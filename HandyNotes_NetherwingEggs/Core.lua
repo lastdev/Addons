@@ -3,7 +3,7 @@
 
                                            Netherwing Eggs
 
-                                      v2.03 - 29th October 2023
+                                     v2.04 - 26th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -39,7 +39,6 @@ local UIParent = _G.UIParent
 local format, ipairs, next = format, ipairs, next
 
 local HandyNotes = _G.HandyNotes
-local TomTom = _G.TomTom
 
 -- Localisation
 ns.locale = GetLocale()
@@ -357,10 +356,6 @@ end
 ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
-	L["Netherwing Egg"] = "Ei der Netherschwingen"
-	L["Netherwing Eggs"] = "Eier der Netherschwingen"
-	L["Netherwing Mines"] = "Netherschwingenminen"
-	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight
 	L["10804"] = "Freundlichkeit"
 	L["10811"] = "Sucht Neltharaku auf"
 	L["10814"] = "Neltharakus Geschichte"
@@ -397,16 +392,16 @@ if ns.locale == "deDE" then
 	L["11086"] = "Schwächt das Portal des Zwielichts"
 	L["11089"] = "Die Seelenkanone Reth'hedrons"
 	L["11090"] = "Unterdrückt den Unterdrücker"
-	L["stand here north"] = "Bitte hier stehen, nach Norden"
+	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight
+	L["Netherwing Egg"] = "Ei der Netherschwingen"
+	L["Netherwing Eggs"] = "Eier der Netherschwingen"
+	L["Netherwing Mines"] = "Netherschwingenminen"
+	L["Shadowmoon Map"] = "Karte des Schattenmondtal"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "Bitte hier stehen, nach Norden"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Quests"] = "Misiones"
-	L["Netherwing Egg"] = "Huevo de Ala Abisal"
-	L["Netherwing Eggs"] = "Huevos de Ala Abisal"
-	L["Netherwing Mines"] = "Minas del Ala Abisal"
-	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Huevos de Ala Abisal"
 	L["10804"] = "Bondad"
 	L["10811"] = "Buscar a Neltharaku"
 	L["10814"] = "La historia de Neltharaku"
@@ -443,16 +438,17 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["11086"] = "Perturbar el Portal Crepuscular"
 	L["11089"] = "El cañón de almas de Reth'hedron"
 	L["11090"] = "Avasallar al Avasallador"
-	L["stand here north"] = "Por favor, quédate aquí, mirando hacia el norte"
+	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Huevos de Ala Abisal"
+	L["Netherwing Egg"] = "Huevo de Ala Abisal"
+	L["Netherwing Eggs"] = "Huevos de Ala Abisal"
+	L["Netherwing Mines"] = "Minas del Ala Abisal"
+	L["Quests"] = "Misiones"
+	L["Shadowmoon Map"] = "Mapa del Valle Sombraluna"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "Por favor, quédate aquí, mirando hacia el norte"
 
 elseif ns.locale == "frFR" then
-	L["Quests"] = "Quêtes"
-	L["Netherwing Egg"] = "Œuf de l'Aile-du-Néant"
-	L["Netherwing Eggs"] = "Œufs de l'Aile-du-Néant"
-	L["Netherwing Mines"] = "Mines de l'Aile-du-Néant"
-	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Œufs de l'Aile-du-Néant"
 	L["10804"] = "Un peu de gentillesse"
 	L["10811"] = "Trouvez Neltharaku"
 	L["10814"] = "L'histoire de Neltharaku"
@@ -489,16 +485,17 @@ elseif ns.locale == "frFR" then
 	L["11086"] = "Perturber la porte du Crépuscule"
 	L["11089"] = "Le canon à âmes de Reth'hedron"
 	L["11090"] = "Dominer le Dominateur"
-	L["stand here north"] = "S'il vous plaît, restez ici, face au nord"
+	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Œufs de l'Aile-du-Néant"
+	L["Netherwing Egg"] = "Œuf de l'Aile-du-Néant"
+	L["Netherwing Eggs"] = "Œufs de l'Aile-du-Néant"
+	L["Netherwing Mines"] = "Mines de l'Aile-du-Néant"
+	L["Quests"] = "Quêtes"
+	L["Shadowmoon Map"] = "Carte de la Vallée d'Ombrelune"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "S'il vous plaît, restez ici, face au nord"
 
 elseif ns.locale == "itIT" then
-	L["Quests"] = "Missioni"
-	L["Netherwing Egg"] = "Uovo di Alafatua"
-	L["Netherwing Eggs"] = "Uova di Alafatua"
-	L["Netherwing Mines"] = "Miniere degli Alafatua"
-	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Uova di Alafatua"
 	L["10804"] = "Kindness"
 	L["10811"] = "Seek Out Neltharaku"
 	L["10814"] = "Neltharaku's Tale"
@@ -535,16 +532,17 @@ elseif ns.locale == "itIT" then
 	L["11086"] = "La distruzione del Portale del Crepuscolo"
 	L["11089"] = "Il Cannone dell'Anima di Reth'hedron"
 	L["11090"] = "Soggioga il soggiogatore"
-	L["stand here north"] = "Si prega di stare qui, verso nord."
+	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Uova di Alafatua"
+	L["Netherwing Egg"] = "Uovo di Alafatua"
+	L["Netherwing Eggs"] = "Uova di Alafatua"
+	L["Netherwing Mines"] = "Miniere degli Alafatua"
+	L["Quests"] = "Missioni"
+	L["Shadowmoon Map"] = "Mappa della Valle di Torvaluna"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "Si prega di stare qui, verso nord."
 
 elseif ns.locale == "koKR" then
-	L["Quests"] = "퀘스트"
-	L["Netherwing Egg"] = "황천날개 알"
-	L["Netherwing Eggs"] = "황천날개 알"
-	L["Netherwing Mines"] = "황천날개 광산"
-	L["AddOn Description"] = ns.colour.highlight .."황천날개 알\124r 를 찾을 수 있도록 도와줍니다"
 	L["10804"] = "친절"
 	L["10811"] = "넬타라쿠 찾기"
 	L["10814"] = "넬타라쿠의 이야기"
@@ -581,16 +579,17 @@ elseif ns.locale == "koKR" then
 	L["11086"] = "황혼의 차원문 방해하기"
 	L["11089"] = "레스히드론의 영혼 대포"
 	L["11090"] = "정복자 제압"
-	L["stand here north"] = "여기 북쪽을 향하여 서십시오."
+	L["AddOn Description"] = ns.colour.highlight .."황천날개 알\124r 를 찾을 수 있도록 도와줍니다"
+	L["Netherwing Egg"] = "황천날개 알"
+	L["Netherwing Eggs"] = "황천날개 알"
+	L["Netherwing Mines"] = "황천날개 광산"
+	L["Quests"] = "퀘스트"
+	L["Shadowmoon Map"] = "어둠달 골짜기 지도"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "여기 북쪽을 향하여 서십시오."
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Quests"] = "Missões"
-	L["Netherwing Egg"] = "Ovo da Asa Etérea"
-	L["Netherwing Eggs"] = "Ovos da Asa Etérea"
-	L["Netherwing Mines"] = "Minas da Asa Etérea"
-	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Ovos da Asa Etérea"
 	L["10804"] = "Bondade"
 	L["10811"] = "Procure Neltarako"
 	L["10814"] = "A história de Neltarako"
@@ -627,17 +626,17 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["11086"] = "Atrapalhando o Portal do Crepúsculo"
 	L["11089"] = "O Canhão das almas de Reth'hedron"
 	L["11090"] = "Domine o Dominador"
-	L["stand here north"] = "Por favor fique aqui, virado para o norte."
+	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Ovos da Asa Etérea"
+	L["Netherwing Egg"] = "Ovo da Asa Etérea"
+	L["Netherwing Eggs"] = "Ovos da Asa Etérea"
+	L["Netherwing Mines"] = "Minas da Asa Etérea"
+	L["Quests"] = "Missões"
+	L["Shadowmoon Map"] = "Mapa do Vale da Lua Negra"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "Por favor fique aqui, virado para o norte."
 
 elseif ns.locale == "ruRU" then
-	L["Quests"] = "Задания"
-	L["Netherwing Egg"] = "Яйцо дракона из стаи Крыльев Пустоты"
-	L["Netherwing Eggs"] = "Яйца дракона из стаи Крыльев Пустоты"
-	L["Netherwing Mines"] = "Крыльев Пустоты"
-	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight
-		.."Яйца дракона из стаи Крыльев Пустоты"
 	L["10804"] = "Доброта"
 	L["10811"] = "Поиски Нельтараку"
 	L["10814"] = "История Нельтараку"
@@ -674,16 +673,18 @@ elseif ns.locale == "ruRU" then
 	L["11086"] = "Разрушение сумеречного портала"
 	L["11089"] = "Пушка души Рет'хедрона"
 	L["11090"] = "Покорить Покорителя"
-	L["stand here north"] = "Пожалуйста, встаньте здесь, лицом на север."
+	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight
+		.."Яйца дракона из стаи Крыльев Пустоты"
+	L["Netherwing Egg"] = "Яйцо дракона из стаи Крыльев Пустоты"
+	L["Netherwing Eggs"] = "Яйца дракона из стаи Крыльев Пустоты"
+	L["Netherwing Mines"] = "Крыльев Пустоты"
+	L["Quests"] = "Задания"
+	L["Shadowmoon Map"] = "Карта Долина Призрачной Луны"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "Пожалуйста, встаньте здесь, лицом на север."
 
 elseif ns.locale == "zhCN" then
-	L["Quests"] = "任务"
-	L["Netherwing Egg"] = "灵翼龙卵"
-	L["Netherwing Eggs"] = "灵翼龙卵"
-	L["Netherwing Mines"] = "灵翼矿洞"
-	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."灵翼龙卵"
 	L["10804"] = "友善"
 	L["10811"] = "寻找奈尔萨拉库"
 	L["10814"] = "奈尔萨拉库的故事"
@@ -720,16 +721,17 @@ elseif ns.locale == "zhCN" then
 	L["11086"] = "暮光岭的传送门"
 	L["11089"] = "雷萨赫尔的灵魂火炮"
 	L["11090"] = "征服者雷萨赫尔顿"
-	L["stand here north"] = "请站在这里，面朝北方。"
+	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."灵翼龙卵"
+	L["Netherwing Egg"] = "灵翼龙卵"
+	L["Netherwing Eggs"] = "灵翼龙卵"
+	L["Netherwing Mines"] = "灵翼矿洞"
+	L["Quests"] = "任务"
+	L["Shadowmoon Map"] = "影月谷地图"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "请站在这里，面朝北方。"
 
 elseif ns.locale == "zhTW" then
-	L["Quests"] = "任務"
-	L["Netherwing Egg"] = "靈翼龍卵"
-	L["Netherwing Eggs"] = "靈翼龍卵"
-	L["Netherwing Mines"] = "靈翼礦洞"
-	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."靈翼龍卵"
 	L["10804"] = "友善"
 	L["10811"] = "尋找奈爾薩拉庫"
 	L["10814"] = "奈爾薩拉庫的故事"
@@ -766,12 +768,17 @@ elseif ns.locale == "zhTW" then
 	L["11086"] = "暮光嶺的傳送門"
 	L["11089"] = "雷薩赫爾的靈魂火砲"
 	L["11090"] = "征服者雷薩赫爾頓"
-	L["stand here north"] = "請站在這裡，面朝北方。"
+	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."靈翼龍卵"
+	L["Netherwing Egg"] = "靈翼龍卵"
+	L["Netherwing Eggs"] = "靈翼龍卵"
+	L["Netherwing Mines"] = "靈翼礦洞"
+	L["Quests"] = "任務"
+	L["Shadowmoon Map"] = "影月谷地圖"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
+	L["stand here north"] = "請站在這裡，面朝北方。"
 	
 else
-	L["AddOn Description"] = "Helps you locate " ..ns.colour.highlight .."Netherwing Eggs"
 	L["10804"] = "Kindness"
 	L["10811"] = "Seek Out Neltharaku"
 	L["10814"] = "Neltharaku's Tale"
@@ -808,6 +815,7 @@ else
 	L["11086"] = "Disrupting the Twilight Portal"
 	L["11089"] = "The Soul Cannon of Reth'hedron"
 	L["11090"] = "Subdue the Subduer"
+	L["AddOn Description"] = "Helps you locate " ..ns.colour.highlight .."Netherwing Eggs"
 	L["stand here north"] = "Please stand here, facing north"
 end
 
@@ -845,44 +853,11 @@ function pluginHandler:OnEnter( mapFile, coord )
 		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
 	end
 
-	if TomTom then
-		GameTooltip:AddLine("Right-click to set a waypoint", 1, 1, 1)
-		GameTooltip:AddLine("Control-Right-click to set waypoints to every |cFF0070DENetherwing Egg|r", 1, 1, 1)
-	end
-
 	GameTooltip:Show()
 end
 
 function pluginHandler:OnLeave()
 	GameTooltip:Hide()
-end
-
-local function createWaypoint(mapID, coord)
-	local x, y = HandyNotes:getXY(coord)
-	TomTom:AddWaypoint(mapID, x, y, { title = L["Netherwing Egg"], persistent = nil, minimap = true, world = true })
-end
-
-local function createAllWaypoints()
-	for mapFile, coords in next, ns.points do
-		if not continents[mapFile] then
-			for coord in next, coords do
-				if coord then
-					createWaypoint(mapFile, coord)
-				end
-			end
-		end
-	end
-	TomTom:SetClosestWaypoint()
-end
-
-function pluginHandler:OnClick(button, down, mapFile, coord)
-	if TomTom and button == "RightButton" and not down then
-		if IsControlKeyDown() then
-			createAllWaypoints()
-		else
-			createWaypoint(mapFile, coord)
-		end
-	end
 end
 
 local function OnEventHandler( self, event, questID )
@@ -1110,9 +1085,30 @@ ns.options = {
 }
 
 function HandyNotes_NetherwingEggs_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "NetherwingEggs" )
- end
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( ns.valley )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Netherwing Eggs"] ..": " ..ns.colour.plaintext
+					.."Not possible at this time. Try later" )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "NetherwingEggs" )
+	end
+end
+ 
+function HandyNotes_NetherwingEggs_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["Netherwing Eggs"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Shadowmoon Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_NetherwingEggs_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

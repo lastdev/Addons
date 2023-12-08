@@ -4865,17 +4865,11 @@ do
 		end
 	end
 
-	local realmKey = GetRealmName() or ""
-	realmKey = realmKey:gsub(" ","")
-	local realmKey_find = "%-"..realmKey.."$"
-
 	local env = {
 		module = module,
 		_db = _db,
 		eventsView = eventsView,
 		_C = _C,
-
-		realmKey_find = realmKey_find,
 
 		spell_startCDbyAuraApplied_fix = _db.spell_startCDbyAuraApplied_fix,
 		spell_startCDbyAuraApplied = _db.spell_startCDbyAuraApplied,
@@ -4940,8 +4934,6 @@ do
 				if not sourceName then
 					return
 				end
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				local forceUpdateAllData
 
@@ -5143,8 +5135,6 @@ do
 				if not sourceName then
 					return
 				end
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				local CDspellID = spell_startCDbyAuraApplied[spellID]
 				if CDspellID then
@@ -5357,8 +5347,6 @@ do
 				if not sourceName then
 					return
 				end
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				local forceUpdateAllData
 
@@ -5510,32 +5498,24 @@ do
 		]]},
 		SPELL_SUMMON = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
 		]]},
 		SPELL_AURA_APPLIED_DOSE = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,type,stack)
-				if Gtype(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if Gtype(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
 		]]},
 		SPELL_AURA_REMOVED_DOSE = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,type,stack)
-				if Gtype(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if Gtype(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
 		]]},
 		SPELL_DISPEL = {main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,destSpell)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				if spell_dispellsList[spellID] and sourceName then
 					_db.spell_dispellsFix[ sourceName ] = true
@@ -5545,8 +5525,6 @@ do
 		]]},
 		SPELL_DAMAGE = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,amount,overkill,school,resisted,blocked,absorbed,critical,glancing,crushing,isOffHand)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
@@ -5559,24 +5537,18 @@ do
 		]]}},
 		SPELL_HEAL = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,amount,overhealing,absorbed,critical)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
 		]],subevents={SPELL_PERIODIC_HEAL=true}},
 		SPELL_ENERGIZE = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,amount,overEnergize,powerType,alternatePowerType)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
 		]],subevents={SPELL_PERIODIC_ENERGIZE=true}},
 		SPELL_MISSED = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,missType,isOffHand,amountMissed,critical)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end
@@ -5589,8 +5561,6 @@ do
 		]]}},
 		SPELL_INTERRUPT = {isEmpty=true,main=[[
 			return function (timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName,_,destSpell)
-				if type(sourceName)=="string" and sourceName:find(realmKey_find) then sourceName = strsplit("-",sourceName) end
-				if type(destName)=="string" and destName:find(realmKey_find) then destName = strsplit("-",destName) end
 				$$$2
 				$$$1
 			end

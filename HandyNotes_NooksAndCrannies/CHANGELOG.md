@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-11-30
+
+### Added
+
+- Cavern of Contemplation and Gromit Hollow entrances in Korthia (SL).
+- Blooming Foundry, Locrian Esper, Gravid Repose, Nexus of Actualization and Catalyst Wards entrances in Zereth Mortis (SL).
+
+### Changed
+
+- Changed dungeon portals in Valdrakken (DF) to reflect Season 3 portal.
+
 ## [1.2.0] - 2023-11-08
 
 ### Added
@@ -26,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed dungeon portals in Valdrakken to reflect Season 2 portals.
+- Changed dungeon portals in Valdrakken (DF) to reflect Season 2 portals.
 - Updated TOC for Dragonflight (10.1.5).
 
 ## [1.1.0] - 2023-05-03
@@ -63,7 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added mini caves (dungeons) to Gorgrond, Talador, Shadowmoon Valley, Nagrand (WoD)
 - Added horde portal from Garrison and Ashran (WoD)
 
-[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.2.0...master
+[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.3.0...master
+[1.3.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.3.0
 [1.2.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.2.0
 [1.1.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.1
 [1.1.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.0

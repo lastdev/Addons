@@ -19,7 +19,7 @@
         the copyright holders.
 ]]
 
-local lib = LibStub:NewLibrary("Krowi_Menu-1.0", 1);
+local lib = LibStub:NewLibrary("Krowi_Menu-1.0", 2);
 
 if not lib then
 	return;
@@ -119,7 +119,7 @@ function lib:SetSelectedName(name)
 	menuFrame.selectedName = nil; -- When we'd use this one, Blizzard code would overwrite info.checked with 1, not looking at the function anymore until the menu is full closed and opened again
 	menuFrame.selectedID = nil;
 	menuFrame.selectedValue = nil;
-	self:UIDropDownMenu_Refresh(menuFrame);
+	self:UIDropDownMenu_RefreshAll(menuFrame);
 end
 
 function lib:GetSelectedName(frame)
@@ -133,6 +133,17 @@ local function GetChild(frame, name, key)
 		return _G[name..key];
 	end
 	return nil;
+end
+
+function lib:UIDropDownMenu_RefreshAll(frame, useValue)
+	for dropdownLevel = UIDROPDOWNMENU_MENU_LEVEL, 2, -1 do
+		local listFrame = _G["DropDownList"..dropdownLevel];
+		if listFrame:IsShown() then
+			self:UIDropDownMenu_Refresh(frame, nil, dropdownLevel);
+		end
+	end
+	-- useValue is the text on the dropdown, only needs to be set once
+	self:UIDropDownMenu_Refresh(frame, useValue, 1);
 end
 
 function lib:UIDropDownMenu_Refresh(frame, useValue, dropdownLevel)

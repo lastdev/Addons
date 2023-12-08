@@ -1,3 +1,11 @@
+== v1.35 - 30th November 2023
+* Translations for Celestial Challenge, Zul' Again, Squirrel,
+  Timeless Champion, Love Heart
+
+== v1.34 - 25th November 2023
+* Translations for Glorious!, Where There's Pirates, There's Booty,
+  Extreme Treasure Hunter, Zarhym Altogether
+
 == v1.33 - 11th November 2023
 * Translations for Riches, Legends, Treasure added
 

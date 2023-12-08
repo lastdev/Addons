@@ -35,9 +35,7 @@ addon.GUI.shortcutButton = shortcutButton
 
 local function adventureMapOpenHandler(followerTypeID)
     if followerTypeID ~= 123 then return end
-    if not IsAddOnLoaded("Blizzard_GarrisonUI") then 
-        LoadAddOn("Blizzard_GarrisonUI")
-    end
+
     tldrButton:Show()
     tldrButton:SetParent(CovenantMissionFrame.MissionTab)
     tldrButton:SetPoint("TOPLEFT", CovenantMissionFrame, 80, -20)
@@ -58,6 +56,12 @@ local function adventureMapOpenHandler(followerTypeID)
     else
         shortcutButton:Hide()
     end
+end
+
+local function adventureMapClosedHandler()
+    tldrButton:Hide()
+    addon.GUI:Hide()
+    shortcutButton:Hide()
 end
 
 local itemInfoCache = {}
@@ -84,7 +88,7 @@ end
 
 local function eventHandler(self, event, ...)
     local arg1 = ...
-    if event == "ADVENTURE_MAP_OPEN" then
+    if event == "GARRISON_MISSION_NPC_OPENED" then
         if arg1 ~= 123 then return end
         if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
         if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
@@ -95,30 +99,29 @@ local function eventHandler(self, event, ...)
         else
             addon.GUI.CompleteMissionsButton:Show()
         end
+    elseif (event == "ADDON_LOADED") then
+        if _G.GarrisonLandingPageFollowerList then
+			addon.followerList:Init()
+		end
     elseif event == "GARRISON_MISSION_COMPLETE_RESPONSE" then
         addon:logCompletedMission(...)
     elseif event == "GARRISON_MISSION_STARTED" then
         addon:garrisonMissionStartedHandler(...)
     elseif event == "GARRISON_MISSION_FINISHED" then
         addon.GUI.CompleteMissionsButton:Show()
+    elseif event == "GARRISON_SHIPYARD_NPC_CLOSED" then
+        adventureMapClosedHandler()
     end
 end
 
 eventFrame:SetScript("OnEvent", eventHandler)
-eventFrame:RegisterEvent("ADVENTURE_MAP_OPEN")
+eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("GARRISON_MISSION_COMPLETE_RESPONSE")
 eventFrame:RegisterEvent("GARRISON_MISSION_STARTED")
 eventFrame:RegisterEvent("GARRISON_MISSION_FINISHED")
+eventFrame:RegisterEvent("GARRISON_MISSION_NPC_OPENED")
+eventFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 
 EventUtil.ContinueOnAddOnLoaded(addonName, function()
     addon:RefreshProfile()
-    if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
-    if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
-    adventureMapOpenHandler(123)
-    preloadItemRewards()
-    if #C_Garrison.GetCompleteMissions(123) == 0 then
-        addon.GUI.CompleteMissionsButton:Hide()
-    else
-        addon.GUI.CompleteMissionsButton:Show()
-    end
 end)

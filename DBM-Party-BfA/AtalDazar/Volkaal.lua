@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2036, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231024091944")
+mod:SetRevision("20231125014209")
 mod:SetCreatureID(122965)
 mod:SetEncounterID(2085)
 --mod:SetHotfixNoticeRev(20231023000000)
@@ -77,7 +77,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:GetStage(2) then
 			timerNoxiousStenchCD:Start(18.2, self.vb.stenchCount+1)
 		else
-			timerNoxiousStenchCD:Start(20.6, self.vb.stenchCount+1)
+			timerNoxiousStenchCD:Start(19.5, self.vb.stenchCount+1)
 			timerLeapCD:AddTime(2)--Consistent with early alpha, might use more complex code if this becomes inconsistent
 		end
 	elseif spellId == 250241 then

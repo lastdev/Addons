@@ -533,6 +533,7 @@ GTFO.SpellID["174921"] = {
 GTFO.SpellID["169445"] = {
 	--desc = "Noxious Eruption (Twisted Abomination)";
 	sound = 3;
+	applicationOnly = true;
 };
 
 GTFO.SpellID["175997"] = {

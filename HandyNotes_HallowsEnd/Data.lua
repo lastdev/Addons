@@ -730,6 +730,11 @@ points[ 1945 ] = { -- Outland
 -- Northrend
 -- ==============================
 
+local herosWelcome = "Don't go into the Silver Enclave.\nIt's in the adjacent \"A Hero's Welcome\" inn.\n"
+					.."Under the stairs on the right side"
+local xAndY = "Hey, did you download my \X and Y\" AddOn for cool minimap coordinates!\n"
+				.."(Shameless self promotion)"
+									
 points[ 114 ] = { -- Borean Tundra
 	[41715440] = { aIDH=5835, indexH=4, quest=13468, iabc=true, tip="The lowest level. Use the south-south-east entrance\n"
 						.."at ground level and enter the pidgeon hole in the stairs.\n"
@@ -742,12 +747,11 @@ points[ 114 ] = { -- Borean Tundra
 					location="Unu'pe" },
 }
 points[ 127 ] = { -- Crystalsong Forest
-	[24903750] = { aIDA=5836, indexA=5, quest=13473, iabc=true, tip="Don't go into the Silver Enclave.\nIt's in the adjacent \"A Hero's Welcome\" inn.\n"
-					.."Under the stairs on the right side", location="A Hero's Welcome" },
+	[24903750] = { aIDA=5836, indexA=5, quest=13473, iabc=true, tip=herosWelcome, location="A Hero's Welcome" },
 	[27304170] = { aIDA=5836, indexA=6, aIDH=5835, indexH=7, quest=13472, iabc=true, tip="Cantrips & Crows", location="The Underbelly" },
-	[29003240] = { aIDA=5836, indexA=4, aIDH=5835, indexH=5, quest=13463, iabc=true, tip="Hey, did you download my \X and Y\" AddOn for cool minimap coordinates!\n"
-									.."(Shameless self promotion)", location="The Legerdemain Lounge" },
+	[29003240] = { aIDA=5836, indexA=4, aIDH=5835, indexH=5, quest=13463, iabc=true, tip=xAndY, location="The Legerdemain Lounge" },
 	[30703770] = { aIDH=5835, indexH=6, quest=13474, iabc=true, tip="The Filthy Animal", location="Sunreaver's Sanctuary" },
+	[92292093] = { aIDA=5836, indexA=20, aIDH=5835, indexH=22, quest=13461, iabc=true, tip="Icon marks the entrance to the Inn. Surprise!", location="K3" },
 }
 points[ 125 ] = { -- Dalaran
 	[38225962] = { aIDA=5836, indexA=6, aIDH=5835, indexH=7, quest=13472, iabc=true, tip="Cantrips & Crows", location="The Underbelly" },
@@ -771,10 +775,13 @@ points[ 115 ] = { -- Dragonblight
 	[76826328] = { aIDH=5835, indexH=10, quest=13470, iabc=true, location="Venomspite" },
 }
 points[ 116 ] = { -- Grizzly Hills
+	[20896477] = { aIDH=5835, indexH=13, quest=12946, iabc=true, location="Conquest Hold" },
+	[29140133] = { aIDA=5836, indexA=21, aIDH=5835, indexH=23, quest=12941, iabc=true, location="The Argent Stand" },
 	[31946021] = { aIDA=5836, indexA=11, quest=12944, iabc=true, location="Amberpine Lodge" },
 	[59642636] = { aIDA=5836, indexA=12, quest=12945, iabc=true, location="Westfall Brigade" },
+	[62368101] = { aIDH=5835, indexH=14, quest=13464, iabc=true, location="Camp Winterhoof" },
 	[65364700] = { aIDH=5835, indexH=12, quest=12947, iabc=true, location="Camp Oneqwah" },
-	[20896477] = { aIDH=5835, indexH=13, quest=12946, iabc=true, location="Conquest Hold" },
+	[75138689] = { aIDA=5836, indexA=13, quest=13435, iabc=true, location="Fort Wildervar" },
 }
 points[ 117 ] = { -- Howling Fjord
 	[25315914] = { aIDA=5836, indexA=14, aIDH=5835, indexH=15, quest=13452, iabc=true, tip="Icon marks the entrance to the subterranean Inn", location="Kamagua" },
@@ -786,20 +793,42 @@ points[ 117 ] = { -- Howling Fjord
 	[79273063] = { aIDH=5835, indexH=17, quest=13466, iabc=true, tip="The Inn entrance is at the side....\nThe Penny Pouch is awesome!\nNot :/",
 					location="Vengeance Landing" },
 }
+points[ 118 ] = { -- Icecrown
+	[74608623] = { aIDA=5836, indexA=5, quest=13473, iabc=true, tip=herosWelcome, location="A Hero's Welcome" },
+	[75648805] = { aIDA=5836, indexA=6, aIDH=5835, indexH=7, quest=13472, iabc=true, tip="Cantrips & Crows", location="The Underbelly" },
+	[76388420] = { aIDA=5836, indexA=4, aIDH=5835, indexH=5, quest=13463, iabc=true, tip=xAndY, location="The Legerdemain Lounge" },
+	[77128631] = { aIDH=5835, indexH=6, quest=13474, iabc=true, tip="The Filthy Animal", location="Sunreaver's Sanctuary" },
+	[90016580] = { aIDA=5836, indexA=19, quest=13448, iabc=true, location="Frosthold" },
+	[92122346] = { aIDA=5836, indexA=18, aIDH=5835, indexH=19, quest=13462, iabc=true, tip="Quest phasing issues reported. Icon marks the entrance",
+					location="Bouldercrag's Refuge" },
+	[99513771] = { aIDH=5835, indexH=21, quest=13548, iabc=true, location="Grom'arsh Crash Site" },
+}
 points[ 119 ] = { -- Sholazar Basin
 	[26615920] = { aIDA=5836, indexA=17, aIDH=5835, indexH=18, quest=12950, iabc=true, tip="At the rear of the larger tent", location="Nesingwary Base Camp" },
+	[28159550] = { aIDH=5835, indexH=1, quest=13501, iabc=true, location="Bor'gorok Outpost" },
 }
 points[ 120 ] = { -- The Storm Peaks
+	[15139230] = { aIDA=5836, indexA=5, quest=13473, iabc=true, tip=herosWelcome, location="A Hero's Welcome" },
+	[16059390] = { aIDA=5836, indexA=6, aIDH=5835, indexH=7, quest=13472, iabc=true, tip="Cantrips & Crows", location="The Underbelly" },
+	[16709034] = { aIDA=5836, indexA=4, aIDH=5835, indexH=5, quest=13463, iabc=true, tip=xAndY, location="The Legerdemain Lounge" },
+	[17359237] = { aIDH=5835, indexH=6, quest=13474, iabc=true, tip="The Filthy Animal", location="Sunreaver's Sanctuary" },
 	[28727428] = { aIDA=5836, indexA=19, quest=13448, iabc=true, location="Frosthold" },
 	[30583694] = { aIDA=5836, indexA=18, aIDH=5835, indexH=19, quest=13462, iabc=true, tip="Quest phasing issues reported. Icon marks the entrance",
 					location="Bouldercrag's Refuge" },
 	[37094951] = { aIDH=5835, indexH=21, quest=13548, iabc=true, location="Grom'arsh Crash Site" },
 	[40938595] = { aIDA=5836, indexA=20, aIDH=5835, indexH=22, quest=13461, iabc=true, tip="Icon marks the entrance to the Inn. Surprise!", location="K3" },
+	[63029971] = { aIDA=5836, indexA=21, aIDH=5835, indexH=23, quest=12941, iabc=true, location="The Argent Stand" },
 	[67655069] = { aIDH=5835, indexH=20, quest=13471, iabc=true, location="Camp Tunka'lo" },
+	[75999351] = { aIDA=5836, indexA=22, aIDH=5835, indexH=24, quest=12940, iabc=true, location="Zim'Torga" },
+}
+points[ 123 ] = { -- Wintergrasp
+	[94919476] = { aIDH=5835, indexH=8, quest=13469, iabc=true, location="Agmar's Hammer" },
 }
 points[ 121 ] = { -- Zul'Drak
+	[09404645] = { aIDA=5836, indexA=20, aIDH=5835, indexH=22, quest=13461, iabc=true, tip="Icon marks the entrance to the Inn. Surprise!", location="K3" },
 	[40866604] = { aIDA=5836, indexA=21, aIDH=5835, indexH=23, quest=12941, iabc=true, location="The Argent Stand" },
 	[59335721] = { aIDA=5836, indexA=22, aIDH=5835, indexH=24, quest=12940, iabc=true, location="Zim'Torga" },
+	[72929235] = { aIDA=5836, indexA=12, quest=12945, iabc=true, location="Westfall Brigade" },
 }
 
 -- ==================================
@@ -1178,29 +1207,29 @@ scalingL[4] = 0.55
 scalingL[5] = 0.55
 scalingL[6] = 0.55
 scalingL[7] = 0.65
-scalingL[8] = 0.62
-scalingL[9] = 0.75
+scalingL[8] = 0.64
+scalingL[9] = 0.77
 scalingL[10] = 0.75
 scalingL[11] = 0.44
 scalingL[12] = 0.40
-scalingL[13] = 0.415
-scalingL[14] = 0.40
+scalingL[13] = 0.45
+scalingL[14] = 0.42
 scalingL[15] = 0.42
-scalingL[16] = 0.415
-scalingL[17] = 0.415
+scalingL[16] = 0.45
+scalingL[17] = 0.45
 scalingS[1] = 0.37
 scalingS[2] = 0.49
 scalingS[3] = 0.49
 scalingS[4] = 0.49
 scalingS[5] = 0.43
 scalingS[6] = 0.41
-scalingS[7] = 0.395
+scalingS[7] = 0.42
 scalingS[8] = 0.57
 scalingS[9] = 0.44
 scalingS[10] = 0.40
-scalingS[11] = 0.415
-scalingS[12] = 0.40
+scalingS[11] = 0.45
+scalingS[12] = 0.42
 scalingS[13] = 0.42
-scalingS[14] = 0.415
-scalingS[15] = 0.415
+scalingS[14] = 0.45
+scalingS[15] = 0.45
 

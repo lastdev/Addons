@@ -8,6 +8,20 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 
+			{1700257286,  "Backend Change", "November 19th, 2023", "Resetting range check ranges where they are no longer set properly due to backend changes.", "cont1nuity"},
+			{1700257286,  "Backend Change", "November 17th, 2023", "Switch to LibRangeCheck-3.0 with combat range detection.", "cont1nuity"},
+			{1700257286,  "Hotfix", "November 17th, 2023", "Cleaning up hotfix.", "cont1nuity"},
+			{1700257286,  "Hotfix", "November 16th, 2023", "Fixes for broken range check API, which was prohibited in combat by Blizzard.", "Terciob"},
+			
+			{1699644993,  "Bug Fix", "November 8th, 2023", "Cleanup and repair of imported Ghost Aura data.", "cont1nuity"},
+			{1699644993,  "Backend Change", "November 7th, 2023", "Retail toc bump to 10.2.", "cont1nuity"},
+			{1699644993,  "Bug Fix", "November 7th, 2023", "Fix threat not being updated properly when scripts denied color change.", "cont1nuity"},
+			{1699644993,  "Backend Change", "November 6th, 2023", "Framework Updates.", "Terciob"},
+			{1699644993,  "Backend Change", "November 2nd, 2023", "Fixing some audio cues not being played.", "cont1nuity"},
+			{1699644993,  "Bug Fix", "November 2nd, 2023", "Fixing an issue with filtering audio cues.", "cont1nuity"},
+			{1699644993,  "Bug Fix", "November 2nd, 2023", "Fixing some channeled casts not showing up properly on the cast list.", "cont1nuity"},
+			
+			{1698612658,  "Bug Fix", "October 27th, 2023", "Fixing classic druid combo points not showing in some cases (again).", "cont1nuity"},
 			{1698612658,  "Bug Fix", "October 29th, 2023", "Auto-refresh Buff Special list to ensure auras are loaded.", "cont1nuity"},
 			{1698612658,  "Bug Fix", "October 29th, 2023", "Changing Ghost Aura spellIDs to be negative internally for better identification.", "cont1nuity"},
 			{1698612658,  "Bug Fix", "October 27th, 2023", "Fixing classic druid combo points not showing.", "cont1nuity"},

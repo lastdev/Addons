@@ -1971,3 +1971,20 @@ Change Log:
 * Updated for patch 10.2
 * Added Dragonflight spells (world)
 * Added Dragonflight spells for Amirdrassil, The Dream's Hope
+
+5.5.6
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Amirdrassil, The Dream's Hope
+
+5.5.7
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Amirdrassil, The Dream's Hope
+* Added Cataclysm spells for Throne of the Tides (Mythic+) (thanks swgam12)
+* Added WoD spells for the Everbloom (Mythic+) (thanks aisenfaire)
+
+5.6
+* Integrated Skada fixes from bKader
+* Added Dragonflight spells (world)
+* Added Dragonflight spells for Amirdrassil, The Dream's Hope
+* Added Cataclysm spells for Throne of the Tides (Mythic+)
+* Added Vanilla spells (world)

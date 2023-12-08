@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.44
+local QCADDON_VERSION = 109.45
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -60,6 +60,11 @@ local QC_ICON_COORDS_CLASS = {0.5,0.625,0,0.25}
 local QC_ICON_COORDS_KILL = {0.25,0.375,0,0.25}
 
 local qcCategoryDropDownMenu = CreateFrame("Frame", "qcCategoryDropDownMenu")
+-- Beta reset daily and weekly
+local lastDailyResetTime = 0
+local lastWeeklyResetTime = 0
+local prof1, prof2, archaeology, fishing, cooking = GetProfessions()
+
 
 --[[ Bitwise Values ]]--
 qcFactionBits = {
@@ -80,7 +85,7 @@ qcClassBits = {
 	["DEATHKNIGHT"]=32,["SHAMAN"]=64,["MAGE"]=128,["WARLOCK"]=256,["DRUID"]=512,
 	["MONK"]=1024,["DEMONHUNTER"]=2048,["EVOKER"]=4096
 }
-qcProfessionBits = {
+local primaryProfessionBits = {
 	[171]=1,		-- Alchemy
 	[164]=2,		-- Blacksmithing
 	[333]=4,		-- Enchanting
@@ -92,10 +97,15 @@ qcProfessionBits = {
 	[182]=256,		-- Herbalism
 	[186]=512,		-- Mining
 	[393]=1024,		-- Skinning
-	[794]=2048,		-- Archaeology
-	[129]=4096,		-- First Aid
-	[185]=8192,		-- Cooking
-	[356]=16384,	-- Fishing
+--	[794]=2048,		-- Archaeology
+--	[129]=4096,		-- First Aid
+--	[185]=8192,		-- Cooking
+--	[356]=16384,	-- Fishing
+}
+local secondaryProfessionIDs = {
+    [794] = true,   -- Archaeology
+    [356] = true,   -- Fishing
+    [185] = true,   -- Cooking
 }
 qcCovenantsBits = {
 	[0]=1,		-- None
@@ -271,6 +281,7 @@ local function qcGetCategoryQuests(categoryId, searchText) -- *
 		end
 	end
 -- Future Code Hides Other Professions Quest
+
 		--	if (qcSettings.QC_L_HIDE_PROFESSION == 1) then
 	    --  local qcProfessionBits = 0
 		--	for i = #qcCategoryQuests, 1, -1 do
@@ -280,21 +291,50 @@ local function qcGetCategoryQuests(categoryId, searchText) -- *
 		--end
 	--end
 	-- Attemp2
-		if (qcSettings.QC_L_HIDE_PROFESSION == 1) then
-		local qcProfessionBits = 0
-		local qcProfessions = {GetProfessions()}
-		for qcIndex, qcEntry in pairs(qcProfessions) do
-			local qcName, qcTexture, _S, _S, _S, _S, qcProfessionID, _S = GetProfessionInfo(qcEntry)
+	--	if (qcSettings.QC_L_HIDE_PROFESSION == 1) then
+	--	local qcProfessionBits = 0
+	--	local qcProfessions = {GetProfessions()}
+	--	for qcIndex, qcEntry in pairs(qcProfessions) do
+	--		local qcName, qcTexture, _S, _S, _S, _S, qcProfessionID, _S = GetProfessionInfo(qcEntry)
 		--	qcProfessionBitwise = (qcProfessionBitwise + qcProfessionBits[qcProfessionID])
-			if (qcQuestDatabase[qcQuestID]) and (qcQuestDatabase[qcQuestID][10] > 0) then
-			if (BitBand(qcQuestDatabase[qcQuestID][10], qcProfessionBitband) == 0) then				
+	--		if (qcQuestDatabase[qcQuestID]) and (qcQuestDatabase[qcQuestID][10] > 0) then
+	--		if (BitBand(qcQuestDatabase[qcQuestID][10], qcProfessionBitband) == 0) then				
 			--tableRemove(qcCategoryQuests,i)
-			tableRemove(qcProfessionBits,i)
-			end
-		end
-	end
+	--		tableRemove(qcProfessionBits,i)
+	--		end
+	--	end
+	--end
+	-- Assuming qcProfessionBits table is defined as you provided
+--attemp3
+if (qcSettings.QC_L_HIDE_PROFESSION == 1) then
+    local prof1, prof2 = GetProfessions()
+    
+    for i = #qcCategoryQuests, 1, -1 do
+        local professionValue = qcCategoryQuests[i][10]
+        local hideQuest = false
+        
+        if professionValue ~= 0 then
+            local isSecondaryProfession = secondaryProfessionIDs[professionValue]
+            
+            if not isSecondaryProfession then
+                local playerHasProfession = false
+                if prof1 == professionValue or prof2 == professionValue then
+                    playerHasProfession = true
+                end
+                
+                if not playerHasProfession then
+                    hideQuest = true  -- 
+                end
+            end
+        end
+        
+        if hideQuest then
+            tableRemove(qcCategoryQuests, i)
+        end
+    end
+end
 
-	end
+--end
 	
 		if (qcSettings.QC_ML_HIDE_FACTION == 1) then
 		local playerFaction, _ = UnitFactionGroup("player")
@@ -334,93 +374,118 @@ local function qcGetCategoryQuests(categoryId, searchText) -- *
 	end
 end
 
-function qcUpdateQuestList(categoryId, startIndex, searchText) -- *
-	if not (qcQuestCompletistUI:IsVisible()) then return nil end
-	local stringFormat = string.format
-	if (categoryId) then
-		qcQuestCompletistUI.qcSearchBox:SetText("")
-		qcCurrentCategoryID = categoryId
-		qcUpdateCurrentCategoryText(categoryId)
-		qcGetCategoryQuests(categoryId)
-		qcCurrentCategoryQuestCount = (#qcCategoryQuests)
-		if (qcCurrentCategoryQuestCount < 16) then
-			qcMenuSlider:SetMinMaxValues(1, 1)
-		else
-			qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
-		end
-		qcMenuSlider:SetValue(startIndex)
-	else
-		if (searchText) then
-			qcGetCategoryQuests(nil, searchText)
-			qcCurrentCategoryQuestCount = (#qcCategoryQuests)
-			qcQuestCompletistUI.qcSelectedCategory:SetText("Search Results")
-			if (qcCurrentCategoryQuestCount < 16) then
-				qcMenuSlider:SetMinMaxValues(1, 1)
-			else
-				qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
-			end
-			qcMenuSlider:SetValue(startIndex)
-		end
-	end
-	qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringFormat("%d Quests Found",qcCurrentCategoryQuestCount))
-	for i = 1, 16 do
-		local offset = ((i + startIndex) - 1)
-		local questRecord = _G["qcMenuButton" .. i]
-		if (qcCurrentCategoryQuestCount >= offset) then
-			local e = qcCategoryQuests[offset]
-			local questId = e[1]
-			local questType = e[6]
-			local questFaction = e[7]
-			local questRequired = e[15] -- Beta Code
-			questRecord.QuestName:SetText(stringFormat("[%d] %s",e[3],e[2]))
-			questRecord.QuestID = questId
-			-- TODO: Possible to reduce code with call to _G[]?
-			if (questType == 1) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (questType == 2) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
-				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-			elseif (questType == 4) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
-				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-			elseif (questType == 8) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
-				questRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
-			elseif (questType == 16) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (questType == 32) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
-				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (questType == 64) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
-				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (questType == 128) then
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_WORLD))-- Todo?? Maybe make own worldquest icon
-				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-			else
-				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			end
-			questRecord.QuestIcon:Show()
-			if ((questFaction == 0) or (questFaction == 3)) then
-				questRecord.FactionIcon:Hide()
-			elseif (questFaction == 1) then
-				questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AllianceIcon")
-				questRecord.FactionIcon:Show()
-			elseif(questFaction == 2) then
-				questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\HordeIcon")
-				questRecord.FactionIcon:Show()
-			else
-				questRecord.FactionIcon:Hide()
-			end
+--local lastDailyResetTime = 0
+--local lastWeeklyResetTime = 0
+
+function qcUpdateQuestList(categoryId, startIndex, searchText)
+    if not (qcQuestCompletistUI:IsVisible()) then return nil end
+    local stringFormat = string.format
+
+    -- Reset daily quests of type 2, 4, and 128
+    local currentTime = time()
+    local oneDay = 24 * 60 * 60 -- 1 day in seconds
+    if (currentTime - lastDailyResetTime >= oneDay) then
+        ResetDailyQuests()
+        lastDailyResetTime = currentTime
+    end
+
+    -- Reset weekly quests of type 2, 4, and 128
+    local oneWeek = 7 * oneDay -- 1 week in seconds
+    if (currentTime - lastWeeklyResetTime >= oneWeek) then
+        ResetWeeklyQuests()
+        lastWeeklyResetTime = currentTime
+    end
+
+    if categoryId then
+        qcQuestCompletistUI.qcSearchBox:SetText("")
+        qcCurrentCategoryID = categoryId
+        qcUpdateCurrentCategoryText(categoryId)
+        qcGetCategoryQuests(categoryId)
+        qcCurrentCategoryQuestCount = (#qcCategoryQuests)
+        if qcCurrentCategoryQuestCount < 16 then
+            qcMenuSlider:SetMinMaxValues(1, 1)
+        else
+            qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
+        end
+        qcMenuSlider:SetValue(startIndex)
+    else
+        if searchText then
+            qcGetCategoryQuests(nil, searchText)
+            qcCurrentCategoryQuestCount = (#qcCategoryQuests)
+            qcQuestCompletistUI.qcSelectedCategory:SetText("Search Results")
+            if qcCurrentCategoryQuestCount < 16 then
+                qcMenuSlider:SetMinMaxValues(1, 1)
+            else
+                qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
+            end
+            qcMenuSlider:SetValue(startIndex)
+        end
+    end
+    qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringFormat("%d Quests Found", qcCurrentCategoryQuestCount))
+    for i = 1, 16 do
+        local offset = ((i + startIndex) - 1)
+        local questRecord = _G["qcMenuButton" .. i]
+        if qcCurrentCategoryQuestCount >= offset then
+            local e = qcCategoryQuests[offset]
+            local questId = e[1]
+            local questType = e[6]
+            local questFaction = e[7]
+            local questRequired = e[15] -- Beta Code
+            questRecord.QuestName:SetText(stringFormat("[%d] %s", e[3], e[2]))
+            questRecord.QuestID = questId
+
+            -- Quest Type Icons and Text Colors
+            if questType == 1 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+            elseif questType == 2 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
+                questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+            elseif questType == 4 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
+                questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+            elseif questType == 8 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
+                questRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
+            elseif questType == 16 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+            elseif questType == 32 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
+                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+            elseif questType == 64 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
+                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+            elseif questType == 128 then
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_WORLD))
+                questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+            else
+                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+            end
+
+            questRecord.QuestIcon:Show()
+
+            -- Faction Icons
+            if questFaction == 0 or questFaction == 3 then
+                questRecord.FactionIcon:Hide()
+            elseif questFaction == 1 then
+                questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AllianceIcon")
+                questRecord.FactionIcon:Show()
+            elseif questFaction == 2 then
+                questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\HordeIcon")
+                questRecord.FactionIcon:Show()
+            else
+                questRecord.FactionIcon:Hide()
+            end
+
+            -- Quest Completion Status
             if not (C_QuestLog.GetLogIndexForQuestID(questId) == nil) then
                 local isComplete = C_QuestLog.IsComplete(questId)
-                if (isComplete) then
+                if isComplete then
                     questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_READY))
                     questRecord.QuestName:SetTextColor(1.0, 0.8196078431372549, 0.0, 1.0)
-                elseif (isComplete == false) then
+                elseif isComplete == false then
                     questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROGRESS))
                     questRecord.QuestName:SetTextColor(0.5803921568627451, 0.5882352941176471, 0.5803921568627451, 1.0)
                 else
@@ -448,6 +513,31 @@ function qcUpdateQuestList(categoryId, startIndex, searchText) -- *
 		end
 	end
 end
+--- BEta code for reset av daily and weekly
+local QUEST_TYPE_DAILY = 4
+local QUEST_TYPE_WEEKLY = 128
+
+function ResetDailyQuests()
+    for _, questInfo in ipairs(qcCategoryQuests) do
+        local questType = questInfo[6]
+        if questType == QUEST_TYPE_DAILY then
+            local questId = questInfo[1]
+            qcCompletedQuests[questId] = nil
+        end
+    end
+end
+
+function ResetWeeklyQuests()
+    for _, questInfo in ipairs(qcCategoryQuests) do
+        local questType = questInfo[6]
+        if questType == QUEST_TYPE_WEEKLY then
+            local questId = questInfo[1]
+            qcCompletedQuests[questId] = nil
+        end
+    end
+end
+
+--- Beta code for reset av daily and weekly End
 
 function qcSearchBox_OnEditFocusLost(self) -- *
 	searchText = string.upper(self:GetText())

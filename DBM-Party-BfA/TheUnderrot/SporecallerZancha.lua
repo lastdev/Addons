@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2130, "DBM-Party-BfA", 8, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230804233648")
+mod:SetRevision("20231117105343")
 mod:SetCreatureID(131383)
 mod:SetEncounterID(2112)
 mod:SetHotfixNoticeRev(20230520000000)
@@ -32,7 +32,6 @@ local specWarnShockwave				= mod:NewSpecialWarningSpell(272457, "Tank", nil, nil
 local specWarnUpheaval				= mod:NewSpecialWarningMoveAway(259718, nil, nil, nil, 1, 2)
 local yellUpheaval					= mod:NewYell(259718)
 local yellUpheavalFades				= mod:NewShortFadesYell(259718)
-local specWarnUpheavalNear			= mod:NewSpecialWarningClose(259718, nil, nil, nil, 1, 2)
 
 local timerFesteringHarvestCD		= mod:NewCDCountTimer(50.9, 259732, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerBoundlessRotCD			= mod:NewCDTimer(13, 259830, nil, nil, nil, 3)
@@ -100,9 +99,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnUpheaval:Play("runout")
 			yellUpheaval:Yell()
 			yellUpheavalFades:Countdown(6)
-		elseif self:CheckNearby(8, args.destName) and not DBM:UnitDebuff("player", spellId) then
-			specWarnUpheavalNear:CombinedShow(0.3, args.destName)
-			specWarnUpheavalNear:ScheduleVoice(0.3, "runaway")
 		else
 			warnUpheaval:CombinedShow(0.3, args.destName)
 		end

@@ -1235,16 +1235,37 @@ gui.SkipMissionButton:SetScript("OnClick", function(self, button)
 end)
 
 local oncePerLogin = true
-local showBlockCompletionErrorOncePerLogin = true
+local lastBlockCompletionReason
+
+-- Not going to deal with stackable existing items and such
+-- Player shouldn't run with almost-full bags to avoid this error
+-- Or just turn this option off
+local function areBagsFull()
+    local numItemRewards = 0
+    for _, mission in pairs(C_Garrison.GetCompleteMissions(123)) do
+        for _, reward in pairs(mission.rewards) do
+            if reward.itemID then
+                numItemRewards = numItemRewards + 1
+            end
+        end
+    end
+    
+    local freeSlots = 0
+    for i = 0, 4 do
+        freeSlots = freeSlots + C_Container.GetContainerNumFreeSlots(i)
+    end
+    return freeSlots < numItemRewards
+end
+
 gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
     local blockCompletionReason 
     if addon.db.profile.blockCompletion then
         if addon.db.profile.blockCompletionFilters.noQuest and (not (C_QuestLog.IsOnQuest(61981) or C_QuestLog.IsOnQuest(61982) or C_QuestLog.IsOnQuest(61983) or C_QuestLog.IsOnQuest(61984))) then
             blockCompletionReason = L["BlockCompletionErrorNoQuest"]
-        end
-        
-        if addon.db.profile.blockCompletionFilters.questPreviouslyFinished and (C_QuestLog.IsQuestFlaggedCompleted(61981) or C_QuestLog.IsQuestFlaggedCompleted(61982) or C_QuestLog.IsQuestFlaggedCompleted(61983) or C_QuestLog.IsQuestFlaggedCompleted(61984)) then
+        elseif addon.db.profile.blockCompletionFilters.questPreviouslyFinished and (C_QuestLog.IsQuestFlaggedCompleted(61981) or C_QuestLog.IsQuestFlaggedCompleted(61982) or C_QuestLog.IsQuestFlaggedCompleted(61983) or C_QuestLog.IsQuestFlaggedCompleted(61984)) then
             blockCompletionReason = L["BlockCompletionErrorQuestComplete"]
+        elseif addon.db.profile.blockCompletionFilters.bagsFull and areBagsFull() then
+            blockCompletionReason = L["BlockCompletionErrorBagsFull"]
         end
     end
 
@@ -1297,11 +1318,11 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
                 end
                 
                 if blockCompletionReason then
-                    for _, reward in ipairs(mission.rewards) do
+                    for _, reward in pairs(mission.rewards) do
                         if reward.itemID and C_Item.IsAnimaItemByID(reward.itemID) then
                             skipThis = true
-                            if showBlockCompletionErrorOncePerLogin then
-                                showBlockCompletionErrorOncePerLogin = false
+                            if lastBlockCompletionReason ~= blockCompletionReason then
+                                lastBlockCompletionReason = blockCompletionReason
                                 print(blockCompletionReason)
                                 AceEvent:SendMessage("TLDRMISSIONS_MISSION_BLOCKED_ANIMA_QUEST")
                                 if WeakAuras then

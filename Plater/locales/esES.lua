@@ -7,7 +7,9 @@ do
 --[[Translation missing --]]
 L["EXPORT"] = "Export"
 --[[Translation missing --]]
-L["EXPORT_CAST_COLORS"] = "Export Colors"
+L["EXPORT_CAST_COLORS"] = "Share Colors"
+--[[Translation missing --]]
+L["EXPORT_CAST_SOUNDS"] = "Share Sounds"
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 --[[Translation missing --]]
@@ -17,6 +19,8 @@ L["HIGHLIGHT_HOVEROVER_DESC"] = "Efecto de resaltado cuando el ratón está sobr
 L["IMPORT"] = "Import"
 --[[Translation missing --]]
 L["IMPORT_CAST_COLORS"] = "Import Colors"
+--[[Translation missing --]]
+L["IMPORT_CAST_SOUNDS"] = "Import Sounds"
 L["OPTIONS_ALPHA"] = "Alfa"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Multiplicador de transparencia."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Transparencia por defecto"

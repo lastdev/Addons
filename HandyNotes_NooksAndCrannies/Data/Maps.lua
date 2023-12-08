@@ -419,13 +419,26 @@ local maps = {
   ['tiragarde_sound'] = 895,
   ['uldum_bfa'] = 1527,
 
+  -- Shadowlands
+  ['korthia'] = 1961,
+  ['zereth_mortis'] = 1970,
+
+  -- Minimaps
+  ['cavern_of_contemplation'] = 2006,
+  ['gromit_hollow'] = 2007,
+  ['blooming_foundry'] = 2027,
+  ['locrian_esper'] = 2028,
+  ['gravid_repose'] = 2029,
+  ['nexus_of_actualization'] = 2030,
+  ['catalyst_wards'] = 2066,
+
   -- Dragonflight
   ['valdrakken'] = 2112,
   ['forbidden_reach'] = 2151,
   ['zaralek_cavern'] = 2133,
   ['emerald_dream'] = 2200,
 
-  -- Minimaps.
+  -- Minimaps
   ['siege_creche'] = 2100,
   ['support_creche'] = 2101,
   ['war_creche'] = 2102,
@@ -433,6 +446,8 @@ local maps = {
   ['zaralek_cavern_mini'] = 2184,
   ['sortheril_barrow_den'] = 2253,
   ['barrows_of_reverie'] = 2254,
+  -- Timeways doesn't have a map, it shows world map.
+  ['timeways'] = 947,
 }
 
 -- Iterate all maps and assign their ids, so we can use them for our points.

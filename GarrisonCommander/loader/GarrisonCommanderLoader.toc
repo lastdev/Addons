@@ -1,9 +1,9 @@
-## Interface: 100100
+## Interface: 100200
 ## Title: GarrisonCommanderLoader (Draenor mission assistant loader)
 ## Notes: Loads GarrisonCommander only when you open the commander table
 ## Author: Alar of Runetotem
-## Version: 3.5.5 100100
-## X-Revision: 591542e
+## Version: 3.6.0 100200
+## X-Revision: fba439c
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -14,7 +14,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2023-05-15T7:57:48Z
+## X-Date: 2023-11-18T13:49:02Z
 ## X-MainFrame: GarrisonMissionFrame
 ..\GarrisonCommander\libs\LibInit\Ace3\AceHook-3.0\AceHook-3.0.xml
 ..\GarrisonCommander\libs\LibInit\Ace3\AceEvent-3.0\AceEvent-3.0.xml

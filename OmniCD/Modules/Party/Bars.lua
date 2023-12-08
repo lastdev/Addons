@@ -41,31 +41,28 @@ local UNIT_TO_PET = {
 E.UNIT_TO_PET = UNIT_TO_PET
 
 function P:SetEnabledColorScheme(info)
-	if not info.isDeadOrOffline then
-		return
-	end
-	info.isDeadOrOffline = false
-
-	for _, icon in pairs(info.spellIcons) do
-		local statusBar = icon.statusBar
-		if statusBar then
-			if icon.active then
-				local castingBar = statusBar.CastingBar
-				local startColor, startBGColor, startTextColor = self.CastingBarFrame_GetEffectiveStartColor(castingBar, true)
-				castingBar:SetStatusBarColor(startColor:GetRGBA())
-				castingBar.BG:SetVertexColor(startBGColor:GetRGBA())
-				castingBar.Text:SetTextColor(startTextColor:GetRGB())
+	if info.isDisabledColor then
+		info.isDisabledColor = nil
+		for _, icon in pairs(info.spellIcons) do
+			local statusBar = icon.statusBar
+			if statusBar then
+				if icon.active then
+					local castingBar = statusBar.CastingBar
+					local startColor, startBGColor, startTextColor = self.CastingBarFrame_GetEffectiveStartColor(castingBar, true)
+					castingBar:SetStatusBarColor(startColor:GetRGBA())
+					castingBar.BG:SetVertexColor(startBGColor:GetRGBA())
+					castingBar.Text:SetTextColor(startTextColor:GetRGB())
+				end
+				self:SetExStatusBarColor(icon, statusBar.key)
 			end
-			self:SetExStatusBarColor(icon, statusBar.key)
+			icon.icon:SetVertexColor(1, 1, 1)
+			local charges = icon.maxcharges and tonumber(icon.count:GetText())
+			icon.icon:SetDesaturated(E.db.icons.desaturateActive and icon.active and not icon.isHighlighted and (not charges or charges == 0))
 		end
-		icon.icon:SetVertexColor(1, 1, 1)
-		local charges = icon.maxcharges and tonumber(icon.count:GetText())
-		icon.icon:SetDesaturated(E.db.icons.desaturateActive and icon.active and not icon.isHighlighted and (not charges or charges == 0))
-	end
-
-	for key, frame in pairs(P.extraBars) do
-		if frame.shouldRearrangeInterrupts then
-			P:SetExIconLayout(key, true)
+		for key, frame in pairs(P.extraBars) do
+			if frame.shouldRearrangeInterrupts then
+				P:SetExIconLayout(key, true)
+			end
 		end
 	end
 end
@@ -127,6 +124,7 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 			end
 
 			info.isDead = nil
+			info.isDeadOrOffline = false
 			P:SetEnabledColorScheme(info)
 			self:UnregisterEvent(event)
 		end
@@ -197,6 +195,7 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 			else
 				P:SetDisabledColorScheme(info)
 			end
+			info.isDeadOrOffline = info.isDead or not isConnected
 		end
 	end
 end
@@ -594,6 +593,14 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 							isValidSpell = (not E.postBFA or not E.covenant_abilities[spellID] or self.isInShadowlands)
 								and self:IsSpecOrTalentForPvpStatus(spec==true and spellID or spec, info, lvl >= GetSpellLevelLearned(spellID))
 								and (not talent or not self:IsSpecOrTalentForPvpStatus(talent, info, true))
+
+							if ( isValidSpell and info.spec == 257 and not info.auras[2050] ) then
+								local _, src = P:GetBuffDuration(unit, 423510)
+								if ( src ) then
+									info.auras[2050] = true
+									info.auras[34861] = true
+								end
+							end
 						elseif i == 5 then
 							isValidSpell = self.isInShadowlands and self:IsSpecOrTalentForPvpStatus(spec==true and spellID or spec, info, true)
 						elseif i == 4 then
@@ -641,6 +648,9 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 										if rank then
 											local rt = modData[k+1]
 											rt = type(rt) == "table" and (rt[rank] or rt[1]) or rt
+											if (tal == 422748 or tal == 422894) and self.isPvP then
+												rt = rt / 2
+											end
 											cd = cd - rt
 										end
 									end
@@ -824,7 +834,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						self:HideOverlayGlow(icon)
 
 						local active = info.active[spellID]
-						if active then
+						if active and active.startTime then
 							if icon.maxcharges then
 								active.charges = active.charges or (icon.maxcharges - 1)
 								icon.count:SetText(active.charges)
@@ -832,6 +842,10 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 								active.charges = nil
 							end
 							self:HighlightIcon(icon, true)
+
+
+
+
 
 							icon.cooldown:SetCooldown(active.startTime, active.duration, active.iconModRate)
 							icon.active = true
@@ -848,12 +862,12 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						if extraBarFrame then
 							local statusBar = icon.statusBar
 							if statusBar then
-								if not extraBarFrame.shouldShowProgressBar or extraBarFrame.db.unitBar then
+								if not extraBarFrame.shouldShowProgressBar then
 									self:RemoveStatusBar(statusBar)
 									icon.statusBar = nil
 								end
 							else
-								if extraBarFrame.shouldShowProgressBar and not extraBarFrame.db.unitBar then
+								if extraBarFrame.shouldShowProgressBar then
 									self:GetStatusBar(icon, extraBarKey)
 								end
 							end

@@ -3,7 +3,7 @@
 
                                       Long-Forgotten Hippogryph
 
-                                      v1.20 - 28th October 2023
+                                     v1.21 - 26th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -361,11 +361,18 @@ ns.name = UnitName( "player" ) or "Character"
 
 
 if ns.locale == "deDE" then
+	L["* Concealed entrance *"] = "* Verdeckter eingang *"
+	L["AddOn Description"] = "Hilft Ihnen, den " ..ns.colour.highlight
+		.."Lang vergessener Hippogryph\124r zu erhalten"
+	L["Azurewing Repose"] = "Azurschwingenrast"
+	L["Azsuna Map"] = "Azsuna-Karte"
+	L["Cave Entrance"] = "Höhle Eingang"
+	L["Cave of Queen Kraklaa"] = "Die Höhle von Königin Kraklaa"
+	L["Cliffdweller Fox lair"] = "Felsläuferfuchs Höhle"
+	L["Cove Gull cave"] = "Bucht Möwenhöhle"
 	L["Long-Forgotten Hippogryph"] = "Lang vergessener Hippogryph"
 	L["Grey Shoals"] = "Die Grauen Untiefen"
-	L["Cave Entrance"] = "Höhle Eingang"
 	L["Nor'Danil Wellspring burrow"] = "Der Quelle von Nor'danil-Bau"
-	L["* Concealed entrance *"] = "* Verdeckter eingang *"
 	L["Prison of the Demon Huntress"] = "Gefängnis der Dämonenjägerin"
 	L["Llothien Grizzly cave"] = "Die Höhle der Llothiengrizzly"
 	L["Runas' Hovel"] = "Hövel von Runas"
@@ -376,15 +383,12 @@ if ns.locale == "deDE" then
 	L["West Entrance"] = "Eingang West"
 	L["North Entrance"] = "Eingang Nord"
 	L["South Entrance"] = "Eingang Süd"
-	L["Azurewing Repose"] = "Azurschwingenrast"
 	L["Salteye murloc cave"] = "Die Höhle der Salzaugen-Murloc"
 	L["Malignant stalker cave"] = "Die Höhle der Heimtückischer Pirscher"
 	L["Shipwreck Arena cave"] = "Höhle an der Schiffbrucharena"
 	L["Lair of the Deposed"] = "Versteck der Entthronte"
 	L["Jilted Former Lover"] = "Höhle des Verschmähter Liebhaber"
 	L["South-East Entrance"] = "Eingang Süd-Ost"
-	L["Cliffdweller Fox lair"] = "Felsläuferfuchs Höhle"
-	L["Cove Gull cave"] = "Bucht Möwenhöhle"
 	L["El'dranil Peak"] = "El'dranil-Gipfel"
 	L["Gangamesh's Den"] = "Höhle von Gangamesh"
 	L["Withered J'im's cave"] = "Höhle von Verdorrter J'im"
@@ -404,21 +408,25 @@ if ns.locale == "deDE" then
 	L["Eksis' Lair"] = "Eksis Höhle"
 	L["Olivian Veil"] = "Olivanhöhen"
 	L["Kira Iresoul's cave"] = "Höhle von Kira Zornseele"
-	L["Cave of Queen Kraklaa"] = "Die Höhle von Königin Kraklaa"
 	L["Submerged"] = "Untergetaucht"
 	L["Gloombound Barrow"] = "Finsterbundgrabhügel"
 	L["Felblaze Ingress"] = "Der Teufelsfeuervorstoß"
 	L["Ephemeral Crystal"] = "Flüchtiger Kristall"
 	L["Unknown"] = "Unbekannt"
-	L["AddOn Description"] = "Hilft Ihnen, den " ..ns.colour.highlight
-		.."Lang vergessener Hippogryph\124r zu erhalten"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["* Concealed entrance *"] = "* Entrada oculta *"
+	L["AddOn Description"] = "Te ayuda a obtener el " ..ns.colour.highlight
+		.."Hipogrifo olvidado hace tiempo"
+	L["Azsuna Map"] = "Mapa de Azsune"
+	L["Azurewing Repose"] = "Reposo Alazur"
+	L["Cave Entrance"] = "Entrada de la cueva"
+	L["Cave of Queen Kraklaa"] = "La cueva de la Reina Kraklaa"
+	L["Cliffdweller Fox lair"] = "Guarida del Zorro habitarrisco"
+	L["Cove Gull cave"] = "Cueva de la Gaviota de Cala"
 	L["Long-Forgotten Hippogryph"] = "Hipogrifo olvidado hace tiempo"
 	L["Grey Shoals"] = "Marisma Gris"
-	L["Cave Entrance"] = "Entrada de la cueva"
 	L["Nor'Danil Wellspring burrow"] = "Madriguera del Manantial de Nor'danil"
-	L["* Concealed entrance *"] = "* Entrada oculta *"
 	L["Prison of the Demon Huntress"] = "Prisión de la Cazadora de demonios"
 	L["Llothien Grizzly cave"] = "Cueva del Oso pardo de Llothien"
 	L["Tunnel"] = "Túnel"
@@ -430,15 +438,12 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["West Entrance"] = "Entrada Oeste"
 	L["North Entrance"] = "Entrada Norte"
 	L["South Entrance"] = "Entrada Sur"
-	L["Azurewing Repose"] = "Reposo Alazur"
 	L["Salteye murloc cave"] = "La cueva del múrloc de ojosal"
 	L["Malignant stalker cave"] = "La cueva del acechador maligno"
 	L["Shipwreck Arena cave"] = "La cueva del Arena del Naufragio"
 	L["Lair of the Deposed"] = "Guarida de los Derrocado"
 	L["Jilted Former Lover"] = "Cueva del Antiguo Amante Rechazado"
 	L["South-East Entrance"] = "Entrada Sureste"	
-	L["Cliffdweller Fox lair"] = "Guarida del Zorro habitarrisco"
-	L["Cove Gull cave"] = "Cueva de la Gaviota de Cala"
 	L["El'dranil Peak"] = "Pico del El'dranil"
 	L["Gangamesh's Den"] = "Guarida de Gangamesh"
 	L["Withered J'im's cave"] = "Cueva de J'im Marchito"
@@ -458,21 +463,25 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Eksis' Lair"] = "Guarida del Eksis"
 	L["Olivian Veil"] = "Velo Oliváceo"
 	L["Kira Iresoul's cave"] = "Cueva de Kira Almaíra"
-	L["Cave of Queen Kraklaa"] = "La cueva de la Reina Kraklaa"
 	L["Submerged"] = "Sumergida"
 	L["Gloombound Barrow"] = "Túmulo de la Penumbra"
 	L["Felblaze Ingress"] = "Acceso Llamarada Vil"
 	L["Ephemeral Crystal"] = "Cristal efímero"
 	L["Unknown"] = "Desconocido"
-	L["AddOn Description"] = "Te ayuda a obtener el " ..ns.colour.highlight
-		.."Hipogrifo olvidado hace tiempo"
 
 elseif ns.locale == "frFR" then
+	L["* Concealed entrance *"] = "* Entrée cachée *"
+	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight
+		.."l'hippogriffe oublié depuis longtemps"
+	L["Azsuna Map"] = "Azsuna: carte"
+	L["Azurewing Repose"] = "Repos Aile-d’Azur"
+	L["Cave Entrance"] = "Entrée de la grotte"
+	L["Cave of Queen Kraklaa"] = "La grotte de la Reine Kraklaa"
+	L["Cliffdweller Fox lair"] = "Repaire de Renard hante-falaise"
+	L["Cove Gull cave"] = "Grotte de la Goéland de la Crique"
 	L["Long-Forgotten Hippogryph"] = "Hippogriffe oublié depuis longtemps"
 	L["Grey Shoals"] = "Gris-Fonds"
-	L["Cave Entrance"] = "Entrée de la grotte"
 	L["Nor'Danil Wellspring burrow"] = "Terrier de Source de Nor'danil"
-	L["* Concealed entrance *"] = "* Entrée cachée *"
 	L["Prison of the Demon Huntress"] = "Prison de la Chasseuse de Démons"
 	L["Llothien Grizzly cave"] = "Grotte de Grizzly de Llothien"
 	L["Runas' Hovel"] = "La Masure de Runas"
@@ -483,15 +492,12 @@ elseif ns.locale == "frFR" then
 	L["West Entrance"] = "Entrée Ouest"
 	L["North Entrance"] = "Entrée Nord"
 	L["South Entrance"] = "Entrée Sud"
-	L["Azurewing Repose"] = "Repos Aile-d’Azur"
 	L["Salteye murloc cave"] = "La grotte de sel-œil Murloc"
 	L["Malignant stalker cave"] = "La grotte de  traqueur malveillant"
 	L["Shipwreck Arena cave"] = "La grotte du l'arène de l'Épave"
 	L["Lair of the Deposed"] = "Repaire des Détrôné"
 	L["Jilted Former Lover"] = "Grotte de l'Ancien Amoureux Éconduit"
 	L["South-East Entrance"] = "Entrée Sud-Est"	
-	L["Cliffdweller Fox lair"] = "Repaire de Renard hante-falaise"
-	L["Cove Gull cave"] = "Grotte de la Goéland de la Crique"
 	L["El'dranil Peak"] = "Pic du El'dranil"
 	L["Gangamesh's Den"] = "Repaire de Gangamesh"
 	L["Withered J'im's cave"] = "Grotte de J'im le Flétri"
@@ -511,21 +517,25 @@ elseif ns.locale == "frFR" then
 	L["Eksis' Lair"] = "Repaire de Eksis"
 	L["Olivian Veil"] = "Voile Olivine"
 	L["Kira Iresoul's cave"] = "Grotte de Kira Irâme"
-	L["Cave of Queen Kraklaa"] = "La grotte de la Reine Kraklaa"
 	L["Submerged"] = "Submergé"
 	L["Gloombound Barrow"] = "Le Tertre Sombrelié"
 	L["Felblaze Ingress"] = "La Gueule du Brasier infernal"
 	L["Ephemeral Crystal"] = "Cristal éphémère"
 	L["Unknown"] = "Inconnu"
-	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight
-		.."l'hippogriffe oublié depuis longtemps"
 
 elseif ns.locale == "itIT" then
+	L["* Concealed entrance *"] = "* Ingresso nascosto *"
+	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight
+		.."l'ippogrifo del Passato"
+	L["Azsuna Map"] = "Mappa di Azsuna"
+	L["Azurewing Repose"] = "Riposo degli Alazzurra"
+	L["Cave Entrance"] = "Entrata della grotta"
+	L["Cave of Queen Kraklaa"] = "La grotta della Regina Kraklaa"
+	L["Cliffdweller Fox lair"] = "L'antro della Volpe che Abita-scogliere"
+	L["Cove Gull cave"] = "Grotta del Gabbiano della Cala"
 	L["Long-Forgotten Hippogryph"] = "Ippogrifo del Passato"
 	L["Grey Shoals"] = "Scogli Grigi"
-	L["Cave Entrance"] = "Entrata della grotta"
 	L["Nor'Danil Wellspring burrow"] = "Fonte di Nor'danil tana"
-	L["* Concealed entrance *"] = "* Ingresso nascosto *"
 	L["Prison of the Demon Huntress"] = "Prigione della Cacciatrice di Demoni"
 	L["Llothien Grizzly cave"] = "Grotta dell'Grizzly di Llothien"
 	L["Tunnel"] = "Fagliavuota"
@@ -537,15 +547,12 @@ elseif ns.locale == "itIT" then
 	L["West Entrance"] = "Ingresso Ovest"
 	L["North Entrance"] = "Ingresso Nord"
 	L["South Entrance"] = "Ingresso Sud"
-	L["Azurewing Repose"] = "Riposo degli Alazzurra"
 	L["Salteye murloc cave"] = "Grotta di murloc occhio-salino"
 	L["Malignant stalker cave"] = "Grotta di Inseguitore Maligno"
 	L["Shipwreck Arena cave"] = "La grotta dell'Arena del naufragio"
 	L["Lair of the Deposed"] = "Tana dei Deposto"
 	L["Jilted Former Lover"] = "Grotta dell'Ex Amante Respinto"
 	L["South-East Entrance"] = "Ingresso Sud-Est"	
-	L["Cliffdweller Fox lair"] = "L'antro della Volpe che Abita-scogliere"
-	L["Cove Gull cave"] = "Grotta del Gabbiano della Cala"
 	L["El'dranil Peak"] = "Cima del El'dranil"
 	L["Gangamesh's Den"] = "La tana di Gangamesh"
 	L["Withered J'im's cave"] = "Grotta del J'im l'Avvizzito"
@@ -565,21 +572,24 @@ elseif ns.locale == "itIT" then
 	L["Eksis' Lair"] = "L'antro di Eksis"
 	L["Olivian Veil"] = "Velo Olivastro"
 	L["Kira Iresoul's cave"] = "Grotta del Kira Iranima"
-	L["Cave of Queen Kraklaa"] = "La grotta della Regina Kraklaa"
 	L["Submerged"] = "Sommersa"
 	L["Gloombound Barrow"] = "Riparo Buiopesto"
 	L["Felblaze Ingress"] = "Soglia della Vilfiamma"
 	L["Ephemeral Crystal"] = "Cristallo Effimero"
 	L["Unknown"] = "Sconosciuto"
-	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight
-		.."l'ippogrifo del Passato"
 
 elseif ns.locale == "koKR" then
+	L["* Concealed entrance *"] = "* 숨겨진 입구 *"
+	L["AddOn Description"] = ns.colour.highlight .."오랫동안 잊혀진 히포그리프\124r 를 얻는 데 도움이됩니다."
+	L["Azsuna Map"] = "아즈스나 지도"
+	L["Azurewing Repose"] = "하늘빛나래 휴식"
+	L["Cave Entrance"] = "동굴 입구"
+	L["Cave of Queen Kraklaa"] = "여왕 크라클라 여왕의 동굴"
+	L["Cliffdweller Fox lair"] = "절벽살이 여우 소굴"
+	L["Cove Gull cave"] = "해안 갈매기 동굴"
 	L["Long-Forgotten Hippogryph"] = "기억 저편의 히포그리프"
 	L["Grey Shoals"] = "잿빛 모래톱"
-	L["Cave Entrance"] = "동굴 입구"
 	L["Nor'Danil Wellspring burrow"] = "노르다닐 수원지에지의 굴"
-	L["* Concealed entrance *"] = "* 숨겨진 입구 *"
 	L["Prison of the Demon Huntress"] = "악마 사냥꾼의 감옥"
 	L["Llothien Grizzly cave"] = "로시엔 곰 동굴"
 	L["Tunnel"] = "터널"
@@ -591,15 +601,12 @@ elseif ns.locale == "koKR" then
 	L["West Entrance"] = "서쪽 입구"
 	L["North Entrance"] = "북쪽 입구"
 	L["South Entrance"] = "남쪽 입구"
-	L["Azurewing Repose"] = "하늘빛나래 휴식"
 	L["Salteye murloc cave"] = "소금눈 멀록 동굴"
 	L["Malignant stalker cave"] = "악성 추적자 동굴"
 	L["Shipwreck Arena cave"] = "난파선 투기장 동굴"
 	L["Lair of the Deposed"] = "퇴위된 소굴"
 	L["Jilted Former Lover"] = "버림받은 옛 연인 동굴"
 	L["South-East Entrance"] = "남동쪽 입구"	
-	L["Cliffdweller Fox lair"] = "절벽살이 여우 소굴"
-	L["Cove Gull cave"] = "해안 갈매기 동굴"
 	L["El'dranil Peak"] = "엘드라닐 산봉우리"
 	L["Gangamesh's Den"] = "강가메시의 소굴"
 	L["Withered J'im's cave"] = "메마른 짐 동굴"
@@ -619,20 +626,25 @@ elseif ns.locale == "koKR" then
 	L["Eksis' Lair"] = "에크시스 소굴"
 	L["Olivian Veil"] = "올리비안 장막"
 	L["Kira Iresoul's cave"] = "키라 아이어소울 동굴"
-	L["Cave of Queen Kraklaa"] = "여왕 크라클라 여왕의 동굴"
 	L["Submerged"] = "잠수함"
 	L["Gloombound Barrow"] = "어스름살이 지하굴"
 	L["Felblaze Ingress"] = "지옥화염 침투지"
 	L["Ephemeral Crystal"] = "찰나의 수정"
 	L["Unknown"] = "알 수 없음"
-	L["AddOn Description"] = ns.colour.highlight .."오랫동안 잊혀진 히포그리프\124r 를 얻는 데 도움이됩니다."
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["* Concealed entrance *"] = "* Entrada Oculta *"
+	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight
+		.."Hipogrifo Esquecido"
+	L["Azsuna Map"] = "Mapa Azsuna"
+	L["Azurewing Repose"] = "Repouso Lazulasa"
+	L["Cave Entrance"] = "Entrada da caverna"
+	L["Cave of Queen Kraklaa"] = "A caverna da Rainha Kraklaa"
+	L["Cliffdweller Fox lair"] = "Covil de Raposa do Penhasco"
+	L["Cove Gull cave"] = "Caverna do Gaivota-da-angra"
 	L["Long-Forgotten Hippogryph"] = "Hipogrifo Esquecido"
 	L["Grey Shoals"] = "Baixios Cinzentos"
-	L["Cave Entrance"] = "Entrada da caverna"
 	L["Nor'Danil Wellspring burrow"] = "Toca de Nascente Lor'Danel"
-	L["* Concealed entrance *"] = "* Entrada Oculta *"
 	L["Prison of the Demon Huntress"] = "Prisão da Caçadora de Demônios"
 	L["Llothien Grizzly cave"] = "Caverna do Urso de Llothien"
 	L["Tunnel"] = "Túnel"
@@ -644,15 +656,12 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["West Entrance"] = "Entrada Oeste"
 	L["North Entrance"] = "Entrada Norte"
 	L["South Entrance"] = "Entrada sul"
-	L["Azurewing Repose"] = "Repouso Lazulasa"
 	L["Salteye murloc cave"] = "Caverna Olho-de-Sal murloc"
 	L["Malignant stalker cave"] = "Caverna Espreitador Maligno"
 	L["Shipwreck Arena cave"] = "A caverna na Arena Naufragada"
 	L["Lair of the Deposed"] = "Covil dos Deposto"
 	L["Jilted Former Lover"] = "Caverna do Antigo Amante Abandonado"
 	L["South-East Entrance"] = "Entrada Sudeste"	
-	L["Cliffdweller Fox lair"] = "Covil de Raposa do Penhasco"
-	L["Cove Gull cave"] = "Caverna do Gaivota-da-angra"
 	L["El'dranil Peak"] = "Pico do El'dranil"
 	L["Gangamesh's Den"] = "Covil de Gangamesh"
 	L["Withered J'im's cave"] = "Caverna de J'im Fenecido"
@@ -672,21 +681,25 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Eksis' Lair"] = "Covil de Eksis"
 	L["Olivian Veil"] = "Véu Oliviano"
 	L["Kira Iresoul's cave"] = "Caverna de Kira Iralma"
-	L["Cave of Queen Kraklaa"] = "A caverna da Rainha Kraklaa"
 	L["Submerged"] = "Submersa"
 	L["Gloombound Barrow"] = "Entrada da Trevosa"
 	L["Felblaze Ingress"] = "Passagem Brasavil"
 	L["Ephemeral Crystal"] = "Cristal Efêmero"
 	L["Unknown"] = "Desconhecido"
-	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight
-		.."Hipogrifo Esquecido"
 
 elseif ns.locale == "ruRU" then
+	L["* Concealed entrance *"] = "* Скрытый вход *"
+	L["AddOn Description"] = "Помогает получить " ..ns.colour.highlight
+		.."Давно брошенный Гиппогрифф"
+	L["Azsuna Map"] = "Карта Азсунаа"
+	L["Azurewing Repose"] = "Покоя Лазурного Крыла"
+	L["Cave Entrance"] = "Вход в пещеру"
+	L["Cave of Queen Kraklaa"] = "Пещера Королева Краклаа"
+	L["Cliffdweller Fox lair"] = "Логово Скальная лиса"
+	L["Cove Gull cave"] = "Чайка бухты Пещера"
 	L["Long-Forgotten Hippogryph"] = "Давно брошенный гиппогриф"
 	L["Grey Shoals"] = "Серые Мели"
-	L["Cave Entrance"] = "Вход в пещеру"
 	L["Nor'Danil Wellspring burrow"] = "Нора у Pодника Нор'Данил"
-	L["* Concealed entrance *"] = "* Скрытый вход *"
 	L["Prison of the Demon Huntress"] = "Тюрьма Охотницы на Демонов"
 	L["Llothien Grizzly cave"] = "Ллотиенский Гризли Пещера"
 	L["Tunnel"] = "Туннель"
@@ -698,15 +711,12 @@ elseif ns.locale == "ruRU" then
 	L["West Entrance"] = "Западный Вход"
 	L["North Entrance"] = "Северный Вход"
 	L["South Entrance"] = "Южный Вход"
-	L["Azurewing Repose"] = "Покоя Лазурного Крыла"
 	L["Salteye murloc cave"] = "Пещера мурлок соленого глаза"
 	L["Malignant stalker cave"] = "Пещера Злонравный преследователь"
 	L["Shipwreck Arena cave"] = "Пещера в арена кораблекрушеня"
 	L["Lair of the Deposed"] = "Логово Низложенный"
 	L["Jilted Former Lover"] = "Пещера Брошенная бывшая Возлюбленная"
 	L["South-East Entrance"] = "Юго-восточный Вход"	
-	L["Cliffdweller Fox lair"] = "Логово Скальная лиса"
-	L["Cove Gull cave"] = "Чайка бухты Пещера"
 	L["El'dranil Peak"] = "Эль'дранилский Вершина"
 	L["Gangamesh's Den"] = "Логово Гангамеш"
 	L["Withered J'im's cave"] = "Пещера Иссохший Дж'им"
@@ -726,21 +736,24 @@ elseif ns.locale == "ruRU" then
 	L["Eksis' Lair"] = "Логово Эксис"
 	L["Olivian Veil"] = "Оливковом Покрове"
 	L["Kira Iresoul's cave"] = "Пещера Кира Злобная Душа"
-	L["Cave of Queen Kraklaa"] = "Пещера Королева Краклаа"
 	L["Submerged"] = "Погруженный"
 	L["Gloombound Barrow"] = "Пещере Темного Ритуала"
 	L["Felblaze Ingress"] = "Врата Пламени Скверны"
 	L["Ephemeral Crystal"] = "Эфемерный Кристалл"
 	L["Unknown"] = "Неизвестно"
-	L["AddOn Description"] = "Помогает получить " ..ns.colour.highlight
-		.."Давно брошенный Гиппогрифф"
 
 elseif ns.locale == "zhCN" then
+	L["* Concealed entrance *"] = "* 隐藏入口 *"
+	L["AddOn Description"] = "帮助您获得" ..ns.colour.highlight .."失落已久的角鹰兽"
+	L["Azsuna Map"] = "阿苏纳地图"
+	L["Azurewing Repose"] = "蓝翼栖地"
+	L["Cave Entrance"] = "洞入口"
+	L["Cave of Queen Kraklaa"] = "克拉克拉女王的洞穴"
+	L["Cliffdweller Fox lair"] = "峭壁狐的巢穴"
+	L["Cove Gull cave"] = "海湾鸥洞穴"
 	L["Long-Forgotten Hippogryph"] = "失落已久的角鹰兽"
 	L["Grey Shoals"] = "灰色浅滩"
-	L["Cave Entrance"] = "洞入口"
 	L["Nor'Danil Wellspring burrow"] = "诺达尼尔圣泉洞穴"
-	L["* Concealed entrance *"] = "* 隐藏入口 *"
 	L["Prison of the Demon Huntress"] = "恶魔猎手的监狱"
 	L["Llothien Grizzly cave"] = "洛希恩灰熊洞穴"
 	L["Tunnel"] = "隧道"
@@ -752,15 +765,12 @@ elseif ns.locale == "zhCN" then
 	L["West Entrance"] = "西入口"
 	L["North Entrance"] = "北入口"
 	L["South Entrance"] = "南入口"
-	L["Azurewing Repose"] = "蓝翼栖地"
 	L["Salteye murloc cave"] = "盐眼鱼人洞穴"
 	L["Malignant stalker cave"] = "恶毒漫步者洞穴"
 	L["Shipwreck Arena cave"] = "沉船竞技场中的洞穴。"
 	L["Lair of the Deposed"] = "被废翻者的巢穴。"
 	L["Jilted Former Lover"] = "被抛弃的前情人的洞穴"
 	L["South-East Entrance"] = "东南入口"	
-	L["Cliffdweller Fox lair"] = "峭壁狐的巢穴"
-	L["Cove Gull cave"] = "海湾鸥洞穴"
 	L["El'dranil Peak"] = "艾达尼尔的巅峰"
 	L["Gangamesh's Den"] = "贡戈麦什的巢穴"
 	L["Withered J'im's cave"] = "凋零者吉姆洞穴"
@@ -780,20 +790,24 @@ elseif ns.locale == "zhCN" then
 	L["Eksis' Lair"] = "克西斯巢穴"
 	L["Olivian Veil"] = "奥利维安影障"
 	L["Kira Iresoul's cave"] = "奇拉·艾索尔洞穴"
-	L["Cave of Queen Kraklaa"] = "克拉克拉女王的洞穴"
 	L["Submerged"] = "湮"
 	L["Gloombound Barrow"] = "暗缚兽穴"
 	L["Felblaze Ingress"] = "邪焰隘口"
 	L["Ephemeral Crystal"] = "短命的水晶"
 	L["Unknown"] = "未知"
-	L["AddOn Description"] = "帮助您获得" ..ns.colour.highlight .."失落已久的角鹰兽"
 
 elseif ns.locale == "zhTW" then
+	L["* Concealed entrance *"] = "* 隱藏入口 *"
+	L["AddOn Description"] = "幫助您獲得" ..ns.colour.highlight .."失落已久的角鷹獸"
+	L["Azsuna Map"] = "阿蘇納地圖"
+	L["Azurewing Repose"] = "藍翼棲地"
+	L["Cave Entrance"] = "洞入口"
+	L["Cave of Queen Kraklaa"] = "克拉克拉女王的洞穴"
+	L["Cliffdweller Fox lair"] = "峭壁狐的巢穴"
+	L["Cove Gull cave"] = "海灣鷗洞穴"
 	L["Long-Forgotten Hippogryph"] = "失落已久的角鷹獸"
 	L["Grey Shoals"] = "灰色淺灘"
-	L["Cave Entrance"] = "洞入口"
 	L["Nor'Danil Wellspring burrow"] = "諾達尼爾聖泉洞穴"
-	L["* Concealed entrance *"] = "* 隱藏入口 *"
 	L["Prison of the Demon Huntress"] = "惡魔獵手的監獄"
 	L["Llothien Grizzly cave"] = "洛希恩灰熊洞穴"
 	L["Tunnel"] = "隧道"
@@ -805,15 +819,12 @@ elseif ns.locale == "zhTW" then
 	L["West Entrance"] = "西入口"
 	L["North Entrance"] = "北入口"
 	L["South Entrance"] = "南入口"
-	L["Azurewing Repose"] = "藍翼棲地"
 	L["Salteye murloc cave"] = "鹽眼魚人洞穴"
 	L["Malignant stalker cave"] = "惡毒漫步者洞穴"
 	L["Shipwreck Arena cave"] = "沉船競技場中的洞穴。"
 	L["Lair of the Deposed"] = "被廢翻者的巢穴。"
 	L["Jilted Former Lover"] = "被拋棄的前情人的洞穴"
 	L["South-East Entrance"] = "東南入口"	
-	L["Cliffdweller Fox lair"] = "峭壁狐的巢穴"
-	L["Cove Gull cave"] = "海灣鷗洞穴"
 	L["El'dranil Peak"] = "艾達尼爾的巔峰"
 	L["Gangamesh's Den"] = "貢戈麥什的巢穴"
 	L["Withered J'im's cave"] = "凋零者吉姆洞穴"
@@ -833,20 +844,19 @@ elseif ns.locale == "zhTW" then
 	L["Eksis' Lair"] = "克西斯巢穴"
 	L["Olivian Veil"] = "奧利維安影障"
 	L["Kira Iresoul's cave"] = "奇拉·艾索爾洞穴"
-	L["Cave of Queen Kraklaa"] = "克拉克拉女王的洞穴"
 	L["Submerged"] = "湮"
 	L["Gloombound Barrow"] = "暗縛獸穴"
 	L["Felblaze Ingress"] = "邪焰隘口"
 	L["Ephemeral Crystal"] = "短命的水晶"
 	L["Unknown"] = "未知"
-	L["AddOn Description"] = "幫助您獲得" ..ns.colour.highlight .."失落已久的角鷹獸"
 	
 else
+	L["AddOn Description"] = "Helps you to obtain the " ..ns.colour.highlight .."Long-Forgotten Hippogryph"
+	L["Azsuna Map"] = "Azsuna Map"
 	L["Shipwreck Arena cave"] = "Cave at the Shipwreck Arena"
 	if ns.locale == "enUS" then
 		L["Grey Shoals"] = "Gray Shoals"
 	end
-	L["AddOn Description"] = "Helps you to obtain the " ..ns.colour.highlight .."Long-Forgotten Hippogryph"
 end
 
 function pluginHandler:OnEnter(mapFile, coord)
@@ -1074,9 +1084,30 @@ ns.options = {
 }
 
 function HandyNotes_LongForgottenHippogryph_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LongForgottenHippogryph" )
- end
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( ns.azsuna )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Long-Forgotten Hippogryph"] ..": " ..ns.colour.plaintext
+					.."Not possible at this time. Try later" )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LongForgottenHippogryph" )
+	end
+end
+ 
+function HandyNotes_LongForgottenHippogryph_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["Long-Forgotten Hippogryph"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Azsuna Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_LongForgottenHippogryph_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

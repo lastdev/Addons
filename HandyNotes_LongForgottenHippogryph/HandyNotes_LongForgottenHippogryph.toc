@@ -1,5 +1,5 @@
 ## Interface: 100200
-## Version: 1.20
+## Version: 1.21
 ## Author: Taraezor
 ## IconTexture: Interface\AddOns\HandyNotes_LongForgottenHippogryph\LFH256
 ## Title: Long-Forgotten Hippogryph
@@ -27,12 +27,11 @@
 ## Notes-ruRU: Помогает получить |cFFE641EFДавно брошенный Гиппогрифф|r
 ## Notes-zhCN: 帮助您获得|cFFE641EF失落已久的角鹰兽|r
 ## Notes-zhTW: 幫助您獲得|cFFE641EF失落已久的角鷹獸|r
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 493985
-## X-WoWI-ID: 26086
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_LongForgottenHippogryphDB
 ## AddonCompartmentFunc: HandyNotes_LongForgottenHippogryph_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_LongForgottenHippogryph_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_LongForgottenHippogryph_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

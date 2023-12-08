@@ -8,6 +8,7 @@ local _, this = ...
 local Player = this.Player
 local points = {}
 local maps = this.maps
+local t = this.t
 
 -- Alliance portals.
 local Home = {
@@ -28,17 +29,11 @@ points['valdrakken'] = {
     icon = 'warlockportal-yellow-32x32',
     portal = Home['id'],
   },
-  [53505510] = {
+  [53605540] = {
+    name = t['timeways'],
+    note = t['timeways_note'],
     icon = 'warlockportal-yellow-32x32',
-    portal = maps['nazmir'],
-  },
-  [54105460] = {
-    icon = 'warlockportal-yellow-32x32',
-    portal = maps['uldum_bfa'],
-  },
-  [54005570] = {
-    icon = 'warlockportal-yellow-32x32',
-    portal = maps['tiragarde_sound'],
+    portal = maps['timeways'],
   },
 }
 

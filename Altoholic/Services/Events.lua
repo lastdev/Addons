@@ -383,7 +383,7 @@ addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.Events
 					
 					-- Other timers (like mysterious egg, etc..)
 					local num = DataStore:GetNumItemCooldowns(character) or 0
-					for i = 1, num do
+					for i = num, 1, -1 do
 						if DataStore:HasItemCooldownExpired(character, i) then
 							DataStore:DeleteItemCooldown(character, i)
 						end
@@ -391,7 +391,7 @@ addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.Events
 					
 					-- Calendar events 
 					num = DataStore:GetNumCalendarEvents(character) or 0 
-					for i = 1, num do
+					for i = num, 1, -1 do
 						if DataStore:HasCalendarEventExpired(character, i) then
 							DataStore:DeleteCalendarEvent(character, i)
 						end

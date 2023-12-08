@@ -25,11 +25,12 @@ L.COPY_URL_DIALOG					= "URL 복사"
 L.COPY_WA_DIALOG						= "WA 키 복사"
 
 --Post Patch 7.1
-L.NO_RANGE					= "거리 레이더를 인스턴스 던전에서 사용할 수 없습니다. 예전의 텍스트 방식 거리창으로 대체됩니다."
+L.TEXT_ONLY_RANGE					= "이 지역에서는 API 제한으로 거리 창을 텍스트 방식으로만 사용할 수 있습니다."
+L.NO_RANGE					= "이 지역에선 API 제한으로 거리 창을 사용할 수 없습니다."
 L.NO_ARROW					= "화살표 기능을 인스턴스 던전에서 사용할 수 없습니다"
 L.NO_HUD						= "HUD 기능을 인스턴스 던전에서 사용할 수 없습니다"
 
-L.DYNAMIC_DIFFICULTY_CLUMP	= "현재 공격대 규모에 맞는 필요한 플레이어 숫자 관련 정보가 부족하여" .. L.DBM .. "이 이 전투에서 동적 거리창을 비활성화 했습니다."
+L.DYNAMIC_DIFFICULTY_CLUMP	= "현재 공격대 규모에 맞는 필요한 플레이어 숫자 관련 정보가 부족하여" .. L.DBM .. "이 이 전투에서 동적 거리 창을 비활성화 했습니다."
 L.DYNAMIC_ADD_COUNT			= "현재 공격대 규모에 맞는 쫄 등장 정보가 부족하여" .. L.DBM .. "이 이 전투에서 쫄 마릿수 정보를 비활성화 했습니다."
 L.DYNAMIC_MULTIPLE			= "현재 공격대 규모에 맞는 보스 기술 작동 원리 정보가 부족하여" .. L.DBM .. "이 이 전투에서 다수의 기능을 비활성화 했습니다."
 
@@ -479,9 +480,10 @@ L.AUTO_TIMER_OPTIONS.achievement		= "%s 업적의 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.stage		= "다음 단계 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.stagecount			= "다음 단계 타이머 바 보기 (단계 번호 포함)"
 L.AUTO_TIMER_OPTIONS.stagecountcycle		= "다음 단계 타이머 바 보기 (단계 번호와 반복 횟수 포함)"
+L.AUTO_TIMER_OPTIONS.stagecontext		= "다음 $spell:%s 단계 타이머 바 보기"
+L.AUTO_TIMER_OPTIONS.stagecontextcount		= "다음 $spell:%s 단계 타이머 바 보기 (반복 횟수 포함)"
 L.AUTO_TIMER_OPTIONS.intermission		= "다음 사잇 단계 타이머 바 보기"
-L.AUTO_TIMER_OPTIONS.intermissioncount		= "다음 사잇 단계 타이머 바 보기 (횟수 포함)"
-
+L.AUTO_TIMER_OPTIONS.intermissioncount		= "다음 사잇 단계 타이머 바 보기 (반복 횟수 포함)"
 L.AUTO_TIMER_OPTIONS.adds		= "쫄 등장 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.addscustom		= "쫄 등장 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.roleplay		= "NPC 대사 지속 시간 타이머 바 보기"
@@ -530,7 +532,7 @@ L.AUTO_INFO_FRAME_OPTION_TEXT2		= "전투 전반에 관한 사항을 정보 창�
 L.AUTO_INFO_FRAME_OPTION_TEXT3		= "$spell:%s|1을;를; 정보 창에 표시 (%%s의 제한 수치 이상인 경우)"
 L.AUTO_READY_CHECK_OPTION_TEXT		= "보스가 풀링되면 전투 준비 효과음 듣기 (보스를 대상으로 잡지 않아도 재생)"
 L.AUTO_SPEEDCLEAR_OPTION_TEXT		= "%s의 완료 신기록 타이머 표시"
-L.AUTO_PRIVATEAURA_OPTION_TEXT		= "이 전투에서 설정한 $spell:%s 개인 오라에 DBM 효과음 경고를 재생합니다."
+L.AUTO_PRIVATEAURA_OPTION_TEXT		= "이 전투에서 설정한 $spell:%s 비공개 오라에 DBM 효과음 경고를 재생합니다."
 
 -- New special warnings
 L.MOVE_WARNING_BAR				= "알림 이동"

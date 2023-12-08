@@ -3,7 +3,7 @@
 
                                           Dark Soil Tillers
 
-                                     v3.37 - 8th November 2023
+                                      v3.42 - 3rd December 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -694,47 +694,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 		if pin.tip then
 			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 		end
-	elseif ( pin.pinType == "B" ) then
-		if pin.title then
-			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
-			if pin.item then
-				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.item ] )
-			end
-		else
-			local itemName = GetItemNameByID( pin.item ) or "Staff of the Hidden Master"
-			GameTooltip:SetText( ns.colour.prefix ..L[ itemName ] )
-		end
-		if pin.quest then
-			completed = IsQuestFlaggedCompleted( pin.quest )
-			if ( completed == true ) then
-				GameTooltip:AddLine( ns.colour.highlight
-						.."\nYou won't see this as you've already\n"
-						.."clicked on it. It is a one-time reward." )
-			else
-				GameTooltip:AddLine( ns.colour.highlight
-						.."\nYou may click on this one time only.\n"
-						.."You have not yet collected this reward." )
-				if ( pin.quest==31406 ) or ( pin.quest==31867 ) then
-				elseif ( pin.quest==31407 ) then -- "Staff of the Hidden Master"
-					GameTooltip:AddLine( ns.colour.highlight
-						.."It will spawn from time to time." )
-				else
-					GameTooltip:AddLine( ns.colour.highlight
-						.."The NPC spawns from time to time." )
-				end
-			end
-			if pin.tip then
-				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
-			end
-		end
-	elseif ( pin.pinType == "P" ) then
-		if pin.title then
-			GameTooltip:SetText( ns.colour.prefix ..L[ pin.title ] )
-		end
-		if pin.tip then
-			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
-		end
-		showCoordinates = false
 	elseif ( pin.pinType == "O" ) then
 		-- Dynamically show the next NPC to visit to continue the chain?
 		-- This will show Farmer Yoon only
@@ -766,10 +725,19 @@ function pluginHandler:OnEnter(mapFile, coord)
 			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
 		end
 		showCoordinates = false
-	else
+	else -- Dark Soil
 		GameTooltip:SetText( ns.colour.prefix ..L[ "Dark Soil" ] )
 		if pin.tip then
-			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+			if type( pin.tip ) == "table" then
+				for i,v in ipairs( pin.tip ) do
+					GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip[i] ] )
+					if i < #pin.tip then
+						GameTooltip:AddLine( "\n" )
+					end
+				end
+			else
+				GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
+			end
 		end
 	end
 

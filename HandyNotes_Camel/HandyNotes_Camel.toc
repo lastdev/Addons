@@ -1,5 +1,5 @@
 ## Interface: 100200
-## Version: 1.00
+## Version: 1.01
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Ability_mount_camel_gray
 ## Title: Mysterious Camel Figurine
@@ -26,12 +26,11 @@
 ## Notes-ruRU: |cFF437C17Помогает вам получить |cFF41A317Странная фигурка верблюда|cFF437C17 в Ульдум
 ## Notes-zhCN: |cFF437C17帮助您获取奥丹姆中的|cFF41A317神秘的骆驼雕像
 ## Notes-zhTW: |cFF437C17幫助您獲取奧丹姆中的|cFF41A317神秘的駱駝雕像
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 
-## X-WoWI-ID: 
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_CamelDB
 ## AddonCompartmentFunc: HandyNotes_Camel_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_Camel_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_Camel_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

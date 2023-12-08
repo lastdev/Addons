@@ -52,10 +52,20 @@ L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para desativar o modo Race World 
 L["DISABLE_RWF_MODE_RELOAD"] = "Você está desabilitando o modo Race World First. Clicar em Confirmar irá recarregar sua interface."
 L["DPS"] = "DPS"
 L["DUNGEON_SHORT_NAME_AA"] = "Academia Algeth'ar"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_AD"] = ""--]] 
 L["DUNGEON_SHORT_NAME_AV"] = "Câmara Lazúli"
 L["DUNGEON_SHORT_NAME_BH"] = "Clareira de Courambaia"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_BRH"] = ""--]] 
 L["DUNGEON_SHORT_NAME_COS"] = "Pátio das Estrelas"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_DHT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_DOS"] = "Outro Lado"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_EB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_FALL"] = ""--]] 
 L["DUNGEON_SHORT_NAME_FH"] = "Angra do Facão"
 L["DUNGEON_SHORT_NAME_GD"] = "Central do Carrilcruel"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Gambito de So'leah"
@@ -70,6 +80,8 @@ L["DUNGEON_SHORT_NAME_NL"] = "Covil de Neltharion"
 L["DUNGEON_SHORT_NAME_NO"] = "Ofensiva Nokhid"
 L["DUNGEON_SHORT_NAME_NW"] = "Chaga"
 L["DUNGEON_SHORT_NAME_PF"] = "Empéstia"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_RISE"] = ""--]] 
 L["DUNGEON_SHORT_NAME_RLP"] = "Poços da Vida Rubi"
 L["DUNGEON_SHORT_NAME_SBG"] = "Sepulcrário da Lua Negra"
 L["DUNGEON_SHORT_NAME_SD"] = "Profundezas"
@@ -77,11 +89,15 @@ L["DUNGEON_SHORT_NAME_SOA"] = "Torres"
 L["DUNGEON_SHORT_NAME_STRT"] = "Ruas das Maravilhas"
 L["DUNGEON_SHORT_NAME_TJS"] = "Templo da Serpente de Jade"
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_TOTT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_ULD"] = "Uldaman"
 L["DUNGEON_SHORT_NAME_UNDR"] = "Terra Podre"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan: Superior"
 L["DUNGEON_SHORT_NAME_VOTW"] = "Câmara das Guardiãs"
 L["DUNGEON_SHORT_NAME_VP"] = "Pináculo do Vórtice"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_WM"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WORK"] = "Gnomecan - Oficina"
 L["DUNGEON_SHORT_NAME_YARD"] = "Gnomecan - Ferro-velho"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar o Quadro de Perfil do Raider.IO Automaticamente."
@@ -120,6 +136,8 @@ L["HIDE_OWN_PROFILE"] = "Ocultar perfil pessoal no Raider.IO."
 L["HIDE_OWN_PROFILE_DESC"] = "Quando definido, isso não mostrará seu próprio perfil Raider.IO na dica (tooltip), mas poderá mostrar outros jogadores, se eles tiverem um."
 L["INVERSE_PROFILE_MODIFIER"] = "Inverter o Modificador da dica (tooltip) do Perfil do Raider.IO"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "Ativar isso inverte o comportamento do modificador da dica (tooltip) do Raider.IO (shift/ctrl/alt): mantenha pressionado para alternar a exibição entre o perfil Pessoal/Líder ou perfil Líder/Pessoal."
+--[[Translation missing --]]
+--[[ L["LOCALE_NAME"] = ""--]] 
 L["LOCKING_PROFILE_FRAME"] = "Raider.IO: Bloqueando o quadro de perfil M+."
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "Melhor pontuação de M+ do Main (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progresso do Main"
@@ -150,6 +168,24 @@ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Tranque o Quadro de Perfil do Raider.IO o
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
 --[[Translation missing --]]
 --[[ L["PVP_DATA_HEADER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_9"] = ""--]] 
 L["RAID_BOSS_ATSC_1"] = "Kazzara, a Forjada no Inferno"
 L["RAID_BOSS_ATSC_2"] = "A Câmara da Amalgamação"
 L["RAID_BOSS_ATSC_3"] = "Os Experimentos Esquecidos"
@@ -266,7 +302,19 @@ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para salvar o log no arquivo de ar
 --[[Translation missing --]]
 --[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_DISABLE_CONFIRM"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_MENU_DOCK"] = ""--]] 
 --[[Translation missing --]]
@@ -293,6 +341,8 @@ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para salvar o log no arquivo de ar
 --[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
 --[[Translation missing --]]

@@ -146,7 +146,11 @@ local setItem = function(info, v)
 	local option = info[#info]
 	local id = GetSpellID(info)
 	if v == "" then
-		OmniCDDB.cooldowns[id][option] = nil
+		if option == "icon" then
+			OmniCDDB.cooldowns[id][option] = OmniCDDB.cooldowns[id].item and GetItemIcon(OmniCDDB.cooldowns[id].item) or select(2, GetSpellTexture(E.iconFix[id] or id))
+		else
+			OmniCDDB.cooldowns[id][option] = nil
+		end
 	else
 		if strmatch(v, "[^%d]+") or strlen(v) > 9 or not C_Item.DoesItemExistByID(v) then
 			E.write(L["Invalid ID"], v)
@@ -357,6 +361,14 @@ local customSpellInfo = {
 	},
 	lb4 = {
 		name = "\n", order = 16, type = "description",
+	},
+	icon = {
+		hidden = isClassCategory,
+		name = L["Icon ID (Optional)"],
+		order = 17,
+		type = "input",
+		get = getItem,
+		set = setItem,
 	},
 }
 

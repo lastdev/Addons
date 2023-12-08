@@ -866,7 +866,10 @@ L['fruitface_note'] = '请求 {npc:209950} {dot:Pink} 帮你获得 {spell:421446
 L['greedy_gessie_note'] = '需要收集 {object:野生青菜}，{object:红玉之鳞甜瓜} 和 {object:橙根}，并将其放置在 {npc:210285} 旁的篮子，以开启战斗。'
 L['nuoberon_note'] = '追逐乌龟，对猴子扔食物，或与梦境野兽战斗来帮助 {npc:209101} 做个有趣的梦！'
 L['reefbreaker_moruud_note'] = '利用附近全部6个 {npc:210089} 来攻击 {npc:209898}。'
+L['splinterlimb_note'] = nil
 L['surging_lasher_note'] = '当这片区域的 {location:翡翠狂欢} 事件激活时，会在此刷新。'
+L['talthonei_ashwisper_note'] = '击杀周围区域的怪物，直到被击杀的怪物说“我会报仇”后稀有出现。'
+L['talthonei_ashwisper_wq_note'] = nil
 
 L['in_a_tree'] = '在树上。'
 L['inside_building'] = '在建筑里面。'
@@ -911,9 +914,9 @@ L['dreamseed_soil_note'] = [[
 {note:奖励列表请查看岛屿北部的 {npc:211265}，她也出售大部分奖励。}
 ]]
 L['dreamseed_cache'] = '梦境之种宝箱'
-
 L['options_icons_dream_of_seeds'] = '{achievement:19013}'
 L['options_icons_dream_of_seeds_desc'] = '显示 {achievement:19013} 成就中 {object:梦境之种壤土} 的位置。'
+L['the_seeds_i_sow_suffix'] = '翡翠奖赏种子已捐献'
 
 L['bloom_man_group_suffix'] = '野性漫溢能量已用次数'
 L['dream_chaser_suffix'] = '迷途之梦已收集'
@@ -954,7 +957,7 @@ L['mbc_vial_location'] = '携带 {item:%d} 到 {location:%s} 的月亮井（{loc
 L['mbc_moonwell_label'] = '月亮井'
 L['mbc_feral_dreamstone_label'] = '野性梦境石'
 
-L['azure_somnowl_note'] = '完成一个德鲁伊专属的简短任务线，最后一步 {quest:78066} 奖励 {item:210645}。'
+L['azure_somnowl_note'] = '完成一个从 {npc:209318} 领取的 {quest:78065} 作为开始的简短任务线，奖励 {item:210645}。'
 
 L['slumbering_somnowl_note_a'] = '对 {location:翡翠梦境} 里各种 {npc:寐枭} 施放 {spell:2637} 然后 {spell:426183}，收集5个 {item:210565}。'
 L['slumbering_somnowl_note_b'] = '从商人处购买一个 {item:4291}。'
@@ -989,8 +992,6 @@ L['options_icons_somnut_desc'] = '显示 {object:眠果} 可能的位置。'
 
 L['improvised_leafbed_note'] = '完成从 {quest:77896} 起始的任务线，从 {npc:210164} 得到奖励 {item:210864}。'
 L['kalandu_note'] = '完成从 {quest:77948} 起始的任务线，从 {npc:210196} 得到奖励 {item:210633}。'
-
-L['renewed_dream'] = '{note:这里不是一个宝箱！}\n{item:201437} 广泛掉落自 {location:翡翠梦境}。\n5个 {item:201437} 可以合成1个 {item:201439}。'
 
 L['ochre_note'] = '和 {npc:209253} 对话开始任务线，{npc:209571} 会布置接下来的任务。'
 L['ochre_note_stage1'] = '{quest:77677}。{note:生长期5天。}'

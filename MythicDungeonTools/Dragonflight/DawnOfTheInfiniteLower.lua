@@ -709,6 +709,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1,
         ["scale"] = 1.4,
       },
+      [12] = {
+        ["x"] = 730.24329490198,
+        ["y"] = -172.50509690137,
+        ["g"] = 12,
+        ["sublevel"] = 1,
+        ["scale"] = 1.4,
+      },
     },
   },
   [10] = {
@@ -811,6 +818,7 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["count"] = 20,
     ["health"] = 2964015,
     ["scale"] = 1,
+    ["stealthDetect"] = true,
     ["displayId"] = 113582,
     ["creatureType"] = "Dragonkin",
     ["level"] = 71,

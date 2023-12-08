@@ -7,7 +7,23 @@ function HealBot_ActionIcons_InitFrames()
     -- Future
 end
 
+function HealBot_ActionIcons_setLuVars(vName, vValue)
+    -- Future
+end
+
+function HealBot_ActionIcons_retLuVars(vName)
+    -- Future
+end
+
+function HealBot_ActionIcons_setBorderHighlightCol()
+    -- Future
+end
+
 function HealBot_ActionIcons_CursorChanged(isDefault, newCursorType)
+    -- Future
+end
+
+function HealBot_ActionIcons_LoadSpec(updateAll)
     -- Future
 end
 

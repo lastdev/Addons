@@ -73,21 +73,21 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20231110040824"),
+	Revision = parseCurseDate("20231203004242"),
 }
 
-local fakeBWVersion, fakeBWHash = 290, "894cc27"
+local fakeBWVersion, fakeBWHash = 303, "479937c"--303.0
 local bwVersionResponseString = "V^%d^%s"
 local PForceDisable
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "10.2.2"
-	DBM.ReleaseRevision = releaseDate(2023, 11, 9) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "10.2.9"
+	DBM.ReleaseRevision = releaseDate(2023, 12, 2) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 	PForceDisable = 8--When this is incremented, trigger force disable regardless of major patch
 elseif isClassic then
-	DBM.DisplayVersion = "1.14.50 alpha"
-	DBM.ReleaseRevision = releaseDate(2023, 10, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
-	PForceDisable = 3--When this is incremented, trigger force disable regardless of major patch
+	DBM.DisplayVersion = "1.15.3 alpha"
+	DBM.ReleaseRevision = releaseDate(2023, 12, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	PForceDisable = 4--When this is incremented, trigger force disable regardless of major patch
 elseif isBCC then
 	DBM.DisplayVersion = "2.6.0 alpha"--When TBC returns (and it will one day). It'll probably be game version 2.6
 	DBM.ReleaseRevision = releaseDate(2023, 10, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
@@ -520,6 +520,7 @@ local bannedMods = { -- a list of "banned" (meaning they are replaced by another
 	"DBM-Sepulcher",--Combined into DBM-Raids-Shadowlands
 
 	"DBM-VaultoftheIncarnates",--Combined into DBM-Raids-Dragonflight
+	"DBM-Aberrus",--Combined into DBM-Raids-Dragonflight
 
 	"DBM-DMF",--Combined into DBM-WorldEvents
 }
@@ -958,20 +959,21 @@ do
 	end
 
 	--Function exclusively used in classic era to make it a little cleaner to mass unifiy modules to auto check spellid or spellName based on game flavor
+	--As of 1.15.0 classic era now has spellids, but want to keep wrapper for now in case they ever revert this or they decide to do classic fresh with no IDs one day
 	function argsMT.__index:IsSpell(...)
-		if isClassic then
-			--ugly ass performance wasting checks that have to first convert Ids to names because #nochanges
-			for _, spellId in ipairs({...}) do
-				local spellName = DBM:GetSpellInfo(spellId)
-				if spellName and spellName == args.spellName then
-					return true
-				end
-			end
-			return false
-		else
+	--	if isClassic then
+	--		--ugly ass performance wasting checks that have to first convert Ids to names because #nochanges
+	--		for _, spellId in ipairs({...}) do
+	--			local spellName = DBM:GetSpellInfo(spellId)
+	--			if spellName and spellName == args.spellName then
+	--				return true
+	--			end
+	--		end
+	--		return false
+	--	else
 			--Just simple table comoparison
 			return tIndexOf({...}, args.spellId) ~= nil
-		end
+	--	end
 	end
 
 	function argsMT.__index:IsPlayer()
@@ -1135,13 +1137,13 @@ do
 			if not registeredSpellIds[event] then
 				registeredSpellIds[event] = {}
 			end
-			if isClassic then
-				if not registeredSpellIds[event][spellName] then--Don't register duplicate spell Names
-					registeredSpellIds[event][spellName] = (registeredSpellIds[event][spellName] or 0) + 1--But classic needs spellNames
-				end
-			else
+			--if isClassic then
+			--	if not registeredSpellIds[event][spellName] then--Don't register duplicate spell Names
+			--		registeredSpellIds[event][spellName] = (registeredSpellIds[event][spellName] or 0) + 1--But classic needs spellNames
+			--	end
+			--else
 				registeredSpellIds[event][spellId] = (registeredSpellIds[event][spellId] or 0) + 1
-			end
+			--end
 		end
 
 		function unregisterSpellId(event, spellId)
@@ -1151,11 +1153,11 @@ do
 				DBM:Debug("DBM unregisterSpellId Warning: "..spellId.." spell id does not exist!")
 				return
 			end
-			local regName = isClassic and spellName or spellId
-			local refs = (registeredSpellIds[event][regName] or 1) - 1
-			registeredSpellIds[event][regName] = refs
+			--local regName = isClassic and spellName or spellId
+			local refs = (registeredSpellIds[event][spellId] or 1) - 1
+			registeredSpellIds[event][spellId] = refs
 			if refs <= 0 then
-				registeredSpellIds[event][regName] = nil
+				registeredSpellIds[event][spellId] = nil
 			end
 		end
 
@@ -1420,7 +1422,7 @@ do
 		if not registeredEvents[event] then return end
 		local eventSub6 = event:sub(0, 6)
 		if (eventSub6 == "SPELL_" or eventSub6 == "RANGE_") and not unfilteredCLEUEvents[event] and registeredSpellIds[event] then
-			if not registeredSpellIds[event][isClassic and extraArg2 or extraArg1] then return end -- SpellName filter for Classic
+			if not registeredSpellIds[event][extraArg1] then return end
 		end
 		-- process some high volume events without building the whole table which is somewhat faster
 		-- this prevents work-around with mods that used to have their own event handler to prevent this overhead
@@ -2784,14 +2786,16 @@ function DBM:GetUnitIdFromCID(creatureID, bossOnly)
 	return returnUnitID
 end
 
+--Scope, will only check if a unit is within 43 yards now
 function DBM:CheckNearby(range, targetname)
 	if not targetname and DBM.RangeCheck:GetDistanceAll(range) then--Do not use self on this function, because self might be bossModPrototype
 		return true--No target name means check if anyone is near self, period
 	else
 		local uId = DBM:GetRaidUnitId(targetname)--Do not use self on this function, because self might be bossModPrototype
 		if uId and not UnitIsUnit("player", uId) then
+			local restrictionsActive = isRetail and DBM:HasMapRestrictions()
 			local inRange = DBM.RangeCheck:GetDistance(uId)--Do not use self on this function, because self might be bossModPrototype
-			if inRange and inRange < range+0.5 then
+			if inRange and inRange < (restrictionsActive and 43 or range)+0.5 then
 				return true
 			end
 		end
@@ -3700,7 +3704,7 @@ do
 		if self:HasMapRestrictions() then
 			self.Arrow:Hide()
 			self.HudMap:Disable()
-			if self.RangeCheck:IsRadarShown() then
+			if (isRetail and self.RangeCheck:IsShown()) or self.RangeCheck:IsRadarShown() then
 				self.RangeCheck:Hide(true)
 			end
 		end
@@ -3721,7 +3725,7 @@ do
 		if self:HasMapRestrictions() then
 			self.Arrow:Hide()
 			self.HudMap:Disable()
-			if self.RangeCheck:IsRadarShown() then
+			if (isRetail and self.RangeCheck:IsShown()) or self.RangeCheck:IsRadarShown() then
 				self.RangeCheck:Hide(true)
 			end
 		end
@@ -3961,8 +3965,6 @@ do
 			local _, _, _, playerZone = UnitPosition("player")
 			local _, _, _, senderZone = UnitPosition(senderuId)
 			if playerZone ~= senderZone then return end--not same zone
-			local range = DBM.RangeCheck:GetDistance("player", senderuId)--Same zone, so check range
-			if not range or range > 120 then return end
 		end
 		if not cSyncSender[sender] then
 			cSyncSender[sender] = true
@@ -5173,6 +5175,7 @@ do
 		["event5"] = "normal",
 		["event20"] = "lfr25",
 		["event40"] = "lfr25",
+		["follower"] = "follower",
 		["normal5"] = "normal",
 		["heroic5"] = "heroic",
 		["challenge5"] = "challenge",
@@ -5988,11 +5991,11 @@ function DBM:GetCurrentInstanceDifficulty()
 	local _, instanceType, difficulty, difficultyName, _, _, _, _, instanceGroupSize = GetInstanceInfo()
 	if difficulty == 0 or difficulty == 172 or (difficulty == 1 and instanceType == "none") or (C_Garrison and C_Garrison:IsOnGarrisonMap()) then--draenor field returns 1, causing world boss mod bug.
 		return "worldboss", RAID_INFO_WORLD_BOSS.." - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 1 or difficulty == 173 or difficulty == 184 or difficulty == 150 then--5 man Normal Dungeon
+	elseif difficulty == 1 or difficulty == 173 or difficulty == 184 or difficulty == 150 or difficulty == 201 then--5 man Normal Dungeon / 201 is SoD 5 man ID for a dungeon that's also a 10 man SoD Raid
 		return "normal5", difficultyName.." - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 2 or difficulty == 174 then--5 man Heroic Dungeon
 		return "heroic5", difficultyName.." - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 3 or difficulty == 175 then--Legacy 10 man Normal Raid
+	elseif difficulty == 3 or difficulty == 175 or difficulty == 198 then--Legacy 10 man Normal Raid/SoD 10 man raid
 		return "normal10", difficultyName.." - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 4 or difficulty == 176 then--Legacy 25 man Normal Raid
 		return "normal25", difficultyName.." - ", difficulty, instanceGroupSize, 0
@@ -6053,6 +6056,10 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "wisdomscenario", difficultyName.." - ",difficulty, instanceGroupSize, 0
 	elseif difficulty == 171 then--Path of Ascention (Shadowlands)
 		return "humilityscenario", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 192 then--Non Instanced Challenge 1 (Likely Delves base difficulty)
+		return "delve1", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 205 then--Follower Dungeon (Dragonflight 10.2.5+)
+		return "follower", difficultyName.." - ",difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
 	end
@@ -7225,16 +7232,16 @@ function bossModPrototype:IsLFR()
 	return diff == "lfr" or diff == "lfr25"
 end
 
---Dungeons: normal, heroic. (Raids excluded)
+--Dungeons: follower, normal, heroic. (Raids excluded)
 function bossModPrototype:IsEasyDungeon()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "heroic5" or diff == "normal5"
+	return diff == "heroic5" or diff == "normal5" or diff == "follower5"
 end
 
---Dungeons: normal, heroic. Raids: LFR, normal
+--Dungeons: follower, normal, heroic. Raids: LFR, normal
 function bossModPrototype:IsEasy()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5"
+	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" or diff == "follower5"
 end
 
 --Dungeons: mythic, mythic+. Raids: heroic, mythic
@@ -7289,6 +7296,11 @@ function DBM:IsRetail()
 end
 bossModPrototype.IsRetail = DBM.IsRetail
 
+function bossModPrototype:IsFollower()
+	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	return diff == "follower"
+end
+
 --Pretty much ANYTHING that has a heroic mode
 function bossModPrototype:IsHeroic()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
@@ -7324,6 +7336,11 @@ end
 function bossModPrototype:IsScenario()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "normalscenario" or diff == "heroicscenario" or diff == "couragescenario" or diff == "loyaltyscenario" or diff == "wisdomscenario" or diff == "humilityscenario"
+end
+
+function bossModPrototype:IsDelve()
+	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	return diff == "delve1"
 end
 
 function bossModPrototype:IsValidWarning(sourceGUID, customunitID, loose, allowFriendly)
@@ -7460,7 +7477,7 @@ do
 	local rangeCache = {}
 	local rangeUpdated = {}
 
-	function bossModPrototype:CheckBossDistance(cidOrGuid, onlyBoss, itemId, distance, defaultReturn)
+	function bossModPrototype:CheckBossDistance(cidOrGuid, onlyBoss, _, distance, defaultReturn)--itemId
 		if not DBM.Options.DontShowFarWarnings then return true end--Global disable.
 		cidOrGuid = cidOrGuid or self.creatureId
 		local uId
@@ -7470,24 +7487,30 @@ do
 			uId = DBM:GetUnitIdFromGUID(cidOrGuid, onlyBoss)
 		end
 		if uId then
-			itemId = itemId or 32698
-			local inRange = IsItemInRange(itemId, uId)
-			if inRange then--IsItemInRange was a success
-				return inRange
-			else--IsItemInRange doesn't work on all bosses/npcs, but tank checks do
-				DBM:Debug("CheckBossDistance failed on IsItemInRange for: "..cidOrGuid, 2)
+			--if not UnitIsFriend("player", uId) then--API only allowed on hostile unit
+			--	itemId = itemId or 32698
+			--	local inRange = IsItemInRange(itemId, uId)
+			--	if inRange then--IsItemInRange was a success
+			--		return inRange
+			--	else--IsItemInRange doesn't work on all bosses/npcs, but tank checks do
+			--		DBM:Debug("CheckBossDistance failed on IsItemInRange due to bad check/unitId: "..cidOrGuid, 2)
+			--		return self:CheckTankDistance(cidOrGuid, distance, onlyBoss, defaultReturn)--Return tank distance check fallback
+			--	end
+			--else--Non hostile, immediately forward to very gimped TankDistance check (43 yards within tank target)
+				DBM:Debug("CheckBossDistance failed on IsItemInRange due to friendly unit: "..cidOrGuid, 2)
 				return self:CheckTankDistance(cidOrGuid, distance, onlyBoss, defaultReturn)--Return tank distance check fallback
-			end
+			--end
 		end
 		DBM:Debug("CheckBossDistance failed on uId for: "..cidOrGuid, 2)
 		return (defaultReturn == nil) or defaultReturn--When we simply can't figure anything out, return true and allow warnings using this filter to fire
 	end
 
-	function bossModPrototype:CheckTankDistance(cidOrGuid, distance, onlyBoss, defaultReturn)
+	--This is still restricted because it uses friendly api, which isn't available to us in combat
+	function bossModPrototype:CheckTankDistance(cidOrGuid, _, onlyBoss, defaultReturn)--distance
 		if not DBM.Options.DontShowFarWarnings then return true end--Global disable.
-		distance = distance or 43
+		--distance = distance or 43--Basically unused
 		if rangeCache[cidOrGuid] and (GetTime() - (rangeUpdated[cidOrGuid] or 0)) < 2 then -- return same range within 2 sec call
-			return rangeCache[cidOrGuid] < distance
+			return rangeCache[cidOrGuid]
 		else
 			cidOrGuid = cidOrGuid or self.creatureId--GetBossTarget supports GUID or CID and it will automatically return correct values with EITHER ONE
 			local uId
@@ -7512,18 +7535,15 @@ do
 				if not UnitIsPlayer(uId) then
 					local inRange2, checkedRange = UnitInRange(uId)--43
 					if checkedRange then--checkedRange only returns true if api worked, so if we get false, true then we are not near npc
+						rangeCache[cidOrGuid] = inRange2
 						return inRange2
 					else--Its probably a totem or just something we can't assess. Fall back to no filtering
+						rangeCache[cidOrGuid] = true
 						return true
 					end
 				end
-				local inRange = DBM.RangeCheck:GetDistance("player", uId)--We check how far we are from the tank who has that boss
-				rangeCache[cidOrGuid] = inRange
-				rangeUpdated[cidOrGuid] = GetTime()
-				if inRange and (inRange > distance) then--You are not near the person tanking boss
-					return false
-				end
-				--Tank in range, return true.
+				--Return true as safety
+				rangeCache[cidOrGuid] = true
 				return true
 			end
 			DBM:Debug("CheckTankDistance failed on uId for: "..cidOrGuid, 2)
@@ -10449,7 +10469,7 @@ do
 			fireEvent("DBM_TimerStart", id, msg, timer, self.icon, self.simpType, self.waSpecialKey or self.spellId, colorId, self.mod.id, self.keep, self.fade, self.name, guid, timerCount)
 			--Bssically tops bar from starting if it's being put on a plater nameplate, to give plater users option to have nameplate CDs without actually using the bars
 			--This filter will only apply to trash mods though, boss timers will always be shown due to need to have them exist for Pause, Resume, Update, and GetTime/GetRemaining methods
-			if guid and (self.type == "cdnp" or self.type ==  "nextnp") then
+			if guid and (self.type == "cdnp" or self.type ==  "nextnp") and not (DBM.Options.DebugMode and DBM.Options.DebugLevel > 1) then
 				DBT:CancelBar(id)--Cancel bar without stop callback
 				return false, "disabled"
 			end
@@ -10963,22 +10983,23 @@ do
 		end
 		local timerTextValue
 		if timerText then
-			--If timertext is a number, accept it as a secondary auto translate spellid
 			--First check if it's shorttext
 			if DBM.Options.ShortTimerText then
+				--If timertext is a number, accept it as a secondary auto translate spellid
 				if type(timerText) == "number" then
 					timerTextValue = timerText
 					spellName = DBM:GetSpellInfo(timerText or 0)--Override Cached spell Name
+				--Interpret it literal with no restrictions, first checking mod local table, then just taking timerText directly
 				else
-					timerTextValue = self.localization.timers[timerText] or timerText--Check timers table first, otherwise accept it as literal timer text
+					timerTextValue = self.localization.timers[timerText]--Check timers table first, otherwise accept it as literal timer text
 				end
-			else--Short text is off, we want to be more aggressive in non setting short text if auto localize non short text available
+			else--Short text is off, we want to be more aggressive in NOT setting short text if we can help it
+				--Short text is off, and spellId does exist, only accept timerText if it's in mods localization tables, cause then it's not short text, it's hard localization
 				if spellId and type(spellId) == "number" then
-					--Still use fully localized timer object text if there, cause that's not short text
+					--Only use timerText if it's full localized, cause that's not shorttext
+					timerTextValue = rawget(self.localization.timers, timerText)
+				else--If no spellID, then we allow hard setting timerText because it's only translation timer object has
 					timerTextValue = self.localization.timers[timerText]
-				else
-					--if spellId isn't valid, we need to accept timerText in any form as fallback
-					timerTextValue = self.localization.timers[timerText] or timerText
 				end
 			end
 		end
@@ -11405,6 +11426,7 @@ function bossModPrototype:EnablePrivateAuraSound(auraspellId, voice, voiceVersio
 	end
 end
 
+--TODO, add ability to remove specific ID only with this function. I'm not so good with tables though so gotta figure it out later
 function bossModPrototype:DisablePrivateAuraSounds()
 	if DBM.Options.DontPlayPrivateAuraSound then return end
 	for _, id in next, self.paSounds do

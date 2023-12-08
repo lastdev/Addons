@@ -472,30 +472,32 @@ function P:SetExBorder(icon, db)
 
 		if shouldShowProgressBar then
 			local statusBar = icon.statusBar
-			if db.nameBar then
-				statusBar:DisableDrawLayer("BORDER")
-			else
-				statusBar:EnableDrawLayer("BORDER")
-				statusBar.borderTop:ClearAllPoints()
-				statusBar.borderBottom:ClearAllPoints()
-				statusBar.borderRight:ClearAllPoints()
-				statusBar.borderTop:SetPoint("TOPLEFT", statusBar, "TOPLEFT")
-				statusBar.borderTop:SetPoint("BOTTOMRIGHT", statusBar, "TOPRIGHT", 0, -edgeSize)
-				statusBar.borderBottom:SetPoint("BOTTOMLEFT", statusBar, "BOTTOMLEFT")
-				statusBar.borderBottom:SetPoint("TOPRIGHT", statusBar, "BOTTOMRIGHT", 0, edgeSize)
-				statusBar.borderRight:SetPoint("TOPRIGHT", statusBar.borderTop, "BOTTOMRIGHT")
-				statusBar.borderRight:SetPoint("BOTTOMLEFT", statusBar.borderBottom, "TOPRIGHT", -edgeSize, 0)
-				if db.hideBorder then
-					statusBar.borderTop:Hide()
-					statusBar.borderBottom:Hide()
-					statusBar.borderRight:Hide()
+			if statusBar then
+				if db.nameBar then
+					statusBar:DisableDrawLayer("BORDER")
 				else
-					statusBar.borderTop:SetColorTexture(r, g, b)
-					statusBar.borderBottom:SetColorTexture(r, g, b)
-					statusBar.borderRight:SetColorTexture(r, g, b)
-					statusBar.borderTop:Show()
-					statusBar.borderBottom:Show()
-					statusBar.borderRight:Show()
+					statusBar:EnableDrawLayer("BORDER")
+					statusBar.borderTop:ClearAllPoints()
+					statusBar.borderBottom:ClearAllPoints()
+					statusBar.borderRight:ClearAllPoints()
+					statusBar.borderTop:SetPoint("TOPLEFT", statusBar, "TOPLEFT")
+					statusBar.borderTop:SetPoint("BOTTOMRIGHT", statusBar, "TOPRIGHT", 0, -edgeSize)
+					statusBar.borderBottom:SetPoint("BOTTOMLEFT", statusBar, "BOTTOMLEFT")
+					statusBar.borderBottom:SetPoint("TOPRIGHT", statusBar, "BOTTOMRIGHT", 0, edgeSize)
+					statusBar.borderRight:SetPoint("TOPRIGHT", statusBar.borderTop, "BOTTOMRIGHT")
+					statusBar.borderRight:SetPoint("BOTTOMLEFT", statusBar.borderBottom, "TOPRIGHT", -edgeSize, 0)
+					if db.hideBorder then
+						statusBar.borderTop:Hide()
+						statusBar.borderBottom:Hide()
+						statusBar.borderRight:Hide()
+					else
+						statusBar.borderTop:SetColorTexture(r, g, b)
+						statusBar.borderBottom:SetColorTexture(r, g, b)
+						statusBar.borderRight:SetColorTexture(r, g, b)
+						statusBar.borderTop:Show()
+						statusBar.borderBottom:Show()
+						statusBar.borderRight:Show()
+					end
 				end
 			end
 		end

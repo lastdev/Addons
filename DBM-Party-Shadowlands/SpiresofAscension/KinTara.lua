@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2399, "DBM-Party-Shadowlands", 5, 1186)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20231117105343")
 mod:SetCreatureID(162059, 163077)--162059 Kin-Tara, 163077 Azules
 mod:SetEncounterID(2357)
 mod:SetBossHPInfoToHighest()
@@ -39,7 +39,6 @@ local specWarnOverheadSlash			= mod:NewSpecialWarningDefensive(320966, "Tank", n
 local specWarnDarkLance				= mod:NewSpecialWarningInterrupt(327481, "HasInterrupt", nil, nil, 1, 2)
 local specWarnChargedSpear			= mod:NewSpecialWarningMoveAway(321009, nil, nil, nil, 1, 2)
 local yellChargedSpear				= mod:NewYell(321009)
-local specWarnChargedSpearNear		= mod:NewSpecialWarningClose(321009, nil, nil, nil, 1, 2)
 
 local timerOverheadSlashCD			= mod:NewCDTimer(6.3, 320966, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--6.3-11
 local timerFlightCD					= mod:NewCDTimer(145, 313606, nil, nil, nil, 6)
@@ -178,9 +177,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 				specWarnChargedSpear:Show()
 				specWarnChargedSpear:Play("runout")
 				yellChargedSpear:Yell()
-			elseif self:CheckNearby(5, targetname) then
-				specWarnChargedSpearNear:Show(targetname)
-				specWarnChargedSpearNear:Play("runaway")
 			else
 				warnChargedSpear:Show(targetname)
 			end

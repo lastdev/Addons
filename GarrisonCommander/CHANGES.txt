@@ -1,10 +1,10 @@
-lightweight tag 591542e3a83a8a70ca7f5dc4cdaa51c07a7a5ab5 3.5.5
+lightweight tag fba439c5a4f9084b0e586f77bdf0906f1cbece8d 3.6.0
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Mon May 15 09:57:48 2023 +0200
+Date:	Sat Nov 18 14:49:02 2023 +0100
 
-commit 591542e3a83a8a70ca7f5dc4cdaa51c07a7a5ab5
+commit fba439c5a4f9084b0e586f77bdf0906f1cbece8d
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Mon May 15 09:57:48 2023 +0200
+Date:   Sat Nov 18 14:49:02 2023 +0100
 
-    Removed chat spam and fixed visualization
+    Updated LibItemUpgradeInfo
 

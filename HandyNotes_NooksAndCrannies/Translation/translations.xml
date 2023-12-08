@@ -2,4 +2,5 @@
   <Include file='Global\translations.xml'/>
   <Include file='WotLK\translations.xml'/>
   <Include file='Cataclysm\translations.xml'/>
+  <Include file='DF\translations.xml'/>
 </Ui>

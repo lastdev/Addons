@@ -204,6 +204,7 @@ qcMenu={
 {text=qcL.ZERETHMORTISCAMPAIGN,isTitle=false,notCheckable=false,hasArrow=false,arg1=1208,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end}}},
 {text=stringformat("   %s",qcL.DRAGONFLIGHT),isTitle=false,notCheckable=true,hasArrow=true,menuList={
 {text=qcL.MAINZONES,isTitle=true,notCheckable=true,hasArrow=false},
+{text=qcL.EMERALDDREAM,isTitle=false,notCheckable=false,hasArrow=false,arg1=1308,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.OHNAHRANPLAINS,isTitle=false,notCheckable=false,hasArrow=false,arg1=1301,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.THALDRASZUS,isTitle=false,notCheckable=false,hasArrow=false,arg1=1302,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.THEAZURESPAN,isTitle=false,notCheckable=false,hasArrow=false,arg1=1303,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
@@ -486,6 +487,7 @@ qcMenu={
 {text=qcL.DAYOFTHEDEAD,isTitle=false,notCheckable=false,hasArrow=false,arg1=50,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.HALLOWSEND,isTitle=false,notCheckable=false,hasArrow=false,arg1=90,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 --{text=qcL.HARVESTFESTIVAL,isTitle=false,notCheckable=false,hasArrow=false,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
+{text=qcL.KORRAKSREVENGE,isTitle=false,notCheckable=false,hasArrow=false,arg1=414,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.LOVEISINTHEAIR,isTitle=false,notCheckable=false,hasArrow=false,arg1=126,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.LUNARFESTIVAL,isTitle=false,notCheckable=false,hasArrow=false,arg1=127,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.MIDSUMMERFIREFESTIVAL,isTitle=false,notCheckable=false,hasArrow=false,arg1=133,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1518, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231028095316")
+mod:SetRevision("20231117105343")
 mod:SetCreatureID(98542)
 mod:SetEncounterID(1832)
 mod:SetHotfixNoticeRev(20231027000000)
@@ -23,6 +23,7 @@ mod:RegisterEventsInCombat(
  or ability.id = 196587 and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
+--NOTE, trash uses 194966 just like boss, the expression will pick up both
 local warnSwirlingScythe			= mod:NewTargetNoFilterAnnounce(195254, 2)
 local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2)
 local warnCallSouls					= mod:NewSpellAnnounce(196078, 2)--Change to important warning if it becomes more relevant.
@@ -32,14 +33,11 @@ local specWarnReapSoul				= mod:NewSpecialWarningDodge(194956, "Tank", nil, nil,
 local specWarnSoulEchos				= mod:NewSpecialWarningRun(194966, nil, nil, nil, 1, 2)
 local specWarnSwirlingScythe		= mod:NewSpecialWarningDodge(195254, nil, nil, nil, 1, 2)
 local yellSwirlingScythe			= mod:NewYell(195254)
-local specWarnSwirlingScytheNear	= mod:NewSpecialWarningClose(195254, nil, nil, nil, 1, 2)
 local specWarnSoulBurst				= mod:NewSpecialWarningCount(196587, nil, nil, nil, 2, 2)
 
 local timerSwirlingScytheCD			= mod:NewCDTimer(20.5, 195254, nil, nil, nil, 3)--20-27
 local timerSoulEchoesCD				= mod:NewNextTimer(27.5, 194966, nil, nil, nil, 3)
 local timerReapSoulCD				= mod:NewNextTimer(13, 194956, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DEADLY_ICON)
-
---mod:AddRangeFrameOption(5, 194966)
 
 mod.vb.scytheCount = 0
 mod.vb.echoesCount = 0
@@ -55,9 +53,6 @@ function mod:ScytheTarget(targetname, uId)
 		specWarnSwirlingScythe:Show()
 		specWarnSwirlingScythe:Play("runaway")
 		yellSwirlingScythe:Yell()
-	elseif self:CheckNearby(6, targetname) then
-		specWarnSwirlingScytheNear:Show(targetname)
-		specWarnSwirlingScytheNear:Play("runaway")
 	else
 		warnSwirlingScythe:Show(targetname)
 	end

@@ -24,7 +24,7 @@ local format = string.format
 
 local Mark, SuperMark, ClearMarks = ns.Mark, ns.SuperMark, ns.ClearMarks
 
-local RC = LibStub( "LibRangeCheck-2.0" )
+local RC = LibStub( "LibRangeCheck-3.0" )
 local LSR = LibStub( "SpellRange-1.0" )
 
 local class = Hekili.Class
@@ -185,7 +185,7 @@ state.movement = {}
 setmetatable( state.movement, {
     __index = function( t, k )
         if k == "distance" then
-            if state.buff.movement.up then return state.target.distance end
+            if state.buff.movement.up then return state.target.maxR end
             return 0
         end
 
@@ -409,7 +409,7 @@ local mt_trinket = {
                 return state.cooldown[ t.ability ]
             end
             return state.cooldown.null_cooldown
-        
+
         elseif k == "cast_time" or k == "cast_time" then
             return t.usable and t.ability and class.abilities[ t.ability ] and class.abilities[ t.ability ].cast or 0
         end
@@ -1334,6 +1334,7 @@ do
     end
 
 
+    -- Increase max forecast duration because Assassination is pooling hard this tier.
     local FORECAST_DURATION = 10.01
 
     forecastResources = function( resource )
@@ -1349,6 +1350,8 @@ do
 
         if state.class.file == "DEATHKNIGHT" and state.runes then
             timeout = max( timeout, 0.01 + 2 * state.runes.cooldown )
+        elseif state.spec.assassination then
+            timeout = 15.01
         end
 
         timeout = timeout + state.gcd.remains
@@ -2509,7 +2512,7 @@ do
                     for i = 1, 5 do
                         present, name, start, duration, icon = GetTotemInfo( i )
                         if duration == 0 then duration = 3600 end
-    
+
                         if present and ( icon == totemIcon or class.abilities[ name ] and t.key == class.abilities[ name ].key ) then
                             t.expires = start + duration
                             return t.expires
@@ -2811,7 +2814,7 @@ do
             if k == "distance" then t[k] = UnitCanAttack( "player", "target" ) and ( ( t.minR + t.maxR ) / 2 ) or 7.5
             elseif k == "in_range" then return t.distance <= 8
             elseif k == "minR" or k == "maxR" then
-                local minR, maxR = RC:GetRange( "target" )
+                local minR, maxR = RC:GetRange( "target", true, InCombatLockdown() )
                 t.minR = minR or 5
                 t.maxR = maxR or 10
 
@@ -3263,7 +3266,7 @@ local mt_gcd = {
             if gcd == "off" then return 0 end
             if gcd == "totem" then return 1 end
 
-            if UnitPowerType( "player" ) == Enum.PowerType.Energy then
+            if UnitPowerType( "player" ) == Enum.PowerType.Energy or class.file == "DEMONHUNTER" then
                 return state.buff.adrenaline_rush.up and 0.8 or 1
             end
 
@@ -3276,7 +3279,7 @@ local mt_gcd = {
             return state.cooldown.global_cooldown.expires
 
         elseif k == "max" or k == "duration" then
-            if UnitPowerType( "player" ) == Enum.PowerType.Energy then
+            if UnitPowerType( "player" ) == Enum.PowerType.Energy or class.file == "DEMONHUNTER" then
                 return state.buff.adrenaline_rush.up and 0.8 or 1
             end
 
@@ -3683,7 +3686,8 @@ do
 
             if aura.meta and aura.meta[ k ] then return aura.meta[ k ]() end
 
-            if k == "count" or k == "stack" or k == "stacks" then
+            if k == "max_stack" then return aura.max_stack or 1
+            elseif k == "count" or k == "stack" or k == "stacks" then
                 local n = 0
 
                 if type == "any" then
@@ -5097,7 +5101,7 @@ local mt_default_action = {
             return max( value, t.cast_time )
 
         elseif k == "charges" then
-            return ability.charges and state.cooldown[ t.action ].charges or 0
+            return ability.charges -- and state.cooldown[ t.action ].charges
 
         elseif k == "charges_fractional" then
             return state.cooldown[ t.action ].charges_fractional
@@ -5816,7 +5820,7 @@ do
             if ability then
                 if type == "PROJECTILE_IMPACT" then
                     if ability.flightTime then time = start + 0.05 + ability.flightTime
-                    else time = start + 0.05 + ( state.target.distance / ability.velocity ) end
+                    else time = start + 0.05 + ( state.target.maxR / ability.velocity ) end
 
                 elseif type == "CHANNEL_START" then
                     time = start
@@ -7144,7 +7148,7 @@ do
             end
 
             if ability.range then
-                local _, dist = RC:GetRange( "target", true )
+                local _, dist = RC:GetRange( "target", true, InCombatLockdown() )
 
                 if dist and dist > ability.range then
                     return false, "not within ability-specified range (" .. ability.range .. ")"

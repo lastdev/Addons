@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20230528023044")
+mod:SetRevision("20231117105343")
 mod:SetCreatureID(43873)
 mod:SetEncounterID(1041)
 mod:SetUsedIcons(8)
@@ -34,7 +34,6 @@ local warnCalltheWind		= mod:NewCountAnnounce(88276, 2)
 local warnUpwind			= mod:NewSpellAnnounce(88282, 1)
 
 --local specWarnBreath		= mod:NewSpecialWarningYou(88308, "-Tank", nil, 2, 1, 2)
---local specWarnBreathNear	= mod:NewSpecialWarningClose(88308, nil, nil, nil, 1, 2)
 local specWarnBreath		= mod:NewSpecialWarningDodgeCount(88308, nil, nil, nil, 2, 2)
 local specWarnDownburst		= mod:NewSpecialWarningMoveTo(413295, nil, nil, nil, 2, 14, 4)
 local specWarnDownwind		= mod:NewSpecialWarningSpell(88286, nil, nil, nil, 1, 14)
@@ -62,9 +61,6 @@ function mod:BreathTarget()
 	if targetname == UnitName("player") then--Tank doesn't care about this so if your current spec is tank ignore this warning.
 		specWarnBreath:Show()
 		specWarnBreath:Play("targetyou")
-	elseif self:CheckNearby(10, targetname) then
-		specWarnBreathNear:Show(targetname)
-		specWarnBreathNear:Play("runaway")
 	else
 		warnBreath:Show(targetname)
 	end

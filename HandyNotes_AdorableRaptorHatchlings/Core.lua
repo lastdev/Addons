@@ -3,7 +3,7 @@
 
                                      Adorable Raptor Hatchlings
 
-                                     v1.24 - 11th November 2023
+                                     v1.26 - 2nd December 2023
                                 Copyright (C) Taraezor / Chris Birch
 								
                                 ----o----(||)----oo----(||)----o----
@@ -60,7 +60,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -95,7 +96,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -130,7 +134,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -163,7 +170,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -195,6 +205,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -227,7 +240,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -260,6 +276,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -293,6 +312,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -325,7 +347,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -357,190 +382,194 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
 end
 
 if ns.locale == "deDE" then
+	L["AddOn Description"] = "Hilft Ihnen, die Nester der entzückenden kleinen Velociraptoren zu finden"	
 	L["Adorable Raptor Hatchling"] = "Entzückendes Velociraptor-Jungtier"
 	L["Adorable Raptor Hatchlings"] = "Entzückende Velociraptor-Jungtiere"
+	L["Cave Entrance"] = "Höhle Eingang"
 	L["Dart's Nest"] = "Pfeils Nest"
 	L["Darting Hatchling"] = "Pfeilschnelles Jungtier"
 	L["Deviate Hatchling"] = "Deviatjungtier"
 	L["Hatchling"] = "Jungtier"
 	L["Leaping Hatchling"] = "Springendes Jungtier"
 	L["Obsidian Hatchling"] = "Obsidianjungtier"
+	L["Raptor Ridge"] = "Raptorgrat"
 	L["Ravasaur Hatchling"] = "Ravasaurusjungtier"
 	L["Ravasaur Matriarch's Nest"] = "Nest der Ravasaurusmatriarchin"
 	L["Razormaw Hatchling"] = "Scharfzähniges Jungtier"
 	L["Razormaw Matriarch's Nest"] = "Nest der Scharfzahnmatriarchin"
-	L["AddOn Description"] = "Hilft Ihnen, die Nester der entzückenden kleinen Velociraptoren zu finden"	
-	L["Cave Entrance"] = "Höhle Eingang"
-	L["Raptor Ridge"] = "Raptorgrat"
 	L["Takk's Nest"] = "Takks Nest"
 	L["Under the foliage"] = "Unter dem Laub"
 	L["Veer to the right"] = "Biegen Sie nach rechts ab, wenn Sie die Höhle betreten.\nGreifen Sie von rechts auf das Nest zu"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["AddOn Description"] = "Te ayuda a encontrar los nidos de los adorables velociraptores"
 	L["Adorable Raptor Hatchling"] = "Adorable cría de Velociraptor"
 	L["Adorable Raptor Hatchlings"] = "Adorables crías de Velociraptor"
+	L["Cave Entrance"] = "Entrada de la cueva"
 	L["Dart's Nest"] = "Nido de Dardo"
 	L["Darting Hatchling"] = "Prole flechada"
 	L["Deviate Hatchling"] = "Prole descarriada"
 	L["Hatchling"] = "Prole"
 	L["Leaping Hatchling"] = "Prole saltarina"
 	L["Obsidian Hatchling"] = "Prole obsidiana"
+	L["Raptor Ridge"] = "Colina del Raptor"
 	L["Ravasaur Hatchling"] = "Prole de ravasaurio"
 	L["Ravasaur Matriarch's Nest"] = "Nido de matriarca ravasaurio"
 	L["Razormaw Hatchling"] = "Prole Tajobuche"
 	L["Razormaw Matriarch's Nest"] = "Nido de matriarca Tajobuche"
-	L["AddOn Description"] = "Te ayuda a encontrar los nidos de los adorables velociraptores"
-	L["Cave Entrance"] = "Entrada de la cueva"
-	L["Raptor Ridge"] = "Colina del Raptor"
 	L["Takk's Nest"] = "Nido de Takk"
 	L["Under the foliage"] = "Bajo el follaje"
 	L["Veer to the right"] = "Ve a la derecha al entrar en la cueva.\nAccede al nido desde el lado derecho."
 
 elseif ns.locale == "frFR" then
+	L["AddOn Description"] = "Vous aide à trouver les nids des adorables petits vélociraptors"
 	L["Adorable Raptor Hatchling"] = "Adorable vélociraptor petit"
 	L["Adorable Raptor Hatchlings"] = "Adorables vélociraptors petits"
+	L["Cave Entrance"] = "Entrée Cave"
 	L["Dart's Nest"] = "Nid de Flèche"
 	L["Darting Hatchling"] = "Jeune raptor véloce"
 	L["Deviate Hatchling"] = "Jeune raptor déviant"
 	L["Hatchling"] = "Jeune"
 	L["Leaping Hatchling"] = "Jeune raptor sauteur"
 	L["Obsidian Hatchling"] = "Jeune raptor d'obsidienne"
+	L["Raptor Ridge"] = "Crête des Raptors"
 	L["Ravasaur Hatchling"] = "Jeune ravasaure"
 	L["Ravasaur Matriarch's Nest"] = "Nid de matriarche ravasaure"
 	L["Razormaw Hatchling"] = "Jeune raptor tranchegueule"
 	L["Razormaw Matriarch's Nest"] = "Nest der Scharfzahnmatriarchin"
-	L["AddOn Description"] = "Vous aide à trouver les nids des adorables petits vélociraptors"
-	L["Cave Entrance"] = "Entrée Cave"
-	L["Raptor Ridge"] = "Crête des Raptors"
 	L["Takk's Nest"] = "Nid de Takk"
 	L["Under the foliage"] = "Sous le feuillage"
 	L["Veer to the right"] = "Tournez à droite en entrant dans la grotte.\nAccéder au nid du côté droit"
 
 elseif ns.locale == "itIT" then
+	L["AddOn Description"] = "Ti aiuta a trovare i nidi degli adorabili piccoli velociraptor"
 	L["Adorable Raptor Hatchling"] = "Adorabile cucciolo di velociraptor"
 	L["Adorable Raptor Hatchlings"] = "adorabili cuccioli di velociraptor"
+	L["Cave Entrance"] = "Entrata della grotta"
 	L["Dart's Nest"] = "Nido di Dart"
 	L["Darting Hatchling"] = "Miniraptor"
 	L["Deviate Hatchling"] = "Prole Degenere"
 	L["Hatchling"] = "Cucciolo"
 	L["Leaping Hatchling"] = "Cucciolo Saltante"
 	L["Obsidian Hatchling"] = "Prole d'Ossidiana"
+	L["Raptor Ridge"] = "Dorsale dei Raptor"
 	L["Ravasaur Hatchling"] = "Cucciolo di Devasauro"
 	L["Ravasaur Matriarch's Nest"] = "Nido della Matriarca Devasauro"
 	L["Razormaw Hatchling"] = "Cucciolo di Boccaguzza"
 	L["Razormaw Matriarch's Nest"] = "Nido della Matriarca Boccaguzza"
-	L["AddOn Description"] = "Ti aiuta a trovare i nidi degli adorabili piccoli velociraptor"
-	L["Cave Entrance"] = "Entrata della grotta"
-	L["Raptor Ridge"] = "Dorsale dei Raptor"
 	L["Takk's Nest"] = "Nido di Takk"
 	L["Under the foliage"] = "Sotto il fogliame"
 	L["Veer to the right"] = "Vira a destra mentre entri nella caverna.\nAccedi al nido dal lato destro"
 
 elseif ns.locale == "koKR" then
+	L["AddOn Description"] = "사랑스러운 작은 벨로시 랩터의 둥지를 찾도록 도와줍니다."
 	L["Adorable Raptor Hatchling"] = "사랑스러운 작은 랩터"
 	L["Adorable Raptor Hatchlings"] = "사랑스러운 작은 랩터"
+	L["Cave Entrance"] = "동굴 입구"
 	L["Dart's Nest"] = "바람뿔의 둥지"
 	L["Darting Hatchling"] = "새끼 화살랩터"
 	L["Deviate Hatchling"] = "새끼 돌연변이 랩터"
 	L["Hatchling"] = "새끼"
 	L["Leaping Hatchling"] = "새끼 도약랩터"
 	L["Obsidian Hatchling"] = "새끼 흑요석 랩터"
+	L["Raptor Ridge"] = "랩터 마루"
 	L["Ravasaur Hatchling"] = "새끼 라바사우루스"
 	L["Ravasaur Matriarch's Nest"] = "우두머리 라바사우루스 둥지"
 	L["Razormaw Hatchling"] = "새끼 고원랩터"
 	L["Razormaw Matriarch's Nest"] = "무쇠턱 우두머리랩터의 둥지"
-	L["AddOn Description"] = "사랑스러운 작은 벨로시 랩터의 둥지를 찾도록 도와줍니다."
-	L["Cave Entrance"] = "동굴 입구"
-	L["Raptor Ridge"] = "랩터 마루"
 	L["Takk's Nest"] = "타크의 둥지"
 	L["Under the foliage"] = "언더 리프"
 	L["Veer to the right"] = "동굴에 들어서 자 오른쪽으로 향하십시오.\n오른쪽에서 둥지에 액세스하십시오."
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["AddOn Description"] = "Ajuda você a encontrar os ninhos dos adoráveis ​​pequenos velociraptors"
 	L["Adorable Raptor Hatchling"] = "Adorável ​​filhote velociraptore"
 	L["Adorable Raptor Hatchlings"] = "adoráveis ​​filhotes velociraptores"
+	L["Cave Entrance"] = "Entrada da caverna"
 	L["Dart's Nest"] = "Ninho da Saltadora"
 	L["Darting Hatchling"] = "Dartinho"
 	L["Deviate Hatchling"] = "Raptinho Anormal"
 	L["Hatchling"] = "Filhote"
 	L["Leaping Hatchling"] = "Raptinho Saltitante"
 	L["Obsidian Hatchling"] = "Raptinho Obsidiano"
+	L["Raptor Ridge"] = "Serra dos Raptores"
 	L["Ravasaur Hatchling"] = "Ravassaurinho"
 	L["Ravasaur Matriarch's Nest"] = "Ninho da Matriarca Ravassauro"
 	L["Razormaw Hatchling"] = "Raptinho Rasgaqueixo"
 	L["Razormaw Matriarch's Nest"] = "Ninho da Matriarca Rasgaqueixo"
-	L["AddOn Description"] = "Ajuda você a encontrar os ninhos dos adoráveis ​​pequenos velociraptors"
-	L["Cave Entrance"] = "Entrada da caverna"
-	L["Raptor Ridge"] = "Serra dos Raptores"
 	L["Takk's Nest"] = "Ninho de Takk"
 	L["Under the foliage"] = "Sob as folhas"
 	L["Veer to the right"] = "Vire para a direita ao entrar na caverna.\nAcesse o ninho pelo lado direito"
 
 elseif ns.locale == "ruRU" then
+	L["AddOn Description"] = "Помогает найти гнезда очаровательных маленьких велоцирапторов"
 	L["Adorable Raptor Hatchling"] = "Очаровательный Mаленький Велоцираптор"
 	L["Adorable Raptor Hatchlings"] = "Очаровательные Mаленькие Велоцирапторы"
+	L["Cave Entrance"] = "Вход в пещеру"
 	L["Dart's Nest"] = "Гнездо Дарта"
 	L["Darting Hatchling"] = "Стремительный детеныш"
 	L["Deviate Hatchling"] = "Загадочный детеныш"
 	L["Hatchling"] = "Детеныш"
 	L["Leaping Hatchling"] = "Прыгающий детеныш"
 	L["Obsidian Hatchling"] = "Обсидиановый детеныш"
+	L["Raptor Ridge"] = "Гряда Ящеров"
 	L["Ravasaur Hatchling"] = "Детеныш равазавра"
 	L["Ravasaur Matriarch's Nest"] = "Гнездо равазавра-матриарха"
 	L["Razormaw Hatchling"] = "Детеныш острозуба"
 	L["Razormaw Matriarch's Nest"] = "Гнездо острозуба-матриарха"
-	L["AddOn Description"] = "Помогает найти гнезда очаровательных маленьких велоцирапторов"
-	L["Cave Entrance"] = "Вход в пещеру"
-	L["Raptor Ridge"] = "Гряда Ящеров"
 	L["Takk's Nest"] = "Гнездо Такка"
 	L["Under the foliage"] = "Под листьями"
 	L["Veer to the right"] = "Поверните направо, когда вы входите в пещеру.\nДоступ к гнезду с правой стороны"
 
 elseif ns.locale == "zhCN" then
+	L["AddOn Description"] = "帮助您找到可爱的小迅猛龙的巢."
 	L["Adorable Raptor Hatchling"] = "可爱的迅猛龙宝宝"
 	L["Adorable Raptor Hatchlings"] = "可爱的迅猛龙宝宝"
+	L["Cave Entrance"] = "洞入口"
 	L["Dart's Nest"] = "达尔特的巢"
 	L["Darting Hatchling"] = "小达尔特"
 	L["Deviate Hatchling"] = "变异幼龙"
 	L["Hatchling"] = "幼体"
 	L["Leaping Hatchling"] = "小塔克"
 	L["Obsidian Hatchling"] = "黑曜石幼龙"
+	L["Raptor Ridge"] = "恐龙岭"
 	L["Ravasaur Hatchling"] = "暴掠幼龙"
 	L["Ravasaur Matriarch's Nest"] = "暴掠龙女王的巢"
 	L["Razormaw Hatchling"] = "刺喉幼龙"
 	L["Razormaw Matriarch's Nest"] = "刺喉雌龙的巢"
-	L["AddOn Description"] = "帮助您找到可爱的小迅猛龙的巢."
-	L["Cave Entrance"] = "洞入口"
-	L["Raptor Ridge"] = "恐龙岭"
 	L["Takk's Nest"] = "塔克的巢"
 	L["Under the foliage"] = "在树叶下"
 	L["Veer to the right"] = "当你进入洞穴时向右转。\n从右侧进入巢穴"
 	
 elseif ns.locale == "zhTW" then
+	L["AddOn Description"] = "幫助您找到可愛的小迅猛龍的巢."
 	L["Adorable Raptor Hatchling"] = "可愛的迅猛龍寶寶"
 	L["Adorable Raptor Hatchlings"] = "可愛的迅猛龍寶寶"
+	L["Cave Entrance"] = "洞入口"
 	L["Dart's Nest"] = "達爾特的巢"
 	L["Darting Hatchling"] = "小達爾特"
 	L["Deviate Hatchling"] = "變異幼龍"
 	L["Hatchling"] = "幼體"
 	L["Leaping Hatchling"] = "小塔克"
 	L["Obsidian Hatchling"] = "黑曜石幼龍"
+	L["Raptor Ridge"] = "恐龍嶺"
 	L["Ravasaur Hatchling"] = "暴掠幼龍"
 	L["Ravasaur Matriarch's Nest"] = "暴掠龍女王的巢"
 	L["Razormaw Hatchling"] = "刺喉幼龍"
 	L["Razormaw Matriarch's Nest"] = "刺喉雌龍的巢"
-	L["AddOn Description"] = "幫助您找到可愛的小迅猛龍的巢."
-	L["Cave Entrance"] = "洞入口"
-	L["Raptor Ridge"] = "恐龍嶺"
 	L["Takk's Nest"] = "塔克的巢"
 	L["Under the foliage"] = "在樹葉下"
 	L["Veer to the right"] = "當你進入洞穴時向右轉。\n從右側進入巢穴"

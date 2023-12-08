@@ -14,7 +14,7 @@ if SpellFlashCore and not SpellFlashCore.LS then
     a.print(L["Old uncompletable version of SFC detected, shuttingdown. \r\n Please update other copies of SFC before use."])
     return
 end
-SpellFlashCore = LibStub:NewLibrary("SpellFlashCore", tonumber("20230411150302") or tonumber(date("%Y%m%d%H%M%S")))
+SpellFlashCore = LibStub:NewLibrary("SpellFlashCore", tonumber("20231129150302") or tonumber(date("%Y%m%d%H%M%S")))
 if not SpellFlashCore then return end
 SpellFlashCore.LS = true
 local FrameNames = {}
@@ -150,8 +150,9 @@ local function RegisterButtons()
     for i = 1, 180 do
         if HasAction(i) then
             local Type, ID = GetActionInfo(i)
+            local name = GetActionText(i)
             if Type == "macro" then
-                if BodyHasMetaTag(GetMacroBody(ID)) then
+                if BodyHasMetaTag(GetMacroBody(name)) then
                     ID = tostring(ID)
                     if not Buttons.Macro[ID] then
                         Buttons.Macro[ID] = a:CreateTable()
@@ -593,8 +594,8 @@ function SpellFlashCore.FlashFrame(frame, color, size, brightness, blink, textur
             else
                 frame[FlashFrameName].FlashTexture:SetTexture(texture or "Interface\\Cooldown\\star4")
             end
-            frame[FlashFrameName].FlashTexture:SetPoint("CENTER", frame[FlashFrameName], "CENTER")
-            frame[FlashFrameName].FlashTexture:SetBlendMode("ADD")
+	    frame[FlashFrameName].FlashTexture:SetPoint("CENTER", frame[FlashFrameName], "CENTER")
+	    frame[FlashFrameName].FlashTexture:SetBlendMode("ADD")
             frame[FlashFrameName].UpdateInterval = 0.02
             frame[FlashFrameName].TimeSinceLastUpdate = 0
             frame[FlashFrameName]:SetScript("OnUpdate", FlashFrameOnUpdate)
@@ -669,6 +670,17 @@ Event.ACTIONBAR_HIDEGRID = RegisterAll
 Event.LEARNED_SPELL_IN_TAB = RegisterAll
 Event.CHARACTER_POINTS_CHANGED = RegisterAll
 Event.ACTIVE_TALENT_GROUP_CHANGED = RegisterAll
+function Event.ACTIONBAR_SLOT_CHANGED(event, arg1)
+    local Type, ID = GetActionInfo(arg1)
+    local name = GetActionText(arg1)
+    local Name = SpellFlashCore.SpellName(ID) or ID
+    if Name then
+        if not Buttons.Spell[Name] then
+            Buttons.Spell[Name] = a:CreateTable()
+        end
+        Buttons.Spell[Name][arg1] = 1
+    end
+end
 if Build >= 100000 then Event.PLAYER_SPECIALIZATION_CHANGED = RegisterAll end -- Does not exist in Wrath.
 Event.UPDATE_MACROS = RegisterAll
 Event.VEHICLE_UPDATE = RegisterAll
@@ -793,14 +805,12 @@ function SpellFlashCore.Flashable(SpellName, NoMacros)
                 local SpellTexture = GetSpellTexture(SpellName)
                 local ItemTexture = GetItemIcon(SpellName)
                 for ID in pairs(Buttons.Macro) do
-                    local name, Texture, body = GetMacroInfo(tonumber(ID))
-                    if Texture and ( Texture == SpellTexture or Texture == ItemTexture ) and body and body:lower():find(PlainName:lower(), nil, true) then
+                    if SpellName == GetSpellInfo(ID) then
                         return true
                     end
                 end
                 for ID in pairs(Frames.Macro) do
-                    local name, Texture, body = GetMacroInfo(tonumber(ID))
-                    if Texture and ( Texture == SpellTexture or Texture == ItemTexture ) and body and body:lower():find(PlainName:lower(), nil, true) then
+                    if SpellName == GetSpellInfo(ID) then
                         return true
                     end
                 end
@@ -866,19 +876,15 @@ function SpellFlashCore.FlashAction(SpellName, color, size, brightness, blink, N
                 local SpellTexture = GetSpellTexture(SpellName)
                 local ItemTexture = GetItemIcon(SpellName)
                 for ID, Table in pairs(Buttons.Macro) do
-                    local name, Texture, body = GetMacroInfo(tonumber(ID))
-                    if Texture and ( Texture == SpellTexture or Texture == ItemTexture ) and body and body:lower():find(PlainName:lower(), nil, true) then
-                        for button in pairs(Table) do
+                    for button in pairs(Table) do
+                        if SpellName == GetSpellInfo(ID) then
                             FlashActionButton(button, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
                         end
                     end
                 end
                 for ID, Table in pairs(Frames.Macro) do
-                    local name, Texture, body = GetMacroInfo(tonumber(ID))
-                    if Texture and ( Texture == SpellTexture or Texture == ItemTexture ) and body and body:lower():find(PlainName:lower(), nil, true) then
-                        for frame in pairs(Table) do
-                            SpellFlashCore.FlashFrame(frame, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
-                        end
+                    if SpellName == GetSpellInfo(ID) then
+                        SpellFlashCore.FlashFrame(frame, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
                     end
                 end
             end

@@ -1,6 +1,9 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.4810
+* Minor fixes
+
 v.4800
 * 10.2 update
 * Note: added option "Personal note in separate window"

@@ -3,7 +3,7 @@
 
                                             Loose Pebbles
 
-                                      v1.21 - 8th November 2023
+                                     v1.22 - 27th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -78,7 +78,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -113,7 +116,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -146,7 +152,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -178,6 +187,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -210,7 +222,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -243,6 +258,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -276,6 +294,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -308,7 +329,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -340,9 +364,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -352,61 +380,60 @@ ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
 	L["AddOn Description"] = "Hilft dir, die " ..ns.colour.highlight .."Loser Steine" .."\124r zu finden"
-	L["Dalaran Map"] = "Zeigt die Karte von Dalaran"
+	L["Dalaran Map"] = "Dalaran-Karte"
 	L["Loose Pebble"] = "Loser Stein"
 	L["Loose Pebbles"] = "Loser Steine"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["AddOn Description"] = "Ayuda a encontrar los " ..ns.colour.highlight .."Guijarros Sueltos"
-	L["Dalaran Map"] = "Mostrar el mapa de Dalaran"
+	L["Dalaran Map"] = "Mapa de Dalaran"
 	L["Loose Pebble"] = "Guijarro Suelto"
 	L["Loose Pebbles"] = "Guijarros Sueltos"
 
 elseif ns.locale == "frFR" then
 	L["AddOn Description"] = "Aide à trouver les " ..ns.colour.highlight .."Cailloux déchaussé"
-	L["Dalaran Map"] = "Afficher la carte de Dalaran"
+	L["Dalaran Map"] = "Carte de Dalaran"
 	L["Loose Pebble"] = "Caillou déchaussé"
 	L["Loose Pebbles"] = "Cailloux déchaussé"
 
 elseif ns.locale == "itIT" then
 	L["AddOn Description"] = "Aiuta a trovare le " ..ns.colour.highlight .."Ciottoli Sciolti"
-	L["Dalaran Map"] = "Mostra la mappa di Dalaran"
+	L["Dalaran Map"] = "Mappa di Dalaran"
 	L["Loose Pebble"] = "Ciottolo Sciolto"
 	L["Loose Pebbles"] = "Ciottoli Sciolti"
 
 elseif ns.locale == "koKR" then
 	L["AddOn Description"] = ns.colour.highlight .."거리의 자갈\124r 를 찾을 수 있도록 도와줍니다"
-	L["Dalaran Map"] = "달라란 지도를 보여주세요"
+	L["Dalaran Map"] = "달라란 지도"
 	L["Loose Pebble"] = "거리의 자갈"
 	L["Loose Pebbles"] = "거리의 자갈"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["AddOn Description"] = "Ajuda você a localizar " ..ns.colour.highlight .."Cascalho Solto"
-	L["Dalaran Map"] = "Mostrar o mapa de Dalaran"
+	L["Dalaran Map"] = "Mapa de Dalaran"
 	L["Loose Pebble"] = "Cascalho Solto"
 	L["Loose Pebbles"] = "Cascalho Solto"
 
 elseif ns.locale == "ruRU" then
 	L["AddOn Description"] = "Помогает найти " ..ns.colour.highlight .."Шатающийся Камушк"
-	L["Dalaran Map"] = "Покажите карту Даларана"
+	L["Dalaran Map"] = "Карта Даларана"
 	L["Loose Pebble"] = "Шатающийся Камушк"
 	L["Loose Pebbles"] = "Шатающийся Камушк"
 
 elseif ns.locale == "zhCN" then
 	L["AddOn Description"] = "帮助你找寻" ..ns.colour.highlight .."松动的卵石"
-	L["Dalaran Map"] = "显示达拉然的地图"
+	L["Dalaran Map"] = "达拉然地图"
 	L["Loose Pebble"] = "松动的卵石"
 	L["Loose Pebbles"] = "松动的卵石"
 
 elseif ns.locale == "zhTW" then
 	L["AddOn Description"] = "幫助你找尋" ..ns.colour.highlight .."鬆動的卵石"
-	L["Dalaran Map"] = "顯示達拉然的地圖"
+	L["Dalaran Map"] = "達拉然地圖"
 	L["Loose Pebble"] = "鬆動的卵石"
 	L["Loose Pebbles"] = "鬆動的卵石"
 	
 else
 	L["AddOn Description"] = "Helps you find the " ..ns.colour.prefix .."Loose Pebbles"
-	L["Dalaran Map"] = "Show me the map of Dalaran"
 end
 
 function pluginHandler:OnEnter(mapFile, coord)
@@ -539,21 +566,20 @@ function HandyNotes_LoosePebbles_OnAddonCompartmentClick( addonName, buttonName 
 	if buttonName and buttonName == "RightButton" then
 		OpenWorldMap( 627 )
 		if WorldMapFrame:IsVisible() ~= true then
-			print( ns.colour.prefix	..L["Loose Pebbles"] ..": " ..ns.colour.plaintext
-					.."Not possible at this time. Try later" )
+			print( ns.colour.prefix	..L["Loose Pebbles"] ..": " ..ns.colour.plaintext ..L["Try later"] )
 		end
 	else
 		Settings.OpenToCategory( "HandyNotes" )
 		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LoosePebbles" )
 	end
- end
+end
  
- function HandyNotes_LoosePebbles_OnAddonCompartmentEnter( ... )
+function HandyNotes_LoosePebbles_OnAddonCompartmentEnter( ... )
 	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
 	GameTooltip:AddLine( ns.colour.prefix ..L["Loose Pebbles"] )
 	GameTooltip:AddLine( ns.colour.highlight .." " )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Dalaran Map"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Right"], ns.colour.plaintext ..L["Dalaran Map"] )
 	GameTooltip:Show()
 end
 

@@ -1385,7 +1385,7 @@ all:RegisterAbilities( {
         item = 202612,
         toggle = "interrupts", -- utility.
 
-        usable = function() return target.distance > 15, "only does damage if jumping 15+ yards" end,
+        usable = function() return target.minR > 15, "only does damage if jumping 15+ yards" end,
 
         handler = function()
             setDistance( 5 )
@@ -2118,7 +2118,7 @@ all:RegisterAbilities( {
         cooldown = 120,
         gcd = "off",
 
-        item = 427113,
+        item = 208616,
         toggle = "cooldowns",
 
         start = function()
@@ -2158,5 +2158,75 @@ all:RegisterAbilities( {
                 max_stack = 1
             }
         }
-    }
+    },
+
+    -- Everbloom
+    spores_of_alacrity = {
+        cast = 0,
+        cooldown = 120,
+        gcd = "off",
+
+        item = 110014,
+        toggle = "cooldowns",
+
+        handler = function()
+            applyBuff( "alacritous_spores" )
+        end,
+
+        auras = {
+            alacritous_spores = {
+                id = 429276,
+                duration = 20,
+                max_stack = 10 -- Ticks down?
+            }
+        }
+    },
+
+    -- Throne of the Tides
+    might_of_the_ocean = {
+        cast = 0,
+        cooldown = 90,
+        gcd = "off",
+
+        item = 133197,
+        toggle = "cooldowns",
+
+        handler = function()
+            applyBuff( "tidehunters_blessing" )
+        end,
+
+        auras = {
+            tidehunters_blessing = {
+                id = 91340,
+                duration = 20,
+                max_stack = 1
+            }
+        }
+    },
+
+    -- Legendary
+    fyralath_the_dreamrender = {
+        cast = 0,
+        cooldown = 120,
+        gcd = "off",
+
+        item = 206448,
+        toggle = "cooldowns",
+
+        handler = function()
+            removeDebuff( "target", "mark_of_fyralath" )
+            active_dot.mark_of_fyralath = 0
+            setDistance( 5 )
+        end,
+
+        auras = {
+            mark_of_fyralath = {
+                id = 414532,
+                duration = 15,
+                max_stack = 1
+            },
+        },
+
+        copy = "fyralath_the_dream_render"
+    },
 } )

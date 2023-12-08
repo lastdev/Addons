@@ -21,7 +21,7 @@ local ResetDisabledGearAndSpells = ns.ResetDisabledGearAndSpells
 local WipeCovenantCache = ns.WipeCovenantCache
 
 local CGetItemInfo = ns.CachedGetItemInfo
-local RC = LibStub( "LibRangeCheck-2.0" )
+local RC = LibStub( "LibRangeCheck-3.0" )
 
 -- Abandoning AceEvent in favor of darkend's solution from:
 -- http://andydote.co.uk/2014/11/23/good-design-in-warcraft-addons.html
@@ -736,6 +736,7 @@ do
         local T1 = GetInventoryItemID( "player", 13 )
 
         state.trinket.t1.__id = 0
+        state.trinket.t1.ilvl = 0
         state.trinket.t1.__ability = "null_cooldown"
         state.trinket.t1.__usable = false
         state.trinket.t1.__has_use_buff = false
@@ -743,6 +744,8 @@ do
 
         if T1 then
             state.trinket.t1.__id = T1
+            -- So this isn't *truly* accurate, but it's accurate relatively speaking.
+            state.trinket.t1.ilvl = GetDetailedItemLevelInfo( T1 )
 
             local isUsable = IsUsableItem( T1 )
             local name, spellID = GetItemSpell( T1 )
@@ -786,9 +789,12 @@ do
         state.trinket.t2.__usable = false
         state.trinket.t2.__has_use_buff = false
         state.trinket.t2.__use_buff_duration = nil
+        state.trinket.t2.ilvl = 0
 
         if T2 then
             state.trinket.t2.__id = T2
+             -- So this isn't *truly* accurate, but it's accurate relatively speaking.
+             state.trinket.t2.ilvl = GetDetailedItemLevelInfo( T2 )
 
             local isUsable = IsUsableItem( T2 )
             local name, spellID = GetItemSpell( T2 )
@@ -828,6 +834,32 @@ do
         state.main_hand.size = 0
         state.off_hand.size = 0
 
+        local MH = GetInventoryItemID( "player", 16 )
+
+        class.abilities.main_hand = class.abilities.actual_main_hand
+
+        if MH then
+            local isUsable = IsUsableItem( MH )
+            local name, spellID = GetItemSpell( MH )
+            local tSpell = class.itemMap[ MH ]
+
+            if tSpell then
+                class.abilities.main_hand = class.abilities[ tSpell ]
+                class.specs[ 0 ].abilities.main_hand = class.abilities[ tSpell ]
+            else
+                class.abilities.main_hand = class.abilities.actual_main_hand
+                class.specs[ 0 ].abilities.main_hand = class.abilities.actual_main_hand
+            end
+
+            if not isUsable then
+                state.trinket.t2.cooldown = state.cooldown.null_cooldown
+            else
+                state.trinket.t2.cooldown = nil
+            end
+
+            state.trinket.t2.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 14, true, true )
+        end
+
         for i = 1, 19 do
             local item = GetInventoryItemID( 'player', i )
 
@@ -846,7 +878,7 @@ do
                         state.main_hand.size = 1
                     elseif equipLoc == "INVTYPE_RANGED" or equipLoc == "INVTYPE_RANGEDRIGHT" then
                         state.set_bonus.ranged = 1
-                            end
+                    end
                 elseif i == 17 then
                     if equipLoc == "INVTYPE_2HWEAPON" then
                         state.off_hand.size = 2
@@ -1252,13 +1284,15 @@ RegisterUnitEvent( "UNIT_SPELLCAST_DELAYED", "player", nil, function( event, uni
                     local u = Hekili:GetUnitByGUID( target ) or Hekili:GetNameplateUnitForGUID( target ) or "target"
 
                     if u then
-                        local _, maxR = RC:GetRange( u )
-                        maxR = maxR or state.target.distance
+                        local _, maxR = RC:GetRange( u, true, InCombatLockdown() )
+                        maxR = maxR or select( 6, GetSpellInfo( ability.id ) ) or 40
                         travel = maxR / ability.velocity
                     end
                 end
 
-                if not travel then travel = state.target.distance / ability.velocity end
+                if not travel then
+                    travel = ( select( 6, GetSpellInfo( ability.id ) ) or 40 ) / ability.velocity
+                end
 
                 state:QueueEvent( ability.impactSpell or ability.key, finish / 1000, 0.05 + travel, "PROJECTILE_IMPACT", target, true )
             end
@@ -1720,13 +1754,13 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                                 local unit = Hekili:GetUnitByGUID( destGUID ) or Hekili:GetNameplateUnitForGUID( destGUID ) or "target"
 
                                 if unit then
-                                    local _, maxR = RC:GetRange( unit )
-                                    maxR = maxR or state.target.distance
+                                    local _, maxR = RC:GetRange( unit, true, InCombatLockdown() )
+                                    maxR = maxR or select( 6, GetSpellInfo( ability.id ) ) or 40
                                     travel = maxR / ability.velocity
                                 end
                             end
 
-                            if not travel then travel = state.target.distance / ability.velocity end
+                            if not travel then travel = ( select( 6, GetSpellInfo( ability.id ) ) or 40 ) / ability.velocity end
 
                             state:QueueEvent( ability.impactSpell or ability.key, finish / 1000, travel, "PROJECTILE_IMPACT", destGUID, true )
                         end
@@ -1780,8 +1814,8 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                             local unit = Hekili:GetUnitByGUID( destGUID ) or Hekili:GetNameplateUnitForGUID( destGUID ) or "target"
 
                             if unit then
-                                local _, maxR = RC:GetRange( unit )
-                                maxR = maxR or state.target.distance
+                                local _, maxR = RC:GetRange( unit, true, InCombatLockdown() )
+                                maxR = maxR or select( 6, GetSpellInfo( ability.id ) ) or 40
                                 travel = maxR / ability.velocity
                             end
                         end

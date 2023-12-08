@@ -867,7 +867,10 @@ L['fruitface_note'] = 'Biete {npc:209950} {dot:Pink} deine Hilfe an, um {spell:4
 L['greedy_gessie_note'] = 'Sammle frische Zutaten wie {object:Wildes Grünzeug}, {object:Rubinschuppenmelone} oder {object:Orangenwurzel} aus der Umgebung und legt diese in die Körbe, damit der seltene Gegner erscheint.'
 L['nuoberon_note'] = 'Jagt Schildkröten, bewerft Affen mit Essen oder bekämpft Traummonster, um {npc:209101} zu einem lustigen Traum zu verhelfen!'
 L['reefbreaker_moruud_note'] = 'Befestige alle 6 {npc:210089e} an ihm, um ihn angreifen zu können.'
+L['splinterlimb_note'] = 'Wird nach 8 Stapeln des Schwächungszaubers {spell:420009} angreifbar. Der Schwächungszauber stapelt sich pro beendeter Runde. Töte die Gegner, die ihn angreifen, damit er seine Runde schneller beenden kann.'
 L['surging_lasher_note'] = 'Kann während des {location:Smaragdraserei} Events in diesem Gebiet erscheinen.'
+L['talthonei_ashwisper_note'] = 'Töte Gegner in der Nähe, bis der getötete Gegner sagt "Man wird... mich rächen", um den seltenen Gegner erscheinen zu lassen.'
+L['talthonei_ashwisper_wq_note'] = '{note:Kann hier erscheinen, wenn die Weltquest {wq:Portalpanik} aktiv ist.}'
 
 L['in_a_tree'] = 'Oben im Baum.'
 L['inside_building'] = 'Im Gebäude.'
@@ -912,11 +915,11 @@ Die Qualität der {object:Traumsaat} bestimmt die Art der Belohnung:
 {note:Für eine Liste der Belohungen sieh dir {npc:211265} auf der Insel im Norden an, sie verkauft auch die meisten Belohungen.}
 ]]
 L['dreamseed_cache'] = 'Traumsaattruhe'
-
 L['options_icons_dream_of_seeds'] = '{achievement:19013}'
 L['options_icons_dream_of_seeds_desc'] = 'Zeigt die Positionen der {npc:210723} für den Erfolg {achievement:19013} an.'
+L['the_seeds_i_sow_suffix'] = 'Samen der Smaragdfülle beigesteuert'
 
-L['bloom_man_group_suffix'] = '-mal die Fähigkeit \'Wilder Überschuss\' genutzt'
+L['bloom_man_group_suffix'] = 'mal die Fähigkeit \'Wilder Überschuss\' genutzt'
 L['dream_chaser_suffix'] = 'umherirrende Träume gesammelt'
 L['dreamfruit_label'] = 'Traumfrucht'
 L['dreamfruit_note_1'] = 'Erscheint, wenn das {location:Superblüte} Event beginnt. Das Event startet zu jeder vollen Stunde.'
@@ -937,12 +940,12 @@ L['pollenfused_bristlebruin_fur_sample_note'] = 'Auf dem Boden vor dem Baum.'
 L['mbc_note_start'] = 'Plündere die {object:Kleine Schachtel mit Phiolen}, um {item:210991} zu erhalten.\n\nDu bekommst 6x {item:210839}, die mit Wasser aus einem Mondbrunnen von sechs Kontinenten gefüllt werden müssen.'
 L['mbc_note_end'] = 'Kombiniere alle 6x {item:210876}, um {item:210977} herzustellen und bringe es zum {object:Wilder Traumstein} in der Nähe von {location:Amirdrassil}.\n\nBenutze {item:210977} und plündere {object:Mondgesegnete Klaue}, um die {item:210728} zu erhalten.'
 
-L['mbc_vial_b'] = 'V' -- review not yet translated
+L['mbc_vial_b'] = 'B' -- review not yet translated
 L['mbc_vial_d'] = 'D'
-L['mbc_vial_e'] = 'Ö' -- review not yet translated
+L['mbc_vial_e'] = 'E' -- review not yet translated
 L['mbc_vial_k'] = 'K'
 L['mbc_vial_n'] = 'N'
-L['mbc_vial_o'] = 'S' -- review not yet translated
+L['mbc_vial_o'] = 'O' -- review not yet translated
 
 L['mbc_vial_d_location'] = 'Außenposten Sternenfall'
 L['mbc_vial_e_location'] = 'Zwielichtshain'
@@ -955,7 +958,7 @@ L['mbc_vial_location'] = 'Fülle die {item:%d} mit Wasser aus dem Mondbrunnen in
 L['mbc_moonwell_label'] = 'Mondbrunnen'
 L['mbc_feral_dreamstone_label'] = 'Wilder Traumstein'
 
-L['azure_somnowl_note'] = 'Schließe die kurze Questreihe für Druiden ab, die mit der von {npc:209318} gegebenen Quest {quest:78065} beginnt, um die {item:210645} zu erhalten.'
+L['azure_somnowl_note'] = 'Schließe die kurze Questreihe ab, die mit der von {npc:209318} gegebenen Quest {quest:78065} beginnt, um die {item:210645} zu erhalten.'
 
 L['slumbering_somnowl_note_a'] = 'Sammle 5x {item:210565}, indem du {npc:Schlummereulen} mit deiner Fähigkeit {spell:2637} in der Zone {location:Der Smaragdgrüne Traum} in den Schlaf versetzt.'
 L['slumbering_somnowl_note_b'] = 'Kaufe 1x {item:4291} bei einem Händler für Handwerkswaren.'
@@ -972,7 +975,7 @@ L['prismatic_location'] = 'Im Schlachtzug {location:Amirdrassil, Hoffnung des Tr
 L['prismatic_note_1'] = '1. Angle 10x {item:210782} aus Becken in der {location:Urquellvorhalle}.'
 L['prismatic_note_2'] = '2. Angle 10x {item:210783} aus Lavabecken in {location:Die Versengte Halle}.'
 L['prismatic_note_3'] = '3. Wirf alle 20x Fische in das größte Becken in der {location:Urquellvorhalle}, um für 30 Minuten den Stärkungszauber {spell:427145} zu erhalten.'
-L['prismatic_note_4'] = '4. Anlge im {object:Prosmatischer Schnurrwels} Fischbecken in der {location:Urquellvorhalle}, bis du {item:210784} fängst.'
+L['prismatic_note_4'] = '4. Angle im {object:Prosmatischer Schnurrwels} Fischbecken in der {location:Urquellvorhalle}, bis du {item:210784} fängst.'
 L['prismatic_note_5'] = '5. Lasse {npc:Xena} im Becken in der {location:Urquellvorhalle} wieder frei, um {item:210753} zu erhalten.'
 
 L['options_icons_druid_glyph'] = 'Druidenglyphen'
@@ -991,8 +994,6 @@ L['options_icons_somnut_desc'] = 'Zeigt die möglichen Positionen für {object:S
 L['improvised_leafbed_note'] = 'Beginne die Quest {quest:77896} und schließe die Questreihe ab, um {item:210864} von {npc:210164} zu erhalten.'
 L['kalandu_note'] = 'Beginne die Quest {quest:77948} und schließe die Questreihe ab, um {item:210633} von {npc:210196} zu erhalten.'
 
-L['renewed_dream'] = '{note:An dieser Position ist KEIN Schatz!}\n{item:201437} kann überall in {location:Der Smaragdgrüne Traum} als Beute fallen gelassen werden.\nKombiniere 5 {item:201437}, um {item:201439} wiederherzustellen.'
-
 L['ochre_note'] = 'Sprich mit {npc:209253}, um die Questreihe zu starten. {npc:209571} wird die nächsten Abschnitte anbieten.'
 L['ochre_note_stage1'] = '{quest:77677}. {note:5 Tage zum Wachsen.}'
 L['ochre_note_stage2'] = '{quest:78398}. {note:5 Tage zum Wachsen.}'
@@ -1001,10 +1002,10 @@ L['ochre_note_stage4'] = '{quest:77711}. {note:5 Tage zum Wachsen.}'
 L['ochre_note_stage5'] = '{quest:77762}.'
 
 L['thorn_beast_stag'] = '{item:%d} ({npc:Hirsch})'
-L['thorn_beast_saber'] = '{item:%d} ({npc:Säbler})' -- review
+L['thorn_beast_saber'] = '{item:%d} ({npc:Säbler})'
 L['thorn_beast_bear'] = '{item:%d} ({npc:Bär})'
 
-L['thornbeast_disclaimer'] = '{note:Info: Jede Bestienart hat einzigartige {item:%s}, die zur passenden Dornenbestie führen.}'
+L['thornbeast_disclaimer'] = '{note:Info: Jede Bestienart hat ein einzigartiges {item:%s}, das zur passenden Dornenbestie führt.}'
 
 L['thorn_laden_heart_note_1'] = 'Plündere ein {item:209860} von einem {npc:Hirsch}, {npc:Säbler} oder {npc:Bär} in {location:Der Smaragdgrüne Traum}.'
 L['thorn_laden_heart_note_2'] = 'Sobald du ein {item:209860} hast, gehe nach {location:Drustvar} in {location:Kul Tiras} zu {npc:140044}.'
@@ -1021,7 +1022,7 @@ L['thorn_bear_note'] = '1. Töte {npc:210977} und benutze das {item:209868} mit 
 
 L['nahqi_note'] = 'Benötigt die {item:211314}, um {npc:210908} mit {spell:1515} zu zähmen.\n\n{npc:210908} fliegt im Himmel um {location:Amirdrassil} {note:gegen den Uhrzeigersinn} seine Runde.\n\n{note:Diese {npc:Geisterbestie} können nur Tierherrschafts-Jäger zähmen.}' -- review Das vom Reittier {item:210061} erhältlich ist
 
-L['sulraka_note'] = 'Patrouilliert das Gebiet östlich von {location:Amirdrassil} {note:gegen den Uhrzeigersinn}.\n\nLässt während des laufens {object:Heavy Tracks} zurück, die 3 Minuten halten.\nLäuft immer in Verstohlenheit, du musst ihn mit deiner Fähigkeit {spell:1543} vor frischen {object:Heavy Tracks} aufdecken.\nZaubere {spell:257284} auf ihn und/oder benutze {spell:187650} und versuche ihn mit {spell:1515} zu zähmen.\n\n{note:Es ist wichtig, ihn aufzudecken oder zu fangen, denn {npc:210868} hört nicht auf sich zu bewegen, selbst wenn er angegriffen wird. Kann aus der Reichweite von {spell:1543} laufen.}\n\n{note:Diese {npc:Geisterbestie} können nur Tierherrschafts-Jäger zähmen.}' -- review Heavy Tracks
+L['sulraka_note'] = 'Patrouilliert das Gebiet östlich von {location:Amirdrassil} {note:gegen den Uhrzeigersinn}.\n\nLässt während des laufens {object:Tiefe Fährten} zurück, die 3 Minuten halten.\nLäuft immer in Verstohlenheit, du musst ihn mit deiner Fähigkeit {spell:1543} vor frischen {object:Tiefe Fährten} aufdecken.\nZaubere {spell:257284} auf ihn und/oder benutze {spell:187650} und versuche ihn mit {spell:1515} zu zähmen.\n\n{note:Es ist wichtig, ihn aufzudecken oder zu fangen, denn {npc:210868} hört nicht auf sich zu bewegen, selbst wenn er angegriffen wird. Kann aus der Reichweite von {spell:1543} laufen.}\n\n{note:Diese {npc:Geisterbestie} können nur Tierherrschafts-Jäger zähmen.}'
 
 -------------------------------------------------------------------------------
 ----------------------------- SECRETS OF AZEROTH ------------------------------

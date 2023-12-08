@@ -1,5 +1,5 @@
 ## Interface: 30403
-## Version: 2.20
+## Version: 2.26
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_bag_28_halloween
 ## Title: Hallow's End

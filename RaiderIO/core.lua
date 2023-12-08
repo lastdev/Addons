@@ -2149,7 +2149,7 @@ do
         if fontObject then
             TOOLTIP_TEXT_FONTSTRING:SetFontObject(fontObject)
         else
-            TOOLTIP_TEXT_FONTSTRING:SetFont(fontWidget:GetFont())
+            TOOLTIP_TEXT_FONTSTRING:SetFont(fontWidget:GetFont()) ---@diagnostic disable-line: param-type-mismatch
         end
     end
 
@@ -2915,7 +2915,7 @@ do
                 end
                 if not config:Get("debugMode") then
                     if provider.region ~= ns.PLAYER_REGION then
-                        DisableAddOn(provider.name)
+                        C_AddOns.DisableAddOn(provider.name)
                         table.wipe(provider)
                         table.remove(providers, i)
                     elseif provider.blocked and provider.data == ns.PROVIDER_DATA_TYPE.MythicKeystone and false then -- TODO: do not purge the data just keep it labeled as blocked this way we can always lookup the players own data and still show the warning that its expired
@@ -6651,6 +6651,15 @@ if IS_RETAIL then
     local profile = ns:GetModule("Profile") ---@type ProfileModule
     local provider = ns:GetModule("Provider") ---@type ProviderModule
 
+    ---@class LFGListFrameSearchFramePolyfill : Frame
+    ---@field public applicantID? number
+    ---@field public Members? LFGListFrameApplicationFramePolyfill[]
+
+    ---@class LFGListFrameApplicationFramePolyfill : Frame
+    ---@field public memberIdx? number
+
+    ---@alias LFGListFrameWildcardFrame LFGListFrameSearchFramePolyfill|LFGListFrameApplicationFramePolyfill
+
     ---@class LfgResult
     ---@field public activityID? number
     ---@field public leaderName string
@@ -6660,11 +6669,21 @@ if IS_RETAIL then
     ---@type LfgResult
     local currentResult = {} ---@diagnostic disable-line: missing-fields
 
+    ---@type table<LFGListFrameWildcardFrame|GameTooltip, boolean?>
     local hooked = {}
+
+    ---@type fun(self: LFGListFrameWildcardFrame)
     local OnEnter
+
+    ---@type fun()
     local OnLeave
+
+    ---@type boolean?
     local cleanupPending
 
+    ---@param tooltip GameTooltip
+    ---@param resultID number
+    ---@param autoAcceptOption boolean
     local function SetSearchEntry(tooltip, resultID, autoAcceptOption)
         if not config:Get("enableLFGTooltips") then
             return
@@ -6701,6 +6720,7 @@ if IS_RETAIL then
         end
     end
 
+    ---@param buttons LFGListFrameWildcardFrame[]
     local function HookApplicantButtons(buttons)
         for _, button in pairs(buttons) do
             if not hooked[button] then
@@ -6711,6 +6731,9 @@ if IS_RETAIL then
         end
     end
 
+    ---@param parent Frame
+    ---@param applicantID number
+    ---@param memberIdx number
     local function ShowApplicantProfile(parent, applicantID, memberIdx)
         local fullName, _, _, _, _, _, _, _, _, _, _, dungeonScore, _, factionGroup = C_LFGList.GetApplicantMemberInfo(applicantID, memberIdx)
         if not fullName then
@@ -6735,6 +6758,7 @@ if IS_RETAIL then
         util:ExecuteWidgetOnEnterSafely(GetMouseFocus())
     end
 
+    ---@param self LFGListFrameWildcardFrame
     function OnEnter(self)
         local entry = C_LFGList.GetActiveEntryInfo()
         if entry then
@@ -6746,7 +6770,8 @@ if IS_RETAIL then
         if self.applicantID and self.Members then
             HookApplicantButtons(self.Members)
         elseif self.memberIdx then
-            local shown, fullName = ShowApplicantProfile(self, self:GetParent().applicantID, self.memberIdx)
+            local parent = self:GetParent() ---@type LFGListFrameSearchFramePolyfill
+            local shown, fullName = ShowApplicantProfile(self, parent.applicantID, self.memberIdx)
             local success
             if shown then
                 success = profile:ShowProfile(GameTooltip, fullName, currentResult)
@@ -6759,7 +6784,7 @@ if IS_RETAIL then
         end
     end
 
-    function OnLeave(self)
+    function OnLeave()
         GameTooltip:Hide()
         profile:HideProfile()
         profile:ShowProfile(false, "player")
@@ -7460,7 +7485,7 @@ if IS_RETAIL then
             end
             -- update anchor
             frame:ClearAllPoints()
-            if IsAddOnLoaded("AngryKeystones") then
+            if C_AddOns.IsAddOnLoaded("AngryKeystones") then
                 frame:SetPoint("TOPRIGHT", ChallengesFrame, "TOPRIGHT", -6, -22)
             else
                 frame:SetPoint("BOTTOMLEFT", ChallengesFrame.DungeonIcons[1], "TOPLEFT", 2, 12)
@@ -7548,7 +7573,7 @@ if IS_RETAIL then
         [5] = "watched_replay",
     }
 
-    ---@class ConfigReplayColor
+    ---@class ConfigReplayColor : ColorMixin
     ---@field public r number
     ---@field public g number
     ---@field public b number
@@ -7894,7 +7919,7 @@ if IS_RETAIL then
         function BossFrameMixin:Setup(bossRows, index)
             self.bossRows = bossRows
             self.index = index
-            self.Name:SetText(self.index)
+            self.Name:SetText(self.index) ---@diagnostic disable-line: param-type-mismatch
             self.InfoL:SetText("")
             self.InfoR:SetText("")
             self:SetBackgroundColor(replayFrame:GetBackgroundColor())
@@ -12355,15 +12380,15 @@ do
                         local check = f[column.check]
                         local addon = f[column.addon]
                         local checked = check:GetChecked()
-                        local loaded = IsAddOnLoaded(addon)
+                        local loaded = C_AddOns.IsAddOnLoaded(addon)
                         if checked then
                             if not loaded then
                                 reload = 1
-                                EnableAddOn(addon)
+                                C_AddOns.EnableAddOn(addon)
                             end
                         elseif loaded then
                             reload = 1
-                            DisableAddOn(addon)
+                            C_AddOns.DisableAddOn(addon)
                         end
                     end
                 end
@@ -12543,8 +12568,8 @@ do
                     for _, column in ipairs(databaseModuleColumns) do
                         local check = f[column.check]
                         local addon = f[column.addon]
-                        check:SetChecked(IsAddOnLoaded(addon))
-                        local _, addonTitle = GetAddOnInfo(addon)
+                        check:SetChecked(C_AddOns.IsAddOnLoaded(addon))
+                        local _, addonTitle = C_AddOns.GetAddOnInfo(addon)
                         check:SetShown(addonTitle ~= nil)
                     end
                 end
@@ -13130,7 +13155,7 @@ do
 
             -- add widgets
             local header = configOptions:CreateHeadline(L.RAIDERIO_MYTHIC_OPTIONS .. "\nVersion: " .. tostring(C_AddOns.GetAddOnMetadata(addonName, "Version")), configHeaderFrame)
-            header.text:SetFont(header.text:GetFont(), 16, "OUTLINE")
+            header.text:SetFont(header.text:GetFont(), 16, "OUTLINE") ---@diagnostic disable-line: param-type-mismatch
 
             configOptions:CreateHeadline(L.CHOOSE_HEADLINE_HEADER)
             configOptions:CreateRadioToggle(L.SHOW_BEST_SEASON, L.SHOW_BEST_SEASON_DESC, "mplusHeadlineMode", 1)

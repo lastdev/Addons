@@ -1,3 +1,9 @@
+== v1.29 - 27th November 2023
+* Added and improved translations to the Minimap AddOns menu
+
+== v1.28 - 8th November 2023
+* Added the ability to show the Dalaran map from the Minimap AddOns menu
+
 == v1.27 - 28th October 2023
 * Ready for 10.2.0
 * Multi-TOC - includes wrath 3.4.3

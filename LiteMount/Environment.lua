@@ -5,7 +5,7 @@
   the mojo is done by IsUsableSpell to know if a mount can be cast, this just
   helps with the prioritization.
 
-  Copyright 2011-2021 Mike Battersby
+  Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -39,6 +39,8 @@ function LM.Environment:Initialize()
     self:RegisterEvent("PLAYER_STOPPED_MOVING")
     self:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
     self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+    self:RegisterEvent("ENCOUNTER_START")
+    self:RegisterEvent("ENCOUNTER_END")
 end
 
 -- I hate OnUpdate handlers but there are just no good events for determining
@@ -145,7 +147,6 @@ function LM.Environment:PLAYER_STOPPED_MOVING()
 end
 
 function LM.Environment:MOUNT_JOURNAL_USABILITY_CHANGED()
-    LM.Debug("Updating swim times due to MOUNT_JOURNAL_USABILITY_CHANGED.")
     self:UpdateSwimTimes()
 end
 
@@ -163,6 +164,22 @@ end
 
 function LM.Environment:ZONE_CHANGED_NEW_AREA()
     LM.Options:RecordInstance()
+end
+
+-- encounterID, encounterName, difficultyID, groupSize
+function LM.Environment:ENCOUNTER_START(event, ...)
+    LM.Debug(format("Encounter started: %d (%s)", ...))
+    self.currentEncounter = { ... }
+end
+
+function LM.Environment:ENCOUNTER_END(event, ...)
+    self.currentEncounter = nil
+end
+
+function LM.Environment:GetEncounterInfo()
+    if self.currentEncounter then
+        return unpack(self.currentEncounter)
+    end
 end
 
 local herbSpellName = GetSpellInfo(2366)
@@ -260,31 +277,28 @@ function LM.Environment:InInstance(...)
     return false
 end
 
--- Apprentice Riding  (60% ground) = IsSpellKnown(33388)
--- Journeyman Riding (100% ground) = IsSpellKnown(33391)
--- Expert Riding     (150% flying) = IsSpellKnown(34090)
--- Artisan Riding    (280% flying) = IsSpellKnown(34091) - removed but characters can still have it
--- Cold Weather Flying             = IsSpellKnown(54197) - wotlk classic
--- Master Riding     (320% flying) = IsSpellKnown(90265)
+-- Apprentice Riding  (60% ground) = IsPlayerSpell(33388)
+-- Journeyman Riding (100% ground) = IsPlayerSpell(33391)
+-- Expert Riding     (150% flying) = IsPlayerSpell(34090)
+-- Artisan Riding    (280% flying) = IsPlayerSpell(34091) - removed but characters can still have it
+-- Master Riding     (320% flying) = IsPlayerSpell(90265)
 
 -- These are in this order because it's more likely you are high level and
 -- know the most advanced one. Non-obviously you forget the earlier ones when
 -- you learn a later one.
 
 function LM.Environment:KnowsRidingSkill()
-    return IsSpellKnown(90265)
-        or IsSpellKnown(54197)
-        or IsSpellKnown(34091)
-        or IsSpellKnown(34090)
-        or IsSpellKnown(33391)
-        or IsSpellKnown(33388)
+    return IsPlayerSpell(54197)
+        or IsPlayerSpell(34091)
+        or IsPlayerSpell(34090)
+        or IsPlayerSpell(33391)
+        or IsPlayerSpell(33388)
 end
 
 function LM.Environment:KnowsFlyingSkill()
-    return IsSpellKnown(90265)
-        or IsSpellKnown(54197)
-        or IsSpellKnown(34091)
-        or IsSpellKnown(34090)
+    return IsPlayerSpell(54197)
+        or IsPlayerSpell(34091)
+        or IsPlayerSpell(34090)
 end
 
 local InstanceFlyableOverride = {
@@ -382,6 +396,15 @@ function LM.Environment:CanFly()
 
     if InstanceFlyableOverride[instanceID] ~= nil then
         return InstanceFlyableOverride[instanceID]
+    end
+
+    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+        -- Classic Northrend requires Cold Weather Flying in WotLK Classic
+        if self:InInstance(571) then
+            if not IsSpellKnown(54197) then
+                return false
+            end
+        end
     end
 
     -- Memories of Sunless Skies / Shadowlands Flying (63893)

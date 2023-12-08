@@ -189,6 +189,7 @@ points[ 1426 ] = { -- Dun Morogh Classic - Kharanos
 	[46775429] = { obj=113768, name="Brightly Colored Egg" },
 	[46775223] = { obj=113768, name="Brightly Colored Egg" },
 	[46785359] = { obj=113768, name="Brightly Colored Egg", tip="Under the wagon" },
+	[46825366] = { obj=113768, name="Brightly Colored Egg", tip="Between three stacks of crates and a large barrel" },
 	[46875212] = { obj=113768, name="Brightly Colored Egg" },
 	[46905220] = { obj=113768, name="Brightly Colored Egg", tip="In a nook on the stairs" },
 	[46905416] = { obj=113768, name="Brightly Colored Egg" },
@@ -872,19 +873,19 @@ textures[14] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleH"
 textures[15] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleO"
 textures[16] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleY"
 
-scaling[1] = 0.68
-scaling[2] = 0.68
-scaling[3] = 0.66
-scaling[4] = 0.66
-scaling[5] = 0.66
-scaling[6] = 0.66
-scaling[7] = 0.76
-scaling[8] = 0.76
-scaling[9] = 0.96
-scaling[10] = 0.96
-scaling[11] = 0.6
-scaling[12] = 0.6
-scaling[13] = 0.6
-scaling[14] = 0.6
-scaling[15] = 0.6
-scaling[16] = 0.6
+scaling[1] = 0.55
+scaling[2] = 0.55
+scaling[3] = 0.55
+scaling[4] = 0.55
+scaling[5] = 0.55
+scaling[6] = 0.55
+scaling[7] = 0.65
+scaling[8] = 0.62
+scaling[9] = 0.75
+scaling[10] = 0.75
+scaling[11] = 0.42
+scaling[12] = 0.42
+scaling[13] = 0.42
+scaling[14] = 0.42
+scaling[15] = 0.42
+scaling[16] = 0.42

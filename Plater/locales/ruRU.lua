@@ -7,7 +7,9 @@ do
 --[[Translation missing --]]
 L["EXPORT"] = "Export"
 --[[Translation missing --]]
-L["EXPORT_CAST_COLORS"] = "Export Colors"
+L["EXPORT_CAST_COLORS"] = "Share Colors"
+--[[Translation missing --]]
+L["EXPORT_CAST_SOUNDS"] = "Share Sounds"
 L["HIGHLIGHT_HOVEROVER"] = "Подсвечивание при наведении курсора"
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Степень подсвечивания при наведении курсора"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Эффект подсвечивания при наведении курсора мыши над индикаторами здоровья"
@@ -15,6 +17,8 @@ L["HIGHLIGHT_HOVEROVER_DESC"] = "Эффект подсвечивания при 
 L["IMPORT"] = "Import"
 --[[Translation missing --]]
 L["IMPORT_CAST_COLORS"] = "Import Colors"
+--[[Translation missing --]]
+L["IMPORT_CAST_SOUNDS"] = "Import Sounds"
 L["OPTIONS_ALPHA"] = "Прозрачность"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Множитель прозрачности."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Прозрачность по умолчанию"

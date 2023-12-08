@@ -1,3 +1,8 @@
+== v2.08 - 1st December 2023
+* Small additions to Northrend
+* Felstriker server added
+* Penance and Shadowstrike added (SoD)
+
 == v2.07 - 3rd November 2023
 * TOC bump to 10.2.0
 * Reworked pin scaling

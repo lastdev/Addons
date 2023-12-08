@@ -1,58 +1,30 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Details_TimeLine", "frFR") 
 if not L then return end 
 
---[[Translation missing --]]
---[[ L["STRING_DATAINVALID"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ELAPSED"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_INCOMBAT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_NODATA"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_BGCOLOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_BGCOLOR_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_MAXSEGMENTS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_MAXSEGMENTS_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOWCOLOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOWCOLOR_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_PLUGIN_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_PLUGIN_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_RESET"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_SEARCH"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_SECONDS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_SELECT_SEGMENT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_SOURCE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_SPELLICONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TARGET"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TIME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TYPE_COOLDOWN"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TYPE_DEBUFF"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_UNKNOWN"] = ""--]] 
-
+L["STRING_DATAINVALID"] = "Impossible de charger ce segment : les données sont corrompues."
+L["STRING_ELAPSED"] = "Temps écoulé"
+L["STRING_INCOMBAT"] = "La chronologie permet de saisir les données des combats en cours."
+L["STRING_NODATA"] = "La chronologie n'a rien à montrer pour le moment."
+L["STRING_OPTIONS"] = "Options"
+L["STRING_OPTIONS_BGCOLOR"] = "Couleur de fond"
+L["STRING_OPTIONS_BGCOLOR_DESC"] = "Sélectionnez la couleur de fond"
+L["STRING_OPTIONS_MAXSEGMENTS"] = "Segments maxi"
+L["STRING_OPTIONS_MAXSEGMENTS_DESC"] = "Limite des segments mémorisés"
+L["STRING_OPTIONS_TITLE"] = "Options relatives aux délais"
+L["STRING_OPTIONS_WINDOWCOLOR"] = "Échelle des fenêtres"
+L["STRING_OPTIONS_WINDOWCOLOR_DESC"] = "Définir la taille de la fenêtre"
+L["STRING_PLUGIN_DESC"] = "Affiche une chronologie des temps de recharge utilisés par les membres de votre raid et des debuffs appliqués par les ennemis dans votre raid. Montre également quand chaque membre est décédé, avec cela, vous pouvez voir le joueur décédé sans utiliser de temps de recharge ou s'il est décédé après une combinaison de debuffs."
+L["STRING_PLUGIN_NAME"] = "Chronologie"
+L["STRING_RESET"] = "Réinitialiser"
+L["STRING_SEARCH"] = "Filtre :"
+L["STRING_SECONDS"] = "Secondes"
+L["STRING_SELECT_SEGMENT"] = "Segment :"
+L["STRING_SOURCE"] = "Source"
+L["STRING_SPELLICONS"] = "Icônes de sort"
+L["STRING_TARGET"] = "Cible"
+L["STRING_TIME"] = "À"
+L["STRING_TOOLTIP"] = "Afficher les données de chronologie"
+L["STRING_TYPE"] = "Type :"
+L["STRING_TYPE_COOLDOWN"] = "Temps de recharge"
+L["STRING_TYPE_DEBUFF"] = "Debuff"
+L["STRING_UNKNOWN"] = "inconnu"

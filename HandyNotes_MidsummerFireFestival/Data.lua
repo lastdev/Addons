@@ -119,6 +119,10 @@ points[ 127 ] = { -- Crystalsong Forest
 	[78187495] = { aID=6008, index=2, quest=13491, npc=32807, faction="Alliance", group="H" },
 	[79975321] = { aID=6009, index=8, quest=13499, npc=32815, faction="Horde", group="H" },
 	[80345272] = { aID=6007, index=6, quest=13457, object=194046, faction="Alliance", group="D" },
+	[90571936] = { aID=6009, index=5, quest=13498, npc=32814, faction="Horde", group="H" },
+	[90841996] = { aID=6007, index=2, quest=13455, object=194043, faction="Alliance", group="D" },
+	[93622359] = { aID=6010, index=5, quest=13446, object=194044, faction="Horde", group="D" },
+	[93632285] = { aID=6008, index=5, quest=13490, npc=32806, faction="Alliance", group="H" },
 }
 points[ 62 ] = { -- Darkshore
 	[48732265] = { aID=1023, index=4, quest=11811, npc=25893, faction="Alliance", group="H", tip=teldrassil },
@@ -146,6 +150,10 @@ points[ 115 ] = { -- Dragonblight
 	[38484819] = { aID=6007, index=8, quest=13451, object=194037, faction="Alliance", group="D" },
 	[75064384] = { aID=6010, index=1, quest=13443, object=194036, faction="Horde", group="D" },
 	[75294380] = { aID=6008, index=1, quest=13487, npc=32803, faction="Alliance", group="H" },
+	[76621171] = { aID=6010, index=8, quest=13447, object=194045, faction="Horde", group="D" },
+	[76891158] = { aID=6008, index=2, quest=13491, npc=32807, faction="Alliance", group="H" },
+	[77760103] = { aID=6009, index=8, quest=13499, npc=32815, faction="Horde", group="H" },
+	[77940079] = { aID=6007, index=6, quest=13457, object=194046, faction="Alliance", group="D" },
 }
 points[ 422 ] = { -- Dread Wastes
 	[56076957] = { aIDA=8045, aIDH=8044, index=1, quest=32497, npc=69522, group="H" },
@@ -203,6 +211,8 @@ points[ 543 ] = { -- Gorgrond
 points[ 116 ] = { -- Grizzly Hills
 	[19136145] = { aID=6007, index=4, quest=13454, object=194042, faction="Alliance", group="D" },
 	[19326116] = { aID=6009, index=7, quest=13497, npc=32813, faction="Horde", group="H" },
+	[31480638] = { aID=6007, index=3, quest=13458, object=194048, faction="Alliance", group="D" },
+	[31540675] = { aID=6009, index=6, quest=13500, npc=32816, faction="Horde", group="H" },
 	[33906045] = { aID=6008, index=7, quest=13489, npc=32805, faction="Alliance", group="H" },
 	[34186061] = { aID=6010, index=7, quest=13445, object=194040, faction="Horde", group="D" },
 }
@@ -224,6 +234,14 @@ points[ 117 ] = { -- Howling Fjord
 	[48611315] = { aID=6009, index=3, quest=13496, npc=32812, faction="Horde", group="H" },
 	[57771577] = { aID=6010, index=3, quest=13444, object=194038, faction="Horde", group="D" },
 	[57801612] = { aID=6008, index=3, quest=13488, npc=32804, faction="Alliance", group="H" },
+}
+points[ 118 ] = { -- Icecrown
+	[09179387] = { aID=6007, index=7, quest=13450, object=194034, faction="Alliance", group="D" },
+	[09319407] = { aID=6009, index=4, quest=13494, npc=32810, faction="Horde", group="H" },
+	[09589719] = { aID=6010, index=4, quest=13442, object=194035, faction="Horde", group="D" },
+	[09739705] = { aID=6008, index=4, quest=13486, npc=32802, faction="Alliance", group="H" },
+	[98519305] = { aID=6009, index=8, quest=13499, npc=32815, faction="Horde", group="H" },
+	[98679283] = { aID=6007, index=6, quest=13457, object=194046, faction="Alliance", group="D" },
 }
 points[ 87 ] = { -- Ironforge
 	[64622482] = { aID=1145, quest=9331, label="Ironforge", object=181333, faction="Horde", group="T" },
@@ -335,12 +353,6 @@ points[ 65 ] = { -- Stonetalon Mountains
 	[52916245] = { aID=1026, index=11, quest=11856, npc=25940, faction="Horde", group="H" },
 	[52976232] = { aID=1029, index=11, quest=11780, object=187968, faction="Alliance", group="D" },
 }
-points[ 120 ] = { -- Storm Peaks
-	[40278535] = { aID=6009, index=5, quest=13498, npc=32814, faction="Horde", group="H" },
-	[40378558] = { aID=6007, index=2, quest=13455, object=194043, faction="Alliance", group="D" },
-	[41448669] = { aID=6008, index=5, quest=13490, npc=32806, faction="Alliance", group="H" },
-	[41448697] = { aID=6010, index=5, quest=13446, object=194044, faction="Horde", group="D" },
-}
 points[ 634 ] = { -- Stormheim
 	[32504213] = { aIDA=11280, aIDH=11282, index=4, quest=44577, npc=114496, group="H" },
 }
@@ -422,6 +434,16 @@ points[ 26 ] = { -- The Hinterlands
 }
 points[ 371 ] = { -- The Jade Forest
 	[47184718] = { aIDA=8045, aIDH=8044, index=2, quest=32498, npc=69529, group="H" },
+}
+points[ 120 ] = { -- The Storm Peaks
+	[36219831] = { aID=6009, index=8, quest=13499, npc=32815, faction="Horde", group="H" },
+	[36359812] = { aID=6007, index=6, quest=13457, object=194046, faction="Alliance", group="D" },
+	[40278535] = { aID=6009, index=5, quest=13498, npc=32814, faction="Horde", group="H" },
+	[40378558] = { aID=6007, index=2, quest=13455, object=194043, faction="Alliance", group="D" },
+	[41448669] = { aID=6008, index=5, quest=13490, npc=32806, faction="Alliance", group="H" },
+	[41448697] = { aID=6010, index=5, quest=13446, object=194044, faction="Horde", group="D" },
+	[62689638] = { aID=6008, index=6, quest=13492, npc=32808, faction="Alliance", group="H" },
+	[62779618] = { aID=6010, index=6, quest=13449, object=194049, faction="Horde", group="D" },
 }
 points[ 2022 ] = { -- The Waking Shores
 	[45988288] = { aIDA=17737, aIDH=17738, index=1, quest=75398, npc=203749, group="H" }, -- Bonfire at 45928279
@@ -505,6 +527,10 @@ points[ 56 ] = { -- Wetlands
 	[13274717] = { aID=1031, index=16, quest=11757, object=187940, faction="Horde", group="D" },
 	[13464707] = { aID=1022, index=16, quest=11828, npc=25911, faction="Alliance", group="H" },
 }
+points[ 123 ] = { -- Wintergrasp
+	[95739853] = { aID=6009, index=1, quest=13495, npc=32811, faction="Horde", group="H" },
+	[96159800] = { aID=6007, index=8, quest=13451, object=194037, faction="Alliance", group="D" },
+}
 points[ 83 ] = { -- Winterspring
 	[58094725] = { aID=1029, index=14, quest=11803, object=187953, faction="Alliance", group="D" },
 	[58144750] = { aID=1026, index=14, quest=11839, npc=25922, faction="Horde", group="H" },
@@ -521,6 +547,14 @@ points[ 2133 ] = { -- Zaralek Cavern
 	[55175542] = { aIDA=17737, aIDH=17738, index=6, quest=75650, npc=204417, group="H" }, -- Bonfire at 55235549
 }
 points[ 121 ] = { -- Zul'Drak
+	[01417604] = { aID=6010, index=8, quest=13447, object=194045, faction="Horde", group="D" },
+	[01707590] = { aID=6008, index=2, quest=13491, npc=32807, faction="Alliance", group="H" },
+	[02686405] = { aID=6009, index=8, quest=13499, npc=32815, faction="Horde", group="H" },
+	[02886378] = { aID=6007, index=6, quest=13457, object=194046, faction="Alliance", group="D" },
+	[08464560] = { aID=6009, index=5, quest=13498, npc=32814, faction="Horde", group="H" },
+	[08614592] = { aID=6007, index=2, quest=13455, object=194043, faction="Alliance", group="D" },
+	[10124790] = { aID=6010, index=5, quest=13446, object=194044, faction="Horde", group="D" },
+	[10134750] = { aID=6008, index=5, quest=13490, npc=32806, faction="Alliance", group="H" },
 	[40386130] = { aID=6008, index=6, quest=13492, npc=32808, faction="Alliance", group="H" },
 	[40516101] = { aID=6010, index=6, quest=13449, object=194049, faction="Horde", group="D" },
 	[43327135] = { aID=6007, index=3, quest=13458, object=194048, faction="Alliance", group="D" },

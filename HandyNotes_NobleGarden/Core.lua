@@ -3,7 +3,7 @@
 
                                              Noblegarden
 
-                                      v2.09 - 28th October 2023
+                                     v2.11 - 26th November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -23,11 +23,11 @@ ns.colour.plaintext = "\124cFFA165F0"
 
 --ns.author = true
 
-local defaults = { profile = { icon_scale = 1.7, icon_alpha = 1, showCoords = true,
+local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
 								removeDailies = false, removeSeasonal = true, removeEver = false,
 								showBCE = true,
-								icon_hardBoiled = 16, icon_nobleGarden = 12, icon_springFling = 13,
-								icon_desertRose = 11, icon_ngDailies = 15, icon_ngBCE = 14 } }
+								iconHardBoiled = 16, iconNobleGarden = 12, iconSpringFling = 13,
+								iconDesertRose = 11, iconNGDailies = 15, iconNGBCE = 14 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -42,38 +42,36 @@ local UIParent = _G.UIParent
 local UnitName = UnitName
 local format = _G.format
 local next = _G.next
-
 local HandyNotes = _G.HandyNotes
 
 local _, _, _, version = GetBuildInfo()
-ns.faction = UnitFactionGroup( "player" )
-ns.classic = (version < 40000) and true or false
-ns.azeroth = 947
-ns.kalimdor = (version < 40000) and 1414 or 12
-ns.easternKingdom = (version < 40000) and 1415 or 13
-ns.unGoroCrater = (version < 40000) and 1449 or 78
-ns.silithus = (version < 40000) and 1451 or 81
-ns.tanaris = (version < 40000) and 1446 or 71
-ns.badlands = (version < 40000) and 1418 or 15
-ns.thousandNeedles = (version < 40000) and 1441 or 64
-ns.desolace = (version < 40000) and 1443 or 66
-ns.azuremystIsle = (version < 40000) and 1943 or 97
-ns.elwynnForest = (version < 40000) and 1429 or 37
-ns.teldrassil = (version < 40000) and 1438 or 57
-ns.teldrassilOther = 1308
-ns.dunMorogh = (version < 40000) and 1426 or 27
-ns.mulgore = (version < 40000) and 1412 or 7
-ns.eversongWoods = (version < 40000) and 1941 or 94
-ns.tirisfalGlades = (version < 40000) and 1420 or 18
-ns.durotar = (version < 40000) and 1411 or 1
-ns.stormwindCity = (version < 40000) and 1453 or 84
-ns.silvermoonCity = (version < 40000) and 1954 or 110
-continents[ns.azeroth] = true
-continents[ns.kalimdor] = true
-continents[ns.easternKingdom] = true
-
-ns.faction = UnitFactionGroup( "player" )
-ns.name = UnitName( "player" ) or "Character"
+if version < 40000 then
+	ns.classic = true
+	continents[ 1414 ] = true -- Kalimdor
+	continents[ 1415 ] = true -- Eastern Kingdoms
+	continents[ 947 ] = true -- Azeroth
+	ns.azeroth = 947
+	ns.azuremystIsle = 1943
+	ns.durotar = 1411
+	ns.elwynnForest = 1429
+	ns.eversongWoods = 1941
+	ns.silvermoonCity = 1954
+	ns.stormwindCity = 1453
+	ns.teldrassil = 1438
+else
+	ns.classic = false
+	continents[ 12 ] = true -- Kalimdor
+	continents[ 13 ] = true -- Eastern Kingdoms
+	continents[ 947 ] = true -- Azeroth
+	ns.azeroth = 947
+	ns.azuremystIsle = 97
+	ns.durotar = 1
+	ns.elwynnForest = 37
+	ns.eversongWoods = 94
+	ns.silvermoonCity = 110
+	ns.stormwindCity = 84
+	ns.teldrassil = 57
+end
 
 -- Localisation
 ns.locale = GetLocale()
@@ -87,6 +85,309 @@ ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar 
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
+
+if ns.locale == "deDE" then
+	L["Character"] = "Charakter"
+	L["Account"] = "Accountweiter"
+	L["Completed"] = "Abgeschlossen"
+	L["Not Completed"] = "Nicht Abgeschlossen"
+	L["Options"] = "Optionen"
+	L["Map Pin Size"] = "Pin-Größe"
+	L["The Map Pin Size"] = "Die Größe der Karten-Pins"
+	L["Map Pin Alpha"] = "Kartenpin Alpha"
+	L["The alpha transparency of the map pins"] = "Die Alpha-Transparenz der Karten-Pins"
+	L["Show Coordinates"] = "Koordinaten anzeigen"
+	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
+		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
+	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
+	L["Red"] = "Rot"
+	L["Blue"] = "Blau"
+	L["Green"] = "Grün"
+	L["Cross"] = "Kreuz"
+	L["Diamond"] = "Diamant"
+	L["Frost"] = "Frost"
+	L["Cogwheel"] = "Zahnrad"
+	L["White"] = "Weiß"
+	L["Purple"] = "Lila"
+	L["Yellow"] = "Gelb"
+	L["Grey"] = "Grau"
+	L["Mana Orb"] = "Manakugel"
+	L["Phasing"] = "Synchronisieren"
+	L["Raptor egg"] = "Raptor-Ei"
+	L["Stars"] = "Sternen"
+	L["Screw"] = "Schraube"
+	
+elseif ns.locale == "esES" or ns.locale == "esMX" then
+	L["Character"] = "Personaje"
+	L["Account"] = "la Cuenta"
+	L["Completed"] = "Completado"
+	L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
+	L["Options"] = "Opciones"
+	L["Map Pin Size"] = "Tamaño de alfiler"
+	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
+	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
+	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
+	L["Icon Alpha"] = "Transparencia del icono"
+	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
+		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
+	L["Map Pin Selections"] = "Selecciones de pines de mapa"
+	L["Gold"] = "Oro"
+	L["Red"] = "Rojo"
+	L["Blue"] = "Azul"
+	L["Green"] = "Verde"
+	L["Ring"] = "Anillo"
+	L["Cross"] = "Cruz"
+	L["Diamond"] = "Diamante"
+	L["Frost"] = "Escarcha"
+	L["Cogwheel"] = "Rueda dentada"
+	L["White"] = "Blanco"
+	L["Purple"] = "Púrpura"
+	L["Yellow"] = "Amarillo"
+	L["Grey"] = "Gris"
+	L["Mana Orb"] = "Orbe de maná"
+	L["Phasing"] = "Sincronización"	
+	L["Raptor egg"] = "Huevo de raptor"	
+	L["Stars"] = "Estrellas"
+	L["Screw"] = "Tornillo"
+	
+elseif ns.locale == "frFR" then
+	L["Character"] = "Personnage"
+	L["Account"] = "le Compte"
+	L["Completed"] = "Achevé"
+	L["Not Completed"] = "Non achevé"
+	L["Options"] = "Options"
+	L["Map Pin Size"] = "Taille des épingles"
+	L["The Map Pin Size"] = "La taille des épingles de carte"
+	L["Map Pin Alpha"] = "Alpha des épingles de carte"
+	L["The alpha transparency of the map pins"] = "La transparence alpha des épingles de la carte"
+	L["Show Coordinates"] = "Afficher les coordonnées"
+	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
+		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
+	L["Map Pin Selections"] = "Sélections de broches de carte"
+	L["Gold"] = "Or"
+	L["Red"] = "Rouge"
+	L["Blue"] = "Bleue"
+	L["Green"] = "Vert"
+	L["Ring"] = "Bague"
+	L["Cross"] = "Traverser"
+	L["Diamond"] = "Diamant"
+	L["Frost"] = "Givre"
+	L["Cogwheel"] = "Roue dentée"
+	L["White"] = "Blanc"
+	L["Purple"] = "Violet"
+	L["Yellow"] = "Jaune"
+	L["Grey"] = "Gris"
+	L["Mana Orb"] = "Orbe de mana"
+	L["Phasing"] = "Synchronisation"
+	L["Raptor egg"] = "Œuf de Rapace"
+	L["Stars"] = "Étoiles"
+	L["Screw"] = "Vis"
+	
+elseif ns.locale == "itIT" then
+	L["Character"] = "Personaggio"
+	L["Completed"] = "Completo"
+	L["Not Completed"] = "Non Compiuto"
+	L["Options"] = "Opzioni"
+	L["Map Pin Size"] = "Dimensione del pin"
+	L["The Map Pin Size"] = "La dimensione dei Pin della mappa"
+	L["Map Pin Alpha"] = "Mappa pin alfa"
+	L["The alpha transparency of the map pins"] = "La trasparenza alfa dei pin della mappa"
+	L["Show Coordinates"] = "Mostra coordinate"
+	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
+		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
+	L["Map Pin Selections"] = "Selezioni pin mappa"
+	L["Gold"] = "Oro"
+	L["Red"] = "Rosso"
+	L["Blue"] = "Blu"
+	L["Green"] = "Verde"
+	L["Ring"] = "Squillo"
+	L["Cross"] = "Attraverso"
+	L["Diamond"] = "Diamante"
+	L["Frost"] = "Gelo"
+	L["Cogwheel"] = "Ruota dentata"
+	L["White"] = "Bianca"
+	L["Purple"] = "Viola"
+	L["Yellow"] = "Giallo"
+	L["Grey"] = "Grigio"
+	L["Mana Orb"] = "Globo di Mana"
+	L["Phasing"] = "Sincronizzazione"
+	L["Raptor egg"] = "Raptor Uovo"
+	L["Stars"] = "Stelle"
+	L["Screw"] = "Vite"
+
+elseif ns.locale == "koKR" then
+	L["Character"] = "캐릭터"
+	L["Account"] = "계정"
+	L["Completed"] = "완료"
+	L["Not Completed"] = "미완료"
+	L["Map Pin Size"] = "지도 핀의 크기"
+	L["Options"] = "설정"
+	L["The Map Pin Size"] = "지도 핀의 크기"
+	L["Map Pin Alpha"] = "지도 핀의 알파"
+	L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
+	L["Show Coordinates"] = "좌표 표시"
+	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	L["Map Pin Selections"] = "지도 핀 선택"
+	L["Gold"] = "금"
+	L["Red"] = "빨간"
+	L["Blue"] = "푸른"
+	L["Green"] = "녹색"
+	L["Ring"] = "반지"
+	L["Cross"] = "십자가"
+	L["Diamond"] = "다이아몬드"
+	L["Frost"] = "냉기"
+	L["Cogwheel"] = "톱니 바퀴"
+	L["White"] = "화이트"
+	L["Purple"] = "보라색"
+	L["Yellow"] = "노랑"
+	L["Grey"] = "회색"
+	L["Mana Orb"] = "마나 보주"
+	L["Phasing"] = "동기화 중"
+	L["Raptor egg"] = "랩터의 알"
+	L["Stars"] = "별"
+	L["Screw"] = "나사"
+	
+elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
+	L["Character"] = "Personagem"
+	L["Account"] = "à Conta"
+	L["Completed"] = "Concluído"
+	L["Not Completed"] = "Não Concluído"
+	L["Options"] = "Opções"
+	L["Map Pin Size"] = "Tamanho do pino"
+	L["The Map Pin Size"] = "O tamanho dos pinos do mapa"
+	L["Map Pin Alpha"] = "Alfa dos pinos do mapa"
+	L["The alpha transparency of the map pins"] = "A transparência alfa dos pinos do mapa"
+	L["Show Coordinates"] = "Mostrar coordenadas"
+	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
+		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
+	L["Map Pin Selections"] = "Seleções de pinos de mapa"
+	L["Gold"] = "Ouro"
+	L["Red"] = "Vermelho"
+	L["Blue"] = "Azul"
+	L["Green"] = "Verde"
+	L["Ring"] = "Anel"
+	L["Cross"] = "Cruz"
+	L["Diamond"] = "Diamante"
+	L["Frost"] = "Gélido"
+	L["Cogwheel"] = "Roda dentada"
+	L["White"] = "Branco"
+	L["Purple"] = "Roxa"
+	L["Yellow"] = "Amarelo"
+	L["Grey"] = "Cinzento"
+	L["Mana Orb"] = "Orbe de Mana"
+	L["Phasing"] = "Sincronização"
+	L["Raptor egg"] = "Ovo de raptor"
+	L["Stars"] = "Estrelas"
+	L["Screw"] = "Parafuso"
+
+elseif ns.locale == "ruRU" then
+	L["Character"] = "Персонажа"
+	L["Account"] = "Счет"
+	L["Completed"] = "Выполнено"
+	L["Not Completed"] = "Не Выполнено"
+	L["Options"] = "Параметры"
+	L["Map Pin Size"] = "Размер булавки"
+	L["The Map Pin Size"] = "Размер булавок на карте"
+	L["Map Pin Alpha"] = "Альфа булавок карты"
+	L["The alpha transparency of the map pins"] = "Альфа-прозрачность булавок карты"
+	L["Show Coordinates"] = "Показать Координаты"
+	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
+		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Map Pin Selections"] = "Выбор булавки карты"
+	L["Gold"] = "Золото"
+	L["Red"] = "Красный"
+	L["Blue"] = "Синий"
+	L["Green"] = "Зеленый"
+	L["Ring"] = "Звенеть"
+	L["Cross"] = "Крест"
+	L["Diamond"] = "Ромб"
+	L["Frost"] = "Лед"
+	L["Cogwheel"] = "Зубчатое колесо"
+	L["White"] = "белый"
+	L["Purple"] = "Пурпурный"
+	L["Yellow"] = "Желтый"
+	L["Grey"] = "Серый"
+	L["Mana Orb"] = "Cфера маны"
+	L["Phasing"] = "Синхронизация"
+	L["Raptor egg"] = "Яйцо ящера"
+	L["Stars"] = "Звезды"
+	L["Screw"] = "Винт"
+
+elseif ns.locale == "zhCN" then
+	L["Character"] = "角色"
+	L["Account"] = "账号"
+	L["Completed"] = "已完成"
+	L["Not Completed"] = "未完成"
+	L["Options"] = "选项"
+	L["Map Pin Size"] = "地图图钉的大小"
+	L["The Map Pin Size"] = "地图图钉的大小"
+	L["Map Pin Alpha"] = "地图图钉的透明度"
+	L["The alpha transparency of the map pins"] = "地图图钉的透明度"
+	L["Show Coordinates"] = "显示坐标"
+	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
+	L["Map Pin Selections"] = "地图图钉选择"
+	L["Gold"] = "金子"
+	L["Red"] = "红"
+	L["Blue"] = "蓝"
+	L["Green"] = "绿色"
+	L["Ring"] = "戒指"
+	L["Cross"] = "叉"
+	L["Diamond"] = "钻石"
+	L["Frost"] = "冰霜"
+	L["Cogwheel"] = "齿轮"
+	L["White"] = "白色"
+	L["Purple"] = "紫色"
+	L["Yellow"] = "黄色"
+	L["Grey"] = "灰色"
+	L["Mana Orb"] = "法力球"
+	L["Phasing"] = "同步"
+	L["Raptor egg"] = "迅猛龙蛋"
+	L["Stars"] = "星星"
+	L["Screw"] = "拧"
+	
+elseif ns.locale == "zhTW" then
+	L["Character"] = "角色"
+	L["Account"] = "賬號"
+	L["Completed"] = "完成"
+	L["Not Completed"] = "未完成"
+	L["Options"] = "選項"
+	L["Map Pin Size"] = "地圖圖釘的大小"
+	L["The Map Pin Size"] = "地圖圖釘的大小"
+	L["Map Pin Alpha"] = "地圖圖釘的透明度"
+	L["The alpha transparency of the map pins"] = "地圖圖釘的透明度"
+	L["Show Coordinates"] = "顯示坐標"
+	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
+	L["Map Pin Selections"] = "地圖圖釘選擇"
+	L["Gold"] = "金子"
+	L["Red"] = "紅"
+	L["Blue"] = "藍"
+	L["Green"] = "綠色"
+	L["Ring"] = "戒指"
+	L["Cross"] = "叉"
+	L["Diamond"] = "钻石"
+	L["Frost"] = "霜"
+	L["Cogwheel"] = "齒輪"
+	L["White"] = "白色"
+	L["Purple"] = "紫色"
+	L["Yellow"] = "黃色"
+	L["Grey"] = "灰色"
+	L["Mana Orb"] = "法力球"
+	L["Phasing"] = "同步"
+	L["Raptor egg"] = "迅猛龍蛋"
+	L["Stars"] = "星星"
+	L["Screw"] = "擰"
+
+else
+	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	if ns.locale == "enUS" then
+		L["Grey"] = "Gray"
+	end
+end
+
+ns.name = UnitName( "player" ) or "Character"
+ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
 	L["Noblegarden"] = "Nobelgarten Erfolge"
@@ -108,36 +409,6 @@ if ns.locale == "deDE" then
 	L["AnywhereE"] = "Überall im Lage"
 	L["hide"] = "(1) Kaufen Sie ein Nobelgartenei\n(2) Platziere es irgendwo in der Stadt"
 	L["AddOn Description"] = "Hilfe für die Nobelgarten Erfolge"	
-	L["Character"] = "Charakter"
-	L["Account"] = "Accountweiter"
-	L["Completed"] = "Abgeschlossen"
-	L["Not Completed"] = "Nicht Abgeschlossen"
-	L["Icon Selection"] = "Symbolauswahl"
-	L["Icon Scale"] = "Symbolskalierung"
-	L["The scale of the icons"] = "Die Skalierung der Symbole"
-	L["Icon Alpha"] = "Symboltransparenz"
-	L["The alpha transparency of the icons"] = "Die Transparenz der Symbole"
-	L["Icon"] = "Symbol"
-	L["Options"] = "Optionen"
-	L["Red"] = "Rot"
-	L["Blue"] = "Blau"
-	L["Green"] = "Grün"
-	L["Cross"] = "Kreuz"
-	L["Diamond"] = "Diamant"
-	L["Frost"] = "Frost"
-	L["Cogwheel"] = "Zahnrad"
-	L["White"] = "Weiß"
-	L["Purple"] = "Lila"
-	L["Yellow"] = "Gelb"
-	L["Grey"] = "Grau"
-	L["Mana Orb"] = "Manakugel"
-	L["Phasing"] = "Synchronisieren"
-	L["Raptor egg"] = "Raptor-Ei"
-	L["Stars"] = "Sternen"
-	L["NPC"] = "NSC"
-	L["Show Coordinates"] = "Koordinaten anzeigen"
-	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
-		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Noblegarden"] = "Jardín Noble"
@@ -159,38 +430,6 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["AnywhereE"] = "En cualquier lugar del campamento"
 	L["hide"] = "(1) Compra un Huevo del Jardín Noble\n(2) Colócalo en cualquier lugar de la ciudad"
 	L["AddOn Description"] = "Ayuda para los logros del Jardín Noble"
-	L["Character"] = "Personaje"
-	L["Account"] = "la Cuenta"
-	L["Completed"] = "Completado"
-	L["Not Completed"] = ns.locale == "esES" and "Sin Completar" or "Incompleto"
-	L["Icon Selection"] = "Selección de iconos"
-	L["Icon Scale"] = "Escala de icono"
-	L["The scale of the icons"] = "La escala de los iconos"
-	L["Icon Alpha"] = "Transparencia del icono"
-	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
-	L["Icon"] = "El icono"
-	L["Options"] = "Opciones"
-	L["Gold"] = "Oro"
-	L["Red"] = "Rojo"
-	L["Blue"] = "Azul"
-	L["Green"] = "Verde"
-	L["Ring"] = "Anillo"
-	L["Cross"] = "Cruz"
-	L["Diamond"] = "Diamante"
-	L["Frost"] = "Escarcha"
-	L["Cogwheel"] = "Rueda dentada"
-	L["White"] = "Blanco"
-	L["Purple"] = "Púrpura"
-	L["Yellow"] = "Amarillo"
-	L["Grey"] = "Gris"
-	L["Mana Orb"] = "Orbe de maná"
-	L["Phasing"] = "Sincronización"	
-	L["Raptor egg"] = "Huevo de raptor"	
-	L["Stars"] = "Estrellas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
-		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
 
 elseif ns.locale == "frFR" then
 	L["Noblegarden"] = "Jardin des nobles"
@@ -213,38 +452,6 @@ elseif ns.locale == "frFR" then
 	L["AnywhereE"] = "Partout dans le campement"
 	L["hide"] = "(1) Acheter un Oeuf du Jardin des nobles\n(2) Placez-le n'importe où dans la ville"
 	L["AddOn Description"] = "Aide pour les hauts faits du Jardin des nobles"
-	L["Character"] = "Personnage"
-	L["Account"] = "le Compte"
-	L["Completed"] = "Achevé"
-	L["Not Completed"] = "Non achevé"
-	L["Icon Selection"] = "Sélection d'icônes"
-	L["Icon Scale"] = "Echelle de l’icône"
-	L["The scale of the icons"] = "L'échelle des icônes"
-	L["Icon Alpha"] = "Transparence de l'icône"
-	L["The alpha transparency of the icons"] = "La transparence des icônes"
-	L["Icon"] = "L'icône"
-	L["Options"] = "Options"
-	L["Gold"] = "Or"
-	L["Red"] = "Rouge"
-	L["Blue"] = "Bleue"
-	L["Green"] = "Vert"
-	L["Ring"] = "Bague"
-	L["Cross"] = "Traverser"
-	L["Diamond"] = "Diamant"
-	L["Frost"] = "Givre"
-	L["Cogwheel"] = "Roue dentée"
-	L["White"] = "Blanc"
-	L["Purple"] = "Violet"
-	L["Yellow"] = "Jaune"
-	L["Grey"] = "Gris"
-	L["Mana Orb"] = "Orbe de mana"
-	L["Phasing"] = "Synchronisation"
-	L["Raptor egg"] = "Œuf de Rapace"
-	L["Stars"] = "Étoiles"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Afficher les coordonnées"
-	L["Show Coordinates Description"] = "Afficher " ..ns.colour.highlight
-		.."les coordonnées\124r dans les info-bulles sur la carte du monde et la mini-carte"
 
 elseif ns.locale == "itIT" then
 	L["Noblegarden"] = "Festa di Nobiluova"
@@ -266,37 +473,6 @@ elseif ns.locale == "itIT" then
 	L["AnywhereE"] = "Ovunque nell'accampamento"
 	L["hide"] = "(1) Acquista un Noblegarden Egg\n(2) Posizionalo ovunque in città"
 	L["AddOn Description"] = "Aiuta con i risultati del Festa di Nobiluova"
-	L["Character"] = "Personaggio"
-	L["Completed"] = "Completo"
-	L["Not Completed"] = "Non Compiuto"
-	L["Icon Selection"] = "Selezione dell'icona"
-	L["Icon Scale"] = "Scala delle icone"
-	L["The scale of the icons"] = "La scala delle icone"
-	L["Icon Alpha"] = "Icona alfa"
-	L["The alpha transparency of the icons"] = "La trasparenza alfa delle icone"
-	L["Icon"] = "Icona"
-	L["Options"] = "Opzioni"
-	L["Gold"] = "Oro"
-	L["Red"] = "Rosso"
-	L["Blue"] = "Blu"
-	L["Green"] = "Verde"
-	L["Ring"] = "Squillo"
-	L["Cross"] = "Attraverso"
-	L["Diamond"] = "Diamante"
-	L["Frost"] = "Gelo"
-	L["Cogwheel"] = "Ruota dentata"
-	L["White"] = "Bianca"
-	L["Purple"] = "Viola"
-	L["Yellow"] = "Giallo"
-	L["Grey"] = "Grigio"
-	L["Mana Orb"] = "Globo di Mana"
-	L["Phasing"] = "Sincronizzazione"
-	L["Raptor egg"] = "Raptor Uovo"
-	L["Stars"] = "Stelle"
-	L["NPC"] = "PNG"
-	L["Show Coordinates"] = "Mostra coordinate"
-	L["Show Coordinates Description"] = "Visualizza " ..ns.colour.highlight
-		.."le coordinate\124r nelle descrizioni comandi sulla mappa del mondo e sulla minimappa"
 
 elseif ns.locale == "koKR" then
 	L["Noblegarden"] = "귀족의 정원"
@@ -316,36 +492,6 @@ elseif ns.locale == "koKR" then
 	L["AnywhereE"] = "야영지 어디든"
 	L["hide"] = "(1) 귀족의 정원 알 구매\n(2) 도시 어디에서나 배치"
 	L["AddOn Description"] = "귀족의 정원 업적들에 대한 도움말"	
-	L["Character"] = "캐릭터"
-	L["Account"] = "계정"
-	L["Completed"] = "완료"
-	L["Not Completed"] = "미완료"
-	L["Icon Selection"] = "아이콘 선택"
-	L["Icon Scale"] = "아이콘 크기 비율"
-	L["The scale of the icons"] = "아이콘의 크기 비율입니다"
-	L["Icon Alpha"] = "아이콘 투명도"
-	L["The alpha transparency of the icons"] = "아이콘의 투명도입니다"
-	L["Icon"] = "아이콘"
-	L["Options"] = "설정"
-	L["Gold"] = "금"
-	L["Red"] = "빨간"
-	L["Blue"] = "푸른"
-	L["Green"] = "녹색"
-	L["Ring"] = "반지"
-	L["Cross"] = "십자가"
-	L["Diamond"] = "다이아몬드"
-	L["Frost"] = "냉기"
-	L["Cogwheel"] = "톱니 바퀴"
-	L["White"] = "화이트"
-	L["Purple"] = "보라색"
-	L["Yellow"] = "노랑"
-	L["Grey"] = "회색"
-	L["Mana Orb"] = "마나 보주"
-	L["Phasing"] = "동기화 중"
-	L["Raptor egg"] = "랩터의 알"
-	L["Stars"] = "별"
-	L["Show Coordinates"] = "좌표 표시"
-	L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Noblegarden"] = "Jardinova"
@@ -367,38 +513,6 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["AnywhereE"] = "Em qualquer lugar do acampamento"
 	L["hide"] = "(1) Compre um Ovo de Jardinova\n(2) Coloque-o em qualquer lugar da cidade"
 	L["AddOn Description"] = "Ajuda para as conquistas do Jardinova"
-	L["Character"] = "Personagem"
-	L["Account"] = "à Conta"
-	L["Completed"] = "Concluído"
-	L["Not Completed"] = "Não Concluído"
-	L["Icon Selection"] = "Seleção de ícones"
-	L["Icon Scale"] = "Escala de Ícone"
-	L["The scale of the icons"] = "A escala dos ícones"
-	L["Icon Alpha"] = "Ícone Alpha"
-	L["The alpha transparency of the icons"] = "A transparência alfa dos ícones"
-	L["Icon"] = "Ícone"
-	L["Options"] = "Opções"
-	L["Gold"] = "Ouro"
-	L["Red"] = "Vermelho"
-	L["Blue"] = "Azul"
-	L["Green"] = "Verde"
-	L["Ring"] = "Anel"
-	L["Cross"] = "Cruz"
-	L["Diamond"] = "Diamante"
-	L["Frost"] = "Gélido"
-	L["Cogwheel"] = "Roda dentada"
-	L["White"] = "Branco"
-	L["Purple"] = "Roxa"
-	L["Yellow"] = "Amarelo"
-	L["Grey"] = "Cinzento"
-	L["Mana Orb"] = "Orbe de Mana"
-	L["Phasing"] = "Sincronização"
-	L["Raptor egg"] = "Ovo de raptor"
-	L["Stars"] = "Estrelas"
-	L["NPC"] = "PNJ"
-	L["Show Coordinates"] = "Mostrar coordenadas"
-	L["Show Coordinates Description"] = "Exibir " ..ns.colour.highlight
-		.."coordenadas\124r em dicas de ferramentas no mapa mundial e no minimapa"
 
 elseif ns.locale == "ruRU" then
 	L["Noblegarden"] = "Сад Чудес"
@@ -420,37 +534,6 @@ elseif ns.locale == "ruRU" then
 	L["AnywhereE"] = "Где угодно в лагере"
 	L["hide"] = "(1) Купить Праздничное яйцо\n(2) Разместите в любом месте города"
 	L["AddOn Description"] = "Достижение Помощь для Сада Чудес"
-	L["Character"] = "Персонажа"
-	L["Account"] = "Счет"
-	L["Completed"] = "Выполнено"
-	L["Not Completed"] = "Не Выполнено"
-	L["Icon Selection"] = "Выбор Значка"
-	L["Icon Scale"] = "Масштаб Значка"
-	L["The scale of the icons"] = "Масштаб для Значков"
-	L["Icon Alpha"] = "Альфа Значок"
-	L["The alpha transparency of the icons"] = "Альфа-прозрачность Значков"
-	L["Icon"] = "Альфа Значок"
-	L["Options"] = "Параметры"
-	L["Gold"] = "Золото"
-	L["Red"] = "Красный"
-	L["Blue"] = "Синий"
-	L["Green"] = "Зеленый"
-	L["Ring"] = "Звенеть"
-	L["Cross"] = "Крест"
-	L["Diamond"] = "Ромб"
-	L["Frost"] = "Лед"
-	L["Cogwheel"] = "Зубчатое колесо"
-	L["White"] = "белый"
-	L["Purple"] = "Пурпурный"
-	L["Yellow"] = "Желтый"
-	L["Grey"] = "Серый"
-	L["Mana Orb"] = "Cфера маны"
-	L["Phasing"] = "Синхронизация"
-	L["Raptor egg"] = "Яйцо ящера"
-	L["Stars"] = "Звезды"
-	L["Show Coordinates"] = "Показать Координаты"
-	L["Show Coordinates Description"] = "Отображает " ..ns.colour.highlight
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
 
 elseif ns.locale == "zhCN" then
 	L["Noblegarden"] = "贵族的花园"
@@ -470,36 +553,6 @@ elseif ns.locale == "zhCN" then
 	L["AnywhereE"] = "在营地的任何地方"
 	L["hide"] = "(1) 购买 复活节彩蛋\n(2) 把它放在城市的任何地方"
 	L["AddOn Description"] = "贵族的花园成就帮助"
-	L["Character"] = "角色"
-	L["Account"] = "账号"
-	L["Completed"] = "已完成"
-	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "图标选择"
-	L["Icon Scale"] = "图示大小"
-	L["The scale of the icons"] = "图示的大小"
-	L["Icon Alpha"] = "图示透明度"
-	L["The alpha transparency of the icons"] = "图示的透明度"
-	L["Icon"] = "图示"
-	L["Options"] = "选项"
-	L["Gold"] = "金子"
-	L["Red"] = "红"
-	L["Blue"] = "蓝"
-	L["Green"] = "绿色"
-	L["Ring"] = "戒指"
-	L["Cross"] = "叉"
-	L["Diamond"] = "钻石"
-	L["Frost"] = "冰霜"
-	L["Cogwheel"] = "齿轮"
-	L["White"] = "白色"
-	L["Purple"] = "紫色"
-	L["Yellow"] = "黄色"
-	L["Grey"] = "灰色"
-	L["Mana Orb"] = "法力球"
-	L["Phasing"] = "同步"
-	L["Raptor egg"] = "迅猛龙蛋"
-	L["Stars"] = "星星"
-	L["Show Coordinates"] = "显示坐标"
-	L["Show Coordinates Description"] = "在世界地图和迷你地图上的工具提示中" ..ns.colour.highlight .."显示坐标"
 
 elseif ns.locale == "zhTW" then
 	L["Noblegarden"] = "貴族的花園"
@@ -519,40 +572,8 @@ elseif ns.locale == "zhTW" then
 	L["AnywhereE"] = "在營地的任何地方"
 	L["hide"] = "(1) 購買 復活節彩蛋\n(2) 把它放在城市的任何地方"
 	L["AddOn Description"] = "貴族的花園成就幫助"
-	L["Character"] = "角色"
-	L["Account"] = "賬號"
-	L["Completed"] = "完成"
-	L["Not Completed"] = "未完成"
-	L["Icon Selection"] = "圖標選擇"
-	L["Icon Scale"] = "圖示大小"
-	L["The scale of the icons"] = "圖示的大小"
-	L["Icon Alpha"] = "圖示透明度"
-	L["The alpha transparency of the icons"] = "圖示的透明度"
-	L["Icon"] = "圖示"
-	L["Options"] = "選項"
-	L["Gold"] = "金子"
-	L["Red"] = "紅"
-	L["Blue"] = "藍"
-	L["Green"] = "綠色"
-	L["Ring"] = "戒指"
-	L["Cross"] = "叉"
-	L["Diamond"] = "钻石"
-	L["Frost"] = "霜"
-	L["Cogwheel"] = "齒輪"
-	L["White"] = "白色"
-	L["Purple"] = "紫色"
-	L["Yellow"] = "黃色"
-	L["Grey"] = "灰色"
-	L["Mana Orb"] = "法力球"
-	L["Phasing"] = "同步"
-	L["Raptor egg"] = "迅猛龍蛋"
-	L["Show Coordinates"] = "顯示坐標"
-	L["Show Coordinates Description"] = "在世界地圖和迷你地圖上的工具提示中" ..ns.colour.highlight .."顯示坐標"
 	
 else
-	if ns.locale == "enUS" then
-		L["Grey"] = "Gray"
-	end
 	L["hb1"] = "(1) Change your \"home\" to Marshall's Stand\n(2) Get the Noblegarden Bunny "
 				.."buff\n(3) Hearth ---> Marshall's Stand"
 	L["hb2"] = "(4) Run to here\n(5) Stand here and wait\n(6) Do not ride\n(7) Take no damage"
@@ -568,7 +589,6 @@ else
 	L["AnywhereE"] = "Anywhere in the encampment"
 	L["hide"] = "(1) Purchase a Noblegarden egg\n(2) Place it anywhere in the city"
 	L["AddOn Description"] = "Help for the Noblegarden achievements"
-	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
 	
 end
 
@@ -582,7 +602,6 @@ function pluginHandler:OnEnter(mapFile, coord)
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	local completed, aName, completedMe;
-	local pName = UnitName( "player" ) or L[ "Character" ]
 	
 	if pin.aID then
 		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( pin.aID )
@@ -595,13 +614,13 @@ function pluginHandler:OnEnter(mapFile, coord)
 			end
 		end
 		GameTooltip:AddDoubleLine( " ",
-			( completedMe == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+			( completedMe == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 		if pin.aIndex then
 			aName, _, completed = GetAchievementCriteriaInfo( pin.aID, pin.aIndex )
 			GameTooltip:AddDoubleLine( ns.colour.highlight ..aName,
-				( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-									or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+				( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+									or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 		end
 		if ( pin.aID == 2416 ) then
 			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.name ] )
@@ -612,8 +631,8 @@ function pluginHandler:OnEnter(mapFile, coord)
 		GameTooltip:SetText( ns.colour.prefix ..L["Noblegarden"] )
 		completed = IsQuestFlaggedCompleted( pin.quest )
 		GameTooltip:AddDoubleLine( ns.colour.highlight ..pin.qName,
-			( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..pName ..")" ) 
-								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..pName ..")" ) )
+			( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..ns.name ..")" ) 
+								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..ns.name ..")" ) )
 	end
 	if pin.tip then
 		GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.tip ] )
@@ -672,76 +691,78 @@ do
 		local coord, pin = next(t, prev)
 		while coord do
 			if pin then
-				if ( pin.aID == 2436 ) then -- Desert Rose
-					if ( ShowConditionallyE( pin.aID ) == true ) then
-						if ( ShowConditionallyS( pin.aID, pin.aIndex ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_desertRose ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_desertRose ], ns.db.icon_alpha
-						end
-					end
-				elseif ( pin.aID == 2419 ) then -- Spring Fling Alliance
-					if ( ns.faction == "Alliance" ) then
+				if pin.aID then
+					if ( pin.aID == 2436 ) then -- Desert Rose
 						if ( ShowConditionallyE( pin.aID ) == true ) then
-							if ( ShowConditionallyS( pin.aID, ( (ns.classic == true) and pin.aIndexC or pin.aIndexR ) ) == true ) then
-								return coord, nil, ns.textures[ ns.db.icon_springFling ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_springFling ], ns.db.icon_alpha
+							if ( ShowConditionallyS( pin.aID, pin.aIndex ) == true ) then
+								return coord, nil, ns.textures[ ns.db.iconDesertRose ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconDesertRose ], ns.db.iconAlpha
 							end
 						end
-					end
-				elseif ( pin.aID == 2497 ) then -- Spring Fling Horde
-					if ( ns.faction == "Horde" ) then
-						if ( ShowConditionallyE( pin.aID ) == true ) then
-							if ( ShowConditionallyS( pin.aID, ( (ns.classic == true) and pin.aIndexC or pin.aIndexR ) ) == true ) then
-								return coord, nil, ns.textures[ ns.db.icon_springFling ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_springFling ], ns.db.icon_alpha
+					elseif ( pin.aID == 2419 ) then -- Spring Fling Alliance
+						if ( ns.faction == "Alliance" ) then
+							if ( ShowConditionallyE( pin.aID ) == true ) then
+								if ( ShowConditionallyS( pin.aID, ( (ns.classic == true) and pin.aIndexC or pin.aIndexR ) ) == true ) then
+									return coord, nil, ns.textures[ ns.db.iconSpringFling ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
+								end
 							end
 						end
-					end
-				elseif ( pin.aID == 2420 ) or ( pin.aID == 2421 ) then -- Noblegarden
-					if ( ns.faction == pin.faction ) then
+					elseif ( pin.aID == 2497 ) then -- Spring Fling Horde
+						if ( ns.faction == "Horde" ) then
+							if ( ShowConditionallyE( pin.aID ) == true ) then
+								if ( ShowConditionallyS( pin.aID, ( (ns.classic == true) and pin.aIndexC or pin.aIndexR ) ) == true ) then
+									return coord, nil, ns.textures[ ns.db.iconSpringFling ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
+								end
+							end
+						end
+					elseif ( pin.aID == 2420 ) or ( pin.aID == 2421 ) then -- Noblegarden
+						if ( ns.faction == pin.faction ) then
+							if ( ShowConditionallyE( pin.aID ) == true ) then
+								if ( ShowConditionallyS( pin.aID ) == true ) then
+									return coord, nil, ns.textures[ ns.db.iconNobleGarden ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconNobleGarden ], ns.db.iconAlpha
+								end
+							end
+						end
+					elseif ( pin.aID == 2416 ) then -- Hard Boiled
 						if ( ShowConditionallyE( pin.aID ) == true ) then
 							if ( ShowConditionallyS( pin.aID ) == true ) then
-								return coord, nil, ns.textures[ ns.db.icon_nobleGarden ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_nobleGarden ], ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconHardBoiled ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconHardBoiled ], ns.db.iconAlpha
 							end
-						end
-					end
-				elseif ( pin.aID == 2416 ) then -- Hard Boiled
-					if ( ShowConditionallyE( pin.aID ) == true ) then
-						if ( ShowConditionallyS( pin.aID ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_hardBoiled ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_hardBoiled ], ns.db.icon_alpha
 						end
 					end
 				elseif pin.obj then -- Brightly Colored Eggs
 					if ns.db.showBCE == true then
 						if pin.author then
 							if ns.author then
-								return coord, nil, ns.textures[ ns.db.icon_ngBCE ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_ngBCE ] * 0.5, ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconNGBCE ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
 							end
 						elseif pin.classic then
 							if ( ns.classic == pin.classic ) then
-								return coord, nil, ns.textures[ ns.db.icon_ngBCE ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_ngBCE ] * 0.5, ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconNGBCE ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
 							end
 						else
-							return coord, nil, ns.textures[ ns.db.icon_ngBCE ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_ngBCE ] * 0.5, ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconNGBCE ],
+									ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
 						end
 					end
 				elseif pin.quest then -- Dailies with quests
 					if ( pin.classic ~= nil ) then
 						if ( ns.classic == pin.classic ) and ( ns.faction == pin.faction ) then
 							if ( ShowConditionallyQ( pin.quest ) == true ) then
-								return coord, nil, ns.textures[ ns.db.icon_ngDailies ],
-										ns.db.icon_scale * ns.scaling[ ns.db.icon_ngDailies ], ns.db.icon_alpha
+								return coord, nil, ns.textures[ ns.db.iconNGDailies ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconNGDailies ], ns.db.iconAlpha
 							end
 						end
 					elseif ( ns.faction == pin.faction ) then
 						if ( ShowConditionallyQ( pin.quest ) == true ) then
-							return coord, nil, ns.textures[ ns.db.icon_ngDailies ],
-									ns.db.icon_scale * ns.scaling[ ns.db.icon_ngDailies ], ns.db.icon_alpha
+							return coord, nil, ns.textures[ ns.db.iconNGDailies ],
+									ns.db.iconScale * ns.scaling[ ns.db.iconNGDailies ], ns.db.iconAlpha
 						end
 					end
 				end
@@ -771,21 +792,21 @@ ns.options = {
 			name = " " ..L["Options"],
 			inline = true,
 			args = {
-				icon_scale = {
+				iconScale = {
 					type = "range",
-					name = L["Icon Scale"],
-					desc = L["The scale of the icons"],
-					min = 1, max = 3, step = 0.1,
-					arg = "icon_scale",
-					order = 2,
+					name = L["Map Pin Size"],
+					desc = L["The Map Pin Size"],
+					min = 1, max = 4, step = 0.1,
+					arg = "iconScale",
+					order = 1,
 				},
-				icon_alpha = {
+				iconAlpha = {
 					type = "range",
-					name = L["Icon Alpha"],
-					desc = L["The alpha transparency of the icons"],
+					name = L["Map Pin Alpha"],
+					desc = L["The alpha transparency of the map pins"],
 					min = 0, max = 1, step = 0.01,
-					arg = "icon_alpha",
-					order = 3,
+					arg = "iconAlpha",
+					order = 2,
 				},
 				showCoords = {
 					name = L["Show Coordinates"],
@@ -794,32 +815,32 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
-					order = 4,
+					order = 3,
 				},
 				removeDailies = {
-					name = "Remove the pin if already completed today by " ..ns.name,
-					desc = "But this pin might be a useful reminder of the hub location",
+					name = "Remove dailies if completed today by " ..ns.name,
+					desc = "The map marker will not appear if you\nhave completed the daily quest today",
 					type = "toggle",
 					width = "full",
 					arg = "removeDailies",
-					order = 5,
+					order = 4,
 				},
 				removeSeasonal = {
-					name = "Remove the pin if completed this season by " ..ns.name,
+					name = "Remove marker if completed this season by " ..ns.name,
 					desc = "Achievements are usually repeatable each season.\n"
 							.."This also applies to components within an achievement",
 					type = "toggle",
 					width = "full",
 					arg = "removeSeasonal",
-					order = 6,
+					order = 5,
 				},
 				removeEver = {
-					name = "Remove the pin if ever fully completed on this account",
-					desc = "If any of your characters has completed the achievement",
+					name = "Remove marker if ever completed on this account",
+					desc = "This if for all Achievement based pins",
 					type = "toggle",
 					width = "full",
 					arg = "removeEver",
-					order = 7,
+					order = 6,
 				},
 				showBCE = {
 					name = "Show Brightly Colored Eggs",
@@ -827,16 +848,16 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showBCE",
-					order = 8,
+					order = 7,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = L["Icon Selection"],
+			name = L["Map Pin Selections"],
 			inline = true,
 			args = {
-				icon_hardBoiled = {
+				iconHardBoiled = {
 					type = "range",
 					name = L["Hard Boiled"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -847,10 +868,10 @@ ns.options = {
 							.."\n14 = " ..L["Noblegarden"] .." - " ..L["Red"] .."\n15 = " ..L["Noblegarden"] 
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
-					arg = "icon_hardBoiled",
-					order = 9,
+					arg = "iconHardBoiled",
+					order = 8,
 				},
-				icon_nobleGarden = {
+				iconNobleGarden = {
 					type = "range",
 					name = L["Noblegarden"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -861,10 +882,10 @@ ns.options = {
 							.."\n14 = " ..L["Noblegarden"] .." - " ..L["Red"] .."\n15 = " ..L["Noblegarden"] 
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
-					arg = "icon_nobleGarden",
-					order = 10,
+					arg = "iconNobleGarden",
+					order = 9,
 				},
-				icon_springFling = {
+				iconSpringFling = {
 					type = "range",
 					name = L["Spring Fling"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -875,10 +896,10 @@ ns.options = {
 							.."\n14 = " ..L["Noblegarden"] .." - " ..L["Red"] .."\n15 = " ..L["Noblegarden"] 
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
-					arg = "icon_springFling",
-					order = 11,
+					arg = "iconSpringFling",
+					order = 10,
 				},
-				icon_desertRose = {
+				iconDesertRose = {
 					type = "range",
 					name = L["Desert Rose"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -889,10 +910,10 @@ ns.options = {
 							.."\n14 = " ..L["Noblegarden"] .." - " ..L["Red"] .."\n15 = " ..L["Noblegarden"] 
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
-					arg = "icon_desertRose",
-					order = 12,
+					arg = "iconDesertRose",
+					order = 11,
 				},
-				icon_ngDailies = {
+				iconNGDailies = {
 					type = "range",
 					name = L["Dailies"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -903,10 +924,10 @@ ns.options = {
 							.."\n14 = " ..L["Noblegarden"] .." - " ..L["Red"] .."\n15 = " ..L["Noblegarden"] 
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
-					arg = "icon_ngDailies",
-					order = 13,
+					arg = "iconNGDailies",
+					order = 12,
 				},
-				icon_ngBCE = {
+				iconNGBCE = {
 					type = "range",
 					name = L["Brightly Colored Eggs"],
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
@@ -917,8 +938,8 @@ ns.options = {
 							.."\n14 = " ..L["Noblegarden"] .." - " ..L["Red"] .."\n15 = " ..L["Noblegarden"] 
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
-					arg = "icon_ngBCE",
-					order = 14,
+					arg = "iconNGBCE",
+					order = 13,
 				},
 			},
 		},
@@ -941,8 +962,8 @@ function pluginHandler:OnEnable()
 			if map.mapID == ns.silvermoonCity or map.mapID == ns.stormwindCity or map.mapID == ns.teldrassil then
 				-- Don't use. I have to use TWO pins for both of the cities so here I supress an extra continent pin
 				-- Teldrassil seems more complex but this hack works
-			elseif (version < 40000) and ( map.mapID < 1400 ) then
-			elseif (version >= 40000) and ( map.mapID >= 1400 ) then
+			elseif (version < 40000) and ( map.mapID < ns.azeroth ) then
+			elseif (version >= 40000) and ( map.mapID > ns.azeroth ) then
 			elseif coords then
 				for coord, criteria in next, coords do
 					local mx, my = HandyNotes:getXY(coord)

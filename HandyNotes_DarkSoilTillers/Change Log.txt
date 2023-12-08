@@ -1,7 +1,25 @@
+== v3.42 - 3rd December 2023
+* Removed code for old Pin types "P" and "B"
+* Can now support multiple tips for Soil pins
+* New Kun-Lai Summit @ (66.25,51.19), (66.67,56.39), (66.85,43.91), (67.79,48.05)
+
+== v3.41 - 28th November 2023
+* New Kun-Lai Summit @ (70.01,51.52), (70.24,46.57), (70.74,52.47), (71.32,46.07)
+
+== v3.40 - 23rd November 2023
+* New Jade Forest @ (56.53,52.85), (57.03,51.60)
+
+== v3.39 - 18th November 2023
+* New Townlong Steppes @ (38.37,65.51)
+* New Kun-Lai Summit @ (67.69,50.80)
+
+== v3.38 - 13th November 2023
+* New Townlong Steppes @ (20.86,59.26), (23.16,21.09), (25.32,54.35)
+
 == v3.37 - 8th November 2023
 * New Vale of Eternal Blossoms @ (22.26,17.30), (31.43,20.44), (35.54,31.03)
 
-== v3.36 - 8th November 2023
+== v3.36 - 3th November 2023
 * New Vale of Eternal Blossoms @ (34.56,22.56)
 
 == v3.35 - 29th October 2023

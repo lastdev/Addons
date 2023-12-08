@@ -147,6 +147,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_UNITINCOMBAT03          = "Lockdown HealBot"
     HEALBOT_OPTIONS_AUTOSHOW                = "Close automatically";
     HEALBOT_OPTIONS_FRAMEGLOWSIZE           = "Bar glow size";
+    HEALBOT_OPTIONS_ICONGLOWSIZE            = "Icon glow size";
+    HEALBOT_OPTIONS_ICONLOCK                = "Icon lock";
     HEALBOT_OPTIONS_HIDEOPTIONS             = "Hide options button";
     HEALBOT_OPTIONS_HIDEUNLOCKEDTAG         = "Hide unlocked tag"
     HEALBOT_OPTIONS_PROTECTPVP              = "Avoid PvP";
@@ -309,6 +311,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWTOOLTIP             = "Show tooltips";
     HEALBOT_OPTIONS_SHOWDETTOOLTIP          = "Show detailed spell information";
     HEALBOT_OPTIONS_SHOWCDTOOLTIP           = "Show spell cooldown";
+    HEALBOT_OPTIONS_COOLDOWNTEXT            = "Cooldown Text";
+    HEALBOT_OPTIONS_COUNTTEXT               = "Count Text";
     HEALBOT_OPTIONS_IGNOREGCDTOOLTIP        = "Ignore spell global cooldown";
     HEALBOT_OPTIONS_SHOWMOUSEWHEELTOOLTIP   = "Show mouse wheel commands"
     HEALBOT_OPTIONS_SHOWUNITTOOLTIP         = "Show target information";
@@ -438,6 +442,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PERCENTAGEFORMAT        = "Percentage format";
     HEALBOT_SKIN_HEADERBARCOL               = "Bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_SKIN_HEADERTEXTCOL              = "Text col"..HEALBOT_enWORD_COLOUR_SUFFIX;
+    HEALBOT_SKIN_ICONGLOWCOL                = "Glow col"..HEALBOT_enWORD_COLOUR_SUFFIX
+    HEALBOT_SKIN_ICONGLOWTIMEOUT            = "Glow timeout"
     HEALBOT_SKIN_ICONGLOW                   = "Icon glow";
     HEALBOT_SKIN_ICONSET                    = "Icon set";
     HEALBOT_SKIN_ICONBUFFSET01              = "Buff icon set 1";
@@ -630,6 +636,9 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_HOTBARS                  = "Hot Bars"
     HEALBOT_OPTION_HOTBARSDEBUFFPRIO        = "Debuff Priority threshold"           
     HEALBOT_OPTIONS_RELOADUIMSG             = "This option requires a UI Reload, Reload now?"
+    HEALBOT_OPTIONS_COPYFROMC1              = "Copy all Action Icons settings\nfrom skin "
+    HEALBOT_OPTIONS_COPYFROMC2              = "\n\nThis will overwrite all current\nAction Icons settings.\n\n\nAre You Sure?"
+    HEALBOT_OPTIONS_COPYFROMND              = "No Action Icons data exists for skin "
     HEALBOT_OPTION_USE                      = "Use"
     HEALBOT_OPTION_TOOLTIPSCALE             = "Scale"
 
@@ -672,7 +681,7 @@ function HealBot_Lang_enALL()
     HEALBOT_RES_TAG                         = "RES "
     HEALBOT_SUMMONS_TAG                     = "SUM "
     HEALBOT_OUTOFRANGE_LABEL                = "Out of range"
-    HEALBOT_RANGE30                         = "In Range 27"
+    HEALBOT_INRANGE                         = "In Range"
     HEALBOT_RECENTHEALS                     = "Recent heals"
     HEALBOT_OUTOFRANGE_TAG                  = "OOR-"
     HEALBOT_RESERVED_LABEL                  = "Reserved"
@@ -1364,6 +1373,7 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_BUFFWATCHSTATE5          = "Waiting on combat"
     HEALBOT_PLUGIN_BUFFWATCHTTIMEOUT        = "Alert timeout"
     HEALBOT_PLUGIN_BUFFWATCHCOL             = "Alert col"..HEALBOT_enWORD_COLOUR_SUFFIX
+    HEALBOT_PLUGIN_STACKS                   = "Stacks"
     HEALBOT_PLUGIN_BUFFWATCHSOUND           = "Play sound on alert";
     HEALBOT_PLUGIN_AURAWATCHT               = "Watch"
     HEALBOT_PLUGIN_AURAWATCHBUFFEXISTS      = "Buff exists"
@@ -1404,6 +1414,9 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_CASTBYSELF              = "Cast by Self"
     HEALBOT_OPTIONS_CASTBYMYCLASS           = "Cast by My Class"
     HEALBOT_OPTIONS_CASTBYEVERYONE          = "Cast by Everyone"
+    
+    HEALBOT_OPTION_ISFALLING                = "Is Falling"
+    HEALBOT_OPTION_ISSWIMMING               = "Is Swimming"
     
     HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC     = "Automatic Debuffs"
     HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS     = "Automatic Buffs"
@@ -1545,7 +1558,7 @@ function HealBot_Lang_enALL()
 
     HEALBOT_OPTIONS_SKINAUTHOR              = "Skin Author"
     HEALBOT_OPTIONS_MORESKINSURL            = "Extra skins are available on the Import/Export > Skins tab"
-    HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Avoid\nBlue Cursor"
+    HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Avoid\nBlue\nCursor"
     HEALBOT_PLAYER_OF_REALM                 = "of"
     
     HEALBOT_OPTIONS_OVERRIDE_EFFECTS        = "Override Effects"
@@ -1564,6 +1577,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_HIGHLIGHTFILTER01S      = "when off CoolDown"
     HEALBOT_OPTIONS_HIGHLIGHTFILTER02       = "when Ability is off CoolDown and Alert condition is met"
     HEALBOT_OPTIONS_HIGHLIGHTFILTER02S      = "when off CD and Alert met"
+    HEALBOT_OPTIONS_SHOWCOOLDOWN            = "Show cooldown"
+    HEALBOT_OPTIONS_SHOWCOUNT               = "Show count"
     
     HEALBOT_OPTIONS_LANG                    = "Language"
     
@@ -1672,6 +1687,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SET_ALL_FRAMES          = "Copy current frame and tabs to other frames"
     HEALBOT_OPTIONS_CURRENT_FRAME           = "Current frame: "
     HEALBOT_OPTIONS_COPY_TABS               = "Copy tabs"
+    HEALBOT_OPTIONS_COPY_FROM               = "Copy from"
     HEALBOT_OPTIONS_TO_FRAMES               = "To frames"
     HEALBOT_WORDS_PROFILE                   = "Profile"
     HEALBOT_WORDS_GLOBALPROFILE             = "Global profile"

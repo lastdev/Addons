@@ -4,17 +4,15 @@ do
     local L = languageTable
 
 ------------------------------------------------------------
---[[Translation missing --]]
-L["EXPORT"] = "Export"
---[[Translation missing --]]
-L["EXPORT_CAST_COLORS"] = "Export Colors"
+L["EXPORT"] = "出口"
+L["EXPORT_CAST_COLORS"] = "共享颜色"
+L["EXPORT_CAST_SOUNDS"] = "共享声音"
 L["HIGHLIGHT_HOVEROVER"] = "鼠标悬停高亮"
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "鼠标悬停高亮透明度"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "鼠标放在姓名版上时的高亮效果."
---[[Translation missing --]]
-L["IMPORT"] = "Import"
---[[Translation missing --]]
-L["IMPORT_CAST_COLORS"] = "Import Colors"
+L["IMPORT"] = "进口"
+L["IMPORT_CAST_COLORS"] = "导入颜色"
+L["IMPORT_CAST_SOUNDS"] = "导入声音"
 L["OPTIONS_ALPHA"] = "透明度"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "透明度倍数."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "整体透明度"
@@ -89,8 +87,7 @@ L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "打断时隐藏火花"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "施法条测试开关"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "点一次开始测试, 再点一次停止."
 L["OPTIONS_CASTBAR_WIDTH"] = "施法条宽度"
---[[Translation missing --]]
-L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
+L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "禁用所有颜色"
 L["OPTIONS_CLICK_SPACE_HEIGHT"] = "接受鼠标点击以选择目标的区域的高度"
 L["OPTIONS_CLICK_SPACE_WIDTH"] = "接受鼠标点击来选择目标的区域的宽度"
 L["OPTIONS_COLOR"] = "颜色"
@@ -155,37 +152,16 @@ L["OPTIONS_NAMEPLATE_HIDE_FRIENDLY_HEALTH_DESC"] = [=[在地下城和团本中�
 |cFFFF7700[*]|r |cFFa0a0a0CVar, 保存在Plater配置文件中并在加载配置文件时恢复.|r
 |cFFa0a0a0A /reload后生效.|r]=]
 L["OPTIONS_NAMEPLATE_OFFSET"] = "稍微调整整个姓名版"
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATE_SHOW_ENEMY"] = "Show Enemy Nameplates|cFFFF7700*|r"
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATE_SHOW_ENEMY_DESC"] = [=[Show nameplate for enemy and neutral units.
+L["OPTIONS_NAMEPLATE_SHOW_ENEMY"] = "显示敌方铭牌|cFFFF7700*|r"
+L["OPTIONS_NAMEPLATE_SHOW_ENEMY_DESC"] = "显示敌方和中立部队的铭牌|cFFFF7700[*]|r|cFFa0a0CVar，保存在Plater配置文件中，并在加载配置文件时恢复|r"
+L["OPTIONS_NAMEPLATE_SHOW_FRIENDLY"] = "显示友好的铭牌|cFFFF7700*|r"
+L["OPTIONS_NAMEPLATE_SHOW_FRIENDLY_DESC"] = "为友好玩家展示铭牌|cFFFF7700[*]|r|cFFa0a0CVar，保存在Plater配置文件中，并在加载配置文件时恢复|r"
+L["OPTIONS_NAMEPLATES_OVERLAP"] = "铭牌重叠（V）|cFFFF7700*|r"
+L["OPTIONS_NAMEPLATES_OVERLAP_DESC"] = [=[启用堆叠时每个铭牌之间的垂直间距|cFFFFFFFF默认值：1.10|r|cFFFF7700[*]|r|c FFa0a0CVar，保存在Plater配置文件中，加载配置文件时恢复|r|cFFFFFF00重要|r：如果发现此设置有问题，请使用：|cFFFFF/run SetCVar（'nameplateOverlapV'，'1.6'）|r
 
-|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r]=]
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATE_SHOW_FRIENDLY"] = "Show Friendly Nameplates|cFFFF7700*|r"
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATE_SHOW_FRIENDLY_DESC"] = [=[Show nameplate for friendly players.
-
-|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r]=]
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATES_OVERLAP"] = "Nameplate Overlap (V)|cFFFF7700*|r"
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATES_OVERLAP_DESC"] = [=[The space between each nameplate vertically when stacking is enabled.
-
-|cFFFFFFFFDefault: 1.10|r
-
-|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r
-
-|cFFFFFF00Important |r: if you find issues with this setting, use:
-|cFFFFFFFF/run SetCVar ('nameplateOverlapV', '1.6')|r]=]
+]=]
 L["OPTIONS_NAMEPLATES_STACKING"] = "叠堆姓名版|cFFFF7700*|r"
---[[Translation missing --]]
-L["OPTIONS_NAMEPLATES_STACKING_DESC"] = [=[If enabled, nameplates won't overlap with each other.
-
-|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r
-
-|cFFFFFF00Important |r: to set the amount of space between each nameplate see '|cFFFFFFFFNameplate Vertical Padding|r' option below.
-Please check the Auto tab settings to setup automatic toggling of this option.]=]
+L["OPTIONS_NAMEPLATES_STACKING_DESC"] = "如果启用，铭牌将不会相互重叠|cFFFF7700[*]|r|cFFa0a0CVar，保存在Plater配置文件中，并在加载配置文件时恢复|r|cFFFFFF00重要|r：要设置每个铭牌之间的间距，请参阅下面的“|cFFFFF铭牌垂直填充|r”选项。请检查“自动”选项卡设置以设置此选项的自动切换。"
 L["OPTIONS_NEUTRAL"] = "中立"
 L["OPTIONS_NOCOMBATALPHA_AMOUNT_DESC"] = "应用'非战斗'特性所需要的透明度."
 L["OPTIONS_NOCOMBATALPHA_ENABLED"] = "使用非战斗透明度"
@@ -196,29 +172,19 @@ L["OPTIONS_NOESSENTIAL_DESC"] = "在更新 Plater 时,新版本通常也会从�
 L["OPTIONS_NOESSENTIAL_NAME"] = "在 Plater 版本升级期间禁用非必要的脚本更新."
 L["OPTIONS_NOESSENTIAL_SKIP_ALERT"] = "跳过非必要的补丁:"
 L["OPTIONS_NOESSENTIAL_TITLE"] = "跳过非必要的脚本Script补丁"
---[[Translation missing --]]
-L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
+L["OPTIONS_NOTHING_TO_EXPORT"] = "没有什么可出口的。"
 L["OPTIONS_OKAY"] = "确定"
 L["OPTIONS_OUTLINE"] = "轮廓"
---[[Translation missing --]]
-L["OPTIONS_PERSONAL_HEALTHBAR_HEIGHT"] = "Height of the health bar."
---[[Translation missing --]]
-L["OPTIONS_PERSONAL_HEALTHBAR_WIDTH"] = "Width of the health bar."
---[[Translation missing --]]
-L["OPTIONS_PERSONAL_SHOW_HEALTHBAR"] = "Show health bar."
---[[Translation missing --]]
-L["OPTIONS_PET_SCALE_DESC"] = "Slightly adjust the size of nameplates when showing a pet"
---[[Translation missing --]]
-L["OPTIONS_PET_SCALE_HEIGHT"] = "Pet Height Scale"
---[[Translation missing --]]
-L["OPTIONS_PET_SCALE_WIDTH"] = "Pet Width Scale"
+L["OPTIONS_PERSONAL_HEALTHBAR_HEIGHT"] = "血条的高度"
+L["OPTIONS_PERSONAL_HEALTHBAR_WIDTH"] = "血条的宽度"
+L["OPTIONS_PERSONAL_SHOW_HEALTHBAR"] = "显示血条"
+L["OPTIONS_PET_SCALE_DESC"] = "当展示宠物时，稍微调整铭牌的大小"
+L["OPTIONS_PET_SCALE_HEIGHT"] = "宠物高度"
+L["OPTIONS_PET_SCALE_WIDTH"] = "宠物宽度"
 L["OPTIONS_PLEASEWAIT"] = "可能需要等待几秒钟..."
---[[Translation missing --]]
-L["OPTIONS_POWERBAR"] = "Power Bar"
---[[Translation missing --]]
-L["OPTIONS_POWERBAR_HEIGHT"] = "Height of the power bar."
---[[Translation missing --]]
-L["OPTIONS_POWERBAR_WIDTH"] = "Width of the power bar."
+L["OPTIONS_POWERBAR"] = "能量条"
+L["OPTIONS_POWERBAR_HEIGHT"] = "能量条高度"
+L["OPTIONS_POWERBAR_WIDTH"] = "能量条宽度"
 L["OPTIONS_PROFILE_CONFIG_EXPORTINGTASK"] = "Plater正在导出当前配置......"
 L["OPTIONS_PROFILE_CONFIG_EXPORTPROFILE"] = "导出配置"
 L["OPTIONS_PROFILE_CONFIG_IMPORTPROFILE"] = "导入配置"
@@ -234,59 +200,34 @@ L["OPTIONS_PROFILE_ERROR_WRONGTAB"] = [=[无效的配置文件.
 
 在脚本或模组选项页面导入脚本或者模组的字符串.]=]
 L["OPTIONS_PROFILE_IMPORT_OVERWRITE"] = "配置 '%s' 已经存在, 确定要覆盖吗?"
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_NONE"] = "Nothing"
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_NONE_DESC"] = "No alpha modifications is applyed."
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_NOTMYTARGET"] = "Units Which Isn't Your Target"
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_NOTMYTARGET_DESC"] = "When a nameplate isn't your current target, alpha is reduced."
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_NOTMYTARGETOUTOFRANGE"] = "Out of Range + Isn't Your Target"
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_NOTMYTARGETOUTOFRANGE_DESC"] = [=[Reduces the alpha of units which isn't your target.
-Reduces even more if the unit is out of range.]=]
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_OUTOFRANGE"] = "Units Out of Your Range"
---[[Translation missing --]]
-L["OPTIONS_RANGECHECK_OUTOFRANGE_DESC"] = "When a nameplate is out of range, alpha is reduced."
---[[Translation missing --]]
-L["OPTIONS_RESOURCES_TARGET"] = "Show Resources on Target"
---[[Translation missing --]]
-L["OPTIONS_RESOURCES_TARGET_DESC"] = [=[Shows your resource such as combo points above your current target.
-Uses Blizzard default resources and disables Platers own resources.
-
-Character specific setting!]=]
+L["OPTIONS_RANGECHECK_NONE"] = "无关"
+L["OPTIONS_RANGECHECK_NONE_DESC"] = "不应用alpha修改。"
+L["OPTIONS_RANGECHECK_NOTMYTARGET"] = "不是你目标的单位"
+L["OPTIONS_RANGECHECK_NOTMYTARGET_DESC"] = "当铭牌不是您当前的目标时，alpha会减少。"
+L["OPTIONS_RANGECHECK_NOTMYTARGETOUTOFRANGE"] = "超出范围+不是你的目标"
+L["OPTIONS_RANGECHECK_NOTMYTARGETOUTOFRANGE_DESC"] = "减少非目标单位的阿尔法值。如果单位超出范围，则会减少更多"
+L["OPTIONS_RANGECHECK_OUTOFRANGE"] = "超出范围的单位"
+L["OPTIONS_RANGECHECK_OUTOFRANGE_DESC"] = "当铭牌超出范围时，alpha会减小。"
+L["OPTIONS_RESOURCES_TARGET"] = "显示目标上的资源"
+L["OPTIONS_RESOURCES_TARGET_DESC"] = "显示您的资源，例如当前目标上方的组合点。使用暴雪默认资源并禁用Platers自己的资源。角色特定设置！"
 L["OPTIONS_SCALE"] = "缩放"
---[[Translation missing --]]
-L["OPTIONS_SCRIPTING_REAPPLY"] = "Re-Apply Default Values"
+L["OPTIONS_SCRIPTING_REAPPLY"] = "重新应用默认值"
 L["OPTIONS_SETTINGS_COPIED"] = "设置已经拷贝"
 L["OPTIONS_SETTINGS_FAIL_COPIED"] = "从当前选择的标签页获取设置失败"
 L["OPTIONS_SHADOWCOLOR"] = "阴影颜色"
 --[[Translation missing --]]
 L["OPTIONS_SHIELD_BAR"] = "Shield Bar"
---[[Translation missing --]]
-L["OPTIONS_SHOW_CASTBAR"] = "Show cast bar"
---[[Translation missing --]]
-L["OPTIONS_SHOW_POWERBAR"] = "Show power bar"
---[[Translation missing --]]
-L["OPTIONS_SHOWOPTIONS"] = "Show Options"
---[[Translation missing --]]
-L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
---[[Translation missing --]]
-L["OPTIONS_SHOWTOOLTIP"] = "Show Tooltip"
---[[Translation missing --]]
-L["OPTIONS_SHOWTOOLTIP_DESC"] = "Show tooltip when hovering over the aura icon."
+L["OPTIONS_SHOW_CASTBAR"] = "显示cast条"
+L["OPTIONS_SHOW_POWERBAR"] = "显示能量条"
+L["OPTIONS_SHOWOPTIONS"] = "显示选项"
+L["OPTIONS_SHOWSCRIPTS"] = "显示脚本"
+L["OPTIONS_SHOWTOOLTIP"] = "显示工具提示"
+L["OPTIONS_SHOWTOOLTIP_DESC"] = "悬停在光环图标上时显示工具提示"
 L["OPTIONS_SIZE"] = "大小"
---[[Translation missing --]]
-L["OPTIONS_STACK_AURATIME"] = "Show shortest time of stacked auras"
---[[Translation missing --]]
-L["OPTIONS_STACK_AURATIME_DESC"] = "Show shortest time of stacked auras or the longes time, when disabled."
---[[Translation missing --]]
-L["OPTIONS_STACK_SIMILAR_AURAS"] = "Stack Similar Auras"
---[[Translation missing --]]
-L["OPTIONS_STACK_SIMILAR_AURAS_DESC"] = "Auras with the same name (e.g. warlock's unstable affliction debuff) get stacked together."
+L["OPTIONS_STACK_AURATIME"] = "显示叠加光环的最短时间"
+L["OPTIONS_STACK_AURATIME_DESC"] = "禁用时显示叠加光环的最短时间或最长时间。"
+L["OPTIONS_STACK_SIMILAR_AURAS"] = "叠加相似光环"
+L["OPTIONS_STACK_SIMILAR_AURAS_DESC"] = "同名光环（例如术士的不稳定痛苦debuff）叠加在一起。"
 L["OPTIONS_STATUSBAR_TEXT"] = "你现在能够从|cFFFFAA00http://wago.io|r导入配置文件，模组，脚本，动画和颜色表。"
 L["OPTIONS_TABNAME_ADVANCED"] = "高级配置"
 L["OPTIONS_TABNAME_ANIMATIONS"] = "动画面板"
@@ -350,24 +291,15 @@ L["OPTIONS_THREAT_MODIFIERS_HEALTHBARCOLOR"] = "血条颜色"
 L["OPTIONS_THREAT_MODIFIERS_NAMECOLOR"] = "姓名颜色"
 --[[Translation missing --]]
 L["OPTIONS_THREAT_PULL_FROM_ANOTHER_TANK"] = "Pulling From Another Tank"
---[[Translation missing --]]
-L["OPTIONS_THREAT_PULL_FROM_ANOTHER_TANK_TANK"] = "The unit has aggro on another tank and you're about to pull it."
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_AGGRO_FLASH"] = "Enable aggro flash"
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_AGGRO_FLASH_DESC"] = "Enables the -AGGRO- flash animation on the nameplates when gaining aggro as dps."
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_AGGRO_GLOW"] = "Enable aggro glow"
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_AGGRO_GLOW_DESC"] = "Enables the healthbar glow on the nameplates when gaining aggro as dps or losing aggro as tank."
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_SOLO_COLOR"] = "Solo Color"
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_SOLO_COLOR_DESC"] = "Use the 'Solo' color when not in a group."
---[[Translation missing --]]
-L["OPTIONS_THREAT_USE_SOLO_COLOR_ENABLE"] = "Use 'Solo' color"
---[[Translation missing --]]
-L["OPTIONS_TOGGLE_TO_CHANGE"] = "|cFFFFFF00 Important |r: hide and show nameplates to see changes."
+L["OPTIONS_THREAT_PULL_FROM_ANOTHER_TANK_TANK"] = "该单位对另一个TANK产生了仇恨，而你正要拉它。"
+L["OPTIONS_THREAT_USE_AGGRO_FLASH"] = "启用仇恨闪光"
+L["OPTIONS_THREAT_USE_AGGRO_FLASH_DESC"] = "当以 dps 获得仇恨时，启用铭牌上的 -AGGRO- 闪光动画"
+L["OPTIONS_THREAT_USE_AGGRO_GLOW"] = "启用仇恨发光"
+L["OPTIONS_THREAT_USE_AGGRO_GLOW_DESC"] = "当作为 DPS 获得仇恨或作为坦克失去仇恨时，使铭牌上的生命条发光。"
+L["OPTIONS_THREAT_USE_SOLO_COLOR"] = "单一颜色"
+L["OPTIONS_THREAT_USE_SOLO_COLOR_DESC"] = "不在团体中时使用“单一”颜色。"
+L["OPTIONS_THREAT_USE_SOLO_COLOR_ENABLE"] = "使用“单一”颜色"
+L["OPTIONS_TOGGLE_TO_CHANGE"] = "|cFFFFFF00 重要 |r：隐藏和显示铭牌以查看更改。"
 L["OPTIONS_WIDTH"] = "宽度"
 L["OPTIONS_XOFFSET"] = "X 偏移"
 L["OPTIONS_XOFFSET_DESC"] = [=[调整X轴上的位置.
@@ -375,26 +307,10 @@ L["OPTIONS_XOFFSET_DESC"] = [=[调整X轴上的位置.
 L["OPTIONS_YOFFSET"] = "Y 偏移"
 L["OPTIONS_YOFFSET_DESC"] = [=[调整Y轴上的位置.
 右键输入数值.]=]
---[[Translation missing --]]
-L["TARGET_CVAR_ALWAYSONSCREEN"] = "Target Always on the Screen|cFFFF7700*|r"
---[[Translation missing --]]
-L["TARGET_CVAR_ALWAYSONSCREEN_DESC"] = [=[When enabled, the nameplate of your target is always shown even when the enemy isn't in the screen.
-
-|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r]=]
---[[Translation missing --]]
-L["TARGET_CVAR_LOCKTOSCREEN"] = "Lock to Screen (Top Side)|cFFFF7700*|r"
---[[Translation missing --]]
-L["TARGET_CVAR_LOCKTOSCREEN_DESC"] = [=[Min space between the nameplate and the top of the screen. Increase this if some part of the nameplate are going out of the screen.
-
-|cFFFFFFFFDefault: 0.065|r
-
-|cFFFFFF00 Important |r: if you're having issue, manually set using these macros:
-/run SetCVar ('nameplateOtherTopInset', '0.065')
-/run SetCVar ('nameplateLargeTopInset', '0.065')
-
-|cFFFFFF00 Important |r: setting to 0 disables this feature.
-
-|cFFFF7700[*]|r |cFFa0a0a0CVar, saved within Plater profile and restored when loading the profile.|r]=]
+L["TARGET_CVAR_ALWAYSONSCREEN"] = "目标始终在屏幕上|cFFFF7700*|r"
+L["TARGET_CVAR_ALWAYSONSCREEN_DESC"] = "启用后，即使敌人不在屏幕中，也会始终显示目标的铭牌。 |cFFFF7700[*]|r |cFFa0a0a0CVar，保存在 Plater 配置文件中并在加载配置文件时恢复。|r"
+L["TARGET_CVAR_LOCKTOSCREEN"] = "锁定屏幕（顶部）|cFFFF7700*|r"
+L["TARGET_CVAR_LOCKTOSCREEN_DESC"] = "铭牌与屏幕顶部之间的最小间距。 如果铭牌的某些部分超出屏幕，请增加此值。 |cFFFFFFFFDefault: 0.065|r |cFFFFFF00 重要 |r：如果遇到问题，请使用以下宏手动设置： /run SetCVar ('nameplateOtherTopInset', '0.065') /run SetCVar ('nameplateLargeTopInset', '0.065') | cFFFFFF00 重要 |r：设置为 0 将禁用此功能。 |cFFFF7700[*]|r |cFFa0a0a0CVar，保存在 Plater 配置文件中并在加载配置文件时恢复。|r"
 L["TARGET_HIGHLIGHT"] = "目标高亮"
 L["TARGET_HIGHLIGHT_ALPHA"] = "目标高亮透明度"
 L["TARGET_HIGHLIGHT_COLOR"] = "目标高亮颜色"

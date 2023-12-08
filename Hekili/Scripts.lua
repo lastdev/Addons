@@ -461,6 +461,7 @@ do
 
         { "^(.-)%.deficit<=?(.-)$"         , "0.01+%1.timeTo(%1.max-(%2))" },
         { "^(.-)%.deficit>=?(.-)$"         , "0.01+%1.timeTo(%1.max-(%2))" },
+        { "^(.-)%.percent[<>=]+(.-)$"      , "0.01+%1.timeTo(%1.max*(%2/100))" },
 
         { "^cooldown%.([a-z0-9_]+)%.ready$"                      , "cooldown.%1.remains"                      },
         { "^cooldown%.([a-z0-9_]+)%.up$"                         , "cooldown.%1.remains"                      },
@@ -495,7 +496,20 @@ do
         { "^!?(debuff%.[a-z0-9_]+)%.ss_buffed$"     , "%1.remains"                                                     }, -- Assassination
         { "^!?(dot%.[a-z0-9_]+)%.ss_buffed$"        , "%1.remains"                                                     }, -- Assassination
         { "^dot%.([a-z0-9_]+).haste_pct_next_tick$" , "0.01+query_time+(dot.%1.last_tick+dot.%1.tick_time)-query_time" }, -- Assassination
-        { "^!?stealthed%.(.-)$"                     , "stealthed.%1_remains"                                           },
+        { "^!?stealthed.(.-)_remains<=?(.-)$"       , "stealthed.%1_remains-%2"                                        },
+        { "^!?stealthed%.(normal)$"                 , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(vanish)$"                 , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(mantle)$"                 , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(subterfuge)$"             , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(shadow_dance)$"           , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(shadowmeld)$"             , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(sepsis)$"                 , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(improved_garrote)$"       , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(basic)$"                  , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(mantle)$"                 , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(rogue)$"                  , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(ambush)$"                 , "stealthed.%1_remains"                                          },
+        { "^!?stealthed%.(all)$"                    , "stealthed.%1_remains"                                          },
 
         { "^!?time_to_hpg$"           , "time_to_hpg"          }, -- Retribution Paladin
         { "^!?time_to_hpg[<=]=?(.-)$" , "time_to_hpg-%1"       }, -- Retribution Paladin
@@ -970,7 +984,8 @@ do
         -- output = output:gsub( "not safebool(", "safebool(not " )
         output = output:gsub( "!safenum(%b())", "safenum(!%1)" )
         output = output:gsub( "@safebool", "@safenum" )
-        output = output:gsub( "!%((%b())%)", "!%1" )
+        output = output:gsub( "!%(%s*(%b())%s*%)", "!%1" )
+        output = output:gsub( "%(%s*(%b())%s*%)", "%1" )
 
         esDepth = esDepth - 1
         return output

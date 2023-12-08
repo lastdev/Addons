@@ -515,6 +515,8 @@ qcLocalize = {
 	VALDRAKKENACCORD = "Valdrakken Accord",
 	WHALLERSNOOK = "Whaler`s Nook",
 	ZARALEKCAVERN = "Zaralek Cavern",
+	EMERALDDREAM = "Emerald Dream",
+	KORRAKSREVENGE = "Korrak`s Revenge",
 	}
 
 end

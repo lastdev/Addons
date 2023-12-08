@@ -19,6 +19,8 @@ local formatKey = ns.formatKey
 local getSpecializationKey = ns.getSpecializationKey
 local tableCopy = ns.tableCopy
 
+local LSR = LibStub( "SpellRange-1.0" )
+
 local insert, wipe = table.insert, table.wipe
 
 local mt_resource = ns.metatables.mt_resource
@@ -38,8 +40,6 @@ local specTemplate = {
     gcdSync = true,
 
     nameplates = true,
-    nameplateRange = 8,
-
     petbased = false,
 
     damage = true,
@@ -82,6 +82,8 @@ local specTemplate = {
             criteria = nil
         }
     },
+
+    ranges = {},
     settings = {},
     phases = {},
     cooldowns = {},
@@ -685,9 +687,10 @@ local HekiliSpecMixin = {
         end
 
         -- default values.
-        if not data.cooldown then data.cooldown = 0 end
+        if not data.cast     then data.cast     = 0             end
+        if not data.cooldown then data.cooldown = 0             end
         if not data.recharge then data.recharge = data.cooldown end
-        if not data.charges  then data.charges = 1 end
+        if not data.charges  then data.charges  = 1             end
 
         if data.hasteCD then
             if type( data.cooldown ) == "number" and data.cooldown > 0 then data.cooldown = Hekili:Loadstring( "return " .. data.cooldown .. " * haste" ) end
@@ -951,6 +954,22 @@ local HekiliSpecMixin = {
     RegisterPriority = function( self, name, version, notes, priority )
     end,
 
+    RegisterRanges = function( self, ... )
+        if type( ... ) == "table" then
+            self.ranges = ...
+            return
+        end
+
+        for i = 1, select( "#", ... ) do
+            insert( self.ranges, ( select( i, ... ) ) )
+        end
+    end,
+
+    RegisterRangeFilter = function( self, name, func )
+        self.filterName = name
+        self.filter = func
+    end,
+
     RegisterOptions = function( self, options )
         self.options = options
     end,
@@ -1049,12 +1068,13 @@ local HekiliSpecMixin = {
 
 function Hekili:RestoreDefaults()
     local p = self.DB.profile
+    local reverted = {}
     local changed = {}
 
     for k, v in pairs( class.packs ) do
         local existing = rawget( p.packs, k )
 
-        if not existing or not existing.version or existing.version < v.version then
+        if not existing or not existing.version or existing.version ~= v.version then
             local data = self.DeserializeActionPack( v.import )
 
             if data and type( data ) == "table" then
@@ -1062,7 +1082,12 @@ function Hekili:RestoreDefaults()
                 data.payload.version = v.version
                 data.payload.date = v.version
                 data.payload.builtIn = true
-                insert( changed, k )
+
+                if not existing or not existing.version or existing.version < v.version then
+                    insert( changed, k )
+                else
+                    insert( reverted, k )
+                end
 
                 local specID = data.payload.spec
 
@@ -1083,10 +1108,11 @@ function Hekili:RestoreDefaults()
         end
     end
 
-    if #changed > 0 then
+    if #changed > 0 or #reverted > 0 then
         self:LoadScripts()
-        -- self:RefreshOptions()
+    end
 
+    if #changed > 0 then
         local msg
 
         if #changed == 1 then
@@ -1103,10 +1129,37 @@ function Hekili:RestoreDefaults()
             msg = "The " .. msg .. ", and |cFFFFD100" .. changed[ #changed ] .. "|r priorities were updated."
         end
 
-        if msg then C_Timer.After( 5, function()
-            if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
-            Hekili:Print( msg )
-        end ) end
+        if msg then
+            C_Timer.After( 5, function()
+                if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
+                Hekili:Print( msg )
+            end )
+        end
+    end
+
+    if #reverted > 0 then
+        local msg
+
+        if #reverted == 1 then
+            msg = "The |cFFFFD100" .. reverted[1] .. "|r priority was reverted."
+        elseif #reverted == 2 then
+            msg = "The |cFFFFD100" .. reverted[1] .. "|r and |cFFFFD100" .. reverted[2] .. "|r priorities were reverted."
+        else
+            msg = "|cFFFFD100" .. reverted[1] .. "|r"
+
+            for i = 2, #reverted - 1 do
+                msg = msg .. ", |cFFFFD100" .. reverted[i] .. "|r"
+            end
+
+            msg = "The " .. msg .. ", and |cFFFFD100" .. reverted[ #reverted ] .. "|r priorities were reverted."
+        end
+
+        if msg then
+            C_Timer.After( 6, function()
+                if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
+                Hekili:Print( msg )
+            end )
+        end
     end
 end
 
@@ -1201,6 +1254,7 @@ function Hekili:NewSpecialization( specID, isRanged, icon )
 
         potions = {},
 
+        ranges = {},
         settings = {},
 
         stateExprs = {}, -- expressions are returned as values and take no args.
@@ -1808,14 +1862,15 @@ all:RegisterAuras( {
     },
 
     out_of_range = {
-        generate = function ()
-            local oor = buff.out_of_range
+        generate = function ( oor )
+            oor.rangeSpell = rawget( oor, "rangeSpell" ) or settings.spec.rangeChecker or class.specs[ state.spec.id ].ranges[ 1 ]
 
-            if target.distance > 8 then
+            if LSR.IsSpellInRange( class.abilities[ oor.rangeSpell ].name, "target" ) ~= 1 then
                 oor.count = 1
                 oor.applied = query_time
-                oor.expires = 3600
+                oor.expires = query_time + 3600
                 oor.caster = "player"
+                oor.v1 = oor.rangeSpell
                 return
             end
 
@@ -2565,7 +2620,7 @@ all:RegisterAbilities( {
 
     -- INTERNAL HANDLERS
     call_action_list = {
-        name = "Call Action List",
+        name = "|cff00ccff[Call Action List]|r",
         listName = '|T136243:0|t |cff00ccff[Call Action List]|r',
         cast = 0,
         cooldown = 0,
@@ -2574,7 +2629,7 @@ all:RegisterAbilities( {
     },
 
     run_action_list = {
-        name = "Run Action List",
+        name = "|cff00ccff[Run Action List]|r",
         listName = '|T136243:0|t |cff00ccff[Run Action List]|r',
         cast = 0,
         cooldown = 0,
@@ -2583,7 +2638,7 @@ all:RegisterAbilities( {
     },
 
     wait = {
-        name = "Wait",
+        name = "|cff00ccff[Wait]|r",
         listName = '|T136243:0|t |cff00ccff[Wait]|r',
         cast = 0,
         cooldown = 0,
@@ -2592,7 +2647,7 @@ all:RegisterAbilities( {
     },
 
     pool_resource = {
-        name = "Pool Resource",
+        name = "|cff00ccff[Pool Resource]|r",
         listName = "|T136243:0|t |cff00ccff[Pool Resource]|r",
         cast = 0,
         cooldown = 0,
@@ -2600,7 +2655,7 @@ all:RegisterAbilities( {
     },
 
     cancel_action = {
-        name = "Cancel Action",
+        name = "|cff00ccff[Cancel Action]|r",
         listName = "|T136243:0|t |cff00ccff[Cancel Action]|r",
         cast = 0,
         cooldown = 0,
@@ -2618,7 +2673,7 @@ all:RegisterAbilities( {
     },
 
     variable = {
-        name = "Variable",
+        name = "|cff00ccff[Variable]|r",
         listName = '|T136243:0|t |cff00ccff[Variable]|r',
         cast = 0,
         cooldown = 0,
@@ -2695,7 +2750,7 @@ all:RegisterAbilities( {
     },
 
     cancel_buff = {
-        name = "Cancel Buff",
+        name = "|cff00ccff[Cancel Buff]|r",
         listName = '|T136243:0|t |cff00ccff[Cancel Buff]|r',
         cast = 0,
         gcd = "off",
@@ -2736,7 +2791,7 @@ all:RegisterAbilities( {
     },
 
     null_cooldown = {
-        name = "Null Cooldown",
+        name = "|cff00ccff[Null Cooldown]|r",
         listName = "|T136243:0|t |cff00ccff[Null Cooldown]|r",
         cast = 0,
         gcd = "off",
@@ -2747,18 +2802,40 @@ all:RegisterAbilities( {
     },
 
     trinket1 = {
-        name = "Trinket #1",
-        listName = "|T136243:0|t |cff00ccff[Trinket #1]",
+        name = "|cff00ccff[Trinket #1]|r",
+        listName = "|T136243:0|t |cff00ccff[Trinket #1]|r",
         cast = 0,
+        cooldown = 600,
         gcd = "off",
+
+        usable = false,
+
+        copy = "actual_trinket1",
     },
 
     trinket2 = {
-        name = "Trinket #2",
-        listName = "|T136243:0|t |cff00ccff[Trinket #2]",
+        name = "|cff00ccff[Trinket #2]|r",
+        listName = "|T136243:0|t |cff00ccff[Trinket #2]|r",
         cast = 0,
+        cooldown = 600,
         gcd = "off",
+
+        usable = false,
+
+        copy = "actual_trinket2",
     },
+
+    main_hand = {
+        name = "|cff00ccff[" .. INVTYPE_WEAPONMAINHAND .. "]|r",
+        listName = "|T136243:0|t |cff00ccff[" .. INVTYPE_WEAPONMAINHAND .. "]|r",
+        cast = 0,
+        cooldown = 600,
+        gcd = "off",
+
+        usable = false,
+
+        copy = "actual_main_hand",
+    }
 } )
 
 
@@ -2776,6 +2853,16 @@ do
         gcd = "off",
     } )
 
+    all:RegisterAbility( "unusable_trinket", {
+        name = "Unusable Trinket",
+        listName = "|T136240:0|t |cff00ccff[Unusable Trinket]|r",
+        cast = 0,
+        cooldown = 180,
+        gcd = "off",
+
+        usable = false,
+        unlisted = true
+    } )
 
     all:RegisterAbility( "heart_essence", {
         name = function () return ( GetItemInfo( 158075 ) ) or "Heart Essence" end,
@@ -4695,7 +4782,7 @@ do
             end
             return m
         end,
-        items = { 161674, 162897, 165055, 165220, 167377, 167525, 181333, 184052, 184055, 172666, 184058, 185309, 185304, 186966, 186869, 192412, 192298, 204164, 205779, 205711 },
+        items = { 161674, 162897, 165055, 165220, 167377, 167525, 181333, 184052, 184055, 172666, 184058, 185309, 185304, 186966, 186869, 192412, 192298, 204164, 205779, 205711, 205779, 205711 },
         toggle = "defensives",
 
         usable = function () return debuff.loss_of_control.up, "requires loss of control effect" end,
@@ -4760,7 +4847,7 @@ do
         cooldown = 120,
         gcd = "off",
 
-        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708 },
+        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343 },
         texture = 135884,
 
         toggle = "cooldowns",
@@ -4867,7 +4954,7 @@ do
             end
             return e
         end,
-        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710 },
+        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345 },
         toggle = "cooldowns",
 
         handler = function ()

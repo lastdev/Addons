@@ -1,3 +1,8 @@
+== v1.13 - 1st December 2023
+* Neighbouring zones data added for Northrend
+* Felstriker server added
+* Penance and Shadowstrike added (SoD)
+
 == v1.12 - 2nd November 2023
 * TOC bump to 10.2.0
 * Updated data structure and pin scaling

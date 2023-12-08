@@ -1,13 +1,37 @@
 # <DBM Mod> Raids (DF)
 
-## [10.2.2](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.2.2) (2023-11-10)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.2.1...10.2.2) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.2.9](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.2.9) (2023-12-03)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.2.8...10.2.9) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- prep a new tag to fix blizzard dumb dumb, and i hate that I have to do this but also have no choice but to make it a forced update.  
-- Why blizzard. Fix a whole slew of broken things caused by blizzard deciding to append realm name on all combat log events for players on same realm.  
-- remove hacky classic infoframes because blizzard refused to support boss unit Ids in classic. it's an inefficient messy hack that's trying to fix a problem that's not worth fixing in DBM if it's not worth supporting by blizzard  
-- - fixing nameplate icons test mode (#311)  
-- Fix double cooldowns on nameplate icons (#310)  
+- prep new retail tag  
+- Disable Surging growth alerts and timer in LFR, since it's based on applied (due to blizzard hating combat log) and in LFR this is not a reliable metric like at all  
+- Update koKR (Retail) (#963)  
+- Fix last  
+- Rework timers to correctly support LFR version of Council of Dreams  
+- sync naming  
 - bump alpha  
-- prep new wrath tag  
+- prep new tag for classic era/SoD  
+- comment this code on retail for now  
+- Prep classic era tag  
+- Remove bad language on dispel alerts. most dispels aren't spellstealable and it's misleading  
+- Support Season of Discovery instance difficulty Ids  
+- revert nymue using boss distance checks for now. no ETA on change is known  
+- fix jump announce  
+- set EnableMouse on parent frame, to allow clickthrough.  
+- Revert CheckBossDistance check to using Item apis on bosses again, with blizzard reverting nerf on hostile targets for this purpose. (range check still dead, distance on players still forbidden). This is just a concession blizzard agreed was a reasonable one.  
+- Switch nymue back to distance calculation usage on bosses for filtering  
+- actually make sure unit is the boss  
+- fixes  
+- Finally add Aurostor mod  
+- again trying to fix special CD checking logic, cause it appears code was still just returning false 100% of time even when special was literally 40 seconds away.  
+- tweak fyrakk and igira tank swaps to not swap unnessesarily early  
+- Since it's early tier, will be updating the version check more often for checking if other raiders mods are out of date.  
+- Fix barreling charge to use YELL and following conventions  
+- More taunt tech improvements to smolderon  
+- timer tweaks  
+- Further refine tanking on smolderon to help movements  
+    Fixed tank swap alerts on council to be more correct and less spammy  
+    Also added a special alert to dodge charge if you already have trampled for all players  
+- fix smolderon tanking stuff  
+- small nitpick, make corrupt appear in stage 1.5 list  
 - bump alpha  

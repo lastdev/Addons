@@ -4,13 +4,15 @@ do
     local L = languageTable
 
     --add to curseforge
-
     --on curseforge
+
+    L["IMPORT_CAST_SOUNDS"] = "Import Sounds"
+    L["EXPORT_CAST_SOUNDS"] = "Share Sounds"
     L["OPTIONS_NOTHING_TO_EXPORT"] = "There's nothing to export."
     L["IMPORT"] = "Import"
     L["EXPORT"] = "Export"
     L["IMPORT_CAST_COLORS"] = "Import Colors"
-    L["EXPORT_CAST_COLORS"] = "Export Colors"
+    L["EXPORT_CAST_COLORS"] = "Share Colors"
     L["OPTIONS_SHOWOPTIONS"] = "Show Options"
     L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
     L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
@@ -234,7 +236,7 @@ do
     L["OPTIONS_POWERBAR_HEIGHT"] = "Height of the power bar."
     L["OPTIONS_POWERBAR_WIDTH"] = "Width of the power bar."
     L["OPTIONS_PROFILE_CONFIG_EXPORTINGTASK"] = "Plater is exporting the current profile"
-    L["OPTIONS_PROFILE_CONFIG_EXPORTPROFILE"] = "Export Profile"
+    L["OPTIONS_PROFILE_CONFIG_EXPORTPROFILE"] = "Share Profile"
     L["OPTIONS_PROFILE_CONFIG_IMPORTPROFILE"] = "Import Profile"
     L["OPTIONS_PROFILE_CONFIG_MOREPROFILES"] = "Get more profiles at Wago.io"
     L["OPTIONS_PROFILE_CONFIG_OPENSETTINGS"] = "Open Profile Settings"
@@ -375,12 +377,14 @@ do
 
 ------------------------------------------------------------
 L["EXPORT"] = "Export"
-L["EXPORT_CAST_COLORS"] = "Export Colors"
+L["EXPORT_CAST_COLORS"] = "Share Colors"
+L["EXPORT_CAST_SOUNDS"] = "Share Sounds"
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 L["HIGHLIGHT_HOVEROVER_ALPHA"] = "Hover Over Highlight Alpha"
 L["HIGHLIGHT_HOVEROVER_DESC"] = "Highlight effect when the mouse is over the nameplate."
 L["IMPORT"] = "Import"
 L["IMPORT_CAST_COLORS"] = "Import Colors"
+L["IMPORT_CAST_SOUNDS"] = "Import Sounds"
 L["OPTIONS_ALPHA"] = "Alpha"
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparency multiplier."
 L["OPTIONS_ALPHABYFRAME_DEFAULT"] = "Default Transparency"
@@ -582,7 +586,7 @@ L["OPTIONS_POWERBAR"] = "Power Bar"
 L["OPTIONS_POWERBAR_HEIGHT"] = "Height of the power bar."
 L["OPTIONS_POWERBAR_WIDTH"] = "Width of the power bar."
 L["OPTIONS_PROFILE_CONFIG_EXPORTINGTASK"] = "Plater is exporting the current profile"
-L["OPTIONS_PROFILE_CONFIG_EXPORTPROFILE"] = "Export Profile"
+L["OPTIONS_PROFILE_CONFIG_EXPORTPROFILE"] = "Share Profile"
 L["OPTIONS_PROFILE_CONFIG_IMPORTPROFILE"] = "Import Profile"
 L["OPTIONS_PROFILE_CONFIG_MOREPROFILES"] = "Get more profiles at Wago.io"
 L["OPTIONS_PROFILE_CONFIG_OPENSETTINGS"] = "Open Profile Settings"

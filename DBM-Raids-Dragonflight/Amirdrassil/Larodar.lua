@@ -1,24 +1,22 @@
-local wowToc, testBuild = DBM:GetTOC()
-if (wowToc < 100200) and not testBuild then return end
 local mod	= DBM:NewMod(2553, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231107021301")
+mod:SetRevision("20231128021157")
 mod:SetCreatureID(208445)
 mod:SetEncounterID(2731)
 mod:SetUsedIcons(6, 7, 8)
-mod:SetHotfixNoticeRev(20231021000000)
-mod:SetMinSyncRevision(20231021000000)
+mod:SetHotfixNoticeRev(20231119000000)
+mod:SetMinSyncRevision(20231115000000)
 mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 425889 426524 422614 418637 426206 417634 427252 427343 429973 421325",
-	"SPELL_CAST_SUCCESS 417653 419485 427299 428901",
-	"SPELL_AURA_APPLIED 425888 425468 420544 426387 423719 426249 426256 421316 427299 427306 421594 421407 418520 429032 428946 428901",
-	"SPELL_AURA_APPLIED_DOSE 426249 426256 421407 418520 429032 428946",
-	"SPELL_AURA_REMOVED 421316 427299 421594 428901",
+	"SPELL_CAST_SUCCESS 417653 419485 427299",
+	"SPELL_AURA_APPLIED 425888 425468 420544 426387 423719 426249 426256 421316 427299 427306 421594 418520 429032 428946",--421407
+	"SPELL_AURA_APPLIED_DOSE 426249 426256 418520 429032 428946",--421407
+	"SPELL_AURA_REMOVED 421316 427299 421594",
 --	"SPELL_AURA_REMOVED_DOSE",
 	"SPELL_PERIODIC_DAMAGE 417632",
 	"SPELL_PERIODIC_MISSED 417632",
@@ -29,8 +27,9 @@ mod:RegisterEventsInCombat(
 
 --[[
 (ability.id = 425889 or ability.id = 426524 or ability.id = 422614 or ability.id = 418637 or ability.id = 426206 or ability.id = 417634 or ability.id = 427252 or ability.id = 427343 or ability.id = 429973 or ability.id = 421325) and type = "begincast"
- or (ability.id = 417653 or ability.id = 419485 or ability.id = 427299 or ability.id = 428901) and type = "cast"
+ or (ability.id = 417653 or ability.id = 427299 or ability.id = 428901) and type = "cast"
  or ability.id = 421316 and (type = "applybuff" or type = "removebuff")
+ or ability.id = 419485 and type = "cast"
 --]]
 --TODO, repeat yells for igniting growth? depends on if it's few targets or everyone.
 --TODO, https://www.wowhead.com/ptr-2/spell=426393/seed-of-life is probably cast on pull, so no reason to alert, unless cast more than once
@@ -59,6 +58,7 @@ local warnBlazingCoalescenceBoss					= mod:NewStackAnnounce(426256, 4)--Boss
 local warnEverlastingBlaze							= mod:NewCountAnnounce(429032, 4, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(429032))--Player
 local warnAshenAsphyxiation							= mod:NewStackAnnounce(428946, 3, nil, "Tank|Healer")
 
+local specWarnCharredBrambles						= mod:NewSpecialWarningSwitch(418655, "Healer", nil, nil, 1, 2)
 --local specWarnIgnitingGrowth						= mod:NewSpecialWarningMoveAway(425888, nil, nil, nil, 1, 2, 4)
 --local yellIgnitingGrowth							= mod:NewShortYell(425888, nil, false)
 --local specWarnDreamBlossom						= mod:NewSpecialWarningYou(425468, nil, nil, nil, 1, 2)
@@ -69,16 +69,17 @@ local specWarnFieryFlourish							= mod:NewSpecialWarningInterruptCount(426524, 
 local specWarnScorchingBramblethorn					= mod:NewSpecialWarningYou(426387, nil, nil, nil, 1, 2)
 local specWarnFuriousCharge							= mod:NewSpecialWarningRun(418637, nil, 100, nil, 4, 2)
 local yellFuriousCharge								= mod:NewShortYell(418637, 100)
-local specWarnNaturesFury							= mod:NewSpecialWarningTaunt(423719, nil, nil, nil, 1, 2)
-local specWarnBlazingThornsSoak						= mod:NewSpecialWarningSoakCount(426206, "-Healer", nil, nil, 1, 2)
-local specWarnBlazingThornsAvoid					= mod:NewSpecialWarningDodgeCount(426206, "-Healer", nil, nil, 1, 2)
+local specWarnFuriousChargePreTaunt					= mod:NewSpecialWarningTaunt(418637, nil, 100, nil, 1, 2)--Taunt on cast start
+local specWarnNaturesFury							= mod:NewSpecialWarningTaunt(423719, nil, nil, nil, 1, 2)--Yell to taunt again if you didn't taunt in pre cast
+local specWarnBlazingThornsAvoid					= mod:NewSpecialWarningDodgeCount(426206, "-Healer", nil, nil, 1, 2)--Initial cast to dodge
+local specWarnBlazingThornsSoak						= mod:NewSpecialWarningSoakCount(426249, "-Healer", nil, nil, 1, 2)--Follow up orbs to soak
 local specWarnRagingInferno							= mod:NewSpecialWarningMoveTo(417634, nil, 37625, nil, 3, 2)--Shortname Inferno
 
 local timerIgnitingGrowthCD							= mod:NewCDCountTimer(49, 425888, DBM_COMMON_L.POOLS.." (%s)", nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerFieryForceofNatureCD						= mod:NewCDCountTimer(11.8, 417653, DBM_COMMON_L.ADDS.." (%s)", nil, nil, 1)
-local timerFieryFlourishCD							= mod:NewCDNPTimer(11.8, 426524, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Nameplate only timer
+local timerFieryFlourishCD							= mod:NewCDNPTimer(9.7, 426524, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Nameplate only timer
 local timerScorchingRootsCD							= mod:NewCDCountTimer(49, 422614, DBM_COMMON_L.ROOTS.." (%s)", nil, nil, 3)
-local timerFuriousChargeCD							= mod:NewCDCountTimer(49, 418637, 100, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--SN "Charge"
+local timerFuriousChargeCD							= mod:NewCDCountTimer(22.5, 418637, 100, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--SN "Charge"
 local timerBlazingThornsCD							= mod:NewCDCountTimer(49, 426206, DBM_COMMON_L.ORBS.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerRagingInfernoCD							= mod:NewCDCountTimer(49, 417634, 37625, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--SN "Inferno"
 
@@ -96,7 +97,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(27243))
 local warnFlashFire									= mod:NewTargetNoFilterAnnounce(427299, 3, nil, "Healer")
 local warnEncasedInAsh								= mod:NewTargetNoFilterAnnounce(427306, 4, nil, "RemoveMagic")
 local warnAshenCall									= mod:NewCountAnnounce(421325, 2)
-local warnSearingAsh								= mod:NewCountAnnounce(421407, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(426249))
+--local warnSearingAsh								= mod:NewCountAnnounce(421407, 2, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(426249))
 --local warnAshenDevastation						= mod:NewTargetNoFilterAnnounce(428901, 4, nil, nil, 167180)--Shortname "Bombs"
 
 local specWarnFallingEmbers							= mod:NewSpecialWarningSoakCount(427252, nil, nil, nil, 2, 2)
@@ -133,57 +134,82 @@ mod.vb.thornsCount = 0--Reused in Stage 2 for Flash Fire
 mod.vb.infernoCount = 0--Reused in Stage 2 for Fire Whirl
 
 local castsPerGUID = {}
-local difficultyName = "normal"
+local difficultyName = "other"
 local allTimers = {
-	["mythic"] = {
+	["mythic"] = {--Stage 1 seems same as other difficulties, but kept split for now
 		--Stage 1
 		--Fiery Force of Nature
-		[417653] = {6.5, 114.9, 109.6, 115.0},
+		[417653] = {6.5, 104.9, 97.7},
+				--	6.6, 105.5, 98.3
+				--	6.5, 104.9, 98.8
+				--	6.6, 104.9, 98.6
 		--Blazing Thorns
-		[426206] = {31.3, 24.7, 24.7, 46.3, 65.6, 63.2, 24.7, 24.7, 46.5, 65.5},
+		[426206] = {30.7, 24.2, 24.2, 37.3, 52.7, 64.4, 24.2, 24.2, 46.5, 65.5},
+				--	30.7, 24.2, 24.2, 38.5, 52.8, 64.3, 24.2
+				--	30.7, 24.2, 24.2, 38.0, 52.6, 64.7, 24.2, 24.1
+				--	30.8, 24.2, 24.2, 37.8, 52.8, 64.5, 24.2
 		--Furious Charge
-		[418637] = {22.3, 22.4, 22.5, 46.5, 22.2, 31.1, 13.4, 66.5, 22.4, 22.5, 46.6, 22.3, 31.1, 13.3},
+		--[418637] = {21.9, 22.0, 24.2, 24.2, 24.2, 28.6, 25.2},--Wildly variant, no longer used, auto corrected elsewhere
+				--	21.9, 22.0, 24.2, 36.2, 24.2, 28.6, 25.3
+				--	21.9, 24.2, 35.1, 24.2, 28.6, 25.2, 43.5, 22.0, 24.2, 22.50, 46.60, 22.30, 31.10, 13.30
+				--	22.0, 22.0, 24.2, 35.6, 24.2, 28.6, 25.2, 43.7, 21.9
 		--Scorching Roots
-		[422614] = {38.0, 120.0, 104.5, 120.2},
-		--Raging Inferno
-		[417634] = {101.3, 111.6, 112.1, 111.9},
+		[422614] = {37.3, 110.3, 92.8, 120.2},
+				--	37.3, 110.9, 93.0, 120.2
+				--	37.3, 111.0, 92.8
+				--	37.3, 110.5, 93.3
+				--	37.4, 110.3, 93.1
 		--Igniting Growth (Mythic Only)
-		[425889] = {14.5, 133.6, 90.2, 133.9},
+		[425889] = {14.2, 123.5, 79.0},
+				--	14.2, 124.1, 79.0
+				--	14.3, 124.2, 79.6
+				--	14.3, 123.5, 79.9
 		--Stage 2
 		--Falling Embers
-		[427252] = {},--Had no variations
+		[427252] = {7.4, 26.7, 35.9, 21.7, 18.4, 38.5, 23.4},
+				--	7.4, 26.7, 35.9, 21.7
+				--	7.4, 26.7, 35.9, 21.8
+				--	7.4, 26.7, 35.9, 21.7
+
 		--FlashFire
-		[427299] = {},--Lowest of each used until can figure out how to detect which sequence is used on demand
+		[427299] = {29.0, 50.1, 27.6, 50.2},
+				--	29.0, 50.1, 36.7, 50.2
+				--	29.0, 51.8, 27.6
+				--	29.0, 51.8
+				--	29.0, 51.8
 		--Fire Whirl
-		[427343] = {},--Had no variation
+		[427343] = {59.1, 32.5, 50.2},
+				--	60.8, 32.5, 50.2
+				--	59.1, 38.4
+				--	59.1, 38.
 		--Smoldering backdraft
-		[421318] = {},--Had no variations
+		[429973] = {14.0, 25.8, 19.2, 21.7, 16.7, 25.10, 18.4},
+				--	14.0, 25.8, 19.2, 21.7, 16.7, 25.10, 18.4
+				--	14.0, 25.9, 24.2, 21.7, 16.7
+				--	14.1, 25.9, 24.2, 21.8, 16.7
+				--	14.0, 25.9, 24.2, 21.7
 		--Ashen Call
-		[421325] = {},--Lowest of each used until can figure out how to detect which sequence is used on demand
+		[421325] = {20.7, 55.1, 56.9},
+				--	20.7, 55.1, 56.9
+				--	20.7, 55.1
 		--Ashen Devestation
-		[428901] = {},--Lowest of each used until can figure out how to detect which sequence is used on demand
+		[428896] = {45.4, 68.5},--Lowest of each used until can figure out how to detect which sequence is used on demand
 	},
-	["heroic"] = {
+	["other"] = {
 		--Stage 1 (same as mythic stage 1 likely)
 		--Fiery Force of Nature
-		[417653] = {6.7, 115.4, 110.3},
-				  --6.7, 118.6
+		[417653] = {6.5, 103.6, 98.6},
 		--Blazing Thorns
-		[426206] = {31.4, 24.8, 24.5, 46.8, 65.5},
-				  --31.6, 24.6, 24.6, 50.1, 65.6
+		[426206] = {30.7, 24.1, 24.2, 37.6, 52.7, 63.7, 24.1, 24.1},
 		--Furious Charge
-		[418637] = {22.5, 22.3, 22.4, 46.9, 22.2, 31.3, 13.3, 67.0},
-				  --22.6, 22.3, 22.4, 50.2, 22.2, 31.1, 13.3
+--		[418637] = {21.9, 22.0, 24.2, 35.6, 24.2, 28.5, 25.3, 42.8, 22.0},
 		--Scorching Roots
-		[422614] = {38.1, 120.5},
-				  --38.1, 123.9
-		--Raging Inferno
-		[417634] = {101.7, 112.8},
-				  --104.2
+		[422614] = {37.3, 109.1, 92.2},
 		--Stage 2
 		--Falling Embers
 		[427252] = {7.4, 26.7, 25.0, 23.3, 30.0, 20.0, 25.0, 25.0, 25.0, 26.7, 23.3},
 				  --7.4, 26.7, 25.0, 23.3, 30.1, 20.0, 25.0, 25.0, 25.0, 26.7, 23.3
+				  --7.4, 26.7, 25.0, 23.3, 30.0, 20.0, 25.0, 25.0, 25.0, 26.7, 23.3
 		--FlashFire
 		[427299] = {29.1, 46.7, 26.6, 36.7, 30.9, 37.5, 37.5},--Lowest times used of variations
 				  --29.1, 46.7, 26.6, 36.7, 36.7, 37.5
@@ -192,36 +218,12 @@ local allTimers = {
 		[427343] = {54.0, 40.9, 32.5, 36.6, 36.7, 39.1},
 				  --54.1, 40.9, 32.4, 36.7, 36.6, 39.2
 		--Smoldering backdraft
-		[429973] = {14.0, 25.9, 30.0, 19.1, 29.2, 20.7, 25.0, 24.2, 25.0, 26.7},--Lowest times used of variations
+		[429973] = {14.0, 25.9, 30.0, 19.1, 29.2, 20.7, 25.0, 24.1, 25.0, 26.7},--Lowest times used of variations
 				  --14.0, 25.9, 30.0, 19.2, 29.2, 25.8, 25.0, 24.2, 25.0, 26.7
 				  --14.1, 25.9, 30.0, 19.1, 29.2, 20.7, 30.0, 24.1, 25.0, 26.7
 		--Ashen Call
 		[421325] = {20.7, 44.2, 42.5, 42.5, 38.3, 40.8},
 				  --20.7, 44.2, 42.5, 42.5, 38.3, 40.8
-	},
-	["normal"] = {--Likely obsolete and the same as heroic
-		--Stage 1
-		--Fiery Force of Nature
-		[417653] = {6.0, 113.4, 44.0, 64.7, 114.5},
-		--Blazing Thorns
-		[426206] = {14.0, 36.0, 74.5, 111.6, 36.0, 75.6},
-		--Furious Charge
-		[418637] = {20.0, 20.0, 20.0, 52.5, 19.9, 19.9, 20.0, 69.6, 20.0, 20.0, 53.5},
-		--Scorching Roots
-		[422614] = {30.1, 113.3, 108.7},
-		--Raging Inferno
-		[417634] = {100, 110.6, 111.6},
-		--Stage 2
-		--Falling Embers
-		[427252] = {7.3, 35.0, 20.0, 33.4, 16.7, 33.4, 25.0, 33.4, 16.7, 33.4, 16.7, 41.7, 16.7, 33.4, 16.7, 33.4},
-		--FlashFire
-		[427299] = {34.0, 45.0, 41.8, 41.8, 50.1, 50.2, 41.7, 41.7, 41.8},
-		--Fire Whirl
-		[427343] = {54.0, 50.1, 50.2, 41.7, 41.8, 41.8, 41.7, 50.1},
-		--Smoldering backdraft
-		[429973] = {17.3, 53.3, 58.5, 50.1, 50.1, 58.5, 50.0, 58.5},
-		--Ashen Call
-		[421325] = {25.7, 61.7, 50.1, 50.1, 58.5, 50.1, 58.4, 50.1},
 	},
 }
 
@@ -252,46 +254,25 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		difficultyName = "mythic"
 		timerFieryForceofNatureCD:Start(6.5-delay, 1)
-		timerIgnitingGrowthCD:Start(14.4-delay, 1)
-		timerFuriousChargeCD:Start(22.3-delay, 1)
-		timerBlazingThornsCD:Start(31.3-delay, 1)
-		timerScorchingRootsCD:Start(38-delay, 1)
-		timerRagingInfernoCD:Start(101-delay, 1)
-	elseif self:IsHeroic() then
-		--Pretty much same as mythic
-		difficultyName = "heroic"
-		timerFieryForceofNatureCD:Start(6.5-delay, 1)
-		timerIgnitingGrowthCD:Start(14.4-delay, 1)
-		timerFuriousChargeCD:Start(22.3-delay, 1)
-		timerBlazingThornsCD:Start(31.3-delay, 1)
-		timerScorchingRootsCD:Start(38-delay, 1)
-		timerRagingInfernoCD:Start(101-delay, 1)
+		timerIgnitingGrowthCD:Start(14.2-delay, 1)
+		timerFuriousChargeCD:Start(21.9-delay, 1)
+		timerBlazingThornsCD:Start(30.7-delay, 1)
+		timerScorchingRootsCD:Start(37.3-delay, 1)
 	else--Only normal vetted
-		difficultyName = "normal"
+		difficultyName = "other"
 		timerFieryForceofNatureCD:Start(6.1-delay, 1)
-		timerBlazingThornsCD:Start(14-delay, 1)
-		timerFuriousChargeCD:Start(20-delay, 1)
-		timerScorchingRootsCD:Start(30.1-delay, 1)
-		timerRagingInfernoCD:Start(100-delay, 1)
+		timerFuriousChargeCD:Start(21.9-delay, 1)
+		timerBlazingThornsCD:Start(30.7-delay, 1)
+		timerScorchingRootsCD:Start(37.3-delay, 1)
 	end
+	timerRagingInfernoCD:Start(90.5-delay, 1)
 end
-
---function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
---end
 
 function mod:OnTimerRecovery()
 	if self:IsMythic() then
 		difficultyName = "mythic"
-	elseif self:IsHeroic() then
-		difficultyName = "heroic"
---	elseif self:IsNormal() then
---		difficultyName = "normal"
 	else
---		difficultyName = "lfr"
-		difficultyName = "normal"
+		difficultyName = "other"
 	end
 end
 
@@ -303,8 +284,15 @@ function mod:SPELL_CAST_START(args)
 		if timer then
 			timerIgnitingGrowthCD:Start(timer, self.vb.ignitingCount+1)
 		end
+		--Charge timer correction
+		if timerFuriousChargeCD:GetRemaining(self.vb.furiousChargeCount+1) < 7.7 then
+			local elapsed, total = timerFuriousChargeCD:GetTime(self.vb.furiousChargeCount+1)
+			local extend = 7.7 - (total-elapsed)
+			DBM:Debug("timerFuriousChargeCD extended by: "..extend, 2)
+			timerFuriousChargeCD:Update(elapsed, total+extend, self.vb.furiousChargeCount+1)
+		end
 	elseif spellId == 426524 then
---		timerFieryFlourishCD:Start(nil, args.sourceGUID)
+		timerFieryFlourishCD:Start(self:IsMythic() and 4.9 or 9.7, args.sourceGUID)
 		if not castsPerGUID[args.sourceGUID] then--Shouldn't happen, but just in case
 			castsPerGUID[args.sourceGUID] = 0
 			if self.Options.SetIconOnForces then
@@ -335,19 +323,24 @@ function mod:SPELL_CAST_START(args)
 			specWarnFuriousCharge:Show()
 			specWarnFuriousCharge:Play("justrun")
 			yellFuriousCharge:Yell()
+		else
+			--Delayed by half cast to ensure taunt debuff lasts til charge ends
+			local bossTarget = UnitName("boss1target") or DBM_COMMON_L.UNKNOWN
+			specWarnFuriousChargePreTaunt:Schedule(1.5, bossTarget)
+			specWarnFuriousChargePreTaunt:ScheduleVoice(1.5, "tauntboss")
 		end
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.furiousChargeCount+1) or 20
-		if timer then
-			timerFuriousChargeCD:Start(timer, self.vb.furiousChargeCount+1)
-		end
+		--local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.furiousChargeCount+1) or 22
+		--if timer then
+		--	timerFuriousChargeCD:Start(timer, self.vb.furiousChargeCount+1)
+		--end
+		timerFuriousChargeCD:Start(22.0, self.vb.furiousChargeCount+1)
 	elseif spellId == 426206 then
 		self.vb.thornsCount = self.vb.thornsCount + 1
-		if DBM:UnitDebuff("player", 429032) then--Everlasting Blaze
-			specWarnBlazingThornsAvoid:Show(self.vb.thornsCount)
-			specWarnBlazingThornsAvoid:Play("watchstep")
-		else
-			specWarnBlazingThornsSoak:Show(self.vb.thornsCount)
-			specWarnBlazingThornsSoak:Play("helpsoak")
+		specWarnBlazingThornsAvoid:Show(self.vb.thornsCount)
+		specWarnBlazingThornsAvoid:Play("watchstep")
+		if not DBM:UnitDebuff("player", 429032) and not self:IsEasy() then
+			specWarnBlazingThornsSoak:Schedule(4, self.vb.thornsCount)
+			specWarnBlazingThornsSoak:ScheduleVoice(4, "helpsoak")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.thornsCount+1)
 		if timer then
@@ -357,9 +350,13 @@ function mod:SPELL_CAST_START(args)
 		self.vb.infernoCount = self.vb.infernoCount + 1
 		specWarnRagingInferno:Show(DBM_COMMON_L.SHIELD)
 		specWarnRagingInferno:Play("findshield")
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.infernoCount+1) or 110.6
-		if timer then
-			timerRagingInfernoCD:Start(timer, self.vb.infernoCount+1)
+		timerRagingInfernoCD:Start(101, self.vb.infernoCount+1)
+		--Charge timer correction
+		if timerFuriousChargeCD:GetRemaining(self.vb.furiousChargeCount+1) < 13 then
+			local elapsed, total = timerFuriousChargeCD:GetTime(self.vb.furiousChargeCount+1)
+			local extend = 13 - (total-elapsed)
+			DBM:Debug("timerFuriousChargeCD extended by: "..extend, 2)
+			timerFuriousChargeCD:Update(elapsed, total+extend, self.vb.furiousChargeCount+1)
 		end
 	elseif spellId == 427252 then
 		self.vb.scorchingRootCount = self.vb.scorchingRootCount + 1
@@ -419,12 +416,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if timer then
 			timerFlashFireCD:Start(timer, self.vb.thornsCount+1)
 		end
-	elseif spellId == 428901 and self:AntiSpam(5, 2) then
-		self.vb.ignitingCount = self.vb.ignitingCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
-		if timer then
-			timerAshenDevestationCD:Start(timer, self.vb.ignitingCount+1)
-		end
+--	elseif spellId == 428901 and self:AntiSpam(5, 2) then
+--		self.vb.ignitingCount = self.vb.ignitingCount + 1
+--		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
+--		if timer then
+--			timerAshenDevestationCD:Start(timer, self.vb.ignitingCount+1)
+--		end
 	end
 end
 
@@ -460,8 +457,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 423719 and not args:IsPlayer() then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then--May be unnessesary, but precaution for a drycode, remove later
-			specWarnNaturesFury:Show(args.destName)
-			specWarnNaturesFury:Play("tauntboss")
+			--Redundant tanking check done so it doesn't warn to taunt again if you already did in pre cast.
+			if not self:IsTanking("player", "boss1", nil, true) then
+				specWarnNaturesFury:Show(args.destName)
+				specWarnNaturesFury:Play("tauntboss")
+			end
 		end
 	elseif spellId == 421594 then
 		if args:IsPlayer() then
@@ -492,8 +492,8 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnBlisteringSplinters:Show(amount)
 			end
 		end
-	elseif spellId == 421407 then
-		warnSearingAsh:Show(args.amount or 1)
+--	elseif spellId == 421407 then
+--		warnSearingAsh:Show(args.amount or 1)
 	elseif spellId == 426256 then
 		warnBlazingCoalescenceBoss:Show(args.destName, args.amount or 1)
 	elseif spellId == 427299 then
@@ -501,7 +501,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnFlashFire:Show()
 			specWarnFlashFire:Play("runout")
-			specWarnFlashFire:Yell()
+			yellFlashFire:Yell()
 			yellFlashFireFades:Countdown(spellId)
 		end
 --	elseif spellId == 428901 then
@@ -550,11 +550,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		warnPhase:Play("ptwo")
 		if self:IsMythic() then
 			timerFallingEmbersCD:Start(7.4, 1)
-			timerSmolderingBackdraftCD:Start(14.1, 1)
-			timerAshenCallCD:Start(20.8, 1)
+			timerSmolderingBackdraftCD:Start(14.0, 1)
+			timerAshenCallCD:Start(20.7, 1)
 			timerFlashFireCD:Start(29, 1)
-			timerAshenDevestationCD:Start(47.4, 1)
-			timerFireWhirlCD:Start(60, 1)
+			timerAshenDevestationCD:Start(45.4, 1)
+			timerFireWhirlCD:Start(59.1, 1)
 		elseif self:IsHeroic() then
 			timerFallingEmbersCD:Start(7.4, 1)
 			timerSmolderingBackdraftCD:Start(14, 1)
@@ -563,9 +563,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerFireWhirlCD:Start(54, 1)
 		else--Normal needs rechecking. Ashen and smoldering likely changed to match mythic and heroic
 			timerFallingEmbersCD:Start(7.3, 1)
-			timerSmolderingBackdraftCD:Start(17.3, 1)--14?
-			timerAshenCallCD:Start(25.7, 1)--20.7?
-			timerFlashFireCD:Start(34, 1)--29?
+			timerSmolderingBackdraftCD:Start(14, 1)
+			timerAshenCallCD:Start(20, 1)
+			timerFlashFireCD:Start(29, 1)
 			timerFireWhirlCD:Start(54, 1)
 		end
 	elseif spellId == 421594 then
@@ -618,6 +618,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 417668 and self:AntiSpam(3, 5) then
 		warnRenewedTreant:Show()
 	elseif spellId == 418655 and self:AntiSpam(3, 6) then
-		--Roots healing warning
+		specWarnCharredBrambles:Show()
+		specWarnCharredBrambles:Play("healfull")
+	elseif spellId == 428896 then
+		self.vb.ignitingCount = self.vb.ignitingCount + 1
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
+		if timer then
+			timerAshenDevestationCD:Start(timer, self.vb.ignitingCount+1)
+		end
 	end
 end

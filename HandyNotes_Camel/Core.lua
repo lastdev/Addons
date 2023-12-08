@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                      v1.00 - 7th November 2023
+                                     v1.01 - 22nd November 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -355,70 +355,79 @@ end
 ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
-	L["Camel"] = "Mysteriöse Kamelfigur"
-	L["Speak to Zidormi"] = "Sprich mit Zidormi"
-	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	L["AddOn Description"] = "Hilft Ihnen, das " ..ns.colour.highlight
 		.."Mysteriöse Kamelfigur" ..ns.colour.plaintext .." in Uldum zu erhalten"
+	L["Camel"] = "Mysteriöse Kamelfigur"
+	L["Speak to Zidormi"] = "Sprich mit Zidormi"
+	L["Uldum Map"] = "Zeigt die Karte von Uldum"
+	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Camel"] = "Figurilla de camello misteriosa"
-	L["Speak to Zidormi"] = "Hablar con Zidormi"
-	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 	L["AddOn Description"] = "Te ayuda a obtener " ..ns.colour.highlight
 		.."el Figurilla de camello misteriosa" ..ns.colour.plaintext .." en Uldum"
+	L["Camel"] = "Figurilla de camello misteriosa"
+	L["Speak to Zidormi"] = "Hablar con Zidormi"
+	L["Uldum Map"] = "Mostrar el mapa de Uldum"
+	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 
 elseif ns.locale == "frFR" then
-	L["Camel"] = "Figurine de dromadaire mystérieuse"
-	L["Speak to Zidormi"] = "Parlez à Zidormi"
-	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight
 		.."l'figurine de dromadaire mystérieuse" ..ns.colour.plaintext .." à Uldum"
+	L["Camel"] = "Figurine de dromadaire mystérieuse"
+	L["Speak to Zidormi"] = "Parlez à Zidormi"
+	L["Uldum Map"] = "Afficher la carte de Uldum"
+	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 
 elseif ns.locale == "itIT" then
-	L["Camel"] = "Statuetta di Dromedario Misteriosa"
-	L["Speak to Zidormi"] = "Parla con Zidormi"
-	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight
 		.."Statuetta di Dromedario Misteriosa" ..ns.colour.plaintext .." a Uldum"
+	L["Camel"] = "Statuetta di Dromedario Misteriosa"
+	L["Speak to Zidormi"] = "Parla con Zidormi"
+	L["Uldum Map"] = "Mostra la mappa di Uldum"
+	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 
 elseif ns.locale == "koKR" then
-	L["Camel"] = "수수께끼 낙타 조각상"
-	L["Speak to Zidormi"] = "지도르미님과 대화"
-	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 	L["AddOn Description"] = "울둠에서 " ..ns.colour.highlight .."수수께끼 낙타 조각상"
 		..ns.colour.plaintext .."를 얻는 데 도움이 됩니다."
+	L["Camel"] = "수수께끼 낙타 조각상"
+	L["Speak to Zidormi"] = "지도르미님과 대화"
+	L["Uldum Map"] = "울둠 지도를 보여주세요"
+	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Camel"] = "Estátua de Camelo Misteriosa"
-	L["Speak to Zidormi"] = "Fale com Zidormi"
-	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight
 		.."Estátua de Camelo Misteriosa" ..ns.colour.plaintext .." em Uldum"
+	L["Camel"] = "Estátua de Camelo Misteriosa"
+	L["Speak to Zidormi"] = "Fale com Zidormi"
+	L["Uldum Map"] = "Mostrar o mapa de Uldum"
+	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 
 elseif ns.locale == "ruRU" then
-	L["Camel"] = "Странная фигурка верблюда"
-	L["Speak to Zidormi"] = "Поговори с Зидорми"
-	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 	L["AddOn Description"] = "Помогает вам получить " ..ns.colour.highlight
 		.."Странная фигурка верблюда" ..ns.colour.plaintext .." в Ульдум"
+	L["Camel"] = "Странная фигурка верблюда"
+	L["Speak to Zidormi"] = "Поговори с Зидорми"
+	L["Uldum Map"] = "Покажите карту Ульдума"
+	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 
 elseif ns.locale == "zhCN" then
+	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."神秘的骆驼雕像"
 	L["Camel"] = "神秘的骆驼雕像"
 	L["Speak to Zidormi"] = "与 希多尔米 通话"
+	L["Uldum Map"] = "显示奥丹姆的地图"
 	L["Wrong version of Uldum"] = "奥丹姆 版本错误"
-	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."神秘的骆驼雕像"
 
 elseif ns.locale == "zhTW" then
+	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."神秘的駱駝雕像"
 	L["Camel"] = "神秘的駱駝雕像"
 	L["Speak to Zidormi"] = "與 希多爾米 通話"
+	L["Uldum Map"] = "顯示奧丹姆的地圖"
 	L["Wrong version of Uldum"] = "奧丹姆 版本錯誤"
-	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."神秘的駱駝雕像"
 	
 else
-	L["Camel"] = "Mysterious Camel Figurine"
 	L["AddOn Description"] = ns.colour.plaintext .."Helps you to obtain the " ..ns.colour.highlight
 		.."Mysterious Camel Figurine" ..ns.colour.plaintext .." in Uldum"
+	L["Camel"] = "Mysterious Camel Figurine"
 end
 
 -- Plugin handler for HandyNotes
@@ -567,9 +576,30 @@ ns.options = {
 }
 
 function HandyNotes_Camel_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "Camel" )
- end
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( 249 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Camel"] ..": " ..ns.colour.plaintext
+					.."Not possible at this time. Try later" )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "Camel" )
+	end
+end
+ 
+function HandyNotes_Camel_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["Camel"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Uldum Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_Camel_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

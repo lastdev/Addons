@@ -1,3 +1,11 @@
+== v2.11 - 26th November 2023
+* Added (46.82,5366) to Dun Morogh Classic
+
+== v2.10 - 12th November 2023
+* Fix for pin data logic for non-acg=hievement pins
+* Adjusted icon sizing to keep them all the same size
+* Continued tidying code to match all the other AddOns
+
 == v2.09 - 28th October 2023
 * Bump to 10.2.0
 * Multi version. Wrath 3.4.3 TOC now included

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2364, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20231117101914")
 mod:SetCreatureID(156866)
 mod:SetEncounterID(2331)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -57,7 +57,6 @@ local specWarnCallCracklingStalker			= mod:NewSpecialWarningSwitch("ej20546", "-
 local timerCallCracklingStalkerCD			= mod:NewNextTimer(30.1, "ej20546", nil, nil, nil, 1, 306865, DBM_COMMON_L.DAMAGE_ICON)
 local timerUnstableVita						= mod:NewTargetTimer(5, 306257, nil, nil, nil, 5)
 
-mod:AddSetIconOption("SetIconOnUnstableVita", 306257, true, false, {1, 2})
 ------Vita Add
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20546))
 local warnChainLightning					= mod:NewTargetNoFilterAnnounce(306874, 3)
@@ -139,126 +138,22 @@ mod:AddBoolOption("OnlyParentBondMoves", false)
 
 mod.vb.callEssenceCount = 0
 mod.vb.callActive = false
-mod.vb.currentVita = nil
-mod.vb.lastHighest = "^^ No DBM"
 mod.vb.lastIcon = 1
 mod.vb.lastMythicIcon = 4
 mod.vb.unstableVoidCount = 0
 mod.vb.voidEruptionCount = 0
 mod.vb.currentNightmare = nil
-mod.vb.lastLowest = "^^ No DBM"
 mod.vb.corruptedExistenceIcon = 2
 mod.vb.corruptedExistenceCount = 0
 mod.vb.bondsCount = 0
 mod.vb.bondsTarget = nil
 mod.vb.gorgedCount = 0
-local playerHasVita, playerHasNightmare = false, false
 local ExposureTargets = {}
 local consumingVoid = DBM:GetSpellInfo(306645)
 local ChargedBondsTargets = {}
 local corruptedExistence = {11.2, 13.3, 12.1, 12.1, 14.6, 12.1, 15.7, 12.1, 12.1}
 local mythicBondstimers = {15, 15.8, 13.3, 10.9, 11.0, 12.1, 13.3, 10.2, 10.4, 10.9}
 --Void Eruption: 22.1, 19.5, 19.4, 19.4, 19.4, 20.6. less important to sequence out i think
-
-local furthestPlayerScanner, closestPlayerScanner
-do
-	--upvalues, this will be called a lot
-	local Ambiguate, IsItemInRange, CheckInteractDistance, GetBestMapForUnit = Ambiguate, IsItemInRange, CheckInteractDistance, C_Map.GetBestMapForUnit
-	local UnitIsDeadOrGhost, UnitIsConnected, UnitIsUnit = UnitIsDeadOrGhost, UnitIsConnected, UnitIsUnit
-
-	local entireRaidDistancetable = {}
-	local function updateRaidDistanceTable(self)
-		for uId in DBM:GetGroupMembers() do
-			local playerMapId = GetBestMapForUnit("player") or 0
-			local mapId = GetBestMapForUnit(uId) or 0
-			--Covers all bases, exists, same map, not self, not dead, and not DCed
-			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) then
-				--This is a bit ugly, but only way to determine most approximate range of a unit from player
-				if IsItemInRange(90175, uId) then entireRaidDistancetable[uId] = 4
-				elseif IsItemInRange(37727, uId) then entireRaidDistancetable[uId] = 6
-				elseif IsItemInRange(8149, uId) then entireRaidDistancetable[uId] = 8
-				elseif CheckInteractDistance(uId, 3) then entireRaidDistancetable[uId] = 10
-				elseif CheckInteractDistance(uId, 2) then entireRaidDistancetable[uId] = 11
-				elseif IsItemInRange(32321, uId) then entireRaidDistancetable[uId] = 13
-				elseif IsItemInRange(6450, uId) then entireRaidDistancetable[uId] = 18
-				elseif IsItemInRange(21519, uId) then entireRaidDistancetable[uId] = 23
-				elseif CheckInteractDistance(uId, 1) then entireRaidDistancetable[uId] = 30
-				elseif IsItemInRange(1180, uId) then entireRaidDistancetable[uId] = 33
-				elseif UnitInRange(uId) then entireRaidDistancetable[uId] = 43
-				elseif IsItemInRange(32698, uId)  then entireRaidDistancetable[uId] = 48
-				elseif IsItemInRange(116139, uId)  then entireRaidDistancetable[uId] = 53
-				elseif IsItemInRange(32825, uId) then entireRaidDistancetable[uId] = 60
-				elseif IsItemInRange(35278, uId) then entireRaidDistancetable[uId] = 80
-				else entireRaidDistancetable[uId] = 81 end
-			end
-		end
-	end
-	furthestPlayerScanner = function(self)
-		updateRaidDistanceTable()
-		local highestDistance = 0
-		--Go through entireRaidDistancetable and establish who is highest distance
-		--If multiple are at that distance, only first name is taken. Do to limited distance APIs, this lacks 100% accuracy but should be accurate most of time
-		for uId, range in pairs(entireRaidDistancetable) do
-			if range > highestDistance then
-				highestDistance = range
-				self.vb.lastHighest = DBM:GetUnitFullName(uId)
-			end
-		end
-		self:SendSync("VitaUpdate", self.vb.lastHighest)
-		if playerHasVita then--As long as debuff present, keep looping
-			self:Schedule(0.5, furthestPlayerScanner, self)
-		else
-			self:Unschedule(furthestPlayerScanner)
-			if not playerHasNightmare then
-				table.wipe(entireRaidDistancetable)
-			end
-		end
-	end
-	closestPlayerScanner = function(self)
-		updateRaidDistanceTable()
-		local lowestDistance = 1000
-		--Go through entireRaidDistancetable and establish who is closest distance
-		--If multiple are at that distance, only first name is taken. Do to limited distance APIs, this lacks 100% accuracy but should be accurate most of time
-		for uId, range in pairs(entireRaidDistancetable) do
-			if range < lowestDistance then
-				lowestDistance = range
-				self.vb.lastLowest = DBM:GetUnitFullName(uId)
-			end
-		end
-		self:SendSync("NightmareUpdate", self.vb.lastLowest)
-		if playerHasNightmare then--As long as debuff present, keep looping
-			self:Schedule(0.5, closestPlayerScanner, self)
-		else
-			self:Unschedule(closestPlayerScanner)
-			if not playerHasVita then
-				table.wipe(entireRaidDistancetable)
-			end
-		end
-	end
-	function mod:OnSync(msg, target)
-		if msg == "VitaUpdate" and target then
-			target = Ambiguate(target, "None")--in cross realm situations, an off realmer would send -realmname on units for units for our realm, we need to correct this
-			self.vb.lastHighest = target
-			if self.Options.SetIconOnUnstableVita then
-				if self.vb.lastIcon == 1 then
-					self:SetIcon(self.vb.lastHighest, 2, 4.5)
-				else
-					self:SetIcon(self.vb.lastHighest, 1, 4.5)
-				end
-			end
-		elseif msg == "NightmareUpdate" and target then
-			target = Ambiguate(target, "None")--in cross realm situations, an off realmer would send -realmname on units for units for our realm, we need to correct this
-			self.vb.lastLowest = target
-			if self.Options.SetIconOnUnstableNightmare then
-				if self.vb.lastMythicIcon == 5 then
-					self:SetIcon(self.vb.lastLowest, 4, 4.5)
-				else
-					self:SetIcon(self.vb.lastLowest, 5, 4.5)
-				end
-			end
-		end
-	end
-end
 
 local updateInfoFrame
 do
@@ -274,16 +169,6 @@ do
 	updateInfoFrame = function()
 		table.wipe(lines)
 		table.wipe(sortedLines)
-		--Unstable Vita Tracker
-		if mod.vb.currentVita then
-			addLine(unstableVita, DBM:GetShortServerName(mod.vb.currentVita))
-			addLine(L.Furthest, DBM:GetShortServerName(mod.vb.lastHighest))
-		end
-		--Unstable Nightmare Tracker
-		if mod.vb.currentNightmare then
-			addLine(unstableNightmare, DBM:GetShortServerName(mod.vb.currentNightmare))
-			addLine(L.Closest, DBM:GetShortServerName(mod.vb.lastLowest))
-		end
 		--Vulnerability
 		if #ExposureTargets > 0 then
 			addLine("---"..Exposure.."---")
@@ -337,16 +222,12 @@ end
 function mod:OnCombatStart(delay)
 	self.vb.callEssenceCount = 0
 	self.vb.callActive = false
-	self.vb.currentVita = nil
-	self.vb.lastHighest = "^^ No DBM"
 	self.vb.lastIcon = 1
 	self.vb.lastMythicIcon = 4
 	self.vb.voidEruptionCount = 0
 	self.vb.currentNightmare = nil
-	self.vb.lastLowest = "^^ No DBM"
 	self.vb.bondsTarget = nil
 	self:SetStage(1)
-	playerHasVita, playerHasNightmare = false, false
 	table.wipe(ExposureTargets)
 	table.wipe(ChargedBondsTargets)
 	timerCallEssenceCD:Start(10-delay)
@@ -376,17 +257,6 @@ function mod:OnCombatEnd()
 	end
 	if self.Options.NPAuraOnDraws then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
-	end
-end
-
-function mod:OnTimerRecovery()
-	if DBM:UnitDebuff("player", 306257) then
-		playerHasVita = true
-		furthestPlayerScanner(self)
-	end
-	if DBM:UnitDebuff("player", 313077) then
-		playerHasNightmare = true
-		closestPlayerScanner(self)
 	end
 end
 
@@ -491,34 +361,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnNightmarePhase:Show()
 		timerCallNightTerrorCD:Start(7.2)
 	elseif spellId == 306207 or spellId == 306273 then--Unstable Vita (Initial, hop)
-		self.vb.currentVita = args.destName
-		--vita marking uses circle and star. Here are Rules
-		--1. First icon used is star on initial vita application
-		--2. Circle will be set on furthest target
-		--3. When Vita jumps, IF it jumpsto the target that had circle, that target will KEEP circle
-		--But if it jumps to someone that wasn't circle, it'll reset back to rule 1, starting at star.
-		--4. if the 3 step was aple to keep circle on new vita target, then star will now be icon set on furthest target.
-		--5. So long as the jumps go to targets DBM estimated it'll continue doing 3 and 4 but with appropriate icon.
-		if self.vb.lastHighest == args.destName then
-			if self.vb.lastIcon == 1 then
-				self.vb.lastIcon = 2
-			else
-				self.vb.lastIcon = 1
-			end
-		else--Reset icons because vita didn't go where it was expected to or this is initial application
-			self.vb.lastIcon = 1
-		end
-		if self.Options.SetIconOnUnstableVita then
-			self:SetIcon(args.destName, self.vb.lastIcon)
-		end
-		self.vb.lastHighest = "^^ No DBM"
 		if args:IsPlayer() then
-			playerHasVita = true
 			specWarnUnstableVita:Show()
 			specWarnUnstableVita:Play("targetyou")
 			yellUnstableVita:Yell()
 			yellUnstableVitaFades:Countdown(spellId)
-			furthestPlayerScanner(self)
 		else
 			warnUnstableVita:Show(args.destName)
 		end
@@ -539,12 +386,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self.vb.lastLowest = "^^ No DBM"
 		if args:IsPlayer() then
-			playerHasNightmare = true
 			specWarnUnstableNightmare:Show()
 			specWarnUnstableNightmare:Play("targetyou")
 			yellUnstableNightmare:Yell()
 			yellUnstableNightmareFades:Countdown(spellId)
-			closestPlayerScanner(self)
 		else
 			warnUnstableNightmare:Show(args.destName)
 		end
@@ -664,21 +509,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 312996 then--Nightmare Empowered
 
 	elseif spellId == 306207 or spellId == 306273 then--Unstable Vita (Initial, hop)
-		self.vb.currentVita = nil
 		if args:IsPlayer() then
-			playerHasVita = false
-			self:Unschedule(furthestPlayerScanner)
 			yellUnstableVitaFades:Cancel()
-		end
-		if self.Options.SetIconOnUnstableVita then
-			self:SetIcon(args.destName, 0)
 		end
 		timerUnstableVita:Stop(args.destName)
 	elseif spellId == 313077 then--Unstable Nightmare
 		self.vb.currentNightmare = nil
 		if args:IsPlayer() then
-			playerHasNightmare = false
-			self:Unschedule(closestPlayerScanner)
 			yellUnstableNightmareFades:Cancel()
 		end
 		if self.Options.SetIconOnUnstableNightmare then

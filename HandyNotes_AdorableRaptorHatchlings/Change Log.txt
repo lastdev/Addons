@@ -1,3 +1,12 @@
+== v1.26 - 2nd December 2023
+* Felstriker server added
+* Penance and Shadowstrike added (SoD)
+* Removed unprintable characters from the TOC titles for ptBR and ptPT
+
+== v1.25 - 25th November 2023
+* Gundrak Raptor added
+* Separated Northern Barrens and The Barrens
+
 == v1.24 - 11th November 2023
 * Translations for Obsidian and Deviate added
 

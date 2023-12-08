@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                      v1.12 - 2nd November 2023
+                                      v1.13 - 1st December 2023
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -66,7 +66,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -101,7 +102,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -136,7 +140,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -169,7 +176,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -201,6 +211,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -233,7 +246,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -266,6 +282,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -299,6 +318,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -331,7 +353,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -363,9 +388,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -375,41 +404,41 @@ ns.name = UnitName( "player" ) or "Character"
 ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
-	L["Midsummer Fire Festival"] = "Sonnenwendfest"
 	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Sonnenwendfest"
+	L["Midsummer Fire Festival"] = "Sonnenwendfest"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Midsummer Fire Festival"] = "Festival del Fuego del Solsticio de Verano"
 	L["AddOn Description"] = "Ayuda con el suceso mundial"
 		.."Festival del Fuego del Solsticio de Verano"
+	L["Midsummer Fire Festival"] = "Festival del Fuego del Solsticio de Verano"
 
 elseif ns.locale == "frFR" then
-	L["Midsummer Fire Festival"] = "Fête du Feu du solstice d'été"
 	L["AddOn Description"] = "Aide à l'événement mondial Fête du Feu du solstice d'été"
+	L["Midsummer Fire Festival"] = "Fête du Feu du solstice d'été"
 
 elseif ns.locale == "itIT" then
-	L["Midsummer Fire Festival"] = "Fuochi di Mezza Estate"
 	L["AddOn Description"] = "Assiste con l'evento mondiale Fuochi di Mezza Estate"
+	L["Midsummer Fire Festival"] = "Fuochi di Mezza Estate"
 
 elseif ns.locale == "koKR" then
-	L["Midsummer Fire Festival"] = "한여름 불꽃축제"
 	L["AddOn Description"] = "한여름 불꽃축제 대규모 이벤트 지원"	
+	L["Midsummer Fire Festival"] = "한여름 불꽃축제"
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Midsummer Fire Festival"] = "Festival do Fogo do Solstício"
 	L["AddOn Description"] = "Auxilia no evento mundial Festival do Fogo do Solstício"
+	L["Midsummer Fire Festival"] = "Festival do Fogo do Solstício"
 
 elseif ns.locale == "ruRU" then
-	L["Midsummer Fire Festival"] = "Огненный Солнцеворот"
 	L["AddOn Description"] = "Помогает с игровое событие Огненный Солнцеворот"
+	L["Midsummer Fire Festival"] = "Огненный Солнцеворот"
 
 elseif ns.locale == "zhCN" then
-	L["Midsummer Fire Festival"] = "仲夏火焰节"
 	L["AddOn Description"] = "协助 仲夏火焰节 活动"
+	L["Midsummer Fire Festival"] = "仲夏火焰节"
 
 elseif ns.locale == "zhTW" then
-	L["Midsummer Fire Festival"] = "仲夏火焰節"
 	L["AddOn Description"] = "協助 仲夏火焰節 活動"
+	L["Midsummer Fire Festival"] = "仲夏火焰節"
 	
 else
 	L["AddOn Description"] = "Help for the Midsummer Fire Festival achievements"

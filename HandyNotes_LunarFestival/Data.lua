@@ -20,6 +20,10 @@ local colourPlaintext	= ns.colour.plaintext
 -- aIDA, aIDH, aIndexA, aIndexH, aQuestA, aQuestH, tip
 -- ===================================================
 
+local elderBluewolf = "He is through here. If your faction is not in control then see\n"
+		.."my Easy Glitch Guide!\n\nIf your faction is in control then the Defender's Portal will work"
+local elderNurgenExit = "After you exit the dungeon, use the path\nhere and very soon after you may mount"
+
 points[ 63 ] = { -- Ashenvale
 	[35544891] = { aID=911, index=9, quest=8725 },
 	[60207290] = { index=4, quest=56842, title="Lunar Preservation" },
@@ -96,12 +100,12 @@ points[ 17 ] = { -- Blasted Lands
 	[54284950] = { aID=912, index=2, quest=8647, tip="Can't find him? Speak to Zidormi" },
 }
 points[ 114 ] = { -- Borean Tundra
-	[59096564] = { aID=1396, index=1, quest=13012 },
-	[57404372] = { aID=1396, index=5, quest=13033 },
-	[33803436] = { aID=1396, index=6, quest=13016 },
-	[42934957] = { aID=1396, index=15, quest=13029, tip="Actually above the Mightstone Quarry" },
 	[27512594] = { aID=910, index=8, quest=13021,
 					tip="Enter through here and follow the markers.\n\nThe lowest portal is for The Nexus" },
+	[33803436] = { aID=1396, index=6, quest=13016 },
+	[42934957] = { aID=1396, index=15, quest=13029, tip="Actually above the Mightstone Quarry" },
+	[57404372] = { aID=1396, index=5, quest=13033 },
+	[59096564] = { aID=1396, index=1, quest=13012 },
 }
 points[ 36 ] = { -- Burning Steppes
 	[70114538] = { aID=912, index=9, quest=8636 },
@@ -145,13 +149,12 @@ points[ 66 ] = { -- Desolace
 	[99614885] = { aID=914, index=2, quest=8678 },
 }
 points[ 115 ] = { -- Dragonblight
-	[29755591] = { aID=1396, index=3, quest=13014 },
-	[48777817] = { aID=1396, index=12, quest=13019 },
-	[35104835] = { aID=1396, index=17, quest=13031 },
+	[14000484] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
 	[26134950] = { aID=910, index=9, quest=13022, tip="Drop down here, face south and locate the portal and enter" },
-	[26814899] = { aID=910, index=9, quest=13022,
-					tip="After you exit the dungeon, use the path\nhere and very soon after you may mount" },
-	[14000484] = { aID=1396, index=10, quest=13026 },
+	[26814899] = { aID=910, index=9, quest=13022, tip=elderNurgenExit },
+	[29755591] = { aID=1396, index=3, quest=13014 },
+	[35104835] = { aID=1396, index=17, quest=13031 },
+	[48777817] = { aID=1396, index=12, quest=13019 },
 }
 points[ 161 ] = { -- Drak'Tharon Keep - Drak'Tharon Overlook
 	[36554553] = { aID=910, index=10, quest=13023, tip="5) So you did decide to come this way. Awesome!\n"
@@ -302,11 +305,11 @@ points[ 117 ] = { -- Howling Fjord
 	[57254671] = { aID=910, index=13, quest=13067, tip="This is the correct portal. It's up quite high" },
 }
 points[ 118 ] = { -- Icecrown
-	[93836520] = { 1396, 1396, 10, 10, 13026, 13026, },
-	[10909536] = { 1396, 1396, 7, 7, 13018, 13018, },
-	[20638522] = { 1396, 1396, 8, 8, 13024, 13024, },
-	[90216517] = { 1396, 1396, 4, 4, 13015, 13015, },
-	[92902422] = { 1396, 1396, 14, 14, 13020, 13020, },
+	[10899536] = { aID=1396, index=7, quest=13018 },
+	[20638522] = { aID=1396, index=8, quest=13024, },
+	[41499646] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
+	[90216517] = { aID=1396, index=4, quest=13015, },
+	[92902422] = { aID=1396, index=14, quest=13020, },
 }
 points[ 87 ] = { -- Ironforge
 	[29191705] = { aID=915, index=2, quest=8866 }, 
@@ -426,7 +429,7 @@ points[ 205 ] = { -- Shimmering Expanse in Vashj'ir
 points[ 119 ] = { -- Sholazar Basin
 	[49786362] = { aID=1396, index=7, quest=13018 },
 	[63804902] = { aID=1396, index=8, quest=13024 },
-	[93836520] = { aID=1396, index=10, quest=13026 },
+	[93836520] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
 }
 points[ 81 ] = { -- Silithus
 	[30801332] = { aID=911, index=20, quest=8654,
@@ -688,8 +691,7 @@ points[ 22 ] = { -- Western Plaguelands
 	[96255275] = { aID=912, index=15, quest=8688 },
 }
 points[ 123 ] = { -- Wintergrasp
-	[50001627] = { aID=1396, index=10, quest=13026, tip="He is through here. If your faction is not in control then see\n"
-					.."my Easy Glitch Guide!\n\nIf your faction is in control then the Defender's Portal will work" },
+	[50001627] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
 	[49491452] = { aID=1396, index=10, quest=13026, 
 					tip="Glitch Guide: 1) You MUST stand exactly here with your face\nburied into the corner.\n\n"
 					.."If that is not possible then you are on the wrong ledge - fly\naround a bit.\n\n"
@@ -704,6 +706,8 @@ points[ 123 ] = { -- Wintergrasp
 					.."degrees) you can jump\ndown onto a circular raised ledge.\n\nCannot see the interior? "
 					.."Just jump down blindly!\n\nContinue with the Elder then use the Violet Citadel\n"
 					.."portal or the Defender's Portal" },
+	[74149952] = { aID=910, index=9, quest=13022, tip=elderNurgenExit },
+	[89779830] = { aID=1396, index=17, quest=13031 },
 }
 points[ 83 ] = { -- Winterspring
 	[53225675] = { aID=911, index=18, quest=8726 },

@@ -53,10 +53,15 @@ L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Нажмите, чтобы отключ�
 L["DISABLE_RWF_MODE_RELOAD"] = "Вы отключаете режим Race World First. Нажатие кнопки Подтвердить перезагрузит Ваш интерфейс."
 L["DPS"] = "Боец"
 L["DUNGEON_SHORT_NAME_AA"] = "Академия Алгет'ар"
+L["DUNGEON_SHORT_NAME_AD"] = "Атал'Дазар"
 L["DUNGEON_SHORT_NAME_AV"] = "Лазурное хранилище"
 L["DUNGEON_SHORT_NAME_BH"] = "Лощина Бурошкуров"
+L["DUNGEON_SHORT_NAME_BRH"] = "Крепость Черной Ладьи"
 L["DUNGEON_SHORT_NAME_COS"] = "Квартал Звезд"
+L["DUNGEON_SHORT_NAME_DHT"] = "Чаща Темного Сердца"
 L["DUNGEON_SHORT_NAME_DOS"] = "Та Сторона"
+L["DUNGEON_SHORT_NAME_EB"] = "Вечное Цветение"
+L["DUNGEON_SHORT_NAME_FALL"] = "Рассвет Бесконечности: падение Галакронда"
 L["DUNGEON_SHORT_NAME_FH"] = "Вольная Гавань"
 L["DUNGEON_SHORT_NAME_GD"] = "Депо Мрачных Путей"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Гамбит Со'леи"
@@ -71,6 +76,7 @@ L["DUNGEON_SHORT_NAME_NL"] = "Логово Нелтариона"
 L["DUNGEON_SHORT_NAME_NO"] = "Наступление клана Нокхуд"
 L["DUNGEON_SHORT_NAME_NW"] = "Смертельная Тризна"
 L["DUNGEON_SHORT_NAME_PF"] = "Чумные каскады"
+L["DUNGEON_SHORT_NAME_RISE"] = "Рассвет Бесконечности: подъем Дорнозму"
 L["DUNGEON_SHORT_NAME_RLP"] = "Рубиновые Омуты Жизни"
 L["DUNGEON_SHORT_NAME_SBG"] = "Некрополь Призрачной Луны"
 L["DUNGEON_SHORT_NAME_SD"] = "Кровавые Катакомбы"
@@ -78,11 +84,13 @@ L["DUNGEON_SHORT_NAME_SOA"] = "Шпили Перерождения"
 L["DUNGEON_SHORT_NAME_STRT"] = "Улицы Чудес"
 L["DUNGEON_SHORT_NAME_TJS"] = "Храм Нефритовой Змеи"
 L["DUNGEON_SHORT_NAME_TOP"] = "Театр Боли"
+L["DUNGEON_SHORT_NAME_TOTT"] = "Трон Приливов"
 L["DUNGEON_SHORT_NAME_ULD"] = "Ульдаман: наследие Тира"
 L["DUNGEON_SHORT_NAME_UNDR"] = "Подгнилье"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Каражан (верх)"
 L["DUNGEON_SHORT_NAME_VOTW"] = "Казематы Стражей"
 L["DUNGEON_SHORT_NAME_VP"] = "Вершина Смерча"
+L["DUNGEON_SHORT_NAME_WM"] = "Усадьба Уэйкрестов"
 L["DUNGEON_SHORT_NAME_WORK"] = "Мехагон Мастерская"
 L["DUNGEON_SHORT_NAME_YARD"] = "Мехагон Свалка"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Автоматическая позиция окна профиля RaiderIO"
@@ -119,6 +127,7 @@ L["HIDE_OWN_PROFILE"] = "Скрыть подсказку для Вашего п�
 L["HIDE_OWN_PROFILE_DESC"] = "Если установлено, не будет показываться всплывающая подсказка Вашего профиля Raider.IO, но могут отображаться подсказки других игроков, если они у них есть."
 L["INVERSE_PROFILE_MODIFIER"] = "Инвертировать модификатор подсказки профиля Raider.IO"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "Включение этого параметра позволит инвертировать модификатор клавиш (Shift/Ctrl/Alt) в подсказке RaiderIO: удерживайте клавишу для переключения между видами профилей Свой/Лидер, либо Лидер/Свой."
+L["LOCALE_NAME"] = "ruRU"
 L["LOCKING_PROFILE_FRAME"] = "Raider.IO: блокировка фрейма профиля M+."
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "Лучший М+ рейтинг мейна (%s)"
 L["MAINS_RAID_PROGRESS"] = "Прогресс мейна"
@@ -147,6 +156,15 @@ L["PROFILE_BEST_RUNS"] = "Лучшие прохождения"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Заблокируйте рамку профиля Raider.IO или включите автоматическое позиционирование, чтобы скрыть эту привязку."
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Предупреждение:|r |cffFFFFFF%s|r не может найти данные для Вашей текущей фракции. Пожалуйста, проверьте Ваши настройки |cffFFFFFF/raiderio|r и включите данные для |cffFFFFFF%s|r."
 L["PVP_DATA_HEADER"] = "[Raider.IO] PvP профиль"
+L["RAID_BOSS_ATDH_1"] = "Кривокорень"
+L["RAID_BOSS_ATDH_2"] = "Игира Жестокая"
+L["RAID_BOSS_ATDH_3"] = "Вулкаросс"
+L["RAID_BOSS_ATDH_4"] = "Совет Снов"
+L["RAID_BOSS_ATDH_5"] = "Хранитель пламени Лародар"
+L["RAID_BOSS_ATDH_6"] = "Нимуэ, Ткач круговорота"
+L["RAID_BOSS_ATDH_7"] = "Пеплорон"
+L["RAID_BOSS_ATDH_8"] = "Тиндрал Полет Мысли, провидец Пламени"
+L["RAID_BOSS_ATDH_9"] = "Фиракк Пылающий"
 L["RAID_BOSS_ATSC_1"] = "Каззара Огнекованная "
 L["RAID_BOSS_ATSC_2"] = "Чертог слияния"
 L["RAID_BOSS_ATSC_3"] = "Забытые эксперименты "
@@ -255,24 +273,36 @@ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = "Недавнее"
 L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = "Личный рекорд"
 L["REPLAY_AUTO_SELECTION_STARRED"] = "В главной роли"
 L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "Рекорд команды"
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_DISABLE_CONFIRM"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
 L["REPLAY_MENU_COPY_URL"] = "Скопировать URL повтора"
 --[[Translation missing --]]
---[[ L["REPLAY_MENU_DOCK"] = ""--]] 
+--[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
 --[[Translation missing --]]
---[[ L["REPLAY_MENU_LOCK"] = ""--]] 
+--[[ L["REPLAY_MENU_DOCK"] = ""--]] 
+L["REPLAY_MENU_LOCK"] = "Заблокировать"
 L["REPLAY_MENU_POSITION"] = "Позиция"
 L["REPLAY_MENU_REPLAY"] = "Повтор"
 L["REPLAY_MENU_STYLE"] = "Стиль"
 L["REPLAY_MENU_TIMING"] = "Синхронизация"
 --[[Translation missing --]]
 --[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
+L["REPLAY_MENU_UNLOCK"] = "Разблокировать"
 L["REPLAY_REPLAY_CHANGING"] = "Изменение повтора приведет к сбросу данных в реальном времени."
 L["REPLAY_SETTINGS_TOOLTIP"] = "Настройки"
 L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
 L["REPLAY_STYLE_TITLE_MODERN"] = "Современный"
 L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "Современный (компактный)"
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
 L["REPLAY_SUMMARY_LOGGED"] = "|cffFFFFFF%s|r записал Ваше завершение этого |cffFFFFFF+%s|r в |cffFFFFFF%s|r."
 L["REPLAY_TIMING_TITLE_BOSS"] = "Время босса"
 L["REPLAY_TIMING_TITLE_DUNGEON"] = "Время подземелья"

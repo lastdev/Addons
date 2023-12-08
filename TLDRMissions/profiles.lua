@@ -87,6 +87,7 @@ function addon:RefreshProfile()
                 noQuest = true,
                 questFinished = true,
                 questPreviouslyFinished = true,
+                bagsFull = true,
             },
             guiX = nil,
             guiY = nil,
@@ -490,6 +491,12 @@ function addon:RefreshProfile()
         info.checked = addon.db.profile.blockCompletionFilters.questPreviouslyFinished
         info.func = function(self)
             addon.db.profile.blockCompletionFilters.questPreviouslyFinished = not addon.db.profile.blockCompletionFilters.questPreviouslyFinished
+        end
+        LibDD:UIDropDownMenu_AddButton(info)
+        info.text = L["BlockCompletionOption4Label"]
+        info.checked = addon.db.profile.blockCompletionFilters.bagsFull
+        info.func = function(self)
+            addon.db.profile.blockCompletionFilters.bagsFull = not addon.db.profile.blockCompletionFilters.bagsFull
         end
         LibDD:UIDropDownMenu_AddButton(info)
     end)

@@ -711,6 +711,10 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                 if debug then self:Debug( "The recommended action (%s) is ready within the active GCD; exiting list (%s).", rAction, listName ) end
                 break
 
+            elseif rAction and state.empowering[ rAction ] then
+                if debug then self:Debug( "The recommended action (%s) is currently empowering; exiting list (%s).", rAction, listName ) end
+                break
+
             elseif stop then
                 if debug then self:Debug( "The action list reached a stopping point; exiting list (%s).", listName ) end
                 break
@@ -775,6 +779,10 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                             end
                             ability = nil
                         end
+                    elseif action == "main_hand" and class.abilities[ action ].key ~= action and not Hekili:IsItemScripted( action, true ) then
+                        action = class.abilities[ action ].key
+                        state.this_action = action
+                        entryReplaced = true
                     end
 
                     rDepth = rDepth + 1
@@ -1249,7 +1257,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                                         slot.actionName = ability.key
                                                         slot.actionID = ability.id
 
-                                                        slot.caption = ability.caption or entry.caption
+                                                        slot.caption = not ability.empowered and ( ability.caption or entry.caption )
                                                         slot.texture = ability.texture
                                                         slot.indicator = ability.indicator
 
@@ -1272,7 +1280,7 @@ function Hekili:GetPredictionFromAPL( dispName, packName, listName, slot, action
                                                         state.selection_time = state.delay
                                                         state.selected_action = rAction
 
-                                                        slot.empower_to = ability.empowered and ( state.args.empower_to or state.max_empower ) or nil
+                                                        slot.empower_to = ability.empowered and ( ability.caption or state.args.empower_to or state.max_empower ) or nil
 
                                                         if debug then
                                                             -- scripts:ImplantDebugData( slot )
@@ -1859,7 +1867,7 @@ function Hekili.Update( initial )
 
                         if state.delay > 0 then state.advance( state.delay ) end
 
-                        local cast = ability.cast
+                        local cast = ability.cast or 0
 
                         if ability.gcd ~= "off" and state.cooldown.global_cooldown.remains == 0 then
                             state.setCooldown( "global_cooldown", state.gcd.execute )
@@ -1870,7 +1878,7 @@ function Hekili.Update( initial )
                             state.removeBuff( "casting" )
                         end
 
-                        if ability.cast > 0 then
+                        if cast > 0 then
                             if not ability.channeled then
                                 if debug then Hekili:Debug( "Queueing %s cast finish at %.2f [+%.2f] on %s.", action, state.query_time + cast, state.offset + cast, cast_target ) end
 

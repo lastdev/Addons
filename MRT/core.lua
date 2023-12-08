@@ -1,8 +1,8 @@
---	07.11.2023
+--	13.11.2023
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 4800
+MRT.V = 4810
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -82,7 +82,7 @@ end
 -------------> global DB <------------
 MRT.GDB = {}
 -------------> upvalues <-------------
-local pcall, unpack, pairs, coroutine, assert, next = pcall, unpack, pairs, coroutine, assert, next
+local pcall, unpack, pairs, coroutine, assert, next, type = pcall, unpack, pairs, coroutine, assert, next, type
 local GetTime, IsEncounterInProgress, CombatLogGetCurrentEventInfo = GetTime, IsEncounterInProgress, CombatLogGetCurrentEventInfo
 local SendAddonMessage, strsplit, tremove, Ambiguate = C_ChatInfo.SendAddonMessage, strsplit, tremove, Ambiguate
 local C_Timer_NewTicker, debugprofilestop, InCombatLockdown = C_Timer.NewTicker, debugprofilestop, InCombatLockdown
@@ -192,10 +192,16 @@ local CLEUListLen = 0
 CLEUFrame.CLEUList = CLEUList
 CLEUFrame.CLEUModules = CLEUModules
 
+
+local CLEU_realmKey = "%-"..MRT.SDB.realmKey:gsub("[ %-]","").."$"
+
 local function CLEU_OnEvent()
 	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,
 		val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13
 				= CombatLogGetCurrentEventInfo()
+
+	if type(sourceName)=="string" and sourceName:find(CLEU_realmKey) then sourceName = strsplit("-",sourceName) end
+	if type(destName)=="string" and destName:find(CLEU_realmKey) then destName = strsplit("-",destName) end
 
 	for i=1,CLEUListLen do
 		CLEUList[i](timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13)

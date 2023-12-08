@@ -3,7 +3,7 @@
 
                                              EA Pandaria
 
-                                     v1.33 - 11th November 2023								  
+                                     v1.35 - 30th November 2023								  
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -384,120 +384,192 @@ ns.name = UnitName( "player" ) or "Character"
 if ns.locale == "deDE" then
 	L["Achievement"] = "Erfolg"
 	L["AddOn Description"] = "Alle Fundorte der Erkundungserfolge von Pandaria"
-	L["Pink"] = "Rosa"
+	L["Celestial Challenge"] = "Erhabene Herausforderung"
+	L["Extreme Treasure Hunter"] = "Extremjäger verlorener Schätze"
+	L["Glorious!"] = "Prächtig!"
 	L["Legends"] = "Zeitlose Legenden"
+	L["Love Heart"] = "Liebesherz"
+	L["Pink"] = "Rosa"
+	L["Pirates Booty"] = "Wo Piraten sind,\ngibt es reichlich Beute"
 	L["Riches"] = "Reichtümer von Pandaria"
 	L["Riches / Legends"] = "Reichtümer / Legenden"
+	L["Squirrel"] = "Eichhörnchen"
+	L["Timeless Champion"] = "Zeitloser Champion"
 	L["Treasure"] = "...ist des anderen Brot"
 	L["Treasure Everywhere"] = "Meine Schätze!"
 	L["Treasure Title"] = "Schatz"
-	
+	L["Zarhym Altogether"] = "Bis auf die Knochen"
+	L["Zul' Again"] = "Zul'Nochmal"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Achievement"] = "Logro"
 	L["AddOn Description"] = "Todas las ubicaciones de logros de exploración de Pandaria"
+	L["Celestial Challenge"] = "Desafío Celestial"
+	L["Extreme Treasure Hunter"] = "El cazatesoros definitivo"
+	L["Glorious!"] = "¡Glorioso!"
 	L["Gold"] = "Oro"
-	L["Pink"] = "Rosa"
 	L["Legends"] = "Leyendas intemporales"
+	L["Love Heart"] = "Amor corazon"
+	L["Pink"] = "Rosa"
+	L["Pirates Booty"] = "Cuando el río\nsuena, tesoros piratas lleva"
 	L["Riches"] = "Riquezas de Pandaria"
 	L["Riches / Legends"] = "Riquezas / Leyendas"
+	L["Squirrel"] = "Ardilla"
+	L["Timeless Champion"] = "Campeón intemporal"
 	L["Treasure"] = "Más vale tesoro en mano que enterrado"
 	L["Treasure Everywhere"] = "¡Tesoros! ¡Tesoros por todas partes!"
 	L["Treasure Title"] = "Tesoro"
+	L["Zarhym Altogether"] = "Zarhym entero"
 
 elseif ns.locale == "frFR" then
 	L["Achievement"] = "Haut fait"
 	L["AddOn Description"] = "Tous les emplacements des réalisations d'exploration de Pandarie"
+	L["Celestial Challenge"] = "Un défi céleste"
+	L["Extreme Treasure Hunter"] = "Chasseur de trésors de l’extrême"
+	L["Glorious!"] = "Victoire!"
 	L["Gold"] = "Or"
-	L["Pandaria"] = "Pandarie"
-	L["Pink"] = "Rose"
 	L["Legends"] = "Les légendes du Temps figé"
+	L["Love Heart"] = "Coeur d'amour"
+	L["Pink"] = "Rose"
+	L["Pirates Booty"] = "Là où y a\ndes pirates, y a des trésors"
 	L["Riches"] = "Les richesses de la Pandarie"
 	L["Riches / Legends"] = "Les richesses / légendes"
+	L["Squirrel"] = "Ecureuil"
+	L["Timeless Champion"] = "Champion du Temps figé"
 	L["Treasure"] = "…Est un trésor pour d’autres"
 	L["Treasure Everywhere"] = "Des trésors, encore des trésors"
 	L["Treasure Title"] = "Trésor"
+	L["Zarhym Altogether"] = "Z’avez pas vu Zarhym ?"
 
 elseif ns.locale == "itIT" then
 	L["Achievement"] = "Impresa"
 	L["AddOn Description"] = "Tutte le posizioni degli obiettivi di esplorazione di Pandaria"
+	L["Celestial Challenge"] = "Sfida dei Celestiali"
+	L["Extreme Treasure Hunter"] = "L'archeologo"
+	L["Glorious!"] = "Glorioso!"
 	L["Gold"] = "Oro"
 	L["Pink"] = "Rosa"
 	L["Legends"] = "Leggende senza tempo"
+	L["Love Heart"] = "Amore Cuore"
+	L["Pirates Booty"] = "Dove ci sono\npirati, ci sono bottini"
 	L["Riches"] = "Le ricchezze di Pandaria"
 	L["Riches / Legends"] = "Le ricchezze / Leggende"
+	L["Squirrel"] = "Scoiattolo"
+	L["Timeless Champion"] = "Campione Senza Tempo"
 	L["Treasure"] = "...è il tesoro di un altro"
 	L["Treasure Everywhere"] = "Tesori, tesori ovunque"
 	L["Treasure Title"] = "Tesoro"
+	L["Zarhym Altogether"] = "Zarhymstein"
+	L["Zul' Again"] = "Troll"
 
 elseif ns.locale == "koKR" then
 	L["Achievement"] = "업적"
 	L["AddOn Description"] = "모든 판다리아 탐험 업적 위치"
+	L["Celestial Challenge"] = "천신의 시험"
+	L["Extreme Treasure Hunter"] = "보물찾기 하기 딱 좋은 날씨네"
+	L["Glorious!"] = "영광스럽군요!"
 	L["Gold"] = "금"
-	L["Pandaria"] = "판다리아"
 	L["Pink"] = "분홍색"
 	L["Legends"] = "영원한 전설"
+	L["Love Heart"] = "사랑의 마음"
+	L["Pirates Booty"] = "즐거운 심해 여행\n되라고!"
 	L["Riches"] = "흔한 판다리아의 금은보화"
 	L["Riches / Legends"] = "보화 / 전설"
+	L["Squirrel"] = "다람쥐"
+	L["Timeless Champion"] = "영원의 용사"
 	L["Treasure"] = "나에겐 보물"
 	L["Treasure Everywhere"] = "보물이 차올라서 가방을 들어"
 	L["Treasure Title"] = "보물"
+	L["Zarhym Altogether"] = "자림 올투게더"
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Achievement"] = "Conquista"
 	L["AddOn Description"] = "Todos os locais de conquistas da exploração de Pandária"
+	L["Celestial Challenge"] = "Desafio Celestial"
+	L["Extreme Treasure Hunter"] = "Caçador de Tesouro Radical"
+	L["Glorious!"] = "Magnífico!"
 	L["Gold"] = "Ouro"
-	L["Pandaria"] = "Pandária"
-	L["Pink"] = "Rosa"
 	L["Legends"] = "Lendas Perenes"
+	L["Love Heart"] = "Coração de amor"
+	L["Pink"] = "Rosa"
+	L["Pirates Booty"] = "Onde Há\nPirata, Há Saque"
 	L["Riches"] = "Riqueza de Pandária"
 	L["Riches / Legends"] = "Riqueza / Lendas"
+	L["Squirrel"] = "Esquilo"
+	L["Timeless Champion"] = "Campeão Perene"
 	L["Treasure"] = "... tesouro pra outro"
 	L["Treasure Everywhere"] = "Tesouro, tesouro em toda a parte"
 	L["Treasure Title"] = "Tesouro"
+	L["Zarhym Altogether"] = "Zarhym Tudojunto"
+	L["Zul' Again"] = "Zul'Dinovo"
 
 elseif ns.locale == "ruRU" then
 	L["Achievement"] = "Достижение"
 	L["AddOn Description"] = "Все локации достижений исследования Пандарии"
-		.."координаты\124r во всплывающих подсказках на карте мира и мини-карте"
+	L["Celestial Challenge"] = "Небесное испытание"
+	L["Extreme Treasure Hunter"] = "Исключительный искатель сокровищ"
+	L["Glorious!"] = "Славная победа"
 	L["Gold"] = "Золото"
-	L["Pandaria"] = "Пандарии"
-	L["Pink"] = "Розовый"
 	L["Legends"] = "Легенды вне времени"
+	L["Love Heart"] = "Люблю сердце"
+	L["Pink"] = "Розовый"
+	L["Pirates Booty"] = "Где пираты,\nтам трофеи"
 	L["Riches"] = "Богатства Пандарии"
 	L["Riches / Legends"] = "Богатства / Легенды"
+	L["Squirrel"] = "Белка"
+	L["Timeless Champion"] = "Вневременный герой"
 	L["Treasure"] = "...то другому прибыль"
 	L["Treasure Everywhere"] = "Сокровища, везде сокровища!"
 	L["Treasure Title"] = "Сокровище"
+	L["Zarhym Altogether"] = "Целый Зарим"
+	L["Zul' Again"] = "Зул'опять"
 
 elseif ns.locale == "zhCN" then
 	L["Achievement"] = "成就"
 	L["AddOn Description"] = "潘达利亚所有探索成就地点"
+	L["Celestial Challenge"] = "天神挑战者"
+	L["Extreme Treasure Hunter"] = "超级宝藏猎人"
+	L["Glorious!"] = "战绩彪炳！"
 	L["Gold"] = "金子"
-	L["Pandaria"] = "潘达利"
-	L["Pink"] = "粉色的"
 	L["Legends"] = "永恒的传奇"
+	L["Love Heart"] = "爱心"
+	L["Pink"] = "粉色的"
+	L["Pirates Booty"] = "哪里有海盗\n哪里就有宝藏"
 	L["Riches"] = "潘达利亚的财富"
 	L["Riches / Legends"] = "财富 / 传奇"
+	L["Squirrel"] = "松鼠"
+	L["Timeless Champion"] = "不朽的勇士"
 	L["Treasure"] = "我之蜜糖"
 	L["Treasure Everywhere"] = "宝藏，到处都是宝藏"
 	L["Treasure Title"] = "宝藏"
+	L["Zarhym Altogether"] = "完整的扎西姆"
+	L["Zul' Again"] = "又见祖尔"
 
 elseif ns.locale == "zhTW" then
 	L["Achievement"] = "成就"
 	L["AddOn Description"] = "潘達利亞所有探索成就地點"
+	L["Celestial Challenge"] = "天神挑戰者"
+	L["Extreme Treasure Hunter"] = "超級寶藏獵人"
+	L["Glorious!"] = "戰績彪炳！"
 	L["Gold"] = "金子"
-	L["Pandaria"] = "潘達利"
-	L["Pink"] = "粉色的"
 	L["Legends"] = "永恆的傳奇"
+	L["Love Heart"] = "愛心"
+	L["Pink"] = "粉色的"
+	L["Pirates Booty"] = "哪裡有海盜\n哪裡就有寶藏"
 	L["Riches"] = "潘達利亞的財富"
 	L["Riches / Legends"] = "財富 / 傳奇"
+	L["Squirrel"] = "松鼠"
+	L["Timeless Champion"] = "不朽的勇士"
 	L["Treasure"] = "我之蜜糖"
 	L["Treasure Everywhere"] = "寶藏，到處都是寶藏"
 	L["Treasure Title"] = "寶藏"
+	L["Zarhym Altogether"] = "完整的紮西姆"
+	L["Zul' Again"] = "又見祖爾"
 	
 else
 	L["AddOn Description"] = "All Pandaria exploration achievement locations"
 	L["Legends"] = "Timeless Legends"
+	L["Pirates Booty"] = "Where There's\nPirates, There's Booty"
 	L["Riches"] = "Riches of Pandaria"
 	L["Riches / Legends"] = "Riches / Legends"
 	L["Treasure"] = "Is another Man's Treasure"
@@ -875,7 +947,7 @@ ns.options = {
 			args = {
 				iconEAPandaria = {
 					type = "range",
-					name = L["Zul Again, Summary, Etc"],
+					name = L["Zul' Again"] ..", Summary, Etc",
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							..L["Mana Orb"] .."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] 
@@ -896,7 +968,7 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
 							..ns.colour.highlight .."\"" ..L["Treasure"] .."\"" ..ns.colour.plaintext
-							.." and\n" ..ns.colour.highlight .."\"" ..L["Treasure Everywhere"] .."\"", 
+							.." &\n" ..ns.colour.highlight .."\"" ..L["Treasure Everywhere"] .."\"", 
 					min = 1, max = 14, step = 1,
 					arg = "iconEATreasure",
 					order = 8,
@@ -911,40 +983,40 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
 							..ns.colour.highlight .."\"" ..L["Riches"] .."\"" ..ns.colour.plaintext
-							.." and\n" ..ns.colour.highlight .."\"" ..L["Legends"] .."\"", 
+							.." &\n" ..ns.colour.highlight .."\"" ..L["Legends"] .."\"", 
 					min = 1, max = 14, step = 1,
 					arg = "iconEARiches",
 					order = 9,
 				},
 				iconEAGlorious = {
 					type = "range",
-					name = L["Glorious & TI Repeatables"],
+					name = L["Glorious!"] .." / TI Repeatables",
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							..L["Mana Orb"] .."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] 
 							.."\n10 = " ..L["Stars"] .."\n11 = " ..L["Achievement"] .." - " ..L["Gold"]
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
-							..ns.colour.highlight .."\"Glorious\"" ..ns.colour.plaintext ..", "
-							..ns.colour.highlight .."\"Where There's\nPirates, There's Booty\""
-							..ns.colour.plaintext ..",\n" ..ns.colour.highlight .."\"Extreme Treasure Hunter\""
+							..ns.colour.highlight .."\"" ..L["Glorious!"] .."\"" ..ns.colour.plaintext ..", "
+							..ns.colour.highlight .."\"" ..L["Pirates Booty"] .."\"" ..ns.colour.plaintext 
+							..",\n" ..ns.colour.highlight .."\"" ..L["Extreme Treasure Hunter"] .."\""
 							..ns.colour.plaintext ..",\n" ..ns.colour.highlight
-							.."\"Zarhym Altogether\"" ..ns.colour.plaintext .." and\n"
-							..ns.colour.highlight .."\"Celestial Challenge\"", 
+							.."\"" ..L["Zarhym Altogether"] .."\"" ..ns.colour.plaintext .." &\n"
+							..ns.colour.highlight .."\"" ..L["Celestial Challenge"] .."\"", 
 					min = 1, max = 14, step = 1,
 					arg = "iconEAGlorious",
 					order = 10,
 				},
 				iconEALove = {
 					type = "range",
-					name = L["Squirrel /Love"],
+					name = L["Squirrel"] .." /Love",
 					desc = "1 = " ..L["White"] .."\n2 = " ..L["Purple"] .."\n3 = " ..L["Red"] .."\n4 = " 
 							..L["Yellow"] .."\n5 = " ..L["Green"] .."\n6 = " ..L["Grey"] .."\n7 = "
 							..L["Mana Orb"] .."\n8 = " ..L["Phasing"] .."\n9 = " ..L["Raptor egg"] 
 							.."\n10 = " ..L["Stars"] .."\n11 = " ..L["Achievement"] .." - " ..L["Gold"]
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"]
-							.."\n15 = " ..L["Love"], 
+							.."\n15 = " ..L["Love Heart"], 
 					min = 1, max = 15, step = 1,
 					arg = "iconEALove",
 					order = 11,
@@ -998,7 +1070,7 @@ ns.options = {
 							.."\n12 = " ..L["Achievement"] .." - " ..L["Blue"] .."\n13 = "
 							..L["Achievement"] .." - " ..L["Pink"] .."\n14 = " ..L["Achievement"] .."\n\n"
 							..ns.colour.highlight .."\"Killing Time\"" ..ns.colour.plaintext
-							.." and\n" ..ns.colour.highlight .."\"I'm In Your Base Killing...\"",  
+							.." &\n" ..ns.colour.highlight .."\"I'm In Your Base Killing...\"",  
 					min = 1, max = 14, step = 1,
 					arg = "iconKillingTime",
 					order = 15,

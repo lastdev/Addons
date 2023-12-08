@@ -61,6 +61,17 @@ points[ns.wetlands] = {	-- Wetlands
 	[69073142] = { title="Razormaw Matriarch's Nest", pet="Razormaw Hatchling", eggID=48124, version="W" }, -- Best estimate
 }
 
+local gundrak = "1 in 1000 chance to drop\nfrom a Gundrak Raptor"
+
+points[ 121 ] = { -- Zul'drak
+	[71502250] = { title="Gundrak Raptors", pet="Gundrak Hatchling", eggID=48116, tip=gundrak },
+	[75003850] = { title="Gundrak Raptors", pet="Gundrak Hatchling", eggID=48116, tip=gundrak },
+	[78501350] = { title="Gundrak Raptors", pet="Gundrak Hatchling", eggID=48116, tip=gundrak },
+	[79004000] = { title="Gundrak Raptors", pet="Gundrak Hatchling", eggID=48116, tip=gundrak },
+	[81503150] = { title="Gundrak Raptors", pet="Gundrak Hatchling", eggID=48116, tip=gundrak },
+	[87002850] = { title="Gundrak Raptors", pet="Gundrak Hatchling", eggID=48116, tip=gundrak },
+}
+
 -- Choice of texture
 -- Note that these textures are all repurposed and as such have non-uniform sizing. I've copied my scaling factors from my old AddOn
 -- in order to homogenise the sizes. I should also allow for non-uniform origin placement as well as adjust the x,y offsets

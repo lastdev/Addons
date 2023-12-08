@@ -1,3 +1,18 @@
+- v4.3.1.1
+  - portuguese translation fix
+- v4.3.1.0
+  - fixed route sharing
+- v4.3.0.0
+  - overhauled and re-enabled share button
+  - live mode will stay temporarily disabled until a future update
+- v4.2.0.10
+  - temporarily disabled share and live buttons - they will be back soon
+- v4.2.0.8
+  - affix weeks
+- v4.2.0.7
+  - Atal'Dazar count updates
+- v4.2.0.6
+  - Galakrond's Fall: added missing Timestream Leech
 - v4.2.0.4
   - count updates Everbloom + Waycrest Manor
 - v4.2.0.3

@@ -54,6 +54,7 @@ Ld["Azuregos"] = "Azuregos"
 Ld["Battleground Deserter"] = "Battleground Deserter"
 Ld["BH"] = "BH"
 Ld["Bind a key to toggle the SavedInstances tooltip"] = "Bind a key to toggle the SavedInstances tooltip"
+Ld["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 Ld["Bonus loot frame"] = "Bonus loot frame"
 Ld["Bonus rolls"] = "Bonus rolls"
 Ld[ [=[Boss kill information is missing for this lockout.
@@ -232,6 +233,7 @@ Ld["SEAT"] = "SEAT"
 Ld["Secured Shipment"] = "Secured Shipment"
 Ld["Set All"] = "Set All"
 Ld["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+Ld["Shipment of Goods"] = "Shipment of Goods"
 Ld["Show all emissary names"] = "Show all emissary names"
 Ld["Show both factions' emissay name"] = "Show both factions' emissay name"
 Ld["Show calling line when all quests completed"] = "Show calling line when all quests completed"
@@ -280,6 +282,7 @@ Ld["TAV"] = "TAV"
 Ld["TD"] = "TD"
 Ld["Text"] = "Text"
 Ld["The Four Celestials"] = "The Four Celestials"
+Ld["The Superbloom"] = "The Superbloom"
 Ld["The World Awaits"] = "The World Awaits"
 Ld["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "These are the instances that count towards the %i instances per hour account limit, and the time until they expire."
 Ld["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."
@@ -371,6 +374,8 @@ La["Battleground Deserter"] = "Déserteur"
 --[[Translation missing --]]
 La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Associez une touche à l'affichage de l'infobulle de SavedInstance."
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 La["Bonus loot frame"] = "Cadre de jet de butin bonus"
 La["Bonus rolls"] = "Jets de dé bonus"
 La[ [=[Boss kill information is missing for this lockout.
@@ -624,6 +629,8 @@ La["Secured Shipment"] = "Secured Shipment"
 La["Set All"] = "Tout régler sur :"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+--[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
 La["Show all emissary names"] = "Afficher tous les noms d'émissaires"
 La["Show both factions' emissay name"] = "Montrer le nom des émissaires de chaque faction."
 La["Show calling line when all quests completed"] = "Afficher la ligne des appels lorsque toutes les quêtes sont terminées"
@@ -681,6 +688,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Texte"
 La["The Four Celestials"] = "Les Quatre Astres"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Ces instances comptent dans la limite de %i instances par heure pour le compte, et le temps avant qu'elles n'expirent."
@@ -786,6 +795,8 @@ La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Schlachtfelddeserteur Abklingzeit"
 La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Wähle Tastenkombination zum Umschalten des SavedInstances Tooltip"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 La["Bonus loot frame"] = "Bonusbeutefenster"
 La["Bonus rolls"] = "Bonuswürfe"
 La[ [=[Boss kill information is missing for this lockout.
@@ -968,6 +979,8 @@ La["SEAT"] = "SEAT"
 La["Secured Shipment"] = "Gesicherte Lieferung"
 La["Set All"] = "Alle festlegen"
 La["Shaping the Dreamsurge"] = "Den Traumsprung formen"
+--[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
 La["Show all emissary names"] = "Zeige alle Namen der Abgesandten"
 La["Show both factions' emissay name"] = "Zeige den Namen beider Fraktionen der Abgesandten"
 La["Show calling line when all quests completed"] = "Zeige Berufungenzeile wenn alle Quests abgeschlossen sind."
@@ -1016,6 +1029,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Text"
 La["The Four Celestials"] = "Die Vier Erhabenen"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 La["The World Awaits"] = "Die Welt wartet"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Diese Instanzen zählen zum %i-Instanzen-pro-Stunde-pro-Account-Limit, gefolgt von der Zeit, bis sie ablaufen."
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Dies sollte nur für Charaktere, die umbenannt oder gelöscht wurden, verwendet werden, da Charaktere erneut in die Datenbank eingetragen werden, wenn du dich mit ihnen einloggst."
@@ -1072,8 +1087,7 @@ elseif locale == "koKR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00좌-클릭|r으로 툴팁 떼어내기"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00가운데-클릭|r 블리자드 공격대 정보 보기"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00우-클릭|r으로 SavedInstances 설정"
---[[Translation missing --]]
-La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
+La["A Worthy Ally: Dream Wardens"] = "가치 있는 동맹: 꿈의 감독관"
 La["A Worthy Ally: Loamm Niffen"] = "가치 있는 동맹: 로암 니펜"
 La["AA"] = "대학"
 La["Abbreviate keystones"] = "쐐기명 축약"
@@ -1098,6 +1112,8 @@ La["Azuregos"] = "아주어고스"
 La["Battleground Deserter"] = "전장 탈영 대기시간 추적"
 La["BH"] = "담쟁이"
 La["Bind a key to toggle the SavedInstances tooltip"] = "SavedInstances 툴팁을 보거나 숨기는 키 설정"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 La["Bonus loot frame"] = "추가 전리품 창"
 La["Bonus rolls"] = "추가 전리품 주사위 추적"
 La[ [=[Boss kill information is missing for this lockout.
@@ -1145,8 +1161,7 @@ La["Dump quest debugging information"] = "퀘스트 디버그 정보 덤프하�
 La["Dump time debugging information"] = "시간 디버깅 정보 덤프하기"
 La["Earth"] = "대지"
 La["Earth Core"] = "대지 핵"
---[[Translation missing --]]
-La["EB"] = "EB"
+La["EB"] = "상록숲"
 La["Emblazion"] = "엠블라지온"
 La["Emissary Missing"] = "사절 없음"
 La["Emissary of War"] = "전쟁의 사절"
@@ -1158,8 +1173,7 @@ La["Expired Lockout - Can be extended"] = "만료된 귀속 - 연장 가능"
 La["Export"] = "내보내기"
 La["Extended Lockout - Not yet saved"] = "연장된 귀속 - 아직 저장 안됨"
 La["Facets of Research"] = "연구용 다면체"
---[[Translation missing --]]
-La["FALL"] = "FALL"
+La["FALL"] = "여명 몰락"
 La["FH"] = "자유지대"
 La["Fighting is Its Own Reward"] = "전투의 보람"
 La["Fire"] = "불"
@@ -1217,18 +1231,12 @@ La["LFG cooldown"] = "무작위 던전 대기시간 추적"
 La["LFR"] = "공찾"
 La["List categories from the current expansion pack first"] = "현재 확장팩을 첫번째로 목록에 나열"
 La["List raid categories before dungeon categories"] = "던전 카테고리 앞에 공격대 카테고리 나열"
---[[Translation missing --]]
-La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
---[[Translation missing --]]
-La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
---[[Translation missing --]]
-La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
---[[Translation missing --]]
-La["Loot Spark of Shadowflame"] = "Loot Spark of Shadowflame"
---[[Translation missing --]]
-La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
---[[Translation missing --]]
-La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
+La["Loot Aspect Crest Fragment"] = "위상 파편"
+La["Loot Drake Crest Fragment"] = "비룡 파편"
+La["Loot Spark of Dreams"] = "꿈의 불꽃"
+La["Loot Spark of Shadowflame"] = "암흑불길의 불꽃"
+La["Loot Whelpling Crest Fragment"] = "새끼용 파편"
+La["Loot Wyrm Crest Fragment"] = "고룡 파편"
 La["Lord Kazzak"] = "군주 카자크"
 La["LOWR"] = "카라잔:하층"
 La["Manage"] = "관리"
@@ -1274,8 +1282,7 @@ La["Report instance resets to group"] = "던전 초기화를 파티에 알림"
 La["Researchers Under Fire"] = "위기의 연구원들"
 La["Reset Characters"] = "캐릭터 초기화"
 La["Reverse ordering"] = "순서를 거꾸로"
---[[Translation missing --]]
-La["RISE"] = "RISE"
+La["RISE"] = "여명 현신"
 La["RLP"] = "루비"
 La["Roll Bonus"] = "추가 보상"
 La["Rouen Icewind"] = "루엔 아이스윈드"
@@ -1285,8 +1292,9 @@ La["SD"] = "심연"
 La["SEAT"] = "삼두정"
 La["Secured Shipment"] = "보호되는 화물"
 La["Set All"] = "모든 설정"
+La["Shaping the Dreamsurge"] = "꿈결쇄도 빚어내기"
 --[[Translation missing --]]
-La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+La["Shipment of Goods"] = "Shipment of Goods"
 La["Show all emissary names"] = "모든 사절 이름 표시"
 La["Show both factions' emissay name"] = "양쪽 진영의 사절퀘 모두 보기"
 La["Show calling line when all quests completed"] = "부름퀘스트 완료시에만 보이기"
@@ -1335,6 +1343,8 @@ La["TAV"] = "하늘빛"
 La["TD"] = "톨다고르"
 La["Text"] = "글자"
 La["The Four Celestials"] = "네 천신"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 La["The World Awaits"] = "세상이 기다린다"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "계정당 1시간 내에 입장이 제한된 %i 개의 인스턴스에 포함된 인스턴스와 만료 될 때까지 남은 시간입니다"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "이름이 변경되거나 삭제된 캐릭터만 사용해야 하며 재로그인시 캐릭터의 정보가 다시 채워집니다."
@@ -1349,8 +1359,7 @@ La["Tooltip Scale"] = "툴팁 크기"
 La["TOP"] = "투기장"
 La["Tormentors of Torghast"] = "토르가스트의 고문관"
 La["TOS"] = "세스.사원"
---[[Translation missing --]]
-La["TOTT"] = "TOTT"
+La["TOTT"] = "파도"
 La["Track Mythic keystone acquisition"] = "쐐기돌 추적"
 La["Track Mythic keystone best run"] = "쐐기 단수 기록"
 La["Track Timeworn Mythic keystone acquisition"] = "시간에 바랜 쐐기돌 추적"
@@ -1433,6 +1442,8 @@ La["Battleground Deserter"] = "Sigue la duración del perjuicio Desertor"
 --[[Translation missing --]]
 La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la descripción SavedInstances"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
 La["Bonus rolls"] = "Tiradas extras"
@@ -1735,6 +1746,8 @@ La["Set All"] = "Ajustar todos"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 --[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
+--[[Translation missing --]]
 La["Show all emissary names"] = "Show all emissary names"
 --[[Translation missing --]]
 La["Show both factions' emissay name"] = "Show both factions' emissay name"
@@ -1802,6 +1815,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas instancias cuentan para el límite de %i por hora por cuenta, y expirará a la hora indicada."
@@ -1916,6 +1931,8 @@ La["Azuregos"] = "Азурегос"
 La["Battleground Deserter"] = "Дезертир с Поля Боя"
 La["BH"] = "ЛОЩИНА"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Клавиша для вкл./выкл. подсказок SavedInstances"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 La["Bonus loot frame"] = "Окно дополнительной добычи"
 La["Bonus rolls"] = "Отслеживать бонусные броски"
 La[ [=[Boss kill information is missing for this lockout.
@@ -2099,6 +2116,8 @@ La["Secured Shipment"] = "Защищенные ресурсы"
 La["Set All"] = "Установить значение для всех"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+--[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
 La["Show all emissary names"] = "Показать все имена эмиссаров"
 La["Show both factions' emissay name"] = "Показать название эмиссаров обеих фракций"
 La["Show calling line when all quests completed"] = "Показывать строку завершенного призыва"
@@ -2147,6 +2166,8 @@ La["TAV"] = "ЛХ"
 La["TD"] = "ТД"
 La["Text"] = "Текст"
 La["The Four Celestials"] = "Четыре небожителя"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 La["The World Awaits"] = "Мир ждёт"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Это те подземелья, на которые существуют ограничения в %i подземелий в час."
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Используйте только для переименованных или удаленных персонажей, так как данные все равно будут заполнены заново при входе на персонажа."
@@ -2203,8 +2224,7 @@ elseif locale == "zhCN" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左键点击|r 显示独立窗口"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中键点击|r 显示游戏内建的团队信息"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右键点击|r 设置SavedInstances"
---[[Translation missing --]]
-La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
+La["A Worthy Ally: Dream Wardens"] = "强大的盟友：梦境守望者"
 La["A Worthy Ally: Loamm Niffen"] = "强大的盟友：峈姆鼹鼠人"
 La["AA"] = "学院"
 La["Abbreviate keystones"] = "史诗钥石简称"
@@ -2229,6 +2249,7 @@ La["Azuregos"] = "艾索雷苟斯"
 La["Battleground Deserter"] = "追踪战场逃亡者冷却"
 La["BH"] = "山谷"
 La["Bind a key to toggle the SavedInstances tooltip"] = "为显示/隐藏SavedInstances界面绑定一个按键"
+La["Blooming Dreamseeds"] = "盛放的梦境之种"
 La["Bonus loot frame"] = "额外拾取提示框架"
 La["Bonus rolls"] = "额外拾取情况"
 La[ [=[Boss kill information is missing for this lockout.
@@ -2276,8 +2297,7 @@ La["Dump quest debugging information"] = "打印任务调试信息"
 La["Dump time debugging information"] = "打印时间调试信息"
 La["Earth"] = "大地"
 La["Earth Core"] = "原始大地核心"
---[[Translation missing --]]
-La["EB"] = "EB"
+La["EB"] = "永茂"
 La["Emblazion"] = "恩布拉基昂"
 La["Emissary Missing"] = "大使任务缺失"
 La["Emissary of War"] = "战争的使者"
@@ -2289,8 +2309,7 @@ La["Expired Lockout - Can be extended"] = "到期锁定 - 可以延长"
 La["Export"] = "导出"
 La["Extended Lockout - Not yet saved"] = "已延长锁定 - 还未被储存"
 La["Facets of Research"] = "探索棱镜"
---[[Translation missing --]]
-La["FALL"] = "FALL"
+La["FALL"] = "陨落"
 La["FH"] = "自由镇"
 La["Fighting is Its Own Reward"] = "战斗就是最好的奖赏"
 La["Fire"] = "火焰"
@@ -2350,8 +2369,7 @@ La["List categories from the current expansion pack first"] = "从目前的资�
 La["List raid categories before dungeon categories"] = "先显示团队副本，再显示地下城"
 La["Loot Aspect Crest Fragment"] = "拾取巨龙纹章碎片"
 La["Loot Drake Crest Fragment"] = "拾取幼龙纹章碎片"
---[[Translation missing --]]
-La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+La["Loot Spark of Dreams"] = "拾取梦境火花"
 La["Loot Spark of Shadowflame"] = "拾取暗影烈焰火花"
 La["Loot Whelpling Crest Fragment"] = "拾取雏龙纹章碎片"
 La["Loot Wyrm Crest Fragment"] = "拾取魔龙纹章碎片"
@@ -2399,8 +2417,7 @@ La["Report instance resets to group"] = "报告副本重置"
 La["Researchers Under Fire"] = "研究员遇袭"
 La["Reset Characters"] = "重置角色"
 La["Reverse ordering"] = "反转排序"
---[[Translation missing --]]
-La["RISE"] = "RISE"
+La["RISE"] = "崛起"
 La["RLP"] = "红玉"
 La["Roll Bonus"] = "额外拾取情况"
 La["Rouen Icewind"] = "鲁恩·冰风"
@@ -2410,8 +2427,8 @@ La["SD"] = "赤红"
 La["SEAT"] = "执政团"
 La["Secured Shipment"] = "夺得的货物"
 La["Set All"] = "设置所有"
---[[Translation missing --]]
-La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+La["Shaping the Dreamsurge"] = "塑造梦涌"
+La["Shipment of Goods"] = "一批货物"
 La["Show all emissary names"] = "显示所有大使名称"
 La["Show both factions' emissay name"] = "同时显示两个阵营不同的大使任务名称"
 La["Show calling line when all quests completed"] = "全部角色的使命任务完成后仍显示该行"
@@ -2460,6 +2477,7 @@ La["TAV"] = "魔馆"
 La["TD"] = "托尔"
 La["Text"] = "文本"
 La["The Four Celestials"] = "四大天神"
+La["The Superbloom"] = "超然盛放"
 La["The World Awaits"] = "世界在等待"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "这些是角色每个小时进入 %i 次副本限制的记录，以及其过期时间。"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "此项仅可在人物重命名或者删除后使用，当你重新登入时原人物会被转移到新人物"
@@ -2474,8 +2492,7 @@ La["Tooltip Scale"] = "提示框缩放"
 La["TOP"] = "剧场"
 La["Tormentors of Torghast"] = "托加斯特的折磨者"
 La["TOS"] = "神庙"
---[[Translation missing --]]
-La["TOTT"] = "TOTT"
+La["TOTT"] = "王座"
 La["Track Mythic keystone acquisition"] = "追踪史诗钥石"
 La["Track Mythic keystone best run"] = "追踪史诗钥石每周最佳记录"
 La["Track Timeworn Mythic keystone acquisition"] = "追踪时空漫游史诗钥石"
@@ -2554,6 +2571,8 @@ La["Battleground Deserter"] = "Desertor del Campo de Batalla"
 --[[Translation missing --]]
 La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la ventana de información de SavedInstances"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
 La["Bonus rolls"] = "Tiradas extra"
@@ -2822,6 +2841,8 @@ La["Secured Shipment"] = "Secured Shipment"
 La["Set All"] = "Establecer todos"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+--[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
 La["Show all emissary names"] = "Mostrar todos los nombres de emisarios"
 La["Show both factions' emissay name"] = "Mostrar ambos nombres de emisario de facciones"
 --[[Translation missing --]]
@@ -2881,6 +2902,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas instancias cuentan para el límite de %i por hora por cuenta, y expirará a la hora indicada."
@@ -2961,8 +2984,7 @@ elseif locale == "zhTW" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左鍵|r 分離滑鼠提示"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中鍵|r 顯示暴雪的團隊資訊"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右鍵|r 設定 SavedInstances"
---[[Translation missing --]]
-La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
+La["A Worthy Ally: Dream Wardens"] = "寶貴的盟友：夢境守望者"
 La["A Worthy Ally: Loamm Niffen"] = "寶貴的盟友：洛姆鼴鼠人"
 La["AA"] = "學院"
 La["Abbreviate keystones"] = "簡短鑰石名稱"
@@ -2989,6 +3011,8 @@ La["Azuregos"] = "艾索雷苟斯"
 La["Battleground Deserter"] = "戰場逃亡者冷卻"
 La["BH"] = "蕨皮"
 La["Bind a key to toggle the SavedInstances tooltip"] = "綁定按鍵來切換顯示 SavedInstances 滑鼠提示"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 La["Bonus loot frame"] = "額外戰利品框架"
 La["Bonus rolls"] = "額外骰子"
 La[ [=[Boss kill information is missing for this lockout.
@@ -3122,8 +3146,7 @@ La["List categories from the current expansion pack first"] = "優先列出目�
 La["List raid categories before dungeon categories"] = "在地城分類之前列出團隊分類"
 La["Loot Aspect Crest Fragment"] = "拾取守護巨龍紋章碎片"
 La["Loot Drake Crest Fragment"] = "拾取飛龍紋章碎片"
---[[Translation missing --]]
-La["Loot Spark of Dreams"] = "Loot Spark of Dreams"
+La["Loot Spark of Dreams"] = "拾取夢境火花"
 La["Loot Spark of Shadowflame"] = "拾取暗焰火花"
 La["Loot Whelpling Crest Fragment"] = "拾取幼龍紋章碎片"
 La["Loot Wyrm Crest Fragment"] = "拾取巨龍紋章碎片"
@@ -3192,8 +3215,9 @@ La["SEAT"] = "SEAT"
 --[[Translation missing --]]
 La["Secured Shipment"] = "Secured Shipment"
 La["Set All"] = "設定全部"
+La["Shaping the Dreamsurge"] = "轉化夢境湧現"
 --[[Translation missing --]]
-La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
+La["Shipment of Goods"] = "Shipment of Goods"
 La["Show all emissary names"] = "顯示所有特使名稱"
 La["Show both factions' emissay name"] = "顯示雙方陣營特使名稱"
 La["Show calling line when all quests completed"] = "完成所有任務後顯示召喚線"
@@ -3246,6 +3270,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "文字"
 La["The Four Celestials"] = "四大天尊"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "有些副本有每個帳號每小時可進入 %i 個副本和時間的限制，直到時間過為止。"
@@ -3346,6 +3372,8 @@ La["Battleground Deserter"] = "Acompanhar tempo de espera de Desertor para campo
 --[[Translation missing --]]
 La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Vincule uma tecla para as dicas do SavedInstances"
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
 La["Bonus rolls"] = "Saque de bônus"
@@ -3637,6 +3665,8 @@ La["Set All"] = "Ajustar todos"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 --[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
+--[[Translation missing --]]
 La["Show all emissary names"] = "Show all emissary names"
 --[[Translation missing --]]
 La["Show both factions' emissay name"] = "Show both factions' emissay name"
@@ -3703,6 +3733,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Texto"
 La["The Four Celestials"] = "Os Quatro Celestiais"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas são as instâncias que contam para %i instâncias por hora em cada conta, e o tempo até que expirem."
@@ -3832,6 +3864,8 @@ La["Battleground Deserter"] = "Disertore di campi di battaglia"
 --[[Translation missing --]]
 La["BH"] = "BH"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Abbina un tasto per mostrare la finestra di SavedInstances "
+--[[Translation missing --]]
+La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
 La["Bonus rolls"] = "Tiri bonus"
@@ -4132,6 +4166,8 @@ La["Set All"] = "Imposta tutto"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 --[[Translation missing --]]
+La["Shipment of Goods"] = "Shipment of Goods"
+--[[Translation missing --]]
 La["Show all emissary names"] = "Show all emissary names"
 --[[Translation missing --]]
 La["Show both factions' emissay name"] = "Show both factions' emissay name"
@@ -4197,6 +4233,8 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Testo"
 La["The Four Celestials"] = "I quattro Celestiali"
+--[[Translation missing --]]
+La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Queste sono le istanze conteggiate per il limite orario per account di %i, e il tempo prima che scadano"

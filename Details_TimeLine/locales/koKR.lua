@@ -29,4 +29,3 @@ L["STRING_TYPE"] = "유형:"
 L["STRING_TYPE_COOLDOWN"] = "생존기"
 L["STRING_TYPE_DEBUFF"] = "약화 효과"
 L["STRING_UNKNOWN"] = "알 수 없음"
-

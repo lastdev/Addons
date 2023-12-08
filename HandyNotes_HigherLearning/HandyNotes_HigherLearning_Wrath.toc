@@ -1,5 +1,5 @@
 ## Interface: 30403
-## Version: 1.28
+## Version: 1.29
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_book_11
 ## Title: Higher Learning

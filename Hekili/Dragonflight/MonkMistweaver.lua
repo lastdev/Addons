@@ -1099,7 +1099,7 @@ spec:RegisterSetting( "save_faeline", false, {
     width = "full",
 } )
 
-spec:RegisterSetting( "roll_movement", 5, {
+--[[ spec:RegisterSetting( "roll_movement", 5, {
     type = "range",
     name = strformat( "%s: Check Distance", Hekili:GetSpellLinkWithTexture( 109132 ), Hekili:GetSpellLinkWithTexture( 115008 ) ),
     desc = strformat( "If set above zero, %s (and %s) may be recommended when your target is at least this far away.", Hekili:GetSpellLinkWithTexture( 109132 ),
@@ -1108,21 +1108,24 @@ spec:RegisterSetting( "roll_movement", 5, {
     max = 100,
     step = 1,
     width = "full"
-} )
+} ) ]]
 
     spec:RegisterStateExpr( "distance_check", function()
-        return target.minR > ( settings.roll_movement or 0 )
+        return target.minR > 0
     end )
 
+
+spec:RegisterRanges( "blackout_kick", "rising_sun_kick", "paralysis", "provoke", "crackling_jade_lightning" )
 
 spec:RegisterOptions( {
     enabled = true,
 
-    aoe = 2,
-    cycle = true,
+    aoe = 3,
+    cycle = false,
 
-    nameplates = true,
-    nameplateRange = 8,
+    nameplates = false,
+    rangeChecker = "blackout_kick",
+    rangeFilter = false,
 
     damage = true,
     damageExpiration = 8,
@@ -1135,4 +1138,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Mistweaver", 20230325, [[Hekili:nFvxVnUnqWFl5LljOj(ITsYDTioaxpGcCbT3dv5zjrtrzXAjsvsQZjfg63EhkARqj)vWH20(qIt4oK7YDho76OXrpgfMsmSOVo5Qjbxfm5MrJdU(2GpgfAEUIffwrOliZXFiiL43)gxBwYiFJPSMEUqssThHwwROWCu4SAEH5lIOz76CVEmGwXOy1pCvuyopnL5GY00Oql0lVAYLJV9NAsAs(eSM2KiRmCPOjXiBsiFtYXskgLOnCX8MKFHWk4cwtsOrww1KSmNbSAdrK2ANJ)JGFypXxVJSn74SmPQjPKiiWCwgNYzc6ZNpQ5HMhCHsWLtUztO0K87YII3)5CEtYJsvflfXZsUjhEdxjoPG)xexK6I4rrHfWNAB(Hiz4JV2MUzcYScwA0phfsvCdtXjaa1W)glMjyLCMUj5UPnjbULLculYRfPmvCMKwRJnmsKb5WV3ttX1iteRRfXl40f2ZkyVN1jiZtkycZi4wAo2OowMfBYzXLsbkdm1ZJwVZMKvRAsMvNLDiW1Om9ouvoCqoRampzTPleVUnrU2ko74LGg6h0aZndXmRwPndaDRpiDfxiSzdQIiyoN1do2noHnfV9xq67Jj(GhMV7d9)GupvklsLlfJgezJuSscxGIX9njZPPJkjp9MvrEJsbqAGUaSnq2EDBOlNGTmXJbWNJ6FfPO0rsszzK6ITzkqCGOIZHEuS2O4lgMG2)R4uUvgJYIP5mlRPJobDOdtC23oT5FJt7AR6xTMfJ9xQpubCwHuMgNvRE(qVPMXuAMAbsNdq9bFuf855gD8FuNoVef4bq)Op0mUI166bG(rFq2lmYWKIykbjO(ihFvVaKmVToRarE49DCVQxL09zFi7VMb(QMzSnA0J041qCx3glvdwpBnHdrlA3yIPsbvQsTbF7RZogjzjzb0gt3CcTwp3lN4wgKk03RnQ2pFyOu79oPwlFKA3PhdbPUy3)eB7E56Hf7A(B7IzHF9R2r39D5hTX9KQc95LLZiB)OANLLjVgPMGJRz16BmHJ2IXn)YKX3gfUKOSDkaH5XCuq5LvsLbZtyNI4uKBo1oyYFwdUkKI0YsGHuJQdgdclqHeWCMgtx8RT8HamyXNLc4NwZNEuzUtDJaDCGB0dXgoB8tU5z2reRn))nGDE823qp28WxAZowhDTB4e7OCTtWbZwYOmJxW2qE0J6yN)W0374JnpSlBDmX9B2YbTHWA7y1T6A4B02a4cE20(Y8(i8e6pmWovF)fFrLV3QDQ6(Roqf33uNQT)I9vP7D((IY(ggKCTNSV2N9cEYofDxT6KZoGy7Qv7tO98E5YbsvxyfPMI37x401Mo2gb9v(UFAWXpc85(pH7c8ieyOfCkBnZ5a7dgMBG1EtV1MZo6RK1jOdop57o2SK3VEoYbHZl0(TwEWJf3DVBAR)Pc925aVl44axFpUBIFbbL)Dvr2rD0JjSExdsuVQ98Vv17OoE760lRpOq5mSZVqfARKlvrHFIVaFD7fK2ESr)n]] )
+spec:RegisterPack( "Mistweaver", 20231128, [[Hekili:nFvxVnUnqWFl5Leh0eDwwj3LwCoaxpGcCbTbfvPVkkAkklwjrQssfhxyOF7DjLTcn9xPbff9HeNWDi3L7o7o0jHjpLeNH10KhNmEsuy4K7ccV72OWOKy9YgAsCdMuINd)bhxd)(xyk9ck(zQ0yAzLaNzocLOvsaZjXZAzv6VXtMT)ZDcGTHsGL)04K4cwwgThlvrsInyVom86j39dDPDP)UI2L(eBov2L(R4Q6U0AHKg09q3dBqgEJfzCnUQQl1eALQU0CbSJWXbtEf74jxh(rl2Va(mRlv0OzcoShrxk(zbdwssjyLMXN3L(tyAfJdUpwlQB6sxuqbSknMNzTZG)dd)qFHTEh5B2XiR3RXCmyopNryuoz5LoHs01tUDtO0L(BIQQp81cgCvfYgAgeply6cWBqIIHRy)fUps7J4GK4kWNktAhlOWhpARIuoEwfnl5htIjsMMkzyaarZEMIOCAnJcjMppTlnQFzbhkXfT8mQeLliTkKMIt0qL59EAsMcYeivlhvYiLMZk6GN1zqMhxr56aWTKcyJkKihPlOOAbhkdu5YG17SlD1QU0zT55hdCluMohQkhpiNvbeArREieVXMixBfoB0cGD7g0aMB9XmRvQ0EG(OlivdJZnzdIeZP9oBl4AdNph3wPhQGVUxkwIkaQgsPLSs)OzIl4wffb50ALhOixqZQeImuERCPhQTU8ZOsfvwcr9XU(vS5fAf6pAZMxdLVJLeYzsQ11EG(KlimNqHRjUcrGEypK3Tv8HNBR6siz6FD)ExGnI(p3cr44JXfvuTPnwfOGQpAOx2W7aRJwZ(GyfAM1iIGteYmtOBPDd0t8cCjW8Y2CcwRx6Kr6xgQRWufBu927DVVNiBOeeZoDyKqId1)piZSH(jeO(j2Mzeg4)dARFx(rP7z1QDj07oM5ieA)Pi7Hw)V0aLr2A76nTtLBa65VTrpVLruG(bPeQKqcgOf2JMievzIf8aV7DGKwJzCLf9Cswqn(L)ZNIPnAVOgq6DNHxnGyPOEgE3Q9E7(M8w8D0PVewFdV(qzWS(TfH3KeValnJBHXcpva9TS6gHuV(HaxaTaxyu3)ZwyGeurvIAadUfAcHNOalqGHTZPkqI(NTT9rG68xfCWpwZxCsI1f9VJ40a3qRGnmk8L(hfSNiwP))BaFup63g55Nd1L5Mo(Mntyo0B6vZnV9X(KhWSH4jYzv0nefvWat87M(HEUx3d7Z2aR7WMn8ntiS2oS6oAXUgh0EDx8vT2TwDqB1DvpTuxtdANUlUTw5wNVR2ORbVmI5KD1GUILp9S9k(TA1zJoIO3QvhsW7sxN5lzCLrSyk0qEvV(Y0qteSTc09tJo9raFE4t4ZrovryQlCk7Ob5z3B8RN1TM3AZzNSXz1QrNDaw)5NsNyi9EkTK7JU88tPGC)A1dVR0R89Dw2RlPp)nif4MAHc5(YT7PI4utxVlVW9nTN3vD4uzY2MZpPJ3nB966EPREd79laatWleW3C(lSs4RhwITYzj)9p]] )

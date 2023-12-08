@@ -43,6 +43,22 @@ local ANY_TEXT = CLUB_FINDER_ANY_FLAG or SPELL_TARGET_TYPE1_DESC:upper()
 
 ]]
 
+local function IterateGroupUnits()
+   local unit, numMembers
+   if IsInRaid() then
+      unit, numMembers = 'raid', GetNumGroupMembers()
+   else
+      unit, numMembers = 'party', GetNumSubgroupMembers()
+   end
+   local i = 0
+   return function ()
+      i = i + 1
+      if i <= numMembers then
+         return unit..i
+      end
+   end
+end
+
 -- If any condition starts with "no" we're screwed
 -- ".args" functions take a fixed set of arguments rather using / for OR
 
@@ -453,14 +469,8 @@ CONDITIONS["gather"] = {
 
 local function IsInCrossFactionGroup()
     local myFaction = UnitFactionGroup('player')
-    local unit, numMembers
-    if IsInRaid() then
-        unit, numMembers = 'raid', GetNumGroupMembers()
-    else
-        unit, numMembers = 'party', GetNumSubgroupMembers()
-    end
-    for i = 1, numMembers do
-        if UnitFactionGroup(unit..i) ~= myFaction then
+    for unit in IterateGroupUnits() do
+        if UnitFactionGroup(unit) ~= myFaction then
             return true
         end
     end
@@ -671,9 +681,12 @@ CONDITIONS["loadout"] = {
     handler =
         function (cond, context, v)
             if v then
-                local id = C_ClassTalents.GetActiveConfigID()
-                local info = C_Traits.GetConfigInfo(id)
-                return info and info.name == v
+                local specID = PlayerUtil.GetCurrentSpecID()
+                local id = C_ClassTalents.GetLastSelectedSavedConfigID(specID)
+                if id then
+                    local info = C_Traits.GetConfigInfo(id)
+                    return info and info.name == v
+                end
             end
         end
 }
@@ -730,37 +743,88 @@ CONDITIONS["maw"] = {
         end
 }
 
+CONDITIONS["member"] = {
+    handler =
+        function (cond, context, name)
+            if not name then return end
+            if name:find('#') then
+                for u in IterateGroupUnits() do
+                    local guid = UnitGUID(u)
+                    local info = C_BattleNet.GetAccountInfoByGUID(guid)
+                    if info and info.battleTag == name then return true end
+                end
+            elseif name:find('-') then
+                for u in IterateGroupUnits() do
+                    local n, r = UnitName(u)
+                    r = r or GetRealmName()
+                    if n..'-'..r == name then return true end
+                end
+            else
+                for u in IterateGroupUnits() do
+                    local n, r = UnitName(u)
+                    if n == name and r == nil then return true end
+                end
+            end
+        end
+}
+
 CONDITIONS["mod"] = {
     name = L.LM_MODIFIER_KEY,
     toDisplay =
         function (v)
-            if v == "alt" then
-                return ALT_KEY_TEXT
-            elseif v == "ctrl" then
-                return CTRL_KEY_TEXT
-            elseif v == "shift" then
-                return SHIFT_KEY_TEXT
-            elseif not v then
+            if not v then
                 return ANY_TEXT
+            elseif tonumber(v) then
+                return v
+            elseif type(v) == "string" then
+                return _G[v:upper().."_KEY_TEXT"] or v
             end
         end,
     menu = {
         nosort = true,
         { val = "mod" },
         { val = "mod:alt" },
+        { val = "mod:lalt" },
+        { val = "mod:ralt" },
         { val = "mod:ctrl" },
+        { val = "mod:lctrl" },
+        { val = "mod:rctrl" },
         { val = "mod:shift" },
+        { val = "mod:lshift" },
+        { val = "mod:rshift" },
     },
     handler =
         function (cond, context, v)
             if not v then
                 return IsModifierKeyDown()
+            elseif tonumber(v) then
+                local i = 0
+                if IsLeftAltKeyDown() then i = i + 1 end
+                if IsLeftShiftKeyDown() then i = i + 1 end
+                if IsLeftControlKeyDown() then i = i + 1 end
+                if IsRightAltKeyDown() then i = i + 1 end
+                if IsRightShiftKeyDown() then i = i + 1 end
+                if IsRightControlKeyDown() then i = i + 1 end
+                if IsRightControlKeyDown() then i = i + 1 end
+                return tonumber(v) == i
             elseif v == "alt" then
                 return IsAltKeyDown()
+            elseif v == "lalt" then
+                return IsLeftAltKeyDown()
+            elseif v == "ralt" then
+                return IsRightAltKeyDown()
             elseif v == "ctrl" then
                 return IsControlKeyDown()
+            elseif v == "lctrl" then
+                return IsLeftControlKeyDown()
+            elseif v == "rtrl" then
+                return IsRightoControlKeyDown()
             elseif v == "shift" then
                 return IsShiftKeyDown()
+            elseif v == "lshift" then
+                return IsLeftShiftKeyDown()
+            elseif v == "rshift" then
+                return IsRightShiftKeyDown()
             else
                 return false
             end

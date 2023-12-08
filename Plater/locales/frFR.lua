@@ -7,7 +7,9 @@ do
 --[[Translation missing --]]
 L["EXPORT"] = "Export"
 --[[Translation missing --]]
-L["EXPORT_CAST_COLORS"] = "Export Colors"
+L["EXPORT_CAST_COLORS"] = "Share Colors"
+--[[Translation missing --]]
+L["EXPORT_CAST_SOUNDS"] = "Share Sounds"
 --[[Translation missing --]]
 L["HIGHLIGHT_HOVEROVER"] = "Hover Over Highlight"
 --[[Translation missing --]]
@@ -18,6 +20,8 @@ L["HIGHLIGHT_HOVEROVER_DESC"] = "Highlight effect when the mouse is over the nam
 L["IMPORT"] = "Import"
 --[[Translation missing --]]
 L["IMPORT_CAST_COLORS"] = "Import Colors"
+--[[Translation missing --]]
+L["IMPORT_CAST_SOUNDS"] = "Import Sounds"
 L["OPTIONS_ALPHA"] = "Alpha"
 --[[Translation missing --]]
 L["OPTIONS_ALPHABYFRAME_ALPHAMULTIPLIER"] = "Transparency multiplier."

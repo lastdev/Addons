@@ -7,6 +7,12 @@ L.HEALER = _G['HEALER']
 L.DAMAGER = _G['DAMAGER']
 
 L["title"] = "TankMD"
+--[[Translation missing --]]
+--[[ L["toFifth"] = "%s to fifth %s"--]] 
 L["toFirst"] = "%s к первому %s"
+--[[Translation missing --]]
+--[[ L["toFourth"] = "%s to fourth %s"--]] 
 L["toSecond"] = "%s ко второму %s"
+--[[Translation missing --]]
+--[[ L["toThird"] = "%s to third %s"--]] 
 

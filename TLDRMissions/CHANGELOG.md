@@ -1,6 +1,7 @@
 # TL;DR Missions
 
-##  (2023-11-08)
+##  (2023-12-02)
  
 
-- 10.2 update  
+- Revert fix for https://github.com/TLDRMissions/TLDRMissions/issues/610  
+    See https://github.com/TLDRMissions/TLDRMissions/issues/622  

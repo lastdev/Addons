@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: da55462768ecd09cb5ab02efcc8fbb98c830846e $")
+end, "$Revision: d9b7338ec9f069d3cc6c46db144a6cbdf5583b15 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -56,6 +56,7 @@ local UnitGUID = UnitGUID
 local UnitHasIncomingResurrection = UnitHasIncomingResurrection
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
+local UnitInRange = UnitInRange
 local UnitIsAFK = UnitIsAFK
 local UnitIsCharmed = UnitIsCharmed
 local UnitIsConnected = UnitIsConnected
@@ -913,20 +914,34 @@ local function XPerl_Party_UpdateMana(self)
 end
 
 -- XPerl_Party_UpdateRange
-local function XPerl_Party_UpdateRange(self, overrideUnit)
+local function XPerl_Party_Update_Range(self, overrideUnit)
 	local partyid = overrideUnit or self.partyid
-	if (partyid) then
-		if (not pconf.range30yard or CheckInteractDistance(partyid, 4) or not UnitIsConnected(partyid)) then
-			self.nameFrame.rangeIcon:Hide()
-		else
-			self.nameFrame.rangeIcon:Show()
-			self.nameFrame.rangeIcon:SetAlpha(1)
-		end
-		--[[if (UnitInVehicle(self.partyid) and pconf.range30yard) then -- Not sure if this is proper way to do it, so this pretty much forces anyone in a vehicle to show out of range.
-			self.nameFrame.rangeIcon:Show()
-			self.nameFrame.rangeIcon:SetAlpha(1)
-		end]]
+	if not partyid then
+		return
 	end
+	if not pconf.range30yard then
+		self.nameFrame.rangeIcon:Hide()
+		return
+	end
+	local inRange = false
+	if IsRetail then
+		local range, checkedRange = UnitInRange(partyid)
+		if not checkedRange then
+			inRange = true
+		end
+	else
+		inRange = CheckInteractDistance(partyid, 4)
+	end
+	if not UnitIsConnected(partyid) or inRange then
+		self.nameFrame.rangeIcon:Hide()
+	else
+		self.nameFrame.rangeIcon:Show()
+		self.nameFrame.rangeIcon:SetAlpha(1)
+	end
+	--[[if (UnitInVehicle(self.partyid) and pconf.range30yard) then -- Not sure if this is proper way to do it, so this pretty much forces anyone in a vehicle to show out of range.
+		self.nameFrame.rangeIcon:Show()
+		self.nameFrame.rangeIcon:SetAlpha(1)
+	end]]
 end
 
 -- XPerl_Party_SingleGroup
@@ -1128,7 +1143,7 @@ function XPerl_Party_OnUpdate(self, elapsed)
 		self.time = self.time + elapsed
 		if (self.time >= 0.2) then
 			if pconf.range30yard then
-				XPerl_Party_UpdateRange(self, partyid)
+				XPerl_Party_Update_Range(self, partyid)
 			end
 
 			if conf.rangeFinder.enabled then
@@ -1178,31 +1193,43 @@ end
 
 -- XPerl_Party_UpdateDisplay
 function XPerl_Party_UpdateDisplay(self, less)
-	if (self.conf and self.partyid and UnitExists(self.partyid)) then
-		self.afk, self.dnd = nil, nil
-		XPerl_Party_UpdateName(self)
-		XPerl_Party_TargetRaidIcon(self)
-		XPerl_Party_UpdateLeader(self)
-		XPerl_Party_UpdateClass(self)
-		UpdateAssignedRoles(self)
-		UpdatePhasingDisplays(self)
-
-		if (not less) then
-			XPerl_SetManaBarType(self)
-			XPerl_Party_UpdateMana(self)
-			XPerl_Party_UpdateHealth(self)
-			XPerl_Unit_UpdateLevel(self)
-		end
-
-		XPerl_Party_UpdatePlayerFlags(self)
-		XPerl_Party_UpdateCombat(self)
-		XPerl_Party_UpdatePVP(self)
-		XPerl_Unit_UpdatePortrait(self)
-		XPerl_Party_Buff_UpdateAll(self)
-		XPerl_Party_UpdateTarget(self)
-		XPerl_Unit_UpdateReadyState(self)
-		XPerl_UpdateSpellRange(self, self.partyid)
+	local partyid = self.partyid
+	if not partyid then
+		return
 	end
+	if not UnitExists(partyid) then
+		return
+	end
+
+	self.afk, self.dnd = nil, nil
+	XPerl_Party_UpdateName(self)
+	XPerl_Party_TargetRaidIcon(self)
+	XPerl_Party_UpdateLeader(self)
+	XPerl_Party_UpdateClass(self)
+	UpdateAssignedRoles(self)
+	UpdatePhasingDisplays(self)
+
+	if (not less) then
+		XPerl_SetManaBarType(self)
+		XPerl_Party_UpdateMana(self)
+		XPerl_Party_UpdateHealth(self)
+		XPerl_Unit_UpdateLevel(self)
+	end
+
+	XPerl_Party_UpdatePlayerFlags(self)
+	XPerl_Party_UpdateCombat(self)
+	XPerl_Party_UpdatePVP(self)
+	XPerl_Unit_UpdatePortrait(self)
+	XPerl_Party_Buff_UpdateAll(self)
+	XPerl_Party_UpdateTarget(self)
+	XPerl_Unit_UpdateReadyState(self)
+
+	if pconf.range30yard then
+		XPerl_Party_Update_Range(self)
+	else
+		self.nameFrame.rangeIcon:Hide()
+	end
+	XPerl_UpdateSpellRange(self, partyid)
 end
 
 -------------------
@@ -1827,7 +1854,7 @@ function XPerl_Party_SetInitialAttributes()
 
 		--self:SetAttribute("initial-height", CalcHeight())
 		--self:SetAttribute("initial-width", CalcWidth())
-	end]]
+	end--]]
 
 	-- Fix Secure Header taint in combat
 	--[[local maxColumns = partyHeader:GetAttribute("maxColumns") or 1
@@ -1837,7 +1864,7 @@ function XPerl_Party_SetInitialAttributes()
 
 	partyHeader:Show()
 	partyHeader:SetAttribute("startingIndex", - maxUnits + 1)
-	partyHeader:SetAttribute("startingIndex", startingIndex)]]
+	partyHeader:SetAttribute("startingIndex", startingIndex)--]]
 
 	partyHeader:Hide()
 
@@ -1847,7 +1874,6 @@ end
 
 -- XPerl_Party_SetMainAttributes
 function XPerl_Party_SetMainAttributes()
-
 	partyAnchor:StopMovingOrSizing()
 
 	partyHeader:ClearAllPoints()

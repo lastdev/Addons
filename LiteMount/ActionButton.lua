@@ -8,7 +8,7 @@
   type="macro" macrotext="...". If we're not in combat we
   use a preclick handler to set it to what we really want to do.
 
-  Copyright 2011-2021 Mike Battersby
+  Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -83,25 +83,20 @@ function LM.ActionButton:PreClick(inputButton, isDown)
 end
 
 function LM.ActionButton:PostClick(inputButton, isDown)
-
-    -- https://github.com/Stanzilla/WoWUIBugs/issues/317#issuecomment-1510847497
-    -- if isDown ~= GetCVarBool("ActionButtonUseKeyDown") then return end
-
     if InCombatLockdown() then return end
 
     LM.Debug(format("PostClick handler called on %s (inputButton=%s, isDown=%s)",
                 self:GetName(), tostring(inputButton), tostring(isDown)))
+end
 
-    -- We'd like to set the macro to undo whatever we did, but
-    -- tests like IsMounted() and CanExitVehicle() will still
-    -- represent the pre-action state at this point.  We don't want
-    -- to just blindly do the opposite of whatever we chose because
-    -- it might not have worked.
-
-    local handler = LM.Actions:GetHandler('Combat')
-    local act = handler()
-    if act then
-        act:SetupActionButton(self)
+-- Combat actions trigger on PLAYER_REGEN_DISABLED which happens before
+-- lockdown starts so we can still do secure things.
+function LM.ActionButton:OnEvent(e, ...)
+    if e == "PLAYER_REGEN_DISABLED" then
+        local act = LM.Actions:GetHandler('Combat')(nil, self.context)
+        if act then
+            act:SetupActionButton(self)
+        end
     end
 end
 
@@ -125,6 +120,10 @@ function LM.ActionButton:Create(n)
     -- SecureActionButton setup
     b:SetScript("PreClick", self.PreClick)
     b:SetScript("PostClick", self.PostClick)
+
+    -- Event handler for combat setup just before lockdown starts
+    b:RegisterEvent("PLAYER_REGEN_DISABLED")
+    b:SetScript('OnEvent', self.OnEvent)
 
     return b
 end

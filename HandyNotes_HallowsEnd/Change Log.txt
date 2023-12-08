@@ -1,3 +1,6 @@
+== v2.26 - 30th November 2023
+* Neighbouring zone project: Northrend completed
+
 == v2.25 - 12th November 2023
 * Neighbouring zone project: Outland and Pandaria completed
 

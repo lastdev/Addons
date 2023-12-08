@@ -1,5 +1,5 @@
 ## Interface: 30403
-## Version: 2.02
+## Version: 2.04
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_shadowegg
 ## Title: Netherwing Eggs
@@ -32,6 +32,8 @@
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_NetherwingEggsDB
 ## AddonCompartmentFunc: HandyNotes_NetherwingEggs_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_NetherwingEggs_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_NetherwingEggs_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

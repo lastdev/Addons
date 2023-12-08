@@ -6,7 +6,10 @@ if UnitClassBase( "player" ) ~= "WARRIOR" then return end
 local addon, ns = ...
 local Hekili = _G[ addon ]
 local class, state = Hekili.Class, Hekili.State
-local FindPlayerAuraByID = ns.FindPlayerAuraByID
+
+local FindPlayerAuraByID, RangeType = ns.FindPlayerAuraByID, ns.RangeType
+
+local strformat = string.format
 
 local spec = Hekili:NewSpecialization( 73 )
 
@@ -800,8 +803,7 @@ spec:RegisterAbilities( {
         startsCombat = true,
         texture = 132337,
 
-        usable = function () return target.minR > 7, "requires 8 yard range or more" end,
-
+        usable = function () return target.minR > 8 and ( query_time - action.charge.lastCast > gcd.execute ), "target too close" end,
         handler = function ()
             applyDebuff( "target", "charge" )
             if legendary.reprisal.enabled then
@@ -1376,6 +1378,7 @@ spec:RegisterAbilities( {
         gcd = "off",
 
         toggle = "defensives",
+        equipped = "shield",
         defensive = true,
 
         spend = 30,
@@ -1404,6 +1407,7 @@ spec:RegisterAbilities( {
         spendType = "rage",
 
         talent = "shield_charge",
+        equipped = "shield",
         startsCombat = true,
 
         handler = function ()
@@ -1440,6 +1444,7 @@ spec:RegisterAbilities( {
         end,
         spendType = "rage",
 
+        equipped = "shield",
         startsCombat = true,
         texture = 134951,
 
@@ -1882,13 +1887,23 @@ spec:RegisterSetting( "last_stand_condition", false, {
 } )
 
 
+local LSR = LibStub( "SpellRange-1.0" )
+
+spec:RegisterRanges( "hamstring", "devastate", "execute", "storm_bolt", "charge", "heroic_throw", "taunt" )
+
+spec:RegisterRangeFilter( strformat( "Can %s but cannot %s (8 yards)", Hekili:GetSpellLinkWithTexture( spec.abilities.taunt.id ), Hekili:GetSpellLinkWithTexture( spec.abilities.charge.id ) ), function()
+    return LSR.IsSpellInRange( spec.abilities.taunt.name ) == 1 and LSR.IsSpellInRange( class.abilities.charge.name ) ~= 0
+end )
+
+
 spec:RegisterOptions( {
     enabled = true,
 
     aoe = 2,
 
     nameplates = true,
-    nameplateRange = 8,
+    rangeChecker = "hamstring",
+    rangeFilter = true,
 
     damage = true,
     damageExpiration = 8,

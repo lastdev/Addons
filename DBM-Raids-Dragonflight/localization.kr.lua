@@ -98,7 +98,6 @@ L:SetGeneralLocalization({
 	name =	"현신의 금고 일반몹"
 })
 
---[[
 ---------------------------
 --  Kazzara --
 ---------------------------
@@ -202,7 +201,6 @@ L:SetGeneralLocalization({
 	name =	"에베루스 일반몹"
 })
 
---]]
 ---------------------------
 --  Amirdrassil, the Dream's Hope --
 ---------------------------
@@ -251,7 +249,11 @@ L:SetMiscLocalization({
 ---------------------------
 --  Nymue, Weaver of the Cycle --
 ---------------------------
---L= DBM:GetModLocalization(2556)
+L= DBM:GetModLocalization(2556)
+
+L:SetMiscLocalization({
+	Threads			= "실타래 (%s)"
+})
 
 ---------------------------
 --  Smolderon --
@@ -261,12 +263,30 @@ L:SetMiscLocalization({
 ---------------------------
 --  Tindral Sageswift, Seer of the Flame --
 ---------------------------
---L= DBM:GetModLocalization(2565)
+L= DBM:GetModLocalization(2565)
+
+L:SetMiscLocalization({
+	TreeForm			= "나무 형상",
+	MoonkinForm			= "달빛야수 형상"
+})
 
 ---------------------------
 --  Fyrakk the Blazing --
 ---------------------------
---L= DBM:GetModLocalization(2519)
+L= DBM:GetModLocalization(2519)
+
+L:SetTimerLocalization{
+	timerMythicDebuffs			= "우리 (%s)"
+}
+
+L:SetWarningLocalization{
+	warnMythicDebuffs			= "우리 (%s)"
+}
+
+L:SetOptionLocalization{
+	warnMythicDebuffs			= "$spell:428988|1과;와; $spell:428970 디버프가 시전되면 알림 (횟수 포함)",
+	timerMythicDebuffs			= "$spell:428988|1과;와; $spell:428970 디버프 타이머 보기 (횟수 포함)"
+}
 
 -------------
 --  Trash  --

@@ -192,9 +192,9 @@ do
 	end
 
 	function Details:Ambiguate(unitName)
-		if (toc >= 100200) then
+		--if (toc >= 100200) then
 			unitName = Ambiguate(unitName, "none")
-		end
+		--end
 		return unitName
 	end
 
@@ -206,13 +206,14 @@ do
 	end
 
 	local UnitFullName = UnitFullName
+	--Details:GetCurrentCombat():GetActor(DETAILS_ATTRIBUTE_DAMAGE, Details:GetFullName("player")):GetSpell(1)
 
 	---create a CLEU compatible name of the unit passed
 	---return string is in the format "playerName-realmName"
 	---the string will also be ambiguated using the ambiguateString passed
 	---@param unitId any
 	---@param ambiguateString any
-	function Details:GetFullName(unitId, ambiguateString)
+	function Details:GetFullName(unitId, ambiguateString) --not in use, get replace by Details.GetCLName a few lines below
 		--UnitFullName is guarantee to return the realm name of the unit queried
 		local playerName, realmName = UnitFullName(unitId)
 		if (playerName) then
@@ -235,9 +236,9 @@ do
 		return Details:GetFullName(unitId, "none")
 	end
 
-	if (toc < 100200) then
+	--if (toc < 100200) then
 		Details.GetFullName = Details.GetCLName
-	end
+	--end
 
 	function Details:Class(actor)
 		return self.classe or actor and actor.classe

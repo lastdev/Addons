@@ -1120,6 +1120,86 @@ do
 			end
 		end
 	})
+	
+	--#32 Cleanup Ghost Auras indexes to be numbers again and remove trash.
+	tinsert (PlaterPatchLibrary, {
+		NotEssential = false,
+		
+		Notes = {
+			"- Cleanup and repair Ghost Auras data."
+		},
+		Func = function()
+			--cleanup is needed for proper number indexing. will remove crap as well.
+			
+			local ghostAuras = Plater.db.profile.ghost_auras.auras
+			local ghostAurasTemp = DetailsFramework.table.copy({}, ghostAuras)
+			local ghostAurasDefault = PLATER_DEFAULT_SETTINGS.profile.ghost_auras.auras
+			
+			for class, specs in pairs(ghostAurasTemp) do
+				for specID, specData in pairs(specs) do
+					ghostAuras[class][specID] = nil
+					if ghostAurasDefault[class][tonumber(specID)] then
+						ghostAuras[class][tonumber(specID)] = ghostAuras[class][tonumber(specID)] or {}
+						for spellId, enabled in pairs(specData) do
+							if tonumber(spellId) then
+								ghostAuras[class][tonumber(specID)][tonumber(spellId)] = enabled 
+							end
+						end
+					end
+				end
+			end
+		end
+	})
+	
+	--#33 Reset range check values if necessary....
+	tinsert (PlaterPatchLibrary, {
+		NotEssential = false,
+		
+		Notes = {
+			"- Reset range check distance settings if necessary."
+		},
+		Func = function()
+			--range check spells
+			local LibRangeCheck = LibStub:GetLibrary ("LibRangeCheck-3.0")
+			LibRangeCheck.RegisterCallback(PlaterPatchLibrary, LibRangeCheck.CHECKERS_CHANGED, function() 
+				local harmCheckers = {}
+				for range, func in LibRangeCheck:GetHarmCheckers(true) do
+					harmCheckers[range] = func
+				end
+				local friendCheckers = {}
+				for range, func in LibRangeCheck:GetFriendCheckers(true) do
+					friendCheckers[range] = func
+				end
+				if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+					for specID, _ in pairs (Plater.SpecList [select (2, UnitClass ("player"))]) do
+						if harmCheckers then
+							if (PlaterDBChr.spellRangeCheckRangeEnemy [specID] == nil or not harmCheckers[PlaterDBChr.spellRangeCheckRangeEnemy [specID]]) then
+								PlaterDBChr.spellRangeCheckRangeEnemy [specID] = Plater.DefaultSpellRangeList [specID]
+							end
+						end
+						if friendCheckers then
+							if (PlaterDBChr.spellRangeCheckRangeFriendly [specID] == nil or not friendCheckers[PlaterDBChr.spellRangeCheckRangeFriendly [specID]]) then
+								PlaterDBChr.spellRangeCheckRangeFriendly [specID] = Plater.DefaultSpellRangeListF [specID]
+							end
+						end
+					end
+				else
+					local playerClass = select (3, UnitClass ("player"))
+					if harmCheckers then
+						if (PlaterDBChr.spellRangeCheckRangeEnemy [playerClass] == nil or not harmCheckers[PlaterDBChr.spellRangeCheckRangeEnemy [playerClass]]) then
+							PlaterDBChr.spellRangeCheckRangeEnemy [playerClass] = Plater.DefaultSpellRangeList [playerClass]
+						end
+					end
+					if friendCheckers then
+						if (PlaterDBChr.spellRangeCheckRangeFriendly [playerClass] == nil or not friendCheckers[PlaterDBChr.spellRangeCheckRangeFriendly [playerClass]]) then
+							PlaterDBChr.spellRangeCheckRangeFriendly [playerClass] = Plater.DefaultSpellRangeListF [playerClass]
+						end
+					end
+				end
+				Plater.GetSpellForRangeCheck()
+			end)
+		end
+	})
 
 	--to tag an update as non-essential, add "NotEssential = true," to the table
 	--/run Plater.db.profile.patch_version = 30

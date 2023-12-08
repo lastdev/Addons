@@ -15,6 +15,28 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.2.007 (26/11/2023)
+
+- DataStore_Crafts: The module is now shared between all versions of the game.
+- This concludes the conversion of all DataStore modules to make them compatible with all versions.
+
+10.2.006 (20/11/2023)
+
+- DataStore_Quests: The module is now shared between all versions of the game.
+- DataStore_Talents: The module is now shared between all versions of the game.
+- DataStore_Reputations: The module is now shared between all versions of the game.
+- DataStore_Containers: Fixed COMMON_NUM_BAG_SLOTS to be NUM_BAG_SLOTS + 1 for retail, and NUM_BAG_SLOTS for non-retail, instead of the opposite.
+
+10.2.005 (17/11/2023)
+
+- Fixed an issue where sorting the bags while the merchant frame is opened would trigger a slow down (Thanks Belazor !)
+- DataStore_Containers: Removed an invalid test when closing a bank frame.
+- Events : fixed a Lua error when a tracked item like an egg actually hatches.
+
+10.2.004 (14/11/2023)
+
+- DataStore_Containers: The module is now shared between all versions of the game.
+
 10.2.003 (11/11/2023)
 
 - DataStore_Currencies: Added the Dream Infusion currency.
@@ -324,7 +346,7 @@ Now for the good stuff, here is what changed:
 Ex: I have 24 alts on my main server, 12 are my mains, 12 are banks, I created 2 groups to separate them.
 Check the help in-game for the details.
 
-- Summary tab: Introducting bank characters filters => you can now mark an alt as a special type of bank.
+- Summary tab: Introducing bank characters filters => you can now mark an alt as a special type of bank.
 Ex: Mark an alt as a mining bank, or a cloth bank, or both !
 You can then easily find these alts back using filters.
 

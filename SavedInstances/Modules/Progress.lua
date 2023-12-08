@@ -103,7 +103,7 @@ local presets = {
       local text
       for index = 1, #store do
         if store[index] then
-          text = (index > 1 and (text .. " / ") or "") .. (entry.difficultyNames[store[index]] or GetDifficultyInfo(store[index]))
+          text = (index > 1 and (text .. "||") or "") .. (entry.difficultyNames[store[index]] or GetDifficultyInfo(store[index]))
         end
       end
       if store.rewardWaiting then
@@ -376,7 +376,7 @@ local presets = {
         if not text then
           text = store[factionID] and store[factionID][1] or '0'
         else
-          text = text .. ' / ' .. (store[factionID] and store[factionID][1] or '0')
+          text = text .. "||" .. (store[factionID] and store[factionID][1] or '0')
         end
       end
 
@@ -385,7 +385,7 @@ local presets = {
           if not text then
             text = store[factionID] and store[factionID][1] or '0'
           else
-            text = text .. ' / ' .. (store[factionID] and store[factionID][1] or '0')
+            text = text .. "||" .. (store[factionID] and store[factionID][1] or '0')
           end
         end
       end
@@ -427,6 +427,7 @@ local presets = {
     end,
     -- addition info
     factionIDs = {
+      2574, -- Dream Wardens
       2564, -- Loamm Niffen
       2507, -- Dragonscale Expedition
       2503, -- Maruuk Centaur
@@ -723,6 +724,43 @@ local presets = {
     reset = 'weekly',
     persists = true,
     fullObjective = false,
+  },
+  -- The Superbloom
+  ['df-the-superbloom'] = {
+    type = 'single',
+    expansion = 9,
+    index = 19,
+    name = L["The Superbloom"],
+    questID = 78319,
+    reset = 'weekly',
+    persists = true,
+    fullObjective = false,
+  },
+  -- Blooming Dreamseeds
+  ['df-blooming-dreamseeds'] = {
+    type = 'single',
+    expansion = 9,
+    index = 20,
+    name = L["Blooming Dreamseeds"],
+    questID = 78821,
+    reset = 'weekly',
+    persists = true,
+    fullObjective = false,
+  },
+  -- Shipment of Goods
+  ['df-shipment-of-goods'] = {
+    type = 'list',
+    expansion = 9,
+    index = 21,
+    name = L["Shipment of Goods"],
+    questID = {
+      78427, -- Great Crates!
+      78428, -- Crate of the Art
+    },
+    reset = 'weekly',
+    persists = false,
+    progress = true,
+    onlyOnOrCompleted = false,
   },
 }
 

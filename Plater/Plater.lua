@@ -69,9 +69,11 @@ local IS_WOW_PROJECT_CLASSIC_WRATH = IS_WOW_PROJECT_NOT_MAINLINE and ClassicExpa
 
 local PixelUtil = PixelUtil or DFPixelUtil
 
+local parserFunctions --reference needed
+
 local LibSharedMedia = LibStub:GetLibrary ("LibSharedMedia-3.0") -- https://www.curseforge.com/wow/addons/libsharedmedia-3-0
 local LCG = LibStub:GetLibrary("LibCustomGlow-1.0") -- https://github.com/Stanzilla/LibCustomGlow
-local LibRangeCheck = LibStub:GetLibrary ("LibRangeCheck-2.0") -- https://www.curseforge.com/wow/addons/librangecheck-2-0/
+local LibRangeCheck = LibStub:GetLibrary ("LibRangeCheck-3.0") -- https://github.com/WeakAuras/LibRangeCheck-3.0
 local LibTranslit = LibStub:GetLibrary ("LibTranslit-1.0") -- https://github.com/Vardex/LibTranslit
 local LDB = LibStub ("LibDataBroker-1.1", true)
 local LDBIcon = LDB and LibStub ("LibDBIcon-1.0", true)
@@ -781,7 +783,7 @@ Plater.AnchorNamesByPhraseId = {
 			castBar_rangeCheckAlpha = profile.range_check_cast_bar_alpha
 			buffFrames_rangeCheckAlpha = profile.range_check_buffs_alpha
 			powerBar_rangeCheckAlpha = profile.range_check_power_bar_alpha
-			rangeChecker = Plater.RangeCheckFunctionEnemy or LibRangeCheck:GetHarmMaxChecker(Plater.RangeCheckRangeEnemy or 40)
+			rangeChecker = Plater.RangeCheckFunctionEnemy or LibRangeCheck:GetHarmMaxChecker(Plater.RangeCheckRangeEnemy or 40, true)
 			rangeCheckRange = Plater.RangeCheckRangeEnemy
 			
 		else
@@ -792,17 +794,28 @@ Plater.AnchorNamesByPhraseId = {
 			castBar_rangeCheckAlpha = profile.range_check_cast_bar_alpha_friendlies
 			buffFrames_rangeCheckAlpha = profile.range_check_buffs_alpha_friendlies
 			powerBar_rangeCheckAlpha = profile.range_check_power_bar_alpha_friendlies
-			rangeChecker = Plater.RangeCheckFunctionFriendly or LibRangeCheck:GetFriendMaxChecker(Plater.RangeCheckRangeFriendly or 40)
+			rangeChecker = Plater.RangeCheckFunctionFriendly or LibRangeCheck:GetFriendMaxChecker(Plater.RangeCheckRangeFriendly or 40, true)
 			rangeCheckRange = Plater.RangeCheckRangeFriendly
 		end
 		
 		if not rangeChecker then
 			rangeChecker = function (unit)
 				Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
-				return (LibRangeCheck:GetRange(unit) or 0) < (rangeCheckRange or 40)
+				return (LibRangeCheck:GetRange(unit) or 0) <= (rangeCheckRange or 40)
 			end
 			Plater.GetSpellForRangeCheck()
 		end
+
+		---------------------------------
+		if (false and IS_WOW_PROJECT_MAINLINE and InCombatLockdown()) then --emergency fix for range check 2023.11.16
+			rangeChecker = function(unit)
+				local min, max = LibRangeCheck:GetRange(unit, false, true)
+				if (max or rangeCheckRange + 1) <= (rangeCheckRange or 40) then
+					return true
+				end
+			end
+		end
+		---------------------------------
 
 		--this unit is target
 		local unitIsTarget = unitFrame.isSoftInteract -- default to softinteract
@@ -1004,8 +1017,9 @@ Plater.AnchorNamesByPhraseId = {
 				--the local character saved variable hold the spell name used for the range check
 				Plater.RangeCheckRangeFriendly = PlaterDBChr.spellRangeCheckRangeFriendly [specID] or Plater.DefaultSpellRangeListF [specID] or 40
 				Plater.RangeCheckRangeEnemy = PlaterDBChr.spellRangeCheckRangeEnemy [specID] or Plater.DefaultSpellRangeList [specID] or 40
-				Plater.RangeCheckFunctionFriendly = LibRangeCheck:GetFriendMaxChecker(Plater.RangeCheckRangeFriendly)
-				Plater.RangeCheckFunctionEnemy = LibRangeCheck:GetHarmMaxChecker(Plater.RangeCheckRangeEnemy)
+				Plater.RangeCheckFunctionFriendly = LibRangeCheck:GetFriendMaxChecker(Plater.RangeCheckRangeFriendly, true)
+				Plater.RangeCheckFunctionEnemy = LibRangeCheck:GetHarmMaxChecker(Plater.RangeCheckRangeEnemy, true)
+				
 				tryingToUpdateRangeChecker = false
 			else
 				tryingToUpdateRangeChecker = true
@@ -1662,7 +1676,7 @@ Plater.AnchorNamesByPhraseId = {
 
 	--a patch is a function stored in the Plater_ScriptLibrary file and are executed only once to change a profile setting, remove or add an aura into the tracker or modify a script
 	--patch versions are stored within the profile, so importing or creating a new profile will apply all patches that wasn't applyed into it yet
-	function Plater.ApplyPatches() --private ~updates ~scriptupdates
+	function Plater.ApplyPatches() --private ~updates ~scriptupdates ~patch ~patches
 		if (PlaterPatchLibrary) then
 			local currentPatch = Plater.db.profile.patch_version
 			local bSkipNonEssentialPatches = PlaterDB.SkipNonEssentialPatches
@@ -3733,8 +3747,8 @@ Plater.AnchorNamesByPhraseId = {
 		
 		UNIT_INVENTORY_CHANGED = function()
 			UpdatePlayerTankState()
-			Plater.UpdateAllNameplateColors()
-			Plater.UpdateAllPlates()
+			--Plater.UpdateAllNameplateColors()
+			--Plater.UpdateAllPlates()
 		end,
 		
 		UPDATE_SHAPESHIFT_FORM = function()
@@ -4717,12 +4731,13 @@ function Plater.OnInit() --private --~oninit ~init
 						self:OnHideWidget()
 					end
 					
+					local curTime = GetTime()
 					--local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo (unitCast)
 					self.SpellName = 		self.spellName
 					self.SpellID = 		self.spellID
 					self.SpellTexture = 	self.spellTexture
-					self.SpellStartTime = 	self.spellStartTime or GetTime()
-					self.SpellEndTime = 	self.spellEndTime or GetTime()
+					self.SpellStartTime = 	self.spellStartTime or curTime
+					self.SpellEndTime = 	self.spellEndTime or curTime
 					
 					local notInterruptible = not self.canInterrupt
 					
@@ -4792,6 +4807,15 @@ function Plater.OnInit() --private --~oninit ~init
 								self.castColorTexture:SetHeight(self:GetHeight() + profile.cast_color_settings.height_offset)
 							end
 						end
+					end
+					
+					if (self.channeling and (self.SpellStartTime + 0.25 > curTime)) then
+						platerInternal.Audio.PlaySoundForCastStart(self.spellID) --fallback for edge cases. should not double play
+					end
+					
+					-- in some occasions channeled casts don't have a CLEU entry... check this here
+					if (event == "UNIT_SPELLCAST_CHANNEL_START" and (not DB_CAPTURED_SPELLS[self.spellID] or DB_CAPTURED_SPELLS[self.spellID].isChanneled == nil)) then
+						parserFunctions.SPELL_CAST_SUCCESS (nil, "SPELL_CAST_SUCCESS", nil, unitFrame[MEMBER_GUID], unitFrame.unitNameInternal, 0x00000000, nil, nil, nil, nil, nil, self.spellID, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 					end
 
 				elseif (event == "UNIT_SPELLCAST_INTERRUPTED") then
@@ -5898,9 +5922,7 @@ end
 			--check aggro if is in combat
 			if (PLAYER_IN_COMBAT) then
 				if (unitFrame.CanCheckAggro) then
-					if (not unitFrame.DenyColorChange) then --tagged from a script
-						Plater.UpdateNameplateThread (unitFrame)
-					end
+					Plater.UpdateNameplateThread (unitFrame)
 				end
 			end
 			
@@ -6122,8 +6144,10 @@ end
 	end
 	
 	local set_aggro_color = function (self, r, g, b, a) --self = unitName
-		if (DB_AGGRO_CHANGE_HEALTHBAR_COLOR) then	
-			Plater.ChangeHealthBarColor_Internal (self.healthBar, r, g, b, a)
+		if (DB_AGGRO_CHANGE_HEALTHBAR_COLOR) then
+			if (not self.DenyColorChange) then --tagged from a script
+				Plater.ChangeHealthBarColor_Internal (self.healthBar, r, g, b, a)
+			end
 		end
 		
 		if (DB_AGGRO_CHANGE_BORDER_COLOR) then
@@ -8822,7 +8846,8 @@ end
 
 	local PlaterCLEUParser = CreateFrame ("frame", "PlaterCLEUParserFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
-	local parserFunctions = {
+	-- defined local above
+	parserFunctions = {
 		SPELL_DAMAGE = function (time, token, hidding, sourceGUID, sourceName, sourceFlag, sourceFlag2, targetGUID, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical)
 			if (SPELL_WITH_ANIMATIONS [spellName] and sourceGUID == Plater.PlayerGUID) then
 				for _, plateFrame in ipairs (Plater.GetAllShownPlates()) do
@@ -8938,6 +8963,9 @@ end
 					end
 					if (npcId and npcId ~= 0) then
 						DB_CAPTURED_SPELLS[spellID] = {event = token, source = sourceName, npcID = npcId, encounterID = Plater.CurrentEncounterID, encounterName = Plater.CurrentEncounterName, isChanneled = isChanneled}
+						if isChanneled and not DB_CAPTURED_CASTS[spellID] then
+							DB_CAPTURED_CASTS[spellID] = {event = token, source = sourceName, npcID = npcId, encounterID = Plater.CurrentEncounterID, encounterName = Plater.CurrentEncounterName, isChanneled = isChanneled}
+						end
 					end
 				end
 			end
@@ -12881,6 +12909,13 @@ local cvarDiagList = {
 }
 
 function SlashCmdList.PLATER (msg, editbox)
+
+	local optionsTabNumber = tonumber(msg)
+	if (optionsTabNumber) then
+		Plater.OpenOptionsPanel(optionsTabNumber)
+		return
+	end
+
 	if (msg == "version") then
 		Plater.GetVersionInfo(true)
 		return

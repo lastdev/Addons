@@ -1,6 +1,4 @@
-## Changed in v2023.9
+## Changed in v2023.10.1
 
-* More loot and ids for Emerald Dream rares
-* Fix Primal Scythid Queen's location in Waking Shores
-* Remove a stray Lost Gilnean Wardog from Thunder Bluff
+* Blizzard hotfixed out the range-check API that I was using to only announce rares that nearby group members saw, so I've switched to a different API for that.
 

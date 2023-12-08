@@ -1922,12 +1922,14 @@ function module.options:Load()
 	self.textHelpAdv = ELib:Text(self.advancedScroll.C,
 		"|cffffff00{time:|r|cff00ff001:06,p2|r|cffffff00}|r - "..L.NoteHelpAdv1..
 		"|n|cffffff00{time:|r|cff00ff000:30,SCC:17:2|r|cffffff00}|r - "..L.NoteHelpAdv2..
+		"|n   "..(HUD_EDIT_MODE_ENABLE_ADVANCED_OPTIONS or "Advanced Options")..": |cffffff00{time:|cff00ff00TIME|r,|cff00ff00SCC/SCS/SAA/SAR|r:|cff00ff00SPELL_ID|r:|cff00ff00SPELL_COUNT|r:|cff00ffffSOURCE_NAME|r:|cff00ffffPHASE|r}|r"..
 		"|n|cffffff00{time:|r|cff00ff002:00,e,customevent|r|cffffff00}|r - "..L.NoteHelpAdv3..
 		"|n|cffffff00{time:|r|cff00ff003:40,glowall|r|cffffff00}|r - "..L.NoteHelpAdv6..
 		"|n|cffffff00{time:|r|cff00ff004:15,glow|r|cffffff00}|r - "..L.NoteHelpAdv7..
 		"|n|cffffff00{time:|r|cff00ff000:45,wa:nzoth_hs1|r|cffffff00}|r - "..L.NoteHelpAdv4..
 		"|n   WA Function example:|n   Events: |cffffff00MRT_NOTE_TIME_EVENT|r|n   |cffff8bf3function(event,...)|n     if event == \"MRT_NOTE_TIME_EVENT\" then|n       local timerName, timeLeft, noteText = ...|n       if timerName == \"nzoth_hs1\" and timeLeft == 3 then|n         return true|n       end|n     end|n   end|r|n"..
-		"|n"..L.NoteHelpAdv5.."|n |cffe6ff15{time:0:30,SCC:17:2,wa:eventName1,wa:eventName2}|r|n |cffff9f05{time:1:40,p:Shade of Kael'thas}|r|n |cffe6ff15{p,SCC:17:2}Until end of the fight{/p}|r|n |cffff9f05{p,SCC:17:2,SCC:17:3}Until second condition{/p}|r|n |cffe6ff15{pShade of Kael'thas}Phase with name{/p}|r|n |cffff9f05{time:0:20,p2,wa:use_hs,glowall}|r"
+		"|n"..L.NoteHelpAdv5.."|n |cffe6ff15{time:0:30,SCC:17:2,wa:eventName1,wa:eventName2}|r|n |cffff9f05{time:1:40,p:Shade of Kael'thas}|r|n |cffe6ff15{p,SCC:17:2}Until end of the fight{/p}|r|n |cffff9f05{p,SCC:17:2,SCC:17:3}Until second condition{/p}|r|n |cffe6ff15{pShade of Kael'thas}Phase with name{/p}|r|n |cffff9f05{time:0:20,p2,wa:use_hs,glowall}|r"..
+		"|n |cffe6ff15{time:65,SCC:17:2:"..UnitName'player'.."} Count casts only for player "..UnitName'player'.." |r|n |cffe6ff15{time:1:05,SCC:17:2::p3} Count casts only on phase 3 |r"
 	):Point("LEFT",10,0):Point("RIGHT",-10,0):Point("TOP",0,-5):Color()
 
 	local height = self.textHelpAdv:GetHeight()
@@ -2128,7 +2130,9 @@ local function NoteWindow_UpdateVisual(self)
 		self:SetShadowComment(true)
 	end
 
-	self:SetFrameStrata(VMRT.Note.Strata)
+	if VMRT.Note.Strata and MRT.F.table_find(frameStrataList,VMRT.Note.Strata) then
+		self:SetFrameStrata(VMRT.Note.Strata)
+	end
 end
 
 local function NoteWindow_Enable(self)
@@ -2598,17 +2602,7 @@ function module.main:ADDON_LOADED()
 
 	VMRT.Note.FontSize = VMRT.Note.FontSize or 12
 
-	if VMRT.Note.enabled then 
-		module:Enable()
-	end
-	C_Timer.After(5,function()
-		module.allframes:UpdateFont()
-	end)
-
-	if VMRT.Note.Text1 then 
-		module.allframes:UpdateText()
-	end
-	module.allframes:UpdateVisual()
+	VMRT.Note.Strata = VMRT.Note.Strata or "HIGH"
 
 	VMRT.Note.BlackNames = VMRT.Note.BlackNames or {}
 
@@ -2619,10 +2613,21 @@ function module.main:ADDON_LOADED()
 	VMRT.Note.BlackLastUpdateName = VMRT.Note.BlackLastUpdateName or {}
 	VMRT.Note.BlackLastUpdateTime = VMRT.Note.BlackLastUpdateTime or {}
 
-	VMRT.Note.Strata = VMRT.Note.Strata or "HIGH"
+	if VMRT.Note.enabled then 
+		module:Enable()
+	end
+	C_Timer.After(5,function()
+		module.allframes:UpdateFont()
+	end)
+
+	if VMRT.Note.Text1 then 
+		module.allframes:UpdateText()
+	end
 
 	module:RegisterAddonMessage()
 	module:RegisterSlash()
+
+	module.allframes:UpdateVisual()
 end
 
 function module.main:PLAYER_LOGIN()
@@ -2755,6 +2760,37 @@ end
 
 
 do
+	local ResetCLEUData
+	local currPhase = 1
+	local currGlobalPhase = 1
+
+	function module.main:SetPhase(stage, globalStage)
+		wipe(encounter_time_p)
+		local t = GetTime()
+		encounter_time_p[stage] = t
+		encounter_time_p[tostring(stage)] = t
+		currPhase = stage
+		ResetCLEUData(true)
+		if globalStage then
+			encounter_time_p["g"..tostring(globalStage)] = t
+			currGlobalPhase = globalStage
+		else
+			currGlobalPhase = currGlobalPhase + 1
+		end
+		--[[
+		if module.db.encounter_counters_time then
+			for k,v in pairs(module.db.encounter_counters_time) do
+				if k:find(":p%d+$") then
+					module.db.encounter_counters_time[k]=nil
+				end
+			end
+		end
+		]]
+		if module.frame:IsShown() then
+			module.allframes:UpdateText()
+		end
+	end
+
 	local BossPhasesBossmodAdded
 	local function BossPhasesBossmod()
 		if BossPhasesBossmodAdded then
@@ -2763,13 +2799,7 @@ do
 		if type(BigWigsLoader)=='table' and BigWigsLoader.RegisterMessage then
 			BigWigsLoader.RegisterMessage({}, "BigWigs_SetStage", function(event, addon, stage)
 				if stage then
-					wipe(encounter_time_p)
-					local t = GetTime()
-					encounter_time_p[stage] = t
-					encounter_time_p[tostring(stage)] = t
-					if module.frame:IsShown() then
-						module.allframes:UpdateText()
-					end
+					module.main:SetPhase(stage)
 				end
 			end)
 
@@ -2777,16 +2807,7 @@ do
 		elseif type(DBM)=='table' and DBM.RegisterCallback then
 			DBM:RegisterCallback("DBM_SetStage", function(event, addon, modId, stage, encounterId, globalStage)
 				if stage then
-					wipe(encounter_time_p)
-					local t = GetTime()
-					encounter_time_p[stage] = t
-					encounter_time_p[tostring(stage)] = t
-					if globalStage then
-						encounter_time_p["g"..tostring(globalStage)] = t
-					end
-					if module.frame:IsShown() then
-						module.allframes:UpdateText()
-					end
+					module.main:SetPhase(stage, globalStage)
 				end
 			end)
 
@@ -2809,12 +2830,11 @@ do
 			module.db.encounter_time = GetTime()
 			encounter_time_p[1] = module.db.encounter_time
 			encounter_time_p["1"] = module.db.encounter_time
+			currPhase = 1
+			currGlobalPhase = 1
 			BossPhasesBossmod()
 
-			wipe(module.db.encounter_counters.SCC)
-			wipe(module.db.encounter_counters.SCS)
-			wipe(module.db.encounter_counters.SAA)
-			wipe(module.db.encounter_counters.SAR)
+			ResetCLEUData()
 
 			if timeInText then
 				module:RegisterTimer()
@@ -2822,10 +2842,16 @@ do
 
 			local anyEvent
 			string_gsub(noteText,"{time:[0-9:]+[^}]*,(S[^{},]+)[,}]",function(str)
-				local event,spellID,count = strsplit(":",str)
+				local event,spellID,count,name,phase = strsplit(":",str)
 				if tonumber(count or "") and tonumber(spellID or "") and event and module.db.encounter_counters[event] then
 					anyEvent = true
 					module.db.encounter_counters[event][tonumber(spellID)] = 0
+					if name and name ~= "" then
+						if not module.db.encounter_counters[event].name[name] then
+							module.db.encounter_counters[event].name[name] = {}
+						end
+						module.db.encounter_counters[event].name[name][tonumber(spellID)] = 0
+					end
 				end
 			end)
 			wipe(phaseCombatEvents)
@@ -2859,12 +2885,7 @@ do
 
 		module:UnregisterEvents("COMBAT_LOG_EVENT_UNFILTERED")
 
-		wipe(module.db.encounter_counters.SCC)
-		wipe(module.db.encounter_counters.SCS)
-		wipe(module.db.encounter_counters.SAA)
-		wipe(module.db.encounter_counters.SAR)
-		wipe(module.db.encounter_counters_time)
-
+		ResetCLEUData()
 		module.allframes:UpdateText()
 	end
 	local tmr = 0
@@ -2885,19 +2906,50 @@ do
 		SAA = {},
 		SAR = {},
 	}
+	function ResetCLEUData(only_phase_data)
+		if not only_phase_data then
+			wipe(module.db.encounter_counters.SCC)
+			wipe(module.db.encounter_counters.SCS)
+			wipe(module.db.encounter_counters.SAA)
+			wipe(module.db.encounter_counters.SAR)
+			wipe(module.db.encounter_counters_time)
+		  
+			module.db.encounter_counters.SCC.name = {}
+			module.db.encounter_counters.SCS.name = {}
+			module.db.encounter_counters.SAA.name = {}
+			module.db.encounter_counters.SAR.name = {}
+		end
+
+		module.db.encounter_counters.SCC.phase = {}
+		module.db.encounter_counters.SCS.phase = {}
+		module.db.encounter_counters.SAA.phase = {}
+		module.db.encounter_counters.SAR.phase = {}
+	end
+	ResetCLEUData()
 	local ECT = module.db.encounter_counters_time
 	local SCC = module.db.encounter_counters.SCC
 	local SCS = module.db.encounter_counters.SCS
 	local SAA = module.db.encounter_counters.SAA
 	local SAR = module.db.encounter_counters.SAR
-	local function AddCounter(table,tableName,spellID)
+	local function AddCounter(table,tableName,spellID,spellTarget)
 		table[spellID] = table[spellID] + 1
+		if spellTarget and table.name[spellTarget] then table.name[spellTarget][spellID] = table.name[spellTarget][spellID] + 1 end
+		table.phase[spellID] = (table.phase[spellID] or 0) + 1
 
 		local key_w_counter = tableName..":"..spellID..":"..table[spellID]
 		local key_wo_counter = tableName..":"..spellID..":"..0
+		local key_w_phase = tableName..":"..spellID..":"..(table.phase[spellID] or 0).."::p"..(currPhase or 1)
+		local key_w_gphase = tableName..":"..spellID..":"..(table.phase[spellID] or 0).."::pg"..(currGlobalPhase or 1)
+		local key_w_name
+		if spellTarget then
+			key_w_name = tableName..":"..spellID..":"..(table.name[spellTarget] and table.name[spellTarget][spellID] or 0)..":"..(spellTarget or "")
+		end
 		local t = GetTime()
 		ECT[ key_w_counter ] = t
 		ECT[ key_wo_counter ] = t
+		ECT[ key_w_phase ] = t
+		ECT[ key_w_gphase ] = t
+		if key_w_name then ECT[ key_w_name ] = t end
 		if phaseCombatEvents[key_w_counter] or phaseCombatEvents[key_wo_counter] then
 			if module.frame:IsShown() then
 				module.allframes:UpdateText()
@@ -2905,22 +2957,22 @@ do
 		end
 	end
 
-	function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,_,_,_,_,_,_,_,_,spellID)
+	function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,_,sourceName,_,_,_,destName,_,_,spellID)
 		if event == "SPELL_CAST_SUCCESS" then
 			if SCC[spellID] then
-				return AddCounter(SCC,"SCC",spellID)
+				return AddCounter(SCC,"SCC",spellID,sourceName)
 			end
 		elseif event == "SPELL_CAST_START" then
 			if SCS[spellID] then
-				return AddCounter(SCS,"SCS",spellID)
+				return AddCounter(SCS,"SCS",spellID,sourceName)
 			end
 		elseif event == "SPELL_AURA_APPLIED" then
 			if SAA[spellID] then
-				return AddCounter(SAA,"SAA",spellID)
+				return AddCounter(SAA,"SAA",spellID,destName)
 			end
 		elseif event == "SPELL_AURA_REMOVED" then
 			if SAR[spellID] then
-				return AddCounter(SAR,"SAR",spellID)
+				return AddCounter(SAR,"SAR",spellID,destName)
 			end
 		end
 	end
@@ -2985,12 +3037,8 @@ function module:slash(arg)
 	elseif arg and arg:find("^note phase ") then
 		local phase = arg:match("^note phase (.-)$")
 		if phase then
-			wipe(encounter_time_p)
-			encounter_time_p[phase] = GetTime()
+			module.main:SetPhase(phase)
 			print("Set phase",phase)
-			if module.frame:IsShown() then
-				module.allframes:UpdateText()
-			end
 		end
 	elseif arg == "help" then
 		print("|cff00ff00/rt note|r - hide/show note")

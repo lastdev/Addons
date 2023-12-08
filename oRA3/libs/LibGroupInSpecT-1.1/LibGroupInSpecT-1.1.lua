@@ -73,7 +73,7 @@
 --     Returns an array with the set of unit ids for the current group.
 --]]
 
-local MAJOR, MINOR = "LibGroupInSpecT-1.1", 93
+local MAJOR, MINOR = "LibGroupInSpecT-1.1", 94
 
 if not LibStub then error(MAJOR.." requires LibStub") end
 local lib = LibStub:NewLibrary (MAJOR, MINOR)
@@ -880,7 +880,7 @@ function lib:CHAT_MSG_ADDON (prefix, datastr, scope, sender)
           need_inspect = 1
           break
         end
-        local entry_id = node.activeEntry.entryID
+        local entry_id = node.activeEntry and node.activeEntry.entryID
         local rank = node.maxRanks
         if import_stream:ExtractValue(1) == 1 then -- isPartiallyRankedValue
           rank = import_stream:ExtractValue(2) + 1
@@ -889,7 +889,10 @@ function lib:CHAT_MSG_ADDON (prefix, datastr, scope, sender)
           local choice_node_index = import_stream:ExtractValue(2) + 1
           entry_id = node.entryIDs[choice_node_index]
         end
-
+        if not entry_id then
+          entry_id = node.entryIDs[1]
+        end
+        -- There's something wrong with this loadout string if we still don't have an entry ID.
         local talent = self:GetCachedTalentInfoByID(entry_id)
         if talent then
           talent.rank = rank

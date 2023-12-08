@@ -1,3 +1,29 @@
+**7.1.6**
+* Fix Death Knight runes for Wrath Classic.
+
+**7.1.5**
+* Fix tags.
+
+**7.1.4**
+* Fixes for Death Knight runes and Monk stagger special bars.
+
+**7.1.3**
+* Revamped player special power bar, the addon is no longer relying on the default frames.
+
+**7.1.2**
+* Fixed range checks on Retail, all range checks are defaulting to 40 yards for now.
+* Added a new spell/item range check for assistable/attackable targets.
+* Fixed some vehicle and vehicle combo point based checks for Wrath Classic.
+* Fixed some player frame related taints.
+* Some performance optimizations.
+
+**7.1.1**
+* Updated for 1.15.0.
+* Fixed alternate power bar taint.
+* Fixed Shaman's curse dispel in Wrath Classic.
+* Fixed vehcile swaps in Wrath Classic.
+* Removed only yours hit indicator settings.
+
 **7.1.0**
 * Updated for 10.2.0.
 * Updated for 3.4.3.

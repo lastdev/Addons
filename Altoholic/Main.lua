@@ -105,11 +105,11 @@ local function IsBOPItemKnown(itemID)
 	return (isBOP and isKnown) -- only return true if both are true
 end
 
-local Orig_MerchantFrame_UpdateMerchantInfo
+-- local Orig_MerchantFrame_UpdateMerchantInfo
 
 local function MerchantFrame_UpdateMerchantInfoHook()
 	
-	Orig_MerchantFrame_UpdateMerchantInfo()		-- Let default stuff happen first ..
+	-- Orig_MerchantFrame_UpdateMerchantInfo()		-- Let default stuff happen first ..
 	
 	if Options.Get("UI.VendorColorCoding") == false then return end
 	
@@ -187,8 +187,17 @@ function addon:OnEnable()
 	addon:RegisterEvent("CHAT_MSG_LOOT", Tooltip.RefreshTooltip)
 	
 	-- hook the Merchant update function
-	Orig_MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfo
-	MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfoHook
+	-- Orig_MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfo
+	-- MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfoHook
+	
+	-- 2023-11-15: From Belazor
+	-- There was an issue where sorting the bags while the merchant frame is opened would trigger a slow down
+	-- This fixes the problem.
+	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
+		C_Timer.NewTimer(0.1, function()
+			MerchantFrame_UpdateMerchantInfoHook();
+		end)
+	end)	
 	
 end
 

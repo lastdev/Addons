@@ -9,11 +9,12 @@ XPerl_RequestConfig(function(New)
 	conf = New
 	raidconf = New.raid
 	rconf = New.raidpet
-end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+end, "$Revision: 69c525b70b9bc2136160b2e5738adf94987affaf $")
 
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 local pairs = pairs
@@ -120,7 +121,7 @@ local function XPerl_RaidPets_UpdateName(self)
 		return
 	end
 	local name
-	if (self.ownerid and not IsClassic and (UnitInVehicle(self.ownerid) or UnitHasVehicleUI(self.ownerid))) then
+	if (self.ownerid and not IsVanillaClassic and (UnitInVehicle(self.ownerid) or UnitHasVehicleUI(self.ownerid))) then
 		name = UnitName(self.ownerid)
 		if (name) then
 			self.text:SetFormattedText("<%s>", name)

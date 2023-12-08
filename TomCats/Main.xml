@@ -67,8 +67,8 @@
 	<Include file="minimap_icon.xml" />
 	<Script file="minimap_icon.lua" />
 	<!-- <Script file="worldmap_icon.lua" /> -->
-<!--	 <Include file="discoveries.xml" />-->
-<!--	 <Script file="discoveries.lua" />-->
+	<!-- <Include file="discoveries.xml" /> -->
+	<!-- <Script file="discoveries.lua" /> -->
 	<!-- <Include file="support/support.xml" /> -->
 	<!-- <Script file="support/support.lua" /> -->
 	<Script file="beta.lua" />
