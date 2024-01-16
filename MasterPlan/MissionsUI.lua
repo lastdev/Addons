@@ -2283,6 +2283,9 @@ local GroupButtonBase = {} do
 			if g then
 				G.SetGroupTooltip(GameTooltip, g, mi)
 				if canSetTentative then
+					if C_Garrison.IsAboveFollowerSoftCap(1) then
+						GameTooltip:AddLine(GARRISON_MAX_FOLLOWERS_MISSION_TOOLTIP, 1, 0, 0, 1)
+					end
 					GameTooltip:AddLine("|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. L"Set tentative party", 0.5, 0.8, 1)
 				end
 			else
@@ -2833,7 +2836,7 @@ do -- availMissionsHandle
 			local order, horizon = T.config.availableMissionSort, T.config.timeHorizon
 			local field = fields[order] or 1
 			local naf = C_Garrison.GetNumActiveFollowers(1)
-			local groupCache = naf <= 25 and G.GetSuggestedGroupsForAllMissions(1, order, roamingParty:GetFollowers()) or {}
+			local groupCache = naf <= 27 and G.GetSuggestedGroupsForAllMissions(1, order, roamingParty:GetFollowers()) or {}
 			local checkReq = (nf < 3 or nr < 100) and T.config.availableMissionSort ~= "expire"
 			local p1, p2, p3 = api.roamingParty:GetFollowers()
 			p1 = not (p2 and p3) and p1

@@ -3,8 +3,9 @@
 
                                              EA Pandaria
 
-                                     v1.35 - 30th November 2023								  
+                                      v1.38 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
+                                         All Rights Reserved
 
                                 ----o----(||)----oo----(||)----o----
 ]]
@@ -74,7 +75,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -109,7 +111,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -144,7 +149,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -177,7 +185,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -209,6 +220,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -241,7 +255,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -274,6 +291,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -307,6 +327,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -339,7 +362,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -371,9 +397,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -389,6 +419,7 @@ if ns.locale == "deDE" then
 	L["Glorious!"] = "Prächtig!"
 	L["Legends"] = "Zeitlose Legenden"
 	L["Love Heart"] = "Liebesherz"
+	L["Pandaria Map"] = "Pandaria-Karte"
 	L["Pink"] = "Rosa"
 	L["Pirates Booty"] = "Wo Piraten sind,\ngibt es reichlich Beute"
 	L["Riches"] = "Reichtümer von Pandaria"
@@ -410,6 +441,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Gold"] = "Oro"
 	L["Legends"] = "Leyendas intemporales"
 	L["Love Heart"] = "Amor corazon"
+	L["Pandaria Map"] = "Mapa de Pandaria"
 	L["Pink"] = "Rosa"
 	L["Pirates Booty"] = "Cuando el río\nsuena, tesoros piratas lleva"
 	L["Riches"] = "Riquezas de Pandaria"
@@ -430,6 +462,7 @@ elseif ns.locale == "frFR" then
 	L["Gold"] = "Or"
 	L["Legends"] = "Les légendes du Temps figé"
 	L["Love Heart"] = "Coeur d'amour"
+	L["Pandaria Map"] = "Carte de Pandarie"
 	L["Pink"] = "Rose"
 	L["Pirates Booty"] = "Là où y a\ndes pirates, y a des trésors"
 	L["Riches"] = "Les richesses de la Pandarie"
@@ -448,9 +481,10 @@ elseif ns.locale == "itIT" then
 	L["Extreme Treasure Hunter"] = "L'archeologo"
 	L["Glorious!"] = "Glorioso!"
 	L["Gold"] = "Oro"
-	L["Pink"] = "Rosa"
 	L["Legends"] = "Leggende senza tempo"
 	L["Love Heart"] = "Amore Cuore"
+	L["Pandaria Map"] = "Mappa di Pandaria"
+	L["Pink"] = "Rosa"
 	L["Pirates Booty"] = "Dove ci sono\npirati, ci sono bottini"
 	L["Riches"] = "Le ricchezze di Pandaria"
 	L["Riches / Legends"] = "Le ricchezze / Leggende"
@@ -469,9 +503,10 @@ elseif ns.locale == "koKR" then
 	L["Extreme Treasure Hunter"] = "보물찾기 하기 딱 좋은 날씨네"
 	L["Glorious!"] = "영광스럽군요!"
 	L["Gold"] = "금"
-	L["Pink"] = "분홍색"
 	L["Legends"] = "영원한 전설"
 	L["Love Heart"] = "사랑의 마음"
+	L["Pandaria Map"] = "판다리아 지도"
+	L["Pink"] = "분홍색"
 	L["Pirates Booty"] = "즐거운 심해 여행\n되라고!"
 	L["Riches"] = "흔한 판다리아의 금은보화"
 	L["Riches / Legends"] = "보화 / 전설"
@@ -491,6 +526,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Gold"] = "Ouro"
 	L["Legends"] = "Lendas Perenes"
 	L["Love Heart"] = "Coração de amor"
+	L["Pandaria Map"] = "Mapa de Pandária"
 	L["Pink"] = "Rosa"
 	L["Pirates Booty"] = "Onde Há\nPirata, Há Saque"
 	L["Riches"] = "Riqueza de Pandária"
@@ -512,6 +548,7 @@ elseif ns.locale == "ruRU" then
 	L["Gold"] = "Золото"
 	L["Legends"] = "Легенды вне времени"
 	L["Love Heart"] = "Люблю сердце"
+	L["Pandaria Map"] = "Карта Пандарии"
 	L["Pink"] = "Розовый"
 	L["Pirates Booty"] = "Где пираты,\nтам трофеи"
 	L["Riches"] = "Богатства Пандарии"
@@ -533,6 +570,7 @@ elseif ns.locale == "zhCN" then
 	L["Gold"] = "金子"
 	L["Legends"] = "永恒的传奇"
 	L["Love Heart"] = "爱心"
+	L["Pandaria Map"] = "潘达利亚地图"
 	L["Pink"] = "粉色的"
 	L["Pirates Booty"] = "哪里有海盗\n哪里就有宝藏"
 	L["Riches"] = "潘达利亚的财富"
@@ -554,6 +592,7 @@ elseif ns.locale == "zhTW" then
 	L["Gold"] = "金子"
 	L["Legends"] = "永恆的傳奇"
 	L["Love Heart"] = "愛心"
+	L["Pandaria Map"] = "潘達利亞地圖"
 	L["Pink"] = "粉色的"
 	L["Pirates Booty"] = "哪裡有海盜\n哪裡就有寶藏"
 	L["Riches"] = "潘達利亞的財富"
@@ -1081,9 +1120,29 @@ ns.options = {
 }
 
 function HandyNotes_EAPandaria_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "EAPandaria" )
- end
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( 424 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["EA Pandaria"] ..": " ..ns.colour.plaintext ..L["Try later"] )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "EAPandaria" )
+	end
+end
+ 
+function HandyNotes_EAPandaria_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["EA Pandaria"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Right"], ns.colour.plaintext ..L["Pandaria Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_EAPandaria_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

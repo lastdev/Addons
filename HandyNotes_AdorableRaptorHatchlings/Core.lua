@@ -3,8 +3,9 @@
 
                                      Adorable Raptor Hatchlings
 
-                                     v1.26 - 2nd December 2023
+                                      v1.27 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
+                                         All Rights Reserved
 								
                                 ----o----(||)----oo----(||)----o----
 ]]

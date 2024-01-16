@@ -1,4 +1,4 @@
-## Interface: 100200
+## Interface: 100205
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BfA)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BfA)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10아제로스 (격아)|r
@@ -11,7 +11,7 @@
 ## SavedVariablesPerCharacter: DBMBfA_SavedStats
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
-## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Type: WORLDBOSS
 ## X-DBM-Mod-Category: BFA
 ## X-DBM-StatTypes: normal
 ## X-DBM-Mod-SubCategoriesID: 1643, 1642, 1943, 2105, 1718, 1779
@@ -28,7 +28,7 @@
 ## X-Curse-Project-ID: 420275
 ## X-WoWI-ID: 25779
 ## X-Wago-ID: RXKqxj6y
-## Version: r24
+## Version: r28
 localization.en.lua
 localization.ru.lua
 localization.de.lua

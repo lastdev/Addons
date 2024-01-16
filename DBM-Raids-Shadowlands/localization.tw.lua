@@ -293,3 +293,13 @@ L = DBM:GetModLocalization("SepulcherTrash")
 L:SetGeneralLocalization({
 	name =	"首創者聖塚小怪"
 })
+
+-----------------------
+-- <<< Fated Raid Affixes >>> --
+-----------------------
+L = DBM:GetModLocalization("FatedAffixes")
+
+L:SetGeneralLocalization({
+	name =	"命定詞綴"
+})
+

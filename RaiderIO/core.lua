@@ -5680,6 +5680,10 @@ do
         GameTooltip:Hide()
     end
 
+    function tooltip:CanLoad()
+        return FriendsTooltip and config:IsEnabled()
+    end
+
     function tooltip:OnLoad()
         self:Enable()
         hooksecurefunc(FriendsTooltip, "Show", FriendsTooltip_Show)
@@ -5728,6 +5732,10 @@ do
         end
         GameTooltip:Hide()
         util:ExecuteWidgetOnEnterSafely(GetMouseFocus())
+    end
+
+    function tooltip:CanLoad()
+        return WhoFrame and config:IsEnabled()
     end
 
     function tooltip:OnLoad()
@@ -6858,7 +6866,7 @@ do
     end
 
     function tooltip:CanLoad()
-        return GuildRosterContainer
+        return GuildRosterContainer and config:IsEnabled()
     end
 
     function tooltip:OnLoad()
@@ -6975,7 +6983,7 @@ if IS_RETAIL then
     end
 
     function tooltip:CanLoad()
-        return CommunitiesFrame and ClubFinderGuildFinderFrame and ClubFinderCommunityAndGuildFinderFrame
+        return CommunitiesFrame and ClubFinderGuildFinderFrame and ClubFinderCommunityAndGuildFinderFrame and config:IsEnabled()
     end
 
     function tooltip:OnLoad()
@@ -7090,6 +7098,10 @@ if IS_RETAIL then
 
     local function OnHide(self)
         render:HideTooltip(self)
+    end
+
+    function tooltip:CanLoad()
+        return config:IsEnabled()
     end
 
     function tooltip:OnLoad()
@@ -13396,12 +13408,12 @@ do
         SlashCmdList[addonName] = handler
     end
 
-    local function OnConfigReady()
-        settings:Enable()
+    function settings:CanLoad()
+        return config:IsEnabled()
     end
 
     function settings:OnLoad()
-        callback:RegisterEvent(OnConfigReady, "RAIDERIO_CONFIG_READY")
+        self:Enable()
     end
 
     function settings:Show()

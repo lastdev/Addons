@@ -32,6 +32,9 @@ frame:HookScript("OnUpdate", function(self, elapsed)
 		timeElapsed = 0
         
         local workPerFrame = addon.db.profile.workPerFrame
+        workPerFrame = workPerFrame / 100
+        local startTime = GetTimePreciseSec()
+        
         repeat
             repeat
                 addon.dontWait = false
@@ -80,8 +83,7 @@ frame:HookScript("OnUpdate", function(self, elapsed)
                 end
             until (not addon.dontWait)
         
-            workPerFrame = workPerFrame - 1
-        until workPerFrame < 1
+        until GetTimePreciseSec() > startTime + workPerFrame
 	end
     alreadyWorking = false
 end)

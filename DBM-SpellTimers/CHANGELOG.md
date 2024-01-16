@@ -1,6 +1,6 @@
 # <DBM Extra> Spell Timers
 
-## [r153](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r153) (2023-11-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r152...r153) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
+## [r155](https://github.com/DeadlyBossMods/DBM-SpellTimers/tree/r155) (2024-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-SpellTimers/compare/r154...r155) [Previous Releases](https://github.com/DeadlyBossMods/DBM-SpellTimers/releases)
 
-- Bump tocs  
+- Bump tocs for 10.2.5  

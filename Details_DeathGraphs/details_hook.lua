@@ -13,8 +13,62 @@ function advancedDeathLogs.RegisterDetailsHook()
             return
         end
 
+        local deathEvents = deathTable[1]
         local timeOfDeath = deathTable[2]
         local gameCooltip = GameCooltip
+
+        local causeOfDeath = {}
+
+        for i = 1, #deathEvents do
+            local event = deathEvents[i]
+            local evType = event[1]
+
+            if (type(evType) == "boolean" and evType == true) then
+                --this is a damage event
+                local spellId = event[2]
+                local amountOfDamage = event[3]
+                local source = Details:GetOnlyName(event[6] or "")
+
+                --findsubtable arguments: table, index of the sub table, any value to find on that index in the sub table
+                local alreadyExistsOnIndex = detailsFramework.table.findsubtable(causeOfDeath, 1, spellId)
+                if (alreadyExistsOnIndex) then
+                    causeOfDeath[alreadyExistsOnIndex][2] = causeOfDeath[alreadyExistsOnIndex][2] + amountOfDamage
+                else
+                    causeOfDeath[#causeOfDeath+1] = {spellId, amountOfDamage, source}
+                end
+            end
+        end
+
+        table.sort(causeOfDeath, function(a, b)
+            return a[2] > b[2]
+        end)
+
+        for i = 1, 3 do
+            if (causeOfDeath[i]) then
+                local spellId, amountOfDamage, source = unpack(causeOfDeath[i] or {})
+                local spellName, spellRank, spellIcon, castTime, minRange, maxRange = GetSpellInfo(spellId)
+                local spellDescription = GetSpellDescription(spellId)
+
+                if (spellDescription == "") then
+                    spellDescription = _G.SEARCH_LOADING_TEXT
+                end
+
+				gameCooltip:AddLine(spellName, "", 2, 1, 1, 1, 1, 1, 1, 1, 1, 12)
+				gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
+
+                --two problems: 1) the spell description isn't breaking into a second line, 2) spell icon isn't showing in the second spell name line
+                --solved the problem 1) by adding a fixed width and height size to the text added with AddLine
+                --solved the problem 2) by adding an icon to each line
+
+                gameCooltip:AddLine(spellDescription, nil, 2, 1, 1, 1, 1, 1, 1, 1, 1, 10, nil, nil, 190, 90)
+                gameCooltip:AddIcon("", 2, 1, 1, 1, .1, .9, .1, .9)
+
+                gameCooltip:AddLine("", "", 2, "white")
+                gameCooltip:AddIcon("", 2, 1, 4, 4, .1, .9, .1, .9)
+            end
+        end
+
+        --[=[
         gameCooltip:AddLine("Used Before Death:", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
 
@@ -29,6 +83,11 @@ function advancedDeathLogs.RegisterDetailsHook()
 
         gameCooltip:AddLine(" ", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
+        --]=]
+
+        gameCooltip:AddLine("", "", 2)
+        gameCooltip:AddIcon("", 2, 1)
+        
 
         gameCooltip:AddLine("Cooldown Received:", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
@@ -71,7 +130,7 @@ function advancedDeathLogs.RegisterDetailsHook()
             end
         end
 
-        gameCooltip:SetOption("FixedWidthSub", 200)
+        gameCooltip:SetOption("FixedWidthSub", 210)
     end)
 
     -------------------------------------------------------------------------

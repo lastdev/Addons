@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-global
 --[[
 	Krowi's Menu License
         Copyright ©2020 The contents of this library, excluding third-party resources, are
@@ -19,7 +18,7 @@
         the copyright holders.
 ]]
 
-local lib = LibStub:NewLibrary("Krowi_MenuItem-1.0", 2);
+local lib = LibStub:NewLibrary("Krowi_MenuItem-1.0", 3);
 
 if not lib then
 	return;
@@ -27,36 +26,47 @@ end
 
 local popupDialog = LibStub("Krowi_PopopDialog-1.0");
 
--- [[ Constructors ]] --
 lib.__index = lib;
-function lib:New(info)
-    local self = {};
-    setmetatable(self, lib);
-
-    for k, v in next, info do
-        self[k] = v;
+function lib:New(info, hideOnClick)
+    local instance = setmetatable({}, lib);
+    if type(info) == "string" then
+        info = {
+            Text = info,
+            KeepShownOnClick = not hideOnClick
+        };
     end
-
-    return self;
+    for k, v in next, info do
+        instance[k] = v;
+    end
+    return instance;
 end
 
 function lib:NewExtLink(text, externalLink)
-    return lib:New({Text = text, Func = function() popupDialog.ShowExternalLink(externalLink); end});
+    return self:New({
+        Text = text,
+        Func = function()
+            popupDialog.ShowExternalLink(externalLink);
+        end
+    });
 end
 
--- [[ Other ]] --
 function lib:Add(item)
     if self.Children == nil then
         self.Children = {}; -- By creating the children table here we reduce memory usage because not every category has children
     end
-
     tinsert(self.Children, item);
-
     return item;
 end
 
 function lib:AddFull(info)
-    return self:Add(lib:New(info));
+    return self:Add(self:New(info));
+end
+
+function lib:AddTitle(text)
+    self:AddFull({
+		Text = text,
+		IsTitle = true
+	});
 end
 
 function lib:AddSeparator()
@@ -64,5 +74,5 @@ function lib:AddSeparator()
 end
 
 function lib:AddExtLinkFull(text, externalLink)
-    return self:Add(lib:NewExtLink(text, externalLink));
+    return self:Add(self:NewExtLink(text, externalLink));
 end

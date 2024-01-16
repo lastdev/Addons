@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526083530")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -27,10 +27,10 @@ local warnInfernoSlice				= mod:NewCountAnnounce(155080, 4)
 local warnPetrifyingSlam			= mod:NewTargetAnnounce(155326, 4)--non mythic only. in mythic, applied to all, so target list only spam
 
 local specWarnInfernoSlice			= mod:NewSpecialWarningCount(155080, "Tank|Healer", nil, nil, nil, 2)
-local specWarnRampage				= mod:NewSpecialWarningSpell(155539, nil, nil, nil, 2)
-local specWarnRampageEnded			= mod:NewSpecialWarningEnd(155539)
+local specWarnRampage				= mod:NewSpecialWarningSpell(155539, nil, nil, nil, 2, 2)
+local specWarnRampageEnded			= mod:NewSpecialWarningEnd(155539, nil, nil, nil, 2, 2)
 local specWarnOverheadSmash			= mod:NewSpecialWarningCount(155301, nil, nil, nil, 2, 2)
-local specWarnCaveIn				= mod:NewSpecialWarningMove(173192)
+local specWarnCaveIn				= mod:NewSpecialWarningMove(173192, nil, nil, nil, 1, 2)
 local specWarnPetrifyingSlam		= mod:NewSpecialWarningMoveAway(155326, nil, nil, nil, 3, 2)
 
 local timerInfernoSliceCD			= mod:NewCDCountTimer(11, 155080, nil, nil, nil, 5, nil, nil, nil, 1, 3)--Variable do to energy bugs (gruul not gain power consistently)
@@ -45,7 +45,7 @@ local berserkTimer					= mod:NewBerserkTimer(360)
 
 mod:AddRangeFrameOption(8, 155530)
 mod:AddHudMapOption("HudMapOnShatter", 155530, false)--Might be overwhelming. up to 8 targets on non mythic, and on mythic, 20 of them. So off by default
-mod:AddDropdownOption("MythicSoakBehavior", {"ThreeGroup", "TwoGroup"}, "ThreeGroup", "misc")
+mod:AddDropdownOption("MythicSoakBehavior", {"ThreeGroup", "TwoGroup"}, "ThreeGroup", "misc", nil, 155080)
 
 mod.vb.smashCount = 0
 mod.vb.sliceCount = 0
@@ -232,6 +232,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.rampage = true
 		self.vb.smashCount = 0
 		specWarnRampage:Show()
+		specWarnRampage:Play("phasechange")
 		timerRampage:Start()
 		timerInfernoSliceCD:Stop()
 		self:UnregisterShortTermEvents()
@@ -258,6 +259,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 155539 then
 		specWarnRampageEnded:Show()
+		specWarnRampageEnded:Play("phasechange")
 		timerRampageCD:Start()
 		self.vb.petrifyCount = 0
 		self.vb.smashCount = 0

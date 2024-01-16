@@ -32,7 +32,7 @@ spec:RegisterTalents( {
     earth_shield                 = { 81106, 974   , 1 }, -- Protects the target with an earthen shield, increasing your healing on them by $s1% and healing them for ${$379s1*(1+$s1/100)} when they take damage. This heal can only occur once every few seconds. Maximum $n charges.; $?s383010[Earth Shield can only be placed on the Shaman and one other target at a time. The Shaman can have up to two Elemental Shields active on them.][Earth Shield can only be placed on one target at a time. Only one Elemental Shield can be active on the Shaman.]
     earthgrab_totem              = { 81082, 51485 , 1 }, -- Summons a totem at the target location for $d. The totem pulses every $116943t1 sec, rooting all enemies within $64695A1 yards for $64695d. Enemies previously rooted by the totem instead suffer $116947s1% movement speed reduction.
     elemental_orbit              = { 81105, 383010, 1 }, -- Increases the number of Elemental Shields you can have active on yourself by 1.; You can have Earth Shield on yourself and one ally at the same time.
-    elemental_warding            = { 81084, 381650, 2 }, -- Reduces all magic damage taken by $s1%.
+    elemental_warding            = { 81084, 381650, 2 }, -- Reduces all magic damage taken by 2%.
     enfeeblement                 = { 81078, 378079, 1 }, -- Your Hex target is slowed by $378080s1% during Hex and for $378080d after it ends.
     fire_and_ice                 = { 81067, 382886, 1 }, -- Increases all Fire and Frost damage you deal by $s1%.
     flurry                       = { 81059, 382888, 1 }, -- Increases your attack speed by $382889s1% for your next $382889n melee swings after dealing a critical strike with a spell or ability.
@@ -1926,10 +1926,10 @@ spec:RegisterAbilities( {
         end,
 
         toggle = "interrupts",
-        debuff = "dispellable_magic",
+        buff = "dispellable_magic",
 
         handler = function ()
-            removeDebuff( "target", "dispellable_magic" )
+            removeBuff( "dispellable_magic" )
         end,
     },
 
@@ -2127,8 +2127,14 @@ spec:RegisterAbilities( {
                 removeBuff( "surge_of_power" )
             end
 
-            if buff.primordial_wave.up and state.spec.elemental and talent.splintered_elements.enabled then
-                applyBuff( "splintered_elements", nil, active_dot.flame_shock )
+            if buff.primordial_wave.up then
+                if state.spec.elemental and talent.splintered_elements.enabled then
+                    applyBuff( "splintered_elements", nil, active_dot.flame_shock )
+                end
+
+                if set_bonus.tier31_4pc > 0 then
+                    applyBuff( "molten_charge", nil, 2 )
+                end
             end
             removeBuff( "primordial_wave" )
 
@@ -2143,7 +2149,9 @@ spec:RegisterAbilities( {
             if buff.vesper_totem.up and vesper_totem_dmg_charges > 0 then trigger_vesper_damage() end
         end,
 
-        impact = function () end,  -- This + velocity makes action.lava_burst.in_flight work in APL logic.
+        impact = function ()
+            if set_bonus.tier31_4pc > 0 then applyDebuff( "target", "molten_slag" ) end
+        end,  -- This + velocity makes action.lava_burst.in_flight work in APL logic.
     },
 
     -- Hurls a bolt of lightning at the target, dealing $s1 Nature damage.$?a343725[    |cFFFFFFFFGenerates $343725s1 Maelstrom.|r][]
@@ -2357,8 +2365,10 @@ spec:RegisterAbilities( {
         end,
         startsCombat = true,
 
+        velocity = 30,
+
         handler = function ()
-            applyDebuff( "target", "flame_shock" )
+            -- applyDebuff( "target", "flame_shock" )
             applyBuff( "primordial_wave" )
 
             if talent.primordial_surge.enabled then
@@ -2374,6 +2384,10 @@ spec:RegisterAbilities( {
                 applyBuff( "elemental_blast_haste", 10 )
                 applyBuff( "elemental_blast_mastery", 10 )
             end
+        end,
+
+        impact = function ()
+            applyDebuff( "target", "flame_shock" )
         end,
 
         copy = { 326059, 375982 }

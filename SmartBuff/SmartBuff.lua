@@ -6,10 +6,10 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE          = "081023";
+SMARTBUFF_DATE          = "111223";
 
-SMARTBUFF_VERSION       = "r23."..SMARTBUFF_DATE;
-SMARTBUFF_VERSIONNR     = 100107;
+SMARTBUFF_VERSION       = "r25."..SMARTBUFF_DATE;
+SMARTBUFF_VERSIONNR     = 100200;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in casting buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -22,7 +22,7 @@ local SmartbuffPrefix = "Smartbuff";
 local SmartbuffSession = true;
 local SmartbuffVerCheck = false;					-- for my use when checking guild users/testers versions  :)
 local buildInfo = select(4, GetBuildInfo())
-local SmartbuffRevision = 23;
+local SmartbuffRevision = 25;
 local SmartbuffVerNotifyList = {}
 
 local SG = SMARTBUFF_GLOBALS;
@@ -3484,7 +3484,6 @@ function SMARTBUFF_OptionsFrame_Toggle()
     SmartBuffOptionsFrame:Hide();
     -- if we were a new build then request a reloadui.
     if (OG.FirstStart ~= SMARTBUFF_VERSION) then
-        print("getting here")
         OG.FirstStart = SMARTBUFF_VERSION;
         StaticPopup_Show("SMARTBUFF_GUI_RELOAD");
 	end
@@ -4396,7 +4395,7 @@ function SMARTBUFF_MinimapButton_OnUpdate(self, move)
   end
 
   local xpos, ypos;
-self:ClearAllPoints()
+  self:ClearAllPoints()
   if (move or O.MMCPosX == nil) then
     local pos, r
     local xmin, ymin = Minimap:GetLeft(), Minimap:GetBottom();
@@ -4405,29 +4404,21 @@ self:ClearAllPoints()
     ypos = ypos/Minimap:GetEffectiveScale()-ymin-70;
     pos  = math.deg(math.atan2(ypos,xpos));
     r    = math.sqrt(xpos*xpos + ypos*ypos);
-    --SMARTBUFF_AddMsgD("x = " .. xpos .. ", y = " .. ypos .. ", r = " .. r .. ", pos = " .. pos);
-
-    if (r < 75) then
-      r = 75;
-    elseif(r > 105) then
-      r = 105;
-    end
-
     xpos = 52-r*cos(pos);
-    ypos = r*sin(pos)-52;
+    ypos = r*sin(pos)-52;  
+    -- give a little more freedom around the minimap
+    if xpos <= -34 then xpos = -34; end
+    if xpos >= 174 then xpos = 174; end
+    if ypos <= -195 then ypos = -195; end
+    if ypos >= 35 then ypos = 35; end
     O.MMCPosX = xpos;
     O.MMCPosY = ypos;
-    --SMARTBUFF_AddMsgD("Update minimap button position");
   else
     xpos = O.MMCPosX;
     ypos = O.MMCPosY;
-    --SMARTBUFF_AddMsgD("Load minimap button position");
   end
-self:ClearAllPoints()
+  self:ClearAllPoints()
   self:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", xpos, ypos);
-  --SMARTBUFF_AddMsgD("x = " .. O.MMCPosX .. ", y = " .. O.MMCPosY);
-  --SmartBuff_MiniMapButton:SetUserPlaced(true);
-  --SMARTBUFF_AddMsgD("Update minimap button");
 end
 -- END Minimap button functions
 

@@ -1703,6 +1703,16 @@ all:RegisterAuras( {
                     t.v3 = 0
                     t.caster = unit
 
+                    if unit == "target" and Hekili.DB.profile.filterCasts then
+                        local filters = Hekili.DB.profile.castFilters
+                        local npcid = state.target.npcid
+
+                        if npcid and filters[ npcid ] and not filters[ npcid ][ spellID ] then
+                            if Hekili.ActiveDebug then Hekili:Debug( "Cast '%s' ignored per user preference.", spell ) end
+                            removeDebuff( "casting" )
+                        end
+                    end
+
                     return
                 end
 
@@ -1721,6 +1731,18 @@ all:RegisterAuras( {
                     t.v2 = notInterruptible and 1 or 0
                     t.v3 = 1 -- channeled.
                     t.caster = unit
+
+                    if class.abilities[ spellID ] and class.abilities[ spellID ].dontChannel then
+                        removeBuff( "casting" )
+                    elseif unit == "target" and Hekili.DB.profile.filterCasts then
+                        local filters = Hekili.DB.profile.castFilters
+                        local npcid = state.target.npcid
+
+                        if npcid and filters[ npcid ] and not filters[ npcid ][ spellID ] then
+                            if Hekili.ActiveDebug then Hekili:Debug( "Cast '%s' ignored per user preference.", spell ) end
+                            removeDebuff( "casting" )
+                        end
+                    end
 
                     return
                 end
@@ -4665,6 +4687,7 @@ all:RegisterAbility( "balefire_branch", {
 
     item = 159630,
     toggle = "cooldowns",
+    proc = "intellect",
 
     handler = function ()
         applyBuff( "kindled_soul" )
@@ -4825,7 +4848,7 @@ do
         { "obsidian_aspirants_badge_of_ferocity", 205778 },
         { "obsidian_gladiator_badge_of_ferocity", 205708 },
         { "verdant_aspirants_badge_of_ferocity", 209763 },
-        { "verdant_gladiators_badget_of_ferocity", 209343 }
+        { "verdant_gladiators_badge_of_ferocity", 209343 }
     }
 
     local pvp_badges_copy = {}

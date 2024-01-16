@@ -690,6 +690,9 @@ local rpLoader = T.MissionsUI.CreateLoader(GarrisonRecruitSelectFrame.FollowerSe
 rpLoader:SetPoint("TOPRIGHT", GarrisonRecruitSelectFrame, -46, -38)
 local function Recruit_ProspectCompare(aw, bw)
 	local a, b = aw.clones, bw.clones
+	if (not a) ~= (not b) then
+		return not b
+	end
 	local ac, bc = a.cR, b.cR
 	if ac == bc then
 		ac, bc = a.crR and a.crR.nR or a.cR, b.crR and b.crR.nR or b.cR
@@ -712,14 +715,17 @@ local function Recruit_ProspectCompare(aw, bw)
 	return ac > bc
 end
 function EV:MP_RECRUIT_PROSPECTS_READY(data)
-	for i=1,data and 3 or 0 do
-		local m = GarrisonRecruitSelectFrame.FollowerSelection["Recruit" .. i].MoIMark
-		m.clones = G.AnnotateCloneProspects(data[i].clones)
-		m:Show()
+	for i=1, #recruitMarks do
+		recruitMarks[i]:Hide()
 	end
 	if data then
+		for i=1,data and #data or 0 do
+			local m = GarrisonRecruitSelectFrame.FollowerSelection["Recruit" .. i].MoIMark
+			m.clones = G.AnnotateCloneProspects(data[i].clones)
+			m:Show()
+		end
 		table.sort(recruitMarks, Recruit_ProspectCompare)
-		for i=1,3 do
+		for i=1, #data do
 			local m, base = recruitMarks[i], i == 1 and 12 or i == 2 and 6 or 1
 			m.icon:SetTexture(("Interface/PvPRankBadges/PvPRank%02d"):format(base + (m.ceR and 2 or m.crR and 1 or 0)))
 		end
@@ -728,7 +734,7 @@ end
 local function Recruit_ProspectsUpdate(waiting)
 	if not waiting then
 		local followers, rf, tinfo = C_Garrison.GetAvailableRecruits(), GarrisonRecruitSelectFrame.FollowerSelection, G.GetFollowerTraits()
-		for i=1,3 do
+		for i=1,#followers do
 			local f, ff = followers[i], rf["Recruit" .. i]
 			local afid, ico = T.Affinities[f.followerID], ff.Affinity
 			if afid and afid > 0 then

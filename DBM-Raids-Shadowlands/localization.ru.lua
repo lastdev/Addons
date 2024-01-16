@@ -292,3 +292,12 @@ L = DBM:GetModLocalization("SepulcherTrash")
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Гробница Предвечных"
 })
+
+-----------------------
+-- <<< Fated Raid Affixes >>> --
+-----------------------
+L = DBM:GetModLocalization("FatedAffixes")
+
+L:SetGeneralLocalization({
+	name =	"Судьбоносные аффиксы"
+})

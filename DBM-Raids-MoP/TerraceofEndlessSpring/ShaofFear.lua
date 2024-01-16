@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-Raids-MoP", 3, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240110075628")
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -325,14 +325,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnWaterspout:Show()
 			yellWaterspout:Yell()
-		else
-			local uId = DBM:GetRaidUnitId(args.destName)
-			if uId then
-				local inRange = CheckInteractDistance(uId, 2)
-				if inRange then
-					specWarnWaterspoutNear:Show(args.destName)
-				end
-			end
+		elseif self:IsClassic() and self:CheckNearby(10, args.destName) then
+			specWarnWaterspoutNear:Show(args.destName)
 		end
 		if self:AntiSpam(5, 3) then
 			if self.vb.specialCount == 3 then self.vb.specialCount = 0 end

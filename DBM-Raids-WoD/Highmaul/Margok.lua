@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230904210616")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetUsedIcons(1, 2, 3)
@@ -127,7 +127,7 @@ mod:AddSetIconOption("SetIconOnInfiniteDarkness", 165102, false)
 mod:AddInfoFrameOption(176537)
 mod:AddHudMapOption("HudMapOnMarkOfChaos", 158605)
 mod:AddHudMapOption("HudMapOnBranded", 156225, false)
-mod:AddDropdownOption("GazeYellType", {"Countdown", "Stacks"}, "Countdown", "misc")
+mod:AddDropdownOption("GazeYellType", {"Countdown", "Stacks"}, "Countdown", "misc", nil, 165595)
 
 mod.vb.markActive = false
 mod.vb.noTaunt = false--Almost same as mark active, but during cast too

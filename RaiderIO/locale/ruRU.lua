@@ -273,8 +273,7 @@ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = "Недавнее"
 L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = "Личный рекорд"
 L["REPLAY_AUTO_SELECTION_STARRED"] = "В главной роли"
 L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "Рекорд команды"
---[[Translation missing --]]
---[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
+L["REPLAY_BACKGROUND_COLOR"] = "Цвет фона повтора"
 --[[Translation missing --]]
 --[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
 --[[Translation missing --]]
@@ -284,8 +283,7 @@ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "Рекорд команды"
 --[[Translation missing --]]
 --[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
 L["REPLAY_MENU_COPY_URL"] = "Скопировать URL повтора"
---[[Translation missing --]]
---[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
+L["REPLAY_MENU_DISABLE"] = "Отключить"
 --[[Translation missing --]]
 --[[ L["REPLAY_MENU_DOCK"] = ""--]] 
 L["REPLAY_MENU_LOCK"] = "Заблокировать"
@@ -301,8 +299,7 @@ L["REPLAY_SETTINGS_TOOLTIP"] = "Настройки"
 L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
 L["REPLAY_STYLE_TITLE_MODERN"] = "Современный"
 L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "Современный (компактный)"
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
+L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = "Только боссы"
 L["REPLAY_SUMMARY_LOGGED"] = "|cffFFFFFF%s|r записал Ваше завершение этого |cffFFFFFF+%s|r в |cffFFFFFF%s|r."
 L["REPLAY_TIMING_TITLE_BOSS"] = "Время босса"
 L["REPLAY_TIMING_TITLE_DUNGEON"] = "Время подземелья"

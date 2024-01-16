@@ -1,0 +1,19 @@
+## Interface: 100200
+## Version: 1.10.20
+## Title: Telepath
+## Notes: Display some chat message as "raid warning"
+## Author: Tomill
+## SavedVariables: TelepathDB
+## OptionalDeps: Ace3, LibSink-2.0
+## X-Curse-Project-ID: 94905
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceAddon-3.0\AceAddon-3.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceConfig-3.0\AceConfig-3.0.xml
+libs\LibSink-2.0\lib.xml
+
+core.lua

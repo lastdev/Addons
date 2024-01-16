@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2030, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231121043415")
+mod:SetRevision("20240106080507")
 mod:SetCreatureID(122968)
 mod:SetEncounterID(2087)
 mod:SetHotfixNoticeRev(20231023000000)
@@ -30,11 +30,11 @@ local warnSoulRend					= mod:NewTargetAnnounce(259187, 4)
 local specWarnSoulRend				= mod:NewSpecialWarningRun(259187, nil, nil, nil, 4, 2)
 local yellSoulRend					= mod:NewYell(259187)
 local specWarnWrackingPain			= mod:NewSpecialWarningInterruptCount(250096, "HasInterrupt", nil, nil, 1, 2)
-local specWarnSkewer				= mod:NewSpecialWarningDefensive(249919, "Tank", nil, nil, 1, 2)
+local specWarnSkewer				= mod:NewSpecialWarningDefensive(249919, nil, nil, nil, 1, 2)
 local specWarnEchoes				= mod:NewSpecialWarningDodgeCount(250050, nil, nil, nil, 2, 2)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(250036, nil, nil, nil, 1, 8)
 
-local timerSoulrendCD				= mod:NewCDCountTimer(40.6, 259187, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerSoulrendCD				= mod:NewCDCountTimer(39.5, 259187, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerWrackingPainCD			= mod:NewCDCountTimer(16.7, 250096, nil, nil, nil, 3)--17-23
 local timerSkewerCD					= mod:NewCDCountTimer(12, 249919, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerEchoesCD					= mod:NewCDCountTimer(31.2, 250050, nil, nil, nil, 3)
@@ -83,7 +83,7 @@ function mod:OnCombatStart(delay)
 	self.vb.echoCount = 0
 	timerWrackingPainCD:Start(3.5-delay, 1)
 	timerSkewerCD:Start(5-delay, 1)
-	timerSoulrendCD:Start(9.6-delay, 1)
+	timerSoulrendCD:Start(8.5-delay, 1)
 	timerEchoesCD:Start(15.6-delay, 1)
 end
 
@@ -97,17 +97,19 @@ function mod:SPELL_CAST_START(args)
 			specWarnSoulRend:Play("runout")
 		end
 		updateAllTimers(self, 6)
-	elseif spellId == 250096 then
+	elseif spellId == 250096 then--Can stutter cast, but since it can be kicked on non mythic+, timer can't be moved to success
 		self.vb.wrackCount = self.vb.wrackCount + 1
 		timerWrackingPainCD:Start(nil, self.vb.wrackCount+1)
 		if not self:IsMythic() and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-			specWarnWrackingPain:Show(args.sourceName, self.vb.wrackCount)
+			specWarnWrackingPain:Show(args.sourceName, self.vb.wrackCount+1)
 			specWarnWrackingPain:Play("kickcast")
 		end
 	elseif spellId == 249919 then
 		self.vb.skewerCount = self.vb.skewerCount + 1
-		specWarnSkewer:Show()
-		specWarnSkewer:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnSkewer:Show()
+			specWarnSkewer:Play("defensive")
+		end
 		timerSkewerCD:Start(nil, self.vb.skewerCount+1)
 		updateAllTimers(self, 3.5)
 	elseif spellId == 250050 then

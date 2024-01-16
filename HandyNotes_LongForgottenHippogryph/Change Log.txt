@@ -1,3 +1,11 @@
+== v1.23 - 12th January 2024
+* TOC bump for 10.2.5
+
+== v1.22 - 10th December 2023
+* Added and improved translations to the Minimap AddOns menu
+* Felstriker server added. Not relevant to this AddOn
+* Penance and Shadowstrike added (SoD)
+
 == v1.21 - 26th November 2023
 * Added the ability to show the Azsuna map from the Minimap AddOns menu
 

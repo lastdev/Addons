@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                     v1.24 - 22nd November 2023
+                                       v1.26 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
 								
                                 ----o----(||)----oo----(||)----o----
@@ -45,7 +45,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -80,7 +81,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -115,7 +119,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -148,7 +155,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -180,6 +190,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -212,7 +225,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -245,6 +261,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -278,6 +297,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -310,7 +332,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -342,9 +367,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -362,7 +391,7 @@ if ns.locale == "deDE" then
 	L["of"] = "@ von #"
 	L["Speak to Zidormi"] = "Sprich mit Zidormi"
 	L["Springfur Alpaca"] = "Frühlingsfellalpaka"
-	L["Uldum Map"] = "Zeigt die Karte von Uldum"
+	L["Uldum Map"] = "Uldum-Karte"
 	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
@@ -375,7 +404,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["of"] = "@ de #"
 	L["Speak to Zidormi"] = "Hablar con Zidormi"
 	L["Springfur Alpaca"] = "Alpaca de pelaje primaveral"
-	L["Uldum Map"] = "Mostrar el mapa de Uldum"
+	L["Uldum Map"] = "Mapa de Uldum"
 	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 
 elseif ns.locale == "frFR" then
@@ -388,7 +417,7 @@ elseif ns.locale == "frFR" then
 	L["of"] = "@ sur #"
 	L["Speak to Zidormi"] = "Parlez à Zidormi"
 	L["Springfur Alpaca"] = "Alpaga toison-vernale"
-	L["Uldum Map"] = "Afficher la carte de Uldum"
+	L["Uldum Map"] = "Carte de Uldum"
 	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 
 elseif ns.locale == "itIT" then
@@ -401,7 +430,7 @@ elseif ns.locale == "itIT" then
 	L["of"] = "@ di #"
 	L["Speak to Zidormi"] = "Parla con Zidormi"
 	L["Springfur Alpaca"] = "Alpaca Primopelo"
-	L["Uldum Map"] = "Mostra la mappa di Uldum"
+	L["Uldum Map"] = "Mappa di Uldum"
 	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 
 elseif ns.locale == "koKR" then
@@ -414,7 +443,7 @@ elseif ns.locale == "koKR" then
 	L["of"] = "#개 중 @개"
 	L["Speak to Zidormi"] = "지도르미님과 대화"
 	L["Springfur Alpaca"] = "봄털 알파카"
-	L["Uldum Map"] = "울둠 지도를 보여주세요"
+	L["Uldum Map"] = "울둠 지도"
 	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
@@ -427,7 +456,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["of"] = "@ de #"
 	L["Speak to Zidormi"] = "Fale com Zidormi"
 	L["Springfur Alpaca"] = "Alpaca Lã de Primavera"
-	L["Uldum Map"] = "Mostrar o mapa de Uldum"
+	L["Uldum Map"] = "Mapa de Uldum"
 	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 
 elseif ns.locale == "ruRU" then
@@ -440,7 +469,7 @@ elseif ns.locale == "ruRU" then
 	L["of"] = "@ из #"
 	L["Speak to Zidormi"] = "Поговори с Зидорми"
 	L["Springfur Alpaca"] = "Курчавая альпака"
-	L["Uldum Map"] = "Покажите карту Ульдума"
+	L["Uldum Map"] = "Карта Ульдума"
 	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 
 elseif ns.locale == "zhCN" then
@@ -452,7 +481,7 @@ elseif ns.locale == "zhCN" then
 	L["of"] = "@ 共 # 个"
 	L["Speak to Zidormi"] = "与 希多尔米 通话"
 	L["Springfur Alpaca"] = "春裘羊驼"
-	L["Uldum Map"] = "显示奥丹姆的地图"
+	L["Uldum Map"] = "奥丹姆地图"
 	L["Wrong version of Uldum"] = "奥丹姆 版本错误"
 
 elseif ns.locale == "zhTW" then
@@ -464,13 +493,12 @@ elseif ns.locale == "zhTW" then
 	L["of"] = "@ 共 # 個"
 	L["Speak to Zidormi"] = "與 希多爾米 通話"
 	L["Springfur Alpaca"] = "春裘羊駝"
-	L["Uldum Map"] = "顯示奧丹姆的地圖"
+	L["Uldum Map"] = "奧丹姆地圖"
 	L["Wrong version of Uldum"] = "奧丹姆 版本錯誤"
 	
 else
 	L["AddOn Description"] = "Helps you to obtain the " ..ns.colour.highlight .."Springfur Alpaca"
 		..ns.colour.plaintext .." in Uldum"
-	L["Uldum Map"] = "Show me the map of Uldum"
 	L["of"] = "@ of #"
 end
 
@@ -553,7 +581,7 @@ do
 							ns.db.iconScale * ns.scalingSpecial[ns.db.iconChoiceSpecial], ns.db.iconAlpha
 				else
 					local found = false
-					-- C_Map.GetBestMapForUnit( "player" ) == 249 would also work I'd think?
+					-- C_Map.GetBestMapForUnit( "player" ) == 1527 would also work I'd think?
 					-- Memory says that patches ago when doing this I got abends when jumping
 					-- in and out of instances and trying to show a map using that code
 					for i = 1, 40 do
@@ -658,8 +686,7 @@ function HandyNotes_SpringfurAlpaca_OnAddonCompartmentClick( addonName, buttonNa
 	if buttonName and buttonName == "RightButton" then
 		OpenWorldMap( 1527 )
 		if WorldMapFrame:IsVisible() ~= true then
-			print( ns.colour.prefix	..L["Springfur Alpaca"] ..": " ..ns.colour.plaintext
-					.."Not possible at this time. Try later" )
+			print( ns.colour.prefix	..L["Springfur Alpaca"] ..": " ..ns.colour.plaintext ..L["Try later"] )
 		end
 	else
 		Settings.OpenToCategory( "HandyNotes" )
@@ -671,8 +698,8 @@ function HandyNotes_SpringfurAlpaca_OnAddonCompartmentEnter( ... )
 	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
 	GameTooltip:AddLine( ns.colour.prefix ..L["Springfur Alpaca"] )
 	GameTooltip:AddLine( ns.colour.highlight .." " )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Uldum Map"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Right"], ns.colour.plaintext ..L["Uldum Map"] )
 	GameTooltip:Show()
 end
 

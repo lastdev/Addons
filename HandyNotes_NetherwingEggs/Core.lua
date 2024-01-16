@@ -3,7 +3,7 @@
 
                                            Netherwing Eggs
 
-                                     v2.04 - 26th November 2023
+                                      v2.06 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -48,7 +48,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -83,7 +84,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -118,7 +122,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -151,7 +158,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -183,6 +193,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -215,7 +228,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -248,6 +264,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -281,6 +300,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -313,7 +335,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -345,9 +370,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
+
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -396,7 +425,7 @@ if ns.locale == "deDE" then
 	L["Netherwing Egg"] = "Ei der Netherschwingen"
 	L["Netherwing Eggs"] = "Eier der Netherschwingen"
 	L["Netherwing Mines"] = "Netherschwingenminen"
-	L["Shadowmoon Map"] = "Karte des Schattenmondtal"
+	L["Shadowmoon Map"] = "Schattenmondtal-Karte"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "Bitte hier stehen, nach Norden"
@@ -443,7 +472,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Netherwing Eggs"] = "Huevos de Ala Abisal"
 	L["Netherwing Mines"] = "Minas del Ala Abisal"
 	L["Quests"] = "Misiones"
-	L["Shadowmoon Map"] = "Mapa del Valle Sombraluna"
+	L["Shadowmoon Map"] = "Mapa de Sombraluna"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "Por favor, quédate aquí, mirando hacia el norte"
@@ -490,7 +519,7 @@ elseif ns.locale == "frFR" then
 	L["Netherwing Eggs"] = "Œufs de l'Aile-du-Néant"
 	L["Netherwing Mines"] = "Mines de l'Aile-du-Néant"
 	L["Quests"] = "Quêtes"
-	L["Shadowmoon Map"] = "Carte de la Vallée d'Ombrelune"
+	L["Shadowmoon Map"] = "Carte de Ombrelune"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "S'il vous plaît, restez ici, face au nord"
@@ -537,7 +566,7 @@ elseif ns.locale == "itIT" then
 	L["Netherwing Eggs"] = "Uova di Alafatua"
 	L["Netherwing Mines"] = "Miniere degli Alafatua"
 	L["Quests"] = "Missioni"
-	L["Shadowmoon Map"] = "Mappa della Valle di Torvaluna"
+	L["Shadowmoon Map"] = "Mappa di Torvaluna"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "Si prega di stare qui, verso nord."
@@ -584,7 +613,7 @@ elseif ns.locale == "koKR" then
 	L["Netherwing Eggs"] = "황천날개 알"
 	L["Netherwing Mines"] = "황천날개 광산"
 	L["Quests"] = "퀘스트"
-	L["Shadowmoon Map"] = "어둠달 골짜기 지도"
+	L["Shadowmoon Map"] = "어둠달 지도"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "여기 북쪽을 향하여 서십시오."
@@ -631,7 +660,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Netherwing Eggs"] = "Ovos da Asa Etérea"
 	L["Netherwing Mines"] = "Minas da Asa Etérea"
 	L["Quests"] = "Missões"
-	L["Shadowmoon Map"] = "Mapa do Vale da Lua Negra"
+	L["Shadowmoon Map"] = "Mapa da Lua Negra"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "Por favor fique aqui, virado para o norte."
@@ -679,7 +708,7 @@ elseif ns.locale == "ruRU" then
 	L["Netherwing Eggs"] = "Яйца дракона из стаи Крыльев Пустоты"
 	L["Netherwing Mines"] = "Крыльев Пустоты"
 	L["Quests"] = "Задания"
-	L["Shadowmoon Map"] = "Карта Долина Призрачной Луны"
+	L["Shadowmoon Map"] = "Карта Призрачной Луны"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "Пожалуйста, встаньте здесь, лицом на север."
@@ -726,7 +755,7 @@ elseif ns.locale == "zhCN" then
 	L["Netherwing Eggs"] = "灵翼龙卵"
 	L["Netherwing Mines"] = "灵翼矿洞"
 	L["Quests"] = "任务"
-	L["Shadowmoon Map"] = "影月谷地图"
+	L["Shadowmoon Map"] = "影月地图"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "请站在这里，面朝北方。"
@@ -773,7 +802,7 @@ elseif ns.locale == "zhTW" then
 	L["Netherwing Eggs"] = "靈翼龍卵"
 	L["Netherwing Mines"] = "靈翼礦洞"
 	L["Quests"] = "任務"
-	L["Shadowmoon Map"] = "影月谷地圖"
+	L["Shadowmoon Map"] = "影月地圖"
 	L["Show Quest Help"] = ""
 	L["Show pins that help with finding quests"] = ""
 	L["stand here north"] = "請站在這裡，面朝北方。"
@@ -1088,8 +1117,7 @@ function HandyNotes_NetherwingEggs_OnAddonCompartmentClick( addonName, buttonNam
 	if buttonName and buttonName == "RightButton" then
 		OpenWorldMap( ns.valley )
 		if WorldMapFrame:IsVisible() ~= true then
-			print( ns.colour.prefix	..L["Netherwing Eggs"] ..": " ..ns.colour.plaintext
-					.."Not possible at this time. Try later" )
+			print( ns.colour.prefix	..L["Netherwing Eggs"] ..": " ..ns.colour.plaintext ..L["Try later"] )
 		end
 	else
 		Settings.OpenToCategory( "HandyNotes" )
@@ -1101,8 +1129,8 @@ function HandyNotes_NetherwingEggs_OnAddonCompartmentEnter( ... )
 	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
 	GameTooltip:AddLine( ns.colour.prefix ..L["Netherwing Eggs"] )
 	GameTooltip:AddLine( ns.colour.highlight .." " )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Shadowmoon Map"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Right"], ns.colour.plaintext ..L["Shadowmoon Map"] )
 	GameTooltip:Show()
 end
 

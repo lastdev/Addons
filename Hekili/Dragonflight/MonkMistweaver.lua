@@ -422,6 +422,11 @@ spec:RegisterAuras( {
         duration = function() return 3 * gust_of_mist.count end,
         max_stack = 1
     },
+    renewing_mist = {
+        id = 119611,
+        duration = function() return 20 + ( buff.tea_of_serenity_rm.up and 10 or 0 ) + ( buff.tea_of_plenty_rm.up and 10 or 0 ) end,
+        max_stack = 1
+    },
     song_of_chiji = {
         id = 198909,
         duration = 20,
@@ -461,6 +466,36 @@ spec:RegisterAuras( {
         id = 388686,
         duration = 30,
         max_stack = 1
+    },
+    tea_of_plenty_ef = {
+        id = 388524,
+        duration = 30,
+        max_stack = 3
+    },
+    tea_of_plenty_rm = {
+        id = 393988,
+        duration = 30,
+        max_stack = 3,
+    },
+    tea_of_plenty_rsk = {
+        id = 388525,
+        duration = 30,
+        max_stack = 3,
+    },
+    tea_of_serenity_em = {
+        id = 388519,
+        duration = 30,
+        max_stack = 3
+    },
+    tea_of_serenity_rm = {
+        id = 388520,
+        duration = 30,
+        max_stack = 3
+    },
+    tea_of_serenity_v = {
+        id = 388518,
+        duration = 30,
+        max_stack = 3,
     },
     teachings_of_the_monastery = {
         id = 202090,
@@ -559,6 +594,18 @@ spec:RegisterHook( "reset_precast", function()
     gust_of_mist.count = nil
 end )
 
+local sm_spells = {
+    enveloping_mist = 1,
+    zen_pulse = 1,
+    vivify = 1
+}
+
+spec:RegisterHook( "runHandler", function( action )
+    if buff.soothing_mist.up and not sm_spells[ action ] then
+        removeBuff( "soothing_mist" )
+    end
+end )
+
 
 -- Abilities
 spec:RegisterAbilities( {
@@ -585,7 +632,7 @@ spec:RegisterAbilities( {
     enveloping_mist = {
         id = 124682,
         cast = function()
-            if buff.invoke_chiji.stack == 3 or buff.thunder_focus_tea.up then return 0 end
+            if buff.invoke_chiji.stack == 3 or buff.thunder_focus_tea.up or buff.tea_of_serenity_em.up then return 0 end
             return 2 * ( 1 - 0.333 * buff.invoke_chiji.stack ) * haste
         end,
         cooldown = 0,
@@ -601,6 +648,7 @@ spec:RegisterAbilities( {
 
         handler = function ()
             if buff.thunder_focus_tea.up then removeBuff( "thunder_focus_tea" )
+            elseif buff.tea_of_serenity_em.up then removeStack( "tea_of_serenity_em" )
             else removeBuff( "invoke_chiji" ) end
             gust_of_mist.count = 0
 
@@ -616,8 +664,9 @@ spec:RegisterAbilities( {
 
     essence_font = {
         id = 191837,
-        cast = 0,
+        cast = function() return ( buff.tea_of_plenty_ef.up and 1.5 or 3 ) * haste end,
         cooldown = 12,
+        channeled = true,
         gcd = "spell",
 
         spend = function() return 0.36 * ( buff.mana_tea.up and 0.5 or 1 ) end,
@@ -628,6 +677,7 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "essence_font" )
+            removeStack( "tea_of_plenty_ef" )
             if talent.ancient_teachings.enabled then applyBuff( "ancient_teachings" ) end
             if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_haste" ) end
         end,
@@ -810,6 +860,8 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "renewing_mist" )
+            removeStack( "tea_of_plenty_rm" )
+            removeStack( "tea_of_serenity_rm" )
             if set_bonus.tier31_2pc > 0 then applyBuff( "chi_harmony" ) end
             if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_haste" ) end
         end,
@@ -955,13 +1007,18 @@ spec:RegisterAbilities( {
 
     soothing_mist = {
         id = 115175,
-        cast = 8,
-        channeled = true,
+        cast = 0,
+        -- channeled = true,
+        dontChannel = function()
+            applyBuff( "soothing_mist", buff.casting.remains )
+            return true
+        end,
         cooldown = 0,
         gcd = "totem",
 
         spend = function() return 0.16 * ( buff.mana_tea.up and 0.5 or 1 ) end,
         spendType = "mana",
+        nobuff = "soothing_mist",
 
         startsCombat = false,
         texture = 606550,
@@ -1032,20 +1089,27 @@ spec:RegisterAbilities( {
         id = 116670,
         cast = 1.5,
         cooldown = 0,
-        gcd = "spell",
+        gcd = function()
+            return buff.soothing_mist.up and "totem" or "spell"
+        end,
 
-        spend = function() return 0.034 * ( buff.mana_tea.up and 0.5 or 1 ) * ( 1 - 0.15 * buff.clouded_focus.stack ) end,
+        spend = function()
+            if buff.tea_of_serenity_v.up then return 0 end
+            return 0.034 * ( buff.mana_tea.up and 0.5 or 1 ) * ( 1 - 0.15 * buff.clouded_focus.stack )
+        end,
         spendType = "mana",
 
         startsCombat = false,
         texture = 1360980,
 
         handler = function ()
+            removeStack( "tea_of_serenity_v" )
             if talent.secret_infusion.enabled and buff.thunder_focus_tea.stack == buff.thunder_focus_tea.max_stack then applyBuff( "secret_infusion_mastery" ) end
             if buff.lifecycles_vivify.up then
                 addStack( "mana_tea_stack" )
                 removeBuff( "lifecycles_vivify" )
             end
+            removeBuff( "vivacious_vivification" )
         end,
     },
 
@@ -1093,9 +1157,10 @@ spec:RegisterSetting( "experimental_msg", nil, {
 spec:RegisterSetting( "save_faeline", false, {
     type = "toggle",
     name = strformat( "%s: Prevent Overlap", Hekili:GetSpellLinkWithTexture( spec.talents.faeline_stomp[2] ) ),
-    desc = strformat( "If checked, %s will not be recommended when %s and/or %s are active.\n\n"
+    desc = strformat( "If checked, %s will not be recommended when %s, %s, and/or %s are active.\n\n"
         .. "Disabling this option may impact your mana efficiency.", Hekili:GetSpellLinkWithTexture( spec.talents.faeline_stomp[2] ),
-        Hekili:GetSpellLinkWithTexture( spec.auras.ancient_concordance.id ), Hekili:GetSpellLinkWithTexture( spec.auras.awakened_faeline.id ) ),
+        Hekili:GetSpellLinkWithTexture( spec.auras.ancient_concordance.id ), Hekili:GetSpellLinkWithTexture( spec.auras.ancient_teachings.id ),
+        Hekili:GetSpellLinkWithTexture( spec.auras.awakened_faeline.id ) ),
     width = "full",
 } )
 
@@ -1114,6 +1179,25 @@ spec:RegisterSetting( "save_faeline", false, {
         return target.minR > 0
     end )
 
+local brm = class.specs[ 268 ]
+
+spec:RegisterSetting( "aoe_rsk", false, {
+    type = "toggle",
+    name = strformat( "%s: AOE", Hekili:GetSpellLinkWithTexture( spec.abilities.rising_sun_kick.id ) ),
+    desc = strformat( "If checked, %s may be recommended when there are more than 3 enemies detected.\n\n"
+        .. "This can result in lower damage but maintains your %s and other rotational buffs for healing.",
+        Hekili:GetSpellLinkWithTexture( brm.abilities.rising_sun_kick.id ), Hekili:GetSpellLinkWithTexture( spec.abilities.enveloping_mist.id ) ),
+    width = "full",
+} )
+
+spec:RegisterSetting( "single_zen_pulse", false, {
+    type = "toggle",
+    name = strformat( "%s: Single Target", Hekili:GetSpellLinkWithTexture( spec.abilities.zen_pulse.id ) ),
+    desc = strformat( "If checked, %s may be recommended when there is only one enemy detected.\n\n"
+        .. "This can result in %s going on cooldown for 30 seconds before additional enemies come in range.",
+        Hekili:GetSpellLinkWithTexture( spec.abilities.zen_pulse.id ), spec.abilities.zen_pulse.name ),
+    width = "full",
+} )
 
 spec:RegisterRanges( "blackout_kick", "rising_sun_kick", "paralysis", "provoke", "crackling_jade_lightning" )
 
@@ -1138,4 +1222,5 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Mistweaver", 20231128, [[Hekili:nFvxVnUnqWFl5Leh0eDwwj3LwCoaxpGcCbTbfvPVkkAkklwjrQssfhxyOF7DjLTcn9xPbff9HeNWDi3L7o7o0jHjpLeNH10KhNmEsuy4K7ccV72OWOKy9YgAsCdMuINd)bhxd)(xyk9ck(zQ0yAzLaNzocLOvsaZjXZAzv6VXtMT)ZDcGTHsGL)04K4cwwgThlvrsInyVom86j39dDPDP)UI2L(eBov2L(R4Q6U0AHKg09q3dBqgEJfzCnUQQl1eALQU0CbSJWXbtEf74jxh(rl2Va(mRlv0OzcoShrxk(zbdwssjyLMXN3L(tyAfJdUpwlQB6sxuqbSknMNzTZG)dd)qFHTEh5B2XiR3RXCmyopNryuoz5LoHs01tUDtO0L(BIQQp81cgCvfYgAgeply6cWBqIIHRy)fUps7J4GK4kWNktAhlOWhpARIuoEwfnl5htIjsMMkzyaarZEMIOCAnJcjMppTlnQFzbhkXfT8mQeLliTkKMIt0qL59EAsMcYeivlhvYiLMZk6GN1zqMhxr56aWTKcyJkKihPlOOAbhkdu5YG17SlD1QU0zT55hdCluMohQkhpiNvbeArREieVXMixBfoB0cGD7g0aMB9XmRvQ0EG(OlivdJZnzdIeZP9oBl4AdNph3wPhQGVUxkwIkaQgsPLSs)OzIl4wffb50ALhOixqZQeImuERCPhQTU8ZOsfvwcr9XU(vS5fAf6pAZMxdLVJLeYzsQ11EG(KlimNqHRjUcrGEypK3Tv8HNBR6siz6FD)ExGnI(p3cr44JXfvuTPnwfOGQpAOx2W7aRJwZ(GyfAM1iIGteYmtOBPDd0t8cCjW8Y2CcwRx6Kr6xgQRWufBu927DVVNiBOeeZoDyKqId1)piZSH(jeO(j2Mzeg4)dARFx(rP7z1QDj07oM5ieA)Pi7Hw)V0aLr2A76nTtLBa65VTrpVLruG(bPeQKqcgOf2JMievzIf8aV7DGKwJzCLf9Cswqn(L)ZNIPnAVOgq6DNHxnGyPOEgE3Q9E7(M8w8D0PVewFdV(qzWS(TfH3KeValnJBHXcpva9TS6gHuV(HaxaTaxyu3)ZwyGeurvIAadUfAcHNOalqGHTZPkqI(NTT9rG68xfCWpwZxCsI1f9VJ40a3qRGnmk8L(hfSNiwP))BaFup63g55Nd1L5Mo(Mntyo0B6vZnV9X(KhWSH4jYzv0nefvWat87M(HEUx3d7Z2aR7WMn8ntiS2oS6oAXUgh0EDx8vT2TwDqB1DvpTuxtdANUlUTw5wNVR2ORbVmI5KD1GUILp9S9k(TA1zJoIO3QvhsW7sxN5lzCLrSyk0qEvV(Y0qteSTc09tJo9raFE4t4ZrovryQlCk7Ob5z3B8RN1TM3AZzNSXz1QrNDaw)5NsNyi9EkTK7JU88tPGC)A1dVR0R89Dw2RlPp)nif4MAHc5(YT7PI4utxVlVW9nTN3vD4uzY2MZpPJ3nB966EPREd79laatWleW3C(lSs4RhwITYzj)9p]] )
+
+spec:RegisterPack( "Mistweaver", 20231225, [[Hekili:9I1wZnQnu4Fl5LCzAcBa7Sz324mt6oTZSPTB7usFPpaile2QasujX6KD8WV9EKaBazW2z70(WMWQZrNlFNB6Ka3GNc8JrksWN8U2BIRN3noUUEV3DAGV6LcsGFbcNIwaFWq5Wp)fQuTIG(mrOj9sghfRfHKxkWa5a)5L0m1hzbZhsU3o1d4TGGHJV96a)L04ysnVejoWxZ7vUEx5DZ3wf9hssv0Fsyvr)wzMK8DvrO44QOFNkPSfvr(LaLFIItRIOWxp8R)qveVqr5mNQhRECJOCNUru)iIKrzWh(kEErvKIxfvi4y4UmmLWuvrprq4LG0LDeH7vEVderJqEIUGialcLLxfLZfKECAugOGCuwgOaaOsLvrjC4gUx741Y71GH9wdVpaiq8glV2OqFMtHJeemsQm(QTPVAPgwKkel2qxdai4FKNPn3izZno3O9CedbKtsOApf)YfDmLj1WTXua4LNL9MpSKcUkxuqIb7zfvTe0ge2OOm6xq1wAdwdPbcEcndc(iS(ePtby5885i13m7nfCd3poenaQdNxkKQXjVcY00wAdD4uWmqIWLGNhkvcAkPlXsjjKQi5YUhopJZJdtkfV07uIqsePAWQZPz0flvYW)QmErUoJOdPeQGyev3drmmbmduwiwhY7kF0IqEsiyI40EMJfIOLCDSc8hi4Ejnz2jsIszsdLG)h2qF9AfkdmkhuD6AiMZWCrS2goDEzsYqeCI5RyT3CfkLWiXBezZ1So16oncvTP2OVU2ES5wDDlnIew)FdZG8Yl1DqMH4Kl1boSAMR2x1ma(iO)CkrE)SjhweWVhxc3nPt(IJuNiPwwYIjIWeoUuQnyl6cthLqzjlmv3pPp15zqhqEPYqZeDAaMTEUjoVKeMZzqblr8Y61NFYEr8XVQtzX61hIhOWhNE)KlofZ5zAy3XYfCeKCeLjVFbo2jh9SLl9fclSq3tv7oT5AWpZiHBjADP2YXDo2QiUg01nkdl09j7epGO)qbKbcJDseAU1agwnblNFqHTE9w)eUuOqMAlLVQ48HIuLfNEq)AxGT9ClKTMGSGYyApglqqBdT9g4dtKLapBM3QhGVcj0Sjd8FAjmjGMxWfQMXrNbI6m9mM)Ue6Rb99L8CGhuj0dcgBdhGHESli6jH)SzqIE02h4mqpgYNDq05S6PzhMrhcdnpJedx4C3NRhnnGflvVodEY)Jg8E1ODpal9St73JdoIjjOYSxjM4E9iM4UtoSTYbMTmcmmQs(3IdhNpSnUnIh0oXAaG(Jgmwl2PaqAk7QI0JE0yyGV5l9dEHYh4xFY8(5gXe89b(yb88dbfv)yO2Y(QO7Mb5hBEJe84A7wGbkO01i5go22URRcaMM86uzv061qIHvZVw1y18uRHPJQHtae9yloQv8HBqwfDAnsVh0QxVzTjEtxKAtdulG6T28yAMAX0TDzAWgRDzhUniHnX9XJL91rVWQnEFSb3xp0FEvu7LgR4YG(htq6ycMM3LufDVjT7cJOp0lumC38kL9eVhpLC0NVmuL0)zzoTV2zNeMM(07K1SZIm7lRz7IndLV0IABw0XIRP94A7IpwC1dzSweAFa02fJ2ha1FrjloFxp7R7Itwm((UmwViLfhUxVVkOb3RQo3(WJ5AlvgBpR(s6GvCdU31GwZoJS21w6VhwNOt3Llni0XpZ6(6UW1lBPtFBlkSwmREYyy9FJi9Srn7EhTIU7RspsvDf22)Ob7uJnykI3XuDp5WTjm6gER1sUiW)bAkIHsrMtd(N]] )

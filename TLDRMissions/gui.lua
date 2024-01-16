@@ -597,6 +597,17 @@ gui.BlockCompletionDropDown:SetPoint("TOPLEFT", TLDRMissionsFrameBlockCompletion
 LibDD:UIDropDownMenu_SetWidth(gui.BlockCompletionDropDown, 10)
 LibDD:UIDropDownMenu_SetText(gui.BlockCompletionDropDown, "")
 
+gui.IgnoreDeadFollowersButton = CreateFrame("CheckButton", "TLDRMissionsFrameIgnoreDeadFollowersButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
+gui.IgnoreDeadFollowersButton:SetPoint("TOPLEFT", gui.BlockCompletionButton, 0, -25)
+gui.IgnoreDeadFollowersButton.Text:SetText(L["IgnoreDeadFollowers"])
+gui.IgnoreDeadFollowersButton.Text:SetWordWrap(true)
+gui.IgnoreDeadFollowersButton.Text:SetWidth(250)
+gui.IgnoreDeadFollowersButton.Text:SetJustifyH("LEFT")
+
+gui.IgnoreDeadFollowersButton:HookScript("OnClick", function()
+    addon.db.profile.ignoreDeadFollowers = gui.IgnoreDeadFollowersButton:GetChecked()
+end)
+
 --
 -- Tab 3
 --

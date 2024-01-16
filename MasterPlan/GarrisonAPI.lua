@@ -3248,7 +3248,8 @@ do -- api.GetBestGroupInfo()
 		return fi, rtid
 	end
 	local function runRecruitProspects(rt, yield)
-		for i=1,#rt do
+		local nrt = #rt
+		for i=1, nrt do
 			local fi, ct = rt[i]
 			fi.useMarks, fi.clones, ct = {}, {}, T.SpecCounters[fi.classSpec]
 			local c1, c2 = fi.counters[1], fi.counters[2] or 0
@@ -3277,7 +3278,7 @@ do -- api.GetBestGroupInfo()
 		for k,v in pairs(groups) do
 			gc[k] = v.variants
 		end
-		for i=1,3 do
+		for i=1, nrt do
 			local t, c = {}, {}
 			for k,v in pairs(rt[i].clones) do
 				c[k] = v.useMarks

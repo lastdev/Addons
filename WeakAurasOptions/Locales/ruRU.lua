@@ -147,8 +147,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Anchor"] = "Крепление"
 	L["Anchor Point"] = "Точка крепления"
 	L["Anchored To"] = "Прикрепить к"
-	L["And "] = "И "
 	L["and"] = "и"
+	L["And "] = "И "
 	L["and %s"] = "и %s"
 	L["and aligned left"] = "Выранивание по левому краю;"
 	L["and aligned right"] = "Выранивание по правому краю;"
@@ -252,8 +252,8 @@ Off Screen]=] ] = [=[Индикация за
 	L["Collapse all non-loaded displays"] = "Свернуть все незагруженные индикации"
 	L["Collapse all pending Import"] = "Свернуть все индикации, ожидающие импорта"
 	L["Collapsible Group"] = "Свёртываемая группа"
-	L["color"] = "цвет"
 	L["Color"] = "Цвет"
+	L["color"] = "цвет"
 	L["Column Height"] = "Высота столбца"
 	L["Column Space"] = "Отступ между столбцами"
 	L["Columns"] = "Столбцы"
@@ -850,6 +850,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Spark Settings"] = "Настройки искры"
 	L["Spark Texture"] = "Текстура искры"
 	L["Specialization"] = "Специализация"
+	L["Specific Currency ID"] = "ID валюты"
 	L["Specific Unit"] = "Конкретная единица"
 	L["Spell ID"] = "ID заклинания"
 	L["Spell Selection Filters"] = "Фильтры выбора заклинания"
@@ -898,6 +899,10 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = [=[Индикация содержит пользовательский код Lua.
 Убедитесь, что вы можете доверять человеку, который ее отправил!]=]
+	--[[Translation missing --]]
+	L["This aura is marked as an update to an aura '%s', but cannot be used to update that aura. This usually happens if an aura is moved out of a group."] = "This aura is marked as an update to an aura '%s', but cannot be used to update that aura. This usually happens if an aura is moved out of a group."
+	--[[Translation missing --]]
+	L["This aura is marked as an update to auras '%s', but cannot be used to update them. This usually happens if an aura is moved out of a group."] = "This aura is marked as an update to auras '%s', but cannot be used to update them. This usually happens if an aura is moved out of a group."
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
 It might not work correctly!]=] ] = [=[Индикация была создана в другой версии World of Warcraft (%s).
 Она может работать неправильно!]=]
@@ -960,8 +965,8 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Use Display Info Id"] = "Использовать ID отображения существа"
 	L["Use SetTransform"] = "Использовать ф. SetTransform"
 	L["Use Texture"] = "Использовать текстуру"
-	L["Used in Auras:"] = "Использовано в индикациях:"
 	L["Used in auras:"] = "Использовано в индикациях:"
+	L["Used in Auras:"] = "Использовано в индикациях:"
 	L["Uses Texture Coordinates to rotate the texture."] = "Использует координаты текстуры для её вращения."
 	L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "Использует функцию UnitInRange для проверки, находится ли указанная единица рядом с игроком. В этом смысле соответствует поведению стандартных рамок рейда (raid frames). Расстояние составляет от 25 до 40 метров в зависимости от вашего класса и специализации."
 	L["Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."] = "Использует функцию UnitIsVisible для проверки, может ли клиент игры видеть указанную единицу (загружен ли объект). Не определяет, находится ли единица в поле зрения. Расстояние составляет 100 метров. Опрос происходит каждую секунду."

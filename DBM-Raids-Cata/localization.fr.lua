@@ -6,52 +6,15 @@ local L
 ----------------
 L= DBM:GetModLocalization(139)
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
-L:SetOptionLocalization({
-	SetIconOnConsuming		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(88954)
-})
-
 -----------------
 --  Occu'thar  --
 -----------------
 L= DBM:GetModLocalization(140)
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
 ----------------------------------
 --  Alizabal, Mistress of Hate  --
 ----------------------------------
 L= DBM:GetModLocalization(339)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
-L:SetOptionLocalization({
-})
 
 -------------------------------
 --  Dark Iron Golem Council  --
@@ -99,11 +62,6 @@ L:SetOptionLocalization({
 --  Atramedes  --
 -----------------
 L = DBM:GetModLocalization(171)
-
-L:SetOptionLocalization({
-	InfoFrame			= "Affiche une fenêtre d'info pour le niveau sonore",
-	TrackingIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(78092)
-})
 
 L:SetMiscLocalization({
 	Airphase			= "Oui, fuyez ! Chaque foulée accélère votre cœur. Les battements résonnent comme le tonnerre... Assourdissant. Vous ne vous échapperez pas !" -- à vérifier
@@ -207,35 +165,10 @@ L:SetGeneralLocalization({
 --------------------------
 L= DBM:GetModLocalization(156)
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
 ---------------------------
 --  Valiona & Theralion  --
 ---------------------------
 L= DBM:GetModLocalization(157)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-	TwilightBlastArrow		= "Afficher la flèche DBM lorsque $spell:92898 est près de vous",
-	RangeFrame				= "Afficher la fenêtre de portée (10)",
-	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92878),
-	EngulfingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(86622)
-})
 
 L:SetMiscLocalization({
 	Trigger1				= "Theralion, je m'occupe du vestibule. Couvre leur fuite !"--Change this to what deep breath emote is.
@@ -283,21 +216,6 @@ L:SetOptionLocalization({
 --  Cho'gall  --
 ----------------
 L= DBM:GetModLocalization(167)
-
-L:SetWarningLocalization({
---	WarnPhase2Soon	= "Phase 2 imminente"
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
---	WarnPhase2Soon		= "Afficher la pré-alerte pour la Phase 2",
-	CorruptingCrashArrow	= "Afficher la flèche DBM lorsque $spell:93178 est près de vous",
-	InfoFrame			= "Afficher la fenêtre d'info pour le sort $journal:3165",
-	RangeFrame		= "Afficher la fenêtre de portée (5) pour $spell:82235",
-	SetIconOnWorship	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(91317)
-})
 
 ----------------
 --  Sinestra  --

@@ -281,9 +281,6 @@ L:SetOptionLocalization{
 }
 L:SetMiscLocalization{
 	Phase2Emote	= "flee as the controlling power of the orb is drained.",
-	YellEgg1 = "You'll pay for forcing me to do this!",
-	YellEgg2 = "Fools! These eggs are more precious than you know!",
-	YellEgg3 = "No - not another one! I'll have your heads for this atrocity!",
 	YellPull 	= "Intruders have breached the hatchery! Sound the alarm! Protect the eggs at all costs!\r\n"--Yes this yell actually has a return and new line in it. as grabbed by transcriptor
 }
 -------------------
@@ -296,7 +293,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	Event				= "Too late, friends! Nefarius' corruption has taken hold...I cannot...control myself."
+	Event				= "Too late, friends!"
 }
 -----------------
 --  Broodlord  --
@@ -1095,4 +1092,87 @@ L:SetWarningLocalization({
 
 L:SetTimerLocalization({
 	TimerPhase2	= "Phase 2"
+})
+
+---------------------------
+--  Season of Discovery  --
+---------------------------
+
+---------------------------
+--  Blackfathom Deeps  --
+---------------------------
+
+------------------
+--  Baron Aquanis  --
+------------------
+L = DBM:GetModLocalization("BaronAuanisSoD")
+
+L:SetGeneralLocalization({
+	name = "Baron Aquanis"
+})
+
+L:SetMiscLocalization({
+	Water		= "Water"
+})
+
+------------------
+--  Ghamoo-ra  --
+------------------
+L = DBM:GetModLocalization("GhamooraSoD")
+
+L:SetGeneralLocalization({
+	name = "Ghamoo-ra"
+})
+
+------------------
+--  Lady Sarevess  --
+------------------
+L = DBM:GetModLocalization("LadySarevessSoD")
+
+L:SetGeneralLocalization({
+	name = "Lady Sarevess"
+})
+
+------------------
+--  Gelihast  --
+------------------
+L = DBM:GetModLocalization("GelihastSoD")
+
+L:SetGeneralLocalization({
+	name = "Gelihast"
+})
+
+------------------
+--  Lorgus Jett  --
+------------------
+L = DBM:GetModLocalization("LorgusJettSoD")
+
+L:SetGeneralLocalization({
+	name = "Lorgus Jett"
+})
+
+L:SetWarningLocalization({
+	warnPriestRemaining		= "%s Priestesses remaining"
+})
+
+L:SetOptionLocalization({
+	warnPriestRemaining	= "Show warning for how maining Blackfathom Tide Priestesses are remaining"
+})
+
+------------------
+--  Twilight Lord Kelris  --
+------------------
+L = DBM:GetModLocalization("TwilightLordKelrisSoD")
+
+L:SetGeneralLocalization({
+	name = "Twilight Lord Kelris"
+})
+
+------------------
+--  Aku'mai  --
+------------------
+L = DBM:GetModLocalization("AkumaiSoD")
+
+L:SetGeneralLocalization({
+	name = "Aku'mai"
 })

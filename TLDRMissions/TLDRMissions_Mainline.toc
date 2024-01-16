@@ -1,6 +1,6 @@
 ## Interface: 100200
 ## Title: TL;DR Missions
-## Version: 10.2-006
+## Version: 10.2-014
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
@@ -54,6 +54,7 @@ logging.lua
 caching.lua
 profiles.lua
 bindings.lua
+publicAPI.lua
 
 torghast-farm.lua
 

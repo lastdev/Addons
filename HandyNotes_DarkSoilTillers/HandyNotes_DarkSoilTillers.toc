@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: 3.42
+## Interface: 100205
+## Version: 3.49
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_faction_tillers
 ## Title: Dark Soil Tillers
@@ -26,13 +26,12 @@
 ## Notes-ruRU: Помогает вам с |cFFD2691EТемная Земля|r и |cFFD2691EЗемледельцами|r в Долине Четырех Ветров
 ## Notes-zhCN: 四风谷的|cFFD2691E分蘖|r和cFFD2691E黑土|r
 ## Notes-zhTW: 幫助四風谷的|cFFD2691E分蘗|r和|cFFD2691E黑土|r
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 491373
-## X-WoWI-ID: 26072
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_DarkSoilDB
 ## OptionalDeps: HandyNotes_APathLessTravelled, HandyNotes_EA-Pandaria
 ## AddonCompartmentFunc: HandyNotes_DarkSoilTillers_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_DarkSoilTillers_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_DarkSoilTillers_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

@@ -147,7 +147,17 @@ end
 
                 if (cooldownLine) then
                     --get the cooldown time from the lib, it return data ready to use on statusbar
-                    local isReady, normalizedPercent, timeLeft, charges, minValue, maxValue, currentValue = openRaidLib.GetCooldownStatusFromCooldownInfo(cooldownInfo)
+
+                    local isReady, normalizedPercent, timeLeft, charges, minValue, maxValue, currentValue
+                    local bRunOkay, errorText = pcall(function()
+                        isReady, normalizedPercent, timeLeft, charges, minValue, maxValue, currentValue = openRaidLib.GetCooldownStatusFromCooldownInfo(cooldownInfo)
+                    end)
+                    if (not bRunOkay) then
+                        local spellName = GetSpellInfo(spellId)
+                        --print("error on cooldown update:", unitName, spellName, errorText)
+                        return
+                    end
+
                     if (not isReady) then
                         cooldownLine:SetTimer(currentValue, minValue, maxValue)
                     else
@@ -278,7 +288,7 @@ end
                 classId = select(3, UnitClass(unitInfo.nameFull))
             end
 
-            if (unitInfo and classId) then
+            if (unitInfo and classId and cooldownsOrganized[classId]) then
                 local allCooldownFrames = Details222.CooldownTracking.GetAllCooldownFrames()
 
                 for spellId, cooldownInfo in pairs(unitCooldowns) do

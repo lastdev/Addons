@@ -1,37 +1,47 @@
 # <DBM Mod> Raids (DF)
 
-## [10.2.9](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.2.9) (2023-12-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.2.8...10.2.9) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.2.16](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.2.16) (2024-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.2.14...10.2.16) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- prep new retail tag  
-- Disable Surging growth alerts and timer in LFR, since it's based on applied (due to blizzard hating combat log) and in LFR this is not a reliable metric like at all  
-- Update koKR (Retail) (#963)  
-- Fix last  
-- Rework timers to correctly support LFR version of Council of Dreams  
-- sync naming  
-- bump alpha  
-- prep new tag for classic era/SoD  
-- comment this code on retail for now  
-- Prep classic era tag  
-- Remove bad language on dispel alerts. most dispels aren't spellstealable and it's misleading  
-- Support Season of Discovery instance difficulty Ids  
-- revert nymue using boss distance checks for now. no ETA on change is known  
-- fix jump announce  
-- set EnableMouse on parent frame, to allow clickthrough.  
-- Revert CheckBossDistance check to using Item apis on bosses again, with blizzard reverting nerf on hostile targets for this purpose. (range check still dead, distance on players still forbidden). This is just a concession blizzard agreed was a reasonable one.  
-- Switch nymue back to distance calculation usage on bosses for filtering  
-- actually make sure unit is the boss  
-- fixes  
-- Finally add Aurostor mod  
-- again trying to fix special CD checking logic, cause it appears code was still just returning false 100% of time even when special was literally 40 seconds away.  
-- tweak fyrakk and igira tank swaps to not swap unnessesarily early  
-- Since it's early tier, will be updating the version check more often for checking if other raiders mods are out of date.  
-- Fix barreling charge to use YELL and following conventions  
-- More taunt tech improvements to smolderon  
-- timer tweaks  
-- Further refine tanking on smolderon to help movements  
-    Fixed tank swap alerts on council to be more correct and less spammy  
-    Also added a special alert to dodge charge if you already have trampled for all players  
-- fix smolderon tanking stuff  
-- small nitpick, make corrupt appear in stage 1.5 list  
-- bump alpha  
+- add a note so that doesn't get misreported again  
+- Revert \"Fix bug in stagecount timer\" This reverts commit fffa343979845f09198427e53255b549fb671833.  
+- prep new tag to fix timer bug  
+- Fix bug in stagecount timer  
+- no message  
+- actually bump it, forgot to hit save  
+- also bump classic and wrath versions. there were quite a few core fixes, and wrath had many halion fixes/updates too (wrath will also be a forced update due to number of halion fixes  
+- Bump tocs for 10.2.5  
+- Merge koKR updates from https://github.com/DeadlyBossMods/DBM-Unified/pull/372  
+- Locale re-ordering for ES; Also fixed some locale quirks in en while I was here.  
+- Core locale re-orderings for common locales.  
+- GUI locale re-orderings for common locales.  
+- because artemis can't read  
+- scope softenemy to retail only  
+- interrupt filter will now consider \"softenemy\"  
+- Update localization.cn.lua (#982)  
+- Mini dragon patch 1 (#370)  
+- Update koKR (#369)  
+- Tweak to last  
+- Use 10.2.5 aura apis when available.  
+- Fix remaining LuaLS warnings (#366)  
+- voice pack version tweak for wrath classic Some cata classic prep  
+- update version check  
+- Update localization.tw.lua (#368)  
+- Update localization.ru.lua (#367)  
+- fix target scanner bugs  
+- fix GetCurrentTank function  
+- Fix follower in wrong file  
+- Fix Lua error.  
+- micro timer adjustments  
+- add smart emergency swap alert tech if Igira is empowered by both heartstopper and umbral at same time, and heartstopper goes on a tank before a soak, to automatically detect this and alert other non debuffed tank to taunt before soak debuff goes out.  
+- remove missed variable  
+- no message  
+- Missed an ID  
+- Add a couple more abilities to trash mod based on trouble spots in LFR (Blazing Pulse and Inferno Heart)  
+- follower dungeon prep  
+- make every 10  a 7.4 instead and call it a day  
+- Update one distance API to be classic only  
+- Update koKR (#365)  
+- Update localization.br.lua (#364)  
+- Fix a missed convention match  
+- bump alphas  

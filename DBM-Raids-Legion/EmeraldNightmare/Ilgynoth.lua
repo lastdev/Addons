@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240108061644")
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetUsedIcons(8, 4, 3, 2, 1)
@@ -83,7 +83,7 @@ mod:AddSetIconOption("SetIconOnOoze", "ej13186", false)
 mod:AddBoolOption("SetIconOnlyOnce2", true)
 mod:AddRangeFrameOption(8, 215128)
 mod:AddInfoFrameOption(210099)
-mod:AddDropdownOption("InfoFrameBehavior", {"Fixates", "Adds"}, "Fixates", "misc")
+mod:AddDropdownOption("InfoFrameBehavior", {"Fixates", "Adds"}, "Fixates", "misc", nil, 210099)
 
 mod.vb.phase = 1
 mod.vb.insideActive = false

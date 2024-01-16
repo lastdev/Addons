@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1438, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -143,7 +143,7 @@ mod:AddBoolOption("NamesWroughtHud", true)
 mod:AddBoolOption("FilterOtherPhase", true)
 mod:AddBoolOption("overrideMarkOfLegion", false)
 mod:AddInfoFrameOption(184964)
-mod:AddDropdownOption("MarkBehavior", {"Numbered", "LocSmallFront", "LocSmallBack", "NoAssignment"}, "Numbered", "misc")
+mod:AddDropdownOption("MarkBehavior", {"Numbered", "LocSmallFront", "LocSmallBack", "NoAssignment"}, "Numbered", "misc", nil, 187050)
 
 mod.vb.phase = 1
 mod.vb.demonicCount = 0

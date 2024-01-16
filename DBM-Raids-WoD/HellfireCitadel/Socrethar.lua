@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1427, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230719202305")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetUsedIcons(1)
@@ -87,7 +87,7 @@ mod:AddRangeFrameOption(10, 184124)
 mod:AddHudMapOption("HudMapOnOrb", 180221)
 mod:AddHudMapOption("HudMapOnCharge", 182051)
 mod:AddSetIconOption("SetIconOnCharge", 182051, true)
-mod:AddDropdownOption("InterruptBehavior", {"Count3Resume", "Count3Reset", "Count4Resume", "Count4Reset"}, "Count3Resume", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Count3Resume", "Count3Reset", "Count4Resume", "Count4Reset"}, "Count3Resume", "misc", nil, 183331)
 
 mod.vb.ReverberatingBlow = 0
 mod.vb.felBurstCount = 0

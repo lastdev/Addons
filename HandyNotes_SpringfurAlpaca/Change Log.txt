@@ -1,3 +1,12 @@
+== v1.26 - 12th January 2024
+* TOC bump for 10.2.5
+
+== v1.25 - 6th December 2023
+* Added and improved translations to the Minimap AddOns menu
+* Minor change to a comment/note to self lol
+* Felstriker server added. Not relevant to this AddOn
+* Penance and Shadowstrike added (SoD)
+
 == v1.24 - 22nd November 2023
 * Added the ability to show the Uldum map from the Minimap AddOns menu
 

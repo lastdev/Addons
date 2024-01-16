@@ -6,7 +6,7 @@ if not mod:IsClassic() then--Future planning, so cata classic uses regular rules
 	mod.statTypes = "normal,heroic,timewalker"
 end
 
-mod:SetRevision("20230526084835")
+mod:SetRevision("20240105194104")
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
 --mod:SetModelSound("Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_AGGRO.ogg", "Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_TRANSITION_02.ogg")

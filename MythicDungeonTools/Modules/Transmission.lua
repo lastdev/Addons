@@ -658,7 +658,7 @@ function MDT:MakeSendingStatusBar(f)
   f.SendingStatusBar = CreateFrame("StatusBar", nil, f)
   local statusbar = f.SendingStatusBar
   statusbar:SetMinMaxValues(0, 1)
-  statusbar:SetPoint("LEFT", f.bottomPanel, "LEFT", 100, 0)
+  statusbar:SetPoint("CENTER", MDT.main_frame.bottomPanel, "CENTER", 0, 0)
   statusbar:SetWidth(200)
   statusbar:SetHeight(20)
   statusbar:SetStatusBarTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
@@ -680,6 +680,14 @@ function MDT:MakeSendingStatusBar(f)
   statusbar.value:SetTextColor(1, 1, 1)
   statusbar:Hide()
 
+  --hooks to show/hide the bottom text
+  statusbar:HookScript("OnShow", function(self)
+    MDT.main_frame.bottomPanelString:Hide()
+  end)
+  statusbar:HookScript("OnHide", function(self)
+    MDT.main_frame.bottomPanelString:Show()
+  end)
+
   if IsAddOnLoaded("ElvUI") and ElvUI then
     local E, L, V, P, G = unpack(ElvUI)
     statusbar:SetStatusBarTexture(E.media.normTex)
@@ -696,6 +704,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
     local distribution = userArgs[1]
     local preset = userArgs[2]
     local silent = userArgs[3]
+    local fromLiveSession = userArgs[4]
     --restore "Send" and "Live" button
     if MDT.liveSessionActive then
       MDT.main_frame.LiveSessionButton:SetText(L["*Live*"])
@@ -709,7 +718,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
     MDT.main_frame.LiveSessionButton:SetDisabled(false)
     MDT.main_frame.SendingStatusBar:Hide()
     --output chat link
-    if not silent then
+    if not silent and preset then
       local prefix = "[MDT_v2: "
       local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx)
       local presetName = preset.text
@@ -730,9 +739,11 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
       SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
     end
     numActiveTransmissions = numActiveTransmissions - 1
-    MDT:RestoreThrottleValues()
+    if not fromLiveSession then MDT:RestoreThrottleValues() end
   end
 end
+
+MDT.displaySendingProgress = displaySendingProgress
 
 function MDT:GetPresetByUid(presetUid)
   local db = MDT:GetDB()

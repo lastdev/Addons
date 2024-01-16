@@ -42,7 +42,7 @@ local function adventureMapOpenHandler(followerTypeID)
     tldrButton:SetFrameStrata("DIALOG")
     addon.GUI:SetParent(CovenantMissionFrame)
     addon.GUI:SetFrameStrata("DIALOG")
-    addon.GUI:SetShown(addon.db.profile.autoShowUI)
+    addon.GUI:SetShown(addon.GUI:IsShown() or addon.db.profile.autoShowUI)
     if (not addon.GUI:IsUserPlaced()) and (not addon.db.profile.guiX) and (not addon.db.profile.guiY) then
         addon.GUI:ClearAllPoints()
         addon.GUI:SetPoint("RIGHT", CovenantMissionFrame, "LEFT")

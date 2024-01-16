@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Loatheb", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240108054628")
 mod:SetCreatureID(16011)
 mod:SetEncounterID(1115)
 mod:SetModelID(16110)
@@ -28,7 +28,7 @@ local timerRemoveCurseCD	= mod:NewNextTimer(30.8, 30281, nil, nil, nil, 5)
 --local timerAura			= mod:NewBuffActiveTimer(17, 55593, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 
 mod:AddInfoFrameOption(29184, "Tank|Healer")
-mod:AddDropdownOption("CorruptedSorting", {"Alphabetical", "Duration"}, "Alphabetical")
+mod:AddDropdownOption("CorruptedSorting", {"Alphabetical", "Duration"}, "Alphabetical", "misc", nil, 29184)
 
 mod.vb.doomCounter	= 0
 mod.vb.sporeTimer	= 12.9

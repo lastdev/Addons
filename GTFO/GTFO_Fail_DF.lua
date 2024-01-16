@@ -1199,6 +1199,12 @@ GTFO.SpellID["398559"] = {
   sound = 3;
 };
 
+GTFO.SpellID["375011"] = {
+  --desc = "Seismic Force (Morchok)";
+  sound = 3;
+  applicationOnly = true;
+};
+
 
 --- *******************
 --- * Ruby Life Pools *
@@ -2950,6 +2956,11 @@ GTFO.SpellID["425370"] = {
   --desc = "Radial Flourish (Cycle Warden)";
   sound = 3;
 };
+
+GTFO.SpellID["423369"] = {
+  --desc = "Barrier Blossom (Nymue)";
+  sound = 3;
+}
 
 GTFO.SpellID["420554"] = {
   --desc = "Verdant Matrix (Nymue)";

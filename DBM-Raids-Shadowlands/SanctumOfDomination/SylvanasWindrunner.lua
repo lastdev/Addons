@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2441, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240116050449")
 mod:SetCreatureID(175732)
 mod:SetEncounterID(2435)
 mod:SetUsedIcons(1, 2, 3)
@@ -665,7 +665,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			soakCount = 4
 		end
 		if self.Options.SpecWarn358588soakcount then
-			specWarnMerciless:Show(self.vb.merciCount.." ("..soakCount.."x)")
+			specWarnMerciless:Show(self.vb.merciCount.." / "..soakCount.."x")
 			specWarnMerciless:Play("helpsoak")
 		else
 			warnMerciless:Show(self.vb.merciCount.." ("..soakCount.."x)")

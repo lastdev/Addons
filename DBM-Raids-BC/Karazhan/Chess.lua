@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Chess", "DBM-Raids-BC", 8)
 local L		= mod:GetLocalizedStrings()
 
 local playerFactoin = UnitFactionGroup("player")
-mod:SetRevision("20230523061139")
+mod:SetRevision("20231229225155")
 if playerFactoin == "Alliance" then
 	mod:SetCreatureID(21752)--Warchief Blackhand
 else
@@ -23,10 +23,10 @@ mod:RegisterEventsInCombat(
 local timerHeroism			= mod:NewBuffActiveTimer(10, 37471)
 local timerBloodlust		= mod:NewBuffActiveTimer(10, 37472)
 local timerRecentlyInGame	= mod:NewBuffFadesTimer(10, 30529, nil, nil, nil, 5)
-local timerNextCheat		= mod:NewTimer(108, "timerCheat", 39342, nil, nil, 3)
+local timerNextCheat		= mod:NewTimer(102.1, "timerCheat", 39342, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
-	timerNextCheat:Start(108)
+	timerNextCheat:Start(108)--Also 102.1?
 end
 
 function mod:SPELL_AURA_APPLIED(args)

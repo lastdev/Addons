@@ -229,6 +229,12 @@ spec:RegisterAuras( {
         type = "Magic",
         max_stack = 1
     },
+    blessing_of_sanctuary = {
+        id = 210256,
+        duration = 5,
+        type = "Magic",
+        max_stack = 1
+    },
     -- Immune to magical damage and harmful effects.
     -- https://wowhead.com/beta/spell=204018
     blessing_of_spellwarding = {
@@ -1085,6 +1091,21 @@ spec:RegisterAbilities( {
         end,
     },
 
+    blessing_of_sanctuary = {
+        id = 210256,
+        cast = 0,
+        cooldown = 0,
+        gcd = "spell",
+        school = "holy",
+
+        pvptalent = "blessing_of_sanctuary",
+        startsCombat = false,
+
+        handler = function ()
+            applyBuff( "blessing_of_sanctuary" )
+        end,
+    },
+
     -- Talent: Emits dazzling light in all directions, blinding enemies within $105421A1 yards, causing them to wander disoriented for $105421d. Non-Holy damage will break the disorient effect.
     blinding_light = {
         id = 115750,
@@ -1639,9 +1660,6 @@ spec:RegisterAbilities( {
             removeBuff( "recompense" )
             gain( talent.boundless_judgment.enabled and 2 or 1, "holy_power" )
 
-            if debuff.expurgation.up and set_bonus.tier31_2pc > 0 then
-                applyDebuff( "target", "wrathful_sanction" )
-            end
             if talent.divine_arbiter.enabled then addStack( "divine_arbiter" ) end
             if talent.empyrean_legacy.enabled and debuff.empyrean_legacy_icd.down then
                 applyBuff( "empyrean_legacy" )

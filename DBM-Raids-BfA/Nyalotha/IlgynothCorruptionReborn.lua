@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2374, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240115231736")
 mod:SetCreatureID(158328)
 mod:SetEncounterID(2345)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetBossHPInfoToHighest()
-mod.noBossDeathKill = true--Instructs mod to ignore 158328 deaths, since it might die 4x on this fight
+mod:DisableBossDeathKill()
 mod:SetHotfixNoticeRev(20200130000000)--2020, 1, 30
 --mod:SetMinSyncRevision(20190716000000)
 mod.respawnTime = 29
@@ -71,8 +71,7 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 mod:AddRangeFrameOption(11, 311159)
 mod:AddSetIconOption("SetIconOnCusedBlood", 313759, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddBoolOption("SetIconOnlyOnce", true)--If disabled, as long as living oozes are up, the skull will bounce around to lowest health mob continually, which is likely not desired by most, thus this defaulted on
-mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-mod:AddDropdownOption("InterruptBehavior", {"Two", "Three", "Four", "Five"}, "Two", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Two", "Three", "Four", "Five"}, "Two", "misc", nil, 310788)
 
 mod.vb.TouchofCorruptorIcon = 1
 mod.vb.IchorCount = 0

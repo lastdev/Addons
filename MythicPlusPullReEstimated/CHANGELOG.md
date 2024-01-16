@@ -1,6 +1,7 @@
 # Mythic Plus Pull ReEstimated
 
-## [v1.8.10](https://github.com/NumyAddon/MythicPlusPullReEstimated/tree/v1.8.10) (2023-11-09)
-[Full Changelog](https://github.com/NumyAddon/MythicPlusPullReEstimated/compare/v1.8.9...v1.8.10) [Previous Releases](https://github.com/NumyAddon/MythicPlusPullReEstimated/releases)
+## [v1.9.1](https://github.com/NumyAddon/MythicPlusPullReEstimated/tree/v1.9.1) (2023-12-29)
+[Full Changelog](https://github.com/NumyAddon/MythicPlusPullReEstimated/compare/v1.9.0...v1.9.1) [Previous Releases](https://github.com/NumyAddon/MythicPlusPullReEstimated/releases)
 
-- TOC bump  
+- Revert changes to Copy text popups, to let them more consistently copy  
+- minor cleanup  

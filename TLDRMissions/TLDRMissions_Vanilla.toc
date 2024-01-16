@@ -1,6 +1,6 @@
 ## Interface: 11404
 ## Title: TL;DR Missions
-## Version: 10.2-006
+## Version: 10.2-014
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## X-Curse-Project-ID: 602487

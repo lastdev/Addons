@@ -10,7 +10,6 @@ SMARTBUFF_CREDITS = "|cffffffff"
   .."Codermik 的 Shadowlands 版本。 请在 CurseForge 或我的 discord 上报告任何问题：\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
   .."|cffffffff如果您感谢所涉及的工作量以及为您带来这些各种插件所花费的时间，请考虑通过以下方式支持我：\n\n"
-  .."|cffffffffPatreon: |cff00e0ffhttps://www.patreon.com/codermik\n"
   .."|cffffffffTwitch: |cff00e0ffhttps://www.twitch.tv/codermik\n"
   .."|cffffffffPayPal.Me: |cff00e0ffhttps://paypal.me/codermik\n\n"
 ;

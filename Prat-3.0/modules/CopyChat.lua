@@ -718,6 +718,11 @@ end
     end)
   end
 
+  local function CleanText(text)
+    text = text:gsub("|K.-|k", "<BNET REMOVED>")
+    return StripHyperlinks(text, false, true)
+  end
+
   --[[------------------------------------------------
       Core Functions
   ------------------------------------------------]] --
@@ -728,8 +733,7 @@ end
         if visibleLine:IsMouseOver() then
           local info = visibleLine.messageInfo
           if info and info.message then
-            local text = info.message:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H.-|h", ""):gsub("|h", "")
-            text = text:gsub("|K.-|k", ""):gsub("|T.-|t", ""):gsub("|A.-|a", "")
+            local text = CleanText(info.message)
 
             local editBox = ChatEdit_ChooseBoxForSend(frame);
 
@@ -798,16 +802,6 @@ end
     self:ScrapeChatFrame(SELECTED_CHAT_FRAME)
   end
 
-  local function stripChatText(text)
-    local stripped = text:gsub("|K[^|]-|k", "<BNET REMOVED>")
-    stripped = stripped:gsub("|T.-|t", "")
-    stripped = stripped:gsub("|A.-|a", "")
-    stripped = stripped:gsub("|cff......|H.-|h(%[.-%])|h|r", "%1")
-    stripped = stripped:gsub("|cff......(.-)|r", "%1")
-
-    return stripped
-  end
-
   function module:DoCopyChatScroll(frame)
     local scrapelines = {}
     local str
@@ -819,7 +813,7 @@ end
       msg = msg and msg.message
 
       if msg then
-       scrapelines[#scrapelines+1] = stripChatText(msg)
+       scrapelines[#scrapelines+1] = CleanText(msg)
       end
     end
 
@@ -842,7 +836,7 @@ end
       local msg = frame:GetMessageInfo(i)
 
       if msg then
-        lines[#lines+1] = stripChatText(msg)
+        lines[#lines+1] = CleanText(msg)
       end
     end
 

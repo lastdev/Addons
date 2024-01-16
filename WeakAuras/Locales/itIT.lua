@@ -126,8 +126,6 @@ L["Afk"] = "Afk"
 L["Aggro"] = "Aggro"
 L["Agility"] = "Agilità"
 L["Ahn'Qiraj"] = "Ahn'Qiraj"
---[[Translation missing --]]
-L["Alchemy Cast Bar"] = "Alchemy Cast Bar"
 L["Alert Type"] = "Tipo di Allerta"
 --[[Translation missing --]]
 L["Algalon the Observer"] = "Algalon the Observer"
@@ -248,7 +246,8 @@ L["Background"] = "Sfondo"
 L["Background Color"] = "Colore Sfondo"
 --[[Translation missing --]]
 L["Baltharus the Warborn"] = "Baltharus the Warborn"
-L["Bar Color"] = "Colore Barra"
+--[[Translation missing --]]
+L["Bar Color/Gradient Start"] = "Bar Color/Gradient Start"
 --[[Translation missing --]]
 L["Baron Geddon"] = "Baron Geddon"
 --[[Translation missing --]]
@@ -274,10 +273,6 @@ L["BigWigs Stage"] = "BigWigs Stage"
 L["BigWigs Timer"] = "Timer di BigWigs"
 --[[Translation missing --]]
 L["Black Wing Lair"] = "Black Wing Lair"
---[[Translation missing --]]
-L["Blacksmithing Cast Bar"] = "Blacksmithing Cast Bar"
---[[Translation missing --]]
-L["Blizzard (2h | 3m | 10s | 2.4)"] = "Blizzard (2h | 3m | 10s | 2.4)"
 L["Blizzard Combat Text"] = "Testo di combattimento Blizzard"
 --[[Translation missing --]]
 L["Blizzard Cooldown Reduction"] = "Blizzard Cooldown Reduction"
@@ -340,6 +335,12 @@ https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Cannot c
 https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
 --[[Translation missing --]]
 L["Can't schedule timer with %i, due to a World of Warcraft bug with high computer uptime. (Uptime: %i). Please restart your computer."] = "Can't schedule timer with %i, due to a World of Warcraft bug with high computer uptime. (Uptime: %i). Please restart your computer."
+--[[Translation missing --]]
+L["Capped"] = "Capped"
+--[[Translation missing --]]
+L["Capped at Season Max"] = "Capped at Season Max"
+--[[Translation missing --]]
+L["Capped at Weekly Max"] = "Capped at Weekly Max"
 L["Cast"] = "Cast"
 --[[Translation missing --]]
 L["Cast Bar"] = "Cast Bar"
@@ -355,6 +356,8 @@ L["Caster Name"] = "Caster Name"
 L["Caster Realm"] = "Caster Realm"
 --[[Translation missing --]]
 L["Caster Unit"] = "Caster Unit"
+--[[Translation missing --]]
+L["Casters Name/Realm"] = "Casters Name/Realm"
 --[[Translation missing --]]
 L["Caster's Target"] = "Caster's Target"
 --[[Translation missing --]]
@@ -488,6 +491,10 @@ L["Crushing"] = "Crushing"
 --[[Translation missing --]]
 L["C'thun"] = "C'thun"
 --[[Translation missing --]]
+L["Currency"] = "Currency"
+--[[Translation missing --]]
+L["Current Combo Point charged"] = "Current Combo Point charged"
+--[[Translation missing --]]
 L["Current Essence"] = "Current Essence"
 --[[Translation missing --]]
 L["Current Experience"] = "Current Experience"
@@ -606,6 +613,8 @@ L["Disable Spell Known Check"] = "Disable Spell Known Check"
 --[[Translation missing --]]
 L["Disabled Spell Known Check"] = "Disabled Spell Known Check"
 --[[Translation missing --]]
+L["Discovered"] = "Discovered"
+--[[Translation missing --]]
 L["Disease"] = "Disease"
 --[[Translation missing --]]
 L["Dispel"] = "Dispel"
@@ -722,8 +731,6 @@ L["Enchant Name or ID"] = "Enchant Name or ID"
 L["Enchant Removed"] = "Enchant Removed"
 --[[Translation missing --]]
 L["Enchanted"] = "Enchanted"
---[[Translation missing --]]
-L["Enchanting Cast Bar"] = "Enchanting Cast Bar"
 --[[Translation missing --]]
 L["Encounter ID(s)"] = "Encounter ID(s)"
 --[[Translation missing --]]
@@ -964,9 +971,9 @@ L["Gothik the Harvester"] = "Gothik the Harvester"
 --[[Translation missing --]]
 L["Gradient"] = "Gradient"
 --[[Translation missing --]]
-L["Gradient Color"] = "Gradient Color"
---[[Translation missing --]]
 L["Gradient Enabled"] = "Gradient Enabled"
+--[[Translation missing --]]
+L["Gradient End"] = "Gradient End"
 --[[Translation missing --]]
 L["Gradient Orientation"] = "Gradient Orientation"
 --[[Translation missing --]]
@@ -981,22 +988,6 @@ L["Grobbulus"] = "Grobbulus"
 L["Group"] = "Group"
 --[[Translation missing --]]
 L["Group Arrangement"] = "Group Arrangement"
---[[Translation missing --]]
-L["Group Finder Eye"] = "Group Finder Eye"
---[[Translation missing --]]
-L["Group Finder Eye Initial"] = "Group Finder Eye Initial"
---[[Translation missing --]]
-L["Group Finder Found"] = "Group Finder Found"
---[[Translation missing --]]
-L["Group Finder Found Initial"] = "Group Finder Found Initial"
---[[Translation missing --]]
-L["Group Finder Mouse Over"] = "Group Finder Mouse Over"
---[[Translation missing --]]
-L["Group Finder Poke"] = "Group Finder Poke"
---[[Translation missing --]]
-L["Group Finder Poke End"] = "Group Finder Poke End"
---[[Translation missing --]]
-L["Group Finder Poke Initial"] = "Group Finder Poke Initial"
 --[[Translation missing --]]
 L["Group Leader/Assist"] = "Group Leader/Assist"
 --[[Translation missing --]]
@@ -1093,6 +1084,8 @@ L["Icon"] = "Icon"
 L["Icon Function"] = "Icon Function"
 --[[Translation missing --]]
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
+--[[Translation missing --]]
+L["ID"] = "ID"
 --[[Translation missing --]]
 L["Id"] = "Id"
 --[[Translation missing --]]
@@ -1232,8 +1225,6 @@ L["Item Type"] = "Item Type"
 --[[Translation missing --]]
 L["Item Type Equipped"] = "Item Type Equipped"
 --[[Translation missing --]]
-L["Jewelcrafting Cast Bar"] = "Jewelcrafting Cast Bar"
---[[Translation missing --]]
 L["Jin'do the Hexxer"] = "Jin'do the Hexxer"
 --[[Translation missing --]]
 L["Journal Stage"] = "Journal Stage"
@@ -1241,8 +1232,6 @@ L["Journal Stage"] = "Journal Stage"
 L["Keep Inside"] = "Keep Inside"
 --[[Translation missing --]]
 L["Kel'Thuzad"] = "Kel'Thuzad"
---[[Translation missing --]]
-L["Key"] = "Key"
 --[[Translation missing --]]
 L["Kologarn"] = "Kologarn"
 --[[Translation missing --]]
@@ -1259,8 +1248,6 @@ L["Latency"] = "Latency"
 L["Leader"] = "Leader"
 --[[Translation missing --]]
 L["Least remaining time"] = "Least remaining time"
---[[Translation missing --]]
-L["Leatherworking Cast Bar"] = "Leatherworking Cast Bar"
 --[[Translation missing --]]
 L["Leaving"] = "Leaving"
 --[[Translation missing --]]
@@ -1305,6 +1292,8 @@ L["Location"] = "Location"
 L["Looking for Raid"] = "Looking for Raid"
 --[[Translation missing --]]
 L["Loop"] = "Loop"
+--[[Translation missing --]]
+L["Loot"] = "Loot"
 --[[Translation missing --]]
 L["Lord Jaraxxus"] = "Lord Jaraxxus"
 --[[Translation missing --]]
@@ -1367,6 +1356,8 @@ L["Max Charges"] = "Max Charges"
 L["Max Health"] = "Max Health"
 --[[Translation missing --]]
 L["Max Power"] = "Max Power"
+--[[Translation missing --]]
+L["Max Quantity"] = "Max Quantity"
 --[[Translation missing --]]
 L["Maximum"] = "Maximum"
 --[[Translation missing --]]
@@ -1734,8 +1725,6 @@ L["Player Name/Realm"] = "Player Name/Realm"
 --[[Translation missing --]]
 L["Player Race"] = "Player Race"
 --[[Translation missing --]]
-L["Player Rest"] = "Player Rest"
---[[Translation missing --]]
 L["Player(s) Affected"] = "Player(s) Affected"
 --[[Translation missing --]]
 L["Player(s) Not Affected"] = "Player(s) Not Affected"
@@ -1795,6 +1784,12 @@ L["PvP Talent %i"] = "PvP Talent %i"
 L["PvP Talent selected"] = "PvP Talent selected"
 --[[Translation missing --]]
 L["PvP Talent Selected"] = "PvP Talent Selected"
+--[[Translation missing --]]
+L["Quality Id"] = "Quality Id"
+--[[Translation missing --]]
+L["Quantity"] = "Quantity"
+--[[Translation missing --]]
+L["Quantity earned this week"] = "Quantity earned this week"
 --[[Translation missing --]]
 L["Queued Action"] = "Queued Action"
 --[[Translation missing --]]
@@ -2136,6 +2131,8 @@ L["Spec Role"] = "Spec Role"
 --[[Translation missing --]]
 L["Specialization"] = "Specialization"
 --[[Translation missing --]]
+L["Specific Currency"] = "Specific Currency"
+--[[Translation missing --]]
 L["Specific Type"] = "Specific Type"
 --[[Translation missing --]]
 L["Specific Unit"] = "Specific Unit"
@@ -2256,8 +2253,6 @@ L["System"] = "System"
 --[[Translation missing --]]
 L["Tab "] = "Tab "
 --[[Translation missing --]]
-L["Tailoring Cast Bar"] = "Tailoring Cast Bar"
---[[Translation missing --]]
 L["Talent"] = "Talent"
 --[[Translation missing --]]
 L["Talent |cFFFF0000Not|r Known"] = "Talent |cFFFF0000Not|r Known"
@@ -2266,9 +2261,9 @@ L["Talent |cFFFF0000Not|r Selected"] = "Talent |cFFFF0000Not|r Selected"
 --[[Translation missing --]]
 L["Talent Known"] = "Talent Known"
 --[[Translation missing --]]
-L["Talent Selected"] = "Talent Selected"
---[[Translation missing --]]
 L["Talent selected"] = "Talent selected"
+--[[Translation missing --]]
+L["Talent Selected"] = "Talent Selected"
 --[[Translation missing --]]
 L["Talent Specialization"] = "Talent Specialization"
 --[[Translation missing --]]
@@ -2302,7 +2297,7 @@ L["The Eye of Eternity"] = "The Eye of Eternity"
 --[[Translation missing --]]
 L["The Four Horsemen"] = "The Four Horsemen"
 --[[Translation missing --]]
-L["The 'Key' value can be found in the BigWigs options of a specific spell"] = "The 'Key' value can be found in the BigWigs options of a specific spell"
+L["The 'ID' value can be found in the BigWigs options of a specific spell"] = "The 'ID' value can be found in the BigWigs options of a specific spell"
 --[[Translation missing --]]
 L["The Lich King"] = "The Lich King"
 --[[Translation missing --]]
@@ -2386,6 +2381,8 @@ L["Total"] = "Total"
 --[[Translation missing --]]
 L["Total Duration"] = "Total Duration"
 --[[Translation missing --]]
+L["Total Earned in this Season"] = "Total Earned in this Season"
+--[[Translation missing --]]
 L["Total Essence"] = "Total Essence"
 --[[Translation missing --]]
 L["Total Experience"] = "Total Experience"
@@ -2421,6 +2418,8 @@ L["Tracking Charge CDs"] = "Tracking Charge CDs"
 L["Tracking Only Cooldown"] = "Tracking Only Cooldown"
 --[[Translation missing --]]
 L["Transmission error"] = "Transmission error"
+--[[Translation missing --]]
+L["Treat charged combo point as 7 combo points"] = "Treat charged combo point as 7 combo points"
 --[[Translation missing --]]
 L["Trial of the Crusader"] = "Trial of the Crusader"
 --[[Translation missing --]]

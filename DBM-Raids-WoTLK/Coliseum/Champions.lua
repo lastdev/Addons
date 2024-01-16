@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240113214633")
 mod:SetCreatureID(34458, 34451, 34459, 34448, 34449, 34445, 34456, 34447, 34441, 34454, 34444, 34455, 34450, 34453, 34461, 34460, 34469, 34467, 34468, 34471, 34465, 34466, 34473, 34472, 34470, 34463, 34474, 34475)
 --mod:SetEncounterID(mod:IsClassic() and 637 or 1086)--This must never be enabled
 mod:SetBossHPInfoToHighest()
@@ -39,6 +39,14 @@ local timerBladestorm		= mod:NewBuffActiveTimer(8, 65947, nil, nil, nil, 2)
 local timerShadowstepCD		= mod:NewCDTimer(30, 66178, nil, nil, nil, 3)
 local timerDeathgripCD		= mod:NewCDTimer(35, 66017, nil, nil, nil, 3)
 local timerBladestormCD		= mod:NewCDTimer(90, 65947, nil, nil, nil, 2)
+
+
+function mod:OnCombatStart(delay)
+	--10 Champions on 25 player and 6 Champions on 10 man
+	local totalBosses = self:IsDifficulty("normal25", "heroic25") and 10 or 6
+	self.vb.bossLeft = totalBosses
+	self.numBoss = totalBosses
+end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 65816 then
@@ -96,15 +104,25 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 34472 or cid == 34454 then
-		timerShadowstepCD:Cancel(args.destGUID)
-	elseif cid == 34458 or cid == 34461 then
-		timerDeathgripCD:Cancel(args.destGUID)
-	elseif cid == 34475 or cid == 34453 then
-		timerBladestormCD:Cancel(args.destGUID)
-		timerBladestorm:Cancel(args.destGUID)
-		preWarnBladestorm:Cancel()
+do
+	local function checkAllBossDead(self)
+		if self.vb.bossLeft == 0 then
+			DBM:EndCombat(self)
+		end
+	end
+
+	function mod:UNIT_DIED(args)
+		self:Unschedule(checkAllBossDead)
+		self:Schedule(1, checkAllBossDead)
+		local cid = self:GetCIDFromGUID(args.destGUID)
+		if cid == 34472 or cid == 34454 then
+			timerShadowstepCD:Cancel(args.destGUID)
+		elseif cid == 34458 or cid == 34461 then
+			timerDeathgripCD:Cancel(args.destGUID)
+		elseif cid == 34475 or cid == 34453 then
+			timerBladestormCD:Cancel(args.destGUID)
+			timerBladestorm:Cancel(args.destGUID)
+			preWarnBladestorm:Cancel()
+		end
 	end
 end

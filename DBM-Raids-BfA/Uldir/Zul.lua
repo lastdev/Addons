@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2195, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240108061637")
 mod:SetCreatureID(138967)
 mod:SetEncounterID(2145)
 mod:DisableESCombatDetection()--ES fires moment you throw out CC, so it can't be trusted for combatstart
@@ -89,7 +89,7 @@ mod:AddNamePlateOption("NPAuraOnEngorgedBurst2", 276299, false)
 mod:AddNamePlateOption("NPAuraOnDecayingFlesh", 276434)
 mod:AddSetIconOption("SetIconOnDecay", 276434, true, true, {8})
 mod:AddSetIconOption("SetIconDarkRev", 273365, true, false, {1, 2})
-mod:AddDropdownOption("TauntBehavior", {"TwoHardThreeEasy", "TwoAlways", "ThreeAlways"}, "TwoHardThreeEasy", "misc")
+mod:AddDropdownOption("TauntBehavior", {"TwoHardThreeEasy", "TwoAlways", "ThreeAlways"}, "TwoHardThreeEasy", "misc", nil, 274358)
 
 mod.vb.darkRevCount = 0
 mod.vb.poolCount = 0

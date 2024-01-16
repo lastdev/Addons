@@ -1,5 +1,19 @@
+== v2.14 - 12th January 2024
+* TOC version bump to 10.2.5
+
+== v2.13 - 26th December 2023
+* New per character/account options for supressing pins plus translations
+* New way of testing for game versions - preventing LUA erros if the player accidentally uses in Classic SoD etc
+* Various changes to formatting / titles in the TOC and the HandyNotes plugin titles
+
+== v2.12 - 10th December 2023
+* Added (50.76,42.70) and (53.81,41.75) in Durotar / Razor Hill (Retail and Classic) from my notes
+* Housekeeping. Standardising code between AddOns
+* Felstriker server added. Not relevant to this AddOn
+* Penance and Shadowstrike added (SoD)
+
 == v2.11 - 26th November 2023
-* Added (46.82,5366) to Dun Morogh Classic
+* Added (46.82,53.66) to Dun Morogh Classic
 
 == v2.10 - 12th November 2023
 * Fix for pin data logic for non-acg=hievement pins

@@ -1,3 +1,7 @@
+== v1.30 - 11th December 2023
+* Felstriker server added
+* Penance and Shadowstrike added (SoD)
+
 == v1.29 - 27th November 2023
 * Added and improved translations to the Minimap AddOns menu
 

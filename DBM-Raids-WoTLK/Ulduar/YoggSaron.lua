@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230525074627")
+mod:SetRevision("20240113024857")
 mod:SetCreatureID(33288)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1143)
@@ -119,7 +119,6 @@ function mod:OnCombatEnd()
 	end
 end
 
-
 function mod:OnTimerRecovery()
 	self.vb.numberOfPlayers = DBM:GetNumRealGroupMembers()
 end
@@ -211,15 +210,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMalady:Show()
 			specWarnMalady:Play("targetyou")
 			yellMalady:Yell()
-		else
-			local uId = DBM:GetRaidUnitId(args.destName)
-			if uId then
-				local inRange = CheckInteractDistance(uId, 2)
-				if inRange then
-					specWarnMaladyNear:Show(args.destName)
-					specWarnMaladyNear:Play("runaway")
-				end
-			end
+		elseif self:IsClassic() and self:CheckNearby(10, args.destName) then
+			specWarnMaladyNear:Show(args.destName)
+			specWarnMaladyNear:Play("runaway")
 		end
 	elseif args:IsSpellID(64126, 64125) then	-- Squeeze
 		warnSqueeze:Show(args.destName)

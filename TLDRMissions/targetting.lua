@@ -633,9 +633,24 @@ function addon:getNearbyAllyOrSelf(follower, field)
     return targets
 end
 
+local numAliveToIndex = {
+    [1] = 1,
+    [2] = 2,
+    [3] = 2,
+    [4] = 4,
+    [5] = 2,
+    [6] = 2,
+    [7] = 7,
+    [8] = 8,
+    [9] = 5,
+    [10] = 2,
+    [11] = 4,        
+}
+
 function addon:getPseudorandomMawswornStrength(follower, field)
     local targets = {}
     
+    --[[
     local patterns = {
         -- observed in 2208
         -- see https://github.com/teelolws/TLDRMissions/issues/92
@@ -673,45 +688,25 @@ function addon:getPseudorandomMawswornStrength(follower, field)
         -- observed in 2254 (Mawsworn Strength)
         {alive = {2, 3, 4}, target = 3},
     }
+    ]]
     
     local aliveMinions = {}
     
     for _, minion in pairs(field) do
         if (minion.boardIndex < 5) and (minion.HP > 0) and (not minion.shroud) then
-            aliveMinions[minion.boardIndex] = true
+            table.insert(aliveMinions, minion)
         end
     end
     
-    local numAliveMinions = 0
+    local numAliveMinions = #aliveMinions
     
-    for _ in pairs(aliveMinions) do
-        numAliveMinions = numAliveMinions + 1
-    end
+    table.sort(aliveMinions, function(a, b)
+        return a.boardIndex < b.boardIndex
+    end)
     
-    for _, pattern in pairs(patterns) do
-        if table.getn(pattern.alive) == numAliveMinions then
-            local match = true
-            for minion, _ in pairs(aliveMinions) do
-                local m = false
-                for _, p in pairs(pattern.alive) do
-                    if minion == p then
-                        m = true
-                    end
-                end
-                if m == false then
-                    match = false
-                end
-            end
-            
-            if match then
-                for _, minion in pairs(field) do
-                    if minion.boardIndex == pattern.target then
-                        table.insert(targets, minion)
-                        return targets
-                    end
-                end
-            end
-        end
+    local index = numAliveToIndex[numAliveMinions]
+    if index then
+        return {aliveMinions[index]}
     end
     
     local priorityList = {1, 2, 4, 3, 0}
@@ -732,6 +727,7 @@ end
 function addon:getPseudorandomRitualFervor(follower, field)
     local targets = {}
     
+    --[[
     local patterns = {
         -- observed in 2221
         -- see https://github.com/teelolws/TLDRMissions/issues/86
@@ -834,45 +830,25 @@ function addon:getPseudorandomRitualFervor(follower, field)
         {alive = {7, 12}, target = 12},
         {alive = {7, 9, 12}, target = 9},  
     }
+    ]]
     
-    local aliveMinions = {} -- counting "shroud" as dead for this
+    local aliveMinions = {}
     
     for _, minion in pairs(field) do
         if (minion.boardIndex > 4) and (minion.HP > 0) and (not minion.shroud) then
-            aliveMinions[minion.boardIndex] = true
+            table.insert(aliveMinions, minion)
         end
     end
     
-    local numAliveMinions = 0
+    local numAliveMinions = #aliveMinions
     
-    for _ in pairs(aliveMinions) do
-        numAliveMinions = numAliveMinions + 1
-    end
+    table.sort(aliveMinions, function(a, b)
+        return a.boardIndex < b.boardIndex
+    end)
     
-    for _, pattern in pairs(patterns) do
-        if table.getn(pattern.alive) == numAliveMinions then
-            local match = true
-            for minion, _ in pairs(aliveMinions) do
-                local m = false
-                for _, p in pairs(pattern.alive) do
-                    if minion == p then
-                        m = true
-                    end
-                end
-                if m == false then
-                    match = false
-                end
-            end
-            
-            if match then
-                for _, minion in pairs(field) do
-                    if minion.boardIndex == pattern.target then
-                        table.insert(targets, minion)
-                        return targets
-                    end
-                end
-            end
-        end
+    local index = numAliveToIndex[numAliveMinions]
+    if index then
+        return {aliveMinions[index]}
     end
     
     local priorityList = {12, 7, 11, 8, 5, 6, 9, 10}
@@ -890,97 +866,115 @@ function addon:getPseudorandomRitualFervor(follower, field)
     return targets
 end
 
-function addon:getPseudorandomLashOut(follower, field)   
+function addon:getPseudorandomLashOut(follower, field)
+    --[[
     local patterns = {
         -- observed in 2238
         -- see https://github.com/TLDRMissions/TLDRMissions/issues/89
+        -- 10
         {alive = {0, 1, 2, 3, 4, 5, 6, 7, 8, 10}, target = 1},
-        {alive = {0, 1, 3, 4, 5, 10}, target = 1},
+        
+        -- 9
         {alive = {0, 1, 2, 3, 4, 6, 7, 8, 10}, target = 4},
-        {alive = {0, 1, 3, 5, 6, 7, 8, 10}, target = 10},
-        {alive = {0, 1, 3, 8, 10}, target = 1},
         {alive = {0, 1, 2, 3, 5, 6, 7, 8, 10}, target = 5},
-        {alive = {0, 1, 2, 3, 8, 10}, target = 1},
         {alive = {0, 2, 3, 4, 5, 6, 7, 8, 10}, target = 5},
-        {alive = {0, 2, 4, 8, 10}, target = 2},
-        {alive = {0, 1, 2, 3, 4, 8, 10}, target = 10},
+        {alive = {0, 1, 3, 4, 5, 6, 7, 8, 10}, target = 5},
+        
+        -- 8
+        {alive = {0, 1, 3, 5, 6, 7, 8, 10}, target = 10},
         {alive = {0, 2, 3, 4, 6, 7, 8, 10}, target = 10},
-        {alive = {0, 2, 3, 4, 8, 10}, target = 2},
         {alive = {0, 1, 2, 3, 6, 7, 8, 10}, target = 10},
-        {alive = {0, 1, 2, 3, 7, 8, 10}, target = 10},
         {alive = {0, 1, 3, 4, 6, 7, 8, 10}, target = 10},
-        {alive = {0, 1, 8, 10}, target = 10},
-        {alive = {0, 1, 3, 4, 8, 10}, target = 1},
-        {alive = {0, 1, 5, 10}, target = 10},
-        {alive = {0, 1, 2, 3, 4, 7}, target = 1},
-        {alive = {0, 1, 3, 4, 6, 7}, target = 1},
-        {alive = {0, 1, 2, 7, 10}, target = 1},
-        {alive = {0, 1, 3, 4, 7, 8, 10}, target = 10},
-        {alive = {0, 1, 7, 8, 10}, target = 1},
         {alive = {0, 2, 3, 5, 6, 7, 8, 10}, target = 10},
-        {alive = {0, 2, 3, 6, 7, 10}, target = 2},
-        {alive = {0, 7, 10}, target = 7},
-        {alive = {0, 3, 4, 8, 10}, target = 3},
+        {alive = {0, 1, 2, 3, 4, 7, 8, 10}, target = 10},
+        {alive = {0, 1, 3, 4, 5, 6, 7, 10}, target = 10},
+        
+        -- 7
+        {alive = {0, 1, 2, 3, 4, 8, 10}, target = 10},
+        {alive = {0, 1, 2, 3, 7, 8, 10}, target = 10},
+        {alive = {0, 1, 3, 4, 7, 8, 10}, target = 10},
         {alive = {0, 1, 2, 3, 4, 6, 7}, target = 7},
         {alive = {0, 1, 3, 4, 6, 7, 10}, target = 10},
-        {alive = {0, 1, 2, 8, 10}, target = 1},
-        {alive = {0, 8}, target = 8},
-        {alive = {0, 1, 4, 6, 7, 10}, target = 1},
-        {alive = {0, 4, 6, 7, 10}, target = 4},
-        {alive = {0, 6, 7}, target = 6},
-        {alive = {0, 2, 6, 7, 10}, target = 2},
-        {alive = {0, 2, 6, 7}, target = 7},
-        {alive = {0, 1, 3, 4, 5, 6, 7, 8, 10}, target = 5},
-        {alive = {0, 1, 2, 3, 4, 7, 8, 10}, target = 10},
-        {alive = {0, 1, 3, 7, 8}, target = 1},
-        {alive = {0, 3, 6, 7, 10}, target = 3},
-        {alive = {0, 2, 3, 7, 8, 10}, target = 2},
-        {alive = {0, 7, 8}, target = 7},
         {alive = {0, 2, 3, 4, 6, 7, 10}, target = 10},
-        {alive = {0, 3, 4, 7}, target = 7},
-        {alive = {0, 7}, target = 7},
-        {alive = {0, 1, 4, 8, 10}, target = 1},
-        {alive = {0, 2, 4, 7, 10}, target = 2},
-        {alive = {0, 2, 8, 10}, target = 10},
         {alive = {3, 4, 5, 6, 7, 8, 10}, target = 10},
-        {alive = {3, 4, 5, 8, 10}, target = 4},
-        {alive = {3, 8, 10}, target = 8},
-        {alive = {0, 1, 6, 7, 10}, target = 1},
-        {alive = {0, 6, 7, 10}, target = 10},
-        {alive = {0, 3, 4, 6, 7, 10}, target = 3},
-        {alive = {0, 4, 6}, target = 4},
-        {alive = {0, 1, 4, 7}, target = 7},
-        {alive = {0, 4, 7}, target = 4},
-        {alive = {3, 4, 8, 10}, target = 10},
-        {alive = {0, 1, 6, 7}, target = 7},
-        {alive = {0, 1, 2, 6, 7, 10}, target = 1},
-        {alive = {0, 1, 7, 8}, target = 8},
-        {alive = {0, 6}, target = 6},
-        {alive = {0, 1, 8}, target = 1},
-        {alive = {0, 3, 4, 7, 10}, target = 3},
-        {alive = {0, 4, 6, 7}, target = 7},
-        {alive = {0, 3, 7, 8, 10}, target = 3},
-        {alive = {0, 2, 3, 4, 6, 10}, target = 2},
-        {alive = {0, 4, 7, 10}, target = 10},
         {alive = {0, 1, 2, 3, 6, 7, 10}, target = 10},
-        {alive = {0, 2, 7, 8, 10}, target = 2},
+        {alive = {1, 2, 5, 6, 7, 8, 10}, target = 10},
+        
+        -- 6
+        {alive = {0, 1, 3, 4, 5, 10}, target = 1},
+        {alive = {0, 1, 2, 3, 8, 10}, target = 1},
+        {alive = {0, 2, 3, 4, 8, 10}, target = 2},
+        {alive = {0, 1, 3, 4, 8, 10}, target = 1},
+        {alive = {0, 1, 2, 3, 4, 7}, target = 1},
+        {alive = {0, 1, 3, 4, 6, 7}, target = 1},
+        {alive = {0, 2, 3, 6, 7, 10}, target = 2},
+        {alive = {0, 1, 4, 6, 7, 10}, target = 1},
+        {alive = {0, 2, 3, 7, 8, 10}, target = 2},
+        {alive = {0, 3, 4, 6, 7, 10}, target = 3},
+        {alive = {0, 1, 2, 6, 7, 10}, target = 1},
+        {alive = {0, 2, 3, 4, 6, 10}, target = 2},
         {alive = {0, 1, 2, 3, 7, 10}, target = 1},
-        {alive = {0, 2, 7}, target = 2},
-        {alive = {0, 1, 2, 6, 7}, target = 1},
-        {alive = {0, 4, 8, 10}, target = 10},
         {alive = {0, 1, 3, 6, 7, 10}, target = 1},
         {alive = {0, 2, 3, 4, 7, 10}, target = 2},
-        {alive = {1, 7, 10}, target = 7},
-        {alive = {0, 1, 6}, target = 1},
-        {alive = {0, 2, 3, 7, 10}, target = 2},
-        {alive = {0, 1, 3, 4, 5, 6, 7, 10}, target = 10},
-        {alive = {1, 2, 5, 6, 7, 8, 10}, target = 10},
         {alive = {1, 2, 6, 7, 8, 10}, target = 2},
-        {alive = {0, 2, 8}, target = 2},
-        {alive = {0, 4, 8}, target = 4},
         {alive = {0, 3, 5, 6, 7, 10}, target = 3},
         {alive = {0, 1, 2, 3, 5, 10}, target = 1},
+
+        -- 5
+        {alive = {0, 1, 3, 8, 10}, target = 1},
+        {alive = {0, 2, 4, 8, 10}, target = 2},
+        {alive = {0, 1, 2, 7, 10}, target = 1},
+        {alive = {0, 1, 7, 8, 10}, target = 1},
+        {alive = {0, 3, 4, 8, 10}, target = 3},
+        {alive = {0, 1, 2, 8, 10}, target = 1},
+        {alive = {0, 4, 6, 7, 10}, target = 4},
+        {alive = {0, 2, 6, 7, 10}, target = 2},
+        {alive = {0, 1, 3, 7, 8}, target = 1},
+        {alive = {0, 3, 6, 7, 10}, target = 3},
+        {alive = {0, 1, 4, 8, 10}, target = 1},
+        {alive = {0, 2, 4, 7, 10}, target = 2},
+        {alive = {3, 4, 5, 8, 10}, target = 4},
+        {alive = {0, 1, 6, 7, 10}, target = 1},
+        {alive = {0, 3, 4, 7, 10}, target = 3},
+        {alive = {0, 3, 7, 8, 10}, target = 3},
+        {alive = {0, 2, 7, 8, 10}, target = 2},
+        {alive = {0, 1, 2, 6, 7}, target = 1},
+        {alive = {0, 2, 3, 7, 10}, target = 2},
         {alive = {0, 1, 3, 4, 7}, target = 1},
+        
+        -- 4
+        {alive = {0, 1, 8, 10}, target = 10},
+        {alive = {0, 1, 5, 10}, target = 10},
+        {alive = {0, 2, 6, 7}, target = 7},
+        {alive = {0, 3, 4, 7}, target = 7},
+        {alive = {0, 2, 8, 10}, target = 10},
+        {alive = {0, 6, 7, 10}, target = 10},
+        {alive = {0, 1, 4, 7}, target = 7},
+        {alive = {3, 4, 8, 10}, target = 10},
+        {alive = {0, 1, 6, 7}, target = 7},
+        {alive = {0, 1, 7, 8}, target = 8},
+        {alive = {0, 4, 6, 7}, target = 7},
+        {alive = {0, 4, 7, 10}, target = 10},
+        {alive = {0, 4, 8, 10}, target = 10},
+        
+        -- 3
+        {alive = {0, 7, 10}, target = 7},
+        {alive = {0, 6, 7}, target = 6},
+        {alive = {0, 7, 8}, target = 7},
+        {alive = {3, 8, 10}, target = 8},
+        {alive = {0, 4, 6}, target = 4},
+        {alive = {0, 4, 7}, target = 4},
+        {alive = {0, 1, 8}, target = 1},
+        {alive = {0, 2, 7}, target = 2},
+        {alive = {1, 7, 10}, target = 7},
+        {alive = {0, 1, 6}, target = 1},
+        {alive = {0, 2, 8}, target = 2},
+        {alive = {0, 4, 8}, target = 4},
+        
+        -- 2
+        {alive = {0, 8}, target = 8},
+        {alive = {0, 7}, target = 7},
+        {alive = {0, 6}, target = 6},
 
         -- observed in 2224 (Panic Attack)
         -- see https://github.com/TLDRMissions/TLDRMissions/issues/120
@@ -1101,22 +1095,44 @@ function addon:getPseudorandomLashOut(follower, field)
         {alive = {1, 4, 10, 11}, target = 11},
         {alive = {0, 4, 6, 7, 10, 11}, target = 4},
         {alive = {0, 6, 7, 11}, target = 11},
+        {alive = {0, 2, 7, 10, 11}, target = 2},
+        {alive = {0, 7, 10, 11}, target = 11},
     }
+    ]]
     
     local aliveMinions = {}
     
+    --[[
     for _, minion in pairs(field) do
         if (minion.HP > 0) and (not minion.shroud) then
             aliveMinions[minion.boardIndex] = true
         end
     end
+    ]]
+    for _, minion in pairs(field) do
+        if (minion.HP > 0) and (not minion.shroud) then
+            table.insert(aliveMinions, minion)
+        end
+    end
     
-    local numAliveMinions = 0
+    local numAliveMinions = #aliveMinions
     
+    table.sort(aliveMinions, function(a, b)
+        return a.boardIndex < b.boardIndex
+    end)
+    
+    local index = numAliveToIndex[numAliveMinions]
+    if index then
+        return {aliveMinions[index]}
+    end
+    
+    --[[
     for _ in pairs(aliveMinions) do
         numAliveMinions = numAliveMinions + 1
     end
+    ]]
     
+    --[[
     for _, pattern in pairs(patterns) do
         if table.getn(pattern.alive) == numAliveMinions then
             local match = true
@@ -1141,6 +1157,7 @@ function addon:getPseudorandomLashOut(follower, field)
             end
         end
     end
+    ]]
     
     local priorityList = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 

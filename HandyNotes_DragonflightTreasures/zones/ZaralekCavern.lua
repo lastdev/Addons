@@ -182,6 +182,7 @@ ns.RegisterPoints(ns.ZARALEKCAVERN, {
         quest=75266, -- 75267
         npc=203462,
         loot={
+            {197021, quest=69221}, -- Cliffside Wylderdrake: Spiked Club Tail
             {206021, pet=3545}, -- Kob'rok's Luminescent Scale
             {205152, pet=3546}, -- Skaarn
             {205147, pet=3541}, -- Ridged Shalewing
@@ -492,7 +493,7 @@ local STASH = {
 }
 ns.RegisterPoints(ns.ZARALEKCAVERN, {
     [60664621] = {quest=75302, vignette=5647},
-    [63203710] = {quest=75303, vignette=5648, note="In cave", path=59903660},
+    [63203710] = {quest=75303, vignette=5648, note="In cave", path=60373727},
 }, STASH)
 ns.RegisterPoints(2184, { -- starting cave
     [63688296] = {quest=75303, vignette=5648},
@@ -504,26 +505,58 @@ local RITUAL = {
 }
 ns.RegisterPoints(ns.ZARALEKCAVERN, {
     [38184991] = {quest=73548, vignette=5528, note="In cave"},
+    [41934711] = {quest=73548, vignette=5528}, -- verify quest
     [32634418] = {quest=73551, vignette=5529},
+    [36034453] = {quest=73551, vignette=5529},
     [30055141] = {quest=73552, vignette=5530}, -- verify quest
     [32015277] = {quest=73552, vignette=5530},
     [27344217] = {quest=73553, vignette=5531},
     [28175154] = {quest=73553, vignette=5531}, -- verify quest
+    [28264627] = {quest=73553, vignette=5531},
 }, RITUAL)
 
 local TRASH = {
     label="Smelly Trash Pile",
     texture=ns.atlas_texture("VignetteLoot", {r=0.5, g=0.5, b=1, scale=0.9}),
     vignette=5714,
+    group="junk",
 }
 ns.RegisterPoints(ns.ZARALEKCAVERN, {
+    [31175207] = {},
     [35754907] = {},
     [37056988] = {},
+    [39438314] = {},
     [40415197] = {},
+    [40613568] = {},
     [41634101] = {},
     [42014541] = {},
+    [44686197] = {},
+    [48213766] = {},
     [51224089] = {},
+    [51984729] = {},
+    [52957419] = {},
     [55076345] = {},
     [57444585] = {},
     [58557141] = {},
+    [58894172] = {},
+    [65135290] = {},
 }, TRASH)
+
+local HAT = {
+    npc=205010, -- Curious Top Hat
+    loot={{205021, pet=3521}}, -- Lord Stantley
+    note="Use a {item:205686:Clacking Claw} from {npc:203618:Klakatak} to stop it running away",
+    texture=ns.atlas_texture("transmog-nav-slot-head", {r=1, g=0.5, b=0.75, scale=1.3}),
+    minimap=true,
+}
+ns.RegisterPoints(ns.ZARALEKCAVERN, {
+    [38866432] = {},
+    [43967748] = {},
+    [51586689] = {},
+    [61576953] = {},
+    [63205572] = {},
+    [60323734] = {note="Inside the cave"}, --  on interior map
+}, HAT)
+ns.RegisterPoints(2184, { -- starting cave
+    [69236586] = {},
+}, HAT)

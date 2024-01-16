@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                     v2.26 - 30th November 2023
+                                      v2.28 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -72,7 +72,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -107,7 +108,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -142,7 +146,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -175,7 +182,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -207,6 +217,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -239,7 +252,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -272,6 +288,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -305,6 +324,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -337,7 +359,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -369,9 +394,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -381,129 +410,129 @@ ns.name = UnitName( "player" ) or "Character"
 ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
-	L["Hallow's End"] = "Schlotternächte"
 	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Schlotternächte"
-	L["Tricks and Treats"] = "Süßes oder Saures"
-	L["Rotten Hallow Dailies"] = "Tägliche Quests für Fauliges Schlottern"
-	L["Other Candy Buckets"] = "Andere Süßigkeiteneimer"
-	L["Candy Swirl"] = "Süßigkeitenwirbel"
-	L["Pumpkin"] = "Kürbis"
-	L["Evil Pumpkin"] = "Böser Kürbis"
 	L["Bat"] = "Schläger"
+	L["Candy Swirl"] = "Süßigkeitenwirbel"
 	L["Cat"] = "Katze"
+	L["Evil Pumpkin"] = "Böser Kürbis"
 	L["Ghost"] = "Geist"
+	L["Hallow's End"] = "Schlotternächte"
+	L["Other Candy Buckets"] = "Andere Süßigkeiteneimer"
+	L["Pumpkin"] = "Kürbis"
+	L["Rotten Hallow Dailies"] = "Tägliche Quests für Fauliges Schlottern"
+	L["Tricks and Treats"] = "Süßes oder Saures"
 	L["Witch"] = "Hexe"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Hallow's End"] = "Halloween"
 	L["AddOn Description"] = "Ayuda para logros y misiones en Halloween"
-	L["Tricks and Treats"] = "Truco o trato"
-	L["Rotten Hallow Dailies"] = "Misiones diarias de Santificación Podrida"
-	L["Other Candy Buckets"] = "Otros cubos de caramelos"
-	L["Candy Swirl"] = "Remolino de caramelo"
-	L["Pumpkin"] = "Calabaza"
-	L["Evil Pumpkin"] = "Calabaza diabolica"
 	L["Bat"] = "Murciélago"
+	L["Candy Swirl"] = "Remolino de caramelo"
 	L["Cat"] = "Gata"
+	L["Evil Pumpkin"] = "Calabaza diabolica"
 	L["Ghost"] = "Fantasma"
+	L["Hallow's End"] = "Halloween"
+	L["Other Candy Buckets"] = "Otros cubos de caramelos"
+	L["Pumpkin"] = "Calabaza"
+	L["Rotten Hallow Dailies"] = "Misiones diarias de Santificación Podrida"
+	L["Tricks and Treats"] = "Truco o trato"
 	L["Witch"] = "Bruja"
 
 elseif ns.locale == "frFR" then
-	L["Hallow's End"] = "Sanssaint"
 	L["AddOn Description"] = "Aide pour les réalisations et les quêtes dans Sanssaint"
-	L["Tricks and Treats"] = "Bonbons et blagues"
-	L["Rotten Hallow Dailies"] = "Quêtes quotidiennes de Sanssaint Ruinée"
-	L["Other Candy Buckets"] = "Autres seaux à bonbons"
-	L["Candy Swirl"] = "Tourbillon de bonbons"
-	L["Pumpkin"] = "Citrouille"
-	L["Evil Pumpkin"] = "Citrouille maléfique"
 	L["Bat"] = "Chauve souris"
+	L["Candy Swirl"] = "Tourbillon de bonbons"
 	L["Cat"] = "Chatte"
+	L["Evil Pumpkin"] = "Citrouille maléfique"
 	L["Ghost"] = "Fantôme"
+	L["Hallow's End"] = "Sanssaint"
+	L["Other Candy Buckets"] = "Autres seaux à bonbons"
+	L["Pumpkin"] = "Citrouille"
+	L["Rotten Hallow Dailies"] = "Quêtes quotidiennes de Sanssaint Ruinée"
+	L["Tricks and Treats"] = "Bonbons et blagues"
 	L["Witch"] = "Sorcière"
 
 elseif ns.locale == "itIT" then
-	L["Hallow's End"] = "Veglia delle Ombre"
 	L["AddOn Description"] = "Aiuto per obiettivi e missioni in Veglia delle Ombre"
+	L["Bat"] = "Pipistrello"
+	L["Candy Swirl"] = "Vortice di caramelle"
+	L["Cat"] = "Gatta"
+	L["Evil Pumpkin"] = "Zucca cattiva"
+	L["Hallow's End"] = "Veglia delle Ombre"
 	L["Tricks and Treats"] = "Dolcetti o scherzetti"
 	L["Rotten Hallow Dailies"] = "Missioni giornaliere di Il guastafeste"
 	L["Other Candy Buckets"] = "Altri secchielli per caramelle Secchi delle Caramelle"
-	L["Candy Swirl"] = "Vortice di caramelle"
 	L["Pumpkin"] = "Zucca"
-	L["Evil Pumpkin"] = "Zucca cattiva"
-	L["Bat"] = "Pipistrello"
-	L["Cat"] = "Gatta"
 	L["Ghost"] = "Fantasma"
 	L["Witch"] = "Strega"
 
 elseif ns.locale == "koKR" then
-	L["Hallow's End"] = "할로윈 축제"
 	L["AddOn Description"] = "할로윈 축제의 업적 및 퀘스트에 대한 도움말"	
-	L["Tricks and Treats"] = "할로윈"
-	L["Rotten Hallow Dailies"] = "부패한 할로윈 일일 퀘스트"
-	L["Other Candy Buckets"] = "기타 사탕 바구니"
-	L["Candy Swirl"] = "캔디 소용돌이"
-	L["Pumpkin"] = "호박"
-	L["Evil Pumpkin"] = "사악한 호박"
 	L["Bat"] = "박쥐"
+	L["Candy Swirl"] = "캔디 소용돌이"
 	L["Cat"] = "고양이"
+	L["Evil Pumpkin"] = "사악한 호박"
 	L["Ghost"] = "귀신"
+	L["Hallow's End"] = "할로윈 축제"
+	L["Other Candy Buckets"] = "기타 사탕 바구니"
+	L["Pumpkin"] = "호박"
+	L["Rotten Hallow Dailies"] = "부패한 할로윈 일일 퀘스트"
+	L["Tricks and Treats"] = "할로윈"
 	L["Witch"] = "마녀"
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Hallow's End"] = "Noturnália"
 	L["AddOn Description"] = "Ajuda para conquistas e missões em Noturnália"
-	L["Tricks and Treats"] = "Gostosuras e Travessuras"
-	L["Rotten Hallow Dailies"] = "Missões diárias do Arruinando Noturnália"
-	L["Other Candy Buckets"] = "Outras cestas de doces"
-	L["Candy Swirl"] = "redemoinho de doces"
-	L["Pumpkin"] = "Abóbora"
-	L["Evil Pumpkin"] = "Abóbora Malvada"
 	L["Bat"] = "Bastão"
+	L["Candy Swirl"] = "redemoinho de doces"
 	L["Cat"] = "Gata"
+	L["Evil Pumpkin"] = "Abóbora Malvada"
 	L["Ghost"] = "Fantasma"
+	L["Hallow's End"] = "Noturnália"
+	L["Other Candy Buckets"] = "Outras cestas de doces"
+	L["Pumpkin"] = "Abóbora"
+	L["Rotten Hallow Dailies"] = "Missões diárias do Arruinando Noturnália"
+	L["Tricks and Treats"] = "Gostosuras e Travessuras"
 	L["Witch"] = "Bruxa"
 
 elseif ns.locale == "ruRU" then
-	L["Hallow's End"] = "Тыквовин"
 	L["AddOn Description"] = "Справка по достижениям и квестам в Тыквовине"
+	L["Bat"] = "Летучая мышь"
+	L["Candy Swirl"] = "Конфетный вихрь"
+	L["Cat"] = "Кот"
+	L["Evil Pumpkin"] = "Злая тыква"
+	L["Ghost"] = "Призрак"
+	L["Hallow's End"] = "Тыквовин"
 	L["Tricks and Treats"] = "Конфета или жизнь"
 	L["Rotten Hallow Dailies"] = "Ежедневные задания Подпорченный Праздник"
 	L["Other Candy Buckets"] = "Другие корзины конфет"
-	L["Candy Swirl"] = "Конфетный вихрь"
 	L["Pumpkin"] = "Тыква"
-	L["Evil Pumpkin"] = "Злая тыква"
-	L["Bat"] = "Летучая мышь"
-	L["Cat"] = "Кот"
-	L["Ghost"] = "Призрак"
 	L["Witch"] = "Ведьма"
 
 elseif ns.locale == "zhCN" then
-	L["Hallow's End"] = "万圣节"
 	L["AddOn Description"] = "帮助万圣节的成就和任务"
-	L["Tricks and Treats"] = "的糖果"
-	L["Rotten Hallow Dailies"] = "糟糕的万圣节每日任务"
-	L["Other Candy Buckets"] = "其他糖果篮"
-	L["Candy Swirl"] = "糖果漩涡"
-	L["Pumpkin"] = "南瓜"
-	L["Evil Pumpkin"] = "邪恶的南瓜"
 	L["Bat"] = "蝙蝠"
+	L["Candy Swirl"] = "糖果漩涡"
 	L["Cat"] = "猫"
+	L["Evil Pumpkin"] = "邪恶的南瓜"
 	L["Ghost"] = "鬼"
+	L["Hallow's End"] = "万圣节"
+	L["Other Candy Buckets"] = "其他糖果篮"
+	L["Pumpkin"] = "南瓜"
+	L["Rotten Hallow Dailies"] = "糟糕的万圣节每日任务"
+	L["Tricks and Treats"] = "的糖果"
 	L["Witch"] = "巫婆"
 
 elseif ns.locale == "zhTW" then
-	L["Hallow's End"] = "萬聖節"
 	L["AddOn Description"] = "幫助萬聖節的成就和任務"
-	L["Tricks and Treats"] = "的糖果"
-	L["Rotten Hallow Dailies"] = "糟糕的萬聖節每日任務"
-	L["Other Candy Buckets"] = "其他糖果籃"
-	L["Candy Swirl"] = "糖果漩渦"
-	L["Pumpkin"] = "南瓜"
-	L["Evil Pumpkin"] = "邪惡的南瓜"
 	L["Bat"] = "蝙蝠"
+	L["Candy Swirl"] = "糖果漩渦"
 	L["Cat"] = "貓"
+	L["Evil Pumpkin"] = "邪惡的南瓜"
 	L["Ghost"] = "鬼"
+	L["Hallow's End"] = "萬聖節"
+	L["Other Candy Buckets"] = "其他糖果籃"
+	L["Pumpkin"] = "南瓜"
+	L["Rotten Hallow Dailies"] = "糟糕的萬聖節每日任務"
+	L["Tricks and Treats"] = "的糖果"
 	L["Witch"] = "巫婆"
 	
 else

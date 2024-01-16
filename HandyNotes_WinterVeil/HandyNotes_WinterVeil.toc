@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: 1.15
+## Interface: 100205
+## Version: 2.06
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_holiday_christmas_present_01
 ## Title: Winter Veil
@@ -26,9 +26,6 @@
 ## Notes-ruRU: Помогает с игровое событие |cFF5FFB17Зимний Покров|r
 ## Notes-zhCN: 协助 |cFF5FFB17冬幕节|r 活动
 ## Notes-zhTW: 協助 |cFF5FFB17冬幕節|r 活動
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 739812
-## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_WinterVeilDB
 ## AddonCompartmentFunc: HandyNotes_WinterVeil_OnAddonCompartmentClick

@@ -91,6 +91,7 @@ function addon:RefreshProfile()
             },
             guiX = nil,
             guiY = nil,
+            ignoreDeadFollowers = false,
         }
     }
     
@@ -583,6 +584,8 @@ function addon:ProfileChanged()
     addon.GUI.AutoStartButton:SetChecked(addon.db.profile.autoStart)
     
     addon.GUI.BlockCompletionButton:SetChecked(addon.db.profile.blockCompletion)
+    
+    addon.GUI.IgnoreDeadFollowersButton:SetChecked(addon.db.profile.ignoreDeadFollowers)
     
     if addon.db.profile.guiX and addon.db.profile.guiY then
         addon.GUI:ClearAllPoints()

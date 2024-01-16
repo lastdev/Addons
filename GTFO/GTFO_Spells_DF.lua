@@ -460,11 +460,13 @@ GTFO.SpellID["420339"] = {
   --desc = "Dripping Embers (Flamebound Sentinel)";
   sound = 2;
   tankSound = 0;
+  ignoreApplication = true;
 };
 
 GTFO.SpellID["420332"] = {
   --desc = "Dripping Embers (Flamebound Sentinel)";
   sound = 1;
+  ignoreApplication = true;
 };
 
 GTFO.SpellID["412391"] = {
@@ -1533,7 +1535,11 @@ GTFO.SpellID["423494"] = {
   sound = 1;
 };
 
--- TODO: Combusting Rage (Volcoross) - Tank-only warning - Tanks out of range
+GTFO.SpellID["424221"] = {
+  --desc = "Combusting Rage (Volcoross)";
+  sound = 0;
+  tankSound = 1;
+};
 
 GTFO.SpellID["429153"] = {
   --desc = "Twisting Singe (Volcoross)";

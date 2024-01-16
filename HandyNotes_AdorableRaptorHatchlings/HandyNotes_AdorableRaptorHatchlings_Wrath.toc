@@ -1,5 +1,5 @@
 ## Interface: 30403
-## Version: 1.26
+## Version: 1.27
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Ability_mount_raptor
 ## Title: Adorable Raptor Hatchlings

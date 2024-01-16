@@ -8,7 +8,7 @@
   Way too many things in this addon are named "action" and I should think of
   better names.
 
-  Copyright 2011-2021 Mike Battersby
+  Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -87,4 +87,16 @@ function LM.SecureAction:Click(clickButton)
             ["clickbutton"] = clickButton
     }
     return self:New(attr)
+end
+
+function LM.SecureAction:GetDescription()
+    if self.type == 'spell' or self.type == 'cancelaura' then
+        return format("%s %s", self.type, self.spell)
+    elseif self.type == 'item' then
+        return format("%s %s", self.type, self.item)
+    elseif self.type == 'click' then
+        return format("%s %s", self.type, self.clickbutton)
+    else
+        return self.type
+    end
 end

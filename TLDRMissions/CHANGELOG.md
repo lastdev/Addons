@@ -1,7 +1,6 @@
 # TL;DR Missions
 
-##  (2023-12-02)
+##  (2024-01-07)
  
 
-- Revert fix for https://github.com/TLDRMissions/TLDRMissions/issues/610  
-    See https://github.com/TLDRMissions/TLDRMissions/issues/622  
+- Fix bug preventing some gear from being matched  

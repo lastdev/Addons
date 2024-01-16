@@ -415,3 +415,5 @@ L["[Show Numbers for Cooldowns] must be disabled in Blizzard's \'Options/Action 
 L["Attach to Raid Frame"] = "Attach to Raid Frame"
 L["Convert to additional CD bars that attach to each unit's raid frame."] = "Convert to additional CD bars that attach to each unit's raid frame."
 L["Icon ID (Optional)"] = "Icon ID (Optional)"
+L["Force Disable"] = "Force Disable"
+L["Only for talent abilities.\nCurrent ability for this specialization will no longer be tracked while you are in the selected zone(s)"] = "Only for talent abilities.\nCurrent ability for this specialization will no longer be tracked while you are in the selected zone(s)"

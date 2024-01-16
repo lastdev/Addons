@@ -6,21 +6,28 @@ local texturesSpecial = ns.texturesSpecial
 local scalingSpecial = ns.scalingSpecial
 
 local maxFour = "There are a maximum of\nfour spawned locations\nat any one time"
+local visibilityKS = "You must have completed\n\"A Celestial Experience\"\n"
+					.."and the follow-up quest\n\"A Witness to History\",\n"
+					.."both available in the Temple,\nin order to see the Soil."
 
 points[ 379 ] = { -- Kun-Lai Summit
-	[66255119] = { pinType="KS", tip=maxFour },
-	[66675639] = { pinType="KS", tip=maxFour },
-	[66854391] = { pinType="KS", tip=maxFour },
-	[67794805] = { pinType="KS", tip=maxFour },
-	[67695080] = { pinType="KS", tip={ maxFour, "Partially buried in the snow" } },
-	[70015152] = { pinType="KS", tip=maxFour },
-	[70244657] = { pinType="KS", tip=maxFour },
-	[70745247] = { pinType="KS", tip=maxFour },
-	[71324607] = { pinType="KS", tip=maxFour },
+	[66255119] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[66675639] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[66854391] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[67794805] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[67695080] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS,
+						"Partially buried in the snow.", maxFour } },
+	[68624623] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[69275474] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[70015152] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[70244657] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[70745247] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
+	[71324607] = { pinType="KS", questA=31512, questH=31511, tip={ visibilityKS, maxFour } },
 }
 
 points[ 418 ] = { -- Krasarang Wilds
 	[29167012] = { pinType="KW", tip=maxFour },
+	[29226476] = { pinType="KW", tip=maxFour },
 	[29247533] = { pinType="KW", tip=maxFour },
 	[31026383] = { pinType="KW", tip=maxFour },
 	[31286975] = { pinType="KW", tip=maxFour },
@@ -44,16 +51,21 @@ points[ 418 ] = { -- Krasarang Wilds
 
 points[ 371 ] = { -- The Jade Forest
 	[52075827] = { pinType="TJF" },
+	[53595300] = { pinType="TJF" },
 	[53866024] = { pinType="TJF" },
 	[54746046] = { pinType="TJF" },
 	[55005078] = { pinType="TJF" },
+	[56375427] = { pinType="TJF" },
 	[56535285] = { pinType="TJF" },
 	[57035160] = { pinType="TJF" },
 	[57435333] = { pinType="TJF" },
 	[57926249] = { pinType="TJF" },
 	[61402442] = { pinType="TJF" },
 	[61472274] = { pinType="TJF" },
+	[62162420] = { pinType="TJF" },
+	[62192091] = { pinType="TJF" },
 	[63542417] = { pinType="TJF" },
+	[63652290] = { pinType="TJF" },
 	[63773117] = { pinType="TJF" },
 	[63952857] = { pinType="TJF" },
 	[64822874] = { pinType="TJF" },
@@ -77,10 +89,16 @@ points[ 388 ] = { -- Townlong Steppes
 	[24845669] = { pinType="TS", },
 	[25261684] = { pinType="TS", },
 	[25325435] = { pinType="TS", },
+	[26174259] = { pinType="TS", },
 	[26265394] = { pinType="TS", },
+	[26673956] = { pinType="TS", },
+	[26785484] = { pinType="TS", },
 	[26871842] = { pinType="TS", },
+	[27180844] = { pinType="TS", },
+	[28082368] = { pinType="TS", },
 	[30692585] = { pinType="TS", },
 	[33102622] = { pinType="TS", },
+	[33891718] = { pinType="TS", },
 	[36305558] = { pinType="TS", },
 	[38376551] = { pinType="TS", },
 	[41986346] = { pinType="TS", },

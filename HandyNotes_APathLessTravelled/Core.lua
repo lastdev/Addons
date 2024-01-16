@@ -3,7 +3,7 @@
 
                                         A Path Less Travelled
 
-                                     v1.25 - 29th November 2023
+                                      v1.31 - 11th January 2024
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -26,14 +26,14 @@ local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = fals
 local continents = {}
 local pluginHandler = {}
 
--- upvalues
+-- Upvalues
 local GameTooltip = _G.GameTooltip
 local GetItemNameByID = C_Item.GetItemNameByID
-local IsIndoors = IsIndoors
+local IsOutdoors = IsOutdoors
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
-local format, next = format, next
+local format, next, random = format, next, math.random
 
 local HandyNotes = _G.HandyNotes
 ns.name = UnitName( "player" ) or "Character"
@@ -114,15 +114,13 @@ do
 		local coord, pin = next(t, prev)
 		while coord do
 			if pin then
-				if ( ns.CurrentMap == 42 ) then -- Deadwind Pass	
-					local mX, mY = HandyNotes:getXY(coord)
-					mX, mY = mX*100, mY*100
-					if ( mX > 24 ) and ( mX < 39 ) and ( mY > 69 ) and ( mY < 82 ) then
-						if IsIndoors( "player" ) then
-							return coord, nil, ns.textures[ns.db.iconChoice],
-								ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
-						end
-					else
+				if pin.outdoors ~= nil then
+					if pin.outdoors == IsOutdoors() then
+						return coord, nil, ns.textures[ns.db.iconChoice],
+							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
+					end
+				elseif pin.random then
+					if random() < pin.random then
 						return coord, nil, ns.textures[ns.db.iconChoice],
 							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 					end
@@ -131,7 +129,7 @@ do
 						ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 				end
 			end
-			coord, v = next(t, coord)
+			coord, pin = next(t, coord)
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
@@ -216,13 +214,23 @@ function pluginHandler:OnEnable()
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
 			local coords = ns.points[map.mapID]
-			if coords then
-				for coord, criteria in next, coords do
-					local mx, my = HandyNotes:getXY(coord)
-					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
-					if cx and cy then
-						ns.points[continentMapID] = ns.points[continentMapID] or {}
-						ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
+			if map.mapID == 84 then --Stormwind
+			elseif coords then
+				for coord, pin in next, coords do
+					local function AddToContinent()
+						local mx, my = HandyNotes:getXY(coord)
+						local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+						if cx and cy then
+							ns.points[continentMapID] = ns.points[continentMapID] or {}
+							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = pin
+						end
+					end
+					if pin.outdoors then
+						if pin.outdoors == IsOutdoors() then
+							AddToContinent()
+						end
+					else
+						AddToContinent()
 					end
 				end
 			end

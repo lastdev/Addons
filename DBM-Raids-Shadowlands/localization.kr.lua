@@ -306,3 +306,13 @@ L = DBM:GetModLocalization("SepulcherTrash")
 L:SetGeneralLocalization({
 	name =	"매장터 일반몹"
 })
+
+-----------------------
+-- <<< Fated Raid Affixes >>> --
+-----------------------
+L = DBM:GetModLocalization("FatedAffixes")
+
+L:SetGeneralLocalization({
+	name =	"운명의 공격대 어픽스"
+})
+

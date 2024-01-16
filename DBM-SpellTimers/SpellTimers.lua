@@ -205,6 +205,7 @@ do
 			disableEncounter:SetScript("OnClick", function(self) settings.disable_encounter = not not self:GetChecked() end)
 
 			local resetbttn = generalarea:CreateButton(L.Reset, 140, 20)
+			resetbttn.myheight = 0
 			resetbttn:SetPoint("TOPRIGHT", generalarea.frame, "TOPRIGHT", -15, -15)
 			resetbttn:SetScript("OnClick", function()
 				twipe(DBM_SpellTimers_Settings)

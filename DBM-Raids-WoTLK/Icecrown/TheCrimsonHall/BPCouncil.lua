@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20231102153911")
+mod:SetRevision("20240110072739")
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(mod:IsClassic() and 852 or 1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -88,16 +88,11 @@ function mod:ShockVortexTarget(targetname, uId)
 		specWarnVortex:Show()
 		specWarnVortex:Play("watchstep")
 		yellVortex:Yell()
+	elseif self:IsClassic() and self:CheckNearby(10, targetname) then
+		specWarnVortexNear:Show(targetname)
+		specWarnVortexNear:Play("watchstep")
 	else
-		if uId then
-			local inRange = CheckInteractDistance(uId, 2)
-			if inRange then
-				specWarnVortexNear:Show(targetname)
-				specWarnVortexNear:Play("watchstep")
-			else
-				warnShockVortex:Show(targetname)
-			end
-		end
+		warnShockVortex:Show(targetname)
 	end
 end
 

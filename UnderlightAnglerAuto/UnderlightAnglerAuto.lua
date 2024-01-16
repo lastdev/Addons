@@ -4,6 +4,12 @@ f:RegisterEvent("MOUNT_JOURNAL_USABILITY_CHANGED")
 f:RegisterEvent("PLAYER_REGEN_ENABLED")
 f:RegisterEvent("CHAT_MSG_LOOT")
 
+-- Check Blizzard_Professions\Blizzard_ProfessionsCrafting.xml for changes to this
+-- FishingToolSlot
+-- <KeyValue key="slotID" value="28" type="number"/>
+-- As of 10.2 I will no longer load in Blizzard_Professions and get this KeyValue due to lua errors from not fully loading in Blizzard_Professions
+local FISHINGTOOLSLOT = 28
+
 local bagID, slotID
 
 local function unequipUA()
@@ -28,7 +34,7 @@ local function unequipUA()
     if not bagID then return end
 
     -- put the fishing tool onto the cursor
-    PickupInventoryItem(ProfessionsFrame.CraftingPage.FishingToolSlot:GetID())
+    PickupInventoryItem(FISHINGTOOLSLOT)
     
     -- put the fishing tool into the bags
     C_Container.PickupContainerItem(bagID, slotID)
@@ -39,7 +45,7 @@ local function reequipUA()
     C_Container.PickupContainerItem(bagID, slotID)
     
     -- put the cursor item (underlight angler) into the fishing tool slot
-    PickupInventoryItem(ProfessionsFrame.CraftingPage.FishingToolSlot:GetID())
+    PickupInventoryItem(FISHINGTOOLSLOT)
     
     bagID, slotID = nil
 end
@@ -60,7 +66,7 @@ f:SetScript("OnEvent", function(self, event, ...)
             if (throttle + 1) > GetTime() then return end
             
             -- only do something if the player has Underlight Angler equipped
-            if GetInventoryItemID("player", ProfessionsFrame.CraftingPage.FishingToolSlot:GetID()) ~= 133755 then return end
+            if GetInventoryItemID("player", FISHINGTOOLSLOT) ~= 133755 then return end
             
             -- if the player already has the Fishing for Attention buff, do nothing
             if C_UnitAuras.GetPlayerAuraBySpellID(394009) then return end
@@ -73,7 +79,7 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif (event == "PLAYER_REGEN_ENABLED") and bagID and slotID then
         reequipUA()
     elseif (event == "PLAYER_REGEN_ENABLED") or (event == "CHAT_MSG_LOOT") then
-        if GetInventoryItemID("player", ProfessionsFrame.CraftingPage.FishingToolSlot:GetID()) ~= 133755 then return end
+        if GetInventoryItemID("player", FISHINGTOOLSLOT) ~= 133755 then return end
         if C_UnitAuras.GetPlayerAuraBySpellID(394009) then return end
         if IsSwimming() then
             unequipUA()

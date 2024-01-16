@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-global, need-check-nil
 --[[
 	Krowi's Menu License
         Copyright ©2020 The contents of this library, excluding third-party resources, are
@@ -19,7 +18,7 @@
         the copyright holders.
 ]]
 
-local lib = LibStub:NewLibrary("Krowi_Menu-1.0", 2);
+local lib = LibStub:NewLibrary("Krowi_Menu-1.0", 3);
 
 if not lib then
 	return;
@@ -73,6 +72,13 @@ function lib:AddFull(info)
     self:Add(menuItem:New(info));
 end
 
+function lib:AddTitle(text)
+	self:AddFull({
+		Text = text,
+		IsTitle = true
+	});
+end
+
 function lib:AddSeparator()
     tinsert(menu, {IsSeparator = true});
 end
@@ -89,20 +95,30 @@ local function Initialize(frame, level, menuList)
 	end
 end
 
-function lib:Open(anchor, offsetX, offsetY)
+function lib:Open(anchor, offsetX, offsetY, point, relativePoint, frameStrata, frameLevel)
     -- Make sure optional values are set to default if not used
 	anchor = anchor or "cursor";
-	offsetX = offsetX or 0;
-    offsetY = offsetY or 0;
 
 	menuFrame.displayMode = "MENU";
+	menuFrame.xOffset = offsetX;
+	menuFrame.yOffset = offsetY;
+	menuFrame.point = point;
+	menuFrame.relativePoint = relativePoint;
+	UIDropDownMenu_SetFrameStrata(menuFrame, frameStrata or "FULLSCREEN_DIALOG");
+	if frameStrata and not frameLevel then
+		menuFrame:Raise();
+	end
+	if frameLevel then
+		menuFrame:SetFrameLevel(frameLevel);
+	end
+
 	UIDropDownMenu_Initialize(menuFrame, Initialize, "MENU", nil, menu);
 	ToggleDropDownMenu(1, nil, menuFrame, anchor, offsetX, offsetY, menu, nil, nil);
 end
 
-function lib:Toggle(anchor, offsetX, offsetY)
+function lib:Toggle(anchor, offsetX, offsetY, point, relativePoint, frameStrata, frameLevel)
 	if not DropDownList1:IsShown() then
-		self:Open(anchor, offsetX, offsetY);
+		self:Open(anchor, offsetX, offsetY, point, relativePoint, frameStrata, frameLevel);
 	else
 		DropDownList1:Hide();
 	end
@@ -181,10 +197,14 @@ function lib:UIDropDownMenu_Refresh(frame, useValue, dropdownLevel)
 							UIDropDownMenu_SetIconImage(icon, button.icon, button.iconInfo);
 						elseif useValue then
 							UIDropDownMenu_SetText(frame, button.value);
-							icon:Hide();
+							if icon then
+								icon:Hide();
+							end
 						else
 							UIDropDownMenu_SetText(frame, button:GetText());
-							icon:Hide();
+							if icon then
+								icon:Hide();
+							end
 						end
 					button:LockHighlight();
 					checkImage:Show();
@@ -206,7 +226,9 @@ function lib:UIDropDownMenu_Refresh(frame, useValue, dropdownLevel)
 	if somethingChecked == nil then
 		UIDropDownMenu_SetText(frame, VIDEO_QUALITY_LABEL6);
 		local icon = GetChild(frame, frame:GetName(), "Icon");
-		icon:Hide();
+		if icon then
+			icon:Hide();
+		end
 	end
 	if not frame.noResize then
 		for i=1, UIDROPDOWNMENU_MAXBUTTONS do

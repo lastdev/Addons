@@ -2,6 +2,19 @@ DataStore Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 2023.12.17 (10/12/2023)
+
+- Reworked the tracking of campaign progress.
+Shadowlands covenant progress is preserved, but 9.1 and 9.2 have changed, so you need to login your alts again to get the proper values.
+
+Version 2023.12.10 (10/12/2023)
+
+- Added weekly world bosses.
+
+Version 2023.11.31 (31/11/2023)
+
+- Now checking the turn-in of daily quests for WotLK also.
+
 Version 2023.11.20 (20/11/2023)
 
 - As of this version, this DataStore module will be released in a single package compatible with all versions of the game.

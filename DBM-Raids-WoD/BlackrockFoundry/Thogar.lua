@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetUsedIcons(8, 7, 2, 1)
@@ -59,8 +59,8 @@ mod:AddInfoFrameOption(176312)
 mod:AddSetIconOption("SetIconOnAdds", "ej9549", false, true)
 mod:AddHudMapOption("HudMapForTrain", 176312, false)
 mod:AddBoolOption("HudMapUseIcons")--Depending what is easier to see/understand, i may change this to default off
-mod:AddDropdownOption("TrainVoiceAnnounce", {"LanesOnly", "MovementsOnly", "LanesandMovements"}, "LanesOnly", "misc")
-mod:AddDropdownOption("InfoFrameSpeed", {"Immediately", "Delayed"}, "Delayed", "misc")
+mod:AddDropdownOption("TrainVoiceAnnounce", {"LanesOnly", "MovementsOnly", "LanesandMovements"}, "LanesOnly", "misc", nil, 176312)
+mod:AddDropdownOption("InfoFrameSpeed", {"Immediately", "Delayed"}, "Delayed", "misc", nil, 176312)
 
 mod.vb.trainCount = 0
 mod.vb.infoCount = 0

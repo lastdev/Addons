@@ -1,6 +1,6 @@
 # <DBM Mod> Raids (WoD)
 
-## [r77](https://github.com/DeadlyBossMods/DBM-WoD/tree/r77) (2023-11-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r76...r77) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
+## [r80](https://github.com/DeadlyBossMods/DBM-WoD/tree/r80) (2024-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r79...r80) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
 
-- Bump tocs  
+- Bump tocs for 10.2.5  

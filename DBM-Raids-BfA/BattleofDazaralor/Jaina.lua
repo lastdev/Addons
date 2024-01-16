@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2343, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240108061637")
 mod:SetCreatureID(146409)
 mod:SetEncounterID(2281)
 mod:SetUsedIcons(1, 2, 3)
@@ -142,8 +142,7 @@ mod:AddRangeFrameOption(10, 289379)
 mod:AddInfoFrameOption(287993, true, 2)
 mod:AddBoolOption("ShowOnlySummary2", true, "misc")
 mod:AddBoolOption("SetWeather", true)
-mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-mod:AddDropdownOption("InterruptBehavior", {"Three", "Four", "Five"}, "Three", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Three", "Four", "Five"}, "Three", "misc", nil, 290084)
 
 mod.vb.corsairCount = 0
 mod.vb.imageCount = 0

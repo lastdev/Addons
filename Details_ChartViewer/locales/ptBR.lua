@@ -1,24 +1,14 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Details_ChartViewer", "ptBR") 
 if not L then return end 
 
---[[Translation missing --]]
---[[ L["STRING_ADDEDOKAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_CONFIRM"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_NEWTAB"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_SHOWICON"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOWSCALE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_PLUGIN_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_PLUGIN_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_TOOSHORTNAME"] = ""--]] 
+L["STRING_ADDEDOKAY"] = "Adicionado com sucesso."
+L["STRING_CONFIRM"] = "Confirmar"
+L["STRING_NEWTAB"] = "Nova aba"
+L["STRING_OPTIONS"] = "Opções do visualizador de gráficos"
+L["STRING_OPTIONS_SHOWICON"] = "Mostrar Icone"
+L["STRING_OPTIONS_WINDOWSCALE"] = "Escala de janela"
+L["STRING_PLUGIN_DESC"] = "Veja os dados coletados pelos Details! em gráficos de linhas simples."
+L["STRING_PLUGIN_NAME"] = "Visualizador de gráficos"
+L["STRING_TOOLTIP"] = "Abrir visualizador de gráficos"
+L["STRING_TOOSHORTNAME"] = "O nome é muito curto."
 

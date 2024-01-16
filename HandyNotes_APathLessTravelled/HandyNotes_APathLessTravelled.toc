@@ -1,8 +1,7 @@
-## Interface: 100200
-## Version: 1.25
+## Interface: 100205
+## Version: 1.31
 ## Author: Taraezor
-## IconTexture: Interface\Icons\Achievement_General
-#  # IconTexture: Interface\Icons\WoW_Token01
+## IconTexture: Interface\Icons\WoW_Token01
 ## Title: A Path Less Travelled
 ## Notes: |cFF00CED1Travel with me and discover the amazing!
 ## RequiredDeps: HandyNotes

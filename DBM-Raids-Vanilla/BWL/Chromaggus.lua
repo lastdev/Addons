@@ -12,18 +12,19 @@ end
 local mod	= DBM:NewMod("Chromaggus", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20231229223555")
 mod:SetCreatureID(14020)
 mod:SetEncounterID(616)
 mod:SetModelID(14367)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 23308 23309 23313 23314 23197 23189 23315 23316 23310 23312",
+	"SPELL_CAST_START 23308 23309 23313 23314 23187 23189 23315 23316 23310 23312",
 	"SPELL_AURA_APPLIED 23155 23169 23153 23154 23170 23128 23537",
 --	"SPELL_AURA_REFRESH",
 	"SPELL_AURA_REMOVED 23155 23169 23153 23154 23170 23128",
-	"UNIT_HEALTH boss1"
+	"UNIT_HEALTH boss1",
+	"CHAT_MSG_MONSTER_EMOTE"
 )
 
 --(ability.id = 23309 or ability.id = 23313 or ability.id = 23189 or ability.id = 23315 or ability.id = 23312 or ability.id = 23314) and type = "begincast"
@@ -193,7 +194,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpell(23308, 23309, 23313, 23314, 23197, 23189, 23315, 23316, 23310, 23312) then
+	if args:IsSpell(23308, 23309, 23313, 23314, 23187, 23189, 23315, 23316, 23310, 23312) then
 		warnBreath:Show(args.spellName)
 		timerBreath:Start(2, args.spellName)
 		timerBreath:UpdateIcon(args.spellId)

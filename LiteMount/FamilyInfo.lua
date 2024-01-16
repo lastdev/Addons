@@ -2,7 +2,7 @@
 
   LiteMount/FamilyInfo.lua
 
-  Copyright 2011-2021 Mike Battersby
+  Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -1288,7 +1288,7 @@ LM.MOUNTFAMILY["Slug"] = {
     [374138] = true, -- Seething Slug
 }
 
-LM.MOUNTFAMILY["Sylvern"] = {
+LM.MOUNTFAMILY["Slyvern"] = {
     [359622] = true, -- Liberated Slyvern
     [385738] = true, -- Temperamental Skyclaw
 }

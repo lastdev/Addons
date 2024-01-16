@@ -1,9 +1,9 @@
-## Interface: 100200
+## Interface: 100205
 ## Title: HandyNotes_ScarabCoffers
 ## Notes: Scarab Coffer locations in AQ40/20
 ## IconTexture: Interface/Addons/HandyNotes_ScarabCoffers/HandyNotes_ScarabCoffers.blp
 ## Author: Keyboardturner
-## Version: 10
+## Version: 11
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_ScarabCoffersDB
 ## RequiredDeps: HandyNotes

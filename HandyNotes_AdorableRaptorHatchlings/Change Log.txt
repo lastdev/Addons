@@ -1,3 +1,6 @@
+== v1.27 - 12th January 2024
+TOC Bump to 10.2.5
+
 == v1.26 - 2nd December 2023
 * Felstriker server added
 * Penance and Shadowstrike added (SoD)

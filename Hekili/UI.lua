@@ -40,15 +40,13 @@ end
 local movementData = {}
 
 local function startScreenMovement(frame)
-    _, _, _, movementData.origX, movementData.origY = frame:GetPoint()
+    movementData.origX, movementData.origY = select( 4, frame:GetPoint() )
     frame:StartMoving()
-    _, _, _, movementData.fromX, movementData.fromY = frame:GetPoint()
+    movementData.fromX, movementData.fromY = select( 4, frame:GetPoint() )
     frame.Moving = true
 end
 
 local function stopScreenMovement(frame)
-    local monitor = (tonumber(GetCVar("gxMonitor")) or 0) + 1
-    --local resolutions = {GetScreenResolutions()}
     local resolution = C_VideoOptions.GetCurrentGameWindowSize()
     local scrW, scrH = resolution.x, resolution.y
 
@@ -60,7 +58,7 @@ local function stopScreenMovement(frame)
     local limitX = (scrW - frame:GetWidth() ) / 2
     local limitY = (scrH - frame:GetHeight()) / 2
 
-    _, _, _, movementData.toX, movementData.toY = frame:GetPoint()
+    movementData.toX, movementData.toY = select( 4, frame:GetPoint() )
     frame:StopMovingOrSizing()
     frame.Moving = false
     frame:ClearAllPoints()
@@ -302,7 +300,7 @@ function ns.StartConfiguration( external )
         ACD:Open( "Hekili" )
 
         local oFrame = ACD.OpenFrames["Hekili"].frame
-        oFrame:SetResizeBounds( 800, 400 )
+        oFrame:SetResizeBounds( 800, 120 )
 
         ns.OnHideFrame = ns.OnHideFrame or CreateFrame( "Frame" )
         ns.OnHideFrame:SetParent( oFrame )
@@ -556,7 +554,8 @@ do
                             if setting.info and ( not setting.info.arg or setting.info.arg() ) then
                                 if setting.info.type == "toggle" then
                                     local name = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
-                                    insert( menuData, {
+                                    local submenu
+                                    submenu = {
                                         text = name,
                                         tooltipTitle = name,
                                         tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc,
@@ -565,24 +564,30 @@ do
                                             menu.args[1] = setting.name
                                             setting.info.set( menu.args, not setting.info.get( menu.args ) )
 
-                                            local name = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
+                                            local nm = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
 
                                             if Hekili.DB.profile.notifications.enabled then
-                                                Hekili:Notify( name .. ": " .. ( setting.info.get( menu.args ) and "ON" or "OFF" ) )
+                                                Hekili:Notify( nm .. ": " .. ( setting.info.get( menu.args ) and "ON" or "OFF" ) )
                                             else
-                                                Hekili:Print( name .. ": " .. ( setting.info.get( menu.args ) and " |cFF00FF00ENABLED|r." or " |cFFFF0000DISABLED|r." ) )
+                                                Hekili:Print( nm .. ": " .. ( setting.info.get( menu.args ) and " |cFF00FF00ENABLED|r." or " |cFFFF0000DISABLED|r." ) )
                                             end
+
+                                            submenu.text = nm
+                                            submenu.tooltipTitle = nm
+                                            submenu.tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc
                                         end,
                                         checked = function ()
                                             menu.args[1] = setting.name
                                             return setting.info.get( menu.args )
                                         end,
                                         hidden = function () return Hekili.State.spec.id ~= i end,
-                                    } )
+                                    }
+                                    insert( menuData, submenu )
 
                                 elseif setting.info.type == "select" then
                                     local name = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
-                                    local submenu = {
+                                    local submenu
+                                    submenu = {
                                         text = name,
                                         tooltipTitle = name,
                                         tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc,
@@ -606,6 +611,11 @@ do
                                                         menu.args[1] = setting.name
                                                         setting.info.set( menu.args, k )
 
+                                                        local nm = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
+                                                        submenu.text = nm
+                                                        submenu.tooltipTitle = nm
+                                                        submenu.tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc
+
                                                         for k, v in pairs( Hekili.DisplayPool ) do
                                                             v:OnEvent( "HEKILI_MENU" )
                                                         end
@@ -624,6 +634,11 @@ do
                                                     func = function ()
                                                         menu.args[1] = setting.name
                                                         setting.info.set( menu.args, k )
+
+                                                        local nm = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
+                                                        submenu.text = nm
+                                                        submenu.tooltipTitle = nm
+                                                        submenu.tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc
 
                                                         for k, v in pairs( Hekili.DisplayPool ) do
                                                             v:OnEvent( "HEKILI_MENU" )
@@ -648,19 +663,17 @@ do
                                         tooltipTitle = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name,
                                         tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc,
                                         tooltipOnButton = true,
-                                        keepShownOnClick = true,
                                         notCheckable = true,
                                         hidden = function () return Hekili.State.spec.id ~= i end,
+                                        hasArrow = true,
+                                        menuList = {}
                                     }
 
-                                    insert( menuData, submenu )
-
-                                    submenu = {
+                                    local slider = {
                                         text = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name,
                                         tooltipTitle = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name,
                                         tooltipText = type( setting.info.desc ) == "function" and setting.info.desc() or setting.info.desc,
                                         tooltipOnButton = true,
-                                        keepShownOnClick = true,
                                         notCheckable = true,
                                         hidden = function () return Hekili.State.spec.id ~= i end,
                                     }
@@ -681,7 +694,21 @@ do
                                     cf.Slider:SetValueStep( setting.info.step or 1 )
                                     cf.Slider:SetObeyStepOnDrag( true )
 
-                                    submenu.customFrame = cf
+                                    cf.Slider:SetScript( "OnEnter", function( self )
+                                        local tooltip = GetAppropriateTooltip()
+                                        tooltip:SetOwner( cf.Slider, "ANCHOR_RIGHT", 0, 2 )
+                                        GameTooltip_SetTitle( tooltip, slider.tooltipTitle )
+                                        GameTooltip_AddNormalLine( tooltip, slider.tooltipText, true )
+                                        tooltip:Show()
+                                    end )
+
+                                    cf.Slider:SetScript( "OnLeave", function( self )
+                                        GameTooltip:Hide()
+                                    end )
+
+                                    slider.customFrame = cf
+
+                                    insert( submenu.menuList, slider )
 
                                     --[[ local low, high, step = setting.info.min, setting.info.max, setting.info.step
                                     local fractional, factor = step < 1, 1 / step
@@ -1232,10 +1259,10 @@ do
                         if a and a.id then
                             local outOfRange = false
 
-                            if conf.range.enabled then
-                                if conf.range.type == "melee" and UnitExists( "target" ) then
-                                    outOfRange = ( LRC:GetRange( "target", true, InCombatLockdown() ) or 50 ) > 7
-                                elseif conf.range.type == "ability" and UnitExists( "target" ) and UnitCanAttack( "player", "target" ) then
+                            if conf.range.enabled and UnitCanAttack( "player", "target" ) then
+                                if conf.range.type == "melee" then
+                                    outOfRange = ( LRC:GetRange( "target" ) or 10 ) > 7
+                                elseif conf.range.type == "ability" then
                                     local name = a.rangeSpell or a.itemSpellName or a.actualName or a.name
                                     if name then outOfRange = LSR.IsSpellInRange( name, "target" ) == 0 end
                                 end
@@ -1277,7 +1304,7 @@ do
                                     end
                                     if rStart > 0 then moment = max( moment, rStart + rDuration - now ) end
 
-                                    _, _, _, start, duration = UnitCastingInfo( "player" )
+                                    start, duration = select( 4, UnitCastingInfo( "player" ) )
                                     if start and start > 0 then moment = max( ( start / 1000 ) + ( duration / 1000 ) - now, moment ) end ]]
 
                                     if delay > 0.05 then
@@ -1457,7 +1484,7 @@ do
                             if start > 0 then moment = start + duration - now end
                         end
 
-                        _, _, _, start, duration = UnitCastingInfo( "player" )
+                        start, duration = select( 4, UnitCastingInfo( "player" ) )
                         if start and start > 0 then moment = max( ( start / 1000 ) + ( duration / 1000 ) - now, moment ) end
 
                         local rStart, rDuration = 0, 0
@@ -2285,7 +2312,7 @@ do
                 self.activeThreadFrames = 0
 
                 if not self.firstThreadCompleted then
-                    Hekili.maxFrameTime = InCombatLockdown() and 10 or 50
+                    Hekili.maxFrameTime = InCombatLockdown() and 10 or 25
                 else
                     if #frameSpans > 0 then
                         local averageSpan = 0
@@ -3082,12 +3109,15 @@ end
 
 function Hekili:SaveCoordinates()
     for i in pairs(Hekili.DB.profile.displays) do
-        local _, _, rel, x, y = ns.UI.Displays[i]:GetPoint()
+        local display = ns.UI.Displays[i]
+        if display then
+            local rel, x, y = select( 3, display:GetPoint() )
 
-        self.DB.profile.displays[i].rel = "CENTER"
-        self.DB.profile.displays[i].x = x
-        self.DB.profile.displays[i].y = y
+            self.DB.profile.displays[i].rel = "CENTER"
+            self.DB.profile.displays[i].x = x
+            self.DB.profile.displays[i].y = y
+        end
     end
 
-    _, _, _, self.DB.profile.notifications.x, self.DB.profile.notifications.y = HekiliNotification:GetPoint()
+    self.DB.profile.notifications.x, self.DB.profile.notifications.y = select( 4, HekiliNotification:GetPoint() )
 end

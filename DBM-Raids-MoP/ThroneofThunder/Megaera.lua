@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(821, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240108061701")
 mod:SetCreatureID(68065, 70235, 70247)--Frozen 70235, Venomous 70247 (only 2 heads that ever start in front, so no need to look for combat with arcane or fire for combat detection)
 mod:SetEncounterID(1578)
 mod:SetMainBossID(68065)
@@ -69,7 +69,7 @@ local timerTorrentofIce			= mod:NewBuffFadesTimer(11, 139866)
 mod:AddBoolOption("SetIconOnCinders", true)
 mod:AddBoolOption("SetIconOnTorrentofIce", true)
 
-mod:AddDropdownOption("AnnounceCooldowns", {"Never", "Every", "EveryTwo", "EveryThree", "EveryTwoExcludeDiff", "EveryThreeExcludeDiff"}, "Every", "misc")
+mod:AddDropdownOption("AnnounceCooldowns", {"Never", "Every", "EveryTwo", "EveryThree", "EveryTwoExcludeDiff", "EveryThreeExcludeDiff"}, "Every", "misc", nil, 139458)
 --CD order options that change based on raid dps and diffusion strat. With high dps, you need 3 groups, with lower dps (and typically heroic) you need 3. Also, on heroic, many don't cd rampage when high stack diffusion tank can be healed off of to heal raid.
 --"Every": for groups that prefer to assign certain rampage numbers to players (e.g. for CD at the 4th rampage only) (maybe "Every" should even be the default option for everyone, beside of any cooldowns?)
 

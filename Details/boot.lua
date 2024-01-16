@@ -10,11 +10,16 @@
 		--add the original name to the global namespace
 		_detalhes = _G.Details --[[GLOBAL]]
 
+		__details_debug = __details_debug or {}
+		if (__details_debug.prescience_timeline) then
+			wipe(__details_debug.prescience_timeline)
+		end
+
 		local addonName, Details222 = ...
 		local version, build, date, tocversion = GetBuildInfo()
 
-		Details.build_counter = 12097
-		Details.alpha_build_counter = 12097 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 12220
+		Details.alpha_build_counter = 12220 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -74,6 +79,12 @@
 			return Details222.ColorScheme[colorScheme]
 		end
 
+		function Details222.DebugMsg(...)
+			if (Details.debug) then
+				print("|cFFCCAAAADetails! Debug:|r", ...)
+			end
+		end
+
 		--namespace for damage spells (spellTable)
 		Details222.DamageSpells = {}
 		--namespace for texture
@@ -87,6 +98,7 @@
 		Details222.Instances = {}
 		Details222.Combat = {}
 		Details222.MythicPlus = {}
+		Details222.MythicPlusBreakdown = {}
 		Details222.EJCache = {}
 		Details222.Segments = {}
 		Details222.Tables = {}
@@ -125,6 +137,10 @@
 		Details222.CurrentDPS = {
 			Cache = {}
 		}
+		--store all data from the encounter journal
+		Details222.EncounterJournalDump = {}
+		--aura scanner
+		Details222.AuraScan = {}
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialization stuff
@@ -141,6 +157,43 @@ do
 	--]=]
 
 	local news = {
+		{"v10.2.0.12220.155", "January 14th, 2024"},
+		"Ignoring the heal of Smoldering Seedling trinket (Flamanis).",
+		"Attribute Judgement of Light to the healed on Wrath (Flamanis).",
+		"Fixed an error while scrolling down target npcs in the breakdown window.",
+		"Fixed an error when clicking to open the Death Recap by Details!.",
+		"End of Mythic Run panel got updates.",
+		"Many tooltips in Details! are now rouded!",
+		"Evoker extra bar tooltip's, now also show the uptime of Black Attunement and Prescience applications.",
+		"Breakdown Window now show Plater Npc Colors in the target box.",
+		"Added event: 'COMBAT_MYTHICPLUS_OVERALL_READY', trigger when the overall segment for the mythic+ is ready.",
+		"Added event: 'COMBAT_PLAYER_LEAVING', trigger at the beginning of the leave combat process.",
+		"Added: Details:IsInMythicPlus() return true if the player is on a mythic dungeon run.",
+		"CombatObjects now have the key 'is_challenge' if the combat is a part of a challenge mode or mythic+ run.",
+		"Lib Open Raid updated.",
+
+		{"v10.2.0.12188.155", "December 28th, 2023"},
+		"Dreamwalker's Healing Potion now shows in the Healing Potion & Stone custom display.",
+		"Added the 'Remove Battleground Segments' option to the menu that opens when hovering over the erase button.",
+		"Attempt to fix Battleground faction icons, shown on enemy players damage bars.",
+		"API: Actor:GetSpellContainer(containerName) now also accepts dispelwhat, interrupt, interruptwhat, interrupttargets.",
+		"Fixed custom scripts showing the damage text too close to the dps text.",
+		"Fixed Dynamic Overall Data, showing overlapped texts for damage and dps.",
+		"Fixed an error when hovering over some spells in the Auras panel on the Player Breakdown window.",
+		"Fixed the character item level, which was not showing for players that left the party group on the Player Breakdown window.",
+		"Fixed boss images not showing at the segments selection menu.",
+		"Other updates related to encounter journal and mythic+, both under development.",
+		"Update Details! Framework for bug fixes.",
+		"Update lib Open Raid (more cooldowns added).",
+
+		{"v10.2.0.12109.155", "December 14th, 2023"},
+		"Classic now uses the same combat log reader as retail (Flamanis).",
+		"Merged Rage of Fyr'alath spells (equara)",
+		"Added Rogue Ambushes to merged spells (WillowGryph).",
+		"The Remove Common Segments option now also removes segments trash between raid bosses.",
+		"Fixed an issue where auras applied before combat start, such as Power Infusion and Prescience, which are counted towards the target, were not being accounted for.",
+		"Added to Combat Class: classCombat:GetRunTimeNoDefault(). This returns the run time of the Mythic+ if available, nil otherwise.",
+
 		{"v10.2.0.12096.155", "December 1st, 2023"},
 		"Added Mythic+ Overall DPS calculation options: 'Use Total Combat Time' and 'Use Run Time'. These options are available in the Mythic Dungeon section of the options panel. The option 'Use Run Time', takes the player's damage and divide by the total elapsed time of the run.",
 		"Added reset options: 'Remove Common Segments' and 'Reset, but keep Mythic+ Overall Segments'.",
@@ -1465,6 +1518,8 @@ Details222.UnitIdCache.Party = {
 	[3] = "party3",
 	[4] = "party4",
 }
+
+Details222.UnitIdCache.PartyIds = {"player", "party1", "party2", "party3", "party4"}
 
 Details222.UnitIdCache.Boss = {
 	[1] = "boss1",

@@ -1,3 +1,35 @@
+== v3.49 - 12th January 2024
+* TOC update for 10.2.5
+
+== v3.48 - 4th January 2024
+* New Townlong Steppes @ (26.67,39.56), (28.08,23.68)
+
+== v3.47 - 30th December 2023
+* New Townlong Steppes @ (26.78,54.84), (27.18,08.44)
+* Noting that a bug in Kun-Lai was fixed a couple of releases ago. Not sure which release
+
+== v3.46 - 25th December 2023
+* Merry Christmas
+* New Jade Forrest @ (53.59,53.00)
+* New Krasarang Wilds @ (29.22,4.76)
+* New Kun-Lai Summit @ (69.27,54.74)
+* New Townlong Steppes @ (26.17,42.59), (33.89,17.18)
+
+== v3.45 - 18th December 2023
+* New Jade Forest @ (62.16,24.20), (62.19,20.91), (63.65,22.90)
+
+== v3.44 - 13th December 2023
+* Added and improved translations to the Minimap AddOns menu
+* New Jade Forest @ (56.37,54.27)
+* Felstriker server added to checklist - not relevant for this AddOn
+* Penance and Shadowstrike added (SoD)
+
+== v3.43 - 8th December 2023
+* New Kun-Lai Summit @ (68.62,46.23)
+* All Kun-Lai Summit pins now indicate if visible or not
+  (I check prerequisite quests)
+* Added the ability to show the Valley of the Four Winds map from the Minimap AddOns menu
+ 
 == v3.42 - 3rd December 2023
 * Removed code for old Pin types "P" and "B"
 * Can now support multiple tips for Soil pins

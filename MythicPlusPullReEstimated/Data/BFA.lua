@@ -5,9 +5,9 @@ tinsert(ns.data, data)
 
 function data:GetPatchVersion()
     return {
-        timestamp = 1698486716,
+        timestamp = 1700046129,
         version = '10.2.0',
-        build = 51851,
+        build = 52148,
     }
 end
 
@@ -112,7 +112,7 @@ function data:GetNPCData()
         [131492] = { ["name"] = "Devout Blood Priest", ["count"] = 5 },
         [131585] = { ["name"] = "Enthralled Guard", ["count"] = 4 },
         [131586] = { ["name"] = "Banquet Steward", ["count"] = 4 },
-        [131587] = { ["name"] = "Bewitched Captain", ["count"] = 5 },
+        [131587] = { ["name"] = "Bewitched Captain", ["count"] = 6 },
         [131601] = { ["name"] = "Executive Chef Daniel", ["count"] = 4 },
         [131607] = { ["name"] = "Sauciere Samuel", ["count"] = 4 },
         [131611] = { ["name"] = "Roast Chef Rhonda", ["count"] = 4 },
@@ -149,7 +149,7 @@ function data:GetNPCData()
         [134005] = { ["name"] = "Shalebiter", ["count"] = 1 },
         [134012] = { ["name"] = "Taskmaster Askari", ["count"] = 6 },
         [134024] = { ["name"] = "Devouring Maggot", ["count"] = 1 },
-        [134041] = { ["name"] = "Infected Peasant", ["count"] = 4 },
+        [134041] = { ["name"] = "Infected Peasant", ["count"] = 3 },
         [134137] = { ["name"] = "Temple Attendant", ["count"] = 9 },
         [134139] = { ["name"] = "Shrine Templar", ["count"] = 10 },
         [134144] = { ["name"] = "Living Current", ["count"] = 18 },
@@ -191,7 +191,7 @@ function data:GetNPCData()
         [135234] = { ["name"] = "Diseased Mastiff", ["count"] = 3 },
         [135235] = { ["name"] = "Spectral Beastmaster", ["count"] = 4 },
         [135239] = { ["name"] = "Spectral Witch Doctor", ["count"] = 4 },
-        [135240] = { ["name"] = "Soul Essence", ["count"] = 2 },
+        [135240] = { ["name"] = "Soul Essence", ["count"] = 1 },
         [135241] = { ["name"] = "Bilge Rat Pillager", ["count"] = 4 },
         [135245] = { ["name"] = "Bilge Rat Demolisher", ["count"] = 8 },
         [135254] = { ["name"] = "Irontide Raider", ["count"] = 4 },
@@ -250,7 +250,7 @@ function data:GetNPCData()
         [138465] = { ["name"] = "Ashvane Cannoneer", ["count"] = 4 },
         [138489] = { ["name"] = "Shadow of Zul", ["count"] = 8 },
         [139110] = { ["name"] = "Spark Channeler", ["count"] = 11 },
-        [139269] = { ["name"] = "Gloom Horror", ["count"] = 4 },
+        [139269] = { ["name"] = "Gloom Horror", ["count"] = 2 },
         [139422] = { ["name"] = "Scaled Krolusk Tamer", ["count"] = 6 },
         [139425] = { ["name"] = "Crazed Incubator", ["count"] = 4 },
         [139626] = { ["name"] = "Dredged Sailor", ["count"] = 1 },

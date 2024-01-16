@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2083, "DBM-Party-BfA", 1, 968)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231125014209")
+mod:SetRevision("20240106080507")
 mod:SetCreatureID(122963)
 mod:SetEncounterID(2086)
 mod:SetHotfixNoticeRev(20231023000000)
@@ -30,13 +30,13 @@ mod:RegisterEventsInCombat(
 --TODO, no two pulls are same timer wise. pursuit kinda fucks timers to hell. makes it hard to learn ACTUAL cds since spells get delayed by ICDs and spell queues
 local warnPursuit				= mod:NewTargetAnnounce(257407, 2)
 
-local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, "Tank", nil, nil, 1, 2)
+local specWarnTeeth				= mod:NewSpecialWarningDefensive(255434, nil, nil, nil, 1, 2)
 local specWarnFear				= mod:NewSpecialWarningMoveTo(255371, nil, nil, nil, 3, 2)--Dodge warning on purpose, you dodge it by LOS behind pillar
 local yellPursuit				= mod:NewYell(257407)
 local specWarnPursuit			= mod:NewSpecialWarningRun(257407, nil, nil, nil, 4, 2)
 local specWarnBoneQuake			= mod:NewSpecialWarningSpell(260683, nil, nil, nil, 2, 2)
 
-local timerTeethCD				= mod:NewCDCountTimer(26.2, 255434, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--actual minimum timer not known
+local timerTeethCD				= mod:NewCDCountTimer(25, 255434, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--actual minimum timer not known
 local timerFearCD				= mod:NewCDCountTimer(35.1, 255371, nil, nil, nil, 2)--actual minimum timer not known
 local timerPursuitCD			= mod:NewCDCountTimer(35.1, 257407, nil, nil, nil, 3)--actual minimum timer not known
 
@@ -77,7 +77,7 @@ function mod:OnCombatStart(delay)
 	self.vb.fearCount = 0
 	self.vb.pursuitCount = 0
 	timerTeethCD:Start(6-delay, 1)--8.1
-	timerFearCD:Start(12-delay, 1)
+	timerFearCD:Start(11.7-delay, 1)
 	timerPursuitCD:Start(21.7-delay, 1)
 end
 
@@ -122,8 +122,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 255434 then
 		self.vb.teethCount = self.vb.teethCount + 1
-		specWarnTeeth:Show()
-		specWarnTeeth:Play("defensive")
+		if self:IsTanking("player", "boss1", nil, true) then
+			specWarnTeeth:Show()
+			specWarnTeeth:Play("defensive")
+		end
 		timerTeethCD:Start(nil, self.vb.teethCount+1)
 		updateAllTimers(self, 3.5)
 	end

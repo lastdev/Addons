@@ -40,8 +40,9 @@ License: MIT
 -- @class file
 -- @name LibRangeCheck-3.0
 local MAJOR_VERSION = "LibRangeCheck-3.0"
-local MINOR_VERSION = 3
+local MINOR_VERSION = 9
 
+---@class lib
 local lib, oldminor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then
   return
@@ -52,7 +53,7 @@ local isWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 local InCombatLockdownRestriction
 if isRetail then
-  InCombatLockdownRestriction = InCombatLockdown
+  InCombatLockdownRestriction = function(unit) return InCombatLockdown() and not UnitCanAttack("player", unit) end
 else
   InCombatLockdownRestriction = function() return false end
 end
@@ -88,7 +89,7 @@ local UnitClass = UnitClass
 local UnitRace = UnitRace
 local GetInventoryItemLink = GetInventoryItemLink
 local GetTime = GetTime
-local HandSlotId = GetInventorySlotInfo("HandsSlot")
+local HandSlotId = GetInventorySlotInfo("HANDSSLOT")
 local math_floor = math.floor
 local UnitIsVisible = UnitIsVisible
 
@@ -246,9 +247,11 @@ tinsert(ResSpells.PRIEST, 2006) -- Resurrection (40 yards, level 10)
 if isRetail then
   tinsert(FriendSpells.ROGUE, 36554) -- Shadowstep (Assassination, Subtlety) (25 yards, level 18) -- works on friendly in retail
   tinsert(FriendSpells.ROGUE, 921) -- Pick Pocket (10 yards, level 24) -- this works for range, keep it in friendly as well for retail but on classic this is melee range and will return min 0 range 0
+else
+  tinsert(HarmSpells.ROGUE, 2764) -- Throw (30 yards)
 end
 
-tinsert(HarmSpells.ROGUE, 2764) -- Throw (30 yards)
+tinsert(HarmSpells.ROGUE, 185565) -- Poisoned Knife (Assassination) (30 yards, level 29)
 tinsert(HarmSpells.ROGUE, 36554) -- Shadowstep (Assassination, Subtlety) (25 yards, level 18)
 tinsert(HarmSpells.ROGUE, 185763) -- Pistol Shot (Outlaw) (20 yards)
 tinsert(HarmSpells.ROGUE, 2094) -- Blind (15 yards)
@@ -286,26 +289,26 @@ if not isRetail then
 end
 
 -- Warlocks
+tinsert(FriendSpells.WARLOCK, 132) -- Detect Invisibility (30 yards, level 26)
 tinsert(FriendSpells.WARLOCK, 5697) -- Unending Breath (30 yards)
 tinsert(FriendSpells.WARLOCK, 20707) -- Soulstone (40 yards) ~ this can be precasted so leave it in friendly as well as res
 
 if isRetail then
-  tinsert(FriendSpells.WARLOCK, 132) -- Detect Invisibility (30 yards, level 26)
+  tinsert(HarmSpells.WARLOCK, 234153) -- Drain Life (40 yards, level 9)
+  tinsert(HarmSpells.WARLOCK, 198590) -- Drain Soul (40 yards, level 15)
+  tinsert(HarmSpells.WARLOCK, 232670) -- Shadow Bolt (40 yards)
+else
+  tinsert(HarmSpells.WARLOCK, 172) -- Corruption (30/33/36 yards, level 4, rank 1)
+  tinsert(HarmSpells.WARLOCK, 348) -- Immolate (30/33/36 yards, level 1, rank 1)
+  tinsert(HarmSpells.WARLOCK, 17877) -- Shadowburn (Destruction) (20/22/24 yards, rank 1)
+  tinsert(HarmSpells.WARLOCK, 18223) -- Curse of Exhaustion (Affliction) (30/33/36/35/38/42 yards)
+  tinsert(HarmSpells.WARLOCK, 689) -- Drain Life (Affliction) (20/22/24 yards, level 14, rank 1)
+  tinsert(HarmSpells.WARLOCK, 403677) -- Master Channeler (Affliction) (20/22/24 yards, level 14, rank 1)
 end
 
 tinsert(HarmSpells.WARLOCK, 5019) -- Shoot (30 yards)
-tinsert(HarmSpells.WARLOCK, 234153) -- Drain Life (40 yards, level 9)
-tinsert(HarmSpells.WARLOCK, 198590) -- Drain Soul (40 yards, level 15)
 tinsert(HarmSpells.WARLOCK, 686) -- Shadow Bolt (Demonology, Affliction) (40 yards)
-tinsert(HarmSpells.WARLOCK, 232670) -- Shadow Bolt (40 yards)
 tinsert(HarmSpells.WARLOCK, 5782) -- Fear (30 yards)
-
-if not isRetail then
-  tinsert(HarmSpells.WARLOCK, 172) -- Corruption (30 yards, level 4, rank 1)
-  tinsert(HarmSpells.WARLOCK, 348) -- Immolate (30 yards, level 1, rank 1)
-  tinsert(HarmSpells.WARLOCK, 17877) -- Shadowburn (Destruction) (20 yards)
-  tinsert(HarmSpells.WARLOCK, 18223) -- Curse of Exhaustion (Affliction) (30/33/36/35/38/42 yards)
-end
 
 tinsert(ResSpells.WARLOCK, 20707) -- Soulstone (40 yards)
 
@@ -540,29 +543,11 @@ local checkers_Spell = setmetatable({}, {
     return func
   end,
 })
-local function createCheckers_SpellWithMin(fallbackSpell)
-  local checkers_SpellWithMin = setmetatable({}, {
-    __index = function(t, spellIdx)
-      local func = function(unit)
-        if IsSpellInRange(spellIdx, BOOKTYPE_SPELL, unit) == 1 then
-          return true
-        elseif fallbackSpell and IsSpellInRange(fallbackSpell, BOOKTYPE_SPELL, unit) == 1 then
-          return true, true
-        else
-          return false
-        end
-      end
-      t[spellIdx] = func
-      return func
-    end,
-  })
-  return checkers_SpellWithMin
-end
-
+local checkers_SpellWithMin = {} -- see getCheckerForSpellWithMinRange()
 local checkers_Item = setmetatable({}, {
   __index = function(t, item)
-    local func = function(unit)
-      if InCombatLockdownRestriction() then
+    local func = function(unit, skipInCombatCheck)
+      if not skipInCombatCheck and InCombatLockdownRestriction(unit) then
         return nil
       else
         return IsItemInRange(item, unit) or nil
@@ -574,8 +559,8 @@ local checkers_Item = setmetatable({}, {
 })
 local checkers_Interact = setmetatable({}, {
   __index = function(t, index)
-    local func = function(unit)
-      if InCombatLockdownRestriction() then
+    local func = function(unit, skipInCombatCheck)
+      if not skipInCombatCheck and InCombatLockdownRestriction(unit) then
         return nil
       else
         return CheckInteractDistance(unit, index) and true or false
@@ -628,6 +613,46 @@ local function findSpellIdx(spellName)
   return nil
 end
 
+local function fixRange(range)
+  if range then
+    return math_floor(range + 0.5)
+  end
+end
+
+local function getSpellData(sid)
+  local name, _, _, _, minRange, range = GetSpellInfo(sid)
+  return name, fixRange(minRange), fixRange(range), findSpellIdx(name)
+end
+
+local function findMinRangeChecker(origMinRange, origRange, spellList)
+  for i = 1, #spellList do
+    local sid = spellList[i]
+    local name, minRange, range, spellIdx = getSpellData(sid)
+    if range and spellIdx and origMinRange <= range and range <= origRange and minRange == 0 then
+      return checkers_Spell[findSpellIdx(name)]
+    end
+  end
+end
+
+local function getCheckerForSpellWithMinRange(spellIdx, minRange, range, spellList)
+  local checker = checkers_SpellWithMin[spellIdx]
+  if checker then
+    return checker
+  end
+  local minRangeChecker = findMinRangeChecker(minRange, range, spellList)
+  if minRangeChecker then
+    checker = function(unit)
+      if IsSpellInRange(spellIdx, BOOKTYPE_SPELL, unit) == 1 then
+        return true
+      elseif minRangeChecker(unit) then
+        return true, true
+      end
+    end
+    checkers_SpellWithMin[spellIdx] = checker
+    return checker
+  end
+end
+
 -- minRange should be nil if there's no minRange, not 0
 local function addChecker(t, range, minRange, checker, info)
   local rc = { ["range"] = range, ["minRange"] = minRange, ["checker"] = checker, ["info"] = info }
@@ -659,33 +684,10 @@ local function createCheckerList(spellList, itemList, interactList)
   end
 
   if spellList then
-    local spellIdWithOutMinRange
-    -- Some spells have a minimum range, IsSpellInRange returns false for both being
-    -- too near and too far. To distinguish between those two cases, we determine a spell
-    -- without a min range and use that as a fallback
     for i = 1, #spellList do
       local sid = spellList[i]
-      local name, _, _, _, minRange, range = GetSpellInfo(sid)
-      local spellIdx = findSpellIdx(name)
+      local name, minRange, range, spellIdx = getSpellData(sid)
       if spellIdx and range then
-        minRange = math_floor(minRange + 0.5)
-        if minRange == 0 then
-          spellIdWithOutMinRange = spellIdx
-          break;
-        end
-      end
-    end
-
-    local checkers_SpellWithMin = createCheckers_SpellWithMin(spellIdWithOutMinRange)
-
-    for i = 1, #spellList do
-      local sid = spellList[i]
-      local name, _, _, _, minRange, range = GetSpellInfo(sid)
-      local spellIdx = findSpellIdx(name)
-      if spellIdx and range then
-        minRange = math_floor(minRange + 0.5)
-        range = math_floor(range + 0.5)
-
         -- print("### spell: " .. tostring(name) .. ", " .. tostring(minRange) .. " - " ..  tostring(range))
 
         if minRange == 0 then -- getRange() expects minRange to be nil in this case
@@ -697,8 +699,11 @@ local function createCheckerList(spellList, itemList, interactList)
         end
 
         if minRange then
-          addChecker(res, range, minRange, checkers_SpellWithMin[spellIdx], "spell:" .. sid .. ":" .. tostring(name))
-          addChecker(resInCombat, range, minRange, checkers_SpellWithMin[spellIdx], "spell:" .. sid .. ":" .. tostring(name))
+          local checker = getCheckerForSpellWithMinRange(spellIdx, minRange, range, spellList)
+          if checker then
+            addChecker(res, range, minRange, checker, "spell:" .. sid .. ":" .. tostring(name))
+            addChecker(resInCombat, range, minRange, checker, "spell:" .. sid .. ":" .. tostring(name))
+          end
         else
           addChecker(res, range, minRange, checkers_Spell[spellIdx], "spell:" .. sid .. ":" .. tostring(name))
           addChecker(resInCombat, range, minRange, checkers_Spell[spellIdx], "spell:" .. sid .. ":" .. tostring(name))
@@ -738,7 +743,7 @@ local function getRangeWithCheckerList(unit, checkerList)
   while lo <= hi do
     local mid = math_floor((lo + hi) / 2)
     local rc = checkerList[mid]
-    if rc.checker(unit) then
+    if rc.checker(unit, true) then
       lo = mid + 1
     else
       hi = mid - 1
@@ -759,20 +764,16 @@ local function getRange(unit, noItems)
   local canAssist = UnitCanAssist("player", unit)
   if UnitIsDeadOrGhost(unit) then
     if canAssist then
-      return getRangeWithCheckerList(unit, InCombatLockdownRestriction() and lib.resRCInCombat or lib.resRC)
+      return getRangeWithCheckerList(unit, InCombatLockdownRestriction(unit) and lib.resRCInCombat or lib.resRC)
     else
-      return getRangeWithCheckerList(unit, InCombatLockdownRestriction() and lib.miscRCInCombat or lib.miscRC)
+      return getRangeWithCheckerList(unit, InCombatLockdownRestriction(unit) and lib.miscRCInCombat or lib.miscRC)
     end
   end
 
   if UnitCanAttack("player", unit) then
-    if InCombatLockdownRestriction() then
-      return getRangeWithCheckerList(unit, noItems and lib.harmNoItemsRCInCombat or lib.harmRCInCombat)
-    else
-      return getRangeWithCheckerList(unit, noItems and lib.harmNoItemsRC or lib.harmRC)
-    end
+    return getRangeWithCheckerList(unit, noItems and lib.harmNoItemsRC or lib.harmRC)
   elseif UnitIsUnit("pet", unit) then
-    if InCombatLockdownRestriction() then
+    if InCombatLockdownRestriction(unit) then
       local minRange, maxRange = getRangeWithCheckerList(unit, noItems and lib.friendNoItemsRCInCombat or lib.friendRCInCombat)
       if minRange or maxRange then
         return minRange, maxRange
@@ -788,13 +789,13 @@ local function getRange(unit, noItems)
       end
     end
   elseif canAssist then
-    if InCombatLockdownRestriction() then
+    if InCombatLockdownRestriction(unit) then
       return getRangeWithCheckerList(unit, noItems and lib.friendNoItemsRCInCombat or lib.friendRCInCombat)
     else
       return getRangeWithCheckerList(unit, noItems and lib.friendNoItemsRC or lib.friendRC)
     end
   else
-    return getRangeWithCheckerList(unit, InCombatLockdownRestriction() and lib.miscRC or lib.miscRCInCombat)
+    return getRangeWithCheckerList(unit, InCombatLockdownRestriction(unit) and lib.miscRCInCombat or lib.miscRC)
   end
 end
 

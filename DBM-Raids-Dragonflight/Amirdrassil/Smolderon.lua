@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2563, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231129063227")
+mod:SetRevision("20231231044144")
 mod:SetCreatureID(200927)
 mod:SetEncounterID(2824)
 --mod:SetUsedIcons(1, 2, 3)
@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
 --]]
 --TODO, better tracking of personal dps buffs in P2?
 --general
-local warnPhase										= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
+local warnPhase										= mod:NewPhaseChangeAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(421532, nil, nil, nil, 1, 8)
 
@@ -49,7 +49,7 @@ local yellBrandofDamnation							= mod:NewShortYell(421343, nil, nil, nil, "YELL
 local yellBrandofDamnationFades						= mod:NewShortFadesYell(421343, nil, nil, nil, "YELL")
 local specWarnAftermathTaunt						= mod:NewSpecialWarningTaunt(422577, nil, nil, nil, 1, 2)
 local specWarnSearingAftermath						= mod:NewSpecialWarningMoveAway(422577, nil, nil, nil, 1, 2)
-local yellSearingAftermath							= mod:NewShortYell(422577)
+local yellSearingAftermath							= mod:NewShortYell(422577, 37859)
 local yellSearingAftermathFades						= mod:NewShortFadesYell(422577)
 local specWarnOverheated							= mod:NewSpecialWarningMoveAway(421455, nil, nil, nil, 1, 2)
 local specWarnOverheatedTaunt						= mod:NewSpecialWarningTaunt(421455, nil, nil, nil, 1, 2)
@@ -58,8 +58,8 @@ local yellOverheatedFades							= mod:NewShortFadesYell(421455)
 local specWarnLavaGeysers							= mod:NewSpecialWarningCount(422691, nil, nil, nil, 2, 2)
 
 local timerBrandofDamnationCD						= mod:NewCDCountTimer(29.9, 421343, nil, nil, nil, 5)
-local timerSearingAftermathCD						= mod:NewTargetTimer(6, 422577, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerOverheatedCD								= mod:NewCDCountTimer(29.9, 421455, nil, nil, nil, 5)
+local timerSearingAftermathCD						= mod:NewTargetTimer(6, 422577, 37859, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerOverheatedCD								= mod:NewCDCountTimer(29.9, 421455, nil, nil, nil, 3)
 local timerLavaGeysersCD							= mod:NewCDCountTimer(25.9, 422691, nil, nil, nil, 3)
 local timerSeekingInfernoCD							= mod:NewCDCountTimer(21.9, 425885, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 

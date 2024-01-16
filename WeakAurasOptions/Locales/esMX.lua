@@ -354,8 +354,8 @@ Off Screen]=]
 	L["Collapse all pending Import"] = "Collapse all pending Import"
 	--[[Translation missing --]]
 	L["Collapsible Group"] = "Collapsible Group"
-	L["color"] = "Color"
 	L["Color"] = "Color"
+	L["color"] = "Color"
 	--[[Translation missing --]]
 	L["Column Height"] = "Column Height"
 	--[[Translation missing --]]
@@ -1277,6 +1277,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Spark Texture"] = "Textura de la chispa"
 	--[[Translation missing --]]
 	L["Specialization"] = "Specialization"
+	--[[Translation missing --]]
+	L["Specific Currency ID"] = "Specific Currency ID"
 	L["Specific Unit"] = "Unidad específica"
 	L["Spell ID"] = "ID de hechizo"
 	--[[Translation missing --]]
@@ -1352,6 +1354,10 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=]
+	--[[Translation missing --]]
+	L["This aura is marked as an update to an aura '%s', but cannot be used to update that aura. This usually happens if an aura is moved out of a group."] = "This aura is marked as an update to an aura '%s', but cannot be used to update that aura. This usually happens if an aura is moved out of a group."
+	--[[Translation missing --]]
+	L["This aura is marked as an update to auras '%s', but cannot be used to update them. This usually happens if an aura is moved out of a group."] = "This aura is marked as an update to auras '%s', but cannot be used to update them. This usually happens if an aura is moved out of a group."
 	--[[Translation missing --]]
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
 It might not work correctly!]=] ] = [=[This aura was created with a different version (%s) of World of Warcraft.
@@ -1450,9 +1456,9 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	--[[Translation missing --]]
 	L["Use Texture"] = "Use Texture"
 	--[[Translation missing --]]
-	L["Used in Auras:"] = "Used in Auras:"
-	--[[Translation missing --]]
 	L["Used in auras:"] = "Used in auras:"
+	--[[Translation missing --]]
+	L["Used in Auras:"] = "Used in Auras:"
 	--[[Translation missing --]]
 	L["Uses Texture Coordinates to rotate the texture."] = "Uses Texture Coordinates to rotate the texture."
 	--[[Translation missing --]]
@@ -1488,14 +1494,14 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["X Offset"] = "Posición de X"
 	L["X Rotation"] = "Rotación de X"
 	L["X Scale"] = "Ajuste de tamaño de X"
-	L["X-Offset"] = "Desplazamiento X"
 	L["x-Offset"] = "Desplazamiento X"
+	L["X-Offset"] = "Desplazamiento X"
 	L["Y Offset"] = "Posición de Y"
 	L["Y Rotation"] = "Rotación de Y"
 	L["Y Scale"] = "Ajuste de tamaño de Y"
 	L["Yellow Rune"] = "Runa amarilla"
-	L["Y-Offset"] = "Desplazamiento Y"
 	L["y-Offset"] = "Desplazamiento Y"
+	L["Y-Offset"] = "Desplazamiento Y"
 	--[[Translation missing --]]
 	L["You already have this group/aura. Importing will create a duplicate."] = "You already have this group/aura. Importing will create a duplicate."
 	--[[Translation missing --]]

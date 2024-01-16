@@ -8,9 +8,9 @@
 
 local VERSION
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	VERSION = "10.0.28"
+	VERSION = "9.2.28.5"
 elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
-	VERSION = "1.14.28.3"
+	VERSION = "1.15.29"
 end
 
 -------------------------------------------------------------------------------
@@ -23,7 +23,6 @@ local FLOASPECTBAR_BARSETTINGS_DEFAULT = { position = "auto", buttonsOrder = {},
 local FLOASPECTBAR_OPTIONS_DEFAULT = { [1] = { scale = 1, borders = true, barSettings = FLOASPECTBAR_BARSETTINGS_DEFAULT }, active = 1 };
 FLOASPECTBAR_OPTIONS = FLOASPECTBAR_OPTIONS_DEFAULT;
 local ACTIVE_OPTIONS = FLOASPECTBAR_OPTIONS[1];
-local _classicUI
 
 -- Ugly
 local changingSpec = false;
@@ -67,13 +66,13 @@ function FloAspectBar_OnLoad(self)
 	self.UpdateState = FloAspectBar_UpdateState;
 	self.menuHooks = { SetPosition = FloAspectBar_SetPosition, SetBorders = FloAspectBar_SetBorders };
 	self:EnableMouse(1);
-	PetActionBar:EnableMouse(false);
+	PetActionBarFrame:EnableMouse(false);
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		ExtraActionBarFrame:EnableMouse(false);
 	end
 
 	if SHOW_WELCOME then
-		DEFAULT_CHAT_FRAME:AddMessage( "|cffd78900FloAspectBar v"..VERSION.."|r loaded." );
+		DEFAULT_CHAT_FRAME:AddMessage( "FloAspectBar "..VERSION.." loaded." );
 		SHOW_WELCOME = nil;
 
 		SLASH_FLOASPECTBAR1 = "/floaspectbar";
@@ -85,11 +84,6 @@ function FloAspectBar_OnLoad(self)
 			self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 		end
 		self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
-
-		_classicUI = _G["ClassicUI"]
-		if _classicUI then
-			DEFAULT_CHAT_FRAME:AddMessage( "FloAspectBar : |cffd78900ClassicUI v".._classicUI.VERSION.."|r detected." )
-		end
 	end
 
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
@@ -256,9 +250,7 @@ function FloAspectBar_UpdateState(self, pos)
 	local spell = self.spells[pos];
 
 	if FloLib_UnitHasBuff("player", spell.name) then
-		if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
-			FloLib_StartTimer(self, nil, spell.id);
-		end
+		FloLib_StartTimer(self, nil, spell.id);
 	elseif self["activeSpell"..pos] == pos then
         FloLib_ResetTimer(self, pos);
     else
@@ -274,7 +266,6 @@ function FloAspectBar_UpdatePosition()
 	end
 
 	local yOffset = 0;
-	local xOffset = 512;
 	local anchorFrame;
 
 	if not MainMenuBar:IsShown() and not (VehicleMenuBar and VehicleMenuBar:IsShown()) then
@@ -283,26 +274,13 @@ function FloAspectBar_UpdatePosition()
 	else
 		anchorFrame = MainMenuBar;
 
-		if _classicUI and _classicUI:IsEnabled() then
-			yOffset = yOffset + 6
-			anchorFrame = CUI_MainMenuBar
-			if MultiBar2_IsVisible() then
-				yOffset = yOffset + 44;
-			end
-
-		else
-			xOffset = 326;
-			if MultiBar1_IsVisible() then
-				yOffset = yOffset + 50;
-			end
-			if MultiBar2_IsVisible() then
-				yOffset = yOffset + 50;
-			end
+		if SHOW_MULTI_ACTIONBAR_2 then
+			yOffset = yOffset + 40;
 		end
 	end
 
 	FloAspectBar:ClearAllPoints();
-	FloAspectBar:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", xOffset/ACTIVE_OPTIONS.scale, yOffset/ACTIVE_OPTIONS.scale);
+	FloAspectBar:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 512/ACTIVE_OPTIONS.scale, yOffset/ACTIVE_OPTIONS.scale);
 end
 
 function FloAspectBar_SetBorders(self, visible)

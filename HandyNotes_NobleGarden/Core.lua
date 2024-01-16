@@ -3,8 +3,10 @@
 
                                              Noblegarden
 
-                                     v2.11 - 26th November 2023
+                                      v2.14 - 12th January 2024
+									 
                                 Copyright (C) Taraezor / Chris Birch
+                                         All Rights Reserved
 
                                 ----o----(||)----oo----(||)----o----
 ]]
@@ -24,8 +26,8 @@ ns.colour.plaintext = "\124cFFA165F0"
 --ns.author = true
 
 local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
-								removeDailies = false, removeSeasonal = true, removeEver = false,
-								showBCE = true,
+								removeDailies = false, removeSeasonal = true, removeEverC = false,
+								removeEverA = false, showBCE = true,
 								iconHardBoiled = 16, iconNobleGarden = 12, iconSpringFling = 13,
 								iconDesertRose = 11, iconNGDailies = 15, iconNGBCE = 14 } }
 local continents = {}
@@ -44,9 +46,10 @@ local format = _G.format
 local next = _G.next
 local HandyNotes = _G.HandyNotes
 
-local _, _, _, version = GetBuildInfo()
-if version < 40000 then
-	ns.classic = true
+ns.version = select( 4, GetBuildInfo() )
+if ns.version < 40000 then
+	ns.preCata = true
+	ns.preAchievements = ( ns.version < 30000 )
 	continents[ 1414 ] = true -- Kalimdor
 	continents[ 1415 ] = true -- Eastern Kingdoms
 	continents[ 947 ] = true -- Azeroth
@@ -59,7 +62,8 @@ if version < 40000 then
 	ns.stormwindCity = 1453
 	ns.teldrassil = 1438
 else
-	ns.classic = false
+	ns.preCata = false
+	ns.preAchievements = false
 	continents[ 12 ] = true -- Kalimdor
 	continents[ 13 ] = true -- Eastern Kingdoms
 	continents[ 947 ] = true -- Azeroth
@@ -81,7 +85,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -116,7 +121,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -151,7 +159,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -184,7 +195,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -216,6 +230,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -248,7 +265,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -281,6 +301,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -314,6 +337,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -346,7 +372,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -378,9 +407,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -390,206 +423,217 @@ ns.name = UnitName( "player" ) or "Character"
 ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
-	L["Noblegarden"] = "Nobelgarten Erfolge"
+	L["AddOn Description"] = ns.colour.plaintext .."Hilfe für die " ..ns.colour.prefix .."Noblegarten"
+					..ns.colour.plaintext .."-Feiertage"
+	L["AnywhereC"] = "Überall im Lager"
+	L["AnywhereE"] = "Überall im Lage"
+	L["AnywhereS"] = "Überall auf dem Platz"
+	L["AnywhereT"] = "Überall im Dorf"
+	L["AnywhereZR"] = "Überall in der Zone.\nVerwende das Spielzeug \"Frühlingsfloristen\".\n"
+					.."(Nobelgartenverkäufer/Nobelgartenhändler - 50x Nobelgartenschokolade)"
+	L["AnywhereZW"] = "Überall in der Zone.\nVerwende die \"Frühlingsrobe\".\n"
+					.."(Nobelgartenverkäufer/Nobelgartenhändler - 50x Nobelgartenschokolade)"
+	L["Cenarion Hold"] = "Burg Cenarius"
+	L["Golakka Hot Springs"] = "Die Heißen Quellen von Golakka"
 	L["hb1"] = "(1) Ändern Sie Ihr \"Zuhause\" in Marschalls Wehr\n(2) Holen Sie sich den "..
 				"Nobelgartenhäschen-stärkungszauber\n(3) Herd ---> Marschalls Wehr"
 	L["hb2"] = "(4) Lauf hierher\n(5) Hier stehen und warten\n(6) Nicht reiten\n(7) Nehmen sie keinen schaden"
 	L["hb3"] = "(1) Ändern Sie Ihr \"Zuhause\" in Burg Cenarius\n(2) Holen Sie sich den "..
 				"Nobelgartenhäschen-stärkungszauber\n(3) Herd ---> Burg Cenarius"
-	L["Cenarion Hold"] = "Burg Cenarius"
-	L["Marshall's Stand"] = "Marschalls Wehr"
-	L["Golakka Hot Springs"] = "Die Heißen Quellen von Golakka"
-	L["AnywhereZW"] = "Überall in der Zone.\nVerwende die \"Frühlingsrobe\".\n"
-					.."(Nobelgartenverkäufer/Nobelgartenhändler - 50x Nobelgartenschokolade)"
-	L["AnywhereZR"] = "Überall in der Zone.\nVerwende das Spielzeug \"Frühlingsfloristen\".\n"
-					.."(Nobelgartenverkäufer/Nobelgartenhändler - 50x Nobelgartenschokolade)"
-	L["AnywhereC"] = "Überall im Lager"
-	L["AnywhereT"] = "Überall im Dorf"
-	L["AnywhereS"] = "Überall auf dem Platz"
-	L["AnywhereE"] = "Überall im Lage"
 	L["hide"] = "(1) Kaufen Sie ein Nobelgartenei\n(2) Platziere es irgendwo in der Stadt"
-	L["AddOn Description"] = "Hilfe für die Nobelgarten Erfolge"	
+	L["Marshall's Stand"] = "Marschalls Wehr"
+	L["Noblegarden"] = "Nobelgarten Erfolge"
+	L["RemoveEver"] = "Entfernen Sie den Stift, wenn der Erfolg abgeschlossen ist: "
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Noblegarden"] = "Jardín Noble"
+	L["AddOn Description"] = ns.colour.plaintext .."Ayuda para las vacaciones de " ..ns.colour.prefix .."Jardín Noble"
+	L["AnywhereC"] = "En cualquier lugar del campamento"
+	L["AnywhereE"] = "En cualquier lugar del campamento"
+	L["AnywhereS"] = "En cualquier lugar de la plaza"
+	L["AnywhereT"] = "En cualquier lugar del pueblo"
+	L["AnywhereZR"] = "En cualquier lugar de la zona.\nUsa el juguete \"Faltriquera de florista primaveral\".\n"
+					.."(Vendedor/Mercader del Jardín Noble - 50x Chocolate del Jardín Noble)"
+	L["AnywhereZW"] = "En cualquier lugar de la zona.\nUsa la \"Togas primaverales\".\n"
+					.."(Vendedor/Mercader del Jardín Noble - 50x Chocolate del Jardín Noble)"
+	L["Cenarion Hold"] = "Fuerte Cenarion"
+	L["Golakka Hot Springs"] = "Baños de Golakka"
 	L["hb1"] = "(1) Cambia tu \"hogar\" a Alto de Marshal\n(2) Consigue el mejora Conejito del Jardín "..
 				"Noble\n(3) Hogar ---> Alto de Marshal"
 	L["hb2"] = "(4) Corre hasta aqui\n(5) Quédate aquí y espera\n(6) No montar\n(7) No te dañes"
 	L["hb3"] = "(1) Cambia tu \"hogar\" a Fuerte Cenarion\n(2) Consigue el mejora Conejito del Jardín "..
 				"Noble\n(3) Hogar ---> Fuerte Cenarion"
-	L["Cenarion Hold"] = "Fuerte Cenarion"
-	L["Marshall's Stand"] = "Alto de Marshal"
-	L["Golakka Hot Springs"] = "Baños de Golakka"
-	L["AnywhereZW"] = "En cualquier lugar de la zona.\nUsa la \"Togas primaverales\".\n"
-					.."(Vendedor/Mercader del Jardín Noble - 50x Chocolate del Jardín Noble)"
-	L["AnywhereZR"] = "En cualquier lugar de la zona.\nUsa el juguete \"Faltriquera de florista primaveral\".\n"
-					.."(Vendedor/Mercader del Jardín Noble - 50x Chocolate del Jardín Noble)"
-	L["AnywhereC"] = "En cualquier lugar del campamento"
-	L["AnywhereT"] = "En cualquier lugar del pueblo"
-	L["AnywhereS"] = "En cualquier lugar de la plaza"
-	L["AnywhereE"] = "En cualquier lugar del campamento"
 	L["hide"] = "(1) Compra un Huevo del Jardín Noble\n(2) Colócalo en cualquier lugar de la ciudad"
-	L["AddOn Description"] = "Ayuda para los logros del Jardín Noble"
+	L["Marshall's Stand"] = "Alto de Marshal"
+	L["Noblegarden"] = "Jardín Noble"
+	L["RemoveEver"] = "Retire el pin si se completa el logro: "
 
 elseif ns.locale == "frFR" then
-	L["Noblegarden"] = "Jardin des nobles"
+	L["AddOn Description"] = ns.colour.plaintext .."Aide pour les vacances de " ..ns.colour.prefix .."Jardin des nobles"
+	L["AnywhereC"] = "Partout dans le camp"
+	L["AnywhereE"] = "Partout dans le campement"
+	L["AnywhereS"] = "Partout dans la Place"
+	L["AnywhereT"] = "Partout dans la ville"
+	L["AnywhereZR"] = "Partout dans la zone.\nUtilisez le jouet Bourse printanière de fleuriste.\n"
+					.."(Vendeur/Marchand du Jardin des nobles - 50x Chocolat du Jardin des nobles)"
+	L["AnywhereZW"] = "Partout dans la zone.\nUtilisez la \"Robe de printemps\".\n"
+					.."(Vendeur/Marchand du Jardin des nobles - 50x Chocolat du Jardin des nobles)"
+	L["Cenarion Hold"] = "Fort Cénarien"
+	L["Golakka Hot Springs"] = "Sources de Golakka"
 	L["hb1"] = "(1) Changez votre \"maison\" en Camp retranché des Marshal\n(2) Obtenez le buff "..
 				"Lapin du Jardin des nobles\n(3) Foyer ---> Camp retranché des Marshal"
 	L["hb2"] = "(4) Courez jusqu'ici\n(5) Tenez-vous ici et attendez\n(6) Ne roule "..
 				"pas\n(7) Ne pas prendre de dégâts"
 	L["hb3"] = "(1) Changez votre \"maison\" en Fort Cénarien\n(2) Obtenez le buff "..
 				"Lapin du Jardin des nobles\n(3) Foyer ---> Fort Cénarien"
-	L["Cenarion Hold"] = "Fort Cénarien"
-	L["Marshall's Stand"] = "Camp retranché des Marshal"
-	L["Golakka Hot Springs"] = "Sources de Golakka"
-	L["AnywhereZW"] = "Partout dans la zone.\nUtilisez la \"Robe de printemps\".\n"
-					.."(Vendeur/Marchand du Jardin des nobles - 50x Chocolat du Jardin des nobles)"
-	L["AnywhereZR"] = "Partout dans la zone.\nUtilisez le jouet Bourse printanière de fleuriste.\n"
-					.."(Vendeur/Marchand du Jardin des nobles - 50x Chocolat du Jardin des nobles)"
-	L["AnywhereC"] = "Partout dans le camp"
-	L["AnywhereT"] = "Partout dans la ville"
-	L["AnywhereS"] = "Partout dans la Place"
-	L["AnywhereE"] = "Partout dans le campement"
 	L["hide"] = "(1) Acheter un Oeuf du Jardin des nobles\n(2) Placez-le n'importe où dans la ville"
-	L["AddOn Description"] = "Aide pour les hauts faits du Jardin des nobles"
+	L["Marshall's Stand"] = "Camp retranché des Marshal"
+	L["Noblegarden"] = "Jardin des nobles"
+	L["RemoveEver"] = "Retirez l'épingle si le succès est terminé: "
 
 elseif ns.locale == "itIT" then
-	L["Noblegarden"] = "Festa di Nobiluova"
+	L["AddOn Description"] = ns.colour.plaintext .."Aiuto per le vacanze di " ..ns.colour.prefix .."Festa di Nobiluova"
+	L["AnywhereC"] = "Ovunque nel campo"
+	L["AnywhereE"] = "Ovunque nell'accampamento"
+	L["AnywhereS"] = "Ovunque in piazza"
+	L["AnywhereT"] = "Ovunque nel villaggio"
+	L["AnywhereZW"] = "Ovunque nella zona.\nUsa le \"vesti primaverili\".\n"
+					.."(Mercante di Nobiluova - 50x Cioccolatino di Nobiluova)"
+	L["AnywhereZR"] = "Ovunque nella zona.\nUsa il giocattolo \"Borsa del Fiorista Primaverile\".\n"
+					.."(Mercante di Nobiluova - 50x Cioccolatino di Nobiluova)"
+	L["Cenarion Hold"] = "Fortezza Cenariana"
+	L["Golakka Hot Springs"] = "Sorgenti Calde di Golakka"
 	L["hb1"] = "(1) Cambia la tua \"casa\" in Accampamento dei Grant\n(2) Ottieni il beneficio "..
 				"Noblegarden Bunny\n(3) Cuore ---> Accampamento dei Grant"
 	L["hb2"] = "(4) Corri qui\n(5) Stai qui e aspetta\n(6) Non guidare\n(7) Non subire danni"
 	L["hb3"] = "(1) Cambia la tua \"casa\" in Cenarion Hold\n(2) Ottieni il beneficio "..
 				"Noblegarden Bunny\n(3) Cuore ---> Cenarion Hold"
-	L["Cenarion Hold"] = "Fortezza Cenariana"
-	L["Marshall's Stand"] = "Accampamento dei Grant"
-	L["Golakka Hot Springs"] = "Sorgenti Calde di Golakka"
-	L["AnywhereZW"] = "Ovunque nella zona.\nUsa le \"vesti primaverili\".\n"
-					.."(Mercante di Nobiluova - 50x Cioccolatino di Nobiluova)"
-	L["AnywhereZR"] = "Ovunque nella zona.\nUsa il giocattolo \"Borsa del Fiorista Primaverile\".\n"
-					.."(Mercante di Nobiluova - 50x Cioccolatino di Nobiluova)"
-	L["AnywhereC"] = "Ovunque nel campo"
-	L["AnywhereT"] = "Ovunque nel villaggio"
-	L["AnywhereS"] = "Ovunque in piazza"
-	L["AnywhereE"] = "Ovunque nell'accampamento"
 	L["hide"] = "(1) Acquista un Noblegarden Egg\n(2) Posizionalo ovunque in città"
-	L["AddOn Description"] = "Aiuta con i risultati del Festa di Nobiluova"
+	L["Marshall's Stand"] = "Accampamento dei Grant"
+	L["Noblegarden"] = "Festa di Nobiluova"
+	L["RemoveEver"] = "Rimuovi la spilla se l'obiettivo è stato completato: "
 
 elseif ns.locale == "koKR" then
-	L["Noblegarden"] = "귀족의 정원"
+	L["AddOn Description"] = ns.colour.prefix .."귀족의 정원" ..ns.colour.plaintext .."휴가를 도와주세요"
+	L["AnywhereC"] = "캠프 어디에서나"
+	L["AnywhereE"] = "야영지 어디든"
+	L["AnywhereS"] = "광장 어디에서나"
+	L["AnywhereT"] = "마을 어디든"
+	L["AnywhereZR"] = "영역의 아무 곳이나.\n\"봄꽃 상인의 주머니\" 장난감을 사용하세요.\n"
+					.."(귀족의 정원 상인/판매원 - 50x 귀족의 정원 초콜릿)"
+	L["AnywhereZW"] = "영역의 아무 곳이나.\n\"새봄맞이 로브\"를 사용하세요.\n"
+					.."(귀족의 정원 상인/판매원 - 50x 귀족의 정원 초콜릿)"
+	L["Cenarion Hold"] = "세나리온 요새"
+	L["Golakka Hot Springs"] = "골락카 간헐천"
 	L["hb1"] = "(1) \"집\"을 마샬의 격전지로 변경\n(2) 귀족의 정원 토끼 버프 받기\n(3) 화덕 ---> 마샬의 격전지"
 	L["hb2"] = "(4) 여기까지 달려\n(5) 여기 서서 기다려\n(6) 타지마\n(7) 피해를 입지 않는다"
 	L["hb3"] = "(1) \"집\"을 세나리온 요새로 변경\n(2) 귀족의 정원 토끼 버프 받기\n(3) 화덕 ---> 세나리온 요새"
-	L["Cenarion Hold"] = "세나리온 요새"
-	L["Marshall's Stand"] = "마샬의 격전지"
-	L["Golakka Hot Springs"] = "골락카 간헐천"
-	L["AnywhereZW"] = "영역의 아무 곳이나.\n\"새봄맞이 로브\"를 사용하세요.\n"
-					.."(귀족의 정원 상인/판매원 - 50x 귀족의 정원 초콜릿)"
-	L["AnywhereZR"] = "영역의 아무 곳이나.\n\"봄꽃 상인의 주머니\" 장난감을 사용하세요.\n"
-					.."(귀족의 정원 상인/판매원 - 50x 귀족의 정원 초콜릿)"
-	L["AnywhereC"] = "캠프 어디에서나"
-	L["AnywhereT"] = "마을 어디든"
-	L["AnywhereS"] = "광장 어디에서나"
-	L["AnywhereE"] = "야영지 어디든"
 	L["hide"] = "(1) 귀족의 정원 알 구매\n(2) 도시 어디에서나 배치"
-	L["AddOn Description"] = "귀족의 정원 업적들에 대한 도움말"	
+	L["Marshall's Stand"] = "마샬의 격전지"
+	L["Noblegarden"] = "귀족의 정원"
+	L["RemoveEver"] = "업적이 완료되면 핀을 제거하세요: "
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Noblegarden"] = "Jardinova"
+	L["AddOn Description"] = ns.colour.plaintext .."Ajuda para o feriado de " ..ns.colour.prefix .."Jardinova"
+	L["AnywhereC"] = "Em qualquer lugar do acampamento"
+	L["AnywhereE"] = "Em qualquer lugar do acampamento"
+	L["AnywhereS"] = "Em qualquer lugar da praça"
+	L["AnywhereT"] = "Em qualquer lugar da vila"
+	L["AnywhereZR"] = "Em qualquer lugar da zona.\nUse o brinquedo \"Bolsa de Florista da Primavera\".\n"
+					.."(Comerciante/Mercador de Jardinova - 50x Chocolate de Jardinova)"
+	L["AnywhereZW"] = "Em qualquer lugar da zona.\nUse os \"Vestes Primaveris\".\n"
+					.."(Comerciante/Mercador de Jardinova - 50x Chocolate de Jardinova)"
+	L["Cenarion Hold"] = "Forte Cenariano"
+	L["Golakka Hot Springs"] = "Fontes Termais Golakka"
 	L["hb1"] = "(1) Altere sua \"casa\" para Posto Avançado do Marshal\n(2) Obtenha o bônus "..
 				"Coelhinho de Jardinova\n(3) Lar ---> Posto Avançado do Marshal"
 	L["hb2"] = "(4) Corre pra cá\n(5) Fique aqui e espere\n(6) Não monte\n(7) Não tome nenhum dano"
 	L["hb3"] = "(1) Altere sua \"casa\" para Forte Cenariano\n(2) Obtenha o bônus "..
 				"Coelhinho de Jardinova\n(3) Lar ---> Forte Cenariano"
-	L["Cenarion Hold"] = "Forte Cenariano"
-	L["Marshall's Stand"] = "Posto Avançado do Marshal"
-	L["Golakka Hot Springs"] = "Fontes Termais Golakka"
-	L["AnywhereZW"] = "Em qualquer lugar da zona.\nUse os \"Vestes Primaveris\".\n"
-					.."(Comerciante/Mercador de Jardinova - 50x Chocolate de Jardinova)"
-	L["AnywhereZR"] = "Em qualquer lugar da zona.\nUse o brinquedo \"Bolsa de Florista da Primavera\".\n"
-					.."(Comerciante/Mercador de Jardinova - 50x Chocolate de Jardinova)"
-	L["AnywhereC"] = "Em qualquer lugar do acampamento"
-	L["AnywhereT"] = "Em qualquer lugar da vila"
-	L["AnywhereS"] = "Em qualquer lugar da praça"
-	L["AnywhereE"] = "Em qualquer lugar do acampamento"
 	L["hide"] = "(1) Compre um Ovo de Jardinova\n(2) Coloque-o em qualquer lugar da cidade"
-	L["AddOn Description"] = "Ajuda para as conquistas do Jardinova"
+	L["Marshall's Stand"] = "Posto Avançado do Marshal"
+	L["Noblegarden"] = "Jardinova"
+	L["RemoveEver"] = "Remova o alfinete se a conquista for concluída: "
 
 elseif ns.locale == "ruRU" then
-	L["Noblegarden"] = "Сад Чудес"
+	L["AddOn Description"] = ns.colour.plaintext .."Помощь на празднике " ..ns.colour.prefix .."Сада Чудес"
+	L["AnywhereC"] = "Где угодно в лагере"
+	L["AnywhereE"] = "Где угодно в лагере"
+	L["AnywhereS"] = "Где угодно на площади"
+	L["AnywhereT"] = "Где угодно в деревне"
+	L["AnywhereZR"] = "Где угодно в зоне.\nИспользуйте игрушку \"Весенний мешочек садовода\".\n"
+					.."(Продавец/Торговец Сада чудес - 50x Праздничное шоколадное яйцо)"
+	L["AnywhereZW"] = "Где угодно в зоне.\nИспользуйте \"Весеннее убранство\".\n"
+					.."(Продавец/Торговец Сада чудес - 50x Праздничное шоколадное яйцо)"
+	L["Cenarion Hold"] = "Крепости Кенария"
+	L["Golakka Hot Springs"] = "Горячие источники Голакка"
 	L["hb1"] = "(1) Измените свой «дом» на Застава Маршалла\n(2) Получите aура Зайчик "..
 				"Сада чудес\n(3) Очаг ---> Застава Маршалла"
 	L["hb2"] = "(4) Беги сюда\n(5) Стой здесь и жди\n(6) Не ездить\n(7) Не получить урона"
 	L["hb3"] = "(1) Измените свой «дом» на Крепости Кенария\n(2) Получите aура Зайчик "..
 				"Сада чудес\n(3) Очаг ---> Крепости Кенария"
-	L["Cenarion Hold"] = "Крепости Кенария"
-	L["Marshall's Stand"] = "Застава Маршалла"
-	L["Golakka Hot Springs"] = "Горячие источники Голакка"
-	L["AnywhereZW"] = "Где угодно в зоне.\nИспользуйте \"Весеннее убранство\".\n"
-					.."(Продавец/Торговец Сада чудес - 50x Праздничное шоколадное яйцо)"
-	L["AnywhereZR"] = "Где угодно в зоне.\nИспользуйте игрушку \"Весенний мешочек садовода\".\n"
-					.."(Продавец/Торговец Сада чудес - 50x Праздничное шоколадное яйцо)"
-	L["AnywhereC"] = "Где угодно в лагере"
-	L["AnywhereT"] = "Где угодно в деревне"
-	L["AnywhereS"] = "Где угодно на площади"
-	L["AnywhereE"] = "Где угодно в лагере"
 	L["hide"] = "(1) Купить Праздничное яйцо\n(2) Разместите в любом месте города"
-	L["AddOn Description"] = "Достижение Помощь для Сада Чудес"
+	L["Marshall's Stand"] = "Застава Маршалла"
+	L["Noblegarden"] = "Сад Чудес"
+	L["RemoveEver"] = "Удалите булавку, если достижение выполнено: "
 
 elseif ns.locale == "zhCN" then
-	L["Noblegarden"] = "贵族的花园"
+	L["AddOn Description"] = ns.colour.prefix .."复活节" ..ns.colour.plaintext .."假期的帮助"
+	L["AnywhereC"] = "在营地的任何地方"
+	L["AnywhereE"] = "在营地的任何地方"
+	L["AnywhereS"] = "广场上的任何地方"
+	L["AnywhereT"] = "村子里的任何地方"
+	L["AnywhereZR"] = "区域内的任何地方.\n使用 \"春日花袋\" 玩具.\n"
+					.."(复活节小贩/复活节商人 - 50x 复活节巧克力)"
+	L["AnywhereZW"] = "区域内的任何地方.\n使用 \"春季长袍\".\n"
+					.."(复活节小贩/复活节商人 - 50x 复活节巧克力)"
+	L["Cenarion Hold"] = "塞纳里奥要塞"
+	L["Golakka Hot Springs"] = "葛拉卡温泉"
 	L["hb1"] = "(1) 将您的“家”更改为 马绍尔哨站\n(2) 获得 复活节小兔 增益\n(3) 炉石 ---> 马绍尔哨站"
 	L["hb2"] = "(4) 跑到这里\n(5) 站在这里等待\n(6) 不要骑\n(7) 不受伤害"
 	L["hb3"] = "(1) 将您的“家”更改为 塞纳里奥要塞\n(2) 获得 复活节小兔 增益\n(3) 炉石 ---> 塞纳里奥要塞"
-	L["Cenarion Hold"] = "塞纳里奥要塞"
-	L["Marshall's Stand"] = "马绍尔哨站"
-	L["Golakka Hot Springs"] = "葛拉卡温泉"
-	L["AnywhereZW"] = "区域内的任何地方.\n使用 \"春季长袍\".\n"
-					.."(复活节小贩/复活节商人 - 50x 复活节巧克力)"
-	L["AnywhereZR"] = "区域内的任何地方.\n使用 \"春日花袋\" 玩具.\n"
-					.."(复活节小贩/复活节商人 - 50x 复活节巧克力)"
-	L["AnywhereC"] = "在营地的任何地方"
-	L["AnywhereT"] = "村子里的任何地方"
-	L["AnywhereS"] = "广场上的任何地方"
-	L["AnywhereE"] = "在营地的任何地方"
 	L["hide"] = "(1) 购买 复活节彩蛋\n(2) 把它放在城市的任何地方"
-	L["AddOn Description"] = "贵族的花园成就帮助"
+	L["Marshall's Stand"] = "马绍尔哨站"
+	L["Noblegarden"] = "贵族的花园"
+	L["RemoveEver"] = "如果成就完成，请移除图钉： "
 
 elseif ns.locale == "zhTW" then
-	L["Noblegarden"] = "貴族的花園"
+	L["AddOn Description"] = ns.colour.prefix .."復活節" ..ns.colour.plaintext .."假期的幫助"
+	L["AnywhereC"] = "在營地的任何地方"
+	L["AnywhereE"] = "在營地的任何地方"
+	L["AnywhereS"] = "廣場上的任何地方"
+	L["AnywhereT"] = "村子裡的任何地方"
+	L["AnywhereZR"] = "區域內的任何地方.\n使用 \"春日花袋\" 玩具.\n"
+					.."(復活節小販/復活節商人 - 50x 復活節巧克力)"
+	L["AnywhereZW"] = "區域內的任何地方.\n使用 \"春季長袍\".\n"
+					.."(復活節小販/復活節商人 - 50x 復活節巧克力)"
+	L["Cenarion Hold"] = "塞纳里奥要塞"
+	L["Golakka Hot Springs"] = "葛拉卡溫泉"
 	L["hb1"] = "(1) 將您的“家”更改為 馬紹爾哨站\n(2) 獲得 復活節小兔 增益\n(3) 爐石 ---> 馬紹爾哨站"
 	L["hb2"] = "(4) 跑到這裡\n(5) 站在這裡等待\n(6) 不要騎\n(7) 不受傷害"
 	L["hb3"] = "(1) 將您的“家”更改為 塞納里奧要塞\n(2) 獲得 復活節小兔 增益\n(3) 爐石 ---> 塞納里奧要塞"
-	L["Cenarion Hold"] = "塞纳里奥要塞"
-	L["Marshall's Stand"] = "馬紹爾哨站"
-	L["Golakka Hot Springs"] = "葛拉卡溫泉"
-	L["AnywhereZW"] = "區域內的任何地方.\n使用 \"春季長袍\".\n"
-					.."(復活節小販/復活節商人 - 50x 復活節巧克力)"
-	L["AnywhereZR"] = "區域內的任何地方.\n使用 \"春日花袋\" 玩具.\n"
-					.."(復活節小販/復活節商人 - 50x 復活節巧克力)"
-	L["AnywhereC"] = "在營地的任何地方"
-	L["AnywhereT"] = "村子裡的任何地方"
-	L["AnywhereS"] = "廣場上的任何地方"
-	L["AnywhereE"] = "在營地的任何地方"
 	L["hide"] = "(1) 購買 復活節彩蛋\n(2) 把它放在城市的任何地方"
-	L["AddOn Description"] = "貴族的花園成就幫助"
+	L["Marshall's Stand"] = "馬紹爾哨站"
+	L["Noblegarden"] = "貴族的花園"
+	L["RemoveEver"] = "如果成就完成，請移除圖釘： "
 	
 else
+	L["AddOn Description"] = ns.colour.plaintext .."Help for the " ..ns.colour.prefix .."Noblegarden"
+					..ns.colour.plaintext .." holiday"
+	L["AnywhereC"] = "Anywhere in the camp"
+	L["AnywhereE"] = "Anywhere in the encampment"
+	L["AnywhereS"] = "Anywhere in the square"
+	L["AnywhereT"] = "Anywhere in the village"
+	L["AnywhereZR"] = "Anywhere in the zone.\nUse the \"Spring Florist's Pouch\" toy.\n"
+					.."(Noblegarden Vendor/Merchant - 50x Noblegarden Chocolate)"
+	L["AnywhereZW"] = "Anywhere in the zone.\nUse the \"Spring Robes\".\n"
+					.."(Noblegarden Vendor/Merchant - 50x Noblegarden Chocolate)"
 	L["hb1"] = "(1) Change your \"home\" to Marshall's Stand\n(2) Get the Noblegarden Bunny "
 				.."buff\n(3) Hearth ---> Marshall's Stand"
 	L["hb2"] = "(4) Run to here\n(5) Stand here and wait\n(6) Do not ride\n(7) Take no damage"
 	L["hb3"] = "(1) Change your \"home\" to Cenarion Hold\n(2) Get the Noblegarden Bunny "
 				.."buff\n(3) Hearth ---> Cenarion Hold"
-	L["AnywhereZW"] = "Anywhere in the zone.\nUse the \"Spring Robes\".\n"
-					.."(Noblegarden Vendor/Merchant - 50x Noblegarden Chocolate)"
-	L["AnywhereZR"] = "Anywhere in the zone.\nUse the \"Spring Florist's Pouch\" toy.\n"
-					.."(Noblegarden Vendor/Merchant - 50x Noblegarden Chocolate)"
-	L["AnywhereC"] = "Anywhere in the camp"
-	L["AnywhereT"] = "Anywhere in the village"
-	L["AnywhereS"] = "Anywhere in the square"
-	L["AnywhereE"] = "Anywhere in the encampment"
 	L["hide"] = "(1) Purchase a Noblegarden egg\n(2) Place it anywhere in the city"
-	L["AddOn Description"] = "Help for the Noblegarden achievements"
-	
+	L["RemoveEver"] = "Remove the pin if the Achievement is completed: "
 end
 
 -- Plugin handler for HandyNotes
@@ -603,13 +647,13 @@ function pluginHandler:OnEnter(mapFile, coord)
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	local completed, aName, completedMe;
 	
-	if pin.aID then
+	if pin.aID and ( ns.preAchievements == false ) then
 		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( pin.aID )
 		GameTooltip:AddDoubleLine( ns.colour.prefix ..aName ..ns.colour.highlight,
 			( completed == true ) and ( "\124cFF00FF00" ..L[ "Completed" ] .." (" ..L[ "Account" ] ..")" ) 
 								or ( "\124cFFFF0000" ..L[ "Not Completed" ] .." (" ..L[ "Account" ] ..")" ) )
 		if ( pin.aID == 2416 ) or ( pin.aID == 2420 ) or ( pin.aID == 2421 ) then
-			if (version >= 40000) then
+			if not ns.preCata then
 				completedMe = select( 3, GetAchievementCriteriaInfo( pin.aID, 1, true ) )
 			end
 		end
@@ -664,11 +708,17 @@ local function ShowConditionallyS( aID, aIndex )
 	return true
 end
 
-local function ShowConditionallyE( aID )
-	if ( ns.db.removeEver == true ) then
-		local _, _, _, completed = GetAchievementInfo( aID )
-		if ( completed == true ) then
+local function ShowConditionallyE( aID  )
+	local completed, completedMe;
+	if ( ns.db.removeEverA == true ) or ( ns.db.removeEverC == true ) then
+		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
+		if ( ns.db.removeEverA == true ) and ( completed == true ) then
 			return false
+		end
+		if ns.db.removeEverC == true then
+			if completedMe == true then
+				return false
+			end
 		end
 	end
 	return true
@@ -692,45 +742,47 @@ do
 		while coord do
 			if pin then
 				if pin.aID then
-					if ( pin.aID == 2436 ) then -- Desert Rose
-						if ( ShowConditionallyE( pin.aID ) == true ) then
-							if ( ShowConditionallyS( pin.aID, pin.aIndex ) == true ) then
-								return coord, nil, ns.textures[ ns.db.iconDesertRose ],
-										ns.db.iconScale * ns.scaling[ ns.db.iconDesertRose ], ns.db.iconAlpha
-							end
-						end
-					elseif ( pin.aID == 2419 ) then -- Spring Fling Alliance
-						if ( ns.faction == "Alliance" ) then
+					if ns.preAchievements == false then
+						if ( pin.aID == 2436 ) then -- Desert Rose
 							if ( ShowConditionallyE( pin.aID ) == true ) then
-								if ( ShowConditionallyS( pin.aID, ( (ns.classic == true) and pin.aIndexC or pin.aIndexR ) ) == true ) then
-									return coord, nil, ns.textures[ ns.db.iconSpringFling ],
-											ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
+								if ( ShowConditionallyS( pin.aID, pin.aIndex ) == true ) then
+									return coord, nil, ns.textures[ ns.db.iconDesertRose ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconDesertRose ], ns.db.iconAlpha
 								end
 							end
-						end
-					elseif ( pin.aID == 2497 ) then -- Spring Fling Horde
-						if ( ns.faction == "Horde" ) then
-							if ( ShowConditionallyE( pin.aID ) == true ) then
-								if ( ShowConditionallyS( pin.aID, ( (ns.classic == true) and pin.aIndexC or pin.aIndexR ) ) == true ) then
-									return coord, nil, ns.textures[ ns.db.iconSpringFling ],
-											ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
+						elseif ( pin.aID == 2419 ) then -- Spring Fling Alliance
+							if ( ns.faction == "Alliance" ) then
+								if ( ShowConditionallyE( pin.aID ) == true ) then
+									if ( ShowConditionallyS( pin.aID, ( ns.preCata and pin.aIndexC or pin.aIndexR ) ) == true ) then
+										return coord, nil, ns.textures[ ns.db.iconSpringFling ],
+												ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
+									end
 								end
 							end
-						end
-					elseif ( pin.aID == 2420 ) or ( pin.aID == 2421 ) then -- Noblegarden
-						if ( ns.faction == pin.faction ) then
+						elseif ( pin.aID == 2497 ) then -- Spring Fling Horde
+							if ( ns.faction == "Horde" ) then
+								if ( ShowConditionallyE( pin.aID ) == true ) then
+									if ( ShowConditionallyS( pin.aID, ( ns.preCata and pin.aIndexC or pin.aIndexR ) ) == true ) then
+										return coord, nil, ns.textures[ ns.db.iconSpringFling ],
+												ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
+									end
+								end
+							end
+						elseif ( pin.aID == 2420 ) or ( pin.aID == 2421 ) then -- Noblegarden
+							if ( ns.faction == pin.faction ) then
+								if ( ShowConditionallyE( pin.aID ) == true ) then
+									if ( ShowConditionallyS( pin.aID ) == true ) then
+										return coord, nil, ns.textures[ ns.db.iconNobleGarden ],
+												ns.db.iconScale * ns.scaling[ ns.db.iconNobleGarden ], ns.db.iconAlpha
+									end
+								end
+							end
+						elseif ( pin.aID == 2416 ) then -- Hard Boiled
 							if ( ShowConditionallyE( pin.aID ) == true ) then
 								if ( ShowConditionallyS( pin.aID ) == true ) then
-									return coord, nil, ns.textures[ ns.db.iconNobleGarden ],
-											ns.db.iconScale * ns.scaling[ ns.db.iconNobleGarden ], ns.db.iconAlpha
+									return coord, nil, ns.textures[ ns.db.iconHardBoiled ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconHardBoiled ], ns.db.iconAlpha
 								end
-							end
-						end
-					elseif ( pin.aID == 2416 ) then -- Hard Boiled
-						if ( ShowConditionallyE( pin.aID ) == true ) then
-							if ( ShowConditionallyS( pin.aID ) == true ) then
-								return coord, nil, ns.textures[ ns.db.iconHardBoiled ],
-										ns.db.iconScale * ns.scaling[ ns.db.iconHardBoiled ], ns.db.iconAlpha
 							end
 						end
 					end
@@ -741,8 +793,8 @@ do
 								return coord, nil, ns.textures[ ns.db.iconNGBCE ],
 										ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
 							end
-						elseif pin.classic then
-							if ( ns.classic == pin.classic ) then
+						elseif pin.preCata then
+							if ( ns.preCata == pin.preCata ) then
 								return coord, nil, ns.textures[ ns.db.iconNGBCE ],
 										ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
 							end
@@ -751,15 +803,15 @@ do
 									ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
 						end
 					end
-				elseif pin.quest then -- Dailies with quests
-					if ( pin.classic ~= nil ) then
-						if ( ns.classic == pin.classic ) and ( ns.faction == pin.faction ) then
+				elseif pin.quest and ( ns.faction == pin.faction ) then -- Dailies with quests
+					if ( pin.preCata ~= nil ) then
+						if ns.preCata == pin.preCata then
 							if ( ShowConditionallyQ( pin.quest ) == true ) then
 								return coord, nil, ns.textures[ ns.db.iconNGDailies ],
 										ns.db.iconScale * ns.scaling[ ns.db.iconNGDailies ], ns.db.iconAlpha
 							end
 						end
-					elseif ( ns.faction == pin.faction ) then
+					else
 						if ( ShowConditionallyQ( pin.quest ) == true ) then
 							return coord, nil, ns.textures[ ns.db.iconNGDailies ],
 									ns.db.iconScale * ns.scaling[ ns.db.iconNGDailies ], ns.db.iconAlpha
@@ -834,13 +886,23 @@ ns.options = {
 					arg = "removeSeasonal",
 					order = 5,
 				},
-				removeEver = {
-					name = "Remove marker if ever completed on this account",
-					desc = "This if for all Achievement based pins",
+				removeEverC = {
+					name =  L["RemoveEver"] ..ns.colour.highlight ..ns.name,
+					desc = " ",
 					type = "toggle",
 					width = "full",
-					arg = "removeEver",
+					arg = "removeEverC",
+					disabled = ns.preAchievements,
 					order = 6,
+				},
+				removeEverA = {
+					name = L["RemoveEver"] ..ns.colour.highlight ..L["Account"],
+					desc = " ",
+					type = "toggle",
+					width = "full",
+					arg = "removeEverA",
+					disabled = ns.preAchievements,
+					order = 7,
 				},
 				showBCE = {
 					name = "Show Brightly Colored Eggs",
@@ -848,7 +910,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "showBCE",
-					order = 7,
+					order = 8,
 				},
 			},
 		},
@@ -869,7 +931,8 @@ ns.options = {
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
 					arg = "iconHardBoiled",
-					order = 8,
+					disabled = ns.preAchievements,
+					order = 9,
 				},
 				iconNobleGarden = {
 					type = "range",
@@ -883,7 +946,8 @@ ns.options = {
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
 					arg = "iconNobleGarden",
-					order = 9,
+					disabled = ns.preAchievements,
+					order = 10,
 				},
 				iconSpringFling = {
 					type = "range",
@@ -897,7 +961,8 @@ ns.options = {
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
 					arg = "iconSpringFling",
-					order = 10,
+					disabled = ns.preAchievements,
+					order = 11,
 				},
 				iconDesertRose = {
 					type = "range",
@@ -911,7 +976,8 @@ ns.options = {
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
 					arg = "iconDesertRose",
-					order = 11,
+					disabled = ns.preAchievements,
+					order = 12,
 				},
 				iconNGDailies = {
 					type = "range",
@@ -925,7 +991,7 @@ ns.options = {
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
 					arg = "iconNGDailies",
-					order = 12,
+					order = 13,
 				},
 				iconNGBCE = {
 					type = "range",
@@ -939,7 +1005,7 @@ ns.options = {
 							.." - " ..L["Orange"] .."\n16 = " ..L["Noblegarden"] .." - " ..L["Yellow"],
 					min = 1, max = 16, step = 1,
 					arg = "iconNGBCE",
-					order = 13,
+					order = 14,
 				},
 			},
 		},
@@ -962,8 +1028,8 @@ function pluginHandler:OnEnable()
 			if map.mapID == ns.silvermoonCity or map.mapID == ns.stormwindCity or map.mapID == ns.teldrassil then
 				-- Don't use. I have to use TWO pins for both of the cities so here I supress an extra continent pin
 				-- Teldrassil seems more complex but this hack works
-			elseif (version < 40000) and ( map.mapID < ns.azeroth ) then
-			elseif (version >= 40000) and ( map.mapID > ns.azeroth ) then
+			elseif ns.preCata and ( map.mapID < ns.azeroth ) then
+			elseif ( not ns.preCata ) and ( map.mapID > ns.azeroth ) then
 			elseif coords then
 				for coord, criteria in next, coords do
 					local mx, my = HandyNotes:getXY(coord)

@@ -1,13 +1,14 @@
 # SavedInstances
 
-## [10.2.1](https://github.com/SavedInstances/SavedInstances/tree/10.2.1) (2023-11-13)
-[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/10.2.0...10.2.1) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
+## [10.2.2](https://github.com/SavedInstances/SavedInstances/tree/10.2.2) (2023-11-24)
+[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/10.2.1...10.2.2) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
 
-- test: add C\_AddOns to luacheckrc  
-- feat: add more 10.2 weeklies to Progress and Quest  
-    The Superbloom, Blooming Dreamseeds, Great Crates!, Crate of the Art  
-- refactor: parallel numbers use "|" instand of " / " to save space  
-    closes #749  
-- feat: add Dream Wardens to Dragonflight Renown  
-- refactor: global func deprecated to C\_AddOns  
-- fix(MythicPlus): use updated enum to calculate reward thresholds  
+- fix: don't use locale for abbrevation  
+- fix: remove unused local  
+- fix: split dungeon item levels into per season values  
+- test: update luacheckrc  
+- feat: show Heroic and Mythic dungeon runs  
+- feat: store paragon prog for rep progress if paragon  
+- Added tracking for Sparks of Life: Zaralek Cavern and Sparks of Life: Emerald Dream  
+- feat: calc DFS3 spark drops for current week  
+- fix: use C\_QuestLog.IsComplete to avoid optional objective not finished  

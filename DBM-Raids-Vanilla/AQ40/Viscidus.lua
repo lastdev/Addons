@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("Viscidus", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20231110035626")
 mod:SetCreatureID(15299)
 mod:SetEncounterID(713)
 mod:SetModelID(15686)
@@ -31,8 +31,6 @@ local warnShatter				= mod:NewAnnounce("WarnShatter", 2, 12982)
 local specWarnGTFO				= mod:NewSpecialWarningGTFO(25989, nil, nil, nil, 1, 8)
 
 local timerPoisonBoltVolleyCD	= mod:NewCDCountTimer(11, 25991, nil, nil, nil, 2, nil, DBM_COMMON_L.POISON_ICON)
-
-mod:AddInfoFrameOption(nil, true)
 
 mod.vb.volleyCount = 0
 

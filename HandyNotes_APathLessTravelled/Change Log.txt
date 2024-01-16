@@ -1,3 +1,40 @@
+== v1.31 - 11th January 2024
+TOC bump to 10.2.5
+
+== v1.30 - 4th January 2024
+* Darkmoon Faire
+* Twilight Highlands typo corrected parricide to patricide
+* Randomness introduced to the pins surrounding the Krazzworks in Twilight Highlands
+* Couple of Mage Quarter Garden pins in Stormwind
+* Deadwind Pass repaired. Now works properly for interior/exterior
+  For my own logging/memory: I no longer checked trigonemetric location (LFH style). I use IsOutdoors()
+
+== v1.29 - 27th December 2023
+* Added Burgy Blackheart in Shimmering Expanse
+* Couple of other Vashj'ir added
+* Sturdy Chest in Deepholm
+* Children of Goldshire typo corrected
+* Timeless Isle cave updated with bonus trivia
+
+== v1.28 - 20th December 2023
+* Northrend highest / Citadel added
+* Remove excessive candles pins - now it's a 30% chance each will appear. Random pins!
+* Marcia Chase / Marica Hase added
+* New AddOn icon for the AddOn Memu / Minimap AddOns Menu
+* Crocolisks now added to neightbouring zones
+
+== v1.27 - 13th December 2023
+* Litter of Xuen added in Kun-Lai
+* Perplexing Pair of boots in the Jade Forest
+* Interesting cave altar
+
+== v1.26 - 6th December 2023
+* Azshara: Phloem improved/expanded
+* Badlands
+* Burning Steppes
+* Redridge
+* Uldum
+
 == v1.25 - 29th November 2023
 * Dun Morogh
 * Lordaeron

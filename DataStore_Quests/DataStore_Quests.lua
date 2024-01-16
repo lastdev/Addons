@@ -43,8 +43,7 @@ local AddonDB_Defaults = {
 				Callings = {},
 				activeCovenantID = 0,				-- Active Covenant ID (0 = None)
 				covenantCampaignProgress = 0,		-- Track the progress in the covenant storyline
-				story91Progress = 0,					-- Track the progress in the 9.1 storyline (Chains of Domination)
-				story92Progress = 0,					-- Track the progress in the 9.2 storyline (Secrets of the First Ones)
+				StorylineProgress = {},				-- Track the progress in various storylines
 			}
 		}
 	}
@@ -107,6 +106,15 @@ local weeklyWorldQuests = {
 	[61816] = true,		-- Maldraxxus - Mortanis
 	[64531] = true,		-- The Maw - Mor'geth
 	[65143] = true,		-- Zereth Mortis - Antros
+	
+	-- Dragonflight : https://www.wowhead.com/guide/world-bosses-dragonflight
+	[69927] = true,		-- The Azure Span - Bazual
+	[69928] = true,		-- Thaldraszus - Liskanoth
+	[69929] = true,		-- Ohn'ahran Plains - Strunraan
+	[69930] = true,		-- The Waking Shores - Basrikron
+	-- [] = true,		-- Zaralek Cavern - The Zaqali Elders ?
+	[76367] = true,		-- Emerald Dream - Aurostor 
+	
 }
 
 local covenantCampaignIDs = {
@@ -124,12 +132,24 @@ local covenantCampaignQuestChapters = {
 	[Enum.CovenantType.Necrolord] = { 59609, 60272, 57648, 58820, 59894, 57636, 58624, 61761, 62406 },		-- https://www.wowhead.com/guides/necrolords-covenant-campaign-story-rewards
 }
 
--- 9.0
-local TorghastQuestLine = { 62932, 62935, 62938, 60139, 62966, 62969, 60146, 62836, 61730 }
--- 9.1
-local ChainsCampaignQuestChapters = { 63639, 64555, 63902, 63727, 63622, 63656, 64437, 63593, 64314 }
--- 9.2
-local SecretsOfTheFirstOnesQuestChapters = { 64958, 64825, 65305, 64844, 64813, 65328, 65238 }
+local storylines = {
+	-- 9.0 Torghast
+	["Torghast"] = { 62932, 62935, 62938, 60139, 62966, 62969, 60146, 62836, 61730 },
+	-- 9.1 Chains of Domination
+	["9.1"] = { 63639, 64555, 63902, 63727, 63622, 63656, 64437, 63593, 64314 },
+	-- 9.2 Secrets of the First Ones
+	["9.2"] = { 64958, 64825, 65305, 64844, 64813, 65328, 65238 },
+	
+	-- 10.0 The Dreamer
+	["10.0"] = { 66392, 66185, 66186, 66188, 66189, 66394, 66397, 66635, 66398, 66399, 66400, 66401, 66402 },
+	-- 10.1 Embers of Neltharion
+	["10.1"] = { 73156, 75644, 72965, 75145, 74563, 72930, 75417 },
+	-- 10.1.5 Fractures in Time
+	["10.1.5"] = { 76140, 76141, 76142, 76143, 76144, 76145, 76146, 76147 },
+	-- 10.2 Guardians of the Dream
+	["10.2"] = { 75923, 77283, 76443, 77178, 76337, 76401, 76283 },
+	
+}
 
 
 -- *** Common API ***
@@ -409,7 +429,10 @@ local function ScanRewardSpells(rewards, questID)
 	end
 end
 
-local function ScanCampaignProgress(chapters, field)
+local function ScanStorylineProgress(storyline)
+	local chapters = storylines[storyline]
+	if not chapters then return end
+
 	local count = 0
 	
 	-- loop through the quest id's of the last quest of each chapter, and check if it is flagged completed
@@ -420,7 +443,7 @@ local function ScanCampaignProgress(chapters, field)
 	end
 	
 	local char = addon.ThisCharacter
-	char[field] = count
+	char.StorylineProgress[storyline] = count		-- Ex: ["9.2"] = 6
 end
 
 local function ScanCovenantCampaignProgress()
@@ -533,8 +556,15 @@ local function ScanQuests()
 	
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		ScanCovenantCampaignProgress()
-		ScanCampaignProgress(ChainsCampaignQuestChapters, "story91Progress")
-		ScanCampaignProgress(SecretsOfTheFirstOnesQuestChapters, "story92Progress")
+		
+		ScanStorylineProgress("Torghast")
+		ScanStorylineProgress("9.1")
+		ScanStorylineProgress("9.2")
+		ScanStorylineProgress("10.0")
+		ScanStorylineProgress("10.1")
+		ScanStorylineProgress("10.1.5")
+		ScanStorylineProgress("10.2")
+		
 	end
 	addon.ThisCharacter.lastUpdate = time()
 	
@@ -917,13 +947,31 @@ local function _GetCovenantCampaignChaptersInfo(character)
 	return chaptersInfo
 end
 
-local function _GetCampaignChaptersInfo(character, campaignID, field)
-	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaign (always available for all covenants)
-	
+local function _GetStorylineProgress(character, storyline)
+	return character.StorylineProgress[storyline] or 0
+end
+
+local function _GetStorylineLength(storyline)
+	return storylines[storyline] and #storylines[storyline] or 0
+end
+
+local function _GetCampaignChaptersInfo(character, campaignID, storyline)
 	local chaptersInfo = {}
+	local progress = _GetStorylineProgress(character, storyline)
+	
+	-- Get the chapters of that campaign (always available for all covenants)
+	-- Or get the quest ID's (ex: for Torghast)
+	local chapters = campaignID
+		and C_CampaignInfo.GetChapterIDs(campaignID)
+		or storylines[storyline]
+	
+	-- Get the chapter name of a given id (step in the campaign or the questID)
+	local GetChapterName = campaignID
+		and function(id) return C_CampaignInfo.GetCampaignChapterInfo(id).name end
+		or function(id) return C_QuestLog.GetTitleForQuestID(id) or "querying.." end
 
 	for index, id in ipairs(chapters) do
-		local info = C_CampaignInfo.GetCampaignChapterInfo(id)
+		local chapterName = GetChapterName(id)
 		
 		-- completed will be true/false or nil
 		-- ex: progress is 3/9
@@ -932,49 +980,18 @@ local function _GetCampaignChaptersInfo(character, campaignID, field)
 		-- 4+ = nil (not yet started)
 			
 		local completed = nil
-		if (index <= character[field]) then
+		if (index <= progress) then
 			completed = true
-		elseif (index == character[field] + 1) and (character[field] ~= 0) then
+		elseif (index == progress + 1) and (progress ~= 0) then
 			completed = false
 		end
 		
-		table.insert(chaptersInfo, { name = info.name, completed = completed})
+		table.insert(chaptersInfo, { name = chapterName, completed = completed})
 	end
 	
 	return chaptersInfo
 end
 
-local function _GetTorghastStorylineProgress(character)
-	local count = 0
-	
-	for _, questID in ipairs(TorghastQuestLine) do
-		if _IsQuestCompletedBy(character, questID) then
-			count = count + 1
-		end
-	end
-	
-	return count
-end
-
-local function _GetTorghastStorylineLength(character)
-	return #TorghastQuestLine
-end
-
-local function _GetChainsOfDominationStorylineProgress(character)
-	return character.story91Progress
-end
-
-local function _GetChainsOfDominationStorylineLength(character)
-	return #ChainsCampaignQuestChapters
-end
-
-local function _GetSecretsOfTheFirstOnesStorylineProgress(character)
-	return character.story92Progress
-end
-
-local function _GetSecretsOfTheFirstOnesStorylineLength(character)
-	return #SecretsOfTheFirstOnesQuestChapters
-end
 
 local PublicMethods = {
 	GetQuestLogSize = _GetQuestLogSize,
@@ -1005,13 +1022,10 @@ if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 	PublicMethods.GetCovenantCampaignProgress = _GetCovenantCampaignProgress
 	PublicMethods.GetCovenantCampaignLength = _GetCovenantCampaignLength
 	PublicMethods.GetCovenantCampaignChaptersInfo = _GetCovenantCampaignChaptersInfo
+	
+	PublicMethods.GetStorylineProgress = _GetStorylineProgress
+	PublicMethods.GetStorylineLength = _GetStorylineLength
 	PublicMethods.GetCampaignChaptersInfo = _GetCampaignChaptersInfo
-	PublicMethods.GetTorghastStorylineProgress = _GetTorghastStorylineProgress
-	PublicMethods.GetTorghastStorylineLength = _GetTorghastStorylineLength
-	PublicMethods.GetChainsOfDominationStorylineProgress = _GetChainsOfDominationStorylineProgress
-	PublicMethods.GetChainsOfDominationStorylineLength = _GetChainsOfDominationStorylineLength
-	PublicMethods.GetSecretsOfTheFirstOnesStorylineProgress = _GetSecretsOfTheFirstOnesStorylineProgress
-	PublicMethods.GetSecretsOfTheFirstOnesStorylineLength = _GetSecretsOfTheFirstOnesStorylineLength
 end
 
 function addon:OnInitialize()
@@ -1041,13 +1055,8 @@ function addon:OnInitialize()
 		DataStore:SetCharacterBasedMethod("GetCovenantCampaignProgress")
 		DataStore:SetCharacterBasedMethod("GetCovenantCampaignLength")
 		DataStore:SetCharacterBasedMethod("GetCovenantCampaignChaptersInfo")
+		DataStore:SetCharacterBasedMethod("GetStorylineProgress")
 		DataStore:SetCharacterBasedMethod("GetCampaignChaptersInfo")
-		DataStore:SetCharacterBasedMethod("GetTorghastStorylineProgress")
-		DataStore:SetCharacterBasedMethod("GetTorghastStorylineLength")
-		DataStore:SetCharacterBasedMethod("GetChainsOfDominationStorylineProgress")
-		DataStore:SetCharacterBasedMethod("GetChainsOfDominationStorylineLength")
-		DataStore:SetCharacterBasedMethod("GetSecretsOfTheFirstOnesStorylineProgress")
-		DataStore:SetCharacterBasedMethod("GetSecretsOfTheFirstOnesStorylineLength")
 	end
 end
 
@@ -1116,7 +1125,7 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 	-- mark the current quest ID as completed
 	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
 
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
 
 		-- track daily quests turn-ins
 		if QuestIsDaily() or emissaryQuests[questID] then
@@ -1130,6 +1139,9 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 				-- https://wowpedia.fandom.com/wiki/API_C_DateAndTime.GetSecondsUntilDailyReset
 			})
 		end
+	end
+	
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 
 		-- track weekly quests turn-ins
 		if QuestIsWeekly() then

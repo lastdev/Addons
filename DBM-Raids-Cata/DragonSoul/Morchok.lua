@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(311, "DBM-Raids-Cata", 1, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526082852")
+mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
+
+mod:SetRevision("20240114012904")
 mod:SetCreatureID(55265)
 mod:SetEncounterID(1292)
 --mod:SetModelSound("sound\\CREATURE\\MORCHOK\\VO_DS_MORCHOK_EVENT_04.OGG", "sound\\CREATURE\\MORCHOK\\VO_DS_MORCHOK_ORB_01.OGG")

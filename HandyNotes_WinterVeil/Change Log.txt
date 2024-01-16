@@ -1,3 +1,35 @@
+== v2.06 - 12th January 2024
+* TOC bump for 10.2.5
+
+== v2.05 - 26th December 2023
+* Added Blizzard Winter Veil trivia pins
+* Added translations for the new per C/A options
+
+== v2.04 - 18th December 2023
+* Second attempt at fixing/implementing the per char/acct logic.
+  More rigorous this time around
+  
+== v2.03 - 17th December 2023
+* New option for per character toggling of pins.
+* Few more translations. This will do it.
+  Too many pin markers to translate
+* Felstriker server added
+* Penance and Shadowstrike added (SoD)
+
+== v2.02 - 11th December 2023
+* Options translations (Complete)
+
+== v2.01 - 4th December 2023
+* Options translations (partial)
+
+== v2.00 - 27th November 2023
+== v1.16 - 27th November 2023
+* New data format - enables easier updates/additions
+* Removed old game version check
+* localised C_Map.GetMapChildrenInfo
+* Fix for "Let it Snow" labelled twice in the options
+* Slight reallocation of default pins - better spread of colour/motifs
+
 == v1.15 - 29th October 2023
 * TOC bump to 10.2.0
 * Data structure redesign

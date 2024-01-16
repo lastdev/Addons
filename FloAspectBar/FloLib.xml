@@ -5,20 +5,20 @@
 ..\FrameXML\UI.xsd">
 	<Script file="FloLib_localization.lua"/>
 	<Script file="FloLib.lua"/>
-	<CheckButton name="FloButtonTemplateA" inherits="SmallActionButtonTemplate, SecureActionButtonTemplate" virtual="true">
+	<CheckButton name="FloButtonTemplateA" inherits="ActionButtonTemplate, SecureActionButtonTemplate" virtual="true">
 		<Size>
-			<!--<AbsDimension x="30" y="30"/>-->
+			<AbsDimension x="30" y="30"/>
 		</Size>
 		<Scripts>
 			<OnLoad>
-				self:SmallActionButtonMixin_OnLoad()
-				self.PushedTexture:SetSize(31.6, 30.9)
-				self.NormalTexture:SetSize(31.6, 30.9)
 				local cooldown = _G[self:GetName().."Cooldown"];
 				cooldown:SetFrameLevel(cooldown:GetFrameLevel() + 2);
 				cooldown:SetScale(.83);	
 				self:RegisterForDrag("LeftButton", "RightButton");
-				self:RegisterForClicks("LeftButtonDown", "LeftButtonUp", "RightButtonUp");
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+				local normalTexture = _G[self:GetName().."NormalTexture"];
+				normalTexture:SetWidth(54);	
+				normalTexture:SetHeight(54);	
 			</OnLoad>
 			<OnDragStart>
 				if not InCombatLockdown() and (LOCK_ACTIONBAR ~= "1" or IsShiftKeyDown()) then

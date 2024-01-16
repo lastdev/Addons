@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2332, "DBM-Raids-BfA", 3, 1177)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240108061637")
 mod:SetCreatureID(145371)
 mod:SetEncounterID(2273)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -120,7 +120,7 @@ mod:AddNamePlateOption("NPAuraOnFeed", 285307)
 mod:AddNamePlateOption("NPAuraOnRegen", 285333)
 mod:AddSetIconOption("SetIconOnAdds", "ej19118", true, true, {1, 2, 4})
 mod:AddSetIconOption("SetIconOnRelics", "ej18970", true, false, {1, 3, 5, 6, 7})--only up to 3 are used, but it depends on what user sets UnstableBehavior2 to. 1 and 7 are not included in the default used by DBM/BW (SetTwo)
-mod:AddDropdownOption("UnstableBehavior2", {"SetOne", "SetTwo", "SetThree", "SetFour", "SetFive", "SetSix"}, "SetTwo", "misc")--SetTwo is BW default (BW default used to be SetOne)
+mod:AddDropdownOption("UnstableBehavior2", {"SetOne", "SetTwo", "SetThree", "SetFour", "SetFive", "SetSix"}, "SetTwo", "misc", nil, 293653)--SetTwo is BW default (BW default used to be SetOne)
 
 mod.vb.touchCount = 0
 mod.vb.resonCount = 0

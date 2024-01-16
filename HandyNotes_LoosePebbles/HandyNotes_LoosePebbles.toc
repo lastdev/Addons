@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: 1.22
+## Interface: 100205
+## Version: 1.24
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Spell_arcane_teleportdalaran
 ## Title: Loose Pebbles

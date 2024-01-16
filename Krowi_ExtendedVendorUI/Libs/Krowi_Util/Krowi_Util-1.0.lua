@@ -12,7 +12,7 @@
     SOFTWARE.
 ]]
 
-local lib = LibStub:NewLibrary("Krowi_Util-1.0", 5);
+local lib = LibStub:NewLibrary("Krowi_Util-1.0", 6);
 
 if not lib then
 	return;
@@ -114,4 +114,12 @@ function lib.TableRemoveByValue(table, value)
         end
     end
     return false;
+end
+
+function lib.TableFindKeyByValue(table, value)
+    for key, _value in next, table do
+        if _value == value then
+            return key;
+        end
+    end
 end

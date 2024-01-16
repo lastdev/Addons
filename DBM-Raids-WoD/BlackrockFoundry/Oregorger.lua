@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1202, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526083530")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(77182)
 mod:SetEncounterID(1696)
 mod.respawnTime = 15
@@ -41,7 +41,7 @@ local timerExplosiveShardCD			= mod:NewCDTimer(12, 156390, nil, "MeleeDps", 3, 3
 local timerExplosiveShard			= mod:NewCastTimer(3.5, 156390, nil, "MeleeDps")
 local timerRetchedBlackrockCD		= mod:NewCDTimer(15.5, 156179, nil, "Ranged", 2, 3)
 
-mod:AddDropdownOption("InterruptBehavior", {"Smart", "Fixed"}, "Smart", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Smart", "Fixed"}, "Smart", "misc", nil, 156877)
 
 mod.vb.torrentCount = 0
 mod.vb.rollCount = 0

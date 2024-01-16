@@ -11,7 +11,6 @@ SMARTBUFF_CREDITS = "|cffffffff"
   .."Version Shadowlands par Codermik. Veuillez signaler tout problème sur CurseForge ou mon discord:\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
   .."|cffffffffSi vous appréciez la quantité de travail impliquée et le temps pris pour vous apporter ces différents addons, pensez à me soutenir en :\n\n"
-  .."|cffffffffPatreon: |cff00e0ffhttps://www.patreon.com/codermik\n"
   .."|cffffffffTwitch: |cff00e0ffhttps://www.twitch.tv/codermik\n"
   .."|cffffffffPayPal.Me: |cff00e0ffhttps://paypal.me/codermik\n\n"
 ;

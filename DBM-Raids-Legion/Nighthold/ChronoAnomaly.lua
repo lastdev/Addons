@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1725, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240108061644")
 mod:SetCreatureID(104415)--104731 (Depleted Time Particle). 104676 (Waning Time Particle). 104491 (Accelerated Time particle). 104492 (Slow Time Particle)
 mod:SetEncounterID(1865)
 --mod:SetUsedIcons(5, 4, 3, 2, 1)--sometimes it was 5 targets, sometimes it was whole raid. even post nerf. have to see
@@ -50,7 +50,7 @@ local timerNextPhase				= mod:NewPhaseTimer(74)--Used anywhere phase change is N
 
 mod:AddRangeFrameOption(10, 206617)
 mod:AddInfoFrameOption(206610)
-mod:AddDropdownOption("InfoFrameBehavior", {"TimeRelease", "TimeBomb"}, "TimeRelease", "misc")
+mod:AddDropdownOption("InfoFrameBehavior", {"TimeRelease", "TimeBomb"}, "TimeRelease", "misc", nil, 206610)
 
 mod.vb.normCount = 0
 mod.vb.fastCount = 0

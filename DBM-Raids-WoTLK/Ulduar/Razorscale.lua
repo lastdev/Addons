@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240110072739")
 mod:SetCreatureID(33186)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1139)
@@ -58,14 +58,9 @@ function mod:FlameTarget(targetname, uId)
 		specWarnDevouringFlameYou:Show()
 		specWarnDevouringFlameYou:Play("targetyou")
 		yellDevouringFlame:Yell()
-	elseif targetname then
-		if uId then
-			local inRange = CheckInteractDistance(uId, 2)
-			if inRange then
-				specWarnDevouringFlameNear:Show(targetname)
-				specWarnDevouringFlameNear:Play("runaway")
-			end
-		end
+	elseif self:IsClassic() and self:CheckNearby(10, targetname) then
+		specWarnDevouringFlameNear:Show(targetname)
+		specWarnDevouringFlameNear:Play("runaway")
 	else
 		warnFlame:Show(targetname)
 	end

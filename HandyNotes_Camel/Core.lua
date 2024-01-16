@@ -4,8 +4,9 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                     v1.01 - 22nd November 2023
+                                      v1.03 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
+                                         All Rights Reserved
 
                                 ----o----(||)----oo----(||)----o----
 ]]
@@ -47,7 +48,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -82,7 +84,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -117,7 +122,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -150,7 +158,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -182,6 +193,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -214,7 +228,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -247,6 +264,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -280,6 +300,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -312,7 +335,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -344,9 +370,13 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
+
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
@@ -359,7 +389,7 @@ if ns.locale == "deDE" then
 		.."Mysteriöse Kamelfigur" ..ns.colour.plaintext .." in Uldum zu erhalten"
 	L["Camel"] = "Mysteriöse Kamelfigur"
 	L["Speak to Zidormi"] = "Sprich mit Zidormi"
-	L["Uldum Map"] = "Zeigt die Karte von Uldum"
+	L["Uldum Map"] = "Uldum-Karte"
 	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
@@ -367,7 +397,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 		.."el Figurilla de camello misteriosa" ..ns.colour.plaintext .." en Uldum"
 	L["Camel"] = "Figurilla de camello misteriosa"
 	L["Speak to Zidormi"] = "Hablar con Zidormi"
-	L["Uldum Map"] = "Mostrar el mapa de Uldum"
+	L["Uldum Map"] = "Mapa de Uldum"
 	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 
 elseif ns.locale == "frFR" then
@@ -375,7 +405,7 @@ elseif ns.locale == "frFR" then
 		.."l'figurine de dromadaire mystérieuse" ..ns.colour.plaintext .." à Uldum"
 	L["Camel"] = "Figurine de dromadaire mystérieuse"
 	L["Speak to Zidormi"] = "Parlez à Zidormi"
-	L["Uldum Map"] = "Afficher la carte de Uldum"
+	L["Uldum Map"] = "Carte de Uldum"
 	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 
 elseif ns.locale == "itIT" then
@@ -383,7 +413,7 @@ elseif ns.locale == "itIT" then
 		.."Statuetta di Dromedario Misteriosa" ..ns.colour.plaintext .." a Uldum"
 	L["Camel"] = "Statuetta di Dromedario Misteriosa"
 	L["Speak to Zidormi"] = "Parla con Zidormi"
-	L["Uldum Map"] = "Mostra la mappa di Uldum"
+	L["Uldum Map"] = "Mappa di Uldum"
 	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 
 elseif ns.locale == "koKR" then
@@ -391,7 +421,7 @@ elseif ns.locale == "koKR" then
 		..ns.colour.plaintext .."를 얻는 데 도움이 됩니다."
 	L["Camel"] = "수수께끼 낙타 조각상"
 	L["Speak to Zidormi"] = "지도르미님과 대화"
-	L["Uldum Map"] = "울둠 지도를 보여주세요"
+	L["Uldum Map"] = "울둠 지도"
 	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
@@ -399,7 +429,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 		.."Estátua de Camelo Misteriosa" ..ns.colour.plaintext .." em Uldum"
 	L["Camel"] = "Estátua de Camelo Misteriosa"
 	L["Speak to Zidormi"] = "Fale com Zidormi"
-	L["Uldum Map"] = "Mostrar o mapa de Uldum"
+	L["Uldum Map"] = "Mapa de Uldum"
 	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 
 elseif ns.locale == "ruRU" then
@@ -407,21 +437,21 @@ elseif ns.locale == "ruRU" then
 		.."Странная фигурка верблюда" ..ns.colour.plaintext .." в Ульдум"
 	L["Camel"] = "Странная фигурка верблюда"
 	L["Speak to Zidormi"] = "Поговори с Зидорми"
-	L["Uldum Map"] = "Покажите карту Ульдума"
+	L["Uldum Map"] = "Карта Ульдума"
 	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 
 elseif ns.locale == "zhCN" then
 	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."神秘的骆驼雕像"
 	L["Camel"] = "神秘的骆驼雕像"
 	L["Speak to Zidormi"] = "与 希多尔米 通话"
-	L["Uldum Map"] = "显示奥丹姆的地图"
+	L["Uldum Map"] = "奥丹姆地图"
 	L["Wrong version of Uldum"] = "奥丹姆 版本错误"
 
 elseif ns.locale == "zhTW" then
 	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."神秘的駱駝雕像"
 	L["Camel"] = "神秘的駱駝雕像"
 	L["Speak to Zidormi"] = "與 希多爾米 通話"
-	L["Uldum Map"] = "顯示奧丹姆的地圖"
+	L["Uldum Map"] = "奧丹姆地圖"
 	L["Wrong version of Uldum"] = "奧丹姆 版本錯誤"
 	
 else
@@ -579,8 +609,7 @@ function HandyNotes_Camel_OnAddonCompartmentClick( addonName, buttonName )
 	if buttonName and buttonName == "RightButton" then
 		OpenWorldMap( 249 )
 		if WorldMapFrame:IsVisible() ~= true then
-			print( ns.colour.prefix	..L["Camel"] ..": " ..ns.colour.plaintext
-					.."Not possible at this time. Try later" )
+			print( ns.colour.prefix	..L["Camel"] ..": " ..ns.colour.plaintext ..L["Try later"] )
 		end
 	else
 		Settings.OpenToCategory( "HandyNotes" )
@@ -592,8 +621,8 @@ function HandyNotes_Camel_OnAddonCompartmentEnter( ... )
 	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
 	GameTooltip:AddLine( ns.colour.prefix ..L["Camel"] )
 	GameTooltip:AddLine( ns.colour.highlight .." " )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Left", ns.colour.plaintext ..L["Options"] )
-	GameTooltip:AddDoubleLine( ns.colour.highlight .."Right", ns.colour.plaintext ..L["Uldum Map"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Right"], ns.colour.plaintext ..L["Uldum Map"] )
 	GameTooltip:Show()
 end
 

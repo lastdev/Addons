@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(325, "DBM-Raids-Cata", 1, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526082852")
+mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
+
+mod:SetRevision("20240114012904")
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 --mod:DisableRegenDetection()--Uncomment in next dbm release

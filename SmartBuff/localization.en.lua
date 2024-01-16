@@ -7,12 +7,8 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
   .."          |cffffffffDragonflight version by Codermik, additional\n"
   .."          retail programming by Speedwaystar.\n"
   .."\n\n"
-  .."          Changes in r23.081023:\n"
-  .."             * Fixed buff order not saving.\n"
-  .."             * Fixed Buzzing Rune.\n"
-  .."             * Added various Augmentation Evoker\n"
-  .."               buffs and abilities.\n"
-  .."             * Resolved no prompts until reloadui bug\n"
+  .."          Changes in r25.071223:\n\n"
+  .."             * Dreambound Augment Rune should be fixed.\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -20,10 +16,9 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
 ;
 
 SMARTBUFF_CREDITS = "|cffffffff"
-  .."Retail & Classic by Codermik & Speedwaystar.  Please join and get support via our discord server:\n"
+  .."Retail & Classic by Codermik & Speedwaystar.  Please join and get support via my discord server:\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
-  .."|cffffffffIf you want to help support us and the development of this addon then please always download from Curse or use one of the following links:\n\n(We only ever upload to Curseforge)\n\n"
-  .."|cffffffffPatreon: |cff00e0ffhttps://www.patreon.com/codermik\n"
+  .."|cffffffffIf you want to help support me and the development of this addon then please always download from Curse or use one of the following links:\n\n"
   .."|cffffffffTwitch: |cff00e0ffhttps://www.twitch.tv/codermik\n"
   .."|cffffffffPayPal.Me: |cff00e0ffhttps://paypal.me/codermik\n\n"
 ;
@@ -47,8 +42,9 @@ SMARTBUFF_UNDEAD    = "Undead";
 SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, The Shadowed Crucible", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, the Shadowed Crucible"};
+SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, The Shadowed Crucible", "Amirdrassil, the Dream's Hope", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
+SMARTBUFF_INSTANCES = {"Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, the Shadowed Crucible", "Amirdrassil, the Dream's Hope" };
+
 -- Mount
 SMARTBUFF_MOUNT = "Increases speed by (%d+)%%.";
 
@@ -115,7 +111,7 @@ SMARTBUFF_OFT_RESETLIST      = "Reset List";
 SMARTBUFF_OFT_YES            = "Yes";
 SMARTBUFF_OFT_NO             = "No";
 SMARTBUFF_OFT_OKAY			 = "Continue"
-SMARTBUFF_OFT_PURGE_DATA     = "Are you sure you want to reset ALL SmartBuff data?\nThis action will force a reload of the UI!";
+SMARTBUFF_OFT_PURGE_DATA     = "New version, reset ALL SmartBuff data?\nThis action will force a reload of the UI!";
 SMARTBUFF_OFT_REQ_RELOAD     = "New versions require a reload of the GUI\nClick Continue when ready.";
 SMARTBUFF_OFT_SPLASHICON     = "Show Icon";
 SMARTBUFF_OFT_SPLASHMSGSHORT = "Short Message";

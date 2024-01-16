@@ -298,7 +298,8 @@ function SMARTBUFF_InitItemList()
   --Shadowlands
   _,SMARTBUFF_AugmentRune         = GetItemInfo(190384); --"Eternal Augment Rune"
   _,SMARTBUFF_VieledAugment       = GetItemInfo(181468); --"Veiled Augment Rune"
-  _,SMARTBUFF_DreambountAugment   = GetItemInfo(211495); --"Dreambound Augment Rune"
+  _,SMARTBUFF_DreamAugmentRune    = GetItemInfo(211495); --"Dreambound Augment Rune"
+
   --Dragonflight
   _,SMARTBUFF_DraconicRune        = GetItemInfo(201325); -- Draconic Augment Rune
   _,SMARTBUFF_VantusRune_VotI_q1  = GetItemInfo(198491); -- Vantus Rune: Vault of the Incarnates (Quality 1)
@@ -699,6 +700,9 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_EbonMight       = GetSpellInfo(395152);   --"Ebon Might"
   SMARTBUFF_BlisteringScale = GetSpellInfo(360827);   --"Blistering Scales"
   SMARTBUFF_Timelessness    = GetSpellInfo(412710);   --"Timelessness"
+  SMARTBUFF_BronzeAttunement = GetSpellInfo(403265);  --"Bronze Attunement"
+  SMARTBUFF_BlackAttunement = GetSpellInfo(403264);   --"Black Attunement"
+
 
   -- Demon Hunter
 
@@ -761,7 +765,7 @@ function SMARTBUFF_InitSpellIDs()
   -- Shadowlands
   SMARTBUFF_BAugmentRune    = GetSpellInfo(367405); --"Eternal Augmentation from Eternal Augment Rune"
   SMARTBUFF_BVieledAugment  = GetSpellInfo(347901); --"Veiled Augmentation from Veiled Augment Rune"
-  SMARTBUFF_DreamAugment    = GetSpellInfo(393439); --"Dreambound Augmentation from Dreambound Augment Rune"
+  SMARTBUFF_BDreamAugmentRune  = GetSpellInfo(393438); --"Dream Augmentation from Dream Augment Rune"
   -- Dragonflight
   SMARTBUFF_BDraconicRune   = GetSpellInfo(393438); -- Draconic Augmentation from Draconic Augment Rune
   SMARTBUFF_BVantusRune_VotI_q1 = GetSpellInfo(384154); -- Vantus Rune: Vault of the Incarnates (Quality 1)
@@ -769,8 +773,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BVantusRune_VotI_q3 = GetSpellInfo(384306); -- Vantus Rune: Vault of the Incarnates (Quality 3)
 
   S.LinkSafariHat           = { SMARTBUFF_BMiscItem9, SMARTBUFF_BMiscItem10 };
-  S.LinkAugment             = { SMARTBUFF_BMiscItem14, SMARTBUFF_BMiscItem14_1, SMARTBUFF_BMiscItem14_2, SMARTBUFF_BMiscItem14_3, SMARTBUFF_BAugmentRune,  
-  								SMARTBUFF_BVieledAugment, SMARTBUFF_BDraconicRune, SMARTBUFF_DreamAugment, };
+  S.LinkAugment             = { SMARTBUFF_BMiscItem14, SMARTBUFF_BMiscItem14_1, SMARTBUFF_BMiscItem14_2, SMARTBUFF_BMiscItem14_3, SMARTBUFF_BAugmentRune,  SMARTBUFF_BVieledAugment, SMARTBUFF_BDreamAugmentRune, SMARTBUFF_BDraconicRune };
 
   -- Flasks & Elixirs
   SMARTBUFF_BFLASKTBC1      = GetSpellInfo(28520);  --"Flask of Relentless Assault"
@@ -1179,12 +1182,14 @@ function SMARTBUFF_InitSpellList()
   -- Evoker
   if (SMARTBUFF_PLAYERCLASS == "EVOKER") then
     SMARTBUFF_BUFFLIST = {
-      {SMARTBUFF_BRONZEBLESSING, 60, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_Visage, -1, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_BRONZEBLESSING, 60, SMARTBUFF_CONST_GROUP, {1}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;DEMONHUNTER;EVOKER"},
       {SMARTBUFF_Timelessness, 30, SMARTBUFF_CONST_GROUP, {1}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;DEMONHUNTER;EVOKER"},
       {SMARTBUFF_BlisteringScale, -1, SMARTBUFF_CONST_GROUP, {1}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;DEMONHUNTER;EVOKER"},
       {SMARTBUFF_SourceOfMagic, 30, SMARTBUFF_CONST_GROUP, {1}, "SHAMAN;PRIEST;PALADIN;MONK;EVOKER"},
       {SMARTBUFF_EbonMight, -1, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_BronzeAttunement, -1, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_BlackAttunement, -1, SMARTBUFF_CONST_SELF},
     };
   end
 
@@ -1387,9 +1392,7 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_MiscItem8, 5, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem8},
     {SMARTBUFF_AugmentRune, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BAugmentRune, S.LinkAugment},
     {SMARTBUFF_VieledAugment, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BVieledAugment, S.LinkAugment},
-    {SMARTBUFF_DreambountAugment, 70, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BVieledAugment, S.LinkAugment},
-    
-
+    {SMARTBUFF_DreamAugmentRune, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BDreamAugmentRune, S.LinkAugment},
     {SMARTBUFF_SOAGILITY9, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBAGILITY},
     {SMARTBUFF_SOAGILITY8, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBAGILITY},
     {SMARTBUFF_SOAGILITY7, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBAGILITY},

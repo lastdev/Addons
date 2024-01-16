@@ -1,3 +1,16 @@
+== v1.38 - 12th January 2024
+* TOC Bump to 10.2.5
+
+== v1.37 - 23rd December 2023
+* Ancient Pandaren Mining Pick in The Jade Forest (40.33,41.33)
+* Greenstone Quarry text improved for level one (map 372)
+* Added and improved translations to the Minimap AddOns menu
+* Felstriker server added. Not relevant to this AddOn
+* Penance and Shadowstrike added (SoD)
+
+== v1.36 - 9th December 2023
+* Added the ability to show the Pandaria map from the Minimap AddOns menu
+
 == v1.35 - 30th November 2023
 * Translations for Celestial Challenge, Zul' Again, Squirrel,
   Timeless Champion, Love Heart

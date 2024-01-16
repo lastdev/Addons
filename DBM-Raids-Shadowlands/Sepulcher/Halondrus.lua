@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2463, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20231110034924")
 mod:SetCreatureID(180906)
 mod:SetEncounterID(2529)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
@@ -24,7 +24,6 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, enable GTFO once it's confirmed debuff doesn't actually linger when you leave pool, misleading tooltip
---TODO, infoframe for reclaim absorb shield %?
 --TODO, is Shatter (formerly detonation) still a dps switch warning?
 --[[
 (ability.id = 363340 or ability.id = 363408 or ability.id = 367079 or ability.id = 361676 or ability.id = 360977 or ability.id = 359236 or ability.id = 364979 or ability.id = 360115 or ability.id = 359235) and type = "begincast"
@@ -70,7 +69,6 @@ local timerCrushingPrismCD						= mod:NewCDCountTimer(26.9, 365297, nil, nil, ni
 local timerRelocationForm						= mod:NewCastTimer(6, 359236, nil, nil, nil, 6)
 local timerShatterCD							= mod:NewCDCountTimer(6, 362056, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 
-mod:AddInfoFrameOption(360115, true)
 mod:AddSetIconOption("SetIconOnCrushing2", 365297, true, false, {1, 2, 3, 4, 5, 6, 7})
 mod:AddNamePlateOption("NPAuraOnFractal", 368671, true)
 mod:GroupSpells(368957, 368969)--Combine the cast (Charges with the debuff Charge)

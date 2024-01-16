@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: 1.35
+## Interface: 100205
+## Version: 1.38
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_faction_lorewalkers
 ## Title: Exploration Achievements - Pandaria
@@ -26,12 +26,11 @@
 ## Notes-ruRU: Все локации |cFFFF7F5достижений исследования|r |cFFE78A61Пандарии|r
 ## Notes-zhCN: |cFFE78A61潘达利|r亚所有|cFFFF7F50探索成就|r地点
 ## Notes-zhTW: |cFFE78A61潘達利|r亞所有|cFFFF7F50探索成就|r地點
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 833778
-## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_EAPandariaDB
 ## AddonCompartmentFunc: HandyNotes_EAPandaria_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_EAPandaria_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_EAPandaria_OnAddonCompartmentLeave
 
 Core.lua
 Data.lua

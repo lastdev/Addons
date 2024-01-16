@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(333, "DBM-Raids-Cata", 1, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526082852")
+mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
+
+mod:SetRevision("20240114012904")
 mod:SetCreatureID(56173)
 mod:SetEncounterID(1299)
 mod:SetUsedIcons(8)

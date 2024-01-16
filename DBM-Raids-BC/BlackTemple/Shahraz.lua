@@ -7,7 +7,7 @@ else
 	mod.statTypes = "normal25"
 end
 
-mod:SetRevision("20230526052555")
+mod:SetRevision("20240108061725")
 mod:SetCreatureID(22947)
 mod:SetEncounterID(607, 2478)
 mod:SetModelID(21252)
@@ -43,8 +43,7 @@ local timerShriekCD		= mod:NewCDTimer(15.8, 40823, nil, nil, nil, 2)--15-46.9
 
 mod:AddSetIconOption("FAIcons", 41001, true, false, {1, 2, 3})
 mod:AddInfoFrameOption(41001, true)
-mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-mod:AddDropdownOption("FAHelper", {"North", "South", "None"}, "North", "misc")
+mod:AddDropdownOption("FAHelper", {"North", "South", "None"}, "North", "misc", nil, 41001)
 
 mod.vb.prewarn_enrage = false
 mod.vb.enrage = false

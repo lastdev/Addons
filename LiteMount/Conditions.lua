@@ -4,7 +4,7 @@
 
   Parser/evaluator for action conditions.
 
-  Copyright 2011-2021 Mike Battersby
+  Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -307,6 +307,21 @@ CONDITIONS["elapsed"] = {
                     cond.elapsed = time()
                     return true
                 end
+            end
+        end
+}
+
+-- This is here in case I want to use it in the combat handler code, it doesn't work
+-- for player actions because you're in combat at the time. In general it's not reliable
+-- because if you are the first hit you will start combat before the encounter info is
+-- available.
+
+CONDITIONS["encounter"] = {
+    handler =
+        function (cond, context, v)
+            v = tonumber(v)
+            if v then
+                return LM.Environment:GetEncounterInfo() == v
             end
         end
 }
@@ -731,7 +746,7 @@ CONDITIONS["map"] = {
             if v:sub(1,1) == '*' then
                 return LM.Environment:IsOnMap(tonumber(v:sub(2)))
             else
-                return LM.Environment:IsMapInPath(tonumber(v), context.mapPath)
+                return LM.Environment:IsMapInPath(tonumber(v), context.mapPath, true)
             end
         end,
 }
@@ -906,15 +921,6 @@ CONDITIONS["pcall"] = {
         end
 }
 
-CONDITIONS["playermodel"] = {
-    handler =
-        function (cond, context, v)
-            if v then
-                return LM.Environment:GetPlayerModel() == tonumber(v)
-            end
-        end
-}
-
 CONDITIONS["party"] = {
     handler =
         function (cond, context)
@@ -935,6 +941,15 @@ CONDITIONS["pet"] = {
                 return UnitName(petunit) == v or UnitCreatureFamily(petunit) == v
             else
                  return UnitExists(petunit)
+            end
+        end
+}
+
+CONDITIONS["playermodel"] = {
+    handler =
+        function (cond, context, v)
+            if v then
+                return LM.Environment:GetPlayerModel() == tonumber(v)
             end
         end
 }
@@ -1099,18 +1114,6 @@ CONDITIONS["sex"] = {
         end
 }
 
--- The difference between IsSwimming and IsSubmerged is that IsSubmerged
--- will also return true when you are standing on the bottom.  Note that
--- it sadly does not return false when you are floating on the top, that
--- is still counted as being submerged.
-
-CONDITIONS["swimming"] = {
-    handler =
-        function (cond, context)
-            return IsSubmerged()
-        end
-}
-
 CONDITIONS["shapeshift"] = {
     handler =
         function (cond, context)
@@ -1181,12 +1184,24 @@ CONDITIONS["stealthed"] = {
         end
 }
 
+-- The difference between IsSwimming and IsSubmerged is that IsSubmerged
+-- will also return true when you are standing on the bottom.  Note that
+-- it sadly does not return false when you are floating on the top, that
+-- is still counted as being submerged.
+
 CONDITIONS["submerged"] = {
     name = TUTORIAL_TITLE28,
     handler =
         function (cond, context)
             return (IsSubmerged() and not LM.Environment:IsFloating())
         end,
+}
+
+CONDITIONS["swimming"] = {
+    handler =
+        function (cond, context)
+            return IsSubmerged()
+        end
 }
 
 CONDITIONS["tracking"] = {

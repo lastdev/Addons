@@ -168,7 +168,7 @@ end
 
 -- encounterID, encounterName, difficultyID, groupSize
 function LM.Environment:ENCOUNTER_START(event, ...)
-    LM.Debug(format("Encounter started: %d (%s)", ...))
+    LM.Debug("Encounter started: %d (%s)", ...)
     self.currentEncounter = { ... }
 end
 
@@ -176,9 +176,34 @@ function LM.Environment:ENCOUNTER_END(event, ...)
     self.currentEncounter = nil
 end
 
+-- If you do the pulling then you get ENCOUNTER_START after PLAYER_REGEN_DISABLED
+-- and the combat setup doesn't work. Hopefully in this case you are targeting the
+-- boss so we can fake it up. This is pretty much all for Tindral Sageswift and I
+-- hope never gets needed again.
+
+local function GetUnitNPCID(unit)
+    local guid = UnitGUID(unit)
+    if guid then
+        local _, _, _, _, _, id = strsplit('-', guid)
+        -- No check for unitType because id will be nil and tonumber(nil) == nil
+        return tonumber(id)
+    end
+end
+
+local EncounterByNPCID = {
+    -- Tindral Sageswift, Amirdrassil (Dragonflight)
+    [209539] = 2786,
+}
+
 function LM.Environment:GetEncounterInfo()
     if self.currentEncounter then
         return unpack(self.currentEncounter)
+    end
+    local npcid = GetUnitNPCID('target')
+    if npcid and EncounterByNPCID[npcid] then
+        local name = UnitName('target')
+        local _, _, difficultyID, _, _, _, _, _, groupSize = GetInstanceInfo()
+        return EncounterByNPCID[npcid], name, difficultyID, groupSize
     end
 end
 
@@ -228,22 +253,24 @@ function LM.Environment:IsCantSummonForm()
     end
 end
 
-function LM.Environment:MapIsMap(a, b)
+function LM.Environment:MapIsMap(a, b, checkGroup)
     if a == b then
         return true
     end
-    -- avoid nil == nil case
-    local aGroup = C_Map.GetMapGroupID(a)
-    if aGroup and aGroup == C_Map.GetMapGroupID(b) then
-        return true
+    if checkGroup then
+        -- avoid nil == nil case
+        local aGroup = C_Map.GetMapGroupID(a)
+        if aGroup and aGroup == C_Map.GetMapGroupID(b) then
+            return true
+    end
     end
     return false
 end
 
-function LM.Environment:IsOnMap(mapID)
+function LM.Environment:IsOnMap(mapID, checkGroup)
     local currentMapID = C_Map.GetBestMapForUnit('player')
     if currentMapID then
-        return self:MapIsMap(currentMapID, mapID)
+        return self:MapIsMap(currentMapID, mapID, checkGroup)
     end
 end
 
@@ -261,9 +288,9 @@ end
 -- is why this takes a mapPath optional argument so we can save the mapPath in
 -- the context for actions.
 
-function LM.Environment:IsMapInPath(mapID, mapPath)
+function LM.Environment:IsMapInPath(mapID, mapPath, checkGroup)
     for _, pathMapID in ipairs(mapPath or self:GetMapPath()) do
-        if self:MapIsMap(pathMapID, mapID) then return true end
+        if self:MapIsMap(mapID, pathMapID, checkGroup) then return true end
     end
     return false
 end
@@ -449,6 +476,7 @@ function LM.Environment:GetLocation()
         "zoneText: " .. GetZoneText(),
         "subZoneText: " .. GetSubZoneText(),
         "IsFlyableArea(): " .. tostring(IsFlyableArea()),
+        "IsAdvancedFlyableArea(): " .. tostring(IsAdvancedFlyableArea()),
     }
 end
 
@@ -495,29 +523,40 @@ function LM.Environment:GetMaxMapID()
     return maxMapID
 end
 
+local ShowMapOverride = {
+    [407] = true,   -- Darkmoon Island (mapType Orphan)
+    [647] = true,   -- Acherus: The Ebon Hold (mapType Micro)
+}
+
 local function ValidDisplayMap(info, group, seenGroups)
     if not info then
         return false
     end
 
-    if C_Map.IsMapValidForNavBarDropDown then
-        if info.mapType <= Enum.UIMapType.Zone then
-            return C_Map.IsMapValidForNavBarDropDown(info.mapID)
-        end
-    else
-        if info.mapType > Enum.UIMapType.Zone then
-            return false
-        end
+    if ShowMapOverride[info.mapID] then
+        return true
     end
+
+    local out
+
+    if C_Map.IsMapValidForNavBarDropDown then
+        out = C_Map.IsMapValidForNavBarDropDown(info.mapID)
+    else
+        out = info.mapType <= Enum.UIMapType.Zone
+    end
+
+    -- Suppress second and on members of a group. Note they must have
+    -- matched above correctly first.
 
     if group then
         if seenGroups[group] then
-            return false
+            out = false
         else
             seenGroups[group] = true
         end
     end
-    return true
+
+    return out
 end
 
 function LM.Environment:GetMaps(str)
@@ -563,15 +602,11 @@ function LM.Environment:GetInstances()
     return LM.Options:GetInstances()
 end
 
-local ShowMapOverride = {
-    [407] = true,   -- Darkmoon Island (mapType Orphan)
-    [647] = true,   -- Acherus: The Ebon Hold (mapType Micro)
-}
-
-local function FillChildren(info)
+local function FillChildren(info, seenGroups)
     for _, child in ipairs(C_Map.GetMapChildrenInfo(info.mapID)) do
-        if ShowMapOverride[child.mapID] or ValidDisplayMap(child) then
-            FillChildren(child)
+        local group = C_Map.GetMapGroupID(child.mapID)
+        if ValidDisplayMap(child, group, seenGroups) then
+            FillChildren(child, seenGroups)
             table.insert(info, child)
         end
     end
@@ -583,7 +618,8 @@ end
 
 function LM.Environment:GetMapTree()
     local mapTree = C_Map.GetMapInfo(946)
-    FillChildren(mapTree)
+    local seenGroups = {}
+    FillChildren(mapTree, seenGroups)
     return mapTree
 end
 

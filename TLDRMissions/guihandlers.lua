@@ -740,22 +740,30 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         gui.CalculateButton:SetEnabled(true)
         gui.AbortButton:SetEnabled(false)
         gui.SkipCalculationButton:SetEnabled(false)
+        if WeakAuras then WeakAuras.ScanEvents("TLDRMISSIONS_SENT_NONE") end
         return
     end
     
     local followerLineup = {}
     for _, follower in ipairs(followers) do
-        if (not follower.status) and (follower.isCollected) then
-            table.insert(followerLineup, follower.followerID)
-        end
         local info = C_Garrison.GetFollowerAutoCombatStats(follower.followerID)
         if info and (info.currentHealth < 1) then
-            gui.shortcutButton:SetText(FAILED)
-            gui.FailedCalcLabel:SetText(L["FollowerZeroHPError"])
-            gui.CalculateButton:SetEnabled(true)
-            gui.AbortButton:SetEnabled(false)
-            gui.SkipCalculationButton:SetEnabled(false)
-            return
+            if addon.db.profile.ignoreDeadFollowers then
+                if WeakAuras then
+                    WeakAuras.ScanEvents("TLDRMISSIONS_SENT_WITH_IGNORED")
+                end
+            else
+                gui.shortcutButton:SetText(FAILED)
+                gui.FailedCalcLabel:SetText(L["FollowerZeroHPError"])
+                gui.CalculateButton:SetEnabled(true)
+                gui.AbortButton:SetEnabled(false)
+                gui.SkipCalculationButton:SetEnabled(false)
+                return
+            end
+        end
+        
+        if (not follower.status) and (follower.isCollected) and info and (info.currentHealth > 0) then
+            table.insert(followerLineup, follower.followerID)
         end
     end 
     
@@ -784,6 +792,10 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     
     hasNextMission = function()
         return (table.getn(missions) > 0) or addon.db.profile.sacrificeRemaining
+    end
+    
+    for _, func in ipairs(addon.hooks.missionsFilter) do
+        func(missions)
     end
     
     missionCounter = 0
@@ -863,7 +875,8 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
             if useSpecialTreatment then
                 if (addon.db.profile.followerXPSpecialTreatmentAlgorithm == 1) or (addon.db.profile.followerXPSpecialTreatmentAlgorithm == 2) then -- "All low level followers, lowest level first"
                     for _, follower in ipairs(followers) do
-                        if (not follower.status) and (not alreadyUsedFollowers[follower.followerID]) and (follower.level < 60) then
+                        local info = C_Garrison.GetFollowerAutoCombatStats(follower.followerID)
+                        if (not follower.status) and (not alreadyUsedFollowers[follower.followerID]) and (follower.level < 60) and info and (info.currentHealth > 0) then
                             table.insert(followerLineup, follower.followerID)
                         end
                     end
@@ -885,7 +898,8 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
                         end)
                         
                         for i = 1, median do
-                            if (not followers[i].status) and (not alreadyUsedFollowers[followers[i].followerID]) and (followers[i].level < 60) then
+                            local info = C_Garrison.GetFollowerAutoCombatStats(followers[i].followerID)
+                            if (not followers[i].status) and (not alreadyUsedFollowers[followers[i].followerID]) and (followers[i].level < 60) and info and (info.currentHealth > 0) then
                                 table.insert(followerLineup, followers[i].followerID)
                             end
                         end
@@ -911,7 +925,8 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
                 end
             else
                 for _, follower in ipairs(followers) do
-                    if (not follower.status) and (not alreadyUsedFollowers[follower.followerID]) then
+                    local info = C_Garrison.GetFollowerAutoCombatStats(follower.followerID)
+                    if (not follower.status) and (not alreadyUsedFollowers[follower.followerID]) and info and (info.currentHealth > 0) then
                         if (follower.level + gui.LowerBoundLevelRestrictionSlider:GetValue()) >= nextMission.missionScalar then
                             table.insert(followerLineup, follower.followerID)
                         end
@@ -1040,6 +1055,25 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
         end
         return
 	end
+    
+    -- the followers stats could have changed between calc and now
+    -- check if the mission will still be a success
+    -- if not, start over
+    if not missionWaitingUserAcceptance.sacrifice then
+        local result
+        addon:Simulate(missionWaitingUserAcceptance.combination[1], missionWaitingUserAcceptance.combination[2], missionWaitingUserAcceptance.combination[3], missionWaitingUserAcceptance.combination[4], missionWaitingUserAcceptance.combination[5], missionWaitingUserAcceptance.missionID, function(r)
+            result = r
+        end)
+        if result.victories ~= 1 then
+            if addon.db.profile.autoStart then
+                gui.AbortButton:Click()
+                gui.CalculateButton:Click()
+            else
+                print("Error: Follower HP changed resulting in mission fail")
+            end
+            return
+        end
+    end
     
     -- remove any followers already pending for this mission
     local lineup =  C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
@@ -1335,8 +1369,16 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
                 end
                 
                 if not skipThis then
-                    C_Garrison.MarkMissionComplete(mission.missionID)
-                    C_Garrison.MissionBonusRoll(mission.missionID)
+                    for _, func in pairs(addon.hooks.singleBlockCompletionCheck) do
+                        if func(mission.missionID) == true then
+                            skipThis = true
+                        end
+                    end
+                        
+                    if not skipThis then
+                        C_Garrison.MarkMissionComplete(mission.missionID)
+                        C_Garrison.MissionBonusRoll(mission.missionID)
+                    end
                 end
             end)
         end)

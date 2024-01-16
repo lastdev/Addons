@@ -1,13 +1,15 @@
-## Interface: 100105
-## Version: v10.1.4
-## LoadOnDemand: 1
+## Interface: 30000
 ## Title: Lib: DataBrokerIcon-1.0
-## Notes: Allows addons to easily create a lightweight minimap icon as an alternative to heavier LDB displays.
-## Author: Funkydude
+## Notes: Allows addons to register to recieve a lightweight minimap icon as an alternative to more heavy LDB displays.
+## Author: Rabbit
+## X-eMail: rabbit.magtheridon@mail.com
 ## X-Category: Library
-## X-License: All Rights Reserved
-## X-Credits: Rabbit, copystring
+## X-License: GPLv2 or later
+## X-Credits: copystring for Barrel.
 
-embeds.xml
-LibDBIcon-1.0\lib.xml
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+
+LibDBIcon-1.0\LibDBIcon-1.0.lua
 

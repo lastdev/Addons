@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2375, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240108061637")
 mod:SetCreatureID(158041)
 mod:SetEncounterID(2344)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -180,8 +180,7 @@ local timerAnnihilateCD						= mod:NewNextCountTimer(22.9, 318459, nil, nil, nil
 local timerCleansingProtocolCD				= mod:NewNextCountTimer(16, 316970, nil, nil, nil, 5)
 local timerCleansingProtocol				= mod:NewCastTimer(8, 316970, nil, nil, nil, 2)
 
-mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Five", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Five", "misc", nil, 316711)
 
 mod.vb.BasherCount = 0
 mod.vb.egoCount = 0

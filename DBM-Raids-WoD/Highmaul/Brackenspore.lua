@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1196, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240108061653")
 mod:SetCreatureID(78491)
 mod:SetEncounterID(1720)
 --Has no audio files
@@ -52,7 +52,7 @@ mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerSpecialCD				= mod:NewCDSpecialTimer(20)--Mythic Specials. Shared cd, which special he uses is random. 20-25 second variation, unless delayed by spores. then 20-25+10
 
 mod:AddRangeFrameOption(8, 160254, false)
-mod:AddDropdownOption("InterruptCounter", {"Two", "Three", "Four"}, "Two", "misc")
+mod:AddDropdownOption("InterruptCounter", {"Two", "Three", "Four"}, "Two", "misc", nil, 160013)
 
 mod.vb.sporesAlive = 0
 mod.vb.decayCounter = 0

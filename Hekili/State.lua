@@ -251,6 +251,31 @@ state.trinket = {
         },
     },
 
+    main_hand = {
+        slot = "main_hand",
+
+        --[[ has_cooldown = {
+            slot = "main_hand",
+        }, ]]
+
+        stacking_stat = {
+            slot = "main_hand"
+        },
+        has_stacking_stat = {
+            slot = "main_hand"
+        },
+
+        stat = {
+            slot = "main_hand"
+        },
+        has_stat = {
+            slot = "main_hand",
+        },
+
+        is = {
+            slot = "main_hand",
+        },
+    },
     any = {},
 
     cooldown = {
@@ -420,6 +445,7 @@ local mt_trinket = {
 
 setmetatable( state.trinket.t1, mt_trinket )
 setmetatable( state.trinket.t2, mt_trinket )
+setmetatable( state.trinket.main_hand, mt_trinket )
 
 
 local mt_trinket_is = {
@@ -434,6 +460,7 @@ local mt_trinket_is = {
 
 setmetatable( state.trinket.t1.is, mt_trinket_is )
 setmetatable( state.trinket.t2.is, mt_trinket_is )
+setmetatable( state.trinket.main_hand.is, mt_trinket_is )
 
 
 --[[ local mt_trinket_cooldown = {
@@ -482,6 +509,7 @@ local mt_trinket_has_stacking_stat = {
 
 setmetatable( state.trinket.t1.has_stacking_stat, mt_trinket_has_stacking_stat )
 setmetatable( state.trinket.t2.has_stacking_stat, mt_trinket_has_stacking_stat )
+setmetatable( state.trinket.main_hand.has_stacking_stat, mt_trinket_has_stacking_stat )
 
 
 local mt_trinket_has_stat = {
@@ -499,6 +527,7 @@ local mt_trinket_has_stat = {
 
 setmetatable( state.trinket.t1.has_stat, mt_trinket_has_stat )
 setmetatable( state.trinket.t2.has_stat, mt_trinket_has_stat )
+setmetatable( state.trinket.main_hand.has_stat, mt_trinket_has_stat )
 
 
 local mt_trinkets_has_stat = {
@@ -2137,7 +2166,7 @@ do
                 return t[ k ]
 
             elseif type(k) == "string" and k:sub(1, 17) == "incoming_physical" then
-                local remains = k:sub(19)
+                local remains = k:sub(18, 24) == "_damage" and k:sub(26) or k:sub(19)
                 local time = remains:match("^(%d+)[m]?s")
 
                 if not time then
@@ -2156,7 +2185,7 @@ do
                 return t[ k ]
 
             elseif type(k) == "string" and k:sub(1, 14) == "incoming_magic" then
-                local remains = k:sub(16)
+                local remains = k:sub(15, 21) == "_damage" and k:sub(23) or k:sub(16)
                 local time = remains:match("^(%d+)[m]?s")
 
                 if not time then
@@ -2814,7 +2843,7 @@ do
             if k == "distance" then t[k] = UnitCanAttack( "player", "target" ) and ( ( t.minR + t.maxR ) / 2 ) or 7.5
             elseif k == "in_range" then return t.distance <= 8
             elseif k == "minR" or k == "maxR" then
-                local minR, maxR = RC:GetRange( "target", true, InCombatLockdown() )
+                local minR, maxR = RC:GetRange( "target" )
                 t.minR = minR or 5
                 t.maxR = maxR or 10
 
@@ -3253,6 +3282,12 @@ local mt_dot = {
 ns.metatables.mt_dot = mt_dot
 
 
+local one_sec_gcd = {
+    DEMONHUNTER = true,
+    MONK = true,
+    ROGUE = true,
+}
+
 local mt_gcd = {
     __index = function( t, k )
         if k == "execute" then
@@ -3266,7 +3301,7 @@ local mt_gcd = {
             if gcd == "off" then return 0 end
             if gcd == "totem" then return 1 end
 
-            if UnitPowerType( "player" ) == Enum.PowerType.Energy or class.file == "DEMONHUNTER" then
+            if one_sec_gcd[ class.file ] or class.file == "DRUID" and UnitPowerType( "player" ) == Enum.PowerType.Energy then
                 return state.buff.adrenaline_rush.up and 0.8 or 1
             end
 
@@ -3279,7 +3314,7 @@ local mt_gcd = {
             return state.cooldown.global_cooldown.expires
 
         elseif k == "max" or k == "duration" then
-            if UnitPowerType( "player" ) == Enum.PowerType.Energy or class.file == "DEMONHUNTER" then
+            if one_sec_gcd[ class.file ] or class.file == "DRUID" and UnitPowerType( "player" ) == Enum.PowerType.Energy then
                 return state.buff.adrenaline_rush.up and 0.8 or 1
             end
 
@@ -3301,7 +3336,6 @@ local mt_prev_lookup = {
     __index = function( t, k )
         local idx = t.index
         local preds, prev
-        local action
 
         if     t.meta == "castsAll" then preds, prev = state.predictions   , state.prev
         elseif t.meta == "castsOn"  then preds, prev = state.predictionsOn , state.prev_gcd
@@ -3326,15 +3360,15 @@ local mt_prev_lookup = {
         if preds[ idx ] then return preds[ idx ] == k end
 
         if state.player.queued_ability then
-            if idx == #preds + 1 then return state.player.queued_ability == k end
+            if idx == #preds + 1 then
+                return state.player.queued_ability == k
+            end
             return prev.history[ idx - #preds + 1 ] == k
         end
 
         if idx == 1 and prev.override then
             return prev.override == k
         end
-
-        if state.time == 0 then return false end
 
         return prev.history[ idx - #preds ] == k
     end,
@@ -3364,7 +3398,7 @@ do
                 if t.meta == "castAll" then t.last = state.player.lastcast
                 elseif t.meta == "castsOn" then t.last = state.player.lastgcd
                 elseif t.meta == "castsOff" then t.last = state.player.lastoffgcd end
-                return rawget( t, "last" )
+                return rawget( t, "last" ) or "none"
             end
 
             if k == t.last then
@@ -5101,7 +5135,7 @@ local mt_default_action = {
             return max( value, t.cast_time )
 
         elseif k == "charges" then
-            return ability.charges -- and state.cooldown[ t.action ].charges
+            return state.cooldown[ t.action ].charges
 
         elseif k == "charges_fractional" then
             return state.cooldown[ t.action ].charges_fractional
@@ -7148,7 +7182,7 @@ do
             end
 
             if ability.range then
-                local _, dist = RC:GetRange( "target", true, InCombatLockdown() )
+                local _, dist = RC:GetRange( "target" )
 
                 if dist and dist > ability.range then
                     return false, "not within ability-specified range (" .. ability.range .. ")"

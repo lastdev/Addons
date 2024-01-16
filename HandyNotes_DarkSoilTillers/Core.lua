@@ -2,8 +2,8 @@
                                 ----o----(||)----oo----(||)----o----
 
                                           Dark Soil Tillers
-
-                                      v3.42 - 3rd December 2023
+										  
+                                      v3.49 - 12th January 2024
                                 Copyright (C) Taraezor / Chris Birch
 
                                 ----o----(||)----oo----(||)----o----
@@ -43,7 +43,6 @@ local match = string.match
 
 local HandyNotes = _G.HandyNotes
 
-ns.faction = UnitFactionGroup( "player" )
 ns.aWitnessToHistory = ( ns.faction == "Alliance" ) and 31512 or ( ( ns.faction == "Horde" ) and 31511 or 0 )
 
 -- Localisation
@@ -54,7 +53,8 @@ local realm = GetNormalizedRealmName() -- On a fresh login this will return null
 ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar = true,
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
-			Yojamba = true, Remulos = true, Arugal = true,}			
+			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
+			Penance = true, Shadowstrike = true }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -89,7 +89,10 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
-	
+	L["Left"] = "Links"
+	L["Right"] = "Rechts"
+	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
+
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Character"] = "Personaje"
 	L["Account"] = "la Cuenta"
@@ -124,7 +127,10 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
-	
+	L["Left"] = "Izquierda"
+	L["Right"] = "Derecha"
+	L["Try later"] = "No es posible en este momento. Intenta más tarde"
+
 elseif ns.locale == "frFR" then
 	L["Character"] = "Personnage"
 	L["Account"] = "le Compte"
@@ -157,7 +163,10 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
-	
+	L["Left"] = "Gauche"
+	L["Right"] = "Droite"
+	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
+
 elseif ns.locale == "itIT" then
 	L["Character"] = "Personaggio"
 	L["Completed"] = "Completo"
@@ -189,6 +198,9 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Left"] = "Sinistra"
+	L["Right"] = "Destra"
+	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
 
 elseif ns.locale == "koKR" then
 	L["Character"] = "캐릭터"
@@ -221,7 +233,10 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
-	
+	L["Left"] = "왼쪽"
+	L["Right"] = "오른쪽"
+	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
+
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Character"] = "Personagem"
 	L["Account"] = "à Conta"
@@ -254,6 +269,9 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Left"] = "Esquerda"
+	L["Right"] = "Direita"
+	L["Try later"] = "Não é possível neste momento. Tente depois"
 
 elseif ns.locale == "ruRU" then
 	L["Character"] = "Персонажа"
@@ -287,6 +305,9 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Left"] = "Налево"
+	L["Right"] = "Направо"
+	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
 
 elseif ns.locale == "zhCN" then
 	L["Character"] = "角色"
@@ -319,7 +340,10 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
-	
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍后再试"
+
 elseif ns.locale == "zhTW" then
 	L["Character"] = "角色"
 	L["Account"] = "賬號"
@@ -351,321 +375,344 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Left"] = "左"
+	L["Right"] = "右"
+	L["Try later"] = "目前不可能。稍後再試"
 
 else
 	L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	L["Try later"] = "Not possible at this time. Try later"
 	if ns.locale == "enUS" then
 		L["Grey"] = "Gray"
 	end
 end
 
 ns.name = UnitName( "player" ) or "Character"
+ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
-	L["Dark Soil"] = "Dunkle Erde"
-	L["Dark Soil Tillers"] = "Dunkle Erde Die Ackerbauern"
-	L["The Tillers"] = "Die Ackerbauern"
-	L["Under the foliage"] = "Unter dem Laub"
-	L["Under the hut"] = "Unter der Hütte"
-	L["Under the hut's\nnorthern side ramp"] = "Unter der Nordseite der Hütte"
-	L["Under the trees.\nVery difficult to see"] = "Unter den Bäumen.\nSehr schwer zu sehen"
-	L["Under the tree, at\nthe edge of the lake"] = "Unter dem Baum,\nam Rande des Sees"
-	L["Under the water tower"] = "Unter dem Wasserturm"
-	L["Under the tree.\nIn front of Thunder"] = "Unter dem Baum.\nVor Thunnnder"
-	L["Under the bridge"] = "Unter der Brücke"
-	L["Inside the building"] = "Im Gebäude"
-	L["Descend into the Springtail Crag"] = "Steigen Sie in den Sprungschweifhöhlen geht"
-	L["Descend into the Springtail Warren"] = "Steigen Sie in den Sprungschweifebau hinab"
-	L["Standing under a tree"] = "Unter einem Baum stehen"
-	L["Same colour as the ground"] = "Gleiche farbe wie der schmutz"
-	L["At the entrance"] = "Am Eingang"
-	L["Sho"] = "Sho"
-	L["Old Hillpaw"] = "Der alte Hügelpranke"
-	L["Ella"] = "Ella"
-	L["Chee Chee"] = "Chi-Chi"
-	L["Fish Fellreed"] = "Fischi Rohrroder"
-	L["Haohan Mudclaw"] = "Haohan Lehmkrall"
-	L["Tina Mudclaw"] = "Tina Lehmkrall"
-	L["Farmer Fung"] = "Bauer Fung"
-	L["Jogu the Drunk"] = "Jogu der Betrunkene"
-	L["Gina Mudclaw"] = "Gina Lehmkrall"
-	L["Show the Dark Soil"] = "Zeige den Dunklen Erde"
 	L["AddOn Description"] = ns.colour.plaintext .."Hilft dir bei " ..ns.colour.highlight
 		.."Dunkle Erde" ..ns.colour.plaintext .." und " ..ns.colour.highlight .."Die Ackerbauern"
 		..ns.colour.plaintext .." im Tal der Vier Winde"
+	L["At the entrance"] = "Am Eingang"
+	L["Dark Soil"] = "Dunkle Erde"
+	L["Dark Soil Tillers"] = "Dunkle Erde Die Ackerbauern"
+	L["Descend into the Springtail Crag"] = "Steigen Sie in den Sprungschweifhöhlen geht"
+	L["Descend into the Springtail Warren"] = "Steigen Sie in den Sprungschweifebau hinab"
+	L["Inside the building"] = "Im Gebäude"
 	L["NPC"] = "NSC"
+	L["Same colour as the ground"] = "Gleiche farbe wie der schmutz"
+	L["Show the Dark Soil"] = "Zeige den Dunklen Erde"
+	L["Standing under a tree"] = "Unter einem Baum stehen"
+	L["The Tillers"] = "Die Ackerbauern"
+	L["Under the bridge"] = "Unter der Brücke"
+	L["Under the foliage"] = "Unter dem Laub"
+	L["Under the hut"] = "Unter der Hütte"
+	L["Under the hut's\nnorthern side ramp"] = "Unter der Nordseite der Hütte"
+	L["Under the tree, at\nthe edge of the lake"] = "Unter dem Baum,\nam Rande des Sees"
+	L["Under the tree.\nIn front of Thunder"] = "Unter dem Baum.\nVor Thunnnder"
+	L["Under the trees.\nVery difficult to see"] = "Unter den Bäumen.\nSehr schwer zu sehen"
+	L["Under the water tower"] = "Unter dem Wasserturm"
+	L["VotFW Map"] = "Karte „Tal der Vier Winde“"
+
+	L["Chee Chee"] = "Chi-Chi"
+	L["Ella"] = "Ella"
+	L["Farmer Fung"] = "Bauer Fung"
+	L["Fish Fellreed"] = "Fischi Rohrroder"
+	L["Gina Mudclaw"] = "Gina Lehmkrall"
+	L["Haohan Mudclaw"] = "Haohan Lehmkrall"
+	L["Jogu the Drunk"] = "Jogu der Betrunkene"
+	L["Old Hillpaw"] = "Der alte Hügelpranke"
+	L["Sho"] = "Sho"
+	L["Tina Mudclaw"] = "Tina Lehmkrall"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["Dark Soil"] = "Tierra Oscura"
-	L["Dark Soil Tillers"] = "Los Labradores Tierra Oscura"
-	L["The Tillers"] = "Los Labradores"
-	L["Under the foliage"] = "Bajo el follaje"
-	L["Under the hut"] = "Bajo la choza"
-	L["Under the hut's\nnorthern side ramp"] = "Bajo la rampa del lado\nnorte de la choza"
-	L["Under the trees.\nVery difficult to see"] = "Bajo los árboles.\nMuy difícil de ver"
-	L["Under the tree, at\nthe edge of the lake"] = "Bajo el árbol,\nen el borde del lago"
-	L["Under the water tower"] = "Bajo la torre de agua"
-	L["Under the tree.\nIn front of Thunder"] = "Debajo del árbol. Delante de Trueno"
-	L["Under the bridge"] = "Bajo el puente"
-	L["Inside the building"] = "Dentro del edificio"
-	L["Descend into the Springtail Crag"] = "Desciende a la madriguera de los Risco Cola Saltarina"
-	L["Descend into the Springtail Warren"] = "Desciende a la madriguera de los Cola Saltarina"
-	L["Standing under a tree"] = "De pie debajo de un árbol"
-	L["Same colour as the ground"] = "Del mismo color que el suelo"
-	L["At the entrance"] = "En la entrada"
-	L["Sho"] = "Sho"
-	L["Old Hillpaw"] = "Viejo Zarpa Collado"
-	L["Ella"] = "Ella"
-	L["Chee Chee"] = "Chee Chee"
-	L["Fish Fellreed"] = "Pez Junco Talado"
-	L["Haohan Mudclaw"] = "Haohan Zarpa Fangosa"
-	L["Tina Mudclaw"] = "Tina Zarpa Fangosa"
-	L["Farmer Fung"] = "Granjero Fung"
-	L["Jogu the Drunk"] = "Jogu el Ebrio"
-	L["Gina Mudclaw"] = "Gina Zarpa Fangosa"
-	L["Show the Dark Soil"] = "Mostrar la Tierra Oscura"
 	L["AddOn Description"] = ns.colour.plaintext .."Te ayuda co " ..ns.colour.highlight
 		.."Tierra Oscura" ..ns.colour.plaintext .." y " ..ns.colour.highlight .."Los Labradores"
 		..ns.colour.plaintext .." en el Valle de los Cuatro Vientos"
+	L["At the entrance"] = "En la entrada"
+	L["Dark Soil"] = "Tierra Oscura"
+	L["Dark Soil Tillers"] = "Los Labradores Tierra Oscura"
+	L["Descend into the Springtail Crag"] = "Desciende a la madriguera de los Risco Cola Saltarina"
+	L["Descend into the Springtail Warren"] = "Desciende a la madriguera de los Cola Saltarina"
+	L["Inside the building"] = "Dentro del edificio"
 	L["NPC"] = "PNJ"
+	L["Same colour as the ground"] = "Del mismo color que el suelo"
+	L["Show the Dark Soil"] = "Mostrar la Tierra Oscura"
+	L["Standing under a tree"] = "De pie debajo de un árbol"
+	L["The Tillers"] = "Los Labradores"
+	L["Under the bridge"] = "Bajo el puente"
+	L["Under the foliage"] = "Bajo el follaje"
+	L["Under the hut"] = "Bajo la choza"
+	L["Under the hut's\nnorthern side ramp"] = "Bajo la rampa del lado\nnorte de la choza"
+	L["Under the tree, at\nthe edge of the lake"] = "Bajo el árbol,\nen el borde del lago"
+	L["Under the tree.\nIn front of Thunder"] = "Debajo del árbol. Delante de Trueno"
+	L["Under the trees.\nVery difficult to see"] = "Bajo los árboles.\nMuy difícil de ver"
+	L["Under the water tower"] = "Bajo la torre de agua"
+	L["VotFW Map"] = "Mapa del Valle de los Cuatro Vientos"
+
+	L["Chee Chee"] = "Chee Chee"
+	L["Ella"] = "Ella"
+	L["Farmer Fung"] = "Granjero Fung"
+	L["Fish Fellreed"] = "Pez Junco Talado"
+	L["Gina Mudclaw"] = "Gina Zarpa Fangosa"
+	L["Haohan Mudclaw"] = "Haohan Zarpa Fangosa"
+	L["Jogu the Drunk"] = "Jogu el Ebrio"
+	L["Old Hillpaw"] = "Viejo Zarpa Collado"
+	L["Sho"] = "Sho"
+	L["Tina Mudclaw"] = "Tina Zarpa Fangosa"
 
 elseif ns.locale == "frFR" then
-	L["Dark Soil"] = "Terre Sombre"
-	L["Dark Soil Tillers"] = "Laboureurs Terre Sombre"
-	L["The Tillers"] = "Laboureurs"
-	L["Under the foliage"] = "Sous le feuillage"
-	L["Under the hut"] = "Sous la cabane"
-	L["Under the hut's\nnorthern side ramp"] = "Sous la rampe côté\nnord de la cabane"
-	L["Under the trees.\nVery difficult to see"] = "Sous les arbres.\nTrès difficile à voir"
-	L["Under the tree, at\nthe edge of the lake"] = "Sous l'arbre,\nau bord du lac"
-	L["Under the water tower"] = "Sous la tour d'eau"
-	L["Under the tree.\nIn front of Thunder"] = "Sous l'arbre. Devant Tonnerre"
-	L["Under the bridge"] = "Sous le pont"
-	L["Inside the building"] = "À l'intérieur du bâtiment"
-	L["Descend into the Springtail Crag"] = "Descendez dans la combe des Queubrioles"
-	L["Descend into the Springtail Warren"] = "Descendez dans la garenne des queubriole"
-	L["Standing under a tree"] = "Debout sous un arbre"
-	L["Same colour as the ground"] = "De la même couleur que le sol"
-	L["At the entrance"] = "À l'entrée"
-	L["Sho"] = "Sho"
-	L["Old Hillpaw"] = "Vieux Patte des Hauts"
-	L["Ella"] = "Ella"
-	L["Chee Chee"] = "Chii Chii"
-	L["Fish Fellreed"] = "Marée Pelage de Roseau"
-	L["Haohan Mudclaw"] = "Haohan Griffe de Tourbe"
-	L["Tina Mudclaw"] = "Tina Griffe de Tourbe"
-	L["Farmer Fung"] = "Fermier Fung"
-	L["Jogu the Drunk"] = "Jogu l’Ivrogne"
-	L["Gina Mudclaw"] = "Gina Griffe de Tourbe"
-	L["Show the Dark Soil"] = "Montre la Terre Sombre"
 	L["AddOn Description"] = ns.colour.plaintext .."Vous aide avec " ..ns.colour.highlight
 		.."Terre Sombre" ..ns.colour.plaintext .." et " ..ns.colour.highlight .."Laboureurs"
 		..ns.colour.plaintext .." dans la Vallée des Quatre vents"
+	L["At the entrance"] = "À l'entrée"
+	L["Dark Soil"] = "Terre Sombre"
+	L["Dark Soil Tillers"] = "Laboureurs Terre Sombre"
+	L["Descend into the Springtail Crag"] = "Descendez dans la combe des Queubrioles"
+	L["Descend into the Springtail Warren"] = "Descendez dans la garenne des queubriole"
+	L["Inside the building"] = "À l'intérieur du bâtiment"
 	L["NPC"] = "PNJ"
+	L["Same colour as the ground"] = "De la même couleur que le sol"
+	L["Show the Dark Soil"] = "Montre la Terre Sombre"
+	L["Standing under a tree"] = "Debout sous un arbre"
+	L["The Tillers"] = "Laboureurs"
+	L["Under the bridge"] = "Sous le pont"
+	L["Under the foliage"] = "Sous le feuillage"
+	L["Under the hut"] = "Sous la cabane"
+	L["Under the hut's\nnorthern side ramp"] = "Sous la rampe côté\nnord de la cabane"
+	L["Under the tree, at\nthe edge of the lake"] = "Sous l'arbre,\nau bord du lac"
+	L["Under the tree.\nIn front of Thunder"] = "Sous l'arbre. Devant Tonnerre"
+	L["Under the trees.\nVery difficult to see"] = "Sous les arbres.\nTrès difficile à voir"
+	L["Under the water tower"] = "Sous la tour d'eau"
+	L["VotFW Map"] = "Carte de la Vallée des Quatre Vents"
+
+	L["Chee Chee"] = "Chii Chii"
+	L["Ella"] = "Ella"
+	L["Farmer Fung"] = "Fermier Fung"
+	L["Fish Fellreed"] = "Marée Pelage de Roseau"
+	L["Gina Mudclaw"] = "Gina Griffe de Tourbe"
+	L["Haohan Mudclaw"] = "Haohan Griffe de Tourbe"
+	L["Jogu the Drunk"] = "Jogu l’Ivrogne"
+	L["Old Hillpaw"] = "Vieux Patte des Hauts"
+	L["Sho"] = "Sho"
+	L["Tina Mudclaw"] = "Tina Griffe de Tourbe"
 
 elseif ns.locale == "itIT" then
-	L["Dark Soil"] = "Terreno Smosso"
-	L["Dark Soil Tillers"] = "Coltivatori Terreno Smosso"
-	L["The Tillers"] = "Coltivatori"
-	L["Under the foliage"] = "Sotto il fogliame"
-	L["Under the hut"] = "Sotto la capanna"
-	L["Under the hut's\nnorthern side ramp"] = "Sotto la rampa laterale nord della capanna"
-	L["Under the trees.\nVery difficult to see"] = "Sotto gli alberi.\nMolto difficile da vedere"
-	L["Under the tree, at\nthe edge of the lake"] = "Sotto l'albero,\nai margini del lago"
-	L["Under the water tower"] = "Sotto la torre dell'acqua"
-	L["Under the tree.\nIn front of Thunder"] = "Sotto l'albero.\nDi fronte a Tuono"
-	L["Under the bridge"] = "Sotto il ponte"
-	L["Inside the building"] = "All'interno dell'edificio"
-	L["Inside the building"] = "À l'intérieur du bâtiment"
-	L["Descend into the Springtail Crag"] = "Scendi nella Rupe dei Codalesta"
-	L["Descend into the Springtail Warren"] = "Scendi nella Tana del Codalesta"
-	L["Standing under a tree"] = "In piedi sotto un albero"
-	L["Same colour as the ground"] = "Lo stesso colore del terreno"
-	L["At the entrance"] = "All'entrata"
-	L["Sho"] = "Sho"
-	L["Old Hillpaw"] = "Vecchio Zampa Brulla"
-	L["Ella"] = "Ella"
-	L["Chee Chee"] = "Ghi Ghi"
-	L["Fish Fellreed"] = "Trota Mezza Canna"
-	L["Haohan Mudclaw"] = "Haohan Palmo Florido"
-	L["Tina Mudclaw"] = "Tina Palmo Florido"
-	L["Farmer Fung"] = "Contadino Fung"
-	L["Jogu the Drunk"] = "Jogu l'Ubriaco"
-	L["Gina Mudclaw"] = "Gina Palmo Florido"
-	L["Show the Dark Soil"] = "Mostra la Terreno Smosso"
 	L["AddOn Description"] = ns.colour.plaintext .."Ti aiuta con " ..ns.colour.highlight .."Terra Oscura"
 			..ns.colour.plaintext .." e " ..ns.colour.highlight .."Coltivatori" ..ns.colour.plaintext
 			.." in the Valle dei Quattro Venti"
+	L["At the entrance"] = "All'entrata"
+	L["Dark Soil"] = "Terreno Smosso"
+	L["Dark Soil Tillers"] = "Coltivatori Terreno Smosso"
+	L["Descend into the Springtail Crag"] = "Scendi nella Rupe dei Codalesta"
+	L["Descend into the Springtail Warren"] = "Scendi nella Tana del Codalesta"
+	L["Inside the building"] = "All'interno dell'edificio"
 	L["NPC"] = "PNG"
+	L["Same colour as the ground"] = "Lo stesso colore del terreno"
+	L["Show the Dark Soil"] = "Mostra la Terreno Smosso"
+	L["Standing under a tree"] = "In piedi sotto un albero"
+	L["The Tillers"] = "Coltivatori"
+	L["Under the bridge"] = "Sotto il ponte"
+	L["Under the foliage"] = "Sotto il fogliame"
+	L["Under the hut"] = "Sotto la capanna"
+	L["Under the hut's\nnorthern side ramp"] = "Sotto la rampa laterale nord della capanna"
+	L["Under the tree, at\nthe edge of the lake"] = "Sotto l'albero,\nai margini del lago"
+	L["Under the tree.\nIn front of Thunder"] = "Sotto l'albero.\nDi fronte a Tuono"
+	L["Under the trees.\nVery difficult to see"] = "Sotto gli alberi.\nMolto difficile da vedere"
+	L["Under the water tower"] = "Sotto la torre dell'acqua"
+	L["VotFW Map"] = "Mappa della Valle dei Quattro Venti"
+
+	L["Chee Chee"] = "Ghi Ghi"
+	L["Ella"] = "Ella"
+	L["Farmer Fung"] = "Contadino Fung"
+	L["Fish Fellreed"] = "Trota Mezza Canna"
+	L["Gina Mudclaw"] = "Gina Palmo Florido"
+	L["Haohan Mudclaw"] = "Haohan Palmo Florido"
+	L["Jogu the Drunk"] = "Jogu l'Ubriaco"
+	L["Old Hillpaw"] = "Vecchio Zampa Brulla"
+	L["Sho"] = "Sho"
+	L["Tina Mudclaw"] = "Tina Palmo Florido"
 
 elseif ns.locale == "koKR" then
-	L["Dark Soil"] = "검은 토양"
-	L["Dark Soil Tillers"] = "농사꾼 연합 검은 토양"
-	L["The Tillers"] = "농사꾼 연합"
-	L["Under the foliage"] = "단풍 아래서"
-	L["Under the hut"] = "오두막 아래서"
-	L["Under the hut's\nnorthern side ramp"] = "오두막의 북쪽 경사로 아래"
-	L["Under the trees.\nVery difficult to see"] = "나무 밑. 보기가 매우 어렵다."
-	L["Under the tree, at\nthe edge of the lake"] = "나무 밑. 호수 가장자리."
-	L["Under the water tower"] = "수상 탑 아래"
-	L["Under the tree.\nIn front of Thunder"] = "나무 아래. 우레 앞에서."
-	L["Under the bridge"] = "다리 아래"
-	L["Inside the building"] = "건물 내부"
-	L["Descend into the Springtail Crag"] = "있는 껑충꼬리 바위굴 처로 내려가세요"
-	L["Descend into the Springtail Warren"] = "껑충꼬리 은신처로 내려가세요"
-	L["Standing under a tree"] = "나무 아래 서"
-	L["Same colour as the ground"] = "땅과 같은 색"
-	L["At the entrance"] = "입구에서"
-	L["Sho"] = "쇼"
-	L["Old Hillpaw"] = "늙은 힐포우"
-	L["Ella"] = "엘라"
-	L["Chee Chee"] = "치 치"
-	L["Fish Fellreed"] = "피시 펠리드"
-	L["Haohan Mudclaw"] = "하오한 머드클로"
-	L["Tina Mudclaw"] = "티나 머드클로"
-	L["Farmer Fung"] = "농부 펑"
-	L["Jogu the Drunk"] = "주정뱅이 조구"
-	L["Gina Mudclaw"] = "지나 머드클로"
-	L["Show the Dark Soil"] = "검은 토양 보여줘"
 	L["AddOn Description"] = ns.colour.plaintext .."네 바람의 계곡에서 " ..ns.colour.highlight .."농사꾼 연합"
 		..ns.colour.plaintext .." 및 " ..ns.colour.highlight .."검은 토양" ..ns.colour.plaintext
 		.." 에 대한 도움말"
+	L["At the entrance"] = "입구에서"
+	L["Dark Soil"] = "검은 토양"
+	L["Dark Soil Tillers"] = "농사꾼 연합 검은 토양"
+	L["Descend into the Springtail Crag"] = "있는 껑충꼬리 바위굴 처로 내려가세요"
+	L["Descend into the Springtail Warren"] = "껑충꼬리 은신처로 내려가세요"
+	L["Inside the building"] = "건물 내부"
+	L["Same colour as the ground"] = "땅과 같은 색"
+	L["Show the Dark Soil"] = "검은 토양 보여줘"
+	L["Standing under a tree"] = "나무 아래 서"
+	L["The Tillers"] = "농사꾼 연합"
+	L["Under the bridge"] = "다리 아래"
+	L["Under the foliage"] = "단풍 아래서"
+	L["Under the hut"] = "오두막 아래서"
+	L["Under the hut's\nnorthern side ramp"] = "오두막의 북쪽 경사로 아래"
+	L["Under the tree, at\nthe edge of the lake"] = "나무 밑. 호수 가장자리."
+	L["Under the tree.\nIn front of Thunder"] = "나무 아래. 우레 앞에서."
+	L["Under the trees.\nVery difficult to see"] = "나무 밑. 보기가 매우 어렵다."
+	L["Under the water tower"] = "수상 탑 아래"
+	L["VotFW Map"] = "네 바람의 계곡 지도"
+
+	L["Chee Chee"] = "치 치"
+	L["Ella"] = "엘라"
+	L["Farmer Fung"] = "농부 펑"
+	L["Fish Fellreed"] = "피시 펠리드"
+	L["Gina Mudclaw"] = "지나 머드클로"
+	L["Haohan Mudclaw"] = "하오한 머드클로"
+	L["Jogu the Drunk"] = "주정뱅이 조구"
+	L["Old Hillpaw"] = "늙은 힐포우"
+	L["Sho"] = "쇼"
+	L["Tina Mudclaw"] = "티나 머드클로"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["Dark Soil"] = "Solo Negro"
-	L["Dark Soil Tillers"] = "Os Lavradores Solo Negro"
-	L["The Tillers"] = "Os Lavradores"
-	L["Under the foliage"] = "Sob a folhagem"
-	L["Under the hut"] = "Debaixo da cabana"
-	L["Under the hut's\nnorthern side ramp"] = "Sob a rampa do lado norte da cabana"
-	L["Under the trees.\nVery difficult to see"] = "Sob as árvores.\nMuito difícil de ver"
-	L["Under the tree, at\nthe edge of the lake"] = "Debaixo da árvore,\nà beira do lago"
-	L["Under the water tower"] = "Sob a torre de água"
-	L["Under the tree.\nIn front of Thunder"] = "Debaixo da árvore. Na frente de Trovão"
-	L["Under the bridge"] = "Debaixo da ponte"
-	L["Inside the building"] = "Dentro do prédio"
-	L["Descend into the Springtail Crag"] = "Desça para o Rochedo Cauda-de-mola"
-	L["Descend into the Springtail Warren"] = "Desça para o Labirinto Cauda-de-mola"
-	L["Standing under a tree"] = "De pé debaixo de uma árvore"
-	L["Same colour as the ground"] = "Da mesma cor do chão"
-	L["At the entrance"] = "Na entrada"
-	L["Sho"] = "Sho"
-	L["Old Hillpaw"] = "Velho Pata do Monte"
-	L["Ella"] = "Ella"
-	L["Chee Chee"] = "Tchi Tchi"
-	L["Fish Fellreed"] = "Peixe Cana Alta"
-	L["Haohan Mudclaw"] = "Haohan Garra de Barro"
-	L["Tina Mudclaw"] = "Tina Garra de Barro"
-	L["Farmer Fung"] = "Fazendeiro Fung"
-	L["Jogu the Drunk"] = "Be Bum, o Ébrio"
-	L["Gina Mudclaw"] = "Gina Garra de Barro"
-	L["Show the Dark Soil"] = "Mostrar o Solo Negro"
 	L["AddOn Description"] = ns.colour.plaintext .."Ajuda você com " ..ns.colour.highlight
 		.."Solo Escuro" ..ns.colour.plaintext .." e " ..ns.colour.highlight .."Os Lavradores"
 		..ns.colour.plaintext .." no Vale dos Quatro Ventos"
+	L["At the entrance"] = "Na entrada"
+	L["Dark Soil"] = "Solo Negro"
+	L["Dark Soil Tillers"] = "Os Lavradores Solo Negro"
+	L["Descend into the Springtail Crag"] = "Desça para o Rochedo Cauda-de-mola"
+	L["Descend into the Springtail Warren"] = "Desça para o Labirinto Cauda-de-mola"
+	L["Inside the building"] = "Dentro do prédio"
 	L["NPC"] = "PNJ"
+	L["Same colour as the ground"] = "Da mesma cor do chão"
+	L["Show the Dark Soil"] = "Mostrar o Solo Negro"
+	L["Standing under a tree"] = "De pé debaixo de uma árvore"
+	L["The Tillers"] = "Os Lavradores"
+	L["Under the bridge"] = "Debaixo da ponte"
+	L["Under the foliage"] = "Sob a folhagem"
+	L["Under the hut"] = "Debaixo da cabana"
+	L["Under the hut's\nnorthern side ramp"] = "Sob a rampa do lado norte da cabana"
+	L["Under the tree, at\nthe edge of the lake"] = "Debaixo da árvore,\nà beira do lago"
+	L["Under the tree.\nIn front of Thunder"] = "Debaixo da árvore. Na frente de Trovão"
+	L["Under the trees.\nVery difficult to see"] = "Sob as árvores.\nMuito difícil de ver"
+	L["Under the water tower"] = "Sob a torre de água"
+	L["VotFW Map"] = "Mapa do Vale dos Quatro Ventos"
+
+	L["Chee Chee"] = "Tchi Tchi"
+	L["Ella"] = "Ella"
+	L["Farmer Fung"] = "Fazendeiro Fung"
+	L["Fish Fellreed"] = "Peixe Cana Alta"
+	L["Gina Mudclaw"] = "Gina Garra de Barro"
+	L["Haohan Mudclaw"] = "Haohan Garra de Barro"
+	L["Jogu the Drunk"] = "Be Bum, o Ébrio"
+	L["Old Hillpaw"] = "Velho Pata do Monte"
+	L["Sho"] = "Sho"
+	L["Tina Mudclaw"] = "Tina Garra de Barro"
 
 elseif ns.locale == "ruRU" then
-	L["Dark Soil"] = "Темная Земля"
-	L["Dark Soil Tillers"] = "Земледельцами Темная Земля"
-	L["The Tillers"] = "Земледельцами"
-	L["Under the foliage"] = "Под листвой"
-	L["Under the hut"] = "Под хижиной"
-	L["Under the hut's\nnorthern side ramp"] = "Под пандусом северной стороны хижины"
-	L["Under the trees.\nVery difficult to see"] = "Под деревьями.\nОчень сложно увидеть"
-	L["Under the tree, at\nthe edge of the lake"] = "Под деревом,\nна краю озера"
-	L["Under the water tower"] = "Под водонапорной башней"
-	L["Under the tree.\nIn front of Thunder"] = "Под деревом.\nПеред Гром"
-	L["Under the bridge"] = "Под мостом"
-	L["Inside the building"] = "Внутри здания"
-	L["Descend into the Springtail Crag"] = "Спускайтесь в Утес Прыгохвостов"
-	L["Descend into the Springtail Warren"] = "Спускайтесь в лабиринт Прыгохвост"
-	L["Standing under a tree"] = "Стоя под деревом"
-	L["Same colour as the ground"] = "Тот же цвет, что и земля"
-	L["At the entrance"] = "На входе"
-	L["Sho"] = "Шо"
-	L["Old Hillpaw"] = "Старик Горная Лапа"
-	L["Ella"] = "Элла"
-	L["Chee Chee"] = "Чи-Чи"
-	L["Fish Fellreed"] = "Рыба Тростниковая Шкура"
-	L["Haohan Mudclaw"] = "Хаохань Грязный Коготь"
-	L["Tina Mudclaw"] = "Тина Грязный Коготь"
-	L["Farmer Fung"] = "Фермер Фун"
-	L["Jogu the Drunk"] = "Йогу Пьяный"
-	L["Gina Mudclaw"] = "Джина Грязный Коготь"
-	L["Show the Dark Soil"] = "Показать Темная Земля"
 	L["AddOn Description"] = ns.colour.plaintext .."Помогает вам с " ..ns.colour.highlight
 		.."Темная Земля" ..ns.colour.plaintext .." и " ..ns.colour.highlight .."Земледельцами"
 		..ns.colour.plaintext .." в Долине Четырех Ветров"
+	L["At the entrance"] = "На входе"
+	L["Dark Soil"] = "Темная Земля"
+	L["Dark Soil Tillers"] = "Земледельцами Темная Земля"
+	L["Descend into the Springtail Crag"] = "Спускайтесь в Утес Прыгохвостов"
+	L["Descend into the Springtail Warren"] = "Спускайтесь в лабиринт Прыгохвост"
+	L["Inside the building"] = "Внутри здания"
+	L["Show the Dark Soil"] = "Показать Темная Земля"
+	L["Same colour as the ground"] = "Тот же цвет, что и земля"
+	L["Standing under a tree"] = "Стоя под деревом"
+	L["The Tillers"] = "Земледельцами"
+	L["Under the bridge"] = "Под мостом"
+	L["Under the foliage"] = "Под листвой"
+	L["Under the hut"] = "Под хижиной"
+	L["Under the hut's\nnorthern side ramp"] = "Под пандусом северной стороны хижины"
+	L["Under the tree, at\nthe edge of the lake"] = "Под деревом,\nна краю озера"
+	L["Under the tree.\nIn front of Thunder"] = "Под деревом.\nПеред Гром"
+	L["Under the trees.\nVery difficult to see"] = "Под деревьями.\nОчень сложно увидеть"
+	L["Under the water tower"] = "Под водонапорной башней"
+	L["VotFW Map"] = "Карта Долины Четырех Ветров"
+
+	L["Chee Chee"] = "Чи-Чи"
+	L["Ella"] = "Элла"
+	L["Farmer Fung"] = "Фермер Фун"
+	L["Fish Fellreed"] = "Рыба Тростниковая Шкура"
+	L["Gina Mudclaw"] = "Джина Грязный Коготь"
+	L["Haohan Mudclaw"] = "Хаохань Грязный Коготь"
+	L["Jogu the Drunk"] = "Йогу Пьяный"
+	L["Old Hillpaw"] = "Старик Горная Лапа"
+	L["Sho"] = "Шо"
+	L["Tina Mudclaw"] = "Тина Грязный Коготь"
 
 elseif ns.locale == "zhCN" then
+	L["AddOn Description"] = ns.colour.plaintext .."四风谷的" ..ns.colour.highlight .."分蘖"
+		..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
+	L["At the entrance"] = "在入口"
 	L["Dark Soil"] = "黑色泥土"
 	L["Dark Soil Tillers"] = "阡陌客 黑色泥土"
+	L["Descend into the Springtail Crag"] = "下降到的弹尾峭壁巢穴" -- 弹尾峭壁
+	L["Descend into the Springtail Warren"] = "下降到弹尾者巢穴"
+	L["Inside the building"] = "建筑物内"
+	L["Same colour as the ground"] = "与地面颜色相同"
+	L["Show the Dark Soil"] = "显示黑色泥土"
+	L["Standing under a tree"] = "站在树下"
 	L["The Tillers"] = "阡陌客"
+	L["Under the bridge"] = "在桥下"
 	L["Under the foliage"] = "在树叶下"
 	L["Under the hut"] = "在小屋下面"
 	L["Under the hut's\nnorthern side ramp"] = "在小屋的北侧坡道下"
-	L["Under the trees.\nVery difficult to see"] = "在树下。很难看"
 	L["Under the tree, at\nthe edge of the lake"] = "在树下，在湖边"
-	L["Under the water tower"] = "在水塔下"
 	L["Under the tree.\nIn front of Thunder"] = "在树下。在雷霆前面"
-	L["Under the bridge"] = "在桥下"
-	L["Inside the building"] = "建筑物内"
-	L["Descend into the Springtail Crag"] = "下降到的弹尾峭壁巢穴" -- 弹尾峭壁
-	L["Descend into the Springtail Warren"] = "下降到弹尾者巢穴"
-	L["Standing under a tree"] = "站在树下"
-	L["Same colour as the ground"] = "与地面颜色相同"
-	L["At the entrance"] = "在入口"
-	L["Sho"] = "阿烁"
-	L["Old Hillpaw"] = "老农山掌"
-	L["Ella"] = "艾拉"
+	L["Under the trees.\nVery difficult to see"] = "在树下。很难看"
+	L["Under the water tower"] = "在水塔下"
+	L["VotFW Map"] = "四风谷地图"
+
 	L["Chee Chee"] = "吱吱"
-	L["Fish Fellreed"] = "玉儿·采苇"
-	L["Haohan Mudclaw"] = "郝瀚·泥爪"
-	L["Tina Mudclaw"] = "迪娜·泥爪"
+	L["Ella"] = "艾拉"
 	L["Farmer Fung"] = "农夫老方"
-	L["Jogu the Drunk"] = "醉鬼贾古"
+	L["Fish Fellreed"] = "玉儿·采苇"
 	L["Gina Mudclaw"] = "吉娜·泥爪"
-	L["Show the Dark Soil"] = "显示黑色泥土"
-	L["AddOn Description"] = ns.colour.plaintext .."四风谷的" ..ns.colour.highlight .."分蘖"
-		..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
+	L["Haohan Mudclaw"] = "郝瀚·泥爪"
+	L["Jogu the Drunk"] = "醉鬼贾古"
+	L["Old Hillpaw"] = "老农山掌"
+	L["Sho"] = "阿烁"
+	L["Tina Mudclaw"] = "迪娜·泥爪"
 
 elseif ns.locale == "zhTW" then
+	L["AddOn Description"] = ns.colour.plaintext .."幫助四風谷的" ..ns.colour.highlight .."分蘗"
+		..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
+	L["At the entrance"] = "在入口"
 	L["Dark Soil"] = "黑色泥土"
 	L["Dark Soil Tillers"] = "阡陌客 黑色泥土"
+	L["Descend into the Springtail Crag"] = "下降到的彈尾峭壁巢穴"
+	L["Descend into the Springtail Warren"] = "下降到彈尾者巢穴"
+	L["Inside the building"] = "建築物內"
+	L["Same colour as the ground"] = "與地面顏色相同"
+	L["Show the Dark Soil"] = "顯示黑色泥土"
+	L["Standing under a tree"] = "站在樹下"
 	L["The Tillers"] = "阡陌客"
+	L["Under the bridge"] = "在橋下"
 	L["Under the foliage"] = "在樹葉下"
 	L["Under the hut"] = "在小屋下面"
 	L["Under the hut's\nnorthern side ramp"] = "在小屋的北側坡道下"
-	L["Under the trees.\nVery difficult to see"] = "在樹下。很難看"
 	L["Under the tree, at\nthe edge of the lake"] = "在樹下。在湖邊"
-	L["Under the water tower"] = "在水塔下"
 	L["Under the tree.\nIn front of Thunder"] = "在樹下。在雷霆前面"
-	L["Under the bridge"] = "在橋下"
-	L["Inside the building"] = "建築物內"
-	L["Descend into the Springtail Crag"] = "下降到的彈尾峭壁巢穴"
-	L["Descend into the Springtail Warren"] = "下降到彈尾者巢穴"
-	L["Standing under a tree"] = "站在樹下"
-	L["Same colour as the ground"] = "與地面顏色相同"
-	L["At the entrance"] = "在入口"
-	L["Sho"] = "阿爍"
-	L["Old Hillpaw"] = "老農山掌"
-	L["Ella"] = "艾拉"
+	L["Under the trees.\nVery difficult to see"] = "在樹下。很難看"
+	L["Under the water tower"] = "在水塔下"
+	L["VotFW Map"] = "四風谷地圖"
+
 	L["Chee Chee"] = "吱吱"
-	L["Fish Fellreed"] = "玉儿·採葦"
-	L["Haohan Mudclaw"] = "郝瀚·泥爪"
-	L["Tina Mudclaw"] = "迪娜·泥爪"
+	L["Ella"] = "艾拉"
 	L["Farmer Fung"] = "農夫老方"
-	L["Jogu the Drunk"] = "醉鬼賈古"
+	L["Fish Fellreed"] = "玉儿·採葦"
 	L["Gina Mudclaw"] = "吉娜·泥爪"
-	L["Show the Dark Soil"] = "顯示黑色泥土"
-	L["AddOn Description"] = ns.colour.plaintext .."幫助四風谷的" ..ns.colour.highlight .."分蘗"
-		..ns.colour.plaintext .."和" ..ns.colour.highlight .."黑土"
+	L["Haohan Mudclaw"] = "郝瀚·泥爪"
+	L["Jogu the Drunk"] = "醉鬼賈古"
+	L["Old Hillpaw"] = "老農山掌"
+	L["Sho"] = "阿爍"
+	L["Tina Mudclaw"] = "迪娜·泥爪"
 	
 else
 	L["AddOn Description"] = ns.colour.plaintext .."Helps you with the " ..ns.colour.highlight 
 			.."Dark Soil" ..ns.colour.plaintext .." and " ..ns.colour.highlight .."The Tillers"
 			..ns.colour.plaintext .." in the Valley of the Four Winds"
+	L["VotFW Map"] = "Valley of the Four Winds Map"
 end
 
 -- Plugin handler for HandyNotes
@@ -727,6 +774,12 @@ function pluginHandler:OnEnter(mapFile, coord)
 		showCoordinates = false
 	else -- Dark Soil
 		GameTooltip:SetText( ns.colour.prefix ..L[ "Dark Soil" ] )
+		if pin.questA or pin.questH then
+			completed = IsQuestFlaggedCompleted( pin.questA or pin.questH )
+			GameTooltip:AddDoubleLine( " ",
+				( completed == true ) and ( "\124cFF00FF00" ..L["Completed"] ) 
+									or ( "\124cFFFF0000" ..L["Not Completed"] ) )
+		end
 		if pin.tip then
 			if type( pin.tip ) == "table" then
 				for i,v in ipairs( pin.tip ) do
@@ -930,9 +983,29 @@ ns.options = {
 }
 
 function HandyNotes_DarkSoilTillers_OnAddonCompartmentClick( addonName, buttonName )
-	Settings.OpenToCategory( "HandyNotes" )
-	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "DarkSoilTillers" )
- end
+	if buttonName and buttonName == "RightButton" then
+		OpenWorldMap( 376 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Dark Soil Tillers"] ..": " ..ns.colour.plaintext ..L["Try later"] )
+		end
+	else
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "DarkSoilTillers" )
+	end
+end
+ 
+function HandyNotes_DarkSoilTillers_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..L["Dark Soil Tillers"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Right"], ns.colour.plaintext ..L["VotFW Map"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_DarkSoilTillers_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)

@@ -49,7 +49,7 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		-- Currencies / Warlords of Draenor
 		[13] = { "Name", "Level", "Cur_Garrison", "Cur_Oil", "Cur_Apexis", "Cur_InevitableFate", "Cur_TemperedFate", "Cur_ArtifactFragment" },
 		-- Currencies / Legion
-		[14] = { "Name", "Level", "Cur_OrderHall", "Cur_WarSupplies", "Cur_Nethershard", "Cur_BrokenFate", "Cur_SightlessEye", "Cur_AncientMana" },
+		[14] = { "Name", "Level", "Cur_OrderHall", "Cur_WarSupplies", "Cur_Nethershard", "Cur_BrokenFate", "Cur_SightlessEye", "Cur_AncientMana", "Cur_VeiledArgunite" },
 		-- Currencies / Battle for Azeroth
 		[15] = { "Name", "Level", "Cur_WarResources", "Cur_WartornFate", "Cur_BfADubloons", "Cur_BfAWarSupplies", "Cur_BfARichAzerite" },
 		-- Currencies / Shadowlands 9.0
@@ -74,7 +74,7 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		-- Currencies / Shadowlands 9.2
 		[23] = { "Name", "Level", "Cur_Cyphers", "Cur_CosmicFlux" },
 		-- Expansion Features / Shadowlands / Campaign Progress
-		[24] = { "Name", "Level", "Story90", "Story91", "Story92" },
+		[24] = { "Name", "Level", "Story90", "StoryTorghast", "Story91", "Story92" },
 		-- Expansion Features / Shadowlands / Cypher Research
 		[25] = { "Name", "Level", "CypherLvl", "Metrial", "Aealic", "Dealic", "Trebalim", "Cur_Cyphers" },
 		
@@ -91,8 +91,10 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		[29] = { "Name", "Level", "Cur_EmeraldDewdrop","Cur_WhelplingsDreamingCrest", "Cur_DrakesDreamingCrest", "Cur_WyrmsDreamingCrest", "Cur_AspectsDreamingCrest", "Cur_DreamInfusion" },
 		
 		-- Weekly Best Runs per dungeon
-		[30] = { "Name", "Level", "MPlus1", "MPlus2", "MPlus3", "MPlus4", "MPlus5", "MPlus6", "MPlus7", "MPlus8" }		
+		[30] = { "Name", "Level", "MPlus1", "MPlus2", "MPlus3", "MPlus4", "MPlus5", "MPlus6", "MPlus7", "MPlus8" },
 		
+		-- Expansion Features / Dragonflight / Campaign Progress
+		[31] = { "Name", "Level", "Story100", "Story101", "Story1015", "Story102" },
 	}
 
 	return {

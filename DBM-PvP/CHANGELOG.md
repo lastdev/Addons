@@ -1,6 +1,8 @@
 # <DBM Mod> PvP
 
-## [r154](https://github.com/DeadlyBossMods/DBM-PvP/tree/r154) (2023-11-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r153...r154) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r160](https://github.com/DeadlyBossMods/DBM-PvP/tree/r160) (2024-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r159...r160) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Bump tocs  
+- Bump tocs for 10.2.5  
+- fix https://github.com/DeadlyBossMods/DBM-PvP/issues/128  
+- Update localization.ru.lua (#127)  

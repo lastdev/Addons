@@ -13,6 +13,9 @@ platerInternal.Date = {}
 platerInternal.Logs = {}
 platerInternal.Audio = {}
 
+platerInternal.RemoveColor = "!removecolor"
+platerInternal.NoColor = "no color"
+
 platerInternal.Defaults = {
     dropdownStatusBarTexture = [[Interface\Tooltips\UI-Tooltip-Background]],
     dropdownStatusBarColor = {.1, .1, .1, .8},
@@ -125,6 +128,21 @@ function platerInternal.CreateDataTables(Plater)
 		[203812] = true, --Voice From Beyond
 		[100818] = true, -- Bellowing Idol
 		[92538] = true, -- Tarspitter Grub
+        [136330] = true, -- Soul Thorns
+        [136541] = true, -- Bile Oozeling
+        [133361] = true, -- Wasting Servant
+        [99664] = true, -- Restless Soul
+        [101008] = true, -- Stinging Swarm
+        [213219] = true, -- Bubbling Ooze
+        [214117] = true, -- Stormflurry Totem
+        [84400] = true, -- Flourishing Ancient
+        [100991] = true, -- Strangling Roots
+        [131009] = true, -- Spirit of Gold
+        [127315] = true, -- Reanimation Totem
+        [127315] = true, -- Reanimation Totem
+        [125828] = true, -- Soulspawn
+        [205212] = true, -- Infinite Keeper
+        [205265] = true, -- Time-Displaced Trooper
 	}
 
     --textures used in the cooldown animation, scripts can add more values to it, profile holds only the path to it
@@ -551,7 +569,7 @@ function platerInternal.CreateDataTables(Plater)
         [1] = 30, --Warrior
         [2] = 40, --Paladin
         [3] = 40, --Hunter
-        [4] = 30, --Rogue
+        [4] = 10, --Rogue
         [5] = 40, --Priest
         [6] = 30, --DeathKnight
         [7] = 40, --Shaman
@@ -593,9 +611,9 @@ function platerInternal.CreateDataTables(Plater)
         [257] = 40, --> priest holy
         [258] = 40, --> priest shadow
 
-        [259] = 30, --> rogue assassination
-        [260] = 20, --> rogue outlaw
-        [261] = 30, --> rogue sub
+        [259] = 10, --> rogue assassination
+        [260] = 10, --> rogue outlaw
+        [261] = 10, --> rogue sub
 
         [262] = 40, --> shaman elemental
         [263] = 40, --> shaman enhancement

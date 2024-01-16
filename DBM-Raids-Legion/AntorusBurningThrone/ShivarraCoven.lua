@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1986, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240108061644")
 mod:SetCreatureID(122468, 122467, 122469)--122468 Noura, 122467 Asara, 122469 Diima, 125436 Thu'raya (mythic only)
 mod:SetEncounterID(2073)
 mod:SetBossHPInfoToHighest()
@@ -112,9 +112,8 @@ local timerMachinationsofAman			= mod:NewCastTimer(20, 250095, nil, nil, nil, 5,
 
 mod:AddNamePlateOption("NPAuraOnVisageofTitan", 249863)
 --MISC option separated on purpose
-mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-mod:AddDropdownOption("InterruptBehavior", {"Three", "Four", "Five"}, "Three", "misc")
-mod:AddDropdownOption("TauntBehavior", {"TwoMythicThreeNon", "TwoAlways", "ThreeAlways"}, "TwoMythicThreeNon", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Three", "Four", "Five"}, "Three", "misc", nil, 250648)
+mod:AddDropdownOption("TauntBehavior", {"TwoMythicThreeNon", "TwoAlways", "ThreeAlways"}, "TwoMythicThreeNon", "misc", nil, 244899)
 
 local titanCount = {}
 mod.vb.stormCount = 0

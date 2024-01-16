@@ -1,3 +1,10 @@
+== v1.24 - 12th January 2024
+* TOC version bump to 10.2.5
+
+== v1.23 - 11th December 2023
+* Felstriker server added
+* Penance and Shadowstrike added (SoD)
+
 == v1.22 - 27th November 2023
 * Added and improved translations to the Minimap AddOns menu
 

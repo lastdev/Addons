@@ -53,6 +53,7 @@ Prat:AddModuleToLoad(function()
     ["Sets alpha of chat tab for active chat frame."] = true,
     ["Not Active Alpha"] = true,
     ["Sets alpha of chat tab for not active chat frame."] = true,
+    ["Show Tab Textures"] = true,
     ["All"] = true,
     ["Individual"] = true,
     ["Always"] = true,
@@ -116,6 +117,7 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = true,
 		["Sets alpha of chat tab for active chat frame."] = true,
 		["Sets alpha of chat tab for not active chat frame."] = true,
+		["Show Tab Textures"] = true,
 		["Tabs"] = true,
 		["Visibility"] = true,
 	}
@@ -187,6 +189,8 @@ L = {
 		["Sets alpha of chat tab for active chat frame."] = "Sets alpha of chat tab for active chat frame.",
 		--[[Translation missing --]]
 		["Sets alpha of chat tab for not active chat frame."] = "Sets alpha of chat tab for not active chat frame.",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		--[[Translation missing --]]
 		["Tabs"] = "Tabs",
 		--[[Translation missing --]]
@@ -261,6 +265,8 @@ L = {
 		--[[Translation missing --]]
 		["Sets alpha of chat tab for not active chat frame."] = "Sets alpha of chat tab for not active chat frame.",
 		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
+		--[[Translation missing --]]
 		["Tabs"] = "Tabs",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -314,6 +320,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "Définir l'affichage des onglets sur toujours, caché ou par défaut Blizzard",
 		["Sets alpha of chat tab for active chat frame."] = "Définit la transparence de l'onglet pour les fenêtres de discussion actives.",
 		["Sets alpha of chat tab for not active chat frame."] = "Définit la transparence de l'onglet pour les fenêtres de discussion inactives.",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "Onglets",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -357,6 +365,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "Reiterdarstellung einstellen: immer, verbergen oder Blizzards Standard",
 		["Sets alpha of chat tab for active chat frame."] = "Transparenz der Chatreiter von aktiven Chatfenstern einstellen.",
 		["Sets alpha of chat tab for not active chat frame."] = "Transparenz der Chatreiter von inaktiven Chatfenstern einstellen.",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "Reiter (Reiter der Chatfenster)",
 		["Visibility"] = "Sichtbarkeit",
 	}
@@ -409,6 +419,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "탭 표시를 항상 표시, 숨김 또는 블리자드 기본값으로 설정합니다.",
 		["Sets alpha of chat tab for active chat frame."] = "활성화 된 대화창 탭의 투명도를 설정합니다.",
 		["Sets alpha of chat tab for not active chat frame."] = "비활성화 된 대화창 탭의 투명도를 설정합니다.",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "대화창 탭 [ChatTabs]",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -480,6 +492,8 @@ L = {
 		--[[Translation missing --]]
 		["Sets alpha of chat tab for not active chat frame."] = "Sets alpha of chat tab for not active chat frame.",
 		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
+		--[[Translation missing --]]
 		["Tabs"] = "Tabs",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -532,6 +546,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "Установить режим отображения вкладки на 'всегда показывать', 'скрывать' или 'поведение по умолчанию, как у Blizzard'.",
 		["Sets alpha of chat tab for active chat frame."] = "Прозрачность активной вкладки чата.",
 		["Sets alpha of chat tab for not active chat frame."] = "Прозрачность неактивных вкладок чата.",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "Вкладки чата",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -584,6 +600,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "设置页签永久显示,隐藏或暴雪预设",
 		["Sets alpha of chat tab for active chat frame."] = "设置活跃聊天框页签透明度",
 		["Sets alpha of chat tab for not active chat frame."] = "设置非活跃聊天框页签透明度",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "页签",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -636,6 +654,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "Establecer mostrar pestaña a siempre, oculta o por defecto (Blizzard).",
 		["Sets alpha of chat tab for active chat frame."] = "Establece la transparencia de la pestaña de chat para el marco activo.",
 		["Sets alpha of chat tab for not active chat frame."] = "Establece la transparencia de la pestaña de chat para el marco no activo.",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "Pestañas",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -688,6 +708,8 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "設定是否顯示聊天標籤或者是 Blizzard預設值",
 		["Sets alpha of chat tab for active chat frame."] = "設定使用中聊天視窗標籤透明度",
 		["Sets alpha of chat tab for not active chat frame."] = "設定非使用中聊天視窗標籤透明度",
+		--[[Translation missing --]]
+		["Show Tab Textures"] = "Show Tab Textures",
 		["Tabs"] = "標籤",
 		--[[Translation missing --]]
 		["Visibility"] = "Visibility",
@@ -727,6 +749,7 @@ end
       notactivealpha = 0,
       activealpha = 0,
       preventdrag = false,
+      showtabtextures = true,
 
       foreveralert = false,
       alerttimeout = 3.2,
@@ -779,6 +802,11 @@ end
             min = 0.0,
             max = 1,
             step = 0.1,
+          },
+          showtabtextures = {
+            name = PL["Show Tab Textures"],
+            type = "toggle",
+            order = 150,
           },
         },
       },
@@ -976,6 +1004,43 @@ end
     self:UpdateAllTabs()
   end
 
+  local ChatTabTexturesRetail = {
+    "Left", "Right", "Middle",
+    "HighlightLeft", "HighlightRight", "HighlightMiddle",
+    "ActiveLeft", "ActiveRight", "ActiveMiddle",
+  }
+  local ChatTabTexturesSelectedRetail = {
+    "ActiveLeft", "ActiveRight", "ActiveMiddle",
+  }
+  local ChatTabTexturesClassic = {
+    "Left", "Right", "Middle",
+    "HighlightLeft", "HighlightRight", "HighlightMiddle",
+    "SelectedLeft", "SelectedRight", "SelectedMiddle",
+  }
+  local ChatTabTexturesSelectedClassic = {
+    "SelectedLeft", "SelectedRight", "SelectedMiddle",
+  }
+
+  function module:ShowHideTabTextures(tab)
+    local tabButton = _G[tab:GetName() .. "Tab"]
+    local alpha = self.db.profile.showtabtextures and 1 or 0
+    if not Prat.IsClassic then
+      for _, field in ipairs(ChatTabTexturesRetail) do
+        tabButton[field]:SetShown(self.db.profile.showtabtextures)
+      end
+      for _, field in ipairs(ChatTabTexturesSelectedRetail) do
+        tabButton[field]:SetAlpha(alpha)
+      end
+    else
+      for _, field in ipairs(ChatTabTexturesClassic) do
+        _G[tabButton:GetName() .. field]:SetShown(self.db.profile.showtabtextures)
+      end
+      for _, field in ipairs(ChatTabTexturesSelectedClassic) do
+        _G[tabButton:GetName() .. field]:SetAlpha(alpha)
+      end
+    end
+  end
+
   function module:UpdateAllTabs()
     CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA = self.db.profile.activealpha;
     CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA = self.db.profile.notactivealpha;
@@ -986,6 +1051,7 @@ end
         tabButton:Hide()
         FCFTab_UpdateAlpha(v)
       end
+      self:ShowHideTabTextures(v)
     end
   end
 

@@ -2,7 +2,7 @@
 
   LiteMount/RuleBoolean.lua
 
-  Copyright 2011-2021 Mike Battersby
+  Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
@@ -105,7 +105,7 @@ function LM.RuleBoolean:EvalLeaf(context)
 
     local c = LM.Conditions:GetCondition(self.condition)
     if not c then
-        LM.WarningAndPrint(format(L.LM_ERR_BAD_CONDITION, condition))
+        LM.WarningAndPrint(L.LM_ERR_BAD_CONDITION, condition)
         return false
     end
 

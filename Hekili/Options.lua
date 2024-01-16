@@ -129,7 +129,7 @@ function Hekili:RunOneTimeFixes()
             profile.runOnce[k] = true
             local ok, err = pcall( v, profile )
             if err then
-                Hekili:Error( "One-Time update failed: " .. k .. ": " .. err )
+                Hekili:Error( "One-time update failed: " .. k .. ": " .. err )
                 profile.runOnce[ k ] = nil
             end
         end
@@ -679,6 +679,171 @@ do
                 interrupts = {
                     pvp = {},
                     encounters = {},
+                },
+
+                filterCasts = true,
+                castFilters = {
+                    [122973] = {
+                        [253517] = "Mending Word",
+                        [258653] = "Bulwark of Juju",
+                        desc = "Atal'Dazar - Dazar'ai Confessor",
+                    },
+                    [127879] = {
+                        [258653] = "Bulwark of Juju",
+                        desc = "Atal'Dazar - Shieldbearer of Zul",
+                    },
+                    [135989] = {
+                        [258653] = "Bulwark of Juju",
+                        desc = "Atal'Dazar - Shieldbearer of Zul",
+                    },
+                    [122969] = {
+                        [252781] = "Unstable Hex",
+                        desc = "Atal'Dazar - Zanchuli Witch-Doctor",
+                    },
+                    [128434] = {
+                        [255041] = "Terrifying Screech",
+                        desc = "Atal'Dazar - Feasting Skyscreamer",
+                    },
+                    [122965] = {
+                        [259572] = "Noxious Stench",
+                        desc = "Atal'Dazar - Vol'kaal (Boss)",
+                    },
+                    [95769] = {
+                        [200630] = "Unnerving Screech",
+                        [200631] = "Unnerving Screech",
+                        desc = "Darkheart Thicket - Mindshattered Screecher",
+                    },
+                    [101991] = {
+                        [204243] = "Tormenting Eye",
+                        desc = "Darkheart Thicket - Nightmare Dweller",
+                    },
+                    [113398] = {
+                        [225562] = "Blood Metamorphosis",
+                        desc = "Darkheart Thicket - Bloodtainted Fury (small ones)",
+                    },
+                    [100527] = {
+                        [201399] = "Dread Inferno",
+                        [201400] = "Dread Inferno",
+                        desc = "Darkheart Thicket - Dreadfire Imp",
+                    },
+                    [131685] = {
+                        [264390] = "Spellbind",
+                        desc = "Waycrest Manor - Runic Disciple",
+                    },
+                    [135049] = {
+                        [265346] = "Pallid Glare",
+                        desc = "Waycrest Manor - Dreadwing Raven",
+                    },
+                    [131812] = {
+                        [263959] = "Soul Volley",
+                        desc = "Waycrest Manor - Heartsbane Soulcharmer",
+                    },
+                    [137830] = {
+                        [271174] = "Retch",
+                        desc = "Waycrest Manor - Palid Gorger",
+                    },
+                    [134024] = {
+                        [278444] = "Infest",
+                        [278456] = "Infest",
+                        desc = "Waycrest Manor - Devouring Maggot",
+                    },
+                    [142587] = {
+                        [278444] = "Infest",
+                        [278456] = "Infest",
+                        desc = "Waycrest Manor - Devouring Maggot",
+                    },
+                    [135365] = {
+                        [265876] = "Ruinous Volley",
+                        desc = "Waycrest Manor - Alma",
+                    },
+                    [131821] = {
+                        [264407] = "Horrific Visage",
+                        desc = "Waycrest Manor - Faceless Maiden",
+                    },
+                    [131864] = {
+                        [266225] = "Darkened Lightning",
+                        desc = "Waycrest Manor - Gorak Tul",
+                    },
+                    [206140] = {
+                        [415770] = "Infinite Bolt Volley",
+                        desc = "Galakrond's Fall - Coalesced Time",
+                    },
+                    [206066] = {
+                        [415437] = "Enervate",
+                        [415439] = "Enervate",
+                        desc = "Galakrond's Fall - Timestream Leech",
+                    },
+                    [199748] = {
+                        [417481] = "Displace Chronosequence",
+                        desc = "Murozond's Rise - Timeline Marauder",
+                    },
+                    [208698] = {
+                        [418200] = "Infinite Burn",
+                        desc = "Murozond's Rise - Infinite Riftmage",
+                    },
+                    [201223] = {
+                        [413606] = "Corroding Volley",
+                        [413607] = "Corroding Volley",
+                        [400180] = "Corroding Volley",
+                        desc = "Murozond's Rise - Infinite Twilight Magus",
+                    },
+                    [205363] = {
+                        [411300] = "Fish Bolt Volley",
+                        desc = "Murozond's Rise - Waveshaper",
+                    },
+                    [205337] = {
+                        [412378] = "Dizzying Sands",
+                        desc = "Murozond's Rise - Infinite Timebender",
+                    },
+                    [205727] = {
+                        [412233] = "Rocket Bolt Volley",
+                        desc = "Murozond's Rise - Time-Lost Rocketeer",
+                    },
+                    [204206] = {
+                        [407891] = "Healing Wave",
+                        desc = "Murozond's Rise - Horde Farseer",
+                    },
+                    [98280] = {
+                        [200248] = "Arcane Blitz",
+                        desc = "Black Rook Hold - Risen Arcanist",
+                    },
+                    [102788] = {
+                        [227913] = "Felfrenzy",
+                        desc = "Black Rook Hold - Felspite Dominator",
+                    },
+                    [81819] = {
+                        [164965] = "Choking Vines",
+                        desc = "Everbloom - Everbloom Mender",
+                    },
+                    [81820] = {
+                        [164965] = "Choking Vines",
+                        desc = "Everbloom - Everbloom Mender",
+                    },
+                    [81985] = {
+                        [165213] = "Enraged Growth",
+                        desc = "Everbloom - Everbloom Cultivator",
+                    },
+                    [84957] = {
+                        [169839] = "Pyroblast",
+                        desc = "Everbloom - Putrid Pyromancer",
+                    },
+                    [83892] = {
+                        [168082] = "Revitalize",
+                        desc = "Everbloom - Gola (Boss)",
+                    },
+                    [83893] = {
+                        [427459] = "Toxic Bloom",
+                        desc = "Everbloom - Telu (Boss)",
+                    },
+                    [41096] = {
+                        [76813] = "Healing Wave",
+                        desc = "Throne of the Tides - Naz'jar Oracle",
+                    },
+                    -- TEST
+                    [195064] = {
+                        [3722351] = "Healing Wave",
+                        desc = "Test Mob - Please Ignore"
+                    }
                 },
 
                 iconStore = {
@@ -1341,8 +1506,8 @@ do
                     },
                     main = {
                         type = 'group',
-                        name = "Main",
-                        desc = "Includes display position, icons, primary icon size/shape, etc.",
+                        name = "Icons",
+                        desc = "Includes display position, icon size/shape, etc.",
                         order = 1,
 
                         args = {
@@ -1356,10 +1521,10 @@ do
 
                             elvuiCooldown = {
                                 type = "toggle",
-                                name = "Apply ElvUI Cooldown Style",
+                                name = "Apply ElvUI Cooldown Style to Primary Icon",
                                 desc = "If ElvUI is installed, you can apply the ElvUI cooldown style to your queued icons.\n\nDisabling this setting requires you to reload your UI (|cFFFFD100/reload|r).",
                                 width = "full",
-                                order = 0.51,
+                                order = 16,
                                 hidden = function () return _G["ElvUI"] == nil end,
                             },
 
@@ -1370,6 +1535,7 @@ do
                                 min = 1,
                                 max = 10,
                                 step = 1,
+                                bigStep = 1,
                                 width = "full",
                                 order = 1,
                                 disabled = function()
@@ -1563,9 +1729,9 @@ do
 
                             advancedFrame = {
                                 type = "group",
-                                name = "Frame Layer",
+                                name = "Display Frame Layer",
                                 inline = true,
-                                order = 16,
+                                order = 99,
                                 args = {
                                     frameStrata = {
                                         type = "select",
@@ -1582,58 +1748,32 @@ do
                                             "FULLSCREEN_DIALOG",
                                             "TOOLTIP"
                                         },
-                                        width = 1.49,
+                                        width = "full",
                                         order = 1,
                                     },
-
-                                    frameLevel = {
-                                        type = "range",
-                                        name = "Level",
-                                        desc = "Frame Level determines the display's position within its current layer.\n\n" ..
-                                                "Default value is |cFFFFD10010|r.",
-                                        min = 1,
-                                        max = 10000,
-                                        step = 1,
-                                        width = 1.49,
-                                        order = 2,
-                                    }
-                                }
+                                },
                             },
 
-                            hideOmniCC = {
+                            queuedElvuiCooldown = {
                                 type = "toggle",
-                                name = "Hide OmniCC",
-                                desc = "If enabled, OmniCC will be hidden from each icon oh this display.",
-                                width = "full",
-                                order = 18,
-                            },
-                        },
-                    },
-
-                    queue = {
-                        type = "group",
-                        name = "Queue",
-                        desc = "Includes anchoring, size, shape, and position settings when a display can show more than one icon.",
-                        order = 2,
-                        disabled = function ()
-                            return data.numIcons == 1
-                        end,
-
-                        args = {
-                            elvuiCooldown = {
-                                type = "toggle",
-                                name = "Apply ElvUI Cooldown Style",
+                                name = "Apply ElvUI Cooldown Style to Queued Icons",
                                 desc = "If ElvUI is installed, you can apply the ElvUI cooldown style to your queued icons.\n\nDisabling this setting requires you to reload your UI (|cFFFFD100/reload|r).",
                                 width = "full",
-                                order = 1,
+                                order = 23,
+                                get = function( info )
+                                    return Hekili.DB.profile.displays[ name ].queue.elvuiCooldown
+                                end,
+                                set = function( info, val )
+                                    Hekili.DB.profile.displays[ name ].queue.elvuiCooldown = val
+                                end,
                                 hidden = function () return _G["ElvUI"] == nil end,
                             },
 
                             iconSizeGroup = {
                                 type = "group",
                                 inline = true,
-                                name = "Icon Size",
-                                order = 2,
+                                name = "Queued Icon Size",
+                                order = 21,
                                 args = {
                                     width = {
                                         type = 'range',
@@ -1644,7 +1784,13 @@ do
                                         step = 1,
                                         bigStep = 1,
                                         order = 10,
-                                        width = 1.49
+                                        width = 1.49,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.width
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.width = val
+                                        end,
                                     },
 
                                     height = {
@@ -1656,7 +1802,13 @@ do
                                         step = 1,
                                         bigStep = 1,
                                         order = 11,
-                                        width = 1.49
+                                        width = 1.49,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.height
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.height = val
+                                        end,
                                     },
                                 }
                             },
@@ -1664,8 +1816,8 @@ do
                             anchorGroup = {
                                 type = "group",
                                 inline = true,
-                                name = "Positioning",
-                                order = 3,
+                                name = "Queued Icon Positioning",
+                                order = 22,
                                 args = {
                                     anchor = {
                                         type = 'select',
@@ -1674,12 +1826,19 @@ do
                                         values = anchorPositions,
                                         width = 1.49,
                                         order = 1,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.anchor
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.anchor = val
+                                        end,
                                     },
 
                                     direction = {
                                         type = 'select',
                                         name = 'Grow Direction',
-                                        desc = "Select the direction for the icon queue.",
+                                        desc = "Select the direction for the icon queue.\n\n"
+                                            .. "This option generally matches Anchor To selection, but you can specify another direction to make a creative layout.",
                                         values = {
                                             TOP = 'Up',
                                             BOTTOM = 'Down',
@@ -1688,6 +1847,12 @@ do
                                         },
                                         width = 1.49,
                                         order = 1.1,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.direction
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.direction = val
+                                        end,
                                     },
 
                                     spacer01 = {
@@ -1700,23 +1865,37 @@ do
                                     offsetX = {
                                         type = 'range',
                                         name = 'X Offset',
-                                        desc = 'Specify the horizontal offset (in pixels) for the queue, in relation to the anchor point on the primary icon for this display.  Positive numbers move the queue to the right, negative numbers move it to the left.',
+                                        desc = "Specify the horizontal offset (in pixels) for the queue, in relation to the anchor point on the primary icon for this display.\n\n"
+                                            .. "Positive numbers move the queue to the right, negative numbers move it to the left.",
                                         min = -100,
                                         max = 500,
                                         step = 1,
                                         width = 1.49,
                                         order = 2,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.offsetX
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.offsetX = val
+                                        end,
                                     },
 
                                     offsetY = {
                                         type = 'range',
                                         name = 'Y Offset',
-                                        desc = 'Specify the vertical offset (in pixels) for the queue, in relation to the anchor point on the primary icon for this display.  Positive numbers move the queue up, negative numbers move it down.',
+                                        desc = "Specify the vertical offset (in pixels) for the queue, in relation to the anchor point on the primary icon for this display.\n\n"
+                                            .. "Positive numbers move the queue up, negative numbers move it down.",
                                         min = -100,
                                         max = 500,
                                         step = 1,
                                         width = 1.49,
                                         order = 2.1,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.offsetY
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.offsetY = val
+                                        end,
                                     },
 
                                     spacer02 = {
@@ -1736,7 +1915,13 @@ do
                                         max = 500,
                                         step = 1,
                                         order = 3,
-                                        width = 2.98
+                                        width = 2.98,
+                                        get = function( info )
+                                            return Hekili.DB.profile.displays[ name ].queue.spacing
+                                        end,
+                                        set = function( info, val )
+                                            Hekili.DB.profile.displays[ name ].queue.spacing = val
+                                        end,
                                     },
                                 }
                             },
@@ -2384,11 +2569,16 @@ do
                                 order = 3.1,
                                 width = 1.19,
                                 values = {
-                                    ["Interface\\Cooldown\\star4"] = "Star (Default)",
-                                    ["Interface\\Cooldown\\ping4"] = "Circle",
-                                    ["Interface\\Cooldown\\starburst"] = "Starburst",
                                     ["Interface\\AddOns\\Hekili\\Textures\\MonoCircle2"] = "Monochrome Circle Thin",
                                     ["Interface\\AddOns\\Hekili\\Textures\\MonoCircle5"] = "Monochrome Circle Thick",
+                                    ["Interface\\Cooldown\\ping4"] = "Circle",
+                                    ["Interface\\Cooldown\\star4"] = "Star (Default)",
+                                    ["Interface\\Cooldown\\starburst"] = "Starburst",
+                                    ["Interface\\Masks\\CircleMaskScalable"] = "Filled Circle",
+                                    ["Interface\\Masks\\SquareMask"] = "Filled Square",
+                                    ["Interface\\Soulbinds\\SoulbindsConduitCollectionsIconMask"] = "Filled Octagon",
+                                    ["Interface\\Soulbinds\\SoulbindsConduitPendingAnimationMask"] = "Octagon Outline",
+                                    ["Interface\\Soulbinds\\SoulbindsEnhancedConduitMask"] = "Octagon Thick",
                                 },
                                 get = function()
                                     return Hekili.DB.profile.flashTexture
@@ -2595,7 +2785,7 @@ do
 
                     empowerment = {
                         type = "group",
-                        name = NewFeature .. "Empowerment",
+                        name =  "Empowerment",
                         desc = "Empowerment stages are shown with additional text placed on the recommendation icon and can glow upon reaching the desired stage.",
                         order = 9.1,
                         hidden = function()
@@ -4981,9 +5171,85 @@ do
                         targets = {
                             type = "group",
                             name = "Targeting",
-                            desc = "Settings related to how enemies are identified and counted by the addon.",
+                            desc = "Settings related to how enemies are identified and counted.",
                             order = 3,
                             args = {
+                                yourTarget = {
+                                    type = "toggle",
+                                    name = "Your Target",
+                                    desc = "Your actual target is always counted as an enemy, even if you do not have a target.\n\n"
+                                        .. "This setting cannot be disabled.",
+                                    width = "full",
+                                    get = function() return true end,
+                                    set = function() end,
+                                    order = 0.01,
+                                },
+
+                                -- Damage Detection Quasi-Group
+                                damage = {
+                                    type = "toggle",
+                                    name = "Count Damaged Enemies",
+                                    desc = "If checked, targets you've damaged will be counted as a valid enemy for several seconds, distinguishing them from other enemies "
+                                        .. "that you have not attacked.\n\n"
+                                        .. CreateAtlasMarkup( "services-checkmark" ) .. " Auto-enabled when nameplates are disabled\n\n"
+                                        .. CreateAtlasMarkup( "services-checkmark" ) .. " Recommended for |cffffd100ranged|r unable to use |cffffd100Pet-Based Target Detection|r",
+                                    width = "full",
+                                    order = 0.02,
+                                },
+
+                                dmgGroup = {
+                                    type = "group",
+                                    inline = true,
+                                    name = "",
+                                    order = 0.03,
+                                    hidden = function () return self.DB.profile.specs[ id ].damage == false end,
+                                    args = {
+                                        damageExpiration = {
+                                            type = "range",
+                                            name = "Timeout",
+                                            desc = "When |cFFFFD100Count Damaged Enemies|r is checked, enemies will be counted until they have been ignored/undamaged for this period of time (or they die).\n\n"
+                                                .. "Ideally, this period should reflect enough time that you will continue to do AOE/cleave damage to enemies in this period, but not so long that enemies "
+                                                .. "could have wandered a great distance away in the interim.",
+                                            softMin = 3,
+                                            min = 1,
+                                            max = 10,
+                                            step = 0.1,
+                                            order = 1,
+                                            width = "full",
+                                        },
+
+                                        damagePets = {
+                                            type = "toggle",
+                                            name = "Detect Enemies Damaged by Pets",
+                                            desc = "If checked, the addon will count enemies that your pets or minions have hit (or hit you) within the past several seconds.  "
+                                                .. "This may give misleading target counts if your pet/minions are spread out over the battlefield.",
+                                            order = 2,
+                                            width = "full",
+                                        },
+
+                                        damageDots = {
+                                            type = "toggle",
+                                            name = "Count Debuffed/Dotted Enemies",
+                                            desc = "When checked, enemies that have your debuffs or damage-over-time effects will be counted as targets, regardless of their location on the battlefield.\n\n"
+                                                .. "This may not be ideal for melee specializations, as enemies may wander away after you've applied your dots/bleeds.  If used with |cFFFFD100Use Nameplate Detection|r, "
+                                                .. "dotted enemies that are no longer in melee range will be filtered.\n\n"
+                                                .. "Recommended for ranged specializations that will DoT multiple enemies and do not rely on the enemy being stacked for AOE damage.",
+                                            width = "full",
+                                            order = 3,
+                                        },
+
+                                        damageOnScreen = {
+                                            type = "toggle",
+                                            name = "Count On-Screen (Nameplates) |cffff0000Only|r",
+                                            desc = function()
+                                                return "If checked, the damage-based target system will only count enemies that are on screen.  If unchecked, offscreen targets can be included in target counts.\n\n"
+                                                    .. ( GetCVar( "nameplateShowEnemies" ) == "0" and "|cFFFF0000Requires Enemy Nameplates|r" or "|cFF00FF00Requires Enemy Nameplates|r" )
+                                            end,
+                                            width = "full",
+                                            order = 4,
+                                        },
+                                    },
+                                },
                                 nameplates = {
                                     type = "toggle",
                                     name = "Count Targets by Nameplates",
@@ -5231,75 +5497,9 @@ do
                                     order = 2,
                                 }, ]]
 
-                                -- Damage Detection Quasi-Group
-                                damage = {
-                                    type = "toggle",
-                                    name = "Count Damaged Enemies",
-                                    desc = "If checked, targets you've damaged will be counted as a valid target for several seconds, distinguishing them from other enemies "
-                                        .. "that you have not attacked.\n\n"
-                                        .. AtlasToString( "common-icon-checkmark" ) .. " Recommended for |cffffd100melee|r without a short-ranged (10 yds) ability for nameplate "
-                                        .. "detection and |cffffd100ranged|r unable to use |cffffd100Pet-Based Target Detection|r.",
-                                    width = "full",
-                                    order = 4,
-                                },
-
-                                dmgGroup = {
-                                    type = "group",
-                                    inline = true,
-                                    name = "Damage",
-                                    order = 5,
-                                    hidden = function () return self.DB.profile.specs[ id ].damage == false end,
-                                    args = {
-                                        damageExpiration = {
-                                            type = "range",
-                                            name = "Timeout",
-                                            desc = "When |cFFFFD100Count Damaged Enemies|r is checked, enemies will be counted until they have been ignored/undamaged for this period of time (or they die).\n\n"
-                                                .. "Ideally, this period should reflect enough time that you will continue to do AOE/cleave damage to enemies in this period, but not so long that enemies "
-                                                .. "could have wandered a great distance away in the interim.",
-                                            softMin = 3,
-                                            min = 1,
-                                            max = 10,
-                                            step = 0.1,
-                                            order = 1,
-                                            width = "full",
-                                        },
-
-                                        damagePets = {
-                                            type = "toggle",
-                                            name = "Detect Enemies Damaged by Pets",
-                                            desc = "If checked, the addon will count enemies that your pets or minions have hit (or hit you) within the past several seconds.  "
-                                                .. "This may give misleading target counts if your pet/minions are spread out over the battlefield.",
-                                            order = 2,
-                                            width = "full",
-                                        },
-
-                                        damageDots = {
-                                            type = "toggle",
-                                            name = "Count Debuffed/Dotted Enemies",
-                                            desc = "When checked, enemies that have your debuffs or damage-over-time effects will be counted as targets, regardless of their location on the battlefield.\n\n"
-                                                .. "This may not be ideal for melee specializations, as enemies may wander away after you've applied your dots/bleeds.  If used with |cFFFFD100Use Nameplate Detection|r, "
-                                                .. "dotted enemies that are no longer in melee range will be filtered.\n\n"
-                                                .. "Recommended for ranged specializations that will DoT multiple enemies and do not rely on the enemy being stacked for AOE damage.",
-                                            width = "full",
-                                            order = 3,
-                                        },
-
-                                        damageOnScreen = {
-                                            type = "toggle",
-                                            name = "Count On-Screen (Nameplates) |cffff0000Only|r",
-                                            desc = function()
-                                                return "If checked, the damage-based target system will only count enemies that are on screen.  If unchecked, offscreen targets can be included in target counts.\n\n"
-                                                    .. ( GetCVar( "nameplateShowEnemies" ) == "0" and "|cFFFF0000Requires Enemy Nameplates|r" or "|cFF00FF00Requires Enemy Nameplates|r" )
-                                            end,
-                                            width = "full",
-                                            order = 4,
-                                        },
-                                    },
-                                },
-
                                 cycle = {
                                     type = "toggle",
-                                    name = "Allow Retargeting |TInterface\\Addons\\Hekili\\Textures\\Cycle:0|t",
+                                    name = "Recommend Changing Targets |TInterface\\Addons\\Hekili\\Textures\\Cycle:0|t",
                                     desc = "When target swapping is enabled, an icon (|TInterface\\Addons\\Hekili\\Textures\\Cycle:0|t) may be shown when you should use an ability on a different target.\n\n" ..
                                         "This works well for some specs that simply want to apply a debuff to another target (like Windwalker), but can be less-effective for specializations that are concerned with " ..
                                         "maintaining dots/debuffs based on their durations (like Affliction).\n\nThis feature is targeted for improvement in a future update.",
@@ -6282,8 +6482,8 @@ do
                                     desc = "Reload Priority",
                                     order = 0.27,
                                     width = 0.15,
-                                    image = GetAtlasFile( "common-icon-undo" ),
-                                    imageCoords = GetAtlasCoords( "common-icon-undo" ),
+                                    image = GetAtlasFile( "UI-RefreshButton" ),
+                                    imageCoords = GetAtlasCoords( "UI-RefreshButton" ),
                                     imageWidth = 25,
                                     imageHeight = 24,
                                     confirm = function ()
@@ -8019,11 +8219,36 @@ do
                             order = 3,
                         },
 
+                        lb2 = {
+                            type = "description",
+                            name = "",
+                            width = "full",
+                            order = 3.1
+                        },
+
+
+                        indent2 = {
+                            type = "description",
+                            name = "",
+                            width = 1,
+                            order = 3.2,
+                        },
+
+                        filterCasts  ={
+                            type = "toggle",
+                            name = format( "%s Filter M+ Interrupts (DF Season 3)", NewFeature ),
+                            desc = format( "If checked, low-priority enemy casts will be ignored when your target may use an ability that should be interrupted.\n\n"
+                                .. "Example:  In Everbloom, Earthshaper Telu's |W%s|w will be ignored and |W%s|w will be interrupted.", ( GetSpellInfo( 168040 ) or "Nature's Wrath" ),
+                                ( GetSpellInfo( 427459 ) or "Toxic Bloom" ) ),
+                            width = 2,
+                            order = 4
+                        },
+
                         defensives = {
                             type = "group",
                             name = "",
                             inline = true,
-                            order = 4,
+                            order = 5,
                             args = {
                                 key = {
                                     type = "keybinding",
@@ -9295,6 +9520,7 @@ do
             general = {
                 type = "group",
                 name = "General",
+                desc = "Welcome to Hekili; includes general information and essential links.",
                 order = 10,
                 childGroups = "tab",
                 args = {
@@ -9337,7 +9563,7 @@ do
                         type = "description",
                         name = function ()
                             return "|cFF00CCFFTHANK YOU TO OUR SUPPORTERS!|r\n\n" .. ns.Patrons .. ".\n\n" ..
-                                "Please see the |cFFFFD100Issue Reporting|r tab for information about reporting bugs.\n\n"
+                                "Please see the |cFFFFD100Issue Reports|r link for information about reporting bugs.\n\n"
                         end,
                         fontSize = "medium",
                         order = 6,
@@ -9364,10 +9590,20 @@ do
                         dialogControl = "SFX-Info-URL",
                     },
 
+                    link = {
+                        type = "input",
+                        name = "Issue Reports",
+                        order = 12,
+                        width = "full",
+                        get = function() return "http://github.com/Hekili/hekili/issues" end,
+                        set = function() end,
+                        dialogControl = "SFX-Info-URL"
+                    },
+
                     simulationcraft = {
                         type = "input",
                         name = "SimC",
-                        order = 12,
+                        order = 13,
                         get = function () return "https://github.com/simulationcraft/simc/wiki" end,
                         set = function () end,
                         width = "full",
@@ -9495,44 +9731,9 @@ do
                 }
             },
 
-            issues = {
-                type = "group",
-                name = "Issue Reporting",
-                order = 85,
-                args = {
-                    header = {
-                        type = "description",
-                        name = "If you are having a technical issue with the addon, please submit an issue report via the link below.  When submitting your report, please include the information " ..
-                            "below (specialization, talents, traits, gear), which can be copied and pasted for your convenience.  If you have a concern about the addon's recommendations, it is preferred " ..
-                            "that you provide a Snapshot (which will include this information) instead.",
-                        order = 10,
-                        fontSize = "medium",
-                        width = "full",
-                    },
-                    profile = {
-                        type = "input",
-                        name = "Character Data",
-                        order = 20,
-                        width = "full",
-                        multiline = 10,
-                        get = 'GenerateProfile',
-                        set = function () end,
-                    },
-                    link = {
-                        type = "input",
-                        name = "Link",
-                        order = 30,
-                        width = "full",
-                        get = function() return "http://github.com/Hekili/hekili/issues" end,
-                        set = function() end,
-                        dialogControl = "SFX-Info-URL"
-                    },
-                }
-            },
-
             snapshots = {
                 type = "group",
-                name = "Snapshots",
+                name = "Snapshots and Reporting",
                 order = 86,
                 args = {
                     autoSnapshot = {
@@ -9578,7 +9779,7 @@ do
 
                     SnapID = {
                         type = "select",
-                        name = "Select Snapshot",
+                        name = "Select Entry",
                         desc = "Select a Snapshot to export.",
                         values = function( info )
                             if #ns.snapshots == 0 then
@@ -9605,7 +9806,7 @@ do
 
                     Snapshot = {
                         type = 'input',
-                        name = "Export Snapshot",
+                        name = "Snapshot",
                         desc = "Click here and press CTRL+A, CTRL+C to copy the snapshot.\n\nPaste in a text editor to review or upload to Pastebin to support an issue ticket.",
                         order = 20,
                         get = function( info )
@@ -9616,6 +9817,15 @@ do
                         width = "full",
                         hidden = function() return snapshots.selected == 0 or #ns.snapshots == 0 end,
                     },
+
+                    SnapshotInstructions = {
+                        type = "description",
+                        name = "Click the Snapshot and press CTRL+A, CTRL+C to select all text and copy it to the clipboard.\n\n"
+                            .. "Paste the text into a text editor for your own review, or upload to Pastebin to link to an issue report on GitHub.",
+                        order = 30,
+                        width = "full",
+                        hidden = function() return snapshots.selected == 0 or #ns.snapshots == 0 end,
+                    }
                 }
             },
         },
@@ -10718,6 +10928,7 @@ do
         { "trinket%.(%d)%.([%w%._]+)"                       , "trinket.t%1.%2"                          },
         { "trinket%.([%w_]+)%.cooldown"                     , "trinket.%1.cooldown.duration"            },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration"     , "trinket.%1.buff_duration"                },
+        { "trinket%.([%w_]+)%.buff%.duration"               , "trinket.%1.buff_duration"                },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"       , "trinket.%1.has_use_buff"                 },
         { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"           , "trinket.%1.has_use_buff"                 },
         { "trinket%.([%w_]+)%.has_use_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"                 },

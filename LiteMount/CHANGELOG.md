@@ -1,6 +1,7 @@
 # LiteMount
 
-## [10.2.0-6](https://github.com/xod-wow/LiteMount/tree/10.2.0-6) (2023-11-22)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.2.0-4...10.2.0-6) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [10.2.0-13](https://github.com/xod-wow/LiteMount/tree/10.2.0-13) (2023-12-28)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/10.2.0-12...10.2.0-13) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Restrict Tindral Sageswift action to specific encounter  
+- Again check for map groups in map condition fix #188  
+    Fix map list in drop-down (broken for ages).  

@@ -665,11 +665,13 @@ points[ 371 ] = { -- The Jade Forest
 }
 points[ 372 ] = { -- Greenstone Quarry in The Jade Forest
 	[52044144] = { aID=7284, item=85777, aQuest=31399, -- Is another Man's Treasure
-					tip="Several confirmed locations", author="Keep checking for more" },
+					tip="Several confirmed locations. Descend and check the map.\n"
+						.."Note: This is NOT one of them, they're all below" },
 }
 points[ 373 ] = { -- Greenstone Quarry in The Jade Forest
 	[33327792] = { aID=7284, item=85777, aQuest=31399, }, -- Ancient Pandaren Mining Pick
 	[37911352] = { aID=7284, item=85777, aQuest=31399, }, -- Ancient Pandaren Mining Pick
+	[40334133] = { aID=7284, item=85777, aQuest=31399, }, -- Ancient Pandaren Mining Pick
 	[64235565] = { aID=7284, item=85777, aQuest=31399, }, -- Ancient Pandaren Mining Pick
 }
 points[ 433 ] = { -- The Veiled Stair

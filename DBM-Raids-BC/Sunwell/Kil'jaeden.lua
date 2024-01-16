@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061548")
+mod:SetRevision("20231117104406")
 mod:SetCreatureID(25315)
 mod:SetEncounterID(729, 2493)
 mod:SetModelID(23200)
@@ -30,7 +30,6 @@ local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warnPhase4		= mod:NewPhaseAnnounce(4)
 
 local specWarnArmaYou	= mod:NewSpecialWarningYou(45909, nil, nil, nil, 3, 2)
-local specWarnArmaClose	= mod:NewSpecialWarningClose(45909, nil, nil, nil, 2, 2)
 local yellArmageddon	= mod:NewYell(45909)
 local specWarnBloom		= mod:NewSpecialWarningYou(45641, nil, nil, nil, 1, 2)
 local yellBloom			= mod:NewYell(45641)
@@ -70,9 +69,6 @@ do
 			specWarnArmaYou:Show()
 			specWarnArmaYou:Play("targetyou")
 			yellArmageddon:Yell()
-		elseif self:CheckNearby(8, targetname) then
-			specWarnArmaClose:Show(targetname)
-			specWarnArmaClose:Play("watchfeet")
 		else
 			warnArmageddon:Show(targetname)
 		end

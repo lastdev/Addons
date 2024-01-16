@@ -1,5 +1,5 @@
-## Interface: 100200
-## X-Min-Interface: 100200
+## Interface: 100205
+## X-Min-Interface: 100205
 ## X-Min-Interface-Classic: 11500
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30403
@@ -22,7 +22,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 35a70ce
+## Version: edbc16a
 ## X-Website: https://deadlybossmods.com
 
 Libs\LibStub\LibStub.lua

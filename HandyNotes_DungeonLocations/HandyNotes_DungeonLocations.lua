@@ -6,7 +6,7 @@ icons = { }
 icons["Dungeon"] = "Interface\\MINIMAP\\Dungeon"
 icons["Raid"] = "Interface\\MINIMAP\\Raid"
 icons["Mixed"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\images\\merged.tga"
-icons["Locked"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\imgaes\\gray.tga"
+icons["Locked"] = "Interface\\Addons\\HandyNotes_DungeonLocations\\images\\gray.tga"
 
 local db
 local mapToContinent = { }
@@ -694,13 +694,7 @@ nodes[23] = { -- EasternPlaguelands
   lfgid = 274,
   type = "Dungeon", -- Stratholme Service Entrance
   showInZone = true,
- },
- [35722310] = { -- Old Naxxramas - Secret Entrance - Wards of the Dread Citadel
-   type = "Raid",
-   id =  754, 
-   hideOnContinent = false,
-   showInZone = true,  
- },
+ }
 }
 
 nodes[69] = { -- Feralas
@@ -843,12 +837,6 @@ nodes[22] = { -- WesternPlaguelands
   id = 246,
   type = "Dungeon",
  }, -- Scholomance World 50903650m
- [69777181] = {
-  type = "Dungeon",
-  name = "Old Scholomance - Secret Entrance - Memory of Scholomance",
-  hideOnContinent = false,
-  showInZone = true,
- }, -- Old Scholomance - Memory of Scholomance - Secret Entrance Vanilla Scholomance
 }
 nodes[52] = { -- Westfall
  --[38307750] = { 63,  type = "Dungeon" }, -- Deadmines 43707320  May look more accurate
@@ -2067,6 +2055,8 @@ nodes[2024] = { } -- The Azure Span
 nodes[2025] = { } -- Thaldraszus
 nodes[2026] = { } -- The Forbidden Reach
 nodes[2133] = { } -- Zaralek Cavern
+nodes[1978] = { } -- Dragon Isles
+nodes[2200] = { } -- The Emerald Dream
 
 nodes[2022][60007577] = {
 	id = 1202,
@@ -2118,6 +2108,15 @@ nodes[2133][48461004] = {
 	type = "Raid",
 } -- Aberrus, the Shadowed Crucible
 
+nodes[1978][87047386] = {
+	id = 1208,
+	type = "Raid",
+} -- Aberrus, the Shadowed Crucible Dragon Isles Map
+
+nodes[2200][27243078] = {
+   id = 1207,
+   type = "Raid",
+   } --Amirdrassil, the Dream's Hope
    end
 end
 end
@@ -2269,9 +2268,8 @@ function Addon:UpdateInstanceNames(node)
  local dungeonInfo = EJ_GetInstanceInfo
  local id = node.id
  
- if (node.lfgid) then
-  dungeonInfo = GetLFGDungeonInfo
-  id = node.lfgid
+ if (node.uiMapID) then
+   id = node.uiMapID
  end
  
  if (type(id) == "table") then

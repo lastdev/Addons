@@ -768,15 +768,17 @@ do
                     state.trinket.t1.__has_use_buff = true
                     state.trinket.t1.__use_buff_duration = aura and aura.duration > 0 and aura.duration or 0.01
                 end
+
+                if not isUsable then
+                    state.trinket.t1.cooldown = state.cooldown.null_cooldown
+                else
+                    state.cooldown.trinket1 = state.cooldown[ ability.key ]
+                    state.trinket.t1.cooldown = state.cooldown.trinket1
+                end
             else
                 class.abilities.trinket1 = class.abilities.actual_trinket1
                 class.specs[ 0 ].abilities.trinket1 = class.abilities.actual_trinket1
-            end
-
-            if not isUsable then
                 state.trinket.t1.cooldown = state.cooldown.null_cooldown
-            else
-                state.trinket.t1.cooldown = nil
             end
 
             state.trinket.t1.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 13, true, true )
@@ -817,15 +819,17 @@ do
                     state.trinket.t2.__has_use_buff = true
                     state.trinket.t2.__use_buff_duration = aura and aura.duration > 0 and aura.duration or 0.01
                 end
+
+                if not isUsable then
+                    state.trinket.t2.cooldown = state.cooldown.null_cooldown
+                else
+                    state.cooldown.trinket2 = state.cooldown[ ability.key ]
+                    state.trinket.t2.cooldown = state.cooldown.trinket2
+                end
             else
                 class.abilities.trinket2 = class.abilities.actual_trinket2
                 class.specs[ 0 ].abilities.trinket2 = class.abilities.actual_trinket2
-            end
-
-            if not isUsable then
                 state.trinket.t2.cooldown = state.cooldown.null_cooldown
-            else
-                state.trinket.t2.cooldown = nil
             end
 
             state.trinket.t2.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 14, true, true )
@@ -842,26 +846,39 @@ do
             local isUsable = IsUsableItem( MH )
             local name, spellID = GetItemSpell( MH )
             local tSpell = class.itemMap[ MH ]
+            local ability = class.abilities[ tSpell ]
 
-            if tSpell then
+            if ability and tSpell then
                 class.abilities.main_hand = class.abilities[ tSpell ]
                 class.specs[ 0 ].abilities.main_hand = class.abilities[ tSpell ]
+
+                local aura = ability and class.auras[ ability.self_buff or spellID ]
+
+                if spellID and SpellIsSelfBuff( spellID ) and aura then
+                    state.trinket.main_hand.__has_use_buff = not aura.ignore_buff and not ( ability and ability.proc and ( ability.proc == "damage" or ability.proc == "healing" or ability.proc == "mana" or ability.proc == "absorb" or ability.proc == "speed" ) )
+                    state.trinket.main_hand.__use_buff_duration = aura.duration > 0 and aura.duration or 0.01
+                elseif ability.self_buff then
+                    state.trinket.main_hand.__has_use_buff = true
+                    state.trinket.main_hand.__use_buff_duration = aura and aura.duration > 0 and aura.duration or 0.01
+                end
+
+                if not isUsable then
+                    state.trinket.main_hand.cooldown = state.cooldown.null_cooldown
+                else
+                    state.cooldown.main_hand = state.cooldown[ ability.key ]
+                    state.trinket.main_hand.cooldown = state.cooldown.main_hand
+                end
             else
                 class.abilities.main_hand = class.abilities.actual_main_hand
                 class.specs[ 0 ].abilities.main_hand = class.abilities.actual_main_hand
+                state.trinket.main_hand.cooldown = state.cooldown.null_cooldown
             end
 
-            if not isUsable then
-                state.trinket.t2.cooldown = state.cooldown.null_cooldown
-            else
-                state.trinket.t2.cooldown = nil
-            end
-
-            state.trinket.t2.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 14, true, true )
+            state.trinket.main_hand.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 16, true, true )
         end
 
         for i = 1, 19 do
-            local item = GetInventoryItemID( 'player', i )
+            local item = GetInventoryItemID( "player", i )
 
             if item then
                 state.set_bonus[ item ] = 1
@@ -1284,7 +1301,7 @@ RegisterUnitEvent( "UNIT_SPELLCAST_DELAYED", "player", nil, function( event, uni
                     local u = Hekili:GetUnitByGUID( target ) or Hekili:GetNameplateUnitForGUID( target ) or "target"
 
                     if u then
-                        local _, maxR = RC:GetRange( u, true, InCombatLockdown() )
+                        local _, maxR = RC:GetRange( u )
                         maxR = maxR or select( 6, GetSpellInfo( ability.id ) ) or 40
                         travel = maxR / ability.velocity
                     end
@@ -1754,7 +1771,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                                 local unit = Hekili:GetUnitByGUID( destGUID ) or Hekili:GetNameplateUnitForGUID( destGUID ) or "target"
 
                                 if unit then
-                                    local _, maxR = RC:GetRange( unit, true, InCombatLockdown() )
+                                    local _, maxR = RC:GetRange( unit )
                                     maxR = maxR or select( 6, GetSpellInfo( ability.id ) ) or 40
                                     travel = maxR / ability.velocity
                                 end
@@ -1814,7 +1831,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                             local unit = Hekili:GetUnitByGUID( destGUID ) or Hekili:GetNameplateUnitForGUID( destGUID ) or "target"
 
                             if unit then
-                                local _, maxR = RC:GetRange( unit, true, InCombatLockdown() )
+                                local _, maxR = RC:GetRange( unit )
                                 maxR = maxR or select( 6, GetSpellInfo( ability.id ) ) or 40
                                 travel = maxR / ability.velocity
                             end
@@ -2417,11 +2434,11 @@ end
 
 
 if select( 2, UnitClass( "player" ) ) == "DRUID" then
-    local prowlOrder = { 8, 7, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15, 1 }
-    local catOrder = { 7, 8, 2, 3, 4, 5, 6, 9, 10, 13, 14, 15, 1 }
-    local bearOrder = { 9, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 1 }
-    local owlOrder = { 10, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 1 }
-    local defaultOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15 }
+    local prowlOrder = { 8, 7, 1, 2, 3, 4, 5, 6, 10, 9, 13, 14, 15 }
+    local catOrder = { 7, 8, 1, 2, 3, 4, 5, 6, 10, 9, 13, 14, 15 }
+    local bearOrder = { 9, 1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 1 }
+    local owlOrder = { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15 }
+    local defaultOrder = { 1, 2, 3, 4, 5, 6, 10, 7, 8, 9, 13, 14, 15 }
 
     function Hekili:GetBindingForAction( key, display, i )
         if not key then return "" end

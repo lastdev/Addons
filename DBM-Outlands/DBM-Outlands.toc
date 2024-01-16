@@ -1,8 +1,8 @@
-## Interface: 100200
+## Interface: 100205
 ## X-Min-Interface: 80000
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30401
-## Version: r704
+## Version: r709
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BC)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10필드 보스 (불성)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Scherbenwelt|r
@@ -14,7 +14,7 @@
 ## SavedVariablesPerCharacter: DBMOutlands_SavedStats
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
-## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Type: WORLDBOSS
 ## X-DBM-Mod-Category: BC
 ## X-DBM-Mod-World-Boss: 1
 ## X-DBM-StatTypes: normal

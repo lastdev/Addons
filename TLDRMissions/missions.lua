@@ -501,7 +501,7 @@ function addon:GetGearMissions(hard)
     local missionLineup = {}
     
     local goldCategories = {
-            ["1-19"] = {0.1, 20},
+            ["0-19"] = {0.1, 20},
             ["20-29"] = {20, 30},
             ["30-39"] = {30, 40},
             ["40-49"] = {40, 50},

@@ -6,10 +6,6 @@ local L
 --------------
 L= DBM:GetModLocalization(139)
 
-L:SetOptionLocalization({
-	SetIconOnConsuming		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(88954)
-})
-
 ---------------
 -- Occu'thar --
 ---------------
@@ -86,11 +82,6 @@ L:SetMiscLocalization({
 --  Atramedes  --
 -----------------
 L = DBM:GetModLocalization(171)
-
-L:SetOptionLocalization({
-	InfoFrame				= "Mostrar marco de información para $journal:3072",
-	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(78092)
-})
 
 L:SetMiscLocalization({
 	NefAdd					= "¡Atramedes, los héroes están justo AHÍ!",
@@ -206,10 +197,6 @@ L:SetGeneralLocalization({
 --------------------------
 L = DBM:GetModLocalization(156)
 
-L:SetOptionLocalization({
-	ShowDrakeHealth		= "Mostrar salud de los dragonantes liberados (requiere que la opción de mostrar marco de salud del jefe esté habilitada)"
-})
-
 ---------------------------
 --  Theralion y Valiona  --
 ---------------------------
@@ -217,11 +204,7 @@ L = DBM:GetModLocalization(157)
 
 L:SetOptionLocalization({
 	TBwarnWhileBlackout		= "Mostrar aviso para $spell:86369 durante $spell:86788",
-	TwilightBlastArrow		= "Mostrar flecha cuando $spell:86369 ocurra cerca de ti",
-	RangeFrame				= "Mostrar marco de distancia (10 m)",
-	BlackoutShieldFrame		= "Mostrar salud del jefe en una barra durante $spell:86788",
-	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(86788),
-	EngulfingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(86622)
+	BlackoutShieldFrame		= "Mostrar salud del jefe en una barra durante $spell:86788"
 })
 
 L:SetMiscLocalization({
@@ -249,16 +232,7 @@ L:SetOptionLocalization({
 	SpecWarnGrounded		= "Mostrar aviso especial cuando no te afecte el perjuicio de $spell:83581 (unos 10 s antes del lanzamiento)",
 	SpecWarnSearingWinds	= "Mostrar aviso especial cuando no te afecte el perjuicio de $spell:83500 (unos 10 s antes del lanzamiento)",
 	timerTransition			= "Mostrar temporizador para los cambios de fase",
-	RangeFrame				= "Mostrar marco de distancia automáticamente cuando sea necesario",
-	yellScrewed				= "Gritar cuando te afecten $spell:83099 y $spell:92307 a la vez",
-	InfoFrame				= "Mostrar marco de información de jugadores sin $spell:83581 o $spell:83500",
-	HeartIceIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(82665),
-	BurningBloodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(82660),
-	LightningRodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(83099),
-	GravityCrushIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(84948),
-	FrostBeaconIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92307),
-	StaticOverloadIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92067),
-	GravityCoreIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92075)
+	yellScrewed				= "Gritar cuando te afecten $spell:83099 y $spell:92307 a la vez"
 })
 
 L:SetMiscLocalization({
@@ -275,13 +249,6 @@ L:SetMiscLocalization({
 --  Cho'gall  --
 ----------------
 L = DBM:GetModLocalization(167)
-
-L:SetOptionLocalization({
-	CorruptingCrashArrow	= "Mostrar flecha cuando $spell:81685 ocurra cerca de ti",
-	InfoFrame				= "Mostrar marco de información para $journal:3165",
-	RangeFrame				= "Mostrar marco de distancia (5 m) para $journal:3165",
-	SetIconOnWorship		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(91317)
-})
 
 ----------------
 --  Sinestra  --

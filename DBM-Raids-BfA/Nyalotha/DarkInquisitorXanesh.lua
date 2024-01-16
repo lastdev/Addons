@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2377, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240108061637")
 mod:SetCreatureID(156575)
 mod:SetEncounterID(2328)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -52,8 +52,7 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 mod:AddInfoFrameOption(312406, true)
 mod:AddSetIconOption("SetIconOnVoidWoken2", 312406, false, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnAdds", "ej21227", true, true, {4, 5, 6, 7, 8})
-mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
-mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Four", "misc")
+mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Four", "misc", nil, 316211)
 
 mod.vb.ritualCount = 0
 mod.vb.obeliskCount = 0

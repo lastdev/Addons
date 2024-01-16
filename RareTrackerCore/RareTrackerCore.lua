@@ -5,6 +5,7 @@ local UnitHealthMax = UnitHealthMax
 local UnitHealth = UnitHealth
 local CreateFrame = CreateFrame
 local GetTime = GetTime
+local table = table
 
 -- Redefine global variables locally.
 local C_Map = C_Map
@@ -72,6 +73,7 @@ local defaults = {
         ignored_rares = {},
         banned_NPC_ids = {},
         version = 0,
+        last_known_location = {},
     },
     profile = {
         minimap = {
@@ -324,6 +326,25 @@ end
 -- Remember when the last refresh was issued by the user, to block refresh spamming.
 RareTracker.last_data_refresh = 0
 
+-- A sorting function for sorting on timestamps.
+function compare_timestamps(r1, r2)
+  return r2.time_stamp > r1.time_stamp
+end
+
+-- A sorting function that sorts a given mapping and returns a sorted collection.
+function get_keys_sorted_by_timestamp_value(data)
+  local keys = {}
+  for key, _ in pairs(data) do
+    table.insert(keys, key)
+  end
+
+  table.sort(keys, function(r1, r2)
+    return compare_timestamps(data[r2], data[r1])
+  end)
+
+  return keys
+end
+
 -- A function that is called when calling a chat command.
 function RareTracker:OnChatCommand(input)
     input = input:trim()
@@ -362,6 +383,27 @@ function RareTracker:OnChatCommand(input)
                 print(L["<RT> The reset button is on cooldown. Please note that a reset is not needed "..
                       "to receive new timers. If it is your intention to reset the data, "..
                       "please do a /reload and click the reset button again."])
+            end
+        elseif cmd == "last" then
+            -- Remove invalid entries.
+            for key, value in pairs(self.db.global.last_known_location) do
+                if type(value) == "string" then
+                    self.db.global.last_known_location[key] = nil
+                end
+            end
+            
+            -- Sort by time_stamp.
+            local ordered_keys = get_keys_sorted_by_timestamp_value(self.db.global.last_known_location)
+            
+            -- Print the data.
+            for i=1, #ordered_keys do
+                local key = ordered_keys[i]
+                local value = self.db.global.last_known_location[key]
+                print(key.." '"..value.zone_name.."-"..value.zone_uid.."' "..date("%m/%d/%y %H:%M", value.time_stamp))
+            end
+        elseif cmd == "resetlast" then
+            for key, value in pairs(self.db.global.last_known_location) do
+                self.db.global.last_known_location[key] = nil
             end
         end
     end
