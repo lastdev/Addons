@@ -75,7 +75,7 @@ local LoadMPOnShow, LoadMP do
 	function LoadMP()
 		if doLoad then
 			doLoad = nil
-			LoadAddOn("MasterPlan")
+			C_AddOns.LoadAddOn("MasterPlan")
 		end
 	end
 	function LoadMPOnShow(f)
@@ -244,5 +244,5 @@ E.ZONE_CHANGED = CheckCacheWarning
 MasterPlanA = api
 
 SLASH_MASTERPLAN1, SlashCmdList.MASTERPLAN = "/masterplan", function()
-	print("|cff0080ffMasterPlan|r v" .. C_AddOns.GetAddOnMetadata("MasterPlan", "Version") .. " (" .. (IsAddOnLoaded("Blizzard_GarrisonUI") and "G" or "N") .. (IsAddOnLoaded("MasterPlan") and "O" or "A") .. ")")
+	print("|cff0080ffMasterPlan|r v" .. C_AddOns.GetAddOnMetadata("MasterPlan", "Version") .. " (" .. (C_AddOns.IsAddOnLoaded("Blizzard_GarrisonUI") and "G" or "N") .. (C_AddOns.IsAddOnLoaded("MasterPlan") and "O" or "A") .. ")")
 end

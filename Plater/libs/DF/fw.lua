@@ -1,6 +1,6 @@
 
 
-local dversion = 497
+local dversion = 510
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -48,6 +48,12 @@ end
 function DF:MsgWarning(msg, ...)
 	print("|cFFFFFFAA" .. (self.__name or "Details!Framework") .. "|r |cFFFFAA00[Warning]|r", msg, ...)
 end
+
+DF.DefaultRoundedCornerPreset = {
+	roundness = 6,
+	color = {.1, .1, .1, 0.98},
+	border_color = {.05, .05, .05, 0.834},
+}
 
 DF.internalFunctions = DF.internalFunctions or {}
 
@@ -507,6 +513,16 @@ function DF:FadeFrame(frame, t)
 end
 
 ------------------------------------------------------------------------------------------------------------
+function DF:RandomBool(odds)
+	if (odds) then
+		local chance = math.random()
+		return chance <= odds
+	else
+		return math.random(1, 2) == 1
+	end
+end
+
+------------------------------------------------------------------------------------------------------------
 --table
 
 DF.table = {}
@@ -696,7 +712,7 @@ end
 function DF.table.duplicate(t1, t2)
 	for key, value in pairs(t2) do
 		if (key ~= "__index" and key ~= "__newindex") then
-			--preserve a wowObject passing it to the new table with copying it
+			--preserve a UIObject passing it to the new table with copying it
 			if (type(value) == "table" and table.GetObjectType and table:GetObjectType()) then
 				t1[key] = value
 
@@ -804,6 +820,7 @@ function DF.table.deploy(t1, t2)
 	return t1
 end
 
+--/run print (DetailsFramework.table.dump({{1, 2}, {2, 3}, {4, 5}}))
 local function tableToString(t, resultString, deep, seenTables)
     resultString = resultString or ""
     deep = deep or 0
@@ -853,7 +870,11 @@ local function tableToString(t, resultString, deep, seenTables)
 			resultString = resultString .. space .. "[\"" .. key .. "\"] = \"|cFFfff1c1" .. value .. "|r\",\n"
 
 		elseif (valueType == "number") then
-			resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF94CEA8" .. value .. "|r,\n"
+			if (type(key) == "number") then
+				resultString = resultString .. space .. "[" .. key .. "] = |cFFffc1f4" .. value .. "|r,\n"
+			else
+				resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF94CEA8" .. value .. "|r,\n"
+			end
 
 		elseif (valueType == "function") then
 			resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFFC586C0function|r,\n"
@@ -2799,7 +2820,6 @@ function DF:CreateAnimation(animation, animationType, order, duration, arg1, arg
 
 	elseif (animationType == "ROTATION") then
 		anim:SetDegrees(arg1) --degree
-		--print("SetOrigin", arg2, arg3, arg4)
 		anim:SetOrigin(arg2 or "center", arg3 or 0, arg4 or 0) --point, x, y
 
 	elseif (animationType == "TRANSLATION") then
@@ -3868,7 +3888,7 @@ local specs_per_class = {
 	["ROGUE"] = {259, 260, 261},
 	["DRUID"] = {102, 103, 104, 105},
 	["HUNTER"] = {253, 254, 255},
-	["SHAMAN"] = {262, 263, 254},
+	["SHAMAN"] = {262, 263, 264},
 	["PRIEST"] = {256, 257, 258},
 	["WARLOCK"] = {265, 266, 267},
 	["PALADIN"] = {65, 66, 70},

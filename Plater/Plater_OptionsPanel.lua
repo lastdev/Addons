@@ -8989,6 +8989,16 @@ end
 			name = "Module Enabled",
 			desc = "Enable Plater nameplates for friendly NPCs.\n\n" .. ImportantText .. "Forces a /reload on change.\nThis option is dependent on the client`s nameplate state (on/off)",
 		},
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.plate_config.friendlynpc.follow_blizzard_npc_option end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.plate_config.friendlynpc.follow_blizzard_npc_option = value
+			end,
+			nocombat = true,
+			name = "Follow Blizzard 'NPC Names' Option",
+			desc = "Hides npc nameplates for untis that would not show a name according to blizzard UI settings.",
+		},
 
 		{
 			type = "select",
@@ -11630,9 +11640,25 @@ end
 	}
 
 	local castBar_options = {
-		--cast bar options
 		{type = "breakline"},
-		{type = "label", get = function() return "Cast Bar Appearance:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+
+		--cast bar options
+		{
+			type = "execute",
+			func = function() 
+				if (Plater.IsShowingCastBarTest) then
+					Plater.StopCastBarTest()
+				else
+					Plater.StartCastBarTest()
+				end
+			end,
+			name = "OPTIONS_CASTBAR_TOGGLE_TEST",
+			desc = "OPTIONS_CASTBAR_TOGGLE_TEST_DESC",
+		},
+
+		{type = "blank"},
+
+		{type = "label", get = function() return "OPTIONS_CASTBAR_APPEARANCE" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		
 		{
 			type = "select",
@@ -11648,6 +11674,9 @@ end
 			name = "OPTIONS_TEXTURE_BACKGROUND",
 			desc = "OPTIONS_TEXTURE_BACKGROUND",
 		},
+
+		{type = "blank"},
+
 		{
 			type = "toggle",
 			get = function() return Plater.db.profile.no_spellname_length_limit end,
@@ -11692,6 +11721,16 @@ end
 			desc = "OPTIONS_INTERRUPT_FILLBAR",
 		},
 
+		{
+			type = "toggle",
+			get = function() return Plater.db.profile.cast_statusbar_quickhide end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.cast_statusbar_quickhide = value
+			end,
+			name = "OPTIONS_CASTBAR_QUICKHIDE",
+			desc = "OPTIONS_CASTBAR_QUICKHIDE_DESC",
+		},
+		
 		{
 			type = "toggle",
 			get = function() return Plater.db.profile.hide_friendly_castbars end,
@@ -11755,24 +11794,9 @@ end
 			desc = "OPTIONS_CASTBAR_FADE_ANIM_TIME_END_DESC" ,
 		},		
 
-		{type = "blank"},
+		{type = "breakline"},
 
-		{
-			type = "execute",
-			func = function() 
-				if (Plater.IsShowingCastBarTest) then
-					Plater.StopCastBarTest()
-					Plater:Msg ("Test loop for cast bar stopped.")
-				else
-					Plater.StartCastBarTest()
-				end
-			end,
-			name = "OPTIONS_CASTBAR_TOGGLE_TEST",
-			desc = "OPTIONS_CASTBAR_TOGGLE_TEST_DESC",
-		},
-		
-		{type = "blank"},
-		{type = "label", get = function() return "Spark Settings" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{type = "label", get = function() return "OPTIONS_CASTBAR_SPARK_SETTINGS" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 
 		{
 			type = "select",
@@ -11858,9 +11882,8 @@ end
 			desc = "OPTIONS_ALPHA",
 		},
 		
-		{type = "breakline"},
-		
-		{type = "label", get = function() return "Cast Bar Colors:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{type = "blank"},
+		{type = "label", get = function() return "OPTIONS_CASTBAR_COLORS" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		
 		{
 			type = "color",
@@ -11954,7 +11977,7 @@ end
 			desc = "OPTIONS_COLOR_BACKGROUND",
 		},
 		
-		{type = "blank"},
+		{type = "breakline"},
 		--toggle cast bar target
 		{type = "label", get = function() return "Cast Bar Target Name:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		{
@@ -12079,7 +12102,7 @@ end
 
 		{type = "breakline"},
 		--toggle cast bar target
-		{type = "label", get = function() return "Spell Icon:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{type = "label", get = function() return "OPTIONS_CASTBAR_SPELLICON" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		{
 			type = "toggle",
 			get = function() return Plater.db.profile.castbar_icon_customization_enabled end,
@@ -12133,7 +12156,7 @@ end
 		},
 		
 		{type = "blank"},
-		{type = "label", get = function() return "Blizzard Cast Bar:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{type = "label", get = function() return "OPTIONS_CASTBAR_BLIZZCASTBAR" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		
 		--hide castbar from blizzard
 		{

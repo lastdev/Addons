@@ -3,8 +3,9 @@
 
                                         A Path Less Travelled
 
-                                      v1.31 - 11th January 2024
+                                      v1.33 - 25th January 2024
                                 Copyright (C) Taraezor / Chris Birch
+                                         All Rights Reserved
 
                                 ----o----(||)----oo----(||)----o----
 ]]
@@ -52,11 +53,12 @@ function pluginHandler:OnEnter(mapFile, coord)
 	end
 
 	local pin = ns.points[mapFile] and ns.points[mapFile][coord]
-	local setTextDone, itemName;
+	local itemName, completed;
+	local setText = ns.colour.prefix
 	
 	if pin.name then
-		GameTooltip:SetText( ns.colour.prefix ..pin.name )
-		setTextDone = true
+		GameTooltip:SetText( setText ..pin.name )
+		setText = ns.colour.highlight
 		if pin.quest or pin.item or pin.tip then
 			GameTooltip:AddLine( "\n" )
 		end
@@ -67,26 +69,21 @@ function pluginHandler:OnEnter(mapFile, coord)
 	end
 	
 	if pin.quest then
-		local completed = IsQuestFlaggedCompleted( pin.quest )
-		if setTextDone then
-			GameTooltip:AddLine( ns.colour.highlight .."! " ..( pin.questName or itemName or " " ) )
-		else
-			GameTooltip:SetText( ns.colour.prefix .."! " ..( pin.questName or itemName or " " ) )
-			setTextDone = true
+		for i,v in ipairs( pin.quest ) do
+			completed = IsQuestFlaggedCompleted( v )
+			-- Following allows for single "Flag" quest situations for clickable items like chests
+			-- Also, ensure that if the quest does not have a questName then item must not me an itemID
+			GameTooltip:AddDoubleLine( setText ..( pin.questName and ( "!" ..pin.questName[ i ] ) or itemName or " " ),
+					( completed == true ) and ( "\124cFF00FF00" .."Completed" .." (" ..ns.name ..")" ) 
+						or ( "\124cFFFF0000" .."Not Completed" .." (" ..ns.name ..")" ) )
+			setText = ns.colour.highlight
 		end
-		GameTooltip:AddLine( ( completed == true )
-					and ( "\124cFF00FF00" .."Completed" .." (" ..ns.name ..")" ) 
-					or ( "\124cFFFF0000" .."Not Completed" .." (" ..ns.name ..")" ) )
 		if pin.tip then
 			GameTooltip:AddLine( "\n" )
 		end
 				
 	elseif pin.item then
-		if setTextDone then
-			GameTooltip:AddLine( ns.colour.highlight ..itemName )
-		else
-			GameTooltip:SetText( ns.colour.prefix ..itemName )
-		end
+		GameTooltip:AddLine( setText ..itemName )
 		if pin.tip then
 			GameTooltip:AddLine( "\n" )
 		end

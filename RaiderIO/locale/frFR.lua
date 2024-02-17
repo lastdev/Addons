@@ -76,32 +76,25 @@ Cliquez sur Confirmer pour recharger votre interface.]=]
 --[[Translation missing --]]
 --[[ L["DISABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["DPS"] = "DPS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AA"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_AA"] = "AA"
+L["DUNGEON_SHORT_NAME_AD"] = "AD"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BRH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_DHT"] = ""--]] 
-L["DUNGEON_SHORT_NAME_DOS"] = "DOS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EB"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_FALL"] = ""--]] 
+L["DUNGEON_SHORT_NAME_BRH"] = "BdF"
+L["DUNGEON_SHORT_NAME_COS"] = "CoS"
+L["DUNGEON_SHORT_NAME_DHT"] = "FS"
+L["DUNGEON_SHORT_NAME_DOS"] = "AC"
+L["DUNGEON_SHORT_NAME_EB"] = "LFé"
+L["DUNGEON_SHORT_NAME_FALL"] = "AdIRdG"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GMBT"] = ""--]] 
-L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
+L["DUNGEON_SHORT_NAME_HOA"] = "SdE"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_HOI"] = ""--]] 
 --[[Translation missing --]]
@@ -110,17 +103,14 @@ L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
 --[[ L["DUNGEON_SHORT_NAME_ID"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
-L["DUNGEON_SHORT_NAME_MISTS"] = "MISTS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MISTS"] = "BdTS"
+L["DUNGEON_SHORT_NAME_NELT"] = "NELT"
+L["DUNGEON_SHORT_NAME_NL"] = "RdN"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "NW"
-L["DUNGEON_SHORT_NAME_PF"] = "PF"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_RISE"] = ""--]] 
+L["DUNGEON_SHORT_NAME_PF"] = "MP"
+L["DUNGEON_SHORT_NAME_RISE"] = "AdIcdM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_RLP"] = ""--]] 
 --[[Translation missing --]]
@@ -132,8 +122,7 @@ L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOP"] = "TOP"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_TOTT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_TOTT"] = "TdM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
 --[[Translation missing --]]
@@ -144,8 +133,7 @@ L["DUNGEON_SHORT_NAME_TOP"] = "TOP"
 --[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WM"] = ""--]] 
+L["DUNGEON_SHORT_NAME_WM"] = "MM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
 --[[Translation missing --]]
@@ -178,12 +166,10 @@ L["GENERAL_TOOLTIP_OPTIONS"] = "Options générales de l'infobulle"
 L["GUILD_BEST_SEASON"] = "Guilde: Top Saison"
 L["GUILD_BEST_TITLE"] = "Record Raider.IO"
 L["GUILD_BEST_WEEKLY"] = "Guilde : Top Semaine"
---[[Translation missing --]]
---[[ L["GUILD_LF_MPLUS_DEFAULT"] = ""--]] 
+L["GUILD_LF_MPLUS_DEFAULT"] = "Recruter des joueurs Mythique +"
 --[[Translation missing --]]
 --[[ L["GUILD_LF_MPLUS_WITH_SCORE"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_PVP"] = ""--]] 
+L["GUILD_LF_PVP"] = "Recruter des joueurs JcJ"
 --[[Translation missing --]]
 --[[ L["GUILD_LF_RAID_DEFAULT"] = ""--]] 
 --[[Translation missing --]]
@@ -232,24 +218,15 @@ L["PROFILE_BEST_RUNS"] = "Meilleurs Donjons"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Attention:|r |cffFFFFFF%s|r Aucune donnée trouvée pour votre faction actuelle . Veuillez vérifier vos paramètres |cffFFFFFF/raiderio|r et activer les données d'info-bulle pour |cffFFFFFF%s|r."
 --[[Translation missing --]]
 --[[ L["PVP_DATA_HEADER"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_9"] = ""--]] 
+L["RAID_BOSS_ATDH_1"] = "Racine-Noueuse"
+L["RAID_BOSS_ATDH_2"] = "Igira la Cruelle"
+L["RAID_BOSS_ATDH_3"] = "Volcoross"
+L["RAID_BOSS_ATDH_4"] = "Conseil des rêves"
+L["RAID_BOSS_ATDH_5"] = "Larodar, gardien de la flamme"
+L["RAID_BOSS_ATDH_6"] = "Nymue, la trame du cercle"
+L["RAID_BOSS_ATDH_7"] = "Fumeron"
+L["RAID_BOSS_ATDH_8"] = "Tindral Vifsage, prophète de flamme"
+L["RAID_BOSS_ATDH_9"] = "Fyrakka le Flamboyant"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ATSC_1"] = ""--]] 
 --[[Translation missing --]]
@@ -382,22 +359,14 @@ L["RAID_BOSS_CN_9"] = "Généraux de la Légion de Pierre"
 --[[ L["RAID_BOSS_SOD_8"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_SOD_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_8"] = ""--]] 
+L["RAID_BOSS_VOTI_1"] = "Eranog"
+L["RAID_BOSS_VOTI_2"] = "Terros"
+L["RAID_BOSS_VOTI_3"] = "Le Conseil primordial"
+L["RAID_BOSS_VOTI_4"] = "Sennarth, la Glaciale"
+L["RAID_BOSS_VOTI_5"] = "Dathéa, transcendée"
+L["RAID_BOSS_VOTI_6"] = "Kurog Totem-Sinistre"
+L["RAID_BOSS_VOTI_7"] = "Garde-couvée Diurna"
+L["RAID_BOSS_VOTI_8"] = "Raszageth la Mange-tempêtes"
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Héroïque"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mythique"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"

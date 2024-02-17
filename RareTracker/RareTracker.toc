@@ -1,7 +1,7 @@
-## Interface: 100200
+## Interface: 100205
 ## Title: RareTracker
 ## Author: Melroy
-## Version: 1.0.20
+## Version: 1.0.21
 ## OptionalDeps: RareTrackerCore
 ## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon
 

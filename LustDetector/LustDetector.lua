@@ -1,4 +1,4 @@
--- By Viicksmille-Thrall - Horde 4ever
+-- By: Viicksmille-Thrall - Horde 4ever
 -- Special thanks for: omsheal, KNARK1337, CommandoCat64 for reports and in special for omsheal
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -109,7 +109,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
         local className = select(2, UnitClass(sourceName))
 
         if HasteItem[spellID] then
-            LUSTDETECTORMSG("{rt1} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " cast: " .. spellLink .. " and increased +15% haste on the party! {rt1}", chatType)
+            LUSTDETECTORMSG("{rt1} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " used: " .. spellLink .. " and increased +15% haste on the party! {rt1}", chatType)
         elseif WarpSpells[spellID] then
             LUSTDETECTORMSG("{rt2} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " cast: " .. spellLink .. " and increased +30% haste on the party! {rt2}", chatType)
         end

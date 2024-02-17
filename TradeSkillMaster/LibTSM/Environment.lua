@@ -123,6 +123,10 @@ function Environment.IsClassicHardcore()
 	return Environment.IsVanillaClassic() and C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == Enum.SeasonID.Hardcore
 end
 
+function Environment.IsClassicDiscovery()
+	return Environment.IsVanillaClassic() and C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == 2 -- Boo Blizard
+end
+
 ---Checks whether or not a features is available in the current game version.
 ---@param feature table A value of Environment.FEATURES
 ---@return boolean

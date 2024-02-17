@@ -23,12 +23,13 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: 69c525b70b9bc2136160b2e5738adf94987affaf $")
+end, "$Revision: 796eb9c23bcfb4778be97fb5d6b7aef47cbcf2c1 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 local LCD = IsVanillaClassic and LibStub and LibStub("LibClassicDurations", true)
 if LCD then
 	LCD.RegisterCallback("ZPerl", "UNIT_BUFF", function(event, unit)
@@ -123,9 +124,10 @@ local CombatFeedback_OnCombatEvent = CombatFeedback_OnCombatEvent
 local percD = "%d"..PERCENT_SYMBOL
 local buffSetup
 local lastInspectPending = 0
-local mobhealth
 
 local feignDeath = GetSpellInfo(5384)
+
+local ComboEventFrame = CreateFrame("Frame")
 
 ----------------------
 -- Loading Function --
@@ -173,11 +175,7 @@ function XPerl_Target_OnLoad(self, partyid)
 	for i, event in pairs(events) do
 		if string.find(event, "^UNIT_") or string.find(event, "^INCOMING") then
 			if pcall(self.RegisterUnitEvent, self, event, partyid) then
-				if event == "UNIT_MAXPOWER" then
-					self:RegisterUnitEvent(event, partyid, "player")
-				else
-					self:RegisterUnitEvent(event, partyid)
-				end
+				self:RegisterUnitEvent(event, partyid)
 			end
 		else
 			if pcall(self.RegisterEvent, self, event) then
@@ -203,6 +201,25 @@ function XPerl_Target_OnLoad(self, partyid)
 		if (XPerl_Target_Events.INSPECT_READY) then
 			self:RegisterEvent("INSPECT_READY")
 		end
+
+		self.nameFrame.cpMeter:SetFrameLevel(2)
+		self.nameFrame.cpMeter:GetStatusBarTexture():SetHorizTile(false)
+		self.nameFrame.cpMeter:GetStatusBarTexture():SetVertTile(false)
+
+		local parenting
+		hooksecurefunc(ComboFrame, "SetParent", function(self)
+			if parenting then
+				return
+			end
+			parenting = true
+			self:SetMovable(true)
+			self:SetParent(XPerl_Target)
+			self:SetMovable(false)
+			parenting = nil
+		end)
+
+		ComboFrame:SetParent(XPerl_Target)
+
 		self.combatMask = 0x00010000
 	else
 		XPerl_BlizzFrameDisable(FocusFrame)
@@ -217,12 +234,6 @@ function XPerl_Target_OnLoad(self, partyid)
 	--self:RegisterEvent("UNIT_COMBO_POINTS") -- Not a standard unit event, becuase we want events for "player" even tho it's "target" or "focus" unit frame
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
-
-	self.nameFrame.cpMeter:SetFrameLevel(2)
-	local maxComboPoints = UnitPowerMax("player", Enum.PowerType.ComboPoints)
-	self.nameFrame.cpMeter:SetMinMaxValues(0, IsClassic and 5 or maxComboPoints)
-	self.nameFrame.cpMeter:GetStatusBarTexture():SetHorizTile(false)
-	self.nameFrame.cpMeter:GetStatusBarTexture():SetVertTile(false)
 
 	local BuffOnUpdate, DebuffOnUpdate, BuffUpdateTooltip, DebuffUpdateTooltip
 	BuffUpdateTooltip = XPerl_Unit_SetBuffTooltip
@@ -335,8 +346,8 @@ function XPerl_Targets_BuffUpdate(self)
 	end
 end
 
--- GetComboColour
-local function GetComboColour(num)
+-- GetComboColor
+local function GetComboColor(num)
 	if (num == 10) then
 		return 0.3, 0, 1
 	elseif (num == 9) then
@@ -363,11 +374,10 @@ end
 ---------------
 -- Combo Points
 ---------------
-function XPerl_Target_UpdateCombo(self)
-	local comboPoints = IsVanillaClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
-	local r, g, b = GetComboColour(comboPoints)
-	if (tconf.combo.enable) then
-		--self.cpFrame:Hide()
+local function XPerl_Target_UpdateCombo(self)
+	local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	local r, g, b = GetComboColor(comboPoints)
+	if tconf.combo.enable and not UnitIsDeadOrGhost("target") and UnitCanAttack(UnitHasVehicleUI("player") and "vehicle" or "player", "target") then
 		self.nameFrame.cpMeter:SetValue(comboPoints)
 		self.nameFrame.cpMeter:Show()
 		if r and g and b then
@@ -378,11 +388,8 @@ function XPerl_Target_UpdateCombo(self)
 	else
 		self.nameFrame.cpMeter:Hide()
 	end
-	--[[if (tconf.combo.blizzard) then
-		self.cpFrame:Hide()
-	else
-		--self.nameFrame.cpMeter:Hide()]]
-	if tconf.comboindicator.enable then
+
+	if tconf.comboindicator.enable and not UnitIsDeadOrGhost("target") and UnitCanAttack(UnitHasVehicleUI("player") and "vehicle" or "player", "target") then
 		self.cpFrame:Show()
 		self.cpFrame.text:SetText(comboPoints)
 		if r and g and b then
@@ -477,7 +484,7 @@ local function XPerl_Target_UpdatePVP(self)
 		XPerl_SetUnitNameColor(self.nameFrame.text, partyid)
 	end
 
-	if (UnitIsVisible(partyid) and UnitIsCharmed(partyid)) then
+	if UnitIsVisible(partyid) and UnitIsCharmed(partyid) and UnitIsPlayer(partyid) and (not IsClassic and not UnitUsingVehicle(partyid) or true) then
 		self.nameFrame.warningIcon:Show()
 	else
 		self.nameFrame.warningIcon:Hide()
@@ -681,19 +688,21 @@ do
 		end
 		LTQ:RegisterCallback("TalentQuery_Ready", TalentQuery_Ready)
 	else
-		hooksecurefunc("NotifyInspect", function(unit)
-			if (IsRetail or UnitIsUnit("player", unit) or (not IsVanillaClassic and UnitInVehicle(unit)) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
-				return
-			end
-			lastInspectUnit = unit
-			lastInspectPending = lastInspectPending + 1
-			if (lastInspectPending > 1) then
-				lastInspectInvalid = true
-			end
-			lastInspectTime = GetTime()
-			lastInspectGUID = UnitGUID(unit)
-			lastInspectName = UnitFullName(unit)
-		end)
+		if IsWrathClassic and NotifyInspect then
+			hooksecurefunc("NotifyInspect", function(unit)
+				if (IsRetail or UnitIsUnit("player", unit) or (not IsVanillaClassic and UnitInVehicle(unit)) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
+					return
+				end
+				lastInspectUnit = unit
+				lastInspectPending = lastInspectPending + 1
+				if (lastInspectPending > 1) then
+					lastInspectInvalid = true
+				end
+				lastInspectTime = GetTime()
+				lastInspectGUID = UnitGUID(unit)
+				lastInspectName = UnitFullName(unit)
+			end)
+		end
 
 		-- INSPECT_READY
 		function XPerl_Target_Events:INSPECT_READY(guid)
@@ -825,9 +834,9 @@ end
 
 -- XPerl_Target_SetManaType
 function XPerl_Target_SetManaType(self)
-	local targetmanamax = UnitPowerMax(self.partyid)
+	local unitPowerMax = UnitPowerMax(self.partyid)
 
-	if (targetmanamax == 0 or not self.conf.mana) then
+	if (unitPowerMax == 0 or not self.conf.mana) then
 		if (self.statsFrame.manaBar:IsShown()) then
 			self.statsFrame.manaBar:Hide()
 
@@ -860,46 +869,48 @@ function XPerl_Target_SetMana(self)
 		return
 	end
 
-	local targetmana, targetmanamax = UnitPower(self.partyid), UnitPowerMax(self.partyid)
-	local mb = self.statsFrame.manaBar
+	local powerType = XPerl_GetDisplayedPowerType(partyid)
+	local unitPower = UnitPower(partyid, powerType)
+	local unitPowerMax = UnitPowerMax(partyid, powerType)
 
-	self.targetmana = targetmana
-	self.targetmanamax = targetmanamax
+	self.targetmana = unitPower
+	self.targetmanamax = unitPowerMax
 
-	--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
-	local pmanaPct
-	if targetmana > 0 and targetmanamax == 0 then --We have current mana but max mana failed.
-		targetmanamax = targetmana --Make max mana at least equal to current mana
-		pmanaPct = 1 --And percent 100% cause a number divided by itself is 1, duh.
-	elseif targetmana == 0 and targetmanamax == 0 then--Probably doesn't use mana or is oom?
-		pmanaPct = 0 --So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
+	-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
+	local powerPercent
+	if unitPower > 0 and unitPowerMax == 0 then -- We have current mana but max mana failed.
+		unitPowerMax = unitPower -- Make max mana at least equal to current mana
+		powerPercent = 1 -- And percent 100% cause a number divided by itself is 1, duh.
+	elseif unitPower == 0 and unitPowerMax == 0 then -- Probably doesn't use mana or is oom?
+		powerPercent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	else
-		pmanaPct = targetmana / targetmanamax--Everything is dandy, so just do it right way.
+		powerPercent = unitPower / unitPowerMax -- Everything is dandy, so just do it right way.
 	end
-	--end division by 0 check
+	-- end division by 0 check
 
-	mb:SetMinMaxValues(0, targetmanamax)
-	mb:SetValue(targetmana)
+	self.statsFrame.manaBar:SetMinMaxValues(0, unitPowerMax)
+	self.statsFrame.manaBar:SetValue(unitPower)
 
-	local p = XPerl_GetDisplayedPowerType(self.partyid)
-	if p == 0 then
-		mb.percent:SetFormattedText(percD, 100 * pmanaPct)	--	XPerl_Percent[floor(100 * (targetmana / targetmanamax))])
+	if powerType >= 1 then
+		self.statsFrame.manaBar.percent:SetText(unitPower)
 	else
-		mb.percent:SetText(targetmana)
+		self.statsFrame.manaBar.percent:SetFormattedText(percD, 100 * powerPercent)	--	XPerl_Percent[floor(100 * (unitPower / unitPowerMax))])
 	end
 
-	XPerl_SetValuedText(mb.text, targetmana, targetmanamax)
-	--mb.text:SetFormattedText("%d/%d", targetmana, targetmanamax)
+	XPerl_SetValuedText(self.statsFrame.manaBar.text, unitPower, unitPowerMax)
+	--self.statsFrame.manaBar.text:SetFormattedText("%d/%d", unitPower, unitPowerMax)
 end
 
 -- XPerl_Target_SetComboBar
-function XPerl_Target_SetComboBar(self)
-	if (tconf.combo.enable) then
-		local comboPoints = IsVanillaClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
-		local maxComboPoints = UnitPowerMax("player", Enum.PowerType.ComboPoints)
-		self.nameFrame.cpMeter:SetMinMaxValues(0, IsClassic and 5 or maxComboPoints)
-		self.nameFrame.cpMeter:SetValue(comboPoints)
+local function XPerl_Target_SetComboBar(self)
+	if not tconf.combo.enable then
+		return
 	end
+
+	local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	local maxComboPoints = UnitPowerMax("player", Enum.PowerType.ComboPoints)
+	self.nameFrame.cpMeter:SetMinMaxValues(0, maxComboPoints)
+	self.nameFrame.cpMeter:SetValue(comboPoints)
 end
 
 -- XPerl_Target_UpdateHealPrediction
@@ -1018,8 +1029,6 @@ function XPerl_Target_UpdateHealth(self)
 		return
 	end
 
-	local hb = self.statsFrame.healthBar
-	local hbt = self.statsFrame.healthBar.text
 	local hp, hpMax, percent = XPerl_Target_GetHealth(self)
 
 	self.targethp = hp
@@ -1052,9 +1061,9 @@ function XPerl_Target_UpdateHealth(self)
 
 	if (percent) then
 		if UnitIsDeadOrGhost(partyid) or hpMax == 0 then -- 4.3+ fix so if for some dumb reason max HP is 0, prevent any division by 0.
-			hbt:SetFormattedText(percD, 0)
+			self.statsFrame.healthBar.text:SetFormattedText(percD, 0)
 		else
-			hbt:SetFormattedText(percD, 100 * hp / hpMax)
+			self.statsFrame.healthBar.text:SetFormattedText(percD, 100 * hp / hpMax)
 		end
 	end
 
@@ -1062,34 +1071,34 @@ function XPerl_Target_UpdateHealth(self)
 	if (self.conf.percent) then
 		if (UnitIsGhost(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
-			hb.percent:SetText(XPERL_LOC_GHOST)
+			self.statsFrame.healthBar.percent:SetText(XPERL_LOC_GHOST)
 		--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
 			--self.statsFrame.manaBar.percent:Hide()
 			--hb.percent:SetText(XPERL_LOC_DEAD)
 			hbt:SetText(XPERL_LOC_FEIGNDEATH)--]]
 		elseif (UnitIsDead(partyid)) then
 			--self.statsFrame.manaBar.percent:Hide()
-			hb.percent:SetText(XPERL_LOC_DEAD)
+			self.statsFrame.healthBar.percent:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
 			self.statsFrame.manaBar.percent:Hide()
-			hb.percent:SetText(XPERL_LOC_OFFLINE)
+			self.statsFrame.healthBar.percent:SetText(XPERL_LOC_OFFLINE)
 		elseif (UnitIsAFK(partyid) and conf.showAFK) --[[and (self == XPerl_Target or self == XPerl_Focus))]] then
-			hb.percent:SetText(CHAT_MSG_AFK)
+			self.statsFrame.healthBar.percent:SetText(CHAT_MSG_AFK)
 		else
 			self.statsFrame.manaBar.percent:Show()
 			color = true
 		end
 	else
 		if (UnitIsGhost(partyid)) then
-			hbt:SetText(XPERL_LOC_GHOST)
+			self.statsFrame.healthBar.text:SetText(XPERL_LOC_GHOST)
 		--[[elseif (conf.showFD and UnitBuff(partyid, feignDeath)) then
 			hbt:SetText(XPERL_LOC_FEIGNDEATH)--]]
 		elseif (UnitIsDead(partyid)) then
-			hbt:SetText(XPERL_LOC_DEAD)
+			self.statsFrame.healthBar.text:SetText(XPERL_LOC_DEAD)
 		elseif (UnitExists(partyid) and not UnitIsConnected(partyid)) then
-			hbt:SetText(XPERL_LOC_OFFLINE)
+			self.statsFrame.healthBar.text:SetText(XPERL_LOC_OFFLINE)
 		elseif (UnitIsAFK(partyid) and conf.showAFK) then
-			hbt:SetText(CHAT_MSG_AFK)
+			self.statsFrame.healthBar.text:SetText(CHAT_MSG_AFK)
 		else
 			color = true
 		end
@@ -1141,13 +1150,13 @@ function XPerl_Target_Update_Range(self)
 		return
 	end
 	local inRange = false
-	if IsRetail then
+	if IsWrathClassic then
+		inRange = CheckInteractDistance(self.partyid, 4)
+	else
 		local range, checkedRange = UnitInRange(self.partyid)
 		if not checkedRange then
 			inRange = true
 		end
-	else
-		inRange = CheckInteractDistance(self.partyid, 4)
 	end
 	if not UnitIsConnected(self.partyid) or inRange then
 		self.nameFrame.rangeIcon:Hide()
@@ -1230,6 +1239,49 @@ local function XPerl_Target_CheckDebuffs(self)
 	end
 end
 
+local function XPerl_Target_ComboFrame_Update()
+	local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
+	if tconf.combo.blizzard and comboPoints > 0 and not UnitIsDeadOrGhost("target") and UnitCanAttack(UnitHasVehicleUI("player") and "vehicle" or "player", "target") then
+		if not ComboFrame:IsShown() then
+			ComboFrame:Show()
+			UIFrameFadeIn(ComboFrame, COMBOFRAME_FADE_IN)
+		end
+
+		local fadeInfo = { }
+		for i = 1, not IsClassic and 9 or 5 do
+			local comboPoint = _G["ComboPoint"..i]
+			if i < 6 then
+				comboPoint:Show()
+			else
+				if comboPoints >= i then
+					comboPoint:Show()
+				else
+					comboPoint:Hide()
+				end
+			end
+			if i <= comboPoints then
+				if i > (ComboFrame.lastPoints or 0) then
+					-- Fade in the highlight and set a function that triggers when it is done fading
+					fadeInfo.mode = "IN"
+					fadeInfo.timeToFade = COMBOFRAME_HIGHLIGHT_FADE_IN
+					fadeInfo.finishedFunc = ComboPointShineFadeIn
+					fadeInfo.finishedArg1 = comboPoint.Shine
+					UIFrameFade(comboPoint.Highlight, fadeInfo)
+				end
+			else
+				--[[if ENABLE_COLORBLIND_MODE == "1" then
+					comboPoint:Hide()
+				end]]
+				comboPoint.Highlight:SetAlpha(0)
+				comboPoint.Shine:SetAlpha(0)
+			end
+		end
+	else
+		ComboFrame:Hide()
+	end
+	ComboFrame.lastPoints = comboPoints
+end
+
 -- XPerl_Target_UpdateDisplay
 function XPerl_Target_UpdateDisplay(self)
 	local partyid = self.partyid
@@ -1250,6 +1302,10 @@ function XPerl_Target_UpdateDisplay(self)
 	XPerl_Target_UpdateLeader(self)
 	XPerl_Unit_ThreatStatus(self, partyid == "target" and "player" or nil, true)
 
+	if IsRetail and self == XPerl_Target and tconf.combo.blizzard then
+		XPerl_Target_ComboFrame_Update()
+	end
+
 	RaidTargetUpdate(self)
 
 	if (self.conf.defer) then
@@ -1261,7 +1317,9 @@ function XPerl_Target_UpdateDisplay(self)
 		self.deferring = true
 		self.time = -0.3
 	else
-		XPerl_Target_UpdateCombo(self)
+		if self == XPerl_Target and (tconf.combo.enable or tconf.comboindicator.enable) then
+			XPerl_Target_UpdateCombo(self)
+		end
 		XPerl_Unit_UpdatePortrait(self)
 	end
 
@@ -1277,7 +1335,7 @@ function XPerl_Target_UpdateDisplay(self)
 	XPerl_NoFadeBars()
 
 	-- Some optimizing here to limit the amount of work done on a target change
-	local buffOptionString = tostring(self.statsFrame.manaBar:IsVisible() or 0)..tostring(self.bossFrame:IsVisible() or 0)..tostring(self.creatureTypeFrame:IsVisible() or 0)..tostring(self.statsFrame:GetWidth())
+	local buffOptionString = tostring(self.statsFrame.manaBar:IsShown() or 0)..tostring(self.bossFrame:IsShown() or 0)..tostring(self.creatureTypeFrame:IsShown() or 0)..tostring(self.statsFrame:GetWidth())
 	if (self.buffOptionString ~= buffOptionString) then
 		self.buffOptionString = buffOptionString
 		-- Work out where all our buffs can fit, we only do this for a fresh target
@@ -1324,7 +1382,9 @@ function XPerl_Target_OnUpdate(self, elapsed)
 			if (self.deferring) then
 				self.deferring = nil
 				XPerl_Target_Update_Combat(self)
-				XPerl_Target_UpdateCombo(self)
+				if self == XPerl_Target and (tconf.combo.enable or tconf.comboindicator.enable) then
+					XPerl_Target_UpdateCombo(self)
+				end
 				XPerl_Unit_UpdatePortrait(self)
 				RaidTargetUpdate(self)
 			end
@@ -1481,19 +1541,21 @@ end--]]
 end--]]
 
 -- UNIT_COMBAT
-function XPerl_Target_Events:UNIT_COMBAT(unitID, action, descriptor, damage, damageType)
-	if (unitID == self.partyid) then
-		XPerl_Target_Update_Combat(self)
+function XPerl_Target_Events:UNIT_COMBAT(unit, action, descriptor, damage, damageType)
+	if unit ~= self.partyid then
+		return
+	end
 
-		if (self.conf.hitIndicator and self.conf.portrait) then
-			CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
-		end
+	XPerl_Target_Update_Combat(self)
 
-		if (action == "HEAL") then
-			XPerl_Target_CombatFlash(self, 0, true, true)
-		elseif (damage and damage > 0) then
-			XPerl_Target_CombatFlash(self, 0, true)
-		end
+	if (self.conf.hitIndicator and self.conf.portrait) then
+		CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)
+	end
+
+	if (action == "HEAL") then
+		XPerl_Target_CombatFlash(self, 0, true, true)
+	elseif (damage and damage > 0) then
+		XPerl_Target_CombatFlash(self, 0, true)
 	end
 end
 
@@ -1610,11 +1672,7 @@ end
 
 -- UNIT_MAXPOWER
 function XPerl_Target_Events:UNIT_MAXPOWER(unit)
-	if unit == "target" then
-		XPerl_Target_SetMana(self)
-	else
-		XPerl_Target_SetComboBar(self)
-	end
+	XPerl_Target_SetMana(self)
 end
 
 -- UNIT_DISPLAYPOWER
@@ -1651,7 +1709,7 @@ end
 	if (unit == "player") or (unit == "vehicle") then
 		XPerl_Target_UpdateCombo(self)
 	end
-end]]
+end--]]
 
 -- UNIT_AURA
 function XPerl_Target_Events:UNIT_AURA()
@@ -1792,19 +1850,19 @@ function XPerl_Target_SetWidth(self)
 	self.conf.size.width = max(0, self.conf.size.width or 0)
 	local w = 128 + ((self.conf.portrait and 1 or 0) * 62) + ((self.conf.percent and 1 or 0) * 32) + self.conf.size.width
 
-	if (not InCombatLockdown()) then
+	if not InCombatLockdown() then
 		self:SetWidth(w)
 	end
 
-	if (self.conf.percent) then
-		if (not InCombatLockdown()) then
+	if self.conf.percent then
+		if not InCombatLockdown() then
 			self.nameFrame:SetWidth(160 + self.conf.size.width)
 			self.statsFrame:SetWidth(160 + self.conf.size.width)
 		end
 		self.statsFrame.healthBar.percent:Show()
 		self.statsFrame.manaBar.percent:Show()
 	else
-		if (not InCombatLockdown()) then
+		if not InCombatLockdown() then
 			self.nameFrame:SetWidth(128 + self.conf.size.width)
 			self.statsFrame:SetWidth(128 + self.conf.size.width)
 		end
@@ -1813,11 +1871,13 @@ function XPerl_Target_SetWidth(self)
 	end
 
 	self.conf.scale = self.conf.scale or 0.8
-	if (not InCombatLockdown()) then
+	if not InCombatLockdown() then
 		self:SetScale(self.conf.scale)
 	end
 
-	XPerl_SavePosition(self, true)
+	if not InCombatLockdown() then
+		XPerl_SavePosition(self, true)
+	end
 end
 
 -- XPerl_Target_Set_Bits
@@ -1912,55 +1972,55 @@ function XPerl_Target_Set_Bits(self)
 	end
 end
 
-function XPerl_Target_ComboFrame_Update()
-	local comboPoints = IsClassic and GetComboPoints("player", "target") or UnitPower(UnitHasVehicleUI("player") and "vehicle" or "player", Enum.PowerType.ComboPoints)
-	if comboPoints > 0 and UnitCanAttack((not IsVanillaClassic and UnitHasVehicleUI("player")) and "vehicle" or "player", "target") then
-		if not ComboFrame:IsShown() then
-			ComboFrame:Show()
-			UIFrameFadeIn(ComboFrame, COMBOFRAME_FADE_IN)
+-- XPerl_Target_RegisterComboEvents
+local function XPerl_Target_RegisterComboEvents(self)
+	if not tconf.combo.blizzard and not tconf.combo.enable and not tconf.comboindicator.enable then
+		ComboEventFrame:UnregisterAllEvents()
+
+		if IsClassic then
+			ComboFrame:UnregisterAllEvents()
 		end
 
-		local fadeInfo = { }
-		for i = 1, not IsClassic and 9 or 5 do
-			local comboPoint = _G["ComboPoint"..i]
-			if i < 6 then
-				comboPoint:Show()
-			else
-				if comboPoints >= i then
-					comboPoint:Show()
-				else
-					comboPoint:Hide()
-				end
-			end
-			if i <= comboPoints then
-				if i > (ComboFrame.lastPoints or 0) then
-					-- Fade in the highlight and set a function that triggers when it is done fading
-					fadeInfo.mode = "IN"
-					fadeInfo.timeToFade = COMBOFRAME_HIGHLIGHT_FADE_IN
-					fadeInfo.finishedFunc = ComboPointShineFadeIn
-					fadeInfo.finishedArg1 = comboPoint.Shine
-					UIFrameFade(comboPoint.Highlight, fadeInfo)
-				end
-			else
-				--[[if ENABLE_COLORBLIND_MODE == "1" then
-					comboPoint:Hide()
-				end]]
-				comboPoint.Highlight:SetAlpha(0)
-				comboPoint.Shine:SetAlpha(0)
-			end
+		ComboFrame:Hide()
+		self.nameFrame.cpMeter:Hide()
+		self.cpFrame:Hide()
+		return
+	end
+
+	ComboEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	ComboEventFrame:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player", "vehicle")
+	ComboEventFrame:RegisterUnitEvent("UNIT_MAXPOWER", "player", "vehicle")
+	ComboEventFrame:RegisterUnitEvent("UNIT_ENTERED_VEHICLE", "player")
+	ComboEventFrame:RegisterUnitEvent("UNIT_EXITED_VEHICLE", "player")
+
+	if IsClassic and tconf.combo.blizzard then
+		ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+		ComboFrame:RegisterEvent("UNIT_POWER_FREQUENT")
+		ComboFrame:RegisterEvent("UNIT_MAXPOWER")
+		ComboFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+		ComboFrame:RegisterUnitEvent("UNIT_ENTERED_VEHICLE", "player")
+		ComboFrame:RegisterUnitEvent("UNIT_EXITED_VEHICLE", "player")
+
+		ComboFrame.unit = UnitHasVehicleUI("player") and "vehicle" or "player"
+
+		ComboFrame_UpdateMax(ComboFrame)
+	end
+
+	if not tconf.combo.blizzard then
+		if IsClassic then
+			ComboFrame:UnregisterAllEvents()
 		end
-		ComboPoint1.Highlight:SetAlpha(1)
-	else
-		--ComboPoint1.Highlight:SetAlpha(0)
-		--ComboPoint1.Shine:SetAlpha(0)
 		ComboFrame:Hide()
 	end
-	ComboFrame.lastPoints = comboPoints
-end
 
-function XPerl_Target_ComboFrame_OnEvent(self, event, ...)
-	if (event == "PLAYER_TARGET_CHANGED") then
-		XPerl_Target_ComboFrame_Update()
+	if not tconf.combo.enable then
+		self.nameFrame.cpMeter:Hide()
+	else
+		XPerl_Target_SetComboBar(self)
+	end
+
+	if not tconf.comboindicator.enable then
+		self.cpFrame:Hide()
 	end
 end
 
@@ -2045,15 +2105,32 @@ function XPerl_Target_Set_BlizzCPFrame(self)
 				ComboPoint8:SetPoint("TOPLEFT", ComboPoint4, "BOTTOMLEFT", 0, 0)
 			end
 		end
-
-		ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-
-		ComboFrame:SetScript("OnEvent", XPerl_Target_ComboFrame_OnEvent)
-		ComboFrame:SetParent(XPerl_Target)
-
-		XPerl_Target_ComboFrame_Update()
-	else
-		ComboFrame:Hide()
-		ComboFrame:UnregisterEvent("PLAYER_TARGET_CHANGED")
 	end
+
+	XPerl_Target_RegisterComboEvents(self)
 end
+
+ComboEventFrame:SetScript("OnEvent", function(self, event, unit, ...)
+	local powerType = ...
+	if event == "UNIT_POWER_FREQUENT" then
+		if powerType == "COMBO_POINTS" then
+			if UnitExists("target") and XPerl_Target:IsShown() then
+				XPerl_Target_UpdateCombo(XPerl_Target)
+				if IsRetail and conf.target.combo.blizzard then
+					XPerl_Target_ComboFrame_Update()
+				end
+			end
+
+		end
+	elseif event == "PLAYER_ENTERING_WORLD" or event == "UNIT_MAXPOWER" or event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" then
+		if powerType == "COMBO_POINTS" then
+			if UnitExists("target") and XPerl_Target:IsShown() then
+				XPerl_Target_SetComboBar(XPerl_Target)
+				if IsRetail and conf.target.combo.blizzard then
+					XPerl_Target_ComboFrame_Update()
+				end
+			end
+
+		end
+	end
+end)

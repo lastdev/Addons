@@ -14,6 +14,14 @@ local L = WeakAuras.L
 	L["%d |4aura:auras; added"] = "已添加%d个光环"
 	L["%d |4aura:auras; deleted"] = "已删除%d个光环"
 	L["%d |4aura:auras; modified"] = "已修改%d个光环"
+	--[[Translation missing --]]
+	L["%d |4aura:auras; with meta data modified"] = "%d |4aura:auras; with meta data modified"
+	--[[Translation missing --]]
+	L["%d displays loaded"] = "%d displays loaded"
+	--[[Translation missing --]]
+	L["%d displays not loaded"] = "%d displays not loaded"
+	--[[Translation missing --]]
+	L["%d displays on standby"] = "%d displays on standby"
 	L["%i auras selected"] = "已选中%i个光环"
 	L["%i."] = "%i"
 	L["%i. %s"] = "%i. %s"
@@ -43,6 +51,8 @@ local L = WeakAuras.L
 	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s，行数：%d，频率：%0.2f，长度：%d，粗细：%d"
 	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s，粒子数：%d，频率：%0.2f，缩放：%0.2f"
 	L["%s %u. Overlay Function"] = "%s %u. 覆盖层函数"
+	--[[Translation missing --]]
+	L["%s (%s)"] = "%s (%s)"
 	L["%s Alpha: %d%%"] = "%s 透明度：%d%%"
 	L["%s Color"] = "%s 颜色"
 	L["%s Custom Variables"] = "%s 自定义变量"
@@ -143,8 +153,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Anchor"] = "锚点"
 	L["Anchor Point"] = "锚点指向"
 	L["Anchored To"] = "对齐到"
-	L["and"] = "和"
 	L["And "] = "和"
+	L["and"] = "和"
 	L["and %s"] = "并且 %s"
 	L["and aligned left"] = "并且左对齐"
 	L["and aligned right"] = "并且右对齐"
@@ -244,8 +254,8 @@ Off Screen]=] ] = "光环在屏幕外"
 	L["Collapse all non-loaded displays"] = "折叠所有未载入的图示"
 	L["Collapse all pending Import"] = "折叠所有待定的导入"
 	L["Collapsible Group"] = "可折叠的组"
-	L["Color"] = "颜色"
 	L["color"] = "颜色"
+	L["Color"] = "颜色"
 	L["Column Height"] = "行高度"
 	L["Column Space"] = "行空间"
 	L["Columns"] = "列"
@@ -460,6 +470,8 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Grid direction"] = "盒方向"
 	L["Group"] = "组"
 	L["Group (verb)"] = "加入组"
+	--[[Translation missing --]]
+	L["Group Alpha"] = "Group Alpha"
 	L[ [=[Group and anchor each auras by frame.
 
 - Nameplates: attach to nameplates per unit.
@@ -514,6 +526,8 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Icon Source"] = "图标来源"
 	L["If"] = "如果"
 	L["If %s"] = "如果 %s"
+	--[[Translation missing --]]
+	L["If checked, then the combo box in the User settings will be sorted."] = "If checked, then the combo box in the User settings will be sorted."
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "勾选后，用户可以看见一个多行的输入框，在输入大量文本时很有用。"
 	L["If checked, then this group will not merge with other group when selecting multiple auras."] = "勾选后，在选中多个光环的情况下，此组将不会和其他组合并。"
 	L["If checked, then this option group can be temporarily collapsed by the user."] = "勾选后，选项组可以临时被用户折叠"
@@ -580,6 +594,8 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Linked aura: "] = "关联光环："
 	L["Load"] = "载入"
 	L["Loaded"] = "已载入"
+	--[[Translation missing --]]
+	L["Loaded/Standby"] = "Loaded/Standby"
 	L["Lock Positions"] = "锁定位置"
 	L["Loop"] = "循环"
 	L["Low Mana"] = "低法力值"
@@ -834,6 +850,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件发�
 	L["Stack Count"] = "层数"
 	L["Stack Info"] = "层数信息"
 	L["Stagger"] = "交错"
+	--[[Translation missing --]]
+	L["Standby"] = "Standby"
 	L["Star"] = "星星"
 	L["Start"] = "开始"
 	L["Start Angle"] = "起始角度"
@@ -883,6 +901,8 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 在导入此光环前，请更新WeakAuras版本或等待下次发布。]=]
 	L["This display is currently loaded"] = "此显示内容已加载"
 	L["This display is not currently loaded"] = "此显示内容未加载"
+	--[[Translation missing --]]
+	L["This display is on standby, it will be loaded when needed."] = "This display is on standby, it will be loaded when needed."
 	L["This enables the collection of debug logs. Custom code can add debug information to the log through the function DebugPrint."] = "启用调试日志的收集。自定义代码可以使用DebugPrint函数向日志添加调试信息。"
 	L["This is a modified version of your aura, |cff9900FF%s.|r"] = "这是一个你光环的修改版本，|cff9900FF%s.|r"
 	L["This is a modified version of your group: |cff9900FF%s|r"] = "这是一个你群组的修改版本：|cff9900FF%s|r"
@@ -966,8 +986,8 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Y Rotation"] = "Y轴旋转"
 	L["Y Scale"] = "长度比例"
 	L["Yellow Rune"] = "黄色符文"
-	L["y-Offset"] = "Y偏移"
 	L["Y-Offset"] = "Y 偏移"
+	L["y-Offset"] = "Y偏移"
 	L["You already have this group/aura. Importing will create a duplicate."] = "此组/光环已经存在，继续导入将会创建副本。"
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "正在删除 %d 个光环，|cFFFF0000此操作无法被撤销！|r真的要删除吗?"
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "你正在删除一个触发器。|cFFFF0000这个操作无法撤销！|r你要继续吗？"

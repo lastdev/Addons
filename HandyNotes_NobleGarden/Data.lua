@@ -248,11 +248,14 @@ points[ ns.durotar ] = { -- Durotar Shared - Razor Hill
 	[52064182] = { obj=113768, name="Brightly Colored Egg", tip="In the water tub" },
 	[52164090] = { obj=113768, name="Brightly Colored Egg", tip="Under the lamp" },
 	[52564261] = { obj=113768, name="Brightly Colored Egg", preCata=false, tip="On top of the wayfinding post" },
+	[52684122] = { obj=113768, name="Brightly Colored Egg", tip="Between three cactii" }, -- Not sure about that one. Version specific?
 	[52794106] = { obj=113768, name="Brightly Colored Egg", tip="Between three cactii" },
 	[52824097] = { obj=113768, name="Brightly Colored Egg" },
 	[52984187] = { obj=113768, name="Brightly Colored Egg", preCata=true, tip="Under the lamp" },
 	[52984187] = { obj=113768, name="Brightly Colored Egg", preCata=false,
 					tip="((In Wrath there was a lamp here, which\nexplains why this egg is out in the open!))" },
+	[53014094] = { obj=113768, name="Brightly Colored Egg", tip="In the centre of and under the round serving table.\n\n"
+																.."The best hidden egg in Razor Hill!" },
 	[53064083] = { obj=113768, name="Brightly Colored Egg", tip="Between two sacks and a cushion" },
 	[53094198] = { obj=113768, name="Brightly Colored Egg", tip="Under the rickshaw" },
 	[53094233] = { obj=113768, name="Brightly Colored Egg", tip="Under the lamp" },
@@ -377,6 +380,7 @@ points[ ns.eversongWoods ] = { -- Eversong Woods Shared - Falconwing Square
 						.."where you might find more useful AddOns!" },
 	[46384646] = { obj=113768, name="Brightly Colored Egg", tip="Between the fence and a shrub" },
 	[46514557] = { obj=113768, name="Brightly Colored Egg", tip="Tucked in between a fence, a tree and the shrubs" },
+	[46694563] = { obj=113768, name="Brightly Colored Egg", tip="Partly concealed by a shrub" },
 	[46734801] = { obj=113768, name="Brightly Colored Egg", tip="Welcome to Flaconwing Square" },
 	[46794570] = { obj=113768, name="Brightly Colored Egg", tip="Tucked in between a fence, a tree and the shrubs" },
 	[46804654] = { obj=113768, name="Brightly Colored Egg", tip="Under the bench seat" },

@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: v10.2.1
+## Interface: 100205
+## Version: v10.2.2
 ## Title: BadBoy_Guilded
 ## Notes: Removes guild advertising from public channels.
 ## Notes-frFR: Enlève les publicités des guildes des canaux publiques.

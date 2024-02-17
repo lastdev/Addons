@@ -8,8 +8,8 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: c862d1d6c9e1c485a2b8ab0e7e79cb538385eef8 $")
-XPerl_SetModuleRevision("$Revision: c862d1d6c9e1c485a2b8ab0e7e79cb538385eef8 $")
+end, "$Revision: 2fc5c67ddc5c24d6b1d4b84c1827b22fa81eb0d6 $")
+XPerl_SetModuleRevision("$Revision: 2fc5c67ddc5c24d6b1d4b84c1827b22fa81eb0d6 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -393,7 +393,7 @@ local function DoRangeCheck(unit, opt)
 			range = nil
 		else--]]
 		if (opt.interact) then
-			if IsRetail then
+			if IsRetail or IsVanillaClassic then
 				if (opt.interact == 6) then -- 45y
 					local checkedRange
 					range, checkedRange = UnitInRange(unit)
@@ -529,7 +529,7 @@ local function DoRangeCheck(unit, opt)
 			-- 4 = Follow = 28 yards (BCC = 28 yards) (Vanilla = 28 yards)
 			-- 5 = Pet-battle Duel = 7 yards (BCC = 7 yards) (Vanilla = 10 yards)
 		elseif opt.spell or opt.spell2 then
-			if IsRetail then
+			if IsRetail or IsVanillaClassic then
 				if UnitCanAssist("player", unit) and opt.spell then
 					range = IsSpellInRange(opt.spell, unit)
 				elseif UnitCanAttack("player", unit) and opt.spell2 then
@@ -545,7 +545,7 @@ local function DoRangeCheck(unit, opt)
 					range = CheckInteractDistance(unit, 4)
 				end
 			end
-		elseif not IsRetail and (opt.item or opt.item2) then
+		elseif not IsRetail and not IsVanillaClassic and (opt.item or opt.item2) then
 			if UnitCanAssist("player", unit) and opt.item then
 				range = IsItemInRange(opt.item, unit)
 			elseif UnitCanAttack("player", unit) and opt.item2 then
@@ -1653,12 +1653,12 @@ function XPerl_MinimapButton_Details(tt, ldb)
 	--tt.updateTooltip = 1
 end
 
-function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
-	local _, _, _, _, _, _, showOnRaid, _, _, _, _, _, _, _, _ = not IsClassic and GetUnitPowerBarInfo(unitID)
-	if ( showOnRaid and UnitHasVehicleUI(unitID) and (UnitInParty(unitID) or UnitInRaid(unitID)) ) then
+function XPerl_GetDisplayedPowerType(unitID)
+	local barInfo = not IsClassic and GetUnitPowerBarInfo(unitID)
+	if barInfo and barInfo.showOnRaid and UnitHasVehicleUI(unitID) and (UnitInParty(unitID) or UnitInRaid(unitID)) then
 		return ALTERNATE_POWER_INDEX
 	else
-		return UnitPowerType(unitID)
+		return UnitPowerType(unitID) or 0
 	end
 end
 
@@ -1930,9 +1930,10 @@ local MagicCureTalentsClassic = {
 
 local MagicCureTalents = {
 	["DRUID"] = 4, -- Resto
-	["PALADIN"] = 1, --Holy
+	["PALADIN"] = 1, -- Holy
 	["SHAMAN"] = 3, -- Resto
 	["MONK"] = 2, -- Mistweaver
+	["EVOKER"] = 2 -- Preservation
 }
 
 local function CanClassCureMagic(class)
@@ -2023,6 +2024,18 @@ function ZPerl_DebufHighlightInit()
 				show = Curses.Magic or Curses.Curse or Curses.Poison or Curses.Disease
 			end
 			return Curses.Poison or show
+		end
+	elseif (playerClass == "EVOKER") then
+		getShow = function(Curses)
+			local show
+			if (not conf.highlightDebuffs.class) then
+				show = Curses.Magic or Curses.Curse or Curses.Poison or Curses.Disease
+			end
+			local magic
+			if (CanClassCureMagic(playerClass)) then
+				magic = Curses.Magic
+			end
+			return Curses.Curse or Curses.Poison or Curses.Disease or magic or show
 		end
 	else
 		getShow = function(Curses)
@@ -2969,7 +2982,6 @@ end
 
 -- XPerl_Unit_BuffSpacing
 local function XPerl_Unit_BuffSpacing(self)
-
 	local w = self.statsFrame:GetWidth()
 	if (self.portraitFrame and self.portraitFrame:IsShown()) then
 		w = w - 2 + self.portraitFrame:GetWidth()

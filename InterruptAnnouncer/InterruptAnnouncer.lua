@@ -1,6 +1,4 @@
 local UnitGUID = UnitGUID;
-local GetNumRaidMembers = GetNumRaidMembers;
-local GetNumPartyMembers = GetNumPartyMembers;
 local IsInInstance = IsInInstance;
 local InstanceType = "none"
 local RaidIconMaskToIndex =

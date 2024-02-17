@@ -1,5 +1,5 @@
 ## Interface: 20504
-## Version: v10.2.1
+## Version: v10.2.2
 ## Title: BadBoy_CCleaner
 ## Notes: Filter crap from your chat.
 ## Notes-frFR: Enlève toutes les saloperies de votre fenêtre de discussion.

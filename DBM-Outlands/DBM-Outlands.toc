@@ -2,7 +2,7 @@
 ## X-Min-Interface: 80000
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30401
-## Version: r709
+## Version: r710
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BC)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10필드 보스 (불성)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Scherbenwelt|r

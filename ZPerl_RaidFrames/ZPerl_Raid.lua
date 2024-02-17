@@ -18,11 +18,12 @@ local SkipHighlightUpdate
 
 --local taintFrames = { }
 
-local conf, rconf
+local conf, rconf, cconf
 XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
-end, "$Revision: 7c303655db44388c76e9dd660ef8ea045a1a721f $")
+	cconf = conf.custom
+end, "$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -1009,12 +1010,12 @@ local function XPerl_Raid_UpdateCombat(self)
 	if not partyid then
 		return
 	end
-	if (UnitExists(partyid) and UnitAffectingCombat(partyid)) then
+	if UnitExists(partyid) and UnitAffectingCombat(partyid) then
 		self.nameFrame.combatIcon:Show()
 	else
 		self.nameFrame.combatIcon:Hide()
 	end
-	if (UnitIsVisible(partyid) and UnitIsCharmed(partyid)) then
+	if UnitIsVisible(partyid) and UnitIsCharmed(partyid) and UnitIsPlayer(partyid) and (not IsClassic and not UnitUsingVehicle(partyid) or true) then
 		self.nameFrame.warningIcon:Show()
 	else
 		self.nameFrame.warningIcon:Hide()
@@ -1075,16 +1076,13 @@ end
 -- XPerl_Raid_OnUpdate
 function XPerl_Raid_OnUpdate(self, elapsed)
 	if (rosterUpdated) then
-		if (not ZPerl_Custom) then
-			LoadAddOn("ZPerl_CustomHighlight")
-		end
 		rosterUpdated = nil
 		if InCombatLockdown() then
 			XPerl_OutOfCombatQueue[XPerl_Raid_Position] = self
 		else
 			XPerl_Raid_Position(self)
 		end
-		if (ZPerl_Custom) then
+		if ZPerl_Custom and rconf.enable and cconf.enable then
 			ZPerl_Custom:UpdateUnits()
 		end
 		if (not IsInRaid() or (not IsInGroup() and rconf.inParty)) then
@@ -1470,7 +1468,7 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLD()
 		XPerl_Raid_Frame:Show()
 	end
 
-	if (IsInInstance()) then
+	if not ZPerl_Custom and rconf.enable and cconf.enable then
 		LoadAddOn("ZPerl_CustomHighlight")
 	end
 
@@ -1555,7 +1553,11 @@ function XPerl_Raid_Events:UNIT_FACTION()
 end
 
 -- UNIT_COMBAT
-function XPerl_Raid_Events:UNIT_COMBAT(unitID, action, descriptor, damage, damageType)
+function XPerl_Raid_Events:UNIT_COMBAT(unit, action, descriptor, damage, damageType)
+	if unit ~= self.partyid then
+		return
+	end
+
 	if (action == "HEAL") then
 		XPerl_Raid_CombatFlash(self, 0, true, true)
 	elseif (damage and damage > 0) then

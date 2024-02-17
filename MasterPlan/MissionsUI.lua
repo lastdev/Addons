@@ -1,6 +1,6 @@
 local _, T = ...
 if T.Mark ~= 50 then return end
-local L, EV, G, api = T.L, T.Evie, T.Garrison, {}
+local L, EV, G, XU, api = T.L, T.Evie, T.Garrison, T.exUI, {}
 local GameTooltip = T.NotGameTooltip or GameTooltip
 
 local function HookOnShow(self, OnShow)
@@ -1774,56 +1774,20 @@ local core do
 		local sf, sc, bar = CreateFrame("ScrollFrame", nil, parent) do
 			sf:SetSize(w, h)
 			sf:SetPoint("CENTER")
-			bar = CreateFrame("Slider", nil, sf) do
-				bar:SetWidth(19)
-				bar:SetPoint("TOPRIGHT", 0, -6)
-				bar:SetPoint("BOTTOMRIGHT", 0, 8)
-				bar:SetThumbTexture("Interface\\Buttons\\UI-ScrollBar-Knob")
-				bar:GetThumbTexture():SetSize(18, 24)
-				bar:GetThumbTexture():SetTexCoord(0.20, 0.80, 0.125, 0.875)
+			bar = XU:Create("ScrollBar", nil, sf) do
+				bar:SetStyle("common")
+				bar:SetPoint("TOPRIGHT", 0, 6)
+				bar:SetPoint("BOTTOMRIGHT", 0, -8)
+				bar:SetWindowRange(h)
 				bar:SetMinMaxValues(0, 100)
 				bar:SetValue(0)
-				local bg = bar:CreateTexture(nil, "BACKGROUND")
-				bg:SetPoint("TOPLEFT", 0, 16)
-				bg:SetPoint("BOTTOMRIGHT", 0, -14)
-				bg:SetColorTexture(0,0,0)
-				bg:SetAlpha(0.85)
-				local top = bar:CreateTexture(nil, "ARTWORK")
-				top:SetSize(24, 48)
-				top:SetPoint("TOPLEFT", -4, 17)
-				top:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ScrollBar")
-				top:SetTexCoord(0, 0.45, 0, 0.20)
-				local bot = bar:CreateTexture(nil, "ARTWORK")
-				bot:SetSize(24, 64)
-				bot:SetPoint("BOTTOMLEFT", -4, -15)
-				bot:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ScrollBar")
-				bot:SetTexCoord(0.515625, 0.97, 0.1440625, 0.4140625)
-				local mid = bar:CreateTexture(nil, "ARTWORK")
-				mid:SetPoint("TOPLEFT", top, "BOTTOMLEFT")
-				mid:SetPoint("BOTTOMRIGHT", bot, "TOPRIGHT")
-				mid:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ScrollBar")
-				mid:SetTexCoord(0, 0.45, 0.1640625, 1)
-				local function Move(self)
-					if int.props then
-						bar:SetValue(bar:GetValue() - (2-self:GetID()) * int.props.entryHeight)
-					end
-				end
-				local up = CreateFrame("Button", nil, bar, "UIPanelScrollUpButtonTemplate", 1)
-				up:SetPoint("BOTTOM", bar, "TOP", 0, -2)
-				local down = CreateFrame("Button", nil, bar, "UIPanelScrollDownButtonTemplate", 3)
-				down:SetPoint("TOP", bar, "BOTTOM", 0, 2)
-				up:SetScript("OnClick", Move)
-				down:SetScript("OnClick", Move)
-				sf:SetScript("OnMouseWheel", function(_, direction)
-					(direction == 1 and up or down):Click()
-				end)
-				bar:SetScript("OnValueChanged", function(self, v, _isUserInteraction)
-					local _, x = self:GetMinMaxValues()
+				bar:SetCoverTarget(sf, 0, 30, 0, 0)
+				bar:SetStepsPerPage(4)
+				bar:SetWheelScrollTarget(sf)
+				bar:SetScript("OnValueChanged", function(_self, v, _isUserInteraction)
 					int:Update(v, true)
-					up:SetEnabled(v > 0)
-					down:SetEnabled(v < x)
 				end)
-				sf.Bar, bar.Up, bar.Down = bar, up, down
+				sf.Bar = bar
 			end
 			sc = CreateFrame("Frame", nil, sf) do
 				sc:SetSize(w-2, h+10)
@@ -1869,9 +1833,7 @@ local core do
 			if not self.props then return end
 			if bar:GetValue() ~= ofs then return bar:SetValue(ofs) end
 			local entryHeight, bot, w = self.props.entryHeight, ofs + sf:GetHeight(), self.props.widgets
-			local baseIndex = (ofs - ofs % entryHeight) / entryHeight
-			local maxIndex = (bot + entryHeight - bot % entryHeight) / entryHeight
-
+			local baseIndex, maxIndex = math.floor(ofs/entryHeight), math.floor(bot/entryHeight) + 1
 			local minIndex, maxIndex, childLevel = max(1, baseIndex), min(#self.data, maxIndex), sc:GetFrameLevel()+1
 			Release(minIndex, maxIndex)
 			for i=minIndex,maxIndex do
@@ -1905,6 +1867,7 @@ local core do
 			if data and propsHandle then
 				local mv = max(0, 3 + propsHandle.entryHeight * #data - sf:GetHeight())
 				bar:SetMinMaxValues(0, mv > 10 and mv or 0)
+				bar:SetValueStep(propsHandle.entryHeight)
 				bar:GetScript("OnValueChanged")(bar, reset and 0 or bar:GetValue(), false)
 			else
 				bar:SetMinMaxValues(0, 0)

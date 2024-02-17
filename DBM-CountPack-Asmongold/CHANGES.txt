@@ -1,0 +1,10 @@
+lightweight tag 8f4d88d879872b7175bb2467ff4e0437a5e4678f 1.0.19
+Author:	Kaan Demiroz <kaandemiroz@gmail.com>
+Date:	Tue Jan 16 18:24:34 2024 -0800
+
+commit 8f4d88d879872b7175bb2467ff4e0437a5e4678f
+Author: Kaan Demiroz <kaandemiroz@gmail.com>
+Date:   Tue Jan 16 18:24:34 2024 -0800
+
+    Updated TOC for 10.2.5
+

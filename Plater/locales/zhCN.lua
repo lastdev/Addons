@@ -67,6 +67,12 @@ L["OPTIONS_CAST_SHOW_TARGETNAME"] = "显示目标名字"
 L["OPTIONS_CAST_SHOW_TARGETNAME_DESC"] = "显示当前施法条的目标(如果目标存在)"
 L["OPTIONS_CAST_SHOW_TARGETNAME_TANK"] = "[坦克] 不要显示你的名字"
 L["OPTIONS_CAST_SHOW_TARGETNAME_TANK_DESC"] = "如果你是坦克, 当施法目标是你时不要显示名字."
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_APPEARANCE"] = "Cast Bar Appearance"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_BLIZZCASTBAR"] = "Blizzard Cast Bar"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_COLORS"] = "Cast Bar Colors"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED"] = "使用渐变动画"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED_DESC"] = "动画开始和结束有渐变效果."
 L["OPTIONS_CASTBAR_FADE_ANIM_TIME_END"] = "淡出时间"
@@ -81,9 +87,17 @@ L["OPTIONS_CASTBAR_ICON_CUSTOM_ENABLE"] = "启用图标自定义"
 L["OPTIONS_CASTBAR_ICON_CUSTOM_ENABLE_DESC"] = "如果这个选项被禁用, Plater就不会修改法术图标而是留给脚本来做."
 L["OPTIONS_CASTBAR_NO_SPELLNAME_LIMIT"] = "不受法术名称长度限制"
 L["OPTIONS_CASTBAR_NO_SPELLNAME_LIMIT_DESC"] = "法术名字的文本不会被切割成适合于施法条的宽度."
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_QUICKHIDE"] = "Quick Hide Cast Bar"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_QUICKHIDE_DESC"] = "After the cast finishes, immediately hide the cast bar."
 L["OPTIONS_CASTBAR_SPARK_HALF"] = "半火花"
 L["OPTIONS_CASTBAR_SPARK_HALF_DESC"] = "火花纹理的一半."
 L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "打断时隐藏火花"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_SPARK_SETTINGS"] = "Spark Settings"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_SPELLICON"] = "Spell Icon"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "施法条测试开关"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "点一次开始测试, 再点一次停止."
 L["OPTIONS_CASTBAR_WIDTH"] = "施法条宽度"

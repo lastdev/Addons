@@ -182,6 +182,7 @@ local moiHandle do
 		GarrisonShipyardFrame.MissionTab:Hide()
 		GarrisonShipyardFrame.FollowerTab:Hide()
 		GarrisonShipyardFrame.FollowerList:Hide()
+		GarrisonShipyardFrame.BorderFrame.TitleText:SetText(L"Missions of Interest")
 		local info, job = G.GetBestGroupInfo(2, false, true)
 		if info then
 			-- This part is actually cheating.

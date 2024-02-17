@@ -1,9 +1,9 @@
-## Interface: 100200
+## Interface: 100205
 ## Title: HandyNotes: DungeonLocations
-## Version: 2.2
+## Version: 2.2c
 ## Notes: Shows locations of old and new world dungeon and raid entrances
 ## Author: Caliaha of Cairne 
-## X-Updated-By: Shadowlands & Dragongflight by BadBoyBarny
+## X-Updated-By: previous expansions up to Dragonflight by BadBoyBarny
 ## RequiredDeps: HandyNotes
 ## X-Curse-Project-ID: 102768
 ## IconTexture: Interface\AddOns\HandyNotes_DungeonLocations\Images\HN_DL_Logo

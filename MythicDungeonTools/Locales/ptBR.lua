@@ -1,4 +1,4 @@
-if not (GetLocale() == "ptBR") then
+if not ((GAME_LOCALE or GetLocale()) == "ptBR") then
   return
 end
 local addonName, MDT = ...
@@ -329,10 +329,14 @@ L["Chamber Sentinel"] = "Sentinela da Câmara"
 L["ChamberOfFlames"] = "Chamber of Flames"
 L["Champion Druna"] = "Campeã Druna"
 L["Champion of Hodir"] = "Campeão de Hodir"
+--[[Translation missing --]]
+L["Change Language"] = "Change Language"
 L["Channeler Varisz"] = "Canalizadora Varisz"
 L["Chaotic Rift"] = "Fenda Caótica"
 L["Chargath, Bane of Scales"] = "Chargath, Ruína das Escamas"
 L["Charged Dust Devil"] = "Redemoinho de Poeira Carregado"
+--[[Translation missing --]]
+L["chatNoninteractiveWarning"] = "Chat frame is currently set to noninteractive, you will not be able to click on MDT routes."
 L["Choose Enemy Forces Format"] = "Escolha o formato das forças inimigas"
 L["Choose Enemy Style. Requires Reload"] = "Escolha estilo inimigo. Requer Recarregamento "
 L["Choose NPC tooltip position"] = "Escolha a posição da dica de ferramenta de NPC"
@@ -693,6 +697,8 @@ L["Emissary of the Tides"] = "Emissária das Marés"
 --[[Translation missing --]]
 L["Empty"] = "Empty"
 L["Empyrean Assassin"] = "Assassino Empíreo"
+--[[Translation missing --]]
+L["Enable Compartment Button"] = "Enable Compartment Button"
 L["Enable Minimap Button"] = "Habilitar botão do minimapa"
 L["Enchanted Broodling"] = "Cria Encantada"
 L["Enchanted Emissary"] = "Emissária Encantada"
@@ -731,7 +737,7 @@ L["Error Message:"] = "Error Message:"
 --[[Translation missing --]]
 L["errorLabel1"] = "MDT has encountered errors."
 --[[Translation missing --]]
-L["errorLabel2"] = "Please visist either GitHub or Discord and report the error message below."
+L["errorLabel2"] = "Please visit either GitHub or Discord and report the error message below."
 --[[Translation missing --]]
 L["errorLabel3"] = "Press CTRL + C to copy!"
 L["Erudite Slayer"] = "Assassina Erudita"
@@ -1279,6 +1285,10 @@ L["Living Waste"] = "Dejeto Vivo"
 L["Loatheb"] = "Repugnaz"
 L["Local color blind mode"] = [=[Modo daltônico local
 ]=]
+--[[Translation missing --]]
+L["localeButtonTooltip1"] = "Requires the \"AddonLocale\" AddOn"
+--[[Translation missing --]]
+L["localeButtonTooltip2"] = "Click to start settings dialog in chat"
 L["Locked"] = "Trancado"
 L["Loken"] = "Loken"
 L["Lord Chamberlain"] = "Lorde Camarista"
@@ -2459,6 +2469,8 @@ L["T'lonja"] = "T'lonja"
 L["To share a different preset while the live session is active simply navigate to the preferred preset and click the new 'Set to Live' Button next to the preset-dropdown"] = "To share a different route while the live session is active simply navigate to the preferred route and click the new 'Set to Live' Button next to the route-dropdown"
 --[[Translation missing --]]
 L["tocNotes"] = "Tool for planning and optimizing Mythic+ dungeon runs"
+--[[Translation missing --]]
+L["Toggle MDT"] = "Toggle MDT"
 --[[Translation missing --]]
 L["Toggle Window"] = "Toggle Window"
 L["Toiling Groundskeeper"] = "Zelador Mourejante"

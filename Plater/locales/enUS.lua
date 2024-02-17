@@ -4,7 +4,15 @@ do
     local L = languageTable
 
     --add to curseforge
+
+L["OPTIONS_"] = ""
+
     --on curseforge
+    L["OPTIONS_CASTBAR_APPEARANCE"] = "Cast Bar Appearance"
+    L["OPTIONS_CASTBAR_SPARK_SETTINGS"] = "Spark Settings"
+    L["OPTIONS_CASTBAR_COLORS"] = "Cast Bar Colors"
+    L["OPTIONS_CASTBAR_SPELLICON"] = "Spell Icon"
+    L["OPTIONS_CASTBAR_BLIZZCASTBAR"] = "Blizzard Cast Bar"
 
     L["IMPORT_CAST_SOUNDS"] = "Import Sounds"
     L["EXPORT_CAST_SOUNDS"] = "Share Sounds"
@@ -66,6 +74,8 @@ do
     L["OPTIONS_INTERRUPT_SHOW_AUTHOR"] = "Show Interrupt Author"
     L["OPTIONS_INTERRUPT_SHOW_ANIM"] = "Play Interrupt Animation"
     L["OPTIONS_INTERRUPT_FILLBAR"] = "Fill Cast Bar On Interrupt"
+    L["OPTIONS_CASTBAR_QUICKHIDE"] = "Quick Hide Cast Bar"
+    L["OPTIONS_CASTBAR_QUICKHIDE_DESC"] = "After the cast finishes, immediately hide the cast bar."
     L["OPTIONS_CASTBAR_HIDE_FRIENDLY"] = "Hide Friendly Cast Bar"
     L["OPTIONS_CASTBAR_HIDE_ENEMY"] = "Hide Enemy Cast Bar"
     L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Toggle Cast Bar Test"
@@ -439,6 +449,9 @@ L["OPTIONS_CAST_SHOW_TARGETNAME"] = "Show Target Name"
 L["OPTIONS_CAST_SHOW_TARGETNAME_DESC"] = "Show who is the target of the current cast (if the target exists)"
 L["OPTIONS_CAST_SHOW_TARGETNAME_TANK"] = "[Tank] Don't Show Your Name"
 L["OPTIONS_CAST_SHOW_TARGETNAME_TANK_DESC"] = "If you are a tank don't show the target name if the cast is on you."
+L["OPTIONS_CASTBAR_APPEARANCE"] = "Cast Bar Appearance"
+L["OPTIONS_CASTBAR_BLIZZCASTBAR"] = "Blizzard Cast Bar"
+L["OPTIONS_CASTBAR_COLORS"] = "Cast Bar Colors"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED"] = "Enable Fade Animations"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED_DESC"] = "Enable fade animations when the cast starts and stop."
 L["OPTIONS_CASTBAR_FADE_ANIM_TIME_END"] = "On Stop"
@@ -453,9 +466,13 @@ L["OPTIONS_CASTBAR_ICON_CUSTOM_ENABLE"] = "Enable Icon Customization"
 L["OPTIONS_CASTBAR_ICON_CUSTOM_ENABLE_DESC"] = "If this option is disabled, Plater won't modify the spell icon, leaving it for scripts to do."
 L["OPTIONS_CASTBAR_NO_SPELLNAME_LIMIT"] = "No Spell Name Length Limitation"
 L["OPTIONS_CASTBAR_NO_SPELLNAME_LIMIT_DESC"] = "Spell name text won't be cut to fit within the cast bar width."
+L["OPTIONS_CASTBAR_QUICKHIDE"] = "Quick Hide Cast Bar"
+L["OPTIONS_CASTBAR_QUICKHIDE_DESC"] = "After the cast finishes, immediately hide the cast bar."
 L["OPTIONS_CASTBAR_SPARK_HALF"] = "Half Spark"
 L["OPTIONS_CASTBAR_SPARK_HALF_DESC"] = "Show only half of the spark texture."
 L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "Hide Spark On Interrupt"
+L["OPTIONS_CASTBAR_SPARK_SETTINGS"] = "Spark Settings"
+L["OPTIONS_CASTBAR_SPELLICON"] = "Spell Icon"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Toggle Cast Bar Test"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "Start cast bar test, press again to stop."
 L["OPTIONS_CASTBAR_WIDTH"] = "Width of the cast bar."

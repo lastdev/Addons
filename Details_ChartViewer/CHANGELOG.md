@@ -1,6 +1,6 @@
 # Details_ChartViewer (plugin)
 
-## [v10.2.0.083](https://github.com/Tercioo/ChartViewer/tree/v10.2.0.083) (2024-01-07)
-[Full Changelog](https://github.com/Tercioo/ChartViewer/compare/v10.2.0.082...v10.2.0.083) 
+## [v10.2.5.084](https://github.com/Tercioo/ChartViewer/tree/v10.2.5.084) (2024-02-15)
+[Full Changelog](https://github.com/Tercioo/ChartViewer/compare/v10.2.0.083...v10.2.5.084) 
 
-- Fixed an error while trying to access Details! data where the data wasn't yet loaded.  
+- Toc Update  

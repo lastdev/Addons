@@ -1,6 +1,6 @@
 
 
-local dversion = 503
+local dversion = 512
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -48,6 +48,12 @@ end
 function DF:MsgWarning(msg, ...)
 	print("|cFFFFFFAA" .. (self.__name or "Details!Framework") .. "|r |cFFFFAA00[Warning]|r", msg, ...)
 end
+
+DF.DefaultRoundedCornerPreset = {
+	roundness = 6,
+	color = {.1, .1, .1, 0.98},
+	border_color = {.05, .05, .05, 0.834},
+}
 
 DF.internalFunctions = DF.internalFunctions or {}
 
@@ -507,6 +513,16 @@ function DF:FadeFrame(frame, t)
 end
 
 ------------------------------------------------------------------------------------------------------------
+function DF:RandomBool(odds)
+	if (odds) then
+		local chance = math.random()
+		return chance <= odds
+	else
+		return math.random(1, 2) == 1
+	end
+end
+
+------------------------------------------------------------------------------------------------------------
 --table
 
 DF.table = {}
@@ -804,6 +820,7 @@ function DF.table.deploy(t1, t2)
 	return t1
 end
 
+--/run print (DetailsFramework.table.dump({{1, 2}, {2, 3}, {4, 5}}))
 local function tableToString(t, resultString, deep, seenTables)
     resultString = resultString or ""
     deep = deep or 0
@@ -853,7 +870,11 @@ local function tableToString(t, resultString, deep, seenTables)
 			resultString = resultString .. space .. "[\"" .. key .. "\"] = \"|cFFfff1c1" .. value .. "|r\",\n"
 
 		elseif (valueType == "number") then
-			resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF94CEA8" .. value .. "|r,\n"
+			if (type(key) == "number") then
+				resultString = resultString .. space .. "[" .. key .. "] = |cFFffc1f4" .. value .. "|r,\n"
+			else
+				resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFF94CEA8" .. value .. "|r,\n"
+			end
 
 		elseif (valueType == "function") then
 			resultString = resultString .. space .. "[\"" .. key .. "\"] = |cFFC586C0function|r,\n"
@@ -2501,6 +2522,28 @@ DF.dropdown_templates["OPTIONS_DROPDOWNDARK_TEMPLATE"] = {
 	dropiconpoints = {-2, -3},
 }
 
+DF.dropdown_templates["OLD_DROPDOWN_TEMPLATE"] = {
+	height = 24,
+
+	backdrop = {
+		edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+		edgeSize = 8,
+		bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
+		tileSize = 64,
+		tile = true,
+		insets = {left = 4, right = 4, top = 4, bottom = 4}
+	},
+
+	backdropcolor = {0.1215, 0.1176, 0.1294, 0.4000},
+	backdropbordercolor = {1, 1, 1, 1},
+	onentercolor = {.5, .5, .5, .9},
+	onenterbordercolor = {1, 1, 1, 1},
+
+	dropicon = "Interface\\BUTTONS\\arrow-Down-Down",
+	dropiconsize = {16, 16},
+	dropiconpoints = {-2, -3},
+}
+
 --switches
 DF.switch_templates = DF.switch_templates or {}
 DF.switch_templates["OPTIONS_CHECKBOX_TEMPLATE"] = {
@@ -2513,6 +2556,23 @@ DF.switch_templates["OPTIONS_CHECKBOX_TEMPLATE"] = {
 	disabled_backdropcolor = {1, 1, 1, .2},
 	onenterbordercolor = {1, 1, 1, 1},
 }
+
+DF.switch_templates["OPTIONS_CIRCLECHECKBOX_TEMPLATE"] = {
+	width = 18,
+	height = 18,
+	is_checkbox = true, --will call SetAsCheckBox()
+	checked_texture = [[Interface\CHARACTERFRAME\TempPortraitAlphaMaskSmall]],
+	checked_size_percent = 0.7,
+	checked_xoffset = 0,
+	checked_yoffset = 0,
+	checked_color = "dark3",
+	rounded_corner = {
+		color = {.075, .075, .075, 1},
+		border_color = {.2, .2, .2, 1},
+		roundness = 8,
+	},
+}
+
 DF.switch_templates["OPTIONS_CHECKBOX_BRIGHT_TEMPLATE"] = {
 	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
 	backdropcolor = {1, 1, 1, .5},
@@ -2530,6 +2590,14 @@ DF.button_templates["OPTIONS_BUTTON_TEMPLATE"] = {
 	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
 	backdropcolor = {1, 1, 1, .5},
 	backdropbordercolor = {0, 0, 0, 1},
+}
+
+DF.button_templates["OPTIONS_CIRCLEBUTTON_TEMPLATE"] = {
+	rounded_corner = {
+		color = {.075, .075, .075, 1},
+		border_color = {.2, .2, .2, 1},
+		roundness = 8,
+	},
 }
 
 DF.button_templates["OPTIONS_BUTTON_GOLDENBORDER_TEMPLATE"] = {
@@ -3867,7 +3935,7 @@ local specs_per_class = {
 	["ROGUE"] = {259, 260, 261},
 	["DRUID"] = {102, 103, 104, 105},
 	["HUNTER"] = {253, 254, 255},
-	["SHAMAN"] = {262, 263, 254},
+	["SHAMAN"] = {262, 263, 264},
 	["PRIEST"] = {256, 257, 258},
 	["WARLOCK"] = {265, 266, 267},
 	["PALADIN"] = {65, 66, 70},
@@ -3884,7 +3952,7 @@ function DF:GetClassSpecIds(engClass) --naming conventions
 end
 
 local dispatch_error = function(context, errortext)
-	DF:Msg( (context or "<no context>") .. " |cFFFF9900error|r: " .. (errortext or "<no error given>"))
+	error((context or "") .. (errortext or ""))
 end
 
 --call a function with payload, if the callback doesn't exists, quit silently
@@ -3909,23 +3977,8 @@ end
 ---@param ... any
 ---@return any
 function DF:Dispatch(func, ...)
-	if (type(func) ~= "function") then
-		return dispatch_error(_, "DetailsFramework:Dispatch(func) expect a function as parameter 1.")
-	end
+	assert(type(func) == "function", "DetailsFramework:Dispatch(func) expect a function as parameter 1. Received: " .. type(func) .. " instead.")
 	return select(2, xpcall(func, geterrorhandler(), ...))
-
-	--[=[
-		local dispatchResult = {xpcall(func, geterrorhandler(), ...)}
-		local okay = dispatchResult[1]
-
-		if (not okay) then
-			return false
-		end
-
-		tremove(dispatchResult, 1)
-
-		return unpack(dispatchResult)
-	--]=]
 end
 
 --[=[

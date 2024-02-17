@@ -163,19 +163,20 @@ end
 
 local function get_zoneId_list()
   local currentmap_id = C_Map.GetBestMapForUnit("player")
-  if not currentmap_id then
-    return ("%s\n\n%s"):format(
-      Private.get_zoneId_list(),
-      L["Supports multiple entries, separated by commas. Group Zone IDs must be prefixed with 'g', e.g. g277."]
-    )
+  local instanceId = select(8, GetInstanceInfo())
+  local bottomText = L["Supports multiple entries, separated by commas. Group Zone IDs must be prefixed with 'g', e.g. g277. Supports Area IDs from https://wago.tools/db2/AreaTable prefixed with 'a'. Supports Instance IDs prefixed with 'i'."]
+  if not instanceId and not currentmap_id then
+    return ("%s\n\n%s"):format(Private.get_zoneId_list(), bottomText)
+  elseif not currentmap_id then
+    return ("%s|cffffd200%s|r%s: %d\n\n%s"):format(Private.get_zoneId_list(), L["Current Instance"], L["Instace Id"], instanceId, bottomText)
   end
   local currentmap_info = C_Map.GetMapInfo(currentmap_id)
   local currentmap_name = currentmap_info and currentmap_info.name or ""
   local currentmap_zone_name = ""
   local mapGroupId = C_Map.GetMapGroupID(currentmap_id)
   if mapGroupId then
-    currentmap_zone_name = string.format("|cffffd200%s|r%s: g%d\n\n",
-                                         L["Current Zone Group\n"], currentmap_name, mapGroupId)
+    currentmap_zone_name = string.format("|cffffd200%s|r\n%s: g%d\n\n",
+                                         L["Current Zone Group"], currentmap_name, mapGroupId)
 
     -- if map is in a group, its real name is (or should be?) found in GetMapGroupMembersInfo
     for k, map in ipairs(C_Map.GetMapGroupMembersInfo(mapGroupId)) do
@@ -186,13 +187,16 @@ local function get_zoneId_list()
     end
   end
 
-  return ("%s|cffffd200%s|r%s: %d\n\n%s%s"):format(
+  return ("%s|cffffd200%s|r\n%s: %d\n\n%s|cffffd200%s|r\n%s: %d\n\n%s"):format(
     Private.get_zoneId_list(),
-    L["Current Zone\n"],
+    L["Current Zone"],
     currentmap_name,
     currentmap_id,
     currentmap_zone_name,
-    L["Supports multiple entries, separated by commas. Group Zone IDs must be prefixed with 'g', e.g. g277."]
+    L["Current Instance"],
+    L["Instance Id"],
+    instanceId,
+    bottomText
   )
 end
 
@@ -1679,7 +1683,8 @@ Private.load_prototype = {
       width = WeakAuras.normalWidth,
       init = "arg",
       values = "group_types",
-      events = {"GROUP_ROSTER_UPDATE"}
+      events = {"GROUP_ROSTER_UPDATE"},
+      optional = true,
     },
     {
       name = "groupSize",
@@ -1691,6 +1696,7 @@ Private.load_prototype = {
         operator = "and",
         limit = 2
       },
+      optional = true,
     },
     {
       name = "group_leader",
@@ -1700,7 +1706,8 @@ Private.load_prototype = {
       events = {"PARTY_LEADER_CHANGED", "GROUP_ROSTER_UPDATE"},
       width = WeakAuras.doubleWidth,
       values = "group_member_types",
-      test = "Private.ExecEnv.CheckGroupMemberType(%s, group_leader)"
+      test = "Private.ExecEnv.CheckGroupMemberType(%s, group_leader)",
+      optional = true,
     },
     {
       name ="locationTitle",
@@ -1716,29 +1723,47 @@ Private.load_prototype = {
       preamble = "local checker = Private.ExecEnv.ParseStringCheck(%q)",
       test = "checker:Check(zone)",
       events = {"ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA", "VEHICLE_UPDATE"},
-      desc = L["Supports multiple entries, separated by commas. Escape ',' with \\"]
+      desc = L["Supports multiple entries, separated by commas. Escape ',' with \\"],
+      optional = true,
     },
     {
       name = "zoneId",
       enable = false,
       hidden = true,
       init = "arg",
+      optional = true,
     },
     {
       name = "zonegroupId",
       enable = false,
       hidden = true,
       init = "arg",
+      optional = true,
+    },
+    {
+      name = "instanceId",
+      enable = false,
+      hidden = true,
+      init = "arg",
+      optional = true,
+    },
+    {
+      name = "minimapZoneText",
+      enable = false,
+      hidden = true,
+      init = "arg",
+      optional = true,
     },
     {
       name = "zoneIds",
-      display = L["Zone ID(s)"],
+      display = L["Player Location ID(s)"],
       type = "string",
       multiline = true,
       events = {"ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA", "VEHICLE_UPDATE"},
       desc = get_zoneId_list,
       preamble = "local zoneChecker = Private.ExecEnv.ParseZoneCheck(%q)",
-      test = "zoneChecker:Check(zoneId, zonegroupId)",
+      test = "zoneChecker:Check(zoneId, zonegroupId, instanceId, minimapZoneText)",
+      optional = true,
     },
     {
       name = "encounterid",
@@ -1749,6 +1774,7 @@ Private.load_prototype = {
       desc = Private.get_encounters_list,
       test = "WeakAuras.CheckNumericIds(%q, encounterid)",
       events = {"ENCOUNTER_START", "ENCOUNTER_END"},
+      optional = true,
     },
     {
       name = "size",
@@ -1757,7 +1783,8 @@ Private.load_prototype = {
       values = "instance_types",
       sorted = true,
       init = "arg",
-      events = {"ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA"}
+      events = {"ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA"},
+      optional = true,
     },
     {
       name = "difficulty",
@@ -1767,7 +1794,8 @@ Private.load_prototype = {
       init = not WeakAuras.IsClassicEra() and "arg" or nil,
       enable = not WeakAuras.IsClassicEra(),
       hidden = WeakAuras.IsClassicEra(),
-      events = {"PLAYER_DIFFICULTY_CHANGED", "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA"}
+      events = {"PLAYER_DIFFICULTY_CHANGED", "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA"},
+      optional = true,
     },
     {
       name = "instance_type",
@@ -1779,6 +1807,7 @@ Private.load_prototype = {
       enable = not WeakAuras.IsClassicEra(),
       hidden = WeakAuras.IsClassicEra(),
       events = {"PLAYER_DIFFICULTY_CHANGED", "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA"},
+      optional = true,
     },
     {
       name = "affixes",
@@ -1790,6 +1819,7 @@ Private.load_prototype = {
       enable = WeakAuras.IsRetail(),
       hidden = not WeakAuras.IsRetail(),
       events = {"CHALLENGE_MODE_START", "CHALLENGE_MODE_COMPLETED"},
+      optional = true,
     },
     {
       name ="equipmentTitle",
@@ -4302,7 +4332,8 @@ Private.event_prototypes = {
       {
         name = "spellName",
         display = L["Spell Name"],
-        type = "string",
+        type = "spell",
+        noValidation = true,
         init = "arg",
         enable = function(trigger)
           return trigger.subeventPrefix and (trigger.subeventPrefix:find("SPELL") or trigger.subeventPrefix == "RANGE" or trigger.subeventPrefix:find("DAMAGE"))
@@ -4392,7 +4423,8 @@ Private.event_prototypes = {
       {
         name = "extraSpellName",
         display = L["Extra Spell Name"],
-        type = "string",
+        type = "spell",
+        noValidation = true,
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and (trigger.subeventSuffix == "_ABSORBED" or trigger.subeventSuffix == "_INTERRUPT" or trigger.subeventSuffix == "_DISPEL" or trigger.subeventSuffix == "_DISPEL_FAILED" or trigger.subeventSuffix == "_STOLEN" or trigger.subeventSuffix == "_AURA_BROKEN_SPELL")
@@ -6429,6 +6461,63 @@ Private.event_prototypes = {
         init = "specName",
         store = "true",
         test = "true"
+      },
+    },
+    automaticrequired = true,
+    statesParameter = "one",
+  },
+  ["Loot Specialization"] = {
+    type = "unit",
+    events = function()
+      local events = {"PLAYER_LOOT_SPEC_UPDATED", "PLAYER_SPECIALIZATION_CHANGED" }
+      return {
+        ["events"] = events
+      }
+    end,
+    force_events = "PLAYER_LOOT_SPEC_UPDATED",
+    name = L["Loot Specialization"],
+    init = function(trigger)
+      return [[
+         local lootSpecId = GetLootSpecialization()
+         local currentSpecId = GetSpecializationInfo(GetSpecialization())
+         if lootSpecId == 0 then --Player chose 'Current Specialization'
+          lootSpecId = currentSpecId
+         end
+         local _, lootSpecName, _, lootSpecIcon = GetSpecializationInfoByID(lootSpecId)
+      ]]
+    end,
+    args = {
+      {
+        name = "lootSpecId",
+        display = L["Loot Specialization Id"],
+        type = "multiselect",
+        init = "lootSpecId",
+        values = "spec_types_all",
+        conditionType = "select",
+        store = true,
+      },
+      {
+        name = "name",
+        display = L["Loot Specialization Name"],
+        init = "lootSpecName",
+        hidden = true,
+        store = true,
+        test = "true",
+      },
+      {
+        name = "isCurrentSpec",
+        display = L["Is Current Specialization"],
+        init = "lootSpecId == currentSpecId",
+        type = "tristate",
+        conditionType = "bool",
+        store = true,
+      },
+      {
+        hidden = true,
+        name = "icon",
+        init = "lootSpecIcon",
+        store = "true",
+        test = "true",
       },
     },
     automaticrequired = true,
@@ -10232,13 +10321,13 @@ Private.event_prototypes = {
         name = "currencyId",
         type = "currency",
         itemControl = "Dropdown-Currency",
-        values = Private.GetDiscoveredCurencies,
-        headers = Private.GetDiscoveredCurenciesHeaders,
+        values = Private.GetDiscoveredCurrencies,
+        headers = Private.GetDiscoveredCurrenciesHeaders,
         sorted = true,
         sortOrder = function()
-          local discovered_currencies_sorted = Private.GetDiscoveredCurenciesSorted()
+          local discovered_currencies_sorted = Private.GetDiscoveredCurrenciesSorted()
           local sortOrder = {}
-          for key, value in pairs(Private.GetDiscoveredCurencies()) do
+          for key, value in pairs(Private.GetDiscoveredCurrencies()) do
             tinsert(sortOrder, key)
           end
           table.sort(sortOrder, function(aKey, bKey)
@@ -10390,6 +10479,10 @@ Private.event_prototypes = {
         conditionType = "bool",
       },
     },
+    GetNameAndIcon = function(trigger)
+      local currencyInfo = Private.GetCurrencyInfoForTrigger(trigger)
+      return currencyInfo and currencyInfo.name, currencyInfo and currencyInfo.iconFileID
+    end,
     automaticrequired = true
   },
 };
@@ -10408,6 +10501,7 @@ if WeakAuras.IsClassicEraOrWrath() then
   Private.event_prototypes["Spell Activation Overlay"] = nil
   Private.event_prototypes["PvP Talent Selected"] = nil
   Private.event_prototypes["Class/Spec"] = nil
+  Private.event_prototypes["Loot Specialization"] = nil
 else
   Private.event_prototypes["Queued Action"] = nil
 end

@@ -621,10 +621,12 @@ do -- Counter-follower lists
 	end)
 	local function GarrisonMissionMechanicTooltip_OnShowHook(self)
 		local mech = self:GetParent().CloseMission and G.GetMechanicInfo(tostring(self.Icon:GetTexture()))
+		-- itip's host resizing logic is needed to unbreak the border on e.g. naval operation enemy threat icon tooltips.
+		itip:ActivateFor(self, "TOPLEFT", self.Description, "BOTTOMLEFT", -10, 16)
 		if mech then
-			itip:ActivateFor(self, "TOPLEFT", self.Description, "BOTTOMLEFT", -10, 16)
 			G.SetThreatTooltip(itip, mech, nil, self.missionLevel, nil, true)
-			itip:Show()
+		else
+			itip:SetText(" ")
 		end
 	end
 	GarrisonMissionMechanicTooltip:HookScript("OnShow", GarrisonMissionMechanicTooltip_OnShowHook)

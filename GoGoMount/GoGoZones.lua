@@ -37,7 +37,7 @@ function GoGo_ZoneCheck()
 	GoGo_Variables.ZoneExclude.LegionZones = true
 	GoGo_Variables.Player.MapID = C_Map.GetBestMapForUnit("player")
     GoGo_Variables.ZoneExclude.TheMaw = true
-	GoGo_Variables.ZoneExclude.DragonRiding = false
+	GoGo_Variables.ZoneExclude.DragonRiding = true
 	
 	if GoGo_Variables.Debug >= 10 then
 		GoGo_DebugAddLine("GoGo_ZoneCheck: Beginning function.")

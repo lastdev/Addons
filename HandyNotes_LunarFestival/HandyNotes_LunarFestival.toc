@@ -1,5 +1,5 @@
 ## Interface: 100205
-## Version: 2.09
+## Version: 2.10
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_elvencoins
 ## Title: Lunar Festival
@@ -26,9 +26,6 @@
 ## Notes-ruRU: Помогает с игровое событие |cFFFDBD01Лунный фестиваль|r
 ## Notes-zhCN: 协助 |cFFFDBD01春节|r 活动
 ## Notes-zhTW: 協助 |cFFFDBD01春節|r 活動
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 776143
-## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_LunarFestivalDB
 ## AddonCompartmentFunc: HandyNotes_LunarFestival_OnAddonCompartmentClick

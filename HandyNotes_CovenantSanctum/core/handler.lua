@@ -206,7 +206,7 @@ do
             }, level)
 
             -- TomTom waypoint menu item
-            if (IsAddOnLoaded("TomTom")) then
+            if (C_AddOns.IsAddOnLoaded("TomTom")) then
                 UIDropDownMenu_AddButton({
                     text = L["handler_context_menu_add_tomtom"],
                     notCheckable = true,
@@ -249,7 +249,7 @@ do
     HL_Dropdown.initialize = generateMenu
 
     function PluginHandler:OnClick(button, down, uMapID, coord)
-        local TomTom = select(2, IsAddOnLoaded('TomTom'))
+        local TomTom = select(2, C_AddOns.IsAddOnLoaded('TomTom'))
         local dropdown = private.db.easy_waypoint_dropdown
 
         if (down or button ~= "RightButton") then return end
@@ -306,7 +306,7 @@ local currentMapID = nil
         if (point.icon == "anvil" and not private.db.show_vendor) then return false end
         if (point.icon == "flightMaster" and not private.db.show_others) then return false end
         if (point.icon == "innkeeper" and not private.db.show_innkeeper) then return false end
-        if (point.icon == "portal" and (not private.db.show_portal or IsAddOnLoaded("HandyNotes_TravelGuide"))) then return false end
+        if (point.icon == "portal" and (not private.db.show_portal or C_AddOns.IsAddOnLoaded("HandyNotes_TravelGuide"))) then return false end
         if (point.icon == "mail" and not private.db.show_mail) then return false end
         if (point.icon == "reforge" and not private.db.show_reforge) then return false end
         if (point.icon == "renown" and not private.db.show_renown) then return false end

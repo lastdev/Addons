@@ -82,6 +82,7 @@ function HealBot_Lang_enALL()
     HEALBOT_MAGIC                           = "Magic";
     HEALBOT_CURSE                           = "Curse";
     HEALBOT_POISON                          = "Poison";
+    HEALBOT_BLEED                           = "Bleed";
 
     HB_TOOLTIP_OFFLINE                      = "Offline";
 
@@ -452,7 +453,6 @@ function HealBot_Lang_enALL()
     HEALBOT_SKIN_ICONGLOWTIMEOUT            = "Glow timeout"
     HEALBOT_SKIN_ICONGLOW                   = "Icon glow";
     HEALBOT_SKIN_ICONSET                    = "Icon set";
-    HEALBOT_OPTIONS_ACTIONICONSBETA         = "Action Icons is currently Experimental"
     HEALBOT_SKIN_ICONBUFFSET01              = "Buff icon set 1";
     HEALBOT_SKIN_ICONBUFFSET02              = "Buff icon set 2";
     HEALBOT_SKIN_ICONBUFFSET03              = "Buff icon set 3";
@@ -598,7 +598,8 @@ function HealBot_Lang_enALL()
     HEALBOT_ICONPREVSET                     = "Icon set prev";
     
     HEALBOT_OPTIONS_SHOWMINIMAPBUTTON       = "Show minimap button";
-    HEALBOT_OPTIONS_ULTRAPERF               = "Ultra performance"
+    HEALBOT_OPTIONS_ULTRA                   = "Ultra"
+    HEALBOT_OPTIONS_CHILL                   = "Chill"
     HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON   = "Show Raid Target";
     HEALBOT_OPTIONS_HOTONBAR                = "On bar";
     HEALBOT_OPTIONS_HOTOFFBAR               = "Off bar";
@@ -1041,6 +1042,7 @@ function HealBot_Lang_enALL()
     HEALBOT_SUPPRESSSOUND                   = "Auto Trinket: Suppress sound"
     HEALBOT_SUPPRESSERROR                   = "Auto Trinket: Suppress errors"
     HEALBOT_PERFLEVEL                       = "Performance Level"
+    HEALBOT_PERF                            = "Performance"
     HEALBOT_SKIN_CHECK_DONE                 = "Integrity check of skins complete"
     HEALBOT_ENABLE_CUSTOM_BUFFS             = "All custom buffs have been enabled"
     HEALBOT_ENABLE_CUSTOM_DEBUFFS           = "All custom debuffs have been enabled"
@@ -1121,10 +1123,11 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWPOWERCOUNTER_WARL   = "Show soul shards"
     HEALBOT_OPTIONS_SHOWPOWERCOUNTER_MONK   = "Show chi power"
     HEALBOT_OPTIONS_DISABLEHEALBOTSOLO      = "only when solo"
-    HEALBOT_OPTIONS_CUSTOM_ALLDISEASE       = "All Disease"
-    HEALBOT_OPTIONS_CUSTOM_ALLMAGIC         = "All Magic"
-    HEALBOT_OPTIONS_CUSTOM_ALLCURSE         = "All Curse"
-    HEALBOT_OPTIONS_CUSTOM_ALLPOISON        = "All Poison"
+    HEALBOT_OPTIONS_CUSTOM_ALLDISEASE       = "All Diseases"
+    HEALBOT_OPTIONS_CUSTOM_ALLMAGIC         = "All Magical"
+    HEALBOT_OPTIONS_CUSTOM_ALLCURSE         = "All Curses"
+    HEALBOT_OPTIONS_CUSTOM_ALLBLEED         = "All Bleeds"
+    HEALBOT_OPTIONS_CUSTOM_ALLPOISON        = "All Poisons"
     HEALBOT_OPTIONS_CUSTOM_ALLBOSS          = "All Bosses"
     HEALBOT_OPTIONS_CUSTOM_ALLTIMED         = "All Timed"
     HEALBOT_OPTIONS_CUSTOM_IDMETHOD         = "Identify By"
@@ -1418,7 +1421,13 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_FORWARDTOHW              = "Forward to HealthWatch"
     HEALBOT_PLUGIN_FORWARDTOMW              = "Forward to ManaWatch"
     HEALBOT_PLUGIN_RETRYDURATION            = "Received from BuffWatch - Retry duration"
-    HEALBOT_PLUGIN_REPEATONCD               = "Repeat after timeout";
+    HEALBOT_PLUGIN_REPEATONCD               = "Repeat after timeout"
+    HEALBOT_PLUGIN_QUEUEVENTBUFF            = "Queue aura events (Buffs)"
+    HEALBOT_PLUGIN_QUEUEVENTDEBUFF          = "Queue aura events (Debuffs)"
+    HEALBOT_PLUGIN_QUEUEVENTHEALTH          = "Queue health events"
+    HEALBOT_PLUGIN_QUEUEVENTPOWER           = "Queue power events"
+    HEALBOT_PLUGIN_QUEUEVENTINHEALS         = "Queue incoming heal events"
+    HEALBOT_PLUGIN_QUEUEVENTABSORBS         = "Queue absorb events"
 
     HEALBOT_CUSTOM_CASTBY_EVERYONE          = "Everyone"
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Enemy"
@@ -1757,6 +1766,7 @@ function HealBot_Lang_enALL()
     HEALBOT_CMD_RESETSKINRAID40             = "Recover Raid 40 skin"
     HEALBOT_OPTIONS_ENTERINGCOMBAT          = "When entering combat"
     HEALBOT_OPTIONS_ALWAYSINCOMBAT          = "Always show"
+    HEALBOT_OPTIONS_SHOWENEMYAURA           = "Monitor enemy auras"
     HEALBOT_OPTIONS_OUTOFCOMBAT             = "When out of combat"
     HEALBOT_OPTIONS_ONLYINGCOMBAT           = "Only show in combat"
     HEALBOT_OPTIONS_ONLYOUTOFCOMBAT         = "Only show out of combat"

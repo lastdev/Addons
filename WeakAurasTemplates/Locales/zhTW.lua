@@ -7,18 +7,12 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	--[[Translation missing --]]
-	L["(Dwarf)"] = "(Dwarf)"
-	--[[Translation missing --]]
-	L["(Dwarf/Human)"] = "(Dwarf/Human)"
-	--[[Translation missing --]]
-	L["(Human)"] = "(Human)"
-	--[[Translation missing --]]
-	L["(Night Elf)"] = "(Night Elf)"
-	--[[Translation missing --]]
-	L["(Troll)"] = "(Troll)"
-	--[[Translation missing --]]
-	L["(Undead)"] = "(Undead)"
+	L["(Dwarf)"] = "(矮人)"
+	L["(Dwarf/Human)"] = "(矮人/人類)"
+	L["(Human)"] = "(人類)"
+	L["(Night Elf)"] = "(夜精靈)"
+	L["(Troll)"] = "(食人妖)"
+	L["(Undead)"] = "(不死族)"
 	L["< 4 stacks"] = "< 4層"
 	L["5 stacks"] = "5層"
 	L["Abilities"] = "技能"
@@ -74,8 +68,7 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "法術作用時顯著標示。"
 	L["Hold CTRL to create multiple auras at once"] = "按住 CTRL 鍵一次建立多個提醒效果"
 	L["Keeps existing triggers intact"] = "完整保留已經存在的觸發事件"
-	--[[Translation missing --]]
-	L["Master Channeler Rune"] = "Master Channeler Rune"
+	L["Master Channeler Rune"] = "大師通靈符文"
 	L["Max 3"] = "最大 3"
 	L["Max 4"] = "最大 4"
 	L["Next"] = "下一步"

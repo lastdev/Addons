@@ -136,6 +136,8 @@ L["Portal to Emerald Dream"] = "Portal zum Smaragdgrünen Traum"
 L["Portal to Ohn'ahran Plains"] = "Portal in die Ebenen von Ohn'ahra"
 L["Portal to Central Encampment"] = "Portal zum Zentrallager"
 L["Portal to The Timeways"] = "Portal zu den Zeitwegen"
+L["Portal to Bel'ameth"] = "Portal nach Bel'ameth"
+L["Portal to Feathermoon Stronghold"] = "Portal zur Mondfederfeste"
 
 --==========================================SHADOWLANDS===========================================--
 
@@ -288,5 +290,5 @@ L["Portal to the Sepulcher"] = "Portal zum Grabmal"
 
 L["Waygate to Un'Goro Crater"] = "Tor zum Krater von Un'Goro"
 L["The Masonary"] = "Die Freimaurerei"
-L["inside Blackrock Mountain"] = "innerhalb des Schwarzfels"
+L["inside the Blackrock Mountain"] = "innerhalb des Schwarzfels"
 end

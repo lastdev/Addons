@@ -1,5 +1,17 @@
+== v1.33 - 25th January 2024
+* The Lady's Necklace in Ghostlands expanded
+* Krasarang Wilds "Stack of Papers" quest improved
+* Crocolisks typo fixed
+* The Jade Witch in The Jade Forest expanded
+* Panther Cub removed: lengthy quest chains to obtain a pet are beyond the scope of this AddOn
+  I have reserved this as a placeholder in a potential future AddOn ;)
+
+== v1.32 - 18th January 2024
+* Blasted Lands skeletons
+* 9 x Darkmoon Faire, including a lengthy historical one about a certain NPC
+
 == v1.31 - 11th January 2024
-TOC bump to 10.2.5
+TOC Bump to 10.2.5
 
 == v1.30 - 4th January 2024
 * Darkmoon Faire

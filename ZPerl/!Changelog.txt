@@ -1,3 +1,33 @@
+**7.2.2**
+* Fixed range checks on Classic.
+* Updated LibHealComm.
+
+**7.2.1**
+* Updated for 1.15.1.
+* Some performance tweaks.
+* Party frame should properly update in combat.
+* Fix assist frame's position getting reset.
+* Charm warning icon should only show on players.
+
+**7.2.0**
+* Fixed various combo point issues on Classic.
+* Revamped Custom Highlight.
+
+**7.1.9**
+* Rewamped blizzard style target combo points.
+* Attempt to reset non-exsiting saved variables to their default values.
+* Fixed a taint.
+
+**7.1.8**
+* Fixed special power bars disappearing in some special cases.
+* Fixed party mana percentages.
+
+**7.1.7**
+* Updated for 10.2.5.
+* Added Evoker dispels.
+* Fixed player frame for lower level Druids or Druids with missing forms.
+* Updated libraries.
+
 **7.1.6**
 * Fix Death Knight runes for Wrath Classic.
 

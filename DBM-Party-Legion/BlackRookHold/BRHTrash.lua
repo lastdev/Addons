@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BRHTrash", "DBM-Party-Legion", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240109040154")
+mod:SetRevision("20240127063852")
 --mod:SetModelID(47785)
 mod:SetZone(1501)
 
@@ -27,9 +27,9 @@ mod:RegisterEvents(
 local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2)
 local warnSacrificeSoul				= mod:NewTargetNoFilterAnnounce(200105, 2)
 local warnSicBats					= mod:NewTargetNoFilterAnnounce(203163, 2)
-local warnArrowBarrage				= mod:NewSpellAnnounce(200343, 4, nil, nil, nil, nil, nil, 3)
-local warnKnifeDance				= mod:NewSpellAnnounce(200291, 4, nil, nil, nil, nil, nil, 3)
-local warnDrinkPotion				= mod:NewSpellAnnounce(200784, 4, nil, nil, nil, nil, nil, 3)
+local warnArrowBarrage				= mod:NewSpellAnnounce(200343, 4, nil, "-Healer", 2, nil, nil, 3)
+local warnKnifeDance				= mod:NewSpellAnnounce(200291, 4, nil, "-Healer", 2, nil, nil, 3)
+local warnDrinkPotion				= mod:NewSpellAnnounce(200784, 4, nil, "-Healer", 2, nil, nil, 3)
 local warnBloodthirstyLeap			= mod:NewSpellAnnounce(225962, 2, nil, false)--Instant cast, announcing it already happened doesn't affect much agency to player
 local warnGlaiveToss				= mod:NewCastAnnounce(196916, 3)
 local warnPhasedExplosion			= mod:NewCastAnnounce(200256, 3, nil, nil, false)--They basically spam cast it, so off by default
@@ -61,7 +61,7 @@ local timerRP						= mod:NewRPTimer(68)
 local timerSacrificeSoulCD			= mod:NewCDNPTimer(21.8, 200105, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerGlaiveTossCD				= mod:NewCDNPTimer(14.5, 196916, nil, nil, nil, 3)
 local timerStrikeDownCD				= mod:NewCDNPTimer(9.7, 225732, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21.8, 200261, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBonebreakingStrikeCD		= mod:NewCDNPTimer(21, 200261, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerKnifeDanceCD				= mod:NewCDNPTimer(18.1, 200291, nil, nil, nil, 2)
 local timerArrowBarrageCD			= mod:NewCDNPTimer(20.6, 200343, nil, nil, nil, 3)--20.7-23
 local timerBloodthirstyLeapCD		= mod:NewCDNPTimer(14.5, 225962, nil, nil, nil, 3)
@@ -70,7 +70,7 @@ local timerBrutalAssaultCD			= mod:NewCDNPTimer(20.6, 201139, nil, "Tank|Healer"
 local timerDrinkPotionCD			= mod:NewCDNPTimer(21.8, 200784, nil, nil, nil, 5)
 local timerSicBatsCD				= mod:NewCDNPTimer(21.8, 203163, nil, nil, nil, 5)
 local timerCoupdeGraceCD			= mod:NewCDNPTimer(8.4, 214003, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerRavensDiveCD				= mod:NewCDNPTimer(16.9, 214001, nil, nil, nil, 3)
+local timerRavensDiveCD				= mod:NewCDNPTimer(16, 214001, nil, nil, nil, 3)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 GTFO
 
@@ -83,7 +83,7 @@ local blitzStacks = {}
 --"<29.29 23:11:07> [CHAT_MSG_MONSTER_SAY] I... understand now. You... you must find Kur'talos. You must put a stop to this.#Lord Etheldrin Ravencrest###Darksøl##0#0##0#2110#nil#0#false#false#false#false", -- [39]
 --"<39.20 23:11:17> [ZONE_CHANGED_INDOORS] Black Rook Hold#Black Rook Hold#Hidden Passageway", -- [41]
 function mod:StartFirstRP()
-	timerRP:Start(36)--Approx, no definitive timestamp but zone ZONE_CHANGED_INDOORS fired running into door til it opened and we subtrack 1 second on top of that
+	timerRP:Start(35)--Adjusted based on twitch streams
 end
 
 function mod:SPELL_CAST_START(args)
@@ -171,7 +171,7 @@ function mod:SPELL_CAST_START(args)
 		warnPhasedExplosion:Show()
 	elseif spellId == 200291 then
 		timerKnifeDanceCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3.5, 6) then
+		if self:AntiSpam(5, 6) then
 			warnKnifeDance:Show()
 			warnKnifeDance:Play("crowdcontrol")
 		end
@@ -198,7 +198,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 200343 then
 		timerArrowBarrageCD:Start(nil, args.sourceGUID)
-		if self:AntiSpam(3.5, 6) then
+		if self:AntiSpam(5, 6) then
 			warnArrowBarrage:Show()
 			warnArrowBarrage:Play("crowdcontrol")
 		end

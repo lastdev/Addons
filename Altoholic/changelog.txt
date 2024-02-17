@@ -15,6 +15,12 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
+10.2.012 (29/12/2023)
+
+- Toc Update for 10.2.5
+- DataStore_Currencies: added Mysterious Fragment.
+- Summary tab: added Mysterious Fragment to Currencies.
+
 10.2.011 (29/12/2023)
 
 - LibItemInfo: added a few Zereth Mortis zone items.

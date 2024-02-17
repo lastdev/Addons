@@ -156,10 +156,8 @@ function private.FSMCreate()
 			:SetOnEnter(function(context, isIgnored)
 				if Environment.IsRetail() then
 					ShowUIPanel(MailFrame)
-				elseif Environment.IsWrathClassic() then
-					MailFrame_Show()
 				else
-					MailFrame_OnEvent(MailFrame, "MAIL_SHOW")
+					MailFrame_Show()
 				end
 
 				if not private.defaultUISwitchBtn then

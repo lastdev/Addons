@@ -1,5 +1,4 @@
 local _, addon = ...
-
 if (not addon.KalimdorCup.IsEventActive()) then return end
 
 local AreaPOIPinMouseOver, appendTooltip

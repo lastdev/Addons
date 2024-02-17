@@ -384,9 +384,16 @@ local InstanceFlyableOverride = {
     [2464] = false,         -- Battle of Ardenweald (9.1)
 }
 
+-- Note that these have 3 possible 0return values, true, false, nil (no override)
+
 local InstanceDragonridableOverride = {
-    -- Stricly speaking this is the debuff "Hostile Airways" (406608)
-    [2597] = false,         -- Zaralek Caverns - Chapter 1 Scenario
+    [2549] =            -- Amirdrassil Raid
+        function ()
+            -- Dragonriding debuff Blessing of the Emerald Dream (429226)
+            if LM.UnitAura('player', 429226, 'HARMFUL') then return true end
+        end,
+    [2597] = false,     -- Zaralek Caverns - Chapter 1 Scenario
+                        -- The debuff "Hostile Airways" (406608) but it's always up
 }
 
 function LM.Environment:ForceFlyable(instanceID)
@@ -395,18 +402,24 @@ function LM.Environment:ForceFlyable(instanceID)
 end
 
 function LM.Environment:CanDragonride(mapPath)
+    --- XXX IsPlayerSpell? XXX
     if not IsSpellKnown(376777) then
         return false
     end
 
     local instanceID = select(8, GetInstanceInfo())
+    local override = InstanceDragonridableOverride[instanceID]
+    local value = ( type(override) == 'function' and override(mapPath) or override )
+    if value ~= nil then return value end
 
-    if InstanceDragonridableOverride[instanceID] ~= nil then
-        return InstanceDragonridableOverride[instanceID]
+    -- Dragon Isles, Nokud Offensive, Zaralek Cavern, Emerald Dream.
+    -- These are only IsFlyableArea() if you have unlocked normal flying.
+    if instanceID == 2444 or instanceID == 2516 or instanceID == 2454 or instanceID == 2548 then
+        return IsAdvancedFlyableArea()
     end
 
-    return IsUsableSpell(368896) == true
-    -- return select(8, GetInstanceInfo()) == 2444
+    -- Lots of non-Dragon Isles areas are wrongly flagged IsAdvancedFlyableArea
+    return IsAdvancedFlyableArea() and IsFlyableArea()
 end
 
 -- Can't fly if you haven't learned a flying skill. Various expansion
@@ -476,7 +489,8 @@ function LM.Environment:GetLocation()
         "zoneText: " .. GetZoneText(),
         "subZoneText: " .. GetSubZoneText(),
         "IsFlyableArea(): " .. tostring(IsFlyableArea()),
-        "IsAdvancedFlyableArea(): " .. tostring(IsAdvancedFlyableArea()),
+        IsAdvancedFlyableArea and
+            "IsAdvancedFlyableArea(): " .. tostring(IsAdvancedFlyableArea()),
     }
 end
 

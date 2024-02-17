@@ -1,8 +1,9 @@
 # TomTom
 
-## [v3.5.4-release](https://github.com/jnwhiteh/TomTom/tree/v3.5.4-release) (2023-11-09)
-[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v3.5.4-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
+## [v3.5.5-release](https://github.com/jnwhiteh/TomTom/tree/v3.5.5-release) (2024-01-17)
+[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v3.5.5-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
 
+- Update toc for 10.2.5 and 1.15.0  
 - Update TOC for 10.2.0  
 - Update TOC for 3.4.3  
 - Update TOC for 10.1.7  
@@ -696,4 +697,3 @@
     * Waypoints will automatically be set as a crazy taxi arrow with the last one taking the arrow.  
 - * Minimap waypoints now properly handle zoning between continents and using portals.  
     * CrazyArrow will be re-displayed when you cross continents, if the active waypoint is on that continent  
-- * Update world map waypoints to change with the map zoom, etc.  

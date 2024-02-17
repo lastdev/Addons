@@ -1,23 +1,24 @@
 # Hekili
 
-## [v10.2.0-1.1.3](https://github.com/Hekili/hekili/tree/v10.2.0-1.1.3) (2024-01-14)
-[Full Changelog](https://github.com/Hekili/hekili/compare/v10.2.0-1.1.2a...v10.2.0-1.1.3) [Previous Releases](https://github.com/Hekili/hekili/releases)
+## [v10.2.5-1.0.5](https://github.com/Hekili/hekili/tree/v10.2.5-1.0.5) (2024-02-03)
+[Full Changelog](https://github.com/Hekili/hekili/compare/v10.2.5-1.0.4...v10.2.5-1.0.5) [Previous Releases](https://github.com/Hekili/hekili/releases)
 
-- Fury: Tweak Thunderous Roar / Avatar sync.  
-- Fix flame\_accelerant duration.  
-- Destro: Make variable.cleave\_apl respect cleave\_apl setting.  
-- Fire: Fix flame\_accelerant spell ID #3124  
-- Havoc: Don't let opener block all recs.  
-- Throttle initial loading thread.  
-- Fix oddness in SaveCoordinates.  
-- Change action.X.charges to match cooldown.X.charges.  
-- Clean up Elemental set bonuses.  
-- Add Clearcasting for Resto Druid.  
+- Arms/Fury priority updates.  
+- Deva: Minor priority update.  
+- WW: Desync Serenity outside raids.  
+- Secret Technique's cooldown is 60 seconds.  
+- Shorten the fake Unbound Chaos buff.  
 - Merge branch 'dragonflight' of https://github.com/Hekili/hekili into dragonflight  
-- Tweak Rime consumption.  
-- Merge pull request #3117 from johnnylam88/feat/incoming\_magic\_damage  
-    feat: support "incoming\_magic\_damage\_XXXX" from SimC  
-- feat: support "incoming\_magic\_damage\_XXXX" from SimC  
-    Support `incoming\_magic\_damage\_XXXX` in SimC action lists, which is  
-    already implemented as `incoming\_magic\_XXXX` in Hekili. Also support  
-    `incoming\_physical\_damage\_XXXX` in an analogous fashion.  
+- Pretend like Shuriken Tornado instantly procs Storm.  
+- Merge pull request #3159 from saucyflaussy/patch-1  
+    [Sub Rogue] Backstab can be used for the 'Danse Macabre' talent  
+- Fix CP generation from Shadowstrike.  
+- Fix secret\_techniques error.  
+- Fix the Shadow Techniques fix.  
+- Testfix for Shadow Techniques.  
+- Remove variable from Destro.  
+- Guardian: Use ICD to throttle number of Ironfur stacks (instead of just 1).  
+- Check CDR model for Secret Technique.  
+- Rebuild UI when certain options are modified.  
+- Shadow Dance can overlap stealth for Subtlety.  
+- [Sub Rogue] Backstab can be used for the 'Danse Macabre' talent  

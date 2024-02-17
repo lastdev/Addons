@@ -22,9 +22,9 @@ ns.RegisterPoints(ns.EMERALDDREAM, {
         criteria=62952,
         quest=77872,
         related={
-            [39705210] = {label="{npc:210060:Triflesnatcher}",note="Follow until the treasure appears"},
-            [42205620] = {label="{npc:210060:Triflesnatcher}",note="Follow until the treasure appears"},
-            [41706250] = {label="{npc:210060:Triflesnatcher}",note="Follow until the treasure appears"},
+            [39705210] = {label="{npc:210060:Triflesnatcher}",note="Follow until the treasure appears", quest=77855},
+            [42205620] = {label="{npc:210060:Triflesnatcher}",note="Follow until the treasure appears", quest=77857}, -- 77505?
+            [41706250] = {label="{npc:210060:Triflesnatcher}",note="Follow until the treasure appears", quest=77369},
         },
         note="Follow the nearby {npc:210060:Triflesnatcher} until the treasure appears",
         vignette=5812,
@@ -150,9 +150,20 @@ ns.RegisterPoints(ns.EMERALDDREAM, {
 -- No quests, basically everywhere, might not even be worth showing
 -- https://www.wowhead.com/object=408719/small-somnut#comments
 ns.RegisterPoints(ns.EMERALDDREAM, {
+    [28553410] = {},
+    [32815440] = {},
     [32936563] = {},
-    [57185350] = {},
+    [37735020] = {},
+    [38486184] = {},
+    [39184365] = {},
+    [39315799] = {},
+    [39695235] = {},
+    [40273457] = {},
+    [42246677] = {},
+    [42284821] = {},
+    [43107190] = {},
     [52003800] = {note="Stuck in a wall"},
+    [57185350] = {},
     [63447358] = {},
     [66256328] = {note="On the branch"},
     [66496315] = {note="Under the branch, but stuck in a wall"},
@@ -473,4 +484,20 @@ ns.RegisterPoints(ns.EMERALDDREAM, {
         vignette=5799,
     },
     --]]
+    [39405340] = { -- Aurostor
+        quest=77217,
+        worldquest=76367, -- Hybernation Heroes
+        npc=209574,
+        loot={
+            208429, -- Mossen Rage Waistguard
+            208435, -- Forgotten Jalgar's Girdle
+            208436, -- Flame-Etched Breastplate
+            208437, -- Crown of Freya's Chosen
+            208438, -- Grasps of Awakened Fury
+            208439, -- Rousing Earth Striders
+            208440, -- Aurostor's Sleeping Knickers
+            208441, -- Restful Dozer's Shoes
+            208443, -- Slumbering Ursine Talisman
+        },
+    },
 })

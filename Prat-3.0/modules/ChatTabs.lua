@@ -365,8 +365,7 @@ L = {
 		["Set tab display to always, hidden or the Blizzard default."] = "Reiterdarstellung einstellen: immer, verbergen oder Blizzards Standard",
 		["Sets alpha of chat tab for active chat frame."] = "Transparenz der Chatreiter von aktiven Chatfenstern einstellen.",
 		["Sets alpha of chat tab for not active chat frame."] = "Transparenz der Chatreiter von inaktiven Chatfenstern einstellen.",
-		--[[Translation missing --]]
-		["Show Tab Textures"] = "Show Tab Textures",
+		["Show Tab Textures"] = "Tab-Texturen anzeigen",
 		["Tabs"] = "Reiter (Reiter der Chatfenster)",
 		["Visibility"] = "Sichtbarkeit",
 	}
@@ -871,6 +870,9 @@ end
 
   function module:Prat_FramesUpdated(info, name, chatFrame, ...)
     self:UpdateHighlightTabsConfig()
+    for k, v in pairs(Prat.Frames) do
+      self:ShowHideTabTextures(v)
+    end
   end
 
   function module:Prat_FramesRemoved(info, name, chatFrame)

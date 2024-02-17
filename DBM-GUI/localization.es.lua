@@ -13,18 +13,18 @@ L.WebsiteButton				= "Página web"
 L.OTabBosses	= "Jefes"
 L.OTabRaids		= "Bandas"
 L.OTabDungeons	= "Mazmorras"
---L.OTabWorld							= "World Bosses"--Since there are so many world mods, enough to get their own tab
---L.OTabScenarios						= "Scenarios"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
+L.OTabWorld		= "Jefes del mundo"--Since there are so many world mods, enough to get their own tab
+L.OTabScenarios	= "Escenarios"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
 L.OTabPlugins	= "Plugins"
 L.OTabOptions	= "Opciones"
 L.OTabAbout		= "Acerca de"
 
---L.FOLLOWER	= "Follower"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
+L.FOLLOWER	= "Seguidor"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
 
---L.TabCategory_CURRENT_SEASON		= "Current Season"
+L.TabCategory_CURRENT_SEASON		= "Temporada actual"
 
 L.TabCategory_OTHER    		= "Otros módulos"
---L.TabCategory_AFFIXES				= "Affixes"
+L.TabCategory_AFFIXES		= "Afijos"
 
 L.BossModLoaded 			= "Estadísticas de %s"
 L.BossModLoad_now 			= [[Este módulo no está cargado.
@@ -43,8 +43,8 @@ L.Mod_Reset					= "Cargar opciones por defecto"
 L.Reset 					= "Restaurar"
 L.Import					= "Importar"
 
---L.Enable							= ENABLE
---L.Disable							= DISABLE
+L.Enable					= ENABLE
+L.Disable					= DISABLE
 
 L.NoSound					= "Sin sonido"
 
@@ -67,6 +67,7 @@ L.Area_ProfilesSetup		= "Guía de uso de perfiles de DBM"
 L.Core_GUI 					= "Generales e interfaz"
 L.General 					= "Opciones generales de DBM"
 L.EnableMiniMapIcon			= "Mostrar botón junto al minimapa"
+--L.EnableCompartmentIcon	= "Show compartment button"
 L.UseSoundChannel			= "Canal de audio para alertas"
 L.UseMasterChannel			= "Canal de audio principal"
 L.UseDialogChannel			= "Canal de audio de diálogo"
@@ -82,8 +83,8 @@ L.Button_ResetInfoRange		= "Restaurar posiciones por defecto"
 L.ModelOptions				= "Opciones del visualizador de modelos 3D"
 L.EnableModels				= "Mostrar modelos 3D en opciones de jefe"
 L.ModelSoundOptions			= "Sonido"
---L.ModelSoundShort					= SHORT
---L.ModelSoundLong					= TOAST_DURATION_LONG
+L.ModelSoundShort			= SHORT
+L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.ResizeOptions			 	= "Tamaño de la ventana"
 L.ResizeInfo				= "Puedes cambiar el tamaño de la GUI haciendo clic en la esquina inferior derecha y arrastrándola."
@@ -95,7 +96,7 @@ L.UIGroupingOptions					= "Opciones de agrupación de IU (cambiarlas requiere re
 L.GroupOptionsExcludeIcon			= "Excluir que las opciones 'Establecer icono activado' se agrupen por hechizo (en su lugar, se agruparán en su propia categoría 'Iconos')"
 L.AutoExpandSpellGroups				= "Expandir opciones automáticamente que están agrupadas por hechizo"
 L.ShowWAKeys						= "Mostrar las claves de WeakAuras junto a los nombres de los hechizos para ayudar a escribir WeakAuras usando los activadores de módulos de Jefe."
---L.ShowSpellDescWhenExpanded	= "Continue showing spell description when groups are expanded"--Might not be used
+L.ShowSpellDescWhenExpanded	= "Continuar mostrando la descripción del hechizo cuando se expanden los grupos."--Might not be used
 L.NoDescription						= "Esta habilidad no tiene descripción."
 L.CustomOptions						= "Esta categoría contiene opciones personalizadas para una habilidad o evento que no tiene ningún hechizo o ID de diario propio. Estas opciones se han agrupado utilizando una identificación manual personalizada para facilitar la creación de WeakAuras."
 
@@ -139,7 +140,7 @@ L.ShowQueuePop				= "Mostrar temporizador para eltiempo restante para aceptar av
 L.ShowBerserkWarnings		= "Mostrar anuncios a los 10/5/3/1 minutos y a los 30/10 segundos restantes en el temporizador de $spell:26662"
 --
 L.Area_3rdParty				= "Opciones de addons de terceros"
---L.oRA3AnnounceConsumables	= "Announce oRA3 consumables check on combat start"
+L.oRA3AnnounceConsumables	= "Anunciar la verificación de consumibles oRA3 al inicio del combate."
 L.Area_Invite				= "Opciones de invitación"
 L.AutoAcceptFriendInvite	= "Aceptar automáticamente invitaciones a grupos de amigos"
 L.AutoAcceptGuildInvite		= "Aceptar automáticamente invitaciones a grupos de miembros de la hermandad"
@@ -174,8 +175,8 @@ L.ImportExportInfo					= "La importación sobrescribirá su perfil actual, hága
 L.ButtonImportProfile				= "Importar perfil"
 L.ButtonExportProfile				= "Exportar perfil"
 
---L.ImportErrorOn						= "Custom sounds missing for setting: %s"
---L.ImportVoiceMissing				= "Missing voice pack: %s"
+L.ImportErrorOn					= "Faltan sonidos personalizados para configurar: %s"
+L.ImportVoiceMissing				= "Paquete de voz faltante: %s"
 
 -- Tab: Alerts
 L.TabCategory_Alerts	 	= "Alertas"
@@ -217,7 +218,7 @@ L.SpecialWarningIcon		= "Mostrar iconos en avisos especiales"
 L.ShortTextSpellname		= "Use texto abreviado cuando sea posible"
 L.SpecWarn_FlashFrameRepeat	= "Repetir %d veces (si está activado)"
 L.SpecWarn_Flash			= "Destello"
---L.SpecWarn_Vibrate					= "Vibrate controller"
+L.SpecWarn_Vibrate			= "Controlador de vibración"
 L.SpecWarn_FlashRepeat		= "Repetir destello"
 L.SpecWarn_FlashColor		= "Destello %d"
 L.SpecWarn_FlashDur			= "Duración: %0.1f s"
@@ -233,13 +234,13 @@ L.SpecialWarnHeader5		= "Tipo 5: Opciones para avisos con notas que contienen tu
 
 -- Panel: Generalwarnings
 L.Tab_GeneralMessages 		= "Mensajes generales"
---L.SelectChatFrameArea				= "Chat Frame Options"
---L.SelectChatFrameButton				= "Select chat frame"
---L.SelectChatFrameInfoIdle			= "Messages are shown in %s."
---L.SelectChatFrameDefaultName		= "the default chat frame"
---L.SelectChatFrameInfoDone			= "Messages will be shown in this chat frame."
---L.SelectChatFrameInfoSelect			= "Click on a chat frame to select it."
---L.SelectChatFrameInfoSelectNow		= "Click to select %s."
+L.SelectChatFrameArea		= "Opciones de marco de chat"
+L.SelectChatFrameButton		= "Seleccionar marco de chat"
+L.SelectChatFrameInfoIdle	= "Los mensajes se muestran en %s."
+L.SelectChatFrameDefaultName	= "el marco de chat predeterminado"
+L.SelectChatFrameInfoDone		= "Los mensajes se mostrarán en este marco de chat."
+L.SelectChatFrameInfoSelect		= "Haz clic en un marco de chat para seleccionarlo."
+L.SelectChatFrameInfoSelectNow	= "Haz clic para seleccionar %s."
 L.CoreMessages				= "Opciones de mensajes del módulo general"
 L.ShowPizzaMessage 			= "Mostrar avisos de temporizadores en el chat"
 L.ShowAllVersions	 		= "Mostrar versión de DBM de cada miembro del grupo en el chat al hacer comprobaciones de versión. Si se desactiva seguirá mostrando quién lo tiene desactualizado."
@@ -268,7 +269,7 @@ L.CountdownVoice2			= "Voz secundaria para cuentas atrás"
 L.CountdownVoice3			= "Voz terciaria para cuentas atrás"
 L.PullVoice					= "Sonido de temporizador de inicio de encuentro"
 L.VoicePackChoice			= "Paquete de voz para alertas de voz"
---L.MissingVoicePack					= "Missing Voice Pack (%s)"
+L.MissingVoicePack			= "Paquete de voz faltante (%s)"
 L.Area_CountdownOptions		= "Opciones de cuenta atrás"
 L.Area_VoicePackReplace		= "Opciones de reemplazo de paquetes de voz (que suenan paquetes de voz, cuando están activados, silencian y reemplazan)"
 L.VPReplaceNote				= "Nota: Los paquetes de voz nunca cambian ni eliminan los sonidos de avisos.\nSimplemente se silencian cuando el paquete de voz los reemplaza."
@@ -282,8 +283,8 @@ L.ReplacesCustom					= "Reemplazar los sonidos de anuncios especiales personaliz
 L.Area_VoicePackAdvOptions			= "Opciones avanzadas del paquete de voz"
 L.SpecWarn_AlwaysVoice		= "Reproducir siempre todas las alertas de voz (ignora las opciones de jefe; útil para líderes de banda)"
 L.VPDontMuteSounds					= "Desactivar el silenciamiento de los sonidos de alerta habituales cuando utiliza el paquete de voz (utilícelo solo si desea escuchar AMBOS durante las alertas)"
-L.Area_VPLearnMore					= "Obtenga más información sobre los paquetes de voz y cómo utilizar estas opciones"
---L.VPLearnMore						= "|cFF73C2FBhttps://github.com/DeadlyBossMods/DBM-Retail/wiki/%5BGuide%5D-DBM-&-Voicepacks#2022-update|r"
+L.Area_VPLearnMore					= "Obten más información sobre los paquetes de voz y cómo utilizar estas opciones"
+L.VPLearnMore						= "|cFF73C2FBhttps://github.com/DeadlyBossMods/DBM-Retail/wiki/%5BGuide%5D-DBM-&-Voicepacks#2022-update|r"
 L.Area_BrowseOtherVP		= "Explora otros paquetes de voz en Curse"
 L.BrowseOtherVPs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+voice|r"
 L.Area_BrowseOtherCT		= "Explora otros paquetes de voz de cuenta atrás en Curse"
@@ -310,7 +311,7 @@ L.Area_ColorBytype			= "Guía para colores de barras por tipo"
 -- Panel: Color by Type
 L.Panel_ColorByType	 		= "Colores por tipo"
 L.AreaTitle_BarColors		= "Colores de barras por tipo de temporizador"
---L.AreaTitle_ImpBarColors			= "Important Bar Colors (These are bars set important by user)"
+L.AreaTitle_ImpBarColors	= "Colores de barras importantes (estas son barras configuradas como importantes por el usuario)"
 L.BarTexture				= "Textura de barras"
 L.BarStyle					= "Estilo de barras"
 L.BarDBM					= "DBM (con animaciones)"
@@ -354,15 +355,19 @@ L.CBTRole					= "Rol"
 L.CBTPhase					= "Fase"
 L.CBTImportant				= "Importante (usuario)"
 --Dropdown Options
---L.ColorDropGeneric					= "Generic (Original)"
---L.ColorDrop1						= "Color 1"
---L.ColorDrop2						= "Color 2"
---L.ColorDrop3						= "Color 3"
---L.ColorDrop4						= "Color 4"
---L.ColorDrop5						= "Color 5"
---L.ColorDrop6						= "Color 6"
---L.CDDImportant1						= "Important 1"
---L.CDDImportant2						= "Important 2"
+--L.SAOne						= "Global Sound 1 (Personal)"
+--L.SATwo						= "Global Sound 2 (Everyone)"
+--L.SAThree					= "Global Sound 3 (High Priority Action)"
+--L.SAFour					= "Global Sound 4 (High Priority Run Away)"
+L.ColorDropGeneric			= "Genérico (original)"
+L.ColorDrop1				= "Color 1"
+L.ColorDrop2				= "Color 2"
+L.ColorDrop3				= "Color 3"
+L.ColorDrop4				= "Color 4"
+L.ColorDrop5				= "Color 5"
+L.ColorDrop6				= "Color 6"
+L.CDDImportant1				= "Importante 1"
+L.CDDImportant2				= "Importante 2"
 L.CVoiceOne					= "Cuenta atrás 1"
 L.CVoiceTwo					= "Cuenta atrás 2"
 L.CVoiceThree				= "Cuenta atrás 3"
@@ -396,7 +401,7 @@ L.ShortTimerText			= "Texto de temporizador breve"
 L.KeepBar					= "Mantener hasta que se lance la habilidad"
 L.KeepBar2					= "(siempre que el módulo lo permita)"
 L.FadeBar					= "Desteñir barras de habilidades lejanas"
---L.BarSkin							= "Bar skin"
+L.BarSkin					= "Skin de barra"
 
 -- Panel: Pull, Break, Combat
 L.Panel_PullBreakCombat				= "Inicio & descanso"
@@ -467,6 +472,7 @@ L.FilterVoidFormSay			= "Desactivar el envío de mensajes de posición y cuenta 
 L.Area_SpecFilter			= "Opciones de filtros de rol"
 L.FilterTankSpec			= "Ocultar avisos designados para tanques cuando no sea tu rol"
 L.FilterDispels				= "Ocular avisos de facultades disipables si tu disipación no está disponible"
+--L.FilterCrowdControl				= "Filter announcements for crowd control based interrupts if your CC is on cooldown"
 L.FilterTrashWarnings		= "Ocultar todos los avisos de enemigos menores en mazmorras normales y heroicas"
 
 L.Area_BInterruptFilter				= "Opciones de filtro de interrupción de jefe"
@@ -491,20 +497,30 @@ L.SpamSpecRoleSwitch				= "Filtrar las alertas de 'cambio de objetivo' y 'bichos
 L.SpamSpecRoleGTFO					= "Filtrar las alertas 'salga' por completo (sin texto ni sonido)"
 
 -- Panel: Blizzard Features
-L.Panel_HideBlizzard		= "Interfaz y funciones de Blizzard"
-L.Area_HideBlizzard			= "Opciones de interfaz y funciones de Blizzard"
-L.HideBossEmoteFrame		= "Ocultar avisos de encuentro de mazmorra y banda"
-L.HideWatchFrame			= "Ocultar seguimiento de objetivos (misiones, logros, etc.) en encuentros si no se está siguiendo un logro relacionado. En modo desafío muestra el tiempo restante."
-L.HideGarrisonUpdates		= "Ocultar botón de ciudadela en jefes"
-L.HideGuildChallengeUpdates	= "Ocultar botón de desafíos de hermandad en jefes"
-L.HideQuestTooltips			= "Ocultar objetivos de misión en en descripciones emergentes durante Hide quest objectives from tooltips during boss fights"
-L.HideTooltips				= "Ocultar por completo las descripciones emergentes en encuentros"
-L.DisableSFX				= "Desactivar el canal de efectos de sonido en encuentros"
-L.DisableCinematics			= "Saltar cinemáticas automáticamente"
-L.OnlyFight					= "Solo en combate, tras haber visto la cinemática por primera vez"
-L.AfterFirst				= "Tras haber visto la cinemática por primera vez"
-L.CombatOnly				= "En combate"
-L.RaidCombat				= "En combate (solo en jefes)"
+L.Panel_HideBlizzard				= "Block Blizzard Features"
+--Toast
+L.Area_HideToast					= "Disable blizzard toasts (popups)"
+L.HideGarrisonUpdates				= "Hide follower toasts during boss fights"
+L.HideGuildChallengeUpdates			= "Hide guild challenge toasts during boss fights"
+--L.HideBossKill					= "Hide boss kill toasts"--NYI
+--L.HideVaultUnlock					= "Hide vault unlock toasts"--NYI
+--Cut Scenes
+L.Area_Cinematics					= "Block in-game cinematics"
+L.DuringFight						= "Block in combat cut scenes during boss encounters"--uses explicite IsEncounterInProgress check
+L.InstanceAnywhere					= "Block non combat cut scenes anywhere inside a dungeon or raid instance"
+L.NonInstanceAnywhere				= "DANGER: Block cut scenes in outdoor open world (NOT recommended)"
+L.OnlyAfterSeen						= "Only block cut scenes after they have been seen at least once (STRONGLY recommended, to experience story as intended at least once)"
+--Sound
+L.Area_Sound						= "Block in-game sounds"
+L.DisableSFX						= "Disable sound effects channel during boss fights"
+L.DisableAmbiance					= "Disable ambiance channel during boss fights"
+L.DisableMusic						= "Disable music channel during boss fights (Note: If enabled, custom boss music will not play if enabled in event sounds)"
+--Other
+L.Area_HideBlizzard					= "Disable & Hide other Blizzard Annoyances"
+L.HideBossEmoteFrame				= "Hide raid boss emote frame during boss fights"
+L.HideWatchFrame					= "Hide watch (objectives) frame during boss fights if no achievements are being tracked and if not in a Mythic+"
+L.HideQuestTooltips					= "Hide quest objectives from tooltips during boss fights"--Currently hidden (NYI)
+L.HideTooltips						= "Completely hide tooltips during boss fights"
 
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "Controles de líder de banda"
@@ -513,10 +529,10 @@ L.OverrideIcons 					= "Desactivar el marcado de iconos para todos los usuarios 
 L.OverrideSay						= "Desactivar la burbuja de chat/mensajes DECIR para todos los usuarios en la banda, incluido el tuyo"
 L.DisableStatusWhisperShort			= "Desactivar estado/susurros de respuesta para todo el grupo"--Duplicated from privacy but makes sense to include option in both panels
 L.DisableGuildStatusShort			= "Desactivar la sincronización de mensajes de progresión con la hermandad para todo el grupo."--Duplicated from privacy but makes sense to include option in both panels
---L.DisabledForDropdown				= "Choose boss mod(s) disable is sent to"--NYI
---L.DiabledForBoth					= "Disable above features for both DBM and BW"--NYI
---L.DiabledForDBM					= "Disable above features for only DBM users"--NYI
---L.DiabledForBW					= "Disable above features for only BW users"--NYI
+L.DisabledForDropdown				= "Elige la desactivación del mod(s) del jefe y se envía a"--NYI
+L.DiabledForBoth					= "Desactiva las funciones anteriores tanto para DBM como para BW"--NYI
+L.DiabledForDBM						= "Desactiva las funciones anteriores solo para usuarios de DBM"--NYI
+L.DiabledForBW						= "Desactiva las funciones anteriores solo para usuarios de BW"--NYI
 
 L.Area_ConfigOverrides				= "Opciones de anulación de configuración"--NYI
 L.OverrideBossAnnounceOptions		= "Establecer la configuración de anuncio de todos los usuarios de DBM en mi configuración"--NYI
@@ -558,12 +574,12 @@ L.Panel_Range				= "Marco de distancia"
 -- Panel: Nameplate
 L.Panel_Nameplates			= "Placas de nombres"
 L.Area_NPStyle				= "Contorno (solo cuando DBM controla las placas de nombres)"
---L.NPAuraText						= "Show timer text on nameplate icons"
+L.NPAuraText				= "Mostrar texto del temporizador en los iconos de la placa de nombre"
 L.NPAuraSize				= "Tamaño del aura: %d"
-L.NPIcon_BarOffSetX 				= "Desplazamiento del icono X: %d"
-L.NPIcon_BarOffSetY 				= "Desplazamiento del icono X Y: %d"
-L.NPIcon_GrowthDirection 			= "Dirección de crecimiento del icono"
-L.NPDemo							= "Prueba (Acercase de placas de nombre)"
+L.NPIcon_BarOffSetX 		= "Desplazamiento del icono X: %d"
+L.NPIcon_BarOffSetY 		= "Desplazamiento del icono X Y: %d"
+L.NPIcon_GrowthDirection 	= "Dirección de crecimiento del icono"
+L.NPDemo					= "Prueba (Acercase de placas de nombre)"
 
 -- Misc
 L.Area_General				= "General"

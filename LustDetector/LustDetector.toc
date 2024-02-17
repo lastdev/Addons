@@ -1,4 +1,4 @@
-## Interface: 100107
+## Interface: 100205
 ## Title: |cff0042ffLust|cffff0000Detector
 ## Author: Viicksmile - Thrall realm.
 ## Version: v6.1 version for Dragonflight 10.1.x

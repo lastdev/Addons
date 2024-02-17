@@ -303,7 +303,7 @@ function DropDownMetaFunctions:GetFrameForOption(optionsTable, value) --not test
 end
 
 function DropDownMetaFunctions:Refresh()
-	local optionsTable = DF:Dispatch(self.func, self)
+	local state, optionsTable = xpcall(self.func, geterrorhandler(), self)
 
 	if (#optionsTable == 0) then
 		self:NoOption(true)
@@ -397,7 +397,7 @@ function DropDownMetaFunctions:Select(optionName, byOptionNumber, bOnlyShown, ru
 		return false
 	end
 
-	local optionsTable = DF:Dispatch(self.func, self) --399
+	local runOkay, optionsTable = xpcall(self.func, geterrorhandler(), self)
 
 	if (#optionsTable == 0) then
 		self:NoOption(true)
@@ -558,9 +558,16 @@ function DropDownMetaFunctions:Selected(thisOption)
 		self.statusbar:SetTexture(thisOption.statusbar)
 		if (thisOption.statusbarcolor) then
 			self.statusbar:SetVertexColor(unpack(thisOption.statusbarcolor))
+		else
+			self.statusbar:SetVertexColor(1, 1, 1, 1)
 		end
 	else
-		self.statusbar:SetTexture([[Interface\Tooltips\CHATBUBBLE-BACKGROUND]])
+		self.statusbar:SetVertexColor(0, 0, 0, 0)
+	end
+
+	if (self.widget.__rcorners) then
+		self.statusbar:SetPoint("topleft", self.widget, "topleft", 2, -2)
+		self.statusbar:SetPoint("bottomright", self.widget, "bottomright", -2, 2)
 	end
 
 	if (thisOption.color) then
@@ -769,9 +776,11 @@ function DetailsFrameworkDropDownOnMouseDown(button, buttontype)
 						thisOptionFrame.statusbar:SetTexture(thisOption.statusbar)
 						if (thisOption.statusbarcolor) then
 							thisOptionFrame.statusbar:SetVertexColor(unpack(thisOption.statusbarcolor))
+						else
+							thisOptionFrame.statusbar:SetVertexColor(1, 1, 1, 1)
 						end
 					else
-						thisOptionFrame.statusbar:SetTexture([[Interface\Tooltips\CHATBUBBLE-BACKGROUND]])
+						thisOptionFrame.statusbar:SetVertexColor(0, 0, 0, 0)
 					end
 
 					--an extra button in the right side of the row
@@ -819,7 +828,7 @@ function DetailsFrameworkDropDownOnMouseDown(button, buttontype)
 						end
 
 						selectedTexture:Show()
-						selectedTexture:SetVertexColor(1, 1, 1, .3)
+						selectedTexture:SetVertexColor(1, 1, 0, .5)
 						selectedTexture:SetTexCoord(0, 29/32, 5/32, 27/32)
 
 						currentIndex = tindex
@@ -1004,13 +1013,21 @@ end
 --template
 
 function DropDownMetaFunctions:SetTemplate(template)
+	if (type(template) == "string") then
+		local templateName = template
+		template = DF:GetTemplate("dropdown", templateName)
+		if (not template) then
+			print("no template found", templateName)
+		end
+	end
+
 	self.template = template
 
 	if (template.width) then
 		PixelUtil.SetWidth(self.dropdown, template.width)
 	end
 	if (template.height) then
-		PixelUtil.SetWidth(self.dropdown, template.height)
+		PixelUtil.SetHeight(self.dropdown, template.height)
 	end
 
 	if (template.backdrop) then
@@ -1085,13 +1102,19 @@ end
 --object constructor
 
 ---@class df_dropdown : table, frame
----@field SetTemplate fun(self:df_dropdown, template:table)
+---@field SetTemplate fun(self:df_dropdown, template:table|string)
 ---@field BuildDropDownFontList fun(self:df_dropdown, onClick:function, icon:any, iconTexcoord:table?, iconSize:table?):table make a dropdown list with all fonts available, on select a font, call the function onClick
----@field 
----@field 
----@field 
----@field 
----@field 
+---@field SetFunction fun(self:df_dropdown, func:function)
+---@field SetEmptyTextAndIcon fun(self:df_dropdown, text:string, icon:any)
+---@field Select fun(self:df_dropdown, optionName:string|number, byOptionNumber:boolean?, bOnlyShown:boolean?, runCallback:boolean?):boolean
+---@field Open fun(self:df_dropdown)
+---@field Close fun(self:df_dropdown)
+---@field Refresh fun(self:df_dropdown)
+---@field GetFunction fun(self:df_dropdown):function
+---@field GetMenuSize fun(self:df_dropdown):number, number
+---@field SetMenuSize fun(self:df_dropdown, width:number, height:number)
+---@field Disable fun(self:df_dropdown)
+---@field Enable fun(self:df_dropdown)
 
 ---return a function which when called returns a table filled with all fonts available and ready to be used on dropdowns
 ---@param callback function
@@ -1253,6 +1276,9 @@ function DF:NewDropDown(parent, container, name, member, width, height, func, de
 	if (default == nil) then
 		default = 1
 	end
+
+	width = width or 160
+	height = height or 20
 
 	dropDownObject.dropdown = DF:CreateNewDropdownFrame(parent, name)
 	PixelUtil.SetSize(dropDownObject.dropdown, width, height)

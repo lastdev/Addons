@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2565, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108022526")
+mod:SetRevision("20240125080131")
 mod:SetCreatureID(209090)--Primary ID
 mod:SetEncounterID(2786)
 mod:SetUsedIcons(1, 2, 3, 4)
-mod:SetHotfixNoticeRev(20240104000000)
+mod:SetHotfixNoticeRev(20240116000000)
 mod:SetMinSyncRevision(20231115000000)
 mod.respawnTime = 29
 
@@ -218,7 +218,7 @@ local allTimers = {
 			--Moonkin Form
 			[420540] = {6.2, 26.0, 40.0},
 			--Fire Beam
-			[421398] = {7.2, 26.0, 7.0, 33.0},
+			[421398] = {7.2, 33.0, 33.0},
 			--Owl Form (mythic)
 			[425582] = {23.0, 40.0},
 		},
@@ -391,7 +391,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 422000 then
 		local amount = args.amount or 1
 		if (amount % 3 == 0) then
-			if amount >= 12 then
+			if amount >= 9 then
 				if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
 					specWarnSearingWrath:Show(args.destName)
 					specWarnSearingWrath:Play("tauntboss")

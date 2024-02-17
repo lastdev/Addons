@@ -1,8 +1,8 @@
-## Interface: 100107
+## Interface: 100205
 ## Title: RareTrackerZerethMortis
 ## Notes: Track and coordinate rare spawn timers in Zereth Mortis.
 ## Author: Melroy
-## Version: 7.1.19
+## Version: 7.1.21
 ## Dependencies: RareTrackerCore
 ## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon
 

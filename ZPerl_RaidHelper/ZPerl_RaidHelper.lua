@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+XPerl_SetModuleRevision("$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -184,13 +184,13 @@ local function UpdateUnit(self,forcedUpdate)
 			self.raidIcon:Hide()
 		end
 
-		if (UnitAffectingCombat(xunit)) then
+		if UnitAffectingCombat(xunit) then
 			self.combatIcon:Show()
 		else
 			self.combatIcon:Hide()
 		end
 
-		if (UnitIsCharmed(xunit)) then
+		if UnitIsCharmed(xunit) and UnitIsPlayer(xunit) and (not IsVanillaClassic and not UnitInVehicle("player") or true) then
 			self.warningIcon:Show()
 		else
 			self.warningIcon:Hide()

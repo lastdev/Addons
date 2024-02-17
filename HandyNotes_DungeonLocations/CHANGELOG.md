@@ -1,4 +1,10 @@
 # HandyNotes: DungeonLocations
+## [2.2c](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-01-12)
+- Note: update for patch 10.2.0 Dragonflight --BadBoyBarny
+      - image update
+## [2.2b](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-01-12)
+- Note: update for patch 10.2.0 Dragonflight --BadBoyBarny
+      - toc bump
 ## [2.2a](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-01-12)
 - Note: update for patch 10.2.0 Dragonflight --BadBoyBarny
       - gray icon fix

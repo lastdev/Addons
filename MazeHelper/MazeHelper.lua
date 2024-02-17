@@ -1340,11 +1340,12 @@ function MazeHelper:CreateButton(index)
     end);
 
     button:HookScript('OnEnter', function(self)
-        if self.sender then
-            self.tooltip = self.state and string.format(L['SENDED_BY'], self.sender) or string.format(L['CLEARED_BY'], self.sender);
-        else
+        if not self.sender then
             self.tooltip = nil;
+            return;
         end
+
+        self.tooltip = self.state and string.format(L['SENDED_BY'], self.sender) or string.format(L['CLEARED_BY'], self.sender);
     end);
 
     E.CreateTooltip(button);
@@ -1379,7 +1380,9 @@ function MazeHelper:CreateButtons()
 end
 
 -- Credit to Garthul#2712
--- Main idea: The solution is the opposite of entrance symbol or opposite of an existing symbol that shares two features with entrance symbol. Order of conditions matter.
+-- Main idea: 
+-- The solution is the opposite of entrance symbol or opposite of an existing symbol that shares two features with entrance symbol.
+-- Order of conditions matter.
 local TryHeuristicSolution do
     local filterTable = {};
 

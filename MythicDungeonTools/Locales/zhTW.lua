@@ -1,4 +1,4 @@
-if not (GetLocale() == "zhTW") then
+if not ((GAME_LOCALE or GetLocale()) == "zhTW") then
   return
 end
 local addonName, MDT = ...
@@ -408,12 +408,15 @@ L["ChamberOfFlames"] = "烈焰之室"
 L["Champion Druna"] = "勇士德鲁娜"
 --[[Translation missing --]]
 L["Champion of Hodir"] = "Champion of Hodir"
+L["Change Language"] = "更改語言"
 L["Channeler Varisz"] = "导魔者瓦里兹"
 --[[Translation missing --]]
 L["Chaotic Rift"] = "Chaotic Rift"
 --[[Translation missing --]]
 L["Chargath, Bane of Scales"] = "Chargath, Bane of Scales"
 L["Charged Dust Devil"] = "充能的沙尘恶魔"
+--[[Translation missing --]]
+L["chatNoninteractiveWarning"] = "Chat frame is currently set to noninteractive, you will not be able to click on MDT routes."
 L["Choose Enemy Forces Format"] = "選擇敵方部隊格式"
 L["Choose Enemy Style. Requires Reload"] = "選擇敵人風格 (需要重新載入)"
 L["Choose NPC tooltip position"] = "選擇 NPC 滑鼠提示位置"
@@ -869,6 +872,8 @@ L["Emissary of the Tides"] = "潮汐使者"
 L["Empty"] = "空白"
 --[[Translation missing --]]
 L["Empyrean Assassin"] = "Empyrean Assassin"
+--[[Translation missing --]]
+L["Enable Compartment Button"] = "Enable Compartment Button"
 L["Enable Minimap Button"] = "啟用小地圖按鈕"
 L["Enchanted Broodling"] = "魔化巢蛛"
 L["Enchanted Emissary"] = "魔力使者"
@@ -912,10 +917,8 @@ L["Erkhart Stormvein"] = "Erkhart Stormvein"
 L["Error Message:"] = "Error Message:"
 --[[Translation missing --]]
 L["errorLabel1"] = "MDT has encountered errors."
---[[Translation missing --]]
-L["errorLabel2"] = "Please visist either GitHub or Discord and report the error message below."
---[[Translation missing --]]
-L["errorLabel3"] = "Press CTRL + C to copy!"
+L["errorLabel2"] = "請到 GitHub 或 Discord 回報下列錯誤訊息。"
+L["errorLabel3"] = "按 CTRL + C 複製!"
 L["Erudite Slayer"] = "艾瑞迪特屠杀者"
 --[[Translation missing --]]
 L["Erunak Stonespeaker"] = "Erunak Stonespeaker"
@@ -1567,6 +1570,8 @@ L["Living Waste"] = "活体废料"
 --[[Translation missing --]]
 L["Loatheb"] = "Loatheb"
 L["Local color blind mode"] = "局部色盲模式"
+L["localeButtonTooltip1"] = "需要 \"AddonLocale\" 插件"
+L["localeButtonTooltip2"] = "點一下以在聊天中開設定對話框"
 L["Locked"] = "已鎖住"
 --[[Translation missing --]]
 L["Loken"] = "Loken"
@@ -2822,7 +2827,8 @@ L["Titanium Vanguard"] = "Titanium Vanguard"
 L["T'lonja"] = "特隆加"
 L["To share a different preset while the live session is active simply navigate to the preferred preset and click the new 'Set to Live' Button next to the preset-dropdown"] = "在連線的過程中要分享不同的路線，只要切換到該路線，然後按下路線下拉選單旁新的 '設為即時連線' 按鈕。"
 L["tocNotes"] = "幫助你計算 M+ 的小怪%，規劃出最佳拉怪路線。"
-L["Toggle Window"] = "切換顯示視窗"
+L["Toggle MDT"] = "切換顯示 MDT"
+L["Toggle Window"] = "切換顯示地城規劃工具"
 L["Toiling Groundskeeper"] = "劳苦的管理员"
 L["Tol Dagor"] = "托達戈爾"
 L["Tol Dagor Sublevel1"] = "托達戈爾"

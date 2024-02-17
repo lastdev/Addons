@@ -500,7 +500,7 @@ function MainFrame:CHAT_MSG_ADDON(prefix, message, _, sender)
     end
 
     if sender == PLAYER_NAME_WITH_REALM then
-        -- return;
+        return;
     end
 
     local command, arg1, arg2, arg3, arg4 = strsplit('|', message);
@@ -537,7 +537,7 @@ function MainFrame:UNIT_AURA()
     local index = FindRuneAura();
 
     for blockId = 1, MAX_BLOCKS do
-        if index and blocks[blockId].bigBoy.index == index then
+        if index and index == blocks[blockId].bigBoy.index  then
             blocks[blockId].bigBoy.glowFrame:Show();
             blocks[blockId].bigBoy.glowFrame.AnimGroup:Play();
         else

@@ -242,6 +242,7 @@ points[ 94 ] = { -- Eversong Woods
 	[40847300] = { index=1, quest=56903, obj="Flower of Fortitude" },
 	[42696870] = { index=1, quest=56903, obj="Flower of Fortitude" },
 	[43456364] = { index=1, quest=56903, obj="Flower of Fortitude" },
+	[44167339] = { index=1, quest=56903, obj="Flower of Fortitude" },
 	[44946799] = { index=1, quest=56903, obj="Flower of Fortitude" },
 	[46226210] = { index=1, quest=56903, obj="Flower of Fortitude" },
 	[46447190] = { index=1, quest=56903, obj="Flower of Fortitude" },

@@ -77,6 +77,12 @@ L["OPTIONS_CAST_SHOW_TARGETNAME"] = "Показывать имя цели"
 L["OPTIONS_CAST_SHOW_TARGETNAME_DESC"] = "Показывать цель к которой применяется заклинание (если она есть)"
 L["OPTIONS_CAST_SHOW_TARGETNAME_TANK"] = "[ТАНК] Не показывать свое имя"
 L["OPTIONS_CAST_SHOW_TARGETNAME_TANK_DESC"] = "Если вы танк, то при применении заклинания к вам ваше имя отображаться не будет"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_APPEARANCE"] = "Cast Bar Appearance"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_BLIZZCASTBAR"] = "Blizzard Cast Bar"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_COLORS"] = "Cast Bar Colors"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED"] = "Включить анимации затухания"
 L["OPTIONS_CASTBAR_FADE_ANIM_ENABLED_DESC"] = "Включить анимации затухания на старте и окончании произнесения заклинаний."
 L["OPTIONS_CASTBAR_FADE_ANIM_TIME_END"] = "На окончании"
@@ -92,9 +98,17 @@ L["OPTIONS_CASTBAR_ICON_CUSTOM_ENABLE"] = "Включить видоизмене
 L["OPTIONS_CASTBAR_ICON_CUSTOM_ENABLE_DESC"] = "Если данный параметр отключен, Plater не будет видоизменять иконку заклинаний, оставляя эту возможность скриптам."
 L["OPTIONS_CASTBAR_NO_SPELLNAME_LIMIT"] = "Не сокращать наименование заклинаний"
 L["OPTIONS_CASTBAR_NO_SPELLNAME_LIMIT_DESC"] = "Наименование заклинания не будет обрезаться по ширине полосы заклинаний."
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_QUICKHIDE"] = "Quick Hide Cast Bar"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_QUICKHIDE_DESC"] = "After the cast finishes, immediately hide the cast bar."
 L["OPTIONS_CASTBAR_SPARK_HALF"] = "Половина искры"
 L["OPTIONS_CASTBAR_SPARK_HALF_DESC"] = "Показывать только половину текстуры искры."
 L["OPTIONS_CASTBAR_SPARK_HIDE_INTERRUPT"] = "Скрыть искру при прерывании"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_SPARK_SETTINGS"] = "Spark Settings"
+--[[Translation missing --]]
+L["OPTIONS_CASTBAR_SPELLICON"] = "Spell Icon"
 L["OPTIONS_CASTBAR_TOGGLE_TEST"] = "Тест полосы заклинаний"
 L["OPTIONS_CASTBAR_TOGGLE_TEST_DESC"] = "Активировать тестовую полосу заклинаний, нажмите снова для остановки теста"
 L["OPTIONS_CASTBAR_WIDTH"] = "Ширина полосы заклинаний."

@@ -23,8 +23,6 @@ spec:RegisterTalents( {
     chi_torpedo                   = { 80685, 115008, 1 }, -- Torpedoes you forward a long distance and increases your movement speed by $119085m1% for $119085d, stacking up to 2 times.
     chi_wave                      = { 80709, 115098, 1 }, -- A wave of Chi energy flows through friends and foes, dealing $132467s1 Nature damage or $132463s1 healing. Bounces up to $s1 times to targets within $132466a2 yards.
     close_to_heart                = { 80707, 389574, 2 }, -- You and your allies within $m2 yards have $s1% increased healing taken from all sources.
-    dampen_harm                   = { 80704, 122278, 1 }, -- Reduces all damage you take by $m2% to $m3% for $d, with larger attacks being reduced by more.
-    dance_of_the_wind             = { 80704, 414132, 1 }, -- Your dodge chance is increased by $s1%.
     diffuse_magic                 = { 80697, 122783, 1 }, -- Reduces magic damage you take by $m1% for $d, and transfers all currently active harmful magical effects on you back to their original caster if possible.
     disable                       = { 80679, 116095, 1 }, -- Reduces the target's movement speed by $s1% for $d, duration refreshed by your melee attacks.$?s343731[ Targets already snared will be rooted for $116706d instead.][]
     elusive_mists                 = { 80603, 388681, 2 }, -- Reduces all damage taken while channelling Soothing Mists by $s1%.
@@ -69,17 +67,19 @@ spec:RegisterTalents( {
     ancient_concordance           = { 80569, 388740, 1 }, -- Your Blackout Kicks strike ${$s2+1} targets and have an additional $s1% chance to reset the cooldown of your Rising Sun Kick while within your Faeline Stomp.
     ancient_teachings             = { 80598, 388023, 1 }, -- After casting Essence Font or Faeline Stomp, your Tiger Palm, Blackout Kick, and Rising Sun Kick heal up to $s2 injured allies within $388024A1 yds for $<healing>% of the damage done, split evenly among them. Lasts $388026d.
     awakened_faeline              = { 80577, 388779, 1 }, -- Your abilities reset Faeline Stomp $s2% more often. While within Faeline Stomp, your Tiger Palms strike twice and your Spinning Crane Kick heals $s4 nearby allies for $s1% of the damage done.
+    awakened_jadefire             = { 80577, 388779, 1 }, -- Your abilities reset Faeline Stomp $s2% more often. While within Faeline Stomp, your Tiger Palms strike twice and your Spinning Crane Kick heals $s4 nearby allies for $s1% of the damage done.
     burst_of_life                 = { 80583, 399226, 1 }, -- When Life Cocoon expires, it releases a burst of mist that restores $399230s2 health to $s3 nearby allies.
     calming_coalescence           = { 80599, 388218, 1 }, -- Each time Soothing Mist heals, the absorb amount of your next Life Cocoon is increased by $s1%, stacking up to $388220u times.
     celestial_harmony             = { 80582, 343655, 1 }, -- While active, Yu'lon and Chi'Ji heal up to $s3 nearby targets with Enveloping Breath when you cast Enveloping Mist, healing for ${$325209s1*$325209d/$325209t1} over $325209d, and increasing the healing they receive from you by $325209s3%.; When activated, Yu'lon and Chi'Ji apply Chi Cocoons to $406139s3 targets within $406139r yds, absorbing $<newshield> damage for $406139d.
     chrysalis                     = { 80583, 202424, 1 }, -- Reduces the cooldown of Life Cocoon by ${$m1/-1000} sec.
     clouded_focus                 = { 80598, 388047, 1 }, -- Healing with Enveloping Mists or Vivify while channeling Soothing Mists increases their healing done by $388048m1% and reduces their mana cost by $388048m2%. Stacks up to $388048u times.; When your Soothing Mists channel ends, this effect is cancelled.
+    dampen_harm                   = { 80704, 122278, 1 }, -- Reduces all damage you take by $m2% to $m3% for $d, with larger attacks being reduced by more.
+    dance_of_the_wind             = { 80704, 414132, 1 }, -- Your dodge chance is increased by $s1%.
     dancing_mists                 = { 80587, 388701, 2 }, -- Renewing Mist has a $s1% chance to immediately spread to an additional target when initially cast or when traveling to a new target.
     echoing_reverberation         = { 80564, 388604, 1 }, -- Zen Pulse triggers a second time at $s1% effectiveness if cast on targets with Enveloping Mist.
     energizing_brew               = { 80575, 422031, 1 }, -- Mana Tea now channels $s1% faster and generates $s2% more Mana.
     enveloping_mist               = { 80568, 124682, 1 }, -- Wraps the target in healing mists, healing for $o1 over $d, and increasing healing received from your other spells by $m2%. $?a388847[; Applies Renewing Mist for $388847s1 seconds to an ally within $388847r yds.][]
     essence_font                  = { 80597, 191837, 1 }, -- Unleashes a rapid twirl of healing bolts at up to $s1 allies within $191840A1 yds, every ${6*$t1}.1 sec for $d. Each bolt heals a target for $191840s1, plus an additional $191840o2 over $191840d.; Gust of Mists will heal affected targets twice. Castable while moving.$?a337209[; Each bolt has a chance to reduce the cooldown of Thunder Focus Tea by $337209s1 sec.][]
-    faeline_stomp                 = { 80560, 388193, 1 }, -- Strike the ground fiercely to expose a faeline for $d, dealing $388207s1 Nature damage to up to 5 enemies, and restores $388207s2 health to up to 5 allies within $388207a1 yds caught in the faeline. $?a137024[Up to 5 allies]?a137025[Up to 5 enemies][Stagger is $s3% more effective for $347480d against enemies] caught in the faeline$?a137023[]?a137024[ are healed with an Essence Font bolt][ suffer an additional $388201s1 damage].; Your abilities have a $s2% chance of resetting the cooldown of Faeline Stomp while fighting on a faeline.
     focused_thunder               = { 80593, 197895, 1 }, -- Thunder Focus Tea now empowers your next ${$m1+1} spells.
     font_of_life                  = { 80580, 337209, 1 }, -- Your Essence Font's initial heal is increased by $s2% and has a chance to reduce the cooldown of Thunder Focus Tea by $s1 sec.
     gift_of_the_celestials        = { 80576, 388212, 1 }, -- Reduces the cooldown of $?s325197[Invoke Chi-Ji, the Red Crane][Invoke Yul'on, the Jade Serpent] by 2 min, but decreases its duration to 12 sec. 
@@ -92,6 +92,7 @@ spec:RegisterTalents( {
     invoke_yulon_the_jade_serpent = { 80590, 322118, 1 }, -- Summons an effigy of Yu'lon, the Jade Serpent for $d. Yu'lon will heal injured allies with Soothing Breath, healing the target and up to $s2 allies for $343737o1 over $343737d. ; Enveloping Mist costs $s4% less mana while Yu'lon is active.
     invokers_delight              = { 80571, 388661, 1 }, -- You gain $388663m1% haste for $?a388212[${$s2-$s3} sec][$388663d] after summoning your Celestial. 
     jade_bond                     = { 80576, 388031, 1 }, -- Abilities that activate Gust of Mist reduce the cooldown on $?s325197[Invoke Chi-Ji, the Red Crane][Invoke Yul'on, the Jade Serpent] by ${$s2/-1000}.1 sec, and $?s325197[Chi-Ji's Gusts of Mists][Yu'lon's Soothing Breath] healing is increased by $s1%.
+    jadefire_stomp                = { 80560, 388193, 1 }, -- Strike the ground fiercely to expose a path of jade for $d, dealing $388207s1 Nature damage to up to 5 enemies, and restores $388207s2 health to up to 5 allies within $388207a1 yds caught in the path. $?a137024[Up to 5 allies]?a137025[Up to 5 enemies][Stagger is $s3% more effective for $347480d against enemies] caught in the path$?a137023[]?a137024[ are healed with an Essence Font bolt][ suffer an additional $388201s1 damage].; Your abilities have a $s2% chance of resetting the cooldown of Jadefire Stomp while fighting within the path.
     legacy_of_wisdom              = { 92684, 404408, 1 }, -- Sheilun's Gift heals $s1 additional allies and its cast time is reduced by ${$s2/-1000}.1 sec.
     life_cocoon                   = { 80584, 116849, 1 }, -- Encases the target in a cocoon of Chi energy for $d, absorbing $<newshield> damage and increasing all healing over time received by $m2%.$?a388548[; Applies Renewing Mist and Enveloping Mist to the target.][]
     lifecycles                    = { 80575, 197915, 1 }, -- Vivify has a $s2% chance to cause your next Rising Sun Kick or Enveloping Mist to generate $s1 stack of Mana Tea.; Enveloping Mist and Rising Sun Kick have a $s3% chance to cause your next Vivify to generate $s1 stack of Mana Tea.
@@ -164,7 +165,8 @@ spec:RegisterAuras( {
     awakened_faeline = {
         id = 389387,
         duration = 3600,
-        max_stack = 1
+        max_stack = 1,
+        copy = "awakened_jadefire"
     },
     bonedust_brew = {
         id = 386276,
@@ -207,6 +209,12 @@ spec:RegisterAuras( {
         id = 122278,
         duration = 10,
         max_stack = 1
+    },
+    -- Your dodge chance is increased by $w1% until you dodge an attack.
+    dance_of_the_wind = {
+        id = 432180,
+        duration = 10.0,
+        max_stack = 1,
     },
     diffuse_magic = {
         id = 122783,
@@ -252,7 +260,8 @@ spec:RegisterAuras( {
     faeline_stomp = {
         id = 388193,
         duration = 30,
-        max_stack = 1
+        max_stack = 1,
+        copy = "jadefire_stomp",
     },
     fatal_touch = {
         id = 337296,
@@ -1156,11 +1165,11 @@ spec:RegisterSetting( "experimental_msg", nil, {
 
 spec:RegisterSetting( "save_faeline", false, {
     type = "toggle",
-    name = strformat( "%s: Prevent Overlap", Hekili:GetSpellLinkWithTexture( spec.talents.faeline_stomp[2] ) ),
+    name = strformat( "%s: Prevent Overlap", Hekili:GetSpellLinkWithTexture( spec.talents.jadefire_stomp[2] ) ),
     desc = strformat( "If checked, %s will not be recommended when %s, %s, and/or %s are active.\n\n"
-        .. "Disabling this option may impact your mana efficiency.", Hekili:GetSpellLinkWithTexture( spec.talents.faeline_stomp[2] ),
+        .. "Disabling this option may impact your mana efficiency.", Hekili:GetSpellLinkWithTexture( spec.talents.jadefire_stomp[2] ),
         Hekili:GetSpellLinkWithTexture( spec.auras.ancient_concordance.id ), Hekili:GetSpellLinkWithTexture( spec.auras.ancient_teachings.id ),
-        Hekili:GetSpellLinkWithTexture( spec.auras.awakened_faeline.id ) ),
+        Hekili:GetSpellLinkWithTexture( spec.auras.awakened_jadefire.id ) ),
     width = "full",
 } )
 
@@ -1223,4 +1232,4 @@ spec:RegisterOptions( {
 
 
 
-spec:RegisterPack( "Mistweaver", 20231225, [[Hekili:9I1wZnQnu4Fl5LCzAcBa7Sz324mt6oTZSPTB7usFPpaile2QasujX6KD8WV9EKaBazW2z70(WMWQZrNlFNB6Ka3GNc8JrksWN8U2BIRN3noUUEV3DAGV6LcsGFbcNIwaFWq5Wp)fQuTIG(mrOj9sghfRfHKxkWa5a)5L0m1hzbZhsU3o1d4TGGHJV96a)L04ysnVejoWxZ7vUEx5DZ3wf9hssv0Fsyvr)wzMK8DvrO44QOFNkPSfvr(LaLFIItRIOWxp8R)qveVqr5mNQhRECJOCNUru)iIKrzWh(kEErvKIxfvi4y4UmmLWuvrprq4LG0LDeH7vEVderJqEIUGialcLLxfLZfKECAugOGCuwgOaaOsLvrjC4gUx741Y71GH9wdVpaiq8glV2OqFMtHJeemsQm(QTPVAPgwKkel2qxdai4FKNPn3izZno3O9CedbKtsOApf)YfDmLj1WTXua4LNL9MpSKcUkxuqIb7zfvTe0ge2OOm6xq1wAdwdPbcEcndc(iS(ePtby5885i13m7nfCd3poenaQdNxkKQXjVcY00wAdD4uWmqIWLGNhkvcAkPlXsjjKQi5YUhopJZJdtkfV07uIqsePAWQZPz0flvYW)QmErUoJOdPeQGyev3drmmbmduwiwhY7kF0IqEsiyI40EMJfIOLCDSc8hi4Ejnz2jsIszsdLG)h2qF9AfkdmkhuD6AiMZWCrS2goDEzsYqeCI5RyT3CfkLWiXBezZ1So16oncvTP2OVU2ES5wDDlnIew)FdZG8Yl1DqMH4Kl1boSAMR2x1ma(iO)CkrE)SjhweWVhxc3nPt(IJuNiPwwYIjIWeoUuQnyl6cthLqzjlmv3pPp15zqhqEPYqZeDAaMTEUjoVKeMZzqblr8Y61NFYEr8XVQtzX61hIhOWhNE)KlofZ5zAy3XYfCeKCeLjVFbo2jh9SLl9fclSq3tv7oT5AWpZiHBjADP2YXDo2QiUg01nkdl09j7epGO)qbKbcJDseAU1agwnblNFqHTE9w)eUuOqMAlLVQ48HIuLfNEq)AxGT9ClKTMGSGYyApglqqBdT9g4dtKLapBM3QhGVcj0Sjd8FAjmjGMxWfQMXrNbI6m9mM)Ue6Rb99L8CGhuj0dcgBdhGHESli6jH)SzqIE02h4mqpgYNDq05S6PzhMrhcdnpJedx4C3NRhnnGflvVodEY)Jg8E1ODpal9St73JdoIjjOYSxjM4E9iM4UtoSTYbMTmcmmQs(3IdhNpSnUnIh0oXAaG(Jgmwl2PaqAk7QI0JE0yyGV5l9dEHYh4xFY8(5gXe89b(yb88dbfv)yO2Y(QO7Mb5hBEJe84A7wGbkO01i5go22URRcaMM86uzv061qIHvZVw1y18uRHPJQHtae9yloQv8HBqwfDAnsVh0QxVzTjEtxKAtdulG6T28yAMAX0TDzAWgRDzhUniHnX9XJL91rVWQnEFSb3xp0FEvu7LgR4YG(htq6ycMM3LufDVjT7cJOp0lumC38kL9eVhpLC0NVmuL0)zzoTV2zNeMM(07K1SZIm7lRz7IndLV0IABw0XIRP94A7IpwC1dzSweAFa02fJ2ha1FrjloFxp7R7Itwm((UmwViLfhUxVVkOb3RQo3(WJ5AlvgBpR(s6GvCdU31GwZoJS21w6VhwNOt3Llni0XpZ6(6UW1lBPtFBlkSwmREYyy9FJi9Srn7EhTIU7RspsvDf22)Ob7uJnykI3XuDp5WTjm6gER1sUiW)bAkIHsrMtd(N]] )
+spec:RegisterPack( "Mistweaver", 20240116, [[Hekili:9E1wVTTnu4Fl5fNeSexl7002TKa0vSb0STUH5Sx2dIIwIYI1sKQKuXjfg63(ouuwxOUyNoS9qID45WZ1VZHFX1X9b3LbyfX9tZNn)Qzooxp15AN35SWDP65uI7YuS)g8A4lmCc87FJkvBj4hjcTONJ54aTjK8mHpi2D5QmAS6Jm3v22fukL4d)9BM5UmIgeqmkrK(Ul1kD5mNlDU(7Z9(Ru9nZ9u4yctjNMFF(9GclU0z(LZFTwbji9VjSCV)ilws(HCpCqqU3FsLu26CVLzGKFH6Vj3JcF79)(pL7XtvuoRLPCUAVP(zmjMYGVSuXtsbhZZ9sfCF4UmFked5EpqW(rG1Bgnoxo)TGjknYd01eber44KCVeUG0sZcNboibhhdoakHBK5EHC4goZMoVw3zZnfbW3qjkyFKBck8JCkCKG4JLQIC1o03gPllsfMfuixxaWWpKNOL3iC)noRW7jyggehgs1zQ)ZN3iuwyk3fHcuE5XXV6druiv5IusaepBPQiWBqFLIJPFfBI0YAT7YyWNsn8aZjWhFQaTry4vXKa3F0DPVGQickguWxrFKGimscLafMBUn3BH5yodGIrzSaIafY9ZKifb7QaGuHLl14RegkvdgA6aqPfVmxM7TBhKqeLQOxdXnsi3u7grbedjZyOnaat7HRg0dNShcpvTh9G4HivebLWzqhKiEEA5nnoEvwy4ykNbD4jqdD8Q1QyyMLNPQcXx3Ssb2gTfgGTkuxBRZQmHuzP0BAQKmLYy6QHVaZigN1sDLE6oeNfRQA(13LGfOiaLIKkbDJD00Q3MjjiOMMi7R3wN0CEakmt8SLwx1slIqseBGO2sRwLOy66iLe95SG1jq7BSkvivqkC9yvkmZNaPjog5dJ)wA(2wXhEDrxxaft709DnvmLB(SLgoZgdlwHQLq3hvTgqJ7kHPyZ2oKpN5Zfb6WUgFoPeE2Nsb8TS2wAlEdapd27MEmJTgDTrPJQMhgowQvrBL6Q0NXaae6qaid2owuIo(Dq3zMQ04tF9nBmEaDrK5pq6DCMnDiZlK6DDA1NF0o6MVj)ivMrmz3PRURlhz6YEL2XU)8LVD7SCVtEbiKdSh8y2xcVdQzbCxXM9ZlmTpNhRbjtTY7PcscMYKfAV2pyAc(PrwPo8w)6Xm43XeuJxM6(y1)zlNvA2iOuGmsNDYPa9bEYkCxCtVlvMFm(EXHtIcFd8gLADAWkClwOFfb229qeSoIMKYfQsQrNcdtNQ578LmykgWgsEcOdodgNbkIWb(WBiRjAwz)AX2mnnRpWzGFkeF6bHONAywDyf3dqHlCMZtgAs9eXs1llGx8)yapQhThiT8ZqZRhOCusa4LvtCMnqi29Ph7OC4xWSldd6K)T1HJlhQ6BdKbDE1RzH(Jf1yTzVYWgut7UGTniwpHZdPXvlCKtRg5)UBFLzip)((KvnEpSy9GToekLdN2HlxtHvC3AEynxTwNwXnR5PwCXAkQI7vZdBZ1QL9BYTQPaRkcCsBEdxqdV9KEzpTB3W4UjJYwQ(Mw4PjdZoQJ3QWitgHnuZ8YMqXfAQe3clzVWW(4whDU2MFYD3U4WMa(CylCZIgag4nzWkDyOyj36XzlPTEnUO7CWLH72D2jJwXhLTXUDhsNcMg3T48jhIFXDLClSsPkkb60zqkewxQEESZXwtXMIEfNGM9dO73xdPN2ydGq5T6jWmcSs(En2UD2)F22w5BQpFOovw6KdMxDlS1NBvznc69)fgEHlIlCx(E6gmdVbxqbY9Fc]] )

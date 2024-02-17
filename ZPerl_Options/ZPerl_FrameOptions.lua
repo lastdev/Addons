@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 69c525b70b9bc2136160b2e5738adf94987affaf $")
+XPerl_SetModuleRevision("$Revision: 25a714ca70d3208dca6121d47111512281008a4a $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
@@ -2258,7 +2258,7 @@ local function XPerl_RegisterConfigDefault(configFunc, configSection)
 end
 
 local function XPerl_MakeDefaultConfig(new)
-	for k,v in pairs(defaultConfig) do
+	for k, v in pairs(defaultConfig) do
 		v.func(new, v.section)
 	end
 end
@@ -2803,7 +2803,7 @@ end
 function XPerl_Custom_Config_OnShow(self)
 	if (not XPerlDB.custom) then
 		XPerlDB.custom = {
-			enable = true,
+			enable = false,
 			alpha = 0.5,
 			blend = "ADD"
 		}
@@ -3254,6 +3254,9 @@ if (XPerl_UpgradeSettings) then
 		if (not old.pet) then
 			old.pet = {}
 			XPerl_Pet_ConfigDefault(old)
+		elseif (not old.pettarget) then
+			old.pettarget = {}
+			XPerl_TargetTarget_ConfigDefault(old, "pettarget")
 		elseif (not old.pet.castBar) then
 			old.pet.castBar = {enable = 1}
 		end
@@ -3394,7 +3397,7 @@ if (XPerl_UpgradeSettings) then
 
 			if (not old.custom) then
 				old.custom = {
-					enable = true,
+					enable = false,
 					alpha = 0.5,
 					blend = "ADD"
 				}

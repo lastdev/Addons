@@ -634,7 +634,7 @@ function HealBot_Panel_retClassRoleIcon(id)
 end
 
 function HealBot_Panel_classEN(unit)
-    local _,classEN = UnitClass(unit)
+    local classEN = HealBot_EnClass(unit)
     if classEN then 
         return strsub(classEN,1,4)
     else
@@ -643,7 +643,7 @@ function HealBot_Panel_classEN(unit)
 end
 
 function HealBot_Panel_CheckRole(unit)
-    local _,classEN = UnitClass(unit)
+    local classEN = HealBot_EnClass(unit)
     if classEN and not tClass[strsub(classEN,1,4)] then
         return "DAMAGER"
     end
@@ -2699,11 +2699,11 @@ local vTargetButton=""
 function HealBot_Panel_TargetChanged(preCombat)
     hbCurrentFrame=8
     hbBarsPerFrame[hbCurrentFrame]=0
+    vTargetButton = HealBot_Extra_Button["target"]
     if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][9]["STATE"] then
         i[hbCurrentFrame]=0
         HeaderPos[hbCurrentFrame]={};
         HealBot_Panel_targetHeals(preCombat)        
-        vTargetButton = HealBot_Extra_Button["target"]
         if vTargetButton then
             if HealBot_TrackUnit[vTargetButton.status.unittype][vTargetButton.unit] and not HealBot_Panel_BlackList[vTargetButton.guid] then
                 HealBot_Panel_TargetShow(vTargetButton)
@@ -2713,7 +2713,6 @@ function HealBot_Panel_TargetChanged(preCombat)
         end
         HealBot_Panel_SetupExtraBars(hbCurrentFrame, preCombat)
     else
-        vTargetButton = HealBot_Extra_Button["target"]
         if vTargetButton then
             HealBot_Action_MarkDeleteButton(vTargetButton)
         end
@@ -2742,7 +2741,7 @@ function HealBot_Panel_TargetChangedCheckFocus()
                 HealBot_Action_OnLoad(vFocusFrame) 
                 vFocusFrame:RegisterForClicks("LeftButtonUp", "RightButtonUp")
             end
-            if not InCombatLockdown() and UnitExists("target") and HealBot_Globals.FocusMonitor[UnitName("target")] then
+            if not HealBot_Data["UILOCK"] and UnitExists("target") and HealBot_Globals.FocusMonitor[UnitName("target")] then
                 if UnitExists("focus") and HealBot_Globals.FocusMonitor[UnitName("focus")] then
                     vFocusFrame:Hide()
                 else
@@ -2902,7 +2901,7 @@ function HealBot_Panel_PlayersChanged(preCombat)
                     HealBot_Panel_vehicleHeals(preCombat)
                 elseif Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][gl]["NAME"]==HEALBOT_OPTIONS_TARGETHEALS_en and hbCurrentFrame<6 then
                     HealBot_Panel_targetHeals(preCombat)
-                elseif Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][gl]["NAME"]==HEALBOT_FOCUS_en and hbCurrentFrame<6 then
+                elseif HEALBOT_GAME_VERSION>1 and Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][gl]["NAME"]==HEALBOT_FOCUS_en and hbCurrentFrame<6 then
                     HealBot_Panel_focusHeals(preCombat)
                 end
             end
@@ -3136,7 +3135,7 @@ function HealBot_Panel_DoPartyChanged(preCombat, changeType)
         else
             vTargetWithPlayers=false
         end
-        if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][10]["FRAME"]<6 then
+        if HEALBOT_GAME_VERSION>1 and Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][10]["FRAME"]<6 then
             vFocusWithPlayers=true
             for x,_ in pairs(HealBot_TrackUnit[10]) do
                 HealBot_TrackUnit[10][x]=nil

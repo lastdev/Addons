@@ -1,0 +1,16 @@
+## Interface: 100205
+## Interface-Classic: 11404
+## Interface-BCC: 20504
+## Interface-Wrath: 30403
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Countpack Asmongold|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Звуки отсчёта из Asmongold|r
+## DefaultState: enabled
+## RequiredDeps: DBM-Core
+## Author: Shadock
+## Version: 1.0.19
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+## X-DBM-CountPack: 1
+## X-DBM-CountPack-GlobalName: DBMCPAsmongold
+## X-Curse-Project-ID: 385685
+
+CountLoadList.lua

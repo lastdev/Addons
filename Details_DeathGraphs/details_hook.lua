@@ -23,11 +23,11 @@ function advancedDeathLogs.RegisterDetailsHook()
             local event = deathEvents[i]
             local evType = event[1]
 
-            if (type(evType) == "boolean" and evType == true) then
-                --this is a damage event
+            --check if this death event is a debuff or if a enemy spell cast
+            if (type(evType) == "number" and (evType == 4 or evType == 6)) then
                 local spellId = event[2]
-                local amountOfDamage = event[3]
                 local source = Details:GetOnlyName(event[6] or "")
+                local amountOfDamage = event[3]
 
                 --findsubtable arguments: table, index of the sub table, any value to find on that index in the sub table
                 local alreadyExistsOnIndex = detailsFramework.table.findsubtable(causeOfDeath, 1, spellId)
@@ -37,24 +37,45 @@ function advancedDeathLogs.RegisterDetailsHook()
                     causeOfDeath[#causeOfDeath+1] = {spellId, amountOfDamage, source}
                 end
             end
+
+            if (type(evType) == "boolean" and evType == true) then
+                --this is a damage event
+                local spellId = event[2]
+                if (spellId ~= 1) then
+                    local amountOfDamage = event[3]
+                    local source = Details:GetOnlyName(event[6] or "")
+
+                    --findsubtable arguments: table, index of the sub table, any value to find on that index in the sub table
+                    local alreadyExistsOnIndex = detailsFramework.table.findsubtable(causeOfDeath, 1, spellId)
+                    if (alreadyExistsOnIndex) then
+                        causeOfDeath[alreadyExistsOnIndex][2] = causeOfDeath[alreadyExistsOnIndex][2] + amountOfDamage
+                    else
+                        causeOfDeath[#causeOfDeath+1] = {spellId, amountOfDamage, source}
+                    end
+                end
+            end
         end
 
         table.sort(causeOfDeath, function(a, b)
             return a[2] > b[2]
         end)
 
-        for i = 1, 3 do
+        gameCooltip:AddLine("Spell Description:", "", 2, "yellow", "white", 14)
+        gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
+
+        for i = 1, 5 do
             if (causeOfDeath[i]) then
                 local spellId, amountOfDamage, source = unpack(causeOfDeath[i] or {})
+
                 local spellName, spellRank, spellIcon, castTime, minRange, maxRange = GetSpellInfo(spellId)
                 local spellDescription = GetSpellDescription(spellId)
 
-                if (spellDescription == "") then
+                if (spellDescription == "" and spellId ~= 149356) then
                     spellDescription = _G.SEARCH_LOADING_TEXT
                 end
 
-				gameCooltip:AddLine(spellName, "", 2, 1, 1, 1, 1, 1, 1, 1, 1, 12)
-				gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
+                gameCooltip:AddLine(spellName, "", 2, 1, 1, 1, 1, 1, 1, 1, 1, 12)
+                gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
 
                 --two problems: 1) the spell description isn't breaking into a second line, 2) spell icon isn't showing in the second spell name line
                 --solved the problem 1) by adding a fixed width and height size to the text added with AddLine
@@ -89,7 +110,7 @@ function advancedDeathLogs.RegisterDetailsHook()
         gameCooltip:AddIcon("", 2, 1)
         
 
-        gameCooltip:AddLine("Cooldown Received:", "", 2, "white")
+        gameCooltip:AddLine("Cooldown Received:", "", 2, "yellow", "white", 14)
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
         local cooldownsReceived = deathTable["cooldown_received"] or {}
 
@@ -110,7 +131,7 @@ function advancedDeathLogs.RegisterDetailsHook()
         gameCooltip:AddLine(" ", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
 
-        gameCooltip:AddLine("Cooldown Status:", "", 2, "white")
+        gameCooltip:AddLine("Cooldown Status:", "", 2, "yellow", "white", 14)
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
 
         for spellId, cooldownInfo in pairs(deathTable.cooldown_status) do

@@ -7,6 +7,7 @@
 local TSM = select(2, ...) ---@type TSM
 local Appearance = TSM.MainUI.Settings:NewPackage("Appearance")
 local L = TSM.Include("Locale").GetTable()
+local Environment = TSM.Include("Environment")
 local Color = TSM.Include("Util.Color")
 local Math = TSM.Include("Util.Math")
 local Log = TSM.Include("Util.Log")
@@ -516,14 +517,22 @@ end
 function private.ColorOnMouseUp(frame)
 	private.currentThemeKey = frame:GetContext()
 	local r, g, b = Theme.GetColor(TSM.UI.Util.GetCustomColorThemeKey(private.currentThemeKey)):GetFractionalRGBA()
-	ColorPickerFrame:SetColorRGB(r, g, b)
+	if Environment.IsRetail() then
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b)
+	else
+		ColorPickerFrame:SetColorRGB(r, g, b)
+	end
 	ColorPickerFrame.hasOpacity = false
 	ColorPickerFrame.previousValues = ColorPickerFrame.previousValues or {}
 	wipe(ColorPickerFrame.previousValues)
 	ColorPickerFrame.previousValues.r = r
 	ColorPickerFrame.previousValues.g = g
 	ColorPickerFrame.previousValues.b = b
-	ColorPickerFrame.func = private.ColorPickerCallback
+	if Environment.IsWrathClassic() then
+		ColorPickerFrame.func = private.ColorPickerCallback
+	else
+		ColorPickerFrame.swatchFunc = private.ColorPickerCallback
+	end
 	ColorPickerFrame.cancelFunc = private.ColorPickerCancelCallback
 	ColorPickerFrame:ClearAllPoints()
 	local baseFrame = frame:GetBaseElement():_GetBaseFrame()

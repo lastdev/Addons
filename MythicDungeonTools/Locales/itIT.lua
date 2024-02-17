@@ -1,4 +1,4 @@
-if not (GetLocale() == "itIT") then
+if not ((GAME_LOCALE or GetLocale()) == "itIT") then
   return
 end
 local addonName, MDT = ...
@@ -328,10 +328,14 @@ L["Chamber Sentinel"] = "Sentinella della Sala"
 L["ChamberOfFlames"] = "Chamber of Flames"
 L["Champion Druna"] = "Campionessa Druna"
 L["Champion of Hodir"] = "Campione di Hodir"
+--[[Translation missing --]]
+L["Change Language"] = "Change Language"
 L["Channeler Varisz"] = "Incanalatrice Varisz"
 L["Chaotic Rift"] = "Fenditura Caotica"
 L["Chargath, Bane of Scales"] = "Chargath, Flagello delle Scaglie"
 L["Charged Dust Devil"] = "Diavolo di Sabbia Energizzato"
+--[[Translation missing --]]
+L["chatNoninteractiveWarning"] = "Chat frame is currently set to noninteractive, you will not be able to click on MDT routes."
 L["Choose Enemy Forces Format"] = "Scegli il formato delle forze nemiche"
 L["Choose Enemy Style. Requires Reload"] = "Scegli lo stile dei nemici. È necessario ricaricare l'interfaccia."
 L["Choose NPC tooltip position"] = "Scegli la posizione della scheda di descrizione dei PNG"
@@ -689,6 +693,8 @@ L["Emissary of the Tides"] = "Emissaria delle Maree"
 --[[Translation missing --]]
 L["Empty"] = "Empty"
 L["Empyrean Assassin"] = "Assassino Empireo"
+--[[Translation missing --]]
+L["Enable Compartment Button"] = "Enable Compartment Button"
 L["Enable Minimap Button"] = "Abilita pulsante della minimappa"
 L["Enchanted Broodling"] = "Progenie Incantata"
 L["Enchanted Emissary"] = "Emissaria Incantata"
@@ -727,7 +733,7 @@ L["Error Message:"] = "Error Message:"
 --[[Translation missing --]]
 L["errorLabel1"] = "MDT has encountered errors."
 --[[Translation missing --]]
-L["errorLabel2"] = "Please visist either GitHub or Discord and report the error message below."
+L["errorLabel2"] = "Please visit either GitHub or Discord and report the error message below."
 --[[Translation missing --]]
 L["errorLabel3"] = "Press CTRL + C to copy!"
 L["Erudite Slayer"] = "Sicaria Erudita"
@@ -1270,6 +1276,10 @@ L["Living Rot"] = "Putridume Vivo"
 L["Living Waste"] = "Spazzatura Vivente"
 L["Loatheb"] = "Loatheb"
 L["Local color blind mode"] = "Modalità daltonici locale"
+--[[Translation missing --]]
+L["localeButtonTooltip1"] = "Requires the \"AddonLocale\" AddOn"
+--[[Translation missing --]]
+L["localeButtonTooltip2"] = "Click to start settings dialog in chat"
 L["Locked"] = "Chiuso a chiave"
 L["Loken"] = "Loken"
 L["Lord Chamberlain"] = "Ciambellano Supremo"
@@ -2317,6 +2327,8 @@ L["Titanium Vanguard"] = "Avanguardia di Titanio"
 L["T'lonja"] = "T'lonja"
 L["To share a different preset while the live session is active simply navigate to the preferred preset and click the new 'Set to Live' Button next to the preset-dropdown"] = "Per condividere un percorso diverso mentre la Sessione Live è attiva è sufficiente aprire il percorso desiderato e fare clic sul nuovo pulsante 'Attiva percorso' accanto al menu a tendina dei percorsi"
 L["tocNotes"] = "Strumento che permette di pianificare e ottimizzare le spedizioni Mitica+"
+--[[Translation missing --]]
+L["Toggle MDT"] = "Toggle MDT"
 L["Toggle Window"] = "Apri/Chiudi finestra"
 L["Toiling Groundskeeper"] = "Custode Affaticato"
 L["Tol Dagor"] = "Tol Dagor"

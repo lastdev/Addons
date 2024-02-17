@@ -1011,11 +1011,11 @@ do
     local supermarked = {}
     local pool = {}
 
-    function ns.Mark( table, key )
-        local data = remove( pool ) or {}
-        data.t = table
-        data.k = key
-        insert( marked, data )
+    local seen = {}
+
+    function ns.Mark( t, key )
+        if not marked[ t ] then marked[ t ] = {} end
+        marked[ t ][ key ] = true
     end
 
     function ns.SuperMark( table, keys )
@@ -1030,21 +1030,30 @@ do
     end
 
     function ns.ClearMarks( super )
+        local count = 0
+        local startTime = debugprofilestop()
         if super then
             for t, keys in pairs( supermarked ) do
                 for key in pairs( keys ) do
                     rawset( t, key, nil )
+                    count = count + 1
                 end
             end
-            return
+
+            wipe( seen )
+        else
+            for t, data in pairs( marked ) do
+                for key in pairs( data ) do
+                    rawset( t, key, nil )
+                    data[ key ] = nil
+
+                    count = count + 1
+                end
+            end
         end
 
-        local data = remove( marked )
-        while( data ) do
-            rawset( data.t, data.k, nil )
-            insert( pool, data )
-            data = remove( marked )
-        end
+        local endTime = debugprofilestop()
+        if Hekili.ActiveDebug then Hekili:Debug( "Purged %d marked values in %.2fms.", count, endTime - startTime ) end
     end
 
     Hekili.Maintenance = {

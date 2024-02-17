@@ -5,7 +5,7 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 50e769c4305c42360c08e4eba003ac2f06dc3d9a $")
+end, "$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
 
 local myClass
 local playerAggro, petAggro
@@ -310,9 +310,6 @@ function XPerl_Assists_OnEvent(self, event, unit)
 		MakeFriendlyUnitList()
 		XPerl_UpdateAssists()
 		XPerl_ShowAssists()
-		if (XPerl_SavePosition) then
-			XPerl_SavePosition(XPerl_Assists_FrameAnchor)
-		end
 
 		if ZPerlConfigHelper and ZPerlConfigHelper.sizeAssistsX and ZPerlConfigHelper.sizeAssistsY then
 			self:SetWidth(ZPerlConfigHelper.sizeAssistsX)

@@ -77,7 +77,7 @@ end
 
 function HealBot_ActionIcons_InitFrames()
     if not HealBot_ActionIcons_luVars["Loaded"] then
-        if not InCombatLockdown() then
+        if not HealBot_Data["UILOCK"] then
             HealBot_ActionIcons_LoadSpec()
             cursorIcon.isVisible=false
             HealBot_ActionIcons_luVars["Loaded"]=true
@@ -542,7 +542,7 @@ function HealBot_ActionIcons_IconGlow(frame, id, enable)
     else
         lGlow.PixelGlow_Stop(actionIconFrame[frame][id], id)
     end
-      --HealBot_setCall("HealBot_ActionIcons_IconGlow")
+    --HealBot_setCall("HealBot_ActionIcons_IconGlow")
 end
 
 function HealBot_ActionIcons_IconGlowBall(frame, id, enable)
@@ -551,7 +551,7 @@ function HealBot_ActionIcons_IconGlowBall(frame, id, enable)
     else
         lGlow.AutoCastGlow_Stop(actionIconFrame[frame][id], id)
     end
-      --HealBot_setCall("HealBot_ActionIcons_IconGlowBall")
+    --HealBot_setCall("HealBot_ActionIcons_IconGlowBall")
 end
 
 function HealBot_ActionIcons_IconGlowBlizz(frame, id, enable)
@@ -560,7 +560,7 @@ function HealBot_ActionIcons_IconGlowBlizz(frame, id, enable)
     else
         lGlow.ButtonGlow_Stop(actionIconFrame[frame][id])
     end
-      --HealBot_setCall("HealBot_ActionIcons_IconGlowBlizz")
+    --HealBot_setCall("HealBot_ActionIcons_IconGlowBlizz")
 end
 
 function HealBot_ActionIcons_DisableIconGlow(frame, id)
@@ -820,13 +820,21 @@ function HealBot_ActionIcons_ConditionAdd(frame, id, cond, cNo)
     actionIcons[frame][id].alertfilter[cNo]=cond
     if cond and cond>1 then
         if cond<6 and cond~=3 then
-            HealBot_ActionIcons_AddBuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuff"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuff"] then
+                HealBot_ActionIcons_AddBuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuff"][cNo], cNo)
+            end
         elseif cond>5 and cond<10 and cond~=7 then
-            HealBot_ActionIcons_AddDebuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuff"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuff"] then
+                HealBot_ActionIcons_AddDebuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuff"][cNo], cNo)
+            end
         elseif cond==3 then
-            HealBot_ActionIcons_AddBuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"] then
+                HealBot_ActionIcons_AddBuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"][cNo], cNo)
+            end
         elseif cond==7 then
-            HealBot_ActionIcons_AddDebuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuffTag"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuffTag"] then
+                HealBot_ActionIcons_AddDebuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuffTag"][cNo], cNo)
+            end
         elseif cond==10 then
             HealBot_ActionIcons_AddHealth(frame, id)
         elseif cond==11 then
@@ -849,13 +857,21 @@ end
 function HealBot_ActionIcons_ConditionDel(frame, id, cond, cNo)
     if cond and cond>1 then
         if cond<6 and cond~=3 then
-            HealBot_ActionIcons_DeleteBuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuff"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuff"] then
+                HealBot_ActionIcons_DeleteBuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuff"][cNo], cNo)
+            end
         elseif cond>5 and cond<10 and cond~=7 then
-            HealBot_ActionIcons_DeleteDebuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuff"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuff"] then
+                HealBot_ActionIcons_DeleteDebuff(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuff"][cNo], cNo)
+            end
         elseif cond==3 then
-            HealBot_ActionIcons_DeleteBuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"] then
+                HealBot_ActionIcons_DeleteBuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"][cNo], cNo)
+            end
         elseif cond==7 then
-            HealBot_ActionIcons_DeleteDebuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuffTag"][cNo], cNo)
+            if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuffTag"] then
+                HealBot_ActionIcons_DeleteDebuffTag(frame, id, Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertDebuffTag"][cNo], cNo)
+            end
         elseif cond==10 then
             HealBot_ActionIcons_DelHealth(frame, id)
         elseif cond==11 then
@@ -1439,7 +1455,7 @@ function HealBot_ActionIcons_SetTarget(frame, id, unit)
         if actionIcons[frame][id].unit then
             if actionIcons[frame][id].guid then HealBot_ActionIcons_CheckGUID(actionIcons[frame][id].guid) end
             actionIcons[frame][id].name=nil
-            if not InCombatLockdown() then
+            if not HealBot_Data["UILOCK"] then
                 actionIcons[frame][id]:SetAttribute("unit", "noone")
             else
                 HealBot_ActionIcons_PostCombatClear(actionIcons[frame][id].uid)
@@ -1466,7 +1482,7 @@ function HealBot_ActionIcons_SetTarget(frame, id, unit)
     elseif unit~=(actionIcons[frame][id].unit or "") or UnitGUID(unit)~=(actionIcons[frame][id].guid or "") or UnitName(unit)~=(actionIcons[frame][id].name or "") then
 --if unit=="target" then HealBot_ActionIcons_Debug(frame, id, "SetTarget t="..unit.." n="..(UnitName(unit) or unit)) end
         actionIcons[frame][id].name=UnitName(unit) or unit
-        if not InCombatLockdown() then
+        if not HealBot_Data["UILOCK"] then
             if hbPostCombatClear[actionIcons[frame][id].uid] then hbPostCombatClear[actionIcons[frame][id].uid]=nil end
             actionIcons[frame][id]:SetAttribute("unit", unit)
             actionIcons[frame][id].unit=unit
@@ -1595,8 +1611,7 @@ function HealBot_ActionIcons_ValidateAbility(frame, id, itemsOnly)
         else
             actionIcons[frame][id]:SetNormalTexture([[Interface\Addons\HealBot\Images\icon_outline]])
             actionIcons[frame][id].isIcon=false
-            HealBot_ActionIcons_CheckHighlightIconAbility(frame, id)
-            HealBot_ActionIcons_HighlightIcon(frame, id)
+            actionIcons[frame][id]:SetAlpha(0.7)
         end
         if actionIcons[frame][id].valid then
             if not hbSelfAbility[hbAbility] then hbSelfAbility[hbAbility]={} end
@@ -1721,7 +1736,7 @@ function HealBot_ActionIcons_ValidateTargets(frame, num, caller)
 end
 
 function HealBot_ActionIcons_ValidateTarget(frame)
-    if Healbot_Config_Skins.ActionIcons[Healbot_Config_Skins.Current_Skin][frame]["NUMICONS"]>0 then
+    if frame and Healbot_Config_Skins.ActionIcons[Healbot_Config_Skins.Current_Skin][frame]["NUMICONS"]>0 then
         HealBot_ActionIcons_ValidateTargets(frame, Healbot_Config_Skins.ActionIcons[Healbot_Config_Skins.Current_Skin][frame]["NUMICONS"], "ValidateTarget")
     end
       --HealBot_setCall("HealBot_ActionIcons_ValidateTarget")
@@ -1828,7 +1843,11 @@ function HealBot_ActionIcons_CurrentBuffTag(frame, id, cNo)
             return false
         end
     end
-    return HealBot_Aura_ActionIconBuffTag(actionIcons[frame][id].guid, (Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"][cNo] or ""))
+    if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"] then
+        return HealBot_Aura_ActionIconBuffTag(actionIcons[frame][id].guid, (Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertBuffTag"][cNo] or ""))
+    else
+        return HealBot_Aura_ActionIconBuffTag(actionIcons[frame][id].guid, "")
+    end
 end
 
 function HealBot_ActionIcons_AlertBuffExists(frame, id, cNo)
@@ -2037,9 +2056,18 @@ function HealBot_ActionIcons_CheckAlertFuncs(frame, id, cNo)
     if cNo>3 then
         HealBot_ActionIcons_HighlightIcon(frame, id)
     else
-    --HealBot_ActionIcons_Debug(frame, id, "CheckAlertFuncs Filter="..(Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertFilter"][cNo] or 1))
         HealBot_ActionIcons_AlertFuncs[(Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertFilter"][cNo] or 1)](frame, id, cNo)
-        --HealBot_ActionIcons_AlertFuncs[(Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["AlertFilter"] or 1)](frame, id, cNo)
+    end
+end
+
+function HealBot_ActionIcons_DebugAlertState(frame, id)
+    if HealBot_Data["PALIVE"] and
+       (not Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["inGroup"] or HealBot_ActionIcons_luVars["inGroup"]) and
+       (not Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["inInst"] or HealBot_ActionIcons_luVars["inInst"]) and
+       (not Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["inCombat"] or HealBot_ActionIcons_luVars["inCombat"]) then
+        return true
+    else
+        return false
     end
 end
 
@@ -2064,20 +2092,21 @@ function HealBot_ActionIcons_IsInRange(unit)
     return false
 end
 
+function HealBot_ActionIcons_CheckRange(frame, id, inRange)
+    if actionIcons[frame][id].inRange~=inRange then
+        actionIcons[frame][id].inRange=inRange
+        HealBot_ActionIcons_CheckHighlightIconAbility(frame, id)
+    end
+end
+
 function HealBot_ActionIcons_UpdateRange(unit, guid, inRange)
     if hbIconKey[unit] then
         for uid,_ in pairs(hbIconKey[unit]) do
-            actionIcons[hbIconUID[uid]["Frame"]][hbIconUID[uid]["ID"]].inRange=inRange
-            if inRange or actionIcons[hbIconUID[uid]["Frame"]][hbIconUID[uid]["ID"]].highlight then
-                HealBot_ActionIcons_CheckHighlightIconAbility(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"])
-            end
+            HealBot_ActionIcons_CheckRange(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], inRange)
         end
     elseif hbIconKey[guid] then
         for uid,_ in pairs(hbIconKey[guid]) do
-            actionIcons[hbIconUID[uid]["Frame"]][hbIconUID[uid]["ID"]].inRange=inRange
-            if inRange or actionIcons[hbIconUID[uid]["Frame"]][hbIconUID[uid]["ID"]].highlight then
-                HealBot_ActionIcons_CheckHighlightIconAbility(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"])
-            end
+            HealBot_ActionIcons_CheckRange(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], inRange)
         end
     end
       --HealBot_setCall("HealBot_ActionIcons_UpdateRange")
@@ -2085,6 +2114,36 @@ end
 
 function HealBot_ActionIcons_Debug(frame, id, msg)
     HealBot_AddDebug(" -"..id.."- "..msg,"aIcons_f"..frame.." i"..id, true)
+end
+
+local hbRangeQueue={}
+local hbRangeQueueList={}
+function HealBot_ActionIcons_CheckUnitInRange(frame, id)
+    if actionIcons[frame][id].unit and UnitExists(actionIcons[frame][id].unit) and HealBot_ActionIcons_IsInRange(actionIcons[frame][id].unit) then
+        HealBot_ActionIcons_CheckRange(frame, id, true)
+    end
+end
+
+function HealBot_ActionIcons_ProcRangeQueue()
+    if hbRangeQueue[1] then
+        HealBot_ActionIcons_CheckUnitInRange(hbIconUID[hbRangeQueue[1]]["Frame"], hbIconUID[hbRangeQueue[1]]["ID"])
+        hbRangeQueueList[hbRangeQueue[1]]=false
+        table.remove(hbRangeQueue, 1)
+        C_Timer.After(0.1, HealBot_ActionIcons_ProcRangeQueue)
+    else
+        HealBot_ActionIcons_luVars["ProcRangeQueue"]=false
+    end
+end
+
+function HealBot_ActionIcons_AddRangeQueue(uid)
+    if not hbRangeQueueList[uid] then
+        table.insert(hbRangeQueue, uid)
+        hbRangeQueueList[uid]=true
+        if not HealBot_ActionIcons_luVars["ProcRangeQueue"] then
+            HealBot_ActionIcons_luVars["ProcRangeQueue"]=true
+            C_Timer.After(0.1, HealBot_ActionIcons_ProcRangeQueue)
+        end
+    end
 end
 
 local hbOnGCDQueue={}
@@ -2107,12 +2166,14 @@ end
 function HealBot_ActionIcons_CheckValidHighlightIcon(spellName, frame, id)
     --HealBot_ActionIcons_Debug(frame, id, "CheckHighlightIcon sName="..spellName.." CD="..(hbCDRunning[spellName] or "nil"))
     if actionIcons[frame][id].valid and not hbOnCD[spellName] and (actionIcons[frame][id].infoType~="item" or IsUsableItem(actionIcons[frame][id].infoID)) then
-        if (actionIcons[frame][id].guid=="unset" or actionIcons[frame][id].inRange) then
-            if not onGCD  then
+        if actionIcons[frame][id].guid=="unset" or actionIcons[frame][id].inRange then
+            if not onGCD then
                 HealBot_ActionIcons_CheckHighlightIcon(frame, id)
             else
                 HealBot_ActionIcons_AddGCDQueue(actionIcons[frame][id].uid)
             end
+        else
+            HealBot_ActionIcons_AddRangeQueue(actionIcons[frame][id].uid)
         end
     else
         HealBot_ActionIcons_FadeIcon(frame, id)
@@ -2122,10 +2183,24 @@ end
 
 function HealBot_ActionIcons_EndGCD()
     onGCD=false
-    for uid,_ in pairs(hbOnGCDQueue) do
-        HealBot_ActionIcons_CheckHighlightIcon(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"])
-        hbOnGCDQueueList[uid]=false
-        hbOnGCDQueue[uid]=nil
+    if #hbOnGCDQueue>0 then
+        for x=#hbOnGCDQueue,1,-1 do
+            HealBot_ActionIcons_CheckHighlightIcon(hbIconUID[hbOnGCDQueue[x]]["Frame"], hbIconUID[hbOnGCDQueue[x]]["ID"])
+            hbOnGCDQueueList[hbOnGCDQueue[x]]=false
+            table.remove(hbOnGCDQueue, x)
+        end
+    end
+end
+
+function HealBot_ActionIcons_DebugHighlightIconAbility(frame, id)
+    if Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["Ability"] then
+        if not hbOnCD[HealBot_ActionIcons_GetSpell(Healbot_Config_Skins.ActionIconsData[Healbot_Config_Skins.Current_Skin][id][frame]["Ability"])] and not onGCD then
+            return true, false
+        else
+            return true, true
+        end 
+    else
+        return false
     end
 end
 
@@ -2197,12 +2272,12 @@ function HealBot_ActionIcons_SelfAbilityCD(spellName, frame, id)
     end
     sbCDEnd=(sbStartTime or 0)+(sbDuration or 0)
     sbCDTime=sbCDEnd-HealBot_TimeNow
-    if sbCDTime>0.1 then
+    if sbCDTime>0.15 then
         HealBot_ActionIcons_SelfTimerStart(spellName, actionIcons[frame][id].uid, sbCDTime, sbCDEnd)
     elseif hbOnCD[spellName] then
         hbOnCD[spellName]=nil
         hbCDRunning[spellName]=0
-        HealBot_ActionIcons_CheckValidHighlightIcon(spellName, frame, id)
+        C_Timer.After(0.15, function() HealBot_ActionIcons_CheckValidHighlightIcon(spellName, frame, id) end)
     end
       --HealBot_setCall("HealBot_ActionIcons_SelfAbilityCD")
 end
@@ -2224,7 +2299,7 @@ function HealBot_ActionIcons_SelfCountText(frame, id)
     elseif actionIcons[frame][id].infoType=="spell" then
         actionIcons[frame][id].count=GetSpellCharges(actionIcons[frame][id].infoID) or GetSpellCount(actionIcons[frame][id].infoID) or 0
     elseif actionIcons[frame][id].infoType=="item" then
-        actionIcons[frame][id].count=GetItemCount(actionIcons[frame][id].infoID) or 0
+        actionIcons[frame][id].count=GetItemCount(actionIcons[frame][id].infoID, nil, true) or 0
     else
         actionIcons[frame][id].count=0
     end
@@ -2306,22 +2381,23 @@ function HealBot_ActionIcons_SelfCDTimerEnd(spellName, frame, id, cdEnd)
 end
 
 function HealBot_ActionIcons_SelfTimerStart(spellName, uid, cdTime, cdEnd)
-    HealBot_ActionIcons_FadeIcon(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"]) 
-    hbCDRunning[spellName]=cdEnd
-    hbOnCD[spellName]=true
-    HealBot_ActionIcons_SelfCDText(spellName, hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], cdEnd)
-    C_Timer.After(cdTime-0.05, function() HealBot_ActionIcons_SelfCDTimerEnd(spellName, hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], cdEnd) end)
+    if not hbCDRunning[spellName] or (hbCDRunning[spellName]<cdEnd-1 or hbCDRunning[spellName]>cdEnd) then
+        cdEnd=floor(cdEnd)
+            --HealBot_ActionIcons_Debug(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], "SelfTimerStart end at "..cdEnd)
+        HealBot_ActionIcons_FadeIcon(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"]) 
+        hbCDRunning[spellName]=cdEnd
+        hbOnCD[spellName]=true
+        HealBot_ActionIcons_SelfCDText(spellName, hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], cdEnd)
+        C_Timer.After(cdTime-0.1, function() HealBot_ActionIcons_SelfCDTimerEnd(spellName, hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"], cdEnd) end)
+    end
       --HealBot_setCall("HealBot_ActionIcons_SelfTimerStart")
 end
 
 function HealBot_ActionIcons_SelfCD(spellName, cdTime, cdEnd)
     if hbSelfAbility[spellName] then
-        cdEnd=floor(cdEnd)
-        if cdEnd~=(hbCDRunning[spellName] or -1) then
-            for uid,_ in pairs(hbSelfAbility[spellName]) do
-                if activeFrames[hbIconUID[uid]["Frame"]] then
-                    HealBot_ActionIcons_SelfTimerStart(spellName, uid, cdTime, cdEnd)
-                end
+        for uid,_ in pairs(hbSelfAbility[spellName]) do
+            if activeFrames[hbIconUID[uid]["Frame"]] then
+                HealBot_ActionIcons_SelfTimerStart(spellName, uid, cdTime, cdEnd)
             end
         end
     end
@@ -2336,12 +2412,12 @@ function HealBot_ActionIcons_UpdateAllCDs()
             gcd = sbDuration or 0
             if gcd>0.1 then
                 onGCD=true
-                C_Timer.After(gcd-0.07, HealBot_ActionIcons_EndGCD)
+                C_Timer.After(gcd-0.05, HealBot_ActionIcons_EndGCD)
                 for x=1,#activeFramesIdx do
                     for y=1,Healbot_Config_Skins.ActionIcons[Healbot_Config_Skins.Current_Skin][activeFramesIdx[x]]["NUMICONS"] do
                         if actionIcons[activeFramesIdx[x]][y].highlight then
                             HealBot_ActionIcons_FadeIcon(activeFramesIdx[x], y)
-                            C_Timer.After(gcd-0.05, function() HealBot_ActionIcons_CheckHighlightIconAbility(activeFramesIdx[x], y) end)
+                            C_Timer.After(gcd-0.025, function() HealBot_ActionIcons_CheckHighlightIconAbility(activeFramesIdx[x], y) end)
                         end
                     end
                     --HealBot_ActionIcons_SelfCDTextUpdate(x)
@@ -2439,6 +2515,11 @@ function HealBot_ActionIcons_GetSpell(spellCode)
 end
 
 function HealBot_ActionIcons_ClearGUID(guid)
+    if hbIconKey[guid] then
+        for uid,_ in pairs(hbIconKey[guid]) do
+            HealBot_ActionIcons_FadeIcon(hbIconUID[uid]["Frame"], hbIconUID[uid]["ID"])
+        end
+    end
     hbBuffGUID[guid]=nil
     HealBot_Aura_BuffWatch(guid, nil, nil, true)
     hbDebuffGUID[guid]=nil

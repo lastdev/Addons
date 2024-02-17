@@ -7,6 +7,8 @@
 local TSM = select(2, ...) ---@type TSM
 local MatString = TSM.Include("Util.MatString")
 local SlotId = TSM.Include("Util.SlotId")
+local Container = TSM.Include("Util.Container")
+local ItemString = TSM.Include("Util.ItemString")
 local ItemInfo = TSM.Include("Service.ItemInfo")
 local Rectangle = TSM.Include("UI.Rectangle")
 local Tooltip = TSM.Include("UI.Tooltip")
@@ -307,8 +309,12 @@ function ItemSelector.__private:IsSelectionSlotValid()
 	if not self._state.selection or not self._selectionSlotId then
 		return false
 	end
+	local bag, slot = SlotId.Split(self._selectionSlotId)
+	if self._state.selection ~= ItemString.Get(Container.GetItemId(bag, slot)) then
+		return false
+	end
 	local selectionQuantity = BagTracking.GetQuantityBySlotId(self._selectionSlotId)
-	local salvageItemLocation = ItemLocation:CreateFromBagAndSlot(SlotId.Split(self._selectionSlotId))
+	local salvageItemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
 	return pcall(C_Item.DoesItemExist, salvageItemLocation) and self._requiredQty and selectionQuantity and selectionQuantity >= self._requiredQty
 end
 

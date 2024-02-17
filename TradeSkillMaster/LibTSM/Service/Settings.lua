@@ -218,9 +218,10 @@ end
 -- [117] added global.storyBoardUIContext, updated global.craftingUIContext.{craftsScrollingTable,matsScrollingTable,gatheringScrollingTable}
 -- [118] updated factionrealm.internalData.crafts
 -- [119] added global.coreOptions.regionWide
+-- [120] updated factionrealm.internalData.crafts
 
 local SETTINGS_INFO = {
-	version = 119,
+	version = 120,
 	minVersion = 10,
 	global = {
 		debug = {
@@ -417,7 +418,7 @@ local SETTINGS_INFO = {
 			mailDisenchantablesChar = { type = "string", default = "", lastModifiedVersion = 49 },
 			mailExcessGoldChar = { type = "string", default = "", lastModifiedVersion = 49 },
 			mailExcessGoldLimit = { type = "number", default = 10000000000, lastModifiedVersion = 49 },
-			crafts = { type = "table", default = {}, lastModifiedVersion = 118 },
+			crafts = { type = "table", default = {}, lastModifiedVersion = 120 },
 			craftingQueue = { type = "table", default = {}, lastModifiedVersion = 101 },
 			mats = { type = "table", default = {}, lastModifiedVersion = 10 },
 			guildGoldLog = { type = "table", default = {}, lastModifiedVersion = 25 },
@@ -726,7 +727,7 @@ Settings:OnSettingsLoad(function()
 			db:Set("global", upgradeObj:GetScopeKey(key), "tooltipOptions", "moduleTooltips", value)
 		end
 	end
-	if prevVersion < 118 then
+	if prevVersion < 120 then
 		if Environment.IsRetail() then
 			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
 				if prevVersion < 99 then
@@ -747,21 +748,17 @@ Settings:OnSettingsLoad(function()
 						end
 					end
 				end
-				for _, craft in pairs(value) do
-					for _, info in pairs(craft.players) do
-						if type(info) == "table" and info.baseRecipeDifficulty then
-							info.inspirationAmount = 0
-							info.inspirationChance = 0
+				if prevVersion < 118 then
+					for _, craft in pairs(value) do
+						for _, info in pairs(craft.players) do
+							if type(info) == "table" and info.baseRecipeDifficulty then
+								info.inspirationAmount = 0
+								info.inspirationChance = 0
+							end
 						end
 					end
 				end
 				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
-			end
-		else
-			if prevVersion >= 105 then
-				for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
-					db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
-				end
 			end
 		end
 	end

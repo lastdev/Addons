@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 69c525b70b9bc2136160b2e5738adf94987affaf $")
+XPerl_SetModuleRevision("$Revision: 796eb9c23bcfb4778be97fb5d6b7aef47cbcf2c1 $")
 
 if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
 	C_ChatInfo.RegisterAddonMessagePrefix("CTRA")
@@ -10,7 +10,7 @@ end
 
 ZPerl_CheckItems = {}
 
-local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 -- Upvalues
 local _G = _G
@@ -1958,7 +1958,7 @@ function XPerl_Check_ActiveScan()
 				myScan.changed = nil
 			end
 			any = true
-			if (not IsRetail and CheckInteractDistance(unit, 1)) then		-- Checks to see if in inspect range
+			if (IsWrathClassic and CheckInteractDistance(unit, 1)) then		-- Checks to see if in inspect range
 				local eq
 				if (type(ActiveScanItem.slot) == "table") then
 					for k,v in pairs(ActiveScanItem.slot) do

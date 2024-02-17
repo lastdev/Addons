@@ -1,9 +1,9 @@
 --[[
 	Localisation file
-	ranslation by Hastings
+	Translation by Hastings
 ]]
 
-if (GetLocale() == "esES") then
+if (GetLocale() == "esES") or (GetLocale() == "esMX") then
 -- Tabs
 XPERL_CONF_TITLE1				= "Global"
 XPERL_CONF_TITLE2				= PLAYER	-- "Player"	Taken from WoW's FrameXML/GlobalStrings.lua

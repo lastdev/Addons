@@ -8,6 +8,7 @@ local Hekili = _G[ addon ]
 local class, state = Hekili.Class, Hekili.State
 
 local insert, wipe = table.insert, table.wipe
+local strformat = string.format
 
 local spec = Hekili:NewSpecialization( 261 )
 
@@ -15,35 +16,12 @@ spec:RegisterResource( Enum.PowerType.Energy, {
     shadow_techniques = {
         last = function () return state.query_time end,
         interval = function () return state.time_to_sht[5] end,
-        value = 8,
+        value = 7,
         stop = function () return state.time_to_sht[5] == 0 or state.time_to_sht[5] == 3600 end,
     }
 } )
 
-spec:RegisterResource( Enum.PowerType.ComboPoints, {
-    shadow_techniques = {
-        last = function () return state.query_time end,
-        interval = function () return state.time_to_sht[5] end,
-        value = 1,
-        stop = function () return state.time_to_sht[5] == 0 or state.time_to_sht[5] == 3600 end,
-    },
-
-    --[[ shuriken_tornado = {
-        aura = "shuriken_tornado",
-        last = function ()
-            local app = state.buff.shuriken_tornado.applied
-            local t = state.query_time
-
-            return app + floor( ( t - app ) / 0.95 ) * 0.95
-        end,
-
-        stop = function( x ) return state.buff.shuriken_tornado.remains == 0 end,
-
-        interval = 0.95,
-        value = function () return state.active_enemies + ( state.buff.shadow_blades.up and 1 or 0 ) end,
-    }, ]]
-} )
-
+spec:RegisterResource( Enum.PowerType.ComboPoints )
 
 -- Talents
 spec:RegisterTalents( {
@@ -73,7 +51,7 @@ spec:RegisterTalents( {
     iron_stomach               = { 90744, 193546, 1 }, -- Increases the healing you receive from Crimson Vial, healing potions, and healthstones by $s1%.
     leeching_poison            = { 90758, 280716, 1 }, -- Adds a Leeching effect to your Lethal poisons, granting you $108211s1% Leech.
     lethality                  = { 90749, 382238, 2 }, -- Critical strike chance increased by $s1%. Critical strike damage bonus of your attacks that generate combo points increased by $s2%.
-    marked_for_death           = { 90750, 137619, 1 }, -- Marks the target, instantly granting full combo points and increasing the damage of your finishing moves by $s1% for $d. Cooldown resets if the target dies during effect.
+    -- marked_for_death           = { 90750, 137619, 1 }, -- Marks the target, instantly granting full combo points and increasing the damage of your finishing moves by $s1% for $d. Cooldown resets if the target dies during effect.
     master_poisoner            = { 90636, 378436, 1 }, -- Increases the non-damaging effects of your weapon poisons by $s1%.
     nightstalker               = { 90693, 14062 , 2 }, -- While Stealth$?c3[ or Shadow Dance][] is active, your abilities deal $s1% more damage.
     nimble_fingers             = { 90745, 378427, 1 }, -- Energy cost of Feint and Crimson Vial reduced by $s1.
@@ -297,6 +275,11 @@ spec:RegisterAuras( {
         id = 121471,
         duration = 20,
         max_stack = 1
+    },
+    shadow_techniques = {
+        id = 196911,
+        duration = 3600,
+        max_stack = 14,
     },
     shot_in_the_dark = {
         id = 257506,
@@ -555,7 +538,7 @@ local function comboSpender( amt, resource )
         end
 
         if talent.secret_technique.enabled then
-            cooldown.secret_technique.expires = max( 0, cooldown.secret_technique.expires - amt )
+            reduceCooldown( "secret_technique", amt )
         end
 
         reduceCooldown( "shadow_dance", amt * ( talent.enveloping_shadows.enabled and 1.5 or 1 ) )
@@ -567,6 +550,20 @@ local function comboSpender( amt, resource )
 end
 
 spec:RegisterHook( "spend", comboSpender )
+
+local function st_gain( token )
+    local amount = action[ token ].cp_gain
+    local st_addl_gain = max( 0, min( combo_points.deficit - amount, buff.shadow_techniques.stack ) )
+
+    if st_addl_gain > 0 then
+        removeStack( "shadow_techniques", st_addl_gain )
+        amount = amount + st_addl_gain
+    end
+
+    gain( amount, "combo_points" )
+end
+
+setfenv( st_gain, state )
 -- spec:RegisterHook( "spendResources", comboSpender )
 
 
@@ -655,7 +652,13 @@ spec:RegisterHook( "reset_precast", function( amt, resource )
     end
 
     if buff.shuriken_tornado.up then
-        local moment = buff.shuriken_tornado.expires
+        if prev_gcd[1].shuriken_tornado then
+            class.abilities.shuriken_storm.handler()
+            if buff.shadow_dance.up and talent.danse_macabre.enabled and not danse_macabre_tracker.shuriken_storm then
+                danse_macabre_tracker.shuriken_storm = true
+            end
+        end
+        local moment = buff.shuriken_tornado.expires - 0.02
         while( moment > query_time ) do
             state:QueueAuraEvent( "shuriken_tornado", class.abilities.shuriken_storm.handler, moment, "AURA_PERIODIC" )
             moment = moment - 1
@@ -773,6 +776,11 @@ spec:RegisterAbilities( {
             return 1 + ( buff.broadside.up and 1 or 0 )
         end,
 
+        used_for_danse = function()
+            if not talent.danse_macabre.enabled or buff.shadow_dance.down then return false end
+            return danse_macabre_tracker.backstab
+        end,
+
         handler = function ()
             removeBuff( "honed_blades" )
             applyDebuff( "target", "shadows_grasp", 8 )
@@ -783,12 +791,14 @@ spec:RegisterAbilities( {
                 gainChargeTime( "shadow_blades", 0.5 )
             end
 
-            gain( action.backstab.cp_gain, "combo_points" )
+            st_gain( "backstab" )
 
             removeBuff( "the_rotten" )
             removeBuff( "symbols_of_death_crit" )
             removeBuff( "perforated_veins" )
         end,
+
+        bind = "shadowstrike"
     },
 
     -- Talent: Finishing move that launches explosive Black Powder at all nearby enemies dealing Physical damage. Deals reduced damage beyond 8 targets. All nearby targets with your Find Weakness suffer an additional 20% damage as Shadow. 1 point : 135 damage 2 points: 271 damage 3 points: 406 damage 4 points: 541 damage 5 points: 676 damage 6 points: 812 damage
@@ -869,7 +879,7 @@ spec:RegisterAbilities( {
 
             if buff.sepsis_buff.up then removeBuff( "sepsis_buff" ) end
 
-            gain( action.cheap_shot.cp_gain, "combo_points" )
+            st_gain( "cheap_shot" )
 
             if buff.cold_blood.up then removeBuff( "cold_blood" )
             elseif buff.the_rotten.up then removeStack( "the_rotten" ) end
@@ -904,7 +914,7 @@ spec:RegisterAbilities( {
                 applyBuff( "echoing_reprimand_5", nil, 5 )
             end
 
-            gain( action.echoing_reprimand.cp_gain, "combo_points" )
+            st_gain( "echoing_reprimand" )
 
             if buff.cold_blood.up then removeBuff( "cold_blood" )
             elseif buff.the_rotten.up then removeStack( "the_rotten" ) end
@@ -954,6 +964,8 @@ spec:RegisterAbilities( {
 
             if talent.deeper_daggers.enabled or conduit.deeper_daggers.enabled then applyBuff( "deeper_daggers" ) end
         end,
+
+        copy = 328082
     },
 
     -- TODO: Does Flagellation generate combo points with Shadow Blades?
@@ -1010,7 +1022,8 @@ spec:RegisterAbilities( {
         handler = function ()
             applyDebuff( "target", "shadows_grasp", 8 )
             if buff.stealth.up then removeBuff( "stealth" ) end
-            gain( ( buff.shadow_blades.up and 2 or 1 ) + ( buff.the_rotten.up and 4 or 0 ), "combo_points" )
+
+            st_gain( "gloomblade" )
 
             if buff.cold_blood.up then removeBuff( "cold_blood" )
             elseif buff.the_rotten.up then removeStack( "the_rotten" )
@@ -1038,7 +1051,8 @@ spec:RegisterAbilities( {
         end,
 
         handler = function()
-            gain( action.goremaws_bite.cp_gain, "combo_points" )
+            st_gain( "goremaws_bite" )
+
             applyBuff( "goremaws_bite" )
             if buff.cold_blood.up then removeBuff( "cold_blood" )
             elseif buff.the_rotten.up then removeStack( "the_rotten" ) end
@@ -1061,7 +1075,7 @@ spec:RegisterAbilities( {
     secret_technique = {
         id = 280719,
         cast = 0,
-        cooldown = function () return 45 - min( talent.deeper_stratagem.enabled and 6 or 5, combo_points.current ) end,
+        cooldown = 60,
         gcd = "totem",
         school = "physical",
 
@@ -1121,7 +1135,7 @@ spec:RegisterAbilities( {
 
         cp_gain = function ()
             if buff.shadow_blades.up then return 7 end
-            return 2 + ( buff.shadow_blades.up and 1 or 0 ) + ( buff.broadside.up and 1 or 0 ) + ( buff.premeditation.up and buff.slice_and_dice.up and 2 or 0 )
+            return 2 + ( talent.improved_ambush.enabled and 1 or 0 ) + ( buff.broadside.up and 1 or 0 ) + ( buff.premeditation.up and buff.slice_and_dice.up and 2 or 0 )
         end,
 
         usable = function () return stealthed.all or buff.sepsis_buff.up, "requires stealth or sepsis_buff" end,
@@ -1132,7 +1146,7 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
-            gain( action.shadowstrike.cp_gain, "combo_points" )
+            st_gain( "shadowstrike" )
 
             removeBuff( "honed_blades" )
             removeBuff( "symbols_of_death_crit" )
@@ -1156,6 +1170,8 @@ spec:RegisterAbilities( {
 
             applyDebuff( "target", "find_weakness" )
         end,
+
+        bind = "backstab"
     },
 
     -- Talent: Attack with your off-hand, dealing 386 Physical damage, dispelling all enrage effects and applying a concentrated form of your Crippling Poison, reducing movement speed by 70% for 5 sec. Awards 1 combo point.
@@ -1187,7 +1203,7 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
-            gain( action.shiv.cp_gain, "combo_points" )
+            st_gain( "shiv" )
             removeDebuff( "target", "dispellable_enrage" )
             if talent.improved_shiv.enabled then applyDebuff( "target", "shiv" ) end
         end,
@@ -1231,7 +1247,7 @@ spec:RegisterAbilities( {
                 removeBuff( "silent_storm" )
             end
 
-            gain( action.shuriken_storm.cp_gain, "combo_points" )
+            st_gain( "shuriken_storm" )
         end,
     },
 
@@ -1253,8 +1269,11 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "shuriken_tornado" )
+            if buff.shadow_dance.up and talent.danse_macabre.enabled and not danse_macabre_tracker.shuriken_storm then
+                danse_macabre_tracker.shuriken_storm = true
+            end
 
-            local moment = buff.shuriken_tornado.expires
+            local moment = buff.shuriken_tornado.expires - 0.02
             while( moment > query_time ) do
                 state:QueueAuraEvent( "shuriken_tornado", class.abilities.shuriken_storm.handler, moment, "AURA_PERIODIC" )
                 moment = moment - 1
@@ -1280,7 +1299,7 @@ spec:RegisterAbilities( {
         end,
 
         handler = function ()
-            gain( 1, "combo_points" )
+
 
             removeBuff( "symbols_of_death_crit" )
             removeStack( "the_rotten" )
@@ -1357,6 +1376,18 @@ spec:RegisterStateExpr( "priority_rotation", function ()
     if prio == nil then return true end
     return prio
 end )
+
+spec:RegisterSetting( "rupture_duration", 12, {
+    name = strformat( "%s Duration", Hekili:GetSpellLinkWithTexture( 1943 ) ),
+    desc = strformat( "If set above 0, %s will not be recommended if the target will die within the timeframe specified.\n\n"
+        .. "Popular guides suggest using that a target should live at least 12 seconds for %s to be worth using.\n\n",
+        Hekili:GetSpellLinkWithTexture( 1943 ), class.specs[ 259 ].abilities.rupture.name ),
+    type = "range",
+    min = 0,
+    max = 18,
+    step = 0.1,
+    width = "full",
+} )
 
 spec:RegisterSetting( "solo_vanish", true, {
     name = "Allow |T132331:0|t Vanish when Solo",

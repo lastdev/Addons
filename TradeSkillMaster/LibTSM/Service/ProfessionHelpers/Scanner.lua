@@ -1049,6 +1049,13 @@ function private.GetClassicSpellId(index)
 	end
 	local hash = Math.CalculateHash(name)
 	if State.IsClassicCrafting() then
+		local itemLink = GetCraftItemLink(index)
+		if itemLink then
+			local id = strmatch(itemLink, "enchant:(%d+)") or strmatch(itemLink, "item:(%d+)")
+			if id then
+				hash = Math.CalculateHash(id, hash)
+			end
+		end
 		hash = Math.CalculateHash(GetCraftIcon(index), hash)
 		for i = 1, GetCraftNumReagents(index) do
 			local _, _, quantity = GetCraftReagentInfo(index, i)
@@ -1056,6 +1063,21 @@ function private.GetClassicSpellId(index)
 			hash = Math.CalculateHash(quantity, hash)
 		end
 	else
+		local itemLink = GetTradeSkillItemLink(index)
+		local emptyLink = strfind(itemLink or "", "item::") and true or false
+		itemLink = not emptyLink and itemLink or nil
+		if itemLink then
+			local id = strmatch(itemLink, "item:(%d+)") or strmatch(itemLink, "spell:(%d+)")
+			if id then
+				hash = Math.CalculateHash(id, hash)
+			end
+		else
+			itemLink = GetTradeSkillRecipeLink(index)
+			local id = strmatch(itemLink, "enchant:(%d+)") or strmatch(itemLink, "item:(%d+)")
+			if id then
+				hash = Math.CalculateHash(id, hash)
+			end
+		end
 		hash = Math.CalculateHash(GetTradeSkillIcon(index), hash)
 		for i = 1, GetTradeSkillNumReagents(index) do
 			local _, _, quantity = GetTradeSkillReagentInfo(index, i)

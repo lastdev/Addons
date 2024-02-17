@@ -47,13 +47,15 @@ HealBot_Timers_luVars["ProcessRefreshTimePets"]=0
 HealBot_Timers_luVars["ProcessRefreshTimeVehicle"]=0
 
 function HealBot_Timers_TurboOn(duration)
-    if HealBot_Globals.UltraPerf then
-        HealBot_Timers_luVars["nProcs"]=HealBot_Globals.CPUUsage
-    else
+    if HealBot_Globals.PerfMode==3 then
+        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.8)
+    elseif HealBot_Globals.PerfMode==2 then
         HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.5)
+    else
+        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.2)
     end
-    if HealBot_Timers_luVars["nProcs"]<4 then
-        HealBot_Timers_luVars["nProcs"]=4
+    if HealBot_Timers_luVars["nProcs"]<2 then
+        HealBot_Timers_luVars["nProcs"]=2
     end
     if HealBot_Timers_luVars["turboEndTimer"]<GetTime()+duration then
         HealBot_Timers_luVars["turboEndTimer"]=GetTime()+duration
@@ -64,13 +66,15 @@ end
 function HealBot_Timers_TurboOff()
     if GetTime()<HealBot_Timers_luVars["turboEndTimer"] then
         HealBot_Timers_Set("LAST","TimerTurboOff",1) -- All recall require a delay
-    elseif HealBot_Globals.UltraPerf then
-        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.5)
+    elseif HealBot_Globals.PerfMode==3 then
+        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.3)
+    elseif HealBot_Globals.PerfMode==2 then
+        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.2)
     else
-        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.25)
+        HealBot_Timers_luVars["nProcs"]=ceil(HealBot_Globals.CPUUsage*0.1)
     end
-    if HealBot_Timers_luVars["nProcs"]<2 then
-        HealBot_Timers_luVars["nProcs"]=2
+    if HealBot_Timers_luVars["nProcs"]<1 then
+        HealBot_Timers_luVars["nProcs"]=1
     end
 end
 
@@ -170,6 +174,18 @@ function HealBot_Timers_nextRecalcEnemy()
     end
 end
 
+function HealBot_Timers_SkinChangePluginUpdate()
+    if HealBot_Timers_luVars["pluginThreat"] and HealBot_Plugin_Threat_Profile then HealBot_Plugin_Threat_Profile() end
+    if HealBot_Timers_luVars["pluginTimeToDie"] and HealBot_Plugin_TimeToDie_Profile then HealBot_Plugin_TimeToDie_Profile() end
+    if HealBot_Timers_luVars["pluginTimeToLive"] and HealBot_Plugin_TimeToLive_Profile then HealBot_Plugin_TimeToLive_Profile() end
+    if HealBot_Timers_luVars["pluginCombatProt"] and HealBot_Plugin_CombatProt_Profile then HealBot_Plugin_CombatProt_Profile() end
+    if HealBot_Timers_luVars["pluginPerformance"] and HealBot_Plugin_Performance_Profile then HealBot_Plugin_Performance_Profile() end
+    if HealBot_Timers_luVars["pluginTweaks"] and HealBot_Plugin_Tweaks_Profile then HealBot_Plugin_Tweaks_Profile() end
+    if HealBot_Timers_luVars["pluginHealthWatch"] and HealBot_Plugin_HealthWatch_Profile then HealBot_Plugin_HealthWatch_Profile() end
+    if HealBot_Timers_luVars["pluginManaWatch"] and HealBot_Plugin_ManaWatch_Profile then HealBot_Plugin_ManaWatch_Profile() end
+    if HealBot_Timers_luVars["pluginMyCooldowns"] and HealBot_Plugin_MyCooldowns_Profile then HealBot_Plugin_MyCooldowns_Profile() end
+end
+
 function HealBot_Timers_HealthAlertLevel_OC()
     HealBot_HealthAlertLevel(false)
 end
@@ -245,7 +261,7 @@ end
 function HealBot_Timers_TargetFocusUpdate()
     HealBot_nextRecalcParty(3)
     if HEALBOT_GAME_VERSION>1 then
-        HealBot_FocusChanged()
+        HealBot_nextRecalcParty(4)
     end
     HealBot_nextRecalcParty(2)
     HealBot_nextRecalcParty(1)
@@ -382,7 +398,8 @@ function HealBot_Timers_LastLoad()
     HealBot_Timers_Set("AURA","DebuffTagNames",0.275)
     HealBot_Timers_Set("SKINS","SetAdaptive",0.3)
     HealBot_Timers_Set("LAST","SetPlayerData",0.325)
-    HealBot_Timers_Set("INIT","LastUpdate",0.35)
+    HealBot_Timers_Set("LAST","SetEventQueues",0.35)
+    HealBot_Timers_Set("INIT","LastUpdate",0.5)
     HealBot_Timers_Set("INIT","HealBotLoaded",1)
     C_Timer.After(1, HealBot_Timers_UpdateMediaIndex)
     if not HealBot_Timers_luVars["HelpNotice"] then
@@ -489,8 +506,9 @@ function HealBot_Timers_SetCurrentSkin()
     HealBot_Options_setAuxBars()
     HealBot_UpdateAllAuxBars()
     HealBot_Action_ResetFrameAlias()
-    HealBot_nextRecalcParty(0)
+    HealBot_nextRecalcDelay(0,0.025)
     HealBot_Timers_Set("AUX","ResetText")
+    HealBot_Timers_Set("SKINS","SkinChangePluginUpdate")
 end
                 
 function HealBot_Timers_InitExtraOptions()
@@ -606,6 +624,7 @@ local hbTimerFuncs={["INIT"]={
                         ["ActionIconsSetGlowSize"]=HealBot_ActionIcons_SetGlowSize,
                         ["ActionIconsSetFontChange"]=HealBot_ActionIcons_setFontChange,
                         ["SelfCountTextUpdate"]=HealBot_ActionIcons_SelfCountTextUpdateAll,
+                        ["SkinChangePluginUpdate"]=HealBot_Timers_SkinChangePluginUpdate,
                     },
                     ["AUX"]={
                         ["ClearBars"]=HealBot_Options_clearAuxBars,
@@ -627,6 +646,7 @@ local hbTimerFuncs={["INIT"]={
                         ["UpdateAllAuxOverHealsBars"]=HealBot_updAllAuxOverHealsBars,
                         ["UpdateAllAuxInHealsBars"]=HealBot_updAllAuxInHealsBars,
                         ["UpdateAllAuxAbsorbBars"]=HealBot_updAllAuxAbsorbBars,
+                        ["UpdateAllAuxTotalHealAbsorbBars"]=HealBot_updAllAuxTotalHealAbsorbBars,
                         ["UpdateAllAuxThreatBars"]=HealBot_updAllAuxThreatBars,
                         ["CheckInUse"]=HealBot_Options_CheckAuxInUse,
                         ["ClearAllMarkedBars"]=HealBot_Aux_clearAllMarkedBars,
@@ -757,6 +777,7 @@ local hbTimerFuncs={["INIT"]={
                         ["PluginHealthWatchDead"]=HealBot_Plugin_HealthWatch_PlayerDead,
                         ["PluginManaWatchDead"]=HealBot_Plugin_ManaWatch_PlayerDead,
                         ["PerfRangeFreq"]=HealBot_PerfRangeFreq,
+                        ["SetEventQueues"]=HealBot_SetEventQueues,
                     },
                     ["OOC"]={
                         ["FullReload"]=HealBot_FullReload,

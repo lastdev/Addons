@@ -325,6 +325,7 @@ PLATER_DEFAULT_SETTINGS = {
 				relevance_state = 4,
 				enabled = true,
 				module_enabled = true,
+				follow_blizzard_npc_option = false,
 				
 				health = {112, 12},
 				cast = {112, 10},
@@ -2987,6 +2988,7 @@ PLATER_DEFAULT_SETTINGS = {
 		health_statusbar_bgtexture = "PlaterBackground 2",
 		health_statusbar_bgcolor = {0.113725, 0.113725, 0.113725, 0.89000000},
 		
+		cast_statusbar_quickhide = false,
 		cast_statusbar_texture = "Details Flat",
 		cast_statusbar_bgtexture = "PlaterBackground 2",
 		cast_statusbar_bgcolor = {0.113725, 0.113725, 0.113725, 0.891240},

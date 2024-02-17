@@ -897,8 +897,10 @@ function private.FormatDaysLeft(timeLeft)
 			timeLeft = hoursLeft.." "..L["Hrs"]
 		elseif hoursLeft == 1 then
 			timeLeft = hoursLeft.." "..L["Hr"]
-		else
+		elseif hoursLeft > 0 then
 			timeLeft = floor(hoursLeft / 60).." "..L["Min"]
+		else
+			timeLeft = ""
 		end
 	end
 	return color:ColorText(timeLeft)

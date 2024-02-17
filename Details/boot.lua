@@ -18,8 +18,8 @@
 		local addonName, Details222 = ...
 		local version, build, date, tocversion = GetBuildInfo()
 
-		Details.build_counter = 12220
-		Details.alpha_build_counter = 12220 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 12325
+		Details.alpha_build_counter = 12325 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -97,7 +97,11 @@
 		Details222.OptionsPanel = {}
 		Details222.Instances = {}
 		Details222.Combat = {}
-		Details222.MythicPlus = {}
+		Details222.MythicPlus = {
+			Charts = {},
+			Frames = {},
+		}
+
 		Details222.MythicPlusBreakdown = {}
 		Details222.EJCache = {}
 		Details222.Segments = {}
@@ -154,9 +158,39 @@ do
 
 	--change logs
 	--[=[
+
 	--]=]
 
 	local news = {
+		{"v10.2.5.12307.155", "February 13th, 2024"},
+		"Fixed the deaths display, where the windows wasn't usig custom text scripts.",
+		"Fixed an issue with custom displays, where it was unable to use class colors in their texts.",
+		"More development and bug fixes on the new Mythic+ Run Completion panel.",
+		"Framework Update.",
+
+		{"v10.2.5.12294.155", "February 08th, 2024"},
+		"General fixes applied to the Mythic+ Panel.",
+		"The Mythic+ section in the options panel can now be translated.",
+		"More fixes for text color.",
+
+		{"v10.2.5.12281.155", "February 07th, 2024"},
+		"Released the new panel for the Mythic+ Run Completion.",
+		"The list of Crowd Control spells is now sourced from the Lib Open Raid.",
+		"Fixed an issue where the Player Color feature wouldn't work properly if not using class colors.",
+		"Fixed an error with Vanilla, where it was trying to access talent data from Retail.",
+
+		{"v10.2.5.12255.155", "February 04th, 2024"},
+		"Dungeon followers now correctly show into the damage done section.",
+		"Fixed an error while statusbar plugin options.",
+		"Backend code maintenance.",
+
+		{"v10.2.5.12236.155", "January 20th, 2024"},
+		"Added Blistering Scales and Mana Restored to the Evoker Predicted Damage bar.",
+		"Fixed an issue which was making the Evoker Predicted Damage bar to show beyond the window width.",
+		"Fixed the key level up animation at the new End of Mythic+ Run panel.",
+		"Lib Open Raid updated to use Burst communications (Grim). The command /keys should give all Keys of the party almost instantly now.",
+		"Framework updated and other minor fixes.",
+
 		{"v10.2.0.12220.155", "January 14th, 2024"},
 		"Ignoring the heal of Smoldering Seedling trinket (Flamanis).",
 		"Attribute Judgement of Light to the healed on Wrath (Flamanis).",

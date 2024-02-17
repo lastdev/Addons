@@ -111,11 +111,9 @@ if f.priest then -- priest
 elseif f.mage then -- mage
 	f.spellID = 130 -- slow fall spell
 	f.buffID = 130 -- slow fall buff
---[[
 elseif f.monk then -- monk (needs more work for the cancel action, will look at it later)
 	f.spellID = 125883 -- zen flight spell
 	f.buffID = 125883 -- zen flight buff
-	]]
 elseif f.druid then -- druid
 	f.spellID = 164862 -- flap spell
 	f.buffID = 164862 -- flap buff

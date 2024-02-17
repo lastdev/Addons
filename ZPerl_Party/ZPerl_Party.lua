@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: d9b7338ec9f069d3cc6c46db144a6cbdf5583b15 $")
+end, "$Revision: 796eb9c23bcfb4778be97fb5d6b7aef47cbcf2c1 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -826,14 +826,14 @@ end
 -- XPerl_Party_UpdateCombat
 local function XPerl_Party_UpdateCombat(self)
 	local partyid = self.partyid
-	if (UnitIsVisible(partyid)) then
+	if UnitIsVisible(partyid) then
 		if (UnitAffectingCombat(partyid)) then
 			self.nameFrame.combatIcon:Show()
 		else
 			self.nameFrame.combatIcon:Hide()
 		end
 
-		if (UnitIsCharmed(partyid)) then
+		if UnitIsCharmed(partyid) and UnitIsPlayer(partyid) and (not IsClassic and not UnitUsingVehicle(self.ownerid) or true) then
 			self.nameFrame.warningIcon:Show()
 		else
 			self.nameFrame.warningIcon:Hide()
@@ -867,34 +867,33 @@ local function XPerl_Party_UpdateMana(self)
 		XPerl_Party_UpdatePlayerFlags(self)
 	end
 
-	local pType = XPerl_GetDisplayedPowerType(partyid)
+	local powerType = XPerl_GetDisplayedPowerType(partyid)
+	local unitPower = UnitPower(partyid, powerType)
+	local unitPowerMax = UnitPowerMax(partyid, powerType)
 
-	local Partymana = UnitPower(partyid, pType)
-	local Partymanamax = UnitPowerMax(partyid, pType)
-
-	--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
-	local percent
-	if Partymana > 0 and Partymanamax == 0 then --We have current mana but max mana failed.
-		Partymanamax = Partymana --Make max mana at least equal to current health
-		percent = 1 --And percent 100% cause a number divided by itself is 1, duh.
-	elseif Partymana == 0 and Partymanamax == 0 then--Probably doesn't use mana or is oom?
-		percent = 0 --So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
+	-- Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
+	local powerPercent
+	if unitPower > 0 and unitPowerMax == 0 then -- We have current mana but max mana failed.
+		unitPowerMax = unitPower -- Make max mana at least equal to current health
+		powerPercent = 1 -- And percent 100% cause a number divided by itself is 1, duh.
+	elseif unitPower == 0 and unitPowerMax == 0 then -- Probably doesn't use mana or is oom?
+		powerPercent = 0 -- So just automatically set percent to 0 and avoid division of 0/0 all together in this situation.
 	else
-		percent = Partymana / Partymanamax--Everything is dandy, so just do it right way.
+		powerPercent = unitPower / unitPowerMax -- Everything is dandy, so just do it right way.
 	end
-	--end division by 0 check
+	-- end division by 0 check
 
 	--[[if (Partymanamax == 1 and Partymana > Partymanamax) then
 		Partymanamax = Partymana
 	end--]]
 
-	self.statsFrame.manaBar:SetMinMaxValues(0, Partymanamax)
-	self.statsFrame.manaBar:SetValue(Partymana)
+	self.statsFrame.manaBar:SetMinMaxValues(0, unitPowerMax)
+	self.statsFrame.manaBar:SetValue(unitPower)
 
-	if (XPerl_GetDisplayedPowerType(partyid) >= 1) then
-		self.statsFrame.manaBar.percent:SetText(Partymana)
+	if powerType >= 1 then
+		self.statsFrame.manaBar.percent:SetText(unitPower)
 	else
-		self.statsFrame.manaBar.percent:SetFormattedText(percD, 100 * percent)
+		self.statsFrame.manaBar.percent:SetFormattedText(percD, 100 * powerPercent)
 	end
 
 	--[[if (pconf.values) then
@@ -903,7 +902,7 @@ local function XPerl_Party_UpdateMana(self)
 		self.statsFrame.manaBar.text:Hide()
 	end]]
 
-	self.statsFrame.manaBar.text:SetFormattedText("%d/%d", Partymana, Partymanamax)
+	self.statsFrame.manaBar.text:SetFormattedText("%d/%d", unitPower, unitPowerMax)
 
 	if (not UnitIsConnected(partyid)) then
 		self.statsFrame.healthBar.text:SetText(XPERL_LOC_OFFLINE)
@@ -924,13 +923,13 @@ local function XPerl_Party_Update_Range(self, overrideUnit)
 		return
 	end
 	local inRange = false
-	if IsRetail then
+	if IsWrathClassic then
+		inRange = CheckInteractDistance(partyid, 4)
+	else
 		local range, checkedRange = UnitInRange(partyid)
 		if not checkedRange then
 			inRange = true
 		end
-	else
-		inRange = CheckInteractDistance(partyid, 4)
 	end
 	if not UnitIsConnected(partyid) or inRange then
 		self.nameFrame.rangeIcon:Hide()
@@ -1236,20 +1235,25 @@ end
 -- Event Handler --
 -------------------
 function XPerl_Party_OnEvent(self, event, unit, ...)
-	local func = XPerl_Party_Events[event]
-	if (func) then
-		if (strfind(event, "^UNIT_") and event ~= "UNIT_THREAT_LIST_UPDATE") then
-			local f = PartyFrames[unit]
-			if f then
-				if event == "UNIT_CONNECTION" or event == "UNIT_PHASE" or event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
-					func(f, unit, ...)
-				else
-					func(f, ...)
+	if (strfind(event, "^UNIT_") and event ~= "UNIT_THREAT_LIST_UPDATE") then
+		local frame = PartyFrames[unit]
+		if frame then
+			if event == "UNIT_CONNECTION" or event == "UNIT_PHASE" or event == "UNIT_HEAL_PREDICTION" or event == "UNIT_ABSORB_AMOUNT_CHANGED" or event == "UNIT_COMBAT" then
+				if not UnitIsUnit(frame.partyid, unit) then
+					return
 				end
+
+				XPerl_Party_Events[event](frame, unit, ...)
+			else
+				if not UnitIsUnit(frame.partyid, unit) then
+					return
+				end
+
+				XPerl_Party_Events[event](frame, ...)
 			end
-		else
-			func(self, unit, ...)
 		end
+	else
+		XPerl_Party_Events[event](self, unit, ...)
 	end
 end
 
@@ -1322,8 +1326,10 @@ XPerl_Party_Events.READY_CHECK_CONFIRM = XPerl_Party_Events.READY_CHECK
 XPerl_Party_Events.READY_CHECK_FINISHED = XPerl_Party_Events.READY_CHECK
 
 -- UNIT_COMBAT
-function XPerl_Party_Events:UNIT_COMBAT(...)
-	local action, descriptor, damage, damageType = ...
+function XPerl_Party_Events:UNIT_COMBAT(unit, action, descriptor, damage, damageType)
+	if unit ~= self.partyid then
+		return
+	end
 
 	if (pconf.hitIndicator and pconf.portrait) then
 		CombatFeedback_OnCombatEvent(self, action, descriptor, damage, damageType)

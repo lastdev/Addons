@@ -149,6 +149,9 @@ end
 
 function private.SwitchBtnOnClick(button)
 	private.settings.showDefault = button ~= private.defaultUISwitchBtn
+	if Environment.IsRetail() and private.settings.showDefault then
+		Professions.SetDefaultFilters()
+	end
 	Profession.SetScannerDisabled(private.settings.showDefault)
 	private.fsm:ProcessEvent("EV_SWITCH_BTN_CLICKED")
 end

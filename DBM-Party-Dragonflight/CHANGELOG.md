@@ -1,17 +1,21 @@
 # <DBM Mod> Dungeons (DF)
 
-## [r115](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r115) (2024-01-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r114...r115) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r119](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r119) (2024-02-06)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r118...r119) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- Bump tocs for 10.2.5  
-- Switch objects to match pauls core updates  
-- Update localization.ru.lua (#164)  
-- Update localization.ru.lua (#163)  
-- minor timer fixes  
-- Micro timer adjustments  
-- tweak last  
-- Use warning aggregation for Yalnu for two similar mechanics  
-- more follower dungeon prep now that we have a dungeon list  
-- Update two distance APIs to be classic only  
-- Update koKR (#162)  
+- bump classic era toc  
+- Fix a bug that caused problems timer to be broken entire expansion on morchie  
+- Per user request, add combat timer to Yalnu  
+- Fix some event registrations (#170)  
+- Drycode wracking pain target scanner with personal and target announce for Mythic and Mythic+  
+- tweaks to classic gnomer  
+- cleanup extra trivial checks that exist in core now  
+- Update koKR (#168)  
     Co-authored-by: Artemis <QartemisT@gmail.com>  
+- note the last missing RP timer cause I keep forgetting to log  
+- Dawn of Infinite Update  
+     - Auto gossip option finally added for rift auto clicking  
+     - RP timer finally added to Tyr  
+     - Rp timer finally added to timelost battlefield  
+- Micro adjust many timers  
+- Add counts to primary abilities on kokia  

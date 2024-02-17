@@ -692,6 +692,8 @@ local function Recruit_ProspectCompare(aw, bw)
 	local a, b = aw.clones, bw.clones
 	if (not a) ~= (not b) then
 		return not b
+	elseif not a then
+		return aw:GetID() > bw:GetID()
 	end
 	local ac, bc = a.cR, b.cR
 	if ac == bc then
@@ -718,8 +720,8 @@ function EV:MP_RECRUIT_PROSPECTS_READY(data)
 	for i=1, #recruitMarks do
 		recruitMarks[i]:Hide()
 	end
-	if data then
-		for i=1,data and #data or 0 do
+	if data and #data > 0 then
+		for i=1, #data do
 			local m = GarrisonRecruitSelectFrame.FollowerSelection["Recruit" .. i].MoIMark
 			m.clones = G.AnnotateCloneProspects(data[i].clones)
 			m:Show()
@@ -733,7 +735,12 @@ function EV:MP_RECRUIT_PROSPECTS_READY(data)
 end
 local function Recruit_ProspectsUpdate(waiting)
 	if not waiting then
-		local followers, rf, tinfo = C_Garrison.GetAvailableRecruits(), GarrisonRecruitSelectFrame.FollowerSelection, G.GetFollowerTraits()
+		local followers = C_Garrison.GetAvailableRecruits()
+		if not followers or #followers < 1 then
+			EV("MP_RECRUIT_PROSPECTS_READY", nil)
+			return
+		end
+		local rf, tinfo = GarrisonRecruitSelectFrame.FollowerSelection, G.GetFollowerTraits()
 		for i=1,#followers do
 			local f, ff = followers[i], rf["Recruit" .. i]
 			local afid, ico = T.Affinities[f.followerID], ff.Affinity
