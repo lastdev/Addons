@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1704, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(102679)--Ysondre, 102683 (Emeriss), 102682 (Lethon), 102681 (Taerar)
 mod:SetEncounterID(1854)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -90,13 +90,13 @@ local timerBellowingRoarCD			= mod:NewCDTimer(44.5, 204078, 118699, nil, nil, 2)
 
 mod:AddRangeFrameOption(10, 203787)
 mod:AddSetIconOption("SetIconOnInfection", 203787, false)
-mod:AddSetIconOption("SetIconOnOozes", 205298, false, true)
+mod:AddSetIconOption("SetIconOnOozes", 205298, false, 5)
 mod:AddInfoFrameOption("ej12809")
 
 mod.vb.volatileInfectionIcon = 1
 mod.vb.alternateOozes = false
 local activeBossGUIDS = {}
-local spellName1, spellName2, spellName3, spellName4 = DBM:GetSpellInfo(203102), DBM:GetSpellInfo(203125), DBM:GetSpellInfo(203124), DBM:GetSpellInfo(203121)
+local spellName1, spellName2, spellName3, spellName4 = DBM:GetSpellName(203102), DBM:GetSpellName(203125), DBM:GetSpellName(203124), DBM:GetSpellName(203121)
 
 local function whoDatUpThere(self)
 	local emerissFound = false
@@ -146,7 +146,7 @@ do
 					text = SPELL_FAILED_OUT_OF_RANGE
 				else
 					local debuffTime = expires - GetTime()
-					text = floor(debuffTime)
+					text = tostring(floor(debuffTime))
 				end
 			end
 			if DBM:UnitDebuff(uId, spellName2) then
@@ -361,7 +361,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	for i = 1, 5 do
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
-		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
+		if unitGUID and UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
 			activeBossGUIDS[unitGUID] = true
 			local bossName = UnitName(unitID)
 			local cid = self:GetUnitCreatureId(unitID)

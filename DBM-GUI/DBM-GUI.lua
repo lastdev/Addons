@@ -508,12 +508,14 @@ function DBM_GUI:CreateBossModPanel(mod)
 					title, desc, icon = mod.groupOptions[spellID].title, L.CustomOptions, 136116
 				elseif tonumber(spellID) then
 					spellID = tonumber(spellID)
-					if spellID < 0 then
-						title, desc, _, icon = DBM:EJ_GetSectionInfo(-spellID)
-					else
-						local _title = DBM:GetSpellInfo(spellID)
-						if _title then
-							title, desc, icon = _title, tonumber(spellID), GetSpellTexture(spellID or 0)
+					if spellID then--Because LuaLS doesn't understand tonumber(spellID) as a nil check
+						if spellID < 0 then
+							title, desc, _, icon = DBM:EJ_GetSectionInfo(-spellID)
+						else
+							local _title = DBM:GetSpellName(spellID)
+							if _title then
+								title, desc, icon = _title, tonumber(spellID), DBM:GetSpellTexture(spellID or 0)
+							end
 						end
 					end
 				elseif spellID:find("^ej") then
@@ -745,12 +747,12 @@ function DBM_GUI:CreateBossModTab(addon, panel, subtab)
 	end
 
 	local ptext = panel:CreateText(L.BossModLoaded:format(subtab and addon.subTabs[subtab] or addon.name), nil, nil, nil, "CENTER")
-	ptext:SetPoint("TOPLEFT", panel.frame, "TOPLEFT", 10, modProfileArea and -245 or -10)
+	ptext:SetPoint("TOPLEFT", panel.frame, "TOPLEFT", 10, modProfileArea and -255 or -10)
 
 	local singleLine, doubleLine, noHeaderLine = 0, 0, 0
 	local area = panel:CreateArea()
 	area.frame.isStats = true
-	area.frame:SetPoint("TOPLEFT", 10, modProfileArea and -260 or -25)
+	area.frame:SetPoint("TOPLEFT", 10, modProfileArea and -270 or -25)
 
 	local statOrder = {
 		"lfr", "follower", "normal", "normal25", "heroic", "heroic25", "mythic", "challenge", "timewalker"
@@ -939,10 +941,10 @@ do
 		end
 	end
 
-    local expansions = {"CLASSIC", "BC", "WOTLK", "CATA", "MOP", "WOD", "LEG", "BFA", "SHADOWLANDS", "DRAGONFLIGHT"}
+    local expansions = {"CLASSIC", "BC", "WOTLK", "CATA", "MOP", "WOD", "LEG", "BFA", "SHADOWLANDS", "DRAGONFLIGHT", "WARWITHIN"}
 
 	-- WotLK compat, search for "local C_AddOns" in DBM-Core.lua for more details
-	local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded ---@diagnostic disable-line:deprecated
+	local IsAddOnLoaded = _G.C_AddOns.IsAddOnLoaded or IsAddOnLoaded ---@diagnostic disable-line:deprecated
 	function DBM_GUI:UpdateModList()
 		for _, addon in ipairs(DBM.AddOns) do
 			if not addon.panel then

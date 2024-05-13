@@ -1,8 +1,11 @@
 # TomTom
 
-## [v3.5.5-release](https://github.com/jnwhiteh/TomTom/tree/v3.5.5-release) (2024-01-17)
-[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v3.5.5-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
+## [v3.6.1-release](https://github.com/jnwhiteh/TomTom/tree/v3.6.1-release) (2024-05-02)
+[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v3.6.1-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
 
+- Update TOC for Cataclysm Classic  
+- Support 11.0 by removing some broken functionality  
+- Update TOC for 10.2.6  
 - Update toc for 10.2.5 and 1.15.0  
 - Update TOC for 10.2.0  
 - Update TOC for 3.4.3  
@@ -692,8 +695,3 @@
 - * Fix for the crazy arrow  
 - .toc update  
 - * Updated to Dongle-1.1  
-- * Added a compat version of TomTom:AddZWaypoint(c,z,x,y,desc) that works with other zones  
-- * Waypoints now automatically disappear when you are within 10 yards (this is just to gain compat with the old TomTom).  
-    * Waypoints will automatically be set as a crazy taxi arrow with the last one taking the arrow.  
-- * Minimap waypoints now properly handle zoning between continents and using portals.  
-    * CrazyArrow will be re-displayed when you cross continents, if the active waypoint is on that continent  

@@ -1,7 +1,7 @@
 # BankStack
 
-## [v2023.2](https://github.com/kemayo/wow-bankstack/tree/v2023.2) (2023-09-14)
-[Full Changelog](https://github.com/kemayo/wow-bankstack/compare/v2023.1...v2023.2) [Previous Releases](https://github.com/kemayo/wow-bankstack/releases)
+## [v2024.1](https://github.com/kemayo/wow-bankstack/tree/v2024.1) (2024-05-06)
+[Full Changelog](https://github.com/kemayo/wow-bankstack/compare/v2023.2...v2024.1) [Previous Releases](https://github.com/kemayo/wow-bankstack/releases)
 
-- Adjust an easily confused comparison to make luacheck happy  
-- TOC for 10.1.7  
+- TOC for 10.2.6, 4.4.0, 3.4.3, and 1.15.2  
+- ITEM\_INVENTORY\_BANK\_BAG\_OFFSET has been fixed on retail  

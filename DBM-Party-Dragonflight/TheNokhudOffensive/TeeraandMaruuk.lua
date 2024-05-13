@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2478, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240121162733")
+mod:SetRevision("20240503080608")
 mod:SetCreatureID(186339, 186338)
 mod:SetEncounterID(2581)
 mod:SetBossHPInfoToHighest()
@@ -74,9 +74,9 @@ local function scanBosses(self, delay)
 			local cid = self:GetUnitCreatureId(unitID)
 			local bossGUID = UnitGUID(unitID)
 			if cid == 186339 then--Terra
-				timerSpiritLeapCD:Start(6-delay, 1, bossGUID)
-				timerGaleArrowCD:Start(21.5-delay, 1, bossGUID)
-				timerRepelCD:Start(50-delay, 1, bossGUID)
+				timerSpiritLeapCD:Start(5-delay, 1, bossGUID)
+				timerGaleArrowCD:Start(20.5-delay, 1, bossGUID)
+				timerRepelCD:Start(49-delay, 1, bossGUID)
 			else--Maruuk
 				timerFrightfulRoarCD:Start(4.5-delay, 1, bossGUID)
 				timerBrutalizeCD:Start(13.5-delay, 1, bossGUID)
@@ -146,13 +146,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.leapCount = self.vb.leapCount + 1
 		warnSpiritLeap:Show()
 		local timer
-		--Spirit Leap: 6.0, 24.0, 13.5, 19.9, 24.0, 13.5, 20.0, 23.9, 13.5
+		--Spirit Leap: 6.0, 24.0, 13.5, 19.9, 24.0, 13.5, 20.0, 23.9, 13.5 (Season 1)
+		--			   6.0, 24.0, 13.5, 21.1, 22.9, 13.5, 21.1 (Season 4)
 		if self.vb.leapCount % 3 == 0 then--3, 6, 9, etc
-			timer = 19.9
+			timer = 19.9--Change to 21.1?
 		elseif self.vb.leapCount % 3 == 1 then--1, 4, 7, etc
-			timer = 23.9
+			timer = 22.9
 		else--2, 5, 8, etc
-			timer = 13.4
+			timer = 13
 		end
 		timerSpiritLeapCD:Start(timer, self.vb.leapCount+1, args.sourceGUID)
 	elseif spellId == 382836 then
@@ -215,6 +216,7 @@ end
 --"<94.47 21:00:23> [CHAT_MSG_MONSTER_YELL] This is what has become of our legacy?#Maruuk###Gravelord Monkh##0#0##0#1389#nil#0#false#false#false#false", -- [473]
 --"<95.30 21:00:24> [DBM_Debug] ENCOUNTER_START event fired: 2581 Teera and Maruuk 1 5#nil", -- [474]
 function mod:OnSync(msg)
+	---@diagnostic disable-next-line: dbm-sync-checker
 	if msg == "TeeraRP" and self:AntiSpam(10, 9) then--Sync sent from trash mod since trash mod is already monitoring out of combat CLEU events
 		timerRP:Start(26.7)
 	end

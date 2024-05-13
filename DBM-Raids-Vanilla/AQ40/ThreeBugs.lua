@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("ThreeBugs", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240426180207")
 mod:SetCreatureID(15544, 15511, 15543)
 mod:SetEncounterID(710)
 mod:SetModelID(15657)
@@ -75,8 +75,8 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 do
-	local ToxicVaper = DBM:GetSpellInfo(25786)--Classic Note
-	local Toxin 	 = DBM:GetSpellInfo(25989)--Classic Note
+	local ToxicVaper = DBM:GetSpellName(25786)--Classic Note
+	local Toxin 	 = DBM:GetSpellName(25989)--Classic Note
 	function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, spellName)
 		if (spellId == 25786 or spellId == 25989 or spellName == ToxicVaper or spellName == Toxin) and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 			specWarnGTFO:Show(spellName)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2374, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240115231736")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(158328)
 mod:SetEncounterID(2345)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -50,7 +50,7 @@ local timerTouchoftheCorruptorCD			= mod:NewCDCountTimer(64.4, 311367, nil, nil,
 local timerCorruptorsGazeCD					= mod:NewCDCountTimer(32.2, 310319, 202046, nil, nil, 3)--32.8-34 Shorttext "Beam"
 
 mod:AddInfoFrameOption(315094, true)
-mod:AddSetIconOption("SetIconOnMC", 311367, false, false, {1, 2, 3, 4, 5, 6, 7})
+mod:AddSetIconOption("SetIconOnMC", 311367, false, 0, {1, 2, 3, 4, 5, 6, 7})
 --Stage 02: The Organs of Corruption
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20993))
 local warnCursedBlood						= mod:NewTargetAnnounce(311159, 2)
@@ -69,7 +69,7 @@ local timerAbsorbingChargeCD				= mod:NewNextTimer(18.3, 318383, nil, nil, nil, 
 local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption(11, 311159)
-mod:AddSetIconOption("SetIconOnCusedBlood", 313759, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnCusedBlood", 313759, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddBoolOption("SetIconOnlyOnce", true)--If disabled, as long as living oozes are up, the skull will bounce around to lowest health mob continually, which is likely not desired by most, thus this defaulted on
 mod:AddDropdownOption("InterruptBehavior", {"Two", "Three", "Four", "Five"}, "Two", "misc", nil, 310788)
 
@@ -95,7 +95,7 @@ do
 		lines[key] = value
 		sortedLines[#sortedLines + 1] = key
 	end
-	local OozeName, fixateName = DBM:EJ_GetSectionInfo(20988), DBM:GetSpellInfo(315094)
+	local OozeName, fixateName = DBM:EJ_GetSectionInfo(20988), DBM:GetSpellName(315094)
 	updateInfoFrame = function()
 		table.wipe(lines)
 		table.wipe(sortedLines)
@@ -310,7 +310,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if spellId == 313759 then--Mythic Only Option
 			if self.Options.SetIconOnCusedBlood then
-				self.SetIcon(args.destName, self.vb.bloodIcon)
+				self:SetIcon(args.destName, self.vb.bloodIcon)
 			end
 			self.vb.bloodIcon = self.vb.bloodIcon + 1
 		end
@@ -342,7 +342,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		if spellId == 313759 then--Mythic Only Option
 			if self.Options.SetIconOnCusedBlood then
-				self.SetIcon(args.destName, 0)
+				self:SetIcon(args.destName, 0)
 			end
 		end
 	end

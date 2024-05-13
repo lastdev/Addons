@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240428104741")
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -84,12 +84,12 @@ local timerEmpoweredChainHealCD		= mod:NewNextSourceTimer(6, 143473, nil, nil, n
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnAdds", "ej7920", false, true)
+mod:AddSetIconOption("SetIconOnAdds", "ej7920", false, 5)
 mod:AddInfoFrameOption("ej7909")
 
 --Upvales, don't need variables
 local UnitName, UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitName, UnitExists, UnitGUID, UnitDetailedThreatSituation
-local spellName1, spellName2, spellName3, spellName4, sunder = DBM:GetSpellInfo(143500), DBM:GetSpellInfo(143536), DBM:GetSpellInfo(143503), DBM:GetSpellInfo(143872), DBM:GetSpellInfo(143494)
+local spellName1, spellName2, spellName3, spellName4, sunder = DBM:GetSpellName(143500), DBM:GetSpellName(143536), DBM:GetSpellName(143503), DBM:GetSpellName(143872), DBM:GetSpellName(143494)
 --Tables, can't recover
 local dotWarned = {}
 --Important, needs recover

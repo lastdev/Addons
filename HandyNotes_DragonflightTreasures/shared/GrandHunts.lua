@@ -70,11 +70,23 @@ ns.RegisterPoints(ns.WAKINGSHORES, {
         loot={},
         vignette=5254,
     },
+    [69546477] = { -- Galnmor
+        quest=73915,
+        npc=193853,
+        loot={},
+        vignette=5259,
+    },
+    [64886476] = { -- Salkii
+        quest=73931,
+        npc=193885,
+        loot={},
+        vignette=5260,
+    },
 }, hunt)
 
 ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     [72374558] = { -- Zumakh
-        quest=70003, -- 70906
+        quest=73949, -- 70906
         npc=194624,
         loot={
             200563, -- Primal Ritual Shell
@@ -137,5 +149,17 @@ ns.RegisterPoints(ns.AZURESPAN, {
         npc=195300,
         quest=73907,
         vignette=5361,
+    },
+}, hunt)
+
+ns.RegisterPoints(ns.THALDRASZUS, {
+    [50464639] = { -- Diluu
+        npc=195431,
+        quest=73912, -- 70519
+        vignette=5364,
+        loot={
+            200233, -- Paradox Saber
+            200204, -- Sandshine Chestplate
+        },
     },
 }, hunt)

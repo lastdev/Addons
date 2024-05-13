@@ -671,6 +671,9 @@ E.spellcast_cdr = {
 		{ 390996, { .5, 1 }, 375901 },
 		{ 390994, { 2, 4 }, 88625 },
 	},
+	[132157] = {
+		{ 390994, { 2, 4 }, 88625 },
+	},
 	[139] = { nil, 2, 34861 },
 	[596] = {
 		{ nil, 6, 34861 },
@@ -681,10 +684,12 @@ E.spellcast_cdr = {
 
 	},
 	[2061] = { nil, 6, 2050 },
-	[2050] = { nil, 15, 265202 },
-	[34861] = { nil, 15, 265202 },
+	[2050] = { nil, nil, {[265202]=15, [372835]=3} },
+	[34861] = { nil, nil, {[265202]=15, [372835]=3} },
 	[204883] = { 390994, { 2, 4 }, 34861 },
 	[33076] = { 390994, { 2, 4 }, 2050 },
+
+	[88625] = { nil, 15, 88625, nil, "hasDivineWord" },
 
 	[1856] = { 382523, { 15, 30 } },
 
@@ -1189,22 +1194,25 @@ E.item_merged = {
 	[209347] = 181816, [209767] = 181816,
 	[209345] = 178447, [208309] = 178447, [209766] = 178447,
 	[209343] = 175921, [209763] = 175921,
+
+	[216282] = 181333, [211606] = 181333, [216369] = 181333,
+	[216283] = 181816, [216372] = 181816,
+	[216281] = 178447, [211608] = 178447, [216371] = 178447,
+	[216279] = 175921, [216368] = 175921,
 }
 
 E.item_equip_bonus = E.BLANK
 
 local class_set_bonus = {
 
-	--[[
-	DRUID = {
+	DRUID100 = {
 		[105] = { 393641, 4 },
 	},
 
 
-	HUNTER = {
+	HUNTER100 = {
 		[253] = { 393646, 2 },
 	},
-	]]
 
 	WARRIOR101 = {
 		[73] = { 405581, 2 },
@@ -1216,6 +1224,7 @@ local class_set_bonus = {
 		[253] = { 405525, 4 },
 		[254] = { 405527, 4 },
 	},
+
 	PALADIN101 = {
 		[65] = { 405545, 2 },
 	},
@@ -1234,9 +1243,11 @@ local class_set_bonus = {
 	DRUID = {
 		[103] = { 422748, 4 },
 	},
+
 	PALADIN = {
 		[65] = { 422894, 4 },
 	},
+
 
 	SHAMAN = {
 		[263] = { 422914, 4 },
@@ -1245,21 +1256,21 @@ local class_set_bonus = {
 		[72] = { 422926, 4 },
 		--[73] = { 422928, 4 },
 	},
+
 }
 
 E.item_set_bonus = {
-	--[[ 10.0
-	[200354] = class_set_bonus.DRUID,
-	[200356] = class_set_bonus.DRUID,
-	[200351] = class_set_bonus.DRUID,
-	[200353] = class_set_bonus.DRUID,
-	[200355] = class_set_bonus.DRUID,
-	[200390] = class_set_bonus.HUNTER,
-	[200392] = class_set_bonus.HUNTER,
-	[200387] = class_set_bonus.HUNTER,
-	[200389] = class_set_bonus.HUNTER,
-	[200391] = class_set_bonus.HUNTER,
-	]]
+
+	[200354] = class_set_bonus.DRUID100,
+	[200356] = class_set_bonus.DRUID100,
+	[200351] = class_set_bonus.DRUID100,
+	[200353] = class_set_bonus.DRUID100,
+	[200355] = class_set_bonus.DRUID100,
+	[200390] = class_set_bonus.HUNTER100,
+	[200392] = class_set_bonus.HUNTER100,
+	[200387] = class_set_bonus.HUNTER100,
+	[200389] = class_set_bonus.HUNTER100,
+	[200391] = class_set_bonus.HUNTER100,
 
 	[202443] = class_set_bonus.WARRIOR101,
 	[202441] = class_set_bonus.WARRIOR101,
@@ -1317,6 +1328,32 @@ E.item_set_bonus = {
 	[207185] = class_set_bonus.WARRIOR,
 	[207183] = class_set_bonus.WARRIOR,
 	[207181] = class_set_bonus.WARRIOR,
+
+	[217223] = class_set_bonus.DEATHKNIGHT101,
+	[217225] = class_set_bonus.DEATHKNIGHT101,
+	[217221] = class_set_bonus.DEATHKNIGHT101,
+	[217222] = class_set_bonus.DEATHKNIGHT101,
+	[217224] = class_set_bonus.DEATHKNIGHT101,
+	[217228] = class_set_bonus.DEMONHUNTER,
+	[217230] = class_set_bonus.DEMONHUNTER,
+	[217226] = class_set_bonus.DEMONHUNTER,
+	[217227] = class_set_bonus.DEMONHUNTER,
+	[217229] = class_set_bonus.DEMONHUNTER,
+	[217193] = class_set_bonus.DRUID,
+	[217195] = class_set_bonus.DRUID,
+	[217191] = class_set_bonus.DRUID,
+	[217192] = class_set_bonus.DRUID,
+	[217194] = class_set_bonus.DRUID,
+	[217198] = class_set_bonus.PALADIN101,
+	[217200] = class_set_bonus.PALADIN101,
+	[217196] = class_set_bonus.PALADIN101,
+	[217197] = class_set_bonus.PALADIN101,
+	[217199] = class_set_bonus.PALADIN101,
+	[217238] = class_set_bonus.SHAMAN,
+	[217240] = class_set_bonus.SHAMAN,
+	[217236] = class_set_bonus.SHAMAN,
+	[217237] = class_set_bonus.SHAMAN,
+	[217239] = class_set_bonus.SHAMAN,
 }
 
 E.item_unity = {
@@ -1575,7 +1612,6 @@ E.sync_cooldowns = {
 	},
 	["ALL"] = {},
 }
-
 
 E.sync_periodic = {
 	[49576] = true,

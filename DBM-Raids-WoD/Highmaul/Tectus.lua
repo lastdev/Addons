@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1195, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240428104732")
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -48,8 +48,8 @@ local timerCrystalBarrage			= mod:NewBuffFadesTimer(15, 162346)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnEarthwarper", "ej10061", true, true)
-mod:AddSetIconOption("SetIconOnMote", "ej10064", false, true)--Working with both shard and mote. ej10083 description is bad / This more or less assumes the 4 at a time strat. if you unleash 8 it will fail. Although any guild unleashing 8 is probably doing it wrong (minus LFR)
+mod:AddSetIconOption("SetIconOnEarthwarper", "ej10061", true, 5)
+mod:AddSetIconOption("SetIconOnMote", "ej10064", false, 5)--Working with both shard and mote. ej10083 description is bad / This more or less assumes the 4 at a time strat. if you unleash 8 it will fail. Although any guild unleashing 8 is probably doing it wrong (minus LFR)
 mod:AddSetIconOption("SetIconOnCrystal", 162370, false)--icons 1 and 2, no conflict with icon on earthwarper
 
 local UnitGUID, UnitExists = UnitGUID, UnitExists
@@ -71,7 +71,7 @@ function mod:CustomHealthUpdate()
 	for i = 1, 5 do
 		local unitID = "boss"..i
 		local guid = UnitGUID(unitID)
-		if UnitExists(unitID) then
+		if guid and UnitExists(unitID) then
 			local cid = self:GetCIDFromGUID(guid)
 			if cid == 78948 then
 				tectusH = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
@@ -142,7 +142,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnTectonicUpheaval:Show()
 		specWarnTectonicUpheaval:Play("aesoon")
 	elseif spellId == 162968 then
-		local guid = args.souceGUID
+		local guid = args.sourceGUID
 		specWarnEarthenFlechettes:Show()
 		timerEarthenFlechettesCD:Start(guid)
 		if guid == UnitGUID("target") or guid == UnitGUID("focus") then

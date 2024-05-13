@@ -2,7 +2,7 @@ local mod	= DBM:NewMod(2025, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 local DBM_COMMON_L = DBM_COMMON_L
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(124445)
 mod:SetEncounterID(2075)
 --mod:SetBossHPInfoToHighest()
@@ -141,7 +141,7 @@ local addCountToLocationLFR = {
 	["Dest"] = {DBM_COMMON_L.MIDDLE, DBM_COMMON_L.BOTTOM, DBM_COMMON_L.TOP, DBM_COMMON_L.MIDDLE, DBM_COMMON_L.BOTTOM, DBM_COMMON_L.TOP, DBM_COMMON_L.BOTTOM, DBM_COMMON_L.TOP, DBM_COMMON_L.BOTTOM}
 }
 
-local lifeForceName = DBM:GetSpellInfo(250048)
+local lifeForceName = DBM:GetSpellName(250048)
 local updateInfoFrame
 do
 	local lines = {}

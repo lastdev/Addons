@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
 
-mod:SetRevision("20240114012904")
+mod:SetRevision("20240426180008")
 mod:SetCreatureID(56173)
 mod:SetEncounterID(1299)
 mod:SetUsedIcons(8)
@@ -65,7 +65,7 @@ local timerCataclysm				= mod:NewCastTimer(60, 106523, nil, nil, nil, 2, nil, DB
 local timerCataclysmCD				= mod:NewCDTimer(130.5, 106523, nil, nil, nil, 2)--130.5-131.5 variations
 local timerFragmentsCD				= mod:NewNextTimer(90, "ej4115", nil, nil, nil, 1, 106708)--Gear icon for now til i find something more suitable
 local timerTerrorCD					= mod:NewNextTimer(90, "ej4117", nil, nil, nil, 1, 106765)--^
-local timerShrapnel					= mod:NewBuffFadesTimer(6, 106794, nil, nil, nil, 3, nil, nil, nil, not mod:IsMelee() and 1, 4)
+local timerShrapnel					= mod:NewBuffFadesTimer(6, 106794, nil, nil, nil, 3, nil, nil, nil, not mod:IsMelee() and 1 or nil, 4)
 local timerParasite					= mod:NewTargetTimer(10, 108649, nil, nil, nil, 1)
 local timerParasiteCD				= mod:NewCDTimer(60, 108649, nil, nil, nil, 3)
 local timerUnstableCorruption		= mod:NewCastTimer(10, 108813, nil, nil, nil, 2, nil, nil, nil, 2, 4)
@@ -84,7 +84,7 @@ local activateTetanusTimers = false
 local parasite = DBM:EJ_GetSectionInfo(4347)
 local parasiteScan = 0
 local parasiteCasted = false
-local debuffFilterDebuff, NozPresence, AlexPresence = DBM:GetSpellInfo(108649), DBM:GetSpellInfo(106027), DBM:GetSpellInfo(106028)
+local debuffFilterDebuff, NozPresence, AlexPresence = DBM:GetSpellName(108649), DBM:GetSpellName(106027), DBM:GetSpellName(106028)
 
 local debuffFilter
 do

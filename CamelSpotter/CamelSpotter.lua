@@ -1,4 +1,5 @@
 local addonName = ...
+---@class CS : Frame
 local CS = CreateFrame("Frame")
 local Settings = {}
 
@@ -30,6 +31,7 @@ local internal = {
 	exportText = "",
 }
 
+local isWarModeDesired = C_PvP and C_PvP.IsWarModeDesired and C_PvP.IsWarModeDesired() or function() return false end
 
 local timeFormatter = CreateFromMixins(SecondsFormatterMixin);
 timeFormatter:Init(1, SecondsFormatter.Abbreviation.Truncate);
@@ -42,6 +44,8 @@ hooksecurefunc(C_CVar, "SetCVar", function(cvar, value)
 		internal.cacheShowAll = value
 	elseif cvar == "nameplateShowFriendlyNPCs" then
 		internal.cacheShowFriendlyNPCs = value
+	elseif cvar == "nameplateMaxDistance" then
+		internal.cacheNameplateMaxDistance = value
 	end
 end)
 
@@ -63,6 +67,7 @@ local function getSortedKeys(tbl)
     return iter
 end
 
+---@class AlertFrame : Button
 local AlertFrame = CreateFrame("Button", "CamelSpotterAlertFrame", UIParent, "BackdropTemplate")
 function AlertFrame:Create()
 	if self.Text then return end
@@ -89,22 +94,17 @@ function AlertFrame:Create()
 			self.l = self:CreateTexture(nil, "BORDER")
 			self.r = self:CreateTexture(nil, "BORDER")
 		end
-
 		PixelUtil.SetPoint(self.t, "BOTTOMLEFT", self, "TOPLEFT", -size, -1, 1)
 		PixelUtil.SetPoint(self.t, "BOTTOMRIGHT", self, "TOPRIGHT", size, 0, 0)
-		PixelUtil.SetHeight(self.t, size)
 
 		PixelUtil.SetPoint(self.b, "TOPLEFT", self, "BOTTOMLEFT", -size, 1, -1)
 		PixelUtil.SetPoint(self.b, "TOPRIGHT", self, "BOTTOMRIGHT", size, 0, 0)
-		PixelUtil.SetHeight(self.b, size)
 
 		PixelUtil.SetPoint(self.l, "TOPRIGHT", self, "TOPLEFT", 1, 0, 0)
 		PixelUtil.SetPoint(self.l, "BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, -1, 1)
-		PixelUtil.SetWidth(self.l, size)
 
 		PixelUtil.SetPoint(self.r, "TOPLEFT", self, "TOPRIGHT", -1, 0, 0)
 		PixelUtil.SetPoint(self.r, "BOTTOMLEFT", self, "BOTTOMRIGHT", 1, 1, -1)
-		PixelUtil.SetWidth(self.r, size)
 	end
 
 	UpdateBorders()
@@ -165,6 +165,7 @@ function CS:ResetCVars()
 	C_CVar.SetCVar("nameplateShowFriends", internal.cacheShowFriends)
 	C_CVar.SetCVar("nameplateShowAll", internal.cacheShowAll)
 	C_CVar.SetCVar("nameplateShowFriendlyNPCs", internal.cacheShowFriendlyNPCs)
+	C_CVar.SetCVar("nameplateMaxDistance", internal.cacheNameplateMaxDistance)
 	C_Timer.After(1, function() internal.cvarsChanged = false end)
 end
 
@@ -185,6 +186,7 @@ function CS:SetCVars()
 	C_CVar.SetCVar("nameplateShowAll", "1")
 	C_CVar.SetCVar("nameplateShowFriends", "1")
 	C_CVar.SetCVar("nameplateShowFriendlyNPCs", "1")
+	C_CVar.SetCVar("nameplateMaxDistance", "60")
 	C_Timer.After(1, function() internal.cvarsChanged = false end)
 end
 
@@ -217,14 +219,18 @@ function CS:GetWarmodeAndTimewalkingText()
 	local warmodeText = ""
 	local timewalkingText = ""
 
-	if C_PvP.IsWarModeDesired() then
-		warmodeText = "WM On"
-	else
-		warmodeText = "WM Off"
+	if C_PvP and C_PvP.IsWarModeDesired then
+		if C_PvP.IsWarModeDesired() then
+			warmodeText = "WM On"
+		else
+			warmodeText = "WM Off"
+		end
 	end
 
-	if C_PlayerInfo.IsPlayerInChromieTime() then
-		timewalkingText = "CT "
+	if C_PlayerInfo and C_PlayerInfo.IsPlayerInChromieTime then
+		if C_PlayerInfo.IsPlayerInChromieTime() then
+			timewalkingText = "CT "
+		end
 	end
 
 	return warmodeText, timewalkingText
@@ -236,8 +242,8 @@ end
 
 ---@return number
 function CS:GetMode()
-	local warmodeNum = C_PvP.IsWarModeDesired() and 2 or 1
-	local mode = C_PlayerInfo.IsPlayerInChromieTime() and warmodeNum+2 or warmodeNum
+	local warmodeNum = isWarModeDesired() and 2 or 1
+	local mode = (C_PlayerInfo and C_PlayerInfo.IsPlayerInChromieTime) and C_PlayerInfo.IsPlayerInChromieTime() and warmodeNum+2 or warmodeNum
 	return mode
 end
 
@@ -260,9 +266,12 @@ end
 
 function CS:RecordLastSeen(unitID, spawnTime)
 	local realmName = GetNormalizedRealmName()
+	if not realmName then return end
 	local mode = self:GetMode()
 	Settings.Servers[realmName] = Settings.Servers[realmName] or {}
-	local playerPosition = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")
+	local uiMapID = C_Map.GetBestMapForUnit("player")
+	if not uiMapID then return end
+	local playerPosition = C_Map.GetPlayerMapPosition(uiMapID, "player")
 	if playerPosition then
 		local x = string.format("%.2f", playerPosition.x * 100)
 		local y = string.format("%.2f", playerPosition.y * 100)
@@ -277,7 +286,10 @@ end
 
 function CS:Announce(unitID, spawnTime)
 	local warmodeText, timewalkingText = self:GetWarmodeAndTimewalkingText()
-	local playerPosition = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")
+	local uiMapID = C_Map.GetBestMapForUnit("player")
+	if not uiMapID then return end
+	local playerPosition = C_Map.GetPlayerMapPosition(uiMapID, "player")
+	if not playerPosition then return end
 	local positionText = string.format("(%.2f, %.2f)", playerPosition.x*100, playerPosition.y*100)
 	local realmName = GetRealmName()
 	if unitID == internal.realFigurineID then
@@ -331,36 +343,48 @@ end
 
 --#region Overlay
 do
-	local Overlay = {}
-	Overlay.modelId = 948186
-	Overlay.model = CreateFrame('PlayerModel', nil, WorldFrame)
-	Overlay.model:SetModel(Overlay.modelId)
-	Overlay.model:SetSize(80, 80)
+	local Overlay = CreateFrame('frame', nil, WorldFrame)
+	Overlay:SetSize(38, 38)
+	Overlay.Texture = Overlay:CreateTexture(nil, "OVERLAY")
+	Overlay.Texture:SetTexture([[Interface\AddOns\CamelSpotter\Media\DownArrow.tga]], nil, nil, "TRILINEAR")
+	Overlay.Texture:SetAllPoints()
 
-	Overlay.fadeIn = Overlay.model:CreateAnimationGroup()
-	Overlay.fadeIn:SetToFinalAlpha(true)
-	local fadeIn = Overlay.fadeIn:CreateAnimation("Alpha")
+	Overlay.Anim = Overlay:CreateAnimationGroup()
+	Overlay.Anim:SetToFinalAlpha(true)
+	local fadeIn = Overlay.Anim:CreateAnimation("Alpha")
 	fadeIn:SetFromAlpha(0)
 	fadeIn:SetToAlpha(1)
 	fadeIn:SetDuration(0.2)
-
+	Overlay.AnimBounce = Overlay:CreateAnimationGroup()
+	Overlay.AnimBounce:SetLooping("REPEAT")
+	local translationDown = Overlay.AnimBounce:CreateAnimation("Translation")
+	local translationUp = Overlay.AnimBounce:CreateAnimation("Translation")
+	translationDown:SetDuration(0.5)
+	translationDown:SetOffset(0,-12)
+	translationDown:SetOrder(1)
+	translationDown:SetSmoothing("IN_OUT")
+	translationUp:SetDuration(0.8)
+	translationUp:SetOffset(0,12)
+	translationUp:SetOrder(2)
+	translationUp:SetSmoothing("IN_OUT")
 	internal.Overlay = Overlay
 end
 
 function CS:ShowOverlay(nameplate)
 	if nameplate and internal.previousNameplate ~= nameplate then
-		local model = internal.Overlay.model
-		model:ClearAllPoints()
-		model:SetPoint("BOTTOM", nameplate, "TOP", 0, -10)
-		model:SetModel(internal.Overlay.modelId)
-		model:Show()
-		internal.Overlay.fadeIn:Play()
+		internal.Overlay:ClearAllPoints()
+		internal.Overlay:SetPoint("BOTTOM", nameplate, "TOP", 0, 14)
+		internal.Overlay:Show()
+		internal.Overlay.Anim:Play()
+		internal.Overlay.AnimBounce:Play()
 	end
 end
 
 function CS:HideOverlay()
 	internal.previousNameplate = nil
-	internal.Overlay.model:Hide()
+	internal.Overlay:Hide()
+	internal.Overlay.Anim:Stop()
+	internal.Overlay.AnimBounce:Stop()
 end
 
 function CS:UpdateOverlay(unit)
@@ -431,6 +455,7 @@ function CS:OnPlayerLogin()
 	internal.cacheShowFriends = C_CVar.GetCVar("nameplateShowFriends")
 	internal.cacheShowAll = C_CVar.GetCVar("nameplateShowAll")
 	internal.cacheShowFriendlyNPCs = C_CVar.GetCVar("nameplateShowFriendlyNPCs")
+	internal.cacheNameplateMaxDistance = C_CVar.GetCVar("nameplateMaxDistance")
 	if not internal.nameplateEventsRegistered and self:IsMapUldum() then
 		AlertFrame:Create()
 		self:SetCVars()
@@ -439,7 +464,7 @@ function CS:OnPlayerLogin()
 		internal.nameplateEventsRegistered = true
 	end
 
-	internal.previousWarmodeValue = C_PvP.IsWarModeDesired()
+	internal.previousWarmodeValue = isWarModeDesired()
 end
 
 function CS:OnEvent(e, ...)
@@ -459,7 +484,7 @@ function CS:OnEvent(e, ...)
 	elseif e == "ZONE_CHANGED_NEW_AREA" then
 		self:OnZoneChanged()
 	elseif e == "PLAYER_FLAGS_CHANGED" then
-		if (C_PvP.IsWarModeDesired() ~= internal.previousWarmodeValue) then
+		if (isWarModeDesired() ~= internal.previousWarmodeValue) then
 			internal.previousWarmodeValue = C_PvP.IsWarModeDesired()
 			if not self:IsMapUldum() then return end
 			self:ReportLastSeen()
@@ -502,6 +527,7 @@ function CS:SetWaypoints()
 end
 
 function CS:CreateExportDialog()
+	---@class frame : Frame
 	local frame = CreateFrame("frame", nil, UIParent)
 	frame:SetClipsChildren(true)
 	frame:Hide()

@@ -1,5 +1,4 @@
 local AddonName, Addon = ...
-local debugp = function (...) Addon:Debug("systems", ...) end
 
 local systems = {}
 
@@ -107,206 +106,7 @@ function DependencyInit:InitTarget(target, complete)
     complete(false)
 end
 
---[[ Called when everything has been initialized ]]
-function DependencyInit:EndInit(success)
-end
-
-local Systems = Mixin({}, DependencyInit)
-
-
---[[ Initialize any systems we've got ]]
-function Systems:Init()
-
-
-    self.systems = {}
-    if (type(Addon.Systems) == "table") then
-
-        -- Create the system tracking data
-        for name, system in pairs(Addon.Systems) do
-            local systemData = {
-                name = name,
-                source = system,
-            }
-
-            local dependencies
-            if (type(system.GetDependencies) == "function") then
-                local success, deps = xpcall(system.GetDependencies, CallErrorHandler, system)
-                if (not success) then
-                    error("Failed to get dependencies for system '" .. name .. "'")
-                end
-                dependencies = deps
-            end
-
-            Systems:AddTarget(systemData, name, dependencies)
-            self.systems[string.lower(name)] = systemData
-        end
-    end
-
-    Systems:BeginInit()
-end
-
---[[ Shutdown any systems we've got ]]
-function Systems:Terminate()
-
-    for _, system in pairs(self.systems) do
-
-        -- Remove the APIs
-        if (system.api) then
-            for _, name in ipairs(system.api) do
-                -- On classic this is firing before Features OnTerminate
-                -- Doesn't seem to be necessary so commenting out for now.
-                --Addon[name] = nil
-            end
-        end
-
-        -- Shutdown the system
-        if (system.shutdown) then
-
-            system.shutdown()
-        end
-    end
-
-    systems = {}
-end
-
---[[ Called to check completion state ]]
-function Systems:IsReady()
-    return self.complete == true
-end
-
---[[ Called when a single system has been initialized ]]
-function Systems:InitComplete(target, success)
-
-end
-
---[[ Create the callbacks for system initialization ]]
-local function createStartupCallbacks(system, complete)
-    return function(api)
-            local source = system.source
-            local name = system.name            
-
-
-            -- todo: should this be a public api, shoudl we return
-            -- both and set it up?
-            if (type(api) == "table") then
-                system.api = api
-                for _, funcname in ipairs(api) do
-
-
-
-                    Addon[funcname] = function(_, ...)
-                            local ret = { xpcall(source[funcname], CallErrorHandler, source, ...) }
-                            if (ret[1]) then
-                                table.remove(ret, 1)
-                                return unpack(ret)
-                            end
-                        end
-
-
-                end
-            end
-
-        -- Create our shutdown proxy if necessary
-        if (type(source.Shutdown) == "function") then
-            system.shutdown = function(...)
-                    xpcall(source.Shutdown, CallErrorHandler, source, ...)
-                end
-        end
-
-        -- Create the system instance itself
-        system.instance = setmetatable({}, {
-                __metatable = string.format("System:%s", name),
-                __newindex = function(_, key)
-
-                    end,
-                __index =  function(_, key)
-
-                        local value = source[key]
-                        if type(value) == "function" then
-                            return function(_, ...)
-                                local result = { xpcall(source[key], CallErrorHandler, source, ...) }
-
-                                table.remove(result, 1)
-                                return unpack(result)
-                            end
-                        else
-                            return value
-                        end
-                    end
-            })
-
-        system.ready = true
-
-        Addon:RaiseEvent("OnSystemReady", name, system.instance)
-        C_Timer.After(0.001, function() complete(true) end)
-    end,
-    function()
-        C_Timer.After(0.001, function() complete(false) end)
-    end
-end
-
---[[ Called to start a single system ]]
-function Systems:InitTarget(system, complete)
-
-
-    local source = system.source
-    local name = system.name
-
-    -- Check if system generates events
-    if (type(source.GetEvents) == "function") then
-        local success, events = xpcall(source.GetEvents, CallErrorHandler, source)
-        if (not success) then
-
-            complete(false)
-        end
-
-        Addon:GenerateEvents(events)
-    end
-
-    -- Automatically hook events into the system
-    for name, handler in pairs(source) do
-        if (type(handler) == "function") then
-            if Addon:RaisesEvent(name) then
-                Addon:RegisterCallback(name, source, handler)
-            elseif (string.find(name, "ON_") == 1) then
-                Addon:RegisterEvent(string.sub(name, 4),
-                    function(...)
-                        handler(source, ...)
-                    end)
-            end
-        end
-    end
-
-    -- If there is an initiailization handler then call it
-    local systemReady, systemError = createStartupCallbacks(system, complete)
-    if (type(source.Startup) == "function") then
-        local success, api = xpcall(source.Startup, CallErrorHandler, source, systemReady, systemError)
-
-        if (not success) then
-            systemError()
-        end
-    else    
-
-        systemReady()
-    end
-end
-
---[[ Called when a dependency is ready ]]
-function Systems:DependencyReady(system, depend, success)
-
-    if (success) then
-        local dependSystem = self.systems[string.lower(depend)]
-        if (dependSystem and dependSystem.instance) then
-            rawset(system.source, dependSystem.name, dependSystem.instance)
-        end
-    end
-end
-
-function Systems:EndInit(success)
-
-    self.complete = true
-    Addon:RaiseEvent("OnAllSystemsReady")
-end
+local Systems = {}
 
 --[[ Get the specified system ]]
 function Systems:Get(system)
@@ -318,30 +118,138 @@ function Systems:Get(system)
 end
 
 -- Hook up the events
-Addon:GenerateEvents({ "OnSystemReady", "OnAllSystemsReady" })
-
---[[ When our addon is completely loaded start the initialization of our systems ]]
-Addon:RegisterEvent("ADDON_LOADED", function(addon)
-    if (addon == AddonName) then
-        Systems:Init()
-    end
-end)
-
---[[ Terminate our systems when the player is leaving ]]
-Addon:RegisterEvent("ADDONS_UNLOADING", function()
-    Systems:Terminate()
-end)
+Addon:GenerateEvents({ "OnAllSystemsReady" })
 
 Addon.Systems = {}
+
 Addon.Systems.Profile = {
     GetDependencies = function()
-        return { "savedvariables" }
+        return { "system:savedvariables" }
     end
 }
 
 --[[ Retrieve the named system ]]
 function Addon:GetSystem(system)
-    return Systems:Get(system)
+    local key = string.lower(system);
+    local result = systems[key];
+    if (result) then
+        return result;
+    end
+
+    error("Unable to locate the specified system: " .. system);
 end
 
 Addon.DependencyInit = DependencyInit
+
+local compMgr = Addon.ComponentManager
+
+local function RegisterApi(name, system, handler)
+    if (type(handler) == "table") then
+        for _, value in ipairs(handler) do
+            RegisterApi(name, system, value)
+        end
+    elseif (type(handler) == "string") then
+        local func = system[handler];
+
+
+
+        Addon[handler] = function(_, ...)
+            return func(system, ...)
+        end;
+
+    end
+end
+
+local function InitializeSystem(name, system)
+    local startup = system.Startup;
+    if (type(startup) == "function") then
+        local success = xpcall(startup, CallErrorHandler, system, 
+            function(...) 
+                RegisterApi(name, system, ...)
+            end)
+    end
+
+    -- Check if system generates events
+    if (type(system.GetEvents) == "function") then
+        local events = system.GetEvents(system);
+        Addon:GenerateEvents(events)
+    end
+
+    Addon.RegisterForEvents(system, system)
+    systems[string.lower(name)] = system
+end
+
+local function TerminateSystem(name, system)
+    Addon.UnregisterFromEvents(system, system)
+
+    if (type(system.GetEvents) == "function") then
+        local events = system.GetEvents(system);
+        Addon:RemoveEvents(events)
+    end
+end
+
+local function CreateComponent(name, system)
+    local systemDeps = {}
+    if (type(system.GetDependencies) == "function") then
+        systemDeps = system.GetDependencies(system)
+    end
+    table.insert(systemDeps, "event:loaded" );
+
+    return {
+        Type = "system",
+        Name = name,
+        OnInitialize = function(self)  InitializeSystem(name, system) end,
+        OnTerminate = function(self) TerminateSystem(name, system) end,
+        Dependencies = systemDeps
+    }
+end
+
+--[[ Simple helper for automatically connecting to events ]]
+Addon.RegisterForEvents = function(instance, metatable)
+    for name, handler in pairs(metatable) do
+        if (type(handler) == "function") then
+            if Addon:RaisesEvent(name) then
+                Addon:RegisterCallback(name, instance, handler)
+            elseif (string.find(name, "ON_") == 1) then
+                Addon:RegisterEvent(string.sub(name, 4),
+                    function(...)
+                        handler(instance, ...)
+                    end
+                )
+            end
+        end
+    end
+end
+
+--[[ Simple helper for automatically connecting to events ]]
+Addon.UnregisterFromEvents = function(instance, metatable)
+    for name, handler in pairs(metatable) do
+        if (type(handler) == "function") then
+            if Addon:RaisesEvent(name) then
+                Addon:UnregisterCallback(name, instance)
+            end
+        end
+    end
+end
+
+Addon:RegisterEvent("ADDON_LOADED", function(addon)
+    if (addon == AddonName) then
+        local deps = {}
+        
+        for name, system in pairs(Addon.Systems or {}) do
+            table.insert(deps, "system:" .. name)
+            compMgr:Create(CreateComponent(name, system));
+        end
+
+        compMgr:Create({
+            Name = "systems",
+            Type = "core",
+            Dependencies = deps,
+            OnInitialize = function(self)
+                Addon:RaiseEvent("OnAllSystemsReady")
+            end
+        })
+
+        compMgr:InitializeComponents()
+    end
+end)

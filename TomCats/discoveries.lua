@@ -426,10 +426,10 @@ local function OnHyperlinkClick(self, link)
 	self.popup.lastLink = link
 	if (link == "discoveries") then
 		self.popup.editbox.text = addon.base64.encode(serializeTable(_G["TomCats_Account"].discoveries))
-		self.popup.info:SetText("Press Control-C to copy the data")
+		self.popup.info:SetText("Press " .. (IsMacClient() and "Cmd" or "Ctrl") .. "-C to copy the data")
 	else
 		self.popup.editbox.text = "https://" .. link
-		self.popup.info:SetText("Press Control-C to copy the link")
+		self.popup.info:SetText("Press " .. (IsMacClient() and "Cmd" or "Ctrl") .. "-C to copy the link")
 	end
 	self.popup.editbox:SetText(self.popup.editbox.text)
 	self.popup.editbox:HighlightText()
@@ -571,12 +571,12 @@ local function OnEvent(event, arg1)
 		if (addonName == arg1) then
 			TomCatsDiscoveryAlertSystem = AlertFrame:AddQueuedAlertFrameSubSystem("TomCatsDiscoveryAlertFrameTemplate", TomCatsDiscoveryAlertFrame_SetUp);
 			--todo: re-enable when going live
-			--if (_G["TomCats_Account"].discoveriesVersion ~= "2.5.11") then
+			--if (_G["TomCats_Account"].discoveriesVersion ~= "2.5.16") then
 			--	_G["TomCats_Account"].discoveries.vignettes = { }
 			--	_G["TomCats_Account"].discoveries.vignetteAtlases = { }
-			--	_G["TomCats_Account"].discoveries.version = "2.5.11"
+			--	_G["TomCats_Account"].discoveries.version = "2.5.16"
 			--	_G["TomCats_Account"].discoveriesResetCount = 0
-			--	_G["TomCats_Account"].discoveriesVersion = "2.5.11"
+			--	_G["TomCats_Account"].discoveriesVersion = "2.5.16"
 			--end
 			local discoveries = 0
 			discoveredVignettes = _G["TomCats_Account"].discoveries.vignettes

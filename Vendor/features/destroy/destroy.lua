@@ -1,11 +1,13 @@
 -- Merchant event handling.
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
+local MessageType = Addon.Systems.Chat.MessageType
 
 local Destroy = {
     NAME = "Destroy",
     VERSION = 1,
     DEPENDENCIES = {
+        "system:chat"
     },
 }
 
@@ -31,20 +33,20 @@ function Destroy:DestroyNextItem()
 
             -- If the cursor is holding anything then we can't pick it up to delete. Yield and check again next cycle.
             if GetCursorInfo() then
-                Addon:Print(L.ITEM_DESTROY_CANCELLED_CURSORITEM)
+                Addon:Output(MessageType.Destroy, "ITEM_DESTROY_CANCELLED_CURSORITEM")
                 return
             end
 
             -- Refresh and get the data entry for this slot.
             local _, entry =  xpcall(Addon.RefreshBagAndSlot, CallErrorHandler, Addon, bag, slot, true)
             if entry and entry.Result.Action == Addon.ActionType.DESTROY then
-                Addon:Print(L.ITEM_DESTROY_CURRENT, tostring(entry.Item.Link), tostring(entry.Result.Rule))
+                Addon:Output(MessageType.Destroy,"ITEM_DESTROY_CURRENT", tostring(entry.Item.Link), tostring(entry.Result.Rule))
                 if not Addon.IsDebug or not Addon:GetDebugSetting("simulate") then
                     Addon:PickupContainerItem(bag, slot)
                     DeleteCursorItem()
                     Addon:AddEntryToHistory(entry.Item.Link, Addon.ActionType.DESTROY, entry.Result.Rule, entry.Result.RuleID, entry.Item.Count, 0)
                 else
-                    Addon:Print("Simulating deletion of: %s", tostring(entry.Item.Link))
+                    Addon:Output(MessageType.Destroy, "Simulating deletion of: %s", tostring(entry.Item.Link))
                 end
 
                 -- Return now, because Blizzard only allows one deletion per action.
@@ -61,7 +63,7 @@ end
 function Destroy:DestroyItems()
     if not Destroy:DestroyNextItem() then
         -- No items were destroyed.
-        Addon:Print(L.ITEM_DESTROY_NONE_REMAIN)
+        Addon:Output(MessageType.Destroy, "ITEM_DESTROY_NONE_REMAIN")
     end
 end
 

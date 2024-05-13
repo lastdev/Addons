@@ -15,7 +15,7 @@
     |
     =======================================================================--]]
 local AddonName, Addon = ...
-local debugp = function (...) Addon:Debug("threads", ...) end
+
 
 local threads = {} 
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2004, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(122578)
 mod:SetEncounterID(2088)
 --mod:SetBossHPInfoToHighest()
@@ -19,7 +19,6 @@ mod:RegisterEventsInCombat(
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
-	"RAID_BOSS_WHISPER",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
 
@@ -127,7 +126,6 @@ local function warnDemolishTargets(self, spellId)
 	end
 end
 
-local demolishDebuff = DBM:GetSpellInfo(246692)
 local updateInfoFrame
 do
 	local lines = {}

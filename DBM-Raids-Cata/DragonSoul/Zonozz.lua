@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
 
-mod:SetRevision("20240114012904")
+mod:SetRevision("20240426180008")
 mod:SetCreatureID(55308)
 mod:SetEncounterID(1294)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -47,7 +47,7 @@ mod:AddDropdownOption("CustomRangeFrame", {"Never", "Normal", "DynamicPhase2", "
 local shadowsTargets = {}
 local phase2Started = false
 local voidWarned = false
-local filterDebuff = DBM:GetSpellInfo(103434)
+local filterDebuff = DBM:GetSpellName(103434)
 
 local function warnShadowsTargets()
 	warnShadows:Show(table.concat(shadowsTargets, "<, >"))

@@ -114,16 +114,16 @@ function ParameterEditor:GetType()
 end
 
 function ParameterEditor:SetType(type)
-    --[===[@debug@
-    local valid = false
-    for k, v in pairs(ParameterType) do
-        if (v == type) then
-            valid = true
-            break
+    if (Addon.IsDebug) then
+        local valid = false
+        for k, v in pairs(ParameterType) do
+            if (v == type) then
+                valid = true
+                break
+            end
         end
-    end
 
-    --@end-debug@]===]
+    end
 
     if (self.type ~= type) then
         self.type = type

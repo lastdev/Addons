@@ -1,7 +1,7 @@
 # TL;DR Missions
 
-##  (2024-01-24)
+##  (2024-05-08)
  
 
-- Fix the way the "Torghast Level 1" string is assembled to be more locale-friendly  
-    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/632  
+- Fix issue with profile displays  
+    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/637  

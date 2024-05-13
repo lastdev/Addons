@@ -6,7 +6,7 @@ if not mod:IsClassic() then--Future planning, so cata classic uses regular rules
 	mod.statTypes = "normal,heroic,timewalker"
 end
 
-mod:SetRevision("20230526084835")
+mod:SetRevision("20240315100444")
 mod:SetCreatureID(52558)--or does 53772 die instead?didn't actually varify this fires right unit_died event yet so we'll see tonight
 mod:SetEncounterID(1204)
 --mod:SetModelSound("Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_AGGRO.ogg", "Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_KILL_02.ogg")

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2359, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(152852, 152853)--Pashmar 152852, Silivaz 152853
 mod:SetEncounterID(2311)
 mod:SetBossHPInfoToHighest()
@@ -71,10 +71,10 @@ local yellFreneticCharge				= mod:NewYell(299914, nil, nil, nil, "YELL")
 local yellFreneticChargeFades			= mod:NewShortFadesYell(299914, nil, nil, nil, "YELL")
 local specWarnZealousEruption			= mod:NewSpecialWarningMoveTo(301807, nil, nil, nil, 3, 2)
 
-local timerFreneticChargeCD				= mod:NewNextTimer(40, 299914, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 2, 4)
+local timerFreneticChargeCD				= mod:NewNextTimer(40, 299914, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 2 or nil, 4)
 local timerZealousEruptionCD			= mod:NewNextTimer(104.4, 301807, nil, nil, nil, 2)
 
-mod:AddSetIconOption("SetIconFreneticCharge", 299914, true, false, {4})
+mod:AddSetIconOption("SetIconFreneticCharge", 299914, true, 0, {4})
 --Pashmar the Fanatical
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20235))
 local warnPashmarsTouch					= mod:NewStackAnnounce(245518, 2, nil, "Tank")
@@ -93,7 +93,7 @@ local timerFanaticalVerdictCD			= mod:NewNextTimer(26.7, 296850, nil, nil, nil, 
 local timerViolentOutburstCD			= mod:NewNextTimer(104.4, 297325, nil, nil, nil, 2)
 local timerPotentSparkCD				= mod:NewCDTimer(92.2, 301947, nil, nil, nil, 1)
 
-mod:AddSetIconOption("SetIconSparks", 301947, true, true, {1, 2, 3})
+mod:AddSetIconOption("SetIconSparks", 301947, true, 5, {1, 2, 3})
 
 mod.vb.sparkIcon = 1
 mod.vb.decreeTimer = 90

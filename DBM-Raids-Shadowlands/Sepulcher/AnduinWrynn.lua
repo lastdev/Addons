@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2469, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061629")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(181954)
 mod:SetEncounterID(2546)
 mod:SetUsedIcons(4, 5, 6, 7, 8)
@@ -64,7 +64,7 @@ local timerWickedStar							= mod:NewTargetCountTimer(4, 365021, nil, false, nil
 local timerHopebreakerCD						= mod:NewCDCountTimer(28.8, 361815, nil, nil, nil, 2)
 local timerDominationWordPainCD					= mod:NewCDCountTimer(28.8, 366849, 249194, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 
-mod:AddSetIconOption("SetIconOnAnduinsHope", "ej24468", true, true, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnAnduinsHope", "ej24468", true, 5, {1, 2, 3, 4})
 mod:GroupSpells(361989, 361992, 361993)--Group two debuffs with parent spell Blasphemy
 mod:GroupSpells(365030, 365021)--Group both wicked star IDs
 --Intermission: Remnant of a Fallen King
@@ -80,7 +80,7 @@ local timerArmyofDeadCD							= mod:NewCDTimer(36.9, 362862, nil, nil, nil, 1, n
 local specWarnNecroticDetonation				= mod:NewSpecialWarningDefensive(363024, nil, nil, nil, 2, 2)--Aoe defensive, big damage followed by heal immunity
 
 mod:AddRangeFrameOption(8, 363020)
-mod:AddSetIconOption("SetIconOnMonstrousSoul", 363028, true, true, {8})
+mod:AddSetIconOption("SetIconOnMonstrousSoul", 363028, true, 5, {8})
 
 --Stage Two: Grim Reflections
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24478))
@@ -89,7 +89,7 @@ local specWarnPsychicTerror						= mod:NewSpecialWarningInterruptCount(365008, "
 
 local timerGrimReflectionsCD					= mod:NewCDCountTimer(28.8, 365120, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 
-mod:AddSetIconOption("SetIconOnGrimReflection", 365120, true, true, {5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnGrimReflection", 365120, true, 5, {5, 6, 7, 8})
 
 --Intermission: March of the Damned
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24172))
@@ -126,7 +126,7 @@ local playersSouled = {}
 local playerName = UnitName("player")
 local overconfidentTargets = {}
 local hopelessnessTargets = {}
-local hopelessnessName, overconfidenceName = DBM:GetSpellInfo(361993), DBM:GetSpellInfo(361992)
+local hopelessnessName, overconfidenceName = DBM:GetSpellName(361993), DBM:GetSpellName(361992)
 local castsPerGUID = {}
 local allTimers = {
 	[1] = {
@@ -235,7 +235,9 @@ function mod:OnTimerRecovery()
 	for uId in DBM:GetGroupMembers() do
 		if DBM:UnitDebuff(uId, 362055) then
 			local name = DBM:GetUnitFullName(uId)
-			playersSouled[name] = true
+			if name then
+				playersSouled[name] = true
+			end
 		end
 	end
 	updateTimerFades(self)
@@ -346,7 +348,7 @@ function mod:SPELL_CAST_START(args)
 			timerHopelessnessCD:Start(19.8)
 			timerWickedStarCD:Start(39.8, 1)
 			if self.Options.InfoFrame then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(365966))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(365966))
 				DBM.InfoFrame:Show(20, "playerdebuffremaining", 365966)
 			end
 			--If an intermission was skipped, affix timer does NOT reset, it continues from previous reset (intermission)
@@ -606,7 +608,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerHopelessnessCD:Start(20.4)
 			timerWickedStarCD:Start(40.4, 1)
 			if self.Options.InfoFrame then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(365966))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(365966))
 				DBM.InfoFrame:Show(20, "playerdebuffremaining", 365966)
 			end
 			if self:IsFated() then

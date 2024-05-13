@@ -7,7 +7,7 @@ else
 	mod.statTypes = "normal25"
 end
 
-mod:SetRevision("20230526052555")
+mod:SetRevision("20240426180207")
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605, 2477)
 mod:SetModelID(21443)
@@ -60,7 +60,7 @@ function mod:OnCombatStart(delay)
 --	timerStrikeCD:Start(26.8-delay)
 	timerRageCD:Start(-delay)--52-58
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(42005))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(42005))
 		DBM.InfoFrame:Show(30, "playerdebuffstacks", 42005, 1)
 	end
 end

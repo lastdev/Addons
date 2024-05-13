@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20240113214633")
+mod:SetRevision("20240428104801")
 
 mod:SetCreatureID(32906)
 if not mod:IsClassic() then
@@ -54,8 +54,8 @@ local timerTremorCD 		= mod:NewCDTimer(22.9, 62859, nil, nil, nil, 2)--22.9-47.8
 local timerLifebinderCD 	= mod:NewCDTimer(38.2, 62869, nil, nil, nil, 1)
 local timerRootsCD 			= mod:NewCDTimer(13.6, 62438, nil, nil, nil, 3)--13.6-29.6
 
-mod:AddSetIconOption("SetIconOnFury", 63571, false, false, {7, 8})
-mod:AddSetIconOption("SetIconOnRoots", 62438, false, false, {6, 5, 4})
+mod:AddSetIconOption("SetIconOnFury", 63571, false, 0, {7, 8})
+mod:AddSetIconOption("SetIconOnRoots", 62438, false, 0, {6, 5, 4})
 mod:AddRangeFrameOption(8, 63571)
 
 local adds = {}

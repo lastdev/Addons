@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2377, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061637")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(156575)
 mod:SetEncounterID(2328)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -50,8 +50,8 @@ local timerTormentCD						= mod:NewNextCountTimer(46.5, 306208, nil, nil, nil, 3
 local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(312406, true)
-mod:AddSetIconOption("SetIconOnVoidWoken2", 312406, false, false, {1, 2, 3})
-mod:AddSetIconOption("SetIconOnAdds", "ej21227", true, true, {4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnVoidWoken2", 312406, false, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnAdds", "ej21227", true, 5, {4, 5, 6, 7, 8})
 mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Four", "misc", nil, 316211)
 
 mod.vb.ritualCount = 0
@@ -65,7 +65,7 @@ local castsPerGUID = {}
 
 local updateInfoFrame
 do
-	local voidWoken = DBM:GetSpellInfo(312406)
+	local voidWoken = DBM:GetSpellName(312406)
 	local floor = math.floor
 	local lines = {}
 	local sortedLines = {}

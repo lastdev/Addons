@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240426180207")
 mod:SetCreatureID(21216)
 mod:SetEncounterID(623, 2458)
 mod:DisableEEKillDetection()--EE always fires wipe (at least on classic)
@@ -38,7 +38,7 @@ local berserkTimer	= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption("10")
 
-local markOfH, markOfC = DBM:GetSpellInfo(38215), DBM:GetSpellInfo(38219)
+local markOfH, markOfC = DBM:GetSpellName(38215), DBM:GetSpellName(38219)
 local damage = {
 	[38215] = "10%", [38216] = "25%", [38217] = "50%", [38218] = "100%", [38231] = "250%", [40584] = "500%",
 	[38219] = "10%", [38220] = "25%", [38221] = "50%", [38222] = "100%", [38230] = "250%", [40583] = "500%",

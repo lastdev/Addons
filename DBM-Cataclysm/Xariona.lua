@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Xariona", "DBM-Cataclysm")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240105052742")
+mod:SetRevision("20240426180008")
 mod:SetCreatureID(50061)
 mod:SetModelID(32229)
 mod:EnableWBEngageSync()--Enable syncing engage in outdoors
@@ -33,7 +33,7 @@ local timerUnleashedMagicCD		= mod:NewCDTimer(66, 93556, nil, nil, nil, 2)--66 C
 
 local specialCharging = false
 local hasPower = false
-local zoneName = DBM:GetSpellInfo(93553)
+local zoneName = DBM:GetSpellName(93553)
 
 function mod:FissureTarget()
 	local targetname = self:GetBossTarget(50061)

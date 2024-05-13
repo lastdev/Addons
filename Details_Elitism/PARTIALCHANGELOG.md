@@ -1,10 +1,10 @@
-# [2.12.0](https://github.com/edusperoni/Details_Elitism/compare/v2.11.0...v2.12.0) (2023-11-10)
+# [2.14.0](https://github.com/edusperoni/Details_Elitism/compare/v2.13.0...v2.14.0) (2024-04-23)
 
 
 ### Features
 
-* 10.2.0 TOC bump ([7e0b556](https://github.com/edusperoni/Details_Elitism/commit/7e0b556e01bed55de8d7c40181c04ed7c7694e77))
-* Dragonflight Season 3 ([#50](https://github.com/edusperoni/Details_Elitism/issues/50)) ([0390ab9](https://github.com/edusperoni/Details_Elitism/commit/0390ab91c1afb7b1256407a75db5f2801ae534c7))
+* bump TOC ([ac4b2b0](https://github.com/edusperoni/Details_Elitism/commit/ac4b2b0c835fbaa2bf65e5378b8bbf2cfd1e95fc))
+* Dragonflight Season 4 ([#56](https://github.com/edusperoni/Details_Elitism/issues/56)) ([82ce764](https://github.com/edusperoni/Details_Elitism/commit/82ce764a7def8a8ef40062ca50dd5fa90aa63190))
 
 
 

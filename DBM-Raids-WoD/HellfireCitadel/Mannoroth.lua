@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1395, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240502130836")
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -124,7 +124,7 @@ local guldanTargets = {}
 local doomSpikeTargets = {}
 local AddsSeen = {}
 local playerName = UnitName("player")
-local doomName, guldanName, doomSpikeName, gaze1, gaze2 = DBM:GetSpellInfo(181099), DBM:GetSpellInfo(186362), DBM:GetSpellInfo(181119), DBM:GetSpellInfo(181597), DBM:GetSpellInfo(182006)
+local doomName, guldanName, doomSpikeName, gaze1, gaze2 = DBM:GetSpellName(181099), DBM:GetSpellName(186362), DBM:GetSpellName(181119), DBM:GetSpellName(181597), DBM:GetSpellName(182006)
 local doomFilter, guldanFilter, doomSpikeFilter
 do
 	doomFilter = function(uId)
@@ -401,7 +401,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 183376 or spellId == 185830 then
 		local targetName, uId, bossuid = self:GetBossTarget(91349, true)
-		local tanking, status = UnitDetailedThreatSituation("player", bossuid)
+		local tanking, status = UnitDetailedThreatSituation("player", bossuid or "")
 		if tanking or (status == 3) then--Player is current target
 		else
 			if self:GetNumAliveTanks() >= 3 and not self:CheckNearby(21, targetName) then return end--You are not near current tank, you're probably 3rd tank on Doom Guards that never taunts massive blast
@@ -501,9 +501,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 181099 then
 		timerMarkofDoomCD:Start(args.sourceGUID)
-		local name = args.destName
-		if not tContains(doomTargets, name) then
-			doomTargets[#doomTargets+1] = name
+		if not tContains(doomTargets, args.destName) then
+			doomTargets[#doomTargets+1] = args.destName
 		end
 		local count = #doomTargets
 		self.vb.DoomTargetCount = self.vb.DoomTargetCount + 1
@@ -523,7 +522,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellMarkOfDoom:Yell(count, count, count)
 		end
 		if self.Options.SetIconOnDoom2 then
-			self:SetIcon(name, count)
+			self:SetIcon(args.destName, count)
 		end
 		updateRangeFrame(self)
 	elseif spellId == 181191 and self:CheckInterruptFilter(args.sourceGUID, true) and self:IsMelee() and self:AntiSpam(2, 5) then--No sense in duplicating code, just use CheckInterruptFilter with arg to skip the filter setting check
@@ -549,7 +548,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.HudMapOnGaze2 then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 8, 8, nil, nil, nil, 0.5, nil, true):Appear():SetLabel(args.destName)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 8, 8, nil, nil, nil, 0.5):Appear():SetLabel(args.destName)
 		end
 	elseif spellId == 181119 then
 		local amount = args.amount or 1

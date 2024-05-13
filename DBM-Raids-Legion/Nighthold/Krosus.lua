@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 --mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
@@ -43,10 +43,10 @@ local timerSlamCD					= mod:NewNextCountTimer(30, 205862, nil, nil, nil, 3, nil,
 local berserkTimer					= mod:NewBerserkTimer(360)--technically not a berserk, but raid instantly wipes during final bridge smash, at 6 minutes.
 
 mod:AddRangeFrameOption(5, 206351)
-mod:AddSetIconOption("SetIconOnAdds", "ej12914", true, true)
+mod:AddSetIconOption("SetIconOnAdds", "ej12914", true, 5)
 mod:AddArrowOption("ArrowOnBeam3", 205368, true)
 
-local burningPitchDebuff = DBM:GetSpellInfo(215944)
+local burningPitchDebuff = DBM:GetSpellName(215944)
 local mobGUIDs = {}
 --Beams (205370/205368 Combined)
 local lolBeamTimers = {5, 15, 30, 30, 23, 27, 30, 44, 14, 16, 14, 16, 22, 60}--LFR & Normal

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AtalDazarTrash", "DBM-Party-BfA", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240109044851")
+mod:SetRevision("20240426175442")
 --mod:SetModelID(47785)
 mod:SetZone(1763)
 
@@ -60,7 +60,7 @@ local timerMendingWardCD			= mod:NewCDNPTimer(13.3, 253517, nil, nil, nil, 4, ni
 local timerFerventStrikeCD			= mod:NewCDNPTimer(12.1, 256138, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--17-19
 local timerFanaticsRageCD			= mod:NewCDNPTimer(20.2, 255824, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerMercilessAssaultCD		= mod:NewCDNPTimer(9.8, 253239, nil, nil, nil, 3)
-local timerBwonsamdisMantleCD		= mod:NewCDNPTimer(26.7, 253544, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--More data needed
+local timerBwonsamdisMantleCD		= mod:NewCDNPTimer(20.5, 253544, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerSoulburnCD				= mod:NewCDNPTimer(13.3, 254959, nil, nil, nil, 3)
 local timerTerrifyingScreechCD		= mod:NewCDNPTimer(18.2, 255041, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Could be 17, watch for debug
 local timerVenomfangStrikeCD		= mod:NewCDNPTimer(15.3, 252687, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -71,7 +71,7 @@ local timerWildThrashCD				= mod:NewCDNPTimer(13.3, 256882, nil, nil, nil, 3)--1
 local timerDinoMightCD				= mod:NewCDNPTimer(14.5, 256849, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--More data needed
 local timerDeadeyeAimCD				= mod:NewCDNPTimer(10.9, 256846, nil, nil, nil, 3)--10.9-20
 
-local taintedBlood = DBM:GetSpellInfo(255558)
+local taintedBlood = DBM:GetSpellName(255558)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt, 8 gtfo
 
@@ -225,6 +225,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

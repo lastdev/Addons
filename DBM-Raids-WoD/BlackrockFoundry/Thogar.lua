@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240428104732")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetUsedIcons(8, 7, 2, 1)
@@ -56,7 +56,7 @@ local timerDelayedSiegeBomb			= mod:NewNextCountTimer(6, 159481)
 local berserkTimer					= mod:NewBerserkTimer(492)
 
 mod:AddInfoFrameOption(176312)
-mod:AddSetIconOption("SetIconOnAdds", "ej9549", false, true)
+mod:AddSetIconOption("SetIconOnAdds", "ej9549", false, 5)
 mod:AddHudMapOption("HudMapForTrain", 176312, false)
 mod:AddBoolOption("HudMapUseIcons")--Depending what is easier to see/understand, i may change this to default off
 mod:AddDropdownOption("TrainVoiceAnnounce", {"LanesOnly", "MovementsOnly", "LanesandMovements"}, "LanesOnly", "misc", nil, 176312)
@@ -65,7 +65,7 @@ mod:AddDropdownOption("InfoFrameSpeed", {"Immediately", "Delayed"}, "Delayed", "
 mod.vb.trainCount = 0
 mod.vb.infoCount = 0
 local GetTime, UnitPosition = GetTime, UnitPosition
-local MovingTrain, Cannon = DBM:GetSpellInfo(176312), DBM:GetSpellInfo(62357)
+local MovingTrain, Cannon = DBM:GetSpellName(176312), DBM:GetSpellName(62357)
 local Reinforcements, ManOArms, Deforester = DBM:EJ_GetSectionInfo(9537), DBM:EJ_GetSectionInfo(9549), DBM:EJ_GetSectionInfo(10329)
 local fakeYellTime = 0
 local bombFrom = nil

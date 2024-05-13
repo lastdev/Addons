@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anub'Rekhan", "DBM-Raids-WoTLK", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240413002358")
 mod:SetCreatureID(15956)
 mod:SetEncounterID(1107)
 mod:SetModelID(15931)
@@ -65,8 +65,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(28785, 54021)
-	and args.auraType == "BUFF" then
+	if args:IsSpellID(28785, 54021) and args:IsDestTypeHostile() then
 		warningLocustFaded:Show()
 		timerLocustIn:Start()
 		warningLocustSoon:Schedule(62)

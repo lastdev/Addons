@@ -3,8 +3,9 @@
 
                                             Loose Pebbles
 
-                                      v1.24 - 12th January 2024
+                                       v1.26 - 20th April 2024
                                 Copyright (C) Taraezor / Chris Birch
+                                         All Rights Reserved
 
                                 ----o----(||)----oo----(||)----o----
 ]]

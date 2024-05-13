@@ -362,7 +362,7 @@ function Scanner.GetResultItem(craftString)
 		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
 		local emptyLink = strfind(itemLink or "", "item::") and true or false
 		itemLink = not emptyLink and itemLink or nil
-		if Environment.IsWrathClassic() then
+		if Environment.IsWrathClassic() or Environment.IsCataClassic() then
 			itemLink = itemLink or GetTradeSkillRecipeLink(spellId) or nil
 			local indirectSpellId = strmatch(itemLink, "enchant:(%d+)")
 			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
@@ -378,7 +378,7 @@ function Scanner.GetResultItem(craftString)
 end
 
 function Scanner.GetVellumItemString(craftString)
-	if Environment.IsWrathClassic() then
+	if Environment.IsWrathClassic() or Environment.IsCataClassic() then
 		local spellId = CraftString.GetSpellId(craftString)
 		spellId = private.classicSpellIdLookup[spellId] or spellId
 		local itemLink = (State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)) or GetTradeSkillRecipeLink(spellId)
@@ -454,7 +454,7 @@ function Scanner.IsEnchant(craftString)
 	else
 		spellId = private.classicSpellIdLookup[spellId] or spellId
 		local itemLink = State.IsClassicCrafting() and GetCraftItemLink(spellId) or GetTradeSkillItemLink(spellId)
-		itemLink = itemLink or (Environment.IsWrathClassic() and GetTradeSkillRecipeLink(spellId)) or nil
+		itemLink = itemLink or ((Environment.IsWrathClassic() or Environment.IsCataClassic()) and GetTradeSkillRecipeLink(spellId)) or nil
 		if not itemLink or not strfind(itemLink, "enchant:") then
 			return false
 		end
@@ -903,7 +903,7 @@ function private.BulkInsertMats(craftString)
 			private.matQuantitiesTemp[matItemString] = quantity
 		end
 	end
-	if Scanner.IsEnchant(craftString) and Environment.IsWrathClassic() then
+	if Scanner.IsEnchant(craftString) and (Environment.IsWrathClassic() or Environment.IsCataClassic()) then
 		-- Add a vellum to the list of mats
 		local vellumItemString = Scanner.GetVellumItemString(craftString)
 		if vellumItemString then

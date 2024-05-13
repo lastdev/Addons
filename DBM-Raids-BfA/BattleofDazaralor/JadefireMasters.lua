@@ -7,7 +7,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(creatureID, creatureID2)
 mod:SetEncounterID(2266, 2285)--2266 horde, 2285 Alliance
 mod:SetUsedIcons(1, 2, 3)
@@ -24,7 +24,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 282037",
 	"SPELL_AURA_REMOVED 282037 285632 286425 286988 284656",
 	"CHAT_MSG_MONSTER_EMOTE",
---	"UNIT_DIED",
+	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
 )
 
@@ -87,7 +87,7 @@ local timerMagmaTrapCD					= mod:NewCDCountTimer(55, 284374, nil, nil, nil, 5)--
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconEmbers", 286988, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconEmbers", 286988, true, 0, {1, 2, 3})
 --mod:AddRangeFrameOption("8/10")
 mod:AddInfoFrameOption(281959, true)
 mod:AddNamePlateOption("NPAuraOnFixate", 268074)
@@ -97,7 +97,7 @@ mod.vb.shieldsActive = false
 mod.vb.embersIcon = 0
 mod.vb.magmaTrapCount = 0
 mod.vb.trapTimer = 50
-local pyroBlast = DBM:GetSpellInfo(286379)
+local pyroBlast = DBM:GetSpellName(286379)
 
 function mod:OnCombatStart(delay)
 	self.vb.shieldsActive = false

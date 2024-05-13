@@ -1,7 +1,6 @@
 # <DBM Mod> PvP
 
-## [r163](https://github.com/DeadlyBossMods/DBM-PvP/tree/r163) (2024-02-10)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r162...r163) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r175](https://github.com/DeadlyBossMods/DBM-PvP/tree/r175) (2024-05-07)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r174...r175) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Fix Blood Moon event errors  
-    Also make timer for STV and Ashenvale event start slightly more accurate  
+- Bump ToCs for 10.2.7  

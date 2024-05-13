@@ -1,6 +1,6 @@
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("tooltipscan", ...) end
+
 
 local ItemProperties = Addon.Systems.ItemProperties
 

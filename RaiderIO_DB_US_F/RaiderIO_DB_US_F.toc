@@ -1,9 +1,10 @@
-## Interface: 100205
+## Interface: 100207
 ## Title: Raider.IO |cffFFFFFFRecruitment|r (Americas)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
+## Version: 10.2.7 (v202405120600)
+## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## Dependencies: RaiderIO
 ## DefaultState: enabled
-## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## X-Type: Recruitment
 ## X-Region: Americas
 ## X-Faction: Both

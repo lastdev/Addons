@@ -1,10 +1,10 @@
 ## Interface: 30403
-## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0LogoutTimer|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cff69ccf0Таймер выхода из системы|r
+## Title: |cffffe00a<|r|cffff7d0aDBM Extra|r|cffffe00a>|r |cff69ccf0Logout Timer|r
+## Title-ruRU: |cffffe00a<|r|cffff7d0aDBM Extra|r|cffffe00a>|r |cff69ccf0Таймер выхода из системы|r
 ## Author: QartemisT
 ## LoadOnDemand: 0
 ## RequiredDeps: DBM-Core
-## Version: r17
+## Version: r18
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER

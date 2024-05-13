@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2337, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(146251, 146253, 146256)--Sister Katherine 146251, Brother Joseph 146253, Laminaria 146256
 mod:SetEncounterID(2280)
 mod:SetBossHPInfoToHighest()
@@ -102,7 +102,7 @@ local timerJoltingVolleyCD				= mod:NewCDCountTimer(43.6, 287169, nil, nil, nil,
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
 mod:AddNamePlateOption("NPAuraOnKepWrapping", 285382)
-mod:AddSetIconOption("SetIconWail", 285350, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconWail", 285350, true, 0, {1, 2, 3})
 mod:AddRangeFrameOption(5, 285118)
 mod:AddInfoFrameOption(284760, true)
 
@@ -113,7 +113,7 @@ mod.vb.joltingCast = 0
 mod.vb.stormsActive = 0
 mod.vb.stormsWailIcon = 1
 mod.vb.voltaicFlashCount = 0
-local freezingTidePod = DBM:GetSpellInfo(285075)
+local freezingTidePod = DBM:GetSpellName(285075)
 local stormTargets = {}
 
 local updateInfoFrame

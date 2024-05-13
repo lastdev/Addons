@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", 1, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(81535)
 mod:SetEncounterID(1770)
 mod:SetReCombatTime(20)
@@ -36,7 +36,7 @@ local timerGrowUntamedMandragoraCD	= mod:NewCDTimer(30, 176013, nil, nil, nil, 1
 --mod:AddReadyCheckOption(37462, false, 100)
 --mod:AddRangeFrameOption(8, 175979)
 
-local debuffName = DBM:GetSpellInfo(176004)
+local debuffName = DBM:GetSpellName(176004)
 local debuffFilter
 do
 	debuffFilter = function(uId)

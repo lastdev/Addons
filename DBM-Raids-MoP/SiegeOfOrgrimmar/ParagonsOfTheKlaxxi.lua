@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -126,7 +126,7 @@ local timerGouge					= mod:NewTargetTimer(10, 143939, nil, "Tank", nil, 5)
 local timerReaveCD					= mod:NewCDTimer(33, 148676, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 local timerDFACD					= mod:NewCDTimer(34, 142232, nil, nil, nil, 3)--34-43 variation
 --Xaril the Poisoned-Mind
-local timerToxicCatalystCD			= mod:NewCDTimer(33, "ej8036", nil, nil, nil, 3)
+local timerToxicCatalystCD			= mod:NewCDTimer(31.4, "ej8036", nil, nil, nil, 3)
 --Kaz'tik the Manipulator
 local timerMesmerizeCD				= mod:NewCDTimer(34, 142671, nil, nil, nil, 3)
 --Korven the Prime
@@ -138,11 +138,11 @@ local timerEncaseInAmberCD			= mod:NewCDTimer(30, 142564, nil, nil, nil, 5, nil,
 local timerInsaneCalculation		= mod:NewBuffActiveTimer(15, 142808)
 local timerInsaneCalculationCD		= mod:NewCDTimer(25, 142416, nil, nil, nil, 3)--25 is minimum but variation is wild (25-50 second variation)
 --Ka'roz the Locust
-local timerFlashCD					= mod:NewCDTimer(62, 143701, nil, nil, nil, 3)
+local timerWhirlingCD				= mod:NewCDTimer(62, 143701, nil, nil, nil, 3)
 local timerWhirling					= mod:NewBuffFadesTimer(5, 143701, nil, false)
 local timerHurlAmberCD				= mod:NewCDTimer(62, 143759, nil, nil, nil, 3)--TODO< verify cd on spell itself. in my logs he died after only casting it once every time.
 --Skeer the Bloodseeker
-local timerBloodlettingCD			= mod:NewCDTimer(35, 143280, nil, nil, nil, 1)--35-65 variable. most of the time it's around 42 range
+local timerBloodlettingCD			= mod:NewCDTimer(32.2, 143280, nil, nil, nil, 1)--32.2-65 variable. most of the time it's around 42 range
 --Rik'kal the Dissector
 local timerMutate					= mod:NewBuffFadesTimer(20, 143337, nil, false)
 local timerMutateCD					= mod:NewCDCountTimer(31.5, 143337, nil, nil, nil, 3)
@@ -159,27 +159,27 @@ mod:AddSetIconOption("SetIconOnAim", 142948, false)
 mod:AddSetIconOption("SetIconOnMesmerize", 142671, false)
 mod:AddArrowOption("AimArrow", 142948, false, true)
 
-local calculatingDude, readyToFight = DBM:EJ_GetSectionInfo(8012), DBM:GetSpellInfo(143542)
-local vulnerable1, vulnerable2, vulnerable3, vulnerable4 = DBM:GetSpellInfo(143279), DBM:GetSpellInfo(143275), DBM:GetSpellInfo(142929), DBM:GetSpellInfo(142931)
-local catalystBlue, catalystRed, catalystYellow = DBM:GetSpellInfo(142532), DBM:GetSpellInfo(142533), DBM:GetSpellInfo(142534)
-local RedDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143620), (DBM:GetSpellInfo(143627))}
-local PurpleDebuffs = {DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143621), (DBM:GetSpellInfo(143628))}
-local BlueDebuffs = {DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143622), (DBM:GetSpellInfo(143629))}
-local GreenDebuffs = {DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143630))}
-local YellowDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143614), DBM:GetSpellInfo(143619), DBM:GetSpellInfo(143624), (DBM:GetSpellInfo(143631))}
+local calculatingDude, readyToFight = DBM:EJ_GetSectionInfo(8012), DBM:GetSpellName(143542)
+local vulnerable1, vulnerable2, vulnerable3, vulnerable4 = DBM:GetSpellName(143279), DBM:GetSpellName(143275), DBM:GetSpellName(142929), DBM:GetSpellName(142931)
+local catalystBlue, catalystRed, catalystYellow = DBM:GetSpellName(142532), DBM:GetSpellName(142533), DBM:GetSpellName(142534)
+local RedDebuffs = {DBM:GetSpellName(143605), DBM:GetSpellName(143610), DBM:GetSpellName(143615), DBM:GetSpellName(143620), (DBM:GetSpellName(143627))}
+local PurpleDebuffs = {DBM:GetSpellName(143606), DBM:GetSpellName(143611), DBM:GetSpellName(143616), DBM:GetSpellName(143621), (DBM:GetSpellName(143628))}
+local BlueDebuffs = {DBM:GetSpellName(143607), DBM:GetSpellName(143612), DBM:GetSpellName(143617), DBM:GetSpellName(143622), (DBM:GetSpellName(143629))}
+local GreenDebuffs = {DBM:GetSpellName(143608), DBM:GetSpellName(143613), DBM:GetSpellName(143618), DBM:GetSpellName(143623), (DBM:GetSpellName(143630))}
+local YellowDebuffs = {DBM:GetSpellName(143610), DBM:GetSpellName(143614), DBM:GetSpellName(143619), DBM:GetSpellName(143624), (DBM:GetSpellName(143631))}
 
-local SwordDebuffs = {DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), (DBM:GetSpellInfo(143609))}
-local DrumDebuffs = {DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), (DBM:GetSpellInfo(143614))}
-local BombDebuffs = {DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), (DBM:GetSpellInfo(143619))}
-local MantidDebuffs = {DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), (DBM:GetSpellInfo(143624))}
-local StaffDebuffs = {DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))}
+local SwordDebuffs = {DBM:GetSpellName(143605), DBM:GetSpellName(143606), DBM:GetSpellName(143607), DBM:GetSpellName(143608), (DBM:GetSpellName(143609))}
+local DrumDebuffs = {DBM:GetSpellName(143610), DBM:GetSpellName(143611), DBM:GetSpellName(143612), DBM:GetSpellName(143613), (DBM:GetSpellName(143614))}
+local BombDebuffs = {DBM:GetSpellName(143615), DBM:GetSpellName(143616), DBM:GetSpellName(143617), DBM:GetSpellName(143618), (DBM:GetSpellName(143619))}
+local MantidDebuffs = {DBM:GetSpellName(143620), DBM:GetSpellName(143621), DBM:GetSpellName(143622), DBM:GetSpellName(143623), (DBM:GetSpellName(143624))}
+local StaffDebuffs = {DBM:GetSpellName(143627), DBM:GetSpellName(143628), DBM:GetSpellName(143629), DBM:GetSpellName(143630), (DBM:GetSpellName(143631))}
 
 local AllDebuffs = {
-	DBM:GetSpellInfo(143605), DBM:GetSpellInfo(143606), DBM:GetSpellInfo(143607), DBM:GetSpellInfo(143608), DBM:GetSpellInfo(143609),
-	DBM:GetSpellInfo(143610), DBM:GetSpellInfo(143611), DBM:GetSpellInfo(143612), DBM:GetSpellInfo(143613), DBM:GetSpellInfo(143614),
-	DBM:GetSpellInfo(143615), DBM:GetSpellInfo(143616), DBM:GetSpellInfo(143617), DBM:GetSpellInfo(143618), DBM:GetSpellInfo(143619),
-	DBM:GetSpellInfo(143620), DBM:GetSpellInfo(143621), DBM:GetSpellInfo(143622), DBM:GetSpellInfo(143623), DBM:GetSpellInfo(143624),
-	DBM:GetSpellInfo(143627), DBM:GetSpellInfo(143628), DBM:GetSpellInfo(143629), DBM:GetSpellInfo(143630), (DBM:GetSpellInfo(143631))
+	DBM:GetSpellName(143605), DBM:GetSpellName(143606), DBM:GetSpellName(143607), DBM:GetSpellName(143608), DBM:GetSpellName(143609),
+	DBM:GetSpellName(143610), DBM:GetSpellName(143611), DBM:GetSpellName(143612), DBM:GetSpellName(143613), DBM:GetSpellName(143614),
+	DBM:GetSpellName(143615), DBM:GetSpellName(143616), DBM:GetSpellName(143617), DBM:GetSpellName(143618), DBM:GetSpellName(143619),
+	DBM:GetSpellName(143620), DBM:GetSpellName(143621), DBM:GetSpellName(143622), DBM:GetSpellName(143623), DBM:GetSpellName(143624),
+	DBM:GetSpellName(143627), DBM:GetSpellName(143628), DBM:GetSpellName(143629), DBM:GetSpellName(143630), (DBM:GetSpellName(143631))
 }
 
 local FlavorTable = {
@@ -247,16 +247,16 @@ local function CheckBosses(self)
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
 		--Only 3 bosses activate on pull, however now the inactive or (next boss to activate) also fires IEEU. As such, we have to filter that boss by scaning for readytofight. Works well though.
-		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] and not DBM:UnitBuff(unitID, readyToFight) then
+		if unitGUID and UnitExists(unitID) and not activeBossGUIDS[unitGUID] and not DBM:UnitBuff(unitID, readyToFight) then
 			activeBossGUIDS[unitGUID] = true
 			activatedTargets[#activatedTargets + 1] = UnitName(unitID)
 			--Activation Controller
 			local cid = self:GetCIDFromGUID(unitGUID)
 			if cid == 71152 then--Skeer the Bloodseeker
-				timerBloodlettingCD:Start(5)--5-6
+				timerBloodlettingCD:Start(3.8)--3.8-6
 				if DBM:UnitDebuff("player", vulnerable1) then vulnerable = true end
 			elseif cid == 71158 then--Rik'kal the Dissector
-				timerInjectionCD:Start(8)
+				timerInjectionCD:Start(7.5)
 				timerMutateCD:Start(23, 1)
 				if DBM:UnitDebuff("player", vulnerable2) then vulnerable = true end
 			elseif cid == 71153 then--Hisek the Swarmkeeper
@@ -282,9 +282,9 @@ local function CheckBosses(self)
 			elseif cid == 71160 then--Iyyokuk the Lucid
 				timerInsaneCalculationCD:Start()
 			elseif cid == 71154 then--Ka'roz the Locust
-				timerFlashCD:Start(14)--In final LFR test, he didn't cast this for 20 seconds. TODO check this change
-				timerHurlAmberCD:Start(44)
-			end--]]
+				timerWhirlingCD:Start(9.8)
+				timerHurlAmberCD:Start(41.3)
+			end
 		end
 	end
 	if #activatedTargets >= 1 then
@@ -549,7 +549,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 143709 then
 		self.vb.flashActive = true
 		specWarnFlashCast:Show()
-		timerFlashCD:Start()
+		timerWhirlingCD:Start()
 		self.vb.whirlCast = 0
 		self.vb.whirlTime = GetTime()
 		lastWhirl = nil
@@ -624,7 +624,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 142671 then
 		warnMesmerize:Show(args.destName)
 		timerMesmerizeCD:Start()
-		if args.IsPlayer() then
+		if args:IsPlayer() then
 			specWarnMesmerize:Show()
 			yellMesmerize:Yell()
 		else
@@ -641,7 +641,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerEncaseInAmberCD:Start()
 	elseif spellId == 143939 then
 		timerGouge:Start(args.destName)
-		if args.IsPlayer() then
+		if args:IsPlayer() then
 			specWarnGouge:Show()
 		else
 			specWarnGougeOther:Show(args.destName)
@@ -656,7 +656,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 143701 then
-		if args.IsPlayer() then
+		if args:IsPlayer() then
 			timerWhirling:Start()
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
@@ -683,11 +683,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		warnMutate:CombinedShow(0.5, self.vb.mutateCount, args.destName)
-		if args.IsPlayer() then
+		if args:IsPlayer() then
 			specWarnMutate:Show()
 			timerMutate:Start()
 		end
-	elseif spellId == 143358 and args.IsPlayer() then
+	elseif spellId == 143358 and args:IsPlayer() then
 		specWarnParasiteFixate:Show()
 	elseif spellId == 142948 then
 		self.vb.aimCount = self.vb.aimCount + 1
@@ -702,7 +702,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerAim:Start(nil, args.destName)
 		end--]]
 		timerAimCD:Start(nil, self.vb.aimCount+1)
-		if args.IsPlayer() then
+		if args:IsPlayer() then
 			specWarnAim:Show()
 			yellAim:Yell()
 		else
@@ -775,7 +775,7 @@ function mod:UNIT_DIED(args)
 		timerInsaneCalculationCD:Cancel()
 	elseif cid == 71154 then--Ka'roz the Locust
 		self:StopRepeatedScan("FlashScan")
-		timerFlashCD:Cancel()
+		timerWhirlingCD:Cancel()
 		timerHurlAmberCD:Cancel()
 	elseif cid == 71152 then--Skeer the Bloodseeker
 		timerBloodlettingCD:Cancel()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(737, "DBM-Raids-MoP", 4, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 
@@ -91,11 +91,7 @@ local willNumber = 100--Last warned player will power number (not same as actual
 local lastStrike = 0
 local amDestabalizeStack = 0
 local amWarnCount = 0
-local Totems = nil
-local Guardians = nil
-local Pets = nil
-local TPTPNormal = nil
-local amberExplosion = DBM:GetSpellInfo(122402)
+local amberExplosion = DBM:GetSpellName(122402)
 local Monstrosity = DBM:EJ_GetSectionInfo(6254)
 local MutatedConstruct = DBM:EJ_GetSectionInfo(6249)
 local canInterrupt = {}
@@ -144,20 +140,8 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(L.WillPower)
-		DBM.InfoFrame:SetSortingAsc(true)
+		DBM.InfoFrame:SetSortingAsc()
 		DBM.InfoFrame:Show(5, "playerpower", 1, ALTERNATE_POWER_INDEX)
-	end
-end
-
-local function delayNamePlateRestore()
-	if Totems then
-		SetCVar("nameplateShowEnemyTotems", 1)
-	end
-	if Guardians then
-		SetCVar("nameplateShowEnemyGuardians", 1)
-	end
-	if Pets then
-		SetCVar("nameplateShowEnemyPets", 1)
 	end
 end
 

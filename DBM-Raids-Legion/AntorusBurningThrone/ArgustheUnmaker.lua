@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2031, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(124828)
 mod:SetEncounterID(2092)
 mod:SetBossHPInfoToHighest()--Because of heal on mythic
@@ -118,7 +118,7 @@ local timerCosmicRayCD				= mod:NewCDTimer(19.9, 252729, nil, nil, nil, 3)--All 
 local timerCosmicBeaconCD			= mod:NewCDTimer(19.9, 252616, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--All adds seem to cast it at same time, so one timer for all
 local timerDiscsofNorg				= mod:NewCastTimer(12, 252516, nil, nil, nil, 6)
 
-mod:AddSetIconOption("SetIconOnVulnerability", 255418, true, true)--1-7
+mod:AddSetIconOption("SetIconOnVulnerability", 255418, true, 5)--1-7
 mod:AddNamePlateOption("NPAuraOnInevitability", 253021)
 mod:AddNamePlateOption("NPAuraOnCosmosSword", 255496)
 mod:AddNamePlateOption("NPAuraOnEternalBlades", 255478)
@@ -151,7 +151,7 @@ local specWarnDeadlyScytheTaunt		= mod:NewSpecialWarningTaunt(258039, nil, nil, 
 local specWarnReorgModule			= mod:NewSpecialWarningSwitchCount(256389, "RangedDps", nil, nil, 1, 2)--Ranged only?
 
 local timerDeadlyScytheCD			= mod:NewCDTimer(5.5, 258039, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerReorgModuleCD			= mod:NewCDCountTimer(48.1, 256389, nil, nil, nil, 1, nil, nil, nil, not mod:IsTank() and 2, 4)
+local timerReorgModuleCD			= mod:NewCDCountTimer(48.1, 256389, nil, nil, nil, 1, nil, nil, nil, not mod:IsTank() and 2 or nil, 4)
 
 local playerAvatar = false
 mod.vb.phase = 1
@@ -881,7 +881,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 end
 
 --RL can run this macro to auto release everyone in raid any time they hit it
---/run DBM:GetModByName("2031"):SendSync("Release")
+--/run DBM:GetModByName("2031"):SendReleaseSync()
+function mod:SendReleaseSync()
+	self:SendSync("Release")
+end
+
 function mod:OnSync(msg, sender)
 	if not self:IsInCombat() then return end
 	if msg == "Release" and DBM:GetRaidRank(sender) == 2 then

@@ -1,6 +1,9 @@
-# <DBM Mod> Raids (BC)
+# DBM - The Burning Crusade mods
 
-## [r710](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r710) (2024-01-28)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r709...r710) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
+## [r2](https://github.com/DeadlyBossMods/DBM-BurningCrusade/tree/r2) (2024-05-11)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BurningCrusade/compare/r1...r2) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BurningCrusade/releases)
 
-- Gelihast: Add timer for March of Murlocs (#45)  
+- here too  
+- actually specify a valid branch  
+- fix typo  
+- minor tweak  

@@ -1,8 +1,14 @@
+== v2.12 - 20th April 2024
+* TOC update to 10.2.7
+
+== v2.11 - 18th March 2024
+* TOC update to 10.2.6
+
 == v2.10 - 13th February 2024
 * Added that missing 10th flower from Eversong. Finally found it!
 
 == v2.09 - 12th January 2024
-* TOC Bump to 10.2.5
+* TOC update to 10.2.5
 
 == v2.08 - 1st December 2023
 * Small additions to Northrend
@@ -10,14 +16,14 @@
 * Penance and Shadowstrike added (SoD)
 
 == v2.07 - 3rd November 2023
-* TOC bump to 10.2.0
+* TOC update to 10.2.0
 * Reworked pin scaling
 
 == v2.06 - 18th September 2023
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 
 == v2.05 - 28th June 2023
-* TOC bump to 10.1.5
+* TOC update to 10.1.5
 
 == v2.04 - 21st June 2023
 * Bug fix. Just noticed a missing scaling paramter for the 15th selectable icon
@@ -30,7 +36,7 @@
 * Added an icon to the TOC file
 
 == v2.01 - 24th April 2023
-* TOC bump to 10.1.0
+* TOC update to 10.1.0
 
 == v2.00 - 15th April 2022
 * All flowers, quests, achievement pins are now visible in adjacent zones of a World Mao's zone!

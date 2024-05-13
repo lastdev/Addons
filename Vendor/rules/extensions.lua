@@ -199,11 +199,9 @@ local function addOnRuleUpdateCallback(ext, cbdef)
     local function fn()
 
         local result, msg = xpcall(cbdef, CallErrorHandler);
-        --[===[@debug@
         if (not result) then
 
         end
-        --@end-debug@]===]
     end
 
     table.insert(ExtensionCallbacks, fn);

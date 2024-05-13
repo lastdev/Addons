@@ -1,0 +1,83 @@
+## Interface: 100207
+## X-Min-Interface: 90005
+## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (BfA)|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cffff6010Рейды (Битва за Азерот)|r
+## Author: MysticalOS
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMRaidsBfA_AllSavedVars
+## SavedVariablesPerCharacter: DBMRaidsBfA_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Category: BFA
+## X-DBM-StatTypes: lfr,normal,heroic,mythic
+## X-DBM-Mod-SubCategoriesID: 2217, 2164, 2096, 2070, 1861
+## X-DBM-Mod-Name: Raids (BfA)
+## X-DBM-Mod-Name-ruRU: Рейды (Битва за Азерот)
+## X-DBM-Mod-Sort: 401
+## X-DBM-Mod-MapID: 2217, 2164, 2096, 2070, 1861
+## X-DBM-Mod-MinCoreRevision: 20230617000000
+## X-DBM-Mod-MinExpansion: 7
+## X-Curse-Project-ID: 420275
+## X-WoWI-ID: 25779
+## X-Wago-ID: RXKqxj6y
+## Version: r32
+
+localization.en.lua
+localization.de.lua
+localization.kr.lua
+localization.ru.lua
+localization.cn.lua
+localization.es.lua
+localization.tw.lua
+localization.it.lua
+
+Nyalotha\Wrathion.lua
+Nyalotha\Maut.lua
+Nyalotha\TheProphetSkitra.lua
+Nyalotha\DarkInquisitorXanesh.lua
+Nyalotha\TheHivemind.lua
+Nyalotha\ShadharTheInsatiable.lua
+Nyalotha\Drestagath.lua
+Nyalotha\Vexiona.lua
+Nyalotha\RadenTheDespoiled.lua
+Nyalotha\IlgynothCorruptionReborn.lua
+Nyalotha\CarapaceofNZoth.lua
+Nyalotha\NZothTheCorruptor.lua
+Nyalotha\NyalothaTrash.lua
+
+EternalPalace\AbyssalCommanderSivara.lua
+EternalPalace\RadianceofAzshara.lua
+EternalPalace\BlackwaterBehemoth.lua
+EternalPalace\LadyPriscillaAshvane.lua
+EternalPalace\Orgozoa.lua
+EternalPalace\TheQueensCourt.lua
+EternalPalace\Zaqul.lua
+EternalPalace\QueenAzshara.lua
+EternalPalace\EternalPalaceTrash.lua
+
+CrucibleofStorms\RestlessCabal.lua
+CrucibleofStorms\Uunat.lua
+CrucibleofStorms\CrucibleofStormsTrash.lua
+
+BattleofDazaralor\ChampionofLight.lua
+BattleofDazaralor\JadefireMasters.lua
+BattleofDazaralor\Grong.lua
+BattleofDazaralor\Opulence.lua
+BattleofDazaralor\ConclaveoftheChosen.lua
+BattleofDazaralor\Rastakhan.lua
+BattleofDazaralor\Mekkatorque.lua
+BattleofDazaralor\StormwallBlockade.lua
+BattleofDazaralor\Jaina.lua
+BattleofDazaralor\ZuldazarRaidTrash.lua
+
+Uldir\Taloc.lua
+Uldir\Mother.lua
+Uldir\FetidDevourer.lua
+Uldir\Zekvhozj.lua
+Uldir\Vectis.lua
+Uldir\Zul.lua
+Uldir\Mythrax.lua
+Uldir\Ghuun.lua
+Uldir\UldirTrash.lua

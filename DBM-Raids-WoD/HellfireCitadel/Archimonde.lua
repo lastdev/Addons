@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1438, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240428104732")
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -107,7 +107,7 @@ local timerLightCD					= mod:NewNextTimer(10, 183963, nil, nil, nil, 5)
 local timerShadowBlastCD			= mod:NewCDTimer(7.3, 183864, nil, "Tank", nil, 5)
 --Phase 2: Hand of the Legion
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
-local timerShackledTormentCD		= mod:NewCDCountTimer(31.5, 184931, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3, 3)
+local timerShackledTormentCD		= mod:NewCDCountTimer(31.5, 184931, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3 or nil, 3)
 local timerWroughtChaosCD			= mod:NewCDTimer(51.7, 184265, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 --Phase 2.5
 local timerFelborneOverfiendCD		= mod:NewNextCountTimer(44.3, "ej11603", nil, nil, nil, 1, 186662)
@@ -130,10 +130,10 @@ local timerSeethingCorruptionCD		= mod:NewNextCountTimer(107, 190506, 66911, nil
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
 mod:AddRangeFrameOption("6/8/10")
-mod:AddSetIconOption("SetIconOnFelBurst", 183634, true)
-mod:AddSetIconOption("SetIconOnShackledTorment2", 184964, false)
-mod:AddSetIconOption("SetIconOnMarkOfLegion2", 187050, true)
-mod:AddSetIconOption("SetIconOnInfernals2", "ej11618", false, true)
+mod:AddSetIconOption("SetIconOnFelBurst", 183634, true, 0)
+mod:AddSetIconOption("SetIconOnShackledTorment2", 184964, false, 0)
+mod:AddSetIconOption("SetIconOnMarkOfLegion2", 187050, true, 0)
+mod:AddSetIconOption("SetIconOnInfernals2", "ej11618", false, 5)
 mod:AddHudMapOption("HudMapOnFelBurst2", 183634, "Ranged")
 mod:AddHudMapOption("HudMapOnShackledTorment2", 184964, true)
 mod:AddHudMapOption("HudMapOnWrought", 184265)
@@ -183,7 +183,7 @@ local felburstTargets = {}
 local playerName = UnitName("player")
 local playerBanished = false
 local UnitDetailedThreatSituation, UnitClass, UnitIsUnit = UnitDetailedThreatSituation, UnitClass, UnitIsUnit
-local NetherBanish, shackledDebuff, felburstDebuff, markOfLegionDebuff = DBM:GetSpellInfo(186961), DBM:GetSpellInfo(184964), DBM:GetSpellInfo(183634), DBM:GetSpellInfo(187050)
+local NetherBanish, shackledDebuff, felburstDebuff, markOfLegionDebuff = DBM:GetSpellName(186961), DBM:GetSpellName(184964), DBM:GetSpellName(183634), DBM:GetSpellName(187050)
 local netherFilter, markOfLegionFilter
 do
 	netherFilter = function(uId)
@@ -451,7 +451,7 @@ local function showMarkOfLegion(self, spellName)
             end
 		end
 		if self.Options.HudMapMarkofLegion2 then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(1870502, "party", playerName, 0.9, 12, nil, nil, nil, 1, nil, false):Appear()
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(1870502, "party", playerName, 0.9, 12, nil, nil, nil, 1):Appear()
 		end
 	end
 end
@@ -512,7 +512,7 @@ local function breakShackles(self, spellName)
 		end
 	end
 	if self.Options.HudMapOnShackledTorment2 and self:IsMythic() then
-		DBM.HudMap:RegisterRangeMarkerOnPartyMember(1849642, "party", playerName, 0.9, 30, nil, nil, nil, 1, nil, false):Appear()
+		DBM.HudMap:RegisterRangeMarkerOnPartyMember(1849642, "party", playerName, 0.9, 30, nil, nil, nil, 1):Appear()
 		for i = 1, #shacklesTargets do
 			local name = shacklesTargets[i]
 			if not name then break end
@@ -947,18 +947,18 @@ function mod:SPELL_AURA_APPLIED(args)
 					warnWroughtChaos:CombinedShow(0.1, self.vb.wroughtWarned, args.sourceName)
 					warnWroughtChaos:CombinedShow(0.1, self.vb.wroughtWarned, args.destName)
 					if UnitIsUnit("player", sourceUId) then
-						DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger (no label on player dot)
+						DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.7, time, nil, nil, nil, 1):Appear()--Players own dot bigger (no label on player dot)
 						if self.Options.NamesWroughtHud then
-							DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
+							DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
 						else
-							DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear()
+							DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5):Appear()
 						end
 					else
-						DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.7, time, nil, nil, nil, 1, nil, false):Appear()--Players own dot bigger (no label on player dot)
+						DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.7, time, nil, nil, nil, 1):Appear()--Players own dot bigger (no label on player dot)
 						if self.Options.NamesWroughtHud then
-							DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
+							DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
 						else
-							DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear()
+							DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5):Appear()
 						end
 					end
 					--create line
@@ -970,11 +970,11 @@ function mod:SPELL_AURA_APPLIED(args)
 				else--red lines for non player lines
 					--Create Points
 					if self.Options.NamesWroughtHud then
-						DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
-						DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
+						DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5):Appear():SetLabel(args.sourceName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
+						DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5):Appear():SetLabel(args.destName, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
 					else
-						DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear()
-						DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5, nil, false):Appear()
+						DBM.HudMap:RegisterRangeMarkerOnPartyMember(186123, "party", args.sourceName, 0.35, time, nil, nil, nil, 0.5):Appear()
+						DBM.HudMap:RegisterRangeMarkerOnPartyMember(185014, "party", args.destName, 0.35, time, nil, nil, nil, 0.5):Appear()
 					end
 					--Create Line
 					if self.Options.ExtendWroughtHud3 then

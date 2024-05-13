@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("Grobbulus", "DBM-Raids-Vanilla", 1)
+local mod	= DBM:NewMod("GrobbulusVanilla", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(15931)
 mod:SetEncounterID(1111)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -25,7 +25,7 @@ local timerInjection	= mod:NewTargetTimer(10, 28169, nil, nil, nil, 3)
 local timerCloud		= mod:NewCDTimer(15, 28240, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local enrageTimer		= mod:NewBerserkTimer(720)
 
-mod:AddSetIconOption("SetIconOnInjectionTarget", 28169, false, false, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnInjectionTarget", 28169, false, 0, {1, 2, 3, 4})
 
 local mutateIcons = {}
 

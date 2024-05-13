@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20231110035626")
+mod:SetRevision("20240502130901")
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733, 2467)
 mod:SetModelID(20023)
@@ -57,7 +57,7 @@ local timerShieldCD		= mod:NewCDTimer(60, 36815, nil, nil, nil, 4)
 local timerGravityCD	= mod:NewNextTimer(92, 35941, nil, nil, nil, 6)
 local timerGravity		= mod:NewBuffActiveTimer(32, 35941, nil, nil, nil, 6)
 
-mod:AddSetIconOption("MCIcon", 36797, true, false, {8, 7, 6})
+mod:AddSetIconOption("MCIcon", 36797, true, 0, {8, 7, 6})
 mod:AddBoolOption("GazeIcon", false)
 --mod:AddSetIconOption("GazeIcon", 38280, false, false, {1})--Problem with no auto localized spellID to use
 mod:AddRangeFrameOption(10, 37018)
@@ -218,7 +218,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 		else
 			warnGaze:Show(target)
 		end
-		if self.Options.GazeIcon then
+		if target and self.Options.GazeIcon then
 			self:SetIcon(target, 1, 15)
 		end
 	end

@@ -1868,7 +1868,7 @@ local core do
 				local mv = max(0, 3 + propsHandle.entryHeight * #data - sf:GetHeight())
 				bar:SetMinMaxValues(0, mv > 10 and mv or 0)
 				bar:SetValueStep(propsHandle.entryHeight)
-				bar:GetScript("OnValueChanged")(bar, reset and 0 or bar:GetValue(), false)
+				bar:SetValue(reset and 0 or bar:GetValue(), true)
 			else
 				bar:SetMinMaxValues(0, 0)
 			end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetUsedIcons(1)
@@ -84,7 +84,7 @@ mod.vb.toxicSliceCooldown = 26.5--Confirmed still true
 mod.vb.cleanerCount = 0
 mod.vb.maniacCount = 0
 mod.vb.caretakerCount = 0
-local spellName = DBM:GetSpellInfo(214573)
+local spellName = DBM:GetSpellName(214573)
 
 local seenMobs = {}
 
@@ -283,11 +283,11 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			seenMobs[GUID] = true
 			local cid = self:GetCIDFromGUID(GUID)
 			if cid == 108144 then--Maniac Imprint
-				--local name = DBM:GetSpellInfo(206557)
+				--local name = DBM:GetSpellName(206557)
 				specWarnEchoDuder:Show(name)
 				specWarnEchoDuder:Play("bigmob")
 			elseif cid == 108303 then--Caretaker Imprint
-				--local name = DBM:GetSpellInfo(206560)
+				--local name = DBM:GetSpellName(206560)
 				specWarnEchoDuder:Show(name)
 				specWarnEchoDuder:Play("bigmob")
 				timerToxicSliceCD:Start(16, "echo")

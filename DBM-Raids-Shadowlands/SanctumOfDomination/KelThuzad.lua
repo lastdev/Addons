@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2440, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240115231745")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(175559)
 mod:SetEncounterID(2422)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -71,10 +71,10 @@ local timerGlacialWrathCD							= mod:NewCDTimer(109.9, 353808, nil, nil, nil, 3
 local timerOblivionsEchoCD							= mod:NewCDTimer(37, 347292, nil, nil, nil, 3)--37-60, 48.6 is the good median but it truly depends on dps
 local timerFrostBlastCD								= mod:NewCDTimer(40.1, 348756, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 
-mod:AddSetIconOption("SetIconOnGlacialWrath", 353808, false, false, {1, 2, 3, 4})--Sets icons on players (can be used with spike marking)
-mod:AddSetIconOption("SetIconOnGlacialSpike", "ej23449", true, true, {1, 2, 3, 4})--Sets icons on spikes spawned by players (can be used with player market)
-mod:AddSetIconOption("SetIconOnEcho", 347292, false, false, {1, 2, 3, 4})--Off by default since it conflicts with wrath icons
-mod:AddSetIconOption("SetIconOnShards", "ej23224", true, true, {4, 5, 6, 7, 8})--5 shards mythic (shares icons with reaper but rarely at same time)
+mod:AddSetIconOption("SetIconOnGlacialWrath", 353808, false, 0, {1, 2, 3, 4})--Sets icons on players (can be used with spike marking)
+mod:AddSetIconOption("SetIconOnGlacialSpike", "ej23449", true, 5, {1, 2, 3, 4})--Sets icons on spikes spawned by players (can be used with player market)
+mod:AddSetIconOption("SetIconOnEcho", 347292, false, 0, {1, 2, 3, 4})--Off by default since it conflicts with wrath icons
+mod:AddSetIconOption("SetIconOnShards", "ej23224", true, 5, {4, 5, 6, 7, 8})--5 shards mythic (shares icons with reaper but rarely at same time)
 mod:AddNamePlateOption("NPAuraOnNecroticEmpowerment", 355948)
 --Stage Two: The Phylactery Opens
 mod:AddOptionLine(DBM:EJ_GetSectionInfo(22885), "announce")
@@ -83,7 +83,7 @@ local warnDemolish									= mod:NewCastAnnounce(349805, 2)
 
 local timerVengefulDestruction						= mod:NewCastTimer(23, 352293, nil, nil, nil, 6)
 
-mod:AddSetIconOption("SetIconOnReaper", "ej23423", true, true, {6, 7, 8})--Shares icons with Shards, but rarely at same time
+mod:AddSetIconOption("SetIconOnReaper", "ej23423", true, 5, {6, 7, 8})--Shares icons with Shards, but rarely at same time
 mod:AddNamePlateOption("NPAuraOnFixate", 355389)
 ----Remnant of Kel'Thuzad
 mod:AddOptionLine(DBM:EJ_GetSectionInfo(23431), "announce")

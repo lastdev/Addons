@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1819, "DBM-Raids-Legion", 4, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(114263, 114361, 114360)--114263 Odyn, 114361 Hymdall, 114360 Hyrja
 mod:SetEncounterID(1958)
 --mod:SetBossHPInfoToHighest()
@@ -116,7 +116,7 @@ local expelLightTimers = {25.0, 20.0, 15.0, 30.0, 20.0}
 
 local debuffFilter
 local playerDebuff = nil
-local spellName, protected, expelLight, stormOfJustice = DBM:GetSpellInfo(231311), DBM:GetSpellInfo(229584), DBM:GetSpellInfo(228028), DBM:GetSpellInfo(227807)
+local spellName, protected, expelLight, stormOfJustice = DBM:GetSpellName(231311), DBM:GetSpellName(229584), DBM:GetSpellName(228028), DBM:GetSpellName(227807)
 do
 	debuffFilter = function(uId)
 		if not playerDebuff then return true end

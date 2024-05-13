@@ -1,5 +1,11 @@
+== v1.26 - 20th April 2024
+* TOC version update to 10.2.7
+
+== v1.25 - 18th March 2024
+* TOC version update to 10.2.6
+
 == v1.24 - 12th January 2024
-* TOC version bump to 10.2.5
+* TOC version update to 10.2.5
 
 == v1.23 - 11th December 2023
 * Felstriker server added
@@ -14,14 +20,14 @@
 * Removed IsControlKeyDown localisation as it's not used
 
 == v1.20 - 28th October 2023
-* TOC bump for 10.2.0
+* TOC update for 10.2.0
 
 == v1.19 - 14th October 2023
 * Added better scaling for pins to ensure uniformity of size when switching between pin textures
 * Standardising of code between AddOns to make maintenance easier
-
+0
 == v1.18 - 18th September 2023
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 
 == v1.17 - 28th June 2023
 * Support WoW 10.1.5
@@ -35,7 +41,7 @@
 * Removed unnecessary print to console code
 
 == v1.14 - 24th April 2023
-* TOC bumped to 10.1.0
+* TOC updateed to 10.1.0
 
 == v1.13 - 21st March 2023
 * 10.0.07 TOC file update

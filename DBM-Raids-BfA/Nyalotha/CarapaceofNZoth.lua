@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2366, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(157439)--Fury of N'Zoth
 mod:SetEncounterID(2337)
 mod:SetUsedIcons(1, 2, 3)
@@ -69,7 +69,7 @@ local timerMentalDecayCD					= mod:NewCDTimer(21, 313364, nil, nil, nil, 3)
 local timerGrowthCoveredTentacleCD			= mod:NewNextCountTimer(60, 307131, nil, nil, nil, 1, nil, nil, nil, 1, 3)
 local timerMandibleSlamCD					= mod:NewCDTimer(12.7, 315947, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)--12.7
 
-mod:AddSetIconOption("SetIconAdaptiveMembrane", 316848, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconAdaptiveMembrane", 316848, true, 0, {1, 2, 3})
 mod:AddNamePlateOption("NPAuraOnMembrane2", 306990, false)
 ----Gaze of Madness
 local specWarnGazeOfMadness					= mod:NewSpecialWarningSwitch("ej20565", "Dps", nil, nil, 1, 2)
@@ -179,7 +179,7 @@ function mod:OnCombatStart(delay)
 	end
 	berserkTimer:Start(self:IsEasy() and 840 or 780)
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(307831))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(307831))
 		DBM.InfoFrame:Show(8, "playerpower", 1, ALTERNATE_POWER_INDEX, nil, nil, 2)--Sorting lowest to highest
 	end
 	if self.Options.NPAuraOnMembrane2 then
@@ -475,7 +475,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:GetDestCreatureID() == 157439 then
 			timerAdaptiveMembrane:Stop()
 			if self.Options.InfoFrame then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(307831))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(307831))
 				DBM.InfoFrame:Show(8, "playerpower", 1, ALTERNATE_POWER_INDEX, nil, nil, 2)--Sorting lowest to highest
 			end
 		elseif args:IsDestTypePlayer() then

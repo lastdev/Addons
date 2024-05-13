@@ -123,7 +123,7 @@ function AppHelper.OnInitialize()
 	elseif Environment.IsVanillaClassic() then
 		private.addonRegion = region.."-Classic"
 		private.appDataRegion = "Classic-"..region
-	elseif Environment.IsWrathClassic() then
+	elseif Environment.IsWrathClassic() or Environment.IsCataClassic() then
 		private.addonRegion = region.."-BCC"
 		private.appDataRegion = "BCC-"..region
 	else

@@ -21,86 +21,67 @@ L["AUTO_COMBATLOG_DESC"] = "Il logging del Combattimento sarà attivato o disatt
 L["BEST_FOR_DUNGEON"] = "Migliore Questa Spedizione"
 L["BEST_RUN"] = "Miglior Spedizione"
 L["BEST_SCORE"] = "Miglior punteggio M+"
+--[[Translation missing --]]
+--[[ L["BINDING_CATEGORY_RAIDERIO"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_HEADER_RAIDERIO_REPLAYUI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_BOSS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TOGGLE"] = ""--]] 
 L["CANCEL"] = "Indietro"
 L["CHANGES_REQUIRES_UI_RELOAD"] = [=[Le tue modifiche sono state salvate, ma devi ricaricare la tua interfaccia affinché abbiano effetto.
 
 Vuoi farlo ora?]=]
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_MPLUS"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_PVP"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_RAID_HEROIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_RAID_NORMAL"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_GUILD_SOCIAL"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = ""--]] 
---[[Translation missing --]]
---[[ L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = ""--]] 
+L["CHARACTER_LF_GUILD_MPLUS"] = "Ricerca di Gilda Mitica+"
+L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = "Ricerca di Gilda Mitica+"
+L["CHARACTER_LF_GUILD_PVP"] = "Ricerca di Gilda PvP"
+L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = "Ricerca di Gilda Raid"
+L["CHARACTER_LF_GUILD_RAID_HEROIC"] = "Ricerca di Gilda Raid Eroico"
+L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = "Ricerca di Gilda Raid Mitico"
+L["CHARACTER_LF_GUILD_RAID_NORMAL"] = "Ricerca di Gilda Raid Normale"
+L["CHARACTER_LF_GUILD_SOCIAL"] = "Ricerca di Gilda Sociale"
+L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = "Ricerca di Squadra Mitica+"
+L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = "Ricerca di %d+ Squadra Mitica+"
 L["CHECKBOX_DISPLAY_WEEKLY"] = "Visualizza Settimanale"
 L["CHOOSE_HEADLINE_HEADER"] = "Mitico+ Tooltip Headline"
 L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Dove mostrare il progresso di Mitiche+ e Incursioni"
 L["CONFIRM"] = "Conferma"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copia URL Raider.IO"
---[[Translation missing --]]
---[[ L["COPY_RAIDERIO_RECRUITMENT_URL"] = ""--]] 
+L["COPY_RAIDERIO_RECRUITMENT_URL"] = "Copia l'URL di reclutamento"
 L["COPY_RAIDERIO_URL"] = "Copia URL Raider.IO"
 L["CURRENT_MAINS_SCORE"] = "Punteggio M+ PG Principale"
 L["CURRENT_SCORE"] = "Punteggio M+ Corrente"
---[[Translation missing --]]
---[[ L["DB_MODULES"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_MYTHIC_PLUS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_RAIDING"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_RECRUITMENT"] = ""--]] 
+L["DB_MODULES"] = "Moduli di database"
+L["DB_MODULES_HEADER_MYTHIC_PLUS"] = "Mitica+"
+L["DB_MODULES_HEADER_RAIDING"] = "Raid"
+L["DB_MODULES_HEADER_RECRUITMENT"] = "Reclutamento"
 L["DISABLE_DEBUG_MODE_RELOAD"] = "Stai disabilitando Debug Mode. Premere Conferma ricaricherà l'interfaccia"
---[[Translation missing --]]
---[[ L["DISABLE_RWF_MODE_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["DISABLE_RWF_MODE_RELOAD"] = ""--]] 
+L["DISABLE_RWF_MODE_BUTTON"] = "Disabilita "
+L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Fai clic per disattivare la modalità Race World First. Ciò causerà il ricaricamento dell'interfaccia."
+L["DISABLE_RWF_MODE_RELOAD"] = "Stai disabilitando la modalità Race World First. Facendo clic su Conferma si ricaricherà l'interfaccia."
 L["DPS"] = "DPS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AA"] = ""--]] 
+L["DUNGEON_SHORT_NAME_AA"] = "ADA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_AD"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BRH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_DHT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_AV"] = "CA"
+L["DUNGEON_SHORT_NAME_BH"] = "CDF"
+L["DUNGEON_SHORT_NAME_BRH"] = "FC"
+L["DUNGEON_SHORT_NAME_COS"] = "CDS"
+L["DUNGEON_SHORT_NAME_DHT"] = "BC"
 L["DUNGEON_SHORT_NAME_DOS"] = "DOS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EB"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_FALL"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
+L["DUNGEON_SHORT_NAME_EB"] = "VE"
+L["DUNGEON_SHORT_NAME_FALL"] = "CDG"
+L["DUNGEON_SHORT_NAME_FH"] = "CDL"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GMBT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_HOI"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_HOV"] = ""--]] 
+L["DUNGEON_SHORT_NAME_HOI"] = "SDI"
+L["DUNGEON_SHORT_NAME_HOV"] = "SDV"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_ID"] = ""--]] 
 --[[Translation missing --]]
@@ -108,39 +89,29 @@ L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
 L["DUNGEON_SHORT_NAME_MISTS"] = "MISTS"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
+L["DUNGEON_SHORT_NAME_NL"] = "ADN"
+L["DUNGEON_SHORT_NAME_NO"] = "ODN"
 L["DUNGEON_SHORT_NAME_NW"] = "NW"
 L["DUNGEON_SHORT_NAME_PF"] = "PF"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_RISE"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_RLP"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_SBG"] = ""--]] 
+L["DUNGEON_SHORT_NAME_RISE"] = "ADM"
+L["DUNGEON_SHORT_NAME_RLP"] = "PDVDR"
+L["DUNGEON_SHORT_NAME_SBG"] = "TDT"
 L["DUNGEON_SHORT_NAME_SD"] = "SD"
 L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_STRT"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_TJS"] = "TDSDG"
 L["DUNGEON_SHORT_NAME_TOP"] = "TOP"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_TOTT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_TOTT"] = "TDM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_UNDR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_UNDR"] = "GROT"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_UPPR"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WM"] = ""--]] 
+L["DUNGEON_SHORT_NAME_VP"] = "PDV"
+L["DUNGEON_SHORT_NAME_WM"] = "MDC"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
 --[[Translation missing --]]
@@ -154,59 +125,50 @@ L["ENABLE_NO_SCORE_COLORS"] = "Disabilita Colori Punteggio"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "Disabilita la Colorizzazione dei Punteggi. Tutti i Punteggi verranno visualizzati in Bianco."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "Consenti Miglioramenti del client RaiderIO"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Abilitare questa opzione ti permetterà di visualizzare i in maniera dettagliata i dati del Profilo RaiderIO scaricati per i tuoi Personaggi."
---[[Translation missing --]]
---[[ L["ENABLE_REPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_REPLAY_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_RWF_MODE_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_RWF_MODE_RELOAD"] = ""--]] 
+L["ENABLE_REPLAY"] = "Mostra il sistema di riproduzione Mitica+"
+L["ENABLE_REPLAY_DESC"] = "Abilitando questa opzione potrai gareggiare contro le corse Mitica+ registrate."
+L["ENABLE_RWF_MODE_BUTTON"] = "Abilita"
+L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Fai clic per abilitare la modalità Race World First. Ciò causerà il ricaricamento dell'interfaccia."
+L["ENABLE_RWF_MODE_RELOAD"] = "Stai abilitando la modalità Race World First. Questo è destinato all'uso con la gara Mythic World First e deve essere utilizzato solo per questo scopo insieme al client Raider.IO per il caricamento dei dati. Facendo clic su Conferma si ricaricherà l'interfaccia."
 L["ENABLE_SIMPLE_SCORE_COLORS"] = [=[Usa i Colori dei Punteggi Semplici
 ]=]
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = [=[Mostra i Punteggi solo con Colori Standard utilizzati per gli Oggetti. Ciò può rendere più facile per chi ha problemi di visione dei colori a distinguere i livelli di punteggio.
 ]=]
+L["ENTER_REALM_AND_CHARACTER"] = "Inserisci il reame e il nome del personaggio:"
 L["EXPORTJSON_COPY_TEXT"] = "Copia quanto segue e ncollalo ovunque su | cff00C8FFhttps: //raider.io | r per Cercare tutti i Giocatori."
 L["GENERAL_TOOLTIP_OPTIONS"] = "Opzioni Generali Tooltip"
 L["GUILD_BEST_SEASON"] = "Gilda: Stagionale"
 L["GUILD_BEST_TITLE"] = "Raider.IO Records"
 L["GUILD_BEST_WEEKLY"] = "Gilda: Settimanale"
---[[Translation missing --]]
---[[ L["GUILD_LF_MPLUS_DEFAULT"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_MPLUS_WITH_SCORE"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_PVP"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_RAID_DEFAULT"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_RAID_HEROIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_RAID_MYTHIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_RAID_NORMAL"] = ""--]] 
---[[Translation missing --]]
---[[ L["GUILD_LF_SOCIAL"] = ""--]] 
+L["GUILD_LF_MPLUS_DEFAULT"] = "Reclutamento di Giocatori Mitica+"
+L["GUILD_LF_MPLUS_WITH_SCORE"] = "Reclutamento di %d+ Giocatori Mitica+"
+L["GUILD_LF_PVP"] = "Reclutamento di Giocatori PvP"
+L["GUILD_LF_RAID_DEFAULT"] = "Reclutamento Raiders"
+L["GUILD_LF_RAID_HEROIC"] = "Reclutamento Raiders Eroico"
+L["GUILD_LF_RAID_MYTHIC"] = "Reclutamento Raiders Mitico "
+L["GUILD_LF_RAID_NORMAL"] = "Reclutamento Raiders Normale "
+L["GUILD_LF_SOCIAL"] = "Reclutamento Giocatori Sociali "
 L["HEALER"] = "Curatore"
 L["HIDE_OWN_PROFILE"] = "Nascondi Informazioni Personali dal Tooltip"
 L["HIDE_OWN_PROFILE_DESC"] = "Quando impostato, questo non mostrerà la propria descrizione del profilo RaiderIO, ma potrebbe mostrare quello di un altro giocatore se ne ha uno."
 L["INVERSE_PROFILE_MODIFIER"] = "Inverti il ​​modificatore del tooltip del profilo RaiderIO"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "Abilitando questo si inverte il comportamento del modificatore del tooltip profilo RaiderIO (shift / ctrl / alt): tieni premuto per alternare la visualizzazione tra profilo personale / leader o profilo leader / personale."
---[[Translation missing --]]
---[[ L["LOCALE_NAME"] = ""--]] 
+L["LOCALE_NAME"] = "itEU"
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: Blocco della finestra Profilo M+."
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "miglior punteggio M+ del PG principale (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progresso PG Principale"
 L["MAINS_SCORE"] = "Punteggio PG Principale"
+L["MINIMAP_SHORTCUT_ENABLE"] = "Abilita il Pulsante"
+L["MINIMAP_SHORTCUT_ENABLE_DESC"] = "Abilita per visualizzare l'icona attorno alla minimappa. Ciò lo renderà disponibile anche in qualsiasi altro addon che supporti il ​​sistema broker."
+L["MINIMAP_SHORTCUT_HEADER"] = "Minimappa"
+L["MINIMAP_SHORTCUT_HELP"] = "|A:newplayertutorial-icon-mouse-leftbutton:16:12|a Cerca |A:newplayertutorial-icon-mouse-rightbutton:16:12|a Impostazioni"
+L["MINIMAP_SHORTCUT_LOCK"] = "Pulsante di blocco"
 L["MODULE_AMERICAS"] = "America"
 L["MODULE_EUROPE"] = "Europa"
 L["MODULE_KOREA"] = "Korea"
 L["MODULE_TAIWAN"] = "Taiwan"
 L["MY_PROFILE_TITLE"] = "Profilo RaiderIO"
---[[Translation missing --]]
---[[ L["MYTHIC_PLUS_DB_MODULES"] = ""--]] 
+L["MYTHIC_PLUS_DB_MODULES"] = "Moduli database di Mitica+"
 L["MYTHIC_PLUS_SCORES"] = "Mythic+ Tooltip Punteggio"
 L["NO_GUILD_RECORD"] = "Nessun Record di Gilda"
 L["OPEN_CONFIG"] = "Apri Configurazione"
@@ -222,47 +184,65 @@ L["OUTDATED_EXPIRES_IN_MINUTES"] = "I Dati di Raider.IO Scadranno in %d Minuti"
 L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "Aggiorna subito il tuo addon per visualizzare i dati più accurati. I giocatori lavorano duramente per migliorare i loro progressi e la visualizzazione di dati molto vecchi è un disservizio per loro. Puoi utilizzare il client Raider.IO per mantenere i tuoi dati sincronizzati automaticamente."
 L["PREVIOUS_SCORE"] = "Punteggio M+ Precedente (%s)"
 L["PROFILE_BEST_RUNS"] = "Miglior Corsa per Spedizione"
---[[Translation missing --]]
---[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
+L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Blocca il frame del profilo Raider.IO o abilita il posizionamento automatico per nascondere questo ancoraggio."
 L["PROVIDER_NOT_LOADED"] = "| cffFF0000Warning: | r | cffFFFFFF% s | r non riesce a trovare i dati per la fazione corrente. Controllare le impostazioni | cffFFFFFF / raiderio | r e abilitare i dati del tooltip per | cffFFFFFF% s | r."
+L["PVP_DATA_HEADER"] = "Profilo PvP Raider.IO"
 --[[Translation missing --]]
---[[ L["PVP_DATA_HEADER"] = ""--]] 
+--[[ L["RAID_AATDH"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_1"] = ""--]] 
+--[[ L["RAID_AATSC"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_2"] = ""--]] 
+--[[ L["RAID_AVOTI"] = ""--]] 
+L["RAID_BOSS_AATDH_1"] = "Torciradice "
+L["RAID_BOSS_AATDH_2"] = "Igira la Crudele"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_3"] = ""--]] 
+L["RAID_BOSS_AATDH_4"] = "Concilio dei Sogni"
+L["RAID_BOSS_AATDH_5"] = "Larodar, Custode della Fiamma"
+L["RAID_BOSS_AATDH_6"] = "Nymue, Tessitrice del Ciclo"
+L["RAID_BOSS_AATDH_7"] = "Ardiron"
+L["RAID_BOSS_AATDH_8"] = "Tindral Saggiaspina, Veggente della Fiamma"
+L["RAID_BOSS_AATDH_9"] = "Fyrakk l'Ardente"
+L["RAID_BOSS_AATSC_1"] = "Kaztara, l'Infernale "
+L["RAID_BOSS_AATSC_2"] = "La Sala dell'Amalgama"
+L["RAID_BOSS_AATSC_3"] = "Gli Esperimenti Dimenticati "
+L["RAID_BOSS_AATSC_4"] = "Assalto degli Zaqali"
+L["RAID_BOSS_AATSC_5"] = "Rashok, l'Anziano"
+L["RAID_BOSS_AATSC_6"] = "Il Sovrintendente Vigile, Zskarn"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_7"] = ""--]] 
+L["RAID_BOSS_AATSC_8"] = "Eco di Neltharion "
+L["RAID_BOSS_AATSC_9"] = "Comandante delle Scaglie Sarkareth"
+L["RAID_BOSS_ATDH_1"] = "Torciradice"
+L["RAID_BOSS_ATDH_2"] = "Igira la Crudele"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ATDH_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATDH_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_6"] = ""--]] 
+L["RAID_BOSS_ATDH_4"] = "Concilio dei Sogni"
+L["RAID_BOSS_ATDH_5"] = "Larodar, Custode della Fiamma"
+L["RAID_BOSS_ATDH_6"] = "Nymue, Tessitrice del Ciclo"
+L["RAID_BOSS_ATDH_7"] = "Ardiron"
+L["RAID_BOSS_ATDH_8"] = "Tindral Saggiaspina, Veggente della Fiamma"
+L["RAID_BOSS_ATDH_9"] = "Fyrakk l'Ardente"
+L["RAID_BOSS_ATSC_1"] = "Kaztara, l'Infernale "
+L["RAID_BOSS_ATSC_2"] = "La Sala dell'Amalgama"
+L["RAID_BOSS_ATSC_3"] = "Gli Esperimenti Dimenticati "
+L["RAID_BOSS_ATSC_4"] = "Assalto degli Zaqali"
+L["RAID_BOSS_ATSC_5"] = "Rashok, l'Anziano"
+L["RAID_BOSS_ATSC_6"] = "Il Sovrintendente Vigile, Zskarn"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ATSC_7"] = ""--]] 
+L["RAID_BOSS_ATSC_8"] = "Eco di Neltharion "
+L["RAID_BOSS_ATSC_9"] = "Comandante delle Scaglie Sarkareth"
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_8"] = ""--]] 
+--[[ L["RAID_BOSS_AVOTI_1"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ATSC_9"] = ""--]] 
+--[[ L["RAID_BOSS_AVOTI_2"] = ""--]] 
+L["RAID_BOSS_AVOTI_3"] = "Il Concilio Primordiale"
+L["RAID_BOSS_AVOTI_4"] = "Sennarth, il Soffio Gelido"
+L["RAID_BOSS_AVOTI_5"] = "Dathea, l'Ascesa"
+L["RAID_BOSS_AVOTI_6"] = "Kurog Totem Truce"
+L["RAID_BOSS_AVOTI_7"] = "Custode della Progenie Diurna"
+L["RAID_BOSS_AVOTI_8"] = "Raszageth la Mangiatempeste"
 L["RAID_BOSS_CN_1"] = "Alagrigia"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor il Predatore"
@@ -381,18 +361,12 @@ L["RAID_BOSS_CN_9"] = "Generali della Legione di Pietra "
 --[[ L["RAID_BOSS_VOTI_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_VOTI_8"] = ""--]] 
+L["RAID_BOSS_VOTI_3"] = "Il Concilio Primordiale "
+L["RAID_BOSS_VOTI_4"] = "Sennarth, il Soffio Gelido"
+L["RAID_BOSS_VOTI_5"] = "Dathea, l'Ascesa"
+L["RAID_BOSS_VOTI_6"] = "Kurog Totem Truce"
+L["RAID_BOSS_VOTI_7"] = "Custode della Progenie Diurna"
+L["RAID_BOSS_VOTI_8"] = "Raszageth la Mangiatempeste"
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Eroica"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mitica"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normale"
@@ -409,92 +383,58 @@ L["RAIDERIO_MP_BEST_SCORE"] = "punteggio M+ Raider.IO"
 L["RAIDERIO_MP_SCORE"] = "Raider.IO Punteggio M+"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Raider.IO Opzioni Addon"
 L["RAIDING_DATA_HEADER"] = "Raider.IO Progresso Incursione"
---[[Translation missing --]]
---[[ L["RAIDING_DB_MODULES"] = ""--]] 
---[[Translation missing --]]
---[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
+L["RAIDING_DB_MODULES"] = "Moduli di database Raid"
+L["RECRUITMENT_DB_MODULES"] = "Moduli del database di reclutamento"
 L["RELOAD_LATER"] = "Ricaricherò Più Tardi"
 L["RELOAD_NOW"] = "Ricarica Ora"
---[[Translation missing --]]
---[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = ""--]] 
+L["RELOAD_RWF_MODE_BUTTON"] = "Salva"
+L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Fare clic per salvare il registro nel file di archiviazione. Ciò causerà il ricaricamento dell'interfaccia."
+L["REPLAY_AUTO_SELECTION"] = "Tipo di riproduzione preferito"
+L["REPLAY_AUTO_SELECTION_DESC"] = "Scegli il tipo di replay che desideri venga selezionato automaticamente."
+L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = "Migliore Gilda"
+L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = "Piu recente"
+L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = "Record personale"
 --[[Translation missing --]]
 --[[ L["REPLAY_AUTO_SELECTION_STARRED"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_DISABLE_CONFIRM"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_FRAME_ALPHA"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_DOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_LOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_POSITION"] = ""--]] 
+L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "Migliore Squadra"
+L["REPLAY_BACKGROUND_COLOR"] = "Riproduci il colore di sfondo"
+L["REPLAY_BACKGROUND_COLOR_DESC"] = "Specificare il colore di sfondo utilizzato nel frame di riproduzione."
+L["REPLAY_DISABLE_CONFIRM"] = "Se disabiliti |cffFFBD0AMythic+ Replay System|r puoi riattivarlo tramite il pannello Impostazioni nella categoria |cffFFBD0ARaider.IO Client Customization|r."
+L["REPLAY_FRAME_ALPHA"] = "Riproduci l'opacità del frame"
+L["REPLAY_FRAME_ALPHA_DESC"] = "Specificare l'opacità del frame di riproduzione."
+L["REPLAY_MENU_COPY_URL"] = "Copia l'URL di riproduzione"
+L["REPLAY_MENU_DISABLE"] = "Disabilita "
+L["REPLAY_MENU_DOCK"] = "Aggancia "
+L["REPLAY_MENU_LOCK"] = "Blocca"
+L["REPLAY_MENU_POSITION"] = "Posizione "
 --[[Translation missing --]]
 --[[ L["REPLAY_MENU_REPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_STYLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_TIMING"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_REPLAY_CHANGING"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+L["REPLAY_MENU_STYLE"] = "Stile"
+L["REPLAY_MENU_TIMING"] = "Tempistica"
+L["REPLAY_MENU_UNDOCK"] = "Sganciare"
+L["REPLAY_MENU_UNLOCK"] = "Sblocca"
+L["REPLAY_REPLAY_CHANGING"] = "La modifica del replay ripristinerà i dati live."
+L["REPLAY_SETTINGS_TOOLTIP"] = "Impostazioni "
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_SUBTITLE_LOGGING_LOOT"] = ""--]] 
+L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "Compatto"
+L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = "Solo i Boss"
+L["REPLAY_SUMMARY_LOGGED"] = "|cffFFFFFF%s|r ha registrato il completamento di questo |cffFFFFFF+%s|r in |cffFFFFFF%s|r."
+L["REPLAY_TIMING_TITLE_BOSS"] = "Tempo del Boss"
+L["REPLAY_TIMING_TITLE_DUNGEON"] = "Tempo della Spedizione "
+L["RESET_BUTTON"] = "Reimposta i predefiniti "
+L["RESET_CONFIRM_BUTTON"] = "Reimposta e ricarica"
+L["RESET_CONFIRM_TEXT"] = "Sei sicuro di voler ripristinare Raider.IO alle impostazioni predefinite?"
+L["RWF_MINIBUTTON_TOOLTIP"] = "Fai clic con il pulsante sinistro del mouse ogni volta che c'è un bottino in sospeso. Ciò causerà il ricaricamento dell'interfaccia. Fare clic con il tasto destro per aprire il frame Race World First."
+L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "(registrazione degli elementi rilevanti)"
+L["RWF_SUBTITLE_LOGGING_LOOT"] = "(bottino di registrazione)"
 --[[Translation missing --]]
 --[[ L["RWF_TITLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["SEARCH_NAME_LABEL"] = ""--]] 
---[[Translation missing --]]
---[[ L["SEARCH_REALM_LABEL"] = ""--]] 
---[[Translation missing --]]
---[[ L["SEARCH_REGION_LABEL"] = ""--]] 
+L["SEARCH_NAME_LABEL"] = "Nome"
+L["SEARCH_REALM_LABEL"] = "Reame"
+L["SEARCH_REGION_LABEL"] = "Regione "
 L["SEASON_LABEL_1"] = "S1"
 L["SEASON_LABEL_2"] = "S2"
 L["SEASON_LABEL_3"] = "S3"
@@ -507,10 +447,8 @@ L["SHOW_BEST_RUN"] = "Mostra Migliore Run Mitico+ come Headline"
 L["SHOW_BEST_RUN_DESC"] = "Mostra la migliore run Mitico+ del giocatore della stagione in corso come tooltip headline."
 L["SHOW_BEST_SEASON"] = "Mostra i Migliori Punteggi Mitico+ Stagionali come Headline"
 L["SHOW_BEST_SEASON_DESC"] = "Mostra il miglior punteggio della stagione Mitico+ del giocatore come tooltip headline.o. Se il punteggio è di una stagione precedente, la stagione verrà indicata come parte del tooltip headline."
---[[Translation missing --]]
---[[ L["SHOW_CHESTS_AS_MEDALS"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_CHESTS_AS_MEDALS_DESC"] = ""--]] 
+L["SHOW_CHESTS_AS_MEDALS"] = "Mostra le icone della medaglia mitica+"
+L["SHOW_CHESTS_AS_MEDALS_DESC"] = "Mostra le medaglie chiave guadagnate come icone invece dei segni più (+)."
 L["SHOW_CLIENT_GUILD_BEST"] = "Mostra i Record nella Ricerca Gruppi per Spedizioni Mitiche"
 L["SHOW_CLIENT_GUILD_BEST_DESC"] = "Abilitando questa Opzione verranno visualizzate le 5 migliori Corse della tua Gilda (Stagionale o Settimanale) nella Scheda Spedizioni Mitiche della finestra di Ricerca Gruppi."
 L["SHOW_CURRENT_SEASON"] = "Mostra il punteggio stagionale attuale di Mitico+ come Headline"
@@ -547,10 +485,8 @@ L["SHOW_SCORE_IN_COMBAT_DESC"] = "Disabilita per minimizzare l'impatto sulle pre
 L["SHOW_SCORE_WITH_MODIFIER"] = "Mostra le informazioni sul tooltip di Raider.IO con l'Attributo"
 L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Disattiva la visualizzazione dei dati durante il passaggio del mouse sui giocatori a meno che non venga tenuto premuto un tasto di modifica."
 L["TANK"] = "Difensore"
---[[Translation missing --]]
---[[ L["TEAM_LF_MPLUS_DEFAULT"] = ""--]] 
---[[Translation missing --]]
---[[ L["TEAM_LF_MPLUS_WITH_SCORE"] = ""--]] 
+L["TEAM_LF_MPLUS_DEFAULT"] = "Reclutamento di Giocatori Mitica+"
+L["TEAM_LF_MPLUS_WITH_SCORE"] = "Reclutamento di %d+ Giocatori Mitica+"
 L["TIMED_10_RUNS"] = "+10-14 In Tempo"
 L["TIMED_15_RUNS"] = "15+ In Tempo"
 L["TIMED_20_RUNS"] = "20+ In Tempo"
@@ -564,12 +500,9 @@ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Permetti al Client di Raider.
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Permetti al Client di Raider.IO (quando presente) di controllare le impostazioni del Logging di Combattimento automaticamente."
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r La modalità Debug è abilitata. Per disabilitarla digita /raiderio debug|r"
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: Devi prima Disabilitare \"Posizionamento Automatico\" per il Profilo RaiderIO."
---[[Translation missing --]]
---[[ L["WARNING_RWF_MODE_ENABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["WIPE_RWF_MODE_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r La modalità Race World First è abilitata. Puoi disabilitarlo digitando |cffFFFFFF/raiderio rwf|r."
+L["WIPE_RWF_MODE_BUTTON"] = "Cancella"
+L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "Fare clic per cancellare il registro dal file di archiviazione. Ciò causerà il ricaricamento dell'interfaccia."
 
 
 end

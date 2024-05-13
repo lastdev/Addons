@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20231117104143")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(32865)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1141)
@@ -46,7 +46,7 @@ local timerUnbalancingStrike		= mod:NewCDTimer(25.6, 62130, nil, "Tank", nil, 5,
 local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
 mod:AddRangeFrameOption("8")
-mod:AddSetIconOption("SetIconOnBomb", 62526, false, false, {7})
+mod:AddSetIconOption("SetIconOnBomb", 62526, false, 0, {7})
 
 local lastcharge = {}
 

@@ -1,4 +1,4 @@
-function HealBot_Plugin_Options_SetupFrame(frame, hide)
+function HealBot_Plugin_Options_SetupFrame(frame, hide, tall)
 	frame:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -6,8 +6,13 @@ function HealBot_Plugin_Options_SetupFrame(frame, hide)
 		insets = { left = 0, right = 0, top = 0, bottom = 0, },
 	})
 	frame:SetBackdropColor(0,0,0,0);
-	frame:SetPoint("TOPLEFT", -5, -120)
-	frame:SetSize(600,470)
+    if tall then
+        frame:SetPoint("TOPLEFT", -5, -80)
+        frame:SetSize(600,510)
+    else
+        frame:SetPoint("TOPLEFT", -5, -120)
+        frame:SetSize(600,470)
+    end
 	if hide then
 		frame:Hide()
 	end
@@ -47,8 +52,6 @@ function HealBot_Plugin_Options_SetupStatusBar(bar, width, height, x, y, text, t
 	bar.Text:SetFontObject(GameFontNormal)
     if txtCenter then
         bar.Text:SetPoint("CENTER")
-        bar.Text:SetJustifyH("CENTER")
-        bar.Text:SetJustifyV("CENTER")
     else
         bar.Text:SetPoint("TOP", 0, 15)
     end
@@ -62,8 +65,6 @@ function HealBot_Plugin_Options_SetupStatusBarButton(bar, width, x, text, y)
 	bar.Text = bar:CreateFontString()
 	bar.Text:SetFontObject(GameFontNormal)
     bar.Text:SetPoint("CENTER")
-    bar.Text:SetJustifyH("CENTER")
-    bar.Text:SetJustifyV("CENTER")
     bar.Text:SetText(text)
 end
 

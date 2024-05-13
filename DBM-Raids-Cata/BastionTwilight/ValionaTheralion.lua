@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-Raids-Cata", 4, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240107062715")
+mod:SetRevision("20240426180008")
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetUsedIcons(1, 2, 3, 8)
@@ -295,14 +295,14 @@ function mod:RAID_BOSS_EMOTE(msg)
 end
 
 do
-	local meteorTarget = DBM:GetSpellInfo(88518)
+	local meteorTarget = DBM:GetSpellName(88518)
 	local function markRemoved()
 		markWarned = false
 	end
 	function mod:UNIT_AURA(uId)
 		if DBM:UnitDebuff("player", meteorTarget) and not markWarned then--Switch to ID if correct ID is verified
 			specWarnTwilightMeteorite:Show()
-			specWarnTwilightMeteorite:Play()
+			specWarnTwilightMeteorite:Play("targetyou")
 			timerTwilightMeteorite:Start()
 			yellTwilightMeteorite:Yell()
 			markWarned = true
@@ -312,9 +312,9 @@ do
 end
 
 do
-	local fabFlames = DBM:GetSpellInfo(86497)
+	local fabFlames = DBM:GetSpellName(86497)
 	function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-		local spellName = DBM:GetSpellInfo(spellId)--Shit workaround, fix
+		local spellName = DBM:GetSpellName(spellId)--Shit workaround, fix
 		local guid = UnitGUID(uId)
 		if spellName == fabFlames and not self.vb.ValionaLanded and self:AntiSpam(2, 2) then
 			self:ScheduleMethod(0.1, "BossTargetScanner", guid, "FabFlamesTarget", 0.1, 4)

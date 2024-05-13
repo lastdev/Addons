@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2364, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231117101914")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(156866)
 mod:SetEncounterID(2331)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -88,7 +88,7 @@ local yellVoidCollapseFades					= mod:NewShortFadesYell(306881, nil, nil, nil, "
 
 local timerVoidCollapseCD					= mod:NewNextTimer(10.8, 306881, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 
-mod:AddSetIconOption("SetIconOnVoidCollapse", 306881, true, false, {3})
+mod:AddSetIconOption("SetIconOnVoidCollapse", 306881, true, 0, {3})
 ----Nightmare
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21083))
 local warnNightmarePhase					= mod:NewSpellAnnounce(312996, 2)
@@ -102,7 +102,7 @@ local specWarnCallNightTerror				= mod:NewSpecialWarningSwitch("ej21176", false,
 
 local timerCallNightTerrorCD				= mod:NewNextTimer(30.1, "ej21176", nil, nil, nil, 1, 314484, DBM_COMMON_L.DAMAGE_ICON)
 
-mod:AddSetIconOption("SetIconOnUnstableNightmare", 313077, true, false, {4, 5})
+mod:AddSetIconOption("SetIconOnUnstableNightmare", 313077, true, 0, {4, 5})
 ------Night Terror
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21176))
 local warnDreadInferno						= mod:NewTargetNoFilterAnnounce(315252, 4)
@@ -132,8 +132,8 @@ local timerGorgeEssenceCD					= mod:NewCDCountTimer(29.1, 309985, nil, nil, nil,
 local timerCorruptedExistenceCD				= mod:NewCDCountTimer(12.2, 316065, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.DEADLY_ICON)
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnChargedBonds", 310019, true, false, {1})
-mod:AddSetIconOption("SetIconOnCorruptedExistence", 316065, true, false, {2, 3, 4})
+mod:AddSetIconOption("SetIconOnChargedBonds", 310019, true, 0, {1})
+mod:AddSetIconOption("SetIconOnCorruptedExistence", 316065, true, 0, {2, 3, 4})
 mod:AddBoolOption("OnlyParentBondMoves", false)
 
 mod.vb.callEssenceCount = 0
@@ -149,7 +149,7 @@ mod.vb.bondsCount = 0
 mod.vb.bondsTarget = nil
 mod.vb.gorgedCount = 0
 local ExposureTargets = {}
-local consumingVoid = DBM:GetSpellInfo(306645)
+local consumingVoid = DBM:GetSpellName(306645)
 local ChargedBondsTargets = {}
 local corruptedExistence = {11.2, 13.3, 12.1, 12.1, 14.6, 12.1, 15.7, 12.1, 12.1}
 local mythicBondstimers = {15, 15.8, 13.3, 10.9, 11.0, 12.1, 13.3, 10.2, 10.4, 10.9}
@@ -157,7 +157,7 @@ local mythicBondstimers = {15, 15.8, 13.3, 10.9, 11.0, 12.1, 13.3, 10.2, 10.4, 1
 
 local updateInfoFrame
 do
-	local unstableVita, unstableNightmare, Exposure = DBM:GetSpellInfo(306257), DBM:GetSpellInfo(313077), DBM:GetSpellInfo(306279)
+	local Exposure = DBM:GetSpellName(306279)
 	local floor = math.floor
 	local lines = {}
 	local sortedLines = {}

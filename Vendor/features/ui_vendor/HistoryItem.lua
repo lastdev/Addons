@@ -39,12 +39,12 @@ function HistoryItem:OnEnter()
     GameTooltip:AddDoubleLine(locale.OPTIONS_AUDIT_TT_RULE, model.RuleName,
         text.r, text.g, text.b, secondary.r, secondary.g, secondary.b)
 
-    --[===[@debug@
-    GameTooltip:AddDoubleLine("ProfileId:", model.ProfileName,
-        text.r, text.g, text.b, secondary.r, secondary.g, secondary.b)
-    GameTooltip:AddDoubleLine("RuleId:", model.RuleId,
-        text.r, text.g, text.b, secondary.r, secondary.g, secondary.b)
-    --@end-debug@]===]
+    if (Addon.IsDebug) then
+        GameTooltip:AddDoubleLine("ProfileId:", model.ProfileName,
+            text.r, text.g, text.b, secondary.r, secondary.g, secondary.b)
+        GameTooltip:AddDoubleLine("RuleId:", model.RuleId,
+            text.r, text.g, text.b, secondary.r, secondary.g, secondary.b)
+    end
 
     GameTooltip:Show()
 end

@@ -1,6 +1,9 @@
-# <DBM Mod> Raids (WoD)
+# <DBM Mod> World Bosses (WoD)
 
-## [r80](https://github.com/DeadlyBossMods/DBM-WoD/tree/r80) (2024-01-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r79...r80) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
+## [r84](https://github.com/DeadlyBossMods/DBM-WoD/tree/r84) (2024-05-07)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r83...r84) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
 
-- Bump tocs for 10.2.5  
+- Bump ToCs for 10.2.7  
+- Fix some seticon nitpicks  
+- apparently no one is actually ready for the cataclysm pre patch yet (ie multi interface versions separated by ,). So revert that for now  
+- War within TOC Support  

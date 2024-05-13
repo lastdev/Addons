@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(39747)
 mod:SetEncounterID(mod:IsClassic() and 891 or 1149)
 mod:SetModelID(31577)
@@ -30,7 +30,7 @@ local timerBreath			= mod:NewCDTimer(25, 74403, nil, "Tank|Healer", nil, 5, nil,
 local timerEnrage			= mod:NewBuffActiveTimer(10, 78722, nil, "RemoveEnrage|Tank|Healer", nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON..DBM_COMMON_L.TANK_ICON)
 
 mod:AddRangeFrameOption(10, 74456)
-mod:AddSetIconOption("beaconIcon", 74453, true, false, {8, 7, 6, 5, 4})
+mod:AddSetIconOption("beaconIcon", 74453, true, 0, {8, 7, 6, 5, 4})
 
 mod:GroupSpells(74453, 74456, 74452)--Group target debuff ID with regular debuff IDs
 

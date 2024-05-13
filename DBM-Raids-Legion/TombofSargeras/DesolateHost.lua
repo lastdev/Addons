@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1896, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(118460, 118462, 119072)--118460 Engine of Souls, 118462 Soul Queen Dajahna, 119072 The Desolate Host
 mod:SetEncounterID(2054)
 mod:SetBossHPInfoToHighest()
@@ -97,7 +97,7 @@ mod.vb.boneArmorCount = 0
 mod.vb.phase = 1
 mod.vb.soulIcon = 3
 mod.vb.tankCount = 2
-local spiritRealm, boneArmor = DBM:GetSpellInfo(235621), DBM:GetSpellInfo(236513)
+local spiritRealm, boneArmor = DBM:GetSpellName(235621), DBM:GetSpellName(236513)
 local doBones = true
 local playersInSpirit = {}
 local playersNotInSpirit = {}

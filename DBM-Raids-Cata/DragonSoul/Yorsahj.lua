@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
 
-mod:SetRevision("20240114012904")
+mod:SetRevision("20240316010403")
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -50,7 +50,7 @@ mod:AddBoolOption("RangeFrame", true)
 local oozesHitTable = {}
 local expectedOozes = 0
 local yellowActive = false
-local bossName = EJ_GetEncounterInfo(325)
+local bossName = EJ_GetEncounterInfo and EJ_GetEncounterInfo(325) or "Yorsahj"
 
 local oozeColorsHeroic = {
 	[105420] = { L.Purple, L.Green, L.Black, L.Blue },

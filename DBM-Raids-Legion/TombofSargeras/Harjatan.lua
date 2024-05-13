@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1856, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(116407)
 mod:SetEncounterID(2036)
 --mod:SetBossHPInfoToHighest()
@@ -84,7 +84,7 @@ local berserkTimer					= mod:NewBerserkTimer(360)
 --mod:AddRangeFrameOption("5/8/15")
 mod:AddNamePlateOption("NPAuraOnSicklyFixate", 241600)
 mod:AddNamePlateOption("NPAuraOnDrivenAssault", 234016)
-mod:AddSetIconOption("SetIconOnWavemender", "ej14555", true, true)
+mod:AddSetIconOption("SetIconOnWavemender", "ej14555", true, 5)
 
 mod.vb.rageCount = 0
 local seenMobs = {}
@@ -131,7 +131,7 @@ function mod:SPELL_CAST_START(args)
 		timerCommandingRoarCD:Start(17.1)
 		timerUncheckedRageCD:Start(21.1, 1)--21.1-23.5
 		specWarnUncheckedRage:Schedule(17, 1)
-		specWarnUncheckedRage:Play(17, "gathershare")
+		specWarnUncheckedRage:ScheduleVoice(17, "gathershare")
 		timerDrawInCD:Start()
 		if self:IsMythic() then
 			timerHatchingCD:Start(30)

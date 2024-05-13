@@ -28,12 +28,17 @@ local StaticPopup_Show = StaticPopup_Show
 
 local Enum_WeeklyRewardChestThresholdType_Activities = Enum.WeeklyRewardChestThresholdType.Activities
 
--- Dragonflight Season 3
 -- this is from https://wago.tools/db2/MythicPlusSeasonRewardLevels?page=1&sort[WeeklyRewardLevel]=asc&filter[MythicPlusSeasonID]=98
 local ItemLevelsBySeason = {
+  -- DF Season 3
   [98] = {
     ["HEROIC"] = 441,
     ["MYTHIC"] = 450,
+  },
+  -- DF Season 4
+  [100] = {
+    ["HEROIC"] = 489,
+    ["MYTHIC"] = 506,
   },
 }
 
@@ -130,7 +135,7 @@ do
     end
 
     local color = C_ChallengeMode_GetKeystoneLevelRarityColor(level)
-    colorCache[level] = color:GenerateHexColor()
+    colorCache[level] = color and color:GenerateHexColor() or 'ffffffff'
     return colorCache[level]
   end
 

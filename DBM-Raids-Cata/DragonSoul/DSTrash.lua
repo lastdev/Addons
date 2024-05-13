@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DSTrash", "DBM-Raids-Cata", 1, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526082852")
+mod:SetRevision("20240426180008")
 mod:SetModelID(39378)
 mod.isTrashMod = true
 
@@ -29,7 +29,7 @@ local timerRoleplay			= mod:NewTimer(45.5, "timerRoleplay", "237538")
 local drakeRunning = false
 local drakesCount = 15
 local drakeguid = {}
-local drakeEscape = DBM:GetSpellInfo(109904)
+local drakeEscape = DBM:GetSpellName(109904)
 
 local function drakeDied(GUID)
 	if not drakeguid[GUID] then

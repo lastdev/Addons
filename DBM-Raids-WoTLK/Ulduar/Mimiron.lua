@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20240113214633")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(33432)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1138)
@@ -66,15 +66,15 @@ local timerFlameSuppressant			= mod:NewBuffActiveTimer(10, 65192, nil, nil, nil,
 --local timerNextFrostBomb			= mod:NewNextTimer(80, 64623, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerBombExplosion			= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnNapalm", 63666, false, false, {1, 2, 3, 4, 5, 6, 7})
-mod:AddSetIconOption("SetIconOnPlasmaBlast", 64529, false, false, {8})
+mod:AddSetIconOption("SetIconOnNapalm", 63666, false, 0, {1, 2, 3, 4, 5, 6, 7})
+mod:AddSetIconOption("SetIconOnPlasmaBlast", 64529, false, 0, {8})
 mod:AddRangeFrameOption("6")
 
 mod:GroupSpells(63274, 63414)--Spinning Up and P3Wx2
 
 mod.vb.hardmode = false
 mod.vb.napalmShellIcon = 7
-local spinningUp = DBM:GetSpellInfo(63414)
+local spinningUp = DBM:GetSpellName(63414)
 local lastSpinUp = 0
 mod.vb.is_spinningUp = false
 local napalmShellTargets = {}
@@ -186,7 +186,7 @@ function mod:SPELL_SUMMON(args)
 end
 
 function mod:UNIT_SPELLCAST_CHANNEL_STOP(unit, _, spellId)
-	local spell = DBM:GetSpellInfo(spellId)--DO BETTER with log
+	local spell = DBM:GetSpellName(spellId)--DO BETTER with log
 	if spell == spinningUp and GetTime() - lastSpinUp < 3.9 then
 		self.vb.is_spinningUp = false
 		self:SendSync("SpinUpFail")

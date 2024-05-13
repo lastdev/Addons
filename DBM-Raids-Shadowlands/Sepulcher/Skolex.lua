@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2465, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240426185011")
 mod:SetCreatureID(181395)
 mod:SetEncounterID(2542)
 mod:SetHotfixNoticeRev(20220301000000)
@@ -76,7 +76,7 @@ function mod:OnCombatStart(delay)
 		berserkTimer:Start((self:IsEasy() and 420 or 360)-delay) -- 7 minutes on Normal, 6 minutes on Heroic/Mythic
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(359778))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(359778))
 		DBM.InfoFrame:Show(20, "table", EphemeraDustStacks, 5)
 	end
 end

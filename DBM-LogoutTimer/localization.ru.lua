@@ -12,7 +12,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	FlashClientIcon	= "Мигающий значок клиента при выходе из системы",
 	PlaySound		= "Воспроизводить звуковой эффект при выходе из системы",
-	TimerLogout		= "Показать таймер выхода"
+	TimerLogout		= "Показывать таймер выхода"
 })
 
 L:SetMiscLocalization({

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NightbaneRaid", "DBM-Raids-BC", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240105194121")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(17225)
 mod:SetEncounterID(662, 2454)
 mod:SetModelID(18062)
@@ -31,7 +31,7 @@ local timerFearCD			= mod:NewCDTimer(31.5, 36922, nil, nil, nil, 2)
 local timerAirPhase			= mod:NewTimer(57, "timerAirPhase", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
 local timerBone				= mod:NewBuffActiveTimer(11, 37098, nil, nil, nil, 1)
 
-mod:AddSetIconOption("SetIconOnCharred", 30128, true, false, {1})
+mod:AddSetIconOption("SetIconOnCharred", 30128, true, 0, {1})
 
 mod.vb.lastBlastTarget = "none"
 

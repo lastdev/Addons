@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2422, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240115231745")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(165759)
 mod:SetEncounterID(2402)
 mod:DisableIEEUCombatDetection()--kael gets stuck on boss frames well after encounter has ended, therefor must not re-engage boss off this bug
@@ -70,7 +70,7 @@ local timerCloakofFlamesCD						= mod:NewNextCountTimer(30, 337859, nil, nil, ni
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(326078, true)--343026
-mod:AddSetIconOption("SetIconOnEmberBlast", 325877, true, false, {1})
+mod:AddSetIconOption("SetIconOnEmberBlast", 325877, true, 0, {1})
 --Adds
 ----Rockbound Vanquisher
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21954))
@@ -123,7 +123,7 @@ local yellEyeOnTarget							= mod:NewYell(328479, nil, false)
 
 local timerPhoenixRespawn						= mod:NewCastTimer(20, 328731, nil, nil, nil, 1)
 
-mod:AddSetIconOption("SetIconOnBirdo", 328731, true, true, {2, 3, 4, 5})
+mod:AddSetIconOption("SetIconOnBirdo", 328731, true, 5, {2, 3, 4, 5})
 mod:AddNamePlateOption("NPAuraOnPhoenixFixate", 328479)
 
 --Mostly for testing, these are not meant to be used as they aren't actual groupings
@@ -144,7 +144,7 @@ mod.vb.occultistCount = 0
 mod.vb.infuserCount = 0
 mod.vb.fiendCount = 0
 mod.vb.vanquisherCount = 0
-local infusersBoon = DBM:GetSpellInfo(326078)
+local infusersBoon = DBM:GetSpellName(326078)
 local seenAdds = {}
 local castsPerGUID = {}
 local infuserTargets = {}

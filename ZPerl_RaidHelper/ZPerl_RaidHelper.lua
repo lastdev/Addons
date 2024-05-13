@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
+XPerl_SetModuleRevision("$Revision: 2f111f16cae2c4903cf32fdc68efa86024c393e2 $")
 
 ZPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -18,7 +18,7 @@ local conf
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 
 local GetNumGroupMembers = GetNumGroupMembers
 
@@ -278,7 +278,7 @@ function XPerl_MTListUnit_OnEnter(self)
 					XPerl_BottomTip:SetOwner(GameTooltip, a2, 0, 10)
 					XPerl_BottomTip:SetUnit(parentID)
 
-					if IsWrathClassic then
+					if IsCataClassic then
 						XPerl_BottomTip:OnBackdropLoaded()
 						XPerl_BottomTip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
 					else
@@ -298,7 +298,7 @@ function XPerl_MTListUnit_OnEnter(self)
 				GameTooltip:SetOwner(self, a1)
 				GameTooltip:SetUnit(partyid)
 
-				if IsWrathClassic then
+				if IsCataClassic then
 					GameTooltip:OnBackdropLoaded()
 					GameTooltip:SetBackdropColor(0.1, 0.4, 0.1, 0.75)
 				else

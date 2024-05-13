@@ -232,20 +232,20 @@ local function list_PopulateItems(self, state)
             litem = list_CreateItem(self, state, model)
             misses = misses + 1
 
-            --[===[@debug@
-            local modelName = tostring(model)
-            if (type(model) == "table") then
-                if type(model.GetName) == "function" then
-                    modelName = model:GetName()
-                else
-                    modelName = model.Name or model.Text or modelName
+            if (Addon.IsDebug) then
+                local modelName = tostring(model)
+                if (type(model) == "table") then
+                    if type(model.GetName) == "function" then
+                        modelName = model:GetName()
+                    else
+                        modelName = model.Name or model.Text or modelName
+                    end
                 end
+
+
             end
-
-
-            --@end-debug@]===]
         else
-            -- This frame  can live in the view frames
+            -- This frame can live in the view frames
             cache[model] = nil
         end
         
@@ -276,11 +276,6 @@ local function list_BuildView(self, state)
         local view = {}
         local filter = state.filter
         local sort = state.sort
-
-        --[===[@debug@
-        --assert(type(state.items) == "table" and table.getn(state.items) ~= 0)
-        --@end-debug@]===]
-
 
         -- Traverse the models, exluding things which don't match 
         -- our filter if one was provided.

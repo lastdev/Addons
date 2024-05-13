@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2353, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(152364)
 mod:SetEncounterID(2305)
 mod:SetUsedIcons(1, 2)
@@ -40,14 +40,14 @@ local yellArcaneBomb					= mod:NewPosYell(296737)
 local yellArcaneBombFades				= mod:NewIconFadesYell(296737)
 local specWarnUnshackledPower			= mod:NewSpecialWarningCount(296894, nil, nil, nil, 2, 2)
 
-local timerTideFistCD					= mod:NewNextCountTimer(58.2, 296546, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2, 4)
+local timerTideFistCD					= mod:NewNextCountTimer(58.2, 296546, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 4)
 local timerArcanadoBurstCD				= mod:NewNextCountTimer(58.2, 296430, nil, nil, nil, 3)
 local timerArcaneBombCD					= mod:NewNextCountTimer(58.2, 296737, nil, "-Tank", nil, 3, nil, nil, nil, 3, 4)
 local timerUnshacklingPowerCD			= mod:NewNextCountTimer(58.2, 296894, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 1, 4)
 local timerAncientTempestCD				= mod:NewNextTimer(95.9, 295916, nil, nil, nil, 6)
 local berserkTimer						= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnArcaneBomb", 296737, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnArcaneBomb", 296737, true, 0, {1, 2})
 --Raging Storm (Intermission Add)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20078))
 local specWarnAncientTempest			= mod:NewSpecialWarningSpell(295916, nil, nil, nil, 2, 2)
@@ -160,7 +160,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellArcaneBombFades:Countdown(spellId, nil, icon)
 		end
 		if self.Options.SetIconOnArcaneBomb then
-			self:SetIcon(args.destname, self.vb.arcaneBombicon)
+			self:SetIcon(args.destName, self.vb.arcaneBombicon)
 		end
 		self.vb.arcaneBombicon = self.vb.arcaneBombicon + 1
 	end
@@ -173,7 +173,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellArcaneBombFades:Cancel()
 		end
 		if self.Options.SetIconOnArcaneBomb then
-			self:SetIcon(args.destname, 0)
+			self:SetIcon(args.destName, 0)
 		end
 	end
 end

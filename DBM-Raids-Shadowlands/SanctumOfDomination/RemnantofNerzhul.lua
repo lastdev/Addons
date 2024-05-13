@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2444, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(175729)
 mod:SetEncounterID(2432)
 mod:SetUsedIcons(1, 2, 3, 4, 7, 8)
@@ -55,7 +55,7 @@ local specWarnGraspofMalice						= mod:NewSpecialWarningDodge(355123, nil, nil, 
 
 local timerOrbofTormentCD						= mod:NewCDCountTimer(35, 349908, nil, nil, nil, 1, nil, nil, true)
 local timerMalevolenceCD						= mod:NewCDCountTimer(31.3, 350469, nil, nil, nil, 3, nil, DBM_COMMON_L.CURSE_ICON, true)--Rattlecage of Agony 31.7--49.7
-local timerSufferingCD							= mod:NewCDTimer(24.4, 350894, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, true, mod:IsTank() and 2, 3)
+local timerSufferingCD							= mod:NewCDTimer(24.4, 350894, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, true, mod:IsTank() and 2 or nil, 3)
 local timerGraspofMaliceCD						= mod:NewCDTimer(20.7, 355123, nil, nil, nil, 3, nil, nil, true)--Malicious Gauntlet (22 possibly the min time now?)
 --local timerBurstofAgonyCD						= mod:NewAITimer(23, 350096, nil, nil, nil, 3)
 
@@ -63,8 +63,8 @@ local berserkTimer								= mod:NewBerserkTimer(600)
 
 --mod:AddRangeFrameOption("8")
 --mod:AddInfoFrameOption(349890, true)
-mod:AddSetIconOption("SetIconOnMalevolence", 350469, true, false, {1, 2, 3})
-mod:AddSetIconOption("SetIconOnOrbs", 321226, true, true, {7, 6, 5, 4})
+mod:AddSetIconOption("SetIconOnMalevolence", 350469, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnOrbs", 321226, true, 5, {7, 6, 5, 4})
 mod:AddNamePlateOption("NPAuraOnOrbEternalTorment", 355790)
 
 mod.vb.orbCount = 0
@@ -160,7 +160,7 @@ function mod:OnCombatStart(delay)
 	timerGraspofMaliceCD:Start(38)
 	berserkTimer:Start(-delay)
 --	if self.Options.InfoFrame then
---		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(328897))
+--		DBM.InfoFrame:SetHeader(DBM:GetSpellName(328897))
 --		DBM.InfoFrame:Show(10, "table", ExsanguinatedStacks, 1)
 --	end
 	if self.Options.NPAuraOnOrbEternalTorment then

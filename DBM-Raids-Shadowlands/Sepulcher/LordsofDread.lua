@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2457, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(181398, 181399)
 mod:SetEncounterID(2543)
 mod:SetUsedIcons(1, 2, 6, 7, 8)
@@ -62,7 +62,7 @@ local timerManifestShadowsCD					= mod:NewCDCountTimer(1, 361913, nil, nil, nil,
 local timerLeechingClawsCD						= mod:NewCDTimer(16.9, 359960, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)
 
 mod:AddInfoFrameOption(360319, false)
-mod:AddSetIconOption("SetIconOnManifestShadows", 361913, true, true, {6, 7, 8})--On by default since they'll be used by most interrupt helpers
+mod:AddSetIconOption("SetIconOnManifestShadows", 361913, true, 5, {6, 7, 8})--On by default since they'll be used by most interrupt helpers
 mod:AddNamePlateOption("NPAuraOnIncompleteForm", 362020, false)--Off by default so it doesn't cover up interrupt weak aura counters, which i suspect many will use
 mod:AddNamePlateOption("NPAuraOnFullyFormed", 361945, true)--Might also cover up interrupt weak auras, but this signifies target is now very dangerous but killable on mythic difficulty
 mod:GroupSpells(360012, 364985)--Group biting wounds with cloud of carrion
@@ -91,7 +91,7 @@ local timerFearfulTrepidationCD					= mod:NewCDCountTimer(29.1, 360145, 39176, n
 local timerSlumberCloudCD						= mod:NewCDCountTimer(32.8, 360229, nil, nil, nil, 3)
 local timerAnguishingStrikeCD					= mod:NewCDTimer(9.7, 360284, 31907, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-mod:AddSetIconOption("SetIconOnFearfulTrepidation", 360146, true, false, {1, 2})--On by default because max targets shows 2 debuffs can be out, and don't want both carrions running to same person. with icons the carrions can make split decisions to pick an icon each are going to
+mod:AddSetIconOption("SetIconOnFearfulTrepidation", 360146, true, 0, {1, 2})--On by default because max targets shows 2 debuffs can be out, and don't want both carrions running to same person. with icons the carrions can make split decisions to pick an icon each are going to
 mod:GroupSpells(360717, 360418)--Group paranoia with parent mechanic Infiltration of dread
 
 --Mal'Ganis

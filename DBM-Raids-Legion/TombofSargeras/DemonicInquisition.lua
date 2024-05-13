@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1867, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(116691, 116689)--Belac (116691), Atrigan (116689)
 mod:SetEncounterID(2048)
 mod:SetBossHPInfoToHighest()
@@ -48,7 +48,7 @@ local specWarnBoneSawEveryoneElse	= mod:NewSpecialWarningReflect(233441, "-Melee
 --Belac
 local specWarnPangsofGuilt			= mod:NewSpecialWarningInterruptCount(239401, "HasInterrupt", nil, nil, 1, 3)
 local specWarnEchoingAnguish		= mod:NewSpecialWarningMoveAway(233983, nil, nil, nil, 1, 2)
-local yellEchoingAnguish			= mod:NewPosYell(233983, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2)
+local yellEchoingAnguish			= mod:NewShortPosYell(233983)
 local specWarnAttackBelac			= mod:NewSpecialWarningSwitch("ej14646", "Dps", nil, nil, 1, 2)
 local specWarnFelSquallMelee		= mod:NewSpecialWarningRun(235230, "Melee", nil, 2, 4, 2)
 local specWarnFelSquallEveryoneElse	= mod:NewSpecialWarningReflect(235230, "-Melee", nil, nil, 1, 2)
@@ -164,7 +164,7 @@ function mod:OnCombatStart(delay)
 --	timerTormentingBurstCD:Start(1-delay, 1)--8-20
 	timerFelSquallCD:Start(35-delay, 1)--Always same, at least
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(233104))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(233104))
 		DBM.InfoFrame:Show(8, "playerpower", 5, ALTERNATE_POWER_INDEX)
 	end
 	--https://www.warcraftlogs.com/reports/JgyrYdDCB63kx8Tb#fight=38&type=summary&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20248671&view=events

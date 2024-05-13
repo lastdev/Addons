@@ -1,6 +1,6 @@
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("tooltipscan", ...) end
+
 
 -- No more need for a scanning tip, we assume properties are importing the tooltip data and can pass it along.
 -- This set of utilities just scans the blizzard tooltip data as-is.
@@ -63,9 +63,14 @@ function ItemProperties:IsItemCraftingReagentInTooltip(tooltipdata)
     return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_CRAFTINGREAGENT"])
 end
 
+-- Blizzard Account Bound
+function ItemProperties:IsItemBlizzardAccountBoundInTooltip(tooltipdata)
+    return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_BLIZZARDACCOUNTBOUND"])
+end
+
 -- Account Bound
 function ItemProperties:IsItemAccountBoundInTooltip(tooltipdata)
-    return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_BLIZZARDACCOUNTBOUND"])
+    return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_ACCOUNTBOUND"])
 end
 
 -- Cosmetic Item

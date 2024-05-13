@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("Sapphiron", "DBM-Raids-Vanilla", 1)
+local mod	= DBM:NewMod("SapphironVanilla", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240422183958")
 mod:SetCreatureID(15989)
 mod:SetEncounterID(1119)
 --mod:SetModelID(16033)--Scales incorrectly

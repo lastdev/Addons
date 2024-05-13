@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Geddon", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230921105810")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(12056)
 mod:SetEncounterID(668)
 mod:SetModelID(12129)
@@ -48,7 +48,7 @@ local timerBombCD		= mod:NewCDTimer(13.3, 20475, nil, nil, nil, 3)--13.3-18.3
 local timerBomb			= mod:NewTargetTimer(8, 20475, nil, nil, nil, 3)
 local timerArmageddon	= mod:NewCastTimer(8, 20478, nil, nil, nil, 2)
 
-mod:AddSetIconOption("SetIconOnBombTarget", 20475, false, false, {8})
+mod:AddSetIconOption("SetIconOnBombTarget", 20475, false, 0, {8})
 
 function mod:OnCombatStart(delay)
 	--timerIgniteManaCD:Start(7-delay)--7-19, too much variation for first
@@ -81,7 +81,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnBomb:Show(args.destName)
 		end
-	elseif args:IsSpell(19659) and self:CheckDispelFilter() then
+	elseif args:IsSpell(19659) and self:CheckDispelFilter("magic") then
 		specWarnIgnite:CombinedShow(0.3, args.destName)
 		specWarnIgnite:ScheduleVoice(0.3, "helpdispel")
 	end
@@ -120,7 +120,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 do
-	local Inferno = DBM:GetSpellInfo(19695)--Classic Note
+	local Inferno = DBM:GetSpellName(19695)--Classic Note
 	function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, spellName)
 		if (spellId == 19698 or spellName == Inferno) and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 			specWarnGTFO:Show(spellName)

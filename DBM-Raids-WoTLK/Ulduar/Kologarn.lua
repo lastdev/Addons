@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(32930)--, 32933, 32934
 if not mod:IsClassic() then
 	mod:SetEncounterID(1137)
@@ -47,8 +47,8 @@ local timerRespawnLeftArm		= mod:NewTimer(48, "timerLeftArm", nil, nil, nil, 1)
 local timerRespawnRightArm		= mod:NewTimer(48, "timerRightArm", nil, nil, nil, 1)
 local timerTimeForDisarmed		= mod:NewTimer(10, "achievementDisarmed")	-- 10 HC / 12 nonHC
 
-mod:AddSetIconOption("SetIconOnGripTarget", 64292, true, false, {7, 6, 5})
-mod:AddSetIconOption("SetIconOnEyebeamTarget", 63346, true, false, {8})
+mod:AddSetIconOption("SetIconOnGripTarget", 64292, true, 0, {7, 6, 5})
+mod:AddSetIconOption("SetIconOnEyebeamTarget", 63346, true, 0, {8})
 
 mod.vb.disarmActive = false
 local gripTargets = {}

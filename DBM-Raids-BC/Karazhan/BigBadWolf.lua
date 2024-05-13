@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BigBadWolf", "DBM-Raids-BC", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230522032844")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(17521)
 --mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17053)
@@ -22,7 +22,7 @@ local timerRRH			= mod:NewTargetTimer(20, 30753, nil, nil, nil, 3)
 local timerRRHCD		= mod:NewNextTimer(30, 30753, nil, nil, nil, 3)
 local timerFearCD		= mod:NewNextTimer(24, 30752, nil, nil, nil, 2)
 
-mod:AddSetIconOption("RRHIcon", 30753, true, false, {8})
+mod:AddSetIconOption("RRHIcon", 30753, true, 0, {8})
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 30753 then

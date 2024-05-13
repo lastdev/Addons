@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(newConf)
 	conf = newConf
 	rconf = conf.raid
 	cconf = conf.custom
-end, "$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
+end, "$Revision: fce90408187312ad482269e3ac08bd41e6e0829f $")
 
 --[[if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -38,7 +38,7 @@ end
 --local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
@@ -46,6 +46,8 @@ local format = format
 local strsub = strsub
 
 local GetNumGroupMembers = GetNumGroupMembers
+local UnitCastingInfo = UnitCastingInfo
+local UnitChannelInfo = UnitChannelInfo
 local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
@@ -63,12 +65,6 @@ local XPerl_CheckDebuffs = XPerl_CheckDebuffs
 local XPerl_ColourFriendlyUnit = XPerl_ColourFriendlyUnit
 local XPerl_ColourHealthBar = XPerl_ColourHealthBar
 
-local UnitCastingInfo, UnitChannelInfo = UnitCastingInfo, UnitChannelInfo
-local LCC = LibStub("LibClassicCasterino", true)
-if LCC then
-	UnitCastingInfo = function(unit) return LCC:UnitCastingInfo(unit); end
-	UnitChannelInfo = function(unit) return LCC:UnitChannelInfo(unit); end
-end
 
 -- TODO - Watch for:	 ERR_FRIEND_OFFLINE_S = "%s has gone offline."
 
@@ -160,12 +156,8 @@ function XPerl_Raid_OnLoad(self)
 		return XPerl_Raid_OnEvent(self, event, ...)
 	end
 	for i, event in pairs(events) do
-		if LCC and strfind(event, "^UNIT_SPELLCAST") then
-			LCC.RegisterCallback(self, event, CastbarEventHandler)
-		else
-			if pcall(self.RegisterEvent, self, event) then
-				self:RegisterEvent(event)
-			end
+		if pcall(self.RegisterEvent, self, event) then
+			self:RegisterEvent(event)
 		end
 	end
 
@@ -518,7 +510,7 @@ end
 
 -- XPerl_Raid_UpdateHotsPrediction
 local function XPerl_Raid_UpdateHotsPrediction(self)
-	if not IsWrathClassic then
+	if not IsCataClassic then
 		return
 	end
 	if rconf.hotPrediction then
@@ -1468,7 +1460,7 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLD()
 		XPerl_Raid_Frame:Show()
 	end
 
-	if not ZPerl_Custom and rconf.enable and cconf.enable then
+	if not ZPerl_Custom and rconf.enable then
 		LoadAddOn("ZPerl_CustomHighlight")
 	end
 
@@ -1741,7 +1733,7 @@ function XPerl_Raid_Events:UNIT_HEAL_PREDICTION(unit)
 	if rconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
 	end
-	if not IsWrathClassic then
+	if not IsCataClassic then
 		return
 	end
 	if rconf.hotPrediction and unit == self.partyid then
@@ -2529,7 +2521,7 @@ local function DefaultRaidClasses()
 			{enable = true, name = "DEMONHUNTER"},
 			{enable = true, name = "EVOKER"}
 		}
-	elseif IsWrathClassic then
+	elseif IsCataClassic then
 		return {
 			{enable = true, name = "WARRIOR"},
 			{enable = true, name = "DEATHKNIGHT"},
@@ -2604,7 +2596,7 @@ function XPerl_Raid_ChangeAttributes()
 
 	rconf.anchor = (rconf and rconf.anchor) or "TOP"
 
-	for i = 1, rconf.sortByClass and CLASS_COUNT or (IsVanillaClassic and 9 or (IsWrathClassic and 10 or 13)) do
+	for i = 1, rconf.sortByClass and CLASS_COUNT or (IsVanillaClassic and 9 or (IsCataClassic and 10 or 13)) do
 		local groupHeader = raidHeaders[i]
 
 		-- Hide this when we change attributes, so the whole re-calc is only done once, instead of for every attribute change

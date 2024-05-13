@@ -1289,42 +1289,6 @@
 			</Frame>
 		</Frames>
 	</Frame>
-	<Button name="OutfitterMinimapButton" hidden="false" enableMouse="true" movable="true" parent="MinimapBackdrop">
-		<Size>
-			<AbsDimension x="32" y="32"/>
-		</Size>
-		<Anchors>
-			<Anchor point="CENTER">
-				<Offset><AbsDimension x="-80" y="0"/></Offset>
-			</Anchor>
-		</Anchors>
-		<Scripts>
-			<OnLoad>
-				self.Inherit = Outfitter.Inherit
-				self:Inherit(Outfitter._MinimapButton)
-			</OnLoad>
-			<OnDragStart>
-				self:DragStart()
-			</OnDragStart>
-			<OnDragStop>
-				self:DragEnd()
-			</OnDragStop>
-			<OnMouseDown>
-				self:MouseDown()
-			</OnMouseDown>
-			<OnMouseUp>
-				self:ToggleMenu()
-			</OnMouseUp>
-			<OnEnter>
-				Outfitter.AddNewbieTip(self, Outfitter.cMinimapButtonTitle, 1, 1, 1, Outfitter.cMinimapButtonDescription, 1)
-			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide()
-			</OnLeave>
-		</Scripts>
-		<NormalTexture file="Interface\Addons\Outfitter\Textures\MinimapButton"/>
-		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
-	</Button>
 
 	<GameTooltip name="OutfitterTooltip" parent="UIParent" hidden="true" inherits="GameTooltipTemplate">
 		<Anchors>

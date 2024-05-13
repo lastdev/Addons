@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2195, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061637")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(138967)
 mod:SetEncounterID(2145)
 mod:DisableESCombatDetection()--ES fires moment you throw out CC, so it can't be trusted for combatstart
@@ -66,7 +66,7 @@ local yellDeathwish						= mod:NewYell(274271)
 local specWarnDeathwishNear				= mod:NewSpecialWarningClose(274271, nil, nil, nil, 1, 2)
 
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(18527))
-local timerDarkRevolationCD				= mod:NewCDCountTimer(55, 273365, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 1, 4)--55-63 (might get delayed by other casts)
+local timerDarkRevolationCD				= mod:NewCDCountTimer(55, 273365, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 1 or nil, 4)--55-63 (might get delayed by other casts)
 local timerPoolofDarknessCD				= mod:NewCDCountTimer(30.6, 273361, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerCallofCrawgCD				= mod:NewTimer(42.6, "timerCallofCrawgCD", 273889, nil, nil, 1, DBM_COMMON_L.DAMAGE_ICON)--Spawn trigger
 local timerCallofHexerCD				= mod:NewTimer(62.1, "timerCallofHexerCD", 273889, nil, nil, 1, DBM_COMMON_L.DAMAGE_ICON)--Spawn trigger
@@ -77,7 +77,7 @@ local timerBloodyCleaveCD				= mod:NewCDTimer(14.1, 273316, nil, "Tank", nil, 5,
 local timerCongealBloodCD				= mod:NewCDTimer(22.7, 273451, nil, "Dps", nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(18550))
 local timerRupturingBloodCD				= mod:NewCDTimer(6.1, 274358, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerDeathwishCD					= mod:NewNextCountTimer(27.9, 274271, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.MAGIC_ICON, nil, not mod:IsTank() and 1, 4)
+local timerDeathwishCD					= mod:NewNextCountTimer(27.9, 274271, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.MAGIC_ICON, nil, not mod:IsTank() and 1 or nil, 4)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -87,8 +87,8 @@ mod:AddNamePlateOption("NPAuraOnThrumming", 273288)
 mod:AddNamePlateOption("NPAuraOnBoundbyShadow", 273432)
 mod:AddNamePlateOption("NPAuraOnEngorgedBurst2", 276299, false)
 mod:AddNamePlateOption("NPAuraOnDecayingFlesh", 276434)
-mod:AddSetIconOption("SetIconOnDecay", 276434, true, true, {8})
-mod:AddSetIconOption("SetIconDarkRev", 273365, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnDecay", 276434, true, 5, {8})
+mod:AddSetIconOption("SetIconDarkRev", 273365, true, 0, {1, 2})
 mod:AddDropdownOption("TauntBehavior", {"TwoHardThreeEasy", "TwoAlways", "ThreeAlways"}, "TwoHardThreeEasy", "misc", nil, 274358)
 
 mod.vb.darkRevCount = 0
@@ -142,8 +142,10 @@ do
 				local spellName, _, count = DBM:UnitDebuff(uId, 274195)
 				if spellName and count then
 					local unitName = DBM:GetUnitFullName(uId)
-					tempLines[unitName] = count
-					tempLinesSorted[#tempLinesSorted + 1] = unitName
+					if unitName then
+						tempLines[unitName] = count
+						tempLinesSorted[#tempLinesSorted + 1] = unitName
+					end
 				end
 			end
 			--Sort debuffs by highest then inject into regular table
@@ -192,7 +194,7 @@ function mod:OnCombatStart(delay)
 					local UnitID = "nameplate"..i
 					local GUID = UnitGUID(UnitID)
 					local cid = self:GetCIDFromGUID(GUID)
-					if cid == 139059 then
+					if GUID and cid == 139059 then
 						local unitPower = UnitPower(UnitID)
 						if not unitTracked[GUID] then unitTracked[GUID] = "None" end
 						if (unitPower < 30) then
@@ -289,7 +291,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 					local UnitID = "nameplate"..i
 					local GUID = UnitGUID(UnitID)
 					local cid = self:GetCIDFromGUID(GUID)
-					if cid == 139059 then
+					if GUID and cid == 139059 then
 						local unitPower = UnitPower(UnitID)
 						if not unitTracked[GUID] then unitTracked[GUID] = "None" end
 						if (unitPower < 30) then
@@ -394,7 +396,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.vb.DarkRevIcon == 3 then
 			self.vb.DarkRevIcon = 1
 		end
-	elseif spellId == 273434 and self:CheckDispelFilter() then
+	elseif spellId == 273434 and self:CheckDispelFilter("curse") then
 		specWarnPitofDespair:CombinedShow(0.3, args.destName)
 		specWarnPitofDespair:CancelVoice()--Avoid spam
 		specWarnPitofDespair:ScheduleVoice(0.3, "helpdispel")

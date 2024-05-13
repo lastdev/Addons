@@ -23,3 +23,7 @@ Fixed API version to correct number. Also included GNU GENERAL PUBLIC LICENSE
 1/22/23
 Fixed all the theme options, including making a theme, saving the theme, and deleting the theme.
 Also fixed so you can now share your them with anyone who uses MisDirectionHelper2/PlusMacro.
+
+3/21/24
+Updated to 10.2.6
+Updated libs

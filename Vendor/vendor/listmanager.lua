@@ -36,9 +36,6 @@ end
 
 --[[ Updates a custom list ]]
 function CustomListManager:UpdateList(id, name, description, items)
-	--[===[@debug@
-
-	--@end-debug@]===]
 
 	savedLists:Set(id, {
 			Name = name, 
@@ -77,9 +74,6 @@ end
 function CustomListManager:GetLists()
 	local results = {}
 	savedLists:ForEach(function(list, id)
-		--[===[@debug@
-
-		--@end-debug@]===]
 
 		table.insert(results, {
 			Id = id,

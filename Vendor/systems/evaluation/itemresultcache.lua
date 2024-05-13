@@ -7,7 +7,7 @@
 -- AFTER retrieving the cached item.
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("itemcache", ...) end
+
 
 local Evaluation = Addon.Systems.Evaluation
 

@@ -40,6 +40,8 @@ do
 		GAME_VERSION = "VANILLA"
 	elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
 		GAME_VERSION = "WRATH"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
+		GAME_VERSION = "CATA"
 	elseif WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		GAME_VERSION = "RETAIL"
 	end
@@ -56,7 +58,7 @@ Environment:OnModuleLoad(function()
 	private.features = {
 		[Environment.FEATURES.REAGENT_BAG] = Environment.IsRetail(),
 		[Environment.FEATURES.CONNECTED_FACTION_AH] = Environment.IsRetail(),
-		[Environment.FEATURES.HONOR_POINTS] = Environment.IsWrathClassic(),
+		[Environment.FEATURES.HONOR_POINTS] = Environment.IsWrathClassic() or Environment.IsCataClassic(),
 		[Environment.FEATURES.MULTIPLE_ENCHANTING_VELLUMS] = Environment.IsWrathClassic(),
 		[Environment.FEATURES.SUB_PROFESSION_NAMES] = not Environment.IsRetail(),
 		[Environment.FEATURES.AH_COPPER] = not Environment.IsRetail(),
@@ -117,6 +119,12 @@ end
 ---@return boolean
 function Environment.IsWrathClassic()
 	return GAME_VERSION == "WRATH"
+end
+
+---Returns whether or not we're running within the Cataclysm Classic version of the game.
+---@return boolean
+function Environment.IsCataClassic()
+	return GAME_VERSION == "CATA"
 end
 
 function Environment.IsClassicHardcore()

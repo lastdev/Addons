@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2365, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(156523)
 mod:SetEncounterID(2327)--Obsidian Destroyer ID, but only one left after eliminating all others, should be correct
 --mod:SetHotfixNoticeRev(20190716000000)--2019, 7, 16
@@ -82,7 +82,7 @@ mod.vb.bigAoeActive = false
 mod.vb.darkManifestationCount = 0
 mod.vb.ritualCount = 0
 --mod.vb.ancientCurseIcon = 1
-local DevouredAbyss = DBM:GetSpellInfo(307839)
+local DevouredAbyss = DBM:GetSpellName(307839)
 local castsPerGUID = {}
 
 function mod:OnCombatStart(delay)

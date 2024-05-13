@@ -263,8 +263,10 @@ local function BorderColor_UpdateAll()
         end
     end
 
-    if PREDICTED_SOLUTION_BUTTON_ID and buttons[PREDICTED_SOLUTION_BUTTON_ID] then
-        buttons[PREDICTED_SOLUTION_BUTTON_ID]:SetPredictedBorder();
+    local button = PREDICTED_SOLUTION_BUTTON_ID and buttons[PREDICTED_SOLUTION_BUTTON_ID];
+
+    if button then
+        button:SetPredictedBorder();
     end
 end
 
@@ -594,12 +596,14 @@ local function ResetAll()
     end
 
     for i = 1, MAX_BUTTONS do
-        buttons[i]:SetUnactiveBorder();
-        buttons[i]:ResetSequence();
+        local button = buttons[i];
 
-        buttons[i].state = false;
-        buttons[i].sender = nil;
-        buttons[i].sequence = nil;
+        button:SetUnactiveBorder();
+        button:ResetSequence();
+
+        button.state = false;
+        button.sender = nil;
+        button.sequence = nil;
     end
 
     MazeHelper.frame.SolutionText:SetText(L['CHOOSE_SYMBOLS_4']);
@@ -1914,14 +1918,14 @@ MinimapButton.Initialize = function()
     local LDB_MazeHelper = LDB:NewDataObject('MazeHelper', {
         type          = 'launcher',
         text          = 'Maze Helper',
-        icon          = M.MazeHelper.TEXTURE,
-        iconCoords    = M.MazeHelper.COORDS.MINI,
+        icon          = M.LOGO_MINI,
         OnClick       = MinimapButton.OnClick,
         OnTooltipShow = MinimapButton.OnTooltipShow,
     });
 
     if LDBIcon then
         LDBIcon:Register('MazeHelper', LDB_MazeHelper, MHMOTSConfig.MinimapButton);
+        LDBIcon:AddButtonToCompartment('MazeHelper');
     end
 end
 

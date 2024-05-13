@@ -3,7 +3,7 @@
 
                                              Noblegarden
 
-                                      v2.17 - 9th February 2024
+                                        v2.27 - 4th May 2024
 									 
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
@@ -13,10 +13,12 @@
 
 local addonName, ns = ...
 ns.db = {}
--- From Data.lua
+
+-- For Data.lua
 ns.points = {}
 ns.textures = {}
 ns.scaling = {}
+
 -- Pink-Purple theme
 ns.colour = {}
 ns.colour.prefix	= "\124cFFE641EF"
@@ -30,7 +32,6 @@ local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true
 								removeEverA = false, showBCE = true,
 								iconHardBoiled = 16, iconNobleGarden = 12, iconSpringFling = 13,
 								iconDesertRose = 11, iconNGDailies = 15, iconNGBCE = 14 } }
-local continents = {}
 local pluginHandler = {}
 
 -- upvalues
@@ -46,13 +47,25 @@ local format = _G.format
 local next = _G.next
 local HandyNotes = _G.HandyNotes
 
+-- Version based data
+ns.continents = {}
 ns.version = select( 4, GetBuildInfo() )
-if ns.version < 40000 then
-	ns.preCata = true
-	ns.preAchievements = ( ns.version < 30000 )
-	continents[ 1414 ] = true -- Kalimdor
-	continents[ 1415 ] = true -- Eastern Kingdoms
-	continents[ 947 ] = true -- Azeroth
+-- Three sets of locations: With Wrath the locations moved from zone wide to centred within town hubs
+-- and then Cataclysm saw these town hub locations needing to be transferred over to the new maps.
+-- I do not have access to data for TBC so I am using the WotLK (i.e. reworked in Vanilla zones) data
+-- for Eversong/Falconwing Square and Azuremyst/Azure Watch. This data is already following the
+-- compact WotLK+ reworked locations. Was it like this from the outset? I've no idea. For Shattrath
+-- there are vague reports of "just outside the gates", from TBC onwards.
+-- Pre-Cata, Wowhead data is very sparse indeed. Thus unable to leverage much from there
+ns.preCata = ( ns.version < 40000 ) and true or false -- New maps
+ns.preAchievements = ( ns.version < 30000 ) and true or false -- Vanilla/TBC - original locations/maps
+ns.wrath = ( ( ns.version < 40000 ) and ( ns.version >= 30000 ) ) and true or false -- WotLK locations
+ns.dragonFlight = ( ns.version >= 100000 ) and true or false -- New from Dragonflight
+
+if ns.preCata == true then
+	ns.continents[ 1414 ] = true -- Kalimdor
+	ns.continents[ 1415 ] = true -- Eastern Kingdoms
+	ns.continents[ 947 ] = true -- Azeroth
 	ns.azeroth = 947
 	ns.azuremystIsle = 1943
 	ns.durotar = 1411
@@ -62,11 +75,9 @@ if ns.version < 40000 then
 	ns.stormwindCity = 1453
 	ns.teldrassil = 1438
 else
-	ns.preCata = false
-	ns.preAchievements = false
-	continents[ 12 ] = true -- Kalimdor
-	continents[ 13 ] = true -- Eastern Kingdoms
-	continents[ 947 ] = true -- Azeroth
+	ns.continents[ 12 ] = true -- Kalimdor
+	ns.continents[ 13 ] = true -- Eastern Kingdoms
+	ns.continents[ 947 ] = true -- Azeroth
 	ns.azeroth = 947
 	ns.azuremystIsle = 97
 	ns.durotar = 1
@@ -669,7 +680,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 		if ( pin.aID == 2416 ) then
 			GameTooltip:AddLine( ns.colour.plaintext ..L[ pin.name ] )
 		end
-	elseif pin.obj then -- Brightly Colored Eggs
+	elseif pin.name and ( pin.name == "Brightly Colored Egg" ) then -- Brightly Colored Eggs
 		GameTooltip:SetText( ns.colour.prefix ..L[ pin.name ] )		
 	else -- Dailies with quests
 		GameTooltip:SetText( ns.colour.prefix ..L["Noblegarden"] )
@@ -708,7 +719,8 @@ local function ShowConditionallyS( aID, aIndex )
 	return true
 end
 
-local function ShowConditionallyE( aID  )
+local function ShowConditionallyE( aID, aIndex )
+	-- See Winter Veil for programming notes
 	local completed, completedMe;
 	if ( ns.db.removeEverA == true ) or ( ns.db.removeEverC == true ) then
 		_, aName, _, completed, _, _, _, _, _, _, _, _, completedMe = GetAchievementInfo( aID )
@@ -719,10 +731,15 @@ local function ShowConditionallyE( aID  )
 			if completedMe == true then
 				return false
 			end
+			if aIndex and ( aIndex > 0 ) then 
+				_, _, completed = GetAchievementCriteriaInfo( aID, aIndex )
+				return not completed
+			end
 		end
 	end
 	return true
 end
+
 
 local function ShowConditionallyQ( quest )
 	local completed;
@@ -742,76 +759,108 @@ do
 		while coord do
 			if pin then
 				if pin.aID then
+					-- Achievements were introduced in WotLK
 					if ns.preAchievements == false then
 						if ( pin.aID == 2436 ) then -- Desert Rose
-							if ( ShowConditionallyE( pin.aID ) == true ) then
-								if ( ShowConditionallyS( pin.aID, pin.aIndex ) == true ) then
-									return coord, nil, ns.textures[ ns.db.iconDesertRose ],
-											ns.db.iconScale * ns.scaling[ ns.db.iconDesertRose ], ns.db.iconAlpha
-								end
+							if ( ShowConditionallyE( pin.aID, pin.aIndex ) == true ) then
+								return coord, nil, ns.textures[ ns.db.iconDesertRose ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconDesertRose ], ns.db.iconAlpha
 							end
 						elseif ( pin.aID == 2419 ) then -- Spring Fling Alliance
 							if ( ns.faction == "Alliance" ) then
-								if ( ShowConditionallyE( pin.aID ) == true ) then
-									if ( ShowConditionallyS( pin.aID, ( ns.preCata and pin.aIndexC or pin.aIndexR ) ) == true ) then
-										return coord, nil, ns.textures[ ns.db.iconSpringFling ],
-												ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
-									end
+								if ( ShowConditionallyE( pin.aID, ( ns.preCata and pin.aIndexC or pin.aIndexR ) ) == true ) then
+									return coord, nil, ns.textures[ ns.db.iconSpringFling ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
 								end
 							end
 						elseif ( pin.aID == 2497 ) then -- Spring Fling Horde
 							if ( ns.faction == "Horde" ) then
-								if ( ShowConditionallyE( pin.aID ) == true ) then
-									if ( ShowConditionallyS( pin.aID, ( ns.preCata and pin.aIndexC or pin.aIndexR ) ) == true ) then
-										return coord, nil, ns.textures[ ns.db.iconSpringFling ],
-												ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
-									end
+								if ( ShowConditionallyE( pin.aID, ( ns.preCata and pin.aIndexC or pin.aIndexR ) ) == true ) then
+									return coord, nil, ns.textures[ ns.db.iconSpringFling ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconSpringFling ], ns.db.iconAlpha
 								end
 							end
 						elseif ( pin.aID == 2420 ) or ( pin.aID == 2421 ) then -- Noblegarden
 							if ( ns.faction == pin.faction ) then
 								if ( ShowConditionallyE( pin.aID ) == true ) then
-									if ( ShowConditionallyS( pin.aID ) == true ) then
-										return coord, nil, ns.textures[ ns.db.iconNobleGarden ],
-												ns.db.iconScale * ns.scaling[ ns.db.iconNobleGarden ], ns.db.iconAlpha
-									end
+									return coord, nil, ns.textures[ ns.db.iconNobleGarden ],
+											ns.db.iconScale * ns.scaling[ ns.db.iconNobleGarden ], ns.db.iconAlpha
 								end
 							end
 						elseif ( pin.aID == 2416 ) then -- Hard Boiled
 							if ( ShowConditionallyE( pin.aID ) == true ) then
-								if ( ShowConditionallyS( pin.aID ) == true ) then
-									return coord, nil, ns.textures[ ns.db.iconHardBoiled ],
-											ns.db.iconScale * ns.scaling[ ns.db.iconHardBoiled ], ns.db.iconAlpha
+								return coord, nil, ns.textures[ ns.db.iconHardBoiled ],
+										ns.db.iconScale * ns.scaling[ ns.db.iconHardBoiled ], ns.db.iconAlpha
+							end
+						end
+					end
+				elseif pin.name and ( pin.name == "Brightly Colored Egg" ) then -- Brightly Colored Eggs
+					if ( ns.db.showBCE == true ) and ( ( pin.author == nil ) or ( ns.author ~= nil ) ) then
+						if ns.preAchievements == true then
+							-- Vanilla or TBC
+							if pin.preWrath == true then
+								if pin.author then
+									return coord, nil, ns.textures[ ns.db.iconHardBoiled ], ns.db.iconScale *
+										ns.scaling[ ns.db.iconHardBoiled ] * ( ( pin.continentShow and 
+										ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								else
+									return coord, nil, ns.textures[ ns.db.iconNGBCE ], ns.db.iconScale *
+										ns.scaling[ ns.db.iconNGBCE ] * ( ( pin.continentShow and 
+										ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								end
+							end
+						elseif ns.preCata == true then
+							-- WotLK
+							
+							if ( ( pin.preWrath == nil ) or ( pin.preWrath == false ) ) and
+									( ( pin.preCata == nil ) or ( pin.preCata == true ) ) then
+								if pin.author then
+									return coord, nil, ns.textures[ ns.db.iconHardBoiled ], ns.db.iconScale *
+										ns.scaling[ ns.db.iconHardBoiled ] * ( ( pin.continentShow and 
+										ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								else
+									return coord, nil, ns.textures[ ns.db.iconNGBCE ], ns.db.iconScale *
+										ns.scaling[ ns.db.iconNGBCE ] * ( ( pin.continentShow and 
+										ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								end
+							end
+						elseif pin.dragonFlight then
+							if ns.dragonFlight == true then
+								if pin.author then
+									return coord, nil, ns.textures[ ns.db.iconHardBoiled ], ns.db.iconScale *
+											ns.scaling[ ns.db.iconHardBoiled ] * ( ( pin.continentShow and 
+											ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								else
+									return coord, nil, ns.textures[ ns.db.iconNGBCE ], ns.db.iconScale *
+											ns.scaling[ ns.db.iconNGBCE ] * ( ( pin.continentShow and 
+											ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								end
+							end
+						else
+							-- Cata -> Retail
+							if ( ( pin.preWrath == nil ) or ( pin.preWrath == false ) ) and
+									( ( pin.preCata == nil ) or ( pin.preCata == false ) ) then
+								if pin.author then
+									return coord, nil, ns.textures[ ns.db.iconHardBoiled ], ns.db.iconScale *
+											ns.scaling[ ns.db.iconHardBoiled ] * ( ( pin.continentShow and 
+											ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
+								else
+									return coord, nil, ns.textures[ ns.db.iconNGBCE ], ns.db.iconScale *
+											ns.scaling[ ns.db.iconNGBCE ] * ( ( pin.continentShow and 
+											ns.continents[ ns.mapID ] ) and 1 or 0.5 ), ns.db.iconAlpha
 								end
 							end
 						end
 					end
-				elseif pin.obj then -- Brightly Colored Eggs
-					if ns.db.showBCE == true then
-						if pin.author then
-							if ns.author then
-								return coord, nil, ns.textures[ ns.db.iconNGBCE ],
-										ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
-							end
-						elseif pin.preCata then
-							if ( ns.preCata == pin.preCata ) then
-								return coord, nil, ns.textures[ ns.db.iconNGBCE ],
-										ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
-							end
-						else
-							return coord, nil, ns.textures[ ns.db.iconNGBCE ],
-									ns.db.iconScale * ns.scaling[ ns.db.iconNGBCE ] * 0.5, ns.db.iconAlpha
-						end
-					end
 				elseif pin.quest and ( ns.faction == pin.faction ) then -- Dailies with quests
-					if ( pin.preCata ~= nil ) then
-						if ns.preCata == pin.preCata then
+					if pin.dragonFlight then
+						if ns.dragonFlight == true then
 							if ( ShowConditionallyQ( pin.quest ) == true ) then
 								return coord, nil, ns.textures[ ns.db.iconNGDailies ],
 										ns.db.iconScale * ns.scaling[ ns.db.iconNGDailies ], ns.db.iconAlpha
 							end
 						end
-					else
+					elseif ns.preAchievements == false then
 						if ( ShowConditionallyQ( pin.quest ) == true ) then
 							return coord, nil, ns.textures[ ns.db.iconNGDailies ],
 									ns.db.iconScale * ns.scaling[ ns.db.iconNGDailies ], ns.db.iconAlpha
@@ -823,6 +872,7 @@ do
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
+		ns.mapID = mapID
 		return iterator, ns.points[mapID]
 	end
 end
@@ -1021,7 +1071,7 @@ function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
 	if not HereBeDragons then return end
 	
-	for continentMapID in next, continents do
+	for continentMapID in next, ns.continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
 			local coords = ns.points[map.mapID]
@@ -1031,12 +1081,14 @@ function pluginHandler:OnEnable()
 			elseif ns.preCata and ( map.mapID < ns.azeroth ) then
 			elseif ( not ns.preCata ) and ( map.mapID > ns.azeroth ) then
 			elseif coords then
-				for coord, criteria in next, coords do
-					local mx, my = HandyNotes:getXY(coord)
-					local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
-					if cx and cy then
-						ns.points[continentMapID] = ns.points[continentMapID] or {}
-						ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = criteria
+				for coord, pin in next, coords do
+					if pin.continentShow then
+						local mx, my = HandyNotes:getXY(coord)
+						local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+						if cx and cy then
+							ns.points[continentMapID] = ns.points[continentMapID] or {}
+							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = pin
+						end
 					end
 				end
 			end

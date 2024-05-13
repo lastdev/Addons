@@ -55,10 +55,10 @@ local function OnHyperlinkClick(self, link)
 	self.popup.lastLink = link
 	if (link == "errors") then
 		self.popup.editbox.text = addon.base64.encode(serializeTable(TomCats_Account.errorLog))
-		self.popup.info:SetText("Press Control-C to copy the data")
+		self.popup.info:SetText("Press " .. (IsMacClient() and "Cmd" or "Ctrl") .. "-C to copy the data")
 	else
 		self.popup.editbox.text = "https://" .. link
-		self.popup.info:SetText("Press Control-C to copy the link")
+		self.popup.info:SetText("Press " .. (IsMacClient() and "Cmd" or "Ctrl") .. "-C to copy the link")
 	end
 	self.popup.editbox:SetText(self.popup.editbox.text)
 	self.popup.editbox:HighlightText()
@@ -104,11 +104,11 @@ local function OnEvent(_, event, arg1, arg2)
 	if (event == "ADDON_LOADED") then
 		if (addonName == arg1) then
 			local errorLogDurationSeconds = tonumber("0")
-			local currentTS = tonumber("1706923821")
+			local currentTS = tonumber("1714384266")
 			expireAt =  currentTS + errorLogDurationSeconds
-			if (TomCats_Account.errorLog.version ~= "2.5.11") then
+			if (TomCats_Account.errorLog.version ~= "2.5.16") then
 				TomCats_Account.errorLog = { }
-				TomCats_Account.errorLog.version = "2.5.11"
+				TomCats_Account.errorLog.version = "2.5.16"
 			end
 			errorLog = TomCats_Account.errorLog
 			local enableButtons = (expireAt > GetServerTime()) and #TomCats_Account.errorLog > 0

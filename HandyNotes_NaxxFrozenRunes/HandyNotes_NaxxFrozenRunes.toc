@@ -1,9 +1,9 @@
-## Interface: 100205
+## Interface: 100207
 ## Title: HandyNotes_NaxxFrozenRunes
 ## Notes: Frozen Rune locations in Naxxramas
 ## IconTexture: Interface/Addons/HandyNotes_NaxxFrozenRunes/HandyNotes_NaxxFrozenRunes.blp
 ## Author: Keyboardturner
-## Version: 6
+## Version: 8
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_NaxxFrozenRunesDB
 ## RequiredDeps: HandyNotes

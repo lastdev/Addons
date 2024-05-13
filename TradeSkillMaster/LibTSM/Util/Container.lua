@@ -47,7 +47,8 @@ function Container.GetBagItemFamily(bag)
 		return 0
 	end
 	local inventoryId = C_Container.ContainerIDToInventoryID(bag)
-	return GetItemFamily(GetInventoryItemLink("player", inventoryId)) or 0
+	local inventoryLink = GetInventoryItemLink("player", inventoryId)
+	return inventoryLink and GetItemFamily(inventoryLink) or 0
 end
 
 ---Gets a list of empty slotIds and their sort values.

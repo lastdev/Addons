@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Horsemen", "DBM-Raids-WoTLK", 8)
 local L		= mod:GetLocalizedStrings()
 local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
 
-mod:SetRevision("20231117104143")
+mod:SetRevision("20240426180424")
 mod:SetCreatureID(16063, 16064, 16065, 30549)
 mod:SetEncounterID(1121)
 mod:SetModelID(10729)
@@ -87,7 +87,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-local BoneBarrier = DBM:GetSpellInfo(29061)
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 29061 then
 		warnBoneBarrier:Show(args.destName)

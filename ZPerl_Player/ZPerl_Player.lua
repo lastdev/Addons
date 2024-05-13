@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
+end, "$Revision: fce90408187312ad482269e3ac08bd41e6e0829f $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -24,7 +24,7 @@ end
 --@end-debug@]===]
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
@@ -496,13 +496,13 @@ local function XPerl_Player_UpdateXP(self)
 						if (playerxprest >= 1000000) then
 							suffix = format(" +%.1fM", playerxprest / 1000000)
 						else
-							suffix = format(" +%.1fK", playerxprest / 1000)
+							suffix = format(" +%.1fk", playerxprest / 1000)
 						end
 					else
 						if (playerxprest >= 1000000) then
 							suffix = format(" +%dM", playerxprest / 1000000)
 						else
-							suffix = format(" +%dK", playerxprest / 1000)
+							suffix = format(" +%dk", playerxprest / 1000)
 						end
 					end
 
@@ -786,7 +786,7 @@ end
 
 -- XPerl_Player_UpdateHotsPrediction
 local function XPerl_Player_UpdateHotsPrediction(self)
-	if not IsWrathClassic then
+	if not IsCataClassic then
 		return
 	end
 	if pconf.hotPrediction then
@@ -1939,7 +1939,7 @@ function XPerl_Player_Events:UNIT_HEAL_PREDICTION(unit)
 	if pconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
 	end
-	if not IsWrathClassic then
+	if not IsCataClassic then
 		return
 	end
 	if pconf.hotPrediction and unit == self.partyid then
@@ -2665,7 +2665,7 @@ function XPerl_Player_InitDK(self, playerClass)
 		self.runes.child2:SetParent(self.runes)
 		self.runes.child2:ClearAllPoints()
 		self.runes.child2:SetPoint("TOP", self.runes, "TOP", 0, -6)
-	elseif IsWrathClassic then
+	elseif IsCataClassic then
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -22)

@@ -6,6 +6,8 @@ local MEDIA_PATH = 'Interface\\AddOns\\' .. ADDON_NAME .. '\\Media\\';
 
 M.Path = MEDIA_PATH;
 
+M.LOGO_MINI = MEDIA_PATH .. 'mh_logo_mini.blp'
+
 M.INLINE_LEADER_ICON      = '|TInterface\\GroupFrame\\UI-Group-LeaderIcon:16|t';
 M.INLINE_TANK_ICON        = _G.INLINE_TANK_ICON;
 M.INLINE_HEALER_ICON      = _G.INLINE_HEALER_ICON;

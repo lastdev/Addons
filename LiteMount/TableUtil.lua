@@ -12,10 +12,16 @@ local _, LM = ...
 if LibDebug then LibDebug() end
 --@end-debug@]==]
 
-function LM.tMap(t, f)
+function LM.tMap(t, f, isIndexTable)
     local out = {}
-    for k, v in pairs(t) do
-        out[k] = f(v)
+    if isIndexTable then
+        for i, v in ipairs(t) do
+            out[i] = f(v)
+        end
+    else
+        for k, v in pairs(t) do
+            out[k] = f(v)
+        end
     end
     return out
 end
@@ -166,4 +172,10 @@ function LM.TableToString(val)
     local context = { depth = 0, lines = {} }
     DumpTableContents(val, '', '', context)
     return table.concat(context.lines, '\n') .. '\n'
+end
+
+local defaultIndexer = { __index = function (t, k) return t.DEFAULT end }
+
+function LM.TableWithDefault(t)
+    return setmetatable(t, defaultIndexer)
 end

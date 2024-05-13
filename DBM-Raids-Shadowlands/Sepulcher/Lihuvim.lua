@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2461, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(182169)
 mod:SetEncounterID(2539)
 mod:SetUsedIcons(1, 2)
@@ -67,7 +67,7 @@ local timerUnstableMoteCD						= mod:NewCDCountTimer(20.6, 362622, nil, nil, nil
 local timerUnstableMote							= mod:NewBuffFadesTimer(5.9, 362622, nil, nil, nil, 5)--1.9+4
 local timerProtoformRadiance					= mod:NewBuffActiveTimer(28.8, 363537, nil, nil, nil, 2)
 local timerProtoformCascadeCD					= mod:NewCDCountTimer(10.9, 364652, 260885, nil, nil, 3)
-local timerResonanceCD							= mod:NewCDCountTimer(41.2, 368027, DBM_COMMON_L.TANKCOMBOC, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerResonanceCD							= mod:NewCDCountTimer(41.2, 368027, DBM_COMMON_L.TANKCOMBO.." (%s)", "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerCosmicShiftCD						= mod:NewCDCountTimer(20.3, 363088, nil, nil, nil, 3)
 local timerDeconstructingEnergyCD				= mod:NewCDCountTimer(37.2, 363795, 119342, nil, nil, 3)--Shorttext "Bombs"
 local timerSynthesizeCD							= mod:NewCDCountTimer(101, 363130, nil, nil, nil, 6)
@@ -76,7 +76,7 @@ local timerRealignment							= mod:NewBuffActiveTimer(20, 361200, nil, nil, nil,
 local berserkTimer								= mod:NewBerserkTimer(480)
 --Adds
 
-mod:AddSetIconOption("SetIconOnDeconstructingEnergy", 363795, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnDeconstructingEnergy", 363795, true, 0, {1, 2})
 mod:AddNamePlateOption("NPAuraOnEphemeralBarrier", 364312, true)
 mod:GroupSpells(368027, 368025, 368024)--Group responance debuffs together
 mod:GroupSpells(362659, 368738, 368740)--Group mythic debuffs together with Allignment Shift (https://ptr.wowhead.com/spell=362659/alignment-shift)
@@ -89,7 +89,7 @@ mod.vb.cosmicCount = 0
 mod.vb.deconstructCount = 0
 mod.vb.resonanceCount = 0
 mod.vb.timerMode = 1
-local grip, push = DBM:GetSpellInfo(56689), DBM:GetSpellInfo(359132)
+local grip, push = DBM:GetSpellName(56689), DBM:GetSpellName(359132)
 local playerGrip = false
 local difficultyName = mod:IsMythic() and "mythic" or mod:IsHeroic() and "heroic" or "easy"
 local allTimers = {

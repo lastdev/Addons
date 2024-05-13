@@ -3,14 +3,12 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20200912131657")
+mod:SetRevision("20240412062605")
 
 mod:RegisterCombat("scenario", 1051)
 
 mod:RegisterEventsInCombat(
-	"CHAT_MSG_MONSTER_YELL",
 	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START"
 )
 

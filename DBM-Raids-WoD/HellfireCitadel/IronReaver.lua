@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1425, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(90284)
 mod:SetEncounterID(1785)
 mod:SetUsedIcons(4, 3, 2)
@@ -85,7 +85,7 @@ local unstableOrbsTimers = {3, 18, 24, 24, 24}--Nerfed considerbly, useful now.
 local poundingTimers = {32.6, 54, 24}
 
 local debuffFilter
-local debuffName, reactiveName, burningName, quickfuseName, reinforcedName, volatileName = DBM:GetSpellInfo(182280), DBM:GetSpellInfo(186676), DBM:GetSpellInfo(186667), DBM:GetSpellInfo(186660), DBM:GetSpellInfo(188294), DBM:GetSpellInfo(182523)
+local debuffName, reactiveName, burningName, quickfuseName, reinforcedName, volatileName = DBM:GetSpellName(182280), DBM:GetSpellName(186676), DBM:GetSpellName(186667), DBM:GetSpellName(186660), DBM:GetSpellName(188294), DBM:GetSpellName(182523)
 do
 	debuffFilter = function(uId)
 		if DBM:UnitDebuff(uId, debuffName) then
@@ -316,7 +316,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.HudMapOnArt then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 13, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 13, 1, 1, 0, 0.5):Pulse(0.5, 0.5)
 		end
 		updateRangeFrame(self)
 	elseif spellId == 182020 then

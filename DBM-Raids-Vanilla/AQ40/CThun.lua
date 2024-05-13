@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("CThun", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(15589, 15727)
 mod:SetEncounterID(717)
 mod:SetHotfixNoticeRev(20200823000000)--2020, 8, 23
@@ -47,7 +47,7 @@ local timerGiantClawTentacle	= mod:NewTimer(60, "TimerGiantClawTentacle", 26391,
 local timerWeakened				= mod:NewTimer(45, "TimerWeakened", 28598)
 
 mod:AddRangeFrameOption("10")
-mod:AddSetIconOption("SetIconOnEyeBeam", 26134, true, false, {1})
+mod:AddSetIconOption("SetIconOnEyeBeam", 26134, true, 0, {1})
 mod:AddInfoFrameOption(26476, true)
 
 local firstBossMod = DBM:GetModByName("AQ40Trash")

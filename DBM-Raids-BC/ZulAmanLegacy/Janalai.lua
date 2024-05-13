@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Janalai", "DBM-Raids-BC", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(23578)
 mod:SetEncounterID(1191, 2484)
 mod:SetZone()
@@ -27,7 +27,7 @@ local timerBomb			= mod:NewCastTimer(12, 42630, nil, nil, nil, 3)--Cast bar?
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("FlameIcon", 43140, true, false, {1})
+mod:AddSetIconOption("FlameIcon", 43140, true, 0, {1})
 
 function mod:FlameTarget(targetname, uId)
 	if not targetname then return end

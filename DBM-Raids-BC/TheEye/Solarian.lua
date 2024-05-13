@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(18805)
 mod:SetEncounterID(732, 2466)
 mod:SetModelID(18239)
@@ -34,7 +34,7 @@ local timerPriest		= mod:NewTimer(20, "TimerPriest", 39414, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("WrathIcon", 42783, true, false, {8})
+mod:AddSetIconOption("WrathIcon", 42783, true, 0, {8})
 
 function mod:OnCombatStart(delay)
 	timerSplit:Start(50-delay)

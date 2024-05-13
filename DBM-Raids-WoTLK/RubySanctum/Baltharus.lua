@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(39751)
 mod:SetEncounterID(mod:IsClassic() and 890 or 1147)
 mod:SetModelID(31761)
@@ -29,7 +29,7 @@ local timerWhirlwind		= mod:NewBuffActiveTimer(4, 75125, nil, "Tank|Healer", nil
 local timerRepellingWave	= mod:NewCastTimer(4, 74509, nil, nil, nil, 2)--1 second cast + 3 second stun
 local timerBrand			= mod:NewBuffActiveTimer(10, 74505, nil, nil, nil, 5)
 
-mod:AddSetIconOption("SetIconOnBrand", 74505, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnBrand", 74505, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddRangeFrameOption(12, 74505)
 
 mod.vb.warnedSplit1	= false

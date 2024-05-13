@@ -1,10 +1,12 @@
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC or not C_Seasons or C_Seasons.GetActiveSeason() ~= 2 then
+if not C_Seasons or C_Seasons.GetActiveSeason() ~= 2 then
 	return
 end
 local MAP_ASHENVALE = 1440
 local mod = DBM:NewMod("m" .. MAP_ASHENVALE, "DBM-PvP")
 
-mod:SetRevision("20240210222413")
+local pvpMod = DBM:GetModByName("PvPGeneral")
+
+mod:SetRevision("20240505221847")
 -- TODO: we could teach this thing to handle outdoor zones instead of only instances
 -- when implementing this make sure that the stop functions are called properly, i.e., that ZONE_CHANGED_NEW_AREA still fires when leaving
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
@@ -12,7 +14,8 @@ mod:RegisterEvents(
 	"LOADING_SCREEN_DISABLED",
 	"ZONE_CHANGED_NEW_AREA",
 	"PLAYER_ENTERING_WORLD",
-	"UPDATE_UI_WIDGET"
+	"UPDATE_UI_WIDGET",
+	"UNIT_AURA player"
 )
 
 mod:AddBoolOption("HealthFrame", nil, nil, function() mod:healthFrameOptionChanged() end)
@@ -24,19 +27,24 @@ local widgetIDs = {
 	[5378] = true, -- Event time remaining
 }
 
+-- Observed start times:
+-- 16:00:12
+
+local function debugTimeString()
+	local time = date("*t", GetServerTime())
+	local gameHour, gameMin = GetGameTime()
+	return ("server time %02d:%02d:%02d, game time %02d:%02d"):format(time.hour, time.min, time.sec, gameHour, gameMin)
+end
+
 function mod:updateStartTimer()
 	if self.eventRunning then
 		-- prevent an update for the prep phase immediately after event start from re-starting timers
 		-- (yes, this happened)
 		return
 	end
-	local time = date("*t", GetServerTime())
-	local sec = time.sec
-	local hour, min = GetGameTime()
-	hour = hour + min / 60 + sec / 60 / 60
-	local remaining = (3 - (hour - 1) % 3) * 60 * 60
+	local remaining = pvpMod:GetTimeUntilWorldPvpEvent(1)
 	local total = 3 * 60 * 60
-	if remaining < 3.75 * 60 * 60 then
+	if remaining < 2.75 * 60 * 60 then
 		startTimer:Update(total - remaining, total)
 	end
 end
@@ -69,8 +77,24 @@ function mod:healthFrameOptionChanged()
 	end
 end
 
+function mod:UNIT_AURA(target)
+	if target ~= "player" then return end
+	local wasInDream = self.inEmeraldDream
+	self.inEmeraldDream = not not C_UnitAuras.GetPlayerAuraBySpellID(444759)
+	if self.inZone and self.eventRunning then
+		if self.tracker and self.Options.HealthFrame and not self.inEmeraldDream then
+			-- Only re-show it if we left the Emerald Dream to avoid re-showing it if it was hidden via the dropdown menu
+			if wasInDream then
+				self.tracker:ShowInfoFrame()
+			end
+		else
+			DBM.InfoFrame:Hide()
+		end
+	end
+end
+
 function mod:startEvent()
-	DBM:Debug("Detected start of Ashenvale event")
+	DBM:Debug("Detected start of Ashenvale event at " .. debugTimeString())
 	startTimer:Stop()
 	self:setupHealthTracking(not self.Options.HealthFrame)
 end

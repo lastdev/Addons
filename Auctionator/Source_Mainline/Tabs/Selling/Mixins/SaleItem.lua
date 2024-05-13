@@ -298,6 +298,8 @@ function AuctionatorSaleItemMixin:SetItemName()
     itemName = itemName .. " " .. C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
   elseif self.itemInfo.itemLevel then
     itemName = AUCTIONATOR_L_ITEM_NAME_X_ITEM_LEVEL_X:format(itemName, self.itemInfo.itemLevel)
+  elseif self.itemInfo.itemLink:find("battlepet", nil, true) then
+    itemName = AUCTIONATOR_L_ITEM_NAME_X_ITEM_LEVEL_X:format(itemName, Auctionator.Utilities.GetPetLevelFromLink(self.itemInfo.itemLink))
   end
   itemName = ITEM_QUALITY_COLORS[self.itemInfo.quality].color:WrapTextInColorCode(itemName)
   self.TitleArea.Text:SetText(itemName)
@@ -415,7 +417,7 @@ function AuctionatorSaleItemMixin:SetEquipmentMultiplier(itemLink)
   local item = Item:CreateFromItemLink(itemLink)
   item:ContinueOnItemLoad(function()
     local multiplier = Auctionator.Config.Get(Auctionator.Config.Options.GEAR_PRICE_MULTIPLIER)
-    local vendorPrice = select(Auctionator.Constants.ITEM_INFO.SELL_PRICE, GetItemInfo(itemLink))
+    local vendorPrice = select(Auctionator.Constants.ITEM_INFO.SELL_PRICE, C_Item.GetItemInfo(itemLink))
     if multiplier ~= 0 and vendorPrice ~= 0 then
       -- Check for a vendor price multiplier being set (and a vendor price)
       self:UpdateSalesPrice(
@@ -608,7 +610,7 @@ function AuctionatorSaleItemMixin:GetConfirmationMessage()
 
   -- Determine if the item is worth more to sell to a vendor than to post on the
   -- AH.
-  local itemInfo = { GetItemInfo(self.itemInfo.itemLink) }
+  local itemInfo = { C_Item.GetItemInfo(self.itemInfo.itemLink) }
   local vendorPrice = itemInfo[Auctionator.Constants.ITEM_INFO.SELL_PRICE]
   if Auctionator.Utilities.IsVendorable(itemInfo) and
      vendorPrice * self.Quantity:GetNumber()

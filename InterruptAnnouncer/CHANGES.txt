@@ -1,12 +1,12 @@
-tag ac8fe29649ed0ea9f34464caa7f59115758cc90e Release-10.2.5-1
+tag 1feba174d77fcb7f3a142ac4d911084a043019b7 Release-10.2.7-1
 Author:	Shauren <shauren.trinity@gmail.com>
-Date:	Fri Jan 19 13:05:34 2024 +0100
+Date:	Wed May 8 09:51:39 2024 +0200
 
 Bump TOC
 
-commit 2f13eda639f89b474957fa6a2bc51c630fecab03
+commit 3e8b1b0b32556f7d28207e079dda3c2fdc7470a5
 Author: Shauren <shauren.trinity@gmail.com>
-Date:   Fri Jan 19 13:04:59 2024 +0100
+Date:   Wed May 8 09:51:09 2024 +0200
 
-    Bump TOC to 10.2.5
+    Bump TOC to 10.2.7
 

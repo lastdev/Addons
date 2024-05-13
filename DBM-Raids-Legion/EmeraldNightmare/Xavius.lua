@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240501100943")
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetUsedIcons(6, 2, 1)
@@ -74,7 +74,7 @@ local timerTormentingSwipeCD			= mod:NewCDTimer(10, 224649, nil, "Tank", nil, 5,
 --Stage Two: From the Shadows
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerBondsOfTerrorCD				= mod:NewCDTimer(14.1, 209034, nil, "-Tank", 2, 3)
-local timerCorruptionMeteorCD			= mod:NewCDCountTimer(28, 206308, 57467, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, not mod:IsTank() and 3, 4)--Short text "meteor"
+local timerCorruptionMeteorCD			= mod:NewCDCountTimer(28, 206308, 57467, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, not mod:IsTank() and 3 or nil, 4)--Short text "meteor"
 local timerBlackeningSoulCD				= mod:NewCDTimer(7.2, 209158, nil, "Healer|Tank", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.TANK_ICON)
 local timerNightmareInfusionCD			= mod:NewCDTimer(61.5, 209443, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)--61.5-62.5
 local timerCallOfNightmaresCD			= mod:NewCDTimer(40, 205588, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 4)
@@ -90,7 +90,7 @@ mod:AddSetIconOption("SetIconOnMeteor", 206308)
 
 local lurkingTimers = {17, 20.5, 41, 20.5, 20.5}--{13.6, 26.3, 47.4, 20.7, 25.9} old. TODO, get more data, if all but one are 20.5, just code smarter without table
 local corruptionName = DBM:EJ_GetSectionInfo(12970)
-local darkSoul, blackSoul, dreamDebuff, blackened = DBM:GetSpellInfo(206651), DBM:GetSpellInfo(209158), DBM:GetSpellInfo(206005), DBM:GetSpellInfo(205612)
+local darkSoul, blackSoul, dreamDebuff, blackened = DBM:GetSpellName(206651), DBM:GetSpellName(209158), DBM:GetSpellName(206005), DBM:GetSpellName(205612)
 local bladesTarget = {}
 local gatherTarget = {}
 local playerName = UnitName("player")
@@ -193,7 +193,7 @@ function mod:SPELL_CAST_START(args)
 			warnNightmareInfusion:Show()
 		else
 			--Player has dream buff and current tank does NOT so TAUNT warning.
-			if playerHasDream and not DBM:UnitDebuff(uId, dreamDebuff) then
+			if playerHasDream and uId and not DBM:UnitDebuff(uId, dreamDebuff) then
 				specWarnNightmareInfusionOther:Show(targetName)
 				specWarnNightmareInfusionOther:Play("tauntboss")
 			end

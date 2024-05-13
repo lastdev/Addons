@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1396, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(90378)
 mod:SetEncounterID(1786)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -65,7 +65,7 @@ mod.vb.berserkerCount = 0
 mod.vb.deathThrowsCount = 0
 mod.vb.visionsCount = 0
 local UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitExists, UnitGUID, UnitDetailedThreatSituation
-local felCorruption = DBM:GetSpellInfo(182159)
+local felCorruption = DBM:GetSpellName(182159)
 local Bloodthirster = DBM:EJ_GetSectionInfo(11266)
 local AddsSeen = {}
 local HowlByGUID = {}--Not syncable, but keeps separate count for each add cleanly

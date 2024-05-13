@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(17767)
 mod:SetEncounterID(618, 2468)
 mod:SetModelID(17444)
@@ -27,7 +27,7 @@ local timerDndCD		= mod:NewCDTimer(32, 31258, nil, nil, nil, 3)--changed to 32 t
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("IceBoltIcon", 31249, false, false, {8})
+mod:AddSetIconOption("IceBoltIcon", 31249, false, 0, {8})
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)

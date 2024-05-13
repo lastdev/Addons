@@ -30,11 +30,6 @@ L:SetOptionLocalization({
 -------------------------------
 L = DBM:GetModLocalization(169)
 
-L:SetWarningLocalization({
-	SpecWarnActivated			= "Mude de alvo para %s!",
-	specWarnGenerator			= "Gerador de Energia - Mexa-se %s!"
-})
-
 L:SetTimerLocalization({
 	timerShadowConductorCast	= "Infusão Sombria",
 	timerArcaneLockout			= "Aniquilador em Recarga",
@@ -46,13 +41,7 @@ L:SetOptionLocalization({
 	timerShadowConductorCast	= "Exibir cronógrafo para lançamento de $spell:92048",
 	timerArcaneLockout			= "Exibir cronógrafo para recarga de $spell:91542",
 	timerArcaneBlowbackCast		= "Exibir cronógrafo para lançamento de $spell:91879",
-	timerNefAblity				= "Exibir cronógrafo para recarga do bônus Melhorar Habilidade (modo Heróico)",
-	SpecWarnActivated			= "Exibir aviso especial quando um novo chefe é ativado",
-	specWarnGenerator			= "Exibir aviso especial quando um chefe obtém $spell:91557",
-	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(79501),
-	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(79888),
-	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92053),
-	SetIconOnActivated			= "Colocar ícone no último chefe ativado"
+	timerNefAblity				= "Exibir cronógrafo para recarga do bônus Melhorar Habilidade (modo Heróico)"
 })
 
 L:SetMiscLocalization({
@@ -113,18 +102,9 @@ L:SetWarningLocalization({
 	WarnPhase			= "Fase %s"
 })
 
-L:SetTimerLocalization({
-	TimerPhase			= "Próxima fase"
-})
-
 L:SetOptionLocalization({
 	WarnPhase			= "Exibir aviso indicando qual será a próxima fase",
-	TimerPhase			= "Exibir cronógrafo para a próxima fase",
-	RangeFrame			= "Exibir medidor de distância (6) durante a fase azul",
-	SetTextures			= "Automaticamente desabilitar texturas projetadas durante a fase escura<br/>(habilita novamente ao término da fase)",
-	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92979),
-	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(77786)
+	SetTextures			= "Automaticamente desabilitar texturas projetadas durante a fase escura<br/>(habilita novamente ao término da fase)"
 })
 
 L:SetMiscLocalization({
@@ -140,39 +120,17 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(174)
 
 L:SetWarningLocalization({
-	OnyTailSwipe			= "Açoite de Cauda (Onyxia)",
-	NefTailSwipe			= "Açoite de Cauda (Nefarian)",
-	OnyBreath				= "Sopro (Onyxia)",
-	NefBreath				= "Sopro (Nefarian)",
-	specWarnShadowblazeSoon	= "%s",
 	warnShadowblazeSoon		= "%s"
 })
 
 L:SetTimerLocalization({
-	timerNefLanding			= "Nefarian pousa",
-	OnySwipeTimer			= "Recarga Açoite de Cauda (Ony)",
-	NefSwipeTimer			= "Recarga Açoite de Cauda (Nef)",
-	OnyBreathTimer			= "Recarga Sopro (Ony)",
-	NefBreathTimer			= "Recarga Sopro (Nef)"
+	timerNefLanding			= "Nefarian pousa"
 })
 
 L:SetOptionLocalization({
-	OnyTailSwipe			= "Exibir aviso para $spell:77827 de Onyxia",
-	NefTailSwipe			= "Exibir aviso para $spell:77827 de Nefarian",
-	OnyBreath				= "Exibir aviso para $spell:94124 de Onyxia",
-	NefBreath				= "Exibir aviso para $spell:94124 de Nefarian",
-	specWarnCinderMove		= "Exibir aviso especial para afastar-se quando você está sob efeito de<br/> $spell:79339 (5s antes da explosão)",
 	warnShadowblazeSoon		= "Exibir aviso antecipado para $spell:81031 (5s antes)<br/>(Funciona apenas após o cronógrafo estar sincronizado, para garantir a precisão)",
-	specWarnShadowblazeSoon	= "Exibir aviso antecipado para $spell:81031<br/>(Primeiro aviso 5s antes. Segundo aviso 1s antes, após sincronia, para garantir precisão)",
 	timerNefLanding			= "Exibir cronógrafo para quando Nefarian pousa",
-	OnySwipeTimer			= "Exibir cronógrafo para recarga de $spell:77827 (Onyxia)",
-	NefSwipeTimer			= "Exibir cronógrafo para recarga de $spell:77827 (Nefarian)",
-	OnyBreathTimer			= "Exibir cronógrafo para recarga de $spell:94124 (Onyxia)",
-	NefBreathTimer			= "Exibir cronógrafo para recarga de $spell:94124 (Nefarian)",
-	InfoFrame				= "Exibir quadro de informações da Energia Elétrica de Onyxia",
-	SetWater				= "Automaticamente desabilitar colisão com a água, ao entrar em combate<br/>(habilita novamente, ao sair de combate)",
-	SetIconOnCinder			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(79339),
-	RangeFrame				= "Exibir medidor de distância (10) para $spell:79339<br/>(Mostra todo mundo se você tiver o debuff, caso contrário, apenas jogadores com ícones)"
+	SetWater				= "Automaticamente desabilitar colisão com a água, ao entrar em combate<br/>(habilita novamente, ao sair de combate)"
 })
 
 L:SetMiscLocalization({
@@ -180,8 +138,7 @@ L:SetMiscLocalization({
 	YellPhase2				= "Curse you, mortals! Such a callous disregard for one's possessions must be met with extreme force!",
 	YellPhase3				= "I have tried to be an accommodating host, but you simply will not die! Time to throw all pretense aside and just... KILL YOU ALL!",
 	YellShadowBlaze			= "Flesh turns to ash!",
-	ShadowBlazeExact		= "Centelha de Labareda Sombria em %ds",
-	ShadowBlazeEstimate		= "Centelha de Labareda Sombria em breve (~5s)"
+	ShadowBlazeExact		= "Centelha de Labareda Sombria em %ds"
 })
 
 -------------------------------

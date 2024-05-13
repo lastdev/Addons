@@ -77,8 +77,26 @@ end
 
 LiteMountAdvancedEditBoxMixin = {}
 
+function LiteMountAdvancedEditBoxMixin:CheckCompileErrors()
+    local parent = self:GetParent()
+    local ruleset = LM.RuleSet:Compile(self:GetText())
+    if ruleset.errors then
+        -- It's possible we should just show the first one
+        local errs = LM.tMap(ruleset.errors, function (info) return info.err end)
+        local msg = table.concat(errs, "\n")
+        parent.ErrorMessage:SetText(msg)
+        parent.ErrorMessage:Show()
+        return false
+    else
+        parent.ErrorMessage:Hide()
+        return true
+    end
+end
+
 function LiteMountAdvancedEditBoxMixin:SetOption(v, i)
-    LM.Options:SetButtonRuleSet(i, v)
+    if self:CheckCompileErrors() then
+        LM.Options:SetButtonRuleSet(i, v)
+    end
 end
 
 function LiteMountAdvancedEditBoxMixin:GetOption(i)
@@ -108,5 +126,6 @@ function LiteMountAdvancedPanelMixin:OnShow()
     local text = BindingText(self.EditScroll.EditBox.tab)
     LibDD:UIDropDownMenu_Initialize(self.BindingDropDown, BindingDropDown_Initialize)
     LibDD:UIDropDownMenu_SetText(self.BindingDropDown, text)
+    self.EditScroll.EditBox:CheckCompileErrors()
     self.UnlockButton:Show()
 end

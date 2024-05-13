@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(24882)
 mod:SetEncounterID(725, 2489)
 mod:DisableESCombatDetection()--ES fires for the RP event that has nothing to do with engaging boss
@@ -38,11 +38,11 @@ local timerBurnCD		= mod:NewCDTimer(20, 46394, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(360)
 
-mod:AddSetIconOption("BurnIcon", 46394, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("BurnIcon", 46394, true, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddRangeFrameOption(46394, 4)
 
 mod.vb.burnIcon = 8
-local debuffName = DBM:GetSpellInfo(46394)
+local debuffName = DBM:GetSpellName(46394)
 
 local DebuffFilter
 do

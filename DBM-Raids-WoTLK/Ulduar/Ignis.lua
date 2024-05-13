@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(33118)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1136)
@@ -45,7 +45,7 @@ end
 
 mod.vb.ConstructCount = 0
 
-mod:AddSetIconOption("SlagPotIcon", 63477, false, false, {8})
+mod:AddSetIconOption("SlagPotIcon", 63477, false, 0, {8})
 
 function mod:OnCombatStart(delay)
 	self.vb.ConstructCount = 0

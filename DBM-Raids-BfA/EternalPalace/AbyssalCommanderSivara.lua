@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2352, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(151881)
 mod:SetEncounterID(2298)
 mod:SetUsedIcons(4, 6)
@@ -47,10 +47,10 @@ local specWarnFrozenBlood				= mod:NewSpecialWarningKeepMove(295795, nil, nil, n
 local specWarnVenomousBlood				= mod:NewSpecialWarningStopMove(295796, nil, nil, nil, 1, 2)
 local specWarnOverwhelmingBarrage		= mod:NewSpecialWarningDodge(296551, nil, nil, nil, 3, 2)
 local specWarnOverflowingChill			= mod:NewSpecialWarningMoveAway(295348, nil, nil, nil, 1, 2)
-local yellOverflowingChill				= mod:NewPosYell(295348, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2)
+local yellOverflowingChill				= mod:NewShortPosYell(295348)
 local yellOverflowingChillFades			= mod:NewIconFadesYell(295348)
 local specWarnOverflowingVenom			= mod:NewSpecialWarningMoveAway(295421, nil, nil, nil, 1, 2)
-local yellOverflowingVenom				= mod:NewPosYell(295421, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2)
+local yellOverflowingVenom				= mod:NewShortPosYell(295421)
 local yellOverflowingVenomFades			= mod:NewIconFadesYell(295421)
 local specWarnInversion					= mod:NewSpecialWarningMoveAway(295791, nil, nil, nil, 3, 2)
 local specWarnInversionSicknessFrost	= mod:NewSpecialWarningYou(300882, nil, nil, nil, 1, 2)--Separate warning in case user wants to customize sound based on type
@@ -58,12 +58,12 @@ local specWarnInversionSicknessToxic	= mod:NewSpecialWarningYou(300883, nil, nil
 local yellInversionSickness				= mod:NewYell(300882)
 local yellInversionSicknessFades		= mod:NewIconFadesYell(300882)
 local specWarnFrostJav					= mod:NewSpecialWarningYou(295606, nil, nil, nil, 1, 2)
-local yellFrostJav						= mod:NewPosYell(295606, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2)
+local yellFrostJav						= mod:NewShortPosYell(295606)
 local specWarnToxicJav					= mod:NewSpecialWarningYou(295607, nil, nil, nil, 1, 2)
-local yellToxicJav						= mod:NewPosYell(295607, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2)
+local yellToxicJav						= mod:NewShortPosYell(295607)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(300961, nil, nil, nil, 1, 8)
 
-local timerCrushingReverbCD				= mod:NewCDTimer(22.3, 295332, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsMelee() and 2, 4)
+local timerCrushingReverbCD				= mod:NewCDTimer(22.3, 295332, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsMelee() and 2 or nil, 4)
 local timerOverwhelmingBarrageCD		= mod:NewCDTimer(40, 296551, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)
 local timerOverflowCD					= mod:NewCDTimer(40.1, 295346, nil, nil, nil, 3)--31.6 previously, but 40 as of mythic testing
 local timerInversionCD					= mod:NewCDTimer(72.9, 295791, nil, nil, nil, 2, nil, DBM_COMMON_L.HEROIC_ICON, nil, 3, 4)
@@ -72,7 +72,7 @@ local timerChimericMarksCD				= mod:NewCDTimer(22.8, 294726, nil, nil, nil, 2, n
 
 local berserkTimer						= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnMarks", 294726, true, false, {4, 6})
+mod:AddSetIconOption("SetIconOnMarks", 294726, true, 0, {4, 6})
 mod:AddInfoFrameOption(294726, true)
 
 local MarksStacks = {}
@@ -98,7 +98,7 @@ function mod:OnCombatStart(delay)
 		end
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(294726))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(294726))
 		DBM.InfoFrame:Show(10, "table", MarksStacks, 1)
 	end
 end
@@ -272,7 +272,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 do
-	local frostJav, toxicJav = DBM:GetSpellInfo(295606), DBM:GetSpellInfo(295607)
+	local frostJav, toxicJav = DBM:GetSpellName(295606), DBM:GetSpellName(295607)
 	function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetname)
 		if msg:find("spell:295607") then--Toxic Jav
 			if targetname and self:AntiSpam(5, targetname) then

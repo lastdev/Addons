@@ -1,9 +1,24 @@
-## Interface: 100200
+## Interface: 100207
 ## Title: EnchantMe
-## Version: 1.2.5
+## Version: 1.3.3
 ## Author: romdeau23
 ## Notes: Check equipped items for missing enchants and gems
+## SavedVariables: EnchantMeAddonConfig
 ## IconTexture: Interface\AddOns\EnchantMe\icon
 ## X-Website: https://github.com/romdeau23/wow-enchant-me
 
-EnchantMe.lua
+lib/event.lua
+lib/defer.lua
+lib/namespace.lua
+lib/mixin.lua
+lib/module.lua
+lib/globals.lua
+mixin/HandlerMixin.lua
+mixin/PlayerHandlerMixin.lua
+mixin/InspectHandlerMixin.lua
+mixin/ItemMixin.lua
+mixin/SlotMixin.lua
+mixin/IndicatorMixin.lua
+modules/config.lua
+modules/settings.lua
+modules/main.lua

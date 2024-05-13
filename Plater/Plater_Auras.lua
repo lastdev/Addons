@@ -26,14 +26,16 @@ local UnitName = _G.UnitName
 local wipe = _G.wipe
 local UnitIsUnit = _G.UnitIsUnit
 local UnitGUID = _G.UnitGUID
-local GetSpellInfo = _G.GetSpellInfo
+local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
 local floor = _G.floor
-local UnitAuraSlots = _G.UnitAuraSlots or (C_UnitAuras and C_UnitAuras.GetAuraSlots)
 local UnitAuraBySlot = _G.UnitAuraBySlot or (C_UnitAuras and (function(...) local auraData = C_UnitAuras.GetAuraDataBySlot(...); if not auraData then return nil; end; return AuraUtil.UnpackAuraData(auraData); end))
 local UnitAura = _G.UnitAura or (C_UnitAuras and (function(...) local auraData = C_UnitAuras.GetAuraDataByIndex(unitToken, index, filter); if not auraData then return nil; end; return AuraUtil.UnpackAuraData(auraData); end))
 local GetAuraDataBySlot = _G.C_UnitAuras and _G.C_UnitAuras.GetAuraDataBySlot
+local GetAuraSlots = _G.C_UnitAuras and _G.C_UnitAuras.GetAuraSlots
+local GetAuraDataByAuraInstanceID = _G.C_UnitAuras and _G.C_UnitAuras.GetAuraDataByAuraInstanceID
 local BackdropTemplateMixin = _G.BackdropTemplateMixin
 local BUFF_MAX_DISPLAY = _G.BUFF_MAX_DISPLAY
+local BUFF_MAX_DISPLAY_PLATER = (not IS_NEW_UNIT_AURA_AVAILABLE and _G.BUFF_MAX_DISPLAY) or (IS_NEW_UNIT_AURA_AVAILABLE and nil) -- why limit it in this case?
 
 local DB_AURA_GROW_DIRECTION
 local DB_AURA_GROW_DIRECTION2
@@ -323,7 +325,7 @@ local function CreatePlaterNamePlateAuraTooltip()
 	end
 	
 	--This is a fallback to save tooltips in classic... can't have nice things.
-	IS_NEW_UNIT_AURA_AVAILABLE = tooltip.SetUnitBuffByAuraInstanceID and true or false
+	--IS_NEW_UNIT_AURA_AVAILABLE = tooltip.SetUnitBuffByAuraInstanceID and true or false --disable this for now. might work.
 	
 	return tooltip
 end
@@ -425,7 +427,7 @@ local ValidateAuraForUpdate = function (unit, aura)
 	
 	local name, spellId = aura.name, aura.spellId
 	
-	--ViragDevTool_AddData({blacklist = (DB_BUFF_BANNED[name] or DB_BUFF_BANNED[spellId] or DB_DEBUFF_BANNED[name] or DB_DEBUFF_BANNED[spellId]) or false, spellId = spellId, name = name}, "UnitAura-Check: "..name)
+	--DevTool:AddData({blacklist = (DB_BUFF_BANNED[name] or DB_BUFF_BANNED[spellId] or DB_DEBUFF_BANNED[name] or DB_DEBUFF_BANNED[spellId]) or false, spellId = spellId, name = name}, "UnitAura-Check: "..name)
 	
 	hasBuff = aura.isHelpful or hasBuff
 	hasDebuff = aura.isHarmful or hasDebuff
@@ -464,13 +466,13 @@ local ValidateAuraForUpdate = function (unit, aura)
 		needsUpdate = hasBuff or hasDebuff or false
 	end
 
-	--ViragDevTool_AddData({needsUpdate=needsUpdate, hasBuff=hasBuff, hasDebuff=hasDebuff}, "Plater_UNIT_AURA return")
+	--DevTool:AddData({needsUpdate=needsUpdate, hasBuff=hasBuff, hasDebuff=hasDebuff}, "Plater_UNIT_AURA return")
 	return needsUpdate, hasBuff, hasDebuff
 	
 end
 
 local UnitAuraEventHandlerValidation = function (unit, isFullUpdate, updatedAuras)
-	--ViragDevTool_AddData({unit = unit, isFullUpdate = isFullUpdate, updatedAuras = updatedAuras}, "Plater_UNIT_AURA")
+	--DevTool:AddData({unit = unit, isFullUpdate = isFullUpdate, updatedAuras = updatedAuras}, "Plater_UNIT_AURA")
 	if isFullUpdate ~= false or not updatedAuras then
 		return true, true, true --update all
 	end
@@ -490,7 +492,7 @@ local UnitAuraEventHandlerValidation = function (unit, isFullUpdate, updatedAura
 	hasBuff = not DB_AURA_SEPARATE_BUFFS and (hasBuff or hasDebuff) or hasBuff 
 	hasDebuff = not DB_AURA_SEPARATE_BUFFS and (hasBuff or hasDebuff) or hasDebuff
 	
-	--ViragDevTool_AddData({unit = unit, needsUpdate=needsUpdate, hasBuff=hasBuff, hasDebuff=hasDebuff}, "Plater_UNIT_AURA return")
+	--DevTool:AddData({unit = unit, needsUpdate=needsUpdate, hasBuff=hasBuff, hasDebuff=hasDebuff}, "Plater_UNIT_AURA return")
 	return needsUpdate, hasBuff, hasDebuff
 end
 
@@ -539,11 +541,11 @@ local UpdateUnitAuraCacheData
 local UnitAuraEventHandlerFrame = CreateFrame ("frame") --private
 local UnitAuraEventHandler = function (_, event, arg1, arg2, arg3, ...)
 	Plater.StartLogPerformanceCore("Plater-Core", "Events", event)
-	
+	--DevTool:AddData({event = event, arg1 = arg1, arg2 = arg2}, "Plater_UnitAuraEventHandler - " .. (event or "N/A"))
 	if event == "UNIT_AURA" then
 		if IS_NEW_UNIT_AURA_AVAILABLE then --for 10.0
 			local unit, updatedAuras = arg1, arg2
-			--ViragDevTool_AddData({unit = unit, updatedAuras = updatedAuras}, "Plater_UNIT_AURA - " .. unit)
+			--DevTool:AddData({unit = unit, updatedAuras = updatedAuras, valid = UnitAuraEventHandlerValidUnits[unit]}, "Plater_UNIT_AURA - " .. unit)
 			if unit and UnitAuraEventHandlerValidUnits[unit] then
 				UpdateUnitAuraCacheData(unit, updatedAuras)
 			end
@@ -552,7 +554,7 @@ local UnitAuraEventHandler = function (_, event, arg1, arg2, arg3, ...)
 			local unit, isFullUpdate, updatedAuras = arg1, arg2, arg3
 			if unit and UnitAuraEventHandlerValidUnits[unit] then
 				local needsUpdate, hasBuff, hasDebuff = UnitAuraEventHandlerValidation(unit, isFullUpdate, updatedAuras)
-				--ViragDevTool_AddData({unit = unit, isFullUpdate = isFullUpdate, updatedAuras = updatedAuras, needsUpdate = needsUpdate, hasBuff = hasBuff, hasDebuff = hasDebuff, existing=CopyTable(UnitAuraEventHandlerData[unit] or {})}, "Plater_UNIT_AURA_AFTER")
+				--DevTool:AddData({unit = unit, isFullUpdate = isFullUpdate, updatedAuras = updatedAuras, needsUpdate = needsUpdate, hasBuff = hasBuff, hasDebuff = hasDebuff, existing=CopyTable(UnitAuraEventHandlerData[unit] or {})}, "Plater_UNIT_AURA_AFTER")
 				if needsUpdate then
 					local existingData = UnitAuraEventHandlerData[unit] or { hasBuff = false, hasDebuff = false }
 					UpdateUnitAuraCacheData(unit, nil)
@@ -583,6 +585,7 @@ end
 
 
 UpdateUnitAuraCacheData = function (unit, updatedAuras)
+	--DevTool:AddData({unit = unit, updatedAuras = updatedAuras}, "Plater_UpdateUnitAuraCacheData - " .. (unit or "N/A"))
 	local unitCacheData = UnitAuraCacheData[unit]
 	if not unitCacheData then
 		unitCacheData = {}
@@ -602,6 +605,8 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 		UnitAuraEventHandlerData[unit] = { hasBuff = true, hasDebuff = true }
 		return
 	end
+	
+	unitCacheData.tbd = {}
 	
 	for _, aura in ipairs(updatedAuras.addedAuras or {}) do
 		local needsUpdate = ValidateAuraForUpdate(unit, aura)
@@ -623,6 +628,9 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 		elseif unitCacheData.buffs[auraInstanceID] ~= nil then
 			unitCacheData.buffs[auraInstanceID].requriresUpdate = true
 			unitCacheData.buffsChanged = true
+		else
+			unitCacheData.tbd[auraInstanceID] = true
+			unitCacheData.tbdChanged = true
 		end
 	end
 	
@@ -633,8 +641,29 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 		elseif unitCacheData.buffs[auraInstanceID] ~= nil then
 			unitCacheData.buffs[auraInstanceID] = nil
 			unitCacheData.buffsChanged = true
+		else
+			unitCacheData.tbd[auraInstanceID] = true
+			unitCacheData.tbdChanged = true
 		end
 	end
+	
+	if unitCacheData.tbdChanged then
+		for index, _ in pairs(unitCacheData.tbd) do
+			local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, index)
+			if aura then
+				if aura.isHarmful then
+					unitCacheData.debuffs[aura.auraInstanceID] = aura
+					unitCacheData.debuffsChanged = true
+				elseif aura.isHelpful then
+					unitCacheData.buffs[aura.auraInstanceID] = aura
+					unitCacheData.buffsChanged = true
+				end
+			end
+		end
+	end
+	
+	unitCacheData.tbd = nil
+	unitCacheData.tbdChanged = nil
 	
 	local existingData = UnitAuraEventHandlerData[unit] or { hasBuff = false, hasDebuff = false }
 	local hasDebuff = existingData.hasDebuff or unitCacheData.debuffsChanged or not DB_AURA_SEPARATE_BUFFS or false
@@ -649,7 +678,7 @@ local function getUnitAuras(unit, filter)
 	local isHelpful = string.find(filter or "HELPFUL", "HELPFUL") and true or false
 	
 	local unitCacheData = UnitAuraCacheData[unit]
-	--ViragDevTool_AddData({unitCacheData, filter = filter, isFullUpdateHarm = unitCacheData.isFullUpdateHarm, isFullUpdateHelp = unitCacheData.isFullUpdateHelp, update = ((isHarmful and  not unitCacheData.isFullUpdateHarm) or (isHelpful and not unitCacheData.isFullUpdateHelp))}, "getUnitAuras - " .. unit)
+	--DevTool:AddData({unitCacheData, filter = filter, isFullUpdateHarm = unitCacheData.isFullUpdateHarm, isFullUpdateHelp = unitCacheData.isFullUpdateHelp, update = ((isHarmful and  not unitCacheData.isFullUpdateHarm) or (isHelpful and not unitCacheData.isFullUpdateHelp))}, "getUnitAuras - " .. unit)
 	
 	if unitCacheData and ((isHarmful and  not unitCacheData.isFullUpdateHarm) or (isHelpful and not unitCacheData.isFullUpdateHelp)) then --new aura event
 		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - getUnitAuras - short")
@@ -658,7 +687,7 @@ local function getUnitAuras(unit, filter)
 			local tmpDebuffs = {}
 			for auraInstanceID, aura in pairs (unitCacheData.debuffs) do
 				if aura.requriresUpdate then
-					tmpDebuffs[auraInstanceID] = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+					tmpDebuffs[auraInstanceID] = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
 				else
 					tmpDebuffs[auraInstanceID] = aura
 				end
@@ -672,7 +701,7 @@ local function getUnitAuras(unit, filter)
 			local tmpBuffs = {}
 			for auraInstanceID, aura in pairs (unitCacheData.buffs) do
 				if aura.requriresUpdate then
-					tmpBuffs[auraInstanceID] = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+					tmpBuffs[auraInstanceID] = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
 				else
 					tmpBuffs[auraInstanceID] = aura
 				end
@@ -701,30 +730,26 @@ local function getUnitAuras(unit, filter)
 		local numSlots = 0
 		local slots
 		if IS_NEW_UNIT_AURA_AVAILABLE then
-			slots = { UnitAuraSlots(unit, filter, BUFF_MAX_DISPLAY, continuationToken) }
+			slots = { GetAuraSlots(unit, filter, BUFF_MAX_DISPLAY_PLATER, continuationToken) }
 			continuationToken = slots[1]
 			numSlots = #slots
 		else
-			numSlots = BUFF_MAX_DISPLAY + 1
+			numSlots = (BUFF_MAX_DISPLAY or 32) + 1
 		end
 		
 		for i=2, numSlots do
 			if IS_NEW_UNIT_AURA_AVAILABLE then
 				local slot = slots[i]
-				local aura = C_UnitAuras.GetAuraDataBySlot(unit, slot)
+				local aura = GetAuraDataBySlot(unit, slot)
 				if aura then
+					--DevTool:AddData({unit = unit, aura = aura, slot = slot}, "GetAuraDataBySlot")
 					filterCache[aura.auraInstanceID] = aura
 				end
 			else
-				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications
-				if IS_NEW_UNIT_AURA_AVAILABLE then
-					local slot = slots[i]
-					name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = UnitAuraBySlot(unit, slot)
-				else
-					name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = UnitAura(unit, i-1, filter)
-					if not name then
-						break
-					end
+				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, shouldConsolidate  = UnitAura(unit, i-1, filter)
+				--DevTool:AddData({name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, shouldConsolidate }, "UnitAura")
+				if not name then
+					break
 				end
 				
 				debuffIndex = debuffIndex + 1
@@ -825,7 +850,8 @@ end
                 setFunction(PlaterNamePlateAuraTooltip, iconFrame:GetParent().unit, iconFrame:GetID(), iconFrame.filter)
             end 
         else
-            PlaterNamePlateAuraTooltip:SetUnitAura (iconFrame:GetParent().unit, iconFrame:GetID(), iconFrame.filter)
+			PlaterNamePlateAuraTooltip:SetSpellByID(iconFrame.spellId)
+            --PlaterNamePlateAuraTooltip:SetUnitAura (iconFrame:GetParent().unit, iconFrame:GetID(), iconFrame.filter)
         end
 		PlaterNamePlateAuraTooltip:ApplyOwnBackdrop()
 		iconFrame.UpdateTooltip = Plater.OnEnterAura
@@ -882,7 +908,6 @@ end
 		for index, iconFramesTable in pairs (aurasDuplicated) do
 			--how many auras with the same name the unit has
 			local amountOfSimilarAuras = #iconFramesTable
-			local totalStacks = iconFramesTable [1][1].Stacks > 0 and iconFramesTable [1][1].Stacks or 1
 			
 			if (amountOfSimilarAuras > 1) then
 				--sort order: the aura with the least time left is shown by default
@@ -892,12 +917,19 @@ end
 					table.sort (iconFramesTable, DF.SortOrder2)
 				end
 				
+				local totalStacks = 0
+				
 				--hide all auras except for the first occurrence of this aura
-				for i = 2, amountOfSimilarAuras do
+				for i = 1, amountOfSimilarAuras do
 					local iconFrame = iconFramesTable [i][1]
-					iconFrame.ShowAnimation:Stop()
-					iconFrame:Hide()
-					iconFrame.InUse = false
+					if i == 1 then --ensure the sorted icon is always shown
+						iconFrame:Show()
+						iconFrame.InUse = true
+					else --hide other icons
+						iconFrame.ShowAnimation:Stop()
+						iconFrame:Hide()
+						iconFrame.InUse = false
+					end
 					
 					totalStacks = totalStacks + (iconFrame.Stacks > 0 and iconFrame.Stacks or 1)
 					
@@ -924,9 +956,10 @@ end
 	--this function is guaranteed to run after all auras been processed
 	function Plater.ShowGhostAuras(buffFrame)
 		if (DB_AURA_GHOSTAURA_ENABLED) then
-			if ((buffFrame.unitFrame.namePlateUnitReaction < 5) and buffFrame.unitFrame.InCombat and not buffFrame.unitFrame.IsSelf and InCombatLockdown()) then
-				local nameplateAuraCache = buffFrame.unitFrame.AuraCache --active auras currently shown in the nameplate
-				local nameplateGhostAuraCache = buffFrame.unitFrame.GhostAuraCache --active ghost auras currently shown in the nameplate
+			local unitFrame = buffFrame.unitFrame
+			if ((unitFrame.namePlateUnitReaction < 5) and unitFrame.InCombat and not unitFrame.IsSelf and not unitFrame.isPerformanceUnit and InCombatLockdown()) then
+				local nameplateAuraCache = unitFrame.AuraCache --active auras currently shown in the nameplate
+				local nameplateGhostAuraCache = unitFrame.GhostAuraCache --active ghost auras currently shown in the nameplate
 				for spellName, spellTable in pairs(GHOSTAURAS) do
 					if (not nameplateAuraCache[spellName.."_player"]) then
 						if (not nameplateGhostAuraCache[spellName.."_player_ghost"]) then --the ghost aura isn't in the nameplate
@@ -1467,7 +1500,7 @@ end
 		end
 		
 		local auraIconFrame = self.PlaterBuffList [i]
-		self.NextAuraIcon = self.NextAuraIcon + 1
+		self.NextAuraIcon = (self.NextAuraIcon or 1) + 1
 		
 		auraIconFrame:SetAlpha(1)
 		auraIconFrame.Icon:SetDesaturated(false)
@@ -1930,7 +1963,7 @@ end
 	--> reset both buff frames to make them ready to receive an aura update
 	function Plater.ResetAuraContainer (self, resetBuffs, resetDebuffs)
 		Plater.StartLogPerformanceCore("Plater-Core", "Update", "UpdateAuras - ResetAuraContainer")
-		--ViragDevTool_AddData({resetBuffs, resetDebuffs}, "ResetAuraContainer")
+		--DevTool:AddData({resetBuffs, resetDebuffs}, "ResetAuraContainer")
 		-- ensure reset is happening if nil
 		resetBuffs = resetBuffs ~= false
 		resetDebuffs = resetDebuffs ~= false
@@ -1984,7 +2017,7 @@ end
 			local unitAuras = getUnitAuras(unit, "HELPFUL") or {}
 			
 			for id, aura in pairs(unitAuras.buffs or {}) do
-				--ViragDevTool_AddData({i, aura})
+				--DevTool:AddData({i, aura})
 				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = 
 					aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, 
 					aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.nameplateShowAll, aura.timeMod, aura.applications
@@ -2026,7 +2059,7 @@ end
 			local unitAuras = getUnitAuras(unit, "HARMFUL") or {}
 			
 			for id, aura in pairs(unitAuras.debuffs or {}) do
-				--ViragDevTool_AddData({i, aura})
+				--DevTool:AddData({i, aura})
 				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = 
 					aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, 
 					aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.nameplateShowAll, aura.timeMod, aura.applications
@@ -2108,13 +2141,13 @@ end
 		
 		Plater.ResetAuraContainer (self, unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff)
 		local unitAuraCache = self.unitFrame.AuraCache
-		--ViragDevTool_AddData({unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff}, "UpdateAuras_Automatic")
+		--DevTool:AddData({unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff}, "UpdateAuras_Automatic")
 		--> debuffs
 		if unitAuraEventData.hasDebuff then
 			local unitAuras = getUnitAuras(unit, "HARMFUL") or {}
 			
 			for id, aura in pairs(unitAuras.debuffs or {}) do
-				--ViragDevTool_AddData({i, aura})
+				--DevTool:AddData({i, aura})
 				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = 
 					aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, 
 					aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.nameplateShowAll, aura.timeMod, aura.applications
@@ -2183,10 +2216,10 @@ end
 		--> buffs
 		if unitAuraEventData.hasBuff then
 			local unitAuras = getUnitAuras(unit, "HELPFUL") or {}
-			--ViragDevTool_AddData(unitAuras, "HELPFUL")
+			--DevTool:AddData(unitAuras, "HELPFUL")
 			
 			for id, aura in pairs(unitAuras.buffs or {}) do
-				--ViragDevTool_AddData({i, aura})
+				--DevTool:AddData({i, aura})
 				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = 
 					aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, 
 					aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.nameplateShowAll, aura.timeMod, aura.applications
@@ -2303,7 +2336,7 @@ end
 
 		local continuationToken
 		repeat
-			local slots = { UnitAuraSlots(unitId, "HELPFUL", BUFF_MAX_DISPLAY, continuationToken) }
+			local slots = { GetAuraSlots(unitId, "HELPFUL", BUFF_MAX_DISPLAY_PLATER, continuationToken) }
 			continuationToken = slots[1]
 			for i=2, #slots do
 				local slot = slots[i];
@@ -2318,7 +2351,7 @@ end
 
 		local continuationToken
 		repeat
-			local slots = { UnitAuraSlots(unitId, "HARMFUL", BUFF_MAX_DISPLAY, continuationToken) }
+			local slots = { GetAuraSlots(unitId, "HARMFUL", BUFF_MAX_DISPLAY_PLATER, continuationToken) }
 			continuationToken = slots[1]
 			for i=2, #slots do
 				local slot = slots[i];
@@ -2342,7 +2375,7 @@ end
 			return
 		end
 		
-		--ViragDevTool_AddData({unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff}, "UpdateAuras_Self_Automatic")
+		--DevTool:AddData({unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff}, "UpdateAuras_Self_Automatic")
 		
 		Plater.ResetAuraContainer (self, unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff)
 		local unitAuraCache = self.unitFrame.AuraCache
@@ -2351,10 +2384,10 @@ end
 		--> debuffs
 		if (Plater.db.profile.aura_show_debuffs_personal and unitAuraEventData.hasDebuff) then
 			local unitAuras = getUnitAuras(unit, "HARMFUL") or {}
-			--ViragDevTool_AddData(unitAuras)
+			--DevTool:AddData(unitAuras)
 			
 			for id, aura in pairs(unitAuras.debuffs or {}) do
-				--ViragDevTool_AddData({i, aura})
+				--DevTool:AddData({i, aura})
 				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = 
 					aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, 
 					aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.nameplateShowAll, aura.timeMod, aura.applications
@@ -2392,10 +2425,10 @@ end
 		--> buffs
 		if (Plater.db.profile.aura_show_buffs_personal and unitAuraEventData.hasBuff) then
 			local unitAuras = getUnitAuras(unit, "HELPFUL|PLAYER") or {}
-			--ViragDevTool_AddData(unitAuras)
+			--DevTool:AddData(unitAuras)
 			
 			for id, aura in pairs(unitAuras.buffs or {}) do
-				--ViragDevTool_AddData({i, aura})
+				--DevTool:AddData({i, aura})
 				local name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications = 
 					aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, 
 					aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.nameplateShowAll, aura.timeMod, aura.applications
@@ -2696,6 +2729,10 @@ end
 		DB_TRACK_METHOD = profile.aura_tracker.track_method
 
 		Plater.MaxAurasPerRow = floor(profile.plate_config.enemynpc.health_incombat[1] / (profile.aura_width + DB_AURA_PADDING))
+		
+		if IS_WOW_PROJECT_CLASSIC_ERA then
+			IS_NEW_UNIT_AURA_AVAILABLE = Plater.db.profile.auras_experimental_update_classic_era
+		end
     end
 
 	local function re_UpdateGhostAurasCache()

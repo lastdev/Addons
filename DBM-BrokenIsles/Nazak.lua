@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1783, "DBM-BrokenIsles", 1, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041824")
+mod:SetRevision("20240422191412")
 mod:SetCreatureID(110321)
 mod:SetEncounterID(1950)
 mod:SetReCombatTime(20)
@@ -57,7 +57,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 219591 then
 		specWarnFoundation:Show()
 --		specWarnFoundation:Play("")
-		timerFoundatoinCD:start()
+		timerFoundatoinCD:Start()
 	elseif spellId == 219865 then
 		warnWebWrap:CombinedShow(0.3, args.destName)
 	end

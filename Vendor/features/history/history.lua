@@ -1,6 +1,6 @@
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("history", ...) end
+
 
 local History = { NAME = "History", VERSION = 1, DEPENDENCIES = { "Rules" } }
 local EVENTS = { "OnHistoryChanged" }

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(827, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(69465)
 mod:SetEncounterID(1577)
 
@@ -43,7 +43,7 @@ local berserkTimer					= mod:NewBerserkTimer(540)
 mod:AddBoolOption("RangeFrame")
 
 local scanFailed = false
-local ionization, stormDebuff, Fluidity, focusedLight = DBM:GetSpellInfo(138732), DBM:GetSpellInfo(137313), DBM:GetSpellInfo(138002), DBM:GetSpellInfo(137422)
+local ionization, stormDebuff, Fluidity, focusedLight = DBM:GetSpellName(138732), DBM:GetSpellName(137313), DBM:GetSpellName(138002), DBM:GetSpellName(137422)
 
 local function checkWaterIonization()
 	if DBM:UnitDebuff("player", Fluidity) and DBM:UnitDebuff("player", ionization) and not UnitIsDeadOrGhost("player") then

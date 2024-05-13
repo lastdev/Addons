@@ -29,14 +29,17 @@ local L = localization
 local GetClassInfo,GetSpecializationInfoByID,EJ_GetEncounterInfo,EJ_GetInstanceInfo = GetClassInfo,GetSpecializationInfoByID,EJ_GetEncounterInfo,EJ_GetInstanceInfo
 
 if ExRT.isClassic then
-	GetClassInfo = ExRT.Classic.GetClassInfo
-	GetSpecializationInfoByID = ExRT.Classic.GetSpecializationInfoByID
-	EJ_GetEncounterInfo = ExRT.NULLfunc
-	EJ_GetInstanceInfo = ExRT.NULLfunc
+	if not ExRT.isCata then
+		GetClassInfo = ExRT.Classic.GetClassInfo
+		EJ_GetEncounterInfo = ExRT.NULLfunc
+		EJ_GetInstanceInfo = ExRT.NULLfunc
+	end
+	GetSpecializationInfoByID = GetSpecializationInfoForSpecID or ExRT.Classic.GetSpecializationInfoByID
 
 	--Global rewrite
 	if not EXPANSION_NAME7 then EXPANSION_NAME7 = "BFA" end
 	if not EXPANSION_NAME8 then EXPANSION_NAME8 = "Shadowlands" end
+	if not EXPANSION_NAME9 then EXPANSION_NAME9 = "DF" end
 	if not TOOLTIP_AZERITE_UNLOCK_LEVELS then TOOLTIP_AZERITE_UNLOCK_LEVELS = "" end
 end
 
@@ -198,6 +201,12 @@ L.NoText = NO
 
 
 local zoneEJids = {
+	S_ZoneT11_BH = 75,
+	S_ZoneT11_ToB = 72,
+	S_ZoneT11_TotFW = 74,
+	S_ZoneT11_BD = 73,
+	S_ZoneT12 = 78,
+	S_ZoneT13 = 187,
 	sooitemst15 = 362,
 	sooitemst16 = 369,
 	RaidLootT17Highmaul = 477,

@@ -12,13 +12,13 @@ end
 local mod	= DBM:NewMod("TalonGuards", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525045438")
+mod:SetRevision("20240511084932")
 mod:SetCreatureID(12460, 12461, 99999)--99999 to prevent mod from ending combat after one of each talon guard type die. Mod will effectively ALWAYS wipe, but it has disabled stats/reporting so irrelevant
 mod:SetModelID(12460)
 mod:RegisterCombat("combat")
 mod.noStatistics = true
 
-local warnVuln			= mod:NewAnnounce("WarnVulnerable", 1, false)
+local warnVuln			= mod:NewAnnounce("WarnVulnerable", 1, nil, false)
 
 mod:AddNamePlateOption("NPAuraOnVulnerable", 22277)
 
@@ -58,7 +58,7 @@ local vulnSpells = {
 --Local Functions
 -- in theory this should only alert on a new vulnerability on your target or when you change target
 local function update_vulnerability(self)
-	local target = UnitGUID("target")
+	local target = UnitGUID("target") or ""
 	local spellSchool = vulnerabilities[target]
 	local cid = self:GetCIDFromGUID(target)
 	if not spellSchool or not vulnMobs[cid] then
@@ -70,6 +70,7 @@ local function update_vulnerability(self)
 	local name = L[info[1]] or info[1]
 
 	if not lastAnnounce[target] or lastAnnounce[target] ~= name then
+		---@diagnostic disable-next-line: inject-field
 		warnVuln.icon = info[3]
 		warnVuln:Show(name)
 		lastAnnounce[target] = name

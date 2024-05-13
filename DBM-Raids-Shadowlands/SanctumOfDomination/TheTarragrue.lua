@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2435, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(175611)
 mod:SetEncounterID(2423)
 mod:SetUsedIcons(1)
@@ -66,7 +66,7 @@ local timerFuryoftheAgesCD							= mod:NewCDCountTimer(36.4, 347490, nil, "Tank|
 local berserkTimer									= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption(6, 347283)
-mod:AddSetIconOption("SetIconOnChains", 347269, true, false, {1})
+mod:AddSetIconOption("SetIconOnChains", 347269, true, 0, {1})
 mod:GroupSpells(352368, 352382, 352389, 352398)--Parent torment cast, 3 torment types activating, bool for the 3 remannt type ticks
 mod:GroupSpells(346985, 346986)--Tank cast, tank debuff
 

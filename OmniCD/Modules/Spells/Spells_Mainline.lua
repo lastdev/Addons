@@ -566,13 +566,15 @@ E.spell_db = {
 		{ ["class"]="PALADIN",["type"]="externalDefensive",["buff"]=6940,["spec"]=true,["name"]="Blessing of Sacrifice",["charges"]=1,["duration"]=120,["icon"]=135966,["spellID"]=6940,["talent"]=199452, },
 		{ ["class"]="PALADIN",["type"]="externalDefensive",["buff"]=1022,["spec"]=true,["name"]="Blessing of Protection",["charges"]=1,["duration"]=300,["icon"]=135964,["spellID"]=1022, },
 		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=105809,["spec"]=true,["name"]="Holy Avenger",["duration"]=180,["icon"]=571555,["spellID"]=105809, },
-		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=152262,["spec"]=true,["name"]="Seraphim",["duration"]=45,["icon"]=1030103,["spellID"]=152262, },
+
 		{ ["class"]="PALADIN",["type"]="cc",["buff"]=10326,["spec"]=true,["name"]="Turn Evil",["duration"]=15,["icon"]=571559,["spellID"]=10326, },
 		{ ["class"]="PALADIN",["type"]="other",["buff"]=276111,["spec"]=true,["name"]="Divine Steed",["charges"]=1,["duration"]=45,["icon"]=1360759,["spellID"]=190784, },
 		{ ["class"]="PALADIN",["type"]="externalDefensive",["buff"]=204018,["spec"]=true,["name"]="Blessing of Spellwarding",["charges"]=1,["duration"]=300,["icon"]=135880,["spellID"]=204018, },
 
 
 		{ ["class"]="PALADIN",["type"]="other",["buff"]=414170,["spec"]=true,["name"]="Daybreak",["duration"]=60,["icon"]=237537,["spellID"]=414170, },
+		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=414273,["spec"]=true,["name"]="Hand of Divinity",["duration"]=90,["icon"]=135985,["spellID"]=414273, },
+		{ ["class"]="PALADIN",["type"]="offensive",["buff"]=198034,["spec"]=true,["name"]="Divine Hammer",["duration"]=20,["icon"]=626003,["spellID"]=198034, },
 	},
 	["SHAMAN"] = {
 		{ ["class"]="SHAMAN",["type"]="immunity",["buff"]=409293,["spec"]=true,["name"]="Burrow",["duration"]=120,["icon"]=5260435,["spellID"]=409293, },
@@ -808,7 +810,7 @@ E.spellDefaults = {
 	59752, 7744,
 	47482, 47528, 48707, 48792, 114556, 51052,
 	183752, 196555, 198589, 209258, 187827, 196718, 191427, 205604, 740,
-	351338, 372048, 378441, 357170, 363916, 374348, 374227, 363534, 377509, 378464, 404381, 408234,
+	351338, 372048, 378441, 357170, 363916, 374348, 374227, 363534, 377509, 378464, 404381, 408234, 368412,
 	106839, 78675, 22812, 102342, 108238, 61336, 33891,
 	147362, 187707, 187650, 186265, 109304, 53480,
 	2139, 45438, 414658, 342246, 342245, 86949, 235219, 198111, 190319,
@@ -816,7 +818,7 @@ E.spellDefaults = {
 	31935, 96231, 215652, 853, 115750, 642, 228049, 199448, 1022, 216331, 31884, 231895, 210256, 31821,
 	15487, 64044, 8122, 197268, 19236, 47585, 47788, 33206, 215982, 108968, 62618, 271466, 47536, 64843, 265202, 15286,
 	1766, 2094, 31230, 31224, 5277, 1856, 360194,
-	57994, 108271, 198838, 210918, 30884, 114052, 98008, 204336, 8143, 108280,
+	57994, 108271, 198838, 210918, 30884, 114052, 98008, 204336, 8143, 108280, 409293,
 	212619, 119898, 6789, 48020, 104773, 212295,
 	6552, 5246, 118038, 184364, 871, 97462, 23920, 236320,
 }

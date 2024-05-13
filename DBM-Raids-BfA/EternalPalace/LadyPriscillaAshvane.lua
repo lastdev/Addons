@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2354, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(152236)
 mod:SetEncounterID(2304)
 mod:SetUsedIcons(1, 2, 3, 4, 6, 7)
@@ -47,7 +47,7 @@ local specWarnGTFO						= mod:NewSpecialWarningGTFO(296752, nil, nil, nil, 1, 8)
 
 --local timerCoralGrowthCD				= mod:NewCDCountTimer(30, 296555, nil, nil, nil, 3, nil, nil, nil, 1, 4)
 local timerRipplingwaveCD				= mod:NewCDCountTimer(35, 296688, nil, nil, nil, 3, nil, nil, nil, 3, 4)
-local timerBarnacleBashCD				= mod:NewCDCountTimer(15, 296725, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2, 4)
+local timerBarnacleBashCD				= mod:NewCDCountTimer(15, 296725, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2 or nil, 4)
 local timerBrinyBubbleCD				= mod:NewCDCountTimer(15, 297324, nil, nil, nil, 3, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON, nil, 2, 4)
 local timerUpsurgeCD					= mod:NewCDCountTimer(15.3, 298055, nil, nil, nil, 3)
 --Stage 2
@@ -58,7 +58,7 @@ local berserkTimer						= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption("4/12")
 mod:AddInfoFrameOption(296650, true)
-mod:AddSetIconOption("SetIconOnArcingAzerite", 296944, false, false, {1, 2, 3, 4, 6, 7})
+mod:AddSetIconOption("SetIconOnArcingAzerite", 296944, false, 0, {1, 2, 3, 4, 6, 7})
 
 mod.vb.coralGrowth = 0
 mod.vb.ripplingWave = 0
@@ -293,7 +293,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 297397 or spellId == 302989 then--Briny targetting spell
-		warnBrinyBubble:CombinedShow(0.3, args.destname)
+		warnBrinyBubble:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnBrinyBubbleNear:Cancel()
 			specWarnBrinyBubbleNear:CancelVoice()

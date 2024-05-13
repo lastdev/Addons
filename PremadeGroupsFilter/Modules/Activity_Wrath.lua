@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -212,6 +212,7 @@ C.ACTIVITY = {
     [1271] = { difficulty = 2, category = 114, mapID =  615 }, -- The Obsidian Sanctum (25 Heroic)
     [1272] = { difficulty = 2, category = 114, mapID =  624 }, -- Vault of Archavon (25 Heroic)
     [1273] = { difficulty = 2, category = 114, mapID =  616 }, -- The Eye of Eternity (25 Heroic)
+    [1517] = { difficulty = 1, category = 114, mapID =  732 }, -- Baradin Hold (10 Normal)
 }
 
 -- Return a default set if activity not found

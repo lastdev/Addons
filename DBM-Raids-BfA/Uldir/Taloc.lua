@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2168, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(137119)--Taloc
 mod:SetEncounterID(2144)
 --mod:SetHotfixNoticeRev(16950)
@@ -54,14 +54,14 @@ local timerPlasmaDischargeCD			= mod:NewCDCountTimer(30.4, 271225, nil, nil, nil
 local timerCudgelOfGoreCD				= mod:NewCDCountTimer(58.2, 271296, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 1, 4)--60.4-63
 local timerSanguineStaticCD				= mod:NewCDTimer(53.6, 272582, nil, nil, nil, 3)--60.4-63
 local timerEnlargedHeartCD				= mod:NewCDCountTimer(60.4, 275205, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON..DBM_COMMON_L.TANK_ICON, nil, 2, 4)--60.4-63 (also timer for hardened, go out at same time, no need for two)
-mod:AddTimerLine(DBM:GetSpellInfo(271965))
+mod:AddTimerLine(DBM:GetSpellName(271965))
 local timerPoweredDown					= mod:NewBuffActiveTimer(88.6, 271965, nil, nil, nil, 6)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
 mod:AddInfoFrameOption(275270, true)
 
-local bloodStorm = DBM:GetSpellInfo(270290)
+local bloodStorm = DBM:GetSpellName(270290)
 local ignoreGTFO = false
 mod.vb.plasmaCast = 0
 mod.vb.cudgelCount = 0
@@ -173,7 +173,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerSanguineStaticCD:Stop()
 		timerEnlargedHeartCD:Stop()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(275270))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(275270))
 			DBM.InfoFrame:Show(5, "playerbaddebuff", 275270)
 		end
 	elseif spellId == 275270 and self:AntiSpam(2, args.destName) then

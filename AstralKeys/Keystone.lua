@@ -10,6 +10,7 @@ COLOUR[4] = 'ffff8000' -- Legendary
 COLOUR[5] = 'ffe6cc80' -- Artifact
 
 addon.keystone = {}
+addon.inKey = false
 
 addon.MYTHICKEY_ITEMID = 180653
 addon.TIMEWALKINGKEY_ITEMID = 187786
@@ -63,10 +64,10 @@ function addon.CreateKeyLink(mapID, keyLevel)
 		a1 = addon.AffixOne()
 	end
 	if addon.AffixFour() == 0 then -- season affix removed in DF S2
-		if keyLevel > 6 then
+		if keyLevel >= 5 then
 		a2 = addon.AffixTwo()
 		end
-		if keyLevel > 13 then
+		if keyLevel >= 10 then
 		a3 = addon.AffixThree()
 		end
 	else -- include season affix
@@ -190,13 +191,13 @@ end
 
 function addon.GetDifficultyColour(keyLevel)
 	if type(keyLevel) ~= 'number' then return COLOUR[1] end -- return white for any strings or non-number values
-	if keyLevel <= 4 then
+	if keyLevel <= 2 then
 		return COLOUR[1]
-	elseif keyLevel <= 9 then
+	elseif keyLevel <= 4 then
 		return COLOUR[2]
-	elseif keyLevel <= 14 then
+	elseif keyLevel <= 7 then
 		return COLOUR[3]
-	elseif keyLevel <= 19 then
+	elseif keyLevel <= 10 then
 		return COLOUR[4]
 	else
 		return COLOUR[5]
@@ -219,13 +220,20 @@ function InitKeystoneData()
 end
 
 AstralEvents:Register('PLAYER_ENTERING_WORLD', InitKeystoneData, 'initData')
-AstralEvents:Register('CHALLENGE_MODE_RESET', addon.CheckKeystone, 'dungeonReset')
-AstralEvents:Register('CHALLENGE_MODE_START', addon.CheckKeystone, 'dungeonStart')
+AstralEvents:Register('CHALLENGE_MODE_RESET', function()
+	addon.CheckKeystone()
+	addon.inKey = false
+end, 'dungeonReset')
+AstralEvents:Register('CHALLENGE_MODE_START', function()
+	addon.CheckKeystone()
+	addon.inKey = true
+end, 'dungeonStart')
 AstralEvents:Register('CHALLENGE_MODE_COMPLETED', function()
 	C_Timer.After(3, function()
 		C_MythicPlus.RequestRewards()
 		addon.CheckKeystone()
 	end)
+	addon.inKey = false
 end, 'dungeonCompleted')
 AstralEvents:Register('ITEM_CHANGED', function()
 	C_Timer.After(3, function()

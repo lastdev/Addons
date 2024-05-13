@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -106,17 +106,17 @@ local timerFelLashCD				= mod:NewNextCountTimer(25, 230403, nil, nil, nil, 2, ni
 local berserkTimer					= mod:NewBerserkTimer(600)--480
 
 mod:AddRangeFrameOption("8")
-mod:AddSetIconOption("SetIconOnFrozenTempest", 213083, true, true)
-mod:AddSetIconOption("SetIconOnSearingDetonate", 213275, true)
-mod:AddSetIconOption("SetIconOnBurstOfFlame", 213760, true, true)
-mod:AddSetIconOption("SetIconOnBurstOfMagic", 213808, true, true)
+mod:AddSetIconOption("SetIconOnFrozenTempest", 213083, true, 5)
+mod:AddSetIconOption("SetIconOnSearingDetonate", 213275, true, 0)
+mod:AddSetIconOption("SetIconOnBurstOfFlame", 213760, true, 5)
+mod:AddSetIconOption("SetIconOnBurstOfMagic", 213808, true, 5)
 mod:AddInfoFrameOption(212647)
 
 mod.vb.annihilateCount = 0
 mod.vb.armageddonAdds = 0
 mod.vb.felLashCount = 0
 mod.vb.lastPhase = 1
-local MarkOfFrostDebuff, SearingBrandDebuff, annihilatedDebuff, frostBitten = DBM:GetSpellInfo(212587), DBM:GetSpellInfo(213166), DBM:GetSpellInfo(215458), DBM:GetSpellInfo(212647)
+local MarkOfFrostDebuff, SearingBrandDebuff, frostBitten = DBM:GetSpellName(212587), DBM:GetSpellName(213166), DBM:GetSpellName(212647)
 local rangeShowAll = false
 local chargeTable = {}
 local annihilateTimers = {8.0, 45.0, 40.0, 44.0, 38.0, 37.0, 33.0, 47.0, 41.0, 44.0, 38.0, 37.0, 33.0}--Need longer pulls/more data. However this pattern did prove to always be same

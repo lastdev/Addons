@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HighmaulTrash", "DBM-Raids-WoD", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426185029")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -26,7 +26,7 @@ local specWarnWildFlames			= mod:NewSpecialWarningMove(173827)
 
 mod:AddRangeFrameOption(8, 166200)
 
-local debuff = DBM:GetSpellInfo(166200)
+local debuff = DBM:GetSpellName(166200)
 local DebuffFilter
 do
 	DebuffFilter = function(uId)

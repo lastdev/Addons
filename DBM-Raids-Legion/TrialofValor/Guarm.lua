@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1830, "DBM-Raids-Legion", 4, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(114323)
 mod:SetEncounterID(1962)
 mod:SetUsedIcons(1, 2, 3)
@@ -72,8 +72,8 @@ mod.vb.two = "None"
 mod.vb.three = "None"
 
 local updateInfoFrame
-local fireFoam, frostFoam, shadowFoam = DBM:GetSpellInfo(228744), DBM:GetSpellInfo(228810), DBM:GetSpellInfo(228818)
-local fireDebuff, frostDebuff, shadowDebuff = DBM:GetSpellInfo(227539), DBM:GetSpellInfo(227566), DBM:GetSpellInfo(227570)
+local fireFoam, frostFoam, shadowFoam = DBM:GetSpellName(228744), DBM:GetSpellName(228810), DBM:GetSpellName(228818)
+local fireDebuff, frostDebuff, shadowDebuff = DBM:GetSpellName(227539), DBM:GetSpellName(227566), DBM:GetSpellName(227570)
 do
 	local lines = {}
 	updateInfoFrame = function()
@@ -122,7 +122,7 @@ function mod:OnCombatStart(delay)
 			--timerLickCD:Start(12.4, 1)
 			berserkTimer:Start(240-delay)
 			if self.Options.InfoFrame then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(228824))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(228824))
 				DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true)
 			end
 			if UnitIsGroupLeader("player") then
@@ -359,6 +359,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 end
 
 function mod:OnSync(msg)
+---@diagnostic disable-next-line: dbm-sync-checker
 	if msg == "YellActualRaidIcon" then
 		DBM:Debug("YellRealIcons = true", 2)
 		self.vb.YellRealIcons = true

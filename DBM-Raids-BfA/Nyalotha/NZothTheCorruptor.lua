@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2375, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061637")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(158041)
 mod:SetEncounterID(2344)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -117,7 +117,7 @@ local specWarnCorruptedMind					= mod:NewSpecialWarningInterruptCount(313400, "H
 local specWarnCorruptedMindDispel			= mod:NewSpecialWarningDispel(313400, "RemoveMagic", nil, nil, 1, 2)
 local specWarnMindFlay						= mod:NewSpecialWarningInterrupt(308885, false, nil, nil, 1, 2)
 
-mod:AddSetIconOption("SetIconOnCorruptor", "ej21441", true, true, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnCorruptor", "ej21441", true, 5, {1, 2, 3, 4})
 ----Through the Mindgate
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20971))
 ------Corruption of Deathwing
@@ -156,7 +156,7 @@ local specWarnHarvestThoughts				= mod:NewSpecialWarningCount(317066, nil, nil, 
 local timerThoughtHarvesterCD				= mod:NewCDCountTimer(30.1, "ej21308", nil, nil, nil, 1, 231298)
 local timerHarvestThoughtsCD				= mod:NewCDTimer(35.2, 317066, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnHarvester", "ej21308", true, true, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnHarvester", "ej21308", true, 5, {1, 2, 3, 4})
 --Stage 3 Mythic
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21435))
 local warnEventHorizon						= mod:NewTargetNoFilterAnnounce(318196, 3)
@@ -444,9 +444,11 @@ do
 			if select(4, UnitPosition(uId)) == currentMapId then
 				if (difficultyName == "mythic" or not mod.Options.HideDead or not UnitIsDeadOrGhost(uId)) then
 					local unitName = DBM:GetUnitFullName(uId)
-					local count = UnitPower(uId, ALTERNATE_POWER_INDEX)
-					tempLines[unitName] = count
-					tempLinesSorted[#tempLinesSorted + 1] = unitName
+					if unitName then
+						local count = UnitPower(uId, ALTERNATE_POWER_INDEX)
+						tempLines[unitName] = count
+						tempLinesSorted[#tempLinesSorted + 1] = unitName
+					end
 				end
 			end
 		end
@@ -513,11 +515,13 @@ function mod:OnCombatStart(delay)
 	end
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
-		neckAvailable[name] = true
+		if name then
+			neckAvailable[name] = true
+		end
 	end
 	currentMapId = select(4, UnitPosition("player"))
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(307831))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(307831))
 		DBM.InfoFrame:Show(self:IsLFR() and 10 or 30, "function", updateInfoFrame, false)
 	end
 end
@@ -554,7 +558,9 @@ function mod:OnTimerRecovery()
 	--On recovery no way to know neck status, so set all to false
 	for uId in DBM:GetGroupMembers() do
 		local name = DBM:GetUnitFullName(uId)
-		neckAvailable[name] = false
+		if name then
+			neckAvailable[name] = false
+		end
 	end
 end
 
@@ -880,7 +886,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				yellParanoiaRepeater:Yell(icon)
 			end
 		end
-	elseif spellId == 313400 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(3, 3) then
+	elseif spellId == 313400 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 3) then
 		specWarnCorruptedMindDispel:Show(args.destName)
 		specWarnCorruptedMindDispel:Play("helpdispel")
 	elseif spellId == 313793 then

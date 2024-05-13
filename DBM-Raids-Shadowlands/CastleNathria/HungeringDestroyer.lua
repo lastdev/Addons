@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2428, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(164261)
 mod:SetEncounterID(2383)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -57,8 +57,8 @@ local timerOverwhelmCD							= mod:NewNextCountTimer(11.9, 329774, nil, "Tank", 
 local berserkTimer								= mod:NewBerserkTimer(600)
 
 --mod:AddRangeFrameOption(10, 310277)
-mod:AddSetIconOption("SetIconOnGluttonousMiasma", 329298, true, false, {1, 2, 3, 4})
-mod:AddSetIconOption("SetIconOnVolatileEjection2", 334266, true, false, {5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnGluttonousMiasma", 329298, true, 0, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnVolatileEjection2", 334266, true, 0, {5, 6, 7, 8})
 mod:AddInfoFrameOption(nil, true)
 mod:AddBoolOption("SortDesc", false)
 mod:AddBoolOption("ShowTimeNotStacks", false)
@@ -111,15 +111,17 @@ do
 		if mod.Options.ShowTimeNotStacks then
 			--Higher Performance check that scans all debuff remaining times
 			for uId in DBM:GetGroupMembers() do
-				if not (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1) or UnitIsDeadOrGhost(uId)) then--Exclude tanks and dead
+				if not (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, true) or UnitIsDeadOrGhost(uId)) then--Exclude tanks and dead
 					local unitName = DBM:GetUnitFullName(uId)
-					local spellName3, _, _, _, _, expireTime3 = DBM:UnitDebuff(uId, 334755)
-					if spellName3 and expireTime3 then
-						tempLines[unitName] = mfloor(expireTime3-GetTime())
-						tempLinesSorted[#tempLinesSorted + 1] = unitName
-					else
-						tempLines[unitName] = 0
-						tempLinesSorted[#tempLinesSorted + 1] = unitName
+					if unitName then
+						local spellName3, _, _, _, _, expireTime3 = DBM:UnitDebuff(uId, 334755)
+						if spellName3 and expireTime3 then
+							tempLines[unitName] = mfloor(expireTime3-GetTime())
+							tempLinesSorted[#tempLinesSorted + 1] = unitName
+						else
+							tempLines[unitName] = 0
+							tempLinesSorted[#tempLinesSorted + 1] = unitName
+						end
 					end
 				end
 			end
@@ -127,10 +129,12 @@ do
 			--More performance friendly check that just returns all player stacks (the default option)
 			for uId in DBM:GetGroupMembers() do
 				local _, _, _, mapId = UnitPosition(uId)
-				if not (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, 1) or UnitIsDeadOrGhost(uId)) and mapId == 2296 then--Exclude tanks and dead and people not in zone
+				if not (UnitGroupRolesAssigned(uId) == "TANK" or GetPartyAssignment("MAINTANK", uId, true) or UnitIsDeadOrGhost(uId)) and mapId == 2296 then--Exclude tanks and dead and people not in zone
 					local unitName = DBM:GetUnitFullName(uId)
-					tempLines[unitName] = essenceSapStacks[unitName] or 0
-					tempLinesSorted[#tempLinesSorted + 1] = unitName
+					if unitName then
+						tempLines[unitName] = essenceSapStacks[unitName] or 0
+						tempLinesSorted[#tempLinesSorted + 1] = unitName
+					end
 				end
 			end
 		end
@@ -187,7 +191,9 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		for uId in DBM:GetGroupMembers() do
 			local unitName = DBM:GetUnitFullName(uId)
-			essenceSapStacks[unitName] = 0
+			if unitName then
+				essenceSapStacks[unitName] = 0
+			end
 		end
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(OVERVIEW)
@@ -199,7 +205,7 @@ end
 function mod:OnTimerRecovery()
 	for uId in DBM:GetGroupMembers() do
 		local unitName = DBM:GetUnitFullName(uId)
-		if self:IsMythic() then
+		if unitName and self:IsMythic() then
 			local _, _, currentStack = DBM:UnitDebuff(uId, 329298)
 			essenceSapStacks[unitName] = currentStack or 0
 			if UnitIsUnit(uId, "player") and currentStack then

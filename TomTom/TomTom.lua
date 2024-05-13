@@ -18,6 +18,9 @@ addon.WOW_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 addon.WOW_CLASSIC = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 addon.WOW_BURNING_CRUSADE_CLASSIC = (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
 
+local buildVersion = select(4, GetBuildInfo())
+addon.WAR_WITHIN = (buildVersion >= 110000)
+
 -- Local definitions
 local GetCurrentCursorPosition
 local WorldMap_OnUpdate
@@ -208,7 +211,7 @@ function TomTom:Initialize(event, addon)
 end
 
 function TomTom:Enable(addon)
-    if self.WOW_MAINLINE then
+    if self.WOW_MAINLINE and not self.WAR_WITHIN then
         self:EnableDisablePOIIntegration()
     end
 

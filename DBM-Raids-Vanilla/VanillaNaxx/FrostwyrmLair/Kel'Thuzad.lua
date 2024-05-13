@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("Kel'Thuzad", "DBM-Raids-Vanilla", 1)
+local mod	= DBM:NewMod("KelThuzadVanilla", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231117104406")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -23,7 +23,7 @@ ability.id = 27810 or ability.id = 27819 or ability.id = 27808 and type = "cast"
  or (source.type = "NPC" and source.firstSeen = timestamp) or (target.type = "NPC" and target.firstSeen = timestamp)
 --]]
 local warnAddsSoon			= mod:NewAnnounce("warnAddsSoon", 1, "134321")
-local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
+local warnPhase2			= mod:NewPhaseAnnounce(2, 3, nil, nil, nil, nil, nil, 2)
 local warnBlastTargets		= mod:NewTargetAnnounce(27808, 2)
 local warnFissure			= mod:NewTargetAnnounce(27810, 4, nil, nil, nil, nil, nil, 2)
 local warnMana				= mod:NewTargetAnnounce(27819, 2)
@@ -43,9 +43,9 @@ local timerfrostBlast		= mod:NewBuffActiveTimer(4, 27808, nil, nil, nil, 5, nil,
 --local timerMCCD			= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
 local timerPhase2			= mod:NewTimer(330, "TimerPhase2", "136116", nil, nil, 6)
 
-mod:AddSetIconOption("SetIconOnMC2", 28410, false, false, {1, 2, 3, 4, 5})
-mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, false, {8})
-mod:AddSetIconOption("SetIconOnFrostTomb2", 27808, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnMC2", 28410, false, 0, {1, 2, 3, 4, 5})
+mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, 0, {8})
+mod:AddSetIconOption("SetIconOnFrostTomb2", 27808, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddRangeFrameOption(10, 27819)
 
 mod.vb.warnedAdds = false
@@ -80,6 +80,7 @@ function mod:OnCombatStart(delay)
 	specwarnP2Soon:Schedule(320-delay)
 	timerPhase2:Start()
 	warnPhase2:Schedule(330)
+	warnPhase2:ScheduleVoice(330, "ptwo")
 	if self.Options.RangeFrame then
 		self:Schedule(330-delay, RangeToggle, true)
 	end
@@ -140,7 +141,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			--timerMCCD:Start(60)--60 seconds?
 		end
 		if self.Options.SetIconOnMC2 then
-			local _, _, group = GetRaidRosterInfo(UnitInRaid(args.destName))
+			local _, _, group = GetRaidRosterInfo(UnitInRaid(args.destName) or 0)
 			if group % 2 == 1 then
 				self:SetIcon(args.destName, self.vb.MCIcon1)
 				self.vb.MCIcon1 = self.vb.MCIcon1 + 1
@@ -173,6 +174,7 @@ function mod:UNIT_TARGETABLE_CHANGED()
 	if self.vb.phase == 1 then
 		self:Unschedule(RangeToggle)
 		warnPhase2:Cancel()
+		warnPhase2:CancelVoice()
 		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")

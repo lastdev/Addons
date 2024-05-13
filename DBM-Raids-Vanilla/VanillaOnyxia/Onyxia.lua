@@ -1,7 +1,7 @@
-local mod	= DBM:NewMod("Onyxia", "DBM-Raids-Vanilla", 7)
+local mod	= DBM:NewMod("OnyxiaVanilla", "DBM-Raids-Vanilla", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031601")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(10184)
 mod:SetEncounterID(1084)
 mod:SetModelID(8570)
@@ -53,7 +53,7 @@ local timerBreath			= mod:NewCastTimer(5, 18584, nil, nil, nil, 3)
 
 mod:AddBoolOption("SoundWTF3", true, "sound")
 mod:AddRangeFrameOption(8, 18392)
-mod:AddSetIconOption("SetIconOnFireball", 18392, true, false, {8})
+mod:AddSetIconOption("SetIconOnFireball", 18392, true, 0, {8})
 
 mod.vb.warned_preP2 = false
 mod.vb.warned_preP3 = false
@@ -131,7 +131,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 do
-	local tailSweep = DBM:GetSpellInfo(15847)--Classic Note
+	local tailSweep = DBM:GetSpellName(15847)--Classic Note
 	function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 		if (spellId == 15847 or spellName == tailSweep) and destGUID == UnitGUID("player") and self.Options.SoundWTF3 then -- Tail Sweep
 			DBM:PlaySoundFile("Interface\\AddOns\\DBM-Raids-Vanilla\\VanillaOnyxia\\sounds\\watch-the-tail.ogg")

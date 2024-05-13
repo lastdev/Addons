@@ -9,11 +9,16 @@ local SettingsFeature = {
     },
 }
 
+SettingsFeature.Events = {
+    OnPagesChanged = "settings:OnPagesChanged"
+}
+
 --[[
     Called when feature is initialized
 ]]
 function SettingsFeature:OnInitialize()
 
+    Addon:GenerateEvents(self.Events)
     self.pages = {}
 
     local profile = Addon:GetProfile()
@@ -25,18 +30,45 @@ function SettingsFeature:OnInitialize()
     end
 end
 
-function SettingsFeature:RegisterPage(name, help, creator, order)
+function SettingsFeature:RegisterPage(name, help, creator, order, new)
 
 
 
+
+    local localizedName = locale:GetString(name) or name
+    local localizedHep = locale:GetString(help) or help
 
     table.insert(self.pages, {
             Key = name,
-            Text = name,
-            Help = help,
+            Text = localizedName,
+            Help = localizedHep,
             CreateList = creator,
-            Order = order
+            Order = order or 9000,
+            IsNew = new or false
         })
+
+    Addon:RaiseEvent(self.Events.OnPagesChanged)
+end
+
+--[[ Removes the settings page with the sepcified name ]]
+function SettingsFeature:UnregisterPage(name)
+
+
+    local pages = {}
+    local changed = false;
+
+    for _, page in ipairs(self.pages) do
+        if (page.Key ~= name) then
+            table.insert(pages, page)
+        else
+            changed = true
+        end
+    end
+
+    self.pages = pages
+    if (changed) then
+        Addon:RaiseEvent(self.Events.OnPagesChanged)
+    end
 end
 
 --[[
@@ -50,15 +82,40 @@ function SettingsFeature:GetSettings()
     local categories = self.Categories
     if type(categories) == "table" then
         for _, category in pairs(categories) do
-            table.insert(settings, {
-                Key = category:GetName(),
-                Text = category:GetText(),
-                Help = category:GetSummary(),
-                Order = category:GetOrder() or 1000,
-                CreateList = function(parent)
-                    return category:CreateList(parent)
+            if (type(category.ShowShow) ~= "function") or (category:ShowShow() == true) then
+
+                local order = 1000
+                if (type(category.GetOrder) == "function") then
+                    order = category:GetOrder()
+                    if (type(order) ~= "number") then
+                        order = 1000
+                    end
                 end
-            })
+
+                local isNew = false
+                if (type(category.GetIsNew) == "function") then
+                    isNew =category:GetIsNew()
+                    if (type(isNew) ~= "boolean") then
+                        isNew = false
+                    end
+                end
+
+                local catName = category:GetText()
+                catName = locale:GetString(catName) or catName
+                local catDesc = category:GetSummary()
+                catDesc = locale:GetString(catDesc) or catDesc
+
+                table.insert(settings, {
+                    Key = category:GetName(),
+                    Text = catName,
+                    Help = catDesc,
+                    Order = order,
+                    IsNew = isNew,
+                    CreateList = function(parent)
+                        return category:CreateList(parent)
+                    end
+                })
+            end
         end
     end
 
@@ -78,7 +135,7 @@ function SettingsFeature:GetSettings()
                 return (a.Order < b.Order)
             end
 
-            return a.Name < b.Name
+            return a.Text < b.Text
         end)
 
 
@@ -86,10 +143,22 @@ function SettingsFeature:GetSettings()
     return settings
 end
 
+--[[  Retrieve the lists tab ]]
+function SettingsFeature:GetTab()
+    return {
+            Id = "settings",
+            Name = "RULES_DIALOG_CONFIG_TAB",
+            Template = "Vendor_SettingsTab",
+            Class = self.SettingsTab,
+            Far = true
+        }
+end
+
 --[[
     Callback for when the feature is terminated
 ]]
 function SettingsFeature:OnTerminate()
+    Addon:RemoveEvents(self.Events)
 end
 
 Addon.Features.Settings = SettingsFeature

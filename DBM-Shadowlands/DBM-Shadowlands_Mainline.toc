@@ -1,0 +1,41 @@
+## Interface: 100207
+## Version: r15
+## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (Shadowlands)|r
+## Title-esES:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Jefes de Mundo (Shadowlands)|r
+## Title-esMX:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10Jefes de Mundo (Shadowlands)|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10필드 보스 (어둠땅)|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10暗影之境|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cff10ff10Мировые боссы (Темные Земли)|r
+## Author: MysticalOS
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMShadowlands_AllSavedVars
+## SavedVariablesPerCharacter: DBMShadowlands_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: WORLDBOSS
+## X-DBM-Mod-Category: SHADOWLANDS
+## X-DBM-StatTypes: normal
+## X-DBM-Mod-Name: World Bosses (Shadowlands)
+## X-DBM-Mod-Name-esES: Jefes de Mundo (Shadowlands)
+## X-DBM-Mod-Name-esMX: Jefes de Mundo (Shadowlands)
+## X-DBM-Mod-Name-koKR: 필드 보스 (어둠땅)
+## X-DBM-Mod-Name-ruRU: Мировые боссы (Темные Земли)
+## X-DBM-Mod-World-Boss: 1
+## X-DBM-Mod-Sort: 310
+## X-DBM-Mod-MapID: 2222, 2374
+## X-DBM-Mod-LoadCID: 167524,167525,167527,167526,178958,182466
+## X-DBM-Mod-MinCoreRevision: 17286
+## X-DBM-Mod-MinExpansion: 8
+## X-Curse-Project-ID: 723031
+## X-Wago-ID: RqGYOE6g
+
+localization.en.lua
+localization.kr.lua
+localization.ru.lua
+Valinor.lua
+Mortanis.lua
+Oranomonos.lua
+Nurgash.lua
+Morgeth.lua
+Antros.lua

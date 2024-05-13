@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetUsedIcons(7, 6)
@@ -91,7 +91,7 @@ mod:AddBoolOption("SetIconOnBitingCold", true)
 mod:AddBoolOption("SetIconOnFrostBite", true)
 mod:AddBoolOption("AnnounceCooldowns", "RaidCooldown")
 
-local lingeringPresence = DBM:GetSpellInfo(136467)
+local lingeringPresence = DBM:GetSpellName(136467)
 local boltCasts = 0
 local kazraPossessed = false
 local possessesDone = 0

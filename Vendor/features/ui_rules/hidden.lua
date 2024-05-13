@@ -7,9 +7,7 @@ local RuleType = Addon.RuleType
 local PAGE_PADDING = 0
 local PAGE_SPACING = 10
 
---[===[@debug@
 
---@end-debug@]===]
 
 --[[ Load the hidden rule settings page ]]
 function HiddenRuleSettings:OnLoad()
@@ -127,8 +125,10 @@ function HiddenRuleItem:HasTooltip()
 end
 
 Addon.Features.Rules.HiddenRuleItem = HiddenRuleItem
-function Addon.Features.Rules.CreateHiddenRulePage(parent)
-    local frame = CreateFrame("Frame", nil, parent or UIParent, "Rules_HiddenSettings")
-    UI.Attach(frame, HiddenRuleSettings)
-    return frame
-end
+Addon.Features.Rules.HiddenRuleSettings = {
+    Create = function(parent)
+        local frame = CreateFrame("Frame", nil, parent or UIParent, "Rules_HiddenSettings")
+        UI.Attach(frame, HiddenRuleSettings)
+        return frame
+    end
+}

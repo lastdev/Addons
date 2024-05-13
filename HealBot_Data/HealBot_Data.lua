@@ -1,8 +1,8 @@
-HealBot_Default_Textures={
+HealBot_Supplied_Textures={
      [1]= {name="HealBot 01", file=[[Interface\Addons\HealBot\Images\bar1.tga]]},
      [2]= {name="Waves", file=[[Interface\Addons\HealBot\Images\bar2.tga]]},
      [3]= {name="HealBot 03", file=[[Interface\Addons\HealBot\Images\bar3.tga]]},
-     [4]= {name="HealBot 04", file=[[Interface\Addons\HealBot\Images\bar4.tga]]},
+     [4]= {name="Aluminium", file=[[Interface\Addons\HealBot\Images\Aluminium.tga]]},
      [5]= {name="HealBot 05", file=[[Interface\Addons\HealBot\Images\bar5.tga]]},
      [6]= {name="BantoBar", file=[[Interface\Addons\HealBot\Images\bar6.tga]]},
      [7]= {name="Otravi", file=[[Interface\Addons\HealBot\Images\bar7.tga]]},
@@ -20,13 +20,44 @@ HealBot_Default_Textures={
     [19]= {name="Flat", file=[[Interface\Addons\HealBot\Images\Flat.tga]]},
     [20]= {name="Smooth v2", file=[[Interface\Addons\HealBot\Images\Smoothv2.tga]]},
     [21]= {name="Outline", file=[[Interface\Addons\HealBot\Images\Outline.tga]]},
+    [22]= {name="Armory", file=[[Interface\Addons\HealBot\Images\Armory.tga]]},
+    [23]= {name="Button", file=[[Interface\Addons\HealBot\Images\Button.tga]]},
+    [24]= {name="Fourths", file=[[Interface\Addons\HealBot\Images\Fourths.tga]]},
+    [25]= {name="Fifths", file=[[Interface\Addons\HealBot\Images\Fifths.tga]]},
+    [26]= {name="Glass", file=[[Interface\Addons\HealBot\Images\Glass.tga]]},
+    [27]= {name="Gloss", file=[[Interface\Addons\HealBot\Images\Gloss.tga]]},
+    [28]= {name="Graphite", file=[[Interface\Addons\HealBot\Images\Graphite.tga]]},
+    [29]= {name="Minimalist", file=[[Interface\Addons\HealBot\Images\Minimalist.tga]]},
+    [30]= {name="Ruben", file=[[Interface\Addons\HealBot\Images\Ruben.tga]]},
 };
-HealBot_Default_Sounds={
+function HealBot_Data_Default_TextureIndex()
+    return 20
+end
+function HealBot_Data_Default_Texture()
+    --return HealBot_Supplied_Textures[HealBot_Data_Default_TextureIndex()].file
+    return 'Interface\\Addons\\HealBot\\Images\\Smoothv2.tga'
+end
+function HealBot_Data_Default_TextureName()
+    --return HealBot_Supplied_Textures[HealBot_Data_Default_TextureIndex()].name
+    return "Smooth v2"
+end
+
+HealBot_Supplied_Sounds={
     [1]= {name="Tribal Bass Drum", file=566027},
     [2]= {name="Thorns", file=569022},
     [3]= {name="Elf Bell Toll", file=566558},
 };
-HealBot_Default_Fonts={
+function HealBot_Data_Default_SoundIndex()
+    return 3
+end
+function HealBot_Data_Default_Sound()
+    return HealBot_Supplied_Sounds[HealBot_Data_Default_SoundIndex()].file
+end
+function HealBot_Data_Default_SoundName()
+    return HealBot_Supplied_Sounds[HealBot_Data_Default_SoundIndex()].name
+end
+
+HealBot_Supplied_Fonts={
     [1]= {name="Aovel Sans Black", file=[[Interface\AddOns\HealBot\Fonts\ASansBlack.ttf]]},
     [2]= {name="Ace Futurism", file=[[Interface\AddOns\HealBot\Fonts\ace_futurism.ttf]]},
     [3]= {name="Oregon LDO Black", file=[[Interface\AddOns\HealBot\Fonts\Oregon_LDO_Black.ttf]]},
@@ -42,14 +73,26 @@ HealBot_Default_Fonts={
     [13]= {name="NotoSans Bold", file=[[Interface\AddOns\HealBot\Fonts\NotoSans-Bold.ttf]]},
     [14]= {name="Roboto Bold", file=[[Interface\AddOns\HealBot\Fonts\Roboto-Bold.ttf]]},
     [15]= {name="Roboto Medium", file=[[Interface\AddOns\HealBot\Fonts\Roboto-Medium.ttf]]},
+    [16]= {name="Bazooka", file=[[Interface\AddOns\HealBot\Fonts\Bazooka.ttf]]},
+    [17]= {name="DorisPP", file=[[Interface\AddOns\HealBot\Fonts\DorisPP.ttf]]},
+    [18]= {name="Augustus", file=[[Interface\AddOns\HealBot\Fonts\AUGUSTUS.ttf]]},
+    [19]= {name="Caesar", file=[[Interface\AddOns\HealBot\Fonts\CAESAR.ttf]]},
+    [20]= {name="Diogenes", file=[[Interface\AddOns\HealBot\Fonts\DIOGENES.ttf]]},
+    [21]= {name="Capitalis Type Oasis", file=[[Interface\AddOns\HealBot\Fonts\CapitalisTypOasis.ttf]]},
+    [22]= {name="Mystic Orbs", file=[[Interface\AddOns\HealBot\Fonts\MystikOrbs.ttf]]},
+    [23]= {name="X360", file=[[Interface\AddOns\HealBot\Fonts\X360.ttf]]},
+    [24]= {name="Impact", file=[[Interface\AddOns\HealBot\Fonts\Impact.ttf]]},
+    [25]= {name="Olde English", file=[[Interface\AddOns\HealBot\Fonts\OldeEnglish.ttf]]},
 };
---HealBot_Default_Font= "Friz Quadrata TT";
-HealBot_Default_Font=HealBot_Default_Fonts[15].name
-HealBot_Font_Outline={
-    [1]= "",
-    [2]= "OUTLINE",
-    [3]= "THICKOUTLINE",
-};
+function HealBot_Data_Default_FontIndex()
+    return 15
+end
+function HealBot_Data_Default_Font()
+    return HealBot_Supplied_Fonts[HealBot_Data_Default_FontIndex()].file
+end
+function HealBot_Data_Default_FontName()
+    return HealBot_Supplied_Fonts[HealBot_Data_Default_FontIndex()].name
+end
 
 local Version=HealBot_Global_InitVersion()
 HealBot_ConfigDefaults = {
@@ -138,6 +181,7 @@ HealBot_Config_SpellsDefaults = {
 HealBot_Config_BuffsDefaults = {
   BuffWatch=true,
   BuffWatchInCombat=false,
+  BuffCustomWatchInCombat=true,
   PalaBlessingsAsOne=false,
   ShortBuffTimer=10,
   LongBuffTimer=120,
@@ -160,16 +204,15 @@ HealBot_Config_BuffsDefaults = {
   AlwaysShowClass = false,
   AlwaysShowTimed = false,
   CBshownHB=true,
-  ShowGroups={[1]=true, [2]=true, [3]=true, [4]=true, [5]=true, [6]=true, [7]=true, [8]=true, },
   ShowBuffWarning=false,
   SoundBuffWarning=false,
-  SoundBuffPlay=HealBot_Default_Sounds[1].name,
+  SoundBuffPlay=HealBot_Data_Default_SoundName(),
   HealBot_CBWarnRange_Bar=3,
   HealBot_CBWarnRange_Screen=2,
   HealBot_CBWarnRange_Sound=3,
   CustomBuffCheck={[1]=false, [2]=false, [3]=false},
-  CustomBuffName={[1]="", [2]="", [3]=""},
-  CustomItemName={[1]="", [2]="", [3]=""},
+  CustomBuffName={[1]="", [2]="", [3]="", [4]=""},
+  CustomItemName={[1]="", [2]="", [3]="", [4]=""},
   ManaDrinkThreshold=50,
   ManaDrinkItem="",
   WellFedItem="",
@@ -184,7 +227,8 @@ HealBot_Config_CuresDefaults = {
   IgnoreFastDurDebuffsSecs=2,
   IgnoreOnCooldownDebuffs = false,
   IgnoreFriendDebuffs = false,
-  SoundDebuffPlay = HealBot_Default_Sounds[1].name,
+  IgnoreCannotDispell = false,
+  SoundDebuffPlay = HealBot_Data_Default_SoundName(),
   DebuffWatchInCombat = true,
   DebuffWatchWhenGrouped = false,
   DebuffWatchWhenMounted = false,
@@ -196,7 +240,6 @@ HealBot_Config_CuresDefaults = {
   ListSortFilterTag="",
   ShowTimeMaxDuration = 31,
   CDCshownHB=true,
-  ShowGroups={[1]=true, [2]=true, [3]=true, [4]=true, [5]=true, [6]=true, [7]=true, [8]=true, },
   HealBot_CDCWarnRange_Bar=3,
   HealBot_CDCWarnRange_Screen=2,
   HealBot_CDCWarnRange_Sound=3,
@@ -284,9 +327,9 @@ function HealBot_Data_InitVars()
         PluginRequests=true,
         PluginHealthWatch=true,
         PluginManaWatch=true,
+        PluginMedia=true,
         FrameStrata="LOW",
         CompressExport=true,
-        AllowPlayerRoles=true,
         VehicleFontSizeReduction=4,
         UseCrashProt=false,
         NoRanks=false,
@@ -324,16 +367,15 @@ function HealBot_Data_InitVars()
         Tooltip_IgnoreGCD=false,
         Tooltip_Scale=1,
         Tooltip_Alpha=1,
-        Tooltip_HeaderFont=HealBot_Default_Fonts[14].name,
+        Tooltip_HeaderFont=HealBot_Supplied_Fonts[14].name,
         Tooltip_HeaderFontSize=14,
-        Tooltip_DetailFont=HealBot_Default_Fonts[15].name,
+        Tooltip_DetailFont=HealBot_Data_Default_FontName(),
         Tooltip_DetailFontSize=12,
         DisableToolTipInCombat=false,
         HideOptions=true,
         ProtectPvP=false,
         RightButtonOptions=false,
-        PerfMode=2,
-        EventQueues={["BUFF"]=true,["DEBUFF"]=true,["HEALTH"]=false,["INHEALS"]=false,["ABSORBS"]=false,["POWER"]=false},
+        TalentInspect=true,
         HideUnlockedTag=true,
         SmartCast=true,
         SmartCastDebuff=true,
@@ -360,6 +402,7 @@ function HealBot_Data_InitVars()
         LastSupporter=1,
         IncMainAssist=true,
         FPS=60,
+        LAG=0.05,
         PresetColoursAlias={[1]=HEALBOT_OPTIONS_PRESET.." 1",[2]=HEALBOT_OPTIONS_PRESET.." 2",
                             [3]=HEALBOT_OPTIONS_PRESET.." 3",[4]=HEALBOT_OPTIONS_PRESET.." 4",
                             [5]=HEALBOT_OPTIONS_PRESET.." 5",[6]=HEALBOT_OPTIONS_PRESET.." 6",

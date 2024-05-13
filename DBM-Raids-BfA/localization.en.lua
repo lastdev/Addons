@@ -81,7 +81,7 @@ L:SetTimerLocalization({
 	timerCallofCrawgCD		= "Next Crawg Pool (%s)",
 	timerCallofHexerCD 		= "Next Hexer Pool (%s)",
 	timerCallofCrusherCD	= "Next Crusher Pool (%s)",
-	timerAddIncoming		= DBM_COMMON_L.INCOMMING
+	timerAddIncoming		= DBM_COMMON_L.INCOMING
 })
 
 L:SetOptionLocalization({

@@ -461,6 +461,10 @@ local presets = {
       78446, -- Aiding the Accord: Superbloom
       78447, -- Aiding the Accord: Emerald Bounty
       78861, -- Aiding the Accord
+      80385, -- Last Hurrah: Dragon Isles
+      80386, -- Last Hurrah: Zaralek Caverns and Time Rifts
+      80388, -- Last Hurrah: Emerald Dream
+      80389, -- Last Hurrah
     },
     reset = 'weekly',
     persists = true,
@@ -622,8 +626,9 @@ local presets = {
       72647, -- Ohn'ahran Plains
       72648, -- The Azure Span
       72649, -- Thaldraszus
-	  75305, -- Zaralek Cavern
-	  78097, -- Emerald Dream
+      74871, -- The Forbidden Reach
+      75305, -- Zaralek Cavern
+      78097, -- Emerald Dream
     },
     reset = 'weekly',
     persists = false,
@@ -768,6 +773,17 @@ local presets = {
     persists = false,
     progress = true,
     onlyOnOrCompleted = false,
+  },
+  -- The Big Dig: Traitor's Rest
+  ['df-the-big-dig-traitors-rest'] = {
+    type = 'single',
+    expansion = 9,
+    index = 22,
+    name = L["The Big Dig: Traitor's Rest"],
+    questID = 79226,
+    reset = 'weekly',
+    persists = true,
+    fullObjective = false,
   },
 }
 

@@ -167,6 +167,9 @@ function LiteMountFlagBitMixin:Update(flag, mount)
     elseif flag == "RUN" and ( mount.flags.FLY or mount.flags.DRAGONRIDING ) then
         self:Enable()
         self:Show()
+    elseif flag == "FLY" and mount.flags.DRAGONRIDING then
+        self:Enable()
+        self:Show()
     else
         self:Hide()
         self:Disable()
@@ -188,8 +191,8 @@ function LiteMountMountIconMixin:OnLeave()
     LiteMountTooltip:Hide()
 end
 
-function LiteMountMountIconMixin:PreClick(mouseButton)
-    if mouseButton == 'LeftButton' and IsModifiedClick("CHATLINK") then
+function LiteMountMountIconMixin:PreClick(mouseButton, isDown)
+    if mouseButton == 'LeftButton' and not isDown and IsModifiedClick("CHATLINK") then
         local mount = self:GetParent().mount
         ChatEdit_InsertLink(GetSpellLink(mount.spellID))
     end
@@ -257,7 +260,7 @@ function LiteMountMountButtonMixin:Update(bitFlags, mount)
         self.Rarity.toolTip = nil
     end
 
-    if not mount.isCollected then
+    if not mount:IsCollected() then
         self.Name:SetFontObject("GameFontDisable")
         self.Icon:GetNormalTexture():SetVertexColor(1, 1, 1)
         self.Icon:GetNormalTexture():SetDesaturated(true)
@@ -266,7 +269,7 @@ function LiteMountMountButtonMixin:Update(bitFlags, mount)
         self.Name:SetFontObject("GameFontNormal")
         self.Icon:GetNormalTexture():SetDesaturated(true)
         self.Icon:GetNormalTexture():SetVertexColor(0.6, 0.2, 0.2)
-    elseif WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and not mount:IsMountable() then
+    elseif WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not mount:IsMountable() then
         -- In classic mounts are made red if you can't use them right now
         self.Name:SetFontObject("GameFontNormal")
         self.Icon:GetNormalTexture():SetDesaturated(true)

@@ -805,7 +805,7 @@ L:SetGeneralLocalization{
 --------------
 --  Onyxia  --
 --------------
-L = DBM:GetModLocalization("Onyxia")
+L = DBM:GetModLocalization("OnyxiaVanilla")
 
 L:SetGeneralLocalization{
 	name = "Onyxia"
@@ -835,7 +835,7 @@ L:SetMiscLocalization{
 -----------------
 -- Anub'Rekhan --
 -----------------
-L = DBM:GetModLocalization("Anub'Rekhan")
+L = DBM:GetModLocalization("AnubRekhanVanilla")
 
 L:SetGeneralLocalization({
 	name = "Anub'Rekhan"
@@ -861,7 +861,7 @@ L:SetMiscLocalization({
 -------------------------
 -- Gran Viuda Faerlina --
 -------------------------
-L = DBM:GetModLocalization("Faerlina")
+L = DBM:GetModLocalization("FaerlinaVanilla")
 
 L:SetGeneralLocalization({
 	name = "Grã-viúva Faerlina"
@@ -884,7 +884,7 @@ L:SetMiscLocalization({
 -------------
 -- Maexxna --
 -------------
-L = DBM:GetModLocalization("Maexxna")
+L = DBM:GetModLocalization("MaexxnaVanilla")
 
 L:SetGeneralLocalization({
 	name = "Maexxna"
@@ -912,7 +912,7 @@ L:SetMiscLocalization({
 -----------------------
 -- Noth el Pesteador --
 -----------------------
-L = DBM:GetModLocalization("Noth")
+L = DBM:GetModLocalization("NothVanilla")
 
 L:SetGeneralLocalization({
 	name = "Noth, o Pestífero"
@@ -942,7 +942,7 @@ L:SetMiscLocalization({
 ----------------------
 -- Heigan el Impuro --
 ----------------------
-L = DBM:GetModLocalization("Heigan")
+L = DBM:GetModLocalization("HeiganVanilla")
 
 L:SetGeneralLocalization({
 	name = "Heigan, o Sujo"
@@ -970,7 +970,7 @@ L:SetMiscLocalization({
 -------------
 -- Loatheb --
 -------------
-L = DBM:GetModLocalization("Loatheb")
+L = DBM:GetModLocalization("LoathebVanilla")
 
 L:SetGeneralLocalization({
 	name = "Repugnaz"
@@ -989,7 +989,7 @@ L:SetOptionLocalization({
 ---------------
 -- Retalhoso --
 ---------------
-L = DBM:GetModLocalization("Patchwerk")
+L = DBM:GetModLocalization("PatchwerkVanilla")
 
 L:SetGeneralLocalization({
 	name = "Retalhoso"
@@ -1006,7 +1006,7 @@ L:SetMiscLocalization({
 ---------------
 -- Grobbulus --
 ---------------
-L = DBM:GetModLocalization("Grobbulus")
+L = DBM:GetModLocalization("GrobbulusVanilla")
 
 L:SetGeneralLocalization({
 	name = "Grobbulus"
@@ -1015,7 +1015,7 @@ L:SetGeneralLocalization({
 -----------
 -- Gluth --
 -----------
-L = DBM:GetModLocalization("Gluth")
+L = DBM:GetModLocalization("GluthVanilla")
 
 L:SetGeneralLocalization({
 	name = "Gluth"
@@ -1024,7 +1024,7 @@ L:SetGeneralLocalization({
 --------------
 -- Thaddius --
 --------------
-L = DBM:GetModLocalization("Thaddius")
+L = DBM:GetModLocalization("ThaddiusVanilla")
 
 L:SetGeneralLocalization({
 	name = "Thaddius"
@@ -1056,7 +1056,7 @@ L:SetWarningLocalization({
 --------------------------
 -- Instructor Razuvious --
 --------------------------
-L = DBM:GetModLocalization("Razuvious")
+L = DBM:GetModLocalization("RazuviousVanilla")
 
 L:SetGeneralLocalization({
 	name = "Instrutor Razúvio"
@@ -1080,7 +1080,7 @@ L:SetWarningLocalization({
 --------------------------
 -- Gothik el Cosechador --
 --------------------------
-L = DBM:GetModLocalization("Gothik")
+L = DBM:GetModLocalization("GothikVanilla")
 
 L:SetGeneralLocalization({
 	name = "Gothik, o Ceifador"
@@ -1121,7 +1121,7 @@ L:SetMiscLocalization({
 ------------------------
 -- Os Quatro Cavaleiros --
 ------------------------
-L = DBM:GetModLocalization("Horsemen")
+L = DBM:GetModLocalization("HorsemenVanilla")
 
 L:SetGeneralLocalization({
 	name = "Os Quatro Cavaleiros"
@@ -1150,7 +1150,7 @@ L:SetMiscLocalization({
 ---------------
 -- Sapphiron --
 ---------------
-L = DBM:GetModLocalization("Sapphiron")
+L = DBM:GetModLocalization("SapphironVanilla")
 
 L:SetGeneralLocalization({
 	name = "Sapphiron"
@@ -1189,7 +1189,7 @@ L:SetTimerLocalization({
 -- Kel'Thuzad --
 ----------------
 
-L = DBM:GetModLocalization("Kel'Thuzad")
+L = DBM:GetModLocalization("KelThuzadVanilla")
 
 L:SetGeneralLocalization({
 	name = "Kel'Thuzad"
@@ -1212,4 +1212,246 @@ L:SetWarningLocalization({
 
 L:SetTimerLocalization({
 	TimerPhase2	= "Fase 2"
+})
+
+---------------------------
+--  Season of Discovery  --
+---------------------------
+
+---------------------------
+--  Blackfathom Deeps  --
+---------------------------
+
+------------------
+--  Baron Aquanis  --
+------------------
+L = DBM:GetModLocalization("BaronAuanisSoD")
+
+L:SetGeneralLocalization({
+	name = "Barão Aquanis"
+})
+
+L:SetMiscLocalization({
+	Water		= "Água"
+})
+
+------------------
+--  Ghamoo-ra  --
+------------------
+L = DBM:GetModLocalization("GhamooraSoD")
+
+L:SetGeneralLocalization({
+	name = "Ghamoo-ra"
+})
+
+------------------
+--  Lady Sarevess  --
+------------------
+L = DBM:GetModLocalization("LadySarevessSoD")
+
+L:SetGeneralLocalization({
+	name = "Lady Sarevess"
+})
+
+------------------
+--  Gelihast  --
+------------------
+L = DBM:GetModLocalization("GelihastSoD")
+
+L:SetGeneralLocalization({
+	name = "Gelihast"
+})
+
+L:SetTimerLocalization{
+	TimerImmune = "Imunidade termina"
+}
+
+L:SetOptionLocalization({
+	TimerImmune	= "Mostrar temporizador para a duração da imunidade de Gelihast durante as transições de fase"
+})
+
+------------------
+--  Lorgus Jett  --
+------------------
+L = DBM:GetModLocalization("LorgusJettSoD")
+
+L:SetGeneralLocalization({
+	name = "Lorgus Jett"
+})
+
+L:SetWarningLocalization({
+	warnPriestRemaining		= "%s Sacerdotisas restantes"
+})
+
+L:SetOptionLocalization({
+	warnPriestRemaining	= "Mostrar um aviso indicando quantas Sacerdotisas das Marés da Profundezas Negras ainda estão restantes"
+})
+
+------------------
+--  Twilight Lord Kelris  --
+------------------
+L = DBM:GetModLocalization("TwilightLordKelrisSoD")
+
+L:SetGeneralLocalization({
+	name = "Senhor do Crepúsculo Kelris"
+})
+
+------------------
+--  Aku'mai  --
+------------------
+L = DBM:GetModLocalization("AkumaiSoD")
+
+L:SetGeneralLocalization({
+	name = "Aku'mai"
+})
+
+------------------
+--  Gnomeregan  --
+------------------
+
+---------------------------
+--  Crowd Pummeler 9-60  --
+---------------------------
+L = DBM:GetModLocalization("CrowdPummellerSoD")
+
+L:SetGeneralLocalization({
+	name = "Espanca-gente 9-60"
+})
+
+---------------
+--  Grubbis  --
+---------------
+L = DBM:GetModLocalization("GrubbisSoD")
+
+L:SetGeneralLocalization({
+	name = "Grúdio"
+})
+
+L:SetMiscLocalization({
+	FirstPull = "Ainda há dutos de ventilação espalhando material radioativo em Gnomeregan.",
+	Pull = "Ah, não! Tremores assim só podem significar uma coisa..."
+})
+----------------------------
+--  Electrocutioner 6000  --
+----------------------------
+L = DBM:GetModLocalization("ElectrocutionerSoD")
+
+L:SetGeneralLocalization({
+	name = "Eletrocutor 6000"
+})
+
+-----------------------
+--  Viscous Fallout  --
+-----------------------
+L = DBM:GetModLocalization("ViscousFalloutSoD")
+
+L:SetGeneralLocalization({
+	name = "Precipitação Radioativa Viscosa"
+})
+
+----------------------------
+--  Mechanical Menagerie  --
+----------------------------
+L = DBM:GetModLocalization("MechanicalMenagerieSoD")
+
+L:SetGeneralLocalization({
+	name = "Viveiro Mecânico"
+})
+
+L:SetMiscLocalization{
+	Sheep		= "Ovelha",
+	Whelp		= "Dragonete",
+	Squirrel	= "Esquilo",
+	Chicken		= "Frango"
+}
+-----------------------------
+--  Mekgineer Thermaplugg  --
+-----------------------------
+L = DBM:GetModLocalization("ThermapluggSoD")
+
+L:SetGeneralLocalization({
+	name = "Mecangenheiro Termaplugue"
+})
+
+L:SetTimerLocalization{
+	timerTankCD = "Habilidade do tanque"
+}
+
+L:SetOptionLocalization({
+	timerTankCD	= "Exibir temporizador para o tempo de recarga aleatório da habilidade do tanque na fase 4."
+})
+
+------------------
+--  Sunken Temple  --
+------------------
+
+---------------------------
+--  Atal'alarion  --
+---------------------------
+L = DBM:GetModLocalization("AtalalarionSoD")
+
+L:SetGeneralLocalization({
+	name = "Atal'alarion"
+})
+
+---------------------------
+--  Festering Rotslime  --
+---------------------------
+L = DBM:GetModLocalization("FesteringRotslimeSoD")
+
+L:SetGeneralLocalization({
+	name = "Podridão Supurante"
+})
+
+---------------------------
+--  Atal'ai Defenders  --
+---------------------------
+L = DBM:GetModLocalization("AtalaiDefendersSoD")
+
+L:SetGeneralLocalization({
+	name = "Defensores Atal'ai"
+})
+
+L:SetOptionLocalization({
+	SetIconsOnGhosts = "Colocar ícones nos chefes fantasmas"
+})
+---------------------------
+--  Dreamscythe and Weaver  --
+---------------------------
+L = DBM:GetModLocalization("DreamscytheAndWeaverSoD")
+
+L:SetGeneralLocalization({
+	name = "Darquimeros e Tecelão"
+})
+---------------------------
+--  Avatar of Hakkar  --
+---------------------------
+L = DBM:GetModLocalization("AvatarofHakkarSoD")
+
+L:SetGeneralLocalization({
+	name = "Avatar de Hakkar"
+})
+---------------------------
+--  Jammal'an and Ogom  --
+---------------------------
+L = DBM:GetModLocalization("JammalanAndOgomSoD")
+
+L:SetGeneralLocalization({
+	name = "Jammal'an e Ogom"
+})
+---------------------------
+--  Morphaz and Hazzas  --
+---------------------------
+L = DBM:GetModLocalization("MorphazandHazzasSoD")
+
+L:SetGeneralLocalization({
+	name = "Morphaz e Hazzas"
+})
+---------------------------
+--  Shade of Eranikus  --
+---------------------------
+L = DBM:GetModLocalization("ShadeofEranikusSoD")
+
+L:SetGeneralLocalization({
+	name = "Vulto de Erânicos"
 })

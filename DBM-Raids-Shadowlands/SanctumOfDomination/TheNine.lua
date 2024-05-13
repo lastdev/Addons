@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2439, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(175726)--Skyja (TODO, add other 2 and set health to highest?)
 mod:SetEncounterID(2429)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -48,7 +48,7 @@ local timerUnendingStrikeCD						= mod:NewCDTimer(6.7, 350202, nil, "Tank|Healer
 local timerFormlessMassCD						= mod:NewCDCountTimer(47.3, 350342, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerWingsofRageCD						= mod:NewCDCountTimer(72.9, 350365, nil, nil, nil, 2)
 
-mod:AddSetIconOption("SetIconOnFormlessMass", 350342, true, true, {7, 8, 6})
+mod:AddSetIconOption("SetIconOnFormlessMass", 350342, true, 5, {7, 8, 6})
 ----Signe, The Voice
 mod:AddOptionLine(DBM:EJ_GetSectionInfo(23203), "announce")
 --local warnBloodLantern						= mod:NewTargetNoFilterAnnounce(341684, 2)
@@ -72,7 +72,7 @@ local timerCalloftheValkyrCD					= mod:NewCDCountTimer(52.3, 350467, nil, nil, n
 local timerFragmentsofDestinyCD					= mod:NewCDCountTimer(47.3, 350542, nil, nil, nil, 3, nil, nil, nil, 2, 3)
 
 mod:AddInfoFrameOption(350542, true)
-mod:AddSetIconOption("SetIconOnFragments", 350542, true, false, {1, 2, 3, 4})--Mythic says max 4, so probably the cap
+mod:AddSetIconOption("SetIconOnFragments", 350542, true, 0, {1, 2, 3, 4})--Mythic says max 4, so probably the cap
 ------Call of the Val'kyr
 mod:AddOptionLine(DBM:EJ_GetSectionInfo(23206), "announce")
 local warnAnnhyldesBrightAegis					= mod:NewTargetNoFilterAnnounce(350158, 2, nil, "Tank")

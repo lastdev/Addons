@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20200912131657")
+mod:SetRevision("20240412062605")
 
 mod:RegisterCombat("scenario", 1104)
 
@@ -34,6 +34,6 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 134974 then
-		timerBloodRage:Cancel(args.destname)
+		timerBloodRage:Cancel(args.destName)
 	end
 end

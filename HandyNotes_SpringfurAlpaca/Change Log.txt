@@ -1,5 +1,11 @@
+== v1.28 - 20th March 2024
+* TOC update to 10.2.7
+
+== v1.27 - 18th March 2024
+* TOC update for 10.2.6
+
 == v1.26 - 12th January 2024
-* TOC bump for 10.2.5
+* TOC update for 10.2.5
 
 == v1.25 - 6th December 2023
 * Added and improved translations to the Minimap AddOns menu
@@ -11,11 +17,11 @@
 * Added the ability to show the Uldum map from the Minimap AddOns menu
 
 == v1.23 - 8th November 2023
-* TOC bump for 10.2.0 (second attempt, sorry)
+* TOC update for 10.2.0 (second attempt, sorry)
 * Small change to a coordinate or two
 
 == v1.22 - 28th October 2023
-* TOC bump for 10.2.0
+* TOC update for 10.2.0
 
 == v1.21 - 18th October 2023
 * greatly expanded two other locations
@@ -36,7 +42,7 @@
 * Small tweak to one of the locations
 
 == v1.18 - 18th September 2023
-* TOC bump to 10.1.7
+* TOC update to 10.1.7
 * Updated grouped coordinates for one location
 
 == v1.17 - 5th August 2023
@@ -63,7 +69,7 @@
 * Removed unnecessary print to console code
 
 == v1.12 - 24th April 2023
-* TOC bump to 10.1.0
+* TOC update to 10.1.0
 
 == v1.11 - 21st March 2023
 * 10.0.07 TOC file update

@@ -193,6 +193,15 @@ st.kibler = "Kibler has a storied history. These days,\n"
 			.."pet will be bigger for 20 minutes!"
 st.lonesomeCoral = "So curious. Why is this coral / sea\n"
 				.."garden above all of the others?"
+st.mawOfTheVoid = "If you've quested through here then you already know...\n\n"
+				.."This one is for those who've newly arrived!...\n\n"
+				.."Try dismounting over the Maw! Later, speak to Bielara\n"
+				.."and she'll happily help you return!\n\n"
+				.."Bonus trivia time! After you've \"dropped in\", you'll\n"
+				.."notice Telarius Voidstrider, a Demon Hunter.\n\n"
+				.."Wait a moment, a Demon Hunter who first appeared\n"
+				.."during the Cataclysm? Sneaky telegraphing of things\n"
+				.."to come much later on!"
 st.miaMalkova = "((In 2021 Blizz, in response to the very serious\n"
 					.."controversies at the time, set about not just\n"
 					.."purging well known male personalities but also\n"
@@ -1374,6 +1383,7 @@ points[ 462 ] = { -- Camp Narache
 	[39453726] = { name="Quark, Strangeness and Charm", tip=st.hawkwind },
 }
 points[ 62 ] = { -- Darkshore
+	[52353203] = { name="Come and \"drop\" by sometime!", tip=st.mawOfTheVoid }, 
 	[73687192] = { name="Too much ground clutter?", tip=st.groundClutter }, 
 	[76544700] = { name="Particle Density", tip=st.particleDensity }, 
 	[86600551] = { name=st.danguiTitle, tip=st.dangui },
@@ -1402,6 +1412,7 @@ points[ 70 ] = { -- Dustwallow Marsh
 	[58766017] = { quest={ 6607 }, questName={ "Nat Pagle, Angler Extreme" }, tip=st.natsLuckyFishingPole },
 }
 points[ 77 ] = { -- Felwood
+	[35720978] = { name="Come and \"drop\" by sometime!", tip=st.mawOfTheVoid }, 
 	[58465232] = { name="Too much ground clutter?", tip=st.groundClutter }, 
 	[61512575] = { name="Particle Density", tip=st.particleDensity }, 
 	[80817658] = { name=st.bbqFishTitle, tip=st.bbqFish }, 
@@ -2287,6 +2298,14 @@ points[ 433 ] = { -- The Veiled Stair
 	[80813691] = { name="Hungry Bloodtalon", tip= birdFeast },
 }
 points[ 388 ] = { -- Townlong Steppes
+	[21904604] = { name="Scotty", tip="You'll want to collect Scotty's Lucky Coin.\n"
+					.."Cool transform into... Scotty!\n\n"
+					.."He's under the roots, at the base of the tree\n"
+					.."hidden in a kind of alcove behind a much larger\n"
+					.."hut. Enter through a narrow gap on the left\n"
+					.."side of that hut.\n\n"
+					.."Three charges and you may only hold one.\n"
+					.."Respawn is exactly six minutes" },
 	[23000700] = { name="G'nathus", tip="Look for G'nathus along the north coast.\n"
 					.."Good chance to drop a really cool battle pet!" },
 	[32496177] = { name="Meanwhile... \"planet\"side... we've located the missing\n"

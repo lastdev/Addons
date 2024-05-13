@@ -1,0 +1,10 @@
+lightweight tag e9e7dda3ce1470f512a461d0e53ba6f4cf159cfe 2.2.0
+Author:	Alar of Runetotem <alar@aspide.it>
+Date:	Thu Apr 11 00:08:35 2024 +0200
+
+commit e9e7dda3ce1470f512a461d0e53ba6f4cf159cfe
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Thu Apr 11 00:08:35 2024 +0200
+
+    Bumped toc 10.2.6
+

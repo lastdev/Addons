@@ -8,6 +8,30 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 
+			{1715123551, "Bug Fix", "May 8th, 2024", "Updating for 10.2.7.", "cont1nuity"},
+			{1715123551, "Bug Fix", "May 6th, 2024", "Fixing SoD tank recognition for druid 'Dire Bear Form'.", "cont1nuity"},
+			{1715123551, "Bug Fix", "April 26th, 2024", "Fixing SoD tank recognition for druid 'Dire Bear Form'.", "cont1nuity"},
+			
+			{1713856200, "Bug Fix", "April 23rd, 2024", "Sending NPC information to other players would not work if the name contained a ','.", "cont1nuity"},
+			{1713856200, "Bug Fix", "April 23rd, 2024", "Fixing options alignment issue with Cata.", "cont1nuity"},
+			{1713856200, "Backend Change", "April 22nd, 2024", "Base support for TWW.", "cont1nuity"},
+			{1713856200, "Backend Change", "April 19nd, 2024", "Backend changes to options layout.", "Terciob"},
+			{1713856200, "Bug Fix", "April 9th, 2024", "Ensuring Gladiator Stance is not considered tanking in SoD.", "cont1nuity"},
+			
+			{1709675079, "Backend Change", "April 7th, 2024", "Adding option to automatically translate NPC names on the 'NPC Colors and Names' tab.", "cont1nuity"},
+			{1709675079, "Backend Change", "March 31st, 2024", "Adding tank states for Rogues on SoD.", "Thunderz"},
+			{1709675079, "Backend Change", "March 14th, 2024", "Maintenance on libraries.", "cont1nuity"},
+			{1709675079, "Backend Change", "March 14th, 2024", "Adding support for Cataclysm classic.", "cont1nuity"},
+			{1709675079, "Backend Change", "March 8th, 2024", "Reworking aura updates for classic era.", "cont1nuity"},
+			{1709675079, "Bug Fix", "March 8th, 2024", "Fixing an issue with aura updates in classic era.", "cont1nuity"},
+			{1709675079, "Bug Fix", "March 5th, 2024", "Fixing an issue with Ghost Auras on performance units.", "cont1nuity"},
+			{1709675079, "Backend Change", "February 27th, 2024", "Maintenance on libraries.", "Terciob"},
+			
+			{1708341442, "Bug Fix", "February 19th, 2024", "Fixing interrupt animation being enabled to break following cast bars.", "cont1nuity"},
+			{1708341442, "Bug Fix", "February 19th, 2024", "Fixing consolidated auras sometimes not showing properly when sorting for longest duration.", "cont1nuity"},
+			{1708341442, "Bug Fix", "February 8th, 2024", "Fixing DK rune visuals not updating properly when on cooldown (for real this time).", "cont1nuity"},
+			{1708341442, "Bug Fix", "February 7th, 2024", "Fixing backup range check error in SoD.", "cont1nuity"},
+			
 			{1707250945, "Bug Fix", "February 6th, 2024", "Fixing SoD nameplate aura bugs.", "cont1nuity"},
 			{1707250945, "Bug Fix", "February 6th, 2024", "Fixing DK rune visuals not updating properly when on cooldown.", "cont1nuity"},
 			{1707250945, "Backend Change", "January 19th, 2024", "Adding 'isLooseTarget', 'isSoftEnemy' and 'isSoftFriend' to 'unitFrame'.", "cont1nuity"},

@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(32845,32926)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1135)
@@ -39,7 +39,7 @@ local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, ni
 local timerFlashFrCD		= mod:NewCDTimer(50, 61968, nil, nil, nil, 2)
 local timerAchieve			= mod:NewTimer(50, "TimerHardmode", "132597", nil, nil, 0)
 
-mod:AddSetIconOption("SetIconOnStormCloud", 65123, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnStormCloud", 65123, true, 0, {1, 2})
 
 mod.vb.stormCloudIcon = 1
 

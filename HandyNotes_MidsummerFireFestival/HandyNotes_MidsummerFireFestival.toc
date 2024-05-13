@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: 1.13
+## Interface: 100207
+## Version: 1.16
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_summerfest_firespirit
 ## Title: Midsummer Fire Festival
@@ -26,9 +26,6 @@
 ## Notes-ruRU: Помогает с игровое событие |cFFFFA500Огненный Солнцеворот|r
 ## Notes-zhCN: 协助 |cFFFFA500仲夏火焰节|r 活动
 ## Notes-zhTW: 協助 |cFFFFA500仲夏火焰節|r 活動
-## X-Category: Map & Minimap
-## X-Curse-Project-ID: 878385
-## X-WoWI-ID: 00000
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_MidsummerFireFestivalDB
 ## AddonCompartmentFunc: HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2456, "DBM-Shadowlands", nil, 1192)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230124042422")
+mod:SetRevision("20240422191430")
 mod:SetCreatureID(178958)
 mod:SetEncounterID(2496)
 mod:SetReCombatTime(20)
@@ -96,6 +96,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if (spellId == 356382 or spellId == 353183) and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426173239")
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -156,7 +156,7 @@ function mod:SuperheatedTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBM.HudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
+		DBM.HudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
 	end
 end
 
@@ -168,7 +168,7 @@ function mod:BreathTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBM.HudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
+		DBM.HudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
 	end
 end
 
@@ -263,7 +263,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnPinDownTargets:ScheduleVoice(0.5, "helpme")
 		end
 	elseif spellId == 154981 then
-		if self:CheckDispelFilter() then
+		if self:CheckDispelFilter("magic") then
 			specWarnConflag:CombinedShow(2.3, args.destName)
 		end
 		if self.Options.SetIconOnConflag and not self:IsLFR() then
@@ -352,7 +352,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	for i = 1, 5 do
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
-		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
+		if unitGUID and UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
 			activeBossGUIDS[unitGUID] = true
 			local cid = self:GetCIDFromGUID(unitGUID)
 			if cid == 76884 or cid == 76874 or cid == 76945 or cid == 76946 then

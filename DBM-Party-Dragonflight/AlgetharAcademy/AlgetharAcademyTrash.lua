@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("AlgetharAcademyTrash", "DBM-Party-Dragonflight", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231029212301")
+mod:SetRevision("20240511020640")
 --mod:SetModelID(47785)
 mod:SetZone(2526)
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 387910 377383 378003 388976 388863 377912 387843 388392 377389 396812",
+	"SPELL_CAST_START 387910 377383 378003 388976 388863 377912 387843 388392 377389 396812 389054 388911",
 	"SPELL_CAST_SUCCESS 390915 388984",
 	"SPELL_AURA_APPLIED 388984 387843",
 	"SPELL_AURA_REMOVED 387843",
@@ -17,7 +17,7 @@ mod:RegisterEvents(
 )
 
 --[[
-(ability.id = 388392 or ability.id = 387843 or ability.id = 387910 or ability.id = 378003 or ability.id = 377912 or ability.id = 377389 or ability.id = 396812) and type = "begincast"
+(ability.id = 388392 or ability.id = 387843 or ability.id = 388911 or ability.id = 387910 or ability.id = 378003 or ability.id = 377912 or ability.id = 377389 or ability.id = 396812) and type = "begincast"
  or ability.id = 388984 and type = "cast"
 --]]
 --TODO: add https://www.wowhead.com/spell=386026/surge ?
@@ -53,6 +53,8 @@ local timerExpelIntrudersCD						= mod:NewCDNPTimer(26.6, 377912, nil, nil, nil,
 local timerViciousAmbushCD						= mod:NewCDNPTimer(14.5, 388984, nil, nil, nil, 3)
 local timerAstralWhirlwindCD					= mod:NewCDNPTimer(18.2, 387910, nil, "Melee", nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
 local timerAstralBombCD							= mod:NewCDNPTimer(18.2, 387843, nil, nil, nil, 3)--These mob packs are heavily stunned and CD can be delayed by stuns
+local timerVicousLungeCD						= mod:NewCDNPTimer(11.4, 389054, nil, nil, nil, 3)
+local timerSeveringSlashCD						= mod:NewCDNPTimer(14.3, 388911, nil, nil, nil, 5)
 
 mod:AddBoolOption("AGBuffs", true)
 
@@ -127,6 +129,10 @@ function mod:SPELL_CAST_START(args)
 			specWarnExpelIntruders:Show()
 			specWarnExpelIntruders:Play("justrun")
 		end
+	elseif spellId == 389054 then
+		timerVicousLungeCD:Start(nil, args.sourceGUID)
+	elseif spellId == 388911 then
+		timerSeveringSlashCD:Start(nil, args.sourceGUID)
 --	elseif spellId == 310839 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 --		specWarnDirgefromBelow:Show(args.sourceName)
 --		specWarnDirgefromBelow:Play("kickcast")
@@ -164,7 +170,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
@@ -190,6 +195,10 @@ function mod:UNIT_DIED(args)
 		timerCalloftheFlockCD:Stop(args.destGUID)
 	elseif cid == 196576 then--Spellbound Scepter
 		timerMysticBlastCD:Stop(args.destGUID)
+	elseif cid == 196694 then--Arcane Forager
+		timerVicousLungeCD:Stop(args.destGUID)
+	elseif cid == 196577 then--Spellbound battleaxe
+		timerSeveringSlashCD:Stop(args.destGUID)
 	end
 end
 

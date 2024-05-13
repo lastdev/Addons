@@ -24,12 +24,18 @@ function RuleSystem:GetEvents()
 end
 
 --[[ Startup our system ]]
-function RuleSystem:Startup(onready)
+function RuleSystem:Startup(register)    
     self.functions = {}
-    xpcall(
-    self.RegisterSystemFunctions, CallErrorHandler, self)
+    xpcall(self.RegisterSystemFunctions, CallErrorHandler, self)
 
-    onready({    "GetRuleFunctions",
+    Addon.Rules.OnDefinitionsChanged:Add(function(...)
+        Addon:RaiseEvent("OnRulesChanged", ...)
+    end)
+    Addon.Rules.OnFunctionsChanged:Add(function(...) 
+        Addon:RaiseEvent("OnRulesChanged", ...)
+    end)
+
+    register({    "GetRuleFunctions",
                 "GetFunctionDocumentation",
                 "RegisterFunctions",
                 "UnregisterFunctions",
@@ -57,8 +63,7 @@ function RuleSystem:GetFunctionDocumentation()
     local docs = {}
 
     for name, definition in pairs(self.functions) do
-        local supported = definition.Supported and definition.Supported[Addon.Systems.Info.ReleaseName]
-        if (type(definition.Documentation) == "string") and supported then
+        if (type(definition.Documentation) == "string") then
             docs[name] = definition.Documentation
         end
     end
@@ -83,6 +88,7 @@ function RuleSystem:RegisterFunctions(functions, source)
 
 
     for _, definition in ipairs(functions) do
+
         if (type(definition.Name) ~= "string") then
             error("An invalid function definition was provided (Name)")
         end
@@ -109,13 +115,15 @@ function RuleSystem:RegisterFunctions(functions, source)
         end
     end
 
-    --Addon:RaiseEvent(RuleEvents.FUNCTIONS_CHANGED)
-    --Addon:RaiseEvent(RuleEvents.DOCS_CHANGED)
+    Addon:RaiseEvent("OnRulesChanged", "DOCS")
+    Addon:RaiseEvent("OnRulesChanged", "FUNCTIONS")
 end
 
 --[[ Removes the functions from our list ]]
 function RuleSystem:UnregisterFunctions(functions)
 end
+
+Addon:GenerateEvents({ "OnRulesChanged" })
 
 Addon.Systems.Rules = RuleSystem
 Addon.Systems.Rules.RuleEvents = RuleEvents

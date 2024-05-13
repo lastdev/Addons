@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 100206
 
 ## X-Curse-Project-ID: 7473
 ## X-WoWI-ID: 10783
@@ -14,7 +14,7 @@
 ## Notes-deDE: Ein Grundaddon für Chatfenstermodule.
 ## Notes-koKR: 대화창에 대한 다양한 기능을 제공하는 애드온입니다.
 ## Notes-ruRU: Фреймворк для чата. Это БЕТА-версия, а значит возможны баги и глюки.
-## Version: 3.9.46
+## Version: 3.9.52
 ## Author: Sylvanaar (Sylvaann - Proudmoore/US-Alliance)
 ## eMail: sylvanaar@mindspring.com
 
@@ -32,7 +32,7 @@
 
 ## IconTexture: Interface\AddOns\Prat-3.0\textures\prat-logo-dark-small
 
-#libraries\includes.xml
+Libs.xml
 
 fonts\includes.xml
 addon\includes.xml

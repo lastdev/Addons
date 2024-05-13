@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240502130836")
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetUsedIcons(1, 2, 3)
@@ -152,14 +152,14 @@ local jumpDistance2 = {
 local UnitDetailedThreatSituation, select = UnitDetailedThreatSituation, select
 local playerName = UnitName("player")
 local chogallName, inter1, inter2 = EJ_GetEncounterInfo(167), DBM:EJ_GetSectionInfo(9891), DBM:EJ_GetSectionInfo(9893)
-local fixateDebuff, gazeDebuff = DBM:GetSpellInfo(157763), DBM:GetSpellInfo(165595)
-local chaosDebuff1, chaosDebuff2, chaosDebuff3, chaosDebuff4 = DBM:GetSpellInfo(158605), DBM:GetSpellInfo(164176), DBM:GetSpellInfo(164178), DBM:GetSpellInfo(164191)
-local brandedDebuff1, brandedDebuff2, brandedDebuff3, brandedDebuff4 = DBM:GetSpellInfo(156225), DBM:GetSpellInfo(164004), DBM:GetSpellInfo(164005), DBM:GetSpellInfo(164006)
+local fixateDebuff, gazeDebuff = DBM:GetSpellName(157763), DBM:GetSpellName(165595)
+local chaosDebuff1, chaosDebuff2, chaosDebuff3, chaosDebuff4 = DBM:GetSpellName(158605), DBM:GetSpellName(164176), DBM:GetSpellName(164178), DBM:GetSpellName(164191)
+local brandedDebuff1, brandedDebuff2, brandedDebuff3, brandedDebuff4 = DBM:GetSpellName(156225), DBM:GetSpellName(164004), DBM:GetSpellName(164005), DBM:GetSpellName(164006)
 
 local debuffFilterMark, debuffFilterBranded, debuffFilterFixate, debuffFilterGaze
 do
 	debuffFilterMark = function(uId)
-		if DBM:UnitDebuff(uId, chaosDebuff1, chaosDebuff2, chaosDebuff3. chaosDebuff4) then
+		if DBM:UnitDebuff(uId, chaosDebuff1, chaosDebuff2, chaosDebuff3, chaosDebuff4) then
 			return true
 		end
 	end
@@ -552,7 +552,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local name = args.destName
 		local uId = DBM:GetRaidUnitId(name)
 		if not uId then return end
-		local _, _, currentStack = DBM:UnitDebuff(uId, DBM:GetSpellInfo(spellId))
+		local _, _, currentStack = DBM:UnitDebuff(uId, DBM:GetSpellName(spellId))
 		local fortified = (self:IsMythic() and self.vb.phase >= 3) or spellId == 164005--Phase 3 uses replication ID, so need hack for mythic fortified/replication phase.
 		if not currentStack then
 			print("currentStack is nil, report to dbm authors. Branded warning disabled.")--Should never happen but added just in case.
@@ -612,14 +612,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if self.Options.SetIconOnBrandedDebuff then
 				if spellId == 164006 or (self:IsMythic() and spellId == 164004) then--On mythic, displacement/replication in phase 1. Using dipslacemnet spellid, on two targets.
-					self:SetSortedIcon("roster", 1, name, 1, 2)
+					self:SetSortedIcon("roster", 1, args.destName, 1, 2)
 				else
-					self:SetIcon(name, 1)
+					self:SetIcon(args.destName, 1)
 				end
 			end
 			updateRangeFrame(self)--Update it here cause we don't need it before stacks get to relevant levels.
 			if self.Options.HudMapOnBranded then
-				DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 5, 1, 1, 0, 0.5):Pulse(0.5, 0.5)
 			end
 		end
 	elseif spellId == 158553 then
@@ -685,9 +685,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		updateRangeFrame(self)
 		if self.Options.HudMapOnMarkOfChaos then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 7, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 7, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
 		end
-	elseif spellId == 157801 and self:CheckDispelFilter() then
+	elseif spellId == 157801 and self:CheckDispelFilter("magic") then
 		specWarnSlow:CombinedShow(1, args.destName)
 		if self:AntiSpam(3, 4) then
 			specWarnSlow:Play("dispelnow")

@@ -88,6 +88,8 @@ end
 function LM.ActionButton:PostClick(inputButton, isDown)
     if InCombatLockdown() then return end
 
+    LM.Environment:ClearMouseButtonClicked()
+
     LM.Debug("[%d] PostClick handler (inputButton=%s, isDown=%s)",
              self.id, tostring(inputButton), tostring(isDown))
 end

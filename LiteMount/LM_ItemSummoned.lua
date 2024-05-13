@@ -30,15 +30,13 @@ function LM.ItemSummoned:Get(itemID, spellID, ...)
         -- GET_ITEM_INFO_RECEIVED fires, but I can't be bothered handling
         -- the event and it's not really needed.
         m.itemID = itemID
-        m.isCollected = ( GetItemCount(m.itemID) > 0 )
     end
 
     return m
 end
 
-function LM.ItemSummoned:Refresh()
-    self.isCollected = ( GetItemCount(self.itemID) > 0 )
-    LM.Mount.Refresh(self)
+function LM.ItemSummoned:IsCollected()
+    return GetItemCount(self.itemID) > 0
 end
 
 function LM.ItemSummoned:GetCastAction(context)
@@ -66,7 +64,7 @@ function LM.ItemSummoned:IsCastable()
 
     -- Either equipped or non-equippable and in bags
     local start, duration, enable = GetItemCooldown(self.itemID)
-    if duration > 0 and enable == 1 then
+    if duration > 0 and (enable == true or enable == 1) then
         return false
     end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-Raids-MoP", 3, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240110075628")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -39,7 +39,7 @@ local specWarnThrash					= mod:NewSpecialWarningSpell(131996, "Tank")
 local specWarnOminousCackleYou			= mod:NewSpecialWarningYou(129147)--You have debuff, just warns you.
 local specWarnDreadSpray				= mod:NewSpecialWarningSpell(120047, nil, nil, nil, 2)--Platform ability, particularly nasty damage, and fear.
 local specWarnDeathBlossom				= mod:NewSpecialWarningSpell(119888, nil, nil, nil, 2)--Cast, warns the entire raid.
-mod:AddBoolOption("specWarnMovement", false, "announce")--http://mysticalos.com/terraceofendlesssprings.jpg
+mod:AddBoolOption("specWarnMovement", false, "announce")--https://www.icy-veins.com/wow/sha-of-fear-strategy-guide-normal-heroic (doesn't match our built in strat but similar idea)
 local MoveWarningForward				= mod:NewSpecialWarning("MoveForward", nil, false)--Warning to switch sites on platform
 local MoveWarningRight					= mod:NewSpecialWarning("MoveRight", nil, false)--Warning to move one eighth to the right
 local MoveWarningBack					= mod:NewSpecialWarning("MoveBack", nil, false)--Move back to starting position
@@ -69,6 +69,7 @@ local timerNakedAndAfraid				= mod:NewTargetTimer(25, 120669, nil, "Tank|Healer"
 local timerNakedAndAfraidCD				= mod:NewCDTimer(30, 120669, nil, "Tank|Healer", nil, 5)-- varies, but mostly 30. can get delayed upwards of 15 seconds though between submerge and specials
 local timerSubmergeCD					= mod:NewCDCountTimer(51.5, 120455, nil, nil, nil, 6)
 mod:AddBoolOption("timerSpecialAbility", true, "timer")--Better to have one option for his shared special timer than 7
+--LuaLS HATES how hacky below is, but it does work. setting option name to false just makes options fail to get created (with no errors)
 local timerWaterspoutCD					= mod:NewCDTimer(10, 120519, nil, nil, false, 3)
 local timerHuddleInTerrorCD				= mod:NewCDTimer(10, 120629, nil, nil, false, 3)
 local timerImplacableStrikeCD			= mod:NewCDTimer(9.5, 120672, nil, nil, false, 3)
@@ -88,7 +89,7 @@ mod.vb.specialsCast = 000--Huddle(100), Spout(10), Strike(1)
 mod.vb.thrashCount = 0
 mod.vb.submergeCount = 0
 mod.vb.specialCount = 0
-local wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellInfo(117964), DBM:GetSpellInfo(118977), DBM:GetSpellInfo(120519), DBM:GetSpellInfo(120629)
+local wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellName(117964), DBM:GetSpellName(118977), DBM:GetSpellName(120519), DBM:GetSpellName(120629)
 local ominousCackleTargets = {}
 local platformGUIDs = {}
 local waterspoutTargets = {}
@@ -178,7 +179,7 @@ function mod:LeavePlatform()
 		table.wipe(platformGUIDs)
 		platformSent = false
 		onPlatform = false
-		MobID = nil
+		MobID = 0
 		--Breath of fear timer recovery
 		if not self.Options.warnBreathOnPlatform then
 			local fearlessApplied = DBM:UnitBuff("player", fearless)
@@ -213,7 +214,7 @@ function mod:OnCombatStart(delay)
 	self.vb.dreadSprayCounter = 0
 	self.vb.thrashCount = 0
 	self.vb.submergeCount = 0
-	MobID = nil
+	MobID = 0
 	self.vb.specialsCast = 000
 	table.wipe(ominousCackleTargets)
 	table.wipe(platformGUIDs)
@@ -278,11 +279,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnOminousCackleTargets)
 		self:Schedule(2, warnOminousCackleTargets)--this actually staggers a bit, so wait the full 2 seconds to get em all in one table
-	elseif spellId == 120047 and MobID and MobID == args:GetSrcCreatureID() then--might change
+	elseif spellId == 120047 and MobID == args:GetSrcCreatureID() then--might change
 		specWarnDreadSpray:Show()
 		timerDreadSpray:Start(args.sourceGUID)
 		timerDreadSprayCD:Start(args.sourceGUID)
-	elseif spellId == 119888 and MobID and MobID == args:GetSrcCreatureID() then
+	elseif spellId == 119888 and MobID == args:GetSrcCreatureID() then
 		timerDeathBlossom:Show()
 	elseif spellId == 118977 and args:IsPlayer() then--Fearless, you're leaving platform
 		timerFearless:Start()
@@ -391,7 +392,7 @@ function mod:SPELL_CAST_START(args)
 		platformGUIDs[args.sourceGUID] = true
 		MobID = self:GetCIDFromGUID(args.sourceGUID)
 		timerDreadSprayCD:Start(10.5, args.sourceGUID)--We can accurately start perfectly accurate spray cd bar off their first shoot cast.
-	elseif spellId == 119888 and MobID and MobID == args:GetSrcCreatureID() then
+	elseif spellId == 119888 and MobID == args:GetSrcCreatureID() then
 		specWarnDeathBlossom:Show()
 		self:ScheduleMethod(40, "CheckPlatformLeaved")--you may leave platform soon after Death Blossom casted. failsafe for UNIT_DIED not fire, and fearless fails.
 	elseif spellId == 120672 then -- Implacable Strike
@@ -422,17 +423,17 @@ function mod:SPELL_CAST_SUCCESS(args)--Handling Dread Sprays
 	elseif spellId == 119983 and onPlatform then
 		self.vb.dreadSprayCounter = self.vb.dreadSprayCounter+1
 		if not self.Options.specWarnMovement then return end
-		if MobID == 61046 then
+		if MobID == 61046 then--Don't remember
 			if self.vb.dreadSprayCounter == 6 then
 				MoveWarningForward:Show()
 			end
 		end
-		if MobID == 61042 then
+		if MobID == 61042 then--Don't remember
 			if self.vb.dreadSprayCounter == 6 then
 				MoveWarningForward:Show()
 			end
 		end
-		if MobID == 61038 then
+		if MobID == 61038 then--South?
 			if self.vb.dreadSprayCounter == 3 then
 				MoveWarningRight:Show()
 			end

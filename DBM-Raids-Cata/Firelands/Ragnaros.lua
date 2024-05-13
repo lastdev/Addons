@@ -6,7 +6,7 @@ if not mod:IsClassic() then--Future planning, so cata classic uses regular rules
 	mod.statTypes = "normal,heroic,timewalker"
 end
 
-mod:SetRevision("20230526084835")
+mod:SetRevision("20240428104752")
 mod:SetCreatureID(52409)
 mod:SetEncounterID(1203)
 mod:SetHotfixNoticeRev(20200918000000)--2020, 09, 18
@@ -68,7 +68,7 @@ local specWarnMagmaTrapNear	= mod:NewSpecialWarningClose(98164, nil, nil, nil, 1
 local yellMagmaTrap			= mod:NewYell(98164)--May Return false tank yells
 local specWarnBurningWound	= mod:NewSpecialWarningStack(99399, nil, 4, nil, nil, 1, 6)
 local specWarnSplittingBlow	= mod:NewSpecialWarningSpell(98951, nil, nil, nil, 1, 2)
-local specWarnBlazingHeat	= mod:NewSpecialWarningYou(100460)--Debuff on you
+local specWarnBlazingHeat	= mod:NewSpecialWarningYou(100460, nil, nil, nil, 1, 2)--Debuff on you
 local yellBlazingHeat		= mod:NewYell(100460)
 local specWarnMoltenSeed	= mod:NewSpecialWarningDodge(98495, nil, nil, nil, 2, 2)
 local specWarnEngulfing		= mod:NewSpecialWarningMove(99171, nil, nil, nil, 1, 2)
@@ -101,14 +101,14 @@ local timerPhaseSons		= mod:NewTimer(45, "TimerPhaseSons", 99014, nil, nil, 6)	-
 local timerCloudBurstCD		= mod:NewCDTimer(50, 100714)
 local timerBreadthofFrostCD	= mod:NewCDTimer(45, 100479)
 local timerEntrapingRootsCD	= mod:NewCDTimer(56, 100646, nil, nil, nil, 5)--56-60sec variations. Always cast before empowered sulf, varies between 3 sec before and like 11 sec before.
-local timerEmpoweredSulfCD	= mod:NewCDTimer(56, 100604, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 1, 5)--56-64sec variations
+local timerEmpoweredSulfCD	= mod:NewCDTimer(56, 100604, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 1 or nil, 5)--56-64sec variations
 local timerEmpoweredSulf	= mod:NewBuffActiveTimer(10, 100604, nil, "Tank", nil, 5, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.TANK_ICON, nil, 1, 0)--Countout timer
 local timerDreadFlameCD		= mod:NewCDTimer(40, 100675, nil, false, nil, 5)--Off by default as only the people dealing with them care about it.
 
 local berserkTimer			= mod:NewBerserkTimer(1080)
 
 mod:AddRangeFrameOption("6/8")
-mod:AddSetIconOption("BlazingHeatIcons", 100460, true, false, {1, 2})
+mod:AddSetIconOption("BlazingHeatIcons", 100460, true, 0, {1, 2})
 mod:AddBoolOption("InfoHealthFrame", "Healer")--Phase 1 info framefor low health detection.
 mod:AddBoolOption("AggroFrame", false)--Phase 2 info frame for seed aggro detection.
 mod:AddBoolOption("MeteorFrame", true)--Phase 3 info frame for meteor fixate detection.
@@ -129,7 +129,7 @@ mod.vb.dreadFlameTimer = 45
 local magmaTrapGUID = {}
 local elementalsGUID = {}
 local meteorWarned = false
-local dreadflame, meteorTarget, staffDebuff = DBM:GetSpellInfo(100675), DBM:GetSpellInfo(99849), DBM:GetSpellInfo(101109)
+local dreadflame, meteorTarget, staffDebuff = DBM:GetSpellName(100675), DBM:GetSpellName(99849), DBM:GetSpellName(101109)
 
 local function showRangeFrame(self)
 	if DBM:UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't change their range finder from 8.
@@ -570,7 +570,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		if self.Options.warnSeedsLand then--Warn after they are on ground, typical strat for normal mode. Time not 100% consistent.
 			self:Schedule(2.5, warnSeeds, self)--But use upper here
 		else
-			warnSeeds(self)
+			warnSeeds()
 		end
 		self:Schedule(17.5, clearSeedsActive, self)--Clear active/warned seeds after they have all blown up.
 		if self.Options.AggroFrame then--Show aggro frame regardless if health frame is still up, it should be more important than health frame at this point. Shouldn't be blowing up traps while elementals are up.

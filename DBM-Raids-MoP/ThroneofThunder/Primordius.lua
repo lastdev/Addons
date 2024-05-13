@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Although if you have 8 viscous horrors up, you are probably doing fight wrong.
@@ -58,8 +58,8 @@ local badCount = 0
 local bigOozeCount = 0
 local bigOozeAlive = 0
 local bigOozeGUIDS = {}
-local good1, good2, good3, good4 = DBM:GetSpellInfo(136180), DBM:GetSpellInfo(136182), DBM:GetSpellInfo(136184), DBM:GetSpellInfo(136186)
-local bad1, bad2, bad3, bad4 = DBM:GetSpellInfo(136181), DBM:GetSpellInfo(136183), DBM:GetSpellInfo(136185), DBM:GetSpellInfo(136187)
+local good1, good2, good3, good4 = DBM:GetSpellName(136180), DBM:GetSpellName(136182), DBM:GetSpellName(136184), DBM:GetSpellName(136186)
+local bad1, bad2, bad3, bad4 = DBM:GetSpellName(136181), DBM:GetSpellName(136183), DBM:GetSpellName(136185), DBM:GetSpellName(136187)
 
 local function BigOoze()
 	bigOozeCount = bigOozeCount + 1

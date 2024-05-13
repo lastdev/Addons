@@ -1,3 +1,28 @@
+- v4.4.0.7 (2024-05-11)
+  - mapping updates
+  - localization updates
+- v4.4.0.6 (2024-05-08)
+  - 10.2.7 update
+- v4.4.0.5 (2024-04-28)
+  - mapping updates
+- v4.4.0.4 (2024-04-27)
+  - mapping updates
+- v4.4.0.3 (2024-04-24)
+  - mapping updates
+- v4.4.0.2 (2024-04-23)
+  - Season 4 Dungeon update
+- v4.3.5.1 (2024-03-21)
+  - Patch 10.2.6 update
+- v4.3.5.0 (2024-03-15)
+  - fix an issue with affix week dates
+- v4.3.4.9 (2024-03-12)
+  - added dates for affix weeks
+- v4.3.4.8 (2024-03-07)
+  - WCM: adjust witches for the adjusted static configuration
+- v4.3.4.6 (2024-02-25)
+  - fix note error
+- v4.3.4.5 (2024-02-20)
+  - Everbloom unlinked Rockspine Stinger 1
 - v4.3.4.4 (2024-02-15)
   - adjusted Darkheart Thicket for latest poisoner/ruiner changes
 - v4.3.4.3 (2024-02-04)

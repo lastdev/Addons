@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LogoutTimerGeneral", "DBM-LogoutTimer")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230706163921")
+mod:SetRevision("20240427024813")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents("CHAT_MSG_SYSTEM")
 
@@ -31,10 +31,12 @@ end
 
 function mod:CHAT_MSG_SYSTEM(msg)
 	if msg == L.IdleMessage or msg:find(L.IdleMessage) then
+		Cancel()
 		logoutTimer:Start()
 		timer30 = C_Timer.NewTimer(1470, ShowAlert)
 		timer15 = C_Timer.NewTimer(1485, ShowAlert)
 		self:RegisterShortTermEvents("ZONE_CHANGED_NEW_AREA")
+		self:RegisterShortTermEvents("PLAYER_STARTED_MOVING")
 	elseif msg == L.UnidleMessage or msg:find(L.UnidleMessage) then
 		Cancel()
 	end
@@ -43,3 +45,4 @@ end
 function mod:ZONE_CHANGED_NEW_AREA()
 	Cancel()
 end
+mod.PLAYER_STARTED_MOVING = mod.ZONE_CHANGED_NEW_AREA

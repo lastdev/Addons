@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2458, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240426185011")
 mod:SetCreatureID(180773)
 mod:SetEncounterID(2512)
 mod:SetHotfixNoticeRev(20220301000000)
@@ -83,7 +83,7 @@ mod:GroupSpells(360412, 360403)--Exposed Core and the shield you seek need to de
 mod.vb.refractedCount = 0
 local castsPerGUID = {}
 
-local shieldName = DBM:GetSpellInfo(360403)
+local shieldName = DBM:GetSpellName(360403)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
@@ -300,7 +300,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	for i = 1, 5 do
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
-		if UnitExists(unitID) and not castsPerGUID[unitGUID] then
+		if unitGUID and UnitExists(unitID) and not castsPerGUID[unitGUID] then
 			castsPerGUID[unitGUID] = {}
 			castsPerGUID[unitGUID][1] = 1--Diss
 			castsPerGUID[unitGUID][2] = 1--Wave

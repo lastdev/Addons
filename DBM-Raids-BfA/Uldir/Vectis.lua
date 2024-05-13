@@ -1,7 +1,8 @@
+---@diagnostic disable: cast-local-type, assign-type-mismatch
 local mod	= DBM:NewMod(2166, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(134442)--135016 Plague Amalgam
 mod:SetEncounterID(2134)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -61,14 +62,14 @@ local specWarnTerminalEruption				= mod:NewSpecialWarningSpell(274989, nil, nil,
 --mod:AddTimerLine(Nexus)
 local timerEvolvingAfflictionCD				= mod:NewCDTimer(8.5, 265178, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerGestateCD						= mod:NewNextTimer(25.5, 265212, nil, nil, nil, 3, nil, nil, nil, 1, 3)
-local timerContagionCD						= mod:NewNextCountTimer(23, 267242, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsHealer() and 2, 3)
+local timerContagionCD						= mod:NewNextCountTimer(23, 267242, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsHealer() and 2 or nil, 3)
 local timerLiquefyCD						= mod:NewNextTimer(90.9, 265217, nil, nil, nil, 6, nil, nil, nil, 3, 3)
 local timerplagueBombCD						= mod:NewCDCountTimer(11.4, 266459, nil, nil, nil, 5)--11.4 or 12.2, not sure which one blizz decided on, find out later
 local timerImmunoSuppCD						= mod:NewCDCountTimer("d25.5", 265206, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconVector", 265129, true, false, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconVector", 265129, true, 0, {1, 2, 3, 4})
 mod:AddRangeFrameOption("5/8")
 mod:AddInfoFrameOption(265127, true)
 mod:AddBoolOption("ShowHighestFirst3", true)--Show highest stacks first by default, since it alines with 3rd generation infoframe
@@ -176,9 +177,11 @@ do
 			--Show lingering and vectors combined for entire raid
 			for uId in DBM:GetGroupMembers() do
 				local unitName = DBM:GetUnitFullName(uId)
-				local count = lingeringTable[unitName] or 0
-				tempLines[unitName] = count
-				tempLinesSorted[#tempLinesSorted + 1] = unitName
+				if unitName then
+					local count = lingeringTable[unitName] or 0
+					tempLines[unitName] = count
+					tempLinesSorted[#tempLinesSorted + 1] = unitName
+				end
 			end
 			--Sort lingering according to options
 			if showHighest then
@@ -188,7 +191,7 @@ do
 			end
 			--Now move lingering back into regular infoframe tables
 			for _, name in ipairs(tempLinesSorted) do
-				local hasVector = false
+				local hasVector = -1
 				for i=1, 4 do
 					if vectorTargets[i] and vectorTargets[i] == name then
 						DBM:Debug("Vector "..i.." on "..name, 3)

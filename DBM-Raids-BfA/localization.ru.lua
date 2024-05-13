@@ -82,7 +82,7 @@ L:SetTimerLocalization({
 	timerCallofCrawgCD		= "Следующий пулл Крогов (%s)",
 	timerCallofHexerCD 		= "Следующий пулл Ведьмаков (%s)",
 	timerCallofCrusherCD	= "Следующий пулл Крошителей (%s)",
-	timerAddIncoming		= DBM_COMMON_L.INCOMMING
+	timerAddIncoming		= DBM_COMMON_L.INCOMING
 })
 
 L:SetOptionLocalization({

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(713, "DBM-Raids-MoP", 4, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetUsedIcons(2)
@@ -52,8 +52,8 @@ local berserkTimer				= mod:NewBerserkTimer(420)
 
 mod:AddBoolOption("PheromonesIcon", true)
 
-local crushWarnText = DBM:GetSpellInfo(122774)
-local crushCountWarnText = DBM:GetSpellInfo(122774).." (%d)"
+local crushWarnText = DBM:GetSpellName(122774)
+local crushCountWarnText = DBM:GetSpellName(122774).." (%d)"
 local brokenLegs = 0
 local crushCount = 0
 

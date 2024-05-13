@@ -1377,7 +1377,6 @@ function Outfitter:UpdateCurrentOutfitIcon()
 	if type(vTexture) == "number" then
 		vTexture = 	self:ConvertTextureIDToPath(vTexture)
 	end
-	SetPortraitToTexture(OutfitterMinimapButton.CurrentOutfitTexture, vTexture)
 end
 
 function Outfitter:BankFrameOpened()
@@ -2335,12 +2334,12 @@ function Outfitter:SetShowItemComparisons(pShowComparisons)
 end
 
 function Outfitter:SetShowMinimapButton(pShowButton)
-	self.Settings.Options.HideMinimapButton = not pShowButton
+	self.Settings.Options.MinimapButton.hide = not pShowButton
 
-	if self.Settings.Options.HideMinimapButton then
-		OutfitterMinimapButton:Hide()
+	if self.Settings.Options.MinimapButton.hide then
+		Outfitter.LDB:HideIcon()
 	else
-		OutfitterMinimapButton:Show()
+		Outfitter.LDB:ShowIcon()
 	end
 
 	self:Update(false)
@@ -2850,7 +2849,7 @@ function Outfitter:Update(pOutfitsChanged)
 				0, 0)                           -- smallHighlightWidth, bigHighlightWidth
 	elseif self.CurrentPanel == 2 then -- Options panel
 		OutfitterAutoSwitch:SetChecked(self.Settings.Options.DisableAutoSwitch)
-		OutfitterShowMinimapButton:SetChecked(not self.Settings.Options.HideMinimapButton)
+		OutfitterShowMinimapButton:SetChecked(not self.Settings.Options.MinimapButton.hide)
 		OutfitterTooltipInfo:SetChecked(not self.Settings.Options.DisableToolTipInfo)
 		OutfitterShowHotkeyMessages:SetChecked(not self.Settings.Options.DisableHotkeyMessages)
 		OutfitterShowOutfitBar:SetChecked(self.Settings.OutfitBar.ShowOutfitBar)
@@ -4761,23 +4760,11 @@ function Outfitter:Initialize()
 		end
 	end
 
-	-- Set the minimap button
-	if self.Settings.Options.HideMinimapButton then
-		OutfitterMinimapButton:Hide()
-	else
-		OutfitterMinimapButton:Show()
-	end
+    if not self.Settings.Options.MinimapButton then
+      self.Settings.Options.MinimapButton = { hide = self.Settings.Options.HideMinimapButton}
+    end
 
-	if not self.Settings.Options.MinimapButtonAngle
-	and not self.Settings.Options.MinimapButtonX then
-		self.Settings.Options.MinimapButtonAngle = -1.5708
-	end
-
-	if self.Settings.Options.MinimapButtonAngle then
-		OutfitterMinimapButton:SetPositionAngle(self.Settings.Options.MinimapButtonAngle)
-	else
-		OutfitterMinimapButton:SetPosition(self.Settings.Options.MinimapButtonX, self.Settings.Options.MinimapButtonY)
-	end
+    Outfitter.LDB:CreateIcon(self.Settings.Options.MinimapButton)
 
 	-- Move the Blizzard UI over a bit
 	PaperDollSidebarTabs:SetPoint("BOTTOMRIGHT", CharacterFrameInsetRight, "TOPRIGHT", -30, -1)
@@ -4963,7 +4950,7 @@ function Outfitter:InitializeSettings()
 	gOutfitter_Settings =
 	{
 		Version = 22,
-		Options = {},
+		Options = { MinimapButton = {}},
 		LastOutfitStack = {},
 		LayerIndex = {},
 		RecentCompleteOutfits = {},

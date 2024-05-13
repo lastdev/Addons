@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240428104741")
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3)
@@ -41,11 +41,11 @@ local timerShellConcussion			= mod:NewBuffFadesTimer(20, 136431)
 local berserkTimer					= mod:NewBerserkTimer(780)
 
 mod:AddBoolOption("InfoFrame")
-mod:AddSetIconOption("SetIconOnTurtles", "ej7129", false, true)
+mod:AddSetIconOption("SetIconOnTurtles", "ej7129", false, 5)
 mod:AddBoolOption("ClearIconOnTurtles", false)--Different option, because you may want auto marking but not auto clearing. or you may want auto clearning when they "die" but not auto marking when they spawn
 mod:AddBoolOption("AnnounceCooldowns", "RaidCooldown")
 
-local shelldName, shellConcussion = DBM:GetSpellInfo(137633), DBM:GetSpellInfo(136431)
+local shelldName, shellConcussion = DBM:GetSpellName(137633), DBM:GetSpellName(136431)
 local stompActive = false
 local stompCount = 0
 local firstRockfall = false--First rockfall after a stomp

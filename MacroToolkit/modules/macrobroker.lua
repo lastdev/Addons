@@ -2,6 +2,7 @@
 --* Code based on the abandoned addon -- Macro Broker by Tuhljin *
 --****************************************************************
 
+--- @class MacroToolkit
 local MT = MacroToolkit
 local assert, type, strlower, select, strmatch, format, tonumber, strsub, strlen, strtrim = assert, type, strlower, select, strmatch, format, tonumber, strsub, strlen, strtrim
 local ipairs, error, pcall, loadstring, tinsert = ipairs, error, pcall, loadstring, tinsert
@@ -10,7 +11,7 @@ local GetInventoryItemLink, GetInventoryItemTexture = GetInventoryItemLink, GetI
 local SecureCmdOptionParse, CreateFrame = SecureCmdOptionParse, CreateFrame
 local _G = _G
 local L = MT.L
- 
+
 -- GLOBALS: DEFAULT_CHAT_FRAME UIParent ChatEdit_SendText
 
 function MT:IsSecureCmd(slash, arg)
@@ -81,7 +82,7 @@ local function chatprint(msg) DEFAULT_CHAT_FRAME:AddMessage(msg) end
 function MT:RunCommands(parse, macrotext)
 	local slash, success, reason
 	for slash in gmatch(macrotext or "", "(/%w+[^\n]+)") do
-		if slash then 
+		if slash then
 			slash = strlower(slash)
 			if MT:IsStopMacro(strmatch(slash, format("%s(.+)", MT.slash))) then if SecureCmdOptionParse(line) then return end
 			else
@@ -158,7 +159,7 @@ function MT:BrokerAdd()
 	b:SetPushedTexture("Interface\\Buttons\\UI-AttributeButton-Encourage-Down")
 	b:SetHighlightTexture("Interface\\Buttons\\UI-AttributeButton-Encourage-Hilight")
 	b:SetScript("OnClick", brokeradd)
-	b:SetScript("OnEnter", 
+	b:SetScript("OnEnter",
 		function(this)
 			GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
 			GameTooltip:SetText(L["Add broker"])
@@ -174,7 +175,7 @@ function MT:BrokerRemove()
 	b:SetPushedTexture("Interface\\Buttons\\UI-MinusButton-Down")
 	b:SetHighlightTexture("Interface\\Buttons\\UI-PlusButton-Hilight")
 	b:SetScript("OnClick", brokerremove)
-	b:SetScript("OnEnter", 
+	b:SetScript("OnEnter",
 		function(this)
 			GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
 			GameTooltip:SetText(L["Remove broker"])

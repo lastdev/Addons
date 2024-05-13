@@ -13,14 +13,10 @@ Engine.L = setmetatable(L, {
 })
 
 if locale == 'zhCN' then
---[[Translation missing --]]
---[[ L["Avoidable Abilities Taken"] = "Avoidable Abilities Taken"--]] 
---[[Translation missing --]]
---[[ L["Avoidable Damage Taken"] = "Avoidable Damage Taken"--]] 
---[[Translation missing --]]
---[[ L["Show how many avoidable abilities hit players."] = "Show how many avoidable abilities hit players."--]] 
---[[Translation missing --]]
---[[ L["Show how much avoidable damage was taken."] = "Show how much avoidable damage was taken."--]] 
+L["Avoidable Abilities Taken"] = "可避免的技能"
+L["Avoidable Damage Taken"] = "可避免的伤害"
+L["Show how many avoidable abilities hit players."] = "显示被击中了多少可避免的技能。"
+L["Show how much avoidable damage was taken."] = "显示承受了多少可避免的伤害。"
 
 elseif locale == 'zhTW' then
 L["Avoidable Abilities Taken"] = "可避免的法術"

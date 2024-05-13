@@ -152,7 +152,7 @@ local defaultSavedVars = {
     toolbarExpanded = true,
     currentSeason = 11, -- not really used for anything anymore
     scale = 1,
-    nonFullscreenScale = 1.3,
+    nonFullscreenScale = 1.4,
     enemyForcesFormat = 2,
     useForcesCount = false, -- replaces percent in pull buttons with count
     enemyStyle = 1,
@@ -182,7 +182,7 @@ local defaultSavedVars = {
       customPaletteValues = {},
       numberCustomColors = 12,
     },
-    selectedDungeonList = 7,
+    selectedDungeonList = 8,
     knownAffixWeeks = {},
   },
 }
@@ -273,7 +273,7 @@ do
       C_MythicPlus.RequestCurrentAffixes()
       C_MythicPlus.RequestMapInfo()
       C_MythicPlus.RequestRewards()
-      if db.loadOnStartUp then MDT:Async(function() MDT:ShowInterfaceInternal(true) end, "showInterface") end
+      if db.loadOnStartUp and db.devMode then MDT:Async(function() MDT:ShowInterfaceInternal(true) end, "showInterface") end
     end)
     eventFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
   end
@@ -663,7 +663,7 @@ function MDT:MakeTopBottomTextures(frame)
     frame.topPanelString:SetFontObject(GameFontNormalMed3)
     frame.topPanelString:SetTextColor(1, 1, 1, 1)
     frame.topPanelString:SetJustifyH("CENTER")
-    frame.topPanelString:SetJustifyV("CENTER")
+    frame.topPanelString:SetJustifyV("MIDDLE")
     --frame.topPanelString:SetWidth(600)
     frame.topPanelString:SetHeight(20)
     frame.topPanelString:SetText("Mythic Dungeon Tools")
@@ -719,7 +719,7 @@ function MDT:MakeTopBottomTextures(frame)
   frame.bottomPanelString = frame.bottomPanel:CreateFontString("MDTMid")
   frame.bottomPanelString:SetFontObject(GameFontNormalSmall)
   frame.bottomPanelString:SetJustifyH("CENTER")
-  frame.bottomPanelString:SetJustifyV("CENTER")
+  frame.bottomPanelString:SetJustifyV("MIDDLE")
   frame.bottomPanelString:SetPoint("CENTER", frame.bottomPanel, "CENTER", 0, 0)
   frame.bottomPanelString:SetTextColor(1, 1, 1, 1)
   frame.bottomPanelString:Show()
@@ -727,7 +727,7 @@ function MDT:MakeTopBottomTextures(frame)
   frame.bottomLeftPanelString = frame.bottomPanel:CreateFontString("MDTVersion")
   frame.bottomLeftPanelString:SetFontObject(GameFontNormalSmall)
   frame.bottomLeftPanelString:SetJustifyH("LEFT")
-  frame.bottomLeftPanelString:SetJustifyV("CENTER")
+  frame.bottomLeftPanelString:SetJustifyV("MIDDLE")
   frame.bottomLeftPanelString:SetPoint("LEFT", frame.bottomPanel, "LEFT", 0, 0)
   frame.bottomLeftPanelString:SetTextColor(1, 1, 1, 1)
   ---@diagnostic disable-next-line: redundant-parameter
@@ -770,7 +770,7 @@ function MDT:MakeTopBottomTextures(frame)
   frame.statusString = frame.bottomPanel:CreateFontString("MDTStatusLabel")
   frame.statusString:SetFontObject(GameFontNormalSmall)
   frame.statusString:SetJustifyH("RIGHT")
-  frame.statusString:SetJustifyV("CENTER")
+  frame.statusString:SetJustifyV("MIDDLE")
   frame.statusString:SetPoint("RIGHT", frame.bottomPanel, "RIGHT", 0, 0)
   frame.statusString:SetTextColor(1, 1, 1, 1)
   frame.statusString:Hide()
@@ -808,7 +808,7 @@ function MDT:MakeCopyHelper(frame)
   MDT.copyHelper.text = MDT.copyHelper:CreateFontString("MDT name")
   MDT.copyHelper.text:SetFontObject(GameFontNormalMed3)
   MDT.copyHelper.text:SetJustifyH("CENTER")
-  MDT.copyHelper.text:SetJustifyV("CENTER")
+  MDT.copyHelper.text:SetJustifyV("MIDDLE")
   MDT.copyHelper.text:SetText(L["errorLabel3"])
   MDT.copyHelper.text:ClearAllPoints()
   MDT.copyHelper.text:SetPoint("CENTER", MDT.copyHelper, "CENTER")
@@ -1212,6 +1212,18 @@ function MDT:MakeSidePanel(frame)
         ret = ret..CreateTextureMarkup(filedataid, 64, 64, 20, 20, 0.1, 0.9, 0.1, 0.9, 0, 0).."  "
       end
     end
+    --date
+    local currentWeek = MDT:GetCurrentAffixWeek()
+    if not longText and week ~= currentWeek then
+      local deltaWeeks = week - currentWeek
+      if deltaWeeks < 0 then deltaWeeks = deltaWeeks + #affixWeeks end
+      local secondsInOneWeek = 604800
+      local now = time()
+      local secondsToReset = C_DateAndTime.GetSecondsUntilWeeklyReset()
+      local reset = now + secondsToReset + (secondsInOneWeek * (deltaWeeks - 1))
+      local monthDay = date("%b %d", reset)
+      ret = ret.." "..monthDay
+    end
     return ret
   end
 
@@ -1355,7 +1367,6 @@ function MDT:MakeSidePanel(frame)
     GameTooltip:SetOwner(frame.sidePanel.DifficultySlider.frame, "ANCHOR_BOTTOMLEFT", 0, 40)
     GameTooltip:AddLine(L["Select the dungeon level"], 1, 1, 1)
     GameTooltip:AddLine(L["The selected level will affect displayed npc health"], 1, 1, 1)
-    GameTooltip:AddLine(L["Levels below 10 will hide enemies related to seasonal affixes"], 1, 1, 1)
     GameTooltip:Show()
   end)
   frame.sidePanel.DifficultySlider:SetCallback("OnLeave", function()
@@ -3285,7 +3296,7 @@ function MDT:MakeSettingsFrame(frame)
 
   frame.minimapCheckbox = AceGUI:Create("CheckBox")
   frame.minimapCheckbox:SetLabel(L["Enable Minimap Button"])
-  frame.minimapCheckbox:SetWidth(frameWidth-10)
+  frame.minimapCheckbox:SetWidth(frameWidth - 10)
   frame.minimapCheckbox:SetValue(not db.minimap.hide)
   frame.minimapCheckbox:SetCallback("OnValueChanged", function(widget, callbackName, value)
     db.minimap.hide = not value
@@ -3299,7 +3310,7 @@ function MDT:MakeSettingsFrame(frame)
 
   frame.compartmentCheckbox = AceGUI:Create("CheckBox")
   frame.compartmentCheckbox:SetLabel(L["Enable Compartment Button"])
-  frame.compartmentCheckbox:SetWidth(frameWidth-10)
+  frame.compartmentCheckbox:SetWidth(frameWidth - 10)
   frame.compartmentCheckbox:SetValue(not db.minimap.compartmentHide)
   frame.compartmentCheckbox:SetCallback("OnValueChanged", function(widget, callbackName, value)
     db.minimap.compartmentHide = not value
@@ -3313,7 +3324,7 @@ function MDT:MakeSettingsFrame(frame)
 
   frame.forcesCheckbox = AceGUI:Create("CheckBox")
   frame.forcesCheckbox:SetLabel(L["Use forces count"])
-  frame.forcesCheckbox:SetWidth(frameWidth-10)
+  frame.forcesCheckbox:SetWidth(frameWidth - 10)
   frame.forcesCheckbox:SetValue(db.useForcesCount)
   frame.forcesCheckbox:SetCallback("OnValueChanged", function(widget, callbackName, value)
     db.useForcesCount = value
@@ -3323,7 +3334,7 @@ function MDT:MakeSettingsFrame(frame)
 
   frame.AutomaticColorsCheck = AceGUI:Create("CheckBox")
   frame.AutomaticColorsCheck:SetLabel(L["Automatically color pulls"])
-  frame.AutomaticColorsCheck:SetWidth(frameWidth-10)
+  frame.AutomaticColorsCheck:SetWidth(frameWidth - 10)
   frame.AutomaticColorsCheck:SetValue(db.colorPaletteInfo.autoColoring)
   frame.AutomaticColorsCheck:SetCallback("OnValueChanged", function(widget, callbackName, value)
     db.colorPaletteInfo.autoColoring = value
@@ -3338,7 +3349,7 @@ function MDT:MakeSettingsFrame(frame)
   --Toggle local color blind mode
   frame.toggleForceColorBlindMode = AceGUI:Create("CheckBox")
   frame.toggleForceColorBlindMode:SetLabel(L["Local color blind mode"])
-  frame.toggleForceColorBlindMode:SetWidth(frameWidth-10)
+  frame.toggleForceColorBlindMode:SetWidth(frameWidth - 10)
   frame.toggleForceColorBlindMode:SetValue(db.colorPaletteInfo.forceColorBlindMode)
   frame.toggleForceColorBlindMode:SetCallback("OnValueChanged", function(widget, callbackName, value)
     db.colorPaletteInfo.forceColorBlindMode = value
@@ -3350,7 +3361,7 @@ function MDT:MakeSettingsFrame(frame)
   frame.PaletteSelectDropdown = AceGUI:Create("Dropdown")
   frame.PaletteSelectDropdown:SetList(colorPaletteNames)
   frame.PaletteSelectDropdown:SetLabel(L["Choose preferred color palette"])
-  frame.PaletteSelectDropdown:SetWidth(frameWidth-10)
+  frame.PaletteSelectDropdown:SetWidth(frameWidth - 10)
   frame.PaletteSelectDropdown:SetValue(db.colorPaletteInfo.colorPaletteIdx)
   frame.PaletteSelectDropdown:SetCallback("OnValueChanged", function(widget, callbackName, value)
     if value == 6 then
@@ -3369,7 +3380,7 @@ function MDT:MakeSettingsFrame(frame)
   -- Without the need to untoggle/toggle or swap back and forth in the PaletteSelectDropdown
   frame.button = AceGUI:Create("Button")
   frame.button:SetText(L["Apply to preset"])
-  frame.button:SetWidth(frameWidth-10)
+  frame.button:SetWidth(frameWidth - 10)
   frame.button:SetCallback("OnClick", function(widget, callbackName)
     if not db.colorPaletteInfo.autoColoring then
       db.colorPaletteInfo.autoColoring = true
@@ -3388,7 +3399,7 @@ function MDT:MakeSettingsFrame(frame)
 
   frame.localeButton = AceGUI:Create("Button")
   frame.localeButton:SetText(L["Change Language"])
-  frame.localeButton:SetWidth(frameWidth-10)
+  frame.localeButton:SetWidth(frameWidth - 10)
   local slashToFire = _G.SlashCmdList["ADDONLOCALE"]
   if not slashToFire then
     frame.localeButton:SetDisabled(true)
@@ -3401,9 +3412,9 @@ function MDT:MakeSettingsFrame(frame)
 
   frame.localeLabel = AceGUI:Create("Label")
   if not slashToFire then
-    frame.localeLabel:SetText("|cff808080" .. L["localeButtonTooltip1"] .. "|r")
+    frame.localeLabel:SetText("|cff808080"..L["localeButtonTooltip1"].."|r")
   else
-    frame.localeLabel:SetText(L["localeButtonTooltip2"] )
+    frame.localeLabel:SetText(L["localeButtonTooltip2"])
   end
   frame.settingsFrame:AddChild(frame.localeLabel)
 
@@ -4577,7 +4588,7 @@ function MDT:ResetMainFramePos(soft)
     --soft reset just redraws the window with existing coordinates from db
     local f = self.main_frame
     if not soft then
-      db.nonFullscreenScale = 1
+      db.nonFullscreenScale = defaultSavedVars.global.nonFullscreenScale
       db.maximized = false
       if not framesInitialized then initFrames() end
       if not framesInitialized then return end
@@ -4799,7 +4810,7 @@ function initFrames()
     end
   end
 
-  db.nonFullscreenScale = db.nonFullscreenScale or 1
+  db.nonFullscreenScale = db.nonFullscreenScale or defaultSavedVars.global.nonFullscreenScale
   if not db.maximized then db.scale = db.nonFullscreenScale end
   main_frame:SetFrameStrata(mainFrameStrata)
   main_frame:SetFrameLevel(1)
@@ -4913,7 +4924,7 @@ function initFrames()
     tooltip.String:SetFont(tooltip.String:GetFont() or '', 10, '')
     tooltip.String:SetTextColor(1, 1, 1, 1)
     tooltip.String:SetJustifyH("LEFT")
-    --tooltip.String:SetJustifyV("CENTER")
+    --tooltip.String:SetJustifyV("MIDDLE")
     tooltip.String:SetWidth(tooltip:GetWidth())
     tooltip.String:SetHeight(90)
     tooltip.String:SetWidth(175)
@@ -4979,7 +4990,7 @@ function initFrames()
     botString:SetFontObject(GameFontNormalSmall)
     botString:SetFont(MDT.pullTooltip.topString:GetFont() or '', 10, '')
     botString:SetTextColor(1, 1, 1, 1)
-    botString:SetJustifyH("TOP")
+    botString:SetJustifyH("CENTER")
     botString:SetJustifyV("TOP")
     botString:SetHeight(40)
     botString:SetWidth(250)

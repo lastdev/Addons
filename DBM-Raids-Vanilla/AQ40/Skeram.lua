@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("Skeram", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240115231835")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(15263)
 mod:SetEncounterID(709)
 if not mod:IsClassic() then
@@ -38,7 +38,7 @@ local warnSummonSoon	= mod:NewSoonAnnounce(747, 2)
 
 local timerMindControl	= mod:NewBuffActiveTimer(20, 785, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnMC", 785, true, false, {4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnMC", 785, true, 0, {4, 5, 6, 7, 8})
 
 local MCTargets = {}
 mod.vb.splitCount = 0

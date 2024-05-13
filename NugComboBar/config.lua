@@ -2,6 +2,8 @@ local APILevel = math.floor(select(4,GetBuildInfo())/10000)
 local isClassic = APILevel <= 3
 local GetSpecialization = APILevel <= 3 and function() return 1 end or _G.GetSpecialization
 
+local DRUID_CAT_FORM = DRUID_CAT_FORM or CAT_FORM or 1
+local DRUID_BEAR_FORM = DRUID_BEAR_FORM or BEAR_FORM or 5
 local UnitPower = UnitPower
 
 local GetSpell = function(spellId)
@@ -248,10 +250,10 @@ NugComboBar:RegisterConfig("ShapeshiftDruid", {
             local form = GetShapeshiftFormID()
             self:ResetConfig()
 
-            if form == BEAR_FORM and spec == 3 and IsPlayerSpell(80313) then --Pulverize
+            if form == DRUID_BEAR_FORM and spec == 3 and IsPlayerSpell(80313) then --Pulverize
                 self:ApplyConfig("Pulverize")
                 self:Update()
-            elseif form == CAT_FORM and IsPlayerSpell(22568) then -- Ferocious Bite, in bfa without Feral Affinity you don't have bite or cps
+            elseif form == DRUID_CAT_FORM and IsPlayerSpell(22568) then -- Ferocious Bite, in bfa without Feral Affinity you don't have bite or cps
                 self:ApplyConfig("ComboPointsDruid")
                 self:Update()
             else
@@ -398,7 +400,7 @@ NugComboBar:RegisterConfig("Teachings", {
     setup = function(self, spec)
         self.eventProxy:RegisterUnitEvent("UNIT_AURA", "player")
         self.eventProxy.UNIT_AURA = GENERAL_UPDATE
-        self:SetMaxPoints(3)
+        self:SetMaxPoints(4)
         self:SetDefaultValue(0)
         self.flags.soundFullEnabled = true
         self:SetPointGetter(GetAuraStack(202090)) -- Teachings of the Monastery
@@ -1003,7 +1005,7 @@ if APILevel <= 3 then
                 local form = GetShapeshiftFormID()
                 self:ResetConfig()
 
-                if form == CAT_FORM then -- Ferocious Bite, in bfa without Feral Affinity you don't have bite or cps
+                if form == DRUID_CAT_FORM then -- Ferocious Bite, in bfa without Feral Affinity you don't have bite or cps
                     self:Enable()
                     self:ApplyConfig("ComboPointsDruid")
                     self:Update()
@@ -1042,6 +1044,20 @@ if APILevel <= 3 then
             self:SetPointGetter(GetAuraStack(400573, "HARMFUL")) -- Arcane Blast
         end
     }, "MAGE")
+
+    NugComboBar:RegisterConfig("MaelstromWeapon", {
+        triggers = { GetSpecialization },
+        setup = function(self, spec)
+            self.eventProxy:RegisterUnitEvent("UNIT_AURA", "player")
+            self.eventProxy.UNIT_AURA = GENERAL_UPDATE
+            self:SetMaxPoints(5)
+            self:SetDefaultValue(0)
+            self.flags.soundFullEnabled = true
+            self:SetPointGetter(GetAuraStack(408505, "HELPFUL")) -- Maelstrom Weapon
+        end
+    }, "SHAMAN")
+
+
     end
 
     if APILevel == 3 then

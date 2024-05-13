@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1392, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(90435)
 mod:SetEncounterID(1787)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -62,7 +62,7 @@ mod.vb.explosiveBurst = 0
 mod.vb.foulCrush = 0
 mod.vb.swatCount = 0
 mod.vb.enraged = false
-local debuffName = DBM:GetSpellInfo(181306)
+local debuffName = DBM:GetSpellName(181306)
 local playerName = UnitName("player")
 
 local debuffFilter

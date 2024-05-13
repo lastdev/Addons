@@ -75,7 +75,7 @@ local DATA = {
 	["i:34052"] = not Environment.IsVanillaClassic() and {
 		["i:34053"] = 1/3, -- Dream Shard
 	} or nil,
-	["i:52721"] = Environment.IsRetail() and {
+	["i:52721"] = (Environment.IsRetail() or Environment.IsCataClassic()) and {
 		["i:52720"] = 1/3, -- Heavenly Shard
 	} or nil,
 	["i:74247"] = Environment.IsRetail() and {

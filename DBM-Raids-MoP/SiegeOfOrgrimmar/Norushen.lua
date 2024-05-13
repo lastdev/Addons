@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20240105194056")
+mod:SetRevision("20240413000752")
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 
@@ -223,6 +223,7 @@ end
 
 function mod:ENCOUNTER_START(id)
 	if id == 1624 then
+		---@diagnostic disable-next-line: undefined-field
 		if self.lastWipeTime and GetTime() - self.lastWipeTime < 20 then return end--False ENCOUNTER_START firing on a wipe (blizz bug), ignore it so we don't start pre pull timer
 		self:SendSync("prepull")
 	end
@@ -236,6 +237,7 @@ end
 
 function mod:OnSync(msg, guid)
 	if msg == "prepull" then
+		---@diagnostic disable-next-line: undefined-field
 		if self.lastWipeTime and GetTime() - self.lastWipeTime < 20 then return end
 		timerCombatStarts:Start()
 	elseif msg == "ManifestationDied" and guid then

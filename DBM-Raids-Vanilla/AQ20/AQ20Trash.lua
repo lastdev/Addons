@@ -9,7 +9,7 @@ end
 local mod	= DBM:NewMod("AQ20Trash", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240313002358")
 if not mod:IsClassic() then
 	mod:SetModelID(15741)-- Qiraji Gladiator
 end
@@ -45,6 +45,9 @@ do-- Anubisath Plague/Explode - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash
 				if self.Options.RangeFrame then
 					DBM.RangeCheck:Show(10)
 				end
+			elseif UnitGUID("pet") and UnitGUID("pet") == args.destGUID then
+				specWarnPlague:Show()
+				specWarnPlague:Play("runout")
 			else
 				warnPlague:Show(args.destName)
 			end

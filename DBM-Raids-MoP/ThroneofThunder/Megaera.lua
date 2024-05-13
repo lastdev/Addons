@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(821, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061701")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(68065, 70235, 70247)--Frozen 70235, Venomous 70247 (only 2 heads that ever start in front, so no need to look for combat with arcane or fire for combat detection)
 mod:SetEncounterID(1578)
 mod:SetMainBossID(68065)
@@ -55,6 +55,7 @@ local specWarnNetherTear		= mod:NewSpecialWarningSwitch("ej7816", "Dps")
 
 local timerRampage				= mod:NewBuffActiveTimer(21, 139458, nil, nil, nil, 6)
 mod:AddBoolOption("timerBreaths", "Tank|Healer", "timer")--Better to have one option for breaths than 4
+--LuaLS hates mods setting option name to false
 local timerArcticFreezeCD		= mod:NewCDTimer(16, 139843, nil, nil, false)--We keep timers for artic and freeze for engage, since the breaths might be out of sync until after first rampage
 local timerRotArmorCD			= mod:NewCDTimer(16, 139840, nil, nil, false)--^
 local timerBreathsCD			= mod:NewTimer(16, "timerBreathsCD", 137731, nil, false, 5)--Rest of breaths after first rampage consolidated into one timer instead of 2
@@ -86,7 +87,7 @@ local rampageCast = 0
 local cinderIcon = 7
 local iceIcon = 6
 local activeHeadGUIDS = {}
-local iceTorrent = DBM:GetSpellInfo(139857)
+local iceTorrent = DBM:GetSpellName(139857)
 local torrentExpires = {}
 local arcaneRecent = false
 

@@ -1,6 +1,6 @@
-## Interface: 100205
+## Interface: 100206
 ## Title: idTip
-## Version: 10.5.5
+## Version: 10.6.3
 ## Notes: Adds various IDs to tooltips
 ## Author: silverwind
 ## X-Curse-Project-ID: 24541

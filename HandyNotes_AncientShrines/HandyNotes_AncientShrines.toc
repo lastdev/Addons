@@ -1,8 +1,8 @@
-## Interface: 100205
+## Interface: 100207
 
 ## Title: HandyNotes_AncientShrines
-## Version: 10.2.0.5
-## Notes: Displays the locations of the ancientshrines, usefull for PVP or PVE
+## Version: 100.2.0.7
+## Notes: Displays the locations of the ancientshrines, usefull for PVP or PVE, Experience LEGACY
 ## Author: Frostaphim-Xavius
 
 ## DefaultState: enabled

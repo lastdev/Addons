@@ -28,6 +28,7 @@
 	local _GetSpellInfo = Details.getspellinfo
 	local isWOTLK = detailsFramework.IsWotLKWow()
 	local isERA = detailsFramework.IsClassicWow()
+	local isCATA = detailsFramework.IsCataWow()
 	local _tempo = time()
 	local _, Details222 = ...
 	_ = nil
@@ -353,6 +354,10 @@
 			[199667] = 199658, --warrior whirlwind
 			[199852] = 199658, --warrior whirlwind
 			[199851] = 199658, --warrior whirlwind
+			[199851] = 199658, --warrior whirlwind
+			[411547] = 199658, --arms warrior whirlwind
+			[385228] = 199658, --arms warrior whirlwind
+			[105771] = 126664, --warrior charge
 
 			[222031] = 199547, --deamonhunter ChaosStrike
 			[200685] = 199552, --deamonhunter Blade Dance
@@ -401,6 +406,8 @@
 			[417134] = 414532, --rage of Fyr'alath
 			[413584] = 414532,
 			[424094] = 414532,
+
+			[228649] = 100784, --monk blackout kick
 		}
 
 		--all totem
@@ -593,7 +600,7 @@
 		Details.SpecialSpellActorsName = {}
 
 		--add sanguine affix
-		if (not isWOTLK) then
+		if (not isWOTLK and not isCATA and not isERA) then
 			if (Details.SanguineHealActorName) then
 				Details.SpecialSpellActorsName[Details.SanguineHealActorName] = SPELLID_SANGUINE_HEAL
 			end
@@ -1646,8 +1653,11 @@
 			end
 
 			if (_current_combat.trinketProcs) then
+				---@type table <actorname, trinketprocdata>
 				local playerTrinketData = _current_combat.trinketProcs[sourceName] or {}
 				_current_combat.trinketProcs[sourceName] = playerTrinketData
+
+				---@type trinketprocdata
 				local trinketData = playerTrinketData[spellId] or {cooldown = 0, total = 0}
 				playerTrinketData[spellId] = trinketData
 
@@ -2247,7 +2257,7 @@
 			12/14 21:14:44.545  SPELL_SUMMON,Creature-0-4391-615-3107-15439-00001A8313,"Fire Elemental Totem",0x2112,0x0,Creature-0-4391-615-3107-15438-00001A8313,"Greater Fire Elemental",0x2112,0x0,32982,"Fire Elemental Totem",0x1
 			]]
 
-		if (isWOTLK) then
+		if (isWOTLK or isCATA) then
 			if (npcId == 15439) then
 				Details.tabela_pets:AddPet(petSerial:gsub("%-15439%-", "%-15438%-"), "Greater Fire Elemental", petFlags, sourceSerial, sourceName, sourceFlags)
 
@@ -2360,7 +2370,7 @@
 	end
 
 	function parser:heal_absorb(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount)
-		if (isWOTLK or isERA) then
+		if (isCATA or isWOTLK or isERA) then
 			if (not amount) then
 				--melee
 				shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount = spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId
@@ -2474,7 +2484,7 @@
 			effectiveHeal = effectiveHeal + amount - overHealing
 		end
 
-		if (isWOTLK) then
+		if (isWOTLK or isCATA) then
 			--earth shield
 			if (spellId == SPELLID_SHAMAN_EARTHSHIELD_HEAL) then
 				--get the information of who placed the buff into this actor
@@ -2921,7 +2931,7 @@
 				return parser:add_buff_uptime(token, time, sourceSerial, sourceName, sourceFlags, sourceSerial, sourceName, sourceFlags, 0x0, spellId, spellName, "BUFF_UPTIME_IN")
 			end
 
-			if (isWOTLK) then
+			if (isWOTLK or isCATA) then
 				if (SHAMAN_EARTHSHIELD_BUFF[spellId]) then
 					TBC_EarthShieldCache[targetName] = {sourceSerial, sourceName, sourceFlags}
 
@@ -4755,6 +4765,12 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 	end
 
+	--local WA_OnPlayerDeath = function(isFakeDeath, token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, deathLog, lastCooldown, combatElapsedTime, maxHealth, mythicPlusElapsedTime)
+		--check auras with details! death log enabled
+		--run a script in the aura which receives interesting data from the WA_OnPlayerDeath()
+	--end
+	--Details:InstallHook("HOOK_DEATH", WA_OnPlayerDeath)
+
 	function parser:environment(token, time, sourceSerial, who_name, who_flags, alvo_serial, alvo_name, alvo_flags, alvo_flags2, env_type, amount)
 		local spelId
 
@@ -5318,8 +5334,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 				--if the current raid is current tier raid, pre-load the storage database
 				if (zoneType == "raid") then
-					if (Details.InstancesToStoreData [zoneMapID]) then
-						Details.ScheduleLoadStorage()
+					if (Details.InstancesToStoreData[zoneMapID]) then
+						--Details.ScheduleLoadStorage()
 					end
 				end
 
@@ -5693,7 +5709,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--when the user requested data from the storage but is in combat lockdown
 		if (Details.schedule_storage_load) then
 			Details.schedule_storage_load = nil
-			Details.ScheduleLoadStorage()
+			--Details.ScheduleLoadStorage()
 		end
 
 		--store a boss encounter when out of combat since it might need to load the storage
@@ -5773,6 +5789,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	function Details.parser_functions:CHALLENGE_MODE_START(...) --~challenge ~mythic ~m+
 		--send mythic dungeon start event
 		if (Details.debug) then
+		end
+
+		if (DetailsMythicPlusFrame.ZoneLeftTimer and not DetailsMythicPlusFrame.ZoneLeftTimer:IsCancelled()) then
+			DetailsMythicPlusFrame.ZoneLeftTimer:Cancel()
 		end
 
 		local zoneName, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize = GetInstanceInfo()
@@ -5871,7 +5891,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details222.MythicPlus.time = 0.1
 		end
 
-		--if (level >= 28 or Details.user_is_patreon_supporter) then --debug
 		if (Details.mythic_plus.show_damage_graphic) then
 			C_Timer.After(0, function()
 				if (ChallengeModeCompleteBanner) then
@@ -5884,36 +5903,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		local zoneName, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize = GetInstanceInfo()
 		if (difficultyID == 8) then
 			Details:SendEvent("COMBAT_MYTHICDUNGEON_END")
-		end
-
-		local okay, errorText = pcall(function()
-			local mapChallengeModeID, mythicLevel, time, onTime, keystoneUpgradeLevels, practiceRun, oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord, PrimaryAffix, isEligibleForScore, members = C_ChallengeMode.GetCompletionInfo()
-			if (mapChallengeModeID) then
-				local statName = "mythicdungeoncompletedDF2"
-				local mythicDungeonRuns = Details222.PlayerStats:GetStat(statName)
-				mythicDungeonRuns = mythicDungeonRuns or {}
-
-				mythicDungeonRuns[mapChallengeModeID] = mythicDungeonRuns[mapChallengeModeID] or {}
-				mythicDungeonRuns[mapChallengeModeID][mythicLevel] = mythicDungeonRuns[mapChallengeModeID][mythicLevel] or {}
-
-				local currentRun = mythicDungeonRuns[mapChallengeModeID][mythicLevel]
-				currentRun.completed = (currentRun.completed or 0) + 1
-				currentRun.totalTime = (currentRun.totalTime or 0) + time
-				if (not currentRun.minTime or time < currentRun.minTime) then
-					currentRun.minTime = time
-				end
-
-				currentRun.history = currentRun.history or {}
-				local day, month, year = tonumber(date("%d")), tonumber(date("%m")), tonumber(date("%Y"))
-				local amountDeaths = C_ChallengeMode.GetDeathCount() or 0
-				tinsert(currentRun.history, {day = day, month = month, year = year, runTime = time, onTime = onTime, deaths = amountDeaths, affix = PrimaryAffix})
-
-				Details222.PlayerStats:SetStat("mythicdungeoncompletedDF2", mythicDungeonRuns)
-			end
-		end)
-
-		if (not okay) then
-			Details:Msg("something went wrong (0x7878):", errorText)
 		end
 
 		Details222.MythicPlus.LogStep("===== Mythic+ Finished =====")
@@ -6901,7 +6890,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		Details:Destroy(bitfield_swap_cache)
 		Details:Destroy(empower_cache)
 
-		local groupRoster = Details.tabela_vigente.raid_roster
+		local currentCombat = Details:GetCurrentCombat()
+
+		local groupRoster = currentCombat.raid_roster
 
 		if (IsInRaid()) then
 			local unitIdCache = Details222.UnitIdCache.Raid
@@ -6987,15 +6978,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				auto_regen_cache[playerName] = auto_regen_power_specs[Details.cached_specs[playerGUID]]
 			end
 		end
-
-		local orderNames = {}
-		for playerName in pairs(groupRoster) do
-			orderNames[#orderNames+1] = playerName
-		end
-		table.sort(orderNames, function(name1, name2)
-			return string.len(name1) > string.len(name2)
-		end)
-		Details.tabela_vigente.raid_roster_indexed = orderNames
 
 		if (Details.iam_a_tank) then
 			tanks_members_cache[UnitGUID("player")] = true

@@ -519,6 +519,47 @@ GTFO.SpellID["401229"] = {
   sound = 1;
 };
 
+GTFO.SpellID["224683"] = {
+  --desc = "Flaming Arrow (Scarlet Houndsmaster)";
+  ignoreApplication = true;
+  sound = 2;
+};
+
+GTFO.SpellID["20296"] = {
+  --desc = "Flamestrike (Scarlet Technician)";
+  ignoreApplication = true;
+  sound = 2;
+};
+
+GTFO.SpellID["430250"] = {
+  --desc = "Zealous Purification (Hallowed Monstrosity)";
+  sound = 1;
+};
+
+GTFO.SpellID["430267"] = {
+  --desc = "Zealous Purification (Hallowed Monstrosity)";
+  sound = 1;
+};
+
+GTFO.SpellID["414235"] = {
+  --desc = "Ashen Dreams";
+  minimumStacks = 1;
+  sound = 2;
+};
+
+GTFO.SpellID["419289"] = {
+  --desc = "Chaotic Breach";
+  sound = 1;
+  tankSound = 2;
+};
+
+GTFO.SpellID["423073"] = {
+  --desc = "Corrupting Felflame";
+  sound = 1;
+  ignoreApplication = true;
+};
+
+
 --- *******************
 --- * Ruby Life Pools *
 --- *******************
@@ -1586,6 +1627,19 @@ GTFO.SpellID["428474"] = {
   affirmingDebuffSpellID = 428479; -- Lucid Vulnerability
 };
 
+GTFO.SpellID["420554"] = {
+  --desc = "Verdant Matrix (Nymue)";
+  applicationOnly = true;
+  soundFunction = function() 
+	local stacks = GTFO_DebuffStackCount("player", 420554);
+	if (stacks > 1) then
+		return 1;
+	else
+		return 2;
+	end
+  end;
+};
+
 GTFO.SpellID["421532"] = {
   --desc = "Smoldering Ground (Smolderon)";
   sound = 1;
@@ -1594,7 +1648,6 @@ GTFO.SpellID["421532"] = {
 GTFO.SpellID["428388"] = {
   --desc = "Roiling Lava (Smolderon)";
   applicationOnly = true;
-  test = true;
   sound = 1;
 };
 
@@ -1614,6 +1667,11 @@ GTFO.SpellID["425451"] = {
   --desc = "Scorching Ground (Tindral Sageswift)";
   sound = 1;
   test = true;
+};
+
+GTFO.SpellID["427311"] = {
+  --desc = "Flame Surge (Tindral Sageswift)";
+  sound = 1;
 };
 
 GTFO.SpellID["419504"] = {

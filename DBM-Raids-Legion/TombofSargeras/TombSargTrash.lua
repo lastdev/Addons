@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TombSargTrash", "DBM-Raids-Legion", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240422191412")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -88,7 +88,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 --TODO, add more
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)

@@ -1,5 +1,14 @@
+== v1.06 - 6th May 2024
+* Classic Cataclysm version included
+
+== v1.05 - 20th April 2024
+* TOC update to 10.2.7
+
+== v1.04 - 18th March 2024
+* TOC update to 10.2.6
+
 == v1.03 - 12th January 2024
-* TOC Bump to 10.2.5
+* TOC update to 10.2.5
 
 == v1.02 - 6th December 2023
 * Added and improved translations to the Minimap AddOns menu

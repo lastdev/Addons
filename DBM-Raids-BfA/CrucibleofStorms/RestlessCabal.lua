@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2328, "DBM-Raids-BfA", 3, 1177)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(144755, 144754)--144755 Zaxasj, 144754 Fa'thuul
 mod:SetEncounterID(2269)
 mod:SetBossHPInfoToHighest()
@@ -92,9 +92,9 @@ local timerCrushingDoubtCD				= mod:NewCDCountTimer(40.1, 282432, nil, nil, nil,
 
 local berserkTimer						= mod:NewBerserkTimer(780)
 
-mod:AddSetIconOption("SetIconCrushingDoubt", 282432, true, false, {1, 2})
-mod:AddSetIconOption("SetIconDarkherald", 282561, true, false, {6})
-mod:AddSetIconOption("SetIconOnAdds", 282617, true, true, {3, 4, 5})
+mod:AddSetIconOption("SetIconCrushingDoubt", 282432, true, 0, {1, 2})
+mod:AddSetIconOption("SetIconDarkherald", 282561, true, 0, {6})
+mod:AddSetIconOption("SetIconOnAdds", 282617, true, 5, {3, 4, 5})
 mod:AddRangeFrameOption(6, 283524)
 mod:AddInfoFrameOption(282741, true)
 mod:AddNamePlateOption("NPAuraOnEcho", 282517)
@@ -113,7 +113,7 @@ local playerPromise = false
 
 local updateInfoFrame
 do
-	local heraldName, UmbrelShield = DBM:GetSpellInfo(282561), DBM:GetSpellInfo(282741)
+	local heraldName, UmbrelShield = DBM:GetSpellName(282561), DBM:GetSpellName(282741)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)

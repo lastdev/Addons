@@ -1,14 +1,25 @@
 -- the data for LibTalentTree will be loaded (and cached) from blizzard's APIs when the Lib loads
 -- @curseforge-project-slug: libtalenttree@
 
-local MAJOR, MINOR = "LibTalentTree-1.0", 11;
---- @class LibTalentTree
+local MAJOR, MINOR = "LibTalentTree-1.0", 14;
+--- @class LibTalentTree-1.0
 local LibTalentTree = LibStub:NewLibrary(MAJOR, MINOR);
 
 if not LibTalentTree then return end -- No upgrade needed
 
+--- Whether the current game version is compatible with this library. This is generally always true on retail, and always false on classic.
+function LibTalentTree:IsCompatible()
+    return C_ClassTalents and C_ClassTalents.InitializeViewLoadout and true or false;
+end
+
 if not C_ClassTalents or not C_ClassTalents.InitializeViewLoadout then
-    error('LibTalentTree requires C_ClassTalents.InitializeViewLoadout to be available');
+    setmetatable(LibTalentTree, {
+        __index = function()
+            error('LibTalentTree requires C_ClassTalents.InitializeViewLoadout to be available');
+        end,
+    });
+
+    return;
 end
 
 local MAX_LEVEL = 70;
@@ -216,16 +227,6 @@ local function buildCache()
 
                     data.groupIDs = data.groupIDs or {}
                     mergeTables(data.groupIDs, nodeInfo.groupIDs);
-
-                    if data.isClassNode == nil then
-                        data.isClassNode = false;
-                        for _, cost in ipairs(C_Traits.GetNodeCost(configID, nodeID)) do
-                            if cost.ID == classCurrencyID then
-                                data.isClassNode = true;
-                                break;
-                            end
-                        end
-                    end
                     for _, entryID in ipairs(nodeInfo.entryIDs) do
                         cache.entryTreeMap[entryID] = treeID;
                         if not entryData[entryID] then
@@ -242,6 +243,20 @@ local function buildCache()
                         local cInfo = C_Traits.GetConditionInfo(configID, conditionID)
                         if cInfo and cInfo.isMet and cInfo.ranksGranted and cInfo.ranksGranted > 0 then
                             data.grantedForSpecs[specID] = true;
+                        end
+                    end
+
+                    if nil == data.isClassNode then
+                        data.isClassNode = false;
+                        local nodeCost = C_Traits.GetNodeCost(configID, nodeID);
+                        if not next(nodeCost) and data.grantedForSpecs[specID] then
+                            data.isClassNode = true;
+                        end
+                        for _, cost in ipairs(nodeCost) do
+                            if cost.ID == classCurrencyID then
+                                data.isClassNode = true;
+                                break;
+                            end
                         end
                     end
                 end
@@ -287,6 +302,7 @@ end
 --- @param treeId number # TraitTreeID, or TraitNodeID, if leaving the 2nd argument nil
 --- @param nodeId number # TraitNodeID, can be omitted, by passing the nodeId as the first argument, the treeId is automatically determined
 --- @return ( libNodeInfo | nil )
+--- @overload fun(self: LibTalentTree-1.0, nodeId: number): libNodeInfo | nil
 function LibTalentTree:GetLibNodeInfo(treeId, nodeId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not nodeId then
@@ -307,6 +323,7 @@ end
 --- @param treeId number # TraitTreeID, or TraitEntryID, if leaving the 2nd argument nil
 --- @param nodeId number # TraitNodeID, can be omitted, by passing the nodeId as the first argument, the treeId is automatically determined
 --- @return ( libNodeInfo ) # libNodeInfo is enriched and overwritten by C_Traits information if possible
+--- @overload fun(self: LibTalentTree-1.0, nodeId: number): libNodeInfo
 function LibTalentTree:GetNodeInfo(treeId, nodeId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not nodeId then
@@ -339,6 +356,7 @@ end
 --- @param treeId number # TraitTreeID, or TraitEntryID, if leaving the 2nd argument nil
 --- @param entryId number # TraitEntryID, can be omitted, by passing the entryId as the first argument, the treeId is automatically determined
 --- @return ( entryInfo | nil )
+--- @overload fun(self: LibTalentTree-1.0, entryId: number): entryInfo | nil
 function LibTalentTree:GetEntryInfo(treeId, entryId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not entryId then
@@ -359,7 +377,7 @@ function LibTalentTree:GetEntryInfo(treeId, entryId)
 end
 
 --- @public
---- @param class (string | number) # ClassID or ClassFilename - e.g. "DEATHKNIGHT" or 6 - See https://wowpedia.fandom.com/wiki/ClassId
+--- @param class (string | number) # ClassID or ClassFilename - e.g. "DEATHKNIGHT" or 6 - See https://warcraft.wiki.gg/wiki/ClassId
 --- @return ( number | nil ) # TraitTreeID
 function LibTalentTree:GetClassTreeId(class)
     assert(type(class) == 'string' or type(class) == 'number', 'class must be a string or number');
@@ -374,7 +392,7 @@ end
 
 --- @public
 --- @param treeId (number) # a class' TraitTreeID
---- @return (number | nil) # ClassID or nil - See https://wowpedia.fandom.com/wiki/ClassId
+--- @return (number | nil) # ClassID or nil - See https://warcraft.wiki.gg/wiki/ClassId
 function LibTalentTree:GetClassIdByTreeId(treeId)
     treeId = tonumber(treeId);
 
@@ -390,7 +408,7 @@ function LibTalentTree:GetClassIdByTreeId(treeId)
 end
 
 --- @public
---- @param specId number # See https://wowpedia.fandom.com/wiki/SpecializationID
+--- @param specId number # See https://warcraft.wiki.gg/wiki/SpecializationID
 --- @param nodeId number # TraitNodeID
 --- @return boolean # whether the node is visible for the given spec
 function LibTalentTree:IsNodeVisibleForSpec(specId, nodeId)
@@ -440,7 +458,7 @@ function LibTalentTree:IsNodeVisibleForSpec(specId, nodeId)
 end
 
 --- @public
---- @param specId number # See https://wowpedia.fandom.com/wiki/SpecializationID
+--- @param specId number # See https://warcraft.wiki.gg/wiki/SpecializationID
 --- @param nodeId number # TraitNodeID
 --- @return boolean # whether the node is granted by default for the given spec
 function LibTalentTree:IsNodeGrantedForSpec(specId, nodeId)
@@ -483,6 +501,7 @@ end
 --- @param treeId number # TraitTreeID, or TraitNodeID, if leaving the 2nd parameter nil
 --- @param nodeId number # TraitNodeID, can be omitted, by passing the nodeId as the first argument, the treeId is automatically determined
 --- @return ( number|nil, number|nil ) # posX, posY - some trees have a global offset
+--- @overload fun(self: LibTalentTree-1.0, nodeId: number): (number|nil, number|nil)
 function LibTalentTree:GetNodePosition(treeId, nodeId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not nodeId then
@@ -510,6 +529,7 @@ local gridPositionCache = {};
 --- @param treeId number # TraitTreeID, or TraitNodeID, if leaving the 2nd parameter nil
 --- @param nodeId number # TraitNodeID, can be omitted, by passing the nodeId as the first argument, the treeId is automatically determined
 --- @return ( number|nil, number|nil ) # column, row
+--- @overload fun(self: LibTalentTree-1.0, nodeId: number): (number|nil, number|nil)
 function LibTalentTree:GetNodeGridPosition(treeId, nodeId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not nodeId then
@@ -563,6 +583,7 @@ end
 --- @param treeId number # TraitTreeID, or TraitNodeID, if leaving the 2nd parameter nil
 --- @param nodeId number # TraitNodeID, can be omitted, by passing the nodeId as the first argument, the treeId is automatically determined
 --- @return ( nil | visibleEdge[] ) # The order might not match C_Traits
+--- @overload fun(self: LibTalentTree-1.0, nodeId: number): nil | visibleEdge[]
 function LibTalentTree:GetNodeEdges(treeId, nodeId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not nodeId then
@@ -581,6 +602,7 @@ end
 --- @param treeId number # TraitTreeID, or TraitNodeID, if leaving the 2nd parameter nil
 --- @param nodeId number # TraitNodeID, can be omitted, by passing the nodeId as the first argument, the treeId is automatically determined
 --- @return ( boolean | nil ) # true if the node is a class node, false for spec nodes, nil if unknown
+--- @overload fun(self: LibTalentTree-1.0, nodeId: number): boolean | nil
 function LibTalentTree:IsClassNode(treeId, nodeId)
     assert(type(treeId) == 'number', 'treeId must be a number');
     if not nodeId then
@@ -598,7 +620,7 @@ end
 local gateCache = {}
 
 --- @public
---- @param specId number # See https://wowpedia.fandom.com/wiki/SpecializationID
+--- @param specId number # See https://warcraft.wiki.gg/wiki/SpecializationID
 --- @return ( gateInfo[] ) # list of gates for the given spec, sorted by spending required
 function LibTalentTree:GetGates(specId)
     -- an optimization step is likely trivial in 10.1.0, but well.. effort, and this also works fine still :)

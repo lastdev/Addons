@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1750, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(104636)
 mod:SetEncounterID(1877)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -69,7 +69,7 @@ local timerRottenBreathCD			= mod:NewCDTimer(24.3, 211192, nil, nil, nil, 3)
 local timerDisiccatingStompCD		= mod:NewCDTimer(32, 211073, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 
 mod:AddRangeFrameOption(8, 211471)
-mod:AddSetIconOption("SetIconOnWisps", "ej13348", false, true)
+mod:AddSetIconOption("SetIconOnWisps", "ej13348", false, 5)
 mod:AddInfoFrameOption(210279)
 
 mod.vb.phase = 1
@@ -77,7 +77,7 @@ mod.vb.addsCount = 0
 mod.vb.sisterCount = 0
 local scornedWarned = false
 local seenMobs = {}
-local debuffName, infoframeName = DBM:GetSpellInfo(211471), DBM:GetSpellInfo(210279)
+local debuffName, infoframeName = DBM:GetSpellName(211471), DBM:GetSpellName(210279)
 
 function mod:BreathTarget(targetname, uId)
 	if not targetname then return end
@@ -131,9 +131,9 @@ function mod:SPELL_CAST_START(args)
 	elseif (spellId == 211073 or spellId == 226821) and self:AntiSpam(10, args.sourceGUID) then
 		warnDesiccatingStomp:Show()
 		if self:IsMythic() then
-			timerDisiccatingStompCD:Start(29, args.SourceGUID)
+			timerDisiccatingStompCD:Start(29, args.sourceGUID)
 		else
-			timerDisiccatingStompCD:Start(nil, args.SourceGUID)
+			timerDisiccatingStompCD:Start(nil, args.sourceGUID)
 		end
 	elseif spellId == 211368 then
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then

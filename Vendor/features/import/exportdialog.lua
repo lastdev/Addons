@@ -6,9 +6,7 @@ local CURRENT_EXPORT_VERSION = 1
 local Encoder = Addon.Features.Import.Encoder
 local Info = Addon.Systems.Info
 
---[===[@debug@
 
---@end-debug@]===]
 
 --[[ Initialize the export dialog ]]
 function ExportDialog:OnInitDialog(dialog, export)

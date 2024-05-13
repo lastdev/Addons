@@ -61,9 +61,6 @@ end
    ==========================================================================]]
 function Profile:SetValue(key, value)
 	local var = self.profilesVariable:Get(self.profileId) or {};
-	--[===[@debug@
-
-	--@end-debug@]===]
 
 	if ((var[key] ~= value) or (type(value) ~= type(var[key]))) then
 		if (type(value) ~= "table") then		
@@ -84,10 +81,6 @@ end
    ==========================================================================]]
 function Profile:GetValue(key)
 	local var = self.profilesVariable:Get(self.profileId) or {};
-
-	--[===[@debug@--
-
-	--@end-debug@]===]
 
 	local value = var[key];	
 	if (value == nil) then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2334, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(144796)
 mod:SetEncounterID(2276)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -83,8 +83,8 @@ local timerExplodingSheepCD				= mod:NewNextCountTimer(55, 287929, 222529, nil, 
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconGigaVolt", 286646, true, false, {1, 2, 3})
-mod:AddSetIconOption("SetIconBot", 288410, true, true, {4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconGigaVolt", 286646, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconBot", 288410, true, 5, {4, 5, 6, 7, 8})
 mod:AddInfoFrameOption(286105, true)
 
 --Count variables for every timer, because stupid sequence mod
@@ -245,7 +245,7 @@ end
 
 local updateInfoFrame
 do
-	local shrunkName = DBM:GetSpellInfo(284168)
+	local shrunkName = DBM:GetSpellName(284168)
 	local floor = math.floor
 	local lines = {}
 	local sortedLines = {}
@@ -363,7 +363,7 @@ function mod:OnCombatStart(delay)
 		end
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(286105))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(286105))
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false)
 	end
 end
@@ -539,7 +539,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, icon)
 		end
 		self.vb.gigaIcon = self.vb.gigaIcon + 1
-	elseif spellId == 287167 and self:CheckDispelFilter() then
+	elseif spellId == 287167 and self:CheckDispelFilter("magic") then
 		specWarnDiscombobulation:CombinedShow(0.3, args.destName)
 		specWarnDiscombobulation:ScheduleVoice(0.3, "helpdispel")
 	elseif spellId == 284168 then

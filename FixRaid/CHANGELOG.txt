@@ -1,0 +1,9 @@
+﻿v1.0.2
+  - Change Project Name to FixGroups-Reborn
+  - More fixes for Damager Role Detection
+
+v1.0.1
+  - Fixes for Errors in Damager Role Detection
+
+v1.0.0
+  - Initial Release for 8.0.1

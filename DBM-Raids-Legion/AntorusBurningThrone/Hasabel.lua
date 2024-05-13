@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1985, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(122104)
 mod:SetEncounterID(2064)
 mod:DisableESCombatDetection()--Remove if blizz fixes clicking portals causing this event to fire (even though boss isn't engaged)
@@ -109,7 +109,7 @@ mod.vb.felBarrageCast = 0
 mod.vb.worldCount = 0
 mod.vb.firstPortal = false
 local playerPlatform = 1--1 Nexus, 2 Xoroth, 3 Rancora, 4 Nathreza
-local mindFog, aegisFlames, felMiasma = DBM:GetSpellInfo(245099), DBM:GetSpellInfo(244383), DBM:GetSpellInfo(244826)
+local mindFog, aegisFlames, felMiasma = DBM:GetSpellName(245099), DBM:GetSpellName(244383), DBM:GetSpellName(244826)
 
 local updateRangeFrame
 do

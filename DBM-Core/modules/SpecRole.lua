@@ -1,33 +1,40 @@
-local _, private = ...
+---@class DBMCoreNamespace
+local private = select(2, ...)
 DBMExtraGlobal = {}
 
+local _, _, _, wowTOC = GetBuildInfo()
 local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
+local isCata = WOW_PROJECT_ID == (WOW_PROJECT_CATACLYSM_CLASSIC or 14)
 
---[[local specFlags ={
-	["Tank"] = true,
-	["Dps"] = true,
-	["Healer"] = true,
-	["Melee"] = true,--ANY melee, including tanks or healers that are 100% excempt from healer/ranged mechanics (like mistweaver monks)
-	["MeleeDps"] = true,
-	["Physical"] = true,
-	["Ranged"] = true,--ANY ranged, healer and dps included
-	["RangedDps"] = true,--Only ranged dps
-	["ManaUser"] = true,--Affected by things like mana drains, or mana detonation, etc
-	["SpellCaster"] = true,--Has channeled casts, can be interrupted/spell locked by roars, etc, include healers. Use CasterDps if dealing with reflect
-	["CasterDps"] = true,--Ranged dps that uses spells, relevant for spell reflect type abilities that only reflect spells but not ranged physical such as hunters
-	["RaidCooldown"] = true,
-	["RemovePoison"] = true,--from ally
-	["RemoveDisease"] = true,--from ally
-	["RemoveCurse"] = true,--from ally
-	["RemoveMagic"] = true,--from ally
-	["RemoveEnrage"] = true,--Can remove enemy enrage. returned in 8.x+!
-	["MagicDispeller"] = true,--from ENEMY, not debuffs on players. use "Healer" or "RemoveMagic" for ally magic dispels. ALL healers can do that on retail, and warlock Imps
-	["ImmunityDispeller"] = true,--Priest mass dispel or Warrior Shattering Throw (shadowlands)
-	["HasInterrupt"] = true,--Has an interrupt that is 24 seconds or less CD that is BASELINE (not a talent)
-	["HasImmunity"] = true,--Has an immunity that can prevent or remove a spell effect (not just one that reduces damage like turtle or dispursion)
-}]]
+---@alias SpecFlag
+---|"Tank"
+---|"Dps"
+---|"Healer"
+---|"Melee" ANY melee, including tanks or healers that are 100% excempt from healer/ranged mechanics (like mistweaver monks)
+---|"MeleeDps"
+---|"Physical"
+---|"Ranged" ANY ranged, healer and DPS included
+---|"RangedDps" Only ranged DPS
+---|"ManaUser" Affected by things like mana drains, or mana detonation, etc
+---|"SpellCaster" Has channeled casts, can be interrupted/spell locked by roars, etc, include healers. Use CasterDps if dealing with reflect
+---|"CasterDps" Ranged DPS that uses spells, relevant for spell reflect type abilities that only reflect spells but not ranged physical such as hunters
+---|"RaidCooldown"
+---|"RemovePoison" From ally
+---|"RemoveDisease" From ally
+---|"RemoveCurse" From ally
+---|"RemoveMagic" From ally
+---|"RemoveEnrage" Can remove enemy enrage. returned in 8.x+!
+---|"MagicDispeller" From ENEMY, not debuffs on players. use "Healer" or "RemoveMagic" for ally magic dispels. ALL healers can do that on retail, and warlock Imps
+---|"ImmunityDispeller" Priest mass dispel or Warrior Shattering Throw (shadowlands)
+---|"HasInterrupt" Has an interrupt that is 24 seconds or less CD that is BASELINE (not a talent)
+---|"HasImmunity" Has an immunity that can prevent or remove a spell effect (not just one that reduces damage like turtle or dispursion)
 
+-- Format: SpecFlag or SpecFlag|SpecFlag|...
+---@alias SpecFlags SpecFlag|string
+
+---@type table<string|number, table<SpecFlag, boolean>>
 local specRoleTable
+-- Caution: the keys used below are not validated by LuaLS at the moment due to https://github.com/LuaLS/lua-language-server/issues/2610
 
 function DBMExtraGlobal:rebuildSpecTable()
 	-- Retail
@@ -592,6 +599,8 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["ManaUser"] = true,
 				["SpellCaster"] = true,
 				["CasterDps"] = true,
+				["HasInterrupt"] = true,
+				["MagicDispeller"] = true,
 			},
 			["SHAMAN2"] = {	--Enhancement Shaman
 				["Dps"] = true,
@@ -601,12 +610,16 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["ManaUser"] = true,
 				["SpellCaster"] = true,
 				["Physical"] = true,
+				["HasInterrupt"] = true,
+				["MagicDispeller"] = true,
 			},
 			["SHAMAN3"] = {	--Restoration Shaman
 				["Healer"] = true,
 				["Ranged"] = true,
 				["ManaUser"] = true,
 				["SpellCaster"] = true,
+				["HasInterrupt"] = true,
+				["MagicDispeller"] = true,
 			},
 			["WARLOCK1"] = { --Affliction Warlock
 				["Dps"] = true,
@@ -616,8 +629,24 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["SpellCaster"] = true,
 				["CasterDps"] = true,
 			},
-			["DEATHKNIGHT1"] = {--Just treat all DKs as all roles, they are hybrid as hell in wrath and any spec can be any role
+			["DEATHKNIGHT1"] = {--Just treat all DKs as all roles in wrath, they are hybrid as hell in wrath and any spec can be any role
 				["Tank"] = true,
+				["Melee"] = true,
+				["Dps"] = isCata and false or true,
+				["MeleeDps"] = true,
+				["Physical"] = true,
+				["HasInterrupt"] = true,
+			},
+			["DEATHKNIGHT2"] = {--Just treat all DKs as all roles in wrath, they are hybrid as hell in wrath and any spec can be any role
+				["Tank"] = isCata and false or true,
+				["Melee"] = true,
+				["Dps"] = true,
+				["MeleeDps"] = true,
+				["Physical"] = true,
+				["HasInterrupt"] = true,
+			},
+			["DEATHKNIGHT3"] = {--Just treat all DKs as all roles in wrath, they are hybrid as hell in wrath and any spec can be any role
+				["Tank"] = isCata and false or true,
 				["Melee"] = true,
 				["Dps"] = true,
 				["MeleeDps"] = true,
@@ -633,8 +662,6 @@ function DBMExtraGlobal:rebuildSpecTable()
 		specRoleTable["ROGUE3"] = specRoleTable["ROGUE1"]--Subtlety Rogue same as Assassination
 		specRoleTable["WARLOCK2"] = specRoleTable["WARLOCK1"]--Demonology Warlock same as Affliction
 		specRoleTable["WARLOCK3"] = specRoleTable["WARLOCK1"]--Destruction Warlock same as Affliction
-		specRoleTable["DEATHKNIGHT2"] = specRoleTable["DEATHKNIGHT1"]
-		specRoleTable["DEATHKNIGHT3"] = specRoleTable["DEATHKNIGHT1"]
 	end
 	private.specRoleTable = specRoleTable
 end

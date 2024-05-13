@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20240105194112")
+mod:SetRevision("20240426180424")
 mod:SetCreatureID(37813)
 mod:SetEncounterID(mod:IsClassic() and 848 or 1096)
 mod:SetModelID(30790)
@@ -52,7 +52,6 @@ mod.vb.boilingBloodIcon = 1
 mod.vb.beastIcon = 8
 mod.vb.Mark = 0
 local boilingBloodTargets = {}
-local spellName = DBM:GetSpellInfo(72370)
 
 local function warnBoilingBloodTargets(self)
 	warnBoilingBlood:Show(table.concat(boilingBloodTargets, "<, >"))

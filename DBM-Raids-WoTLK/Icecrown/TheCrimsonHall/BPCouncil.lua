@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20240110072739")
+mod:SetRevision("20240502130851")
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(mod:IsClassic() and 852 or 1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -184,7 +184,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		else
 			warnEmpoweredFlames:Show(target)
 		end
-		if self.Options.EmpoweredFlameIcon then
+		if target and self.Options.EmpoweredFlameIcon then
 			self:SetIcon(target, 7, 10)
 		end
 	end

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20230928144539")
+mod:SetRevision("20240502130851")
 mod:SetCreatureID(37955)
 mod:SetEncounterID(mod:IsClassic() and 853 or 1103)
 mod:SetModelID(31165)
@@ -201,7 +201,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		else
 			warnSwarmingShadows:Show(target)
 		end
-		if self.Options.SwarmingShadowsIcon2 then
+		if target and self.Options.SwarmingShadowsIcon2 then
 			self:SetIcon(target, 4, 6)
 		end
 	end

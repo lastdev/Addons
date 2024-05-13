@@ -18,8 +18,6 @@ local L = LM.Localize
 
 LM.Rule = { }
 
-local function replaceConstant(k) return LM.Vars:GetConst(k) end
-
 local function ReadWord(line)
     local token, rest
 
@@ -32,23 +30,23 @@ local function ReadWord(line)
     if token then return nil, nil end
 
     -- Match ""
-    token, rest = line:match('^("[^"]*")(.*)$')
+    token, rest = line:match('^"(.-)"(.*)$')
     if token then return token, rest end
 
-    -- Match '', turn into ""
-    token, rest = line:match("^'([^']*)'(.*)$")
-    if token then return '"' .. token .. '"', rest end
+    -- Match ''
+    token, rest = line:match("^'(.-)'(.*)$")
+    if token then return token, rest end
 
-    -- Match [] empty condition, which is just skipped
-    token, rest = line:match('^(%[%])(.*)$')
-    if token then return nil, rest end
-
-    -- Match regular conditions
+    -- Match conditions (includes empty condition [])
     token, rest = line:match('^(%[.-%])(.*)$')
     if token then return token, rest end
 
-    -- Match comma separated arguments
-    token, rest = line:match('^([^,]+),?(.*)$')
+    -- Match argument operator tokens - + = , / ~
+    token, rest = line:match('^([-+=,/~])(.*)$')
+    if token then return token, rest end
+
+    -- Match argument word tokens
+    token, rest = line:match('^([^,/]+)(.*)$')
     if token then return token, rest end
 end
 
@@ -62,7 +60,7 @@ function LM.Rule:ParseLine(line)
 
     r.line = line
 
-    local argWords, condWords, rest = { }, { }, nil
+    local argTokens, condWords, rest = { }, { }, nil
 
     -- Note this is intentionally unanchored to skip leading whitespace
     r.action, rest = line:match('(%S+)%s*(.*)')
@@ -72,14 +70,19 @@ function LM.Rule:ParseLine(line)
         return
     end
 
+    -- once we see an argument we are done with conditions
+    local inArgs = false
+
     while rest ~= nil do
         local word
         word, rest = ReadWord(rest)
         if word then
-            if word:match('^%[.-%]$') then
+            word = LM.Vars:StrSubConsts(word)
+            if not inArgs and word:match('^%[.*%]$') then
                 tinsert(condWords, word:sub(2, -2))
             else
-                tinsert(argWords, word)
+                tinsert(argTokens, word)
+                inArgs = true
             end
         end
     end
@@ -89,14 +92,6 @@ function LM.Rule:ParseLine(line)
     for _, word in ipairs(condWords) do
         local clause = { }
         for c in word:gmatch('[^,]+') do
-            c = c:gsub('{.-}', function (k)
-                    local v = LM.Vars:GetConst(k)
-                    if v then
-                        return v
-                    else
-                        r.vars = true
-                    end
-                 end)
             if c:sub(1,2) == 'no' then
                 local l = LM.RuleBoolean:Leaf(c:sub(3))
                 table.insert(clause, LM.RuleBoolean:Not(l))
@@ -109,20 +104,37 @@ function LM.Rule:ParseLine(line)
 
     r.conditions = LM.RuleBoolean:Or(unpack(conditions))
 
-    r.args = { }
+    -- Delay actually parsing the args until later when the actions can parse
+    -- them as they need. Can probably parse them using LM.Actions:GetArgType,
+    -- but I've done enough changing things for now so continue to let the
+    -- action handlers call the parsing.
 
-    for _, word in ipairs(argWords) do
-        word = word:gsub('{.-}', replaceConstant)
-        if word:match('^".+"$') then
-            tinsert(r.args, word:sub(2, -2))
-        else
-            for w in word:gmatch('[^,]+') do
-                tinsert(r.args, w)
-            end
-        end
+    r.args = LM.RuleArguments:Get(argTokens)
+
+    local ok, err = r:Validate()
+    return ok and r or nil, err
+end
+
+function LM.Rule:Validate()
+    -- XXX At some point should probably OO into LM.RuleAction XXX
+    local fcHandler = LM.Actions:GetFlowControlHandler(self.action)
+    local handler = LM.Actions:GetHandler(self.action)
+
+    if not ( fcHandler or handler ) then
+        return false, format(L.LM_ERR_BAD_ACTION, self.action)
     end
 
-    return r
+    local ok, err = self.conditions:Validate()
+    if not ok then
+        return false, err
+    end
+
+    ok, err = self.args:Validate(self.action)
+    if not ok then
+        return false, err
+    end
+
+    return true
 end
 
 function LM.Rule:Dispatch(context)
@@ -132,7 +144,7 @@ function LM.Rule:Dispatch(context)
     local handler = LM.Actions:GetFlowControlHandler(self.action)
     if handler then
         LM.Debug("  Dispatching flow control action " .. (self.line or self:ToString()))
-        handler(self.args or {}, context, isTrue)
+        handler(self.args, context, isTrue)
         return
     end
 
@@ -142,20 +154,21 @@ function LM.Rule:Dispatch(context)
 
     handler = LM.Actions:GetHandler(self.action)
     if not handler then
-        LM.WarningAndPrint(L.LM_ERR_BAD_ACTION, self.action)
+        -- Shouldn't reach this due to Validate at compile time
         return
     end
 
     LM.Debug("  Dispatching rule " .. (self.line or self:ToString()))
 
-    return handler(self.args or {}, context)
+    return handler(self.args:ReplaceVars(), context)
 end
 
 function LM.Rule:ToString()
     local out = { self.action }
     local cText = self.conditions:ToString()
     if cText and cText ~= "" then table.insert(out, cText) end
-    if self.args then table.insert(out, table.concat(self.args, ',')) end
+    local aText = self.args:ToString()
+    if aText ~= "" then table.insert(out, aText) end
     return table.concat(out, ' ')
 end
 
@@ -177,7 +190,6 @@ end
 local SimpleActions = {
     "Mount",
     "SmartMount",
-    "LimitSet",
     "LimitInclude",
     "LimitExclude",
 }
@@ -186,7 +198,7 @@ function LM.Rule:IsSimpleRule()
     if not tContains(SimpleActions, self.action) then
         return false
     end
-    if #self.args ~= 1 then
+    if not self.args:IsSimpleArguments() then
         return false
     end
     if not self.conditions:IsSimpleCondition() then

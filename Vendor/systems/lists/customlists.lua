@@ -104,9 +104,6 @@ function CustomLists:GetLists()
 	local results = {}
 
 	self.variable:ForEach(function(list, id)
-		--[===[@debug@
-
-		--@end-debug@]===]
 
 		table.insert(results, list)
 	end)

@@ -1,6 +1,30 @@
 ------------------------------------------------------------------------------
 -- Dragonflight
 --
+v10.2.7.2788
+	Fixed 2pc tier set bonus for Holy Paladin.
+	Embeded AceComm w/ ChatThrottleLib.
+		> No longer syncs with earlier versions of this addon.
+
+	Updated for Cataclysm Classic
+
+v10.2.7.2787
+	bump toc
+	Season 4 PvP trinkets added
+	Season 4 tier set bonus added
+
+v10.2.6.2786
+	bump toc
+	10.2.6 Class Updates
+		Casting Holy Word: Chastise with Divine Word active now refunds 15 seconds from the cooldown of Holy Word: Chastise.
+		Voice of Harmony now causes Holy Nova to reduce the cooldown of Chastise in addition to Holy Fire.
+		Lightwell cooldown reduced by 3 seconds when you cast Holy Word: Serenity or Holy Word: Sanctify.
+
+v10.2.5.2785
+	Fixed Float Like a Butterfly will correctly reduce Evasion and Feint by 0.5 sec per combo point spent (was 1 sec).
+	Hotfixes: March 12, 2024
+		Float Like a Butterfly (talent) effectiveness is now reduced by 50% in PvP combat.
+
 v10.2.5.2784
 	Dark Arbiter will correctly replace Summon Gargoyle.
 	Searing Glare cd fix.
@@ -995,6 +1019,11 @@ v2.6.01-bcc
 ------------------------------------------------------------------------------
 -- classic era
 --
+v1.15.2.2788
+	bump toc
+	Embeded AceComm w/ ChatThrottleLib.
+		> No longer syncs with earlier versions of this addon.
+
 v1.15.0.2775
 	Talent inspection will correctly work for group members without OmniCD
 
@@ -1045,3 +1074,9 @@ v2.6.35
 
 v2.6.30
 	Initial release for WoW: Classic Era.
+
+------------------------------------------------------------------------------
+-- Cataclysm
+--
+v4.4.0.2788
+	Cataclysm Classic release (4.4.0.54525)

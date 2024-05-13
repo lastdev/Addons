@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20240115001519")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(39863)--40142 (twilight form)
 mod:SetEncounterID(mod:IsClassic() and 887 or 1150)
 mod:SetModelID(31952)
@@ -53,10 +53,10 @@ local timerMeteorCD					= mod:NewNextTimer(40, 74648, nil, nil, nil, 3)--Target 
 local timerMeteorCast				= mod:NewCastTimer(7, 74648, nil, nil, nil, 3)--7-8 seconds from boss yell the meteor impacts.
 local timerFlameBreathCD			= mod:NewCDTimer(12.1, 74525, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--12.1-19.4
 
-mod:AddSetIconOption("SetIconOnFireConsumption", 74562, true, false, {7})--Red x for Fire
+mod:AddSetIconOption("SetIconOnFireConsumption", 74562, true, 0, {7})--Red x for Fire
 
 -- Stage Two - Twilight Realm (75%)
-local twilightRealmName = DBM:GetSpellInfo(74807)
+local twilightRealmName = DBM:GetSpellName(74807)
 mod:AddTimerLine(SCENARIO_STAGE:format(2)..": "..twilightRealmName)
 local warnPhase3Soon				= mod:NewPrePhaseAnnounce(3)
 local warnPhase2					= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
@@ -74,10 +74,10 @@ local timerTwilightCutter			= mod:NewBuffActiveTimer(10, 74769, nil, nil, nil, 6
 local timerTwilightCutterCD			= mod:NewNextTimer(15, 74769, nil, nil, nil, 6)
 local timerDarkBreathCD				= mod:NewCDTimer(12.1, 74806, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--12.1-19.4
 
-mod:AddSetIconOption("SetIconOnShadowConsumption", 74792, true, false, {3})--Purple diamond for shadow
+mod:AddSetIconOption("SetIconOnShadowConsumption", 74792, true, 0, {3})--Purple diamond for shadow
 
 -- Stage Three - Corporeality (50%)
-local twilightDivisionName = DBM:GetSpellInfo(75063)
+local twilightDivisionName = DBM:GetSpellName(75063)
 mod:AddTimerLine(SCENARIO_STAGE:format(3)..": "..twilightDivisionName)
 local warnPhase3					= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 
@@ -115,7 +115,7 @@ local function UpdateCorp(self, spellId)
 end
 
 local function updateBossDistance(self)
-	if playerInTwilight then
+	if playerInTwilight or self:GetStage(2) then
 		--Set twilight timers normal
 		timerShadowConsumptionCD:SetFade(false)
 		timerTwilightCutterCast:SetFade(false)
@@ -180,7 +180,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 74806 then
-		if playerInTwilight or self.Options.AnnounceAlternatePhase then
+		if playerInTwilight or self.Options.AnnounceAlternatePhase or self:GetStage(2) then
 			warningDarkBreath:Show()
 		end
 		timerDarkBreathCD:Start()
@@ -228,7 +228,7 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 			specWarnShadowConsumption:Show()
 			specWarnShadowConsumption:Play("runout")
 			yellShadowconsumption:Yell()
-		elseif playerInTwilight or self.Options.AnnounceAlternatePhase then
+		elseif playerInTwilight or self.Options.AnnounceAlternatePhase or self:GetStage(2) then
 			warningShadowConsumption:Show(args.destName)
 		end
 		if self.Options.SetIconOnShadowConsumption then
@@ -367,10 +367,10 @@ end]]
 
 function mod:OnSync(msg, target)
 	if msg == "TwilightCutter" and self:AntiSpam(5, 3) then
-		if playerInTwilight or self.Options.AnnounceAlternatePhase then
+		if playerInTwilight or self.Options.AnnounceAlternatePhase or self:GetStage(2) then
 			warningTwilightCutter:Show()
 		end
-		if playerInTwilight then
+		if playerInTwilight or self:GetStage(2) then
 			specWarnTwilightCutter:Schedule(5)
 			specWarnTwilightCutter:ScheduleVoice(5, "farfromline")
 		end

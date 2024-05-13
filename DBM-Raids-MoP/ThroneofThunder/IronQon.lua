@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -79,7 +79,7 @@ mod:AddBoolOption("InfoFrame")
 local Roshak = select(2, EJ_GetCreatureInfo(2, 817))
 local Quetzal = select(2, EJ_GetCreatureInfo(3, 817))
 local Damren = select(2, EJ_GetCreatureInfo(4, 817))
-local arcingName = DBM:GetSpellInfo(136193)
+local arcingName = DBM:GetSpellName(136193)
 mod.vb.phase = 1
 mod.vb.fistSmashCount = 0
 local spearSpecWarnFired = false
@@ -92,7 +92,7 @@ local function notEligable(unit)
 	-- 2. check blizzard roles second
 	-- 3. check boss' highest threat target
 	-- 4. Check monks
-	if GetPartyAssignment("MAINTANK", unit, 1) then
+	if GetPartyAssignment("MAINTANK", unit, true) then
 		return true
 	end
 	if UnitGroupRolesAssigned(unit) == "TANK" then

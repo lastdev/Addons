@@ -260,11 +260,8 @@ function RuleManager:RegisterFunctions(functions)
 
 
     for _, func in ipairs(functions) do
-        --[===[@debug@
 
 
-
-        --@end-debug@]===]
 
         ruleFunctions[func.Name] = func.Function
 

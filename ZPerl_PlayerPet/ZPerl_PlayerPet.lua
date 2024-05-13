@@ -10,10 +10,10 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player_Pet) then
 		XPerl_Player_Pet.conf = pconf
 	end
-end, "$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
+end, "$Revision: 2f111f16cae2c4903cf32fdc68efa86024c393e2 $")
 
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
-local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 -- Upvalues
@@ -705,7 +705,7 @@ function XPerl_Player_Pet_Events:UNIT_HEAL_PREDICTION(unit)
 	if pconf.healprediction and unit == self.partyid then
 		XPerl_SetExpectedHealth(self)
 	end
-	if not IsWrathClassic then
+	if not IsCataClassic then
 		return
 	end
 	if pconf.hotPrediction and unit == self.partyid then

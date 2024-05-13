@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1897, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(118289)
 mod:SetEncounterID(2052)
 mod:SetUsedIcons(4, 1)
@@ -72,7 +72,7 @@ mod.vb.infusionCount = 0
 mod.vb.spontFragmentationCount = 0
 mod.vb.massShitCount = 0
 mod.vb.shieldActive = false
-local AegynnsWard, felDebuff, lightDebuff, shieldname, unstableSoul = DBM:GetSpellInfo(236420), DBM:GetSpellInfo(235240), DBM:GetSpellInfo(235213), DBM:GetSpellInfo(235028), DBM:GetSpellInfo(235117)
+local AegynnsWard, felDebuff, lightDebuff, shieldname, unstableSoul = DBM:GetSpellName(236420), DBM:GetSpellName(235240), DBM:GetSpellName(235213), DBM:GetSpellName(235028), DBM:GetSpellName(235117)
 
 function mod:OnCombatStart(delay)
 	self.vb.shieldActive = false

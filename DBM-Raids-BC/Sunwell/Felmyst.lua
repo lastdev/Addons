@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20231117104406")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(25038)
 mod:SetEncounterID(726, 2490)
 mod:SetModelID(22838)
@@ -39,8 +39,8 @@ local timerPhase			= mod:NewTimer(60, "TimerPhase", 31550, nil, nil, 6)
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("EncapsIcon", 45665, true, false, {7})
-mod:AddSetIconOption("VaporIcon", 45402, true, false, {8})
+mod:AddSetIconOption("EncapsIcon", 45665, true, 0, {7})
+mod:AddSetIconOption("VaporIcon", 45402, true, 0, {8})
 
 mod.vb.breathCounter = 0
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1997, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(122369, 122333, 122367)--Chief Engineer Ishkar, General Erodus, Admiral Svirax
 mod:SetEncounterID(2070)
 mod:SetBossHPInfoToHighest()
@@ -76,14 +76,14 @@ local specWarnSummonReinforcements		= mod:NewSpecialWarningSwitch(245546, nil, n
 
 local timerSummonReinforcementsCD		= mod:NewNextTimer(8.4, 245546, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON, nil, 1, 4)
 
-mod:AddSetIconOption("SetIconOnAdds", 245546, true, true)
+mod:AddSetIconOption("SetIconOnAdds", 245546, true, 5)
 -------Adds
 local specWarnPyroblast					= mod:NewSpecialWarningInterrupt(246505, "HasInterrupt", nil, nil, 1, 2)
 local specWarnDemonicChargeYou			= mod:NewSpecialWarningYou(253040, nil, nil, nil, 1, 2)
 local specWarnDemonicCharge				= mod:NewSpecialWarningClose(253040, nil, nil, nil, 1, 2)
 local yellDemonicCharge					= mod:NewYell(253040)
 
-local felShield = DBM:GetSpellInfo(244910)
+local felShield = DBM:GetSpellName(244910)
 mod.vb.FusilladeCount = 0
 mod.vb.lastIcon = 8
 

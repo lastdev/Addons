@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ZulJin", "DBM-Raids-BC", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240303162621")
 mod:SetCreatureID(23863)
 mod:SetEncounterID(1194, 2487)--Data says Daakara, but it's not daakara in TBC it's Zul'jin
 mod:SetZone()
@@ -46,7 +46,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(43095) then
 		warnParalyzeSoon:Schedule(22)
 		if self.Options.SpecWarn43095dispel and self:CheckDispelFilter("magic") then
-			specWarnParalyze:Show(DBM_CORE_L.ALLIES)
+			specWarnParalyze:Show(DBM_COMMON_L.ALLIES)
 			specWarnParalyze:Play("helpdispel")
 		else
 			warnParalyze:Show()

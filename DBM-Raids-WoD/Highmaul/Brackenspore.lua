@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1196, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240413065503")
 mod:SetCreatureID(78491)
 mod:SetEncounterID(1720)
 --Has no audio files
@@ -101,7 +101,7 @@ function mod:SPELL_CAST_START(args)
 			self.vb.decayCounter = 0
 		end
 		self.vb.decayCounter = self.vb.decayCounter + 1
-		local guid = args.souceGUID
+		local guid = args.sourceGUID
 		if guid == UnitGUID("target") or guid == UnitGUID("focus") then
 			specWarnDecay:Show(args.sourceName, self.vb.decayCounter)
 			timerDecayCD:Start(args.sourceGUID)

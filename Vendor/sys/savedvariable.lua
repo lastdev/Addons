@@ -28,10 +28,7 @@ end
 
 --[[ Ensures the saved variable exists, if does not the assign the value provided ]]
 function SavedVariable:GetOrCreate(defaultValue)
-	--[===[@debug@
 
-	--@end-debug@]===]
-	
 	local var = _G[self.savedVar];
 	if (not var) then
 		if (defaultValue ~= nil) then
@@ -62,10 +59,6 @@ end
 function SavedVariable:Get(key)
 	local var = self:GetOrCreate();
 
-	--[===[@debug@
-
-	--@end-debug@]===]
-
 	local value = var[key];
 	if (type(value) == "table") then
 		return Addon.DeepTableCopy(value);
@@ -78,10 +71,6 @@ end
 function SavedVariable:Set(key, value)
 	local var = self:GetOrCreate();
 
-	--[===[@debug@
-
-	--@end-debug@]===]
-
 	if (type(value) == "table") then
 		var[key] = Addon.DeepTableCopy(value);
 	else
@@ -93,10 +82,6 @@ end
 function SavedVariable:ForEach(callback, ...)
 	local var = self:GetOrCreate();
 
-	--[===[@debug@
-
-
-	--@end-debug@]===]
 
 	for key, value in pairs(var) do
 		local success = xpcall(callback, CallErrorHandler, value, key, ...);
@@ -111,25 +96,27 @@ end
 local SavedVariablesSystem = {}
 
 --[[ Initialize hthe saved variable system ]]
-function SavedVariablesSystem:Startup(onready)
-	self.onready = onready
+function SavedVariablesSystem:Startup(register)
+	rawset(Addon, VARIABLES_LOADED, 1)
+
 	self.variables = {}
+	register({ "CreateSavedVariable" })
+end
+
+--[[ Called to get the dependencies of this system ]]
+function SavedVariablesSystem:GetDependencies()
+	return { "event:VARIABLES_LOADED" };
 end
 
 --[[ Create a new saved variable ]]
 function SavedVariablesSystem:CreateSavedVariable(name)
 
+
 	if (not self.variables[name]) then
 		self.variables[name] = SavedVariable.new(name)
 	end
-	return self.variables[name]
-end
 
---[[ Called when our variables are loaded ]]
-function SavedVariablesSystem:ON_VARIABLES_LOADED()
-	rawset(Addon, VARIABLES_LOADED, 1)
-	self.onready({ "CreateSavedVariable" })
-	self.onready = nil
+	return self.variables[name]
 end
 
 Addon.Systems.SavedVariables = SavedVariablesSystem

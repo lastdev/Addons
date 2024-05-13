@@ -4,15 +4,75 @@ local Colors = Addon.CommonUI.Colors
 local UI = Addon.CommonUI.UI
 local ItemItem = Addon.Features.Lists.ItemItem
 
+local SORTS = {
+    --[[ Sort the two items by ID ]]
+    id = function(itemA, itemB)
+         return tonumber(itemA) < tonumber(itemB)
+    end,
+
+    --[[ Sort the two items by namne ]]
+    name = function (itemA, itemB)
+        if (not itemA or not itemB) then
+            return (tonumber(itemA) or 0) < (tonumber(itemB) or 0)
+        end
+
+        local nA = C_Item.GetItemNameByID(itemA) or nil
+        local nB = C_Item.GetItemNameByID(itemB) or nil
+
+        -- Items that aren't loaded yet are considered less than
+        -- everything, the list should fix itself on the next
+        -- update, this is an edge case and only on first show
+        if (nA and nB) then
+            return nA < nB
+        end
+
+        if (not nA) then
+            return true
+        end
+
+        return false
+    end,
+
+    --[[ Sort the two items by quality ]]
+    quality = function(itemA, itemB)
+        if (not itemA or not itemB) then
+            return tonumber(itemA) < tonumber(itemB)
+        end
+
+        local qA = C_Item.GetItemQualityByID(itemA)
+        local qB = C_Item.GetItemQualityByID(itemB)
+
+        if (qA == qB) then
+            local nA = C_Item.GetItemNameByID(itemA)
+            local nB = C_Item.GetItemNameByID(itemB)
+
+            if (nA and nB) then
+                return nA < nB
+            end
+
+            if (not nA) then
+                return true
+            end
+
+            return false
+        end
+        return  qA > qB
+    end
+}
+
 --[[ Handle load ]]
 function ItemList:OnLoad()
     Addon.CommonUI.List.OnLoad(self)
+    self.sort = SORTS.name
 end
 
 function ItemList:OnShow()
     Addon:RegisterCallback("OnListChanged", self, self.OnListChanged)
     Addon:RegisterCallback("OnListRemoved", self, self.OnListRemoved)
     Addon:RegisterCallback("OnProfileChanged", self, self.OnListChanged)
+    if (self.sort) then
+        self:Sort(self.sort)
+    end
     self:Rebuild()
 end
 
@@ -24,11 +84,22 @@ end
 
 --[[ Get the list of our models ]]
 function ItemList:OnGetItems()
+    local items
     if (not self.list) then
-        return {}
+        items = {}
     else
-        return self.list:GetContents()
+        items = self.list:GetContents()
     end
+
+    return items
+end
+
+function ItemList:SetItemSort(sortType)
+
+    local sort = SORTS[string.lower(sortType)] or SORTS.id
+
+    self.sort = sort
+    self:Sort(sort)
 end
 
 --[[ Create an item ]]

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,heroic25"
 
-mod:SetRevision("20231217024134")
+mod:SetRevision("20240426180008")
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetUsedIcons(1, 2)
@@ -62,7 +62,7 @@ mod.vb.expectedTargets = 25
 local orbList = {}
 local cachedWhelps = {}
 local playerWarned = nil
-local wrackName = DBM:GetSpellInfo(89421)
+local wrackName = DBM:GetSpellName(89421)
 local wrackTargets = {}
 
 local function resetPlayerOrbStatus(self)

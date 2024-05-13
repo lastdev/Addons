@@ -3,7 +3,7 @@
 
                                      Adorable Raptor Hatchlings
 
-                                      v1.27 - 12th January 2024
+                                        v1.31 - 3rd May 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 								
@@ -42,16 +42,19 @@ local _, _, _, version = GetBuildInfo()
 -- Map IDs. The nests were added in WotLK, even though the locations are original zones
 -- The Barrens (W) coordinates are different to Northern Barrens (R)
 -- The Wetlands implementation between (W) and (R) is also different
-ns.kalimdor = (version < 40000) and 1414 or 12
-ns.easternKingdom = (version < 40000) and 1415 or 13
-ns.dalaran = (version < 40000) and 125 or 125
-ns.dustwallowMarsh = (version < 40000) and 1445 or 70
-ns.barrens = 1413
-ns.northernBarrens = 10
-ns.unGoroCrater = (version < 40000) and 1449 or 78
-ns.wetlands = (version < 40000) and 1437 or 56
+-- With Classic Cata Pre-Launch 4.4.0 the maps IDs are the 14xx series but locations match Retail
+-- 		thus elsewhere in the code I test for < 50000 rather than 40000
+--		The Azeroth map did not populate correctly when testing 4.4.0
+ns.kalimdor = (version < 50000) and 1414 or 12
+ns.easternKingdom = (version < 50000) and 1415 or 13
+ns.dalaran = (version < 50000) and 125 or 125
+ns.dustwallowMarsh = (version < 50000) and 1445 or 70
+ns.barrens = (version < 50000) and 1413 or 10
+ns.unGoroCrater = (version < 50000) and 1449 or 78
+ns.wetlands = (version < 50000) and 1437 or 56
 continents[ns.kalimdor] = true
 continents[ns.easternKingdom] = true
+-- continents[ 947 ] = true -- Azeroth
 
 -- Localisation
 ns.locale = GetLocale()
@@ -396,7 +399,8 @@ else
 end
 
 if ns.locale == "deDE" then
-	L["AddOn Description"] = "Hilft Ihnen, die Nester der entzückenden kleinen Velociraptoren zu finden"	
+	L["AddOn Description"] = ns.colour.highlight .."Hilft Ihnen, die Nester der "
+		..ns.colour.prefix .."Entzückenden Velociraptor-Jungtiere" ..ns.colour.highlight .."zu finden"
 	L["Adorable Raptor Hatchling"] = "Entzückendes Velociraptor-Jungtier"
 	L["Adorable Raptor Hatchlings"] = "Entzückende Velociraptor-Jungtiere"
 	L["Cave Entrance"] = "Höhle Eingang"
@@ -416,7 +420,8 @@ if ns.locale == "deDE" then
 	L["Veer to the right"] = "Biegen Sie nach rechts ab, wenn Sie die Höhle betreten.\nGreifen Sie von rechts auf das Nest zu"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["AddOn Description"] = "Te ayuda a encontrar los nidos de los adorables velociraptores"
+	L["AddOn Description"] = ns.colour.highlight .."Te ayuda a encontrar los nidos de las "
+		..ns.colour.prefix .."Adorables crías de Velociraptor"
 	L["Adorable Raptor Hatchling"] = "Adorable cría de Velociraptor"
 	L["Adorable Raptor Hatchlings"] = "Adorables crías de Velociraptor"
 	L["Cave Entrance"] = "Entrada de la cueva"
@@ -436,7 +441,8 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Veer to the right"] = "Ve a la derecha al entrar en la cueva.\nAccede al nido desde el lado derecho."
 
 elseif ns.locale == "frFR" then
-	L["AddOn Description"] = "Vous aide à trouver les nids des adorables petits vélociraptors"
+	L["AddOn Description"] = ns.colour.highlight .."Vous aide à trouver les nids des "
+		..ns.colour.prefix .."adorables Vélociraptors petits"
 	L["Adorable Raptor Hatchling"] = "Adorable vélociraptor petit"
 	L["Adorable Raptor Hatchlings"] = "Adorables vélociraptors petits"
 	L["Cave Entrance"] = "Entrée Cave"
@@ -456,9 +462,10 @@ elseif ns.locale == "frFR" then
 	L["Veer to the right"] = "Tournez à droite en entrant dans la grotte.\nAccéder au nid du côté droit"
 
 elseif ns.locale == "itIT" then
-	L["AddOn Description"] = "Ti aiuta a trovare i nidi degli adorabili piccoli velociraptor"
+	L["AddOn Description"] = ns.colour.highlight .."Ti aiuta a trovare i nidi degli "
+		..ns.colour.prefix .."Adorabili cuccioli di velociraptor"
 	L["Adorable Raptor Hatchling"] = "Adorabile cucciolo di velociraptor"
-	L["Adorable Raptor Hatchlings"] = "adorabili cuccioli di velociraptor"
+	L["Adorable Raptor Hatchlings"] = "Adorabili cuccioli di velociraptor"
 	L["Cave Entrance"] = "Entrata della grotta"
 	L["Dart's Nest"] = "Nido di Dart"
 	L["Darting Hatchling"] = "Miniraptor"
@@ -476,7 +483,7 @@ elseif ns.locale == "itIT" then
 	L["Veer to the right"] = "Vira a destra mentre entri nella caverna.\nAccedi al nido dal lato destro"
 
 elseif ns.locale == "koKR" then
-	L["AddOn Description"] = "사랑스러운 작은 벨로시 랩터의 둥지를 찾도록 도와줍니다."
+	L["AddOn Description"] = ns.colour.prefix .."사랑스러운 새끼 랩터의" ..ns.colour.highlight .." 둥지를 찾는 데 도움이 됩니다."
 	L["Adorable Raptor Hatchling"] = "사랑스러운 작은 랩터"
 	L["Adorable Raptor Hatchlings"] = "사랑스러운 작은 랩터"
 	L["Cave Entrance"] = "동굴 입구"
@@ -496,9 +503,10 @@ elseif ns.locale == "koKR" then
 	L["Veer to the right"] = "동굴에 들어서 자 오른쪽으로 향하십시오.\n오른쪽에서 둥지에 액세스하십시오."
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["AddOn Description"] = "Ajuda você a encontrar os ninhos dos adoráveis ​​pequenos velociraptors"
-	L["Adorable Raptor Hatchling"] = "Adorável ​​filhote velociraptore"
-	L["Adorable Raptor Hatchlings"] = "adoráveis ​​filhotes velociraptores"
+	L["AddOn Description"] = ns.colour.highlight .."Ajuda você a encontrar os ninhos dos "
+		..ns.colour.prefix .."adoráveis filhotes de velociraptores"
+	L["Adorable Raptor Hatchling"] = "Adorável filhote velociraptore"
+	L["Adorable Raptor Hatchlings"] = "adoráveis filhotes velociraptores"
 	L["Cave Entrance"] = "Entrada da caverna"
 	L["Dart's Nest"] = "Ninho da Saltadora"
 	L["Darting Hatchling"] = "Dartinho"
@@ -516,7 +524,8 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Veer to the right"] = "Vire para a direita ao entrar na caverna.\nAcesse o ninho pelo lado direito"
 
 elseif ns.locale == "ruRU" then
-	L["AddOn Description"] = "Помогает найти гнезда очаровательных маленьких велоцирапторов"
+	L["AddOn Description"] = ns.colour.highlight .."Помогает найти гнезда "
+		..ns.colour.prefix .."Очаровательных Детенышей Хищника"
 	L["Adorable Raptor Hatchling"] = "Очаровательный Mаленький Велоцираптор"
 	L["Adorable Raptor Hatchlings"] = "Очаровательные Mаленькие Велоцирапторы"
 	L["Cave Entrance"] = "Вход в пещеру"
@@ -536,9 +545,10 @@ elseif ns.locale == "ruRU" then
 	L["Veer to the right"] = "Поверните направо, когда вы входите в пещеру.\nДоступ к гнезду с правой стороны"
 
 elseif ns.locale == "zhCN" then
-	L["AddOn Description"] = "帮助您找到可爱的小迅猛龙的巢."
-	L["Adorable Raptor Hatchling"] = "可爱的迅猛龙宝宝"
-	L["Adorable Raptor Hatchlings"] = "可爱的迅猛龙宝宝"
+	L["AddOn Description"] = ns.colour.highlight .."帮助您找到" ..ns.colour.prefix .."可爱的迅猛龙宝"
+		..ns.colour.highlight .."巢穴."
+	L["Adorable Raptor Hatchling"] = "可爱的迅猛龙宝"
+	L["Adorable Raptor Hatchlings"] = "可爱的迅猛龙宝"
 	L["Cave Entrance"] = "洞入口"
 	L["Dart's Nest"] = "达尔特的巢"
 	L["Darting Hatchling"] = "小达尔特"
@@ -556,9 +566,10 @@ elseif ns.locale == "zhCN" then
 	L["Veer to the right"] = "当你进入洞穴时向右转。\n从右侧进入巢穴"
 	
 elseif ns.locale == "zhTW" then
-	L["AddOn Description"] = "幫助您找到可愛的小迅猛龍的巢."
-	L["Adorable Raptor Hatchling"] = "可愛的迅猛龍寶寶"
-	L["Adorable Raptor Hatchlings"] = "可愛的迅猛龍寶寶"
+	L["AddOn Description"] = ns.colour.highlight .."幫助您找到" ..ns.colour.prefix .."可愛的迅猛龍寶"
+		..ns.colour.highlight .."巢穴."
+	L["Adorable Raptor Hatchling"] = "可愛的迅猛龍寶"
+	L["Adorable Raptor Hatchlings"] = "可愛的迅猛龍寶"
 	L["Cave Entrance"] = "洞入口"
 	L["Dart's Nest"] = "達爾特的巢"
 	L["Darting Hatchling"] = "小達爾特"
@@ -576,7 +587,8 @@ elseif ns.locale == "zhTW" then
 	L["Veer to the right"] = "當你進入洞穴時向右轉。\n從右側進入巢穴"
 	
 else
-	L["AddOn Description"] = "Helps you find the nests of the adorable little velociraptors"	
+	L["AddOn Description"] = ns.colour.highlight .."Helps you find the nests of the "
+		..ns.colour.prefix .."adorable raptor hatchlings"	
 	L["Veer to the right"] = "Veer to the right as you enter the cave.\nAccess the nest from the right side"
 end
 
@@ -648,7 +660,7 @@ do
 					if ns.insideCave == false then
 						return coord, nil, ns.textures[ns.db.iconChoice], ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 					end
-				elseif ( (v.version == "R") or (v.version == "W") ) then			
+				elseif ( (v.version == "R") or (v.version == "W") ) then
 					if (version < 40000) then
 						if (v.version == "W") then
 							return coord, nil, ns.textures[ns.db.iconChoice], ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
@@ -664,6 +676,7 @@ do
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
+		ns.mapID = mapID
 		return iterator, ns.points[mapID]
 	end
 end
@@ -767,3 +780,23 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_AdorableRaptorHatchlingsDB", "AceEvent-3.0")
+
+--=======================================================================================================
+--
+--		SLASH CHAT COMMANDS  -- All game versions
+--		===================
+--
+--=======================================================================================================
+
+SLASH_AdorableRaptorHatchlings1 = "/arh"
+
+local function Slash( options )
+
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "AdorableRaptorHatchlings" )
+	if ( version > 100000 ) then
+		print( ns.colour.prefix .."ARH: " ..ns.colour.highlight .."Try the Minimap AddOn Menu (below the Calendar)" )
+	end
+end
+
+SlashCmdList[ "AdorableRaptorHatchlings" ] = function( options ) Slash( options ) end

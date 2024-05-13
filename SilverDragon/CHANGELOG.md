@@ -1,5 +1,25 @@
 # Changelog
 
+## Changed in v2024.3.1
+
+* Updated ChatThrottleLib, which had some bugged behavior when upgrading older versions causing lots of errors
+
+## Changed in v2024.3
+
+* Updated TOC for 10.2.6 (oops, thanks to Xarano)
+* Updated coordinates for the Mysterious Camel Figuring (thanks to Xarano)
+* Fix a typo in the description for the mount list option (thanks to Xarano)
+* Fix some errors in Cataclysm Classic when showing loot
+
+## Changed in v2024.2
+
+* Updated to not error in Cataclysm Classic (data adjustments to follow)
+* Taxi setting will now also suppress alerts while you're in a dragon race
+
+## Changed in v2024.1.1
+
+* Missed some of the separated-addon TOCs
+
 ## Changed in v2024.1
 
 * Updated for 10.2.5

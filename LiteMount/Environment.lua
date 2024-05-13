@@ -384,7 +384,7 @@ local InstanceFlyableOverride = {
     [2464] = false,         -- Battle of Ardenweald (9.1)
 }
 
--- Note that these have 3 possible 0return values, true, false, nil (no override)
+-- Note that these have 3 possible return values, true, false, nil (no override)
 
 local InstanceDragonridableOverride = {
     [2549] =            -- Amirdrassil Raid
@@ -409,15 +409,27 @@ function LM.Environment:CanDragonride(mapPath)
 
     local instanceID = select(8, GetInstanceInfo())
     local override = InstanceDragonridableOverride[instanceID]
-    local value = ( type(override) == 'function' and override(mapPath) or override )
-    if value ~= nil then return value end
+    if type(override) == 'function' then
+        local value = override(mapPath)
+        if value ~= nil then return value end
+    else
+        if override ~= nil then return override end
+    end
 
-    -- Dragon Isles, Nokud Offensive, Zaralek Cavern, Emerald Dream.
-    -- These are only IsFlyableArea() if you have unlocked normal flying.
-    if instanceID == 2444 or instanceID == 2516 or instanceID == 2454 or instanceID == 2548 then
+    -- Dragon Isles and everything in it are correctly flagged IsAdvancedFlyableArea
+    -- if you can dragonride, and you can't fly there unless you unlock it.
+
+    if self:IsMapInPath(1978, mapPath) then
         return IsAdvancedFlyableArea()
     end
 
+    -- Can't dragonride in Warfronts either
+    if C_Scenario and C_Scenario.IsInScenario() then
+        local scenarioType = select(10, C_Scenario.GetInfo())
+        if scenarioType == LE_SCENARIO_TYPE_WARFRONT then
+            return false
+        end
+    end
     -- Lots of non-Dragon Isles areas are wrongly flagged IsAdvancedFlyableArea
     return IsAdvancedFlyableArea() and IsFlyableArea()
 end
@@ -438,7 +450,7 @@ function LM.Environment:CanFly()
         return InstanceFlyableOverride[instanceID]
     end
 
-    if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
+    if WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
         -- Classic Northrend requires Cold Weather Flying in WotLK Classic
         if self:InInstance(571) then
             if not IsSpellKnown(54197) then
@@ -764,4 +776,16 @@ end
 
 function LM.Environment:GetHolidayName(id)
     return self.holidaysByID[id]
+end
+
+function LM.Environment:SaveMouseButtonClicked()
+    self.mouseButtonClicked = GetMouseButtonClicked()
+end
+
+function LM.Environment:ClearMouseButtonClicked()
+    self.mouseButtonClicked = nil
+end
+
+function LM.Environment:GetMouseButtonClicked()
+    return self.mouseButtonClicked
 end

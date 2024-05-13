@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240502130901")
 mod:SetCreatureID(25165, 25166)
 mod:SetEncounterID(727, 2491)
 mod:SetModelID(23334)
@@ -44,8 +44,8 @@ local timerNova				= mod:NewCastTimer(3.5, 45329, nil, false, 2)
 local berserkTimer			= mod:NewBerserkTimer(360)
 
 mod:AddRangeFrameOption(10, 45333)
-mod:AddSetIconOption("ConflagIcon", 45333, false, false, {8})
-mod:AddSetIconOption("NovaIcon", 45329, false, false, {7})
+mod:AddSetIconOption("ConflagIcon", 45333, false, 0, {8})
+mod:AddSetIconOption("NovaIcon", 45329, false, 0, {7})
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
@@ -143,7 +143,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		else
 			warnNova:Show(target)
 		end
-		if self.Options.NovaIcon then
+		if target and self.Options.NovaIcon then
 			self:SetIcon(target, 7, 5)
 		end
 	elseif (msg == L.Conflag or msg:find(L.Conflag)) and target and self:AntiSpam(5, target..2) then
@@ -155,7 +155,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		else
 			warnConflag:Show(target)
 		end
-		if self.Options.ConflagIcon then
+		if target and self.Options.ConflagIcon then
 			self:SetIcon(target, 8, 5)
 		end
 	end

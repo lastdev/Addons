@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2367, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(157231)
 mod:SetEncounterID(2335)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -71,7 +71,7 @@ local berserkTimer							= mod:NewBerserkTimer(360)
 
 --mod:AddRangeFrameOption(6, 264382)
 mod:AddInfoFrameOption(307358, true)
-mod:AddSetIconOption("SetIconOnDebilitating", 306953, true, false, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnDebilitating", 306953, true, 0, {1, 2, 3, 4})
 
 mod.vb.umbralMantleCount = 0
 mod.vb.eruptionCount = 0
@@ -278,7 +278,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self.Options.InfoFrame then
 			if #SpitStacks == 1 then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(307358))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(307358))
 				DBM.InfoFrame:Show(10, "table", SpitStacks, 1)
 			else
 				DBM.InfoFrame:UpdateTable(SpitStacks)

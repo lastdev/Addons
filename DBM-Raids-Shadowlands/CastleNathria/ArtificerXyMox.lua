@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2418, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(166644)
 mod:SetEncounterID(2405)
 mod:SetUsedIcons(1, 2)
@@ -33,7 +33,7 @@ local warnPhase										= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil
 local warnDimensionalTear							= mod:NewTargetNoFilterAnnounce(328437, 3, nil, nil, 327770)
 local warnHyperlightSpark							= mod:NewCountAnnounce(325399, 2, nil, false, 2)
 
-local specWarnDimensionalTear						= mod:NewSpecialWarningYouPos(328437, 327770, nil, nil, 1, 2)
+local specWarnDimensionalTear						= mod:NewSpecialWarningYouPos(328437, nil, 327770, nil, 1, 2)
 local yellDimensionalTear							= mod:NewPosYell(328437, 327770)
 local yellDimensionalTearFades						= mod:NewIconFadesYell(328437, 327770)
 local specWarnGlyphofDestruction					= mod:NewSpecialWarningMoveAwayCount(325361, nil, nil, nil, 1, 2)
@@ -51,7 +51,7 @@ local timerRiftBlastCD								= mod:NewCDTimer(36, 335013, nil, nil, nil, 3)--36
 local timerHyperlightSparkCD						= mod:NewCDTimer(15.8, 325399, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--15.8 except when it's heavily spell queued
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconOnTear", 328437, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnTear", 328437, true, 0, {1, 2})
 --Sire Denathrius' Private Collection
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22119))
 local warnSpirits									= mod:NewSpellAnnounce(340758, 3, nil, nil, 263222)

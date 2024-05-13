@@ -1,3 +1,6 @@
+== v1.39 - 18th March 2024
+* TOC Bump to 10.2.6
+
 == v1.38 - 12th January 2024
 * TOC Bump to 10.2.5
 

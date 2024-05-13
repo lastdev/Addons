@@ -1,262 +1,283 @@
 local AddonName, Addon = ...
-local debugp = function (...) Addon:Debug("features", ...) end
-local Features = Mixin({}, Addon.DependencyInit)
 
---[[ A simple helper for calling an optional method on a feature ]]
-local function callFeature(feature, method, ...)
-    if (type(feature[method]) == "function") then
-        local result = { xpcall(feature[method], CallErrorHandler, feature, ... ) }
-        if (not result[1]) then
-            return false
-        end
+local Features = {}
+local compMgr = Addon.ComponentManager
 
-        table.remove(result, 1)
-        return true, unpack(result)
+--[[ Gets a property or calls a function on the specified featuire ]]
+local function GetFeatureValue(feature, property, funcName)
+    local func = feature[funcName]
+    if (type(func) == "function") then
+        return func(feature)
+    end
+
+    local prop = feature[property]
+    if (type(prop) ~= "nil") then
+        return prop
+    end
+
+    return nil
+end
+
+--[[ Checks if the feature is a beta feature or not ]]
+local function IsBetaFeature(feature)
+    local beta = GetFeatureValue(feature, "BETA", "GetIsBeta")
+    return (type(beta) == "boolean") and beta == true
+end
+
+--[[ Retreives the enables state of a beta feature ]]
+local function GetBetaFeatureState(name)
+    local beta = Addon:GetAccountSetting("BetaFeatures", {})
+    name = string.lower(name)
+
+    if (type(beta[name]) == "boolean") then
+        return (beta[name] ~= false)
     end
 
     return true
 end
 
---[[ Startup our features ]]
-function Features:Startup(onready)
+function Features:InitializeFeature(name, feature)
+
+    local instance = feature
+
+    -- In debug we create a proxy to the feature so that we can 
+    -- catch typo's
+    if (Addon.IsDebug) then
+        instance = setmetatable({}, {
+            __metatable = "feature:" .. name,
+            __index = function(_self, member)
+                local field = rawget(feature, member)
+                if (type(field) ~= nil and type(field) ~= "function") then
+                    return field;
+                end
+
+                if (type(field) ~= 'function') then
+                    error(string.format("The feature '%s' does not have a method '%s'", name, member))
+                end
+
+                return function(_, ...)
+                        local result = { xpcall(field, CallErrorHandler, feature, ...) }
+
+                        table.remove(result, 1)
+                        return unpack(result)
+                    end
+            end,
+            __newindex = function(_, name, value)
+                rawset(feature, name, value)
+            end
+        })
+        rawset(instance, "#FEATURE#", feature)
+    end
+
+    -- Merge the locale into the table
+    if (type(feature.Locale) == "table") then
+        for locale, strings in pairs(feature.Locale) do
 
 
-    self.features = {}
-    if (type(Addon.Features) == "table") then
-        for name, feature in pairs(Addon.Features) do
-
-            if (name == nil or feature == nil) then
-
-            else
-                local featureInfo = {
-                    name = name,
-                    instance = feature,
-                    enabled = false,
-                }
-                self.features[string.lower(name)] = featureInfo
+            local loc = Addon:FindLocale(locale);
+            if (loc) then
+                loc:Add(strings)
             end
         end
     end
 
-    onready({ "GetFeature", "IsFeatureEnabled", "EnableFeature", "DisableFeature",  "WithFeature" })
+    -- Call Initiaize on the feature
+    -- We should have 2 core events:
+    --      OnInitialize
+    --      OnTerminate
+    local init = feature.OnInitialize
+    if (type(init) == "function") then
+
+        local success = xpcall(init, CallErrorHandler, instance)
+
+
+        if (not success) then
+            return
+        end
+    end
+
+    -- Check for events (move to GetEvents)
+    local events = GetFeatureValue(feature, "EVENTS", "GetEvents")
+    if (type(events) == "table") then
+        Addon:GenerateEvents(events)
+    end
+
+    Addon.RegisterForEvents(instance, feature)
+    self.features[string.lower(name)] = instance;
+    Addon:RaiseEvent("OnFeatureReady", name, instance)
+    Addon:RaiseEvent("OnFeatureEnabled", name, instance)
+end
+
+function Features:TerminateFeature(name, feature)
+
+
+    name = string.lower(name)
+    if (self.features[name]) then
+        local term = feature.OnTerminate
+        if (type(term) == "function") then
+
+            local success = xpcall(term, CallErrorHandler, self.features[name])
+
+        end
+
+        Addon.UnregisterFromEvents(self.features[name], feature)
+        self.features[string.lower(name)] = nil;
+        Addon:RaiseEvent("OnFeatureDisabled", name, feature)
+    end
+end
+
+function Features:CreateComponent(name, feature)
+
+
+    local featureDeps = GetFeatureValue(feature, "DEPENDENCIES", "GetDependencies") or {}
+    table.insert(featureDeps, "event:loaded" );
+    table.insert(featureDeps, "core:systems" );
+    table.insert(featureDeps, "event:PLAYER_ENTERING_WORLD" );
+
+    local fs = self
+    return {
+        Type = "feature",
+        Name = name,
+        Beta = IsBetaFeature(feature),
+        OnInitialize = function() Features.InitializeFeature(fs, name, feature) end,
+        OnTerminate = function() Features.TerminateFeature(fs, name, feature) end,
+        Dependencies = featureDeps
+    }
+end
+
+function Features:GetDependencies() 
+    return { "system:savedvariables", "system:accountsettings", "system:profile" }
+end
+
+--[[ Startup our features ]]
+function Features:Startup(register)
+
+    self.features = {}
+
+    local deps = { }
+    
+    for name, feature in pairs(Addon.Features or {}) do
+        local enable = true
+        local optional = false
+
+        if (IsBetaFeature(feature)) then
+            if (not GetBetaFeatureState(name)) then
+
+                enable = false
+            end
+            optional = true
+        end
+
+        if (not optional and type(feature.OPTIONAL) == "boolean") then
+            optional = feature.OPTIONAL == true
+        end
+
+        if (enable) then
+            if (not optional) then
+                table.insert(deps, "feature:" .. name)
+            end
+
+            compMgr:Create(self:CreateComponent(name, feature));
+        end
+    end
+
+    compMgr:Create({
+        Name = "features",
+        Type = "core",
+        Dependencies = deps,
+        OnInitialize = function(self)
+
+            Addon:RaiseEvent("OnFeaturesReady")
+        end
+    })
+
+    register({
+        "GetFeature", 
+        "IsFeatureEnabled", 
+        "EnableFeature", 
+        "DisableFeature",  
+        "WithFeature", 
+        "GetBetaFeatures",
+        "SetBetaFeatureState"
+    })
 end
 
 --[[ Called to handle shutting down the features ]]
 function Features:Shutdown()
-    for _, feature in pairs(self.features) do
-        feature.onready = nil
-        callFeature(feature.instance, "OnTerminate")
-    end
+    self.features = {}
 end
 
---[[ Called when single feature has finished initialzation ]]
-function Features:InitComplete(feature, success)
-
-    if (success) then
-        feature.ready = true
-        --Addon:RaiseEvent("OnFeatureReady", feature.name)
-        if (feature.onready) then
-            for _, callback in pairs(feature.onready) do
-                xpcall(callback, CallErrorHandler, feature.object)
-            end
+--[[ Returns all the beta features ]]
+function Features:GetBetaFeatures()
+    local beta = {}
+    for name, feature in pairs(Addon.Features or {}) do
+        if (IsBetaFeature(feature)) then
+            table.insert(beta, {
+                id = string.lower(name),
+                name = feature.NAME or name,
+                description = feature.DESCRIPTION or "",
+                eanbled = self.features[string.lower(name)] ~= nil
+            })
         end
     end
+    return beta
 end
 
---[[ Called to start a single system ]]
-function Features:InitTarget(feature, complete)
-
-    --C_Timer.After(.03, function()
-
-            self:EnableFeature(feature.name)
-            complete(feature.enabled)
-    --    end)
-end
-
-function Features:EndInit(success)
+--[[ Change the state of a beta feature ]]
+function Features:SetBetaFeatureState(name, state)
+    local beta = Addon:GetAccountSetting("BetaFeatures", {})
+    beta[string.lower(name)] = state or false
+    Addon:SetAccountSetting("BetaFeatures", beta)
 
 end
 
 function Features:GetFeature(feature)
-    local info = self.features[string.lower(feature)]
-    if (info) then
-        return info.object
-    end
+    return self.features[string.lower(feature)]
 end
 
 function Features:IsFeatureEnabled(name)
-    local feature = self.features[string.lower(name)]
-    if (feature and feature.enabled) then
-        return true
-    end
-
-    return false
+    return self.features[string.lower(name)] ~= nil
 end
 
 function Features:EnableFeature(name)
-    local feature = self.features[string.lower(name)]
-    if (not feature) then
-        error("Attempting to enable non-existent feature '" .. name .. "'")
+
+    local component = compMgr:Get("feature:" .. string.lower(name))
+    if (component ~= nil) then
+        return
     end
 
-    if (not feature.enabled) then
-
-
-        -- Call Initiaize on the feature
-        -- We should have 4 core events:
-        --      OnInitialize
-        --      OnTerminate
-        --      OnEnable
-        --      OnDisable
-        -- Initialize can serve both purposes IFF Initialize implementation
-        -- is idempotent. Everything in this call and in the feature's call
-        -- must be idempotent for this to not have strange bugs.
-        -- It makes sense for Initialize to serve both purposes since the
-        -- feature could begin disabled, so OnEnable would need to potentially
-        -- call Initialize anyway and we'd need to track initialize state.
-        -- That would be better served by the feature simply recognizing that
-        -- Initialize will be called anytime it is enabled and can be called
-        -- multiple times.
-        -- TODO: Verify Idempotency
-        local success = callFeature(feature.instance, "OnInitialize")
-        if (not success) then
-            return
+    name = string.lower(name)
+    for fname, feature in pairs(Addon.Features) do
+        if (string.lower(fname) == name) then
+            compMgr:Create(self:CreateComponent(name, feature))
+            compMgr:InitializeComponents()
+            break;
         end
-
-        -- Check for events (move to GetEvents)
-        if (feature.instance.EVENTS) then
-            Addon:GenerateEvents(feature.instance.EVENTS)
-        end
-
-        -- Register event handlers for this feature
-        for name, value in pairs(feature.instance) do
-            if (type(value) == "function") then
-                if (Addon:RaisesEvent(name)) then
-                    Addon:RegisterCallback(name, feature.instance, value)
-                elseif(string.find(name, "ON_") == 1) then
-                    Addon:RegisterEvent(string.sub(name, 4), 
-                        function(...)
-                            value(feature.instance, ...)
-                        end)
-                end
-            end
-        end
-
-        -- Wrap the feature to produce and instance        
-        local instance = feature.instance
-        feature.object = setmetatable({}, {
-                __metatable = string.format("Feature[%s]", feature.name),
-                __index = function(_, key)
-                    local value = instance[key]
-                    if (type(value) == "function") then
-                        return function(_, ...)
-                                local result = { xpcall(value, CallErrorHandler, instance, ...) }
-
-                                table.remove(result, 1)
-                                return unpack(result)
-                            end
-                    end
-
-                    error(string.format("Feature '%s' has not method '%s'", feature.name, tostring(key)))
-                end,
-                __newindex = function(_, key, value)
-                end
-            })
-
-        feature.enabled = true
     end
 end
 
 function Features:DisableFeature(name)
-    local feature = self.features[string.lower(name)]
-    if (not feature) then
-        error("Attempting to disable non-existent feature '" .. name .. "'")
-    end
 
-
-    -- Call OnTerminate
-    local success = callFeature(feature.instance, "OnTerminate")
-    if (not success) then
-
-        return
-    end
-
-    -- Remove for events
-    if (feature.instance.EVENTS) then
-        Addon:RemoveEvents(feature.instance.EVENTS)
-    end
-
-    -- TODO: Disable all features that depend on this one....
-    --- .... and all features dependent on those features...
-    -- For now lets just not disable features on which other features depend....
-
-    feature.enabled = false
+    local componentName = "feature:" .. string.lower(name)
+    local component = compMgr:Remove(componentName)
 end
 
 function Features:WithFeature(name, callback)
     local feature = self.features[string.lower(name)]
     if (not feature) then
-        error("There is no feature '" .. tostring(feature) .. "'")
+        error("There is no feature '" .. tostring(name) .. "'")
     end
 
     -- todo handle enabled
-
-
-    if (feature.ready) then
-        callback(feature.object)
+    if (feature) then
+        callback(feature)
     else
         feature.onready = feature.onready or {}
         table.insert(feature.onready, callback)
     end
 end
 
---[[ Retrun the systems we depend on ]]
-function Features:GetDependencies()
-    return { "profile", "savedvariables" }
-end
-
---[[ Retreive the events we raise ]]
-function Features:GetEvents()
-    return { "OnFeatureDisabled", "OnFeatureEnabled", "OnFeatureReady" }
-end
-
---[[ Called when all systems are ready ]]
-function Features:OnAllSystemsReady()
-
-
-    for _, feature in pairs(self.features) do
-
-
-        --[===[@debug@
-        local success, systems = callFeature(feature.instance, "GetSystems")
-        if (not success) then
-            error("Failed to get the systems feature '" .. name .. "' depends on")
-        end
-
-        if (type(systems) == "table") then
-            for _, system in pairs(systems) do
-                if (not Addon:GetSystem(system)) then
-                    error("Feature '" .. name .. "' depends on system '" .. system .. "' which is not available")
-                end
-            end
-        end
-        --@end-debug@]===]
-
-        local success, dependencies = callFeature(feature.instance, "GetDependencies")
-        if (not success) then 
-            error("Failed to resolve dependencies for feature '" .. name .. "'")
-        end
-
-        -- TEMP
-        if (not dependencies and feature.instance.DEPENDENCIES) then
-            dependencies = feature.instance.DEPENDENCIES
-        end
-
-        self:AddTarget(feature, feature.name, dependencies)
-    end
-
-    C_Timer.After(0.001, function() self:BeginInit() end)
-end
 
 Addon.Features = {}
 Addon.Systems.Features = Features
+Addon:GenerateEvents({ "OnFeatureDisabled", "OnFeatureEnabled", "OnFeatureReady", "OnFeaturesReady" })

@@ -237,54 +237,40 @@ local function filterMatch(m, ...)
     return m:MatchesFilters(...)
 end
 
-local function filterSplitOr(s)
-    local out = { strsplit('/', s) }
-    if #out == 1 then
-        return out[1]
-    else
-        return out
-    end
-end
-
 function LM.MountList:FilterSearch(...)
-    -- This looks like a terrible idea but it's actually way faster and memory
-    -- efficient to do all this here once rather than strsplit for every mount
-    -- in the list
-
-    local filters = LM.tMap({ ... }, filterSplitOr)
-    return self:Search(filterMatch, unpack(filters))
+    return self:Search(filterMatch, ...)
 end
 
--- Limits can be filter (no prefix), set (=), reduce (-) or extend (+).
+-- Limits can be intersect (no prefix), subtract (-) or union (+). This really
+-- only works when called on a list of the full set of mounts because it's
+-- assuming self is everything. So bundle up all the limit expressions into a
+-- list and call this once.
 
-function LM.MountList:Limit(...)
+local function expressionMatch(m, e)
+    return m:MatchesExpression(e)
+end
 
-    -- This is a dubiously worthwhile optimization, to look for the last
-    -- set (=) and ignore everything before it as irrelevant. Depending on
-    -- how inefficient sub(1,1) is this might actually be slower.
+function LM.MountList:ExpressionSearch(e)
+    return self:Search(expressionMatch, e)
+end
 
-    local begin = 1
-    for i = 1, select('#', ...) do
-        if select(i, ...):sub(1,1) == '=' then
-            begin = i
-        end
-    end
-
+function LM.MountList:Limit(limits)
     local mounts = self:Copy()
-
-    for i = begin, select('#', ...) do
-        local f = select(i, ...)
-        if f:sub(1,1) == '+' then
-            mounts:Extend(self:FilterSearch(f:sub(2)))
-        elseif f:sub(1,1) == '-' then
-            mounts:Reduce(self:FilterSearch(f:sub(2)))
-        elseif f:sub(1,1) == '=' then
-            mounts = self:FilterSearch(f:sub(2))
+    for _, arg in ipairs(limits) do
+        local e = arg:ParseExpression()
+        if e == nil then
+            -- SYNTAX ERROR PRINT SOMETHING?
+            return nil
+        elseif e.op == '+' then
+            mounts = mounts:Extend(self:ExpressionSearch(e[1]))
+        elseif e.op == '-' then
+            mounts = mounts:Reduce(self:ExpressionSearch(e[1]))
+        elseif e.op == '=' then
+            mounts = self:ExpressionSearch(e[1])
         else
-            mounts = mounts:FilterSearch(f)
+            mounts = mounts:ExpressionSearch(e)
         end
     end
-
     return mounts
 end
 
@@ -295,8 +281,8 @@ local SortFunctions = {
     -- Show all the collected mounts before the uncollected mounts, then by name
     ['default'] =
         function (a, b)
-            if a.isCollected and not b.isCollected then return true end
-            if not a.isCollected and b.isCollected then return false end
+            if a:IsCollected() and not b:IsCollected() then return true end
+            if not a:IsCollected() and b:IsCollected() then return false end
             if dragonRidingSort then
                 if a.dragonRiding and not b.dragonRiding then return true end
                 if not a.dragonRiding and b.dragonRiding then return false end

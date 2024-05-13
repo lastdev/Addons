@@ -25,7 +25,9 @@ ns.RegisterPoints(ns.AZURESPAN, {
     [53964377] = { -- Gnoll Fiend Flail
         criteria=54805,
         quest=70604,
-        loot={},
+        loot={
+            202692, -- Gnoll Fiend Flail
+        },
         active={ns.conditions.QuestComplete(70535), ns.conditions.Item(199066), any=true}, -- Letter of Caution
         note="Find {item:199066} in other treasures",
     },
@@ -299,7 +301,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
     },
     [26804940] = { -- Skag the Thrower
         criteria=56110,
-        quest=72154,
+        quest=74030, -- 72154
         npc=193149,
         loot={
             {196991,quest=69191,}, -- Cliffside Wylderdrake: Black Horns

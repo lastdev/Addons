@@ -4,7 +4,7 @@
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
 
-local debugp = function (...) Addon:Debug("status", ...) end
+
 
 local Status = {
     NAME = "Status",

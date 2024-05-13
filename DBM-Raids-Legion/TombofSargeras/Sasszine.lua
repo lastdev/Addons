@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240502130828")
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -41,7 +41,7 @@ local warnPhase3					= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 
 --General Stuff
 local specWarnHydraShot				= mod:NewSpecialWarningYouPos(230139, nil, nil, nil, 1, 2)
-local yellHydraShot					= mod:NewPosYell(230139, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2)
+local yellHydraShot					= mod:NewShortPosYell(230139)
 local yellHydraShotFades			= mod:NewIconFadesYell(230139)
 local specWarnBurdenofPain			= mod:NewSpecialWarningYou(230201, nil, nil, nil, 1, 2)
 local specWarnBurdenofPainTaunt		= mod:NewSpecialWarningTaunt(230201, nil, nil, 2, 3, 2)
@@ -91,7 +91,7 @@ mod.vb.hydraShotCount = 0
 mod.vb.burdenCount = 0
 mod.vb.tornadoCount = 0
 mod.vb.mawCount = 0
-local thunderingShock, consumingHunger, bufferFish = DBM:GetSpellInfo(230358), DBM:GetSpellInfo(230384), DBM:GetSpellInfo(239375)
+local thunderingShock, consumingHunger, bufferFish = DBM:GetSpellName(230358), DBM:GetSpellName(230384), DBM:GetSpellName(239375)
 local hydraIcons = {}
 local eventsRegistered = false
 local p3MythicCrashingWave = {30.9, 30.9, 40.6, 35.8, 30.9}--All minus 2 because timer starts at SUCCESS but is for START
@@ -224,10 +224,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDeliciousBufferfish:Show()
 		end
 	elseif spellId == 230139 then
-		local isPlayer = args:IsPlayer()
-		local name = args.destName
-		if not tContains(hydraIcons, name) then
-			hydraIcons[#hydraIcons+1] = name
+		if not tContains(hydraIcons, args.destName) then
+			hydraIcons[#hydraIcons+1] = args.destName
 		end
 		local count = #hydraIcons
 		warnHydraShot:CombinedShow(0.3, self.vb.hydraShotCount, args.destName)
@@ -242,7 +240,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellHydraShotFades:Countdown(6, nil, count)
 		end
 		if self.Options.SetIconOnHydraShot then
-			self:SetIcon(name, count)
+			self:SetIcon(args.destName, count)
 		end
 	elseif spellId == 230201 then
 		if not args:IsPlayer() and self:AntiSpam(5, args.destName) then

@@ -8,6 +8,7 @@ ns.defaults = {
         show_on_world = true,
         show_on_minimap = false,
         show_npcs = true,
+        show_npcs_onlynotable = false,
         show_treasure = true,
         show_routes = true,
         upcoming = true,
@@ -181,18 +182,24 @@ ns.options = {
                     desc = "Show rare NPCs to be killed, generally for items or achievements",
                     order = 30,
                 },
+                show_npcs_onlynotable = {
+                    type = "toggle",
+                    name = "...but only notable ones",
+                    desc = "Only show the NPCs that you can still get something from: achievements, transmogs for the current character",
+                    order = 31,
+                },
                 show_treasure = {
                     type = "toggle",
                     name = "Show treasure",
                     desc = "Show treasure that can be looted",
-                    order = 30,
+                    order = 35,
                 },
                 show_routes = {
                     type = "toggle",
                     name = "Show routes",
                     desc = "Show relevant routes between points ",
                     disabled = function() return not ns.RouteWorldMapDataProvider end,
-                    order = 31,
+                    order = 37,
                 },
                 tooltip_questid = {
                     type = "toggle",
@@ -332,17 +339,24 @@ local function doTestAny(test, input, ...)
     end
     return false
 end
-local function doTest(test, input, ...)
-    if type(input) == "table" and not input.__parent then
-        if input.any then
-            return doTestAny(test, input, ...)
+local doTest, doTestDefaultAny
+do
+    local function doTestMaker(default)
+        return function(test, input, ...)
+            if type(input) == "table" and not input.__parent then
+                if input.any then return doTestAny(test, input, ...) end
+                if input.all then return doTestAll(test, input, ...) end
+                return default(test, input, ...)
+            else
+                return test(input, ...)
+            end
         end
-        return doTestAll(test, input, ...)
-    else
-        return test(input, ...)
     end
+    doTest = doTestMaker(doTestAll)
+    doTestDefaultAny = doTestMaker(doTestAny)
 end
 ns.doTest = doTest
+ns.doTestDefaultAny = doTestDefaultAny
 local function testMaker(test, override)
     return function(...)
         return (override or doTest)(test, ...)
@@ -464,6 +478,9 @@ ns.itemRestricted = function(item)
     if item.class and ns.playerClass ~= item.class then
         return true
     end
+    if item.requires and not ns.conditions.check(item.requires) then
+        return true
+    end
     -- TODO: profession recipes
     return false
 end
@@ -479,7 +496,7 @@ ns.itemIsKnowable = function(item)
                 return bit.band(info.classMask, ns.playerClassMask) == ns.playerClassMask
             end
         end
-        return (item.toy or item.mount or item.pet or item.quest or CanLearnAppearance(item[1]))
+        return (item.toy or item.mount or item.pet or item.quest or item.questComplete or item.set or item.spell or CanLearnAppearance(item[1]))
     end
     return CanLearnAppearance(item)
 end
@@ -502,6 +519,21 @@ ns.itemIsKnown = function(item)
                 -- we want to return nil for sets the current class can't learn:
                 if info.classMask and bit.band(info.classMask, ns.playerClassMask) == ns.playerClassMask then return false end
             end
+            return false
+        end
+        if item.spell then
+            -- can't use the tradeskill functions + the recipe-spell because that data's only available after the tradeskill window has been opened...
+            local info = C_TooltipInfo.GetItemByID(item[1])
+            if info then
+                TooltipUtil.SurfaceArgs(info)
+                for _, line in ipairs(info.lines) do
+                    TooltipUtil.SurfaceArgs(line)
+                    if line.leftText and string.match(line.leftText, _G.ITEM_SPELL_KNOWN) then
+                        return true
+                    end
+                end
+            end
+            return false
         end
         if CanLearnAppearance(item[1]) then return HasAppearance(item[1]) end
     elseif CanLearnAppearance(item) then
@@ -519,6 +551,33 @@ local allLootKnown = testMaker(function(item)
     return known
 end)
 
+local function isAchieved(point)
+    if point.criteria and point.criteria ~= true then
+        if not allCriteriaComplete(point.criteria, point.achievement) then
+            return false
+        end
+    else
+        local completedByMe = select(13, GetAchievementInfo(point.achievement))
+        if not completedByMe then
+            return false
+        end
+    end
+    return true
+end
+local function isNotable(point)
+    -- A point is notable if it has loot you can use, or is tied to an
+    -- achievement you can still earn. It ignores quest-completion, because
+    -- repeatable mobs are a nightmare here.
+    if point.achievement and not isAchieved(point) then
+        return true
+    end
+    if point.loot and hasKnowableLoot(point.loot) and not allLootKnown(point.loot) then
+        return true
+    end
+    if point.follower and not C_Garrison.IsFollowerCollected(point.follower) then
+        return true
+    end
+end
 local function everythingFound(point)
     local ret
     if ns.db.collectablefound and point.loot and hasKnowableLoot(point.loot) then
@@ -527,16 +586,9 @@ local function everythingFound(point)
         end
         ret = true
     end
-    if (ns.db.achievedfound or not point.quest) and point.achievement then
-        if point.criteria and point.criteria ~= true then
-            if not allCriteriaComplete(point.criteria, point.achievement) then
-                return false
-            end
-        else
-            local completedByMe = select(13, GetAchievementInfo(point.achievement))
-            if not completedByMe then
-                return false
-            end
+    if (ns.db.achievedfound or not point.quest) and point.achievement and not point.achievementNotFound then
+        if not isAchieved(point) then
+            return false
         end
         ret = true
     end
@@ -596,6 +648,8 @@ do
     end
 end
 
+local checkArt = testMaker(function(artid, uiMapID) return artid == C_Map.GetMapArtID(uiMapID) end, doTestDefaultAny)
+
 local function showOnMapType(point, uiMapID, isMinimap)
     -- nil means to respect the preferences, but points can override
     if isMinimap then
@@ -637,7 +691,7 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if point.outdoors_only and IsIndoors() then
         return false
     end
-    if point.art and point.art ~= C_Map.GetMapArtID(currentZone) then
+    if point.art and not checkArt(point.art, currentZone) then
         return false
     end
     if point.poi and not checkPois(point.poi) then
@@ -673,6 +727,10 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if not point.follower then
         if point.npc then
             if not ns.db.show_npcs then
+                return false
+            end
+            if ns.db.show_npcs_onlynotable and not isNotable(point) then
+                -- Only show "notable" npcs, which we define as "has loot you can use or has an achievement"
                 return false
             end
         else

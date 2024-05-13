@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(741, "DBM-Raids-MoP", 4, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(62397)
 mod:SetEncounterID(1498)
 mod:SetUsedIcons(1, 2)
@@ -25,7 +25,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 131830 122125 122064 121898",
 	"SPELL_PERIODIC_MISSED 131830 122125 122064 121898",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED boos1",
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_AURA_UNFILTERED"
 )
 
@@ -73,8 +73,7 @@ local berserkTimer						= mod:NewBerserkTimer(480)
 
 mod:AddBoolOption("AmberPrisonIcons", true)
 
-local Reinforcement = DBM:EJ_GetSectionInfo(6554)
-local strikeSpell = DBM:GetSpellInfo(123963)
+local strikeSpell = DBM:GetSpellName(123963)
 local addsCount = 0
 local amberPrisonIcon = 2
 local zarthikCount = 0

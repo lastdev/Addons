@@ -1,7 +1,7 @@
-## Interface: 100100
+## Interface: 100207
 ## Title: World Quests List
 ## Author: ykiigor
-## Version: 107
+## Version: 109
 ## SavedVariables: VWQL
 ## IconAtlas: questlog-questtypeicon-weekly
 db.lua

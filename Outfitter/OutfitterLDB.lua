@@ -15,6 +15,20 @@ function Outfitter.LDB:Initialize()
 	Outfitter:RegisterOutfitEvent("OUTFITTER_INIT", function (...) self:OutfitEvent(...) end)
 end
 
+function Outfitter.LDB:CreateIcon(minimapButton)
+    self.icon = LibStub("LibWithFreeDragDBIcon-1.0")
+
+    self.icon:Register(Outfitter.cTitle, self.DataObj, minimapButton)
+end
+
+function Outfitter.LDB:ShowIcon()
+    self.icon:Show(Outfitter.cTitle)
+end
+
+function Outfitter.LDB:HideIcon()
+    self.icon:Hide(Outfitter.cTitle)
+end
+
 function Outfitter.LDB:OnClick(pFrame, pButton)
 	if pButton == "LeftButton" then
 		self:ToggleMenu()

@@ -1,0 +1,36 @@
+## Interface: 40400
+## Version: 1.06
+## Author: Taraezor
+## IconTexture: Interface\Icons\Ability_mount_camel_gray
+## Title: Mysterious Camel Figurine
+## Title-deDE: Mysteriöse Kamelfigur
+## Title-esES: Figurilla de camello misteriosa
+## Title-esMX: Figurilla de camello misteriosa
+## Title-frFR: Figurine de dromadaire mystérieuse
+## Title-itIT: Statuetta di Dromedario Misteriosa
+## Title-koKR: 수수께끼 낙타 조각상
+## Title-ptBR: Estátua de Camelo Misteriosa
+## Title-ptPT: Estátua de Camelo Misteriosa
+## Title-ruRU: Странная фигурка верблюда
+## Title-zhCN: 神秘的骆驼雕像
+## Title-zhTW: 神秘的駱駝雕像
+## Notes: |cFF437C17Helps you find the |cFF41A317Mysterious Camel Figurine|cFF437C17 in Uldum
+## Notes-deDE: |cFF437C17Hilft Ihnen, das |cFF41A317Mysteriöse Kamelfigur|cFF437C17 in Uldum zu erhalten
+## Notes-esES: |cFF437C17Te ayuda a obtener el |cFF41A317Figurilla de camello misteriosa|cFF437C17 en Uldum
+## Notes-esMX: |cFF437C17Te ayuda a obtener el |cFF41A317Figurilla de camello misteriosa|cFF437C17 en Uldum
+## Notes-frFR: |cFF437C17Il vous aide à obtenir |cFF41A317Figurine de dromadaire mystérieuse|cFF437C17 en Uldum
+## Notes-itIT: |cFF437C17Ti aiuta a ottenere la |cFF41A317Statuetta di Dromedario Misteriosa|cFF437C17 a Uldum
+## Notes-koKR: |cFF437C17울둠에서 |cFF41A317수수께끼 낙타 조각상|r를 얻는 데 도움이 됩니다.
+## Notes-ptBR: |cFF437C17Ajuda você a obter o |cFF41A317Estátua de Camelo Misteriosa|cFF437C17 em Uldum
+## Notes-ptPT: |cFF437C17Ajuda você a obter o |cFF41A317Estátua de Camelo Misteriosa|cFF437C17 em Uldum
+## Notes-ruRU: |cFF437C17Помогает вам получить |cFF41A317Странная фигурка верблюда|cFF437C17 в Ульдум
+## Notes-zhCN: |cFF437C17帮助您获取奥丹姆中的|cFF41A317神秘的骆驼雕像
+## Notes-zhTW: |cFF437C17幫助您獲取奧丹姆中的|cFF41A317神秘的駱駝雕像
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_CamelDB
+## AddonCompartmentFunc: HandyNotes_Camel_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_Camel_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_Camel_OnAddonCompartmentLeave
+
+Core.lua
+Data.lua

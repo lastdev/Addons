@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20231110035600")
+mod:SetRevision("20240426180424")
 mod:SetCreatureID(34497, 34496)
 mod:SetEncounterID(mod:IsClassic() and 641 or 1089)
 mod:SetModelID(29240)
@@ -42,7 +42,7 @@ mod:AddBoolOption("SpecialWarnOnDebuff", false, "announce")
 mod:AddSetIconOption("SetIconOnLightTarget", 65950, false, 0, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnDarkTarget", 66001, false, 0, {1, 2, 3, 4})
 
-local lightEssence, darkEssence = DBM:GetSpellInfo(65686), DBM:GetSpellInfo(65684)
+local lightEssence, darkEssence = DBM:GetSpellName(65686), DBM:GetSpellName(65684)
 local debuffTargets = {}
 mod.vb.debuffIcon = 1
 

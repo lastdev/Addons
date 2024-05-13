@@ -1,0 +1,100 @@
+lightweight tag cb1177dc26fc79d167a53aa32f5b3904c250e744 5.0
+Author:	Remeen <wow@meen.co.uk>
+Date:	Tue Apr 23 19:48:35 2024 +0100
+
+commit cb1177dc26fc79d167a53aa32f5b3904c250e744
+Author: Remeen <wow@meen.co.uk>
+Date:   Tue Apr 23 19:48:35 2024 +0100
+
+    Set zone option
+
+commit a8b78d7c8fc5672226ad0db07233d311eb2ad66d
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 19:45:32 2024 +0100
+
+    Tests for sorting
+
+commit a4e3201b1300449b910613faf2af6fd26b28a464
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 18:09:02 2024 +0100
+
+    Reactor spell functions
+
+commit 30d8bb797dffd63690fd9db9cf49879e4afd3f8c
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 18:08:42 2024 +0100
+
+    Remove Tome of Customisation
+
+commit f3b9b72ff95143523eb3c8315113c2871bf8ebae
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 16:56:53 2024 +0100
+
+    Update readme
+
+commit 71300d0a5a6cf87268f198f1b7ab4af399a4a304
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 16:56:32 2024 +0100
+
+    Fix tests
+
+commit 0ccf2416478c5402d107b6a51665319222bc0da5
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 16:39:57 2024 +0100
+
+    New settings UI
+
+commit f8ea9ced25f01c784e8916db08ef632883b9db26
+Author: Remeen <wow@meen.co.uk>
+Date:   Sun Apr 21 16:12:29 2024 +0100
+
+    Sorting functions
+
+commit 26687f724c8aef0c542b0deeb3bae42f3cd07dfe
+Author: Remeen <wow@meen.co.uk>
+Date:   Sat Apr 20 10:20:13 2024 +0100
+
+    TeleporterCanUseSpell function
+
+commit 329cd2712e607bf396154adff0bb2412305ebcb2
+Author: Remeen <wow@meen.co.uk>
+Date:   Fri Apr 19 22:02:01 2024 +0100
+
+    Season 4 dungeons
+
+commit 358224751f7a0998eb5f24065066ccb4bfc56a19
+Author: Remeen <wow@meen.co.uk>
+Date:   Fri Apr 19 21:50:47 2024 +0100
+
+    Raid teleports
+
+commit 52032e10befad709fdd0552c77f83eccf215ed47
+Author: Remeen <wow@meen.co.uk>
+Date:   Fri Apr 19 20:52:03 2024 +0100
+
+    More functions for customising spells
+
+commit 88dfa81553c438164e1670226ec5cf77de1e5977
+Author: Remeen <wow@meen.co.uk>
+Date:   Fri Apr 19 18:30:01 2024 +0100
+
+    "Always show" option to work around game bugs. There's currently no way to enable this.
+
+commit f17ba953683b24165bbb545b870a9fea5e82060f
+Author: Remeen <wow@meen.co.uk>
+Date:   Thu Apr 18 22:22:31 2024 +0100
+
+    Add TelporterAddSpells
+
+commit b613a47e7fa02ab95001c07aaabe3154c6dcbcae
+Author: Remeen <wow@meen.co.uk>
+Date:   Wed Apr 17 21:38:06 2024 +0100
+
+    Minor theme changes
+
+commit d38212d2fbafe68a79f781af761562d798510e1a
+Author: Remeen <wow@meen.co.uk>
+Date:   Tue Apr 16 21:31:26 2024 +0100
+
+    Functions to access settings
+

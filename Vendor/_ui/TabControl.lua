@@ -171,6 +171,7 @@ function TabControl:AddTab(id, name, template, class, far)
     if (type(id) == "table") then
 
         tab = Tab.Create(self, id.Id, id.Name, id.Template, id.Class)
+        far = id.Far or false
     else
 
         tab = Tab.Create(self, id, name, template, class)

@@ -16,22 +16,20 @@ points[ns.dustwallowMarsh] = { -- Dustwallow Marsh
 	[49171736] = { title="Dart's Nest", pet="Darting Hatchling", eggID=48118 },
 }
 
-points[ns.barrens] = { -- Barrens (WotLK Classic)
-	[58450828] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 }, 
-	[59470851] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 },
-	[60281011] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 },
-	[60711330] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 },
-	[46003645] = { title="Deviate Guardians & Ravagers", pet="Deviate Hatchling", eggID=48114,
-					tip="Wailing Caverns dungeon.\n1 in 3500 chance" },
-}
+points[ns.barrens] = { -- Barrens (WotLK Classic or Northern Barrens (Retail) or Hybrid (Classic Cata Prelaunch)
+	[58450828] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="W" }, 
+	[59470851] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="W" },
+	[60281011] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="W" },
+	[60711330] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="W" },
+	[60951976] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="R" },
+	[62762018] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="R" },
+	[64172300] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="R" },
+	[64942860] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112, version="R" },
 
-points[ns.northernBarrens] = { -- Northern Barrens
-	[60951976] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112},
-	[62762018] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 },
-	[64172300] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 },
-	[64942860] = { title="Takk's Nest", pet="Leaping Hatchling", eggID=48112 },
-	[38966932] = { title="Deviate Guardians & Ravagers", pet="Deviate Hatchling", eggID=48114,
-					tip="Wailing Caverns dungeon.\n1 in 500 chance" },
+	[38966932] = { title="Deviate Guardians & Ravagers", pet="Deviate Hatchling", eggID=48114, version="R",
+					tip="Wailing Caverns dungeon.\n1 in 3500 chance" },
+	[46003645] = { title="Deviate Guardians & Ravagers", pet="Deviate Hatchling", eggID=48114, version="W",
+					tip="Wailing Caverns dungeon.\n1 in 3500 chance" },
 }
 
 points[ns.unGoroCrater] = {	-- Un'Goro Crater

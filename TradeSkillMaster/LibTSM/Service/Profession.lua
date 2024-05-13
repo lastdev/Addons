@@ -222,7 +222,7 @@ function Profession.GetResultInfo(craftString)
 		-- Result of craft is not an item
 		local spellId = CraftString.GetSpellId(craftString)
 		local indirectSpellId = nil
-		if Environment.IsWrathClassic() then
+		if Environment.IsWrathClassic() or Environment.IsCataClassic() then
 			indirectSpellId = strmatch(resultItem, "enchant:(%d+)")
 			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
 			if not indirectSpellId then
@@ -235,12 +235,12 @@ function Profession.GetResultInfo(craftString)
 		if type(itemString) == "table" then
 			itemString = itemString[CraftString.GetQuality(craftString) or 1]
 		end
-		if itemString and (Environment.IsRetail() or Environment.IsWrathClassic()) then
+		if itemString and (Environment.IsRetail() or Environment.IsWrathClassic() or Environment.IsCataClassic()) then
 			return itemString, ItemInfo.GetTexture(itemString), ItemInfo.GetName(itemString)
 		elseif ProfessionInfo.IsEngineeringTinker(spellId) then
 			local name, _, icon = GetSpellInfo(spellId)
 			return nil, icon, name
-		elseif Environment.IsWrathClassic() then
+		elseif Environment.IsWrathClassic() or Environment.IsCataClassic() then
 			local name, _, icon = GetSpellInfo(indirectSpellId)
 			return nil, icon, name
 		else

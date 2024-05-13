@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20200912131657")
+mod:SetRevision("20240426181222")
 
 mod:RegisterCombat("scenario", 1135)
 
@@ -22,7 +22,7 @@ local timerEvent			= mod:NewBuffFadesTimer(299, 140000, nil, nil, nil, 6, nil, n
 local timerStoneSmash		= mod:NewCastTimer(3, 139777, nil, false)
 
 local timerStarted = false
-local timerDebuff = DBM:GetSpellInfo(140000)
+local timerDebuff = DBM:GetSpellName(140000)
 
 local function endCombatDelay()
 	DBM:EndCombat(mod)

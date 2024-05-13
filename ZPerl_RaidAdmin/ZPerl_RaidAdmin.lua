@@ -4,7 +4,9 @@
 
 local AddonName, Addon = ...
 
-XPerl_SetModuleRevision("$Revision: cd469ddf009de44eb4c4cd248a7ab1a7cf618486 $")
+XPerl_SetModuleRevision("$Revision: ddda951e11d8520e24a10d5d519ce922a1c3db00 $")
+
+local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 
 local SavedRoster = nil
 local XswapCount = 0
@@ -68,6 +70,13 @@ function XPerl_AdminOnLoad(self)
 	self:OnBackdropLoaded()
 	self:SetBackdropColor(0, 0, 0, 1)
 	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+
+	if IsRetail then
+		XPerl_AdminFrame_TitleBar_CloseButton:SetScale(0.66)
+		XPerl_AdminFrame_TitleBar_CloseButton:SetPoint("TOPRIGHT", 2, 2)
+		XPerl_AdminFrame_TitleBar_Pin:SetPoint("RIGHT", XPerl_AdminFrame_TitleBar_CloseButton, "LEFT", 0, 0)
+		XPerl_AdminFrame_TitleBar_LockOpen:SetPoint("RIGHT", XPerl_AdminFrame_TitleBar_Pin, "LEFT", 0, 0)
+	end
 
 	self.Expand = function()
 		XPerl_AdminFrame_Controls:Show()

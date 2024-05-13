@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2447, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(175730)
 mod:SetEncounterID(2431)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 351680 350554 350421 353426 350169 354367 354265 357144 353603",
-	"SPELL_CAST_SUCCESS 350355",
+--	"SPELL_CAST_SUCCESS 350355",
 	"SPELL_AURA_APPLIED 354365 351680 353432 350568 356065 353195 354964 357739",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 354365 351680 350568 356065 353195 357739 353432",
@@ -65,8 +65,8 @@ local timerFatedConjunctionCD					= mod:NewCDCountTimer(59.7, 350355, 207544, ni
 local timerFatedConjunction						= mod:NewCastTimer(6.7, 350355, 207544, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerCallofEternityCD						= mod:NewCDCountTimer(37.9, 350554, 167180, nil, nil, 3)--"Bombs"
 
-mod:AddSetIconOption("SetIconOnCallofEternity", 350554, true, false, {1, 2, 3, 4, 5})
-mod:AddSetIconOption("SetIconOnGrimPortent", 354365, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnCallofEternity", 350554, true, 0, {1, 2, 3, 4, 5})
+mod:AddSetIconOption("SetIconOnGrimPortent", 354365, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddNamePlateOption("NPAuraOnBurdenofDestiny", 353432, true)
 --Stage Two: Defying Destiny
 mod:AddOptionLine(DBM:EJ_GetSectionInfo(22927), "announce")
@@ -83,7 +83,7 @@ local warnDespair								= mod:NewCountAnnounce(357144, 3)
 local specWarnDespair							= mod:NewSpecialWarningInterruptCount(357144, "HasInterrupt", nil, nil, 1, 2)--Non mythic only
 local specWarnDespairRun						= mod:NewSpecialWarningRun(357144, nil, nil, nil, 4, 2, 4)
 
-mod:AddSetIconOption("SetIconOnMonstrosity", "ej23764", true, true, {7, 8})
+mod:AddSetIconOption("SetIconOnMonstrosity", "ej23764", true, 5, {7, 8})
 --Stage Three: Fated Terminus
 mod:AddOptionLine(DBM:EJ_GetSectionInfo(23486), "announce")
 local warnExtemporaneousFate					= mod:NewSoonAnnounce(353195, 3)
@@ -505,7 +505,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	for i = 1, 5 do
 		local unitID = "boss"..i
 		local unitGUID = UnitGUID(unitID)
-		if UnitExists(unitID) and not castsPerGUID[unitGUID] then
+		if unitGUID and UnitExists(unitID) and not castsPerGUID[unitGUID] then
 			castsPerGUID[unitGUID] = 0
 			local cid = self:GetUnitCreatureId(unitID)
 			if cid == 180323 then--Fatespawn Monstrosity

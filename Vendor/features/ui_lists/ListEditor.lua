@@ -101,9 +101,6 @@ end
 
 --[[ Called to change the name of this list ]]
 function ListEditor:SetName(name)
-    --[===[@debug@
-
-    --@end-debug@]===]
 
     if (name ~= self.name) then
         self.name = name or ""
@@ -119,9 +116,6 @@ end
 
 --[[ Called to change the description of this list ]]
 function ListEditor:SetDescription(description)
-    --[===[@debug@
-
-    --@end-debug@]===]
 
     if (description ~= self.description) then
         if (not description or string.len(description) == 0) then

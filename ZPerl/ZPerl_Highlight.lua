@@ -6,25 +6,13 @@ local playerClass, playerName, playerGUID
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 8c2ee354c22c703a5dd4fcc236c0c7d3bbfbc4c2 $")
+end, "$Revision: ddda951e11d8520e24a10d5d519ce922a1c3db00 $")
 
 local _, _, _, clientRevision = GetBuildInfo()
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-
-local UnitCastingInfo = UnitCastingInfo
-local UnitChannelInfo = UnitChannelInfo
-local LCC = IsVanillaClassic and LibStub("LibClassicCasterino", true)
-if LCC then
-	UnitCastingInfo = function(unit)
-		return LCC:UnitCastingInfo(unit)
-	end
-	UnitChannelInfo = function(unit)
-		return LCC:UnitChannelInfo(unit)
-	end
-end
 
 local _G = _G
 
@@ -55,6 +43,7 @@ local GetTime = GetTime
 local GetUnitName = GetUnitName
 local IsInRaid = IsInRaid
 local UnitAura = UnitAura
+local UnitCastingInfo = UnitCastingInfo
 local UnitClass = UnitClass
 local UnitExists = UnitExists
 local UnitGetIncomingHeals = UnitGetIncomingHeals

@@ -1,5 +1,5 @@
-## Interface: 100200
-## Version: 1.10.20
+## Interface: 100205
+## Version: 1.10.25
 ## Title: Telepath
 ## Notes: Display some chat message as "raid warning"
 ## Author: Tomill

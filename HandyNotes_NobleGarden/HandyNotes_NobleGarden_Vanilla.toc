@@ -1,0 +1,34 @@
+## Interface: 11502
+## Version: 2.27
+## Author: Taraezor
+## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
+## Title: Noblegarden
+## Title-deDE: Nobelgarten-Feiertage 
+## Title-esES: Jardín Noble
+## Title-esMX: Jardín Noble
+## Title-frFR: Jardin des nobles
+## Title-itIT: Festa di Nobiluova
+## Title-koKR: 귀족의 정원
+## Title-ptBR: Jardinova
+## Title-ptPT: Jardinova
+## Title-ruRU: Сада Чудес
+## Title-zhCN: 复活节
+## Title-zhTW: 復活節
+## Notes: Help for the |cFFE641EFNoble Garden|r holiday
+## Notes-deDE: Hilfe für die |cFFE641EFNobelgarten|r-Feiertage
+## Notes-esES: Ayuda para las vacaciones de |cFFE641EFJardín Noble|r
+## Notes-esMX: Ayuda para las vacaciones de |cFFE641EFJardín Noble|r
+## Notes-frFR: Aide pour les vacances de |cFFE641EFJardin des nobles|r
+## Notes-itIT: Aiuto per le vacanze di |cFFE641EFFesta di Nobiluova|r
+## Notes-koKR: |cFFE641EF귀족의 정원|r 휴가를 도와주세요
+## Notes-ptBR: Ajuda para o feriado de |cFFE641EFJardinova|r
+## Notes-ptPT: Ajuda para o feriado de |cFFE641EFJardinova|r
+## Notes-ruRU: ППомощь на празднике |cFFE641EFСада Чудес|r
+## Notes-zhCN: |cFFE641EF复活节|r假期的帮助
+## Notes-zhTW: |cFFE641EF復活節|r假期的幫助
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_NobleGardenDB
+## AddonCompartmentFunc: HandyNotes_NobleGarden_OnAddonCompartmentClick
+
+Core.lua
+Data.lua

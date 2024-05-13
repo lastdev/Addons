@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1992, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240422191412")
 mod:SetCreatureID(122450)
 mod:SetEncounterID(2076)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
@@ -189,7 +189,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.annihilatorHaywire = true
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId

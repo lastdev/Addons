@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1447, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240428104732")
 mod:SetCreatureID(93068)
 mod:SetEncounterID(1800)
 mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -97,7 +97,7 @@ local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204, nil, nil, 2,
 --Applied gives all targets, this is the easier strat for most users, where they wait until everyone has it, then run in different directions.
 --Both, gives users ALL the information for everything so they can decide on their own. This will be default until I can see what becomes more popular. Maybe both will be what everyone ends up preferring.
 mod:AddRangeFrameOption(5, 189775)--Mythic
-mod:AddSetIconOption("SetIconOnImps", -11694, true, true)
+mod:AddSetIconOption("SetIconOnImps", -11694, true, 5)
 mod:AddDropdownOption("ChainsBehavior", {"Cast", "Applied", "Both"}, "Both", "misc", nil, 186490)
 
 mod.vb.EmpFelChainCount = 0
@@ -112,7 +112,7 @@ local UnitExists, UnitGUID, UnitDetailedThreatSituation = UnitExists, UnitGUID, 
 local AddsSeen = {}
 
 local debuffFilter
-local debuffName, vanguardTank, voidwalkerTank = DBM:GetSpellInfo(189775), DBM:GetSpellInfo(186135), DBM:GetSpellInfo(186134)
+local debuffName, vanguardTank, voidwalkerTank = DBM:GetSpellName(189775), DBM:GetSpellName(186135), DBM:GetSpellName(186134)
 do
 	debuffFilter = function(uId)
 		if DBM:UnitDebuff(uId, debuffName) then

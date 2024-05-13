@@ -8,18 +8,19 @@ local perc1F = "%.1f"..PERCENT_SYMBOL
 
 XPerl_RequestConfig(function(New)
 	conf = New
-end, "$Revision: 2fc5c67ddc5c24d6b1d4b84c1827b22fa81eb0d6 $")
-XPerl_SetModuleRevision("$Revision: 2fc5c67ddc5c24d6b1d4b84c1827b22fa81eb0d6 $")
+end, "$Revision: c8a3b9e1b28b9729126b5b16d8dc9e10e5f3c4b9 $")
+XPerl_SetModuleRevision("$Revision: c8a3b9e1b28b9729126b5b16d8dc9e10e5f3c4b9 $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+
+local UnitAuraWithBuffs
 local LCD = IsVanillaClassic and LibStub and LibStub("LibClassicDurations", true)
-local UnitAuraDirect
 if LCD then
 	LCD:Register("ZPerl")
-	UnitAuraDirect = LCD.UnitAuraDirect
+	UnitAuraWithBuffs = LCD.UnitAuraWithBuffs
 end
 local HealComm = IsClassic and LibStub and LibStub("LibHealComm-4.0", true)
 
@@ -1624,9 +1625,9 @@ function XPerl_MinimapButton_Details(tt, ldb)
 				if (showDiff) then
 					diff = usedKB - xpStartupMemory[v]
 					diffKB = diffKB + diff
-					tt:AddDoubleLine(format(" %s", v), format("%.1fkb (%s%.1fkb|r)%s", usedKB, DiffColour(diff / 1000), diff, cpuText), 1, 1, 0.5, 1, 1, 1)
+					tt:AddDoubleLine(format(" %s", v), format("%.1fkB (%s%.1fkB|r)%s", usedKB, DiffColour(diff / 1000), diff, cpuText), 1, 1, 0.5, 1, 1, 1)
 				else
-					tt:AddDoubleLine(format(" %s", v), format("%.1fkb%s", usedKB, cpuText), 1, 1, 0.5, 1, 1, 1)
+					tt:AddDoubleLine(format(" %s", v), format("%.1fkB%s", usedKB, cpuText), 1, 1, 0.5, 1, 1, 1)
 				end
 			end
 		end
@@ -1634,14 +1635,14 @@ function XPerl_MinimapButton_Details(tt, ldb)
 		if (showDiff) then
 			local color = DiffColour(diffKB / 3000)
 
-			tt:AddDoubleLine("Total", format("%.1fkb (%s%.1fkb|r)", totalKB, color, diffKB), 1, 1, 1, 1, 1, 1)
+			tt:AddDoubleLine("Total", format("%.1fkB (%s%.1fkB|r)", totalKB, color, diffKB), 1, 1, 1, 1, 1, 1)
 		else
-			tt:AddDoubleLine("Total", format("%.1fkb", totalKB), 1, 1, 1, 1, 1, 1)
+			tt:AddDoubleLine("Total", format("%.1fkB", totalKB), 1, 1, 1, 1, 1, 1)
 		end
 
 		local usedKB = GetAddOnMemoryUsage("ZPerl_Options")
 		if ((usedKB or 0) > 0) then
-			tt:AddDoubleLine(" ZPerl_Options", format("%.1fkb", usedKB), 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+			tt:AddDoubleLine(" ZPerl_Options", format("%.1fkB", usedKB), 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
 		end
 
 		if (totalCPU > 0) then
@@ -2279,12 +2280,24 @@ function XPerl_RestoreAllPositions()
 						frame:SetUserPlaced(false)
 						frame:ClearAllPoints()
 						frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", v.left / frame:GetScale(), v.top / frame:GetScale())
-						if v.height and v.width then
-							if frame:IsResizable() then
-								frame:SetHeight(v.height)
-								frame:SetWidth(v.width)
-							else
-								v.height, v.width = nil, nil
+						if k == "XPerl_Assists_FrameAnchor" then
+							if ZPerlConfigHelper then
+								if ZPerlConfigHelper.sizeAssistsX and ZPerlConfigHelper.sizeAssistsY then
+									XPerl_Assists_Frame:SetWidth(ZPerlConfigHelper.sizeAssistsX)
+									XPerl_Assists_Frame:SetHeight(ZPerlConfigHelper.sizeAssistsY)
+								end
+								if ZPerlConfigHelper.sizeAssistsS then
+									XPerl_Assists_Frame:SetScale(ZPerlConfigHelper.sizeAssistsS)
+								end
+							end
+						else
+							if v.height and v.width then
+								if frame:IsResizable() then
+									frame:SetHeight(v.height)
+									frame:SetWidth(v.width)
+								else
+									v.height, v.width = nil, nil
+								end
 							end
 						end
 						--[[if (k == "XPerl_Runes") then
@@ -2327,7 +2340,7 @@ if IsClassic then
 			[GetSpellInfo(5118)] = true,				-- Aspect of the Cheetah
 			[GetSpellInfo(13159)] = true,				-- Aspect of the Pack
 			--[GetSpellInfo(61648)] = true,				-- Aspect of the Beast
-			[GetSpellInfo(13163)] = true,			-- Aspect of the Monkey
+			--[GetSpellInfo(13163)] = true,				-- Aspect of the Monkey
 			[GetSpellInfo(19506)] = true,				-- Trueshot Aura
 			[GetSpellInfo(5384)] = true,				-- Feign Death
 		},
@@ -2343,8 +2356,8 @@ if IsClassic then
 			[GetSpellInfo(20165)] = true,				-- Seal of Insight
 			[GetSpellInfo(20164)] = true,				-- Seal of Justice
 			--[GetSpellInfo(31801)] = true,				-- Seal of Truth
-			[GetSpellInfo(20375)] = true,				-- Seal of Command
-			[GetSpellInfo(20166)] = true,				-- Seal of Wisdom
+			--[GetSpellInfo(20375)] = true,				-- Seal of Command
+			--[GetSpellInfo(20166)] = true,				-- Seal of Wisdom
 			[GetSpellInfo(20165)] = true,				-- Seal of Light
 			--[GetSpellInfo(53736)] = true,				-- Seal of Corruption
 			--[GetSpellInfo(31892)] = true,				-- Seal of Blood
@@ -2574,21 +2587,21 @@ end
 
 -- XPerl_UnitBuff
 function XPerl_UnitBuff(unit, index, filter, raidFrames)
-	return BuffException(unit, index, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, BuffExceptions, raidFrames)
+	return BuffException(unit, index, filter, (IsVanillaClassic and unit == "target") and UnitAuraWithBuffs or UnitAura, BuffExceptions, raidFrames)
 end
 
 -- XPerl_UnitDebuff
 function XPerl_UnitDebuff(unit, index, filter, raidFrames)
 	if (conf.buffs.ignoreSeasonal or raidFrames) then
-		return DebuffException(unit, index, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, raidFrames)
+		return DebuffException(unit, index, filter, UnitAura, raidFrames)
 	end
-	return BuffException(unit, index, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, DebuffExceptions, raidFrames)
+	return BuffException(unit, index, filter, UnitAura, DebuffExceptions, raidFrames)
 end
 
 -- XPerl_TooltipSetUnitBuff
 -- Retreives the index of the actual unfiltered buff, and uses this on unfiltered tooltip call
 function XPerl_TooltipSetUnitBuff(self, unit, ind, filter, raidFrames)
-	local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index = BuffException(unit, ind, filter, (IsClassic and unit == "target") and UnitAuraDirect or UnitAura, BuffExceptions, raidFrames)
+	local name, icon, count, debuffType, duration, expirationTime, unitCaster, canStealOrPurge, nameplateShowPersonal, spellID, index = BuffException(unit, ind, filter, (IsVanillaClassic and unit == "target") and UnitAuraWithBuffs or UnitAura, BuffExceptions, raidFrames)
 	if (name and index) then
 		if (Utopia_SetUnitBuff) then
 			Utopia_SetUnitBuff(self, unit, index)
@@ -3821,14 +3834,28 @@ end
 -- XPerl_Unit_UpdateReadyState
 function XPerl_Unit_UpdateReadyState(self)
 	local status = conf.showReadyCheck and self.partyid and GetReadyCheckStatus(self.partyid)
-	if (status) then
+	if status then
 		self.statsFrame.ready:Show()
-		if (status == "ready") then
-			self.statsFrame.ready.check:SetTexture(READY_CHECK_READY_TEXTURE)
-		elseif (status == "waiting") then
-			self.statsFrame.ready.check:SetTexture(READY_CHECK_WAITING_TEXTURE)
-		else -- "notready"
-			self.statsFrame.ready.check:SetTexture(READY_CHECK_NOT_READY_TEXTURE)
+		if status == "ready" then
+			if IsRetail then
+				self.statsFrame.ready.check:SetAtlas(READY_CHECK_READY_TEXTURE)
+			else
+				self.statsFrame.ready.check:SetTexture(READY_CHECK_READY_TEXTURE)
+			end
+		elseif status == "waiting" then
+			if IsRetail then
+				self.statsFrame.ready.check:SetAtlas(READY_CHECK_WAITING_TEXTURE)
+			else
+				self.statsFrame.ready.check:SetTexture(READY_CHECK_WAITING_TEXTURE)
+			end
+		elseif status == "notready" then
+			if IsRetail then
+				self.statsFrame.ready.check:SetAtlas(READY_CHECK_NOT_READY_TEXTURE)
+			else
+				self.statsFrame.ready.check:SetTexture(READY_CHECK_NOT_READY_TEXTURE)
+			end
+		else
+			self.statsFrame.ready:Hide()
 		end
 	else
 		self.statsFrame.ready:Hide()
@@ -3921,19 +3948,23 @@ local function scaleMouseUp(self)
 
 	XPerl_SavePosition(self.anchor)
 
-	if (self.resizeTop) then
+	if self.resizeTop then
 		XPerl_SwitchAnchor(self.anchor, "BOTTOMLEFT")
 	end
 
-	if (self.scaling) then
-		if (self.onScaleChanged) then
+	if self.scaling then
+		if self.onScaleChanged then
 			self:onScaleChanged(self.frame:GetScale())
-		elseif (self.onSizeChanged) then
+		end
+	end
+
+	if self.sizing then
+		if self.onSizeChanged then
 			self:onSizeChanged(self.frame:GetWidth(), self.frame:GetHeight())
 		end
 	end
 
-	if (self.oldBdBorder) then
+	if self.oldBdBorder then
 		self.frame:SetBackdropBorderColor(unpack(self.oldBdBorder))
 		self.oldBdBorder = nil
 	end
@@ -4123,7 +4154,7 @@ end
 
 -- XPerl_SetExpectedHots
 function XPerl_SetExpectedHots(self)
-	if WOW_PROJECT_ID ~= WOW_PROJECT_WRATH_CLASSIC then
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CATACLYSM_CLASSIC then
 		return
 	end
 	local bar
@@ -4340,7 +4371,7 @@ function XPerl_Unit_ThreatStatus(self, relative, immediate)
 	end
 end
 
-function XPerl_Register_Prediction(self, conf, g2u, ...)
+function XPerl_Register_Prediction(self, conf, guidToUnit, ...)
 	if not self then
 		return
 	end
@@ -4352,17 +4383,17 @@ function XPerl_Register_Prediction(self, conf, g2u, ...)
 			self:UnregisterEvent("UNIT_HEAL_PREDICTION")
 		end
 
-		if not IsWrathClassic then
+		if not IsCataClassic then
 			if conf.absorbs then
 				self:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", ...)
 			else
 				self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 			end
 		else
-			-- HoT predictions do not work properly on Wrath Classic so use HealComm
+			-- HoT predictions do not work properly on Wrath/Cata Classic so use HealComm
 			if conf.hotPrediction then
 				local UpdateHealth = function(event, ...)
-					local unit = g2u(select(select("#", ...), ...))
+					local unit = guidToUnit(select(select("#", ...), ...))
 					if unit then
 						local f = self:GetScript("OnEvent")
 						f(self, "UNIT_HEAL_PREDICTION", unit)
@@ -4386,7 +4417,7 @@ function XPerl_Register_Prediction(self, conf, g2u, ...)
 	else
 		if conf.healprediction then
 			local UpdateHealth = function(event, ...)
-				local unit = g2u(select(select("#", ...), ...))
+				local unit = guidToUnit(select(select("#", ...), ...))
 				if unit then
 					local f = self:GetScript("OnEvent")
 					f(self, "UNIT_HEAL_PREDICTION", unit)

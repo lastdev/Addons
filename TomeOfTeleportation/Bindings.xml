@@ -1,0 +1,5 @@
+<Bindings>
+ <Binding name="TOMEOFTELEPORTATION" category="ADDONS">
+   TeleporterSlashCmdFunction()
+ </Binding>
+</Bindings>

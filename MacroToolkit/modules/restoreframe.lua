@@ -1,3 +1,4 @@
+--- @class MacroToolkit
 local MT = MacroToolkit
 local L = MT.L
 local AceGUI = MT.LS("AceGUI-3.0")
@@ -103,7 +104,7 @@ function MT:CreateRestoreFrame()
 			StaticPopup_Show("MACROTOOLKIT_DELETEBACKUP")
 		end)
 
-	mtrf:SetScript("OnShow", 
+	mtrf:SetScript("OnShow",
 		function(this)
 			--PlaySound("igCharacterInfoOpen")
 			PlaySound(839)
@@ -134,7 +135,7 @@ function MT:CreateRestoreFrame()
 			MT:Skin(mtrf)
 		end)
 
-	mtrf:SetScript("OnHide", 
+	mtrf:SetScript("OnHide",
 		function(this)
 			--PlaySound("igCharacterInfoClose")
 			PlaySound(840)

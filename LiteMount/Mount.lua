@@ -64,13 +64,15 @@ function LM.Mount:Refresh()
     -- Nothing in base
 end
 
-function LM.Mount:FilterToDisplay(f)
+function LM.Mount.FilterToDisplay(f)
     if not f or f == "NONE" then
         return NONE
+    elseif f == "ALL" then
+        return ALL
     elseif f == "FAVORITES" then
         return FAVORITES
     elseif f:sub(1,1) == '~' then
-        return string.format(L.LM_NOT_FORMAT, self:FilterToDisplay(f:sub(2)))
+        return string.format(L.LM_NOT_FORMAT, LM.Mount.FilterToDisplay(f:sub(2)))
     elseif f:match('^id:%d+$') then
         local _, id = string.split(':', f, 2)
         return C_MountJournal.GetMountInfoByID(tonumber(id))
@@ -93,24 +95,20 @@ function LM.Mount:FilterToDisplay(f)
 end
 
 function LM.Mount:MatchesOneFilter(flags, groups, f)
-    if f == "" or f == self.name then
+    if f == "" or f == "ALL" or f == self.name then
         return true
     elseif f == "NONE" then
         return false
     elseif f == "CASTABLE" then
         return self:IsCastable() == true
     elseif f == "COLLECTED" then
-        return self.isCollected == true
+        return self:IsCollected() == true
     elseif f == "MAWUSABLE" then
         return self:MawUsable() == true
     elseif f == "JOURNAL" then
         return self.mountTypeID ~= nil
     elseif f == "FAVORITES" then
-        return self.isFavorite == true
---[[
-    elseif f == "DRAGONRIDING" then
-        return self.dragonRiding == true
-]]
+        return self:IsFavorite()
     elseif f == "ZONEMATCH" then
         local zone = GetZoneText()
         return self:IsFromZone(zone)
@@ -131,38 +129,63 @@ function LM.Mount:MatchesOneFilter(flags, groups, f)
     end
 end
 
-function LM.Mount:MatchesFilterOr(flags, groups, ...)
-    local f
+function LM.Mount:MatchesFilters(...)
+    local currentFlags = self:GetFlags()
+    local currentGroups = self:GetGroups()
     for i = 1, select('#', ...) do
-        f = select(i, ...)
-        if self:MatchesOneFilter(flags, groups, f) then
-            return true
-        end
-    end
-    return false
-end
-
-function LM.Mount:MatchesFilterAnd(flags, groups, ...)
-    local f
-    for i = 1, select('#', ...) do
-        f = select(i, ...)
-        if type(f) == 'table' then
-            if not self:MatchesFilterOr(flags, groups, unpack(f)) then
-                return false
-            end
-        else
-            if not self:MatchesFilterOr(flags, groups, f) then
-                return false
-            end
+        local f = select(i, ...)
+        if not self:MatchesOneFilter(currentFlags, currentGroups, f) then
+            return false
         end
     end
     return true
 end
 
-function LM.Mount:MatchesFilters(...)
+function LM.Mount:EvalLeaf(f, g, e)
+    return self:MatchesOneFilter(f, g, e)
+end
+
+function LM.Mount:EvalAnd(f, g, e)
+    local result = true
+    for _, term in ipairs(e) do
+        result = result and self:Eval(f, g, term)
+    end
+    return result
+end
+
+function LM.Mount:EvalOr(f, g, e)
+    local result = false
+    for _, term in ipairs(e) do
+        result = result or self:Eval(f, g, term)
+    end
+    return result
+end
+
+function LM.Mount:EvalNot(f, g, e)
+    return not self:Eval(f, g, e[1])
+end
+
+function LM.Mount:Eval(f, g, e)
+    if type(e) ~= 'table' then
+        return self:EvalLeaf(f, g, e)
+    elseif e.op == ',' then
+        return self:EvalAnd(f, g, e)
+    elseif e.op == '/' then
+        return self:EvalOr(f, g, e)
+    elseif e.op == '~' then
+        return self:EvalNot(f, g, e)
+    else
+    --[==[@debug@
+        DevTools_Dump(e)
+        LM.WarningAndPrint('Bad operator made it through somehow: ' .. e.op)
+    --@end-debug@]==]
+    end
+end
+
+function LM.Mount:MatchesExpression(e)
     local currentFlags = self:GetFlags()
     local currentGroups = self:GetGroups()
-    return self:MatchesFilterAnd(currentFlags, currentGroups, ...)
+    return self:Eval(currentFlags, currentGroups, e)
 end
 
 function LM.Mount:FlagsSet(checkFlags)
@@ -196,6 +219,18 @@ end
 
 function LM.Mount:IsMountable()
     return true
+end
+
+function LM.Mount:IsFavorite()
+    return false
+end
+
+function LM.Mount:IsCollected()
+    return true
+end
+
+function LM.Mount:IsFiltered()
+    return false
 end
 
 function LM.Mount:IsFromZone(zone)
@@ -296,9 +331,10 @@ function LM.Mount:Dump(prefix)
     LM.Print(prefix .. " mountID: " .. tostring(self.mountID))
     LM.Print(prefix .. " family: " .. tostring(self.family))
     LM.Print(prefix .. " dragonRiding: " .. tostring(self.dragonRiding))
-    LM.Print(prefix .. " isCollected: " .. tostring(self.isCollected))
-    LM.Print(prefix .. " isFavorite: " .. tostring(self.isFavorite))
-    LM.Print(prefix .. " isFiltered: " .. tostring(self.isFiltered))
+    LM.Print(prefix .. " isCollected: " .. tostring(self:IsCollected()))
+    LM.Print(prefix .. " isMountable: " .. tostring(self:IsMountable()))
+    LM.Print(prefix .. " isFavorite: " .. tostring(self:IsFavorite()))
+    LM.Print(prefix .. " isFiltered: " .. tostring(self:IsFiltered()))
     LM.Print(prefix .. " priority: " .. tostring(self:GetPriority()))
     LM.Print(prefix .. " castable: " .. tostring(self:IsCastable()) .. " (spell " .. tostring(IsUsableSpell(self.spellID)) .. ")")
 end

@@ -1,7 +1,10 @@
-# <DBM Mod> Raids (MoP)
+# <DBM Mod> Scenario (MoP)
 
-## [r163](https://github.com/DeadlyBossMods/DBM-MoP/tree/r163) (2024-01-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r162...r163) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
+## [r167](https://github.com/DeadlyBossMods/DBM-MoP/tree/r167) (2024-05-07)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r166...r167) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
 
-- Bump tocs for 10.2.5  
-- Update one distance API to be classic only  
+- Bump ToCs for 10.2.7  
+- Fix some seticon nitpicks  
+- Fix bug identified by continued improvement to LuaLS function mapping  
+- apparently no one is actually ready for the cataclysm pre patch yet (ie multi interface versions separated by ,). So revert that for now  
+- War within TOC Support  

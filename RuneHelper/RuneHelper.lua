@@ -346,6 +346,7 @@ end
 
 function RH:SendActiveButtons()
     local partyChatType = GetPartyChatType();
+
     if not partyChatType then
         return;
     end
@@ -356,20 +357,12 @@ function RH:SendActiveButtons()
 end
 
 function RH:ReceiveActiveButtons(button1, button2, button3, button4)
-    if button1 and button1 ~= 0 then
-        MiniButton_OnClick(buttons[1][button1]);
-    end
+    local buttonsToActivate = { button1, button2, button3, button4 };
 
-    if button2 and button2 ~= 0 then
-        MiniButton_OnClick(buttons[2][button2]);
-    end
-
-    if button3 and button3 ~= 0 then
-        MiniButton_OnClick(buttons[3][button3]);
-    end
-
-    if button4 and button4 ~= 0 then
-        MiniButton_OnClick(buttons[4][button4]);
+    for i, buttonIndex in ipairs(buttonsToActivate) do
+        if buttonIndex and buttonIndex ~= 0 then
+            MiniButton_OnClick(buttons[i][buttonIndex]);
+        end
     end
 end
 
@@ -495,11 +488,7 @@ function MainFrame:COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function MainFrame:CHAT_MSG_ADDON(prefix, message, _, sender)
-    if prefix ~= ADDON_COMM_PREFIX then
-        return;
-    end
-
-    if sender == PLAYER_NAME_WITH_REALM then
+    if prefix ~= ADDON_COMM_PREFIX or sender == PLAYER_NAME_WITH_REALM then
         return;
     end
 
@@ -537,7 +526,7 @@ function MainFrame:UNIT_AURA()
     local index = FindRuneAura();
 
     for blockId = 1, MAX_BLOCKS do
-        if index and index == blocks[blockId].bigBoy.index  then
+        if index and index == blocks[blockId].bigBoy.index then
             blocks[blockId].bigBoy.glowFrame:Show();
             blocks[blockId].bigBoy.glowFrame.AnimGroup:Play();
         else

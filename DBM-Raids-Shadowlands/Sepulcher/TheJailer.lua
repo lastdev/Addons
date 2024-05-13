@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2464, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(180990)
 mod:SetEncounterID(2537)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -17,8 +17,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 362401 360281 366285 365150 365153 362075 365219 365222 362192 368383 360174 368593 363748 368591 181089 360378",--362024 360180
 	"SPELL_AURA_REMOVED 362401 360281 366285 365150 365153 365222 368383 360174 368593 363748 368591 363886",--360180
 	"SPELL_PERIODIC_DAMAGE 360425 365174",
-	"SPELL_PERIODIC_MISSED 360425 365174",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"SPELL_PERIODIC_MISSED 360425 365174"
+--	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --TODO, is tyranny warning appropriate? maybe track debuff for mythic?
@@ -69,12 +69,12 @@ local yellRuneofDamnationFades					= mod:NewIconFadesYell(360281)
 local timerRelentingDominationCD				= mod:NewCDCountTimer(28.8, 362028, nil, nil, nil, 2)
 local timerTyrany								= mod:NewCDTimer(11, 366132, nil, nil, nil, 3)
 local timerChainsofOppressionCD					= mod:NewCDCountTimer(28.8, 362631, nil, nil, nil, 3)
-local timerMartyrdomCD							= mod:NewCDCountTimer(28.8, 363893, DBM_COMMON_L.TANKCOMBOC, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerMartyrdomCD							= mod:NewCDCountTimer(28.8, 363893, DBM_COMMON_L.TANKCOMBO.." (%s)", nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerTormentCD							= mod:NewCDCountTimer(28.8, 365436, nil, nil, nil, 2)
 local timerRuneofDamnationCD					= mod:NewCDCountTimer(28.8, 360281, DBM_COMMON_L.BOMBS.." (%s)", nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnMartyrdom2", 363893, false, false, {7})
-mod:AddSetIconOption("SetIconOnDamnation", 360281, true, false, {1, 2, 3, 4, 5, 6})
+mod:AddSetIconOption("SetIconOnMartyrdom2", 363893, false, 0, {7})
+mod:AddSetIconOption("SetIconOnDamnation", 360281, true, 0, {1, 2, 3, 4, 5, 6})
 
 --Stage Two: Unholy Attunement
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(23925))
@@ -96,7 +96,7 @@ local timerShatteringBlastCD					= mod:NewCDCountTimer(28.8, 359856, nil, nil, n
 local timerRuneofCompulsionCD					= mod:NewCDCountTimer(28.8, 366285, DBM_COMMON_L.MINDCONTROL.." (%s)", nil, nil, 3)
 local timerDecimatorCD							= mod:NewCDCountTimer(28.8, 364942, 72994, nil, nil, 2)
 
-mod:AddSetIconOption("SetIconOnCopulsion", 366285, true, false, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconOnCopulsion", 366285, true, 0, {1, 2, 3, 4})
 
 --Stage Three: Eternity's End
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24252))
@@ -125,9 +125,9 @@ local timerRuneofDominationCD					= mod:NewCDCountTimer(28.8, 365150, DBM_COMMON
 local timerChainsofAnguishCD					= mod:NewCDCountTimer(28.8, 365219, nil, nil, nil, 5)
 local timerDefileCD								= mod:NewCDCountTimer(28.8, 365169, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 
-mod:AddSetIconOption("SetIconOnDomination2", 365150, true, false, {1, 2, 3})
-mod:AddSetIconOption("SetIconOnChainsofAnguish", 365219, true, false, {5, 6, 7, 8})
---mod:AddSetIconOption("SetIconOnDefile", 365169, true, false, {8})
+mod:AddSetIconOption("SetIconOnDomination2", 365150, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnChainsofAnguish", 365219, true, 0, {5, 6, 7, 8})
+--mod:AddSetIconOption("SetIconOnDefile", 365169, true, 0, {8})
 --Stage Four: Hidden Mythic Stage
 mod:AddTimerLine(SCENARIO_STAGE:format(4))
 local warnLifeShieldOver				= mod:NewEndAnnounce(368383, 1)

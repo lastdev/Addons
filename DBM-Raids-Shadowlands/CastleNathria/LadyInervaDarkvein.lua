@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2420, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(165521)
 mod:SetEncounterID(2406)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -81,7 +81,7 @@ local yellSharedSuffering						= mod:NewShortYell(324983, 202046)--Short Name "B
 
 local timerSinsandSufferingCD					= mod:NewCDCountTimer(44.3, 325064, 202046, nil, nil, 3, nil, nil, true)--ShortName "Beams"
 
-mod:AddSetIconOption("SetIconOnSharedSuffering", 324983, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnSharedSuffering", 324983, true, 0, {1, 2, 3})
 --Container of Concentrated Anima
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22567))
 local specWarnConcentrateAnima					= mod:NewSpecialWarningMoveAway(342321, nil, nil, nil, 1, 2)--Rank 1-2
@@ -90,7 +90,7 @@ local specWarnCondemn							= mod:NewSpecialWarningInterruptCount(331550, false,
 
 local timerConcentratedAnimaCD					= mod:NewCDCountTimer(35.4, 342321, nil, nil, 2, 1)--Technically targetted(3) bar type as well, but since bar is both, and 2 other bars are already 3s, 1 makes more sense
 
-mod:AddSetIconOption("SetIconOnAdds", "ej22618", true, true, {5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnAdds", "ej22618", true, 5, {5, 6, 7, 8})
 
 mod.vb.sufferingIcon = 1
 mod.vb.addIcon = 8

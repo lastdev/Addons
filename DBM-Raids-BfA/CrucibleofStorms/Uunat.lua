@@ -1,7 +1,8 @@
+---@diagnostic disable: dbm-sync-checker
 local mod	= DBM:NewMod(2332, "DBM-Raids-BfA", 3, 1177)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061637")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(145371)
 mod:SetEncounterID(2273)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -65,7 +66,7 @@ local specWarnUnstableResonanceVoid		= mod:NewSpecialWarningYouPos(293663, nil, 
 local specWarnUnstableResonanceOcean	= mod:NewSpecialWarningYouPos(293662, nil, nil, nil, 1, 6)
 local specWarnUnstableResonanceStorm	= mod:NewSpecialWarningYouPos(293661, nil, nil, nil, 1, 6)
 local yellUnstableResonanceSign			= mod:NewPosYell(293653, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION)
-local yellUnstableResonanceRelic		= mod:NewPosYell("ej18970", DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION2, nil, nil, "YELL")
+local yellUnstableResonanceRelic		= mod:NewShortPosYell("ej18970", nil, nil, nil, "YELL")
 --Stage One: His All-Seeing Eyes
 local specWarnTouchoftheEnd				= mod:NewSpecialWarningYou(284851, nil, nil, nil, 1, 2)
 local specWarnTouchoftheEndTaunt		= mod:NewSpecialWarningTaunt(284851, nil, nil, nil, 1, 6)
@@ -118,8 +119,8 @@ mod:AddInfoFrameOption(293653, true)
 mod:AddNamePlateOption("NPAuraOnBond", 287693)
 mod:AddNamePlateOption("NPAuraOnFeed", 285307)
 mod:AddNamePlateOption("NPAuraOnRegen", 285333)
-mod:AddSetIconOption("SetIconOnAdds", "ej19118", true, true, {1, 2, 4})
-mod:AddSetIconOption("SetIconOnRelics", "ej18970", true, false, {1, 3, 5, 6, 7})--only up to 3 are used, but it depends on what user sets UnstableBehavior2 to. 1 and 7 are not included in the default used by DBM/BW (SetTwo)
+mod:AddSetIconOption("SetIconOnAdds", "ej19118", true, 5, {1, 2, 4})
+mod:AddSetIconOption("SetIconOnRelics", "ej18970", true, 0, {1, 3, 5, 6, 7})--only up to 3 are used, but it depends on what user sets UnstableBehavior2 to. 1 and 7 are not included in the default used by DBM/BW (SetTwo)
 mod:AddDropdownOption("UnstableBehavior2", {"SetOne", "SetTwo", "SetThree", "SetFour", "SetFive", "SetSix"}, "SetTwo", "misc", nil, 293653)--SetTwo is BW default (BW default used to be SetOne)
 
 mod.vb.touchCount = 0
@@ -146,7 +147,7 @@ local castsPerGUID = {}
 
 local updateInfoFrame
 do
-	local UnstableResonance, UmbrelShield = DBM:GetSpellInfo(293653), DBM:GetSpellInfo(284722)
+	local UnstableResonance, UmbrelShield = DBM:GetSpellName(293653), DBM:GetSpellName(284722)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)
@@ -495,7 +496,7 @@ function mod:SPELL_SUMMON(args)
 					local UnitID = "nameplate"..i
 					local GUID = UnitGUID(UnitID)
 					local cid = self:GetCIDFromGUID(GUID)
-					if cid == 139059 then
+					if GUID and cid == 139059 then
 						local unitPower = UnitPower(UnitID)
 						if not unitTracked[GUID] then unitTracked[GUID] = "None" end
 						if (unitPower < 30) then

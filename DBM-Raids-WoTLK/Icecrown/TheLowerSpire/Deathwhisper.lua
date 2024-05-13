@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20231026032354")
+mod:SetRevision("20240426180424")
 mod:SetCreatureID(36855)
 mod:SetEncounterID(mod:IsClassic() and 846 or 1100)
 mod:SetModelID(30893)
@@ -53,7 +53,7 @@ end
 
 local dominateMindTargets = {}
 mod.vb.dominateMindIcon = 1
-local shieldName = DBM:GetSpellInfo(70842)
+local shieldName = DBM:GetSpellName(70842)
 
 local function showDominateMindWarning(self)
 	warnDominateMind:Show(table.concat(dominateMindTargets, "<, >"))

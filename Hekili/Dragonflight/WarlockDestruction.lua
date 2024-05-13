@@ -1049,7 +1049,7 @@ spec:RegisterStateExpr( "soul_shard", function () return soul_shards.current end
 
 
 -- Tier 29
-spec:RegisterGear( "tier29", 200336, 200338, 200333, 200335, 200337 )
+spec:RegisterGear( "tier29", 200336, 200338, 200333, 200335, 200337, 217212, 217214, 217215, 217211, 217213 )
 spec:RegisterAura( "chaos_maelstrom", {
     id = 394679,
     duration = 10,
@@ -1666,7 +1666,7 @@ spec:RegisterOptions( {
     cycle = true,
 
     nameplates = false,
-    rangeChecker = "corruption",
+    nameplateRange = 40,
     rangeFilter = false,
 
 

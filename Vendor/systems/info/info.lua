@@ -7,12 +7,12 @@
 
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("info", ...) end
+
 
 -- Actual version and then assumed "next" version is the next minor version bump.
 local RETAIL_VERSION = 100002
 local RETAIL_VERSION_NEXT = 100100
-local CLASSIC_VERSION =  30401
+local CLASSIC_VERSION = 0
 local CLASSIC_VERSION_NEXT = 30500
 local tocVersion = {
     RetailNext = RETAIL_VERSION_NEXT,
@@ -125,9 +125,9 @@ function Info:CheckReleaseForClient(release)
     return false
 end
 
-function Info:Startup(onready)
+function Info:Startup(register)
     populateBuildInfo()
-    onready({
+    register({
         "GetPriceString",
         "CheckReleaseForClient"
     })

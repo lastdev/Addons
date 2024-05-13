@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2378, "DBM-BfA", 6, 1028)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116032237")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(154638)
 mod:SetEncounterID(2351)
 mod:SetReCombatTime(20)
@@ -24,7 +24,7 @@ local timerSongoftheEmpressCD			= mod:NewCDTimer(82.0, 314304, nil, nil, nil, 3)
 local timerForceandVerveCD				= mod:NewCDTimer(82.0, 314333, nil, nil, 2, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 local timerSummonSwarmguardCD			= mod:NewCDTimer(30.5, 314307, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
 
-local BarrierName = DBM:GetSpellInfo(314323)
+local BarrierName = DBM:GetSpellName(314323)
 
 --[[
 function mod:OnCombatStart(delay, yellTriggered)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1862, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(115844)
 mod:SetEncounterID(2032)
 --mod:SetUsedIcons(1)
@@ -45,7 +45,7 @@ local timerCrashingComet				= mod:NewBuffFadesTimer(5, 232249, nil, nil, nil, 5,
 local timerCrashingCometCD				= mod:NewCDTimer(18.2, 232249, nil, nil, nil, 3)--18.2-24.7
 local timerInfernalSpikeCD				= mod:NewCDTimer(16, 233055, nil, nil, nil, 3)--16.2-20.7
 local timerBurningArmorCD				= mod:NewCDCountTimer(24.3, 231363, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerBurningArmor					= mod:NewBuffFadesTimer(6, 231363, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 2, 4)
+local timerBurningArmor					= mod:NewBuffFadesTimer(6, 231363, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON, nil, mod:IsTank() and 2 or nil, 4)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerRainofBrimstoneCD			= mod:NewCDCountTimer(31, 238587, nil, nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerRainofBrimstone				= mod:NewCastTimer(8, 238587, 87701, nil, nil, 5, nil, DBM_COMMON_L.HEROIC_ICON)
@@ -56,7 +56,7 @@ local timerRainofBrimstone				= mod:NewCastTimer(8, 238587, 87701, nil, nil, 5, 
 --mod:AddInfoFrameOption(227503, true)
 mod:AddRangeFrameOption("10/25")
 
-local infernalSpike, crashingComet, tankDebuff = DBM:GetSpellInfo(233021), DBM:GetSpellInfo(232249), DBM:GetSpellInfo(234264)
+local infernalSpike, tankDebuff = DBM:GetSpellName(233021), DBM:GetSpellName(234264)
 local cometTable = {}
 local shatteringStarTimers = {24, 60, 60, 50}--24, 60, 60, 50, 20, 40, 20, 40, 20, 40
 --["232249-Crashing Comet"] = "pull:8.5, 18.3, 18.3, 18.1, 18.5, 18.3, 22.0, 18.3, 18.2, 25.6, 18.3", --Heroic
@@ -213,7 +213,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 233285 then--Rain of Brimston
 		self.vb.brimstoneCount = self.vb.brimstoneCount + 1
 		local nextCount = self.vb.brimstoneCount+1
-		specWarnRainofBrimstone:Show(DBM:GetSpellInfo(spellId))
+		specWarnRainofBrimstone:Show(DBM:GetSpellName(spellId))
 		specWarnRainofBrimstone:Play("helpsoak")
 		--["233285-Rain of Brimstone"] = "pull:12.1, 60.4, 60.8, 60.8, 68.2, 60.0",
 		--["233285-Rain of Brimstone"] = "pull:12.2, 60.8, 60.8, 60.5, 68.5",

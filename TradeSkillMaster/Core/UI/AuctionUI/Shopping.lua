@@ -94,7 +94,9 @@ local GENERIC_TYPES = {
 -- ============================================================================
 
 function Shopping.OnInitialize()
-	if Environment.IsWrathClassic() then
+	if Environment.IsCataClassic() then
+		private.maxLevel = 85
+	elseif Environment.IsWrathClassic() then
 		private.maxLevel = 80
 	elseif Environment.IsVanillaClassic() then
 		private.maxLevel = 60

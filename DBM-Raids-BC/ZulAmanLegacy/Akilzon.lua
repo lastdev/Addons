@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akilzon", "DBM-Raids-BC", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(23574)
 mod:SetEncounterID(1189, 2482)
 mod:SetZone()
@@ -25,7 +25,7 @@ local timerStormCD		= mod:NewCDTimer(34.1, 43648, nil, nil, nil, 3)--34-55
 local berserkTimer		= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption("10")
-mod:AddSetIconOption("StormIcon", 43648, true, false, {1})
+mod:AddSetIconOption("StormIcon", 43648, true, 0, {1})
 
 function mod:OnCombatStart(delay)
 --	warnStormSoon:Schedule(43)

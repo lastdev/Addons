@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2426, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(166971, 166969, 166970)--Castellan Niklaus, Baroness Frieda, Lord Stavros
 mod:SetEncounterID(2412)
 mod:SetBossHPInfoToHighest()
@@ -69,7 +69,7 @@ local timerDualistsRiposteCD					= mod:NewCDTimer(18.7, 346690, nil, "Tank", nil
 local timerDutifulAttendantCD					= mod:NewCDTimer(44.9, 346698, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)--Used after death on Mythic
 
 mod:AddNamePlateOption("NPAuraOnShield", 346694)
-mod:AddSetIconOption("SetIconOnDutiful", 346698, true, true, {8})
+mod:AddSetIconOption("SetIconOnDutiful", 346698, true, 5, {8})
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22201))--One is dead
 local warnDredgerServants						= mod:NewSpellAnnounce(330978, 2)--One boss dead
 
@@ -103,7 +103,7 @@ mod:AddRangeFrameOption(8, 346657)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22945))--Two are dead
 local timerSoulSpikesCD							= mod:NewCDTimer(19.4, 346762, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnImage", "ej22433", true, true, {6})
+mod:AddSetIconOption("SetIconOnImage", "ej22433", true, 5, {6})
 --Lord Stavros
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22149))--2 baseline abilities
 local warnDarkRecital							= mod:NewTargetNoFilterAnnounce(331634, 3)
@@ -125,7 +125,7 @@ local specWarnDancingFools						= mod:NewSpecialWarningSwitch(330964, "Dps", nil
 
 local timerDancingFoolsCD						= mod:NewCDTimer(30.3, 330964, nil, nil, nil, 1)
 
-mod:AddSetIconOption("SetIconOnDancingFools", 346826, true, true, {8})--Attempts to set icon only on killable one, not yet tested
+mod:AddSetIconOption("SetIconOnDancingFools", 346826, true, 5, {8})--Attempts to set icon only on killable one, not yet tested
 mod:AddNamePlateOption("NPAuraOnUproar", 346303)
 --Mythic
 mod:AddTimerLine(PLAYER_DIFFICULTY6)

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -103,8 +103,6 @@ L["dialog.brfit"] = "Battle Res Fit"
 L["dialog.brfit.tooltip"] = "If nobody in your group has a battle rezz, show only groups that already have a battle rezz, or after joining, there is still an open slot. Also works if you are alone."
 L["dialog.matchingid"] = "Matching ID"
 L["dialog.matchingid.tooltip"] = "Show only groups that have the exact same instance lockout than yourself. Always shows all groups where you not have lockout at all."
-L["dialog.dungeon.alert.single.title"] = "Single dungeon selected"
-L["dialog.dungeon.alert.single.info"] = "When searching for a single dungeon, you will get many more relevant results if you type a part of the dungeon's name into the standard search field, for example 'neltharus' or 'vortex 10'. Due to restrictions, addons cannot change the search field for you."
 
 L["settings.dialogMovable.title"] = "Dialog Movable"
 L["settings.dialogMovable.tooltip"] = "Allows you to move the dialog with the mouse. Right-click resets the position."

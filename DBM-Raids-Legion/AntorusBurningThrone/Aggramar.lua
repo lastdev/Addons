@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1984, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(121975)
 mod:SetEncounterID(2063)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -55,7 +55,7 @@ local timerFlameRendCD					= mod:NewNextCountTimer(6.1, 245463, nil, nil, nil, 5
 local timerTempestCD					= mod:NewNextTimer(6.1, 245301, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerScorchingBlazeCD				= mod:NewCDTimer(6.5, 245994, nil, nil, nil, 3)--6.5-8
 local timerRavenousBlazeCD				= mod:NewCDTimer(22.2, 254452, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
-local timerWakeofFlameCD				= mod:NewCDTimer(24.3, 244693, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3, 4)
+local timerWakeofFlameCD				= mod:NewCDTimer(24.3, 244693, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3 or nil, 4)
 
 mod:AddSetIconOption("SetIconOnBlaze2", 254452, false)--Both off by default, both conflit with one another
 mod:AddInfoFrameOption(244688, true)
@@ -66,7 +66,7 @@ local specWarnFlare						= mod:NewSpecialWarningDodge(245983, "-Melee", nil, 2, 
 
 local timerFlareCD						= mod:NewCDTimer(15, 245983, nil, "-Melee", 2, 3, nil, nil, nil, 2, 4)
 
-mod:AddSetIconOption("SetIconOnAdds", 244903, false, true)--Both off by default, both conflit with one another
+mod:AddSetIconOption("SetIconOnAdds", 244903, false, 5)--Both off by default, both conflit with one another
 mod:AddNamePlateOption("NPAuraOnPresence", 244903)
 mod:AddBoolOption("skipMarked", true)
 
@@ -303,7 +303,7 @@ function mod:OnCombatStart(delay)
 				local UnitID = "nameplate"..i
 				local GUID = UnitGUID(UnitID)
 				local cid = self:GetCIDFromGUID(GUID)
-				if cid == 122532 then
+				if GUID and cid == 122532 then
 					local unitPower = UnitPower(UnitID)
 					if not unitTracked[GUID] then unitTracked[GUID] = "None" end
 					if (unitPower < 35) then
@@ -635,7 +635,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		warnTaeshalachTech:Show(self.vb.techCount)
 		timerTaeshalachTechCD:Start(nil, self.vb.techCount+1)
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(spellId))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(spellId))
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, false, true)
 		end
 	elseif spellId == 244792 and self.vb.techActive then--Burning Will of Taeshalach (technique ended)

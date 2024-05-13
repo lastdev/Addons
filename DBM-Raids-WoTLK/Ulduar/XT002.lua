@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal,timewalker"
 end
 
-mod:SetRevision("20230522065847")
+mod:SetRevision("20240428104801")
 mod:SetCreatureID(33293)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1142)
@@ -50,8 +50,8 @@ else
 	timerAchieve					= mod:NewAchievementTimer(205, 2937)
 end
 
-mod:AddSetIconOption("SetIconOnLightBombTarget", 65121, true, true, {1})
-mod:AddSetIconOption("SetIconOnGravityBombTarget", 64234, true, true, {2})
+mod:AddSetIconOption("SetIconOnLightBombTarget", 65121, true, 5, {1})
+mod:AddSetIconOption("SetIconOnGravityBombTarget", 64234, true, 5, {2})
 
 function mod:OnCombatStart(delay)
 	enrageTimer:Start(self:IsClassic() and 360 or 600-delay)

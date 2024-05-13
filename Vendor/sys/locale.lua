@@ -27,6 +27,47 @@ local _, Addon = ...
 local locales = {}
 local localizedStrings = nil
 local localizedStringsProxy = nil
+local LocaleObject = {}
+local currentLocale = nil
+
+function LocaleObject:__construct()
+
+    self.strings = localizedStrings
+end
+
+function LocaleObject:GetName()
+    return self.locale
+end
+
+function LocaleObject:Add(strings)
+
+
+    for id, string in pairs(strings) do
+        self.strings[id] = string
+    end
+end
+
+function LocaleObject:Remove(strings)
+
+    
+    for id, _ in pairs(strings) do
+        self.strings[id] = nil
+    end
+end
+
+function LocaleObject:Get(id)
+
+    return self.strings[id] or nil
+end
+
+function LocaleObject:Format(id, ...)
+    local string = self:Get(id)
+    if (type(string) == "string") then
+        return string.format(string, ...)
+    end
+    return nil
+end
+    
 
 -- This will add a locale definition to the addon.
 -- All locale definitions must be added before calling SetLocale or GetLocale.
@@ -40,6 +81,15 @@ function Addon:AddLocale(locale, strings)
 
 
     table.insert(locales, { locale=locale, strings=strings })
+end
+
+--[[ Finds the locale object for the specified locale, returns nil if the locale doens't exist ]]
+function Addon:FindLocale(locale)
+    if (string.lower(locale) ~= string.lower(currentLocale)) then
+        return nil
+    end
+
+    return Addon.object("LocaleObject", { locale = locale }, LocaleObject)
 end
 
 local function findLocale(locale)
@@ -161,6 +211,7 @@ local function setLocale()
     setmetatable(localizedStringsProxy, proxyMetatable)
 
     -- Free up memory for all the unused strings.
+    currentLocale = targetLocale.locale
     locales = nil
 end
 

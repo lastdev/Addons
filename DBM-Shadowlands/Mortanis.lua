@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2431, "DBM-Shadowlands", nil, 1192)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230124042422")
+mod:SetRevision("20240501100923")
 mod:SetCreatureID(167525)
 mod:SetEncounterID(2410)
 mod:SetReCombatTime(20)
@@ -35,7 +35,7 @@ local timerScreamingSkullCD					= mod:NewCDTimer(26.7, 338851, nil, nil, nil, 3,
 local timerBoneCleaveCD						= mod:NewCDTimer(12.3, 338846, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerUnrulyRemainsCD					= mod:NewCDTimer(15.6, 338849, nil, nil, nil, 3)--15.6-20
 
-mod:AddSetIconOption("SetIconOnSkull", 338851, true, false, {1})
+mod:AddSetIconOption("SetIconOnSkull", 338851, true, 0, {1})
 
 --Ugly, but only accurate way to do it
 local function checkBuff(self)
@@ -46,7 +46,7 @@ local function checkBuff(self)
 			if guid then
 				local cid = self:GetCIDFromGUID(guid)
 				if cid == 167525 then
-					if DBM:UnitBuff(338850) then
+					if DBM:UnitBuff(UnitID, 338850) then
 						return true
 					end
 				end
@@ -59,7 +59,7 @@ local function checkBuff(self)
 			if guid then
 				local cid = self:GetCIDFromGUID(guid)
 				if cid == 167525 then
-					if DBM:UnitBuff(338850) then
+					if DBM:UnitBuff(UnitID, 338850) then
 						return true
 					end
 				end
@@ -70,7 +70,7 @@ local function checkBuff(self)
 		if guid then
 			local cid = self:GetCIDFromGUID(guid)
 			if cid == 167525 then
-				if DBM:UnitBuff(338850) then
+				if DBM:UnitBuff("target", 338850) then
 					return true
 				end
 			end

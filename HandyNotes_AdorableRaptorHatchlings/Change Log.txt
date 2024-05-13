@@ -1,5 +1,19 @@
+== v1.31 - 3rd May 2024
+* Added chat command to jump straight to the options configuration panel
+
+== v1.30 - 1st May 2024
+* Redesign/colourising of the AddOn menu / Options menu description
+* Support for Classic Cataclysm 4.4.0
+
+== v1.29 - 20th April 2024
+* TOC update to 10.2.7
+* Removed old x- entries from TOC files
+
+== v1.28 - 18th March 2024
+* TOC update to 10.2.6
+
 == v1.27 - 12th January 2024
-TOC Bump to 10.2.5
+* TOC update to 10.2.5
 
 == v1.26 - 2nd December 2023
 * Felstriker server added
@@ -14,18 +28,18 @@ TOC Bump to 10.2.5
 * Translations for Obsidian and Deviate added
 
 == v1.23 - 28th October 2023
-* TOC bump for 10.2.0
+* TOC update for 10.2.0
 
 == v1.22 - 24th October 2023
 * Updated to be dual Retail/Wrath
 
 == v1.21 W - 17th October 2023
-* TOC bump for 3.4.3
+* TOC update for 3.4.3
 
 == v1.21 - 18th September 2023
 * Deviate Hatchling added - drops from Deviate Guardians and Deviate Ravagers,
   both found in Wailing Caverns in the first large cave inside the instance
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 
 == v1.20 - 26th August 2023
 * Added Breanni's purchasable Obsidian raptor hatchling.
@@ -36,7 +50,7 @@ TOC Bump to 10.2.5
   Just a little easter egg of sorts, beyond the core four I cover in this AddOn!
 
 == v1.19 W - 15th July 2023
-* TOC bump to 3.4.2
+* TOC update to 3.4.2
 
 == v1.18 - 6th May 2023
 * Now supports the new AddOn Compartment introduced in 10.1.0.
@@ -47,22 +61,22 @@ TOC Bump to 10.2.5
 * Removed unnecessary print to console code
 
 == v1.16 - 24th April 2023
-* TOC bump to 10.1.0
+* TOC update to 10.1.0
 
 == v1.15 - 21st March 2023
-* TOC bump to 10.0.7
+* TOC update to 10.0.7
 
 == v1.14 - 26th January 2023
-* TOC bump to 10.0.5
+* TOC update to 10.0.5
 
 == v1.14 W - 18th January 2023
-* TOC bump to 3.4.1
+* TOC update to 3.4.1
 
 == v1.13 - 7th December 2022
-* TOC bump to 10.0.2
+* TOC update to 10.0.2
 
 == v1.12 - 26th October 2022
-* TOC bump to 10.0.0
+* TOC update to 10.0.0
 
 == v1.11 - 9th October 2022
 * Wrath: The Barrens coordinates are all confirmed now for the Barrens and slightly adjusted as necessary
@@ -96,16 +110,16 @@ TOC Bump to 10.2.5
 * Found and fixed a bug preventing continent pins from showing when inside the Wetlands cave.
 
 == v1.06 W - 11th September 2022
-* TOC bump for 3.4.0
+* TOC update for 3.4.0
 
 == v1.06 - 4th September 2022
-* TOC bump for 9.2.7
+* TOC update for 9.2.7
 
 == v1.05 - 20th March 2022
-* TOC bump for 9.2.0
+* TOC update for 9.2.0
 
 == v1.04 - 8th November 2021
-* TOC bump for 9.1.5
+* TOC update for 9.1.5
 
 == v1.03 - 13th August 2021
 * Switched tooltip labels for Darting/Leaping Hatchlings. Doh!

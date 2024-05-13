@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1123, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240428104732")
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetUsedIcons(6, 5, 4, 3)
@@ -63,7 +63,7 @@ local timerFireStorm					= mod:NewBuffActiveTimer(14, 155493, nil, nil, nil, 6)
 local berserkTimer						= mod:NewBerserkTimer(420)
 
 mod:AddRangeFrameOption("10/6")
-mod:AddSetIconOption("SetIconOnAdds", 155776, true, true)
+mod:AddSetIconOption("SetIconOnAdds", 155776, true, 5)
 mod:AddHudMapOption("HudMapOnFixate", 154952, false)
 
 mod.vb.firestorm = 0
@@ -76,7 +76,7 @@ local function showFixate(self)
 	for name, time in pairs(fixateTagets) do
 		text[#text + 1] = name
 		if self.Options.HudMapOnFixate then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(154952, "highlight", name, 3, 10, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(154952, "highlight", name, 3, 10, 1, 1, 0, 0.5):Pulse(0.5, 0.5)
 		end
 	end
 	warnFixate:Show(table.concat(text, "<, >"))
@@ -279,7 +279,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 		local unitGUID = UnitGUID(unitID)
 		if UnitExists(unitID) and not activeBossGUIDS[unitGUID] then
 			local cid = self:GetCIDFromGUID(unitGUID)
-			if cid == 76794 then--Cinder Wolf
+			if unitGUID and cid == 76794 then--Cinder Wolf
 				wolfIcon = wolfIcon + 1
 				activeBossGUIDS[unitGUID] = true
 				if self:CanSetIcon("SetIconOnAdds") then--Check if elected

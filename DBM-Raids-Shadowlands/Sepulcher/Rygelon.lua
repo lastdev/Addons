@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2467, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(182777)
 mod:SetEncounterID(2549)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -80,10 +80,10 @@ local timerMassiveBang							= mod:NewCastTimer(10, 363533, nil, nil, nil, 5, ni
 
 mod:AddRangeFrameOption(5, 362206)
 mod:AddInfoFrameOption(362081, false)--Tracks just ejection on heroic but on mythic it tracks Irregularity
-mod:AddSetIconOption("SetIconOnDarkEclipse", 361548, true, false, {1, 2, 3}, true)
-mod:AddSetIconOption("SetIconOnQuasar", 362275, false, true, {3, 4, 5, 6, 7, 8}, true)
+mod:AddSetIconOption("SetIconOnDarkEclipse", 361548, true, 0, {1, 2, 3}, true)
+mod:AddSetIconOption("SetIconOnQuasar", 362275, false, 5, {3, 4, 5, 6, 7, 8}, true)
 --The Singularity
-local singularityName = DBM:GetSpellInfo(362207)
+local singularityName = DBM:GetSpellName(362207)
 mod:AddTimerLine(singularityName)
 local warnSingularity							= mod:NewYouAnnounce(362207, 1)
 local warnGravitationalCollapse					= mod:NewCastAnnounce(364386, 4)
@@ -135,7 +135,7 @@ function mod:OnCombatStart(delay)
 		berserkTimer:Start(390-delay)
 		if self.Options.InfoFrame then
 			--On mythic it's slightly more elaborate and involves coordinating a bunch of people around the new mechanic
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(362088))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(362088))
 			DBM.InfoFrame:Show(20, "table", cosmicStacks, 1)
 		end
 	else--Rest are all same, and seem to have been tweaked in recent weeks too
@@ -148,7 +148,7 @@ function mod:OnCombatStart(delay)
 			timerManifestCosmosCD:Start(16.7-delay, 1)
 			if self.Options.InfoFrame then
 				--On heroic it's fairly straight forward swaps tracking only some people
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(362081))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(362081))
 				DBM.InfoFrame:Show(5, "table", cosmicStacks, 1)
 			end
 		end

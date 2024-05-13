@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -52,7 +52,7 @@ mod.vb.sliceCount = 0
 mod.vb.petrifyCount = 0
 mod.vb.rampage = false
 mod.vb.firstWarned = false
-local petrifyDebuff = DBM:GetSpellInfo(155323)
+local petrifyDebuff = DBM:GetSpellName(155323)
 local debuffFilter
 do
 	debuffFilter = function(uId)
@@ -157,7 +157,7 @@ function mod:SPELL_CAST_START(args)
 			end
 		else
 			timerInfernoSliceCD:Start(nil, self.vb.sliceCount+1)
-			local countFormat = self.vb.sliceCount
+			local countFormat = tostring(self.vb.sliceCount)
 			if self.Options.MythicSoakBehavior == "ThreeGroup" then
 				if mythicSoakOrder3Group[self.vb.sliceCount] then
 					countFormat = self.vb.sliceCount.."-"..mythicSoakOrder3Group[self.vb.sliceCount]
@@ -226,7 +226,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPetrifyingSlam:Play("scatter")
 		end
 		if hudEnabled then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "timer", args.destName, 8, 10, 0, 1, 0, 0.6, nil, nil, 4):Appear():RegisterForAlerts():Rotate(360, 9.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "timer", args.destName, 8, 10, 0, 1, 0, 0.6):Appear():RegisterForAlerts():Rotate(360, 9.5)
 		end
 	elseif spellId == 155539 then
 		self.vb.rampage = true

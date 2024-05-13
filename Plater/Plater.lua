@@ -53,7 +53,7 @@ local UnitCanAttack = UnitCanAttack
 --local IsSpellInRange = IsSpellInRange --200 locals limit
 local abs = math.abs
 local format = string.format
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
 local UnitIsUnit = UnitIsUnit
 local type = type
 local select = select
@@ -68,6 +68,7 @@ local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local IS_WOW_PROJECT_CLASSIC_WRATH = IS_WOW_PROJECT_NOT_MAINLINE and ClassicExpansionAtLeast and LE_EXPANSION_WRATH_OF_THE_LICH_KING and ClassicExpansionAtLeast(LE_EXPANSION_WRATH_OF_THE_LICH_KING)
+--local IS_WOW_PROJECT_CLASSIC_CATACLYSM = IS_WOW_PROJECT_NOT_MAINLINE and ClassicExpansionAtLeast and LE_EXPANSION_CATACLYSM and ClassicExpansionAtLeast(LE_EXPANSION_CATACLYSM)
 
 local PixelUtil = PixelUtil or DFPixelUtil
 
@@ -596,7 +597,7 @@ Plater.AnchorNamesByPhraseId = {
 				if (class == "PRIEST") then
 					-- SW:D is available to all priest specs
 					if IsPlayerSpell(32379) then
-						lowExecute = 0.2
+						lowExecute = 0.25
 					end
 					
 				elseif (class == "MAGE") then
@@ -688,15 +689,22 @@ Plater.AnchorNamesByPhraseId = {
 					if GetSpellInfo(GetSpellInfo(53351)) then
 						lowExecute = 0.2
 					end
-				elseif (class == "PRIEST") and IS_WOW_PROJECT_CLASSIC_WRATH then
-					for i = 1, 6 do
-						local enabled, _, glyphSpellID = GetGlyphSocketInfo(i)
-						if enabled and glyphSpellID then
-							if glyphSpellID == 55682 then --Glyph of Shadow Word: Death
-								lowExecute = 0.35
-								break
+				elseif (class == "PRIEST") then
+					if IS_WOW_PROJECT_CLASSIC_WRATH then -- why wrath again?... can't remember
+						for i = 1, 6 do
+							local enabled, _, glyphSpellID = GetGlyphSocketInfo(i)
+							if enabled and glyphSpellID then
+								if glyphSpellID == 55682 then --Glyph of Shadow Word: Death
+									lowExecute = 0.35
+									break
+								end
 							end
 						end
+					end
+					
+					-- SW:D is available to all priest specs
+					if IsPlayerSpell(32379) then
+						lowExecute = 0.25
 					end
 				end
 			end
@@ -817,8 +825,9 @@ Plater.AnchorNamesByPhraseId = {
 		
 		if not rangeChecker then
 			rangeChecker = function (unit)
+				local range = (LibRangeCheck:GetRange(unit, nil, true) or 0) <= (rangeCheckRange or 40)
 				Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
-				return (LibRangeCheck:GetRange(unit) or 0) <= (rangeCheckRange or 40)
+				return range
 			end
 			Plater.GetSpellForRangeCheck()
 		end
@@ -1110,13 +1119,22 @@ Plater.AnchorNamesByPhraseId = {
 			if not hasTankAura then
 				local playerClass = Plater.PlayerClass
 				if playerClass == "WARRIOR" then
-					playerIsTank = GetShapeshiftForm() == 2 or IsEquippedItemType("Shields") -- Defensive Stance or shield
+					local stance = GetShapeshiftFormID() --18 is def, 24 is glad
+					playerIsTank = stance == 18 or ((not stance == 24) and IsEquippedItemType("Shields")) -- Defensive Stance or shield (and not glad)
 				elseif playerClass == "DRUID" then
-					playerIsTank = GetShapeshiftForm() == 1 -- Bear Form
+					local formId = GetShapeshiftFormID()
+					playerIsTank = (formId == 5) or (formId == 8) -- Bear Form or Dire Bear Form...
 				elseif playerClass == "PALADIN" then
 					for i=1,40 do
 					  local spellId = select(10, UnitBuff("player",i))
 					  if spellId == 25780 or spellId == 407627 then
+						playerIsTank = true
+					  end
+					end
+				elseif playerClass == "ROGUE" then
+					for i=1,40 do
+					  local spellId = select(10, UnitBuff("player",i))
+					  if spellId == 400015 or spellId == 400016 then
 						playerIsTank = true
 					  end
 					end
@@ -1135,6 +1153,7 @@ Plater.AnchorNamesByPhraseId = {
 					  end
 					end
 				end
+				
 			end
 			
 			-- if the player is assigned as MAINTANK, then treat him as one:
@@ -1974,7 +1993,7 @@ Plater.AnchorNamesByPhraseId = {
 	end
 	
 	--store all functions for all events that will be registered inside OnInit
-	local last_GetShapeshiftForm = GetShapeshiftForm()
+	local last_GetShapeshiftFormID = GetShapeshiftFormID()
 	local eventFunctions = {
 
 		--when a unit from unatackable change its state, this event triggers several times, a schedule is used to only update once
@@ -2262,7 +2281,7 @@ Plater.AnchorNamesByPhraseId = {
 			
 			Plater.CurrentEncounterID = nil
 			
-			local pvpType, isFFA, faction = GetZonePVPInfo()
+			local pvpType, isFFA, faction = (GetZonePVPInfo or C_PvP.GetZonePVPInfo)()
 			Plater.ZonePvpType = pvpType
 			Plater.UpdateBgPlayerRoleCache()
 			
@@ -2313,7 +2332,7 @@ Plater.AnchorNamesByPhraseId = {
 				C_Timer.After (10, delayed_guildname_check)
 			end
 			
-			local pvpType, isFFA, faction = GetZonePVPInfo()
+			local pvpType, isFFA, faction = (GetZonePVPInfo or C_PvP.GetZonePVPInfo)()
 			Plater.ZonePvpType = pvpType
 			
 			local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize = GetInstanceInfo()
@@ -2460,7 +2479,7 @@ Plater.AnchorNamesByPhraseId = {
 			C_Timer.After (3, Plater.Resources.OnSpecChanged)
 			
 			-- translate NPC_CACHE entries if needed
-			--C_Timer.After (5, Plater.TranslateNPCCache)
+			C_Timer.After (10, Plater.TranslateNPCCache)
 
 		end,
 		
@@ -3860,10 +3879,10 @@ Plater.AnchorNamesByPhraseId = {
 		UPDATE_SHAPESHIFT_FORM = function()
 			local curTime = GetTime()
 			--this is to work around UPDATE_SHAPESHIFT_FORM firing for all units and not just the player... causing lag...
-			if last_GetShapeshiftForm == GetShapeshiftForm() then
+			if last_GetShapeshiftFormID == GetShapeshiftFormID() then
 				return
 			end
-			last_GetShapeshiftForm = GetShapeshiftForm()
+			last_GetShapeshiftFormID = GetShapeshiftFormID()
 			
 			UpdatePlayerTankState()
 			Plater.UpdateAllNameplateColors()
@@ -5640,7 +5659,9 @@ end
 			---@cast plateFrame plateframe
 			if plateFrame.unitFrame and plateFrame.unitFrame.PlaterOnScreen then
 				if not plateFrame.unitFrame.isPerformanceUnit then
-					Plater.AddToAuraUpdate(plateFrame.unitFrame.unit) -- force aura update
+					if not IS_WOW_PROJECT_CLASSIC_ERA or (IS_WOW_PROJECT_CLASSIC_ERA and plateFrame.actorType ~= ACTORTYPE_ENEMY_PLAYER) then -- don't force update in classic
+						Plater.AddToAuraUpdate(plateFrame.unitFrame.unit) -- force aura update
+					end
 				end
 				
 				Plater.UpdatePlateFrame (plateFrame, nil, forceUpdate, justAdded, regenDisabled)
@@ -9045,8 +9066,11 @@ end
 	
 	-- tanslate the npc cache entries if needed, do so. can translate names only, but not zones.
 	function Plater.TranslateNPCCache()
+		if not Plater.db.profile.auto_translate_npc_names then return end
 		if Plater.TranslateNPCCacheIsRunning then return end
 		Plater.TranslateNPCCacheIsRunning = true
+		local maxPerFrame = 10
+		local translateTimer = 0.1
 		
 		local function GetCreatureNameFromID(npcID)
 			if C_TooltipInfo then
@@ -9064,34 +9088,39 @@ end
 			end
 		end
 		
-		local translate_npc_cache = function()
-			if PLAYER_IN_COMBAT or not IS_IN_OPEN_WORLD then
+		local translate_npc_cache
+		translate_npc_cache	= function()
+			if not Plater.db.profile.auto_translate_npc_names then return end
+			if PLAYER_IN_COMBAT then --or not IS_IN_OPEN_WORLD then
 				C_Timer.After(5, translate_npc_cache)
 			end
 			
 			local count = 0
 			local leftOvers = false
 			for id, entry in pairs(DB_NPCIDS_CACHE) do
-				leftOvers = false
 				
 				if entry[3] ~= Plater.Locale then
 					local npcName = GetCreatureNameFromID(id)
 					if npcName then
+						--DevTool:AddData(npcName, "translated")
 						entry[1] = npcName
 						entry[3] = Plater.Locale
 						count = count + 1
+					else
+						--DevTool:AddData(id .. " - " .. entry[1], "not translated")
 					end
 				end
 				
-				if count > 10 then
+				if count >= maxPerFrame then
 					leftOvers = true
 					break
-				else 
 				end
 			end
 			
 			if leftOvers and Plater.TranslateNPCCacheIsRunning then
-				C_Timer.After(1, translate_npc_cache)
+				C_Timer.After(translateTimer, translate_npc_cache)
+			else
+				Plater.TranslateNPCCacheIsRunning = false
 			end
 		end
 		translate_npc_cache()

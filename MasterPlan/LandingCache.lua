@@ -115,10 +115,10 @@ end
 hooksecurefunc("GarrisonLandingPageReport_GetShipments", function(self)
 	if GarrisonLandingPage.garrTypeID >= 3 then return end
 	local index, ship = self.shipmentsPool.numActiveObjects, self.shipmentsPool:Acquire()
-	ship:SetPoint("TOPLEFT", 60 + mod(index, 3) * 105, -105 - floor(index / 3) * 100)
+	ship:SetPoint("TOPLEFT", 60 + (index % 3) * 105, -105 - math.floor(index / 3) * 100)
 	if Ship_SetRecruit(ship) then
 		index, ship = self.shipmentsPool.numActiveObjects, self.shipmentsPool:Acquire()
-		ship:SetPoint("TOPLEFT", 60 + mod(index, 3) * 105, -105 - floor(index / 3) * 100)
+		ship:SetPoint("TOPLEFT", 60 + (index % 3) * 105, -105 - math.floor(index / 3) * 100)
 	end
 	if not Ship_SetCache(ship) then
 		self.shipmentsPool:Release(ship)

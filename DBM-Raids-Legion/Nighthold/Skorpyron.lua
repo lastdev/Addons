@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240428104720")
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -51,12 +51,12 @@ local timerShockwaveCD				= mod:NewCDTimer(57.9, 204316, nil, nil, nil, 2, nil, 
 local timerFocusedBlastCD			= mod:NewCDTimer(30.4, 204471, nil, nil, nil, 3, nil, nil, nil, 3, 4)--30-34 (32.8 NEW data)
 local timerVulnerable				= mod:NewBuffFadesTimer(15, 204459, nil, nil, nil, 6)
 
-mod:AddSetIconOption("SetIconOnVolatileScorpion", 204697, true, true)
+mod:AddSetIconOption("SetIconOnVolatileScorpion", 204697, true, 5)
 mod:AddInfoFrameOption(204284)
 
 mod.vb.volatileScorpCount = 0
 
-local shardName, goodDebuff = DBM:GetSpellInfo(204292), DBM:GetSpellInfo(204284)
+local shardName, goodDebuff = DBM:GetSpellName(204292), DBM:GetSpellName(204284)
 
 function mod:OnCombatStart(delay)
 	self.vb.volatileScorpCount = 0

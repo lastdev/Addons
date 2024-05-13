@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1725, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061644")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(104415)--104731 (Depleted Time Particle). 104676 (Waning Time Particle). 104491 (Accelerated Time particle). 104492 (Slow Time Particle)
 mod:SetEncounterID(1865)
 --mod:SetUsedIcons(5, 4, 3, 2, 1)--sometimes it was 5 targets, sometimes it was whole raid. even post nerf. have to see
@@ -58,8 +58,8 @@ mod.vb.slowCount = 0
 mod.vb.currentPhase = 2
 mod.vb.interruptCount = 0
 mod.vb.timeBombDebuffCount = 0
-local timeBombDebuff = DBM:GetSpellInfo(206617)
-local timeRelease = DBM:GetSpellInfo(206610)
+local timeBombDebuff = DBM:GetSpellName(206617)
+local timeRelease = DBM:GetSpellName(206610)
 local function updateTimeBomb(self)
 	local _, _, _, _, _, expires = DBM:UnitDebuff("player", timeBombDebuff)
 	if expires then

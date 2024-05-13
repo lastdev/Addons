@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
@@ -75,7 +75,7 @@ mod.vb.ballsCount = 0
 mod.vb.shieldCharging = false
 mod.vb.fireActive = false
 local lastX, LastY = nil, nil--Not in VB table because it player personal position
-local barName, arcaneDebuff = DBM:GetSpellInfo(156803), DBM:GetSpellInfo(162186)
+local arcaneDebuff = DBM:GetSpellName(162186)
 
 local function closeRange(self)
 	if self.Options.RangeFrame and not DBM:UnitDebuff("player", arcaneDebuff) then
@@ -276,7 +276,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				lastX, LastY = UnitPosition("player")
 				self:Schedule(7, returnPosition, self)
 				if self.Options.HudMapForFel then
-					DBM.HudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5, nil, nil, 4):Pulse(0.5, 0.5)
+					DBM.HudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5):Pulse(0.5, 0.5)
 				end
 			end
 		end

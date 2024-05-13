@@ -1,6 +1,6 @@
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("itempropertyinfo", ...) end
+
 
 --[[
     Format is the following

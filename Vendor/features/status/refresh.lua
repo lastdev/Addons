@@ -7,7 +7,7 @@
 local AddonName, Addon = ...
 local L = Addon:GetLocale()
 
-local debugp = function (...) Addon:Debug("refresh", ...) end
+
 
 local Status = Addon.Features.Status
 

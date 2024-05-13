@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2342, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(145261)
 mod:SetEncounterID(2271)
 mod:SetHotfixNoticeRev(18355)
@@ -111,7 +111,7 @@ local trackedGemBuff
 
 local updateInfoFrame
 do
-	local Incan, grosslyIncan = DBM:GetSpellInfo(284664), DBM:GetSpellInfo(284798)
+	local Incan, grosslyIncan = DBM:GetSpellName(284664), DBM:GetSpellName(284798)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)

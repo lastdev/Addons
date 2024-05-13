@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2330, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(144747, 144767, 144963, 144941)
 mod:SetEncounterID(2268)
 --mod:DisableESCombatDetection()
@@ -121,7 +121,7 @@ local timerBwonsamdisWrathCD			= mod:NewCDCountTimer(50, 284666, nil, nil, nil, 
 mod:AddNamePlateOption("NPAuraOnPact", 282079)
 mod:AddNamePlateOption("NPAuraOnPackHunter", 286007)
 mod:AddNamePlateOption("NPAuraOnFixate", 282209)
-mod:AddSetIconOption("SetIconHex", 282135, false, false, {1, 2, 3, 4})
+mod:AddSetIconOption("SetIconHex", 282135, false, 0, {1, 2, 3, 4})
 --mod:AddRangeFrameOption("8/10")
 mod:AddInfoFrameOption(282079, true)--Not real spellID, just filler for now
 
@@ -346,7 +346,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnBwonsamdisWrath:Show(args.destName)
 		end
 		local uId = DBM:GetRaidUnitId(args.destName)
-		if self:IsTanking(uId) and self:CheckDispelFilter() then
+		if self:IsTanking(uId) and self:CheckDispelFilter("curse") then
 			specWarnBwonsamdisWrathDispel:Show(args.destName)
 			specWarnBwonsamdisWrathDispel:Play("helpdispel")
 		end

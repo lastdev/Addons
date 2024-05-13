@@ -84,7 +84,14 @@ end
 
 function private.CanLootMailIndex(index, copper)
 	local currentMoney = GetMoney()
-	local moneyCap = Environment.IsRetail() and MAXIMUM_BID_PRICE or 2147483647
+	local moneyCap = nil
+	if Environment.IsRetail() then
+		moneyCap = MAXIMUM_BID_PRICE
+	elseif Environment.IsWrathClassic() or Environment.IsCataClassic() then
+		moneyCap = 9999999999
+	else
+		moneyCap = 2147483647
+	end
 	assert(currentMoney <= moneyCap)
 	-- check if this would put them over the gold cap
 	if currentMoney + copper > moneyCap then return end

@@ -1,0 +1,27 @@
+## Interface: 100206
+## Title: GarrisonCommander-Broker
+## Notes: Data-Broker for GarrisonCommander
+## Notes-itIT: Data-Broker per GarrisonCommander
+## Notes-frFR: Data-Broker pour GarrisonCommander
+## Author: Alar of Runetotem
+## Version: 3.8.1 100250
+## IconTexture: 134414
+## X-Revision: 86314e1
+## eMail: alar@aspide.it
+## URL: http://wow.aspide.it
+## OptionalDeps: Titan, Bazooka, ChocolateBar , FuBar , LibDataBroker-1.1, LibDebug
+## DefaultState: Enabled
+## SavedVariables: dbGACB
+## X-ID: GACB
+## X-Database:dbGACB
+## X-Category: Garrison
+## X-License: GPL v3
+## X-eMail: alar@aspide.it
+## X-Date: 2024-04-07T18:31:57Z
+## X-Embeds:
+embeds.xml
+localization.lua
+ldb.lua
+RelNotes.lua
+../GarrisonCommander/minimap.lua
+

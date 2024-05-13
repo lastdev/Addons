@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2373, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(157602)
 mod:SetEncounterID(2343)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 310277 310358 312595 310361",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
-	"UNIT_DIED",
+--	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_POWER_UPDATE boss1"
 )
@@ -60,8 +60,8 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption("18/4")--Sadly, choices are 13 or 18, 13 too small so have to round 15 up to 18
 mod:AddInfoFrameOption(308377, false)
-mod:AddSetIconOption("SetIconOnVolatileSeed", 310277, true, false, {1})
-mod:AddSetIconOption("SetIconOnMuttering", 310358, false, false, {2, 3, 4, 5, 6, 7, 8})--Depends on number of maws up. Shouldn't need to use all 7 but CAN use up to 7
+mod:AddSetIconOption("SetIconOnVolatileSeed", 310277, true, 0, {1})
+mod:AddSetIconOption("SetIconOnMuttering", 310358, false, 0, {2, 3, 4, 5, 6, 7, 8})--Depends on number of maws up. Shouldn't need to use all 7 but CAN use up to 7
 mod:AddNamePlateOption("NPAuraOnVolatileCorruption", 312595)
 --Eye of Drest'agath
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(20885))
@@ -100,7 +100,7 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(4)--For Acid Splash
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(308377))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(308377))
 		DBM.InfoFrame:Show(10, "playerdebuffremaining", 308377)
 	end
 	berserkTimer:Start(self:IsMythic() and 600 or 900-delay)--Confirmed normal and heroic

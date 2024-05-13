@@ -1,21 +1,31 @@
+== v1.16 - 20th April 2024
+* TOC update to 10.2.7
+* Remove old X- lines from the TOC file
+
+== v1.15 - 18th March 2024
+* TOC update to 10.2.6
+
+== v1.14 - 12th January 2024
+* TOC update to 10.2.5
+
 == v1.13 - 1st December 2023
 * Neighbouring zones data added for Northrend
 * Felstriker server added
 * Penance and Shadowstrike added (SoD)
 
 == v1.12 - 2nd November 2023
-* TOC bump to 10.2.0
+* TOC update to 10.2.0
 * Updated data structure and pin scaling
 
 == v1.11 - 18th September 2023
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 
 == v1.10 - 18th September 2023
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 (short lived. I immediately noticed an omission)
 
 == v1.09 - 4th July 2023
-* TOC version bump to 10.1.5
+* TOC version update to 10.1.5
 
 == v1.08 - 1st July 2023
 * Zidormi suggestions and help throughout

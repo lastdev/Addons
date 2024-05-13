@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1394, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(90269)
 mod:SetEncounterID(1784)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -104,7 +104,7 @@ local AncientSovereign = DBM:EJ_GetSectionInfo(11170)
 local TyrantVelhari = EJ_GetEncounterInfo(1394)
 
 local debuffFilter, debuffFilter2
-local debuffName = DBM:GetSpellInfo(180526)
+local debuffName = DBM:GetSpellName(180526)
 do
 	debuffFilter = function(uId)
 		if DBM:UnitDebuff(uId, debuffName) then
@@ -132,7 +132,7 @@ function mod:AnnTarget(targetname, uId)
 		warnAnnihilationStrike:Show(self.vb.annihilationCount, targetname)
 	end
 	if self.Options.HudMapOnStrike then
-		DBM.HudMap:RegisterRangeMarkerOnPartyMember(180260, "highlight", targetname, 3, 4, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
+		DBM.HudMap:RegisterRangeMarkerOnPartyMember(180260, "highlight", targetname, 3, 4, 1, 0, 0, 0.5):Pulse(0.5, 0.5)
 	end
 end
 
@@ -257,7 +257,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEdictofCondemnationOther:ScheduleVoice(5, "gather")
 		end
 		if self.Options.HudMapEdict2 then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 9, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 9, 1, 1, 0, 0.5):Pulse(0.5, 0.5)
 		end
 	elseif args:IsSpellID(180166, 185237) then--Casts
 		self.vb.touchofHarmCount = self.vb.touchofHarmCount + 1

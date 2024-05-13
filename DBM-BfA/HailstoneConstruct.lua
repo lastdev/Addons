@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2197, "DBM-BfA", 1, 1028)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116032237")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(140252)
 --mod:SetEncounterID(1880)
 mod:SetReCombatTime(20)
@@ -24,7 +24,7 @@ local timerGlacialBreathCD			= mod:NewCDTimer(43.2, 274891, nil, nil, nil, 3)
 local timerFreezingTempestCD		= mod:NewCDTimer(65.5, 274895, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 
 --mod:AddReadyCheckOption(37460, false)
-local spikeName = DBM:GetSpellInfo(274896)
+local spikeName = DBM:GetSpellName(274896)
 
 --[[
 function mod:OnCombatStart(delay, yellTriggered)

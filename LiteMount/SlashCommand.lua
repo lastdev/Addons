@@ -21,6 +21,7 @@ local MacroName = "LiteMount"
 local MacroText = [[
 # Auto-created by LiteMount addon, it is safe to delete or edit this macro.
 # To re-create it run "/litemount macro"
+/lmt savebtn
 /click LM_B1
 ]]
 
@@ -177,6 +178,12 @@ COMMANDS['forcefly'] =
         LM.Environment:ForceFlyable()
     end
 
+
+COMMANDS['savebtn'] =
+    function ()
+        LM.Environment:SaveMouseButtonClicked()
+    end
+
 --[==[@debug@
 COMMANDS['usable'] =
     function ()
@@ -234,4 +241,3 @@ LM.SlashCommandFunc = function (argstr)
 
     return true
 end
-

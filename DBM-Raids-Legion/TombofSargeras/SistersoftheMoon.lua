@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1903, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240102041351")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(118523, 118374, 118518)--118523 Huntress kasparian, 118374 Captain Yathae Moonstrike, 118518 Prestess Lunaspyre
 mod:SetEncounterID(2050)
 --mod:SetBossHPInfoToHighest()
@@ -101,7 +101,7 @@ mod.vb.moonTalonCount = 0
 mod.vb.pulltime = 0
 mod.vb.specialCount = 0
 mod.vb.lastBeacon = false
-local astralPurge = DBM:GetSpellInfo(234998)
+local astralPurge = DBM:GetSpellName(234998)
 
 function mod:VolleyTarget(targetname, uId)
 	if not targetname then return end

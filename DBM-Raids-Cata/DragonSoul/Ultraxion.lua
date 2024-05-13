@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
 
-mod:SetRevision("20240114012904")
+mod:SetRevision("20240426180008")
 mod:SetCreatureID(55294)
 mod:SetEncounterID(1297)
 --mod:SetModelSound("sound\\CREATURE\\ULTRAXION\\VO_DS_ULTRAXION_INTRO_01.OGG", "sound\\CREATURE\\ULTRAXION\\VO_DS_ULTRAXION_AGGRO_01.OGG")
@@ -55,7 +55,7 @@ mod:AddDropdownOption("SpecWarnHoTN", {"Never", "One", "Two", "Three"}, "Never",
 local hourOfTwilightCount = 0
 local fadingLightCount = 0
 local fadingLightTargets = {}
-local hourOfTwilight = DBM:GetSpellInfo(106371)
+local hourOfTwilight = DBM:GetSpellName(106371)
 
 local function warnFadingLightTargets()
 	warnFadingLight:Show(fadingLightCount, table.concat(fadingLightTargets, "<, >"))

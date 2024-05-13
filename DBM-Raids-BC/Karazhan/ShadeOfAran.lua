@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Aran", "DBM-Raids-BC", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(16524)
 mod:SetEncounterID(658, 2450)
 mod:SetModelID(16621)
@@ -36,8 +36,8 @@ local timerChains			= mod:NewTargetTimer(10, 29991, nil, nil, nil, 3, nil, DBM_C
 
 local berserkTimer			= mod:NewBerserkTimer(900)
 
-mod:AddSetIconOption("WreathIcons", 29946, true, false, {5, 6, 7, 8})
-mod:AddSetIconOption("ElementalIcons", 37053, true, true, {1, 2, 3, 4})
+mod:AddSetIconOption("WreathIcons", 29946, true, 0, {5, 6, 7, 8})
+mod:AddSetIconOption("ElementalIcons", 37053, true, 5, {1, 2, 3, 4})
 
 local WreathTargets = {}
 mod.vb.flameWreathIcon = 8

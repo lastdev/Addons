@@ -1,11 +1,11 @@
-## Interface: 100205
+## Interface: 100207
 ## Title: TL;DR Missions
-## Version: 10.2-016
+## Version: 10.2-023
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
 ## SavedVariablesPerCharacter: TLDRMissionsLogging
-## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache
+## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache, TLDRMissionsWODProfiles
 ## X-Curse-Project-ID: 602487
 ## IconTexture: Interface\Icons\Spell_AnimaBastion_Orb
 ## LoadOnDemand: 1
@@ -39,26 +39,31 @@ libs\LibStub\LibStub.lua
 libs\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 enums.lua
-spellsdb.lua
-targetting.lua
-matherrors.lua
-simulation.lua
-combinations.lua
-gui.lua
-guihandlers.lua
-testing.lua
-workhandler.lua
-missions.lua
 events.lua
-logging.lua
-caching.lua
-profiles.lua
 bindings.lua
 publicAPI.lua
 
-torghast-farm.lua
+Draenor\gui.lua
+Draenor\guih.lua
+Draenor\profiles.lua
+
+Shadowlands\caching.lua
+Shadowlands\combinations.lua
+Shadowlands\gui.lua
+Shadowlands\guihandlers.lua
+Shadowlands\logging.lua
+Shadowlands\matherrors.lua
+Shadowlands\missions.lua
+Shadowlands\profiles.lua
+Shadowlands\simulation.lua
+Shadowlands\spellsdb.lua
+Shadowlands\targetting.lua
+Shadowlands\workhandler.lua
+
+Shadowlands\followerlist.xml
+Shadowlands\followerlist.lua
+Shadowlands\torghast-farm.lua
 
 ResultCache\index.xml
 
-followerlist.xml
-followerlist.lua
+

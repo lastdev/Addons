@@ -567,7 +567,7 @@ do
 	ELib.ScrollDropDown.List = {}
 	local ScrollDropDown_Modern = {}
 	
-	for i=1,2 do
+	for i=1,3 do
 		ScrollDropDown_Modern[i] = ELib:Template("ExRTDropDownListModernTemplate",UIParent)
 		_G["WQL_ExRTDropDownListModern"..i] = ScrollDropDown_Modern[i]
 		ScrollDropDown_Modern[i]:SetClampedToScreen(true)
@@ -575,6 +575,7 @@ do
 		ScrollDropDown_Modern[i].Buttons = {}
 		ScrollDropDown_Modern[i].MaxLines = 0
 		ScrollDropDown_Modern[i].isModern = true
+		ScrollDropDown_Modern[i].Level = i
 		do
 			ScrollDropDown_Modern[i].Animation = CreateFrame("Frame",nil,ScrollDropDown_Modern[i])
 			ScrollDropDown_Modern[i].Animation:SetSize(1,1)
@@ -662,6 +663,8 @@ do
 		end
 		ELib.ScrollDropDown.DropDownList[1]:SetFrameStrata("TOOLTIP")
 		ELib.ScrollDropDown.DropDownList[2]:SetFrameStrata("TOOLTIP")
+		ELib.ScrollDropDown.DropDownList[3]:SetFrameStrata("TOOLTIP")
+		ELib.ScrollDropDown.DropDownList[3]:SetToplevel(true)
 		ELib.ScrollDropDown.ToggleDropDownMenu(dropDown)
 		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	end
@@ -833,7 +836,7 @@ do
 		end
 		ELib.ScrollDropDown:CloseSecondLevel(self.Level)
 		if self.subMenu then
-			ELib.ScrollDropDown.ToggleDropDownMenu(self,2)
+			ELib.ScrollDropDown.ToggleDropDownMenu(self,self.Level+1)
 		end
 	end
 	function ELib.ScrollDropDown.OnButtonLeave(self)

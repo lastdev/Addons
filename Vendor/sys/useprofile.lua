@@ -43,9 +43,6 @@ end
    |	SetProfileValues(vals)
    ==========================================================================]]
 function UseProfile:SetProfileValues(values)
-	--[===[@debug@--
-
-	--@end-debug@]===]	
 
 	local profile = Addon:GetProfile()
 	for name,value in pairs(values) do

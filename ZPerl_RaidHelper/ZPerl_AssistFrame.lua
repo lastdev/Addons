@@ -5,7 +5,9 @@
 local conf
 XPerl_RequestConfig(function(new)
 	conf = new
-end, "$Revision: 39bf928a1cdb8b9b5f4c9738a205200b653ebcdd $")
+end, "$Revision: ddda951e11d8520e24a10d5d519ce922a1c3db00 $")
+
+local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 
 local myClass
 local playerAggro, petAggro
@@ -256,7 +258,6 @@ end
 
 -- XPerl_Assists_MouseUp
 function XPerl_Assists_MouseUp(self, button)
-
 	--XPerl_Assists_Frame:StopMovingOrSizing()
 	XPerl_Assists_FrameAnchor:StopMovingOrSizing()
 	if (XPerl_SavePosition) then
@@ -268,9 +269,8 @@ end
 
 -- MakeFriendlyUnitList
 local function MakeFriendlyUnitList()
-
 	local start, prefix, total
-	if (IsInRaid()) then
+	if IsInRaid() then
 		start, prefix, total = 1, "raid", GetNumGroupMembers()
 	else
 		start, prefix, total = 0, "party", GetNumSubgroupMembers()
@@ -311,15 +311,13 @@ function XPerl_Assists_OnEvent(self, event, unit)
 		XPerl_UpdateAssists()
 		XPerl_ShowAssists()
 
-		if ZPerlConfigHelper and ZPerlConfigHelper.sizeAssistsX and ZPerlConfigHelper.sizeAssistsY then
-			self:SetWidth(ZPerlConfigHelper.sizeAssistsX)
-			self:SetHeight(ZPerlConfigHelper.sizeAssistsY)
-		end
-
 		XPerl_RegisterScalableFrame(self, XPerl_Assists_FrameAnchor, nil, nil, nil, true, true)
 		self.corner.onSizeChanged = function(self, x, y)
 			ZPerlConfigHelper.sizeAssistsX = x
 			ZPerlConfigHelper.sizeAssistsY = y
+		end
+		self.corner.onScaleChanged = function(self, s)
+			ZPerlConfigHelper.sizeAssistsS = s
 		end
 		XPerlAssistPin:SetButtonTex()
 	elseif (event == "GROUP_ROSTER_UPDATE") then
@@ -338,6 +336,13 @@ function XPerl_Assists_OnEvent(self, event, unit)
 		if (XPerl_Highlight) then
 			XPerl_Highlight:ClearAll("AGGRO")
 		end
+
+		if IsRetail then
+			XPerlAssistsCloseButton:SetScale(0.66)
+			XPerlAssistsCloseButton:SetPoint("TOPRIGHT", -6, -6)
+			XPerlAssistPin:SetPoint("RIGHT", XPerlAssistsCloseButton, "LEFT", 0, 0)
+		end
+
 		MakeFriendlyUnitList()
 		doUpdate = true
 	end

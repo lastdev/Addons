@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(691, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220516021321")
+mod:SetRevision("20240428104741")
 mod:SetCreatureID(60491)
 mod:SetEncounterID(1564)
 mod:SetReCombatTime(20, 10)
@@ -17,22 +17,22 @@ mod:RegisterEventsInCombat(
 	"UNIT_AURA player"
 )
 
-local warnGrowingAnger			= mod:NewTargetAnnounce(119622, 4)--Mind control trigger
+local warnGrowingAnger			= mod:NewTargetNoFilterAnnounce(119622, 4)--Mind control trigger
 local warnAggressiveBehavior	= mod:NewTargetAnnounce(119626, 4)--Actual mind control targets
+local warnUnleashedWrath		= mod:NewSpellAnnounce(119488, 3)
 
-local specWarnUnleashedWrath	= mod:NewSpecialWarningSpell(119488, nil, nil, nil, 2)--Defaults to tank and healers cause tank probalby want to Cd through this and healers have to heal it, dps just do what they always do and kill stuff.
-local specWarnGrowingAnger		= mod:NewSpecialWarningYou(119622)
-local specWarnBitterThoughts	= mod:NewSpecialWarningMove(119610)
+local specWarnGrowingAnger		= mod:NewSpecialWarningYou(119622, nil, nil, nil, 1, 2)
+local specWarnGTFO				= mod:NewSpecialWarningGTFO(119610, nil, nil, nil, 1, 8)
 
 local timerGrowingAngerCD		= mod:NewCDTimer(32, 119622, nil, nil, nil, 3)--Min 32.6~ Max 67.8
 local timerUnleashedWrathCD		= mod:NewCDTimer(53, 119488, nil, nil, nil, 2)--Based on rage, but timing is consistent enough to use a CD bar, might require some perfecting later, similar to xariona's special, if rage doesn't reset after wipes, etc.
-local timerUnleashedWrath		= mod:NewBuffActiveTimer(24, 119488, nil, "Tank|Healer")
+local timerUnleashedWrath		= mod:NewBuffActiveTimer(24, 119488, nil, "Tank|Healer", nil, 5)
 
 mod:AddRangeFrameOption(5, 119622)
-mod:AddSetIconOption("SetIconOnMC2", 119626, false, false, {8, 7, 6, 5, 4, 3, 2, 1})
+mod:AddSetIconOption("SetIconOnMC2", 119626, false, 0, {8, 7, 6, 5, 4, 3, 2, 1})
 mod:AddReadyCheckOption(32099, false)
 
-local bitterThought, growingAnger = DBM:GetSpellInfo(119601), DBM:GetSpellInfo(119622)
+local bitterThought, growingAnger = DBM:GetSpellName(119601), DBM:GetSpellName(119622)
 local playerMCed = false
 
 local function debuffFilter(uId)
@@ -66,7 +66,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 119488 then
-		specWarnUnleashedWrath:Show()
+		warnUnleashedWrath:Show()
 		timerUnleashedWrath:Start()
 	elseif spellId == 119622 then
 		timerGrowingAngerCD:Start()
@@ -80,6 +80,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:updateRangeFrame()
 		if args:IsPlayer() then
 			specWarnGrowingAnger:Show()
+			specWarnGrowingAnger:Play("findmc")
 		end
 	elseif spellId == 119626 then
 		--Maybe add in function to update icons here in case of a spread that results in more then the original 3 getting the final MC debuff.
@@ -110,6 +111,7 @@ end
 
 function mod:UNIT_AURA(uId)
 	if DBM:UnitDebuff("player", bitterThought) and self:AntiSpam(2) and not playerMCed then
-		specWarnBitterThoughts:Show()
+		specWarnGTFO:Show(bitterThought)
+		specWarnGTFO:Play("watchfeet")
 	end
 end

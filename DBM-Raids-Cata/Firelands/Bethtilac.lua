@@ -6,7 +6,7 @@ if not mod:IsClassic() then--Future planning, so cata classic uses regular rules
 	mod.statTypes = "normal,heroic,timewalker"
 end
 
-mod:SetRevision("20230526084835")
+mod:SetRevision("20240412064728")
 mod:SetCreatureID(52498)
 mod:SetEncounterID(1197)
 
@@ -174,7 +174,7 @@ end
 
 --Adds draw energy off boss through "Leaech Venom" (99411). This causes bosses energy to deplete faster if adds are up longer
 --This code force updates timer as adds siphon off the boss energy
-function mod:UNIT_POWER_UPDATE(uId, powerType)
+function mod:UNIT_POWER_UPDATE(uId)
 	local bossMana = UnitPower(uId) / UnitPowerMax(uId) * 100
 	local bossRemaining = bossMana * 1.176--Calculating based on 85 seconds to fully deplete energy with no drains, is 1.176 energy per second
 	local timeRemaining = timerSmolderingDevastationCD:GetRemaining(self.vb.smolderingCount+1)

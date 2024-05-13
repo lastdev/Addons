@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061653")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -75,7 +75,7 @@ mod.vb.yellType = "Icon"
 mod.vb.latentIcon = 8
 local yellSeeds2 = mod:NewPosYell(181508, nil, true, false)
 local seedsTargets = {}
-local befouledName, latentDebuff = DBM:GetSpellInfo(179711), DBM:GetSpellInfo(182008)
+local befouledName, latentDebuff = DBM:GetSpellName(179711), DBM:GetSpellName(182008)
 local debuffFilter
 do
 	debuffFilter = function(uId)
@@ -131,6 +131,7 @@ local function warnSeeds(self)
 				yellSeeds2:Yell(currentType[i], i, i)
 			end
 			if currentVoice and currentVoice[i] then
+				---@diagnostic disable-next-line: param-type-mismatch
 				specWarnSeedPosition:Play(currentVoice[i])
 			end
 		end
@@ -139,15 +140,15 @@ local function warnSeeds(self)
 		end
 		if self.Options.HudMapOnSeeds then
 			if i == 1 then--Yellow to match Star
-				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "star", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "star", targetName, 3, 13, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
 			elseif i == 2 then--Orange to match Circle
-				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "circle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "circle", targetName, 3, 13, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
 			elseif i == 3 then--Purple to match Diamond
-				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "diamond", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "diamond", targetName, 3, 13, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
 			elseif i == 4 then--Green to match Triangle
-				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "triangle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "triangle", targetName, 3, 13, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
 			else--White to match  Moon
-				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "moon", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "moon", targetName, 3, 13, 1, 1, 1, 0.5):Pulse(0.5, 0.5)
 			end
 		end
 	end

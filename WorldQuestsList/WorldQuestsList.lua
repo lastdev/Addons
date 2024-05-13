@@ -1,4 +1,4 @@
-local VERSION = 107
+local VERSION = 109
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -321,6 +321,10 @@ toc update
 fixes
 
 fixes
+
+toc update
+Restructured options dropdowns: now options for different expansions always visible
+Added option to hide emerald dream quest icons from main map
 ]]
 
 local GlobalAddonName, WQLdb = ...
@@ -1466,7 +1470,7 @@ ArrowsHelpFrame.right:SetRoll(-math.pi / 2)
 
 
 WorldQuestList:RegisterEvent('ADDON_LOADED')
-if UnitLevel'player' < 60 then
+if UnitLevel'player' < 70 then
 	WorldQuestList:RegisterEvent('PLAYER_LEVEL_UP')
 end
 WorldQuestList:RegisterEvent('QUEST_REMOVED')
@@ -1767,6 +1771,17 @@ do
 		[885] = "Legion",
 		[882] = "Legion",
 		[830] = "Legion",
+		[864] = "Bfa",
+		[863] = "Bfa",
+		[862] = "Bfa",
+		[1165] = "Bfa",
+		[875] = "Bfa",
+		[942] = "Bfa",
+		[896] = "Bfa",
+		[895] = "Bfa",
+		[876] = "Bfa",
+		[1161] = "Bfa",
+		[1169] = "Bfa",
 	}
 	function WorldQuestList:IsLegionZone(mapID)
 		mapID = mapID or GetCurrentMapID()
@@ -1899,6 +1914,11 @@ do
 		[896] = true,
 		[895] = true,
 		[942] = true,
+
+		[2025] = true,
+		[2022] = true,
+		[2023] = true,
+		[2024] = true,
 	}
 	function WorldQuestList:FilterCurrentZone(mapID)
 		if subZonesList[mapID] then
@@ -1942,6 +1962,7 @@ end
 do
 	local cache = {}
 	local mapCoords = {	--leftX,topY,rightX,bottomY
+		--UiMapAssignment
 		[875] = {8728.96,4532.46,-4939.41,-4582.09},	--Zandalar
 		[876] = {7521.37,5475.55,-5587.68,-3263.90},	--Кул-Тирас
 		[619] = {13099.97,7262.06,-5737.99,-5296.67},	--Broken Isles
@@ -1960,6 +1981,8 @@ do
 		[1550] = {12568.46,6330.90,-11587.08,-9772.61},	--shadowlands
 
 		[1978] = {13342.78,8432.13,-12137.89,-8544.50},	--Драконьи острова
+		[2133] = {6068.75,2329.16,-1195.83,-2514.58},	--Cave
+		[2200] = {10891.70,1393.75,3414.58,-3589.58},	--Emerald Dream
 	}
 	function WorldQuestList:DevCreateMapCoords(mapID)
 		self.DCMC = self.DCMC or CreateFrame("Frame")
@@ -2135,6 +2158,11 @@ do
 		[2031] = 2507,
 		[2108] = 2503,
 		[2109] = 2511,
+
+		[2420] = 2568,
+
+		[2819] = 2615,
+		[2652] = 2574,
 	}
 	local fg_list = {
 		[2164] = "Both",
@@ -3198,7 +3226,17 @@ ViewAllButton.Argus:SetScript("OnEnter",function(self) self.b:SetColorTexture(0.
 ViewAllButton.Argus:SetScript("OnLeave",function(self) self.b:SetColorTexture(0.28,0.08,0.08,1) end)
 
 ViewAllButton.Update = function()
-	if UnitLevel'player' >= 51 then
+	if UnitLevel'player' >= 61 then
+		ViewAllButton:SetScript("OnClick",function()
+			WorldMapFrame:SetMapID(1978)
+		end)
+		ViewAllButton.t:SetText("World Quests List: "..EXPANSION_NAME9)
+
+		ViewAllButton.Argus:SetScript("OnClick",function()
+			WorldMapFrame:SetMapID(947)
+		end)
+		ViewAllButton.Argus.t:SetText("World Quests List: "..WorldQuestList:GetMapName(947))
+	elseif UnitLevel'player' >= 51 then
 		ViewAllButton:SetScript("OnClick",function()
 			WorldMapFrame:SetMapID(1550)
 		end)
@@ -3350,24 +3388,28 @@ do
 	}
 
 	list[#list+1] = {text = LOCALE.gear,			func = SetFilter,	arg1 = 1,					checkable = true,				}
-	list[#list+1] = {text = LE.ARTIFACT_POWER,		func = SetFilter,	arg1 = 2,					checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = LE.AZERITE,			func = SetFilterType,	arg1 = "azerite",				checkable = true,	shownFunc = NOT_LEGION	}
-	list[#list+1] = {text = WORLD_QUEST_REWARD_FILTERS_ANIMA,func = SetFilterType,	arg1 = "anima",					checkable = true,	shownFunc = SL		}
-	list[#list+1] = {text = LE.ORDER_RESOURCES_NAME_LEGION,	func = SetFilter,	arg1 = 3,					checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = LE.ORDER_RESOURCES_NAME_BFA,	func = SetFilterType,	arg1 = "bfa_orderres",				checkable = true,	shownFunc = NOT_LEGION	}
-	list[#list+1] = {text = LOCALE.blood,			func = SetFilter,	arg1 = 4,					checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = LOCALE.expulsom,		func = SetFilterType,	arg1 = "expulsom",				checkable = true,	shownFunc = NOT_LEGION	}
-	list[#list+1] = {text = GetCurrencyInfo(1508),		func = SetIgnoreFilter,	arg1 = "arguniteFilter",	arg2 = true,	checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = GetCurrencyInfo(1533),		func = SetIgnoreFilter,	arg1 = "wakeningessenceFilter",	arg2 = true,	checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = GetCurrencyInfo(1721),		func = SetFilterType,	arg1 = "manapearl",				checkable = true,	shownFunc = NOT_LEGION	}
 	list[#list+1] = {text = LOCALE.gold,			func = SetFilter,	arg1 = 5,					checkable = true,				}
-	list[#list+1] = {text = LOCALE.invasionPoints,		func = SetIgnoreFilter,	arg1 = "invasionPointsFilter",	arg2 = true,	checkable = true,	shownFunc = LEGION	}
 	list[#list+1] = {text = REPUTATION,			func = SetFilterType,	arg1 = "rep",					checkable = true,				}
-	list[#list+1] = {text = "8.3 Chest",			func = SetFilterType,	arg1 = "bounty_cache",				checkable = true,	shownFunc = NOT_LEGION	}
-	--list[#list+1] = {text = GetCurrencyInfo(UnitFactionGroup("player") == "Alliance" and 1717 or 1716),		func = SetIgnoreFilter,	arg1 = "servicemedalFilter",	arg2 = true,	checkable = true,				}
 	list[#list+1] = {text = OTHER,				func = SetFilter,	arg1 = 6,					checkable = true,				}
 
-
+	list[#list+1] = {text = EXPANSION_NAME6, padding = 16, subMenu = {
+		{text = LE.ARTIFACT_POWER,		func = SetFilter,	arg1 = 2,					checkable = true},
+		{text = LE.ORDER_RESOURCES_NAME_LEGION,	func = SetFilter,	arg1 = 3,					checkable = true},
+		{text = LOCALE.blood,			func = SetFilter,	arg1 = 4,					checkable = true},
+		{text = GetCurrencyInfo(1508),		func = SetIgnoreFilter,	arg1 = "arguniteFilter",	arg2 = true,	checkable = true},
+		{text = GetCurrencyInfo(1533),		func = SetIgnoreFilter,	arg1 = "wakeningessenceFilter",	arg2 = true,	checkable = true},
+		{text = LOCALE.invasionPoints,		func = SetIgnoreFilter,	arg1 = "invasionPointsFilter",	arg2 = true,	checkable = true},
+	}}
+	list[#list+1] = {text = EXPANSION_NAME7, padding = 16, subMenu = {
+		{text = LE.AZERITE,			func = SetFilterType,	arg1 = "azerite",				checkable = true},
+		{text = LE.ORDER_RESOURCES_NAME_BFA,	func = SetFilterType,	arg1 = "bfa_orderres",				checkable = true},
+		{text = LOCALE.expulsom,		func = SetFilterType,	arg1 = "expulsom",				checkable = true},
+		{text = GetCurrencyInfo(1721),		func = SetFilterType,	arg1 = "manapearl",				checkable = true},
+		{text = "8.3 Chest",			func = SetFilterType,	arg1 = "bounty_cache",				checkable = true},
+	}}
+	list[#list+1] = {text = EXPANSION_NAME8, padding = 16, subMenu = {
+		{text = WORLD_QUEST_REWARD_FILTERS_ANIMA,func = SetFilterType,	arg1 = "anima",					checkable = true}
+	}}
 
 
 	list[#list+1] = {
@@ -3384,57 +3426,82 @@ do
 		isTitle = true,
 	}
 	list[#list+1] = {text = LOCALE.bountyIgnoreFilter,		func = SetIgnoreFilter,	arg1 = "bountyIgnoreFilter",		checkable = true,				}
-	list[#list+1] = {text = LE.ARTIFACT_POWER,			func = SetIgnoreFilter,	arg1 = "apIgnoreFilter",		checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = LE.AZERITE,				func = SetIgnoreFilter,	arg1 = "azeriteIgnoreFilter",		checkable = true,	shownFunc = NOT_LEGION	}
-	list[#list+1] = {text = WORLD_QUEST_REWARD_FILTERS_ANIMA,	func = SetIgnoreFilter,	arg1 = "animaIgnoreFilter",		checkable = true,	shownFunc = SL		}
-	list[#list+1] = {text = GetCurrencyInfo(1721),			func = SetIgnoreFilter,	arg1 = "manapearlIgnoreFilter",		checkable = true,	shownFunc = NOT_LEGION	}
 	list[#list+1] = {text = LOCALE.honorIgnoreFilter,		func = SetIgnoreFilter,	arg1 = "honorIgnoreFilter",		checkable = true,				}
 	list[#list+1] = {text = SHOW_PET_BATTLES_ON_MAP_TEXT,		func = SetIgnoreFilter,	arg1 = "petIgnoreFilter",		checkable = true,				}
 	list[#list+1] = {text = LOCALE.wantedIgnoreFilter,		func = SetIgnoreFilter,	arg1 = "wantedIgnoreFilter",		checkable = true,				}
 	list[#list+1] = {text = LOCALE.epicIgnoreFilter,		func = SetIgnoreFilter,	arg1 = "epicIgnoreFilter",		checkable = true,				}
 	list[#list+1] = {text = LOCALE.ignoreList,			func = SetIgnoreFilter,	arg1 = "ignoreIgnore",			checkable = true,				}
-	list[#list+1] = {text = GetFaction(2045,"Legionfall"),		func = SetIgnoreFilter,	arg1 = "legionfallIgnoreFilter",	checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = GetFaction(2165,"Army of the Light"),	func = SetIgnoreFilter,	arg1 = "aotlIgnoreFilter",		checkable = true,	shownFunc = LEGION	}
-	list[#list+1] = {text = GetFaction(2170,"Argussian Reach"),	func = SetIgnoreFilter,	arg1 = "argusReachIgnoreFilter",	checkable = true,	shownFunc = LEGION	}
 
-	list[#list+1] = {text = GetFaction(2164),	func = SetIgnoreFilter,	arg1 = "faction2164IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2164) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2163),	func = SetIgnoreFilter,	arg1 = "faction2163IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2163) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2157),	func = SetIgnoreFilter,	arg1 = "faction2157IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2157) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2156),	func = SetIgnoreFilter,	arg1 = "faction2156IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2156) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2103),	func = SetIgnoreFilter,	arg1 = "faction2103IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2103) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2158),	func = SetIgnoreFilter,	arg1 = "faction2158IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2158) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2159),	func = SetIgnoreFilter,	arg1 = "faction2159IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2159) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2160),	func = SetIgnoreFilter,	arg1 = "faction2160IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2160) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2162),	func = SetIgnoreFilter,	arg1 = "faction2162IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2162) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2161),	func = SetIgnoreFilter,	arg1 = "faction2161IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2161) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2391),	func = SetIgnoreFilter,	arg1 = "faction2391IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2391) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2400),	func = SetIgnoreFilter,	arg1 = "faction2400IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2400) and NOT_LEGION() end	}
-	list[#list+1] = {text = GetFaction(2373),	func = SetIgnoreFilter,	arg1 = "faction2373IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2373) and NOT_LEGION() end	}
+	list[#list+1] = {text = EXPANSION_NAME6, padding = 16, subMenu = {
+		{text = LE.ARTIFACT_POWER,			func = SetIgnoreFilter,	arg1 = "apIgnoreFilter",		checkable = true},
+		{text = GetFaction(2045,"Legionfall"),		func = SetIgnoreFilter,	arg1 = "legionfallIgnoreFilter",	checkable = true},
+		{text = GetFaction(2165,"Army of the Light"),	func = SetIgnoreFilter,	arg1 = "aotlIgnoreFilter",		checkable = true},
+		{text = GetFaction(2170,"Argussian Reach"),	func = SetIgnoreFilter,	arg1 = "argusReachIgnoreFilter",	checkable = true},
+	}}
 
-	list[#list+1] = {text = GetFaction(2465),	func = SetIgnoreFilter,	arg1 = "faction2465IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2465) and SL() end	}
-	list[#list+1] = {text = GetFaction(2410),	func = SetIgnoreFilter,	arg1 = "faction2410IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2410) and SL() end	}
-	list[#list+1] = {text = GetFaction(2413),	func = SetIgnoreFilter,	arg1 = "faction2413IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2413) and SL() end	}
-	list[#list+1] = {text = GetFaction(2407),	func = SetIgnoreFilter,	arg1 = "faction2407IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2407) and SL() end	}
+	list[#list+1] = {text = EXPANSION_NAME7, padding = 16, subMenu = {
+		{text = LE.AZERITE,				func = SetIgnoreFilter,	arg1 = "azeriteIgnoreFilter",		checkable = true},
+		{text = GetCurrencyInfo(1721),			func = SetIgnoreFilter,	arg1 = "manapearlIgnoreFilter",		checkable = true},
 
-	list[#list+1] = {text = GetFaction(2478),	func = SetIgnoreFilter,	arg1 = "faction2478IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2478) and SL() end	}
+		{text = GetFaction(2164),	func = SetIgnoreFilter,	arg1 = "faction2164IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2164) end	},
+		{text = GetFaction(2163),	func = SetIgnoreFilter,	arg1 = "faction2163IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2163) end	},
+		{text = GetFaction(2157),	func = SetIgnoreFilter,	arg1 = "faction2157IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2157) end	},
+		{text = GetFaction(2156),	func = SetIgnoreFilter,	arg1 = "faction2156IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2156) end	},
+		{text = GetFaction(2103),	func = SetIgnoreFilter,	arg1 = "faction2103IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2103) end	},
+		{text = GetFaction(2158),	func = SetIgnoreFilter,	arg1 = "faction2158IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2158) end	},
+		{text = GetFaction(2159),	func = SetIgnoreFilter,	arg1 = "faction2159IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2159) end	},
+		{text = GetFaction(2160),	func = SetIgnoreFilter,	arg1 = "faction2160IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2160) end	},
+		{text = GetFaction(2162),	func = SetIgnoreFilter,	arg1 = "faction2162IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2162) end	},
+		{text = GetFaction(2161),	func = SetIgnoreFilter,	arg1 = "faction2161IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2161) end	},
+		{text = GetFaction(2391),	func = SetIgnoreFilter,	arg1 = "faction2391IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2391) end	},
+		{text = GetFaction(2400),	func = SetIgnoreFilter,	arg1 = "faction2400IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2400) end	},
+		{text = GetFaction(2373),	func = SetIgnoreFilter,	arg1 = "faction2373IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2373) end	},
 
-	list[#list+1] = {text = GetFaction(2510),	func = SetIgnoreFilter,	arg1 = "faction2510IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2510) and DF() end	}
-	list[#list+1] = {text = GetFaction(2507),	func = SetIgnoreFilter,	arg1 = "faction2507IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2507) and DF() end	}
-	list[#list+1] = {text = GetFaction(2503),	func = SetIgnoreFilter,	arg1 = "faction2503IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2503) and DF() end	}
-	list[#list+1] = {text = GetFaction(2511),	func = SetIgnoreFilter,	arg1 = "faction2511IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2511) and DF() end	}
+	}}
+
+	list[#list+1] = {text = EXPANSION_NAME8, padding = 16, subMenu = {
+		{text = WORLD_QUEST_REWARD_FILTERS_ANIMA,	func = SetIgnoreFilter,	arg1 = "animaIgnoreFilter",		checkable = true},
+
+		{text = GetFaction(2465),	func = SetIgnoreFilter,	arg1 = "faction2465IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2465) end	},
+		{text = GetFaction(2410),	func = SetIgnoreFilter,	arg1 = "faction2410IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2410) end	},
+		{text = GetFaction(2413),	func = SetIgnoreFilter,	arg1 = "faction2413IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2413) end	},
+		{text = GetFaction(2407),	func = SetIgnoreFilter,	arg1 = "faction2407IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2407) end	},
+
+		{text = GetFaction(2478),	func = SetIgnoreFilter,	arg1 = "faction2478IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2478) end	},
+
+	}}
+
+	list[#list+1] = {text = EXPANSION_NAME9, padding = 16, subMenu = {
+		{text = GetFaction(2510),	func = SetIgnoreFilter,	arg1 = "faction2510IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2510) end	},
+		{text = GetFaction(2507),	func = SetIgnoreFilter,	arg1 = "faction2507IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2507) end	},
+		{text = GetFaction(2503),	func = SetIgnoreFilter,	arg1 = "faction2503IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2503) end	},
+		{text = GetFaction(2511),	func = SetIgnoreFilter,	arg1 = "faction2511IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2511) end	},
+		{text = GetFaction(2564),	func = SetIgnoreFilter,	arg1 = "faction2564IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2564) end	},
+		{text = GetFaction(2615),	func = SetIgnoreFilter,	arg1 = "faction2615IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2615) end	},
+		{text = GetFaction(2574),	func = SetIgnoreFilter,	arg1 = "faction2574IgnoreFilter",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2574) end	},
+
+	}}
 
 	list[#list+1] = {text = CLOSE,			func = function() ELib.ScrollDropDown.Close() end,		padding = 16,	}
 
+	local function CheckEntry(entry)
+		if entry.func == SetFilter then
+			entry.checkState = bit.band(filters[ entry.arg1 ][2],ActiveFilter) > 0
+		elseif entry.func == SetFilterType then
+			entry.checkState = not ActiveFilterType[ entry.arg1 ]
+		elseif entry.func == SetIgnoreFilter and not entry.arg2 then 
+			entry.checkState = VWQL[charKey][entry.arg1]
+		elseif entry.func == SetIgnoreFilter and entry.arg2 then 
+			entry.checkState = not VWQL[charKey][entry.arg1]
+		end
+	end
 	function WorldQuestList.filterDropDown.Button:additionalToggle()
 		for i=1,#self.List do
-			if self.List[i].func == SetFilter then
-				self.List[i].checkState = bit.band(filters[ self.List[i].arg1 ][2],ActiveFilter) > 0
-			elseif self.List[i].func == SetFilterType then
-				self.List[i].checkState = not ActiveFilterType[ self.List[i].arg1 ]
-			elseif self.List[i].func == SetIgnoreFilter and not self.List[i].arg2 then 
-				self.List[i].checkState = VWQL[charKey][self.List[i].arg1]
-			elseif self.List[i].func == SetIgnoreFilter and self.List[i].arg2 then 
-				self.List[i].checkState = not VWQL[charKey][self.List[i].arg1]
+			CheckEntry(self.List[i])
+			if self.List[i].subMenu then
+				for j=1,#self.List[i].subMenu do
+					CheckEntry(self.List[i].subMenu[j])
+				end
 			end
 		end
 	end
@@ -3695,6 +3762,9 @@ do
 			func = function()
 				VWQL.DisableArrow = not VWQL.DisableArrow
 				WorldQuestList_Update()
+				if VWQL.DisableArrow then
+					WQLdb.Arrow:Hide()
+				end
 			end,
 			checkable = true,
 		},
@@ -3826,12 +3896,6 @@ do
 		},
 	}
 
-	list[#list+1] = {
-		text = LOCALE.apFormatSetup,
-		subMenu = azeriteFormatSubMenu,
-		padding = 16,
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
 
 	local function SetIconGeneral(_, arg1)
 		VWQL["DisableIconsGeneralMap"..arg1] = not VWQL["DisableIconsGeneralMap"..arg1]
@@ -3980,35 +4044,43 @@ do
 		WorldQuestList_Update()
 	end
 	local highlightingSubmenu = {
-		{text = GetFaction(2164),	func = SetHighlighFaction,	arg1 = "faction2164Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2164) and NOT_LEGION() end	},
-		{text = GetFaction(2163),	func = SetHighlighFaction,	arg1 = "faction2163Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2163) and NOT_LEGION() end	},
-		{text = GetFaction(2157),	func = SetHighlighFaction,	arg1 = "faction2157Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2157) and NOT_LEGION() end	},
-		{text = GetFaction(2156),	func = SetHighlighFaction,	arg1 = "faction2156Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2156) and NOT_LEGION() end	},
-		{text = GetFaction(2103),	func = SetHighlighFaction,	arg1 = "faction2103Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2103) and NOT_LEGION() end	},
-		{text = GetFaction(2158),	func = SetHighlighFaction,	arg1 = "faction2158Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2158) and NOT_LEGION() end	},
-		{text = GetFaction(2159),	func = SetHighlighFaction,	arg1 = "faction2159Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2159) and NOT_LEGION() end	},
-		{text = GetFaction(2160),	func = SetHighlighFaction,	arg1 = "faction2160Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2160) and NOT_LEGION() end	},
-		{text = GetFaction(2162),	func = SetHighlighFaction,	arg1 = "faction2162Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2162) and NOT_LEGION() end	},
-		{text = GetFaction(2161),	func = SetHighlighFaction,	arg1 = "faction2161Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2161) and NOT_LEGION() end	},
-
-		{text = GetFaction(2465),	func = SetHighlighFaction,	arg1 = "faction2465Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2465) and SL() end	},
-		{text = GetFaction(2410),	func = SetHighlighFaction,	arg1 = "faction2410Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2410) and SL() end	},
-		{text = GetFaction(2413),	func = SetHighlighFaction,	arg1 = "faction2413Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2413) and SL() end	},
-		{text = GetFaction(2407),	func = SetHighlighFaction,	arg1 = "faction2407Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2407) and SL() end	},
-
-		{text = GetFaction(2478),	func = SetHighlighFaction,	arg1 = "faction2478Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2478) and SL() end	},
-
-		{text = GetFaction(2510),	func = SetHighlighFaction,	arg1 = "faction2510Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2510) and DF() end	},
-		{text = GetFaction(2507),	func = SetHighlighFaction,	arg1 = "faction2507Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2507) and DF() end	},
-		{text = GetFaction(2503),	func = SetHighlighFaction,	arg1 = "faction2503Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2503) and DF() end	},
-		{text = GetFaction(2511),	func = SetHighlighFaction,	arg1 = "faction2511Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2511) and DF() end	},
+		{text = EXPANSION_NAME7, padding = 16, subMenu = {
+			{text = GetFaction(2164),	func = SetHighlighFaction,	arg1 = "faction2164Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2164) end	},
+			{text = GetFaction(2163),	func = SetHighlighFaction,	arg1 = "faction2163Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2163) end	},
+			{text = GetFaction(2157),	func = SetHighlighFaction,	arg1 = "faction2157Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2157) end	},
+			{text = GetFaction(2156),	func = SetHighlighFaction,	arg1 = "faction2156Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2156) end	},
+			{text = GetFaction(2103),	func = SetHighlighFaction,	arg1 = "faction2103Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2103) end	},
+			{text = GetFaction(2158),	func = SetHighlighFaction,	arg1 = "faction2158Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2158) end	},
+			{text = GetFaction(2159),	func = SetHighlighFaction,	arg1 = "faction2159Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2159) end	},
+			{text = GetFaction(2160),	func = SetHighlighFaction,	arg1 = "faction2160Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2160) end	},
+			{text = GetFaction(2162),	func = SetHighlighFaction,	arg1 = "faction2162Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2162) end	},
+			{text = GetFaction(2161),	func = SetHighlighFaction,	arg1 = "faction2161Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2161) end	},
+		}},
+	
+		{text = EXPANSION_NAME8, padding = 16, subMenu = {
+			{text = GetFaction(2465),	func = SetHighlighFaction,	arg1 = "faction2465Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2465) end	},
+			{text = GetFaction(2410),	func = SetHighlighFaction,	arg1 = "faction2410Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2410) end	},
+			{text = GetFaction(2413),	func = SetHighlighFaction,	arg1 = "faction2413Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2413) end	},
+			{text = GetFaction(2407),	func = SetHighlighFaction,	arg1 = "faction2407Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2407) end	},
+	
+			{text = GetFaction(2478),	func = SetHighlighFaction,	arg1 = "faction2478Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2478) end	},
+		}},
+	
+		{text = EXPANSION_NAME9, padding = 16, subMenu = {
+			{text = GetFaction(2510),	func = SetHighlighFaction,	arg1 = "faction2510Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2510) end	},
+			{text = GetFaction(2507),	func = SetHighlighFaction,	arg1 = "faction2507Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2507) end	},
+			{text = GetFaction(2503),	func = SetHighlighFaction,	arg1 = "faction2503Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2503) end	},
+			{text = GetFaction(2511),	func = SetHighlighFaction,	arg1 = "faction2511Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2511) end	},
+			{text = GetFaction(2564),	func = SetHighlighFaction,	arg1 = "faction2564Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2564) end	},
+			{text = GetFaction(2615),	func = SetHighlighFaction,	arg1 = "faction2615Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2615) end	},
+			{text = GetFaction(2574),	func = SetHighlighFaction,	arg1 = "faction2574Highlight",	checkable = true,	shownFunc = function() return WorldQuestList:IsFactionAvailable(2574) end	},
+		}},
 	}
 
 	list[#list+1] = {
 		text = HIGHLIGHTING.." "..REPUTATION,
 		padding = 16,
 		subMenu = highlightingSubmenu,
-		shownFunc = function() return NOT_LEGION() or SL() or DF() or not WorldQuestList.optionsDropDown:IsVisible() end,
 	}
 
 	list[#list+1] = {
@@ -4020,117 +4092,148 @@ do
 		checkable = true,
 	}
 
-	list[#list+1] = {
-		text = LOCALE.expulsomReplace,
-		func = function()
-			VWQL.ExpulsomReplace = not VWQL.ExpulsomReplace
-			WorldQuestList_Update()
-		end,
-		checkable = true,
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
+	list[#list+1] = {text = EXPANSION_NAME6, padding = 16, subMenu = {
+		{
+			text = LOCALE.addQuestsArgus,
+			func = function()
+				VWQL.OppositeContinentArgus = not VWQL.OppositeContinentArgus
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = LOCALE.argusMap,
+			func = function()
+				VWQL.ArgusMap = not VWQL.ArgusMap
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 905 then
+					WorldMapFrame:SetMapID(885)
+					WorldMapFrame:SetMapID(905)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = LOCALE.enigmaHelper,
+			func = function()
+				VWQL.EnableEnigma = not VWQL.EnableEnigma
+			end,
+			checkable = true,
+		},
+		{
+			text = LOCALE.barrelsHelper,
+			func = function()
+				VWQL.DisableBarrels = not VWQL.DisableBarrels
+			end,
+			checkable = true,
+		},
+	}}
 
-	list[#list+1] = {
-		text = (UnitFactionGroup("player") == "Alliance" and "|TInterface\\FriendsFrame\\PlusManz-Alliance:16|t " or "|TInterface\\FriendsFrame\\PlusManz-Horde:16|t ")..LOCALE.addQuestsOpposite,
-		func = function()
-			VWQL.OppositeContinent = not VWQL.OppositeContinent
-			WorldQuestList_Update()
-		end,
-		checkable = true,
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-		mark = "OppositeContinent",
-	}
-	list[#list+1] = {
-		text = LOCALE.addQuestsArgus,
-		func = function()
-			VWQL.OppositeContinentArgus = not VWQL.OppositeContinentArgus
-			WorldQuestList_Update()
-		end,
-		checkable = true,
-		shownFunc = function() return LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.addQuestsNazjatar,
-		func = function()
-			VWQL.OppositeContinentNazjatar = not VWQL.OppositeContinentNazjatar
-			WorldQuestList_Update()
-		end,
-		checkable = true,
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = WorldQuestList:GetMapIcon(619).." "..LOCALE.hideLegion,
-		func = function()
-			VWQL.HideLegion = not VWQL.HideLegion
-			WorldQuestList_Update()
-		end,
-		checkable = true,
-		mark = "HideLegion",
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.argusMap,
-		func = function()
-			VWQL.ArgusMap = not VWQL.ArgusMap
-			ELib.ScrollDropDown.Close()
-			if GetCurrentMapID() == 905 then
-				WorldMapFrame:SetMapID(885)
-				WorldMapFrame:SetMapID(905)
-			end
-			WorldQuestList_Update()
-		end,
-		checkable = true,
-		shownFunc = function() return LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
+	list[#list+1] = {text = EXPANSION_NAME7, padding = 16, subMenu = {
+		{
+			text = LOCALE.apFormatSetup,
+			subMenu = azeriteFormatSubMenu,
+			padding = 16,
+		},
+		{
+			text = LOCALE.expulsomReplace,
+			func = function()
+				VWQL.ExpulsomReplace = not VWQL.ExpulsomReplace
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = (UnitFactionGroup("player") == "Alliance" and "|TInterface\\FriendsFrame\\PlusManz-Alliance:16|t " or "|TInterface\\FriendsFrame\\PlusManz-Horde:16|t ")..LOCALE.addQuestsOpposite,
+			func = function()
+				VWQL.OppositeContinent = not VWQL.OppositeContinent
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+			mark = "OppositeContinent",
+		},
+		{
+			text = LOCALE.addQuestsNazjatar,
+			func = function()
+				VWQL.OppositeContinentNazjatar = not VWQL.OppositeContinentNazjatar
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = WorldQuestList:GetMapIcon(619).." "..LOCALE.hideLegion,
+			func = function()
+				VWQL.HideLegion = not VWQL.HideLegion
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+			mark = "HideLegion",
+		},
+		{
+			text = LOCALE.shellGameHelper,
+			func = function()
+				VWQL.DisableShellGame = not VWQL.DisableShellGame
+			end,
+			checkable = true,
+		},
+		{
+			text = LOCALE.calligraphyGameHelper,
+			func = function()
+				VWQL.DisableCalligraphy = not VWQL.DisableCalligraphy
+			end,
+			checkable = true,
+		}
+	}}
 
-	list[#list+1] = {
-		text = LOCALE.enigmaHelper,
-		func = function()
-			VWQL.EnableEnigma = not VWQL.EnableEnigma
-		end,
-		checkable = true,
-		shownFunc = function() return LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.barrelsHelper,
-		func = function()
-			VWQL.DisableBarrels = not VWQL.DisableBarrels
-		end,
-		checkable = true,
-		shownFunc = function() return LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.shellGameHelper,
-		func = function()
-			VWQL.DisableShellGame = not VWQL.DisableShellGame
-		end,
-		checkable = true,
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.calligraphyGameHelper,
-		func = function()
-			VWQL.DisableCalligraphy = not VWQL.DisableCalligraphy
-		end,
-		checkable = true,
-		shownFunc = function() return NOT_LEGION() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.aspirantTraining,
-		func = function()
-			VWQL.DisableAspirantTraining = not VWQL.DisableAspirantTraining
-		end,
-		checkable = true,
-		shownFunc = function() return SL() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
-	list[#list+1] = {
-		text = LOCALE.toughCrowdHelper,
-		func = function()
-			VWQL.DisableToughCrowd = not VWQL.DisableToughCrowd
-		end,
-		checkable = true,
-		shownFunc = function() return SL() or not WorldQuestList.optionsDropDown:IsVisible() end,
-	}
+	list[#list+1] = {text = EXPANSION_NAME8, padding = 16, subMenu = {
+		{
+			text = LOCALE.aspirantTraining,
+			func = function()
+				VWQL.DisableAspirantTraining = not VWQL.DisableAspirantTraining
+			end,
+			checkable = true,
+		},
+		{
+			text = LOCALE.toughCrowdHelper,
+			func = function()
+				VWQL.DisableToughCrowd = not VWQL.DisableToughCrowd
+			end,
+			checkable = true,
+		}
+	}}
+
+	local opt_name_dfcave = WorldQuestList:GetMapName(2133).." quests on main map"
+	local opt_name_dfemeralddream = WorldQuestList:GetMapName(2200).." quests on main map"
+	list[#list+1] = {text = EXPANSION_NAME9, padding = 16, subMenu = {
+		{
+			text = opt_name_dfcave,
+			func = function()
+				VWQL.DFCaveMap = not VWQL.DFCaveMap
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 1978 then
+					WorldMapFrame:SetMapID(885)
+					WorldMapFrame:SetMapID(1978)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+		{
+			text = opt_name_dfemeralddream,
+			func = function()
+				VWQL.EmeraldDreamMap = not VWQL.EmeraldDreamMap
+				ELib.ScrollDropDown.Close()
+				if GetCurrentMapID() == 1978 then
+					WorldMapFrame:SetMapID(885)
+					WorldMapFrame:SetMapID(1978)
+				end
+				WorldQuestList_Update()
+			end,
+			checkable = true,
+		},
+	}}
+
 
 	list[#list+1] = {
 		text = LOCALE.ignoreList,
@@ -4147,44 +4250,56 @@ do
 		padding = 16,
 	}
 
+	local function CheckEntry(entry)
+		if entry.text == LOCALE.barrelsHelper then
+			entry.checkState = not VWQL.DisableBarrels
+		elseif entry.text == LOCALE.enigmaHelper then
+			entry.checkState = VWQL.EnableEnigma
+		elseif entry.text == LOCALE.disabeHighlightNewQuests then
+			entry.checkState = VWQL.DisableHighlightNewQuest
+		elseif entry.text == LOCALE.disableBountyIcon then
+			entry.checkState = VWQL.DisableBountyIcon
+		elseif entry.mark == "OppositeContinent" then
+			entry.checkState = VWQL.OppositeContinent
+		elseif entry.mark == "HideLegion" then
+			entry.checkState = VWQL.HideLegion
+		elseif entry.text == LOCALE.shellGameHelper then
+			entry.checkState = not VWQL.DisableShellGame
+		elseif entry.text == LOCALE.iconsOnMinimap then
+			entry.checkState = not VWQL.DisableIconsGeneral
+		elseif entry.text == LOCALE.addQuestsArgus then
+			entry.checkState = not VWQL.OppositeContinentArgus
+		elseif entry.text == LOCALE.argusMap then
+			entry.checkState = not VWQL.ArgusMap
+		elseif entry.text == LOCALE.lfgSearchOption then
+			entry.checkState = not VWQL.DisableLFG
+		elseif entry.text == LOCALE.disableRewardIcons then
+			entry.checkState = not VWQL.DisableRewardIcons
+		elseif entry.text == LOCALE.expulsomReplace then
+			entry.checkState = VWQL.ExpulsomReplace
+		elseif entry.text == LOCALE.calligraphyGameHelper then
+			entry.checkState = not VWQL.DisableCalligraphy
+		elseif entry.text == LOCALE.addQuestsNazjatar then
+			entry.checkState = not VWQL.OppositeContinentNazjatar
+		elseif entry.text == LOCALE.questsForAchievements then
+			entry.checkState = not VWQL.ShowQuestAchievements
+		elseif entry.text == LOCALE.aspirantTraining then
+			entry.checkState = not VWQL.DisableAspirantTraining
+		elseif entry.text == LOCALE.toughCrowdHelper then
+			entry.checkState = not VWQL.DisableToughCrowd
+		elseif entry.text == opt_name_dfemeralddream then
+			entry.checkState = not VWQL.EmeraldDreamMap
+		elseif entry.text == opt_name_dfcave then
+			entry.checkState = not VWQL.DFCaveMap
+		end
+	end
 	function WorldQuestList.optionsDropDown.Button:additionalToggle()
 		for i=1,#self.List do
-			if self.List[i].text == LOCALE.barrelsHelper then
-				self.List[i].checkState = not VWQL.DisableBarrels
-			elseif self.List[i].text == LOCALE.enigmaHelper then
-				self.List[i].checkState = VWQL.EnableEnigma
-			elseif self.List[i].text == LOCALE.disabeHighlightNewQuests then
-				self.List[i].checkState = VWQL.DisableHighlightNewQuest
-			elseif self.List[i].text == LOCALE.disableBountyIcon then
-				self.List[i].checkState = VWQL.DisableBountyIcon
-			elseif self.List[i].mark == "OppositeContinent" then
-				self.List[i].checkState = VWQL.OppositeContinent
-			elseif self.List[i].mark == "HideLegion" then
-				self.List[i].checkState = VWQL.HideLegion
-			elseif self.List[i].text == LOCALE.shellGameHelper then
-				self.List[i].checkState = not VWQL.DisableShellGame
-			elseif self.List[i].text == LOCALE.iconsOnMinimap then
-				self.List[i].checkState = not VWQL.DisableIconsGeneral
-			elseif self.List[i].text == LOCALE.addQuestsArgus then
-				self.List[i].checkState = not VWQL.OppositeContinentArgus
-			elseif self.List[i].text == LOCALE.argusMap then
-				self.List[i].checkState = not VWQL.ArgusMap
-			elseif self.List[i].text == LOCALE.lfgSearchOption then
-				self.List[i].checkState = not VWQL.DisableLFG
-			elseif self.List[i].text == LOCALE.disableRewardIcons then
-				self.List[i].checkState = not VWQL.DisableRewardIcons
-			elseif self.List[i].text == LOCALE.expulsomReplace then
-				self.List[i].checkState = VWQL.ExpulsomReplace
-			elseif self.List[i].text == LOCALE.calligraphyGameHelper then
-				self.List[i].checkState = not VWQL.DisableCalligraphy
-			elseif self.List[i].text == LOCALE.addQuestsNazjatar then
-				self.List[i].checkState = not VWQL.OppositeContinentNazjatar
-			elseif self.List[i].text == LOCALE.questsForAchievements then
-				self.List[i].checkState = not VWQL.ShowQuestAchievements
-			elseif self.List[i].text == LOCALE.aspirantTraining then
-				self.List[i].checkState = not VWQL.DisableAspirantTraining
-			elseif self.List[i].text == LOCALE.toughCrowdHelper then
-				self.List[i].checkState = not VWQL.DisableToughCrowd
+			CheckEntry(self.List[i])
+			if self.List[i].subMenu then
+				for j=1,#self.List[i].subMenu do
+					CheckEntry(self.List[i].subMenu[j])
+				end
 			end
 		end
 		anchorSubMenu[1].checkState = not VWQL.Anchor
@@ -4221,7 +4336,13 @@ do
 		listSizeSubmenu[2].checkState = not VWQL.DisableTotalAP
 		listSizeSubmenu[4].slider.val = (VWQL.MaxLinesShow or 9)
 		for i=1,#highlightingSubmenu do
-			highlightingSubmenu[i].checkState = VWQL[charKey][highlightingSubmenu[i].arg1]
+			if highlightingSubmenu[i].subMenu then
+				for j=1,#highlightingSubmenu[i].subMenu do
+					highlightingSubmenu[i].subMenu[j].checkState = VWQL[charKey][highlightingSubmenu[i].subMenu[j].arg1]
+				end
+			else
+				highlightingSubmenu[i].checkState = VWQL[charKey][highlightingSubmenu[i].arg1]
+			end
 		end
 	end
 end
@@ -4544,7 +4665,38 @@ end
 
 WorldQuestList.oppositeContinentButton.Update = function(self) 
 	local level = UnitLevel'player'
-	if level > 50 and self.State ~= 60 then
+	if level > 60 and self.State ~= 70 then
+		self.Button6.mapID = 619
+		self.Button6.t:SetTexCoord(0,1,0,1)
+		self.Button6.t:SetAtlas("worldquest-icon-burninglegion")
+		self.Button6.t:SetDesaturated(false)
+
+		self.Button5.mapID = 876
+		self.Button5.t:SetTexCoord(0,1,0,1)
+		self.Button5.t:SetAtlas("worldquest-icon-alliance")
+		self.Button5.t:SetSize(17,17)
+
+		self.Button4.mapID = 875
+		self.Button4.t:SetAtlas("worldquest-icon-horde")
+		self.Button4.t2:SetTexture("")
+		self.Button4.t3:SetTexture("")
+		self.Button4.t:SetSize(17,17)
+
+		self.Button3.mapID = 1550
+		self.Button3.t:SetAtlas("Mobile-Inscription")
+		self.Button3.t2:SetTexture("")
+		self.Button3.t3:SetTexture("")
+		self.Button3.t:SetSize(17,17)
+
+		self.Button2.mapID = 2200
+		self.Button2.t:SetAtlas("SeedPlanting-Full")
+		self.Button2.t:SetSize(17,17)
+
+		self.Button1.mapID = 1978
+		self.Button1.t:SetAtlas("dragon-rostrum")
+
+		self.State = 70
+	elseif level > 50 and level <= 60 and self.State ~= 60 then
 		self.Button6.mapID = 1543
 		self.Button6.t:SetTexCoord(0,1,0,1)
 		self.Button6.t:SetAtlas("Dungeon")
@@ -5529,13 +5681,19 @@ function WorldQuestList:FormatTime(timeLeftMinutes)
 	end
 	local color
 	local timeString
+
+	local time_red,time_yellow = 30, 180
+	if WorldQuestList:IsDragonflightZone() then
+		time_red, time_yellow = 120, 1440
+	end
+
 	if ( timeLeftMinutes <= WORLD_QUESTS_TIME_CRITICAL_MINUTES ) then
 		color = "|cffff3333"
 		timeString = SecondsToTime(timeLeftMinutes * 60)
 	else
-		if timeLeftMinutes <= 30 then
+		if timeLeftMinutes <= time_red then
 			color = "|cffff3333"
-		elseif timeLeftMinutes <= 180 then
+		elseif timeLeftMinutes <= time_yellow then
 			color = "|cffffff00"
 		end
 
@@ -5556,6 +5714,12 @@ function WorldQuestList:FormatTimeSeconds(secondsRemaining)
 	end
 	local color
 	local timeString
+
+	local time_red,time_yellow = 30, 180
+	if WorldQuestList:IsDragonflightZone() then
+		time_red, time_yellow = 120, 1440
+	end
+
 	if secondsRemaining <= 300 then
 		color = "|cffff3333"
 		timeString = SecondsToTime(secondsRemaining):gsub(" ",""):lower()
@@ -5565,9 +5729,9 @@ function WorldQuestList:FormatTimeSeconds(secondsRemaining)
 		timeString = SecondsToTime((m - m % 1)*60)
 	else
 		local timeLeftMinutes = secondsRemaining / 60
-		if timeLeftMinutes <= 30 then
+		if timeLeftMinutes <= time_red then
 			color = "|cffff3333"
-		elseif timeLeftMinutes <= 180 then
+		elseif timeLeftMinutes <= time_yellow then
 			color = "|cffffff00"
 		end
 
@@ -5613,6 +5777,27 @@ function WorldQuestList:GetRadiantWQPosition(info,result)
 	local radius = 0.05 + count * 0.003
 	newInfo.x = newInfo.x + radius * math.cos(math.pi * 2 / count * (self_pos - 1) - math.pi / 2) / 1.5
 	newInfo.y = newInfo.y + radius * math.sin(math.pi * 2 / count * (self_pos - 1) - math.pi / 2)
+	return newInfo
+end
+
+function WorldQuestList:GetLinearWQPosition(info,result,direction)
+	direction = direction or 1
+	local count,self_pos = 0
+	for i=1,#result do
+		if result[i].info and result[i].info.x == info.x and result[i].info.y == info.y and result[i].info.questId then
+			count = count + 1
+		end
+		if info == result[i].info then
+			self_pos = count
+		end
+	end
+	if count <= 1 or not self_pos then
+		return info
+	end
+	local newInfo = {}
+	for q,w in pairs(info) do newInfo[q]=w end
+	newInfo.x = newInfo.x + self_pos * 0.05 * (direction == 1 and 0 or direction == 2 and -1 or direction == 3 and 0 or 1)
+	newInfo.y = newInfo.y + self_pos * 0.05 * (direction == 1 and -1 or direction == 2 and 0 or direction == 3 and 1 or 0)
 	return newInfo
 end
 
@@ -5835,7 +6020,21 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
 				taskInfo[#taskInfo+1] = info
 				info.dX,info.dY,info.dMap = info.x,info.y,2133
-				info.x,info.y = 0.87, 0.81
+				if not VWQL.DFCaveMap then	--reverse opt
+					info.x,info.y = 0.87, 0.81
+				else
+					info.x,info.y = nil
+				end
+			end
+			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2200)
+			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
+				taskInfo[#taskInfo+1] = info
+				info.dX,info.dY,info.dMap = info.x,info.y,2200
+				if not VWQL.EmeraldDreamMap then	--reverse opt
+					info.x,info.y = 0.31, 0.56
+				else
+					info.x,info.y = nil
+				end
 			end
 		end
 	end
@@ -6403,7 +6602,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 							RewardListType[#RewardListStrings] = (VWQL.SortPrio.curr1721 or defSortPrio.curr1721)
 						elseif currencyID == 1602 then	--Conq Points
 							RewardListType[#RewardListStrings] = (VWQL.SortPrio.honor or defSortPrio.honor) + 0.1
-						elseif currencyID == 2408 then
+						elseif currencyID == 2408 or currencyID == 2245 then
 							hasRewardFiltered = true
 							RewardListType[#RewardListStrings] = (VWQL.SortPrio.curr1508 or defSortPrio.curr1508)
 						elseif WorldQuestList:IsFactionCurrency(currencyID) then
@@ -6470,10 +6669,6 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						else
 							local tooltipData = C_TooltipInfo.GetQuestLogItem("reward", 1, questID)
 							if tooltipData then
-								TooltipUtil.SurfaceArgs(tooltipData)
-								for _, line in ipairs(tooltipData.lines) do
-									TooltipUtil.SurfaceArgs(line)
-								end
 								rewardItemLink = tooltipData.hyperlink
 								for j=2, #tooltipData.lines do
 									local tooltipLine = tooltipData.lines[j]
@@ -6883,8 +7078,17 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			for i=1,#result do
 				local info = result[i].info
 				if info and info.questId and info.x and not result[i].showAsRegQuest then
-					if (O.generalMapType == 3 and VWQL.ArgusMap) or (mapAreaID == 619 and info.x == 0.87 and info.y == 0.165) or ((mapAreaID == 875 or mapAreaID == 876) and info.x == 0.87 and info.y == 0.12) or (mapAreaID == 1550 and info.x == 0.86 and info.y == 0.80) or (mapAreaID == 1978 and info.x == 0.87 and info.y == 0.81) then
+					if (O.generalMapType == 3 and VWQL.ArgusMap) or 
+						(mapAreaID == 619 and info.x == 0.87 and info.y == 0.165) or 
+						((mapAreaID == 875 or mapAreaID == 876) and info.x == 0.87 and info.y == 0.12) or 
+						(mapAreaID == 1550 and info.x == 0.86 and info.y == 0.80) or 
+						(mapAreaID == 1978 and info.x == 0.87 and info.y == 0.81)
+					then
 						info = WorldQuestList:GetRadiantWQPosition(info,result)
+					elseif
+						(mapAreaID == 1978 and info.x == 0.31 and info.y == 0.56)
+					then
+						info = WorldQuestList:GetLinearWQPosition(info,result,3)
 					end
 					pinsToRemove[info.questId] = nil
 					local pin = WorldQuestList.WMF_activePins[info.questId]
@@ -7474,10 +7678,15 @@ SLASH_WQLSlash2 = "/worldquestslist"
 
 --Add /way
 C_Timer.After(10,function()
-	if IsAddOnLoaded("TomTom") then
+	if C_AddOns.IsAddOnLoaded("TomTom") then
 		return
 	end
 	SlashCmdList["WQLSlashWay"] = function(arg)
+		for prefix,cmd in pairs(_G) do
+			if type(prefix)=="string" and prefix:find("^SLASH_") and cmd == "/way" and prefix ~= "SLASH_WQLSlashWay1" then
+				return
+			end
+		end
 		slashfunc("way "..(arg or ""))
 	end
 	SLASH_WQLSlashWay1 = "/way"
@@ -9092,7 +9301,7 @@ do
 				elseif t < 2880 then
 					bountyData.middleTime = true
 				end
-				if IsQuestComplete(bountyData.questID) then
+				if IsQuestComplete(bountyData.questID) or t == 0 then
 					bountyData.completed = true
 				end
 			end
@@ -9111,7 +9320,7 @@ do
 						elseif t < 2880 then
 							callingData.middleTime = true
 						end
-						if IsQuestComplete(questID) then
+						if IsQuestComplete(questID) or t == 0 then
 							callingData.completed = true
 						end
 
@@ -9216,7 +9425,7 @@ do
 							ajustSize = 5
 							amount = floor(numItems * (warMode and C_QuestLog.QuestCanHaveWarModeBonus(obj.questID) and C_CurrencyInfo.DoesWarModeBonusApply(currencyID) and warModeBonus or 1))
 							break
-						elseif currencyID == 2408 then
+						elseif currencyID == 2408 or currencyID == 2245 or currencyID == 2706 then
 							iconTexture = texture
 							ajustMask = true
 							ajustSize = 8
@@ -9245,7 +9454,6 @@ do
 								if not itemLink then
 									local tooltipData = C_TooltipInfo.GetQuestLogItem("reward", 1, obj.questID)
 									if tooltipData then
-										TooltipUtil.SurfaceArgs(tooltipData)
 										itemLink = tooltipData.hyperlink
 									end
 
@@ -9279,7 +9487,7 @@ do
 								end
 							elseif itemID == 152960 or itemID == 152957 then
 								iconAtlas = "poi-workorders"
-							elseif itemID == 163857 or itemID == 143559 or itemID == 141920 or itemID == 152668 then
+							elseif itemID == 163857 or itemID == 143559 or itemID == 141920 or itemID == 152668 or itemID == 209839 or itemID == 209837 then
 								iconTexture = icon
 								ajustMask = true
 								ajustSize = 4
@@ -9337,10 +9545,6 @@ do
 							elseif select(2,GetItemInfoInstant(itemID)) == MISCELLANEOUS then
 								local tooltipData = C_TooltipInfo.GetQuestLogItem("reward", 1, obj.questID)
 								if tooltipData then
-									TooltipUtil.SurfaceArgs(tooltipData)
-									for _, line in ipairs(tooltipData.lines) do
-										TooltipUtil.SurfaceArgs(line)
-									end
 									local isAnima
 									for j=2, #tooltipData.lines do
 										local tooltipLine = tooltipData.lines[j]

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240502130843")
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE 134044",
 	"SPELL_MISSED 134044",
 	"SPELL_PERIODIC_DAMAGE 134755",
-	"SPELL_PERIODIC_MISS 134755",
+	"SPELL_PERIODIC_MISSED 134755",
 	"CHAT_MSG_MONSTER_EMOTE",
 	"UNIT_DIED"
 )
@@ -88,7 +88,7 @@ local lfrEngaged = false
 local crimsonFog = DBM:EJ_GetSectionInfo(6892)
 local amberFog = DBM:EJ_GetSectionInfo(6895)
 local azureFog = DBM:EJ_GetSectionInfo(6898)
-local lifeDrain = DBM:GetSpellInfo(133795)
+local lifeDrain = DBM:GetSpellName(133795)
 local playerName = UnitName("player")
 local firstIcewall = false
 local CVAR = nil
@@ -410,7 +410,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, npc, _, _, target)
 		timerLifeDrain:Start()
 		timerLifeDrainCD:Start(not lifeDrained and 50 or nil)--first is 50, 2nd and later is 40
 		lifeDrained = true
-		if self.Options.SetIconLifeDrain then
+		if target and self.Options.SetIconLifeDrain then
 			self:SetIcon(target, 8)--Skull
 		end
 		if self.Options.InfoFrame and not self:IsDifficulty("lfr25") then

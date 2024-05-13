@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 100207
 ## Title: MisDirectionHelper2
 ## Notes: Use Misdirection / Tricks of the Trade with one click without losing your target. Create Smart Macros for Applying and Announcing Misdirection / Tricks of the Trade.
 ## Notes-deDE: Irreführung / Schurkenhandel benutzen ohne das Ziel zu verlieren. Erstellt Makro zum Setzen und Ansagen von Irreführung / Schurkenhandel.
@@ -7,10 +7,10 @@
 ## Author: Deepac, Gabriel, Jotschi, Soul, Sharpedge_Gaming
 ## OptionalDeps: TipTac, Tukui, ElvUI, Tukui_Packages_Skins, Ace3, LibStub, CallbackHandler-1.0, LibQTip-1.0, LibDBIcon-1.0
 ## SavedVariables: MisDirectionHelperDB
-## Version: v10.1.8
+## Version: v10.2.7
 ## X-Category: Raid
 ## X-Localizations: enUS, deDE, frFR, koKR, ruRU, ptBR, zhCN, zhTW, esES, esMX, itIT
-## X-Compatible-With: 100205
+## X-Compatible-With: 100207
 ## X-Curse-Project-Name: MisDirectionHelper2
 ## X-Curse-Project-ID: misdirectionhelper2
 ## X-Credits: Jotschi, Soul, Gabriel - original authors

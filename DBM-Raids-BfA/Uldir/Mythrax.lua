@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2194, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 mod:SetBossHPInfoToHighest()
@@ -60,7 +60,7 @@ mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerEssenceShearCD				= mod:NewNextSourceTimer(19.5, 274693, 41032, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 3)--Short Text "Shear", All timers generlaly 20 but 19.9 can happen and DBM has to use lost known time
 local timerObliterationBlastCD			= mod:NewNextSourceTimer(14.9, 273538, 158259, nil, nil, 3)--Short Text "Blast"
 local timerOblivionSphereCD				= mod:NewNextCountTimer(14.9, 272407, nil, nil, nil, 3, nil, nil, nil, 1, 3)
-local timerImminentRuinCD				= mod:NewNextCountTimer(14.9, 272536, 139074, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3, 3)--Short Text "Ruin"
+local timerImminentRuinCD				= mod:NewNextCountTimer(14.9, 272536, 139074, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3 or nil, 3)--Short Text "Ruin"
 local timerLivingWeaponCD				= mod:NewNextTimer(60.5, 276922, nil, nil, nil, 1, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic
 local timerVoidEchoesCD					= mod:NewNextCountTimer(60.5, 279157, nil, nil, nil, 2, nil, DBM_COMMON_L.HEROIC_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
@@ -70,7 +70,7 @@ local timerVisionsoMadnessCD			= mod:NewNextCountTimer(20, 273949, nil, nil, nil
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("SetIconRuin", 272536, true, false, {1, 2})
+mod:AddSetIconOption("SetIconRuin", 272536, true, 0, {1, 2})
 mod:AddRangeFrameOption(5, 272407)
 mod:AddInfoFrameOption(272146, true)
 
@@ -127,7 +127,7 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(5)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(272146))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(272146))
 		DBM.InfoFrame:Show(5, "table", infoframeTable, 1)
 	end
 end

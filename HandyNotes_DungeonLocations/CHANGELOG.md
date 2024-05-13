@@ -1,4 +1,10 @@
 # HandyNotes: DungeonLocations
+## [2.3a](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-04-12)
+- Note: update for patch 10.2.6 Dragonflight --BadBoyBarny
+      - add Dragonflight nodes for future patches
+## [2.3](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-03-22)
+- Note: update for patch 10.2.6 Dragonflight --BadBoyBarny
+      - toc bump
 ## [2.2c](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-01-12)
 - Note: update for patch 10.2.0 Dragonflight --BadBoyBarny
       - image update

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20230523061139")
+mod:SetRevision("20240428104809")
 mod:SetCreatureID(17842)
 mod:SetEncounterID(621, 2471)
 mod:SetModelID(18526)
@@ -30,7 +30,7 @@ local timerSilenceCD	= mod:NewCDTimer(16.7, 31344, nil, nil, nil, 2, nil, DBM_CO
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("DoomIcon", 31347, true, false, {8})
+mod:AddSetIconOption("DoomIcon", 31347, true, 0, {8})
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)

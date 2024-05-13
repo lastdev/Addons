@@ -5,7 +5,8 @@
 
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("tooltip", ...) end
+
+local MessageType = Addon.Systems.Chat.MessageType
 
 local Info = Addon.Systems.Info
 local ItemProperties = Addon.Systems.ItemProperties
@@ -13,8 +14,7 @@ local ItemProperties = Addon.Systems.ItemProperties
 local Tooltip = {
     NAME = "Tooltip",
     VERSION = 1,
-    DEPENDENCIES = {
-    },
+    DEPENDENCIES = { "system:chat" },
 }
 
 -- Will take whatever item is being moused-over and add it to the Always-Sell list.
@@ -22,16 +22,16 @@ function Tooltip:AddTooltipItemToList(list)
     -- Get the item from
     name, link = GameTooltip:GetItem();
     if not link then
-        Addon:Print(string.format(L["TOOLTIP_ADDITEM_ERROR_NOITEM"], list))
+        Addon:Output(MessageType.Other, "TOOLTIP_ADDITEM_ERROR_NOITEM", list)
         return
     end
 
     -- Add the link to the specified blocklist.
     local retval = Addon:ToggleItemInBlocklist(list, link)
     if retval == 1 then
-        Addon:Print(string.format(L["CMD_LISTTOGGLE_ADDED"], tostring(link), list))
+        Addon:Output(MessageType.List, "CMD_LISTTOGGLE_ADDED", tostring(link), list)
     elseif retval == 2 then
-        Addon:Print(string.format(L["CMD_LISTTOGGLE_REMOVED"], tostring(link), list))
+        Addon:Output(MessageType.List, "CMD_LISTTOGGLE_REMOVED", tostring(link), list)
     end
 end
 
@@ -166,18 +166,18 @@ local function addItemTooltipLines(tooltip, tooltipData)
         end
     end
 
-    --[===[@debug@
-    if (ruleId) then
-        -- If we had a rule match (make a choice) then add it to the tooltip, if we didn't get a match then
-        -- no line means we didn't match anything.
-        tooltip:AddLine(string.format("%s RuleId: %s[%s] %s%s",L["ADDON_NAME"], ACHIEVEMENT_COLOR_CODE, ruleType, ruleId, FONT_COLOR_CODE_CLOSE))
-    end
+    if (Addon.IsDebug) then
+        if (ruleId) then
+            -- If we had a rule match (make a choice) then add it to the tooltip, if we didn't get a match then
+            -- no line means we didn't match anything.
+            tooltip:AddLine(string.format("%s RuleId: %s[%s] %s%s",L["ADDON_NAME"], ACHIEVEMENT_COLOR_CODE, ruleType, ruleId, FONT_COLOR_CODE_CLOSE))
+        end
 
-    if (itemId) then
-        -- Add item ID tooltip, it's handy for debugging.
-        tooltip:AddLine(string.format("%sItem ID: %s%s", HEIRLOOM_BLUE_COLOR_CODE, tostring(itemId), FONT_COLOR_CODE_CLOSE))
+        if (itemId) then
+            -- Add item ID tooltip, it's handy for debugging.
+            tooltip:AddLine(string.format("%sItem ID: %s%s", HEIRLOOM_BLUE_COLOR_CODE, tostring(itemId), FONT_COLOR_CODE_CLOSE))
+        end
     end
-    --@end-debug@]===]
 end
 
 function Tooltip:OnInitialize()

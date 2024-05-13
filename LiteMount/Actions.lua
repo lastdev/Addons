@@ -36,37 +36,29 @@ local restoreFormIDs = {
     [36] = true,    -- Treant Form
 }
 
-local function ReplaceVars(list)
-    local out = {}
-    for _,l in ipairs(list) do
-        l = LM.Vars:StrSubVars(l)
-        tinsert(out, l)
-    end
-    return out
-end
-
 local FLOWCONTROLS = { }
 
 FLOWCONTROLS['IF'] =
     function (args, context, isTrue)
         LM.Debug('  * IF test is ' .. tostring(isTrue))
-        table.insert(context.flowControl, isTrue)
+        local trueCount = isTrue and 1 or 0
+        table.insert(context.flowControl, trueCount)
     end
 
 FLOWCONTROLS['ELSEIF'] =
     function (args, context, isTrue)
-        local wasTrue = context.flowControl[#context.flowControl]
-        isTrue = not wasTrue and isTrue
-        LM.Debug('  * ELSEIF test is ' .. tostring(isTrue))
-        context.flowControl[#context.flowControl] = isTrue
+        local trueCount  = context.flowControl[#context.flowControl]
+        trueCount = trueCount + ( isTrue and 1 or 0 )
+        LM.Debug('  * ELSEIF test is ' .. tostring(trueCount == 1))
+        context.flowControl[#context.flowControl] = trueCount
     end
 
 FLOWCONTROLS['ELSE'] =
     function (args, context, isTrue)
-        local wasTrue = context.flowControl[#context.flowControl]
-        isTrue = not wasTrue
-        LM.Debug('  * ELSE test is ' .. tostring(isTrue))
-        context.flowControl[#context.flowControl] = isTrue
+        local trueCount  = context.flowControl[#context.flowControl]
+        trueCount = trueCount + 1
+        LM.Debug('  * ELSE test is ' .. tostring(trueCount == 1))
+        context.flowControl[#context.flowControl] = trueCount
     end
 
 FLOWCONTROLS['END'] =
@@ -82,57 +74,58 @@ local ACTIONS = { }
 ACTIONS['Limit'] = {
     handler =
         function (args, context)
-            local filters = LM.tJoin(context.filters[1], args)
-            table.insert(context.filters, 1, filters)
-            LM.Debug("  * New filter: " .. table.concat(context.filters[1], ' '))
+            LM.Debug("  * Add limits: " .. args:ToString())
+            table.insert(context.limits, args)
         end
 }
 
--- These ones are really just for user rules.
+-- These ones are really just for user rules.  The whole syntax of the Limit
+-- args is a mess and doesn't parse well. If I had my time again I would
+-- probably use & and | which are more obvious. Or, you know, start with a proper
+-- grammar-based parser.
 
 ACTIONS['LimitSet'] = {
     name = L.LM_LIMIT_MOUNTS,
-    toDisplay =
-        function (v)
-            -- XXX Doesn't support multiple args XXX
-            return LM.Mount:FilterToDisplay(v)
+    description = L.LM_LIMITSET_DESCRIPTION,
+    argType = 'expression',
+    toDisplay = LM.RuleArguments.ToDisplay,
+    handler =
+        function (args, context)
+            ACTIONS.Limit.handler(args:Prepend('='), context)
         end,
-    handler = function (args, context)
-            -- There's no point of multi-arg, just use the last
-            if #args > 0 then
-                local setArgs = { '=' .. args[#args] }
-                ACTIONS['Limit'].handler(setArgs, context)
-            end
-        end
 }
 
 ACTIONS['LimitInclude'] = {
     name = L.LM_INCLUDE_MOUNTS,
-    toDisplay = function (v) return LM.Mount:FilterToDisplay(v) end,
-    handler = function (args, context)
-            -- XXX this multi-arg support is super sketchy/wrong XXX
-            local plusArgs = LM.tMap(args, function (a) return '+' .. a end)
-            ACTIONS['Limit'].handler(plusArgs, context)
-        end
+    description = L.LM_LIMITINCLUDE_DESCRIPTION,
+    argType = 'expression',
+    toDisplay = LM.RuleArguments.ToDisplay,
+    handler =
+        function (args, context)
+            ACTIONS.Limit.handler(args:Prepend('+'), context)
+        end,
 }
 
 ACTIONS['LimitExclude'] = {
     name = L.LM_EXCLUDE_MOUNTS,
-    toDisplay = function (v) return LM.Mount:FilterToDisplay(v) end,
-    handler = function (args, context)
-            -- XXX this multi-arg support is super sketchy/wrong XXX
-            local minusArgs = LM.tMap(args, function (a) return '-' .. a end)
-            ACTIONS['Limit'].handler(minusArgs, context)
-        end
+    description = L.LM_LIMITEXCLUDE_DESCRIPTION,
+    argType = 'expression',
+    toDisplay = LM.RuleArguments.ToDisplay,
+    handler =
+        function (args, context)
+            ACTIONS.Limit.handler(args:Prepend('-'), context)
+        end,
 }
 
 ACTIONS['Endlimit'] = {
+    argType = 'none',
     handler =
         function (args, context)
-            if #context.filters == 1 then return end
-            table.remove(context.filters, 1)
-            LM.Debug("  * restored filter: " .. table.concat(context.filters[1], ' '))
-        end
+            local args = table.remove(context.limits)
+            if args then
+                LM.Debug("  * removed limits: " .. args:ToString())
+            end
+        end,
 }
 
 local function GetUsableSpell(arg)
@@ -174,25 +167,32 @@ local function GetUsableSpell(arg)
     end
 end
 
+local function SpellArgsToDisplay(args)
+    local out = {}
+    for _, v in ipairs(args:ParseList()) do
+        local name, _, _, _, _, _, id = GetSpellInfo(v)
+        if name then
+            table.insert(out, string.format("%s (%d)", name, id))
+        else
+            table.insert(out, v)
+        end
+    end
+    return out
+end
+
 ACTIONS['Spell'] = {
-    name = L.LM_CAST_SPELL,
-    toDisplay =
-        function (v)
-            local name, _, _, _, _, _, id = GetSpellInfo(v)
-            if name then
-                return string.format("%s (%d)", name, id)
-            else
-                return v
-            end
-        end,
+    name = L.LM_SPELL_ACTION,
+    description = L.LM_SPELL_DESCRIPTION,
+    argType = 'list',
+    toDisplay = SpellArgsToDisplay,
     handler =
         function (args, context)
-            for _, arg in ipairs(args) do
+            for _, arg in ipairs(args:ParseList()) do
                 LM.Debug('  * trying spell: ' .. tostring(arg))
                 local name, id, nameWithSubtext = GetUsableSpell(arg)
                 if nameWithSubtext then
                     LM.Debug("  * setting action to spell " .. nameWithSubtext)
-                    return LM.SecureAction:Spell(nameWithSubtext, context.unit)
+                    return LM.SecureAction:Spell(nameWithSubtext, context.rule.unit)
                 end
             end
         end
@@ -204,16 +204,16 @@ ACTIONS['Spell'] = {
 -- because for some spells (e.g., Levitate) the ID doesn't match.
 
 ACTIONS['Buff'] = {
-    name = L.LM_APPLY_BUFF,
-    toDisplay = ACTIONS["Spell"].toDisplay,
+    toDisplay = SpellArgsToDisplay,
+    argType = 'list',
     handler =
         function (args, context)
-            for _, arg in ipairs(args) do
+            for _, arg in ipairs(args:ParseList()) do
                 LM.Debug('  * trying buff: ' .. tostring(arg))
                 local name, id, nameWithSubtext = GetUsableSpell(arg)
-                if name and not LM.UnitAura(context.unit or 'player', name) then
+                if name and not LM.UnitAura(context.rule.unit or 'player', name) then
                     LM.Debug("  * setting action to spell " .. nameWithSubtext)
-                    return LM.SecureAction:Spell(nameWithSubtext, context.unit)
+                    return LM.SecureAction:Spell(nameWithSubtext, context.rule.unit)
                 end
             end
         end
@@ -225,10 +225,13 @@ ACTIONS['Buff'] = {
 -- avoiding the IsUsableSpell failures when targeting others.
 
 ACTIONS['PreCast'] = {
-    toDisplay = ACTIONS["Spell"].toDisplay,
+    name = L.LM_PRECAST_ACTION,
+    description = L.LM_PRECAST_DESCRIPTION,
+    argType = 'list',
+    toDisplay = SpellArgsToDisplay,
     handler =
         function (args, context)
-            for _, arg in ipairs(args) do
+            for _, arg in ipairs(args:ParseList()) do
                 local name, _, _, castTime, _, _, id = GetSpellInfo(arg)
                 if name and IsPlayerSpell(id) and castTime == 0 then
                     LM.Debug("  * setting preCast to spell " .. name)
@@ -240,14 +243,18 @@ ACTIONS['PreCast'] = {
 }
 
 ACTIONS['CancelAura'] = {
-    name = L.LM_CANCEL_BUFF,
-    toDisplay = ACTIONS['Spell'].toDisplay,
+    toDisplay = SpellArgsToDisplay,
+    argType = 'list',
     handler =
         function (args, context)
-            for _, arg in ipairs(args) do
-                local name, _, _, _, _, _, _, _, _, _, castable = LM.UnitAura('player', arg)
-                if name and castable then
-                    return LM.SecureAction:CancelAura(name)
+            for _, arg in ipairs(args:ParseList()) do
+                local name, _,_,_,_,_, source, _,_,_, canApplyAura = LM.UnitAura('player', arg)
+                if name then
+                    -- Levitate (for example) is marked canApplyAura == false so this is a
+                    -- half-workaround. You still won't cancel Levitate somone else put on you.
+                    if canApplyAura or (source == 'player' and GetSpellInfo(name)) then
+                        return LM.SecureAction:CancelAura(name)
+                    end
                 end
             end
         end
@@ -255,6 +262,7 @@ ACTIONS['CancelAura'] = {
 
 -- In vehicle -> exit it
 ACTIONS['LeaveVehicle'] = {
+    argType = 'none',
     handler =
         function (args, context)
             if CanExitVehicle() then
@@ -279,6 +287,7 @@ end
 
 ACTIONS['Dismount'] = {
     name = BINDING_NAME_DISMOUNT,
+    argType = 'none',
     handler =
         function (args, context)
             local action
@@ -301,7 +310,7 @@ ACTIONS['Dismount'] = {
                 end
             end
 
-            if action and savedFormName then
+            if action and savedFormName and savedFormName ~= GetFormNameWithSubtext() then
                 -- Without the /cancelform the "Auto Dismount in Flight" setting stops
                 -- this from working.
                 LM.Debug("  * override action to restore form: " .. savedFormName)
@@ -325,14 +334,16 @@ ACTIONS['Dismount'] = {
 
 -- CancelForm has been absorbed into Dismount
 ACTIONS['CancelForm'] = {
+    argType = 'none',
     handler = function (args, context) end
 }
 
 -- Got a player target, try copying their mount
 ACTIONS['CopyTargetsMount'] = {
+    argType = 'none',
     handler =
         function (args, context)
-            local unit = context.unit or "target"
+            local unit = context.rule.unit or "target"
             if LM.Options:GetOption('copyTargetsMount') and UnitIsPlayer(unit) then
                 LM.Debug("  * trying to clone %s's mount", unit)
                 local m = LM.MountRegistry:GetMountFromUnitAura(unit)
@@ -345,6 +356,7 @@ ACTIONS['CopyTargetsMount'] = {
 }
 
 ACTIONS['ApplyRules'] = {
+    argType = 'none',
     handler =
         function (args, context)
             local ruleSet = LM.Options:GetCompiledRuleSet(context.id)
@@ -358,97 +370,90 @@ ACTIONS['ApplyRules'] = {
         end
 }
 
-ACTIONS['SmartMount'] = {
-    name = L.LM_SMARTMOUNT_ACTION,
-    toDisplay =
-        function (v) return LM.Mount:FilterToDisplay(v) end,
-    handler =
-        function (args, context)
+local mawCastableArg = LM.RuleArguments:Get("MAWUSABLE", ",", "CASTABLE")
+local castableArg = LM.RuleArguments:Get("CASTABLE")
 
-            local filters = ReplaceVars(LM.tJoin(context.filters[1], args))
-
-            if LM.Conditions:Check("[maw]", context) then
-                table.insert(filters, "MAWUSABLE")
-            end
-
-            local filteredList = LM.MountRegistry:FilterSearch("CASTABLE"):Limit(unpack(filters))
-
-            LM.Debug("  * filters: " .. table.concat(filters, ' '))
-            LM.Debug("  * filtered list contains " .. #filteredList .. " mounts")
-
-            if next(filteredList) == nil then return end
-
-            local randomStyle = LM.Options:GetOption('randomWeightStyle')
-
-            local m
-
-            if not m and LM.Conditions:Check("[submerged]", context) then
-                LM.Debug("  * trying Aquatic Mount (underwater)")
-                local swim = filteredList:FilterSearch('SWIM')
-                LM.Debug("  * found " .. #swim .. " mounts.")
-                m = swim:Random(context.random, randomStyle)
-            end
-
-            if not m and LM.Conditions:Check("[dragonridable]", context) then
-                LM.Debug("  * trying Dragon Riding Mount")
-                local fly = filteredList:FilterSearch('DRAGONRIDING')
-                LM.Debug("  * found " .. #fly .. " mounts.")
-                m = fly:Random(context.random, randomStyle)
-            end
-
-            if not m and LM.Conditions:Check("[flyable]", context) then
-                LM.Debug("  * trying Flying Mount")
-                local fly = filteredList:FilterSearch('FLY')
-                LM.Debug("  * found " .. #fly .. " mounts.")
-                m = fly:Random(context.random, randomStyle)
-            end
-
-            if not m and LM.Conditions:Check("[floating,nowaterwalking]", context) then
-                LM.Debug("  * trying Aquatic Mount (on the surface)")
-                local swim = filteredList:FilterSearch('SWIM')
-                LM.Debug("  * found " .. #swim .. " mounts.")
-                m = swim:Random(context.random, randomStyle)
-            end
-
-            -- XXX Is it actually sensible to always fall back to a ground mount?
-            -- XXX What would break if it only did this when the other conditions
-            -- XXX definitely didn't match, instead of just falling through. I kind
-            -- of want do "SmartMount ZONEMATCH" but can't.
-
-            if not m then
-                LM.Debug("  * trying Ground Mount")
-                local run = filteredList:FilterSearch('RUN', '~SLOW')
-                LM.Debug("  * found " .. #run .. " mounts.")
-                m = run:Random(context.random, randomStyle)
-            end
-
-            if not m then
-                LM.Debug("  * trying Slow Ground Mount")
-                local walk = filteredList:FilterSearch('RUN', 'SLOW')
-                LM.Debug("  * found " .. #walk .. " mounts.")
-                m = walk:Random(context.random, randomStyle)
-            end
-
-            if m then
-                LM.Debug("  * setting action to mount %s", m.name)
-                return m:GetCastAction(context), m
-            end
-        end
+local smartActions = {
+    {
+        condition   = "[submerged]",
+        arg         = LM.RuleArguments:Get('SWIM'),
+        debug       = "Aquatic Mount (underwater)",
+    },
+    {
+        condition   = "[dragonridable]",
+        arg         = LM.RuleArguments:Get('DRAGONRIDING'),
+        debug       = "Dragonriding Mount",
+    },
+    {
+        condition   = "[flyable]",
+        arg         = LM.RuleArguments:Get('FLY'),
+        debug       = 'Flying Mount',
+    },
+    {
+        condition   = "[floating,nowaterwalking]",
+        arg         = LM.RuleArguments:Get('SWIM'),
+        debug       = "Aquatic Mount (on the surface)",
+    },
+    {
+        condition   = "[]",
+        arg         = LM.RuleArguments:Get('RUN', ',', '~', 'SLOW'),
+        debug       = "Ground Mount",
+    },
+    {
+        condition   = "[]",
+        arg         = LM.RuleArguments:Get('RUN', ',', 'SLOW'),
+        debug       = "Slow Ground Mount",
+    },
 }
 
 ACTIONS['Mount'] = {
     name = L.LM_MOUNT_ACTION,
-    toDisplay =
-        function (v) return LM.Mount:FilterToDisplay(v) end,
+    description = L.LM_MOUNT_DESCRIPTION,
+    argType = 'expression',
+    toDisplay = LM.RuleArguments.ToDisplay,
     handler =
         function (args, context)
-            local filters = ReplaceVars(LM.tJoin(context.filters[1], args))
+            local limits = CopyTable(context.limits)
             if LM.Conditions:Check("[maw]", context) then
-                table.insert(filters, "MAWUSABLE")
+                table.insert(limits, mawCastableArg)
+            else
+                table.insert(limits, castableArg)
             end
-            LM.Debug("  * filters: " .. table.concat(filters, ' '))
-            local mounts = LM.MountRegistry:FilterSearch("CASTABLE"):Limit(unpack(filters))
-            local m = mounts:Random(context.random)
+            if #args > 0 then
+                table.insert(limits, args)
+            end
+            local filteredList = LM.MountRegistry:Limit(limits)
+
+            LM.Debug("  * args: " .. args:ToString())
+            LM.Debug("  * limits:")
+            for i, l in ipairs(limits) do
+                LM.Debug("    % 2d. %s", i, l:ToString())
+            end
+            LM.Debug("  * filtered list contains " .. #filteredList .. " mounts")
+
+            if next(filteredList) == nil then return end
+
+            local randomStyle = context.rule.priority and LM.Options:GetOption('randomWeightStyle')
+
+            local m
+
+            if context.rule.smart then
+                for _, info in ipairs(smartActions) do
+                    if not m and LM.Conditions:Check(info.condition, context) then
+                        LM.Debug("  * trying " .. info.debug)
+                        local expr = info.arg:ParseExpression()
+                        local mounts = filteredList:ExpressionSearch(expr)
+                        LM.Debug("  * found " .. #mounts .. " mounts.")
+                        m = mounts:Random(context.random, randomStyle)
+                        if context.rule.strict and info.condition ~= '[]' and not m then
+                            return
+                        end
+                    end
+                end
+            else
+                m = filteredList:Random(context.random, randomStyle)
+            end
+
             if m then
                 LM.Debug("  * setting action to mount %s", m.name)
                 return m:GetCastAction(context), m
@@ -456,7 +461,33 @@ ACTIONS['Mount'] = {
         end
 }
 
+ACTIONS['SmartMount'] = {
+    name = L.LM_SMARTMOUNT_ACTION,
+    description = L.LM_SMARTMOUNT_DESCRIPTION,
+    argType = 'expression',
+    toDisplay = LM.RuleArguments.ToDisplay,
+    handler =
+        function (args, context)
+            context.rule.priority = true
+            context.rule.smart = true
+            return ACTIONS.Mount.handler(args, context)
+        end
+}
+
+ACTIONS['PriorityMount'] = {
+    name = L.LM_PRIORITYMOUNT_ACTION,
+    description = L.LM_PRIORITYMOUNT_DESCRIPTION,
+    argType = 'expression',
+    toDisplay = LM.RuleArguments.ToDisplay,
+    handler =
+        function (args, context)
+            context.rule.priority = true
+            return ACTIONS.Mount.handler(args, context)
+        end
+}
+
 ACTIONS['Macro'] = {
+    argType = 'none',
     handler =
         function (args, context)
             local macrotext = LM.Options:GetOption('unavailableMacro')
@@ -468,17 +499,17 @@ ACTIONS['Macro'] = {
 }
 
 ACTIONS['Script'] = {
+    argType = 'macrotext',
     handler =
         function (args, context)
-            local macroText = table.concat(args, ' ')
-            if SecureCmdOptionParse(macroText) then
-                LM.Debug("  * setting action to script line: " .. macroText)
-                return LM.SecureAction:Macro(macroText)
-            end
+            local macroText = args:ToString()
+            LM.Debug("  * setting action to script line: " .. macroText)
+            return LM.SecureAction:Macro(macroText)
         end
 }
 
 ACTIONS['CantMount'] = {
+    argType = 'none',
     handler =
         function (args, context)
             -- This isn't a great message, but there isn't a better one that
@@ -521,6 +552,7 @@ local CombatHandlerOverride = {
 }
 
 ACTIONS['Combat'] = {
+    argType = 'none',
     handler =
         function (args, context)
             -- If specific combat macro is set always use it
@@ -545,6 +577,7 @@ ACTIONS['Combat'] = {
 }
 
 ACTIONS['Stop'] = {
+    argType = 'none',
     handler =
         function (args, context)
             -- return true and set up to do nothing
@@ -569,7 +602,7 @@ local function IsCastableItem(itemID)
     end
 
     local s, d, e = GetItemCooldown(itemID)
-    if s == 0 and e == 1 then
+    if s == 0 and (e == true or e == 1) then
         return true
     end
 
@@ -602,23 +635,64 @@ local function UsableItemParse(arg)
     return name, itemID, slotNum
 end
 
+-- Is this really not in the game anywhere?
+local InventorySlotTable = {
+    [INVSLOT_AMMO]      = AMMOSLOT,
+    [INVSLOT_HEAD]      = HEADSLOT,
+    [INVSLOT_NECK]      = NECKSLOT,
+    [INVSLOT_SHOULDER]  = SHOULDERSLOT,
+    [INVSLOT_BODY]      = SHIRTSLOT,
+    [INVSLOT_CHEST]     = CHESTSLOT,
+    [INVSLOT_WAIST]     = WAISTSLOT,
+    [INVSLOT_LEGS]      = LEGSSLOT,
+    [INVSLOT_FEET]      = FEETSLOT,
+    [INVSLOT_FINGER1]   = FINGER0SLOT .. " (1)",
+    [INVSLOT_FINGER2]   = FINGER1SLOT .. " (2)",
+    [INVSLOT_TRINKET1]  = TRINKET0SLOT .. " (1)",
+    [INVSLOT_TRINKET2]  = TRINKET1SLOT .. " (2)",
+    [INVSLOT_BACK]      = BACKSLOT,
+    [INVSLOT_MAINHAND]  = MAINHANDSLOT,
+    [INVSLOT_OFFHAND]   = SECONDARYHANDSLOT,
+    [INVSLOT_RANGED]    = RANGEDSLOT,
+    [INVSLOT_TABARD]    = TABARDSLOT,
+}
+
+local function ItemArgsToDisplay(args)
+    local out = {}
+    for _, v in ipairs(args:ParseList()) do
+        local name, id, slot = UsableItemParse(v)
+        if name then
+            table.insert(out, string.format("%s (%d)", name, id))
+        elseif slot then
+            table.insert(out, InventorySlotTable[slot] or slot)
+        else
+            table.insert(out, v)
+        end
+    end
+    return out
+end
+
 ACTIONS['Use'] = {
+    name = L.LM_USE_ACTION,
+    description = L.LM_USE_DESCRIPTION,
+    argType = 'list',
+    toDisplay = ItemArgsToDisplay,
     handler =
         function (args, context)
-            for _, arg in ipairs(args) do
+            for _, arg in ipairs(args:ParseList()) do
                 local name, itemID, slotNum = UsableItemParse(arg)
                 if slotNum then
                     LM.Debug('  * trying slot ' .. tostring(slotNum))
                     local s, d, e = GetInventoryItemCooldown('player', slotNum)
                     if s == 0 and e == 1 then
                         LM.Debug('  * Setting action to use slot ' .. slotNum)
-                        return LM.SecureAction:Item(slotNum, context.unit)
+                        return LM.SecureAction:Item(slotNum, context.rule.unit)
                     end
                 else
                     LM.Debug('  * trying item ' .. tostring(name))
                     if name and IsCastableItem(itemID) then
                         LM.Debug('  * setting action to use item ' .. name)
-                        return LM.SecureAction:Item(name, context.unit)
+                        return LM.SecureAction:Item(name, context.rule.unit)
                     end
                 end
             end
@@ -626,7 +700,10 @@ ACTIONS['Use'] = {
 }
 
 ACTIONS['PreUse'] = {
-    toDisplay = ACTIONS['Use'].toDisplay,
+    name = L.LM_PREUSE_ACTION,
+    description = L.LM_PREUSE_DESCRIPTION,
+    argType = 'list',
+    toDisplay = ItemArgsToDisplay,
     handler =
         function (args, context)
             local action = ACTIONS['Use'].handler(args, context)
@@ -691,6 +768,14 @@ function LM.Actions:DefaultCombatMacro()
     return mt
 end
 
+function LM.Actions:GetArgType(action)
+    if FLOWCONTROLS[action] then
+        return 'none'
+    elseif ACTIONS[action] then
+        return ACTIONS[action].argType
+    end
+end
+
 function LM.Actions:GetFlowControlHandler(action)
     return FLOWCONTROLS[action]
 end
@@ -701,17 +786,28 @@ function LM.Actions:GetHandler(action)
 end
 
 function LM.Actions:IsFlowSkipped(context)
-    return tContains(context.flowControl, false)
+    return ContainsIf(context.flowControl, function (v) return v ~= 1 end)
 end
+
+-- This is really terrible and only works for a minimal amount of things
+-- which rules might do, which is so far only one mount or group or type etc.
+-- It will probably break if I ever make rules actions even slightly flexible.
 
 function LM.Actions:ToDisplay(action, args)
     local a = ACTIONS[action]
-    local name = a.name or action
-    if not args then
-        return name
-    elseif a.toDisplay then
-        return name, table.concat(LM.tMap(args, a.toDisplay), "\n")
-    else
-        return name, table.concat(args, ' ')
+    if a then
+        local name = a.name or action
+        if args == nil then
+            return name
+        elseif a.toDisplay then
+            return name, table.concat(a.toDisplay(args), "\n")
+        else
+            return name, args:ToString()
+        end
     end
+end
+
+function LM.Actions:GetDescription(action)
+    local a = ACTIONS[action]
+    if a then return a.description end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2393, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(164406)
 mod:SetEncounterID(2398)
 mod:SetUsedIcons(1, 2, 3)
@@ -76,7 +76,7 @@ local timerEchoingSonar							= mod:NewCastTimer(6, 329362, nil, false, nil, 5)
 
 mod:AddRangeFrameOption("8")
 mod:AddInfoFrameOption(328897, true)
-mod:AddSetIconOption("SetIconOnEcholocation", 342074, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnEcholocation", 342074, true, 0, {1, 2, 3})
 
 mod:GroupSpells(328857, 328897)
 
@@ -102,7 +102,7 @@ function mod:OnCombatStart(delay)
 	timerBloodshroudCD:Start(112-delay)
 --	berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(328897))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(328897))
 		DBM.InfoFrame:Show(10, "table", ExsanguinatedStacks, 1)
 	end
 end

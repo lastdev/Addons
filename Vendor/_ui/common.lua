@@ -1,16 +1,7 @@
 local _, Addon = ...
 local locale = Addon:GetLocale()
 local Colors = Addon.CommonUI.Colors
-
-local PLACEHOLDER_ALPHA_DEFAULT = 0.8
 local PLACEHOLDER_INSET = 8
-
--- Simple helper to determine the color
-local function computeColor(frame)
-    local color = frame.PlacholderColor or PLACEHOLDER_COLOR_DEFAULT
-    local alpha = frame.PlacholderAlpha or PLACEHOLDER_ALPHA_DEFAULT
-    return color.r, color.g, color.b, alpha
-end
 
 --[[===========================================================================
   | Implements a mixin which provides placehodler support, which is ghosted 
@@ -170,7 +161,7 @@ function Border:OnBorderLoaded(parts, borderColor, backColor)
 
     local border = self:CreateTexture(nil, "BORDER")
     border:SetPoint("TOPLEFT")
-    border:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, -1)
+    border:SetPoint("TOPRIGHT")
     border:SetHeight(1)
     self.borderTop = border
 
@@ -186,13 +177,13 @@ function Border:OnBorderLoaded(parts, borderColor, backColor)
     border:SetWidth(1)
     self.borderLeft = border
 
-    border = self:CreateTexture(nil, "BORDER")
+    border = self:CreateTexture(nil, "BORDER", nil)
     border:SetPoint("TOPRIGHT", 0, -1)
     border:SetPoint("BOTTOMRIGHT", 0, 1)
     border:SetWidth(1)
     self.borderRight = border
 
-    border = self:CreateTexture(nil, "BACKGROUND")
+    border = self:CreateTexture(nil, "BORDER", nil, -6)
     self.background = border
 
     self:SetBorderParts(parts or "lrtbk")
@@ -215,7 +206,7 @@ function Border:CreateBorderTexture(horiz)
     if (horiz) then
         tex:SetHeight(1)
     else
-        text:SetWidth(1)
+        tex:SetWidth(1)
     end
 
     table.insert(self.borders, tex)

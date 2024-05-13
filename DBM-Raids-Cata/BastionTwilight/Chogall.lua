@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-Raids-Cata", 4, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240107062549")
+mod:SetRevision("20240420125225")
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -76,7 +76,7 @@ local Bloodlevel = DBM:EJ_GetSectionInfo(3165)
 
 local function showWorshipWarning(self)
 	warnWorship:Show(table.concat(worshipTargets, "<, >"))
-	warnWorship:Play("mindcontrol")
+	warnWorship:Play("findmc")
 	table.wipe(worshipTargets)
 	self.vb.worshipIcon = 1
 	timerWorshipCD:Start(self.vb.worshipCooldown)

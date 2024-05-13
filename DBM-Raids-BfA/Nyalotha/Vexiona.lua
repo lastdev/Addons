@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2370, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(157354)
 mod:SetEncounterID(2336)
 mod:SetHotfixNoticeRev(20200128000000)--2020, 1, 28
@@ -133,7 +133,7 @@ function mod:OnCombatStart(delay)
 				local UnitID = "nameplate"..i
 				local GUID = UnitGUID(UnitID)
 				local cid = self:GetCIDFromGUID(GUID)
-				if cid == 157447 then
+				if GUID and cid == 157447 then
 					local unitPower = UnitPower(UnitID)
 					if not unitTracked[GUID] then unitTracked[GUID] = "None" end
 					if (unitPower < 30) then
@@ -165,7 +165,7 @@ function mod:OnCombatStart(delay)
 		end, 1)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(307019))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(307019))
 		DBM.InfoFrame:Show(10, "table", voidCorruptionStacks, 1)
 	end
 end

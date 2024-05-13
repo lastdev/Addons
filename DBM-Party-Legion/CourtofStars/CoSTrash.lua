@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("CoSTrash", "DBM-Party-Legion", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231026112110")
+mod:SetRevision("20240426175442")
 --mod:SetModelID(47785)
 mod:SetOOCBWComms()
 mod:SetMinSyncRevision(20221228000000)
@@ -12,6 +12,7 @@ mod.isTrashMod = true
 --LW solution, unregister/reregister other addons/WA frames from GOSSIP_SHOW
 --This is to prevent things like https://wago.io/M+Timer/114 from breaking clue helper do to advancing
 --dialog before we get a chance to read gossipID
+---@type Frame[]
 local frames = {GetFramesRegisteredForEvent("GOSSIP_SHOW")}
 for i = 1, #frames do
 	frames[i]:UnregisterEvent("GOSSIP_SHOW")
@@ -275,7 +276,7 @@ do
 	local notableBuffNPCs = {
 		--Buffs
 		[105160] = { -- Fel Orb
-			["name"] = DBM:GetSpellInfo(208275),
+			["name"] = DBM:GetSpellName(208275),
 			["buffid"] = 211081,
 			["class"] = {
 				["PALADIN"] = true,
@@ -359,7 +360,7 @@ do
 		},
 		--Debuffs
 		[105117] = { -- Flask of the Solemn Night
-			["name"] = DBM:GetSpellInfo(207815),
+			["name"] = DBM:GetSpellName(207815),
 			["class"] = {
 				["ROGUE"] = true
 			},
@@ -369,7 +370,7 @@ do
 			}
 		},
 		[105157] = {-- Arcane Power Conduit
-			["name"] = DBM:GetSpellInfo(210466),
+			["name"] = DBM:GetSpellName(210466),
 			["raceids"] = {
 				[7] = true,--Gnome
 				[9] = true--Goblin
@@ -697,11 +698,13 @@ do
 			--DBM and BW will both just parse the bigiwgs comms for profession data
 			for icon, skill in extra:gmatch("(%d+):(%d+)#") do
 				icon = tonumber(icon)
-				skill = tonumber(skill)
-				if not professionCache[icon] then
-					professionCache[icon] = {}
+				if icon then
+					skill = tonumber(skill)
+					if not professionCache[icon] then
+						professionCache[icon] = {}
+					end
+					professionCache[icon][#professionCache[icon]+1] = {name=sender, skill=skill}
 				end
-				professionCache[icon][#professionCache[icon]+1] = {name=sender, skill=skill}
 			end
 			self:AntiSpam(300, "CoSProf")
 		end

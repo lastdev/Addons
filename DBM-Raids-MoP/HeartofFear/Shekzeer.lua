@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(743, "DBM-Raids-MoP", 4, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20240426181222")
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetUsedIcons(1, 2)
@@ -79,7 +79,7 @@ local resinTargets = {}
 local resinIcon = 2
 local phase3Started = false
 local fieldCount = 0
-local screechDebuff, fixateDebuff = DBM:GetSpellInfo(123735), DBM:GetSpellInfo(125390)
+local screechDebuff, fixateDebuff = DBM:GetSpellName(123735), DBM:GetSpellName(125390)
 
 local function warnVisionsTargets()
 	warnVisions:Show(table.concat(visonsTargets, "<, >"))
@@ -326,7 +326,7 @@ end
 function mod:UNIT_HEALTH_UNFILTERED(uId)
 	local cid = self:GetUnitCreatureId(uId)
 	local guid = UnitGUID(uId)
-	if cid == 62847 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.08 and not sentLowHP[guid] then -- 0.05 seems too late.
+	if cid == 62847 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.08 and guid and not sentLowHP[guid] then -- 0.05 seems too late.
 		sentLowHP[guid] = true
 		self:SendSync("lowhealth", guid)
 	end

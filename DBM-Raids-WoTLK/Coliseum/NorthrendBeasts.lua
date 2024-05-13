@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25"
 
-mod:SetRevision("20240113214633")
+mod:SetRevision("20240426180424")
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(mod:IsClassic() and 629 or 1088)--Buggy, never enable this
 mod:SetMinSyncRevision(104)
@@ -81,7 +81,7 @@ mod:GroupSpells(66902, 66869)--Burning Spray with Burning Bile
 mod:GroupSpells(66901, 66823)--Paralytic Spray with Toxic Bile
 mod:GroupSpells(52311, 66758, 66759)--Furious Charge, Staggering Daze, and frothing rage
 
-local bileName = DBM:GetSpellInfo(66869)
+local bileName = DBM:GetSpellName(66869)
 mod.vb.burnIcon = 1
 mod.vb.DreadscaleActive = true
 mod.vb.DreadscaleDead = false

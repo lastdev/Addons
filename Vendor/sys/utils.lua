@@ -2,15 +2,19 @@
 local AddonName, Addon = ...
 
 function Addon:IsShadowlands()
-    return Info.Build.InterfaceVersion >= 90000
+    return Addon.Systems.Info.Build.InterfaceVersion >= 90000
 end
 
 -- Gets the version of the addon
 function Addon:GetVersion()
     local version = GetAddOnMetadata(AddonName, "version")
-    --[===[@debug@
-    if version == "6.2.0" then version = "Debug" end
-    --@end-debug@]===]
+    if (Addon.IsDebug) then
+        if version == "6.1.2-54-g78736c0" then
+            version = "Debug"
+        else
+            version = "Debug "..version
+        end
+    end
     return version
 end
 
@@ -39,12 +43,12 @@ function Addon.DeepTableCopy(obj, seen)
     if seen and seen[obj] then return seen[obj] end
 
     local s = seen or {}
-    local meta = getmetatable(obj)
-    if (type(meta) ~= "table") then
-        meta = nil
+
+    local res = {}
+    if (type(getmetatable(obj)) == "table") then
+        setmetatable({}, getmetatable(obj))
     end
 
-    local res = setmetatable({}, meta)
     s[obj] = res
     for k, v in pairs(obj) do res[Addon.DeepTableCopy(k, s)] = Addon.DeepTableCopy(v, s) end
     return res
@@ -72,26 +76,25 @@ function Addon.object(typeName, instance, API, events)
     local fullName = string.format("%s.%s", AddonName, typeName);
     local fullApi = rawget(TypeInformation, fullName);
 
+    if (type(instance) ~= "table") then
+        instance = {}
+    end
+
     if (not fullApi) then
-        fullApi = CreateFromMixins(CallbackRegistryMixin)
+        if (type(events) == "table") then
+            fullApi = CreateFromMixins(CallbackRegistryMixin)
+        else
+            fullApi = {}
+        end
 
         -- Copy the functions over the API
         for name, value in pairs(API) do
-            if (type(value) == "function") then
+            if (type(value) == "function" and string.find(name, "__") ~= 0) then
                 fullApi[name] = value;
             else
-                --[===[@debug@
-                error(string.format("Type '%s' API contains member '%s' which is not a function", fullName, name));
-                --@end-debug@]===]                    
+
             end
         end
-
-        --[[
-        -- If the object has events then mixin the callback registry
-        if (type(events) == "table") then
-            fullApi = Mixin(fullApi, CallbackRegistryMixin)
-        end
-        ]]--
 
         rawset(TypeInformation, fullName, fullApi);
     end
@@ -103,13 +106,13 @@ function Addon.object(typeName, instance, API, events)
         CallbackRegistryMixin.GenerateCallbackEvents(instance, events);
     end
     
-    if (Addon.Debug) then
-        --[===[@debug@
+    local object = nil
+    if (Addon.IsDebug) then
         local thunk = {};
-        return setmetatable(thunk, {
+        object = setmetatable(thunk, {
             __metatable = fullName,
             __index = function(self, key)
-            -- Check for a member function
+                -- Check for a member function
                 local member = rawget(fullApi, key);
                 if (type(member) == "function") then
                     return function(...) 
@@ -134,11 +137,17 @@ function Addon.object(typeName, instance, API, events)
                 end
             end,
         })
-        --@end-debug@]===]
+    else
+        object = setmetatable(instance, {
+            __metatable = fullName,
+            __index = fullApi,
+        });
     end
 
-    return setmetatable(instance, {
-        __metatable = fullName,
-        __index = fullApi,
-    });
+    local ctor = rawget(API, "__construct")
+    if (type(ctor) == "function") then
+        ctor(instance)
+    end
+
+    return object
 end

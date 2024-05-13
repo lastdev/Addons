@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2147, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -22,7 +22,9 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"INSTANCE_ENCOUNTER_ENGAGE_UNIT",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"UNIT_SPELLCAST_SUCCEEDED boss1",
+	"SPELL_DAMAGE 263326",
+	"SPELL_MISSED 263326"
 )
 
 --[[
@@ -108,9 +110,9 @@ mod:AddRangeFrameOption(5, 270428)
 mod:AddInfoFrameOption(nil, true)
 mod:AddNamePlateOption("NPAuraOnFixate", 268074)
 mod:AddNamePlateOption("NPAuraOnUnstoppable", 275204)
-mod:AddSetIconOption("SetIconOnBloodHost", 267813, true, false, {7})
-mod:AddSetIconOption("SetIconOnBurstingBoil", 277007, true, false, {1, 2, 3, 4, 5, 6})
-mod:AddSetIconOption("SetIconOnExplosiveCorruption", 272506, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnBloodHost", 267813, true, 0, {7})
+mod:AddSetIconOption("SetIconOnBurstingBoil", 277007, true, 0, {1, 2, 3, 4, 5, 6})
+mod:AddSetIconOption("SetIconOnExplosiveCorruption", 272506, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 
 mod.vb.mawCastCount = 0
 mod.vb.matrixCount = 0
@@ -140,7 +142,7 @@ end
 
 local updateInfoFrame
 do
-	local matrixSpellName, bloodFeastName = DBM:GetSpellInfo(263372), DBM:GetSpellInfo(263235)
+	local matrixSpellName, bloodFeastName = DBM:GetSpellName(263372), DBM:GetSpellName(263235)
 	local lines = {}
 	local sortedLines = {}
 	local function addLine(key, value)

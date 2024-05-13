@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2343, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061637")
+mod:SetRevision("20240506005004")
 mod:SetCreatureID(146409)
 mod:SetEncounterID(2281)
 mod:SetUsedIcons(1, 2, 3)
@@ -136,8 +136,8 @@ mod:AddNamePlateOption("NPAuraOnMarkedTarget2", 288038, false)
 mod:AddNamePlateOption("NPAuraOnTimeWarp", 287925)
 mod:AddNamePlateOption("NPAuraOnRefractiveIce", 288219)
 mod:AddNamePlateOption("NPAuraOnHowlingWinds2", 290053, false)
-mod:AddSetIconOption("SetIconAvalanche", 287565, true, false, {1, 2, 3})
-mod:AddSetIconOption("SetIconBroadside", 288212, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconAvalanche", 287565, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconBroadside", 288212, true, 0, {1, 2, 3})
 mod:AddRangeFrameOption(10, 289379)
 mod:AddInfoFrameOption(287993, true, 2)
 mod:AddBoolOption("ShowOnlySummary2", true, "misc")
@@ -167,32 +167,6 @@ local castsPerGUID = {}
 local rangeThreshold = 1
 local fixStupid = {}
 local CVAR1, CVAR2
-
---/run DBM:GetModByName("2343"):TimerTestFunction(30)
---This will auto loop, just run it once and wait to see how keep timers behave.
---Grasp of frost and ring of ice will be two main ones to watch, they won't be "cast" again but every 30 seconds so a 15 and 20 second timer will be kept for 15 or 10 additional seconds.
-function mod:TimerTestFunction(time)
-	timerFrozenSiegeCD:Start(3.3, 1)
-	timerAvalancheCD:Start(13.4)
-	timerFreezingBlastCD:Start(8.6)
-	timerGraspofFrostCD:Start(15.5)
-	timerRingofIceCD:Stop()
-	timerRingofIceCD:Start(20, 1)
-	timerHowlingWindsCD:Start(25, 1)
-	self:ScheduleMethod(time, "TimerTestFunction", time)
-end
-
---/run DBM:GetModByName("2343"):TimerTestFunctionEnd()
---Just run to end loop and stop all timers
-function mod:TimerTestFunctionEnd()
-	timerFrozenSiegeCD:Stop()
-	timerAvalancheCD:Stop()
-	timerFreezingBlastCD:Stop()
-	timerGraspofFrostCD:Stop()
-	timerRingofIceCD:Stop()
-	timerHowlingWindsCD:Stop()
-	self:UnscheduleMethod("TimerTestFunction")
-end
 
 function mod:HeartofFrostTarget(targetname, uId)
 	if not targetname then return end
@@ -264,7 +238,7 @@ function mod:OnCombatStart(delay)
 		berserkTimer:Start(900)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(287993))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(287993))
 		DBM.InfoFrame:Show(10, "table", ChillingTouchStacks, 1)
 	end
 	if self.Options.NPAuraOnMarkedTarget2 or self.Options.NPAuraOnTimeWarp or self.Options.NPAuraOnRefractiveIce or self.Options.NPAuraOnHowlingWinds2 then

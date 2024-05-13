@@ -10,8 +10,10 @@ ADDON_NAME = "Vendor",
 ADDON_LOADED = "is loaded. Type '/vendor help' for usage.",
 VENDOR_URL = "https://www.curseforge.com/wow/addons/vendor",
 VENDOR_TUTORIAL = "https://youtu.be/j93Orw3vPKQ",
+VENDOR_DISCORD  = "https://discord.gg/BtqVg8KVDg",
 ABOUT_PROJECT_LABEL = "Project:",
 ABOUT_TUTORIAL_LABEL = "Tutorial:",
+ABOUT_DISCORD_LABEL = "Discord:",
 ABOUT_RELEASES_LABEL = "Releases:",
 ABOUT_VERSION_LABEL = "Version:",
 DEFAULT_PROFILE_NAME = "Default",
@@ -389,6 +391,7 @@ TOOLTIP_SCAN_TOY = _G["TOY"],
 TOOLTIP_SCAN_ALREADYKNOWN = _G["ITEM_SPELL_KNOWN"],
 TOOLTIP_SCAN_CRAFTINGREAGENT = _G["PROFESSIONS_USED_IN_COOKING"],
 TOOLTIP_SCAN_BLIZZARDACCOUNTBOUND = _G["ITEM_BNETACCOUNTBOUND"],
+TOOLTIP_SCAN_ACCOUNTBOUND = _G["ITEM_ACCOUNTBOUND"],
 TOOLTIP_SCAN_COSMETIC = _G["ITEM_COSMETIC"],
 
 -- Data Migration
@@ -396,19 +399,6 @@ DATA_MIGRATION_SL_NOTICE = YELLOW_FONT_COLOR_CODE.. "Detected migration to Shado
 DATA_MIGRATION_ERROR = YELLOW_FONT_COLOR_CODE.. "Data migration error. Migration was detected, but no action taken. Please notify the addon authors here: https://www.curseforge.com/wow/addons/vendor/issues" ..FONT_COLOR_CODE_CLOSE,
 
 -- Extensions Loc
-
--- Adibags extension
-ADIBAGS_FILTER_VENDOR_SELL_NAME = "Vendor: Sell",
-ADIBAGS_FILTER_VENDOR_SELL_DESC = "Put items that the Vendor addon will sell into this collection."..
-" This filter must be a very high priority to work correctly, as it can reclassify any item in your inventory.",
-ADIBAGS_CATEGORY_VENDOR_SELL = "Sell (Vendor)",
-
-ADIBAGS_FILTER_VENDOR_DESTROY_NAME = "Vendor: Destroy",
-ADIBAGS_FILTER_VENDOR_DESTROY_DESC = "Put items that the Vendor addon will destroy into this collection."..
-" This filter must be a very high priority to work correctly, as it can reclassify any item in your inventory.",
-ADIBAGS_CATEGORY_VENDOR_DESTROY = "Destroy (Vendor)",
-
-
 
 -- Edit Rule Dialog
 EDITRULE_CAPTION = "Edit Rule",
@@ -466,27 +456,27 @@ DIALOG_TEXT_CONFIRM="Confirm",
 IMPORT_HELP_TEXT="Paste in the encoded text string below for Vendor rules or lists from other players to import them.",
 IMPORT_DIALOG_CAPTION="Import Rules and Lists",
 IMPORT_HELP_TEXT_PASTE_HERE="Paste in Vendor export strings here from exporting rules or lists.",
-IMPORT_INVALID_STRING = "[revisit] The specified string is not a valid import payload",
+IMPORT_INVALID_STRING = "The specified string is not a valid import string.",
 IMPORT_ERROR_CAPTION="Import Error",
 IMPORT_PAYLOAD_ERROR = [[
 # Import Error
 
-[revisit] The contents of the import data appear to be invalid
+Invalid import data.
 ]],
 IMPORT_UNKNOWN_CONTENT = [[
 # Import Error
 
-[revisit] The contents of the import data do not appear to be a vendor object
+Import data is not a string Vendor recognizes.
 ]],
 IMPORT_MISMATCH_RELEASE = [[
 # Import Error
 
-[revisit] The contents of the import data are for a different flavor of World of Warcraft
+Import data is for a different flavor of World of Warcraft.
 ]],
 IMPORT_OUTDATED_VERSION = [[
 # Import Error
 
-[revisit] The contents of the import data are for an older version of vendor
+Import data is from an older version of Vendor and is unsupported on this version.
 ]],
 
 EDITPARAM_NAME_LABEL = "Name:",
@@ -697,7 +687,6 @@ HELP_QUALITY_TEXT = [[The quality of the item:
 8 = Wow Token
 
 You can also use the following constants in your scripts: POOR, COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, ARTIFACT, HEIRLOOM]],
-HELP_LEVEL_TEXT = [[The item level (iLvl) of the item.]],
 HELP_LEVEL_TEXT = "This will be the item's effective item level if it is Equipment, otherwise it will be the base item level if it does not have an effective item level.",
 HELP_MINLEVEL_TEXT = [[The required character level for equipping the item.]],
 HELP_TYPE_TEXT = [[The name of the item's Type. This is a localized string. You can use this in conjunction with SubType to zero in on specific types of items.]],
@@ -895,6 +884,10 @@ True if the player is currently a Fury Warrior
 > PlayerSpecializationId() == 72
 
 ]],
+
+HELP_PLAYERNAME_TEXT = "The name of the currently logged in character",
+
+HELP_PLAYERREALM_TEXT = "The realm where the currently logged in character resides",
 
 HELP_TOTALITEMCOUNT_TEXT = [[
 Usage: TotalItemCount([includeBank, includeUses])

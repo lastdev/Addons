@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2335, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240426182205")
 mod:SetCreatureID(145616)--145644 Bwonsamdi
 mod:SetEncounterID(2272)
 mod:SetHotfixNoticeRev(18336)
@@ -432,7 +432,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.RangeCheck:Show(8)
 		end
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(285195))
+			DBM.InfoFrame:SetHeader(DBM:GetSpellName(285195))
 			DBM.InfoFrame:Show(5, "table", infoframeTable, 1)
 		end
 	elseif spellId == 284446 and self.vb.phase < 3 then--Bwonsamdi's Boon (shouldn't be needed but good to have)

@@ -1,8 +1,50 @@
 # Vendor
 
-## [6.2.0](https://github.com/typicalzergling/vendor/tree/6.2.0) (2023-05-02)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...6.2.0) 
+## [6.1.2-54-g78736c0](https://github.com/typicalzergling/vendor/tree/78736c0ace934ef5e42c220526de2b189814ab24) (2024-05-03)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...78736c0ace934ef5e42c220526de2b189814ab24) 
 
+- Add SoD and Cataclysm support  
+- Note update  
+- Remove all --@debug@ guards from lua code  
+- Bug fixes and toc update for 10.2.6  
+- Fix shutdown issue  
+- Merge branch 'vendor63' of https://github.com/typicalzergling/vendor into vendor63  
+- Fix sort  
+- Bugfixes and text tweaks  
+- Fix sorting  
+- bugfix  
+- Fix ESC  
+- Fix sell message  
+- optional features  
+- Document player name and relam  
+- Release notes  
+- Support PlayerRealm and PlayerName in a rule  
+- Support List Sort  
+    Allow the item  list to be sorted by Id, name or quality.  Fix a couple of bugs.  
+- Fix  documentation bug  
+- Correct defaults  
+- New adibags integration  
+    Better AdiBags integation as a feature  
+- More rework  
+    Fix settings and beta feature / chat settings.  
+- More component work and bug fix  
+- Update release notes and minor fixes  
+- Fix toc, add _xptr_ and fix divide by zero on ptr  
+- Cleanup  
+    Cleanup the initialization code some more, remove more old code.  
+- Rework the initialization  
+    - Chat feature  
+    - Rules as fitler in adibags  
+- Another bug fix  
+- Couple of simple bugfixes  
+- Chat frame feature  
+- Merge branch 'vendor63' of https://github.com/typicalzergling/vendor into vendor63  
+- Beta feature settings  
+- Merge branch 'vendor62' into vendor63  
+- Final release notes  
+- Inital Chat feature  
+    - Add the chat feature  
+    - Behaves the same as  
 - Merge branch 'vendor63' of https://github.com/typicalzergling/vendor into vendor63  
 - Wrath scrollbars  
     - Scrollbars for Wrath, they are ugly but the work  

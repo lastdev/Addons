@@ -2116,7 +2116,12 @@ nodes[1978][87047386] = {
 nodes[2200][27243078] = {
    id = 1207,
    type = "Raid",
-   } --Amirdrassil, the Dream's Hope
+} --Amirdrassil, the Dream's Hope
+
+nodes[1978][31015550] = {
+   id = 1207,
+   type = "Raid",
+} --Amirdrassil, the Dream's Hope
    end
 end
 end

@@ -1,6 +1,6 @@
 local _, Addon = ...
 local L = Addon:GetLocale()
-local debugp = function (...) Addon:Debug("items", ...) end
+
 
 local ItemProperties = {}
 local itemPropertiesList = nil
@@ -15,7 +15,7 @@ function ItemProperties:GetDependencies()
 end
 
 
-function ItemProperties:Startup(onready)
+function ItemProperties:Startup(register)
     -- Populate the property list
     itemPropertiesList = self:GetPropertyList()
 
@@ -24,7 +24,8 @@ function ItemProperties:Startup(onready)
     IS_RETAIL = Addon.Systems.Info.IsRetailEra
     IS_CLASSIC = Addon.Systems.Info.IsClassicEra
     itemproperties = self
-    onready({
+    
+    register({
         "GetPropertyDocumentation",
         "GetPropertyList",
         "GetPropertyType",
@@ -227,7 +228,7 @@ local function doGetItemProperties(itemObj)
         -- if the player cannot use it but could potentially trade it to other characters.
         -- This may not include illusions. TODO: Check illusion behavior.
         item.IsCollectable = false
-        if not item.IsCollected and item.IsTransmogEquipment and (item.IsBindOnEquip or item.IsAccountBound) and not (item.AppearanceId == 0) then
+        if not item.IsCollected and item.IsTransmogEquipment and not (item.AppearanceId == 0) then
             item.IsCollectable = true
         end
 

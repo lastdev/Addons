@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2368, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240428104711")
 mod:SetCreatureID(156818)
 mod:SetEncounterID(2329)
 mod:SetUsedIcons(1, 2, 3)--Unknown number of burning targets, guessed for now
@@ -64,7 +64,7 @@ local warnSap								= mod:NewTargetNoFilterAnnounce(314347, 3, nil, false)--off
 local timerSmokeandMirrorsCD				= mod:NewNextTimer(155, 306995, nil, nil, nil, 6)
 
 mod:AddInfoFrameOption(307013, true)
-mod:AddSetIconOption("SetIconBurningMadness", 307013, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconBurningMadness", 307013, true, 0, {1, 2, 3})
 mod:AddNamePlateOption("NPAuraOnHardenedCore", 313175)
 
 mod.vb.cataCast = 0
@@ -87,7 +87,7 @@ local mythicincinerateTimers = {28.6, 71.6}
 
 local updateInfoFrame
 do
-	local burningMadness = DBM:GetSpellInfo(307013)
+	local burningMadness = DBM:GetSpellName(307013)
 	local floor = math.floor
 	local lines = {}
 	local sortedLines = {}
@@ -149,7 +149,7 @@ function mod:OnCombatStart(delay)
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self.Options.InfoFrame and self:IsMythic() then
-		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(313255))
+		DBM.InfoFrame:SetHeader(DBM:GetSpellName(313255))
 		DBM.InfoFrame:Show(6, "playerdebuffstacks", 313255)--Sorted lowest first (highest first is default of arg not given)
 	end
 end
@@ -312,7 +312,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerSmokeandMirrorsCD:Start(155)
 		if self.Options.InfoFrame then
 			if self:IsMythic() then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(313255))
+				DBM.InfoFrame:SetHeader(DBM:GetSpellName(313255))
 				DBM.InfoFrame:Show(6, "playerdebuffstacks", 313255)
 			else
 				DBM.InfoFrame:Hide()

@@ -381,8 +381,11 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 		end
 	end
 
+	local noColor = {1, 1, 1, 1}
+
 	---add an icon to the left of the button text
 	---short method truncates the text: false = do nothing, nil = increate the button width, 1 = decrease the font size, 2 = truncate the text
+	---@param self table
 	---@param texture any
 	---@param width number|nil
 	---@param height number|nil
@@ -393,7 +396,8 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 	---@param leftPadding number|nil
 	---@param textHeight number|nil
 	---@param shortMethod any
-	function ButtonMetaFunctions:SetIcon(texture, width, height, layout, texcoord, overlay, textDistance, leftPadding, textHeight, shortMethod)
+	---@param filterMode any
+	function ButtonMetaFunctions:SetIcon(texture, width, height, layout, texcoord, overlay, textDistance, leftPadding, textHeight, shortMethod, filterMode)
 		if (not self.icon) then
 			self.icon = self:CreateTexture(nil, "artwork")
 			self.icon:SetSize(self.height * 0.8, self.height * 0.8)
@@ -401,6 +405,16 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 			self.icon.leftPadding = leftPadding or 0
 			self.widget.text:ClearAllPoints()
 			self.widget.text:SetPoint("left", self.icon, "right", textDistance or 2, 0 + (textHeight or 0))
+		end
+
+		overlay = overlay or noColor
+		local red, green, blue, alpha = detailsFramework:ParseColors(overlay or noColor)
+
+		local left, right, top, bottom = texcoord and texcoord[1], texcoord and texcoord[2], texcoord and texcoord[3], texcoord and texcoord[4]
+		texture, width, height, left, right, top, bottom, red, green, blue, alpha = detailsFramework:ParseTexture(texture, width, height, left, right, top, bottom, red, green, blue, alpha)
+
+		if (red == nil) then
+			red, green, blue, alpha = 1, 1, 1, 1
 		end
 
 		if (type(texture) == "string") then
@@ -412,35 +426,19 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 				local r, g, b, a = detailsFramework:ParseColors(texture)
 				self.icon:SetColorTexture(r, g, b, a)
 			else
-				self.icon:SetTexture(texture)
+				self.icon:SetTexture(texture, nil, nil, filterMode)
 			end
-
-		elseif (type(texture) == "table") then
-			local r, g, b, a = detailsFramework:ParseColors(texture)
-			self.icon:SetColorTexture(r, g, b, a)
 		else
-			self.icon:SetTexture(texture)
+			self.icon:SetTexture(texture, nil, nil, filterMode)
 		end
 
 		self.icon:SetSize(width or self.height * 0.8, height or self.height * 0.8)
+
 		self.icon:SetDrawLayer(layout or "artwork")
 
-		if (texcoord) then
-			self.icon:SetTexCoord(unpack(texcoord))
-		else
-			self.icon:SetTexCoord(0, 1, 0, 1)
-		end
+		self.icon:SetTexCoord(left, right, top, bottom)
 
-		if (overlay) then
-			if (type(overlay) == "string") then
-				local r, g, b, a = detailsFramework:ParseColors(overlay)
-				self.icon:SetVertexColor(r, g, b, a)
-			else
-				self.icon:SetVertexColor(unpack(overlay))
-			end
-		else
-			self.icon:SetVertexColor(1, 1, 1, 1)
-		end
+		self.icon:SetVertexColor(red, green, blue, alpha)
 
 		local buttonWidth = self.button:GetWidth()
 		local iconWidth = self.icon:GetWidth()
@@ -469,6 +467,13 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 			elseif (shortMethod == 2) then
 				detailsFramework:TruncateText(self.button.text, self:GetWidth() - self.icon:GetWidth() - 15)
 			end
+		end
+	end
+
+	---@param self df_button
+	function ButtonMetaFunctions:SetIconFilterMode(filterMode)
+		if (self.icon) then
+			self.icon:SetTexture(self.icon:GetTexture(), nil, nil, filterMode)
 		end
 	end
 
@@ -739,9 +744,7 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 ---width, height, icon|table, textcolor, textsize, textfont, textalign, backdrop, backdropcolor, backdropbordercolor, onentercolor, onleavecolor, onenterbordercolor, onleavebordercolor
 ---@param template table|string
 function ButtonMetaFunctions:SetTemplate(template)
-	if (type(template) == "string") then
-		template = detailsFramework:GetTemplate("button", template)
-	end
+	template = detailsFramework:ParseTemplate(self.type, template)
 
 	if (not template) then
 		detailsFramework:Error("template not found")
@@ -863,7 +866,7 @@ end
 		self:SetScript("OnEnable", onEnableFunc)
 	end
 
-	---@class df_button : button, df_scripthookmixin
+	---@class df_button : button, df_scripthookmixin, df_widgets
 	---@field widget button
 	---@field tooltip string
 	---@field shown boolean
@@ -894,6 +897,7 @@ end
 	---@field SetTextColor fun(self: df_button, color: any) set the button text color
 	---@field SetText fun(self: df_button, text: string) set the button text
 	---@field SetClickFunction fun(self: df_button, func: function, param1: any, param2: any, clickType: "left"|"right"|nil)
+	---@field SetIconFilterMode fun(self: df_button, filterMode: any) set the filter mode for the icon, execute after SetIcon()
 
 	---create a Details Framework button
 	---@param parent frame
@@ -1103,7 +1107,7 @@ end
 	---@param callback function
 	---@param alpha number|nil
 	---@param buttonTemplate table|nil
-	---@return table|nil
+	---@return df_colorpickbutton
 	function detailsFramework:CreateColorPickButton(parent, name, member, callback, alpha, buttonTemplate)
 		return detailsFramework:NewColorPickButton(parent, name, member, callback, alpha, buttonTemplate)
 	end

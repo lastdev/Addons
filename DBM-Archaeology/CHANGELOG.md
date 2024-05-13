@@ -1,6 +1,10 @@
 # <DBM Extra> Archaeology
 
-## [r59](https://github.com/DeadlyBossMods/DBM-Archaeology/tree/r59) (2024-01-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Archaeology/compare/r58...r59) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Archaeology/releases)
+## [r61](https://github.com/DeadlyBossMods/DBM-Archaeology/tree/r61) (2024-05-07)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Archaeology/compare/r60...r61) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Archaeology/releases)
 
-- Bump tocs for 10.2.5  
+- Bump ToCs for 10.2.7  
+- apparently no one is actually ready for the cataclysm pre patch yet (ie multi interface versions separated by ,). So revert that for now  
+- War within TOC Support  
+- Update README.md  
+- Fix LuaLS nitpick  

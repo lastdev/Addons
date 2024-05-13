@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1873, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(116939)--Maiden of Valor 120437
 mod:SetEncounterID(2038)
 mod:SetBossHPInfoToHighest()
@@ -80,7 +80,7 @@ local timerCorruptedMatrixCD		= mod:NewNextTimer(40, 233556, nil, nil, nil, 5, n
 local timerCorruptedMatrix			= mod:NewCastTimer(10, 233556, nil, nil, nil, 5)
 --Stage Two: An Avatar Awakened
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
-local timerDarkMarkCD				= mod:NewNextCountTimer(34, 239739, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 2, 4)
+local timerDarkMarkCD				= mod:NewNextCountTimer(34, 239739, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 2 or nil, 4)
 local timerRainoftheDestroyerCD		= mod:NewNextCountTimer(35, 240396, nil, nil, nil, 3)
 local timerRainoftheDestroyer		= mod:NewCastTimer(5.5, 240396, 206577, nil, nil, 3, nil, nil, nil, 3, 4)--Shortname: Comet Impact
 
@@ -107,8 +107,8 @@ mod.vb.realityCount = 0
 mod.vb.rainCount = 0
 local darkMarkTargets = {}
 local playerName = UnitName("player")
-local beamName = DBM:GetSpellInfo(238244)
-local touch, rupture, unbound, shadowy, shieldName = DBM:GetSpellInfo(239207), DBM:GetSpellInfo(239132), DBM:GetSpellInfo(234059), DBM:GetSpellInfo(236571), DBM:GetSpellInfo(241008)
+local beamName = DBM:GetSpellName(238244)
+local touch, rupture, unbound, shadowy, shieldName = DBM:GetSpellName(239207), DBM:GetSpellName(239132), DBM:GetSpellName(234059), DBM:GetSpellName(236571), DBM:GetSpellName(241008)
 local showTouchofSarg = true
 
 local function warnDarkMarkTargets(self, spellName)

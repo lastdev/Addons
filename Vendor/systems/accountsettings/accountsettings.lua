@@ -4,7 +4,7 @@ local AccountSettings = {}
 
 --[[ Retrieve our depenedencies ]]
 function AccountSettings:GetDependencies()
-    return { "savedvariables" }
+    return { "system:savedvariables" }
 end
 
 --[[ Called when the settings have changed ]]
@@ -13,10 +13,9 @@ function AccountSettings:GetEvents()
 end
 
 --[[ Startup our system ]]
-function AccountSettings:Startup(onready)
+function AccountSettings:Startup(register)
     self.savedVariable = Addon:CreateSavedVariable("AccountSettings")
-
-    onready({ "GetAccountSetting", "SetAccountSetting" })
+    register({ "GetAccountSetting", "SetAccountSetting" });
 end
 
 --[[ Shutdown our system ]]
@@ -29,6 +28,7 @@ end
 
 --[[ Retrieve an account setting ]]
 function AccountSettings:GetAccountSetting(name, default)
+
 
     local value = self.savedVariable:Get(name)
 

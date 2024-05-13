@@ -1,0 +1,25 @@
+## Interface: 100207
+## Title: LittleSnitch
+## Notes: Customizable reports for interrupts, defensive and offensive dispels, taunts, misdirects, cc breaks, combat res and non-combat res
+## Author: Birckin
+## Version: 1.0
+
+## SavedVariables: LittleSnitchDB
+
+# Library files
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\LibStub\LibStub.lua
+
+# Locale files
+Locales/Locale-enUS.lua
+Locales/Locale-esES.lua
+
+# Core files
+SpellData.lua
+LittleSnitch.lua

@@ -280,6 +280,8 @@ L["Bounty stacks after this pull"] = ""
 L["Bracken Warscourge"] = "Azote de guerra Frondacuero"
 L["Brackenhide Shaper"] = "Modeladora Frondacuero"
 --[[Translation missing --]]
+L["brackenhideCage"] = "Meat Storage"
+--[[Translation missing --]]
 L["BrackenhideHollow"] = "Brackenhide Hollow"
 L["Brain of Yogg-Saron"] = "Cerebro de Yogg-Saron"
 L["Brawling Patron"] = "Cliente camorrista"
@@ -351,6 +353,8 @@ L["Chrono-Lord Epoch"] = "Cronolord Época"
 L["Claw Fighter"] = "Luchador de zarpa"
 L["Click the fullscreen button for a maximized view of MDT."] = "Haz click en el botón de pantalla completa para maximizar la vista de MDT."
 L["Click to adjust color settings"] = "Click para ajustar los ajustes de color"
+--[[Translation missing --]]
+L["Click to assign player"] = "Click to assign player"
 L["Click to go to %s"] = "Click para ir a %s"
 L["Click to set dungeon level to 10"] = "Click para establecer una mazmorra al nivel 10"
 L["Click to switch to current week"] = "Click para cambiar a la semana actual"
@@ -591,6 +595,8 @@ L["Dragonflight Season 1"] = "Dragonflight Season 1"
 L["Dragonflight Season 2"] = "Dragonflight Season 2"
 --[[Translation missing --]]
 L["Dragonflight Season 3"] = "Dragonflight Season 3"
+--[[Translation missing --]]
+L["Dragonflight Season 4"] = "Dragonflight Season 4"
 L["Dragonkin"] = "Dragonante"
 L["Drakkari Bat"] = "Murciélago Drakkari"
 L["Drakkari Battle Rider"] = "Jinete de batalla Drakkari"
@@ -734,7 +740,7 @@ L["Error Message:"] = "Error Message:"
 --[[Translation missing --]]
 L["errorLabel1"] = "MDT has encountered errors."
 --[[Translation missing --]]
-L["errorLabel2"] = "Please visit either GitHub or Discord and report the error message below."
+L["errorLabel2"] = "Please update MDT to the latest version and visit either GitHub or Discord and report the error message below."
 --[[Translation missing --]]
 L["errorLabel3"] = "Press CTRL + C to copy!"
 L["Erudite Slayer"] = "Asesina erudita"
@@ -1014,9 +1020,7 @@ L["Hardened Steel Skycaller"] = "Clamacielos de acero endurecido"
 --[[Translation missing --]]
 L["hardResetButton"] = "Reset MDT"
 --[[Translation missing --]]
-L["hardResetPrompt"] = [=[Do you really want to reset all settings to default?
-|cFFFF0000Only do this if MDT is not loading at all and is in a broken state.|r
-This will reload the UI!]=]
+L["hardResetPrompt"] = "Do you really want to reset all settings to default?\\n|cFFFF0000Try updating the AddOn to the latest version first!\\nOnly do this if MDT is not loading at all and is in a broken state.\\nThis will delete ALL YOUR ROUTES!|r\\nThis will reload the UI!"
 --[[Translation missing --]]
 L["hardResetPromptTitle"] = "Delete ALL settings"
 L["Harlan Sweete"] = "Harlan Sweete"
@@ -1472,6 +1476,8 @@ L["Neltharion's Lair"] = "Guarida de Neltharion"
 L["Neltharion's Lair Sublevel"] = "Subnivel 1 de Guarida de Neltharion"
 --[[Translation missing --]]
 L["Neltharus"] = "Neltharus"
+--[[Translation missing --]]
+L["neltharusChain"] = "Burning Chain"
 L["Ner'zhul"] = "Ner'zhul"
 L["Netherspace"] = "Espacio Abisal"
 L["New"] = "Nuevo"
@@ -1783,6 +1789,8 @@ L["Rook Spiderling"] = "Arañita del torreón"
 L["Rook Spinner"] = "Hiladora del torreón"
 L["Root"] = "Raíz"
 L["Rotation"] = "Rotación"
+--[[Translation missing --]]
+L["Rotbow Ranger"] = "Rotbow Ranger"
 L["Rotbow Stalker"] = "Acechador putriarco"
 L["Rotfang Hyena"] = "Hiena colmillomugre"
 L["Rotheart Dryad"] = "Dríade Corazón infecto"

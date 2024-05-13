@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061644")
+mod:SetRevision("20240426185020")
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetUsedIcons(8, 4, 3, 2, 1)
@@ -124,7 +124,7 @@ local phase2DeathBlossom = {80, 75}--VERIFIED Oct 16
 local autoMarkScannerActive = false
 local autoMarkBlocked = false
 local autoMarkFilter = {}
-local infoFrameSpell = DBM:GetSpellInfo(210099)
+local infoFrameSpell = DBM:GetSpellName(210099)
 
 local updateInfoFrame
 do

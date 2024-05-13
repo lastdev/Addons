@@ -274,9 +274,11 @@ if ObjectiveTrackerBlocksFrame and ObjectiveTrackerBlocksFrame.CallOnCreateFunct
         end
     end)
 else
-    hooksecurefunc("QuestPOIButton_OnClick", function(self, button)
-        poi_OnClick(self, button)
-    end)
+    if not addon.WAR_WITHIN then
+        hooksecurefunc("QuestPOIButton_OnClick", function(self, button)
+            poi_OnClick(self, button)
+        end)
+    end
 end
 
 function TomTom:EnableDisablePOIIntegration()

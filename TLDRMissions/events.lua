@@ -103,6 +103,15 @@ local function eventHandler(self, event, ...)
         if _G.GarrisonLandingPageFollowerList then
 			addon.followerList:Init()
 		end
+        C_Timer.After(0.1, function()
+            if true then return end
+            if GarrisonMissionFrame:IsShown() then
+                addon.WODGUI:Show()
+                addon.WODGUI:SetParent(GarrisonMissionFrame)
+                addon.WODGUI:SetFrameStrata("DIALOG")
+            end
+        end)
+        eventFrame:UnregisterEvent("ADDON_LOADED")
     elseif event == "GARRISON_MISSION_COMPLETE_RESPONSE" then
         addon:logCompletedMission(...)
     elseif event == "GARRISON_MISSION_STARTED" then
@@ -124,4 +133,5 @@ eventFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 
 EventUtil.ContinueOnAddOnLoaded(addonName, function()
     addon:RefreshProfile()
+    addon.WODGUI:RefreshProfile()
 end)

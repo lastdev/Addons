@@ -93,6 +93,7 @@ Prat:AddModuleToLoad(function()
     [".*[Tt]wink.*$"] = true,
     ["(.-)'s? [Aa]lt"] = "%f[%a\192-\255]([%a\192-\255]+)%f[^%a\128-\255]'s [Aa]lt",
     ["([^%s%p%d%c%z]+)'s alt"] = "%f[%a\192-\255]([%a\192-\255]+)%f[^%a\128-\255]'s [Aa]lt",
+    ["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%a\192-\255]([%a\192-\255]+)%f[^%a\128-\255]",
     ['ERROR: some function sent a blank message!'] = true,
     ["Alts:"] = true,
     ['Main:'] = true,
@@ -160,6 +161,7 @@ L = {
 		["Alt"] = true,
 		["alt"] = true,
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = true,
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
 		["AltNames"] = true,
 		["Alts:"] = true,
 		["autoguildalts_desc"] = "Automatically run the import from guild roster command silently",
@@ -192,7 +194,7 @@ L = {
 		["Import options"] = true,
 		["Imports alt names from a Guild Greet database, if present"] = true,
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = true,
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = true,
 		["Left"] = true,
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = true,
 		["Link alt"] = true,
@@ -272,6 +274,8 @@ L = {
 		--[[Translation missing --]]
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "alt name exists: %s -> %s; not overwriting as set in preferences",
 		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
+		--[[Translation missing --]]
 		["AltNames"] = "AltNames",
 		["Alts:"] = "Rerolls:",
 		--[[Translation missing --]]
@@ -318,7 +322,7 @@ L = {
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
 		--[[Translation missing --]]
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		--[[Translation missing --]]
 		["Left"] = "Left",
 		--[[Translation missing --]]
@@ -435,6 +439,7 @@ L = {
 		["Alt"] = "Alternative",
 		["alt"] = "alternative",
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "Alternativname existiert: %s -> %s; nicht wie in den Einstellungen festgelegt überschreiben",
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt von %f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]",
 		["AltNames"] = "Alternative Namen",
 		["Alts:"] = "Alternativen:",
 		["autoguildalts_desc"] = "Führe den Import aus dem Gildenplan automatisch aus",
@@ -537,6 +542,8 @@ L = {
 		["Alt"] = "부 캐릭터",
 		["alt"] = "부 캐릭터",
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "부 캐릭터 이름 존재: %s -> %s; 우선권 설정으로 덮어쓰지 않았습니다",
+		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
 		["AltNames"] = "부 캐릭터 이름 [AltNames]",
 		["Alts:"] = "부 캐릭터:",
 		["autoguildalts_desc"] = "자동으로 길드 명단에서 가져오기 명령을 실행합니다",
@@ -653,6 +660,8 @@ L = {
 		--[[Translation missing --]]
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "alt name exists: %s -> %s; not overwriting as set in preferences",
 		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
+		--[[Translation missing --]]
 		["AltNames"] = "AltNames",
 		--[[Translation missing --]]
 		["Alts:"] = "Alts:",
@@ -717,7 +726,7 @@ L = {
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
 		--[[Translation missing --]]
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		--[[Translation missing --]]
 		["Left"] = "Left",
 		--[[Translation missing --]]
@@ -835,6 +844,8 @@ L = {
 		["Alt"] = "Альт",
 		["alt"] = "альт",
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "имя альта уже существует: %s -> %s; перезапись запрещена настройками",
+		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
 		["AltNames"] = "Имя альтов",
 		["Alts:"] = "Альты:",
 		["autoguildalts_desc"] = "Автоматически и без отчета выполнять команду импорта из списка гильдии",
@@ -938,6 +949,8 @@ L = {
 		["Alt"] = "马甲",
 		["alt"] = "马甲",
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "马甲名称存在: %s -> %s;没有覆盖参数设置",
+		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
 		["AltNames"] = "马甲名称",
 		["Alts:"] = "马甲:",
 		["autoguildalts_desc"] = [=[后台自动从公会信息中导入
@@ -1043,6 +1056,8 @@ L = {
 		["Alt"] = true,
 		["alt"] = true,
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "existe el nombre alternativo: %s -> %s; sin sobrescribir como está establecido en las preferencias",
+		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
 		["AltNames"] = "AltNombres",
 		["Alts:"] = true,
 		--[[Translation missing --]]
@@ -1163,6 +1178,8 @@ L = {
 		["alt"] = "分身",
 		--[[Translation missing --]]
 		["alt name exists: %s -> %s; not overwriting as set in preferences"] = "alt name exists: %s -> %s; not overwriting as set in preferences",
+		--[[Translation missing --]]
+		["alt of ([^%s%p%d%c%z]+)"] = "[Aa]lt of %f[%aÀ-ÿ]([%aÀ-ÿ]+)%f[^%a-ÿ]",
 		["AltNames"] = "分身名字",
 		["Alts:"] = "分身:",
 		--[[Translation missing --]]
@@ -1205,7 +1222,7 @@ L = {
 		--[[Translation missing --]]
 		["Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\""] = "Imports alt names from the guild roster by checking for members with the rank \"alt\" or \"alts\", or guild / officer notes like \"<name>'s alt\"",
 		--[[Translation missing --]]
-		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariablesLOKWhoIsWho.lua in the Prat directory to be able to use this).",
+		["Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this)."] = "Imports data from LOKWhoIsWho, if present (drop your SavedVariables\\LOKWhoIsWho.lua in the Prat directory to be able to use this).",
 		["Left"] = "左方",
 		["link <alt name> <main name> (eg, /altnames link Fin Finjathealtoffin)"] = "link <alt name> <main name> (例如, /altnames link Fin Finjathealtoffin)",
 		["Link alt"] = "連結分身",
@@ -2212,6 +2229,11 @@ L = {
         mainname = cleanoffnote
       elseif officernote:find(PL["([^%s%p%d%c%z]+)'s alt"]) or publicnote:find(PL["([^%s%p%d%c%z]+)'s alt"]) then
         local TempName = officernote:match(PL["([^%s%p%d%c%z]+)'s alt"]) or publicnote:match(PL["([^%s%p%d%c%z]+)'s alt"])
+        if TempName and guildMembers[string.lower(TempName)] then
+          mainname = TempName
+        end
+      elseif officernote:find(PL["alt of ([^%s%p%d%c%z]+)"]) or publicnote:find(PL["alt of ([^%s%p%d%c%z]+)"]) then
+        local TempName = officernote:match(PL["alt of ([^%s%p%d%c%z]+)"]) or publicnote:match(PL["alt of ([^%s%p%d%c%z]+)"])
         if TempName and guildMembers[string.lower(TempName)] then
           mainname = TempName
         end

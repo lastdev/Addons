@@ -163,6 +163,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SKINTEXT                = "Use skin"
     HEALBOT_SKINS_STD                       = "Standard"
     HEALBOT_OPTIONS_SKINTEXTURE             = "Texture"
+    HEALBOT_OPTIONS_SKINTEXTURES            = "Textures"
     HEALBOT_OPTIONS_SKINHEIGHT              = "Height"
     HEALBOT_OPTIONS_SKINWIDTH               = "Width"
     HEALBOT_OPTIONS_SKINNUMCOLS             = "Number of columns"
@@ -187,6 +188,7 @@ function HealBot_Lang_enALL()
     HEALBOT_SKIN_BACKTEXT                   = "Background"
     HEALBOT_SKIN_BORDERTEXT                 = "Border"
     HEALBOT_OPTIONS_SKINFONT                = "Font"
+    HEALBOT_OPTIONS_SKINFONTS               = "Fonts"
     HEALBOT_OPTIONS_SKINFHEIGHT             = "Font Size"
     HEALBOT_OPTIONS_SKINFOUTLINE            = "Font Outline"
     HEALBOT_OPTIONS_BARALPHADIS             = "Disabled opacity"
@@ -228,10 +230,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_CDCSHOWHBARS            = "Change health bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_OPTIONS_CDCSHOWABARS            = "Change aggro bar col"..HEALBOT_enWORD_COLOUR_SUFFIX;
     HEALBOT_OPTIONS_CDCWARNINGS             = "Debuff warnings";
-    HEALBOT_OPTIONS_RAIDGROUPWARN           = "Raid filter";
-    HEALBOT_OPTIONS_NPCGROUPWARN            = "NPC filter";
-    HEALBOT_OPTIONS_NPCGROUPWARNFRIEND      = "Include friendly npc's"
-    HEALBOT_OPTIONS_NPCGROUPWARNENEMY       = "Include enemy npc's"
     HEALBOT_OPTIONS_BUFFWARNINGS            = "Buff warnings";
     HEALBOT_OPTIONS_BUFFCUSTOM              = "Custom buffs";
     HEALBOT_OPTIONS_DEBUFFCUSTOM            = "Custom debuffs"
@@ -245,6 +243,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWBUFFWARNING         = "Display warning on buff";
     HEALBOT_OPTIONS_SOUNDBUFFWARNING        = "Play sound on buff";
     HEALBOT_OPTIONS_SOUND                   = "Sound"
+    HEALBOT_OPTIONS_SOUNDS                  = "Sounds"
     HEALBOT_OPTIONS_WARN_CLASSCOL           = "Unable to change text col"..HEALBOT_enWORD_COLOUR_SUFFIX.." when\nCol"..HEALBOT_enWORD_COLOUR_SUFFIX.." text by class is on"
 
     HEALBOT_OPTIONS_PLAYERVISIBILITY        = "Player and Pet Visibility";
@@ -464,6 +463,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_BUFFSTEXTWEMAIN         = "Main hand / 2H";
     HEALBOT_OPTIONS_BUFFSTEXTWEOFF          = "Off hand";
     HEALBOT_OPTIONS_ITEMNAME                = "Item name";
+    HEALBOT_OPTIONS_SPELLITEMNAME           = "Spell name / Item name";
     HEALBOT_OPTIONS_PRIMARYITEM             = "Primary Item";
     HEALBOT_OPTIONS_BACKUPITEM              = "Backup Item";
     HEALBOT_OPTIONS_BUFFSTEXT2              = "check members";
@@ -477,7 +477,9 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_BUFFPARTY               = "on party";
     HEALBOT_OPTIONS_BUFFRAID                = "on raid";
     HEALBOT_OPTIONS_MONITORBUFFS            = "Monitor buffs";
-    HEALBOT_OPTIONS_MONITORBUFFSC           = "also in combat";
+    HEALBOT_OPTIONS_MONITORDEBUFFSC         = "also in combat";
+    HEALBOT_OPTIONS_MONITORGBUFFSC          = "include General in combat";
+    HEALBOT_OPTIONS_MONITORCBUFFSC          = "also in combat";
     HEALBOT_OPTIONS_ENABLESMARTCAST         = "SmartCast out of combat";
     HEALBOT_OPTIONS_SMARTCASTSPELLS         = "Include spells";
     HEALBOT_OPTIONS_SMARTCASTDISPELL        = "Remove debuffs";
@@ -555,6 +557,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_IGNOREDEBUFFDURATION    = "Short duration";
     HEALBOT_OPTIONS_IGNOREDEBUFFCOOLDOWN    = "When cure spell CoolDown > 2 seconds";
     HEALBOT_OPTIONS_IGNOREDEBUFFFRIEND      = "When caster is known as friend";
+    HEALBOT_OPTIONS_IGNORECANNOTDISPELL     = "When debuff cannot be dispelled";
 
     HEALBOT_OPTIONS_OPTIONSOPACITY          = "Options opacity";
 
@@ -685,6 +688,7 @@ function HealBot_Lang_enALL()
 
     HEALBOT_DISCONNECTED_LABEL              = "Disconnected"
     HEALBOT_DISCONNECTED_TAG                = "DC "
+    HEALBOT_DEAD_SPIRIT                     = "Spirit"
     HEALBOT_DEAD_LABEL                      = "Dead"
     HEALBOT_DEAD_TAG                        = "RIP "
     HEALBOT_RES_TAG                         = "RES "
@@ -976,10 +980,12 @@ function HealBot_Lang_enALL()
     HEALBOT_WORDS_MAX                       = "max"
     HEALBOT_CHAT_SELFPETSON                 = "Self Pet switched on"
     HEALBOT_CHAT_SELFPETSOFF                = "Self Pet switched off"
-    HEALBOT_CHAT_PLAYERROLESON              = "Allow player roles switched on"
-    HEALBOT_CHAT_PLAYERROLESOFF             = "Allow player roles switched off"
-    HEALBOT_ALLOWTALENTQUERYON              = "Allow querying player talents On"
-    HEALBOT_ALLOWTALENTQUERYOFF             = "Allow querying player talents Off"
+    HEALBOT_CHAT_PLAYERROLESON              = "Allow player roles switched"
+    HEALBOT_CHAT_PLAYERROLESOFF             = "Deny player roles switched"
+    HEALBOT_ALLOWTALENTQUERYON              = "Allow querying player talents"
+    HEALBOT_ALLOWTALENTQUERYOFF             = "Deny querying player talents"
+    HEALBOT_CLEARINSPECTON                  = "Execute Clear Inspection after Talent Query"
+    HEALBOT_CLEARINSPECTOFF                 = "Do not execute Clear Inspection"
     HEALBOT_WORD_PRIORITY                   = "Priority"
     HEALBOT_VISIBLE_RANGE                   = "Within 100 yards"
     HEALBOT_SPELL_RANGE                     = "Within spell range"
@@ -1042,7 +1048,7 @@ function HealBot_Lang_enALL()
     HEALBOT_SUPPRESSSOUND                   = "Auto Trinket: Suppress sound"
     HEALBOT_SUPPRESSERROR                   = "Auto Trinket: Suppress errors"
     HEALBOT_PERFLEVEL                       = "Performance Level"
-    HEALBOT_PERF                            = "Performance"
+    HEALBOT_TALENTINSPECT                   = "Inspect player talents"
     HEALBOT_SKIN_CHECK_DONE                 = "Integrity check of skins complete"
     HEALBOT_ENABLE_CUSTOM_BUFFS             = "All custom buffs have been enabled"
     HEALBOT_ENABLE_CUSTOM_DEBUFFS           = "All custom debuffs have been enabled"
@@ -1104,6 +1110,7 @@ function HealBot_Lang_enALL()
     HEALBOT_SKIN_HEALTHBARCOL_TEXT          = "Health bar"
     HEALBOT_SKIN_BORDER_HAZARD              = "Border hazard"
     HEALBOT_SKIN_BORDER_HAZARDU             = "Border Hazard"
+    HEALBOT_SKIN_BORDER_SOLID               = "Border solid"
     HEALBOT_SKIN_FRAME_GLOW                 = "Bar glow lines"
     HEALBOT_SKIN_FRAME_GLOWSTARS            = "Bar glow stars"
     HEALBOT_SKIN_FRAME_GLOWBLIZZ            = "Alt Blizzard glow"
@@ -1320,6 +1327,7 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_PERFORMANCE              = "HealBot Performance"
     HEALBOT_PLUGIN_MYCOOLDOWNS              = "HealBot MyCooldowns"
     HEALBOT_PLUGIN_TWEAKS                   = "HealBot Tweaks"
+    HEALBOT_PLUGIN_MEDIA                    = "HealBot Media"
     HEALBOT_PLUGIN_REQUESTS                 = "HealBot Requests"
     HEALBOT_PLUGIN_AURAWATCH                = "HealBot AuraWatch"
     HEALBOT_PLUGIN_HEALTHWATCH              = "HealBot HealthWatch"
@@ -1353,9 +1361,11 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_CPMACRO                  = "Macro name: "
     HEALBOT_PLUGIN_AGGRO2THRESHOLD          = "Aggro level 2 threshold"
     HEALBOT_PLUGIN_AGGRO3THRESHOLD          = "Aggro level 3 threshold"
+    HEALBOT_PLUGIN_AUXMAXINHEALS            = "Aux incoming heals max value"
+    HEALBOT_PLUGIN_AUXMAXABSORBS            = "Aux absorbs max value"
     HEALBOT_PLUGIN_INHEALHOTTIME            = "Incoming heals HoT time"
-    HEALBOT_PLUGIN_AUTOTIMEDBUFFDURATION    = "Custom buff - auto All Timed duration less than"
-    HEALBOT_PLUGIN_AUTOTIMEDDURATION        = "Custom debuff - auto All Timed duration less than"
+    HEALBOT_PLUGIN_AUTOTIMEDBUFFDURATION    = "Auto All Timed duration less than"
+    HEALBOT_PLUGIN_AUTOTIMEDDURATION        = "Auto All Timed duration less than"
     HEALBOT_PLUGIN_SORTBYTOPROLE            = "Sort by role - Top role"
     HEALBOT_PLUGIN_USETRINKET10             = "Auto trinket includes gloves"
     HEALBOT_PLUGIN_CLASSICPLAYERROLES       = "Allow player roles in groups and raids"
@@ -1405,16 +1415,22 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_AURAWATCHAGGROLEVEL      = "Aggro level"
     HEALBOT_PLUGIN_AURAWATCHRAIDTARGET      = "Raid Target"
     HEALBOT_PLUGIN_AURAWATCHRAIDTARGETF     = "Filter raid target"
+    HEALBOT_PLUGIN_ALERTRANGE               = "Alert Range"
     HEALBOT_PLUGIN_TWEAKSDELETEALL          = "Delete All"
     HEALBOT_PLUGIN_TWEAKSENABLEALL          = "Enable All"
     HEALBOT_PLUGIN_TWEAKSDISABLEALL         = "Disable All"
     HEALBOT_PLUGIN_TWEAKSRESETALL           = "Reset All"
     HEALBOT_PLUGIN_TWEAKSCASTBYALL          = "Set Cast By to Everyone for all"
     HEALBOT_PLUGIN_TWEAKSCASTBYSELF         = "Set Cast By to Self for all"
-    HEALBOT_PLUGIN_TWEAKSCOLOURNONE         = "Set Bar Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." to None for all"
-    HEALBOT_PLUGIN_TWEAKSCOLOURADAPTIVE     = "Set Bar Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." to Adaptive Only for all"
-    HEALBOT_PLUGIN_TWEAKSCOLOURADAPTBAR     = "Set Bar Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." to Adaptive and Health Bar for all"
-    HEALBOT_PLUGIN_TWEAKSCOLOURBARCOL       = "Set Bar Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." to Bar Col"..HEALBOT_enWORD_COLOUR_SUFFIX.." Only for all"
+    HEALBOT_PLUGIN_TWEAKSCOLOURNONE         = "Set all to None"
+    HEALBOT_PLUGIN_TWEAKSCOLOURADAPTIVE     = "Set all to Adaptive Only"
+    HEALBOT_PLUGIN_TWEAKSCOLOURADAPTBAR     = "Set all to Adaptive and Health Bar"
+    HEALBOT_PLUGIN_TWEAKSCOLOURBARCOL       = "Set all to Health Bar Only"
+    HEALBOT_PLUGIN_TWEAKSCOLOURHAZARD       = "Set all to Border Hazard"
+    HEALBOT_PLUGIN_TWEAKSCOLOURLINES        = "Set all to Glow Lines"
+    HEALBOT_PLUGIN_TWEAKSCOLOURSTARS        = "Set all to Glow Stars"
+    HEALBOT_PLUGIN_TWEAKSCOLOURBLIZZARD     = "Set all to Alt Blizzard Glow"
+    HEALBOT_PLUGIN_TWEAKSCOLOURSOLID        = "Set all to Border Solid"
     HEALBOT_PLUGIN_HEALTHALERTLEVEL         = "Health alert level"
     HEALBOT_PLUGIN_MANAALERTLEVEL           = "Mana alert level"
     HEALBOT_PLUGIN_ALERTMETHOD              = "Alert method"
@@ -1428,6 +1444,8 @@ function HealBot_Lang_enALL()
     HEALBOT_PLUGIN_QUEUEVENTPOWER           = "Queue power events"
     HEALBOT_PLUGIN_QUEUEVENTINHEALS         = "Queue incoming heal events"
     HEALBOT_PLUGIN_QUEUEVENTABSORBS         = "Queue absorb events"
+    HEALBOT_PLUGIN_MEDIAEXAMPLEBAR          = "Example Status Bar 321"
+    HEALBOT_PLUGIN_TWEAKSCUSTOMCOL          = "Set all col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s to this"
 
     HEALBOT_CUSTOM_CASTBY_EVERYONE          = "Everyone"
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Enemy"
@@ -1647,7 +1665,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_IN_A_GROUP              = "Only in a Group or Raid"
     HEALBOT_OPTIONS_ALSO_WHEN_MOUNTED       = "also when mounted"
     HEALBOT_OPTIONS_PALADIN_BLESSINGS       = "View all my blessings as same"
-    HEALBOT_OPTIONS_ONLY_IN_INSTANCE        = "Only in instance"
+    HEALBOT_OPTIONS_ONLY_IN_INSTANCE        = "Only in an instance"
     
     HEALBOT_OPTIONS_TAB_EFFECTS              = "Effects"
     HEALBOT_OPTIONS_TAB_EMERG                = "Emergency"
@@ -1681,6 +1699,7 @@ function HealBot_Lang_enALL()
     HEALBOT_SKIN_ABSORBCOL_TEXT             = HEALBOT_classicABSORBHOTUP.." effects";
     HEALBOT_OPTIONS_BARALPHAABSORB          = HEALBOT_classicABSORBHOTUP.." effects opacity";
     HEALBOT_OPTIONS_OUTLINE                 = "Outline"
+    HEALBOT_OPTIONS_OUTLINEAUXBAR           = "Border outline"
     HEALBOT_OPTIONS_FRAME                   = "Frame"
     HEALBOT_OPTIONS_FRAMESOPTTEXT           = "Frames options"
     HEALBOT_OPTIONS_SETTOOLTIP_POSITION     = "Set Tooltip Position"
@@ -1699,7 +1718,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_EXCLUDEMOUNT_ON          = "Now Excluding Mount"
     HEALBOT_OPTION_EXCLUDEMOUNT_OFF         = "No longer Excluding Mount"
     HEALBOT_CMD_TOGGLEEXCLUDEMOUNT          = "Toggle Exclude Mount"
-    HEALBOT_CMD_SETFAVMOUNT                 = "Set Favourite Mount"
+    HEALBOT_CMD_TOGGLETALENTQUERY           = "Toggle Talent Query"
+    HEALBOT_CMD_TOGGLECLEARINSPECT          = "Toggle execute Clear Inspect after Talent Query"
     HEALBOT_OPTIONS_HIDEMINIBOSSFRAMES      = "Hide mini boss frames";
     HEALBOT_OPTIONS_HIDERAIDFRAMES          = "Hide raid frames";
     HEALBOT_OPTIONS_HIDEFOCUSFRAME          = "Hide focus frame";

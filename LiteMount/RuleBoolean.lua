@@ -93,19 +93,33 @@ function LM.RuleBoolean:Not(cond)
 end
 
 function LM.RuleBoolean:EvalLeaf(context)
-    local condition = LM.Vars:StrSubVars(self.condition)
-
     -- Empty condition [] is true
-    if condition == "" then return true end
-
-    if condition:sub(1,1) == '@' then
-        context.unit = condition:sub(2)
+    if self.condition == "" then
         return true
+    end
+
+    if self.condition:len() > 1 then
+        if self.condition:sub(1,1) == '@' then
+            context.rule.unit = self.condition:sub(2)
+            return true
+        end
+
+        -- This is a mildly awful hack to allow setting binary options on actions
+        -- using conditions instead of having heterogenous arg types or overloading
+        -- the expression syntax (even more). Devoid of backwards compatibility it'd
+        -- probably be better to have used this for Limit as well as Mount.
+        if self.condition:sub(1,1) == '+' then
+            context.rule[self.condition:sub(2)] = true
+            return true
+        elseif self.condition:sub(1,1) == '-' then
+            context.rule[self.condition:sub(2)] = false
+            return true
+        end
     end
 
     local c = LM.Conditions:GetCondition(self.condition)
     if not c then
-        LM.WarningAndPrint(L.LM_ERR_BAD_CONDITION, condition)
+        -- Hopefully stopped at compile time and can't happen
         return false
     end
 
@@ -122,7 +136,7 @@ function LM.RuleBoolean:EvalNot(context)
     return not self.conditions[1]:Eval(context)
 end
 
--- the ANDed sections carry the unit between them
+-- the ANDed sections carry the per-rule context between them
 function LM.RuleBoolean:EvalAnd(context)
     for _,c in ipairs(self.conditions) do
         local v = c:Eval(context)
@@ -131,16 +145,16 @@ function LM.RuleBoolean:EvalAnd(context)
     return true
 end
 
--- Note: deliberately resets the unit on false
+-- Note: deliberately resets the per-rule context on false
 function LM.RuleBoolean:EvalOr(context)
     if #self.conditions == 0 then
         return true
     end
-    local origUnit = context.unit
+    local origRuleContext = CopyTable(context.rule)
     for _,c in ipairs(self.conditions) do
         local v = c:Eval(context)
         if v then return v end
-        context.unit = origUnit
+        context.rule = origRuleContext
     end
     return false
 end
@@ -230,5 +244,39 @@ function LM.RuleBoolean:ToDisplay()
         else
             return c
         end
+    end
+end
+
+function LM.RuleBoolean:ValidateLeaf(badList)
+    if self.condition == '' then
+        return true
+    elseif self.condition:len() > 1 then
+        if self.condition:sub(1, 1) == '@' then
+            return true
+        elseif self.condition:sub(1, 1) == '+' then
+            return true
+        elseif self.condition:sub(1, 1) == '-' then
+            return true
+        end
+    end
+    local c = LM.Conditions:GetCondition(self.condition)
+    if not c then
+        table.insert(badList, self.condition)
+    end
+end
+
+function LM.RuleBoolean:Validate(badList)
+    badList = badList or {}
+    if self.op == 'LEAF' then
+        self:ValidateLeaf(badList)
+    else
+        for _, c in ipairs(self.conditions) do
+            c:Validate(badList)
+        end
+    end
+    if #badList == 0 then
+        return true
+    else
+        return false, format(L.LM_ERR_BAD_CONDITION, table.concat(badList, ', '))
     end
 end

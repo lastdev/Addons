@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230525081254")
+mod:SetRevision("20240428104732")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -81,10 +81,10 @@ local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3, nil,
 local berserkTimer						= mod:NewBerserkTimer(540)
 
 mod:AddRangeFrameOption(15)--Both aoes are 15 yards, ref 187991 and 181748
-mod:AddSetIconOption("SetIconOnAnzu", 179202, false)
-mod:AddSetIconOption("SetIconOnWinds", 181957, true)
-mod:AddSetIconOption("SetIconOnFelBomb", 181753, true)
-mod:AddSetIconOption("SetIconOnAdds", 181873, false, true)
+mod:AddSetIconOption("SetIconOnAnzu", 179202, false, 0)
+mod:AddSetIconOption("SetIconOnWinds", 181957, true, 0)
+mod:AddSetIconOption("SetIconOnFelBomb", 181753, true, 0)
+mod:AddSetIconOption("SetIconOnAdds", 181873, false, 5)
 mod:AddHudMapOption("HudMapOnChakram", 182178)
 
 mod.vb.escapeCount = 0
@@ -97,7 +97,7 @@ mod.vb.windsTargets = 0
 mod.vb.bombActive = nil
 local chakramTargets = {}
 local playerHasAnzu = false
-local darkBindings, realFelBomb, phantasmalFelBomb, phantWinds, corruption = DBM:GetSpellInfo(185510), DBM:GetSpellInfo(181753), DBM:GetSpellInfo(179219), DBM:GetSpellInfo(181957), DBM:GetSpellInfo(181824)
+local darkBindings, realFelBomb, phantasmalFelBomb, phantWinds, corruption = DBM:GetSpellName(185510), DBM:GetSpellName(181753), DBM:GetSpellName(179219), DBM:GetSpellName(181957), DBM:GetSpellName(181824)
 local playerName = UnitName("player")
 local AddsSeen = {}
 
@@ -144,9 +144,9 @@ local function showChakram(self)
 	end
 	if ranged and melee and tank then
 		DBM:Debug("All Chakram found!", 2)
-		DBM.HudMap:RegisterRangeMarkerOnPartyMember(182178, "party", ranged, 0.65, 6, nil, nil, nil, 0.8, nil, false):Appear():SetLabel(ranged, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
-		DBM.HudMap:RegisterRangeMarkerOnPartyMember(182178, "party", melee, 0.65, 6, nil, nil, nil, 0.8, nil, false):Appear():SetLabel(melee, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
-		DBM.HudMap:RegisterRangeMarkerOnPartyMember(182178, "party", tank, 0.65, 6, nil, nil, nil, 0.8, nil, false):Appear():SetLabel(tank, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
+		DBM.HudMap:RegisterRangeMarkerOnPartyMember(182178, "party", ranged, 0.65, 6, nil, nil, nil, 0.8):Appear():SetLabel(ranged, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
+		DBM.HudMap:RegisterRangeMarkerOnPartyMember(182178, "party", melee, 0.65, 6, nil, nil, nil, 0.8):Appear():SetLabel(melee, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
+		DBM.HudMap:RegisterRangeMarkerOnPartyMember(182178, "party", tank, 0.65, 6, nil, nil, nil, 0.8):Appear():SetLabel(tank, nil, nil, nil, nil, nil, 0.8, nil, -15, 8, nil)
 		if playerName == melee or playerName == ranged or playerName == tank then--Player in it, Yellow lines
 			DBM.HudMap:AddEdge(1, 1, 0, 0.5, 6, ranged, melee, nil, nil, nil, nil)
 			DBM.HudMap:AddEdge(1, 1, 0, 0.5, 6, melee, tank, nil, nil, nil, nil)
@@ -440,7 +440,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId

@@ -1,5 +1,5 @@
 local _, Addon = ...
-local debugp = function (...) Addon:Debug("historytab", ...) end
+
 
 local History = Addon.Features.History
 

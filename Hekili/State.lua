@@ -1700,7 +1700,7 @@ do
                 local i = 1
                 while ( true ) do
                     if remains - ( i * aura.tick_time ) > 0 then
-                        workTable[ roundUp( remains - ( i * aura.tick_time ), 2 ) ] = true
+                        workTable[ roundUp( remains - ( i * aura.tick_time ), 3 ) ] = true
                     else break end
                     i = i + 1
                 end
@@ -6756,7 +6756,7 @@ function state.advance( time )
     end
 
     time = ns.callHook( "advance", time ) or time
-    if not state.resetting then time = roundUp( time, 2 ) end
+    if not state.resetting then time = roundUp( time, 3 ) end
 
     state.delay = 0
 
@@ -7465,13 +7465,14 @@ function state:TimeToReady( action, pool )
     z = ability.icd
     z = z and z + lastCast - now
     if z and z > wait then
+        if Hekili.ActiveDebug then Hekili:Debug( "ICD is " .. z .. ", last cast was " .. lastCast .. ", remaining CD: " .. max( 0, lastCast + z - now ) ) end
         wait = z
     end
 
     local line_cd = state.args.line_cd
     if ( line_cd and type( line_cd ) == "number" ) then
         if lastCast > self.combat then
-            if Hekili.Debug then Hekili:Debug( "Line CD is " .. line_cd .. ", last cast was " .. lastCast .. ", remaining CD: " .. max( 0, lastCast + line_cd - now ) ) end
+            if Hekili.ActiveDebug then Hekili:Debug( "Line CD is " .. line_cd .. ", last cast was " .. lastCast .. ", remaining CD: " .. max( 0, lastCast + line_cd - now ) ) end
             wait = max( wait, lastCast + line_cd - now )
         end
     end

@@ -1,3 +1,43 @@
+== v2.27 - 4th May 2024
+* Changed "Pitcher" (which has a pouring spout) to "flask" throughout Dolanaar
+* Dolanaar added @ (55.42,50.33), (55.81,50.21), (56.55,50.74)
+
+== v2.26 - 20th April 2024
+* TOC update to 10.2.7
+
+== v2.25 - 8th April 2024
+* Azure Watch: New locations for DragonFlight: (48.22,50.26), (49.25,50.73), (49.71,48.89), (49.86,49.05), (49.87,48.87)
+
+== v2.24 - 7th April 2024
+* Kharanos: New locations for DragonFlight @ (53.84,49.26), (53.86,52.85), (53.87,49.83), (53.89,52.44), (53.96,52.68)
+* Kharanos: Confirmed a long standing location @ (54.02,50.13), (54.16,50.74)
+
+== v2.23 - 6th April 2024
+* Kharanos: New locations for DragonFlight @ (53.21,51.57), (53.35,52.64), (53.38,50.57), (53.41,51.86), (53.64,50.59), (53.78,52.84)
+* Kharanos: Confirmed a long standing location @ (53.73,53.10)
+
+== v2.22 - 5th April 2024
+* New Quacking Down Daily added for Horde/Alliance
+* New locations added in Razorhill Retail @ (51.83,43.15), (52.86,43.67), (53.33,43.57), (55.19,4230)
+* Reposition Spring Fling for retail Kharanos
+* Support DragonFlight specific locations (with WoW Cataclysm looming - must get ready etc)
+
+== v2.21 - 4th April 2024
+* Big change to Classic pre-WotLK Mulgore and Dun Morogh data
+* Added "author" field to some data so I can avoid speculative locations going live
+* Vanilla TOC is now 1.15.2
+
+== v2.20 - 2nd April 2024
+* I now support Vanilla, TBC, Wrath and Cata+
+* Correction to Ever/character completion logic/tests: As per Winter Veil AddOn
+* Continent/World maps now shows only one Brightly Colored Egg per zone
+
+== v2.19 - 18th March 2024
+* TOC version bump to 10.2.6
+
+== v2.18 - 5th March 2024
+* Added (60.42,52.92) for retail Tirisfal / Brill
+
 == v2.17 - 9th February 2024
 * Added (46.69,45.63) for Eversong Woods / Falconwing Square
 

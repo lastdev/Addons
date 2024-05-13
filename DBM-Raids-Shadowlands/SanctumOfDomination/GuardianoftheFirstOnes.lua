@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2446, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240108061629")
+mod:SetRevision("20240428104702")
 mod:SetCreatureID(175731)
 mod:SetEncounterID(2436)
 mod:SetUsedIcons(1, 2, 3)
@@ -58,7 +58,7 @@ local timerThreatNeutralizationCD				= mod:NewCDCountTimer(11.4, 350496, 167180,
 
 mod:AddRangeFrameOption(10, 350496)
 mod:AddInfoFrameOption(352394, true)
-mod:AddSetIconOption("SetIconOnThreat", 350496, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnThreat", 350496, true, 0, {1, 2, 3})
 mod:AddDropdownOption("IconBehavior", {"TypeOne", "TypeTwo"}, "TypeOne", "misc", nil, 350496)--TypeTwo is BW default
 mod:GroupSpells(350732, 350735)
 
@@ -70,7 +70,7 @@ mod.vb.patternCount = 0
 mod.vb.threatCount = 0
 mod.vb.comboCount = 0
 mod.vb.iconSetting = 1
-local radiantEnergy = DBM:GetSpellInfo(352394)
+local radiantEnergy = DBM:GetSpellName(352394)
 local playerSafe = false
 local playersSafe = {}
 local threatTargets = {}
@@ -427,7 +427,9 @@ function mod:OnCombatStart(delay)
 	for uId in DBM:GetGroupMembers() do
 		if DBM:UnitDebuff(uId, 352394) then
 			local unitName = DBM:GetUnitFullName(uId)
-			playersSafe[unitName] = true
+			if unitName then
+				playersSafe[unitName] = true
+			end
 		end
 	end
 	if DBM:UnitAura("boss1", 352385) then
@@ -467,7 +469,9 @@ function mod:OnTimerRecovery()
 	for uId in DBM:GetGroupMembers() do
 		if DBM:UnitDebuff(uId, 352394) then
 			local unitName = DBM:GetUnitFullName(uId)
-			playersSafe[unitName] = true
+			if unitName then
+				playersSafe[unitName] = true
+			end
 		end
 	end
 end

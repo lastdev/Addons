@@ -1,0 +1,34 @@
+## Interface: 100207
+## Version: 2.08
+## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_holiday_christmas_present_01
+## Title: Winter Veil
+## Title-deDE: Winterhauchfest
+## Title-esES: El festín del Festival de Invierno
+## Title-esMX: El festín del Festival de Invierno
+## Title-frFR: Voile d'hiver
+## Title-itIT: Vigilia di Grande Inverno
+## Title-koKR: 겨울맞이 축제
+## Title-ptBR: Festa do Véu de Inverno
+## Title-ptPT: Festa do Véu de Inverno
+## Title-ruRU: Зимний Покров
+## Title-zhCN: 冬幕节
+## Title-zhTW: 冬幕節
+## Notes: Helps you with the |cFF5FFB17Winter Veil|r world event
+## Notes-deDE: Hilft bei der |cFF5FFB17Winterhauchfest|r 
+## Notes-esES: Ayuda con el suceso mundial |cFF5FFB17El festín del Festival de Invierno|r
+## Notes-esMX: Ayuda con el suceso mundial |cFF5FFB17El festín del Festival de Invierno|r
+## Notes-frFR: Aide à l'événement mondial |cFF5FFB17Voile d'hiver|r
+## Notes-itIT: Assiste con l'evento mondiale |cFF5FFB17Vigilia di Grande Inverno|r
+## Notes-koKR: |cFF5FFB17겨울맞이 축제|r 대규모 이벤트 지원
+## Notes-ptBR: Auxilia no evento mundial |cFF5FFB17Festa do Véu de Inverno|r
+## Notes-ptPT: Auxilia no evento mundial |cFF5FFB17Festa do Véu de Inverno|r
+## Notes-ruRU: Помогает с игровое событие |cFF5FFB17Зимний Покров|r
+## Notes-zhCN: 协助 |cFF5FFB17冬幕节|r 活动
+## Notes-zhTW: 協助 |cFF5FFB17冬幕節|r 活動
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_WinterVeilDB
+## AddonCompartmentFunc: HandyNotes_WinterVeil_OnAddonCompartmentClick
+
+Core.lua
+Data.lua

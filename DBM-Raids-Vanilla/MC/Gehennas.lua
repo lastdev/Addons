@@ -12,7 +12,7 @@ end
 local mod	= DBM:NewMod("Gehennas", "DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230814031337")
+mod:SetRevision("20240426180207")
 mod:SetCreatureID(12259)--, 11661
 mod:SetEncounterID(665)
 mod:SetModelID(13030)
@@ -67,7 +67,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 do
-	local RainofFire = DBM:GetSpellInfo(19717)--Classic Note
+	local RainofFire = DBM:GetSpellName(19717)--Classic Note
 	function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, spellName)
 		if (spellId == 19717 or spellName == RainofFire) and destGUID == UnitGUID("player") and self:AntiSpam() then
 			specWarnGTFO:Show(spellName)

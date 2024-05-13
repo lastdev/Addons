@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 796eb9c23bcfb4778be97fb5d6b7aef47cbcf2c1 $")
+XPerl_SetModuleRevision("$Revision: 2f111f16cae2c4903cf32fdc68efa86024c393e2 $")
 
 if type(C_ChatInfo.RegisterAddonMessagePrefix) == "function" then
 	C_ChatInfo.RegisterAddonMessagePrefix("CTRA")
@@ -10,7 +10,8 @@ end
 
 ZPerl_CheckItems = {}
 
-local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 
 -- Upvalues
 local _G = _G
@@ -88,6 +89,13 @@ function XPerl_CheckOnLoad(self)
 	XPerl_CheckListItemsScrollBar.offset = 0
 	XPerl_CheckListPlayersScrollBar.offset = 0
 
+	if IsRetail then
+		XPerl_CheckTitleBarClose:SetScale(0.66)
+		XPerl_CheckTitleBarClose:SetPoint("TOPRIGHT", 2, 2)
+		XPerl_CheckTitleBarPin:SetPoint("RIGHT", XPerl_CheckTitleBarClose, "LEFT", 0, 0)
+		XPerl_CheckTitleBarLockOpen:SetPoint("RIGHT", XPerl_CheckTitleBarPin, "LEFT", 0, 0)
+	end
+
 	if (XPerl_RegisterPerlFrames) then
 		XPerl_RegisterPerlFrames(self)
 	end
@@ -100,7 +108,7 @@ function XPerl_CheckOnLoad(self)
 	self.corner:SetParent(XPerl_CheckList)
 
 	XPerl_Check:SetWidth(130)
-		XPerl_Check:SetHeight(18)
+	XPerl_Check:SetHeight(18)
 
 	XPerl_CheckOnLoad = nil
 end
@@ -1958,7 +1966,7 @@ function XPerl_Check_ActiveScan()
 				myScan.changed = nil
 			end
 			any = true
-			if (IsWrathClassic and CheckInteractDistance(unit, 1)) then		-- Checks to see if in inspect range
+			if (IsCataClassic and CheckInteractDistance(unit, 1)) then		-- Checks to see if in inspect range
 				local eq
 				if (type(ActiveScanItem.slot) == "table") then
 					for k,v in pairs(ActiveScanItem.slot) do

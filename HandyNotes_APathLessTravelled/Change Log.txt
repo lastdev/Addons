@@ -1,3 +1,12 @@
+== v1.36 - 20th April 2024
+* TOC update to 10.2.7
+
+== v1.35 - 10th April 2024
+* Scotty in Townlong Steppes
+
+== v1.34 - 18th March 2024
+* TOC update to 10.2.6
+
 == v1.33 - 25th January 2024
 * The Lady's Necklace in Ghostlands expanded
 * Krasarang Wilds "Stack of Papers" quest improved
@@ -11,7 +20,7 @@
 * 9 x Darkmoon Faire, including a lengthy historical one about a certain NPC
 
 == v1.31 - 11th January 2024
-TOC Bump to 10.2.5
+TOC update to 10.2.5
 
 == v1.30 - 4th January 2024
 * Darkmoon Faire
@@ -92,7 +101,7 @@ TOC Bump to 10.2.5
 * Small coordinate change in Uldum to Harrison Jones
 * Falla Sagewind in Northern Barrens added
 * Small code cleanup
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 
 == v1.17 - Number skipped
 
@@ -138,7 +147,7 @@ TOC Bump to 10.2.5
 * Added an icon to the TOC file
 
 == v1.7 - 29th April 2023
-* TOC bump to 10.1.0
+* TOC update to 10.1.0
 
 == v1.6 - 22nd April 2023
 * Underwater Love for the Timeless Isle
@@ -163,7 +172,7 @@ TOC Bump to 10.2.5
 * Maybe some other tweaks
 
 == v1.1 - 21st March 2023
-* Bump the TOC file to 10.0.7
+* update the TOC file to 10.0.7
 
 == v1.0 - 10th March 2023
 * Initial release: Lots of Pandaria

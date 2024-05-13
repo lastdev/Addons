@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("JulakDoom", "DBM-Cataclysm")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240105052742")
+mod:SetRevision("20240428104752")
 mod:SetCreatureID(50089)
 mod:SetModelID(24301)
 mod:SetUsedIcons(8, 7)
@@ -26,7 +26,7 @@ local specWarnBreath		= mod:NewSpecialWarningMove(93612, nil, nil, nil, 1, 8)
 local timerShockwaveCD		= mod:NewNextTimer(28.5, 93610, nil, nil, nil, 3)
 local timerMCCD				= mod:NewNextTimer(40, 93621, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnMC", 93621, true, false, {8, 7})
+mod:AddSetIconOption("SetIconOnMC", 93621, true, 0, {8, 7})
 
 local warnMCTargets = {}
 mod.vb.mcIcon = 8

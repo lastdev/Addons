@@ -7,7 +7,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240203194707")
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(2265)
 --mod:SetHotfixNoticeRev(17775)
@@ -21,6 +21,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 284468 283619 283573 284469 283933 284436 282113 283582",
 	"SPELL_AURA_APPLIED_DOSE 283573",
 	"SPELL_AURA_REMOVED 283619 284468 284469 283933 284436",
+	"SPELL_PERIODIC_DAMAGE 283582",
+	"SPELL_PERIODIC_MISSED 283582",
 	"UNIT_DIED"
 )
 

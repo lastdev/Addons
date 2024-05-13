@@ -1,4 +1,5 @@
 local _G = _G
+--- @class MacroToolkit
 local MT = MacroToolkit
 local CreateFrame, PlaySound, GameTooltip, GameTooltip_Hide, UnitName = CreateFrame, PlaySound, GameTooltip, GameTooltip_Hide, UnitName
 local UIParent = UIParent
@@ -857,7 +858,7 @@ function MT:CreateMTFrame()
 		mtopt:SetSize(80, 22)
 		mtopt:SetText(_G.MAIN_MENU)
 		mtopt:SetPoint("RIGHT", mtcustom, "LEFT", -14, 0)
-		mtopt:SetScript("OnClick", function() if MT.MTPF then MT.MTPF:Hide() end InterfaceOptionsFrame_OpenToCategory('Macro Toolkit') InterfaceOptionsFrame_OpenToCategory('Macro Toolkit') end)
+		mtopt:SetScript("OnClick", function() if MT.MTPF then MT.MTPF:Hide() end Settings.OpenToCategory('Macro Toolkit') end)
 	end
 
 	local mtcon = CreateFrame("Button", "MacroToolkitConditions", mtframe, "BackdropTemplate,UIPanelButtonTemplate")
@@ -899,7 +900,7 @@ function MT:CreateMTFrame()
 	mtmarkerdd = AceGUI:Create("Dropdown")
 	do
 		local mtmarkers = {}
-		for m = 1, 8 do mtmarkers[m] = format("%s0|t", _G.ICON_LIST[_G.ICON_TAG_LIST[format("rt%d", m)]]) end
+		for m = 1, 8 do mtmarkers[m] = format("%s0|t", _G.ICON_LIST[m]) end
 		mtmarkerdd.frame:SetParent(mtframe)
 		mtmarkerdd.label:SetTextColor(1, 1, 1, 1)
 		mtmarkerdd:SetList(mtmarkers)
@@ -1087,7 +1088,7 @@ function MT:CreateSecureFrames()
 	end
 
 	--extra macros
-	for b = 1001, 1000 + _G.MAX_ACCOUNT_MACROS do
+	for b = 1001, 1000 + MT.MAX_EXTRA_MACROS do
 		self:CreateSecureActionButton(b)
 	end
 end

@@ -272,8 +272,8 @@ Rules.SystemRules =
         Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false },
         Name = L["SYSRULE_KEEP_COSMETIC"],
         Description = L["SYSRULE_KEEP_COSMETIC_DESC"],
-        ScriptText = "IsCosmetic and (IsBindOnEquip or IsBindOnAccount)",
-        Script = function() return IsCosmetic and (IsBindOnEquip or IsAccountBound) end,
+        ScriptText = "IsCosmetic",
+        Script = function() return IsCosmetic end,
         Order = 1250,
     },
 

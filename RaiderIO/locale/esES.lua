@@ -26,6 +26,16 @@ L["AUTO_COMBATLOG_DESC"] = "Activa o desactiva el registro de combate automátic
 L["BEST_FOR_DUNGEON"] = "Mejor en esta mazmorra"
 L["BEST_RUN"] = "Mejor mazmorra"
 L["BEST_SCORE"] = "Mejor puntuacion M + (% s)"
+--[[Translation missing --]]
+--[[ L["BINDING_CATEGORY_RAIDERIO"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_HEADER_RAIDERIO_REPLAYUI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_BOSS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TOGGLE"] = ""--]] 
 L["CANCEL"] = "Cancelar"
 L["CHANGES_REQUIRES_UI_RELOAD"] = "Los cambios se han guardado, pero debes recargar la interfaz para que surtan efecto. ¿Quieres recargar ahora?"
 L["CHARACTER_LF_GUILD_MPLUS"] = "Buscando Guild Mythic+"
@@ -147,6 +157,8 @@ L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Haz clic para habilitar el modo Race Worl
 --[[ L["ENABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["ENABLE_SIMPLE_SCORE_COLORS"] = "Usar colores de puntuación simples"
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "Muestra las puntuaciones usando solo los colores estándar de calidad de objeto. Facilita la distinción de puntuaciones para personas con defectos de visión cromática."
+--[[Translation missing --]]
+--[[ L["ENTER_REALM_AND_CHARACTER"] = ""--]] 
 L["EXPORTJSON_COPY_TEXT"] = "Copia este texto y pégalo en |cff00C8FFhttps://raider.io|r para ver información de todos los jugadores."
 L["GENERAL_TOOLTIP_OPTIONS"] = "Opciones generales del tooltip"
 L["GUILD_BEST_SEASON"] = "Hermandad: mejor de la temporada"
@@ -171,6 +183,16 @@ L["LOCKING_PROFILE_FRAME"] = "RaiderIO: bloqueando el marco de perfil de M+."
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "Mejor puntuación en M+ con el main (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progreso de personaje principal"
 L["MAINS_SCORE"] = "Puntuación de personaje principal"
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_ENABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_ENABLE_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HEADER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_LOCK"] = ""--]] 
 L["MODULE_AMERICAS"] = "América"
 L["MODULE_EUROPE"] = "Europa"
 L["MODULE_KOREA"] = "Corea"
@@ -197,6 +219,48 @@ L["PROFILE_BEST_RUNS"] = "Mejor de cada mazmorra"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede encontrar datos para tu facción actual. Compruebe la configuración de |cffFFFFFF/raiderio|r y habilite los datos de información sobre herramientas para |cffFFFFFF%s|r."
 --[[Translation missing --]]
 --[[ L["PVP_DATA_HEADER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_AATDH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_AATSC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_AVOTI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATDH_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AATSC_9"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ATDH_1"] = ""--]] 
 --[[Translation missing --]]
@@ -233,6 +297,22 @@ L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede enc
 --[[ L["RAID_BOSS_ATSC_8"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ATSC_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_AVOTI_8"] = ""--]] 
 L["RAID_BOSS_CN_1"] = "Alachilla"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor el Cazador"
@@ -398,6 +478,12 @@ L["RELOAD_NOW"] = "Reiniciarla ahora"
 --[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RESET_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RESET_CONFIRM_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RESET_CONFIRM_TEXT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]

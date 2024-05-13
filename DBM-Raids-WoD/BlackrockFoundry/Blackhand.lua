@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(959, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230526083530")
+mod:SetRevision("20240426185029")
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetUsedIcons(3, 2, 1)
@@ -102,7 +102,7 @@ local mortarsWarned = {}
 local tankFilter
 local yellMFD2 = mod:NewYell(156096, L.customMFDSay, true, false)
 local yellSlag2 = mod:NewYell(157000, L.customSlagSay, true, false)
-local mfdDebuff, slagDebuff1, slagDebuff2 = DBM:GetSpellInfo(156096), DBM:GetSpellInfo(157000), DBM:GetSpellInfo(159179)
+local mfdDebuff, slagDebuff1, slagDebuff2 = DBM:GetSpellName(156096), DBM:GetSpellName(157000), DBM:GetSpellName(159179)
 local playerName = UnitName("player")
 do
 	tankFilter = function(uId)
@@ -388,7 +388,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon("roster", 1.5, args.destName, 1, expectedMFDCount)
 		end
 		if self.Options.HudMapOnMFD then
-			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 157000 then--Non Tank Version
 		if self:AntiSpam(5, 4) then
@@ -611,7 +611,7 @@ end
 function mod:UNIT_POWER_UPDATE(uId)
 	local power = UnitPower(uId)
 	local guid = UnitGUID(uId)
-	if power > 70 and not mortarsWarned[guid] then
+	if guid and power > 70 and not mortarsWarned[guid] then
 		specWarnMortarSoon:Show()
 		mortarsWarned[guid] = true
 	end

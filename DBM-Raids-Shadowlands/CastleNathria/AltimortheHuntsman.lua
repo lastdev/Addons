@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2429, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20240502130803")
 mod:SetCreatureID(165066)
 mod:SetEncounterID(2418)
 mod:SetUsedIcons(1, 2, 3)
@@ -44,7 +44,7 @@ local timerSpreadshotCD							= mod:NewCDTimer(11.8, 334404, nil, nil, nil, 2, n
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption("5/6/10")
-mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, false, {1, 2, 3})--335111 335112 335113
+mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, 0, {1, 2, 3})--335111 335112 335113
 --Hunting Gargon
 ----Margore
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22312))
@@ -68,7 +68,7 @@ local specWarnShadesofBargast					= mod:NewSpecialWarningSwitch(334757, false, n
 local timerRipSoulCD							= mod:NewCDTimer(30, 334797, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerShadesofBargastCD					= mod:NewCDTimer(60.1, 334757, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--60-63 at least
 
-mod:AddSetIconOption("SetIconOnShades", 334757, true, true, {4, 5})
+mod:AddSetIconOption("SetIconOnShades", 334757, true, 5, {4, 5})
 ----Hecutis
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22310))
 local warnCrushingStone							= mod:NewStackAnnounce(334860, 2, nil, "Tank|Healer")
@@ -280,7 +280,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 335111 or spellId == 335112 or spellId == 335113 then
 		self.vb.activeSeekers = self.vb.activeSeekers + 1
 		local icon = spellId == 335111 and 1 or spellId == 335112 and 2 or spellId == 335113 and 3
-		if self.Options.SetIconOnSinSeeker then
+		if icon and self.Options.SetIconOnSinSeeker then
 			self:SetIcon(args.destName, icon)
 		end
 		if args:IsPlayer() then
