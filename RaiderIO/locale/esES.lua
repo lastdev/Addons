@@ -8,6 +8,10 @@ if ns:IsSameLocale("esES") then
 	L.LOCALE_NAME = "esES"
 
 	L["ALLOW_IN_LFD"] = "Permitir en buscador de mazmorras"
+--[[Translation missing --]]
+--[[ L["ALLOW_IN_LFD_CLASSIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ALLOW_IN_LFD_CLASSIC_DESC"] = ""--]] 
 L["ALLOW_IN_LFD_DESC"] = "Click derecho en los grupos o aplicantes en el buscador de mazmorras para copiar la URL de su perfil de Raider.IO"
 L["ALLOW_ON_PLAYER_UNITS"] = "Permitir en marcos de jugador"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = [=[Click derecho en el marco de un jugador para copiar la URL de su perfil de Raider.IO
@@ -192,6 +196,14 @@ L["MAINS_SCORE"] = "Puntuación de personaje principal"
 --[[Translation missing --]]
 --[[ L["MINIMAP_SHORTCUT_HELP"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_LEFT_CLICK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_RIGHT_CLICK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_SEARCH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_SETTINGS"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["MINIMAP_SHORTCUT_LOCK"] = ""--]] 
 L["MODULE_AMERICAS"] = "América"
 L["MODULE_EUROPE"] = "Europa"
@@ -313,6 +325,28 @@ L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede enc
 --[[ L["RAID_BOSS_AVOTI_7"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_AVOTI_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_6"] = ""--]] 
 L["RAID_BOSS_CN_1"] = "Alachilla"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor el Cazador"
@@ -354,6 +388,32 @@ L["RAID_BOSS_FSOD_6"] = "Forjapenas Raznal"
 L["RAID_BOSS_FSOD_7"] = "Guardián de los Primeros"
 L["RAID_BOSS_FSOD_8"] = "Escriba del destino Roh-Kalo"
 L["RAID_BOSS_FSOD_9"] = "Kel'Thuzad"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_12"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_RS_1"] = ""--]] 
 L["RAID_BOSS_SFO_1"] = "Guardián vigilante"
 L["RAID_BOSS_SFO_10"] = "Rygelon"
 L["RAID_BOSS_SFO_11"] = "El Carcelero"
@@ -376,6 +436,10 @@ L["RAID_BOSS_SOD_7"] = "Guardián de los Primeros"
 L["RAID_BOSS_SOD_8"] = "Escriba del destino Roh-Kalo"
 L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_TOTFW_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOTFW_2"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_2"] = ""--]] 
@@ -391,13 +455,39 @@ L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
 --[[ L["RAID_BOSS_VOTI_7"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BWD"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heroico"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_HEROIC10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_HEROIC25"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítico"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_NORMAL10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_NORMAL25"] = ""--]] 
 L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = "H"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC25"] = ""--]] 
 L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = ""--]] 
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encuentros de banda derrotados"
+--[[Translation missing --]]
+--[[ L["RAID_ICC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_RS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_TOTFW"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Puntuación media de +%s en tiempo"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO Mejor resultado en M+"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalización del cliente de RaiderIO"
@@ -518,6 +608,8 @@ L["SHOW_CURRENT_SEASON_DESC"] = "Muestra la puntuación actual de la temporada d
 L["SHOW_IN_FRIENDS"] = "Mostrar en la lista de amigos"
 L["SHOW_IN_FRIENDS_DESC"] = "Muestra la puntuación de M+ de tus amigos cuando pasas el ratón por encima."
 L["SHOW_IN_LFD"] = "Mostrar en el buscador de grupos"
+--[[Translation missing --]]
+--[[ L["SHOW_IN_LFD_CLASSIC"] = ""--]] 
 L["SHOW_IN_LFD_DESC"] = "Muestra la puntuación de M+ cuando pasas el ratón por encima de grupos ya creados del buscador o jugadores que soliciten unirse a tu grupo."
 L["SHOW_IN_SLASH_WHO_RESULTS"] = "Mostrar en resultados de /who"
 L["SHOW_IN_SLASH_WHO_RESULTS_DESC"] = "Muestra la puntuación de M+ cuando usas \"/who\" con un jugador específico."
@@ -539,6 +631,8 @@ L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Experimental) Priorizar mostrar la mejor ca
 L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Esta es una característica experimental. En lugar de mostrar la puntuación de Raider.IO como la primera línea, muestra la mejor carrera del jugador."
 L["SHOW_RAIDERIO_PROFILE"] = "Mostrar marco de perfil en el buscador de grupos"
 L["SHOW_RAIDERIO_PROFILE_DESC"] = "Muestra el marco de perfil de Raider.IO en el buscador de grupos."
+--[[Translation missing --]]
+--[[ L["SHOW_RAIDERIO_PROFILE_OPTION"] = ""--]] 
 L["SHOW_ROLE_ICONS"] = "Mostrar iconos de rol en el tooltip"
 L["SHOW_ROLE_ICONS_DESC"] = "Cuando está activado, se muestran los mejores roles del jugador en míticas+ en el tooltip."
 L["SHOW_SCORE_IN_COMBAT"] = "Mostrar puntuación en combate"

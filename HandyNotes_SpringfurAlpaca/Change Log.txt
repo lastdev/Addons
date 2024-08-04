@@ -1,4 +1,17 @@
-== v1.28 - 20th March 2024
+== v1.32 - 23rd July 2024
+* TOC update to 11.0.0
+
+== v1.31 - 27th May 2024
+* Cradle of the Ancients range added
+
+== v1.30 - 20th May 2024
+* Colourised AddOn title in the AddOn menu and the HandyNotes menu
+* Slash chat commands for options or the map
+
+== v1.29 - 13th May 2024
+* Capture a server not ready error when fetching quest objective data
+
+== v1.28 - 20th April 2024
 * TOC update to 10.2.7
 
 == v1.27 - 18th March 2024

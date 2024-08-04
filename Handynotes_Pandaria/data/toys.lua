@@ -1,6 +1,6 @@
-local addonName, shared = ...;
+local _, addon = ...;
 
-shared.toyData = {
+addon.toyData = {
   [86588] = 50817,
   [86589] = 50821,
   [86593] = 50836,

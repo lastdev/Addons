@@ -14,10 +14,6 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
-
 local L = LM.Localize
 
 LM.ActionButton = { }
@@ -44,15 +40,24 @@ function LM.ActionButton:PreClick(inputButton, isDown)
     -- https://github.com/Stanzilla/WoWUIBugs/issues/317#issuecomment-1510847497
     -- if isDown ~= GetCVarBool("ActionButtonUseKeyDown") then return end
 
+    local startTime = debugprofilestop()
+
     LM.Debug("[%d] PreClick handler (inputButton=%s, isDown=%s)",
              self.id, tostring(inputButton), tostring(isDown))
 
     if InCombatLockdown() then
-        LM.Debug("[%d] In combat, aborting", self.id)
+        if GetRunningMacro() and self:GetAttribute("type") == 'macro' then
+            if IsMounted() then
+                Dismount()
+            elseif CanExitVehicle() then
+                VehicleExit()
+            end
+            LM.Debug("[%d] In combat direct time %0.2fms", self.id, debugprofilestop() - startTime)
+        else
+            LM.Debug("[%d] In combat abort time %0.2fms", self.id, debugprofilestop() - startTime)
+        end
         return
     end
-
-    local startTime = debugprofilestop()
 
     LM.MountRegistry:RefreshMounts()
 
@@ -74,28 +79,37 @@ function LM.ActionButton:PreClick(inputButton, isDown)
 
     local act = ruleSet:Run(context)
     if act then
+        -- Note that in some circumstances this call will do the action and
+        -- leave the button as a NoOp (if it can be done in non-protected code)
         act:SetupActionButton(self)
-        LM.Debug("[%d] PreClick ok time %0.2f", self.id, debugprofilestop() - startTime)
+        LM.Debug("[%d] PreClick ok time %0.2fms", self.id, debugprofilestop() - startTime)
         return
     end
 
     local handler = LM.Actions:GetHandler('CantMount')
-    local act = handler()
-    act:SetupActionButton(self)
-    LM.Debug("[%d] PreClick fail time %0.2f", self.id, debugprofilestop() - startTime)
+    handler():SetupActionButton(self)
+    LM.Debug("[%d] PreClick fail time %0.2fms", self.id, debugprofilestop() - startTime)
 end
 
 function LM.ActionButton:PostClick(inputButton, isDown)
-    if InCombatLockdown() then return end
-
-    LM.Environment:ClearMouseButtonClicked()
+    local startTime = debugprofilestop()
 
     LM.Debug("[%d] PostClick handler (inputButton=%s, isDown=%s)",
              self.id, tostring(inputButton), tostring(isDown))
+
+    LM.Environment:ClearMouseButtonClicked()
+
+    if not InCombatLockdown() then
+        LM.SecureAction:ClearActionButton(self)
+    end
+
+    LM.Debug("[%d] PostClick finish time %0.2fms", self.id, debugprofilestop() - startTime)
 end
 
 -- Combat actions trigger on PLAYER_REGEN_DISABLED which happens before
--- lockdown starts so we can still do secure things.
+-- lockdown starts so we can still do secure things. Unlike other places
+-- it's possible this will do SecureHandlerWrapScript if it's being called
+-- from a macro.
 function LM.ActionButton:OnEvent(e, ...)
     if e == "PLAYER_REGEN_DISABLED" then
         LM.Debug('[%d] Combat started', self.id)
@@ -103,6 +117,9 @@ function LM.ActionButton:OnEvent(e, ...)
         if act then
             act:SetupActionButton(self)
         end
+    elseif e == "PLAYER_REGEN_ENABLED" then
+        LM.Debug('[%d] Combat ended', self.id)
+        LM.SecureAction:ClearActionButton(self)
     end
 end
 
@@ -127,8 +144,9 @@ function LM.ActionButton:Create(n)
     b:SetScript("PreClick", self.PreClick)
     b:SetScript("PostClick", self.PostClick)
 
-    -- Event handler for combat setup just before lockdown starts
+    -- Events handler for combat setup just before lockdown starts/ends
     b:RegisterEvent("PLAYER_REGEN_DISABLED")
+    b:RegisterEvent("PLAYER_REGEN_ENABLED")
     b:SetScript('OnEvent', self.OnEvent)
 
     return b

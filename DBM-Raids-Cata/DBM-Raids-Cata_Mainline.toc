@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 100207, 110000
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (Cata)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010공격대 (대격변)|r
@@ -24,7 +24,7 @@
 ## X-Curse-Project-ID: 43971
 ## X-WoWI-ID: 21469
 ## X-Wago-ID: RBKpErGE
-## Version: r241
+## Version: r246
 
 localization.en.lua
 localization.de.lua

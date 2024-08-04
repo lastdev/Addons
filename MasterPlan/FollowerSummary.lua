@@ -359,6 +359,7 @@ local stats = CreateFrame("Frame", nil, summaryTab) do
 				end
 			end
 		end
+		local GetItemCount = C_Item.GetItemCount
 		local wH = GetItemCount(114128)*3 + GetItemCount(114129)*6 + GetItemCount(114131)*9
 		local aH = GetItemCount(114745)*3 + GetItemCount(114808)*6 + GetItemCount(114822)*9
 		GameTooltip:AddDoubleLine(L"Weapon levels:", "|cffffffff" .. wA .. (wI > 0 and "|cffccc78f+" .. wI or "") .. (wH > 0 and " |cff00ff00" .. (L"(have %d)"):format(wH) or ""))
@@ -469,12 +470,13 @@ local accessButton = CreateFrame("CheckButton", nil, GarrisonMissionFrame) do
 			summaryTab:Show()
 		end
 	end)
+	local function isPushedFollowerButton(self)
+		return self.id and self.info and self.GetButtonState and self:GetButtonState() == "PUSHED"
+	end
 	hooksecurefunc(GarrisonMissionFrameFollowers, "ShowFollower", function()
-		if GarrisonMissionFrame.selectedFollower and summaryTab:IsShown() then
-			local mf = T.GetMouseFocus()
-			if mf and mf.id and mf.info and mf.GetButtonState and mf:GetButtonState() == "PUSHED" then
-				GarrisonMissionFrame.FollowerTab:Show()
-			end
+		if GarrisonMissionFrame.selectedFollower and summaryTab:IsShown() and
+		   T.GetMouseFocus(isPushedFollowerButton, nil, false) then
+			GarrisonMissionFrame.FollowerTab:Show()
 		end
 	end)
 	function EV:MP_SHOW_MISSION_TAB(tab)

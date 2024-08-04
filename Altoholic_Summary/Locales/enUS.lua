@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Altoholic", "enUS", true, false)
+local L = DataStore:SetDefaultLocale("Altoholic", "enUS")
 
 -- TO DO
 L["Calendar"] = true
@@ -37,6 +37,7 @@ L["FILTER_FACTIONS"] = "Faction filter"
 L["FILTER_LEVELS"] = "Level filter"
 L["FILTER_PROFESSIONS"] = "Profession filter"
 L["FILTER_CLASSES"] = "Class filter"
+L["FILTER_RACES"] = "Race filter"
 L["FILTER_MISC"] = "Miscellaneous filters"
 L["FILTER_BANKTYPE"] = "Bank characters filters"
 L["This realm"] = true
@@ -46,6 +47,7 @@ L["All accounts"] = true
 L["Both factions"] = true
 L["This faction"] = true
 L["Any"] = true
+L["Allied Races"] = true
 L["ACCOUNT_SHARING_BUTTON_TITLE"] = "Account Sharing Request"
 L["ACCOUNT_SHARING_BUTTON_INFO"] = "Click this button to ask a player\nto share their entire Altoholic Database\nand add it to your own"
 
@@ -193,6 +195,9 @@ L["COLUMN_PROFESSION_2_TITLE"] = "Profession 2"
 L["COLUMN_PROFESSION_2_TITLE_SHORT"] = "Prof. 2"
 L["COLUMN_RIDING_UPGRADEABLE_MALE"] = "This character could upgrade his riding skill"
 L["COLUMN_RIDING_UPGRADEABLE_FEMALE"] = "This character could upgrade her riding skill"
+L["COLUMN_SKILLS_NODATA"] = "Open this character's profession to load the recipes"
+L["COLUMN_SKILLS_NOT_LEARNED"] = "Profession not learned yet"
+
 L["COLOR_RED"] = "Red"
 L["COLOR_GREY"] = "Grey"
 L["COLOR_GREEN"] = "Green"
@@ -275,6 +280,9 @@ L["COLUMN_TRANSPORT_NETWORK_TITLE"] = "Transport Network"
 L["COLUMN_ANIMA_TITLE"] = "Anima Conductor"
 L["COLUMN_COMMAND_TABLE_TITLE"] = "Command Table"
 L["COLUMN_SANCTUM_UNIQUE_TITLE"] = "Sanctum Unique"
+L["COLUMN_CYPHER_NODATA"] = "Visit this character's research console at Exile's Hollow in Zereth Mortis"
+L["COLUMN_SANCTUM_NODATA"] = "Visit this character's sanctum reservoir in their covenant to populate this value"
+L["COLUMN_SOULBIND_NODATA"] = "Visit this character's forge of bonds in their covenant to populate this value"
 
 L["Overall"] = true
 L["Torghast"] = true

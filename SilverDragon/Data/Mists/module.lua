@@ -32,7 +32,7 @@ core:RegisterMobData("Mists", {
 	[50733] = {name="Ski'thik",locations={[379]={36407960},},loot={86577},},
 	[50734] = {name="Lith'ik the Stalker",locations={[388]={41807860,47408420},},loot={87221},},
 	[50739] = {name="Gar'lok",locations={[422]={35603060,39204180},},loot={{86578,toy=true,}},},
-	[50749] = {name="Kal'tik the Blight",locations={[390]={14005820},},loot={86579,{134023,toy=true,}},},
+	[50749] = {name="Kal'tik the Blight",locations={[390]={14005820},},loot={{134023,toy=true,}},},
 	[50750] = {name="Aethis",locations={[371]={33405080},},},
 	[50766] = {name="Sele'na",locations={[376]={52402820,54403640,59603840},},loot={86580},},
 	[50768] = {name="Cournith Waterstrider",locations={[418]={30603820},},},
@@ -64,7 +64,7 @@ core:RegisterMobData("Mists", {
 	[51059] = {name="Blackhoof",locations={[376]={32806240,39405680},},loot={{86565,toy=true}},},
 	[51078] = {name="Ferdinand",locations={[371]={52004460},},},
 	[58336] = {name="Darkmoon Rabbit",locations={[407]={75208560,75407800},},loot={{80008,pet=848,}},},
-	[58474] = {name="Bloodtip",locations={[390]={27001460,74005200},},tameable=132196,},
+	[58474] = {name="Bloodtip",locations={[390]={24702640},[395]={75804758},},tameable=132196,vignette=33,},
 	[58768] = {name="Cracklefang",locations={[390]={45805900},},tameable=true,},
 	[58769] = {name="Vicejaw",locations={[390]={34405140},},},
 	[58771] = {name="Quid",locations={[390]={66203900},},},
@@ -75,12 +75,12 @@ core:RegisterMobData("Mists", {
 	[60491] = {name="Sha of Anger",boss=true,locations={[379]={53606460},},loot={{87771,mount=473,}},quest=32099,},
 	[62346] = {name="Galleon",boss=true,locations={[376]={71606440},},loot={{89783,mount=515,}},quest=32098,},
 	[62352] = {name="Chief Salyis",boss=true,locations={[376]={71616441},},loot={{89783,mount=515,}},quest=32098,hidden=true,},
-	[62880] = {name="Gochao the Ironfist",locations={[390]={27001340},},},
-	[62881] = {name="Gaohun the Soul-Severer",locations={[390]={21201700,52205900,53006440},},},
+	[62880] = {name="Gochao the Ironfist",locations={[390]={27001340},},notes="Inside a blocked cave"},
+	[62881] = {name="Gaohun the Soul-Severer",locations={[390]={24702640},[395]={53395910},},vignette=41,},
 	[63101] = {name="General Temuja",locations={[390]={26405040,28405600},},},
 	[63240] = {name="Shadowmaster Sydow",locations={[390]={30407800},},},
 	[63510] = {name="Wulon",locations={[390]={45007620},},tameable=625905,},
-	[63691] = {name="Huo-Shuang",locations={[390]={24000780,26801580,62801980},},},
+	[63691] = {name="Huo-Shuang",locations={[390]={24702640},[395]={64041911},},vignette=45,},
 	[63695] = {name="Baolai the Immolator",locations={[390]={28404300},},},
 	[63977] = {name="Vyraxxis",locations={[390]={7803380},},},
 	[63978] = {name="Kri'chon",locations={[390]={6205780},},tameable=true,},
@@ -91,12 +91,12 @@ core:RegisterMobData("Mists", {
 	[64403] = {name="Alani",locations={[390]={16603400,16603960,17202740,18804520,20001740,23805040,23805720,24406700,25604480,25607340,28203840,29202080,29405340,32007280,32203220,34602520,35004960,36804320,37603800,40006620,40603080,41406040,42604540,43207240,45003820,45005220,48607040,48802600,52603760,54002440,54003180,54204360,55204880,58206400,60403140,61604660,63005500,63406120},},loot={{90655,mount=517,boe=true,}},tameable=136040,},
 	[65552] = {name="Glinting Rapana Whelk",locations={[422]={40806340},},loot={86529},quest=31432,},
 	[66900] = {name="Huggalon the Heart Watcher",locations={[388]={37205760},},loot={{90067,toy=true,}},},
-	[68317] = {name="Mavis Harms",faction="Alliance",locations={[418]={84403100},},loot={92785},},
-	[68318] = {name="Dalan Nightbreaker",faction="Alliance",locations={[418]={84802720},},loot={92783},},
-	[68319] = {name="Disha Fearwarden",faction="Alliance",locations={[418]={87402920},},loot={92787},},
-	[68320] = {name="Ubunti the Shade",faction="Horde",locations={[418]={13006660},},loot={92784},},
-	[68321] = {name="Kar Warmaker",faction="Horde",locations={[418]={13605700},},loot={92782},},
-	[68322] = {name="Muerta",faction="Horde",locations={[418]={10605660},},loot={92786},},
+	[68317] = {name="Mavis Harms",faction="Alliance",locations={[418]={84403100},},art=499,loot={92785},},
+	[68318] = {name="Dalan Nightbreaker",faction="Alliance",locations={[418]={84802720},},art=499,loot={92783},},
+	[68319] = {name="Disha Fearwarden",faction="Alliance",locations={[418]={87402920},},art=499,loot={92787},},
+	[68320] = {name="Ubunti the Shade",faction="Horde",locations={[418]={13006660},},art=499,loot={92784},},
+	[68321] = {name="Kar Warmaker",faction="Horde",locations={[418]={13605700},},art=499,loot={92782},},
+	[68322] = {name="Muerta",faction="Horde",locations={[418]={10605660},},art=499,loot={92786},},
 	[69099] = {name="Nalak",boss=true,locations={[504]={60503730},},loot={{95057,mount=542,},95602},quest=32518,tameable=136040,},
 	[69161] = {name="Oondasta",boss=true,locations={[507]={50005700},},loot={{94228,mount=533,},95601},quest=32519,tameable=236192,},
 	[69664] = {name="Mumta",locations={[504]={35006220},},},
@@ -141,7 +141,7 @@ core:RegisterMobData("Mists", {
 	[71992] = {name="Moonfang",locations={[407]={39204580},},loot={{101570,pet=1276,},{105898,toy=true,},{101571,toy=true,},101675,{105891,quest=33354,}},},
 	[72045] = {name="Chelon",locations={[554]={25203540},},loot={{86584,toy=true,}},quest=32966,},
 	[72048] = {name="Rattleskew",locations={[554]={60208740},},loot={104321,104219},vignette=61,},
-	[72049] = {name="Cranegnasher",locations={[554]={43606940},},loot={104268},quest=33319,},
+	[72049] = {name="Cranegnasher",locations={[554]={43606940},},loot={104268},quest=32967,notes="Kite a {npc:73297:Fishgorged Crane} here from the south"},
 	[72193] = {name="Karkanos",locations={[554]={33608540},},loot={104035},quest=33292,},
 	[72245] = {name="Zesqua",locations={[554]={47008740},},loot={104303,104225},quest=33316,},
 	[72769] = {name="Spirit of Jadefire",locations={[554]={44003720},[555]={47806180,51207160,55602880,62203560,63204320,64206300,73603220},},loot={{104307,pet=1348,},104258},quest=33293,},
@@ -161,7 +161,7 @@ core:RegisterMobData("Mists", {
 	[73166] = {name="Monstrous Spineclaw",locations={[554]={18805460},},loot={{104168,pet=1337,},104293},notes="Rare spawn of {npc:72766:Ancient Spineclaw}",quest=33302,tameable=132186,},
 	[73167] = {name="Huolon",
 		locations={[554]={65505730},},
-		routes={[554]={{65505730,71805100,74004500,64404060,60304490,58005840}},},
+		routes={[554]={{65505730,71805100,74004500,64404060,60304490,56505130,58005840}},},
 		loot={{104269,mount=561,},104286},quest=33311,tameable=136040,
 	},
 	[73169] = {name="Jakur of Ordon",locations={[554]={52408240},},loot={{104331,toy=true,},104245},quest=33306,},
@@ -187,3 +187,72 @@ core:RegisterMobData("Mists", {
 	[73666] = {name="Archiereus of Flame",locations={[554]={34203140},},loot={86574},quest=33312,},
 	[73704] = {name="Stinkbraid",locations={[554]={71208220},},loot={6657},quest=33305,},
 }, true)
+
+core:RegisterHandyNotesData("Mists", 554, {
+    [55001810] = { -- Ordos
+        achievement=8533,
+        quest=33118,
+        npc=72057,
+        loot={
+            104273, -- Flame-Scarred Cache of Offerings
+            105754, -- Desirae's Dashing Leggings
+            105755, -- Moshne's Keen Kilt
+            105756, -- Poxleitner's Leggings of Lights
+            105757, -- Shipley's Shady Silks
+            105758, -- Arielle's Ancient Legwraps
+            105759, -- Magmaplates of Jian Wu Xi Feng
+            105760, -- Hamlet's Wind-Whipped Leggings
+            105761, -- Partik's Purified Legplates
+            105762, -- Smoldering Eye
+            105763, -- Penate's Perilous Pendant
+            105764, -- Rising New Moon Talisman
+            105765, -- Bladeforger Necklace
+            105766, -- Anafielle's Spiked Choker
+            105767, -- Hoodrych's Bloodied Chestplate
+            105768, -- Pamela's Muuscat Wrap
+            105769, -- Omegal's Crushing Carapace
+            105770, -- Zoo-Per's Superior Chestguard
+            105771, -- Chestguard of Pyrrhic Immolation
+            105772, -- Moonhee's Mean Vest
+            105773, -- Ulmaas' Robes of Crushing Magma
+            105774, -- Catia's Flowing Robes
+            105775, -- Gleaming Eye Spellplate
+            105776, -- Belt of the Burning Soul
+            105777, -- Remnar's Ruinous Girdle
+            105778, -- Derevka's Gleaming Girdle
+            105779, -- Light Kindler Waistguard
+            105780, -- Windflame Girdle
+            105781, -- Venruki's Venerable Sash
+            105782, -- Belt of Glowing Embers
+            105783, -- Greatbelt of the Crendor
+            105784, -- Binkenstein's Burnished Belt
+            105785, -- Vanguard's Burly Bracers
+            105786, -- Ordosian Cultist's Bracers
+            105787, -- Burnseal Bracers
+            105788, -- Paululum's Doodled Wraps
+            105789, -- Bjam's Blasting Bracers
+            105790, -- Firetotem Bracers
+            105791, -- Bracers of Unquestioning Belief
+            105792, -- Bowflight Wristguard
+            105793, -- Bracers of Simmering Fury
+            105794, -- Starry Spaulders of Durability
+            105795, -- Bo He Me's Deathwind Mantle
+            105796, -- Rossi's Rosin-Soaked Shoulderplates
+            105797, -- Shay-Nii's Popping Shoulderpads
+            105798, -- Flame Healer's Shoulderguards
+            105799, -- Fleshsmoke Chain Shoulders
+            105800, -- Firearrow Shoulderpads
+            105801, -- Spaulders of Dominating Dreams
+            105802, -- Yaungol Deathcult Shoulderguards
+            105803, -- Stickney's Grey-Shade Hood
+            105804, -- Aladya's Spiritfire Greathelm
+            105805, -- Dominik's Casque of Raging Flame
+            105806, -- Circlet of the Panser
+            105807, -- Magdalena's Murderous Crown
+            105808, -- Damien's Ice-Vein Mask
+            105809, -- Crest of Burning Deeds
+            105810, -- Buc-Zakai Burning Hood
+            105811, -- Olivia's Graceful Gaze
+        },
+    },
+})

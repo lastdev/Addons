@@ -58,7 +58,7 @@ do
 					local c = C_CurrencyInfo.GetBasicCurrencyInfo(v.currencyID).icon
 					r = r .. " |T" .. (c or "Interface/Icons/Temp") .. ":0|t"
 				elseif v.itemID then
-					r = r .. " |T" .. GetItemIcon(v.itemID) .. ":0|t"
+					r = r .. " |T" .. C_Item.GetItemIconByID(v.itemID) .. ":0|t"
 				end
 			end
 		end
@@ -216,22 +216,17 @@ do -- Adding tentatively-used ships to missions
 			end
 		end
 	end
-	local function AddShipToMission(_, fid)
+	local function AddShipToMission(fid)
 		AddToMission(C_Garrison.GetFollowerInfo(fid))
 		GarrisonShipyardFrame.FollowerList:UpdateFollowers()
 	end
-	local origShipMenu = GarrisonShipyardFollowerOptionDropDown.initialize
-	function GarrisonShipyardFollowerOptionDropDown.initialize(self, ...)
-		local fid = self.followerID
+	Menu.ModifyMenu("MENU_GARRISON_SHIP_FOLLOWER", function(owner, rootDescription)
+		local fid = owner.id
 		local tmid = fid and G.GetFollowerTentativeMission(fid)
 		if SHIP_MISSION_PAGE:IsShown() and tmid and SHIP_MISSION_PAGE.missionInfo.missionInfo ~= tmid then
-			local info = UIDropDownMenu_CreateInfo()
-			info.text, info.notCheckable = GARRISON_MISSION_ADD_FOLLOWER, true
-			info.func, info.arg1, info.arg2 = AddShipToMission, fid
-			UIDropDownMenu_AddButton(info)
+			rootDescription:CreateButton(GARRISON_MISSION_ADD_FOLLOWER, AddShipToMission, fid)
 		end
-		return origShipMenu(self, ...)
-	end
+	end)
 end
 local function FollowerList_UpdateShip(btn, _einfo)
 	local mi = SHIP_MISSION_PAGE:IsShown() and SHIP_MISSION_PAGE.missionInfo
@@ -271,7 +266,7 @@ do -- Follower counter button tooltips
 		for i=1,#self.Counters do
 			local self = self.Counters[i]
 			self:SetScript("OnEnter", OnEnter)
-			if self:IsShown() and self:IsMouseOver() and GetMouseFocus() == self then
+			if self:IsShown() and self:IsMouseMotionFocus() then
 				OnEnter(self)
 				break
 			end
@@ -313,7 +308,7 @@ local function UpdateHover(_, frame)
 		if ol then
 			securecall(ol, frame)
 		end
-		if oe and GetMouseFocus() == frame then
+		if oe and frame:IsMouseMotionFocus() then
 			oe(frame)
 		end
 	end
@@ -600,12 +595,19 @@ do -- Counter-follower lists
 			end
 		end
 	end
-	hooksecurefunc(GarrisonMissionMechanicTooltip, "SetParent", function(s)
-		local owner = GetMouseFocus()
-		s:SetOwner(owner, "ANCHOR_NONE")
-		s:ClearAllPoints()
-		s:SetPoint("TOPLEFT", owner, "BOTTOMRIGHT", 5, 0);
-		s:SetText(" ")
+	local function isGarrisonMissionMechanic(self, ctx)
+		if self.info and self.mainFrame == ctx then
+			return true
+		end
+	end
+	hooksecurefunc(GarrisonMissionMechanicTooltip, "SetParent", function(s, p)
+		local owner = T.GetMouseFocus(isGarrisonMissionMechanic, p)
+		if owner then
+			s:SetOwner(owner, "ANCHOR_NONE")
+			s:ClearAllPoints()
+			s:SetPoint("TOPLEFT", owner, "BOTTOMRIGHT", 5, 0);
+			s:SetText(" ")
+		end
 	end)
 	GarrisonMissionMechanicFollowerCounterTooltip:HookScript("OnShow", function(self)
 		local mech = G.GetMechanicInfo(tostring(self.Icon:GetTexture()))
@@ -652,7 +654,7 @@ do -- Mission page rewards
 		if IsModifiedClick("CHATLINK") then
 			local q, text = self.quantity and self.quantity > 1 and self.quantity .. " " or ""
 			if self.itemID then
-				text = select(2, GetItemInfo(self.itemID))
+				text = select(2, C_Item.GetItemInfo(self.itemID))
 				if text then
 					text = q .. text
 				end
@@ -672,23 +674,24 @@ do -- Mission page rewards
 	end)
 end
 
-local function SetFollowerIgnore(_, fid, val)
+local function SetFollowerIgnore(fid, val)
 	MasterPlan:SetFollowerIgnored(fid, val)
 	GarrisonMissionFrame.FollowerList.dirtyList = true
 	GarrisonMissionFrame.FollowerList:UpdateFollowers()
 end
-hooksecurefunc(GarrisonFollowerOptionDropDown, "initialize", function(self)
-	local fi = self.followerID and C_Garrison.GetFollowerInfo(self.followerID)
+local function SetFollowerIgnored(fid)
+	return SetFollowerIgnore(fid, true)
+end
+local function SetFollowerNotIgnored(fid)
+	return SetFollowerIgnore(fid, false)
+end
+Menu.ModifyMenu("MENU_GARRISON_FOLLOWER", function(owner, rootDescription)
+	local fid = owner.id
+	local fi = fid and C_Garrison.GetFollowerInfo(fid)
 	if fi and fi.isCollected then
-		DropDownList1.numButtons = DropDownList1.numButtons - 1
-		
-		local info, ignored = UIDropDownMenu_CreateInfo(), T.config.ignore[fi.followerID]
-		info.text, info.notCheckable = ignored and L"Unignore" or L"Ignore", true
-		info.func, info.arg1, info.arg2 = SetFollowerIgnore, fi.followerID, not ignored
-		UIDropDownMenu_AddButton(info)
-		
-		info.text, info.func = CANCEL
-		UIDropDownMenu_AddButton(info)
+		local ignored = T.config.ignore[fi.followerID]
+		local mut = ignored and SetFollowerNotIgnored or SetFollowerIgnored
+		rootDescription:CreateButton(ignored and L"Unignore" or L"Ignore", mut, fid)
 	end
 end)
 
@@ -837,7 +840,7 @@ do -- Ship re-fitting
 			sContainer:SetHeight(32)
 			sContainer:SetPoint("BOTTOM", 0, 6)
 			local function Equipment_OnClick(self)
-				refit.itemID = self:GetChecked() and GetItemCount(self.itemID) > 0 and self.itemID or nil
+				refit.itemID = self:GetChecked() and C_Item.GetItemCount(self.itemID) > 0 and self.itemID or nil
 				refit:SyncButtonState()
 			end
 			function refit:SyncButtonState()
@@ -855,7 +858,7 @@ do -- Ship re-fitting
 				if self.itemID then
 					GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 6)
 					GameTooltip:SetHyperlink("item:" .. self.itemID)
-					if GetItemCount(self.itemID) == 0 then
+					if C_Item.GetItemCount(self.itemID) == 0 then
 						GameTooltip:AddLine(L"You do not have this in your bags.", 1, 0.3, 0)
 					end
 					GameTooltip:Show()
@@ -931,8 +934,8 @@ do -- Ship re-fitting
 		end
 		local function SetItem(b, id)
 			b.itemID = id
-			b.icon:SetTexture(GetItemIcon(id))
-			b.icon:SetDesaturated(GetItemCount(id) == 0)
+			b.icon:SetTexture(C_Item.GetItemIconByID(id))
+			b.icon:SetDesaturated(C_Item.GetItemCount(id) == 0)
 			b:Show()
 		end
 		local function countTraitThreats(nf, tid)

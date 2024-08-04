@@ -166,7 +166,7 @@ function ItemList:OnDropItem()
             if (type(item) == "table") then
                 itemId = C_Item.GetItemID(item)
             elseif (type(item) == "string") then
-                itemId = GetItemInfoInstant(item)
+                itemId = Addon:GetItemInfoInstant(item)
             end
             if (type(itemId) == "number") then
                 self.list:Add(itemId)

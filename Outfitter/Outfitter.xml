@@ -1051,7 +1051,7 @@
 					</OnHide>
 				</Scripts>
 			</Frame>
-			<Frame name="OutfitterSlotEnables" hidden="true" setAllPoints="true">
+			<Frame name="OutfitterSlotEnables" hidden="true" setAllPoints="true" frameLevel="1000">
 				<Frames>
 					<Button name="OutfitterEnableAll" inherits="OutfitterSmallButtonTemplate" text="Outfitter_cEnableNone">
 						<Size x="80" y="18"/>

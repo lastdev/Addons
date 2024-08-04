@@ -3,7 +3,7 @@
 
                                              EA Pandaria
 
-                                       v1.39 - 18th March 2024
+                                       v1.43 - 23rd July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -413,7 +413,8 @@ ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
 	L["Achievement"] = "Erfolg"
-	L["AddOn Description"] = "Alle Fundorte der Erkundungserfolge von Pandaria"
+	L["AddOn Description"] = ns.colour.highlight .."Alle Fundorte der Erkundungserfolge von "
+		..ns.colour.prefix .."Pandaria"
 	L["Celestial Challenge"] = "Erhabene Herausforderung"
 	L["Extreme Treasure Hunter"] = "Extremjäger verlorener Schätze"
 	L["Glorious!"] = "Prächtig!"
@@ -434,7 +435,8 @@ if ns.locale == "deDE" then
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Achievement"] = "Logro"
-	L["AddOn Description"] = "Todas las ubicaciones de logros de exploración de Pandaria"
+	L["AddOn Description"] = ns.colour.highlight .."Todas las ubicaciones de logros de exploración de "
+		..ns.colour.prefix .."Pandaria"
 	L["Celestial Challenge"] = "Desafío Celestial"
 	L["Extreme Treasure Hunter"] = "El cazatesoros definitivo"
 	L["Glorious!"] = "¡Glorioso!"
@@ -455,7 +457,8 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 
 elseif ns.locale == "frFR" then
 	L["Achievement"] = "Haut fait"
-	L["AddOn Description"] = "Tous les emplacements des réalisations d'exploration de Pandarie"
+	L["AddOn Description"] = ns.colour.highlight .."Tous les emplacements des réalisations d'exploration de "
+		..ns.colour.prefix .."Pandaria"
 	L["Celestial Challenge"] = "Un défi céleste"
 	L["Extreme Treasure Hunter"] = "Chasseur de trésors de l’extrême"
 	L["Glorious!"] = "Victoire!"
@@ -476,7 +479,8 @@ elseif ns.locale == "frFR" then
 
 elseif ns.locale == "itIT" then
 	L["Achievement"] = "Impresa"
-	L["AddOn Description"] = "Tutte le posizioni degli obiettivi di esplorazione di Pandaria"
+	L["AddOn Description"] = ns.colour.highlight .."Tutte le posizioni degli obiettivi di esplorazione di "
+		..ns.colour.prefix .."Pandaria"
 	L["Celestial Challenge"] = "Sfida dei Celestiali"
 	L["Extreme Treasure Hunter"] = "L'archeologo"
 	L["Glorious!"] = "Glorioso!"
@@ -498,7 +502,8 @@ elseif ns.locale == "itIT" then
 
 elseif ns.locale == "koKR" then
 	L["Achievement"] = "업적"
-	L["AddOn Description"] = "모든 판다리아 탐험 업적 위치"
+	L["AddOn Description"] = ns.colour.highlight .."모든 " ..ns.colour.prefix .."판다리아"
+		..ns.colour.highlight .." 탐험 업적 위치"
 	L["Celestial Challenge"] = "천신의 시험"
 	L["Extreme Treasure Hunter"] = "보물찾기 하기 딱 좋은 날씨네"
 	L["Glorious!"] = "영광스럽군요!"
@@ -519,7 +524,8 @@ elseif ns.locale == "koKR" then
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Achievement"] = "Conquista"
-	L["AddOn Description"] = "Todos os locais de conquistas da exploração de Pandária"
+	L["AddOn Description"] = ns.colour.highlight .."Todos os locais de conquistas da exploração de "
+		..ns.colour.prefix .."Pandaria"
 	L["Celestial Challenge"] = "Desafio Celestial"
 	L["Extreme Treasure Hunter"] = "Caçador de Tesouro Radical"
 	L["Glorious!"] = "Magnífico!"
@@ -541,7 +547,8 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 
 elseif ns.locale == "ruRU" then
 	L["Achievement"] = "Достижение"
-	L["AddOn Description"] = "Все локации достижений исследования Пандарии"
+	L["AddOn Description"] = ns.colour.highlight .."Все локации достижений исследования "
+		..ns.colour.prefix .."Пандарии"
 	L["Celestial Challenge"] = "Небесное испытание"
 	L["Extreme Treasure Hunter"] = "Исключительный искатель сокровищ"
 	L["Glorious!"] = "Славная победа"
@@ -563,7 +570,7 @@ elseif ns.locale == "ruRU" then
 
 elseif ns.locale == "zhCN" then
 	L["Achievement"] = "成就"
-	L["AddOn Description"] = "潘达利亚所有探索成就地点"
+	L["AddOn Description"] = ns.colour.prefix .."潘达利亚" ..ns.colour.highlight .."所有探索成就地点"
 	L["Celestial Challenge"] = "天神挑战者"
 	L["Extreme Treasure Hunter"] = "超级宝藏猎人"
 	L["Glorious!"] = "战绩彪炳！"
@@ -585,7 +592,7 @@ elseif ns.locale == "zhCN" then
 
 elseif ns.locale == "zhTW" then
 	L["Achievement"] = "成就"
-	L["AddOn Description"] = "潘達利亞所有探索成就地點"
+	L["AddOn Description"] = ns.colour.prefix .."潘達利亞" ..ns.colour.highlight .."所有探索成就地點"
 	L["Celestial Challenge"] = "天神挑戰者"
 	L["Extreme Treasure Hunter"] = "超級寶藏獵人"
 	L["Glorious!"] = "戰績彪炳！"
@@ -606,7 +613,8 @@ elseif ns.locale == "zhTW" then
 	L["Zul' Again"] = "又見祖爾"
 	
 else
-	L["AddOn Description"] = "All Pandaria exploration achievement locations"
+	L["AddOn Description"] = ns.colour.highlight .."All of the " ..ns.colour.prefix .."Pandaria"
+		..ns.colour.highlight .." exploration achievement locations"
 	L["Legends"] = "Timeless Legends"
 	L["Pirates Booty"] = "Where There's\nPirates, There's Booty"
 	L["Riches"] = "Riches of Pandaria"
@@ -1170,16 +1178,23 @@ function pluginHandler:OnEnable()
 				( map.mapID == 555 ) or -- Cavern of Lost Spirit on the Timeless Isle
 				( map.mapID == 424 ) then -- Pandaria
 			elseif coords then
-				for coord, v in next, coords do
+				for coord, pin in next, coords do
 					local function AddToContinent()
 						local mx, my = HandyNotes:getXY(coord)
 						local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
 						if cx and cy then
 							ns.points[continentMapID] = ns.points[continentMapID] or {}
-							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
+							ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = pin
 						end
-					end					
-					AddToContinent()
+					end
+					if ( pin.aID ~= nil ) and
+							( ( pin.aID == 6350 ) or ( pin.aID == 7439 ) or ( pin.aID == 8078 ) ) then
+						if pin.continent then
+							AddToContinent()
+						end
+					else
+						AddToContinent()
+					end
 				end
 			end
 		end

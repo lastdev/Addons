@@ -54,5 +54,5 @@ end
 
 ---@return string|nil INVTYPE_X
 function ItemMixin:GetInvType()
-    return (select(9, GetItemInfo(self:GetLinkValues()[1])))
+    return (select(9, C_Item.GetItemInfo(self:GetLinkValues()[1])))
 end

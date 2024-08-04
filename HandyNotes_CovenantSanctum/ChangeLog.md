@@ -1,5 +1,15 @@
 ## Revision History:
 
+#### v27 (July 24, 2024)
+-------------------------------
+* Updated for TWW API
+* Bump .toc to 110000
+
+#### v26 (May 07, 2024)
+-------------------------------
+* Updated localizations
+* Bump .toc to 100207
+
 #### v25 (March 20, 2024)
 -------------------------------
 * Bump .toc to 100206

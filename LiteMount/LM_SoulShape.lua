@@ -15,9 +15,7 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
+local C_Spell = LM.C_Spell or C_Spell
 
 LM.Soulshape = setmetatable({ }, LM.Spell)
 LM.Soulshape.__index = LM.Soulshape
@@ -35,7 +33,7 @@ function LM.Soulshape:IsCollected()
 end
 
 function LM.Soulshape:IsKnown()
-    if IsSpellKnown(self.spellID) then
+    if IsPlayerSpell(self.spellID) then
         return true
     end
     for _,ability in ipairs(C_ZoneAbility.GetActiveAbilities()) do
@@ -57,13 +55,14 @@ function LM.Soulshape:IsCastable()
     end
 ]]
 
-    local activeSpellID = select(7, GetSpellInfo(self.name))
+    local activeSpellInfo = C_Spell.GetSpellInfo(self.name)
 
-    if not IsUsableSpell(activeSpellID) then
+    if not C_Spell.IsSpellUsable(activeSpellInfo.spellID) then
         return false
     end
 
-    if GetSpellCooldown(activeSpellID) > 0 then
+    local cooldownInfo = C_Spell.GetSpellCooldown(activeSpellInfo.spellID)
+    if cooldownInfo and cooldownInfo.startTime > 0 then
         return false
     end
 

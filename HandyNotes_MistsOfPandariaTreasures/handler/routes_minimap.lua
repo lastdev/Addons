@@ -46,7 +46,7 @@ function dataProvider:RefreshAllRotations()
 end
 
 local function OnPinReleased(pinPool, pin)
-    FramePool_HideAndClearAnchors(pinPool, pin)
+    (_G.FramePool_HideAndClearAnchors or _G.Pool_HideAndClearAnchors)(pinPool, pin)
     pin:OnReleased()
 
     pin.provider = nil

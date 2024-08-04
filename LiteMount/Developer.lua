@@ -8,9 +8,7 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
+local C_Spell = LM.C_Spell or C_Spell
 
 local MAX_SPELL_ID = 500000
 
@@ -25,7 +23,7 @@ local function CoPartialUpdate(t)
     local i = #t + 1
     while true do
         if i > MAX_SPELL_ID then return end
-        t[i] = IsUsableSpell(i)
+        t[i] = C_Spell.IsSpellUsable(i)
         if i % 50000 == 0 then
             LM.Print(i)
             coroutine.yield()
@@ -38,7 +36,7 @@ function LM.Developer:CompareUsability()
     for i = 1, #self.usableOnSurface do
         if self.usableOnSurface[i] ~= self.usableUnderWater[i] then
             LM.Print("Found a spell with a difference!")
-            LM.Print(i .. ": " .. GetSpellInfo(i))
+            LM.Print(i .. ": " .. C_Spell.GetSpellName(i))
             LM.Print("")
         end
         if i % 50000 == 0 then
@@ -102,45 +100,39 @@ function LM.Developer:ExportMockData()
     data.GetSpellInfo = {}
 
     for name, spellID in pairs(LM.SPELL) do
-        local info = { GetSpellInfo(spellID) }
-        if info[1] then
-            data.GetSpellInfo[spellID] = info
-        end
+        data.GetSpellInfo[spellID] = C_Spell.GetSpellInfo(spellID)
     end
 
     for _,mountID in ipairs(C_MountJournal.GetMountIDs()) do
         data.GetMountInfoByID[mountID] = { C_MountJournal.GetMountInfoByID(mountID) }
         data.GetMountInfoExtraByID[mountID] = { C_MountJournal.GetMountInfoExtraByID(mountID) }
         local spellID = select(2, C_MountJournal.GetMountInfoByID(mountID))
-        data.GetSpellInfo[spellID] =  { GetSpellInfo(spellID) }
+        data.GetSpellInfo[spellID] =  C_Spell.GetSpellInfo(spellID)
     end
 
     data.GetItemInfo = {}
     data.GetItemSpell = {}
 
     for name, itemID in pairs(LM.ITEM) do
-        local info = { GetItemInfo(itemID) }
-        if info[1] then
-            data.GetItemInfo[itemID] = info
-        end
-        info = { GetItemSpell(itemID) }
-        if info[1] then
-            data.GetItemSpell[itemID] = info
-            data.GetSpellInfo[info[2]] = { GetSpellInfo(info[2]) }
+        data.GetItemInfo[itemID] = { C_Item.GetItemInfo(itemID) }
+        local spellName, spellID = C_Item.GetItemSpell(itemID)
+        if spellName then
+            data.GetItemSpell[itemID] = { spellName, spellID }
+            data.GetSpellInfo[spellID] = C_Spell.GetSpellInfo(spellID)
         end
     end
 
     data.GetMapInfo = {}
     data.GetMapGroupID = {}
-    data.IsMapValidForNavBarDropDown = {}
+    data.IsMapValidForNavBarDropdown = {}
 
     for i = 1, 10000 do
         local info = C_Map.GetMapInfo(i)
         if info then
             data.GetMapInfo[i] = info
             data.GetMapGroupID[i] = C_Map.GetMapGroupID(i)
-            if C_Map.IsMapValidForNavBarDropDown(i) then
-                data.IsMapValidForNavBarDropDown[i] = true
+            if C_Map.IsMapValidForNavBarDropdown(i) then
+                data.IsMapValidForNavBarDropdown[i] = true
             end
         end
     end
@@ -155,6 +147,18 @@ function LM.Developer:ExportMockData()
             i = i + 1
         else
             break
+        end
+    end
+
+    data.GetRaceInfo = {}
+    for i = 1, 100 do
+        data.GetRaceInfo[i] = C_CreatureInfo.GetRaceInfo(i)
+    end
+
+    data.GlobalStrings = {}
+    for k,v in pairs(_G) do
+        if type(k) == 'string' and type(v) == 'string' then
+            data.GlobalStrings[k] = v
         end
     end
 end

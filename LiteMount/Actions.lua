@@ -10,11 +10,10 @@
 
 local _, LM = ...
 
-local L = LM.Localize
+local C_Spell = LM.C_Spell or C_Spell
+local C_MountJournal = LM.C_MountJournal or C_MountJournal
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
+local L = LM.Localize
 
 --
 -- This is the support for saving and restoring druid forms which is all done
@@ -38,32 +37,38 @@ local restoreFormIDs = {
 
 local FLOWCONTROLS = { }
 
+-- trueState values
+--  0 false and never was true
+--  1 true
+--  2 false and previously was true
+
 FLOWCONTROLS['IF'] =
     function (args, context, isTrue)
-        LM.Debug('  * IF test is ' .. tostring(isTrue))
-        local trueCount = isTrue and 1 or 0
-        table.insert(context.flowControl, trueCount)
+        local trueState = isTrue and 1 or 0
+        table.insert(context.flowControl, trueState)
+        LM.Debug('  * IF test is ' .. table.concat(context.flowControl, ','))
     end
 
 FLOWCONTROLS['ELSEIF'] =
     function (args, context, isTrue)
-        local trueCount  = context.flowControl[#context.flowControl]
-        trueCount = trueCount + ( isTrue and 1 or 0 )
-        LM.Debug('  * ELSEIF test is ' .. tostring(trueCount == 1))
-        context.flowControl[#context.flowControl] = trueCount
+        local trueState  = context.flowControl[#context.flowControl]
+        trueState = trueState == 1 and 2 or isTrue and 1 or 0
+        context.flowControl[#context.flowControl] = trueState
+        LM.Debug('  * ELSEIF test is ' .. table.concat(context.flowControl, ','))
     end
 
 FLOWCONTROLS['ELSE'] =
     function (args, context, isTrue)
-        local trueCount  = context.flowControl[#context.flowControl]
-        trueCount = trueCount + 1
-        LM.Debug('  * ELSE test is ' .. tostring(trueCount == 1))
-        context.flowControl[#context.flowControl] = trueCount
+        local trueState  = context.flowControl[#context.flowControl]
+        trueState = trueState + 1
+        context.flowControl[#context.flowControl] = trueState
+        LM.Debug('  * ELSE test is ' .. table.concat(context.flowControl, ','))
     end
 
 FLOWCONTROLS['END'] =
     function (args, context, isTrue)
         table.remove(context.flowControl)
+        LM.Debug('  * END is ' .. table.concat(context.flowControl, ','))
     end
 
 local ACTIONS = { }
@@ -84,11 +89,17 @@ ACTIONS['Limit'] = {
 -- probably use & and | which are more obvious. Or, you know, start with a proper
 -- grammar-based parser.
 
+
+local function MountListToDisplay(args)
+    local limits = args:ParseList()
+    return LM.tMap(limits, LM.Mount.FilterToDisplay, true)
+end
+
 ACTIONS['LimitSet'] = {
     name = L.LM_LIMIT_MOUNTS,
     description = L.LM_LIMITSET_DESCRIPTION,
     argType = 'expression',
-    toDisplay = LM.RuleArguments.ToDisplay,
+    toDisplay = MountListToDisplay,
     handler =
         function (args, context)
             ACTIONS.Limit.handler(args:Prepend('='), context)
@@ -99,7 +110,7 @@ ACTIONS['LimitInclude'] = {
     name = L.LM_INCLUDE_MOUNTS,
     description = L.LM_LIMITINCLUDE_DESCRIPTION,
     argType = 'expression',
-    toDisplay = LM.RuleArguments.ToDisplay,
+    toDisplay = MountListToDisplay,
     handler =
         function (args, context)
             ACTIONS.Limit.handler(args:Prepend('+'), context)
@@ -110,7 +121,7 @@ ACTIONS['LimitExclude'] = {
     name = L.LM_EXCLUDE_MOUNTS,
     description = L.LM_LIMITEXCLUDE_DESCRIPTION,
     argType = 'expression',
-    toDisplay = LM.RuleArguments.ToDisplay,
+    toDisplay = MountListToDisplay,
     handler =
         function (args, context)
             ACTIONS.Limit.handler(args:Prepend('-'), context)
@@ -121,9 +132,9 @@ ACTIONS['Endlimit'] = {
     argType = 'none',
     handler =
         function (args, context)
-            local args = table.remove(context.limits)
-            if args then
-                LM.Debug("  * removed limits: " .. args:ToString())
+            local oldLimits = table.remove(context.limits)
+            if oldLimits then
+                LM.Debug("  * removed limits: " .. oldLimits:ToString())
             end
         end,
 }
@@ -132,25 +143,27 @@ local function GetUsableSpell(arg)
     -- You can look up any spell from any class by number so we have to
     -- test numbers to see if we know them
     local argN = tonumber(arg)
-    if argN and not IsSpellKnown(argN) then
+    if argN and not IsPlayerSpell(argN) then
         return
     end
 
     -- For names, GetSpellInfo returns nil if it's not in your spellbook
-    -- so we don't need to call IsSpellKnown
-    local name, _, _, _, _, _, spellID = GetSpellInfo(argN or arg)
-    if not name then
+    -- so we don't need to call IsPlayerSpell
+    local info = C_Spell.GetSpellInfo(argN or arg)
+    if not info then
         return
     end
 
     -- Glide won't cast while mounted
-    if spellID == 131347 and IsMounted() then
+    if info.spellID == 131347 and IsMounted() then
         return
     end
 
     -- Zen Flight only works if you can fly
-    if spellID == 125883 and not LM.Environment:CanFly() then
-        return
+    if info.spellID == 125883 then
+        if not ( IsFlyableArea() or IsAdvancedFlyableArea() ) then
+            return
+        end
     end
 
     -- Some spells share names (e.g., Surge Forward is both an Evoker ability
@@ -159,20 +172,23 @@ local function GetUsableSpell(arg)
     -- pass the spell in by ID since otherwise you'll get whichever one
     -- GetSpellInfo(name) decides to return.
 
-    local subtext = GetSpellSubtext(argN or arg)
-    local nameWithSubtext = string.format('%s(%s)', name, subtext or "")
+    local subtext = C_Spell.GetSpellSubtext(argN or arg)
+    local nameWithSubtext = string.format('%s(%s)', info.name, subtext or "")
 
-    if name and IsUsableSpell(name) and GetSpellCooldown(name) == 0 then
-        return name, spellID, nameWithSubtext
+    if C_Spell.IsSpellUsable(info.name) then
+        local cooldownInfo = C_Spell.GetSpellCooldown(info.name)
+        if cooldownInfo and cooldownInfo.startTime == 0 then
+            return info.name, info.spellID, nameWithSubtext
+        end
     end
 end
 
 local function SpellArgsToDisplay(args)
     local out = {}
     for _, v in ipairs(args:ParseList()) do
-        local name, _, _, _, _, _, id = GetSpellInfo(v)
-        if name then
-            table.insert(out, string.format("%s (%d)", name, id))
+        local info = C_Spell.GetSpellInfo(v)
+        if info then
+            table.insert(out, string.format("%s (%d)", info.name, info.spellID))
         else
             table.insert(out, v)
         end
@@ -222,20 +238,24 @@ ACTIONS['Buff'] = {
 -- Set context.precast to a spell name to try to macro in before mounting journal
 -- mounts. This is a bit less strict than Spell and Buff because the macro
 -- still works even if the spell isn't usable, and has the advantage of
--- avoiding the IsUsableSpell failures when targeting others.
+-- avoiding the IsSpellUsable failures when targeting others.
 
 ACTIONS['PreCast'] = {
     name = L.LM_PRECAST_ACTION,
-    description = L.LM_PRECAST_DESCRIPTION,
+    description =
+        string.format("%s\n\n%s",
+            L.LM_PRECAST_DESCRIPTION,
+            FACTION_RED_COLOR:WrapTextInColorCode(L.LM_MACRO_NOT_ALLOWED)
+        ),
     argType = 'list',
     toDisplay = SpellArgsToDisplay,
     handler =
         function (args, context)
             for _, arg in ipairs(args:ParseList()) do
-                local name, _, _, castTime, _, _, id = GetSpellInfo(arg)
-                if name and IsPlayerSpell(id) and castTime == 0 then
-                    LM.Debug("  * setting preCast to spell " .. name)
-                    context.preCast = name
+                local info = C_Spell.GetSpellInfo(arg)
+                if info and IsPlayerSpell(info.spellID) and info.castTime == 0 then
+                    LM.Debug("  * setting preCast to spell " .. info.name)
+                    context.preCast = info.name
                     return
                 end
             end
@@ -248,12 +268,14 @@ ACTIONS['CancelAura'] = {
     handler =
         function (args, context)
             for _, arg in ipairs(args:ParseList()) do
-                local name, _,_,_,_,_, source, _,_,_, canApplyAura = LM.UnitAura('player', arg)
-                if name then
+                local info = LM.UnitAura('player', arg)
+                if info then
                     -- Levitate (for example) is marked canApplyAura == false so this is a
                     -- half-workaround. You still won't cancel Levitate somone else put on you.
-                    if canApplyAura or (source == 'player' and GetSpellInfo(name)) then
-                        return LM.SecureAction:CancelAura(name)
+                    if info.canApplyAura then
+                        return LM.SecureAction:CancelAura(info.name)
+                    elseif info.sourceUnit == 'player' and C_Spell.GetSpellInfo(info.name) then
+                        return LM.SecureAction:CancelAura(info.name)
                     end
                 end
             end
@@ -276,8 +298,8 @@ local function GetFormNameWithSubtext()
     local idx = GetShapeshiftForm()
     if idx and idx > 0 then
         local spellID = select(4, GetShapeshiftFormInfo(idx))
-        local n = GetSpellInfo(spellID)
-        local s = GetSpellSubtext(spellID) or ''
+        local n = C_Spell.GetSpellName(spellID)
+        local s = C_Spell.GetSpellSubtext(spellID) or ''
         return string.format('%s(%s)', n, s)
     end
 end
@@ -299,7 +321,7 @@ ACTIONS['Dismount'] = {
 
             if IsMounted() then
                 LM.Debug("  * setting action to dismount")
-                action = LM.SecureAction:Macro(SLASH_DISMOUNT1)
+                action = LM.SecureAction:Execute(Dismount)
             else
                 -- Otherwise we look for the mount from its buff and return the cancel
                 -- actions.
@@ -310,12 +332,14 @@ ACTIONS['Dismount'] = {
                 end
             end
 
+            -- This obeys "Auto Dismount in Flight", otherwise it would need a
+            -- macrotext and not work from the actionbar.
             if action and savedFormName and savedFormName ~= GetFormNameWithSubtext() then
-                -- Without the /cancelform the "Auto Dismount in Flight" setting stops
-                -- this from working.
-                LM.Debug("  * override action to restore form: " .. savedFormName)
-                local macroText = string.format("/cancelform\n/cast %s", savedFormName)
-                action = LM.SecureAction:Macro(macroText)
+                local autoDismount = not IsFlying() or GetCVarBool('autoDismountFlying')
+                if autoDismount or GetShapeshiftFormID() then
+                    LM.Debug("  * override action to restore form: " .. savedFormName)
+                    action = LM.SecureAction:Spell(savedFormName)
+                end
             end
 
             if action then
@@ -370,10 +394,47 @@ ACTIONS['ApplyRules'] = {
         end
 }
 
+local switchSpellID = C_MountJournal.GetDynamicFlightModeSpellID()
+local switchSpellInfo = C_Spell.GetSpellInfo(switchSpellID or 0)
+
+ACTIONS['SwitchFlightStyle'] = {
+    name = switchSpellInfo and switchSpellInfo.name,
+    argType = 'valueOrNone',
+    toDisplay =
+        function (args)
+            if #args == 0 then
+                return { switchSpellInfo.name }
+            else
+                -- XXX if there is a localization for Steady Flight it would
+                -- be better to return it instead of L.FLY
+                local typeName =  L[args[1]] or UNKNOWN
+                return { switchSpellInfo.name .. ': ' .. typeName }
+            end
+        end,
+    handler =
+        function (args, context)
+            if IsPlayerSpell(switchSpellID) then
+                local argList = args:ParseList()
+                local _, currentStyle = LM.Environment:GetFlightStyle()
+                if #argList == 0 or currentStyle ~= argList[1] then
+                    LM.Debug("  * setting action to spell " .. switchSpellInfo.name)
+                    return LM.SecureAction:Spell(switchSpellInfo.name, context.rule.unit)
+                end
+            end
+        end
+}
+
 local mawCastableArg = LM.RuleArguments:Get("MAWUSABLE", ",", "CASTABLE")
 local castableArg = LM.RuleArguments:Get("CASTABLE")
 
 local smartActions = {
+    {
+        -- Only original aquatic mounts are sped up by the buff in Vashj'ir,
+        -- newer hybrid ones like Ottuks are slow.
+        condition   = "[submerged,map:203]",
+        arg         = LM.RuleArguments:Get('mt:231', '/', 'mt:254'),
+        debug       = "Aquatic Mount (Vashj'ir)",
+    },
     {
         condition   = "[submerged]",
         arg         = LM.RuleArguments:Get('SWIM'),
@@ -382,7 +443,7 @@ local smartActions = {
     {
         condition   = "[dragonridable]",
         arg         = LM.RuleArguments:Get('DRAGONRIDING'),
-        debug       = "Dragonriding Mount",
+        debug       = "Skyriding Mount",
     },
     {
         condition   = "[flyable]",
@@ -410,7 +471,7 @@ ACTIONS['Mount'] = {
     name = L.LM_MOUNT_ACTION,
     description = L.LM_MOUNT_DESCRIPTION,
     argType = 'expression',
-    toDisplay = LM.RuleArguments.ToDisplay,
+    toDisplay = MountListToDisplay,
     handler =
         function (args, context)
             local limits = CopyTable(context.limits)
@@ -465,7 +526,7 @@ ACTIONS['SmartMount'] = {
     name = L.LM_SMARTMOUNT_ACTION,
     description = L.LM_SMARTMOUNT_DESCRIPTION,
     argType = 'expression',
-    toDisplay = LM.RuleArguments.ToDisplay,
+    toDisplay = MountListToDisplay,
     handler =
         function (args, context)
             context.rule.priority = true
@@ -478,7 +539,7 @@ ACTIONS['PriorityMount'] = {
     name = L.LM_PRIORITYMOUNT_ACTION,
     description = L.LM_PRIORITYMOUNT_DESCRIPTION,
     argType = 'expression',
-    toDisplay = LM.RuleArguments.ToDisplay,
+    toDisplay = MountListToDisplay,
     handler =
         function (args, context)
             context.rule.priority = true
@@ -492,8 +553,12 @@ ACTIONS['Macro'] = {
         function (args, context)
             local macrotext = LM.Options:GetOption('unavailableMacro')
             if macrotext ~= "" then
-                LM.Debug("  * setting action to unavailable macro")
-                return LM.SecureAction:Macro(macrotext)
+                if GetRunningMacro() then
+                    LM.Debug("  * unavailable macro not possible from actionbar")
+                else
+                    LM.Debug("  * setting action to unavailable macro")
+                    return LM.SecureAction:Macro(macrotext)
+                end
             end
         end
 }
@@ -502,9 +567,13 @@ ACTIONS['Script'] = {
     argType = 'macrotext',
     handler =
         function (args, context)
-            local macroText = args:ToString()
-            LM.Debug("  * setting action to script line: " .. macroText)
-            return LM.SecureAction:Macro(macroText)
+            if GetRunningMacro() then
+                LM.Debug("  * Script action not available from actionbar")
+            else
+                local macroText = args:ToString()
+                LM.Debug("  * setting action to script line: " .. macroText)
+                return LM.SecureAction:Macro(macroText)
+            end
         end
 }
 
@@ -518,7 +587,7 @@ ACTIONS['CantMount'] = {
             LM.Warning(SPELL_FAILED_NO_MOUNTS_ALLOWED)
 
             LM.Debug("  * setting action to can't mount now")
-            return LM.SecureAction:Macro("")
+            return LM.SecureAction:NoAction()
         end
 }
 
@@ -540,7 +609,7 @@ local CombatHandlerOverride = {
                     if id and name then
                         LM.Debug("  * matched encounter %s (%d)", name, id)
                     end
-                    local mounts = LM.MountRegistry:FilterSearch('DRAGONRIDING', 'COLLECTED')
+                    local mounts = LM.MountRegistry:FilterSearch('DRAGONRIDING', 'JOURNAL', 'COLLECTED')
                     local randomStyle = LM.Options:GetOption('randomWeightStyle')
                     local m = mounts:Random(context.random, randomStyle)
                     if m then
@@ -551,6 +620,9 @@ local CombatHandlerOverride = {
     },
 }
 
+-- Combat handler is a bit magic because it's called from PLAYER_REGEN_DISABLED
+-- rather than by user activation, so you can't tell if it's being called from
+-- a macro (and thus won't work).
 ACTIONS['Combat'] = {
     argType = 'none',
     handler =
@@ -582,7 +654,7 @@ ACTIONS['Stop'] = {
         function (args, context)
             -- return true and set up to do nothing
             LM.Debug("  * setting action to nothing for stop")
-            return LM.SecureAction:Macro("")
+            return LM.SecureAction:NoAction()
         end
 }
 
@@ -595,13 +667,13 @@ local function IsCastableItem(itemID)
         if not C_ToyBox.IsToyUsable(itemID) then
             return false
         end
-    elseif not IsUsableItem(itemID) then
+    elseif not C_Item.IsUsableItem(itemID) then
         return false
-    elseif IsEquippableItem(itemID) and not IsEquippedItem(itemID) then
+    elseif C_Item.IsEquippableItem(itemID) and not C_Item.IsEquippedItem(itemID) then
         return false
     end
 
-    local s, d, e = GetItemCooldown(itemID)
+    local s, d, e = C_Container.GetItemCooldown(itemID)
     if s == 0 and (e == true or e == 1) then
         return true
     end
@@ -611,7 +683,7 @@ end
 
 -- A derpy version of SecureCmdItemParse that doesn't support bags but does
 -- support item IDs as well as slot names. The assumption is that if you have
--- the item then GetItemInfo will always return values immediately.
+-- the item then GetItemName will always return values immediately.
 
 local function UsableItemParse(arg)
     local name, itemID, slotNum
@@ -620,7 +692,7 @@ local function UsableItemParse(arg)
     if slotOrID and slotOrID <= INVSLOT_LAST_EQUIPPED then
         slotNum = slotOrID
     elseif slotOrID then
-        name = GetItemInfo(slotOrID)
+        name = C_Item.GetItemNameByID(slotOrID)
         itemID = slotOrID
     else
         local slotName = "INVSLOT_"..arg:upper()
@@ -628,7 +700,7 @@ local function UsableItemParse(arg)
             slotNum = _G[slotName]
         else
             name = arg
-            itemID = GetItemInfoInstant(arg)
+            itemID = C_Item.GetItemInfoInstant(arg)
         end
     end
 
@@ -643,6 +715,8 @@ local InventorySlotTable = {
     [INVSLOT_SHOULDER]  = SHOULDERSLOT,
     [INVSLOT_BODY]      = SHIRTSLOT,
     [INVSLOT_CHEST]     = CHESTSLOT,
+    [INVSLOT_WRIST]     = WRISTSLOT,
+    [INVSLOT_HAND]      = HANDSSLOT,
     [INVSLOT_WAIST]     = WAISTSLOT,
     [INVSLOT_LEGS]      = LEGSSLOT,
     [INVSLOT_FEET]      = FEETSLOT,
@@ -701,7 +775,11 @@ ACTIONS['Use'] = {
 
 ACTIONS['PreUse'] = {
     name = L.LM_PREUSE_ACTION,
-    description = L.LM_PREUSE_DESCRIPTION,
+    description =
+        string.format("%s\n\n%s",
+            L.LM_PREUSE_DESCRIPTION,
+            FACTION_RED_COLOR:WrapTextInColorCode(L.LM_MACRO_NOT_ALLOWED)
+        ),
     argType = 'list',
     toDisplay = ItemArgsToDisplay,
     handler =
@@ -757,7 +835,7 @@ function LM.Actions:DefaultCombatMacro()
     elseif playerClass == "SHAMAN" then
         local mount = LM.MountRegistry:GetMountBySpell(LM.SPELL.GHOST_WOLF)
         if mount and mount:GetPriority() > 0 then
-            local s = GetSpellInfo(LM.SPELL.GHOST_WOLF)
+            local s = C_Spell.GetSpellName(LM.SPELL.GHOST_WOLF)
             mt = mt .. "/cast [noform] " .. s .. "\n"
             mt = mt .. "/cancelform [form]\n"
         end

@@ -375,7 +375,7 @@
 			</OnLoad>
 			<OnClick>
 				if (button == "LeftButton" and IsAltKeyDown()) then
-					if (IsAddOnLoaded("SmartDebuff")) then
+					if (C_AddOns.IsAddOnLoaded("SmartDebuff")) then
 						SMARTDEBUFF_ToggleSF();
 					end
 				elseif (button == "LeftButton") then

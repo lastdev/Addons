@@ -44,7 +44,7 @@ end
 
 local major = "LibOpenRaid-1.0"
 
-local CONST_LIB_VERSION = 127
+local CONST_LIB_VERSION = 133
 
 if (LIB_OPEN_RAID_MAX_VERSION) then
     if (CONST_LIB_VERSION <= LIB_OPEN_RAID_MAX_VERSION) then
@@ -72,6 +72,8 @@ end
 --default values
     openRaidLib.inGroup = false
     openRaidLib.UnitIDCache = {}
+
+    openRaidLib.Util = openRaidLib.Util or {}
 
     local CONST_CVAR_TEMPCACHE = "LibOpenRaidTempCache"
     local CONST_CVAR_TEMPCACHE_DEBUG = "LibOpenRaidTempCacheDebug"
@@ -2640,7 +2642,7 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
 
     function openRaidLib.KeystoneInfoManager.UpdatePlayerKeystoneInfo(keystoneInfo)
         keystoneInfo.level = C_MythicPlus.GetOwnedKeystoneLevel() or 0
-        keystoneInfo.mapID = C_MythicPlus.GetOwnedKeystoneMapID() or 0
+        keystoneInfo.mapID = C_MythicPlus.GetOwnedKeystoneMapID() or 0 --returning nil?
         keystoneInfo.mythicPlusMapID = getMythicPlusMapID() or 0
         keystoneInfo.challengeMapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID() or 0
 

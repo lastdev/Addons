@@ -1,8 +1,9 @@
 # <DBM Mod> Raids (Cata)
 
-## [r241](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r241) (2024-05-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r240...r241) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Cataclysm/releases)
+## [r246](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r246) (2024-06-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r244...r246) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Cataclysm/releases)
 
-- Bump ToCs for 10.2.7  
-- apparently no one is actually ready for the cataclysm pre patch yet (ie multi interface versions separated by ,). So revert that for now  
-- War within TOC Support  
+- Fix numerous cases where count was missing, or wrong object type was set (also causing count to be missing)  
+    Disabled some false diagnostics reports as well  
+- Fix invalid text  
+- Add sinestra respawn timer  

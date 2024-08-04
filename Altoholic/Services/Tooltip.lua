@@ -1,15 +1,14 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local colors = addon.Colors
 
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local L = DataStore:GetLocale(addonName)
 local LII = LibStub("LibItemInfo-1.0")
 local LOI = LibStub("LibObjectInfo-1.0")
 local MVC = LibStub("LibMVC-1.0")
-local Options = MVC:GetService("AltoholicUI.Options")
 local AccountSharing = MVC:GetService("AltoholicUI.AccountSharing")
 
 local storedLink = nil
+local options
 
 local hearthstoneItemIDs = {
 	[6948] = true,				-- Hearthstone
@@ -45,12 +44,8 @@ local function GetCraftNameFromRecipeLink(link)
 	local craftName
 
 	-- try to determine if it's a transmute (has 2 colons in the string --> Alchemy: Transmute: blablabla)
-	local pos = string.find(recipeName, L["Transmute"])
-	if pos then	-- it's a transmute
-		return string.sub(recipeName, pos, -2)
-	else
-		craftName = select(2, strsplit(":", recipeName))
-	end
+	-- there's more than just transmutes now, so rejoin anything with extra colons
+	craftName = strjoin(":", select(2, strsplit(":", recipeName)))
 	
 	if craftName == nil then		-- will be nil for enchants
 		return string.sub(recipeName, 3, -2)		-- ex: "Enchant Weapon - Striking"
@@ -76,7 +71,7 @@ end
 local function WriteCounterLines(tooltip)
 	if #counterLines == 0 then return end
 
-	if Options.Get("UI.Tooltip.ShowItemCount") then			-- add count per character/guild
+	if options["ShowItemCount"] then			-- add count per character/guild
 		tooltip:AddLine(" ",1,1,1)
 		for _, line in ipairs (counterLines) do
 			tooltip:AddDoubleLine(line.owner, format("%s%s", colors.teal, line.info))
@@ -85,7 +80,7 @@ local function WriteCounterLines(tooltip)
 end
 
 local function WriteTotal(tooltip)
-	if Options.Get("UI.Tooltip.ShowTotalItemCount") and cachedTotal then
+	if options["ShowTotalItemCount"] and cachedTotal then
 		tooltip:AddLine(cachedTotal, 1,1,1)
 	end
 end
@@ -95,14 +90,14 @@ local function GetRealmsList(isAccountBound)
 	local realms = {}
 	table.insert(realms, DataStore.ThisRealm)		-- always "this realm" first
 	
-	if isAccountBound and Options.Get("UI.Tooltip.ShowAllRealmsCount") then
+	if isAccountBound and options["ShowAllRealmsCount"] then
 		for realm, _ in pairs(DataStore:GetRealms()) do
 			if realm ~= DataStore.ThisRealm then
 				table.insert(realms, realm)
 			end
 		end
 	
-	elseif Options.Get("UI.Tooltip.ShowMergedRealmsCount") then
+	elseif options["ShowMergedRealmsCount"] then
 		for _, connectedRealm in pairs(DataStore:GetRealmsConnectedWith(DataStore.ThisRealm)) do
 			table.insert(realms, connectedRealm)
 		end
@@ -112,10 +107,14 @@ local function GetRealmsList(isAccountBound)
 end
 
 local function GetCharacterItemCount(character, searchedID)
-	itemCounts[1], itemCounts[2], itemCounts[3], itemCounts[4], itemCounts[9] = DataStore:GetContainerItemCount(character, searchedID)
+	itemCounts[1], itemCounts[2], itemCounts[9] = DataStore:GetContainerItemCount(character, searchedID)
+	itemCounts[2] = itemCounts[2] + (DataStore:GetPlayerBankItemCount(character, searchedID) or 0)
+	itemCounts[3] = DataStore:GetVoidStorageItemCount(character, searchedID)
+	itemCounts[4] = DataStore:GetReagentBankItemCount(character, searchedID)
 	itemCounts[5] = DataStore:GetAuctionHouseItemCount(character, searchedID)
 	itemCounts[6] = DataStore:GetInventoryItemCount(character, searchedID)
 	itemCounts[7] = DataStore:GetMailItemCount(character, searchedID)
+	
 	
 	local charCount = 0
 	for _, v in pairs(itemCounts) do
@@ -144,7 +143,7 @@ local function GetCharacterItemCount(character, searchedID)
 			end
 		end
 
-		if Options.Get("UI.Tooltip.ShowSimpleCount") then
+		if options["ShowSimpleCount"] then
 			AddCounterLine(name, format("%s%s", colors.orange, charCount))
 		else
 			-- charInfo should look like 	(Bags: 4, Bank: 8, Equipped: 1, Mail: 7), table concat takes care of this
@@ -160,7 +159,7 @@ local function GetAccountItemCount(account, searchedID, isAccountBound)
 
 	for _, realm in pairs(GetRealmsList(isAccountBound)) do
 		for _, character in pairs(DataStore:GetCharacters(realm, account)) do
-			if Options.Get("UI.Tooltip.ShowCrossFactionCount") then
+			if options["ShowCrossFactionCount"] then
 				count = count + GetCharacterItemCount(character, searchedID)
 			else
 				if	DataStore:GetCharacterFaction(character) == UnitFactionGroup("player") then
@@ -191,7 +190,8 @@ local function IsItemAccountBound(itemLink)
 	for i = 1, numLines do		-- parse the first 5 lines maximum
 		local tooltipText = _G[format("%sTextLeft%d", tooltipName, i)]:GetText()
 		
-		if tooltipText == ITEM_BIND_TO_BNETACCOUNT or tooltipText == ITEM_BNETACCOUNTBOUND then
+		if tooltipText == ITEM_BIND_TO_BNETACCOUNT or tooltipText == ITEM_BNETACCOUNTBOUND or 
+			tooltipText == ITEM_BIND_TO_ACCOUNT or tooltipText == ITEM_ACCOUNTBOUND then
 			return true
 		end
 	end
@@ -205,7 +205,7 @@ local function GetItemCount(searchedID, itemLink)
 	-- determine if the item is account bound
 	local isAccountBound = IsItemAccountBound(itemLink)
 	
-	if Options.Get("UI.Tooltip.ShowAllAccountsCount") and not AccountSharing.IsSharingInProgress() then
+	if options["ShowAllAccountsCount"] and not AccountSharing.IsSharingInProgress() then
 		for account in pairs(DataStore:GetAccounts()) do
 			count = count + GetAccountItemCount(account, searchedID, isAccountBound)
 		end
@@ -213,12 +213,12 @@ local function GetItemCount(searchedID, itemLink)
 		count = GetAccountItemCount(DataStore.ThisAccount, searchedID, isAccountBound)
 	end
 	
-	local showCrossFaction = Options.Get("UI.Tooltip.ShowCrossFactionCount")
+	local showCrossFaction = options.ShowCrossFactionCount
 	
-	if Options.Get("UI.Tooltip.ShowGuildBankCount") then
+	if options.ShowGuildBankCount then
 		for _, realm in pairs(GetRealmsList(isAccountBound)) do
 			for guildName, guildKey in pairs(DataStore:GetGuilds(realm)) do
-				local hideInTooltip = Options.Get(format("%s.HideInTooltip", guildKey)) or false
+				local hideInTooltip = options.HiddenGuilds[guildKey] or false
 				local bankFaction = DataStore:GetGuildBankFaction(guildKey)
 
 				-- do not show cross faction counters for guild banks if they were not requested
@@ -226,14 +226,13 @@ local function GetItemCount(searchedID, itemLink)
 					and not hideInTooltip
 				then
 					local guildCount = 0
-					
 					local guildLabel = format("%s%s|r", colors.green, guildName)
 					
-					if Options.Get("UI.Tooltip.ShowGuildBankRealm") then
+					if options.ShowGuildBankRealm then
 						guildLabel = format("%s %s(%s)|r", guildLabel, colors.yellow, realm)
 					end
 					
-					if Options.Get("UI.Tooltip.ShowGuildBankCountPerTab") then
+					if options.ShowGuildBankCountPerTab then
 						local tabCounters = {}
 						
 						local tabCount
@@ -255,7 +254,7 @@ local function GetItemCount(searchedID, itemLink)
 						end
 					end
 						
-					if Options.Get("UI.Tooltip.IncludeGuildBankInTotal") then
+					if options["IncludeGuildBankInTotal"] then
 						count = count + guildCount
 					end
 				end
@@ -269,10 +268,20 @@ end
 function addon:GetRecipeOwners(professionName, link, recipeLevel)
 	local craftName
 	local spellID = addon:GetSpellIDFromRecipeLink(link)
-
+	local isEnchant = false
+	local categoryName = 0
+	
 	if not spellID then		-- spell id unknown ? let's parse the tooltip
 		craftName = GetCraftNameFromRecipeLink(link)
 		if not craftName then return end		-- still nothing usable ? then exit
+		
+		-- Enchant spell info doesn't give the category in the spell - eg. it's just "Strength" not "Enchant Bracer - Strength" - so split the category from the recipe name to compare later
+		if string.find(craftName, "^Enchant ") then
+			isEnchant = true
+			categoryName, craftName = strsplit("-", craftName)
+			categoryName = strtrim(strsub(categoryName, 8))
+			craftName = strtrim(craftName)
+		end
 	end
 	
 	local know = {}				-- list of alts who know this recipe
@@ -297,9 +306,29 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 					local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
 					local skillName = GetSpellInfo(recipeID) or ""
 
+					-- this is silly. There's a typo in the Blizz spell list
+					skillName = string.gsub(skillName, "Proto Drake", "Proto-Drake")
+
 					if string.lower(skillName) == string.lower(craftName) and isLearned then
-						isKnownByChar = true
-						return true	-- stop iteration
+						if not isEnchant then
+							isKnownByChar = true
+							return true	-- stop iteration
+						end
+
+						-- matched "Strength" for instance, now check that it's the right category (eg. "Bracer" not "Chest")
+						local skillCategoryID = C_TradeSkillUI.GetRecipeInfo(recipeID, 1).categoryID
+						
+						if skillCategoryID and skillCategoryID ~= 0 then
+							local info = C_TradeSkillUI.GetCategoryInfo(skillCategoryID)
+							local skillCategory = info and info.name or ""
+						
+							skillCategory = string.gsub(skillCategory, " Enchantments", "")
+
+							if skillCategory == categoryName then
+								isKnownByChar = true
+								return true	-- stop iteration
+							end
+						end
 					end
 				end)
 			end
@@ -309,7 +338,7 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 			if isKnownByChar then
 				table.insert(know, coloredName)
 			else
-				local currentLevel = DataStore:GetProfessionInfo(DataStore:GetProfession(character, professionName))
+				local currentLevel = DataStore:GetProfessionRank(character, professionName)
 				if currentLevel > 0 then
 					if currentLevel < recipeLevel then
 						table.insert(willLearn, format("%s |r(%d)", coloredName, currentLevel))
@@ -371,7 +400,7 @@ end
 
 local function ShowGatheringNodeCounters()
 	-- exit if player does not want counters for known gathering nodes
-	if Options.Get("UI.Tooltip.ShowGatheringNodesCount") == false then return end
+	if options["ShowGatheringNodesCount"] == false then return end
 
 	-- Get the first tooltip line
 	local line = _G["GameTooltipTextLeft1"]:GetText()
@@ -394,7 +423,7 @@ local function ShowGatheringNodeCounters()
 	end
 
 	-- check player bags to see how many times he owns this item, and where
-	if Options.Get("UI.Tooltip.ShowItemCount") or Options.Get("UI.Tooltip.ShowTotalItemCount") then
+	if options["ShowItemCount"] or options["ShowTotalItemCount"] then
 		cachedCount = GetItemCount(itemID) -- if one of the 2 options is active, do the count
 		cachedTotal = (cachedCount > 0) and format("%s%s: %s%d", colors.gold, L["Total owned"], colors.teal, cachedCount) or nil
 	end
@@ -435,7 +464,7 @@ local function ProcessTooltip(tooltip, link)
 		cachedItemID = itemID			-- we have searched this ID ..
 		
 		-- .. then check player bags to see how many times he owns this item, and where
-		if Options.Get("UI.Tooltip.ShowItemCount") or Options.Get("UI.Tooltip.ShowTotalItemCount") then
+		if options["ShowItemCount"] or options["ShowTotalItemCount"] then
 			cachedCount = GetItemCount(itemID, link) -- if one of the 2 options is active, do the count
 			cachedTotal = (cachedCount > 0) and format("%s%s: %s%s", colors.gold, L["Total owned"], colors.teal, cachedCount) or nil
 		end
@@ -448,7 +477,7 @@ local function ProcessTooltip(tooltip, link)
 	end
 
 	local isHearth = hearthstoneItemIDs[itemID] 
-	local showHearth = Options.Get("UI.Tooltip.ShowHearthstoneCount")
+	local showHearth = options["ShowHearthstoneCount"]
 	
 	if showHearth or (not showHearth and not isHearth) then
 		WriteCounterLines(tooltip)
@@ -457,7 +486,7 @@ local function ProcessTooltip(tooltip, link)
 	
 	local itemType, expansion, expansionID, arg1, arg2, arg3 = LII:GetItemSource(itemID)
 	
-	if Options.Get("UI.Tooltip.ShowItemSource") then
+	if options["ShowItemSource"] then
 		local TYPE_REAGENT = 1
 		local TYPE_DUNGEON_LOOT = 2
 		local TYPE_RAID_LOOT = 3
@@ -501,7 +530,7 @@ local function ProcessTooltip(tooltip, link)
 			
 			end
 			
-			if Options.Get("UI.Tooltip.ShowItemXPack") then
+			if options["ShowItemXPack"] then
 				tooltip:AddLine(format("%s%s: %s%s %s(%d.0)", colors.gold, EXPANSION_FILTER_TEXT, colors.teal, expansion,
 					colors.yellow, expansionID + 1), 1,1,1)
 			end
@@ -511,7 +540,7 @@ local function ProcessTooltip(tooltip, link)
 	local itemSubType, _, _, _, _, classID, subclassID, bindType = select(7, GetItemInfo(itemID))
 	
 	-- Show "Could be stored on" info
-	if Options.Get("UI.Tooltip.ShowCouldBeStoredOn") and itemType and expansionID and expansionID < GetExpansionLevel() then
+	if options["ShowCouldBeStoredOn"] and itemType and expansionID and expansionID < GetExpansionLevel() then
 		
 		local bankType = reagentTypeToBankType[arg3]
 		
@@ -542,7 +571,7 @@ local function ProcessTooltip(tooltip, link)
 	end
 	
 	
-	if Options.Get("UI.Tooltip.ShowItemID") then
+	if options["ShowItemID"] then
 		local iLevel = select(4, GetItemInfo(itemID))
 		
 		if iLevel then
@@ -559,7 +588,7 @@ local function ProcessTooltip(tooltip, link)
 		return
 	end
 	
-	if Options.Get("UI.Tooltip.ShowKnownRecipes") == false then return end -- exit if recipe information is not wanted
+	if options["ShowKnownRecipes"] == false then return end -- exit if recipe information is not wanted
 	
 	if classID ~= Enum.ItemClass.Recipe then return end -- exit if not a recipe
 	if subclassID == Enum.ItemRecipeSubclass.Book then return end -- exit if it's a book
@@ -705,6 +734,8 @@ addon:Service("AltoholicUI.Tooltip", { function()
 					end
 				end, "refresh")
 			end
+			
+			options = Altoholic_Tooltip_Options
 		end,
 		RefreshTooltip = function()
 			cachedItemID = nil	-- putting this at NIL will force a tooltip refresh in self:ProcessToolTip

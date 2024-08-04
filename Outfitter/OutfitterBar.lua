@@ -391,7 +391,7 @@ function Outfitter.OutfitBar:GetOutfitTexture(pOutfit)
 	end
 
 	if vOutfitItem then
-		local vTexture = GetItemIcon(vOutfitItem.Code)
+		local vTexture = C_Item.GetItemIconByID(vOutfitItem.Code)
 
 		if vTexture then
 			return vTexture
@@ -409,7 +409,7 @@ function Outfitter.OutfitBar:GetCursorTexture()
 		return
 	end
 
-	if vType == "spell" then
+	if vType == "spell" and vParam1 and vParam2 then
 		return GetSpellTexture(vParam1, vParam2)
 
 	elseif vType == "item" then

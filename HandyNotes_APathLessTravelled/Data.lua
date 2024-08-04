@@ -9,13 +9,52 @@ local colourPlaintext	= ns.colour.plaintext
 local st = {}
 
 st.doomsayersRobes = "Kill him and oh boy, he might drop a toy!\n\n"
-						.."The cool \"Doomsayer's Robes\" transform\n"
-						.."no less!\n\n"
-						.."If the corpse disappears instantly then there\n"
-						.."was no drop this time. There's no toying with\n"
-						.."this lad! Come back next time...\n\n"
-						.."...And next time. But it ain't too bad. Reports\n"
-						.."are you'll have it in ten attempts easy!"
+			.."The cool \"Doomsayer's Robes\" transform\nno less!\n\n"
+			.."If the corpse disappears instantly then there\n"
+			.."was no drop this time. There's no toying with\n"
+			.."this lad! Come back next time...\n\n"
+			.."...And next time. But it ain't too bad. Reports\n"
+			.."are you'll have it in ten attempts easy!"
+st.griftahTitle = "The Saga of Griftah, Asric and Jadaar"
+st.griftah = "Once upon a time there was a troll charlatan named \"Griftah\"\n"
+			.."who delighted in selling useless necklaces to his marks.\n\n"
+			.."All of the purchasers were summarily \"grifted\", thus his name!\n\n"
+			.."When adventurers first visited Shattrath, this shady troll was to\n"
+			.."be found in the Lower City. Alongside him was the Draenei\n"
+			.."Peacekeeper Jadaar. They engaged in lively reparte, with Jadaar\n"
+			.."closely monitoring Griftah for any untoward activity. Jadaar also\n"
+			.."warned visitors that complaints had been filed and that he was\ninvestigating.\n\n"
+			.."The events of the Burning Crusade eventually saw Griftah exiled\n"
+			.."from the city. From the gates of Shattrath he cut a forlorn figure,\n"
+			.."reduced to selling foraged tinder and weeds to eek out a living.\n\n"
+			..colourHighlight .."    \"I can't believe they be chasin' me outta the city. Innit\n"
+			.."     supposed to be a refuge? Ol' Griftah be a refugee! Not my\n"
+			.."     fault I be an ENTERPRISIN' refugee...\n\n" ..colourPlaintext
+			.."Jadaar maintained a presence at the old kiosk, warning visitors\n"
+			.."of the ongoing operation.\n\n"
+			.."At this time the Bloodelf Scryer Asric joined the investigation\n"
+			.."and things did not go well. The investigation collapsed, due to\n"
+			.."the loss of some key evidence. Over drinks in Shattrath's World's\n"
+			.."End Tavern they argued bitterly. The Sha'tar fired them too.\n\n"
+			.."Griftah for his part was free to return to Shattrath.\n\n"
+			..colourHighlight .."    \"Ahaha, ya see this? Griftah's BACK! Back in my stall, back\n"
+			.."     with my old wares, and ready to pass on the deals to ya!\"\n\n" ..colourPlaintext
+			.."Cut forward now to the events of the Lich King and we meet the\n"
+			.."quarrelsome duo in Dalaran's Cantrip & Crows tavern. Asric:\n\n"
+			..colourHighlight .."    \"I have decades of practice handling blowhards like yourself, and\n"
+			.."     I'm the only one you know here in this abominably freezing land.\n\n" ..colourPlaintext
+			.."They agree as much that as free agents they are now able to seek\n"
+			.."their fortune and soon enough they reappear at The Aspirants'\n"
+			.."Ring in the Argent Tournament grounds. Seeking redemption?\n\n"
+			.."From time to time they appear at the Darkmoon Faire too.\n\n"
+			.."Griftah to this day maintains his (relocated) kiosk in the Shattrath\n"
+			.."lower City but he from time to time visits the Darkmoon Faire and\n"
+			.."a host of other places as he furthers his entrepreneurial fortune.\n"
+			.."Griftah believes the DMF to be particularly lucrative...\n\n"
+			..colourHighlight .."    \"Da faire be easy times for ol' Griftah...\"\n\n" ..colourPlaintext
+			.."Curiously, Griftah did not follow the bumbling detective duo to\n"
+			.."Northrend but he can be found at pretty much every place where\n"
+			.."events have unfolded in Azeroth!"
 
 --=======================================================================================================
 --
@@ -24,385 +63,289 @@ st.doomsayersRobes = "Kill him and oh boy, he might drop a toy!\n\n"
 --=======================================================================================================
 
 st.abandonedHope = "Love the signs and the victims strung up.\nHmmm... someone or something has \n"
-					.."been gnawing at their legs!"
+				.."been gnawing at their legs!"
 st.abercrombieAndFitch = "Okay you've found Abercrombie. Great!\n"
-							.."But now the other part. What could it be?\n"
-							.."Hint: Do the quest chain!"
-st.antonJermaine = "Two dwarves on a camping / drinking\n"
-					.." expedition. What could possibly go\n"
-					.."wrong? Guess the \"locals\" scented\nsomething delicious?\n\n"
-					.."It's more than I can bear!"
+				.."But now the other part. What could it be?\nHint: Do the quest chain!"
+st.antonJermaine = "Two dwarves on a camping / drinking\nexpedition. What could possibly go\n"
+				.."wrong? Guess the \"locals\" scented\nsomething delicious?\n\nIt's more than I can bear!"
 st.aridensCamp = "Ariden's camp has been here since the first adventurers\n"
-				.."traipsed through Deadwind Pass.\n\n"
-				.."During the events of \"Legion\" A Relic Box was noticed...\n"
-				.."\"clever forgeries\" hints at Ariden's activities - he's\n"
-				.."nothing more than a charlatan trader, flogging conterfeit\n"
-				.."artifacts!\n\n"
-				.."Some adventurers will come here, specifically Unholy\n"
-				.."Deathknights, Affliction Warlocks, and Balance Druids,\n"
-				.."as they hunt for him in their quest to obtain a legendary\n"
-				.."artifact weapon.\n\n"
-				.."Depending upon your situation, some of the items in\n"
-				.."the camp, when clicked, have extra information"
-st.artifactWeapons = "If you come across this then chances are\n"
-					.."you'll see a disc structure in the lake.\n\n"
-					.."Since the Legion era Holy Paladins who\n"
-					.."adventured here are rumoured to have\n"
-					.."found \"The Silver Hand\" artifact two-\n"
-					.."handed mace legendary weapon!\n\n"
-					.."Likewise \"Strom'kar the Warbreaker\" as\n"
-					.."wielded by Arms Warriors and \"Xal'atath,\n"
-					.."Blade of the Black Empire\" (along with\n"
-					.."\"Secrets of the Void\" as possessed by\n"
-					.."Shadow Priests.\n\n"
-					.."An \"Underwater Passage\" here? Only\n"
-					.."if you are on a quest to retrieve said\n"
-					.."legendary weapons"
-st.blackIce = "Yup. You wear a ring and you can see it!\n"
-				.."Sounds cool? I thought so!!! Here's the deal:\n\n"
-				.."Go to Heroic Zul'Gurub and speak to Oversear\n"
-				.."Blingbang at the entrance area. He'll give you\n"
-				.."a bit of work to do. Sigh. Nothing is free in life...\n\n"
-				.."(1) Kill High Priest Venoxis\n"
-				.."(2) Kill High Priestess Kilnara\n"
-				.."(3) Go to Jin'do the Godbreaker's platform but\n"
-				.."pull and bring a Gurubashi Spirit Warrior with\n"
-				.."you. Take the boss down to 1%\n"
-				.."(4) In the next phase there are three chains\n"
-				.."which need to be broken. Wait until a Warrior\n"
-				.."Body Slams you then break the chain\n"
-				.."(5) Kill Jin'do and loot him\n"
-				.."(6) Hand in etc\n\n"
-				.."\"Black Ice\" is a toy which rewards a cosmetic\n"
-				.."effect. It does NOT use a ring slot! Neat? Yup!!!"
+			.."traipsed through Deadwind Pass.\n\n"
+			.."During the events of \"Legion\" A Relic Box was noticed...\n"
+			.."\"clever forgeries\" hints at Ariden's activities - he's\n"
+			.."nothing more than a charlatan trader, flogging conterfeit\nartifacts!\n\n"
+			.."Some adventurers will come here, specifically Unholy\n"
+			.."Deathknights, Affliction Warlocks, and Balance Druids,\n"
+			.."as they hunt for him in their quest to obtain a legendary\nartifact weapon.\n\n"
+			.."Depending upon your situation, some of the items in\n"
+			.."the camp, when clicked, have extra information"
+st.artifactWeapons = "If you come across this then chances are\nyou'll see a disc structure in the lake.\n\n"
+			.."Since the Legion era Holy Paladins who\nadventured here are rumoured to have\n"
+			.."found \"The Silver Hand\" artifact two-\nhanded mace legendary weapon!\n\n"
+			.."Likewise \"Strom'kar the Warbreaker\" as\nwielded by Arms Warriors and \"Xal'atath,\n"
+			.."Blade of the Black Empire\" (along with\n\"Secrets of the Void\" as possessed by\n"
+			.."Shadow Priests.\n\nAn \"Underwater Passage\" here? Only\n"
+			.."if you are on a quest to retrieve said\nlegendary weapons"
+st.blackIce = "Yup. You wear a ring and you can see it!\nSounds cool? I thought so!!! Here's the deal:\n\n"
+			.."Go to Heroic Zul'Gurub and speak to Oversear\n"
+			.."Blingbang at the entrance area. He'll give you\n"
+			.."a bit of work to do. Sigh. Nothing is free in life...\n\n(1) Kill High Priest Venoxis\n"
+			.."(2) Kill High Priestess Kilnara\n(3) Go to Jin'do the Godbreaker's platform but\n"
+			.."pull and bring a Gurubashi Spirit Warrior with\nyou. Take the boss down to 1%\n"
+			.."(4) In the next phase there are three chains\n"
+			.."which need to be broken. Wait until a Warrior\nBody Slams you then break the chain\n"
+			.."(5) Kill Jin'do and loot him\n(6) Hand in etc\n\n"
+			.."\"Black Ice\" is a toy which rewards a cosmetic\n"
+			.."effect. It does NOT use a ring slot! Neat? Yup!!!"
 st.broadsideBetty = "Well we hate to see her go,\nBut we love to watch her leave!\n"
-						.."She'll do her best for William\nAnd Wes and Mike and Steve!\n"
-						.."Her name is spread both far and wide!\nHer legend is renowned!\n"
-						.."They call her Broadside Betty,\nShe's the roundest game in town!\n"
-						.."So if you've mind to travel south,\nBe sure to stop and play!\n"
-						.."'Cause she's the real reason\nThat they call it Booty Bay!\n\n"
-						.."((Warcraft: Legends Vol. 4, manga))"
+			.."She'll do her best for William\nAnd Wes and Mike and Steve!\n"
+			.."Her name is spread both far and wide!\nHer legend is renowned!\n"
+			.."They call her Broadside Betty,\nShe's the roundest game in town!\n"
+			.."So if you've mind to travel south,\nBe sure to stop and play!\n"
+			.."'Cause she's the real reason\nThat they call it Booty Bay!\n\n"
+			.."((Warcraft: Legends Vol. 4, manga))"
 st.caerDarrow = "Possible to fly in and snoop around!"
 st.catLady = "At the back of her house is a tombstone marking\n"
-				.."the grave of \"Lord Underfoot\". You can meet\n"
-				.."Lord Underfoot again at the Blacksmith in Arathi\n"
-				.."Basin if you are Horde and you've captured it!\n\n"
-				.."((Donni is named after former Blizzard staffer\n"
-				.."Donna \"Kat\" Anthony, whom is reportedly the\n"
-				.."person responsible for pushing for vanity pets\n"
-				.."in game. Thank you Katricia!))"
+			.."the grave of \"Lord Underfoot\". You can meet\n"
+			.."Lord Underfoot again at the Blacksmith in Arathi\n"
+			.."Basin if you are Horde and you've captured it!\n\n"
+			.."((Donni is named after former Blizzard staffer\n"
+			.."Donna \"Kat\" Anthony, whom is reportedly the\n"
+			.."person responsible for pushing for vanity pets\nin game. Thank you Katricia!))"
 st.christ = "((The goblin statue with outstretched arms is referring to\n"
-			.."\"Christ on Corcovado\". This statue is atop a mountain\n"
-			.."near Rio de Janeiro.))\n\n"
+			.."\"Christ on Corcovado\". This statue is atop a mountain\nnear Rio de Janeiro.))\n\n"
 			.."The robes the goblin is wearing are, appropriately,\n"
 			.."\"Gamemaster Robes\", unobtainable be us mere\nmortals!"
-st.darkmoonPortalA = "The Darkmoon Faire portal is exactly\n"
-				.."at this location when it comes around\n"
-				.."each month. Before you go rushing in,\n"
-				.."grab some Simple Flour from Tharynn\n"
-				.."Bouden back at the cart at the town's\n"
-				.."edge. And any other materials you'll\n"
-				.."need for those sweet profession skill\n"
-				.."jumps!"
+st.darkmoonPortalA = "The Darkmoon Faire portal is exactly\nat this location when it comes around\n"
+			.."each month. Before you go rushing in,\ngrab some Simple Flour from Tharynn\n"
+			.."Bouden back at the cart at the town's\nedge. And any other materials you'll\n"
+			.."need for those sweet profession skill\njumps!"
 st.deadminesExit = "This is the exit to the, erm, Deadmines exit.\n\n"
-					.."Ever since adventurers first used this exit\n"
-					.."they have tried to go back in. Not possible!\n\n"
-					.."When you exit from the Deadmines you are\n"
-					.."placed below a ledge which is too high to\n"
-					.."jump upon. Your only option is to continue\n"
-					.."down to here"
+			.."Ever since adventurers first used this exit\n"
+			.."they have tried to go back in. Not possible!\n\n"
+			.."When you exit from the Deadmines you are\n"
+			.."placed below a ledge which is too high to\n"
+			.."jump upon. Your only option is to continue\ndown to here"
 st.defiasGate = "This huge gate is the exit for the Defias Juggernaught.\n"
-				.."That's the huge ship we see when we reach the\n"
-				.."Ironclad Cove in the Deadmines.\n\n"
-				.."((In WoW Alpha the Cove was outdoors!!!))"
-st.dregoth =   "Awwww he's not at all suspicious! First\n"
-				.."appeared at the start of \"Dragonflight\".\n\n"
-				.."Why did he suddenly arrive in Darkshire?\n"
-				.."Nobody knows! Others have likewise popped\n"
-				.."up in several locations across Azeroth!"
+			.."That's the huge ship we see when we reach the\nIronclad Cove in the Deadmines.\n\n"
+			.."((In WoW Alpha the Cove was outdoors!!!))"
+st.dregoth =   "Awwww he's not at all suspicious! First\nappeared at the start of \"Dragonflight\".\n\n"
+			.."Why did he suddenly arrive in Darkshire?\nNobody knows! Others have likewise popped\n"
+			.."up in several locations across Azeroth!"
 st.dwarvenFarm = "Just a cool farming area. Chill. Nothing else to see!"
 st.ebonchill = "This location, complete with a Circle of Power\n"
-				.."is swarming with arcane elementals and mana wyrm.\n\n"
-				.."It became known around the time of \"Legion\" and\n"
-				.."is a key location frost mages will visit when they\n"
-				.."seek to acquire their legendary artifact weapon."
+			.."is swarming with arcane elementals and mana wyrm.\n\n"
+			.."It became known around the time of \"Legion\" and\n"
+			.."is a key location frost mages will visit when they\n"
+			.."seek to acquire their legendary artifact weapon."
 st.fourChildren = "((The four children in this area are tributes\n"
-					.."to Blizzard Exterior Level Designers. One,\n"
-					.."Matt, wanders between the pond and the\n"
-					.."lake, searching for fish))"
-st.fourSkeletons = "Four of them. Looking up at... what?\n"
-				.."And it looks like some crazy drinking\n"
-				.."ritual too! Did they become somehow\n"
-				.."ensorcelled?"
-st.gnollTent = "When gnolls skin their prey they leave\n"
-				.."nothing to waste. Even a human face has\n"
-				.."a use when stretched out for tent material!"
-st.garrod = "No need to take your shoes off when\n"
-			.."visiting Garrod's house. Just fly right in!\n\n"
-			.."Yup, flying on any of your mounts is\n"
-			.."quite within his house rules it seems.\n\n"
-			.."Just don't you dare try to mount up\n"
-			.."though as he apparently draws the line\n"
+			.."to Blizzard Exterior Level Designers. One,\nMatt, wanders between the pond and the\n"
+			.."lake, searching for fish))"
+st.fourSkeletons = "Four of them. Looking up at... what?\nAnd it looks like some crazy drinking\n"
+			.."ritual too! Did they become somehow\nensorcelled?"
+st.gnollTent = "When gnolls skin their prey they leave\nnothing to waste. Even a human face has\n"
+			.."a use when stretched out for tent material!"
+st.garrod = "No need to take your shoes off when\nvisiting Garrod's house. Just fly right in!\n\n"
+			.."Yup, flying on any of your mounts is\nquite within his house rules it seems.\n\n"
+			.."Just don't you dare try to mount up\nthough as he apparently draws the line\n"
 			.."at that. Go figure, whatever!"
 st.graveMoss = "This herb, unusually, has just the one\nlocation which is viable to farm...\n"
-				.."right here in the Raven Hill Cemetery!\n\nYes... I know you can find it elsewhere\n"
-				.."but emphasis on \"viable\" please! :)"
-st.highPointEK = "Highest peak in the Eastern Kingdoms.\n\n"
-					.."Hmmm... looks like another expedition\n"
-					.."wasn't quite as successful..."
-st.hiHoHiHo = "It's the Seven Dwarves Plus Two!\n\n"
-				.."Built in redundancy in case of\n"
-				.."problems along the way.\n\n"
-				.."Hang around a bit and you'll\n"
-				.."see what I mean!\n\n"
+			.."right here in the Raven Hill Cemetery!\n\nYes... I know you can find it elsewhere\n"
+			.."but emphasis on \"viable\" please! :)"
+st.highPointEK = "Highest peak in the Eastern Kingdoms.\n\nHmmm... looks like another expedition\n"
+			.."wasn't quite as successful..."
+st.hiHoHiHo = "It's the Seven Dwarves Plus Two!\n\nBuilt in redundancy in case of\n"
+			.."problems along the way.\n\nHang around a bit and you'll\nsee what I mean!\n\n"
 st.hogger = "Hogger  and Gammon, sitting in a tree...\n\nnot as such... but forgive the love-in...\n\n"
 			.."Hogger is to Alliance and Stormwind as\nGammon is to Horde and Orgrimmar.\n\n"
 			.."The NPC we love to bully. For the uninitiated\nI marked the map location"
-st.holdBreath = "Originally I was going to suggest that\n"
-				.."you dive down and check out the\n"
-				.."Quel'dorei (High Elf) ship wrecks.\n\n"
-				.."Then I realised that... breathing,\n"
-				.."submerged... not a problem here!"
+st.holdBreath = "Originally I was going to suggest that\nyou dive down and check out the\n"
+			.."Quel'dorei (High Elf) ship wrecks.\n\nThen I realised that... breathing,\n"
+			.."submerged... not a problem here!"
 st.ironforgeGuardPatrol = "There's a solitary Ironforge Guard patrolling\n"
-							.."the mountain top. Guess you never know\n"
-							.."who might need directions.\n\n"
-							.."Incredibly, the guard is able to walk\n"
-							.."inclines that no other person dare try!"
+			.."the mountain top. Guess you never know\nwho might need directions.\n\n"
+			.."Incredibly, the guard is able to walk\ninclines that no other person dare try!"
 st.jeremiahSeely = "Such a chill place to while away your time!\n\n"
-					.."Oh... the matter of Jeremiah. Once upon a time he\n"
-					.."sold the \"Tome of the Clear Mind\", which hapless\n"
-					.."adventurers like you and I would use to reset our\n"
-					.."talents. No wonder it was a best seller!\n\n"
-					.."I've a feeling Jeremiah is not so pleased with the\n"
-					.."author(s) of the Steamy Romance Novel series!"
-st.kibler = "Kibler has a storied history. These days,\n"
-			.."he offers one last quest in the Burning\n"
-			.."Steppes before you are sent on your\n"
-			.."way to the Swamp of Sorrows.\n\n"
-			.."The reward for all of your trouble is a\n"
-			.."cute little Tiny Flamefly (firefly) pet!\n"
-			.."It's for Horde only...\n\n"
-			.."Before Cataclysm he was much more\n"
-			.."generous. A Smoulderweb Hatchling\n"
-			.."AND a Worg Pup were your rewards and\n"
-			.."he didn't mind whose side you were on!\n\n"
-			.."Bonus Factoid!...\n\n"
-			.."A possible reward from the Terrokar\n"
-			.."fishing dailies is the \"Kibler's Bits\"\n"
-			.."recipe. If YOU eat the food then your\n"
-			.."pet will be bigger for 20 minutes!"
-st.lonesomeCoral = "So curious. Why is this coral / sea\n"
-				.."garden above all of the others?"
+			.."Oh... the matter of Jeremiah. Once upon a time he\n"
+			.."sold the \"Tome of the Clear Mind\", which hapless\n"
+			.."adventurers like you and I would use to reset our\n"
+			.."talents. No wonder it was a best seller!\n\n"
+			.."I've a feeling Jeremiah is not so pleased with the\n"
+			.."author(s) of the Steamy Romance Novel series!"
+st.kibler = "Kibler has a storied history. These days,\nhe offers one last quest in the Burning\n"
+			.."Steppes before you are sent on your\nway to the Swamp of Sorrows.\n\n"
+			.."The reward for all of your trouble is a\ncute little Tiny Flamefly (firefly) pet!\n"
+			.."It's for Horde only...\n\nBefore Cataclysm he was much more\n"
+			.."generous. A Smoulderweb Hatchling\nAND a Worg Pup were your rewards and\n"
+			.."he didn't mind whose side you were on!\n\nBonus Factoid!...\n\n"
+			.."A possible reward from the Terrokar\nfishing dailies is the \"Kibler's Bits\"\n"
+			.."recipe. If YOU eat the food then your\npet will be bigger for 20 minutes!"
+st.lonesomeCoral = "So curious. Why is this coral / sea\ngarden above all of the others?"
 st.mawOfTheVoid = "If you've quested through here then you already know...\n\n"
-				.."This one is for those who've newly arrived!...\n\n"
-				.."Try dismounting over the Maw! Later, speak to Bielara\n"
-				.."and she'll happily help you return!\n\n"
-				.."Bonus trivia time! After you've \"dropped in\", you'll\n"
-				.."notice Telarius Voidstrider, a Demon Hunter.\n\n"
-				.."Wait a moment, a Demon Hunter who first appeared\n"
-				.."during the Cataclysm? Sneaky telegraphing of things\n"
-				.."to come much later on!"
+			.."This one is for those who've newly arrived!...\n\n"
+			.."Try dismounting over the Maw! Later, speak to Bielara\n"
+			.."and she'll happily help you return!\n\n"
+			.."Bonus trivia time! After you've \"dropped in\", you'll\n"
+			.."notice Telarius Voidstrider, a Demon Hunter.\n\n"
+			.."Wait a moment, a Demon Hunter who first appeared\n"
+			.."during the Cataclysm? Sneaky telegraphing of things\nto come much later on!"
 st.miaMalkova = "((In 2021 Blizz, in response to the very serious\n"
-					.."controversies at the time, set about not just\n"
-					.."purging well known male personalities but also\n"
-					.."some in-game window dressing.\n\n"
-					.."A lot of innuendo was removed, for example.\n\n"
-					.."They missed this one. Or is it too obscure?\n\n"
-					.."Mia Malkova is a famous Twitch streamer and\n"
-					.."is partnered to Rich Campbell, formerly of\n"
-					.."OTK.\n\n"
-					.."Her IRL in-game character is also a Nelf.\n\n"
-					.."I don't dare talk about OnlyFans, her NSFW\n"
-					.."Twitch account or the videos she made before\n"
-					.."she retired from that industry.\n\n"
-					.."Her bf Rich is worth researching too for his\n"
-					.."sudden social silence in December 2022 due to\n"
-					.."a very very bad allegation))"
+			.."controversies at the time, set about not just\n"
+			.."purging well known male personalities but also\nsome in-game window dressing.\n\n"
+			.."A lot of innuendo was removed, for example.\n\n"
+			.."They missed this one. Or is it too obscure?\n\n"
+			.."Mia Malkova is a famous Twitch streamer and\n"
+			.."is partnered to Rich Campbell, formerly of\nOTK.\n\n"
+			.."Her IRL in-game character is also a Nelf.\n\n"
+			.."I don't dare talk about OnlyFans, her NSFW\n"
+			.."Twitch account or the videos she made before\nshe retired from that industry.\n\n"
+			.."Her bf Rich is worth researching too for his\n"
+			.."sudden social silence in December 2022 due to\na very very bad allegation))"
 st.miaMalkovaTitle = "Goldshire ERP Is Tame (In Comparison)"
 st.mechanoArachnid = "Might impressive Mechano-\narachnid this!\n\n"
-					.."But... where are the owners?\nWhat befell of them?\n\n"
-					.."Interestingly... it's identical to the\n"
-					.."extra large mechano-tanks at\n"
-					.."Crushcog's arsenal and... its\n"
-					.."almost all the way to Coldridge\nValley!\n\n"
-					.."You think the dwarven recruits\n"
-					.."were trying to steal this\ngnomish technology?"
+			.."But... where are the owners?\nWhat befell of them?\n\n"
+			.."Interestingly... it's identical to the\nextra large mechano-tanks at\n"
+			.."Crushcog's arsenal and... its\nalmost all the way to Coldridge\nValley!\n\n"
+			.."You think the dwarven recruits\nwere trying to steal this\ngnomish technology?"
 st.morgansPlotGlitch = "You've heard of glitching to fall through\n"
-						.."the world. Yes, it's all to do with the\n"
-						.."famous unfinished crypts below Karazhan.\n\n"
-						.."On this occasion we WON'T be glitching.\n\n"
-						.."Firstly strip off all your armour you\n"
-						.."shameless immodest wretch you!\n\n"
-						.."Next aggro and drag some Restless Spirits\n"
-						.."from over yonder back here and down the\n"
-						.."stairs to the gate below.\n\n"
-						.."Stand in the left-most corner and face\n"
-						.."the gate, being careful not to auto-\n"
-						.."attack the Spirits. Let them kill you.\n\n"
-						.."Spirit walk back to here and rez inside\n"
-						.."the iron gate. Voilà! Not even a glitch!"
+			.."the world. Yes, it's all to do with the\nfamous unfinished crypts below Karazhan.\n\n"
+			.."On this occasion we WON'T be glitching.\n\nFirstly strip off all your armour you\n"
+			.."shameless immodest wretch you!\n\nNext aggro and drag some Restless Spirits\n"
+			.."from over yonder back here and down the\nstairs to the gate below.\n\n"
+			.."Stand in the left-most corner and face\nthe gate, being careful not to auto-\n"
+			.."attack the Spirits. Let them kill you.\n\nSpirit walk back to here and rez inside\n"
+			.."the iron gate. Voilà! Not even a glitch!"
 st.nakada = "Just... volunteer!\n\nPssst... several outcomes, all harmless!"
 st.ollie = "Ollie is one spoilt pug!"
 st.petrifiedYojamba = "Careful of the basilisk. She scales up and packs a whallop!\n\n"
-						.."Oh... and all of those petrified Bloodscalp Shaman and\n"
-						.."Scavengers... I guess she permanently petrified them with\n"
-						.."her Crystaline Breath.\n\n"
-						.."Which figures because when your are taking a S.E.L.F.I.E.\n"
-						.."you do need everyone to be standing reeeeeal still now!\n\n"
-						.."Yeah she drops a quest item for that blessed selfie camera."
-st.planeCamp = "If Alliance, you may have flown over\n"
-			.."this camp many times while taxiing\n"
-			.."between Ironforge and Stormwind.\n\n"
-			.."What's curious is that the plane didn't\n"
-			.."crash land for once. In fact it's a nice\n"
-			.."safe little hideaway. So, where are the\n"
+			.."Oh... and all of those petrified Bloodscalp Shaman and\n"
+			.."Scavengers... I guess she permanently petrified them with\nher Crystaline Breath.\n\n"
+			.."Which figures because when your are taking a S.E.L.F.I.E.\n"
+			.."you do need everyone to be standing reeeeeal still now!\n\n"
+			.."Yeah she drops a quest item for that blessed selfie camera."
+st.planeCamp = "If Alliance, you may have flown over\nthis camp many times while taxiing\n"
+			.."between Ironforge and Stormwind.\n\nWhat's curious is that the plane didn't\n"
+			.."crash land for once. In fact it's a nice\nsafe little hideaway. So, where are the\n"
 			.."people who live here?"
 st.plugs = "I wonder what these two plugs are plugging?"
 st.questNextToFM = "Alliance can visit Ragged Jong\nfor a quest and...\n\n"
-					.."Oh wait. WTF! He's standing\nright next to a max level\n"
-					.."Horde Wind Rider Master.\n\n"
-					.."This is not going to finish well..."
-st.rixaTransport = "Yup! It's an entertaining flight down\n"
-					.."to Gol'Bolar Quarry way below!\n\n"
-					.."If you are wondering... why...\n"
-					.."It's probably because you are able\n"
-					.."to get a free flight up to here from\n"
-					.."Gol'Bolar and, well, you might not\n"
-					.."be able to fly yourself!\n\n"
-					.."Alliance only! Horde not welcome!"
-st.sandahl = "In the basement of this innocuous pub\n"
-				.."lurks a warlock coven, led by Sandahl.\n\n"
-				.."Of immense importance to Warlocks\n"
-				.."who crave green/fel fire for their magic!"
+			.."Oh wait. WTF! He's standing\nright next to a max level\n"
+			.."Horde Wind Rider Master.\n\nThis is not going to finish well..."
+st.rixaTransport = "Yup! It's an entertaining flight down\nto Gol'Bolar Quarry way below!\n\n"
+			.."If you are wondering... why...\nIt's probably because you are able\n"
+			.."to get a free flight up to here from\nGol'Bolar and, well, you might not\n"
+			.."be able to fly yourself!\n\nAlliance only! Horde not welcome!"
+st.sandahl = "In the basement of this innocuous pub\nlurks a warlock coven, led by Sandahl.\n\n"
+			.."Of immense importance to Warlocks\nwho crave green/fel fire for their magic!"
 st.senegal = "The Senegal pet, purchasable from Narkk, is\nthe\n\n"
-				.."    \"Favored pet of the goblins of Booty\n"
-				.."    Bay, this colorful bird is renowned for\n"
-				.."    its ability to count coins, tally budgets,\n"
-				.."    and lie about contracts.\"\n\n(Pet Journal)"
+			..colourHighlight .."    \"Favored pet of the goblins of Booty\n"
+			.."    Bay, this colorful bird is renowned for\n"
+			.."    its ability to count coins, tally budgets,\n"
+			.."    and lie about contracts.\"\n\n(Pet Journal)"
 st.seasonedAV = "The two Alterac Valley explorers are quietly famous.\n\n"
-				.."When defeated, they will drop Stormpike Commander's\n"
-				.."Flesh which you turn-in when you are running AV!\n\n"
-				.."Of course back in the day how would the Horde get\n"
-				.."to here easily, given that flying wasn't a thing!"
+			.."When defeated, they will drop Stormpike Commander's\n"
+			.."Flesh which you turn-in when you are running AV!\n\n"
+			.."Of course back in the day how would the Horde get\n"
+			.."to here easily, given that flying wasn't a thing!"
 st.secondHighestPeakEK = "The second highest peak in the Eastern Kingdoms.\n\n"
-							.."The highest? It's at 2 degrees from here.\n\n"
-							.."Oh, erm, you'll need my \"X and Y\" AddOn\n"
-							.."which shows degrees as well as coordinates!"
+			.."The highest? It's at 2 degrees from here.\n\n"
+			.."Oh, erm, you'll need my \"X and Y\" AddOn\n"
+			.."which shows degrees as well as coordinates!"
 st.shadowfangKeep = "Take a look around. Sure looks the same but...\n"
-					.."each doorway is boarded up and each alcove\n"
-					.."leads to nowhere!"
+			.."each doorway is boarded up and each alcove\nleads to nowhere!"
 st.shamefulTask = "Flagged for PvP but... taking a hit for the\n"
-					.."team and reluctantly, of course, choosing\n"
-					.."a rather safe task. Who are you kidding!\n"
-					.."Makes all the Horde PvPers look gutless! :D"
-st.sharpbeak = "Now that I've got your attention...\n\n"
-				.."Sharpbeak gives a free lift down to\n"
-				.."Fraggar Thundermantle's little camp,\n"
-				.."if you were wondering. I marked it\n"
-				.."on the map :)"
-st.sledCave = "Many have met the sledders but I bet\n"
-				.."you didn't know about their cave!"
+			.."team and reluctantly, of course, choosing\n"
+			.."a rather safe task. Who are you kidding!\n"
+			.."Makes all the Horde PvPers look gutless! :D"
+st.sharpbeak = "Now that I've got your attention...\n\nSharpbeak gives a free lift down to\n"
+			.."Fraggar Thundermantle's little camp,\nif you were wondering. I marked it\n"
+			.."on the map :)"
+st.sledCave = "Many have met the sledders but I bet\nyou didn't know about their cave!"
 st.sledFall = "Maybe a good place to wait, if you're patient!\n"
-				.."You never know what might slide in to view!"
-st.sledStart = "This is where it all begins!\n\n"
-				.."Why can't we join in? Looks fun!"
+			.."You never know what might slide in to view!"
+st.sledStart = "This is where it all begins!\n\nWhy can't we join in? Looks fun!"
+st.sparsePink = "Pink Shrooms in a far away place"
 st.stanLee = "Stanley is a homage to Stan Lee, the famous DC and\n"
-				.."Marvel comics writer/editor during the Silver Age\n"
-				.."of Comics.\n\n"
-				.."    \"With great power, comes great responsibility\"\n\n"
-				.."As a boy I would be extra excited to see his by-line\n"
-				.."on a story - I knew that it would indeed be epic!\n\n"
-				.."More personally, all the Silver Age comics sustained\n"
-				.."me during my hospitalisations and indeed holding\n"
-				.."and reading these comics in bed remains the happiest\n"
-				.."of times in my life. I could escape into their worlds!\n\n"
-				.."    \"Whosoever holds this hammer, if he be worthy,\n"
-				.."    shall possess the power of Thor\"\n\n"
-				.."The Stanley we see here is a very good likeness too!\n\n"
-				.."In his later years he was famous for cameos in MCU\n"
-				.."movies and his appearance here is a cameo too.\n\n"
-				.."Your character gets one chance only to witness his\n"
-				.."pathing and to see him yell \"Excelsior!\" At the end\n"
-				.."of the walk he will despawn forever.\n\n"
-				.."    \"Face front, true believers!\"\n\n"
-				.."What a fitting tribute!\n\n"
-				.."    \"Nuf said\""
+			.."Marvel comics writer/editor during the Silver Age\nof Comics.\n\n"
+			..colourHighlight .."    \"With great power, comes great responsibility\"\n\n"
+			..colourPlaintext .."As a boy I would be extra excited to see his by-line\n"
+			.."on a story - I knew that it would indeed be epic!\n\n"
+			.."More personally, all the Silver Age comics sustained\n"
+			.."me during my hospitalisations and indeed holding\n"
+			.."and reading these comics in bed remains the happiest\n"
+			.."of times in my life. I could escape into their worlds!\n\n"
+			..colourHighlight .."    \"Whosoever holds this hammer, if he be worthy,\n"
+			.."    shall possess the power of Thor\"\n\n"..colourPlaintext
+			.."The Stanley we see here is a very good likeness too!\n\n"
+			.."In his later years he was famous for cameos in MCU\n"
+			.."movies and his appearance here is a cameo too.\n\n"
+			.."Your character gets one chance only to witness his\n"
+			.."pathing and to see him yell \"Excelsior!\" At the end\n"
+			.."of the walk he will despawn forever.\n\n"..colourHighlight
+			.."    \"Face front, true believers!\"\n\n"..colourPlaintext
+			.."What a fitting tribute!\n\n    \"Nuf said\""
 st.stranglethornAmbience = "Just a really peacful location to level fishing. I can\n"
-							.."see the waterfall from here but the sound doesn't\n"
-							.."intrude. I can balance my audio ambience and music\n"
-							.."how it suits me and just while away the time!"
+			.."see the waterfall from here but the sound doesn't\n"
+			.."intrude. I can balance my audio ambience and music\n"
+			.."how it suits me and just while away the time!"
 st.sundayStrollTitle="A relaxing Sunday stroll.\nWhat could possibly go wrong?"
 st.sundayStroll ="I just love these pathways\nthat connect the zones! <3"
 st.theUnknownSoldier = "So many questions. The two Dark Portal guardians. Why?\n\n"
-						.."If lucky, the Unknown Soldier warrior will be present,\n"
-						.."undead and kneeling at his own tomb.\n\n"
-						.."There's a curious carved figure on a pedestal between\n"
-						.."the two statues, the meaning of which is mysterious.\n\n"
-						.."His armour is \"rare\" and the fact that the tomb is so\n"
-						.."grand - it's not just an earthen grave - makes me\n"
-						.."think that he was quite important. but... \"unknown\"?\n"
-						.."That much doesn't make sense.\n\n"
-						.."The location suggests that he died defending\n"
-						.."Duskwood from the scourge invasion.\n\n"
-						.."When you do kill him... he becomes a vrykul skeleton!\n\n"
-						.."By the way his armour is a Lieutenant Commander's\n"
-						.."Battlearmor / Grand Marshal's Battlegear combo. In\n"
-						.."other words he was a decent (PvP) fighter!"
+			.."If lucky, the Unknown Soldier warrior will be present,\n"
+			.."undead and kneeling at his own tomb.\n\n"
+			.."There's a curious carved figure on a pedestal between\n"
+			.."the two statues, the meaning of which is mysterious.\n\n"
+			.."His armour is \"rare\" and the fact that the tomb is so\n"
+			.."grand - it's not just an earthen grave - makes me\n"
+			.."think that he was quite important. but... \"unknown\"?\n"
+			.."That much doesn't make sense.\n\n"
+			.."The location suggests that he died defending\n"
+			.."Duskwood from the scourge invasion.\n\n"
+			.."When you do kill him... he becomes a vrykul skeleton!\n\n"
+			.."By the way his armour is a Lieutenant Commander's\n"
+			.."Battlearmor / Grand Marshal's Battlegear combo. In\n"
+			.."other words he was a decent (PvP) fighter!"
 st.thisSoCute = "Should I or shouldn't I...\n\n"
-				.."Often I reveal the details of the Vignette.\n"
-				.."Half the time you may not bother to fly there?\n\n"
-				.."Well, I just love these extras, these little\n"
-				.."glimpses of eveyday life in Azeroth.\n\n"
-				.."But this scene is just so cute yeah?\n\n"
-				.."What's up with Jessel? Exhausted from being\n"
-				.."a parent I guess!"
-st.virility = "Something quite remarkable\n"
-			.."about this statue. Did you\n"
-			.."notice his wood? Strategically\n"
-			.."placed wood to hide what would\n"
-			.."surely be his impressive...\n\n"
+			.."Often I reveal the details of the Vignette.\n"
+			.."Half the time you may not bother to fly there?\n\n"
+			.."Well, I just love these extras, these little\n"
+			.."glimpses of eveyday life in Azeroth.\n\n"
+			.."But this scene is just so cute yeah?\n\n"
+			.."What's up with Jessel? Exhausted from being\na parent I guess!"
+st.virility = "Something quite remarkable\nabout this statue. Did you\nnotice his wood? Strategically\n"
+			.."placed wood to hide what would\nsurely be his impressive...\n\n"
 			.."Did somebody say wood again?"
 st.wasItWorthTheTrip = "A quaint little grove of orange shrooms...\n\n"
-						.."I waited and waited for something to occur.\n"
-						.."I mean, you know about the Whispering\n"
-						.."Forest in Tirisfal Glades?\n\n"
-						.."Alas... nothing happened at all and in the\n"
-						.."end I simply enjoyed my shrooms.\n\n"
-						.."And that begged the question of was the trip\n"
-						.."all the way over to here even worth it?...\n\n"
-						.."Yeah! Just love the art for art's sake!"
-st.welcomeMachine = "The Cataclysm threw up some changes\n"
-						.."and good to see that the Hillsbrad\n"
-						.."story, which begins here, is so self\n"
-						.."aware.\n\n"
-						.."Do yourself a favour and complete\n"
-						.."this quest!"
-st.whiteOut = "Sadly, wouldn't be the first plane\n"
-				.."to slam into a mountain side"
-st.yarrr = "((Perfect for International Talk Like A\n"
-				.."Pirate Day... or any day for that matter..\n"
-				.."is my AddOn called \"Yarrr\" @ Curseforge.\n\n"
-				.."Lots of piratey themed random yells!\n\n"
-				.."Get it now while stocks last!))"
+			.."I waited and waited for something to occur.\n"
+			.."I mean, you know about the Whispering\nForest in Tirisfal Glades?\n\n"
+			.."Alas... nothing happened at all and in the\nend I simply enjoyed my shrooms.\n\n"
+			.."And that begged the question of was the trip\n"
+			.."all the way over to here even worth it?...\n\n"
+			.."Yeah! Just love the art for art's sake!"
+st.welcomeMachine = "The Cataclysm threw up some changes\nand good to see that the Hillsbrad\n"
+			.."story, which begins here, is so self\naware.\n\n"
+			.."Do yourself a favour and complete\nthis quest!"
+st.whiteOut = "Sadly, wouldn't be the first plane\nto slam into a mountain side"
+st.yarrr = "((Perfect for International Talk Like A\nPirate Day... or any day for that matter..\n"
+			.."is my AddOn called \"Yarrr\" @ Curseforge.\n\n"
+			.."Lots of piratey themed random yells!\n\nGet it now while stocks last!))"
 					
-points[ 14 ] = { -- Arathi Highlands
+points[ ns.classicCata and 1417 or 14 ] = { -- Arathi Highlands
 	[71870431] = { name="Egregious Ride Share Surge Pricing", tip=st.sharpbeak },
 	[77975666] = { name="The Forbidding Sea",
 					tip="Yup. An apt name for the\nzone. Yeah... I can see\n"
 						.."water everywhere from\nhere. Not" },
 	[89477333] = { name="What a Waist of Time!",
 					tip="Just love this area. A few critters about\n"
-						.."but nothing else really that's \"alive\".\n\n"
-						.."Have a look around!\n\n"
+						.."but nothing else really that's \"alive\".\n\nHave a look around!\n\n"
 						.."Don't hold your breath but... hoping\n"
 						.."to have an AddOn to help step you\n"
 						.."through that... \"waist of time\"!" },
 }
-points[ 15 ] = { -- Badlands
+points[ ns.classicCata and 1418 or 15 ] = { -- Badlands
 	[08747981] = { name="Now that was tricky!", tip=st.questNextToFM },
 	[09597845] = { name="Kibler's Exotic Pets", tip=st.kibler },
 }
-points[ 17 ] = { -- Blasted Lands
+points[ ns.classicCata and 1419 or 17 ] = { -- Blasted Lands
 	[14491467] = { name="Abandoned Kirin Tor Camp", tip=st.ebonchill },
 	[17382103] = { name="Morgan's Plot Glitch", tip=st.morgansPlotGlitch },
 	[27170144] = { name="Ghostly Trees", tip="The trees look positively tormented!" },
@@ -410,7 +353,7 @@ points[ 17 ] = { -- Blasted Lands
 	[45448612] = { name="Come, fly right in!", tip=st.garrod },
 	[64625555] = { name="Four Skeleton Friends", tip=st.fourSkeletons },
 }
-points[ 36 ] = { -- Burning Steppes
+points[ ns.classicCata and 1428 or 36 ] = { -- Burning Steppes
 	[02677869] = { name="Jeremiah Seely", tip=st.jeremiahSeely },
 	[03955678] = { name="Hi Ho Hi Ho It's Off to the Expedition We Go...", tip=st.hiHoHiHo },
 	[20292411] = { name="Don't Look Down!", tip=st.secondHighestPeakEK },
@@ -418,18 +361,17 @@ points[ 36 ] = { -- Burning Steppes
 	[54122388] = { name="Now that was tricky!", tip=st.questNextToFM },
 	[54952256] = { name="Kibler's Exotic Pets", tip=st.kibler },
 	[78295882] = { name="Blast Off!", tip="Whether you're Horde or Alliance (or even\n"
-										.."a confused Panda I suppose) Sharon has one\n"
-										.."helluva rocket ride for you to Bogpaddle\n\n"
-										.."It's a one way trip so do make sure that\n"
-										.."you're all done here!" },
+						.."a confused Panda I suppose) Sharon has one\n"
+						.."helluva rocket ride for you to Bogpaddle\n\n"
+						.."It's a one way trip so do make sure that\nyou're all done here!" },
 }
-points[ 42 ] = { -- Deadwind Pass
+points[ ns.classicCata and 1430 or 42 ] = { -- Deadwind Pass
 	[12694048] = { name="Dregoth", tip=st.dregoth, outdoors=true },
 	[24038144] = { name="The Slough of Dispair", tip="Let's not quibble about spelling errors\n"
 						.."in unfinished areas!\n\nSpeaking of unfinished... this pit is\n"
 						.."ready for the meat wagon deliveries!", outdoors=false },
 	[25707270] = { name="Mass Burials - Cheaper buy the dozen!", tip="How many stiffs do you\n"
-					.."think are in this mound?", outdoors=false },
+						.."think are in this mound?", outdoors=false },
 	[27762902] = { name="Abercrombie and Fitch", tip=st.abercrombieAndFitch, outdoors=true },
 	[28378144] = { name="The Upside-down Sinners", tip="They are in this pool. I counted 40", outdoors=false },
 	[29138132] = { name="The Upside-down Sinners", tip="Secret underwater passage here", outdoors=false },
@@ -442,17 +384,15 @@ points[ 42 ] = { -- Deadwind Pass
 	[35637344] = { name="Pauper's Walk side-passage", tip="Go this way, always left, to descend", outdoors=false },
 	[35656450] = { name="Abandoned Kirin Tor Camp", tip=st.ebonchill, outdoors=true },
 	[36336951] = { name="Pauper's Walk", outdoors=false, tip="Too poor for a grave or tomb?\n"
-					.."No worries!... We've plenty of\nopen pigeon holes for you!" },
+						.."No worries!... We've plenty of\nopen pigeon holes for you!" },
 	[36518091] = { name="Tome of the Unrepentant", outdoors=false,
 					tip="Spell checking wasn't a thing\nfor unfinished content" },
 	[37757706] = { name="Lucid Nightmare / Puzzler's Desire", outdoors=false, tip="On top of the bone pile will be the\n"
-					.."\"Puzzler's Desire\" container IF you\nhave completed the arduous \"Lucid\n"
-					.."Nightmare\" mount hunt puzzles!" },
+						.."\"Puzzler's Desire\" container IF you\nhave completed the arduous \"Lucid\n"
+						.."Nightmare\" mount hunt puzzles!" },
 	[37777329] = { name="Rez Location is Here", outdoors=false, tip="Only possible if you stood where I\n"
-												.."told you. Otherwise, rez inside the\n"
-												.."first room and drop down into the\n"
-												.."\"Well of the Forgotten\" and do\n"
-												.."the walkthrough in reverse!" },
+						.."told you. Otherwise, rez inside the\nfirst room and drop down into the\n"
+						.."\"Well of the Forgotten\" and do\nthe walkthrough in reverse!" },
 	[38617463] = { name="The Pit of Criminals", outdoors=false, tip="That's a bigger pile of bones than I saw\n"
 					.."in the Auchenai Crypts and Mana Tombs!\n\nIf you look up you will see that we are\n"
 					.."at the bottom of a dumping hole. That is\n\n"
@@ -462,7 +402,7 @@ points[ 42 ] = { -- Deadwind Pass
 	[52473432] = { name="Ariden's Camp", tip=st.aridensCamp, outdoors=true },
 	[54224511] = { name="Ghostly Trees", tip="The trees look positively tormented!", outdoors=true },
 }
-points[ 27 ] = { -- Dun Morogh
+points[ ns.classicCata and 1426 or 27 ] = { -- Dun Morogh
 	[18077480] = { name="High Admiral \"Shelly\" Jorrik <Retiree>",
 					tip="From the events of The Burning Crusade, up to the\n"
 						.."events of Legion, Jorrik could be found here.\n\n"
@@ -503,7 +443,7 @@ points[ 27 ] = { -- Dun Morogh
 	[68690342] = { name="Dwarven Farmland", tip=st.dwarvenFarm },
 	[75931680] = { name="All Aboard!", tip=st.rixaTransport },
 }
-points[ 47 ] = { -- Duskwood
+points[ ns.classicCata and 1431 or 47 ] = { -- Duskwood
 	[06042360] = { name="We really do love you Hogger. Kinda...", tip=st.hogger },
 	[06441595] = { name="Here's Looking at You!", tip=st.gnollTent },
 	[09571188] = { name="Here's Looking at You!", tip=st.gnollTent },
@@ -516,7 +456,7 @@ points[ 47 ] = { -- Duskwood
 	[98153599] = { name="I Sit Upon the Hill of Shame\nA Shameful Task Chose I", tip=st.shamefulTask },
 	[98657667] = { name="Morgan's Plot Glitch", tip=st.morgansPlotGlitch },
 }
-points[ 23 ] = { -- Eastern Plaguelands
+points[ ns.classicCata and 1423 or 23 ] = { -- Eastern Plaguelands
 	[05332745] = { name="The wall!", tip="Travelling north I hit a wall right here" },
 	[07088583] = { name="Have a Look Around", tip=st.caerDarrow },
 	[15991428] = { name="The wall!", tip="Travelling north I hit a wall right here" },
@@ -536,10 +476,19 @@ points[ 23 ] = { -- Eastern Plaguelands
 						.."invisible area of the Outland continent.\n\n"
 						.."See it @ Hayven YT 9rFE8HzIijY @9:27))" },
 }
-points[ 37 ] = { -- Elwynn Forest
+points[ ns.classicCata and 1429 or 37 ] = { -- Elwynn Forest
 	[24939513] = { name="We really do love you Hogger. Kinda...", tip=st.hogger },
 	[25248918] = { name="Here's Looking at You!", tip=st.gnollTent },
 	[27678602] = { name="Here's Looking at You!", tip=st.gnollTent },
+	[39000200] = { name="Scenic Route Taxi", tip="((Ever noticed a wonky flight path or rather\n"
+				.."indirect pathing between points?\n\nThat was because the Vanilla WoW developers\n"
+				.."were trying to minimise frame rate stress by\nflying through low impact areas.\n\n"
+				.."Source: J Staats, The WoW Diary.\n\nMy own take is that the IF <-> SW path was\n"
+				.."additionly avoiding the zone immediately to\n"
+				.."the north of SW as its use was not decided\nupon. And it was untextured to boot!\n\n"
+				.."As gorgeous as the scenic route is, it wears\n"
+				.."thin by the tenth iteration, as we head to the\n"
+				.."refridgerator or take a toilet break))" },
 	[40406390] = { name="Four Children", tip=st.fourChildren },
 	[41786950] = { name="Step right up!", tip=st.darkmoonPortalA },
 	[44205330] = { name="The Cat Lady", tip=st.catLady },
@@ -576,12 +525,12 @@ points[ 37 ] = { -- Elwynn Forest
 							.."((Named after Terry Jones and Michael Palin))" },
 	[88933005] = { name="Plugs", tip=st.plugs },
 }
-points[ 94 ] = { -- Eversong Woods
+points[ ns.classicCata and 1941 or 94 ] = { -- Eversong Woods
 	[21489502] = { name="Don't hold your breath. Erm...", tip=st.holdBreath },
 	[27861133] = { name="Lonesome Coral?", tip=st.lonesomeCoral },
 	[40871596] = { name="This is just so cute!", tip=st.thisSoCute },
 }
-points[ 95 ] = { -- Ghostlands
+points[ ns.classicCata and 1942 or 95 ] = { -- Ghostlands
 	[07941568] = { name="Don't hold your breath. Erm...", tip=st.holdBreath },
 	[10967877] = { name="The wall!", tip="Travelling south I hit a wall right here" },
 	[12072438] = { name="Moonwells of the Ghostlands",
@@ -603,13 +552,13 @@ points[ 95 ] = { -- Ghostlands
 						.."no doubt had good cause to leave rapidly.\n\n"
 						.."Perhaps something from over\nyonder at The Dead Scar?" },
 }
-points[ 25 ] = { -- Hillsbrad Foothills
-	[02725551] = { name="Paint it Pink... Just a Little Bit", tip=st.sparsePink },
+points[ ns.classicCata and 1424 or 25 ] = { -- Hillsbrad Foothills
 	[03635215] = { name="It's the Same But It Isn't!", tip=st.shadowfangKeep },
+	[05774754] = { name="Paint it Pink... Just a Little Bit", tip=st.sparsePink },
 	[89393084] = { name=st.sundayStrollTitle, tip=st.sundayStroll },
 	[90960258] = { name="Have a Look Around", tip=st.caerDarrow },
 }
-points[ 48 ] = { -- Loch Modan
+points[ ns.classicCata and 1432 or 48 ] = { -- Loch Modan
 	[96943269] = { name=st.miaMalkovaTitle, tip=st.miaMalkova },
 }
 points[ 469 ] = { -- New Tinkertown
@@ -617,7 +566,7 @@ points[ 469 ] = { -- New Tinkertown
 	[75501406] = { name="Three Minute Pause!", tip=st.sledFall },
 	[97766999] = { name="Mechano-arachnid", tip=st.mechanoArachnid },
 }
-points[ 50 ] = { -- Northern Stranglethorn
+points[ ns.classicCata and 1434 or 50 ] = { -- Northern Stranglethorn
 	[02221279] = { name="Exit guaranteed! Entrance? Not so much!", tip=st.deadminesExit },
 	[12063055] = { name="Hold real still now and say \"cheese\"...", tip=st.petrifiedYojamba },
 	[13051727] = { name="Exit from Ironclad Cove", tip=st.defiasGate },
@@ -625,7 +574,7 @@ points[ 50 ] = { -- Northern Stranglethorn
 	[19530403] = { name="Here's Looking at You!", tip=st.gnollTent },
 	[20720108] = { name="Here's Looking at You!", tip=st.gnollTent },
 	[23330282] = { name="Here's Looking at You!", tip=st.gnollTent },
-	[74307900] = { name="Stranglethorn Ambience & Fishing", tip=stranglethornAmbience },
+	[74307900] = { name="Stranglethorn Ambience & Fishing", tip=st.stranglethornAmbience },
 	[75883192] = { name="Black Ice - A VISIBLE Ring", tip=st.blackIce },
 	[87170293] = { name="Morgan's Plot Glitch", tip=st.morgansPlotGlitch },
 }
@@ -633,7 +582,7 @@ points[ 425 ] = { -- Northshire
 	[19229327] = { name="The Cat Lady", tip=st.catLady },
 	[76001040] = { name="Jeremiah Seely", tip=st.jeremiahSeely },
 }
-points[ 49 ] = { -- Redridge
+points[ ns.classicCata and 1433 or 49 ] = { -- Redridge Mountains
 	[02800704] = { name="Plugs", tip=st.plugs },
 	[27974819] = { name="Plugs", tip="Suppose this is where all the kids hang out to go fishin' I guess!" },
 	[81003825] = { name="Oh You'll Take the High Road\nAnd I'll Take the Low Road...",
@@ -646,13 +595,13 @@ points[ 49 ] = { -- Redridge
 						.."(I didn't forget Sharon's rocket ride, sigh)"
  },
 }
-points[ 32 ] = { -- Searing Gorge
+points[ ns.classicCata and 1427 or 32 ] = { -- Searing Gorge
 	[20360403] = { name="Nice landing!", tip=st.planeCamp },
 	[35019356] = { name="Don't Look Down!", tip=st.secondHighestPeakEK },
 	[82819324] = { name="Now that was tricky!", tip=st.questNextToFM },
 	[83979137] = { name="Kibler's Exotic Pets", tip=st.kibler },
 }
-points[ 21 ] = { -- Silverpine Forest
+points[ ns.classicCata and 1421 or 21 ] = { -- Silverpine Forest
 	[37344415] = { name="May I Have a Water Totem Please?",
 					tip="A long, long time ago certain classes\n"
 						.."had to run around a bit to earn certain\n"
@@ -661,14 +610,13 @@ points[ 21 ] = { -- Silverpine Forest
 						.."Tiev here, for example, no longer has any\n"
 						.."relevance.\n\n"
 						.."Fondly (?) remembered by Horde Shaman!" },
-	[41257089] = { name="Paint it Pink... Just a Little Bit", tip=st.sparsePink },
+	[44766168] = { name="Paint it Pink... Just a Little Bit", tip=st.sparsePink },
 	[42306700] = { name="It's the Same But It Isn't!", tip=st.shadowfangKeep },
 }
-points[ 84 ] = { -- Stormwind
+points[ ns.classicCata and 1453 or 84 ] = { -- Stormwind City
 	[42348168] = { npc=5496, name="I'm Green With Envy!", tip=st.sandahl },
-	[42807640] = { item=134831, npc=130828,
-					tip="Gordon Mackellar - Toy Boy\n\n"
-						.."He's inside the Pyrotechnics shop.\n\n" ..st.doomsayersRobes
+	[42807640] = { npc=130828, name="Gordon Mackellar - Toy Boy",
+					tip="He's inside the Pyrotechnics shop.\n\n" ..st.doomsayersRobes
 						.."\n\nWait, there's bonus trivia!!!\n\n"
 						.."You might not be in to toys. That's okay!\n\n"
 						.."Go there anyhow to see the crazy way he\n"
@@ -680,6 +628,7 @@ points[ 84 ] = { -- Stormwind
 						.."as the life of the great Varian Wyrnn is commemorated.\n\n"
 						.."At times melancholy, at times haunting, it's a fitting\n"
 						.."tribute to an incredible leader. Vale King Varian!\n\n"
+						..colourHighlight
 						.."    \124cFFFDD017My son, a terrible darkness has returned to our world.\n"
 						.."    As before, it seeks to annihilate all that we hold dear.\n"
 						.."    I go to face it, knowing I may not return.\n"
@@ -805,7 +754,7 @@ points[ 224 ] = { -- Stranglethorn Vale
 	[35957652] = { name="Arrrrgh It's a Pirate's Life!", tip=st.yarrr },
 	[37467779] = { name="A Pirate Shanty", tip=st.broadsideBetty },
 	[38947715] = { name="Beware of Parrot Poop on Your Shoulder", tip=st.senegal },
-	[65335061] = { name="Stranglethorn Ambience & Fishing", tip=stranglethornAmbience },
+	[65335061] = { name="Stranglethorn Ambience & Fishing", tip=st.stranglethornAmbience },
 	[66312116] = { name="Black Ice - A VISIBLE Ring", tip=st.blackIce },
 	[73370303] = { name="Morgan's Plot Glitch", tip=st.morgansPlotGlitch },
 	[82393546] = { name="Was It Worth the Trip?", tip=st.wasItWorthTheTrip },
@@ -817,7 +766,7 @@ points[ 467 ] = { -- Sunstrider Isle
 	[69802960] = { name="This is just so cute!", tip=st.thisSoCute },
 }
 
-points[ 51 ] = { -- Swamp of Sorrows
+points[ ns.classicCata and 1435 or 51 ] = { -- Swamp of Sorrows
 	[02555400] = { name="Ariden's Camp", tip=st.aridensCamp },
 	[04296474] = { name="Ghostly Trees", tip="The trees look positively tormented!" },
 	[73680928] = { name="Beach Party Tonight!",
@@ -835,9 +784,9 @@ points[ 210 ] = { -- The Cape of Stranglethorn
 	[37686807] = { name="Arrrrgh It's a Pirate's Life!", tip=st.yarrr },
 	[40187017] = { name="A Pirate Shanty", tip=st.broadsideBetty },
 	[42646910] = { name="Beware of Parrot Poop on Your Shoulder", tip=st.senegal },
-	[86472504] = { name="Stranglethorn Ambience & Fishing", tip=stranglethornAmbience },
+	[86472504] = { name="Stranglethorn Ambience & Fishing", tip=st.stranglethornAmbience },
 }
-points[ 26 ] = { -- The Hinterlands
+points[ ns.classicCata and 1425 or 26 ] = { -- The Hinterlands
 	[23943838] = { name=st.sundayStrollTitle, tip=st.sundayStroll },
 	[25920270] = { name="Have a Look Around", tip=st.caerDarrow },
 	[53276656] = { name="Egregious Ride Share Surge Pricing", tip=st.sharpbeak },
@@ -845,7 +794,7 @@ points[ 26 ] = { -- The Hinterlands
 						tip="Sharpbeak drops you here. It's a\n"
 						.."slow taxi, not worth it soz to say" },
 }
-points[ 18 ] = { -- Tirisfal Glades
+points[ ns.classicCata and 1420 or 18 ] = { -- Tirisfal Glades
 	[14565256] = { name="Somthing's Fishy!",
 					tip="A gnome skeleton with a dagger between the ribs.\n\n"
 					.."A well prepared / provisioned fishing setup. Related\n"
@@ -891,16 +840,20 @@ points[ 241 ] = { -- Twilight Highlands
 						.."Is patricide a thing at The Krazzworks?" },
 	[78411391] = { name="OH&S Meeting Today!", random=0.3, tip="How do management deal with OH&S issues?\n"
 						.."Did the worker representatives all \"fall\"?" },
+	[78507551] = { name="No Dice!", class="Rogue", tip="Rogues know a thing or two about five finger\n"
+						.."specials and the Highbank Marksmen have\n"
+						.."proven to be the best (albeit rarely) for rogues\nto lift a Loaded Gnomish Dice.\n\n"
+						.."(Aside from phasing, always hostile to Horde)" },
 	[79602083] = { name="This will be the best selfie!", random=0.4, tip="The only young \"victim\". The others\n"
 						.."are all aged. A red herring to throw\nus off the scent? Was she investigating\n"
 						.."the sad demise of the others?" },
 	[79961598] = { name="Your Number's Up!", random=0.4, tip="Interestingly the bodies are mostly of a\n"
 						.."similar age. A pact ritual or ritual culling?" },
 }
-points[ 90 ] = { -- Undercity
+points[ ns.classicCata and 1458 or 90 ] = { -- Undercity
 	[63842611] = { name="He has so much wood", tip=st.virility .."\n\n(Above in the Ruins)" },
 }
-points[ 22 ] = { -- Western Plaguelands
+points[ ns.classicCata and 1422 or 22 ] = { -- Western Plaguelands
 	[03635776] = { name="He has so much wood", tip=st.virility },
 	[32481149] = { name="The wall!", tip="Travelling north I hit a wall right here" },
 	[51961745] = { name="The wall!", tip="Travelling north I hit a wall right here" },
@@ -908,7 +861,7 @@ points[ 22 ] = { -- Western Plaguelands
 	[69526869] = { name="Have a Look Around", tip=st.caerDarrow },
 	[77880161] = { name="The wall!", tip="Travelling north I hit a wall right here" },
 }
-points[ 52 ] = { -- Westfall
+points[ ns.classicCata and 1436 or 52 ] = { -- Westfall
 	[38978427] = { name="Exit guaranteed! Entrance? Not so much!", tip=st.deadminesExit },
 	[51668952] = { name="Exit from Ironclad Cove", tip=st.defiasGate },
 	[56597024] = { name="Here's Looking at You!", tip=st.gnollTent },
@@ -922,7 +875,7 @@ points[ 52 ] = { -- Westfall
 	[82360076] = { name="Four Children", tip=st.fourChildren },
 	[83760636] = { name="Step right up!", tip=st.darkmoonPortalA },
 }
-points[ 56 ] = { -- Wetlands
+points[ ns.classicCata and 1437 or 56 ] = { -- Wetlands
 	[06679870] = { name="Return to Mulverick! (Erm... in AV)", tip=st.seasonedAV },
 	[07489345] = { name="Slip Slidin' Away", tip=st.sledStart },
 	[08409104] = { name="Meet Ollie!", tip=st.ollie },
@@ -932,6 +885,11 @@ points[ 56 ] = { -- Wetlands
 	[14869607] = { name="Glad You Made It!", tip=st.highPointEK },
 	[20256912] = { name="Dwarven Farmland", tip=st.dwarvenFarm },
 	[28828498] = { name="All Aboard!", tip=st.rixaTransport },
+	[37946217] = { name="Vanilla Notes", tip="((The original Zone landscapes were limited to just\n"
+			.."four textures per zone. Somehow I never noticed!\n\nSource: J Staats, The WoW Diary))" },
+	[39364345] = { name="Never Seen Until Flying", tip="Okay, originally we couldn't fly over here.\n"
+			.."so were these eggs here all along? Did they\n"
+			.."appear after the Cataclysm? Related to some\npost-Cataclysm quest?" },
 }
 
 --=======================================================================================================
@@ -940,348 +898,195 @@ points[ 56 ] = { -- Wetlands
 --
 --=======================================================================================================
 
-st.benched = "A lonesome bench on the border.\n\n"
-				.."To one side barren and cold.\n"
-				.."And on the other lush, green.\n"
-				.."The horizon to the left... Teldrassil.\n\n"
-				.."Perhaps. Depends really on your\n"
-				.."standing with Zidormi in Darkshore\n"
-				.."I'd suppose.\n\n"
-				.."Don't look down... scary!"
-st.bioshock = "Wait a moment... Big Papa, not \"Daddy\"\n"
-				.."and Andrew Ryan is \"Anderov Ryon\".\n"
-				.."Well that doesn't matter because I can\n"
-				.."see little Alice there... and we love\n"
-				.."the little sisters of Bioshock...\n\n"
-				.."Wait there's more! Some dialogue too!"
-st.boatAndSkulls = "Okay... a mysterious boat in a lake...\n\n"
-					.."A couple of mysterious skulls and no\n"
-					.."sign of whomever owned the boat...\n\n"
-					.."Dive below the surface... very spooky!\n\n"
-					.."Air bubbles as well? What the...!"
-st.camelBoast = "Yeah... probably a humble boast...\n\n"
-				.."This is where you get dumped when the\n"
-				.."swirling tornado from the Mysterious\n"
-				.."Camel Figurine whisks you away to your\n"
-				.."destiny in Feralas.\n\n"
-				.."((Oh did I say already that I have an\n"
-				.."AddOn too for farming the Figurine? It's\n"
-				.."called \"HandyNotes - Camel\" of course!))"
+st.benched = "A lonesome bench on the border.\n\nTo one side barren and cold.\n"
+			.."And on the other lush, green.\nThe horizon to the left... Teldrassil.\n\n"
+			.."Perhaps. Depends really on your\nstanding with Zidormi in Darkshore\nI'd suppose.\n\n"
+			.."Don't look down... scary!"
+st.bioshock = "Wait a moment... Big Papa, not \"Daddy\"\nand Andrew Ryan is \"Anderov Ryon\".\n"
+			.."Well that doesn't matter because I can\nsee little Alice there... and we love\n"
+			.."the little sisters of Bioshock...\n\nWait there's more! Some dialogue too!"
+st.boatAndSkulls = "Okay... a mysterious boat in a lake...\n\nA couple of mysterious skulls and no\n"
+			.."sign of whomever owned the boat...\n\nDive below the surface... very spooky!\n\n"
+			.."Air bubbles as well? What the...!"
+st.camelBoast = "Yeah... probably a humble boast...\n\nThis is where you get dumped when the\n"
+			.."swirling tornado from the Mysterious\nCamel Figurine whisks you away to your\n"
+			.."destiny in Feralas.\n\n((Oh did I say already that I have an\n"
+			.."AddOn too for farming the Figurine? It's\ncalled \"HandyNotes - Camel\" of course!))"
 st.canoe = "I love the location and especially\n"
 			.."the placement of this canoe. Perfect!"
 st.crashLanded = "This is where draenei \"wake up\"\nwhen they begin life on Azeroth"
-st.cultivation = "With your Tauren \"cultivation\" racial\n"
-					.."bonus you'll have plenty of \"buffalo\"\n"
-					.."to place in this here \"peace\" pipe"
-st.dadanga = "Prior to that questionable \"Cataclysm\"...\n"
-				.."there lived an ancient kodo named\n"
-				.."\"Dadanga\".\n\n"
-				.."She was a harmless but hungry old girl.\n"
-				.."You could bring her Bloodpetal Sprouts,\n"
-				.."15 each time, and she would reward you\n"
-				.."with a box of consumables and, if you\n"
-				.."were lucky, the excellent Elixir of\n"
-				.."Brute Force recipe.\n\n"
-				.."Here now lies her grave, and there's a\n"
-				.."one time reward for laying Bloodpetal\n"
-				.."Sprouts on her grave.\n\n"
-				.."R.I.P. Dadanga, needlessly killed off!\n\n"
-				.."((Dodongo from the Zelda universe.\n"
-				.."Link(en) was here too. In fact this\n"
-				.."sub-zone had numerous references!))"
-st.dangui = "Geenia is the only vendor of the \"Formal\n"
-				.." Dangui\" and it's only rarely stocked.\n\n"
-				.."It's worth a look see if flying past.\n\n"
-				.."Might fetch a million on the AH as it's\n"
-				.."prized by collectors and RPers alike!"
+st.cultivation = "With your Tauren \"cultivation\" racial\nbonus you'll have plenty of \"buffalo\"\n"
+			.."to place in this here \"peace\" pipe"
+st.dadanga = "Prior to that questionable \"Cataclysm\"...\nthere lived an ancient kodo named\n"
+			.."\"Dadanga\".\n\nShe was a harmless but hungry old girl.\n"
+			.."You could bring her Bloodpetal Sprouts,\n15 each time, and she would reward you\n"
+			.."with a box of consumables and, if you\nwere lucky, the excellent Elixir of\n"
+			.."Brute Force recipe.\n\nHere now lies her grave, and there's a\n"
+			.."one time reward for laying Bloodpetal\nSprouts on her grave.\n\n"
+			.."R.I.P. Dadanga, needlessly killed off!\n\n((Dodongo from the Zelda universe.\n"
+			.."Link(en) was here too. In fact this\nsub-zone had numerous references!))"
+st.dangui = "Geenia is the only vendor of the \"Formal\nDangui\" and it's only rarely stocked.\n\n"
+			.."It's worth a look see if flying past.\n\nMight fetch a million on the AH as it's\n"
+			.."prized by collectors and RPers alike!"
 st.danguiTitle = "Formally Rare"
-st.darkmoonPortalH = "The Darkmoon Faire portal is exactly\n"
-				.."at this location when it comes around\n"
-				.."each month. Before you go rushing in,\n"
-				.."grab some Simple Flour from Shadi\n"
-				.."Mistrunner on the main Thunderbluff\n"
-				.."mesa. And any other materials you'll\n"
-				.."need for those sweet profession skill\n"
-				.."jumps!"
-st.dartingHatchling = "A set of easy to acquire and oh so\n"
-						.."adorable raptor hatchling pets is\n"
-						.."available - you just need to know\n"
-						.."where to look!\n\n"
-						.."The Darting hatchling is arguably\n"
-						.."the easiest to acquire and it's\n"
-						.."around here in a nest!\n\n"
-						.."((I have a dedicated AddOn for\n"
-						.."obtaining four of these pets. It's\n"
-						.."HandyNotes - Adorable Raptor\n"
-						.."Hatchlings @ Curseforge. Enjoy!))"
-st.diedAlone = "What strange fate caused this person\n"
-				.."to die a lonely death?\n\n"
-				.."Nearby a hut, three carefully dug and\n"
-				.."marked graves...\n\n"
-				.."But why come to here and with a\n"
-				.."scoped rifle to end it all?"
-st.digRat = "Sigh. So you killed the Dig Rat critter and\n"
-				.."finally you scored a Plump Dig Rat? Great!\n\n"
-				.."But what's that... it just gets consumed?\n\n"
-				.."Sigh. Read. The. Item. Text.\n\n"
-				.."(1) Setup a cooking fire. (2) Use it.\n\n"
-				.."You're welcome! Recipe learnt!"
+st.darkmoonPortalH = "The Darkmoon Faire portal is exactly\nat this location when it comes around\n"
+			.."each month. Before you go rushing in,\ngrab some Simple Flour from Shadi\n"
+			.."Mistrunner on the main Thunderbluff\nmesa. And any other materials you'll\n"
+			.."need for those sweet profession skill\njumps!"
+st.dartingHatchling = "A set of easy to acquire and oh so\nadorable raptor hatchling pets is\n"
+			.."available - you just need to know\nwhere to look!\n\nThe Darting hatchling is arguably\n"
+			.."the easiest to acquire and it's\naround here in a nest!\n\n"
+			.."((I have a dedicated AddOn for\nobtaining four of these pets. It's\n"
+			.."HandyNotes - Adorable Raptor\nHatchlings @ Curseforge. Enjoy!))"
+st.diedAlone = "What strange fate caused this person\nto die a lonely death?\n\n"
+			.."Nearby a hut, three carefully dug and\nmarked graves...\n\n"
+			.."But why come to here and with a\nscoped rifle to end it all?"
+st.digRat = "Sigh. So you killed the Dig Rat critter and\nfinally you scored a Plump Dig Rat? Great!\n\n"
+			.."But what's that... it just gets consumed?\n\nSigh. Read. The. Item. Text.\n\n"
+			.."(1) Setup a cooking fire. (2) Use it.\n\nYou're welcome! Recipe learnt!"
 st.digRatTitle = "Adiposity-Based Chronic Disease Dig Rat\n"
-					.."Erm... Sub-Prime Dimensioned Dig Rat\n"
-					.."Oh, ah... Delightfully Rubenesque Dig Rat"
-st.donQuijote = "Maximillian of Northshire...\n\n"
-					.."As little as possible needs to be said about\n"
-					.."this incorrigible fop, for fear of spoiling\n"
-					.."arguably the funniest quest chain this side\n"
-					.."of Johnny Awesome's twinked bear ass"
+			.."Erm... Sub-Prime Dimensioned Dig Rat\nOh, ah... Delightfully Rubenesque Dig Rat"
+st.donQuijote = "Maximillian of Northshire...\n\nAs little as possible needs to be said about\n"
+			.."this incorrigible fop, for fear of spoiling\n"
+			.."arguably the funniest quest chain this side\nof Johnny Awesome's twinked bear ass"
 st.donQuijoteTitle = "Of Sancho Panza, Dulcinea... and Maximillian"
 st.doubleCompanions = "Within Azeroth we know that sometimes\n"
-						.."a mob might, if we are really lucky, drop\n"
-						.."a cool companion / pet.\n\n"
-						.."The Noxious Whelps in Feralas have a\n"
-						.."chance to drop TWO companions!\n\n"
-						.."The gorgeous Sprite Darter (egg) and the\n"
-						.."adorable Emerald Whelpling.\n\n"
-						.."At 1 in 10,000 and 1 in 1,000 respectively\n"
-						.."it ain't going to be easy though!\n\n"
-						.."Wait, there's more! Technically, THREE\n"
-						.."pets as the \"OOX-22/FE Distress Beacon\"\n"
-						.."leads to the Mechanical Chicken and it has\n"
-						.."a 1 in 500 drop chance too!"
-st.drazzilb = "One step forward is\n"
-				.."two steps backward,\n"
-				.."Say it anyway but\n"
-				.."It's always awkward"
-st.fallaSagewind = "There can't be too many Tauren who are\n"
-			.."friendly to both Horde and Alliance!\n\n"
-			.."Prior to The Cataclysm she was part of a\n"
-			.."quest chain, arising from your adventures\n"
-			.."within the Wailing Caverns (below).\n\n"
-			.."She'd send you to Hamuul Runetotem in\n"
-			.."Thunderbluff or Mathrengyl Bearwalker\n"
-			.."in Darnassus...\n\n"
-			.."They would look at the \"Nightmare Shard\"\n"
-			.."you had delivered and then pronounce...\n"
-			.."\"This shard holds great secrets; it is the\n"
-			.."pure essence of the Emerald Dream.\n"
-			.."However, what I see in this shard is not\n"
-			.."a dream; one would call this sort of a\n"
-			.."vision a nightmare\".\n\n"
-			.."((As this quest chain was removed from\n"
-			.."WoW then it's safe to say that these\n"
-			.."remarks are no longer canon!))"
-st.feralas = "Map sub-zone text says we are in Feralas.\n"
-				.."The music checks. The ambience checks.\n\n"
-				.."One small detail though...\n\n"
-				.."We ain't in Feralas!"
-st.bbqFish = "Just for fun, while researching my\n"
-				.."Cod Do Batter fishing AddOn...\n\n"
-				.."(shameless self promotion lol)\n\n"
-				.."I thought I'd chance my arm...\n\n"
-				.."Result was mostly junk, some\n"
-				.."coal and a few Volatile Fire and\n"
-				.."several Melted Cleavers worth\n"
-				.."about 14 gold each!"
+			.."a mob might, if we are really lucky, drop\na cool companion / pet.\n\n"
+			.."The Noxious Whelps in Feralas have a\nchance to drop TWO companions!\n\n"
+			.."The gorgeous Sprite Darter (egg) and the\nadorable Emerald Whelpling.\n\n"
+			.."At 1 in 10,000 and 1 in 1,000 respectively\nit ain't going to be easy though!\n\n"
+			.."Wait, there's more! Technically, THREE\npets as the \"OOX-22/FE Distress Beacon\"\n"
+			.."leads to the Mechanical Chicken and it has\na 1 in 500 drop chance too!"
+st.drazzilb = "One step forward is\ntwo steps backward,\nSay it anyway but\nIt's always awkward"
+st.fallaSagewind = "There can't be too many Tauren who are\nfriendly to both Horde and Alliance!\n\n"
+			.."Prior to The Cataclysm she was part of a\nquest chain, arising from your adventures\n"
+			.."within the Wailing Caverns (below).\n\nShe'd send you to Hamuul Runetotem in\n"
+			.."Thunderbluff or Mathrengyl Bearwalker\nin Darnassus...\n\n"
+			.."They would look at the \"Nightmare Shard\"\nyou had delivered and then pronounce...\n"
+			.."\"This shard holds great secrets; it is the\npure essence of the Emerald Dream.\n"
+			.."However, what I see in this shard is not\na dream; one would call this sort of a\n"
+			.."vision a nightmare\".\n\n((As this quest chain was removed from\n"
+			.."WoW then it's safe to say that these\nremarks are no longer canon!))"
+st.feralas = "Map sub-zone text says we are in Feralas.\nThe music checks. The ambience checks.\n\n"
+			.."One small detail though...\n\nWe ain't in Feralas!"
+st.bbqFish = "Just for fun, while researching my\nCod Do Batter fishing AddOn...\n\n"
+			.."(shameless self promotion lol)\n\nI thought I'd chance my arm...\n\n"
+			.."Result was mostly junk, some\ncoal and a few Volatile Fire and\n"
+			.."several Melted Cleavers worth\nabout 14 gold each!"
 st.bbqFishTitle = "Great Place for a BBQ!"
-st.gloomWeed = "You can appreciate why Tauren are\n"
-				.."so chill and high up on these mesa.\n\n"
-				.."By all reports they pack the best\n"
-				.."Tirisfal Glades Gloom Weed into the\n"
-				.."pipe, hence the acrid red fumes.\n\n"
-				.."Do as a famous leader once\n"
-				.."advised... Don't inhale!"
-st.groundClutter = "Just this once, max out \"Ground Clutter\".\n"
-					.."You're welcome! :)\n\n"
-					.."((Here we go again... I have an AddOn for\n"
-					.."that too so you may seemlessly switch\n"
-					.."between gorgeous vistas such as here or\n"
-					.."denuded landscapes for farming hard to\n"
-					.."see stuff))"
-st.hastenExtinction = "Prince Lakma, The Last Chimaerok\n"
-						.."patrols through here. The last\n"
-						.."of his kind. So sad.\n\n"
-						.."Go on! You know you wanna do it!\n\n"
-						.."In for the kill! The very last one!\n\n"
-						.."Maybe some chimaerok tenderloin\n"
-						.."will drop too! Nice!\n\n"
-						.."Only problem is that when that\n"
-						.."Cataclysm happened the recipe\n"
-						.."disappeared. It's useless meat!\n\n"
-						.."Doesn't it feel so good?"
-st.hawkwind = "In this \"space\" on the \"rock\" is\n"
-				.."Grull Hawkwind!\n\n"
-				.."In the Hall of the Mountain Grill you'll\n"
-				.."come across Astounding Sounds,\n"
-				.."Amazing Music. Is it already 25 Years\n"
-				.."On since this Warrior on the Edge of\n"
-				.."Time went In Search of Space?\n\n"
-				.."You'll not find an Electric Tepee here\n"
-				.."or in Thunder Bluff or Distant Horizons.\n\n"
-				.."And when Hawkwind goes Into The\n"
-				.."Woods we know one thing: The Future\n"
-				.."Never Waits so Take Me to Your Future!"
+st.gloomWeed = "You can appreciate why Tauren are\nso chill and high up on these mesa.\n\n"
+			.."By all reports they pack the best\nTirisfal Glades Gloom Weed into the\n"
+			.."pipe, hence the acrid red fumes.\n\nDo as a famous leader once\nadvised... Don't inhale!"
+st.groundClutter = "Just this once, max out \"Ground Clutter\".\nYou're welcome! :)\n\n"
+			.."((Here we go again... I have an AddOn for\nthat too so you may seemlessly switch\n"
+			.."between gorgeous vistas such as here or\ndenuded landscapes for farming hard to\n"
+			.."see stuff))"
+st.hastenExtinction = "Prince Lakma, The Last Chimaerok\npatrols through here. The last\n"
+			.."of his kind. So sad.\n\nGo on! You know you wanna do it!\n\n"
+			.."In for the kill! The very last one!\n\nMaybe some chimaerok tenderloin\n"
+			.."will drop too! Nice!\n\nOnly problem is that when that\nCataclysm happened the recipe\n"
+			.."disappeared. It's useless meat!\n\nDoesn't it feel so good?"
+st.hawkwind = "In this \"space\" on the \"rock\" is\nGrull Hawkwind!\n\n"
+			.."In the Hall of the Mountain Grill you'll\ncome across Astounding Sounds,\n"
+			.."Amazing Music. Is it already 25 Years\nOn since this Warrior on the Edge of\n"
+			.."Time went In Search of Space?\n\nYou'll not find an Electric Tepee here\n"
+			.."or in Thunder Bluff or Distant Horizons.\n\nAnd when Hawkwind goes Into The\n"
+			.."Woods we know one thing: The Future\nNever Waits so Take Me to Your Future!"
 st.hyjalHeights = "Hyjal is already mightily elevated,\n"
-					.."so who'd have expected this pesky\n"
-					.."peak to be in the way?\n\n"
-					.."At least the hapless pilot can be\n"
-					.."remembered for discovering the\n"
-					.."tallest point in Hyjal!"
+			.."so who'd have expected this pesky\npeak to be in the way?\n\n"
+			.."At least the hapless pilot can be\nremembered for discovering the\n"
+			.."tallest point in Hyjal!"
 st.hyjalHeightsTitle = "Dang! Who Put That There?"				
-st.justTheTip = "((In November 2021 Blizzard, in order to\n"
-				.."quieten public sentiment over a scandal,\n"
-				.."decided to \"clean up\" parts of the game\n"
-				.."(as well as other actions).\n\n"
-				.."A couple of quests involving Harrison\n"
-				.."Ford were cleansed of overt innuendo.\n\n"
-				.."Previously, taken as a whole, the quest\n"
-				.."titles alluded to a teenage \"first\n"
-				.."experiment\" ;) cliche.\n\n"
-				.."With the renamings of \"Just the Tip\"\n"
-				.."to \"A Strange Disc\" and \"Premature\n"
-				.."Explosionation\" to \"Exploding\n"
-				.."Through\", the innuendo within the\n"
-				.."quest chain was effectively disarmed))"
+st.justTheTip = "((In November 2021 Blizzard, in order to\nquieten public sentiment over a scandal,\n"
+			.."decided to \"clean up\" parts of the game\n(as well as other actions).\n\n"
+			.."A couple of quests involving Harrison\nFord were cleansed of overt innuendo.\n\n"
+			.."Previously, taken as a whole, the quest\ntitles alluded to a teenage \"first\n"
+			.."experiment\" ;) cliche.\n\nWith the renamings of \"Just the Tip\"\n"
+			.."to \"A Strange Disc\" and \"Premature\nExplosionation\" to \"Exploding\n"
+			.."Through\", the innuendo within the\nquest chain was effectively disarmed))"
 st.justTheTipTitle = "Just the Tip. Promise.\nSee How it Feels..."
-st.korkronLoot = "Okay... so you're new to Azeroth and\n"
-					.."somewhat povo? I get that... you don't\n"
-					.."have the gold to throw around. Taraezor\n"
-					.."to the rescue!\n\n"
-					.."The Kor'kron mobs here can drop a cool\n"
-					.."24 slot \"Kor'kron Supply Satchel\" and\n"
-					.."an incredible three-headed hydra pet,\n"
-					.."Gahz'rooki.\n\n"
-					.."The bad news: 1 in 250 and 1 in 1,000\n"
-					.."drop chances respectively"
+st.korkronLoot = "Okay... so you're new to Azeroth and\nsomewhat povo? I get that... you don't\n"
+			.."have the gold to throw around. Taraezor\nto the rescue!\n\n"
+			.."The Kor'kron mobs here can drop a cool\n24 slot \"Kor'kron Supply Satchel\" and\n"
+			.."an incredible three-headed hydra pet,\nGahz'rooki.\n\n"
+			.."The bad news: 1 in 250 and 1 in 1,000\ndrop chances respectively"
 st.lakeDumont = "Well that's what I call the island!!!\n\n"
-				.."Seems the sole purpose of all these NPCs\n"
-				.."is to recognise Blizzard employees who\n"
-				.."contributed in some way!\n\n"
-				.."Could the fire inside the ruins be a\n"
-				.."pyre for, erm, less celebrated ex-staff?"
+			.."Seems the sole purpose of all these NPCs\nis to recognise Blizzard employees who\n"
+			.."contributed in some way!\n\nCould the fire inside the ruins be a\n"
+			.."pyre for, erm, less celebrated ex-staff?"
 st.loneSurvivor = "It's highly likely this poor person thinks that\n"
-				.."only he/she survived. Just over yonder is the\n"
-				.."bustling Ammen Vale settlement and...\n\n"
-				.."decades later this poor soul is discovered?"
-st.marioLuigi = "Two towers... Muigin in one, Larion\n"
-				.."in the other. Look closely at what\n"
-				.."they are wearing!\n\n"
-				.."Now, swap the \"L\" and \"M\".\n"
-				.."Got it yet? No?\n"
-				.."Okay... drop the \"n\" too!\n\n"
-				.."Prior to the Cataclysm, adventurers\n"
-				.."reported that they would hit for 64\n"
-				.."damage.\n\n"
-				.."((Did you nintendo that amount, Blizzard?))"
+			.."only he/she survived. Just over yonder is the\nbustling Ammen Vale settlement and...\n\n"
+			.."decades later this poor soul is discovered?"
+st.marioLuigi = "Two towers... Muigin in one, Larion\nin the other. Look closely at what\n"
+			.."they are wearing!\n\nNow, swap the \"L\" and \"M\".\nGot it yet? No?\n"
+			.."Okay... drop the \"n\" too!\n\nPrior to the Cataclysm, adventurers\n"
+			.."reported that they would hit for 64\ndamage.\n\n"
+			.."((Did you nintendo that amount, Blizzard?))"
 st.miniGames = "There are three all told. Horde\n"
-					.."only. Reason enough to quest\nhere. A really  fun diversion!"
+			.."only. Reason enough to quest\nhere. A really  fun diversion!"
 st.natPagle = "...from the journals of Taraezor...\n\n"
-				.."Found him long ago on a small island off Theramore.\n\n"
-				.."I can still picture him now. Alone with his mates.\n"
-				.."That's Jack and Jim and Johnnie. Not to mention\n"
-				.."Jamieson and Glen. And this wild dude who was a\n"
-				.."real turkey.\n\n"
-				.."I tell you bud, I'm wiser for the stories he told.\n\n"
-				.."And forever grateful for the Nat's Lucky Fishing\n"
-				.."Pole he gifted me.\n\n"
-				.."A solitary man, a solitary existence..."
+			.."Found him long ago on a small island off Theramore.\n\n"
+			.."I can still picture him now. Alone with his mates.\n"
+			.."That's Jack and Jim and Johnnie. Not to mention\n"
+			.."Jamieson and Glen. And this wild dude who was a\nreal turkey.\n\n"
+			.."I tell you bud, I'm wiser for the stories he told.\n\n"
+			.."And forever grateful for the Nat's Lucky Fishing\nPole he gifted me.\n\n"
+			.."A solitary man, a solitary existence..."
 st.natsLuckyFishingPole = "You'll need 225+ Classic Fishing (i.e.\n"
-							.."\"Expert Fisherman\") and your level\n"
-							.."must be at the Chromie Time minimum\n"
-							.."for Dustwallow Marsh.\n\n"
-							.."Reward is an excellent fishing pole\n"
-							.."and it goes real well with my HandyNotes\n"
-							.."\"Let Minnow\" AddOn @ Curseforge!"
-st.polyTurtle = "This one is just for disciples of\n"
-					.."Khadgar. Mages in other words!\n\n"
-					.."Fishing in any Cata zone SCHOOL\n"
-					.."can potentially reward the turtle\n"
-					.."polymorph!\n\n"
-					.."Low drop rate though... but anyone\n"
-					.."can receive it. You'll find it on the\n"
-					.."AH no doubt!"
-st.particleDensity = "Just this once, max out \"Particle Density\".\n"
-					.."You're welcome! :)\n\n"
-					.."(A great place to experiment with this setting,\n"
-					.."ensuring you can squeeze as much out of that\n"
-					.."old potato of yours!)"
-st.ringo = "What would you think if I sang out of tune?\n"
-			.."Would you stand up and walk out on me?\n"
-			.."Lend me your ears and I'll sing you a song\n"
-			.."And I'll try not to sing out of key\n"
+			.."\"Expert Fisherman\") and your level\nmust be at the Chromie Time minimum\n"
+			.."for Dustwallow Marsh.\n\nReward is an excellent fishing pole\n"
+			.."and it goes real well with my HandyNotes\n\"Let Minnow\" AddOn @ Curseforge!"
+st.polyTurtle = "This one is just for disciples of\nKhadgar. Mages in other words!\n\n"
+			.."Fishing in any Cata zone SCHOOL\ncan potentially reward the turtle\npolymorph!\n\n"
+			.."Low drop rate though... but anyone\ncan receive it. You'll find it on the\nAH no doubt!"
+st.particleDensity = "Just this once, max out \"Particle Density\".\nYou're welcome! :)\n\n"
+			.."(A great place to experiment with this setting,\n"
+			.."ensuring you can squeeze as much out of that\nold potato of yours!)"
+st.ringo = "What would you think if I sang out of tune?\nWould you stand up and walk out on me?\n"
+			.."Lend me your ears and I'll sing you a song\nAnd I'll try not to sing out of key\n"
 			.."...Oh, I get by with a little help from my friends\n\n"
 			.."(Ringo may or may not be in the cave)"
-st.rugAndCandles = "The prayer rug was laid down and\n"
-					.."the candles, one by one, are being\n"
-					.."lit. The circle of candles was\n"
-					.."almost complete and then?\n\n"
-					.."Argh! Don't leave us hanging!\n"
-					.."Misfortune befell the owner of the\n"
-					.."rug? Snapped away suddenly by...?"
-st.silenceOfTheLambs = "Go underneath to The Pools of Vision.\n\n"
-						.."Clarice Foster pats through here...\n\n"
-						.."Her doppelganger Jodie Starling\n"
-						.."has never been found"
-st.stranded = "Oh so sad to see this.\n\n"
-				.."You'll notice some others around.\n\n"
-				.."Let's start a Tortoise Rescue!"
-st.targetPractice = "It is very rare to see anyone\n"
-						.."actually using the 100's of\n"
-						.."targets we see in our travels.\n\n"
-						.."So the denizens of Azeroth\n"
-						.."do really practise! Sometimes..."
-st.taurenHead = "Look directly above. That's a severed\n"
-					.."tauren head that's hanging there. But,\n"
-					.."functioning as a dream catcher? Ew!"
+st.rugAndCandles = "The prayer rug was laid down and\nthe candles, one by one, are being\n"
+			.."lit. The circle of candles was\nalmost complete and then?\n\n"
+			.."Argh! Don't leave us hanging!\nMisfortune befell the owner of the\n"
+			.."rug? Snapped away suddenly by...?"
+st.silenceOfTheLambs = "Go underneath to The Pools of Vision.\n\nClarice Foster pats through here...\n\n"
+			.."Her doppelganger Jodie Starling\nhas never been found"
+st.stranded = "Oh so sad to see this.\n\nYou'll notice some others around.\n\n"
+			.."Let's start a Tortoise Rescue!"
+st.targetPractice = "It is very rare to see anyone\nactually using the 100's of\n"
+			.."targets we see in our travels.\n\nSo the denizens of Azeroth\n"
+			.."do really practise! Sometimes..."
+st.taurenHead = "Look directly above. That's a severed\ntauren head that's hanging there. But,\n"
+			.."functioning as a dream catcher? Ew!"
 st.threeArtOnRock = "Love the \"prehistoric\" style rock art.\n\n"
-					.."Who painted it? Why hasn't it weathered?\n\n"
-					.."A sign from the Old Gods? Perhaps a prank!"
-st.toeToToe = "Where else can you see the elementals\n"
-				.."just going for it against each other?"
+			.."Who painted it? Why hasn't it weathered?\n\nA sign from the Old Gods? Perhaps a prank!"
+st.toeToToe = "Where else can you see the elementals\njust going for it against each other?"
 st.unusedBFA = "This cave and the hut above it were originally\n"
-				.."a part of a Warfront story for the Battle for\n"
-				.."Azeroth.\n\n"
-				.."Sadly, this never happened.\n\n"
-				.."By the way... stand here and listen to the\n"
-				.."music (you need \"Ambience\" turned up)"
-st.viciousGiants = "Hang around a bit... these cute\n"
-					.."critters are not so cute!\n\n"
-					.."They seem to randomlt transform\n"
-					.."into vicious, bloodthirsty giant\n"
-					.."versions of themselves!"
+			.."a part of a Warfront story for the Battle for\nAzeroth.\n\n"
+			.."Sadly, this never happened.\n\nBy the way... stand here and listen to the\n"
+			.."music (you need \"Ambience\" turned up)"
+st.viciousGiants = "Hang around a bit... these cute\ncritters are not so cute!\n\n"
+			.."They seem to randomlt transform\ninto vicious, bloodthirsty giant\n"
+			.."versions of themselves!"
 st.vielTitle = "That old felcloth grind... :("
-st.viel = "Every once in a while Vi'el will have\n"
-			.."some felcloth for sale. And all the\n"
-			.."classic tailors may rejoice. And those\n"
-			.."of us farming for cool mogging too!\n\n"
-			.."The grind is made doubly difficult if\n"
-			.."you need to make mooncloth on the\n"
-			.."way to the amazing Mooncloth Robe!!!\n\n"
-			.."(Oh yeah... The Henderine Initiates? An\n"
-			.."easier source of felcloth for those in the\n"
-			.."know. Sadly, with the Cataclysm they\n"
+st.viel = "Every once in a while Vi'el will have\nsome felcloth for sale. And all the\n"
+			.."classic tailors may rejoice. And those\nof us farming for cool mogging too!\n\n"
+			.."The grind is made doubly difficult if\nyou need to make mooncloth on the\n"
+			.."way to the amazing Mooncloth Robe!!!\n\n(Oh yeah... The Henderine Initiates? An\n"
+			.."easier source of felcloth for those in the\nknow. Sadly, with the Cataclysm they\n"
 			.."all disappeared. Enjoy the grind baby!)"
-st.vortacoil = "Tex here has a great toy for sale.\n"
-				.."But would you pay 5000g?\n\n"
-				.."The lovely looking apprentice Joanna,\n"
-				.."who is standing nearby, is wearing the\n"
-				.."Mage starter \"Recruit's Robe\". It's\n"
-				.."available in different colours as the\n"
-				.."\"Astralaan Robe\" too. The similar\n"
-				.."\"Soulcloth Vest\" is also appealing!"
-st.warningHash = "Do not toke on this pipe or you'll\n"
-					.."make a hash of your gaming sess!"
-st.whatYouSmoking = "Something to mull over...\n\n"
-					.."Whatever they are smoking,\n"
-					.."those noxious looking red\n"
-					.."fumes look positively foul!"
-st.whereIsEverybody = "Camp fire... check!\n"
-						.."Seats... check!\n"
-						.."Stash of stuff... check!\n"
-						.."Cushion, firewood...\n\n"
-						.."Okay... so where are you all?"
-st.zangenStonehoof = "Every night at 21:00 ((server time))\n"
-						.."Zangen Stonehoof gives a short\n"
-						.."speech and lights the bonfire!"
+st.vortacoil = "Tex here has a great toy for sale.\nBut would you pay 5000g?\n\n"
+			.."The lovely looking apprentice Joanna,\nwho is standing nearby, is wearing the\n"
+			.."Mage starter \"Recruit's Robe\". It's\navailable in different colours as the\n"
+			.."\"Astralaan Robe\" too. The similar\n\"Soulcloth Vest\" is also appealing!"
+st.warningHash = "Do not toke on this pipe or you'll\nmake a hash of your gaming sess!"
+st.whatYouSmoking = "Something to mull over...\n\nWhatever they are smoking,\n"
+			.."those noxious looking red\nfumes look positively foul!"
+st.whereIsEverybody = "Camp fire... check!\nSeats... check!\nStash of stuff... check!\n"
+			.."Cushion, firewood...\n\nOkay... so where are you all?"
+st.zangenStonehoof = "Every night at 21:00 ((server time))\nZangen Stonehoof gives a short\n"
+			.."speech and lights the bonfire!"
 
 points[ 468 ] = { -- Ammen Vale
 	[30241602] = { name="Earth, Wind, Water and Fire!", tip=st.toeToToe },
@@ -1289,7 +1094,7 @@ points[ 468 ] = { -- Ammen Vale
 	[64008593] = { name="Nestlewood Vibes", tip="Just love this cool owlkin area" },
 	[42760840] = { name="I'm the Lone Survivor", tip=st.loneSurvivor },
 }
-points[ 63 ] = { -- Ashenvale
+points[ ns.classicCata and 1440 or 63 ] = { -- Ashenvale
 	[00784614] = { name="Come Out, Come Out, Wherever You Are...", tip=st.whereIsEverybody },
 	[12049525] = { name="Cultivating Stoned Talon Mountains", tip=st.cultivation },
 	[21598965] = { name="Shocking Big Daddy Bio!", tip=st.bioshock },
@@ -1298,7 +1103,7 @@ points[ 63 ] = { -- Ashenvale
 	[51168508] = { name="A Simple Canoe", tip=st.canoe },
 	[83261380] = { name=st.bbqFishTitle, tip=st.bbqFish }, 
 }
-points[ 76 ] = { -- Azshara
+points[ ns.classicCata and 1447 or 76 ] = { -- Azshara
 	[07740686] = { name=st.hyjalHeightsTitle, tip=st.hyjalHeights }, 
 	[19955657] = { name="Gallywix Pleasure Palace",
 						tip="The pleasure is all yours at this ultimate\n"
@@ -1313,8 +1118,8 @@ points[ 76 ] = { -- Azshara
 							.."Inside a suckling pig awaits. Tuck in!\n\n"
 							.."Upstairs, it's trippy man! It's got that\n"
 							.."wholesome 70's vibe. Yup, it's a \"love in\"!" }, 
-	[25563805] = { name="Of Toys and Chests...", tip=vortacoil }, 
-	[25630494] = { name=st.vielTitle, tip=viel }, 
+	[25563805] = { name="Of Toys and Chests...", tip=st.vortacoil }, 
+	[25630494] = { name=st.vielTitle, tip=st.viel }, 
 	[25663942] = { name="Target Practice", tip=st.targetPractice }, 
 	[28215290] = { name="Love that sneer!",
 						tip="That's an impressive shrine to oneself!\n\n"
@@ -1324,9 +1129,9 @@ points[ 76 ] = { -- Azshara
 	[39898476] = { name="When you need to cast an expelianus...",
 						tip="I was in desperate need to release the kraken.\n"
 							.."When my best friend, DJ Trolldya, caught wind\n"
-							.."of my plugged up condition he said\n\n"
+							.."of my plugged up condition he said\n\n" ..colourHighlight
 							.."    \"Don't worry mon, Bingham Gadgetspring\n"
-							.."    has just the thing to get you movin'\"\n\n"
+							.."    has just the thing to get you movin'\"\n\n" ..colourPlaintext
 							.."and of course I listened, after all I'm not\n"
 							.."typically the stuck up sort. So I flew here and\n"
 							.."I went upstairs, but I'm not so sure now. If I\n"
@@ -1334,8 +1139,8 @@ points[ 76 ] = { -- Azshara
 							.."problem, even if a friend needs to assist by\n"
 							.."rolling up a sleeve and greasing an arm.\n\n"
 							.."But how do the little people fair? I'm only\n"
-							.."a gnome. I recall my friend saying\n\n"
-							.."    \"Relax mon, it's a suppository\"\n\n"
+							.."a gnome. I recall my friend saying\n\n" ..colourHighlight
+							.."    \"Relax mon, it's a suppository\"\n\n" ..colourPlaintext
 							.."Butt, your milage may vary so come here and\n"
 							.."see for yourself. The instruction manual is\n"
 							.."nearby, along with a lamp to shine a light on\n"
@@ -1358,7 +1163,7 @@ points[ 76 ] = { -- Azshara
 	[85825684] = { name="Your guess is as good as mine...",
 						tip="Of course we know what this\nis meant to be. Erm, don't we?" }, 
 }
-points[ 97 ] = { -- Azuremyst Isle
+points[ ns.classicCata and 1943 or 97 ] = { -- Azuremyst Isle
 	[22337021] = { name="Totemic Wards", tip=st.taurenHead },
 	[26952592] = { name="Come, Say Hi!",
 						tip=  "Susurrus and Velaada don't get many\n"
@@ -1382,7 +1187,7 @@ points[ 99 ] = { -- Azuremyst Isle - Stillpine Hold
 points[ 462 ] = { -- Camp Narache
 	[39453726] = { name="Quark, Strangeness and Charm", tip=st.hawkwind },
 }
-points[ 62 ] = { -- Darkshore
+points[ ns.classicCata and 1439 or 62 ] = { -- Darkshore
 	[52353203] = { name="Come and \"drop\" by sometime!", tip=st.mawOfTheVoid }, 
 	[73687192] = { name="Too much ground clutter?", tip=st.groundClutter }, 
 	[76544700] = { name="Particle Density", tip=st.particleDensity }, 
@@ -1390,8 +1195,8 @@ points[ 62 ] = { -- Darkshore
 	[87751911] = { name="Candles and Rug", tip=st.rugAndCandles },
 	[94649467] = { name=st.bbqFishTitle, tip=st.bbqFish }, 
 }
-points[ 66 ] = { -- Desolace
-	[87042785] = { name="Vicious Giants", tip=viciousGiants },
+points[ ns.classicCata and 1443 or 66 ] = { -- Desolace
+	[87042785] = { name="Vicious Giants", tip=st.viciousGiants },
 	[89354944] = { name="Silence of the Lambs", tip=st.silenceOfTheLambs },
 	[89806417] = { name="Step Right Up!", tip=st.darkmoonPortalH },
 	[90582690] = { name="Ancient Art?", tip=st.threeArtOnRock },
@@ -1399,26 +1204,26 @@ points[ 66 ] = { -- Desolace
 	[95435537] = { name="Honoured Ancestors", tip=st.zangenStonehoof },
 	[96705343] = { name="Advice to Mull Over", tip=st.gloomWeed },
 }
-points[ 1 ] = { -- Durotar
+points[ ns.classicCata and 1411 or 1 ] = { -- Durotar
 	[05626838] = { name="The Emerald Dream is Fake!", tip=st.fallaSagewind },
 	[06125383] = { name="Did You See the Three-Headed Hydra?", tip=st.korkronLoot },
 }
-points[ 70 ] = { -- Dustwallow Marsh
+points[ ns.classicCata and 1445 or 70 ] = { -- Dustwallow Marsh
 	[23226046] = { name=st.digRatTitle, tip=st.digRat },
-	[28399352] = { name="Stranded!", tip=stranded },
+	[28399352] = { name="Stranded!", tip=st.stranded },
 	[37153309] = { name="What's in a Name?", tip=st.drazzilb },
 	[47841667] = { name="Awww They're So Cute!", tip=st.dartingHatchling },
 	[58076065] = { name="Nat Pagle", tip=st.natPagle },
 	[58766017] = { quest={ 6607 }, questName={ "Nat Pagle, Angler Extreme" }, tip=st.natsLuckyFishingPole },
 }
-points[ 77 ] = { -- Felwood
+points[ ns.classicCata and 1448 or 77 ] = { -- Felwood
 	[35720978] = { name="Come and \"drop\" by sometime!", tip=st.mawOfTheVoid }, 
 	[58465232] = { name="Too much ground clutter?", tip=st.groundClutter }, 
 	[61512575] = { name="Particle Density", tip=st.particleDensity }, 
 	[80817658] = { name=st.bbqFishTitle, tip=st.bbqFish }, 
 	[92335217] = { name=st.hyjalHeightsTitle, tip=st.hyjalHeights }, 
 }
-points[ 69 ] = { -- Feralas
+points[ ns.classicCata and 1444 or 69 ] = { -- Feralas
 	[29007700] = { name="Isle of Dread",
 					tip="The Sub-zone text remains but the island\n"
 						.."disappeared with the dubious events of\n"
@@ -1469,7 +1274,7 @@ points[ 69 ] = { -- Feralas
 	[84971401] = { name="Quark, Strangeness and Charm", tip=st.hawkwind },
 	[94838183] = { name="Vale Dadanga", quest={ 24702 }, questName={ "Here Lies Dadanga" }, tip=st.dadanga },
 }
-points[ 80 ] = { -- Moonglade
+points[ ns.classicCata and 1450 or 80 ] = { -- Moonglade
 	[52003289] = { name=st.danguiTitle, tip=st.dangui }, 
 	[55217097] = { name="Candles and Rug", tip=st.rugAndCandles },
 	[64630996] = { name="Bench With a View", tip=st.benched },
@@ -1478,15 +1283,15 @@ points[ 198 ] = { -- Mount Hyjal
 	[19253790] = { name="Too much ground clutter?", tip=st.groundClutter }, 
 	[51167253] = { name=st.bbqFishTitle, tip=st.bbqFish }, 
 	[67613768] = { name=st.hyjalHeightsTitle, tip=st.hyjalHeights }, 
-	[90767819] = { name="Of Toys and Chests...", tip=vortacoil }, 
-	[90853519] = { name=st.vielTitle, tip=viel }, 
+	[90767819] = { name="Of Toys and Chests...", tip=st.vortacoil }, 
+	[90853519] = { name=st.vielTitle, tip=st.viel }, 
 	[90897996] = { name="Target Practice", tip=st.targetPractice }, 
 }
-points[ 7 ] = { -- Mulgore
+points[ ns.classicCata and 1412 or 7 ] = { -- Mulgore
 	[01767388] = { name="Luvin' the Odds!", tip=st.doubleCompanions },
 	[20177028] = { name="Boat and Bubbles!", tip=st.boatAndSkulls },
 	[22197504] = { name="Tribute Island", tip=st.lakeDumont },
-	[34570589] = { name="Vicious Giants", tip=viciousGiants },
+	[34570589] = { name="Vicious Giants", tip=st.viciousGiants },
 	[36482371] = { name="Silence of the Lambs", tip=st.silenceOfTheLambs },
 	[36843586] = { name="Step Right Up!", tip=st.darkmoonPortalH },
 	[37490511] = { name="Ancient Art?", tip=st.threeArtOnRock },
@@ -1495,11 +1300,11 @@ points[ 7 ] = { -- Mulgore
 	[42542700] = { name="Advice to Mull Over", tip=st.gloomWeed },
 	[48957835] = { name="Quark, Strangeness and Charm", tip=st.hawkwind },
 	[60971624] = { name="Ancient Art?", tip=st.threeArtOnRock },
-	[61991753] = { name="Redrock Cave and Hut", tip=unusedBFA },
+	[61991753] = { name="Redrock Cave and Hut", tip=st.unusedBFA },
 	[62942399] = { name="Ancient Art?", tip=st.threeArtOnRock },
 	[94128319] = { name="What's in a Name?", tip=st.drazzilb },
 }
-points[ 10 ] = { -- Northern Barrens
+points[ ns.classicCata and 1413 or 10 ] = { -- Northern Barrens / The Barrens
 	[00715650] = { name="Ancient Art?", tip=st.threeArtOnRock },
 	[00108566] = { name="Step Right Up!", tip=st.darkmoonPortalH },
 	[01777631] = { name="Surgeon General Says...", tip=st.warningHash },
@@ -1507,20 +1312,20 @@ points[ 10 ] = { -- Northern Barrens
 	[05507726] = { name="Advice to Mull Over", tip=st.gloomWeed },
 	[21531795] = { name="What You Smoking?", tip=st.whatYouSmoking },
 	[22996706] = { name="Ancient Art?", tip=st.threeArtOnRock },
-	[23966828] = { name="Redrock Cave and Hut", tip=unusedBFA },
+	[23966828] = { name="Redrock Cave and Hut", tip=st.unusedBFA },
 	[24867441] = { name="Ancient Art?", tip=st.threeArtOnRock },
 	[25281064] = { name="A Simple Canoe", tip=st.canoe },
 	[42856297] = { name="The Emerald Dream is Fake!", tip=st.fallaSagewind },
 	[43304959] = { name="Did You See the Three-Headed Hydra?", tip=st.korkronLoot },
 }
-points[ 85 ] = { -- Orgrimmar
-	[50845509] = { item=134831, npc=130911, tip="Charles Gastly - Toy Boy\n\n" ..st.doomsayersRobes },
+points[ ns.classicCata and 1454 or 85 ] = { -- Orgrimmar
+	[50845509] = { npc=130911, npc=130911, name="Charles Gastly - Toy Boy", tip=st.doomsayersRobes },
 	[52398576] = { npc=199015, name="Skeletal Troll March", tip="Along with his retinue of similar skeletal\n"
 					.."trolls, First Mate Jamboya makes his way\nfrom Grommash Hold past here and\n"
 					.."downwards to the first portal room\nwhere they exit to Zandalar.\n\n"
 					.."Yes, you can look for them in Vol'dun!" },
 }
-points[ 81 ] = { -- Silithus
+points[ ns.classicCata and 1451 or 81 ] = { -- Silithus
 	[12525232] = { name="Welcome to Feralas!", tip=st.feralas },
 	[21510163] = { name="Hasten the Extinction!", tip=st.hastenExtinction },
 	[88285007] = { name=st.donQuijoteTitle, quest={ 24707 }, tip=st.donQuijote, questName={ "The Ballad of Maximillian" } },
@@ -1528,7 +1333,7 @@ points[ 81 ] = { -- Silithus
 points[ 199 ] = { -- Southern Barrens
 	[03395922] = { name="Boat and Bubbles!", tip=st.boatAndSkulls },
 	[04886272] = { name="Tribute Island", tip=st.lakeDumont },
-	[13981188] = { name="Vicious Giants", tip=viciousGiants },
+	[13981188] = { name="Vicious Giants", tip=st.viciousGiants },
 	[15382498] = { name="Silence of the Lambs", tip=st.silenceOfTheLambs },
 	[15653391] = { name="Step Right Up!", tip=st.darkmoonPortalH },
 	[16121130] = { name="Ancient Art?", tip=st.threeArtOnRock },
@@ -1537,7 +1342,7 @@ points[ 199 ] = { -- Southern Barrens
 	[19832740] = { name="Advice to Mull Over", tip=st.gloomWeed },
 	[24556516] = { name="Quark, Strangeness and Charm", tip=st.hawkwind },
 	[33391948] = { name="Ancient Art?", tip=st.threeArtOnRock },
-	[34142043] = { name="Redrock Cave and Hut", tip=unusedBFA },
+	[34142043] = { name="Redrock Cave and Hut", tip=st.unusedBFA },
 	[34842518] = { name="Ancient Art?", tip=st.threeArtOnRock },
 	[47908810] = { name=st.digRatTitle, tip=st.digRat },
 	[48781632] = { name="The Emerald Dream is Fake!", tip=st.fallaSagewind },
@@ -1547,17 +1352,17 @@ points[ 199 ] = { -- Southern Barrens
 	[72588823] = { name="Nat Pagle", tip=st.natPagle },
 	[73078789] = { quest={ 6607 }, questName={ "Nat Pagle, Angler Extreme" }, tip=st.natsLuckyFishingPole },
 }
-points[ 65 ] = { -- Stonetalon Mountains
+points[ ns.classicCata and 1442 or 65 ] = { -- Stonetalon Mountains
 	[38081284] = { name="Come Out, Come Out, Wherever You Are...", tip=st.whereIsEverybody },
 	[49096083] = { name="Cultivating Stoned Talon Mountains", tip=st.cultivation },
 	[58425535] = { name="Shocking Big Daddy Bio!", tip=st.bioshock },
-	[60719628] = { name="Vicious Giants", tip=viciousGiants },
+	[60719628] = { name="Vicious Giants", tip=st.viciousGiants },
 	[61094062] = { name="Died Alone", tip=st.diedAlone },
 	[63409556] = { name="Ancient Art?", tip=st.threeArtOnRock },
 	[83685800] = { name="What You Smoking?", tip=st.whatYouSmoking },
 	[87335089] = { name="A Simple Canoe", tip=st.canoe },
 }
-points[ 71 ] = { -- Tanaris
+points[ ns.classicCata and 1446 or 71 ] = { -- Tanaris
 	[13988820] = { name="Khadgar's Turtling Again!", tip=st.polyTurtle },
 	[15070806] = { name="Vale Dadanga", quest={ 24702 }, questName={ "Here Lies Dadanga" }, tip=st.dadanga },
 	[18402962] = { name="Do You Need Anybody?", quest={ 24735 },
@@ -1565,7 +1370,7 @@ points[ 71 ] = { -- Tanaris
 	[19973692] = { name="Patrolling Plumbers", tip=st.marioLuigi },
 	[20727153] = { name=st.justTheTipTitle, tip=st.justTheTip },
 }
-points[ 57 ] = { -- Teldrassil
+points[ ns.classicCata and 1438 or 57 ] = { -- Teldrassil
 	[56715355] = { name="Somebody shrunk the world!", tip="The oversize table with it's huge leg\n"
 					.."of meat and huges apples do rather\nmake Nyoma and Zarrin seem so small!" },
 	[55755204] = { name="Elven water source", tip="Atop a setee is a type of fountain, filling\n"
@@ -1576,14 +1381,14 @@ points[ 57 ] = { -- Teldrassil
 	[57255296] = { name="Elven magnetism", tip="Atop a setee we see a large tree cutting\n"
 					.."that is able to suspend a large rock in the\nair, as if by some magnetic force. Wow!" },
 }
-points[ 64 ] = { -- Thousand Needles
+points[ ns.classicCata and 1441 or 64 ] = { -- Thousand Needles
 	[16277471] = { name="Vale Dadanga", quest={ 24702 }, questName={ "Here Lies Dadanga" }, tip=st.dadanga },
 	[40020623] = { name=st.digRatTitle, tip=st.digRat },
-	[46194567] = { name="Stranded!", tip=stranded },
+	[46194567] = { name="Stranded!", tip=st.stranded },
 	[81600645] = { name="Nat Pagle", tip=st.natPagle },
 	[82420588] = { quest={ 6607 }, questName={ "Nat Pagle, Angler Extreme" }, tip=st.natsLuckyFishingPole },
 }
-points[ 88 ] = { -- Thunder Bluff
+points[ ns.classicCata and 1456 or 88 ] = { -- Thunder Bluff
 	[28782589] = { name="Silence of the Lambs", tip=st.silenceOfTheLambs },
 	[30708933] = { name="Step Right Up!", tip=st.darkmoonPortalH },
 	[39883781] = { name="Surgeon General Says...", tip=st.warningHash },
@@ -1595,13 +1400,18 @@ points[ 249 ] = { -- Uldum
 	[56714802] = { name="Khadgar's Turtling Again!", tip=st.polyTurtle },
 	[64562860] = { name=st.justTheTipTitle, tip=st.justTheTip },
 }
-points[ 78 ] = { -- Un'Goro Crater
+points[ 1527 ] = { -- Uldum Modern
+	[35271718] = { name="Awesome statue!", tip="Nuff said. Check it out!" },
+	[56714802] = { name="Khadgar's Turtling Again!", tip=st.polyTurtle },
+	[64562860] = { name=st.justTheTipTitle, tip=st.justTheTip },
+}
+points[ ns.classicCata and 1449 or 78 ] = { -- Un'Goro Crater
 	[30615114] = { name=st.donQuijoteTitle, quest={ 24707 }, tip=st.donQuijote, questName={ "The Ballad of Maximillian" } },
 	[45480777] = { name="Vale Dadanga", quest={ 24702 }, questName={ "Here Lies Dadanga" }, tip=st.dadanga },
 	[51974980] = { name="Do You Need Anybody?", quest={ 24735 }, questName={ "A Little Help From My Friends" }, tip=st.ringo },
 	[55036404] = { name="Patrolling Plumbers", tip=st.marioLuigi },
 }
-points[ 83 ] = { -- Winterspring
+points[ ns.classicCata and 1452 or 83 ] = { -- Winterspring
 	[12278953] = { name="Too much ground clutter?", tip=st.groundClutter }, 
 	[15286334] = { name="Particle Density", tip=st.particleDensity }, 
 	[25851972] = { name=st.danguiTitle, tip=st.dangui },
@@ -1612,16 +1422,15 @@ points[ 83 ] = { -- Winterspring
 	[45668939] = { name=st.hyjalHeightsTitle, tip=st.hyjalHeights }, 
 	[76767865] = { name="It's all about the skulls", tip="Oh and that rotting flesh too!" }, 
 	[56041212] = { name="Mini games!", tip=st.miniGames }, 
-	[61718766] = { name=st.vielTitle, tip=viel }, 
+	[61718766] = { name=st.vielTitle, tip=st.viel }, 
 }
 
-points[ 12 ] = { -- Kalimdor
+points[ ns.classicCata and 1414 or 12 ] = { -- Kalimdor
 	[39657988] = { name="Welcome to Feralas!", tip=st.feralas },
 	[56751409] = { name="Elwynn Forest?", tip="Don't you love the lush green of\nElwynn... Wait on!\n\n"
 					.."These trees aren't quite the same.\nThe music is familiar though!\n\nErm. This is Winterspring.\n\n"
 					.."Okay. This is doing my head in!!!" },
-	[58314263] = { item=134831, npc=130911,
-					tip="Charles Gastly - Toy Boy\n\n" ..st.doomsayersRobes },
+	[58314263] = { npc=130911, npc=130911, name="Charles Gastly - Toy Boy", tip=st.doomsayersRobes },
 }
 
 --=======================================================================================================
@@ -1630,23 +1439,28 @@ points[ 12 ] = { -- Kalimdor
 --
 --=======================================================================================================
 
-st.anAppleADay = "So many Apples! If one fell on his head, sure,\nit hurts!. A few dozen? What a headache!\n\n"
-			.."Newtonian thoughts aside, somebody cleaved\nhis head apart from point blank range! Now\n"
-			.."THAT'S a headache! Wait on... that's his own\nweapon, so that means... hmmm... but why?\n\n"
-			.."Don't forget the Loose Dirt Mound which is\nexactly where this pin is. Maybe some\n"
-			.."goodies for you!"
+st.anAppleADay = "So many Apples! If one fell on his head, sure,\n"
+			.."it hurts!. A few dozen? What a headache!\n\nNewtonian thoughts aside, somebody cleaved\n"
+			.."his head apart from point blank range! Now\n"
+			.."THAT'S a headache! Wait on... that's his own\n"
+			.."weapon, so that means... hmmm... but why?\n\nDon't forget the Loose Dirt Mound which is\n"
+			.."exactly where this pin is. Maybe some\ngoodies for you!"
 st.anAppleADayTitle = "An apple a day... Nah, fcuk it!"
-st.babyFarm = "Awww, isn't it so lovely! A well-meaning\nmatron caring for so many children and\nbabies!...\n\n"
-			.."Hey... wait a minute there... something's a\nbit off! The small cuts of meat on the\n"
-			.."tiered food rack, the tauren floor rugs,\nthe tiny half eaten corpse in the kennel,\n"
-			.."cages out the back complete with a tiny\nskeleton...\n\nHate to break it to Chaddo but he ain't\n"
+st.babyFarm = "Awww, isn't it so lovely! A well-meaning\nmatron caring for so many children and\n"
+			.."babies!...\n\nHey... wait a minute there... something's a\n"
+			.."bit off! The small cuts of meat on the\ntiered food rack, the tauren floor rugs,\n"
+			.."the tiny half eaten corpse in the kennel,\ncages out the back complete with a tiny\n"
+			.."skeleton...\n\nHate to break it to Chaddo but he ain't\n"
 			.."gonna be no chad, his day is very near!\nHmmm... I wonder if he's seen the large\n"
 			.."wooden club, next to the kennel?\n\nAnd Sa'rah. well, lo que será, será...\n\n"
 			.."Oh yeah, you'll have a blast if you play\nin the sandbox, so do take care now!\n\n"
-			.."Ahhh right... so all the babies are Horde\nbut Chaddo and Sa'rah are Alliance? Okay...\n\n"
-			.."Did you see Jara? He's in the naughty corner!\n\n((Prior to Blizzard's ill considered burst of\n"
-			.."censorship, the sign at the entry gate read:\n\n    \"Challe's Home for Little Tykes\"!\n\n"
-			.."Presumably removed because the archaic\nword \"tyke\" in British English means \"small\n"
+			.."Ahhh right... so all the babies are Horde\n"
+			.."but Chaddo and Sa'rah are Alliance? Okay...\n\n"
+			.."Did you see Jara? He's in the naughty corner!\n\n"
+			.."((Prior to Blizzard's ill considered burst of\n"
+			.."censorship, the sign at the entry gate read:\n\n"
+			.."    \"Challe's Home for Little Tykes\"!\n\nPresumably removed because the archaic\n"
+			.."word \"tyke\" in British English means \"small\n"
 			.."child\" but also \"Roman Catholic\", which is\nrather derogatory. Oh Blizzard! lol))"			
 st.babyFarmTitle = "How ya gonna keep 'em down on the farm\nAfter they've seen Halaa\n"
 			.."How ya gonna keep 'em away from harm,\nThat's a mystery"
@@ -1655,43 +1469,83 @@ st.crocolisks="Yes, fishing dailies abound and there are\nexcellent rewards on o
 			.."and Jeweled Fishing Poles.\n\nBut Old Man Barlo here in Terokkar offers\n"
 			.."four adorable and instantly lovable baby\ncrocolisk pets. Yup. Four!!!\n\n"
 			.."20% of the time you'll be offered the\n\"Crocolisks in the City\" daily. And each\n"
-			.."of the four pets has a very high drop\nchance with a repeat of a known pet\nextremely unlikely"
+			.."of the four pets has a very high drop\nchance with a repeat of a known pet\n"
+			.."extremely unlikely"
+st.jarOfAshes = "This is so well hidden. Better still,\nif you click on the jar there'll be a\n"
+			.."rather curious tome...\n\nWho are the \"wicked and soulless\n"
+			.."ones\" who drove the writer crazy?\n\nThey \"devoured what he held most\n"
+			.."dear\", the world that is the Alliance\nand Horde!...\n\n"
+			.."Indeed they devoured and feasted\nupon the product of his toils.\n\n"
+			.."And now he speaks of \"wrath\" and\navenging his torment, only to be\n"
+			.."found as a skeleton in a cove.\n\nCowering or seeking respite?\n\n"
+			.."((This is what working as a WoW\ncommunity GM will do to you.\nYou have been warned!))"
 st.skyFence = "Just love the way the fence\nis suspended and... yeah! <3"
-st.moteCloud = "Back in the day Engineers could fly around Nagrand\nand harness the clouds for farming elemental motes.\n"
+st.moteCloud = "Back in the day Engineers could fly around Nagrand\n"
+			.."and harness the clouds for farming elemental motes.\n"
 			.."They are always located on the floating islands"
-st.skywing = "Skywing patrols around here.\nI'm sure you'd love a great\nbattle pet just like this one!"
-st.slammer = "Gotta feel for the creature. There it was flying\naround then wham! A flying chunk of Draenor!\n\n"
-			.."Another theory is that when Draenor was sundered,\nthis subterranean skeleton was ripped out along\n"
+st.skywing = "Skywing patrols around here.\nI'm sure you'd love a great\n"
+			.."battle pet just like this one!"
+st.slammer = "Gotta feel for the creature. There it was flying\n"
+			.."around then wham! A flying chunk of Draenor!\n\n"
+			.."Another theory is that when Draenor was sundered,\n"
+			.."this subterranean skeleton was ripped out along\n"
 			.."with the chunk of ground too. What's your take?"
-				
-points[ 100 ] = { -- Hellfire Peninsular
+st.slimTitle = "Will the real Slim Shady please stand up?"
+st.slim = "So won't the real Slim Shady please stand up\nPlease stand up, please stand up?\n"
+			.."'Cause I'm Slim Shady, yes I'm the real Shady\n"
+			.."All you other Slim Shadys are just imitating\n"
+			.."So won't the real Slim Shady please stand up\nPlease stand up, please stand up?\n\n"
+			.."(Dr. Dre's dead, he's locked in my basement)\n\n"
+st.warbossNekrogg = "Me Orc. Me patrol up here for no reason.\nCreators gave me a name and gear and\n"
+			.."a path to patrol. Me bored. Creators forgot\nto give me something to do and a reason\n"
+			.."for you to visit me.\n\nWanna Mak'gora? Me fight one handed!"
+			
+points[ ns.classicCata and 1944 or 100 ] = { -- Hellfire Peninsula
 	[10598543] = { name=st.crocolisksTitle, tip=st.crocolisks },
+	[44467716] = { name="At Least I Have a Name", tip=st.warbossNekrogg },
+	[45068715] = { name="Jar of Ashes", tip=st.jarOfAshes },
+	[53565055] = { name="I Walk Upon Your... Footsteps?", tip="The Path of Glory, made more glorious\n"
+						.."by the inglorious skeletons of those\nwho were defeated" },
+	[54216645] = { name="A Touching Vignette", tip="The graveyard caretaker has an interesting\nstory. No quests, just great flavour!\n\n"
+						.."If you hang around, every 15 minutes he\npatrols the graveyard.\n\nHe stops at many, saluting or even\n"
+						.."laying flowers and weeping" },
 	[54778817] = { name="Don't Fence Me In!", tip=st.skyFence },
+	[55096631] = { name="Who smelt it, dealt it", tip="One of these gravestones has\nsome interesting writing!" },
 }
-points[ 107 ] = { -- Nagrand
+points[ ns.classicCata and 1951 or 107 ] = { -- Nagrand
 	[50901440] = { name=st.babyFarmTitle, tip=st.babyFarm },
 	[51873042] = { name="Inscruitable Cloudy Sparkling...", tip=st.moteCloud },
 	[55993734] = { name="Ouch who put that there?", tip=st.slammer },
 	[57892632] = { name=st.anAppleADayTitle, tip=st.anAppleADay },
 	[95994079] = { name=st.crocolisksTitle, tip=st.crocolisks },
+	[96498577] = { name=st.slimTitle, tip=st.slim },
 }
-points[ 104 ] = { -- Shadowmoon Valley
+points[ ns.classicCata and 1948 or 104 ] = { -- Shadowmoon Valley
 	[00894515] = { name="Predatory Strike!", tip=st.skywing, quest={ 10898 }, questName={ "Skywing" }, item=31760 },
-	[65748602] = { name="Sorry, Goose, but it's time to buzz the tower", tip="I feel the need, the need for speed but\n"
+	[65748602] = { name="Sorry, Goose, but it's time to buzz the tower",
+					tip="I feel the need, the need for speed but\n"
 					.."something tells me your ego is writing\ncheques your body can't cash.\n\n"
 					.."Yeah, don't be a Goose, you big stud. Ja'y\nover there talks about the Top Orc ;) and\n"
-					.."Ichman, or did he mean Iceman? Dunno.\nNot to forget Mulverick too, or wait,\nwas that Maverick?\n\n"
+					.."Ichman, or did he mean Iceman? Dunno.\nNot to forget Mulverick too, or wait,\n"
+					.."was that Maverick?\n\n"
 					.."The question is can you fly? If you can't\nthen you become everyone’s problem.\n"
 					.."That’s because every time you go up\nin the air you’re unsafe, and I don’t\n"
 					.."like you because you’re dangerous.\n\nProve yourself and you can be my wing-\n"
-					.."man any time. But always remember:\n\nYou Don't Have Time To Think Up\nThere. You Think, You're Dead" },
+					.."man any time. But always remember:\n\nYou Don't Have Time To Think Up\n"
+					.."There. You Think, You're Dead" },
 }
-points[ 108 ] = { -- Terokkar Forest	
+points[ ns.classicCata and 1955 or 111 ] = { -- Shattrath City
+	[65646929] = { name=st.griftahTitle, tip=st.griftah },
+}
+points[ ns.classicCata and 1952 or 108 ] = { -- Terokkar Forest
 	[38721280] = { name=st.crocolisksTitle, tip=st.crocolisks },
+	[39235882] = { name=st.slimTitle, tip=st.slim },
 	[53847232] = { name="Predatory Strike!", tip=st.skywing, quest={ 10898 }, questName={ "Skywing" }, item=31760 },
+	[71110489] = { name="At Least I Have a Name", tip=st.warbossNekrogg },
+	[71681445] = { name="Jar of Ashes", tip=st.jarOfAshes },
 	[80971542] = { name="Don't Fence Me In!", tip=st.skyFence },
 }
-points[ 102 ] = { -- Zangarmarsh
+points[ ns.classicCata and 1946 or 102 ] = { -- Zangarmarsh
 	[39627232] = { name=st.babyFarmTitle, tip=st.babyFarm },
 	[40688992] = { name="Inscruitable Cloudy Sparkling...", tip=st.moteCloud },
 	[45219752] = { name="Ouch who put that there?", tip=st.slammer },
@@ -1704,119 +1558,161 @@ points[ 102 ] = { -- Zangarmarsh
 --
 --=======================================================================================================
 
-st.afsanehAsrar = "Afsaneh Asrar pats around the\nstairs in The Legerdemain Lounge.\n\nThis is very unusual for an inn\n"
-			.."keeper as they are always stationary.\n\nSo stop her at your favoured location\nand set your hearthstone.\n\n"
+st.afsanehAsrar = "Afsaneh Asrar pats around the\nstairs in The Legerdemain Lounge.\n\n"
+			.."This is very unusual for an inn\nkeeper as they are always stationary.\n\n"
+			.."So stop her at your favoured location\nand set your hearthstone.\n\n"
 			.."Now, whenever you hearth, you'll\nreturn to that exact location!"
-st.agedWine = "Have a close look at Christi's inventory at\nthe \"One More Glass\" shop.\n\nTwo of the items are noted as:\n\n"
-			.."        \"Improves with age\"\n\nPricey yes. and improve with age they do!\n\n"
-			.."Deposit in your bank for a rainy RP day...\nand voilà... 365 days later they will\n"
-			.."change into something different!\n\nBonus trivia: Try the /drink emote!"
+st.agedWine = "Have a close look at Christi's inventory at\nthe \"One More Glass\" shop.\n\n"
+			.."Two of the items are noted as:\n\n    \"Improves with age\"\n\n"
+			.."Pricey yes. And improve with age they do!\n\nDeposit in your bank for a rainy RP day...\n"
+			.."and voilà... 365 days later they will\nchange into something different!\n\n"
+			.."Bonus trivia: Try the /drink emote!"
 st.arsenic = "What's \"arsenic\" spelled backwards?"
 st.arsenicTitle = "?sdrawkcab delleps \"cinesra\" s'tahW"
-st.badRogue = "Everything about Nisstina is just so wrong!\n\nIn stealth but she has her pet out? Doh!\n\n"
-			.."Her gear... it's a noob mess!\n\nIt's as though she's a parody\nof bad rogue adventurers!\n\n"
+st.badRogue = "Everything about Nisstina is just so wrong!\n\n"
+			.."In stealth but she has her pet out? Doh!\n\nHer gear... it's a noob mess!\n\n"
+			.."It's as though she's a parody\nof bad rogue adventurers!\n\n"
 			.."Yup. Got a feelin they bin trolled mon!"
 st.badRogueTitle = "How Many Fingers Does a Troll Have?"
 st.bambi = "In another universe you may find Bambi,\nThumper and Flower. Even the mother of\nBambi!\n\n"
 			.."And here too, you can see them running\naround!"
-st.bmHunter = "Sholazar Basin is an iconic zone for\nBeast Mastery Hunters.\n\nThree, no less, incredibly difficult to\n"
-			.."farm beasts: Aotona with its stunning\nplumage; Loque'nahak, the first ever\nspirit beast and with its awesome eyes\n"
-			.."and striking fur markings; King Krush,\nthe fearsome lime green devilsaur!\n\nAnd they were not merely rares but\n"
-			.."indeed de rigueur for all adventurers\nkeen on the Frost Bitten achievement.\n\n"
-			.."Tales abound to this day of ten year\nfarms. City and zone chat was filled\nwith QQ. Good luck!\n\n"
+st.bmHunter = "Sholazar Basin is an iconic zone for\nBeast Mastery Hunters.\n\n"
+			.."Three, no less, incredibly difficult to\nfarm beasts: Aotona with its stunning\n"
+			.."plumage; Loque'nahak, the first ever\nspirit beast and with its awesome eyes\n"
+			.."and striking fur markings; King Krush,\nthe fearsome lime green devilsaur!\n\n"
+			.."And they were not merely rares but\nindeed de rigueur for all adventurers\n"
+			.."keen on the Frost Bitten achievement.\n\nTales abound to this day of ten year\n"
+			.."farms. City and zone chat was filled\nwith QQ. Good luck!\n\n"
 			.."(Today, BM will get FB credit for taming)"
 st.cockroach = "Another iconic farm... this time shaman\nwould camp here for hours in the hope\n"
-			.."that Cravitz Lorent would soon spawn.\n\nFinally, they'd be able to purchase the\n\"Tome of Hex: Cockroach\".\n\n"
-			.."Bonus fact: The real reason he hides\ndown here is because he's peddling\nsmutty \"Seamy Romance\" novels!\n\n"
-			.."Bonus++: Priests will love the\nScarlet Confessional Book. Yup, it's\nso much fun spamming this toy!"
-st.darahir = "Darahir sells a nice \"Ghostly Skull\"\npet. Doesn't seem to have a limit so\nI'd guess if you made the trip down\n"
-			.."here he'd surely let you buy one!"
-st.duoctane = "Did you know that his other\nname is Dominic Toretto?\n\nNow... let's see if we can\nfind where he parked his\n"
-			.."black dodge charger!"
-st.elixir = "Keep a look out for this elixir, carelessly\nleft lying around by those Kirin Tor mages.\n\n"
-			.."I got a fantastic Tuskarr transformation\nand a nice fishing skill bonus to boot!\n\n"
+			.."that Cravitz Lorent would soon spawn.\n\nFinally, they'd be able to purchase the\n"
+			.."\"Tome of Hex: Cockroach\".\n\nBonus fact: The real reason he hides\n"
+			.."down here is because he's peddling\nsmutty \"Seamy Romance\" novels!\n\n"
+			.."Bonus++: Priests will love the\nScarlet Confessional Book. Yup, it's\n"
+			.."so much fun spamming this toy!"
+st.darahir = "Darahir sells a nice \"Ghostly Skull\"\npet. Doesn't seem to have a limit so\n"
+			.."I'd guess if you made the trip down\nhere he'd surely let you buy one!"
+st.decahedral = "The Onslaught Raven Archon\nare the best for rogues farming\nthe Decahedral Dwarven Dice\n"
+			.."although the Death Knights\nhere also have a chance"
+st.duoctane = "Did you know that his other\nname is Dominic Toretto?\n\nNow... let's see if we can\n"
+			.."find where he parked his\nblack dodge charger!"
+st.elixir = "Keep a look out for this elixir, carelessly\n"
+			.."left lying around by those Kirin Tor mages.\n\nI got a fantastic Tuskarr transformation\n"
+			.."and a nice fishing skill bonus to boot!\n\n"
 			.."Oh... you didn't get transformed but all\nothers got transformed? Yeah that's the\n"
 			.."impressive Tier 2 Netherwind Regalia set.\nDoesn't it look superb!\n\nWhat did you get?"
-st.factsOfLife = "Whatever could Natalie and Chooch be discussing?\n\nAside from the Facts of Life of course!"
+st.factsOfLife = "Whatever could Natalie and Chooch be discussing?\n\n"
+			.."Aside from the Facts of Life of course!"
 st.factsOfLifeTitle = "The Good and Bad?\nYou take em both, and there you have..."
-st.fabio = "It's a little known fact in Dalaran that\nFabio has appeared on the cover of\n100's of Steamy Romance Novels.\n\n"
-			.."(Never heard of them? It's surely no\ncoincidence that the water well nearby\n"
-			.."is a secret entrance to The Underbelly.\nOccasionally Cravitz Lorent can be found\n"
-			.."there. Ask and he might open his rain-\ncoat to reveal his tasteless tomes.)\n\n"
-			.."Needless to say, Fabio looks positively\ngorgeous here with his tradmark flowing\n"
-			.."locks, chiselled nelf features and that\nJe ne sais quoi that has made him a\n"
-			.."magnet to women and, yes... he's still\nsingle and looking!\n\n(He'd look much prettier if he were a\n"
+st.fabio = "It's a little known fact in Dalaran that\nFabio has appeared on the cover of\n"
+			.."100's of Steamy Romance Novels.\n\n(Never heard of them? It's surely no\n"
+			.."coincidence that the water well nearby\nis a secret entrance to The Underbelly.\n"
+			.."Occasionally Cravitz Lorent can be found\nthere. Ask and he might open his rain-\n"
+			.."coat to reveal his tasteless tomes.)\n\nNeedless to say, Fabio looks positively\n"
+			.."gorgeous here with his tradmark flowing\nlocks, chiselled nelf features and that\n"
+			.."Je ne sais quoi that has made him a\nmagnet to women and, yes... he's still\n"
+			.."single and looking!\n\n(He'd look much prettier if he were a\n"
 			.."blood elf. Just saying...)"
-st.genderBending = "Grab some Underbelly Elixir\nand start quaffing... soon\nenough everyone will become\n"
-			.."a mage... but wait on... there's\nsome serious gender bending\nhappening here as well!"
+st.genderBending = "Grab some Underbelly Elixir\nand start quaffing... soon\n"
+			.."enough everyone will become\na mage... but wait on... there's\n"
+			.."some serious gender bending\nhappening here as well!"
 st.higherDnD = "Upon this crate is often a document.\nIt's a part of a collection achievement\n"
-			.."called \"Higher Learning\" and the task\nis a huge reference to the popular\ntabletop game Dungeons & Dragons!\n\n"
-			.."((Yeah... Taraezor (that's yours truly!)\nhas an AddOn over at Curseforge to\n"
-			.."track your progress. Get it now while\nstocks last!))\n\nEach book you are required to collect\n"
+			.."called \"Higher Learning\" and the task\nis a huge reference to the popular\n"
+			.."tabletop game Dungeons & Dragons!\n\n((Yeah... Taraezor (that's yours truly!)\n"
+			.."has an AddOn over at Curseforge to\ntrack your progress. Get it now while\n"
+			.."stocks last!))\n\nEach book you are required to collect\n"
 			.."is one of the schools of magic in the\nD&D universe. Now... lets roll 2D20\nand..."
 st.initiative = "When your GM is a dud...\nalways roll for initiative!"
 st.jones = "Is this the same Jones we saw on that ship?\n\nNo, not The Exodar... but a similar ship!\n\n"
 			.."If it is the same ship's cat\nthen this is definitely alien!"
 st.jonesTitle = "Jones isn't a pet. He's a survivor"
-st.lost = "Subtract one from each of the numbers\non the hatch and what do you get?\n\nThe six Valenzetti Equation numbers\n"
-			.."of course!\n\nStill not clear?\nHow about \"Dharma Initiative\"?\n\nOkay, if you're still reading then you're\n"
-			.."definitely \"Lost\"! ;)\n\nIt all adds up! That crashed plane...\ncould it be Oceanic Flight 815?\n\n"
-			.."And if you see a puff of smoke moving\ntowards you... then just run!"
-st.mageLove = "Mages must come to Endora!\n\nIf you are lucky she will sell the:\n   (1) Ancient Tome of Portal: Dalaran\n"
-			.."   (2) Tome of Polymorph: Black Cat\n   (3) Dalaran Initiates Pin\n\nEven if they are unavailable she will\n"
+st.lost = "Subtract one from each of the numbers\non the hatch and what do you get?\n\n"
+			.."The six Valenzetti Equation numbers\nof course!\n\nStill not clear?\n"
+			.."How about \"Dharma Initiative\"?\n\nOkay, if you're still reading then you're\n"
+			.."definitely \"Lost\"! ;)\n\nIt all adds up! That crashed plane...\n"
+			.."could it be Oceanic Flight 815?\n\nAnd if you see a puff of smoke moving\n"
+			.."towards you... then just run!"
+st.mageLove = "Mages must come to Endora!\n\nIf you are lucky she will sell the:\n"
+			.."   (1) Ancient Tome of Portal: Dalaran\n   (2) Tome of Polymorph: Black Cat\n"
+			.."   (3) Dalaran Initiates Pin\n\nEven if they are unavailable she will\n"
 			.."surely restock within about 45 minutes\nor so.\n\nShe always has available:\n"
-			.."   (1) Mystical Tome:Arcane Linguist\n   (2) Familiar Stone\n   (3) Mystical Tome: Illusion\n\n"
-			.."Insciptors! Don't forget that she might\nalso have the Glyph of Dalaran Brilliance\n"
-			.."Technique available too. Mages love it!\n\nBonues trivia: In another universe, the\n"
-			.."60's TV show Bewitched! starred Samantha,\nwhose mother's name was Endora. The name\n"
-			.."of the actress... Agnes Moorehead. Ah...\nIt's all starting to add up!\n\n"
-			.."And now the black cat \"Bad Luck\"...\nI wonder who it was who was polymorphed!!!"
-st.maricaHase = "15 years ago this writer (@Taraezor) first visited\nDalaran and he couldn't believe his eyes when he\n"
-			.."stumbled upon the exotically delectable Marcia!\n\nAnd now, in the present day... nobody is the wiser\n"
-			.."as to her real identity \"in another universe\". Yeah,\nthat universe we call \"IRL\".\n\n"
-			.."Who is she? None other than Marica Hase!\n\n((Easily found on IG and X. She's an AV Idol from\n"
-			.."Japan so... those links might be naughty! Careful!\n\nHow the hell did this survive the infamous Blizzard|n"
+			.."   (1) Mystical Tome:Arcane Linguist\n   (2) Familiar Stone\n"
+			.."   (3) Mystical Tome: Illusion\n\nInsciptors! Don't forget that she might\n"
+			.."also have the Glyph of Dalaran Brilliance\nTechnique available too. Mages love it!\n\n"
+			.."Bonues trivia: In another universe, the\n60's TV show Bewitched! starred Samantha,\n"
+			.."whose mother's name was Endora. The name\nof the actress... Agnes Moorehead. Ah...\n"
+			.."It's all starting to add up!\n\nAnd now the black cat \"Bad Luck\"...\n"
+			.."I wonder who it was who was polymorphed!!!"
+st.maricaHase = "15 years ago this writer (@Taraezor) first visited\n"
+			.."Dalaran and he couldn't believe his eyes when he\n"
+			.."stumbled upon the exotically delectable Marcia!\n\n"
+			.."And now, in the present day... nobody is the wiser\n"
+			.."as to her real identity \"in another universe\". Yeah,\n"
+			.."that universe we call \"IRL\".\n\nWho is she? None other than Marica Hase!\n\n"
+			.."((Easily found on IG and X. She's an AV Idol from\n"
+			.."Japan so... those links might be naughty! Careful!\n\n"
+			.."How the hell did this survive the infamous Blizzard|n"
 			.."purge of politically incorrect or naughty content?))"
-st.nethaerasLight = "There was a famous community worker,\nwhose avatar was a candle, who is\ncommemorated in Dalaran. There are\n"
-			.."ten possible locations where you\nmight find a candle...\n\nDismount, target it and /cheer\n\n"
+st.nethaerasLight = "There was a famous community worker,\nwhose avatar was a candle, who is\n"
+			.."commemorated in Dalaran. There are\nten possible locations where you\n"
+			.."might find a candle...\n\nDismount, target it and /cheer\n\n"
 			.."You'll be rewarded with a nice pet!"
-st.northrendHighest = "So you just try sitting atop the Icecrown\nCitadel. Ouch! Until then... this here is\n"
-			.."the highest perch in Northrend. Correct?\n\nBonus factoid... really, just try to sit atop\n"
-			.."the Citadel! There's a \"force\"\npreventing you from trying!\n\nHey, who's spoiling all the fun?"
-st.polarBearCub = "Mages love their polymorphs!\nSo how about a cute polar bear cub?\n\nThe tome drops off Arctic Grizzlies\n"
-			.."in Dragonblight. There's a few here!\n\nThe drop rate is around 1:100"
-st.rayban = "Okay, let's accept for one moment that\nShifty Vickers here has nicked Mankrik's\nOld Wedding Garments...\n\n"
-			.."But I just gotta know where to lay my\nhands on those cool shades!"
+st.northrendHighest = "So you just try sitting atop the Icecrown\n"
+			.."Citadel. Ouch! Until then... this here is\nthe highest perch in Northrend. Correct?\n\n"
+			.."Bonus factoid... really, just try to sit atop\nthe Citadel! There's a \"force\"\n"
+			.."preventing you from trying!\n\nHey, who's spoiling all the fun?"
+st.polarBearCub = "Mages love their polymorphs!\nSo how about a cute polar bear cub?\n\n"
+			.."The tome drops off Arctic Grizzlies\nin Dragonblight. There's a few here!\n\n"
+			.."The drop rate is around 1:100"
+st.preppingTitle = "Wasted Conspiracy or Clever Prepping?"
+st.prepping = "Here they are all alone... three conspirators.\n\n"
+			.."Better to hide here as nobody can be trusted?\n\nBut there's danger within their ranks?\n"
+			.."Or they truly parrot as one?\n\nI suspect that they are prepping!\n"
+			.."They'll surely be safe here come the\narmageddon / apocalypse / holocaust!"
+st.rayban = "Okay, let's accept for one moment that\nShifty Vickers here has nicked Mankrik's\n"
+			.."Old Wedding Garments...\n\nBut I just gotta know where to lay my\n"
+			.."hands on those cool shades!"
 st.raybanTitle = "Mankrik's Ray-Bans too? Very Shifty!"
+st.rustedCrateTitle = "Keys to the City"
+st.rustedCrate = "So you've fished up a key in the moat\noutside The Violet Hold. Great!\n\n"
+			.."What to do with it? Come here!"
 st.sheddleShine = "Upstairs of The Threads of Fate is\nSheddle, who'll gladly shine your\nshoes.\n\n"
 			.."No tip necessary (as he's paid a\ndecent wage by those kindly Kirin\nTor mages).\n\n"
-			.."He does a nice job too. The buff\nwill last you an hour.\n\nJust sit in the seat and Sheddle\n"
-			.."will apply the spit and polish!"
-st.shortcut = "Have a look into the well. Have a reeeeal\ngood look!\n\nOops! Did you fall in? Nevermind! You\n"
-			.."just discovered a shortcut..."
+			.."He does a nice job too. The buff\nwill last you an hour.\n\n"
+			.."Just sit in the seat and Sheddle\nwill apply the spit and polish!"
+st.shortcut = "Have a look into the well. Have a reeeeal\ngood look!\n\n"
+			.."Oops! Did you fall in? Nevermind! You\njust discovered a shortcut..."
 st.silverbrook = "A great place for inscriptors to farm the\ncool \"Rituals of the New Moon\" which\n"
 			.."confers an on-use transform into a giant\nwolf onto an off-hand gear piece.\n\n"
-			.."It's Bind on Pickup so make sure you're\nan inscriptor!\n\nOh yeah... at this very location one of\n"
-			.."the Silverbrook Hunters is buried up to\nhis head!\n\nThis is also the best location for Ally\n"
+			.."It's Bind on Pickup so make sure you're\nan inscriptor!\n\n"
+			.."Oh yeah... at this very location one of\nthe Silverbrook Hunters is buried up to\n"
+			.."his head!\n\nThis is also the best location for Ally\n"
 			.."as Silverbrook mobs in other locations\nare invariably friendly. Horde, you've\n"
-			.."lots more options! Regardless, the\nmobs spawn really quick here too!\n\nExpect to farm 200 or so for the drop"
+			.."lots more options! Regardless, the\nmobs spawn really quick here too!\n\n"
+			.."Expect to farm 200 or so for the drop"
 st.silverbrookTitle = "This Silverbrook Hunter\nis up to his neck in it!"
-st.smouldering = "The camp is very basic.\nBut the fire smoulders.\nNot long departed.\nWill he/she return?"
-st.timmyJ = "Yo Timmy J the deal\nKeepin it so real\nPimpin purple 'n' hat 'n' mo\nUh, uh it's Timmy J on show\n"
-			.."It be boss in dis hood\nAn Timmy J always got da wood\nYeah Timmy J can bounce\nCareful don't blow that ounce\n"
-			.."Trashin tha ride\nlike wat yo got ta hide?\nYa 'sall pimped out\nLike that I got no doubt"
+st.smouldering = "The camp is very basic.\nBut the fire smoulders.\nNot long departed.\n"
+			.."Will he/she return?"
+st.timmyJ = "Yo Timmy J the deal\nKeepin it so real\nPimpin purple 'n' hat 'n' mo\n"
+			.."Uh, uh it's Timmy J on show\n"
+			.."It be boss in dis hood\nAn Timmy J always got da wood\nYeah Timmy J can bounce\n"
+			.."Careful don't blow that ounce\nTrashin tha ride\nlike wat yo got ta hide?\n"
+			.."Ya 'sall pimped out\nLike that I got no doubt"
 st.vitamins = "What maniacal abomination is this?\n\nThere must surely be something in the\n"
 			.."sewer water for a rat to grow that big!\n\nTakes more than prayers and \"vitamins\"\n"
-			.."to grow such a hulking beast.\n\nWhat evil juice are the mages of Dalaran\npumping through the sewer?\n\n"
-			.."Psst! For your very own Giant Sewer Rat\ncompanion try fishing anywhwere in The\n"
-			.."Underbelly. The RNG is brutal but eventually\nyou'll be rewarded with a more modestly,\n"
+			.."to grow such a hulking beast.\n\nWhat evil juice are the mages of Dalaran\n"
+			.."pumping through the sewer?\n\nPsst! For your very own Giant Sewer Rat\n"
+			.."companion try fishing anywhwere in The\nUnderbelly. The RNG is brutal but eventually\n"
+			.."you'll be rewarded with a more modestly,\n"
 			.."but still hulkingly ginormous, giant rat of\nyour very own!"
-st.windle = "At 21:00 \"Blizzard Time\" Windle pats around\nDalaran, lighting the gas lamps and torches.\n\n"
+st.windle = "At 21:00 \"Blizzard Time\" Windle pats around\n"
+			.."Dalaran, lighting the gas lamps and torches.\n\n"
 			.."Windle's not the bright spark he once was\nand he always misses a few.\n\n"
 			.."Why does he light the lights? They are in\nmemory of his daughter Kinndy. She died\n"
 			.."in the Theramore explosion.\n\nHelp out Windle by purchasing a magic\n"
 			.."wand so that you may light the lamps that\nWindle missed!\n\n"
 			.."(If you're late to the party he walks clock-\nwise and is done in about 5 minutes)"
+--=======================================================================================================
 			
 points[ 114 ] = { -- Borean Tundra
 	[22545039] = { name="So Many Tundra Penguins", tip="Why this berg? No idea. But there's\n"
@@ -1846,7 +1742,7 @@ points[ 114 ] = { -- Borean Tundra
 }
 points[ 127 ] = { -- Crystalsong Forest
 	[25863929] = { name="Give Me a Fast Five!", tip=st.duoctane },
-	[26573766] = { name="This One Ate It's Vitamins!", tip=vitamins },
+	[26573766] = { name="This One Ate It's Vitamins!", tip=st.vitamins },
 	[27374052] = { name="Endora Moorehead", tip=st.mageLove },
 	[27803634] = { name="Bouncin' Timmy J!", tip=st.timmyJ },
 	[28003480] = { name="You Light Up My Life Nethaera", tip=st.nethaerasLight },
@@ -1861,12 +1757,14 @@ points[ 127 ] = { -- Crystalsong Forest
 	[29763977] = { name="Underbelly Elixir", tip=st.elixir },
 	[29783559] = { name="I Can't Believe It's Not Butter!", tip=st.fabio },
 	[29893742] = { name=st.jonesTitle, tip=st.jones },
+	[30364247] = { name="Ooh Matron!", tip=st.maricaHase },
 	[30563571] = { name="Vintage... 365 days ago!", tip=st.agedWine },
 	[30653619] = { name=st.factsOfLifeTitle, tip=st.factsOfLife },
 	[31583163] = { name=st.badRogueTitle, tip=st.badRogue },
 	[32533141] = { name=st.arsenicTitle, tip=st.arsenic },
 	[32663246] = { name="Cool Pet For Sale!", tip=st.darahir },
-	[30364247] = { name="Ooh Matron!", tip=st.maricaHase },
+	[32754432] = { name=st.rustedCrateTitle, tip=st.rustedCrate },
+	[68699951] = { name="No Dice!", class="Rogue", tip=st.decahedral },
 }
 points[ 125 ] = { -- Dalaran
 	[37213132] = { name="You Light Up My Life Nethaera", random=0.3, tip=st.nethaerasLight },
@@ -1890,10 +1788,11 @@ points[ 125 ] = { -- Dalaran
 	[54003228] = { name="Vintage... 365 days ago!", tip=st.agedWine },
 	[58315231] = { name="You Light Up My Life Nethaera", random=0.3, tip=st.nethaerasLight },
 	[61964415] = { name="You Light Up My Life Nethaera", random=0.3, tip=st.nethaerasLight },
+	[64627394] = { name=st.rustedCrateTitle, tip=st.rustedCrate },
 }
 points[ 126 ] = { -- Dalaran - The Underbelly
 	[31284960] = { name="Give Me a Fast Five!", tip=st.duoctane },
-	[34754171] = { name="This One Ate It's Vitamins!", tip=vitamins },
+	[34754171] = { name="This One Ate It's Vitamins!", tip=st.vitamins },
 	[44193473] = { name=st.raybanTitle, tip=st.rayban },
 	[47372759] = { name="It Ain't Over 'Til It's Over", tip=st.cockroach },
 	[49564170] = { name="Gender Bending", tip=st.genderBending },
@@ -1906,7 +1805,7 @@ points[ 126 ] = { -- Dalaran - The Underbelly
 points[ 115 ] = { -- Dragonblight
 	[12654150] = { name="Smouldering", tip=st.smouldering },
 	[40775451] = { name="Attention Mages!", tip=st.polarBearCub },
-	
+	[72282350] = { name="No Dice!", class="Rogue", tip=st.decahedral },
 }
 points[ 116 ] = { -- Grizzly Hills
 	[31065547] = { name="Arcturis", tip="Northrend... who loves it more than\n"
@@ -1932,14 +1831,20 @@ points[ 116 ] = { -- Grizzly Hills
 points[ 117 ] = { -- Howling Fjord
 	[26470047] = { name=st.silverbrookTitle, tip=st.silverbrook },
 }
+points[ 170 ] = { -- Hrothgar's Landing
+	[04326271] = { name="Lonesome Berg", tip="Love the attention to detail" },
+	[20246893] = { name=st.preppingTitle, tip=st.prepping },
+	[50618824] = { name=st.griftahTitle, tip=st.griftah },
+	[48003200] = { name="No Dice!", class="Rogue", tip="Rogues surely know that the best place to farm\n"
+						.."Worn Troll Dice is right here. Seems the Kvaldir\n"
+						.."Reavers are obvlivious to your hands in their\npockets!" },
+}
 points[ 118 ] = { -- Icecrown
 	[03177702] = { name="I've Got One Up on You!\n(Reference Lost)", tip=st.lost },
 	[19809549] = { name="Beast Master Hunter Nostalgia", tip=st.bmHunter },
 	[44720439] = { name="Lonesome Berg", tip="Love the attention to detail" },
-	[54060804] = { name="Wasted Conspiracy or Clever Prepping?", tip="Here they are all alone... three conspirators.\n\n"
-						.."Better to hide here as nobody can be trusted?\n\nBut there's danger within their ranks?\n"
-						.."Or they truly parrot as one?\n\nI suspect that they are prepping!\n"
-						.."They'll surely be safe here come the\narmageddon / apocalypse / holocaust!" },
+	[54060804] = { name=st.preppingTitle, tip=st.prepping },
+	[71871936] = { name=st.griftahTitle, tip=st.griftah },
 	[75678754] = { name="Endora Moorehead", tip=st.mageLove },
 	[75868573] = { name="Bouncin' Timmy J!", tip=st.timmyJ },
 	[76128675] = { name=st.initiative, tip=st.higherDnD },
@@ -1964,6 +1869,7 @@ points[ 119 ] = { -- Sholazar Basin
 	[62606380] = { name="Beast Master Hunter Nostalgia", tip=st.bmHunter },
 }
 points[ 120 ] = { -- The Storm Peaks
+	[12723333] = { name=st.griftahTitle, tip=st.griftah },
 	[16079345] = { name="Endora Moorehead", tip=st.mageLove },
 	[16249185] = { name="Bouncin' Timmy J!", tip=st.timmyJ },
 	[16479275] = { name=st.initiative, tip=st.higherDnD },
@@ -2044,10 +1950,14 @@ points[ 203 ] = { -- Vashj'ir
 --=======================================================================================================
 
 st.abandonedKite = "We've all had to do the swim of shame\nwhen we've fallen off a cliff or gone\n"
-			.."too far while exploring.\n\nA convenient taxi! It's a freebie too!\n\nBut... why is it \"abandoned\"?"
-st.alignedGrass = "The grass lines here are precisely aligned.\n\nWhen correctly oriented one can see the letters\n"
-			.."\"EVD\" and from a distance the silhouette of an\nancient carriage is apparent. Is this the long\n"
-			.."rumoured reference to the \"Chariots of the Old\nOnes\" and a subsequent \"Return to the Stars\"?"
+			.."too far while exploring.\n\nA convenient taxi! It's a freebie too!\n\n"
+			.."But... why is it \"abandoned\"?"
+st.alignedGrass = "The grass lines here are precisely aligned.\n\n"
+			.."When correctly oriented one can see the letters\n"
+			.."\"EVD\" and from a distance the silhouette of an\n"
+			.."ancient carriage is apparent. Is this the long\n"
+			.."rumoured reference to the \"Chariots of the Old\n"
+			.."Ones\" and a subsequent \"Return to the Stars\"?"
 st.bellTolls = "This deserted landing is a questing location\n"
 			.."which is not often visited. I urge you to go\n"
 			.."inside and listen to the excellent zone music"
@@ -2061,42 +1971,53 @@ st.clamshellBand = "One of six items you need to collect\nin order to craft the 
 			.."south-west Krasarang Wilds at\n(12.6,81.2).\n\nThat boss drops Lobstmourne, an\n"
 			.."interesting claw-like fist weapon\nused for transmogging"
 st.condor = "The highest peak in The Jade Forest and an\nexcellent place to watch the Condors flying!"
-st.eaPandaria = "Sounds like a good idea for an AddOn!\nYeah... shameless self promotaion again\nbut it really is good!"
+st.eaPandaria = "Sounds like a good idea for an AddOn!\nYeah... shameless self promotaion again\n"
+			.."but it really is good!"
 st.forgottenLockbox = "Second floor of the \"Tavern in the Mists\".\n\n"
 st.gokklok = "You'll love dancing to this toy...\nJust go kill it already and thank me later!"
-st.grohl = "I was in nirvana when I wandered into this cave!...\n\nIs someone getting the best, the best, the best\n"
+st.grohl = "I was in nirvana when I wandered into this cave!...\n\n"
+			.."Is someone getting the best, the best, the best\n"
 			.."The best of you?\nIs someone getting the best, the best, the best\nThe best of you?\n\n"
-			.."He's putting on quite the show! If you hang around\nlong enough his mate ghostly mate Kurt might appear!\n\n"
+			.."He's putting on quite the show! If you hang around\n"
+			.."long enough his mate ghostly mate Kurt might appear!\n\n"
 			.."((Nah... I just made that last bit up. RIP))"
-st.hawkmaster = "My favourite secret location in Pandaria!\n\nWithin The Veiled Stair we have The Secret\n"
+st.hawkmaster = "My favourite secret location in Pandaria!\n\n"
+			.."Within The Veiled Stair we have The Secret\n"
 			.."Aerie and within that we have \"The People\nof the Sky\", a small and oh so isolated\n"
 			.."village of Hawkmasters and Hawk Trainers.\n\nThere's a book in one of the huts.\n\n"
-			.."In addition to the named Hawkmasters, there\nis the adorable Lil' Reed and Lil' Griffin, two\n"
+			.."In addition to the named Hawkmasters, there\n"
+			.."is the adorable Lil' Reed and Lil' Griffin, two\n"
 			.."unobtainable pets to make your heart melt!"
-st.kherShan = "Seems to be guarded the memorial which is\n"
-			.."likely dedicated to whom? Kipling? Mowgli?"
+st.kherShan = "Seems to be guarded the memorial which is\nlikely dedicated to whom? Kipling? Mowgli?"
 st.krosh = "When you run out of IRL references...\nWhy not refer back to yourself?\n\n"
-			.."You all remember Kresh from The Wailing Caverns?\nHe dropped the \"Kresh's Back\" shield. This time\n"
-			.."around... hmmm... that quest name has a double\nreference!!! And... \"whose\" works with and\n"
-			.."without the apostrophe. Nice work Blizz writers!!!\n\nHey hunter tamers! This one's unique!"
-st.lakeKittitata = "Far from an unfinished borderland zone,\nLake Kittitata, especially the upper section,\n"
-			.."affords a spectacular view of The Jade Forest\nbelow, as well as ample opportunity to fish\n"
-			.."the plentiful Jade Lungfish schools"
+			.."You all remember Kresh from The Wailing Caverns?\n"
+			.."He dropped the \"Kresh's Back\" shield. This time\n"
+			.."around... hmmm... that quest name has a double\n"
+			.."reference!!! And... \"whose\" works with and\n"
+			.."without the apostrophe. Nice work Blizz writers!!!\n\n"
+			.."Hey hunter tamers! This one's unique!"
+st.lakeKittitata = "Far from an unfinished borderland zone,\n"
+			.."Lake Kittitata, especially the upper section,\n"
+			.."affords a spectacular view of The Jade Forest\n"
+			.."below, as well as ample opportunity to fish\nthe plentiful Jade Lungfish schools"
 st.lenin = "Advance far enough and you'll be rewarded\nwith the Townlong Steppes zone quest\n"
 			.."completion achievement!\n\nIt's undoubtedly a reference to a phrase\n"
 			.."popularised by Vladimir Ilyich Ulyanov,\ncommonly known as \"Lenin\", and is\n"
 			.."indeed the title of one of his tomes.\n\nThat you are still with me here is an\n"
-			.."achievement itself!\n\n\"Steppes\" obviously reinforces this\nby referencing the Russian Steppes.\n\n"
+			.."achievement itself!\n\n\"Steppes\" obviously reinforces this\n"
+			.."by referencing the Russian Steppes.\n\n"
 st.litterOfXuen = "So cute. There are several\nof these spirit kitties!"
 st.lobstmourne = "Once you have all six pieces and you've\ncrafted the Clamshell Band then you must\n"
 			.."come here and use it to summon Clawlord\nKril'mandar who will then drop Lobstmourne.\n\n"
 			.."This is an interesting fist weapon which\nis nice for transmogrification purposes"
-st.loKiAlaniStory = "He may not get many visitors but be prepared\nto stay a while and listen for Loh-Ki has a\n"
-			.."great story to tell... the origin of ..."
+st.loKiAlaniStory = "He may not get many visitors but be prepared\n"
+			.."to stay a while and listen for Loh-Ki has a\ngreat story to tell... the origin of ..."
 st.manglemaw = "Awww... such a cute baby crocolisk!\n\nToo cute to kill! No... you wouldn't\n"
 			.."dare kill cute lil junior Manglemaw?"
-st.masterNguyen = "Who are the \"Five Sorcerers\"? What secret?\n\nSo much time has elapsed since the mists cleared\n"
-			.."over Pandaria and we are still none the wiser!\n\nDon't you love his \"Power of the Storm\" buff!\n\n"
+st.masterNguyen = "Who are the \"Five Sorcerers\"? What secret?\n\n"
+			.."So much time has elapsed since the mists cleared\n"
+			.."over Pandaria and we are still none the wiser!\n\n"
+			.."Don't you love his \"Power of the Storm\" buff!\n\n"
 			.."((I've marked the extremes of his pat path))"
 st.mountainClimber = "It must be so cold up here!"
 st.neverest = "The highest peak in all of Azeroth!\nIs it really 8,844m above sea level?"
@@ -2104,44 +2025,55 @@ st.nothingToSee = "Nothing to see... move on!\n\nBut you've got to agree it is b
 st.psilocybin = "A tiny mushroom... why? Is it magical?\nWhat a strange trip this must be!"				
 st.renFiretongue = "He just wants to be left alone.\n\nBy the way, Ren can also be found on the\n"
 			.."Kun-Lai Summit side of the Gate of the\nAugust Celestials, phasing permitted"
-st.rollingDeep = "We could have had it all!\n\nRolling in the deep\nYou had my heart inside of your hands\n"
+st.rollingDeep = "We could have had it all!\n\nRolling in the deep\n"
+			.."You had my heart inside of your hands\n"
 			.."But you played it, you played it, you played it\nYou played it to the beat"				
 st.roseOffering = "Hidden away between the zones is this\naltar, like any other save for a solitary\n"
 			.."rose. It's fresh! Who placed it here and\nwho lit the incense?"
-st.rosesSkeleton = "Two strange skeletons and a bed of roses.\n\nAre they a type of saurok? Head to tail and\n"
-			.."facing away from each other. No camp or weapons.\n\nThe largest rose is in the hand of one of the deceased"
+st.rosesSkeleton = "Two strange skeletons and a bed of roses.\n\n"
+			.."Are they a type of saurok? Head to tail and\n"
+			.."facing away from each other. No camp or weapons.\n\n"
+			.."The largest rose is in the hand of one of the deceased"
 st.samwiseDidier = "Celebrating Blizzard's very own real life\nhobbit, the popular WoW artist Sam\n"
 			.."Didier who arguably is responsible for the\nPandaren art we know and love.\n\n"
 			.."And of course Samwise Gamgee from\nThe Hobbit"
-st.secondHighest = "The highest summit in Azeroth? Almost but not quite!\n\nFace at 44 degrees (easy with the \"X and Y\" AddOn by\n"
-			.."yours truly @ Curse) and you might be able to see\nhighest peak in Azeroth from here, way off in the\n"
+st.secondHighest = "The highest summit in Azeroth? Almost but not quite!\n\n"
+			.."Face at 44 degrees (easy with the \"X and Y\" AddOn by\n"
+			.."yours truly @ Curse) and you might be able to see\n"
+			.."highest peak in Azeroth from here, way off in the\n"
 			.."distance.\n\nWasn't that factoid worth the shameless self promotion!"
-st.secretAerie = "With one tiny questing exception, the Secret\nAerie is a perfect location for some chill\n"
-			.."fishing. Hey, the Tiger Gourami Schools\nwhich spawn here can help in that respect\n"
-			.."too! Don't forget the book in the boat!"
+st.secretAerie = "With one tiny questing exception, the Secret\n"
+			.."Aerie is a perfect location for some chill\nfishing. Hey, the Tiger Gourami Schools\n"
+			.."which spawn here can help in that respect\ntoo! Don't forget the book in the boat!"
 st.senTheOptimist = "You'll find Sen wandering around here.\n\nOriginally his dialogue was messed up.\n"
 			.."That's thankfully been fixed. He's now\nsimply... optimistic!"
 st.serpentShrine = "I love this location @ the Peak of Serenity"
-st.smiteAgain = "The Deadmines was apparently not \"merely a\nsetback\" for " ..colourHighlight .."Mr Smite"
-			..colourPlaintext ..". In fact the evidence\nhere is that he is still rather traumatised.\n\n"
-			.."Determined to start a new life he travelled far\nfrom his old base in Westfall. He filed his horns,\n"
-			.."coloured his mane, doned a hoodie and generally\nkeeps a low profile in this quiet corner of the Vale.\n\n"
-			.."Mindless toying with his Gnomish model tug boat\nand his old-world \"vanilla\" chest, no doubt filled\n"
-			.."with painful memories, hint at his trauma.\n\n((He drops a cool \"Mr Smite\" transform toy\n"
+st.smiteAgain = "The Deadmines was apparently not \"merely a\nsetback\" for " ..colourHighlight
+			.."Mr Smite" ..colourPlaintext ..". In fact the evidence\n"
+			.."here is that he is still rather traumatised.\n\n"
+			.."Determined to start a new life he travelled far\n"
+			.."from his old base in Westfall. He filed his horns,\n"
+			.."coloured his mane, doned a hoodie and generally\n"
+			.."keeps a low profile in this quiet corner of the Vale.\n\n"
+			.."Mindless toying with his Gnomish model tug boat\n"
+			.."and his old-world \"vanilla\" chest, no doubt filled\n"
+			.."with painful memories, hint at his trauma.\n\n"
+			.."((He drops a cool \"Mr Smite\" transform toy\n"
 			.."so you may need to wait for the respawn))\n\nHe still wields his favourite weapons too!"
 st.solitaryReed = "Attention to detail? Allowing a\nsolitary reed to stick out of the sea?"
 st.teaTree = "Reminds me of Leptospermum scoparium,\naka \"Tea Tree\" in my country"
-st.tigerWood = "Okay how to tee up a reference? I don't really\nknow how because it's a bit of a bogey. Par\n"
-			.."for the course for most people I suppose"
+st.tigerWood = "Okay how to tee up a reference? I don't really\n"
+			.."know how because it's a bit of a bogey. Par\nfor the course for most people I suppose"
 st.wallWatchers = "Chat to the Wallwatchers...\n\nUncanny! It's as though they had worked far\n"
 			.."to the north, protecting Castle Black from the\nwildlings!\n\n"
-			.."Hang around and Ygritte, Styr and the wildlings\nmight appear? Don't forget to burn the bodies!"
-st.weirdBirdGuitar = "This non-clickable old broiler is a...?\n\nCheckout its animation! It's not about\n"
-			.."to start talking turkey, that's for sure!\n\nAnd the guitar? A case of \"Zul again\"\n"
-			.."or merely gobbledygook?"
-st.zumba = "Hey, we're just in time for the sprite zumba class!\n\nAwwwww, aren't they just so adorable!\n\n"
-			.."C'mon! Let's squeeze into our active wear...\nYeah... must have shrunk in the wash that last\n"
-			.."time we exercised..."
+			.."Hang around and Ygritte, Styr and the wildlings\n"
+			.."might appear? Don't forget to burn the bodies!"
+st.weirdBirdGuitar = "This non-clickable old broiler is a...?\n\n"
+			.."Checkout its animation! It's not about\nto start talking turkey, that's for sure!\n\n"
+			.."And the guitar? A case of \"Zul again\"\nor merely gobbledygook?"
+st.zumba = "Hey, we're just in time for the sprite zumba class!\n\n"
+			.."Awwwww, aren't they just so adorable!\n\nC'mon! Let's squeeze into our active wear...\n"
+			.."Yeah... must have shrunk in the wash that last\ntime we exercised..."
 
 points[ 422 ] = { -- Dread Wastes
 	[27066933] = { item=90170, npc=66935, tip=st.clamshellBand },
@@ -2199,6 +2131,7 @@ points[ 379 ] = { -- Kun-Lai Summit
 					.."The plaque overlooking his old corral in Galapágos\n(Ecuador) now reads, " ..colourHighlight 
 					.."\"We promise to tell your\nstory and to share your conservation message.\"\n\n"
 					..colourPlaintext .."Vale El Solitario George!))" },
+	[64766176] = { name=st.griftahTitle, tip=st.griftah },
 	[68601660] = { name="Mei and Eva", tip="Mei is certainly in the zone, focusing on her\n"
 					.."student. But... persist with talking to her.\n\nA little extra tidbit no?\n\n"
 					.."Interact some more... okay then... leave her be" },
@@ -2230,6 +2163,7 @@ points[ 386 ] = { -- Kun-Lai Summit - Ruins of Korune
 points[ 371 ] = { -- The Jade Forest
 	[05426296] = { name="Single Rose", tip=st.roseOffering },
 	[07906333] = { tip="It's Magic!", tip=st.psilocybin },
+	[09531312] = { name=st.griftahTitle, tip=st.griftah },
 	[14330574] = { name="Aw, They're So Cute!", tip=st.litterOfXuen },
 	[14746943] = { name="Manglemaw", tip=st.manglemaw },
 	[17067175] = { name="Sen the Optimist", tip=st.senTheOptimist },
@@ -2392,8 +2326,10 @@ points[ 554 ] = { -- Timeless Isle
 --
 --=======================================================================================================
 
-st.dmfSpritDust = "Note: Can only be seen when\nyou are in spirit form!\n\nBonus DMF fact: When you are\n"
-			.."alive you can see where the\nspirits are standing/walking.\nLook closely for green-blue\nsparkling dust clouds!"
+st.dmfSpritDust = "Note: Can only be seen when\nyou are in spirit form!\n\n"
+			.."Bonus DMF fact: When you are\n"
+			.."alive you can see where the\nspirits are standing/walking.\n"
+			.."Look closely for green-blue\nsparkling dust clouds!"
 st.stayAWALto = "Stay a While and Listen to..."
 
 points[ 407 ] = { -- Darkmoon Faire
@@ -2417,6 +2353,21 @@ points[ 407 ] = { -- Darkmoon Faire
 					.."place. And what do you make\nof Silas' role in this?\n\n" ..st.dmfSpritDust },
 	[47447453] = { name=st.stayAWALto, tip="Martha Weller!\n\nAs well as being the location\nof the Spirit Healer, you\n"
 					.."can also find Martha patrolling\naround here.\n\n" ..st.dmfSpritDust },
+	[50008660] = { name=st.griftahTitle, tip=st.griftah },
+	[50922568] = { name="A Poet 'n' We Didn't Know It",
+					tip="Ahead of you, Down the Path\nA Majestic, Magical Faire!\nIgnore the Darkened, Eerie Woods\n"
+						.."Ignore the Eyes That Blink and Stare\nFun & Games & Wondrous Sights!\n"
+						.."Music & Fireworks to Light Up the Night!\nDo Not Stop! You're Nearly There!\n"
+						.."Behold, My Friend: THE DARKMOON FAIRE!\n\n(\"Read\" each arrow!)" },
+	[51406370] = { name=st.griftahTitle, tip=st.griftah },
+	[53247584] = { name="Sayge words from a benevolent Gnoll!", tip= "Sayge, the hierophant of the Darkmoon Faire,\n"
+					.."sending you on your way with an appropriate\nbuff, a buff befitting your answers to his\n"
+					.."wisened, searching questions of principle.\n\nNah. We all just wanna scab a decent buff off\n"
+					.."him. If only we knew the correct answers!...\n\n(1:1) Answer 1 + answer 1 : +6% damage\n"
+					.."(1,2) : +5 to all magic resistance\n(1,3) : +10% armour\n(2,1) : +1% versatility\n"
+					.."(2,2) : +10% intellect\n(2,3) : +5 to all magic resistances\n(3,1) : +10% stamina\n"
+					.."(3,2) : +10% strength\n(3,3) : +10% agility\n(4,1) : +10% intellect\n(4,2) : +1% versatility\n"
+					.."(4,3) : +10% armour\n\nThank you oh kind and benevolent Sayge for\nshowing me the way" },
 	[57447285] = { name="Flik", tip="Flik scampers around these parts,\nalong with his pet frog. If you're\n"
 					.."quick enough to catch Flik, he just\nmight sell you one of his less\nfrequently stocked Wood Frog Box.\n"
 					.."Of course he also has his standard\nbasic Tree Frog crates too!" },
@@ -2444,12 +2395,37 @@ points[ 407 ] = { -- Darkmoon Faire
 --
 --=======================================================================================================
 
+points[ 947 ] = { -- Azeroth
+	[90009000] = { name="Top Secret!", tip="((Well off this map, at (1600,1600) was the\n"
+					.."Programmer Isle. Players were never able to\n"
+					.."legally travel to there, even with glitching.\n"
+					.."You'd have to resort to nefarious means.\n\n"
+					.."It served as a test bed for texture and other\n"
+					.."ideas and was used by Programming Team 2\n"
+					.."way back when WoW was still a top secret\nproject.\n\n"
+					.."Source: J Staats, The WoW Diary))" },
+}
 points[ 1532 ] = { -- Crapopolis
 	[46454882] = { name="Mind Your Step!", tip="Did you known there's another mine field?\n\n"
 					.."Sparksocket Minefield, to the west of K3 in\nStorm Peaks." },
 	[56086809] = { name="Funky Town!", tip="Ahhh yes every New Years Eve the\nAuction House in Stormwind or\n"
 					.."Orgrimmar is transformed into a disco.\n\nBut here... it's 24/7!\n\n"
 					.."Time to splash out your best toys!\nNow, where's my Rainbow Generator..." },
+}
+points[ 1672 ] = { -- The Broker's Den, Oribos
+	[51274685] = { name=st.griftahTitle, tip=st.griftah .."\n\n(Griftah is visible after progress)" },
+}
+points[ 626 ] = { -- The Hall of Shadows, Broken Isles Dalaran (Rogue Order Hall)
+	[45502758] = { name=st.griftahTitle, tip=st.griftah .."\n\nNote his expanded inventory here!" },
+}
+points[ 2025 ] = { -- Thaldraszus, Dragon Isles
+	[04992554] = { name=st.griftahTitle, tip=st.griftah .."\n\n(Griftah is visible after progress)" },
+}
+points[ 2022 ] = { -- The Waking Shores, Dragon Isles
+	[25605430] = { name=st.griftahTitle, tip=st.griftah .."\n\n(Griftah is visible after progress)" },
+}
+points[ 1165 ] = { -- Dazar'alor, Zuldazar in Zandalar
+	[53038994] = { name=st.griftahTitle, tip=st.griftah },
 }
 
 -- Choice of texture

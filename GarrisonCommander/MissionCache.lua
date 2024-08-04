@@ -57,9 +57,9 @@ function addon:GetContainedItems(itemID,spec)
 end
 function module:OnInitialized()
   if module.initalized then return end
---[===[@debug@
+--[==[@debug@
   print("OnInitialized")
---@end-debug@]===]
+--@end-debug@]==]
 	--Building price function
 	--> has auction addons installed?
 	local appraisers={}
@@ -162,13 +162,13 @@ function module:AddExtraData(mission)
 		mission.numrewards=mission.numrewards+1
 		if mission.missionID == dbg then DevTools_Dump(v) end
 		for i,c in ipairs(classes) do
-			--[===[@debug@
+			--[==[@debug@
 			if mission.missionID == dbg then print("Checking for class",c.key) end
-			--@end-debug@]===]
+			--@end-debug@]==]
 			local value=c.func(c,k,v)
-			--[===[@debug@
+			--[==[@debug@
 			if mission.missionID == dbg then print("Returned:",value) end
-			--@end-debug@]===]
+			--@end-debug@]==]
 			if value then
 				if not mission.class  then
 					mission[c.key]=mission[c.key]+value
@@ -201,9 +201,9 @@ function module:AddExtraData(mission)
 					else
 						sellvalue=self:GetMarketValue(v.itemID)
 					end
-					--[===[@debug@
+					--[==[@debug@
 					if mission.missionID == dbg then print("Market value",sellvalue) end
-					--@end-debug@]===]
+					--@end-debug@]==]
 					if not tonumber(sellvalue) then
 						print(mission.missionID,"sellvalue for",v.itemID,"was non numeric:",sellvalue)
 						sellvalue=0
@@ -212,9 +212,9 @@ function module:AddExtraData(mission)
 						mission.moreClasses.gold=(mission.moreClasses.gold or 0) + sellvalue * (v.quantity)
 					end
 				end
-				--[===[@debug@
+				--[==[@debug@
 				if mission.missionID == dbg then print("Current gold",mission.gold,"moreclass gold",mission.moreClasses.gold) end
-				--@end-debug@]===]
+				--@end-debug@]==]
 				break
 			end
 		end
@@ -228,9 +228,9 @@ function module:AddExtraData(mission)
 		if not mission.class then mission.class=k end
 		mission[k]=mission[k]+v
 	end
---[===[@debug@
+--[==[@debug@
 	if mission.missionID == dbg then print("Final gold",mission.gold) DevTools_Dump(mission.moreClasses)end
---@end-debug@]===]
+--@end-debug@]==]
 	if not mission.class then mission.class="other" end
 	local xp=G.GetMissionDeploymentInfo(mission.missionID)['xp']
 	if not mission.xp or mission.xp==0 then mission.xp=xp end
@@ -316,9 +316,9 @@ function addon:GetMissionData(missionID,key,default)
 		end
 	end
 	if not mission then
-		--[===[@debug@
+		--[==[@debug@
 		print("Could not find info for mission",missionID,G.GetMissionName(missionID))
-		--@end-debug@]===]
+		--@end-debug@]==]
 		return default
 	end
 	if (key==nil) then

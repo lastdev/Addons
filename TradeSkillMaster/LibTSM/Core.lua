@@ -4,10 +4,10 @@
 --    All Rights Reserved - Detailed license information included with addon.     --
 -- ------------------------------------------------------------------------------ --
 
--- This is loaded before anything else and simply sets up the addon table
-
 local ADDON_NAME = select(1, ...)
 local TSM = select(2, ...) ---@class TSM
+local LibTSMClass = LibStub("LibTSMClass")
+local AddonSettings = TSM.LibTSMApp:Include("Lib.AddonSettings")
 local private = {
 	context = {},
 	initOrder = {},
@@ -16,6 +16,8 @@ local private = {
 	gotAddonLoaded = false,
 	gotPlayerLogin = false,
 	gotPlayerLogout = false,
+	startSystemTime = GetTimePreciseSec(),
+	startTime = time(),
 }
 
 
@@ -24,28 +26,43 @@ local private = {
 -- Module Metatable
 -- ============================================================================
 
-local MODULE_METHODS = {
-	OnModuleLoad = function(self, func)
-		local context = private.context[self]
-		assert(context and not context.moduleLoadFunc and not context.moduleLoadTime and type(func) == "function")
-		context.moduleLoadFunc = func
-	end,
-	OnSettingsLoad = function(self, func)
-		local context = private.context[self]
-		assert(context and not context.settingsLoadFunc and not context.settingsLoadTime and type(func) == "function")
-		context.settingsLoadFunc = func
-	end,
-	OnGameDataLoad = function(self, func)
-		local context = private.context[self]
-		assert(context and not context.gameDataLoadFunc and not context.gameDataLoadTime and type(func) == "function")
-		context.gameDataLoadFunc = func
-	end,
-	OnModuleUnload = function(self, func)
-		local context = private.context[self]
-		assert(context and not context.moduleUnloadFunc and not context.moduleUnloadTime and type(func) == "function")
-		context.moduleUnloadFunc = func
-	end,
-}
+---@class TSMModule
+local MODULE_METHODS = {}
+
+---Registers the function be called when the module is loaded.
+---@protected
+---@param func fun() The function to call
+function MODULE_METHODS:OnModuleLoad(func)
+	local context = private.context[self]
+	assert(context and not context.moduleLoadFunc and not context.moduleLoadTime and type(func) == "function")
+	context.moduleLoadFunc = func
+end
+
+---Registers the function be called with a settings object once available.
+---@protected
+---@param func fun(db: SettingsDB) The function to call
+function MODULE_METHODS:OnSettingsLoad(func)
+	local context = private.context[self]
+	AddonSettings.RegisterOnLoad(context.path, func)
+end
+
+---Registers the function be called once game data is available.
+---@protected
+---@param func fun() The function to call
+function MODULE_METHODS:OnGameDataLoad(func)
+	local context = private.context[self]
+	assert(context and not context.gameDataLoadFunc and not context.gameDataLoadTime and type(func) == "function")
+	context.gameDataLoadFunc = func
+end
+
+---Registers the function be called when the module is unloaded.
+---@protected
+---@param func fun() The function to call
+function MODULE_METHODS:OnModuleUnload(func)
+	local context = private.context[self]
+	assert(context and not context.moduleUnloadFunc and not context.moduleUnloadTime and type(func) == "function")
+	context.moduleUnloadFunc = func
+end
 
 local MODULE_MT = {
 	__index = MODULE_METHODS,
@@ -64,8 +81,9 @@ local MODULE_MT = {
 -- ============================================================================
 
 ---Creates a new TSM module.
----@param path string The name of the module
----@return table
+---@generic T: TSMModule
+---@param path `T` The name of the module
+---@return T
 function TSM.Init(path)
 	assert(type(path) == "string")
 	if private.context[path] then
@@ -77,8 +95,6 @@ function TSM.Init(path)
 		module = moduleObj,
 		moduleLoadFunc = nil,
 		moduleLoadTime = nil,
-		settingsLoadFunc = nil,
-		settingsLoadTime = nil,
 		gameDataLoadFunc = nil,
 		gameDataLoadTime = nil,
 		moduleUnloadFunc = nil,
@@ -104,7 +120,7 @@ function TSM.Include(path)
 end
 
 ---Returns an iterator over all available modules.
----@return fun(): number, string, number, number, number, number # An iterator with fields: `index, loadTime, settingsLoadTime, gameDataLoadTime, moduleUnloadTime`
+---@return fun(): number, string, number, number, number, number # An iterator with fields: `index`, `path`, `loadTime`, `gameDataLoadTime`, `moduleUnloadTime`
 function TSM.ModuleInfoIterator()
 	return private.ModuleInfoIterator, nil, 0
 end
@@ -118,6 +134,24 @@ end
 ---@return boolean
 function TSM.IsLibTSMLoaded()
 	return private.gotAddonLoaded
+end
+
+---Returns whether or not we're running a dev version.
+---@return boolean
+function TSM.IsDev()
+	return TSM.LibTSMUtil.IsDevVersion()
+end
+
+---Returns whether or not we're running in a test environment.
+---@return boolean
+function TSM.IsTest()
+	return TSM.LibTSMUtil.IsTestVersion()
+end
+
+---Gets the current addon version.
+---@return string
+function TSM.GetVersion()
+	return TSM.LibTSMUtil.GetVersionStr()
 end
 
 
@@ -134,37 +168,22 @@ function private.ModuleInfoIterator(_, index)
 	end
 	local context = private.context[path]
 	assert(context)
-	return index, path, context.moduleLoadTime, context.settingsLoadTime, context.gameDataLoadTime, context.moduleUnloadTime
+	return index, path, context.moduleLoadTime, context.gameDataLoadTime, context.moduleUnloadTime
 end
 
 function private.ProcessModuleLoad(path)
 	local context = private.context[path]
 	assert(context)
 	if context.moduleLoadTime then
-		-- already loaded
+		-- Already loaded
 		return
 	end
 	tinsert(private.loadOrder, path)
 	context.moduleLoadTime = 0
 	if context.moduleLoadFunc then
-		local st = GetTimePreciseSec()
+		local startTime = GetTimePreciseSec()
 		context.moduleLoadFunc()
-		context.moduleLoadTime = GetTimePreciseSec() - st
-	end
-end
-
-function private.ProcessSettingsLoad(path)
-	local context = private.context[path]
-	assert(context)
-	if context.settingsLoadTime then
-		-- already loaded
-		return
-	end
-	context.settingsLoadTime = 0
-	if context.settingsLoadFunc then
-		local st = GetTimePreciseSec()
-		context.settingsLoadFunc()
-		context.settingsLoadTime = GetTimePreciseSec() - st
+		context.moduleLoadTime = GetTimePreciseSec() - startTime
 	end
 end
 
@@ -172,14 +191,14 @@ function private.ProcessGameDataLoad(path)
 	local context = private.context[path]
 	assert(context)
 	if context.gameDataLoadTime then
-		-- already loaded
+		-- Already loaded
 		return
 	end
 	context.gameDataLoadTime = 0
 	if context.gameDataLoadFunc then
-		local st = GetTimePreciseSec()
+		local startTime = GetTimePreciseSec()
 		context.gameDataLoadFunc()
-		context.gameDataLoadTime = GetTimePreciseSec() - st
+		context.gameDataLoadTime = GetTimePreciseSec() - startTime
 	end
 end
 
@@ -187,41 +206,41 @@ function private.ProcessModuleUnload(path)
 	local context = private.context[path]
 	assert(context)
 	if context.moduleUnloadTime then
-		-- already unloaded
+		-- Already unloaded
 		return
 	end
 	context.moduleUnloadTime = 0
 	if context.moduleUnloadFunc then
-		local st = GetTimePreciseSec()
+		local startTime = GetTimePreciseSec()
 		context.moduleUnloadFunc()
-		context.moduleUnloadTime = GetTimePreciseSec() - st
+		context.moduleUnloadTime = GetTimePreciseSec() - startTime
 	end
 end
 
 function private.UnloadAll()
-	-- unload in the opposite order we loaded
+	-- Unload in the opposite order we loaded
 	for i = #private.loadOrder, 1, -1 do
 		private.ProcessModuleUnload(private.loadOrder[i])
 	end
+	TSM.LibTSMCore.UnloadAll()
 end
 
 function private.OnEvent(_, event, arg)
 	if event == "ADDON_LOADED" and arg == ADDON_NAME and not private.gotAddonLoaded then
-		assert(not private.gotAddonLoaded and not private.gotPlayerLogin and not private.gotPlayerLogout)
+		assert(not private.gotPlayerLogin and not private.gotPlayerLogout)
 		private.gotAddonLoaded = true
-		-- load any module which haven't already
+		TSM.LibTSMCore.LoadAll()
+		-- Load any module which haven't already
 		for _, path in ipairs(private.initOrder) do
 			private.ProcessModuleLoad(path)
 		end
-		-- settings are now available
-		for _, path in ipairs(private.loadOrder) do
-			private.ProcessSettingsLoad(path)
-		end
+		-- Load settings
+		AddonSettings.LoadDB()
 		private.frame:UnregisterEvent("ADDON_LOADED")
 	elseif event == "PLAYER_LOGIN" then
 		assert(private.gotAddonLoaded and not private.gotPlayerLogin and not private.gotPlayerLogout)
 		private.gotPlayerLogin = true
-		-- game data is now available
+		-- Game data is now available
 		for _, path in ipairs(private.loadOrder) do
 			private.ProcessGameDataLoad(path)
 		end
@@ -229,7 +248,7 @@ function private.OnEvent(_, event, arg)
 		assert(private.gotAddonLoaded and not private.gotPlayerLogout)
 		private.gotPlayerLogout = true
 		if not private.gotPlayerLogin then
-			-- this can happen if the player exists the game during the loading screen, in which case we just ignore it
+			-- This can happen if the player exits the game during the loading screen, in which case we just ignore it
 			return
 		end
 		private.UnloadAll()
@@ -242,18 +261,24 @@ end
 -- Initialization Code
 -- ============================================================================
 
--- Only do initialization if we're loaded in a WoW environment
-if ADDON_NAME then
-	-- Create frame to listen for lifecycle events
-	private.frame = CreateFrame("Frame")
-	private.frame:RegisterEvent("ADDON_LOADED")
-	private.frame:RegisterEvent("PLAYER_LOGIN")
-	private.frame:RegisterEvent("PLAYER_LOGOUT")
-	private.frame:SetScript("OnEvent", private.OnEvent)
-	-- Manually register LibTSMClass
-	local libTSMClassModule = TSM.Init("LibTSMClass")
-	local libTable = LibStub("LibTSMClass")
-	for k, v in pairs(libTable) do
-		libTSMClassModule[k] = v
+do
+	-- Configure LibTSMCore
+	TSM.LibTSMCore.SetTimeFunction(function()
+		return private.startTime + GetTimePreciseSec() - private.startSystemTime
+	end)
+
+	-- Only create the frame if we're running in a WoW environment
+	if ADDON_NAME then
+		-- Create frame to listen for lifecycle events
+		private.frame = CreateFrame("Frame")
+		private.frame:RegisterEvent("ADDON_LOADED")
+		private.frame:RegisterEvent("PLAYER_LOGIN")
+		private.frame:RegisterEvent("PLAYER_LOGOUT")
+		private.frame:SetScript("OnEvent", private.OnEvent)
+		-- Manually register LibTSMClass
+		local libTSMClassModule = TSM.Init("LibTSMClass")
+		for k, v in pairs(LibTSMClass) do
+			libTSMClassModule[k] = v
+		end
 	end
 end

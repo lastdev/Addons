@@ -21,7 +21,7 @@ local seasonListActive = false
 MDT.seasonList = {}
 MDT.dungeonSelectionToIndex = {}
 
-if MDT:IsDragonflight() then
+do
   tinsert(MDT.seasonList, L["Legion"])
   tinsert(MDT.dungeonSelectionToIndex, { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 })
   tinsert(MDT.seasonList, L["BFA"])
@@ -38,12 +38,8 @@ if MDT:IsDragonflight() then
   tinsert(MDT.dungeonSelectionToIndex, { 100, 101, 102, 103, 15, 104, 4, 105 })
   tinsert(MDT.seasonList, L["Dragonflight Season 4"])
   tinsert(MDT.dungeonSelectionToIndex, { 42, 43, 44, 45, 49, 48, 51, 50 })
-end
-
-if MDT:IsWrath() then
-  tinsert(MDT.seasonList, L["Wrath of the Lich King"])
-  tinsert(MDT.dungeonSelectionToIndex,
-    { 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 80, 81 })
+  tinsert(MDT.seasonList, L["The War Within Season 1"])
+  tinsert(MDT.dungeonSelectionToIndex, { 31, 35, 19, 110, 111, 112, 113, 114 })
 end
 
 local seasonList = MDT.seasonList
@@ -88,6 +84,7 @@ function MDT:CreateDungeonSelectDropdown(frame)
   db = MDT:GetDB()
   --Simple Group to hold both dropdowns
   frame.DungeonSelectionGroup = AceGUI:Create("SimpleGroup")
+  frame.DungeonSelectionGroup.frame:SetParent(frame)
   local group = frame.DungeonSelectionGroup
   group.frame:Hide()
   if not group.frame.SetBackdrop then
@@ -103,6 +100,7 @@ function MDT:CreateDungeonSelectDropdown(frame)
   MDT:FixAceGUIShowHide(group)
 
   group.DungeonDropdown = AceGUI:Create("Dropdown")
+  group.DungeonDropdown.pullout.frame:SetParent(group.DungeonDropdown.frame)
   group.DungeonDropdown.text:SetJustifyH("LEFT")
   group.DungeonDropdown:SetCallback("OnValueChanged", function(widget, callbackName, key)
     if (seasonListActive) then
@@ -139,6 +137,7 @@ function MDT:CreateDungeonSelectDropdown(frame)
 
   --sublevel select
   group.SublevelDropdown = AceGUI:Create("Dropdown")
+  group.SublevelDropdown.pullout.frame:SetParent(group.SublevelDropdown.frame)
   group.SublevelDropdown.text:SetJustifyH("LEFT")
   group.SublevelDropdown:SetCallback("OnValueChanged", function(widget, callbackName, key)
     db.presets[db.currentDungeonIdx][db.currentPreset[db.currentDungeonIdx]].value.currentSublevel = key

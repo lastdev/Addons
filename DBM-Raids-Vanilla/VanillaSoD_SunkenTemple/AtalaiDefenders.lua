@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AtalaiDefendersSoD", "DBM-Raids-Vanilla", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240419190350")
+mod:SetRevision("20240615124047")
 mod:SetCreatureID(221640, 218868, 221639, 221637, 221638, 223586)--Zul'Lor, Mijan, Zolo, Gasher, Loro, Hukku
 mod:SetEncounterID(2954)
 mod:SetBossHPInfoToHighest()
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 446372 438294 446338 438341 438339 23511 446361 438335",
 	"SPELL_CAST_SUCCESS 446364 446369 444962 445912 445940 446339 445289 444747 444960 444961 446360 444963 444964",
-	"SPELL_AURA_APPLIED 446354 445284 438294",
+	"SPELL_AURA_APPLIED 446354 438294",
 	"SPELL_AURA_APPLIED_DOSE 445284",
 	"SPELL_AURA_REMOVED 445284 438294",
 	"SPELL_SUMMON 444962 444963 444964 444747 444960 444961"
@@ -42,7 +42,7 @@ local specWarnCorruptedSlam			= mod:NewSpecialWarningDodge(446372, nil, nil, nil
 --local timerChargeCD				= mod:NewAITimer(8, 446369, nil, nil, nil, 3)--8-17.8 so disabled for now
 
 --Mijan
-local warnThorns					= mod:NewSpellAnnounce(438294, 2)
+local warnThorns					= mod:NewTargetNoFilterAnnounce(438294, 2)
 local warnHealingWard				= mod:NewSpellAnnounce(438335, 3)
 
 local specWarnAtalaiSerpentTotem	= mod:NewSpecialWarningSwitch(445912, "Dps", nil, nil, nil, 2)
@@ -103,7 +103,7 @@ function mod:SPELL_CAST_START(args)
 	if args:IsSpell(446372) then
 		specWarnCorruptedSlam:Show()
 		specWarnCorruptedSlam:Play("watchstep")
-	elseif args:IsSpell(438294) then
+	elseif args:IsSpell(438294) and args:GetSrcCreatureID() == 218868  then -- ignore the ghost
 		warnThorns:Show(args.sourceName)--Paladin aura of a druid ability, nani?
 		specWarnThornsStopDps:Show(args.sourceName)
 		specWarnThornsStopDps:Play("stopattack")
@@ -149,7 +149,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		--Can restart timers here for resurrected ones, but can't set initial timers for new spawning boss since group decides which one they pull, so that check needs scanning player damage events :\
 		if args:IsSpell(444960) then--Laro
 			--maybe stop sooner (UNIT_DIED)?
-			timerDemoShoutCD:Restart(14.6)
+			timerDemoShoutCD:Stop()
+			timerDemoShoutCD:Start(14.6)
 		end
 	elseif args:IsSpell(445912) then
 		specWarnAtalaiSerpentTotem:Show()
@@ -169,12 +170,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 446354 then
 		warnShieldSlam:Show(args.destName)
-	elseif spellId == 445284 then
+	elseif spellId == 445284 and args:GetDestCreatureID() == 221637 then
 		local amount = args.amount or 1
 		if amount % 10 == 0 then--Some kills had 80+ stacks, so trying every 10 stack for now
 			warnFervor:Show(args.destName, args.amount or 1)
 		end
-	elseif args:IsSpell(438294) and self:AntiSpam(30, 1) then -- Spell description says it also applies to nearby "party members", maybe it spreads to ghosts? Antispam to be safe
+	elseif args:IsSpell(438294) and args:GetDestCreatureID() == 218868 then
 		timerThorns:Start()
 		specWarnThornsPurge:Show(args.destName)
 		specWarnThornsPurge:Play("dispelboss")
@@ -183,7 +184,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 445284 and self:AntiSpam(8, 1) then--In case continously kited don't want to spam announce it faded
+	if args.spellId == 445284 and args:GetDestCreatureID() == 221637 and self:AntiSpam(8, 1) then--In case continously kited don't want to spam announce it faded
 		warnFervorFaded:Show()
 	elseif args.spellId == 438294 and args:GetDestCreatureID() == 218868 then
 		timerThorns:Stop()
@@ -202,12 +203,12 @@ end
 function mod:SPELL_SUMMON(args)
 	if args:IsSpell(444962, 444963, 444964, 444747, 444960, 444961) then
 		local iconOrder = {
-			[221837] = 1,
-			[221835] = 2,
-			[221836] = 3,
-			[221759] = 4,
-			[221834] = 5,
-			[221833] = 6
+			[221837] = 1,--Zul'Lor
+			[221835] = 2,--Mijan
+			[221836] = 3,--Zolo
+			[221759] = 4,--Gasher
+			[221834] = 5,--Loro
+			[221833] = 6--Hukku
 		}
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if self.Options.SetIconsOnGhosts and cid and iconOrder[cid] then

@@ -1,11 +1,13 @@
-local addonName, shared = ...;
+local addonName, addon = ...;
 
 local SETTINGS_NAME = 'HandyNotes_Pandaria_savedData';
 
-shared.saved = {};
+addon.saved = {};
 
-local function findGlobalObject (names)
-  for _, name in ipairs(names) do
+local function findGlobalObject (...)
+  for x = 1, select('#', ...), 1 do
+    local name = select(x, ...);
+
     if (type(_G[name]) == 'table') then
       return _G[name];
     end
@@ -38,11 +40,11 @@ end
 local function handleAddonLoad (event, loadedAddon)
   if (loadedAddon ~= addonName) then return end
 
-  local saved = shared.saved;
-  local readData = findGlobalObject({
+  local saved = addon.saved;
+  local readData = findGlobalObject(
     SETTINGS_NAME,
-    'storedData',
-  }) or {};
+    'storedData'
+  ) or {};
 
   if (type(readData.hiddenNodes) == 'table') then
     saved.hiddenNodes = readData.hiddenNodes;
@@ -58,12 +60,12 @@ local function handleAddonLoad (event, loadedAddon)
 
   checkSettings(saved.settings);
 
-  shared.addon.off('ADDON_LOADED', handleAddonLoad);
+  addon.off('ADDON_LOADED', handleAddonLoad);
 end
 
 local function exportSettings ()
-  _G[SETTINGS_NAME] = shared.saved;
+  _G[SETTINGS_NAME] = addon.saved;
 end
 
-shared.addon.on('ADDON_LOADED', handleAddonLoad);
-shared.addon.on('PLAYER_LOGOUT', exportSettings);
+addon.on('ADDON_LOADED', handleAddonLoad);
+addon.on('PLAYER_LOGOUT', exportSettings);

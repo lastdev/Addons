@@ -1,5 +1,7 @@
 local E, L = select(2, ...):unpack()
 
+local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+
 local unitFrameData = {
 	--[[
 		[1] = AddOn name
@@ -72,7 +74,7 @@ local unitFrameData = {
 		[5] = 50,
 	},
 	{
-		[1] = "Cell",
+		[1] = "Cell-Party",
 		[2] = "CellPartyFrameMember",
 		[3] = "unit",
 		[4] = 1,
@@ -90,7 +92,7 @@ local unitFrameData = {
 		[2] = "CellSpotlightFrameUnitButton",
 		[3] = "unit",
 		[4] = 1,
-		[5] = 10,
+		[5] = 15,
 	},
 	{
 		[1] = "Cell-QuickCast",

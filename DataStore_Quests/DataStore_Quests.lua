@@ -5,49 +5,25 @@ July 8th, 2009
 
 if not DataStore then return end
 
-local addonName = "DataStore_Quests"
+local addonName, addon = ...
+local thisCharacter
+local allCharacters
+local questInfos
+local questColors
+local questTitles
+local options
 
-_G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 
-local addon = _G[addonName]
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local DataStore, pairs, tonumber, time, format, strsplit, TableInsert, TableConcat = DataStore, pairs, tonumber, time, format, strsplit, table.insert, table.concat
+local GetNumQuestLogEntries, GetQuestLogSelection, SelectQuestLogEntry, GetQuestLogTitle, GetQuestTagInfo = GetNumQuestLogEntries, GetQuestLogSelection, SelectQuestLogEntry, GetQuestLogTitle, GetQuestTagInfo
+local GetQuestLink, GetQuestFactionGroup, GetQuestObjectiveInfo, ExpandQuestHeader, CollapseQuestHeader = GetQuestLink, GetQuestFactionGroup, GetQuestObjectiveInfo, ExpandQuestHeader, CollapseQuestHeader
+local GetNumQuestLogChoices, GetQuestLogChoiceInfo, GetQuestLogItemLink = GetNumQuestLogChoices, GetQuestLogChoiceInfo, GetQuestLogItemLink
+local GetNumQuestLogRewards, GetQuestLogRewardInfo, GetQuestLogRewardMoney = GetNumQuestLogRewards, GetQuestLogRewardInfo, GetQuestLogRewardMoney
+local C_QuestLog, C_TaskQuest, C_QuestInfoSystem, C_CovenantCallings = C_QuestLog, C_TaskQuest, C_QuestInfoSystem, C_CovenantCallings
 
-local AddonDB_Defaults = {
-	global = {
-		Options = {
-			TrackTurnIns = true,					-- by default, save the ids of completed quests in the history
-			AutoUpdateHistory = true,			-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
-			DailyResetHour = 3,					-- Reset dailies at 3am (default value)
-		},
-		Characters = {
-			['*'] = {				-- ["Account.Realm.Name"]
-				lastUpdate = nil,
-				Quests = {},
-				QuestLinks = {},					-- No quest links in Classic !!
-				QuestHeaders = {},
-				QuestTitles = {},	
-				QuestTags = {},
-				Rewards = {},
-				Money = {},
-				Dailies = {},
-				Weeklies = {},
-				History = {},		-- a list of completed quests, hash table ( [questID] = true )
-				HistoryBuild = nil,	-- build version under which the history has been saved
-				HistorySize = 0,
-				HistoryLastUpdate = nil,
-				
-				-- ** Expansion Features / 8.0 - Battle for Azeroth **
-				Emissaries = {},
-				
-				-- ** Expansion Features / 9.0 - Shadowlands **
-				Callings = {},
-				activeCovenantID = 0,				-- Active Covenant ID (0 = None)
-				covenantCampaignProgress = 0,		-- Track the progress in the covenant storyline
-				StorylineProgress = {},				-- Track the progress in various storylines
-			}
-		}
-	}
-}
+local L = DataStore:GetLocale(addonName)
+local bit64 = LibStub("LibBit64")
 
 local emissaryQuests = {
 	-- 7.0 Legion / EXPANSION_NAME6
@@ -77,97 +53,21 @@ local emissaryQuests = {
 	[56120] = 7, -- The Unshackled
 }
 
-local weeklyWorldQuests = {
-	-- Legion : https://www.wowhead.com/broken-isles-world-bosses-guide
-	[43512] = true,		-- Ana-Mouz
-	[43193] = true,		-- Calamir
-	[43448] = true,		-- Drugon the Frostblood
-	[43985] = true,		-- Flotsam
-	[42819] = true,		-- Humongris
-	[43192] = true,		-- Levantus
-	[43513] = true,		-- Na'zak the Fiend
-	[42270] = true,		-- Nithogg
-	[42779] = true,		-- Shar'thos
-	[42269] = true,		-- The Soultakers
-	[44287] = true,		-- Withered J'im
-	
-	-- BfA : https://www.wowhead.com/world-bosses-in-battle-for-azeroth
-	[52196] = true,		-- Dunegorger Kraulok
-	[52169] = true,		-- Ji'arak
-	[52181] = true,		-- T'zane
-	[52166] = true,		-- Warbringer Yenajz
-	[52163] = true,		-- Azurethos, The Winged Typhoon
-	[52157] = true,		-- Hailstone Construct
-	
-	-- Shadowlands
-	[61813] = true,		-- Bastion - Valinor, the Light of Eons
-	[61814] = true,		-- Revendreth - Nurgash Muckformed
-	[61815] = true,		-- Ardenweald - Oranomonos the Everbranching
-	[61816] = true,		-- Maldraxxus - Mortanis
-	[64531] = true,		-- The Maw - Mor'geth
-	[65143] = true,		-- Zereth Mortis - Antros
-	
-	-- Dragonflight : https://www.wowhead.com/guide/world-bosses-dragonflight
-	[69927] = true,		-- The Azure Span - Bazual
-	[69928] = true,		-- Thaldraszus - Liskanoth
-	[69929] = true,		-- Ohn'ahran Plains - Strunraan
-	[69930] = true,		-- The Waking Shores - Basrikron
-	-- [] = true,		-- Zaralek Cavern - The Zaqali Elders ?
-	[76367] = true,		-- Emerald Dream - Aurostor 
-	
-}
-
-local covenantCampaignIDs = {
-	[Enum.CovenantType.Kyrian] = 119,
-	[Enum.CovenantType.Venthyr] = 113,
-	[Enum.CovenantType.NightFae] = 117,
-	[Enum.CovenantType.Necrolord] = 115
-}
-
-local covenantCampaignQuestChapters = {
-	-- These are the quest id's of the last quest in each chapter
-	[Enum.CovenantType.Kyrian] = { 57904, 60272, 58798, 58181, 61878, 58571, 61697, 62555, 62557 },			-- https://www.wowhead.com/guides/kyrian-covenant-campaign-story-rewards
-	[Enum.CovenantType.Venthyr] = { 62921, 60272, 59343, 57893, 58444, 59233, 58395, 57646, 58407 },		-- https://www.wowhead.com/guides/venthyr-covenant-campaign-story-rewards
-	[Enum.CovenantType.NightFae] = { 62899, 60272, 59242, 59821, 59071, 61171, 58452, 59866, 60108 },		-- https://www.wowhead.com/guides/night-fae-covenant-campaign-story-rewards
-	[Enum.CovenantType.Necrolord] = { 59609, 60272, 57648, 58820, 59894, 57636, 58624, 61761, 62406 },		-- https://www.wowhead.com/guides/necrolords-covenant-campaign-story-rewards
-}
-
-local storylines = {
-	-- 9.0 Torghast
-	["Torghast"] = { 62932, 62935, 62938, 60139, 62966, 62969, 60146, 62836, 61730 },
-	-- 9.1 Chains of Domination
-	["9.1"] = { 63639, 64555, 63902, 63727, 63622, 63656, 64437, 63593, 64314 },
-	-- 9.2 Secrets of the First Ones
-	["9.2"] = { 64958, 64825, 65305, 64844, 64813, 65328, 65238 },
-	
-	-- 10.0 The Dreamer
-	["10.0"] = { 66392, 66185, 66186, 66188, 66189, 66394, 66397, 66635, 66398, 66399, 66400, 66401, 66402 },
-	-- 10.1 Embers of Neltharion
-	["10.1"] = { 73156, 75644, 72965, 75145, 74563, 72930, 75417 },
-	-- 10.1.5 Fractures in Time
-	["10.1.5"] = { 76140, 76141, 76142, 76143, 76144, 76145, 76146, 76147 },
-	-- 10.2 Guardians of the Dream
-	["10.2"] = { 75923, 77283, 76443, 77178, 76337, 76401, 76283 },
-	
-}
-
 
 -- *** Common API ***
-local API_GetNumQuestLogEntries
-local API_GetSelectedQuest
-local API_SetSelectedQuest
+local API_GetNumQuestLogEntries = isRetail and C_QuestLog.GetNumQuestLogEntries or GetNumQuestLogEntries
+local API_GetSelectedQuest = isRetail and C_QuestLog.GetSelectedQuest or GetQuestLogSelection
+local API_SetSelectedQuest = isRetail and C_QuestLog.SetSelectedQuest or SelectQuestLogEntry
+local API_DailyFrequency = isRetail and Enum.QuestFrequency.Daily or LE_QUEST_FREQUENCY_DAILY
+local API_WeeklyFrequency = isRetail and Enum.QuestFrequency.Weekly or LE_QUEST_FREQUENCY_WEEKLY
 local API_GetQuestInfo
-local API_DailyFrequency
 local API_GetQuestTagInfo
 
-if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	API_GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
-	API_GetSelectedQuest = C_QuestLog.GetSelectedQuest
-	API_SetSelectedQuest = C_QuestLog.SetSelectedQuest
-	API_DailyFrequency = Enum.QuestFrequency.Daily
-	API_WeeklyFrequency = Enum.QuestFrequency.Weekly
+if isRetail then
 	API_GetQuestInfo = function(index) 
 			local info = C_QuestLog.GetInfo(index)
+		
+			-- isComplete : always nil in retail ? needs checking
 		
 			return info.title, info.level, info.groupSize, info.isHeader, info.isCollapsed, info.isComplete, 
 				info.frequency or 0, info.questID, info.isTask, info.isBounty, info.isStory, info.isHidden, info.suggestedGroup			
@@ -177,14 +77,11 @@ if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 			return info.tagID
 		end
 else
-	API_GetNumQuestLogEntries = GetNumQuestLogEntries
-	API_GetSelectedQuest = GetQuestLogSelection
-	API_SetSelectedQuest = SelectQuestLogEntry
-	API_DailyFrequency = LE_QUEST_FREQUENCY_DAILY
-	API_WeeklyFrequency = LE_QUEST_FREQUENCY_WEEKLY
 	API_GetQuestInfo = function(index) 
 			local title, level, groupSize, isHeader, isCollapsed, isComplete, frequency, questID, 
 					_, _, _, _, isTask, isBounty, isStory, isHidden = GetQuestLogTitle(index)
+			
+			-- isComplete : 1 if the quest is completed, -1 if the quest is failed, nil otherwise
 			
 			-- 2019/09/01 groupSize = "Dungeon", "Raid" in Classic, not numeric !! => 0
 			-- temporary fix: set it to 0 (3rd return value)
@@ -197,95 +94,82 @@ else
 end
 
 -- *** Utility functions ***
-local bAnd = bit.band
-local bOr = bit.bor
-local RShift = bit.rshift
-local LShift = bit.lshift
-
-local function GetOption(option)
-	return addon.db.global.Options[option]
+local function GetQuestTitle(questID)
+	-- retail
+	if isRetail then return C_QuestLog.GetTitleForQuestID(questID) end
+	
+	-- non-retail
+	if questTitles then return questTitles[questID] end
 end
 
-local function GetQuestLogIndexByName(name)
-	-- helper function taken from QuestGuru
-	for i = 1, API_GetNumQuestLogEntries() do
-		local title = API_GetQuestInfo(i)
-		
-		if title == strtrim(name) then
-			return i
-		end
+
+local function SetQuestInfo(questID, isDaily, isWeekly, isTask, isBounty, isStory, isHidden, isSolo, groupSize, level)
+
+	local link = GetQuestLink and GetQuestLink(questID)
+	if not link then return end
+
+	-- local inputString = "|cffffff00|Hquest:76317:2699|h[Call of the Dream]|h|r"
+	local color, _, questInfo = link:match("|c(%x+)|Hquest:(%d+):(-?%d+)|h")
+	
+	local colorID = DataStore:StoreToSetAndList(questColors, color)
+	questInfo = tonumber(questInfo)
+	
+	-- 2024/06/24 : Fix for Cataclysm, not sure yet if it applies to Retail
+	-- questInfo can be equal to -1 for quests that seem to have no level (like holiday quests)
+	-- Set it to 0, and adjust when rebuilding the link
+	if questInfo < 0 then
+		questInfo = 0
 	end
+	
+	local tagID = API_GetQuestTagInfo(questID) or 0
+
+	questInfos[questID] = colorID 			-- bits 0-3, 4 bits = quest color (16 should be more than enough..)
+		+ bit64:LeftShift(tagID, 4)			-- bits 4-13, 10 bits = quest tag (1024, to be safe, current highest is 278 (10.2, Jan. 2024))
+		+ bit64:LeftShift(isDaily, 14)		-- bit 14 : isDaily
+		+ bit64:LeftShift(isWeekly, 15)		-- bit 15 : isWeekly
+		+ bit64:LeftShift(isTask, 16)			-- bit 16 : isTask
+		+ bit64:LeftShift(isBounty, 17)		-- bit 17 : isBounty
+		+ bit64:LeftShift(isStory, 18)		-- bit 18 : isStory
+		+ bit64:LeftShift(isHidden, 19)		-- bit 19 : isHidden
+		+ bit64:LeftShift(isSolo, 20)			-- bit 20 : isSolo
+		+ bit64:LeftShift(groupSize, 21)		-- bit 21-23 : groupSize, 3 bits, shouldn't exceed 5
+		+ bit64:LeftShift(level, 24)			-- bit 24-31 : level
+		+ bit64:LeftShift(questInfo, 32)		-- bits 32+, n bits = info about the quest, Blizzard's encoding, no idea what it means, but necessary to rebuild the quest link.
 end
 
-local function TestBit(value, pos)
-	-- note: this function works up to bit 51
-	local mask = 2 ^ pos		-- 0-based indexing
-	return value % (mask + mask) >= mask
-end
-
-local function ClearExpiredDailies()
-	-- this function will clear all the dailies from the day(s) before (or same day, but before the reset hour)
-
-	local timeTable = {}
-
-	timeTable.year = date("%Y")
-	timeTable.month = date("%m")
-	timeTable.day = date("%d")
-	timeTable.hour = GetOption("DailyResetHour")
-	timeTable.min = 0
-
-	local now = time()
-	local resetTime = time(timeTable)
-
-	-- gap is positive if reset time was earlier in the day (ex: it is now 9am, reset was at 3am) => simply make sure that:
-	--		the elapsed time since the quest was turned in is bigger than  (ex: 10 hours ago)
-	--		the elapsed time since the last reset (ex: 6 hours ago)
-
-	-- gap is negative if reset time is later on the same day (ex: it is 1am, reset is at 3am)
-	--		the elapsed time since the quest was turned in is bigger than
-	--		the elapsed time since the last reset 1 day before
-
-	local gap = now - resetTime
-	gap = (gap < 0) and (86400 + gap) or gap	-- ex: it's 1am, next reset is in 2 hours, so previous reset was (24 + (-2)) = 22 hours ago
-
-	for characterKey, character in pairs(addon.Characters) do
-		-- browse dailies history backwards, to avoid messing up the indexes when removing
-		local dailies = character.Dailies
-		
-		for i = #dailies, 1, -1 do
-			local quest = dailies[i]
-			-- if (now - quest.timestamp) > gap then
-			if quest.timestamp and quest.expiresIn and (now - quest.timestamp) > quest.expiresIn then
-				table.remove(dailies, i)
-			end
-		end
-		
-		-- Clear weeklies
-		local weeklies = character.Weeklies
-
-		for i = #weeklies, 1, -1 do
-			local quest = weeklies[i]
-			
-			-- fix the condition
-			if quest.timestamp and quest.expiresIn and (now - quest.timestamp) > quest.expiresIn then
-				table.remove(weeklies, i)
-			end
-		end
+local function BuildQuestLink(questID)
+	local data = questInfos[questID]
+	if not data then return end
+	
+	local title = GetQuestTitle(questID)
+	if not title then return end
+	
+	local color = bit64:GetBits(data, 0, 4)
+	local info = bit64:RightShift(data, 32)
+	
+	-- 2024/06/24 : Fix for Cataclysm, not sure yet if it applies to Retail
+	-- questInfo can be equal to -1 for quests that seem to have no level (like holiday quests)
+	-- Set it to 0, and adjust when rebuilding the link
+	if info == 0 then
+		info = -1
 	end
+	
+	-- Ex: "|cffffff00|Hquest:65436:2573|h[The Dragon Isles Await]|h|r"
+	return format("|c%s|Hquest:%d:%d|h[%s]|h|r", color, questID, info, title)
 end
 
 local function DailyResetDropDown_OnClick(self)
 	-- set the new reset hour
 	local newHour = self.value
 	
-	addon.db.global.Options.DailyResetHour = newHour
+	options.DailyResetHour = newHour
 	UIDropDownMenu_SetSelectedValue(DataStore_Quests_DailyResetDropDown, newHour)
 end
 
 local function DailyResetDropDown_Initialize(self)
 	local info = UIDropDownMenu_CreateInfo()
 	
-	local selectedHour = GetOption("DailyResetHour")
+	local selectedHour = options.DailyResetHour
 	
 	for hour = 0, 23 do
 		info.value = hour
@@ -297,10 +181,14 @@ local function DailyResetDropDown_Initialize(self)
 	end
 end
 
-local function GetQuestTagID(questID, isComplete, frequency)
-	local tagID = API_GetQuestTagInfo(questID)
+local function GetQuestTagID(questID, isComplete)
+	local data = questInfos[questID]
+	if not data then return end
 	
-	if tagID then
+	-- bits 4-13, 10 bits = quest tag
+	local tagID = bit64:GetBits(data, 4, 10)
+	
+	if tagID ~= 0 then
 		-- if there is a tagID, process it
 		if tagID == QUEST_TAG_ACCOUNT then
 			local factionGroup = GetQuestFactionGroup(questID)
@@ -313,35 +201,40 @@ local function GetQuestTagID(questID, isComplete, frequency)
 		return tagID	-- might be raid/dungeon..
 	end
 
-	if isComplete and isComplete ~= 0 then
-		return (isComplete < 0) and "FAILED" or "COMPLETED"
+	-- needs checking, this does not apply to retail
+	-- old version was always nil in retail
+	-- if isComplete and isComplete ~= 0 then
+		-- return (isComplete < 0) and "FAILED" or "COMPLETED"
+	-- end
+	
+	if isComplete then
+		return "COMPLETED"
 	end
+	
 
 	-- at this point, isComplete is either nil or 0
-	if frequency == API_DailyFrequency then
-		return "DAILY"
-	end
-
-	if frequency == API_WeeklyFrequency then
-		return "WEEKLY"
-	end
+	if bit64:TestBit(data, 14) then return "DAILY" end		-- isDaily ?
+	if bit64:TestBit(data, 15) then return "WEEKLY" end	-- isWeekly ?
 end
 
 local function InjectCallingsAsEmissaries()
 	-- simply loop through all characters, and add the callings to the emissaries table
-	for characterKey, character in pairs(addon.Characters) do
-		for questID, _ in pairs(character.Callings) do
-			emissaryQuests[questID] = 8	-- 8 as Shadowlands is EXPANSION_NAME8
-			
-			-- if the calling quest has not yet been taken at the npc (so it is only still in the Callings list)
-			-- the it will not be enough to just inject it, since the quest log won't find the quest and populate the data.
-
-			if not character.Emissaries[questID] then
-				local questTitle = C_TaskQuest.GetQuestInfoByQuestID(questID)
-				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
+	for _, character in pairs(allCharacters) do
+		
+		if character.Callings then
+			for questID, _ in pairs(character.Callings) do
+				emissaryQuests[questID] = 8	-- 8 as Shadowlands is EXPANSION_NAME8
 				
-				character.Emissaries[questID] = format("%d|%d|%d|%s|%d|%s", numFulfilled, numRequired, 
-					C_TaskQuest.GetQuestTimeLeftMinutes(questID), objective or " ", time(), questTitle)
+				-- if the calling quest has not yet been taken at the npc (so it is only still in the Callings list)
+				-- the it will not be enough to just inject it, since the quest log won't find the quest and populate the data.
+
+				if not character.Emissaries[questID] then
+					local questTitle = C_TaskQuest.GetQuestInfoByQuestID(questID)
+					local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
+					
+					character.Emissaries[questID] = format("%d|%d|%d|%s|%d|%s", numFulfilled, numRequired, 
+						C_TaskQuest.GetQuestTimeLeftMinutes(questID), objective or " ", time(), questTitle)
+				end
 			end
 		end
 	end
@@ -392,7 +285,7 @@ local function ScanChoices(rewards, questID)
 		if link then
 			local id = tonumber(link:match("item:(%d+)"))
 			if id then
-				table.insert(rewards, format("c|%d|%d|%d", id, numItems, isUsable))
+				TableInsert(rewards, format("c|%d|%d|%d", id, numItems, isUsable))
 			end
 		end
 	end
@@ -405,11 +298,12 @@ local function ScanRewards(rewards)
 	for i = 1, GetNumQuestLogRewards() do
 		local _, _, numItems, _, isUsable = GetQuestLogRewardInfo(i)
 		isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
+		
 		local link = GetQuestLogItemLink("reward", i)
 		if link then
 			local id = tonumber(link:match("item:(%d+)"))
 			if id then
-				table.insert(rewards, format("r|%d|%d|%d", id, numItems, isUsable))
+				TableInsert(rewards, format("r|%d|%d|%d", id, numItems, isUsable))
 			end
 		end
 	end
@@ -423,66 +317,22 @@ local function ScanRewardSpells(rewards, questID)
 			local spellInfo = C_QuestInfoSystem.GetQuestRewardSpellInfo(questID, spellID);
 			
 			if spellInfo and (spellInfo.isTradeskill or spellInfo.isSpellLearned) then
-				table.insert(rewards, format("s|%d", spellID))
+				TableInsert(rewards, format("s|%d", spellID))
 			end
 		end
 	end
 end
 
-local function ScanStorylineProgress(storyline)
-	local chapters = storylines[storyline]
-	if not chapters then return end
-
-	local count = 0
-	
-	-- loop through the quest id's of the last quest of each chapter, and check if it is flagged completed
-	for _, questID in pairs(chapters) do
-		if C_QuestLog.IsQuestFlaggedCompleted(questID) then
-			count = count + 1
-		end
-	end
-	
-	local char = addon.ThisCharacter
-	char.StorylineProgress[storyline] = count		-- Ex: ["9.2"] = 6
-end
-
-local function ScanCovenantCampaignProgress()
-	-- Get the covenant ID, exit if invalid
-	local covenantID = C_Covenants.GetActiveCovenantID()
-	if covenantID == Enum.CovenantType.None then return end
-
-	local count = 0
-	
-	-- loop through the quest id's of the last quest of each chapter, and check if it is flagged completed
-	for _, questID in pairs(covenantCampaignQuestChapters[covenantID]) do
-		if C_QuestLog.IsQuestFlaggedCompleted(questID) then
-			count = count + 1
-		end
-	end
-	
-	local char = addon.ThisCharacter
-	char.activeCovenantID = C_Covenants.GetActiveCovenantID()
-	char.covenantCampaignProgress = count
-end
-
 local function ScanQuests()
-	local char = addon.ThisCharacter
+	local char = thisCharacter
 	local quests = char.Quests
-	local links = char.QuestLinks
 	local headers = char.QuestHeaders
 	local rewards = char.Rewards
-	local tags = char.QuestTags
 	local emissaries = char.Emissaries
-	local titles = char.QuestTitles
-	local money = char.Money
 
 	wipe(quests)
-	wipe(links)
 	wipe(headers)
 	wipe(rewards)
-	wipe(tags)
-	wipe(titles)			 
-	wipe(money)
 	
 	-- wipe(emissaries)
 	-- We do not want to delete all emissaries, some may have just been injected
@@ -506,32 +356,33 @@ local function ScanQuests()
 				frequency, questID, isTask, isBounty, isStory, isHidden, suggestedGroup	= API_GetQuestInfo(i)
 		
 		if isHeader then
-			table.insert(headers, title or "")
+			TableInsert(headers, title or "")
 			lastHeaderIndex = lastHeaderIndex + 1
 		else
-			API_SetSelectedQuest(WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and questID or i)
+			API_SetSelectedQuest(isRetail and questID or i)
 			
 			local value = (isComplete and isComplete > 0) and 1 or 0		-- bit 0 : isComplete
-			value = value + LShift((frequency == API_DailyFrequency) and 1 or 0, 1)		-- bit 1 : isDaily
-			value = value + LShift(isTask and 1 or 0, 2)						-- bit 2 : isTask
-			value = value + LShift(isBounty and 1 or 0, 3)					-- bit 3 : isBounty
-			value = value + LShift(isStory and 1 or 0, 4)					-- bit 4 : isStory
-			value = value + LShift(isHidden and 1 or 0, 5)					-- bit 5 : isHidden
-			value = value + LShift((groupSize == 0) and 1 or 0, 6)		-- bit 6 : isSolo
-			-- bit 7 : unused, reserved
-
-			value = value + LShift(suggestedGroup, 8)							-- bits 8-10 : groupSize, 3 bits, shouldn't exceed 5
-			value = value + LShift(lastHeaderIndex, 11)					-- bits 11-15 : index of the header (zone) to which this quest belongs
-			value = value + LShift(level, 16)								-- bits 16-23 : level
-			-- value = value + LShift(GetQuestLogRewardMoney(), 24)		-- bits 24+ : money
+			value = value 
+					+ bit64:LeftShift(lastHeaderIndex, 1)						-- bits 1-5 : index of the header (zone) to which this quest belongs
+					+ bit64:LeftShift(questID, 6)									-- bits 6-23 : questID
+					+ bit64:LeftShift(GetQuestLogRewardMoney(), 24)			-- bits 24+ : money
 			
-			table.insert(quests, value)
+			TableInsert(quests, value)
 			lastQuestIndex = lastQuestIndex + 1
 			
-			tags[lastQuestIndex] = GetQuestTagID(questID, isComplete, frequency)
-			titles[lastQuestIndex] = title
-			links[lastQuestIndex] = GetQuestLink and GetQuestLink(questID) or nil
-			money[lastQuestIndex] = GetQuestLogRewardMoney()
+			if not isRetail then
+				questTitles[questID] = title
+			end
+
+			SetQuestInfo(questID,
+				(frequency == API_DailyFrequency) and 1 or 0,
+				(frequency == API_WeeklyFrequency) and 1 or 0,
+				isTask and 1 or 0,
+				isBounty and 1 or 0,
+				isStory and 1 or 0,
+				isHidden and 1 or 0,
+				(groupSize == 0) and 1 or 0,
+				suggestedGroup, level)
 
 			-- is the quest an emissary quest ?
 			-- Note: this will also process callings, since they were injected earlier
@@ -546,49 +397,35 @@ local function ScanQuests()
 			ScanRewardSpells(rewardsCache, questID)
 
 			if #rewardsCache > 0 then
-				rewards[lastQuestIndex] = table.concat(rewardsCache, ",")
+				rewards[lastQuestIndex] = TableConcat(rewardsCache, ",")
 			end
 		end
 	end
 
 	RestoreHeaders()
 	API_SetSelectedQuest(currentSelection)		-- restore the selection to match the cursor, must be properly set if a user abandons a quest
+
+	char.lastUpdate = time()
 	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		ScanCovenantCampaignProgress()
-		
-		ScanStorylineProgress("Torghast")
-		ScanStorylineProgress("9.1")
-		ScanStorylineProgress("9.2")
-		ScanStorylineProgress("10.0")
-		ScanStorylineProgress("10.1")
-		ScanStorylineProgress("10.1.5")
-		ScanStorylineProgress("10.2")
-		
-	end
-	addon.ThisCharacter.lastUpdate = time()
-	
-	addon:SendMessage("DATASTORE_QUESTLOG_SCANNED", char)
+	DataStore:Broadcast("DATASTORE_QUESTLOG_SCANNED", char)
 end
 
 local function ScanCallings(bountyInfo)
 	if not bountyInfo or not C_CovenantCallings.AreCallingsUnlocked() then return end
 
-	local char = addon.ThisCharacter
-	local callings = char.Callings
-	wipe(callings)
+	local char = thisCharacter
+	char.Callings = (#bountyInfo > 0) and {} or nil
 	
 	for _, bounty in pairs(bountyInfo) do
 		local questID = bounty.questID
 		local timeRemaining = C_TaskQuest.GetQuestTimeLeftMinutes(questID) or 0
 		
-		callings[questID] = format("%s|%s", timeRemaining, bounty.icon)
+		char.Callings[questID] = format("%s|%s", timeRemaining, bounty.icon)
 	end
 	
 	InjectCallingsAsEmissaries()
 end
 
-local queryVerbose
 
 -- *** Event Handlers ***
 local function OnPlayerAlive()
@@ -596,12 +433,12 @@ local function OnPlayerAlive()
 end
 
 local function OnQuestLogUpdate()
-	addon:UnregisterEvent("QUEST_LOG_UPDATE")		-- .. and unregister it right away, since we only want it to be processed once (and it's triggered way too often otherwise)
+	addon:StopListeningTo("QUEST_LOG_UPDATE")		-- .. and unregister it right away, since we only want it to be processed once (and it's triggered way too often otherwise)
 	ScanQuests()
 end
 
 local function OnUnitQuestLogChanged()			-- triggered when accepting/validating a quest .. but too soon to refresh data
-	addon:RegisterEvent("QUEST_LOG_UPDATE", OnQuestLogUpdate)		-- so register for this one ..
+	addon:ListenTo("QUEST_LOG_UPDATE", OnQuestLogUpdate)		-- so register for this one ..
 end
 
 local function OnCovenantCallingsUpdated(event, bountyInfo)
@@ -609,72 +446,14 @@ local function OnCovenantCallingsUpdated(event, bountyInfo)
 	ScanCallings(bountyInfo)
 end
 
-local function OnQuestTurnedIn(event, questID, xpReward, moneyReward)
-	if weeklyWorldQuests[questID] then
-		table.insert(addon.ThisCharacter.Weeklies, {
-			title = C_QuestLog.GetTitleForQuestID(questID),
-			id = questID,
-			timestamp = time(),
-			expiresIn = C_DateAndTime.GetSecondsUntilWeeklyReset()
-		})
-	end
-end
-
-
-local function GetQuestHistory_Common()
-	-- In retail, the questID is the value in the returned table
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		return C_QuestLog.GetAllCompletedQuestIDs()
-	end
-
-	-- In Classic and WotLK, the questID is the key ..
-	local quests = {}
-	GetQuestsCompleted(quests)	
-	
-	-- .. so let's normalize that
-	return DataStore:HashToSortedArray(quests)
-end
-
-local function RefreshQuestHistory()
-	local thisChar = addon.ThisCharacter
-	local history = thisChar.History
-	wipe(history)
-	
-	local quests = GetQuestHistory_Common()
-
-	--[[	In order to save memory, we'll save the completion status of 32 quests into one number (by setting bits 0 to 31)
-		Ex:
-			in history[1] , we'll save quests 0 to 31		(note: questID 0 does not exist, we're losing one bit, doesn't matter :p)
-			in history[2] , we'll save quests 32 to 63
-			...
-			index = questID / 32 (rounded up)
-			bit position = questID % 32
-	--]]
-
-	local count = 0
-	local index, bitPos
-	for _, questID in pairs(quests) do
-		bitPos = (questID % 32)
-		index = ceil(questID / 32)
-
-		history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
-		count = count + 1
-	end
-
-	local _, version = GetBuildInfo()				-- save the current build, to know if we can requery and expect immediate execution
-	thisChar.HistoryBuild = version
-	thisChar.HistorySize = count
-	thisChar.HistoryLastUpdate = time()
-
-	if queryVerbose then
-		addon:Print("Quest history successfully retrieved!")
-		queryVerbose = nil
-	end
-end
 
 -- ** Mixins **
 local function _GetEmissaryQuests()
 	return emissaryQuests
+end
+
+local function _IsEmissaryQuest(questID)
+	return emissaryQuests[questID] and true or false
 end
 
 local function _GetEmissaryQuestInfo(character, questID)
@@ -702,52 +481,59 @@ local function _GetEmissaryQuestInfo(character, questID)
 	return numFulfilled, numRequired, timeLeft, objective, questName, expansionLevel
 end
 
+local function _GetQuestGroupSize(questID)
+	local data = questInfos[questID]
+	
+	-- bit 21-23 : groupSize, 3 bits, shouldn't exceed 5
+	return data and bit64:GetBits(data, 21, 3) or 0
+end
+
+local function _GetQuestName(questID)
+	return GetQuestTitle(questID) or "querying.."
+end
+
+local function _GetQuestLevel(questID)
+	local data = questInfos[questID]
+	
+	-- bit 24-31 : level
+	return data and bit64:GetBits(data, 24, 8) or 0
+end
+
 local function _GetQuestLogSize(character)
 	return #character.Quests
 end
 
-local function _GetQuestLogInfo(character, index, callingQuestID)
-	-- Typical function call : GetQuestLogInfo(character, 5)
-	-- Call for a calling : GetQuestLogInfo(character, nil, 12345)
-	-- 	index not necessary, calling quest id mandatory
-	
-	-- Special treatment in case info is requested for a calling that is not yet in the quest log
-	if not index and callingQuestID and emissaryQuests[callingQuestID] then
-		-- return only the quest name
-		return select(5, _GetEmissaryQuestInfo(character, callingQuestID))
-	end
-
+local function _GetQuestLogID(character, index)
 	local quest = character.Quests[index]
-	if not quest or type(quest) == "string" then return end
 	
-	local isComplete = TestBit(quest, 0)
-	local isDaily = TestBit(quest, 1)
-	local isTask = TestBit(quest, 2)
-	local isBounty = TestBit(quest, 3)
-	local isStory = TestBit(quest, 4)
-	local isHidden = TestBit(quest, 5)
-	local isSolo = TestBit(quest, 6)
+	-- bits 6-23 : questID
+	return quest and bit64:GetBits(quest, 6, 18) or 0
+end
 
-	local groupSize = bAnd(RShift(quest, 8), 7)			-- 3-bits mask
-	local headerIndex = bAnd(RShift(quest, 11), 31)		-- 5-bits mask
-	local level = bAnd(RShift(quest, 16), 255)			-- 8-bits mask
+local function _GetQuestLogTag(character, index)
+	local quest = character.Quests[index]
+	if not quest then return end		
+
+	local questID = bit64:GetBits(quest, 6, 18)
+	local isComplete = bit64:TestBit(quest, 0)
 	
-	local groupName = character.QuestHeaders[headerIndex]		-- This is most often the zone name, or the profession name
+	return GetQuestTagID(questID, isComplete)
+end
+
+local function _GetQuestLogLink(character, index)
+	return BuildQuestLink(_GetQuestLogID(character, index))
+end
+
+local function _IsQuestCompleted(character, index)
+	local quest = character.Quests[index]
 	
-	local tag = character.QuestTags[index]
-	local link, questID, questName
-	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		link = character.QuestLinks[index]
-		questID = link:match("quest:(%d+)")
-		questName = link:match("%[(.+)%]")
-	else
-		-- link = nil			-- intentionally left nil for non-retail
-		-- questID = nil
-		questName = character.QuestTitles[index]
-	end
-	
-	return questName, questID, link, groupName, level, groupSize, tag, isComplete, isDaily, isTask, isBounty, isStory, isHidden, isSolo
+	-- bit 0 : isComplete
+	return quest and bit64:TestBit(quest, 0)
+end
+
+local function QuestBit(questID, bit)
+	local data = questInfos[questID]
+	return data and bit64:TestBit(data, bit)
 end
 
 local function _GetQuestHeaders(character)
@@ -755,18 +541,17 @@ local function _GetQuestHeaders(character)
 end
 
 local function _GetQuestLogMoney(character, index)
-	-- if not character.Money then return end
-	
-	local money = character.Money[index]
-	return money or 0
+	local info = character.Quests[index]
+	return info and bit64:RightShift(info, 24) or 0
 end
 
 local function _GetQuestLogNumRewards(character, index)
 	local reward = character.Rewards[index]
-	if reward then
-		return select(2, gsub(reward, ",", ",")) + 1		-- returns the number of rewards (=count of ^ +1)
-	end
-	return 0
+	
+	-- returns the number of rewards (=count of ^ +1)
+	return reward 
+		and select(2, gsub(reward, ",", ",")) + 1 
+		or 0
 end
 
 local function _GetQuestLogRewardInfo(character, index, rewardIndex)
@@ -787,78 +572,22 @@ local function _GetQuestLogRewardInfo(character, index, rewardIndex)
 	end
 end
 
-local function _GetQuestInfo(link)
-	if type(link) ~= "string" then return end
-
-	local questID, questLevel = link:match("quest:(%d+):(-?%d+)")
-	local questName = link:match("%[(.+)%]")
-
-	return questName, tonumber(questID), tonumber(questLevel)
-end
-
-local function _QueryQuestHistory()
-	queryVerbose = true
-	RefreshQuestHistory()		-- this call triggers "QUEST_QUERY_COMPLETE"
-end
-
-local function _GetQuestHistory(character)
-	return character.History
-end
-
-local function _GetQuestHistoryInfo(character)
-	-- return the size of the history, the timestamp, and the build under which it was saved
-	return character.HistorySize, character.HistoryLastUpdate, character.HistoryBuild
-end
-
-local function _GetDailiesHistory(character)
-	return character.Dailies
-end
-
-local function _GetDailiesHistorySize(character)
-	return #character.Dailies
-end
-
-local function _GetDailiesHistoryInfo(character, index)
-	local quest = character.Dailies[index]
-	return quest.id, quest.title, quest.timestamp
-end
-
-local function _GetWeekliesHistory(character)
-	return character.Weeklies
-end
-
-local function _GetWeekliesHistorySize(character)
-	return #character.Weeklies
-end
-
-local function _GetWeekliesHistoryInfo(character, index)
-	local quest = character.Weeklies[index]
-	return quest.id, quest.title, quest.timestamp
-end
-
-local function _IsQuestCompletedBy(character, questID)
-	local bitPos = (questID % 32)
-	local index = ceil(questID / 32)
-
-	if character.History[index] then
-		return TestBit(character.History[index], bitPos)		-- nil = not completed (not in the table), true = completed
-	end
-end
-
 local function _IsCharacterOnQuest(character, questID)
-	-- Check if the quest is in the quest log
-	for index, link in pairs(character.QuestLinks) do
-		local id = link:match("quest:(%d+)")
-		if questID == tonumber(id) then
+	for index, quest in ipairs(character.Quests) do
+		local id = bit64:GetBits(quest, 6, 18)
+		
+		if questID == id then
 			return true, index		-- return 'true' if the id was found, also return the index at which it was found
 		end
 	end
 	
 	-- Callings will be empty for non-retail, we can leave it as is.
 	-- If not in the quest log, it may be a Calling (even not yet accepted and not yet in the quest log)
-	for callingQuestID, _ in pairs(character.Callings) do
-		if questID == callingQuestID then
-			return true, nil
+	if character.Callings then
+		for callingQuestID, _ in pairs(character.Callings) do
+			if questID == callingQuestID then
+				return true, nil
+			end
 		end
 	end
 end
@@ -869,16 +598,18 @@ local function _GetCharactersOnQuest(questName, player, realm, account)
 	account = account or DataStore.ThisAccount
 	realm = realm or DataStore.ThisRealm
 
-	for characterKey, character in pairs(addon.Characters) do
-		local accountName, realmName, characterName = strsplit(".", characterKey)
-		
+	for id, character in pairs(allCharacters) do
+		local accountName, realmName, characterName = DataStore:GetCharacterInfoByID(id)
+
 		-- all players except the one passed as parameter on that account & that realm
 		if account == accountName and realm == realmName and player ~= characterName then
-			local questLogSize = _GetQuestLogSize(character) or 0
-			for i = 1, questLogSize do
-				local name = _GetQuestLogInfo(character, i)
-				if questName == name then		-- same quest found ?
-					table.insert(out, characterKey)
+
+			-- Loop through quests..
+			for index, quest in ipairs(character.Quests) do
+				local questID = bit64:GetBits(quest, 6, 18)
+				
+				if questName == _GetQuestName(questID) then		-- same quest found ?
+					TableInsert(out, DataStore:GetCharacterKey(id))
 				end
 			end
 		end
@@ -890,9 +621,9 @@ end
 local function _IterateQuests(character, category, callback)
 	-- category : category index (or 0 for all)
 	
-	for index = 1, _GetQuestLogSize(character) do
-		local quest = character.Quests[index]
-		local headerIndex = bAnd(RShift(quest, 11), 31)		-- 5-bits mask	
+	-- Loop through quests..
+	for index, quest in ipairs(character.Quests) do
+		local headerIndex = bit64:GetBits(quest, 1, 5)		-- bits 1-5 : index of the header (zone) to which this quest belongs
 		
 		-- filter quests that are in the right category
 		if (category == 0) or (category == headerIndex) then
@@ -902,257 +633,100 @@ local function _IterateQuests(character, category, callback)
 	end
 end
 
-local function _GetCovenantCampaignProgress(character)
-	return character.covenantCampaignProgress
-end
 
-local function _GetCovenantCampaignLength(character)
-	local covenantID = character.activeCovenantID
-	if not covenantID or covenantID == Enum.CovenantType.None then return 0 end
-	
-	local campaignID = covenantCampaignIDs[covenantID]				-- get the campaign ID of that character's covenant
-	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaing (always available for all covenants)
-	
-	return #chapters
-end
+DataStore:OnAddonLoaded(addonName, function()
+	DataStore:RegisterModule({
+		addon = addon,
+		addonName = addonName,
+		rawTables = {
+			"DataStore_Quests_Infos",
+			"DataStore_Quests_Colors",
+			"DataStore_Quests_Options"
+		},
+		characterTables = {
+			["DataStore_Quests_Characters"] = {
+				GetQuestLogSize = _GetQuestLogSize,
+				GetQuestHeaders = _GetQuestHeaders,
+				GetQuestLogID = _GetQuestLogID,
+				GetQuestLogTag = _GetQuestLogTag,
+				GetQuestLogLink = _GetQuestLogLink,
+				GetQuestLogMoney = _GetQuestLogMoney,
+				GetQuestLogNumRewards = _GetQuestLogNumRewards,
+				GetQuestLogRewardInfo = _GetQuestLogRewardInfo,
+				GetEmissaryQuestInfo = isRetail and _GetEmissaryQuestInfo,
+				IsQuestCompleted = _IsQuestCompleted,
+				IsCharacterOnQuest = _IsCharacterOnQuest,
+				IterateQuests = _IterateQuests,
+			},
+		},
+	})
 
-local function _GetCovenantCampaignChaptersInfo(character)
-	local covenantID = character.activeCovenantID
-	if not covenantID or covenantID == Enum.CovenantType.None then return {} end
-	
-	local campaignID = covenantCampaignIDs[covenantID]				-- get the campaign ID of that character's covenant
-	local chapters = C_CampaignInfo.GetChapterIDs(campaignID)	-- get the chapters of that campaing (always available for all covenants)
-	
-	local chaptersInfo = {}
+	DataStore:RegisterMethod(addon, "IsQuestDaily", function(questID) return QuestBit(questID, 14) end)
+	DataStore:RegisterMethod(addon, "IsQuestWeekly", function(questID) return QuestBit(questID, 15) end)
+	DataStore:RegisterMethod(addon, "IsQuestTask", function(questID) return QuestBit(questID, 16) end)
+	DataStore:RegisterMethod(addon, "IsQuestBounty", function(questID) return QuestBit(questID, 17) end)
+	DataStore:RegisterMethod(addon, "IsQuestStory", function(questID) return QuestBit(questID, 18) end)
+	DataStore:RegisterMethod(addon, "IsQuestHidden", function(questID) return QuestBit(questID, 19) end)
+	DataStore:RegisterMethod(addon, "IsQuestSolo", function(questID) return QuestBit(questID, 20) end)
 
-	for index, id in ipairs(chapters) do
-		local info = C_CampaignInfo.GetCampaignChapterInfo(id)
+	DataStore:RegisterMethod(addon, "GetQuestName", _GetQuestName)
+	DataStore:RegisterMethod(addon, "GetQuestLevel", _GetQuestLevel)
+	DataStore:RegisterMethod(addon, "GetQuestGroupSize", _GetQuestGroupSize)
+	DataStore:RegisterMethod(addon, "GetCharactersOnQuest", _GetCharactersOnQuest)
+
+	if isRetail then
+		DataStore:RegisterMethod(addon, "IsEmissaryQuest", _IsEmissaryQuest)
+		DataStore:RegisterMethod(addon, "GetEmissaryQuests", _GetEmissaryQuests)
+	end
+
+	thisCharacter = DataStore:GetCharacterDB("DataStore_Quests_Characters", true)
+	thisCharacter.Quests = thisCharacter.Quests or {}
+	thisCharacter.QuestHeaders = thisCharacter.QuestHeaders or {}
+	thisCharacter.Rewards = thisCharacter.Rewards or {}
+	thisCharacter.Emissaries = thisCharacter.Emissaries or {}
+	
+	-- Quest titles cannot be retrieved with C_QuestLog in Cataclym
+	if not isRetail then
+		DataStore_Quests_Titles = DataStore_Quests_Titles or {}
+		questTitles = DataStore_Quests_Titles
+	end
 		
-		-- completed will be true/false or nil
-		-- ex: progress is 3/9
-		-- 1 & 2 are true (completed)
-		-- 3 is false (ongoing, but not completed yet)
-		-- 4+ = nil (not yet started)
-			
-		local completed = nil
-		if (index <= character.covenantCampaignProgress) then
-			completed = true
-		elseif (index == character.covenantCampaignProgress + 1) and (character.covenantCampaignProgress ~= 0) then
-			completed = false
-		end
-		
-		table.insert(chaptersInfo, { name = info.name, completed = completed})
-	end
+	allCharacters = DataStore_Quests_Characters
+	questInfos = DataStore_Quests_Infos
 	
-	return chaptersInfo
-end
+	questColors = DataStore:CreateSetAndList(DataStore_Quests_Colors)
+end)
 
-local function _GetStorylineProgress(character, storyline)
-	return character.StorylineProgress[storyline] or 0
-end
+DataStore:OnPlayerLogin(function()
+	options = DataStore:SetDefaults("DataStore_Quests_Options", {
+		AutoUpdateHistory = true,	-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
+		TrackTurnIns = true,			-- by default, save the ids of completed quests in the history
+		DailyResetHour = 3,			-- Reset dailies at 3am (default value)
+	})
 
-local function _GetStorylineLength(storyline)
-	return storylines[storyline] and #storylines[storyline] or 0
-end
-
-local function _GetCampaignChaptersInfo(character, campaignID, storyline)
-	local chaptersInfo = {}
-	local progress = _GetStorylineProgress(character, storyline)
+	addon:ListenTo("PLAYER_ALIVE", OnPlayerAlive)
+	addon:ListenTo("UNIT_QUEST_LOG_CHANGED", OnUnitQuestLogChanged)
 	
-	-- Get the chapters of that campaign (always available for all covenants)
-	-- Or get the quest ID's (ex: for Torghast)
-	local chapters = campaignID
-		and C_CampaignInfo.GetChapterIDs(campaignID)
-		or storylines[storyline]
+	if isRetail then
+		addon:ListenTo("WORLD_QUEST_COMPLETED_BY_SPELL", ScanQuests)
+		addon:ListenTo("COVENANT_CALLINGS_UPDATED", OnCovenantCallingsUpdated)
 	
-	-- Get the chapter name of a given id (step in the campaign or the questID)
-	local GetChapterName = campaignID
-		and function(id) return C_CampaignInfo.GetCampaignChapterInfo(id).name end
-		or function(id) return C_QuestLog.GetTitleForQuestID(id) or "querying.." end
-
-	for index, id in ipairs(chapters) do
-		local chapterName = GetChapterName(id)
-		
-		-- completed will be true/false or nil
-		-- ex: progress is 3/9
-		-- 1 & 2 are true (completed)
-		-- 3 is false (ongoing, but not completed yet)
-		-- 4+ = nil (not yet started)
-			
-		local completed = nil
-		if (index <= progress) then
-			completed = true
-		elseif (index == progress + 1) and (progress ~= 0) then
-			completed = false
-		end
-		
-		table.insert(chaptersInfo, { name = chapterName, completed = completed})
-	end
-	
-	return chaptersInfo
-end
-
-
-local PublicMethods = {
-	GetQuestLogSize = _GetQuestLogSize,
-	GetQuestLogInfo = _GetQuestLogInfo,
-	GetQuestHeaders = _GetQuestHeaders,
-	GetQuestLogMoney = _GetQuestLogMoney,
-	GetQuestLogNumRewards = _GetQuestLogNumRewards,
-	GetQuestLogRewardInfo = _GetQuestLogRewardInfo,
-	GetQuestInfo = _GetQuestInfo,
-	QueryQuestHistory = _QueryQuestHistory,
-	GetQuestHistory = _GetQuestHistory,
-	GetQuestHistoryInfo = _GetQuestHistoryInfo,
-	IsQuestCompletedBy = _IsQuestCompletedBy,
-	GetDailiesHistory = _GetDailiesHistory,
-	GetDailiesHistorySize = _GetDailiesHistorySize,
-	GetDailiesHistoryInfo = _GetDailiesHistoryInfo,
-	IsCharacterOnQuest = _IsCharacterOnQuest,
-	GetCharactersOnQuest = _GetCharactersOnQuest,
-	IterateQuests = _IterateQuests,
-}
-
-if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	PublicMethods.GetEmissaryQuests = _GetEmissaryQuests
-	PublicMethods.GetEmissaryQuestInfo = _GetEmissaryQuestInfo
-	PublicMethods.GetWeekliesHistory = _GetWeekliesHistory
-	PublicMethods.GetWeekliesHistorySize = _GetWeekliesHistorySize
-	PublicMethods.GetWeekliesHistoryInfo = _GetWeekliesHistoryInfo
-	PublicMethods.GetCovenantCampaignProgress = _GetCovenantCampaignProgress
-	PublicMethods.GetCovenantCampaignLength = _GetCovenantCampaignLength
-	PublicMethods.GetCovenantCampaignChaptersInfo = _GetCovenantCampaignChaptersInfo
-	
-	PublicMethods.GetStorylineProgress = _GetStorylineProgress
-	PublicMethods.GetStorylineLength = _GetStorylineLength
-	PublicMethods.GetCampaignChaptersInfo = _GetCampaignChaptersInfo
-end
-
-function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
-
-	DataStore:RegisterModule(addonName, addon, PublicMethods)
-	DataStore:SetCharacterBasedMethod("GetQuestLogSize")
-	DataStore:SetCharacterBasedMethod("GetQuestLogInfo")
-	DataStore:SetCharacterBasedMethod("GetQuestHeaders")
-	DataStore:SetCharacterBasedMethod("GetQuestLogMoney")
-	DataStore:SetCharacterBasedMethod("GetQuestLogNumRewards")
-	DataStore:SetCharacterBasedMethod("GetQuestLogRewardInfo")
-	DataStore:SetCharacterBasedMethod("GetQuestHistory")
-	DataStore:SetCharacterBasedMethod("GetQuestHistoryInfo")
-	DataStore:SetCharacterBasedMethod("IsQuestCompletedBy")
-	DataStore:SetCharacterBasedMethod("GetDailiesHistory")
-	DataStore:SetCharacterBasedMethod("GetDailiesHistorySize")
-	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
-	DataStore:SetCharacterBasedMethod("IsCharacterOnQuest")
-	DataStore:SetCharacterBasedMethod("IterateQuests")
-	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		DataStore:SetCharacterBasedMethod("GetWeekliesHistory")
-		DataStore:SetCharacterBasedMethod("GetWeekliesHistorySize")
-		DataStore:SetCharacterBasedMethod("GetWeekliesHistoryInfo")
-		DataStore:SetCharacterBasedMethod("GetEmissaryQuestInfo")
-		DataStore:SetCharacterBasedMethod("GetCovenantCampaignProgress")
-		DataStore:SetCharacterBasedMethod("GetCovenantCampaignLength")
-		DataStore:SetCharacterBasedMethod("GetCovenantCampaignChaptersInfo")
-		DataStore:SetCharacterBasedMethod("GetStorylineProgress")
-		DataStore:SetCharacterBasedMethod("GetCampaignChaptersInfo")
-	end
-end
-
-function addon:OnEnable()
-	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-	addon:RegisterEvent("UNIT_QUEST_LOG_CHANGED", OnUnitQuestLogChanged)
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		addon:RegisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL", ScanQuests)
-		addon:RegisterEvent("COVENANT_CALLINGS_UPDATED", OnCovenantCallingsUpdated)
-		addon:RegisterEvent("QUEST_TURNED_IN", OnQuestTurnedIn)
-	end
-
-	addon:SetupOptions()
-
-	if GetOption("AutoUpdateHistory") then		-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
-		addon:ScheduleTimer(RefreshQuestHistory, 5)	-- refresh quest history 5 seconds later, to decrease the load at startup
-	end
-
-	-- Daily Reset Drop Down & label
-	local frame = DataStore.Frames.QuestsOptions.DailyResetDropDownLabel
-	frame:SetText(format("|cFFFFFFFF%s:", L["DAILY_QUESTS_RESET_LABEL"]))
-
-	frame = DataStore_Quests_DailyResetDropDown
-	UIDropDownMenu_SetWidth(frame, 60)
-
-	-- This line causes tainting, do not use as is
-	-- UIDropDownMenu_Initialize(frame, DailyResetDropDown_Initialize)
-	frame.displayMode = "MENU"
-	frame.initialize = DailyResetDropDown_Initialize
-	
-	UIDropDownMenu_SetSelectedValue(frame, GetOption("DailyResetHour"))
-	
-	ClearExpiredDailies()
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		InjectCallingsAsEmissaries()
+	else
+		addon:SetupOptions()
+
+		-- Daily Reset Drop Down & label
+		local frame = DataStore.Frames.QuestsOptions.DailyResetDropDownLabel
+		frame:SetText(format("|cFFFFFFFF%s:", L["DAILY_QUESTS_RESET_LABEL"]))
+
+		frame = DataStore_Quests_DailyResetDropDown
+		UIDropDownMenu_SetWidth(frame, 60)
+
+		-- This line causes tainting, do not use as is
+		-- UIDropDownMenu_Initialize(frame, DailyResetDropDown_Initialize)
+		frame.displayMode = "MENU"
+		frame.initialize = DailyResetDropDown_Initialize
+		
+		UIDropDownMenu_SetSelectedValue(frame, options.DailyResetHour)
 	end
-end
-
-function addon:OnDisable()
-	addon:UnregisterEvent("PLAYER_ALIVE")
-	addon:UnregisterEvent("UNIT_QUEST_LOG_CHANGED")
-	addon:UnregisterEvent("QUEST_QUERY_COMPLETE")
-	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		addon:UnregisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL")
-		addon:UnregisterEvent("COVENANT_CALLINGS_UPDATED")
-	end
-end
-
--- *** Hooks ***
--- GetQuestReward is the function that actually turns in a quest
-hooksecurefunc("GetQuestReward", function(choiceIndex)
-	-- 2019/09/09 : questID is valid, even in Classic
-	local questID = GetQuestID() -- returns the last displayed quest dialog's questID
-
-	if not GetOption("TrackTurnIns") or not questID then return end
-	
-	local history = addon.ThisCharacter.History
-	local bitPos  = (questID % 32)
-	local index   = ceil(questID / 32)
-
-	if type(history[index]) == "boolean" then		-- temporary workaround for all players who have not cleaned their SV for 4.0
-		history[index] = 0
-	end
-
-	-- mark the current quest ID as completed
-	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
-
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
-
-		-- track daily quests turn-ins
-		if QuestIsDaily() or emissaryQuests[questID] then
-			-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
-			
-			table.insert(addon.ThisCharacter.Dailies, {
-				title = GetTitleText(),
-				id = questID,
-				timestamp = time(),
-				expiresIn = C_DateAndTime.GetSecondsUntilDailyReset()
-				-- https://wowpedia.fandom.com/wiki/API_C_DateAndTime.GetSecondsUntilDailyReset
-			})
-		end
-	end
-	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-
-		-- track weekly quests turn-ins
-		if QuestIsWeekly() then
-			table.insert(addon.ThisCharacter.Weeklies, {
-				title = GetTitleText(),
-				id = questID,
-				timestamp = time(),
-				expiresIn = C_DateAndTime.GetSecondsUntilWeeklyReset()
-			})
-		end
-	end
-	
-	addon:SendMessage("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
 end)

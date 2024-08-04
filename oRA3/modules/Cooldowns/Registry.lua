@@ -3,6 +3,8 @@ local _, scope = ...
 local oRA3 = scope.addon
 local module = oRA3:GetModule("Cooldowns")
 
+local GetSpellName = C_Spell.GetSpellName
+
 --------------------------------------------------------------------------------
 -- Layouts
 --
@@ -98,7 +100,7 @@ function module:CreateDisplay(type, name)
 		end
 		local spellDB = moduleDB.spells[name]
 		for spellId in next, spellDB do -- clean up
-			if not GetSpellInfo(spellId) then
+			if not GetSpellName(spellId) then
 				spellDB[spellId] = nil
 			end
 		end

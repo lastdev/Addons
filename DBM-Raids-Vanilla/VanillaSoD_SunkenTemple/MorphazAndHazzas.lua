@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MorphazandHazzasSoD", "DBM-Raids-Vanilla", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240409010007")
+mod:SetRevision("20240518094614")
 mod:SetCreatureID(221942, 221943)--Morphaz, Hazzas
 mod:SetEncounterID(2958)
 mod:SetBossHPInfoToHighest()
@@ -107,7 +107,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 446487 then
 		local uId = DBM:GetRaidUnitId(args.destName)
-		if self:IsTanking(uId, nil, nil, true, args.destGUID) then
+		if self:IsTanking(uId, nil, nil, false, args.sourceGUID) then
 			local amount = args.amount or 1
 			warnCorruptedBreath:Show(args.destName, amount)
 		end

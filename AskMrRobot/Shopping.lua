@@ -296,9 +296,9 @@ function Amr:RefreshShoppingUi()
 	-- clear out any previous data
 	_panelContent:ReleaseChildren()
 	
-	local parts = { strsplit("@", _selectedSetup) }
+	local parts = _selectedSetup and { strsplit("@", _selectedSetup) }
 
-	local data = Amr.db.global.Shopping2[parts[1]].setups[parts[2]]
+	local data = parts and Amr.db.global.Shopping2[parts[1]].setups[parts[2]]
 	if not data then		
 		_panelContent:SetLayout("None")
 		

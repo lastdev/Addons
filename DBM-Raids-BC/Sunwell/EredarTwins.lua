@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20240502130901")
+mod:SetRevision("20240616044400")
 mod:SetCreatureID(25165, 25166)
 mod:SetEncounterID(727, 2491)
 mod:SetModelID(23334)
@@ -135,7 +135,7 @@ end
 --This still acts as fastest way to get target. The additional checks in success are for locales that may be missing
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if (msg == L.Nova or msg:find(L.Nova)) and target and self:AntiSpam(5, target..1) then
-		target = DBM:GetUnitFullName(target)
+		target = DBM:GetUnitFullName(target) or target
 		if target == UnitName("player") then
 			specWarnNova:Show()
 			specWarnNova:Play("targetyou")
@@ -147,7 +147,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			self:SetIcon(target, 7, 5)
 		end
 	elseif (msg == L.Conflag or msg:find(L.Conflag)) and target and self:AntiSpam(5, target..2) then
-		target = DBM:GetUnitFullName(target)
+		target = DBM:GetUnitFullName(target) or target
 		if target == UnitName("player") then
 			specWarnConflag:Show()
 			specWarnConflag:Play("targetyou")

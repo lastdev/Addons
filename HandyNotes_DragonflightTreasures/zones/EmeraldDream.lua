@@ -485,7 +485,7 @@ ns.RegisterPoints(ns.EMERALDDREAM, {
     },
     --]]
     [39405340] = { -- Aurostor
-        quest=77217,
+        quest=76367,
         worldquest=76367, -- Hybernation Heroes
         npc=209574,
         loot={
@@ -498,6 +498,7 @@ ns.RegisterPoints(ns.EMERALDDREAM, {
             208440, -- Aurostor's Sleeping Knickers
             208441, -- Restful Dozer's Shoes
             208443, -- Slumbering Ursine Talisman
+            210433, -- Visage of Aurostor
         },
     },
 })

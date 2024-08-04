@@ -1,5 +1,5 @@
 -- Classes.lua
--- July 2014
+-- July 2024
 
 local addon, ns = ...
 local Hekili = _G[ addon ]
@@ -26,10 +26,14 @@ local insert, wipe = table.insert, table.wipe
 local mt_resource = ns.metatables.mt_resource
 
 local GetActiveLossOfControlData, GetActiveLossOfControlDataCount = C_LossOfControl.GetActiveLossOfControlData, C_LossOfControl.GetActiveLossOfControlDataCount
-local GetItemCooldown = _G.GetItemCooldown
-local GetSpellDescription, GetSpellTexture = _G.GetSpellDescription, _G.GetSpellTexture
+local GetItemCooldown = C_Item.GetItemCooldown
+local GetSpellDescription, GetSpellTexture = C_Spell.GetSpellDescription, C_Spell.GetSpellTexture
 local GetSpecialization, GetSpecializationInfo = _G.GetSpecialization, _G.GetSpecializationInfo
+local GetItemSpell, GetItemCount, IsUsableItem = C_Item.GetItemSpell, C_Item.GetItemCount, C_Item.IsUsableItem
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellLink = C_Spell.GetSpellLink
 
+local UnitBuff, UnitDebuff = ns.UnitBuff, ns.UnitDebuff
 
 local specTemplate = {
     enabled = true,
@@ -280,7 +284,8 @@ local HekiliSpecMixin = {
             if a.id > 0 then
                 -- Hekili:ContinueOnSpellLoad( a.id, function( success )
                 a.onLoad = function( a )
-                    a.name = GetSpellInfo( a.id )
+                    local d = GetSpellInfo( a.id )
+                    a.name = d and d.name
 
                     if not a.name then
                         for k, v in pairs( class.auraList ) do
@@ -741,6 +746,7 @@ local HekiliSpecMixin = {
                     local link = actionItem:GetItemLink()
                     local texture = actionItem:GetItemIcon()
 
+                   
                     if name then
                         if not a.name or a.name == a.key then a.name = name end
                         if not a.link or a.link == a.key then a.link = link end
@@ -858,7 +864,16 @@ local HekiliSpecMixin = {
         if a.id and a.id > 0 then
             -- Hekili:ContinueOnSpellLoad( a.id, function( success )
             a.onLoad = function()
-                a.name = GetSpellInfo( a.id )
+                local spellInfo = GetSpellInfo( a.id )
+                
+                if spellInfo == nil then
+                    spellInfo = GetItemInfo( a.id )
+                end
+                if spellInfo then
+                    a.name = spellInfo.name
+                else
+                    a.name = nil
+                end
 
                 if not a.name then
                     for k, v in pairs( class.abilityList ) do
@@ -870,7 +885,7 @@ local HekiliSpecMixin = {
                     return
                 end
 
-                -- if not a.name then Hekili:Error( "Name info not available for " .. a.id .. "." ); return false end
+                if not a.name then Hekili:Error( "Name info not available for " .. a.id .. "." ); return false end
 
                 a.desc = GetSpellDescription( a.id ) -- was returning raw tooltip data.
 
@@ -892,7 +907,12 @@ local HekiliSpecMixin = {
                 if a.rangeSpell and type( a.rangeSpell ) == "number" then
                     Hekili:ContinueOnSpellLoad( a.rangeSpell, function( success )
                         if success then
-                            a.rangeSpell = GetSpellInfo( a.rangeSpell )
+                            info = GetSpellInfo( a.rangeSpell )
+                            if info then
+                                a.rangeSpell = info.name
+                            else
+                                a.rangeSpell = nil
+                            end
                         else
                             a.rangeSpell = nil
                         end
@@ -1560,14 +1580,25 @@ all:RegisterAuras( {
         id = 10060,
         duration = 20,
         max_stack = 1,
-        shared = "player"
+        shared = "player",
+        dot = "buff"
     },
 
     battle_shout = {
         id = 6673,
         duration = 3600,
         max_stack = 1,
-        shared = "player"
+        shared = "player",
+        dot = "buff"
+    },
+
+    -- Mastery increased by $w1% and auto attacks have a $h% chance to instantly strike again.
+    skyfury = {
+        id = 462854,
+        duration = 3600.0,
+        max_stack = 1,
+        shared = "player",
+        dot = "buff"
     },
 
     -- SL Season 3
@@ -2816,6 +2847,7 @@ all:RegisterAbilities( {
         name = "|cff00ccff[Null Cooldown]|r",
         listName = "|T136243:0|t |cff00ccff[Null Cooldown]|r",
         cast = 0,
+        cooldown = 0.001,
         gcd = "off",
 
         startsCombat = false,
@@ -4787,10 +4819,13 @@ do
     end
 
     all:RegisterAbility( "gladiators_medallion", {
-        name = function () return ( GetSpellInfo( 277179 ) ) end,
+        name = function ()
+            local data = GetSpellInfo( 277179 )
+            return data and data.name or "Gladiator's Medallion"
+        end,
         listName = function ()
-            local _, _, tex = GetSpellInfo( 277179 )
-            if tex then return "|T" .. tex .. ":0|t " .. ( GetSpellLink( 277179 ) ) end
+            local data = GetSpellInfo( 277179 )
+            if data and data.iconID then return "|T" .. data.iconID .. ":0|t " .. ( GetSpellLink( 277179 ) ) end
         end,
         link = function () return ( GetSpellLink( 277179 ) ) end,
         cast = 0,
@@ -4860,10 +4895,13 @@ do
     end
 
     all:RegisterAbility( "gladiators_badge", {
-        name = function () return ( GetSpellInfo( 277185 ) ) end,
+        name = function ()
+            local data = GetSpellInfo( 277185 )
+            return data and data.name or "Gladiator's Badge"
+        end,
         listName = function ()
-            local _, _, tex = GetSpellInfo( 277185 )
-            if tex then return "|T" .. tex .. ":0|t " .. ( GetSpellLink( 277185 ) ) end
+            local data = GetSpellInfo( 277185 )
+            if data and data.iconID then return "|T" .. data.iconID .. ":0|t " .. ( GetSpellLink( 277185 ) ) end
         end,
         link = function () return ( GetSpellLink( 277185 ) ) end,
         cast = 0,
@@ -4959,10 +4997,13 @@ do
 
 
     all:RegisterAbility( "gladiators_emblem", {
-        name = function () return ( GetSpellInfo( 277187 ) ) end,
+        name = function ()
+            local data = GetSpellInfo( 277187 )
+            return data and data.name or "Gladiator's Emblem"
+        end,
         listName = function ()
-            local _, _, tex = GetSpellInfo( 277187 )
-            if tex then return "|T" .. tex .. ":0|t " .. ( GetSpellLink( 277187 ) ) end
+            local data = GetSpellInfo( 277187 )
+            if data and data.iconID then return "|T" .. data.iconID .. ":0|t " .. ( GetSpellLink( 277187 ) ) end
         end,
         link = function () return ( GetSpellLink( 277187 ) ) end,
         cast = 0,
@@ -6416,11 +6457,11 @@ function Hekili:SpecializationChanged()
 
         if ability and ability.id > 0 then
             if not ability.texture or not ability.name then
-                local name, _, tex = GetSpellInfo( ability.id )
+                local data = GetSpellInfo( ability.id )
 
-                if name and tex then
-                    ability.name = ability.name or name
-                    class.abilityList[ k ] = "|T" .. tex .. ":0|t " .. ability.name
+                if data and data.name and data.iconID then
+                    ability.name = ability.name or data.name
+                    class.abilityList[ k ] = "|T" .. data.iconID .. ":0|t " .. ability.name
                 end
             else
                 class.abilityList[ k ] = "|T" .. ability.texture .. ":0|t " .. ability.name

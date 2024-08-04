@@ -1,9 +1,9 @@
 # HandyNotes: Mists of Pandaria (Treasures and Rares)
 
-## [v27](https://github.com/kemayo/wow-handynotes-lostandfound/tree/v27) (2024-05-10)
-[Full Changelog](https://github.com/kemayo/wow-handynotes-lostandfound/compare/v26...v27) [Previous Releases](https://github.com/kemayo/wow-handynotes-lostandfound/releases)
+## [v33](https://github.com/kemayo/wow-handynotes-lostandfound/tree/v33) (2024-07-26)
+[Full Changelog](https://github.com/kemayo/wow-handynotes-lostandfound/compare/v32...v33) [Previous Releases](https://github.com/kemayo/wow-handynotes-lostandfound/releases)
 
-- TOC for 10.2.7  
-- Show the Timeless Legends achievement instead of Legend of the Past  
-- A few minor data touchups  
-- All the mobs for Lobstmourne  
+- Update handler submodule to main (d8d98d1)  
+    New changes:  
+    7b05a00 Remove reference to GetFactionInfoByID in 11.0  
+    d8d98d1 Update Krowi\_WorldMapButtons-1.4 to v7, fixing overlap of Legend button  

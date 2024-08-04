@@ -412,6 +412,15 @@ local maps = {
 
   -- Legion
   ['dalaran_legion'] = 627,
+  ['highmountain'] = 650,
+  ['suramar'] = 680,
+
+  -- Minimaps
+  ['stonedark_grotto'] = 659,
+  ['temple_of_faladora'] = 684,
+  ['falanaar_tunnels'] = 685,
+  ['falanaar_tunnels_army_upper'] = 692,
+  ['falanaar_tunnels_army_lower'] = 693,
 
   -- Battle for Azeroth
   ['jade_forest_bfa'] = 371,
@@ -442,6 +451,7 @@ local maps = {
   ['siege_creche'] = 2100,
   ['support_creche'] = 2101,
   ['war_creche'] = 2102,
+  ['dragonskull_island'] = 2150,
   ['froststone_vault'] = 2154,
   ['zaralek_cavern_mini'] = 2184,
   ['sortheril_barrow_den'] = 2253,

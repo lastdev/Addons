@@ -1,5 +1,5 @@
 -- Utils.lua
--- June 2014
+-- July 2024
 
 local addon, ns = ...
 local Hekili = _G[ addon ]
@@ -11,6 +11,50 @@ local class = Hekili.Class
 local state = Hekili.State
 
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
+local GetBuffDataByIndex, GetDebuffDataByIndex = C_UnitAuras.GetBuffDataByIndex, C_UnitAuras.GetDebuffDataByIndex
+local FindAura = AuraUtil.FindAura
+local UnpackAuraData = AuraUtil.UnpackAuraData
+
+local GetSpellBookItemInfo = function(index, bookType)
+    local spellBank = (bookType == BOOKTYPE_SPELL) and Enum.SpellBookSpellBank.Player or Enum.SpellBookSpellBank.Pet
+    local info = C_SpellBook.GetSpellBookItemInfo(index, spellBank)
+    if info then return info.name, info.icon, info.spellID end
+end
+
+ns.UnitBuff = function( unit, index, filter )
+    return UnpackAuraData( GetBuffDataByIndex( unit, index, filter ) )
+end
+
+ns.UnitDebuff = function( unit, index, filter )
+    return UnpackAuraData( GetDebuffDataByIndex( unit, index, filter ) )
+end
+
+
+ns.UnitBuffByID = function( unitToken, spellID, filter )
+    local playerOrPet = UnitIsUnit( "player", unitToken ) or UnitIsUnit( "pet", unitToken )
+    filter = filter or "HELPFUL"
+
+    return FindAura( function( _, _, _, ... )
+        local id, isFromPlayerOrPet = select( 10, ... ), select( 13, ... )
+        return id == spellID and ( not playerOrPet or isFromPlayerOrPet )
+    end, unitToken, filter )
+end
+
+ns.UnitDebuffByID = function( unitToken, spellID, filter )
+    local playerOrPet = UnitIsUnit( "player", unitToken ) or UnitIsUnit( "pet", unitToken )
+    filter = filter or "HARMFUL"
+
+    return FindAura( function( _, _, _, ... )
+        local id, isFromPlayerOrPet = select( 10, ... ), select( 13, ... )
+        return id == spellID and ( not playerOrPet or isFromPlayerOrPet )
+    end, unitToken, filter )
+end
+
+local UnitBuff, UnitDebuff = ns.UnitBuff, ns.UnitDebuff
+local UnitBuffByID, UnitDebuffByID = ns.UnitBuffByID, ns.UnitDebuffByID
+
+local GetItemInfo = C_Item.GetItemInfo
+local GetSpellInfo = C_Spell.GetSpellInfo
 
 local errors = {}
 local eIndex = {}
@@ -290,7 +334,7 @@ function Hekili:After( time, func, ... )
     C_Timer.After( time, delayfunc )
 end
 
-function ns.FindRaidBuffByID(id)
+function ns.FindRaidBuffByID( id )
 
     local unitName
     local buffCounter = 0
@@ -517,7 +561,7 @@ local function FindPlayerAuraByID( id )
     local aura = GetPlayerAuraBySpellID( id )
 
     if aura and aura.name then
-        return aura.name, aura.icon, aura.applications, aura.dispelName, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, aura.isBossAura, aura.nameplateShowAll, aura.timeMod, unpack( aura.points )
+        return aura.name, aura.icon, aura.applications, aura.dispelName, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.nameplateShowPersonal, aura.spellId, aura.canApplyAura, aura.isBossAura, aura.nameplateShowAll, aura.timeMod, unpack( aura.points )
     end
 end
 ns.FindPlayerAuraByID = FindPlayerAuraByID
@@ -525,24 +569,7 @@ ns.FindPlayerAuraByID = FindPlayerAuraByID
 -- Duplicate spell info lookup.
 function ns.FindUnitBuffByID( unit, id, filter )
     if unit == "player" then return FindPlayerAuraByID( id ) end
-
-    local playerOrPet = false
-
-    if filter == "PLAYER|PET" then
-        playerOrPet = true
-        filter = nil
-    end
-
-    local i = 1
-    local name, icon, count, debuffType, duration, expirationTime, caster, stealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff( unit, i, filter )
-
-    while( name ) do
-        if spellID == id and ( not playerOrPet or UnitIsUnit( caster, "player" ) or UnitIsUnit( caster, "pet" ) ) then break end
-        i = i + 1
-        name, icon, count, debuffType, duration, expirationTime, caster, stealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = UnitBuff( unit, i, filter )
-    end
-
-    return name, icon, count, debuffType, duration, expirationTime, caster, stealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3
+    return UnitBuffByID( unit, id, filter )
 end
 
 
@@ -573,8 +600,7 @@ end
 function ns.IsActiveSpell( id )
     local slot = FindSpellBookSlotBySpellID( id )
     if not slot then return false end
-
-    local _, _, spellID = GetSpellBookItemName( slot, "spell" )
+    local _, _, spellID = GetSpellBookItemInfo( slot, "spell" )
     return id == spellID
 end
 
@@ -586,16 +612,16 @@ function Hekili:GetSpellLinkWithTexture( id, size, color )
         id = class.abilities[ id ].id
     end
 
-    local name, _, _, _, _, _, _, icon = GetSpellInfo( id )
+    local data = GetSpellInfo( id )
 
-    if name and icon then
+    if data and data.name and data.iconID then
         if type( color ) == "boolean" then
             color = color and "ff00ff00" or "ffff0000"
         end
 
         if color == nil then color = "ff71d5ff" end
 
-        return "|W|T" .. icon .. ":" .. ( size or 0 ) .. ":" .. ( size or "" ) .. ":::64:64:4:60:4:60|t " .. ( color and ( "|c" .. color ) or "" ) .. name .. ( color and "|r" or "" ) .. "|w"
+        return "|W|T" .. data.iconID .. ":" .. ( size or 0 ) .. ":" .. ( size or "" ) .. ":::64:64:4:60:4:60|t " .. ( color and ( "|c" .. color ) or "" ) .. data.name .. ( color and "|r" or "" ) .. "|w"
     end
 
     return tostring( id )
@@ -926,7 +952,7 @@ function Hekili:GetLoadoutExportString()
     local bitWidthRanksPurchased = 6
 
     -- Cannot force-load as needed without causing taint, so this simply replicates existing Blizzard functionality.
-    if IsAddOnLoaded( "Blizzard_ClassTalentUI" ) then
+    if C_AddOns.IsAddOnLoaded( "Blizzard_ClassTalentUI" ) then
         bitWidthHeaderVersion = ClassTalentImportExportMixin.bitWidthHeaderVersion
         bitWidthSpecID = ClassTalentImportExportMixin.bitWidthSpecID
         bitWidthRanksPurchased = ClassTalentImportExportMixin.bitWidthRanksPurchased
@@ -953,42 +979,46 @@ function Hekili:GetLoadoutExportString()
         es:AddValue( 8, hashVal )
     end
 
-    local treeNodes = C_Traits.GetTreeNodes( treeID )
-    for i, treeNodeID in ipairs( treeNodes ) do
-        local treeNode = C_Traits.GetNodeInfo( configID, treeNodeID )
+	local treeNodes = C_Traits.GetTreeNodes(treeID);
+	for i, treeNodeID in ipairs(treeNodes) do
+		local treeNode = C_Traits.GetNodeInfo(configID, treeNodeID);
 
-        local isNodeSelected = treeNode.ranksPurchased > 0
-        local isPartiallyRanked = treeNode.ranksPurchased ~= treeNode.maxRanks
-        local isChoiceNode = treeNode.type == Enum.TraitNodeType.Selection
+		local isNodeGranted = treeNode.activeRank - treeNode.ranksPurchased > 0;
+		local isNodePurchased = treeNode.ranksPurchased > 0;
+		local isNodeSelected = isNodeGranted or isNodePurchased;
+		local isPartiallyRanked = treeNode.ranksPurchased ~= treeNode.maxRanks;
+		local isChoiceNode = treeNode.type == Enum.TraitNodeType.Selection or treeNode.type == Enum.TraitNodeType.SubTreeSelection;
 
-        es:AddValue( 1, isNodeSelected and 1 or 0 )
+		es:AddValue(1, isNodeSelected and 1 or 0);
+		if(isNodeSelected) then
+			es:AddValue(1, isNodePurchased and 1 or 0);
 
-        if ( isNodeSelected ) then
-            es:AddValue( 1, isPartiallyRanked and 1 or 0 )
-            if ( isPartiallyRanked ) then
-                es:AddValue( bitWidthRanksPurchased, treeNode.ranksPurchased )
-            end
+			if isNodePurchased then
+				es:AddValue(1, isPartiallyRanked and 1 or 0);
+				if(isPartiallyRanked) then
+					es:AddValue(bitWidthRanksPurchased, treeNode.ranksPurchased);
+				end
 
-            es:AddValue( 1, isChoiceNode and 1 or 0 )
-            if ( isChoiceNode) then
-                local entryIndex = 0
+				es:AddValue(1, isChoiceNode and 1 or 0);
+				if(isChoiceNode) then
+					local entryIndex = 0
 
-                for i, entryID in ipairs( treeNode.entryIDs ) do
-                    if ( entryID == treeNode.activeEntry.entryID ) then
-                        entryIndex = i
-                        break
+                    for i, entryID in ipairs(treeNode.entryIDs) do
+                        if(entryID == treeNode.activeEntry.entryID) then
+                            entryIndex = i
+                        end
                     end
-                end
 
-                if ( entryIndex <= 0 or entryIndex > 4 ) then
-                    return "error: unable to generate"
-                end
+					if(entryIndex <= 0 or entryIndex > 4) then
+						error("Error exporting tree node " .. treeNode.ID .. ". The active choice node entry index (" .. entryIndex .. ") is out of bounds. ");
+					end
 
-                -- store entry index as zero-index
-                es:AddValue( 2, entryIndex - 1 )
-            end
-        end
-    end
+					-- store entry index as zero-index
+					es:AddValue(2, entryIndex - 1);
+				end
+			end
+		end
+	end
 
     return es:GetExportString()
 end

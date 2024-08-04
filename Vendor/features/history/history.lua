@@ -156,7 +156,7 @@ function Addon:AddEntryToHistory(link, action, rule, ruleid, count, value)
     local entry = {}
     entry.TimeStamp = time()
     entry.Action = action
-    entry.Id = select(1, GetItemInfoInstant(link))
+    entry.Id = select(1, Addon:GetItemInfoInstant(link))
     entry.Count = count
     entry.Value = value
     entry.Profile = getOrCreateProfileId()
@@ -341,11 +341,11 @@ end
 function Addon:History_Cmd(arg1, arg2, arg3)
     if arg1 == "clear" then
         if arg2 == "all" then
-            Addon:Print(L.CMD_CLEAR_ALL_HISTORY)
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_CLEAR_ALL_HISTORY);
             History:ClearAllHistory()
             return
         else
-            Addon:Print(L.CMD_CLEAR_CHAR_HISTORY, Addon:GetCharacterFullName() or "")
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_CLEAR_CHAR_HISTORY, Addon:GetCharacterFullName() or "");
             History:ClearCharacterHistory()
             return
         end
@@ -353,19 +353,18 @@ function Addon:History_Cmd(arg1, arg2, arg3)
 
     if arg1 == "prune" then
         if not arg2 then
-            Addon:Print(L.CMD_PRUNE_HISTORY_ARG)
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRUNE_HISTORY_ARG);
             return
         end
         if arg3 == "all" then
-            
-            Addon:Print(L.CMD_PRUNE_ALL_HISTORY, arg2)
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRUNE_ALL_HISTORY, arg2);
             local count = Addon:PruneAllHistory(tonumber(arg2))
-            Addon:Print(L.CMD_PRUNE_SUMMARY, tostring(count))
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRUNE_SUMMARY, tostring(count));
             return
         else
-            Addon:Print(L.CMD_PRUNE_CHAR_HISTORY, Addon:GetCharacterFullName() or "", arg2)
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRUNE_CHAR_HISTORY, Addon:GetCharacterFullName() or "", arg2);
             local count = Addon:PruneHistory(tonumber(arg2))
-            Addon:Print(L.CMD_PRUNE_SUMMARY, tostring(count))
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRUNE_SUMMARY, tostring(count));
             return
         end
     end
@@ -390,14 +389,14 @@ function Addon:History_Cmd(arg1, arg2, arg3)
     local allcount = 0
     local allvalue = 0
     for _, char in pairs(charsToPrint) do
-        Addon:Print(L.CMD_PRINT_HISTORY_HEADER, char)
+        Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRINT_HISTORY_HEADER, char);
         local count = 0
         local total = 0
         if history.Characters and history.Characters[char] and history.Characters[char].Entries then
             for _, entry in pairs(history.Characters[char].Entries) do
                 count = count + 1
                 total = total + entry.Value
-                local _, display = GetItemInfo(entry.Id)
+                local _, display = Addon:GetItemInfo(entry.Id)
                 if not display then display = entry.Id end
                 local ruleid, rule = History:GetRuleInfoFromHistoryId(entry.Rule)
                 local profileid, profile = History:GetProfileInfoFromHistoryId(entry.Profile)
@@ -405,7 +404,8 @@ function Addon:History_Cmd(arg1, arg2, arg3)
                 if Addon.IsDebug then
                     debugextra = string.format(" {%s | %s}", ruleid, profile)
                 end
-                Addon:Print("  [%s] (%s) %s - %s %s",
+                Addon:Output(Addon.Systems.Chat.MessageType.Console,
+                    "  [%s] (%s) %s - %s %s",
                     date(L.CMD_HISTORY_DATEFORMAT,tonumber(entry.TimeStamp)),
                     History:GetActionTypeFromId(entry.Action),
                     display,
@@ -414,12 +414,13 @@ function Addon:History_Cmd(arg1, arg2, arg3)
             end
             allcount = allcount + count
             allvalue = allvalue + total
-            Addon:Print(L.CMD_PRINT_HISTORY_SUMMARY, char, count, Addon:GetPriceString(total))
+
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRINT_HISTORY_SUMMARY, char, count, Addon:GetPriceString(total));
         end
     end
 
     if totalsummary then
-        Addon:Print(L.CMD_PRINT_HISTORY_SUMMARY_ALL, tostring(allcount), Addon:GetPriceString(allvalue))
+        Addon:Output(Addon.Systems.Chat.MessageType.Console, L.CMD_PRINT_HISTORY_SUMMARY_ALL, tostring(allcount), Addon:GetPriceString(allvalue));
     end
 end
 

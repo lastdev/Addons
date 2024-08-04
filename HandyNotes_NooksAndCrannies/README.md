@@ -57,6 +57,10 @@ This adds doors and portal to map, showing you where you can travel. It can be s
 - __Shadowmoon Valley__: Bloodthorn Cave, Den of Secrets
 - __Nagrand__: Oshu'gun, Stonecrag Gorge, The Masters' Cavern
 
+#### Waypoints in Legion
+
+- __Suramar__: Temple of Fal'adora
+
 #### Waypoints in Shadowlands
 
 - __Korthia__: Cavern of Contemplation, Gromit Hollow
@@ -65,6 +69,6 @@ This adds doors and portal to map, showing you where you can travel. It can be s
 #### Waypoints in Dragonflight
 
 - __Valdrakken__: Mythic dungeon portals (Seasonal), Home City portals (Orgrimmar / Stormwind)
-- __Forbidden Reach__: The Siege Creche, The Support Creche, The War Creche
+- __Forbidden Reach__: The Siege Creche, The Support Creche, The War Creche, Dragonskull Island
 - __Zaralek Cavern__: Zaralek Cavern
 - __Emerald Dream__: Sor'theril Barrow Den, Barrows of Reverie

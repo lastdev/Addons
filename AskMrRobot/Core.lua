@@ -184,7 +184,7 @@ local _pendingInit = false
 -- upgrade some stuff from old to new formats
 local function upgradeFromOld()
 
-	local currentVersion = tonumber(GetAddOnMetadata(Amr.ADDON_NAME, "Version"))
+	local currentVersion = tonumber(C_AddOns.GetAddOnMetadata(Amr.ADDON_NAME, "Version"))
 	if Amr.db.char.LastVersion < 65 then
 
 		if not Amr.db.profile.options.disableEm then
@@ -368,7 +368,7 @@ local function sendVersionInfo()
 	
     local realm = GetRealmName()
     local name = UnitName("player")
-	local ver = GetAddOnMetadata(Amr.ADDON_NAME, "Version")
+	local ver = C_AddOns.GetAddOnMetadata(Amr.ADDON_NAME, "Version")
 	
 	local msg = string.format("%s\n%s\n%s\n%s", Amr.MessageTypes.Version, realm, name, ver)
 	Amr:SendAmrCommMessage(msg)
@@ -625,7 +625,7 @@ end
 ----------------------------------------------------------------------------------------
 function Amr:SendAmrCommMessage(message, channel)
 	-- prepend version to all messages
-	local v = GetAddOnMetadata(Amr.ADDON_NAME, "Version")
+	local v = C_AddOns.GetAddOnMetadata(Amr.ADDON_NAME, "Version")
 	message = v .. "\r" .. message
 	
 	Amr:SendCommMessage(Amr.ChatPrefix, message, channel or (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or "RAID"))

@@ -17,11 +17,11 @@ local tostringall=tostringall
 local tostring=tostring
 local tonumber=tonumber
 local type=type
---[===[@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 LoadAddOn("LibDebug")
 if LibDebug then LibDebug() ns.print=print else ns.print=function() end end
---@end-debug@]===]
+--@end-debug@]==]
 --@non-debug@
 ns.print=function() end
 --@end-non-debug@
@@ -39,14 +39,14 @@ ns.prioritylist=false
 ns.KEY_BUTTON1 = "\124TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:228:283\124t" -- left mouse button
 ns.KEY_BUTTON2 = "\124TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:330:385\124t" -- right mouse button
 if not ns.GMF then
---[===[@debug@
+--[==[@debug@
 	print("GarrisonCommander is being loaded before Blizzard_GarrisonUI is available")
 	print(GetTime())
---@end-debug@]===]
+--@end-debug@]==]
 	LoadAddOn("Blizzard_GarrisonUI")
---[===[@debug@
+--[==[@debug@
 	print(GetTime())
---@end-debug@]===]
+--@end-debug@]==]
 	ns.GMF=_G.GarrisonMissionFrame
 end
 if not ns.GMF then error("GarrisonCommander is being loaded before Blizzard_GarrisonUI is available") end
@@ -66,7 +66,7 @@ function addon:EventQUEST_TURNED_IN(event,quest,item,gold)
 end
 ns.new=addon:Wrap("NewTable")
 ns.del=addon:Wrap("DelTable")
---[===[@debug@
+--[==[@debug@
 local t =ns.new()
 if type(t)~="table" then
 	error("new is broken")
@@ -74,7 +74,7 @@ if type(t)~="table" then
 else
 	ns.del(t)
 end
---@end-debug@]===]
+--@end-debug@]==]
 -- Caching iteminfo
 ns.I=LibStub("LibItemUpgradeInfo-1.0")
 ns.GetItemInfo=ns.I:GetCachingGetItemInfo()

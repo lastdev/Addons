@@ -1,0 +1,111 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="ProtoformSynthesisManagerItemFrameTemplate" inherits="SecureFrameTemplate" virtual="true">
+		<Size x="33" y="33"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="texture" file="Interface/ICONS/INV_PROGENITOR_PROTOFORMSYNTHESIS" setAllPoints="true"/>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<FontString parentKey="text" inherits="GameFontNormalOutline" hidden="true">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="2"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self:RegisterEvent("BAG_UPDATE");
+				self:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
+				self:RegisterEvent("NEW_MOUNT_ADDED");
+			</OnLoad>
+			<OnShow function="ProtoformSynthesisManagerItemFrame_OnShow"/>
+			<OnEvent function="ProtoformSynthesisManagerItemFrame_OnEvent"/>
+			<OnEnter function="ProtoformSynthesisManagerItemFrame_OnEnter"/>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Frame>
+	<Frame name="ProtoformSynthesisManagerMainFrameTemplate" inherits="ButtonFrameTemplate" frameLevel="600" frameStrata="HIGH" virtual="true" enableMouse="true" movable="true" hidden="true">
+		<Size x="970" y="775"/>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="UIParent"/>
+		</Anchors>
+		<Frames>
+			<Frame parentKey="GridFrame" frameLevel="610">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="11" y="-64" />
+					<Anchor point="BOTTOMRIGHT" x="-10" y="26" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="UntradableMatsFrame" frameLevel="620">
+				<Size y="33"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="14" y="-66" />
+					<Anchor point="TOPRIGHT" x="-10" y="-66" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="TradableMatsFrame" frameLevel="620">
+				<Size x="33"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.UntradableMatsFrame" x="0" y="-5" />
+					<Anchor point="BOTTOMLEFT" x="0" y="26" />
+				</Anchors>
+			</Frame>
+			<Frame parentKey="CollectionItemsFrame" frameLevel="630">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.TradableMatsFrame" x="5" y="0" />
+					<Anchor point="BOTTOMRIGHT" x="-10" y="26" />
+				</Anchors>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:SetTitle("Protoform Synthesis Manager");
+				self:SetPortraitToAsset("Interface\\Icons\\INV_PROGENITOR_PROTOFORMSYNTHESIS");
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+	<Button name="ProtoformSynthesisManagerToggleButtonTemplate" inherits="SecureFrameTemplate" virtual="true">
+		<Size x="33" y="33"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="texture" file="Interface/ICONS/INV_PROGENITOR_PROTOFORMSYNTHESIS" setAllPoints="true"/>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="BlackCover" setAllPoints="true" hidden="true">
+					<Color r="0" g="0" b="0" a="0.6"/>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture inherits="ActionBarFlyoutButton-IconFrame">
+					<Size x="35" y="35"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="LockIcon" file="Interface\PetBattles\PetBattle-LockIcon" setAllPoints="true" hidden="true"/>
+				<FontString parentKey="Text" inherits="GameFontNormal" maxLines="2" justifyH="RIGHT" text="Protoform Synthesis">
+					<Size x="130" y="0"/>
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="LEFT" x="-3" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick function="ProtoformSynthesisManagerToggleButton_OnClick"/>
+		</Scripts>
+		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+		<HighlightTexture parentKey="Highlight" file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+	</Button>
+</Ui>

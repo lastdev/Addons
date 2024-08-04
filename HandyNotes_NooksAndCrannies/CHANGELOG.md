@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2024-07-24
+
+### Added
+
+- Dragonskull Island entrance in Forbidden Reach (DF).
+- Temple of Fal'adora entrance in Suramar (Legion).
+
+### Changed
+
+- Updated TOC for The War Within (11.0.0)
+
 ## [1.3.0] - 2023-11-30
 
 ### Added
@@ -74,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added mini caves (dungeons) to Gorgrond, Talador, Shadowmoon Valley, Nagrand (WoD)
 - Added horde portal from Garrison and Ashran (WoD)
 
-[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.3.0...master
+[Unreleased]: https://gitlab.com/mulambo/nooks-and-crannies/-/compare/v1.3.1...master
+[1.3.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.3.1
 [1.3.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.3.0
 [1.2.0]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.2.0
 [1.1.1]: https://gitlab.com/mulambo/nooks-and-crannies/-/releases/v1.1.1

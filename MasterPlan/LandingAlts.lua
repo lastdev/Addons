@@ -19,8 +19,10 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 	t, ui.NoDataText2 = CreateFrame("Button", "GarrisonLandingPageTab4", GarrisonLandingPage, "GarrisonLandingPageTabTemplate", 4), t
 	t:SetPoint("LEFT", GarrisonLandingPageTab3, "RIGHT", 2, 0)
 	t:SetText(L"Other Characters")
+	PanelTemplates_DeselectTab(t)
 	ui.Tab = t
 	core, ui.List = api.createScrollList(ui, 740, 380)
+	ui.List.Bar:SetStyle("minimal")
 	ui.List:ClearAllPoints()
 	ui.List:SetPoint("RIGHT", -40, -30)
 	ui.NoDataText:SetPoint("CENTER", ui.List, "CENTER", -8, 0)
@@ -116,7 +118,7 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 	local function Char_OnClick(self)
 		local d = core:GetRowData(handle, self)
 		dm[1].text, dm[2].arg1, dm[2].arg2 = Char_GetName(d), d[1], d[2]
-		EasyMenu(dm, dmFrame, "cursor", 0, 0, "MENU", 4)
+		T.EasyMenu(dm, dmFrame, "cursor", 0, 0, "MENU", 4)
 	end
 	local function CreateCharEntry()
 		local f = CreateFrame("Button")
@@ -252,7 +254,7 @@ local ui, core, handle = CreateFrame("Frame", "MPLandingPageAlts", GarrisonLandi
 			if ls then
 				local t = f.Timers[nt]
 				nt, t.itemID, t.lastOffer = nt + 1, sum["ti" .. i], ls
-				SetPortraitToTexture(t.Icon, GetItemIcon(t.itemID))
+				SetPortraitToTexture(t.Icon, C_Item.GetItemIconByID(t.itemID))
 				t.Icon:SetDesaturated(ls ~= true)
 				local endTime = ls ~= true and (ls + 1252800)
 				if endTime and endTime > snow then

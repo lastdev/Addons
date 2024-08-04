@@ -404,7 +404,7 @@ local function renderGear(setupId, container)
 							local socketBorder, socketIcon = createSocketWidget(panelMods, prevSocket or lblItem, prevSocket, isPowerActive)
 							
 							-- set icon and tooltip
-							local _, _, spellIcon = GetSpellInfo(spellId)
+							local spellIcon = C_Spell.GetSpellInfo(spellId).iconID
 							socketIcon:SetIcon(spellIcon)
 							Amr:SetSpellTooltip(socketIcon, spellId, "ANCHOR_TOPRIGHT")
 							
@@ -828,21 +828,18 @@ local function setTalents(setup)
 
 			-- UI needs to be opened once to create it, or else this stuff doesn't really work
 			local uiOpened = false
-			if not ClassTalentFrame then
-				ToggleTalentFrame()
+			if not PlayerSpellsFrame then
+				TogglePlayerSpellsFrame()
 				uiOpened = true
-			--else
-			--	ClassTalentFrame:Show()
-			--	uiOpened = true
 			end
 			
 			local specPos = GetSpecialization()
 			local specId = GetSpecializationInfo(specPos)
 
 			-- janky AF way to force the "default" loadout to be active
-			if ClassTalentFrame then
-				ClassTalentFrame.TalentsTab:ClearLastSelectedConfigID()
-				ClassTalentFrame.TalentsTab:MarkTreeDirty()
+			if PlayerSpellsFrame then
+				PlayerSpellsFrame.TalentsFrame:ClearLastSelectedConfigID()
+				PlayerSpellsFrame.TalentsFrame:MarkTreeDirty()
 			end
 			C_ClassTalents.UpdateLastSelectedSavedConfigID(specId, 0)
 
@@ -861,12 +858,17 @@ local function setTalents(setup)
 
 			-- get nodes and entries
 			local talMap = {}
-			local treeIds = config["treeIDs"];		
+			local treeIds = config["treeIDs"]
+			local heroTreeNodeId
 			for i = 1, #treeIds do
 				for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
 					local node = C_Traits.GetNodeInfo(configId, nodeId)
 					if node.ID and node.isVisible and node.maxRanks > 0 then
-						talMap[node.ID] = node.entryIDs
+						if node.type == 3 then
+							heroTreeNodeId = node.ID
+						else
+							talMap[node.ID] = node.entryIDs
+						end						
 					end
 				end		
 			end
@@ -895,6 +897,12 @@ local function setTalents(setup)
 				C_Traits.ResetTree(configId, treeIds[i])
 			end
 
+			-- start by activating the hero tree with the special selection node
+			if heroTreeNodeId and setup.HeroTreeEntryId > 0 then
+				local node = C_Traits.GetNodeInfo(configId, heroTreeNodeId)
+				C_Traits.SetSelection(configId, heroTreeNodeId, setup.HeroTreeEntryId)
+			end
+
 			-- pick all the nodes, kinda dumb but you have to "script" clicking on each node in a valid order
 			local loopSafety = 1000
 			while #path > 0 and loopSafety > 0 do
@@ -921,7 +929,7 @@ local function setTalents(setup)
 			C_Traits.CommitConfig(configId)
 
 			if uiOpened then
-				ClassTalentFrame:Hide()
+				PlayerSpellsFrame:Hide()
 			end			
 	
 		end	

@@ -1,4 +1,4 @@
-## Changed in v75
+## Changed in v78
 
-* Updated for 10.2.5
+* Fix error from calling the removed GetFactionInfoByID in a Korthia-specific override
 

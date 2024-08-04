@@ -8,6 +8,10 @@ if ns:IsSameLocale("ptBR") then
 	L.LOCALE_NAME = "ptBR"
 
 	L["ALLOW_IN_LFD"] = "Permitir no localizador de masmorras."
+--[[Translation missing --]]
+--[[ L["ALLOW_IN_LFD_CLASSIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ALLOW_IN_LFD_CLASSIC_DESC"] = ""--]] 
 L["ALLOW_IN_LFD_DESC"] = "Clique-direito em grupos ou candidatos no localizador de masmorras para copiar o URL do perfil Raider.IO."
 L["ALLOW_ON_PLAYER_UNITS"] = "Permitir em retratos de jogador"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Clique-direito no retrato do jogador para copiar a URL do perfil Raider.IO."
@@ -141,6 +145,14 @@ L["MINIMAP_SHORTCUT_ENABLE"] = "Habilitar botão"
 L["MINIMAP_SHORTCUT_ENABLE_DESC"] = "Ative para exibir o ícone ao redor do minimapa. Isso também o deixará disponível em qualquer outro addon que suporte o sistema de broker."
 L["MINIMAP_SHORTCUT_HEADER"] = "Minimapa"
 L["MINIMAP_SHORTCUT_HELP"] = "|A:newplayertutorial-icon-mouse-leftbutton:16:12|a Procurar |A:newplayertutorial-icon-mouse-rightbutton:16:12|a Configurações"
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_LEFT_CLICK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_RIGHT_CLICK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_SEARCH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["MINIMAP_SHORTCUT_HELP_SETTINGS"] = ""--]] 
 L["MINIMAP_SHORTCUT_LOCK"] = "Botão de travar"
 L["MODULE_AMERICAS"] = "Américas"
 L["MODULE_EUROPE"] = "Europa"
@@ -214,6 +226,28 @@ L["RAID_BOSS_AVOTI_5"] = "Dathea, Ascendida"
 L["RAID_BOSS_AVOTI_6"] = "Kurog Temível Totem"
 L["RAID_BOSS_AVOTI_7"] = "Guarda-prole Diurna"
 L["RAID_BOSS_AVOTI_8"] = "Raszageth, a Devoradora de Tempestade"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_6"] = ""--]] 
 L["RAID_BOSS_CN_1"] = "Guinchasa"
 L["RAID_BOSS_CN_10"] = "Sir Denathrius"
 L["RAID_BOSS_CN_2"] = "Guarda-caça Altimor"
@@ -255,6 +289,32 @@ L["RAID_BOSS_FSOD_6"] = "Artífice da Dor Raznal"
 L["RAID_BOSS_FSOD_7"] = "Guardião dos Primogênitos"
 L["RAID_BOSS_FSOD_8"] = "Escreve-sinas Roh-Kalo"
 L["RAID_BOSS_FSOD_9"] = "Kel'Thuzad"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_12"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_RS_1"] = ""--]] 
 L["RAID_BOSS_SFO_1"] = "Guardião Vigilante"
 L["RAID_BOSS_SFO_10"] = "Rygelon"
 L["RAID_BOSS_SFO_11"] = "O Carcereiro"
@@ -276,6 +336,10 @@ L["RAID_BOSS_SOD_6"] = "Artífice da Dor Raznal"
 L["RAID_BOSS_SOD_7"] = "Guardião dos Primogênitos"
 L["RAID_BOSS_SOD_8"] = "Escreve-sinas Roh-Kalo"
 L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOTFW_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOTFW_2"] = ""--]] 
 L["RAID_BOSS_VOTI_1"] = "Eranog"
 L["RAID_BOSS_VOTI_2"] = "Terros"
 L["RAID_BOSS_VOTI_3"] = "Conselho Primevo"
@@ -284,13 +348,39 @@ L["RAID_BOSS_VOTI_5"] = "Dathea, Ascendida"
 L["RAID_BOSS_VOTI_6"] = "Kurog Temível Totem"
 L["RAID_BOSS_VOTI_7"] = "Guarda-prole Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth, a Devoradora de Tempestade"
+--[[Translation missing --]]
+--[[ L["RAID_BOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BWD"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heroico"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_HEROIC10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_HEROIC25"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítico"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_NORMAL10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_NAME_NORMAL25"] = ""--]] 
 L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = "H"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC25"] = ""--]] 
 L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = ""--]] 
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encontros de Raide Derrotados"
+--[[Translation missing --]]
+--[[ L["RAID_ICC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_RS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_TOTFW"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Pontuações Médias para Runs Dentro do Tempo +%s"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO Melhor Run M+"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalização do cliente Raider.IO."
@@ -369,6 +459,8 @@ L["SHOW_CURRENT_SEASON_DESC"] = "Mostra a pontuação atual da temporada de Myth
 L["SHOW_IN_FRIENDS"] = "Mostrar nas dicas (tooltips) da lista de amigos"
 L["SHOW_IN_FRIENDS_DESC"] = "Mostre a pontuação de  Mythic+ ao passar o mouse sobre seus amigos."
 L["SHOW_IN_LFD"] = "Mostrar nas dicas (tooltips) do localizador de masmorras."
+--[[Translation missing --]]
+--[[ L["SHOW_IN_LFD_CLASSIC"] = ""--]] 
 L["SHOW_IN_LFD_DESC"] = "Mostre a pontuação de  Mythic+ ao passar o mouse sobre grupos ou candidatos."
 L["SHOW_IN_SLASH_WHO_RESULTS"] = "Mostrar nos resultados do \"/who\""
 L["SHOW_IN_SLASH_WHO_RESULTS_DESC"] = "Mostre a pontuação de Mythic+ quando você \"/who\" alguém específico."
@@ -390,6 +482,8 @@ L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Experimental) Priorize mostrar a melhor run
 L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Este é um recurso experimental. Em vez de mostrar a pontuação do Raider.IO como a primeira linha, mostre a melhor run do jogador."
 L["SHOW_RAIDERIO_PROFILE"] = "Mostrar dica (tooltip) de perfil do Raider.IO"
 L["SHOW_RAIDERIO_PROFILE_DESC"] = "Mostra a dica (tooltip) de perfil do Raider.IO"
+--[[Translation missing --]]
+--[[ L["SHOW_RAIDERIO_PROFILE_OPTION"] = ""--]] 
 L["SHOW_ROLE_ICONS"] = "Mostrar ícones de função nas dicas (tooltips)"
 L["SHOW_ROLE_ICONS_DESC"] = "Quando ativado, as principais funções do jogador em Mythic+ serão exibidas em suas dicas (tooltips)."
 L["SHOW_SCORE_IN_COMBAT"] = "Mostra a dica (tooltip) do Raider.IO durante o combate"

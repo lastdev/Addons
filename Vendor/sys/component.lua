@@ -316,9 +316,9 @@ end
 
 --[[ Make sure is an entry for each and every addon that was loaded ]]
 local function satisfyAllAddons()
-    local numAddons = GetNumAddOns();
+    local numAddons = Addon:GetNumAddOns();
     for i=1,numAddons do
-        local addon, _, _, enabled = GetAddOnInfo(i);
+        local addon, _, _, enabled = Addon:GetAddOnInfo(i);
         if (enabled) then
             local depenedency = "addon:" .. addon;
             if (not IsDependencySatisfied(depenedency)) then

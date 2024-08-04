@@ -26,8 +26,7 @@ local default = function(parentType)
     model_st_rz = 0,
     model_st_us = 40,
 
-    model_fileId = "235338",
-    model_path = "spells/arcanepower_state_chest.m2",
+    model_fileId = WeakAuras.IsClassic() and "165589" or "235338",
     bar_model_clip = true
   }
 end
@@ -94,7 +93,11 @@ local function AcquireModel(region, data)
 
   local anchor
   if region.parentType == "aurabar" then
-    anchor = region.parent.bar
+    if data.bar_model_clip and WeakAuras.IsTWW() then
+      anchor = region.parent.bar.fgMask
+    else
+      anchor = region.parent.bar
+    end
   else
     anchor = region.parent
   end
@@ -190,7 +193,10 @@ local funcs = {
 
 local function create()
   local subRegion = CreateFrame("Frame", nil, UIParent)
-  subRegion:SetClipsChildren(true)
+  subRegion:SetFlattensRenderLayers(true)
+  if not WeakAuras.IsTWW() then
+    subRegion:SetClipsChildren(true)
+  end
 
   for k, v in pairs(funcs) do
     subRegion[k] = v
@@ -207,8 +213,6 @@ end
 local function onRelease(subRegion)
   subRegion:Hide()
 end
-
-
 
 local function modify(parent, region, parentData, data, first)
   if region.model then

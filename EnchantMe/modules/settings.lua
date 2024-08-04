@@ -10,7 +10,7 @@ function settings.init()
     do
         local key = 'ignoreBelt'
         local setting = Settings.RegisterAddOnSetting(category, 'Ignore belt', key, 'boolean', defaults[key])
-        Settings.CreateCheckBox(category, setting, 'Ignore missing Shadowed Belt Clasp\n(as it is usually very expensive and only gives a small amount of stamina)')
+        Settings.CreateCheckbox(category, setting, 'Ignore missing Shadowed Belt Clasp\n(as it is usually very expensive and only gives a small amount of stamina)')
         private.configureSetting(key, setting)
     end
 
@@ -27,7 +27,7 @@ function settings.init()
 
             return container:GetData()
         end
-        Settings.CreateDropDown(category, setting, options, 'Position of the missing enchant indicator on the equipment item frame')
+        Settings.CreateDropdown(category, setting, options, 'Position of the missing enchant indicator on the equipment item frame')
         private.configureSetting(key, setting)
     end
 
@@ -43,7 +43,7 @@ function settings.init()
 
             return container:GetData()
         end
-        Settings.CreateDropDown(category, setting, options, 'Color of the indicator flag text')
+        Settings.CreateDropdown(category, setting, options, 'Color of the indicator flag text')
         private.configureSetting(key, setting)
     end
 

@@ -28,3 +28,4 @@ L["STRING_TYPE"] = "Type :"
 L["STRING_TYPE_COOLDOWN"] = "Temps de recharge"
 L["STRING_TYPE_DEBUFF"] = "Debuff"
 L["STRING_UNKNOWN"] = "inconnu"
+

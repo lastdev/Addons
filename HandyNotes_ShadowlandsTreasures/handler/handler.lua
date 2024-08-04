@@ -1,5 +1,5 @@
 local myname, ns = ...
-local _, myfullname = GetAddOnInfo(myname)
+local _, myfullname = C_AddOns.GetAddOnInfo(myname)
 
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
@@ -9,7 +9,7 @@ ns.HL = HL
 local HBD = LibStub("HereBeDragons-2.0")
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == '@'..'project-version@'
+ns.DEBUG = C_AddOns.GetAddOnMetadata(myname, "Version") == '@'..'project-version@'
 
 ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 
@@ -148,21 +148,24 @@ function ns.RegisterPoints(zone, points, defaults)
         if point.related then
             local relatedNode = ns.nodeMaker(setmetatable({
                 label=point.npc and "Related to nearby NPC" or "Related to nearby treasure",
-                atlas="playerpartyblip",
-                texture=false,
-                note=false,
+                atlas=point.related.atlas or "playerpartyblip", color=point.related.color,
+                texture=point.related.atlas or false,
+                note=point.related.note or false,
+                active=point.related.active, required=point.related.required,
                 route=coord,
                 _uiMapID=zone,
             }, proxy_meta))
             for rcoord, related in pairs(point.related) do
-                local rpoint = relatedNode(related)
-                rpoint._coord = rcoord
-                if related.color then
-                    rpoint.texture = ns.atlas_texture(rpoint.atlas, related.color)
+                if type(rcoord) == "number" then
+                    local rpoint = relatedNode(related)
+                    rpoint._coord = rcoord
+                    if related.color then
+                        rpoint.texture = ns.atlas_texture(rpoint.atlas, related.color)
+                    end
+                    if not point.routes then point.routes = {} end
+                    table.insert(point.routes, {rcoord, coord, highlightOnly=true})
+                    ns.points[zone][rcoord] = rpoint
                 end
-                if not point.routes then point.routes = {} end
-                table.insert(point.routes, {rcoord, coord, highlightOnly=true})
-                ns.points[zone][rcoord] = rpoint
             end 
         end
         if point.parent then
@@ -285,9 +288,7 @@ if _G.C_TooltipInfo then
     mob_name = function(id)
         if not name_cache[id] then
             local info = C_TooltipInfo.GetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
-            -- TooltipUtil.SurfaceArgs(info)
             if info and info.lines and info.lines[1] then
-                TooltipUtil.SurfaceArgs(info.lines[1])
                 if info.lines[1].type == Enum.TooltipDataType.Unit then
                     name_cache[id] = info.lines[1].leftText
                 end
@@ -331,12 +332,20 @@ local function render_string(s, context)
         mainid, subid = mainid and tonumber(mainid), subid and tonumber(subid)
         id = tonumber(id)
         if variant == "item" then
-            local name, link, _, _, _, _, _, _, _, icon = GetItemInfo(id)
+            local name, link, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(id)
             if link and icon then
                 return quick_texture_markup(icon) .. " " .. link:gsub("[%[%]]", "")
             end
         elseif variant == "spell" then
-            local name, _, icon = GetSpellInfo(id)
+            local name, icon, _
+            if C_Spell and C_Spell.GetSpellInfo then
+                local info = C_Spell.GetSpellInfo(id)
+                if info then
+                    name, icon = info.name, info.iconID
+                end
+            else
+                name, _, icon = GetSpellInfo(id)
+            end
             if name and icon then
                 return quick_texture_markup(icon) .. " " .. name
             end
@@ -391,9 +400,14 @@ local function render_string(s, context)
                 return CreateAtlasMarkup(("majorFactions_icons_%s512"):format(info.textureKit)) .. " " .. info.name
             end
         elseif variant == "faction" then
-            local name = GetFactionInfoByID(id)
-            if name then
-                return name
+            local name
+            if C_Reputation and C_Reputation.GetFactionDataByID then
+                local info = C_Reputation.GetFactionDataByID(id)
+                if info and info.name then
+                    name = info.name
+                end
+            elseif GetFactionInfoByID then
+                name = GetFactionInfoByID(id)
             end
         elseif variant == "garrisontalent" then
             local info = C_Garrison.GetTalentInfo(id)
@@ -405,6 +419,11 @@ local function render_string(s, context)
             if (info and info.professionName and info.professionName ~= "") then
                 -- there's also info.parentProfessionName for the general case ("Dragon Isles Inscription" vs "Inscription")
                 return info.professionName
+            end
+        elseif variant == "zone" then
+            local info = C_Map.GetMapInfo(id)
+            if info and info.name then
+                return info.name
             end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
@@ -514,7 +533,7 @@ local function work_out_label(point)
     end
     if point.loot and #point.loot > 0 then
         -- handle multiples?
-        local _, link = GetItemInfo(ns.lootitem(point.loot[1]))
+        local _, link = C_Item.GetItemInfo(ns.lootitem(point.loot[1]))
         if link then
             return link:gsub("[%[%]]", "")
         end
@@ -553,7 +572,7 @@ local function work_out_texture(point)
             return trimmed_icon(point.icon)
         end
         if point.loot and #point.loot > 0 then
-            local texture = select(10, GetItemInfo(ns.lootitem(point.loot[1])))
+            local texture = select(10, C_Item.GetItemInfo(ns.lootitem(point.loot[1])))
             if texture then
                 return trimmed_icon(texture)
             end
@@ -718,11 +737,11 @@ local function tooltip_loot(tooltip, item)
     local knownText
     local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
     local id = ns.lootitem(item)
-    local _, itemType, itemSubtype, equipLoc, icon, classID, subclassID = GetItemInfoInstant(id)
+    local _, itemType, itemSubtype, equipLoc, icon, classID, subclassID = C_Item.GetItemInfoInstant(id)
     if ns.db.tooltip_charloot and not IsShiftKeyDown() then
         -- show loot for the current character only
         -- can't pass in a reusable table for the second argument because it changes the no-data case
-        local specTable = GetItemSpecInfo(id)
+        local specTable = C_Item.GetItemSpecInfo(id)
         -- Some cosmetic items seem to be flagged as not dropping for any spec. I
         -- could only confirm this for some cosmetic back items but let's play it
         -- safe and say that any cosmetic item can drop regardless of what the
@@ -733,7 +752,7 @@ local function tooltip_loot(tooltip, item)
         -- then catch covenants / classes / etc
         if ns.itemRestricted(item) then return true end
     end
-    local _, link = GetItemInfo(ns.lootitem(item))
+    local _, link = C_Item.GetItemInfo(ns.lootitem(item))
     local label = ENCOUNTER_JOURNAL_ITEM
     if classID == Enum.ItemClass.Armor and subclassID ~= Enum.ItemArmorSubclass.Shield then
         label = _G[equipLoc] or label

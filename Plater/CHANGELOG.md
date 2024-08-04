@@ -1,5 +1,4 @@
 @cont1nuity:
-- Updating for 10.2.7.
-- Fixing SoD tank recognition for druid 'Dire Bear Form'.
-- Fixing SoD tank recognition for druid 'Dire Bear Form'.
+- Fixing issues with range checks on certain classes/specs.
+- Fixing Mage execute range.
 

@@ -1,8 +1,6 @@
-local addonName, shared = ...;
+local _, addon = ...;
 
-local addon = shared.addon;
-
-shared.achievementData = {
+addon.achievementData = {
   rares = {
     auto = {
       7439, -- Glorious!
@@ -19,10 +17,8 @@ shared.achievementData = {
       [8078] = {
         {
           id = 69768,
-          index = 1,
         }, {
           id = 69769,
-          index = 2,
         }
       },
       -- there are two npcs named "Archiereus of Flame" and therefor the Achievement
@@ -40,53 +36,31 @@ shared.achievementData = {
       [8101] = {
         {
           id = 69471,
-          index = 1,
-          description = 'Inside a cave in the wall near coast to the West. \nNeeds 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69633,
-          index = 2,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69341,
-          index = 3,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69339,
-          index = 4,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69749,
-          index = 5,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69767,
-          index = 6,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 70080,
-          index = 7,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69396,
-          index = 8,
-          description = 'Needs 3x Shan\'ze Ritual Stone to summon',
-        },
-        {
+        }, {
           id = 69347,
-          index = 9,
           description = 'Needs 3x Shan\'ze Ritual Stone to summon',
         },
-      }
-    }
+      },
+    },
   },
   treasures = {
+    auto = {
+      8723, -- Legend of the Past
+    },
     static = {
       [7997] = { -- Riches of Pandaria
         31400,
@@ -107,40 +81,62 @@ shared.achievementData = {
         31426,
         31427,
         31428,
-      }
+      },
     },
   },
 }
 
 -- "I'm in your base, killing your dudes" has faction specific NPCs
 if (_G.UnitFactionGroup('player') == 'Alliance') then
-  shared.achievementData.rares.static[7932] = {
+  addon.achievementData.rares.static[7932] = {
     {
       id = 68321,
-      index = 1,
-    },
-    {
+    }, {
       id = 68320,
-      index = 2,
-    },
-    {
+    }, {
       id = 68322,
-      index = 3,
     },
   };
 else
-  shared.achievementData.rares.static[7932] = {
+  addon.achievementData.rares.static[7932] = {
     {
       id = 68318,
-      index = 1,
-    },
-    {
+    }, {
       id = 68317,
-      index = 2,
-    },
-    {
+    },  {
       id = 68319,
-      index = 3,
     },
   };
 end
+
+--[[ Timerunning check returns nil if it's called before PLAYER_LOGIN, so the
+     check needs to be deferred. ]]
+addon.onOnce('PLAYER_LOGIN', function ()
+  if (addon.isPandariaTimerunning()) then
+    local achievementData = addon.achievementData;
+    local timeRunningRareAchievements = {
+      19993, -- Elusive Foes: The Jade Forest
+      19994, -- Elusive Foes: Valley of the Four Winds
+      19995, -- Elusive Foes: Krasarang Wilds
+      19996, -- Elusive Foes: Kun-Lai Summit
+      19997, -- Elusive Foes: Townlong Steppes
+      19998, -- Elusive Foes: Dread Wastes
+      19999, -- Elusive Foes: Landfall
+      20000, -- Elusive Foes: Isle of Thunder
+      20001, -- Elusive Foes: Timeless Isle
+      20069, -- Elusive Foes: Vale of Eternal Blossoms
+    };
+
+    local timeRunningTreasureAchievements = {
+      19982, -- Hidden Treasures: Timeless Isle
+    };
+
+    for _, achievement in ipairs(timeRunningRareAchievements) do
+      _G.tinsert(achievementData.rares.auto, achievement);
+    end
+
+    for _, achievement in ipairs(timeRunningTreasureAchievements) do
+      _G.tinsert(achievementData.treasures.auto, achievement);
+    end
+  end
+end);

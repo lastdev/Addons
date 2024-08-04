@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-Raids-Cata", 4, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426180008")
+mod:SetRevision("20240609195526")
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetUsedIcons(1, 2, 3, 8)
@@ -178,7 +178,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnDazzlingDestruction:Show()
 			specWarnDazzlingDestruction:Play("watchstep")
 		elseif self.vb.dazzlingCast == 3 then
-			self:Schedule(5, theralionDelay)--delayed so we don't cancel blackout timer until after 3rd cast.
+			self:Schedule(5, theralionDelay, self)--delayed so we don't cancel blackout timer until after 3rd cast.
 			self.vb.dazzlingCast = 0
 		end
 	elseif args.spellId == 86369 then--First cast of this is true phase change, as theralion can still cast his grounded phase abilities until he's fully in air casting this instead.

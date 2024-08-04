@@ -1,9 +1,9 @@
-## Interface: 100205
+## Interface: 100206
 ## Title: Lib: ItemUpgradeInfo-1.0
 ## Notes: Database of item upgrade IDs
 ## Author: eridius
-## Version: @project-version@ 70200
-## X-Revision: @project-abbreviated-hash@
+## Version: v1.2.1 70200
+## X-Revision: 4727aa0
 ## X-Category: Library
 
 LibItemUpgradeInfo-1.0.xml

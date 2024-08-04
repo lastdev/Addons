@@ -1915,7 +1915,7 @@ MinimapButton.Initialize = function()
         return;
     end
 
-    local LDB_MazeHelper = LDB:NewDataObject('MazeHelper', {
+    local LDB_MazeHelper = LDB:NewDataObject('Maze Helper', {
         type          = 'launcher',
         text          = 'Maze Helper',
         icon          = M.LOGO_MINI,
@@ -1924,8 +1924,8 @@ MinimapButton.Initialize = function()
     });
 
     if LDBIcon then
-        LDBIcon:Register('MazeHelper', LDB_MazeHelper, MHMOTSConfig.MinimapButton);
-        LDBIcon:AddButtonToCompartment('MazeHelper');
+        LDBIcon:Register('Maze Helper', LDB_MazeHelper, MHMOTSConfig.MinimapButton);
+        LDBIcon:AddButtonToCompartment('Maze Helper');
     end
 end
 
@@ -1934,9 +1934,9 @@ MinimapButton.ToggleShown = function()
 
     if MHMOTSConfig.MinimapButton.hide then
         mhPrint(L['MINIMAP_BUTTON_COMMAND_SHOW']);
-        LDBIcon:Hide('MazeHelper');
+        LDBIcon:Hide('Maze Helper');
     else
-        LDBIcon:Show('MazeHelper');
+        LDBIcon:Show('Maze Helper');
     end
 end
 

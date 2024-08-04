@@ -4,48 +4,83 @@ July 15th, 2009
 --]]
 if not DataStore then return end
 
-local addonName = "DataStore_Auctions"
+local addonName, addon = ...
+local thisCharacter
+local auctionsList, bidsList
 
-_G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local DataStore, TableInsert, TableRemove, format, strsplit, tonumber = DataStore, table.insert, table.remove, format, strsplit, tonumber
+local GetNumAuctionItems, GetAuctionItemInfo, GetAuctionItemLink, GetAuctionItemTimeLeft = GetNumAuctionItems, GetAuctionItemInfo, GetAuctionItemLink, GetAuctionItemTimeLeft
+local C_Map, C_AuctionHouse, time, date = C_Map, C_AuctionHouse, time, date
 
-local addon = _G[addonName]
+local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 
-local AddonDB_Defaults = {
-	global = {
-		Options = {
-			CheckLastVisit = true,				-- Check the last auction house visit time or not
-			CheckLastVisitThreshold = 15,
-			AutoClearExpiredItems = true,		-- Automatically clear expired auctions and bids
-		},
-		Characters = {
-			['*'] = {				-- ["Account.Realm.Name"] 
-				Auctions = {},
-				Bids = {},
-				lastUpdate = nil,				-- last time the AH was checked for this char
-				lastVisitDate = nil,			-- in YYYY MM DD  hh:mm, for external apps
-				lastAuctionsScan = nil,		-- last time an auction placed by the player was scanned
-			}
-		}
-	}
-}
+-- *** Common API ***
+local API_GetNumAuctions = isRetail and C_AuctionHouse.GetNumOwnedAuctions or function() return GetNumAuctionItems("owner") end
+local API_GetNumBids = isRetail and C_AuctionHouse.GetNumBids or function() return GetNumAuctionItems("bidder") end
+local API_GetAuctionInfo
+local API_GetBidInfo
 
--- *** Utility functions ***
-local function GetOption(option)
-	return addon.db.global.Options[option]
+local function IsItemSold(status)
+	return (status and status == 1)
 end
 
-local function ClearEntries(auctionsList, AHZone)
+if isRetail then
+	API_GetAuctionInfo = function(index) 
+			local info = C_AuctionHouse.GetOwnedAuctionInfo(index)
+			local saleStatus = info.status
+			local itemID = info.itemKey.itemID
+			
+			-- do not list sold items, they're supposed to be in the mailbox
+			if itemID and not IsItemSold(saleStatus) then
+				return itemID, info.quantity, info.bidder, info.bidAmount, info.buyoutAmount, info.timeLeftSeconds, info.auctionID
+			end
+		end
+	API_GetBidInfo = function(index) 
+			local info = C_AuctionHouse.GetBidInfo(index)
+			
+			return info.itemKey.itemID, info.quantity, info.bidder, info.bidAmount, info.buyoutAmount, info.timeLeft
+		end
+else
+	API_GetAuctionInfo = function(index) 
+			local itemName, _, count, _, _, _, _, startPrice, _, buyoutPrice, _, highBidder, _, _, _, saleStatus, itemID =  GetAuctionItemInfo("owner", index)
+			
+			-- do not list sold items, they're supposed to be in the mailbox
+			if itemName and itemID and not IsItemSold(saleStatus) then
+				local timeLeft = GetAuctionItemTimeLeft("owner", index)
+			
+				return itemID, count, highBidder, startPrice, buyoutPrice, timeLeft
+			end
+		end
+	API_GetBidInfo = function(index) 
+			local itemName, _, count, _, _, _, _, _, _, buyoutPrice, bidPrice, _, ownerName = GetAuctionItemInfo("bidder", index)
+		
+			if itemName then
+				local link = GetAuctionItemLink("bidder", index)
+				
+				if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
+					local itemID = tonumber(link:match("item:(%d+)"))
+					local timeLeft = GetAuctionItemTimeLeft("bidder", index)
+					
+					return itemID, count, ownerName, bidPrice, buyoutPrice, timeLeft
+				end
+			end
+		end
+end
+
+
+-- *** Utility functions ***
+local function ClearEntries(entries, AHZone)
 	-- this function clears the "auctions" or "bids" of a specific AH (faction or goblin)
-	-- auctionsList = character.Auctions or character.Bids (the name of the table in the DB)
+	-- entries = character.Auctions or character.Bids (the name of the table in the DB)
 	-- AHZone = 0 for player faction, or 1 for goblin
-	local ah = auctionsList
+	local ah = entries
 	if not ah then return end
 	
 	for i = #ah, 1, -1 do			-- parse backwards to avoid messing up the index
 		local faction = strsplit("|", ah[i])
 		if faction then
 			if tonumber(faction) == AHZone then
-				table.remove(ah, i)
+				TableRemove(ah, i)
 			end
 		end
 	end
@@ -58,142 +93,75 @@ local function GetAuctionHouseZone()
 	return (zoneID == 161 or zoneID == 281 or zoneID == 673) and 1 or 0
 end
 
-
 -- *** Scanning functions ***
 local function ScanAuctions()
 	local AHZone = GetAuctionHouseZone()
 	
 	local now = time()
-	local character = addon.ThisCharacter
-	local numAuctions = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) and C_AuctionHouse.GetNumOwnedAuctions() or GetNumAuctionItems("owner")
+	local char = thisCharacter
+	local charID = DataStore.ThisCharID
+	local numAuctions = API_GetNumAuctions()
 	
-	character.lastUpdate = now
-	character.lastAuctionsScan = nil
-	if numAuctions > 0 then
-		character.lastAuctionsScan = now
-	end
+	char.lastUpdate = now
+	char.lastAuctionsScan = now
 	
-	ClearEntries(character.Auctions, AHZone)
+	auctionsList[charID] = auctionsList[charID] or {}
+	ClearEntries(auctionsList[charID], AHZone)
 	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		-- Retail scan
-		for i = 1, numAuctions do
-			local info = C_AuctionHouse.GetOwnedAuctionInfo(i)
-			local saleStatus = info.status
-			local itemID = info.itemKey.itemID
+	for i = 1, numAuctions do
+		local itemID, quantity, bidder, bidAmount, buyoutAmount, timeLeftSeconds, auctionID = API_GetAuctionInfo(i)
 			
-			-- do not list sold items, they're supposed to be in the mailbox
-			if saleStatus and saleStatus == 1 then		-- just to be sure, in case Bliz ever returns nil
-				saleStatus = true
-			else
-				saleStatus = false
-			end
-				
-			-- if info.itemLink and itemID and not saleStatus then
-			if itemID and not saleStatus then
-				table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s|%s", 
-					AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount or 0, info.timeLeftSeconds or 0, info.auctionID or 0))
-			end
-		end	
-	
-	else
-		-- Non-retail scan
-		
-		for i = 1, GetNumAuctionItems("owner") do
-			local itemName, _, count, _, _, _, _, startPrice, 
-				_, buyoutPrice, _, highBidder, _, _, _, saleStatus, itemID =  GetAuctionItemInfo("owner", i)
-				
-			-- do not list sold items, they're supposed to be in the mailbox
-			if saleStatus and saleStatus == 1 then		-- just to be sure, in case Bliz ever returns nil
-				saleStatus = true
-			else
-				saleStatus = false
-			end
-				
-			if itemName and itemID and not saleStatus then
-				local link = GetAuctionItemLink("owner", i)
-				local timeLeft = GetAuctionItemTimeLeft("owner", i)
-				
-				table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-					AHZone, itemID, count, highBidder or "", startPrice, buyoutPrice, timeLeft))
-			end
+		if itemID then
+			TableInsert(auctionsList[charID], format("%s|%s|%s|%s|%s|%s|%s|%s", 
+				AHZone, itemID, quantity or 1, bidder or "", bidAmount or 0, buyoutAmount or 0, timeLeftSeconds or 0, auctionID or 0))
 		end
 	end
 	
-	addon:SendMessage("DATASTORE_AUCTIONS_UPDATED")
+	-- Completely clear the table is it is empty
+	if #auctionsList[charID] == 0 then
+		auctionsList[charID] = nil
+	end
+	
+	DataStore:Broadcast("DATASTORE_AUCTIONS_UPDATED")
 end
 
 local function ScanBids()
 	local AHZone = GetAuctionHouseZone()
 	
-	local character = addon.ThisCharacter
-	character.lastUpdate = time()
-	character.lastVisitDate = date("%Y/%m/%d %H:%M")
+	local char = thisCharacter
+	local charID = DataStore.ThisCharID
+	char.lastUpdate = time()
+	char.lastVisitDate = date("%Y/%m/%d %H:%M")
 	
-	ClearEntries(character.Bids, AHZone)
+	bidsList[charID] = bidsList[charID] or {}
+	ClearEntries(bidsList[charID], AHZone)
 	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		-- Retail scan
-		
-		for i = 1, C_AuctionHouse.GetNumBids() do
-			local info = C_AuctionHouse.GetBidInfo(i)
-			local itemID = info.itemKey.itemID
-		
-			-- review item.name ? item.quantity ?
-			table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, itemID, info.quantity or 1, info.bidder or "", info.bidAmount or 0, info.buyoutAmount, info.timeLeft))	
-		
-			-- local itemName, _, count, _, _, _, _, _, 
-				-- _, buyoutPrice, bidPrice, _, ownerName = C_AuctionHouse.GetReplicateItemInfo("bidder", i);
-				
-			-- if itemName then
-				-- local link = C_AuctionHouse.GetReplicateItemLink("bidder", i)
-				-- if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
-					-- local id = tonumber(link:match("item:(%d+)"))
-					-- local timeLeft = C_AuctionHouse.GetReplicateItemTimeLeft("bidder", i)
-				
-					-- table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
-						-- AHZone, itemID, info.quantity, info.bidder or "", info.bidAmount, info.buyoutAmount, info.timeLeft))
-				-- end
-			-- end
+	for i = 1, API_GetNumBids() do
+		local itemID, quantity, bidder, bidAmount, buyoutAmount, timeLeft = API_GetBidInfo(i)
+
+		if itemID then
+			TableInsert(bidsList[charID], format("%s|%s|%s|%s|%s|%s|%s", AHZone, itemID, quantity or 1, bidder or "", bidAmount or 0, buyoutAmount or 0, timeLeft))	
 		end
-	else
-		-- Non-retail scan
-		
-		for i = 1, GetNumAuctionItems("bidder") do
-			local itemName, _, count, _, _, _, _, _, 
-				_, buyoutPrice, bidPrice, _, ownerName = GetAuctionItemInfo("bidder", i)
-				
-			if itemName then
-				local link = GetAuctionItemLink("bidder", i)
-				if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
-					local id = tonumber(link:match("item:(%d+)"))
-					local timeLeft = GetAuctionItemTimeLeft("bidder", i)
-				
-					table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
-						AHZone, id, count, ownerName or "", bidPrice, buyoutPrice, timeLeft))
-				end
-			end
-		end
+	end
+	
+	-- Completely clear the table is it is empty
+	if #bidsList[charID] == 0 then
+		bidsList[charID] = nil
 	end
 end
 
-
 -- *** Event Handlers ***
 local function OnAuctionHouseClosed()
-	addon:UnregisterEvent("AUCTION_HOUSE_CLOSED")
+	addon:StopListeningTo("AUCTION_HOUSE_CLOSED")
+	addon:StopListeningTo("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
 	
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
-	end
-	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		addon:UnregisterEvent("OWNED_AUCTIONS_UPDATED")
-		addon:UnregisterEvent("AUCTION_HOUSE_AUCTION_CREATED")
-		addon:UnregisterEvent("BIDS_UPDATED")
+	if isRetail then
+		addon:StopListeningTo("OWNED_AUCTIONS_UPDATED", ScanAuctions)
+		addon:StopListeningTo("AUCTION_HOUSE_AUCTION_CREATED", ScanAuctions)
+		addon:StopListeningTo("BIDS_UPDATED", ScanBids)
 	else
-		addon:UnregisterEvent("AUCTION_OWNED_LIST_UPDATE")
-		addon:UnregisterEvent("AUCTION_BIDDER_LIST_UPDATE")
+		addon:StopListeningTo("AUCTION_OWNED_LIST_UPDATE", ScanAuctions)
+		addon:StopListeningTo("AUCTION_BIDDER_LIST_UPDATE", ScanBids)
 	end
 end
 
@@ -204,24 +172,21 @@ local function OnAuctioneerHide(event, interactionType)
 end
 
 local function OnAuctionHouseShow()
-	addon:RegisterEvent("AUCTION_HOUSE_CLOSED", OnAuctionHouseClosed)
+	addon:ListenTo("AUCTION_HOUSE_CLOSED", OnAuctionHouseClosed)
+	addon:ListenTo("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnAuctioneerHide)
 	
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", OnAuctioneerHide)
-	end
-	
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		addon:RegisterEvent("OWNED_AUCTIONS_UPDATED", ScanAuctions)
-		addon:RegisterEvent("AUCTION_HOUSE_AUCTION_CREATED", ScanAuctions)
-		addon:RegisterEvent("BIDS_UPDATED", ScanBids)
+	if isRetail then
+		addon:ListenTo("OWNED_AUCTIONS_UPDATED", ScanAuctions)
+		addon:ListenTo("AUCTION_HOUSE_AUCTION_CREATED", ScanAuctions)
+		addon:ListenTo("BIDS_UPDATED", ScanBids)
 	else
-		addon:RegisterEvent("AUCTION_OWNED_LIST_UPDATE", ScanAuctions)
-		addon:RegisterEvent("AUCTION_BIDDER_LIST_UPDATE", ScanBids)
+		addon:ListenTo("AUCTION_OWNED_LIST_UPDATE", ScanAuctions)
+		addon:ListenTo("AUCTION_BIDDER_LIST_UPDATE", ScanBids)
 	end
 	
-	local character = addon.ThisCharacter
-	character.lastUpdate = time()
-	character.lastVisitDate = date("%Y/%m/%d %H:%M")
+	local char = thisCharacter
+	char.lastUpdate = time()
+	char.lastVisitDate = date("%Y/%m/%d %H:%M")
 end
 
 local function OnAuctioneerShow(event, interactionType)
@@ -231,129 +196,37 @@ local function OnAuctioneerShow(event, interactionType)
 end
 
 
--- ** Mixins **
-local function _GetNumAuctions(character)
-	return #character.Auctions
-end
-
-local function _GetNumBids(character)
-	return #character.Bids
-end
-
-local function _GetAuctionHouseItemInfo(character, list, index)
-	-- invalid auction type ? exit
-	if not (list == "Auctions" or list == "Bids") then return end
+DataStore:OnAddonLoaded(addonName, function()
+	DataStore:RegisterModule({
+		addon = addon,
+		addonName = addonName,
+		characterTables = {
+			["DataStore_Auctions_Characters"] = {
+				ClearAuctionEntries = function(character, AHType, AHZone)
+					-- this function clears the "auctions" or "bids" of a specific AH (faction or goblin)
+					-- AHType = "Auctions" or "Bids" (the name of the table in the DB)
+					-- AHZone = 0 for player faction, or 1 for goblin
+					
+					ClearEntries(character[AHType], AHZone)
+				end,
+			},
+		},
+		characterIdTables = {
+			["DataStore_Auctions_AuctionsList"] = {},
+			["DataStore_Auctions_BidsList"] = {},
+		}
+	})
 	
-	-- invalid index ? exit
-	local item = character[list][index]
-	if not item then return end
-	
-	local isGoblin, itemID, count, name, price1, price2, timeLeft, auctionID = strsplit("|", item)
-	isGoblin = (tonumber(isGoblin) == 1) and true or nil
-	
-	return isGoblin, tonumber(itemID), tonumber(count), name, tonumber(price1), tonumber(price2), tonumber(timeLeft), tonumber(auctionID or 0)
-end
+	thisCharacter = DataStore:GetCharacterDB("DataStore_Auctions_Characters", true)
+	auctionsList = DataStore_Auctions_AuctionsList
+	bidsList = DataStore_Auctions_BidsList
+end)
 
-local function _GetAuctionHouseLastVisit(character)
-	return character.lastUpdate or 0
-end
-
-local function _GetAuctionHouseItemCount(character, searchedID)
-	local count = 0
-	for k, v in pairs (character.Auctions) do
-		local _, id, itemCount = strsplit("|", v)
-		if id and (tonumber(id) == searchedID) then 
-			itemCount = tonumber(itemCount) or 1
-			count = count + itemCount
-		end 
+DataStore:OnPlayerLogin(function()
+	addon:ListenTo("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
+	addon:ListenTo("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnAuctioneerShow)
+	
+	if not isRetail then
+		addon:SetupOptions()
 	end
-	return count
-end
-
-local function _ClearAuctionEntries(character, AHType, AHZone)
-	-- this function clears the "auctions" or "bids" of a specific AH (faction or goblin)
-	-- AHType = "Auctions" or "Bids" (the name of the table in the DB)
-	-- AHZone = 0 for player faction, or 1 for goblin
-	
-	ClearEntries(character[AHType], AHZone)
-end
-
-local PublicMethods = {
-	GetNumAuctions = _GetNumAuctions,
-	GetNumBids = _GetNumBids,
-	GetAuctionHouseItemInfo = _GetAuctionHouseItemInfo,
-	GetAuctionHouseLastVisit = _GetAuctionHouseLastVisit,
-	GetAuctionHouseItemCount = _GetAuctionHouseItemCount,
-	ClearAuctionEntries = _ClearAuctionEntries,
-}
-
--- maximum time left in seconds per auction type : [1] = max 30 minutes, [2] = 2 hours, [3] = 12 hours, [4] = more than 12, but max 48 hours
--- info : https://wowpedia.fandom.com/wiki/API_C_AuctionHouse.GetReplicateItemTimeLeft    (retail)
--- info : https://wowpedia.fandom.com/wiki/API_GetAuctionItemTimeLeft   (vanilla & LK)
-local maxHours = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 24 or 48
-local maxTimeLeft = { 30*60, 2*60*60, 12*60*60, maxHours*60*60 }
-
-local function CheckExpiries()
-	local AHTypes = { "Auctions", "Bids" }
-	local timeLeft, diff
-	
-	local checkLastVisit = GetOption("CheckLastVisit")
-	local threshold = GetOption("CheckLastVisitThreshold")
-	local autoClear = GetOption("AutoClearExpiredItems")
-	
-	for key, character in pairs(addon.db.global.Characters) do
-		-- Check if the last auction visit was maybe a very long time ago, and warn the player that he may have missed items..
-		if checkLastVisit and character.lastAuctionsScan then
-			local seconds = time() - character.lastAuctionsScan
-			local days = floor(seconds / 86400)
-			
-			addon:SendMessage("DATASTORE_AUCTIONS_NOT_CHECKED_SINCE", character, key, days, threshold)
-		end
-		
-		for _, ahType in pairs(AHTypes) do					-- browse both auctions & bids
-			for index = #character[ahType], 1, -1 do		-- from last to first, to make sure table.remove does not screw up indexes.
-				timeLeft = select(7, _GetAuctionHouseItemInfo(character, ahType, index))
-				if not timeLeft or (timeLeft < 1) or (timeLeft > 4) then
-					timeLeft = 4	-- timeLeft is supposed to always be between 1 and 4, if it's not in this range, set it to the longest value (4 = more than 12 hours)
-				end
-
-				diff = time() - character.lastUpdate
-				
-				if diff > maxTimeLeft[timeLeft] and autoClear then		-- has expired
-					table.remove(character[ahType], index)
-				end
-			end
-		end
-	end
-end
-
-function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
-
-	DataStore:RegisterModule(addonName, addon, PublicMethods)
-	DataStore:SetCharacterBasedMethod("GetNumAuctions")
-	DataStore:SetCharacterBasedMethod("GetNumBids")
-	DataStore:SetCharacterBasedMethod("GetAuctionHouseItemInfo")
-	DataStore:SetCharacterBasedMethod("GetAuctionHouseLastVisit")
-	DataStore:SetCharacterBasedMethod("GetAuctionHouseItemCount")
-	DataStore:SetCharacterBasedMethod("ClearAuctionEntries")
-end
-
-function addon:OnEnable()
-	addon:RegisterEvent("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
-	
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		addon:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", OnAuctioneerShow)
-	end
-	addon:SetupOptions()
-	
-	addon:ScheduleTimer(CheckExpiries, 3)	-- check AH expiries 3 seconds later, to decrease the load at startup
-end
-
-function addon:OnDisable()
-	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
-	
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
-		addon:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
-	end
-end
+end)

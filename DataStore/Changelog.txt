@@ -2,6 +2,39 @@ DataStore Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 2024.07.28 (28/07/2024)
+
+- Fixes for The War Within
+- Added GetCharacterIDByGUID
+
+Version 2024.06.30 (30/06/2024)
+
+- Fixed the guild-character relationship sometimes getting broken. Relog an alt if it has "lost" its guild.
+
+Version 2024.06.26 (26/06/2024)
+
+- Fixed a nasty bug when unregistering an event.
+
+Version 2024.06.02 (02/06/2024)
+
+- Properly implemented the deletion of a character in the new datase format.
+
+Version 2024.05.20 (20/05/2024)
+
+- Stopped using Ace libraries
+- Using locals for all global functions
+- Using new tables in the SV file. 
+- Each 'domain' is now in its own file, under the API folder.
+
+Version 2023.12.30 (30/12/2023)
+
+- Added a few utility functions for array management.
+- Prepared the new SV tables for future data migration, using internal character id (final goal : lower memory footprint).
+- Each alt and guild will now get a unique numeric id shared between modules (currently mostly unused, only attributed).
+- Alt groups have been reworked and must be recreated. This feature now required the new internal ids, so alts must be logged in again once in order to be added to a group.
+- Support for connected realms is now done via a new SV table, be sure to log in alts that are part of a guild from another realm.
+
+
 Version 2023.11.17 (17/11/2023)
 
 - ToC Update for Vanilla

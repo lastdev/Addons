@@ -1,10 +1,13 @@
-# DBM - Dungeons
+# DBM - Dungeons, Delves, & Events
 
-## [r128](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r128) (2024-05-11)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r127...r128) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r141](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r141) (2024-07-28)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r140...r141) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- Update raging tempest storm timer for season 4 (it's now a 75 second cd instead of 60 second)  
-    Add user requested Mortal strike nameplate timer to nokhud offensive trash  
-    Add user requested severing slash nameplate timer to Algethar Academy trash  
-- DMF: Add Cannon timer for Alliance Classic (#201)  
-- if more than 1 add is up at once on Kokia, scope interrupt warnings to use target and focus checks  
+- Stratholme: Add note for Balnazzar (#237)  
+- UBRS: Fix Rend combat start timer (#236)  
+- This is now in combat log  
+- UBRS: Add combat start timer for Rend (#235)  
+- UBRS: add mod for t0.5 quest boss (#234)  
+- Some timer fixes, nameplate CD fixes and new announces for delves  
+- Cleanup VP on classic cata from showing all the retail objects  
+- fix bad nameplate timer in Nokhud  

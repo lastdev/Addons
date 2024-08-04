@@ -68,7 +68,7 @@ end
 -- Wrapping a unit's name in its class colour is very common in custom Auras
 local WA_ClassColorName = function(unit)
   if unit and UnitExists(unit) then
-    local name = UnitName(unit)
+    local name = WeakAuras.UnitName(unit)
     local _, class = UnitClass(unit)
     if not class then
       return name
@@ -524,7 +524,17 @@ local overridden = {
 }
 
 local env_getglobal_custom
-local exec_env_custom = setmetatable({},
+-- WORKAROUND API which return Mixin'd values need those mixin "rawgettable" in caller's fenv #5071
+local exec_env_custom = setmetatable({
+  ColorMixin = ColorMixin,
+  Vector2DMixin = Vector2DMixin,
+  Vector3DMixin = Vector3DMixin,
+  ItemLocationMixin = ItemLocationMixin,
+  ItemTransmogInfoMixin = ItemTransmogInfoMixin,
+  TransmogPendingInfoMixin = TransmogPendingInfoMixin,
+  TransmogLocationMixin = TransmogLocationMixin,
+  PlayerLocationMixin = PlayerLocationMixin,
+},
 {
   __index = function(t, k)
     if k == "_G" then

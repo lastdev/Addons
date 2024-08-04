@@ -17,7 +17,7 @@ local Tracing = TSMDEV.Tracing
 -- ============================================================================
 
 function Tracing.Enable(apiName)
-	LoadAddOn("Blizzard_EventTrace")
+	C_AddOns.LoadAddOn("Blizzard_EventTrace")
 	local tableName, tableKey = strsplit(".", apiName)
 	if not tableKey then
 		tableName = nil

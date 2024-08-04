@@ -4,7 +4,7 @@
 -- * Added support for items with an icon
 
 local MAJOR = "LibDropdownMC-1.0"
-local MINOR = 3
+local MINOR = 4
 
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
@@ -214,7 +214,13 @@ local function ReleaseInput(input)
 end
 
 local function MouseOver(frame)
-	local f = GetMouseFocus()
+	local f
+	if GetMouseFocus then
+        f = GetMouseFocus()
+    elseif GetMouseFoci then
+        local foci = GetMouseFoci()
+        f = foci[1] or nil
+    end
 	while f and f ~= UIParent do
 		if f == frame then return true end
 		f = f:GetParent()

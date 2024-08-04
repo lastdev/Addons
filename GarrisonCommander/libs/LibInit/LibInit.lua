@@ -8,9 +8,9 @@
 -- local me,ns=... -- Wow engine passes you your addon name and a private table to use
 -- addon=LibStub("LibInit"):newAddon(ns,me)
 -- -- Since now, all LibInit methods are available on self
---@debug@
+--[==[@debug@
 -- Check
---@end-debug@
+--@end-debug@]==]
 local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"

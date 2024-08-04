@@ -15,11 +15,134 @@ How to support Altoholic's development :
 If you like the addon, consider supporting it, this has been the long term effort and commitment of a single person. #ArmyOfOne
 
 
-10.2.012 (29/12/2023)
+11.0.001 (28/07/2024)
 
-- Toc Update for 10.2.5
-- DataStore_Currencies: added Mysterious Fragment.
-- Summary tab: added Mysterious Fragment to Currencies.
+- DataStore_Spells : fixed TWW compatibility.
+- DataStore_Reputations : fixed TWW compatibility.
+- DataStore_Currencies : I prepared the code to support the transfer of currencies, but Blizzard does not properly provide the GUID's yet, so the code is commented until they fix it.
+Until then, if you transfer a currency, the receiving alt will be updated with the proper new count, but the sender will not, you will have to log them on to update it.
+Do not complain to me, there is nothing I can do about it. It's Blizzard's job to fix it.
+- A few minor fixes in the UI.
+
+Please note : I will be off until August 9th, so no updates in that period.
+
+
+10.2.020 (26/06/2024)
+
+- Aligned DataStore with recent fixes for Cataclysm.
+- Fixed invalid item counters after leaving the bank (identified in Cataclysm, but applies also to Retail).
+
+10.2.019 (23/06/2024)
+
+- Fixed an issue where the mailbox was properly scanned, but not properly reflected in the UI.
+- Fixed another UI issue related to auctions.
+- DataStore_Auctions : Fixed compatibility with the Cataclysm version.
+
+10.2.018 (16/06/2024)
+
+- DataStore_Crafts : Fixed a Lua error related to cooldowns when scanning a profession (Thanks Stormspark!).
+- DataStore_Containers : Fixed the count of items which can be stacked by more than 2047 (such as the Polished Pet Charm ! ..which I thought could stack up to 2000, but it's 5000).
+- DataStore_Agenda : Fixed the detection of the client-server time gap, which messed up the reporting of expired events.
+- Warnings are now properly sent for expired events (issue with repeated timer).
+- Saved instances reset warnings are now only displayed if warnings are enabled in the options.
+
+
+10.2.017 (09/06/2024)
+
+- DataStore_Agenda : Fixed scanning of raid instances.
+- DataStore_Crafts : Fixed an issue when opening NPC profession panels.
+- DataStore_Containers : Fixed the count of items which can be stacked by more than 1023 (such as the Polished Pet Charm).
+Note: the maximum stack is now coded on 16 bits instead of 10, and to prevent asking all of you to logon all of your alts again, I implemented a non-breaking fix.
+I support both the old (10 bits) and new (16 bits) format, and logging on with an alt will automatically convert the bag/bank contents to the new format.
+In a few months, I will remove support for the old formats, so that leaves you time :)
+
+It is however necessary to log on with an alt to fix the counters of stacks higher than 1000.
+
+
+10.2.016 (02/06/2024)
+
+- Summary tab -> Properly implemented the deletion of a character in the new datase format.
+- Added a shortcut to open the add-on's UI in the Blizzard's add-on compartment at the top right of the screen.
+
+
+10.2.015 (31/05/2024)
+
+- Summary tab -> Added a race filter. Races are listed in the same order as on the character creation screen.
+
+10.2.014 (24/05/2024)
+
+- Added the Pandaria Remix achievements.
+- Fixed an error when scanning AH Bids
+- Fixed a guild communication error.
+
+
+
+10.2.013 (20/05/2024)
+
+Hi !
+
+In a similar fashion to what I did in 2021 when I rewrote the complete UI of Altoholic, I have spent the past few months basically
+rewriting all of the DataStore layer. Yes, all modules, basically from scratch.
+Things should have gone faster, I had originally hoped to work on this for about 2 months, but it took longer due to a rough IRL.
+
+The motivations behind this decision were multiple:
+
+- I could see memory consumption growing
+- Data structures becoming a bit harder to manage
+- Efforts to implement new features resulting in always more code to manage
+
+.. so I took a deep breath and looked seriously at the best approach in order to solve this problem, and something had to be done.
+
+The only way to truly address the problem was a better separation of concern everywhere in the code.
+While the code was already pretty well organized, one big limitation remained: I could not simply move code to other files because 
+Altoholic and DataStore were Ace add-ons since the beginning, and while Ace is an amazing library, it does (as libraries do)
+impose its own approach, which prevented me for example from reacting to an ADDON_LOADED event in two files.
+This may seem like I'm nitpicking, but being able to do so drastically improves the flow and allows me better organize the code.
+
+The whole exercise brought me to removing all Ace libraries one after another, and to clean the code everywhere, to save memory
+and processing time in all hidden corners.
+
+The result is a memory footprint that is now 20-40% smaller than it was.
+
+One drawback of this whole reorganization is that the whole database structure has changed, and I have no other choice but to
+enforce a full database wipe. Sorry to all those of you who like me have 40+ alts, I know your pain, but it was a long overdue necessary 
+step to ensure that future updates go smoother, and that the add-on can face the next 20 years of expansions that Blizzard
+is promising us :)
+
+This will however mean faster transfers for those of you who use the account sharing feature.
+
+Things that are not working :
+- Talents
+- Account sharing: a special word about this one, I intend to implement it at a lower level, in the DataStore modules.
+This way, everything but the UI will be written once for all versions of the game. A bit more patience is required here. 
+- I strove to not break features that were working before, but this is a big change, and while the Discord community helped greatly, some stuff may have slipped through.
+
+Anyway, on to the change log:
+
+- New database format in all DataStore modules.
+- Ace libraries have been dropped.
+- A ton of bugfixes.
+- Added more slots in the recipes panel (Thanks Furball13 !)
+- Improved learnability of recipes in the tooltip (Thanks Furball13 !)
+- Tab Grids -> Added a panel for profession equipment (Thanks Ghordian !)
+
+Finally, the same is coming for Cataclysm & Vanilla, I'm busy with that too.
+
+
+
+10.2.012 (02/01/2024)
+
+- Changed the database format and moved all addon options to cleaner tables.
+All options related to a given tab are now only loaded-on-demand when the tab is clicked.
+This is a first step in reducing the memory footprint of the add-on.
+- DataStore : also changed the database format of the main module. Other modules will follow.
+The goal is also to reduce the memory footprint.
+When I can I will migrate the data so you have nothing to do, in other cases I will start copying the data into a new location.
+This means that for a little while, the add-on may consume a bit more than before.
+When all is done, I will rework the account sharing feature (which will be faster, because less data will be transferred).
+
+In the meantime, I recommend to logon with each alt once to create the proper entries in the DataStore database.
+
 
 10.2.011 (29/12/2023)
 

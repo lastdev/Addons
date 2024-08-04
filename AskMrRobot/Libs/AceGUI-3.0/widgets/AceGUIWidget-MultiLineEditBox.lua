@@ -6,7 +6,7 @@ if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 local pairs = pairs
 
 -- WoW APIs
-local GetCursorInfo, GetSpellInfo, ClearCursor = GetCursorInfo, GetSpellInfo, ClearCursor
+local GetCursorInfo, GetSpellName, ClearCursor = GetCursorInfo, C_Spell.GetSpellName, ClearCursor
 local CreateFrame, UIParent = CreateFrame, UIParent
 local _G = _G
 
@@ -106,7 +106,7 @@ end
 local function OnReceiveDrag(self)                                               -- EditBox / ScrollFrame
 	local type, id, info = GetCursorInfo()
 	if type == "spell" then
-		info = GetSpellInfo(id, info)
+		info = GetSpellName(id) --, info)
 	elseif type ~= "item" then
 		return
 	end

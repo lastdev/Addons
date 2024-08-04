@@ -29,6 +29,7 @@ function Templates.CreateBasicWindow(parentFrame, params)
 	frame.backdropColor = backdropColor
 	frame.backdropColorAlpha = params.alpha or defaultParams.alpha
 	frame.backdropBorderColor = backdropBorderColor
+	frame.minimizable = params.minimizable or false
 	frame:SetFrameLevel(3000)
 	frame:SetMovable(true)
 	frame:EnableMouse(true)
@@ -42,7 +43,12 @@ function Templates.CreateBasicWindow(parentFrame, params)
 	end)
 	frame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
-		prefs.WindowLocation = { self:GetPoint() }
+		if not self.isLocked then
+			local topLeftX, topLeftY = self:GetLeft(), self:GetTop()
+			self:ClearAllPoints()
+			self:SetPoint("TOPLEFT", UIParent, "TOPLEFT", topLeftX, topLeftY-UIParent:GetHeight())
+			prefs.WindowLocation = { "TOPLEFT", "UIParent", "TOPLEFT", topLeftX, topLeftY-UIParent:GetHeight() }
+		end
 	end)
 	if (prefs.WindowLocation and (#prefs.WindowLocation > 0)) then
 		frame:ClearAllPoints()
@@ -71,6 +77,56 @@ function Templates.CreateBasicWindow(parentFrame, params)
 	frame.title:SetPoint("TOP", frame, "TOP", 0, -8)
 	if (params and params.icon) then
 		frame.icon = CreateFrame("Button", nil, frame)
+		frame.icon:SetFrameLevel(3001)
+		if (frame.minimizable) then
+			local clickTimes = { }
+			local threshold = 0.4
+			local function OnClick()
+				--local currentTime = GetTime()
+				--if #clickTimes == 0 or (currentTime - clickTimes[#clickTimes]) > threshold then
+				--	clickTimes = {currentTime}
+				--else
+				--	table.insert(clickTimes, currentTime)
+				--end
+				--if #clickTimes >= 2 and (clickTimes[#clickTimes] - clickTimes[#clickTimes - 1]) <= threshold then
+					if (prefs.minimized) then
+						frame:Maximize()
+					else
+						--prefs.minimized = true
+						--frame.icon:SetParent(UIParent)
+						--frame.icon:SetFrameLevel(3001)
+						--frame:Hide()
+						--if (params.onMinimizeFunc) then
+						--	params.onMinimizeFunc(frame)
+						--end
+					end
+				--end
+			end
+			frame.Maximize = function(self)
+				prefs.minimized = false
+				self.icon:SetParent(frame)
+				self:Show()
+				if (params.onMaximizeFunc) then
+					params.onMaximizeFunc(frame)
+				end
+			end
+			frame.Minimize = function(self)
+				prefs.minimized = true
+				frame.icon:SetParent(UIParent)
+				frame.icon:SetFrameLevel(3001)
+				frame:Hide()
+				if (params.onMinimizeFunc) then
+					params.onMinimizeFunc(frame)
+				end
+			end
+			frame.icon:SetScript("OnClick", OnClick)
+		end
+		if (params.iconEnterFunc) then
+			frame.icon:SetScript("OnEnter", params.iconEnterFunc)
+		end
+		if (params.iconLeaveFunc) then
+			frame.icon:SetScript("OnLeave", params.iconLeaveFunc)
+		end
 		frame.icon:SetSize(32, 32)
 		frame.icon:SetPoint("TOPLEFT", frame, "TOPLEFT", -1, 3)
 		frame.icon.Background = frame.icon:CreateTexture(nil, "ARTWORK")
@@ -90,6 +146,20 @@ function Templates.CreateBasicWindow(parentFrame, params)
 		frame.icon.Border:SetTexture("Interface/Minimap/MiniMap-TrackingBorder")
 		frame.icon.Border:SetPoint("TOPLEFT")
 		frame.icon.Border:SetDesaturated(1)
+		if (frame.minimizable) then
+			if (prefs.minimized) then
+				frame.icon:SetParent(UIParent)
+				frame.icon:SetFrameLevel(3001)
+				frame:Hide()
+				if (params.onMinimizeFunc) then
+					params.onMinimizeFunc(frame)
+				end
+			else
+				if (params.onMaximizeFunc) then
+					params.onMaximizeFunc(frame)
+				end
+			end
+		end
 	end
 	return frame
 end

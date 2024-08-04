@@ -1,21 +1,16 @@
 # DBM - Vanilla and Season of Discovery
 
-## [r725](https://github.com/DeadlyBossMods/DBM-Vanilla/tree/r725) (2024-05-11)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Vanilla/compare/r723...r725) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Vanilla/releases)
+## [r736](https://github.com/DeadlyBossMods/DBM-Vanilla/tree/r736) (2024-07-31)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Vanilla/compare/r735...r736) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Vanilla/releases)
 
-- readd project IDs so it can actually package  
-- Remove Burning Crusade mods (#147)  
-- Split .pkgmeta by release type  
-    This seems to be the only way to fully exclude a whole addon from  
-    release builds.  
-    https://github.com/BigWigsMods/packager/issues/165  
-- Add test for Atal'arion mod  
-- Add basic vscode config  
-- Upgrade LuaLS and use multi-threaded checking  
-- ST Trash: use different icon for ghosts  
-    Similar skull/bones texture but slightly more visible than the previous  
-    one when there are a lot of hunter frost traps on the ground.  
-- Update koKR (BCVanilla) (#144)  
-- Fixed bad arg position for option default on Chromaggus and Talon Guards  
-    Fixed broken inline icon on Majordomo  
-- ST: add trash mod that sets a nameplate timer for the ghosts  
+- oh, bump hotfix revision. if there is any good example why that revision exists, this is it.  
+- Why edit existing spellids when you can hotfix totally new ones into the game to change number of targets!  
+    (This fixes alerts, icons, and say bubbles so they worka gain on bombs during Geddon)  
+- Ragnaros: remove timer for second submerge on heat 1  
+    This also makes the wipe test obsolete, that was just interesting because  
+    of the second full submerge cycle, we'll get one on higher heat levels instead :)  
+- Temple: Update Eranikus test  
+    For https://github.com/DeadlyBossMods/DBM-Vanilla/commit/14dd8b1febfedb5eec5a1778eeb9441abb91ede4  
+- Add tests for Molten Core at Heat 1  
+    I haven't checked the reports, don't take this is as an LGTM for all mods,  
+    this is just documenting the current state of the mods.  

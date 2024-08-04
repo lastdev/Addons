@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2343, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240506005004")
+mod:SetRevision("20240629024602")
 mod:SetCreatureID(146409)
 mod:SetEncounterID(2281)
 mod:SetUsedIcons(1, 2, 3)
@@ -48,7 +48,7 @@ local warnSetCharge						= mod:NewSpellAnnounce(285725, 2)
 local warnIceShard						= mod:NewStackAnnounce(285253, 2, nil, "Tank")
 local warnTimeWarp						= mod:NewSpellAnnounce(287925, 3)
 local warnFreezingBlast					= mod:NewSpellAnnounce(285177, 3)
-local warnFrozenSiege					= mod:NewSpellAnnounce(289488, 2)
+local warnFrozenSiege					= mod:NewCountAnnounce(289488, 2)
 --Intermission 1
 local warnHowlingWindsLeft				= mod:NewCountAnnounce(290053, 2)
 --Stage Two: Frozen Wrath
@@ -101,7 +101,7 @@ local specWarnOrbofFrost				= mod:NewSpecialWarningCount(288619, nil, nil, nil, 
 local specWarnPrismaticImage			= mod:NewSpecialWarningSwitchCount(288747, nil, nil, 2, 1, 2)
 
 --General
-local timerPhaseTransition				= mod:NewPhaseTimer(55)
+local timerPhaseTransition				= mod:NewStageTimer(55)
 local timerHowlingWindsCD				= mod:NewCDCountTimer(80, 288169, nil, nil, nil, 6, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic
 local berserkTimer						= mod:NewBerserkTimer(900)
 local timerIceBlockCD					= mod:NewTargetTimer(20, 287322, nil, nil, nil, 6)

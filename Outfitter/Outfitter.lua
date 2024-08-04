@@ -2934,7 +2934,7 @@ function Outfitter:FindOutfitItemIndex(pOutfit)
 end
 
 function Outfitter:WearOutfitByName(pOutfitName, pLayerID)
-	vOutfit = self:FindOutfitByName(pOutfitName)
+	local vOutfit = self:FindOutfitByName(pOutfitName)
 
 	if not vOutfit then
 		self:ErrorMessage("Couldn't find outfit named %s", pOutfitName)
@@ -2945,7 +2945,7 @@ function Outfitter:WearOutfitByName(pOutfitName, pLayerID)
 end
 
 function Outfitter:RemoveOutfitByName(pOutfitName, pLayerID)
-	vOutfit = self:FindOutfitByName(pOutfitName)
+	local vOutfit = self:FindOutfitByName(pOutfitName)
 
 	if not vOutfit then
 		self:ErrorMessage("Couldn't find outfit named %s", pOutfitName)
@@ -3297,7 +3297,7 @@ function Outfitter:WearBoundOutfit(pBindingIndex)
 						UIErrorsFrame:AddMessage(format(self.cEquipOutfitMessageFormat, vOutfit:GetName()), self.OUTFIT_MESSAGE_COLOR.r, self.OUTFIT_MESSAGE_COLOR.g, self.OUTFIT_MESSAGE_COLOR.b)
 					end
 				else
-					local vEquipped = self:ToggleOutfitNow(vOutfit, vCategoryID)
+					local vEquipped = self:ToggleOutfitNow(vOutfit)
 
 					if not self.Settings.Options.DisableHotkeyMessages then
 						if vEquipped then
@@ -3661,7 +3661,7 @@ function Outfitter:GetBagType(pBagIndex)
 		return nil
 	end
 
-	return GetItemFamily(vItemLink)
+	return C_Item.GetItemFamily(vItemLink)
 end
 
 function Outfitter:GetEmptyBagSlot(pStartBagIndex, pStartBagSlotIndex, pIncludeBank)
@@ -4147,7 +4147,7 @@ function Outfitter:GetPlayerAuraStates()
 	end
 
 	while true do
-		local vName, _, vTexture, _, _, _, _, _, _, _, vSpellID = UnitBuff("player", vBuffIndex)
+		local vName, _, vTexture, _, _, _, _, _, _, _, vSpellID = C_UnitAuras.GetAuraDataByIndex("PLAYER", vBuffIndex)
 
 		if not vName then
 			return self.AuraStates
@@ -4465,7 +4465,7 @@ function Outfitter:GetCurrentZoneIDs(pRecycleTable)
 		vZoneSpecialIDMap = self.cZoneSpecialIDMap[GetRealZoneText()]
 	end
 
-	local vPVPType, vIsArena, vFactionName = GetZonePVPInfo()
+	local vPVPType, vIsArena, vFactionName = C_PvP.GetZonePVPInfo()
 
 	if vZoneSpecialIDMap then
 		for _, vZoneSpecialID in ipairs(vZoneSpecialIDMap) do
@@ -4621,7 +4621,7 @@ function Outfitter:FindMultipleItemLocation(pItems, pInventoryCache)
 end
 
 function Outfitter:FindAndAddItemsToOutfit(pOutfit, pSlotName, pItems, pInventoryCache)
-	vItemLocation, vItem = self:FindMultipleItemLocation(pItems, pInventoryCache)
+	local vItemLocation, vItem = self:FindMultipleItemLocation(pItems, pInventoryCache)
 
 	if vItemLocation then
 		local vInventorySlot = pSlotName
@@ -4642,7 +4642,35 @@ function Outfitter:InitializationCheck()
 	-- Don't initialize for a short time after WoW comes up to allow
 	-- time for WoW to load inventory, bags, talent trees, etc.
 
+	self:InitializeInstant()
+
 	self.SchedulerLib:RescheduleTask(1, self.Initialize, self)
+end
+
+function Outfitter:InitializeInstant()
+	if self.InitializedInstant then
+		return
+	end
+
+	-- Initialize the global settings if they didn't get loaded
+    if not gOutfitter_GlobalSettings then
+        self:InitializeGlobalSettings()
+    end
+
+    -- Initialize the settings
+    if not gOutfitter_Settings then
+        self:InitializeSettings()
+    else
+        self.Settings = gOutfitter_Settings
+    end
+
+    if not self.Settings.Options.MinimapButton then
+          self.Settings.Options.MinimapButton = { hide = self.Settings.Options.HideMinimapButton}
+    end
+
+	Outfitter.LDB:CreateIcon(self.Settings.Options.MinimapButton)
+
+	self.InitializedInstant = true
 end
 
 function Outfitter:Initialize()
@@ -4656,7 +4684,7 @@ function Outfitter:Initialize()
 	end
 
 	-- Make sure they're not upgrading with a reloadui when there are new files
-	if tonumber(GetAddOnMetadata("Outfitter", "X-ReloadTag")) ~= 2 then
+	if tonumber(C_AddOns.GetAddOnMetadata("Outfitter", "X-ReloadTag")) ~= 2 then
 		OutfitterMinimapButton:Hide() -- Remove access to Outfitter so more errors don't start coming up
 		OutfitterButtonFrame:Hide()
 		StaticPopup_Show("OUTFITTER_CANT_RELOADUI")
@@ -4672,11 +4700,6 @@ function Outfitter:Initialize()
 	-- Swap in the Horde Lance for the Alliance Lance mapping
 	if UnitFactionGroup("player") == "Horde" then
 		Outfitter.cItemAliases[46106] = 46070 -- Argent Lance -> Horde Lance
-	end
-
-	-- Initialize the global settings if they didn't get loaded
-	if not gOutfitter_GlobalSettings then
-		self:InitializeGlobalSettings()
 	end
 
 	-- Refuse to load for select characters
@@ -4722,13 +4745,6 @@ function Outfitter:Initialize()
 	-- Initialize the scripts
 	Outfitter:InitializeScripts()
 
-	-- Initialize the settings
-	if not gOutfitter_Settings then
-		self:InitializeSettings()
-	else
-		self.Settings = gOutfitter_Settings
-	end
-
 	-- Initialize the outfits
 	self.CurrentOutfit = self:GetInventoryOutfit()
 
@@ -4759,12 +4775,6 @@ function Outfitter:Initialize()
 			vUsedRecentNames[vName] = true
 		end
 	end
-
-    if not self.Settings.Options.MinimapButton then
-      self.Settings.Options.MinimapButton = { hide = self.Settings.Options.HideMinimapButton}
-    end
-
-    Outfitter.LDB:CreateIcon(self.Settings.Options.MinimapButton)
 
 	-- Move the Blizzard UI over a bit
 	PaperDollSidebarTabs:SetPoint("BOTTOMRIGHT", CharacterFrameInsetRight, "TOPRIGHT", -30, -1)
@@ -5150,7 +5160,7 @@ end
 
 function Outfitter:CreateEmptySpecialOccasionOutfit(pScriptID, pName, pAllowDuplicates)
 	-- Return the existing outfit if duplicates aren't allowed
-	vOutfit = self:GetOutfitByName(pName)
+	local vOutfit = self:GetOutfitByName(pName)
 	if vOutfit and not pAllowDuplicates then
 		-- Assign the script to the existing outfit if there isn't one already
 		if not vOutfit.ScriptID then
@@ -5631,7 +5641,7 @@ function Outfitter._NameOutfitDialog:Update(pCheckForStatOutfit)
 
 		if vStat
 		and not vStat.Complex then -- Don't attempt to test for iterative outfits
-			vOutfit = Outfitter:GenerateSmartOutfit("temp outfit", vStat, Outfitter:GetInventoryCache())
+			local vOutfit = Outfitter:GenerateSmartOutfit("temp outfit", vStat, Outfitter:GetInventoryCache())
 			if not vOutfit
 			or vOutfit:IsEmpty() then
 				vErrorMessage = Outfitter.cNoItemsWithStatError
@@ -5778,7 +5788,7 @@ function Outfitter._RebuildOutfitDialog:Update(pCheckForStatOutfit)
 
 		if vStat
 		and not vStat.Complex then -- Don't attempt to test for iterative outfits
-			vOutfit = Outfitter:GenerateSmartOutfit("temp outfit", vStat, Outfitter:GetInventoryCache())
+			local vOutfit = Outfitter:GenerateSmartOutfit("temp outfit", vStat, Outfitter:GetInventoryCache())
 			if not vOutfit
 			or vOutfit:IsEmpty() then
 				vErrorMessage = Outfitter.cNoItemsWithStatError
@@ -6034,7 +6044,7 @@ function Outfitter.OutfitItemSelected(dropdown, item)
 	local outfit = Outfitter:GetOutfitFromDropdown(dropdown)
 
 	if not outfit then
-		Outfitter:ErrorMessage("Outfit for menu item "..tostring(pItem.name).." not found")
+		Outfitter:ErrorMessage("Outfit for menu item "..tostring(item.name).." not found")
 		return
 	end
 
@@ -6122,8 +6132,9 @@ function Outfitter:ToggleUI(pToggleCharWindow)
 end
 
 function Outfitter:OpenUI()
+	CharacterFrame:ShowSubFrame("PaperDollFrame")
 	ShowUIPanel(CharacterFrame)
-	CharacterFrame_ShowSubFrame("PaperDollFrame")
+	CharacterFrame:RefreshDisplay()
 	OutfitterFrame:Show()
 end
 
@@ -6373,7 +6384,7 @@ function Outfitter:DepositOutfit(pOutfit, pUniqueItemsOnly)
 	local vNumChanges = #vEquipmentChangeList
 
 	while vChangeIndex <= vNumChanges do
-		vEquipmentChange = vEquipmentChangeList[vChangeIndex]
+		local vEquipmentChange = vEquipmentChangeList[vChangeIndex]
 
 		if self:IsBankBagIndex(vEquipmentChange.FromLocation.BagIndex) then
 			table.remove(vEquipmentChangeList, vChangeIndex)
@@ -6470,7 +6481,7 @@ function Outfitter:WithdrawOutfit(pOutfit)
 	local vNumChanges = #vEquipmentChangeList
 
 	while vChangeIndex <= vNumChanges do
-		vEquipmentChange = vEquipmentChangeList[vChangeIndex]
+		local vEquipmentChange = vEquipmentChangeList[vChangeIndex]
 
 		if not self:IsBankBagIndex(vEquipmentChange.FromLocation.BagIndex) then
 			table.remove(vEquipmentChangeList, vChangeIndex)
@@ -6486,7 +6497,7 @@ function Outfitter:WithdrawOutfit(pOutfit)
 
 	-- Execute the changes
 
-	vEquipmentChangeList:execute(vEmptyBagSlots, vExpectedInventoryCache)
+	vEquipmentChangeList:execute(vEmptyBagSlots, vInventoryCache)
 
 	self:DispatchOutfitEvent("EDIT_OUTFIT", pOutfit:GetName(), pOutfit)
 end
@@ -7098,7 +7109,7 @@ function Outfitter:InventoryItemIsActive(pInventorySlot)
 	local vSlotID = self.cSlotIDs[pInventorySlot]
 	local vItemLink = self:GetInventorySlotIDLink(vSlotID)
 	local vItemCode = self:GetSlotIDLinkInfo(vSlotID)[1]
-	local vStartTime, vDuration, vEnable = GetItemCooldown(vItemCode)
+	local vStartTime, vDuration, vEnable = C_Item.GetItemCooldown(vItemCode)
 
 	if not vStartTime or vStartTime == 0 then
 		return false
@@ -7159,9 +7170,9 @@ function Outfitter:GenerateItemLink(pItem)
 		return
 	end
 
-	local _, _, vQuality = GetItemInfo(pItem.Code)
+	local _, _, vQuality = C_Item.GetItemInfo(pItem.Code)
 	if pItem.Quality then vQuality = pItem.Quality end
-	local _, _, _, vQualityColorCode = GetItemQualityColor(vQuality or 1)
+	local _, _, _, vQualityColorCode = C_Item.GetItemQualityColor(vQuality or 1)
 
 	return string.format("|c%s|Hitem:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%s%s|h[%s]|h|r", vQualityColorCode, pItem.Code, pItem.EnchantCode or 0, pItem.JewelCode1 or 0, pItem.JewelCode2 or 0, pItem.JewelCode3 or 0, pItem.JewelCode4 or 0, pItem.SubCode or 0, pItem.UniqueID or 0, pItem.LinkLevel or 0, 0, pItem.UpgradeTypeID or 0, pItem.InstanceDifficultyID or 0, pItem.BonusIDs or "::", (pItem.UpgradeItemType and pItem.UpgradeItemType ~= 0) and (":"..pItem.UpgradeID) or "", pItem.Name or "unknown"), vQuality or 1
 end
@@ -7212,7 +7223,7 @@ function Outfitter:CallCompanionByName(pName)
 end
 
 function Outfitter:PlayerIsOnQuestID(pQuestID)
-	local vNumQuests = GetNumQuestLogEntries()
+	local vNumQuests = C_QuestLog.GetNumQuestLogEntries()
 
 	for vQuestIndex = 1, vNumQuests do
 		local vQuestLink = GetQuestLink(vQuestIndex)
@@ -7236,7 +7247,7 @@ function Outfitter:GetTrackingEnabled(pTexture)
 
 	for vIndex = 1, vNumTypes do
 		local vName, vTexture, vActive = OutfitterAPI:GetTrackingInfo(vIndex)
-		if vTexture == pTexture then
+        if vTexture == pTexture then
 			return vActive, vIndex
 		end
 	end
@@ -7258,10 +7269,10 @@ function Outfitter._ExtendedCompareTooltip:Construct()
 		if not Outfitter.Settings.Options.DisableItemComparisons then
 			if OutfitterAPI.IsWoW1002 then
 				if TooltipUtil.ShouldDoItemComparison() then
-					self:ShowCompareItem(pShift)
+					self:ShowCompareItem()
 				end
 			else
-				self:ShowCompareItem(pShift)
+				self:ShowCompareItem()
 			end
 		end
 	end)
@@ -7307,7 +7318,7 @@ function Outfitter._ExtendedCompareTooltip:ShowCompareItem()
 	      vTooltipItemType,
 	      vTooltipItemSubType,
 	      vTooltipItemCount,
-	      vTooltipItemInvType = GetItemInfo(vTooltipItemCodes[1])
+	      vTooltipItemInvType = C_Item.GetItemInfo(vTooltipItemCodes[1])
 
 	if not vTooltipItemInvType or vTooltipItemType ~= "Armor" then
 		return

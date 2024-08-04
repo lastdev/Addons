@@ -40,25 +40,6 @@ local color = Addon.c_PrintColorCode or ORANGE_FONT_COLOR_CODE
 
 local printPrefix = string.format("%s[%s%s%s]%s%s%s", HIGHLIGHT_FONT_COLOR_CODE, color, AddonName, HIGHLIGHT_FONT_COLOR_CODE, FONT_COLOR_CODE_CLOSE, FONT_COLOR_CODE_CLOSE, " ")
 
---[[
-function Addon:Print(msg, ...)
-    -- Make sure all arguments are strings. This will catch nil and boolean values and allow you
-    -- to not worry about using "tostring()" in your code that will add unnecessary overhead.
-    local args = {...}
-    for i, arg in ipairs(args) do
-        if type(arg) ~= "string" then
-            args[i] = tostring(arg)
-        end
-    end
-    
-    if type(msg) ~= "string" then
-        msg = tostring(msg)
-    end
-
-    DEFAULT_CHAT_FRAME:AddMessage(printPrefix .. string.format(msg, unpack(args)))
-end
-]]-- 
-
 --[[===========================================================================
     | Create lifetime management events and event handling.
     |

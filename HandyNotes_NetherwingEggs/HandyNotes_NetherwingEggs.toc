@@ -1,5 +1,5 @@
-## Interface: 100207
-## Version: 2.11
+## Interface: 110000
+## Version: 2.13
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_shadowegg
 ## Title: Netherwing Eggs

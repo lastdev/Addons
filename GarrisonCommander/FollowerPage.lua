@@ -37,17 +37,17 @@ function module:ShowImprovements()
 			b:SetUserData("item",itemID)
 			b:SetCallback("OnEnter",function(this)
 
---[===[@debug@
+--[==[@debug@
 			print("Item:",this:GetUserData("item"))
---@end-debug@]===]
+--@end-debug@]==]
 			GameTooltip:SetOwner(this.frame,"ANCHOR_CURSOR")
 			GameTooltip:AddLine("Reward")
 			GameTooltip:SetItemByID(this:GetUserData("item"))
 			GameTooltip:Show() end)
 			b:SetCallback("OnLeave",function(this) GameTooltip:Hide() end)
---[===[@debug@
+--[==[@debug@
 			b:SetCallback("OnClick",function(this) print("Click") end)
---@end-debug@]===]
+--@end-debug@]==]
 		end
 	end
 	scroller:AddRow("Item Tokens",C.Orange())
@@ -167,9 +167,9 @@ function module:ShowUpgradeButtons(force)
 			level=tonumber(level)
 			local A=b[used]
 			local qt=GetItemCount(itemID)
---[===[@debug@
+--[==[@debug@
 			print(tipo,level)
---@end-debug@]===]
+--@end-debug@]==]
 			repeat
 				if (qt>0) then
 					A:ClearAllPoints()
@@ -283,9 +283,9 @@ end
 function module:Setup()
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","DelayedRefresh")
 	self:RegisterEvent("CHAT_MSG_LOOT","DelayedRefresh")
---[===[@debug@
+--[==[@debug@
 	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers; with %s"] .. " (%d)")
---@end-debug@]===]
+--@end-debug@]==]
 --@non-debug@
 	self:GarrisonTraitCountersFrame_OnLoad(GarrisonTraitCountersFrame, L["%s |4follower:followers; with %s"])
 --@end-non-debug@

@@ -1,4 +1,4 @@
-local VERSION = 109
+local VERSION = 110
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -325,26 +325,17 @@ fixes
 toc update
 Restructured options dropdowns: now options for different expansions always visible
 Added option to hide emerald dream quest icons from main map
+
+11.0 update
 ]]
 
 local GlobalAddonName, WQLdb = ...
 
-local is83 = false
-do
-	local version, buildVersion, buildDate, uiVersion = GetBuildInfo()
-
-	local expansion,majorPatch,minorPatch = (version or "1.0.0"):match("^(%d+)%.(%d+)%.(%d+)")
-
-	if ((expansion or 0) * 10000 + (majorPatch or 0) * 100 + (minorPatch or 0)) >= 80300 then
-		is83 = true
-	end
-end
-
 local VWQL = nil
 
-local GetCurrentMapID, tonumber, C_TaskQuest, tinsert, abs, time, HaveQuestData, QuestUtils_IsQuestWorldQuest, bit, format, floor, pairs = 
-      function() return WorldMapFrame:GetMapID() or 0 end, tonumber, C_TaskQuest, tinsert, abs, time, HaveQuestData, QuestUtils_IsQuestWorldQuest, bit, format, floor, pairs
+local GetCurrentMapID = function() return WorldMapFrame:GetMapID() or 0 end
 local IsQuestComplete, IsQuestCriteriaForBounty = C_QuestLog.IsComplete, C_QuestLog.IsQuestCriteriaForBounty
+
 
 local function GetCurrencyInfo(id)
 	local data = C_CurrencyInfo.GetCurrencyInfo(id)
@@ -357,6 +348,40 @@ end
 local function GetQuestTagInfo(id)
 	local data = C_QuestLog.GetQuestTagInfo(id)
 	return data.tagID, data.tagName, data.worldQuestType, data.quality, data.isElite, data.tradeskillLineID, data.displayExpiration
+end
+
+local GetFactionInfoByID = GetFactionInfoByID or function(id)
+	local data = C_Reputation.GetFactionDataByID(id)
+	if not data then
+		return
+	end
+	return data.name, data.description
+end
+
+local GetNumQuestLogRewardCurrencies, GetQuestLogRewardCurrencyInfo = GetNumQuestLogRewardCurrencies, GetQuestLogRewardCurrencyInfo
+if not GetNumQuestLogRewardCurrencies then
+	local reward_cache = {}
+	local function GetData(questID)
+		local data = reward_cache[questID]
+		local t = GetTime()
+		if not data or t > data.expTime then
+			data = C_QuestLog.GetQuestRewardCurrencies(questID)
+			data.expTime = t + 5
+		end
+		return data
+	end
+	function GetNumQuestLogRewardCurrencies(questID)
+		local data = GetData(questID)
+		return #data
+	end
+	function GetQuestLogRewardCurrencyInfo(i, questID)
+		local data = GetData(questID)[i]
+		if not data then
+			return
+		end
+		return data.name, data.texture, data.baseRewardAmount, data.currencyID
+		--data.totalRewardAmount
+	end
 end
 
 local LE = {
@@ -1079,32 +1104,10 @@ local ActiveFilterType
 
 local ActiveSort = 5
 
-local WorldMapHideWQLCheck
 local UpdateScale
 local UpdateAnchor
 
 local DEBUG = false
-
-local FIRST_NUMBER, SECOND_NUMBER, THIRD_NUMBER, FOURTH_NUMBER = FIRST_NUMBER, SECOND_NUMBER, THIRD_NUMBER, FOURTH_NUMBER
-
-if SECOND_NUMBER then
-	if locale == "deDE" or locale == "frFR" then
-		SECOND_NUMBER = SECOND_NUMBER:match("|7([^:]+):")
-		THIRD_NUMBER = THIRD_NUMBER:match("|7([^:]+):")
-		FOURTH_NUMBER = FOURTH_NUMBER:match("|7([^:]+):")
-	elseif locale == "ptBR" then
-		SECOND_NUMBER = SECOND_NUMBER:match("|7([^h]+h)")
-		THIRD_NUMBER = THIRD_NUMBER:match("|7([^h]+h)")
-		FOURTH_NUMBER = FOURTH_NUMBER:match("|7([^h]+h)")
-	elseif locale == "esES" or locale == "esMX" then
-		SECOND_NUMBER = SECOND_NUMBER:match("|7([^l]+ll)")
-		FOURTH_NUMBER = FOURTH_NUMBER:match("|7([^l]+ll)")
-	elseif locale == "itIT" then
-		SECOND_NUMBER = SECOND_NUMBER:match("|7([^:]+).:")
-		THIRD_NUMBER = THIRD_NUMBER:match("|7([^:]+).:")
-		FOURTH_NUMBER = FOURTH_NUMBER:match("|7([^:]+).:")
-	end
-end
 
 local defSortPrio = {
 	bounty_cache = 0.6,
@@ -1131,23 +1134,6 @@ local WorldQuestList_Update
 
 local UpdateTicker = nil
 
-local function AddArrow(x,y,questID,name,hideRange)
-	if VWQL.DisableArrow or VWQL.ArrowStyle == 2 then
-		return
-	end
-	WQLdb.Arrow:ShowRunTo(x,y,hideRange or 40,nil,true)
-end
-
-local TomTomCache = {}
-local function AddArrowNWC(x,y,mapID,questID,name,hideRange)
-	if VWQL.DisableArrow or VWQL.ArrowStyle ~= 2 then
-		return
-	end
-	if type(TomTom)=='table' and type(TomTom.AddWaypoint)=='function' then
-		local uid = TomTom:AddWaypoint(mapID, x, y, {title = name})
-		TomTomCache[questID or 0] = uid
-	end
-end
 
 local WorldQuestList
 
@@ -1174,8 +1160,24 @@ if WQLdb.ToMain then
 	end
 end
 WorldQuestList.Arrow = WQLdb.Arrow
-WorldQuestList.AddArrow = AddArrow
-WorldQuestList.AddArrowNWC = AddArrowNWC
+
+local TomTomCache = {}
+function WorldQuestList.AddArrow(x,y,questID,name,hideRange)
+	if VWQL.DisableArrow or VWQL.ArrowStyle == 2 then
+		return
+	end
+	WQLdb.Arrow:ShowRunTo(x,y,hideRange or 40,nil,true)
+end
+
+function WorldQuestList.AddArrowNWC(x,y,mapID,questID,name,hideRange)
+	if VWQL.DisableArrow or VWQL.ArrowStyle ~= 2 then
+		return
+	end
+	if type(TomTom)=='table' and type(TomTom.AddWaypoint)=='function' then
+		local uid = TomTom:AddWaypoint(mapID, x, y, {title = name})
+		TomTomCache[questID or 0] = uid
+	end
+end
 
 WorldQuestList:SetScript("OnHide",function(self)
 	WorldQuestList.IsSoloRun = false
@@ -1486,6 +1488,7 @@ WorldQuestList:SetScript("OnEvent",function(self,event,...)
 				AzeriteFormat = 20,
 				--DisableRewardIcons = true,
 				HideLegion = true,
+				DisableLFG_Popup = true,
 			}
 		end
 		VWQL = _G.VWQL
@@ -1507,7 +1510,7 @@ WorldQuestList:SetScript("OnEvent",function(self,event,...)
 
 		VWQL.Ignore = VWQL.Ignore or {}
 
-		WorldMapHideWQLCheck:SetChecked(not VWQL[charKey].HideMap)
+		WorldQuestList.WorldMapHideWQLCheck:SetChecked(not VWQL[charKey].HideMap)
 
 		if not (type(VWQL[charKey].VERSION)=='number') or VWQL[charKey].VERSION < 51 then
 			--WorldQuestList:ForceModeCheck()
@@ -1586,7 +1589,7 @@ do
 		if self.clickData then
 			local x,y = WorldQuestList:GetQuestWorldCoord2(-1,self.clickData.mapID,self.clickData.x,self.clickData.y,true)
 			if x and y then
-				AddArrow(x,y,nil,nil,5)
+				WorldQuestList.AddArrow(x,y,nil,nil,5)
 			end
 		elseif self.questID then
 			local mapCanvas = self:GetMap()
@@ -1606,7 +1609,7 @@ do
 
 			do
 				local name = C_TaskQuest.GetQuestInfoByQuestID(self.questID) or ""
-				AddArrowNWC(x,y,mapID,self.questID,name)
+				WorldQuestList.AddArrowNWC(x,y,mapID,self.questID,name)
 			end
 			if x and y then
 				local continentID, worldPos = C_Map.GetWorldPosFromMapPos(mapID, CreateVector2D(x, y))
@@ -1614,7 +1617,7 @@ do
 					local wy,wx = worldPos:GetXY()
 					if wx and wy then
 						local name = C_TaskQuest.GetQuestInfoByQuestID(self.questID) or ""
-						AddArrow(wx,wy,self.questID,name)
+						WorldQuestList.AddArrow(wx,wy,self.questID,name)
 						return
 					end
 				end
@@ -1622,7 +1625,7 @@ do
 			local x,y = WorldQuestList:GetQuestWorldCoord(self.questID)
 			if x and y then
 				local name = C_TaskQuest.GetQuestInfoByQuestID(self.questID) or ""
-				AddArrow(x,y,self.questID,name)
+				WorldQuestList.AddArrow(x,y,self.questID,name)
 			end
 		end
 	end
@@ -1647,8 +1650,8 @@ do
 					local wy,wx = worldPos:GetXY()
 					if wx and wy and VWQL and VWQL.EnableArrowQuest then
 						local name = C_TaskQuest.GetQuestInfoByQuestID(self.questID) or ""
-						AddArrow(wx,wy,self.questID,name)
-						AddArrowNWC(x,y,mapID,self.questID,name)
+						WorldQuestList.AddArrow(wx,wy,self.questID,name)
+						WorldQuestList.AddArrowNWC(x,y,mapID,self.questID,name)
 						return
 					end
 				end
@@ -1656,7 +1659,7 @@ do
 				if x and y and VWQL and VWQL.EnableArrowQuest then
 					local questIndex = C_QuestLog.GetLogIndexForQuestID(self.questID)
 					local name = GetQuestLogTitle(questIndex) or ""
-					AddArrow(x,y,self.questID,name)
+					WorldQuestList.AddArrow(x,y,self.questID,name)
 				end
 			end
 		end
@@ -1669,8 +1672,8 @@ do
 			if x and y then
 				local wx,wy = WorldQuestList:GetMapCoordAdj(x,y,mapID)
 				if x and y and VWQL and VWQL.EnableArrowQuest then
-					AddArrow(wx,wy)
-					AddArrowNWC(x,y,mapID,nil,self.vignetteInfo.name)
+					WorldQuestList.AddArrow(wx,wy)
+					WorldQuestList.AddArrowNWC(x,y,mapID,nil,self.vignetteInfo.name)
 
 					C_Map.SetUserWaypoint(UiMapPoint.CreateFromCoordinates(mapID, x, y))
 					C_SuperTrack.SetSuperTrackedUserWaypoint(true)
@@ -1682,36 +1685,28 @@ do
 	WorldQuestList.hookQuestClickFunc = hookQuestFunc
 	function HookWQbuttons()
 		if WorldMapFrame.pinPools then
-			if WorldMapFrame.pinPools.WorldMap_WorldQuestPinTemplate and WorldMapFrame.pinPools.WorldMap_WorldQuestPinTemplate.activeObjects then
-				for button,_ in pairs(WorldMapFrame.pinPools.WorldMap_WorldQuestPinTemplate.activeObjects) do
-					if not hooked[button] then
-						button:HookScript("OnMouseUp",hookFunc)
-						hooked[button] = true
-					end
+			for button in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
+				if not hooked[button] then
+					button:HookScript("OnMouseUp",hookFunc)
+					hooked[button] = true
 				end
 			end
-			if WorldMapFrame.pinPools.QuestPinTemplate and WorldMapFrame.pinPools.QuestPinTemplate.activeObjects then
-				for button,_ in pairs(WorldMapFrame.pinPools.QuestPinTemplate.activeObjects) do
-					if not hooked[button] then
-						button:HookScript("OnMouseUp",hookQuestFunc)
-						hooked[button] = true
-					end
+			for button in WorldMapFrame:EnumeratePinsByTemplate("QuestPinTemplate") do
+				if not hooked[button] then
+					button:HookScript("OnMouseUp",hookQuestFunc)
+					hooked[button] = true
 				end
 			end
-			if WorldMapFrame.pinPools.ThreatObjectivePinTemplate and WorldMapFrame.pinPools.ThreatObjectivePinTemplate.activeObjects then
-				for button,_ in pairs(WorldMapFrame.pinPools.ThreatObjectivePinTemplate.activeObjects) do
-					if not hooked[button] then
-						button:HookScript("OnMouseUp",hookQuestFunc)
-						hooked[button] = true
-					end
+			for button in WorldMapFrame:EnumeratePinsByTemplate("ThreatObjectivePinTemplate") do
+				if not hooked[button] then
+					button:HookScript("OnMouseUp",hookQuestFunc)
+					hooked[button] = true
 				end
 			end
-			if WorldMapFrame.pinPools.VignettePinTemplate and WorldMapFrame.pinPools.VignettePinTemplate.activeObjects then
-				for button,_ in pairs(WorldMapFrame.pinPools.VignettePinTemplate.activeObjects) do
-					if not hooked[button] then
-						button:HookScript("OnMouseUp",hookVignetteFunc)
-						hooked[button] = true
-					end
+			for button in WorldMapFrame:EnumeratePinsByTemplate("VignettePinTemplate") do
+				if not hooked[button] then
+					button:HookScript("OnMouseUp",hookVignetteFunc)
+					hooked[button] = true
 				end
 			end
 		end
@@ -1983,6 +1978,8 @@ do
 		[1978] = {13342.78,8432.13,-12137.89,-8544.50},	--Драконьи острова
 		[2133] = {6068.75,2329.16,-1195.83,-2514.58},	--Cave
 		[2200] = {10891.70,1393.75,3414.58,-3589.58},	--Emerald Dream
+
+		[2274] = {-556.25,5141.669921875,-6883.330078125,1662.5},	--Khaz Algar
 	}
 	function WorldQuestList:DevCreateMapCoords(mapID)
 		self.DCMC = self.DCMC or CreateFrame("Frame")
@@ -2672,13 +2669,13 @@ local function WorldQuestList_LineName_OnClick(self,button)
 			end
 			if x and y then
 				local name = questID and C_TaskQuest.GetQuestInfoByQuestID(line.questID) or line.data.name or "unk"
-				AddArrow(x,y,questID,name)
+				WorldQuestList.AddArrow(x,y,questID,name)
 			end
 
 			local x,y,mapID = WorldQuestList:GetQuestCoord(questID)
 			if x and y then
 				local name = C_TaskQuest.GetQuestInfoByQuestID(questID) or ""
-				AddArrowNWC(x,y,mapID,questID,name)
+				WorldQuestList.AddArrowNWC(x,y,mapID,questID,name)
 			end
 
 			local mapAreaID = GetCurrentMapID()
@@ -5126,10 +5123,10 @@ local function WorldQuestList_Leveling_Update()
 		end
 	end
 
-	local currMapID = GetCurrentMapID()
-	if UnitLevel'player' < 50 then
-		local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(currMapID)
 
+	local currMapID = GetCurrentMapID()
+	local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(currMapID)
+	if UnitLevel'player' < 50 then
 		for _,info in pairs(taskInfo or WorldQuestList.NULLTable) do
 			if HaveQuestData(info.questId) and QuestUtils_IsQuestWorldQuest(info.questId) then
 				local _,_,worldQuestType,rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical = GetQuestTagInfo(info.questId)
@@ -5143,6 +5140,25 @@ local function WorldQuestList_Leveling_Update()
 					isElite = isElite,
 					isWQ = true,
 				}
+			end
+		end
+	end
+
+	local questsOnMap = C_QuestLog.GetQuestsOnMap(currMapID)
+	
+	for i, questData in ipairs(quests) do
+		for _,info in pairs(taskInfo or WorldQuestList.NULLTable) do
+			if info.questId == questData.questID then
+				questData.x = info.x
+				questData.y = info.y
+				break
+			end
+		end
+		for _,info in pairs(questsOnMap or WorldQuestList.NULLTable) do
+			if info.questID == questData.questID then
+				questData.x = info.x
+				questData.y = info.y
+				break
 			end
 		end
 	end
@@ -5166,7 +5182,7 @@ local function WorldQuestList_Leveling_Update()
 			local header = questData.header
 			local questID = questData.questID
 
-			local _,x,y = QuestPOIGetIconInfo(questID)
+			local x,y = questData.x,questData.y
 			if questData.isWQ then
 				x,y = C_TaskQuest.GetQuestLocation(questID,currMapID)
 			end
@@ -5882,6 +5898,7 @@ local GENERAL_MAPS = {	--1: continent A, 2: azeroth, 3: argus, 4: continent B
 	[101] = 4,
 	[1550] = 1,
 	[1978] = 1,
+	[2274] = 1,
 }
 WorldQuestList.GeneralMaps = GENERAL_MAPS
 
@@ -6281,7 +6298,6 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 		end
 	end
 
-	local isWarModeOn = C_PvP.IsWarModeDesired()
 	WAR_MODE_BONUS = C_PvP.GetWarModeRewardBonus() / 100 + 1
 
 	local noRewardCount = 0
@@ -6312,7 +6328,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 				local rewardSort = 0
 				local rewardItemLink
 				local nameicon = nil
-				local artifactKnowlege
+				--local artifactKnowlege
 				local isEliteQuest
 				local timeToComplete
 				local isInvasion
@@ -6494,7 +6510,6 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 					end
 				end
 
-
 				if GetQuestLogRewardXP(questID) > 0 or GetNumQuestLogRewardCurrencies(questID) > 0 or GetNumQuestLogRewards(questID) > 0 or GetQuestLogRewardMoney(questID) > 0 or GetQuestLogRewardHonor(questID) > 0 then
 					local hasRewardFiltered = false
 					-- xp
@@ -6512,7 +6527,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						if DEBUG then
 							debugLine = debugLine .. "Currency: "..name..";|T"..texture..":0|t;"..numItems..";ID:"..currencyID.."|n"
 						end
-						if isWarModeOn and C_QuestLog.QuestCanHaveWarModeBonus(questID) and C_CurrencyInfo.DoesWarModeBonusApply(currencyID) then
+						if C_PvP.IsWarModeDesired() and C_QuestLog.QuestCanHaveWarModeBonus(questID) and C_CurrencyInfo.DoesWarModeBonusApply(currencyID) then
 							numItems = floor(numItems * WAR_MODE_BONUS + .5)
 						end
 						local text = BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT:format(texture, numItems, name)
@@ -6552,7 +6567,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 							if O.nextResearch and (timeLeftMinutes - 5) > O.nextResearch then
 								timeToComplete = timeLeftMinutes - O.nextResearch
 								RewardListStrings[#RewardListStrings] = RewardListStrings[#RewardListStrings]:gsub("( [^ ]+)$","**%1")
-								artifactKnowlege = true
+								--artifactKnowlege = true
 							end
 						elseif currencyID == 1533 then	--Wakening Essence
 							hasRewardFiltered = true
@@ -6707,7 +6722,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 							if type(isAnimaItem)=='number' then
 								numItems = (numItems or 0) * isAnimaItem
 							end
-							if isWarModeOn and C_QuestLog.QuestCanHaveWarModeBonus(questID) then
+							if C_PvP.IsWarModeDesired() and C_QuestLog.QuestCanHaveWarModeBonus(questID) then
 								local bonus = floor(numItems * (WAR_MODE_BONUS - 1) + .5)
 								--if isAnimaItem <= 35 then
 									bonus = bonus - bonus % 3
@@ -6817,7 +6832,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 					-- money
 					local money = GetQuestLogRewardMoney(questID)
 					if ( money > 0 ) then
-						if isWarModeOn and C_QuestLog.QuestCanHaveWarModeBonus(questID) then
+						if C_PvP.IsWarModeDesired() and C_QuestLog.QuestCanHaveWarModeBonus(questID) then
 							money = money * WAR_MODE_BONUS
 							money = money - money % 100
 						end
@@ -6921,8 +6936,8 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						faction = faction,
 						factionInProgress = factionInProgress,
 						factionSort = factionSort,
-						zone = (((VWQL.OppositeContinent and (mapAreaID == 875 or mapAreaID == 876)) or mapAreaID == 947 or mapAreaID == 1550 or mapAreaID == 1978) and WorldQuestList:GetMapIcon(info.mapID) or "")..
-							((mapAreaID == 875 or mapAreaID == 876 or mapAreaID == 1550 or mapAreaID == 1978) and WorldQuestList:GetMapTextColor(info.mapID) or "")..WorldQuestList:GetMapName(info.mapID),
+						zone = (((VWQL.OppositeContinent and (mapAreaID == 875 or mapAreaID == 876)) or mapAreaID == 947 or mapAreaID == 1550 or mapAreaID == 1978 or mapAreaID == 2274) and WorldQuestList:GetMapIcon(info.mapID) or "")..
+							((mapAreaID == 875 or mapAreaID == 876 or mapAreaID == 1550 or mapAreaID == 1978 or mapAreaID == 2274) and WorldQuestList:GetMapTextColor(info.mapID) or "")..WorldQuestList:GetMapName(info.mapID),
 						zoneID = info.mapID or 0,
 						timeleft = timeleft,
 						time = timeLeftMinutes or 0,
@@ -6933,7 +6948,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						rewardType = rewardType,
 						rewardSort = rewardSort,
 						nameicon = nameicon,
-						artifactKnowlege = artifactKnowlege,
+						--artifactKnowlege = artifactKnowlege,
 						isEliteQuest = isEliteQuest,
 						timeToComplete = timeToComplete,
 						isInvasion = isInvasion,
@@ -7692,10 +7707,10 @@ C_Timer.After(10,function()
 	SLASH_WQLSlashWay1 = "/way"
 end)
 
-WorldMapHideWQLCheck = CreateFrame("CheckButton",nil,WorldMapFrame,"UICheckButtonTemplate")  
-WorldMapHideWQLCheck:SetPoint("TOPLEFT", WorldMapFrame, "TOPRIGHT", -130, 25)
-WorldMapHideWQLCheck.text:SetText("World Quests List")
-WorldMapHideWQLCheck:SetScript("OnClick", function(self,event) 
+WorldQuestList.WorldMapHideWQLCheck = CreateFrame("CheckButton",nil,WorldMapFrame,"UICheckButtonTemplate")  
+WorldQuestList.WorldMapHideWQLCheck:SetPoint("TOPLEFT", WorldMapFrame, "TOPRIGHT", -130, 25)
+WorldQuestList.WorldMapHideWQLCheck.text:SetText("World Quests List")
+WorldQuestList.WorldMapHideWQLCheck:SetScript("OnClick", function(self,event) 
 	if not self:GetChecked() then
 		VWQL[charKey].HideMap = true
 		WorldQuestList:Hide()
@@ -9207,7 +9222,7 @@ do
 				local pins = mapFrame.pinPools[pinName]
 				if pins then
 					local scaleFactor,startScale,endScale
-					for obj,_ in pairs(pins.activeObjects) do
+					for obj in mapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 						scaleFactor = obj.scaleFactor
 						startScale = obj.startScale
 						endScale = obj.endScale
@@ -9267,11 +9282,11 @@ do
 		t.obj = obj:GetParent()
 		if VWQL.DisableRibbon and t.type ~= 2 then
 			t.type = 2
-			t.t:SetFont("Interface\\AddOns\\WorldQuestsList\\ariblk.ttf",18,"OUTLINE")
+			t.t:SetFont("Interface\\AddOns\\WorldQuestsList\\ariblk.ttf",10,"OUTLINE")
 			t.t:SetTextColor(1,1,1,1)
 		elseif not VWQL.DisableRibbon and t.type ~= 1 then
 			t.type = 1
-			t.t:SetFont("Interface\\AddOns\\WorldQuestsList\\ariblk.ttf",18)
+			t.t:SetFont("Interface\\AddOns\\WorldQuestsList\\ariblk.ttf",10)
 			t.t:SetTextColor(.1,.1,.1,1)
 		end
 
@@ -9338,7 +9353,7 @@ do
 			end
 			local warMode = C_PvP.IsWarModeDesired()
 			local warModeBonus = C_PvP.GetWarModeRewardBonus() / 100 + 1
-			for obj,_ in pairs(pins.activeObjects) do
+			for obj in frame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 				local icon = obj.WQL_rewardIcon
 				if obj.questID then
 					if not icon then
@@ -9355,8 +9370,8 @@ do
 
 						local ribbon = obj:CreateTexture(nil,"BACKGROUND")
 						obj.WQL_rewardRibbon = ribbon
-						ribbon:SetPoint("TOP",obj,"BOTTOM",0,16)
-						ribbon:SetSize(100,40)
+						ribbon:SetPoint("TOP",obj,"BOTTOM",0,5)
+						ribbon:SetSize(100*0.6,40*0.6)
 						ribbon:SetAtlas("UI-Frame-Neutral-Ribbon")
 
 						if not isWorldMapFrame then
@@ -9371,12 +9386,12 @@ do
 						local iconTopRight = obj:CreateTexture(nil,"OVERLAY")
 						obj.WQL_iconTopRight = iconTopRight
 						iconTopRight:SetPoint("CENTER",obj,"TOPRIGHT",-10,-10)
-						iconTopRight:SetSize(20,20)
+						iconTopRight:SetSize(20*0.75,20*0.75)
 
 						obj:HookScript("OnEnter",HookOnEnter)
 						obj:HookScript("OnLeave",HookOnLeave)
 
-						obj.WQL_BountyRing_defSize = obj.BountyRing:GetSize()
+						obj.WQL_BountyRing_defSize = obj.BountyRing and obj.BountyRing:GetSize()
 					end
 
 					local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, displayTimeLeft = GetQuestTagInfo(obj.questID)
@@ -9638,8 +9653,9 @@ do
 
 					if iconTexture or iconAtlas or iconVirtual then
 						if not iconVirtual then
-							icon:SetSize(26+ajustSize,26+ajustSize)
-							obj.WQL_rewardIconWMask:SetSize(26+ajustSize,26+ajustSize)
+							local res_size = (26+ajustSize) * 0.5
+							icon:SetSize(res_size,res_size)
+							obj.WQL_rewardIconWMask:SetSize(res_size,res_size)
 							if iconTexture then
 								if ajustMask then
 									if obj.WQL_rewardIconWMask.curr ~= iconTexture then
@@ -9680,7 +9696,22 @@ do
 									end
 								end
 							end
-							obj.Texture:SetTexture()
+							if obj.Display then
+								obj.Display.Icon:SetTexture()
+								obj.WQL_rewardIcon:SetParent(obj.Display.Icon:GetParent())
+								obj.WQL_rewardIcon:SetDrawLayer("OVERLAY",5)
+								obj.WQL_rewardIconWMask:SetParent(obj.Display.Icon:GetParent())
+								obj.WQL_rewardIconWMask:SetDrawLayer("OVERLAY",5)
+							end
+						else
+							if obj.WQL_rewardIconWMask.curr then
+								obj.WQL_rewardIconWMask:SetTexture()
+								obj.WQL_rewardIconWMask.curr = nil
+							end
+							if icon.curr then
+								icon:SetTexture()
+								icon.curr = nil
+							end
 						end
 
 						if ((type(amount)=="number" and amount > 0) or type(amount) == "string") and not isRibbonDisabled then
@@ -9705,7 +9736,7 @@ do
 							if not isWorldMapFrame then
 								obj.WQL_rewardRibbonText:SetText((amountIcon and "|T"..amountIcon..":0|t" or "")..(amountColor or "")..amount)
 							end
-							obj.WQL_rewardRibbon:SetWidth( (#tostring(amount) + (amountIcon and 1.5 or 0)) * 16 + 40 )
+							obj.WQL_rewardRibbon:SetWidth( ((#tostring(amount) + (amountIcon and 1.5 or 0)) * 16 + 40) * 0.6 )
 
 							obj.TimeLowFrame:SetPoint("CENTER",-22,-8)
 
@@ -9738,48 +9769,79 @@ do
 					end
 					obj.WQL_questID = obj.questID
 
-					obj.BountyRing:SetVertexColor(1,1,1)
-					obj.BountyRing:SetSize(obj.WQL_BountyRing_defSize,obj.WQL_BountyRing_defSize)
-					obj.BountyRing.WQL_color = 4
-					if not VWQL.RewardIcons_DisableBountyColors then
-						obj.BountyRing:Hide()
-						for _,bountyData in pairs(bounties) do
-							if IsQuestCriteriaForBounty(obj.questID, bountyData.questID) and not bountyData.completed then
-								obj.BountyRing:SetSize(64,64)
-								obj.BountyRing:Show()
-								if bountyData.lowTime and obj.BountyRing.WQL_color > 1 then
-									obj.BountyRing:SetVertexColor(1,0,0)
-									obj.BountyRing.WQL_color = 1
-								elseif bountyData.middleTime and obj.BountyRing.WQL_color > 2 then
-									obj.BountyRing:SetVertexColor(1,.5,0)
-									obj.BountyRing.WQL_color = 2
-								elseif not bountyData.lowTime and not bountyData.middleTime and obj.BountyRing.WQL_color > 3 then
-									obj.BountyRing:SetVertexColor(.3,1,.3)
-									obj.BountyRing.WQL_color = 3
-								end
-							end
-						end
-						local mapID = WorldQuestList.QuestIDtoMapID[obj.questID or 0]
-						if mapID then
-							for i=1,#mapsToHighlightCallings do
-								local callingData = mapsToHighlightCallings[i]
-								if callingData and callingData.mapID == mapID and (callingData.worldQuests or (callingData.worldQuestsElite and isElite)) and not callingData.completed then
+					if obj.BountyRing then
+						obj.BountyRing:SetVertexColor(1,1,1)
+						obj.BountyRing:SetSize(obj.WQL_BountyRing_defSize,obj.WQL_BountyRing_defSize)
+						obj.BountyRing.WQL_color = 4
+						if not VWQL.RewardIcons_DisableBountyColors then
+							obj.BountyRing:Hide()
+							for _,bountyData in pairs(bounties) do
+								if IsQuestCriteriaForBounty(obj.questID, bountyData.questID) and not bountyData.completed then
 									obj.BountyRing:SetSize(64,64)
 									obj.BountyRing:Show()
-									if callingData.lowTime and obj.BountyRing.WQL_color > 1 then
+									if bountyData.lowTime and obj.BountyRing.WQL_color > 1 then
 										obj.BountyRing:SetVertexColor(1,0,0)
 										obj.BountyRing.WQL_color = 1
-									elseif callingData.middleTime and obj.BountyRing.WQL_color > 2 then
+									elseif bountyData.middleTime and obj.BountyRing.WQL_color > 2 then
 										obj.BountyRing:SetVertexColor(1,.5,0)
 										obj.BountyRing.WQL_color = 2
-									elseif not callingData.lowTime and not callingData.middleTime and obj.BountyRing.WQL_color > 3 then
+									elseif not bountyData.lowTime and not bountyData.middleTime and obj.BountyRing.WQL_color > 3 then
 										obj.BountyRing:SetVertexColor(.3,1,.3)
 										obj.BountyRing.WQL_color = 3
 									end
 								end
 							end
+							local mapID = WorldQuestList.QuestIDtoMapID[obj.questID or 0]
+							if mapID then
+								for i=1,#mapsToHighlightCallings do
+									local callingData = mapsToHighlightCallings[i]
+									if callingData and callingData.mapID == mapID and (callingData.worldQuests or (callingData.worldQuestsElite and isElite)) and not callingData.completed then
+										obj.BountyRing:SetSize(64,64)
+										obj.BountyRing:Show()
+										if callingData.lowTime and obj.BountyRing.WQL_color > 1 then
+											obj.BountyRing:SetVertexColor(1,0,0)
+											obj.BountyRing.WQL_color = 1
+										elseif callingData.middleTime and obj.BountyRing.WQL_color > 2 then
+											obj.BountyRing:SetVertexColor(1,.5,0)
+											obj.BountyRing.WQL_color = 2
+										elseif not callingData.lowTime and not callingData.middleTime and obj.BountyRing.WQL_color > 3 then
+											obj.BountyRing:SetVertexColor(.3,1,.3)
+											obj.BountyRing.WQL_color = 3
+										end
+									end
+								end
+							end
 						end
 					end
+				else
+					if obj.WQL_rewardIcon then
+						if obj.WQL_rewardIconWMask.curr then
+							obj.WQL_rewardIconWMask:SetTexture()
+							obj.WQL_rewardIconWMask.curr = nil
+						end
+						if obj.WQL_rewardIcon.curr then
+							obj.WQL_rewardIcon:SetTexture()
+							obj.WQL_rewardIcon.curr = nil
+						end
+						if obj.WQL_iconTopRight.curr then
+							obj.WQL_iconTopRight:SetTexture()
+							obj.WQL_iconTopRight.curr = nil
+						end
+						obj.WQL_rewardRibbon:Hide()
+						if not isWorldMapFrame then
+							obj.WQL_rewardRibbonText:SetText("")
+						end
+						obj.TimeLowFrame:SetPoint("CENTER",-17,-17)
+						if obj.BountyRing then
+							obj.BountyRing:SetSize(obj.WQL_BountyRing_defSize,obj.WQL_BountyRing_defSize)
+							obj.BountyRing:SetVertexColor(1,1,1)
+						end
+					end
+					obj.WQL_questID = nil
+				end
+				if DEBUG then
+					WWW = WWW or {}
+					WWW[obj] = true
 				end
 			end
 			if isWorldMapFrame then
@@ -9788,30 +9850,6 @@ do
 				end
 			end
 
-			for _,obj in pairs(pins.inactiveObjects) do
-				if obj.WQL_rewardIcon then
-					if obj.WQL_rewardIconWMask.curr then
-						obj.WQL_rewardIconWMask:SetTexture()
-						obj.WQL_rewardIconWMask.curr = nil
-					end
-					if obj.WQL_rewardIcon.curr then
-						obj.WQL_rewardIcon:SetTexture()
-						obj.WQL_rewardIcon.curr = nil
-					end
-					if obj.WQL_iconTopRight.curr then
-						obj.WQL_iconTopRight:SetTexture()
-						obj.WQL_iconTopRight.curr = nil
-					end
-					obj.WQL_rewardRibbon:Hide()
-					if not isWorldMapFrame then
-						obj.WQL_rewardRibbonText:SetText("")
-					end
-					obj.TimeLowFrame:SetPoint("CENTER",-17,-17)
-					obj.BountyRing:SetSize(obj.WQL_BountyRing_defSize,obj.WQL_BountyRing_defSize)
-					obj.BountyRing:SetVertexColor(1,1,1)
-				end
-				obj.WQL_questID = nil
-			end
 		elseif frame == WorldMapFrame then
 			for i=1,#WorldMapFrame_TextTable do
 				WorldMapFrame_TextTable[i]:Hide()
@@ -9825,21 +9863,20 @@ do
 			if frame then
 				local pins = frame.pinPools[ frames[2] ]
 				if pins then
-					for i,pinsPool in pairs({pins.activeObjects,pins.inactiveObjects}) do
-						for k,v in pairs(pinsPool) do
-							local obj = i == 1 and k or v
-							if obj.WQL_rewardIcon then
-								obj.WQL_rewardIconWMask:SetTexture()
-								obj.WQL_rewardIconWMask.curr = nil
-								obj.WQL_rewardIcon:SetTexture()
-								obj.WQL_rewardIcon.curr = nil
-								obj.WQL_iconTopRight:SetTexture()
-								obj.WQL_iconTopRight.curr = nil
-								obj.WQL_rewardRibbon:Hide()
-								if obj.WQL_rewardRibbonText then
-									obj.WQL_rewardRibbonText:SetText("")
-								end
-								obj.TimeLowFrame:SetPoint("CENTER",-17,-17)
+					for obj in frame:EnumeratePinsByTemplate(frames[2]) do
+						if obj.WQL_rewardIcon then
+							obj.WQL_rewardIconWMask:SetTexture()
+							obj.WQL_rewardIconWMask.curr = nil
+							obj.WQL_rewardIcon:SetTexture()
+							obj.WQL_rewardIcon.curr = nil
+							obj.WQL_iconTopRight:SetTexture()
+							obj.WQL_iconTopRight.curr = nil
+							obj.WQL_rewardRibbon:Hide()
+							if obj.WQL_rewardRibbonText then
+								obj.WQL_rewardRibbonText:SetText("")
+							end
+							obj.TimeLowFrame:SetPoint("CENTER",-17,-17)
+							if obj.BountyRing then
 								obj.BountyRing:SetSize(obj.WQL_BountyRing_defSize,obj.WQL_BountyRing_defSize)
 								obj.BountyRing:SetVertexColor(1,1,1)
 							end
@@ -9874,7 +9911,7 @@ end)
 
 --- Icons size on map
 
-local defScaleFactor, defStartScale, defEndScale = 1, 0.425, 0.425
+local defScaleFactor, defStartScale, defEndScale = 1, 1, 1
 if WorldMap_WorldQuestPinMixin then
 	local f = CreateFrame("Frame")
 	f.SetScalingLimits = function(_,scaleFactor, startScale, endScale) 
@@ -9888,15 +9925,7 @@ end
 function WorldQuestList:WQIcons_RemoveScale()
 	local pins = WorldMapFrame.pinPools["WorldMap_WorldQuestPinTemplate"]
 	if pins then
-		for obj,_ in pairs(pins.activeObjects) do
-			pcall(function() 
-				obj:SetScalingLimits(defScaleFactor, defStartScale, defEndScale)
-				if obj:GetMap() and obj:GetMap().ScrollContainer.zoomLevels then	--fix unk error in 8.3
-					obj:ApplyCurrentScale()
-				end
-			end)
-		end
-		for _,obj in pairs(pins.inactiveObjects) do
+		for obj in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 			pcall(function() 
 				obj:SetScalingLimits(defScaleFactor, defStartScale, defEndScale)
 				if obj:GetMap() and obj:GetMap().ScrollContainer.zoomLevels then	--fix unk error in 8.3
@@ -9916,18 +9945,21 @@ function WorldQuestList:WQIcons_UpdateScale()
 		if not generalMap then
 			startScale, endScale = defStartScale, defEndScale
 		elseif generalMap == 2 then
-			startScale, endScale = 0.15, 0.2
+			--startScale, endScale = 0.15, 0.2
+			startScale, endScale = .8, .8
 			scaleFactor = scaleFactor * (WorldMapFrame:IsMaximized() and 1.25 or 1)
 		elseif generalMap == 4 then
-			startScale, endScale = 0.3, 0.425
+			startScale, endScale = .7, .7
+			--startScale, endScale = 0.3, 0.425
 			scaleFactor = scaleFactor * (WorldMapFrame:IsMaximized() and 1.25 or 1)
 		else
-			startScale, endScale = 0.35, 0.425
+			--startScale, endScale = 0.35, 0.425
+			startScale, endScale = 1, 1
 			scaleFactor = scaleFactor * (WorldMapFrame:IsMaximized() and 1.25 or 1)
 		end
 		startScale, endScale = startScale * scaleFactor, endScale * scaleFactor
 
-		for obj,_ in pairs(pins.activeObjects) do
+		for obj in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 			--scaleFactor, startScale, endScale
 			if obj.startScale ~= startScale or obj.endScale ~= endScale then
 				obj:SetScalingLimits(1, startScale, endScale)

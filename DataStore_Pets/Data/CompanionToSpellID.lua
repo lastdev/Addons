@@ -1,5 +1,4 @@
-local addonName = "DataStore_Pets"
-local addon = _G[addonName]
+local addonName, addon = ...
 
 -- [itemID] = spellID
 addon.CompanionToSpellID = {

@@ -8,6 +8,26 @@ root.__G = root
 root.SavedVariablesName = ("%s_Account"):format(root.addonName)
 root.SavedVariablesPerCharacterName = ("%s_Character"):format(root.addonName)
 
+local directReferences = {
+	ColorMixin = ColorMixin,
+	ItemLocationMixin = ItemLocationMixin,
+	ItemTransmogInfoMixin = ItemTransmogInfoMixin,
+	PlayerLocationMixin = PlayerLocationMixin,
+	ReportInfoMixin = ReportInfoMixin,
+	TransmogLocationMixin = TransmogLocationMixin,
+	TransmogPendingInfoMixin = TransmogPendingInfoMixin,
+	Vector2DMixin = Vector2DMixin,
+	Vector3DMixin = Vector3DMixin,
+}
+
+local function applyDirectReferences(scope)
+	for k, v in pairs(directReferences) do
+		scope[k]= v
+	end
+end
+
+applyDirectReferences(root)
+
 setmetatable(root, {
 	__index = function(self, key)
 		local value = rawget(self,key)
@@ -36,9 +56,14 @@ local scopeMetatable = {
 
 function addon.InitScope(scopeName)
 	if (scopeName == nil) then return root end
-	root[scopeName] = root[scopeName] or { }
-	setmetatable(root[scopeName] , scopeMetatable)
-	return root[scopeName]
+	local scope = root[scopeName]
+	if (not scope) then
+		scope = { }
+		applyDirectReferences(scope)
+		setmetatable(scope , scopeMetatable)
+		root[scopeName] = scope
+	end
+	return scope
 end
 
 function addon.SetScope(scopeName)

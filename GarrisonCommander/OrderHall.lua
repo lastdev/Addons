@@ -203,9 +203,9 @@ function module:RenderUpgradeButton(id,previous)
 		return b
 end
 function module:Setup(this,...)
---[===[@debug@
+--[==[@debug@
 print("Doing one time initialization for",this:GetName(),...)
---@end-debug@]===]
+--@end-debug@]==]
 	addon:CheckMP()
 	self:SafeSecureHookScript("OrderHallMissionFrame","OnShow")
 	GCS=addon:CreateHeader(self,'HALLMOVEPANEL','HALLPIN')
@@ -218,10 +218,10 @@ print("Doing one time initialization for",this:GetName(),...)
 	self:FollowerSetup()
 end
 function module:ScriptOrderHallMissionFrame_OnShow()
---[===[@debug@
+--[==[@debug@
 	print("Doing all time initialization")
 	print(GetTime())
---@end-debug@]===]
+--@end-debug@]==]
 	GCS:Show()
 	GCS:SetWidth(GHF:GetWidth())
 	GHF:ClearAllPoints()
@@ -229,16 +229,16 @@ function module:ScriptOrderHallMissionFrame_OnShow()
 	GHF:SetPoint("TOPRIGHT",GCS,"BOTTOMRIGHT",0,23)
 	self:RefreshMenu()
 	self:RefreshFollowerStatus()
---[===[@debug@
+--[==[@debug@
 	print("Done all time initialization")
 	print(GetTime())
---@end-debug@]===]
+--@end-debug@]==]
 end
 
 function addon:EventADVENTURE_MAP_CLOSE(event,...)
---[===[@debug@
+--[==[@debug@
 print("NPC CLOSED")
---@end-debug@]===]
+--@end-debug@]==]
 	if (GCS) then
 		self:RemoveMenu()
 		GCS:Hide()
@@ -249,9 +249,9 @@ function addon:ApplyMSORTH(value)
 end
 
 function module:EventGARRISON_MISSION_STARTED(event,missionType,missionID,...)
-	--[===[@debug@
+	--[==[@debug@
 	print(event,missionID)
-	--@end-debug@]===]
+	--@end-debug@]==]
 	self:RefreshFollowerStatus()
 end
 function module:RefreshParties()
@@ -272,9 +272,9 @@ function module:RefreshMenu()
 	end
 end
 function module:AddMenu()
---[===[@debug@
+--[==[@debug@
 print("Adding Menu",GCS.Menu,GHF.MissionTab:IsVisible(),GHF.FollowerTab:IsVisible())
---@end-debug@]===]
+--@end-debug@]==]
 	if GCS.Menu then
 		return
 	end
@@ -293,10 +293,10 @@ print("Adding Menu",GCS.Menu,GHF.MissionTab:IsVisible(),GHF.FollowerTab:IsVisibl
 		self.currentmenu=nil
 		menu,size=self:CreateOptionsLayer('HALLMOVEPANEL')
 	end
---[===[@debug@
+--[==[@debug@
 	self:AddOptionToOptionsLayer(menu,'DBG')
 	self:AddOptionToOptionsLayer(menu,'TRC')
---@end-debug@]===]
+--@end-debug@]==]
 	local frame=menu.frame
 	frame:Show()
 	frame:SetParent(GCS)
@@ -315,22 +315,22 @@ print("Adding Menu",GCS.Menu,GHF.MissionTab:IsVisible(),GHF.FollowerTab:IsVisibl
 	GCS.Menu=menu
 end
 function module:RemoveMenu()
---[===[@debug@
+--[==[@debug@
 print("Removing menu")
---@end-debug@]===]
+--@end-debug@]==]
 	if (GCS.Menu) then
 		local rc,message=pcall(GCS.Menu.Release,GCS.Menu)
-		--[===[@debug@
+		--[==[@debug@
 		print("Removed menu",rc,message)
-		--@end-debug@]===]
+		--@end-debug@]==]
 		GCS.Menu=nil
 	end
 end
 
 function module:OpenLastTab()
---[===[@debug@
+--[==[@debug@
 print("Should restore tab")
---@end-debug@]===]
+--@end-debug@]==]
 end
 function addon:SetBackdrop(frame,r,g,b)
 	r=r or 1
@@ -435,9 +435,9 @@ function module:ShowUpgradeButtons(force)
 			level=tonumber(level)
 			local A=b[used]
 			local qt=GetItemCount(itemID)
---[===[@debug@
+--[==[@debug@
 			print(tipo,level)
---@end-debug@]===]
+--@end-debug@]==]
 			repeat
 				if (qt>0) then
 					A:ClearAllPoints()

@@ -10,7 +10,7 @@ if not TSMDEV then
 end
 local Profiling = {}
 TSMDEV.Profiling = Profiling
-local Math = TSM.Include("Util.Math")
+local Math = TSM.LibTSMUtil:Include("Lua.Math")
 local private = {
 	startTime = nil,
 	nodes = {},
@@ -147,8 +147,8 @@ end
 ---@return number
 function Profiling.GetMemoryUsage()
 	collectgarbage()
-	UpdateAddOnMemoryUsage()
-	return GetAddOnMemoryUsage("TradeSkillMaster") * 1024
+	C_AddOns.UpdateAddOnMemoryUsage()
+	return C_AddOns.GetAddOnMemoryUsage("TradeSkillMaster") * 1024
 end
 
 

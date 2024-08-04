@@ -1,8 +1,12 @@
 # Vendor
 
-## [6.1.2-54-g78736c0](https://github.com/typicalzergling/vendor/tree/78736c0ace934ef5e42c220526de2b189814ab24) (2024-05-03)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...78736c0ace934ef5e42c220526de2b189814ab24) 
+## [6.1.2-58-gbcf38d2](https://github.com/typicalzergling/vendor/tree/bcf38d23f4a94bc99d771412e7d4a4152c91c8de) (2024-06-12)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...bcf38d23f4a94bc99d771412e7d4a4152c91c8de) 
 
+- Update item properties  
+- Add warbound on equip support  
+- Fix broken slash commands  
+- Update interop, toc for beta  
 - Add SoD and Cataclysm support  
 - Note update  
 - Remove all --@debug@ guards from lua code  

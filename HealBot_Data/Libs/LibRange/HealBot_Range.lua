@@ -3,6 +3,7 @@ local HealBot_RangeSpellsKeysFriendly = {}
 local HealBot_RangeSpellsKeysEnemy = {}
 local hbRangeRequests = {}
 local hbActionIconsInRange = {}
+local aButton = {}
 local HealBot_Range_luVars = {}
 HealBot_Range_luVars["rangeCheckInterval"] = 2
 HealBot_Range_luVars["rangeCheckIntEnabled"] = 1
@@ -10,6 +11,12 @@ HealBot_Range_luVars["modKeyUpdate"] = 0
 HealBot_Range_luVars["CurrentModKey"] = ""
 HealBot_RangeSpells["HEAL"] = ""
 HealBot_RangeSpells["HARM"] = ""
+
+local UnitInRange=UnitInRange
+local UnitIsVisible=UnitIsVisible
+local CheckInteractDistance=CheckInteractDistance
+local GetInventoryItemID=GetInventoryItemID
+local UnitPhaseReason=UnitPhaseReason
 
 function HealBot_Range_setLuVars(vName, vValue)
 	  --HealBot_setCall("HealBot_setLuVars - "..vName)
@@ -32,11 +39,11 @@ end
 function HealBot_Range_PerfFreq()
       --HealBot_setCall(HealBot_Range_PerfFreqq")
     if HealBot_retLuVars("CPUProfilerOn") then
-        HealBot_Range_luVars["rangeCheckInterval"]=2
-        HealBot_Range_luVars["rangeCheckIntEnabled"]=1
+        HealBot_Range_luVars["rangeCheckInterval"] = 4
+        HealBot_Range_luVars["rangeCheckIntEnabled"] = 2
     else
-        HealBot_Range_luVars["rangeCheckInterval"]=2-(HealBot_Globals.CPUUsage*0.034)
-        HealBot_Range_luVars["rangeCheckIntEnabled"]=1-(HealBot_Globals.CPUUsage*0.017)
+        HealBot_Range_luVars["rangeCheckInterval"] = HealBot_Util_PerfVal2(800)
+        HealBot_Range_luVars["rangeCheckIntEnabled"] = HealBot_Util_PerfVal2(900)
     end
     if HealBot_Range_luVars["rangeCheckIntEnabled"]<0.45 then HealBot_Range_luVars["rangeCheckIntEnabled"]=0.45 end
     if HealBot_Range_luVars["rangeCheckInterval"]<0.9 then HealBot_Range_luVars["rangeCheckInterval"]=0.9 end
@@ -46,78 +53,73 @@ end
 
 function HealBot_Range_SetSpells()
       --HealBot_setCall("HHealBot_Range_SetSpells)
-    local x=HealBot_GetBandageType() or HEALBOT_LINEN_BANDAGE
-    local y=GetInventoryItemID("player", INVSLOT_MAINHAND) or HEALBOT_WORDS_UNKNOWN
-    if y~=HEALBOT_WORDS_UNKNOWN then y=GetItemInfo(y) or y end
+    local x = HealBot_GetBandageType() or HEALBOT_LINEN_BANDAGE
+    local y = GetInventoryItemID("player", INVSLOT_MAINHAND) or HEALBOT_WORDS_UNKNOWN
+    if y~=HEALBOT_WORDS_UNKNOWN then y = HealBot_WoWAPI_ItemInfo(y) or y end
     if (HealBot_RangeSpells["HEAL"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HEAL"]=x end
     if (HealBot_RangeSpells["HARM"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HARM"]=y end
     if (HealBot_RangeSpells["HEAL30"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HEAL30"]=x end
     if (HealBot_RangeSpells["HARM30"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HARM30"]=y end
 
-    local sName=""
+    local sName = ""
     local HealBot_Keys_List = HealBot_Action_retComboKeysList()
-    for y=1, getn(HealBot_Keys_List), 1 do
-        sName=HealBot_Action_GetSpell("ENABLED", HealBot_Action_GetComboSpec(HealBot_Keys_List[y], "Left"))
+    for y = 1, getn(HealBot_Keys_List), 1 do
+        sName = HealBot_Action_GetSpell("ENABLED", HealBot_Action_GetComboSpec(HealBot_Keys_List[y], "Left"))
         if not sName or not HealBot_Spell_Names[sName] then
-            sName=HealBot_RangeSpells["HEAL"]
+            sName = HealBot_RangeSpells["HEAL"]
         end
-        HealBot_RangeSpellsKeysFriendly[HealBot_Keys_List[y]]=sName
-        sName=HealBot_Action_GetSpell("ENEMY", HealBot_Action_GetComboSpec(HealBot_Keys_List[y], "Left"))
+        HealBot_RangeSpellsKeysFriendly[HealBot_Keys_List[y]] = sName
+        sName = HealBot_Action_GetSpell("ENEMY", HealBot_Action_GetComboSpec(HealBot_Keys_List[y], "Left"))
         if not sName or not HealBot_Spell_Names[sName] then
             sName=HealBot_RangeSpells["HARM"]
         end
-        HealBot_RangeSpellsKeysEnemy[HealBot_Keys_List[y]]=sName
+        HealBot_RangeSpellsKeysEnemy[HealBot_Keys_List[y]] = sName
     end
+    hbPhaseShift=HealBot_WoWAPI_SpellName(HBC_PHASE_SHIFT)
 end
 
 local function HealBot_Range_ButtonSpellUpdate(button, checkSoon, rangespell)
       --HealBot_setCall("HealBot_Range_ButtonSpellUpdate", button)
-    button.status.rangemodkeyupd=HealBot_TimeNow
+    button.status.rangemodkeyupd = HealBot_TimeNow
     if button.status.hostile then
-        button.status.rangespell=HealBot_RangeSpellsKeysEnemy[HealBot_Range_luVars["CurrentModKey"]]
+        button.status.rangespell = HealBot_RangeSpellsKeysEnemy[HealBot_Range_luVars["CurrentModKey"]]
     elseif rangespell and HealBot_Action_ActiveButtonId()~=button.id then
-        button.status.rangespell=rangespell
+        button.status.rangespell = rangespell
     else
-        button.status.rangespell=HealBot_RangeSpellsKeysFriendly[HealBot_Range_luVars["CurrentModKey"]]
+        button.status.rangespell = HealBot_RangeSpellsKeysFriendly[HealBot_Range_luVars["CurrentModKey"]]
     end
 end
 
 local prevRangeSpell=""
 function HealBot_Range_ButtonSpell(button, checkSoon, rangespell)
       --HealBot_setCall("HealBot_Range_ButtonSpell", button)
-    prevRangeSpell=button.status.rangespell
+    prevRangeSpell = button.status.rangespell
     HealBot_Range_ButtonSpellUpdate(button, checkSoon, rangespell)
     if prevRangeSpell~=button.status.rangespell or checkSoon then
-        button.status.rangenextcheck=0
+        button.status.rangenextcheck = 0
     end
 end
 
-function HealBot_Range_OnEventUpdate(button)
-      --HealBot_setCall("HealBot_Range_OnEventUpdate", button)
-    button.status.rangenextcheck=0
-    --HealBot_Range_UpdateUnit(button)
-end
-
 local hbInPhase, hbPhaseShift=true,""
-function HealBot_Range_UnitInPhase(button)
+function HealBot_Range_UnitInPhase(unit, guid)
       --HealBot_setCall("HealBot_Range_UnitInPhase", button)
     if HEALBOT_GAME_VERSION<9 then 
-        if not HealBot_Data["UILOCK"] and HealBot_Aura_CurrentBuff(button.guid, hbPhaseShift) then
-            hbInPhase=true
+        if not HealBot_Data["UILOCK"] and HealBot_Aura_CurrentBuff(guid, hbPhaseShift) then
+            hbInPhase = false
         else
-            hbInPhase=UnitInPhase(button.unit)
+            hbInPhase = UnitInPhase(unit)
         end
-    elseif (UnitPhaseReason(button.unit) or 2)~=2 then
-        hbInPhase=false
+    elseif (UnitPhaseReason(unit) or 2)~=2 then
+        hbInPhase = false
     else
-        hbInPhase=true
+        hbInPhase = true
     end
     return hbInPhase
 end
 
 function HealBot_Range_WarnInRange(button, spellName, warnRange)
     if warnRange==3 then
-        if HealBot_Range_SpellInRange(button, spellName) then
+        if button.status.range>-1 and HealBot_Range_SpellInRange(button, spellName) then
             return true
         else
             return false
@@ -129,13 +131,15 @@ function HealBot_Range_WarnInRange(button, spellName, warnRange)
     end
 end
 
-local IsSpellInRange,UnitInRange=IsSpellInRange,UnitInRange
 local sRange=0
-local function HealBot_Range_IsSpellInRange(button, spellName)
-    sRange=IsSpellInRange(spellName, button.unit)
-    if type(sRange)=="number" then
+local function HealBot_Range_IsSpellInRange(button, spellName, limit)
+    sRange = HealBot_WoWAPI_SpellInRange(spellName, button.unit)
+    if sRange and type(sRange)=="number" then
+        if sRange==1 and HealBot_Spell_Names[spellName] and HealBot_Spell_IDs[HealBot_Spell_Names[spellName]].range<31 then
+            sRange=2
+        end
         return sRange
-    elseif sRange or HealBot_Range_Unit(button.unit, button.status.range) then
+    elseif HealBot_Range_Unit(button.unit, button.guid, limit) then
         return 1
     end
     return 0
@@ -143,66 +147,70 @@ end
 
 local rSpellId=0
 function HealBot_Range_SpellInRange(button, spellName)
-    spellName=spellName or HealBot_Range_Spell("HEAL")
-    rSpellId = HealBot_Spell_Names[spellName] or HealBot_Init_knownClassicHealSpell(spellName)
-    if rSpellId then
-        if HealBot_Spell_IDs[rSpellId].range>45 and button.status.range>-1 then
-            return true
-        elseif HealBot_Spell_IDs[rSpellId].range>35 and button.status.range>0 then
-            return true
-        elseif HealBot_Spell_IDs[rSpellId].range>25 and button.status.range>1 then
+    spellName = spellName or HealBot_Range_Spell("HEAL")
+    rSpellId = HealBot_Spell_Names[spellName]
+    if rSpellId and HealBot_Spell_IDs[rSpellId].range then
+        if button.player or
+           (HealBot_Spell_IDs[rSpellId].range>45 and button.status.range>-1) or
+           (HealBot_Spell_IDs[rSpellId].range>35 and button.status.range>0) or
+           (HealBot_Spell_IDs[rSpellId].range>25 and button.status.range>1) then
             return true
         else
             return false
         end
-    elseif button.status.range<1 or (button.status.rangespell~=spellName and HealBot_Range_IsSpellInRange(button, spellName)<1) then
+    elseif button.status.range<1 or (button.status.rangespell~=spellName and HealBot_Range_IsSpellInRange(button, spellName, false)<1) then
         return false
     else
         return true
+    end
+end
+
+function HealBot_Range_InteractDistance(unit, range)
+    if (UnitIsEnemy(unit,"player") or not HealBot_Data["UILOCK"]) and CheckInteractDistance(unit, range) then
+        return true
+    else
+        return false
     end
 end
 
 local inRange, checkedRange=false,false
-function HealBot_Range_Unit(unit, prevRange)
-    inRange, checkedRange=UnitInRange(unit)
+function HealBot_Range_Unit(unit, guid, limit)
+    inRange, checkedRange = UnitInRange(unit)
     if checkedRange then
-        if inRange then
-            return true
-        else
+        return inRange
+    elseif not limit then
+        if not UnitIsVisible(unit) or not HealBot_Range_UnitInPhase(unit, guid) then 
             return false
+        elseif HealBot_Range_InteractDistance(unit, 4) then
+            return true
         end
-    elseif prevRange>0 then
-        return true
-    else
-        return false
     end
+    return false
 end
 
 function HealBot_Range_UnitGUID(unit)
-    xButton, pButton = HealBot_Panel_AllUnitButton(UnitGUID(unit) or "x")
-    if xButton then
-        return HealBot_Range_Unit(xButton.unit, xButton.status.range)
-    elseif pButton then
-        return HealBot_Range_Unit(pButton.unit, pButton.status.range)
+    aButton=HealBot_Panel_AllButton(UnitGUID(unit) or "x")
+    if aButton then
+        return HealBot_Range_Unit(aButton.unit, aButton.guid)
     else
-        return HealBot_Range_Unit(unit, 0)
+        return HealBot_Range_Unit(unit, UnitGUID(unit))
     end
 end
 
 local uRange=0
 function HealBot_Range_UnitCurrent(button, spellName)
       --HealBot_setCall("HealBot_Range_UnitCurrent", button)
-    if not HealBot_Range_UnitInPhase(button) then 
-        uRange = -2
-    elseif button.player then
+    if button.player then
         uRange = 2
     elseif not UnitIsVisible(button.unit) then 
         uRange = -1
-    elseif (UnitIsEnemy(button.unit, "player") or not HealBot_Data["UILOCK"]) and CheckInteractDistance(button.unit, 4) then
+    elseif not HealBot_Range_UnitInPhase(button.unit, button.guid) then 
+        uRange = -2
+    elseif HealBot_Range_InteractDistance(button.unit, 4) then
         uRange = 2
     elseif spellName and HealBot_Spell_Names[spellName] then
-        uRange = HealBot_Range_IsSpellInRange(button, spellName)
-    elseif HealBot_Range_Unit(button.unit, button.status.range) then
+        uRange = HealBot_Range_IsSpellInRange(button, spellName, true)
+    elseif HealBot_Range_Unit(button.unit, button.guid, true) then
         uRange = 1
     else
         uRange = 0
@@ -217,17 +225,16 @@ function HealBot_Range_UpdateUnit(button)
         if button.status.rangemodkeyupd<HealBot_Range_luVars["modKeyUpdate"] then
             HealBot_Range_ButtonSpellUpdate(button)
         end
-        newRange=HealBot_Range_UnitCurrent(button, button.status.rangespell)
-        HealBot_Range_UpdateCheckTime(button, newRange)
+        newRange = HealBot_Range_UnitCurrent(button, button.status.rangespell)
         if newRange~=button.status.range then
-            oldRange=button.status.range
-            button.status.range=newRange
+            oldRange = button.status.range
+            button.status.range = newRange
             if button.status.enabled or button.status.range>0 or oldRange>0 then
                 HealBot_Update_AuxRange(button)
                 HealBot_RefreshUnit(button)
                 if button.status.range<0 or oldRange<0 then 
-                    HealBot_HealsInUpdate(button)
-                    HealBot_AbsorbsUpdate(button)
+                    HealBot_Events_HealsInUpdate(button)
+                    HealBot_Events_AbsorbsUpdate(button)
                 end
                 HealBot_Action_AdaptiveOORUpdate(button)
                 HealBot_Update_InRangeBar(button)
@@ -240,7 +247,8 @@ function HealBot_Range_UpdateUnit(button)
                 end
                 if button.status.isdead then
                     HealBot_Text_UpdateButton(button)
-                else
+                end
+                if HealBot_Text_TagInUse(button.framecol, "OOR") then
                     HealBot_Text_setNameTag(button)
                 end
                 if Healbot_Config_Skins.BarSort[Healbot_Config_Skins.Current_Skin][button.frame]["OORLAST"] then
@@ -262,7 +270,7 @@ function HealBot_Range_UpdateUnit(button)
             end
             if hbRangeRequests[button.guid] and button.status.range>-1 then
                 HealBot_Plugin_Requests_CancelGUID(button.guid)
-                hbRangeRequests[button.guid]=nil
+                hbRangeRequests[button.guid] = nil
             end
             if HealBot_Range_luVars["pluginAuraWatch"] then
                 HealBot_Plugin_AuraWatch_RangeUpdate(button)
@@ -274,43 +282,40 @@ function HealBot_Range_UpdateUnit(button)
                 HealBot_setTooltipUpdateNow()
             end
         end
+        HealBot_Range_UpdateCheckTime(button)
     else
-        button.status.range=-3
+        button.status.range = -3
     end
 end
 
-function HealBot_Range_UpdateCheckTime(button, range)
+function HealBot_Range_UpdateCheckTime(button)
       --HealBot_setCall("HealBot_Range_UpdateCheckTime", button, nil, nil, true)
-    if range>-1 then
-        if not HealBot_Data["UILOCK"] then
-            if CheckInteractDistance(button.unit, 4) then
-                button.status.rangenextcheck=HealBot_TimeNow+HealBot_Range_luVars["rangeCheckInterval"]
-            else
-                button.status.rangenextcheck=HealBot_TimeNow+HealBot_Range_luVars["rangeCheckIntEnabled"]
-            end
+    if button.status.range>-1 then
+        if HealBot_Range_InteractDistance(button.unit, 4) then
+            button.status.rangenextcheck = HealBot_TimeNow+HealBot_Range_luVars["rangeCheckInterval"]
         else
-            button.status.rangenextcheck=HealBot_TimeNow+HealBot_Range_luVars["rangeCheckIntEnabled"]
+            button.status.rangenextcheck = HealBot_TimeNow+HealBot_Range_luVars["rangeCheckIntEnabled"]
         end
     else
-        button.status.rangenextcheck=HealBot_TimeNow+HealBot_Range_luVars["rangeCheckInterval"]
+        button.status.rangenextcheck = HealBot_TimeNow+HealBot_Range_luVars["rangeCheckInterval"]
     end
 end
 
 function HealBot_Range_ActionIcons(guid, state)
       --HealBot_setCall("HealBot_Range_ActionIcons", nil, guid)
     if state then
-        hbActionIconsInRange[guid]=true
+        hbActionIconsInRange[guid] = true
     else
-        hbActionIconsInRange[guid]=nil
+        hbActionIconsInRange[guid] = nil
     end
 end
 
 function HealBot_Range_Requests(guid, state)
       --HealBot_setCall("HealBot_Requests", nil, guid)
     if state then
-        hbRangeRequests[guid]=true
+        hbRangeRequests[guid] = true
     else
-        hbRangeRequests[guid]=nil
+        hbRangeRequests[guid] = nil
     end
 end
 
@@ -322,7 +327,7 @@ function HealBot_Range_RequestsClearButton(button)
         elseif button.request.colbar==5 then
             HealBot_Action_DisableButtonGlowType(button, "PLUGIN", "R")
         end
-        button.request.colbar=0
+        button.request.colbar = 0
         HealBot_Action_UpdateRequestButton(button)
     end
 end
@@ -342,9 +347,9 @@ local gucUIMapID, gucPos=false,false
 local function HealBot_Range_getUnitCoords(unit)
       --HealBot_setCall("HealBot_Range_getUnitCoords", nil, nil, unit)
     if UnitIsPlayer(unit) then
-        gucUIMapID=C_Map.GetBestMapForUnit(unit)
+        gucUIMapID = C_Map.GetBestMapForUnit(unit)
         if gucUIMapID then
-            gucPos=C_Map.GetPlayerMapPosition(gucUIMapID, unit)
+            gucPos = C_Map.GetPlayerMapPosition(gucUIMapID, unit)
             if gucPos and gucPos.x and gucPos.y and gucPos.x > 0 and gucPos.y > 0 then
                 return gucPos.x, gucPos.y
             end
@@ -379,6 +384,6 @@ function HealBot_Range_DirectionCheck(unit)
 end
 
 function HealBot_Range_ClearGUID(guid)
-    hbRangeRequests[guid]=nil
-    hbActionIconsInRange[guid]=nil
+    hbRangeRequests[guid] = nil
+    hbActionIconsInRange[guid] = nil
 end

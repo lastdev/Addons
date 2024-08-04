@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FesteringRotslimeSoD", "DBM-Raids-Vanilla", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240409010007")
+mod:SetRevision("20240513223911")
 mod:SetCreatureID(218819)--Drum 222542, Slab 222543, Mask 222544, Candle 222545
 mod:SetEncounterID(2953)
 --mod:SetUsedIcons(8)
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 
 
 
-local warnGunk						= mod:NewCountAnnounce(432062, 3)
+local warnGunk						= mod:NewCountAnnounce(438142, 3)
 local warnNauseousGas				= mod:NewCountAnnounce(438130, 2, nil, false, 2)
 local warnSlimeTime					= mod:NewCountAnnounce(446311, 4, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(446311))
 

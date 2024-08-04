@@ -1,6 +1,8 @@
-## Changed in v56
+## Changed in v60
 
-* Updated for 10.2.6
-* Added the locations for the Pepes added in 10.2.5
-* Added some minor missing locations and questids
+* Add the broken waygate in Waking Shores
+* Add loot to the forgotten jewel box
+* Add the missing Visage of Aurostor to Aurostor in Emerald Dream
+* Label cosmetic loot in tooltips
+* Clean up some deprecated WoW API calls for the future (and for running on beta)
 

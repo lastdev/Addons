@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AvatarofHakkarSoD", "DBM-Raids-Vanilla", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240417212459")
+mod:SetRevision("20240521112819")
 mod:SetCreatureID(221394)--221426 Rituals on engage, 221396 Hakkari Bloodkeeper
 mod:SetEncounterID(2956)
 --mod:SetUsedIcons(8)
@@ -9,6 +9,9 @@ mod:SetHotfixNoticeRev(20240405000000)
 --mod:SetMinSyncRevision(20231115000000)
 
 mod:RegisterCombat("combat")
+-- IsEncounterInProgress() only becomes active ~15 seconds after ENCOUNTER_START
+-- This isn't a real problem unless you don't immediately engage the summoners, but the unit test trips over this because the log was recorded by a healer
+mod:SetMinCombatTime(20)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 443940 443990 444050 444039 444253 444046 444132",
@@ -122,21 +125,23 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	local spellId = args.spellId
 	if args:IsSpell(443964) then
-		warnSpiritChains:PreciseShow(2, args.destName)
+		warnSpiritChains:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnSpiritChains:Show()
 			specWarnSpiritChains:Play("scatter")
 			yellSpiritChains:Yell()
 		end
 	elseif args:IsSpell(444039) then
-		warnInsanity:CombinedShow(0.3, args.destName)
+		warnInsanity:Show(args.destName)
 	elseif args:IsSpell(444255) then
 		if args:GetSrcCreatureID() == 221394 then--Initial cast from boss
 			warnCorruptedBlood:PreciseShow(2, args.destName)--Anywhere from .1 to 1.2 sec, but precise show uses count aggregation instead
 		else--Spreads from players
-			warnCorruptedBloodSpread:CombinedShow(0.3, args.sourceName, args.destName)
+			warnCorruptedBlood:CombinedShow(0.3, args.destName)
+			if self:AntiSpam(3, "spread" .. args.sourceName) then
+				warnCorruptedBloodSpread:Show(args.sourceName, args.destName)
+			end
 		end
 		if args:IsPlayer() then
 			specWarnCorruptedBlood:Show()
@@ -150,7 +155,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCurseofTongues:Play("targetyou")
 		end
 	elseif args:IsSpell(444165) then
-		warnSkeletal:CombinedShow(0.5, args.destName)
+		-- This can be spread across ~0.6 seconds if it hits the tank
+		warnSkeletal:CombinedShow(0.7, args.destName)
 		if args:IsPlayer() then
 			specWarnSkeletal:Show()
 			specWarnSkeletal:Play("targetyou")

@@ -1,3 +1,10 @@
+## [v2.1](https://github.com/Davie3/who-taunted/releases/tag/v2.1)
+- Bug fixes for 11.0 The War Within compatibility.
+- Code Optimizations to ensure both Mainline and Classic function correctly.
+
+## [v2.0.16](https://github.com/Davie3/who-taunted/releases/tag/v2.0.16)
+- 11.0.0 The War Within compatibility.
+
 ## [v2.0.15](https://github.com/Davie3/who-taunted/releases/tag/v2.0.15)
 - 10.2.7 Dragonflight compatibility.
 
@@ -34,17 +41,17 @@
 - Minor code change for Party and Raid detection.
 
 ## [v2.0.4](https://github.com/Davie3/who-taunted/releases/tag/v2.0.4)
-- Fixed a localization issue which caused options for Output types to not function correctly (#15).
+- Fixed a localization issue which caused options for Output types to not function correctly ([#15](https://github.com/Davie3/who-taunted/issues/15)).
 - Added a new option which defaults the output to Self if any of the outputs are unavailable. For example, if you are not in a party or raid.
 
 ## [v2.0.3](https://github.com/Davie3/who-taunted/releases/tag/v2.0.3)
-- Fixed a bug that would cause "You Are Not in Party" or similar system errors (#12).
+- Fixed a bug that would cause "You Are Not in Party" or similar system errors ([#12](https://github.com/Davie3/who-taunted/issues/12)).
 
 ## [v2.0.2](https://github.com/Davie3/who-taunted/releases/tag/v2.0.2)
 - 10.0/Dragonflight compatibility.
 
 ## [v2.0.1](https://github.com/Davie3/who-taunted/releases/tag/v2.0.1)
-- Fixed a bug where errors were thrown in Classic when a player taunts. Some code from Mainline WoW was not compatible in Classic (#8).
+- Fixed a bug where errors were thrown in Classic when a player taunts. Some code from Mainline WoW was not compatible in Classic ([#8](https://github.com/Davie3/who-taunted/issues/8)).
 - Fixed some issues with the Chat Window Options.
 - Fixed a rare bug with the Taunt Output Options.
 
@@ -58,18 +65,18 @@
 - Cleaning up and re-organizing the options menu.
 - Profiles are now supported in the options menu.
 - Re-introducing options to change the Output of each Taunt Type.
-- Various bug fixes and improvements - https://github.com/Davie3/who-taunted/releases/tag/v2.0
+- [Various bug fixes and improvements](https://github.com/Davie3/who-taunted/releases/tag/v2.0).
 
-## [v1.5](https://github.com/Davie3/who-taunted/releases/tag/v1.5)
+## [v1.5](https://github.com/Davie3/who-taunted/releases/tag/1.5)
 - 9.0.1/Shadowlands compatibility.
 - Removed Hunter's Distracting Shot.
 - Re-added Warrior's Challenging Shout under AOE taunts
 - Removed all options pertaining to changing the output of the Taunt messages. In 8.2.5, Blizzard protected the SendChatMessage function so this fixes any errors if the output type for WhoTaunted was set to anything other than "self". The default is now to display to the player (which is normal functionality). I will re-add the options if Blizzard makes any changes in the future.
 
-## [v1.4.3](https://github.com/Davie3/who-taunted/releases/tag/v1.4.3)
+## [v1.4.3](https://github.com/Davie3/who-taunted/releases/tag/1.4.3)
 - 8.3 compatibility.
 
-## [v1.4.2](https://github.com/Davie3/who-taunted/releases/tag/v1.4.2)
+## [v1.4.2](https://github.com/Davie3/who-taunted/releases/tag/1.4.2)
 - 8.2 compatibility.
 
 ## [v1.4.1](https://github.com/Davie3/who-taunted/releases/tag/v1.4.1)
@@ -143,7 +150,7 @@
 - Hide own taunts and failed taunts option added.
 - Paladin Righteous Defense target option added.
 - The ability to select the chat window for the self output has been added.
-- Hide the '<WhoTaunted>' prefix option added.
+- Hide the `<WhoTaunted>` prefix option added.
 - Toggle the display of the ability used to taunt option added.
 - Fixed bug with the disable in battlegrounds option.
 

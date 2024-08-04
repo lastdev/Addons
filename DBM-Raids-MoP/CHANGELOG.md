@@ -1,10 +1,8 @@
-# <DBM Mod> Scenario (MoP)
+# <DBM Mod> Raids (MoP)
 
-## [r167](https://github.com/DeadlyBossMods/DBM-MoP/tree/r167) (2024-05-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r166...r167) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
+## [r176](https://github.com/DeadlyBossMods/DBM-MoP/tree/r176) (2024-06-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r175...r176) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
 
-- Bump ToCs for 10.2.7  
-- Fix some seticon nitpicks  
-- Fix bug identified by continued improvement to LuaLS function mapping  
-- apparently no one is actually ready for the cataclysm pre patch yet (ie multi interface versions separated by ,). So revert that for now  
-- War within TOC Support  
+- Fix numerous cases where count was missing, or wrong object type was set (also causing count to be missing)  
+    Disabled some false diagnostics reports as well  
+- Fix bad option key  

@@ -3,7 +3,7 @@
 
                                            Netherwing Eggs
 
-                                        v2.11 - 5th May 2024
+                                       v2.13 - 23rd July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -1153,3 +1153,23 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_NetherwingEggsDB", "AceEvent-3.0")
+
+--=======================================================================================================
+--
+--		SLASH CHAT COMMANDS  -- All game versions
+--		===================
+--
+--=======================================================================================================
+
+SLASH_NetherwingEggs1 = "/ne"
+
+local function Slash( options )
+
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "NetherwingEggs" )
+	if ( ns.version > 100000 ) then
+		print( ns.colour.prefix .."ARH: " ..ns.colour.highlight .."Try the Minimap AddOn Menu (below the Calendar)" )
+	end
+end
+
+SlashCmdList[ "NetherwingEggs" ] = function( options ) Slash( options ) end

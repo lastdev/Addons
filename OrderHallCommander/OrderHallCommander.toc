@@ -1,4 +1,4 @@
-## Interface: 100206
+## Interface: 100207
 ## Title: OrderHallCommander
 ## Notes: Sending all follower to missions with just one click and more
 ## Notes-itIT: Invia tutti i seguaci in missione con un click e molto altro
@@ -12,8 +12,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Runetotem
-## Version: 2.2.0 100250
-## X-Revision: e9e7dda
+## Version: 2.3.2 100250
+## X-Revision: a796203
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -28,7 +28,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2024-04-10T22:08:35Z
+## X-Date: 2024-05-16T07:11:10Z
 ## X-Embeds: LibInit
 ## X-Reboot: 1
 ## X-Curse-Project-ID: 103097

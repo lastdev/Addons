@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                       v1.28 - 20th April 2024
+                                       v1.32 - 23rd July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 								
@@ -383,8 +383,8 @@ end
 ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
-	L["AddOn Description"] = "Hilft Ihnen, das " ..ns.colour.highlight .."Frühlingsfell-Alpaka"
-		..ns.colour.plaintext .." in Uldum zu erhalten"
+	L["AddOn Description"] = ns.colour.highlight .."Hilft Ihnen, das " ..ns.colour.prefix
+		.."Frühlingsfell-Alpaka" ..ns.colour.highlight .." in Uldum zu erhalten"
 	L["Alpaca It In"] = "Wir alpaken's dann mal"
 	L["Alpaca It Up"] = "Rackern fürs Alpaka"
 	L["Daily Quest"] = "Tägliche Aufgabe"
@@ -396,8 +396,8 @@ if ns.locale == "deDE" then
 	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["AddOn Description"] = "Te ayuda a obtener " ..ns.colour.highlight
-		.."el Alpaca de pelaje primaveral" ..ns.colour.plaintext .." en Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Te ayuda a obtener " ..ns.colour.prefix
+		.."el Alpaca de pelaje primaveral" ..ns.colour.highlight .." en Uldum"
 	L["Alpaca It In"] = "Hay una alpaca en ti"
 	L["Alpaca It Up"] = "Una alpaca de traca"
 	L["Daily Quest"] = "Búsqueda Diaria"
@@ -409,8 +409,8 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 
 elseif ns.locale == "frFR" then
-	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight .."l'alpaga toison-vernale" 
-		..ns.colour.plaintext .." à Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Vous aide à obtenir " ..ns.colour.prefix
+		.."l'alpaga toison-vernale" ..ns.colour.highlight .." à Uldum"
 	L["Alpaca It In"] = "Alpaga alpagué"
 	L["Alpaca It Up"] = "Alpaga gavé"
 	L["Daily Quest"] = "Quêtes Journalières"
@@ -422,8 +422,8 @@ elseif ns.locale == "frFR" then
 	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 
 elseif ns.locale == "itIT" then
-	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight .."Alpaca Primopelo"
-		..ns.colour.plaintext .." a Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Ti aiuta a ottenere " ..ns.colour.prefix
+		.."Alpaca Primopelo" ..ns.colour.highlight .." a Uldum"
 	L["Alpaca It In"] = "Alpaca 1, Alpaca 2"
 	L["Alpaca It Up"] = "Io sono Alpaca"
 	L["Daily Quest"] = "Missione Giornaliera"
@@ -435,8 +435,8 @@ elseif ns.locale == "itIT" then
 	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 
 elseif ns.locale == "koKR" then
-	L["AddOn Description"] = "울둠에서 " ..ns.colour.highlight .."봄털 알파카" ..ns.colour.plaintext
-		.."를 얻는 데 도움이 됩니다."
+	L["AddOn Description"] = ns.colour.highlight .."울둠에서 " ..ns.colour.prefix .."봄털 알파카"
+		..ns.colour.highlight .."를 얻는 데 도움이 됩니다."
 	L["Alpaca It In"] = "알파카 출동!"
 	L["Alpaca It Up"] = "알파카만 믿으라고"
 	L["Daily Quest"] = "일일 퀘스트"
@@ -448,8 +448,8 @@ elseif ns.locale == "koKR" then
 	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight .."Alpaca Lã de Primavera"
-		..ns.colour.plaintext .." em Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Ajuda você a obter o " ..ns.colour.prefix
+		.."Alpaca Lã de Primavera" ..ns.colour.highlight .." em Uldum"
 	L["Alpaca It In"] = "Alpaca pacas"
 	L["Alpaca It Up"] = "Alpaca papa"
 	L["Daily Quest"] = "Missão Diária"
@@ -461,8 +461,8 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 
 elseif ns.locale == "ruRU" then
-	L["AddOn Description"] = "Помогает вам получить " ..ns.colour.highlight .."Курчавая альпака"
-		..ns.colour.plaintext .." в Ульдум"
+	L["AddOn Description"] = ns.colour.highlight .."Помогает вам получить " ..ns.colour.prefix
+		.."Курчавая альпака" ..ns.colour.highlight .." в Ульдум"
 	L["Alpaca It In"] = "Альпачиный взгляд"
 	L["Alpaca It Up"] = "Добряк среди альпак"
 	L["Daily Quest"] = "Ежедневный Квест"
@@ -474,7 +474,7 @@ elseif ns.locale == "ruRU" then
 	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 
 elseif ns.locale == "zhCN" then
-	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."春裘羊驼"
+	L["AddOn Description"] = ns.colour.highlight .."帮助您获取奥丹姆中的" ..ns.colour.prefix .."春裘羊驼"
 	L["Alpaca It In"] = "Alpaca It In" -- No Translation available at Wowhead
 	L["Alpaca It Up"] = "羊驼要吃饱"
 	L["Daily Quest"] = "日常"
@@ -486,7 +486,7 @@ elseif ns.locale == "zhCN" then
 	L["Wrong version of Uldum"] = "奥丹姆 版本错误"
 
 elseif ns.locale == "zhTW" then
-	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."春裘羊駝"
+	L["AddOn Description"] = ns.colour.highlight .."幫助您獲取奧丹姆中的" ..ns.colour.prefix .."春裘羊駝"
 	L["Alpaca It In"] = "Alpaca It In" -- See for simplified. Traditional is a direct translation of that
 	L["Alpaca It Up"] = "羊駝要吃飽"
 	L["Daily Quest"] = "每日"
@@ -498,8 +498,8 @@ elseif ns.locale == "zhTW" then
 	L["Wrong version of Uldum"] = "奧丹姆 版本錯誤"
 	
 else
-	L["AddOn Description"] = "Helps you to obtain the " ..ns.colour.highlight .."Springfur Alpaca"
-		..ns.colour.plaintext .." in Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Helps you to obtain the " ..ns.colour.prefix
+		.."Springfur Alpaca" ..ns.colour.highlight .." in Uldum"
 	L["of"] = "@ of #"
 end
 
@@ -540,9 +540,13 @@ function pluginHandler:OnEnter( mapFile, coord )
 			
 			local _, _, _, fulfilled, required = GetQuestObjectiveInfo( 58881, 0, false )
 			local progress = L["of"]
-			progress = string.gsub( progress, "@", fulfilled )
-			progress = string.gsub( progress, "#", required )
-			GameTooltip:AddLine( ns.colour.highlight .."(" ..progress ..")" )
+			if fulfilled then
+				progress = string.gsub( progress, "@", fulfilled )
+				progress = string.gsub( progress, "#", required )
+				GameTooltip:AddLine( ns.colour.highlight .."(" ..progress ..")" )
+			else
+				GameTooltip:AddLine( "\124cFFFF0000" ..PERKS_PROGRAM_SERVER_ERROR )
+			end
 		end
 		
 	elseif pin.gersahlGreens then
@@ -721,3 +725,36 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_SpringfurAlpacaDB", "AceEvent-3.0")
+
+--=======================================================================================================
+--
+--		SLASH CHAT COMMANDS  -- All game versions
+--		===================
+--
+--=======================================================================================================
+
+SLASH_SpringfurAlpaca1, SLASH_SpringfurAlpaca2, SLASH_SpringfurAlpaca3 = "/sa", "/sfa", "/alpaca"
+
+local function Slash( options )
+
+	if ( options == "" ) then
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "SpringfurAlpaca" )
+	elseif ( options == "u" ) then
+		OpenWorldMap( 1527 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Springfur Alpaca"] ..": " ..ns.colour.plaintext ..L["Try later"] )
+		end
+	else
+		print( ns.colour.prefix .."Options:\n"
+				..ns.colour.highlight .."/sa" ..ns.colour.plaintext .." Show the HandyNotes options panel\n"
+				..ns.colour.highlight .."/sa ?" ..ns.colour.plaintext .." Show this menu\n"
+				..ns.colour.highlight .."/sa u" ..ns.colour.plaintext .." Show the Uldum map" )
+		print( ns.colour.prefix .."Tip:" ..ns.colour.highlight
+			.." Try the Minimap AddOn Menu (below the Calendar)\nLeft Mouse:" ..ns.colour.plaintext
+			.." SA options panel; " ..ns.colour.highlight .."Right Mouse:" ..ns.colour.plaintext
+			.." Uldum map" )
+	end
+end
+
+SlashCmdList[ "SpringfurAlpaca" ] = function( options ) Slash( options ) end

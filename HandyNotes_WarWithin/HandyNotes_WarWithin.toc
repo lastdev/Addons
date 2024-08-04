@@ -1,0 +1,30 @@
+## Interface: 110002, 110000
+## Title: HandyNotes: The War Within Treasures and Rares
+## Notes: Where are the hidden treasures in the War Within?
+## Author: Kemayo
+## Version: v4
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 934069
+## X-Wago-ID: 56n9w0N9
+## SavedVariables: HandyNotes_WarWithinDB
+## RequiredDeps: HandyNotes
+## OptionalDeps: !LibUIDropDownMenu
+
+lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
+
+handler\handler.xml
+
+warwithin.lua
+
+zones\AzjKahet.lua
+zones\Dornogal.lua
+zones\Hallowfall.lua
+zones\IsleOfDorn.lua
+zones\KhazAlgar.lua
+zones\RingingDeeps.lua
+
+achievements\GlyphHunter.lua
+#achievements\EchoesOfDanger.lua
+achievements\KhazAlgarLoreHunter.lua

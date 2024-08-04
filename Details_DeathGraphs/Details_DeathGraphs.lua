@@ -11,6 +11,8 @@ adlObject.version_string = "v3.8"
 
 advancedDeathLogs.PluginAbsoluteName = "DETAILS_PLUGIN_DEATH_GRAPHICS"
 
+local GetSpellDescription = C_Spell and C_Spell.GetSpellDescription or GetSpellDescription
+
 ---@alias ehash string
 
 local GetNumGroupMembers = GetNumGroupMembers
@@ -44,6 +46,17 @@ local CONST_DBTYPE_ENDURANCE = "endurance"
 
 advancedDeathLogs.debugMode = false
 advancedDeathLogs.debugEncounter = false
+
+local GetSpellInfo = C_Spell and C_Spell.GetSpellInfo or GetSpellInfo
+
+if (detailsFramework.IsWarWow()) then
+    GetSpellInfo = function(...)
+        local result = C_Spell.GetSpellInfo(...)
+        if result then
+            return result.name, 1, result.iconID
+        end
+    end
+end
 
 adlObject:SetPluginDescription(Loc["STRING_PLUGIN_DESC"])
 
@@ -211,6 +224,27 @@ local createPluginFunctions = function()
 			adlObject:DebugMsg("combat finished -> calling CombatFinished()")
 			adlObject:CombatFinished(...)
 			cleuEventFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+			---@type combat
+			local combatObject = Details:GetCurrentCombat()
+			if (combatObject) then
+				local deathsTable = combatObject:GetDeaths()
+				for i = 1, #deathsTable do
+					local eventsBeforePlayerDeath = deathsTable[i][1]
+					if (type(eventsBeforePlayerDeath) == "table") then
+						for j = 1, #eventsBeforePlayerDeath do
+							local eventTable = eventsBeforePlayerDeath[j]
+							if (type(eventTable) == "table") then
+								if (eventTable[1] == true) then --is damage
+									local spellId = eventTable[2]
+									if (spellId and GetSpellInfo(spellId)) then
+										local desc = GetSpellDescription(spellId)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
 
 		elseif (event == "PLUGIN_DISABLED") then
 			adlObject:HideIcon()

@@ -1,6 +1,6 @@
 # NugComboBar
 
-## [10.2.4](https://github.com/rgd87/NugComboBar/tree/10.2.4) (2024-03-14)
-[Full Changelog](https://github.com/rgd87/NugComboBar/compare/10.2.3...10.2.4) [Previous Releases](https://github.com/rgd87/NugComboBar/releases)
+## [11.0.1](https://github.com/rgd87/NugComboBar/tree/11.0.1) (2024-07-30)
+[Full Changelog](https://github.com/rgd87/NugComboBar/compare/11.0.0...11.0.1) [Previous Releases](https://github.com/rgd87/NugComboBar/releases)
 
-- Fix for 10.2.5 ColorPicker  
+- Sanguine Stratagem fix for retail  

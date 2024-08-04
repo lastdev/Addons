@@ -1,3 +1,10 @@
+== v1.18 - 23rd July 2024
+* TOC update to 11.0.0
+
+== v1.17 - 27th June 2024
+* Translation for Thief's Reward added
+* Colourising the description text while I was at it
+
 == v1.16 - 20th April 2024
 * TOC update to 10.2.7
 * Remove old X- lines from the TOC file

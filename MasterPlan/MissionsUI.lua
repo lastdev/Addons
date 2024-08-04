@@ -479,7 +479,7 @@ local easyDrop = CreateFrame("Frame", "MPDropDown", nil, "UIDropDownMenuTemplate
 		self:Close()
 		hoverFocus:Open(owner, DropDownList1, checkMenu, closeEasyDrop)
 		self.owner, self.closeOwner, self.openOwner, self.closeGrace = owner
-		EasyMenu(menu, self, "cursor", 9000, 9000, "MENU", 4)
+		T.EasyMenu(menu, self, "cursor", 9000, 9000, "MENU", 4)
 		DropDownList1:ClearAllPoints()
 		DropDownList1:SetPoint(...)
 	end
@@ -752,7 +752,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 			for i=1,#self.items do
 				local ii = self.items[i]
 				if ii.itemID and ii:IsShown() then
-					ii:SetIcon(select(10, GetItemInfo(ii.itemID)) or GetItemIcon(ii.itemID) or "Interface\\Icons\\Temp")
+					ii:SetIcon(C_Item.GetItemIconByID(ii.itemID) or "Interface\\Icons\\Temp")
 				end
 			end
 		end)
@@ -889,7 +889,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 				local link
 				if not IsModifiedClick("CHATLINK") then
 				elseif self.itemID then
-					link = select(2, GetItemInfo(self.itemID))
+					link = select(2, C_Item.GetItemInfo(self.itemID))
 				elseif self.currencyID and self.currencyID > 0 then
 					link = C_CurrencyInfo.GetCurrencyLink(self.currencyID, tonumber(self.Quantity:GetText() or 1) or 1)
 				end
@@ -944,7 +944,7 @@ local activeUI = CreateFrame("Frame", nil, missionList) do
 		for k,v in pairs(rewards) do
 			local quantity, icon, tooltipHeader, tooltipText, _, tooltipExtra = v.quantity
 			if v.itemID then
-				icon, tooltipExtra = select(10, GetItemInfo(v.itemID)) or GetItemIcon(v.itemID) or "Interface\\Icons\\Temp", v.itemID == 120205 and rewards.xp and rewards.xp.playerXP and XP_GAIN:format(BreakUpLargeNumbers(rewards.xp.playerXP)) or nil
+				icon, tooltipExtra = C_Item.GetItemIconByID(v.itemID) or "Interface\\Icons\\Temp", v.itemID == 120205 and rewards.xp and rewards.xp.playerXP and XP_GAIN:format(BreakUpLargeNumbers(rewards.xp.playerXP)) or nil
 			elseif v.currencyID == 0 then
 				icon, tooltipHeader, tooltipText = "Interface\\Icons\\INV_Misc_Coin_02", GARRISON_REWARD_MONEY, GetMoneyString(v.quantity)
 				quantity = floor(quantity/10000)
@@ -1101,7 +1101,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 	availUI:SetScript("OnShow", function(self)
 		missionList.ctlContainer:Steal(self, ctl)
 		RefreshAvailMissionsView(true)
-		self.notebook:SetShown(GetItemCount(self.notebook.itemID) > 0)
+		self.notebook:SetShown(C_Item.GetItemCount(self.notebook.itemID) > 0)
 	end)
 	local roamingParty = CreateFrame("Frame", nil, availUI) do
 		roamingParty:SetPoint("BOTTOMRIGHT", availUI, "BOTTOM", 106, -2)
@@ -1508,7 +1508,7 @@ local interestUI = CreateFrame("Frame", nil, missionList) do
 					if (not mi.text or mi.placeholder) then
 						local key, name, ico, _ = mi.arg1
 						if key > 2e3 then
-							name, ico = GetItemInfo(key), GetItemIcon(key)
+							name, ico = C_Item.GetItemNameByID(key), C_Item.GetItemIconByID(key)
 						else
 							local ci = C_CurrencyInfo.GetBasicCurrencyInfo(key)
 							name, ico = ci.name, ci.icon
@@ -1769,6 +1769,15 @@ activeUI.CompleteAll:SetScript("OnClick", function(_, button)
 end)
 
 local core do
+	local function isMouseFocusableDescendent(self, ctx)
+		local p = self.GetScript and self.IsMouseMotionEnabled and self:IsMouseMotionEnabled()
+		      and (self.IsEnabled == nil or self:IsEnabled() or self.GetMotionScriptsWhileDisabled and self:GetMotionScriptsWhileDisabled())
+		      and self:GetScript("OnEnter") and self
+		while p and p ~= ctx and not (p.IsForbidden and p:IsForbidden()) and p.GetParent do
+			p = p:GetParent()
+		end
+		return ctx and p == ctx
+	end
 	function api.createScrollList(parent, w, h)
 		local core, int, h = {}, {view={}}, h or 541
 		local sf, sc, bar = CreateFrame("ScrollFrame", nil, parent) do
@@ -1851,10 +1860,10 @@ local core do
 					f:Show()
 				end
 			end
-			local mf = T.GetMouseFocus()
-			local oe = mf and T.IsDescendantOf(mf, sc) and mf:GetScript("OnEnter")
-			if mf and oe and mf.IsEnabled and mf:IsEnabled() then
-				oe(mf)
+			local mfd = T.GetMouseFocus(isMouseFocusableDescendent, sc, false)
+			local oe = mfd and mfd.GetScript and mfd:GetScript("OnEnter")
+			if oe then
+				securecall(oe, mfd)
 			end
 		end
 
@@ -1948,7 +1957,7 @@ do -- CreateMissionButton
 			elseif IsModifiedClick("CHATLINK") then
 				local qt, text, _ = self.quantity:GetText()
 				if self.itemID then
-					_, text = GetItemInfo(self.itemID)
+					_, text = C_Item.GetItemInfo(self.itemID)
 				elseif self.currencyID and self.currencyID ~= 0 then
 					text = C_CurrencyInfo.GetCurrencyLink(self.currencyID, qt or 0)
 				elseif self.tooltipTitle then
@@ -2481,8 +2490,8 @@ do -- activeMissionsHandle
 						quant = abridge(quant)
 					end
 				elseif v.itemID then
-					local _, _, q, l, _, _, _, _, _, tex = GetItemInfo(v.itemID)
-					l, icon = T.CrateLevels[v.itemID] or l, tex or GetItemIcon(v.itemID)
+					local _, _, q, l, _, _, _, _, _, tex = C_Item.GetItemInfo(v.itemID)
+					l, icon = T.CrateLevels[v.itemID] or l, tex or C_Item.GetItemIconByID(v.itemID)
 					if v.quantity == 1 and q and l and l > 500 then
 						quant = ITEM_QUALITY_COLORS[q].hex .. l
 					end
@@ -2703,8 +2712,8 @@ do -- availMissionsHandle
 				elseif v.currencyID then
 					r.canIgnore = "c:" .. v.currencyID
 				elseif v.itemID then
-					local _, _, q, l, _, _, _, _, _, tex = GetItemInfo(v.itemID)
-					r.canIgnore, icon, l = "i:" .. v.itemID, tex or GetItemIcon(v.itemID), T.CrateLevels[v.itemID] or l
+					local _, _, q, l, _, _, _, _, _, tex = C_Item.GetItemInfo(v.itemID)
+					r.canIgnore, icon, l = "i:" .. v.itemID, tex or C_Item.GetItemIconByID(v.itemID), T.CrateLevels[v.itemID] or l
 					if v.quantity == 1 and q and l and l > 40 then
 						quant = ITEM_QUALITY_COLORS[q].hex .. l
 						if G.IsLevelAppropriateToken(v.itemID) then
@@ -3235,7 +3244,7 @@ do -- interestMissionsHandle
 		else
 			r.itemID, r.currencyID, r.tooltipTitle, r.tooltipText = rt
 			r.quantity:SetText(d[3] > 1 and d[3] or "")
-			r.icon:SetTexture(select(10, GetItemInfo(r.itemID)) or GetItemIcon(r.itemID) or "Interface/Icons/Temp")
+			r.icon:SetTexture(C_Item.GetItemIconByID(r.itemID) or "Interface/Icons/Temp")
 		end
 		r:Show()
 	end
@@ -3586,7 +3595,7 @@ do -- RefreshActiveMissionsView
 		if force or core:IsOwned(activeMissionsHandle) then
 			activeMissionsHandle:Activate(force)
 		end
-		activeUI.orders:SetShown(GetItemCount(activeUI.orders.itemID) > 0)
+		activeUI.orders:SetShown(C_Item.GetItemCount(activeUI.orders.itemID) > 0)
 	end
 	function RefreshActiveMissionsView(force)
 		if core:IsShown() and (force or core:IsOwned(activeMissionsHandle)) then

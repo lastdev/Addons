@@ -1,3 +1,11 @@
+== v1.08 - 20th May 2024
+* Translation fix  "l'figurine" > "la figurine" as reported by @Adal4
+* Removed to unused translations for esES
+* Enhanced the new chat commands - menu plus the option to open the Uldum map
+
+== v1.07 - 13th May 2024
+* Added a chat command shortcut to pull up the configuration panel: "/mcf" or "/camel"
+
 == v1.06 - 6th May 2024
 * Classic Cataclysm version included
 

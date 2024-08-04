@@ -5,14 +5,12 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local StoryBoard = TSM.UI:NewPackage("StoryBoard")
-local Environment = TSM.Include("Environment")
-local Log = TSM.Include("Util.Log")
-local Reactive = TSM.Include("Util.Reactive")
-local Settings = TSM.Include("Service.Settings")
-local Profession = TSM.Include("Service.Profession")
-local UIElements = TSM.Include("UI.UIElements")
-local UIManager = TSM.Include("UI.UIManager")
+local StoryBoard = TSM.UI:NewPackage("StoryBoard") ---@type AddonPackage
+local ClientInfo = TSM.LibTSMWoW:Include("Util.ClientInfo")
+local Reactive = TSM.LibTSMUtil:Include("Reactive")
+local Profession = TSM.LibTSMService:Include("Profession")
+local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
+local UIManager = TSM.LibTSMUtil:IncludeClassType("UIManager")
 local private = {
 	manager = nil,
 	settings = nil,
@@ -20,10 +18,10 @@ local private = {
 }
 local MIN_FRAME_SIZE = { width = 400, height = 300 }
 local DEFAULT_DIVIDED_CONTAINER_CONTEXT = { leftWidth = 200 }
-local STATE_SCHEMA = Reactive.CreateStateSchema()
+local STATE_SCHEMA = Reactive.CreateStateSchema("STORYBOARD_UI_STATE")
 	:AddOptionalTableField("frame")
 	:Commit()
-local ITEM_LIST = Environment.IsRetail() and {"i:2770", "i:2771", "i:2772", "i:3858", "i:10620", "i:189143", "i:188658", "i:190311", "i:190312", "i:190313", "i:190314"} or {"i:2770", "i:2771", "i:2772", "i:3858", "i:10620"}
+local ITEM_LIST = ClientInfo.IsRetail() and {"i:2770", "i:2771", "i:2772", "i:3858", "i:10620", "i:189143", "i:188658", "i:190311", "i:190312", "i:190313", "i:190314"} or {"i:2770", "i:2771", "i:2772", "i:3858", "i:10620"}
 
 
 
@@ -31,12 +29,14 @@ local ITEM_LIST = Environment.IsRetail() and {"i:2770", "i:2771", "i:2772", "i:3
 -- Module Functions
 -- ============================================================================
 
-function StoryBoard.OnEnable()
-	private.settings = Settings.NewView()
+function StoryBoard.OnInitialize(settingsDB)
+	private.settings = settingsDB:NewView()
 		:AddKey("global", "storyBoardUIContext", "frame")
+end
 
+function StoryBoard.OnEnable()
 	local state = STATE_SCHEMA:CreateState()
-	private.manager = UIManager.Create(state, private.ActionHandler)
+	private.manager = UIManager.Create("STORY_BOARD", state, private.ActionHandler)
 end
 
 function StoryBoard.OnDisable()
@@ -53,8 +53,7 @@ end
 -- Action Handler
 -- ============================================================================
 
-function private.ActionHandler(state, action)
-	Log.Info("Handling action %s", action)
+function private.ActionHandler(manager, state, action, ...)
 	if action == "ACTION_FRAME_SHOW" then
 		assert(not state.frame)
 		state.frame = private.CreateMainFrame(state)
@@ -69,13 +68,12 @@ function private.ActionHandler(state, action)
 		if state.frame then
 			state.frame:Hide()
 		else
-			return "ACTION_FRAME_SHOW"
+			return private.ActionHandler(manager, state, "ACTION_FRAME_SHOW")
 		end
 	elseif action == "ACTION_ON_DISABLE" then
-		if not state.frame then
-			return
+		if state.frame then
+			state.frame:Hide()
 		end
-		state.frame:Hide()
 	else
 		error("Unknown action: "..tostring(action))
 	end
@@ -224,7 +222,7 @@ function private.CreateButtonPage(button)
 			)
 			:AddChild(UIElements.New("Spacer", "spacer3"))
 		)
-		:AddChildIf(Environment.IsRetail(), UIElements.New("Frame", "itemButtonRow")
+		:AddChildIf(ClientInfo.IsRetail(), UIElements.New("Frame", "itemButtonRow")
 			:SetLayout("HORIZONTAL")
 			:SetHeight(24)
 			:SetMargin(0, 0, 32, 0)

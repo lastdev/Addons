@@ -6,17 +6,13 @@
 
 local TSM = select(2, ...) ---@type TSM
 local DBViewer = TSM.UI:NewPackage("DBViewer")
-local Database = TSM.Include("Util.Database")
-local Log = TSM.Include("Util.Log")
-local UIElements = TSM.Include("UI.UIElements")
+local Database = TSM.LibTSMUtil:Include("Database")
+local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local private = {
 	frame = nil,
 	frameContext = {},
 	dividedContainerContext = {},
 	selectedDBName = nil,
-	structureScrollingTableContext = {},
-	browseScrollingTableContext = {},
-	defaultBrowseScrollingTableContext = { colWidth = {}, colHidden = {} },
 }
 local DEFAULT_FRAME_CONTEXT = {
 	width = 900,
@@ -32,15 +28,6 @@ local MIN_FRAME_SIZE = {
 local DEFAULT_DIVIDED_CONTAINER_CONTEXT = {
 	leftWidth = 200,
 }
-local DEFAULT_STRUCTURE_SCROLLING_TABLE_CONTEXT = {
-	colWidth = {
-		order = 24,
-		field = 346,
-		type = 60,
-		attributes = 200,
-	},
-	colHidden = {},
-}
 
 
 
@@ -49,7 +36,7 @@ local DEFAULT_STRUCTURE_SCROLLING_TABLE_CONTEXT = {
 -- ============================================================================
 
 function DBViewer.OnDisable()
-	-- hide the frame
+	-- Hide the frame
 	if private.frame then
 		DBViewer.Toggle()
 	end
@@ -131,8 +118,6 @@ function private.ContentNavCallback(_, path)
 end
 
 function private.CreateStructureFrame()
-	local query = Database.CreateInfoFieldQuery(private.selectedDBName)
-		:OrderBy("order", true)
 	return UIElements.New("Frame", "structure")
 		:SetLayout("VERTICAL")
 		:AddChild(UIElements.New("Frame", "info")
@@ -148,56 +133,13 @@ function private.CreateStructureFrame()
 				:SetText("Active Queries: "..Database.GetNumActiveQueries(private.selectedDBName))
 			)
 		)
-		:AddChild(UIElements.New("QueryScrollingTable", "table")
-			:SetContextTable(private.structureScrollingTableContext, DEFAULT_STRUCTURE_SCROLLING_TABLE_CONTEXT)
-			:GetScrollingTableInfo()
-				:NewColumn("order")
-					:SetTitle("#")
-					:SetFont("ITEM_BODY3")
-					:SetJustifyH("LEFT")
-					:SetTextInfo("order")
-					:SetSortInfo("order")
-					:Commit()
-				:NewColumn("field")
-					:SetTitle("Field")
-					:SetFont("ITEM_BODY3")
-					:SetJustifyH("LEFT")
-					:SetTextInfo("field")
-					:SetSortInfo("field")
-					:Commit()
-				:NewColumn("type")
-					:SetTitle("Type")
-					:SetFont("ITEM_BODY3")
-					:SetJustifyH("LEFT")
-					:SetTextInfo("type")
-					:SetSortInfo("type")
-					:Commit()
-				:NewColumn("attributes")
-					:SetTitle("Attributes")
-					:SetFont("ITEM_BODY3")
-					:SetJustifyH("LEFT")
-					:SetTextInfo("attributes")
-					:SetSortInfo("attributes")
-					:Commit()
-				:Commit()
-			:SetQuery(query)
-			:SetAutoReleaseQuery(true)
-			:SetSelectionDisabled(true)
+		:AddChild(UIElements.New("DatabaseStructureScrollTable", "table")
+			:SetQuery(Database.CreateInfoFieldQuery(private.selectedDBName))
 		)
 end
 
 function private.CreateBrowseFrame()
-	local query = Database.CreateDBQuery(private.selectedDBName)
-	local fieldQuery = Database.CreateInfoFieldQuery(private.selectedDBName)
-		:Select("field")
-		:OrderBy("order", true)
-	wipe(private.defaultBrowseScrollingTableContext.colWidth)
-	for _, field in fieldQuery:Iterator() do
-		private.defaultBrowseScrollingTableContext.colWidth[field] = 100
-	end
-	wipe(private.browseScrollingTableContext)
-
-	local frame = UIElements.New("Frame", "browse")
+	return UIElements.New("Frame", "browse")
 		:SetLayout("VERTICAL")
 		:AddChild(UIElements.New("Input", "queryInput")
 			:SetHeight(26)
@@ -206,40 +148,9 @@ function private.CreateBrowseFrame()
 			:SetValue("query")
 			:SetScript("OnEnterPressed", private.QueryInputOnEnterPressed)
 		)
-		:AddChild(UIElements.New("QueryScrollingTable", "table")
-			:SetContextTable(private.browseScrollingTableContext, private.defaultBrowseScrollingTableContext)
-			:SetContext(query)
-			:SetQuery(query)
-			:SetAutoReleaseQuery(true)
-			:SetSelectionDisabled(true)
+		:AddChild(UIElements.New("DatabaseBrowseScrollTable", "table")
+			:SetTable(private.selectedDBName)
 		)
-
-	local stInfo = frame:GetElement("table"):GetScrollingTableInfo()
-	for _, field in fieldQuery:Iterator() do
-		local function TextFunc(row)
-			return strjoin(",", tostringall(row:GetField(field)))
-		end
-		local function TooltipFunc(row)
-			local value = TextFunc(row)
-			if not strmatch(value, ",") and (strmatch(value, "item:") or strmatch(value, "battlepet:") or strmatch(value, "[ip]:")) then
-				-- this is an item string or item link
-				return value
-			else
-				return "Value: "..value
-			end
-		end
-		stInfo:NewColumn(field)
-			:SetTitle(field)
-			:SetFont("ITEM_BODY3")
-			:SetJustifyH("LEFT")
-			:SetTextInfo(nil, TextFunc)
-			:SetTooltipInfo(nil, TooltipFunc)
-			:Commit()
-	end
-	fieldQuery:Release()
-	stInfo:Commit()
-
-	return frame
 end
 
 
@@ -266,19 +177,5 @@ function private.NavButtonOnClick(button)
 end
 
 function private.QueryInputOnEnterPressed(input)
-	local func, errStr = loadstring(input:GetValue())
-	if not func then
-		Log.PrintfUser("Failed to compile code: "..errStr)
-		return
-	end
-	local tableElement = input:GetElement("__parent.table")
-	local query = tableElement:GetContext()
-	query:Reset()
-	setfenv(func, { query = query })
-	local ok, funcErrStr = pcall(func)
-	if not ok then
-		Log.PrintfUser("Failed to execute code: "..funcErrStr)
-		return
-	end
-	tableElement:UpdateData(true)
+	input:GetElement("__parent.table"):UpdateQueryWithLoadedFunction(input:GetValue())
 end

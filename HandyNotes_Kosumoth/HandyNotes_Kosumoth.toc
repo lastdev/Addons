@@ -1,0 +1,14 @@
+## Interface: 110000, 1100002
+## Title: HandyNotes: Kosumoth
+## Notes: You want to find the orbs to enable Kosumoth? Sure, why not?
+## Author: Kemayo
+## Version: v9
+## DefaultState: enabled
+## X-Category: Achievements
+## X-eMail: kemayo @ gmail DOT com
+## SavedVariables: HandyNotes_KosumothDB
+## RequiredDeps: HandyNotes
+
+handler.lua
+config.lua
+nodes.lua

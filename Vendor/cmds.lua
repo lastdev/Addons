@@ -6,7 +6,6 @@ function Addon:SetupConsoleCommands()
     self:RegisterConsoleCommandName(AddonName, "/vendor", "/ven")
     self:AddConsoleCommand(nil, nil, "OpenConfigDialog_Cmd")                        -- Override the default
     self:AddConsoleCommand("rules", L.CMD_RULES_HELP, "OpenConfigDialog_Cmd")
-    self:AddConsoleCommand("list", L.CMD_LISTTOGGLE_HELP, "ListToggle_Cmd")
     self:AddConsoleCommand("keys", L.CMD_KEYS_HELP, "OpenKeybindings_Cmd")
     self:AddConsoleCommand("settings", L.CMD_SETTINGS_HELP, "OpenSettings_Cmd")
     self:AddConsoleCommand("withdraw", L.CMD_WITHDRAW_HELP, "Withdraw_Cmd")
@@ -20,63 +19,6 @@ function Addon:Import_Cmd(text)
     local feature = Addon:GetFeature("import")
     if (feature) then
         feature:ShowImportDialog(text)
-    end
-end
-
--- Add or remove items from the blacklist or whitelist.
-function Addon:ListToggle_Cmd(list, item)
-
-    -- Get the key in the ListType to which this value belongs.
-    local function inListType(list)
-        for k, v in pairs(Addon.ListType) do
-            if list == v then
-                return k
-            end
-        end
-    end
-
-    -- need at least one command, should print usage
-    if not list or not inListType(list) then
-        self:Print(L["CMD_LISTTOGGLE_INVALIDARG"])
-        return
-    end
-
-    -- get item id
-    local id = select(1, GetItemInfoInstant(item))
-
-    -- if id specified, add or remove it
-    if id then
-        local retval = self:ToggleItemInBlocklist(list, id)
-        if retval == 1 then
-            self:Print(string.format(L["CMD_LISTTOGGLE_ADDED"], tostring(id), list))
-        else
-            self:Print(string.format(L["CMD_LISTTOGGLE_REMOVED"], tostring(id), list))
-        end
-
-    -- otherwise dump the list
-    else
-        self:PrintAddonList(list)
-    end
-end
-
-function Addon:PrintAddonList(list)
-    local vlist = self:GetBlocklist(list)
-    if self:TableSize(vlist) == 0 then
-        self:Print(string.format(L["CMD_LISTDATA_EMPTY"], list))
-        return
-    end
-
-    self:Print(string.format(L["CMD_LISTDATA_LISTHEADER"], list))
-    for i, v in pairs(vlist) do
-        -- Get item info for pretty display
-        local name, link = GetItemInfo(tonumber(i))
-        local disp = link or name
-
-        -- Note that GetItemInfo will not return anything if the item has not yet been seen.
-        if not disp then
-            disp = L["CMD_LISTDATA_NOTINCACHE"]
-        end
-        self:Print(string.format(L["CMD_LISTDATA_LISTITEM"], tostring(i), tostring(disp)))
     end
 end
 
@@ -134,18 +76,18 @@ function Addon:AutoSell_Cmd()
     local merchant = Addon:GetFeature("Merchant")
     -- Check for merchant not being open.
     if not merchant:IsMerchantOpen() then
-        self:Print(L["CMD_AUTOSELL_MERCHANTNOTOPEN"])
+        Addon:Output(Addon.Systems.Chat.MessageType.Merchant, L["CMD_AUTOSELL_MERCHANTNOTOPEN"]);
         return
     end
 
     -- Check for sell in progress.
     if merchant:IsAutoSelling() then
-        self:Print(L["CMD_AUTOSELL_INPROGRESS"])
+        Addon:Output(Addon.Systems.Chat.MessageType.Merchant, L["CMD_AUTOSELL_INPROGRESS"]);
         return
     end
 
     -- OK to do the auto-sell.
-    self:Print(L["CMD_AUTOSELL_EXECUTING"])
+    Addon:Output(Addon.Systems.Chat.MessageType.Merchant, L["CMD_AUTOSELL_EXECUTING"]);
     merchant:AutoSell()
 end
 
@@ -167,25 +109,26 @@ function Addon:Withdraw_Cmd()
             local bag, slot, link = unpack(item);
             local tobag = findBagWithSpace();
             if (tobag > 0) then
-                PickupContainerItem(bag, slot);
+                Addon:PickupContainerItem(bag, slot);
                 PutItemInBag(ContainerIDToInventoryID(tobag));
-                Addon:Print(L["MERCHANT_WITHDRAW_ITEM"], link);
+                Addon:Output(Addon.Systems.Chat.MessageType.Console, L["MERCHANT_WITHDRAW_ITEM"], link);
                 count = (count + 1);
             elseif (tobag == 0) then
                 PickupContainerItem(bag, slot);
                 PutItemInBackpack();
-                Addon:Print(L["MERCHANT_WITHDRAW_ITEM"], link);
+                Addon:Output(Addon.Systems.Chat.MessageType.Console, L["MERCHANT_WITHDRAW_ITEM"], link);
                 count = (count + 1);
             else
                 break;
             end
         end
     end
-    Addon:Print(L["MERCHANT_WITHDRAWN_ITEMS"], count);
+
+    Addon:Output(Addon.Systems.Chat.MessageType.Console, L["MERCHANT_WITHDRAWN_ITEMS"], count);
 end
 
 function Addon:Destroy_Cmd()
-    Addon:Print(L.CMD_RUNDESTROY)
+    Addon:Output(Addon.Systems.Chat.MessageType.Destroy, L.CMD_RUNDESTROY);
     local destroy = Addon:GetFeature("Destroy")
     destroy:DestroyItems()
 end

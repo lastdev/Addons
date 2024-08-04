@@ -1,5 +1,5 @@
-## Interface: 11502, 20504, 30403, 40400, 100207, 110000
-## Version: v10.2.4
+## Interface: 11502, 11503, 20504, 30403, 40400, 100207, 110000, 110002
+## Version: v10.2.5
 ## Title: BadBoy_Ignore
 ## Notes: A simple and infinite ignore list to block chat from players.
 ## Notes-frFR: A simple and infinite ignore list to block chat from players.

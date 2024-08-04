@@ -4,6 +4,17 @@ local ELib = WQLdb.ELib
 
 local GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 
+local GetSpellInfo = C_Spell and function(spellID)
+	if not spellID then
+		return nil;
+	end
+
+	local spellInfo = C_Spell.GetSpellInfo(spellID);
+	if spellInfo then
+		return spellInfo.name, nil, spellInfo.iconID, spellInfo.castTime, spellInfo.minRange, spellInfo.maxRange, spellInfo.spellID, spellInfo.originalIconID;
+	end
+end or GetSpellInfo
+
 local function GetQuestLogTitle(i)
 	local data = C_QuestLog.GetInfo(i)
 	return data.title, data.level, data.suggestedGroup, data.isHeader, data.isCollapsed, data.isComplete, data.frequency, data.questID

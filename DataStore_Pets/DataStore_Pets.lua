@@ -4,202 +4,86 @@ June 22st, 2009
 --]]
 if not DataStore then return end
 
-local addonName = "DataStore_Pets"
+local addonName, addon = ...
+local thisCharacter
+local petGUIDs
 
-_G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0")
-
-local addon = _G[addonName]
-
-local AddonDB_Defaults = {
-	global = {
-		Reference = {
-			Spells = {},			-- spell ids are unique, so both mounts & pets are in the same table
-			CompanionGUIDs = {},	-- updated for the new API, testing to see if this works -- TechnoHunter
-		},
-		Characters = {
-			['*'] = {				-- ["Account.Realm.Name"] 
-				lastUpdate = nil,
-				CRITTER = {},		-- companion types are used as table names
-				MOUNT = {},
-			}
-		}
-	}
-}
-
-local INVALID_COMPANION_TYPE = "Invalid companionType passed, must be \"CRITTER\" or \"MOUNT\""
-
-local CompanionTypes = {
-	["CRITTER"] = {
-		GetNum = function(self)
-				return select(2, C_PetJournal.GetNumPets())
-			end,
-		GetReference = function(self, spellID)
-				local modelID = addon.db.global.Reference.CompanionGUIDs[spellID]
-				local name, icon
-				
-				if modelID then
-					local info = C_PetJournal.GetPetInfoTableByPetID(spellID)
-					if info then
-						name = info.name
-						icon = info.icon
-					end
-				end
-				
-				return modelID, name, icon
-			end,
-		GetInfo = function(self, index)
-				-- CRITTERs use C_PetJournal.GetPetInfoByIndex(index) which has return values of 
-				--     petID, speciesID, owned, customName, level, favorite, isRevoked, speciesName, 
-				--     icon, petType, companionID, tooltip, description, isWild, canBattle, isTradeable,
-				--     isUnique, obtainable = C_PetJournal.GetPetInfoByIndex(index)
-				
-				local petID = C_PetJournal.GetPetInfoByIndex(index)
-				if petID then
-					local info = C_PetJournal.GetPetInfoTableByPetID(petID)
-					if info then
-						return info.creatureID, petID
-					end
-				end
-			end,
-	},
-	["MOUNT"] = {
-		GetNum = function(self)
-				return C_MountJournal.GetNumDisplayedMounts()
-			end,
-		GetReference = function(self, spellID)
-				local modelID = addon.db.global.Reference.Spells[spellID]
-				local name, icon
-
-				if modelID then
-					name, _, icon = C_MountJournal.GetMountInfoByID(modelID)
-				end
-				
-				return modelID, name, icon
-			end,
-		GetInfo = function(self, index)
-				-- MOUNTs use C_MountJournal.GetMountInfoByID(mountID) which has return values of 
-				--     name, spellID, icon, isActive, isUsable, sourceType, isFavorite, isFactionSpecific,
-				--     faction, shouldHideOnChar, isCollected, mountID = C_MountJournal.GetMountInfoByID(mountID)
-				--     = C_MountJournal.GetDisplayedMountInfo(displayIndex)
-				
-				local mountID = C_MountJournal.GetDisplayedMountID(index)
-				if mountID then
-					local _, spellID = C_MountJournal.GetMountInfoByID(mountID)
-					if spellID then
-						return spellID, mountID
-					end
-				end
-			end,
-	}
-}
+local C_PetJournal, GetSpellInfo, tonumber, format = C_PetJournal, GetSpellInfo, tonumber, format
 
 -- *** Utility functions ***
-local function GetPetReference(spellID, companionType)
-	assert(companionType == "CRITTER" or "MOUNT", INVALID_COMPANION_TYPE)
+--[[
+local function GetPetReference(guid)
+	local modelID = petGUIDs[guid]
+	local name, icon
 	
-	local Companion = CompanionTypes[companionType]
-	return Companion:GetReference(spellID)
-end
-
--- *** Scanning functions ***
-local function ScanCompanions(companionType)
-	assert(companionType == "CRITTER" or "MOUNT", INVALID_COMPANION_TYPE)
-	
-	local list = addon.ThisCharacter[companionType]
-	local refSpells = addon.db.global.Reference.Spells
-	local refGUID = addon.db.global.Reference.CompanionGUIDs
-	local Companion = CompanionTypes[companionType]
-
-	wipe(list)
-	
-	for index = 1, Companion:GetNum() do
-		if companionType == "CRITTER" then
-			local modelID, petGUID = Companion:GetInfo(index)
-			
-			if modelID and petGUID then
-				refGUID[petGUID] = modelID
-				list[index] = petGUID
-			end
-			
-		elseif companionType == "MOUNT" then
-			local spellID, mountID = Companion:GetInfo(index)
-			
-			if spellID and mountID then
-				refSpells[spellID] = mountID
-				list[index] = spellID
-			end
+	if modelID then
+		local info = C_PetJournal.GetPetInfoTableByPetID(guid)
+		if info then
+			name = info.name
+			icon = info.icon
 		end
 	end
-
-	addon.ThisCharacter.lastUpdate = time()
+	
+	return modelID, name, icon	
 end
+--]]
 
--- *** Event Handlers ***
-local function OnPlayerAlive()
-	ScanCompanions("CRITTER")
-end
+-- *** Scanning functions ***
+local function ScanCritters()
+	local char = thisCharacter
+	-- char.Critters = char.Critters or {}
+	-- wipe(char.Critters)
 
-local function OnCompanionUpdate()
-	-- COMPANION_UPDATE is triggered very often, but after the very first call, pets & mounts can be scanned automatically. After that, we only need to track COMPANION_LEARNED
-	addon:UnregisterEvent("COMPANION_UPDATE")
-	ScanCompanions("CRITTER")
-end
+	-- https://wowpedia.fandom.com/wiki/API_C_PetJournal.GetNumPets
+	local numPets, numOwned = C_PetJournal.GetNumPets()
 
-local function OnCompanionLearned()
-	ScanCompanions("CRITTER")
-end
-
--- ** Mixins **
-local function _GetPets(character, companionType)
-	return character[companionType]
-end
-
-local function _GetNumPets(pets)
-	assert(type(pets) == "table")		-- this is the pointer to a pet table, obtained through GetPets()
-	return #pets
-end
-
-local function _GetPetInfo(pets, index, companionType)
-	local spellID = pets[index]
-	if spellID then
-		local modelID, name, icon = GetPetReference(spellID, companionType)
-		return modelID, name, spellID, icon
-	end
-end
-
-local function _IsPetKnown(character, companionType, spellID)
-	local pets = _GetPets(character, companionType)
-	for i = 1, #pets do
-		local _, _, id = _GetPetInfo(pets, i, companionType)
+	for index = 1, numOwned do
+		local petID = C_PetJournal.GetPetInfoByIndex(index)
 		
-		if companionType == "CRITTER" then
-			local petName = GetSpellInfo(spellID)
-			if petName then
-				local _, petID = C_PetJournal.FindPetIDByName(petName)
-				if petID then
-					spellID = petID
+		if petID then
+			local info = C_PetJournal.GetPetInfoTableByPetID(petID)
+			
+			if info then
+				local modelID = info.creatureID
+				
+				if modelID and petID then
+					petGUIDs[petID] = modelID
+					-- char.Critters[index] = petID
 				end
 			end
 		end
-		
-		if id == spellID then
-			return true			-- returns true if a given spell ID is a known pet or mount
-		end
+	end
+
+	char.lastUpdate = time()
+end
+
+
+-- ** Mixins **
+--[[
+local function _GetPets(character)
+	return character.Critters
+end
+
+local function _GetPetInfo(pets, index)
+	local guid = pets[index]
+	if guid then
+		local modelID, name, icon = GetPetReference(guid)
+		return modelID, name, guid, icon
 	end
 end
+--]]
 
-local function _GetCompanionList()
-	return addon.CompanionList
-end
-
-local function _GetCompanionSpellID(itemID)
-	-- returns nil if  id is not in the DB, returns the spellID otherwise
-	return addon.CompanionToSpellID[itemID]
-end
-
-local function _GetCompanionLink(spellID)
-	local name = GetSpellInfo(spellID)
-	return format("|cff71d5ff|Hspell:%s|h[%s]|h|r", spellID, name)
+local function _IsPetKnown(spellID)
+	
+	-- Find the pet name
+	local petName = GetSpellInfo(spellID)
+	if not petName then return end
+	
+	-- Find the pet ID
+	local _, petID = C_PetJournal.FindPetIDByName(petName)
+	if not petID then return end
+	
+	return petGUIDs[petID] and true or false
 end
 
 local function _GetBattlePetInfoFromLink(link)
@@ -212,32 +96,47 @@ local function _GetBattlePetInfoFromLink(link)
 	end
 end
 
-local PublicMethods = {
-	GetPets = _GetPets,
-	GetNumPets = _GetNumPets,
-	GetPetInfo = _GetPetInfo,
-	IsPetKnown = _IsPetKnown,
-	GetCompanionList = _GetCompanionList,
-	GetCompanionSpellID = _GetCompanionSpellID,
-	GetCompanionLink = _GetCompanionLink,
-	GetBattlePetInfoFromLink = _GetBattlePetInfoFromLink,
-}
+DataStore:OnAddonLoaded(addonName, function() 
+	DataStore:RegisterModule({
+		addon = addon,
+		addonName = addonName,
+		rawTables = {
+			"DataStore_Pets_GUIDs"			-- ["petGUID"] = modelID
+		},
+		characterTables = {
+			["DataStore_Pets_Characters"] = {
+				-- GetPets = _GetPets,
+			},
+		}
+	})
+	
+	-- DataStore:RegisterMethod(addon, "GetPetInfo", _GetPetInfo)
+	DataStore:RegisterMethod(addon, "IsPetKnown", _IsPetKnown)
+	DataStore:RegisterMethod(addon, "GetBattlePetInfoFromLink", _GetBattlePetInfoFromLink)
+	
+	DataStore:RegisterMethod(addon, "GetCompanionLink", function(spellID)
+		local name = GetSpellInfo(spellID)
+		return format("|cff71d5ff|Hspell:%s|h[%s]|h|r", spellID, name)
+	end)
+	
+	DataStore:RegisterMethod(addon, "GetCompanionList", function() return addon.CompanionList end)
+	DataStore:RegisterMethod(addon, "GetCompanionSpellID", function(itemID)
+		-- returns spellID if itemID is known, nil otherwise
+		return addon.CompanionToSpellID[itemID]
+	end)
+	
+	thisCharacter = DataStore:GetCharacterDB("DataStore_Pets_Characters", true)
+	petGUIDs = DataStore_Pets_GUIDs
+end)
 
-function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
-
-	DataStore:RegisterModule(addonName, addon, PublicMethods)
-	DataStore:SetCharacterBasedMethod("GetPets")
-	DataStore:SetCharacterBasedMethod("IsPetKnown")
-end
-
-function addon:OnEnable()
-	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-	addon:RegisterEvent("COMPANION_UPDATE", OnCompanionUpdate)
-	addon:RegisterEvent("COMPANION_LEARNED", OnCompanionLearned)
-end
-
-function addon:OnDisable()
-	addon:UnregisterEvent("PLAYER_ALIVE")
-	addon:UnregisterEvent("COMPANION_LEARNED")
-end
+DataStore:OnPlayerLogin(function() 
+	addon:ListenTo("PLAYER_ALIVE", ScanCritters)
+	addon:ListenTo("COMPANION_LEARNED", ScanCritters)
+	addon:ListenTo("COMPANION_UPDATE", function()
+		-- COMPANION_UPDATE is triggered very often, but after the very first call, pets & mounts can be scanned automatically.
+		-- After that, we only need to track COMPANION_LEARNED
+		addon:StopListeningTo("COMPANION_UPDATE")
+		
+		ScanCritters()
+	end)
+end)

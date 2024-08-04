@@ -68,7 +68,7 @@ end
 local function onReceiveDrag(self)
 	local type, id, info = GetCursorInfo()
 	if type == "spell" then
-		info = GetSpellInfo(id, info)
+		info = C_Spell.GetSpellName(id) --, info)
 	elseif type ~= "item" then
 		return
 	end

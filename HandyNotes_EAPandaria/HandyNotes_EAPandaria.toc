@@ -1,5 +1,5 @@
-## Interface: 100206
-## Version: 1.39
+## Interface: 110000
+## Version: 1.43
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_faction_lorewalkers
 ## Title: Exploration Achievements - Pandaria
@@ -14,18 +14,18 @@
 ## Title-ruRU: исследовательских достижений - Пандарии
 ## Title-zhCN: 勘探成果 - 潘达利
 ## Title-zhTW: 勘探成果 - 潘達利
-## Notes: All |cFFE78A61Pandaria|r |cFFFF7F50Exploration Achievement|r locations
-## Notes-deDE: Alle Fundorte der |cFFFF7F50Erforschungserfolge|r von |cFFE78A61Pandaria|r
-## Notes-esES: Todas las ubicaciones de |cFFFF7F50logros de exploración|r de |cFFE78A61Pandaria|r
-## Notes-esMX: Todas las ubicaciones de |cFFFF7F50logros de exploración|r de |cFFE78A61Pandaria|r
-## Notes-frFR: Tous les emplacements des |cFFFF7F50réalisations d'exploration|r de |cFFE78A61Pandarie|r
-## Notes-itIT: Tutte le posizioni degli |cFFFF7F50obiettivi di esplorazione|r di |cFFE78A61Pandaria|r
-## Notes-koKR: 모든 |cFFE78A61판다리아|r |cFFFF7F5탐험 업적|r 위치
-## Notes-ptBR: Todos os locais de |cFFFF7F5conquistas da exploração|r de |cFFE78A61Pandária|r
-## Notes-ptPT: Todos os locais de |cFFFF7F5conquistas da exploração|r de |cFFE78A61Pandária|r
-## Notes-ruRU: Все локации |cFFFF7F5достижений исследования|r |cFFE78A61Пандарии|r
-## Notes-zhCN: |cFFE78A61潘达利|r亚所有|cFFFF7F50探索成就|r地点
-## Notes-zhTW: |cFFE78A61潘達利|r亞所有|cFFFF7F50探索成就|r地點
+## Notes: |cFFE78A61All of the |cFFFF7F50Pandaria |cFFE78A61Exploration Achievement locations
+## Notes-deDE: |cFFE78A61Alle Fundorte der |cFFFF7F50Erforschungserfolge von |cFFFF7F50Pandaria
+## Notes-esES: |cFFE78A61Todas las ubicaciones de logros de exploración de |cFFFF7F50Pandaria
+## Notes-esMX: |cFFE78A61Todas las ubicaciones de logros de exploración de |cFFFF7F50Pandaria
+## Notes-frFR: |cFFE78A61Tous les emplacements des réalisations d'exploration de |cFFFF7F50Pandarie
+## Notes-itIT: |cFFE78A61Tutte le posizioni degli obiettivi di esplorazione di |cFFFF7F50Pandaria
+## Notes-koKR: |cFFE78A61모든 |cFFFF7F50판다리아 |cFFE78A61탐험 업적 위치
+## Notes-ptBR: |cFFE78A61Todos os locais de conquistas da exploração de |cFFFF7F50Pandária
+## Notes-ptPT: |cFFE78A61Todos os locais de conquistas da exploração de |cFFFF7F50Pandária
+## Notes-ruRU: |cFFE78A61Все локации достижений исследования |cFFFF7F50Пандарии
+## Notes-zhCN: |cFFFF7F50潘达利亚|cFFE78A61所有探索成就地点
+## Notes-zhTW: |cFFFF7F50潘達利亞|cFFE78A61所有探索成就地點
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_EAPandariaDB
 ## AddonCompartmentFunc: HandyNotes_EAPandaria_OnAddonCompartmentClick

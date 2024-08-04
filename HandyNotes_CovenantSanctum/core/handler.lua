@@ -2,21 +2,19 @@
 ------------------------------------------AddOn NAMESPACE-------------------------------------------
 ----------------------------------------------------------------------------------------------------
 
-local FOLDER_NAME, private = ...
+local FOLDER_NAME, ns = ...
 
 local addon = LibStub("AceAddon-3.0"):NewAddon(FOLDER_NAME, "AceEvent-3.0")
 local AceDB = LibStub("AceDB-3.0")
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HBD = LibStub('HereBeDragons-2.0')
 local L = LibStub("AceLocale-3.0"):GetLocale(FOLDER_NAME)
-private.locale = L
-
-addon.constants = private.constants
+ns.locale = L
 
 _G.HandyNotes_CovenantSanctum = addon
 
 local IsQuestCompleted = C_QuestLog.IsQuestFlaggedCompleted
-local constantsicon = private.constants.icon
+local constantsicon = ns.constants.icon
 
 ----------------------------------------------------------------------------------------------------
 -----------------------------------------------LOCALS-----------------------------------------------
@@ -45,8 +43,8 @@ end
 ------------------------------------------------ICON------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 
-local function SetIcon(point)
-    local icon_key = point.icon
+local function SetIcon(node)
+    local icon_key = node.icon
 
     if (icon_key and constantsicon[icon_key]) then
         return constantsicon[icon_key]
@@ -55,64 +53,64 @@ end
 
 local function GetIconScale(icon)
     -- anvil npcs are vendors
-    if icon == "anvil" then
-        return private.db["icon_scale_vendor"]
+    if (icon == "anvil") then
+        return ns.db["icon_scale_vendor"]
     end
 
-    return private.db["icon_scale_"..icon] or private.db["icon_scale_others"]
+    return ns.db["icon_scale_"..icon] or ns.db["icon_scale_others"]
 end
 
 local function GetIconAlpha(icon)
     -- anvil npcs are vendors
-    if icon == "anvil" then
-        return private.db["icon_alpha_vendor"]
+    if (icon == "anvil") then
+        return ns.db["icon_alpha_vendor"]
     end
 
-    return private.db["icon_alpha_"..icon] or private.db["icon_alpha_others"]
+    return ns.db["icon_alpha_"..icon] or ns.db["icon_alpha_others"]
 end
 
-local GetPointInfo = function(point)
+local GetNodeInfo = function(node)
     local icon
-    if point then
-        local label = GetCreatureNameByID(point.npc) or point.label or UNKNOWN
-        local portal_red = private.constants.icon["portal_red"]
+    if (node) then
+        local label = GetCreatureNameByID(node.npc) or node.label or UNKNOWN
+        local portal_red = ns.constants.icon["portal_red"]
 
-        if (point.icon == "portal" and point.sanctumtalent) then
-            local TALENT = C_Garrison.GetTalentInfo(point.sanctumtalent)
-            icon = TALENT["researched"] and SetIcon(point) or portal_red
+        if (node.icon == "portal" and node.sanctumtalent) then
+            local TALENT = C_Garrison.GetTalentInfo(node.sanctumtalent)
+            icon = TALENT["researched"] and SetIcon(node) or portal_red
         else
-            icon = SetIcon(point)
+            icon = SetIcon(node)
         end
-        return label, icon, point.icon, point.scale, point.alpha
+        return label, icon, node.icon, node.scale, node.alpha
     end
 end
 
-local GetPointInfoByCoord = function(uMapID, coord)
-    return GetPointInfo(private.DB.points[uMapID] and private.DB.points[uMapID][coord])
+local GetNodeInfoByCoord = function(uMapID, coord)
+    return GetNodeInfo(ns.DB.nodes[uMapID] and ns.DB.nodes[uMapID][coord])
 end
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------TOOLTIP-----------------------------------------------
 ----------------------------------------------------------------------------------------------------
 
-local function SetTooltip(tooltip, point)
+local function SetTooltip(tooltip, node)
 
-    if point then
-        if point.npc then
-            local name, sublabel = GetCreatureNameByID(point.npc)
-            if name then
+    if (node) then
+        if (node.npc) then
+            local name, sublabel = GetCreatureNameByID(node.npc)
+            if (name) then
                 tooltip:AddLine(name)
             end
-            if sublabel then
+            if (sublabel) then
                 tooltip:AddLine(sublabel,1,1,1)
             end
         end
-        if point.label then
-            tooltip:AddLine(point.label)
+        if (node.label) then
+            tooltip:AddLine(node.label)
         end
-        if point.covenant and point.sanctumtalent then
-            local TALENT = C_Garrison.GetTalentInfo(point.sanctumtalent)
-            if not TALENT["researched"] then
+        if (node.covenant) and node.sanctumtalent then
+            local TALENT = C_Garrison.GetTalentInfo(node.sanctumtalent)
+            if (not TALENT["researched"]) then
                 tooltip:AddLine(requires.." "..sanctum_feature..":", 1) -- red
                 tooltip:AddLine(TALENT["name"], 1, 1, 1) -- white
                 tooltip:AddTexture(TALENT["icon"], {margin={right=2}})
@@ -126,7 +124,7 @@ local function SetTooltip(tooltip, point)
 end
 
 local SetTooltipByCoord = function(tooltip, uMapID, coord)
-    return SetTooltip(tooltip, private.DB.points[uMapID] and private.DB.points[uMapID][coord])
+    return SetTooltip(tooltip, ns.DB.nodes[uMapID] and ns.DB.nodes[uMapID][coord])
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -147,7 +145,7 @@ function PluginHandler:OnEnter(uMapID, coord)
 end
 
 function PluginHandler:OnLeave(uMapID, coord)
-    if self:GetParent() == WorldMapButton then
+    if (self:GetParent() == WorldMapButton) then
         WorldMapTooltip:Hide()
     else
         GameTooltip:Hide()
@@ -155,7 +153,7 @@ function PluginHandler:OnLeave(uMapID, coord)
 end
 
 local function hideNode(button, uMapID, coord)
-    private.hidden[uMapID][coord] = true
+    ns.hidden[uMapID][coord] = true
     addon:Refresh()
 end
 
@@ -164,10 +162,10 @@ local function closeAllDropdowns()
 end
 
 local function addTomTomWaypoint(button, uMapID, coord)
-    if TomTom then
+    if (TomTom) then
         local x, y = HandyNotes:getXY(coord)
         TomTom:AddWaypoint(uMapID, x, y, {
-            title = GetPointInfoByCoord(uMapID, coord),
+            title = GetNodeInfoByCoord(uMapID, coord),
             from = L["handler_context_menu_addon_name"],
             persistent = nil,
             minimap = true,
@@ -250,15 +248,15 @@ do
 
     function PluginHandler:OnClick(button, down, uMapID, coord)
         local TomTom = select(2, C_AddOns.IsAddOnLoaded('TomTom'))
-        local dropdown = private.db.easy_waypoint_dropdown
+        local dropdown = ns.db.easy_waypoint_dropdown
 
         if (down or button ~= "RightButton") then return end
 
-        if (button == "RightButton" and not down and not private.db.easy_waypoint) then
+        if (button == "RightButton" and not down and not ns.db.easy_waypoint) then
             currentMapID = uMapID
             currentCoord = coord
             ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
-        elseif (IsControlKeyDown() and private.db.easy_waypoint) then
+        elseif (IsControlKeyDown() and ns.db.easy_waypoint) then
             currentMapID = uMapID
             currentCoord = coord
             ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
@@ -274,14 +272,13 @@ do
 end
 
 do
-
-local currentMapID = nil
+    local currentMapID = nil
     local function iter(t, prestate)
-        if not t then return nil end
+        if (not t) then return nil end
         local state, value = next(t, prestate)
         while state do
-            if value and private:ShouldShow(state, value, currentMapID) then
-                local _, icon, iconname, scale, alpha = GetPointInfo(value)
+            if (value and ns:ShouldShow(state, value, currentMapID)) then
+                local _, icon, iconname, scale, alpha = GetNodeInfo(value)
                     scale = (scale or 1) * GetIconScale(iconname)
                     alpha = (alpha or 1) * GetIconAlpha(iconname)
                 return state, nil, icon, scale, alpha
@@ -290,31 +287,33 @@ local currentMapID = nil
         end
         return nil, nil, nil, nil, nil, nil
     end
+
     function PluginHandler:GetNodes2(uMapID, minimap)
         currentMapID = uMapID
-        return iter, private.DB.points[uMapID], nil
+        return iter, ns.DB.nodes[uMapID], nil
     end
-    function private:ShouldShow(coord, point, currentMapID)
-    if not private.db.force_nodes then
-        if (private.hidden[currentMapID] and private.hidden[currentMapID][coord]) then
-            return false
+
+    function ns:ShouldShow(coord, node, currentMapID)
+        if (not ns.db.force_nodes) then
+            if (ns.hidden[currentMapID] and ns.hidden[currentMapID][coord]) then
+                return false
+            end
+            -- this will check if any node is for specific covenant
+            if (node.covenant and node.covenant ~= C_Covenants.GetActiveCovenantID()) then
+                return false
+            end
+            if (node.icon == "anvil" and not ns.db.show_vendor) then return false end
+            if (node.icon == "flightMaster" and not ns.db.show_others) then return false end
+            if (node.icon == "innkeeper" and not ns.db.show_innkeeper) then return false end
+            if (node.icon == "portal" and (not ns.db.show_portal or C_AddOns.IsAddOnLoaded("HandyNotes_TravelGuide"))) then return false end
+            if (node.icon == "mail" and not ns.db.show_mail) then return false end
+            if (node.icon == "reforge" and not ns.db.show_reforge) then return false end
+            if (node.icon == "renown" and not ns.db.show_renown) then return false end
+            if (node.icon == "stablemaster" and not ns.db.show_stablemaster) then return false end
+            if (node.icon == "trainer" and not ns.db.show_others) then return false end
+            if (node.icon == "vendor" and not ns.db.show_vendor) then return false end
+            if (node.icon == "weaponsmith" and not ns.db.show_weaponsmith) then return false end
         end
-        -- this will check if any node is for specific covenant
-        if (point.covenant and point.covenant ~= C_Covenants.GetActiveCovenantID()) then
-            return false
-        end
-        if (point.icon == "anvil" and not private.db.show_vendor) then return false end
-        if (point.icon == "flightMaster" and not private.db.show_others) then return false end
-        if (point.icon == "innkeeper" and not private.db.show_innkeeper) then return false end
-        if (point.icon == "portal" and (not private.db.show_portal or C_AddOns.IsAddOnLoaded("HandyNotes_TravelGuide"))) then return false end
-        if (point.icon == "mail" and not private.db.show_mail) then return false end
-        if (point.icon == "reforge" and not private.db.show_reforge) then return false end
-        if (point.icon == "renown" and not private.db.show_renown) then return false end
-        if (point.icon == "stablemaster" and not private.db.show_stablemaster) then return false end
-        if (point.icon == "trainer" and not private.db.show_others) then return false end
-        if (point.icon == "vendor" and not private.db.show_vendor) then return false end
-        if (point.icon == "weaponsmith" and not private.db.show_weaponsmith) then return false end
-    end
         return true
     end
 end
@@ -324,22 +323,22 @@ end
 ---------------------------------------------------------------------------------------------------
 
 function addon:OnInitialize()
-    self.db = AceDB:New(FOLDER_NAME.."DB", private.constants.defaults)
+    self.db = AceDB:New(FOLDER_NAME.."DB", ns.constants.defaults)
 
     profile = self.db.profile
-    private.db = profile
+    ns.db = profile
 
     global = self.db.global
-    private.global = global
+    ns.global = global
 
-    private.hidden = self.db.char.hidden
+    ns.hidden = self.db.char.hidden
 
-    if private.global.dev then
-        private.devmode()
+    if (ns.global.dev) then
+        ns.devmode()
     end
 
     -- Initialize database with HandyNotes
-    HandyNotes:RegisterPluginDB(addon.pluginName, PluginHandler, private.config.options)
+    HandyNotes:RegisterPluginDB(addon.pluginName, PluginHandler, ns.config.options)
 end
 
 function addon:Refresh()
@@ -355,7 +354,7 @@ local frame, events = CreateFrame("Frame"), {};
 function events:ZONE_CHANGED(...)
     addon:Refresh()
 
-    if private.global.dev and private.db.show_prints then
+    if (ns.global.dev and ns.db.show_prints) then
         print("Covenant Santcum: refreshed after ZONE_CHANGED")
     end
 end
@@ -363,7 +362,7 @@ end
 function events:ZONE_CHANGED_INDOORS(...)
     addon:Refresh()
 
-    if private.global.dev and private.db.show_prints then
+    if (ns.global.dev and ns.db.show_prints) then
         print("Covenant Santcum: refreshed after ZONE_CHANGED_INDOORS")
     end
 end
@@ -371,7 +370,7 @@ end
 function events:QUEST_FINISHED(...)
     addon:Refresh()
 
-    if private.global.dev and private.db.show_prints then
+    if (ns.global.dev and ns.db.show_prints) then
         print("Covenant Santcum: refreshed after QUEST_FINISHED")
     end
 end

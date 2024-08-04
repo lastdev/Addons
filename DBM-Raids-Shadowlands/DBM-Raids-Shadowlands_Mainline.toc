@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 100207, 110000
 ## X-Min-Interface: 90005
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (SL)|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cffff6010Рейды (Темные Земли)|r
@@ -21,7 +21,7 @@
 ## X-DBM-Mod-MinExpansion: 8
 ## X-Curse-Project-ID: 723031
 ## X-Wago-ID: RqGYOE6g
-## Version: r15
+## Version: r19
 
 localization.en.lua
 localization.kr.lua

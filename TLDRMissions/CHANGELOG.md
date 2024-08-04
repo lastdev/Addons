@@ -1,7 +1,6 @@
 # TL;DR Missions
 
-##  (2024-05-08)
+##  (2024-07-24)
  
 
-- Fix issue with profile displays  
-    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/637  
+- Update for 11.0  

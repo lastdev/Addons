@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2483, "DBM-Party-Dragonflight", 6, 1203)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426175442")
+mod:SetRevision("20240601044955")
 mod:SetCreatureID(186737)
 mod:SetEncounterID(2583)
 mod:SetHotfixNoticeRev(20221027000000)
@@ -74,7 +74,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 386781 then
 		timerFrostBombCD:Start()
 	elseif spellId == 387151 then
-		timerIcyDevastatorCD:Start(self:IsMythicPlus() and 22.6 or 32.8)
+		timerIcyDevastatorCD:Start(22.6)--No longer 32.8 in non M+
 		self:ScheduleMethod(0.2, "BossTargetScanner", args.sourceGUID, "DevastatorTarget", 0.1, 6, true)
 		--If time remaining on frost bomb less than 6, time remaining increased to 6
 		if timerFrostBombCD:GetRemaining() < 6 then
@@ -87,8 +87,10 @@ function mod:SPELL_CAST_START(args)
 		specWarAbsoluteZero:Show(vaultRuin)
 		specWarAbsoluteZero:Play("findshelter")
 		timerAbsoluteZeroCD:Start()
-		timerFrostBombCD:Restart(12.2)
-		timerIcyDevastatorCD:Restart(self:IsMythicPlus() and 19.6 or 23.2)
+		timerFrostBombCD:Stop()
+		timerFrostBombCD:Start(12.2)
+		timerIcyDevastatorCD:Stop()
+		timerIcyDevastatorCD:Start(self:IsMythicPlus() and 19.6 or 23.2)
 	end
 end
 

@@ -1,6 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
-
+local addonName, addon = ...
 
 addon:Service("AltoholicUI.SharedTableOfContent", function() 
 	-- Warning : this service is used for both sides of the account sharing process.
@@ -26,7 +24,7 @@ addon:Service("AltoholicUI.SharedTableOfContent", function()
 			table.insert(toc, format("1;%s", realm))
 		end,
 		AddGuild = function(guildName, guildMoney)
-			table.insert(toc, format("2;%s;%s", guildName, guildMoney))
+			table.insert(toc, format("2;%s;%s", guildName, guildMoney or 0))
 		end,
 		AddGuildBankTab = function(tabName, tabID, size, lastUpdate)
 			table.insert(toc, format("3;%s;%s;%s;%s", tabName, tabID, size, lastUpdate or 0))
@@ -55,7 +53,7 @@ addon:Service("AltoholicUI.SharedContentView", { "AltoholicUI.Formatter", functi
 	-- This service manages the view
 	local view
 
-	local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+	local L = DataStore:GetLocale(addonName)
 
 	local colors = addon.Colors
 	local icons = addon.Icons
@@ -179,7 +177,7 @@ addon:Service("AltoholicUI.SharedContent", { "AltoholicUI.SharedContentView", "A
 		"DataStore_Garrisons",
 		"DataStore_Inventory",
 		"DataStore_Mails",
-		"DataStore_Pets",
+		-- "DataStore_Pets",
 		"DataStore_Quests",
 		"DataStore_Reputations",
 		"DataStore_Spells",
@@ -188,7 +186,7 @@ addon:Service("AltoholicUI.SharedContent", { "AltoholicUI.SharedContentView", "A
 	
 	return {
 		Initialize = function()
-			content = Altoholic.db.global.Sharing.SharedContent
+			content = Altoholic_Sharing_Options.SharedContent
 		end,
 		
 		BuildView = function()
@@ -353,7 +351,7 @@ addon:Service("AltoholicUI.SharedContent", { "AltoholicUI.SharedContentView", "A
 						end
 						
 						local _, class = DataStore:GetCharacterClass(character)
-						lastUpdate = DataStore:GetModuleLastUpdate("DataStore_Characters", characterName, realm)
+						lastUpdate = DataStore:GetModuleLastUpdateByKey("DataStore_Characters", character)
 						
 						SourceToC.AddCharacter(characterName, class, size, lastUpdate)
 
@@ -364,7 +362,7 @@ addon:Service("AltoholicUI.SharedContent", { "AltoholicUI.SharedContentView", "A
 							if content[index] then
 								-- evaluate the size of transferred data
 								serializedData = LibSerialize:Serialize(DataStore:GetCharacterTable(module, characterName, realm))
-								lastUpdate = DataStore:GetModuleLastUpdate(module, characterName, realm)
+								lastUpdate = DataStore:GetModuleLastUpdateByKey(module, character)
 							
 								-- Set the right datastore module (ex: DataStore_Crafts)
 								SourceToC.AddDataStoreModule(module, strlen(serializedData), lastUpdate)
@@ -375,11 +373,13 @@ addon:Service("AltoholicUI.SharedContent", { "AltoholicUI.SharedContentView", "A
 			end
 			
 			-- Add reference here
-			for class, _ in pairs(DataStore:GetReferenceTable()) do
-				serializedData = LibSerialize:Serialize(DataStore:GetClassReference(class))
+			-- 30/06/2024, sharing feature fix: this most likely disappears
+			
+			-- for class, _ in pairs(DataStore:GetReferenceTable()) do
+				-- serializedData = LibSerialize:Serialize(DataStore:GetClassReference(class))
 				
-				SourceToC.AddClassReference(class, strlen(serializedData))
-			end
+				-- SourceToC.AddClassReference(class, strlen(serializedData))
+			-- end
 			
 			return SourceToC.Get()
 		end,

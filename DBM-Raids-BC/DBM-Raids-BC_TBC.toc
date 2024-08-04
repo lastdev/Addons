@@ -1,5 +1,5 @@
-## Interface: 20501
-## X-Min-Interface: 20501
+## Interface: 20504
+## X-Min-Interface: 20504
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (BC)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010공격대 (불성)|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Мод|r|cffffe00a>|r |cffff6010Рейды (BC)|r
@@ -21,7 +21,7 @@
 ## X-DBM-Mod-MapID: 580, 564, 534, 550, 548, 544, 565, 532, 568
 ## X-DBM-Mod-MinCoreRevision: 20230521000000
 ## X-DBM-Mod-MinExpansion: 1
-## Version: r2
+## Version: r4
 
 localization.en.lua
 localization.tw.lua

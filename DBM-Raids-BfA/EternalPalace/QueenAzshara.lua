@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2361, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240629024602")
 mod:SetCreatureID(152910)
 mod:SetEncounterID(2299)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -92,7 +92,7 @@ local timerHulkSpawnCD					= mod:NewCDCountTimer(30.4, "ej20480", nil, nil, nil,
 mod:AddNamePlateOption("NPAuraOnInfuriated", 300428)
 ----Azshara
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20258))
-local warnDrainAncientWard				= mod:NewSpellAnnounce(300334, 2)
+local warnDrainAncientWard				= mod:NewCountAnnounce(300334, 2)
 local warnBeckon						= mod:NewTargetNoFilterAnnounce(299094, 3)
 local warnCrushingDepths				= mod:NewTargetNoFilterAnnounce(303825, 4, nil, false, 2)
 
@@ -112,7 +112,7 @@ local warnQueensDecree					= mod:NewCastAnnounce(299250, 3)
 local specWarnQueensDecree				= mod:NewSpecialWarningYouCount(299250, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.you:format(299250), nil, 3, 2)
 local yellQueensDecree					= mod:NewYell(299250, "%s", false, nil, "YELL")
 
-local timerNextPhase					= mod:NewPhaseTimer(30.4)
+local timerNextPhase					= mod:NewStageTimer(30.4)
 --Stage Two: Hearts Unleashed
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20323))
 local warnArcaneBurst					= mod:NewTargetNoFilterAnnounce(303657, 3, nil, "Healer", 2)

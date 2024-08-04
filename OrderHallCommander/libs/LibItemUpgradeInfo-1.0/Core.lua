@@ -1,18 +1,20 @@
 local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 31
 local type,tonumber,select,strsplit,GetItemInfoFromHyperlink=type,tonumber,select,strsplit,GetItemInfoFromHyperlink
-local unpack,GetDetailedItemLevelInfo=unpack,GetDetailedItemLevelInfo
-local library,previous = _G.LibStub:NewLibrary(MAJOR, MINOR)
-local lib=library --#lib Needed to keep Eclipse LDT happy
+---@diagnostic disable-next-line: deprecated
+local unpack,GetDetailedItemLevelInfo=unpack,C_Item.GetDetailedItemLevelInfo
+---@class lib 
+---@diagnostic disable-next-line: assign-type-mismatch
+local lib,previous = _G.LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 local pp=print
---@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 LoadAddOn("LibDebug")
 if LibDebug then LibDebug() end
---@end-debug@
---[===[@non-debug@
+--@end-debug@]==]
+--@non-debug@
 local print=function() end
---@end-non-debug@]===]
+--@end-non-debug@
 --[[
 Caching system
 1	itemName	String	The name of the item.
@@ -75,8 +77,8 @@ lib.itemcache=lib.itemcache or
 				if relic2 and relic2 ~= '' and not oGetItemInfo(relic2) then cacheIt = false end
 				if relic3 and relic3 ~= '' and not oGetItemInfo(relic3) then cacheIt = false end
 			end
-			cached.englishClass=GetItemClassInfo(cached[12])
-			cached.englishSubClass=GetItemSubClassInfo(cached[12],cached[13])
+			cached.englishClass=C_Item.GetItemClassInfo(cached[12])
+			cached.englishSubClass=C_Item.GetItemSubClassInfo(cached[12],cached[13])
 			if cacheIt then
 				rawset(table,key,cached)
 			end
@@ -161,11 +163,17 @@ do
 	end})
 end
 -- Tooltip Scanning stuff
+---@diagnostic disable-next-line: undefined-field
 local itemLevelPattern = _G.ITEM_LEVEL:gsub("%%d", "(%%d+)")
+---@diagnostic disable-next-line: undefined-field
 local soulboundPattern = _G.ITEM_SOULBOUND
+---@diagnostic disable-next-line: undefined-field
 local boePattern=_G.ITEM_BIND_ON_EQUIP
+---@diagnostic disable-next-line: undefined-field
 local bopPattern=_G.ITEM_BIND_ON_PICKUP
+---@diagnostic disable-next-line: undefined-field
 local boaPattern1=_G.ITEM_BIND_TO_BNETACCOUNT
+---@diagnostic disable-next-line: undefined-field
 local boaPattern2=_G.ITEM_BNETACCOUNTBOUND
 local patterns={
   [soulboundPattern]="soulbound",
@@ -187,6 +195,9 @@ local function ScanTip(itemLink,itemLevel,show)
 		if not itemLink then return emptytable end
 	end
 	if type(tipCache[itemLink].ilevel)=="nil"then -- or not tipCache[itemLink].cached then
+		if true then
+			return emptytable
+		end
 		local cacheIt=true
 		if not scanningTooltip then
 			anchor=CreateFrame("Frame")
@@ -279,7 +290,7 @@ function lib:GetUpgradeID(itemString)
 	instaid=tonumber(instaid) or 7
 	numBonuses=tonumber(numBonuses) or 0
 	if instaid >0 and (instaid-4)%8==0 then
-		return tonumber((select(numBonuses + 1, strsplit(":", affixes))))
+		return tonumber((select(numBonuses + 1, strsplit(":", affixes or ''))))
 	end
 end
 
@@ -474,7 +485,7 @@ end
 
 
 function lib:GetClassInfo(itemString)
-	local rc=ScantTip(itemString)
+	local rc=ScanTip(itemString)
 	return rc.class,rc.subclass
 end
 
@@ -553,6 +564,7 @@ SlashCmdList['CHECKSLOT'] = function(args,chatframe)
     return
   end
   slot=tonumber(slot)
+---@diagnostic disable-next-line: param-type-mismatch
   local itemlink=GetInventoryItemLink("player",slot)
   if itemlink then
     for k,v in pairs(slots) do
@@ -688,6 +700,7 @@ do
 			end)
 		end
 		if not debugTooltip then
+			---@class debugTooltip: GameTooltip
 			debugTooltip = _G.CreateFrame("GameTooltip", "LibItemUpgradeInfoDebugTooltip", nil, "GameTooltipTemplate")
 			debugTooltip:SetOwner(_G.WorldFrame, "ANCHOR_NONE")
 		end
@@ -695,7 +708,7 @@ do
 		--local itemLink = "|cff0070dd|Hitem:89551:0:0:0:0:0:0:0:90:253:0:0:1:0|h[Aspirant's Staff of Harmony]|h|r"
 		local itemLink = itemLink or "|cff0070dd|Hitem:89551:0:0:0:0:0:0:0:100:253:4:0:0:0|h[Aspirant's Staff of Harmony]|h|r"
 -- Livello è il 9,upgradeid il 14. Al decimo posto, un valore che deve essere 4 o 4+n *8) per far scattare l'uso dell'upgradeid
-		local itemLevel = select(4, _G.GetItemInfo(itemLink))
+		local itemLevel = select(4, C_Item.GetItemInfo(itemLink))
 		assert(itemLevel, "Can't find item level for itemLink")
 		local count, max, batchsize = 0, 10000, 200
 		worker = function()

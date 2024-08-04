@@ -210,7 +210,7 @@ function Outfitter._OutfitMethods:IsComplete()
 end
 
 function Outfitter._OutfitMethods:CalculateOutfitCategory()
-	return self:IsComplete(UnitHasRelicSlot("player")) and "Complete" or "Accessory"
+	return self:IsComplete() and "Complete" or "Accessory"
 end
 
 Outfitter._OutfitMethods.DefaultRepairValues =
@@ -296,7 +296,7 @@ function Outfitter._OutfitMethods:UpdateDatabaseItemCodes(pInventoryCache)
 	
 	for vInventorySlot, vOutfitItem in pairs(self.Items) do
 		if vOutfitItem.Code ~= 0 then
-			local vItem = vInventoryCache:FindItemOrAlt(vOutfitItem, false, true)
+			local vItem = pInventoryCache:FindItemOrAlt(vOutfitItem, false, true)
 			
 			if vItem then
 				vOutfitItem.SubCode = vItem.SubCode
@@ -325,7 +325,7 @@ end
 function Outfitter._OutfitMethods:OutfitUsesItem(pItemInfo)
 	if not pItemInfo then return false end
 	
-	local vInventoryCache = Outfitter:GetInventoryCache(false)
+	local vInventoryCache = Outfitter:GetInventoryCache()
 	local vItemInfo, vItemInfo2
 	
 	if pItemInfo.ItemSlotName == "Finger0Slot" then
@@ -687,11 +687,6 @@ function Outfitter._OutfitMethodsEM:UnpackLocation(pLocation)
 		end
 	end
 
-    -- Increase bank bags with +1 because function gives wrong result
-	if vInBank and vBagIndex > 0 then
-		vBagIndex = vBagIndex + 1
-	end
-
 	return vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex
 end
 
@@ -752,22 +747,16 @@ end
 function Outfitter:DumpEMOutfitLocations(pName)
 	local equipmentSetID = C_EquipmentSet.GetEquipmentSetID(pName)
 	local vLocations = C_EquipmentSet.GetItemLocations(equipmentSetID)
-	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(pName)
 	self:DebugTable(vLocations, "Locations")
-	self:DebugTable(vIgnoreSlots, "IgnoreSlots")
 
 	for vSlotName, vSlotID in pairs(self.cSlotIDs) do
 		self:DebugMessage("Checking slot %s (%s)", tostring(vSlotName), tostring(vSlotID))
-		if vIgnoreSlots[vSlotID] then
-			self:DebugMessage("%s (%s): IGNORED", vSlotName, vSlotID)
+		local vLocation = vLocations[vSlotID]
+		if not vLocation then
+			self:DebugMessage("%s (%s): EMPTY", vSlotName, vSlotID)
 		else
-			local vLocation = vLocations[vSlotID]
-			if not vLocation then
-				self:DebugMessage("%s (%s): EMPTY", vSlotName, vSlotID)
-			else
-				local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = Outfitter._OutfitMethodsEM:UnpackLocation(vLocation)
-				self:DebugMessage("%s (%s): Location=%s OnPlayer=%s, InBank=%s, InBags=%s, SlotIndex=%s, BagIndex=%s", vSlotName, vSlotID, tostring(vLocation), tostring(vOnPlayer), tostring(vInBank), tostring(vInBags), tostring(vSlotIndex), tostring(vBagIndex))
-			end
+			local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = Outfitter._OutfitMethodsEM:UnpackLocation(vLocation)
+			self:DebugMessage("%s (%s): Location=%s OnPlayer=%s, InBank=%s, InBags=%s, SlotIndex=%s, BagIndex=%s", vSlotName, vSlotID, tostring(vLocation), tostring(vOnPlayer), tostring(vInBank), tostring(vInBags), tostring(vSlotIndex), tostring(vBagIndex))
 		end
 	end
 end
@@ -927,7 +916,7 @@ function Outfitter._OutfitMethodsEM:IsComplete()
 end
 
 function Outfitter._OutfitMethodsEM:CalculateOutfitCategory()
-	return self:IsComplete(UnitHasRelicSlot("player")) and "Complete" or "Accessory"
+	return self:IsComplete() and "Complete" or "Accessory"
 end
 
 function Outfitter._OutfitMethodsEM:CheckOutfit(pCategoryID)
@@ -965,7 +954,7 @@ function Outfitter._OutfitMethodsEM:LocationsEqual(pOutfitterLocation, pEMLocati
 end
 
 function Outfitter._OutfitMethodsEM:OutfitUsesItem(pItemInfo)
-	local vInventoryCache = Outfitter:GetInventoryCache(false)
+	local vInventoryCache = Outfitter:GetInventoryCache()
 	local vItemInfo, vItemInfo2
 	
 	if pItemInfo.ItemSlotName == "Finger0Slot" then

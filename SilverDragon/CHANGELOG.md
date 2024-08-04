@@ -1,5 +1,60 @@
 # Changelog
 
+## Changed in v2024.10
+
+* Clicking the line in the history window will now try to target the mob (so long as you're out-of-combat)
+* The history window wouldn't fully disable itself until your UI reloaded (it would reappear when you saw a rare)
+* Added some fallbacks for missing textures in Classic
+* Fix a very-rare error with missing achievement names in popups
+
+## Changed in v2024.9
+
+* New submodule: History
+    * Shows a window with a log of rares you've seen, and when you saw them
+    * Should make it easier to work out how long it has been since a rare spawned
+* New scanning method: "dark magic"
+    * Abuses detection of when Blizzard blocks attempts to call a protected function (TargetUnit) to work out when you're in targetting range of a unit with a given name
+    * This *inherently* causes in-game errors, so it is disabled by default
+    * Enable in the addon config under "Scanning > Dark Magic"
+    * By default it's less-aggressive, scanning through rares in the zone without known vignettes at a rate of 1/second. However, you can turn that rate way up if you'd like.
+    * You can also turn on an option to automatically hide the error messages it causes, but beware that this will probably cause taint issues that'll leave you needing to `/reload` eventually
+* New option for popups so you can disable 3d models
+    * Addresses a prepatch issues where some people are reporting crashes when certain models are displayed (through the Blizzard dialog popups as well, so this isn't a complete fix)
+    * In most looks will just show a generic texture, but Minimal will aggressively shrink down
+* Waypoints: fix that creating a TomTom waypoint wasn't respecting the replacement setting (so it was always overriding your existing waypoint)
+* Show in the addon compartment
+
+## Changed in v2024.8
+
+* Show more information about items in tooltips (item type, cosmetic)
+* Add Aurastor to Emerald Dream
+* BfA assaults: add Shek'zara and Vuk'laz loot, fix multi-assault rares that weren't showing
+
+## Changed in v2024.7
+
+* Add the War Within adventurer achievements (but no mobs yet)
+* RangeExtender: changed how I'm suppressing some inconvenient unknown vignettes to be more reliable
+* Fixed a nil error when releasing a loot window
+* Fix the position of Haarka the Ravenous in Tanaris
+
+## Changed in v2024.6
+
+* Updated for 11.0.0
+* Include Ordos' loot in the Mists module
+
+## Changed in v2024.5
+
+* Vignette scanning: option to alert on zone-wide vignettes. I originally disabled these because it can be really spammy in zones like Timeless Isles / Zereth Mortis. Turn it off in the options at `Scanning > Vignettes`
+* Add the I'm In Your Base, Killing Your Dudes achievement in Krasarang
+* Remove a long-removed-from-the-game old trinket from Kal'tik the Blight
+
+## Changed in v2024.4
+
+* TOC for 10.2.7
+* Mists data improvements: some missing questids, mob positions in the Vale, and some better accounting for phasing in Krasarang
+* Minor data tweaks in Dragonflight
+* Fixed the alert for the Armored Vaultbot in Mechagon
+
 ## Changed in v2024.3.1
 
 * Updated ChatThrottleLib, which had some bugged behavior when upgrading older versions causing lots of errors

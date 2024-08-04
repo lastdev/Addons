@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 134
+local MAJOR, MINOR = "AskMrRobot-Serializer", 140
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -22,7 +22,8 @@ Amr.RegionNames = {
 	[2] = "KR",
 	[3] = "EU",
 	[4] = "TW",
-	[5] = "CN",	
+	[5] = "CN",
+	[72] = "US" -- beta testing
 }
 
 -- map of the skillLine returned by profession API to the AMR profession name

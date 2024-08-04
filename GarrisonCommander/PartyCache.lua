@@ -97,13 +97,13 @@ function party:IsFull()
 end
 
 function party:Dump()
---[===[@debug@
+--[==[@debug@
 	print("Dumping party for mission",ID)
 	for i=1,#members do
 		print(addon:GetFollowerData(members[i],'fullname'),G.GetFollowerStatus(members[i] or 1))
 	end
 	print(G.GetPartyMissionInfo(ID))
---@end-debug@]===]
+--@end-debug@]==]
 end
 
 function party:AddFollower(followerID)
@@ -125,9 +125,9 @@ function party:RemoveFollower(followerID)
 		if (followerID==members[i]) then
 			tremove(members,i)
 			local rc,code=pcall(G.RemoveFollowerFromMission,ID,followerID)
---[===[@debug@
+--[==[@debug@
 			if (not rc) then trace("Unable to remove", G.GetFollowerName(members[i]),"from",ID,code) end
---@end-debug@]===]
+--@end-debug@]==]
 		return true end
 	end
 end
@@ -146,12 +146,12 @@ local function fsort(a,b)
 	if tonumber(rank1) and tonumber(rank2) then
 		return rank1 < rank2
 	else
---[===[@debug@
+--[==[@debug@
 		print(a,rank1)
 		print(b,rank2)
 		print(G.GetFollowerName(a))
 		print(G.GetFollowerName(b))
---@end-debug@]===]
+--@end-debug@]==]
 		return 0
 	end
 end
@@ -189,9 +189,9 @@ function party:Close(desttable)
 	for i=1,3 do
 		if (members[i]) then
 			local rc,code=pcall(G.RemoveFollowerFromMission,ID,members[i])
---[===[@debug@
+--[==[@debug@
 			if (not rc) then print("Unable to pop", G.GetFollowerName(members[i])," from ",ID,code,debugstack()) end
---@end-debug@]===]
+--@end-debug@]==]
 
 		else
 			break
@@ -212,9 +212,9 @@ function addon:GetParty(missionID,key,default)
 	local party=parties[missionID]
 	party.missionID=missionID
 	if not party then
---[===[@debug@
+--[==[@debug@
 		print(GetTime(),missionID,G.GetMissionName(missionID),"Empty")
---@end-debug@]===]
+--@end-debug@]==]
 	end
 	if not party then return default end
 	if #party.members==0 and self:GetMissionData(missionID,'inProgress') then

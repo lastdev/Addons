@@ -3,14 +3,14 @@
 
                                         A Path Less Travelled
 
-                                       v1.36 - 20th April 2024
+                                       v1.44 - 22nd July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
                                 ----o----(||)----oo----(||)----o----
 ]]
 
-local myName, ns = ...
+local addonName, ns = ...
 ns.db = {}
 -- From Data.lua
 ns.points = {}
@@ -23,8 +23,7 @@ ns.colour.highlight = "\124cFF00CED1" -- Dark Turquoise
 ns.colour.plaintext = "\124cFF6495ED" -- Cornflower Blue
 
 local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = false,
-								iconChoice = 7 } }
-local continents = {}
+								iconChoice = 7, showContinents = true } }
 local pluginHandler = {}
 
 -- Upvalues
@@ -37,13 +36,28 @@ local UIParent = _G.UIParent
 local format, next, random = format, next, math.random
 
 local HandyNotes = _G.HandyNotes
-ns.name = UnitName( "player" ) or "Character"
 
-continents[ 12 ] = true -- Kalimdor
-continents[ 13 ] = true -- Eastern Kingdoms
-continents[ 101 ] = true -- Outland
-continents[ 113 ] = true -- Northrend
-continents[ 424 ] = true -- Pandaria
+_, _, _, ns.version = GetBuildInfo()
+ns.classicCata = ( ( ns.version >= 40000 ) and ( ns.version < 50000 ) ) and 1 or nil
+
+ns.continents = {}
+ns.continents[ ns.classicCata and 1414 or 12 ] = true -- Kalimdor
+ns.continents[ ns.classicCata and 1415 or 13 ] = true -- Eastern Kingdoms
+ns.continents[ ns.classicCata and 1945 or 101 ] = true -- Outland
+ns.continents[ 113 ] = true -- Northrend
+ns.continents[ 203 ] = true -- Vashj'ir
+ns.continents[ 947 ] = true -- Azeroth
+if not ns.classicCata then
+	ns.continents[ 424 ] = true -- Pandaria
+	ns.continents[ 572 ] = true -- Draenor
+	ns.continents[ 619 ] = true -- Broken Isles
+	ns.continents[ 875 ] = true -- Zandalar
+	ns.continents[ 876 ] = true -- Kul Tiras
+	ns.continents[ 1978 ] = true -- Dragon Isles
+end
+
+ns.name = UnitName( "player" ) or "Character"
+ns.class = UnitClass( "player" ) or "Unknown"
 
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
@@ -109,21 +123,26 @@ do
 	local function iterator(t, prev)
 		if not t then return end
 		local coord, pin = next(t, prev)
+
+		if ns.continents[ ns.CurrentMap ] and ( ns.db.showContinents ~= nil ) and ( ns.db.showContinents == false ) then return end
+		
 		while coord do
 			if pin then
-				if pin.outdoors ~= nil then
-					if pin.outdoors == IsOutdoors() then
+				if pin.class and ( pin.class == ns.class ) or ( pin.class == nil ) then
+					if pin.outdoors ~= nil then
+						if pin.outdoors == IsOutdoors() then
+							return coord, nil, ns.textures[ns.db.iconChoice],
+								ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
+						end
+					elseif pin.random then
+						if random() < pin.random then
+							return coord, nil, ns.textures[ns.db.iconChoice],
+								ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
+						end
+					else
 						return coord, nil, ns.textures[ns.db.iconChoice],
 							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 					end
-				elseif pin.random then
-					if random() < pin.random then
-						return coord, nil, ns.textures[ns.db.iconChoice],
-							ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
-					end
-				else
-					return coord, nil, ns.textures[ns.db.iconChoice],
-						ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 				end
 			end
 			coord, pin = next(t, coord)
@@ -139,7 +158,7 @@ end
 ns.options = {
 	type = "group",
 	name = "A Path Less Travelled",
-	desc = "Travel with me and discover the amazing!",
+	desc = ns.colour.highlight .."Travel with me and discover the amazing!",
 	get = function(info) return ns.db[info[#info]] end,
 	set = function(info, v)
 		ns.db[info[#info]] = v
@@ -176,6 +195,14 @@ ns.options = {
 					arg = "showCoords",
 					order = 3,
 				},
+				showContinents = {
+					name = "Show Pins on Continents",
+					desc = "Disable if you think the AddOn is causing lag",
+					type = "toggle",
+					width = "full",
+					arg = "showContinents",
+					order = 4,
+				},
 			},
 		},
 		icon = {
@@ -191,7 +218,7 @@ ns.options = {
 							.."\n11 = Cogwheel\n12 = Frost\n13 = Diamond\n14 = Screw",
 					min = 1, max = 14, step = 1,
 					arg = "iconChoice",
-					order = 4,
+					order = 5,
 				},
 			},
 		},
@@ -207,7 +234,7 @@ function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
 	if not HereBeDragons then return end
 	
-	for continentMapID in next, continents do
+	for continentMapID in next, ns.continents do
 		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
 		for _, map in next, children do
 			local coords = ns.points[map.mapID]
@@ -243,3 +270,23 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_APathLessTravelledDB", "AceEvent-3.0")
+
+--=======================================================================================================
+--
+--		SLASH CHAT COMMANDS  -- All game ns.versions
+--		===================
+--
+--=======================================================================================================
+
+SLASH_APathLessTravelled1 = "/aplt"
+
+local function Slash( options )
+
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "APathLessTravelled" )
+	if ( ns.version > 100000 ) then
+		print( ns.colour.prefix .."APLT: " ..ns.colour.highlight .."Try the Minimap AddOn Menu (below the Calendar)" )
+	end
+end
+
+SlashCmdList[ "APathLessTravelled" ] = function( options ) Slash( options ) end

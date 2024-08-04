@@ -47,7 +47,7 @@ function RouteWorldMapDataProvider:CreatePools()
         if not pin.OnReleased then
             Mixin(pin, RoutePinMixin)
         end
-        FramePool_HideAndClearAnchors(pool, pin)
+        (_G.FramePool_HideAndClearAnchors or _G.Pool_HideAndClearAnchors)(pool, pin)
         pin:OnReleased()
 
         pin.pinTemplate = nil
@@ -59,7 +59,7 @@ function RouteWorldMapDataProvider:CreatePools()
             connection:SetIgnoreParentScale(true)
             connection.Line = connection:CreateLine()
         end
-        FramePool_HideAndClearAnchors(pool, connection)
+        (_G.FramePool_HideAndClearAnchors or _G.Pool_HideAndClearAnchors)(pool, connection)
 
         connection.point = nil
         connection.route = nil

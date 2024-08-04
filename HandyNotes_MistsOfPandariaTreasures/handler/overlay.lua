@@ -1,5 +1,5 @@
 local myname, ns = ...
-local _, myfullname = GetAddOnInfo(myname)
+local _, myfullname = C_AddOns.GetAddOnInfo(myname)
 
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 

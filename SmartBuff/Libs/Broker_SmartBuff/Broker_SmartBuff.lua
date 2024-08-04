@@ -26,7 +26,7 @@ F.LS = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("SmartBuff", {
       SMARTBUFF_OToggle();
 	  SMARTBUFF_BROKER_SetIcon();	-- bug fix, credit: SunNova
     elseif (msg == "LeftButton" and IsAltKeyDown()) then
-      if (IsAddOnLoaded("SmartDebuff")) then
+      if (C_AddOns.IsAddOnLoaded("SmartDebuff")) then
         SMARTDEBUFF_ToggleSF();
       end      
     elseif (msg == "LeftButton") then

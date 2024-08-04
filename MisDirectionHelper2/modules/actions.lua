@@ -1,3 +1,6 @@
+local MDH = MDH or {}
+MDH = MDH or {}
+
 local UnitExists, UnitName, IsInRaid = UnitExists, UnitName, IsInRaid
 local UnitGroupRolesAssigned, UnitGetAvailableRoles, UnitHealthMax = UnitGroupRolesAssigned, UnitGetAvailableRoles, UnitHealthMax
 local GetNumGroupMembers, GetPartyAssignment = GetNumGroupMembers, GetPartyAssignment

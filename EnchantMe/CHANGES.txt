@@ -1,10 +1,10 @@
-lightweight tag 1a987594b1cff926edb1973c362050b6a30dca7a v1.3.3
+lightweight tag 72804b79a67f30962c6627a50715684bc735379d v1.3.6
 Author:	romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:	Sat May 11 13:41:49 2024 +0200
+Date:	Sat Jul 27 21:20:31 2024 +0200
 
-commit 1a987594b1cff926edb1973c362050b6a30dca7a
+commit 72804b79a67f30962c6627a50715684bc735379d
 Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:   Sat May 11 13:41:49 2024 +0200
+Date:   Sat Jul 27 21:20:31 2024 +0200
 
-    Update TOC
+    Fix interface version
 

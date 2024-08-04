@@ -5,15 +5,14 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local AltTracking = TSM.Init("Service.AltTracking") ---@class Service.AltTracking
-local Database = TSM.Include("Util.Database")
-local TempTable = TSM.Include("Util.TempTable")
-local ItemString = TSM.Include("Util.ItemString")
-local Vararg = TSM.Include("Util.Vararg")
-local Wow = TSM.Include("Util.Wow")
-local Table = TSM.Include("Util.Table")
-local Settings = TSM.Include("Service.Settings")
-local Sync = TSM.Include("Service.Sync")
+local AltTracking = TSM.Init("Service.AltTracking") ---@class Service.AltTracking: Module
+local Database = TSM.LibTSMUtil:Include("Database")
+local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
+local ItemString = TSM.LibTSMTypes:Include("Item.ItemString")
+local Vararg = TSM.LibTSMUtil:Include("Lua.Vararg")
+local SessionInfo = TSM.LibTSMWoW:Include("Util.SessionInfo")
+local Table = TSM.LibTSMUtil:Include("Lua.Table")
+local Sync = TSM.LibTSMService:Include("Sync")
 local PlayerInfo = TSM.Include("Service.PlayerInfo")
 local private = {
 	settings = nil,
@@ -37,8 +36,8 @@ local MIRROR_SETTING_KEYS = {
 -- Module Loading
 -- ============================================================================
 
-AltTracking:OnSettingsLoad(function()
-	private.settings = Settings.NewView()
+AltTracking:OnSettingsLoad(function(db)
+	private.settings = db:NewView()
 		:AddKey("factionrealm", "internalData", "pendingMail")
 		:AddKey("factionrealm", "internalData", "guildVaults")
 		:AddKey("factionrealm", "coreOptions", "ignoreGuilds")
@@ -185,8 +184,8 @@ function private.UpdateDB()
 	local totalQuantity = TempTable.Acquire()
 	local auctionQuantity = TempTable.Acquire()
 	for _, key in Vararg.Iterator("bagQuantity", "bankQuantity", "reagentBankQuantity", "auctionQuantity", "mailQuantity") do
-		for _, data, character, factionrealm, _, isConnected in private.settings:AccessibleValueIterator(key) do
-			if not Wow.IsPlayer(character, factionrealm) and (isConnected or private.settings.regionWide) then
+		for _, data, character, factionrealm in private.settings:AccessibleValueIterator(key) do
+			if not SessionInfo.IsPlayer(character, factionrealm) then
 				local cacheKey = character..CACHE_SEP..factionrealm
 				if not private.characterFactionrealmCache[cacheKey] then
 					private.characterFactionrealmCache[cacheKey] = true
@@ -205,22 +204,20 @@ function private.UpdateDB()
 			end
 		end
 	end
-	for _, data, factionrealm, isConnected in private.settings:AccessibleValueIterator("pendingMail") do
-		if isConnected or private.settings.regionWide then
-			for character, pendingQuantity in pairs(data) do
-				local isValid = true
-				for levelItemString, quantity in pairs(pendingQuantity) do
-					if type(quantity) ~= "number" or quantity < 0 then
-						isValid = false
-						break
-					end
-					if not Wow.IsPlayer(character, factionrealm) then
-						totalQuantity[levelItemString] = (totalQuantity[levelItemString] or 0) + quantity
-					end
+	for _, data, factionrealm in private.settings:AccessibleValueIterator("pendingMail") do
+		for character, pendingQuantity in pairs(data) do
+			local isValid = true
+			for levelItemString, quantity in pairs(pendingQuantity) do
+				if type(quantity) ~= "number" or quantity < 0 then
+					isValid = false
+					break
 				end
-				if not isValid then
-					data[character] = nil
+				if not SessionInfo.IsPlayer(character, factionrealm) then
+					totalQuantity[levelItemString] = (totalQuantity[levelItemString] or 0) + quantity
 				end
+			end
+			if not isValid then
+				data[character] = nil
 			end
 		end
 	end
@@ -270,10 +267,10 @@ function private.GetInventoryValue(itemString, settingKey, character, factionrea
 end
 
 function private.GetPendingMailQuantity(itemString, character, factionrealm)
-	character = character or Wow.GetCharacterName()
+	character = character or SessionInfo.GetCharacterName()
 	-- TODO: Figure out how to track pendingMail across accounts
 	-- TODO: Update this code to support pendingMail across connected realms
-	if factionrealm and factionrealm ~= Wow.GetFactionrealmName() then
+	if factionrealm and factionrealm ~= SessionInfo.GetFactionrealmName() then
 		return 0
 	end
 	return private.GetItemQuantityFromSettingsTable(private.settings.pendingMail[character], itemString)

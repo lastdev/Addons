@@ -1,10 +1,11 @@
-local MinBuild, OverBuild = 100000, 0
+local MinBuild, OverBuild = 110000, 0
 local BuildStr, _, _, Build = GetBuildInfo()
 if BuildStr:match("^3.4.") then MinBuild = 30400 end
 if Build < (MinBuild or 0) or ( (OverBuild or 0) > 0 and Build >= OverBuild ) then return end
 local AddonName, a = ...
 a.AddonName = AddonName
-local AddonTitle = select(2, GetAddOnInfo(AddonName))
+local AddonTitle = select(2, C_AddOns.GetAddOnInfo(AddonName))
+local GetSpellSubtext = C_Spell.GetSpellSubtext
 local PlainAddonTitle = AddonTitle:gsub("|c........", ""):gsub("|r", "")
 local L = a.Localize
 function a.print(...)
@@ -14,7 +15,7 @@ if SpellFlashCore and not SpellFlashCore.LS then
     a.print(L["Old uncompletable version of SFC detected, shuttingdown. \r\n Please update other copies of SFC before use."])
     return
 end
-SpellFlashCore = LibStub:NewLibrary("SpellFlashCore", tonumber("20231129150302") or tonumber(date("%Y%m%d%H%M%S")))
+SpellFlashCore = LibStub:NewLibrary("SpellFlashCore", tonumber("20240730150302") or tonumber(date("%Y%m%d%H%M%S")))
 if not SpellFlashCore then return end
 SpellFlashCore.LS = true
 local FrameNames = {}
@@ -46,14 +47,9 @@ SpellFlashCore.RegisterBigLibTimer(a)
 
 local EmptyTable = {}
 
-local SpellCache = setmetatable({}, {__index = function(t, v) if GetSpellInfo(v) then t[v] = {GetSpellInfo(v)} return t[v] end return EmptyTable end})
-function SpellFlashCore.GetSpellInfo(id)
-    if type(id) == "string" then return GetSpellInfo(id) end
-    return unpack(SpellCache[id])
-end
-local GetSpellInfo = SpellFlashCore.GetSpellInfo
+local GetSpellInfo, GetSpellSubtext = C_Spell.GetSpellInfo, C_Spell.GetSpellSubtext
 
-local ItemCache = setmetatable({}, {__index = function(t, v) if GetItemInfo(v) then t[v] = {GetItemInfo(v)} return t[v] end return EmptyTable end})
+local ItemCache = setmetatable({}, {__index = function(t, v) if C_Item.GetItemInfo(v) then t[v] = {C_Item.GetItemInfo(v)} return t[v] end return EmptyTable end})
 function SpellFlashCore.GetItemInfo(id)
     if type(id) == "string" then return GetItemInfo(id) end
     return unpack(ItemCache[id])
@@ -62,7 +58,9 @@ local GetItemInfo = SpellFlashCore.GetItemInfo
 
 function SpellFlashCore.SpellName(GlobalSpellID, NoSubName)
     if type(GlobalSpellID) == "number" then
-        local SpellName = GetSpellInfo(GlobalSpellID)
+        local sInfo = GetSpellInfo(GlobalSpellID)
+        if not sInfo then return GlobalSpellID end
+        local SpellName = sInfo.name
         local SubName = GetSpellSubtext(GlobalSpellID)
         if not NoSubName and SubName and SubName ~= "" then
             return SpellName.."("..SubName..")"
@@ -195,7 +193,7 @@ local function RegisterButtons()
             end
         end
     end
-    if IsAddOnLoaded("ButtonForge") then
+    if C_AddOns.IsAddOnLoaded("ButtonForge") then
         local i = 1
         local frame = _G["ButtonForge"..i]
         while type(frame) == "table" do
@@ -787,7 +785,8 @@ function SpellFlashCore.Flashable(SpellName, NoMacros)
     elseif FRAMESREGISTERED and BUTTONSREGISTERED then
         local SpellName, PlainName = SpellName, SpellName
         if type(SpellName) == "number" then
-            local name = GetSpellInfo(SpellName)
+            local sInfo = GetSpellInfo(SpellName)
+            local name = sInfo and sInfo.name
             local second =  GetSpellSubtext(SpellName)
             if name then
                 PlainName = name
@@ -801,16 +800,21 @@ function SpellFlashCore.Flashable(SpellName, NoMacros)
         if SpellName then
             if Buttons.Spell[SpellName] or Buttons.Item[SpellName] or Frames.Spell[SpellName] or Frames.Item[SpellName] then
                 return true
-            elseif not NoMacros and type(SpellName) == "string" and ( GetSpellInfo(SpellName) or GetItemCount(SpellName) > 0 ) then
-                local SpellTexture = GetSpellTexture(SpellName)
-                local ItemTexture = GetItemIcon(SpellName)
+            end
+
+            local sInfo = GetSpellInfo(SpellName)
+            if not NoMacros and type(SpellName) == "string" and ( sInfo and sInfo.name or C_Item.GetItemCount(SpellName) > 0 ) then
+                local SpellTexture = sInfo and sInfo.iconID
+                local ItemTexture = C_Item.GetItemIconByID(SpellName)
                 for ID in pairs(Buttons.Macro) do
-                    if SpellName == GetSpellInfo(ID) then
+                    local mInfo = GetSpellInfo(ID)
+                    if mInfo and SpellName == mInfo.name then
                         return true
                     end
                 end
                 for ID in pairs(Frames.Macro) do
-                    if SpellName == GetSpellInfo(ID) then
+                    local mInfo = GetSpellInfo(ID)
+                    if mInfo and SpellName == mInfo.name then
                         return true
                     end
                 end
@@ -840,7 +844,8 @@ function SpellFlashCore.FlashAction(SpellName, color, size, brightness, blink, N
     elseif FRAMESREGISTERED and BUTTONSREGISTERED then
         local SpellName, PlainName = SpellName, SpellName
         if type(SpellName) == "number" then
-            local name = GetSpellInfo(SpellName)
+            local sInfo = GetSpellInfo(SpellName)
+            local name = sInfo and sInfo.name
             local second =  GetSpellSubtext(SpellName)
             if name then
                 PlainName = name
@@ -872,18 +877,25 @@ function SpellFlashCore.FlashAction(SpellName, color, size, brightness, blink, N
                     SpellFlashCore.FlashFrame(frame, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
                 end
             end
-            if not NoMacros and type(SpellName) == "string" and ( GetSpellInfo(SpellName) or GetItemCount(SpellName) > 0 ) then
-                local SpellTexture = GetSpellTexture(SpellName)
-                local ItemTexture = GetItemIcon(SpellName)
+
+            local sInfo = GetSpellInfo(SpellName)
+            if not NoMacros and type(SpellName) == "string" and ( sInfo and sInfo.name or C_Item.GetItemCount(SpellName) > 0 ) then
+                local SpellTexture = sInfo and sInfo.iconID
+                local ItemTexture = C_Item.GetItemIconByID(SpellName)
                 for ID, Table in pairs(Buttons.Macro) do
-                    for button in pairs(Table) do
-                        if SpellName == GetSpellInfo(ID) then
-                            FlashActionButton(button, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
+                    local mInfo = GetSpellInfo(ID)
+                    if mInfo and mInfo.name then
+                        for button in pairs(Table) do
+                            if SpellName == mInfo.name then
+                                FlashActionButton(button, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
+                            end
                         end
                     end
                 end
                 for ID, Table in pairs(Frames.Macro) do
-                    if SpellName == GetSpellInfo(ID) then
+                    local mInfo = GetSpellInfo(ID)
+
+                    if mInfo and SpellName == mInfo.name then
                         SpellFlashCore.FlashFrame(frame, color, size, brightness, blink, texture, fixedSize, fixedBrightness)
                     end
                 end

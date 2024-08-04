@@ -1,0 +1,11 @@
+## Interface: 40400
+## Title: Raider.IO |cffFFFFFFRecruitment|r (Europe)
+## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
+## Version: 4.4.0 (v202408010600)
+## IconTexture: Interface\AddOns\RaiderIO\icons\logo
+## Dependencies: RaiderIO
+## DefaultState: enabled
+## X-Type: Recruitment
+## X-Region: Europe
+## X-Faction: Both
+## X-Website: https://raider.io

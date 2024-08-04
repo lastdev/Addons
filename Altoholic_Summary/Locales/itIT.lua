@@ -1,5 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale( "Altoholic", "itIT" )
-
+local L = DataStore:SetLocale("Altoholic", "itIT")
 if not L then return end
 
 L["Calendar"] = "Calendario"
@@ -38,6 +37,7 @@ L["PATCH_10.2"] = "Guardians of the Dream"
 -- L["FILTER_LEVELS"] = "Level filter"
 -- L["FILTER_PROFESSIONS"] = "Profession filter"
 -- L["FILTER_CLASSES"] = "Class filter"
+-- L["FILTER_RACES"] = "Race filter"
 -- L["FILTER_MISC"] = "Miscellaneous filters"
 -- L["FILTER_BANKTYPE"] = "Bank characters filters"
 L["This realm"] = "Questo reame"
@@ -47,6 +47,7 @@ L["All accounts"] = "Tutti gli Account"
 L["This faction"] = "Questa fazione"
 L["Both factions"] = "Entrambe le fazioni"
 L["Any"] = "Qualsiasi"
+-- L["Allied Races"] = true
 L["ACCOUNT_SHARING_BUTTON_TITLE"] = "Richiesta di condivisione account"
 L["ACCOUNT_SHARING_BUTTON_INFO"] = "Cliccare questo pulsante per chiedere ad un giocatore di condividere tutto il suo database di Altoholic ed aggiungerlo al vostro"
 

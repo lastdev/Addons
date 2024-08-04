@@ -1,4 +1,5 @@
-local MDH = MDH
+local MDH = MDH or {}
+MDH = MDH or {}
 local QTC = LibStub("LibQTip-1.0")
 local _G = _G
 local L = MDH.L
@@ -18,25 +19,31 @@ local InCombatLockdown, IsAddOnLoaded = InCombatLockdown, IsAddOnLoaded
 function MDH:trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1")) end
 
 function MDH:CreateLDBObject()
-	MDH.dataObject = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("MisdirectionHelper", {
-		type = "data source",
-		text = MDH:TTText("both"),
-		icon = "Interface\\Icons\\Ability_Hunter_Misdirection",
-		OnClick = 
-			function(frame, button)
-				if button == "RightButton" then InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame)
-				elseif button == "LeftButton" then MDH:MDHtarget(button) end
-			end,
-		OnEnter = 
-			function(frame)
-				MDH.tooltip = QTC:Acquire("Broker_MisdirectionHelperTooltip", 1, "CENTER")
-				MDH.tooltip:SmartAnchorTo(frame)
-				MDH.tooltip:SetAutoHideDelay(0.25, frame)
-				MDH:MDHShowToolTip()
-			end,
-		OnLeave = nil,
-	})
+    MDH.dataObject = LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("MisdirectionHelper", {
+        type = "data source",
+        text = MDH:TTText("both"),
+        icon = "Interface\\Icons\\Ability_Hunter_Misdirection",
+        OnClick = function(_, button)
+            if button == "RightButton" then
+                if Settings and Settings.OpenToCategory then
+                    Settings.OpenToCategory(MDH.optionsFrame)
+                else
+                    print("Options frame function not available")
+                end
+            elseif button == "LeftButton" then
+                MDH:MDHtarget(button)
+            end
+        end,
+        OnEnter = function(frame)
+            MDH.tooltip = QTC:Acquire("Broker_MisdirectionHelperTooltip", 1, "CENTER")
+            MDH.tooltip:SmartAnchorTo(frame)
+            MDH.tooltip:SetAutoHideDelay(0.25, frame)
+            MDH:MDHShowToolTip()
+        end,
+        OnLeave = nil,
+    })
 end
+
 
 function MDH:validateTarget(unit)
 	local t = UnitName(unit)
@@ -138,143 +145,145 @@ local function HandlerFunc(arg, button)
 end
 
 function MDH:MDHShowToolTip()
-	if InCombatLockdown() then return end
-	local theme = self.themes[self.db.profile.theme]
-	local y
-	local tooltip = self.tooltip
-	if not tooltip then return end
-	if not tooltip.lines then return end
-	if not theme then
-		self.db.profile.theme = _G.DEFAULT
-		theme = _G.DEFAULT
-	end
-	if IsAddOnLoaded("TipTac") then 
-		if not self.tiptacstyled then
-			TipTac:AddModifiedTip(tooltip:GetName())
-			self.tiptacstyled = true
-		end
-	else
-		
-	end
-	tooltip:Clear()
+    if InCombatLockdown() then return end
+
+    local theme = self.themes[self.db.profile.theme]
+    local y
+    local tooltip = self.tooltip
+
+    if not tooltip or not tooltip.lines then return end
+
+    if not theme then
+        self.db.profile.theme = _G.DEFAULT
+        theme = self.themes[_G.DEFAULT]
+    end
+
+    local loadedOrLoading, loaded = C_AddOns.IsAddOnLoaded("TipTac")
+    if loaded then
+        if not self.tiptacstyled then
+            TipTac:AddModifiedTip(tooltip:GetName())
+            self.tiptacstyled = true
+        end
+    else
+        local lineFont = self.fonts[theme.linefont] and self.fonts[theme.linefont].font
+        local headerFont = self.fonts[theme.headerfont] and self.fonts[theme.headerfont].font
+
+        if lineFont then
+            tooltip:SetFont(lineFont)
+        end
+
+        if headerFont then
+            tooltip:SetHeaderFont(headerFont)
+        end
+    end
+
+    tooltip:Clear()
 
     y = tooltip:AddHeader()
-	tooltip:SetCell(y, 1, "|c" .. theme.title[5] .. "MisdirectionHelper|r", "CENTER", 1)
+    tooltip:SetCell(y, 1, "|c" .. theme.title[5] .. "MisdirectionHelper|r", "CENTER", 1)
     tooltip:SetLineColor(y, theme.title[1], theme.title[2], theme.title[3], theme.title[4])
 
     y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
-
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
 
     y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, " " .. L["Set To Party Tank"])
-	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b1", button) end)
-    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2],theme.group1[3], theme.group1[4])
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
+
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, " " .. L["Set To Party Tank"])
+    tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b1", button) end)
+    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2], theme.group1[3], theme.group1[4])
 
     y = tooltip:AddLine()
     tooltip:SetCell(y, 1, " " .. L["Set To Target"])
-	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b2", button) end)
-    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2],theme.group1[3], theme.group1[4])
+    tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b2", button) end)
+    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2], theme.group1[3], theme.group1[4])
 
     y = tooltip:AddLine()
     tooltip:SetCell(y, 1, " " .. L["Set to Target Of Target"])
-	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b3", button) end)
-    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2],theme.group1[3], theme.group1[4])
+    tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b3", button) end)
+    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2], theme.group1[3], theme.group1[4])
 
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, " " .. L["Set to Focus"])
-	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("f", button) end)
-	tooltip:SetLineColor(y, theme.group1[1], theme.group1[2],theme.group1[3], theme.group1[4])
-
-	--y = tooltip:AddLine()
-	--if MDH.db.profile.target3 then
-		--tooltip:SetCell(y, 1, " " .. L["Disable Mouseover"])
-	--else
-		--tooltip:SetCell(y, 1, " " .. L["Enable Mouseover"])
-	--end
-	--tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("h", button) end)
-	--tooltip:SetLineColor(y, theme.group1[1], theme.group1[2], theme.group1[3], theme.group1[4])
-	
     y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
+    tooltip:SetCell(y, 1, " " .. L["Set to Focus"])
+    tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("f", button) end)
+    tooltip:SetLineColor(y, theme.group1[1], theme.group1[2], theme.group1[3], theme.group1[4])
 
-	if uc == "HUNTER" then
-		y = tooltip:AddLine()
-		tooltip:SetCell(y, 1, " " .. L["Set to Your Pet"])
-		tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b4", button) end)
-		tooltip:SetLineColor(y, theme.group2[1], theme.group2[2],theme.group2[3], theme.group2[4])
-	end
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
+
+    if uc == "HUNTER" then
+        y = tooltip:AddLine()
+        tooltip:SetCell(y, 1, " " .. L["Set to Your Pet"])
+        tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b4", button) end)
+        tooltip:SetLineColor(y, theme.group2[1], theme.group2[2], theme.group2[3], theme.group2[4])
+    end
 
     y = tooltip:AddLine()
     tooltip:SetCell(y, 1, " " .. L["Enter Player Name"])
-	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b5", button) end)
-	tooltip:SetLineColor(y, theme.group2[1], theme.group2[2],theme.group2[3], theme.group2[4])
+    tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("b5", button) end)
+    tooltip:SetLineColor(y, theme.group2[1], theme.group2[2], theme.group2[3], theme.group2[4])
 
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
-
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, " " .. L["Clear Target"])
-	tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("c", button) end)
-	tooltip:SetLineColor(y, theme.group3[1], theme.group3[2],theme.group3[3], theme.group3[4])
-
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
-
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
-
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "|c" .. theme.group4[5] .. string.format(L["Left click target: %s"], "|c" .. theme.group4[6] .. self:TTText("left")), "CENTER", 1)
-	tooltip:SetLineColor(y, theme.group4[1], theme.group4[2],theme.group4[3], theme.group4[4])
-
-	if self.db.profile.target2 then
-		y = tooltip:AddLine()
-		tooltip:SetCell(y, 1, "|c" .. theme.group4[5] .. string.format(L["Right click target: %s"], "|c" .. theme.group4[6] .. self:TTText("right")), "CENTER", 1)
-		tooltip:SetLineColor(y, theme.group4[1], theme.group4[2],theme.group4[3], theme.group4[4])
-	end
-
-	--if MDH.db.profile.target3 then
-		--y = tooltip:AddLine()
-		--tooltip:SetCell(y, 1, "|c" .. theme.group4[5] .. L["Mouseover Enabled"], "CENTER", 1)
-		--tooltip:SetLineColor(y, theme.group4[1], theme.group4[2],theme.group4[3], theme.group4[4])
-	--end
-	
     y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
 
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2],theme.spacer[3], theme.spacer[4])
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, " " .. L["Clear Target"])
+    tooltip:SetCellScript(y, 1, "OnMouseDown", function(this, arg, button) HandlerFunc("c", button) end)
+    tooltip:SetLineColor(y, theme.group3[1], theme.group3[2], theme.group3[3], theme.group3[4])
 
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "|c" .. theme.group5[5] .. L["Left Click Each Text To Activate"] .. "|r ", "CENTER", 1)
-	tooltip:SetLineColor(y, theme.group5[1], theme.group5[2],theme.group5[3], theme.group5[4])
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
 
-	y = tooltip:AddLine()
-	tooltip:SetCell(y, 1, "|c" .. theme.group5[5] .. L["Right Click For MDH Options"] .. "|r", "CENTER", 1)
-    tooltip:SetLineColor(y, theme.group5[1], theme.group5[2],theme.group5[3], theme.group5[4])
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
 
-	if IsAddOnLoaded("ElvUI") then
-		if not self.ttstyled then
-			local E, L, V, P, G, DF = unpack(ElvUI)
-			local TT = E:GetModule("Tooltip")
-			function tooltip:GetUnit(unit) return UnitName("player"), "player" end
-			TT:HookScript(tooltip, "OnShow", "SetStyle")
-			self.ttstyled = true
-		end
-	end			
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "|c" .. theme.group4[5] .. string.format(L["Left click target: %s"], "|c" .. theme.group4[6] .. self:TTText("left")), "CENTER", 1)
+    tooltip:SetLineColor(y, theme.group4[1], theme.group4[2], theme.group4[3], theme.group4[4])
+
+    if self.db.profile.target2 then
+        y = tooltip:AddLine()
+        tooltip:SetCell(y, 1, "|c" .. theme.group4[5] .. string.format(L["Right click target: %s"], "|c" .. theme.group4[6] .. self:TTText("right")), "CENTER", 1)
+        tooltip:SetLineColor(y, theme.group4[1], theme.group4[2], theme.group4[3], theme.group4[4])
+    end
+
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
+
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.spacer[1], theme.spacer[2], theme.spacer[3], theme.spacer[4])
+
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "|c" .. theme.group5[5] .. L["Left Click Each Text To Activate"] .. "|r ", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.group5[1], theme.group5[2], theme.group5[3], theme.group5[4])
+
+    y = tooltip:AddLine()
+    tooltip:SetCell(y, 1, "|c" .. theme.group5[5] .. L["Right Click For MDH Options"] .. "|r", "CENTER", 1)
+    tooltip:SetLineColor(y, theme.group5[1], theme.group5[2], theme.group5[3], theme.group5[4])
+
+    loadedOrLoading, loaded = C_AddOns.IsAddOnLoaded("ElvUI")
+    if loaded then
+        if not self.ttstyled then
+            local E, L, V, P, G, DF = unpack(ElvUI)
+            local TT = E:GetModule("Tooltip")
+            function tooltip:GetUnit(unit) return UnitName("player"), "player" end
+            TT:HookScript(tooltip, "OnShow", "SetStyle")
+            self.ttstyled = true
+        end
+    end
+
     tooltip:Show()
 end
+
 
 function MDH:ShowError(msg)
 	StaticPopupDialogs["MDH_ERROR"] = {
@@ -288,17 +297,4 @@ function MDH:ShowError(msg)
 	StaticPopup_Show("MDH_ERROR")
 end
 
-function MDH:ShowExport(val)
-	StaticPopupDialogs["MDH_THEME_EXPORT"] = {
-		text = L["Export"],
-		button1 = _G.OKAY,
-		hasEditBox = 1,
-		editBoxWidth = 250,
-		OnAccept = function(this) this:Hide() end,
-		OnShow = function(this) this.editBox:SetText(val) end,
-		timeout = 0,
-		whileDead = 1,
-		hideOnEscape = 1
-	}
-	StaticPopup_Show("MDH_THEME_EXPORT")
-end
+

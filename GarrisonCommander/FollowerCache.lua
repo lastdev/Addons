@@ -1,8 +1,8 @@
 local me,ns=...
 ns.Configure()
---[===[@debug@
+--[==[@debug@
 print("loaded")
---@end-debug@]===]
+--@end-debug@]==]
 local addon=addon --#addon
 --local holdEvents,releaseEvents=addon.holdEvents,addon.releaseEvents
 --upvalue
@@ -35,9 +35,9 @@ local EMPTY={}
 local GMCUsedFollowers={}
 local GMCUsedFollowersCount=0
 function module:OnInitialized()
---[===[@debug@
+--[==[@debug@
   print("OnInitialized")
---@end-debug@]===]
+--@end-debug@]==]
 	self:RegisterEvent("GARRISON_FOLLOWER_REMOVED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_ADDED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE","OnEvent")
@@ -45,9 +45,9 @@ function module:OnInitialized()
 	self:RegisterEvent("GARRISON_FOLLOWER_XP_CHANGED","OnEvent")
 end
 function module:OnEvent(event,...)
---[===[@debug@
+--[==[@debug@
 print(event,...)
---@end-debug@]===]
+--@end-debug@]==]
 	local followerType,followerID=...
 	if self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2].cache[followerID].followerID then
 		self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:OnEvent(event,...)
@@ -174,9 +174,9 @@ function cache:GetFollowerData(followerID,key,default)
 	if (followerID:sub(1,2)~="0x") then
 		followerID=self.names[followerID]
 	end
---[===[@debug@
+--[==[@debug@
 	assert(followerID)
---@end-debug@]===]
+--@end-debug@]==]
 	if not followerID then
 		return key and default or EMPTY
 	end

@@ -5,12 +5,14 @@ local module = oRA:NewModule("BattleRes", "AceTimer-3.0")
 local L = scope.locale
 local coloredNames = oRA.coloredNames
 
+local GetSpellLink = C_Spell.GetSpellLink
+
 local resAmount = 0
 local badBuffs = {
 	27827, -- Spirit of Redemption
 	5384, -- Feign Death
 }
-local engineerItem = 201409 -- Tinker: Arclight Vital Correctors
+local engineerItem = { 201409, 201408, 201407 } -- Tinker: Arclight Vital Correctors
 local engineerIcon = 4548853 -- inv_10_engineering_device_gadget1_color2
 local resSpells = {
 	[20484] = true, -- Rebirth
@@ -24,7 +26,7 @@ local theDead = {}
 local updateFunc
 local brez
 local inCombat = false
-local isEngineer = false
+local hasEngineer = {}
 local active = {
 	[8] = true, -- Mythic+
 	[14] = true, -- Normal
@@ -84,7 +86,7 @@ local function createFrame()
 	icon:SetPoint("LEFT", remaining, "LEFT", 20, 0)
 	icon:SetTexture(engineerIcon)
 	icon:Hide()
-	brez.icon = icon
+	brez.engineerIcon = icon
 
 	local scroll = CreateFrame("ScrollingMessageFrame", nil, brez)
 	scroll:SetPoint("TOP", brez, "BOTTOM")
@@ -117,7 +119,11 @@ local function toggleShow()
 	if not brez then return end
 	if module.db.profile.showDisplay then
 		brez:Show()
-		brez.icon:SetShown(isEngineer)
+		if next(hasEngineer) then
+			brez.engineerIcon:Show()
+		else
+			brez.engineerIcon:Hide()
+		end
 	else
 		brez:Hide()
 	end
@@ -219,16 +225,23 @@ function module:OnRegister()
 end
 
 function module:OnStartup()
+	wipe(hasEngineer)
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "CheckOpen")
 	self:RegisterEvent("CHALLENGE_MODE_START")
 	oRA.RegisterCallback(self, "OnGroupChanged", "CheckOpen")
+	oRA.RegisterCallback(self, "OnPlayerInspect")
+	oRA.RegisterCallback(self, "OnPlayerRemove")
+	self:OnPlayerInspect(nil, UnitGUID("player"), "player")
 	self:CheckOpen()
 end
 
 function module:OnShutdown()
+	wipe(hasEngineer)
 	self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
 	self:UnregisterEvent("CHALLENGE_MODE_START")
 	oRA.UnregisterCallback(self, "OnGroupChanged")
+	oRA.UnregisterCallback(self, "OnPlayerInspect")
+	oRA.UnregisterCallback(self, "OnPlayerRemove")
 	self:Close()
 end
 
@@ -237,12 +250,34 @@ function module:CHALLENGE_MODE_START()
 	self:ScheduleTimer("CheckOpen", 1)
 end
 
+function module:OnPlayerInspect(_, guid, unit)
+	hasEngineer[guid] = nil
+	-- Check head and wrist for Tinker: Arclight Vital Correctors
+	for _, slot in ipairs{ 1, 9 } do
+		local itemLink = GetInventoryItemLink(unit, slot)
+		if itemLink then
+			for _, engineerItemId in next, engineerItem do
+				if tonumber(itemLink:match("item:%d+:%d*:(%d*):")) == engineerItemId then
+					hasEngineer[guid] = true
+					break
+				end
+			end
+		end
+	end
+	self:CheckOpen()
+end
+
+function module:OnPlayerRemove(_, guid)
+	hasEngineer[guid] = nil
+	self:CheckOpen()
+end
+
 do
-	local GetTime, GetSpellCharges = GetTime, GetSpellCharges
+	local GetTime, GetSpellCharges = GetTime, C_Spell.GetSpellCharges
 	local function updateTime()
-		local charges, _, started, duration = GetSpellCharges(20484) -- Rebirth
-		if not charges then return end
-		local time = duration - (GetTime() - started)
+		local chargeInfo = GetSpellCharges(20484) -- Rebirth
+		if not chargeInfo then return end
+		local time = chargeInfo.cooldownDuration - (GetTime() - chargeInfo.cooldownStartTime)
 		local m = floor(time/60)
 		local s = mod(time, 60)
 		brez.timer:SetFormattedText("%d:%02d", m, s)
@@ -264,8 +299,9 @@ do
 
 	local timeUpdater = nil
 	local function updateStatus()
-		local charges = GetSpellCharges(20484) -- Rebirth
-		if charges then
+		local chargeInfo = GetSpellCharges(20484) -- Rebirth
+		if chargeInfo then
+			local charges = chargeInfo.currentCharges
 			if not inCombat then
 				inCombat = true
 				theDead = {}
@@ -281,16 +317,16 @@ do
 				else
 					brez.remaining:SetTextColor(0,1,0)
 				end
-				if isEngineer then
+				if next(hasEngineer) then
 					local count = 1 -- GetItemCount(engineerItem)
 					if count > 0 then
-						brez.icon:SetVertexColor(1, 1, 1)
+						brez.engineerIcon:SetVertexColor(1, 1, 1)
 					else
-						brez.icon:SetVertexColor(1, 0.5, 0.5)
+						brez.engineerIcon:SetVertexColor(1, 0.5, 0.5)
 					end
 				end
 			end
-		elseif inCombat and not charges then
+		elseif inCombat and not chargeInfo then
 			inCombat = false
 			resAmount = 0
 			brez:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -301,38 +337,16 @@ do
 		end
 	end
 
-	local p = { 1, 9 }
 	local function canGroupRes()
-		isEngineer = false
+		if next(hasEngineer) then
+			return true
+		end
 		for _, player in next, oRA:GetGroupMembers() do
 			local _, class = UnitClass(player)
 			if class == "DRUID" or class == "DEATHKNIGHT" or class == "WARLOCK" or class == "PALADIN" then
 				return true
 			end
 		end
-
-		-- p[1], p[2] = GetProfessions()
-		-- for i = 1, 2 do
-		-- 	local index = p[i]
-		-- 	if index then
-		-- 		local _, _, rank, _, _, _, _, _, _, _, skillLineName = GetProfessionInfo(index)
-		-- 		if skillLineName == C_TradeSkillUI.GetTradeSkillDisplayName(2755) and rank > 50 then -- Shadowlands Engineering
-		-- 			isEngineer = true
-		-- 			return true
-		-- 		end
-		-- 	end
-		-- end
-
-		-- Check head and wrist for Tinker: Arclight Vital Correctors
-		for i = 1, 2 do
-			local slot = p[i]
-			local itemLink = GetInventoryItemLink("player", slot)
-			if tonumber(itemLink:match("item:%d+:%d*:(%d*):")) == engineerItem then
-				isEngineer = true
-				return true
-			end
-		end
-
 		return module.db.profile.alwaysShow
 	end
 

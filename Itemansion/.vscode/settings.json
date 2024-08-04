@@ -1,0 +1,12 @@
+{
+    "Lua.diagnostics.globals": [
+        "DEFAULT_CHAT_FRAME",
+        "TooltipDataProcessor",
+        "GameTooltip",
+        "ItemRefTooltip",
+        "ItemRefShoppingTooltip1",
+        "ItemRefShoppingTooltip2",
+        "ShoppingTooltip1",
+        "ShoppingTooltip2"
+    ]
+}

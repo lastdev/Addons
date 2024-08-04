@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= DBM:EJ_GetSectionInfo(3279)
 local Onyxia	= DBM:EJ_GetSectionInfo(3283)
 
-mod:SetRevision("20240426180008")
+mod:SetRevision("20240511084829")
 mod:SetCreatureID(41376, 41270)
 mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 mod:SetUsedIcons(1, 2, 3)
@@ -168,7 +168,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		cinderTargets[#cinderTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnCinderMove:Schedule(3)
-			specWarnCinderMove:ScheduleVoice("runout")
+			specWarnCinderMove:ScheduleVoice(3, "runout")
 			yellCinder:Yell()
 			yellCinderFades:Countdown(args.spellId)
 		end

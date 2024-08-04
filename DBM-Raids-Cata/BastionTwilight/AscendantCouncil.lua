@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-Raids-Cata", 4, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426180008")
+mod:SetRevision("20240609210355")
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
@@ -191,7 +191,8 @@ local function checkSearingWinds(self)
 end
 
 function mod:OnCombatStart(delay)
-	DBM:GetModByName("BoTrash"):SetFlamestrike(true)
+	local botTrash = DBM:GetModByName("BoTrash")
+	botTrash:SetFlamestrike(true)
 	self:SetStage(1)
 	self.vb.lightningRodIcon = 1
 	self.vb.gravityCrushIcon = 1
@@ -364,7 +365,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnAegisFlame:Play("targetchange")
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(args.spellName)
-			DBM.InfoFrame:Show(2, "enemyabsorb", nil, shieldHealth[(DBM:GetCurrentInstanceDifficulty())])
+			DBM.InfoFrame:Show(2, "enemyabsorb", nil, shieldHealth[(DBM:GetCurrentInstanceDifficulty())], args.spellId)
 		end
 	elseif args.spellId == 82762 and args:IsPlayer() then
 		specWarnWaterLogged:Show()

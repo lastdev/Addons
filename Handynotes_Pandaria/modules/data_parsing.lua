@@ -1,16 +1,16 @@
-local addonName, shared = ...;
+local _, addon = ...;
+
+local tinsert = _G.tinsert;
 
 local GetAchievementNumCriteria = _G.GetAchievementNumCriteria;
 local GetAchievementCriteriaInfo = _G.GetAchievementCriteriaInfo;
 
-local addon = shared.addon;
-
 local function parseData ()
-  local rareInfo = shared.rareData;
-  local treasureInfo = shared.treasureData;
+  local rareInfo = addon.rareData;
+  local treasureInfo = addon.treasureData;
 
   local function parseMountData ()
-    local mountData = shared.mountData;
+    local mountData = addon.mountData;
 
     if (mountData == nil) then return end
 
@@ -28,16 +28,16 @@ local function parseData ()
         elseif (rareData.mounts == nil) then
           rareData.mounts = {mountId};
         else
-          table.insert(rareData.mounts, mountId);
+          tinsert(rareData.mounts, mountId);
         end
       end
     end
 
-    shared.mountData = nil;
+    addon.mountData = nil;
   end
 
   local function parseToyData ()
-    local toyData = shared.toyData;
+    local toyData = addon.toyData;
 
     if (toyData == nil) then return end
 
@@ -55,16 +55,16 @@ local function parseData ()
         elseif (rareData.toys == nil) then
           rareData.toys = {toyId};
         else
-          table.insert(rareData.toys, toyId);
+          tinsert(rareData.toys, toyId);
         end
       end
     end
 
-    shared.toyData = nil;
+    addon.toyData = nil;
   end
 
   local function parseAchievementdata ()
-    local achievementData = shared.achievementData;
+    local achievementData = addon.achievementData;
 
     if (achievementData == nil) then return end
 
@@ -75,12 +75,12 @@ local function parseData ()
       data = infoTable[id];
 
       data.achievements = data.achievements or {};
-      table.insert(data.achievements, {
+      tinsert(data.achievements, {
         id = achievementId,
         index = criteriaIndex,
       });
 
-      if (description ~= nil and data.description == nil) then
+      if (data.description == nil and description ~= nil) then
         data.description = description;
       end
 
@@ -143,7 +143,7 @@ local function parseData ()
             end
 
             addRareAchievementInfo(rareData.id, achievement,
-                rareData.index or -1, rareData.description);
+                rareData.index or x, rareData.description);
           end
         end
       end
@@ -159,6 +159,29 @@ local function parseData ()
 
       local function addTreasureAchievementInfo (treasureId, achievementId, criteriaIndex, description)
         addAchievementInfo(treasureInfo, treasureId, achievementId, criteriaIndex, description);
+      end
+
+      local function parseDynamicData ()
+        local achievementList = treasureAchievementData.auto;
+
+        if (achievementList == nil) then return end
+
+        for x = 1, #achievementList, 1 do
+          local achievementId = achievementList[x];
+          local numCriteria  = GetAchievementNumCriteria(achievementId);
+
+          for y = 1, numCriteria, 1 do
+            local criteriaInfo = {GetAchievementCriteriaInfo(achievementId, y)};
+            local treasureId = criteriaInfo[8];
+
+            -- -- this is for detecting unhandled rares
+            -- if (rareId == nil or rareId == 0) then
+            --   print(y, criteriaInfo[1], '-', rareId);
+            -- end
+
+            addTreasureAchievementInfo(treasureId, achievementId, y);
+          end
+        end
       end
 
       local function parseStaticData ()
@@ -180,6 +203,7 @@ local function parseData ()
         end
       end
 
+      parseDynamicData();
       parseStaticData();
     end
 
@@ -191,8 +215,16 @@ local function parseData ()
   parseToyData();
   parseAchievementdata();
 
-  shared.achievementData = nil;
-  shared.mountData = nil;
+  addon.achievementData = nil;
+  addon.mountData = nil;
 end
 
-addon.on('PLAYER_LOGIN', parseData);
+--[[ Some character and anchievement data is only available after PLAYER_LOGIN
+     and event callbacks are not called in order. Therefore waiting for one
+     frame after PLAYER_LOGIN is required. ]]
+addon.onOnce('PLAYER_LOGIN', function ()
+  _G.C_Timer.After(0, function ()
+    parseData();
+    addon.integrateWithHandyNotes();
+  end);
+end);

@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                       v1.16 - 20th April 2024
+                                       v1.18 - 23rd July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -405,44 +405,58 @@ ns.name = UnitName( "player" ) or "Character"
 ns.faction = UnitFactionGroup( "player" )
 
 if ns.locale == "deDE" then
-	L["AddOn Description"] = "Hilfe für Erfolge und Quests in Sonnenwendfest"
+	L["AddOn Description"] = ns.colour.highlight .."Hilfe für Erfolge und Quests in " ..ns.colour.prefix .."Sonnenwendfest"
 	L["Midsummer Fire Festival"] = "Sonnenwendfest"
+	L["Thief's Reward"] = "Der Lohn des Diebes"
 
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["AddOn Description"] = "Ayuda con el suceso mundial"
+	L["AddOn Description"] = ns.colour.highlight .."Ayuda con el suceso mundial" ..ns.colour.prefix
 		.."Festival del Fuego del Solsticio de Verano"
 	L["Midsummer Fire Festival"] = "Festival del Fuego del Solsticio de Verano"
+	L["Thief's Reward"] = "Una recompensa de ladrón"
 
 elseif ns.locale == "frFR" then
-	L["AddOn Description"] = "Aide à l'événement mondial Fête du Feu du solstice d'été"
+	L["AddOn Description"] = ns.colour.highlight .."Aide à l'événement mondial " ..ns.colour.prefix
+		.."Fête du Feu du solstice d'été"
 	L["Midsummer Fire Festival"] = "Fête du Feu du solstice d'été"
+	L["Thief's Reward"] = "La récompense d'un voleur"
 
 elseif ns.locale == "itIT" then
-	L["AddOn Description"] = "Assiste con l'evento mondiale Fuochi di Mezza Estate"
+	L["AddOn Description"] = ns.colour.highlight .."Assiste con l'evento mondiale " ..ns.colour.prefix
+		.."Fuochi di Mezza Estate"
 	L["Midsummer Fire Festival"] = "Fuochi di Mezza Estate"
+	L["Thief's Reward"] = "La Ricompensa del Ladro"
 
 elseif ns.locale == "koKR" then
-	L["AddOn Description"] = "한여름 불꽃축제 대규모 이벤트 지원"	
+	L["AddOn Description"] = ns.colour.prefix .."한여름 불꽃축제 " ..ns.colour.highlight .."대규모 이벤트 지원"	
 	L["Midsummer Fire Festival"] = "한여름 불꽃축제"
+	L["Thief's Reward"] = "도적의 보상"
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["AddOn Description"] = "Auxilia no evento mundial Festival do Fogo do Solstício"
+	L["AddOn Description"] = ns.colour.highlight .."Auxilia no evento mundial " ..ns.colour.prefix
+		.."Festival do Fogo do Solstício"
 	L["Midsummer Fire Festival"] = "Festival do Fogo do Solstício"
+	L["Thief's Reward"] = "A recompensa de um ladrão"
 
 elseif ns.locale == "ruRU" then
-	L["AddOn Description"] = "Помогает с игровое событие Огненный Солнцеворот"
+	L["AddOn Description"] = ns.colour.highlight .."Помогает с игровое событие " ..ns.colour.prefix
+		.."Огненный Солнцеворот"
 	L["Midsummer Fire Festival"] = "Огненный Солнцеворот"
+	L["Thief's Reward"] = "Награда вора"
 
 elseif ns.locale == "zhCN" then
-	L["AddOn Description"] = "协助 仲夏火焰节 活动"
+	L["AddOn Description"] = ns.colour.highlight .."协助 " ..ns.colour.prefix .."仲夏火焰节 " ..ns.colour.highlight .."活动"
 	L["Midsummer Fire Festival"] = "仲夏火焰节"
+	L["Thief's Reward"] = "盗贼的奖励"
 
 elseif ns.locale == "zhTW" then
-	L["AddOn Description"] = "協助 仲夏火焰節 活動"
+	L["AddOn Description"] = ns.colour.highlight .."協助 " ..ns.colour.prefix .."仲夏火焰節 " ..ns.colour.highlight .."活動"
 	L["Midsummer Fire Festival"] = "仲夏火焰節"
-	
+	L["Thief's Reward"] = "盜賊的獎勵"
+
 else
-	L["AddOn Description"] = "Help for the Midsummer Fire Festival achievements"
+	L["AddOn Description"] = ns.colour.highlight .."Help for the " ..ns.colour.prefix .."Midsummer Fire Festival"
+		..ns.colour.highlight .." achievements"
 end
 
 -- Plugin handler for HandyNotes

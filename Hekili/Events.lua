@@ -1,5 +1,5 @@
 -- Events.lua
--- June 2014
+-- June 2024
 
 local addon, ns = ...
 local Hekili = _G[ addon ]
@@ -17,7 +17,16 @@ local insert, remove, sort, wipe = table.insert, table.remove, table.sort, table
 
 local CGetItemInfo = C_Item.GetItemInfo
 local IsEquippedItem = C_Item.IsEquippedItem
+local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo
 local UA_GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
+local IsUsableItem = C_Item.IsUsableItem
+local GetItemSpell = C_Item.GetItemSpell
+local GetSpellCooldown = function(spellID)
+    local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID);
+    if spellCooldownInfo then
+        return spellCooldownInfo.startTime, spellCooldownInfo.duration, spellCooldownInfo.isEnabled, spellCooldownInfo.modRate;
+    end
+end
 local FindStringInInventoryItemTooltip = ns.FindStringInInventoryItemTooltip
 local ResetDisabledGearAndSpells = ns.ResetDisabledGearAndSpells
 local WipeCovenantCache = ns.WipeCovenantCache
@@ -354,7 +363,7 @@ do
             end
         end
 
-        RegisterUnitEvent( "PLAYER_SPECIALIZATION_CHANGED", "player", nil, CheckForTalentUpdate )
+        RegisterEvent( "ACTIVE_PLAYER_SPECIALIZATION_CHANGED", CheckForTalentUpdate )
 
         for event in pairs( specializationEvents ) do
             RegisterEvent( event, CheckForTalentUpdate )
@@ -2417,9 +2426,7 @@ end
 end ]]
 
 RegisterEvent( "UPDATE_BINDINGS", DelayedUpdateKeybindings )
-RegisterEvent( "PLAYER_ENTERING_WORLD", function( event, login, reload )
-    if login or reload then DelayedUpdateKeybindings() end
-end )
+RegisterEvent( "SPELLS_CHANGED", DelayedUpdateKeybindings )
 RegisterEvent( "ACTIONBAR_SHOWGRID", DelayedUpdateKeybindings )
 RegisterEvent( "ACTIONBAR_HIDEGRID", DelayedUpdateKeybindings )
 -- RegisterEvent( "ACTIONBAR_PAGE_CHANGED", DelayedUpdateKeybindings )
@@ -2428,7 +2435,7 @@ RegisterEvent( "ACTIONBAR_HIDEGRID", DelayedUpdateKeybindings )
 if Hekili.IsWrath() then
     RegisterEvent( "ACTIVE_TALENT_GROUP_CHANGED", DelayedUpdateKeybindings )
 else
-    RegisterUnitEvent( "PLAYER_SPECIALIZATION_CHANGED", "player", nil, DelayedUpdateKeybindings )
+    RegisterEvent( "ACTIVE_PLAYER_SPECIALIZATION_CHANGED", DelayedUpdateKeybindings )
     RegisterEvent( "TRAIT_CONFIG_UPDATED", DelayedUpdateKeybindings )
 end
 

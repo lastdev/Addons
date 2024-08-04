@@ -2,6 +2,23 @@ DataStore Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 2024.07.28 (28/07/2024)
+
+- ToC Update.
+
+Version 2024.06.23 (23/06/2024)
+
+- Several fixes for Cataclysm
+- Unified retail & cataclysm code.
+
+Version 2024.05.20 (20/05/2024)
+
+- Stopped using Ace libraries
+- Using locals for all global functions
+- Using new tables in the SV file. 
+- Each 'domain' is now in its own file, under the API folder.
+- Only the relevant API's are loaded by the .toc files
+
 Version 2023.11.17 (17/11/2023)
 
 - ToC Update for Vanilla

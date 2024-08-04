@@ -234,9 +234,9 @@ Rules.SystemRules =
         Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true },
         Name = L["SYSRULE_KEEP_SOULBOUNDGEAR"],
         Description = L["SYSRULE_KEEP_SOULBOUNDGEAR_DESC"],
-        ScriptText = "IsEquipment and IsSoulbound",
+        ScriptText = "IsEquippable and IsSoulbound",
         Script = function()
-                return IsEquipment and IsSoulbound;
+                return IsEquippable and IsSoulbound;
             end,
         Order = 1250,
     },
@@ -262,8 +262,8 @@ Rules.SystemRules =
         Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false },
         Name = L["SYSRULE_KEEP_UNKNOWNAPPEARANCE"],
         Description = L["SYSRULE_KEEP_UNKNOWNAPPEARANCE_DESC"],
-        ScriptText = "IsCollectable",
-        Script = function() return IsCollectable end,
+        ScriptText = "IsUnknownAppearance",
+        Script = function() return IsUnknownAppearance end,
         Order = 1200,
     },
     {

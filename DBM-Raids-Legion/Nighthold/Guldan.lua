@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240502130828")
+mod:SetRevision("20240629024612")
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -120,7 +120,7 @@ local timerDzorykxCD				= mod:NewCastTimer(35, "ej13129", nil, nil, nil, 1, 2122
 local timerSoulVortexCD				= mod:NewCDTimer(21, 206883, nil, nil, nil, 3)--34-36
 --Stage Two: The Ritual of Aman'thul
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
-local timerTransition				= mod:NewPhaseTimer(19)
+local timerTransition				= mod:NewStageTimer(19)
 local timerHandofGuldanCD			= mod:NewNextCountTimer(58.5, 212258, nil, nil, nil, 1, nil, nil, nil, mod:IsTank() and 2 or nil, 4)
 local timerBondsofFelCD				= mod:NewNextCountTimer(50, 206222, nil, nil, nil, 3, nil, nil, nil, 1, 4)
 local timerEyeofGuldanCD			= mod:NewNextCountTimer(60, 209270, nil, nil, nil, 1, nil, nil, nil, not mod:IsTank() and 2 or nil, 4)

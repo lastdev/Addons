@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BrawlersGeneral", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240429235922")
+mod:SetRevision("20240721192753")
 --mod:SetCreatureID(60491)
 --mod:SetModelID(41448)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
@@ -34,6 +34,7 @@ local modsStopped = false
 local eventsRegistered = false
 local lastRank = 0
 
+---@param self DBMMod
 local function setDialog(self, set)
 	if not self.Options.NormalizeVolume then return end
 	if set then
@@ -196,6 +197,12 @@ function mod:OnMatchEnd(callback)
 	table.insert(endCallbacks, callback)
 end
 
+local function stopExtraMod(mod)
+	if mod then
+		mod:Stop()--Stop all timers and warnings
+	end
+end
+
 --Most group up for this so they can buff eachother for matches. Syncing should greatly improve reliability, especially for match end since the person fighting definitely should detect that (probably missing yells still)
 function mod:OnSync(msg)
 	if msg == "MatchBegin" then
@@ -223,23 +230,11 @@ function mod:OnSync(msg)
 			v()
 		end
 		for i = 1, 7 do
-			local mod2 = DBM:GetModByName("BrawlRank" .. i)
-			if mod2 then
-				mod2:Stop()--Stop all timers and warnings
-			end
+			stopExtraMod(DBM:GetModByName("BrawlRank" .. i))
 		end
-		local mod2 = DBM:GetModByName("BrawlChallenges")
-		if mod2 then
-			mod2:Stop()--Stop all timers and warnings
-		end
-		mod2 = DBM:GetModByName("BrawlLegacy")
-		if mod2 then
-			mod2:Stop()--Stop all timers and warnings
-		end
-		mod2 = DBM:GetModByName("BrawlRumble")
-		if mod2 then
-			mod2:Stop()--Stop all timers and warnings
-		end
+		stopExtraMod(DBM:GetModByName("BrawlChallenges"))
+		stopExtraMod(DBM:GetModByName("BrawlLegacy"))
+		stopExtraMod(DBM:GetModByName("BrawlRumble"))
 	end
 end
 

@@ -1,7 +1,7 @@
-## Interface: 100206
+## Interface: 100207
 ## Title: Handynotes Pandaria
 ## X-Curse-Project-ID: 352950
-## Version: 1.5.13
+## Version: 1.7.1
 ## Notes: Shows locations of treasures and rares in Pandaria
 ## Author: syndenbock
 ## RequiredDeps: HandyNotes
@@ -12,6 +12,7 @@
 HandyNotes_Pandaria.lua
 
 # core files
+core\Utils.lua
 core\Events.lua
 core\EventFunnel.lua
 core\Yell.lua

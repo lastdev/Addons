@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2354, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240616044055")
 mod:SetCreatureID(152236)
 mod:SetEncounterID(2304)
 mod:SetUsedIcons(1, 2, 3, 4, 6, 7)
@@ -31,7 +31,7 @@ local warnShield						= mod:NewTargetNoFilterAnnounce(296650, 2, nil, nil, nil, 
 local warnShieldOver					= mod:NewEndAnnounce(296650, 2, nil, nil, nil, nil, nil, 2)
 --local warnCoral						= mod:NewCountAnnounce(296555, 2)
 local warnBrinyBubble					= mod:NewTargetNoFilterAnnounce(297324, 4)
-local warnUpsurge						= mod:NewSpellAnnounce(298055, 3)
+local warnUpsurge						= mod:NewCountAnnounce(298055, 3)
 
 local specWarnRipplingWave				= mod:NewSpecialWarningCount(296688, false, nil, 2, 2, 2)
 local specWarnBarnacleBash				= mod:NewSpecialWarningTaunt(296725, nil, nil, nil, 1, 2)

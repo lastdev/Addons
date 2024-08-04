@@ -1,7 +1,7 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- Always check line number in regexp and file, must be 1
---[===[@debug@
+--[==[@debug@
 print('Loaded',__FILE__)
---@end-debug@]===]
+--@end-debug@]==]
 local function pp(...) print(GetTime(),"|cff009900",__FILE__:sub(-15),strjoin(",",tostringall(...)),"|r") end
 --*TYPE module
 --*CONFIG noswitch=false,profile=true,enhancedProfile=true
@@ -58,7 +58,7 @@ local HideTT=OrderHallCommanderMixin.HideTT
 
 local dprint=print
 local ddump
---[===[@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 ddump=DevTools_Dump
 LoadAddOn("LibDebug")
@@ -66,7 +66,7 @@ LoadAddOn("LibDebug")
 if LibDebug then LibDebug() dprint=print end
 local safeG=addon.safeG
 
---@end-debug@]===]
+--@end-debug@]==]
 --@non-debug@
 dprint=function() end
 ddump=function() end
@@ -145,13 +145,13 @@ function addon:OnInitialized()
     self.db.global.tutorialStep=1
   end
 	menu=CreateFrame("Frame")
---[===[@debug@
+--[==[@debug@
 --[[
 	local f=menu
 	f:RegisterAllEvents()
 	self:RawHookScript(f,"OnEvent","ShowGarrisonEvents")
 ]]--
---@end-debug@]===]
+--@end-debug@]==]
 	self:AddLabel(L["General"])
 	self:AddBoolean("MOVEPANEL",true,L["Make Order Hall Mission Panel movable"],L["Position is not saved on logout"])
 	self:AddBoolean("TROOPALERT",true,L["Troop ready alert"],L["Notifies you when you have troops ready to be collected"])
@@ -264,9 +264,9 @@ local newsframes={}
 function addon:MarkAsNew(obj,key,message,method)
 	local db=self.db.global
 	if not db.news then db.news={} end
---[===[@debug@
+--[==[@debug@
 	db.news[key]=true
---@end-debug@]===]
+--@end-debug@]==]
 	if (not db.news[key]) then
 		local f=CreateFrame("Button",nil,obj,"OHCWhatsNew")
 		f.tooltip=message

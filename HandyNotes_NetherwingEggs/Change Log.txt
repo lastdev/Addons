@@ -1,23 +1,29 @@
+== v2.13 - 23rd July 2024
+* TOC update to 11.0.0
+
+== v2.12 - 12th May 2024
+* Added chat command "/ne" - much easier for non-Retail players to get to the config panel
+
 == v2.11 - 5th May 2024
 * Now supports Classic Cataclysm
 * default icon sizes decreased x 0.6 - previously just way too big for the map
 * Improved the AddOn name colouring in the AddOn menu and the HN options menu
 
 == v2.10 - 20th April 2024
-* TOC update for 10.2.7
+* TOC update to 10.2.7
 
 == v2.09 - 1st April 2024
 * Remove old X-... fields from TOC files
 * Throw in a support _TBC TOC file while I'm at it. Might be of some use to someone
 
 == v2.08 - 18th March 2024
-* TOC update for 10.2.6
+* TOC update to 10.2.6
 
 == v2.07 - 26th January 2024
 * Small change to clarify location @ (68.68,83.62)
 
 == v2.06 - 12th January 2024
-* TOC update for 10.2.5
+* TOC update to 10.2.5
 
 == v2.05 - 10th December 2023
 * Added and improved translations to the Minimap AddOns menu

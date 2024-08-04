@@ -1,7 +1,7 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- Always check line number in regexp and file, must be 1
---[===[@debug@
+--[==[@debug@
 print('Loaded',__FILE__)
---@end-debug@]===]
+--@end-debug@]==]
 local function pp(...) print(GetTime(),"|cff009900",__FILE__:sub(-15),strjoin(",",tostringall(...)),"|r") end
 --*TYPE module
 --*CONFIG noswitch=false,profile=true,enhancedProfile=true
@@ -58,7 +58,7 @@ local HideTT=OrderHallCommanderMixin.HideTT
 
 local dprint=print
 local ddump
---[===[@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 ddump=DevTools_Dump
 LoadAddOn("LibDebug")
@@ -66,7 +66,7 @@ LoadAddOn("LibDebug")
 if LibDebug then LibDebug() dprint=print end
 local safeG=addon.safeG
 
---@end-debug@]===]
+--@end-debug@]==]
 --@non-debug@
 dprint=function() end
 ddump=function() end
@@ -110,9 +110,9 @@ local select=select
 local function GetItemName(id) return (GetItemInfo(id)) end
 local UpgradeFrame
 local UpgradeButtons={}
---[===[@debug@
+--[==[@debug@
 local debugInfo
---@end-debug@]===]
+--@end-debug@]==]
 function module:CheckSpell()
 end
 function module:OnInitialized()
@@ -122,18 +122,18 @@ function module:OnInitialized()
 	u:SetPoint("BOTTOMLEFT",OHFFollowerTab,"BOTTOMLEFT",5,7)
 	u:SetWidth(70)
 	u:Show()
---[===[@debug@
+--[==[@debug@
 	--addon:SetBackdrop(u,C:Green())
---@end-debug@]===]
+--@end-debug@]==]
 	self:SecureHook("GarrisonMission_SetFollowerModel","RefreshUpgrades")
 	UpgradeFrame:EnableMouse(true)
---[===[@debug@
+--[==[@debug@
 	self:RawHookScript(UpgradeFrame,"OnEnter","ShowFollowerData")
 	self:SecureHook(OHFFollowerTab,"ShowEquipment","CheckEquipment")
 	self:RawHookScript(UpgradeFrame,"OnLeave",function() GameTooltip:Hide() end)
 	debugInfo=u:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	debugInfo:SetPoint("TOPLEFT",70,20)
---@end-debug@]===]
+--@end-debug@]==]
 end
 function module:Events()
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED")
@@ -240,11 +240,11 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if not followerID then followerID=OHFFollowerTab.followerID end
   local follower=addon:GetFollowerData(followerID)
-  --[===[@debug@
+  --[==[@debug@
   if followerID then
     debugInfo:SetText(followerID  ..  " " .. (displayID or "no display id") .. " " .. (follower.status or ""))
   end
-  --@end-debug@]===]
+  --@end-debug@]==]
   for i=1,#UpgradeButtons do
     self:ReleaseButton(UpgradeButtons[i])
   end
@@ -257,9 +257,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   --if follower.status==GARRISON_FOLLOWER_COMBAT_ALLY then return end
   --if follower.status==GARRISON_FOLLOWER_INACTIVE then return end
   local data=addon:GetData("Buffs")
-  --[===[@debug@
+  --[==[@debug@
   print("Buffs",#data)
-  --@end-debug@]===]
+  --@end-debug@]==]
   for i=1,#data do
     local id=data[i]
     self:RenderUpgradeButton(id)
@@ -267,9 +267,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   if follower.isTroop then return end
   if follower.iLevel <850  then
     local data=addon:GetData("U850")
-    --[===[@debug@
+    --[==[@debug@
     print("U850",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderUpgradeButton(id)
@@ -277,9 +277,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if follower.iLevel <880 then
     local data=addon:GetData("U880")
-    --[===[@debug@
+    --[==[@debug@
     print("U880",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderUpgradeButton(id)
@@ -287,9 +287,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if follower.iLevel <900 then
     local data=addon:GetData("U900")
-    --[===[@debug@
+    --[==[@debug@
     print("U900",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderUpgradeButton(id)
@@ -297,9 +297,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if follower.iLevel <925 then
     local data=addon:GetData("U925")
-    --[===[@debug@
+    --[==[@debug@
     print("U925",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderUpgradeButton(id)
@@ -307,9 +307,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if follower.iLevel <950 then
     local data=addon:GetData("U950")
-    --[===[@debug@
+    --[==[@debug@
     print("U950",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderUpgradeButton(id)
@@ -317,9 +317,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if not follower.isMaxLevel or  follower.quality < 5 then
     local data=addon:GetData("Xp")
-    --[===[@debug@
+    --[==[@debug@
     print("Xp",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderUpgradeButton(id)
@@ -327,9 +327,9 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
   end
   if follower.quality >=Enum.ItemQuality.Rare then
     local data=addon:GetData("Equipments")
-    --[===[@debug@
+    --[==[@debug@
     print("Equipments",#data)
-    --@end-debug@]===]
+    --@end-debug@]==]
     for i=1,#data do
       local id=data[i]
       self:RenderEquipmentButton(id)

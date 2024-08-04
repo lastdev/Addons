@@ -17,73 +17,54 @@ end
 
 local Info = Addon.Systems.Info
 
---[[ GetContainerItemInfo ]]
-local getContainerItemInfo = nil
-local function setupGetContainerItemInfo()
-    if C_Container.GetContainerItemInfo then
-        getContainerItemInfo = C_Container.GetContainerItemInfo
-    else
-        getContainerItemInfo = GetContainerItemInfo
+
+--[[
+    Blizzard has been moving global functions into C_ class families. This map
+    Identifies how those methods have been moved around so simple refactorings
+    can be easily mapped and used interchangeably based on their presence.
+]]
+local interopMap = {
+    -- [OldName]                    = {"NewClassName",      "NewMethodName"}
+
+    -- C_Container remaps from 10.0
+    ["GetContainerItemInfo"]        = {"C_Container",       "GetContainerItemInfo"},
+    ["GetContainerNumSlots"]        = {"C_Container",       "GetContainerNumSlots"},
+    ["UseContainerItem"]            = {"C_Container",       "UseContainerItem"},
+    ["PickupContainerItem"]         = {"C_Container",       "PickupContainerItem"},
+    ["GetContainerFreeSlots"]       = {"C_Container",       "GetContainerFreeSlots"},
+
+    -- C_AddOn remaps from 11.0
+    ["GetAddOnInfo"]                = {"C_AddOns",          "GetAddOnInfo"},
+    ["IsAddOnLoaded"]               = {"C_AddOns",          "IsAddOnLoaded"},
+    ["GetAddOnMetadata"]            = {"C_AddOns",          "GetAddOnMetadata"},
+    ["GetNumAddOns"]                = {"C_AddOns",          "GetNumAddOns"},
+
+    -- C_Item remaps from 11.0
+    ["GetItemInfo"]                 = {"C_Item",            "GetItemInfo"},
+    ["GetItemInfoInstant"]          = {"C_Item",            "GetItemInfoInstant"},
+    ["GetDetailedItemLevelInfo"]    = {"C_Item",            "GetDetailedItemLevelInfo"},
+    ["IsEquippableItem"]            = {"C_Item",            "IsEquippableItem"},
+    ["IsUsableItem"]                = {"C_Item",            "IsUsableItem"},
+}
+
+local function registerInteropMap(register)
+    for oldMethod, newMap in pairs(interopMap) do
+
+        local class = newMap[1]
+        local method = newMap[2]
+        if _G[class] and _G[class][method] then
+
+            Interop[oldMethod] = function(_, ...) return _G[class][method](...) end
+        else
+
+            Interop[oldMethod] = function(_, ...) return _G[oldMethod](...) end
+        end
+
+        register(method)
     end
 end
-function Interop:GetContainerItemInfo(...)
-    return getContainerItemInfo(...)
-end
 
---[[ GetContainerNumSlots ]]
-local getContainerNumSlots = nil
-local function setupGetContainerNumSlots()
-    if C_Container.GetContainerNumSlots then
-        getContainerNumSlots = C_Container.GetContainerNumSlots
-    else
-        getContainerNumSlots = GetContainerNumSlots
-    end
-end
-function Interop:GetContainerNumSlots(...)
-    return getContainerNumSlots(...)
-end
-
---[[ UseContainerItem ]]
-local useContainerItem = nil
-local function setupUseContainerItem()
-    if C_Container.UseContainerItem then
-        useContainerItem = C_Container.UseContainerItem
-    else
-        useContainerItem = UseContainerItem
-    end
-end
-function Interop:UseContainerItem(...)
-    return useContainerItem(...)
-end
-
---[[ PickupContainerItem ]]
-local pickupContainerItem = nil
-local function setupPickupContainerItem()
-    if C_Container.PickupContainerItem then
-        pickupContainerItem = C_Container.PickupContainerItem
-    else
-        pickupContainerItem = PickupContainerItem
-    end
-end
-function Interop:PickupContainerItem(...)
-    return pickupContainerItem(...)
-end
-
---[[ GetContainerFreeSlots ]]
-local getContainerFreeSlots = nil
-local function setupGetContainerFreeSlots()
-    if C_Container.GetContainerFreeSlots then
-        getContainerFreeSlots = C_Container.GetContainerFreeSlots
-    else
-        getContainerFreeSlots = GetContainerFreeSlots
-    end
-end
-function Interop:GetContainerFreeSlots(container)
-    return getContainerFreeSlots(container)
-end
-
-
---[[ NUM_TOTAL_EQUIPPED_BAG_SLOTS]]
+--[[ NUM_TOTAL_EQUIPPED_BAG_SLOTS - Changed in 10.0 ]]
 local getNumTotalEquippedBagSlots = nil
 local function setupGetNumTotalEquippedBagSlots()
     if NUM_TOTAL_EQUIPPED_BAG_SLOTS then
@@ -106,22 +87,16 @@ function Interop:IsLocationValid(location)
 end
 
 function Interop:Startup(register)
-    setupGetContainerItemInfo()
-    setupGetContainerNumSlots()
-    setupUseContainerItem()
-    setupPickupContainerItem()
-    setupGetContainerFreeSlots()
+    -- Set up non-trivial maps or one-offs
     setupGetNumTotalEquippedBagSlots()
     setupIsLocationValid()
     
     register({
-        "GetContainerItemInfo",
-        "GetContainerNumSlots",
-        "UseContainerItem",
-        "PickupContainerItem",
-        "GetContainerFreeSlots",
         "GetNumTotalEquippedBagSlots",
     })
+
+    -- Set up all the simple remaps
+    registerInteropMap(register)
 end
 
 function Interop:Shutdown()

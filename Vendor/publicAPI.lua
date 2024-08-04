@@ -92,8 +92,8 @@ Addon:MakePublic(
 Addon:MakePublic(
     "GetProfiles",
     function () return Addon:GetProfiles() end,
-    L["API_GETPROFILE_TITLE"],
-    L["API_GETPROFILE_DOCS"])
+    L["API_GETPROFILES_TITLE"],
+    L["API_GETPROFILES_DOCS"])
 
 Addon:MakePublic(
     "SetProfile",
@@ -108,6 +108,6 @@ Addon:MakePublic(
             destroy:DestroyItems()
         end)
     end,
-    L["API_SETPROFILE_TITLE"],
-    L["API_SETPROFILE_DOCS"])
+    L["API_DESTROYITEMS_TITLE"],
+    L["API_DESTROYITEMS_DOCS"])
 

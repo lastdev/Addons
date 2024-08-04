@@ -4,11 +4,17 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
-  .."          |cffffffffDragonflight version by Codermik, additional\n"
-  .."          retail programming by Speedwaystar.\n"
+  .."          |cffffffffDragonflight version by Codermik, additional retail\n"
+  .."          programming by Speedwaystar.\n"
   .."\n\n"
-  .."          Changes in r25.071223:\n\n"
-  .."             * Dreambound Augment Rune should be fixed.\n"
+  .."          Changes in r26.010824:\n\n"
+  .."             * This release is the result of very kind\n"
+  .."               people dedicating their free time to fix\n"
+  .."               the various issues while I was unable to\n"
+  .."               be at the computer for personal reasons!\n\n"
+  .."               Thank you MrWizard and DrunkyTheClown,\n"
+  .."               and to everyone of you that spent time\n"
+  .."               testing their changes!\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -24,7 +30,7 @@ SMARTBUFF_CREDITS = "|cffffffff"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"Daggers", "Axes", "Swords", "Maces", "Staves", "Fist Weapons", "Polearms", "Thrown", "Crossbows", "Bows"};
+SMARTBUFF_WEAPON_STANDARD = {"Daggers", "Axes", "Swords", "Maces", "Staves", "Fist Weapons", "Polearms", "Thrown", "Crossbows", "Bows", "Shields"};
 SMARTBUFF_WEAPON_BLUNT = {"Maces", "Staves", "Fist Weapons"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "Weightstone$";
 SMARTBUFF_WEAPON_SHARP = {"Daggers", "Axes", "Swords", "Polearms"};

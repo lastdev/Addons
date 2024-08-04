@@ -1,12 +1,13 @@
-tag ac0b928d731f56d9add320f6b4b2bd0b6ffd524d WoW-10.2.6-release1
+tag 7c04589ca21b63a380f18497fd32d82ca0e76d6e WoW-10.2.7-release1
 Author:	Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:	Wed Mar 27 23:04:58 2024 +0100
+Date:	Wed Jul 10 23:04:04 2024 +0200
 
-TAgged as WoW-10.2.6-release1
+Tagged as WoW-10.2.7-release1
 
-commit 6cd5a9ab3c22958fa088d4705a03a817ae3ab914
+commit 274907a4d8c0883bc4f0408fe5189f1fb14a87ca
 Author: Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:   Wed Mar 27 23:04:08 2024 +0100
+Date:   Wed Jul 10 23:03:14 2024 +0200
 
-    - updated version in TOC to 100206
+    - updated version in TOC to 100207
+    - included updated LibTourist
 

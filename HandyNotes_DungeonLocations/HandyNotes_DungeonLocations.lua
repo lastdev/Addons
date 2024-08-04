@@ -1287,6 +1287,13 @@ end
 
 -- CATACLYSM
 if (not self.db.profile.hideCata) then
+nodes[948] = { -- Deepholm
+ [51102835] = {
+  id = 67,
+  type = "Dungeon",
+  showInZone = true,
+ }, -- The Stonecore (Maelstrom: 51002790)
+}
 nodes[207] = { -- Deepholm
  [47405210] = {
   id = 67,
@@ -1859,9 +1866,22 @@ nodes[875] = { } -- Zandalar
 nodes[876] = { } --Kul'Tiras
 nodes[1355] = {} -- Nazjatar
 
+nodes[875][86261305] = { -- The Eternal Palace
+	id = 1179,
+	type = "Raid",
+   showInZone = true,
+} 
+
+nodes[876][86261305] = { -- The Eternal Palace
+	id = 1179,
+	type = "Raid",
+   showInZone = true,
+} 
+
 nodes[1355][50431199] = { -- The Eternal Palace
 	id = 1179,
 	type = "Raid",
+   showInZone = true,
 } 
 
 nodes[862][43323947] = {
@@ -1897,6 +1917,14 @@ nodes[863][53886268] = {
  id = 1031,
  type = "Raid",
 } -- Uldir
+
+if (self.faction == "Horde") then
+nodes[1165][38920289] = {
+   id = 1176,
+   type = "Raid",
+   showInZone = true,
+} -- Battle of Dazar Alor
+end
 
 nodes[864][51932484] = {
  id = 1030,
@@ -2124,6 +2152,7 @@ nodes[1978][31015550] = {
 } --Amirdrassil, the Dream's Hope
    end
 end
+
 end
 
 

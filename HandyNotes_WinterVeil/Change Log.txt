@@ -1,3 +1,6 @@
+== v2.09 - 23rd July 2024
+* TOC update to 11.0.0
+
 == v2.08 - 20th April 2024
 * TOC update to 10.2.7
 

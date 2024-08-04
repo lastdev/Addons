@@ -5,7 +5,7 @@ local C_Item = C_Item
 local C_MountJournal = C_MountJournal
 local C_PetJournal = C_PetJournal
 local C_ToyBox = C_ToyBox
-local GetItemInfo = GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 local PlayerHasToy = PlayerHasToy
 local ITEM_SPELL_KNOWN = ITEM_SPELL_KNOWN
 local LE_ITEM_CLASS_MISCELLANEOUS = Enum.ItemClass.Miscellaneous
@@ -60,9 +60,9 @@ function addon.getLootDisplayInfo(items)
 						end
 					else
 						lootType = LOOT_TYPE.UNKNOWN
-						local _, itemSpell = GetItemSpell(itemID)
+						local _, itemSpell = C_Item.GetItemSpell(itemID)
 						if (itemSpell) then
-							local spellDescription = GetSpellDescription(itemSpell)
+							local spellDescription = C_Spell.GetSpellDescription(itemSpell)
 							if (spellDescription) then
 								collectedString = spellDescription
 							end

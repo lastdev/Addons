@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ThermapluggSoD", "DBM-Raids-Vanilla", 9)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426180207")
+mod:SetRevision("20240601045051")
 mod:SetCreatureID(218538, 218970, 218972, 218974, 218537)--(red, blue, green, gray, thermaplugg)
 mod:SetEncounterID(2940)
 mod:SetBossHPInfoToHighest()
@@ -142,8 +142,10 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args:IsSpell(438713) then
-		timerSummonBombCD:Restart(14)
-		timerSprocketfireCD:Restart(18.9)--18.9-24.3
+		timerSummonBombCD:Stop()
+		timerSummonBombCD:Start(14)
+		timerSprocketfireCD:Stop()
+		timerSprocketfireCD:Start(18.9)--18.9-24.3
 		if self:GetStage(4) then
 			timerSpecialCD:Start(21)
 		else

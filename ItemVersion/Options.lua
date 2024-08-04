@@ -8,17 +8,17 @@ local Util = ItemVersion.Util
 
 local GetPreviewTooltipText = function(tooltip)
   local exampleItems = {
-    159, -- Refreshing Spring Water, classic
-    22786, -- Dreaming Glory, tbc
-    36905, -- Lichbloom, wotlk
-    52985, -- Azshara's Veil, cata
-    72238, -- Golden Lotus, mop
+    159,    -- Refreshing Spring Water, classic
+    22786,  -- Dreaming Glory, tbc
+    36905,  -- Lichbloom, wotlk
+    52985,  -- Azshara's Veil, cata
+    72238,  -- Golden Lotus, mop
     120945, -- Primal Spirit, wod
     124124, -- Blood of Sargeras, legion
     163036, -- Polished Pet Charm, bfa
     182614, -- Blanchy's Reins, sl
     191470, -- Writhebark, df
-    0, -- unknown item
+    0,      -- unknown item
   }
   local mapped = {}
   for _, id in pairs(exampleItems) do
@@ -83,6 +83,7 @@ local GetOptions = function(db, tooltip)
   local includeCommunityUpdatesOpt = ScalarOption(db, "includeCommunityUpdates", updatePreview)
   local showWhenMissingOpt = ScalarOption(db, "showWhenMissing", updatePreview)
   local showPrefixOpt = ScalarOption(db, "showPrefix", updatePreview)
+  local showBuildNumberOpt = ScalarOption(db, "showBuildNumber", updatePreview)
   local prefixColorOpt = ColorOption(db, "prefixColor", updatePreview)
   local shortExpacNamesOpt = ScalarOption(db, "shortExpacNames", updatePreview)
   local expacColorOpt = ColorOption(db, "expacColor", updatePreview)
@@ -105,7 +106,7 @@ local GetOptions = function(db, tooltip)
             type = "toggle",
             order = 5,
             name = L["Include community updates"],
-            desc = L["Including community updates changes some items' version/expansion to the one that players expect. For example, the herb [Marrowroot] was actually added towards the end of BfA in pre-release development, but was only obtainable in SL. With this option turned on, ItemVersion would report SL in this case, instead of BfA.\n\nBecause the updates are non-canonical, the version number will be a placeholder one: the major part will be that of the new expansion, but the lesser parts will be zeroed.\n\nIf you encounter an item that is not fixed by these updates, please consider reporting it to the project page."],
+            desc = L["Correct the version for some items"],
             set = includeCommunityUpdatesOpt.set,
             get = includeCommunityUpdatesOpt.get,
             width = "full",
@@ -117,6 +118,15 @@ local GetOptions = function(db, tooltip)
             desc = L["Show the tooltip line even when the item is not in the database"],
             set = showWhenMissingOpt.set,
             get = showWhenMissingOpt.get,
+            width = "full",
+          },
+          showBuildNumber = {
+            type = "toggle",
+            order = 8,
+            name = L["Show build number"],
+            desc = L["Include or omit the build number in the tooltip"],
+            set = showBuildNumberOpt.set,
+            get = showBuildNumberOpt.get,
             width = "full",
           },
           prefix = {
@@ -207,7 +217,8 @@ local GetOptions = function(db, tooltip)
             type = "multiselect",
             order = 30,
             name = L["Modifier keys"],
-            desc = L["Display the tooltip only when the selected modifier keys being are pressed. (No selections means always show.)"],
+            desc = L
+            ["Display the tooltip only when the selected modifier keys being are pressed. (No selections means always show.)"],
             values = keyModifiersOpt.values,
             set = keyModifiersOpt.set,
             get = keyModifiersOpt.get,

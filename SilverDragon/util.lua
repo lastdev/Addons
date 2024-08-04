@@ -79,7 +79,15 @@ function addon:RenderString(s, context)
 				return CreateAtlasMarkup(("majorFactions_icons_%s512"):format(info.textureKit)) .. " " .. info.name
 			end
 		elseif variant == "faction" then
-			local name = GetFactionInfoByID(id)
+			local name
+			if C_Reputation and C_Reputation.GetFactionDataByID then
+				local info = C_Reputation.GetFactionDataByID(id)
+				if info and info.name then
+					name = info.name
+				end
+			elseif GetFactionInfoByID then
+				name = GetFactionInfoByID(id)
+			end
 			if name then
 				return name
 			end
@@ -87,6 +95,17 @@ function addon:RenderString(s, context)
 			local info = C_Garrison.GetTalentInfo(id)
 			if info then
 				return quick_texture_markup(info.icon) .. " " .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
+			end
+		elseif variant == "profession" then
+			local info = C_TradeSkillUI.GetProfessionInfoBySkillLineID(id)
+			if (info and info.professionName and info.professionName ~= "") then
+				-- there's also info.parentProfessionName for the general case ("Dragon Isles Inscription" vs "Inscription")
+				return info.professionName
+			end
+		elseif variant == "zone" then
+			local info = C_Map.GetMapInfo(id)
+			if info and info.name then
+				return info.name
 			end
 		end
 		return fallback ~= "" and fallback or (variant .. ':' .. id)
@@ -204,9 +223,7 @@ do
 	if _G.C_TooltipInfo then
 		function TextFromHyperlink(link)
 			local info = C_TooltipInfo.GetHyperlink(link)
-			-- TooltipUtil.SurfaceArgs(info)
 			if info and info.lines and info.lines[1] then
-				TooltipUtil.SurfaceArgs(info.lines[1])
 				if info.lines[1].type == Enum.TooltipDataType.Unit then
 					return info.lines[1].leftText
 				end
@@ -348,3 +365,14 @@ ns.Tooltip = {
 		return tooltip
 	end,
 }
+
+-- Compatibility helpers
+
+function ns.IsCosmeticItem(itemInfo)
+    if _G.C_Item and C_Item.IsCosmeticItem then
+        return C_Item.IsCosmeticItem(itemInfo)
+    elseif _G.IsCosmeticItem then
+        return IsCosmeticItem(itemInfo)
+    end
+    return false
+end

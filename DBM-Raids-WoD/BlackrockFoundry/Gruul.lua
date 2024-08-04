@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185029")
+mod:SetRevision("20240616044113")
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -153,6 +153,7 @@ function mod:SPELL_CAST_START(args)
 			if self.Options.SpecWarn155080count then
 				specWarnInfernoSlice:Show(self.vb.sliceCount.."-"..otherSoakOrder[self.vb.sliceCount])
 			else
+				---@diagnostic disable-next-line: param-type-mismatch
 				warnInfernoSlice:Show(self.vb.sliceCount.."-"..otherSoakOrder[self.vb.sliceCount])
 			end
 		else
@@ -165,6 +166,7 @@ function mod:SPELL_CAST_START(args)
 				if self.Options.SpecWarn155080count then
 					specWarnInfernoSlice:Show(countFormat)
 				else
+					---@diagnostic disable-next-line: param-type-mismatch
 					warnInfernoSlice:Show(countFormat)
 				end
 			else
@@ -174,6 +176,7 @@ function mod:SPELL_CAST_START(args)
 				if self.Options.SpecWarn155080count then
 					specWarnInfernoSlice:Show(countFormat)
 				else
+					---@diagnostic disable-next-line: param-type-mismatch
 					warnInfernoSlice:Show(countFormat)
 				end
 			end

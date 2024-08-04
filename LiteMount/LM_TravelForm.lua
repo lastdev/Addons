@@ -8,17 +8,13 @@
 
   LEAVE TRAVEL FORM ALONE!
 
-  Also IsUsableSpell doesn't work right on it.
+  Also IsSpellUsable doesn't work right on it.
 
   Copyright 2011 Mike Battersby
 
 ----------------------------------------------------------------------------]]--
 
 local _, LM = ...
-
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
 
 LM.TravelForm = setmetatable({ }, LM.Spell)
 LM.TravelForm.__index = LM.TravelForm
@@ -64,7 +60,7 @@ function LM.TravelForm:IsAreaDenied()
     return true
 end
 
--- IsUsableSpell doesn't return false for Travel Form indoors like it should,
+-- IsSpellUsable doesn't return false for Travel Form indoors like it should,
 -- because you can swim indoors with it (apparently).
 function LM.TravelForm:IsCastable()
     if self:IsAreaDenied() then return false end

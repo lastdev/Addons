@@ -1,11 +1,11 @@
 local me, ns = ...
 local toc=select(4,GetBuildInfo())
 local pp=print
---[===[@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 LoadAddOn("LibDebug")
 if LibDebug then LibDebug() end
---@end-debug@]===]
+--@end-debug@]==]
 local print=print
 --@non-debug@
 print=function() end
@@ -186,9 +186,9 @@ function addon:UNIT_SPELLCAST_START(event,unit,lineID,spellID)
 	end
 end
 function addon:ITEM_PUSH(event,bag,icon)
---[===[@debug@
+--[==[@debug@
 	self:print(event,bag,icon)
---@end-debug@]===]
+--@end-debug@]==]
 end
 function addon:CheckDateReset()
 	local oldToday=today
@@ -352,11 +352,11 @@ function addon:OnInitialized()
 		end
 	end
 	print("initing",LDB)
-	--[===[@debug@
+	--[==[@debug@
 	if LDB.fake then
 		self:Print("Missing LibDataBroker-1.1, still collecting data but no display possibile")
 	end
-	--@end-debug@]===]
+	--@end-debug@]==]
 	ns.me=GetUnitName("player",false)
 	self:RegisterEvent("GARRISON_MISSION_STARTED")
 	self:RegisterEvent("GARRISON_MISSION_NPC_OPENED","ldbCleanup")
@@ -579,9 +579,9 @@ function dataobj:OnTooltipShow()
 				end
 			end
 			addon:DelTable(sorted)
-		--[===[@debug@
+		--[==[@debug@
 		addon:CacheStats()
-		--@end-debug@]===]
+		--@end-debug@]==]
 		else
 			for i=1,#db do
 				if db[i] then

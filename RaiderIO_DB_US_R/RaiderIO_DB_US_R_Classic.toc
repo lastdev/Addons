@@ -1,7 +1,7 @@
 ## Interface: 11502
 ## Title: Raider.IO |cffFFFFFFRaiding|r (Americas)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
-## Version: 1.15.2 (v202405120600)
+## Version: 1.15.2 (v202408010600)
 ## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## Dependencies: RaiderIO
 ## DefaultState: enabled

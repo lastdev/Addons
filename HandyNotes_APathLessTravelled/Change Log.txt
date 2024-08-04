@@ -1,3 +1,40 @@
+== v1.44 - 22nd July 2024
+* Added Wetlands eggs on a peak
+* Various Vanilla trivia sourced from J Staats "The WoW Diary"
+
+== v1.43 - 27th June 2024
+* Missing text for one of the Dalaran tips fixed
+* Worn Troll Dice farming spot added (Rogue only)
+* Decahedral Dwarven Dice farming spot added (Rogue only)
+* Loaded Gnomish Dice farming spot added (Rogue only)
+
+== v1.42 - 11th June 2024
+* Griftah added to Dazar'alor, Zuldazar in Zandalar
+* Colourised the very few that have dialog/quotes
+* Rusted Prisoner's Footlocker and key in Dalaran added
+
+== v1.41 - 4th June 2024
+* Slash commands added
+* Griftah, Asric and Jadaar added - various locations for this deep dive
+* Hrothgar map added
+
+== v1.40 - 28th May 2024
+* Extended some love to Hellfire Peninsular. Several new ones
+
+== v1.39 - 21st May 2024
+* Sayge in the DMF
+* Darkmoon Faire arrow poetry added
+
+== v1.38 - 14th May 2024
+* Now has a Classic Cata version
+* Pink Shrooms in Silverpine Forest now has its missing text. Also relocated
+* Quite a few others with missing text (global copy/paste fail from some time back) fixed
+
+== v1.37 - 13th May 2024
+* Small change to description text colouring
+* Added Slim in the Auchendoun Mana-Tombs foyer
+* Added option to disable Continent pins if you think the AddOn is causing lag or it's too cluttered
+
 == v1.36 - 20th April 2024
 * TOC update to 10.2.7
 

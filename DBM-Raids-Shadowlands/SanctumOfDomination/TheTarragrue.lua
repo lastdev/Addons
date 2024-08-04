@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2435, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240616044044")
 mod:SetCreatureID(175611)
 mod:SetEncounterID(2423)
 mod:SetUsedIcons(1)
@@ -32,9 +32,9 @@ local warnChainsofEternity							= mod:NewTargetNoFilterAnnounce(347269, 2)
 local warnAnnihilatingSmash							= mod:NewTargetAnnounce(347274, 4)
 local warnPedatorsHowl								= mod:NewTargetAnnounce(347283, 2)
 local warnForgottenTorments							= mod:NewSoonAnnounce(352368, 2)--When it's soon
-local warnUpperReachesMight							= mod:NewSpellAnnounce(352382, 2)--When it's happening
-local warnMortregarsEchoes							= mod:NewSpellAnnounce(352389, 2)--When it's happening
-local warnSoulforgeHeat								= mod:NewSpellAnnounce(352398, 2)--When it's happening
+local warnUpperReachesMight							= mod:NewCountAnnounce(352382, 2)--When it's happening
+local warnMortregarsEchoes							= mod:NewCountAnnounce(352389, 2)--When it's happening
+local warnSoulforgeHeat								= mod:NewCountAnnounce(352398, 2)--When it's happening
 local warnTheJailersGaze							= mod:NewTargetNoFilterAnnounce(347369, 4)
 mod:AddBoolOption("warnRemnant", false, "announce", nil, nil, nil, 352368)--3 options are combined into 1, so they don't need bundling
 local warnRemantPhysical							= mod:NewCountAnnounce(352384, 2, nil, nil, false)--Physical

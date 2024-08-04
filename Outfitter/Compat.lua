@@ -55,8 +55,16 @@ function API:GetNumTrackingTypes(...)
 end
 
 function API:GetTrackingInfo(...)
-    if C_Minimap and C_Minimap.GetTrackingInfo then return C_Minimap.GetTrackingInfo(...) end
-    return GetTrackingInfo(...)
+    if C_Minimap and C_Minimap.GetTrackingInfo then
+        local result = C_Minimap.GetTrackingInfo(...)
+        if type(result) == 'table' then
+            return result.name, result.texture, result.active
+        else
+            return C_Minimap.GetTrackingInfo(...)
+        end
+    else
+        return GetTrackingInfo(...)
+    end
 end
 
 function API:SetTracking(...)

@@ -6,8 +6,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WhoTaunted", "koKR", false);
 if not L then return end
 
 L["<WhoTaunted>"] = true
---[[Translation missing --]]
-L["A new Who Taunted? version is available!"] = "A new Who Taunted? version is available!"
+L["A new Who Taunted? version is available!"] = "\"Who Taunted?\"의 새 버전이 나왔습니다!"
 L["against"] = ":"
 L["Announcements"] = "알림"
 L["Anounce AOE Taunts"] = "광역 도발 알리기"

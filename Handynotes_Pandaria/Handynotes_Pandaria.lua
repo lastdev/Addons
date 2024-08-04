@@ -1,16 +1,17 @@
-local addonName, shared = ...;
+local _, addon = ...;
 
-shared.addon = {};
-shared.HandyNotes = _G.LibStub('AceAddon-3.0'):GetAddon('HandyNotes', true)
+addon.HandyNotes = _G.LibStub('AceAddon-3.0'):GetAddon('HandyNotes', true)
 -- export and import handling
+
 do
   local modules = {};
 
-  function shared.addon.export (moduleName, module)
+  function addon.export (moduleName, module)
+    assert(modules[moduleName] == nil);
     modules[moduleName] = module;
   end
 
-  function shared.addon.import (moduleName)
+  function addon.import (moduleName)
     return modules[moduleName];
   end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2441, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240629024554")
 mod:SetCreatureID(175732)
 mod:SetEncounterID(2435)
 mod:SetUsedIcons(1, 2, 3)
@@ -99,7 +99,7 @@ local warnRive										= mod:NewCountAnnounce(353418, 4)--May default off by de
 local specWarnBansheeWail							= mod:NewSpecialWarningMoveAwayCount(348094, nil, nil, nil, 2, 2)
 
 local timerRiveCD									= mod:NewCDTimer(48.8, 353418, nil, nil, nil, 3)
-local timerNextPhase								= mod:NewPhaseTimer(16.5, 348094, nil, nil, nil, 6)
+local timerNextPhase								= mod:NewStageTimer(16.5, 348094, nil, nil, nil, 6)
 
 --Stage Two: The Banshee Queen
 --mod:AddOptionLine(P2Info, "announce")
@@ -668,6 +668,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnMerciless:Show(self.vb.merciCount.." / "..soakCount.."x")
 			specWarnMerciless:Play("helpsoak")
 		else
+			---@diagnostic disable-next-line: param-type-mismatch
 			warnMerciless:Show(self.vb.merciCount.." ("..soakCount.."x)")
 		end
 		timerMercilessCD:Start(self.vb.merciCount < 7 and 21 or 41, self.vb.merciCount+1)

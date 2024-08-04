@@ -111,9 +111,9 @@ local function GMCList()
 	end
 	function m:AddFollower(follower,xp,levelup)
 
---[===[@debug@
+--[==[@debug@
 print(follower)
---@end-debug@]===]
+--@end-debug@]==]
 		local followerID=follower.followerID
 		local followerType=follower.followerTypeID
 		if xp < 0 then
@@ -301,7 +301,7 @@ local function GMCLayer()
 		local frame=CreateFrame("Frame",nil,nil,"BackdropTemplate")
 		local title=frame:CreateFontString(nil, "BACKGROUND", "GameFontNormalHugeBlack")
 		title:SetJustifyH("CENTER")
-		title:SetJustifyV("CENTER")
+		title:SetJustifyV("MIDDLE")
 		title:SetPoint("TOPLEFT")
 		title:SetPoint("TOPRIGHT")
 		title:SetHeight(0)
@@ -380,9 +380,9 @@ local function GMCMissionButton()
 	function m:Blacklist(blacklisted)
 		local mb=self.frame
 		if blacklisted then
---[===[@debug@
+--[==[@debug@
 			print("Blacklisting",mb:GetName())
---@end-debug@]===]
+--@end-debug@]==]
 			mb.Overlay:Show()
 			mb.Overlay.Overlay:SetAlpha(1)
 			for i,v in pairs(mb.gcPANEL.Party) do
@@ -472,7 +472,7 @@ local function GMCMissionButton()
 		widget.type=Type2
 		local indicators=CreateFrame("Frame",nil,frame,"GarrisonCommanderIndicators")
 		indicators.Percent:SetJustifyH("LEFT")
-		indicators.Percent:SetJustifyV("CENTER")
+		indicators.Percent:SetJustifyV("MIDDLE")
 		indicators:SetPoint("LEFT",70,0)
 		indicators.Age:Hide()
 		local spinner=CreateFrame("Frame",nil,frame,"LoadingSpinnerTemplate")

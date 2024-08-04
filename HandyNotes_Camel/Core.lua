@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                        v1.06 - 6th May 2024
+                                        v1.08 - 20th May 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -39,6 +39,8 @@ local select = _G.select
 local UnitAura = UnitAura
 
 local HandyNotes = _G.HandyNotes
+
+local _, _, _, version = GetBuildInfo()
 
 -- Localisation
 ns.locale = GetLocale()
@@ -98,8 +100,6 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
 	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
 	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
-	L["Icon Alpha"] = "Transparencia del icono"
-	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
 	L["Show Coordinates"] = "Mostrar coordenadas"
 	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
 		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
@@ -385,39 +385,39 @@ end
 ns.name = UnitName( "player" ) or "Character"
 
 if ns.locale == "deDE" then
-	L["AddOn Description"] = "Hilft Ihnen, das " ..ns.colour.highlight
-		.."Mysteriöse Kamelfigur" ..ns.colour.plaintext .." in Uldum zu erhalten"
+	L["AddOn Description"] = ns.colour.highlight .."Hilft Ihnen, das " ..ns.colour.prefix
+		.."Mysteriöse Kamelfigur" ..ns.colour.highlight .." in Uldum zu erhalten"
 	L["Camel"] = "Mysteriöse Kamelfigur"
 	L["Speak to Zidormi"] = "Sprich mit Zidormi"
 	L["Uldum Map"] = "Uldum-Karte"
 	L["Wrong version of Uldum"] = "Falsche Version von Uldum"
 	
 elseif ns.locale == "esES" or ns.locale == "esMX" then
-	L["AddOn Description"] = "Te ayuda a obtener " ..ns.colour.highlight
-		.."el Figurilla de camello misteriosa" ..ns.colour.plaintext .." en Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Te ayuda a obtener " ..ns.colour.prefix
+		.."el Figurilla de camello misteriosa" ..ns.colour.highlight .." en Uldum"
 	L["Camel"] = "Figurilla de camello misteriosa"
 	L["Speak to Zidormi"] = "Hablar con Zidormi"
 	L["Uldum Map"] = "Mapa de Uldum"
 	L["Wrong version of Uldum"] = "Versión incorrecta de Uldum"
 
 elseif ns.locale == "frFR" then
-	L["AddOn Description"] = "Vous aide à obtenir " ..ns.colour.highlight
-		.."l'figurine de dromadaire mystérieuse" ..ns.colour.plaintext .." à Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Vous aide à obtenir " ..ns.colour.prefix
+		.."la figurine de dromadaire mystérieuse" ..ns.colour.highlight .." à Uldum"
 	L["Camel"] = "Figurine de dromadaire mystérieuse"
 	L["Speak to Zidormi"] = "Parlez à Zidormi"
 	L["Uldum Map"] = "Carte de Uldum"
 	L["Wrong version of Uldum"] = "Mauvaise version de Uldum"
 
 elseif ns.locale == "itIT" then
-	L["AddOn Description"] = "Ti aiuta a ottenere " ..ns.colour.highlight
-		.."Statuetta di Dromedario Misteriosa" ..ns.colour.plaintext .." a Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Ti aiuta a ottenere " ..ns.colour.prefix
+		.."Statuetta di Dromedario Misteriosa" ..ns.colour.highlight .." a Uldum"
 	L["Camel"] = "Statuetta di Dromedario Misteriosa"
 	L["Speak to Zidormi"] = "Parla con Zidormi"
 	L["Uldum Map"] = "Mappa di Uldum"
 	L["Wrong version of Uldum"] = "Versione errata di Uldum"
 
 elseif ns.locale == "koKR" then
-	L["AddOn Description"] = "울둠에서 " ..ns.colour.highlight .."수수께끼 낙타 조각상"
+	L["AddOn Description"] = ns.colour.highlight .."울둠에서 " ..ns.colour.prefix .."수수께끼 낙타 조각상"
 		..ns.colour.plaintext .."를 얻는 데 도움이 됩니다."
 	L["Camel"] = "수수께끼 낙타 조각상"
 	L["Speak to Zidormi"] = "지도르미님과 대화"
@@ -425,38 +425,38 @@ elseif ns.locale == "koKR" then
 	L["Wrong version of Uldum"] = "잘못된 버전의 울둠"
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
-	L["AddOn Description"] = "Ajuda você a obter o " ..ns.colour.highlight
-		.."Estátua de Camelo Misteriosa" ..ns.colour.plaintext .." em Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Ajuda você a obter o " ..ns.colour.prefix
+		.."Estátua de Camelo Misteriosa" ..ns.colour.highlight .." em Uldum"
 	L["Camel"] = "Estátua de Camelo Misteriosa"
 	L["Speak to Zidormi"] = "Fale com Zidormi"
 	L["Uldum Map"] = "Mapa de Uldum"
 	L["Wrong version of Uldum"] = "Versão incorreta de Uldum"
 
 elseif ns.locale == "ruRU" then
-	L["AddOn Description"] = "Помогает вам получить " ..ns.colour.highlight
-		.."Странная фигурка верблюда" ..ns.colour.plaintext .." в Ульдум"
+	L["AddOn Description"] = ns.colour.highlight .."Помогает вам получить " ..ns.colour.prefix
+		.."Странная фигурка верблюда" ..ns.colour.highlight .." в Ульдум"
 	L["Camel"] = "Странная фигурка верблюда"
 	L["Speak to Zidormi"] = "Поговори с Зидорми"
 	L["Uldum Map"] = "Карта Ульдума"
 	L["Wrong version of Uldum"] = "Неправильная версия Ульдум"
 
 elseif ns.locale == "zhCN" then
-	L["AddOn Description"] = "帮助您获取奥丹姆中的" ..ns.colour.highlight .."神秘的骆驼雕像"
+	L["AddOn Description"] = ns.colour.highlight .."帮助您获取奥丹姆中的" ..ns.colour.prefix .."神秘的骆驼雕像"
 	L["Camel"] = "神秘的骆驼雕像"
 	L["Speak to Zidormi"] = "与 希多尔米 通话"
 	L["Uldum Map"] = "奥丹姆地图"
 	L["Wrong version of Uldum"] = "奥丹姆 版本错误"
 
 elseif ns.locale == "zhTW" then
-	L["AddOn Description"] = "幫助您獲取奧丹姆中的" ..ns.colour.highlight .."神秘的駱駝雕像"
+	L["AddOn Description"] = ns.colour.highlight .."幫助您獲取奧丹姆中的" ..ns.colour.prefix .."神秘的駱駝雕像"
 	L["Camel"] = "神秘的駱駝雕像"
 	L["Speak to Zidormi"] = "與 希多爾米 通話"
 	L["Uldum Map"] = "奧丹姆地圖"
 	L["Wrong version of Uldum"] = "奧丹姆 版本錯誤"
 	
 else
-	L["AddOn Description"] = ns.colour.plaintext .."Helps you to obtain the " ..ns.colour.highlight
-		.."Mysterious Camel Figurine" ..ns.colour.plaintext .." in Uldum"
+	L["AddOn Description"] = ns.colour.highlight .."Helps you to obtain the " ..ns.colour.prefix
+		.."Mysterious Camel Figurine" ..ns.colour.highlight .." in Uldum"
 	L["Camel"] = "Mysterious Camel Figurine"
 end
 
@@ -643,3 +643,38 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_CamelDB", "AceEvent-3.0")
+
+--=======================================================================================================
+--
+--		SLASH CHAT COMMANDS  -- All game versions
+--		===================
+--
+--=======================================================================================================
+
+SLASH_Camel1, SLASH_Camel2 = "/camel", "/mcf"
+
+local function Slash( options )
+
+	if ( options == "" ) then
+		Settings.OpenToCategory( "HandyNotes" )
+		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "Camel" )
+	elseif ( options == "u" ) then
+		OpenWorldMap( 249 )
+		if WorldMapFrame:IsVisible() ~= true then
+			print( ns.colour.prefix	..L["Camel"] ..": " ..ns.colour.plaintext ..L["Try later"] )
+		end
+	else
+		print( ns.colour.prefix .."Options:\n"
+				..ns.colour.highlight .."/sa" ..ns.colour.plaintext .." Show the HandyNotes options panel\n"
+				..ns.colour.highlight .."/sa ?" ..ns.colour.plaintext .." Show this menu\n"
+				..ns.colour.highlight .."/sa u" ..ns.colour.plaintext .." Show the Uldum map" )
+		if ( version > 100000 ) then
+			print( ns.colour.prefix .."Tip:" ..ns.colour.highlight
+				.." Try the Minimap AddOn Menu (below the Calendar)\nLeft Mouse:" ..ns.colour.plaintext
+				.." MCF options panel; " ..ns.colour.highlight .."Right Mouse:" ..ns.colour.plaintext
+				.." Uldum map" )
+		end
+	end
+end
+
+SlashCmdList[ "Camel" ] = function( options ) Slash( options ) end

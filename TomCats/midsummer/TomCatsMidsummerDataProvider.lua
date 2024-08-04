@@ -318,9 +318,9 @@ end
 function GetPoiInfoForPhasedZone(phasedZone)
     local poiInfo
     for _, poiID in ipairs(phasedZone["Timewalking NPC POI IDs"]) do
-        poiInfo = CreateFromMixins(C_AreaPoiInfo.GetAreaPOIInfo(phasedZone["UIMap ID"], poiID))
+        poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(phasedZone["UIMap ID"], poiID)
         if (not (poiInfo and poiInfo.position) and phasedZone["Alt Phase Zone"]) then
-            poiInfo = CreateFromMixins(C_AreaPoiInfo.GetAreaPOIInfo(phasedZone["Alt Phase Zone"], poiID))
+            poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(phasedZone["Alt Phase Zone"], poiID)
         end
         if (poiInfo and poiInfo.position) then
             return poiInfo
@@ -546,4 +546,6 @@ local function OnUpdate()
     end
 end
 
-CreateFrame("FRAME"):SetScript("OnUpdate",OnUpdate)
+function addon.midsummerInit()
+    CreateFrame("FRAME"):SetScript("OnUpdate",OnUpdate)
+end

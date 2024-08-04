@@ -13,6 +13,7 @@ local hbCommands = { [strlower(HEALBOT_DISABLED_TARGET)]=true,
                      [strlower(HEALBOT_STOP)]=true,
                      [strlower(HEALBOT_IGNOREAURAALL)]=true,
                      [strlower(HEALBOT_CANCELPLUGINALERT)]=true,
+                     [strlower(HEALBOT_MOUSELOOK)]=true,
                     }  
 local hbPlayerCommands = {}
 if HEALBOT_GAME_VERSION>3 then
@@ -32,6 +33,7 @@ elseif HEALBOT_GAME_VERSION>2 then
                        }
 end
 local hbTip = HealBot_GameTooltip
+HealBot_Data["TIPTYPE"] = "Enabled" -- Initialize
 
 local hbCustomTipAnchor=nil
 local hbCustomTipAnchorText={}
@@ -69,19 +71,13 @@ end
 
 function HealBot_Tooltip_GetHealSpell(button,sName)
       --HealBot_setCall("HealBot_Tooltip_GetHealSpell", button)
-    if not sName or not HealBot_Spell_Names[sName] then
-        if HealBot_Init_knownClassicHealSpell(sName) then
-            if HealBot_Range_SpellInRange(button,sName) then
-                return sName, 1, 1, 1, false, true
-            else
-                return sName, 1, 0.2, 0, false, false
-            end
-        elseif sName then
+    if not HealBot_Spells_KnownByName(sName) then
+        if sName then
             if not HealBot_IsKnownItem(sName) then
                 return nil, 1, 0.2, 0, false, false
             else
                 if not button.player then
-                    if IsUsableItem(sName) and IsItemInRange(sName,button.unit) then
+                    if HealBot_WoWAPI_UsableItem(sName) and HealBot_Range_Unit(button.unit, button.guid) then
                         return sName, 0.2, 0.5, 1, true, true
                     else
                         return sName, 0.1, 0.25, 0.7, true, false
@@ -108,25 +104,25 @@ function HealBot_Tooltip_GCDV1()
 end
 
 local gcdDUR=0
-function HealBot_Tooltip_GCDV5()
+function HealBot_Tooltip_GCDV4()
       --HealBot_setCall("HealBot_Tooltip_GCDV4")
-    _, gcdDUR = GetSpellCooldown(61304) -- GCD
+    _, gcdDUR = HealBot_WoWAPI_SpellCooldown(61304) -- GCD
     return gcdDUR
 end
 
 local HealBot_Tooltip_GCD=HealBot_Tooltip_GCDV1
-if HEALBOT_GAME_VERSION>4 then
-    HealBot_Tooltip_GCD=HealBot_Tooltip_GCDV5
+if HEALBOT_GAME_VERSION>3 then
+    HealBot_Tooltip_GCD=HealBot_Tooltip_GCDV4
 end
 function HealBot_Tooltip_getSpellCD(validSpellName, isMacro)
       --HealBot_setCall("HealBot_Tooltip_getSpellCD")
-    local z, x, _ = GetSpellCooldown(validSpellName);
+    local z, x = HealBot_WoWAPI_SpellCooldown(validSpellName);
     local gcd=0
     if HealBot_Globals.Tooltip_IgnoreGCD then
         gcd=HealBot_Tooltip_GCD()
     end
     if HealBot_Globals.Tooltip_ShowCD and x and x>gcd then 
-        z = HealBot_Comm_round(x-(GetTime()-z),0)
+        z = HealBot_Util_Round(x-(GetTime()-z),0)
         local u=HEALBOT_TOOLTIP_SECS
         if z>59 then
             z = ceil(z/60)
@@ -334,6 +330,10 @@ function HealBot_Tooltip_SetLine(lText,lR,lG,lB,la,rText,rR,rG,rB,ra)
     end
 end
 
+function HealBot_Tooltip_SetWrappedLine(lText,lR,lG,lB,la)
+    hbTip:AddLine(lText,lR,lG,lB,true)
+end
+
 local HealBot_Tooltip_Power = 9
 local HealBot_Tooltip_PowerDesc = {[0]="Mana", 
                                    [1]="Rage", 
@@ -419,18 +419,39 @@ function HealBot_ToolTip_ShowHoT(button)
 end
 
 local hbTipDebugText={}
+local hbStates={[0]="Disabled",
+                [2]="Check",
+                [3]="Enabled OOR",
+                [4]="Enabled IR",
+                [5]="Buff No Col",
+                [6]="Buff Bar Col",
+                [7]="Debuff No Col",
+                [8]="Debuff Bar Col",
+               [15]="Plugin Bar Col",
+               [18]="Dead",
+               [19]="Res",
+               [50]="DC",
+               [99]="Reserved",
+               }
 function HealBot_ToolTip_ShowDebug(button)
       --HealBot_setCall("HealBot_ToolTip_ShowDebug", button)
     HealBot_Tooltip_SetLine("  ",0,0,0,0)
     HealBot_Tooltip_SetLine("Debug On - Turn off in Tip with /hb debugtip",1,1,1,1)
     hbTipDebugText["player"]="False"
     hbTipDebugText["isPlayer"]="False"
-    hbTipDebugText["debugtrack"]="false"
+    hbTipDebugText["debugtrack"]="False"
     hbTipDebugText["range40"]=-99
-    hbTipDebugText["debugtime"]=""
+    hbTipDebugText["status"]="Unknown"
+    hbTipDebugText["debugtime"]="Unset"
+    hbTipDebugText["duplicate"]="False"
     if button then
-        HealBot_Tooltip_SetLine("Button ID:"..button.id,0.4,1,1,1,"Unit ID:"..button.unit)
-        HealBot_Tooltip_SetLine("Button Name:"..button.bName,0.4,1,1,1,"Frame:"..button.frame)
+        hbTipDebugText["playerTarget"]=HealBot_Panel_isSpecialPlayerUnit(button.unit)
+        if hbTipDebugText["playerTarget"]<0 then hbTipDebugText["playerTarget"]="No" end
+        if button.status.duplicate then hbTipDebugText["duplicate"]="True" end
+        HealBot_Tooltip_SetLine("Button ID: "..button.id,0.4,1,1,1,"Unit ID: "..button.unit)
+        HealBot_Tooltip_SetLine("Player target: "..hbTipDebugText["playerTarget"],0.4,1,1,1,"Duplicate: "..hbTipDebugText["duplicate"])
+        HealBot_Tooltip_SetLine("Button Name: "..button.bName,0.4,1,1,1,"Frame: "..button.frame)
+        HealBot_Tooltip_SetLine("Height: "..button.height,0.4,1,1,1,"Width: "..button.width)
         if UnitExists(button.unit) then
             if UnitIsFriend("player",button.unit) then
                 HealBot_Tooltip_SetLine("UnitExists is True",0.4,1,1,1,"UnitIsFriend is True")
@@ -441,6 +462,7 @@ function HealBot_ToolTip_ShowDebug(button)
             HealBot_Tooltip_SetLine("UnitExists is False",0.4,1,1,1)
         end
         hbTipDebugText["range40"]=button.status.range
+        hbTipDebugText["status"]=hbStates[button.status.current] or ("Unknown ("..button.status.current..")")
         if button.player then hbTipDebugText["player"]="True" end
         if button.isplayer then hbTipDebugText["isPlayer"]="True" end
         if button.debug.track then
@@ -452,7 +474,10 @@ function HealBot_ToolTip_ShowDebug(button)
     end
     HealBot_Tooltip_SetLine("Button Player is "..hbTipDebugText["player"],0.4,1,1,1,"Button isPlayer is "..hbTipDebugText["isPlayer"])
     HealBot_Tooltip_SetLine("Debug track is "..hbTipDebugText["debugtrack"],0.4,1,1,1,"Debug time is "..hbTipDebugText["debugtime"])
-    HealBot_Tooltip_SetLine("Range 40",0.4,1,1,1,hbTipDebugText["range40"],0.4,1,1,1)
+    HealBot_Tooltip_SetLine("Range state is "..hbTipDebugText["range40"],0.4,1,1,1,"Current status="..hbTipDebugText["status"])
+    if button then
+        HealBot_Tooltip_SetLine("unitType is "..button.status.unittype,0.4,1,1,1,"Column is "..(button.Column or "nil"))
+    end
 end
 
 function HealBot_ToolTip_ToggleDebug()
@@ -580,14 +605,39 @@ function HealBot_Tooltip_setPlayerPowerCols(r,g,b)
     playerPowerCols.r,playerPowerCols.g,playerPowerCols.b=r+0.34,g+0.34,b+0.34
 end
 
+function HealBot_Action_setSpellInfo(button)
+    local bId, bName, sName, sType, sDisplayName, bR, bG, bB
+    for x=1,HealBot_Globals.Tooltip_MaxButtons do
+        bId, bName=HealBot_Options_ComboClass_Button(x)
+        sName = HealBot_Action_SpellPattern(bId, string.upper(HealBot_Data["TIPTYPE"]))
+        if x==1 and HealBot_Globals.SmartCast and button.status.current<HealBot_Unit_Status["DC"] and not IsModifierKeyDown() and UnitIsFriend("player",button.unit) and not HealBot_Data["UILOCK"] then 
+            sName=HealBot_Action_SmartCast(button) or sName
+        end
+        sDisplayName, bR, bG, bB, sType=HealBot_Tooltip_setspellName(button, sName)
+        if sDisplayName then
+            if HealBot_Globals.Tooltip_ShowSpellExtra then
+                HealBot_Tooltip_SetLine(bName..": "..sDisplayName, bR, bG, bB,1,HealBot_Tooltip_SpellSummary(sName, sType),playerPowerCols.r,playerPowerCols.g,playerPowerCols.b,1)
+            else
+                HealBot_Tooltip_SetLine(bName..": "..sDisplayName, bR, bG, bB,1)
+            end
+        end
+    end
+end
+
 local tipsUnitBosses={["boss1"]=true,["boss2"]=true,["boss3"]=true,["boss4"]=true,
                       ["boss5"]=true,["boss6"]=true,["boss7"]=true,["boss8"]=true}
 function HealBot_Action_DoRefreshTooltip()
     if HealBot_Globals.ShowTooltip==false then return end
     if HealBot_Globals.DisableToolTipInCombat and HealBot_Data["UILOCK"] then return end
+    if not HealBot_Globals.Tooltip_ShowTarget and not HealBot_Globals.Tooltip_ShowSpellInfo then return end
     xButton=HealBot_Data["TIPBUTTON"]
+    
       --HealBot_setCall("HealBot_Action_DoRefreshTooltip", xButton)
-    if not xButton then return end
+    if not xButton then 
+        return 
+    else
+        HealBot_Tooltip_luVars["button"]=xButton
+    end
     xUnit=xButton.unit
     xGUID=UnitGUID(xUnit)
     local uName=""
@@ -601,7 +651,6 @@ function HealBot_Action_DoRefreshTooltip()
     end
     HealBot_ToolTip_SetTooltipPos(xButton.frame);
     if xGUID and uName and UnitExists(xUnit) then
-        if HealBot_Data["TIPTYPE"]=="NONE" then return end
         if HealBot_Data["TIPTYPE"]=="WoWUnit" then
             hbTip:SetUnit(xUnit)
         else
@@ -687,7 +736,13 @@ function HealBot_Action_DoRefreshTooltip()
                     end
                     local uGuild=""
                     if HealBot_Globals.Tooltip_ShowGuild and xButton.guild then
-                        uGuild="<"..xButton.guild..">".." "..xButton.guildrank.." ("..xButton.guildranki..")"
+                        uGuild="<"..xButton.guild..">"
+                        if HealBot_Globals.Tooltip_ShowGuildTitle then
+                            uGuild=uGuild.." "..xButton.guildtitle
+                        end
+                        if HealBot_Globals.Tooltip_ShowGuildRank then
+                            uGuild=uGuild.." ("..xButton.guildrank..")"
+                        end
                     end
                     if HealBot_Globals.Tooltip_ShowRank or HealBot_Globals.Tooltip_ShowRole then
                         local uRankIdx=xButton.rank
@@ -899,22 +954,7 @@ function HealBot_Action_DoRefreshTooltip()
             end
             
             if HealBot_Globals.Tooltip_ShowSpellInfo then
-                local bId, bName, sName, sType, sDisplayName, bR, bG, bB
-                for x=1,HealBot_Globals.Tooltip_MaxButtons do
-                    bId, bName=HealBot_Options_ComboClass_Button(x)
-                    sName = HealBot_Action_SpellPattern(bId, string.upper(HealBot_Data["TIPTYPE"]))
-                    if x==1 and HealBot_Globals.SmartCast and xButton.status.current<HealBot_Unit_Status["DC"] and not IsModifierKeyDown() and UnitIsFriend("player",xButton.unit) and not HealBot_Data["UILOCK"] then 
-                        sName=HealBot_Action_SmartCast(xButton) or sName
-                    end
-                    sDisplayName, bR, bG, bB, sType=HealBot_Tooltip_setspellName(xButton, sName)
-                    if sDisplayName then
-                        if HealBot_Globals.Tooltip_ShowSpellExtra then
-                            HealBot_Tooltip_SetLine(bName..": "..sDisplayName, bR, bG, bB,1,HealBot_Tooltip_SpellSummary(sName, sType),playerPowerCols.r,playerPowerCols.g,playerPowerCols.b,1)
-                        else
-                            HealBot_Tooltip_SetLine(bName..": "..sDisplayName, bR, bG, bB,1)
-                        end
-                    end
-                end
+                HealBot_Action_setSpellInfo(xButton)
             end
 
             HealBot_ToolTip_ShowHoT(xButton)
@@ -1215,8 +1255,10 @@ function HealBot_Tooltip_DisplayActionIconTooltip(icon, target)
         else
             HealBot_Tooltip_SetLine("icon SpellRangeNeeds 100",1,1,1,1)
         end
-        HealBot_Tooltip_SetLine("icon.infoType="..(icon.infoType or "nil"),1,0.25,0.25,1)
-        HealBot_Tooltip_SetLine("icon.info="..(icon.info or "nil"),1,0.25,0.25,1)
+        HealBot_Tooltip_SetLine("icon.infoType="..(icon.infoType or "nil"),0.25,1,0.25,1)
+        HealBot_Tooltip_SetLine("icon.infoID="..(icon.infoID or "nil"),0.25,1,0.25,1)
+        HealBot_Tooltip_SetLine("icon.infoName="..(icon.infoName or "nil"),0.25,1,0.25,1)
+        HealBot_Tooltip_SetLine("icon.info="..(icon.info or "nil"),0.25,1,0.25,1)
         HealBot_Tooltip_SetLine("  ",0,0,0,0)
         if not icon.guid then
             HealBot_Tooltip_SetLine("icon.guid not valid",1,0.25,0.25,1)
@@ -1228,23 +1270,23 @@ function HealBot_Tooltip_DisplayActionIconTooltip(icon, target)
                 HealBot_Tooltip_SetLine("Ability valid",1,1,1,1,"On Cooldown",1,0.25,0.25,1)
             else
                 HealBot_Tooltip_SetLine("Ability valid",1,1,1,1,"Not on cooldown",1,1,1,1)
-                if icon.valid then 
-                    HealBot_Tooltip_SetLine("icon.valid is ",0.4,1,1,1,"TRUE",0.25,1,0.25,1)
-                else
-                    HealBot_Tooltip_SetLine("icon.valid is ",0.4,1,1,1,"FALSE",1,0.25,0.25,1)
-                end
-                if HealBot_ActionIcons_CheckValidTarget(icon.frame, icon.id) then 
-                    HealBot_Tooltip_SetLine("target valid is ",0.4,1,1,1,"TRUE",0.25,1,0.25,1)
-                else
-                    HealBot_Tooltip_SetLine("target valid is ",0.4,1,1,1,"FALSE",1,0.25,0.25,1)
-                end
-                HealBot_Tooltip_SetLine("  ",0,0,0,0)
-                if not HealBot_ActionIcons_DebugAlertState(icon.frame, icon.id) then
-                    HealBot_Tooltip_SetLine("Global conditions not met",1,0.25,0.25,1)
-                else
-                    for x=1,3 do
-                        HealBot_Tooltip_DebugActionIconCondition(icon, x)
-                    end
+            end
+            if icon.valid then 
+                HealBot_Tooltip_SetLine("icon.valid is ",0.4,1,1,1,"TRUE",0.25,1,0.25,1)
+            else
+                HealBot_Tooltip_SetLine("icon.valid is ",0.4,1,1,1,"FALSE",1,0.25,0.25,1)
+            end
+            if HealBot_ActionIcons_CheckValidTarget(icon.frame, icon.id) then 
+                HealBot_Tooltip_SetLine("target valid is ",0.4,1,1,1,"TRUE",0.25,1,0.25,1)
+            else
+                HealBot_Tooltip_SetLine("target valid is ",0.4,1,1,1,"FALSE",1,0.25,0.25,1)
+            end
+            HealBot_Tooltip_SetLine("  ",0,0,0,0)
+            if not HealBot_ActionIcons_DebugAlertState(icon.frame, icon.id) then
+                HealBot_Tooltip_SetLine("Global conditions not met",1,0.25,0.25,1)
+            else
+                for x=1,3 do
+                    HealBot_Tooltip_DebugActionIconCondition(icon, x)
                 end
             end
         end
@@ -1252,15 +1294,30 @@ function HealBot_Tooltip_DisplayActionIconTooltip(icon, target)
     HealBot_Tooltip_Show()
 end
 
-function HealBot_Tooltip_DisplayIconTooltip(frame, details, name, aType, desc, r, g, b, id)
-      --HealBot_setCall("HealBot_Tooltip_DisplayIconTooltip")
+function HealBot_Tooltip_DisplayIconTooltipInit(frame, details, name, aType, r, g, b)
     if HealBot_Tooltip_luVars["doInit"] then
         HealBot_Tooltip_Init()
     end
     HealBot_ToolTip_SetTooltipPos(frame);
     hbTip:ClearLines()
+    if details.debuffType and details.debuffType~="nil" then
+        HealBot_Tooltip_SetLine(name,r,g,b,1,details.debuffType.." ("..aType..")",r,g,b,1)
+    else
+        HealBot_Tooltip_SetLine(name,r,g,b,1,aType,r,g,b,1)
+    end
+end
 
-    HealBot_Tooltip_SetLine(name,r,g,b,1,aType,r,g,b,1)
+function HealBot_Tooltip_DisplayCompactIconTooltip(frame, details, name, aType, r, g, b, l2, l3)
+    HealBot_Tooltip_DisplayIconTooltipInit(frame, details, name, aType, r, g, b)
+    if l2 then HealBot_Tooltip_SetWrappedLine(l2,1,1,1,1) end
+    if l3 then HealBot_Tooltip_SetWrappedLine(l3) end
+    HealBot_Tooltip_Show()
+end
+
+function HealBot_Tooltip_DisplayIconTooltip(frame, details, name, aType, desc, r, g, b, id)
+      --HealBot_setCall("HealBot_Tooltip_DisplayIconTooltip")
+    HealBot_Tooltip_DisplayIconTooltipInit(frame, details, name, aType, r, g, b)
+
     if details.unitCaster and UnitName(details.unitCaster) then
         if not UnitIsFriend("player",details.unitCaster) then
             HealBot_Tooltip_SetLine(HEALBOT_WORD_CASTER,1,1,1,1,UnitName(details.unitCaster),1,0.5,0.2,1)
@@ -1291,7 +1348,7 @@ function HealBot_Tooltip_DisplayIconTooltip(frame, details, name, aType, desc, r
     end
 
     HealBot_Tooltip_SetLine(" ",0,0,0,0," ",0,0,0,0)
-    local aPrio=20
+    local aPrio, bPrio=20, 20
     local aCol=1
     local iSet=1
     local iGlow=1
@@ -1314,7 +1371,8 @@ function HealBot_Tooltip_DisplayIconTooltip(frame, details, name, aType, desc, r
             iSet=3
         end
     else
-        aPrio=HealBot_Options_retDebuffPriority(details.spellId, name, details.type) or 20
+        aPrio, bPrio=HealBot_Options_retDebuffPriority(details.spellId, name, details.debuffType)
+        if bPrio<aPrio then aPrio=bPrio end
         aCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[details.spellId] or HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[name] or 1
         iGlow=HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[name] or HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[details.spellId] or 1
         if id<59 then
@@ -1334,35 +1392,40 @@ function HealBot_Tooltip_DisplayIconTooltip(frame, details, name, aType, desc, r
     HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_ICONSCALE,1,1,1,1,iScale,1,1,0,1)
     HealBot_Tooltip_SetLine(" ",0,0,0,0," ",0,0,0,0)
 
-    local spellLeft = HealBot_Action_IconSpellPattern("Left");
-    local spellMiddle = HealBot_Action_IconSpellPattern("Middle");
-    local spellRight = HealBot_Action_IconSpellPattern("Right");
-    local spellButton4 = HealBot_Action_IconSpellPattern("Button4");
-    local spellButton5 = HealBot_Action_IconSpellPattern("Button5");
+    if HealBot_Globals.UseIconCommands then
+        local spellLeft = HealBot_Action_IconSpellPattern("Left");
+        local spellMiddle = HealBot_Action_IconSpellPattern("Middle");
+        local spellRight = HealBot_Action_IconSpellPattern("Right");
+        local spellButton4 = HealBot_Action_IconSpellPattern("Button4");
+        local spellButton5 = HealBot_Action_IconSpellPattern("Button5");
 
-    if aType=="Auto Debuff" then
-        HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONANY,1,1,1,1,HEALBOT_OPTIONS_DEBUFFAUTOTOCUSTOM,1,1,0,1)
-    end
-    if spellLeft then
-        HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONLEFT,1,1,1,1,spellLeft,1,1,0,1)
-    end
-    if spellMiddle then
-        HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONMIDDLE,1,1,1,1,spellMiddle,1,1,0,1)
-    end
-    if spellRight then
-        HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONRIGHT,1,1,1,1,spellRight,1,1,0,1)
-    end
-    if spellButton4 then
-        HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTON4,1,1,1,1,spellButton4,1,1,0,1)
-    end
-    if spellButton5 then
-        HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTON5,1,1,1,1,spellButton5,1,1,0,1)
+        if aType=="Auto Debuff" then
+            HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONANY,1,1,1,1,HEALBOT_OPTIONS_DEBUFFAUTOTOCUSTOM,1,1,0,1)
+        end
+        if spellLeft then
+            HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONLEFT,1,1,1,1,spellLeft,1,1,0,1)
+        end
+        if spellMiddle then
+            HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONMIDDLE,1,1,1,1,spellMiddle,1,1,0,1)
+        end
+        if spellRight then
+            HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTONRIGHT,1,1,1,1,spellRight,1,1,0,1)
+        end
+        if spellButton4 then
+            HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTON4,1,1,1,1,spellButton4,1,1,0,1)
+        end
+        if spellButton5 then
+            HealBot_Tooltip_SetLine(HEALBOT_OPTIONS_BUTTON5,1,1,1,1,spellButton5,1,1,0,1)
+        end
+    elseif HealBot_Globals.Tooltip_ShowSpellInfo and HealBot_Tooltip_luVars["button"] then
+        HealBot_Action_setSpellInfo(HealBot_Tooltip_luVars["button"])
     end
     HealBot_Tooltip_Show()
 end
 
 local hbIconTip={}
-function HealBot_Tooltip_AuraUpdateIconTooltip(frame, details, name, aType,  r, g, b, id)
+local GetSpellDescription=(C_Spell and C_Spell.GetSpellDescription) or GetSpellDescription
+function HealBot_Tooltip_AuraUpdateIconTooltip(frame, details, name, aType, r, g, b, id)
       --HealBot_setCall("HealBot_Tooltip_AuraUpdateIconTooltip")
     local spell = Spell:CreateFromSpellID(details.spellId)
     spell:ContinueOnSpellLoad(function()
@@ -1373,94 +1436,138 @@ end
 
 function HealBot_Tooltip_DebuffIconTooltip(button, id)
       --HealBot_setCall("HealBot_Tooltip_DebuffIconTooltip", button)
-    if HealBot_Globals.DisableToolTipInCombat and HealBot_Data["UILOCK"] then return end
-    local r,g,b=1,1,1
-    UnitDebuffIcons=HealBot_Aura_ReturnDebuffdetails(button.id)
-    if UnitDebuffIcons[id].current and UnitDebuffIcons[id].spellId>0 then
-        ttName=HealBot_Aura_ReturnDebuffdetailsname(UnitDebuffIcons[id].spellId)
-        if ttName then
-            hbIconTip["type"]="Debuff"
-            if HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId] then
-                r=(HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId].R or 0.4)+0.2
-                g=(HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId].G or 0.05)+0.2
-                b=(HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId].B or 0.2)+0.2
-            elseif HealBot_Globals.CDCBarColour[ttName] then
-                r=(HealBot_Globals.CDCBarColour[ttName].R or 0.4)+0.2
-                g=(HealBot_Globals.CDCBarColour[ttName].G or 0.05)+0.2
-                b=(HealBot_Globals.CDCBarColour[ttName].B or 0.2)+0.2
-            else
-                local DebuffType=HealBot_Aura_retDebufftype(UnitDebuffIcons[id].spellId)
-                if HealBot_Config_Cures.CDCBarColour[DebuffType] then
-                    r=(HealBot_Config_Cures.CDCBarColour[DebuffType].R or 0.5)+0.2
-                    g=(HealBot_Config_Cures.CDCBarColour[DebuffType].G or 0.2)+0.2
-                    b=(HealBot_Config_Cures.CDCBarColour[DebuffType].B or 0.4)+0.2
+    if HealBot_Globals.UseIconCommands or HealBot_Globals.Tooltip_ShowDebuffIconInfo then
+        if HealBot_Globals.DisableToolTipInCombat and HealBot_Data["UILOCK"] then return end
+        local r,g,b=1,1,1
+        UnitDebuffIcons=HealBot_Aura_ReturnDebuffdetails(button.id)
+        if UnitDebuffIcons[id].current and UnitDebuffIcons[id].spellId>0 then
+            ttName=HealBot_Aura_ReturnDebuffdetailsname(UnitDebuffIcons[id].spellId)
+            if ttName then
+                hbIconTip["type"]="Debuff"
+                if HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId] then
+                    r=(HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId].R or 0.4)+0.2
+                    g=(HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId].G or 0.05)+0.2
+                    b=(HealBot_Globals.CDCBarColour[UnitDebuffIcons[id].spellId].B or 0.2)+0.2
+                elseif HealBot_Globals.CDCBarColour[ttName] then
+                    r=(HealBot_Globals.CDCBarColour[ttName].R or 0.4)+0.2
+                    g=(HealBot_Globals.CDCBarColour[ttName].G or 0.05)+0.2
+                    b=(HealBot_Globals.CDCBarColour[ttName].B or 0.2)+0.2
                 else
-                    local customDebuffPriority=HEALBOT_CUSTOM_en.."15"
-                    r=(HealBot_Globals.CDCBarColour[customDebuffPriority].R or 0.5)+0.2
-                    g=(HealBot_Globals.CDCBarColour[customDebuffPriority].G or 0.2)+0.2
-                    b=(HealBot_Globals.CDCBarColour[customDebuffPriority].B or 0.4)+0.2
-                    hbIconTip["type"]="Auto Debuff"
+                    local DebuffType=HealBot_Aura_retDebufftype(UnitDebuffIcons[id].spellId)
+                    if HealBot_Config_Cures.CDCBarColour[DebuffType] then
+                        r=(HealBot_Config_Cures.CDCBarColour[DebuffType].R or 0.5)+0.2
+                        g=(HealBot_Config_Cures.CDCBarColour[DebuffType].G or 0.2)+0.2
+                        b=(HealBot_Config_Cures.CDCBarColour[DebuffType].B or 0.4)+0.2
+                    else
+                        local customDebuffPriority=HEALBOT_CUSTOM_en.."15"
+                        r=(HealBot_Globals.CDCBarColour[customDebuffPriority].R or 0.5)+0.2
+                        g=(HealBot_Globals.CDCBarColour[customDebuffPriority].G or 0.2)+0.2
+                        b=(HealBot_Globals.CDCBarColour[customDebuffPriority].B or 0.4)+0.2
+                        hbIconTip["type"]="Auto Debuff"
+                    end
                 end
+                hbIconTip["frame"]=button.frame
+                hbIconTip["details"]=UnitDebuffIcons[id]
+                hbIconTip["name"]=ttName
+                hbIconTip["r"]=r
+                hbIconTip["g"]=g
+                hbIconTip["b"]=b
+                hbIconTip["id"]=id
+                if HealBot_Globals.Tooltip_ShowDebuffIconCompact then
+                    HealBot_ScanTooltip:SetUnitDebuff(button.unit, UnitDebuffIcons[id].slot)
+                    HealBot_Tooltip_DisplayCompactIconTooltip(hbIconTip["frame"],
+                                                              hbIconTip["details"],
+                                                              hbIconTip["name"],
+                                                              hbIconTip["type"],
+                                                              hbIconTip["r"], 
+                                                              hbIconTip["g"], 
+                                                              hbIconTip["b"],
+                                                              HealBot_ScanTooltipTextLeft2:GetText(), 
+                                                              HealBot_ScanTooltipTextLeft3:GetText())
+                else
+                    HealBot_Tooltip_AuraUpdateIconTooltip(hbIconTip["frame"], 
+                                                          hbIconTip["details"],
+                                                          hbIconTip["name"],
+                                                          hbIconTip["type"],
+                                                          hbIconTip["r"], 
+                                                          hbIconTip["g"], 
+                                                          hbIconTip["b"],
+                                                          hbIconTip["id"])
+                end
+                HealBot_Data["TIPICON"]=button
             end
-            hbIconTip["frame"]=button.frame
-            hbIconTip["details"]=UnitDebuffIcons[id]
-            hbIconTip["name"]=ttName
-            hbIconTip["r"]=r
-            hbIconTip["g"]=g
-            hbIconTip["b"]=b
-            hbIconTip["id"]=id
-            HealBot_Tooltip_AuraUpdateIconTooltip(hbIconTip["frame"], 
-                                                  hbIconTip["details"], 
-                                                  hbIconTip["name"],
-                                                  hbIconTip["type"],
-                                                  hbIconTip["r"], 
-                                                  hbIconTip["g"], 
-                                                  hbIconTip["b"],
-                                                  hbIconTip["id"])
-            HealBot_Data["TIPICON"]="DEBUFF"
         end
     end
 end
 
 function HealBot_Tooltip_BuffIconTooltip(button, id)
       --HealBot_setCall("HealBot_Tooltip_BuffIconTooltip", button)
-    if HealBot_Globals.DisableToolTipInCombat and HealBot_Data["UILOCK"] then return end
-    local r,g,b=1,1,1
-    UnitBuffIcons=HealBot_Aura_ReturnHoTdetails(button.id)
-    if UnitBuffIcons and UnitBuffIcons[id].current and UnitBuffIcons[id].spellId>0 then
-        ttName=HealBot_Aura_ReturnHoTdetailsname(UnitBuffIcons[id].spellId)
-        if ttName then
-            hbIconTip["frame"]=button.frame
-            hbIconTip["details"]=UnitBuffIcons[id]
-            hbIconTip["name"]=ttName
-            hbIconTip["type"]="Buff"
-            hbIconTip["r"]=r
-            hbIconTip["g"]=g
-            hbIconTip["b"]=b
-            hbIconTip["id"]=id
-            HealBot_Tooltip_AuraUpdateIconTooltip(hbIconTip["frame"], 
-                                                  hbIconTip["details"], 
-                                                  hbIconTip["name"],
-                                                  hbIconTip["type"],
-                                                  hbIconTip["r"], 
-                                                  hbIconTip["g"], 
-                                                  hbIconTip["b"],
-                                                  hbIconTip["id"])
-            HealBot_Data["TIPICON"]="BUFF"
+    if HealBot_Globals.UseIconCommands or HealBot_Globals.Tooltip_ShowBuffIconInfo then
+        if HealBot_Globals.DisableToolTipInCombat and HealBot_Data["UILOCK"] then return end
+        local r,g,b=1,1,1
+        UnitBuffIcons=HealBot_Aura_ReturnHoTdetails(button.id)
+        if UnitBuffIcons and UnitBuffIcons[id].current and UnitBuffIcons[id].spellId>0 then
+            ttName=HealBot_Aura_ReturnHoTdetailsname(UnitBuffIcons[id].spellId)
+            if ttName then        
+                if HealBot_Globals.CustomBuffBarColour[UnitBuffIcons[id].spellId] then
+                    r=HealBot_Globals.CustomBuffBarColour[UnitBuffIcons[id].spellId].R
+                    g=HealBot_Globals.CustomBuffBarColour[UnitBuffIcons[id].spellId].G
+                    b=HealBot_Globals.CustomBuffBarColour[UnitBuffIcons[id].spellId].B
+                elseif HealBot_Globals.CustomBuffBarColour[ttName] then
+                    r=HealBot_Globals.CustomBuffBarColour[ttName].R 
+                    g=HealBot_Globals.CustomBuffBarColour[ttName].G
+                    b=HealBot_Globals.CustomBuffBarColour[ttName].B
+                elseif HealBot_Globals.CustomBuffBarColour[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS] then
+                    r=HealBot_Globals.CustomBuffBarColour[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS].R
+                    g=HealBot_Globals.CustomBuffBarColour[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS].G
+                    b=HealBot_Globals.CustomBuffBarColour[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS].B
+                else
+                    r=0.25
+                    g=0.58
+                    b=0.8
+                end
+                hbIconTip["frame"]=button.frame
+                hbIconTip["details"]=UnitBuffIcons[id]
+                hbIconTip["name"]=ttName
+                hbIconTip["type"]="Buff"
+                hbIconTip["r"]=r
+                hbIconTip["g"]=g
+                hbIconTip["b"]=b
+                hbIconTip["id"]=id
+                if HealBot_Globals.Tooltip_ShowBuffIconCompact then
+                    HealBot_ScanTooltip:SetUnitBuff(button.unit, UnitBuffIcons[id].slot)
+                    HealBot_Tooltip_DisplayCompactIconTooltip(hbIconTip["frame"],
+                                                              hbIconTip["details"],
+                                                              hbIconTip["name"],
+                                                              hbIconTip["type"],
+                                                              hbIconTip["r"], 
+                                                              hbIconTip["g"], 
+                                                              hbIconTip["b"],
+                                                              HealBot_ScanTooltipTextLeft2:GetText(), 
+                                                              HealBot_ScanTooltipTextLeft3:GetText())
+                else
+                    HealBot_Tooltip_AuraUpdateIconTooltip(hbIconTip["frame"], 
+                                                          hbIconTip["details"],
+                                                          hbIconTip["name"],
+                                                          hbIconTip["type"],
+                                                          hbIconTip["r"], 
+                                                          hbIconTip["g"], 
+                                                          hbIconTip["b"],
+                                                          hbIconTip["id"])
+                end
+                HealBot_Data["TIPICON"]=button
+            end
         end
     end
 end
 
 function HealBot_Tooltip_UpdateIconTooltip()
       --HealBot_setCall("HealBot_Tooltip_UpdateIconTooltip")
-    HealBot_Tooltip_AuraUpdateIconTooltip(hbIconTip["frame"], 
-                                          hbIconTip["details"], 
-                                          hbIconTip["name"],
-                                          hbIconTip["type"],
-                                          hbIconTip["r"], 
-                                          hbIconTip["g"], 
-                                          hbIconTip["b"],
-                                          hbIconTip["id"])
+    if hbIconTip["type"]=="Buff" then
+        HealBot_Tooltip_BuffIconTooltip(HealBot_Data["TIPICON"], hbIconTip["id"])
+    else
+        HealBot_Tooltip_DebuffIconTooltip(HealBot_Data["TIPICON"], hbIconTip["id"])
+    end
 end
 
 function HealBot_Action_RefreshTargetTooltip(button)

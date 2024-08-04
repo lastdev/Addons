@@ -1,3 +1,13 @@
+== v2.30 - 23rd July 2024
+* TOC update to 11.0.0
+* TOC update to 1.15.3
+
+== v2.29 - 1st June 2024
+* Goldshire Retail: (42.01,65.85) - new for 10.2.6 and (42.29,67.59) - probably an old one I haven't seen before
+
+== v2.28 - 18th May 2024
+Bloodhoof Village Retail: (46.16,58.67), (46.65,58.19) - both for Dragonflight and up
+
 == v2.27 - 4th May 2024
 * Changed "Pitcher" (which has a pouring spout) to "flask" throughout Dolanaar
 * Dolanaar added @ (55.42,50.33), (55.81,50.21), (56.55,50.74)
@@ -33,7 +43,7 @@
 * Continent/World maps now shows only one Brightly Colored Egg per zone
 
 == v2.19 - 18th March 2024
-* TOC version bump to 10.2.6
+* TOC version update to 10.2.6
 
 == v2.18 - 5th March 2024
 * Added (60.42,52.92) for retail Tirisfal / Brill
@@ -48,7 +58,7 @@
 * Added (52.68,41.22) for Durotar / Razor Hill
 
 == v2.14 - 12th January 2024
-* TOC version bump to 10.2.5
+* TOC version update to 10.2.5
 * Tiny correction to tabbing numbers if in the Options panel - had a duplicate number
 
 == v2.13 - 26th December 2023
@@ -71,12 +81,12 @@
 * Continued tidying code to match all the other AddOns
 
 == v2.09 - 28th October 2023
-* Bump to 10.2.0
+* update to 10.2.0
 * Multi version. Wrath 3.4.3 TOC now included
 
 == v2.08 - 18th September 2023
 * Reposition the Stormwind egg so as to not conflict with an upcoming unannounced AddOn
-* TOC version bump to 10.1.7
+* TOC version update to 10.1.7
 
 == v2.07 W - 15th July 2023
 * Support for WoW 3.4.2
@@ -93,7 +103,7 @@
 * Removed unnecessary print to console code
 
 == v2.04 - 29th April 2023
-* TOC bump to 10.1.0
+* TOC update to 10.1.0
 
 == v2.03 - 17th April 2023
 * (46.78,55.36) removed from Dun Morogh Classic

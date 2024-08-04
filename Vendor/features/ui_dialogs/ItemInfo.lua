@@ -171,8 +171,50 @@ Addon.Features.Dialogs.ItemInfoTab = {
         if (not iteminfo.item:IsItemEmpty()) then
             local models = {}
             local itemproperties = Addon:GetSystem("ItemProperties")
-            for name, value in pairs(itemproperties:GetItemPropertiesFromItem(iteminfo.item)) do
-                if not itemproperties:IsPropertyHidden(name) then
+            local props = itemproperties:GetItemPropertiesFromItem(iteminfo.item)
+            for name, value in pairs(props) do
+                local isApplicable = true;
+                local hideType = 0;
+
+                local defined = itemproperties:IsPropertyDefined(name)
+                if not defined then
+
+                end
+
+                if defined then
+                    -- Hide has 3 states, never hidden, always hidden, and hidden if default
+                    hideType = itemproperties:IsPropertyHidden(name)
+
+                    -- Two types of applicability:
+                    -- 1) parent is specified and is false
+                    -- 2) conditional hide is specified and it is the default value
+                    -- Property is considered non-applicable if either of these are true.
+
+                    -- If property has a parent, it is not applicable unless the parent
+                    -- has a non-false value.
+
+                    local parent = itemproperties:GetPropertyParent(name)
+                    if parent and not props[parent] then
+                        -- Parent is false, this is not applicable
+                        isApplicable = false;
+                    end
+
+                    -- Conditional hide state
+                    if hideType == 2 then
+                        local default = itemproperties:GetPropertyDefault(name)
+                        if value == default then
+                            isApplicable = false;
+                        end
+                    end
+                end
+
+                -- TODO: add setting to show non-applicable values
+                -- This effectively would override the applicability test, but not the
+                -- always-hidden test.
+
+                -- TODO: Add debug setting to override to show all properties regardless
+                -- of applicability or hide state.
+                if (hideType ~= 1) and isApplicable then
                     table.insert(models, {
                         Name = name,
                         Value = value

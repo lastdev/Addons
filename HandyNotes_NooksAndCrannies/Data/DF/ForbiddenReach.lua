@@ -29,6 +29,24 @@ points['forbidden_reach'] = {
     type = 'world',
     portal = maps['froststone_vault'],
   },
+  [75003610] = {
+    icon = 'poi-door-down',
+    type = 'world',
+    portal = maps['dragonskull_island'],
+  },
+}
+
+points['dragonskull_island'] = {
+  [10406910] = {
+    icon = 'poi-door-up',
+    type = 'world',
+    portal = maps['forbidden_reach'],
+  },
+  [31409150] = {
+    icon = 'poi-door-up',
+    type = 'world',
+    portal = maps['forbidden_reach'],
+  },
 }
 
 points['war_creche'] = {

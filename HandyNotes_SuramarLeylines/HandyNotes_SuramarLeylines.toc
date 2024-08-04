@@ -1,0 +1,15 @@
+## Interface: 110002, 110000
+## Title: HandyNotes: Suramar Leylines
+## Notes: Leyline feeds in Suramar? Sure, why not?
+## Author: Kemayo
+## Version: v8
+## DefaultState: enabled
+## X-Category: Achievements
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 102429
+## SavedVariables: HandyNotes_SuramarLeylinesDB
+## RequiredDeps: HandyNotes
+
+handler.lua
+config.lua
+nodes.lua

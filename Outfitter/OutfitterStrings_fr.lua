@@ -122,7 +122,6 @@ if GetLocale() == "frFR" then
 		mana = "Mana",
 		vie = "Health",
 		
-		["la puissance d'attaque"] = {"Attack", "RangedAttack"},
 		["toutes les caractéristiques"] = {"Stamina", "Intellect", "Agility", "Strength", "Spirit"},
 		
 		["sorts et effets magiques"] = {"SpellDmg", "FireDmg", "ShadowDmg", "FrostDmg", "ArcaneDmg", "NatureDmg"},

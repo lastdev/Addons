@@ -28,9 +28,9 @@ local salvages={
 local module=addon:NewSubClass('MissionCompletion') --#Module
 function module:GenerateMissionCompleteList(title,anchor)
 	local w=AceGUI:Create("GCMCList")
---[===[@debug@
+--[==[@debug@
 	title=format("%s %s %s",title,w.frame:GetName(),GetTime()*1000)
---@end-debug@]===]
+--@end-debug@]==]
 	w:SetTitle(title)
 	w:SetCallback("OnClose",function(widget) widget:Release() return module:MissionsCleanup() end)
 	--report:SetPoint("TOPLEFT",GMFMissions.CompleteDialog.BorderFrame)
@@ -43,11 +43,11 @@ function module:GenerateMissionCompleteList(title,anchor)
 	w.frame:SetFrameStrata("HIGH")
 	return w
 end
---[===[@debug@
+--[==[@debug@
 function addon.ShowRewards()
 	module:GenerateMissionCompleteList("Test",UIParent)
 end
---@end-debug@]===]
+--@end-debug@]==]
 local cappedCurrencies={
 	GARRISON_CURRENCY,
 	GARRISON_SHIP_OIL_CURRENCY
@@ -78,9 +78,9 @@ local function startTimer(delay,event,...)
 	event=event or "LOOP"
 	stopTimer()
 	timer=module:ScheduleRepeatingTimer("MissionAutoComplete",delay,event,...)
-	--[===[@debug@
+	--[==[@debug@
 	print("Timer rearmed for",event,delay)
-	--@end-debug@]===]
+	--@end-debug@]==]
 end
 function module:MissionsCleanup()
 	local f=panel
@@ -113,14 +113,14 @@ end
 function module:CloseReport()
 	if report then pcall(report.Close,report) report=nil end
 	if GSF and GSF:IsVisible() then
-	--[===[@debug@
+	--[==[@debug@
 		print "Ship close mission"
-	--@end-debug@]===]
+	--@end-debug@]==]
 		GSF:CloseMissionComplete()
 	elseif GMF and GMF:IsVisible() then
-	--[===[@debug@
+	--[==[@debug@
 		print "Garr close mission"
-	--@end-debug@]===]
+	--@end-debug@]==]
 		GMF:CloseMissionComplete()
 	end
 	addon:OpenMissionsTab()
@@ -165,9 +165,9 @@ function module:MissionComplete(this,button,skiprescheck)
 		local stop
 		for id,qt in pairs(wasted) do
 			local name,current,_,_,_,cap=addon:GetCurrencyInfo(id)
-			--[===[@debug@
+			--[==[@debug@
 			print(name,current,qt,cap)
-			--@end-debug@]===]
+			--@end-debug@]==]
 			current=current+qt
 			if current+qt > cap then
 				message=message.."\n"..format(L["Capped %1$s. Spend at least %2$d of them"],name,current+qt-cap)
@@ -215,9 +215,9 @@ end
 function module:MissionAutoComplete(event,ID,arg1,arg2,arg3,arg4,...)
 -- C_Garrison.MarkMissionComplete Mark mission as complete and prepare it for bonus roll, da chiamare solo in caso di successo
 -- C_Garrison.MissionBonusRoll
---[===[@debug@
+--[==[@debug@
 	print("evt",event,ID,arg1 or'',arg2 or '',arg3 or '',...)
---@end-debug@]===]
+--@end-debug@]==]
 	if event=="LOOT" then
 		return self:MissionsPrintResults()
 	end
@@ -277,15 +277,15 @@ function module:MissionAutoComplete(event,ID,arg1,arg2,arg3,arg4,...)
 				report:AddMissionButton(currentMission,addon:GetParty(currentMission.missionID),currentMission.successChance,"report")
 			end
 			if (step==0) then
-				--[===[@debug@
+				--[==[@debug@
 				print("Fired mission complete for",currentMission.missionID)
-				--@end-debug@]===]
+				--@end-debug@]==]
 				G.MarkMissionComplete(currentMission.missionID)
 				startTimer(2)
 			elseif (step==1) then
-				--[===[@debug@
+				--[==[@debug@
 				print("Fired bonus roll complete for",currentMission.missionID)
-				--@end-debug@]===]
+				--@end-debug@]==]
 				G.MissionBonusRoll(currentMission.missionID)
 				startTimer(2)
 			elseif (step>=2) then

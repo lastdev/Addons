@@ -1,9 +1,7 @@
-local _, shared = ...;
+local _, addon = ...;
 
 local CallAfter = _G.C_Timer.After;
 local wipe = _G.wipe;
-
-local addon = shared.addon;
 
 local callbackMap = {};
 local triggeredCallbacks = {};

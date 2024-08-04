@@ -20,10 +20,6 @@
 	<Script file="locale/zhCN.lua" />
 	<Script file="locale/zhTW.lua" />
 
-	<Script file="db/db_realms.lua" />
-	<Script file="db/db_regions.lua" />
-	<Script file="db/db_titles.lua" />
-
 	<Script file="utf8.lua" />
 	<Script file="core.lua" />
 

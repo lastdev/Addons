@@ -6,9 +6,9 @@
 
 local TSM = select(2, ...) ---@type TSM
 local ItemTask = TSM.Include("LibTSMClass").DefineClass("ItemTask", TSM.TaskList.Task, "ABSTRACT")
-local Table = TSM.Include("Util.Table")
-local Math = TSM.Include("Util.Math")
-local ItemInfo = TSM.Include("Service.ItemInfo")
+local Table = TSM.LibTSMUtil:Include("Lua.Table")
+local Math = TSM.LibTSMUtil:Include("Lua.Math")
+local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
 TSM.TaskList.ItemTask = ItemTask
 local private = {}
 

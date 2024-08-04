@@ -1,8 +1,7 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local colors = addon.Colors
 
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local L = DataStore:GetLocale(addonName)
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 local LibSerialize = LibStub:GetLibrary("LibSerialize")
 
@@ -22,10 +21,11 @@ local MSG_COMPLETED			= 7
 local MSG_ACK					= 8	-- a simple ACK message, confirms message has been received, but no data is sent back
 
 local CMD_DATASTORE_XFER			= 20
-local CMD_DATASTORE_CHAR_XFER		= 21
-local CMD_DATASTORE_STAT_XFER		= 22
-local CMD_BANKTAB_XFER				= 23
-local CMD_REFDATA_XFER				= 24
+local CMD_DATASTORE_MAIN_XFER		= 21
+local CMD_DATASTORE_CHAR_XFER		= 22
+local CMD_DATASTORE_STAT_XFER		= 23
+local CMD_BANKTAB_XFER				= 24
+local CMD_REFDATA_XFER				= 25
 
 
 --[[	*** Protocol ***
@@ -46,12 +46,11 @@ Client						Server
 --]]
 
 addon:Service("AltoholicUI.AccountSharing", { 
-	"AltoholicUI.Options", 
 	"AltoholicUI.Authorization", 
 	"AltoholicUI.SharedContent", 
 	"AltoholicUI.AvailableContent", 
 	"AltoholicUI.SharedTableOfContent",
-	function(Options, Authorization, SharedContent, AvailableContent, TableOfContent)
+	function(Authorization, SharedContent, AvailableContent, TableOfContent)
 
 	local sharingDomains				-- reference to the domains in the DB
 	local messageHandler
@@ -59,7 +58,7 @@ addon:Service("AltoholicUI.AccountSharing", {
 	local destinationCurrentItem
 	local authorizedRecipient
 	local clientAccountName
-	local clientRealmName, clientGuildName, clientCharName
+	local clientRealmName, clientGuildName, clientCharName, clientCharGUID
 	local serverRealmName, serverGuildName, serverCharacterName
 	local importedChars
 	local modeUpdateInfo, statusUpdateInfo
@@ -81,7 +80,7 @@ addon:Service("AltoholicUI.AccountSharing", {
 		local compressedData = LibDeflate:CompressDeflate(serializedData, {level = 8})
 		local encodedData = LibDeflate:EncodeForWoWAddonChannel(compressedData)
 		
-		addon:SendCommMessage(COMM_PREFIX, encodedData, "WHISPER", player)
+		DataStore:SendChatMessage(COMM_PREFIX, encodedData, "WHISPER", player)
 	end
 	
 	local function ImportCharacters()
@@ -167,22 +166,15 @@ addon:Service("AltoholicUI.AccountSharing", {
 		AltoholicFrame.TabOptions.SharingProcess:Update()
 
 		-- Set last account sharing info
-		local sharing = sharingDomains[format("%s.%s", clientAccountName, DataStore.ThisRealm)]
+		local domainName = format("%s.%s", clientAccountName, DataStore.ThisRealm)
+		sharingDomains[domainName] = sharingDomains[domainName] or {}
+		local sharing = sharingDomains[domainName]
 		sharing.lastSharingTimestamp = time()
 		sharing.lastUpdatedWith = player
 		
 		-- Update the characters view & account summary
 		LibStub("LibMVC-1.0"):GetService("AltoholicUI.Characters").InvalidateView()
 		AltoholicFrame.TabSummary:Update()
-	end
-	
-	local function ImportCharacters()
-		-- once data has been transfered, finalize the import by acknowledging that these alts can be seen by client addons
-		-- will be changed when account sharing goes into datastore.
-		for k, v in pairs(importedChars) do
-			DataStore:ImportCharacter(k, v.faction, v.guild)
-		end
-		importedChars = nil
 	end
 	
 	local callbacks = {
@@ -276,6 +268,7 @@ addon:Service("AltoholicUI.AccountSharing", {
 				-- Send character => send mandatory modules (char definition = DS_Char + DS_Stats)
 				serverCharacterName = arg1
 				
+				Whisper(authorizedRecipient, CMD_DATASTORE_MAIN_XFER, DataStore:GetCharacterTable("DataStore", serverCharacterName, serverRealmName))
 				Whisper(authorizedRecipient, CMD_DATASTORE_CHAR_XFER, DataStore:GetCharacterTable("DataStore_Characters", serverCharacterName, serverRealmName))
 				Whisper(authorizedRecipient, CMD_DATASTORE_STAT_XFER, DataStore:GetCharacterTable("DataStore_Stats", serverCharacterName, serverRealmName))
 			
@@ -308,6 +301,11 @@ addon:Service("AltoholicUI.AccountSharing", {
 			DataStore:ImportData(moduleName, data, clientCharName, clientRealmName, clientAccountName)
 			RequestNext(sender)
 		end,
+		
+		[CMD_DATASTORE_MAIN_XFER] = function(sender, data)
+			-- Main datastore tables, retrieve the GUID
+		end,
+		
 		[CMD_DATASTORE_CHAR_XFER] = function(sender, data)
 			DataStore:ImportData("DataStore_Characters", data, clientCharName, clientRealmName, clientAccountName)
 
@@ -374,7 +372,7 @@ addon:Service("AltoholicUI.AccountSharing", {
 		
 	local function SetMessageHandler()
 		-- Set the appropriate communication handler according to user settings.
-		messageHandler = Options.Get("UI.AccountSharing.IsEnabled") and ActiveHandler or EmptyHandler
+		messageHandler = Altoholic_Sharing_Options.IsEnabled and ActiveHandler or EmptyHandler
 	end
 	
 	local function SharingHandler(prefix, message, distribution, sender)
@@ -385,10 +383,10 @@ addon:Service("AltoholicUI.AccountSharing", {
 	
 	return {
 		Initialize = function()
-			sharingDomains = addon.db.global.Sharing.Domains
+			sharingDomains = Altoholic_Sharing_Options.Domains
 			
 			SetMessageHandler()
-			addon:RegisterComm(COMM_PREFIX, SharingHandler)
+			DataStore:OnGuildComm(COMM_PREFIX, SharingHandler)
 		end,
 		
 		GetLastAccountSharingInfo = function(realm, account)
@@ -423,7 +421,7 @@ addon:Service("AltoholicUI.AccountSharing", {
 		end,
 		
 		Request = function(player, account)
-			if not Options.Get("UI.AccountSharing.IsEnabled") then
+			if not Altoholic_Sharing_Options.IsEnabled then
 				addon:Print(L["SHARING_OPTION_DISABLED"])
 				return
 			end

@@ -1,8 +1,8 @@
-local addonName, shared = ...;
+local addonName, addon = ...;
 
 local wipe = _G.wipe;
 
-local saved = shared.saved;
+local saved = addon.saved;
 
 local module = {};
 
@@ -24,4 +24,4 @@ module.restoreAllNodes = function (zone)
   wipe(saved.hiddenNodes);
 end
 
-shared.addon.export('nodeHider', module);
+addon.export('nodeHider', module);

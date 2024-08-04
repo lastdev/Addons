@@ -391,7 +391,7 @@ local brokenItems = {
     [153316] = {25123, 90885}, -- Praetor's Ornamental Edge
 }
 local function GetAppearanceAndSource(itemLinkOrID)
-    local itemID = GetItemInfoInstant(itemLinkOrID)
+    local itemID = C_Item.GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
     local appearanceID, sourceID = C_TransmogCollection.GetItemInfo(itemLinkOrID)
     if not appearanceID then
@@ -408,7 +408,7 @@ end
 local canLearnCache = {}
 local function CanLearnAppearance(itemLinkOrID)
     if not _G.C_Transmog then return false end
-    local itemID = GetItemInfoInstant(itemLinkOrID)
+    local itemID = C_Item.GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
     if canLearnCache[itemID] ~= nil then
         return canLearnCache[itemID]
@@ -436,7 +436,7 @@ local function CanLearnAppearance(itemLinkOrID)
 end
 local hasAppearanceCache = {}
 local function HasAppearance(itemLinkOrID)
-    local itemID = GetItemInfoInstant(itemLinkOrID)
+    local itemID = C_Item.GetItemInfoInstant(itemLinkOrID)
     if not itemID then return end
     if hasAppearanceCache[itemID] ~= nil then
         return hasAppearanceCache[itemID]
@@ -525,9 +525,7 @@ ns.itemIsKnown = function(item)
             -- can't use the tradeskill functions + the recipe-spell because that data's only available after the tradeskill window has been opened...
             local info = C_TooltipInfo.GetItemByID(item[1])
             if info then
-                TooltipUtil.SurfaceArgs(info)
                 for _, line in ipairs(info.lines) do
-                    TooltipUtil.SurfaceArgs(line)
                     if line.leftText and string.match(line.leftText, _G.ITEM_SPELL_KNOWN) then
                         return true
                     end

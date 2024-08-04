@@ -36,7 +36,7 @@ end
 local function MigrateData()
     if IsMigrationToShadowlands() then
         -- Shadowlands is a rules config reset without migrating settings.
-        Addon:Print(L["DATA_MIGRATION_SL_NOTICE"])
+        Addon:Output(Addon.Systems.Chat.MessageType.Console, L["DATA_MIGRATION_SL_NOTICE"]);
         Vendor_RulesConfig = Addon.DeepTableCopy(Addon.DefaultConfig.Rules)
     elseif IsNewConfigVersion() then
         local oldRuleConfig = Vendor_RulesConfig
@@ -45,7 +45,7 @@ local function MigrateData()
 
     else
         -- We shouldn't ever get here, but just in case...
-        Addon.Print(L["DATA_MIGRATION_ERROR"])
+        Addon:Output(Addon.Systems.Chat.MessageType.Console, L["DATA_MIGRATION_ERROR"]);
     end
 end
 

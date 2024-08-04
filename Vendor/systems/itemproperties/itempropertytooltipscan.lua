@@ -12,7 +12,7 @@ local function isStringInTooltipText(tooltipdata, str, location)
 
     if not tooltipdata then return false end
 
-    for i, line in ipairs(tooltipdata.lines) do
+    for k, line in pairs(tooltipdata.lines) do
         local txt = nil
         if location == "Left" and line.leftText then
             txt = line.leftText
@@ -63,12 +63,12 @@ function ItemProperties:IsItemCraftingReagentInTooltip(tooltipdata)
     return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_CRAFTINGREAGENT"])
 end
 
--- Blizzard Account Bound
+-- Blizzard Account Bound -- Now called Warbound
 function ItemProperties:IsItemBlizzardAccountBoundInTooltip(tooltipdata)
     return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_BLIZZARDACCOUNTBOUND"])
 end
 
--- Account Bound
+-- Account Bound -- Now called Warbound
 function ItemProperties:IsItemAccountBoundInTooltip(tooltipdata)
     return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_ACCOUNTBOUND"])
 end
@@ -76,4 +76,14 @@ end
 -- Cosmetic Item
 function ItemProperties:IsItemCosmeticInTooltip(tooltipdata)
     return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_COSMETIC"])
+end
+
+-- Unknown Appearance
+function ItemProperties:IsItemUnknownAppearanceInTooltip(location)
+    return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_UNKNOWNAPPEARANCE"])
+end
+
+-- Soulbound
+function ItemProperties:IsItemSoulboundInTooltip(location)
+    return self:IsStringInTooltipLeftText(tooltipdata, L["TOOLTIP_SCAN_SOULBOUND"])
 end

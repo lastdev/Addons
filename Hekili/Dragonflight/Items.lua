@@ -10,9 +10,6 @@ local all = Hekili.Class.specs[ 0 ]
 local FindPlayerAuraByID = ns.FindPlayerAuraByID
 local RegisterEvent = ns.RegisterEvent
 
-local GetSpellCooldown = _G.GetSpellCooldown
-
-
 -- 10.0
 all:RegisterAbilities( {
     algethar_puzzle_box = {
@@ -570,15 +567,22 @@ all:RegisterAbilities( {
         gcd = "off",
 
         item = 193718,
-        usable = function() return group and active_dot.coached == 0, "requires an ally" end,
+        usable = function() return group, "requires an ally" end,
+        nobuff = "coaching",
 
         handler = function()
+            applyBuff( "coaching" )
             active_dot.coached = 1
         end,
 
         proc = "mastery",
 
         auras = {
+            coaching = {
+                id = 389581,
+                duration = 3600,
+                max_stack = 1,
+            },
             coached = {
                 id = 386578,
                 duration = 3600,
@@ -2291,4 +2295,26 @@ all:RegisterAbilities( {
 
         copy = { "fyralath_the_dream_render", "rage_of_fyralath_417131" }
     },
+
+    -- Missed items?
+    granyths_enduring_scale = {
+        cast = 0,
+        cooldown = 120,
+        gcd = "off",
+
+        item = 212757,
+        toggle = "defensives",
+
+        handler = function()
+            applyBuff( "granyths_enduring_scale" )
+        end,
+
+        auras = {
+            granyths_enduring_scale = {
+                id = 434064,
+                duration = 20,
+                max_stack = 20
+            }
+        }
+    }
 } )

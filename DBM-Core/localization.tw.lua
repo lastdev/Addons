@@ -11,8 +11,8 @@ end
 
 L.HOW_TO_USE_MOD				= "歡迎使用"..L.DBM.."。在聊天頻道輸入 /dbm 打開設定開始設定。你可以載入特定區域後為任何首領設定你喜歡的特別設置。"..L.DBM.."會在設定你的職業天賦的預設值，但有些選項可能需要調整。"
 L.SILENT_REMINDER				= "提醒："..L.DBM.."正處於無聲模式。"
-L.NEWS_UPDATE					= "|h|c11ff1111更新說明|r|h: DBM已更新並對模組結構做了更動，因此經典版和正式版現在使用統一的（相同）模組。這意味著經典版(包含探索賽季)、燃燒的遠征、巫妖王之怒以及浩劫與重生現在分別安裝並使用與正式版相同的插件包。 讀取更多訊息在|Hgarrmission:DBM:news|h|cff3588ff[此處]|r|h"
-L.NEWS_UPDATE_REPEAT			= "|h|c11ff1111更新說明|r|h: DBM已更新並對模組結構做了更動，因此經典版和正式版現在使用統一的（相同）模組。這意味著經典版(包含探索賽季)、燃燒的遠征、巫妖王之怒以及浩劫與重生現在分別安裝並使用與正式版相同的插件包。你目前正在缺少模組的團隊副本中。此訊息將持續顯示 (並且您將沒有此區域的功能警報) 直到你安裝了缺少的團隊副本模組為止。"
+L.NEWS_UPDATE					= "|h|c11ff1111更新說明|r|h: DBM已更新並對模組結構做了更動，因此經典版和正式版現在使用統一的（相同）模組。這意味著經典版(包含探索賽季)、燃燒的遠征、巫妖王之怒以及浩劫與重生現在分別下載並使用與正式版相同的插件包。 讀取更多訊息在|Hgarrmission:DBM:news|h|cff3588ff[此處]|r|h"
+L.NEWS_UPDATE_REPEAT			= "|h|c11ff1111更新說明|r|h: DBM已更新並對模組結構做了更動，因此經典版和正式版現在使用統一的（相同）模組。這意味著經典版(包含探索賽季)、燃燒的遠征、巫妖王之怒以及浩劫與重生現在分別下載並使用與正式版相同的插件包。你目前正在缺少模組的團隊副本中。此訊息將持續顯示 (並且您將沒有此區域的功能警報) 直到你安裝了缺少的團隊副本模組為止。"
 
 
 L.COPY_URL_DIALOG_NEWS			= "要閱讀最新說明，請拜訪以下連結"
@@ -76,7 +76,7 @@ L.TRANSCRIPTOR_LOG_START		= "Transcriptor開始記錄。"
 L.TRANSCRIPTOR_LOG_END			= "Transcriptor結束紀錄。"
 
 L.MOVIE_SKIPPED					= L.DBM.."已嘗試自動略過一個過場動畫。"
---L.MOVIE_NOTSKIPPED							= L.DBM .. " has detected a skipable cut scene but has NOT skipped it due to a blizzard bug. When this bug is fixed, skipping will be re-enabled"
+L.MOVIE_NOTSKIPPED				= L.DBM .. "已經發現了一個可跳過的過場動畫，但由於暴雪的bug沒有跳過。當bug被修復時，跳過將重新啟用。"
 L.BONUS_SKIPPED					= L.DBM.."已經自動關閉額外戰利品擲骰框架。如果你需要恢復此框架，在三分鐘內輸入/dbmbonusroll"
 
 L.AFK_WARNING					= "你正在暫離並戰鬥中(血量還剩餘%d百分比)所以發出警告。如果你並非暫離，請清除暫離的標籤或是在'額外功能'停用此選項。"
@@ -285,9 +285,10 @@ L.TIMER_USAGE	= {
 	"/dbm timer endloop: 停止任何無限循環ltimer的計時器。",
 }
 
-L.ERROR_NO_PERMISSION		= "無權進行此操作。"
+L.ERROR_NO_PERMISSION			= "您無權發送備戰/休息計時器。"
+L.ERROR_NO_PERMISSION_COMBAT	= "當遭遇戰進行中時無法發送備戰/休息計時器"
 L.PULL_TIME_TOO_SHORT			= "備戰計時器必須超過3秒。 "
-L.PULL_TIME_TOO_LONG							= "Pull timer cannot be longer than 60 seconds"
+L.PULL_TIME_TOO_LONG			= "備戰計時器不能超過60秒。考慮使用/休息計時器取代。"
 
 L.BREAK_USAGE					= "休息時間不可以長過60分鐘。請確定您輸入的時間是分鐘而不是秒。"
 L.BREAK_START					= "現在開始休息-你有%s分鐘! (由 %s 發送)"
@@ -580,6 +581,10 @@ L.AUTO_READY_CHECK_OPTION_TEXT			= "當首領開打時撥放準備檢查的音�
 L.AUTO_SPEEDCLEAR_OPTION_TEXT			= "顯示 %s 的最快清除計時器"
 L.AUTO_PRIVATEAURA_OPTION_TEXT			= "為這場戰鬥的私人光環$spell:%s播放DBM音效警告。"
 
+L.AUTO_GOSSIP_BUFFS						= "自動選擇npc的對話選項或專業增益"
+L.AUTO_GOSSIP_PERFORM_ACTION			= "自動選擇對話選項來執行動作 (例如使用傳送功能)"
+L.AUTO_GOSSIP_START_ENCOUNTER			= "自動選擇對話選項來開始遭遇戰"
+
 -- New special warnings
 L.MOVE_WARNING_BAR			= "可移動提示"
 L.MOVE_WARNING_MESSAGE		= "感謝您使用"..L.DEADLY_BOSS_MODS..""
@@ -635,13 +640,27 @@ L.LDB_TOOLTIP_HELP1				= "點擊開啟" .. L.DBM
 L.LDB_TOOLTIP_HELP2				= "Alt+右鍵點擊切換到無聲模式"
 L.SILENTMODE_IS                 = "無聲模式是 "
 
---Localizers, do not copy entire table, follow same guidelines as other tables, overwrite each entry with L.WORLD_BUFFS.hordeOny = "stuff" for example.
-L.WORLD_BUFFS.hordeOny						= "部落的人民，奧格瑪的城民，來吧，聚集到一起歡慶部落英雄的誕生。"
-L.WORLD_BUFFS.allianceOny					= "暴風城的城民和盟友們，今天，有人創造了歷史。"
-L.WORLD_BUFFS.hordeNef						= "奈法利安被!@#掉了！奧格瑪的人們" -- this is probably not correct (need to get rid of @#)
-L.WORLD_BUFFS.allianceNef					= "聯盟的人民們，黑石領主已經被幹掉了！"
-L.WORLD_BUFFS.zgHeart						= "只差最後一步，我們就可以擺脫靈魂掠奪者的威脅了……"
-L.WORLD_BUFFS.zgHeartBooty					= "靈魂掠奪者血神已經被打敗了！我們不再有危險了！"
-L.WORLD_BUFFS.zgHeartYojamba				= "開始儀式，我的僕從們。我們必須把哈卡完全打回扭曲虛空中！"
-L.WORLD_BUFFS.rendHead						= "那個假的酋長，雷德·黑手，已經倒下了！"
---L.WORLD_BUFFS.blackfathomBoon				= "boon of Blackfathom"
+L.WORLD_BUFFS = {
+	hordeOny							= "部落的人民，奧格瑪的城民，來吧，聚集到一起歡慶部落英雄的誕生。",
+	allianceOny							= "暴風城的城民和盟友們，今天，有人創造了歷史。",
+	hordeNef							= "奈法利安被!@#掉了！奧格瑪的人們",
+	allianceNef							= "聯盟的人民們，黑石領主已經被幹掉了！",
+	zgHeart								= "只差最後一步，我們就可以擺脫靈魂掠奪者的威脅了……",
+	zgHeartBooty						= "靈魂掠奪者血神已經被打敗了！我們不再有危險了！",
+	zgHeartYojamba						= "開始儀式，我的僕從們。我們必須把哈卡完全打回扭曲虛空中！",
+	rendHead							= "那個假的酋長，雷德·黑手，已經倒下了！",
+	--blackfathomBoon						= "boon of Blackfathom"
+}
+
+-- Annoying popup, especially for classic players
+L.DBM_INSTALL_REMINDER_HEADER	= "檢測到不完整的DBM安裝！"
+--L.DBM_INSTALL_REMINDER_EXPLAIN	= "Welcome to %s. DBM mods for bosses here are in the %s which you do not have installed. DBM will not show timers or warnings in this zone unless you install the %s!"
+L.DBM_INSTALL_REMINDER_DISABLE	= "停用此區域的全部 DBM 警告與計時器。" -- Used when we believe it's a user error that the mod isn't installed (i.e., current raids)
+L.DBM_INSTALL_REMINDER_DISABLE2 = "不要再顯示此組件的訊息。" -- Used for unimportant mods, i.e., dungeons
+L.DBM_INSTALL_REMINDER_DL_WAGO	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " 來複製Wago.io的連結到剪貼簿。"
+L.DBM_INSTALL_REMINDER_DL_CURSE	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " 來複製Curseforge的連結到剪貼簿。"
+--"Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  "
+L.DBM_INSTALL_PACKAGE_VANILLA	= "經典與探索賽季組件"
+L.DBM_INSTALL_PACKAGE_WRATH		= "巫妖王組件"
+L.DBM_INSTALL_PACKAGE_CATA		= "浩劫與重生組件"
+L.DBM_INSTALL_PACKAGE_DUNGEON	= "地下城、探究以及事件組件"

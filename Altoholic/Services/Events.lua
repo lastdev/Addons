@@ -1,10 +1,9 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local colors = addon.Colors
 
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local L = DataStore:GetLocale(addonName)
 
-addon:Service("AltoholicUI.EventsList", { "AltoholicUI.Options", "AltoholicUI.Formatter", function(Options, Formatter) 
+addon:Service("AltoholicUI.EventsList", { "AltoholicUI.Formatter", function(Formatter) 
 
 	local timeTable = {}				-- to pass as an argument to time()	see http://lua-users.org/wiki/OsLibraryTutorial for details
 	
@@ -225,7 +224,7 @@ addon:Service("AltoholicUI.EventsList", { "AltoholicUI.Options", "AltoholicUI.Fo
 				local warningType = (event.eventType == SHARED_CD_LINE) and COOLDOWN_LINE or event.eventType
 				-- Gets something like "15|5|1"
 
-				return Options.Get(format("WarningType%d", warningType))
+				return Altoholic_Calendar_Options[format("WarningType%d", warningType)]
 			end
 		end,
 		GetReadyNowWarning = function(index)
@@ -304,7 +303,7 @@ addon:Service("AltoholicUI.EventsList", { "AltoholicUI.Options", "AltoholicUI.Fo
 	}
 end})
 
-addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.EventsList", function(Options, EventsList) 
+addon:Service("AltoholicUI.Events", { "AltoholicUI.EventsList", function(EventsList) 
 
 	local timerThresholds = { 30, 15, 10, 5, 4, 3, 2, 1 }
 
@@ -328,7 +327,7 @@ addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.Events
 		if not warning then return end
 		
 		-- print instead of dialog box if player is in combat
-		if Options.Get("UI.Calendar.UseDialogBoxForWarnings") and not UnitAffectingCombat("player") then
+		if Altoholic_Calendar_Options["UseDialogBoxForWarnings"] and not UnitAffectingCombat("player") then
 			
 			AltoMessageBox:Ask(format("%s%s\n%s", colors.white, warning, L["Do you want to open Altoholic's calendar for details ?"]), function()
 				
@@ -351,7 +350,11 @@ addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.Events
 			
 			if expiresIn < 0 then							-- if the event has expired
 				EventsList.MarkForDeletion(index)		-- .. mark it for deletion (no table.remove in this pass, to avoid messing up indexes)
-				ShowExpiryWarning(index, 0)		-- .. and do the appropriate warning
+				
+				-- only report if warnings are enabled
+				if Altoholic_Calendar_Options["WarningsEnabled"] == true then
+					ShowExpiryWarning(index, 0)		-- .. and do the appropriate warning
+				end
 			end
 		end
 		
@@ -482,11 +485,56 @@ addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.Events
 		EventsList.SortByTime()
 	end
 	
+	local function CheckExpiries()
+		-- warning here, check the value of self, the elapsed parameter seems wrong, double check this !
+		C_Timer.After(60, CheckExpiries)	-- repeating timer
+		if Altoholic_Calendar_Options["WarningsEnabled"] == false then	-- warnings disabled ? do nothing
+			return
+		end
+
+		-- called every 60 seconds
+		local hasExpired
+		
+		for index, event in pairs(EventsList.GetEvents()) do
+			local minutes = floor(EventsList.GetExpiry(index) / 60)
+
+			if minutes > -1440 and minutes < 0 then		-- expiry older than 1 day is ignored
+				hasExpired = true		-- at least one event has expired
+				
+			elseif minutes == 0 then
+				ShowExpiryWarning(index, 0)
+				hasExpired = true		-- at least one event has expired
+				
+			elseif minutes > 0 and minutes <= 30 then
+				for _, threshold in pairs(timerThresholds) do
+					if threshold == minutes then			-- if snooze is allowed for this value
+						if IsNumberInString(threshold, EventsList.GetWarnings(index)) then
+							ShowExpiryWarning(index, minutes)
+						end
+						break
+						
+					-- save some cpu cycles, exit if threshold too low
+					elseif threshold < minutes then
+						break
+					end
+				end
+			end
+		end
+		
+		-- if at least one event has expired, rebuild the list & Update
+		if hasExpired then
+			ClearExpiredEvents()
+			BuildList()
+			
+			DataStore:Broadcast("ALTOHOLIC_EVENT_EXPIRY")
+		end
+	end
+	
 	return {
 		Initialize = function(self)
-			addon:RegisterMessage("DATASTORE_CS_TIMEGAP_FOUND", function() 
+			DataStore:ListenTo("DATASTORE_CS_TIMEGAP_FOUND", function() 
 				-- once the Client-Server time gap is known, check for expiries every 60 seconds
-				addon:ScheduleRepeatingTimer(self.CheckExpiries, 60)
+				C_Timer.After(60, CheckExpiries)
 			end)
 		
 			-- Sequence of operations : 
@@ -496,49 +544,6 @@ addon:Service("AltoholicUI.Events", { "AltoholicUI.Options", "AltoholicUI.Events
 			BuildList()									-- 4. Rebuild the list of events
 		end,
 		BuildList = BuildList,
-	
-		CheckExpiries = function(elapsed)
-			if Options.Get("UI.Calendar.WarningsEnabled") == false then	-- warnings disabled ? do nothing
-				return
-			end
-
-			-- called every 60 seconds
-			local hasExpired
-			
-			for index, event in pairs(EventsList.GetEvents()) do
-				local minutes = floor(EventsList.GetExpiry(index) / 60)
-
-				if minutes > -1440 and minutes < 0 then		-- expiry older than 1 day is ignored
-					hasExpired = true		-- at least one event has expired
-					
-				elseif minutes == 0 then
-					ShowExpiryWarning(index, 0)
-					hasExpired = true		-- at least one event has expired
-					
-				elseif minutes > 0 and minutes <= 30 then
-					for _, threshold in pairs(timerThresholds) do
-						if threshold == minutes then			-- if snooze is allowed for this value
-							if IsNumberInString(threshold, EventsList.GetWarnings(index)) then
-								ShowExpiryWarning(index, minutes)
-							end
-							break
-							
-						-- save some cpu cycles, exit if threshold too low
-						elseif threshold < minutes then
-							break
-						end
-					end
-				end
-			end
-			
-			-- if at least one event has expired, rebuild the list & Update
-			if hasExpired then
-				ClearExpiredEvents()
-				BuildList()
-				
-				addon:SendMessage("ALTOHOLIC_EVENT_EXPIRY")
-			end
-		end,
 	
 		GetTimerThresholds = function() return timerThresholds end,
 		

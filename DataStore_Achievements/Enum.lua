@@ -71,6 +71,7 @@ enum.AchievementCategories = {
 	PvPTempleOfKotmogu = 15163,
 	PvPSeethingShore = 15292,
 	PvPDeepwindGorge = 15218,
+	PvPStrandOfTheAncients = 14881,
 
 	Dungeons = 168,
 	DungeonHero = 12,
@@ -78,9 +79,17 @@ enum.AchievementCategories = {
 	DungeonGloryRaider = 14,
 	DungeonsOther = 19,
 
+	DungeonsUlduar10 = 14961,	-- Cataclysm
+	DungeonsUlduar25 = 14962,	-- Cataclysm
+	DungeonsCrusade10 = 15001,	-- Cataclysm
+	DungeonsCrusade25 = 15002,	-- Cataclysm
+	DungeonsIcecrow10 = 15041,	-- Cataclysm
+	DungeonsIcecrow25 = 15042,	-- Cataclysm
+
 	DungeonsClassic = 14808,
 	DungeonsBurningCrusade = 14805,
 	DungeonsLichKing = 14806,
+	DungeonsLichKingHeroic = 14921,	-- Cataclysm
 	DungeonsCataclysm = 15067,
 	DungeonsPandaria = 15106,
 	DungeonsDraenor = 15228,
@@ -153,6 +162,7 @@ enum.AchievementCategories = {
 	ProfessionsCookingCook = 24,
 	ProfessionsCookingDailyQuests = 25,
 	ProfessionsFishing = 171,
+	ProfessionsFirstAid = 172,			-- Cataclysm
 	ProfessionsFishingDragonflight = -139,
 	ProfessionsFishingLevel = 26,
 	ProfessionsFishingFishUp = 27,
@@ -250,6 +260,14 @@ enum.AchievementCategories = {
 	ExpansionFeaturesCovenantSanctumsAdventures = -73,
 	ExpansionFeaturesDragonriderRacing = 15462,
 	ExpansionFeaturesPrimalStorms = 15474,
+
+	PandariaRemix = 15509,
+	PandariaRemixQuests = 15510,
+	PandariaRemixReputation = 15513,
+	PandariaRemixExploration = 15511,
+	PandariaRemixScenarios = 15512,
+	PandariaRemixDungeons = 15514,
+	PandariaRemixRaids = 15515,
 
 	FeatsOfStrength = 81,
 	FeatsOfStrengthMounts = 15269,

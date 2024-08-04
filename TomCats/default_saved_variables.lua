@@ -16,6 +16,7 @@ addon.defaultSavedVariables = {
 				twitchDrops = addon.constants.accessoryDisplay.NOINSTANCES,
 				primeGamingLoot = addon.constants.accessoryDisplay.NOINSTANCES,
 				blizzardOther = addon.constants.accessoryDisplay.NOINSTANCES,
+				radiantEchoes = addon.constants.accessoryDisplay.NOINSTANCES,
 				snoozed = addon.constants.HINT_ALL,
 			},
 			["TomCats-MinimapButton"] = {
@@ -64,6 +65,23 @@ addon.defaultSavedVariables = {
 		hallowsend = addon.constants.HINT_ALL,
 		primalstorms = {
 			preferences = addon.constants.HINT_ALL,
+		},
+		mopremix = {
+			osd = addon.constants.HINT_ALL, -- bonusXPTracker position
+			bonusXPTrackerDisplay = addon.constants.accessoryDisplay.WHENAPPLICABLE,
+			collectionTracker = addon.constants.HINT_ALL,
+			collectionTrackerDisplay = true,
+			filterOptions = {
+				collected = true,
+				notCollected = true,
+				mounts = true,
+				pets = true,
+				toys = true,
+				appearances = true,
+				heirlooms = true,
+				vendor = true,
+				achievement = true
+			}
 		}
 	},
 	TomCats_Character = {
@@ -78,6 +96,17 @@ addon.defaultSavedVariables = {
 		},
 		hallowsend = {
 			preferences = addon.constants.HINT_ALL
+		},
+		mopremix = {
+			bonusxp = {
+				level = 10,
+				xp = 0,
+				bonus = 0,
+				synchronized = false,
+				uncommon = 0,
+				rare = 0,
+				epic = 0,
+			}
 		}
 	}
 }

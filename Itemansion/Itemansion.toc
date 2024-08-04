@@ -1,10 +1,10 @@
-## Interface: 100105
+## Interface: 110000
 ## Title: Itemansion
 ## Notes: Отображает дополнение, в котором был добавлен предмет
 ## Notes-enUS: Displays in which expansion the item was added
 ## Author: ludwici
 ## DefaultState: Enabled
-## Version: 1.0.2
+## Version: 1.0.3
 ## IconTexture: Interface\Icons\ClassIcon_Warrior
 ## X-Discord: ludwici
 

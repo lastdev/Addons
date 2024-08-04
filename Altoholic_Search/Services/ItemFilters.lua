@@ -4,7 +4,9 @@ local colors = addon.Colors
 
 local LII = LibStub("LibItemInfo-1.0")
 
-addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.Equipment", function(Options, Equipment)
+addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Equipment", function(Equipment)
+
+	local TableInsert, TableConcat = table.insert, table.concat
 
 	local filters = {}
 	local searchedItem = {}
@@ -67,7 +69,7 @@ addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.E
 			
 			if minLevel == 0 then
 				-- include items with no minimum requirement
-				if Options.Get("UI.Tabs.Search.IncludeNoMinLevel") then return true end
+				if Altoholic_SearchTab_Options["IncludeNoMinLevel"] then return true end
 			else
 				-- include if within the right level boundaries
 				if minLevel >= filters["itemMinLevel"] then return true end
@@ -90,7 +92,7 @@ addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.E
 		EnableFilter = function(filter)
 			if methods[filter] then
 				activeFilters = activeFilters or {}
-				table.insert(activeFilters, methods[filter])
+				TableInsert(activeFilters, methods[filter])
 			end
 		end,
 		GetFiltersString = function()
@@ -98,37 +100,37 @@ addon:Service("AltoholicUI.ItemFilters", { "AltoholicUI.Options", "AltoholicUI.E
 			local color = colors.cyan
 			
 			if filters["itemName"] then
-				table.insert(out, format("%s %s%s|r", "Name contains", color, filters["itemName"]))
+				TableInsert(out, format("%s %s%s|r", "Name contains", color, filters["itemName"]))
 			end
 			
 			if filters["itemType"] then
-				table.insert(out, format("%s = %s%s|r", TYPE, color, filters["itemType"]))
+				TableInsert(out, format("%s = %s%s|r", TYPE, color, filters["itemType"]))
 			end
 			
 			if filters["itemSubType"] then
-				table.insert(out, format("%s = %s%s|r", "Subtype", color, filters["itemSubType"]))
+				TableInsert(out, format("%s = %s%s|r", "Subtype", color, filters["itemSubType"]))
 			end
 			
 			if type(filters["itemSlot"]) == "string" then
-				table.insert(out, format("%s = %s%s|r", "Slot", color, _G[filters["itemSlot"]]))
+				TableInsert(out, format("%s = %s%s|r", "Slot", color, _G[filters["itemSlot"]]))
 			elseif type(filters["itemSlot"]) == "number" then
-				table.insert(out, format("%s = %s%s|r", "Slot", color, Equipment.GetEquipLocFromInventoryType(filters["itemSlot"])))
+				TableInsert(out, format("%s = %s%s|r", "Slot", color, Equipment.GetEquipLocFromInventoryType(filters["itemSlot"])))
 			end
 			
 			if filters["itemRarity"] then
 				local rarity = filters["itemRarity"]
 				local rarityLabel = format("|c%s%s", select(4, GetItemQualityColor(rarity)), _G[format("ITEM_QUALITY%d_DESC", rarity)])
 			
-				table.insert(out, format("%s >= %s|r", RARITY, rarityLabel))
+				TableInsert(out, format("%s >= %s|r", RARITY, rarityLabel))
 			end
 			
 			if filters["itemExpansion"] then
 				local expansion = filters["itemExpansion"]
 			
-				table.insert(out, format("%s = %s%s|r", EXPANSION_FILTER_TEXT, color, _G["EXPANSION_NAME"..expansion]))
+				TableInsert(out, format("%s = %s%s|r", EXPANSION_FILTER_TEXT, color, _G["EXPANSION_NAME"..expansion]))
 			end
 			
-			local filtersString = table.concat(out, ", ")
+			local filtersString = TableConcat(out, ", ")
 			
 			return (filtersString:len() > 0) and filtersString or "No active filter"
 		end,

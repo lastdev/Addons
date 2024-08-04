@@ -2,6 +2,18 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MisDirectionHelper","enUS",true)
 
 if not L then return end
 
+L["Options"] = "Options"
+L["Themes"] = "Themes"
+L["Select Theme"] = "Select Theme"
+L["General Settings"] = "General Settings"
+L["Toggle Misdirection Applied Announcement"] = "Toggle Misdirection Applied Announcement"
+L["Profiles"] = "Profiles"
+L["Select Key"] = "Select Key"
+L["Select Icon"] = "Select Icon"
+L["Select Channel"] = "Select Channel"
+L["Misdirection Macro Icon"] = "Misdirection Macro Icon"
+L["Macro Bypass Key"] = "Macro Bypass Key"
+L["Show or hide the minimap icon"] = true
 L["Misdirection"] = true
 L["Tricks of the Trade"] = true
 L["%s Misdirects to %s"] = true

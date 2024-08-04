@@ -8,10 +8,6 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
-
 local L = LM.Localize
 
 LM.RuleArguments = { }
@@ -220,6 +216,10 @@ function LM.RuleArguments:Validate(action)
         if macrotext:sub(1,1) ~= '/' then
             return false, format(L.LM_ERR_BAD_ARGUMENTS, macrotext)
         end
+    elseif argType == 'value' then
+        return #self == 1, format(L.LM_ERR_BAD_ARGUMENTS, self:ToString())
+    elseif argType == 'valueOrNone' then
+        return #self == 0 or #self == 1, format(L.LM_ERR_BAD_ARGUMENTS, self:ToString())
     end
     return true
 end

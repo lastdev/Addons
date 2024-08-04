@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2424, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240629024554")
 mod:SetCreatureID(167406)
 mod:SetEncounterID(2407)
 mod:SetUsedIcons(1, 2, 3, 4, 7, 8)
@@ -68,11 +68,11 @@ mod:AddSetIconOption("SetIconOnNightHunter", 327796, true, 0, {1, 2, 3})
 --Intermission: March of the Penitent
 local specWarnMarchofthePenitent				= mod:NewSpecialWarningSpell(328117, nil, nil, nil, 2, 2)
 
-local timerNextPhase							= mod:NewPhaseTimer(16.5, 328117, nil, nil, nil, 6, nil, nil, nil, 1, 4)
+local timerNextPhase							= mod:NewStageTimer(16.5, 328117, nil, nil, nil, 6, nil, nil, nil, 1, 4)
 --Stage Two: The Crimson Chorus
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22059))
 ----Crimson Cabalist
-local warnCrimsonCabalists						= mod:NewSpellAnnounce("ej22131", 2, 329711)
+local warnCrimsonCabalists						= mod:NewCountAnnounce("ej22131", 2, 329711)
 local warnCrescendo								= mod:NewSpellAnnounce(336162, 3)
 
 local specWarnCrescendo							= mod:NewSpecialWarningDodge(336162, false, nil, nil, 2, 2)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(155, "DBM-Raids-Cata", 3, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240411045619")
+mod:SetRevision("20240616044344")
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
 mod:SetUsedIcons(8)
@@ -184,7 +184,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		if not self.vb.phase2Started then
 			self:SetStage(2)
 			self.vb.phase2Started = true
-			warnPhase:Show()
+			warnPhase:Show(2)
 			warnPhase:Play("ptwo")
 			timerWindBurstCD:Cancel()
 			timerIceStormCD:Cancel()
@@ -192,7 +192,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		end
 	elseif spellId == 89528 and self:AntiSpam(2, 6) then -- Relentless Storm Initial Vehicle Ride Trigger (phase 3 start trigger)
 		self:SetStage(3)
-		warnPhase:Show()
+		warnPhase:Show(3)
 		warnPhase:Play("pthree")
 		timerLightningCloudCD:Start(15.5)
 		timerWindBurstCD:Start(25)

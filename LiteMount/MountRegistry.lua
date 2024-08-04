@@ -10,9 +10,8 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
+local C_MountJournal = LM.C_MountJournal or C_MountJournal
+local C_Spell = LM.C_Spell
 
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0", true)
 
@@ -27,12 +26,8 @@ local MOUNT_SPELLS = {
     { "GhostWolf", LM.SPELL.GHOST_WOLF, 'RUN', 'SLOW' },
     { "Nagrand", LM.SPELL.FROSTWOLF_WAR_WOLF, 'Horde', 'RUN' },
     { "Nagrand", LM.SPELL.TELAARI_TALBUK, 'Alliance', 'RUN' },
-    { "Soar", LM.SPELL.SOAR, 'DRAGONRIDING' },
+    { "Soar", LM.SPELL.SOAR, 'FLY', 'DRAGONRIDING' },
 --  { "Soulshape", LM.SPELL.SOULSHAPE, 'RUN', 'SLOW' },
-    { "ItemSummoned",
-        LM.ITEM.LOANED_GRYPHON_REINS, LM.SPELL.LOANED_GRYPHON, 'FLY' },
-    { "ItemSummoned",
-        LM.ITEM.LOANED_WIND_RIDER_REINS, LM.SPELL.LOANED_WIND_RIDER, 'FLY' },
     { "ItemSummoned",
         LM.ITEM.MAGIC_BROOM, LM.SPELL.MAGIC_BROOM, 'RUN', 'FLY', },
     { "ItemSummoned",
@@ -57,7 +52,7 @@ local MOUNT_SPELLS = {
 
 local MOUNT_SPELLS_BY_PROJECT = LM.TableWithDefault({
     [1] = {
-        { "TravelForm", LM.SPELL.TRAVEL_FORM, 'RUN', 'FLY', 'SWIM' },
+        { "TravelForm", LM.SPELL.TRAVEL_FORM, 'DRAGONRIDING', 'RUN', 'FLY', 'SWIM' },
         { "TravelForm", LM.SPELL.MOUNT_FORM, 'RUN' },
     },
     DEFAULT = {
@@ -89,6 +84,20 @@ local RefreshEvents = {
     ["ACHIEVEMENT_EARNED"] = true,
 }
 
+function LM.MountRegistry:OnEvent(event, ...)
+    if RefreshEvents[event] then
+        LM.Debug("Got refresh event "..event)
+        self.needRefresh = true
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+        local _, _, spellID = ...
+        local m = self.indexes.spellID[spellID]
+        if m then
+            m:OnSummon()
+            self.callbacks:Fire("OnMountSummoned", m)
+        end
+    end
+end
+
 function LM.MountRegistry:Initialize()
 
     self.mounts = LM.MountList:New()
@@ -101,20 +110,7 @@ function LM.MountRegistry:Initialize()
     self:BuildIndexes()
 
     -- Refresh event setup
-    self:SetScript("OnEvent",
-            function (self, event, ...)
-                if RefreshEvents[event] then
-                    LM.Debug("Got refresh event "..event)
-                    self.needRefresh = true
-                elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-                    local _, _, spellID = ...
-                    local m = self.indexes.spellID[spellID]
-                    if m then
-                        m:OnSummon()
-                        self.callbacks:Fire("OnMountSummoned", m)
-                    end
-                end
-            end)
+    self:SetScript("OnEvent", self.OnEvent)
 
     for ev in pairs(RefreshEvents) do
         self:RegisterEvent(ev)
@@ -154,6 +150,8 @@ function LM.MountRegistry:AddMount(m)
     else
         tinsert(self.mounts, m)
     end
+
+    LM.UIFilter.RegisterUsedTypeID(m.mountTypeID or 0)
 end
 
 local CollectedFilterSettings = {
@@ -277,7 +275,7 @@ end
 
 local function MatchMountToBuff(m, buffNames)
     if buffNames[m.name] then return true end
-    local spellName = GetSpellInfo(m.spellID)
+    local spellName = C_Spell.GetSpellName(m.spellID)
     if spellName and buffNames[spellName] then return true end
 end
 
@@ -285,8 +283,8 @@ function LM.MountRegistry:GetMountFromUnitAura(unitid)
     local buffNames = { }
     local i = 1
     while true do
-        local aura = UnitAura(unitid, i)
-        if aura then buffNames[aura] = true else break end
+        local auraInfo = C_UnitAuras.GetAuraDataByIndex(unitid, i)
+        if auraInfo then buffNames[auraInfo.name] = true else break end
         i = i + 1
     end
     return self.mounts:Find(MatchMountToBuff, buffNames)
@@ -300,8 +298,8 @@ function LM.MountRegistry:GetActiveMount()
     local buffIDs = { }
     local i = 1
     while true do
-        local id = select(10, UnitAura('player', i))
-        if id then buffIDs[id] = true else break end
+        local auraInfo = C_UnitAuras.GetAuraDataByIndex('player', i)
+        if auraInfo then buffIDs[auraInfo.spellId] = true else break end
         i = i + 1
     end
     return self.mounts:Find(function (m) return m:IsActive(buffIDs) end)
@@ -386,4 +384,3 @@ function LM.MountRegistry:GetJournalTotals()
     end
     return c
 end
-

@@ -1,8 +1,21 @@
+== v1.43 - 23rd July 2024
+* TOC update to 11.0.0
+
+== v1.42 - 13th May 2024
+* Redesign of the AddOn menu / Options menu AddOn description
+* Remove excess continent pins to reduce loading lag
+
+== v1.41 - 20th April 2024
+* TOC update to 10.2.7
+
+== v1.40 - 10th April 2024
+* Ancient Jinyu Staff verified (finally!) @ (46.16,71.21)
+
 == v1.39 - 18th March 2024
-* TOC Bump to 10.2.6
+* TOC update to 10.2.6
 
 == v1.38 - 12th January 2024
-* TOC Bump to 10.2.5
+* TOC update to 10.2.5
 
 == v1.37 - 23rd December 2023
 * Ancient Pandaren Mining Pick in The Jade Forest (40.33,41.33)
@@ -30,7 +43,7 @@
 * Recalibrated icon sizing
 
 == v1.31 - 28th October 2023
-* Bump to TOC 10.2.0
+* update to TOC 10.2.0
 
 == v1.30 - 10th October 2023
 * Bug fix. The collectable items across Pandaria will no longer give a LUA error
@@ -57,7 +70,7 @@
 * New Havac location at (58.71,73.95)
 
 == v1.22 - 28th June 2023
-* Bump up a version to 10.1.5
+* update up a version to 10.1.5
 
 == v1.21 - 25th June 2023
 * New Sele'na pat zone centred around (52.81,28.38) added
@@ -96,7 +109,7 @@
 * Removed unnecessary print to console code
 
 == v1.11 - 29th April 2023
-* TOC bump to 10.1.0
+* TOC update to 10.1.0
 
 == v1.10 - 23rd April 2023
 * Pandaren Cuisine improved advice
@@ -156,7 +169,7 @@
 * Private author notes added. Set ns.author == true if you really want to see them lol
 
 == v1.03 - 21st March 2023
-* Bump the TOC file to 10.0.7
+* update the TOC file to 10.0.7
 
 == v1.02 - 9th March 2023
 * Added Treasures and Riches - all of mainland Pandaria and Isle of Thunder too

@@ -14,10 +14,6 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
-
 -- This wrapper class is so that LM.ActionButton can treat all of the returns
 -- from action functions as if they were a Mount class.
 
@@ -28,16 +24,34 @@ function LM.SecureAction:New(attr)
     return setmetatable(attr, LM.SecureAction)
 end
 
-function LM.SecureAction:SetupActionButton(button, n)
-    for k,v in pairs(self) do
-        if k ~= 'type' and n then
-            k = k .. tostring(n)
+function LM.SecureAction:SetupActionButton(button, mouseButtonIndex)
+    if self.type == nil then
+        button:SetAttribute('type', nil)
+    elseif self.type == '_lm_func' then
+        self._lm_func()
+        button:SetAttribute('type', nil)
+    else
+        for k,v in pairs(self) do
+            if k ~= 'type' and mouseButtonIndex then
+                k = k .. tostring(mouseButtonIndex)
+            end
+            button:SetAttribute(k, v)
         end
-        button:SetAttribute(k, v)
     end
     -- https://github.com/Stanzilla/WoWUIBugs/issues/317#issuecomment-1510847497
     button:SetAttribute("pressAndHoldAction", true)
-    button:SetAttribute("typerelease", self.type)
+    button:SetAttribute("typerelease", button:GetAttribute("type"))
+end
+
+function LM.SecureAction:ClearActionButton(button)
+    button:SetAttribute('type', nil)
+    button:SetAttribute('typerelease', nil)
+end
+
+function LM.SecureAction:NoAction()
+    return self:New( {
+                ["type"] = nil,
+            } )
 end
 
 function LM.SecureAction:Macro(macroText, unit)
@@ -85,6 +99,17 @@ function LM.SecureAction:Click(clickButton)
     local attr = {
             ["type"] = "click",
             ["clickbutton"] = clickButton
+    }
+    return self:New(attr)
+end
+
+function LM.SecureAction:Execute(script)
+    if type(script) == 'string' then
+        script = loadstring(script)
+    end
+    local attr = {
+            ["type"] = "_lm_func",
+            ["_lm_func"] = script
     }
     return self:New(attr)
 end

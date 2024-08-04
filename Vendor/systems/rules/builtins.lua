@@ -441,8 +441,8 @@ local RuleFunctions = {
             local location = ItemLocation:CreateFromEquipmentSlot(slot)
             if C_Item.DoesItemExist(location) then
                 local link = C_Item.GetItemLink(location)
-                --local equiploc = select(4, GetItemInfoInstant(link))
-                local ilvl = GetDetailedItemLevelInfo(link)
+                --local equiploc = select(4, Addon:GetItemInfoInstant(link))
+                local ilvl = Addon:GetDetailedItemLevelInfo(link)
                 if ilvl and (lowestlevel == 0 or ilvl < lowestlevel) then
                     lowestlevel = ilvl
                 end

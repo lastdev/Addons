@@ -26,7 +26,7 @@ local math_max = math.max
 local math_min = math.min
 local dummy = function() return 0 end
 local GetComboPoints = dummy
-
+local LoadAddOn = LoadAddOn or C_AddOns.LoadAddOn
 
 
 local function GetSpecializationWithFallback()
@@ -41,8 +41,8 @@ end
 --- Compatibility with Classic
 local APILevel = math.floor(select(4,GetBuildInfo())/10000)
 -- local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local IsInPetBattle = APILevel <= 3 and function() end or C_PetBattles.IsInBattle
-local GetSpecialization = APILevel <= 3 and function() return 1 end or GetSpecializationWithFallback
+local IsInPetBattle = APILevel <= 4 and function() end or C_PetBattles.IsInBattle
+local GetSpecialization = APILevel <= 4 and function() return 1 end or GetSpecializationWithFallback
 
 local configs = {}
 local currentConfigName
@@ -204,6 +204,22 @@ if APILevel == 3 then
         PRIEST = { "Disabled", "Disabled", "Disabled" },
     }
 end
+if APILevel == 4 then
+    defaults.global.classConfig = {
+        ROGUE = { "ComboPointsRogueClassic", "ComboPointsRogueClassic", "ComboPointsRogueClassic" },
+        DRUID = { "ShapeshiftDruid", "ComboPointsDruid", "ShapeshiftDruid", "ComboPointsDruid" },
+        PALADIN = { "HolyPower", "HolyPower", "HolyPower" },
+        MONK = { "Disabled", "Disabled", "Disabled" },
+        WARLOCK = { "SoulShards", "SoulShards", "SoulShards" },
+        DEMONHUNTER = { "Disabled", "Disabled" },
+        DEATHKNIGHT = { "Disabled", "Disabled", "Disabled" },
+        MAGE = { "ArcaneBlastClassic", "ArcaneBlastClassic", "ArcaneBlastClassic" },
+        WARRIOR = { "Disabled", "Disabled", "Disabled" },
+        SHAMAN = { "MaelstromWeapon", "MaelstromWeapon", "MaelstromWeapon" },
+        HUNTER = { "Disabled", "Disabled", "Disabled" },
+        PRIEST = { "ShadowOrbs", "ShadowOrbs", "ShadowOrbs" },
+    }
+end
 
 function NugComboBar:LoadClassSettings()
         local class = select(2,UnitClass("player"))
@@ -287,6 +303,7 @@ do
             local f = CreateFrame('Frame', nil, SettingsPanel or InterfaceOptionsFrame) -- helper frame to load GUI and to watch specialization changes
             f:SetScript('OnShow', function(self)
                 self:SetScript('OnShow', nil)
+
                 LoadAddOn('NugComboBarGUI')
             end)
 
@@ -1024,6 +1041,17 @@ local ParseOpts = function(str)
     end
     return fields
 end
+
+local function InterfaceOptionsFrame_OpenToCategory(categoryIDOrFrame)
+	if type(categoryIDOrFrame) == "table" then
+		local categoryID = categoryIDOrFrame.name;
+		return Settings.OpenToCategory(categoryID);
+	else
+		return Settings.OpenToCategory(categoryIDOrFrame);
+	end
+end
+
+
 NugComboBar.Commands = {
     ["unlock"] = function(v)
 		NugComboBar:Show()

@@ -1,10 +1,11 @@
-## Interface: 100206
+## Interface: 110000
 ## Title: Vendor
 ## Notes: Vendors junk you don't want and auto-repairs.
-## Version: 6.5.0
+## Version: 6.6.0
 ## SavedVariables: Vendor_CustomRuleDefinitions, Vendor_Settings, Vendor_debug, Vendor_Profiles, Vendor_CustomLists, Vendor_History, Vendor_AccountSettings, Vendor_XX_InstanceInfo, Vendor_XX_LootInfo
 ## SavedVariablesPerCharacter: Vendor_RulesConfig, Vendor_ActiveProfile, Vendor_Character_Data
 ## Author: Thoekh of Sargeras & Buskin of Lightbringer
+## IconTexture: 2484341
 ## X-Curse-Project-ID: 297511
 
 # Constants defined first

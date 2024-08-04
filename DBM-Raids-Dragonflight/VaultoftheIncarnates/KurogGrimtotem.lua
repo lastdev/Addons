@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2491, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104643")
+mod:SetRevision("20240702184243")
 mod:SetCreatureID(184986)
 mod:SetEncounterID(2605)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -37,7 +37,7 @@ mod:RegisterEventsInCombat(
 --General
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(374554, nil, nil, nil, 1, 8)
 
-local timerPhaseCD								= mod:NewPhaseTimer(30)
+local timerPhaseCD								= mod:NewStageTimer(30)
 local berserkTimer								= mod:NewBerserkTimer(600)
 
 --Stage One: Elemental Mastery
@@ -52,7 +52,7 @@ local timerSunderStrikeCD						= mod:NewCDTimer(17, 372158, nil, "Tank|Healer", 
 local timerDamageCD								= mod:NewTimer(30, "timerDamageCD", 391096, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 391096, nil, nil, "next")--Magma Burst, Biting Chill, Enveloping Earth, Lightning Crash
 local timerAvoidCD								= mod:NewTimer(60, "timerAvoidCD", 391100, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 391100, nil, nil, "next")--Molten Rupture, Frigid Torrent, Erupting Bedrock, Shocking Burst
 local timerUltimateCD							= mod:NewTimer(60, "timerUltimateCD", 374680, nil, nil, 3, nil, nil, nil, nil, nil, nil, nil, 374680, nil, nil, "next")--Searing Carnage, Absolute Zero, Seismic Rupture, Thunder Strike
-local timerAddEnrageCD							= mod:NewTimer(60, "timerAddEnrageCD", 28131, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON, nil, nil, nil, nil, nil, 400473, nil, nil, "next")
+local timerAddEnrageCD							= mod:NewTimer(60, "timerAddEnrageCD", 28131, nil, nil, 5, DBM_COMMON_L.DAMAGE_ICON, nil, nil, nil, nil, nil, nil, 400473, nil, nil, "next")
 
 --mod:AddInfoFrameOption(361651, true)
 mod:AddNamePlateOption("NPAuraOnSurge", 371971, true)
@@ -184,6 +184,7 @@ mod.vb.damageSpell = "?"
 mod.vb.avoidSpell = "?"
 mod.vb.ultimateSpell = "?"
 mod.vb.damageCount = 0
+mod.vb.zeroCount = 0
 mod.vb.damageTimer = 30
 mod.vb.avoidTimer = 60
 mod.vb.ultTimer = 60
@@ -197,10 +198,11 @@ function mod:OnCombatStart(delay)
 	self.vb.chillCast = 0
 	self.vb.curAltar = false
 	self.vb.damageCount = 0
+	self.vb.zeroCount = 0
 	self.vb.damageSpell = "?"
 	self.vb.avoidSpell = "?"
 	self.vb.ultimateSpell = "?"
-	timerSunderStrikeCD:Start(8-delay)
+	timerSunderStrikeCD:Start(7.2-delay)
 	timerPhaseCD:Start(125-delay)--125-127
 	self.vb.damageTimer = 19.5--Alternating in P1
 	self.vb.avoidTimer = 45
@@ -538,7 +540,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.damageCount = 0
 		self.vb.zeroCount = 0
 		self:SetStage(1)
-		timerSunderStrikeCD:Start(7.4)
+		timerSunderStrikeCD:Start(7.1)
 		if self.vb.stageTotality == 3 then
 			timerPhaseCD:Start(127)--Second intermission (Primal Barrier)
 		else

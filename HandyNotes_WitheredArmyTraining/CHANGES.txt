@@ -1,0 +1,12 @@
+tag 0057d696e7bd26411ef320b2711f062983ee5a76 v7
+Author:	David Lynch <kemayo@gmail.com>
+Date:	Fri Jul 26 11:54:50 2024 -0500
+
+Tagging v7
+
+commit 402be152453cf2ed0f607d7a368df09bb7937f3f
+Author: David Lynch <kemayo@gmail.com>
+Date:   Fri Jul 26 11:54:42 2024 -0500
+
+    TOC for 11.0.0
+

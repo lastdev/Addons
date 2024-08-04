@@ -4,9 +4,7 @@ local colors = addon.Colors
 local icons = addon.Icons
 
 local MVC = LibStub("LibMVC-1.0")
-local Options = MVC:GetService("AltoholicUI.Options")
-
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local L = DataStore:GetLocale(addonName)
 local PARAGON_LABEL = "Paragon"
 
 -- *** Reputations ***
@@ -314,6 +312,8 @@ local Factions = {
 			{ name = DataStore:GetFactionName(2564), icon = "ui_majorfaction_niffen" },      			-- Loamm Niffen
 			{ name = DataStore:GetFactionName(2568), icon = "inv_snailrockmount_pink" }, 					-- Glimmerogg Racer Unknown icon
 			{ name = DataStore:GetFactionName(2574), icon = "ui_majorfaction_denizens" }, 				-- Dream Wardens 10.2
+			{ name = DataStore:GetFactionName(2523), icon = "inv_dracthyrhead03" }, 				-- Dark Talons Dracthyrs
+			{ name = DataStore:GetFactionName(2524), icon = "inv_dracthyrhead03" }, 				-- Obsidian Warders Dracthyrs
 		},
 	},
 	{	-- [11]
@@ -342,8 +342,8 @@ local VertexColors = {
 local view
 local isViewValid
 
-local OPTION_XPACK = "UI.Tabs.Grids.Reputations.CurrentXPack"
-local OPTION_FACTION = "UI.Tabs.Grids.Reputations.CurrentFactionGroup"
+local OPTION_XPACK = "Reputations.CurrentXPack"
+local OPTION_FACTION = "Reputations.CurrentFactionGroup"
 
 local currentFaction
 
@@ -351,8 +351,9 @@ local function BuildView()
 	view = view or {}
 	wipe(view)
 	
-	local currentXPack = Options.Get(OPTION_XPACK)
-	local currentFactionGroup = Options.Get(OPTION_FACTION)
+	local options = Altoholic_GridsTab_Options
+	local currentXPack = options[OPTION_XPACK]
+	local currentFactionGroup = options[OPTION_FACTION]
 
 	if (currentXPack ~= CAT_ALLINONE) then
 		for index, faction in ipairs(Factions[currentXPack][currentFactionGroup]) do
@@ -414,8 +415,9 @@ tab:RegisterGrid(2, {
 	OnUpdate = function() 
 			if isViewValid then return end
 
-			local currentXPack = Options.Get(OPTION_XPACK)
-			local currentFactionGroup = Options.Get(OPTION_FACTION)
+			local options = Altoholic_GridsTab_Options
+			local currentXPack = options[OPTION_XPACK]
+			local currentFactionGroup = options[OPTION_FACTION]
 			
 			if (currentXPack == CAT_GUILD) then
 				tab:SetStatus(format("%s%s|r / %s%s", colors.white, L["Reputations"], colors.green, GUILD))

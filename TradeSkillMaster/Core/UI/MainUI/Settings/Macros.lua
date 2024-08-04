@@ -6,19 +6,19 @@
 
 local TSM = select(2, ...) ---@type TSM
 local Macros = TSM.MainUI.Settings:NewPackage("Macros")
-local Environment = TSM.Include("Environment")
-local L = TSM.Include("Locale").GetTable()
-local TempTable = TSM.Include("Util.TempTable")
-local Vararg = TSM.Include("Util.Vararg")
-local Log = TSM.Include("Util.Log")
-local Theme = TSM.Include("Util.Theme")
-local UIElements = TSM.Include("UI.UIElements")
-local UIUtils = TSM.Include("UI.UIUtils")
+local ClientInfo = TSM.LibTSMWoW:Include("Util.ClientInfo")
+local L = TSM.Locale.GetTable()
+local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
+local Vararg = TSM.LibTSMUtil:Include("Lua.Vararg")
+local ChatMessage = TSM.LibTSMService:Include("UI.ChatMessage")
+local Theme = TSM.LibTSMService:Include("UI.Theme")
+local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
+local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
 local private = {}
 local MACRO_NAME = "TSMMacro"
-local MACRO_ICON = Environment.IsRetail() and "Achievement_Faction_GoldenLotus" or "INV_Misc_Flower_01"
+local MACRO_ICON = ClientInfo.IsRetail() and "Achievement_Faction_GoldenLotus" or "INV_Misc_Flower_01"
 local BINDING_NAME = "MACRO "..MACRO_NAME
-local buttonEvent = Environment.IsRetail() and (GetCVarBool("ActionButtonUseKeyDown") and "1" or "0") or nil
+local buttonEvent = ClientInfo.IsRetail() and (GetCVarBool("ActionButtonUseKeyDown") and "1" or "0") or nil
 local BUTTON_INFO = {
 	["row1.myauctionsCheckbox"] = {name = "TSMCancelAuctionBtn"},
 	["row1.auctioningCheckbox"] = {name = "TSMAuctioningBtn"},
@@ -26,7 +26,7 @@ local BUTTON_INFO = {
 	["row2.bidBuyConfirmBtn"] = {name = "TSMBidBuyConfirmBtn"},
 	["row3.sniperCheckbox"] = {name = "TSMSniperBtn"},
 	["row3.craftingCheckbox"] = {name = "TSMCraftingBtn"},
-	["row4.destroyingCheckbox"] = {name = "TSMDestroyBtn", button = Environment.IsRetail() and "LeftButton "..buttonEvent or nil},
+	["row4.destroyingCheckbox"] = {name = "TSMDestroyBtn", button = ClientInfo.IsRetail() and "LeftButton "..buttonEvent or nil},
 	["row4.vendoringCheckbox"] = {name = "TSMVendoringSellAllButton"},
 }
 local CHARACTER_BINDING_SET = 2
@@ -218,7 +218,7 @@ function private.CreateButtonOnClick(button)
 	DeleteMacro(MACRO_NAME)
 
 	if GetNumMacros() >= MAX_ACCOUNT_MACROS then
-		Log.PrintUser(L["Could not create macro as you already have too many. Delete one of your existing macros and try again."])
+		ChatMessage.PrintUser(L["Could not create macro as you already have too many. Delete one of your existing macros and try again."])
 		return
 	end
 
@@ -266,8 +266,8 @@ function private.CreateButtonOnClick(button)
 	button:SetText(GetMacroInfo(MACRO_NAME) and L["Update existing macro"] or L["Create macro"])
 		:Draw()
 
-	Log.PrintUser(L["Macro created and scroll wheel bound!"])
+	ChatMessage.PrintUser(L["Macro created and scroll wheel bound!"])
 	if #macroText > MAX_MACRO_LENGTH then
-		Log.PrintUser(L["WARNING: The macro was too long, so was truncated to fit by WoW."])
+		ChatMessage.PrintUser(L["WARNING: The macro was too long, so was truncated to fit by WoW."])
 	end
 end

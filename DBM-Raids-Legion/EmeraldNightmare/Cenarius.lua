@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1750, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104720")
+mod:SetRevision("20240616044104")
 mod:SetCreatureID(104636)
 mod:SetEncounterID(1877)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -267,8 +267,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		self:BossUnitTargetScanner(uId, "BreathTarget")
 		timerRottenBreathCD:Start(nil, UnitGUID(uId))
 	elseif spellId == 210290 then--Bramble cast finish (only thing not hidden, probably be hidden too by live, if so will STILL find a way to warn this, even if it means scanning boss 24/7)
-		if not UnitExists(uId.."target") then return end--Blizzard decided to go even further out of way to break this detection, if this happens we don't want nil errors for users.
 		local targetName = DBM:GetUnitFullName(uId.."target")
+		if not targetName then return end
 		if UnitIsUnit("player", uId.."target") then
 			specWarnNightmareBramblesNear:Show(YOU)
 			yellNightmareBrambles:Yell()

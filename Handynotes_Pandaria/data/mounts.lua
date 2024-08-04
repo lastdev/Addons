@@ -1,7 +1,8 @@
-local addonName, shared = ...;
+local _, addon = ...;
 
-shared.mountData = {
+addon.mountData = {
   [473] = 60491,
+  [515] = 62346,
   [542] = 69099,
   [533] = 69161,
   [534] = 69769,

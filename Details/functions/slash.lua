@@ -11,6 +11,7 @@ local UIParent = UIParent
 local UnitGUID = UnitGUID
 local tonumber= tonumber
 local LoggingCombat = LoggingCombat
+local GetSpellInfo = Details222.GetSpellInfo
 
 SLASH_PLAYEDCLASS1 = "/playedclass"
 function SlashCmdList.PLAYEDCLASS(msg, editbox)
@@ -383,28 +384,10 @@ function SlashCmdList.DETAILS (msg, editbox)
 		instance2.baseframe:SetPoint("bottomright", RightChatToggleButton, "topright", -1, 1)
 
 	elseif (msg == "pets") then
-		local petFrame = Details.PetFrame
-		if (not petFrame) then
-			petFrame = Details:CreateListPanel()
-			Details.PetFrame = petFrame
-		end
+		Details.DebugPets()
 
-		local i = 1
-		for k, v in pairs(Details.tabela_pets.pets) do
-			petFrame:add( k .. ": " ..  v[1] .. " | " .. v[2] .. " | " .. v[3] .. " | " .. v[6], i)
-			i = i + 1
-		end
-
-		petFrame:Show()
-
-	elseif (msg == "savepets") then
-		Details.tabela_vigente.saved_pets = {}
-
-		for k, v in pairs(Details.tabela_pets.pets) do
-			Details.tabela_vigente.saved_pets[k] = {v[1], v[2], v[3]}
-		end
-
-		Details:Msg("pet table has been saved on current combat.")
+	elseif (msg == "mypets") then
+		Details.DebugMyPets()
 
 	elseif (msg == "model") then
 		local frame = CreateFrame("PlayerModel");
@@ -776,6 +759,57 @@ function SlashCmdList.DETAILS (msg, editbox)
 			end
 		end
 
+	elseif (command == "spellid") then
+		if (Details222.FocusedSpellId) then
+			local npcId = Details222.FocusedSpellId
+			if (not Details.id_frame) then
+				local backdrop = {
+					bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+					edgeFile = "Interface\\ChatFrame\\ChatFrameBackground",
+					tile = true, edgeSize = 1, tileSize = 5,
+				}
+
+				Details.id_frame = CreateFrame("Frame", "DetailsID", UIParent, "BackdropTemplate")
+				Details.id_frame:SetHeight(14)
+				Details.id_frame:SetWidth(120)
+				Details.id_frame:SetPoint("center", UIParent, "center")
+				Details.id_frame:SetBackdrop(backdrop)
+
+				table.insert(UISpecialFrames, "DetailsID")
+
+				Details.id_frame.texto = CreateFrame("editbox", nil, Details.id_frame, "BackdropTemplate")
+				Details.id_frame.texto:SetPoint("topleft", Details.id_frame, "topleft")
+				Details.id_frame.texto:SetAutoFocus(false)
+				Details.id_frame.texto:SetFontObject(GameFontHighlightSmall)
+				Details.id_frame.texto:SetHeight(14)
+				Details.id_frame.texto:SetWidth(120)
+				Details.id_frame.texto:SetJustifyH("CENTER")
+				Details.id_frame.texto:EnableMouse(true)
+				Details.id_frame.texto:SetBackdropColor(0, 0, 0, 0.5)
+				Details.id_frame.texto:SetBackdropBorderColor(0.3, 0.3, 0.30, 0.80)
+				Details.id_frame.texto:SetText("")
+				Details.id_frame.texto.perdeu_foco = nil
+
+				Details.id_frame.texto:SetScript("OnEnterPressed", function()
+					Details.id_frame.texto:ClearFocus()
+					Details.id_frame:Hide()
+				end)
+
+				Details.id_frame.texto:SetScript("OnEscapePressed", function()
+					Details.id_frame.texto:ClearFocus()
+					Details.id_frame:Hide()
+				end)
+
+			end
+
+			C_Timer.After(0.1, function()
+				Details.id_frame:Show()
+				Details.id_frame.texto:SetFocus()
+				Details.id_frame.texto:SetText("" .. npcId)
+				Details.id_frame.texto:HighlightText()
+			end)
+		end
+
 	elseif (command == "profile") then
 
 		local profile = rest:match("^(%S*)%s*(.-)$")
@@ -901,27 +935,14 @@ function SlashCmdList.DETAILS (msg, editbox)
 			print(Loc["STRING_DETAILS1"] .. "net diagnostic mode has been turned on.")
 		end
 
-	elseif (command == "debug") then
-		if (Details.debug) then
-			Details.debug = false
-			print(Loc ["STRING_DETAILS1"] .. "diagnostic mode has been turned off.")
-			return
-		else
-			Details.debug = true
-			print(Loc ["STRING_DETAILS1"] .. "diagnostic mode has been turned on.")
+	elseif (command == "m+debug") then
+		Details222.Debug.SetMythicPlusDebugState() --passing nothing will toggle the debug state
 
-			if (rest and rest ~= "") then
-				if (rest == "-clear") then
-					_detalhes_global.debug_chr_log = ""
-					print(Loc ["STRING_DETAILS1"] .. "log for characters has been wiped.")
-					return
-				end
-				Details.debug_chr = rest
-				_detalhes_global.debug_chr_log = _detalhes_global.debug_chr_log or ""
-				print(Loc ["STRING_DETAILS1"] .. "diagnostic for character " .. rest .. " turned on.")
-				return
-			end
-		end
+	elseif (command == "m+debugloot") then
+		Details222.Debug.SetMythicPlusLootDebugState() --passing nothing will toggle the debug state
+
+	elseif (command == "debug") then
+		Details.ShowDebugOptionsPanel()
 
 	--debug combat log
 	elseif (msg == "combatlog") then
@@ -1265,7 +1286,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 		end
 
 		--create a new combat to be the overall for the mythic run
-		Details:EntrarEmCombate()
+		Details222.StartCombat()
 
 		--get the current combat just created and the table with all past segments
 		local newCombat = Details:GetCurrentCombat()
@@ -1418,7 +1439,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 			local tokenId = line:match("%s%s(.*)"):match("^(.-),")
 
 			if (tokenId == "ENCOUNTER_START") then
-				Details:StartCombat()
+				Details222.StartCombat()
 			end
 
 			if (tokenId == "ENCOUNTER_END") then
@@ -1515,9 +1536,12 @@ function SlashCmdList.DETAILS (msg, editbox)
 	elseif (msg == "generateracialslist") then
 		Details.GenerateRacialSpellList()
 
-	elseif (msg == "survey") then
+	elseif (msg == "spellcat") then
 		Details.Survey.OpenSurveyPanel()
 
+	elseif (msg == "pstate") then
+		local sEngineState = Details222.Parser.GetState()
+		Details:Msg("Parser State:", sEngineState)
 	else
 
 		--if (_detalhes.opened_windows < 1) then
@@ -2033,6 +2057,10 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 
 							local unitName, level, mapID, challengeMapID, classID, rating, mythicPlusMapID, classIconTexture, iconTexCoords, mapName, inMyParty, isOnline, isGuildMember = unpack(unitTable)
 
+							if (mapName == "") then
+								mapName = "user need update details!"
+							end
+
 							local rioProfile
 							if (RaiderIO) then
 								local playerName, playerRealm = unitName:match("(.+)%-(.+)")
@@ -2188,6 +2216,17 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					newData.offlineGuildPlayers = {}
 					local keystoneData = openRaidLib.GetAllKeystonesInfo()
 
+					--[=[
+						["Exudragão"] =  {
+							["mapID"] = 2526,
+							["challengeMapID"] = 402,
+							["mythicPlusMapID"] = 0,
+							["rating"] = 215,
+							["classID"] = 13,
+							["level"] = 6,
+						},
+					--]=]
+
 					local guildUsers = {}
 					local totalMembers, onlineMembers, onlineAndMobileMembers = GetNumGuildMembers()
 
@@ -2229,7 +2268,12 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							local coords = CLASS_ICON_TCOORDS
 							local _, class = GetClassInfo(classId)
 
-							local mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mythicPlusMapID) or ""
+							local mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mythicPlusMapID)
+							if (not mapName) then
+								mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.challengeMapID)
+							end
+
+							mapName = mapName or "map name not found"
 
 							--local mapInfoChallenge = C_Map.GetMapInfo(keystoneInfo.challengeMapID)
 							--local mapNameChallenge = mapInfoChallenge and mapInfoChallenge.name or ""

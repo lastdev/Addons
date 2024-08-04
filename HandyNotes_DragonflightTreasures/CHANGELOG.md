@@ -1,5 +1,28 @@
 # Changelog
 
+## Changed in v60
+
+* Add the broken waygate in Waking Shores
+* Add loot to the forgotten jewel box
+* Add the missing Visage of Aurostor to Aurostor in Emerald Dream
+* Label cosmetic loot in tooltips
+* Clean up some deprecated WoW API calls for the future (and for running on beta)
+
+## Changed in v59
+
+* Updated Krowi_WorldMapButtons-1.4 to v7, which should fix an issue with the button on the world map sometimes overlapping the new legend button
+* Changed the name of the Dragon Glyphs group to just Glyphs
+
+## Changed in v58
+
+* Fix a usage of GetFactionInfoByID when it was removed in 11.0
+
+## Changed in v57
+
+* Updated for 11.0.0
+* Added some minor missing locations and questids
+* Updated Krowi_WorldMapButtons-1.4 to v6
+
 ## Changed in v56
 
 * Updated for 10.2.6

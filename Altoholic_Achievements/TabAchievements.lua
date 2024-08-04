@@ -1,9 +1,10 @@
+local addonTabName = ...
 local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 local icons = addon.Icons
 
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local L = DataStore:GetLocale(addonName)
 local ICON_NOT_STARTED = "Interface\\RaidFrame\\ReadyCheck-NotReady" 
 local ICON_PARTIAL = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 local ICON_COMPLETED = "Interface\\RaidFrame\\ReadyCheck-Ready" 
@@ -41,12 +42,9 @@ addon:Controller("AltoholicUI.TabAchievements", {
 				frame:Update()
 			end
 	
-		addon:RegisterEvent("ACHIEVEMENT_EARNED", function(event, id)
+		addon:ListenTo("ACHIEVEMENT_EARNED", function(event, id)
 			if id then frame:Update() end
 		end)
-		
-		local account, realm = frame.SelectRealm:GetCurrentRealm()
-		frame.ClassIcons:Update(account, realm, currentPage)		
 		
 	end,
 	RegisterPanel = function(frame, key, panel)
@@ -439,6 +437,14 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 				{ text = GetCategoryInfo(cat.ExpansionFeaturesDragonriderRacing), id = cat.ExpansionFeaturesDragonriderRacing },
 				{ text = "Primal Storms", id = cat.ExpansionFeaturesPrimalStorms },
 			}},
+			{ id = cat.PandariaRemix, subMenu = {
+				{ id = cat.PandariaRemixQuests },
+				{ id = cat.PandariaRemixReputation },
+				{ id = cat.PandariaRemixExploration },
+				{ id = cat.PandariaRemixScenarios },
+				{ id = cat.PandariaRemixDungeons },
+				{ id = cat.PandariaRemixRaids },
+			}},
 			{ id = cat.FeatsOfStrength, subMenu = {
 				{ id = cat.FeatsOfStrengthMounts, subMenu = {
 					{ text = GetCategoryInfo(cat.PvPArena), id = cat.FeatsOfStrengthMountsArena },
@@ -492,3 +498,33 @@ addon:Controller("AltoholicUI.TabAchievementsCategoriesList", {
 		frame:SetCategories(categories)
 	end,
 })
+
+DataStore:OnAddonLoaded(addonTabName, function() 
+	Altoholic_AchievementsTab_Columns = Altoholic_AchievementsTab_Columns or {}
+		
+	--Temporary: database migration
+	if AltoholicDB and AltoholicDB.global and AltoholicDB.global.options then
+		local source = AltoholicDB.global.options
+		local dest = Altoholic_AchievementsTab_Columns
+
+		for k, v in pairs(source) do
+			local arg1, arg2, account, realm, column = strsplit(".", k)
+			
+			if arg1 == "Tabs" and arg2 == "Achievements" then
+				local realmKey = format("%s.%s", account, realm)	-- ex: "Default.Dalaran"
+				local columnIndex = tonumber(column:match("%d+$"))
+				local _, _, characterName = strsplit(".", v)
+				
+				-- Create the new entries
+				dest[realmKey] = dest[realmKey] or {}
+				dest[realmKey][columnIndex] = characterName
+				
+				-- Delete the old entries
+				source[k] = nil
+			end
+		end
+	end
+
+	local account, realm = tab.SelectRealm:GetCurrentRealm()
+	tab.ClassIcons:Update(account, realm, currentPage)	
+end)

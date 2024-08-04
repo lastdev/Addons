@@ -4,7 +4,7 @@ function Outfitter.LDB:Initialize()
 	self.LDB = LibStub("LibDataBroker-1.1", true)
 	self.DataObj = self.LDB:NewDataObject(Outfitter.cTitle,
 	{
-		type = "data source",
+		type = "launcher",
 		icon = "Interface\\AddOns\\Outfitter\\Textures\\Icon",
 		text = "Outfitter",
 		OnClick = function(pFrame, pButton) self:OnClick(pFrame, pButton) end

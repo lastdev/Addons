@@ -69,6 +69,7 @@ local HasteItem = {
     [309658] = true, -- Drums of Deathly Ferocity
     [146613] = true, -- Drums of Rage
     [381301] = true, -- Feral Hide Drums - DF
+	[441076] = true, -- Timeless Drums (Event Pandaria remix)
 }
 
 local WarpSpells = {

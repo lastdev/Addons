@@ -98,7 +98,7 @@ end
 --
 -- item actions
 --
-local _deSpellName = GetSpellInfo(13262);
+local _deSpellName = C_Spell.GetSpellName(13262);
 local _deMacro = "/stopmacro [combat][btn:2]\n/stopcasting\n/cast %s\n/use %s %s";
 
 local function onItemPreClick(widget)

@@ -74,7 +74,7 @@ points[ 422 ] = { -- Dread Wastes
 	[60556460] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
 	[61156890] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
 	[62157370] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
-	[63806960] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
+	[63806960] = { aID=6350, aIndex=3, continent=true }, -- Clouded Hedgehog
 	[65156615] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
 	[65857170] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
 	[66607000] = { aID=6350, aIndex=3, }, -- Clouded Hedgehog
@@ -83,14 +83,14 @@ points[ 422 ] = { -- Dread Wastes
 	[54257900] = { aID=6350, aIndex=6, }, -- Emperor Crab
 	[55417971] = { aID=6350, aIndex=6, }, -- Emperor Crab
 	[56678046] = { aID=6350, aIndex=6, }, -- Emperor Crab
-	[58818015] = { aID=6350, aIndex=6, }, -- Emperor Crab
+	[58818015] = { aID=6350, aIndex=6, continent=true }, -- Emperor Crab
 	[60378027] = { aID=6350, aIndex=6, }, -- Emperor Crab
 	[60888196] = { aID=6350, aIndex=6, }, -- Emperor Crab
 	[61648027] = { aID=6350, aIndex=6, }, -- Emperor Crab
 	[61878144] = { aID=6350, aIndex=6, }, -- Emperor Crab
 	[59007325] = { aID=6350, aIndex=14, }, -- Resilient Roach
 	[61905905] = { aID=6350, aIndex=14, }, -- Resilient Roach
-	[62206680] = { aID=6350, aIndex=14, }, -- Resilient Roach
+	[62206680] = { aID=6350, aIndex=14, continent=true }, -- Resilient Roach
 	[62406520] = { aID=6350, aIndex=14, }, -- Resilient Roach
 	[63357180] = { aID=6350, aIndex=14, }, -- Resilient Roach
 	[64356390] = { aID=6350, aIndex=14, }, -- Resilient Roach
@@ -129,15 +129,15 @@ points[ 422 ] = { -- Dread Wastes
 	[71773607] = { aID=7284, item=86519, aQuest=31666 }, -- Wind-Reaver's Dagger of Quick Strikes
 
 	-- Glorious
-	[25212840] = { aID=7439, aIndex=55, }, -- Dak the Breaker
-	[34742323] = { aID=7439, aIndex=41, }, -- Ai-Li Skymirror
+	[25212840] = { aID=7439, aIndex=55, continent=true }, -- Dak the Breaker
+	[34742323] = { aID=7439, aIndex=41, continent=true }, -- Ai-Li Skymirror
 	[35623053] = { aID=7439, aIndex=20, }, -- Gar'lok
 	[35996227] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[36176406] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[36376089] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[37015960] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
-	[37016411] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
-	[37682957] = { aID=7439, aIndex=20, }, -- Gar'lok
+	[37016411] = { aID=7439, aIndex=48, continent=true }, -- Omnis Grinlock
+	[37682957] = { aID=7439, aIndex=20, continent=true }, -- Gar'lok
 	[38046366] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[38275807] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[39006255] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
@@ -147,17 +147,17 @@ points[ 422 ] = { -- Dread Wastes
 	[39805946] = { aID=7439, aIndex=48, }, -- Omnis Grinlock
 	[52600582] = { aID=7439, aIndex=12, }, -- Eshelon
 	[53670505] = { aID=7439, aIndex=12, }, -- Eshelon
-	[55260586] = { aID=7439, aIndex=12, }, -- Eshelon
-	[55346355] = { aID=7439, aIndex=6, }, -- Ik-Ik the Nimble
+	[55260586] = { aID=7439, aIndex=12, continent=true }, -- Eshelon
+	[55346355] = { aID=7439, aIndex=6, continent=true }, -- Ik-Ik the Nimble
 	[56490769] = { aID=7439, aIndex=12, }, -- Eshelon
 	[66378676] = { aID=7439, aIndex=12, }, -- Eshelon
-	[64255846] = { aID=7439, aIndex=13, }, -- Nalash Verdantis
-	[71893769] = { aID=7439, aIndex=27, }, -- Karr the Darkener
+	[64255846] = { aID=7439, aIndex=13, continent=true }, -- Nalash Verdantis
+	[71893769] = { aID=7439, aIndex=27, continent=true }, -- Karr the Darkener
 	[72982204] = { aID=7439, aIndex=34, }, -- Krol the Blade
 	[73162020] = { aID=7439, aIndex=34, }, -- Krol the Blade
-	[74102054] = { aID=7439, aIndex=34, }, -- Krol the Blade
+	[74102054] = { aID=7439, aIndex=34, continent=true }, -- Krol the Blade
 	[74462290] = { aID=7439, aIndex=34, }, -- Krol the Blade
-	[54846581] = { aID=7439, aIndex=6, tip="Enter the burrow" }, -- Ik-Ik The Nimble
+	[54846581] = { aID=7439, aIndex=6, tip="Enter the burrow", continent=true  }, -- Ik-Ik The Nimble
 
 	-- Zul Again
 	[48636121] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
@@ -168,7 +168,7 @@ points[ 422 ] = { -- Dread Wastes
 	[53106666] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[54466696] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[55806685] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
-	[57266629] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
+	[57266629] = { aID=8078, npc=69842, tip="Zandalari Warscout", continent=true },
 	[58566683] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[59786506] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[59796688] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
@@ -187,7 +187,7 @@ points[ 422 ] = { -- Dread Wastes
 	[40414590] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[40904993] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[41494436] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
-	[41925109] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
+	[41925109] = { aID=8078, npc=69842, tip="Zandalari Warscout", continent=true },
 	[43345182] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[44055353] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[44955522] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
@@ -253,12 +253,12 @@ points[ 418 ] = { -- Krasarang Wilds
 	[46853970] = { aID=6350, aIndex=1, }, -- Amethyst Spiderling
 	[47703680] = { aID=6350, aIndex=1, }, -- Amethyst Spiderling
 	[48253985] = { aID=6350, aIndex=1, }, -- Amethyst Spiderling
-	[66802525] = { aID=6350, aIndex=1, }, -- Amethyst Spiderling
+	[66802525] = { aID=6350, aIndex=1, continent=true }, -- Amethyst Spiderling
 	[70002810] = { aID=6350, aIndex=1, }, -- Amethyst Spiderling
 	[72852415] = { aID=6350, aIndex=1, }, -- Amethyst Spiderling
 	[47753890] = { aID=6350, aIndex=10, }, -- Luyu Moth
 	[47804130] = { aID=6350, aIndex=10, }, -- Luyu Moth
-	[48853465] = { aID=6350, aIndex=10, }, -- Luyu Moth
+	[48853465] = { aID=6350, aIndex=10, continent=true }, -- Luyu Moth
 	[50654010] = { aID=6350, aIndex=10, }, -- Luyu Moth
 	[66652130] = { aID=6350, aIndex=10, }, -- Luyu Moth
 	[67802290] = { aID=6350, aIndex=10, }, -- Luyu Moth
@@ -276,20 +276,20 @@ points[ 418 ] = { -- Krasarang Wilds
 	[15393488] = { aID=7439, aIndex=17, tip="Turns here" }, -- Torik Ethis
 	[15303473] = { aID=7439, aIndex=17, tip="Pauses here" }, -- Torik Ethis
 	[15593464] = { aID=7439, aIndex=17, tip="Pauses and turns here" }, -- Torik Ethis
-	[15483433] = { aID=7439, aIndex=17, tip="Pauses and turns here" }, -- Torik Ethis
+	[15483433] = { aID=7439, aIndex=17, tip="Pauses and turns here", continent=true  }, -- Torik Ethis
 	[14853533] = { aID=7439, aIndex=17, tip="Pauses and turns here" }, -- Torik Ethis
 	[15263539] = { aID=7439, aIndex=17, tip="Pauses and turns here" }, -- Torik Ethis
 	[14883589] = { aID=7439, aIndex=17, tip="Turns here" }, -- Torik Ethis
-	[30593837] = { aID=7439, aIndex=10, }, -- Cournith Waterstrider
-	[39335533] = { aID=7439, aIndex=38, }, -- Ruun Ghostpaw
-	[39392899] = { aID=7439, aIndex=52, }, -- Go-Kan
-	[52308890] = { aID=7439, aIndex=3, tip="Small patrol area on the deck" }, -- Spriggin
+	[30593837] = { aID=7439, aIndex=10, continent=true }, -- Cournith Waterstrider
+	[39335533] = { aID=7439, aIndex=38, continent=true }, -- Ruun Ghostpaw
+	[39392899] = { aID=7439, aIndex=52, continent=true }, -- Go-Kan
+	[52308890] = { aID=7439, aIndex=3, tip="Small patrol area on the deck", continent=true  }, -- Spriggin
 	[53513889] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
 	[53883216] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
-	[56184695] = { aID=7439, aIndex=45, }, -- Arness the Scale
-	[56223797] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
+	[56184695] = { aID=7439, aIndex=45, continent=true }, -- Arness the Scale
+	[56223797] = { aID=7439, aIndex=24, tip="Spawns in four locations", continent=true  }, -- Gaarn the Toxic
 	[56313511] = { aID=7439, aIndex=24, tip="Spawns in four locations" }, -- Gaarn the Toxic
-	[67182326] = { aID=7439, aIndex=31, }, -- Qu'nas
+	[67182326] = { aID=7439, aIndex=31, continent=true }, -- Qu'nas
 
 	-- I'm In Your Base Killing Your Dudes
 	[84972737] = { aID=7932, aIndex=1, npc=68318, faction="Horde" }, -- Dalan Nightbreaker
@@ -318,7 +318,7 @@ points[ 418 ] = { -- Krasarang Wilds
 	[45985400] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[46725198] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[47544942] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
-	[48554704] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
+	[48554704] = { aID=8078, npc=69842, tip="Zandalari Warscout", continent=true },
 	[49193809] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[49394524] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[49872986] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
@@ -341,7 +341,7 @@ points[ 418 ] = { -- Krasarang Wilds
 	[24514051] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[25984197] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[26014450] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
-	[26944651] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
+	[26944651] = { aID=8078, npc=69842, tip="Zandalari Warscout", continent=true },
 	[28454671] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[29864577] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
 	[31564743] = { aID=8078, npc=69842, tip="Zandalari Warscout" },
@@ -397,31 +397,31 @@ points[ 379 ] = { -- Kun-Lai Summit
 	[72977347] = { aID=7284, item="Sprite's Cloth Chest", aQuest=31412, tip="Enter Pranksters' Hollow" },
 
 	-- Glorious
-	[36657984] = { aID=7439, aIndex=18, }, -- Ski'thik
-	[40814263] = { aID=7439, aIndex=39, }, -- Ahone the Wanderer
+	[36657984] = { aID=7439, aIndex=18, continent=true }, -- Ski'thik
+	[40814263] = { aID=7439, aIndex=39, continent=true }, -- Ahone the Wanderer
 	[45096364] = { aID=7439, aIndex=4, tip="Maybe in this cave" }, -- Scritch
 	[45106525] = { aID=7439, aIndex=4, tip="Maybe in this cave" }, -- Scritch
-	[46236190] = { aID=7439, aIndex=4, tip="Maybe in this cave" }, -- Scritch CONFIRMED
+	[46236190] = { aID=7439, aIndex=4, tip="Maybe in this cave", continent=true  }, -- Scritch CONFIRMED
 	[46896565] = { aID=7439, aIndex=4, tip="Maybe in this cave" }, -- Scritch
 	[47016309] = { aID=7439, aIndex=4, tip="Maybe in this cave" }, -- Scritch
 	[47588117] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
 	[48558133] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
 	[48908071] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
-	[49488078] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
+	[49488078] = { aID=7439, aIndex=53, tip="Patrol path", continent=true  }, -- Korda Torros
 	[50288060] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
 	[51038067] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
 	[51077930] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
 	[51438007] = { aID=7439, aIndex=53, tip="Patrol path" }, -- Korda Torros
 	[55444397] = { aID=7439, aIndex=25, }, -- Borginn Darkfist
-	[55634345] = { aID=7439, aIndex=25, }, -- Borginn Darkfist
+	[55634345] = { aID=7439, aIndex=25, continent=true }, -- Borginn Darkfist
 	[56064321] = { aID=7439, aIndex=25, }, -- Borginn Darkfist
 	[57047600] = { aID=7439, aIndex=32, }, -- Havak
 	[57497494] = { aID=7439, aIndex=32, }, -- Havak
-	[58717395] = { aID=7439, aIndex=32, }, -- Havak
+	[58717395] = { aID=7439, aIndex=32, continent=true }, -- Havak
 	[59357376] = { aID=7439, aIndex=32, }, -- Havak
-	[63911374] = { aID=7439, aIndex=46, }, -- Nessos the Oracle
+	[63911374] = { aID=7439, aIndex=46, continent=true }, -- Nessos the Oracle
 	[73387625] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
-	[73867724] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
+	[73867724] = { aID=7439, aIndex=11, author="V. More?", continent=true  }, -- Zai the Outcast
 	[74137880] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
 	[74377929] = { aID=7439, aIndex=11, author="V. More?" }, -- Zai the Outcast
 	
@@ -472,7 +472,7 @@ points[ 379 ] = { -- Kun-Lai Summit
 	[69447695] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[69737665] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[70017635] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
-	[70327603] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
+	[70327603] = { aID=8078, npc=69768, tip="Zandalari Warscout", continent=true },
 	[70547565] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[70717524] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[70887496] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
@@ -543,7 +543,7 @@ points[ 371 ] = { -- The Jade Forest
 	[34134748] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
 	[35214815] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
 	[36014852] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
-	[36215964] = { aID=6350, aIndex=15, }, -- Shrine Fly
+	[36215964] = { aID=6350, aIndex=15, continent=true }, -- Shrine Fly
 	[36325741] = { aID=6350, aIndex=15, }, -- Shrine Fly
 	[36625844] = { aID=6350, aIndex=15, }, -- Shrine Fly
 	[36955784] = { aID=6350, aIndex=15, }, -- Shrine Fly
@@ -553,7 +553,7 @@ points[ 371 ] = { -- The Jade Forest
 	[37856172] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
 	[41465552] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
 	[41585683] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
-	[41755833] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
+	[41755833] = { aID=6350, aIndex=9, continent=true }, -- Leopard Tree Frog
 	[41875966] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
 	[42545460] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
 	[43036495] = { aID=6350, aIndex=9, }, -- Leopard Tree Frog
@@ -567,7 +567,7 @@ points[ 371 ] = { -- The Jade Forest
 	[64368533] = { aID=6350, aIndex=4, }, -- Coral Adder
 	[64548620] = { aID=6350, aIndex=4, }, -- Coral Adder
 	[64958423] = { aID=6350, aIndex=4, }, -- Coral Adder
-	[65208564] = { aID=6350, aIndex=4, }, -- Coral Adder
+	[65208564] = { aID=6350, aIndex=4, continent=true }, -- Coral Adder
 	[65518262] = { aID=6350, aIndex=4, }, -- Coral Adder
 	[66098267] = { aID=6350, aIndex=4, }, -- Coral Adder
 	[66268499] = { aID=6350, aIndex=4, }, -- Coral Adder
@@ -575,12 +575,12 @@ points[ 371 ] = { -- The Jade Forest
 	[66798608] = { aID=6350, aIndex=4, }, -- Coral Adder
 	
 	-- Is another Man's Treasure
-	[44926467] = { aID=7284, item=86196, aQuest=31402, author="V" }, -- Ancient Jinyu Staff
-	[45576439] = { aID=7284, item=86196, aQuest=31402, author="V" }, -- Ancient Jinyu Staff
-	[46207120] = { aID=7284, item=86196, aQuest=31402, author="?" }, -- Ancient Jinyu Staff
-	[46386535] = { aID=7284, item=86196, aQuest=31402, author="V" }, -- Ancient Jinyu Staff
-	[46437007] = { aID=7284, item=86196, aQuest=31402, author="V" }, -- Ancient Jinyu Staff
-	[47106743] = { aID=7284, item=86196, aQuest=31402, author="V" }, -- Ancient Jinyu Staff
+	[44926467] = { aID=7284, item=86196, aQuest=31402 }, -- Ancient Jinyu Staff
+	[45576439] = { aID=7284, item=86196, aQuest=31402 }, -- Ancient Jinyu Staff
+	[46167121] = { aID=7284, item=86196, aQuest=31402 }, -- Ancient Jinyu Staff
+	[46386535] = { aID=7284, item=86196, aQuest=31402 }, -- Ancient Jinyu Staff
+	[46437007] = { aID=7284, item=86196, aQuest=31402 }, -- Ancient Jinyu Staff
+	[47106743] = { aID=7284, item=86196, aQuest=31402 }, -- Ancient Jinyu Staff
 	[46092912] = { aID=7284, item=85777, aQuest=31399, -- Ancient Pandaren Mining Pick
 					tip="It's in the mine. Several locations", author="No reliable data online" },
 	[40201370] = { aID=7284, item=86198, aQuest=31403, }, -- Hammer of Ten Thunders
@@ -593,15 +593,15 @@ points[ 371 ] = { -- The Jade Forest
 	[39420723] = { aID=7284, item=85776, aQuest=31397, }, -- Wodin's Mantid Shanker
 
 	-- Glorious
-	[33565078] = { aID=7439, aIndex=8, }, -- Aethis
-	[39516261] = { aID=7439, aIndex=15, }, -- Krax'ik
+	[33565078] = { aID=7439, aIndex=8, continent=true }, -- Aethis
+	[39516261] = { aID=7439, aIndex=15, continent=true }, -- Krax'ik
 	[40201360] = { aID=7439, aIndex=29, tip="Possible topmost spawn" },
-	[42221741] = { aID=7439, aIndex=29, tip="Confirmed spawn" }, -- Morgrinn Crackfang
-	[42543885] = { aID=7439, aIndex=1, }, -- Mister Ferocious
+	[42221741] = { aID=7439, aIndex=29, tip="Confirmed spawn", continent=true  }, -- Morgrinn Crackfang
+	[42543885] = { aID=7439, aIndex=1, continent=true }, -- Mister Ferocious
 	[43457672] = { aID=7439, aIndex=22, tip="Patrol path" },
 	[43677619] = { aID=7439, aIndex=22, tip="Patrol path" },
 	[43707187] = { aID=7439, aIndex=22, tip="Patrol path" },
-	[43727279] = { aID=7439, aIndex=22, tip="Patrol path" },
+	[43727279] = { aID=7439, aIndex=22, tip="Patrol path", continent=true  },
 	[43957431] = { aID=7439, aIndex=22, tip="Patrol path" },
 	[44017339] = { aID=7439, aIndex=22, tip="Patrol path" },
 	[44017509] = { aID=7439, aIndex=22, tip="Patrol path" },
@@ -609,9 +609,9 @@ points[ 371 ] = { -- The Jade Forest
 	[46301990] = { aID=7439, aIndex=29, tip="Possible bottommost spawn" },
 	[47951843] = { aID=7439, aIndex=29, tip="Confirmed spawn" }, -- Morgrinn Crackfang
 	[53584965] = { aID=7439, aIndex=50, }, -- Ferdinand
-	[54234231] = { aID=7439, aIndex=50, }, -- Ferdinand
-	[57387169] = { aID=7439, aIndex=36, }, -- Urobi the Walker
-	[66007420] = { aID=7439, aIndex=43, }, -- Sarnak
+	[54234231] = { aID=7439, aIndex=50, continent=true }, -- Ferdinand
+	[57387169] = { aID=7439, aIndex=36, continent=true }, -- Urobi the Walker
+	[66007420] = { aID=7439, aIndex=43, continent=true }, -- Sarnak
 
 	-- Riches of Pandaria
 	[23493505] = { aID=7997, item=86216, aQuest=31404, }, -- Pandaren Ritual Stone
@@ -632,7 +632,7 @@ points[ 371 ] = { -- The Jade Forest
 	[46501832] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[46761956] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[47182089] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
-	[48282136] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
+	[48282136] = { aID=8078, npc=69768, tip="Zandalari Warscout", continent=true },
 	[49282080] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[49483692] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[50172004] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
@@ -1847,7 +1847,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[52506570] = { aID=6350, aIndex=13, }, -- Mongoose
 	[70608120] = { aID=6350, aIndex=13, }, -- Mongoose
 	[72508060] = { aID=6350, aIndex=13, }, -- Mongoose
-	[72608440] = { aID=6350, aIndex=13, }, -- Mongoose
+	[72608440] = { aID=6350, aIndex=13, continent=true }, -- Mongoose
 	[72807650] = { aID=6350, aIndex=13, }, -- Mongoose
 	[76107270] = { aID=6350, aIndex=13, }, -- Mongoose
 	[77006700] = { aID=6350, aIndex=13, }, -- Mongoose
@@ -1857,7 +1857,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[81608410] = { aID=6350, aIndex=13, }, -- Mongoose	
 	[49207140] = { aID=6350, aIndex=17, }, -- Yakrat
 	[49806720] = { aID=6350, aIndex=17, }, -- Yakrat
-	[70608380] = { aID=6350, aIndex=17, }, -- Yakrat
+	[70608380] = { aID=6350, aIndex=17, continent=true }, -- Yakrat
 	[75408250] = { aID=6350, aIndex=17, }, -- Yakrat
 	[77508360] = { aID=6350, aIndex=17, }, -- Yakrat
 	[78107840] = { aID=6350, aIndex=17, }, -- Yakrat
@@ -1872,20 +1872,20 @@ points[ 388 ] = { -- Townlong Steppes
 	[66854805] = { aID=7284, item=86518, aQuest=31425, }, -- Yaungol Fire Carrier
 	
 	-- Glorious
-	[31856196] = { aID=7439, aIndex=40, }, -- Yul Wildpaw
+	[31856196] = { aID=7439, aIndex=40, continent=true }, -- Yul Wildpaw
 	[41887849] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
-	[46317445] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
+	[46317445] = { aID=7439, aIndex=19, continent=true }, -- Lith'ik the Stalker
 	[47818426] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
 	[47868855] = { aID=7439, aIndex=19 }, -- Lith'ik the Stalker
-	[53896348] = { aID=7439, aIndex=26, }, -- Norlaxx
-	[59358537] = { aID=7439, aIndex=47, }, -- Siltriss the Sharpener
-	[62863540] = { aID=7439, aIndex=33, }, -- Kah'tir
+	[53896348] = { aID=7439, aIndex=26, continent=true }, -- Norlaxx
+	[59358537] = { aID=7439, aIndex=47, continent=true }, -- Siltriss the Sharpener
+	[62863540] = { aID=7439, aIndex=33, continent=true }, -- Kah'tir
 	[64034947] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[64234997] = { aID=7439, aIndex=54, }, -- Lon the Bull
-	[64365058] = { aID=7439, aIndex=54, }, -- Lon the Bull
+	[64365058] = { aID=7439, aIndex=54, continent=true }, -- Lon the Bull
 	[64705068] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[65195059] = { aID=7439, aIndex=54, }, -- Lon the Bull
-	[65378747] = { aID=7439, aIndex=12, }, -- Eshelon
+	[65378747] = { aID=7439, aIndex=12, continent=true }, -- Eshelon
 	[65655061] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[66134494] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[66135082] = { aID=7439, aIndex=54, }, -- Lon the Bull
@@ -1896,7 +1896,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[66585279] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[66695237] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[66705185] = { aID=7439, aIndex=54, }, -- Lon the Bull
-	[66725154] = { aID=7439, aIndex=54, }, -- Lon the Bull
+	[66725154] = { aID=7439, aIndex=54, continent=true }, -- Lon the Bull
 	[66935110] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[67134465] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[67214645] = { aID=7439, aIndex=54, }, -- Lon the Bull
@@ -1909,7 +1909,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[67755028] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[67834902] = { aID=7439, aIndex=54, }, -- Lon the Bull
 	[67854967] = { aID=7439, aIndex=54, }, -- Lon the Bull
-	[67407355] = { aID=7439, aIndex=5, tip="Enter the cave here" }, -- The Yowler
+	[67407355] = { aID=7439, aIndex=5, tip="Enter the cave here", continent=true  }, -- The Yowler
 	[67858751] = { aID=7439, aIndex=12, }, -- Eshelon
 	[68998921] = { aID=7439, aIndex=12, }, -- Eshelon
 
@@ -1946,7 +1946,7 @@ points[ 388 ] = { -- Townlong Steppes
 	[39918074] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[40407882] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[40967683] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
-	[41028985] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
+	[41028985] = { aID=8078, npc=69768, tip="Zandalari Warscout", continent=true },
 	[42559059] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[42657607] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
 	[44007481] = { aID=8078, npc=69768, tip="Zandalari Warscout" },
@@ -1982,33 +1982,33 @@ local pandarenCuisine = "All except the \"Perfectly Cooked Instant Noodles\" and
 points[ 390 ] = { -- Vale of Eternal Blossoms
 	-- To All the Squirrels I Once Caressed?
 	[30956785] = { aID=6350, aIndex=5, }, -- Dancing Water Skimmer
-	[31756700] = { aID=6350, aIndex=5, }, -- Dancing Water Skimmer
+	[31756700] = { aID=6350, aIndex=5, continent=true }, -- Dancing Water Skimmer
 	[33156515] = { aID=6350, aIndex=5, }, -- Dancing Water Skimmer
 	[22656080] = { aID=6350, aIndex=7, }, -- Gilded Moth
-	[30206415] = { aID=6350, aIndex=7, }, -- Gilded Moth
+	[30206415] = { aID=6350, aIndex=7, continent=true }, -- Gilded Moth
 	[36606275] = { aID=6350, aIndex=7, }, -- Gilded Moth
 	[25556470] = { aID=6350, aIndex=8, }, -- Golden Civet
 	[27306875] = { aID=6350, aIndex=8, }, -- Golden Civet
-	[30355910] = { aID=6350, aIndex=8, }, -- Golden Civet
+	[30355910] = { aID=6350, aIndex=8, continent=true }, -- Golden Civet
 	[36656495] = { aID=6350, aIndex=8, }, -- Golden Civet
 
 	-- Glorious
-	[13865864] = { aID=7439, aIndex=21, }, -- Kal'tik the Blight
-	[15253522] = { aID=7439, aIndex=28, }, -- Kang the Soul Thief
-	[30789150] = { aID=7439, aIndex=7, }, -- Major Nanners
+	[13865864] = { aID=7439, aIndex=21, continent=true }, -- Kal'tik the Blight
+	[15253522] = { aID=7439, aIndex=28, continent=true }, -- Kang the Soul Thief
+	[30789150] = { aID=7439, aIndex=7, continent=true }, -- Major Nanners
 	[34546187] = { aID=7439, aIndex=49, }, -- Moldo One Eye
 	[35586003] = { aID=7439, aIndex=49, }, -- Moldo One Eye
 	[36765802] = { aID=7439, aIndex=49, }, -- Moldo One Eye
-	[37865636] = { aID=7439, aIndex=49, }, -- Moldo One Eye
+	[37865636] = { aID=7439, aIndex=49, continent=true }, -- Moldo One Eye
 	[38855429] = { aID=7439, aIndex=49, }, -- Moldo One Eye
-	[39572514] = { aID=7439, aIndex=35, }, -- Urgolax
+	[39572514] = { aID=7439, aIndex=35, continent=true }, -- Urgolax
 	[40545339] = { aID=7439, aIndex=49, }, -- Moldo One Eye
-	[40956848] = { aID=7439, aIndex=42, tip="Enter here" }, -- Al-Ran the Shifting Cloud
+	[40956848] = { aID=7439, aIndex=42, tip="Enter here", continent=true  }, -- Al-Ran the Shifting Cloud
 	[42135392] = { aID=7439, aIndex=49, }, -- Moldo One Eye
-	[42846925] = { aID=7439, aIndex=42, }, -- Al-Ran the Shifting Cloud
+	[42846925] = { aID=7439, aIndex=42, continent=true }, -- Al-Ran the Shifting Cloud
 	[43845229] = { aID=7439, aIndex=49, }, -- Moldo One Eye
-	[69413064] = { aID=7439, aIndex=14, }, -- Sahn Tidehunter
-	[88084435] = { aID=7439, aIndex=56, }, -- Yorik Sharpeye
+	[69413064] = { aID=7439, aIndex=14, continent=true }, -- Sahn Tidehunter
+	[88084435] = { aID=7439, aIndex=56, continent=true }, -- Yorik Sharpeye
 
 	-- I'm In Your Base Killing Your Dudes
 	[83995870] = { aID=7932, aQuest=32246, qName="Meet the Scout", npc=64610, faction="Alliance",
@@ -2037,14 +2037,14 @@ points[ 393 ] = { -- Shrine of Seven Stars in Vale of Eternal Blossoms
 points[ 376 ] = { -- Valley of the Four Winds
 	-- To All the Squirrels I Once Caressed?
 	[62156350] = { aID=6350, aIndex=2, }, -- Bandicoon
-	[62555775] = { aID=6350, aIndex=2, }, -- Bandicoon
+	[62555775] = { aID=6350, aIndex=2, continent=true }, -- Bandicoon
 	[63856245] = { aID=6350, aIndex=2, }, -- Bandicoon
-	[59855675] = { aID=6350, aIndex=11, }, -- Malayan Quillrat
+	[59855675] = { aID=6350, aIndex=11, continent=true }, -- Malayan Quillrat
 	[59955870] = { aID=6350, aIndex=11, }, -- Malayan Quillrat
 	[58755735] = { aID=6350, aIndex=12, }, -- Marsh Fiddler
-	[63256055] = { aID=6350, aIndex=12, }, -- Marsh Fiddler
+	[63256055] = { aID=6350, aIndex=12, continent=true }, -- Marsh Fiddler
 	[64306136] = { aID=6350, aIndex=12, }, -- Marsh Fiddler
-	[59405965] = { aID=6350, aIndex=16, }, -- Sifang Otter
+	[59405965] = { aID=6350, aIndex=16, continent=true }, -- Sifang Otter
 	[64406525] = { aID=6350, aIndex=16, }, -- Sifang Otter
 
 	-- Ballad of Liu Lang
@@ -2084,7 +2084,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[09645672] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
 	[09735758] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
 	[09845392] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
-	[10015617] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
+	[10015617] = { aID=7439, aIndex=16, continent=true }, -- Nal'lak the Ripper
 	[10164923] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
 	[10174727] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
 	[10475653] = { aID=7439, aIndex=16, }, -- Nal'lak the Ripper
@@ -2100,11 +2100,11 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[13953847] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
 	[15383220] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
 	[16494092] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
-	[18597770] = { aID=7439, aIndex=30, }, -- Jonn-Dar
-	[19133566] = { aID=7439, aIndex=2, author="V. need five" }, -- Bonobos
+	[18597770] = { aID=7439, aIndex=30, continent=true }, -- Jonn-Dar
+	[19133566] = { aID=7439, aIndex=2, author="V. need five", continent=true  }, -- Bonobos
 	[32886269] = { aID=7439, aIndex=51, }, -- Blackhoof
-	[34545922] = { aID=7439, aIndex=51, }, -- Blackhoof
-	[36942575] = { aID=7439, aIndex=23, item=86569 }, -- Sulik'shor
+	[34545922] = { aID=7439, aIndex=51, continent=true }, -- Blackhoof
+	[36942575] = { aID=7439, aIndex=23, item=86569, continent=true  }, -- Sulik'shor
 	[37826040] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[39635765] = { aID=7439, aIndex=51, }, -- Blackhoof
 	[52132787] = { aID=7439, aIndex=9, author="Look for more", -- Sele'na
@@ -2129,7 +2129,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[54543576] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 	[54543717] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 	[54823583] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
-	[55093679] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
+	[55093679] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more", continent=true  }, -- Sele'na
 	[54963622] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
 
 	[57173330] = { aID=7439, aIndex=9, tip="Pat perimeter", author="Look for more" }, -- Sele'na
@@ -2155,7 +2155,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[72115241] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[72785255] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[73465276] = { aID=7439, aIndex=44, }, -- Salyin Warscout
-	[74095249] = { aID=7439, aIndex=44, }, -- Salyin Warscout
+	[74095249] = { aID=7439, aIndex=44, continent=true }, -- Salyin Warscout
 	[74194963] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[74265150] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[74305060] = { aID=7439, aIndex=44, }, -- Salyin Warscout
@@ -2164,7 +2164,7 @@ points[ 376 ] = { -- Valley of the Four Winds
 	[75344667] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[75414771] = { aID=7439, aIndex=44, }, -- Salyin Warscout
 	[75904654] = { aID=7439, aIndex=44, }, -- Salyin Warscout
-	[88391785] = { aID=7439, aIndex=37, }, -- Nasra Spothide
+	[88391785] = { aID=7439, aIndex=37, continent=true }, -- Nasra Spothide
 
 	-- Riches of Pandaria
 	[23722832] = { aID=7997, item="Virmen Treasure Cache", aQuest=31405, }, -- Virmen Treasure Cache

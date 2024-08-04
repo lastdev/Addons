@@ -264,8 +264,8 @@ CMD_PRUNE_HISTORY_ARG = "Invalid argument to history pruning, please specify num
 CMD_PRUNE_SUMMARY = "Removed %s entries from the history.",
 CMD_HISTORY_HELP = "View, clear, or prune history. Usage: history [clear||prune hours] [all]",
 
-CMD_RUNDESTROY = "Destroying all items matching Destroy rules or in the Destory list.",
-CMD_DESTROY_HELP = "Destroys all items matching Destroy rules or in the Destroy list.",
+CMD_RUNDESTROY = "Destroying next item in the Destroy rules or in the Destroy list.",
+CMD_DESTROY_HELP = "Destroys a single item matching Destroy rules or in the Destroy list. Only one item can be destroyed per execution of this command.",
 
 -- API
 API_REGISTEREXTENSION_TITLE = "Register Extension",
@@ -276,6 +276,8 @@ API_ADDTOALWAYSSELL_TITLE = "Add Tooltip Item To Always Sell List",
 API_ADDTOALWAYSSELL_DOCS = "Toggles the item that has a tooltip showing on or off the Always Sell list.",
 API_ADDTONEVERSELL_TITLE = "Add Tooltip Item To Never Sell List",
 API_ADDTONEVERSELL_DOCS = "Toggles the item that has a tooltip showing on or off the Never Sell list.",
+API_ADDTODESTROY_TITLE = "Add Tooltip Item To Destroy List",
+API_ADDTODESTROY_DOCS = "Toggles the item that has a tooltip showing on or off the Destroy list.",
 API_AUTOSELL_TITLE = "Run Autosell",
 API_AUTOSELL_DOCS = "Runs the autosell routine if at a merchant.",
 API_OPENSETTINGS_TITLE = "Open Settings",
@@ -295,7 +297,7 @@ API_SETPROFILE_DOCS = "Sets the currently selected profile to the specified prof
 API_GETPROFILES_TITLE = "Get Profiles",
 API_GETPROFILES_DOCS = "Gets the available list of profiles which can be set.",
 API_DESTROYITEMS_TITLE = "Destroy Items",
-API_DESTROYITEMS_DOCS = "Runs the item destroyer, which will destroy all items matching Destroy rules or the Destroy list.",
+API_DESTROYITEMS_DOCS = "Runs the item destroyer, which will destroy the next item matching Destroy rules or the Destroy list. Blizzard only allows one item to be destroyed at a time.",
 
 -- Rules
 RULEUI_LABEL_ITEMLEVEL = "Item Level:",
@@ -392,7 +394,9 @@ TOOLTIP_SCAN_ALREADYKNOWN = _G["ITEM_SPELL_KNOWN"],
 TOOLTIP_SCAN_CRAFTINGREAGENT = _G["PROFESSIONS_USED_IN_COOKING"],
 TOOLTIP_SCAN_BLIZZARDACCOUNTBOUND = _G["ITEM_BNETACCOUNTBOUND"],
 TOOLTIP_SCAN_ACCOUNTBOUND = _G["ITEM_ACCOUNTBOUND"],
+TOOLTIP_SCAN_ACCOUNTBOUND_UNTILEQUIP = _G["ITEM_ACCOUNTBOUND_UNTIL_EQUIP"],
 TOOLTIP_SCAN_COSMETIC = _G["ITEM_COSMETIC"],
+TOOLTIP_SCAN_SOULBOUND = _G["ITEM_SOULBOUND"],
 
 -- Data Migration
 DATA_MIGRATION_SL_NOTICE = YELLOW_FONT_COLOR_CODE.. "Detected migration to Shadowlands! The settings for Vendor have been reset and custom rules require verification before they will be active!" ..FONT_COLOR_CODE_CLOSE,

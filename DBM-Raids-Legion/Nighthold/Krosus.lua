@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104720")
+mod:SetRevision("20240525081121")
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 --mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
@@ -44,7 +44,7 @@ local berserkTimer					= mod:NewBerserkTimer(360)--technically not a berserk, bu
 
 mod:AddRangeFrameOption(5, 206351)
 mod:AddSetIconOption("SetIconOnAdds", "ej12914", true, 5)
-mod:AddArrowOption("ArrowOnBeam3", 205368, true)
+mod:AddArrowOption("ArrowOnBeam3", 205368, true, 3)
 
 local burningPitchDebuff = DBM:GetSpellName(215944)
 local mobGUIDs = {}

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2464, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240629024554")
 mod:SetCreatureID(180990)
 mod:SetEncounterID(2537)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -37,7 +37,7 @@ mod:RegisterEventsInCombat(
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
 local warnHealAzeroth							= mod:NewAnnounce("warnHealAzeroth", 3, 366401, nil, nil, nil, 366401)
 
-local timerPhaseCD								= mod:NewPhaseTimer(30)
+local timerPhaseCD								= mod:NewStageTimer(30)
 local timerPits									= mod:NewTimer(28.8, "timerPits", 353643, nil, nil, 3)--Stages 1-3
 local timerHealAzeroth							= mod:NewTimer(28.8, "timerHealAzeroth", 366401, nil, nil, 5, nil, nil, nil, nil, nil, nil, nil, 366401)--Stages 1-3
 

@@ -1,76 +1,71 @@
+local StatPriority = LibStub("AceAddon-3.0"):NewAddon("StatPriority")
+
 if statPriorityStoredStats == nil then
 	statPriorityStoredStats = {}
 end
 
-local statPriorityStats = {}
-local statPriorityTexts = {}
-local statPriorityBoxes = {}
+StatPriority.Stats = {}
 
-statPriorityStats["WARRIORArms"] = "Strength > Haste > Critical Strike > Versatility > Mastery"
-statPriorityStats["WARRIORFury"] = "Strength > Haste > Mastery > Versatility > Critical Strike"
-statPriorityStats["WARRIORProtection"] = "Strength > Haste > Versatility = Critical Strike > Mastery"
+StatPriority.Stats["WARRIORArms"] = "Strength > Haste > Critical Strike > Versatility > Mastery"
+StatPriority.Stats["WARRIORFury"] = "Strength > Haste > Mastery > Versatility > Critical Strike"
+StatPriority.Stats["WARRIORProtection"] = "Strength > Haste > Versatility = Critical Strike > Mastery"
 
-statPriorityStats["PALADINHoly"] = "Intellect > Critical Strike > Mastery = Haste > Versatility"
-statPriorityStats["PALADINProtection"] = "Strength > Haste > Mastery > Versatility > Critical Strike"
-statPriorityStats["PALADINRetribution"] = "Strength > Haste > Versatility = Critical Strike > Mastery"
+StatPriority.Stats["PALADINHoly"] = "Intellect > Critical Strike > Mastery = Haste > Versatility"
+StatPriority.Stats["PALADINProtection"] = "Strength > Haste > Mastery > Versatility > Critical Strike"
+StatPriority.Stats["PALADINRetribution"] = "Strength > Mastery > Critical Strike = Haste = Versatility"
 
-statPriorityStats["HUNTERBeast Mastery"] = "Agility > Haste to 30% > Critical Strike to 44% > Mastery > Versatility"
-statPriorityStats["HUNTERMarksmanship"] = "Agility > Haste to 30% > Critical Strike to 44% > Mastery = Versatility"
-statPriorityStats["HUNTERSurvival"] = "Agility > Haste to 30% > Critical Strike to 44% > Versatility > Mastery"
+StatPriority.Stats["HUNTERBeast Mastery"] = "Agility > Mastery > Critical Strike to 44% > Haste to 30% > Versatility"
+StatPriority.Stats["HUNTERMarksmanship"] = "Agility > Critical Strike > Haste to 30% > Mastery to 5400 > Versatility"
+StatPriority.Stats["HUNTERSurvival"] = "Agility > Haste to 30% > Mastery to 5400 > Versatility to 30% > Critical Strike"
 
-statPriorityStats["ROGUEAssassination"] = "Agility > Mastery > Critical Strike > Haste > Versatility"
-statPriorityStats["ROGUEOutlaw"] = "Agility > Versatility > Critical Strike > Mastery > Haste"
-statPriorityStats["ROGUESubtlety"] = "Agility > Critical Strike > Mastery > Versatility > Haste"
+StatPriority.Stats["ROGUEAssassination"] = "Agility > Mastery > Critical Strike > Haste > Versatility"
+StatPriority.Stats["ROGUEOutlaw"] = "Agility > Versatility > Haste > Critical Strike > Mastery"
+StatPriority.Stats["ROGUESubtlety"] = "Agility > Critical Strike > Mastery > Versatility > Haste"
 
-statPriorityStats["PRIESTDiscipline"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
-statPriorityStats["PRIESTHoly"] = "Intellect > Mastery = Critical Strike > Versatility > Haste"
-statPriorityStats["PRIESTShadow"] = "Intellect > Haste > Mastery > Critical Strike > Versatility"
+StatPriority.Stats["PRIESTDiscipline"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
+StatPriority.Stats["PRIESTHoly"] = "Intellect > Mastery = Critical Strike > Versatility > Haste"
+StatPriority.Stats["PRIESTShadow"] = "Intellect > Haste > Mastery > Critical Strike > Versatility"
 
-statPriorityStats["SHAMANElemental"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
-statPriorityStats["SHAMANEnhancement"] = "Agility > Mastery > Haste > Critical Strike > Versatility"
-statPriorityStats["SHAMANRestoration"] = "Intellect > Versatility = Critical Strike > Haste = Mastery"
+StatPriority.Stats["SHAMANElemental"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
+StatPriority.Stats["SHAMANEnhancement"] = "Agility > Mastery > Haste > Critical Strike > Versatility"
+StatPriority.Stats["SHAMANRestoration"] = "Intellect > Versatility = Critical Strike > Haste = Mastery"
 
-statPriorityStats["MAGEArcane"] = "Intellect > Critical Strike > Mastery > Haste > Versatility"
-statPriorityStats["MAGEFire"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
-statPriorityStats["MAGEFrost"] = "Intellect > Mastery > Haste > Critical Strike to 33.34% > Versatility"
+StatPriority.Stats["MAGEArcane"] = "Intellect > Critical Strike > Mastery > Haste > Versatility"
+StatPriority.Stats["MAGEFire"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
+StatPriority.Stats["MAGEFrost"] = "Intellect > Mastery > Haste > Critical Strike to 33.34% > Versatility"
 
-statPriorityStats["WARLOCKAffliction"] = "Intellect > Haste to 30% > Mastery > Versatility = Critical Strike"
-statPriorityStats["WARLOCKDemonology"] = "Intellect > Haste to 27% > Critical Strike = Versatility > Mastery"
-statPriorityStats["WARLOCKDestruction"] = "Intellect > Haste to 30% > Critical Strike = Versatility > Mastery"
+StatPriority.Stats["WARLOCKAffliction"] = "Intellect > Haste to 30% > Mastery > Versatility = Critical Strike"
+StatPriority.Stats["WARLOCKDemonology"] = "Intellect > Haste to 24% > Critical Strike = Versatility > Mastery"
+StatPriority.Stats["WARLOCKDestruction"] = "Intellect > Haste to 30% > Critical Strike = Versatility > Mastery"
 
-statPriorityStats["DRUIDBalance"] = "Intellect > Mastery > Haste > Critical Strike > Versatility"
-statPriorityStats["DRUIDFeral"] = "Agility > Mastery > Critical Strike > Haste = Versatility"
-statPriorityStats["DRUIDGuardian"] = "Armor = Agility = Stamina > Haste > Versatility > Mastery > Critical Strike"
-statPriorityStats["DRUIDRestoration"] = "Intellect > Haste > Mastery > Critical Strike = Versatility"
+StatPriority.Stats["DRUIDBalance"] = "Intellect > Mastery > Haste > Critical Strike > Versatility"
+StatPriority.Stats["DRUIDFeral"] = "Agility > Mastery > Critical Strike > Haste = Versatility"
+StatPriority.Stats["DRUIDGuardian"] = "Armor = Agility = Stamina > Haste > Versatility > Mastery > Critical Strike"
+StatPriority.Stats["DRUIDRestoration"] = "Intellect > Haste > Mastery > Versatility > Critical Strike"
 
-statPriorityStats["MONKBrewmaster"] = "Agility > Versatility = Mastery = Critical Strike > Haste"
-statPriorityStats["MONKMistweaver"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
-statPriorityStats["MONKWindwalker"] = "Agility > Versatility = Critical Strike > Mastery > Haste"
+StatPriority.Stats["MONKBrewmaster"] = "Agility > Versatility = Mastery = Critical Strike > Haste"
+StatPriority.Stats["MONKMistweaver"] = "Intellect > Haste > Critical Strike > Versatility > Mastery"
+StatPriority.Stats["MONKWindwalker"] = "Agility > Haste > Critical Strike > Mastery > Versatility"
 
-statPriorityStats["DEATHKNIGHTBlood"] = "Strength > Haste = Critical Strike = Versatility = Mastery"
-statPriorityStats["DEATHKNIGHTFrost"] = "Strength > Critical Strike > Haste > Mastery > Versatility"
-statPriorityStats["DEATHKNIGHTUnholy"] = "Strength > Mastery > Critical Strike > Haste > Versatility"
+StatPriority.Stats["DEATHKNIGHTBlood"] = "Strength > Haste = Critical Strike = Versatility = Mastery"
+StatPriority.Stats["DEATHKNIGHTFrost"] = "Strength > Critical Strike > Haste > Mastery > Versatility"
+StatPriority.Stats["DEATHKNIGHTUnholy"] = "Strength > Mastery > Haste > Critical Strike > Versatility"
 
-statPriorityStats["DEMONHUNTERHavoc"] = "Agility > Critical Strike > Mastery > Versatility > Haste"
-statPriorityStats["DEMONHUNTERVengeance"] = "Agility > Critical Strike > Haste > Versatility > Mastery"
+StatPriority.Stats["DEMONHUNTERHavoc"] = "Agility > Critical Strike > Mastery > Versatility > Haste"
+StatPriority.Stats["DEMONHUNTERVengeance"] = "Agility > Critical Strike = Haste > Versatility > Mastery"
 
-statPriorityStats["EVOKERAugmentation"] = "Intellect > Mastery > Critial Strike > Haste > Versatility"
-statPriorityStats["EVOKERDevastation"] = "Intellect > Critial Strike > Versatility = Mastery = Haste"
-statPriorityStats["EVOKERPreservation"] = "Intellect > Mastery > Critial Strike > Versatility > Haste"
+StatPriority.Stats["EVOKERAugmentation"] = "Intellect > Mastery > Critial Strike > Haste > Versatility"
+StatPriority.Stats["EVOKERDevastation"] = "Intellect > Critial Strike > Versatility = Mastery = Haste"
+StatPriority.Stats["EVOKERPreservation"] = "Intellect > Mastery > Critial Strike > Haste > Versatility"
 
-function statPriorityFrameOnEvent(self, event, arg1)
-	if event == "ADDON_LOADED" and arg1 == "StatPriority" then
-		self:UnregisterEvent("ADDON_LOADED")
-		PaperDollFrame:HookScript("OnShow", function() statPriorityFrameUpdate(self, statPriorityText, PaperDollFrame, "player") end)
-	elseif event == "SPELLS_CHANGED" and IsAddOnLoaded("StatPriority") then
-		statPriorityFrameUpdate(self, statPriorityText, PaperDollFrame, "player")
-	--elseif event == "INSPECT_READY" and IsAddOnLoaded("StatPriority") then
-	--	statPriorityFrameUpdate(statPriorityInspectFrame, statPriorityInspectText, InspectPaperDollFrame, "target")
+function StatPriority:FrameOnEvent(event, arg1)
+	if event == "SPELLS_CHANGED" then
+		StatPriority:FrameUpdate(statPriorityText, PaperDollFrame, "player")
 	end
 end
 
-function statPriorityFrameCreate(frame, text, parent)
-	if parent:IsVisible() then
+function StatPriority:FrameCreate(frame, text, parent)
+	if parent.IsVisible ~= nil and parent:IsVisible() then
 		frame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
 						   edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
 						   tile = true,
@@ -82,7 +77,7 @@ function statPriorityFrameCreate(frame, text, parent)
 									 bottom = 1}}) 
 		frame:SetBackdropColor(0, 0, 0, 1)
 		frame:SetFrameStrata("TOOLTIP")
-		frame:SetWidth(parent:GetWidth() - 50)
+		frame:SetWidth(parent:GetWidth() * 1.6)
 		if parent == PaperDollFrame then
 			frame:SetHeight(25)
 		else
@@ -101,7 +96,7 @@ function statPriorityFrameCreate(frame, text, parent)
 	return false
 end
 
-function GetSpecializationName(id)
+function StatPriority:GetSpecializationName(id)
 	local spec = ""
 	if id == 62 then 
 		spec = "Arcane"
@@ -185,127 +180,518 @@ function GetSpecializationName(id)
 	return spec
 end
 
-function statPriorityFrameUpdate(frame, frameText, parent, unit)
-	if parent ~= nil and statPriorityFrameCreate(frame, frameText, parent) then
+function StatPriority:FrameUpdate(frame, frameText, parent, unit)
+	if parent ~= nil and self:FrameCreate(frame, frameText, parent) then
 		local temp, class = UnitClass(unit)
 		local spec
 		local text
 		if parent == PaperDollFrame then
 			spec = GetSpecializationInfo(GetSpecialization())
-			spec = GetSpecializationName(spec)
-			text = statPriorityStats[class .. spec];
+			spec = StatPriority:GetSpecializationName(spec)
+			text = StatPriority.Stats[class .. spec];
 			if statPriorityStoredStats[class..spec] == nil then
-				text = statPriorityStats[class..spec]
+				text = StatPriority.Stats[class..spec]
 			else
 				text = statPriorityStoredStats[class..spec]
 			end
 		else
-			spec = GetSpecializationName(GetInspectSpecialization(unit))
-			text = statPriorityStats[class .. spec];
-			if statPriorityStats[class..spec] ~= nil and class == UnitClass("player") then
-				text = statPriorityStats[class..spec]
+			spec = StatPriority:GetSpecializationName(GetInspectSpecialization(unit))
+			text = StatPriority.Stats[class .. spec];
+			if StatPriority.Stats[class..spec] ~= nil and class == UnitClass("player") then
+				text = StatPriority.Stats[class..spec]
 			end
 		end
 		frameText:SetText(text)
 	end
 end
 
-function statPrioritySpecBox(parent, x, y)
-	local text = parent:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	text:SetPoint("TOPLEFT", x, y)
-	table.insert(statPriorityTexts, text)
-	local box = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
-	box:SetAutoFocus(false)
-	box:SetHeight(25)
-	box:SetWidth(400)
-	box:SetPoint("TOPLEFT", x, y - 15)
-	table.insert(statPriorityBoxes, box)
+function StatPriority:SetPriority(info, val)
+	local _, name = UnitClass("player")
+	statPriorityStoredStats[name .. info.option.name] = val
 end
 
-function statPriorityGetSpecs()
-	local temp, class = UnitClass("player")
+function StatPriority:GetPriority(info)
+	local _, name = UnitClass("player")
+	return statPriorityStoredStats[name .. info.option.name]
+end
+
+function StatPriority:OnInitialize()
+	self.Frame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
+	self.Text = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontWhite")
+	self.Frame:RegisterEvent("SPELLS_CHANGED")
+	self.Frame:SetScript("OnEvent", self.FrameOnEvent)
+	PaperDollFrame:HookScript("OnShow", function() self:FrameUpdate(self.Frame, self.Text, PaperDollFrame, "player") end)
+	local options;
+	local _, class = UnitClass("player")
 	if class == "WARRIOR" then
-		return {"Arms", "Fury", "Protection"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Arms",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Fury",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Protection",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "PALADIN" then
-		return {"Holy", "Protection", "Retribution"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Holy",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Protection",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Retribution",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "HUNTER" then
-		return {"Beast Mastery", "Marksmanship", "Survival"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Beast Mastery",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Marksmanship",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Survival",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "ROGUE" then
-		return {"Assassination", "Outlaw", "Subtlety"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Assassination",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Outlaw",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Subtlety",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "PRIEST" then
-		return {"Discipline", "Holy", "Shadow"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Discipline",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Holy",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Shadow",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "SHAMAN" then
-		return {"Elemental", "Enhancement", "Restoration"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Elemental",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Enhancement",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Restoration",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "MAGE" then
-		return {"Arcane", "Fire", "Frost"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Arcane",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Fire",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Frost",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "WARLOCK" then
-		return {"Affliction", "Demonology", "Destruction"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Affliction",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Demonology",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Destruction",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "DRUID" then
-		return {"Balance", "Feral", "Guardian", "Restoration"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Balance",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Feral",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Guardian",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec4 = {
+							name = "Restoration",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "MONK" then
-		return {"Brewmaster", "Mistweaver", "Windwalker"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Brewmaster",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Mistweaver",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Windwalker",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "DEATHKNIGHT" then
-		return {"Blood", "Frost", "Unholy"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Blood",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Frost",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Unholy",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "DEMONHUNTER" then
-		return {"Havoc", "Vengeance"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Havoc",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Vengeance",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	elseif class == "EVOKER" then
-		return {"Devastation", "Preservation"}
+		options = {
+			name = "Stat Priority",
+			handler = StatPriority,
+			type = "group",
+			args = {
+				stats = {
+					name = "Custom priority strings",
+					type = "group",
+					desc = "You can put your own custom priority strings here",
+					args = {
+						spec1 = {
+							name = "Devastation",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec2 = {
+							name = "Preservation",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						},
+						spec3 = {
+							name = "Augmentation",
+							type = "input",
+							width = "full",
+							set = "SetPriority",
+							get = "GetPriority"
+						}
+					}
+				}
+			}
+		}
 	end
+	LibStub("AceConfig-3.0"):RegisterOptionsTable("StatPriority", options, nil)
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("StatPriority", "Stat Priority")
 end
-
-function statPriorityOptionsRefresh()
-	local temp, name = UnitClass("player")
-	local specs = statPriorityGetSpecs()
-	for i = 1, table.getn(statPriorityTexts) do
-		if specs[i] ~= nil then
-			statPriorityTexts[i]:Show()
-			statPriorityTexts[i]:SetText(specs[i])
-			statPriorityBoxes[i]:Show()
-			if statPriorityStoredStats[name..specs[i]] == nil then
-				statPriorityBoxes[i]:SetText("")
-			else
-				statPriorityBoxes[i]:SetText(statPriorityStoredStats[name..specs[i]])
-			end
-			statPriorityBoxes[i]:SetCursorPosition(0)
-		else
-			statPriorityTexts[i]:Hide()
-			statPriorityBoxes[i]:Hide()
-		end
-	end
-end
-
-function statPriorityOptionsOkay()
-	local temp, name = UnitClass("player")
-	local specs = statPriorityGetSpecs()
-	for i = 1, table.getn(specs) do
-		local text = statPriorityBoxes[i]:GetText()
-		if text == "" then
-			statPriorityStoredStats[name..specs[i]] = nil
-		else
-			statPriorityStoredStats[name..specs[i]] = text
-		end
-	end
-end
-
-local statPriorityFrame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-statPriorityInspectFrame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-statPriorityText = statPriorityFrame:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-statPriorityInspectText = statPriorityInspectFrame:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-statPriorityFrame:RegisterEvent("ADDON_LOADED")
-statPriorityFrame:RegisterEvent("SPELLS_CHANGED")
-statPriorityFrame:RegisterEvent("INSPECT_READY");
-statPriorityFrame:SetScript("OnEvent", statPriorityFrameOnEvent)
-
-local statPriorityOptions = CreateFrame("FRAME")
-statPriorityOptions.name = "Stat Priority"
-local statPriorityOptionsText = statPriorityOptions:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-statPriorityOptionsText:SetPoint("TOPLEFT", 20, -20)
-statPriorityOptionsText:SetText("You can put your own custom priority strings here")
-statPrioritySpecBox(statPriorityOptions, 20, -40)
-statPrioritySpecBox(statPriorityOptions, 20, -85)
-statPrioritySpecBox(statPriorityOptions, 20, -130)
-statPrioritySpecBox(statPriorityOptions, 20, -175)
-statPriorityOptions.refresh = statPriorityOptionsRefresh
-statPriorityOptions.okay = statPriorityOptionsOkay
-statPriorityOptions.cancel = statPriorityOptionsRefresh
-InterfaceOptions_AddCategory(statPriorityOptions)

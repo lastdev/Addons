@@ -1172,7 +1172,7 @@ end
 
 if select(1, ...) ~= "player" then return end
 
-if UnitBuff("player", setting.buffName) then
+if C_UnitAuras.GetAuraDataByIndex("PLAYER", setting.buffName) then
     equip = true
 end
 

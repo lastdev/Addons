@@ -1,6 +1,6 @@
-local addonName, shared = ...;
+local _, addon = ...;
 
-shared.rareData = {
+addon.rareData = {
   [60491] = {
     name = 'Sha of Anger',
     quest = 32099,
@@ -54,6 +54,33 @@ shared.rareData = {
   [68319] = {
     name = 'Disha Fearwarden',
     faction = 'Horde',
+  },
+  [69471] = {
+    description = 'Inside a cave in the wall near coast to the West. \nNeeds 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69633] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69341] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69339] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69749] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69767] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [70080] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69396] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
+  },
+  [69347] = {
+    description = 'Needs 3x Shan\'ze Ritual Stone to summon',
   },
   -- special rares
   [50831] = {

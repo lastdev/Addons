@@ -1,7 +1,8 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Altoholic", "enUS", true, false)
+local L = DataStore:SetDefaultLocale("Altoholic", "enUS")
 
 -- ** Menu **
 L["Equipment"] = true
+L["Profession Equipment"] = true
 L["Currencies"] = true
 L["Reputations"] = true
 L["Daily Quests"] = true
@@ -12,6 +13,14 @@ L["Rest XP"] = true
 
 -- ** Equipment **
 L["Unknown link, please relog this character"] = true
+
+-- ** Profession Equipment ** Dragonflight
+L["Profession"] = true
+L["Tool"] = true
+L["Accessory"] = true
+L["FISHING_TOOL"] = "Fishing Rod"
+L["COOKING_TOOL"] = "Cooking Tool"
+L["COOKING_ACCESSORY"] = "Cooking Accessory"
 
 -- ** Reputations **
 L["Alliance Forces"] = true

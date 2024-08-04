@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod("d517", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20240518204811")
 
 mod:RegisterCombat("scenario", 1005)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
+	"SPELL_CAST_START 115013",
+	"SPELL_CAST_SUCCESS 115013",
+	"SPELL_AURA_APPLIED 122142",
 	"CHAT_MSG_MONSTER_SAY",
 	"UNIT_DIED"
 )
@@ -17,17 +18,18 @@ local warnSwampSmash			= mod:NewSpellAnnounce(115013, 3)--TODO, see if target sc
 local warnEarthShattering		= mod:NewSpellAnnounce(122142, 3)
 
 --Borokhula the Destroyer
-local specWarnSwampSmash		= mod:NewSpecialWarningSpell(115013, nil, nil, nil, 2)
-
---Borokhula the Destroyer
-local timerSwampSmashCD			= mod:NewCDTimer(8, 115013)
-local timerEarthShatteringCD	= mod:NewCDTimer(18, 122142)--Limited sample size, may be shorter
+local timerSwampSmashCD			= mod:NewCDTimer(8, 115013, nil, nil, nil, 3)
+local timerEarthShatteringCD	= mod:NewCDTimer(15.8, 122142, nil, nil, nil, 3)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 115013 then
 		warnSwampSmash:Show()
-		specWarnSwampSmash:Show()
-		timerSwampSmashCD:Start()
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 115013 then
+		timerSwampSmashCD:Start(6)--Only start timer if cast finishes. Boss can be stunned and it interrupts cast but doesn't put it on CD
 	end
 end
 

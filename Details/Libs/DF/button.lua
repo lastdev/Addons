@@ -471,6 +471,7 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 	end
 
 	---@param self df_button
+	---@param filterMode texturefilter
 	function ButtonMetaFunctions:SetIconFilterMode(filterMode)
 		if (self.icon) then
 			self.icon:SetTexture(self.icon:GetTexture(), nil, nil, filterMode)
@@ -1331,7 +1332,7 @@ detailsFramework.TabButtonMixin = {
 ---@return df_tabbutton
 function detailsFramework:CreateTabButton(parent, frameName)
 	---@type df_tabbutton
-	local tabButton = CreateFrame("button", frameName, parent)
+	local tabButton = CreateFrame("button", frameName, parent, "BackdropTemplate")
 	tabButton:SetSize(50, 20)
 	tabButton.bIsSelected = false
 

@@ -338,7 +338,7 @@ end
 -- Returns 2 if item was removed from the list.
 -- Returns nil if no action taken.
 function Addon:ToggleItemInBlocklist(list, item)
-    local id = select(1, GetItemInfoInstant(item))
+    local id = select(1, Addon:GetItemInfoInstant(item))
     if not id then return nil end
 
     local systemLists = Addon:GetSystemLists()
@@ -355,7 +355,7 @@ function Addon:ToggleItemInBlocklist(list, item)
     -- Check if the list is Sell and the item is Unsellable
     -- If so, change the list type to Destroy
     if list == Addon.SystemListId.ALWAYS then
-        local isUnsellable = select(11, GetItemInfo(id)) == 0
+        local isUnsellable = select(11, Addon:GetItemInfo(id)) == 0
         if isUnsellable then
             self:Print(L.CMD_LISTTOGGLE_UNSELLABLE, link)
             list = Addon.SystemListId.DESTROY
@@ -406,7 +406,7 @@ end
 
 -- Returns whether an item is in the list and which one.
 function Addon:GetBlocklistForItem(item)
-    local id = select(1, GetItemInfoInstant(item))
+    local id = select(1, Addon:GetItemInfoInstant(item))
     if id then
         for _, list in pairs(ListType) do
             if (isSystemListType(list)) then

@@ -9,18 +9,17 @@ ns.RegisterPoints(376, { -- Valley of the Four Winds
     [19103780] = { loot={86218}, quest=31407, }, -- Staff of the Hidden Master
     [19004250] = { loot={86218}, quest=31407, }, -- Staff of the Hidden Master
     [43603740] = { label="Cache of Pilfered Goods", quest=31406, },
-}, {
-	achievement=7284, -- Is Another Man's Treasure
-})
+}, ns.treasure{})
 
 ns.RegisterPoints(376, { -- Valley of the Four Winds
     [23712833] = { label="Virmen Treasure Cache", quest=31405, },
-    [75105510] = { loot={86220}, quest=31408, } -- Saurok Stone Tablet
+    [75105510] = { loot={86220}, quest=31408, path=77285750, } -- Saurok Stone Tablet
 }, ns.riches{})
 
 ns.RegisterPoints(376, { -- Valley of the Four Winds
-	[92003900] = { loot={87524}, group="junk", quest=31869, }, -- Boat-Building Instructions
-})
+	[92003900] = { loot={87524}, quest=31869, }, -- Boat-Building Instructions
+    [52056382] = { loot={110505}, quest=37246, } -- Mysterious Fruit Pile (Mesmerizing Fruit Hat)
+}, ns.junk{})
 
 -- Rares
 

@@ -5,9 +5,8 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local Environment = TSM.Include("Environment")
 -- only create the TSMDEV table if we're in a dev or test environment
-if not Environment.IsDev() and not Environment.IsTest() then
+if not TSM.IsDev() and not TSM.IsTest() then
 	return
 end
 TSMDEV = {} ---@class TSMDEV
@@ -20,7 +19,7 @@ TSMDEV = {} ---@class TSMDEV
 
 function TSMDEV.Dump(value)
 	-- TODO: Implement something for test environments
-	assert(not Environment.IsTest())
-	LoadAddOn("Blizzard_DebugTools")
+	assert(not TSM.IsTest())
+	C_AddOns.LoadAddOn("Blizzard_DebugTools")
 	DevTools_Dump(value)
 end

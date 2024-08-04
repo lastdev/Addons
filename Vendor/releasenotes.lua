@@ -2,6 +2,72 @@ local _, Addon = ...
 
 Addon.ReleaseNotes = {
 {
+Release = "6.6 (June 28, 2024)",
+Notes = [[
+# TWW Support, New properties
+
+This release adds support for The War Within Beta, 11.0, and features many updates to properties and how properties are shown.
+
+# Properties Changes
+Some properties have changed in a bit of a rework on how transmogs work.
+
+* IsWarbound and related is replacing IsAccountBound, as this is the terminology blizzard has changed to using. IsAccountBound still
+works and is identical to IsWarbound.
+
+* IsWarboundUntilEquip is new and reflects the new "Warbound Until Equip" type of binding Blizzard has added in 11.0.
+
+* IsUsable has changed. It no longer refers to whether an item has an on-use ability, but instead literally refers to whether the player
+can "use" the item. This includes whether the player can equip the item, use the item as a token, etc. For a long time we did not have a
+capture of this property and IsUsable
+now works very well.
+
+* The old functionality of "IsUsable" is now "HasUseAbility". This means the item has a "Use: <something>" or on-use effect. We believe
+this makes these properties more clear in that IsUsable literally means whether it is usable and "HasUseAbility" means the item literally
+has a "Use" ability.
+
+* IsAppearanceCollected has been improved as best as we are able and reflects whether you have collected the appearance.
+
+* IsUnknownAppearance has returned and is true if you have not collected the appearance. It is defined as an item that has an appearance
+and you have not collected it.
+
+* HasAppearance is new and is true if the item has an appearance associated with it (i.e. is transmog equipment). It does NOT mean you
+have collected the appearance. It literally means the item has an appearance! If you want to know collection state, use IsAppearanceCollected
+or (better) IsUnknownAppearance.
+
+* IsEquippable has changed to being a composite of IsUsable and IsEquipment, and accurate reflects whether the player can equip the item.
+
+* New Pet properties!  We now have IsPet, and if an item is a pet, it has new pet-specific properties that show up if an item is a pet.
+We also have collection state, species Id, pet type and other pet properties in case you wish to make rules around uncollected pets
+or targeting specific types of pets.
+
+* We have a new "IsUpgradeable" property. Be careful with this one, it does not mean simply any item that can be upgraded - it specifically
+means an item that can be upgraded AND still has ranks left to upgrade. Once an item is fully upgraded it will no longer show as true
+for this property.
+
+# Dynamic property showing
+Now properties have internal groupings that make sense based on whether a property is meaningful. When you add an item into the item
+properties window in rule editing, you will now only see relevant item properties to that item. For example, an item that is a piece of
+equipment will have equipment-related properties, appearance info, etc. If an item is not equipment it will not have equipment relevant
+properties. Similarily, if an item is a pet then it will have pet specific properties showing. If it is not a pet it will only have the
+IsPet property, which will be false. This is to reduce clutter in the properties viewer and make it easier for you to see the relevant
+properties.
+
+We also now hide some properties UNLESS they are non-default. This includes Conduits and Azerite gear. These should be very rare or
+even non-existent now, so we will not clutter the properties list with these almost certainly false values unless for some reason you
+happen to come across one and then it will show in the properties list. Items with CraftedQuality is also hidden unless it is defined.
+
+# Bugfixes
+* Slash commands should once again work.
+* Transmog identification should be much better now. Please know that if your character cannot use the item then transmog may not
+be reliable. This is only an issue in Dragonflight, as this is not a problem in TWW beta.
+
+# Known issues
+* A tooltip scan on 11.0 may not function correctly for some items. It does not seem it is always pulling in the entire tooltip. This does not happen
+for all items and the bug is so far eluding me. Blizzard has changed how the tooltip data is loaded and there may be a bug on their end, it is
+unknown. Please be and validate any tooltip scan rules work on items you expect them to work on as this may be inconsistent in beta.
+]]
+},
+{
 Release = "6.5 (May 3, 2024)",
 Notes = [[
 # Classic SoD, Cata Support

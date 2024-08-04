@@ -8,7 +8,7 @@ function Outfitter:FindNextCooldownItem(pItemCodes, pIgnoreSwapCooldown)
 
 	for _, vItemCode in ipairs(pItemCodes) do
 		if type(vItemCode) == "string" then
-			local vItemName, vItemLink = GetItemInfo(vItemCode)
+			local vItemName, vItemLink = C_Item.GetItemInfo(vItemCode)
 
 			if vItemLink then
 				vItemCode = self:ParseItemLink2(vItemLink)[1]
@@ -22,7 +22,7 @@ function Outfitter:FindNextCooldownItem(pItemCodes, pIgnoreSwapCooldown)
 				local vStart, vDuration, vEnabled
 
 				if vItemInfo.Location.BagIndex then
-					vStart, vDuration, vEnabled = GetContainerItemCooldown(vItemInfo.Location.BagIndex, vItemInfo.Location.BagSlotIndex)
+					vStart, vDuration, vEnabled = C_Container.GetContainerItemCooldown(vItemInfo.Location.BagIndex, vItemInfo.Location.BagSlotIndex)
 				elseif vItemInfo.Location.SlotID then
 					vStart, vDuration, vEnabled = GetInventoryItemCooldown("player", vItemInfo.Location.SlotID)
 				end
@@ -101,7 +101,7 @@ function Outfitter:GetBagItemInvType(bagIndex, slotIndex)
 		return
 	end
 
-	local _, _, _, _, _, _, _, _, itemInvType = GetItemInfo(itemLink)
+	local _, _, _, _, _, _, _, _, itemInvType = C_Item.GetItemInfo(itemLink)
 
 	return itemInvType
 end
@@ -114,7 +114,7 @@ function Outfitter:GetItemLocationLink(pItemLocation)
 	if pItemLocation.BagIndex then
 		return OutfitterAPI:GetContainerItemLink(pItemLocation.BagIndex, pItemLocation.BagSlotIndex)
 	elseif pItemLocation.SlotName then
-		return self:GetInventorySlotIDLink(pSlotID)
+		return self:GetInventorySlotIDLink(GetInventorySlotInfo(pItemLocation.SlotName))
 	else
 		self:ErrorMessage("Unknown location in GetItemLocationLink")
 		return
@@ -144,7 +144,7 @@ function Outfitter:GetBagItemBagType(pBagIndex, pSlotIndex)
 		return
 	end
 
-	return GetItemFamily(vItemCodes[1])
+	return C_Item.GetItemFamily(vItemCodes[1])
 end
 
 function Outfitter:GetSlotIDLinkInfo(pSlotID)
@@ -158,7 +158,7 @@ function Outfitter:GetSlotIDItemBagType(pSlotID)
 		return
 	end
 
-	return GetItemFamily(vItemCodes[1])
+	return C_Item.GetItemFamily(vItemCodes[1])
 end
 
 function Outfitter:ParseItemLink2(pItemLink)
@@ -248,7 +248,7 @@ function Outfitter._ItemInfo:GetItemInfoFromCode(itemCode)
 	      itemType,
 	      itemSubType,
 	      itemCount,
-	      itemInvType = GetItemInfo(itemCode)
+	      itemInvType = C_Item.GetItemInfo(itemCode)
 
 	--
 
@@ -328,7 +328,7 @@ function Outfitter._ItemInfo:GetItemInfoFromLink(itemLink)
 	local _, _,
 	      itemQuality,
 	      itemLevel,
-	      itemMinLevel = GetItemInfo(itemLink)
+	      itemMinLevel = C_Item.GetItemInfo(itemLink)
 
 	self.Name = itemName
 	self.Link = itemLink
@@ -1004,7 +1004,7 @@ function Outfitter._InventoryCache:FindItemIndex(pOutfitItem, pAllowSubCodeWildc
 
 	-- Return the match if only one item was found
 
-	if vNumItemsFound == 1
+	if vNumItemsFound == 1 and vBestMatch
 	and not vBestMatch.IgnoreItem then
 		return vBestMatch, vBestMatchIndex, vItemFamily, nil
 	end

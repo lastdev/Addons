@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2147, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240616044055")
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -710,6 +710,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			else
 				self.vb.matrixSide = DBM_COMMON_L.LEFT
 			end
+			---@diagnostic disable-next-line: param-type-mismatch
 			warnMatrixSpawn:Show(self.vb.matrixCount.."-"..self.vb.matrixSide)
 		else
 			warnMatrixSpawn:Show(self.vb.matrixCount)

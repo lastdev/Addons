@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2194, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240629024602")
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 mod:SetBossHPInfoToHighest()
@@ -64,7 +64,7 @@ local timerImminentRuinCD				= mod:NewNextCountTimer(14.9, 272536, 139074, nil, 
 local timerLivingWeaponCD				= mod:NewNextTimer(60.5, 276922, nil, nil, nil, 1, nil, DBM_COMMON_L.MYTHIC_ICON)--Mythic
 local timerVoidEchoesCD					= mod:NewNextCountTimer(60.5, 279157, nil, nil, nil, 2, nil, DBM_COMMON_L.HEROIC_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
-local timerIntermission					= mod:NewPhaseTimer(60)
+local timerIntermission					= mod:NewStageTimer(60)
 local timerObliterationbeamCD			= mod:NewCDCountTimer(12.1, 272115, 194463, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 3)--Short Text "Beam"
 local timerVisionsoMadnessCD			= mod:NewNextCountTimer(20, 273949, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 

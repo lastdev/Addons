@@ -1,5 +1,5 @@
 -- Targets.lua
--- June 2014
+-- July 2024
 
 local addon, ns = ...
 local Hekili = _G[addon]
@@ -344,7 +344,7 @@ do
             return lastCount, lastStationary
         end
 
-        local debugging = Hekili.ActiveDebug
+        local debugging = true
         local details = nil
         local showNPs = GetCVar( "nameplateShowEnemies" ) == "1" and GetCVar( "nameplateShowAll" ) == "1"
 
@@ -383,7 +383,7 @@ do
 
                         local _, range
 
-                        if debugging then details = format( "%s\n - Checking %s [ %s ] %s.", details, unit, guid, UnitName( unit ) ) end
+                        if debugging then details = format( "%s\n - Checking nameplate list for %s [ %s ] %s.", details, unit, guid, UnitName( unit ) ) end
 
                         if excluded then
                             if requiredForInclusion[ npcid ] then
@@ -412,6 +412,8 @@ do
                             if not excluded and checkPlates then
                                 local _, maxR = RC:GetRange( unit )
                                 excluded = maxR and maxR > checkPlates
+
+                                range = maxR
 
                                 if debugging and excluded then
                                     details = format( "%s\n    - Excluded by range (%d > %d).", details, maxR, checkPlates )
@@ -479,6 +481,8 @@ do
                                 if not excluded and checkPlates then
                                     local _, maxR = RC:GetRange( unit )
                                     excluded = maxR and maxR > checkPlates
+
+                                    range = maxR
 
                                     if debugging and excluded then
                                         details = format( "%s\n    - Excluded by range (%d > %d).", details, maxR, checkPlates )
@@ -602,7 +606,9 @@ do
             if Hekili:GetToggleState( "mode" ) == "reactive" then HekiliDisplayAOE:UpdateAlpha() end
         end
 
-        Hekili.TargetDebug = details
+        if details then
+            Hekili.TargetDebug = details
+        end
 
         return count, stationary
     end
@@ -1059,8 +1065,8 @@ Hekili:ProfileCPU( "Audit", ns.Audit )
 
 
 function Hekili:DumpDotInfo( aura )
-    if not IsAddOnLoaded( "Blizzard_DebugTools" ) then
-        LoadAddOn( "Blizzard_DebugTools" )
+    if not C_AddOns.IsAddOnLoaded( "Blizzard_DebugTools" ) then
+        C_AddOns.LoadAddOn( "Blizzard_DebugTools" )
     end
 
     aura = aura and class.auras[ aura ] and class.auras[ aura ].id or aura

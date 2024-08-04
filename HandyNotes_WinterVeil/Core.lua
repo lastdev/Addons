@@ -3,7 +3,7 @@
 
                                              Winter Veil
 
-                                       v2.08 - 20th April 2024									 
+                                       v2.09 - 23rd July 2024									 
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

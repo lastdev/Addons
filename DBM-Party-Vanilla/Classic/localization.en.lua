@@ -318,6 +318,12 @@ L = DBM:GetModLocalization("WarchiefRendBlackhand")
 L:SetGeneralLocalization{
 	name 		= "Warchief Rend Blackhand"
 }
+
+L:SetMiscLocalization{
+	Pull1 = "Excellent... it would appear as if the meddlesome insects have arrived just in time to feed my legion. Welcome, mortals!", -- Yell when you jump into the arena
+	Pull2 = "THIS CANNOT BE!!! Rend, deal with these insects.", -- Yell when you defeat the last wave
+}
+
 -----------------------------
 --  The Beast  --
 -----------------------------
@@ -1530,4 +1536,56 @@ L = DBM:GetModLocalization(489)
 
 L:SetGeneralLocalization{
 	name 		= "Chief Ukorz Sandscalp"
+}
+
+-----------------------------
+--Demon Fall Canyon
+-----------------------------
+--  Grimroot  --
+-----------------------------
+L = DBM:GetModLocalization("Grimroot")
+
+L:SetGeneralLocalization{
+	name 		= "Grimroot"
+}
+
+-----------------------------
+--  Diathorus the Seeker  --
+-----------------------------
+L = DBM:GetModLocalization("Diathorus")
+
+L:SetGeneralLocalization{
+	name 		= "Diathorus the Seeker"
+}
+-----------------------------
+--  Destructor's Wraith  --
+-----------------------------
+L = DBM:GetModLocalization("DestructorsWraith")
+
+L:SetGeneralLocalization{
+	name 		= "Destructor's Wraith"
+}
+-----------------------------
+--  Zilbagob  --
+-----------------------------
+L = DBM:GetModLocalization("Zilbagob")
+
+L:SetGeneralLocalization{
+	name 		= "Zilbagob"
+}
+-----------------------------
+--  Pyranis  --
+-----------------------------
+L = DBM:GetModLocalization("Pyranis")
+
+L:SetGeneralLocalization{
+	name 		= "Pyranis"
+}
+-----------------------------
+--  Hellscream's Phantom  --
+-----------------------------
+L = DBM:GetModLocalization("HellscreamsPhantom")
+
+L:SetGeneralLocalization{
+	name 		= "Hellscream's Phantom"
 }

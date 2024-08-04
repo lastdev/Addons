@@ -94,8 +94,8 @@ Items with UnitValue == 0 cannot be sold to a vendor. We use this to determine i
 ExpansionPackId = [[
 The expansion pack ID to which this item belongs.
 
-> 0 = Default / None (this matches many items)
-> 1 = BC
+> 0 = Classic
+> 1 = TBC
 > 2 = WoTLK
 > 3 = Cata
 > 4 = MoP
@@ -104,6 +104,7 @@ The expansion pack ID to which this item belongs.
 > 7 = BFA
 > 8 = SL
 > 9 = DF
+> 10 = TWW
 
 ## Notes:
 
@@ -168,37 +169,24 @@ If the item is not yet in your possession, then it will always return true if it
 IsCosmetic = [[
 True if the item is an Account-Bound Cosmetic item. These are items you can trade to your other characters to learn the transmog.
 ]],
-IsCollectable = [[
-True if the item has an appearance which you have not collected on this character. Also is only true if the equipment is transmogrifiable, and either bind on equip or bind on account.
+IsAppearanceCollected = [[
+True if your account has collected this appearance. If this is false it means that it is an uncollected appearance.
 
 ### Notes:
 
-Will always be false for gear this character cannot equip, even if it is an unknown appearance on another character. This is a Blizzard limitation. Some addons keep track of appearances
-across characters; we do not. We use Blizzard's API to determine if it is collected, and that API currently only reports the current character.
-This will also be true for Soulbound gear since you have already collected it.
-If you are concerned about missing transmogs for other characters, we recommend making a rule that keeps Bind-on-Equip equipment which your character cannot use. 
-]],
-IsCollected = [[
-If your character has a confirmed collection of this appearance.
-
-### Notes:
-
-We only ever set IsCollected to true if the Blizzard transmog API confirms to us that it is a collected appearance by this character, otherwise it is false in all other circumstances.
+This will work across an account, even for a character that cannot equip the item.
 ]],
 
 IsProfessionEquipment = [[
 Returns true if the item is an equippable piece of profession equipment.
-]],
-
-IsTransmogEquipment = [[
-Is equipment that can be transmogrified. Not to be confused with an uncollected appearance. 
 ]],
 IsToy = "True if the item is a toy.",
 IsCraftingReagent = [[
 True if this specific item is a crafting reagent.
 ]],
 IsAlreadyKnown = [[True if the item is "Already known", such as a Toy or Recipe you have already learned. This matches the tooltip text indicating this.]],
-IsUsable = [[True if the item can be used, such as if it has a "Use:" effect described in its tooltip.]],
+IsUsable = [[True if the character can use the item, includes equipping, activating, and consuming.]],
+HasUseAbility = [[True if the item can be used like an ability, such as if it has a "Use:" effect described in its tooltip.]],
 IsUnsellable = [[
 True if the item has 0 value.
 

@@ -9,13 +9,15 @@
 
 local TSM = select(2, ...) ---@type TSM
 local FrameStack = TSM.UI:NewPackage("FrameStack")
-local Math = TSM.Include("Util.Math")
-local Theme = TSM.Include("Util.Theme")
-local Table = TSM.Include("Util.Table")
-local Vararg = TSM.Include("Util.Vararg")
-local ScriptWrapper = TSM.Include("Util.ScriptWrapper")
-local UIElements = TSM.Include("UI.UIElements")
-local private = {}
+local Math = TSM.LibTSMUtil:Include("Lua.Math")
+local Theme = TSM.LibTSMService:Include("UI.Theme")
+local Table = TSM.LibTSMUtil:Include("Lua.Table")
+local Vararg = TSM.LibTSMUtil:Include("Lua.Vararg")
+local ScriptWrapper = TSM.LibTSMWoW:Include("API.ScriptWrapper")
+local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
+local private = {
+	tooltip = nil,
+}
 local STRATA_ORDER = {"TOOLTIP", "FULLSCREEN_DIALOG", "FULLSCREEN", "DIALOG", "HIGH", "MEDIUM", "LOW", "BACKGROUND", "WORLD"}
 local framesByStrata = {
 	WORLD = {},
@@ -83,10 +85,7 @@ local FONT_KEYS = {
 local ELEMENT_STYLE_KEYS = {
 	"_texture",
 	"_backgroundColor",
-	"_borderColor",
 	"_font",
-	"_roundedCorners",
-	"_borderSize",
 }
 local IGNORED_FRAMES = {
 	GlobalFXDialogModelScene = true
@@ -99,27 +98,27 @@ local IGNORED_FRAMES = {
 -- ============================================================================
 
 function FrameStack.Toggle()
-	if not TSMFrameStackTooltip then
-		CreateFrame("GameTooltip", "TSMFrameStackTooltip", UIParent, "GameTooltipTemplate")
-		TSMFrameStackTooltip.highlightFrame = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate" or nil)
-		TSMFrameStackTooltip.highlightFrame:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8X8" })
-		TSMFrameStackTooltip.highlightFrame:SetBackdropColor(1, 0, 0, 0.3)
-		TSMFrameStackTooltip:Hide()
-		ScriptWrapper.Set(TSMFrameStackTooltip, "OnUpdate", private.OnUpdate)
+	if not private.tooltip then
+		private.tooltip = CreateFrame("GameTooltip", "TSMFrameStackTooltip", UIParent, "GameTooltipTemplate")
+		private.tooltip.highlightFrame = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		private.tooltip.highlightFrame:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8X8" })
+		private.tooltip.highlightFrame:SetBackdropColor(1, 0, 0, 0.3)
+		private.tooltip:Hide()
+		ScriptWrapper.Set(private.tooltip, "OnUpdate", private.OnUpdate)
 	end
-	if TSMFrameStackTooltip:IsVisible() then
-		TSMFrameStackTooltip:Hide()
-		TSMFrameStackTooltip.highlightFrame:Hide()
+	if private.tooltip:IsVisible() then
+		private.tooltip:Hide()
+		private.tooltip.highlightFrame:Hide()
 	else
-		TSMFrameStackTooltip.lastUpdate = 0
-		TSMFrameStackTooltip.altDown = nil
-		TSMFrameStackTooltip.index = 1
-		TSMFrameStackTooltip.numFrames = 0
-		TSMFrameStackTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-		TSMFrameStackTooltip:SetPoint("TOPLEFT", 0, 0)
-		TSMFrameStackTooltip:AddLine("Loading...")
-		TSMFrameStackTooltip:Show()
-		TSMFrameStackTooltip.highlightFrame:Show()
+		private.tooltip.lastUpdate = 0
+		private.tooltip.altDown = nil
+		private.tooltip.index = 1
+		private.tooltip.numFrames = 0
+		private.tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+		private.tooltip:SetPoint("TOPLEFT", 0, 0)
+		private.tooltip:AddLine("Loading...")
+		private.tooltip:Show()
+		private.tooltip.highlightFrame:Show()
 	end
 end
 
@@ -144,26 +143,26 @@ function private.OnUpdate(self)
 			end
 		end
 	end
-	if numFrames ~= TSMFrameStackTooltip.numFrames then
-		TSMFrameStackTooltip.index = 1
-		TSMFrameStackTooltip.numFrames = numFrames
+	if numFrames ~= private.tooltip.numFrames then
+		private.tooltip.index = 1
+		private.tooltip.numFrames = numFrames
 	end
 
 	local leftAltDown = IsKeyDown("LALT")
 	local rightAltDown = IsKeyDown("RALT")
 	if not self.altDown and leftAltDown and not rightAltDown then
 		self.altDown = "LEFT"
-		if TSMFrameStackTooltip.index == TSMFrameStackTooltip.numFrames then
-			TSMFrameStackTooltip.index = 1
+		if private.tooltip.index == private.tooltip.numFrames then
+			private.tooltip.index = 1
 		else
-			TSMFrameStackTooltip.index = TSMFrameStackTooltip.index + 1
+			private.tooltip.index = private.tooltip.index + 1
 		end
 	elseif not self.altDown and not leftAltDown and rightAltDown then
 		self.altDown = "RIGHT"
-		if TSMFrameStackTooltip.index == 1 then
-			TSMFrameStackTooltip.index = TSMFrameStackTooltip.numFrames
+		if private.tooltip.index == 1 then
+			private.tooltip.index = private.tooltip.numFrames
 		else
-			TSMFrameStackTooltip.index = TSMFrameStackTooltip.index - 1
+			private.tooltip.index = private.tooltip.index - 1
 		end
 	elseif self.altDown == "LEFT" and not leftAltDown then
 		self.altDown = nil
@@ -236,6 +235,15 @@ function private.OnUpdate(self)
 							end
 							self:AddLine("    }", 0.7, 0.7, 0.7)
 						end
+					elseif strataFrame.__debug and next(strataFrame.__debug) then
+						self:AddLine("    __debug = {", 0.7, 0.7, 0.7)
+						for k, v in pairs(strataFrame.__debug) do
+							local vStr = private.GetStyleValueStr(v)
+							if vStr then
+								self:AddLine(format("        %s = %s", tostring(k), vStr), 0.7, 0.7, 0.7)
+							end
+						end
+						self:AddLine("    }", 0.7, 0.7, 0.7)
 					end
 				elseif mouseEnabled then
 					self:AddLine(text, 0.6, 1, 1)
@@ -262,7 +270,7 @@ function private.TableValueSearch(tbl, searchValue, currentKey, visited)
 	for key, value in pairs(tbl) do
 		if value == searchValue then
 			return (currentKey and (currentKey..".") or "")..key
-		elseif type(value) == "table" and (not value.__isa or value:__isa(TSM.UI.Element)) and not visited[value] then
+		elseif type(value) == "table" and (not value.__isa or UIElements.IsType(value, "Element")) and not visited[value] then
 			visited[value] = true
 			local result = private.TableValueSearch(value, searchValue, (currentKey and (currentKey..".") or "")..key, visited)
 			if result then
@@ -274,7 +282,7 @@ function private.TableValueSearch(tbl, searchValue, currentKey, visited)
 		local value = tbl[key]
 		if value == searchValue then
 			return (currentKey and (currentKey..".") or "")..key
-		elseif type(value) == "table" and (not value.__isa or value:__isa(TSM.UI.Element)) and not visited[value] then
+		elseif type(value) == "table" and (not value.__isa or UIElements.IsType(value, "Element")) and not visited[value] then
 			visited[value] = true
 			local result = private.TableValueSearch(value, searchValue, (currentKey and (currentKey..".") or "")..key, visited)
 			if result then
@@ -286,7 +294,7 @@ end
 
 function private.GetFrameNodeInfo(frame)
 	local globalName = not frame:IsObjectType("Texture") and frame:GetName()
-	if globalName and not strmatch(globalName, "^TSM_UI_ELEMENT:") and not strmatch(globalName, "^TSM_FONT_STRING:") then
+	if globalName and not strmatch(globalName, "^TSM_[A-Z_]+:") then
 		return globalName, frame:GetParent()
 	end
 

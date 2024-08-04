@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1667, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185020")
+mod:SetRevision("20240616044104")
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetUsedIcons(6, 4)
@@ -189,6 +189,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			icon = 4
 			secondCount = 1
 		end
+		---@diagnostic disable-next-line: param-type-mismatch
 		warnFocusedGaze:Show(self.vb.chargeCount.."-"..secondCount, args.destName)
 		if args:IsPlayer() then
 			specWarnFocusedGaze:Show()

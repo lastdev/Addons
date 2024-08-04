@@ -28,3 +28,4 @@ L["STRING_TYPE"] = "Tipo:"
 L["STRING_TYPE_COOLDOWN"] = "Tiempo de reutilización"
 L["STRING_TYPE_DEBUFF"] = "Perjuicio"
 L["STRING_UNKNOWN"] = "desconocido"
+

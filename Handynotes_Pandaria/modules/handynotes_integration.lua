@@ -1,4 +1,4 @@
-local addonName, shared = ...;
+local addonName, addon = ...;
 
 local CloseDropDownMenus = _G.CloseDropDownMenus;
 local GameTooltip = _G.GameTooltip;
@@ -10,10 +10,9 @@ local UIParent = _G.UIParent;
 local WorldMapButton = _G.WorldMapButton;
 local WorldMapTooltip = _G.WorldMapTooltip;
 
-local addon = shared.addon;
-local HandyNotes = shared.HandyNotes;
-local nodes = shared.nodeData;
-local saved = shared.saved;
+local HandyNotes = addon.HandyNotes;
+local nodes = addon.nodeData;
+local saved = addon.saved;
 local handler = {};
 local tooltip;
 local currentInfo;
@@ -21,44 +20,30 @@ local currentInfo;
 local infoProvider = addon.import('infoProvider');
 local nodeHider = addon.import('nodeHider');
 
-local function makeIterator (zones, isMinimap)
-  local zoneIndex, zone = next(zones, nil);
-  local coords;
+local function iterateZoneNodes (zone, nodes)
+  for coords, _ in pairs(nodes) do
+    local nodeList = infoProvider.getNodeInfo(zone, coords);
 
-  local function iterator ()
-    local scale = saved.settings.icon_scale;
-    local alpha = saved.settings.icon_alpha;
-
-    while (zone) do
-      local zoneNodes = nodes[zone];
-
-      if (zoneNodes) then
-        coords = next(zoneNodes, coords);
-
-        while (coords) do
-          local info = infoProvider.getNodeInfo(zone, coords);
-
-          if (info == nil) then
-            local remCoords = coords;
-
-            -- get the next node before deleting, so next() knows the coords
-            coords = next(zoneNodes, coords);
-            zoneNodes[remCoords] = nil;
-          else
-            if (info.display) then
-              return coords, zone, info.icon, scale, alpha;
-            end
-
-            coords= next(zoneNodes, coords);
-          end
+    if (nodeList ~= nil) then
+      for _, node in ipairs(nodeList) do
+        if (node.display == true) then
+          coroutine.yield(coords, zone, node.icon, saved.settings.icon_scale, saved.settings.icon_alpha);
         end
       end
-
-      zoneIndex, zone = next(zones, zoneIndex);
+    else
+      nodes[coords] = nil;
     end
   end
+end
 
-  return iterator;
+local function iterateZones (zones)
+  for _, zone in ipairs(zones) do
+    local zoneNodes = nodes[zone];
+
+    if (zoneNodes) then
+      iterateZoneNodes(zone, zoneNodes);
+    end
+  end
 end
 
 local function returnNil ()
@@ -79,7 +64,9 @@ function handler:GetNodes2(uiMapId, isMinimap)
 
   infoProvider.flush();
 
-  return makeIterator(zones, isMinimap);
+  return coroutine.wrap(function ()
+    iterateZones(zones);
+  end);
 end
 
 local function addTooltipText (tooltip, info, header)
@@ -95,29 +82,39 @@ local function addTooltipText (tooltip, info, header)
   end
 end
 
-local function displayTooltip (nodeInfo)
-  local nodeData = nodeInfo.rareInfo or nodeInfo.treasureInfo;
-
-  tooltip:SetText(nodeData.name or nodeInfo.rare or nodeInfo.treasure);
+local function displayNode (nodeInfo)
+  tooltip:AddLine(nodeInfo.name or nodeInfo.rare or nodeInfo.treasure);
   -- tooltip:SetText(nodeData.name .. ' ' .. (node.rare or node.treasure));
 
-  if (nodeData.description ~= nil) then
-    tooltip:AddLine(nodeData.description);
+  if (nodeInfo.description ~= nil) then
+    tooltip:AddLine(nodeInfo.description);
   end
 
-  addTooltipText(tooltip, nodeData.mountInfo, 'Mounts:');
-  addTooltipText(tooltip, nodeData.toyInfo, 'Toys:');
-  addTooltipText(tooltip, nodeData.achievementInfo, 'Achievements:');
+  addTooltipText(tooltip, nodeInfo.mountInfo, 'Mounts:');
+  addTooltipText(tooltip, nodeInfo.toyInfo, 'Toys:');
+  addTooltipText(tooltip, nodeInfo.achievementInfo, 'Achievements:');
+end
+
+local function displayTooltip (nodeList)
+  tooltip:ClearLines();
+
+  for x = 1, #nodeList, 1 do
+    displayNode(nodeList[x]);
+
+    if (x < #nodeList) then
+      tooltip:AddLine(' ');
+    end
+  end
 
   tooltip:Show();
 end
 
 function handler:OnEnter(uiMapId, coords)
-  local nodeInfo = infoProvider.getNodeInfo(uiMapId, coords);
+  local nodeList = infoProvider.getNodeInfo(uiMapId, coords);
 
-  if (nodeInfo == nil) then return end
+  if (nodeList == nil) then return end
 
-  currentInfo = nodeInfo;
+  currentInfo = nodeList;
 
   tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip;
 
@@ -127,7 +124,7 @@ function handler:OnEnter(uiMapId, coords)
     tooltip:SetOwner(self, "ANCHOR_RIGHT");
   end
 
-  displayTooltip(nodeInfo);
+  displayTooltip(nodeList);
 end
 
 function handler:OnLeave(uiMapId, coords)
@@ -135,9 +132,41 @@ function handler:OnLeave(uiMapId, coords)
   tooltip:Hide();
 end
 
-addon.listen('DATA_READY', function (info, id)
-  if (currentInfo == info) then
-    displayTooltip(currentInfo);
+local function getNestedValue (object, ...)
+  for x = 1, select('#', ...), 1 do
+    if (object == nil) then
+      return nil;
+    end
+    object = object[select(x, ...)];
+  end
+
+  return object;
+end
+
+local function checkIfNodeQueriedToy (node, item)
+  local toyList = getNestedValue(node, 'toyInfo', 'list');
+
+  if (toyList ~= nil) then
+    local itemId = item:GetItemID();
+
+    for _, toy in ipairs(toyList) do
+      if (toy.queried == itemId) then
+        toy.name = item:GetItemName();
+        toy.text = toy.name;
+        toy.icon = item:GetItemIcon() or toy.icon;
+        toy.queried = nil;
+        displayTooltip(currentInfo);
+        return;
+      end
+    end
+  end
+end
+
+addon.listen('DATA_READY', function (item)
+  if (currentInfo ~= nil) then
+    for _, node in ipairs(currentInfo) do
+      checkIfNodeQueriedToy(node, item);
+    end
   end
 end);
 
@@ -154,15 +183,14 @@ do
   local function addTomTomWaypoint(button, mapId, coords)
     if TomTom then
       local x, y = HandyNotes:getXY(coords);
-      local info = infoProvider.getNodeInfo(mapId, coords);
-
-      info = info.rareInfo or info.treasureInfo;
+      local info = infoProvider.getNodeInfo(mapId, coords)[1];
 
       TomTom:AddWaypoint(mapId, x, y, {
         title = info.name;
         persistent = nil,
         minimap = saved.settings.minimap_icons,
         world = true,
+        from = addonName,
       });
     end
   end
@@ -356,13 +384,11 @@ local function registerWithHandyNotes ()
   };
 
   HandyNotes:RegisterPluginDB(addonName, handler, options);
+  updateNodes();
 end
 
-local function handleLogin ()
+function addon.integrateWithHandyNotes ()
   registerWithHandyNotes();
   addon.funnel({'CRITERIA_UPDATE'}, updateNodes);
   addon.on({'NEW_TOY_ADDED', 'NEW_MOUNT_ADDED'}, updateNodes);
-  addon.off('PLAYER_LOGIN', handleLogin);
 end
-
-addon.on('PLAYER_LOGIN', handleLogin);

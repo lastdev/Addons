@@ -1,8 +1,8 @@
-## Interface: 100200
+## Interface: 110002, 110000
 ## Title: HandyNotes: Stygia
 ## Notes: Where are the Stygia gathering nodes in the Maw?
 ## Author: Kemayo
-## Version: v100200.0
+## Version: v110000.0
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

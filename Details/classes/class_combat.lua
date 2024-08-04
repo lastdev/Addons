@@ -178,7 +178,11 @@ local segmentTypeToString = {
 	end
 
 	function classCombat:GetDifficulty()
-		return self.is_boss and self.is_boss.diff
+		local bossInfo = self:GetBossInfo()
+		if (bossInfo) then
+			local difficultyId = bossInfo.diff
+			return difficultyId, Details222.storage.DiffIdToName[difficultyId]
+		end
 	end
 
 	function classCombat:GetEncounterCleuID()
@@ -936,12 +940,31 @@ local segmentTypeToString = {
 		end
 	end
 
+	function classCombat:CutDeathEventsByTime(time)
+		time = time or 10
+		local deathsTable = self:GetDeaths()
+		for i = #deathsTable, 1, -1 do
+			local deathTable = deathsTable[i]
+			local playerName, playerClass, deathTime, deathCombatTime, deathTimeString, playerMaxHealth, deathEvents, lastCooldown, spec = Details:UnpackDeathTable(deathTable)
+			for evIndex = #deathEvents, 1, -1 do
+				local event = deathEvents[evIndex]
+				local evType = event[1]
+				if (type(evType) == "boolean") then
+					local eventTime = event[4]
+					if (eventTime+10 < deathTime) then
+						table.remove(deathEvents, evIndex)
+					end
+				end
+			end
+		end
+	end
+
 	--return the total of a specific attribute
 	local power_table = {0, 1, 3, 6, 0, "alternatepower"}
 
 	---return the total of a specific attribute, example: total damage, total healing, total resources, etc
 	---@param attribute number
-	---@param subAttribute number
+	---@param subAttribute number?
 	---@param onlyGroup boolean?
 	---@return number
 	function classCombat:GetTotal(attribute, subAttribute, onlyGroup)

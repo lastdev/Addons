@@ -173,7 +173,7 @@ local moiHandle do
 		else
 			r.itemID, r.currencyID, r.tooltipTitle, r.tooltipText = rt
 			r.quantity:SetText(d[3] > 1 and d[3] or "")
-			r.icon:SetTexture(select(10, GetItemInfo(r.itemID)) or GetItemIcon(r.itemID) or "Interface/Icons/Temp")
+			r.icon:SetTexture(C_Item.GetItemIconByID(r.itemID) or "Interface/Icons/Temp")
 		end
 		r:Show()
 	end

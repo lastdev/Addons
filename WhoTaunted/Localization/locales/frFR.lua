@@ -6,8 +6,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("WhoTaunted", "frFR", false);
 if not L then return end
 
 L["<WhoTaunted>"] = true
---[[Translation missing --]]
-L["A new Who Taunted? version is available!"] = "A new Who Taunted? version is available!"
+L["A new Who Taunted? version is available!"] = "Une nouvelle version de Who Taunted est disponible!"
 L["against"] = "contre"
 L["Announcements"] = "Annonces"
 L["Anounce AOE Taunts"] = "Annoncer les taunts de zone"
@@ -19,8 +18,7 @@ L["Anounce Taunts"] = "Annoncer les taunts"
 L["Anounce Taunts Output:"] = "Canal de sortie des taunts :"
 L["Anounce taunts that fail."] = "Annoncer les taunts ratés."
 L["Anounce taunts."] = "Annoncer les taunts."
---[[Translation missing --]]
-L["AOE"] = "AOE"
+L["AOE"] = "Zone d'effet"
 L["AOE taunted using"] = "à fait un taunt de zone avec"
 L["Chat Window"] = "Fenêtre de chat"
 --[[Translation missing --]]
@@ -29,11 +27,9 @@ L["Default the output to Self if any of the below outputs are unavailable. For e
 L["Default to Self"] = "Default to Self"
 L["Disable Who Taunted?"] = "Désactiver Who Taunted ?"
 L["Disable Who Taunted? in Battlegrounds"] = "Désactiver <Who Taunted ?> dans les champs de batailles"
---[[Translation missing --]]
-L["Disable Who Taunted? in PvP Zones"] = "Disable Who Taunted? in PvP Zones"
+L["Disable Who Taunted? in PvP Zones"] = "Désactiver Who Taunted lorsque vous êtes dans une zone PvP ?"
 L["Disables Who Taunted? while you are in a battleground."] = "Désactiver <Who Taunted ?> dans les champs de batailles."
---[[Translation missing --]]
-L["Disables Who Taunted? while you are in PvP Zones such as Ashran."] = "Disables Who Taunted? while you are in PvP Zones such as Ashran."
+L["Disables Who Taunted? while you are in PvP Zones such as Ashran."] = "Désactiver Who Taunted lorsque vous êtes dans une zone PvP comme A’shran ?"
 L["Disables Who Taunted?."] = "Désactiver Who Taunted ?"
 L["Display Ability"] = "Afficher les techniques"
 L["Display the ability that was used to taunt."] = "Afficher les techniques utilisées pour taunter."

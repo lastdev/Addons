@@ -8,6 +8,10 @@ if ns:IsSameLocale("itIT") then
 	L.LOCALE_NAME = "itIT"
 
 	L["ALLOW_IN_LFD"] = "Abilita in Ricerca delle Incursioni"
+--[[Translation missing --]]
+--[[ L["ALLOW_IN_LFD_CLASSIC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ALLOW_IN_LFD_CLASSIC_DESC"] = ""--]] 
 L["ALLOW_IN_LFD_DESC"] = "Fai clic con il pulsante destro del mouse su gruppi o candidati in Ricerca delle Incusioni per copiare l'URL del Profilo Raider.IO"
 L["ALLOW_ON_PLAYER_UNITS"] = "Consenti su Frame Unità Giocatore"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = "Fare clic con il tasto destro del mouse sulla finestra di un Giocatore per Copiare l'URL del Profilo Raider.IO."
@@ -106,8 +110,7 @@ L["DUNGEON_SHORT_NAME_TOTT"] = "TDM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
 L["DUNGEON_SHORT_NAME_UNDR"] = "GROT"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_UPPR"] = ""--]] 
+L["DUNGEON_SHORT_NAME_UPPR"] = "KS"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
 L["DUNGEON_SHORT_NAME_VP"] = "PDV"
@@ -162,6 +165,10 @@ L["MINIMAP_SHORTCUT_ENABLE"] = "Abilita il Pulsante"
 L["MINIMAP_SHORTCUT_ENABLE_DESC"] = "Abilita per visualizzare l'icona attorno alla minimappa. Ciò lo renderà disponibile anche in qualsiasi altro addon che supporti il ​​sistema broker."
 L["MINIMAP_SHORTCUT_HEADER"] = "Minimappa"
 L["MINIMAP_SHORTCUT_HELP"] = "|A:newplayertutorial-icon-mouse-leftbutton:16:12|a Cerca |A:newplayertutorial-icon-mouse-rightbutton:16:12|a Impostazioni"
+L["MINIMAP_SHORTCUT_HELP_LEFT_CLICK"] = "Click Sinistro"
+L["MINIMAP_SHORTCUT_HELP_RIGHT_CLICK"] = "Click Destro"
+L["MINIMAP_SHORTCUT_HELP_SEARCH"] = "Ricerca"
+L["MINIMAP_SHORTCUT_HELP_SETTINGS"] = "Impostazioni "
 L["MINIMAP_SHORTCUT_LOCK"] = "Pulsante di blocco"
 L["MODULE_AMERICAS"] = "America"
 L["MODULE_EUROPE"] = "Europa"
@@ -187,12 +194,9 @@ L["PROFILE_BEST_RUNS"] = "Miglior Corsa per Spedizione"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Blocca il frame del profilo Raider.IO o abilita il posizionamento automatico per nascondere questo ancoraggio."
 L["PROVIDER_NOT_LOADED"] = "| cffFF0000Warning: | r | cffFFFFFF% s | r non riesce a trovare i dati per la fazione corrente. Controllare le impostazioni | cffFFFFFF / raiderio | r e abilitare i dati del tooltip per | cffFFFFFF% s | r."
 L["PVP_DATA_HEADER"] = "Profilo PvP Raider.IO"
---[[Translation missing --]]
---[[ L["RAID_AATDH"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_AATSC"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_AVOTI"] = ""--]] 
+L["RAID_AATDH"] = "Amirdrassil, Speranza del Sogno Risvegliata "
+L["RAID_AATSC"] = "Aberrus, il Crogiolo d'Ombra Risvegliata "
+L["RAID_AVOTI"] = "Segrete delle Incarnazioni Risvegliata "
 L["RAID_BOSS_AATDH_1"] = "Torciradice "
 L["RAID_BOSS_AATDH_2"] = "Igira la Crudele"
 --[[Translation missing --]]
@@ -243,6 +247,28 @@ L["RAID_BOSS_AVOTI_5"] = "Dathea, l'Ascesa"
 L["RAID_BOSS_AVOTI_6"] = "Kurog Totem Truce"
 L["RAID_BOSS_AVOTI_7"] = "Custode della Progenie Diurna"
 L["RAID_BOSS_AVOTI_8"] = "Raszageth la Mangiatempeste"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BOT_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BWD_6"] = ""--]] 
 L["RAID_BOSS_CN_1"] = "Alagrigia"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor il Predatore"
@@ -316,6 +342,32 @@ L["RAID_BOSS_CN_9"] = "Generali della Legione di Pietra "
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_FSOD_9"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_12"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ICC_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_RS_1"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_SFO_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_SFO_10"] = ""--]] 
@@ -358,6 +410,10 @@ L["RAID_BOSS_CN_9"] = "Generali della Legione di Pietra "
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_SOD_9"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_TOTFW_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOTFW_2"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_VOTI_2"] = ""--]] 
@@ -367,13 +423,33 @@ L["RAID_BOSS_VOTI_5"] = "Dathea, l'Ascesa"
 L["RAID_BOSS_VOTI_6"] = "Kurog Totem Truce"
 L["RAID_BOSS_VOTI_7"] = "Custode della Progenie Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth la Mangiatempeste"
+--[[Translation missing --]]
+--[[ L["RAID_BOT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BWD"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Eroica"
+L["RAID_DIFFICULTY_NAME_HEROIC10"] = "Eroico 10"
+L["RAID_DIFFICULTY_NAME_HEROIC25"] = "Eroico 25"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mitica"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normale"
+L["RAID_DIFFICULTY_NAME_NORMAL10"] = "Normale 10"
+L["RAID_DIFFICULTY_NAME_NORMAL25"] = "Normale 25"
 L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = "HC"
+L["RAID_DIFFICULTY_SUFFIX_HEROIC10"] = "E10"
+L["RAID_DIFFICULTY_SUFFIX_HEROIC25"] = "E25"
 L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "NM"
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = ""--]] 
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Boss Incursione Sconfitti"
+--[[Translation missing --]]
+--[[ L["RAID_ICC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_RS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_TOTFW"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Media Punteggio per +%s in Tempo"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO M+ Migliore Run"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalizzazione del client RaiderIO"
@@ -456,6 +532,8 @@ L["SHOW_CURRENT_SEASON_DESC"] = "Mostra il punteggio attuale della stagione Miti
 L["SHOW_IN_FRIENDS"] = "Mostra in Elenco Amici"
 L["SHOW_IN_FRIENDS_DESC"] = "Mostra il Punteggio M+ quando passi il Mouse sopra i tuoi Amici"
 L["SHOW_IN_LFD"] = "Mostra in Ricerca delle Spedizioni"
+--[[Translation missing --]]
+--[[ L["SHOW_IN_LFD_CLASSIC"] = ""--]] 
 L["SHOW_IN_LFD_DESC"] = "Mostra il Punteggio M+ quando passi il mouse sopra gruppi o candidati."
 L["SHOW_IN_SLASH_WHO_RESULTS"] = "Mostra nei risultati del comando /chi"
 L["SHOW_IN_SLASH_WHO_RESULTS_DESC"] = "Mostra il Punteggio M+ quando esegui il comendo /chi su un personaggio specifico."
@@ -478,6 +556,7 @@ L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Sperimentale) Dai la priorità a Raider.IO 
 L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Questa è una funzionalità sperimentale. Invece di mostrare il punteggio Raider.IO come prima riga, mostra la miglior run del giocatore."
 L["SHOW_RAIDERIO_PROFILE"] = "Mostra il Tooltip del Profilo RaiderIO"
 L["SHOW_RAIDERIO_PROFILE_DESC"] = "Mostra il Popup del Profilo RaiderIO"
+L["SHOW_RAIDERIO_PROFILE_OPTION"] = "Mostra Profilo Raider.IO"
 L["SHOW_ROLE_ICONS"] = "Mostra Icone Ruolo nei Tooltip"
 L["SHOW_ROLE_ICONS_DESC"] = "Quando abilitata, i migliori ruoli del giocatore in Mitico+ saranno mostrati nel tooltip."
 L["SHOW_SCORE_IN_COMBAT"] = "Mostra Punteggio in Combattimento"

@@ -4,51 +4,34 @@ June 21st, 2009
 --]]
 if not DataStore then return end
 
-local addonName = "DataStore_Achievements"
+local addonName, addon = ...
+local thisCharacter
 
-_G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0")
-
-local addon = _G[addonName]
-
-local AddonDB_Defaults = {
-	global = {
-		Account = {
-			Partial = {},
-			Completed = {},
-			CompletionDates = {},
-		},
-		Guilds = {
-			['*'] = {			-- ["Account.Realm.Name"]
-				numAchievements = 0,
-				numCompletedAchievements = 0,
-				numAchievementPoints = 0,
-
-				Partial = {},
-				Completed = {},
-				CompletionDates = {},
-			},
-		},
-		Characters = {
-			['*'] = {					-- ["Account.Realm.Name"]
-				lastUpdate = nil,
-				numAchievements = 0,
-				numCompletedAchievements = 0,
-				numAchievementPoints = 0,
-				guid = nil,
-
-				Partial = {},
-				Completed = {},
-				CompletionDates = {},
-				Tabards = {},
-			}
-		}
-	}
-}
+local TableConcat, TableInsert, format, floor, select, time = table.concat, table.insert, format, math.floor, select, time
+local GetAchievementCriteriaInfoByID, GetAchievementNumCriteria, GetAchievementCriteriaInfo, GetAchievementInfo = GetAchievementCriteriaInfoByID, GetAchievementNumCriteria, GetAchievementCriteriaInfo, GetAchievementInfo
+local GetCategoryList, GetCategoryNumAchievements, GetPreviousAchievement, GetNumCompletedAchievements = GetCategoryList, GetCategoryNumAchievements, GetPreviousAchievement, GetNumCompletedAchievements
+local GetTotalAchievementPoints, GetInventorySlotInfo, GetInventoryItemLink, UnitGUID = GetTotalAchievementPoints, GetInventorySlotInfo, GetInventoryItemLink, UnitGUID
+local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 
 -- *** Utility functions ***
 local bAnd = bit.band
-local bOr = bit.bor
-local TestBit = DataStore.TestBit
+local bit64 = LibStub("LibBit64")
+
+local function IsAccountBound(flags)
+	return bit.band(flags, ACHIEVEMENT_FLAGS_ACCOUNT) == ACHIEVEMENT_FLAGS_ACCOUNT
+end
+
+local function DateToInt(month, day, year)
+	return year * 10000 + month * 100 + day
+end
+
+local function IntDateToStr(intDate)
+	local year = floor(intDate / 10000)
+	local month = floor((intDate % 10000) / 100)
+	local day = intDate % 100
+	
+	return format("%d:%d:%d", month, day, year)
+end
 
 -- *** Scanning functions ***
 local CriteriaCache = {}
@@ -70,29 +53,36 @@ local function ScanTabards()
 	}
 
 	local criteriaID, icCompleted
+	local tabards = thisCharacter.Tabards
 
 	for i = 1, #tabardCriteriaIDs do
 		criteriaID = tabardCriteriaIDs[i]
-		local _, _, isCompleted = GetAchievementCriteriaInfoByID(TABARDS_ACHIEVEMENT_ID, criteriaID)
+		isCompleted = select(3, GetAchievementCriteriaInfoByID(TABARDS_ACHIEVEMENT_ID, criteriaID))
 
-		addon.ThisCharacter.Tabards[criteriaID] = (isCompleted == true) and true or nil
+		tabards[criteriaID] = (isCompleted == true) and true or nil
 	end
 end
 
 local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, wasEarnedByMe)
+--[[
+	How achievements are saved :
+	- Storage : in the character's table. Account-wide achievements are no longer saved.
+	- Structure:
+		- If an achievement is fully completed, it is saved in the "Completed" and "CompletionDates" tables.
+		- If it is partially complete:
+			- There is only 1 criteria, and that criteria is a quantity : saved in "Partial", as a number
+			- There is more than 1 criteria:
+				- At least one criteria has a progression : saved in "Partial", as a string
+				- Every criteria is a simple true/false flag : saved in "PartialBits", into a number (64 bits)
+		
+		- If an achievement is not completed, not even started, it is not saved at all.
+--]]
 	if not id or not flags then return end	 -- no id or no flags, exit
-	
-	local storage		-- pointer to the destination location of this achievement's info (ie = character or account)
 
-	local isAccountBound = ( bAnd(flags, ACHIEVEMENT_FLAGS_ACCOUNT) == ACHIEVEMENT_FLAGS_ACCOUNT )
+	-- Account-wide achievements are no longer saved.
+	if IsAccountBound(flags) then return end
 
-	if isAccountBound then
-		-- if true, achievement is account wide, save in a shared location
-		storage = addon.db.global.Account
-	else
-		storage = addon.ThisCharacter
-	end
-
+	local storage = thisCharacter
 	storage.lastUpdate = time()
 
 	--[[ Achievements can have 3 different statuses :
@@ -103,21 +93,23 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, w
 	--]]
 
 	-- 1) Fully completed achievements
+	local index, bitPos
+	
 	if isCompleted and wasEarnedByMe then
 		local completed = storage.Completed
-		local bitPos = (id % 32)
-		local index = ceil(id / 32)
+		bitPos = (id % 64)
+		index = ceil(id / 64)
 
 		-- true when completed, all criterias are completed thus
-		completed[index] = bOr((completed[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
-
-		storage.CompletionDates[id] = format("%d:%d:%d", month, day, year)
+		completed[index] = bit64:SetBit((completed[index] or 0), bitPos)
+		storage.CompletionDates[id] = DateToInt(month, day, year)
+		
 		return
 	end
 
-	local num = GetAchievementNumCriteria(id)
-
 	-- 2) Partially completed achievements (with a single criteria)
+	local num = GetAchievementNumCriteria(id)
+	
 	if num == 1 then
 		-- if there's only 1 criteria, we know for sure it hasn't been completed (otherwise the achievement itself would be completed)
 		-- so only the quantity matters (and only if it's > 0)
@@ -125,15 +117,20 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, w
 		if quantity and quantity > 0 then
 			storage.Partial[id] = quantity
 		end
+		
 		return
 	end
 
+	-- 3) Partially completed achievements (with multiple criteria)
+	local partialBits = 0
+	local hasProgress = false
 	wipe(CriteriaCache)
 
-	-- 3) Partially completed achievements (with multiple criteria)
+	local critCompleted, quantity, reqQuantity, _
+	
 	for j = 1, num do
 		-- ** calling GetAchievementCriteriaInfo in this loop is what costs the most in terms of cpu time **
-		local _, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(id, j)
+		_, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(id, j)
 
 		-- MoP fix, some achievements not completed by current alt, but completed by another alt, return that the criteria is completed, even when it's not
 		-- This is visible for reputation achievements for example.
@@ -142,16 +139,29 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, w
 		end
 
 	   if critCompleted then
-	      table.insert(CriteriaCache, tostring(j))
+	      TableInsert(CriteriaCache, tostring(j))
+			
+			if num <= 63 then
+				partialBits = bit64:SetBit(partialBits, j)
+			-- else
+				-- we have a problem if more than 64 criteria in an achievement..
+			end
 	   else
 	      if quantity and reqQuantity and quantity > 0 and reqQuantity > 1 then		-- a quantity of 0 = not started, don't save !
-	         table.insert(CriteriaCache, j .. ":" .. quantity)
+	         TableInsert(CriteriaCache, format("%d:%d", j, quantity))
+				hasProgress = true
 	      end
 	   end
 	end
 
 	if #CriteriaCache > 0 then		-- if at least one criteria completed, save the entry, do nothing otherwise
-		storage.Partial[id] = table.concat(CriteriaCache, ",")
+		
+		if hasProgress then
+			storage.Partial[id] = TableConcat(CriteriaCache, ",")
+		else
+			-- store partial bits as a number (completed criteria 1,4,5 ? set bits 1,4,5
+			storage.PartialBits[id] = partialBits
+		end
 	end
 end
 
@@ -159,19 +169,18 @@ local function ScanAllAchievements()
 	-- 2021/06/25 : do not wipe information about fully completed achievements, they will not go "uncompleted" any time soon.
 	-- The reason is that achievements that are both horde and alliance have different id's, and wiping would cancel the achievement
 	-- when logging on with the other faction. (especially for account-wide achievements)
-	wipe(addon.db.global.Account.Partial)
-	-- wipe(addon.db.global.Account.Completed)
-	-- wipe(addon.db.global.Account.CompletionDates)
-	wipe(addon.ThisCharacter.Partial)
-	-- wipe(addon.ThisCharacter.Completed)
-	-- wipe(addon.ThisCharacter.CompletionDates)
+
+	wipe(thisCharacter.Partial)
+	wipe(thisCharacter.PartialBits)
 
 	local cats = GetCategoryList()
 	local prevID
 
-	for _, categoryID in ipairs(cats) do
+	local achievementID, achCompleted, month, day, year, flags, wasEarnedByMe, earnedBy, _
+
+	for k, categoryID in ipairs(cats) do
 		for i = 1, GetCategoryNumAchievements(categoryID) do
-			local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(categoryID, i)
+			achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(categoryID, i)
 			if achievementID then
 				ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
 
@@ -179,7 +188,7 @@ local function ScanAllAchievements()
 				prevID = GetPreviousAchievement(achievementID)
 
 				while type(prevID) ~= "nil" do
-					local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(prevID)
+					achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(prevID)
 					if not achievementID then break end	-- exit the loop if id is invalid
 					
 					ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
@@ -191,7 +200,7 @@ local function ScanAllAchievements()
 end
 
 local function ScanProgress()
-	local char = addon.ThisCharacter
+	local char = thisCharacter
 	local total, completed = GetNumCompletedAchievements()
 
 	char.numAchievements = total
@@ -199,71 +208,132 @@ local function ScanProgress()
 	char.numAchievementPoints = GetTotalAchievementPoints()
 end
 
-
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	-- for some reason, since 4.1, the event seems to be triggered repeatedly when a player releases after death, I could not clearly identify the cause
 	-- but I could reproduce the issue and work around it by unregistering the event.
-	addon:UnregisterEvent("PLAYER_ALIVE")
+	addon:StopListeningTo("PLAYER_ALIVE")
 
 	ScanAllAchievements()
 	ScanProgress()
 	
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then
+	if not isRetail then
 		ScanTabards()
 	end
 
-	addon.ThisCharacter.guid = UnitGUID("player") -- Get the GUID for achievement links
-end
-
-local function OnAchievementEarned(event, id)
-	if id then
-		local _, _, _, achCompleted, month, day, year, _, flags, _, _, _, wasEarnedByMe = GetAchievementInfo(id)
-		ScanSingleAchievement(id, true, month, day, year, flags, wasEarnedByMe)
-		ScanProgress()
-	end
-end
-
-local function OnPlayerEquipmentChanged(slot)
-	-- if it's the tabard slot and we actually equipped one, then scan
-	local tabardSlot = GetInventorySlotInfo("TabardSlot")
-	if slot == tabardSlot and GetInventoryItemLink("player", tabardSlot) then
-		ScanTabards()
-	end
+	thisCharacter.guid = UnitGUID("player") -- Get the GUID for achievement links
 end
 
 -- ** Mixins **
-local function _GetAchievementInfo(character, achievementID, isAccountBound)
-	local index = ceil(achievementID / 32)
-	local source = (isAccountBound) and addon.db.global.Account or character
+local function GetAccountWideAchievementInfo(achievementID)
+	-- 1) Fully completed achievements
+	local isCompleted = select(4, GetAchievementInfo(achievementID))
+	if isCompleted then
+		return true, true			-- The achievement is started and completed
+	end
+	
+	-- 2) Partially completed achievements (with a single criteria)
+	local num = GetAchievementNumCriteria(achievementID)
+	if num == 1 then
+		-- if there's only 1 criteria, we know for sure it hasn't been completed 
+		-- (otherwise the achievement itself would be completed)
+		return true, nil		-- started, not completed
+	end
+	
+	-- 3) Partially completed achievements (with multiple criteria)
+	local critCompleted, quantity, reqQuantity, _
 
-	if source.Completed[index] then				-- if there's a potential index for this id ..
-		local bitPos = (achievementID % 32)
-		if TestBit(source.Completed[index], bitPos) then -- .. and if the right bit is set ..
+	-- try all criteria, if at least one is completed, then it's a partial completion
+	for j = 1, num do
+		_, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(achievementID, j)
+
+		-- MoP fix, some achievements not completed by current alt, but completed by another alt, return that the criteria is completed, even when it's not
+		-- This is visible for reputation achievements for example.
+		if quantity < reqQuantity then
+			critCompleted = false
+		end
+
+	   if critCompleted then
+	      return true, nil		-- started, not completed
+	   else
+	      if quantity and reqQuantity and quantity > 0 and reqQuantity > 1 then		-- a quantity of 0 = not started, don't save !
+	         return true, nil		-- started, not completed
+	      end
+	   end
+	end
+	
+	-- not started, not completed
+	-- implicit return of nil, nil otherwise
+end
+
+local function _GetAchievementInfo(character, achievementID, isAccountBound)
+	-- account bound are no longer saved, just query the game's API
+	if isAccountBound then
+		return GetAccountWideAchievementInfo(achievementID)
+	end
+
+	local index = ceil(achievementID / 64)
+
+	if character.Completed[index] then				-- if there's a potential index for this id ..
+		local bitPos = (achievementID % 64)
+		if bit64:TestBit(character.Completed[index], bitPos) then -- .. and if the right bit is set ..
 			return true, true			-- .. then achievement is started and completed
 		end
 	end
 
-	if source.Partial[achievementID] then
+	if character.Partial[achievementID] or character.PartialBits[achievementID] then
 		return true, nil		-- started, not completed
 	end
 
 	-- implicit return of nil, nil otherwise
 end
 
-local function _GetCriteriaInfo(character, achievementID, criteriaIndex, isAccountBound)
-	local source = (isAccountBound) and addon.db.global.Account or character
+local function GetAccountWideCriteriaInfo(achievementID, criteriaIndex)
+	local _, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(achievementID, criteriaIndex)
 
-	local achievement = source.Partial[achievementID]
+	-- MoP fix, some achievements not completed by current alt, but completed by another alt, return that the criteria is completed, even when it's not
+	-- This is visible for reputation achievements for example.
+	if quantity < reqQuantity then
+		critCompleted = false
+	end
+	
+	if critCompleted then
+		return true, true				-- The criteria is started and completed
+	else
+		return true, nil, quantity	-- The criteria is started, not completed, + quantity
+	end
+end
+
+local function _GetCriteriaInfo(character, achievementID, criteriaIndex, isAccountBound)
+	-- account bound are no longer saved, just query the game's API
+	if isAccountBound then
+		return GetAccountWideCriteriaInfo(achievementID, criteriaIndex)
+	end
+
+	local achievement = character.PartialBits[achievementID]
+	-- if we have partial bits.. check them
+	if achievement then
+		-- no need for "criteriaIndex - 1" because we do not save partials in bit 0
+		local icCompleted = bit64:TestBit(achievement, criteriaIndex)
+		
+		if icCompleted then
+			return true, true			-- .. then criteria is started and completed
+		end
+		
+		return	-- nil, nil : not started, not completed
+	end
+	
+	achievement = character.Partial[achievementID]
 
 	if type(achievement) == "number" then	-- number = only 1 criteria
 		return true, nil, achievement			-- started, not complete, quantity
 	end
 
 	if type(achievement) == "string" then	-- string = multiple criteria
-
+		
+		local index, qty
 		for v in achievement:gmatch("([^,]+)") do
-			local index, qty = strsplit(":", v)
+			index, qty = strsplit(":", v)
 
 			index = tonumber(index)
 			qty = tonumber(qty)
@@ -285,37 +355,28 @@ local function _GetCriteriaInfo(character, achievementID, criteriaIndex, isAccou
 	-- implicit return of nil, nil , nil 	(not started, not complete)
 end
 
-local function _GetNumAchievements(character)
-	return character.numAchievements
+local bitset = { 0, 0, 0, 0 }		-- a simple array that will contain the 4 values to store into "criterias"
+
+local function ClearBitSet()
+	bitset[1] = 0
+	bitset[2] = 0
+	bitset[3] = 0
+	bitset[4] = 0
 end
 
-local function _GetNumCompletedAchievements(character)
-	return character.numCompletedAchievements
-end
-
-local function _GetNumAchievementPoints(character)
-	return character.numAchievementPoints
-end
-
-local function _GetAchievementLink(character, achievementID)
-	-- information sources :
-		-- http://www.wowwiki.com/AchievementLink
-		-- http://www.wowwiki.com/AchievementString
-	if not character.guid then return end
-
-	local link
+local function GetCompletionInfo(character, achievementID)
 	local completion		-- will contain: finished (0 or 1), month, day, year
 	local criterias
 
 	local index = ceil(achievementID / 32)
 	if character.Completed[index] then				-- if there's a potential index for this id ..
 		local bitPos = (achievementID % 32)
-		if TestBit(character.Completed[index], bitPos) then -- .. and if the right bit is set ..
+		if bit64:TestBit(character.Completed[index], bitPos) then -- .. and if the right bit is set ..
 			-- .. then achievement is started and completed
 			local completionDate = character.CompletionDates[achievementID]
 			if not completionDate then return end		-- if there's no data yet for this achievement, the link can't be created, return nil
 
-			completion = format("1:%s", completionDate)							-- ex: 1:12:19:8		1 = finished, on 12/19/2008
+			completion = format("1:%s", IntDateToStr(completionDate))			-- ex: 1:12:19:8		1 = finished, on 12/19/2008
 			criterias = "4294967295:4294967295:4294967295:4294967295"		-- 4294967295 = the highest 32-bit value = 32 bits set to 1
 		end
 	end
@@ -323,10 +384,10 @@ local function _GetAchievementLink(character, achievementID)
 	if not completion then	-- if it wasn't a completed achievement, maybe it's a partially completed one
 		completion = "0:0:0:-1"
 
-		local bitset = { 0, 0, 0, 0 }		-- a simple array that will contain the 4 values to store into "criterias"
-		local numCriteria = GetAchievementNumCriteria(achievementID)
+		local num = GetAchievementNumCriteria(achievementID)
+		ClearBitSet()
 
-		for criteriaIndex = 1, numCriteria do			-- browse all criterias
+		for criteriaIndex = 1, num do						-- browse all criterias
 			local index = ceil(criteriaIndex / 32)		-- store in bitset[1], [2] ..
 
 			local _, isComplete = _GetCriteriaInfo(character, achievementID, criteriaIndex)
@@ -337,10 +398,58 @@ local function _GetAchievementLink(character, achievementID)
 			end
 		end
 
-		criterias = table.concat(bitset, ":")
+		criterias = TableConcat(bitset, ":")
 	end
+	
+	return completion, criterias
+end
 
-	local _, name = GetAchievementInfo(achievementID)
+local function GetAccountWideCompletionInfo(achievementID)
+	local completion, criterias
+	
+	local _, isComplete = GetAccountWideAchievementInfo(achievementID)
+	if isComplete then
+		local _, _, _, _, month, day, year = GetAchievementInfo(achievementID)
+		completion = format("1:%d:%d:%d", month, day, year)	-- ex: 1:12:19:8		1 = finished, on 12/19/2008
+		criterias = "4294967295:4294967295:4294967295:4294967295"		-- 4294967295 = the highest 32-bit value = 32 bits set to 1
+	
+	else
+		completion = "0:0:0:-1"
+		
+		local num = GetAchievementNumCriteria(achievementID)
+		ClearBitSet()
+
+		for criteriaIndex = 1, num do						-- browse all criterias
+			local index = ceil(criteriaIndex / 32)		-- store in bitset[1], [2] ..
+
+			local _, isComplete = GetAccountWideCriteriaInfo(achievementID, criteriaIndex)
+			if isComplete then
+				local pos = mod(criteriaIndex, 32)		-- pos must be within [1 .. 32]
+				pos = (pos == 0) and 32 or pos			-- if the modulo leads to 0, change it to 32
+				bitset[index] = bitset[index] + (2^(pos-1))		-- I'll change this to use bit functions later on, for the time being, this works fine.
+			end
+		end
+
+		criterias = TableConcat(bitset, ":")
+	end
+	
+	return completion, criterias
+end
+
+local function _GetAchievementLink(character, achievementID)
+	-- information sources :
+		-- http://www.wowwiki.com/AchievementLink
+		-- http://www.wowwiki.com/AchievementString
+	if not character.guid then return end
+
+	local _, name, _, _, _, _, _, _, flags = GetAchievementInfo(achievementID)
+	local completion, criterias
+	
+	if IsAccountBound(flags) then
+		completion, criterias = GetAccountWideCompletionInfo(achievementID)
+	else
+		completion, criterias = GetCompletionInfo(character, achievementID)
+	end
 
 	return format("|cffffff00|Hachievement:%s:%s:%s:%s|h\[%s\]|h|r", achievementID, character.guid, completion, criterias, name)
 end
@@ -351,37 +460,68 @@ local function _IsTabardKnown(character, criteriaID)
 	end
 end
 
-local PublicMethods = {
-	GetAchievementInfo = _GetAchievementInfo,
-	GetCriteriaInfo = _GetCriteriaInfo,
-	GetNumAchievements = _GetNumAchievements,
-	GetNumCompletedAchievements = _GetNumCompletedAchievements,
-	GetNumAchievementPoints = _GetNumAchievementPoints,
-	GetAchievementLink = _GetAchievementLink,
-	IsTabardKnown = _IsTabardKnown,
-}
+DataStore:OnAddonLoaded(addonName, function()
+	DataStore:RegisterModule({
+		addon = addon,
+		addonName = addonName,
+		characterTables = {
+			["DataStore_Achievements_Characters"] = {
+				GetNumAchievements = function(character)
+					return character.numAchievements
+				end,
+				GetNumCompletedAchievements = function(character)
+					return character.numCompletedAchievements
+				end,
+				GetNumAchievementPoints = function(character)
+					return character.numAchievementPoints
+				end,
+				GetAchievementInfo = _GetAchievementInfo,
+				GetAchievementLink = _GetAchievementLink,
+				GetCriteriaInfo = _GetCriteriaInfo,
+				IsTabardKnown = _IsTabardKnown,
+			},
+		}
+	})
+	
+	thisCharacter = DataStore:GetCharacterDB("DataStore_Achievements_Characters", true)
+	thisCharacter.Partial = thisCharacter.Partial or {}
+	thisCharacter.PartialBits = thisCharacter.PartialBits or {}
+	thisCharacter.Completed = thisCharacter.Completed or {}
+	thisCharacter.CompletionDates = thisCharacter.CompletionDates or {}
+	
+	if not isRetail then
+		thisCharacter.Tabards = thisCharacter.Tabards or {}
+	end
+end)
 
-function addon:OnInitialize()
-	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
+DataStore:OnPlayerLogin(function() 
+	addon:ListenTo("PLAYER_ALIVE", function()
+		-- for some reason, since 4.1, the event seems to be triggered repeatedly when a player releases after death, I could not clearly identify the cause
+		-- but I could reproduce the issue and work around it by unregistering the event.
+		addon:StopListeningTo("PLAYER_ALIVE")
 
-	DataStore:RegisterModule(addonName, addon, PublicMethods)
-	DataStore:SetCharacterBasedMethod("GetAchievementInfo")
-	DataStore:SetCharacterBasedMethod("GetCriteriaInfo")
-	DataStore:SetCharacterBasedMethod("GetNumAchievements")
-	DataStore:SetCharacterBasedMethod("GetNumCompletedAchievements")
-	DataStore:SetCharacterBasedMethod("GetNumAchievementPoints")
-	DataStore:SetCharacterBasedMethod("GetAchievementLink")
-	DataStore:SetCharacterBasedMethod("IsTabardKnown")
-end
+		ScanAllAchievements()
+		ScanProgress()
+		
+		if not isRetail then
+			ScanTabards()
+		end
 
-function addon:OnEnable()
-	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-	addon:RegisterEvent("ACHIEVEMENT_EARNED", OnAchievementEarned)
-	addon:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", OnPlayerEquipmentChanged)
-end
-
-function addon:OnDisable()
-	addon:UnregisterEvent("PLAYER_ALIVE")
-	addon:UnregisterEvent("ACHIEVEMENT_EARNED")
-	addon:UnregisterEvent("PLAYER_EQUIPMENT_CHANGED")
-end
+		thisCharacter.guid = UnitGUID("player") -- Get the GUID for achievement links
+	end)
+	addon:ListenTo("ACHIEVEMENT_EARNED", function(event, id)
+		if id then
+			local _, _, _, achCompleted, month, day, year, _, flags, _, _, _, wasEarnedByMe = GetAchievementInfo(id)
+			ScanSingleAchievement(id, true, month, day, year, flags, wasEarnedByMe)
+			ScanProgress()
+		end
+	end)
+	addon:ListenTo("PLAYER_EQUIPMENT_CHANGED", function(slot)
+		-- if it's the tabard slot and we actually equipped one, then scan
+		local tabardSlot = GetInventorySlotInfo("TabardSlot")
+		
+		if slot == tabardSlot and GetInventoryItemLink("player", tabardSlot) then
+			ScanTabards()
+		end
+	end)
+end)

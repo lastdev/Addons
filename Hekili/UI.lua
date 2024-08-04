@@ -18,6 +18,21 @@ local multiUnpack = ns.multiUnpack
 local orderedPairs = ns.orderedPairs
 local round = ns.round
 
+local IsCurrentItem = C_Item.IsCurrentItem
+local IsUsableItem = C_Item.IsUsableItem
+local IsCurrentSpell = C_Spell.IsCurrentSpell
+local GetItemCooldown = C_Item.GetItemCooldown
+local GetSpellTexture = C_Spell.GetSpellTexture
+local IsUsableSpell = C_Spell.IsSpellUsable
+
+local GetSpellCooldown = function(spellID)
+    local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID)
+    if spellCooldownInfo then
+        return spellCooldownInfo.startTime, spellCooldownInfo.duration, spellCooldownInfo.isEnabled, spellCooldownInfo.modRate
+    end
+    return 0, 0, false, 0
+end
+
 local format, insert = string.format, table.insert
 
 local HasVehicleActionBar, HasOverrideActionBar, IsInPetBattle, UnitHasVehicleUI, UnitOnTaxi = HasVehicleActionBar, HasOverrideActionBar, C_PetBattles.IsInBattle, UnitHasVehicleUI, UnitOnTaxi
@@ -1489,7 +1504,7 @@ do
 
                         local rStart, rDuration = 0, 0
                         if a.item then
-                            rStart, rDuration = GetItemCooldown( a.item )
+                            rStart, rDuration = C_Item.GetItemCooldown( a.item )
                         else
                             if a.cooldown > 0 or a.spendType ~= "runes" then
                                 rStart, rDuration = GetSpellCooldown( a.id )
@@ -1613,7 +1628,7 @@ do
 
         function d:RefreshCooldowns( event )
             local gStart = GetSpellCooldown( 61304 )
-            local cStart = ( select( 4, UnitCastingInfo( "player" ) ) or select( 4, UnitCastingInfo( "player" ) ) or 0 ) / 1000
+            local cStart = ( select( 4, UnitCastingInfo( "player" ) ) or select( 4, UnitChannelInfo( "player" ) ) or 0 ) / 1000
 
             local now = GetTime()
             local conf = Hekili.DB.profile.displays[ self.id ]

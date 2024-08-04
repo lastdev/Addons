@@ -410,24 +410,33 @@ local function readTalentConfig(configId)
 	local config = C_Traits.GetConfigInfo(configId)
 	if not config or config.type ~= Enum.TraitConfigType.Combat then return nil end
 	
-	local treeIds = config["treeIDs"];
+	local treeIds = config["treeIDs"]
   	for i = 1, #treeIds do
     	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
-      		local node = C_Traits.GetNodeInfo(configId, nodeId)
+			local node = C_Traits.GetNodeInfo(configId, nodeId)
 			if node.ID and node.isVisible and node.maxRanks > 0 then
+
+				-- the root node of subtree will say it is active with one rank, even if the subtree is not active
+				local realRank = node.activeRank
+				if node.subTreeID and not node.subTreeActive then
+					realRank = 0
+				end
+
 				-- need to check node type b/c blizz abandoned a few selection node entries in the data which still show up in a scan here... super annoying and gross
-				if #node.entryIDs > 1  and node.type == 2 then
+				if #node.entryIDs > 1 and node.type == 2 then
 					talMap[node.ID] = {}
 					for e = 1, #node.entryIDs do
 						if node.activeEntry and node.entryIDs[e] == node.activeEntry.entryID then
-							table.insert(talMap[node.ID], node.activeRank)
+							table.insert(talMap[node.ID], realRank)
 						else
 							table.insert(talMap[node.ID], 0)
 						end
 					end
-				else
+				elseif node.type ~= 3 then
+					-- we skip the fake-ish node that chooses the hero tree (type 3), we can infer it if any subtree node is active
+					
 					if node.activeEntry and node.activeRank then
-						talMap[node.ID] = { node.activeRank }
+						talMap[node.ID] = { realRank }
 					else
 						talMap[node.ID] = { 0 }
 					end
@@ -436,20 +445,15 @@ local function readTalentConfig(configId)
 
 			-- for reference if ever need it
 			--[[
-			if node.activeEntry and node.activeRank > 0 then
-				print(Amr:dump(node))
-			end
-      		local activeEntry = node.activeEntry;
-      		local activeRank = node.activeRank;
-      		if activeEntry and activeRank > 0 then
-        		local activeEntryId = activeEntry.entryID;
-        		local entry = C_Traits.GetEntryInfo(configId, activeEntryId);
-          		local defnId = entry["definitionID"];
-          		local defn = C_Traits.GetDefinitionInfo(defnId);
-          		local spellId = defn["spellID"];
-          		local spellName = GetSpellInfo(spellId);
-			end
-			]]
+			local activeEntryId = node.entryIDs[1]
+			local entry = C_Traits.GetEntryInfo(configId, activeEntryId)
+			local defnId = entry["definitionID"]
+			local defn = C_Traits.GetDefinitionInfo(defnId)
+			local spellId = defn["spellID"]
+			local spellName = C_Spell.GetSpellName(spellId)
+			if spellName == "Lightning Strikes" then
+				print(Amr:dump(node))							
+			end]]
 
 		end
 	end
@@ -482,7 +486,7 @@ local function scanActiveTalents()
 	-- grab the currently active config for this spec and save it
 	local configId = C_ClassTalents.GetActiveConfigID()
 	if configId then
-		parsedConfig = readTalentConfig(configId)
+		local parsedConfig = readTalentConfig(configId)
 		if parsedConfig then
 			Amr.db.char.TalentConfigs.LastConfig[specPos] = parsedConfig
 		end

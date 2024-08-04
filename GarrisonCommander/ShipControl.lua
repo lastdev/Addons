@@ -55,9 +55,9 @@ local function chooseBestClass(class,moreClasses)
 
 end
 function module:AcceptMission(missionID,class,value,name,choosenby)
---[===[@debug@
+--[==[@debug@
 	print("Validating",name)
---@end-debug@]===]
+--@end-debug@]==]
 	local ar=settings.allowedRewards
 	value=tonumber(value)
 	if not value then
@@ -72,17 +72,17 @@ function module:AcceptMission(missionID,class,value,name,choosenby)
 		if self:GetMissionData(missionID,"level")<self:GetNumber("MINXPLEVEL") then return false end
 	elseif class=="itemLevel" then
 		if self:GetMissionData(missionID,'itemLevel') < settings.minLevel then
-			--[===[@debug@
+			--[==[@debug@
 			print("  ",missionID,"discarded due to ilevel == ", self:GetMissionData(missionID,'itemLevel'))
-			--@end-debug@]===]
+			--@end-debug@]==]
 			return false
 		end
 	elseif class=="followerUpgrade" then
 		if self:GetMissionData(missionID,'followerUpgrade') < settings.minUpgrade and
 			self:GetMissionData(missionID,'followerUpgrade') > 600 then
-			--[===[@debug@
+			--[==[@debug@
 			print("  ",missionID,"discarded due to followerUpgrade == ", self:GetMissionData(missionID,'followerUpgrade'))
-			--@end-debug@]===]
+			--@end-debug@]==]
 			return false
 		end
 	end
@@ -114,9 +114,9 @@ function module:CreateMissionList(workList)
 		local name=self:GetMissionData(missionID,"name")
 		repeat
 			if not addon:GetMissionData(missionID,"canStart") then break end
-			--[===[@debug@
+			--[==[@debug@
 			print("|cffff0000Examining|r",missionID,name,class,self:GetMissionData(missionID,class),self:GetMissionData(missionID,'type'))
-			--@end-debug@]===]
+			--@end-debug@]==]
 			if missionID==OILRIG and settings.rig then
 				self:AcceptMission(missionID,class,10,name,choosenby)
 				break
@@ -127,28 +127,28 @@ function module:CreateMissionList(workList)
 			end
 			local durationSeconds=addon:GetMissionData(missionID,'durationSeconds')
 			if (durationSeconds > settings.maxDuration * 3600 or durationSeconds <  settings.minDuration * 3600) then
-				--[===[@debug@
+				--[==[@debug@
 				print("  ",missionID,"discarded due to duration",durationSeconds /3600)
-				--@end-debug@]===]
+				--@end-debug@]==]
 				break
 			end -- Mission too long, out of here
 			if addon:GetMissionData(missionID,'isRare') and addon:GetBoolean('GCSKIPRARE') then
-				--[===[@debug@
+				--[==[@debug@
 				print("  ",missionID,"discarded due to rarity")
-				--@end-debug@]===]
+				--@end-debug@]==]
 				break
 			end
 			for _,testclass in ipairs(priority) do
 				if class==testclass or moreClasses[testclass] then
 					if self:AcceptMission(missionID,testclass,addon:GetMissionData(missionID,testclass),name,choosenby) then
-				--[===[@debug@
+				--[==[@debug@
 						print("  ",missionID,"accepted for",testclass)
-				--@end-debug@]===]
+				--@end-debug@]==]
 						break
-				--[===[@debug@
+				--[==[@debug@
 					else
 						print("  ",missionID,"refused for",testclass)
-				--@end-debug@]===]
+				--@end-debug@]==]
 					end
 				end
 			end
@@ -156,18 +156,18 @@ function module:CreateMissionList(workList)
 	end
 	local parties=self:GetParty()
 	table.sort(choosenby)
-	--[===[@debug@
+	--[==[@debug@
 	print("Final worklist")
-	--@end-debug@]===]
+	--@end-debug@]==]
 	local used=new()
 	for i=1,#choosenby do
 		local _1,_2,missionId,_=strsplit('@',choosenby[i])
 		if not used[missionId] then
 			tinsert(workList,tonumber(missionId))
 			used[missionId]=true
-			--[===[@debug@
+			--[==[@debug@
 				print(strjoin(" ",tostringall(missionId,_1,99999999-tonumber(_2))))
-			--@end-debug@]===]
+			--@end-debug@]==]
 		end
 	end
 	del(used)
@@ -179,9 +179,9 @@ end
 -- @param #number missionID Optional, to run a single mission
 -- @param #boolean start Optional, tells that follower already are on mission and that we need just to start it
 function module:RunMission(missionID,start)
-	--[===[@debug@
+	--[==[@debug@
 	print("Asked to start mission",missionID)
-	--@end-debug@]===]
+	--@end-debug@]==]
 	local GMC=GSF.MissionControlTab
 	if (start) then
 		G.StartMission(missionID)
@@ -192,9 +192,9 @@ function module:RunMission(missionID,start)
 	end
 	for i=1,#GMC.list.Parties do
 		local party=GMC.list.Parties[i]
-		--[===[@debug@
+		--[==[@debug@
 		print("Checking",party.missionID)
-		--@end-debug@]===]
+		--@end-debug@]==]
 		if (missionID and party.missionID==missionID or not missionID) then
 			GMC.list.widget:RemoveChild(party.missionID)
 			GMC.list.widget:DoLayout()
@@ -281,9 +281,9 @@ do
 					minimumChance=tonumber(settings.rewardChance[class]) or 100
 				end
 				local party={members={},perc=0}
-				--[===[@debug@
+				--[==[@debug@
 				print(self:GetMissionData(missionID,"name"),missionID,"  Requested",class,minimumChance,party.perc,party.full)
-				--@end-debug@]===]
+				--@end-debug@]==]
 				self:MCMatchMaker(missionID,party,settings.skipEpic,minimumChance)
 				if ( party.full and party.perc >= minimumChance) then
 					if nextMissionID==OILRIG then
@@ -297,9 +297,9 @@ do
 							self:MCMatchMaker(missionID,party,false,100)
 						end
 					end
-					--[===[@debug@
+					--[==[@debug@
 					print(missionID,"  Accepted",party.perc,minimumChance)
-					--@end-debug@]===]
+					--@end-debug@]==]
 					local mb=AceGUI:Create("GMCMissionButton")
 					if not blacklist[missionID] then
 						for i=1,#party.members do
@@ -393,9 +393,9 @@ local function buildDragging(frame,drawItemButtons)
 	frame:RegisterForDrag("LeftButton")
 	frame:SetMovable(true)
 	frame:SetScript("OnDragStart",function(this,button)
-			--[===[@debug@
+			--[==[@debug@
 			print("Start",this:GetName(),GetMouseFocus():GetName(),this:GetID(),this.key)
-			--@end-debug@]===]
+			--@end-debug@]==]
 			local f=GMC.ignoreFrames[this:GetID()+1]
 			if f then f:ClearAllPoints() end
 			this:StartMoving()
@@ -404,15 +404,15 @@ local function buildDragging(frame,drawItemButtons)
 	end)
 	frame:SetScript("OnDragStop",function(this,button)
 		this:StopMovingOrSizing()
-		--[===[@debug@
+		--[==[@debug@
 		print("Stopped",this:GetName(),GetMouseFocus():GetName(),this:GetID(),this.key)
-		--@end-debug@]===]
+		--@end-debug@]==]
 		this:SetFrameStrata(this.oldframestrata)
 	end)
 	frame:SetScript("OnReceiveDrag",function(this,...)
-			--[===[@debug@
+			--[==[@debug@
 			print("Receive",this:GetName(),GetMouseFocus():GetName(),this:GetID(),this.key,...)
-			--@end-debug@]===]
+			--@end-debug@]==]
 			local from=this:GetID()
 			local to
 			local x,y=this:GetCenter()
@@ -433,10 +433,10 @@ local function buildDragging(frame,drawItemButtons)
 			if (to) then
 				local appo=tremove(classlist,from)
 				tinsert(classlist,to,appo)
-				--[===[@debug@
+				--[==[@debug@
 				print(appo,"from:",from,"to:",to)
 				DevTools_Dump(classlist)
-				--@end-debug@]===]
+				--@end-debug@]==]
 			end
 			drawItemButtons()
 			module:Refresh()
@@ -543,9 +543,9 @@ local function drawItemButtons(frame)
 	return GMC.ignoreFrames[#tItems]
 end
 local function dbfixV1()
---[===[@debug@
+--[==[@debug@
 	print('dbfixV1')
---@end-debug@]===]
+--@end-debug@]==]
 	if type(settings.allowedRewards['equip'])~='nil' then
 		settings.allowedRewards['itemLevel']=settings.allowedRewards['equip']
 		settings.rewardChance['itemLevel']=settings.rewardChance['equip']
@@ -561,9 +561,9 @@ local function dbfixV1()
 	settings.version=2
 end
 local function dbfixV2()
---[===[@debug@
+--[==[@debug@
 	print('dbfixV2')
---@end-debug@]===]
+--@end-debug@]==]
 	local old=
 		{
 			'gold',
@@ -656,12 +656,12 @@ function module:OnInitialized()
 	if flags then
 		flags:SetPoint("TOPLEFT",chance,"BOTTOMLEFT",0,0)
 	end
-	--[===[@debug@
+	--[==[@debug@
 	--AddBackdrop(rewards)
 	--AddBackdrop(duration,0,1,0)
 	--AddBackdrop(chance,0,0,1)
 	--	AddBackdrop(flags,0,1,1)
-	--@end-debug@]===]
+	--@end-debug@]==]
 	GMC.Credits=GMC:CreateFontString(nil,"ARTWORK","QuestFont_Shadow_Small")
 	GMC.Credits:SetWidth(0)
 	GMC.Credits:SetFormattedText(C(L["Original concept and interface by %s"],'Yellow'),C("Motig","Red") )

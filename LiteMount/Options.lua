@@ -13,10 +13,6 @@ local _, LM = ...
 local Serializer = LibStub("AceSerializer-3.0")
 local LibDeflate = LibStub("LibDeflate")
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
-
 --[[----------------------------------------------------------------------------
 
 mountPriorities is a list of spell ids the player has seen before mapped to
@@ -43,13 +39,12 @@ LeaveVehicle
 Dismount [nofalling]
 CopyTargetsMount
 ApplyRules
+SwitchFlightStyle [mod:rshift]
 IF [mod:shift]
     IF [submerged]
         Limit -SWIM
-    ELSEIF [dragonridable]
-        Limit -DRAGONRIDING
-    ELSEIF [flyable]
-        Limit -FLY
+    ELSEIF [dragonridable][flyable]
+        Limit -DRAGONRIDING/FLY
     ELSEIF [floating]
         Limit -SWIM
     END
@@ -111,6 +106,7 @@ local defaults = {
         announceViaChat     = false,
         announceViaUI       = false,
         announceColors      = false,
+        announceFlightStyle = true,
     },
     char = {
         unavailableMacro    = "",

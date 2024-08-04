@@ -38,7 +38,12 @@ points[ 1527 ] = {
 	[39400940] = { alpaca=true },
 	[38621018] = { alpaca=true },
 	
-	[42407030] = { alpaca=true },
+	[42107031] = { alpaca=true },
+	[42207055] = { alpaca=true },
+	[42317074] = { alpaca=true },
+	[42517011] = { alpaca=true },
+	[42567021] = { alpaca=true },
+	[42796999] = { alpaca=true },
 		
 	[45804815] = { alpaca=true },
 	[46354906] = { alpaca=true },

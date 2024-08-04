@@ -20,8 +20,19 @@ local wipe = table.wipe
 local bitBand = bit.band
 local CreateFrame = CreateFrame
 local unpack = unpack
+
 local _GetSpellInfo = Details.getspellinfo
 local GetSpellInfo = GetSpellInfo
+
+if (DetailsFramework.IsWarWow() or C_Spell.GetSpellInfo) then
+	GetSpellInfo = function(...)
+		local result = C_Spell.GetSpellInfo(...)
+		if result then
+			return result.name, 1, result.iconID
+		end
+	end
+end
+
 local myName = UnitName("player")
 local GameCooltip = GameCooltip
 local date = date
@@ -1514,8 +1525,8 @@ function TimeLine:EnemySpellCast(time, token, hidding, sourceGUID, sourceName, s
 	if (sourceFlag) then
 		if (bitBand(sourceFlag, 0x00000060) ~= 0) then --is enemy
 			if (bitBand(sourceFlag, 0x00000400) == 0) then --is not player
-				local petInfo = Details.tabela_pets.pets[sourceGUID]
-				if (not petInfo or bitBand(petInfo[3], 0x00000400) == 0) then --isn't a pet or owner isn't a player
+				local petInfo = Details:GetPetInfo(sourceGUID)
+				if (not petInfo or bitBand(petInfo.ownerFlags, 0x00000400) == 0) then --isn't a pet or owner isn't a player
 					sourceName = sourceName or select(1, GetSpellInfo(spellID or 0)) or "--x--x--"
 
 					do
@@ -1710,7 +1721,7 @@ function TimeLine:OnEvent(_, event, ...)
 		if (AddonName == "Details_TimeLine") then
 			if (_G.Details) then
 				CreatePluginFrames()
-				local MINIMAL_DETAILS_VERSION_REQUIRED = 140
+				local MINIMAL_DETAILS_VERSION_REQUIRED = 158
 				local db = DetailsTimeLineDB
 
 				--install plugin

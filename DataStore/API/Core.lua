@@ -8,6 +8,7 @@ local registeredModules = {}
 local registeredMethods = {}
 
 local modulesList = {
+	["DataStore"] = true,
 	["DataStore_Achievements"] = true,
 	["DataStore_Agenda"] = true,
 	["DataStore_Auctions"] = true,
@@ -22,8 +23,8 @@ local modulesList = {
 	["DataStore_Talents"] = true
 }
 
-if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
-	-- Add wrath modules
+if WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
+	-- Add cataclysm modules
 	modulesList["DataStore_Currencies"] = true
 
 elseif WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
@@ -63,36 +64,121 @@ end
 
 setmetatable(addon, { __index = function(self, key)
 	return function(self, arg1, ...)
-		if not registeredMethods[key] then
+		local method = registeredMethods[key]
+	
+		if not method then
 			-- enable this in Debug only, there's a risk that this function gets called unexpectedly
 			-- print(format("DataStore : method <%s> is missing.", key))
 			return
 		end
 
-		if registeredMethods[key].isCharBased then		-- if this method is character related, the first expected parameter is the character
-			local owner = registeredMethods[key].owner
-			
+		local owner = method.owner
+		
+		-- if this method is character related, the first expected parameter is the character
+		if method.isCharacterBased then	
 			-- arg1 is the current character key
-			arg1 = owner.Characters[arg1]						-- turns a "string" parameter into a table, fully intended.
-			if not arg1.lastUpdate then return end			-- lastUpdate must be present in the Character part of a db, if not, data is unavailable
+			-- convert the key to the appropriate id
+			local id = DataStore_CharacterIDs.Set[arg1]
+
+			-- now from the id, get the linked table in the module
+			arg1 = method.linkedTable[id]
 			
-		elseif registeredMethods[key].isGuildBased then	-- if this method is guild related, the first expected parameter is the guild
-			local owner = registeredMethods[key].owner
-			
+			-- the table must be valid (for some character tables, we allow that they are not created, ex: DS_Stats weeklies)
+			-- lastUpdate must be present in the Character part of a db, if not, data is unavailable
+			-- if not arg1 or not arg1.lastUpdate then return end
+			if not arg1 then return end
+		
+		elseif method.isIndexBased then	-- if this method is character related, but has no character table, so just send its index
+			-- arg1 is the current character key
+			-- convert the key to the appropriate id
+			arg1 = DataStore_CharacterIDs.Set[arg1]
+		
+		elseif method.isGuildBased then	-- if this method is guild related, the first expected parameter is the guild
 			-- arg1 is the current guild key
-			arg1 = owner.Guilds[arg1]							-- turns a "string" parameter into a table, fully intended.
+			-- convert the key to the appropriate id
+			local id = DataStore_GuildIDs.Set[arg1]
+			
+			arg1 = method.linkedTable[id]
+			
 			if not arg1 then return end
 		end
 		
-		return registeredMethods[key].func(arg1, ...)
+		return method.func(arg1, ...)
 	end
 end})
 
+local function Print(moduleName, text)
+	DEFAULT_CHAT_FRAME:AddMessage(format("|cff33ff99%s|r: %s", moduleName, text))
+end
 
-function addon:RegisterModule(moduleName, module, publicMethods, allowOverrides)
-	assert(type(moduleName) == "string")
-	assert(type(module) == "table")
+-- Initialize a table in the saved variables file
+local function InitSVTable(tableName)
+	-- Initialize the global DB object
+	_G[tableName] = _G[tableName] or {}
+	return _G[tableName]
+end
 
+local function SetMethodInfo(moduleObject, methodName, method, linkedTable, methodType)
+	local method = addon:RegisterMethod(moduleObject, methodName, method)
+	method[methodType] = true
+	method.linkedTable = linkedTable
+end
+
+local function SetTableMethods(newModule, tables, methodType)
+	if not tables then return end
+	
+	for name, methods in pairs(tables) do
+		local svTable = InitSVTable(name)
+		
+		for methodName, method in pairs(methods) do
+			SetMethodInfo(newModule, methodName, method, svTable, methodType)
+		end
+	end
+end
+
+local function SetTablesInfo(newModule, tables, storage)
+	if not tables then return end
+	
+	-- ex: make room for a "Character" sub-table
+	newModule[storage] = newModule[storage] or {}
+	
+	-- we only care about the table names
+	for name, _ in pairs(tables) do
+		newModule[storage][name] = true
+	end
+end
+
+
+local unboundCount = 0
+
+function addon:RegisterMethod(moduleObject, methodName, method)
+	if registeredMethods[methodName] then
+		print(format("DataStore:RegisterMethod() : adding method for module <%s> failed.", moduleName))
+		print(format("DataStore:RegisterMethod() : method <%s> already exists !", methodName))
+		return
+	end
+	
+	if type(moduleObject) == "nil" then
+		unboundCount = unboundCount + 1
+		print(format("DataStore:RegisterMethod() : method <%s> is not bound to its module ! (%d)", methodName, unboundCount))
+	end
+	
+	registeredMethods[methodName] = {
+		func = method,
+		owner = moduleObject, 	-- module that owns this method & associated data
+	}
+	
+	return registeredMethods[methodName]
+end
+
+function addon:RegisterModule(options)
+	assert(type(options) == "table")
+	assert(type(options.addon) == "table")
+	assert(type(options.addonName) == "string")
+	
+	local newModule = options.addon
+	local moduleName = options.addonName
+	
 	if not modulesList[moduleName] then 
 		local white	= "|cFFFFFFFF"
 		local teal = "|cFF00FF9A"
@@ -111,47 +197,63 @@ function addon:RegisterModule(moduleName, module, publicMethods, allowOverrides)
 	end
 	modulesList[moduleName] = nil		-- Prevent a module from registering twice
 	
-	-- add the module's database address (addon.db.global) to the list of known modules, if it is not already known
 	if registeredModules[moduleName] then return end
 	
-	registeredModules[moduleName] = module
-	local db = module.db.global
+	registeredModules[moduleName] = newModule
 
-	-- simplifies the life of child modules, and prepares a few pointers for them
-	module.ThisCharacter = db.Characters[GetKey()]
-	module.Characters = db.Characters
-	module.Guilds = db.Guilds
-
-	-- register module's public method
-	for methodName, method in pairs(publicMethods) do
-		if registeredMethods[methodName] and not allowOverrides then
-			print(format("DataStore:RegisterMethod() : adding method for module <%s> failed.", moduleName))
-			print(format("DataStore:RegisterMethod() : method <%s> already exists !", methodName))
-			return
-		end
-
-		registeredMethods[methodName] = {
-			func = method,
-			owner = module, 			-- module that owns this method & associated data
-		}
-	end
-
-	-- Automatically clean orphan data in child modules (ie: data exist for a char/guild in a sub module, but no key in the main module)
-	--	Tested and fixed with empty sv files on 5/08/2022
-	local Characters = addon.db.global.Characters
+	-- Register tables, if any, the user may want to call that function separately from another file
+	addon:RegisterTables(options)
 	
-	for charKey, _ in pairs(db.Characters) do
-		-- if the key is not valid in the main module, kill the data
-		
-		-- 5/08/22 : There's an issue with the test on the faction
-		-- check if it is really necessary, in any case, this second test often succeeds (when it should not) 
-		-- because the sequence of events is not guaranteed, thus the faction is not available
-		
-		-- if not Characters[charKey] or not Characters[charKey].faction then
-		if not Characters[charKey] then
-			db.Characters[charKey] = nil
+	-- Simplify the life of child modules, and prepares a few pointers for them
+	local key = GetKey()
+	newModule.name = moduleName
+	newModule.ThisCharID = DataStore_CharacterIDs.Set and DataStore_CharacterIDs.Set[key]
+	newModule.Print = function(self, ...) Print(self.name, ...) end
+	newModule.ListenTo = function(self, ...) addon:ListenToEvent(self, ...) end
+	newModule.StopListeningTo = function(self, ...)	addon:StopListeningToEvent(self, ...) end
+end
+
+function addon:RegisterTables(options)
+	-- Initialize raw tables (ie: not character or guild related)
+	if options.rawTables then
+		for _, tableName in pairs(options.rawTables) do
+			InitSVTable(tableName)
 		end
 	end
+	
+	SetTablesInfo(options.addon, options.characterTables, "CharacterTables")
+	SetTablesInfo(options.addon, options.characterIdTables, "CharacterIdTables")
+	
+	-- Register the character & guild based methods
+	SetTableMethods(options.addon, options.characterTables, "isCharacterBased")
+	SetTableMethods(options.addon, options.characterIdTables, "isIndexBased")
+	SetTableMethods(options.addon, options.guildTables, "isGuildBased")
+end
+
+function addon:GetCharacterDB(dbName, initTable)
+	local db = _G[dbName]
+	local id = DataStore_CharacterIDs.Set[GetKey()]	
+	
+	-- Initialize the table for this character
+	if initTable then
+		db[id] = db[id] or {}		-- be sure the table is created, not required for all tables.
+	end
+	
+	return db[id], id
+end
+
+function addon:SetDefaults(tableName, defaultValues)
+	-- Get the table
+	local t = _G[tableName]
+	if not t then return end
+	
+	for k, v in pairs(defaultValues) do
+		if type(t[k]) == "nil" then			-- If the key does not exist yet..
+			t[k] = v									-- .. set it
+		end
+	end
+	
+	return t
 end
 
 
@@ -178,18 +280,10 @@ function addon:GetMethodOwner(methodName)
 	return ownerName
 end
 
-function addon:SetCharacterBasedMethod(methodName)
-	-- flags a given method as character based
-	if registeredMethods[methodName] then
-		-- this will take care of error checking before calling the registered method, and pass the appropriate character table as argument
-		registeredMethods[methodName].isCharBased = true
-	end
-end
-
 function addon:IsCharacterBasedMethod(methodName)
 	local info = registeredMethods[methodName]
 	
-	if info and info.isCharBased then
+	if info and info.isCharacterBased then
 		return true
 	end
 end
@@ -220,10 +314,9 @@ function addon:IsModuleEnabled(name)
 	end
 end
 
--- Warning: AceAddon already has a :IterateModules..
-function addon:IterateDBModules(callback)
-	for moduleName, moduleDB in pairs(registeredModules) do
-		callback(moduleDB.db.global, moduleName)
+function addon:IterateModules(callback)
+	for moduleName, moduleTable in pairs(registeredModules) do
+		callback(moduleTable, moduleName)
 	end
 end
 
@@ -253,12 +346,19 @@ function addon:GetModuleLastUpdate(module, name, realm, account)
 	end
 end
 
-function addon:GetModuleLastUpdateByKey(module, key)
-	module = GetModuleTable(module)
-
-	if key and type(module) == "table" then
-		return module.Characters[key].lastUpdate
+function addon:GetModuleLastUpdateByKey(moduleName, key)
+	local characterID = addon:GetCharacterID(key)
+	local db = _G[format("%s_Characters", moduleName)]
+	
+	if db and db[characterID] then
+		return db[characterID].lastUpdate
 	end
+	
+	-- module = GetModuleTable(module)
+
+	-- if key and type(module) == "table" then
+		-- return module.Characters[key].lastUpdate
+	-- end
 end
 
 function addon:ImportData(module, data, name, realm, account)
@@ -287,24 +387,4 @@ function addon:ImportCharacter(key, faction, guild)
 			moduleDB.Characters[key].lastUpdate = time()
 		end
 	end)
-end
-
-function addon:SetOption(module, option, value)
-	module = GetModuleTable(module)
-
-	if type(module) == "table" then
-		if module.db.global.Options then
-			module.db.global.Options[option] = value
-		end
-	end
-end
-
-function addon:GetOption(module, option)
-	module = GetModuleTable(module)
-
-	if type(module) == "table" then
-		if module.db.global.Options then
-			return module.db.global.Options[option]
-		end
-	end
 end

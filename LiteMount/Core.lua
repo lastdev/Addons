@@ -23,10 +23,6 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
-
 -- This is still a SecureActionButton for backwards compatibility with
 -- people's macros with /click LiteMount in them.
 
@@ -39,7 +35,7 @@ function LiteMount:Initialize()
     -- Do this first because LM.Debug doesn't work until it's loaded.
     LM.Options:Initialize()
 
-    local version = GetAddOnMetadata("LiteMount", "Version") or "UNKNOWN"
+    local version = C_AddOns.GetAddOnMetadata("LiteMount", "Version") or "UNKNOWN"
 
     LM.Debug("Initializing LiteMount v%s, debugging enabled.", version)
 

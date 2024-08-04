@@ -1,5 +1,5 @@
 local _, IE = ...;
-local select, strsplit, string = select, strsplit, string
+local select, strsplit, string = select, strsplit, string;
 
 local expColors = {
 	"|cFFFFFFFF%s|r",
@@ -12,10 +12,16 @@ local expColors = {
 	"|cFF7a7a7a%s|r",
 	"|cFFefdea9%s|r",
 	"|cFFc9c3c3%s|r",
+	"|cFFff5f07%s|r",
 };
 
 local function OnTooltipSetItem(tooltip, data)
-	if (tooltip ~= GameTooltip) then
+	if (tooltip ~= GameTooltip and
+		tooltip ~= ItemRefTooltip and
+		tooltip ~= ItemRefShoppingTooltip1 and
+		tooltip ~= ItemRefShoppingTooltip2 and
+		tooltip ~= ShoppingTooltip1 and
+		tooltip ~= ShoppingTooltip2) then
 		return;
 	end
 
@@ -28,7 +34,7 @@ local function OnTooltipSetItem(tooltip, data)
 		itemID = itemSting[2];
 	end
 
-    local expacID = select(15, GetItemInfo(itemID));
+    local expacID = select(15, C_Item.GetItemInfo(itemID));
 	if (expacID) then
 		expacID = expacID + 1;
 	else

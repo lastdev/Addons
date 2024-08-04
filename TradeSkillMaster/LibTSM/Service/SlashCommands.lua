@@ -6,8 +6,9 @@
 
 local TSM = select(2, ...) ---@type TSM
 local SlashCommands = TSM.Init("Service.SlashCommands") ---@class Service.SlashCommands
-local Log = TSM.Include("Util.Log")
-local L = TSM.Include("Locale").GetTable()
+local Log = TSM.LibTSMUtil:Include("Util.Log")
+local ChatMessage = TSM.LibTSMService:Include("UI.ChatMessage")
+local L = TSM.Locale.GetTable()
 local private = {
 	commandInfo = {},
 	commandOrder = {},
@@ -21,7 +22,7 @@ local CALLBACK_TIME_WARNING = 0.02
 -- ============================================================================
 
 SlashCommands:OnModuleLoad(function()
-	-- register the TSM slash commands
+	-- Register the TSM slash commands
 	SlashCmdList["TSM"] = private.OnChatCommand
 	SlashCmdList["TRADESKILLMASTER"] = private.OnChatCommand
 	_G["SLASH_TSM1"] = "/tsm"
@@ -46,14 +47,14 @@ function SlashCommands.Register(key, callback, label)
 end
 
 function SlashCommands.PrintHelp()
-	Log.PrintUser(L["Slash Commands:"])
+	ChatMessage.PrintUser(L["Slash Commands:"])
 	for _, key in ipairs(private.commandOrder) do
 		local info = private.commandInfo[key]
 		if info.label then
 			if info.key == "" then
-				Log.PrintfUserRaw("|cffffaa00/tsm|r - %s", info.label)
+				ChatMessage.PrintfUserRaw("|cffffaa00/tsm|r - %s", info.label)
 			else
-				Log.PrintfUserRaw("|cffffaa00/tsm %s|r - %s", info.key, info.label)
+				ChatMessage.PrintfUserRaw("|cffffaa00/tsm %s|r - %s", info.key, info.label)
 			end
 		end
 	end

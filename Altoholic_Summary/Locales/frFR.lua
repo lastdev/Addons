@@ -1,5 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale( "Altoholic", "frFR" )
-
+local L = DataStore:SetLocale("Altoholic", "frFR")
 if not L then return end
 
 L["Calendar"] = "Calendrier"
@@ -34,6 +33,7 @@ L["PATCH_10.2"] = "Guardians of the Dream"
 
 -- ** Filter Icons **
 L["FILTER_CLASSES"] = "Filtrer par classe"
+L["FILTER_RACES"] = "Filtrer par race"
 L["FILTER_FACTIONS"] = "Filtrer par faction"
 L["FILTER_LEVELS"] = "Filtrer par niveau"
 L["FILTER_PROFESSIONS"] = "Filtrer par profession"
@@ -47,6 +47,7 @@ L["All accounts"] = "Tous les comptes"
 L["Both factions"] = "Les 2 factions"
 L["This faction"] = "Cette faction"
 L["Any"] = "Tout"
+-- L["Allied Races"] = true
 L["ACCOUNT_SHARING_BUTTON_TITLE"] = "Demande de partage de compte"
 L["ACCOUNT_SHARING_BUTTON_INFO"] = [[Cliquez sur ce bouton pour demander
 à un joueur de partager toute sa base de

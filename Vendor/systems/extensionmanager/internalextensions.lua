@@ -61,7 +61,7 @@ function ExtensionManager:RegisterInternalExtension(addonName)
     end
 
     -- Verify the Addon is actually present
-    local addonInfo = {GetAddOnInfo(addonName)}
+    local addonInfo = {Addon:GetAddOnInfo(addonName)}
     -- 1 = name (folder)
     -- 2 = title
     -- 3 = description

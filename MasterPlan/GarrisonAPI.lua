@@ -685,6 +685,7 @@ do -- CompleteMissions/AbortCompleteMissions
 	local curSalvage, curPlayerXP = {[114120]=0, [114119]=0, [114116]=0, [140590]=0, [139593]=0}, {}
 	local curState, curIndex, completionStep, lastAction, delayIndex, delayMID
 	local function checkSalvage(addRewards)
+		local GetItemCount = C_Item.GetItemCount
 		for k,v in pairs(curSalvage) do
 			local nv = GetItemCount(k) or 0
 			if addRewards and nv > v then
@@ -1520,11 +1521,11 @@ end
 function api.IsLevelAppropriateToken(itemID)
 	local ts = T.TokenSlots[itemID]
 	if ts then
-		local _, _, _, tl = GetItemInfo(itemID)
+		local _, _, _, tl = C_Item.GetItemInfo(itemID)
 		if not tl then return end
 		for s=ts, ts + (ts > 10 and 1 or 0) do
 			local iid = GetInventoryItemID("player", s)
-			local l = iid and select(4, GetItemInfo(iid))
+			local l = iid and select(4, C_Item.GetItemInfo(iid))
 			if l and l <= tl then
 				return true
 			end
@@ -1747,17 +1748,18 @@ do -- api.GetSuggestedGroupsMenu(mi, f1, f2, f3)
 end
 
 do -- api.GetUpgradeItems(ilevel, isArmor)
-	local function walk(ilvl, t, pos)
+	local function walk(GetItemCount, ilvl, t, pos)
 		for i=pos,#t,2 do
 			if t[i+1] > ilvl and GetItemCount(t[i]) > 0 then
-				return t[i], walk(ilvl, t, i + 2)
+				return t[i], walk(GetItemCount, ilvl, t, i + 2)
 			end
 		end
 	end
 	function api.GetUpgradeItems(ilevel, isWeapon)
-		return walk(ilevel, T.ItemLevelUpgrades[isWeapon and "WEAPON" or "ARMOR"], 1)
+		return walk(C_Item.GetItemCount, ilevel, T.ItemLevelUpgrades[isWeapon and "WEAPON" or "ARMOR"], 1)
 	end
 	function api.GetUpgradeRange()
+		local GetItemCount = C_Item.GetItemCount
 		local t, rW, rA  = T.ItemLevelUpgrades.WEAPON
 		for i=1,2 do
 			local limit = 0
@@ -2550,7 +2552,7 @@ function api.GetMoIRewardIcon(rid)
 	elseif rid < 2000 then
 		return "|T" .. (C_CurrencyInfo.GetBasicCurrencyInfo(rid).icon or "Interface/Icons/Temp") .. ":14:14:0:0:64:64:4:60:4:60|t"
 	else
-		return "|T" .. (GetItemIcon(rid) or "Interface/Icons/Temp") .. ":14:14:0:0:64:64:4:60:4:60|t"
+		return "|T" .. (C_Item.GetItemIconByID(rid) or "Interface/Icons/Temp") .. ":14:14:0:0:64:64:4:60:4:60|t"
 	end
 	return ""
 end

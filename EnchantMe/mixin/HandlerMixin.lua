@@ -1,6 +1,5 @@
 local _, addon = ...
 local HandlerMixin, private = addon.namespace('HandlerMixin')
-local minLevel = 60
 
 HandlerMixin.unit = nil
 HandlerMixin.slots = nil
@@ -11,18 +10,27 @@ function HandlerMixin:IsAvailable()
 end
 
 function HandlerMixin:UpdateFlags()
-    if not self:IsAvailable() then
+    -- check availability
+    if
+        not self:IsAvailable()
+        or PlayerGetTimerunningSeasonID() ~= nil -- disable in timerunning
+    then
         return
     end
 
+    -- check unit level
+    local unitLevel = UnitLevel(self.unit)
+
+    if unitLevel < addon.main.MIN_UNIT_LEVEL or unitLevel > addon.main.MAX_UNIT_LEVEL then
+        return
+    end
+
+    -- create indicators if not done yet
     if not self.indicators then
         self:CreateIndicators()
     end
 
-    if UnitLevel(self.unit) < minLevel then
-        return
-    end
-
+    -- update flags
     for slotName, slot in pairs(self.slots) do
         local itemLink = GetInventoryItemLink(self.unit, GetInventorySlotInfo(slotName))
 

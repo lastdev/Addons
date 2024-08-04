@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FatedAffixes", "DBM-Raids-Shadowlands", 0)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20231223021939")
+mod:SetRevision("20240601045004")
 --mod:SetModelID(47785)
 mod:SetZone(2296, 2450, 2481)--Shadowlands Raids
 
@@ -365,7 +365,8 @@ do
 					if eventType == 0 then
 						timerReconfigurationEmitterCD:Stop()
 					elseif eventType == 1 and specialTimers[372419][1][encounterID][stage] then
-						timerReconfigurationEmitterCD:Restart(specialTimers[372419][1][encounterID][stage])
+						timerReconfigurationEmitterCD:Stop()
+						timerReconfigurationEmitterCD:Start(specialTimers[372419][1][encounterID][stage])
 					elseif timeAdjust and eventType == 2 then
 						if timerReconfigurationEmitterCD:GetRemaining() < timeAdjust then
 							local elapsed, total = timerReconfigurationEmitterCD:GetTime()
@@ -382,7 +383,8 @@ do
 					if eventType == 0 then
 						timerChaoticEssenceCD:Stop()
 					elseif eventType == 1 and specialTimers[372642][1][encounterID][stage] then
-						timerChaoticEssenceCD:Restart(specialTimers[372642][1][encounterID][stage])
+						timerChaoticEssenceCD:Stop()
+						timerChaoticEssenceCD:Start(specialTimers[372642][1][encounterID][stage])
 					elseif timeAdjust and eventType == 2 then
 						if timerChaoticEssenceCD:GetRemaining() < timeAdjust then
 							local elapsed, total = timerChaoticEssenceCD:GetTime()
@@ -399,7 +401,8 @@ do
 					if eventType == 0 then
 						timerProtoformBarrierCD:Stop()
 					elseif eventType == 1 and specialTimers[372418][1][encounterID][stage] then
-						timerProtoformBarrierCD:Restart(specialTimers[372418][1][encounterID][stage])
+						timerProtoformBarrierCD:Stop()
+						timerProtoformBarrierCD:Start(specialTimers[372418][1][encounterID][stage])
 					elseif timeAdjust and eventType == 2 then
 						if timerProtoformBarrierCD:GetRemaining() < timeAdjust then
 							local elapsed, total = timerProtoformBarrierCD:GetTime()
@@ -416,7 +419,8 @@ do
 					if eventType == 0 then
 						timerCreationSparkCD:Stop()
 					elseif eventType == 1 and specialTimers[372647][1][encounterID][stage] then
-						timerCreationSparkCD:Restart(specialTimers[372647][1][encounterID][stage])
+						timerCreationSparkCD:Stop()
+						timerCreationSparkCD:Start(specialTimers[372647][1][encounterID][stage])
 					elseif timeAdjust and eventType == 2 then
 						if timerCreationSparkCD:GetRemaining() < timeAdjust then
 							local elapsed, total = timerCreationSparkCD:GetTime()

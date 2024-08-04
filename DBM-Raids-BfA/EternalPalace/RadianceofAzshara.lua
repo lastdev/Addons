@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2353, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240616044055")
 mod:SetCreatureID(152364)
 mod:SetEncounterID(2305)
 mod:SetUsedIcons(1, 2)
@@ -29,7 +29,7 @@ mod:RegisterEventsInCombat(
 --]]
 --Rising Fury (Boss)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20076))
-local warnArcanadoBurst					= mod:NewSpellAnnounce(296430, 2)
+local warnArcanadoBurst					= mod:NewCountAnnounce(296430, 2)
 local warnSquallTrap					= mod:NewSpellAnnounce(296459, 4)
 local warnArcaneBomb					= mod:NewTargetNoFilterAnnounce(296737, 4)
 

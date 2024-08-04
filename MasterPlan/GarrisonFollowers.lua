@@ -266,7 +266,7 @@ end
 
 local function UpgradeItem_SetItem(self, id)
 	self.itemID = id
-	local count, itemName, _, itemQuality, _, _, _, _, _, _, itemTexture = GetItemCount(id), GetItemInfo(id)
+	local count, itemName, _, itemQuality, _, _, _, _, _, _, itemTexture = C_Item.GetItemCount(id), C_Item.GetItemInfo(id)
 	if itemName then
 		self.Icon:SetTexture(itemTexture)
 		self.Name:SetText(itemName)
@@ -408,9 +408,9 @@ local CreateClassSpecButton, ClassSpecButton_Set do
 		GameTooltip.NineSlice:SetCenterColor(0,0,0)
 	end
 	function EV:MP_REROLL_PROSPECTS_READY()
-		local mf = GetMouseFocus()
-		if mf and GameTooltip:GetOwner() == mf and not mf:IsForbidden() and mf:GetScript("OnEnter") == ClassSpecButton_OnEnter then
-			ClassSpecButton_OnEnter(mf)
+		local to = not GameTooltip:IsForbidden() and GameTooltip:IsVisible() and GameTooltip:GetOwner()
+		if to and not to:IsForbidden() and to:GetScript("OnEnter") == ClassSpecButton_OnEnter then
+			ClassSpecButton_OnEnter(to)
 		end
 	end
 	function CreateClassSpecButton(parent)
@@ -840,37 +840,68 @@ end
 GarrisonThreatCountersFrame:SetScript("OnShow", GarrisonThreatCountersFrame.Hide)
 GarrisonThreatCountersFrame:Hide()
 
-local function Recruiter_ShowTraitTooltip(self)
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	G.SetTraitTooltip(GameTooltip, self.value)
+local function Recruiter_ShowTraitTooltip(self, entry)
+	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 10, 6)
+	G.SetTraitTooltip(GameTooltip, entry.data.id)
 	GameTooltip:Show()
-	return T.HideOwnedGameTooltip
+	self:SetScript("OnHide", T.HideOwnedGameTooltip)
 end
-local function Recruiter_ShowCounterTooltip(self)
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	G.SetThreatTooltip(GameTooltip, self.value)
+local function Recruiter_ShowCounterTooltip(self, entry)
+	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 10, 6)
+	G.SetThreatTooltip(GameTooltip, entry.data.id)
 	GameTooltip:Show()
-	return T.HideOwnedGameTooltip
+	self:SetScript("OnHide", T.HideOwnedGameTooltip)
 end
-local function Recruiter_DropDownInitHook(_, level)
-	local lf, bn
-	if level == 2 then
-		lf, bn = DropDownList2, "DropDownList2Button"
-	elseif level == 1 and #GarrisonRecruiterFrame.Pick.entries > 0 then
-		lf, bn = DropDownList1, "DropDownList1Button"
-	end
-	for i=1,lf and lf.numButtons or 0 do
-		local b = _G[bn .. i]
-		local entry = b.arg1
-		if type(entry) == "table" and entry.id then
-			b.tooltipOnButton, b.tooltipTitle, b.tooltipText = level == 2 and Recruiter_ShowTraitTooltip or Recruiter_ShowCounterTooltip
+local function Recruiter_HideTooltip(self)
+	T.HideOwnedGameTooltip(self)
+end
+local function Recruiter_IsChecked(entry)
+	return GarrisonRecruiterFrame.Pick.selectedID == entry.id
+end
+local function Recruiter_SetChecked(entry)
+	GarrisonRecruiterFrame_SetAbilityPreference(entry)
+end
+local function Recruiter_UpdatePickMenu()
+	if GarrisonRecruitSelectFrame:IsShown() or not GarrisonRecruiterFrame.Pick:IsShown() then return end
+	GarrisonRecruiterFrame.Pick.ThreatDropdown:SetupMenu(function(_, rootDescription)
+		rootDescription:SetTag("MENU_GARRISON_RECRUITER_THREAT");
+
+		for _, category in pairs(GarrisonRecruiterFrame.categoriesTable) do
+			local categoryEntry = GarrisonRecruiterFrame.Pick.categories[category];
+			if #categoryEntry.entries > 0 then
+				categoryEntry.id = category;
+
+				local submenu = rootDescription:CreateButton(category);
+
+				for _, entry in pairs(categoryEntry.entries) do
+					local checkbox = submenu:CreateCheckbox(entry.name, Recruiter_IsChecked, Recruiter_SetChecked, entry);
+					checkbox:SetOnEnter(Recruiter_ShowTraitTooltip)
+					checkbox:SetOnLeave(Recruiter_HideTooltip)
+					checkbox:SetResponse(MenuResponse.CloseAll)
+				end
+			end
 		end
+
+		for _, entry in pairs(GarrisonRecruiterFrame.Pick.entries) do
+			local checkbox = rootDescription:CreateCheckbox(entry.name, Recruiter_IsChecked, Recruiter_SetChecked, entry);
+			checkbox:SetOnEnter(Recruiter_ShowCounterTooltip)
+			checkbox:SetOnLeave(Recruiter_HideTooltip)
+			checkbox:SetResponse(MenuResponse.CloseAll)
+		end
+	end);
+end
+hooksecurefunc("GarrisonRecruiterFrame_OnShow", Recruiter_UpdatePickMenu)
+GarrisonRecruiterFrame:HookScript("OnShow", Recruiter_UpdatePickMenu)
+if GarrisonRecruiterFrame:IsVisible() then Recruiter_UpdatePickMenu() end
+GarrisonRecruiterFrame.Pick.Radio1:SetHitRectInsets(-4, -90, -4, -4)
+GarrisonRecruiterFrame.Pick.Radio2:SetHitRectInsets(-4, -90, -4, -4)
+hooksecurefunc("GarrisonRecruiterFrame_SetAbilityPreference", function(entry)
+	if entry and entry.name then
+		GarrisonRecruiterFrame.Pick.ThreatDropdown:SetText(entry.name)
 	end
-end
-hooksecurefunc("GarrisonRecruiterFrame_Init", Recruiter_DropDownInitHook)
-if GarrisonRecruiterFramePickThreatDropDown:IsVisible() then
-	hooksecurefunc(GarrisonRecruiterFramePickThreatDropDown, "initialize", Recruiter_DropDownInitHook)
-end
+end)
 
 local specialSearchQueries = {["duplicate counters"]="dup", [(L"Duplicate counters"):lower()]="dup", ["upgradable gear"]="up", [(L"Upgradable gear"):lower()]="up", ["redundant"]="red", [(L"Redundant"):lower()]="red"} do
 	local sc = C_Garrison.GetFollowerAbilityName(79)
@@ -1132,8 +1163,8 @@ do -- Weapon/Armor upgrades and rerolls
 				local avail = C_Garrison.GetFollowerStatus(id) ~= GARRISON_FOLLOWER_ON_MISSION
 				local canWeapon, canArmor = avail and not not G.GetUpgradeItems(wil, true), avail and not not G.GetUpgradeItems(ail, false)
 				items.weapon.itemLevel, items.armor.itemLevel = wil, ail
-				items.weapon:SetNormalTexture(GetItemIcon(wid))
-				items.armor:SetNormalTexture(GetItemIcon(aid))
+				items.weapon:SetNormalTexture(C_Item.GetItemIconByID(wid))
+				items.armor:SetNormalTexture(C_Item.GetItemIconByID(aid))
 				items.weapon:SetText(wil)
 				items.armor:SetText(ail)
 				items.weapon:SetEnabled(canWeapon)
@@ -1168,7 +1199,7 @@ do -- Weapon/Armor upgrades and rerolls
 			end
 			function reroll:Sync(keepShown)
 				keepShown = keepShown and not self.wasHidden
-				local x = 0
+				local x, GetItemCount = 0, C_Item.GetItemCount
 				for i=1,#buttons do
 					local b = buttons[i]
 					if GetItemCount(b.itemID) > 0 or (keepShown and b:IsShown()) then
@@ -1426,7 +1457,7 @@ do -- Ship equipment
 			return a.itemID < b.itemID
 		end)
 		function reroll:Sync()
-			local x = 0
+			local x, GetItemCount = 0, C_Item.GetItemCount
 			for i=1,#buttons do
 				local b = buttons[i]
 				if GetItemCount(b.itemID) > 0 then

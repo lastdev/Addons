@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2031, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104720")
+mod:SetRevision("20240629024612")
 mod:SetCreatureID(124828)
 mod:SetEncounterID(2092)
 mod:SetBossHPInfoToHighest()--Because of heal on mythic
@@ -34,7 +34,7 @@ local warnPhase						= mod:NewPhaseChangeAnnounce()
 
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(248167, nil, nil, nil, 1, 2)
 
-local timerNextPhase				= mod:NewPhaseTimer(74)
+local timerNextPhase				= mod:NewStageTimer(74)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

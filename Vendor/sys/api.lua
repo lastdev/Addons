@@ -274,7 +274,7 @@ function Addon:PrintPublic(showUndocumented, showTree)
                 indent = indent.."    "
                 level = level - 1
             end
-            self:Print("%s%s [%s]",indent, v.Name, v.Type)
+            Addon:Output(Addon.Systems.Chat.MessageType.Console, "%s%s [%s]",indent, v.Name, v.Type)
         end
 
     -- List view with full paths
@@ -285,12 +285,12 @@ function Addon:PrintPublic(showUndocumented, showTree)
                 suffix = "()"
             end
             if v.Title then
-                self:Print("%s%s%s%s - %s", color, v.Path, suffix, FONT_COLOR_CODE_CLOSE, v.Title)
+                Addon:Output(Addon.Systems.Chat.MessageType.Console, "%s%s%s%s - %s", color, v.Path, suffix, FONT_COLOR_CODE_CLOSE, v.Title)
             else
-                self:Print("%s%s%s%s", color, v.Path, suffix, FONT_COLOR_CODE_CLOSE)
+                sAddon:Output(Addon.Systems.Chat.MessageType.Console, "%s%s%s%s", color, v.Path, suffix, FONT_COLOR_CODE_CLOSE)
             end
             if v.Documentation then
-                self:Print("    %s", v.Documentation)
+                Addon:Output(Addon.Systems.Chat.MessageType.Console, "    %s", v.Documentation)
             end
         end
     end

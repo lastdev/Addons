@@ -1,16 +1,16 @@
 # See license.txt for license and copyright information
-## Interface: 100206
+## Interface: 110000, 110002
 ## Title: TomCat's Tours
-## Notes: Version: 2.5.16
+## Notes: Version: 2.5.34
 ## Author: TomCat
 ## X-Website: https://www.tomcatstours.com
 ## IconTexture: Interface\AddOns\TomCats\images\tomcats_logo_square.png
-## Version: 2.5.16
+## Version: 2.5.34
 ## DefaultState: enabled
 ## SavedVariables: TomCats_Account
 ## SavedVariablesPerCharacter: TomCats_Character
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-TomCats-Expiry: 1716976266
+## X-TomCats-Expiry: 1722688497
 
 Main.xml

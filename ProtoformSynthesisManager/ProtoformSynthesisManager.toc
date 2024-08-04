@@ -1,12 +1,11 @@
-﻿## Interface: 100200
+## Interface: 110000
 ## Title: Protoform Synthesis Manager
 ## Author: Morizo
 ## Notes: Display Protoform Synthesis mats in Grid.
-## Version: 1.0.3
+## Version: 1.1.2
 ## IconTexture: Interface\AddOns\ProtoformSynthesisManager\icon.blp
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
+## X-Curse-Project-ID: 853467
 
 ProtoformSynthesisManager.xml
-ProtoformSynthesisManager.lua
-ProtoformSynthesisManager_Items.lua

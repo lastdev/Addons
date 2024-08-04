@@ -114,10 +114,10 @@ local function Ship_SetRecruit(ship)
 end
 hooksecurefunc("GarrisonLandingPageReport_GetShipments", function(self)
 	if GarrisonLandingPage.garrTypeID >= 3 then return end
-	local index, ship = self.shipmentsPool.numActiveObjects, self.shipmentsPool:Acquire()
+	local index, ship = self.shipmentsPool:GetNumActive(), self.shipmentsPool:Acquire()
 	ship:SetPoint("TOPLEFT", 60 + (index % 3) * 105, -105 - math.floor(index / 3) * 100)
 	if Ship_SetRecruit(ship) then
-		index, ship = self.shipmentsPool.numActiveObjects, self.shipmentsPool:Acquire()
+		index, ship = self.shipmentsPool:GetNumActive(), self.shipmentsPool:Acquire()
 		ship:SetPoint("TOPLEFT", 60 + (index % 3) * 105, -105 - math.floor(index / 3) * 100)
 	end
 	if not Ship_SetCache(ship) then
@@ -140,15 +140,6 @@ local function addCacheResources(self, tooltipData)
 	end
 end
 TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Currency, addCacheResources)
-hooksecurefunc(GarrisonLandingPage.Report.shipmentsPool, "ReleaseAll", function(self)
-	local o = self.inactiveObjects
-	for i=1,o and #o or 0 do
-		if o[i].Swipe then
-			-- Subsequent Acquire/Setup might not reset the swipe
-			o[i].Swipe:Hide()
-		end
-	end
-end)
 
 local function ShowReportMissionExpirationTime(b, item)
 	if GarrisonLandingPage.garrTypeID >= 3 then return end

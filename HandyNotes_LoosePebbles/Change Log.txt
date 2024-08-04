@@ -1,11 +1,14 @@
+== v1.27 - 23rd July 2024
+* TOC update to 11.0.0
+
 == v1.26 - 20th April 2024
-* TOC version update to 10.2.7
+* TOC update to 10.2.7
 
 == v1.25 - 18th March 2024
-* TOC version update to 10.2.6
+* TOC update to 10.2.6
 
 == v1.24 - 12th January 2024
-* TOC version update to 10.2.5
+* TOC update to 10.2.5
 
 == v1.23 - 11th December 2023
 * Felstriker server added
@@ -20,17 +23,17 @@
 * Removed IsControlKeyDown localisation as it's not used
 
 == v1.20 - 28th October 2023
-* TOC update for 10.2.0
+* TOC update to 10.2.0
 
 == v1.19 - 14th October 2023
 * Added better scaling for pins to ensure uniformity of size when switching between pin textures
 * Standardising of code between AddOns to make maintenance easier
 0
 == v1.18 - 18th September 2023
-* TOC version update to 10.1.7
+* TOC update to 10.1.7
 
 == v1.17 - 28th June 2023
-* Support WoW 10.1.5
+* TOC update to 10.1.5
 
 == v1.16 - 6th May 2023
 * Now supports the new AddOn Compartment introduced in 10.1.0.
@@ -41,19 +44,19 @@
 * Removed unnecessary print to console code
 
 == v1.14 - 24th April 2023
-* TOC updateed to 10.1.0
+* TOC update to 10.1.0
 
 == v1.13 - 21st March 2023
-* 10.0.07 TOC file update
+* TOC update to 10.0.07
 
 == v1.12 - 26th January 2023
-* Trivial update to 10.0.5
+* TOC update to 10.0.5
 
 == v1.11 - 7th December 2022
-* Update TOC to 10.0.2
+* TOC update to 10.0.2
 
 == v1.10 - 26th October 2022
-* Update game version to 10.0.0
+* TOC update to 10.0.0
 
 == v1.09 - 26th October 2022
 * Reworked the Interface Configuration - standardising across my AddOns
@@ -61,16 +64,16 @@
 == v1.08 - Missed that number
 
 == v1.07 - 4th September 2022
-* Support TOC 90207
+* TOC update to 9.2.7
 
 == v1.06 - 20th March 2022
-* Update to Game version 9.2.0
+* TOC update to 9.2.0
 
 == v1.05 - 8th November 2021
 * Update the TOC file for the new game version.
 
 == v1.04 - 12th July 2021
-* Version number update for Patch 9.1.0
+* TOC update toh 9.1.0
 * enGB language support for players on Oceania realms (i.e. spelling)
 
 == v1.03 - 25th June 2021

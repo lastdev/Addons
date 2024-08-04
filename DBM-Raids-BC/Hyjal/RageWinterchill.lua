@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal25"
 
-mod:SetRevision("20240428104809")
+mod:SetRevision("20240616044400")
 mod:SetCreatureID(17767)
 mod:SetEncounterID(618, 2468)
 mod:SetModelID(17444)
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 31258"
 )
 
-local warnIceBolt		= mod:NewSpellAnnounce(31249, 3)
+local warnIceBolt		= mod:NewTargetNoFilterAnnounce(31249, 3)
 local warnDnd			= mod:NewSpellAnnounce(31258, 3)
 
 local specWarnIceBolt	= mod:NewSpecialWarningYou(31249, nil, nil, nil, 1, 2)

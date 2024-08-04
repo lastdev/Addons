@@ -10,10 +10,6 @@
 
 local _, LM = ...
 
---[==[@debug@
-if LibDebug then LibDebug() end
---@end-debug@]==]
-
 local L = LM.Localize
 
 -- https://github.com/Stanzilla/WoWUIBugs/issues/317#issuecomment-1510847497
@@ -47,13 +43,18 @@ local COMMANDS = {}
 
 COMMANDS[''] =
     function ()
-        LiteMountOptionsPanel_Open()
+        -- Look, please stop doing this, ok? Nothing good can come of it.
+        if not InCombatLockdown() then
+            LiteMountOptionsPanel_Open()
+        end
     end
 
 COMMANDS['macro'] =
     function ()
-        local i = CreateOrUpdateMacro()
-        if i then PickupMacro(i) end
+        if not InCombatLockdown() then
+            local i = CreateOrUpdateMacro()
+            if i then PickupMacro(i) end
+        end
     end
 
 COMMANDS['priority'] =
@@ -199,7 +200,7 @@ COMMANDS['pi'] =
 COMMANDS['mockdata'] =
     function ()
         LM.Developer:ExportMockData()
-        ReloadUI()
+        C_UI.Reload()
     end
 
 --@end-debug@]==]
@@ -222,13 +223,6 @@ local function PrintUsage()
 end
 
 LM.SlashCommandFunc = function (argstr)
-
-    -- Look, please stop doing this, ok? Nothing good can come of it.
-    if InCombatLockdown() then
-        LM.PrintError(ERR_NOT_IN_COMBAT)
-        return true
-    end
-
     local args = { strsplit(" ", argstr) }
     local cmd = table.remove(args, 1)
 

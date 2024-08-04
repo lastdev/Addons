@@ -22,6 +22,7 @@ function ItemProperties:Startup(register)
     -- We will do simple checks here because this code executes a lot
     -- So we will minimize function calls that are not necessary
     IS_RETAIL = Addon.Systems.Info.IsRetailEra
+    IS_RETAIL_NEXT = Addon.Systems.Info.IsRetailNext
     IS_CLASSIC = Addon.Systems.Info.IsClassicEra
     itemproperties = self
     
@@ -101,7 +102,7 @@ local function doGetItemProperties(itemObj)
     item.Count = count
 
     -- Get more id and cache GetItemInfo, because we aren't bad.
-    local getItemInfo = {GetItemInfo(item.Link)}
+    local getItemInfo = {Addon:GetItemInfo(item.Link)}
 
     -- Safeguard to make sure GetItemInfo returned something. If not bail.
     -- This will happen if we get this far with a Keystone, because Keystones aren't items. Go figure.
@@ -114,9 +115,15 @@ local function doGetItemProperties(itemObj)
     local tooltipdata = nil
     if IS_RETAIL then
         tooltipdata = C_TooltipInfo.GetItemByGUID(item.GUID)
-        TooltipUtil.SurfaceArgs(tooltipdata)
-        for _, line in ipairs(tooltipdata.lines) do
-            TooltipUtil.SurfaceArgs(line)
+
+        -- TooltipUtil.SurfaceArgs removed in 11.0
+        -- Does not appear necessary in order for data to be
+        -- available.
+        if not Addon.Systems.Info.IsRetailNext then
+            TooltipUtil.SurfaceArgs(tooltipdata)
+            for _, line in ipairs(tooltipdata.lines) do
+                TooltipUtil.SurfaceArgs(line)
+            end
         end
     end
 
@@ -124,7 +131,7 @@ local function doGetItemProperties(itemObj)
     item.TooltipData = Addon.DeepTableCopy(tooltipdata)
 
     -- Get the effective item level.
-    item.Level = GetDetailedItemLevelInfo(item.Link)
+    item.Level = Addon:GetDetailedItemLevelInfo(item.Link)
 
     -- Rip out properties from GetItemInfo
     item.Id = itemObj:GetItemID()
@@ -162,105 +169,153 @@ local function doGetItemProperties(itemObj)
         item.Bag, item.Slot = location:GetBagAndSlot()
     end
 
-    item.IsUsable = IsUsableItem(item.Id)
-    item.IsEquipment = IsEquippableItem(item.Id)
+    item.HasUseAbility = Addon:IsUsableItem(item.Id)
+    item.IsEquipment = Addon:IsEquippableItem(item.Id)
     if IS_RETAIL then item.IsProfessionEquipment = item.IsEquipment and item.TypeId == 19 end
     item.IsEquipped = location and location:IsEquipmentSlot()
     if IS_RETAIL then item.IsTransmogEquipment = isTransmogEquipment(item.EquipLoc) end
+    if IS_RETAIL then item.IsUpgradeable = location and C_ItemUpgrade.CanUpgradeItem(location) end
 
     -- Get soulbound information
     if location and C_Item.IsBound(location) then
-        item.IsSoulbound = true         -- This actually also covers account bound.
-        -- TODO watch for better way. Blizzard API doesn't expose it, which means we need
-        -- to scan the tooltip.
-        if IS_RETAIL then
-            if itemproperties:IsItemAccountBoundInTooltip(tooltipdata) then
-                item.IsAccountBound = true
-            end
+        -- IsBound returns true for both Account Bound and Soulbound
+        -- We must check for both types.
+        -- First check if it's soulbound. If it is soulbound then it cannot be
+        if itemproperties:IsItemAccountBoundInTooltip(tooltipdata) then
+            item.IsWarbound = true
+            item.IsAccountBound = true
+        else
+            -- If it is bound but not account bound it must be soulbound.
+            item.IsSoulbound = true
         end
     else
         if item.BindType == 2 then
             item.IsBindOnEquip = true
+            if IS_RETAIL_NEXT and C_Item.IsBoundToAccountUntilEquip(location) then
+                item.IsWarboundUntilEquip = true
+                -- For rule simplicity, we will treat WarboundUntilEquip the same as Warbound
+                -- Technically it is both warbound and bind on equip.
+                item.IsWarbound = true
+            end
         elseif item.BindType == 3 then
             item.IsBindOnUse = true
         end
     end
 
-    -- Determine if this item is cosmetic.
-    -- This information is currently not available via API.
     if IS_RETAIL then
+        -- Determine if this item is cosmetic. Blizzard Cosmetic check doesn't count every type of cosmetic
+        -- we have seen, so we will use tooltip to ensure it is actually a Cosmetic as the Player sees it.
         if tooltipdata and item.IsEquipment and itemproperties:IsItemCosmeticInTooltip(tooltipdata) then
             item.IsCosmetic = true
         end
-    end
 
-    -- Get Transmog info
-    -- We aren't using PlayerHasTransmog becuase item id is unreliable, better to use the actual itemloc & appearance info.
-    if IS_RETAIL then
-        if (location) then
-            -- We do not expose appearanceId of an item, becuase it will be 0 if the player cannot use it.
-            -- This could lead to trying to collect an appearance and getting false positives.
-            local baseItemTransmogInfo = C_Item.GetBaseItemTransmogInfo(location);
-            local baseInfo = C_TransmogCollection.GetAppearanceInfoBySource(baseItemTransmogInfo.appearanceID);
-            if baseInfo then
-                -- This will be zero if the player cannot use the item. More blizzard being awesome.
-                item.AppearanceId = baseInfo.appearanceID
-                item.IsCollected = baseInfo.appearanceIsCollected
+        -- This will detect usable items by the player class, for example, armor they can wear, tokens they can use, etc.
+        item.IsUsable = C_PlayerInfo.CanUseItem(item.Id)
+        item.IsEquippable = item.IsUsable and item.IsEquipment
+
+        -- Transmog identification
+        local appearanceId, sourceId = C_TransmogCollection.GetItemInfo(item.Link)
+        if (appearanceId and sourceId and appearanceId ~= 0) then
+            item.HasAppearance = true
+            item.AppearanceId = appearanceId
+            item.SourceId = sourceId
+
+            -- Optimization - if the item is Soulbound then nothing else matters.
+            -- Soulbound items have their appearances learned immediately.
+            -- We don't need to even bother checking appearance collection because if it could
+            -- have been collected it would have been, and the item is safe to vendor
+            -- or destroy.
+            if not item.IsAppearanceCollected and item.IsSoulbound then
+                if Addon.IsDebug then
+                    item.TransmogInfoSource = "Soulbound"
+                end
+                item.IsAppearanceCollected = true
+            end
+
+            -- If it isn't soulbound, try exact item matching the source. If we have the source, we're done.
+            local hasSource = C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(item.SourceId)
+            if hasSource then
+                if Addon.IsDebug then
+                    item.TransmogInfoSource = "PlayerHasTransmogItemModifiedAppearance"
+                end
+                item.IsAppearanceCollected = true
+            else
+                -- No exact source, so check alternate sources.
+                local sources = C_TransmogCollection.GetAppearanceSources(item.AppearanceId)
+                if sources then
+                    for k, source in pairs(sources) do
+                        if source and source.isCollected then
+                            if Addon.IsDebug then
+                                item.TransmogInfoSource = "GetAppearanceSources"
+                            end
+                            item.IsAppearanceCollected = true
+                            break;
+                        end
+                    end
+                end
+            end
+
+            -- If source lookup did not work, fall back on PlayerHasTransmog
+            -- This is typical for Cosmetic items which will return nil for the first two checks.
+            -- This may also detect some non-usable transmogs as having been collected already.
+            if not item.IsAppearanceCollected then
+                if Addon.IsDebug then
+                    item.TransmogInfoSource = "PlayerHasTransmogByItemInfo"
+                end
+                item.IsAppearanceCollected = C_TransmogCollection.PlayerHasTransmogByItemInfo(item.Link)
             end
         end
 
-        -- Treat AppearanceId of 0 as cannot-use. Appearances the player cannot use have appearanceId 0.
-        -- Items that dont' have an appearance also have 0. Without tracking appearances across all characters
-        -- we don't have a way of knowing just yet whether the appearance is collectable by another character.
-        -- However, we can leverage the fact that appearance will be 0 for unusable equipment to identify unusable equipment.
-        -- We will assume that rings, cloaks, and the like are "usable" by everyone, even though on some edge cases they are
-        -- not. This is a safe assumption for things like "Keep usable gear" or "vendor unusable gear" so we err on the side
-        -- of safety.
-        item.IsEquippable = false
-        if item.IsEquipment and ((not item.IsTransmogEquipment) or (item.IsTransmogEquipment and item.AppearanceId ~= 0)) then
-            item.IsEquippable = true
-        end
-
-        -- (we could track all appearances on other characters, but there's addons for that and it would be
-        -- better to have a plugin for Mog-it or something like that instead of re-writing that code.)
-        -- However, we can assume that if the item is BoA or BoE and the player does not have it, that it
-        -- could be collectable, and therefore we will err on the side of caution and flag it as collectable
-        -- if the player cannot use it but could potentially trade it to other characters.
-        -- This may not include illusions. TODO: Check illusion behavior.
-        item.IsCollectable = false
-        if not item.IsCollected and item.IsTransmogEquipment and not (item.AppearanceId == 0) then
-            item.IsCollectable = true
-        end
-
-        -- Alias for IsUnknownAppearance
-        item.IsUnknownAppearance = item.IsCollectable
+        item.IsUnknownAppearance = item.HasAppearance and not item.IsAppearanceCollected
 
         -- Get Crafted Quality for Dragonflight professions.
         -- There is also a Reagent Quality but every instance I have found for that it is identical.
         -- We will just use the one for now unless there is need to add the differentiation.
         item.CraftedQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(item.Link)
         if not item.CraftedQuality then item.CraftedQuality = 0 end
-    end
 
-    if IS_RETAIL then
         -- Determine if this is a toy.
         -- Toys are typically type 15 (Miscellaneous), but sometimes 0 (Consumable), and the subtype is very inconsistent.
-        -- Since blizz is inconsistent in identifying these, we will just look at these two types and then check the tooltip.
+        -- Toybox API could confirm toy status but is sometimes not available, so we cannot use it.
+        -- Toybox may be some sort of on-demand loaded component.
         item.IsToy = false
+        local isToy = {C_ToyBox.GetToyInfo(item.Id)}
         if tooltipdata and item.TypeId == 15 or item.TypeId == 0 then
             if itemproperties:IsItemToyInTooltip(tooltipdata) then
                 item.IsToy = true
             end
         end
 
-        -- Determine if this is an already-collected item, which should only be usable items.
+        item.IsPet = false
+        if item.TypeId == 15 and item.SubTypeId == 2 then
+            local petInfo = {C_PetJournal.GetPetInfoByItemID(item.Id)}
+            if #petInfo > 0 then
+                item.IsPet = true
+                item.PetName = petInfo[1] or ""
+                item.PetType = petInfo[3] or 0
+                item.IsPetTradeable = petInfo[9] or 0
+                item.PetSpeciesId = petInfo[13] or 0
+                if item.PetSpeciesId > 0 then
+                    local petCount, petMax = C_PetJournal.GetNumCollectedInfo(item.PetSpeciesId)
+                    item.PetCount = petCount or 0
+                    item.PetLimit = petMax or 0
+                    item.IsPetCollectable = item.PetCount < item.PetLimit
+                end
+            end
+        end
+
+        -- Determine if this is an already-collected item, which should only be items with a
+        -- use action. Note Cosmetics may not show up as having a use ability, even though
+        -- they have a use ability.
         item.IsAlreadyKnown = false
-        if tooltipdata and item.IsUsable then
+        if tooltipdata and item.HasUseAbility then
             if itemproperties:IsItemAlreadyKnownInTooltip(tooltipdata) then
                 item.IsAlreadyKnown = true
             end
         end
-    else
+    end
+
+    if not IS_RETAIL then
         -- Old tooltip import for Classic
         -- Import the tooltip text as item properties for custom rules.
         item.TooltipLeft = itemproperties:ImportTooltipTextLeft(location)

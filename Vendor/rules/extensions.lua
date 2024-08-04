@@ -305,7 +305,7 @@ end
     |   addon we will use to identify it.
     ========================================================================--]]
 local function validateExtension(extension)
-    if (not validateString(extension.Addon) and not IsAddOnLoaded(extension.Addon)) then
+    if (not validateString(extension.Addon) and not Addon:IsAddOnLoaded(extension.Addon)) then
         return false, "The specified AddOn was either invalid or not loaded";
     end
 
@@ -317,8 +317,8 @@ local function validateExtension(extension)
         return false, string.format("The extension 'Source' field was invalid. (%s)", extension.Addon);
     end
 
-    local version = GetAddOnMetadata(extension.Addon, "Version");
-    local _, title = GetAddOnInfo(extension.Addon);
+    local version = Addon:GetAddOnMetadata(extension.Addon, "Version");
+    local _, title = Addon:GetAddOnInfo(extension.Addon);
     if (not validateString(version) or not validateString(title)) then
         return false, string.format("Unable to get information about '%s' addon", extension.Addon);
     end

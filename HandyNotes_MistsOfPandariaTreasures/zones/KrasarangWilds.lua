@@ -1,16 +1,17 @@
 local myname, ns = ...
 
-ns.RegisterPoints(418, { -- Krasarang Wilds
-    [43669232] = { loot={86122}, label="Equipment Locker", quest=31410, }, -- Plankwalking Greaves
-    [54488873] = { loot={87266}, note="in a barrel", quest=31411, }, -- Recipe: Banana Infused Rum
-    [52814644] = { loot={86124}, quest=31409, }, -- Pandaren Fishing Spear
-}, {
-    achievement=7284, -- Is Another Man's Treasure
-})
+-- Pre-landing: art=430
+-- Post-landing: art=499
+-- In the original change in patch 5.1(?), this actually changed the coordinates on the map, but as of the remix in 10.2.7 that's no longer the case
 
 ns.RegisterPoints(418, { -- Krasarang Wilds
-    [54267232] = { loot={87798}, group="junk", quest=31863, }, -- Stack of Papers
-    [71000920] = ns.riches{ loot={86220}, note="in the cave", quest=31408, }, -- Saurok Stone Tablet
+    [42409200] = { loot={86122}, label="Equipment Locker", quest=31410, }, -- Plankwalking Greaves
+    [52308870] = { loot={87266}, note="in a barrel", quest=31411, }, -- Recipe: Banana Infused Rum
+    [50804930] = { loot={86124}, quest=31409, }, -- Pandaren Fishing Spear
+}, ns.treasure{})
+ns.RegisterPoints(418, { -- Krasarang Wilds
+    [52007300] = ns.junk{ loot={87798}, quest=31863, }, -- Stack of Papers
+    [69500790] = ns.riches{ loot={86220}, note="in the cave", quest=31408, path=70670959 }, -- Saurok Stone Tablet
 })
 
 -- Rares
@@ -61,48 +62,64 @@ ns.RegisterPoints(418, { -- Krasarang Wilds
 })
 
 ns.RegisterPoints(418, { -- Krasarang Wilds
+    -- Post-landing PVP rares:
     [84802720] = { -- Dalan Nightbreaker
+        criteria=1, -- Champion of Arms
         quest=nil,
         npc=68318,
         loot={
             92783, -- Mark of the Hardened Grunt
         },
+        faction="Horde",
     },
     [87402920] = { -- Disha Fearwarden
+        criteria=3, -- Champion of the Light
         quest=nil,
         npc=68319,
         loot={
             92787, -- Horde Insignia of Conquering
         },
+        faction="Horde",
     },
     [13605700] = { -- Kar Warmaker
+        criteria=1, -- Champion of Arms
         quest=nil,
         npc=68321,
         loot={
             92782, -- Steadfast Footman's Medallion
         },
+        faction="Alliance",
     },
     [84403100] = { -- Mavis Harms
+        criteria=2, -- Champion of the Shadows
         quest=nil,
         npc=68317,
         loot={
             92785, -- Kor'kron Book of Hurting
         },
+        faction="Horde",
     },
     [10605660] = { -- Muerta
+        criteria=3, -- Champion of the Light
         quest=nil,
         npc=68322,
         loot={
             92786, -- Alliance Insignia of Conquering
         },
+        faction="Alliance",
     },
     [13006660] = { -- Ubunti the Shade
+        criteria=2, -- Champion of the Shadows
         quest=nil,
         npc=68320,
         loot={
             92784, -- SI:7 Operative's Manual
         },
+        faction="Alliance",
     },
+}, {
+    art=499,
+    achievement=7932,
 })
 
 ns.RegisterPoints(418, { -- Krasarang Wilds

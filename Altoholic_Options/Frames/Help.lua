@@ -2,7 +2,7 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 local colors = addon.Colors
 
-local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local L = DataStore:GetLocale(addonName)
 
 local function GetMemoryUsage(addons)
 	collectgarbage()
@@ -58,6 +58,7 @@ local dataStoreModules = {
 }
 
 local altoholicModules = {
+	"AddonFactory",
 	"Altoholic",
 	"Altoholic_Summary",
 	"Altoholic_Characters",

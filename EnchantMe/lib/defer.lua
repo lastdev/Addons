@@ -4,7 +4,6 @@ function addon.defer(delay, callback)
     local timer
 
     return function (...)
-        -- merge arguments
         local args = {...}
         local argCount = select('#', ...)
 

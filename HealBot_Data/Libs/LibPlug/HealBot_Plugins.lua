@@ -2,8 +2,8 @@ function HealBot_Plugin_Options_SetupFrame(frame, hide, tall)
 	frame:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = true, tileSize = 8, edgeSize = 8,
-		insets = { left = 0, right = 0, top = 0, bottom = 0, },
+        tile = true, tileSize = 12, edgeSize = 12,
+        insets = { left = 2, right = 2, top = 2, bottom = 2, },
 	})
 	frame:SetBackdropColor(0,0,0,0);
     if tall then
@@ -39,7 +39,7 @@ function HealBot_Plugin_Options_SetupSlider(slider, point, width, x, y)
 end
 
 function HealBot_Plugin_Options_SetLabel(object, text)
-	local r,g,b,a=HealBot_Options_OptionsThemeCols()
+	local r,g,b,a = HealBot_Options_OptionsThemeCols()
 	object:SetText(text)
 	object:SetTextColor(r,g,b,a)
 end

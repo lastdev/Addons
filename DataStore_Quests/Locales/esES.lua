@@ -1,5 +1,5 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("DataStore_Quests", "esES")
-
+local addonName = ...
+local L = DataStore:SetLocale(addonName, "esES")
 if not L then return end
 
 L["AUTO_UPDATE_DISABLED"] = "El historial de misiones permanecerá en su estado actual, ya sea vacío o desactualizado."

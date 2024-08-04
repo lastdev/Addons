@@ -16,7 +16,7 @@ ns.RegisterPoints(390, { -- Vale of Eternal Blossoms
         criteria=21068,
         npc=50749,
         loot={
-            86579, -- Bottled Tornado
+            -- 86579, -- Bottled Tornado (pre-toy version)
             {134023,toy=true,}, -- Bottled Tornado
         },
     },
@@ -88,20 +88,16 @@ ns.RegisterPoints(390, { -- Vale of Eternal Blossoms
         criteria=20524,
         npc=63695,
     },
-    [27001460] = { -- Bloodtip +2
+    [24602670] = ns.path{ -- Bloodtip, Huo-Shang, Gaohun the Soul-Severer
         quest=nil,
-        criteria=20526,
-        npc=58474,
+        label="{zone:395}",
+        criteria={20526, 20525, 20529},
+        -- npc={58474, 62881, 63691},
     },
     [45805900] = { -- Cracklefang
         quest=nil,
         criteria=20517,
         npc=58768,
-    },
-    [21201700] = { -- Gaohun the Soul-Severer +3
-        quest=nil,
-        criteria=20525,
-        npc=62881,
     },
     [26405040] = { -- General Temuja +2
         quest=nil,
@@ -112,11 +108,8 @@ ns.RegisterPoints(390, { -- Vale of Eternal Blossoms
         quest=nil,
         criteria=20528,
         npc=62880,
-    },
-    [24000780] = { -- Huo-Shuang +3
-        quest=nil,
-        criteria=20529,
-        npc=63691,
+        path=28001530,
+        note="Inside a blocked cave",
     },
     [6205780] = { -- Kri'chon
         quest=nil,
@@ -148,13 +141,33 @@ ns.RegisterPoints(390, { -- Vale of Eternal Blossoms
         criteria=20532,
         npc=63977,
     },
-    [45007620] = { -- Wulon
+    [45347624] = { -- Wulon
         quest=nil,
         criteria=20527,
         npc=63510,
+        path=40807720,
     },
 }, {
     achievement=7317, -- One Many Army
+})
+ns.RegisterPoints(395, {-- Guo-Lai Halls
+    [64041911] = { -- Huo-Shuang
+        quest=nil,
+        criteria=20529,
+        npc=63691,
+        note="Inside the Guo-Lai Halls"
+    },
+    [75804758] = { -- Bloodtip
+        quest=nil,
+        criteria=20526,
+        npc=58474,
+        vignette=33,
+    },
+    [53395910] = { -- Gaohun the Soul-Severer
+        quest=nil,
+        criteria=20525,
+        npc=62881,
+    },
 })
 
 ns.RegisterPoints(390, { -- Vale of Eternal Blossoms

@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Raids-BC", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240414045756")
+mod:SetRevision("20240520103015")
+--mod:SetZone(1234)--FIXME RIGHT ID
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",

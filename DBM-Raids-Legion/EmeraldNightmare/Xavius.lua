@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1726, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240501100943")
+mod:SetRevision("20240525081121")
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetUsedIcons(6, 2, 1)
@@ -82,7 +82,7 @@ local timerCallOfNightmaresCD			= mod:NewCDTimer(40, 205588, nil, nil, nil, 1, n
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerNightmareTentacleCD			= mod:NewCDTimer(20, "ej12977", nil, nil, nil, 1, 93708)--226194 is an icon consideration now
 
-mod:AddInfoFrameOption("ej12970")
+mod:AddInfoFrameOption(-12970)
 mod:AddBoolOption("InfoFrameFilterDream", true)
 mod:AddRangeFrameOption(6, 208322)
 mod:AddSetIconOption("SetIconOnBlades", 206656)

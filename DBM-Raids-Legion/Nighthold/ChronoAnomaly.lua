@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1725, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185020")
+mod:SetRevision("20240629024612")
 mod:SetCreatureID(104415)--104731 (Depleted Time Particle). 104676 (Waning Time Particle). 104491 (Accelerated Time particle). 104492 (Slow Time Particle)
 mod:SetEncounterID(1865)
 --mod:SetUsedIcons(5, 4, 3, 2, 1)--sometimes it was 5 targets, sometimes it was whole raid. even post nerf. have to see
@@ -46,7 +46,7 @@ local timerBurstofTimeCD			= mod:NewNextCountTimer(30, 206614, nil, nil, nil, 3)
 local timerTimeReleaseCD			= mod:NewNextCountTimer(30, 206610, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerChronoPartCD				= mod:NewCDTimer(5, 206607, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerBigAddCD					= mod:NewNextCountTimer(30, 206700, nil, nil, nil, 1, nil, nil, nil, 1, 4)--Switch to waning time particle when section info known
-local timerNextPhase				= mod:NewPhaseTimer(74)--Used anywhere phase change is NOT immediately after power overwhelming
+local timerNextPhase				= mod:NewStageTimer(74)--Used anywhere phase change is NOT immediately after power overwhelming
 
 mod:AddRangeFrameOption(10, 206617)
 mod:AddInfoFrameOption(206610)

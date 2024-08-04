@@ -1,6 +1,20 @@
 # SharedMedia Classical Fonts
 
-## [2.0.38](https://github.com/Myrroddin/sharedmedia-classicalfonts/tree/2.0.38) (2024-05-08)
-[Full Changelog](https://github.com/Myrroddin/sharedmedia-classicalfonts/compare/2.0.37...2.0.38) [Previous Releases](https://github.com/Myrroddin/sharedmedia-classicalfonts/releases)
+## [2.100](https://github.com/Myrroddin/sharedmedia-classicalfonts/tree/2.100) (2024-06-12)
+[Full Changelog](https://github.com/Myrroddin/sharedmedia-classicalfonts/compare/2.0.41...2.100) [Previous Releases](https://github.com/Myrroddin/sharedmedia-classicalfonts/releases)
 
-- [Retail] Bump ToC for patch 10.2.7  
+- Update README.md  
+- Update README.md  
+- Remove duplicate license file  
+- Create LICENSE  
+- Create LICENCE.md  
+- Update README.md  
+- Create a suggestion or improvement issue template  
+- Update issue templates  
+- Update README.md  
+- Update bug\_report.md again  
+- Update bug\_report.md  
+- Update bug\_report.md  
+- Update issue templates  
+- [All] Update the fonts' licences  
+- Create a README file  

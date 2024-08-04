@@ -1,7 +1,7 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- Always check line number in regexp and file, must be 1
---[===[@debug@
+--[==[@debug@
 print('Loaded',__FILE__)
---@end-debug@]===]
+--@end-debug@]==]
 local function pp(...) print(GetTime(),"|cff009900",__FILE__:sub(-15),strjoin(",",tostringall(...)),"|r") end
 --*TYPE module
 --*CONFIG noswitch=false,profile=true,enhancedProfile=true
@@ -58,7 +58,7 @@ local HideTT=OrderHallCommanderMixin.HideTT
 
 local dprint=print
 local ddump
---[===[@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 ddump=DevTools_Dump
 LoadAddOn("LibDebug")
@@ -66,7 +66,7 @@ LoadAddOn("LibDebug")
 if LibDebug then LibDebug() dprint=print end
 local safeG=addon.safeG
 
---@end-debug@]===]
+--@end-debug@]==]
 --@non-debug@
 dprint=function() end
 ddump=function() end
@@ -231,7 +231,7 @@ function module:BuildMission(missionID,followerID)
 		end
 	end
 end
---[===[@debug@
+--[==[@debug@
 function module:GetFollower(key)
 	if (key:sub(1,2)=='0x') then
 		key="0x" .. ("0000000000000000" ..key:sub(3)):sub(-16)
@@ -243,7 +243,7 @@ function module:GetFollower(key)
 		end
 	end
 end
---@end-debug@]===]
+--@end-debug@]==]
 local indexes={followers={},missions={}}
 local followerCache={}
 local followerCacheUpdate=GetTime()
@@ -717,9 +717,9 @@ function module:OnInitialized()
 	  LoadAddOn("Blizzard_OrderHallUI")
 	currency, _ = C_Garrison.GetCurrencyTypes(garrisonType);
 	currencyName, resources, currencyTexture = addon:GetCurrencyInfo(currency)
---[===[@debug@
+--[==[@debug@
 	print("Currency init",currencyName, resources, currencyTexture)
---@end-debug@]===]
+--@end-debug@]==]
 	addon.resourceFormat=COSTS_LABEL .." %d"
 	self:ParseFollowers()
 end
@@ -753,9 +753,9 @@ end
 function addon:RefreshFollowers()
 	followerCache=G.GetFollowers(followerType)
 	rebuildFollowerIndex()
---[===[@debug@
+--[==[@debug@
 	print("Followeres refreshed:",#followerCache)
---@end-debug@]===]
+--@end-debug@]==]
 end
 function addon:GetFollowerData(...)
 	return module:GetFollowerData(...)
@@ -885,9 +885,9 @@ function addon:GetFullPermutations(dowipe)
 			end
 		end
 		table.sort(all) -- We need champions first and a predictable order
---[===[@debug@
+--[==[@debug@
 		for x=1,1 do
---@end-debug@]===]
+--@end-debug@]==]
 		for i=1,#all do
 			local class,id,value=strsplit('|',all[i])
 			if class=="T" then -- champions ended, troops only parties are invalid
@@ -911,9 +911,9 @@ function addon:GetFullPermutations(dowipe)
 				end
 			end
 		end
---[===[@debug@
+--[==[@debug@
 		end
---@end-debug@]===]
+--@end-debug@]==]
 		table.sort(fullPermutations)
 		del(all)
 		del(seen)
@@ -958,9 +958,9 @@ function addon:RefreshFollowerStatus()
 	wipe(s)
 	local followers=module:GetFollowerData()
 	if type(followers)~="table" then
-	--[===[@debug@
+	--[==[@debug@
 		print("GetFollowerData returned",followers)
-	--@end-debug@]===]
+	--@end-debug@]==]
 		return
 	end
 	for i=1,#followers do

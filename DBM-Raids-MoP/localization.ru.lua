@@ -10,7 +10,7 @@ L = DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
 	SpecWarnOverloadSoon		= "Скоро %s!",
-	specWarnBreakJasperChains	= "Рвите яшмовые цепи!"
+	specWarnBreakJasperChains	= "Рвите Яшмовые цепи!"
 })
 
 L:SetOptionLocalization({
@@ -58,7 +58,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull	= "Пора умирать!"
+	Pull	= "Пора умирать!",
+	RolePlay	= "А вот теперь вы меня разозлили!"
 })
 
 ----------------------
@@ -636,7 +637,8 @@ L:SetOptionLocalization({
 	StaticShockArrow			= "Показывать стрелку DBM, когда на ком-то $spell:135695",
 	OverchargeArrow				= "Показывать стрелку DBM, когда на ком-то $spell:136295",
 	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136295),
-	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(135695)
+	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(135695),
+	AGStartDP					= "Автоматический выбор диалога для использования Телепортационной площадки перед Лэй Шэнем"
 })
 
 L:SetMiscLocalization({
@@ -696,6 +698,10 @@ L:SetWarningLocalization({
 -- Norushen --
 ---------------------------
 L = DBM:GetModLocalization(866)
+
+L:SetOptionLocalization({
+	AGStartNorushen		= "Автоматический выбор диалога для начала боя при взаимодействии с Норусхеном"
+})
 
 L:SetMiscLocalization({
 	wasteOfTime	= "Хорошо, я создам поле для удерживания порчи."
@@ -866,14 +872,12 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerRoleplay		= "Показывать таймер для Гарроша/Тралла (ролевая игра)",
 	RangeFrame			= "Показывать динамическое окно проверки дистанции (8м.)<br/>(Это умное окно проверки дистанции, которое появляется, когда Вы достигаете порога $spell:147126)",
-	InfoFrame			= "Показывать информационное окно для игроков без снижения урона на переходной фазе",
-	yellMaliceFading	= "Кричать, когда $spell:147209 спадает"
+	InfoFrame			= "Показывать информационное окно для игроков без снижения урона на переходной фазе"
 })
 
 L:SetMiscLocalization({
 	wasteOfTime		= "Еще не поздно, Гаррош. Сними с себя мантию вождя. Мы можем закончить все здесь и сейчас.",
 	NoReduce		= "Нет снижения урона",
-	MaliceFadeYell	= "Злоба спадает с %s (%d)",
 	phase3End		= "Думаете, вы победили? Слепцы. Я раскрою вам глаза!"
 })
 

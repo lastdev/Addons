@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185029")
+mod:SetRevision("20240525081132")
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 --Could not find south path for this one
@@ -56,7 +56,7 @@ mod:AddTimerLine(ALL)
 local berserkTimer					= mod:NewBerserkTimer(420)--As reported in feedback threads
 
 mod:AddRangeFrameOption("8/3", 163372)
-mod:AddInfoFrameOption("ej9586")
+mod:AddInfoFrameOption(-9586)
 
 --Non resetting counts because strategy drastically changes based on number of people. Mechanics like debuff duration change with different player counts.
 mod.vb.EnfeebleCount = 0

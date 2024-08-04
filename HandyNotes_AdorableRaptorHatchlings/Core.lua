@@ -3,7 +3,7 @@
 
                                      Adorable Raptor Hatchlings
 
-                                        v1.31 - 3rd May 2024
+                                       v1.32 - 23rd July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 								
@@ -794,7 +794,7 @@ local function Slash( options )
 
 	Settings.OpenToCategory( "HandyNotes" )
 	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "AdorableRaptorHatchlings" )
-	if ( version > 100000 ) then
+	if ( version >= 100000 ) then
 		print( ns.colour.prefix .."ARH: " ..ns.colour.highlight .."Try the Minimap AddOn Menu (below the Calendar)" )
 	end
 end

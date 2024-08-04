@@ -93,6 +93,15 @@ local challengeModeIds = {
 	[456] = 643, -- Throne of the Tides
 	[463] = 2579, -- Dawn of the Infinite: Galakrond's Fall
 	[464] = 2579, -- Dawn of the Infinite: Murozond's Rise
+	[499] = 2649, -- Priory of the Sacred Flame
+	[500] = 2648, -- The Rookery
+	[501] = 2652, -- The Stonevault
+	[502] = 2669, -- City of Threads
+	[503] = 2660, -- Ara-Kara, City of Echoes
+	[504] = 2651, -- Darkflame Cleft
+	[505] = 2662, -- The Dawnbreaker
+	[506] = 2661, -- Cinderbrew Meadery
+	[507] = 670, -- Grim Batol
 }
 
 do
@@ -687,6 +696,7 @@ function DBM_GUI:CreateBossModTab(addon, panel, subtab)
 			local profileID = playerLevel > 9 and DBM_UseDualProfile and GetSpecializationGroup() or 0
 			for _, id in ipairs(DBM.ModLists[addon.modId]) do
 				_G[addon.modId:gsub("-", "") .. "_AllSavedVars"][playerName .. "-" .. realmName][id][profileID] = importTable[id]
+				---@diagnostic disable-next-line: inject-field
 				DBM:GetModByName(id).Options = importTable[id]
 			end
 			DBM:AddMsg("Profile imported.")
@@ -755,7 +765,7 @@ function DBM_GUI:CreateBossModTab(addon, panel, subtab)
 	area.frame:SetPoint("TOPLEFT", 10, modProfileArea and -270 or -25)
 
 	local statOrder = {
-		"lfr", "follower", "normal", "normal25", "heroic", "heroic25", "mythic", "challenge", "timewalker"
+		"follower", "story", "lfr", "normal", "normal25", "heroic", "heroic25", "mythic", "challenge", "timewalker"
 	}
 
 	for _, mod in ipairs(DBM.Mods) do
@@ -823,13 +833,14 @@ function DBM_GUI:CreateBossModTab(addon, panel, subtab)
 
 			local statTypes = {
 				follower	= L.FOLLOWER,--no PLAYER_DIFFICULTY entry yet
+				story		= L.STORY,--no PLAYER_DIFFICULTY entry yet
 				lfr25		= PLAYER_DIFFICULTY3,
 				normal		= mod.addon.minExpansion < 5 and RAID_DIFFICULTY1 or PLAYER_DIFFICULTY1,
 				normal25	= RAID_DIFFICULTY2,
 				heroic		= mod.addon.minExpansion < 5 and RAID_DIFFICULTY3 or PLAYER_DIFFICULTY2,
 				heroic25	= RAID_DIFFICULTY4,
 				mythic		= PLAYER_DIFFICULTY6,
-				challenge	= (mod.addon.minExpansion < 6 and not mod.upgradedMPlus) and CHALLENGE_MODE or (PLAYER_DIFFICULTY6 .. "+"),
+				challenge	= (mod.addon.minExpansion < 6 and not mod.upgradedMPlus) and CHALLENGE_MODE or PLAYER_DIFFICULTY6 .. "+",
 				timewalker	= PLAYER_DIFFICULTY_TIMEWALKER
 			}
 			if (mod.addon.type == "PARTY" or mod.addon.type == "SCENARIO") or -- Fixes dungeons being labled incorrectly
@@ -855,7 +866,7 @@ function DBM_GUI:CreateBossModTab(addon, panel, subtab)
 					local kills, pulls, bestRank, bestTime = mod.stats[statType .. "Kills"] or 0, mod.stats[statType .. "Pulls"] or 0, mod.stats[statType .. "BestRank"] or 0, mod.stats[statType .. "BestTime"]
 					section.value1:SetText(kills)
 					section.value2:SetText(pulls - kills)
-					if statType == "challenge" and bestRank > 0 then
+					if bestRank > 0 then--Used by "challenge" and "normal" for M+, Delves, and SoD raids
 						section.value3:SetText(bestTime and ("%d:%02d (%d)"):format(mfloor(bestTime / 60), bestTime % 60, bestRank) or "-")
 					else
 						section.value3:SetText(bestTime and ("%d:%02d"):format(mfloor(bestTime / 60), bestTime % 60) or "-")
@@ -904,7 +915,14 @@ do
 		for _, challengeMap in ipairs(C_ChallengeMode.GetMapTable()) do
 			local challengeMode = challengeModeIds[challengeMap]
 			local id = challengeMode
-			local mapName = strsplit("-", GetRealZoneText(id):trim() or id)
+			--For handling zones like Warfront: Arathi - Alliance
+			local mapName = GetRealZoneText(id):trim() or id
+			for w in string.gmatch(mapName, " - ") do
+				if w:trim() ~= "" then
+					mapName = w
+					break
+				end
+			end
 			if not currentSeasons[mapName] then
 				local modId
 				for _, addon in ipairs(DBM.AddOns) do
@@ -990,7 +1008,9 @@ do
 				end
 			end
 
-			for _, mod in ipairs(DBM.Mods) do
+			for _, v in ipairs(DBM.Mods) do
+				---@class DBMMod
+				local mod = v
 				if mod.modId == addon.modId then
 					if not mod.panel and (not addon.subTabs or (addon.subPanels and (addon.subPanels[mod.subTab] or mod.subTab == 0))) then
 						if addon.subTabs and addon.subPanels[mod.subTab] then

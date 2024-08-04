@@ -1,7 +1,7 @@
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):1:")) -- Always check line number in regexp and file, must be 1
---[===[@debug@
+--[==[@debug@
 print('Loaded',__FILE__)
---@end-debug@]===]
+--@end-debug@]==]
 local function pp(...) print(GetTime(),"|cff009900",__FILE__:sub(-15),strjoin(",",tostringall(...)),"|r") end
 --*TYPE module
 --*CONFIG profile=true,enhancedProfile=true
@@ -56,7 +56,7 @@ local HideTT=OrderHallCommanderMixin.HideTT
 
 local dprint=print
 local ddump
---[===[@debug@
+--[==[@debug@
 LoadAddOn("Blizzard_DebugTools")
 ddump=DevTools_Dump
 LoadAddOn("LibDebug")
@@ -64,7 +64,7 @@ LoadAddOn("LibDebug")
 if LibDebug then LibDebug() dprint=print end
 local safeG=addon.safeG
 
---@end-debug@]===]
+--@end-debug@]==]
 --@non-debug@
 dprint=function() end
 ddump=function() end
@@ -220,10 +220,10 @@ function module:OnInitialized()
   for _,i in ipairs(data.ANY) do
     tinsert(data.Class,i)
   end
-	--[===[@debug@
+	--[==[@debug@
 	DevTools_Dump(data.Class)
 	addon:Print("Starting coroutine")
-	--@end-debug@]===]
+	--@end-debug@]==]
 	addon.coroutineExecute(module,0.1,"TickleServer")
 end
 local GetItemIcon=GetItemIcon
@@ -261,11 +261,11 @@ do
   					itemquality[itemid]=quality
   					icon2item[GetItemIcon(itemid)]=itemid
   					i=i+1
-  --[===[@debug@
+  --[==[@debug@
   					if i % 100 == 0 then
   						addon:Print(format("Precached %d items in %.3f so far",i,(debugprofilestop()-start)))
   					end
-  --@end-debug@]===]
+  --@end-debug@]==]
   				end
   				if coroutine.running() then coroutine.yield() end
   			end
@@ -276,8 +276,8 @@ do
   	start=debugprofilestop()
   	tickle(data.Equipments)
     tickle(addon.allArtifactPower,true)
-  	--[===[@debug@
+  	--[==[@debug@
   	addon:Print(format("Precached %d items in %.3f seconds",i,(debugprofilestop()-start)/1000))
-  	--@end-debug@]===]
+  	--@end-debug@]==]
   end
 end

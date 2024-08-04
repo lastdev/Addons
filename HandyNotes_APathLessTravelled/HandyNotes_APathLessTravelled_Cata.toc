@@ -1,0 +1,12 @@
+## Interface: 40400
+## Version: 1.44
+## Author: Taraezor
+## IconTexture: Interface\Icons\WoW_Token01
+## Title: A Path Less Travelled
+## Notes: |cFF00CED1Travel with me and discover the amazing!
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_APathLessTravelledDB
+## AddonCompartmentFunc: HandyNotes_APathLessTravelled_OnAddonCompartmentClick
+
+Core.lua
+Data.lua
