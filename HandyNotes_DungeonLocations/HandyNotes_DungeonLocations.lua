@@ -179,7 +179,7 @@ do
 							anyLocked = true
 						end
 					end
-	  
+
 					-- I feel like this inverted lockout thing could be done far better
 					if ((anyLocked and db.invertlockout) or (allLocked and not db.invertlockout) and db.lockoutgray) then   
 						icon = icons["Locked"]
@@ -292,6 +292,7 @@ local defaults = {
   continentScale = 3,
   continentAlpha = 1,
   continent = true,
+  Zone = false,
   tomtom = true,
   journal = true,
   checkForPOI = false,
@@ -310,6 +311,7 @@ local defaults = {
   hideBfa = false,
   hideSL = false,
   hideDF = false,
+  hideTWW = false,
   show = {
    Dungeon = true,
    Raid = true,
@@ -387,6 +389,13 @@ function Addon:PLAYER_LOGIN()
    name = L["Show on Continent"],
    desc = L["Show icons on continent map"],
    order = 1,
+  },
+  Zone = {
+   type = "toggle",
+   name = L["Show on Zone"],
+   desc = L["Show icons on zone map"],
+   order = 1,
+   set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
   },
   tomtom = {
    type = "toggle",
@@ -546,6 +555,13 @@ function Addon:PLAYER_LOGIN()
    order = 26.9,
    set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
   },
+   hideTWW = {
+    type = "toggle",
+    name = L["Hide Khaz Algar"],
+    desc = L["Hide all Khaz Algar nodes from the map"],
+    order = 27.0,
+    set = function(info, v) db[info[#info]] = v self:FullUpdate() HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "DungeonLocations") end,
+   },
  },
 }
 
@@ -592,17 +608,71 @@ table.wipe(minimap)
 --  lfgid = { }, Either one id for single or multiple id's in table; though I don't know if tables gaurantee order
     
 -- },
+
 -- VANILLA
 if (not self.db.profile.hideVanilla) then
+
+nodes[12] = { -- Kalimdor
+   [58324232] = { id = 226, type = "Dungeon" }, -- Ragefire 
+   [43913301] = { id = 227, type = "Dungeon" }, -- Blackfathom Deeps 
+   [52215315] = { id = 240, type = "Dungeon" }, -- Wailing Caverns  
+   [38395594] = { id = 232, type = "Dungeon" }, -- Maraudon 
+   [44006850] = { id = 230, type = "Dungeon" }, -- 	 Maul
+   [45929663] = { id = 74, type = "Raid" }, -- Throne of the Four Winds
+   [54243397] = { id = 78, type = "Raid" }, -- Firelands 
+   [56526946] = { id = 760, type = "Raid" }, -- Onyxia's Lair 
+   [42068358] = { id = 743, type = "Raid" },-- Ruins of Ahn'Qiraj 
+   [40678358] = { id = 744, type = "Raid" }, -- Temple of Ahn'Qiraj
+   [53146914] = { id = 233, type = "Dungeon" }, -- Razorfen Downs 
+   [42726722] = { id = 230, lfgid = 36, type = "Dungeon" }, -- Dire Maul - Warpwood Quarter 
+   [54187774] = { id = 241, type = "Dungeon" }, -- Zul'Farrak
+   [50916837] = { id = 234, type = "Dungeon" }, -- Razorfen Kraul 
+   [52519670] = { id = 68, type = "Dungeon" }, -- The Vortex Pinnacle 
+   [49699341] = { id = 69, type = "Dungeon" }, -- Lost City of Tol'Vir 
+   [51579122] = { id = 70, type = "Dungeon" }, -- Halls of Origination
+   [51102882] = { id = 67, type = "Dungeon" }, -- The Stonecore
+   [59228331] = { id = { 187, 750, 279, 255, 251, 184, 185, 186 }, type = "Mixed" }
+}
+
+-- Vanilla Continent, For things that should be shown or merged only at the continent level
+nodes[13] = { -- Eastern Kingdoms
+   [56740242] = { id = 249, type = "Dungeon" }, -- Magisters' Terrace 
+   [58572466] = { id = 77, type = "Dungeon" }, -- Zul'Aman 
+   [31796256] = { id = 65, type = "Dungeon" }, -- Throne of Tides 
+   [47448471] = { id = 76, type = "Dungeon" }, -- Zul'Gurub 
+   [40764187] = { id = 64, type = "Dungeon" }, -- Shadowfang Keep 
+   [50573677] = { id = 246, type = "Dungeon" }, -- Scholomance
+   [52712836] = { id = 236, lfgid = 40, type = "Dungeon" }, -- Stratholme 
+   [53135585] = { id = 71, type = "Dungeon" }, -- Grim Batol
+   [46603050] = { id = { 311, 316 }, type = "Dungeon" }, -- Scarlet Halls/Monastery
+   [49508190] = { id = { 745, 860 },  type = "Mixed"}, -- Karazhan/Return to Karazhan
+   [42787097] = { id = 238, type = "Dungeon" }, -- The Stockade 
+   [55160370] = { id = 752, type = "Raid" }, -- Sunwell Plateau 
+   [47536894] = { id = 73, type = "Raid"  }, -- Blackwind Descent 
+   [54905899] = { id = 72, type = "Raid"  }, -- The Bastion of Twilight 
+   [35565150] = { id = 75, type = "Raid"  }, -- Baradin Hold
+   [53977927] = { id = 237, type = "Dungeon" }, -- The Temple of Atal'hakkar 
+   [40808194] = { id = 63, type = "Dungeon"  }, -- Deadmines
+   [42915972] = { id = 231, type = "Dungeon" }, -- Gnomeregan 
+   [46886972] = { mnID = 33, id = { 741, 742, 66, 228, 229, 559 }, type = "Mixed"   }, -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
+   [49428163] = { mnID = 42, id = { 745, 860 }, type = "Mixed" }, -- Karazhan, Return to Karazhan
+   [46583029] = { mnID = 19, id = { 311, 316 }, type = "Mixed" }, -- Scarlet Halls, Monastery 
+   [52176317] = { mnID = 15, id = { 1197, 239 }, type = "Mixed" }, --  Legacy of Tyr Dragonflight Dungeon & Vanilla Uldaman 
+}
+
+if self.db.profile.Zone then
+
 nodes[327] = { -- AhnQirajTheFallenKingdom
  [59001430] = {
   id = 743,
   type = "Raid",
-  hideOnContinent = true
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Ruins of Ahn'Qiraj Silithus 36509410, World 42308650
  [46800750] = { id = 744,
   type = "Raid",
-  hideOnContinent = true
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Temple of Ahn'Qiraj Silithus 24308730, World 40908570
 }
 nodes[63] = { -- Ashenvale
@@ -610,6 +680,8 @@ nodes[63] = { -- Ashenvale
  [14001310] = {
   id = 227,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Blackfathom Deeps, not at portal but look
 }
 nodes[15] = { -- Badlands
@@ -618,6 +690,7 @@ nodes[15] = { -- Badlands
   type = "Dungeon",
   hideOnMinimap = true,
   showInZone = true,
+  hideOnContinent = true,
  }, -- Uldaman & Legacy of Tyr Dragonflight Dungeon
  [58463690] = { 
   id = 239,
@@ -625,61 +698,74 @@ nodes[15] = { -- Badlands
   type = "Dungeon",
   hideOnMinimap = true,
   showInZone = true,
+  hideOnContinent = true,
  }, -- Uldaman (Secondary Entrance)
 }
 minimap[15] = { -- Badlands
  [60683744] = {
   id = 239,
-  type = "Dungeon"
+  type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Uldaman (Secondary Entrance)
 }
 nodes[10] = { -- Barrens
 [42106660] = {
  id = 240,
  type = "Dungeon",
- cont = true,
+ hideOnContinent = true,
+ showInZone = true,
  }, -- Wailing Caverns
 }
 nodes[36] = { -- BurningSteppes
  [20303260] = {
   id = { 66, 228, 229, 559, 741, 742 },
   type = "Mixed", 
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackrock mountain dungeons and raids
  [23202630] = {
   id = 73,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackwind Descent
 }
 nodes[42] = { -- DeadwindPass
  [46907470] = {
   id = 745,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Karazhan
  [46707020] = {
   id = 860,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Return to Karazhan
 }
 nodes[66] = { -- Desolace
  [29106250] = {
   id = 232,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Maraudon 29106250 Door at beginning
 }
 nodes[27] = { -- DunMorogh
  [29903560] = {
   id = 231,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gnomeregan
 }
 nodes[70] = { -- Dustwallow
- [52907770] = {
+ [52117581] = {
   id = 760,
   type = "Raid",
+  hideOnContinent = true, 
   showInZone = true,
  }, -- Onyxia's Lair
 }
@@ -688,29 +774,30 @@ nodes[23] = { -- EasternPlaguelands
   id = 236,
   lfgid = 40,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Stratholme World 52902870
  [43401940] = {
   id = 236,
   lfgid = 274,
   type = "Dungeon", -- Stratholme Service Entrance
+  hideOnContinent = true, 
   showInZone = true,
  }
 }
-
 nodes[69] = { -- Feralas
  [65503530] = {
   id = 230,
   lfgid = 34,
   type = "Dungeon",
+  hideOnContinent = true, 
   showInZone = true,
-  hideOnContinent = true,
  }, -- Dire Maul, probably dire maul east
  [60403070] = {
   id = 230,
   lfgid = 36,
   type = "Dungeon",
-  hideOnContinent = true,
-  hideOnMinimap = true,
+  hideOnContinent = true, 
   showInZone = true,
  }, -- Dire Maul West (probably) One spot between the two actual entrances
  -- Captial Gardens, 60.3 31.3; 60.4 30.7; 60.3 30.1; 429
@@ -730,75 +817,98 @@ nodes[69] = { -- Feralas
   showInZone = true,
  }, -- Dire Maul (at Lariss Pavillion)
 }
+
 nodes[85] = { -- Orgrimmar
  [51685848] = {
   id = 226,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Ragefire Chasm Cleft of Shadow 70104880
 }
 nodes[32] = { -- SearingGorge
  [41708580] = {
   id = { 66, 228, 229, 559, 741, 742 },
   type = "Mixed",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  },
  [43508120] = {
   id = 73,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackwind Descent
 }
 
 nodes[81] = { -- Silithus
- [36208420] = {
+ [36509380] = {
   id = 743,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Ruins of Ahn'Qiraj
- [23508620] =  {
+ [24108698] =  {
   id = 744,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Temple of Ahn'Qiraj
 }
 nodes[21] = { -- Silverpine
  [44806780] = {
   id = 64,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Shadowfang Keep
 }
 nodes[199] = { -- SouthernBarrens
  [40909450] = {
   id = 234,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Razorfen Kraul
 }
 nodes[84] = { -- StormwindCity
  [50406640] = {
   id = 238,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Stockade
 }
 nodes[50] = { -- StranglethornJungle
  [72203290] = {
   id = 76,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Zul'Gurub
 }
 nodes[224] = { -- StranglethornVale Jungle and Cape are subzones of this zone (weird)
  [63402180] = {
   id = 76,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Zul'Gurub
 }
 nodes[51] = { -- SwampOfSorrows
  [69505250] = {
   id = 237,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Temple of Atal'hakkar
 }
 nodes[71] = { --Tanaris
  [65604870] = {
   id = { 279, 255, 251, 750, 184, 185, 186, 187 },
   type = "Mixed",
+  hideOnContinent = true,
+  showInZone = true,
  },
  --[[[61006210] = { "The Culling of Stratholme",
   type = "Dungeon" },  --65604870 May look more accurate and merge all CoT dungeons/raids
@@ -812,30 +922,38 @@ nodes[71] = { --Tanaris
  [39202130] = {
   id = 241,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Zul'Farrak
 }
 nodes[18] = { -- Tirisfal
  [85303220] = {
   id = 311,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Scarlet Halls
  [84903060] = {
   id = 316,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Scarlet Monastery
 }
 nodes[64] = { -- ThousandNeedles
  [47402360] = {
   id = 233,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Razorfen Downs
 }
 nodes[22] = { -- WesternPlaguelands
  [69007290] = { 
   id = 246,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Scholomance World 50903650m
 }
 nodes[52] = { -- Westfall
@@ -843,56 +961,38 @@ nodes[52] = { -- Westfall
  [43107390] = {
   id = 63,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Deadmines
 }
 
--- Vanilla Continent, For things that should be shown or merged only at the continent level
- nodes[13] = { -- Eastern Kingdoms
-  [46603050] = {
-   id = { 311, 316 },
-   type = "Dungeon",
-   cont = true,
-  }, -- Scarlet Halls/Monastery
-  [47316942] = {
-   id = { 66, 73, 228, 229, 559, 741, 742 },
-   type = "Mixed",
-  }, -- Blackrock mount instances, merged in blackwind descent at continent level
-  --[38307750] = { 63,  type = "Dungeon" }, -- Deadmines 43707320,
-  [49508190] = {
-   id = { 745, 860 }, 
-   type = "Mixed",
-  }, -- Karazhan/Return to Karazhan
- }
- nodes[12] = { -- Kalimdor
-  [44006850] = {
-   id = 230,
-   type = "Dungeon"
-  }, -- 	 Maul
- }
  minimap[69] = { -- Feralas
   [65503530] = {
    id = 230,
    lfgid = 34,
    type = "Dungeon",
-   hideOnContinent = true,
+   hideOnContinent = true, 
+   showInZone = true,
   }, -- Dire Maul - Warpwood Quarter
   [62502490] = {
    id = 230,
    lfgid = 38,
    type = "Dungeon",
-   hideOnContinent = true,
+   hideOnContinent = true, showInZone = true,
   }, -- Dire Maul, probaly dire maul north
   [60303130] = {
    id = 230,
    lfgid = 36,
    type = "Dungeon",
-   hideOnContinent = true,
+   hideOnContinent = true, 
+   showInZone = true,
   }, -- Dire Maul, probably dire maul west, two entrances to same dungeon
   [60303010] = {
    id = 230,
    lfgid = 36,
    type = "Dungeon",
-   hideOnContinent = true,
+   hideOnContinent = true, 
+   showInZone = true,
   }, -- Dire Maul, probably dire maul west
  }
 
@@ -901,66 +1001,98 @@ nodes[33] = { -- BlackrockMountain
  [71305340] = {
   id = 66,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackrock Caverns
  [38701880] = {
   id = 228,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackrock Depths
  [80504080] = {
   id = 229,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
  }, -- Lower Blackrock Spire
  [79003350] = {
   id = 559,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Upper Blackrock Spire
  [54208330] = {
   id = 741,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Molten Core
  [64207110] = {
   id = 742,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackwing Lair
 }
 nodes[75] = { -- CavernsofTime
  [57608260] = {
   id = 279,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Culling of Stratholme
  [36008400] = {
   id = 255,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Black Morass
  [26703540] = {
   id = 251,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Old Hillsbrad Foothills
  [35601540] = {
   id = 750,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Battle for Mount Hyjal
  [57302920] = {
   id = 184,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- End Time
  [22406430] = {
   id = 185,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Well of Eternity
  [67202930] = {
   id = 186,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Hour of Twilight
  [61702640] = {
   id = 187,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Dragon Soul
 }
+
+
 nodes[55] = { -- DeadminesWestfall
  [25505090] = {
   id = 63,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Deadmines
 }
 nodes[67] = { -- MaraudonOutside Wicked Grotto I swapped the lfgid for this one and the 26 one to better match map name
@@ -968,67 +1100,109 @@ nodes[67] = { -- MaraudonOutside Wicked Grotto I swapped the lfgid for this one 
   id = 232,
   lfgid = 272,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Maraudon 36006430
 }
 nodes[68] = { -- Maraudon Foulspore Cavern
  [52102390] = {
   id = 232,
   lfgid = 26,
-  type = "Dungeon"
+  type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Maraudon 30205450 
 
  [44307680] = {
   id = 232,
   lfgid = 273,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  },  -- Maraudon
 }
 nodes[469] = { -- NewTinkertownStart
  [31703450] = {
   id = 231,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gnomeregan
 }
 nodes[30] = { -- New Tinker Town
  [30167457] = {
   id = 231,
-  type = "Dungeon"
+  type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gnomeregan
  [44631377] = {
   id = 231,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gnomeregan
 }
 nodes[19] = { -- Internal Zone ScarletMonasteryEntrance
  [68802420] = {
   id = 316,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Scarlet Monastery
  [78905920] = {
   id = 311,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Scarlet Halls
 }
 nodes[11] = {
  [55106640] = {
   id = 240,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Wailing Caverns
 }
+
+end
+
 end
 
 -- OUTLAND
 if (not self.db.profile.hideOutland) then
+
+nodes[101] = { -- Outland
+   [44487857] = { id = 247, type = "Dungeon" }, -- Auchenai Crypts 
+   [46027626] = { id = 250, type = "Dungeon" }, -- Mana-Tombs 
+   [47577861] = { id = 252, type = "Dungeon" }, -- Sethekk Halls 
+   [46028099] = { id = 253, type = "Dungeon" }, -- Shadow Labyrinth 
+   [65842044] = { id = 257, type = "Dungeon" }, -- The Botanica 
+   [65542528] = { id = 258, type = "Dungeon" }, -- The Mechanar  
+   [66722143] = { id = 254, type = "Dungeon" }, -- The Arcatraz
+   [66452335] = { id = 749, type = "Raid" }, -- The Eye  
+   [72298069] = { id = 751, type = "Raid" }, -- Black Temple 
+   [45131901] = { id = 746, type = "Raid" }, -- Gruul's Lairend
+   [56695240] = { mnID = 100, id = { 747, 248, 256, 259 }, type = "Mixed" }, -- Hellfire Ramparts, The Blood Furnace, The Shattered Halls, Magtheridon's Lair 
+   [34624490] = { mnID = 102, id = { 748, 260, 261, 262 }, type = "Mixed" }, -- Slave Pens, The Steamvault, The Underbog, Serpentshrine Cavern
+}
+
+if self.db.profile.Zone then
 nodes[105] = { -- BladesEdgeMountains
  [69302370] = {
   id = 746,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gruul's Lair World 45301950
 }
 nodes[95] = { -- Ghostlands
  [85206430] = {
   id = 77,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Zul'Aman World 58302480
 }
 nodes[100] = { -- Hellfire
@@ -1040,58 +1214,82 @@ nodes[100] = { -- Hellfire
   id = { 248, 256, 259, 747 },
   type = "Mixed",
   hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Hellfire Ramparts, The Blood Furnace, The Shattered Halls, Magtheridon's Lair
 }
 nodes[109] = { -- Netherstorm
  [71705500] = {
   id = 257,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Botanica
  [70606980] = {
   id = 258,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Mechanar World 65602540
  [74405770] = {
   id = 254,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Arcatraz World 66802160
  [73806380] = {
   id = 749,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Eye World 66602350
 }
 nodes[108] = { -- TerokkarForest
  [34306560] = {
   id = 247,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Auchenai Crypts World 44507890
  [39705770] = {
   id = 250,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Mana-Tombs World 46107640
  [44906560] = {
   id = 252,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Sethekk Halls World 47707890  Summoning Stone For Auchindoun 39806470, World: 46207860 
  [39607360] = {
   id = 253,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Shadow Labyrinth World 46108130
 }
 nodes[104] = { -- ShadowmoonValley
  [71004660] = {
   id = 751,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Black Temple World 72608410
 }
 nodes[122] = { -- Sunwell, Isle of Quel'Danas
  [61303090] = {
   id = 249,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Magisters' Terrace
  [44304570] = {
   id = 752,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Sunwell Plateau World 55300380
 }
 nodes[102] = { -- Zangarmarsh
@@ -1102,52 +1300,95 @@ nodes[102] = { -- Zangarmarsh
   id = { 260, 261, 262, 748 },
   type = "Mixed",
   hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Mixed Location
 }
 minimap[100] = { -- Hellfire
  [47605360] = {
   id = 248,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Hellfire Ramparts World 56805310 Stone 48405240 World 57005280
  [46005180] = {
   id = 256,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Blood Furnace World 56305260
  [48405180] = {
   id = 259,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Shattered Halls World 56705270, Old 47505200.  Adjusted for clarity
  [46405290] = {
   id = 747,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Magtheridon's Lair World 56705270, Old 47505210.  Adjusted for clarity
 }
 minimap[102] = { -- Zangarmarsh
  [48903570] = {
   id = 260,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Slave Pens World 34204370
  [50303330] = {
   id = 261,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Steamvault
  [54203450] = {
   id = 262,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Underbog World 35804330
  [51903280] = {
   id = 748,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Serpentshrine Cavern World 35104280
 }
+end
 end
 
 -- NORTHREND (16 Dungeons, 9 Raids)
 if (not self.db.profile.hideNorthrend) then
+
+nodes[113] = { -- Northrend
+   [77707945] = { id = 285, type = "Dungeon" }, -- Utgarde Keep, at doorway entrance 
+   [77557824] = { id = 286, type = "Dungeon" }, -- Utgarde Pinnacle 
+   [59091507] = { id = 275, type = "Dungeon" }, -- Halls of Lightning 
+   [56911729] = { id = 277, type = "Dungeon" }, -- Halls of Stone 
+   [62405001] = { id = 273, type = "Dungeon" }, -- Drak'Tharon Keep 
+   [75113259] = { id = 274, type = "Dungeon" }, -- Gundrak Left Entrance 
+   [76533471] = { id = 274, type = "Dungeon" }, -- Gundrak Right Entrance 
+   [49134292] = { id = 283, type = "Dungeon" }, -- Violet Hold
+   [58415888] = { id = 754, type = "Raid" }, -- Naxxramas 
+   [40794199] = { id = 758, type = "Raid" }, -- Icecrown Citadel 
+   [57721389] = { id = 759, type = "Raid" }, -- Ulduar
+   [36624457] = { id = 753, type = "Raid" }, -- Vault of Archavon
+   [40595892] = { mnID = 115, id = { 271, 272 }, type = "Mixed" }, -- Ahn'kahet The Old Kingdom, Azjol-Nerub        
+   [41154408] = { mnID = 118, id = { 276, 278, 280 }, type = "Mixed" }, -- The Forge of Souls, Halls of Reflection, Pit of Saron         
+   [47652029] = { mnID = 118, id = { 757, 284 }, type = "Mixed" }, -- Trial of the Crusader, Trial of the Champion 
+   [14725757] = { mnID = 114, id = { 756, 282, 281 }, type = "Mixed" }, -- The Eye of Eternity, The Nexus, The Oculus
+   [50346038] = { mnID = 115, id = { 755, 761 }, type = "Mixed" }, -- The Ruby Sanctum, The Obsidian Sanctum 
+}
+
+if self.db.profile.Zone then
 nodes[114] = { --"BoreanTundra"
  [27602660] = {
   id = { 282, 756, 281 },
   type = "Mixed",
+  hideOnContinent = true, 
+  showInZone = true,
  },
  -- Oculus same as eye of eternity
  --[27502610] = { "The Nexus",  type = "Dungeon" },
@@ -1156,36 +1397,48 @@ nodes[125] = {
  [66726812] = {
   id = 283,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Violet Hold
 }
 nodes[127] = {
  [28203640] = {
   id = 283,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Violet Hold
 }
 nodes[115] = { -- Dragonblight
  [28505170] = {
   id = 271,
   type = "Dungeon",
-  cont = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Ahn'kahet: The Old Kingdom
  [26005090] = {
   id = 272,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Azjol-Nerub
  [87305100] = {
   id = 754,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Naxxramas
  [61305260] = {
   id = 761,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Ruby Sanctum
  [60005690] = {
   id = 755,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Obsidian Sanctum
 }
 nodes[117] = { -- HowlingFjord
@@ -1193,10 +1446,14 @@ nodes[117] = { -- HowlingFjord
  [58005000] = {
   id = 285,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Utgarde Keep, at doorway entrance
  [57204660] = {
   id = 286,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Utgarde Pinnacle
 }
 nodes[118] = { -- IcecrownGlacier
@@ -1204,54 +1461,74 @@ nodes[118] = { -- IcecrownGlacier
   id = { 276, 278, 280 },
   type = "Dungeon",
   hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Forge of Souls, Halls of Reflection, Pit of Saron
  [74202040] = {
   id = 284,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Trial of the Champion
  [75202180] = {
   id = 757,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Trial of the Crusader
  [53808720] = {
   id = 758,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Icecrown Citadel
 }
 nodes[123] = { -- LakeWintergrasp
  [50001160] = {
   id = 753,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Vault of Archavon
 }
 nodes[120] = { -- TheStormPeaks
  [45302140] = {
   id = 275,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Halls of Lightning
  [39602690] = {
   id = 277,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Halls of Stone
  [41601770] = {
   id = 759,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Ulduar
 }
 nodes[121] = { -- ZulDrak
  [28508700] = {
   id = 273,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
 }, -- Drak'Tharon Keep 17402120 Grizzly Hills
 [76202110] = {
  id = 274,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
  }, -- Gundrak Left Entrance
  [81302900] = {
   id = 274,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gundrak Right Entrance
 }
 
@@ -1260,184 +1537,256 @@ minimap[118] = { -- IcecrownGlacier
  [54908980] = {
   id = 280,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Forge of Souls
  [55409080] = {
   id = 276,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Halls of Reflection
  [54809180] = {
   id = 278,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Pit of Saron 54409070 Summoning stone in the middle of last 3 dungeons
 }
 
--- NORTHREND CONTINENT, For things that should be shown or merged only at the continent level
-nodes[113] = { -- Northrend
- --[80407600] = { 285,  type = "Dungeon", false, 286 }, -- Utgarde Keep, Utgarde Pinnacle CONTINENT MERGE Location is slightly incorrect
- [47501750] = {
-  id = { 757, 284 },
-  type = "Mixed",
-  showOnContinent = true,
- }, -- Trial of the Crusader and Trial of the Champion
-}
+end
 end
 
 -- CATACLYSM
 if (not self.db.profile.hideCata) then
+
+if self.db.profile.Zone then
+
 nodes[948] = { -- Deepholm
  [51102835] = {
   id = 67,
   type = "Dungeon",
+  hideOnContinent = true, 
   showInZone = true,
  }, -- The Stonecore (Maelstrom: 51002790)
 }
+
 nodes[207] = { -- Deepholm
  [47405210] = {
   id = 67,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Stonecore (Maelstrom: 51002790)
 }
 nodes[198] = { -- Hyjal
  [47307810] = {
   id = 78,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Firelands
 }
 nodes[244] = { -- TolBarad
  [46104790] = {
   id = 75,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Baradin Hold
 }
 nodes[241] = { -- TwilightHighlands
  [19105390] = {
   id = 71,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Grim Batol World 53105610
  [34007800] = {
   id = 72,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Bastion of Twilight World 55005920
 }
 nodes[249] = { -- Uldum
  [76808450] = {
   id = 68,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Vortex Pinnacle
  [60506430] = {
   id = 69,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Lost City of Tol'Vir
  [69105290] = {
   id = 70,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Halls of Origination
  [38308060] = {
   id = 74,
   type = "Raid",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Throne of the Four Winds
 }
 nodes[1527] = { -- Uldum
  [76808450] = {
   id = 68,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Vortex Pinnacle
  [60506430] = {
   id = 69,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Lost City of Tol'Vir
  [69105290] = {
   id = 70,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Halls of Origination
 [38308060] = {
   id = 74,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Throne of the Four Winds
 }
 nodes[203] = { -- Vashjir
  [48204040] =  {
   id = 65,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Throne of Tides
 }
 nodes[204] = { -- VashjirDepths
  [69302550] = {
   id = 65,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Throne of Tides
 }
+
+end
 end
 
 -- PANDARIA
 if (not self.db.profile.hidePandaria) then
+
+nodes[424] = { -- Pandaria
+   [72275515] = { id = 313, type = "Dungeon" }, -- Temple of the Jade Serpent 
+   [48117132] = { id = 302, type = "Dungeon" }, -- Stormstout Brewery
+   [40002920] = { id = 312, type = "Dungeon" }, -- Shado-Pan Monastery
+   [23575057] = { id = 324, type = "Dungeon" }, -- Siege of Niuzao Temple 
+   [42975779] = { id = 303, type = "Dungeon" }, -- Gate of the Setting Sun 
+   [53745257] = { id = 321, type = "Dungeon" }, -- Mogu'shan Palace (moved location cause of the LFR position)
+   [49152606] = { id = 317, type = "Raid" }, -- Mogu'shan Vaults 
+   [52355265] = { id = 369, type = "Raid" }, -- Siege of Orgrimmar 
+   [30076296] = { id = 330, type = "Raid" }, -- Heart of Fear 
+   [23100860] = { id = 362, type = "Raid" }, -- Throne of Thunder
+   [56685529] = { id = 320, type = "Raid" }, -- Terrace of Endless Spring  
+   [47015340] = { id = 1180, type = "Raid" } -- Ny'Alotha, The Waking City
+}
+
+if self.db.profile.Zone then
+
 nodes[422] = { -- DreadWastes
  [38803500] = {
   id = 330,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Heart of Fear
 }
 nodes[504] = { -- IsleoftheThunderKing
  [63603230] = {
   id = 362,
   type = "Raid",
-  hideOnContinent = true
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Throne of Thunder
 }
 nodes[379] = { -- KunLaiSummit
  [59503920] = {
   id = 317,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Mogu'shan Vaults
  [36704740] = {
   id = 312,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Shado-Pan Monastery
 }
 nodes[433] = { -- TheHiddenPass
  [48306130] = {
   id = 320,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Terrace of Endless Spring
 }
 nodes[371] = { -- TheJadeForest
  [56205790] = {
   id = 313,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Temple of the Jade Serpent
 }
 nodes[388] = { -- TownlongWastes
  [34708150] = {
   id = 324,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Siege of Niuzao Temple
 }
 nodes[390] = { -- ValeofEternalBlossoms
  [15907410] = {
   id = 303,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Gate of the Setting Sun
  [80803270] = {
   id = 321,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Mogu'shan Palace
  [74104200] = {
   id = 369,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Siege of Orgrimmar
 }
 nodes[1530] = { -- ValeofEternalBlossoms New Map
  [15907410] = {
   id = 303,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Gate of the Setting Sun
  [80803270] = {
   id = 321,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Mogu'shan Palace
  --[[[74104200] = {
   id = 369,
@@ -1448,114 +1797,150 @@ nodes[376] = { -- ValleyoftheFourWinds
  [36106920] = {
   id = 302,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Stormstout Brewery
 }
 
--- PANDARIA Continent, For things that should be shown or merged only at the continent level
-nodes[424] = { -- Pandaria
- [23100860] = {
-  id = 362,
-  type = "Raid",
- }, -- Throne of Thunder, looked weird so manually placed on continent
-}
+end
 end
 
 -- DRAENOR
 if (not self.db.profile.hideDraenor) then
+
+nodes[572] = { -- Draenor
+   [34102566] = { id = 385, type = "Dungeon" }, -- Bloodmaul Slag Mines
+   [51322183] = { id = 536, type = "Dungeon" }, -- Grimrail Depot
+   [52932678] = { id = 556, type = "Dungeon" }, -- The Everbloom
+   [47961477] = { id = 558, type = "Dungeon" }, -- Iron Docks
+   [53196866] = { id = 537, type = "Dungeon" }, -- Shadowmoon Burial Grounds
+   [42607342] = { id = 476, type = "Dungeon" }, -- Skyreach
+   [40256374] = { id = 547, type = "Dungeon" }, -- Auchindoun
+   [56854685] = { id = 669, type = "Raid" }, -- Hellfire Citadel
+   [49992014] = { id = 457, type = "Raid" }, -- Blackrock Foundry
+   [21125032] = { id = 477, type = "Raid" }, -- Highmaul
+}
+
+if self.db.profile.Zone then
+
 nodes[525] = { -- FrostfireRidge
  [49902470] = {
   id = 385,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Bloodmaul Slag Mines
 }
 nodes[543] = { -- Gorgrond
  [51502730] = {
   id = 457,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Blackrock Foundry
  [55103160] = {
   id = 536,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Grimrail Depot
  [59604560] = {
   id = 556,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- The Everbloom
  [45401350] = {
   id = 558,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Iron Docks
 }
 nodes[550] = { -- NagrandDraenor
  [32903840] = {
   id = 477,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Highmaul
 }
 nodes[539] = { -- ShadowmoonValleyDR
  [31904260] = {
   id = 537,
   type = "Dungeon",
+  hideOnContinent = true,
+   showInZone = true,
  }, -- Shadowmoon Burial Grounds
 }
 nodes[542] = { -- SpiresOfArak
  [35603360] = {
   id = 476,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Skyreach
 }
 nodes[535] = { -- Talador
  [46307390] = {
   id = 547,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Auchindoun
 }
 nodes[534] = { -- TanaanJungle
  [45605360] = {
   id = 669,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Hellfire Citadel
 }
+
+end
 end
 
+-- BROKEN ISLES
 if (not self.db.profile.hideBrokenIsles) then -- FIX ME
+
+nodes[619] = { -- Broken Isles
+   [47076690] = { id = 777, type = "Dungeon" }, -- Assault on Violet Hold
+   [38805780] = { id = 716, type = "Dungeon" }, -- Eye of Azshara
+   [34207210] = { id = 707, type = "Dungeon" }, -- Vault of the Wardens
+   [89551352] = { id = 945, type = "Dungeon" }, -- The Seat of the Triumvirate
+   [29403300] = { id = 740, type = "Dungeon" }, -- Black Rook Hold
+   [59003060] = { id = 727, type = "Dungeon" }, -- Maw of Souls
+   [47302810] = { id = 767, type = "Dungeon" }, -- Neltharion's Lair
+   [49104970] = { id = 800, type = "Dungeon" }, -- Court of Stars
+   [46004883] = { id = 726, type = "Dungeon" }, -- The Arcway
+   [56416109] = { id = 900, type = "Dungeon" }, -- Cathedral of the Night
+   [65573821] = { id = 721, type = "Dungeon" }, -- Halls of Valor
+   [35792725] = { id = 762, type = "Dungeon" }, -- Darkheart Thicket
+   [86262011] = { id = 946, type = "Raid" }, -- Antorus, the Burning Throne
+   [46864732] = { id = 786, type = "Raid" }, -- The Nighthold
+   [56506240] = { id = 875, type = "Raid" }, -- Tomb of Sargeras
+   [64553903] = { id = 861, type = "Raid" }, -- Trial of Valor
+   [34982901] = { id = 768, type = "Raid" }, -- The Emerald Nightmare
+}
+
+nodes[905] = { -- Argus
+   [32896084] = { id = 946, type = "Raid" }, -- Antorus, the Burning Throne
+   [52513071] = { id = 945, type = "Dungeon" }, -- The Seat of the Triumvirate
+}
+
 -- Legion Dungeons/Raids for minimap and continent map for consistency
 -- This seems to be the only legion dungeon/raid that isn't shown at all
 -- I have made this into an ugly abomination
 
- nodes[619] = { } -- BrokenIsles
- nodes[619][35402850] = {
-  id = { 762, 768 },
-  type = "Mixed",
-  hideOnMinimap = true,
- } -- The Emerald Nightmare 35102910
- nodes[619][65003870] = {
-  id = { 721, 861 },
-  type = "Mixed",
-  hideOnMinimap = true,
- } -- Halls of Valor/Trial of Valor
- nodes[619][46704780] = {
-  id = { 726, 786 },
-  type = "Mixed",
-  hideOnMinimap = true,
- }
-  nodes[619][46606550] = {
-  id = 777,
-  type = "Dungeon",
-  hideOnMinimap = true,
- } -- Assault on Violet Hold
- nodes[619][56506240] = { -- Always show because merged
-  id = { 875, 900 },
-  type = "Mixed",
-  hideOnMinimap = true,
- } -- Tomb of Sargeras and Cathedral of the Night
-
+if self.db.profile.Zone then 
 
 nodes[627] = { -- Dalaran70
  [66406850] = {
   id = 777,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Assault on Violet Hold
 }
 
@@ -1564,6 +1949,8 @@ nodes[885] = { -- ArgusCore
  [54786241] = {
   id = 946,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Antorus, the burning throne
 }
 else
@@ -1571,6 +1958,8 @@ else
   [54786241] = {
    id = 946,
    type = "Raid",
+   hideOnContinent = true,
+    showInZone = true,
   }, -- Antorus, the burning throne
  }
 end
@@ -1580,6 +1969,8 @@ nodes[882] = { -- ArgusMacAree
  [22205584] = {
   id = 945,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }, -- Seat of the Triumvirate
 }
 else
@@ -1588,6 +1979,8 @@ minimap[882] = {
  [22205584] = {
   id = 945,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }, -- Seat of the Triumvirate
 }
 end
@@ -1596,17 +1989,16 @@ if (not legionInstancesDiscovered[716]) then
  nodes[630][61204110] = {
   id = 716,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }
 else
  minimap[630] = { }
  minimap[630][61204110] = {
   id = 716,
   type = "Dungeon",
- }
- nodes[619][38805780] = {
-  id = 716,
-  type = "Dungeon",
-  hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 if (not legionInstancesDiscovered[707]) then
@@ -1615,7 +2007,9 @@ if (not legionInstancesDiscovered[707]) then
  end
  nodes[630][48308030] = {
   id = 707,
-  type = "Dungeon"
+  type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }
 else
  if (not minimap[630]) then
@@ -1623,12 +2017,9 @@ else
  end
  minimap[630][48308030] = {
   id = 707,
-  type = "Dungeon"
- }
- nodes[619][34207210] = {
-  id = 707,
   type = "Dungeon",
-  hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 
@@ -1636,12 +2027,15 @@ end
  nodes[646][64602070] = {
   id = 875,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
  minimap[619] = {
   [64602070] = {
    id = 875,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
   },
  }
 
@@ -1652,7 +2046,8 @@ if (not legionInstancesDiscovered[900]) then
  nodes[646][64701660] = {
   id = 900,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 else
  if (not minimap[646]) then
@@ -1661,6 +2056,8 @@ else
  minimap[646][64701660] = {
   id = 900,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 if (not legionInstancesDiscovered[767]) then
@@ -1668,6 +2065,8 @@ if (not legionInstancesDiscovered[767]) then
   [49606860] = {
    id = 767,
    type = "Dungeon",
+   hideOnContinent = true,
+   showInZone = true,
   },
  }
 else
@@ -1675,12 +2074,9 @@ else
   [49606860] = {
    id = 767,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
   },
- }
- nodes[619][47302810] = {
-  id = 767,
-  type = "Dungeon",
-  hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[861]) then
@@ -1688,13 +2084,16 @@ if (not legionInstancesDiscovered[861]) then
  nodes[634][71107280] = {
   id = 861,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 else
  minimap[634] = {
   [71107280] = {
    id = 861,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
   },
  }
 end
@@ -1705,7 +2104,8 @@ if (not legionInstancesDiscovered[721]) then
  nodes[634][72707050] = {
   id = 721,
   type = "Dungeon",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 else
  if (not minimap[634]) then
@@ -1714,6 +2114,8 @@ else
  minimap[634][72707050] = {
   id = 721,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 if (not legionInstancesDiscovered[727]) then
@@ -1723,6 +2125,8 @@ if (not legionInstancesDiscovered[727]) then
  nodes[634][52504530] = {
   id = 727,
   type = "Dungeon",
+  hideOnContinent = true,
+  showInZone = true,
  }
 else
  if (not minimap[634]) then
@@ -1731,11 +2135,8 @@ else
  minimap[634][52504530] = {
   id = 727,
   type = "Dungeon",
- }
- nodes[619][59003060] = {
-  id = 727,
-  type = "Dungeon",
-  hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 if (not legionInstancesDiscovered[726]) then
@@ -1743,7 +2144,8 @@ if (not legionInstancesDiscovered[726]) then
   [41106170] = {
    id = 726,
    type = "Dungeon",
-   hideOnContinent = true,
+   hideOnContinent = true, 
+   showInZone = true,
   },
  }
 else
@@ -1751,6 +2153,8 @@ else
   [41106170] = {
    id = 726,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
   },
  }
 end
@@ -1761,6 +2165,8 @@ if (not legionInstancesDiscovered[800]) then
  nodes[680][50806550] = {
   id = 800,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }
 else
  if (not minimap[680]) then
@@ -1769,11 +2175,8 @@ else
  minimap[680][50806550] = {
   id = 800,
   type = "Dungeon",
- }
- nodes[619][49104970] = {
-  id = 800,
-  type = "Dungeon",
-  hideOnMinimap = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 if (not legionInstancesDiscovered[786]) then
@@ -1783,7 +2186,8 @@ if (not legionInstancesDiscovered[786]) then
  nodes[680][44105980] = {
   id = 786,
   type = "Raid",
-  hideOnContinent = true,
+  hideOnContinent = true, 
+  showInZone = true,
  }
 else
  if (not minimap[680]) then
@@ -1792,6 +2196,8 @@ else
  minimap[680][44105980] = {
   id = 786,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }
 end
 if (not legionInstancesDiscovered[740]) then
@@ -1799,6 +2205,8 @@ if (not legionInstancesDiscovered[740]) then
   [37205020] = {
    id = 740,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
   },
  }
 else
@@ -1806,12 +2214,9 @@ else
   [37205020] = {
    id = 740,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
   },
- }
- nodes[619][29403300] = {
-  id = 740,
-  type = "Dungeon",
-  hideOnMinimap = true,
  }
 end
 if (not legionInstancesDiscovered[762]) then
@@ -1822,6 +2227,7 @@ if (not legionInstancesDiscovered[762]) then
   id = 762,
   type = "Dungeon",
   hideOnContinent = true,
+   showInZone = true,
  }
 else
  if (not minimap[641]) then
@@ -1830,6 +2236,8 @@ else
  minimap[641][59143135] = {
   id = 762,
   type = "Dungeon",
+  hideOnContinent = true, 
+  showInZone = true,
  }
 
 end
@@ -1841,6 +2249,7 @@ if (not legionInstancesDiscovered[768]) then
   id = 768,
   type = "Raid",
   hideOnContinent = true,
+   showInZone = true,
  }
 else
 if (not minimap[641]) then
@@ -1849,10 +2258,15 @@ if (not minimap[641]) then
  minimap[641][56673746] = {
   id = 768,
   type = "Raid",
+  hideOnContinent = true, 
+  showInZone = true,
  }
+
+end
 end
 end
 
+-- BFA
 if (not self.db.profile.hideBfA) then
 nodes[862] = { } -- Zuldazar
 nodes[863] = { } -- Nazmir
@@ -1866,33 +2280,61 @@ nodes[875] = { } -- Zandalar
 nodes[876] = { } --Kul'Tiras
 nodes[1355] = {} -- Nazjatar
 
+
+nodes[875] = { -- Zandalar   
+   [45457850] = { name = "ALLIANCE", id = 1012, type = "Dungeon" }, -- The MOTHERLODE Alliance
+   [57757046] = { name = "HORDE", id = 1012, type = "Dungeon" }, -- The MOTHERLODE HORDE
+   [56005350] = { id = 1176, type = "Raid" }, -- Battle of Dazar'alor
+   [48865880] = { id = 968, type = "Dungeon" }, -- Atal'Dazar
+   [45205880] = { id = 1041, type = "Dungeon" }, -- Kings' Rest
+   [58243603] = { id = 1022, type = "Dungeon" }, -- The Underrot
+   [40781425] = { id = 1030, type = "Dungeon" }, -- Temple of Sethraliss
+   [59413469] = { id = 1031, type = "Raid" }, -- Uldir
+   [86731430] = {  id = 1179, type = "Raid" }, -- The Eternal Palace 
+}
+
+nodes[876] = { -- Kul Tiras
+   [70406468] = { id = 1023, type = "Dungeon" }, -- Siege of Boralus Horde
+   [61865000] = { id = 1023, type = "Dungeon" }, -- Siege of Boralus Alliance
+   [61645308] = { id = 1176, type = "Raid" }, -- Battle of Dazar'alorend Alliance
+   [19872697] = { id = 1178, type = "Dungeon" }, -- Operation: Mechagon 
+   [67018056] = { id = 1001, type = "Dungeon" }, -- Freehold 
+   [31675333] = { id = 1021, type = "Dungeon" }, -- Waycrest Manor 
+   [66051501] = { id = 1036, type = "Dungeon" }, -- Shrine of Storm 
+   [77566206] = { id = 1002, type = "Dungeon" }, -- Tol Dagor
+   [68262354] = { id = 1177, type = "Raid" }, -- Crucible of Storms
+   [86261171] = { id = 1179, type = "Raid" }, -- The Eternal Palace
+}
+
+if self.db.profile.Zone then
+
 nodes[875][86261305] = { -- The Eternal Palace
 	id = 1179,
 	type = "Raid",
-   showInZone = true,
-} 
-
-nodes[876][86261305] = { -- The Eternal Palace
-	id = 1179,
-	type = "Raid",
+   hideOnContinent = true, 
    showInZone = true,
 } 
 
 nodes[1355][50431199] = { -- The Eternal Palace
 	id = 1179,
 	type = "Raid",
+   hideOnContinent = true, 
    showInZone = true,
 } 
 
 nodes[862][43323947] = {
  id = 968,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 }
 
 if (self.faction == "Alliance") then
 nodes[862][39227137] = {
  id = 1012,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- The MOTHERLODE ALLIANCE
 end
 
@@ -1900,28 +2342,44 @@ if (self.faction == "Horde") then
 nodes[862][55995989] = {
  id = 1012,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- The MOTHERLODE HORDE
 end
 
 nodes[862][37463948] = {
  id = 1041,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 }
+
+nodes[862][54242984] = {
+   id = 1176,
+   type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
+} -- Battle of Dazar Alor
 
 nodes[863][51386483] = {
  id = 1022,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- The Underrot
 
 nodes[863][53886268] = {
  id = 1031,
  type = "Raid",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Uldir
 
 if (self.faction == "Horde") then
 nodes[1165][38920289] = {
    id = 1176,
    type = "Raid",
+   hideOnContinent = true,
    showInZone = true,
 } -- Battle of Dazar Alor
 end
@@ -1929,68 +2387,76 @@ end
 nodes[864][51932484] = {
  id = 1030,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Temple of Sethraliss
 
 nodes[895][84457887] = {
  id = 1001,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Freehold
 
 nodes[1165][44049256] = {
  id = 1012,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- The MOTHERLODE HORDE
 
 nodes[1169][39576833] = {
  id = 1002,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Tol Dagor
 
 nodes[896][33681233] = {
  id = 1021,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Waycrest Manor
 
 
 nodes[942][78932647] = {
  id = 1036,
  type = "Dungeon",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Shrine of Storm
 
-nodes[876][19872697] = { -- Operation: Mechagon
-	id = 1178,
-	type = "Dungeon",
-}
-
-nodes[876][68262354] = {
+nodes[942][83934677] = {
  id = 1177,
  type = "Raid",
-} -- Crucible of Storms
-minimap[942] = { }
-minimap[942][83934677] = {
- id = 1177,
- type = "Raid",
+ hideOnContinent = true, 
+ showInZone = true,
 } -- Crucible of Storms
 	if (self.faction == "Alliance") then
 		nodes[895][74752350] = {
 		 id = 1023, -- LFG 1700, 1701
 		 type = "Dungeon",
+       hideOnContinent = true, 
+       showInZone = true,
 		} -- Siege of Boralus
-		nodes[876][62005250] = {
-		 id = 1176,
-		 type = "Raid",
-		} -- Battle of Dazar'alor
 	end
 	if (self.faction == "Horde") then
 		nodes[895][88305105] = {
 		 id = 1023,
 		 type = "Dungeon",
+       hideOnContinent = true, 
+       showInZone = true,
 		} -- Siege of Boralus
 		nodes[875][56005350] = {
 		 id = 1176,
 		 type = "Raid",
+       hideOnContinent = true, 
+       showInZone = true,
 		} -- Battle of Dazar'alor
    end
+
+end
 
 --[[nodes[1161] = { } -- Boralus
 nodes[1161][71961540] = {
@@ -1999,9 +2465,9 @@ nodes[1161][71961540] = {
 		} -- Siege of Boralus
 --	end ]]--
 
+end
 
 -- Shadowlands
-
 if (not self.db.profile.hideSL) then
 nodes[1533] = { } -- Bastion
 nodes[1536] = { } -- Maldraxxus
@@ -2010,71 +2476,112 @@ nodes[1525] = { } -- Revendreth
 nodes[1533] = { } -- Bastion for Zereth Mortis - Sepulcher of the First Ones
 nodes[1565] = { } -- Ardenweald for Tazavesh, the Veiled Market
 nodes[1543] = { } -- The Maw
+nodes[1550] = { } -- Shadowlands
+
+nodes[1550]= { -- Shadowlands
+   [69025977] = { id = 1182, type = "Dungeon" }, -- The Necrotic Wake
+   [74085251] = { id = 1186, type = "Dungeon" }, -- Spires of Ascension
+   [64912620] = { id = 1183, type = "Dungeon" }, -- Plaguefall
+   [63372312] = { id = 1187, type = "Dungeon" }, -- Theater of Pain
+   [44698228] = { id = 1184, type = "Dungeon" }, -- Mists of Tirna Scithe
+   [54378591] = { id = 1188, type = "Dungeon" }, -- De Other Side
+   [31335274] = { id = 1185, type = "Dungeon" }, -- Halls of Atonement
+   [24984833] = { id = 1189, type = "Dungeon" }, -- Sanguine Depths
+   [31957638] = { id = 1194, type = "Dungeon" }, -- Tazavesh, the Veiled Market
+   [89067983] = { id = 1195, type = "Raid" }, -- Sepulcher of the First Ones
+   [27081359] = { id = 1193, type = "Raid" }, -- Sanctum of Domination
+   [23795072] = { id = 1190, type = "Raid" }, -- Castle Nathria
+}
+
+if self.db.profile.Zone then
  
 nodes[1533][60007577] = {
    id = 1182,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- The Necrotic Wake
    
 nodes[1533][58472870] = {
    id = 1186,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
   } -- Spires of Ascension
    
 nodes[1536][59306484] = {
    id = 1183,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Plaguefall
 
 nodes[1536][53215314] = {
    id = 1187,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Theater of Pain
 
 nodes[1565][35715421] = {
    id = 1184,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Mists of Tirna Scithe
 
 nodes[1565][68606598] = {
    id = 1188,
    type = "Dungeon",
+   hideOnContinent = true,
+   showInZone = true,
 } -- De Other Side
 
 nodes[1525][77964852] = {
    id = 1185,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
  } -- Halls of Atonement
 
 nodes[1525][51093007] = {
    id = 1189,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Sanguine Depths
 
 nodes[1565][00003200] = {
    id = 1194,
    type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Tazavesh, the Veiled Market
 
 nodes[1533][99999999] = {
    id = 1195,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- 	Sepulcher of the First Ones
 
 nodes[1525][45764149] = {
    id = 1190,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- 	Castle Nathria 
 
 nodes[1543][68688540] = {
    id = 1193,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- 	Sanctum of Domination
    end
-
+end
 
 -- Dragonflight
-
 if (not self.db.profile.hideDF) then
 
 nodes[2022] = { } -- The Waking Shores
@@ -2086,71 +2593,151 @@ nodes[2133] = { } -- Zaralek Cavern
 nodes[1978] = { } -- Dragon Isles
 nodes[2200] = { } -- The Emerald Dream
 
+nodes[1978] = { -- Dragon Isles
+   [52884168] = { id = 1202, type = "Dungeon" }, -- Ruby Life Pools
+   [42163601] = { id = 1199, type = "Dungeon" }, -- Neltharus
+   [43635285] = { id = 1198, type = "Dungeon" }, -- The Nokhud Offensive
+   [35407585] = { id = 1196, type = "Dungeon" }, -- Brackenhide Hollow
+   [47408261] = { id = 1203, type = "Dungeon" }, -- The Azure Vault
+   [63114151] = { id = 1201, type = "Dungeon" }, -- Algeth'ar Academy
+   [63614887] = { id = 1204, type = "Dungeon" }, -- Halls of Infusion
+   [64415841] = { id = 1209, type = "Dungeon" }, -- Dawn of the Infinite
+   [69074677] = { id = 1200, type = "Raid" }, -- Vault of the Incarnates
+   [86737309] = { id = 1208, type = "Raid" }, -- Aberrus, the Shadowed Crucible
+}
+
+if self.db.profile.Zone then
+
 nodes[2022][60007577] = {
 	id = 1202,
 	type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Ruby Life Pools 
 
 nodes[2022][25735629] = {
    id = 1199,
    type = "Dungeon",
+   hideOnContinent = true,
+   showInZone = true,
 } -- Neltharus
 
 nodes[2023][60853900] = {
 	id = 1198,
 	type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- The Nokhud Offensive
 
 nodes[2024][11574878] = {
 	id = 1196,
 	type = "Dungeon",
+   hideOnContinent = true,
+   showInZone = true,
 } -- Brackenhide Hollow
 
 nodes[2024][38896476] = {
 	id = 1203,
 	type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- The Azure Vault
 
 nodes[2025][58284235] = {
 	id = 1201,
 	type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Algeth'ar Academy
 
 nodes[2025][59246064] = {
 	id = 1204,
 	type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Halls of Infusion
 
 nodes[2025][61118443] = {
 	id = 1209,
 	type = "Dungeon",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Dawn of the Infinite
 
 nodes[2025][73145560] = {
 	id = 1200,
 	type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Vault of the Incarnates
 
 nodes[2133][48461004] = {
 	id = 1208,
 	type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Aberrus, the Shadowed Crucible
 
 nodes[1978][87047386] = {
 	id = 1208,
 	type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } -- Aberrus, the Shadowed Crucible Dragon Isles Map
 
 nodes[2200][27243078] = {
    id = 1207,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } --Amirdrassil, the Dream's Hope
 
 nodes[1978][31015550] = {
    id = 1207,
    type = "Raid",
+   hideOnContinent = true, 
+   showInZone = true,
 } --Amirdrassil, the Dream's Hope
+
    end
+
+end
+
+if (not self.db.profile.hideTWW) then
+
+nodes[2339] = { } -- Dornogal
+nodes[2248] = { } -- Isle of Dorn
+nodes[2274] = { } -- Khaz Algar
+nodes[2255] = { } -- Azj-Kahet
+nodes[2256] = { } -- Azj-Kathet_Lower
+nodes[2215] = { } -- Hallowfall
+nodes[2213] = { } -- Nerub'ar
+nodes[2216] = { } -- Nerub'ar_Lower
+nodes[2214] = { } -- The Ringing Deeps
+
+nodes[2274] = { -- Khaz Algar
+   [56904935] = { id = 1210, type = "Dungeon" }, -- Darkflame Cleft
+   [35095289] = { id = 1267, type = "Dungeon" }, -- Priory of the Sacred Flame
+   [40465803] = { id = 1270, type = "Dungeon" }, -- The Dawnbreaker
+   [52514448] = { id = 1269, type = "Dungeon" }, -- The Stonevault
+   [70301908] = { id = 1268, type = "Dungeon" }, -- The Rookery
+   [84362059] = { id = 1272, type = "Dungeon" }, -- Cinderbrew Meadery
+   [43337984] = { id = 1274, type = "Dungeon" }, -- City of Threads
+   [44338372] = { id = 1271, type = "Dungeon" }, -- Ara-Kara, City of Echoes
+   [42188673] = { id = 1273, type = "Raid" },  -- Nerub-ar Palace
+}
+
+-- if self.db.profile.Zone then
+
+--nodes[2274][56904935] = { 
+--   id = 1210, 
+--   type = "Dungeon", 
+--   hideOnContinent = true, 
+--   showInZone = true,
+--} -- Darkflame Cleft
+
+--end
+
 end
 
 end

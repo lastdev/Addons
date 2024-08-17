@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Configuration Panel Loader for SIA and STA
 --
--- Copyright 2012-2020 BeathsCurse (Bowmore - Silvermoon EU)
+-- Copyright 2012-2024 BeathsCurse (Bowmore - Silvermoon EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ subTitle:SetText(addon.version)
 
 -- Load the addon with the configuration panel code when the panel is shown.
 panel:SetScript('OnShow', function(self)
-	local loaded, reason = LoadAddOn(addonName .. '_Config')
+	local loaded, reason = C_AddOns.LoadAddOn(addonName .. '_Config')
 
 	if not loaded then
 		-- Show error on panel
@@ -51,4 +51,5 @@ panel:SetScript('OnShow', function(self)
 end)
 
 -- Add our panel to the interface options addons menu
-InterfaceOptions_AddCategory(panel)
+local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
+Settings.RegisterAddOnCategory(category)

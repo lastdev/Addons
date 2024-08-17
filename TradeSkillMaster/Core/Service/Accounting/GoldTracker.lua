@@ -16,7 +16,7 @@ local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
 local SessionInfo = TSM.LibTSMWoW:Include("Util.SessionInfo")
 local DefaultUI = TSM.LibTSMWoW:Include("UI.DefaultUI")
 local GoldLog = TSM.LibTSMTypes:IncludeClassType("GoldLog")
-local PlayerInfo = TSM.Include("Service.PlayerInfo")
+local PlayerInfo = TSM.LibTSMApp:Include("Service.PlayerInfo")
 local Guild = TSM.LibTSMWoW:Include("API.Guild")
 local Container = TSM.LibTSMWoW:Include("API.Container")
 local private = {
@@ -132,7 +132,9 @@ function GoldTracker.GetCharacterGuilds(resultTbl)
 	for guild in pairs(private.guildLog) do
 		tinsert(resultTbl, guild)
 	end
-	tinsert(resultTbl, L["Warbank"])
+	if private.warbankLog then
+		tinsert(resultTbl, L["Warbank"])
+	end
 end
 
 function GoldTracker.GetGoldAtTime(timestamp, ignoredCharactersGuilds)

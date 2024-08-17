@@ -1,14 +1,16 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "frFR")
 if not L then return end
 
+L["Show on Zone"] = "Montrer sur le Zone"
+L["Show icons on zone map"] = "Montrer les icônes sur la carte du Zone"
 L["Allow left click to open journal to dungeon or raid"] = "Autoriser le clic droit pour ouvrir le journal des donjons et raids"
-L["Allow right click to create waypoints with TomTom"] = [=[
-Autoriser le clic gauche pour créer des repéres avec TomTom]=]
-L["Continent Alpha"] = true
+L["Allow right click to create waypoints with TomTom"] = "Autoriser le clic gauche pour créer des repéres avec TomTom"
+L["Continent Alpha"] = "Continent Alpha"
 L["Continent Scale"] = "Continent Echelle"
 L["Don't show discovered dungeons"] = "Ne pas afficher les donjons decouverts."
 L["Enable TomTom integration"] = "Permettre l'intégration de TomTom"
 L["Filter Options"] = "Option de filtre"
+L["Hide all Khaz Algar nodes from the map"] = "Cacher tous les nœuds de Khaz Algar de la carte"
 L["Hide all Dragonflight nodes from the map"] = "Cacher tous les nœuds de Dragonflight de la carte"
 L["Hide all Shadowlands nodes from the map"] = "Cacher tous les nœuds de Shadowlands de la carte"
 L["Hide all BfA nodes from the map"] = "Cacher tous les nœuds de BFA de la carte"
@@ -19,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "Cacher tous les nœuds de Norfendr
 L["Hide all Outland nodes from the map"] = "Cacher tous les nœuds d' Outreterre de la carte"
 L["Hide all Pandaria nodes from the map"] = "Cacher tous les nœuds de Pandarie de la carte"
 L["Hide all Vanilla nodes from the map"] = "Cacher tous les nœuds de Vanilla de la carte"
+L["Hide Khaz Algar"] = "Masquer Khaz Algar"
 L["Hide Dragonflight"] = "Masquer Dragonflight"
 L["Hide Shadowlands"] = "Masquer Shadowlands"
 L["Hide Battle for Azeroth"] = "Masquer Battle For Azeroth"
@@ -64,6 +67,6 @@ L["Use a different alpha for dungeons and raids that are locked to any extent"] 
 L["Use gray icon for dungeons and raids that are locked to any extent"] = [=[
 Utilisez l'icône grise pour les donjons et les raids qui sont verrouillés sous certaines conditions]=]
 L["Use Lockout Alpha"] = "Utiliser le verrouillage Alpha"
-L["Zone Alpha"] = true
+L["Zone Alpha"] = "Zone Alpha"
 L["Zone Scale"] = "Zone échelle"
 

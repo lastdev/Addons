@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
     <Script file="Source\Core.lua" />
 
+    <Script file="Source\Util\Lifecycle.lua" />
     <Script file="Source\Util\ClientInfo.lua" />
     <Script file="Source\Util\CharacterInfo.lua" />
     <Script file="Source\Util\Debug.lua" />
@@ -12,6 +13,7 @@
     <Script file="Source\UI\FontObject.lua" />
     <Script file="Source\UI\ExtraTooltip.lua" />
     <Script file="Source\UI\SoundAlert.lua" />
+    <Script file="Source\UI\SlashCommandList.lua" />
 
     <Script file="Source\Service\Event.lua" />
 

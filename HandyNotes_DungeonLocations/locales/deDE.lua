@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "deDE")
 if not L then return end
 
+L["Show on Zone"] = "Auf Zone anzeigen"
+L["Show icons on zone map"] = "Zeigt Symbole auf der Zonenkarte"
 L["Allow left click to open journal to dungeon or raid"] = "Per Linksklick öffnet sich die Seite des Dungeons oder Schlachtzugs im Abenteuerführer"
 L["Allow right click to create waypoints with TomTom"] = "Per Rechtsklick werden Wegpunkte mit TomTom erstellt"
 L["Continent Alpha"] = "Deckkraft auf Kontinent"
@@ -8,6 +10,7 @@ L["Continent Scale"] = "Größe auf Kontinent"
 L["Don't show discovered dungeons"] = "Zeige keine entdeckten Dungeons"
 L["Enable TomTom integration"] = "TomTom-Integration aktivieren"
 L["Filter Options"] = "Filteroptionen"
+L["Hide all Khaz Algar nodes from the map"] = "Versteckt alle Knoten von Khaz Algar auf der Karte"
 L["Hide all Dragonflight nodes from the map"] = "Versteckt alle Knoten von Dragonflight auf der Karte"
 L["Hide all Shadowlands nodes from the map"] = "Versteckt alle Knoten von den Schattenlanden auf der Karte"
 L["Hide all BfA nodes from the map"] = "Versteckt alle Knoten von BFA auf der Karte"
@@ -18,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "Versteckt alle Knoten von Northren
 L["Hide all Outland nodes from the map"] = "Versteckt alle Knoten der Scherbenwelt auf der Karte"
 L["Hide all Pandaria nodes from the map"] = "Versteckt alle Knoten von Pandaria auf der Karte"
 L["Hide all Vanilla nodes from the map"] = "Versteckt alle Knoten von Vanilla auf der Karte"
+L["Hide Khaz Algar"] = "Khaz Algar Ausblenden"
 L["Hide Dragonflight"] = "Dragonflight ausblenden"
 L["Hide Shadowlands"] = "Schattenlande ausblenden"
 L["Hide Battle for Azeroth"] = "Battle for Azeroth ausblenden"

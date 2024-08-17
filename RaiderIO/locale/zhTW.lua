@@ -334,10 +334,8 @@ L["RAID_BOSS_SOD_6"] = "痛苦工匠拉茲內爾"
 L["RAID_BOSS_SOD_7"] = "首創者的守護者"
 L["RAID_BOSS_SOD_8"] = "述命者羅卡洛"
 L["RAID_BOSS_SOD_9"] = "科爾蘇加德"
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOTFW_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOTFW_2"] = ""--]] 
+L["RAID_BOSS_TOTFW_1"] = "風之議會"
+L["RAID_BOSS_TOTFW_2"] = "奧拉基爾"
 L["RAID_BOSS_VOTI_1"] = "伊拉諾格"
 L["RAID_BOSS_VOTI_2"] = "忒羅司"
 L["RAID_BOSS_VOTI_3"] = "洪荒議會"

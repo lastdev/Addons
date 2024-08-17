@@ -5,10 +5,11 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local ExpiredAuctionTask = TSM.Include("LibTSMClass").DefineClass("ExpiredAuctionTask", TSM.TaskList.Task)
+local LibTSMClass = LibStub("LibTSMClass")
+local ExpiredAuctionTask = LibTSMClass.DefineClass("ExpiredAuctionTask", TSM.TaskList.Task)
 local L = TSM.Locale.GetTable()
 local SessionInfo = TSM.LibTSMWoW:Include("Util.SessionInfo")
-local AddonSettings = TSM.LibTSMApp:Include("Lib.AddonSettings")
+local AddonSettings = TSM.LibTSMApp:Include("Service.AddonSettings")
 TSM.TaskList.ExpiredAuctionTask = ExpiredAuctionTask
 local private = {
 	didModuleInit = false,

@@ -15,6 +15,7 @@ local ItemString = TSM.LibTSMTypes:Include("Item.ItemString")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
 local CustomString = TSM.LibTSMTypes:Include("CustomString")
+local AppHelper = TSM.LibTSMApp:Include("Service.AppHelper")
 local private = {
 	realmData = {},
 	realmUpdateTime = nil,
@@ -38,7 +39,7 @@ local UPDATE_TIME_KEYS = {
 -- ============================================================================
 
 function AuctionDB.OnEnable()
-	local realmData, regionData, commodityData, altRealmData = TSM.AppHelper.GetAuctionDBData()
+	local realmData, regionData, commodityData, altRealmData = AppHelper.GetAuctionDBData()
 	private.realmUpdateTime = private.LoadRegionRealmAppData(private.realmData, realmData)
 	private.regionUpdateTime = private.LoadRegionRealmAppData(private.regionData, regionData)
 	private.LoadRegionRealmAppData(private.realmData, commodityData)

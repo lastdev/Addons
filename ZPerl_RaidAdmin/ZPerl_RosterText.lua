@@ -2,7 +2,7 @@
 -- Author: Resike
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: cd469ddf009de44eb4c4cd248a7ab1a7cf618486 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 -- onEvent
 local function onEvent(self, event, a, b, c)

@@ -71,3 +71,21 @@ function SessionInfo.FormatCharacterName(character, factionrealm, full)
 		return strjoin(PLAYER_SEP, character, realm == REALM and faction or factionrealm)
 	end
 end
+
+---Gets the region from the C-var.
+---@return string
+function SessionInfo.GetRegion()
+	return GetCVar("Portal")
+end
+
+---Checks if we're in an active hardcore season.
+---@return boolean
+function SessionInfo.IsHardcore()
+	return C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == Enum.SeasonID.Hardcore
+end
+
+---Checks if we're in an active season of discovery.
+---@return boolean
+function SessionInfo.IsSeasonOfDiscovery()
+	return C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == 2 -- Boo Blizzard
+end

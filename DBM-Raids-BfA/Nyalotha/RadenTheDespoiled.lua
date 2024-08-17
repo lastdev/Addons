@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2364, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044055")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(156866)
 mod:SetEncounterID(2331)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -32,7 +32,7 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage 1: Gathering Power
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20527))
-local specWarnCallEssence					= mod:NewSpecialWarningSpell(306091, "-Healer")
+local specWarnCallEssence					= mod:NewSpecialWarningCount(306091, "-Healer")
 local specWarnNullifyingStrike				= mod:NewSpecialWarningStack(306819, nil, 2, nil, nil, 1, 6)
 local specWarnNullifyingStrikeTaunt			= mod:NewSpecialWarningTaunt(306819, nil, nil, nil, 1, 2)
 local specWarnExposure						= mod:NewSpecialWarningYou(306279, nil, nil, nil, 1, 2)
@@ -120,7 +120,7 @@ local warnChargedBonds						= mod:NewTargetAnnounce(310019, 2)
 local warnCorruptedExistence				= mod:NewTargetNoFilterAnnounce(316065, 4)
 
 local specWarnDecayingStrike				= mod:NewSpecialWarningDefensive(313213, nil, nil, nil, 1, 2)
-local specWarnChargedBonds					= mod:NewSpecialWarningMoveAwayCount(310019, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.moveaway:format(310019), nil, 3, 2)
+local specWarnChargedBonds					= mod:NewSpecialWarningMoveAwayTarget(310019, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.moveaway:format(310019), nil, 3, 2)
 local yellChargedBonds						= mod:NewYell(310019)
 local specWarnDecayingWoundTaunt			= mod:NewSpecialWarningTaunt(313227, nil, nil, nil, 1, 2)
 local specWarnCorruptedExistence			= mod:NewSpecialWarningYou(316065, nil, nil, nil, 3, 2, 4)--Mythic Only
@@ -455,6 +455,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnChargedBonds:Show(DBM_COMMON_L.ALLIES)
 				specWarnChargedBonds:Play("runaway")
+				yellChargedBonds:Yell()
 			end
 			if self.Options.SetIconOnChargedBonds then
 				self:SetIcon(args.destName, 1)
@@ -463,6 +464,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() and not self.Options.OnlyParentBondMoves then
 				specWarnChargedBonds:Show(self.vb.bondsTarget)
 				specWarnChargedBonds:Play("runaway")
+				yellChargedBonds:Yell()
 			end
 		end
 		--if #ChargedBondsTargets == 4 then--This is not definitive yet that it can cap at 4

@@ -1418,7 +1418,7 @@ function Addon.UIElementsLib._DropDownMenu:Show(items, point, relativeTo, relati
 	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 	
 	-- Show the menu
-	self.menuFrame = LibStub("LibDropdownMC-1.0"):OpenAce3Menu(items)
+	self.menuFrame = LibStub("LibDropdown-1.0"):OpenAce3Menu(items)
 	self.menuFrame:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset)
 	self.menuFrame.cleanup = function ()
 		if self.cleanup then

@@ -11,8 +11,8 @@ local String = LibTSMWoW:From("LibTSMUtil"):Include("Lua.String")
 local private = {
 	lootHandlers = {},
 }
-local LOOT_PATTERN_STR = String.FormatToMatchPattern(LOOT_ITEM_PUSHED_SELF)
-local LOOT_MULTIPLE_PATTERN_STR = String.FormatToMatchPattern(LOOT_ITEM_PUSHED_SELF_MULTIPLE)
+local LOOT_PATTERN_STR = "^"..String.FormatToMatchPattern(LOOT_ITEM_PUSHED_SELF).."$"
+local LOOT_MULTIPLE_PATTERN_STR = "^"..String.FormatToMatchPattern(LOOT_ITEM_PUSHED_SELF_MULTIPLE).."$"
 
 
 

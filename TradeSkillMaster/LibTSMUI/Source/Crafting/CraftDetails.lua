@@ -278,7 +278,7 @@ function CraftDetails:Acquire()
 
 	self._state:PublisherForExpression([[craftType ~= "ENCHANT_VELLUM" and craftType ~= "ITEM"]])
 		:CallMethod(buttons:GetElement("queueBtn"), "SetDisabled")
-	self._state:PublisherForExpression([[craftType ~= "ITEM" and craftType ~= "SALVAGE"]])
+	self._state:PublisherForExpression(LibTSMUI.IsRetail() and [[craftType ~= "ITEM" and craftType ~= "SALVAGE" and craftType ~= "ENCHANT_VELLUM"]] or [[craftType ~= "ITEM" and craftType ~= "SALVAGE"]])
 		:Share(4)
 		:CallMethod(buttons:GetElement("quantity.decrease"), "SetDisabled")
 		:CallMethod(buttons:GetElement("quantity.input"), "SetDisabled")

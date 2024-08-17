@@ -51,6 +51,14 @@ L["OPTIONS_ANCHOR_TARGET_SIDE"] = "К какой стороне прикрепи
 L["OPTIONS_ANCHOR_TOP"] = "Сверху"
 L["OPTIONS_ANCHOR_TOPLEFT"] = "Сверху слева"
 L["OPTIONS_ANCHOR_TOPRIGHT"] = "Сверху cправо"
+--[[Translation missing --]]
+L["OPTIONS_AUDIOCUE_COOLDOWN"] = "Audio Cooldown"
+--[[Translation missing --]]
+L["OPTIONS_AUDIOCUE_COOLDOWN_DESC"] = [=[Amount of time in milliseconds to wait before playing the SAME audio again.
+
+Prevents loud sounds from playing when two or more casts are happening at the same time.
+
+Set to 0 to disable this feature.]=]
 L["OPTIONS_AURA_DEBUFF_HEIGHT"] = "Высота иконки дебаффов."
 L["OPTIONS_AURA_DEBUFF_WITH"] = "Ширина иконки дебаффов."
 L["OPTIONS_AURA_HEIGHT"] = "Высота иконки дебаффов."

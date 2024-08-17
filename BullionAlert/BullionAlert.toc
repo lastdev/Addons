@@ -1,7 +1,7 @@
 ## Title: Bullion Alert
-## Interface: 110000
+## Interface: 110002
 ## Author: Kab
-## Version: 11.0.0.2
+## Version: 11.0.2.0
 ## Notes: Tracks Antique Bronze Bullion across your characters and plays an alert when you loot one in raid.
 ## X-Website: https://www.curseforge.com/wow/addons/bullion-alert
 ## X-Curse-Project-ID: 1030700

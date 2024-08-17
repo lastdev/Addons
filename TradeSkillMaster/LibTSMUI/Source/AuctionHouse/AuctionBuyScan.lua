@@ -115,6 +115,7 @@ function AuctionBuyScan.__private:__init(scanType, scanTypeName, isPlayerFunc, a
 		:SuppressActionLog("ACTION_SCAN_PROGRESS_UPDATED")
 		:SuppressActionLog("ACTION_BAG_QUANTITY_UPDATED")
 		:SuppressActionLog("ACTION_AUCTION_ID_UPDATED")
+		:SuppressActionLog("ACTION_AUCTION_SELECTION_CHANGED")
 	self._selectionPostContext = AuctionPostContext.New()
 	self._selectionDelayTimer = DelayTimer.New("AUCTION_BUY_SCAN_SELECTION_DELAY_"..scanTypeName, self._manager:CallbackToProcessAction("ACTION_AUCTION_SELECTION_CHANGED_DELAYED"))
 	self._restartDelayTimer = DelayTimer.New("AUCTION_BUY_SCAN_RESTART_DELAY_"..scanTypeName, self._manager:CallbackToProcessAction("ACTION_RESTART_DELAYED"))
@@ -413,6 +414,9 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		if success and state.auctionScrollTable then
 			state.auctionScrollTable:ExpandSingleResult()
 		end
+		if not success then
+			state.scanProgress = 1
+		end
 	elseif action == "ACTION_RESTART_DELAYED" then
 		if state.selectedAuction or not state.auctionScan then
 			return
@@ -611,7 +615,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		local result = ...
 		if result then
 			Mail.HandleAuctionPurchase(ItemString.ToLevel(state.selectedAuction:GetItemString()), state.lastBuyQuantity)
-			state.numConfirmed = state.numConfirmed + (LibTSMUI.IsRetail() and state.lastBuyQuantity or 1)
+			state.numConfirmed = min(state.numConfirmed + (LibTSMUI.IsRetail() and state.lastBuyQuantity or 1), state.numFound)
 			manager:ProcessAction("ACTION_REMOVE_BOUGHT_AUCTIONS", state.lastBuyQuantity)
 			if state.numConfirmed == state.numFound then
 				state.numBid = 0

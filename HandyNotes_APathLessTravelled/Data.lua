@@ -115,6 +115,11 @@ st.christ = "((The goblin statue with outstretched arms is referring to\n"
 			.."\"Christ on Corcovado\". This statue is atop a mountain\nnear Rio de Janeiro.))\n\n"
 			.."The robes the goblin is wearing are, appropriately,\n"
 			.."\"Gamemaster Robes\", unobtainable be us mere\nmortals!"
+st.cutKharazan = "((Kharazan had a flooded sub-level but it was\n"
+			.."cut prior to the Vanilla release, as was a\nraid at the top of the tower and unfinished\n"
+			.."micro-dungeons around the tower.\n\nSource: J Staats, The WoW Diary\n\n"
+			.."Yeah, the WoW devs were careful to remove\nall suggestions of cut content. And nothing\n"
+			.."eventually found it's way into the game, not\neven in The Burning Crusade. Not!!!))"
 st.darkmoonPortalA = "The Darkmoon Faire portal is exactly\nat this location when it comes around\n"
 			.."each month. Before you go rushing in,\ngrab some Simple Flour from Tharynn\n"
 			.."Bouden back at the cart at the town's\nedge. And any other materials you'll\n"
@@ -132,7 +137,7 @@ st.dregoth =   "Awwww he's not at all suspicious! First\nappeared at the start o
 			.."Why did he suddenly arrive in Darkshire?\nNobody knows! Others have likewise popped\n"
 			.."up in several locations across Azeroth!"
 st.dwarvenFarm = "Just a cool farming area. Chill. Nothing else to see!"
-st.ebonchill = "This location, complete with a Circle of Power\n"
+st.ebonchill = "This location, complete with a Circle of Power,\n"
 			.."is swarming with arcane elementals and mana wyrm.\n\n"
 			.."It became known around the time of \"Legion\" and\n"
 			.."is a key location frost mages will visit when they\n"
@@ -283,12 +288,25 @@ st.stanLee = "Stanley is a homage to Stan Lee, the famous DC and\n"
 			.."of the walk he will despawn forever.\n\n"..colourHighlight
 			.."    \"Face front, true believers!\"\n\n"..colourPlaintext
 			.."What a fitting tribute!\n\n    \"Nuf said\""
+st.stonewrought = "((Since Cataclysm, not much of the Stonewrought\n"
+			.."Dam remains, but did you known that J Staats,\n"
+			.."well known as the creator of Blackrock Mountain\n"
+			.."and its various dungeons, lots of other dungeons\n"
+			.."such as The Wailing Caverns, and almost all of\n"
+			.."the overland caves and mines, also built the\nStonewrought Dam!\n\n"
+			.."Source: J Staats, The WoW Diary\n\nLegend has it he built it stone by stone under\n"
+			.."the watchfull eye of Franclorn Forgewright\nhimself, as punishment by the Dark Iron\n"
+			.."Dwarves for apparent slights against them\nwith his design of Blackrock Mountain))"
 st.stranglethornAmbience = "Just a really peacful location to level fishing. I can\n"
 			.."see the waterfall from here but the sound doesn't\n"
 			.."intrude. I can balance my audio ambience and music\n"
 			.."how it suits me and just while away the time!"
-st.sundayStrollTitle="A relaxing Sunday stroll.\nWhat could possibly go wrong?"
-st.sundayStroll ="I just love these pathways\nthat connect the zones! <3"
+st.sundayStrollTitle= "A relaxing Sunday stroll.\nWhat could possibly go wrong?"
+st.sundayStroll = "I just love these pathways\nthat connect the zones! <3"
+st.tallTower = "((The Kharazan tower was originally too tall\n"
+			.."for the game engine. No worries! It was sunk\n"
+			.."into a valley surrounded by mountains, with\nthe path leading to it now at the tower's\n"
+			.."midway point.\n\nSource: J Staats, The WoW Diary))"
 st.theUnknownSoldier = "So many questions. The two Dark Portal guardians. Why?\n\n"
 			.."If lucky, the Unknown Soldier warrior will be present,\n"
 			.."undead and kneeling at his own tomb.\n\n"
@@ -348,6 +366,8 @@ points[ ns.classicCata and 1418 or 15 ] = { -- Badlands
 points[ ns.classicCata and 1419 or 17 ] = { -- Blasted Lands
 	[14491467] = { name="Abandoned Kirin Tor Camp", tip=st.ebonchill },
 	[17382103] = { name="Morgan's Plot Glitch", tip=st.morgansPlotGlitch },
+	[20050920] = { name="My, you're a tall one!", tip=st.tallTower, outdoors=true, staats=true },	
+	[24581558] = { name="Cut! Cut! Cut!", tip=st.cutKharazan, outdoors=true, staats=true },
 	[27170144] = { name="Ghostly Trees", tip="The trees look positively tormented!" },
 	[33527906] = { name="Was It Worth the Trip?", tip=st.wasItWorthTheTrip },
 	[45448612] = { name="Come, fly right in!", tip=st.garrod },
@@ -399,6 +419,8 @@ points[ ns.classicCata and 1430 or 42 ] = { -- Deadwind Pass
 					.."the \"Well of the Forgotten\" which is far\nabove!" },
 	[39342987] = { name="I Sit Upon the Hill of Shame\nA Shameful Task Chose I", tip=st.shamefulTask, outdoors=true },
 	[39887381] = { name="Morgan's Plot Glitch", tip=st.morgansPlotGlitch, outdoors=true },
+	[43785648] = { name="My, you're a tall one!", tip=st.tallTower, outdoors=true, staats=true },
+	[50436583] = { name="Cut! Cut! Cut!", tip=st.cutKharazan, outdoors=true, staats=true },
 	[52473432] = { name="Ariden's Camp", tip=st.aridensCamp, outdoors=true },
 	[54224511] = { name="Ghostly Trees", tip="The trees look positively tormented!", outdoors=true },
 }
@@ -488,7 +510,7 @@ points[ ns.classicCata and 1429 or 37 ] = { -- Elwynn Forest
 				.."the north of SW as its use was not decided\nupon. And it was untextured to boot!\n\n"
 				.."As gorgeous as the scenic route is, it wears\n"
 				.."thin by the tenth iteration, as we head to the\n"
-				.."refridgerator or take a toilet break))" },
+				.."refridgerator or take a toilet break))", staats=true },
 	[40406390] = { name="Four Children", tip=st.fourChildren },
 	[41786950] = { name="Step right up!", tip=st.darkmoonPortalA },
 	[44205330] = { name="The Cat Lady", tip=st.catLady },
@@ -767,6 +789,7 @@ points[ 467 ] = { -- Sunstrider Isle
 }
 
 points[ ns.classicCata and 1435 or 51 ] = { -- Swamp of Sorrows
+	[00518539] = { name="Cut! Cut! Cut!", tip=st.cutKharazan, outdoors=true, staats=true },
 	[02555400] = { name="Ariden's Camp", tip=st.aridensCamp },
 	[04296474] = { name="Ghostly Trees", tip="The trees look positively tormented!" },
 	[73680928] = { name="Beach Party Tonight!",
@@ -828,6 +851,7 @@ points[ 20 ] = { -- Tirisfal Glades - Keeper's Rest - Tomb of Tyr
 	[37461241] = { name="So Many Bubbles!", tip=st.artifactWeapons, },
 }
 points[ 241 ] = { -- Twilight Highlands
+	[17357499] = { name="Sentenced to Hard Labour", tip=st.stonewrought },
 	[42318344] = { name=st.miaMalkovaTitle, tip=st.miaMalkova },
 	[73721657] = { name="You First!", random=0.3, tip="Another fresh body. Why so many?" },
 	[73981897] = { name="She said it was 65 yards!", random=0.3, tip="Another aged goblin. What happens at The\n"
@@ -889,7 +913,8 @@ points[ ns.classicCata and 1437 or 56 ] = { -- Wetlands
 			.."four textures per zone. Somehow I never noticed!\n\nSource: J Staats, The WoW Diary))" },
 	[39364345] = { name="Never Seen Until Flying", tip="Okay, originally we couldn't fly over here.\n"
 			.."so were these eggs here all along? Did they\n"
-			.."appear after the Cataclysm? Related to some\npost-Cataclysm quest?" },
+			.."appear after the Cataclysm? Related to some\npost-Cataclysm quest?", staats=true },
+	[71649593] = { name="Sentenced to Hard Labour", tip=st.stonewrought },
 }
 
 --=======================================================================================================
@@ -1273,6 +1298,9 @@ points[ ns.classicCata and 1444 or 69 ] = { -- Feralas
 					.."fruit punch" },
 	[84971401] = { name="Quark, Strangeness and Charm", tip=st.hawkwind },
 	[94838183] = { name="Vale Dadanga", quest={ 24702 }, questName={ "Here Lies Dadanga" }, tip=st.dadanga },
+}
+points[ ns.classicCata and 1432 or 48 ] = { -- Loch Modan
+	[49241655] = { name="Sentenced to Hard Labour", tip=st.stonewrought },
 }
 points[ ns.classicCata and 1450 or 80 ] = { -- Moonglade
 	[52003289] = { name=st.danguiTitle, tip=st.dangui }, 
@@ -2403,7 +2431,7 @@ points[ 947 ] = { -- Azeroth
 					.."It served as a test bed for texture and other\n"
 					.."ideas and was used by Programming Team 2\n"
 					.."way back when WoW was still a top secret\nproject.\n\n"
-					.."Source: J Staats, The WoW Diary))" },
+					.."Source: J Staats, The WoW Diary))", staats=true },
 }
 points[ 1532 ] = { -- Crapopolis
 	[46454882] = { name="Mind Your Step!", tip="Did you known there's another mine field?\n\n"

@@ -16,6 +16,7 @@ local Container = LibTSMService:From("LibTSMWoW"):Include("API.Container")
 local Item = LibTSMService:From("LibTSMWoW"):Include("API.Item")
 local DelayTimer = LibTSMService:From("LibTSMWoW"):IncludeClassType("DelayTimer")
 local Event = LibTSMService:From("LibTSMWoW"):Include("Service.Event")
+local Lifecycle = LibTSMService:From("LibTSMWoW"):Include("Util.Lifecycle")
 local TooltipScanning = LibTSMService:From("LibTSMWoW"):Include("Service.TooltipScanning")
 local SlotId = LibTSMService:From("LibTSMWoW"):Include("Type.SlotId")
 local DefaultUI = LibTSMService:From("LibTSMWoW"):Include("UI.DefaultUI")
@@ -74,6 +75,7 @@ BagTracking:OnModuleLoad(function()
 		:AddNumberField("itemTexture")
 		:AddNumberField("quantity")
 		:AddBooleanField("isBound")
+		:AddBooleanField("isWarBound")
 		:AddIndex("slotId")
 		:AddIndex("bag")
 		:AddIndex("itemString")
@@ -157,55 +159,7 @@ function BagTracking.Start()
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) then
 		Event.Register("PLAYERREAGENTBANKSLOTS_CHANGED", private.ReagentBankSlotChangedHandler)
 	end
-end
-
---- Performs an initial scan of the bags.
-function BagTracking.InitialScan()
-	-- We'll scan all the bags right away, so wipe the existing quantities
-	wipe(private.storage.bagQuantity)
-	private.quantityDB:SetQueryUpdatesPaused(true)
-	local query = private.quantityDB:NewQuery()
-	for _, row in query:Iterator() do
-		local oldBagQuantity = row:GetField("bagQuantity")
-		local oldTotalBankQuantity = row:GetField("bankQuantity") + row:GetField("reagentBankQuantity")
-		if oldTotalBankQuantity == 0 then
-			-- Remove this row
-			assert(oldBagQuantity > 0)
-			private.quantityDB:DeleteRow(row)
-		else
-			local updated = false
-			if LibTSMService.IsRetail() and oldTotalBankQuantity > 0 then
-				-- Update commodity quantities using GetItemCount()
-				local levelItemString = row:GetField("levelItemString")
-				if levelItemString == ItemString.GetBaseFast(levelItemString) and ItemInfo.IsCommodity(levelItemString) then
-					local itemId = ItemString.ToId(levelItemString)
-					local _, bankQuantity, reagentBankQuantity = Container.GetItemCount(itemId)
-					if reagentBankQuantity ~= row:GetField("reagentBankQuantity") or bankQuantity ~= row:GetField("bankQuantity") then
-						updated = true
-						if reagentBankQuantity + bankQuantity == 0 then
-							private.quantityDB:DeleteRow(row)
-						else
-							row:SetField("bagQuantity", 0)
-								:SetField("bankQuantity", bankQuantity)
-								:SetField("reagentBankQuantity", reagentBankQuantity)
-								:Update()
-						end
-					end
-				end
-			end
-			if not updated and oldBagQuantity ~= 0 then
-				-- Update this row
-				row:SetField("bagQuantity", 0)
-					:Update()
-			end
-		end
-	end
-	query:Release()
-	private.quantityDB:SetQueryUpdatesPaused(false)
-
-	-- WoW does not fire an update event for the backpack when you log in, so trigger one
-	private.BagUpdateHandler(nil, 0)
-	private.BagUpdateDelayedHandler()
+	Lifecycle.RegisterCallback(private.HandleLogin, Lifecycle.EVENT.LOGIN)
 end
 
 ---Registers a callback for when the bags change.
@@ -319,10 +273,6 @@ function BagTracking.ForceBankQuantityDeduction(itemString, quantity)
 	if DefaultUI.IsBankVisible() then
 		return
 	end
-	private.slotDB:SetQueryUpdatesPaused(true)
-	local query = private.slotDB:NewQuery()
-		:Equal("itemString", itemString)
-		:Function("bag", Container.IsBankOrReagentBank)
 	local levelItemString = ItemString.ToLevel(itemString)
 	if private.isFirstBankOpen then
 		-- Haven't scanned yet, so just deduct the quantity
@@ -338,6 +288,10 @@ function BagTracking.ForceBankQuantityDeduction(itemString, quantity)
 		end
 		return
 	end
+	private.slotDB:SetQueryUpdatesPaused(true)
+	local query = private.slotDB:NewQuery()
+		:Equal("itemString", itemString)
+		:Function("bag", Container.IsBankOrReagentBank)
 	for _, row in query:Iterator() do
 		if quantity > 0 then
 			local rowQuantity, rowBag = row:GetFields("quantity", "bag")
@@ -464,6 +418,55 @@ end
 -- ============================================================================
 -- Event Handlers
 -- ============================================================================
+
+function private.HandleLogin()
+	-- We'll scan all the bags right away, so wipe the existing quantities
+	wipe(private.storage.bagQuantity)
+	private.quantityDB:SetQueryUpdatesPaused(true)
+	local query = private.quantityDB:NewQuery()
+	for _, row in query:Iterator() do
+		local oldBagQuantity = row:GetField("bagQuantity")
+		local oldTotalBankQuantity = row:GetField("bankQuantity") + row:GetField("reagentBankQuantity")
+		if oldTotalBankQuantity == 0 then
+			-- Remove this row
+			assert(oldBagQuantity > 0)
+			private.quantityDB:DeleteRow(row)
+		else
+			local updated = false
+			if LibTSMService.IsRetail() and oldTotalBankQuantity > 0 then
+				-- Update commodity quantities using GetItemCount()
+				local levelItemString = row:GetField("levelItemString")
+				if levelItemString == ItemString.GetBaseFast(levelItemString) and ItemInfo.IsCommodity(levelItemString) then
+					local itemId = ItemString.ToId(levelItemString)
+					local _, bankQuantity, reagentBankQuantity = Container.GetItemCount(itemId)
+					if reagentBankQuantity ~= row:GetField("reagentBankQuantity") or bankQuantity ~= row:GetField("bankQuantity") then
+						updated = true
+						if reagentBankQuantity + bankQuantity == 0 then
+							private.quantityDB:DeleteRow(row)
+						else
+							row:SetField("bagQuantity", 0)
+								:SetField("bankQuantity", bankQuantity)
+								:SetField("reagentBankQuantity", reagentBankQuantity)
+								:Update()
+						end
+					end
+				end
+			end
+			if not updated and oldBagQuantity ~= 0 then
+				-- Update this row
+				row:SetField("bagQuantity", 0)
+					:Update()
+			end
+		end
+	end
+	query:Release()
+	private.quantityDB:SetQueryUpdatesPaused(false)
+
+	-- WoW does not fire an update event for the backpack when you log in, so trigger one
+	private.BagUpdateHandler(nil, 0)
+	private.BagUpdateDelayedHandler()
+	return true
+end
 
 function private.BankVisible()
 	if private.isFirstBankOpen then
@@ -684,12 +687,14 @@ function private.ScanBagSlot(bag, slot)
 	local slotId = SlotId.Join(bag, slot)
 	local row = private.slotDB:GetUniqueRow("slotId", slotId)
 	if levelItemString then
+		local isWarBound = isBound and Container.CanDepositIntoWarbank(bag, slot)
 		if row then
 			if row:GetField("itemLink") ~= link then
 				row:SetField("itemLink", link)
 					:SetField("itemString", ItemString.Get(link))
 					:SetField("itemTexture", texture or ItemInfo.GetTexture(link))
 					:SetField("isBound", isBound)
+					:SetField("isWarBound", isWarBound)
 			end
 			local oldLevelItemString, oldQuantity = row:GetFields("levelItemString", "quantity")
 			if levelItemString ~= oldLevelItemString then
@@ -714,6 +719,7 @@ function private.ScanBagSlot(bag, slot)
 				:SetField("itemTexture", texture or ItemInfo.GetTexture(link))
 				:SetField("quantity", quantity)
 				:SetField("isBound", isBound)
+				:SetField("isWarBound", isWarBound)
 				:CreateOrUpdateAndRelease()
 			-- Add to the item totals
 			private.ChangeBagItemTotal(bag, levelItemString, quantity)

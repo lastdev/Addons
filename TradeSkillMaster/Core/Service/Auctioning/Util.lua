@@ -9,7 +9,7 @@ local Util = TSM.Auctioning:NewPackage("Util") ---@type AddonPackage
 local ClientInfo = TSM.LibTSMWoW:Include("Util.ClientInfo")
 local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
 local AuctioningOperation = TSM.LibTSMSystem:Include("AuctioningOperation")
-local PlayerInfo = TSM.Include("Service.PlayerInfo")
+local PlayerInfo = TSM.LibTSMApp:Include("Service.PlayerInfo")
 local private = {
 	settings = nil,
 }

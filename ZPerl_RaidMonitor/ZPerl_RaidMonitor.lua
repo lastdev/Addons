@@ -17,7 +17,7 @@ local UnitCastingInfo = UnitCastingInfo
 local UnitChannelInfo = UnitChannelInfo
 
 
-XPerl_SetModuleRevision("$Revision: ddda951e11d8520e24a10d5d519ce922a1c3db00 $")
+XPerl_SetModuleRevision("$Revision:  $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150

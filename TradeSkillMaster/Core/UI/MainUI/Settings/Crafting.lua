@@ -7,7 +7,7 @@
 local TSM = select(2, ...) ---@type TSM
 local Crafting = TSM.MainUI.Settings:NewPackage("Crafting") ---@type AddonPackage
 local L = TSM.Locale.GetTable()
-local PlayerInfo = TSM.Include("Service.PlayerInfo")
+local PlayerInfo = TSM.LibTSMApp:Include("Service.PlayerInfo")
 local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
 local private = {

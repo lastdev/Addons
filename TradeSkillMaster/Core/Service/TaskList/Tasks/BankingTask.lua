@@ -5,7 +5,8 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local BankingTask = TSM.Include("LibTSMClass").DefineClass("BankingTask", TSM.TaskList.ItemTask)
+local LibTSMClass = LibStub("LibTSMClass")
+local BankingTask = LibTSMClass.DefineClass("BankingTask", TSM.TaskList.ItemTask)
 local L = TSM.Locale.GetTable()
 local BagTracking = TSM.LibTSMService:Include("Inventory.BagTracking")
 local Guild = TSM.LibTSMService:Include("Guild")

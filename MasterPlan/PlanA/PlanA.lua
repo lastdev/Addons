@@ -125,7 +125,7 @@ do
 	local landingChoiceMenu, landingChoices
 	GarrisonLandingPageMinimapButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	GarrisonLandingPageMinimapButton:HookScript("PreClick", function(self, b)
-		self.landingVisiblePriorToClick = IsLandingPageVisible() and GarrisonLandingPage.garrTypeID
+		self.landingVisiblePriorToClick = IsLandingPageVisible() and GarrisonLandingPage and GarrisonLandingPage.garrTypeID
 		self.expansionPageVisiblePriorToClick = IsExpansionPageVisible()
 		if b == "RightButton" then
 			local soundOK, soundID = PlaySound(SOUNDKIT.UI_GARRISON_GARRISON_REPORT_OPEN)
@@ -134,7 +134,7 @@ do
 	end)
 	GarrisonLandingPageMinimapButton:HookScript("OnClick", function(self, b)
 		if b == "LeftButton" then
-			if IsLandingPageVisible() and not (IsExpansionPageVisible() or self.expansionPageVisiblePriorToClick) and GarrisonLandingPage.garrTypeID ~= C.GetLandingPageGarrisonType() then
+			if IsLandingPageVisible() and not (IsExpansionPageVisible() or self.expansionPageVisiblePriorToClick) and GarrisonLandingPage and GarrisonLandingPage.garrTypeID ~= C.GetLandingPageGarrisonType() then
 				ShowLanding(nil, C.GetLandingPageGarrisonType())
 			end
 			return
@@ -174,7 +174,7 @@ do
 				local p1 = (u and "TOP" or "BOTTOM") .. (r and "RIGHT" or "LEFT")
 				local p2 = (u and "TOP" or "BOTTOM") .. (r and "LEFT" or "RIGHT")
 				DropDownList1:SetPoint(p1, self, p2, r and 10 or -10, u and -8 or 8)
-			elseif GarrisonLandingPage.garrTypeID == 3 then
+			elseif GarrisonLandingPage and GarrisonLandingPage.garrTypeID == 3 then
 				ShowLanding(nil, 2)
 			end
 		end

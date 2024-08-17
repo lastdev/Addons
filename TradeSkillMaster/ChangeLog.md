@@ -1,8 +1,10 @@
-## v4.14.6 Changes
+## v4.14.9 Changes
 
-* [Retail] Added support for tracking inventory and gold in the Warband Bank
-* [Retail] Fixed optional mat quantities not reflecting items in the bank
-* [Classic] Fixed issue with enchanting button
+* [Retail] Update for 11.0.2
+* [Retail] Fixed mailing of warbound items
+* [Retail] Include warbank in total gold displayed
+* [Retail] Allow crafting more than one of an enchant at a time
+* [Classic] Fixed error on load when destroying UI is open
 * [All] Various other bug fixes
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

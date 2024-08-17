@@ -12,7 +12,8 @@ local GroupOperation = TSM.LibTSMTypes:Include("GroupOperation")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local SniperOperation = TSM.LibTSMSystem:Include("SniperOperation")
 local AuctionSearchContext = TSM.LibTSMService:IncludeClassType("AuctionSearchContext")
-local SniperSearchContext = TSM.Include("LibTSMClass").DefineClass("SniperSearchContext", AuctionSearchContext)
+local LibTSMClass = LibStub("LibTSMClass")
+local SniperSearchContext = LibTSMClass.DefineClass("SniperSearchContext", AuctionSearchContext)
 TSM.Sniper.SniperSearchContext = SniperSearchContext
 
 

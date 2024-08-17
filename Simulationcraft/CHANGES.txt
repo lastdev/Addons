@@ -1,10 +1,10 @@
-lightweight tag 941cf146deb58d1d710396afde9c03835cd4427b 11.0.0-01
+lightweight tag edc6d50aee4f70f2f983e8c78d275193e8665430 patch-11.0.2-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Jul 23 07:40:23 2024 -0700
+Date:	Thu Aug 15 13:21:19 2024 -0700
 
-commit 941cf146deb58d1d710396afde9c03835cd4427b
+commit edc6d50aee4f70f2f983e8c78d275193e8665430
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Jul 23 07:40:23 2024 -0700
+Date:   Thu Aug 15 13:21:19 2024 -0700
 
-    Update TOC for 11.0 prepatch
+    Bump TOC version for 11.0.2
 

@@ -1,7 +1,7 @@
 --[[-------------------------------------------------------------------------
 -- Simple Interrupt Announce
 --
--- Copyright 2011-2020 BeathsCurse (Bowmore - Silvermoon EU)
+-- Copyright 2011-2024 BeathsCurse (Bowmore - Silvermoon EU)
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 -------------------------------------------------------------------------]]--
 
 local addonName, addon = ...
-addon.version = GetAddOnMetadata(addonName, 'Version')
+addon.version = C_AddOns.GetAddOnMetadata(addonName, 'Version')
 
 -- Expose our addon table through a global variable
 _G[addonName] = addon
@@ -109,7 +109,7 @@ local lastTime, lastSpellID
 
 -- Local names for globals used in CLEU handler
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local GetSpellLink = GetSpellLink
+local GetSpellLink = C_Spell.GetSpellLink
 local IsInGroup = IsInGroup
 local IsInRaid = IsInRaid
 local PlaySoundFile = PlaySoundFile

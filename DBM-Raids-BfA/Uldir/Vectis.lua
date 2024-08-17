@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod(2166, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044055")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(134442)--135016 Plague Amalgam
 mod:SetEncounterID(2134)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -114,7 +114,7 @@ local function delayedIconCheck(self)
 			yellOmegaVectorFades:Countdown(remaining-0.3, 3, currentIcon)
 		end
 	else--Didn't find an icon
-		specWarnOmegaVectorAlt:Show(DBM_COMMON_L.UNKNOWN)
+		specWarnOmegaVectorAlt:Show()
 		specWarnOmegaVectorAlt:Play("targetyou")
 		yellOmegaVectorNoIcon:Yell()
 		if expireTime then

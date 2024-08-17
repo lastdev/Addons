@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2352, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(151881)
 mod:SetEncounterID(2298)
 mod:SetUsedIcons(4, 6)
@@ -206,7 +206,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 295348 then
 		warnOverflowingChill:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
-			specWarnOverflowingChill:Show(6, args.spellName, 6)
+			specWarnOverflowingChill:Show()
 			specWarnOverflowingChill:Play("runout")
 			yellOverflowingChill:Yell(6, args.spellName, 6)
 			yellOverflowingChillFades:Countdown(spellId, nil, 6)

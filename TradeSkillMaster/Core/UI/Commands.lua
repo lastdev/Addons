@@ -14,10 +14,8 @@ local Log = TSM.LibTSMUtil:Include("Util.Log")
 local ItemString = TSM.LibTSMTypes:Include("Item.ItemString")
 local CustomString = TSM.LibTSMTypes:Include("CustomString")
 local Money = TSM.LibTSMUtil:Include("UI.Money")
-local SlashCommands = TSM.Include("Service.SlashCommands")
-local CustomPrice = TSM.Include("Service.CustomPrice")
-local ErrorHandler = TSM.LibTSMService:Include("Debug.ErrorHandler")
-local ItemInfoConfig = TSM.Include("Service.ItemInfoConfig")
+local SlashCommands = TSM.LibTSMApp:Include("Service.SlashCommands")
+local CustomPrice = TSM.LibTSMApp:Include("Service.CustomPrice")
 local private = {
 	settingsDB = nil,
 	settings = nil,
@@ -37,13 +35,11 @@ function Commands.OnInitialize(settingsDB)
 		:AddKey("factionrealm", "internalData", "crafts")
 
 	-- Slash commands
-	SlashCommands.Register("", TSM.MainUI.Toggle, L["Toggles the main TSM window"])
-	SlashCommands.Register("help", SlashCommands.PrintHelp, L["Prints the slash command help listing"])
+	SlashCommands.RegisterBase(TSM.MainUI.Toggle, L["Toggles the main TSM window"])
 	SlashCommands.Register("version", private.PrintVersions, L["Prints out the version numbers of all installed modules"])
 	SlashCommands.Register("sources", private.PrintSources, L["Prints out the available price sources for use in custom prices"])
 	SlashCommands.Register("price", private.TestPriceSource, L["Allows for testing of custom prices"])
 	SlashCommands.Register("profile", private.ChangeProfile, L["Changes to the specified profile (i.e. '/tsm profile Default' changes to the 'Default' profile)"])
-	SlashCommands.Register("debug", private.DebugSlashCommandHandler)
 	SlashCommands.Register("destroy", TSM.UI.DestroyingUI.Toggle, L["Opens the Destroying frame if there are items in your bags to be destroyed."])
 	SlashCommands.Register("crafting", TSM.UI.CraftingUI.Toggle, L["Toggles the TSM Crafting UI."])
 	SlashCommands.Register("tasklist", TSM.UI.TaskListUI.Toggle, L["Toggles the TSM Task List UI"])
@@ -51,6 +47,10 @@ function Commands.OnInitialize(settingsDB)
 	SlashCommands.Register("get", TSM.Banking.GetByFilter, L["Gets items from the bank or guild bank matching the item or partial text entered."])
 	SlashCommands.Register("put", TSM.Banking.PutByFilter, L["Puts items matching the item or partial text entered into the bank or guild bank."])
 	SlashCommands.Register("restock_help", TSM.Crafting.RestockHelp, L["Tells you why a specific item is not being restocked and added to the queue."])
+	SlashCommands.RegisterDebug("logging", private.ToggleLogging)
+	SlashCommands.RegisterDebug("clearcraftdb", private.ClearCraftDB)
+	SlashCommands.RegisterDebug("leaks", private.EnableLeakDebug)
+	SlashCommands.RegisterDebug("whatsnew", private.ResetWhatsNew)
 end
 
 
@@ -61,7 +61,7 @@ end
 
 function private.PrintVersions()
 	ChatMessage.PrintUser(L["TSM Version Info:"])
-	ChatMessage.PrintUserRaw("TradeSkillMaster "..ChatMessage.ColorUserAccentText(TSM.GetVersion()))
+	ChatMessage.PrintUserRaw("TradeSkillMaster "..ChatMessage.ColorUserAccentText(TSM.LibTSMUtil.GetVersionStr()))
 	local appHelperVersion = C_AddOns.GetAddOnMetadata("TradeSkillMaster_AppHelper", "Version")
 	if appHelperVersion then
 		-- use strmatch so that our sed command doesn't replace this string
@@ -156,37 +156,27 @@ function private.GetProfileListStr()
 	return result
 end
 
-function private.DebugSlashCommandHandler(cmd)
-	if cmd == "fstack" then
-		TSM.UI.FrameStack.Toggle()
-	elseif cmd == "error" then
-		ErrorHandler.ShowManual()
-	elseif cmd == "logging" then
-		assert(not TSM.IsTest() and TSM.IsDev())
-		private.settings.chatLoggingEnabled = not private.settings.chatLoggingEnabled
-		Log.SetLoggingToChatEnabled(private.settings.chatLoggingEnabled)
-		if private.settings.chatLoggingEnabled then
-			ChatMessage.PrintfUser("Logging to chat enabled")
-		else
-			ChatMessage.PrintfUser("Logging to chat disabled")
-		end
-	elseif cmd == "db" then
-		TSM.UI.DBViewer.Toggle()
-	elseif cmd == "sb" or cmd == "story" or cmd == "storyboard" then
-		TSM.UI.StoryBoard.Toggle()
-	elseif cmd == "state" then
-		TSM.UI.StateInspect.Open()
-	elseif cmd == "logout" then
-		TSM.AddonTestLogout()
-	elseif cmd == "clearitemdb" then
-		ItemInfoConfig.WipeCache()
-	elseif cmd == "clearcraftdb" then
-		private.settings.crafts = {}
-		ReloadUI()
-	elseif cmd == "leaks" then
-		TempTable.EnableLeakDebug()
-		ObjectPool.EnableLeakDebug()
-	elseif cmd == "whatsnew" then
-		private.settings.whatsNewVersion = 0
+function private.ToggleLogging()
+	assert(not TSM.LibTSMUtil.IsTestVersion() and TSM.LibTSMUtil.IsDevVersion())
+	private.settings.chatLoggingEnabled = not private.settings.chatLoggingEnabled
+	Log.SetLoggingToChatEnabled(private.settings.chatLoggingEnabled)
+	if private.settings.chatLoggingEnabled then
+		ChatMessage.PrintfUser("Logging to chat enabled")
+	else
+		ChatMessage.PrintfUser("Logging to chat disabled")
 	end
+end
+
+function private.ClearCraftDB()
+	private.settings.crafts = {}
+	ReloadUI()
+end
+
+function private.EnableLeakDebug()
+	TempTable.EnableLeakDebug()
+	ObjectPool.EnableLeakDebug()
+end
+
+function private.ResetWhatsNew()
+	private.settings.whatsNewVersion = 0
 end

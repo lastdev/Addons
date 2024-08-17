@@ -7,7 +7,8 @@ do
 
 L["OPTIONS_"] = ""
 
-
+    L["OPTIONS_AUDIOCUE_COOLDOWN"] = "Audio Cooldown"
+    L["OPTIONS_AUDIOCUE_COOLDOWN_DESC"] = "Amount of time in milliseconds to wait before playing the SAME audio again.\n\nPrevents loud sounds from playing when two or more casts are happening at the same time.\n\nSet to 0 to disable this feature."
 
     --on curseforge
     L["OPTIONS_CASTBAR_APPEARANCE"] = "Cast Bar Appearance"
@@ -26,6 +27,9 @@ L["OPTIONS_"] = ""
     L["OPTIONS_SHOWOPTIONS"] = "Show Options"
     L["OPTIONS_SHOWSCRIPTS"] = "Show Scripts"
     L["OPTIONS_CASTCOLORS_DISABLECOLORS"] = "Disable All Colors"
+    L["OPTIONS_CASTCOLORS_DISABLECOLORS_CONFIRM"] = "Confirm disable all cast colors?"
+    L["OPTIONS_CASTCOLORS_DISABLE_SOUNDS"] = "Remove All Sounds"
+    L["OPTIONS_CASTCOLORS_DISABLE_SOUNDS_CONFIRM"] = "Are you sure you want to remove all configured cast sounds?"
 
     L["OPTIONS_NOESSENTIAL_TITLE"] = "Skip Non Essential Script Patches"
     L["OPTIONS_NOESSENTIAL_NAME"] = "Disable non-essential script updates during Plater version upgrades."
@@ -426,6 +430,12 @@ L["OPTIONS_ANCHOR_TARGET_SIDE"] = "Which side this widget is attach to."
 L["OPTIONS_ANCHOR_TOP"] = "Top"
 L["OPTIONS_ANCHOR_TOPLEFT"] = "Top Left"
 L["OPTIONS_ANCHOR_TOPRIGHT"] = "Top Right"
+L["OPTIONS_AUDIOCUE_COOLDOWN"] = "Audio Cooldown"
+L["OPTIONS_AUDIOCUE_COOLDOWN_DESC"] = [=[Amount of time in milliseconds to wait before playing the SAME audio again.
+
+Prevents loud sounds from playing when two or more casts are happening at the same time.
+
+Set to 0 to disable this feature.]=]
 L["OPTIONS_AURA_DEBUFF_HEIGHT"] = "Debuff's icon height."
 L["OPTIONS_AURA_DEBUFF_WITH"] = "Debuff's icon width."
 L["OPTIONS_AURA_HEIGHT"] = "Debuff's icon height."

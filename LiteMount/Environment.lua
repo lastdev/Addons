@@ -228,9 +228,8 @@ function LM.Environment:IsCombatTravelForm()
 end
 
 function LM.Environment:IsCantSummonForm()
-    local formID = GetShapeshiftFormID()
-    -- cat, bear, treant druid forms can't be mounted from with SummonByID
-    if formID == 1 or formID == 5 or formID == 36 then
+    -- C_MountJournal.SummonByID() fails in druid forms, Ghost Wolf is OK.
+    if select(2, UnitClass("player")) == "DRUID" and GetShapeshiftFormID() then
         return true
     else
         return false
@@ -246,7 +245,7 @@ function LM.Environment:MapIsMap(a, b, checkGroup)
         local aGroup = C_Map.GetMapGroupID(a)
         if aGroup and aGroup == C_Map.GetMapGroupID(b) then
             return true
-    end
+        end
     end
     return false
 end
@@ -288,30 +287,21 @@ function LM.Environment:InInstance(...)
     return false
 end
 
+-- Blizzard appears sometime in the TWW pre-patch have changed
+-- IsAdvancedFlyableArea so that is really IsFlightStyleSkyriding. So
+--
+--  skyridingArea = IsFlyableArea() and IsAdvancedFlyableArea()
+--  flyingArea = IsFlyableArea() and not IsAdvancedFlyableArea()
+
+local steadyInfo = C_Spell.GetSpellInfo(LM.SPELL.FLIGHT_STYLE_STEADY_FLIGHT)
+local skyridingInfo = C_Spell.GetSpellInfo(LM.SPELL.FLIGHT_STYLE_SKYRIDING)
+
 function LM.Environment:GetFlightStyle()
-    local spellID = C_MountJournal.GetDynamicFlightModeSpellID()
-    if not spellID then return end
-
-    local spellInfo = C_Spell.GetSpellInfo(spellID)
-    if not spellInfo then return end
-
-    local steadyInfo = C_Spell.GetSpellInfo(LM.SPELL.FLIGHT_STYLE_STEADY_FLIGHT)
-    local skyridingInfo = C_Spell.GetSpellInfo(LM.SPELL.FLIGHT_STYLE_SKYRIDING)
     if not steadyInfo and skyridingInfo then return end
 
-    -- The default flight style is skyriding. Weirdly GetOverrideSpell still
-    -- return 460003 (Switch to Skyriding) in this case, but it can be detected
-    -- by the icon in the base spell not being replaced.
-
-    if spellInfo.iconID == spellInfo.originalIconID then
-        return skyridingInfo.name, "skyriding"
-    end
-
-    if steadyInfo and spellInfo.iconID == steadyInfo.iconID then
+    if IsAdvancedFlyableArea() == false then
         return steadyInfo.name, "steady"
-    end
-
-    if skyridingInfo and spellInfo.iconID == skyridingInfo.iconID then
+    else
         return skyridingInfo.name, "skyriding"
     end
 end
@@ -340,70 +330,16 @@ function LM.Environment:KnowsFlyingSkill()
         or IsPlayerSpell(34090)
 end
 
+
+-- Overrides have 3 possible return values, true, false, nil (no override)
 local InstanceFlyableOverride = {
-    -- IsFlyableArea() seems to be broken for all of WoD in the Shadowlands prepatch
-    -- unless you have the old achievement completed.
-    [1116] = true,          -- Draenor (WoD)
-    [1152] = true,          -- Horde Garrison Level 1
-    [1330] = true,          -- Horde Garrison Level 2
-    [1153] = true,          -- Horde Garrison Level 3
-    [1154] = true,          -- Horde Garrison Level 4 (?)
-    [1158] = true,          -- Alliance Garrison Level 1
-    [1331] = true,          -- Alliance Garrison Level 2
-    [1159] = true,          -- Alliance Garrison Level 3
-    [1160] = true,          -- Alliance Garrison Level 4 (?)
-    [1464] = true,          -- Tanaan Jungle (WoD)
-
-    -- Some people report IsFlyableArea() broken for Broken Isles (Legion) too
-    [1220] = true,          -- Broken Isles
-
-    [ 754] = false,         -- Throne of the Four Winds
-    [1107] = false,         -- Dreadscar Rift (Warlock)
-    [1191] = false,         -- Ashran PVP Area
-    [1265] = false,         -- Tanaan Jungle Intro
-    [1463] = false,         -- Helheim Exterior Area
-    [1469] = false,         -- Heart of Azeroth (Shaman)
-    [1479] = false,         -- Skyhold (Warrior)
-    [1500] = false,         -- Broken Shore DH Scenario
-    [1514] = false,         -- Wandering Isle (Monk)
-    [1519] = false,         -- Fel Hammer (DH)
-    [1604] = false,         -- Niskara, priest legion campaign
-    [1669] = false,         -- Argus
-    [1688] = false,         -- The Deadmines (Pet Battle)
-    [1750] = false,         -- Azuremyst Isle (Legion Scenario?)
-    [1760] = false,         -- Ruins of Lordaeron BfA opening
-    [1763] = false,         -- Atal'Dazar instance
-    [1803] = false,         -- Battleground: Seething Shore
-    [1813] = false,         -- Island Expedition Un'gol Ruins
-    [1814] = false,         -- Island Expedition Havenswood
-    [1879] = false,         -- Island Expedition Jorundall
-    [1882] = false,         -- Island Expedition Verdant Wilds
-    [1883] = false,         -- Island Expedition Whispering Reef
-    [1892] = false,         -- Island Expedition Rotting Mire
-    [1893] = false,         -- Island Expedition The Dread Chain
-    [1897] = false,         -- Island Expedition Molten Cay
-    [1898] = false,         -- Island Expedition Skittering Hollow
-    [1906] = false,         -- Zuldazar Continent Finale
-    [1907] = false,         -- Island Expedition Snowblossom Village
-    [2124] = false,         -- Island Expedition Crestfall
-    [2275] = false,         -- Lesser Vision Vale of Eternal Twilight
-    [2278] = false,         -- Revendreth Scenario
-    [2291] = false,         -- De Other Side
-    [2293] = false,         -- Theater of Pain
-    [2296] = false,         -- Castle Nathria
-    [2363] = false,         -- Queen's Winter Conservatory
-    [2364] = false,         -- The Maw (Starting Experience)
-    [2464] = false,         -- Battle of Ardenweald (9.1)
-}
-
--- Note that these have 3 possible return values, true, false, nil (no override)
-
-local InstanceDragonridableOverride = {
+    -- Clear these out for TWW, everything I tested is flagged correctly.
+    [2512] = true,      -- The Primalist Future
     [2549] =            -- Amirdrassil Raid
         function ()
-            -- Dragonriding debuff Blessing of the Emerald Dream (429226)
-            -- This is an approximation, it doesn't make the area dragonriding
-            -- it just forces the journal dragonriding mounts to work. Notably
+            -- Skyriding debuff Blessing of the Emerald Dream (429226)
+            -- This is an approximation, it doesn't make the area skyriding
+            -- it just forces the journal skyriding mounts to work. Notably
             -- Soar does not work with it, so there is a hack there too.
             if LM.UnitAura('player', 429226, 'HARMFUL') then return true end
         end,
@@ -411,82 +347,34 @@ local InstanceDragonridableOverride = {
                         -- The debuff "Hostile Airways" (406608) but it's always up
 }
 
-function LM.Environment:ForceFlyable(instanceID)
-    instanceID = instanceID or select(8, GetInstanceInfo())
-    InstanceFlyableOverride[instanceID] = true
-end
-
-function LM.Environment:CanDragonride(mapPath)
-    if not C_MountJournal.IsDragonridingUnlocked() then
-        return false
-    end
-
-    -- if you are switched into steady flight you can't skyride
-    if LM.UnitAura('player', LM.SPELL.FLIGHT_STYLE_STEADY_FLIGHT) then
-        return false
-    end
-
+function LM.Environment:GetFlyableOverride(mapPath)
     local instanceID = select(8, GetInstanceInfo())
-    local override = InstanceDragonridableOverride[instanceID]
+    local override = InstanceFlyableOverride[instanceID]
     if type(override) == 'function' then
         local value = override(mapPath)
         if value ~= nil then return value end
     else
         if override ~= nil then return override end
     end
-
-    -- TWW intro area has this debuff preventing dragonriding (and I would assume
-    -- flying also would have to check that later).
-    if LM.UnitAura('player', 456486, 'HARMFUL') then
-        return false
-    end
-
-    -- Dragon Isles and Khaz Algar and everything in them are correctly flagged
-    -- IsAdvancedFlyableArea if you can dragonride, and you can't fly there
-    -- unless you unlock it.
-
-    if self:IsMapInPath(1978, mapPath) or self:IsMapInPath(2274, mapPath) then
-        return IsAdvancedFlyableArea()
-    end
-
-
-    -- Can't dragonride in Warfronts either
-    if C_Scenario and C_Scenario.IsInScenario() then
-        local scenarioType = select(10, C_Scenario.GetInfo())
-        if scenarioType == LE_SCENARIO_TYPE_WARFRONT then
-            return false
-        end
-    end
-
-    -- Lots of non-Dragon Isles areas are wrongly flagged IsAdvancedFlyableArea
-    return IsAdvancedFlyableArea() and IsFlyableArea()
 end
 
--- Can't fly if you haven't learned a flying skill. Various expansion
--- continents from Draenor onwards need achievement unlocks to be able to fly.
+function LM.Environment:IsFlyableArea(mapPath)
 
-function LM.Environment:CanSteadyFly()
-
-    -- If you don't know how to fly, you can't fly
-    if not self:KnowsFlyingSkill() then
-        return false
-    end
-
-    -- if you are switched into skyriding you can't fly only skyride
-    if LM.UnitAura('player', LM.SPELL.FLIGHT_STYLE_SKYRIDING) ~= nil then
-        return false
-    end
-
-    local instanceID = select(8, GetInstanceInfo())
-
-    if InstanceFlyableOverride[instanceID] ~= nil then
-        return InstanceFlyableOverride[instanceID]
+    local override = self:GetFlyableOverride(mapPath)
+    if override ~= nil then
+        return override
     end
 
     if WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
-        -- Classic Northrend requires Cold Weather Flying in WotLK Classic
+        -- Northrend requires Cold Weather Flying
         if self:InInstance(571) then
             if not IsPlayerSpell(54197) then
+                return false
+            end
+        end
+        -- Eastern Kingdoms, Kalimdor and Deepholm require Flight Master's License
+        if self:InInstance(0, 1, 646) then
+            if not IsPlayerSpell(90267) then
                 return false
             end
         end
@@ -511,7 +399,30 @@ function LM.Environment:CanSteadyFly()
         end
     end
 
+    -- TWW intro area has this debuff preventing skyriding (and I would assume
+    -- flying also would have to check that later).
+    if LM.UnitAura('player', 456486, 'HARMFUL') then
+        return false
+    end
+
     return IsFlyableArea()
+end
+
+-- Area allows flying and you know how to fly0
+function LM.Environment:CanFly(mapPath)
+
+    if IsAdvancedFlyableArea and IsAdvancedFlyableArea() then
+        -- This has a compat for Cataclysm Classic to return false always
+        if not C_MountJournal.IsDragonridingUnlocked() then
+            return false
+        end
+    else
+        if not self:KnowsFlyingSkill() then
+            return false
+        end
+    end
+
+    return self:IsFlyableArea(mapPath)
 end
 
 function LM.Environment:CantBreathe()

@@ -16,6 +16,7 @@ local Theme = TSM.LibTSMService:Include("UI.Theme")
 local Analytics = TSM.LibTSMUtil:Include("Util.Analytics")
 local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
+local AppHelper = TSM.LibTSMApp:Include("Service.AppHelper")
 local private = {
 	settings = nil,
 	characterGuilds = {},
@@ -476,7 +477,7 @@ function private.GetDashboardFrame()
 	frame:GetElement("content.goldHeader.hoverTime"):Hide()
 
 	local newsContent = frame:GetElement("news.content")
-	local newsEntries = TSM.AppHelper.GetNews()
+	local newsEntries = AppHelper.GetNews()
 	if newsEntries then
 		for i, info in ipairs(newsEntries) do
 			newsContent:AddChild(UIElements.New("Frame", "news"..i)

@@ -87,7 +87,7 @@ function addon:logSentMission(missionID, followers, predictedFinalHP)
     
     record.environmentEffect = C_Garrison.GetAutoMissionEnvironmentEffect(missionID)
     
-    record.addonVersion = GetAddOnMetadata(addonName, "Version")
+    record.addonVersion = C_AddOns.GetAddOnMetadata(addonName, "Version")
     record.sentTime = time()
     
     TLDRMissionsLogging[missionID] = record
@@ -155,7 +155,7 @@ function addon:logCompletedMission(missionID, canComplete, success, overmaxSucce
         end
     else
         if TLDRMissionsLogging[missionID] then
-            if (TLDRMissionsLogging[missionID].addonVersion ~= GetAddOnMetadata(addonName, "Version")) and (not addon.db.profile.DEVTESTING) then return end
+            if (TLDRMissionsLogging[missionID].addonVersion ~= C_AddOns.GetAddOnMetadata(addonName, "Version")) and (not addon.db.profile.DEVTESTING) then return end
             if not printOnce then
                 print(L["DiscrepancyError"])
                 printOnce = true

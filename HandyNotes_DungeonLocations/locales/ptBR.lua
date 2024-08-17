@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "ptBR")
 if not L then return end
 
+L["Show on Zone"] = "Mostrar na zona"
+L["Show icons on zone map"] = "Mostra símbolos no cartão de zona"
 L["Allow left click to open journal to dungeon or raid"] = "Permitir usar o clique esquerdo para abrir o diário para Masmorras ou raides"
 L["Allow right click to create waypoints with TomTom"] = "Permitir usar o clique direito para criar waypoints com o TomTom"
 L["Continent Alpha"] = "Alfa do continente"
@@ -8,6 +10,7 @@ L["Continent Scale"] = "Escala de Continente"
 L["Don't show discovered dungeons"] = "Não mostrar masmorras descobertas"
 L["Enable TomTom integration"] = "Habilitar a integração com o TomTom"
 L["Filter Options"] = "Opções de filtro"
+L["Hide all Khaz Algar nodes from the map"] = "Ocultar todos os nós Khaz Algar do mapa"
 L["Hide all Dragonflight nodes from the map"] = "Ocultar todos os nós Dragonflight do mapa"
 L["Hide all Shadowlands nodes from the map"] = "Oculte todos os nodos de Shadowlands do mapa"
 L["Hide all BfA nodes from the map"] = "Ocultar do mapa todos os nós do BFA"
@@ -18,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "Ocultar todos os pontos de Nortún
 L["Hide all Outland nodes from the map"] = "Ocultar todos os pontos de Terralém do mapa"
 L["Hide all Pandaria nodes from the map"] = "Ocultar todos os pontos de Pandária do mapa"
 L["Hide all Vanilla nodes from the map"] = "Ocultar todos os pontos de Vanilla do mapa"
+L["Hide Khaz Algar"] = "Ocultar Khaz Algar"
 L["Hide Dragonflight"] = "Ocultar Dragonflight"
 L["Hide Shadowlands"] = "Ocultar Shadowlands"
 L["Hide Battle for Azeroth"] = "Ocultar Battle for Azeroth"

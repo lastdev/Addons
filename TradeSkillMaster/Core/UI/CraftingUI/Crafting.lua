@@ -489,11 +489,17 @@ function private.ActionHandler(manager, state, action, ...)
 	elseif action == "ACTION_DETAILS_CRAFT_BUTTON_CLICKED" then
 		local recipeString, quantity, isVellum, salvageItemLocation = ...
 		local craftingSource = isVellum and CraftingUIUtils.CRAFTING_SOURCE.VELLUM or CraftingUIUtils.CRAFTING_SOURCE.CRAFT
-		return manager:ProcessAction("ACTION_START_CRAFT", recipeString, isVellum and math.huge or quantity, craftingSource, salvageItemLocation)
+		if isVellum and not ClientInfo.IsRetail() then
+			quantity = math.huge
+		end
+		return manager:ProcessAction("ACTION_START_CRAFT", recipeString, quantity, craftingSource, salvageItemLocation)
 	elseif action == "ACTION_DETAILS_CRAFT_BUTTON_MOUSE_DOWN" then
 		local recipeString, quantity, isVellum, salvageItemLocation = ...
 		local craftingSource = isVellum and CraftingUIUtils.CRAFTING_SOURCE.VELLUM or CraftingUIUtils.CRAFTING_SOURCE.CRAFT
-		return manager:ProcessAction("ACTION_PREPARE_TO_CRAFT", recipeString, isVellum and math.huge or quantity, craftingSource, salvageItemLocation)
+		if isVellum and not ClientInfo.IsRetail() then
+			quantity = math.huge
+		end
+		return manager:ProcessAction("ACTION_PREPARE_TO_CRAFT", recipeString, quantity, craftingSource, salvageItemLocation)
 	elseif action == "ACTION_QUEUE_ROW_MOUSE_DOWN" then
 		if state.craftingRecipeString or state.professionType ~= TradeSkill.TYPE.PLAYER then
 			return

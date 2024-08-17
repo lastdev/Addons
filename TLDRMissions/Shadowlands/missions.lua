@@ -39,13 +39,13 @@ local SPELL_ID_COOKING = 2550
 local SPELL_ID_FISHING = 131474
 
 local craftingCacheCategories = {
-    [SPELL_ID_ENCHANTING] = GetSpellInfo(SPELL_ID_ENCHANTING),
-    [SPELL_ID_TAILORING] = GetSpellInfo(SPELL_ID_TAILORING),
-    [SPELL_ID_SKINNING] = GetSpellInfo(SPELL_ID_SKINNING),
-    [SPELL_ID_MINING] = GetSpellInfo(SPELL_ID_MINING),
-    [SPELL_ID_HERBALISM] = GetSpellInfo(SPELL_ID_HERBALISM),
-    [SPELL_ID_COOKING] = GetSpellInfo(SPELL_ID_COOKING),
-    [SPELL_ID_FISHING] = GetSpellInfo(SPELL_ID_FISHING),
+    [SPELL_ID_ENCHANTING] = C_Spell.GetSpellInfo(SPELL_ID_ENCHANTING).name,
+    [SPELL_ID_TAILORING] = C_Spell.GetSpellInfo(SPELL_ID_TAILORING).name,
+    [SPELL_ID_SKINNING] = C_Spell.GetSpellInfo(SPELL_ID_SKINNING).name,
+    [SPELL_ID_MINING] = C_Spell.GetSpellInfo(SPELL_ID_MINING).name,
+    [SPELL_ID_HERBALISM] = C_Spell.GetSpellInfo(SPELL_ID_HERBALISM).name,
+    [SPELL_ID_COOKING] = C_Spell.GetSpellInfo(SPELL_ID_COOKING).name,
+    [SPELL_ID_FISHING] = C_Spell.GetSpellInfo(SPELL_ID_FISHING).name,
     ["zereth"] = C_Map.GetMapInfo(1970).name,
 }
 addon.craftingCacheCategories = craftingCacheCategories

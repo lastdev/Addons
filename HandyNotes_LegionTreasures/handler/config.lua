@@ -363,7 +363,7 @@ local function testMaker(test, override)
     end
 end
 
-local itemInBags = testMaker(function(item) return GetItemCount(item, true) > 0 end)
+local itemInBags = testMaker(function(item) return C_Item.GetItemCount(item, true) > 0 end)
 local allQuestsComplete = testMaker(function(quest) return C_QuestLog.IsQuestFlaggedCompleted(quest) end)
 ns.allQuestsComplete = allQuestsComplete
 

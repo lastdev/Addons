@@ -1,7 +1,8 @@
-local addonName = ...
+local addonName, namespace = ...
 ---@class CS : Frame
 local CS = CreateFrame("Frame")
 local Settings = {}
+local L = namespace.L
 
 local internal = {
 	uldumMapID = 249,
@@ -31,7 +32,13 @@ local internal = {
 	exportText = "",
 }
 
-local isWarModeDesired = C_PvP and C_PvP.IsWarModeDesired and C_PvP.IsWarModeDesired() or function() return false end
+function CS:IsWarModeEnabled()
+	if C_PvP and C_PvP.IsWarModeDesired then
+		return C_PvP.IsWarModeDesired()
+	else
+		return false
+	end
+end
 
 local timeFormatter = CreateFromMixins(SecondsFormatterMixin);
 timeFormatter:Init(1, SecondsFormatter.Abbreviation.Truncate);
@@ -125,7 +132,7 @@ function AlertFrame:Create()
 		end
 	end)
 
-    self.tooltip = "|T1065418:16:16:0:0:2048:1024:2009:2041:35:67|tLeft-click to drag and move.\n|T1065418:16:16:0:0:2048:1024:2009:2041:69:101|tRight-click to close."
+    self.tooltip = "|T1065418:16:16:0:0:2048:1024:2009:2041:35:67|t"..L["Left-click to drag and move."].."\n|T1065418:16:16:0:0:2048:1024:2009:2041:69:101|t"..L["Right-click to close."]
 	self:SetScript("OnEnter", function(self)
 		if self.tooltip then
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -4)
@@ -174,11 +181,11 @@ function CS:SetCVars()
 		internal.recentlyDisplayedEntry = true
 		local displayText = "Camel Spotter"
 		local link = LinkUtil.FormatLink("addon", displayText, "CamelSpotter", "help")
-		AddMessage(format("|cffEEE4AE%s:|r %s", link, "Friendly nameplates have been activated for this zone."))
+		AddMessage(format("|cffEEE4AE%s:|r %s", link, L["Friendly nameplates have been activated for this zone."]))
 		if TomTom then
-			displayText = "[Click Here]"
+			displayText = L["[Click Here]"]
 			link = LinkUtil.FormatLink("addon", displayText, "CamelSpotter", "setloc")
-			AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r %s", "Camel Spotter", link, "for TomTom waypoints."))
+			AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r %s", "Camel Spotter", link, L["for TomTom waypoints."]))
 		end
 		C_Timer.After(60, function() internal.recentlyDisplayedEntry = false end)
 	end
@@ -219,12 +226,10 @@ function CS:GetWarmodeAndTimewalkingText()
 	local warmodeText = ""
 	local timewalkingText = ""
 
-	if C_PvP and C_PvP.IsWarModeDesired then
-		if C_PvP.IsWarModeDesired() then
-			warmodeText = "WM On"
-		else
-			warmodeText = "WM Off"
-		end
+	if self:IsWarModeEnabled() then
+		warmodeText = "WM On"
+	else
+		warmodeText = "WM Off"
 	end
 
 	if C_PlayerInfo and C_PlayerInfo.IsPlayerInChromieTime then
@@ -242,7 +247,7 @@ end
 
 ---@return number
 function CS:GetMode()
-	local warmodeNum = isWarModeDesired() and 2 or 1
+	local warmodeNum = self:IsWarModeEnabled() and 2 or 1
 	local mode = (C_PlayerInfo and C_PlayerInfo.IsPlayerInChromieTime) and C_PlayerInfo.IsPlayerInChromieTime() and warmodeNum+2 or warmodeNum
 	return mode
 end
@@ -257,7 +262,7 @@ function CS:ReportLastSeen()
 		if info.mode == mode then
 			local time = GetServerTime() - info.time
 			local warmodeText, timewalkingText = self:GetWarmodeAndTimewalkingText()
-			AddMessage(string.format("|cffEEE4AE%s:|r %s|cff37DB33 %s|r |cff37DB33(%s%s)|r", "Camel Spotter", "Mysterious Camel Figurine last seen:", timeFormatter:Format(time, false, false), timewalkingText, warmodeText))
+			AddMessage(string.format("|cffEEE4AE%s:|r %s|cff37DB33 %s|r |cff37DB33(%s%s)|r", "Camel Spotter", L["Mysterious Camel Figurine last seen:"], timeFormatter:Format(time, false, false), timewalkingText, warmodeText))
 			internal.recentlyDisplayed = true
 			break;
 		end
@@ -295,7 +300,7 @@ function CS:Announce(unitID, spawnTime)
 	if unitID == internal.realFigurineID then
 		PlaySound(63971, "Master")
 		PlaySound(71678, "Master")
-		local text = string.format("|cff3DD341%s|r |cffFFDD00%s", "Real Camel Figurine", self:BetterTime())
+		local text = string.format("|cff3DD341%s|r |cffFFDD00%s", L["Real Camel Figurine"], self:BetterTime())
 		AddMessage("|cffEEE4AECamel Spotter:|r", text.."|r ".. positionText)
 
 		local buttonText = string.format("%s\n\n%s %s%s|r", text, realmName, timewalkingText, warmodeText)
@@ -315,7 +320,7 @@ function CS:Announce(unitID, spawnTime)
 		--PlaySound(3175, "Master")
 		--PlaySound(89712, "Master")
         PlaySoundFile([[Interface\AddOns\CamelSpotter\Media\Dust.ogg]], "Master")
-		local text = string.format("|cffF72D55%s|r |cffFFDD00%s", "Fake Camel Figurine", self:BetterTime())
+		local text = string.format("|cffF72D55%s|r |cffFFDD00%s", L["Fake Camel Figurine"], self:BetterTime())
 		AddMessage("|cffEEE4AECamel Spotter:|r", text.."|r ".. positionText)
 
 		local buttonText = string.format("%s\n\n%s %s%s|r", text, realmName, timewalkingText, warmodeText)
@@ -334,7 +339,7 @@ function CS:Announce(unitID, spawnTime)
 	end
 	local formattedTime = timeFormatter:Format(GetServerTime() - spawnTime, false, true)
 	formattedTime = formattedTime == "" and SECONDS_ABBR:format(0) or formattedTime
-	AddMessage(string.format("|cffEEE4AE%s|r %s %s %s", "Camel Spotter:", "Figurine has been up for", formattedTime, date("(%H:%M %d.%m)", spawnTime)))
+	AddMessage(string.format("|cffEEE4AE%s|r %s %s %s", "Camel Spotter:", L["Figurine has been up for"], formattedTime, date("(%H:%M %d.%m)", spawnTime)))
 
 	if Settings.ScreenshotEnabled then
 		C_Timer.After(0.5, function() Screenshot() end)
@@ -464,7 +469,7 @@ function CS:OnPlayerLogin()
 		internal.nameplateEventsRegistered = true
 	end
 
-	internal.previousWarmodeValue = isWarModeDesired()
+	internal.previousWarmodeValue = self:IsWarModeEnabled()
 end
 
 function CS:OnEvent(e, ...)
@@ -484,8 +489,8 @@ function CS:OnEvent(e, ...)
 	elseif e == "ZONE_CHANGED_NEW_AREA" then
 		self:OnZoneChanged()
 	elseif e == "PLAYER_FLAGS_CHANGED" then
-		if (isWarModeDesired() ~= internal.previousWarmodeValue) then
-			internal.previousWarmodeValue = C_PvP.IsWarModeDesired()
+		if (self:IsWarModeEnabled() ~= internal.previousWarmodeValue) then
+			internal.previousWarmodeValue = self:IsWarModeEnabled()
 			if not self:IsMapUldum() then return end
 			self:ReportLastSeen()
 			internal.recentSpawnID = nil
@@ -507,22 +512,22 @@ function CS:SetWaypoints()
 	if TomTom then
 		for _,v in pairs(LOCATIONS) do
 			TomTom:AddWaypoint(internal.uldumMapID, v[1]/100, v[2]/100, {
-				title = "|cffFFDD00Mysterious Camel Figurine|r\n|cffEEE4AECamel Spotter|r",
+				title = "|cffFFDD00"..L["Mysterious Camel Figurine"].."|r\n|cffEEE4AECamel Spotter|r",
 				minimap_icon = icon,
 				minimap_icon_size = icon_size,
 				worldmap_icon = icon,
 				worldmap_icon_size = icon_size
 			})
 		end
-		AddMessage(format("|cffEEE4AE%s:|r %s %s.", "Camel Spotter", "Waypoints added to", mapInfo.name))
+		AddMessage(format("|cffEEE4AE%s:|r %s %s.", "Camel Spotter", L["Waypoints added to"], mapInfo.name))
 		if currentUIMapID == internal.uldumMapID then
 			TomTom:SetClosestWaypoint()
 		end
-		local displayText = "[Set Closest Waypoint when needed]"
+		local displayText = L["[Set Closest Waypoint when needed]"]
 		local link = LinkUtil.FormatLink("addon", displayText, "CamelSpotter", "closest")
 		AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r", "Camel Spotter", link))
 	else
-		AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r", "Camel Spotter", "You need TomTom for this feature."))
+		AddMessage(format("|cffEEE4AE%s:|r |cff85DBF3%s|r", "Camel Spotter", L["You need TomTom for this feature."]))
 	end
 end
 
@@ -669,16 +674,16 @@ function CS:Help(msg)
 	end
 	if not cmd or cmd == "" or cmd == "help" then
 		AddMessage("|cffEEE4AECamel Spotter: /cs /camelspotter|r")
-		AddMessage("   Add TomTom Waypoints - /cs way")
-		AddMessage("   Export History as CSV - /cs export")
-		AddMessage("   Toggle Auto Screenshot - /cs screenshot (Default: Disabled)")
+		AddMessage("   "..L["Add TomTom Waypoints - /cs way"])
+		AddMessage("   "..L["Export History as CSV - /cs export"])
+		AddMessage("   "..L["Toggle Auto Screenshot - /cs screenshot (Default: Disabled)"])
 	elseif cmd == "way" then
 		self:SetWaypoints()
 	elseif cmd == "screenshot" then
 		if not Settings.ScreenshotEnabled then
-			AddMessage("|cffEEE4AECamel Spotter:|r |cff37DB33Automatically take a screenshot enabled.")
+			AddMessage("|cffEEE4AECamel Spotter:|r |cff37DB33"..L["Automatically take a screenshot enabled."])
 		else
-			AddMessage("|cffEEE4AECamel Spotter:|r |cffB6B6B6Automatically take a screenshot disabled.")
+			AddMessage("|cffEEE4AECamel Spotter:|r |cffB6B6B6"..L["Automatically take a screenshot disabled."])
 		end
 		Settings.ScreenshotEnabled = not Settings.ScreenshotEnabled
 	elseif cmd == "export" then

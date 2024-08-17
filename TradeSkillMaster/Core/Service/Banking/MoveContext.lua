@@ -16,6 +16,7 @@ local Group = TSM.LibTSMTypes:Include("Group")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local BagTracking = TSM.LibTSMService:Include("Inventory.BagTracking")
 local Guild = TSM.LibTSMService:Include("Guild")
+local LibTSMClass = LibStub("LibTSMClass")
 local private = {
 	bagToBank = nil,
 	bankToBag = nil,
@@ -29,7 +30,7 @@ local private = {
 -- BaseMoveContext Class
 -- ============================================================================
 
-local BaseMoveContext = TSM.Include("LibTSMClass").DefineClass("BaseMoveContext", nil, "ABSTRACT")
+local BaseMoveContext = LibTSMClass.DefineClass("BaseMoveContext", nil, "ABSTRACT")
 
 
 
@@ -37,7 +38,7 @@ local BaseMoveContext = TSM.Include("LibTSMClass").DefineClass("BaseMoveContext"
 -- BagToBankMoveContext Class
 -- ============================================================================
 
-local BagToBankMoveContext = TSM.Include("LibTSMClass").DefineClass("BagToBankMoveContext", BaseMoveContext)
+local BagToBankMoveContext = LibTSMClass.DefineClass("BagToBankMoveContext", BaseMoveContext)
 
 function BagToBankMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity)
 	local fromBag, fromSlot = SlotId.Split(fromSlotId)
@@ -79,7 +80,7 @@ end
 -- BankToBagMoveContext Class
 -- ============================================================================
 
-local BankToBagMoveContext = TSM.Include("LibTSMClass").DefineClass("BankToBagMoveContext", BaseMoveContext)
+local BankToBagMoveContext = LibTSMClass.DefineClass("BankToBagMoveContext", BaseMoveContext)
 
 function BankToBagMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity)
 	local fromBag, fromSlot = SlotId.Split(fromSlotId)
@@ -117,7 +118,7 @@ end
 -- BagToGuildBankMoveContext Class
 -- ============================================================================
 
-local BagToGuildBankMoveContext = TSM.Include("LibTSMClass").DefineClass("BagToGuildBankMoveContext", BaseMoveContext)
+local BagToGuildBankMoveContext = LibTSMClass.DefineClass("BagToGuildBankMoveContext", BaseMoveContext)
 
 function BagToGuildBankMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity)
 	local fromBag, fromSlot = SlotId.Split(fromSlotId)
@@ -171,7 +172,7 @@ end
 -- GuildBankToBagMoveContext Class
 -- ============================================================================
 
-local GuildBankToBagMoveContext = TSM.Include("LibTSMClass").DefineClass("GuildBankToBagMoveContext", BaseMoveContext)
+local GuildBankToBagMoveContext = LibTSMClass.DefineClass("GuildBankToBagMoveContext", BaseMoveContext)
 
 function GuildBankToBagMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity)
 	local fromTab, fromSlot = SlotId.Split(fromSlotId)
@@ -287,7 +288,7 @@ end
 function private.BagBankGetTargetSlotId(itemString, emptySlotIds, depositSlotId)
 	for i, slotId in ipairs(emptySlotIds) do
 		local bag = SlotId.Split(slotId)
-		if (not depositSlotId or Container.CanDepositIntoWarbank(SlotId.Split(depositSlotId))) and BagTracking.ItemWillGoInBag(itemString, bag) then
+		if (not depositSlotId or not Container.IsWarbankBag(bag) or Container.CanDepositIntoWarbank(SlotId.Split(depositSlotId))) and BagTracking.ItemWillGoInBag(itemString, bag) then
 			return tremove(emptySlotIds, i)
 		end
 	end

@@ -1,13 +1,30 @@
-tag 7c04589ca21b63a380f18497fd32d82ca0e76d6e WoW-10.2.7-release1
+tag 0930fed354ab9b5dd4bf4b632370918834a94c5f WoW-11.0.2-release1
 Author:	Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:	Wed Jul 10 23:04:04 2024 +0200
+Date:	Fri Aug 16 23:09:36 2024 +0200
 
-Tagged as WoW-10.2.7-release1
+Tagged as WoW-11.0.2-release1
 
-commit 274907a4d8c0883bc4f0408fe5189f1fb14a87ca
+commit 6caaeb5f36673cb6364aa08844cc81d5821bfb45
 Author: Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:   Wed Jul 10 23:03:14 2024 +0200
+Date:   Fri Aug 16 23:08:54 2024 +0200
 
-    - updated version in TOC to 100207
-    - included updated LibTourist
+    - updated version in TOC to 110002
+    - included updated version of LibTourist:
+    
+    ---------------------
+    - added 1 new map ID
+    - removed 5 mapIDs
+    - corrected 16 names in the mapID table
+    - added zone (?) Azj-Kahet - Lower (for now a c/p from Azj-Kahet)
+    - removed The Transformatory (delve)
+    - corrected player levels for 7 zones
+    - removed Valdrakken portals to Shadowmoon Valley, Dalaran and Jade Forest
+    - added portal Valdrakken - Emerald Dream
+    - added portals from Dalaran (Broken Isles) to:
+        Dragonblight (v.v.)
+        Karazhan (one way)
+        Hillsbrad Foothills (Dalaran Crater, one way)
+        Dustwallow Marsh (v.v.)
+        Searing Gorge (v.v.)
+    ---------------------
 

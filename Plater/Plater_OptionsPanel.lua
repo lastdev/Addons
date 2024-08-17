@@ -1,6 +1,7 @@
 local addonId, platerInternal = ...
 
 local Plater = Plater
+---@type detailsframework
 local DF = DetailsFramework
 local LibSharedMedia = LibStub:GetLibrary ("LibSharedMedia-3.0")
 local LibRangeCheck = LibStub:GetLibrary ("LibRangeCheck-3.0")
@@ -153,6 +154,185 @@ function Plater.CheckOptionsTab()
 		end
 	end
 	update_wago_update_icons()
+end
+
+---@param profileName string
+---@param profile table
+---@param bIsUpdate boolean
+---@param bKeepModsNotInUpdate boolean
+---@param doNotReload boolean
+function Plater.ImportAndSwitchProfile(profileName, profile, bIsUpdate, bKeepModsNotInUpdate, doNotReload)
+	local bWasUsingUIParent = Plater.db.profile.use_ui_parent
+	local scriptDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.script_data) or {}
+	local hookDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.hook_data) or {}
+	
+	--switch to profile
+	Plater.db:SetProfile(profileName)
+	
+	--cleanup profile -> reset to defaults
+	Plater.db:ResetProfile(false, true)
+	
+	--import new profile settings
+	DF.table.copy(Plater.db.profile, profile)
+	
+	--make the option reopen after the reload
+	Plater.db.profile.reopoen_options_panel_on_tab = TAB_INDEX_PROFILES
+
+	--check if parent to UIParent is enabled and calculate the new scale
+	if (Plater.db.profile.use_ui_parent) then
+		if (not bIsUpdate or not bWasUsingUIParent) then --only update if necessary
+			Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
+		end
+	else
+		Plater.db.profile.ui_parent_scale_tune = 0
+	end
+	
+	if (bIsUpdate or bKeepModsNotInUpdate) then
+		--copy user settings for mods/scripts and keep mods/scripts which are not part of the profile
+		for index, oldScriptObject in ipairs(scriptDataBackup) do
+			local scriptDB = Plater.db.profile.script_data or {}
+			local bFound = false
+			for i = 1, #scriptDB do
+				local scriptObject = scriptDB[i]
+				if (scriptObject.Name == oldScriptObject.Name) then
+					if (bIsUpdate) then
+						Plater.UpdateOptionsForModScriptImport(scriptObject, oldScriptObject)
+					end
+
+					bFound = true
+					break
+				end
+			end
+
+			if (not bFound and bKeepModsNotInUpdate) then
+				table.insert(scriptDB, oldScriptObject)
+			end
+		end
+		
+		for index, oldScriptObject in ipairs(hookDataBackup) do
+			local scriptDB = Plater.db.profile.hook_data or {}
+			local bFound = false
+			for i = 1, #scriptDB do
+				local scriptObject = scriptDB[i]
+				if (scriptObject.Name == oldScriptObject.Name) then
+					if (bIsUpdate) then
+						Plater.UpdateOptionsForModScriptImport(scriptObject, oldScriptObject)
+					end
+
+					bFound = true
+					break
+				end
+			end
+
+			if (not bFound and bKeepModsNotInUpdate) then
+				table.insert(scriptDB, oldScriptObject)
+			end
+		end
+	end
+	
+	--cleanup NPC cache/colors
+	---@type table<number, string[]> [1] npcname [2] zonename [3] language
+	local cache = Plater.db.profile.npc_cache
+
+	local cacheTemp = DetailsFramework.table.copy({}, cache)
+	for npcId, npcData in pairs(cacheTemp) do
+		---@cast npcData table{key1: string, key2: string, key3: string|nil}
+		if (tonumber(npcId)) then
+			cache[npcId] = nil
+			cache[tonumber(npcId)] = npcData 
+		end
+	end
+	
+	--cleanup npc colors
+	---@type npccolordb
+	local colors = Plater.db.profile.npc_colors
+	---@type npccolordb
+	local colorsTemp = DetailsFramework.table.copy({}, colors)
+
+	---@type number, npccolortable
+	for npcId, npcColorTable in pairs(colorsTemp) do
+		if tonumber(npcId) then 
+			colors[npcId] = nil
+			colors[tonumber(npcId)] = npcColorTable 
+		end
+	end
+	
+	--cleanup cast colors/sounds
+	---@type castcolordb
+	local castColors = Plater.db.profile.cast_colors
+	---@type castcolordb
+	local castColorsTemp = DetailsFramework.table.copy({}, castColors)
+
+	---@type number, castcolortable
+	for spellId, castColorTable in pairs(castColorsTemp) do
+		if tonumber(spellId) then 
+			castColors[spellId] = nil
+			castColors[tonumber(spellId)] = castColorTable 
+		end
+	end
+	
+	---@type renamednpcsdb
+	local renamedNPCs = Plater.db.profile.npcs_renamed
+	---@type renamednpcsdb
+	local renamedNPCsTemp = DetailsFramework.table.copy({}, renamedNPCs)
+	
+	for npcId, renamedName in pairs(renamedNPCsTemp) do
+		if tonumber(npcId) then 
+			renamedNPCs[npcId] = nil
+			renamedNPCs[tonumber(npcId)] = renamedName 
+		end
+	end
+	
+	---@type audiocuedb
+	local audioCues = Plater.db.profile.cast_audiocues
+	---@type audiocuedb
+	local audioCuesTemp = DetailsFramework.table.copy({}, audioCues)
+
+	for spellId, audioCuePath in pairs(audioCuesTemp) do
+		if tonumber(spellId) then 
+			audioCues[spellId] = nil
+			audioCues[tonumber(spellId)] = audioCuePath 
+		end
+	end
+	
+	---@type ghostauras
+	local ghostAuras = Plater.db.profile.ghost_auras.auras
+	---@type ghostauras
+	local ghostAurasTemp = DetailsFramework.table.copy({}, ghostAuras)
+	local ghostAurasDefault = PLATER_DEFAULT_SETTINGS.profile.ghost_auras.auras
+	--cleanup is needed for proper number indexing. will remove crap as well.
+	for class, specs in pairs(ghostAurasTemp) do
+		for specID, specData in pairs(specs) do
+			ghostAuras[class][specID] = nil
+			if ghostAurasDefault[class][tonumber(specID)] then
+				ghostAuras[class][tonumber(specID)] = ghostAuras[class][tonumber(specID)] or {}
+				for spellId, enabled in pairs(specData) do
+					if tonumber(spellId) then
+						ghostAuras[class][tonumber(specID)][tonumber(spellId)] = enabled 
+					end
+				end
+			end
+		end
+	end
+	
+	-- cleanup captured_spells
+	for spellId, data in pairs(Plater.db.profile.captured_spells) do
+		DB_CAPTURED_SPELLS[spellId] = DB_CAPTURED_SPELLS[spellId] or data --retain original
+	end
+	Plater.db.profile.captured_spells = nil --this does belong into PlaterDB
+	-- cleanup captured_casts
+	for spellId, data in pairs(Plater.db.profile.captured_casts) do
+		DB_CAPTURED_CASTS[spellId] = DB_CAPTURED_CASTS[spellId] or data --retain original
+	end
+	Plater.db.profile.captured_casts = nil --this does belong into PlaterDB
+	
+	--restore CVars of the profile
+	Plater.RestoreProfileCVars()
+	
+	--automatically reload the user UI unless explicitly posponed (external importer, for example)
+	if not doNotReload then
+		ReloadUI()
+	end
 end
 
 local TAB_INDEX_UIPARENTING = 5
@@ -884,182 +1064,14 @@ function Plater.OpenOptionsPanel(pageNumber, bIgnoreLazyLoad)
 				
 				profile.profile_name = nil --no need to import
 				
-				local bWasUsingUIParent = Plater.db.profile.use_ui_parent
-				local scriptDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.script_data) or {}
-				local hookDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.hook_data) or {}
-				
-				--switch to profile
-				Plater.db:SetProfile(profileName)
-				
-				--cleanup profile -> reset to defaults
-				Plater.db:ResetProfile(false, true)
-				
-				--import new profile settings
-				DF.table.copy(Plater.db.profile, profile)
-				
-				--make the option reopen after the reload
-				Plater.db.profile.reopoen_options_panel_on_tab = TAB_INDEX_PROFILES
-
-				--check if parent to UIParent is enabled and calculate the new scale
-				if (Plater.db.profile.use_ui_parent) then
-					if (not bIsUpdate or not bWasUsingUIParent) then --only update if necessary
-						Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
-					end
-				else
-					Plater.db.profile.ui_parent_scale_tune = 0
-				end
-				
-				if (bIsUpdate or bKeepModsNotInUpdate) then
-					--copy user settings for mods/scripts and keep mods/scripts which are not part of the profile
-					for index, oldScriptObject in ipairs(scriptDataBackup) do
-						local scriptDB = Plater.db.profile.script_data or {}
-						local bFound = false
-						for i = 1, #scriptDB do
-							local scriptObject = scriptDB[i]
-							if (scriptObject.Name == oldScriptObject.Name) then
-								if (bIsUpdate) then
-									Plater.UpdateOptionsForModScriptImport(scriptObject, oldScriptObject)
-								end
-
-								bFound = true
-								break
-							end
-						end
-
-						if (not bFound and bKeepModsNotInUpdate) then
-							table.insert(scriptDB, oldScriptObject)
-						end
-					end
-					
-					for index, oldScriptObject in ipairs(hookDataBackup) do
-						local scriptDB = Plater.db.profile.hook_data or {}
-						local bFound = false
-						for i = 1, #scriptDB do
-							local scriptObject = scriptDB[i]
-							if (scriptObject.Name == oldScriptObject.Name) then
-								if (bIsUpdate) then
-									Plater.UpdateOptionsForModScriptImport(scriptObject, oldScriptObject)
-								end
-
-								bFound = true
-								break
-							end
-						end
-
-						if (not bFound and bKeepModsNotInUpdate) then
-							table.insert(scriptDB, oldScriptObject)
-						end
-					end
-				end
-				
-				--cleanup NPC cache/colors
-				---@type table<number, string[]> [1] npcname [2] zonename [3] language
-				local cache = Plater.db.profile.npc_cache
-
-				local cacheTemp = DetailsFramework.table.copy({}, cache)
-				for npcId, npcData in pairs(cacheTemp) do
-					---@cast npcData table{key1: string, key2: string, key3: string|nil}
-					if (tonumber(npcId)) then
-						cache[npcId] = nil
-						cache[tonumber(npcId)] = npcData 
-					end
-				end
-				
-				--cleanup npc colors
-				---@type npccolordb
-				local colors = Plater.db.profile.npc_colors
-				---@type npccolordb
-				local colorsTemp = DetailsFramework.table.copy({}, colors)
-
-				---@type number, npccolortable
-				for npcId, npcColorTable in pairs(colorsTemp) do
-					if tonumber(npcId) then 
-						colors[npcId] = nil
-						colors[tonumber(npcId)] = npcColorTable 
-					end
-				end
-				
-				--cleanup cast colors/sounds
-				---@type castcolordb
-				local castColors = Plater.db.profile.cast_colors
-				---@type castcolordb
-				local castColorsTemp = DetailsFramework.table.copy({}, castColors)
-
-				---@type number, castcolortable
-				for spellId, castColorTable in pairs(castColorsTemp) do
-					if tonumber(spellId) then 
-						castColors[spellId] = nil
-						castColors[tonumber(spellId)] = castColorTable 
-					end
-				end
-				
-				---@type renamednpcsdb
-				local renamedNPCs = Plater.db.profile.npcs_renamed
-				---@type renamednpcsdb
-				local renamedNPCsTemp = DetailsFramework.table.copy({}, renamedNPCs)
-				
-				for npcId, renamedName in pairs(renamedNPCsTemp) do
-					if tonumber(npcId) then 
-						renamedNPCs[npcId] = nil
-						renamedNPCs[tonumber(npcId)] = renamedName 
-					end
-				end
-				
-				---@type audiocuedb
-				local audioCues = Plater.db.profile.cast_audiocues
-				---@type audiocuedb
-				local audioCuesTemp = DetailsFramework.table.copy({}, audioCues)
-
-				for spellId, audioCuePath in pairs(audioCuesTemp) do
-					if tonumber(spellId) then 
-						audioCues[spellId] = nil
-						audioCues[tonumber(spellId)] = audioCuePath 
-					end
-				end
-				
-				---@type ghostauras
-				local ghostAuras = Plater.db.profile.ghost_auras.auras
-				---@type ghostauras
-				local ghostAurasTemp = DetailsFramework.table.copy({}, ghostAuras)
-				local ghostAurasDefault = PLATER_DEFAULT_SETTINGS.profile.ghost_auras.auras
-				--cleanup is needed for proper number indexing. will remove crap as well.
-				for class, specs in pairs(ghostAurasTemp) do
-					for specID, specData in pairs(specs) do
-						ghostAuras[class][specID] = nil
-						if ghostAurasDefault[class][tonumber(specID)] then
-							ghostAuras[class][tonumber(specID)] = ghostAuras[class][tonumber(specID)] or {}
-							for spellId, enabled in pairs(specData) do
-								if tonumber(spellId) then
-									ghostAuras[class][tonumber(specID)][tonumber(spellId)] = enabled 
-								end
-							end
-						end
-					end
-				end
-				
-				-- cleanup captured_spells
-				for spellId, data in pairs(Plater.db.profile.captured_spells) do
-					DB_CAPTURED_SPELLS[spellId] = DB_CAPTURED_SPELLS[spellId] or data --retain original
-				end
-				Plater.db.profile.captured_spells = nil --this does belong into PlaterDB
-				-- cleanup captured_casts
-				for spellId, data in pairs(Plater.db.profile.captured_casts) do
-					DB_CAPTURED_CASTS[spellId] = DB_CAPTURED_CASTS[spellId] or data --retain original
-				end
-				Plater.db.profile.captured_casts = nil --this does belong into PlaterDB
-				
-				--restore CVars of the profile
-				Plater.RestoreProfileCVars()
-				
-				--automatically reload the user UI
-				ReloadUI()
+				Plater.ImportAndSwitchProfile(profileName, profile, bIsUpdate, bKeepModsNotInUpdate, false)
 			end
 			
 			function profilesFrame.OpenProfileManagement()
 				f:Hide()
 				if SettingsPanel then
 					if not Plater.ProfileFrame then
-						Plater.ProfileFrame = LibStub ("AceConfig-3.0"):RegisterOptionsTable ("Plater", LibStub ("AceDBOptions-3.0"):GetOptionsTable (Plater.db))
+						Plater.ProfileFrame = LibStub ("AceConfig-3.0"):RegisterOptionsTable ("Plater", LibStub ("AceDBOptions-3.0"):GetOptionsTable (Plater.db, true))
 					end
 					LibStub ("AceConfigDialog-3.0"):Open("Plater")
 				else
@@ -3669,8 +3681,19 @@ Plater.CreateAuraTesting()
 				name = "OPTIONS_YOFFSET",
 				desc = "OPTIONS_YOFFSET_DESC",
 			},
+			--text enabled
+			{
+				type = "toggle",
+				get = function() return Plater.db.profile.bossmod_support_bars_text_enabled end,
+				set = function (self, fixedparam, value) 
+					Plater.db.profile.bossmod_support_bars_text_enabled = value
+					Plater.UpdateAllPlates()
+				end,
+				name = "Icon text enabled",
+				desc = "Enable Bar Text.",
+			},
 			
-			{type = "blank"},
+			--{type = "blank"},
 			
 			{type = "label", get = function() return "Cooldown Text:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 			{

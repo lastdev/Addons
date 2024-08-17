@@ -312,15 +312,6 @@ CONDITIONS["difficulty"] = {
         end
 }
 
-CONDITIONS["dragonridable"] = {
-    name = format(L.LM_AREA_FMT_S, MOUNT_JOURNAL_FILTER_DRAGONRIDING or UNKNOWN),
-    disabled = ( IsAdvancedFlyableArea == nil ),
-    handler =
-        function (cond, context)
-            return LM.Environment:CanDragonride(context.mapPath)
-        end,
-}
-
 -- Persistent "deck of cards" draw randomness
 
 CONDITIONS["draw"] = {
@@ -509,7 +500,7 @@ CONDITIONS["flyable"] = {
     name = format(L.LM_AREA_FMT_S, MOUNT_JOURNAL_FILTER_FLYING),
     handler =
         function (cond, context)
-            return LM.Environment:CanSteadyFly()
+            return LM.Environment:CanFly(context.mapPath)
         end,
 }
 
@@ -1558,7 +1549,7 @@ function LM.Conditions:Check(conditions, context)
     local line = "Stop " .. conditions
     if not CheckConditionCache[line] then
         local rule = LM.Rule:ParseLine(line)
-        if not rule then
+        if not rule or next(rule.errors) then
             -- I hope I don't mess up my own checks, but I might
             return
         else

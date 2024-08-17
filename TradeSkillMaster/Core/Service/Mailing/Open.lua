@@ -127,18 +127,20 @@ function private.OpenMails(mails, keepMoney, filterType)
 		local matchesFilter = (not filterType and mailType) or (filterType == mailType)
 		local hasBagSpace = not Mail.GetInboxItemLink(index) or CalculateTotalNumberOfFreeBagSlots() > private.settings.keepMailSpace
 		if matchesFilter and hasBagSpace then
-			local _, money, cod, _, _, _, textCreated = Inbox.GetHeaderInfo(index)
+			local _, money, cod, numItems, _, _, textCreated = Inbox.GetHeaderInfo(index)
 			if cod == 0 and (not keepMoney or (keepMoney and money <= 0)) then
 				local message = private.settings.inboxMessages and private.GetOpenMailMessage(index) or nil
 				AutoLootMailItem(index)
 				private.moneyCollected = private.moneyCollected + money
 
 				local event = nil
-				if mailType == Inbox.MAIL_TYPE.BUY.CRAFTING_ORDER or MANUAL_MAIL_TYPES[mailType] then
-					event = "MAIL_SUCCESS"
-				elseif textCreated and mailType ~= Inbox.MAIL_TYPE.OTHER.TEMP_INVOICE then
-					-- Temporary invoices are not auto deleted
-					event = "CLOSE_INBOX_ITEM"
+				if money > 0 or numItems > 0 then
+					if mailType == Inbox.MAIL_TYPE.BUY.CRAFTING_ORDER or MANUAL_MAIL_TYPES[mailType] then
+						event = "MAIL_SUCCESS"
+					elseif textCreated and mailType ~= Inbox.MAIL_TYPE.OTHER.TEMP_INVOICE then
+						-- Temporary invoices are not auto deleted
+						event = "CLOSE_INBOX_ITEM"
+					end
 				end
 				if event and Threading.WaitForEvent(event, "MAIL_FAILED") ~= "MAIL_FAILED" then
 					if message then

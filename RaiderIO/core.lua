@@ -191,9 +191,9 @@ local DropDownUtil do
     ---@alias WowStyle1DropdownTemplateRadioSetSelectedPolyfill fun(index: number)
 
     ---@class WowStyle1DropdownTemplateMenuAnchorPolyfill
-    ---@field public point AnchorPoint
+    ---@field public point FramePoint
     ---@field public relativeTo Region
-    ---@field public relativePoint AnchorPoint
+    ---@field public relativePoint FramePoint
     ---@field public x number
     ---@field public y number
 
@@ -202,8 +202,8 @@ local DropDownUtil do
     ---@field public menu? Frame @The menu frame when the menu is being shown.
     ---@field public menuAnchor WowStyle1DropdownTemplateMenuAnchorPolyfill
     ---@field public menuDescription WowStyle1DropdownTemplateRootDescriptionPolyfill
-    ---@field public menuRelativePoint AnchorPoint
-    ---@field public menuPoint AnchorPoint
+    ---@field public menuRelativePoint FramePoint
+    ---@field public menuPoint FramePoint
     ---@field public menuPointX number
     ---@field public menuPointY number
     ---@field public text string
@@ -286,9 +286,9 @@ local DropDownUtil do
     end
 
     ---@param menu WowStyle1DropdownTemplatePolyfill
-    ---@param anchorPoint? AnchorPoint
+    ---@param anchorPoint? FramePoint
     ---@param anchorRelativePoint? Region
-    ---@param anchorRelativeTo? AnchorPoint
+    ---@param anchorRelativeTo? FramePoint
     ---@param anchorX? number
     ---@param anchorY? number
     function DropDownUtil:OpenMenu(menu, anchorPoint, anchorRelativePoint, anchorRelativeTo, anchorX, anchorY)
@@ -310,9 +310,9 @@ local DropDownUtil do
     end
 
     ---@param menu WowStyle1DropdownTemplatePolyfill
-    ---@param anchorPoint? AnchorPoint
+    ---@param anchorPoint? FramePoint
     ---@param anchorRelativePoint? Region
-    ---@param anchorRelativeTo? AnchorPoint
+    ---@param anchorRelativeTo? FramePoint
     ---@param anchorX? number
     ---@param anchorY? number
     function DropDownUtil:ToggleMenu(menu, anchorPoint, anchorRelativePoint, anchorRelativeTo, anchorX, anchorY)
@@ -1499,7 +1499,13 @@ do
     ---@field public replayPoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
     ---@field public profilePoint ConfigProfilePoint Defaults to `{ point = nil, x = 0, y = 0 }`
     ---@field public replayBackground ConfigReplayColor Defaults to `{ r = 0, g = 0, b = 0, a = 0.5 }`
-    ---@field public minimapIcon LibDBIcon.button.DB Defaults to `{ hide = false, lock = false, showInCompartment = true, minimapPos = 180 }`
+    ---@field public minimapIcon MinimapIconDB Defaults to `{ hide = false, lock = false, showInCompartment = true, minimapPos = 180 }`
+
+    ---@class MinimapIconDB : LibDBIcon.button.DB
+    ---@field public hide boolean `false`
+    ---@field public lock boolean `false`
+    ---@field public showInCompartment boolean `true`
+    ---@field public minimapPos number `180`
 
     -- fallback saved variables
     ---@class FallbackConfig
@@ -1883,10 +1889,13 @@ do
         return 2
     end
 
+    ---@diagnostic disable-next-line: undefined-global
+    local GetMouseFocus = GetMouseFocus ---@type (fun(): ScriptRegion?)?
+
     ---@return Frame|ScriptRegion? focus
     function util:GetMouseFocus()
         if GetMouseFoci then
-            local focused = GetMouseFoci() ---@type Region[]?
+            local focused = GetMouseFoci()
             if not focused then
                 return
             end
@@ -1896,11 +1905,13 @@ do
             end
             return focus
         end
-        local focus = GetMouseFocus()
-        if not focus or focus == WorldFrame then
-            return
+        if GetMouseFocus then
+            local focus = GetMouseFocus()
+            if not focus or focus == WorldFrame then
+                return
+            end
+            return focus
         end
-        return focus
     end
 
     ---@param before? fun() @Optional function to run right before the OnEnter script executes.
@@ -8951,13 +8962,25 @@ if IS_RETAIL then
             if numCriteria and numCriteria > 1 then
                 local anyBossesInCombat = false
                 for i = 1, numCriteria do
-                    ---@type string?, number?, boolean?, number?, number?, number?, number?, string?, number?, number?, number?, boolean?, boolean?
-                    local criteriaString, criteriaType, completed, quantity, totalQuantity, flags, assetID, quantityString, criteriaID, duration, elapsed, criteriaFailed, isWeightedProgress = C_ScenarioInfo.GetCriteriaInfo(i)
-                    if criteriaString then
+                    local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(i)
+                    if criteriaInfo then
+                        local completed = criteriaInfo.completed
                         local isTrash = i == numCriteria
                         if isTrash then
-                            local trash = quantityString and tonumber(strsub(quantityString, 1, strlen(quantityString) - 1)) or -1
-                            if trash > 0 then
+                            -- `quantityString` is not provided, but we attempt to read it in case it comes back
+                            -- https://github.com/Stanzilla/WoWUIBugs/issues/592
+                            ---@diagnostic disable-next-line: undefined-field
+                            local quantityString = criteriaInfo.quantityString ---@type string?
+                            local quantity = criteriaInfo.quantity
+                            local totalQuantity = criteriaInfo.totalQuantity
+                            local trash ---@type number?
+                            if quantityString then
+                                trash = tonumber(strsub(quantityString, 1, strlen(quantityString) - 1))
+                            end
+                            if not trash and quantity and totalQuantity then
+                                trash = quantity*totalQuantity/100
+                            end
+                            if trash and trash > 0 then
                                 liveSummary.trash = trash
                             end
                         else
@@ -9881,7 +9904,7 @@ if IS_RETAIL then
             self.MDI.DeathPenR.Background:SetColorTexture(0, 0, 0, 0.85)
         end
 
-        ---@return AnchorPoint point, Region relativeTo, AnchorPoint relativePoint, number offsetX, number offsetY
+        ---@return FramePoint point, Region relativeTo, FramePoint relativePoint, number offsetX, number offsetY
         function ReplayFrameMixin:GetTrackerPoint()
             if self.trackerFrame:GetParent() ~= self.trackerFrameParent or self.trackerFrame == self.trackerFrameParent then
                 local offsetX = -32 - self.trackerFrameParent:GetWidth()
@@ -11815,6 +11838,7 @@ do
     ---@field public which? string
     ---@field public accountInfo? BNetAccountInfo
     ---@field public playerLocation? PlayerLocationPolyfill
+    ---@field public friendsList? number
 
     ---@class ModifyMenuCallbackRootDescriptionPolyfill
     ---@field public tag string
@@ -11903,13 +11927,22 @@ do
             faction = util:GetFaction(unit)
             return name, realm, level, unit, faction
         end
-        if contextData.isRafRecruit then
-            local accountInfo = contextData.accountInfo
-            if accountInfo then
-                return GetBNetAccountInfo(accountInfo)
+        local accountInfo = contextData.accountInfo
+        if accountInfo then
+            name, realm, level, unit, faction = GetBNetAccountInfo(accountInfo)
+            if not realm then
+                return -- HOTFIX: characters on classic when on retail will have their realm missing so this ensures we skip showing the dropdown menu unless we have the realm available
             end
+            return name, realm, level, unit, faction
         end
         name, realm, unit = util:GetNameRealm(contextData.name, contextData.server)
+        if contextData.friendsList then
+            local friendInfo = C_FriendList.GetFriendInfoByIndex(contextData.friendsList)
+            if friendInfo then
+                level = friendInfo.level
+                faction = ns.PLAYER_FACTION
+            end
+        end
         return name, realm, level, unit, faction
     end
 
@@ -14448,11 +14481,37 @@ do
 
             configOptions:CreatePadding()
             configOptions:CreateHeadline(L.MINIMAP_SHORTCUT_HEADER)
-            configOptions:CreateOptionToggle(L.MINIMAP_SHORTCUT_ENABLE, L.MINIMAP_SHORTCUT_ENABLE_DESC, nil, {
+            configOptions:CreateOptionToggle(L.MINIMAP_SHORTCUT_BROKER_ENABLE, L.MINIMAP_SHORTCUT_BROKER_ENABLE_DESC, nil, {
                 ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
                 isRealChecked = function(self)
                     if self.value == nil then
-                        local db = config:Get("minimapIcon") ---@type LibDBIcon.button.DB
+                        local db = config:Get("minimapIcon") ---@type MinimapIconDB
+                        self.value = not not db.showInCompartment
+                    end
+                    return self.value
+                end,
+                ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
+                onPreClick = function(self)
+                    if self.value ~= nil then
+                        self.value = not self.value
+                    end
+                end,
+                ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
+                callback = function(self)
+                    local db = config:Get("minimapIcon") ---@type MinimapIconDB
+                    db.showInCompartment = not not self.value
+                    self.value = nil
+                end,
+                ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
+                callbackClose = function(self)
+                    self.value = nil
+                end,
+            })
+            configOptions:CreateOptionToggle(L.MINIMAP_SHORTCUT_MINIMAP_ENABLE, L.MINIMAP_SHORTCUT_MINIMAP_ENABLE_DESC, nil, {
+                ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
+                isRealChecked = function(self)
+                    if self.value == nil then
+                        local db = config:Get("minimapIcon") ---@type MinimapIconDB
                         self.value = not db.hide
                     end
                     return self.value
@@ -14465,7 +14524,7 @@ do
                 end,
                 ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
                 callback = function(self)
-                    local db = config:Get("minimapIcon") ---@type LibDBIcon.button.DB
+                    local db = config:Get("minimapIcon") ---@type MinimapIconDB
                     db.hide = not self.value
                     self.value = nil
                 end,
@@ -14474,11 +14533,11 @@ do
                     self.value = nil
                 end,
             })
-            configOptions:CreateOptionToggle(L.MINIMAP_SHORTCUT_LOCK, nil, nil, {
+            configOptions:CreateOptionToggle(L.MINIMAP_SHORTCUT_MINIMAP_LOCK, nil, nil, {
                 ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
                 isRealChecked = function(self)
                     if self.value == nil then
-                        local db = config:Get("minimapIcon") ---@type LibDBIcon.button.DB
+                        local db = config:Get("minimapIcon") ---@type MinimapIconDB
                         self.value = not not db.lock
                     end
                     return self.value
@@ -14491,7 +14550,7 @@ do
                 end,
                 ---@param self RaiderIOSettingsToggleWidgetMinimapToggle
                 callback = function(self)
-                    local db = config:Get("minimapIcon") ---@type LibDBIcon.button.DB
+                    local db = config:Get("minimapIcon") ---@type MinimapIconDB
                     db.lock = not not self.value
                     self.value = nil
                 end,
@@ -14908,7 +14967,7 @@ do
     end
 
     function shortcuts:GetMinimapIconDB()
-        return config:Get("minimapIcon") ---@type LibDBIcon.button.DB
+        return config:Get("minimapIcon") ---@type MinimapIconDB
     end
 
     ---@param frame Frame
@@ -14935,7 +14994,7 @@ do
     end
 
     ---@param frame Frame
-    ---@param button MouseButton
+    ---@param button MouseAction
     function shortcuts:OnButtonClick(frame, button)
         if button == "RightButton" then
             settings:Toggle()
@@ -14983,29 +15042,44 @@ do
     end
 
     function shortcuts:ShowIcon()
+        local db = self:GetMinimapIconDB()
         if self.dbIcon then
-            LDBI:AddButtonToCompartment(addonName)
-            LDBI:Show(addonName)
-            LDBI:Refresh(addonName, self:GetMinimapIconDB())
+            if db.showInCompartment then
+                LDBI:AddButtonToCompartment(addonName)
+            end
+            if not db.hide then
+                LDBI:Show(addonName)
+            end
+            if db.showInCompartment or not db.hide then
+                LDBI:Refresh(addonName, db)
+            end
         end
     end
 
     function shortcuts:HideIcon()
+        local db = self:GetMinimapIconDB()
         if self.dbIcon then
-            LDBI:RemoveButtonFromCompartment(addonName)
-            LDBI:Hide(addonName)
+            if not db.showInCompartment then
+                LDBI:RemoveButtonFromCompartment(addonName)
+            end
+            if db.hide then
+                LDBI:Hide(addonName)
+            end
         end
     end
 
     function shortcuts:UpdateState()
         local db = self:GetMinimapIconDB()
-        if db.hide then
+        if db.hide and not db.showInCompartment then
             self:HideIcon()
             return
         end
         self:InitializeDataBroker()
         self:InitializeDBIcon()
         self:ShowIcon()
+        if db.hide or not db.showInCompartment then
+            self:HideIcon()
+        end
     end
 
     local function OnEvent(event, ...)

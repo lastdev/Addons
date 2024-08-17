@@ -2,7 +2,7 @@
 ## Title: Stat Priority
 ## Notes: Displays stat priority based on Icy-Veins
 ## Author: Vampyr78
-## Version: 3.0
+## Version: 3.0.1
 ## SavedVariablesPerCharacter: statPriorityStoredStats
 ## IconTexture: Interface\Icons\inv_misc_clipboard01.blp
 embeds.xml

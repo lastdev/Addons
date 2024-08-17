@@ -6,26 +6,26 @@ local debugCat=1
 local dFrame=CreateFrame("Frame", "HealBot_Debug_Frame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
 local function HealBot_Debug_OnMouseDown(self, button)
-    if button=="LeftButton" and not dFrame.isMoving then
+    if button == "LeftButton" and not dFrame.isMoving then
         dFrame:StartMoving();
-        dFrame.isMoving = true;
+        dFrame.isMoving=true;
     end
 end
 
 local function HealBot_Debug_OnMouseUp(self, button)
-    if button=="LeftButton" and dFrame.isMoving then
+    if button == "LeftButton" and dFrame.isMoving then
 		dFrame:StopMovingOrSizing();
-		dFrame.isMoving = false;
+		dFrame.isMoving=false;
     end
 end
 
 dFrame:SetBackdrop({
-    bgFile = "Interface\\Addons\\HealBot\\Images\\WhiteLine",
-    edgeFile = "Interface\\Addons\\HealBot\\Images\\border",
-    tile = true,
-    tileSize = 8,
-    edgeSize = 8,
-    insets = { left = 3, right = 3, top = 3, bottom = 3, },
+    bgFile="Interface\\Addons\\HealBot\\Images\\WhiteLine",
+    edgeFile="Interface\\Addons\\HealBot\\Images\\border",
+    tile=true,
+    tileSize=8,
+    edgeSize=8,
+    insets={ left=3, right=3, top=3, bottom=3, },
 })
 dFrame:SetMovable(true)
 dFrame:EnableMouse(true)
@@ -81,7 +81,7 @@ local function HealBot_Debug_SetupStatusBarButton(bar, x, text)
 	bar:SetSize(22, 22)
 	bar:SetPoint("BOTTOM", x, 12)
 	bar:SetStatusBarTexture("Interface\\Addons\\HealBot\\Images\\tukuibar.tga")
-	bar.Text = bar:CreateFontString()
+	bar.Text=bar:CreateFontString()
 	bar.Text:SetFontObject(GameFontNormal)
 	bar.Text:SetPoint("CENTER")
     bar.Text:SetText(text)
@@ -102,12 +102,12 @@ function HealBot_Debug_HideShow(show)
         dTop=dFrame:GetTop()
         if dLeft<-400 then dLeft=20 end
         if dLeft>(GetScreenWidth()-100) then dLeft=GetScreenWidth()-520 end
-        if dTop<100 then 
-            dTop=GetScreenHeight()-850 
-        elseif dTop>(GetScreenHeight()+400) then 
-            dTop=50 
+        if dTop<100 then
+            dTop=GetScreenHeight()-850
+        elseif dTop>(GetScreenHeight()+400) then
+            dTop=50
         elseif dLeft~=dFrame:GetLeft() then
-           dTop=GetScreenHeight()-dTop           
+           dTop=GetScreenHeight()-dTop
         end
         if dLeft~=dFrame:GetLeft() or dTop~=dFrame:GetTop() then
             dFrame:ClearAllPoints()
@@ -121,7 +121,7 @@ end
 
 function HealBot_Debug_Clear(cat)
     debugText[cat]={};
-    if debugCatText[debugCat]==cat then
+    if debugCatText[debugCat] == cat then
         for x=1,50 do
             dFrameText[x]:SetText("")
         end
@@ -129,8 +129,8 @@ function HealBot_Debug_Clear(cat)
 end
 
 function HealBot_Debug_Add(cat, text, incTime)
-    if not debugText[cat] then 
-        debugText[cat]={} 
+    if not debugText[cat] then
+        debugText[cat]={}
         table.insert(debugCatText,cat)
     end
     if not incTime then
@@ -152,22 +152,22 @@ end
 local msgs={}
 local order={}
 function HealBot_Debug_UpdateCalls()
-    if not debugText["Calls"] then 
+    if not debugText["Calls"] then
         debugText["Calls"]={}
         table.insert(debugCatText,"Calls")
         HealBot_Debug_Add("Calls", "Calls Active", true)
         debugText["Calls-Freq"]={}
         table.insert(debugCatText,"Calls-Freq")
         HealBot_Debug_Add("Calls-Freq", "Calls Active", true)
-    elseif debugCatText[debugCat]=="Calls" then    
+    elseif debugCatText[debugCat] == "Calls" then
         debugText["Calls"]={}
         msgs=HealBot_retCalls()
-        local linenum = 0
+        local linenum=0
         local maxcount=0
         for x,_ in pairs(order) do
             order[x]=nil;
         end
-        
+
         for name,count in pairs(msgs) do
             table.insert(order,name)
         end
@@ -180,20 +180,20 @@ function HealBot_Debug_UpdateCalls()
         for j=1,#order do
             if linenum<50 then
                 linenum=linenum+1
-                table.insert(debugText["Calls"],order[j].." = "..msgs[order[j]])
+                table.insert(debugText["Calls"],order[j].."="..msgs[order[j]])
             end
         end
-        
+
         HealBot_Debug_RefreshCat()
-    elseif debugCatText[debugCat]=="Calls-Freq" then
+    elseif debugCatText[debugCat] == "Calls-Freq" then
         debugText["Calls-Freq"]={}
         msgs=HealBot_retCalls(nil, true)
-        local linenum = 0
+        local linenum=0
         local maxcount=0
         for x,_ in pairs(order) do
             order[x]=nil;
         end
-        
+
         for name,count in pairs(msgs) do
             table.insert(order,name)
         end
@@ -206,7 +206,7 @@ function HealBot_Debug_UpdateCalls()
         for j=1,#order do
             if linenum<50 then
                 linenum=linenum+1
-                table.insert(debugText["Calls-Freq"],order[j].." = "..msgs[order[j]])
+                table.insert(debugText["Calls-Freq"],order[j].."="..msgs[order[j]])
             end
         end
     end
@@ -214,7 +214,7 @@ end
 
 local debugRefresh=0
 function HealBot_Debug_UpdateButtonCalls(button, caller, mCount)
-    if not debugText["Calls "..button.name] then 
+    if not debugText["Calls "..button.name] then
         debugText["Calls "..button.name]={}
         table.insert(debugCatText,"Calls "..button.name)
         HealBot_Debug_Add("Calls "..button.name, "Calls Active for "..button.name, true)
@@ -222,12 +222,12 @@ function HealBot_Debug_UpdateButtonCalls(button, caller, mCount)
         debugRefresh=HealBot_TimeNow+1
         debugText["Calls "..button.name]={}
         msgs=HealBot_retCalls(button)
-        local linenum = 0
+        local linenum=0
         local maxcount=0
         for x,_ in pairs(order) do
             order[x]=nil;
         end
-        
+
         for name,count in pairs(msgs) do
             table.insert(order,name)
         end
@@ -240,7 +240,7 @@ function HealBot_Debug_UpdateButtonCalls(button, caller, mCount)
         for j=1,#order do
             if linenum<50 then
                 linenum=linenum+1
-                table.insert(debugText["Calls "..button.name],order[j].." = "..msgs[order[j]])
+                table.insert(debugText["Calls "..button.name],order[j].."="..msgs[order[j]])
             end
         end
         HealBot_Debug_RefreshCat()
@@ -256,32 +256,32 @@ HealBot_Debug_Add("Load", "Debug Loaded", true)
 local pFrame=CreateFrame("Frame", "HealBot_Debug_Perf", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
 local function HealBot_Debug_pFrameOnMouseDown(self, button)
-    if button=="LeftButton" and not pFrame.isMoving then
+    if button == "LeftButton" and not pFrame.isMoving then
         pFrame:StartMoving();
-        pFrame.isMoving = true;
+        pFrame.isMoving=true;
     end
 end
 
 local function HealBot_Debug_pFrameOnMouseUp(self, button)
-    if button=="LeftButton" and pFrame.isMoving then
+    if button == "LeftButton" and pFrame.isMoving then
 		pFrame:StopMovingOrSizing();
-		pFrame.isMoving = false;
+		pFrame.isMoving=false;
     end
 end
 
 pFrame:SetBackdrop({
-    bgFile = "Interface\\Addons\\HealBot\\Images\\WhiteLine",
-    edgeFile = "Interface\\Addons\\HealBot\\Images\\border",
-    tile = true,
-    tileSize = 8,
-    edgeSize = 8,
-    insets = { left = 3, right = 3, top = 3, bottom = 3, },
+    bgFile="Interface\\Addons\\HealBot\\Images\\WhiteLine",
+    edgeFile="Interface\\Addons\\HealBot\\Images\\border",
+    tile=true,
+    tileSize=8,
+    edgeSize=8,
+    insets={ left=3, right=3, top=3, bottom=3, },
 })
 pFrame:SetMovable(true)
 pFrame:EnableMouse(true)
 pFrame:SetScript("OnMouseDown", function(self, button) HealBot_Debug_pFrameOnMouseDown(self, button) end)
 pFrame:SetScript("OnMouseUp", function(self, button) HealBot_Debug_pFrameOnMouseUp(self, button) end)
-pFrame:SetHeight(370)
+pFrame:SetHeight(420)
 pFrame:SetWidth(220)
 pFrame:SetPoint("TOPLEFT",20,-120)
 pFrame:SetBackdropColor(0.1,0.1,0.1,0.88)
@@ -309,10 +309,13 @@ local pIndex={["PerfLevel"]=1,
               ["lag"]=17,
               ["CDdelay"]=18,
               ["RefreshDelay"]=19,
+              ["FluidFreq"]=20,
+              ["FlashFreq"]=21,
+              ["AuxFluidFreq"]=22,
              }
 local pFrameText={}
 local pFrameTextVal={}
-for x=1,19 do
+for x=1,22 do
     pFrameText[x]=pFrame:CreateFontString("HealBot_Debug_pFrameFrameText"..x, "ARTWORK", "GameFontNormal")
     pFrameTextVal[x]=pFrame:CreateFontString("HealBot_pFrameDebug_FrameTextVal"..x, "ARTWORK", "GameFontNormal")
     pFrameTextVal[x]:SetTextColor(1,1,1,1)
@@ -365,6 +368,13 @@ pFrameText[18]:SetText("Cooldown Delay:")
 pFrameText[19]:SetPoint("TOPLEFT", pFrameText[18], "TOPLEFT", 0, -20)
 pFrameText[19]:SetText("Refresh Delay:")
 
+pFrameText[20]:SetPoint("TOPLEFT", pFrameText[19], "TOPLEFT", 0, -20)
+pFrameText[20]:SetText("Fluid Freq:")
+pFrameText[21]:SetPoint("TOPLEFT", pFrameText[20], "TOPLEFT", 0, -15)
+pFrameText[21]:SetText("Flash Freq:")
+pFrameText[22]:SetPoint("TOPLEFT", pFrameText[21], "TOPLEFT", 0, -15)
+pFrameText[22]:SetText("Aux Fluid Freq:")
+
 pFrameTextVal[1]:SetPoint("TOPRIGHT", pFrame, "TOPRIGHT", -10, -35)
 pFrameTextVal[2]:SetPoint("TOPRIGHT", pFrameTextVal[1], "TOPRIGHT", 0, -20)
 pFrameTextVal[3]:SetPoint("TOPRIGHT", pFrameTextVal[2], "TOPRIGHT", 0, -15)
@@ -384,6 +394,9 @@ pFrameTextVal[16]:SetPoint("TOPRIGHT", pFrameTextVal[15], "TOPRIGHT", 0, -20)
 pFrameTextVal[17]:SetPoint("TOPRIGHT", pFrameTextVal[16], "TOPRIGHT", 0, -15)
 pFrameTextVal[18]:SetPoint("TOPRIGHT", pFrameTextVal[17], "TOPRIGHT", 0, -15)
 pFrameTextVal[19]:SetPoint("TOPRIGHT", pFrameTextVal[18], "TOPRIGHT", 0, -20)
+pFrameTextVal[20]:SetPoint("TOPRIGHT", pFrameTextVal[19], "TOPRIGHT", 0, -20)
+pFrameTextVal[21]:SetPoint("TOPRIGHT", pFrameTextVal[20], "TOPRIGHT", 0, -15)
+pFrameTextVal[22]:SetPoint("TOPRIGHT", pFrameTextVal[21], "TOPRIGHT", 0, -15)
 
 local pLeft,pTop=20,120
 function HealBot_Debug_PerfHideShow(show)
@@ -393,12 +406,12 @@ function HealBot_Debug_PerfHideShow(show)
         pTop=pFrame:GetTop()
         if pLeft<-100 then pLeft=20 end
         if pLeft>(GetScreenWidth()-100) then pLeft=GetScreenWidth()-240 end
-        if pTop<100 then 
-            pTop=GetScreenHeight()-220 
-        elseif pTop>(GetScreenHeight()+100) then 
-            pTop=50 
+        if pTop<100 then
+            pTop=GetScreenHeight()-220
+        elseif pTop>(GetScreenHeight()+100) then
+            pTop=50
         elseif pLeft~=pFrame:GetLeft() then
-            pTop=GetScreenHeight()-pTop 
+            pTop=GetScreenHeight()-pTop
         end
         if pLeft~=pFrame:GetLeft() or pTop~=pFrame:GetTop() then
             pFrame:ClearAllPoints()
@@ -411,7 +424,7 @@ function HealBot_Debug_PerfHideShow(show)
 end
 
 function HealBot_Debug_PerfUpdate(cat, value)
-    if type(value)=="boolean" then
+    if type(value) == "boolean" then
         if value then
             value="True"
         else

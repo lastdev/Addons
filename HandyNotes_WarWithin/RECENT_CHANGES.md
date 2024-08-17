@@ -1,4 +1,5 @@
-## Changed in v4
+## Changed in v14
 
-* Added Not So Quick Fix achievement
+* Azj-Kahet: found Silk-Spun Supplies, Concealed Contraband
+* Delves: Kriegval's Rest, Fungal Folly
 

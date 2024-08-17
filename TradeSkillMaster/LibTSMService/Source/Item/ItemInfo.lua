@@ -107,6 +107,11 @@ function ItemInfo.Start()
 
 	-- Process pending item info every 0.05 seconds
 	private.processInfoTimer:RunForTime(0)
+
+	-- Cache battle pet names
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.BATTLE_PETS) then
+		Item.LoadPetInfo()
+	end
 end
 
 ---Saves the item info cache.

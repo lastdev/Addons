@@ -125,6 +125,7 @@ addon.onOnce('PLAYER_LOGIN', function ()
       20000, -- Elusive Foes: Isle of Thunder
       20001, -- Elusive Foes: Timeless Isle
       20069, -- Elusive Foes: Vale of Eternal Blossoms
+      20002, -- Powerful Enemies: Timeless Isle
     };
 
     local timeRunningTreasureAchievements = {

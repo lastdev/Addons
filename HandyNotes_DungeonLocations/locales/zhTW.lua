@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "zhTW")
 if not L then return end
 
+L["Show on Zone"] = "在區域上展示"
+L["Show icons on zone map"] = "在區域卡上顯示符號"
 L["Allow left click to open journal to dungeon or raid"] = "允許使用左鍵打開地城或團隊副本的冒險指南"
 L["Allow right click to create waypoints with TomTom"] = "允許使用右鍵建立 TomTom 導引箭頭"
 L["Continent Alpha"] = "大陸地圖圖示透明度"
@@ -8,8 +10,9 @@ L["Continent Scale"] = "大陸地圖圖示縮放大小"
 L["Don't show discovered dungeons"] = "不要顯示已發現的地城"
 L["Enable TomTom integration"] = "啟用 TomTom 整合"
 L["Filter Options"] = "過濾選項"
-L["Hide all Dragonflight nodes from the map"] = "在地圖上隱藏 Dragonflight 的所有地牢圖標"
-L["Hide all Shadowlands nodes from the map"] = "在地圖上隱藏 Shadowlands 的所有地牢圖標"
+L["Hide all Khaz Algar nodes from the map"] = "隐藏地图上所有卡兹阿加的副本图标"
+L["Hide all Dragonflight nodes from the map"] = "隐藏地图上所有巨龙时代的副本图标"
+L["Hide all Shadowlands nodes from the map"] = "隐藏地图上所有暗影国度的副本图标"
 L["Hide all BfA nodes from the map"] = "隱藏地圖上所有決戰艾澤拉斯的副本圖示"
 L["Hide all Broken Isle nodes from the map"] = "隱藏地圖上所有破碎群島的副本圖示"
 L["Hide all Cataclysm nodes from the map"] = "隱藏地圖上所有浩劫與重生的副本圖示"
@@ -18,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "隱藏地圖上所有北裂境的�
 L["Hide all Outland nodes from the map"] = "隱藏地圖上所有外域的副本圖示"
 L["Hide all Pandaria nodes from the map"] = "隱藏地圖上所有潘達利亞的副本圖示"
 L["Hide all Vanilla nodes from the map"] = "隱藏地圖上所有艾澤拉斯的副本圖示"
+L["Hide Khaz Algar"] = "隐藏卡兹阿加"
 L["Hide Dragonflight"] = "隱龍軍團"
 L["Hide Shadowlands"] = "隱藏暗影國度"
 L["Hide Battle for Azeroth"] = "隱藏決戰艾澤拉斯"

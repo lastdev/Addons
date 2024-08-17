@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2375, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(158041)
 mod:SetEncounterID(2344)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -107,7 +107,7 @@ local timerEternalTormentCD					= mod:NewNextCountTimer(56.1, 318449, 311383, ni
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(21286))
 local warnTumultuousBurst					= mod:NewCastAnnounce(310042, 4, nil, nil, "Tank")
 
-local specWarnBasherTentacle				= mod:NewSpecialWarningSwitch("ej21286", "-Healer", nil, 2, 1, 2)
+local specWarnBasherTentacle				= mod:NewSpecialWarningSwitchCount("ej21286", "-Healer", nil, 2, 1, 2)
 local specWarnVoidLash						= mod:NewSpecialWarningDefensive(309698, nil, nil, nil, 1, 2)
 
 local timerBasherTentacleCD					= mod:NewNextCountTimer(60, "ej21286", nil, nil, nil, 1, "319441", DBM_COMMON_L.DAMAGE_ICON)

@@ -1,6 +1,6 @@
 --[[
 Name: ZoneInfo 2
-Revision: $Rev: 127 $
+Revision: $Rev: 130 $
 Author: Odica; based on the ZoneInfo module of Cartographer 2 by ckknight
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
 Description: Addon that will show levels and other information about the zone being displayed on the World Map.
@@ -1057,6 +1057,8 @@ function ZoneInfoDataProvider:RefreshAllData(fromOnShow)
 					name = BATTLEGROUND..": " .. name
 				elseif Tourist:IsArena(instance) then
 					name = ARENA..": " .. name
+				elseif Tourist:IsDelve(instance) then
+					name = DELVE_LABEL..": "..name
 				elseif groupSize > 5 then
 					name = RAID..": " .. name
 				end

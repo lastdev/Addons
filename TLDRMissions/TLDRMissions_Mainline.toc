@@ -1,6 +1,6 @@
-## Interface: 110000
+## Interface: 110002
 ## Title: TL;DR Missions
-## Version: 11.0-001
+## Version: 11.0-003
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI

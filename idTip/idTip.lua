@@ -35,6 +35,13 @@ local kinds = {
   vignette = "VignetteID",
   expansion = "ExpansionID",
   object = "ObjectID",
+  traitnode = "TraitNodeID",
+  traitentry = "TraitEntryID",
+  traitdef = "TraitDefinitionID",
+}
+
+local defaultDisabledKinds = {
+  "traitnode", "traitentry", "traitdef",
 }
 
 -- https://warcraft.wiki.gg/wiki/Struct_TooltipData
@@ -173,6 +180,7 @@ local function addByKind(tooltip, id, kind)
 end
 
 local function addItemInfo(tooltip, link)
+  if not link then return end
   local itemString = string.match(link, "item:([%-?%d:]+)")
   if not itemString then return end
 
@@ -238,10 +246,18 @@ end
 local function attachItemTooltip(tooltip, id)
   if (tooltip == ShoppingTooltip1 or tooltip == ShoppingTooltip2) and tooltip.info and tooltip.info.tooltipData and tooltip.info.tooltipData.guid and GetItemLinkByGUID then
     local link = GetItemLinkByGUID(tooltip.info.tooltipData.guid)
-    addItemInfo(tooltip, link)
+    if link then
+      addItemInfo(tooltip, link)
+    else
+      add(tooltip, id, "item")
+    end
   elseif tooltip.GetItem then
     local link = select(2, tooltip:GetItem())
-    addItemInfo(tooltip, link)
+    if link then
+      addItemInfo(tooltip, link)
+    else
+      add(tooltip, id, "item")
+    end
   else
     add(tooltip, id, "item")
   end
@@ -262,7 +278,11 @@ if TooltipDataProcessor then
       end
     elseif kind == "item" and data and data.guid and GetItemLinkByGUID then
       local link = GetItemLinkByGUID(data.guid)
-      addItemInfo(tooltip, link)
+      if link then
+        addItemInfo(tooltip, link)
+      else
+        add(tooltip, data.id, kind)
+      end
     elseif kind then
       add(tooltip, data.id, kind)
     end
@@ -273,6 +293,17 @@ if GetActionInfo then
   hook(GameTooltip, "SetAction", function(tooltip, slot)
     local kind, id = GetActionInfo(slot)
     addByKind(tooltip, id, kind)
+  end)
+end
+
+if TalentDisplayMixin then
+  hook(TalentDisplayMixin, "SetTooltipInternal", function(btn)
+    if not btn then return end
+    add(GameTooltip, btn.entryID, "traitentry")
+    add(GameTooltip, btn.definitionID, "traitdef")
+    if btn.GetNodeInfo then
+      add(GameTooltip, btn:GetNodeInfo().ID, "traitnode")
+    end
   end)
 end
 
@@ -503,7 +534,7 @@ f:SetScript("OnEvent", function(_, _, addon)
 
     for key, _ in pairs(kinds) do
       if type(idTipConfig[configKey(key)]) ~= "boolean" then
-        idTipConfig[configKey(key)] = true
+        idTipConfig[configKey(key)] = not contains(defaultDisabledKinds, key)
       end
     end
   elseif addon == "Blizzard_AchievementUI" then
@@ -620,7 +651,7 @@ panel:SetScript("OnShow", function()
   local index = 0
   local rowHeight = 24
   local columnWidth = 150
-  local rowNum = 7
+  local rowNum = 10
 
   local keys = {}
   for key in pairs(kinds) do table.insert(keys, key) end

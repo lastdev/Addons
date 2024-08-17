@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_Player) then
 		XPerl_Player.conf = conf.player
 	end
-end, "$Revision: 9491193e4cf4be78cdec18b12462c124dc189a99 $")
+end, "$Revision:  $")
 
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
@@ -47,7 +47,6 @@ local GetRaidRosterInfo = GetRaidRosterInfo
 local GetShapeshiftForm = GetShapeshiftForm
 local GetSpecialization = GetSpecialization
 local GetSpellInfo = GetSpellInfo
-local GetWatchedFactionInfo = GetWatchedFactionInfo
 local GetXPExhaustion = GetXPExhaustion
 local InCombatLockdown = InCombatLockdown
 local IsInInstance = IsInInstance
@@ -56,7 +55,6 @@ local IsPVPTimerRunning = IsPVPTimerRunning
 local IsResting = IsResting
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitClass = UnitClass
-local UnitExists = UnitExists
 local UnitFactionGroup = UnitFactionGroup
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitGUID = UnitGUID
@@ -80,7 +78,6 @@ local UnitLevel = UnitLevel
 local UnitName = UnitName
 local UnitOnTaxi = UnitOnTaxi
 local UnitPower = UnitPower
-local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnitPowerType = UnitPowerType
 local UnitXP = UnitXP
@@ -101,6 +98,9 @@ local XPerl_Player_InitWarlock
 
 local XPerl_PlayerStatus_OnUpdate
 local XPerl_Player_HighlightCallback
+
+--local feignDeath = (C_Spell and C_Spell.GetSpellInfo(5384)) and C_Spell.GetSpellInfo(5384).name or GetSpellInfo(5384)
+--local spiritOfRedemption = (C_Spell and C_Spell.GetSpellInfo(27827)) and C_Spell.GetSpellInfo(27827).name or GetSpellInfo(27827)
 
 
 ----------------------
@@ -397,6 +397,21 @@ local function XPerl_Player_UpdateClass(self)
 		self.classFrame:Show()
 	else
 		self.classFrame:Hide()
+	end
+end
+
+-- There are two different functions to get faction info, used in retail/classic/era.
+-- To maintain compatibility, we fake the original function if it's not there.
+local GetWatchedFactionInfo
+if _G.GetWatchedFactionInfo then
+	GetWatchedFactionInfo = _G.GetWatchedFactionInfo
+else
+	GetWatchedFactionInfo = function()
+		local data = C_Reputation.GetWatchedFactionData()
+		if data then
+			return data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding, data.factionID
+		end
+		return nil, nil, nil, nil, nil, nil -- documenting that there should be six returns.
 	end
 end
 
@@ -811,9 +826,6 @@ local function XPerl_Player_UpdateResurrectionStatus(self)
 		end
 	end
 end
-
-local feignDeath = GetSpellInfo(5384)
-local spiritOfRedemption = GetSpellInfo(27827)
 
 -- XPerl_Player_UpdateHealth
 local function XPerl_Player_UpdateHealth(self)

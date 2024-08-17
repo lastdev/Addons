@@ -5,7 +5,8 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local ShoppingTask = TSM.Include("LibTSMClass").DefineClass("ShoppingTask", TSM.TaskList.ItemTask)
+local LibTSMClass = LibStub("LibTSMClass")
+local ShoppingTask = LibTSMClass.DefineClass("ShoppingTask", TSM.TaskList.ItemTask)
 local L = TSM.Locale.GetTable()
 local DelayTimer = TSM.LibTSMWoW:IncludeClassType("DelayTimer")
 local Log = TSM.LibTSMUtil:Include("Util.Log")

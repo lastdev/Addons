@@ -167,7 +167,7 @@ local function GetUsableSpell(arg)
     end
 
     -- Some spells share names (e.g., Surge Forward is both an Evoker ability
-    -- and a Dragonriding ability). If the spell has a subtext it can be
+    -- and a Skyriding ability). If the spell has a subtext it can be
     -- distinguished by bracketing it after the name. This only works if you
     -- pass the spell in by ID since otherwise you'll get whichever one
     -- GetSpellInfo(name) decides to return.
@@ -441,7 +441,7 @@ local smartActions = {
         debug       = "Aquatic Mount (underwater)",
     },
     {
-        condition   = "[dragonridable]",
+        condition   = "[flyable,advflyable]",
         arg         = LM.RuleArguments:Get('DRAGONRIDING'),
         debug       = "Skyriding Mount",
     },
@@ -609,7 +609,7 @@ local CombatHandlerOverride = {
                     if id and name then
                         LM.Debug("  * matched encounter %s (%d)", name, id)
                     end
-                    local mounts = LM.MountRegistry:FilterSearch('DRAGONRIDING', 'JOURNAL', 'COLLECTED')
+                    local mounts = LM.MountRegistry:FilterSearch('mt:402', 'COLLECTED')
                     local randomStyle = LM.Options:GetOption('randomWeightStyle')
                     local m = mounts:Random(context.random, randomStyle)
                     if m then
@@ -882,6 +882,8 @@ function LM.Actions:ToDisplay(action, args)
         else
             return name, args:ToString()
         end
+    else
+        return action.." |A:gmchat-icon-alert:15:15|a", args:ToString()
     end
 end
 

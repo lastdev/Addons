@@ -77,7 +77,7 @@ function StatPriority:FrameCreate(frame, text, parent)
 									 bottom = 1}}) 
 		frame:SetBackdropColor(0, 0, 0, 1)
 		frame:SetFrameStrata("TOOLTIP")
-		frame:SetWidth(parent:GetWidth() * 1.6)
+		frame:SetWidth(parent:GetWidth())
 		if parent == PaperDollFrame then
 			frame:SetHeight(25)
 		else
@@ -89,6 +89,7 @@ function StatPriority:FrameCreate(frame, text, parent)
 		text:SetJustifyV("MIDDLE")
 		frame:ClearAllPoints()
 		frame:SetPoint("BOTTOMRIGHT", parent, "TOPRIGHT",0,0)
+		frame:SetPoint("BOTTOMLEFT", parent, "TOPLEFT",0,0)
 		frame:SetParent(parent)
 		frame:Show()
 		return true

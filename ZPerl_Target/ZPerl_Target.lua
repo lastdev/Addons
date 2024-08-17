@@ -23,7 +23,7 @@ XPerl_RequestConfig(function(new)
 	if (XPerl_PetTarget) then
 		XPerl_PetTarget.conf = conf.pettarget
 	end
-end, "$Revision: fce90408187312ad482269e3ac08bd41e6e0829f $")
+end, "$Revision:  $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
@@ -126,7 +126,7 @@ local percD = "%d"..PERCENT_SYMBOL
 local buffSetup
 local lastInspectPending = 0
 
-local feignDeath = GetSpellInfo(5384)
+--local feignDeath = GetSpellInfo and GetSpellInfo(5384) or (C_Spell.GetSpellInfo(5384) and C_Spell.GetSpellInfo(5384).name)
 
 local ComboEventFrame = CreateFrame("Frame")
 

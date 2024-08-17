@@ -14,7 +14,7 @@
 ## Notes-deDE: Ein Grundaddon für Chatfenstermodule.
 ## Notes-koKR: 대화창에 대한 다양한 기능을 제공하는 애드온입니다.
 ## Notes-ruRU: Фреймворк для чата. Это БЕТА-версия, а значит возможны баги и глюки.
-## Version: 3.9.55
+## Version: 3.9.58
 ## Author: Sylvanaar (Sylvaann - Proudmoore/US-Alliance)
 ## eMail: sylvanaar@mindspring.com
 
@@ -25,12 +25,13 @@
 
 ## X-License: GPLv3
 
-## OptionalDeps: Prat-3.0_Libraries, LibSink-2.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDataBroker-1.1, LibDBIcon-1.0, LibAlts-1.0, LibChatAnims
+## OptionalDeps: LibSink-2.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDataBroker-1.1, LibDBIcon-1.0, LibAlts-1.0, LibChatAnims
 
 ## SavedVariables: Prat3DB
 ## SavedVariablesPerCharacter: Prat3CharDB, Prat3HighCPUPerCharDB
 
 ## IconTexture: Interface\AddOns\Prat-3.0\textures\prat-logo-dark-small
+## AddonCompartmentFunc: Prat_ToggleOptionsWindow
 
 Libs.xml
 

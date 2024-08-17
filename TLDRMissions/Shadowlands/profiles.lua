@@ -3,6 +3,7 @@ local addon = _G[addonName]
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 
 
 function addon:RefreshProfile()

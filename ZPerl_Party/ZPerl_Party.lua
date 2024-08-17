@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 	for k, v in pairs(PartyFrames) do
 		v.conf = pconf
 	end
-end, "$Revision: 2f111f16cae2c4903cf32fdc68efa86024c393e2 $")
+end, "$Revision:  $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -87,7 +87,8 @@ local partyAnchor
 
 local XPerl_Party_HighlightCallback
 
-local feignDeath = GetSpellInfo(5384)
+--local feignDeath = (C_Spell and C_Spell.GetSpellInfo(5384)) and C_Spell.GetSpellInfo(5384).name or GetSpellInfo(5384)
+--local spiritOfRedemption = (C_Spell and C_Spell.GetSpellInfo(27827)) and C_Spell.GetSpellInfo(27827).name or GetSpellInfo(27827)
 
 ----------------------
 -- Loading Function --
@@ -385,8 +386,6 @@ local function XPerl_Party_UpdateResurrectionStatus(self)
 		end
 	end
 end
-
-local spiritOfRedemption = GetSpellInfo(27827)
 
 -- XPerl_Party_UpdateHealth
 local function XPerl_Party_UpdateHealth(self)
@@ -833,7 +832,7 @@ local function XPerl_Party_UpdateCombat(self)
 			self.nameFrame.combatIcon:Hide()
 		end
 
-		if UnitIsCharmed(partyid) and UnitIsPlayer(partyid) and (not IsClassic and not UnitUsingVehicle(self.ownerid) or true) then
+		if UnitIsCharmed(partyid) and UnitIsPlayer(partyid) and (not IsClassic and (self.ownerid and not UnitUsingVehicle(self.ownerid)) or true) then
 			self.nameFrame.warningIcon:Show()
 		else
 			self.nameFrame.warningIcon:Hide()

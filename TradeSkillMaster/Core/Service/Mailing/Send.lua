@@ -80,8 +80,11 @@ function private.SendMailThread(recipient, subject, body, money, items, isGroup,
 
 	local query = BagTracking.CreateQueryBags()
 		:OrderBy("slotId", true)
+		:Or()
+			:Equal("isBound", false)
+			:Equal("isWarBound", true)
+		:End()
 		:Select("bag", "slot", "itemString", "quantity")
-		:Equal("isBound", false)
 	for _, bag, slot, itemString, quantity in query:Iterator() do
 		if isGroup then
 			itemString = Group.TranslateItemString(itemString)

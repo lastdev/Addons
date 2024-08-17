@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "zhCN")
 if not L then return end
 
+L["Show on Zone"] = "在区域上展示"
+L["Show icons on zone map"] = "在区域卡上显示符号"
 L["Allow left click to open journal to dungeon or raid"] = "允许使用左键打开地下城或团队副本的冒险指南"
 L["Allow right click to create waypoints with TomTom"] = "允许使用右键建立 TomTom 的引导箭头"
 L["Continent Alpha"] = "世界地图图标透明度"
@@ -8,6 +10,7 @@ L["Continent Scale"] = "世界地图图标缩放大小"
 L["Don't show discovered dungeons"] = "隐藏已被发现的地下城副本"
 L["Enable TomTom integration"] = "启用 TomTom 整合"
 L["Filter Options"] = "过滤选项"
+L["Hide all Khaz Algar nodes from the map"] = "隐藏地图上所有卡兹阿加的副本图标"
 L["Hide all Dragonflight nodes from the map"] = "隐藏地图上所有巨龙时代的副本图标"
 L["Hide all Shadowlands nodes from the map"] = "隐藏地图上所有暗影国度的副本图标"
 L["Hide all BfA nodes from the map"] = "隐藏地图上所有争霸艾泽拉斯的副本图标"
@@ -18,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "隐藏地图上所有诺森德的�
 L["Hide all Outland nodes from the map"] = "隐藏地图上所有外域的副本图标"
 L["Hide all Pandaria nodes from the map"] = "隐藏地图上所有潘达利亚的副本图标"
 L["Hide all Vanilla nodes from the map"] = "隐藏地图上所有艾泽拉斯的副本图标"
+L["Hide Khaz Algar"] = "隐藏卡兹阿加"
 L["Hide Dragonflight"] = "隐藏巨龙时代"
 L["Hide Shadowlands"] = "隐藏暗影国度"
 L["Hide Battle for Azeroth"] = "隐藏争霸艾泽拉斯"

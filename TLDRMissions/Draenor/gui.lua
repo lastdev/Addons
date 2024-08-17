@@ -64,7 +64,7 @@ gui.TitleBarTexture:SetTexCoord(0, 1, 0, 0.14)
 
 gui.TitleBarLabel = gui:CreateFontString("TLDRMissionsWODTitleBarLabel", "OVERLAY", "GameFontNormal")
 gui.TitleBarLabel:SetPoint("CENTER", gui.TitleBarTexture, "CENTER", 0, -7)
-gui.TitleBarLabel:SetText(addonName.." "..GetAddOnMetadata(addonName, "Version"))
+gui.TitleBarLabel:SetText(addonName.." "..C_AddOns.GetAddOnMetadata(addonName, "Version"))
 
 --
 -- Tab one: main frame

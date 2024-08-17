@@ -767,7 +767,9 @@ function Outfitter._OutfitMethodsEM:GetItems()
 		return self.TemporaryItems
 	end
 	
-	self.ItemLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
+	if self.equipmentSetID and type(self.equipmentSetID) == "number" then
+		self.ItemLocations = C_EquipmentSet.GetItemLocations(self.equipmentSetID)
+	end
 	
 	if not self.ItemLocations then
 		Outfitter:ErrorMessage("Couldn't get item locations for %s", tostring(self.Name))

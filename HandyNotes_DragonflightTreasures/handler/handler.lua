@@ -149,9 +149,9 @@ function ns.RegisterPoints(zone, points, defaults)
         end
         if point.related then
             local relatedNode = ns.nodeMaker(setmetatable({
-                label=point.npc and "Related to nearby NPC" or "Related to nearby treasure",
+                label=point.related.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
                 atlas=point.related.atlas or "playerpartyblip", color=point.related.color,
-                texture=point.related.atlas or false,
+                texture=point.related.atlas or false, minimap=point.related.minimap,
                 note=point.related.note or false,
                 active=point.related.active, required=point.related.required,
                 route=coord,
@@ -170,18 +170,51 @@ function ns.RegisterPoints(zone, points, defaults)
                 end
             end 
         end
-        if point.parent then
-            local x, y = HandyNotes:getXY(coord)
-            local mapinfo = C_Map.GetMapInfo(zone)
-            if mapinfo and mapinfo.parentMapID and mapinfo.parentMapID ~= 0 then
-                local pzone = mapinfo.parentMapID
-                local px, py = HBD:TranslateZoneCoordinates(x, y, zone, pzone)
-                if px and py then
-                    if not ns.points[pzone] then
-                        ns.points[pzone] = {}
+        -- and then variations on "also register this elsewhere":
+        if point.translate or point.parent or point.levels then
+            local translateTo = {}
+            if point.translate then
+                for tzone in pairs(point.translate) do
+                    if tzone ~= zone then
+                        translateTo[tzone] = true
                     end
-                    local pcoord = HandyNotes:getCoord(px, py)
-                    ns.points[pzone][pcoord] = point
+                end
+            end
+            if point.parent then
+                local mapinfo = C_Map.GetMapInfo(zone)
+                if mapinfo and mapinfo.parentMapID and mapinfo.parentMapID ~= 0 then
+                    local pzone = mapinfo.parentMapID
+                    translateTo[pzone] = true
+                end
+            end
+            if point.levels then
+                -- Show on other levels of the same zone
+                local groupID = C_Map.GetMapGroupID(zone)
+                if groupID then
+                    local members = C_Map.GetMapGroupMembersInfo(groupID)
+                    if members then
+                        for _, member in pairs(members) do
+                            if member.mapID ~= zone then
+                                translateTo[member.mapID] = true
+                            end
+                        end
+                    end
+                end
+            end
+            local x, y = HandyNotes:getXY(coord)
+            for tzone in pairs(translateTo) do
+                local tx, ty = HBD:TranslateZoneCoordinates(x, y, zone, tzone)
+                if tx and ty then
+                    if not ns.points[tzone] then
+                        ns.points[tzone] = {}
+                    end
+                    local tcoord = HandyNotes:getCoord(tx, ty)
+                    if ns.DEBUG and ns.points[tzone][tcoord] then
+                        print(myname, "translate point collision", zone, coord, "to", tzone, tcoord)
+                    end
+                    ns.points[tzone][tcoord] = point
+                elseif ns.DEBUG then
+                    print(myname, "translation failed", x, y, zone, tzone)
                 end
             end
         end
@@ -420,6 +453,9 @@ local function render_string(s, context)
             elseif GetFactionInfoByID then
                 name = GetFactionInfoByID(id)
             end
+            if name then
+                return name
+            end
         elseif variant == "garrisontalent" then
             local info = C_Garrison.GetTalentInfo(id)
             if info then
@@ -435,6 +471,12 @@ local function render_string(s, context)
             local info = C_Map.GetMapInfo(id)
             if info and info.name then
                 return info.name
+            end
+        elseif variant == "area" then
+            -- See: https://wago.tools/db2/AreaTable or C_MapExplorationInfo.GetExploredAreaIDsAtPosition
+            local name = C_Map.GetAreaInfo(id)
+            if name then
+                return name
             end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
@@ -521,12 +563,26 @@ local function work_out_label(point)
     if point.label then
         return (render_string(point.label, point))
     end
-    if point.achievement and point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
-        local criteria = ns.GetCriteria(point.achievement, point.criteria)
-        if criteria then
-            return criteria
+    if point.achievement and point.criteria and point.criteria ~= true then
+        if type(point.criteria) == "table" then
+            local t = {}
+            for _, criteriaid in ipairs(point.criteria) do
+                local criteria = ns.GetCriteria(point.achievement, criteriaid)
+                if criteria then
+                    table.insert(t, criteria)
+                end
+            end
+            if #t == #point.criteria then
+                return string.join(', ', unpack(t))
+            end
+            fallback = 'achievement:'..point.achievement..'.'..string.join('+', unpack(point.criteria))
+        else
+            local criteria = ns.GetCriteria(point.achievement, point.criteria)
+            if criteria then
+                return criteria
+            end
+            fallback = 'achievement:'..point.achievement..'.'..point.criteria
         end
-        fallback = 'achievement:'..point.achievement..'.'..point.criteria
     end
     if point.follower then
         local follower = C_Garrison.GetFollowerInfo(point.follower)

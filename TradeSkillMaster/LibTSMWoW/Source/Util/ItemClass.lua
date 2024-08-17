@@ -204,6 +204,24 @@ function ItemClass.GetPetClassId()
 	return Enum.ItemClass.Battlepet
 end
 
+---Gets the armor class ID.
+---@return number
+function ItemClass.GetArmorClassId()
+	return Enum.ItemClass.Armor
+end
+
+---Gets the weapon class ID.
+---@return number
+function ItemClass.GetWeaponClassId()
+	return Enum.ItemClass.Weapon
+end
+
+---Gets the profession class ID.
+---@return number
+function ItemClass.GetProfessionClassId()
+	return Enum.ItemClass.Profession
+end
+
 ---Gets all item class names.
 ---@return string[]
 function ItemClass.GetClasses()

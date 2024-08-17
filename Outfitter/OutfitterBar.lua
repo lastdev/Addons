@@ -813,7 +813,7 @@ function Outfitter.OutfitBar._Button:OnClick(pMouseButton)
 		local relativePoint = oppositeVert..nearestHoriz
 
 		-- Show the menu
-		self.menuFrame = LibStub("LibDropdownMC-1.0"):OpenAce3Menu(items)
+		self.menuFrame = LibStub("LibDropdown-1.0"):OpenAce3Menu(items)
 		self.menuFrame:SetPoint(anchorPoint, self, relativePoint, 0, 0)
 		self.menuFrame.cleanup = function ()
 			self.menuFrame = nil

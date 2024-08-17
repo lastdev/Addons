@@ -1,8 +1,8 @@
 ## Interface: 110002, 110000
-## Title: HandyNotes: Legion Treasures
+## Title: HandyNotes: Legion Treasures and Rares
 ## Notes: Where are the hidden treasures in Legion?
 ## Author: Kemayo
-## Version: v35.1
+## Version: v36
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -32,6 +32,9 @@ zones\AntoranWastes.lua
 zones\Krokuun.lua
 zones\Eredath.lua
 
+zones\Mardum.lua
+
 achievements\AnomalousAnimals.lua
 
-zones\Mardum.lua
+shared\Kosumoth.lua
+

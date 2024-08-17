@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "koKR")
 if not L then return end
 
+L["Show on Zone"] = "존에 표시"
+L["Show icons on zone map"] = "영역 카드의 기호를 보여줍니다"
 L["Allow left click to open journal to dungeon or raid"] = "던전이나 공격대 도감을 열도록 왼쪽 클릭 허용"
 L["Allow right click to create waypoints with TomTom"] = "TomTom으로 웨이포인트 생성하도록 오른쪽 클릭 허용"
 L["Continent Alpha"] = "대륙 투명토"
@@ -8,6 +10,7 @@ L["Continent Scale"] = "대륙 크기 비율"
 L["Don't show discovered dungeons"] = "미발견 던전 표시하지 않음"
 L["Enable TomTom integration"] = "TomTom 기능 활성화"
 L["Filter Options"] = "필터 옵션"
+L["Hide all Khaz Algar nodes from the map"] = "지도에서 카즈 알가르 위치를 숨깁니다."
 L["Hide all Dragonlight nodes from the map"] = "지도에서 모든 용군단 위치를 숨깁니다."
 L["Hide all Shadowlands nodes from the map"] = "지도에서 모든 어둠땅 위치 숨기기."
 L["Hide all BfA nodes from the map"] = "지도에서 모든 격전의 아제로스 위치를 숨깁니다."
@@ -18,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "지도에서 노스렌드의 모�
 L["Hide all Outland nodes from the map"] = "지도에서 아웃랜드의 모든 위치 표시를 숨깁니다"
 L["Hide all Pandaria nodes from the map"] = "지도에서 판다리아의 모든 위치 표시를 숨깁니다"
 L["Hide all Vanilla nodes from the map"] = "지도에서 오리지널의 모든 위치 표시를 숨깁니다"
+L["Hide Khaz Algar"] = "카즈 알가르 숨기기"
 L["Hide Dragonflight"] = "용군단 숨기기"
 L["Hide Shadowlands"] = "어둠땅 숨기기"
 L["Hide Battle for Azeroth"] = "격전의 아제로스 숨기기"

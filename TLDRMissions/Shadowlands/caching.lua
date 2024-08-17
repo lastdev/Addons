@@ -1,6 +1,6 @@
 local addonName = ...
 local addon = _G[addonName]
-local addonVersion = GetAddOnMetadata(addonName, "Version")
+local addonVersion = C_AddOns.GetAddOnMetadata(addonName, "Version")
 
 local GFICache = {}
 function addon:C_Garrison_GetFollowerInfo(garrFollowerID)

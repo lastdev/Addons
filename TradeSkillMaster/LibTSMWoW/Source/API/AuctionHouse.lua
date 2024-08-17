@@ -8,6 +8,7 @@ local LibTSMWoW = select(2, ...).LibTSMWoW
 local AuctionHouse = LibTSMWoW:Init("API.AuctionHouse")
 local Event = LibTSMWoW:Include("Service.Event")
 local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
+local EnumType = LibTSMWoW:From("LibTSMUtil"):Include("BaseType.EnumType")
 local private = {
 	itemLocation = ItemLocation:CreateEmpty(),
 	auctionIdToLink = {},
@@ -20,12 +21,21 @@ local private = {
 		quantity = nil,
 		buyout = nil,
 	},
+	notificationCallbacks = {},
 }
 AuctionHouse.DURATIONS = {
 	not LibTSMWoW.IsVanillaClassic() and AUCTION_DURATION_ONE or gsub(AUCTION_DURATION_ONE, "12", "2"),
 	not LibTSMWoW.IsVanillaClassic() and AUCTION_DURATION_TWO or gsub(AUCTION_DURATION_TWO, "24", "8"),
 	not LibTSMWoW.IsVanillaClassic() and AUCTION_DURATION_THREE or gsub(AUCTION_DURATION_THREE, "48", "24"),
 }
+local NOTIFICATION = EnumType.New("AUCTION_NOTIFICATION", {
+	BUY = EnumType.NewValue(),
+	BID = EnumType.NewValue(),
+	OUTBID = EnumType.NewValue(),
+	EXPIRED = EnumType.NewValue(),
+	SOLD = EnumType.NewValue(),
+})
+AuctionHouse.NOTIFICATION = NOTIFICATION
 local AUCTIONABLE_WOW_TOKEN_ITEM_ID = 122270
 
 ---@class ExtendedItemSearchResultInfo: ItemSearchResultInfo
@@ -371,6 +381,39 @@ function AuctionHouse.GetQuoteDurationRemaining()
 	return C_AuctionHouse.GetQuoteDurationRemaining()
 end
 
+---Registers a callback for auction house notification messages.
+---@param callback fun(notification: EnumValue, arg?: string|number)
+function AuctionHouse.RegisterNotificationCallback(callback)
+	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
+	if #private.notificationCallbacks == 0 then
+		Event.Register("AUCTION_HOUSE_SHOW_NOTIFICATION", private.HandleNotification)
+		Event.Register("AUCTION_HOUSE_SHOW_FORMATTED_NOTIFICATION", private.HandleNotification)
+		Event.Register("AUCTION_HOUSE_SHOW_COMMODITY_WON_NOTIFICATION", private.HandleCommodityNotification)
+	end
+	tinsert(private.notificationCallbacks, callback)
+end
+
+---Gets the formatted auction purchase message.
+---@param name string The item name
+---@return string
+function AuctionHouse.GetPurchaseMessage(name)
+	return format(ERR_AUCTION_WON_S, name)
+end
+
+---Returns whether or not the specified message is an auction purchase message.
+---@param msg string The message
+---@param name string The item name
+---@param quantity? number The auction quantity
+---@return boolean
+function AuctionHouse.IsPurchaseMessage(msg, name, quantity)
+	if msg == AuctionHouse.GetPurchaseMessage(name) then
+		return true
+	elseif quantity and ClientInfo.IsRetail() and msg == format(ERR_AUCTION_COMMODITY_WON_S, name, quantity) then
+		return true
+	end
+	return false
+end
+
 
 
 -- ============================================================================
@@ -450,4 +493,26 @@ function private.HandlePurchaseHook(link, name, quantity, price)
 	private.lastPurchase.name = name
 	private.lastPurchase.quantity = quantity
 	private.lastPurchase.buyout = price
+end
+
+function private.HandleNotification(_, msg, msgArg)
+	for _, callback in ipairs(private.notificationCallbacks) do
+		if msg == Enum.AuctionHouseNotification.AuctionWon then
+			callback(NOTIFICATION.BUY)
+		elseif msg == Enum.AuctionHouseNotification.AuctionSold and msgArg then
+			callback(NOTIFICATION.SOLD, msgArg)
+		elseif msg == Enum.AuctionHouseNotification.AuctionOutbid and msgArg then
+			callback(NOTIFICATION.OUTBID, format(ERR_AUCTION_OUTBID_S, msgArg))
+		elseif msg == Enum.AuctionHouseNotification.AuctionExpired and msgArg then
+			callback(NOTIFICATION.EXPIRED, format(ERR_AUCTION_EXPIRED_S, msgArg))
+		elseif msg == Enum.AuctionHouseNotification.BidPlaced then
+			callback(NOTIFICATION.BID, ERR_AUCTION_BID_PLACED)
+		end
+	end
+end
+
+function private.HandleCommodityNotification(_, _, quantity)
+	for _, callback in ipairs(private.notificationCallbacks) do
+		callback(NOTIFICATION.BUY, quantity)
+	end
 end

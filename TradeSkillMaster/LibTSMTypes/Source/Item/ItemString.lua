@@ -354,9 +354,12 @@ function private.FilterBonusIdsAndModifiers(itemString, itemType, itemId, rand, 
 	local numParts = select("#", ...)
 	if numParts == 0 then
 		return itemString
+	elseif not LibTSMTypes.IsRetail() then
+		-- No bonus IDs or modifiers on classic
+		return rand and strjoin(":", itemType, itemId, rand) or itemString
 	end
 
-	-- grab the modifiers and filter them
+	-- Grab the modifiers and filter them
 	local numModifiers = numParts - numBonusIds
 	local modifiersStr = (numModifiers > 0 and numModifiers > 1 and numModifiers % 2 == 1) and strjoin(":", select(numBonusIds + 1, ...)) or ""
 	if modifiersStr ~= "" then
@@ -404,7 +407,7 @@ function private.FilterBonusIdsAndModifiers(itemString, itemType, itemId, rand, 
 		end
 	end
 
-	-- filter the bonusIds
+	-- Filter the bonusIds
 	local bonusIdsStr = ""
 	if numBonusIds > 0 then
 		-- get the list of bonusIds and filter them
@@ -415,9 +418,9 @@ function private.FilterBonusIdsAndModifiers(itemString, itemType, itemId, rand, 
 		bonusIdsStr = BonusIds.Filter(table.concat(private.bonusIdsTemp, ":"))
 	end
 
-	-- rebuild the itemString
+	-- Rebuild the itemString
 	itemString = strjoin(":", itemType, itemId, rand, bonusIdsStr, modifiersStr)
-	itemString = gsub(itemString, ":0:", "::") -- remove 0s which are in the middle
+	itemString = gsub(itemString, ":0:", "::") -- Remove 0s which are in the middle
 	return private.RemoveExtra(itemString)
 end
 

@@ -40,6 +40,7 @@ LSM:Register("sound", "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_7:16|t"
 LSM:Register("sound", "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:16|t", [[Interface\Addons\SharedMedia_Causese\sound\08.ogg]])
 LSM:Register("sound", "|cFFFF0000Add|r", [[Interface\Addons\SharedMedia_Causese\sound\Add.ogg]])
 LSM:Register("sound", "|cFFFF0000Adds|r", [[Interface\Addons\SharedMedia_Causese\sound\Adds.ogg]])
+LSM:Register("sound", "|cFFFF0000Affix|r", [[Interface\Addons\SharedMedia_Causese\sound\Affix.ogg]])
 LSM:Register("sound", "|cFFFF0000AoE|r", [[Interface\Addons\SharedMedia_Causese\sound\AoE.ogg]])
 LSM:Register("sound", "|cFFFF0000Assist|r", [[Interface\Addons\SharedMedia_Causese\sound\Assist.ogg]])
 LSM:Register("sound", "|cFFFF0000Avoid|r", [[Interface\Addons\SharedMedia_Causese\sound\Avoid.ogg]])

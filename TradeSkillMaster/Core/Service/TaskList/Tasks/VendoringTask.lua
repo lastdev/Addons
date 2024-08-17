@@ -5,7 +5,8 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local VendoringTask = TSM.Include("LibTSMClass").DefineClass("VendoringTask", TSM.TaskList.ItemTask)
+local LibTSMClass = LibStub("LibTSMClass")
+local VendoringTask = LibTSMClass.DefineClass("VendoringTask", TSM.TaskList.ItemTask)
 local L = TSM.Locale.GetTable()
 local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
 local Vendor = TSM.LibTSMService:Include("Vendor")

@@ -1,9 +1,10 @@
-## Interface: 100207
+## Interface: 40400, 110000
 ## Title: |cffEEE4AECamel Spotter|r
 ## Notes: |cff58C6FAHelps you find Mysterious Camel Figurines in Uldum.|r|n|n|cffFFC700Slash command: /cs, /camelspotter|r
 ## Author: Yuyuli
-## Version: 1.7.17
+## Version: 1.7.21
 ## IconTexture: 454772
 ## SavedVariables: CamelSpotterDB
 
+locales.xml
 CamelSpotter.lua

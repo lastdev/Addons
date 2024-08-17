@@ -14,12 +14,12 @@ ns.RegisterPoints(680, { -- Suramar
     [21425446] = {quest=42842, loot={136269}, label="Kel'danath's Manaflask"},
     [22863574] = ns.path{quest={43838, 43988}, label="Temple of Fal'adora"},
     [23414880] = {quest=43842, label=ns.CHEST_SM},
-    [25958548] = {quest=43831, label=ns.CHEST_SM},
+    [25958548] = {quest=43831, label=ns.CHEST_SM,  path=29018481},
     [26354127] = {quest=42827, loot={139890}, label="Ancient Mana Chunk"},
     [26831696] = {quest=43847, label=ns.CHEST_SM},
     [26877073] = {quest=43987, loot={140327}, label="Kyrtos's Research Notes", note="Cave entrance @ 27.3, 72.9", path=27307290},
     [29271622] = {quest=43848, label=ns.CHEST},
-    [29768817] = {quest=43748, loot={141655}, label="Shimmering Ancient Mana Cluster"},
+    [29768799] = {quest=43748, loot={141655}, label="Shimmering Ancient Mana Cluster", path=29008481, vignette=1557},
     [31956249] = {quest=43831, label=ns.CHEST_SM},
     [32317708] = {quest=43834, label=ns.CHEST_SM, note="Inside the Lightbreaker, after quests; portal @ 31.0, 85.1", path=31008510},
     [35561209] = {quest=43989, loot={140329}, label="Arcane Power Unit"},
@@ -122,3 +122,97 @@ ns.RegisterPoints(680, { -- Suramar
     [29405330] = {quest=44676, npc=113368, criteria=333, loot={138839}, note="Cave entrance @ 29.3, 50.7", path=29305070}, -- Llorian
     [87856250] = {quest=41786, npc=103827, criteria=333, loot={140384}}, -- King Morgalash
 })
+
+-- Leylines!
+
+local LEYLINES = {
+    achievement=10756,
+    atlas="worldquest-questmarker-abilityhighlight",
+    hide_before=ns.conditions.QuestComplete(41138), -- Feeding Shal'Aran
+}
+ns.RegisterPoints(680, { -- Suramar
+    [41703890] = {criteria=31056, quest=41028}, -- Anora Hollow (the prerequisite!)
+    [29008480] = {criteria=31918, quest=43594}, -- Soul Vaults (Halls of the Eclipse)
+    [59304280] = {criteria=31914, quest=43588}, -- Kel'balor
+    [65804190] = {criteria=31913, quest=43587}, -- Elor'shan
+    [20405040] = {criteria=31917, quest=43593}, -- Falanaar South
+    [21404330] = {criteria=31916, quest=43592}, -- Falanaar North
+    [24301940] = {criteria=31919, quest=43591}, -- Moon Guard
+    [35702410] = {criteria=31915, quest=43590}, -- Moonwhisper Gulch
+}, LEYLINES)
+ns.RegisterPoints(685, { -- Falanaar Tunnels
+    [65105210] = {criteria=31916, quest=43592}, -- Falanaar North
+    [58107520] = {criteria=31917, quest=43593}, -- Falanaar South
+}, LEYLINES)
+ns.RegisterPoints(686, { -- Elor'shan
+    [46704720] = {criteria=31913, quest=43587},
+}, LEYLINES)
+ns.RegisterPoints(687, { -- Kel'balor
+    [52304490] = {criteria=31914, quest=43588},
+}, LEYLINES)
+ns.RegisterPoints(689, { -- Ley Station Moonfall, Moonwhisper Gulch
+    [54004470] = {criteria=31915, quest=43590},
+}, LEYLINES)
+ns.RegisterPoints(690, { -- Ley Station Aethenar, Moon Guard
+    [48704870] = {criteria=31919, quest=43591},
+}, LEYLINES)
+
+-- Telemancy!
+
+local Portal = ns.Class{
+    Initialize=function(self, questid, label, data)
+        self._questid = questid
+        self.label = label
+        MergeTable(self, data)
+    end,
+    group="{achievementname:11125:Now You're Thinking With Portals}",
+    __get={
+        atlas=function(self)
+            return C_QuestLog.IsQuestFlaggedCompleted(self._questid) and "MagePortalAlliance" or "MagePortalHorde"
+        end,
+    },
+}
+
+ns.RegisterPoints(680, { -- Suramar
+    -- These crop up at points in the storyline
+    [36204710] = Portal(40956, "{area:8173:Ruins of Elune'eth}", {hide_before=ns.conditions.QuestComplete(40956)}), -- Ruins of Elune'eth, storyline: Survey Says...
+    [22903580] = Portal(42230, "{area:7843:Falanaar}", {hide_before=ns.conditions.QuestComplete(42228)}), -- Falanaar, storyline: Valewalker's Burden, hidden until Hidden City
+    [47508200] = Portal(42487, "{area:8382:Waning Crescent}", {require=ns.conditions.QuestIncomplete(43569), hide_before=ns.conditions.QuestComplete(42486), }), --Waning Crescent, storyline: Friends on the Outside, hidden until Little One Lost, hidden after Arluin's Request
+    [64006040] = Portal(44084, "{area:8149:Twilight Vineyards}", {hide_before=ns.conditions.QuestComplete(42838)}), -- Twilight Vineyards, storyline: Vengeance for Margaux, hidden until Reversal
+    [52007800] = Portal(42889, "{area:8487:Evermoon Terrace}", {hide_before=ns.conditions.QuestComplete(43569)}), -- Evermoon Terrace, storyline: The Way Back Home, hidden until 38694
+    [54496943] = Portal(44740, "{area:8395:Astravar Harbor}", {hide_before=ns.conditions.QuestComplete(44738)}), -- Astravar Harbor, storyline: Staging Point, hidden until Full Might of the Elves
+    -- These ones are general-access after Ruins is opened via Survey Says:
+    [30801090] = Portal(43808, "{area:7842:Moon Guard Stronghold}", {hide_before=ns.conditions.QuestComplete(40956), path={27802230, atlas="map-icon-SuramarDoor.tga"}}), -- Moon Guard Stronghold
+    [42203540] = Portal(43809, "{area:7841:Tel'anor}", {hide_before=ns.conditions.QuestComplete(40956)}), -- Tel'anor
+    [43406070] = Portal(43813, "{area:8431:Sanctum of Order}", {hide_before=ns.conditions.QuestComplete(40956), path={42606170, atlas="map-icon-SuramarDoor.tga"}}), -- Sanctum of Order
+    [43607910] = Portal(43811, "{area:8021:Lunastre Estate}", {hide_before=ns.conditions.QuestComplete(40956)}), -- Lunastre Estate
+    [35808210] = Portal(41575, "{area:7844:Felsoul Hold}", {hide_before=ns.conditions.QuestComplete(40956)}), -- Felsoul Hold
+})
+ns.RegisterPoints(684, { -- Fal'adore
+    [40901350] = Portal(42230, "{area:7843:Falanaar}", {hide_before=ns.conditions.QuestComplete(42228)}), -- Falanaar
+})
+ns.RegisterPoints(682, { -- The Fel Breach
+    [53403680] = Portal(41575, "{area:7844:Felsoul Hold}", {hide_before=ns.conditions.QuestComplete(40956)}), -- Felsoul Hold
+})
+
+-- Withered Army Training
+
+ns.RegisterPoints(692, { -- upper level
+    [29804260]={ quest=43149, loot={139010}, label="Treasure Chest", note="+25% HP. Requires 5 withered.", },
+    [30007000]={ quest=43146, loot={140451}, label="Glimmering Treasure Chest", note="Withered Mana-Rager. Requires 10 withered.", },
+    [38805350]={ quest=43140, loot={140778}, label="Treasure Chest", note="Bank in Shal'aran. Under stairs. Requires 5 withered.", },
+    [40801350]={ quest=43071, loot={139011}, label="Glimmering Treasure Chest", note="Withered Berserker. Requires 10 withered.", },
+    [75902840]={ quest=43120, loot={139018}, label="Treasure Chest", note="Withered more efficiently focus their attacks. Requires 5 withered.", },
+}, {group="withered"})
+ns.RegisterPoints(693, { -- lower level
+    [32506440]={ quest=43145, loot={140450}, label="Glimmering Treasure Chest", note="Withered Berserker. Requires 10 withered.", },
+    [36603240]={ quest=43135, loot={139028}, label="Glimmering Treasure Chest", note="Withered Starcaller. Requires 10 withered.", },
+    [44205350]={ quest=43134, loot={139027}, label="Glimmering Treasure Chest", note="Withered Spellseer. Requires 10 withered.", },
+    [45704610]={ quest=43143, loot={141313}, label="Treasure Chest", note="Artifact power. Requires 5 withered.", },
+    [48707980]={ quest=43141, loot={136914}, label="Treasure Chest", note="Pet. Requires 5 withered.", },
+    [51802930]={ quest=43111, loot={139017}, label="Treasure Chest", note="Reduces fear rate. Requires 5 withered.", },
+    [60507310]={ quest=43148, loot={140448}, label="Treasure Chest", note="+25% damage. Requires 5 withered.", },
+    [62206200]={ quest=43128, loot={139019}, label="Glimmering Treasure Chest", note="Withered Mana-Rager. Requires 10 withered.", },
+    [62409010]={ quest=43142, loot={141314}, label="Treasure Chest", note="Artifact power. Requires 5 withered.", },
+    [67305140]={ quest=43144, loot={141296}, label="Treasure Chest", note="Toy. Requires 5 withered.", },
+}, {group="withered"})

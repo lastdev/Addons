@@ -5,7 +5,8 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local AltTask = TSM.Include("LibTSMClass").DefineClass("AltTask", TSM.TaskList.Task)
+local LibTSMClass = LibStub("LibTSMClass")
+local AltTask = LibTSMClass.DefineClass("AltTask", TSM.TaskList.Task)
 local L = TSM.Locale.GetTable()
 TSM.TaskList.AltTask = AltTask
 

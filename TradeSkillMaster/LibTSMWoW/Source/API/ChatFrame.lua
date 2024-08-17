@@ -35,3 +35,29 @@ function ChatFrame.AddMessage(str)
 	end
 	frame:AddMessage(str)
 end
+
+---Adds a filter function for chat messages.
+---@param func function
+function ChatFrame.AddMessageFilter(func)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", func)
+end
+
+---Suppresses auction messages from showing in chat.
+function ChatFrame.SuppressAuctionMessages()
+	local funcTable = _G
+	-- luacheck: globals ElvUI
+	if C_AddOns.IsAddOnLoaded("ElvUI") and ElvUI then
+		local tbl, _, settings = unpack(ElvUI)
+		if settings.chat.enable then
+			funcTable = tbl:GetModule("Chat")
+		end
+	end
+	local origChatFrameOnEvent = funcTable.ChatFrame_OnEvent
+	funcTable.ChatFrame_OnEvent = function(self, event, msg, ...)
+		-- Suppress auction created / cancelled spam
+		if event == "CHAT_MSG_SYSTEM" and (msg == ERR_AUCTION_STARTED or msg == ERR_AUCTION_REMOVED) then
+			return
+		end
+		return origChatFrameOnEvent(self, event, msg, ...)
+	end
+end

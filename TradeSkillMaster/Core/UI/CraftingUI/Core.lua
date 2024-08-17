@@ -17,6 +17,7 @@ local TradeSkill = TSM.LibTSMWoW:Include("API.TradeSkill")
 local Profession = TSM.LibTSMService:Include("Profession")
 local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
+local AppHelper = TSM.LibTSMApp:Include("Service.AppHelper")
 local private = {
 	settings = nil,
 	topLevelPages = {},
@@ -129,7 +130,7 @@ function private.CreateMainFrame()
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
 		:SetStrata("HIGH")
 		:AddPlayerGold(private.settings)
-		:AddAppStatusIcon(TSM.AppHelper.GetRegion(), TSM.AppHelper.GetLastSync() or 0, TSM.AuctionDB.GetAppDataUpdateTimes())
+		:AddAppStatusIcon(AppHelper.GetRegion(), AppHelper.GetLastSync(), TSM.AuctionDB.GetAppDataUpdateTimes())
 		:AddSwitchButton(private.SwitchBtnOnClick)
 		:SetScript("OnHide", private.BaseFrameOnHide)
 

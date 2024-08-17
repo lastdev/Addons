@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod(2332, "DBM-Raids-BfA", 3, 1177)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(145371)
 mod:SetEncounterID(2273)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -59,7 +59,7 @@ local warnMaddeningEyes					= mod:NewTargetNoFilterAnnounce(285345, 4)
 --Stage Three: His Unwavering Gaze
 local warnInsatiableTorment				= mod:NewTargetNoFilterAnnounce(285652, 2)
 
-local specWarnUnstableResonance			= mod:NewSpecialWarningMoveAway(293653, nil, nil, nil, 3, 2)
+local specWarnUnstableResonance			= mod:NewSpecialWarningMoveAwayCount(293653, nil, nil, nil, 3, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 --Multiple specialwarings for same event, because this way users can customize sound for each sign
 local specWarnUnstableResonanceVoid		= mod:NewSpecialWarningYouPos(293663, nil, nil, nil, 1, 6)
@@ -80,7 +80,7 @@ local specWarnCallUndyingGuardian		= mod:NewSpecialWarningSwitchCount(285820, "-
 local specWarnGiftofNzothHysteria		= mod:NewSpecialWarningCount(285638, nil, nil, nil, 2, 2)
 local specWarnConsumeEssence			= mod:NewSpecialWarningInterruptCount(285427, false, nil, nil, 1, 2)
 local specWarnUnknowableTerror			= mod:NewSpecialWarningRun(285562, nil, nil, nil, 4, 2)
-local specWarnPrimordialMindbender		= mod:NewSpecialWarningSwitch("ej19118", "Dps", nil, nil, 1, 2)
+local specWarnPrimordialMindbender		= mod:NewSpecialWarningSwitchCount("ej19118", "Dps", nil, nil, 1, 2)
 --Stage Three: His Unwavering Gaze
 local specWarnInsatiableTorment			= mod:NewSpecialWarningYou(285652, nil, nil, nil, 1, 2)
 local yellInsatiableTorment				= mod:NewShortYell(285652, 142942)--Short text "Torment"

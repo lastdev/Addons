@@ -5,10 +5,11 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local CooldownCraftingTask = TSM.Include("LibTSMClass").DefineClass("CooldownCraftingTask", TSM.TaskList.CraftingTask)
+local LibTSMClass = LibStub("LibTSMClass")
+local CooldownCraftingTask = LibTSMClass.DefineClass("CooldownCraftingTask", TSM.TaskList.CraftingTask)
 local Math = TSM.LibTSMUtil:Include("Lua.Math")
 local Profession = TSM.LibTSMService:Include("Profession")
-local AddonSettings = TSM.LibTSMApp:Include("Lib.AddonSettings")
+local AddonSettings = TSM.LibTSMApp:Include("Service.AddonSettings")
 TSM.TaskList.CooldownCraftingTask = CooldownCraftingTask
 local private = {
 	didModuleInit = false,

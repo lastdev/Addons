@@ -190,7 +190,7 @@ end
 function LedgerTransactionsScrollTable.__protected:_LoadDeferredRowData(dataIndex)
 	local dbRow = self._query:GetNthResult(dataIndex)
 	local itemString, otherPlayer, source, stackSize, auctions, price, total, recordTime = dbRow:GetFields("filteredItemString", "otherPlayer", "source", "stackSize", "auctions", "price", "total", "time")
-	self._data.item[dataIndex] = "|T"..ItemInfo.GetTexture(itemString)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?")
+	self._data.item[dataIndex] = "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?")
 	self._data.item_tooltip[dataIndex] = itemString
 	self._data.player[dataIndex] = otherPlayer
 	self._data.type[dataIndex] = source

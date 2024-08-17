@@ -8,6 +8,18 @@ local module = oRA:NewModule("RoleIcons")
 -- Icons on the player buttons
 local updateIcons
 do
+	-- Deprecated then added back, just leaving the function here for now
+	local function GetTexCoordsForOldRoleSmallCircle(role)
+		if role == "TANK" then
+			return 0, 19 / 64, 22 / 64, 41 / 64
+		elseif role == "HEALER" then
+			return 20 / 64, 39 / 64, 1 / 64, 20 / 64
+		elseif role == "DAMAGER" then
+			return 20 / 64, 39 / 64, 22 / 64, 41 / 64
+		else
+			error("Unknown role: " .. tostring(role))
+		end
+	end
 	local roleIcons = setmetatable({}, { __index = function(t,i)
 		local parent = _G["RaidGroupButton"..i]
 		local icon = CreateFrame("Frame", nil, parent)
@@ -43,7 +55,7 @@ do
 				local icon = roleIcons[i]
 				local role = UnitGroupRolesAssigned("raid"..i)
 				if role and role ~= "NONE" then
-					icon.texture:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
+					icon.texture:SetTexCoord(GetTexCoordsForOldRoleSmallCircle(role))
 					icon:Show()
 				else
 					icon:Hide()
@@ -61,18 +73,23 @@ do
 	local function sortColoredNames(a, b) return a:sub(11) < b:sub(11) end
 
 	local function onEnter(self)
-		if not IsInRaid() then return end
 		local role = self.role
-		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
-		GameTooltip:SetText(_G["INLINE_" .. role .. "_ICON"] .. _G[role])
+		local found = nil
 		for i = 1, GetNumGroupMembers() do
 			local name, _, group, _, _, class, _, _, _, _, _, groupRole = GetRaidRosterInfo(i)
 			if name and groupRole == role then
 				local color = oRA.classColors[class]
 				local coloredName = ("|cff%02x%02x%02x%s"):format(color.r * 255, color.g * 255, color.b * 255, name:gsub("%-.+", "*"))
 				tinsert(roster[group], coloredName)
+				found = true
 			end
 		end
+		if not found then
+			return
+		end
+
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
+		GameTooltip:SetText(_G["INLINE_" .. role .. "_ICON"] .. _G[role])
 		for group, list in ipairs(roster) do
 			sort(list, sortColoredNames)
 			for _, name in ipairs(list) do

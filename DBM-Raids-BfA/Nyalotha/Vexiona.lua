@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2370, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426182205")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(157354)
 mod:SetEncounterID(2336)
 mod:SetHotfixNoticeRev(20200128000000)--2020, 1, 28
@@ -88,7 +88,7 @@ local specWarnBrutalSmash					= mod:NewSpecialWarningDodge(315932, false, nil, 2
 
 local timerNoEscapeCD						= mod:NewCDCountTimer(11, 316437, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 ----Void Ascendant
-local specWarnAnnihilation					= mod:NewSpecialWarningDodgeCount(307403, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.dodge:format(307403), nil, 2, 2)
+local specWarnAnnihilation					= mod:NewSpecialWarningDodgeLoc(307403, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.dodge:format(307403), nil, 2, 2)
 local specWarnAnnihilationDefensive			= mod:NewSpecialWarningDefensive(307403, nil, nil, nil, 1, 2)
 
 local timerAnnihilationCD					= mod:NewCDTimer(14.6, 307403, nil, nil, nil, 3)

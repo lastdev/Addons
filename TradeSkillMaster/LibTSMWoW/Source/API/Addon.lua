@@ -47,3 +47,9 @@ function Addon.IsEnabled(name)
 	local character = UnitName("player")
 	return C_AddOns.GetAddOnEnableState(name, character) == Enum.AddOnEnableState.All and select(4, C_AddOns.GetAddOnInfo(name))
 end
+
+---Enables the specified addon.
+---@param name string The name of the addon
+function Addon.Enable(name)
+	C_AddOns.EnableAddOn(name)
+end

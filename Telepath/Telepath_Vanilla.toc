@@ -1,5 +1,5 @@
 ## Interface: 11503
-## Version: 1.11.0
+## Version: 1.11.1
 ## Title: Telepath
 ## Notes: Display some chat message as "raid warning"
 ## Author: Tomill

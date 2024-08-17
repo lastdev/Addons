@@ -8,7 +8,7 @@ local addonName, addon = ...
 local thisCharacter
 local petGUIDs
 
-local C_PetJournal, GetSpellInfo, tonumber, format = C_PetJournal, GetSpellInfo, tonumber, format
+local C_PetJournal, C_Spell, tonumber, format = C_PetJournal, C_Spell, tonumber, format
 
 -- *** Utility functions ***
 --[[
@@ -76,7 +76,7 @@ end
 local function _IsPetKnown(spellID)
 	
 	-- Find the pet name
-	local petName = GetSpellInfo(spellID)
+	local petName = C_Spell.GetSpellName(spellID)
 	if not petName then return end
 	
 	-- Find the pet ID
@@ -115,7 +115,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	DataStore:RegisterMethod(addon, "GetBattlePetInfoFromLink", _GetBattlePetInfoFromLink)
 	
 	DataStore:RegisterMethod(addon, "GetCompanionLink", function(spellID)
-		local name = GetSpellInfo(spellID)
+		local name = C_Spell.GetSpellName(spellID)
 		return format("|cff71d5ff|Hspell:%s|h[%s]|h|r", spellID, name)
 	end)
 	

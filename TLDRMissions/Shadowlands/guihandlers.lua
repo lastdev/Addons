@@ -1171,7 +1171,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
             else
                 addon:wipeObsoleteMissionLog(missionWaitingUserAcceptance.missionID)
             end
-            AceEvent:SendMessage("TLDRMISSIONS_START_MISSION", missionWaitingUserAcceptance.missionID, GetAddOnMetadata(addonName, "Version"))
+            AceEvent:SendMessage("TLDRMISSIONS_START_MISSION", missionWaitingUserAcceptance.missionID, C_AddOns.GetAddOnMetadata(addonName, "Version"))
             numSent = numSent + 1
         end)
     end

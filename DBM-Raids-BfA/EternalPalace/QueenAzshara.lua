@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2361, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024602")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(152910)
 mod:SetEncounterID(2299)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -155,7 +155,7 @@ local warnSystemShock					= mod:NewTargetAnnounce(300877, 3)
 local specWarnGreaterReversal			= mod:NewSpecialWarningSpell(297372, nil, nil, nil, 2, 5)
 local specWarnVoidtouched				= mod:NewSpecialWarningStack(300743, nil, 4, nil, nil, 1, 6)
 local specWarnVoidtouchedTaunt			= mod:NewSpecialWarningTaunt(300743, nil, nil, nil, 1, 2)
-local specWarnPiercingGaze				= mod:NewSpecialWarningDodge(300768, nil, nil, nil, 2, 2)
+local specWarnPiercingGaze				= mod:NewSpecialWarningDodgeCount(300768, nil, nil, nil, 2, 2)
 local specWarnOverload					= mod:NewSpecialWarningCount(301431, false, nil, 2, 2, 2)
 local specWarnEssenceofAZeroth			= mod:NewSpecialWarningYou(300866, nil, nil, nil, 1, 2)
 local specWarnSystemShock				= mod:NewSpecialWarningDefensive(300877, nil, nil, nil, 1, 2)
@@ -186,7 +186,7 @@ mod.vb.painfulMemoriesActive = false
 mod.vb.myrmidonCount = 0
 local drainedSoulStacks = {}
 local playerSoulDrained = false
-local shieldName = DBM:GetSpellName(300620)
+local shieldName = DBM:GetSpellName(300620) or DBM_COMMON_L.SHIELD
 local seenAdds = {}
 local castsPerGUID = {}
 local text = ""
@@ -737,6 +737,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			--Sometimes you get less than max amount though so must still schedule
 			specWarnQueensDecree:Cancel()
 			if self.vb.maxDecree == playerDecreeCount then
+				---@diagnostic disable-next-line: param-type-mismatch
 				specWarnQueensDecree:Show(text)
 			else
 				specWarnQueensDecree:Schedule(0.5, text)

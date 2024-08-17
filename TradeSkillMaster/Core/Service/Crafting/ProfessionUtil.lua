@@ -234,7 +234,7 @@ function ProfessionUtil.Craft(recipeString, quantity, useVellum, salvageSlotId, 
 	end
 	local isEnchant = Profession.IsEnchant(craftString)
 	local vellumable = isEnchant and not ClientInfo.IsVanillaClassic()
-	if isEnchant or TradeSkill.IsClassicCrafting() then
+	if not ClientInfo.IsRetail() and (isEnchant or TradeSkill.IsClassicCrafting()) then
 		quantity = 1
 	elseif spellId ~= private.preparedSpellId or private.preparedTime == GetTime() then
 		-- We can only craft one of this item due to a bug on Blizzard's end

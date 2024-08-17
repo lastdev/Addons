@@ -31,7 +31,7 @@ function mod:SPELL_CAST_SUCCESS(args)
         Name            = Spells[key][1]
         ID_no_taint     = Spells[key][2]
         Duration        = Spells[key][3]
-        _, _, SpellIcon = GetSpellInfo(args.spellId)
+        _, _, SpellIcon = C_Spell.GetSpellInfo(args.spellId)
 
         if args.spellId == ID_no_taint then
             DBT:CreateBar(Duration, Name..":"..args.sourceName, SpellIcon)

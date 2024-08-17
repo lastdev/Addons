@@ -1,7 +1,7 @@
 --- Main methods directly available in your addon
 -- @module lib
 -- @author Alar of Runetotem
--- @release 73
+-- @release 75
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
@@ -12,11 +12,12 @@
 -- Check
 --@end-debug@]==]
 local me, ns = ...
-local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
+---@diagnostic disable-next-line: undefined-field
+local __FILE__=tostring(debugstack(1,2,0):match("(.*):16:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 73
+local MINOR_VERSION = 75
 local LibStub=LibStub
-local dprint=function() end
+local dprint=function(...) end
 local encapsulate  = function ()
   if LibDebug and AlarDbg then
     LibDebug()
@@ -35,7 +36,9 @@ else
 	dprint(strconcat("Already loaded ",MAJOR_VERSION,'.',MINOR_VERSION," checked from ", __FILE__))
 	return
 end
+---@diagnostic disable-next-line: undefined-field
 local off=(_G.RED_FONT_COLOR_CODE or '|cffff0000') .. (_G.VIDEO_OPTIONS_DISABLED or  'Off') .. ( _G.FONT_COLOR_CODE_CLOSE or '|r')
+---@diagnostic disable-next-line: undefined-field
 local on=(_G.GREEN_FONT_COLOR_CODE or '|cff00ff00') .. (_G.VIDEO_OPTIONS_ENABLED or 'On') .. ( _G.FONT_COLOR_CODE_CLOSE or '|r')
 local nop=function() end
 local pp=print -- Keeping a handy plain print around
@@ -82,7 +85,7 @@ local GetContainerNumSlots=C_Container.GetContainerNumSlots
 local GetContainerItemID=C_Container.GetContainerItemID
 local GetContainerItemLink=C_Container.GetContainerItemLink
 local GetContainerNumFreeSlots=C_Container.GetContainerNumFreeSlots
-local GetItemInfo=GetItemInfo
+local GetItemInfo=C_Item.GetItemInfo
 local UnitHealth=UnitHealth
 local UnitHealthMax=UnitHealthMax
 local setmetatable=setmetatable
@@ -92,11 +95,9 @@ local error=error
 local tinsert=tinsert
 local debugstack=debugstack
 local ipairs=ipairs
-local GetAddOnMetadata=GetAddOnMetadata
 local format=format
 local tostringall=tostringall
 local tonumber=tonumber
-local strconcat=strconcat
 local strjoin=strjoin
 local strsplit=strsplit
 local select=select
@@ -339,25 +340,25 @@ function lib:NewAddon(target,...)
 	options.name=name
 	options.first=true
 	options.libstub=__FILE__
-	options.version=GetAddOnMetadata(name,'Version') or "Internal"
+	options.version=C_AddOns.GetAddOnMetadata(name,'Version') or "Internal"
 	if (options.version:sub(1,1)=='@') then
-		options.version=GetAddOnMetadata(name,'X-Version') or "Internal"
+		options.version=C_AddOns.GetAddOnMetadata(name,'X-Version') or "Internal"
 	end
 	local b,e=options.version:find(" ")
 	if b and b>1 then
 		options.version=options.version:sub(1,b-1)
 	end
-	options.revision=GetAddOnMetadata(name,'X-revision') or "Alpha"
+	options.revision=C_AddOns.GetAddOnMetadata(name,'X-revision') or "Alpha"
 	if (options.revision:sub(1,1)=='@') then
 		options.revision='Development'
 	end
 	options.prettyversion=format("%s (Revision: %s)",tostringall(options.version,options.revision))
-	options.title=GetAddOnMetadata(name,"title") or 'No title'
-	options.notes=GetAddOnMetadata(name,"notes") or 'No notes'
+	options.title=C_AddOns.GetAddOnMetadata(name,"title") or 'No title'
+	options.notes=C_AddOns.GetAddOnMetadata(name,"notes") or 'No notes'
 	options.libinit=MAJOR_VERSION .. ' ' .. MINOR_VERSION
 	-- Setting sensible default for mandatory fields
-	options.ID=GetAddOnMetadata(name,"X-ID") or name
-	options.DATABASE=GetAddOnMetadata(name,"X-Database") or "db" .. options.ID
+	options.ID=C_AddOns.GetAddOnMetadata(name,"X-ID") or name
+	options.DATABASE=C_AddOns.GetAddOnMetadata(name,"X-Database") or ("db" .. options.ID)
 	lib.toggles[target]={}
 	if customOptions then
 		for k,v in pairs(customOptions) do
@@ -389,7 +390,7 @@ end
 function lib:NewSubModule(name,...)
 	local obj=self:NewModule(name,...)
 	-- To avoid strange interactions
-	obj.OnInitialized=function()end -- placeholder
+	obj.OnInitialized=function(...)end -- placeholder
 	obj.OnInitialize=function(self,...) return  self:OnInitialized(...) end
 	obj.OnEnable=nil
 	obj.OnDisable=nil
@@ -426,7 +427,7 @@ function lib:GetCurrencyInfo(id)
     t.quantity,
     t.iconFileID,
     t.quantityEarnedThisWeek,
-    t.maxWeeklyQuantiti,
+    t.maxWeeklyQuantity,
     t.maxQuantity,
     t.discovered,
     t.quality

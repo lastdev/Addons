@@ -56,8 +56,9 @@ end
 ---Registers the function be called when the module is unloaded.
 ---@protected
 ---@param func fun() The function to call
-function MODULE_METHODS:OnModuleUnload(func)
-	private.componentByModule[self]:_SetModuleUnloadFunc(self, func)
+---@param isLate? boolean Runs the unload as late as possible in the process
+function MODULE_METHODS:OnModuleUnload(func, isLate)
+	private.componentByModule[self]:_SetModuleUnloadFunc(self, func, isLate)
 end
 
 local MODULE_MT = {
@@ -84,6 +85,7 @@ local LibTSMComponent = LibTSMClass.DefineClass("LibTSMComponent") ---@class Lib
 ---@field moduleLoadTime number
 ---@field moduleUnloadFunc fun()?
 ---@field moduleUnloadTime number
+---@field moduleUnloadIsLate boolean
 
 ---@private
 function LibTSMComponent:__init(name)
@@ -92,6 +94,7 @@ function LibTSMComponent:__init(name)
 	self._classTypes = {} ---@type table<string,Class>
 	self._initOrder = {} ---@type LibTSMModuleContext[]
 	self._loadOrder = {} ---@type LibTSMModuleContext[]
+	self._lateUnload = {} ---@type LibTSMModuleContext[]
 	self._dependencies = {} ---@type table<string,LibTSMComponent>
 end
 
@@ -168,6 +171,7 @@ function LibTSMComponent:Init(path)
 		moduleLoadTime = nil,
 		moduleUnloadFunc = nil,
 		moduleUnloadTime = nil,
+		moduleUnloadIsLate = nil,
 	}
 	-- Store a reference to the context by both the module object and the path
 	self._moduleContext[path] = context
@@ -251,10 +255,11 @@ function LibTSMComponent:_SetModuleLoadFunc(module, func)
 end
 
 ---@private
-function LibTSMComponent:_SetModuleUnloadFunc(module, func)
+function LibTSMComponent:_SetModuleUnloadFunc(module, func, isLate)
 	local context = self._moduleContext[module]
 	assert(context and not context.moduleUnloadFunc and not context.moduleUnloadTime and type(func) == "function")
 	context.moduleUnloadFunc = func
+	context.moduleUnloadIsLate = isLate or false
 end
 
 ---@private
@@ -286,18 +291,48 @@ function LibTSMComponent:_LoadAll()
 end
 
 ---@private
-function LibTSMComponent:_UnloadAll()
-	-- Unload in the opposite order we loaded
-	while #self._loadOrder > 0 do
-		local context = tremove(self._loadOrder) ---@type LibTSMModuleContext
-		if not context.moduleUnloadTime then
-			context.moduleUnloadTime = 0
-			if context.moduleUnloadFunc then
-				local startTime = self.GetTime()
-				context.moduleUnloadFunc()
-				context.moduleUnloadTime = self.GetTime() - startTime
-			end
+function LibTSMComponent:_UnloadAll(maxTime)
+	if maxTime == math.huge then
+		-- Don't mutate our `_loadOrder` queue
+		assert(#self._lateUnload == 0)
+		for _, context in ipairs(self._loadOrder) do
+			self:_UnloadModule(context)
 		end
+	else
+		-- Unload in the opposite order we loaded
+		while #self._loadOrder > 0 and self.GetTime() < maxTime do
+			local context = tremove(self._loadOrder) ---@type LibTSMModuleContext
+			context.moduleUnloadTime = self:_UnloadModule(context)
+		end
+	end
+	-- Run the late unload functions
+	while #self._lateUnload > 0 and self.GetTime() < maxTime do
+		local context = tremove(self._lateUnload) ---@type LibTSMModuleContext
+		local startTime = self.GetTime()
+		context.moduleUnloadFunc()
+		context.moduleUnloadTime = self.GetTime() - startTime
+	end
+	if maxTime == math.huge then
+		assert(#self._lateUnload == 0)
+		return true
+	end
+	return #self._loadOrder == 0 and #self._lateUnload == 0
+end
+
+---@param context LibTSMModuleContext
+function LibTSMComponent:_UnloadModule(context)
+	if context.moduleUnloadTime then
+		return context.moduleUnloadTime
+	end
+	if context.moduleUnloadIsLate then
+		tinsert(self._lateUnload, context)
+		return nil
+	elseif context.moduleUnloadFunc then
+		local startTime = self.GetTime()
+		context.moduleUnloadFunc()
+		return self.GetTime() - startTime
+	else
+		return 0
 	end
 end
 
@@ -339,11 +374,16 @@ function LibTSMCore.LoadAll()
 end
 
 ---Unloads all modules.
-function LibTSMCore.UnloadAll()
+---@param maxTime number The max time before aborting early
+---@return boolean
+function LibTSMCore.UnloadAll(maxTime)
 	-- Unload in the opposite order
 	for i = #private.components, 1, -1 do
-		private.components[i]:_UnloadAll()
+		if not private.components[i]:_UnloadAll(maxTime) then
+			return false
+		end
 	end
+	return true
 end
 
 ---Returns an iterator over all available modules.

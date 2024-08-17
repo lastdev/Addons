@@ -1,4 +1,4 @@
-## Interface: 100200
+## Interface: 110002
 ## Title: Simple Interrupt Announce Config
 ## Notes: Configuration panel for SIA
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)

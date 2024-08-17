@@ -1,5 +1,9 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "enUS", true)
 
+
+
+L["Show on Zone"] = true
+L["Show icons on zone map"] = true
 L["Allow left click to open journal to dungeon or raid"] = true
 L["Allow right click to create waypoints with TomTom"] = true
 L["Continent Alpha"] = true
@@ -7,6 +11,7 @@ L["Continent Scale"] = true
 L["Don't show discovered dungeons"] = true
 L["Enable TomTom integration"] = true
 L["Filter Options"] = true
+L["Hide all Khaz Algar nodes from the map"] = true
 L["Hide all Dragonflight nodes from the map"] = true
 L["Hide all Shadowlands nodes from the map"] = true
 L["Hide all BfA nodes from the map"] = true
@@ -17,6 +22,7 @@ L["Hide all Northrend nodes from the map"] = true
 L["Hide all Outland nodes from the map"] = true
 L["Hide all Pandaria nodes from the map"] = true
 L["Hide all Vanilla nodes from the map"] = true
+L["Hide Khaz Algar"] = true
 L["Hide Dragonflight"] = true
 L["Hide Shadowlands"] = true
 L["Hide Battle for Azeroth"] = true

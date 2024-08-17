@@ -2,7 +2,7 @@ local addonName, addon = ...;
 
 local CloseDropDownMenus = _G.CloseDropDownMenus;
 local GameTooltip = _G.GameTooltip;
-local IsAddOnLoaded = _G.IsAddOnLoaded;
+local IsAddOnLoaded = _G.C_AddOns.IsAddOnLoaded;
 local ToggleDropDownMenu = _G.ToggleDropDownMenu;
 local TomTom = _G.TomTom;
 local UIDropDownMenu_AddButton = _G.UIDropDownMenu_AddButton;

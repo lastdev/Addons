@@ -1,8 +1,8 @@
-## Interface: 100207
+## Interface: 110002
 ## Title: LittleSnitch
 ## Notes: Customizable reports for interrupts, defensive and offensive dispels, taunts, misdirects, cc breaks, combat res and non-combat res
 ## Author: Birckin
-## Version: 1.0
+## Version: 1.3
 
 ## SavedVariables: LittleSnitchDB
 

@@ -1,6 +1,6 @@
 # TL;DR Missions
 
-##  (2024-07-24)
+##  (2024-08-14)
  
 
-- Update for 11.0  
+- Fix GetSpellInfo to C\_Spell.GetSpellInfo change  

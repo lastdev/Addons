@@ -16,6 +16,7 @@ local ItemLinked = TSM.LibTSMUI:Include("Util.ItemLinked")
 local DefaultUI = TSM.LibTSMWoW:Include("UI.DefaultUI")
 local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
+local AppHelper = TSM.LibTSMApp:Include("Service.AppHelper")
 local LibAHTab = LibStub("LibAHTab-1-0")
 local private = {
 	settings = nil,
@@ -201,7 +202,7 @@ function private.CreateMainFrame()
 		:SetStrata("HIGH")
 		:SetProtected(not ClientInfo.IsRetail() and private.settings.protectAuctionHouse)
 		:AddPlayerGold(private.settings)
-		:AddAppStatusIcon(TSM.AppHelper.GetRegion(), TSM.AppHelper.GetLastSync() or 0, TSM.AuctionDB.GetAppDataUpdateTimes())
+		:AddAppStatusIcon(AppHelper.GetRegion(), AppHelper.GetLastSync(), TSM.AuctionDB.GetAppDataUpdateTimes())
 		:AddSwitchButton(private.SwitchBtnOnClick)
 		:SetScript("OnHide", private.BaseFrameOnHide)
 	for _, info in ipairs(private.topLevelPages) do

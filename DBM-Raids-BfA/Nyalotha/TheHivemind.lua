@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2372, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(157253, 157254)--Ka'zir and Tek'ris
 mod:SetEncounterID(2333)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)--Refine when max number of mythic Volatile Eruption is known
@@ -32,8 +32,8 @@ mod:RegisterEventsInCombat(
 --General
 local warnDarkRecon							= mod:NewCastAnnounce(307569, 4)
 
-local specWarnTekrissHiveControl			= mod:NewSpecialWarningCount(307213, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(307213), nil, 2, 2)--Keep Together
-local specWarnKazirsHiveControl				= mod:NewSpecialWarningCount(307201, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(307201), nil, 2, 2)--Keep Apart
+local specWarnTekrissHiveControl			= mod:NewSpecialWarningTarget(307213, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(307213), nil, 2, 2)--Keep Together
+local specWarnKazirsHiveControl				= mod:NewSpecialWarningTarget(307201, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(307201), nil, 2, 2)--Keep Apart
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(313672, nil, nil, nil, 1, 8)
 
 local timerTekrissHiveControlCD				= mod:NewNextTimer(98.7, 307213, nil, nil, nil, 6, nil, nil, nil, 1, 5)
@@ -57,7 +57,7 @@ local warnNullification						= mod:NewTargetNoFilterAnnounce(313460, 4)--Might f
 
 local specWarnAcceleratedEvolution			= mod:NewSpecialWarningTargetChange(307637, nil, 75610, nil, 1, 2)
 local specWarnNullificationBlast			= mod:NewSpecialWarningDodgeCount(307968, nil, 158259, nil, 2, 2)
-local specWarnEchoingVoid					= mod:NewSpecialWarningMoveAway(307232, nil, nil, nil, 2, 2)
+local specWarnEchoingVoid					= mod:NewSpecialWarningMoveAwayCount(307232, nil, nil, nil, 2, 2)
 local specWarnFixate						= mod:NewSpecialWarningYou(308360, false, nil, nil, 1, 2)
 local specWarnEtropicEhco					= mod:NewSpecialWarningDodge(313692, nil, nil, nil, 3, 2)--Mythic
 

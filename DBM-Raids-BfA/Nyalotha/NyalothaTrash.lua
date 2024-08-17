@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NyalothaTrash", "DBM-Raids-BfA", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20240714045844")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -28,7 +28,7 @@ local yellFeartheVoidFades					= mod:NewShortFadesYell(316623)
 local specWarnPsychicDetonation				= mod:NewSpecialWarningMoveAway(316623, nil, nil, nil, 1, 2)
 local yellPsychicDetonation					= mod:NewYell(316623)
 local yellPsychicDetonationFades			= mod:NewShortFadesYell(316623)
-local specWarnAnnihilation					= mod:NewSpecialWarningDodgeCount(307403, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.dodge:format(307403), nil, 2, 2)
+local specWarnAnnihilation					= mod:NewSpecialWarningDodgeLoc(307403, nil, nil, nil, 2, 2)
 local specWarnDirgefromBelow				= mod:NewSpecialWarningInterrupt(310839, "HasInterrupt", nil, nil, 1, 2)
 local specWarnVoidBoltVolley				= mod:NewSpecialWarningInterrupt(311576, "HasInterrupt", nil, nil, 1, 2)
 

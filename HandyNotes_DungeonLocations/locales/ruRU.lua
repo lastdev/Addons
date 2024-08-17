@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_DungeonLocations", "ruRU")
 if not L then return end
 
+L["Show on Zone"] = "Показать в зоне"
+L["Show icons on zone map"] = "Показывает символы на карте зоны"
 L["Allow left click to open journal to dungeon or raid"] = "Щелкните левой кнопкой мыши, чтобы открыть страницу подземелья или рейда в Путеводителе по приключениям"
 L["Allow right click to create waypoints with TomTom"] = "Щелкните правой кнопкой мыши, чтобы создать путевые точки с помощью TomTom"
 L["Continent Alpha"] = "Непрозрачность на континенте"
@@ -8,6 +10,7 @@ L["Continent Scale"] = "Размер на континенте"
 L["Don't show discovered dungeons"] = "Не показывать обнаруженные подземелья"
 L["Enable TomTom integration"] = "Интеграция с TomTom "
 L["Filter Options"] = "Параметры фильтрации"
+L["Hide all Khaz Algar nodes from the map"] = "Скрыть все узлы Каз Алгар с карты"
 L["Hide all Dragonflight nodes from the map"] = "Скрыть все узлы Dragonflight с карты"
 L["Hide all Shadowlands nodes from the map"] = "Скрыть все узлы Shadowlands с карты"
 L["Hide all BfA nodes from the map"] = "Скрыть все метки Битвы за Азерот на карте"
@@ -18,6 +21,7 @@ L["Hide all Northrend nodes from the map"] = "Скрыть все метки Н�
 L["Hide all Outland nodes from the map"] = "Скрыть все метки Запределья на карте"
 L["Hide all Pandaria nodes from the map"] = "Скрыть все метки Пандарии на карте"
 L["Hide all Vanilla nodes from the map"] = "Скрыть все метки Классика на карте"
+L["Hide Khaz Algar"] = "Скрыть Каз Алгар"
 L["Hide Dragonflight"] = "спрятать дракона"
 L["Hide Shadowlands"] = "СкрыватьСкрывать Земли теней"
 L["Hide Battle for Azeroth"] = "Скрыть Битву за Азерот"

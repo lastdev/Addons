@@ -8,6 +8,7 @@ local TSM = select(2, ...) ---@type TSM
 local MainUI = TSM:NewPackage("MainUI") ---@type AddonPackage
 local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
+local AppHelper = TSM.LibTSMApp:Include("Service.AppHelper")
 local private = {
 	settings = nil,
 	topLevelPages = {},
@@ -69,7 +70,7 @@ function private.CreateMainFrame()
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
 		:SetStrata("HIGH")
 		:AddPlayerGold(private.settings)
-		:AddAppStatusIcon(TSM.AppHelper.GetRegion(), TSM.AppHelper.GetLastSync() or 0, TSM.AuctionDB.GetAppDataUpdateTimes())
+		:AddAppStatusIcon(AppHelper.GetRegion(), AppHelper.GetLastSync(), TSM.AuctionDB.GetAppDataUpdateTimes())
 		:SetScript("OnHide", private.BaseFrameOnHide)
 	for _, info in ipairs(private.topLevelPages) do
 		frame:AddNavButton(info.name, info.callback)

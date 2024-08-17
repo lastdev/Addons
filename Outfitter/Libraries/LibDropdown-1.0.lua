@@ -1,10 +1,5 @@
--- This library has been modified and so I've changed the major name to use an MC suffix. Changes are:
--- * Added support for a color parameter on items to tint the text
--- * Added an optional cleanup function to menus so their owner can be notified if they're released
--- * Added support for items with an icon
-
-local MAJOR = "LibDropdownMC-1.0"
-local MINOR = 4
+local MAJOR = "LibDropdown-1.0"
+local MINOR = 20240724
 
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
@@ -214,20 +209,25 @@ local function ReleaseInput(input)
 end
 
 local function MouseOver(frame)
-	local f
-	if GetMouseFocus then
-        f = GetMouseFocus()
-    elseif GetMouseFoci then
-        local foci = GetMouseFoci()
-        f = foci[1] or nil
-    end
-	while f and f ~= UIParent do
-		if f == frame then return true end
-		f = f:GetParent()
+    if GetMouseFocus then
+        local f = GetMouseFocus()
+        while f and f ~= UIParent do
+            if f == frame then return true end
+            f = f:GetParent()
+        end
+    else
+        local mouseFoci = GetMouseFoci()
+        for _, f in ipairs(mouseFoci) do
+            while f do
+                if f == frame then
+                    return true
+                end
+                f = f:GetParent()
+            end
+        end
 	end
 	return false
 end
-
 -- Frame methods
 function AddButton(self, b)
 	b:ClearAllPoints()
@@ -389,8 +389,10 @@ do
 	local function click(self)
 		if self.OnClick and self.clickable then
 			self.OnClick(self)
-			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
-			self:GetParent():GetRoot():Refresh()
+			PlaySound(856)
+			if self:IsShown() then
+				self:GetParent():GetRoot():Refresh()
+			end
 		end
 	end
 
@@ -568,11 +570,6 @@ function ReleaseFrame(f)
 		openMenu = nil
 	end
 	if f.released then return end
-
-	if f.cleanup then
-		f.cleanup()
-	end
-
 	f.released = true
 	f.data = nil
 	f.dataname = nil
@@ -664,11 +661,6 @@ do
 		b.option = v
 		b.dataname = k
 		b.refresh = grefresh
-
-		-- Tint with a color (mundocani)
-		if v.color then
-			b.text:SetTextColor(v.color.r, v.color.g, v.color.b, v.color.a)
-		end
 		return b
 	end
 
@@ -760,15 +752,6 @@ do
 				self:Enable()
 			end
 		end
-		if self.data.icon then
-			self.swatch:Show()
-			self.swatch.tex:Hide()
-			self.swatch:SetNormalTexture(self.data.icon)
-		else
-			self.swatch:Hide()
-			self.swatch.tex:Show()
-			self.swatch:SetNormalTexture([[Interface\ChatFrame\ChatFrameColorSwatch]])
-		end
 		return isDisabled
 	end
 
@@ -802,7 +785,9 @@ do
 		b.OnClick = function(self)
 			initInfo('execute')
 			runHandler(self, "func")
-			self:GetRoot():Refresh()
+			if self:IsShown() then
+				self:GetRoot():Refresh()
+			end
 		end
 	end
 
@@ -816,7 +801,9 @@ do
 		local function inputValueChanged(self, val)
 			initInfo('input')
 			runHandler(self:GetParent():GetParent(), "set", val)
-			self:GetParent():GetRoot():Refresh()
+			if self:IsShown() then
+				self:GetParent():GetRoot():Refresh()
+			end
 		end
 
 		function Ace3.input(k, v, parent)
@@ -872,7 +859,10 @@ do
 				local val = not runHandler(self, "get")
 				runHandler(self, "set", val)
 			end
-			self:GetRoot():Refresh()
+
+			if self:IsShown() then
+				self:GetRoot():Refresh()
+			end
 		end
 
 		function Ace3.toggle(k, v, parent)
@@ -909,7 +899,7 @@ do
 			local b = setup(k, v, parent)
 			b.swatch:Show()
 			b.clickable = false
-			b.refresh = refresh
+			 b.refresh = refresh
 			b.OnClick = function(self, r, g, b, a)
 				runHandler(self, "set", r, g, b, a)
 				self:GetRoot():Refresh()
@@ -1030,12 +1020,12 @@ do
 
 	do
 		local sortOptions = function(a, b)
-			if (b.order or 100) > (a.order or 100) then return true
-			elseif (b.order or 100) < (a.order or 100) then return false
-			elseif b.name:lower() > a.name:lower() then return true
-			else return false
-			end
+		if (b.order or 100) > (a.order or 100) then return true
+		elseif (b.order or 100) < (a.order or 100) then return false
+		elseif b.name:lower() > a.name:lower() then return true
+		else return false
 		end
+	end
 
 		function lib:OpenAce3Menu(t, parent)
 			assert(t and type(t) == "table", "Expected table, got "..type(t))
@@ -1214,9 +1204,24 @@ local t = {
 --[[function testlibdropdown()
 	LibStub("LibDropdown-1.0"):OpenAce3Menu(t)
 end]]
+if UIDropDownMenu_HandleGlobalMouseEvent then
+	hooksecurefunc("UIDropDownMenu_HandleGlobalMouseEvent", function(button, event)
+		if openMenu and event == "GLOBAL_MOUSE_DOWN" and (button == "LeftButton" or button == "RightButton") then
+			for i = 0, frameCount - 1 do
+				if _G["LibDropdownFrame" .. i]:IsMouseOver() then return end
+			end
 
-WorldFrame:HookScript("OnMouseDown", function()
-	if openMenu then
-		openMenu = openMenu:Release()
-	end
-end)
+			openMenu:Release()
+		end
+	end)
+else
+	lib.mousecallback = EventRegistry:RegisterFrameEventAndCallback("GLOBAL_MOUSE_DOWN",function(ownerID,button)
+		if openMenu and (button == "LeftButton" or button == "RightButton") then
+			for i = 0, frameCount - 1 do
+				if _G["LibDropdownFrame" .. i]:IsMouseOver() then return end
+			end
+
+			openMenu:Release()
+		end
+	end)
+end

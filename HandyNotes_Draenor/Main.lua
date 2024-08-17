@@ -429,8 +429,8 @@ end
 
 function HandyNotes_Draenor:WorldEnter()
 
-    HandyNotes_Draenor.db.profile.Integration.DBM.Loaded = IsAddOnLoaded("DBM-Core")
-    HandyNotes_Draenor.db.profile.Integration.TomTom.Loaded = IsAddOnLoaded("TomTom")
+    HandyNotes_Draenor.db.profile.Integration.DBM.Loaded = C_AddOns.IsAddOnLoaded("DBM-Core")
+    HandyNotes_Draenor.db.profile.Integration.TomTom.Loaded = C_AddOns.IsAddOnLoaded("TomTom")
     
     local HandyNotes_DraenorDropdownMenu = CreateFrame("Frame", "HandyNotes_DraenorDropdownMenu")
     HandyNotes_DraenorDropdownMenu.displayMode = "MENU"

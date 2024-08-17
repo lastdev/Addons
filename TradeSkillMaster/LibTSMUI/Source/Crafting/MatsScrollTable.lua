@@ -144,7 +144,7 @@ function MatsScrollTable.__private:_HandleQueryUpdate()
 	wipe(self._createGroupsData)
 	for _, row in self._query:Iterator() do
 		local itemString, name, professions, totalQuantity = row:GetFields("itemString", "name", "professions", "totalQuantity")
-		tinsert(self._data.name, "|T"..ItemInfo.GetTexture(itemString)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or name))
+		tinsert(self._data.name, "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or name))
 		tinsert(self._data.name_tooltip, itemString)
 		tinsert(self._data.price, self.DEFERRED_DATA)
 		tinsert(self._data.professions, professions)

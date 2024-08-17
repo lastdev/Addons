@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 75.5 - 2024-08-15
+### Fixed
+- Library bug
+
+## 75.4 - 2024-08-12
+### Fixed
+- Turned off errors again when translations are missing
+
+## 75.3 - 2024-08-12
+### Changed
+- Updated all localization
+
 ## 75.2 - 2024-07-31
 ### Added
 - Radiant Echoes are now available as Event Reminders

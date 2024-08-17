@@ -1,8 +1,8 @@
-## Interface: 100200
+## Interface: 110002
 ## Title: Simple Interrupt Announce
 ## Notes: A simple interrupt announcer
 ## Author: BeathsCurse (Bowmore - Silvermoon EU)
-## Version: 1.0.51
+## Version: 1.0.55
 ## SavedVariablesPerCharacter: SIACFG
 
 SimpleInterruptAnnounce.lua

@@ -43,9 +43,8 @@ function PlayerGoldText:SetSettings(settings)
 	assert(settings and not self._settings)
 	self._settings = settings
 	self:SetTooltip(self:__closure("_GetTooltip"))
-	self:AddCancellable(settings:PublisherForKeys("money", "showTotalMoney", "regionWide")
+	self:SetTextPublisher(settings:PublisherForKeys("money", "showTotalMoney", "regionWide", "warbankMoney")
 		:MapWithFunction(private.SettingsToText)
-		:CallMethod(self, "SetText")
 	)
 	return self
 end
@@ -96,6 +95,7 @@ function private.SettingsToText(settings)
 				amount = amount + money
 			end
 		end
+		amount = amount + settings.warbankMoney
 	end
 	return Money.ToStringForUI(amount)
 end

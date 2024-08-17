@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2366, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20240714045844")
 mod:SetCreatureID(157439)--Fury of N'Zoth
 mod:SetEncounterID(2337)
 mod:SetUsedIcons(1, 2, 3)
@@ -72,7 +72,7 @@ local timerMandibleSlamCD					= mod:NewCDTimer(12.7, 315947, nil, "Tank", 2, 5, 
 mod:AddSetIconOption("SetIconAdaptiveMembrane", 316848, true, 0, {1, 2, 3})
 mod:AddNamePlateOption("NPAuraOnMembrane2", 306990, false)
 ----Gaze of Madness
-local specWarnGazeOfMadness					= mod:NewSpecialWarningSwitch("ej20565", "Dps", nil, nil, 1, 2)
+local specWarnGazeOfMadness					= mod:NewSpecialWarningSwitchCount("ej20565", "Dps", nil, nil, 1, 2)
 
 local timerGazeofMadnessCD					= mod:NewCDCountTimer(58, "ej20565", nil, nil, nil, 1, 307008, DBM_COMMON_L.DAMAGE_ICON)
 --Stage 2: Subcutaneous Tunnel

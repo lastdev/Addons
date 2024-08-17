@@ -9,79 +9,26 @@ local function parseData ()
   local rareInfo = addon.rareData;
   local treasureInfo = addon.treasureData;
 
-  local function parseMountData ()
-    local mountData = addon.mountData;
-
-    if (mountData == nil) then return end
-
-    for mountId, rareList in pairs(mountData) do
-      if (type(rareList) ~= 'table') then
-        rareList = {rareList};
-      end
-
-      for x = 1, #rareList, 1 do
-        local rareId = rareList[x];
-        local rareData = rareInfo[rareId];
-
-        if (rareData == nil) then
-          rareInfo[rareId] = {mounts = {mountId}};
-        elseif (rareData.mounts == nil) then
-          rareData.mounts = {mountId};
-        else
-          tinsert(rareData.mounts, mountId);
-        end
-      end
-    end
-
-    addon.mountData = nil;
-  end
-
-  local function parseToyData ()
-    local toyData = addon.toyData;
-
-    if (toyData == nil) then return end
-
-    for toyId, rareList in pairs(toyData) do
-      if (type(rareList) ~= 'table') then
-        rareList = {rareList};
-      end
-
-      for x = 1, #rareList, 1 do
-        local rareId = rareList[x];
-        local rareData = rareInfo[rareId];
-
-        if (rareData == nil) then
-          rareInfo[rareId] = {toys = {toyId}};
-        elseif (rareData.toys == nil) then
-          rareData.toys = {toyId};
-        else
-          tinsert(rareData.toys, toyId);
-        end
-      end
-    end
-
-    addon.toyData = nil;
-  end
-
   local function parseAchievementdata ()
     local achievementData = addon.achievementData;
 
     if (achievementData == nil) then return end
 
-    local function addAchievementInfo (infoTable, id, achievementId, criteriaIndex, description)
+    local function addAchievementInfo (infoTable, id, achievementId, criteriaIndex)
       local data;
 
       infoTable[id] = infoTable[id] or {};
       data = infoTable[id];
 
-      data.achievements = data.achievements or {};
-      tinsert(data.achievements, {
-        id = achievementId,
-        index = criteriaIndex,
-      });
-
-      if (data.description == nil and description ~= nil) then
-        data.description = description;
+      if (data.achievements == nil) then
+        data.achievements = achievementId;
+        data.criteria = criteriaIndex;
+      elseif (type(data.achievements) == 'table') then
+        tinsert(data.achievements, achievementId);
+        tinsert(data.criteria, criteriaIndex);
+      else
+        data.achievements = {data.achievements, achievementId};
+        data.criteria = {data.criteria, criteriaIndex};
       end
 
       return data;
@@ -92,8 +39,8 @@ local function parseData ()
 
       if (rareAchievementData == nil) then return end
 
-      local function addRareAchievementInfo (rareId, achievementId, criteriaIndex, description)
-        local rareData = addAchievementInfo(rareInfo, rareId, achievementId, criteriaIndex, description);
+      local function addRareAchievementInfo (rareId, achievementId, criteriaIndex)
+        local rareData = addAchievementInfo(rareInfo, rareId, achievementId, criteriaIndex);
 
         if (rareData.name == nil and criteriaIndex > 0) then
           local numCriteria = GetAchievementNumCriteria(achievementId);
@@ -142,8 +89,7 @@ local function parseData ()
               rareData = {id = rareData};
             end
 
-            addRareAchievementInfo(rareData.id, achievement,
-                rareData.index or x, rareData.description);
+            addRareAchievementInfo(rareData.id, achievement, rareData.index or x);
           end
         end
       end
@@ -157,8 +103,8 @@ local function parseData ()
 
       if (treasureAchievementData == nil) then return end
 
-      local function addTreasureAchievementInfo (treasureId, achievementId, criteriaIndex, description)
-        addAchievementInfo(treasureInfo, treasureId, achievementId, criteriaIndex, description);
+      local function addTreasureAchievementInfo (treasureId, achievementId, criteriaIndex)
+        addAchievementInfo(treasureInfo, treasureId, achievementId, criteriaIndex);
       end
 
       local function parseDynamicData ()
@@ -166,12 +112,11 @@ local function parseData ()
 
         if (achievementList == nil) then return end
 
-        for x = 1, #achievementList, 1 do
-          local achievementId = achievementList[x];
+        for _, achievementId in ipairs(achievementList) do
           local numCriteria  = GetAchievementNumCriteria(achievementId);
 
-          for y = 1, numCriteria, 1 do
-            local criteriaInfo = {GetAchievementCriteriaInfo(achievementId, y)};
+          for x = 1, numCriteria, 1 do
+            local criteriaInfo = {GetAchievementCriteriaInfo(achievementId, x)};
             local treasureId = criteriaInfo[8];
 
             -- -- this is for detecting unhandled rares
@@ -179,7 +124,7 @@ local function parseData ()
             --   print(y, criteriaInfo[1], '-', rareId);
             -- end
 
-            addTreasureAchievementInfo(treasureId, achievementId, y);
+            addTreasureAchievementInfo(treasureId, achievementId, x);
           end
         end
       end
@@ -198,7 +143,7 @@ local function parseData ()
             end
 
             addTreasureAchievementInfo(treasureData.id, achievement,
-                treasureData.index or -1, treasureData.description);
+                treasureData.index or -1);
           end
         end
       end
@@ -211,12 +156,8 @@ local function parseData ()
     parseTreasureData();
   end
 
-  parseMountData();
-  parseToyData();
   parseAchievementdata();
-
   addon.achievementData = nil;
-  addon.mountData = nil;
 end
 
 --[[ Some character and anchievement data is only available after PLAYER_LOGIN

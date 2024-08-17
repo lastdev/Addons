@@ -160,7 +160,7 @@ function LedgerAuctionsScrollTable.__private:_HandleQueryUpdate()
 	wipe(self._createGroupsData)
 	for _, row in self._query:Iterator() do
 		local itemString, player, stackSize, auctions, recordTime = row:GetFields("filteredItemString", "player", "stackSize", "auctions", "time")
-		tinsert(self._data.item, "|T"..ItemInfo.GetTexture(itemString)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?"))
+		tinsert(self._data.item, "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?"))
 		tinsert(self._data.item_tooltip, itemString)
 		tinsert(self._data.player, player)
 		tinsert(self._data.stackSize, stackSize)

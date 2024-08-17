@@ -15,12 +15,13 @@ local Sync = TSM.LibTSMService:Include("Sync")
 local Theme = TSM.LibTSMService:Include("UI.Theme")
 local ChatFrame = TSM.LibTSMWoW:Include("API.ChatFrame")
 local SessionInfo = TSM.LibTSMWoW:Include("Util.SessionInfo")
-local PlayerInfo = TSM.Include("Service.PlayerInfo")
+local PlayerInfo = TSM.LibTSMApp:Include("Service.PlayerInfo")
 local Tooltip = TSM.LibTSMUI:Include("Tooltip")
 local UIElements = TSM.LibTSMUI:Include("Util.UIElements")
 local UIUtils = TSM.LibTSMUI:Include("Util.UIUtils")
 local CustomString = TSM.LibTSMTypes:Include("CustomString")
 local StaticPopupDialog = TSM.LibTSMWoW:IncludeClassType("StaticPopupDialog")
+local AppHelper = TSM.LibTSMApp:Include("Service.AppHelper")
 local private = {
 	settingsDB = nil,
 	settings = nil,
@@ -153,7 +154,7 @@ function private.GetGeneralSettingsFrame()
 	wipe(private.altRealmSourceKeys)
 	tinsert(private.altRealmSources, L["None"])
 	tinsert(private.altRealmSourceKeys, "")
-	for altRealm in pairs(TSM.AppHelper.GetAltRealms()) do
+	for altRealm in AppHelper.AltRealmIterator() do
 		tinsert(private.altRealmSources, altRealm)
 		tinsert(private.altRealmSourceKeys, altRealm)
 	end

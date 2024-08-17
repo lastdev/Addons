@@ -101,6 +101,13 @@ function Item.GetPetInfo(speciesId)
 	return name, texture, petTypeId
 end
 
+---Requests loading of all pet info.
+function Item.LoadPetInfo()
+	for i = 1, C_PetJournal.GetNumPets() do
+		C_PetJournal.GetPetInfoByIndex(i)
+	end
+end
+
 ---Returns whether or not items of a class can have variations (potentially only with a specific sub class ID).
 ---@param classId number The class ID
 ---@return boolean canHaveVariations

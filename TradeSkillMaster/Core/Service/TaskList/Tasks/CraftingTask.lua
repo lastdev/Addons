@@ -5,7 +5,8 @@
 -- ------------------------------------------------------------------------------ --
 
 local TSM = select(2, ...) ---@type TSM
-local CraftingTask = TSM.Include("LibTSMClass").DefineClass("CraftingTask", TSM.TaskList.Task)
+local LibTSMClass = LibStub("LibTSMClass")
+local CraftingTask = LibTSMClass.DefineClass("CraftingTask", TSM.TaskList.Task)
 local TradeSkill = TSM.LibTSMWoW:Include("API.TradeSkill")
 local ClientInfo = TSM.LibTSMWoW:Include("Util.ClientInfo")
 local L = TSM.Locale.GetTable()
@@ -116,7 +117,7 @@ function CraftingTask.OnMouseDown(self)
 		local craftString = self._craftStrings[1]
 		local quantity = self._craftQuantity[craftString]
 		Log.Info("Preparing %s (%d)", craftString, quantity)
-		TSM.Crafting.ProfessionUtil.PrepareToCraft(RecipeString.FromCraftString(craftString), nil, quantity)
+		TSM.Crafting.ProfessionUtil.PrepareToCraft(RecipeString.FromCraftString(craftString), quantity)
 	end
 end
 

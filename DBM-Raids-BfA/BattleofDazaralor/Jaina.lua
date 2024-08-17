@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2343, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024602")
+mod:SetRevision("20240721192722")
 mod:SetCreatureID(146409)
 mod:SetEncounterID(2281)
 mod:SetUsedIcons(1, 2, 3)
@@ -77,7 +77,7 @@ local yellAvalanche						= mod:NewPosYell(285254)
 local specWarnAvalancheTaunt			= mod:NewSpecialWarningTaunt(287565, nil, nil, nil, 1, 2)
 local specWarGraspofFrost				= mod:NewSpecialWarningDispel(287626, "Healer", nil, 3, 1, 2)
 local specWarnFreezingBlast				= mod:NewSpecialWarningDodge(285177, "Tank", nil, nil, 2, 2)
-local specWarnRingofIce					= mod:NewSpecialWarningRun(285459, nil, nil, nil, 4, 2)
+local specWarnRingofIce					= mod:NewSpecialWarningRunCount(285459, nil, nil, nil, 4, 2)
 --Stage Two: Frozen Wrath
 local specWarnIceBlockTaunt				= mod:NewSpecialWarningTaunt(287490, nil, nil, nil, 3, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(288297, nil, nil, nil, 1, 8)
@@ -181,10 +181,11 @@ function mod:HeartofFrostTarget(targetname, uId)
 	end
 end
 
+---@param self DBMMod
 local function graspCollection(self, finish)
 	if finish then
 		graspActive = false
-		if self:CheckDispelFilter() then
+		if self:CheckDispelFilter("magic") then
 			specWarGraspofFrost:Show(table.concat(chillingCollector, "<, >"))
 			specWarGraspofFrost:Play("helpdispel")
 		end

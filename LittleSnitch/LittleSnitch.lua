@@ -304,6 +304,9 @@ local IsInInstance, UnitName, UnitBuff, UnitExists, UnitGUID, GetSpellLink, GetU
 GetNumGroupMembers, IsInGuild, GetTime, UnitGroupRolesAssigned, GetPartyAssignment = 
 IsInInstance, UnitName, UnitBuff, UnitExists, UnitGUID, GetSpellLink, GetUnitName, GetPlayerInfoByGUID, GetRealZoneText, 
 GetNumGroupMembers, IsInGuild, GetTime, UnitGroupRolesAssigned, GetPartyAssignment
+local GetSpellInfo = C_Spell and C_Spell.GetSpellInfo or GetSpellInfo
+local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
+local UnitDebuff = C_TooltipInfo and C_TooltipInfo.GetUnitDebuff or UnitDebuff
 
 local COMBATLOG_OBJECT_RAIDTARGET_MASK, COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_TYPE_NPC, COMBATLOG_OBJECT_TYPE_PET, 
 COMBATLOG_OBJECT_TYPE_GUARDIAN, COMBATLOG_OBJECT_REACTION_FRIENDLY, COMBATLOG_OBJECT_REACTION_HOSTILE, COMBATLOG_OBJECT_AFFILIATION_OUTSIDER = 
@@ -325,7 +328,7 @@ local function convertIDstoNames(spellIDs)
         if (not spellName) then
             if not ignoreMissing[v] then LitteSnitch:Print("MISSING SPELLID: "..v) end
         else
-            result[spellName] = true
+            result[spellName.name] = true
         end
     end
     return result
@@ -741,7 +744,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
         if (ccinfo.dmgspellamt[dstGUID] == 0 and new_dmgspellamt > 0) or -- first direct dmg
         (new_dmgspellamt > 0 and -- newer direct dmg overwrites older direct dmg, except
         -- not (addon:IsTank(ccinfo.dmgunitname[dstGUID]) and not addon:IsTank(srcname))) -- non-tanks dont overwrite tanks
-        not (addon:IsTank(dstGUID) and not addon:IsTank(srcGUID))) -- non-tanks dont overwrite tanks
+        not (addon:IsTank(dstname) and not addon:IsTank(srcname))) -- non-tanks dont overwrite tanks
         then
             ccinfo.dmgspellid[dstGUID] = new_dmgspellid
             ccinfo.dmgspellamt[dstGUID] = new_dmgspellamt
@@ -763,7 +766,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
     elseif db.ccbreak and is_playersrc and is_hostiledst
     and (subevent == "SPELL_AURA_APPLIED" or subevent == "SPELL_AURA_REFRESH")
     and spellID ~= 24131 -- ignore the dot component of wyvern sting
-    and ccSpellNames[spellname] then        
+    and ccSpellNames[spellname] then
         local expires
         local now = GetTime()
         db.cctime = db.cctime or {}
@@ -805,7 +808,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
     and is_hostiledst
     and spellID ~= 24131 -- ignore the dot component of wyvern sting
     and ccSpellNames[spellname] then
-        addon:IsTank(srcGUID)
+    -- and not addon:IsTank(srcname) then
         local throttleResetTime = 15;
         local now = GetTime();
         local expired = false

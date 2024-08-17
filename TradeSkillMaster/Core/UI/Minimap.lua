@@ -35,7 +35,7 @@ function Minimap.OnInitialize(settingsDB)
 		OnTooltipShow = function(tooltip)
 			local cs = Theme.GetColor("INDICATOR_ALT"):GetTextColorPrefix()
 			local ce = "|r"
-			tooltip:AddLine("TradeSkillMaster "..TSM.GetVersion())
+			tooltip:AddLine("TradeSkillMaster "..TSM.LibTSMUtil.GetVersionStr())
 			tooltip:AddLine(format(L["%sLeft-Click%s to open the main window"], cs, ce))
 			tooltip:AddLine(format(L["%sDrag%s to move this button"], cs, ce))
 		end,

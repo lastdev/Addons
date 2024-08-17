@@ -1536,6 +1536,9 @@ function SlashCmdList.DETAILS (msg, editbox)
 	elseif (msg == "generateracialslist") then
 		Details.GenerateRacialSpellList()
 
+	elseif (msg == "bug") then
+		dumpt(DETAILS_FAILED_ACTOR or {"No bug to report here."})
+
 	elseif (msg == "spellcat") then
 		Details.Survey.OpenSurveyPanel()
 
@@ -2272,6 +2275,9 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							if (not mapName) then
 								mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.challengeMapID)
 							end
+							if (not mapName and keystoneInfo.mapID) then
+								mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mapID)
+							end
 
 							mapName = mapName or "map name not found"
 
@@ -2411,6 +2417,18 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 
 				f:SetScript("OnHide", function()
 					openRaidLib.UnregisterCallback(DetailsKeystoneInfoFrame, "KeystoneUpdate", "OnKeystoneUpdate")
+				end)
+
+				f:SetScript("OnUpdate", function(self, deltaTime)
+					if (not self.lastUpdate) then
+						self.lastUpdate = 0
+					end
+
+					self.lastUpdate = self.lastUpdate + deltaTime
+					if (self.lastUpdate > 1) then
+						self.lastUpdate = 0
+						self.RefreshData()
+					end
 				end)
 			end
 

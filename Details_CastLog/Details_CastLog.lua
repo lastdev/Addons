@@ -2,6 +2,8 @@
 --adicionar uma lupa no scroll do "zoom'
 --implementar no details o nome do boss e o tempo de luta
 
+--spells_cast_timeline is saving within the combatObject
+
 do
 	local Details = Details
 	if (not Details) then

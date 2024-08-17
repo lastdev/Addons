@@ -1,6 +1,18 @@
+== v1.46 - 31st July 2024
+* Grammatical "," added to the Ebonchill tooltips
+* Two new Deadwood entires because, well, who doesn't love Kharazan?
+* The Stonewrought Dam @ Loch Modan / Wetlands now gets an entry
+  (All the above with J Staats source credited)
+
+== v1.45 - 24th July 2024
+* TOC update to 11.0.0
+
 == v1.44 - 22nd July 2024
 * Added Wetlands eggs on a peak
+* Notes about Vanilla textures
+* Programmer Isle added
 * Various Vanilla trivia sourced from J Staats "The WoW Diary"
+* Internal formatting to help make it easier to edit on a laptop while travelling
 
 == v1.43 - 27th June 2024
 * Missing text for one of the Dalaran tips fixed

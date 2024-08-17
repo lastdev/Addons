@@ -63,8 +63,47 @@ local function queryItem (itemId)
   end
 end
 
+local function checkAchievement (achievementId, criteriaIndex)
+  local achievementInfo = {GetAchievementInfo(achievementId)};
+  local text = achievementInfo[2];
+  local completed = achievementInfo[4];
+  -- local completedOnThisCharacter = achievementInfo[13];
+  local icon = achievementInfo[10];
+
+  if (completed) then
+    text = setTextColor(text, COLOR_MAP.green);
+  else
+    text = setTextColor(text, COLOR_MAP.red);
+  end
+
+  -- some achievements and their indices are set statically, so we make
+  -- sure the criteria exists
+  if (criteriaIndex > 0 and
+      criteriaIndex <= GetAchievementNumCriteria(achievementId)) then
+    local criteriaInfo = {GetAchievementCriteriaInfo(achievementId, criteriaIndex)};
+    local criteria = criteriaInfo[1];
+    local fulfilled = criteriaInfo[3];
+
+    if (fulfilled) then
+      completed = true;
+      criteria = setTextColor(criteria, COLOR_MAP.green);
+    else
+      criteria = setTextColor(criteria, COLOR_MAP.red);
+    end
+
+    text = text .. ' - ' .. criteria;
+  end
+
+  return {
+    completed = completed,
+    text = text,
+    icon = icon,
+  };
+end
+
 local function getAchievementInfo (rareData)
   local achievementList = rareData.achievements;
+  local criteriaList = rareData.criteria;
 
   if (achievementList == nil) then return nil end
 
@@ -72,56 +111,63 @@ local function getAchievementInfo (rareData)
   local totalCompleted = true;
   local totalIcon;
 
-  for x = 1, #achievementList, 1 do
-    local achievementData = achievementList[x];
-    local achievementId = achievementData.id;
-    local achievementInfo = {GetAchievementInfo(achievementId)};
-    local text = achievementInfo[2];
-    local completed = achievementInfo[4];
-    -- local completedOnThisCharacter = achievementInfo[13];
-    local criteriaIndex = achievementData.index;
-    local icon = achievementInfo[10];
+  local function handleAchievement (achievement, criteria, index)
+    local info = checkAchievement(achievement, criteria);
 
-    if (completed) then
-      text = setTextColor(text, COLOR_MAP.green);
-    else
-      text = setTextColor(text, COLOR_MAP.red);
-    end
-
-    -- some achievements and their indices are set statically, so we make
-    -- sure the criteria exists
-    if (criteriaIndex > 0 and
-        criteriaIndex <= GetAchievementNumCriteria(achievementId)) then
-      local criteriaInfo = {GetAchievementCriteriaInfo(achievementId, criteriaIndex)};
-      local criteria = criteriaInfo[1];
-      local fulfilled = criteriaInfo[3];
-
-      if (fulfilled) then
-        completed = true;
-        criteria = setTextColor(criteria, COLOR_MAP.green);
-      else
-        criteria = setTextColor(criteria, COLOR_MAP.red);
-      end
-
-      text = text .. ' - ' .. criteria;
-    end
-
-    if (not completed) then
+    if (info.completed == false) then
       totalCompleted = false;
-      totalIcon = totalIcon or icon;
+      totalIcon = totalIcon or info.icon;
     end
 
-    list[x] = {
-      completed = completed,
-      text = text,
-      icon = icon,
-    };
+    list[index] = info;
+  end
+
+  if (type(achievementList) == 'table') then
+    for index, achievement in ipairs(achievementList) do
+      handleAchievement(achievement, criteriaList[index], index);
+    end
+  else
+    handleAchievement(achievementList, criteriaList, 1);
   end
 
   return {
     completed = totalCompleted,
     icon = totalIcon,
     list = list,
+  };
+end
+
+local function checkToy (toy)
+  local collected = PlayerHasToy(toy);
+  local toyName;
+  local icon;
+  local queried;
+
+  -- data is not cached yet
+  if (IsItemDataCachedByID(toy)) then
+    local toyInfo = {GetItemInfo(toy)};
+
+    toyName = toyInfo[1];
+    icon = toyInfo[10] or ICON_MAP.skullGreen;
+  else
+    toyName = 'waiting for data...';
+    icon = GetItemIcon(toy) or ICON_MAP.skullGreen;
+    queried = toy;
+    queryItem(toy);
+  end
+
+  if (collected) then
+    toyName = setTextColor(toyName, COLOR_MAP.green);
+  else
+    toyName = setTextColor(toyName, COLOR_MAP.red);
+  end
+
+  return {
+    text = toyName,
+    name = toyName,
+    icon = icon,
+    collected = collected,
+    queried = queried,
   };
 end
 
@@ -134,46 +180,48 @@ local function getToyInfo (rareData)
   local totalCollected = true;
   local totalIcon;
 
-  for x = 1, #toyList, 1 do
-    local toy = toyList[x];
-    local collected = PlayerHasToy(toy);
-    local toyName;
-    local icon;
-    local queried;
+  local function handleToy (toy, index)
+    local info = checkToy(toy);
 
-    -- data is not cached yet
-    if (IsItemDataCachedByID(toy)) then
-      local toyInfo = {GetItemInfo(toy)};
-
-      toyName = toyInfo[1];
-      icon = toyInfo[10] or ICON_MAP.skullGreen;
-    else
-      toyName = 'waiting for data...';
-      icon = GetItemIcon(toy) or ICON_MAP.skullGreen;
-      queried = toy;
-      queryItem(toy);
-    end
-
-    if (collected) then
-      toyName = setTextColor(toyName, COLOR_MAP.green);
-    else
-      toyName = setTextColor(toyName, COLOR_MAP.red);
+    if (info.collected == false) then
       totalCollected = false;
-      totalIcon = totalIcon or icon;
+      totalIcon = totalIcon or info.icon;
     end
 
-    list[x] = {
-      text = toyName,
-      name = toyName,
-      collected = collected,
-      queried = queried,
-    };
+    list[index] = info;
+  end
+
+  if (type(toyList) == 'table') then
+    for index, toy in ipairs(toyList) do
+      handleToy(toy, index);
+    end
+  else
+    handleToy(toyList, 1);
   end
 
   return {
     collected = totalCollected,
     icon = totalIcon,
     list = list,
+  };
+end
+
+local function checkMount (mountId)
+  local mountInfo = {GetMountInfoByID(mountId)};
+  local mountName = mountInfo[1];
+  local icon = mountInfo[3] or ICON_MAP.skullOrange;
+  local collected = mountInfo[11];
+
+  if (collected) then
+    mountName = setTextColor(mountName, COLOR_MAP.green);
+  else
+    mountName = setTextColor(mountName, COLOR_MAP.red);
+  end
+
+  return {
+    collected = collected,
+    icon = icon,
+    text = mountName,
   };
 end
 
@@ -186,26 +234,23 @@ local function getMountInfo (rareData)
   local totalCollected = true;
   local totalIcon;
 
-  for x = 1, #mountList, 1 do
-    local mountId = mountList[x];
-    local mountInfo = {GetMountInfoByID(mountId)};
-    local mountName = mountInfo[1];
-    local icon = mountInfo[3] or ICON_MAP.skullOrange;
-    local collected = mountInfo[11];
+  local function handleMount (mount, index)
+    local info = checkMount(mount);
 
-    if (collected) then
-      mountName = setTextColor(mountName, COLOR_MAP.green);
-    else
-      mountName = setTextColor(mountName, COLOR_MAP.red);
+    if (info.collected == false) then
       totalCollected = false;
-      totalIcon = totalIcon or icon;
+      totalIcon = totalIcon or info.icon;
     end
 
-    list[x] = {
-      collected = collected,
-      icon = icon,
-      text = mountName,
-    };
+    list[index] = info;
+  end
+
+  if (type(mountList) == "table") then
+    for index, mountId in ipairs(mountList) do
+      handleMount(mountId, index);
+    end
+  else
+    handleMount(mountList, 1);
   end
 
   return {
@@ -344,7 +389,7 @@ local function readTreasureInfo (treasureId)
   end
 
   treasureData.achievementInfo = getAchievementInfo(treasureData);
-  treasureData.collected = IsQuestFlaggedCompleted(treasureId);
+  treasureData.collected = treasureData.quest and IsQuestFlaggedCompleted(treasureData.quest);
   treasureCache[treasureId] = treasureData;
 
   return treasureData;

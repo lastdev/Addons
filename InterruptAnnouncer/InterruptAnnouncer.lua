@@ -1,5 +1,6 @@
 local UnitGUID = UnitGUID;
 local IsInInstance = IsInInstance;
+local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
 local InstanceType = "none"
 local RaidIconMaskToIndex =
 {
@@ -54,7 +55,7 @@ interr:SetScript("OnEvent", function(self, event, ...)
                     msgType = "RAID";
                 end
 
-                SendChatMessage(msg, msgType); -- should NEVER happen
+                SendChatMessage(msg, msgType);
             else
                 DEFAULT_CHAT_FRAME:AddMessage(msg);
             end

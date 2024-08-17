@@ -7,7 +7,6 @@
 local TSM = select(2, ...) ---@type TSM
 local Log = TSM.LibTSMUtil:Include("Util.Log")
 local MoneyFormatter = TSM.LibTSMUtil:IncludeClassType("MoneyFormatter")
-local StaticPopupDialog = TSM.LibTSMWoW:IncludeClassType("StaticPopupDialog")
 local Addon = TSM.LibTSMWoW:Include("API.Addon")
 local ChatFrame = TSM.LibTSMWoW:Include("API.ChatFrame")
 local AuctioningOperation = TSM.LibTSMSystem:Include("AuctioningOperation")
@@ -18,7 +17,7 @@ local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
 local ItemFilter = TSM.LibTSMService:IncludeClassType("ItemFilter")
 local VendorBuy = TSM.LibTSMService:Include("Item.VendorBuy")
 local Sync = TSM.LibTSMService:Include("Sync")
-local Inventory = TSM.Include("Service.Inventory")
+local Inventory = TSM.LibTSMApp:Include("Service.Inventory")
 local L = TSM.Locale.GetTable()
 local CustomStringFormat = TSM.LibTSMUI:Include("Util.CustomStringFormat")
 local private = {
@@ -27,12 +26,8 @@ local private = {
 	oribosExchangeTemp = {},
 }
 do
-	-- Show a message if we were updated
-	if C_AddOns.GetAddOnMetadata("TradeSkillMaster", "Version") ~= "v4.14.6" and not TSM.IsTest() then
-		StaticPopupDialog.ShowWithOk("TSM was just updated and may not work properly until you restart WoW.")
-	end
 	-- Basic module configuration
-	Log.SetLoggingToChatEnabled(TSM.IsTest())
+	Log.SetLoggingToChatEnabled(TSM.LibTSMUtil.IsTestVersion())
 	MoneyFormatter.SetLargeNumberSeperator(LARGE_NUMBER_SEPERATOR)
 end
 
@@ -58,9 +53,9 @@ function TSM.OnInitialize(settingsDB)
 
 	-- Configure the logger
 	ChatFrame.SetActive(private.settings.chatFrame)
-	if TSM.IsTest() then
+	if TSM.LibTSMUtil.IsTestVersion() then
 		private.settings.chatLoggingEnabled = true
-	elseif not TSM.IsDev() then
+	elseif not TSM.LibTSMUtil.IsDevVersion() then
 		private.settings.chatLoggingEnabled = false
 	end
 	Log.SetLoggingToChatEnabled(private.settings.chatLoggingEnabled)

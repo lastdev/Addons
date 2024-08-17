@@ -3,7 +3,7 @@
 
                                         A Path Less Travelled
 
-                                       v1.44 - 22nd July 2024
+                                       v1.46 - 31st July 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

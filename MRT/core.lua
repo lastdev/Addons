@@ -1,8 +1,8 @@
---	20.06.2024
+--	14.08.2024
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 4880
+MRT.V = 4900
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -32,6 +32,7 @@ MRT.locale = GetLocale()
 do
 	local version, buildVersion, buildDate, uiVersion = GetBuildInfo()
 	
+	MRT.clientBuildVersion = buildVersion
 	MRT.clientUIinterface = uiVersion
 	local expansion,majorPatch,minorPatch = (version or "5.0.0"):match("^(%d+)%.(%d+)%.(%d+)")
 	MRT.clientVersion = (expansion or 0) * 10000 + (majorPatch or 0) * 100 + (minorPatch or 0)
@@ -190,15 +191,29 @@ CLEUFrame.CLEUList = CLEUList
 CLEUFrame.CLEUModules = CLEUModules
 
 
-local CLEU_realmKey = "%-"..MRT.SDB.realmKey:gsub("[ %-]","").."$"
+local CLEU_realmKey = MRT.SDB.realmKey:gsub("[ %-]","")
 
 local function CLEU_OnEvent()
 	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,
 		val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13
 				= CombatLogGetCurrentEventInfo()
 
-	if type(sourceName)=="string" and sourceName:find(CLEU_realmKey) then sourceName = strsplit("-",sourceName) end
-	if type(destName)=="string" and destName:find(CLEU_realmKey) then destName = strsplit("-",destName) end
+	if type(sourceName)=="string" then
+		local name,server,region = strsplit("-",sourceName)
+		if server == CLEU_realmKey then 
+			sourceName = name
+		elseif region then 
+			sourceName = name .. "-" .. server
+		end
+	end
+	if type(destName)=="string" then
+		local name,server,region = strsplit("-",destName)
+		if server == CLEU_realmKey then 
+			destName = name
+		elseif region then 
+			destName = name .. "-" .. server
+		end
+	end
 
 	for i=1,CLEUListLen do
 		CLEUList[i](timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13)
@@ -759,7 +774,7 @@ MRT.frame:SetScript("OnEvent",function (self, event, ...)
 		MRT.AddonLoaded = true
 
 		if not MRT.isClassic then
-			if not VMRT.Addon.EJ_CHECK_VER or VMRT.Addon.EJ_CHECK_VER ~= MRT.clientUIinterface then
+			if not VMRT.Addon.EJ_CHECK_VER or VMRT.Addon.EJ_CHECK_VER ~= MRT.clientUIinterface or (((type(IsTestBuild)=="function" and IsTestBuild()) or (type(IsBetaBuild)=="function" and IsBetaBuild())) and VMRT.Addon.EJ_CHECK_VER_PTR ~= MRT.clientBuildVersion) then
 				C_Timer.After(10,function()
 					MRT.F.EJ_AutoScan()
 				end)

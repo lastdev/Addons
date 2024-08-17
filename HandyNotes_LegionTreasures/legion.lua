@@ -14,7 +14,10 @@ ns.hiddenConfig = {
 
 ns.defaultsOverride = {
     show_on_minimap = true,
-    groupsHidden = {junk=true,},
+    groupsHidden = {junk=true, hippogryph=true,},
 }
 
 ns.groups["junk"] = "Junk"
+ns.groups["hippogryph"] = "{spell:215159:Long Forgotten Hippogryph}"
+ns.groups["withered"] = "{questname:43943:Withered Army Training}"
+ns.groups["kosumoth"] = "{npc:111573:Kosumoth}"

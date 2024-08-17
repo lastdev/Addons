@@ -9,6 +9,11 @@ vars.spellData.ccspells = {
 	28271, -- Polymorph Turtle
 	28272, -- Polymorph Pig
 	61780, -- Polymorph Turkey
+    126819, -- Polymorph Porcupine
+    161353, -- Polymorph Polar Bear Cub
+    161354, -- Polymorph Monkey
+    277787, -- Polymorph Baby Direhorn
+    391622, -- Polymorph Duck
 	9484, -- Shackle Undead
 	3355, -- Freezing Trap (Effect)
 	6770, -- Sap
