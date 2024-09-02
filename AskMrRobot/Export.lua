@@ -190,6 +190,11 @@ local function scanBank()
 	local bagList = {}
 	table.insert(bagList, BANK_CONTAINER)
 	table.insert(bagList, REAGENTBANK_CONTAINER)
+	table.insert(bagList, Enum.BagIndex.AccountBankTab_1)
+	table.insert(bagList, Enum.BagIndex.AccountBankTab_2)
+	table.insert(bagList, Enum.BagIndex.AccountBankTab_3)
+	table.insert(bagList, Enum.BagIndex.AccountBankTab_4)
+	table.insert(bagList, Enum.BagIndex.AccountBankTab_5)
 	for bagId = NUM_TOTAL_EQUIPPED_BAG_SLOTS + 1, NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS do
 		table.insert(bagList, bagId)
 	end
@@ -411,36 +416,55 @@ local function readTalentConfig(configId)
 	if not config or config.type ~= Enum.TraitConfigType.Combat then return nil end
 	
 	local treeIds = config["treeIDs"]
+
+	-- at least for a while, scanning nodes would return subtrees not available to this spec, so we need to do a pre-scan for available subtrees
+	-- and use that to actively prune out bad subtrees... very gross	
+
+	local allowedSubtrees = {}
+	local activeSubtreeId = 0
+	for i = 1, #treeIds do
+    	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
+			local node = C_Traits.GetNodeInfo(configId, nodeId)
+			if node.ID and node.isVisible and node.maxRanks > 0 and node.type == 3 then
+				-- this is the special node that picks your subtree, scan its entries to see which are allowed and also which is active
+				for e = 1, #node.entryIDs do
+					local entry = C_Traits.GetEntryInfo(configId, node.entryIDs[e])
+					allowedSubtrees[entry.subTreeID] = true
+					if node.activeEntry and node.activeEntry.entryID == node.entryIDs[e] then
+						activeSubtreeId = entry.subTreeID
+					end
+				end
+			end
+		end
+	end
+
+	-- NOTE: the below will also pick up ranks in inactive subtrees... kind of annoying, but that is how they remember your selections
+	--       when switching back and forth, and then the selected subtree implicitly disables the inactive tree
+	
   	for i = 1, #treeIds do
     	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
 			local node = C_Traits.GetNodeInfo(configId, nodeId)
-			if node.ID and node.isVisible and node.maxRanks > 0 then
-
-				-- the root node of subtree will say it is active with one rank, even if the subtree is not active
-				local realRank = node.activeRank
-				if node.subTreeID and not node.subTreeActive then
-					realRank = 0
-				end
+			if node.ID and node.isVisible and node.maxRanks > 0 and (not node.subTreeID or allowedSubtrees[node.subTreeID]) then
 
 				-- need to check node type b/c blizz abandoned a few selection node entries in the data which still show up in a scan here... super annoying and gross
 				if #node.entryIDs > 1 and node.type == 2 then
 					talMap[node.ID] = {}
 					for e = 1, #node.entryIDs do
 						if node.activeEntry and node.entryIDs[e] == node.activeEntry.entryID then
-							table.insert(talMap[node.ID], realRank)
+							table.insert(talMap[node.ID], node.activeRank)
 						else
 							table.insert(talMap[node.ID], 0)
 						end
 					end
 				elseif node.type ~= 3 then
-					-- we skip the fake-ish node that chooses the hero tree (type 3), we can infer it if any subtree node is active
+					-- we skip the fake-ish node that chooses the hero tree (type 3), we have pre-parsed it above
 					
 					if node.activeEntry and node.activeRank then
-						talMap[node.ID] = { realRank }
+						talMap[node.ID] = { node.activeRank }
 					else
 						talMap[node.ID] = { 0 }
 					end
-				end
+				end				
 			end
 
 			-- for reference if ever need it
@@ -470,7 +494,7 @@ local function readTalentConfig(configId)
 	return {
 		id = configId,
 		name = config.name,
-		tals = table.concat(tals, "")
+		tals = table.concat(tals, "") .. "_" .. activeSubtreeId
 	}
 end
 
@@ -569,6 +593,19 @@ local function scanTalents()
 	]]
 end
 
+local function scanHighestItemLevels()
+
+	local lvls = {}
+
+	for k,v in pairs(Enum.ItemRedundancySlot) do
+		local chr, acct = C_ItemUpgrade.GetHighWatermarkForSlot(v)
+		lvls[v] = {chr, acct}
+		--print(k .. " " .. v .. " " .. chr .. " " .. acct)
+	end	
+
+	Amr.db.char.HighestItemLevels = lvls	
+end
+
 -- Returns a data object containing all information about the current player needed for an export:
 -- gear, spec, reputations, bag, bank, and void storage items.
 function Amr:ExportCharacter()
@@ -579,6 +616,9 @@ function Amr:ExportCharacter()
 	-- cache latest-seen equipped gear for current spec
 	local spec = GetSpecialization()	
 	Amr.db.char.Equipped[spec] = data.Equipped[spec]
+
+	-- scan highest ilvls in each slot used for determining upgrade discounts
+	scanHighestItemLevels()
 
 	-- scan current inventory just before export so that it is always fresh
 	scanBags()
@@ -594,6 +634,8 @@ function Amr:ExportCharacter()
 	
 	-- scan the great vault for potential rewards this week
 	scanGreatVault()
+
+	data.HighestItemLevels = Amr.db.char.HighestItemLevels
 
 	data.SavedTalentConfigs = Amr.db.char.TalentConfigs.ConfigList
 	data.LastTalentConfig = Amr.db.char.TalentConfigs.LastConfig

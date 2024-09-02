@@ -2,6 +2,7 @@
 -- esES Localization file
 
 local L = LibStub("AceLocale-3.0"):NewLocale("LittleSnitch", "esES")
+if not L then return end
 
 L["Enable LittleSnitch"] = "Habilitar LittleSnitch"
 L["Enable or disable LittleSnitch"] = "Habilitar o deshabilitar LittleSnitch"

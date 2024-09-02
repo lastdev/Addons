@@ -822,7 +822,7 @@ function private.BulkInsertMats(craftString)
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
 		local categorySkillLevel = TradeSkill.GetCurrentCategorySkillLevel(private.recipeInfoCache[craftString].categoryID)
 		local level = CraftString.GetLevel(craftString)
-		local salvageItems, salvageQuantityMin = TradeSkill.GetSalvagaeInfo(spellId, level)
+		local salvageItems, salvageQuantityMin = TradeSkill.GetSalvageInfo(spellId, level)
 		if salvageItems then
 			local matString = MatString.Create(MatString.TYPE.REQUIRED, 1, salvageItems)
 			private.matDB:BulkInsertNewRow(craftString, matString, salvageQuantityMin, "")

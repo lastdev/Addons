@@ -450,7 +450,7 @@ end
 ---@param level? number The recipe level
 ---@return number[]? itemIds
 ---@return number? quantityMin
-function TradeSkill.GetSalvagaeInfo(spellId, level)
+function TradeSkill.GetSalvageInfo(spellId, level)
 	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI))
 	local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, level)
 	if private.MapRecipeType(info.recipeType) ~= RECIPE_TYPE.SALVAGE then

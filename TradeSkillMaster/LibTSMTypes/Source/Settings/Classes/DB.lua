@@ -73,16 +73,16 @@ function SettingsDB.__static.New(name, schema, realmName, factionName, character
 		isValid = false
 	elseif not private.ValidateTable(tbl, schema:GetMinimumVersion()) then
 		-- Corrupted
-		assert(LibTSMTypes.IsDevVersion() or LibTSMTypes.IsTestVersion(), "DB is not valid!")
+		assert(not LibTSMTypes.IsDevVersion() and not LibTSMTypes.IsTestVersion(), "DB is not valid!")
 		isValid = false
 	elseif tbl._version == schema:GetVersion() and tbl._hash ~= schema:GetHash() then
 		-- The hash didn't match
-		assert(LibTSMTypes.IsDevVersion() or LibTSMTypes.IsTestVersion(), "Invalid settings hash! Did you forget to increase the version?")
+		assert(not LibTSMTypes.IsDevVersion() and not LibTSMTypes.IsTestVersion(), "Invalid settings hash! Did you forget to increase the version?")
 		isValid = false
 	elseif tbl._syncOwner and tbl._syncOwner[currentScopeKeys.sync] and tbl._syncOwner[currentScopeKeys.sync] ~= tbl._syncAccountKey[currentScopeKeys.factionrealm] then
 		-- We aren't the owner of this character, so wipe the DB and show a manual error
 		userError = true
-		assert(LibTSMTypes.IsDevVersion() or LibTSMTypes.IsTestVersion(), "Settings are corrupted due to manual copying of saved variables file")
+		assert(not LibTSMTypes.IsDevVersion() and not LibTSMTypes.IsTestVersion(), "Settings are corrupted due to manual copying of saved variables file")
 		isValid = false
 	end
 	if not isValid then

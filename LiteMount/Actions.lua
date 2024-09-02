@@ -242,11 +242,7 @@ ACTIONS['Buff'] = {
 
 ACTIONS['PreCast'] = {
     name = L.LM_PRECAST_ACTION,
-    description =
-        string.format("%s\n\n%s",
-            L.LM_PRECAST_DESCRIPTION,
-            FACTION_RED_COLOR:WrapTextInColorCode(L.LM_MACRO_NOT_ALLOWED)
-        ),
+    description = L.LM_PRECAST_DESCRIPTION,
     argType = 'list',
     toDisplay = SpellArgsToDisplay,
     handler =
@@ -256,6 +252,7 @@ ACTIONS['PreCast'] = {
                 if info and IsPlayerSpell(info.spellID) and info.castTime == 0 then
                     LM.Debug("  * setting preCast to spell " .. info.name)
                     context.preCast = info.name
+                    context.preUse = nil
                     return
                 end
             end
@@ -599,26 +596,43 @@ ACTIONS['CantMount'] = {
 --
 -- E.g, Mount [map:2234] DRAGONRIDING
 
-local CombatHandlerOverride = {
-    {
-        -- Tindral Sageswift, Amirdrassil (Dragonflight)
-        handler =
-            function (args, context)
-                if LM.Environment:IsMapInPath(2234) then
-                    local id, name = LM.Environment:GetEncounterInfo()
-                    if id and name then
-                        LM.Debug("  * matched encounter %s (%d)", name, id)
-                    end
-                    local mounts = LM.MountRegistry:FilterSearch('mt:402', 'COLLECTED')
-                    local randomStyle = LM.Options:GetOption('randomWeightStyle')
-                    local m = mounts:Random(context.random, randomStyle)
-                    if m then
-                        return m:GetCastAction()
-                    end
-                end
-            end,
-    },
-}
+local function SummonJournalMountDirect(...)
+    if IsMounted() then
+        Dismount()
+    else
+        local mounts = LM.MountRegistry:FilterSearch(..., 'JOURNAL', 'CASTABLE')
+        local m = mounts:Random()
+        if m then C_MountJournal.SummonByID(m.mountID) end
+    end
+end
+
+local function CombatHandlerOverride(args, context)
+    -- For speed these should try to return ASAP.
+
+    local id, name = LM.Environment:GetEncounterInfo()
+    if id and name then
+        LM.Debug("  * matched encounter %s (%d)", name, id)
+    end
+
+    -- Tindral Sageswift, Amirdrassil raid (Dragonflight)
+    if LM.Environment:IsMapInPath(2234) then
+        return LM.SecureAction:Execute(function () SummonJournalMountDirect('DRAGONRIDING') end)
+    end
+
+    -- The Dawnbreaker dungeon (The War Within)
+    -- Two boss fight (Speaker Shadowcrown and Rasha'nan) have flying in combat
+    -- enabled by a debuff, Radiant Light.
+    --      https://www.wowhead.com/spell=449042/radiant-light
+    -- Unfortunately it may not be enabled when you enter combat so we have to
+    -- override the whole instance.
+
+    local instanceID = select(8, GetInstanceInfo())
+    if instanceID == 2662 then
+        -- Because you can fly out of combat the CASTABLE checks work correctly
+        -- and there's no need to be fancy.
+        return LM.SecureAction:Execute(function () SummonJournalMountDirect('DRAGONRIDING') end)
+    end
+end
 
 -- Combat handler is a bit magic because it's called from PLAYER_REGEN_DISABLED
 -- rather than by user activation, so you can't tell if it's being called from
@@ -634,12 +648,10 @@ ACTIONS['Combat'] = {
                 return LM.SecureAction:Macro(macrotext)
             end
             -- Check for an override combat setting
-            for _, info in ipairs(CombatHandlerOverride) do
-                local act = info.handler(args, context)
-                if act then
-                    LM.Debug("  * setting action to %s", act:GetDescription())
-                    return act
-                end
+            local act = CombatHandlerOverride(args, context)
+            if act then
+                LM.Debug("  * setting action to %s", act:GetDescription())
+                return act
             end
             -- Otherwise use the default actions
             LM.Debug("  * setting action to default combat macro")
@@ -775,19 +787,16 @@ ACTIONS['Use'] = {
 
 ACTIONS['PreUse'] = {
     name = L.LM_PREUSE_ACTION,
-    description =
-        string.format("%s\n\n%s",
-            L.LM_PREUSE_DESCRIPTION,
-            FACTION_RED_COLOR:WrapTextInColorCode(L.LM_MACRO_NOT_ALLOWED)
-        ),
+    description = L.LM_PREUSE_DESCRIPTION,
     argType = 'list',
     toDisplay = ItemArgsToDisplay,
     handler =
         function (args, context)
             local action = ACTIONS['Use'].handler(args, context)
             if action and action.item then
-                LM.Debug("  * setting preCast to item " .. action.item)
-                context.preCast = action.item
+                LM.Debug("  * setting preUse to item " .. action.item)
+                context.preUse = action.item
+                context.preCast = nil
                 return
             end
         end

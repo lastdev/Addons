@@ -37,6 +37,13 @@ local _amrLDB = LibStub("LibDataBroker-1.1"):NewDataObject(Amr.ADDON_NAME, {
 })
 local _icon = LibStub("LibDBIcon-1.0")
 
+function AskMrRobot_AddonCompartmentFunc(self, button)
+	if button == "LeftButton" then
+		Amr:Toggle()
+	elseif button == "RightButton" then
+		Amr:EquipGearSet()
+	end
+end
 
 -- initialize the database
 local function initializeDb()
@@ -60,6 +67,7 @@ local function initializeDb()
 			GearSetups = {},           -- imported gear sets
 			JunkData = {},             -- imported data about items that can be vendored/scrapped/disenchanted
 			ExtraEnchantData = {},     -- enchant id to enchant display information and material information
+			HighestItemLevels = {},    -- highest item levels for determining upgrade discounts
 			Logging = {                -- character logging settings
 				Enabled = false,       -- whether logging is currently on or not
 				LastZone = nil,        -- last zone the player was in
@@ -729,5 +737,5 @@ end
 
 
 function Amr:Test()
-
+	
 end

@@ -9,11 +9,10 @@ end
 
 function SlotMixin.GetDefaultSlots()
     return {
-        HeadSlot = addon.new(SlotMixin, {
-            enchantable = true, -- [Incandescent Essence] from Amirdrassil raid quest
-        }),
+        -- HeadSlot = addon.new(SlotMixin, {
+        -- }),
         NeckSlot = addon.new(SlotMixin, {
-            socketable = 3,
+            socketable = 2,
         }),
         -- ShoulderSlot = addon.new(SlotMixin, {
         -- }),
@@ -38,14 +37,10 @@ function SlotMixin.GetDefaultSlots()
                 return invType == 'INVTYPE_WEAPON' or invType == 'INVTYPE_2HWEAPON'
             end,
         }),
-        HandsSlot = addon.new(SlotMixin, {
-        }),
-        WaistSlot = addon.new(SlotMixin, {
-            enchantable = true,
-            condition = function ()
-                return not addon.config.db.ignoreBelt
-            end,
-        }),
+        -- HandsSlot = addon.new(SlotMixin, {
+        -- }),
+        -- WaistSlot = addon.new(SlotMixin, {
+        -- }),
         LegsSlot = addon.new(SlotMixin, {
             enchantable = true,
         }),
@@ -54,9 +49,11 @@ function SlotMixin.GetDefaultSlots()
         }),
         Finger0Slot = addon.new(SlotMixin, {
             enchantable = true,
+            socketable = 2,
         }),
         Finger1Slot = addon.new(SlotMixin, {
             enchantable = true,
+            socketable = 2,
         }),
         -- Trinket0Slot = addon.new(SlotMixin, {
         -- }),

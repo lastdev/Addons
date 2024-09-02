@@ -66,6 +66,16 @@ st.abandonedHope = "Love the signs and the victims strung up.\nHmmm... someone o
 				.."been gnawing at their legs!"
 st.abercrombieAndFitch = "Okay you've found Abercrombie. Great!\n"
 				.."But now the other part. What could it be?\nHint: Do the quest chain!"
+st.alteracValleyTitle = "The BG that spawned a million memes"
+st.alteracValley = 	  "((Alterac Valley has a storied history of balancing.\n"
+					.."It's a BG most of us have learnt to despise. In his\n"
+					.."book, John Staats revealed that AV was added late\n"
+					.."in the development of Vanilla. The idea was that\n"
+					.."it would also cater to players who didn't want to\n"
+					.."directly confront PvP enemies but instead farm\n"
+					.."monsters which in turn would unlock NPCs which\n"
+					.."would turn the tide of the battle. Thus the players\n"
+					.."were contributing meaningfully.\n\nSource: John Staats, The WoW Diary))"
 st.antonJermaine = "Two dwarves on a camping / drinking\nexpedition. What could possibly go\n"
 				.."wrong? Guess the \"locals\" scented\nsomething delicious?\n\nIt's more than I can bear!"
 st.aridensCamp = "Ariden's camp has been here since the first adventurers\n"
@@ -96,6 +106,13 @@ st.blackIce = "Yup. You wear a ring and you can see it!\nSounds cool? I thought 
 			.."(5) Kill Jin'do and loot him\n(6) Hand in etc\n\n"
 			.."\"Black Ice\" is a toy which rewards a cosmetic\n"
 			.."effect. It does NOT use a ring slot! Neat? Yup!!!"
+st.blackrockTitle = "What is the meaning of this intrusion?"
+st.blackrock = "((Of the ambience within Blackrock Mountain,\n"
+			.."designer John Staats had this to say:\n\n" ..colourHighlight
+			.."    Players would feel like they were sneaking\n"
+			.."    into areas they weren't supposed to go\n\n" ..colourPlaintext
+			.."when discussing the use of chains to act as bridges\n\n"
+			.."Source: John Staats, The WoW Diary))"
 st.broadsideBetty = "Well we hate to see her go,\nBut we love to watch her leave!\n"
 			.."She'll do her best for William\nAnd Wes and Mike and Steve!\n"
 			.."Her name is spread both far and wide!\nHer legend is renowned!\n"
@@ -117,7 +134,7 @@ st.christ = "((The goblin statue with outstretched arms is referring to\n"
 			.."\"Gamemaster Robes\", unobtainable be us mere\nmortals!"
 st.cutKharazan = "((Kharazan had a flooded sub-level but it was\n"
 			.."cut prior to the Vanilla release, as was a\nraid at the top of the tower and unfinished\n"
-			.."micro-dungeons around the tower.\n\nSource: J Staats, The WoW Diary\n\n"
+			.."micro-dungeons around the tower.\n\nSource: John Staats, The WoW Diary\n\n"
 			.."Yeah, the WoW devs were careful to remove\nall suggestions of cut content. And nothing\n"
 			.."eventually found it's way into the game, not\neven in The Burning Crusade. Not!!!))"
 st.darkmoonPortalA = "The Darkmoon Faire portal is exactly\nat this location when it comes around\n"
@@ -185,6 +202,18 @@ st.kibler = "Kibler has a storied history. These days,\nhe offers one last quest
 			.."A possible reward from the Terrokar\nfishing dailies is the \"Kibler's Bits\"\n"
 			.."recipe. If YOU eat the food then your\npet will be bigger for 20 minutes!"
 st.lonesomeCoral = "So curious. Why is this coral / sea\ngarden above all of the others?"
+st.mageAncientTitle = "You're in good company"
+st.mageAncient = "What happens when you accept a portal to,\n"
+				.."or as a mage you teleport to, Dalaran?\n"
+				.."You land exactly here! You'll die from fall\n"
+				.."damage.\n\n"
+				.."Oh, this is the ANCIENT portal version.\n\n"
+				.."No need to be embarrassed, plenty of\n"
+				.."suckers just like you. Hey lookie here!\n"
+				.."It's our mate Crusader Jorny the Deified,\n"
+				.."looking all Lightforged and squashed.\n\n"
+				.."Enjoy the 800 plus yard spirit walk!\n\n"
+				.."...must have been a \"troll\" mage"
 st.mawOfTheVoid = "If you've quested through here then you already know...\n\n"
 			.."This one is for those who've newly arrived!...\n\n"
 			.."Try dismounting over the Maw! Later, speak to Bielara\n"
@@ -193,6 +222,11 @@ st.mawOfTheVoid = "If you've quested through here then you already know...\n\n"
 			.."notice Telarius Voidstrider, a Demon Hunter.\n\n"
 			.."Wait a moment, a Demon Hunter who first appeared\n"
 			.."during the Cataclysm? Sneaky telegraphing of things\nto come much later on!"
+st.mechanoArachnid = "Might impressive Mechano-\narachnid this!\n\n"
+			.."But... where are the owners?\nWhat befell of them?\n\n"
+			.."Interestingly... it's identical to the\nextra large mechano-tanks at\n"
+			.."Crushcog's arsenal and... its\nalmost all the way to Coldridge\nValley!\n\n"
+			.."You think the dwarven recruits\nwere trying to steal this\ngnomish technology?"
 st.miaMalkova = "((In 2021 Blizz, in response to the very serious\n"
 			.."controversies at the time, set about not just\n"
 			.."purging well known male personalities but also\nsome in-game window dressing.\n\n"
@@ -206,11 +240,24 @@ st.miaMalkova = "((In 2021 Blizz, in response to the very serious\n"
 			.."Her bf Rich is worth researching too for his\n"
 			.."sudden social silence in December 2022 due to\na very very bad allegation))"
 st.miaMalkovaTitle = "Goldshire ERP Is Tame (In Comparison)"
-st.mechanoArachnid = "Might impressive Mechano-\narachnid this!\n\n"
-			.."But... where are the owners?\nWhat befell of them?\n\n"
-			.."Interestingly... it's identical to the\nextra large mechano-tanks at\n"
-			.."Crushcog's arsenal and... its\nalmost all the way to Coldridge\nValley!\n\n"
-			.."You think the dwarven recruits\nwere trying to steal this\ngnomish technology?"
+st.moltenCoreTitle = "You have awakened me too soon, Executus!"
+st.moltenCore = "((Just three weeks prior to Vanilla WoW going \"gold\",\n"
+			.."game designer Jeff Kaplan snuck into dungeon designer\n"
+			.."John Staats office and in whispered tones asked if he\n"
+			.."could quickly whip up a large raid dungeon\n\n"
+			..colourHighlight
+			.."    Nothing Fancy. Raiders don't care about art. Which is\n"
+			.."    terrible to say, but it's true. We need raid content.\n\n" ..colourPlaintext
+			.."Staats eagerly got to work and within a week he had Molten\n"
+			.."Core. Kaplan was ecstatic. Over the next few weeks things\n"
+			.."were added. The final design was so simple that it was 1/4\n"
+			.."the size of the smallest dungeon to date. Staats recalled\n\n" ..colourHighlight
+			.."    Despite the lack of thought and time I'd put into the\n"
+			.."    Molten Core, it was the only source of compliments I'd\n"
+			.."    ever received from fans.\n\n" ..colourPlaintext
+			.."Interestingly, Staats book revealed that Kaplan used fan\n"
+			.."made DPS meter beta AddOns in testing MC as Blizzard\n"
+			.."didn't have their own tools!\n\nSource: John Staats, The WoW Diary))"
 st.morgansPlotGlitch = "You've heard of glitching to fall through\n"
 			.."the world. Yes, it's all to do with the\nfamous unfinished crypts below Karazhan.\n\n"
 			.."On this occasion we WON'T be glitching.\n\nFirstly strip off all your armour you\n"
@@ -220,6 +267,9 @@ st.morgansPlotGlitch = "You've heard of glitching to fall through\n"
 			.."attack the Spirits. Let them kill you.\n\nSpirit walk back to here and rez inside\n"
 			.."the iron gate. Voilà! Not even a glitch!"
 st.nakada = "Just... volunteer!\n\nPssst... several outcomes, all harmless!"
+st.necropolisTitle = "Bring out your (forsaken) dead"
+st.necropolis = "The original name of the Undercity was \"Necropolis\".\n"
+			.."It's design is consistent with others such as Naxxramas"
 st.ollie = "Ollie is one spoilt pug!"
 st.petrifiedYojamba = "Careful of the basilisk. She scales up and packs a whallop!\n\n"
 			.."Oh... and all of those petrified Bloodscalp Shaman and\n"
@@ -289,12 +339,12 @@ st.stanLee = "Stanley is a homage to Stan Lee, the famous DC and\n"
 			.."    \"Face front, true believers!\"\n\n"..colourPlaintext
 			.."What a fitting tribute!\n\n    \"Nuf said\""
 st.stonewrought = "((Since Cataclysm, not much of the Stonewrought\n"
-			.."Dam remains, but did you known that J Staats,\n"
+			.."Dam remains, but did you known that John Staats,\n"
 			.."well known as the creator of Blackrock Mountain\n"
 			.."and its various dungeons, lots of other dungeons\n"
 			.."such as The Wailing Caverns, and almost all of\n"
 			.."the overland caves and mines, also built the\nStonewrought Dam!\n\n"
-			.."Source: J Staats, The WoW Diary\n\nLegend has it he built it stone by stone under\n"
+			.."Source: John Staats, The WoW Diary\n\nLegend has it he built it stone by stone under\n"
 			.."the watchfull eye of Franclorn Forgewright\nhimself, as punishment by the Dark Iron\n"
 			.."Dwarves for apparent slights against them\nwith his design of Blackrock Mountain))"
 st.stranglethornAmbience = "Just a really peacful location to level fishing. I can\n"
@@ -306,7 +356,7 @@ st.sundayStroll = "I just love these pathways\nthat connect the zones! <3"
 st.tallTower = "((The Kharazan tower was originally too tall\n"
 			.."for the game engine. No worries! It was sunk\n"
 			.."into a valley surrounded by mountains, with\nthe path leading to it now at the tower's\n"
-			.."midway point.\n\nSource: J Staats, The WoW Diary))"
+			.."midway point.\n\nSource: John Staats, The WoW Diary))"
 st.theUnknownSoldier = "So many questions. The two Dark Portal guardians. Why?\n\n"
 			.."If lucky, the Unknown Soldier warrior will be present,\n"
 			.."undead and kneeling at his own tomb.\n\n"
@@ -343,6 +393,13 @@ st.welcomeMachine = "The Cataclysm threw up some changes\nand good to see that t
 			.."story, which begins here, is so self\naware.\n\n"
 			.."Do yourself a favour and complete\nthis quest!"
 st.whiteOut = "Sadly, wouldn't be the first plane\nto slam into a mountain side"
+st.wingsTitle = "On a wing and a prayer"
+st.wings = 	"((During development it was unknown how\n"
+			.."long a dungeon would or should take to\n"
+			.."complete. Seeing the popularity of the\n"
+			.."shorter \"wing\" approach to the Scarlet\n"
+			.."Monastery design, developers used that\n"
+			.."as a blueprint for subsequent expansions.\n\nSource: John Staats, The WoW Diary))"
 st.yarrr = "((Perfect for International Talk Like A\nPirate Day... or any day for that matter..\n"
 			.."is my AddOn called \"Yarrr\" @ Curseforge.\n\n"
 			.."Lots of piratey themed random yells!\n\nGet it now while stocks last!))"
@@ -362,6 +419,19 @@ points[ ns.classicCata and 1417 or 14 ] = { -- Arathi Highlands
 points[ ns.classicCata and 1418 or 15 ] = { -- Badlands
 	[08747981] = { name="Now that was tricky!", tip=st.questNextToFM },
 	[09597845] = { name="Kibler's Exotic Pets", tip=st.kibler },
+	[58463689] = { name="Backstage Pass", staats=true, tip="What's this cave you ask?\n"
+						.."Oh, it's the back entrance\nto the Uldaman dungeon!\n\n"
+						.."((Bet you didn't known this!...\nBefore the great Cataclysm, we\n"
+						.."had to visit Uldaman several\ntimes for questing, etc. Players\n"
+						.."didn't like that and Blizzard\ndecided that going forward they'd\n"
+						.."try to design dungeons around\na single run through, with the\n"
+						.."emphasis on linearity.\n\nSource: John Staats, The WoW Diary))" },
+}
+points[ 35 ] = { -- Blackrock Mountain - Blackrock Depths
+	[66568411] = { name=st.moltenCoreTitle, tip=st.moltenCore, staats=true },
+}
+points[ 33 ] = { -- Blackrock Mountain - Blackrock Spire
+	[39745878] = { name=st.blackrockTitle, tip=st.blackrock, staats=true },
 }
 points[ ns.classicCata and 1419 or 17 ] = { -- Blasted Lands
 	[14491467] = { name="Abandoned Kirin Tor Camp", tip=st.ebonchill },
@@ -377,6 +447,8 @@ points[ ns.classicCata and 1428 or 36 ] = { -- Burning Steppes
 	[02677869] = { name="Jeremiah Seely", tip=st.jeremiahSeely },
 	[03955678] = { name="Hi Ho Hi Ho It's Off to the Expedition We Go...", tip=st.hiHoHiHo },
 	[20292411] = { name="Don't Look Down!", tip=st.secondHighestPeakEK },
+	[24243621] = { name=st.blackrockTitle, tip=st.blackrock, staats=true },
+	[24802217] = { name=st.moltenCoreTitle, tip=st.moltenCore, staats=true },
 	[34477856] = { name="Plugs", tip=st.plugs },
 	[54122388] = { name="Now that was tricky!", tip=st.questNextToFM },
 	[54952256] = { name="Kibler's Exotic Pets", tip=st.kibler },
@@ -505,7 +577,7 @@ points[ ns.classicCata and 1429 or 37 ] = { -- Elwynn Forest
 	[39000200] = { name="Scenic Route Taxi", tip="((Ever noticed a wonky flight path or rather\n"
 				.."indirect pathing between points?\n\nThat was because the Vanilla WoW developers\n"
 				.."were trying to minimise frame rate stress by\nflying through low impact areas.\n\n"
-				.."Source: J Staats, The WoW Diary.\n\nMy own take is that the IF <-> SW path was\n"
+				.."Source: John Staats, The WoW Diary.\n\nMy own take is that the IF <-> SW path was\n"
 				.."additionly avoiding the zone immediately to\n"
 				.."the north of SW as its use was not decided\nupon. And it was untextured to boot!\n\n"
 				.."As gorgeous as the scenic route is, it wears\n"
@@ -577,6 +649,9 @@ points[ ns.classicCata and 1942 or 95 ] = { -- Ghostlands
 points[ ns.classicCata and 1424 or 25 ] = { -- Hillsbrad Foothills
 	[03635215] = { name="It's the Same But It Isn't!", tip=st.shadowfangKeep },
 	[05774754] = { name="Paint it Pink... Just a Little Bit", tip=st.sparsePink },
+	[30913634] = { name=st.mageAncientTitle, tip=st.mageAncient },
+	[33230340] = { name=st.necropolisTitle, tip=st.necropolis },
+	[44624577] = { name=st.alteracValleyTitle, tip=st.alteracValley, staats=true },
 	[89393084] = { name=st.sundayStrollTitle, tip=st.sundayStroll },
 	[90960258] = { name="Have a Look Around", tip=st.caerDarrow },
 }
@@ -620,6 +695,7 @@ points[ ns.classicCata and 1433 or 49 ] = { -- Redridge Mountains
 points[ ns.classicCata and 1427 or 32 ] = { -- Searing Gorge
 	[20360403] = { name="Nice landing!", tip=st.planeCamp },
 	[35019356] = { name="Don't Look Down!", tip=st.secondHighestPeakEK },
+	[41389082] = { name=st.moltenCoreTitle, tip=st.moltenCore, staats=true },
 	[82819324] = { name="Now that was tricky!", tip=st.questNextToFM },
 	[83979137] = { name="Kibler's Exotic Pets", tip=st.kibler },
 }
@@ -634,6 +710,9 @@ points[ ns.classicCata and 1421 or 21 ] = { -- Silverpine Forest
 						.."Fondly (?) remembered by Horde Shaman!" },
 	[44766168] = { name="Paint it Pink... Just a Little Bit", tip=st.sparsePink },
 	[42306700] = { name="It's the Same But It Isn't!", tip=st.shadowfangKeep },
+	[73884869] = { name=st.mageAncientTitle, tip=st.mageAncient },
+	[76571056] = { name=st.necropolisTitle, tip=st.necropolis },
+	[89765961] = { name=st.alteracValleyTitle, tip=st.alteracValley, staats=true },
 }
 points[ ns.classicCata and 1453 or 84 ] = { -- Stormwind City
 	[42348168] = { npc=5496, name="I'm Green With Envy!", tip=st.sandahl },
@@ -845,13 +924,15 @@ points[ ns.classicCata and 1420 or 18 ] = { -- Tirisfal Glades
 					tip="Pop your head in the water and look around.\n\n"
 						.."Yeah, those skeleton fish seem alive enough to me!" },
 	[61367060] = { name="He has so much wood", tip=st.virility },
+	[61958187] = { name=st.necropolisTitle, tip=st.necropolis },
+	[82903276] = { name=st.wingsTitle, tip=st.wings, staats=true },
 	[88812656] = { name="The wall!", tip="Travelling north I hit a wall right here" },
 }
 points[ 20 ] = { -- Tirisfal Glades - Keeper's Rest - Tomb of Tyr
 	[37461241] = { name="So Many Bubbles!", tip=st.artifactWeapons, },
 }
 points[ 241 ] = { -- Twilight Highlands
-	[17357499] = { name="Sentenced to Hard Labour", tip=st.stonewrought },
+	[17357499] = { name="Sentenced to Hard Labour", tip=st.stonewrought, staats=true },
 	[42318344] = { name=st.miaMalkovaTitle, tip=st.miaMalkova },
 	[73721657] = { name="You First!", random=0.3, tip="Another fresh body. Why so many?" },
 	[73981897] = { name="She said it was 65 yards!", random=0.3, tip="Another aged goblin. What happens at The\n"
@@ -879,6 +960,8 @@ points[ ns.classicCata and 1458 or 90 ] = { -- Undercity
 }
 points[ ns.classicCata and 1422 or 22 ] = { -- Western Plaguelands
 	[03635776] = { name="He has so much wood", tip=st.virility },
+	[04256961] = { name=st.necropolisTitle, tip=st.necropolis },
+	[26271800] = { name=st.wingsTitle, tip=st.wings, staats=true  },
 	[32481149] = { name="The wall!", tip="Travelling north I hit a wall right here" },
 	[51961745] = { name="The wall!", tip="Travelling north I hit a wall right here" },
 	[67891396] = { name="The wall!", tip="Travelling north I hit a wall right here" },
@@ -910,11 +993,12 @@ points[ ns.classicCata and 1437 or 56 ] = { -- Wetlands
 	[20256912] = { name="Dwarven Farmland", tip=st.dwarvenFarm },
 	[28828498] = { name="All Aboard!", tip=st.rixaTransport },
 	[37946217] = { name="Vanilla Notes", tip="((The original Zone landscapes were limited to just\n"
-			.."four textures per zone. Somehow I never noticed!\n\nSource: J Staats, The WoW Diary))" },
+			.."four textures per zone. Somehow I never noticed!\n\nSource: John Staats, The WoW Diary))",
+			staats=true },
 	[39364345] = { name="Never Seen Until Flying", tip="Okay, originally we couldn't fly over here.\n"
 			.."so were these eggs here all along? Did they\n"
-			.."appear after the Cataclysm? Related to some\npost-Cataclysm quest?", staats=true },
-	[71649593] = { name="Sentenced to Hard Labour", tip=st.stonewrought },
+			.."appear after the Cataclysm? Related to some\npost-Cataclysm quest?" },
+	[71649593] = { name="Sentenced to Hard Labour", tip=st.stonewrought, staats=true },
 }
 
 --=======================================================================================================
@@ -923,6 +1007,11 @@ points[ ns.classicCata and 1437 or 56 ] = { -- Wetlands
 --
 --=======================================================================================================
 
+st.barrenTitle = "Designed to be barren"
+st.barren = "((The Barrens, by name, is a rather bleak or empty\n"
+			.."landscape. And it's for this reason that The Barrens\n"
+			.."were not a favourite zone for WoW's designers.\n\n"
+			.."Source: John Staats, The WoW Diary))"
 st.benched = "A lonesome bench on the border.\n\nTo one side barren and cold.\n"
 			.."And on the other lush, green.\nThe horizon to the left... Teldrassil.\n\n"
 			.."Perhaps. Depends really on your\nstanding with Zidormi in Darkshore\nI'd suppose.\n\n"
@@ -1042,6 +1131,15 @@ st.lakeDumont = "Well that's what I call the island!!!\n\n"
 st.loneSurvivor = "It's highly likely this poor person thinks that\n"
 			.."only he/she survived. Just over yonder is the\nbustling Ammen Vale settlement and...\n\n"
 			.."decades later this poor soul is discovered?"
+st.mageDustwallowTitle = "X marks the spot"
+st.mageDustwallow = "What happens when you accept a portal to,\n"
+				.."or as a mage you teleport to, Theramore?\n"
+				.."You land exactly here! You'll cop a little\n"
+				.."fall damage but s'all good.\n\n"
+				.."Oh BEFORE the fall of Theramore you ask?\n"
+				.."Location is exactly the same - you'll be\n"
+				.."standing alongside Ysuria, the Portal\n"
+				.."Trainer, inside her Mage Tower!"
 st.marioLuigi = "Two towers... Muigin in one, Larion\nin the other. Look closely at what\n"
 			.."they are wearing!\n\nNow, swap the \"L\" and \"M\".\nGot it yet? No?\n"
 			.."Okay... drop the \"n\" too!\n\nPrior to the Cataclysm, adventurers\n"
@@ -1232,6 +1330,7 @@ points[ ns.classicCata and 1443 or 66 ] = { -- Desolace
 points[ ns.classicCata and 1411 or 1 ] = { -- Durotar
 	[05626838] = { name="The Emerald Dream is Fake!", tip=st.fallaSagewind },
 	[06125383] = { name="Did You See the Three-Headed Hydra?", tip=st.korkronLoot },
+	[20084775] = { name=st.barrenTitle, tip=st.barren, staats=true },
 }
 points[ ns.classicCata and 1445 or 70 ] = { -- Dustwallow Marsh
 	[23226046] = { name=st.digRatTitle, tip=st.digRat },
@@ -1240,6 +1339,7 @@ points[ ns.classicCata and 1445 or 70 ] = { -- Dustwallow Marsh
 	[47841667] = { name="Awww They're So Cute!", tip=st.dartingHatchling },
 	[58076065] = { name="Nat Pagle", tip=st.natPagle },
 	[58766017] = { quest={ 6607 }, questName={ "Nat Pagle, Angler Extreme" }, tip=st.natsLuckyFishingPole },
+	[66004899] = { name=st.mageDustwallowTitle, tip=st.mageDustwallow },
 }
 points[ ns.classicCata and 1448 or 77 ] = { -- Felwood
 	[35720978] = { name="Come and \"drop\" by sometime!", tip=st.mawOfTheVoid }, 
@@ -1300,7 +1400,7 @@ points[ ns.classicCata and 1444 or 69 ] = { -- Feralas
 	[94838183] = { name="Vale Dadanga", quest={ 24702 }, questName={ "Here Lies Dadanga" }, tip=st.dadanga },
 }
 points[ ns.classicCata and 1432 or 48 ] = { -- Loch Modan
-	[49241655] = { name="Sentenced to Hard Labour", tip=st.stonewrought },
+	[49241655] = { name="Sentenced to Hard Labour", tip=st.stonewrought, staats=true },
 }
 points[ ns.classicCata and 1450 or 80 ] = { -- Moonglade
 	[52003289] = { name=st.danguiTitle, tip=st.dangui }, 
@@ -1345,6 +1445,7 @@ points[ ns.classicCata and 1413 or 10 ] = { -- Northern Barrens / The Barrens
 	[25281064] = { name="A Simple Canoe", tip=st.canoe },
 	[42856297] = { name="The Emerald Dream is Fake!", tip=st.fallaSagewind },
 	[43304959] = { name="Did You See the Three-Headed Hydra?", tip=st.korkronLoot },
+	[56154399] = { name=st.barrenTitle, tip=st.barren, staats=true },
 }
 points[ ns.classicCata and 1454 or 85 ] = { -- Orgrimmar
 	[50845509] = { npc=130911, npc=130911, name="Charles Gastly - Toy Boy", tip=st.doomsayersRobes },
@@ -1376,9 +1477,11 @@ points[ 199 ] = { -- Southern Barrens
 	[48781632] = { name="The Emerald Dream is Fake!", tip=st.fallaSagewind },
 	[49140594] = { name="Did You See the Three-Headed Hydra?", tip=st.korkronLoot },
 	[57776871] = { name="What's in a Name?", tip=st.drazzilb },
+	[59100160] = { name=st.barrenTitle, tip=st.barren, staats=true },
 	[65335708] = { name="Awww They're So Cute!", tip=st.dartingHatchling },
 	[72588823] = { name="Nat Pagle", tip=st.natPagle },
 	[73078789] = { quest={ 6607 }, questName={ "Nat Pagle, Angler Extreme" }, tip=st.natsLuckyFishingPole },
+	[78207998] = { name=st.mageDustwallowTitle, tip=st.mageDustwallow },
 }
 points[ ns.classicCata and 1442 or 65 ] = { -- Stonetalon Mountains
 	[38081284] = { name="Come Out, Come Out, Wherever You Are...", tip=st.whereIsEverybody },
@@ -2431,7 +2534,7 @@ points[ 947 ] = { -- Azeroth
 					.."It served as a test bed for texture and other\n"
 					.."ideas and was used by Programming Team 2\n"
 					.."way back when WoW was still a top secret\nproject.\n\n"
-					.."Source: J Staats, The WoW Diary))", staats=true },
+					.."Source: John Staats, The WoW Diary))", staats=true },
 }
 points[ 1532 ] = { -- Crapopolis
 	[46454882] = { name="Mind Your Step!", tip="Did you known there's another mine field?\n\n"

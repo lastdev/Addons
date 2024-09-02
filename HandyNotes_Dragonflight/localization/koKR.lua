@@ -60,6 +60,8 @@ L['options_icons_tuskarr_tacklebox_desc'] = nil
 L['squirrels_note'] = '전투 애완동물이 아닌 동물에게 {emote:/사랑} 을 해야 합니다'
 L['options_icons_squirrels'] = '{achievement:16729}'
 L['options_icons_squirrels_desc'] = '{achievement:16729} 업적을 위한 동물 위치를 표시합니다.'
+L['options_icons_zaralek_squirrels'] = '{achievement:18361}'
+L['options_icons_zaralek_squirrels_desc'] = '{achievement:18361} 업적을 위한 동물 위치를 표시합니다.'
 
 L['hnj_sublabel'] = '해당 지역에서 시카르 사냥의 제전 진행 필요'
 L['hnj_western_azure_span_hunt'] = '죽은 나무 꼭대기에 있음'
@@ -84,7 +86,6 @@ L['options_icons_signal_transmitter'] = '지룡 구멍 생성기 신호 송신�
 L['options_icons_signal_transmitter_desc'] = '{item:198156}를 이용하기 위한 {object:비활성화된 신호 송신기} 위치를 표시합니다.'
 
 L['rare_14h'] = nil
-L['now'] = nil
 L['spawns_at_night'] = '저녁에만 출몰합니다. (서버 시각 기준 18:30)'
 
 L['elemental_storm'] = nil
@@ -144,6 +145,10 @@ L['frostbound_chest'] = '서리결속 보관함'
 L['options_icons_frostbound_chest'] = '서리결속 보관함'
 L['options_icons_frostbound_chest_desc'] = nil
 
+L['war_supply_chest_note'] = nil
+L['options_icons_war_supplies_desc'] = nil
+L['options_icons_war_supplies'] = nil
+
 L['fyrakk_assault_label'] = nil
 L['fyrakk_secured_shipment'] = nil
 
@@ -155,6 +160,8 @@ L['shadowflame_leatherworking_table_label'] = nil
 L['shadowflame_leatherworking_table_note'] = nil
 L['shadowflame_incantation_table_label'] = nil
 L['shadowflame_incantation_table_note'] = nil
+L['altar_of_decay_label'] = nil
+L['altar_of_decay_note'] = nil
 L['azure_loom_label'] = nil
 L['azure_loom_note'] = nil
 L['temporal_loom_label'] = nil
@@ -174,6 +181,24 @@ L['tuskarr_pepe_label'] = nil
 L['tuskarr_pepe_note'] = nil
 
 L['end_of_august'] = nil
+
+L['rich_soil_label'] = nil
+L['rich_soil_note'] = nil
+L['options_icons_rich_soil'] = nil
+L['options_icons_rich_soil_desc'] = nil
+
+L['information_stuffed_clue'] = nil
+L['clued_in_note'] = nil
+L['options_icons_clued_in'] = nil
+L['options_icons_clued_in_desc'] = nil
+
+L['goggle_wobble_note'] = nil
+L['options_icons_goggle_wobble'] = nil
+L['options_icons_goggle_wobble_desc'] = nil
+
+L['just_one_more_thing_note'] = nil
+L['options_icons_just_one_more_thing'] = nil
+L['options_icons_just_one_more_thing_desc'] = nil
 
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
@@ -272,6 +297,16 @@ L['naszuro_azure_archives'] = nil
 L['naszuro_hudsons_rock'] = nil
 
 L['ferry_to_iskaara'] = nil
+
+L['options_icons_vegetarian_diet'] = '{achievement:16762}'
+L['options_icons_vegetarian_diet_desc'] = nil
+
+L['meat_storage_label'] = nil
+L['meat_storage_note'] = nil
+
+L['meat_storage_location_a'] = nil
+L['meat_storage_location_b'] = nil
+L['meat_storage_location_c'] = nil
 
 -------------------------------------------------------------------------------
 ------------------ FORBIDDEN REACH (DRACTHYR STARTING ZONE) -------------------
@@ -397,6 +432,18 @@ L['trader_hagarth_note'] = nil
 
 L['naszuro_caldera_of_the_menders'] = nil
 
+L['sun_bleached_vase'] = nil
+L['untranslated_tome'] = nil
+L['untranslated_tome_note'] = nil
+L['mysterious_boot'] = nil
+L['mysterious_boot_note'] = nil
+L['decaying_fishing_bucket'] = nil
+L['decaying_fishing_bucket_note'] = nil
+L['forgotten_fishing_pole'] = nil
+L['forgotten_fishing_pole_note'] = nil
+L['overgrown_fishing_bench'] = nil
+L['overgrown_fishing_bench_note'] = nil
+
 -------------------------------------------------------------------------------
 ------------------------------ OHN'AHRAN PLAINS -------------------------------
 -------------------------------------------------------------------------------
@@ -474,6 +521,7 @@ L['options_icons_dreamguard'] = nil
 L['options_icons_dreamguard_desc'] = '{achievement:16574} 업적을 위한 꿈수호병 위치를 표시합니다.'
 
 L['khadin_note'] = '{item:191784}을 교환하여 전문기술 지식을 습득합니다'
+L['khadin_prof_note'] = nil
 L['the_great_swog_note'] = '{item:199338}, {item:199339}, {item:199340}을 교환하여 {item:202102}를 얻습니다.'
 L['hunt_instructor_basku_note'] = '{item:200093}을 반납하여 {faction:2503} 평판을 획득합니다.'
 L['elder_yusa_note'] = nil
@@ -502,6 +550,12 @@ L['bloodgullet_note'] = nil
 
 L['naszuro_windsong_rise'] = nil
 L['naszuro_emerald_gardens'] = nil
+
+L['prismatic_leaper_school_label'] = nil
+L['prismatic_leaper_school_note'] = nil
+
+L['aylaag_spear'] = nil
+L['dedication_plaquard'] = nil
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -552,7 +606,17 @@ L['new_perspective_note'] = '절경에서 "셀카" 사진기로 사진을 촬영
 L['options_icons_new_perspective'] = nil
 L['options_icons_new_perspective_desc'] = '{achievement:16634} 업적을 위한 절경의 위치를 표시합니다.'
 
+L['fringe_benefits_note'] = nil
+L['options_icons_fringe_benefits'] = '{achievement:19507}'
+L['options_icons_fringe_benefits_desc'] = nil
+
+L['little_scales_daycare_note'] = nil
+L['options_icons_whelp'] = '{achievement:18384}'
+L['options_icons_whelp_desc'] = nil
+
 L['ruby_feast_gourmand'] = '매일 무작위로 선정된 요리사가 서로 다른 음식과 음료를 제공합니다.'
+L['options_icons_ruby_feast_gourmand'] = '{achievement:16556}'
+L['options_icons_ruby_feast_gourmand_desc'] = nil
 
 L['sorotis_note'] = '{item:199906}을 반납하여 {faction:2510} 평판을 획득합니다.'
 L['lillian_brightmoon_note'] = '{item:201412}을 반납하여 {faction:2507} 평판을 획득합니다.'
@@ -572,7 +636,6 @@ L['options_icons_titan_chest_desc'] = nil
 
 L['living_mud_mask_note'] = nil
 
-L['little_scales_daycare_note'] = nil
 L['naszuro_veiled_ossuary'] = nil
 L['naszuro_algethar_academy'] = nil
 L['naszuro_vault_of_the_incarnates'] = nil
@@ -583,6 +646,13 @@ L['revival_catalyst_label'] = nil
 L['revival_catalyst_note'] = nil
 
 L['provisioner_aristta_note'] = nil
+
+L['investigators_pocketwatch_note_a'] = nil
+L['investigators_pocketwatch_note_b'] = nil
+L['investigators_pocketwatch_note_c'] = nil
+
+L['ominous_portal_label'] = nil
+L['ominous_portal_note'] = nil
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
@@ -732,6 +802,11 @@ L['box_of_rocks_note'] = nil
 L['options_icons_many_boxes'] = '{achievement:18559}'
 L['options_icons_many_boxes_desc'] = nil
 
+L['drakonid_painting'] = nil
+L['emptied_hourglass'] = nil
+L['rusted_signal_horn'] = nil
+L['rusted_signal_horn_note'] = nil
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
@@ -801,6 +876,16 @@ L['zaralek_event_inactive'] = nil
 L['options_icons_zone_event'] = nil
 L['options_icons_zone_event_desc'] = nil
 
+L['djaradin_scroll'] = nil
+L['forgotten_incense'] = nil
+L['forgotten_incense_note'] = nil
+L['historied_heirloom'] = nil
+L['rusted_dirt_pale'] = nil
+L['rusted_dirt_pale_note'] = nil
+L['niffen_pickaxe'] = nil
+L['chipped_grub_pot'] = nil
+L['chipped_grub_pot_note'] = nil
+
 -------------------------------------------------------------------------------
 ------------------------------- Emerald Dream ---------------------------------
 -------------------------------------------------------------------------------
@@ -867,6 +952,7 @@ L['moonkin_hatchling_note'] = nil
 L['druid_glyphs_label'] = nil
 L['druid_glyphs_sublabel'] = nil
 L['druid_glyphs_note'] = nil
+L['druid_glyphs_checklist_note'] = nil
 
 L['pollenfused_bristlebruin_fur_sample_note'] = nil
 
@@ -880,6 +966,7 @@ L['mbc_vial_k'] = nil
 L['mbc_vial_n'] = nil
 L['mbc_vial_o'] = nil
 
+L['mbc_vial_b_location'] = nil
 L['mbc_vial_d_location'] = nil
 L['mbc_vial_e_location'] = nil
 L['mbc_vial_k_location'] = nil

@@ -533,35 +533,17 @@ function DR.GetVigorValueExact()
 	end
 end
 
--- this runs every frame
-function DR.FixBlizzFrames()
-	for _, v in pairs(DR.WidgetFrameIDs) do
-		local f = UIWidgetPowerBarContainerFrame.widgetFrames[v];
-		if f then
-			local canGlide = LibAdvFlight.IsAdvFlyEnabled();
-			if not canGlide then
-				if f:IsShown() then
-					f:Hide();
-					if DragonRider_DB.debug then
-						print("Fixing a Blizzard bug where widgets persisted.")
-					end
-				end
-				if DragonRider_DB.sideArt then
-					local PowerBarChildren = {UIWidgetPowerBarContainerFrame:GetChildren()}
-					if PowerBarChildren[3] ~= nil and PowerBarChildren[3]:IsShown() then
-						for _, child in ipairs({PowerBarChildren[3]:GetRegions()}) do
-							child:SetAlpha(0)
-						end
-						if DragonRider_DB.debug then
-							print("Hiding wings asset.")
-						end
-					end
-				end
+-- ugly hack fix for the vigor widget not disappearing when it should
+LibAdvFlight.RegisterCallback(LibAdvFlight.Events.ADV_FLYING_DISABLED, function()
+	for _, v in ipairs(DR.WidgetFrameIDs) do
+		C_Timer.After(1, function()
+			local f = UIWidgetPowerBarContainerFrame.widgetFrames[v];
+			if f and f:IsShown() then
+				f:Hide();
 			end
-		end
+		end);
 	end
-	--UIWidgetPowerBarContainerFrame:UpdateWidgetLayout(); -- This seems to cause some kind of edit mode taint. Yeeting this for now and keeping this note here.
-end
+end);
 
 function DR.SetupVigorToolip()
 	EmbeddedItemTooltip:HookScript("OnShow", function(self)
@@ -864,6 +846,12 @@ function DR.SetTheme()
 	end
 end
 
+local ParentFrame = CreateFrame("Frame", nil, UIParent)
+ParentFrame:SetPoint("TOPLEFT", UIWidgetPowerBarContainerFrame, "TOPLEFT")
+ParentFrame:SetPoint("BOTTOMRIGHT", UIWidgetPowerBarContainerFrame, "BOTTOMRIGHT")
+-- this should solve that weird "moving" thing, the widget adjusts its size based on children
+
+
 function DR.setPositions()
 	DR.SetTheme()
 	if DragonRider_DB.DynamicFOV == true then
@@ -872,10 +860,15 @@ function DR.setPositions()
 		C_CVar.SetCVar("AdvFlyingDynamicFOVEnabled", 0)
 	end
 
-	local ParentFrame = UIWidgetPowerBarContainerFrame
+	ParentFrame:ClearAllPoints()
+	ParentFrame:SetScale(UIWidgetPowerBarContainerFrame:GetScale()) -- because some of you are rescaling this thing...... the "moving vigor bar" was your fault.
+	ParentFrame:SetPoint("TOPLEFT", UIWidgetPowerBarContainerFrame, "TOPLEFT")
+	ParentFrame:SetPoint("BOTTOMRIGHT", UIWidgetPowerBarContainerFrame, "BOTTOMRIGHT")
 	for k, v in pairs(DR.WidgetFrameIDs) do
 		if UIWidgetPowerBarContainerFrame.widgetFrames[v] then
-			ParentFrame = UIWidgetPowerBarContainerFrame.widgetFrames[v]
+			ParentFrame:ClearAllPoints()
+			ParentFrame:SetPoint("TOPLEFT", UIWidgetPowerBarContainerFrame.widgetFrames[v], "TOPLEFT")
+			ParentFrame:SetPoint("BOTTOMRIGHT", UIWidgetPowerBarContainerFrame.widgetFrames[v], "BOTTOMRIGHT")
 		end
 	end
 	DR.statusbar:ClearAllPoints();
@@ -1064,6 +1057,7 @@ function DR.clearPositions()
 	for i = 1, 10 do
 		DR.charge[i]:Hide();
 	end
+	DR.toggleModels()
 end
 
 DR.clearPositions();
@@ -1664,7 +1658,6 @@ function DR.OnAddonLoaded()
 				DR.statusbar:Show()
 			end
 			DR.setPositions();
-			DR.FixBlizzFrames()
 		end
 
 		local function OnAdvFlyEnd()
@@ -1672,7 +1665,6 @@ function DR.OnAddonLoaded()
 				DR.HideWithFadeBar();
 			end
 			DR.setPositions();
-			DR.FixBlizzFrames()
 		end
 
 		-- when the player dismounts
@@ -1683,7 +1675,6 @@ function DR.OnAddonLoaded()
 				DR.statusbar:SetAlpha(1)
 			end
 			DR.clearPositions();
-			DR.FixBlizzFrames()
 		end
 
 		LibAdvFlight.RegisterCallback(LibAdvFlight.Events.ADV_FLYING_START, OnAdvFlyStart);

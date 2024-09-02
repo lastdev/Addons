@@ -1,6 +1,7 @@
 # TL;DR Missions
 
-##  (2024-08-14)
+##  (2024-08-21)
  
 
-- Fix GetSpellInfo to C\_Spell.GetSpellInfo change  
+- Update some namespace changes  
+    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/640  

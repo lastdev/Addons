@@ -1,19 +1,13 @@
-## Interface: 110002, 110000, 40400
+## Interface: 110002
 ## Title: HandyNotes: Wrath of the Lich King
-## Notes: Where are the interesting things in Northrend?
-## Author: Kemayo
-## Version: v14
-## DefaultState: enabled
-## X-Category: Map
-## X-eMail: kemayo @ gmail DOT com
-## X-Curse-Project-ID: 678106
-## X-Wago-ID: xZKxlvKk
-## SavedVariables: HandyNotes_WrathOfTheLichKingDB
+## Version: 86
+## Notes: Wrath of the Lich King Notes
+## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes
-## OptionalDeps: !LibUIDropDownMenu
+## X-Embeds: Ace3
+## SavedVariables: HandyNotes_WrathOfTheLichKingDB
+## IconTexture: 630787
 
-lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
-
-handler\handler.xml
-
-wrath.lua
+embeds.xml
+core\core.xml
+plugin.xml

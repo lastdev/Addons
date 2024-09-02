@@ -139,6 +139,7 @@ local API_EVENT_INFO = not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_H
 		},
 		RequestMoreCommoditySearchResults = {
 			COMMODITY_SEARCH_RESULTS_ADDED = { result = true },
+			COMMODITY_SEARCH_RESULTS_UPDATED = { result = true },
 		},
 		RequestMoreItemSearchResults = {
 			ITEM_SEARCH_RESULTS_ADDED = { result = true },
@@ -162,7 +163,7 @@ local API_EVENT_INFO = not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_H
 			["UI_ERROR_MESSAGE"..GENERIC_EVENT_SEP..ERR_AUCTION_DATABASE_ERROR] = { result = false },
 		},
 		StartCommoditiesPurchase = {
-			COMMODITY_PRICE_UPDATED = { result = 2, rawFilterFunc = function(apiArgs, unitPrice, totalPrice) return Math.Ceil((totalPrice / apiArgs[2]), COPPER_PER_SILVER) == apiArgs[3] and true end },
+			COMMODITY_PRICE_UPDATED = { result = function(apiArgs, _, totalPrice) return Math.Ceil((totalPrice / apiArgs[2]), COPPER_PER_SILVER) == apiArgs[3] and totalPrice or nil end },
 			COMMODITY_PRICE_UNAVAILABLE = { result = false },
 		},
 		ConfirmCommoditiesPurchase = {
@@ -753,7 +754,7 @@ function APIWrapper:_HandleEvent(eventName, ...)
 	end
 	local eventIsValid, result = self:_ValidateEvent(eventName, ...)
 	if not eventIsValid then
-		Log.Info("Ignoring invalidated event")
+		Log.Info("Ignoring invalidated event (%s)", eventName)
 		return
 	end
 	self:_Done(result)
@@ -776,6 +777,8 @@ function APIWrapper:_ValidateEvent(eventName, ...)
 	local eventIsValid, result = true, nil
 	if type(info.result) == "number" then
 		result = select(info.result, ...)
+	elseif type(info.result) == "function" then
+		result = info.result(self._args, ...)
 	else
 		result = info.result
 	end

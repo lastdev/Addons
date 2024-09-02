@@ -1,5 +1,50 @@
 # Changelog
 
+## Changed in v2024.19
+
+* History: fixed the frame not hiding immediately at the start of combat
+* Fixed some issues with profile-switching in History and ClickTargets
+* Stop showing the marker on the popup for a rare if you mark a different rare
+
+## Changed in v2024.18
+
+* New loot for all War Within zones
+* Add The Missing Lynx achievement for tooltips
+* Add To All the Slimes I Love achievement for tooltips
+* Add Echoes of Danger achievement for tooltips
+* Overlay: route pins should also sabotage SetPassThroughButtons; this should stop occasional action-blocked errors
+
+## Changed in v2024.17
+
+* New loot for all War Within zones
+* Don't put tomtom waypoints on the world map, stick to the crazy arrow
+* Improve the tooltips for history and popups
+* Add data to show in treasure-popups in Isle of Dorn and Ringing Deeps
+
+## Changed in v2024.16
+
+* A bunch of new loot for Hallowfall
+* Fix TomTom waypoints still pushing onto the arrow (with a more specific combination of settings between addons required now!), and not clearing after the popup closed
+
+## Changed in v2024.15
+
+* A bunch of new loot for the Ringing Deeps
+* Fix ctrl-clicking to set a waypoint from popups/history/etc not forcing its way into TomTom's crazy arrow
+
+## Changed in v2024.14
+
+* A bunch of new loot for the Isle of Dorn
+* Waypoints can now be set for loot as well
+* Support for Map Pin Enhanced for waypoints
+
+## Changed in v2024.13
+
+* Data for the War Within (from the beta: a few mobs aren't found yet, and there's a lot of loot missing)
+* Custom mobs can now set per-zone
+* Per-zone custom mobs will be picked up by the dark magic scanning method
+* Fix relative time display in history window for over 30 minutes ago
+* Fix an obscure error with double-releasing popups on leaving combat
+
 ## Changed in v2024.12
 
 * History: keep the frame position stable when toggling collapsed state

@@ -24,7 +24,7 @@ local unpack = unpack
 local _GetSpellInfo = Details.getspellinfo
 local GetSpellInfo = GetSpellInfo
 
-if (DetailsFramework.IsWarWow() or C_Spell.GetSpellInfo) then
+if (detailsFramework.IsWarWow() or (C_Spell and C_Spell.GetSpellInfo)) then
 	GetSpellInfo = function(...)
 		local result = C_Spell.GetSpellInfo(...)
 		if result then

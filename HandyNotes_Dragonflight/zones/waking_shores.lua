@@ -26,11 +26,13 @@ local PM = ns.node.ProfessionMasters
 local PrettyNeat = ns.node.PrettyNeat
 local PT = ns.node.ProfessionTreasures
 local RareElite = ns.node.RareElite
+local RichSoil = ns.node.RichSoil
 local Safari = ns.node.Safari
 local Scoutpack = ns.node.Scoutpack
 local SignalTransmitter = ns.node.SignalTransmitter
 local Squirrel = ns.node.Squirrel
 local TuskarrTacklebox = ns.node.TuskarrTacklebox
+local WarSupply = ns.node.WarSupply
 
 local Achievement = ns.reward.Achievement
 local Currency = ns.reward.Currency
@@ -388,7 +390,7 @@ map.nodes[56004592] = Rare({
         Achievement({id = 16676, criteria = 56034}),
         Transmog({item = 200165, slot = L['shield']}), -- Aegis of Scales
         Transmog({item = 200256, slot = L['offhand']}), -- Darkmaul Soul Horn
-        Transmog({item = 200310, note = L['cloak']}), -- Stole of the Iron Phantom
+        Transmog({item = 200310, slot = L['cloak']}), -- Stole of the Iron Phantom
         DC.RenewedProtoDrake.ClubTail, DC.RenewedProtoDrake.WhiteHorns,
         DC.CliffsideWylderdrake.HeavyHorns, DC.CliffsideWylderdrake.HornedJaw
     }
@@ -868,11 +870,11 @@ map.nodes[69314658] = Treasure({
     quest = 70346,
     note = L['dead_mans_chestplate_note'],
     rewards = {
-        Achievement({id = 16297, criteria = 54702}),
-        Transmog({item = 202190, slot = L['cosmetic']}), -- Dead Man's Chains
-        Transmog({item = 202191, slot = L['cosmetic']}), -- Dead Man's Breastplate
-        Transmog({item = 202192, slot = L['cosmetic']}), -- Dead Man's Leathers
-        Transmog({item = 202193, slot = L['cosmetic']}) -- Dead Man's Tunic
+        Achievement({id = 16297, criteria = 54702}), --
+        Transmog({item = 202190}), -- Dead Man's Chains
+        Transmog({item = 202191}), -- Dead Man's Breastplate
+        Transmog({item = 202192}), -- Dead Man's Leathers
+        Transmog({item = 202193}) -- Dead Man's Tunic
     }
 }) -- Dead Man's Chestplate
 
@@ -995,6 +997,20 @@ map.nodes[57604350] = ns.node.DracthyrSupplyChest()
 map.nodes[66405660] = ns.node.DracthyrSupplyChest()
 map.nodes[67905800] = ns.node.DracthyrSupplyChest()
 map.nodes[68005890] = ns.node.DracthyrSupplyChest()
+
+-------------------------------------------------------------------------------
+------------------------------ WAR SUPPLY CHESTS ------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[24227983] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[32006370] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[32605100] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[47997652] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[51545639] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[51794273] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[66123326] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[70866535] = WarSupply({fgroup = 'supply_waking_shore'})
+map.nodes[78704910] = WarSupply({fgroup = 'supply_waking_shore'})
 
 -------------------------------------------------------------------------------
 --------------------------------- BATTLE PETS ---------------------------------
@@ -1442,20 +1458,20 @@ local DjaradinCache = Class('DjaradinCache', ns.node.Node, {
     group = ns.groups.DJARADIN_CACHE,
     rewards = {
         Item({item = 191784}), -- Dragon Shard of Knowledge
-        Transmog({item = 201035, slot = L['cosmetic']}), -- Citadel Crushers Pauldrons
-        Transmog({item = 201036, slot = L['cosmetic']}), -- Citadel Crushers Chestplate
-        Transmog({item = 201037, slot = L['cosmetic']}), -- Citadel Crushers Legguards
-        Transmog({item = 201038, slot = L['cosmetic']}), -- Citadel Crushers Footwraps
-        Transmog({item = 201039, slot = L['cosmetic']}), -- Citadel Crushers Helm
-        Transmog({item = 201041, slot = L['cosmetic']}), -- Citadel Crushers Cloak
-        Transmog({item = 201042, slot = L['cosmetic']}), -- Obsidian Crushers Bracers
-        Transmog({item = 201043, slot = L['cosmetic']}), -- Obsidian Crushers Belt
-        Transmog({item = 201429, slot = L['cosmetic']}), -- Obsidian Fist
-        Transmog({item = 201430, slot = L['cosmetic']}), -- Burning Mallet
-        Transmog({item = 201431, slot = L['cosmetic']}), -- Obsidian Tyrants Mace
-        Transmog({item = 201432, slot = L['cosmetic']}), -- Obsidian Dragontooth
-        Transmog({item = 201433, slot = L['cosmetic']}), -- Citadel Wardens Mace
-        Transmog({item = 201434, slot = L['cosmetic']}), -- Obsidian Barrier
+        Transmog({item = 201035, slot = L['plate']}), -- Citadel Crushers Pauldrons
+        Transmog({item = 201036, slot = L['plate']}), -- Citadel Crushers Chestplate
+        Transmog({item = 201037, slot = L['plate']}), -- Citadel Crushers Legguards
+        Transmog({item = 201038, slot = L['plate']}), -- Citadel Crushers Footwraps
+        Transmog({item = 201039, slot = L['plate']}), -- Citadel Crushers Helm
+        Transmog({item = 201041, slot = L['cloak']}), -- Citadel Crushers Cloak
+        Transmog({item = 201042, slot = L['plate']}), -- Obsidian Crushers Bracers
+        Transmog({item = 201043, slot = L['plate']}), -- Obsidian Crushers Belt
+        Transmog({item = 201429, slot = L['fist']}), -- Obsidian Fist
+        Transmog({item = 201430, slot = L['1h_mace']}), -- Burning Mallet
+        Transmog({item = 201431, slot = L['1h_mace']}), -- Obsidian Tyrants Mace
+        Transmog({item = 201432, slot = L['1h_sword']}), -- Obsidian Dragontooth
+        Transmog({item = 201433, slot = L['2h_mace']}), -- Citadel Wardens Mace
+        Transmog({item = 201434, slot = L['shield']}), -- Obsidian Barrier
         Item({item = 199230}), -- Schematic: Projectile Propulsion Pinion
         Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
         Item({item = 199066, quest = 70535}), -- Letter of Caution
@@ -2240,7 +2256,7 @@ map.nodes[30287005] = Collectible({
     requires = ns.requirement.Reputation(2510, 5, true), -- Valdrakken Accord
     rewards = SIEGE_ON_DRAGONBANE_KEEP_REWARDS,
     IsEnabled = function(self)
-        local activePOIs = C_AreaPoiInfo.GetAreaPOIForMap(self.mapID)
+        local activePOIs = C_AreaPoiInfo.GetEventsForMap(self.mapID)
         local possiblePOIs = self.areaPOIs
         for a = 1, #activePOIs do
             for p = 1, #possiblePOIs do
@@ -2253,7 +2269,7 @@ map.nodes[30287005] = Collectible({
     end
 }) -- Siege on Dragonbane Keep
 
-hooksecurefunc(AreaPOIPinMixin, 'TryShowTooltip', function(self)
+hooksecurefunc(AreaPOIEventPinMixin, 'TryShowTooltip', function(self)
     if self and self.areaPoiID then
         local mapID = self:GetMap().mapID
         local group = ns.groups.DRAGONBANE_SIEGE
@@ -2320,11 +2336,65 @@ map.nodes[34624668] = Collectible({
 }) -- Broken Waygate
 
 -------------------------------------------------------------------------------
+---------------------------------- RICH SOIL ----------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[60006400] = RichSoil()
+map.nodes[56006800] = RichSoil()
+map.nodes[53506400] = RichSoil()
+map.nodes[54476895] = RichSoil()
+map.nodes[54355753] = RichSoil()
+map.nodes[53376028] = RichSoil()
+map.nodes[57006000] = RichSoil()
+map.nodes[54305700] = RichSoil()
+map.nodes[53005200] = RichSoil()
+map.nodes[54606584] = RichSoil()
+map.nodes[55875764] = RichSoil()
+map.nodes[59456104] = RichSoil()
+map.nodes[60645668] = RichSoil()
+-------------------------------------------------------------------------------
+---------------------------------- CLUED IN -----------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[56434294] = ns.node.CluedIn({
+    label = L['drakonid_painting'],
+    quest = 76911 -- Research: Drakonid of Waking Shores
+})
+
+map.nodes[56814222] = ns.node.CluedIn({
+    label = L['emptied_hourglass'],
+    quest = 76911
+})
+
+map.nodes[57014632] = ns.node.CluedIn({
+    label = L['rusted_signal_horn'],
+    quest = 76911,
+    location = L['rusted_signal_horn_note']
+})
+
+-------------------------------------------------------------------------------
+-------------------------------- GOGGLE WOBBLE --------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[56374394] = ns.node.GoggleWobble({
+    rewards = {Achievement({id = 19791, criteria = 65406})}
+})
+
+-------------------------------------------------------------------------------
+----------------------------- JUST ONE MORE THING -----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[57004400] = ns.node.JustOneMoreThing({
+    quest = {79610, 79609, 79608},
+    rewards = {Achievement({id = 19792, criteria = 65412})} -- Concord Observatory
+}) -- Research: Drakonid of Waking Shores -- 76911
+
+-------------------------------------------------------------------------------
 -------------------------------- MISCELLANEOUS --------------------------------
 -------------------------------------------------------------------------------
 
 local function status(id, itemsNeed)
-    local itemsHave = GetItemCount(id, true);
+    local itemsHave = C_Item.GetItemCount(id, true);
     return ns.PlayerHasItem(id, itemsNeed) and
                ns.status.Green(itemsHave .. '/' .. itemsNeed) or
                ns.status.Red(itemsHave .. '/' .. itemsNeed)
@@ -2407,13 +2477,13 @@ function Friendship:Initialize(id, level, label)
 end
 
 function Friendship:GetText()
-    local name = GetFactionInfoByID(self.id)
+    local name = ns.api.GetFactionInfoByID(self.id)
     local level = self.label
     return string.format(name .. ' (' .. level .. ')')
 end
 
 function Friendship:IsMet()
-    local standingID = select(3, GetFactionInfoByID(self.id))
+    local standingID = select(3, ns.api.GetFactionInfoByID(self.id))
     return standingID >= self.level
 end
 
@@ -2655,5 +2725,12 @@ map.nodes[47308270] = Collectible({
         Item({item = 213202, quest = 79550}) -- A Tiny Explorer's Hat
     }
 }) -- Explorer Pepe
+
+------------------------------------------------------------------------------
+--------------------------------- DREAMSURGE ---------------------------------
+------------------------------------------------------------------------------
+
+map.nodes[58446784] = ns.node.Celestine()
+map.nodes[41197748] = ns.node.RenewedMagmammoth()
 
 -- STOP: DO NOT ADD NEW NODES HERE UNLESS THEY BELONG IN MISCELLANEOUS

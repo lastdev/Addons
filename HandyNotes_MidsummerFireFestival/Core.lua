@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                       v1.18 - 23rd July 2024
+                                      v1.19 - 21st August 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

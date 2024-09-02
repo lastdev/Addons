@@ -12,6 +12,7 @@ L['leather'] = 'Leder'
 L['mail'] = 'Kette'
 L['plate'] = 'Platte'
 L['cosmetic'] = 'Kosmetisch'
+L['tabard'] = 'Wappenrock'
 
 L['1h_mace'] = 'Einhandstreitkolben'
 L['1h_sword'] = 'Einhandschwert'
@@ -44,34 +45,22 @@ L['activation_unknown'] = 'Aktivierung unbekannt!'
 L['requirement_not_found'] = 'Voraussetzungsort unbekannt!'
 L['multiple_spawns'] = 'Kann an mehreren Orten erscheinen.'
 L['shared_drops'] = 'Geteilte Beute'
+L['zone_drops_label'] = 'Zonenbeute'
+L['zone_drops_note'] = 'Die unten aufgeführten Gegenstände können von mehreren Gegnern in dieser Zone fallen gelassen werden.'
 
 L['requires'] = 'Benötigt'
 L['ranked_research'] = '%s (Rang %d/%d)'
 
 L['focus'] = 'fokussieren'
 L['retrieving'] = 'Gegenstandslink wird abgerufen ...'
-L['in_cave'] = 'In einer Höhle.'
-L['in_small_cave'] = 'In einer kleinen Höhle.'
-L['in_water_cave'] = 'In einer Unterwasserhöhle.'
-L['in_waterfall_cave'] = 'In einer Höhle hinter einem Wasserfall.'
-L['in_water'] = 'Im Wasser.'
-L['hourly'] = 'Stündlich'
-L['daily'] = 'Täglich'
-L['weekly'] = 'Wöchentlich'
+
 L['normal'] = 'Normal'
 L['hard'] = 'Schwer'
-L['heirloom'] = 'Erbstück'
-L['item'] = 'Gegenstand'
-L['mount'] = 'Reittier'
-L['pet'] = 'Haustier'
-L['recipe'] = 'Rezept'
-L['spell'] = 'Fähigkeit'
-L['title'] = 'Titel'
-L['toy'] = 'Spielzeug'
-L['currency'] = 'Währung'
-L['rep'] = 'Ruf'
+
 L['completed'] = 'Abgeschlossen'
 L['incomplete'] = 'Unvollständig'
+L['claimed'] = 'Erhalten'
+L['unclaimed'] = 'Fehlt'
 L['known'] = 'Bekannt'
 L['missing'] = 'Fehlt'
 L['unobtainable'] = 'Nicht erhältlich'
@@ -83,16 +72,44 @@ L['quest'] = 'Quest'
 L['quest_repeatable'] = 'Wiederholbare Quest'
 L['achievement'] = 'Erfolg'
 
+---------------------------------- LOCATION -----------------------------------
+L['in_cave'] = 'In einer Höhle.'
+L['in_small_cave'] = 'In einer kleinen Höhle.'
+L['in_water_cave'] = 'In einer Unterwasserhöhle.'
+L['in_waterfall_cave'] = 'In einer Höhle hinter einem Wasserfall.'
+L['in_water'] = 'Im Wasser.'
+L['in_building'] = 'Im Gebäude.'
+
+------------------------------------ TIME -------------------------------------
+L['now'] = 'Jetzt'
+L['hourly'] = 'Stündlich'
+L['daily'] = 'Täglich'
+L['weekly'] = 'Wöchentlich'
+
+L['time_format_12hrs'] = '%d.%m - %I:%M %p'
+L['time_format_24hrs'] = '%d.%m - %H:%M'
+
+----------------------------------- REWARDS -----------------------------------
+L['heirloom'] = 'Erbstück'
+L['item'] = 'Gegenstand'
+L['mount'] = 'Reittier'
+L['pet'] = 'Haustier'
+L['recipe'] = 'Rezept'
+L['spell'] = 'Fähigkeit'
+L['title'] = 'Titel'
+L['toy'] = 'Spielzeug'
+L['currency'] = 'Währung'
+L['rep'] = 'Ruf'
+
+---------------------------------- FOLLOWERS ----------------------------------
 L['follower_type_follower'] = 'Anhänger'
 L['follower_type_champion'] = 'Champion'
 L['follower_type_companion'] = 'Abenteurer'
 
+--------------------------------- REPUTATION ----------------------------------
 L['rep_honored'] = 'Wohlwollend'
 L['rep_revered'] = 'Respektvoll'
 L['rep_exalted'] = 'Erfürchtig'
-
-L['time_format_12hrs'] = '%d.%m - %I:%M %p'
-L['time_format_24hrs'] = '%d.%m - %H:%M'
 
 -------------------------------------------------------------------------------
 --------------------------------- DRAGONRACES ---------------------------------
@@ -109,7 +126,7 @@ L['dr_challenge'] = 'Herausforderung'
 L['dr_reverse_challenge'] = 'Umgekehrte Herausforderung'
 L['dr_storm_race'] = 'Sturmrennen'
 L['dr_bronze'] = 'Beende das Rennen um ' .. ns.color.Bronze('Bronze') .. ' zu erhalten.'
-L['dr_vendor_note'] = 'Tausche {currency:2588} gegen Drachenanpassungen und Ausrüstungsvorlagen ein.'
+L['dr_vendor_note'] = 'Tausche {currency:2588} gegen Drachenwächtermanuskripte und Ausrüstungsvorlagen ein.'
 L['options_icons_dragonrace'] = 'Drachenrennen'
 L['options_icons_dragonrace_desc'] = 'Zeigt die Positionen der Drachenrennen an.'
 
@@ -160,6 +177,8 @@ L['options_show_completed_nodes'] = 'Zeige bereits abgeschlossenes'
 L['options_show_completed_nodes_desc'] = 'Zeigt alle Punkte an, auch wenn diese heute bereits geplündert oder abgeschlossen wurden.'
 L['options_toggle_hide_done_rare'] = 'Blende seltene Gegner aus, deren Belohnungen bekannt sind.'
 L['options_toggle_hide_done_rare_desc'] = 'Blendet alle seltenen Gegner deren Beute bereits bekannt ist aus.'
+L['options_toggle_hide_done_treasure'] = nil
+L['options_toggle_hide_done_treasure_desc'] = nil
 L['options_toggle_hide_minimap'] = 'Blende alle Symbole auf der Minikarte aus'
 L['options_toggle_hide_minimap_desc'] = 'Blendet alle Symbole dieses Addons auf der Minikarte aus und zeigt sie nur auf der Hauptkarte an.'
 L['options_toggle_maximized_enlarged'] = 'Symbole bei maximierter Weltkarte vergrößern'
@@ -173,6 +192,8 @@ L['options_restore_hidden_nodes_desc'] = 'Stellt alle Punkte wieder her, die üb
 
 L['options_rewards_settings'] = 'Belohnungen'
 L['options_reward_types'] = 'Zeige Belohnungstypen'
+L['options_manuscript_rewards'] = 'Zeige Drachenwächtermanuskriptbelohnungen'
+L['options_manuscript_rewards_desc'] = 'Zeige Drachenwächtermanuskriptbelohnungen in Tooltips an und verfolge ihren Sammlungsstatus.'
 L['options_mount_rewards'] = 'Zeige Reittierbelohnungen'
 L['options_mount_rewards_desc'] = 'Zeige Reittierbelohnungen in Tooltips an und verfolge ihren Sammlungsstatus.'
 L['options_pet_rewards'] = 'Zeige Haustierbelohnungen'
@@ -185,6 +206,10 @@ L['options_transmog_rewards'] = 'Zeige Vorlagenbelohnungen'
 L['options_transmog_rewards_desc'] = 'Zeige Vorlagenbelohnungen für Waffen und Rüstungen in Tooltips an und verfolge ihren Sammlungsstatus.'
 L['options_all_transmog_rewards'] = 'Zeige nicht erhältliche Vorlagenbelohnungen'
 L['options_all_transmog_rewards_desc'] = 'Zeigt Vorlagenbelohnungen an, die nur für andere Klassen erhältlich sind.'
+L['options_rep_rewards'] = 'Zeige Rufbelohnungen'
+L['options_rep_rewards_desc'] = 'Zeige Rufbelohnungen in Tooltips an und verfolge ihren Sammlungsstatus.'
+L['options_claimed_rep_rewards'] = 'Zeige erhaltene Rufbelohnungen'
+L['options_claimed_rep_rewards_desc'] = 'Zeigt Rufbelohnungen an, die bereits von deiner Kriegsmeute erhalten wurden.'
 
 L['options_icons_misc_desc'] = 'Zeigt die Positionen von anderen nicht kategorisierten Punkten an.'
 L['options_icons_misc'] = 'Sonstiges'
@@ -194,6 +219,8 @@ L['options_icons_rares_desc'] = 'Zeigt die Positionen von seltenen Gegnern an.'
 L['options_icons_rares'] = 'Seltene Gegner'
 L['options_icons_treasures_desc'] = 'Zeigt die Positionen versteckter Schätze an.'
 L['options_icons_treasures'] = 'Schätze'
+L['options_icons_vendors_desc'] = 'Zeigt die Positionen von Händlern an.'
+L['options_icons_vendors'] = 'Händler'
 
 ---------------------------------- FOCUS ---------------------------------
 
@@ -214,6 +241,8 @@ L['options_toggle_show_notes'] = 'Zeige Notizen'
 L['options_toggle_show_notes_desc'] = 'Zeigt hilfreiche Notizen an sofern diese verfügbar sind.'
 L['options_toggle_use_standard_time'] = 'Verwende das 12-Stunden-Format'
 L['options_toggle_use_standard_time_desc'] = 'Zeigt die Uhrzeit im 12-Stunden-Format (z.B.: 8:00 PM) anstelle des 24-Stunden-Formates (z.B.: 20:00) in Tooltips an.'
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

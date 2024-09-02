@@ -12,6 +12,7 @@ L['leather'] = '가죽'
 L['mail'] = '사슬'
 L['plate'] = '판금'
 L['cosmetic'] = '장식'
+L['tabard'] = '겉옷'
 
 L['1h_mace'] = '한손 둔기'
 L['1h_sword'] = '한손 도검'
@@ -58,6 +59,8 @@ L['hard'] = '어려움'
 
 L['completed'] = '완료'
 L['incomplete'] = '미완료'
+L['claimed'] = nil
+L['unclaimed'] = nil
 L['known'] = '확인'
 L['missing'] = '미확인'
 L['unobtainable'] = '획득불가'
@@ -78,6 +81,7 @@ L['in_water'] = '물 속에 있음.'
 L['in_building'] = nil
 
 ------------------------------------ TIME -------------------------------------
+L['now'] = nil
 L['hourly'] = '한시간단위'
 L['daily'] = '일간'
 L['weekly'] = '주간'
@@ -173,6 +177,8 @@ L['options_show_completed_nodes'] = '완료 지점 표시'
 L['options_show_completed_nodes_desc'] = '이미 완료한 지점도 표시하도록 설정합니다'
 L['options_toggle_hide_done_rare'] = '모든 보상을 획득한 희귀몹 숨김'
 L['options_toggle_hide_done_rare_desc'] = '모든 보상을 획득한 희귀몹을 지도에서 숨깁니다.'
+L['options_toggle_hide_done_treasure'] = nil
+L['options_toggle_hide_done_treasure_desc'] = nil
 L['options_toggle_hide_minimap'] = '미니맵 상의 모든 아이콘 숨김'
 L['options_toggle_hide_minimap_desc'] = '이 애드온이 표시하는 미니맵 내의 모든 아이콘을 숨기고 지도에서만 나타나도록 합니다'
 L['options_toggle_maximized_enlarged'] = '세계지도 최대화면 모드에서 아이콘 확대'
@@ -200,6 +206,10 @@ L['options_transmog_rewards'] = '형상변환 보상 표시'
 L['options_transmog_rewards_desc'] = '형상변환 보상을 툴팁에 표시하고 수집 진행상황을 추적합니다'
 L['options_all_transmog_rewards'] = '획득 불가 형상변환 보상 표시'
 L['options_all_transmog_rewards_desc'] = '타직업으로만 수집가능한 형상변환 보상을 표시합니다'
+L['options_rep_rewards'] = nil
+L['options_rep_rewards_desc'] = nil
+L['options_claimed_rep_rewards'] = nil
+L['options_claimed_rep_rewards_desc'] = nil
 
 L['options_icons_misc_desc'] = '기타 위치 정보 표시'
 L['options_icons_misc'] = '기타'
@@ -231,6 +241,8 @@ L['options_toggle_show_notes'] = '가이드 표시'
 L['options_toggle_show_notes_desc'] = '가이드가 있으면 툴팁에 표시합니다'
 L['options_toggle_use_standard_time'] = nil
 L['options_toggle_use_standard_time_desc'] = nil
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

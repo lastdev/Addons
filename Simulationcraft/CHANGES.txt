@@ -1,10 +1,10 @@
-lightweight tag edc6d50aee4f70f2f983e8c78d275193e8665430 patch-11.0.2-01
+lightweight tag 90f8bbad6e0a0795d0c2dbe37987eea732846a69 patch-11.0.2-02
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Thu Aug 15 13:21:19 2024 -0700
+Date:	Sat Aug 31 12:43:50 2024 -0700
 
-commit edc6d50aee4f70f2f983e8c78d275193e8665430
+commit 90f8bbad6e0a0795d0c2dbe37987eea732846a69
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Thu Aug 15 13:21:19 2024 -0700
+Date:   Sat Aug 31 12:43:50 2024 -0700
 
-    Bump TOC version for 11.0.2
+    Tweak corrupt talent loadout message that has been confusing
 

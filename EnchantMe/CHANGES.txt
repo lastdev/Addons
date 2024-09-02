@@ -1,10 +1,10 @@
-lightweight tag 75d97eb7a4d2f7cde654d9f7639dd6c42e7583cc v1.3.7
+lightweight tag 13ba7b66a5b097b606b271d5ed17a82492549a6e v1.4.0
 Author:	romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:	Wed Aug 14 11:37:26 2024 +0200
+Date:	Mon Aug 26 18:33:52 2024 +0200
 
-commit 75d97eb7a4d2f7cde654d9f7639dd6c42e7583cc
+commit 13ba7b66a5b097b606b271d5ed17a82492549a6e
 Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:   Wed Aug 14 11:37:26 2024 +0200
+Date:   Mon Aug 26 18:33:52 2024 +0200
 
-    Fix settings, update TOC
+    Update for TWW launch
 

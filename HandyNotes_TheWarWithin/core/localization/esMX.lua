@@ -12,6 +12,7 @@ L['leather'] = 'Cuero'
 L['mail'] = 'Malla'
 L['plate'] = 'Placas'
 L['cosmetic'] = nil
+L['tabard'] = nil
 
 L['1h_mace'] = '1m Maza'
 L['1h_sword'] = '1m Espada'
@@ -58,6 +59,8 @@ L['hard'] = 'Difícil'
 
 L['completed'] = 'Terminado'
 L['incomplete'] = 'Incompleto'
+L['claimed'] = nil
+L['unclaimed'] = nil
 L['known'] = 'Conocido'
 L['missing'] = 'Desconocido'
 L['unobtainable'] = 'No se puede obtener'
@@ -78,6 +81,7 @@ L['in_water'] = 'Bajo el agua.'
 L['in_building'] = nil
 
 ------------------------------------ TIME -------------------------------------
+L['now'] = 'Ahora'
 L['hourly'] = nil
 L['daily'] = nil
 L['weekly'] = 'Semanal'
@@ -173,6 +177,8 @@ L['options_show_completed_nodes'] = nil
 L['options_show_completed_nodes_desc'] = nil
 L['options_toggle_hide_done_rare'] = 'Ocultar el raro si todo el botín se conoce'
 L['options_toggle_hide_done_rare_desc'] = 'Ocultar todos los raros de botín conocido.'
+L['options_toggle_hide_done_treasure'] = nil
+L['options_toggle_hide_done_treasure_desc'] = nil
 L['options_toggle_hide_minimap'] = 'Ocultar todos los íconos sobre el minimapa'
 L['options_toggle_hide_minimap_desc'] = 'Oculta todos íconos de este addon sobre el minimapa y los mostra solamente sobre el mapa principal.'
 L['options_toggle_maximized_enlarged'] = nil
@@ -200,6 +206,10 @@ L['options_transmog_rewards'] = nil
 L['options_transmog_rewards_desc'] = nil
 L['options_all_transmog_rewards'] = nil
 L['options_all_transmog_rewards_desc'] = nil
+L['options_rep_rewards'] = nil
+L['options_rep_rewards_desc'] = nil
+L['options_claimed_rep_rewards'] = nil
+L['options_claimed_rep_rewards_desc'] = nil
 
 L['options_icons_misc_desc'] = nil
 L['options_icons_misc'] = 'Miscelánea'
@@ -231,6 +241,8 @@ L['options_toggle_show_notes'] = 'Mostrar las Notas'
 L['options_toggle_show_notes_desc'] = 'Agregar las notas útiles al tooltip cuando esté disponible'
 L['options_toggle_use_standard_time'] = nil
 L['options_toggle_use_standard_time_desc'] = nil
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

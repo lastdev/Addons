@@ -181,6 +181,8 @@ end
 
 --[[------------------------------------------------------------------------]]--
 
+-- This is a minimal emulation of LM.ActionButton
+
 LiteMountMountIconMixin = {}
 
 function LiteMountMountIconMixin:OnEnter()
@@ -191,6 +193,12 @@ end
 
 function LiteMountMountIconMixin:OnLeave()
     LiteMountTooltip:Hide()
+end
+
+function LiteMountMountIconMixin:OnClickHook(mouseButton, isDown)
+    if self.clickHookFunction then
+        self.clickHookFunction()
+    end
 end
 
 function LiteMountMountIconMixin:PreClick(mouseButton, isDown)
@@ -205,6 +213,7 @@ function LiteMountMountIconMixin:OnLoad()
     self:RegisterForClicks("AnyUp")
     self:RegisterForDrag("LeftButton")
     self:SetScript('PreClick', self.PreClick)
+    self:HookScript('OnClick', self.OnClickHook)
 end
 
 function LiteMountMountIconMixin:OnDragStart()
@@ -270,12 +279,7 @@ function LiteMountMountButtonMixin:Update(bitFlags, mount)
         self.Icon:GetNormalTexture():SetVertexColor(1, 1, 1)
         self.Icon:GetNormalTexture():SetDesaturated(true)
     elseif not mount:IsUsable() then
-        -- In retail mounts are made red if you can't use them ever
-        self.Name:SetFontObject("GameFontNormal")
-        self.Icon:GetNormalTexture():SetDesaturated(true)
-        self.Icon:GetNormalTexture():SetVertexColor(0.6, 0.2, 0.2)
-    elseif WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not mount:IsMountable() then
-        -- In classic mounts are made red if you can't use them right now
+        -- Mounts are made red if you can't use them
         self.Name:SetFontObject("GameFontNormal")
         self.Icon:GetNormalTexture():SetDesaturated(true)
         self.Icon:GetNormalTexture():SetVertexColor(0.6, 0.2, 0.2)
@@ -414,6 +418,7 @@ function LiteMountMountsPanelMixin:OnShow()
     LiteMountFilter:Attach(self, 'BOTTOMLEFT', self.MountScroll, 'TOPLEFT', 0, 15)
     LM.UIFilter.RegisterCallback(self, "OnFilterChanged", "OnRefresh")
     LM.MountRegistry:RefreshMounts()
+    LM.MountRegistry:UpdateFilterUsability()
     LM.MountRegistry.RegisterCallback(self, "OnMountSummoned", "OnRefresh")
 
     -- Update the counts, Journal-only

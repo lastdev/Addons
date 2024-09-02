@@ -1,5 +1,5 @@
-## Changed in v14
+## Changed in v39
 
-* Azj-Kahet: found Silk-Spun Supplies, Concealed Contraband
-* Delves: Kriegval's Rest, Fungal Folly
+* Delves: add The Spiral Weave, Tak-Rethan Abyss, and The Underkeep
+* Ringing Deeps: add the weekly reputation for Disturbed Earthgorger
 

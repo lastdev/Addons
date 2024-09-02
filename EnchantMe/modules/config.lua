@@ -1,6 +1,6 @@
 local _, addon = ...
 local config, private = addon.module('config')
-local latestVersion = 1
+local latestVersion = 2
 
 function config.init()
     if EnchantMeAddonConfig then
@@ -25,7 +25,6 @@ function config.getDefaultConfig()
         version = latestVersion,
         indicatorPos = 'TOPLEFT',
         flagColor = 'ffff0000',
-        ignoreBelt = false,
     }
 end
 
@@ -43,5 +42,7 @@ function private.migrateConfiguration()
 end
 
 private.migrations = {
-    -- none for now
+    [2] = function ()
+        config.db.ignoreBelt = nil
+    end,
 }

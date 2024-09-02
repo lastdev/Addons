@@ -60,6 +60,8 @@ L['options_icons_tuskarr_tacklebox_desc'] = 'Zeigt die möglichen Positionen fü
 L['squirrels_note'] = 'Du musst das Emote {emote:/liebe} auf Kleintiere anwenden (KEINE Kampfhaustiere).'
 L['options_icons_squirrels'] = '{achievement:16729}'
 L['options_icons_squirrels_desc'] = 'Zeigt die Positionen der Kleintiere für den Erfolg {achievement:16729} an.'
+L['options_icons_zaralek_squirrels'] = '{achievement:18361}'
+L['options_icons_zaralek_squirrels_desc'] = 'Zeigt die Positionen der Kleintiere für den Erfolg {achievement:18361} an.'
 
 L['hnj_sublabel'] = 'Benötigt einen Großen Jagdtrupp der Shikaarzen in der Nähe'
 L['hnj_western_azure_span_hunt'] = 'Auf dem toten Baum.'
@@ -84,7 +86,6 @@ L['options_icons_signal_transmitter'] = 'Wyrmlochgenerator Signaltransmitters'
 L['options_icons_signal_transmitter_desc'] = 'Zeigt die Positionen der {object:Deaktivierten Signaltransmitter} für {item:198156} an.'
 
 L['rare_14h'] = 'Dieser Gegner befindet sich in einem 14 Stunden Interval mit anderen Gegnern, wobei alle 30 Minuten einer dieser Gegner erscheinen kann.\n\nNächstes mögliches erscheinen: {note:%s}'
-L['now'] = 'Jetzt'
 L['spawns_at_night'] = '{note:Erscheint nur nachts. (Ab 18:30 Server Zeit)}'
 
 L['elemental_storm'] = 'Elementarsturm'
@@ -144,6 +145,10 @@ L['frostbound_chest'] = 'Frostgebundene Kiste'
 L['options_icons_frostbound_chest'] = 'Frostgebundene Kiste'
 L['options_icons_frostbound_chest_desc'] = 'Zeigt die möglichen Positionen der {object:Frostgebundene Kisten} an.'
 
+L['war_supply_chest_note'] = 'Eine {npc:135181} fliegt alle 45 Minuten und wirft eine {npc:135238} an einer der möglichen Abwurfstellen ab.'
+L['options_icons_war_supplies_desc'] = 'Zeigt die Position von möglichen Abwurfstellen für die {npc:135238} an.'
+L['options_icons_war_supplies'] = '{npc:135238}'
+
 L['fyrakk_assault_label'] = 'Angriff von Fyrakk'
 L['fyrakk_secured_shipment'] = 'Gesicherte Lieferung'
 
@@ -155,6 +160,8 @@ L['shadowflame_leatherworking_table_label'] = 'Schattenflammenlederverarbeitungs
 L['shadowflame_leatherworking_table_note'] = 'Erforderlich für die Herstellung des Rezepts:\n{spell:406275}'
 L['shadowflame_incantation_table_label'] = 'Schattenflammenzauberformeltisch'
 L['shadowflame_incantation_table_note'] = 'Erforderlich für die Herstellung des Rezepts:\n{spell:405076}'
+L['altar_of_decay_label'] = 'Altar des Verfalls'
+L['altar_of_decay_note'] = 'Erforderlich für die Herstellung der Rezepte:\n{spell:110423}:\nVerfallene Muster\nVerfall-angereicherte Reagenzien\n\n{spell:264211}:\nToxische Tränke\nToxische Phiolen\n{spell:405879}'
 L['azure_loom_label'] = 'Azurblauer Webrahmen'
 L['azure_loom_note'] = 'Erforderlich für die Herstellung des Rezepts:\n{spell:376556}'
 L['temporal_loom_label'] = 'Temporalwebrahmen'
@@ -167,13 +174,31 @@ L['celestine_vendor_note'] = 'Tausche {item:207026} gegen ein Reittier, Haustier
 L['renewed_magmammoth_note'] = 'Sammle 20x {item:209419} vom Endboss eines {location:Traumsprungs}, um das Reittier {item:192807} zu erhalten.'
 
 L['dragon_pepe_label'] = 'Pepe der Drache'
-L['dragon_pepe_note'] = 'Sitzt unten an der Treppe, die zum {Ort:Sitz der Aspekte} führt.'
+L['dragon_pepe_note'] = 'Sitzt unten an der Treppe, die zum {location:Sitz der Aspekte} führt.'
 L['explorer_pepe_label'] = 'Pepe der Entdecker'
-L['explorer_pepe_note'] = 'Sitzt oben auf dem großen Zelt im {Ort:Drachenschuppenbasislager}.'
+L['explorer_pepe_note'] = 'Sitzt oben auf dem großen Zelt im {location:Drachenschuppenbasislager}.'
 L['tuskarr_pepe_label'] = 'Pepe der Tuskarr'
 L['tuskarr_pepe_note'] = 'Sitzt in der Nähe von {npc:196544} und {npc:187680} auf einem Gegenstand.'
 
 L['end_of_august'] = '{note:Nur bis Ende August verfügbar.}'
+
+L['rich_soil_label'] = 'Fruchtbarer Boden'
+L['rich_soil_note'] = 'Pflanzt verschiedene Samen in einem Stück {object:Fruchtbarer Boden} auf den {location:Dracheninseln}, um Belohnungen zu erhalten.\n\n{item:200506} - Zufällige Planzen der {location:Dracheninseln}\n\n{item:200508} - Zufällige tobende Essenzen\n\n{item:200507} - Zufällige verrottende Pflanzen\n\n{item:200509} - Lässt {npc:198571} für verschiedene Kräuter und Essenzen erscheinen.'
+L['options_icons_rich_soil'] = 'Fruchtbarer Boden'
+L['options_icons_rich_soil_desc'] = 'Zeigt mögliche Positionen von {object:Fruchtbarer Boden} an.'
+
+L['information_stuffed_clue'] = 'Informationsreicher Hinweis'
+L['clued_in_note'] = 'Ein {npc:210079} erscheint während des Events {note:Das große Buddeln} oder bei {wq:Forschung: ...} Weltquests.'
+L['options_icons_clued_in'] = '{achievement:19787}'
+L['options_icons_clued_in_desc'] = 'Zeigt die Positionen für {npc:210079} für den Erfolg {achievement:19787} an.'
+
+L['goggle_wobble_note'] = 'Tanze {emote:/tanzen} mit {npc:207763} während der Einführungsquestreihe oder den {wq:Technosehen: ...} Weltquests während du den {item:202247} trägst.'
+L['options_icons_goggle_wobble'] = '{achievement:19791}'
+L['options_icons_goggle_wobble_desc'] = 'Zeigt die Positionen von {npc:207763} für den Erfolg {achievement:19791} an.'
+
+L['just_one_more_thing_note'] = 'Du musst eine beliebige {wq:Forschung: ...} Weltquest dreimal abschließen.'
+L['options_icons_just_one_more_thing'] = '{achievement:19792}'
+L['options_icons_just_one_more_thing_desc'] = 'Zeigt die Positionen der Weltquests für den Erfolg {achievement:19792} an.'
 
 -------------------------------------------------------------------------------
 ------------------------------- THE AZURE SPAN --------------------------------
@@ -292,6 +317,16 @@ L['naszuro_azure_archives'] = 'An der Seite des Berges, auf einem kleinen Felsen
 L['naszuro_hudsons_rock'] = 'Oben auf dem kleinen felsigen Hügel.'
 
 L['ferry_to_iskaara'] = 'Boot nach Iskaara'
+
+L['options_icons_vegetarian_diet'] = '{achievement:16762}'
+L['options_icons_vegetarian_diet_desc'] = 'Zeigt die Position der {object:Fleischlager} für den Erfolg {achievement:16762} an.'
+
+L['meat_storage_label'] = 'Fleischlager'
+L['meat_storage_note'] = 'Nachdem du alle 12 {npc:186766}, die in einem {object:Fleischlager} gefangen sind, befreit hast, erhältst du Post von {npc:196267}. In der Post ist das {item:200631} Spielzeug.'
+
+L['meat_storage_location_a'] = 'Am Strand umgeben von {npc:96239en}.'
+L['meat_storage_location_b'] = 'In der Nähe einer Höhle hinter {npc:187192}.'
+L['meat_storage_location_c'] = 'In einer kleinen Höhle hinter {npc:197130} und {npc:186226}.'
 
 -------------------------------------------------------------------------------
 ------------------ FORBIDDEN REACH (DRACTHYR STARTING ZONE) -------------------
@@ -424,6 +459,18 @@ L['trader_hagarth_note'] = 'Tausche {item:190456} gegen Rezepte ein.'
 
 L['naszuro_caldera_of_the_menders'] = 'Oben im Turm.'
 
+L['sun_bleached_vase'] = 'Sonnengebleichte Vase'
+L['untranslated_tome'] = 'Unübersetzter Foliant'
+L['untranslated_tome_note'] = 'In dem Gebäude mit dem Eingang unterhalb der Brücke.'
+L['mysterious_boot'] = 'Mysteriöser Stiefel'
+L['mysterious_boot_note'] = 'Im oberen Stockwerk.'
+L['decaying_fishing_bucket'] = 'Vergessener Fischeimer'
+L['decaying_fishing_bucket_note'] = 'Auf der obersten Ebene des Turms.'
+L['forgotten_fishing_pole'] = 'Vergessene Angelrute'
+L['forgotten_fishing_pole_note'] = 'Auf der untersten Ebene.'
+L['overgrown_fishing_bench'] = 'Überwucherte Fischbank'
+L['overgrown_fishing_bench_note'] = 'Ein zugewachsener Felsen, schwer zu erkennen.'
+
 -------------------------------------------------------------------------------
 ------------------------------ OHN'AHRAN PLAINS -------------------------------
 -------------------------------------------------------------------------------
@@ -501,6 +548,7 @@ L['options_icons_dreamguard'] = '{achievement:16574}'
 L['options_icons_dreamguard_desc'] = 'Zeigt die Positionen der Traumwächterinnen für den Erfolg {achievement:16574} an.'
 
 L['khadin_note'] = 'Tausche {item:191784} gegen Berufswissen ein.'
+L['khadin_prof_note'] = 'Verdiene weitere %d {currency:%d}, um den Berufstalentbaum für {spell:%d} zu vervollständigen.'
 L['the_great_swog_note'] = 'Tausche {item:199338}, {item:199339} oder {item:199340} gegen die jeweiligen Flunkschatzbeutel ein.'
 L['hunt_instructor_basku_note'] = 'Tausche {item:200093} gegen Ruf bei den {faction:2503} ein.'
 L['elder_yusa_note'] = 'Visiere {npc:192818} an und benutze den Chatbefehl {emote:/hunger}, um das Rezept zu erhalten.'
@@ -529,6 +577,12 @@ L['bloodgullet_note'] = 'Hol dir in einem Zelt am {location:Baumschrittaußenpos
 
 L['naszuro_windsong_rise'] = 'Oben auf der Steinsäule.'
 L['naszuro_emerald_gardens'] = 'Im Gras neben dem Wasserfall.'
+
+L['prismatic_leaper_school_label'] = 'Prismatischer Springerschwarm'
+L['prismatic_leaper_school_note'] = 'Sprich mit {npc:195935} in {location:Iskaara}, um Verbesserungen freizuschalten.\n\nAngle die folgenden Gegenstände aus {object:Prismatischer Springerschwarm} in {location:Ohn\'ahran Plains}:\n\n{item:%d}\n{item:%d}\n{item:%d}\n{item:%d}\n{item:%d}'
+
+L['aylaag_spear'] = 'Speer der Aylaag'
+L['dedication_plaquard'] = 'Widmungsplakette'
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -579,7 +633,17 @@ L['new_perspective_note'] = 'Mache am Aussichtspunkt ein Foto mit der S.E.L.F.I.
 L['options_icons_new_perspective'] = '{achievement:16634}'
 L['options_icons_new_perspective_desc'] = 'Zeigt die Positionen der Aussichten für den Erfolg {achievement:16634} an.'
 
+L['fringe_benefits_note'] = 'Schließe 8 der täglichen Quests ab, um den Erfolg zu erringen.'
+L['options_icons_fringe_benefits'] = '{achievement:19507}'
+L['options_icons_fringe_benefits_desc'] = 'Zeigt die Position, an der die täglichen Quests für den Erfolg {achievement:19507} angenommen werden können.'
+
+L['little_scales_daycare_note'] = 'Du musst eine mehrtägige Questreihe abschließen, die mit der Quest {quest:72664} von {npc:197478} startet, um diesen Erfolg und das Haustier zu erhalten.'
+L['options_icons_whelp'] = '{achievement:18384}'
+L['options_icons_whelp_desc'] = 'Zeigt die Position, an der die täglichen Quests für der Erfolg {achievement:18384} angenommen werden können.'
+
 L['ruby_feast_gourmand'] = 'Täglich tischt ein zufälliger Gastkoch verschiedene Gerichte und Getränke auf.'
+L['options_icons_ruby_feast_gourmand'] = '{achievement:16556}'
+L['options_icons_ruby_feast_gourmand_desc'] = 'Zeigt die Position, an der die täglichen Quests für der Erfolg {achievement:16556} angenommen werden können.'
 
 L['sorotis_note'] = 'Tausche {item:199906} gegen Ruf beim {faction:2510} ein.'
 L['lillian_brightmoon_note'] = 'Tausche {item:201412} gegen Ruf bei der |cFFFFFF00Drachenschuppenexpedition|r ein.'
@@ -611,7 +675,6 @@ Verfolge die erscheinende {npc:198590} bis auf einen Ast hinter {npc:197232}. We
 Geh zu {npc:198062} und schließe die Quest ab, um {item:200872} zu erhalten.
 ]]
 
-L['little_scales_daycare_note'] = 'Du musst eine mehrtägige Questreihe abschließen, die mit der Quest {quest:72664} von {npc:197478} startet, um diesen Erfolg und das Haustier zu erhalten.'
 L['naszuro_veiled_ossuary'] = 'Neben dem kleinen Schrein.'
 L['naszuro_algethar_academy'] = 'Auf dem Vorsprung der Turmspitze.'
 L['naszuro_vault_of_the_incarnates'] = 'Neben dem Fuß der Statue.'
@@ -619,9 +682,16 @@ L['naszuro_thaldraszus_peak'] = 'Auf einem Nebengipfel des Berges.'
 L['naszuro_temporal_conflux'] = 'Auf dem Kopf der Drachenstatue.'
 
 L['revival_catalyst_label'] = 'Belebungskatalysator'
-L['revival_catalyst_note'] = 'Verwandelt einen Gegenstand in einen Setgegenstand.'
+L['revival_catalyst_note'] = 'Verwandelt einen Gegenstand in einen Setgegenstand.\n\n{currency:2912}: %d/%d'
 
 L['provisioner_aristta_note'] = 'Tausche {currency:2657} gegen ein Reittier und Ausrüstungsvorlagen ein.'
+
+L['investigators_pocketwatch_note_a'] = '1. Leihe dir {item:208449} von {npc:204990} {dot:Green} in der oberen Etage im {location:Gasthaus im Irgendwann} aus.\n\n{note:Du muss ihre Questreihe abgeschlossen haben.}'
+L['investigators_pocketwatch_note_b'] = '2. Benutze {item:208449} in der Nähe von {npc:203769} {dot:Blue} in der unteren Etage im {location:Gasthaus im Irgendwann} und kaufe {item:208448} von {npc:207463}.\n\n{note:{item:208448} hält nur 30 Sekunden. Beeil dich!}'
+L['investigators_pocketwatch_note_c'] = '3. Begib dich schnell zum Wasserfall und trinke {item:208448}. Interagiere mit der neu erschienenen {object:Zeitgetränkte Uhr}, um {npc:201664} erscheinen zu lassen.'
+
+L['ominous_portal_label'] = 'Ominöses Portal'
+L['ominous_portal_note'] = 'Alle 30 Minuten erscheint ein {object:Ominöses Portal}.\n\n5 Minuten später wird {npc:214984} mehrere Bosse erscheinen lassen. Besiege den {npc:215141}, {npc:215147} und {npc:215146} für eine Chance auf die Belohnungen.\n\n{note:Es gibt keine tägliche Beutesperre.}'
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
@@ -797,6 +867,11 @@ L['box_of_rocks_note'] = '{object:Kasten mit Steinen} kann in {location:Die Küs
 L['options_icons_many_boxes'] = '{achievement:18559}'
 L['options_icons_many_boxes_desc'] = 'Zeigt die möglichen Positionen von {object:Kasten mit Steinen} für den Erfolg {achievement:18559} an.'
 
+L['drakonid_painting'] = 'Drakonidengemälde'
+L['emptied_hourglass'] = 'Geleertes Stundenglas'
+L['rusted_signal_horn'] = 'Rostiges Signalhorn'
+L['rusted_signal_horn_note'] = 'Auf der obersten Ebene.'
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
@@ -865,6 +940,16 @@ L['zaralek_event_inactive'] = ns.color.Orange('Dieses Ereignis wird heute nicht 
 
 L['options_icons_zone_event'] = 'Zonen-Ereignisse'
 L['options_icons_zone_event_desc'] = 'Zeigt die Positionen der Zonen-Ereignisse an.'
+
+L['djaradin_scroll'] = 'Schriftrolle der Djaradin'
+L['forgotten_incense'] = 'Vergessenes Räucherwerk'
+L['forgotten_incense_note'] = '{note:Aufgrund der Questgrenzen schwer zu erreichen.}'
+L['historied_heirloom'] = 'Historisches Erbstück'
+L['rusted_dirt_pale'] = 'Rostiger dreckiger Pfahl'
+L['rusted_dirt_pale_note'] = nil -- review
+L['niffen_pickaxe'] = 'Niffenspitzhacke'
+L['chipped_grub_pot'] = 'Gesprungener Essenstopf'
+L['chipped_grub_pot_note'] = 'Oben auf dem Turm.'
 
 -------------------------------------------------------------------------------
 ------------------------------- Emerald Dream ---------------------------------
@@ -945,6 +1030,7 @@ L['moonkin_hatchling_note'] = 'Die Weltquest {wq:Beklemmende Klauen} muss aktiv 
 L['druid_glyphs_label'] = 'Druidenglyphen'
 L['druid_glyphs_sublabel'] = '{note:Das ist nur eine Checkliste für die Druidenglypen!}'
 L['druid_glyphs_note'] = 'Sammle {note:Druidenglyphen} von verschiedenen Aktivitäten in der Zone {location:Der Smaragdgrüne Traum}.'
+L['druid_glyphs_checklist_note'] = 'Verfolge, ob du heute schon die seltenen Gegner im {location:Der Smaragdgrüne Traum} besiegt hast. Es werden nur {npc:NPCs} mit benötigter Beute angezeigt.\n\nWurde ein Gegner besiegt, wird dieser als ' .. ns.status.Green('Abgeschlossen') .. ' angezeigt.'
 
 L['pollenfused_bristlebruin_fur_sample_note'] = 'Auf dem Boden vor dem Baum.'
 
@@ -958,6 +1044,7 @@ L['mbc_vial_k'] = 'K'
 L['mbc_vial_n'] = 'N'
 L['mbc_vial_o'] = 'O' -- review not yet translated
 
+L['mbc_vial_b_location'] = 'Das Becken von Thas\'talah'
 L['mbc_vial_d_location'] = 'Außenposten Sternenfall'
 L['mbc_vial_e_location'] = 'Zwielichtshain'
 L['mbc_vial_k_location'] = 'Sturmgrimms Grabhügel'

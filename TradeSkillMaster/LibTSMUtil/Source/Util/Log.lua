@@ -47,7 +47,7 @@ function Log.SetCurrentThreadNameFunction(func)
 end
 
 ---Enables or disables printing log messages to chat.
----@param enabled boolean
+---@param enabled boolean The logging state to set
 function Log.SetLoggingToChatEnabled(enabled)
 	if private.logToChat == enabled then
 		return

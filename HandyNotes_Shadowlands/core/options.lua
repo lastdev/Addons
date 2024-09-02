@@ -14,6 +14,7 @@ ns.optionDefaults = {
 
         -- visibility
         hide_done_rares = false,
+        hide_done_treasures = false,
         hide_minimap = false,
         maximized_enlarged = true,
         show_completed_nodes = false,
@@ -23,14 +24,20 @@ ns.optionDefaults = {
         -- tooltip
         show_loot = true,
         show_notes = true,
+        show_npc_id = false,
 
         -- rewards
+        show_rep_rewards = true,
         show_mount_rewards = true,
         show_pet_rewards = true,
         show_recipe_rewards = true,
         show_toy_rewards = true,
         show_transmog_rewards = true,
+        show_manuscript_rewards = true, -- dragonflight only
+
+        -- reward options
         show_all_transmog_rewards = false,
+        show_claimed_rep_rewards = true,
 
         -- development
         development = false,
@@ -106,6 +113,7 @@ ns.options = {
                     set = function(info, v)
                         ns:SetOpt(info.arg, v)
                         ns.world_map_button:Refresh()
+                        LibStub('Krowi_WorldMapButtons-1.4').SetPoints()
                     end,
                     order = 2,
                     width = 'full'
@@ -130,6 +138,14 @@ ns.options = {
                     type = 'header',
                     name = L['options_rewards_settings'],
                     order = 10
+                },
+                show_manuscript_rewards = {
+                    type = 'toggle',
+                    arg = 'show_manuscript_rewards',
+                    name = L['options_manuscript_rewards'],
+                    desc = L['options_manuscript_rewards_desc'],
+                    order = 11,
+                    width = 'full'
                 },
                 show_mount_rewards = {
                     type = 'toggle',
@@ -179,6 +195,22 @@ ns.options = {
                     order = 12,
                     width = 'full'
                 },
+                show_rep_rewards = {
+                    type = 'toggle',
+                    arg = 'show_rep_rewards',
+                    name = L['options_rep_rewards'],
+                    desc = L['options_rep_rewards_desc'],
+                    order = 13,
+                    width = 'full'
+                },
+                show_claimed_rep = {
+                    type = 'toggle',
+                    arg = 'show_claimed_rep_rewards',
+                    name = L['options_claimed_rep_rewards'],
+                    desc = L['options_claimed_rep_rewards_desc'],
+                    order = 14,
+                    width = 'full'
+                },
                 VisibilityHeader = {
                     type = 'header',
                     name = L['options_visibility_settings'],
@@ -200,12 +232,20 @@ ns.options = {
                     order = 22,
                     width = 'full'
                 },
+                hide_done_treasure = {
+                    type = 'toggle',
+                    arg = 'hide_done_treasures',
+                    name = L['options_toggle_hide_done_treasure'],
+                    desc = L['options_toggle_hide_done_treasure_desc'],
+                    order = 23,
+                    width = 'full'
+                },
                 hide_minimap = {
                     type = 'toggle',
                     arg = 'hide_minimap',
                     name = L['options_toggle_hide_minimap'],
                     desc = L['options_toggle_hide_minimap_desc'],
-                    order = 23,
+                    order = 24,
                     width = 'full'
                 },
                 use_char_achieves = {
@@ -213,14 +253,14 @@ ns.options = {
                     arg = 'use_char_achieves',
                     name = L['options_toggle_use_char_achieves'],
                     desc = L['options_toggle_use_char_achieves_desc'],
-                    order = 24,
+                    order = 25,
                     width = 'full'
                 },
                 restore_all_nodes = {
                     type = 'execute',
                     name = L['options_restore_hidden_nodes'],
                     desc = L['options_restore_hidden_nodes_desc'],
-                    order = 25,
+                    order = 26,
                     width = 'full',
                     func = function()
                         wipe(ns.addon.db.char)
@@ -308,6 +348,13 @@ ns.options = {
                     name = L['options_toggle_use_standard_time'],
                     desc = L['options_toggle_use_standard_time_desc'],
                     order = 43
+                },
+                show_npc_id = {
+                    type = 'toggle',
+                    arg = 'show_npc_id',
+                    name = L['options_toggle_show_npc_id'],
+                    desc = L['options_toggle_show_npc_id_desc'],
+                    order = 44
                 }
             }
         },

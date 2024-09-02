@@ -831,9 +831,9 @@ Plater.AnchorNamesByPhraseId = {
 		
 		if not rangeChecker then
 			rangeChecker = function (unit)
-				local range = (LibRangeCheck:GetRange(unit, nil, true) or 0) <= (rangeCheckRange or 40)
+				local minRange, maxRange = (LibRangeCheck:GetRange(unit, nil, true) or 0) <= (rangeCheckRange or 40)
 				Plater.EndLogPerformanceCore("Plater-Core", "Update", "CheckRange")
-				return range
+				return maxRange or minRange
 			end
 			Plater.GetSpellForRangeCheck()
 		end
@@ -1468,6 +1468,11 @@ Plater.AnchorNamesByPhraseId = {
 		["SoftTargetNameplateInteract"] = (IS_WOW_PROJECT_MAINLINE),
 	}
 	
+	local cvars_to_store_lower = {}
+	for CVarName in pairs (cvars_to_store) do
+		cvars_to_store_lower[lower(CVarName)] = CVarName
+	end
+	
 	--keep this separate for now, with only stuff that NEEDS restoring in order
 	local function cvar_restore_order(v1, v2)
 		local restoreOrder = {
@@ -1533,18 +1538,22 @@ Plater.AnchorNamesByPhraseId = {
 					cvarTable [CVarName] = Plater.ParseCVarValue(GetCVar (CVarName))
 				end
 			end
-		elseif cvars_to_store [cvar] then
-			cvarTable [cvar] = Plater.ParseCVarValue(value)
-			local callstack = debugstack(2) -- starts at "SetCVar" or caller
-			if callstack then
-				local caller, line = callstack:match("\"@([^\"]+)\"%]:(%d+)")
-				if not caller then
-					caller, line = callstack:match("in function <([^:%[>]+):(%d+)>")
+		else
+			-- make this case insensitive, but ensure original case is stored
+			cvar = cvars_to_store_lower[lower(cvar) or "N/A"] -- get right case for storage
+			if cvars_to_store[cvar] then
+				cvarTable [cvar] = Plater.ParseCVarValue(value)
+				local callstack = debugstack(2) -- starts at "SetCVar" or caller
+				if callstack then
+					local caller, line = callstack:match("\"@([^\"]+)\"%]:(%d+)")
+					if not caller then
+						caller, line = callstack:match("in function <([^:%[>]+):(%d+)>")
+					end
+					
+					--print((caller and caller .. ":" .. line) or callstack)
+					local isCVarUtil = (caller and caller:lower():find("[\\/]sharedxml[\\/]cvarutil%.lua"))
+					cvarLastChangedTable [cvar] = not isCVarUtil and (caller and (caller .. ":" .. line)) or callstack or "N/A"
 				end
-				
-				--print((caller and caller .. ":" .. line) or callstack)
-				local isCVarUtil = (caller and caller:lower():find("[\\/]sharedxml[\\/]cvarutil%.lua"))
-				cvarLastChangedTable [cvar] = not isCVarUtil and (caller and (caller .. ":" .. line)) or callstack or "N/A"
 			end
 		end
 		
@@ -1705,6 +1714,10 @@ Plater.AnchorNamesByPhraseId = {
 		
 		if (profile.spell_animations) then
 			for spellId, animations in pairs (profile.spell_animation_list) do
+				if type(spellId) == "string" and tonumber(spellId) then
+					profile.spell_animation_list[tonumber(spellId)] = animations
+					profile.spell_animation_list[spellId] = nil
+				end
 				local frameAnimations = {}
 				local spellName = GetSpellInfo (spellId)
 				if (spellName) then
@@ -5140,6 +5153,7 @@ function Plater.OnInit() --private --~oninit ~init
 					--cast color (from options tab Cast Colors)
 					local castColors = profile.cast_colors
 					local customColor = castColors[self.spellID]
+					local customRenamed = false
 					if (customColor) then
 						local isEnabled, color, customSpellName = customColor[1], customColor[2], customColor[3]
 						if (color and isEnabled) then
@@ -5155,6 +5169,7 @@ function Plater.OnInit() --private --~oninit ~init
 
 							if (customSpellName and customSpellName ~= "") then
 								self.Text:SetText(customSpellName)
+								customRenamed = true
 							end
 
 							--check if the original cast color is enabled
@@ -5166,6 +5181,13 @@ function Plater.OnInit() --private --~oninit ~init
 								self.castColorTexture:SetColorTexture(r, g, b)
 								self.castColorTexture:SetHeight(self:GetHeight() + profile.cast_color_settings.height_offset)
 							end
+						end
+					end
+					
+					if not customRenamed and Plater.db.profile.bossmod_bw_castrename_enabled and BigWigsAPI and BigWigsAPI.GetSpellRename then
+						local bwSpellName = BigWigsAPI.GetSpellRename(self.spellID)
+						if bwSpellName then
+							self.Text:SetText(bwSpellName)
 						end
 					end
 					

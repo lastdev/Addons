@@ -6,7 +6,7 @@
 
 local LibTSMDev = select(2, ...).LibTSMDev
 local DBViewer = LibTSMDev:Init("DBViewer")
-local SlashCommands = LibTSMDev:Include("Service.SlashCommands")
+local SlashCommands = LibTSMDev:From("LibTSMApp"):Include("Service.SlashCommands")
 local UIElements = LibTSMDev:From("LibTSMUI"):Include("Util.UIElements")
 local Database = LibTSMDev:From("LibTSMUtil"):Include("Database")
 local private = {

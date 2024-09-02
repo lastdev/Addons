@@ -109,8 +109,8 @@ function HealBot_Action_setAuxAssigns(vName, frame, vValue)
 end
 
 function HealBot_Action_UpdateCheckInterval()
-    HealBot_Action_luVars["deadCheckInterval"]=HealBot_Util_PerfVal2(958)
-    if HealBot_Action_luVars["deadCheckInterval"]<0.1 then HealBot_Action_luVars["deadCheckInterval"]=0.1 end
+    HealBot_Action_luVars["deadCheckInterval"]=HealBot_Util_PerfVal2(925)
+    if HealBot_Action_luVars["deadCheckInterval"]<0.5 then HealBot_Action_luVars["deadCheckInterval"]=0.5 end
     HealBot_Debug_PerfUpdate("deadInt", HealBot_Action_luVars["deadCheckInterval"])
 end
 
@@ -123,7 +123,30 @@ function HealBot_Action_setAdaptive()
     else
         hbAdaptive=HealBot_Options_copyTable(Healbot_Config_Skins.Adaptive[Healbot_Config_Skins.Current_Skin])
         hbAdaptiveOrder=HealBot_Options_copyTable(Healbot_Config_Skins.AdaptiveOrder[Healbot_Config_Skins.Current_Skin])
-        hbAdaptiveCol=HealBot_Options_copyTable(Healbot_Config_Skins.AdaptiveCol[Healbot_Config_Skins.Current_Skin])
+        hbAdaptiveCol["RecentHeals"].R=HealBot_Skins_GetColVar("AdaptiveCol", "RecentHeals", "R")
+        hbAdaptiveCol["RecentHeals"].G=HealBot_Skins_GetColVar("AdaptiveCol", "RecentHeals", "G")
+        hbAdaptiveCol["RecentHeals"].B=HealBot_Skins_GetColVar("AdaptiveCol", "RecentHeals", "B")
+        hbAdaptiveCol["Threat"].R=HealBot_Skins_GetColVar("AdaptiveCol", "Threat", "R")
+        hbAdaptiveCol["Threat"].G=HealBot_Skins_GetColVar("AdaptiveCol", "Threat", "G")
+        hbAdaptiveCol["Threat"].B=HealBot_Skins_GetColVar("AdaptiveCol", "Threat", "B")
+        hbAdaptiveCol["Aggro"].R=HealBot_Skins_GetColVar("AdaptiveCol", "Aggro", "R")
+        hbAdaptiveCol["Aggro"].G=HealBot_Skins_GetColVar("AdaptiveCol", "Aggro", "G")
+        hbAdaptiveCol["Aggro"].B=HealBot_Skins_GetColVar("AdaptiveCol", "Aggro", "B")
+        hbAdaptiveCol["Highlight"].R=HealBot_Skins_GetColVar("AdaptiveCol", "Highlight", "R")
+        hbAdaptiveCol["Highlight"].G=HealBot_Skins_GetColVar("AdaptiveCol", "Highlight", "G")
+        hbAdaptiveCol["Highlight"].B=HealBot_Skins_GetColVar("AdaptiveCol", "Highlight", "B")
+        hbAdaptiveCol["Target"].R=HealBot_Skins_GetColVar("AdaptiveCol", "Target", "R")
+        hbAdaptiveCol["Target"].G=HealBot_Skins_GetColVar("AdaptiveCol", "Target", "G")
+        hbAdaptiveCol["Target"].B=HealBot_Skins_GetColVar("AdaptiveCol", "Target", "B")
+        hbAdaptiveCol["OOR"].R=HealBot_Skins_GetColVar("AdaptiveCol", "OOR", "R")
+        hbAdaptiveCol["OOR"].G=HealBot_Skins_GetColVar("AdaptiveCol", "OOR", "G")
+        hbAdaptiveCol["OOR"].B=HealBot_Skins_GetColVar("AdaptiveCol", "OOR", "B")
+        hbAdaptiveCol["Overheals"].R=HealBot_Skins_GetColVar("AdaptiveCol", "Overheals", "R")
+        hbAdaptiveCol["Overheals"].G=HealBot_Skins_GetColVar("AdaptiveCol", "Overheals", "G")
+        hbAdaptiveCol["Overheals"].B=HealBot_Skins_GetColVar("AdaptiveCol", "Overheals", "B")
+        hbAdaptiveCol["Absorbs"].R=HealBot_Skins_GetColVar("AdaptiveCol", "Absorbs", "R")
+        hbAdaptiveCol["Absorbs"].G=HealBot_Skins_GetColVar("AdaptiveCol", "Absorbs", "G")
+        hbAdaptiveCol["Absorbs"].B=HealBot_Skins_GetColVar("AdaptiveCol", "Absorbs", "B")
     end
     hbAdaptiveOrder[12]="None"
     for x=1,11 do
@@ -832,27 +855,27 @@ function HealBot_Action_FramesGlowLen()
       --HealBot_setCall("HealBot_Action_FramesGlowLen")
     local l=100
     for x=1,10 do
-        l=ceil(Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][x]["WIDTH"]*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"])
+        l=ceil(Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][x]["WIDTH"]*HealBot_Skins_GetFrameVar("Frame", "SCALE", x))
         if HealBot_Action_luVars["BarGlowSize"] == 1 then
             hbGlowLen[x]=ceil(l/12)
-            hbGlowSize[x]=1*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbGlowSizeStars[x]=2.2*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbGlowSize[x]=1*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbGlowSizeStars[x]=2.2*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         elseif HealBot_Action_luVars["BarGlowSize"] == 2 then
             hbGlowLen[x]=ceil(l/10)
-            hbGlowSize[x]=2*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbGlowSizeStars[x]=3.1*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbGlowSize[x]=2*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbGlowSizeStars[x]=3.1*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         elseif HealBot_Action_luVars["BarGlowSize"] == 4 then
             hbGlowLen[x]=ceil(l/7)
-            hbGlowSize[x]=4*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbGlowSizeStars[x]=4.9*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbGlowSize[x]=4*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbGlowSizeStars[x]=4.9*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         elseif HealBot_Action_luVars["BarGlowSize"] == 5 then
             hbGlowLen[x]=ceil(l/5)
-            hbGlowSize[x]=5*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbGlowSizeStars[x]=5.8*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbGlowSize[x]=5*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbGlowSizeStars[x]=5.8*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         else
             hbGlowLen[x]=ceil(l/9)
-            hbGlowSize[x]=3*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbGlowSizeStars[x]=4*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbGlowSize[x]=3*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbGlowSizeStars[x]=4*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         end
         if HEALBOT_GAME_VERSION<10 then
             hbGlowSizeStars[x]=hbGlowSizeStars[x]*1.25
@@ -864,27 +887,27 @@ function HealBot_Action_FramesIconGlowLen()
       --HealBot_setCall("HealBot_Action_FramesIconGlowLen")
     local i=10
     for x=1,10 do
-        i=(Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][x]["HEIGHT"]*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"])
+        i=(Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][x]["HEIGHT"]*HealBot_Skins_GetFrameVar("Frame", "SCALE", x))
         if HealBot_Action_luVars["IconGlowSize"] == 1 then
             hbIconGlowLen[x]=i/18
-            hbIconGlowSize[x]=1.25*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbIconGlowSizeStars[x]=1*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbIconGlowSize[x]=1.25*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbIconGlowSizeStars[x]=1*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         elseif HealBot_Action_luVars["IconGlowSize"] == 2 then
             hbIconGlowLen[x]=i/16
-            hbIconGlowSize[x]=1.5*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbIconGlowSizeStars[x]=1.25*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbIconGlowSize[x]=1.5*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbIconGlowSizeStars[x]=1.25*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         elseif HealBot_Action_luVars["IconGlowSize"] == 4 then
             hbIconGlowLen[x]=i/14
-            hbIconGlowSize[x]=2.2*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbIconGlowSizeStars[x]=1.75*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbIconGlowSize[x]=2.2*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbIconGlowSizeStars[x]=1.75*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         elseif HealBot_Action_luVars["IconGlowSize"] == 5 then
             hbIconGlowLen[x]=i/12
-            hbIconGlowSize[x]=2.7*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbIconGlowSizeStars[x]=2*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbIconGlowSize[x]=2.7*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbIconGlowSizeStars[x]=2*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         else
             hbIconGlowLen[x]=i/15
-            hbIconGlowSize[x]=1.8*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
-            hbIconGlowSizeStars[x]=1.5*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["SCALE"]
+            hbIconGlowSize[x]=1.8*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
+            hbIconGlowSizeStars[x]=1.5*HealBot_Skins_GetFrameVar("Frame", "SCALE", x)
         end
         if HEALBOT_GAME_VERSION<10 then
             hbIconGlowSizeStars[x]=hbIconGlowSizeStars[x]*1.5
@@ -1546,7 +1569,7 @@ end
 
 function HealBot_Action_BackgroundBorderColourHealth(button)
       --HealBot_setCall("HealBot_Action_BackgroundBorderColourHealth", button)
-    button.gref["BackBorder"]:SetBackdropBorderColor(button.health.rcol, button.health.gcol,0,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+    button.gref["BackBorder"]:SetBackdropBorderColor(button.health.rcol, button.health.gcol,0,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 local ubbHcR, ubbHcG, ubbHcB=0,0,0
@@ -1557,7 +1580,7 @@ function HealBot_Action_BackgroundBorderColourClass(button)
     else
         ubbHcR,ubbHcG,ubbHcB=button.text.r,button.text.g,button.text.b
     end
-    button.gref["BackBorder"]:SetBackdropBorderColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"],1))
+    button.gref["BackBorder"]:SetBackdropBorderColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol),1))
 end
 
 function HealBot_Action_BackgroundBorderColourRole(button)
@@ -1569,37 +1592,37 @@ function HealBot_Action_BackgroundBorderColourRole(button)
         ubbHcG=hbCustomRoleCols[button.roletxt].g
         ubbHcB=hbCustomRoleCols[button.roletxt].b
     end
-    button.gref["BackBorder"]:SetBackdropBorderColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"],1))
+    button.gref["BackBorder"]:SetBackdropBorderColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol),1))
 end
 
 function HealBot_Action_BackgroundBorderColourCustom(button)
       --HealBot_setCall("HealBot_Action_BackgroundBorderColourCustom", button)
-    if button.health.pct>Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORIT"] then
-        button.gref["BackBorder"]:SetBackdropBorderColor(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORR"],
-                                                         Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORG"],
-                                                         Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORB"],
-                                                         HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1))
-    elseif button.health.pct>Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORCT"] then
-        button.gref["BackBorder"]:SetBackdropBorderColor(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORIR"],
-                                                         Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORIG"],
-                                                         Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORIB"],
-                                                         HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1))
+    if button.health.pct>HealBot_Skins_GetFrameVar("BarCol", "BORIT", button.framecol) then
+        button.gref["BackBorder"]:SetBackdropBorderColor(HealBot_Skins_GetFrameVar("BarCol", "BORR", button.framecol),
+                                                         HealBot_Skins_GetFrameVar("BarCol", "BORG", button.framecol),
+                                                         HealBot_Skins_GetFrameVar("BarCol", "BORB", button.framecol),
+                                                         HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1))
+    elseif button.health.pct>HealBot_Skins_GetFrameVar("BarCol", "BORCT", button.framecol) then
+        button.gref["BackBorder"]:SetBackdropBorderColor(HealBot_Skins_GetFrameVar("BarCol", "BORIR", button.framecol),
+                                                         HealBot_Skins_GetFrameVar("BarCol", "BORIG", button.framecol),
+                                                         HealBot_Skins_GetFrameVar("BarCol", "BORIB", button.framecol),
+                                                         HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1))
     else
-        button.gref["BackBorder"]:SetBackdropBorderColor(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORCR"],
-                                                         Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORCG"],
-                                                         Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORCB"],
-                                                         HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1))
+        button.gref["BackBorder"]:SetBackdropBorderColor(HealBot_Skins_GetFrameVar("BarCol", "BORCR", button.framecol),
+                                                         HealBot_Skins_GetFrameVar("BarCol", "BORCG", button.framecol),
+                                                         HealBot_Skins_GetFrameVar("BarCol", "BORCB", button.framecol),
+                                                         HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1))
     end
 end
 
 function HealBot_Action_BackgroundBorderColourClassHlthMix(button)
       --HealBot_setCall("HealBot_Action_BackgroundBorderColourClassHlthMix", button)
-    button.gref["BackBorder"]:SetBackdropBorderColor(button.health.mixcolr, button.health.mixcolg,button.health.mixcolb,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+    button.gref["BackBorder"]:SetBackdropBorderColor(button.health.mixcolr, button.health.mixcolg,button.health.mixcolb,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundBorderColourRoleHlthMix(button)
       --HealBot_setCall("HealBot_Action_BackgroundBorderColourRoleHlthMix", button)
-    button.gref["BackBorder"]:SetBackdropBorderColor(button.health.rmixcolr, button.health.rmixcolg,button.health.rmixcolb,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.frame]["BORA"], 1));
+    button.gref["BackBorder"]:SetBackdropBorderColor(button.health.rmixcolr, button.health.rmixcolg,button.health.rmixcolb,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundBorderColourAdaptiveClassMix(button)
@@ -1607,7 +1630,7 @@ function HealBot_Action_BackgroundBorderColourAdaptiveClassMix(button)
     if button.adaptive.current<12 then
         HealBot_Action_BackgroundBorderColourAdaptive(button)
     else
-        button.gref["BackBorder"]:SetBackdropBorderColor(button.text.r,button.text.g,button.text.b,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1))
+        button.gref["BackBorder"]:SetBackdropBorderColor(button.text.r,button.text.g,button.text.b,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1))
     end
 end
 
@@ -1619,7 +1642,7 @@ function HealBot_Action_BackgroundBorderColourAdaptiveRoleMix(button)
         button.gref["BackBorder"]:SetBackdropBorderColor(hbCustomRoleCols[button.roletxt].r,
                                                          hbCustomRoleCols[button.roletxt].g,
                                                          hbCustomRoleCols[button.roletxt].b,
-                                                         HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1))
+                                                         HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1))
     end
 end
 
@@ -1637,7 +1660,7 @@ function HealBot_Action_BackgroundBorderColourAdaptivePlugin(button)
     button.gref["BackBorder"]:SetBackdropBorderColor(button.plugin.r,
                                                      button.plugin.g,
                                                      button.plugin.b,
-                                                     HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                                     HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundBorderColourAdaptiveDebuffs(button)
@@ -1645,7 +1668,7 @@ function HealBot_Action_BackgroundBorderColourAdaptiveDebuffs(button)
     button.gref["BackBorder"]:SetBackdropBorderColor(button.aura.debuff.r,
                                                      button.aura.debuff.g,
                                                      button.aura.debuff.b,
-                                                     HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                                     HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundBorderColourAdaptiveBuffs(button)
@@ -1653,7 +1676,7 @@ function HealBot_Action_BackgroundBorderColourAdaptiveBuffs(button)
     button.gref["BackBorder"]:SetBackdropBorderColor(button.aura.buff.r,
                                                      button.aura.buff.g,
                                                      button.aura.buff.b,
-                                                     HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                                     HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundBorderColourAdaptiveGeneric(button)
@@ -1661,7 +1684,7 @@ function HealBot_Action_BackgroundBorderColourAdaptiveGeneric(button)
     button.gref["BackBorder"]:SetBackdropBorderColor(hbAdaptiveCol[hbAdaptiveOrder[button.adaptive.current]].R,
                                                      hbAdaptiveCol[hbAdaptiveOrder[button.adaptive.current]].G,
                                                      hbAdaptiveCol[hbAdaptiveOrder[button.adaptive.current]].B,
-                                                     HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                                     HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 local dAlpha=1
@@ -1828,7 +1851,7 @@ local hbBackgroundBorderColourFuncs={[1]=HealBot_Action_BackgroundBorderColourHa
 function HealBot_Action_UpdateBackgroundBorder(button)
       --HealBot_setCall("HealBot_Action_UpdateBackgroundBorder", button)
     if button.status.current<HealBot_Unit_Status["DC"] then
-        hbBackgroundBorderColourFuncs[Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORDER"]](button)
+        hbBackgroundBorderColourFuncs[HealBot_Skins_GetFrameVar("BarCol", "BORDER", button.framecol)](button)
     else
         HealBot_Action_BackgroundBorderColourAdaptiveNone(button)
     end
@@ -1836,7 +1859,7 @@ end
 
 function HealBot_Action_BackgroundColourHealth(button)
       --HealBot_setCall("HealBot_Action_BackgroundColourHealth", button)
-    button.gref["Back"]:SetStatusBarColor(button.health.rcol, button.health.gcol,0,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5));
+    button.gref["Back"]:SetStatusBarColor(button.health.rcol, button.health.gcol,0,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5));
 end
 
 function HealBot_Action_BackgroundColourClass(button)
@@ -1846,7 +1869,7 @@ function HealBot_Action_BackgroundColourClass(button)
     else
         ubbHcR,ubbHcG,ubbHcB=button.text.r,button.text.g,button.text.b
     end
-    button.gref["Back"]:SetStatusBarColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"],1.5));
+    button.gref["Back"]:SetStatusBarColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol),1.5));
 end
 
 function HealBot_Action_BackgroundColourRole(button)
@@ -1858,37 +1881,37 @@ function HealBot_Action_BackgroundColourRole(button)
         ubbHcG=hbCustomRoleCols[button.roletxt].g
         ubbHcB=hbCustomRoleCols[button.roletxt].b
     end
-    button.gref["Back"]:SetStatusBarColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"],1.5));
+    button.gref["Back"]:SetStatusBarColor(ubbHcR,ubbHcG,ubbHcB,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol),1.5));
 end
 
 function HealBot_Action_BackgroundColourCustom(button)
       --HealBot_setCall("HealBot_Action_BackgroundColourCustom", button)
-    if button.health.pct>Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BIT"] then
-        button.gref["Back"]:SetStatusBarColor(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BR"],
-                                              Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BG"],
-                                              Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BB"],
-                                              HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5))
-    elseif button.health.pct>Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BCT"] then
-        button.gref["Back"]:SetStatusBarColor(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BIR"],
-                                              Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BIG"],
-                                              Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BIB"],
-                                              HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5))
+    if button.health.pct>HealBot_Skins_GetFrameVar("BarCol", "BIT", button.framecol) then
+        button.gref["Back"]:SetStatusBarColor(HealBot_Skins_GetFrameVar("BarCol", "BR", button.framecol),
+                                              HealBot_Skins_GetFrameVar("BarCol", "BG", button.framecol),
+                                              HealBot_Skins_GetFrameVar("BarCol", "BB", button.framecol),
+                                              HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5))
+    elseif button.health.pct>HealBot_Skins_GetFrameVar("BarCol", "BCT", button.framecol) then
+        button.gref["Back"]:SetStatusBarColor(HealBot_Skins_GetFrameVar("BarCol", "BIR", button.framecol),
+                                              HealBot_Skins_GetFrameVar("BarCol", "BIG", button.framecol),
+                                              HealBot_Skins_GetFrameVar("BarCol", "BIB", button.framecol),
+                                              HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5))
     else
-        button.gref["Back"]:SetStatusBarColor(Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BCR"],
-                                              Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BCG"],
-                                              Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BCB"],
-                                              HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5))
+        button.gref["Back"]:SetStatusBarColor(HealBot_Skins_GetFrameVar("BarCol", "BCR", button.framecol),
+                                              HealBot_Skins_GetFrameVar("BarCol", "BCG", button.framecol),
+                                              HealBot_Skins_GetFrameVar("BarCol", "BCB", button.framecol),
+                                              HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5))
     end
 end
 
 function HealBot_Action_BackgroundColourClassHlthMix(button)
       --HealBot_setCall("HealBot_Action_BackgroundColourClassHlthMix", button)
-    button.gref["Back"]:SetStatusBarColor(button.health.mixcolr, button.health.mixcolg,button.health.mixcolb,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5));
+    button.gref["Back"]:SetStatusBarColor(button.health.mixcolr, button.health.mixcolg,button.health.mixcolb,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5));
 end
 
 function HealBot_Action_BackgroundColourRoleHlthMix(button)
       --HealBot_setCall("HealBot_Action_BackgroundColourRoleHlthMix", button)
-    button.gref["Back"]:SetStatusBarColor(button.health.rmixcolr, button.health.rmixcolg,button.health.rmixcolb,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5));
+    button.gref["Back"]:SetStatusBarColor(button.health.rmixcolr, button.health.rmixcolg,button.health.rmixcolb,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5));
 end
 
 function HealBot_Action_BackgroundColourAdaptiveClassMix(button)
@@ -1896,7 +1919,7 @@ function HealBot_Action_BackgroundColourAdaptiveClassMix(button)
     if button.adaptive.current<12 then
         HealBot_Action_BackgroundColourAdaptive(button)
     else
-        button.gref["Back"]:SetStatusBarColor(button.text.r,button.text.g,button.text.b,HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5))
+        button.gref["Back"]:SetStatusBarColor(button.text.r,button.text.g,button.text.b,HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5))
     end
 end
 
@@ -1908,7 +1931,7 @@ function HealBot_Action_BackgroundColourAdaptiveRoleMix(button)
         button.gref["Back"]:SetStatusBarColor(hbCustomRoleCols[button.roletxt].r,
                                               hbCustomRoleCols[button.roletxt].g,
                                               hbCustomRoleCols[button.roletxt].b,
-                                              HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BA"], 1.5))
+                                              HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BA", button.framecol), 1.5))
     end
 end
 
@@ -1926,7 +1949,7 @@ function HealBot_Action_BackgroundColourAdaptivePlugin(button)
     button.gref["Back"]:SetStatusBarColor(button.plugin.r,
                                                button.plugin.g,
                                                button.plugin.b,
-                                               HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                               HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundColourAdaptiveDebuffs(button)
@@ -1934,7 +1957,7 @@ function HealBot_Action_BackgroundColourAdaptiveDebuffs(button)
     button.gref["Back"]:SetStatusBarColor(button.aura.debuff.r,
                                                button.aura.debuff.g,
                                                button.aura.debuff.b,
-                                               HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                               HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundColourAdaptiveBuffs(button)
@@ -1942,7 +1965,7 @@ function HealBot_Action_BackgroundColourAdaptiveBuffs(button)
     button.gref["Back"]:SetStatusBarColor(button.aura.buff.r,
                                                button.aura.buff.g,
                                                button.aura.buff.b,
-                                               HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                               HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 function HealBot_Action_BackgroundColourAdaptiveGeneric(button)
@@ -1950,7 +1973,7 @@ function HealBot_Action_BackgroundColourAdaptiveGeneric(button)
     button.gref["Back"]:SetStatusBarColor(hbAdaptiveCol[hbAdaptiveOrder[button.adaptive.current]].R,
                                                hbAdaptiveCol[hbAdaptiveOrder[button.adaptive.current]].G,
                                                hbAdaptiveCol[hbAdaptiveOrder[button.adaptive.current]].B,
-                                               HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BORA"], 1));
+                                               HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "BORA", button.framecol), 1));
 end
 
 local dAlpha=1
@@ -2020,7 +2043,7 @@ local hbBackgroundColourFuncs={[1]=HealBot_Action_BackgroundColourHealth,
 function HealBot_Action_UpdateHealthBackground(button)
       --HealBot_setCall("HealBot_Action_UpdateHealthBackground", button)
     if button.status.current<HealBot_Unit_Status["DC"] then
-        hbBackgroundColourFuncs[Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["BACK"]](button)
+        hbBackgroundColourFuncs[HealBot_Skins_GetFrameVar("BarCol", "BACK", button.framecol)](button)
     else
         button.gref["Back"]:SetStatusBarColor(0.1,0.1,0.1,0.75)
     end
@@ -2113,9 +2136,9 @@ function HealBot_Action_UpdatePluginBarCol(button, r, g, b)
                 button.status.r,button.status.g,button.status.b=r, g, b
                 HealBot_Action_setState(button, HealBot_Unit_Status["PLUGINBARCOL"])
                 if button.status.range>0 then  
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HA"],1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol),1)
                 else
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["ORA"],1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "ORA", button.framecol),1)
                 end
                 HealBot_Action_setEnabled(button, true, curAlpha)
                 HealBot_Action_UpdateHealthStatusBarColor(button)
@@ -2198,9 +2221,9 @@ function HealBot_Action_UpdateDebuffButton(button)
                 button.status.r,button.status.g,button.status.b=button.aura.debuff.r,button.aura.debuff.g,button.aura.debuff.b
                 HealBot_Action_setState(button, HealBot_Unit_Status["DEBUFFBARCOL"])
                 if button.status.range>0 then  
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HA"],1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol),1)
                 else
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["ORA"],1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "ORA", button.framecol),1)
                 end
                 HealBot_Action_setEnabled(button, true, curAlpha)
                 HealBot_Action_UpdateHealthStatusBarColor(button)
@@ -2241,9 +2264,9 @@ function HealBot_Action_UpdateBuffButton(button)
                 HealBot_Action_setState(button, HealBot_Unit_Status["BUFFBARCOL"])
                 button.status.r,button.status.g,button.status.b=button.aura.buff.r,button.aura.buff.g,button.aura.buff.b
                 if button.status.range>0 then  
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HA"], 1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
                 else
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["ORA"], 1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "ORA", button.framecol), 1)
                 end
                 HealBot_Action_setEnabled(button, true, curAlpha)
                 HealBot_Action_UpdateHealthStatusBarColor(button)
@@ -2349,6 +2372,10 @@ function HealBot_Action_UpdateUnitNotDead(button)
     HealBot_Aux_ClearResBar(button)
     HealBot_Text_Update(button)
     button.status.slowupdate=true
+end
+
+function HealBot_Action_ResStateChanged(button)
+    button.status.deadnextcheck=0
 end
 
 function HealBot_Action_UpdateTheDeadButton(button)
@@ -2528,18 +2555,18 @@ end
 
 function HealBot_Action_BarColourCustom(button)
       --HealBot_setCall("HealBot_Action_BarColourCustom", button)
-    if button.health.pct>Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HIT"] then
-        button.status.r=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HR"]
-        button.status.g=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HG"]
-        button.status.b=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HB"]
-    elseif button.health.pct>Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HCT"] then
-        button.status.r=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HIR"]
-        button.status.g=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HIG"]
-        button.status.b=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HIB"]
+    if button.health.pct>HealBot_Skins_GetFrameVar("BarCol", "HIT", button.framecol) then
+        button.status.r=HealBot_Skins_GetFrameVar("BarCol", "HR", button.framecol)
+        button.status.g=HealBot_Skins_GetFrameVar("BarCol", "HG", button.framecol)
+        button.status.b=HealBot_Skins_GetFrameVar("BarCol", "HB", button.framecol)
+    elseif button.health.pct>HealBot_Skins_GetFrameVar("BarCol", "HCT", button.framecol) then
+        button.status.r=HealBot_Skins_GetFrameVar("BarCol", "HIR", button.framecol)
+        button.status.g=HealBot_Skins_GetFrameVar("BarCol", "HIG", button.framecol)
+        button.status.b=HealBot_Skins_GetFrameVar("BarCol", "HIB", button.framecol)
     else
-        button.status.r=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HCR"]
-        button.status.g=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HCG"]
-        button.status.b=Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HCB"]
+        button.status.r=HealBot_Skins_GetFrameVar("BarCol", "HCR", button.framecol)
+        button.status.g=HealBot_Skins_GetFrameVar("BarCol", "HCG", button.framecol)
+        button.status.b=HealBot_Skins_GetFrameVar("BarCol", "HCB", button.framecol)
     end
 end
 
@@ -2588,11 +2615,11 @@ function HealBot_Action_UpdateHealthButton(button, hlthevent)
             button.health.rmixcolr, button.health.rmixcolg, button.health.rmixcolb=button.health.rcol, button.health.gcol, 0
         end
 
-        if HealBot_TextColChangeWithHealth[Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["NAME"]] then 
+        if HealBot_TextColChangeWithHealth[HealBot_Skins_GetFrameVar("BarTextCol", "NAME", button.frame)] then 
             button.text.nameupdate=true 
         end
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HLTHTXTANCHOR"]~=4 and
-           HealBot_TextColChangeWithHealth[Healbot_Config_Skins.BarTextCol[Healbot_Config_Skins.Current_Skin][button.frame]["HLTH"]] then 
+           HealBot_TextColChangeWithHealth[HealBot_Skins_GetFrameVar("BarTextCol", "HLTH", button.frame)] then 
             button.text.healthupdate=true
         end
         HealBot_Action_UpdateHealthHotBar(button)
@@ -2606,26 +2633,26 @@ function HealBot_Action_UpdateHealthButton(button, hlthevent)
 
     if button.status.current<HealBot_Unit_Status["DEAD"] then --or (button.status.current == HealBot_Unit_Status["RESERVED"] and UnitHealth(button.unit)) then
         if button.status.hlthupd then 
-            if button.aggro.status>Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][button.frame]["ALERT"] or 
-               HealBot_AlwaysEnabled[button.guid] or button.status.current>HealBot_Unit_Status["ENABLEDIR"] or
-               button.health.pct<=Healbot_Config_Skins.BarVisibility[Healbot_Config_Skins.Current_Skin][button.framecol][hbAlert] then
+            if button.status.current>HealBot_Unit_Status["ENABLEDIR"] or
+               button.health.pct<=Healbot_Config_Skins.BarVisibility[Healbot_Config_Skins.Current_Skin][button.framecol][hbAlert] or
+               button.aggro.status>HealBot_Skins_GetFrameVar("BarAggro", "ALERT", button.frame) or HealBot_AlwaysEnabled[button.guid] then
                 if button.status.current<HealBot_Unit_Status["BUFFNOCOL"] then
                     HealBot_Range_ButtonSpell(button)
                 end
                 if button.status.range>0 then
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HA"], 1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
                     if button.status.current<HealBot_Unit_Status["BUFFNOCOL"] then HealBot_Action_setState(button, HealBot_Unit_Status["ENABLEDIR"]) end
                 else
-                    curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["ORA"], 1)
+                    curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "ORA", button.framecol), 1)
                     if button.status.current<HealBot_Unit_Status["BUFFNOCOL"] then HealBot_Action_setState(button, HealBot_Unit_Status["ENABLEDOOR"]) end
                 end
                 HealBot_Action_setEnabled(button, true, curAlpha)
             else
                 if button.status.current<HealBot_Unit_Status["BUFFNOCOL"] then HealBot_Action_setState(button, HealBot_Unit_Status["DISABLED"]) end
-                curAlpha=HealBot_Action_BarColourAlpha(button, Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["DISA"], 1)
+                curAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "DISA", button.framecol), 1)
                 HealBot_Action_setEnabled(button, false, curAlpha)
             end
-            hbBarColourFuncs[Healbot_Config_Skins.BarCol[Healbot_Config_Skins.Current_Skin][button.framecol]["HLTH"]](button)
+            hbBarColourFuncs[HealBot_Skins_GetFrameVar("BarCol", "HLTH", button.framecol)](button)
             HealBot_Action_UpdateHealthStatusBarColor(button)
         end
         HealBot_Action_UpdateBackground(button)
@@ -2776,7 +2803,7 @@ end
 local hbBarColourAlphaFunc=HealBot_Action_BarColourAlphaNoMod
 function HealBot_Action_BarColourAlphaSetFunc()
       --HealBot_setCall("HealBot_Action_BarColourAlphaSetFunc")
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         if HealBot_Action_luVars["FocusGroups"] == 2 then
             if HealBot_Action_luVars["HotBarsEnabled"] then
                 hbBarColourAlphaFunc=HealBot_Action_BarColourAlphaGDFGHB
@@ -2817,9 +2844,9 @@ function HealBot_Action_SetFocusGroups()
         HealBot_Action_luVars["FGroups"]=HealBot_Globals.OverrideFocusGroups
         HealBot_Action_luVars["FGDimming"]=HealBot_Globals.OverrideEffects["FGDIMMING"]
     else
-        HealBot_Action_luVars["FocusGroups"]=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["FOCUSGROUPS"]
+        HealBot_Action_luVars["FocusGroups"]=HealBot_Skins_GetVar("General", "FOCUSGROUPS")
         HealBot_Action_luVars["FGroups"]=Healbot_Config_Skins.FocusGroups[Healbot_Config_Skins.Current_Skin]
-        HealBot_Action_luVars["FGDimming"]=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["FGDIMMING"]
+        HealBot_Action_luVars["FGDimming"]=HealBot_Skins_GetVar("General", "FGDIMMING")
     end
     HealBot_Timers_Set("SKINS","UpdateTextButtons")
     HealBot_Panel_SetFocusGroups()
@@ -2989,7 +3016,7 @@ function HealBot_Action_PowerIndicators(button)
         if hbPowerIndicator == 1 then
             if button.mana.power~=1 then
                 button.mana.power=1
-                if Healbot_Config_Skins.Indicators[Healbot_Config_Skins.Current_Skin][button.frame]["PCOL"] == 1 then
+                if HealBot_Skins_GetFrameVar("Indicators", "PCOL", button.frame) == 1 then
                     button.gref.indicator.power[1]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_red.tga]])
                 end
                 button.gref.indicator.power[1]:SetAlpha(indAlpha)
@@ -3001,7 +3028,7 @@ function HealBot_Action_PowerIndicators(button)
         elseif hbPowerIndicator == 2 then
             if button.mana.power~=2 then
                 button.mana.power=2
-                if Healbot_Config_Skins.Indicators[Healbot_Config_Skins.Current_Skin][button.frame]["PCOL"] == 1 then
+                if HealBot_Skins_GetFrameVar("Indicators", "PCOL", button.frame) == 1 then
                     if HealBot_Action_luVars["UnitPowerMax"]<4 then
                         button.gref.indicator.power[1]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_yellow.tga]]);
                         button.gref.indicator.power[2]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_yellow.tga]]);
@@ -3019,7 +3046,7 @@ function HealBot_Action_PowerIndicators(button)
         elseif hbPowerIndicator == 3 then
             if button.mana.power~=3 then
                 button.mana.power=3
-                if Healbot_Config_Skins.Indicators[Healbot_Config_Skins.Current_Skin][button.frame]["PCOL"] == 1 then
+                if HealBot_Skins_GetFrameVar("Indicators", "PCOL", button.frame) == 1 then
                     if HealBot_Action_luVars["UnitPowerMax"]<4 then
                         button.gref.indicator.power[1]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
                         button.gref.indicator.power[2]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
@@ -3043,7 +3070,7 @@ function HealBot_Action_PowerIndicators(button)
         elseif hbPowerIndicator == 4 then
             if button.mana.power~=4 then
                 button.mana.power=4
-                if Healbot_Config_Skins.Indicators[Healbot_Config_Skins.Current_Skin][button.frame]["PCOL"] == 1 then
+                if HealBot_Skins_GetFrameVar("Indicators", "PCOL", button.frame) == 1 then
                     if HealBot_Action_luVars["UnitPowerMax"]<5 then
                         button.gref.indicator.power[1]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
                         button.gref.indicator.power[2]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
@@ -3066,7 +3093,7 @@ function HealBot_Action_PowerIndicators(button)
         elseif hbPowerIndicator == 5 then
             if button.mana.power~=5 then
                 button.mana.power=5
-                if Healbot_Config_Skins.Indicators[Healbot_Config_Skins.Current_Skin][button.frame]["PCOL"] == 1 then
+                if HealBot_Skins_GetFrameVar("Indicators", "PCOL", button.frame) == 1 then
                     button.gref.indicator.power[1]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
                     button.gref.indicator.power[2]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
                     button.gref.indicator.power[3]:SetTexture([[Interface\AddOns\HealBot\Images\indicator_green.tga]]);
@@ -3213,12 +3240,12 @@ end
 function HealBot_Action_setFrameHeader(f)
       --HealBot_setCall("HealBot_Action_setFrameHeader")
     if Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][f]["SHOW"] and grpFrame[f]:GetRight() then
-        grpFrameBar[f]:SetPoint("BOTTOM",grpFrame[f],"TOP",0,Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["OFFSET"])
+        grpFrameBar[f]:SetPoint("BOTTOM",grpFrame[f],"TOP",0,HealBot_Skins_GetFrameVar("FrameAliasBar", "OFFSET", f))
         local fWidth=grpFrame[f]:GetRight()-grpFrame[f]:GetLeft()
-        local hwidth=ceil(fWidth*Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["WIDTH"])
-        grpFrameBar[f]:SetHeight(ceil(Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["HEIGHT"]*Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][f]["SCALE"]));
+        local hwidth=ceil(fWidth*HealBot_Skins_GetFrameVar("FrameAliasBar", "WIDTH", f))
+        grpFrameBar[f]:SetHeight(ceil(HealBot_Skins_GetFrameVar("FrameAliasBar", "HEIGHT", f)*HealBot_Skins_GetFrameVar("Frame", "SCALE", f)));
         grpFrameBar[f]:SetWidth(hwidth);
-        HealBot_Media_UpdateTexture(grpFrameBar[f], Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["TEXTURE"], "Action_setFrameHeader - FrameAliasBar")
+        HealBot_Media_UpdateTexture(grpFrameBar[f], HealBot_Skins_GetFrameVar("FrameAliasBar", "TEXTURE", f), "Action_setFrameHeader - FrameAliasBar")
         grpFrameBar[f]:GetStatusBarTexture():SetHorizTile(false)
         HealBot_Action_UpdateFrameHeaderOpacity(f)
     else
@@ -3266,6 +3293,7 @@ local hbEventFuncs={["UNIT_AURA"]=HealBot_Events_UnitAura,
                     ["UNIT_AREA_CHANGED"]=HealBot_Events_UpdateRange,
                     ["UNIT_DISTANCE_CHECK_UPDATE"]=HealBot_Events_UpdateRange,
                     ["UNIT_IN_RANGE_UPDATE"]=HealBot_Events_UpdateRange,
+                    ["INCOMING_RESURRECT_CHANGED"]=HealBot_Action_ResStateChanged,
                    }
 
 local hbEnemyEventFuncs={["UNIT_PHASE"]=HealBot_Events_UnitPhase,
@@ -3551,7 +3579,7 @@ end
 local hbInitAuxGlow={}
 function HealBot_Action_InitAuxGlow(id, frame, button)
       --HealBot_setCall("HealBot_Action_InitAuxGlow")
-    if Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][frame]["OUTLINE"] and Healbot_Config_Skins.AuxBar[Healbot_Config_Skins.Current_Skin][id][frame]["USE"]>1 then
+    if HealBot_Data_AuxGetBarVar("OUTLINE", frame, id) and HealBot_Data_AuxGetBarVar("USE", frame, id)>1 then
         if not hbInitAuxGlow[frame] then hbInitAuxGlow[frame]={} end
         if button then
             if button.frame == frame and not button.aux[id]["OUTLINE"] then
@@ -4096,6 +4124,7 @@ function HealBot_Action_UnregisterUnitEvents(button)
     button:UnregisterEvent("UNIT_FLAGS")
     button:UnregisterEvent("UNIT_DISTANCE_CHECK_UPDATE")
     button:UnregisterEvent("UNIT_IN_RANGE_UPDATE")
+    button:UnregisterEvent("INCOMING_RESURRECT_CHANGED")
     if HEALBOT_GAME_VERSION>4 then
         button:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
         button:UnregisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
@@ -4118,7 +4147,7 @@ function HealBot_Action_Register_Aggro()
       --HealBot_setCall("HealBot_Action_Register_Aggro")
     local regAggro=HealBot_Action_luVars["pluginThreat"]
     for x=1,10 do
-        if Healbot_Config_Skins.BarAggro[Healbot_Config_Skins.Current_Skin][x]["SHOW"] then
+        if HealBot_Skins_GetFrameBoolean("BarAggro", "SHOW", x) then
             regAggro=true
             break
         end
@@ -4157,6 +4186,7 @@ function HealBot_Action_RegisterUnitEvents(button)
         button:RegisterUnitEvent("UNIT_MODEL_CHANGED", button.unit)
         button:RegisterUnitEvent("UNIT_DISTANCE_CHECK_UPDATE", button.unit)
         button:RegisterUnitEvent("UNIT_IN_RANGE_UPDATE", button.unit)
+        button:RegisterUnitEvent("INCOMING_RESURRECT_CHANGED", button.unit)
         if HEALBOT_GAME_VERSION>4 then
             button:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", button.unit)
             button:RegisterUnitEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", button.unit)
@@ -4602,68 +4632,102 @@ function HealBot_Action_SetSpell(cType, cKey, sText)
     HealBot_Action_ClearSpellCache(cType, cKey)
 end
 
-HealBot_Action_luVars["defaultLoadoutID"]=0
 function HealBot_Action_UpdateLoadoutId()
       --HealBot_setCall("HealBot_Action_UpdateLoadoutId")
     if HEALBOT_GAME_VERSION>9 then
         local spec=PlayerUtil.GetCurrentSpecID()
         local loadout=spec and C_ClassTalents.GetLastSelectedSavedConfigID(spec)
-        local configId="x"
+        local configId=false
         if loadout then
             local configInfo=C_Traits.GetConfigInfo(loadout)
             if configInfo then
                 configId=configInfo.ID
             end
         end
-        if not configId or type(configId)~="number" then
+        if not configId then
             configId=C_ClassTalents.GetActiveConfigID()
-            if configId and type(configId) == "number" and configId>0 then
-                HealBot_Action_luVars["defaultLoadoutID"]=configId
-            else
-                configId=HealBot_Action_luVars["defaultLoadoutID"]
-            end
         end
         if configId and configId>0 then
             HealBot_Config.LastLoadout=configId
-            HealBot_Config.KnownLoadouts[configId]=true
+        else
+            HealBot_Config.LastLoadout=GetSpecialization() or 0
         end
     else
         HealBot_Config.LastLoadout=0
     end
 end
 
-function HealBot_Action_GetComboWithSpec(key, button, spec)
+function HealBot_Action_RemoveInvalidLoadouts()
+    if HEALBOT_GAME_VERSION>9 then
+        for l,_ in pairs(HealBot_Spell_Loadouts) do
+            if l>9 and not C_Traits.GetConfigInfo(l) then
+                HealBot_Spell_Loadouts[l]=nil
+            end
+        end
+        for x,_ in pairs(HealBot_ActionIcons_Loadouts) do
+            local s,l=string.split(":",x)
+            l=tonumber(l)
+            if l and l>9 and not C_Traits.GetConfigInfo(l) then
+                HealBot_ActionIcons_Loadouts[x]=nil
+            end
+        end
+        for x,_ in pairs(HealBot_ActionIconsData_Loadouts) do
+            local s,l=string.split(":",x)
+            l=tonumber(l)
+            if l and l>9 and not C_Traits.GetConfigInfo(l) then
+                HealBot_ActionIconsData_Loadouts[x]=nil
+            end
+        end
+    end
+end
+
+function HealBot_Action_GetCombo(key, button)
+      --HealBot_setCall("HealBot_Action_GetCombo", nil, nil, nil, true)
+    sConcat[1]=key
+    sConcat[2]=button
+    return HealBot_Action_Concat(2)
+end
+
+function HealBot_Action_GetSpecID()
+    if HEALBOT_GAME_VERSION>9 then
+        return HealBot_Config.CurrentLoadout
+    else
+        return HealBot_Config.CurrentSpec
+    end
+end
+
+function HealBot_Action_GetSpecProf()
+    sConcat[1]=HealBot_Config.Profile
+    sConcat[2]=":"
+    sConcat[3]=HealBot_Action_GetSpecID()
+    return HealBot_Action_Concat(3)
+end
+
+function HealBot_Action_GetComboWithSpec_OLD(key, button, spec)
       --HealBot_setCall("HealBot_Action_GetComboWithSpec", nil, nil, nil, true)
     sConcat[1]=key
     sConcat[2]=button
     sConcat[3]=spec or 1
-    if HealBot_Config.SpellsUpdatedToV10 then
-        sConcat[4]=HealBot_Config.LastLoadout
-        return HealBot_Action_Concat(4)
-    else
-        return HealBot_Action_Concat(3)
-    end
+    sConcat[4]=HealBot_Config.LastLoadout
+    return HealBot_Action_Concat(4)
 end
 
-function HealBot_Action_GetComboSpec(key, button)
+function HealBot_Action_GetComboSpec_OLD(key, button)
       --HealBot_setCall("HealBot_Action_GetComboSpec", nil, nil, nil, true)
-    return HealBot_Action_GetComboWithSpec(key, button, HealBot_Config.CurrentSpec)
+    return HealBot_Action_GetComboWithSpec_OLD(key, button, HealBot_Config.CurrentSpec)
 end
 
 function HealBot_Action_GetActionIconSpecWithSkin(skinname)
       --HealBot_setCall("HealBot_Action_GetActionIconSpecWithSkin")
     sConcat[1]=skinname
-    sConcat[2]=HealBot_Config.CurrentSpec
-    sConcat[3]=HealBot_Config.LastLoadout
+    sConcat[2]=":"
+    sConcat[3]=HealBot_Action_GetSpecID()
     return HealBot_Action_Concat(3)
 end
 
 function HealBot_Action_GetActionIconSpec()
       --HealBot_setCall("HealBot_Action_GetActionIconSpec")
-    sConcat[1]=Healbot_Config_Skins.Current_Skin
-    sConcat[2]=HealBot_Config.CurrentSpec
-    sConcat[3]=HealBot_Config.LastLoadout
-    return HealBot_Action_Concat(3)
+    return HealBot_Action_GetActionIconSpecWithSkin(Healbot_Config_Skins.Current_Skin)
 end
 
 local HealBot_Action_SpellCache={["ENABLED"]={},["ENEMY"]={},["EMERG"]={},["ICON"]={}}
@@ -4792,12 +4856,12 @@ end
 
 function HealBot_Action_SpellPattern(click, cType)
       --HealBot_setCall("HealBot_Action_SpellPattern")
-    return HealBot_Action_GetSpell(cType, HealBot_Action_GetComboSpec(HealBot_Action_luVars["CurrentModKey"], click))
+    return HealBot_Action_GetSpell(cType, HealBot_Action_GetCombo(HealBot_Action_luVars["CurrentModKey"], click))
 end
 
 function HealBot_Action_IconSpellPattern(click)
       --HealBot_setCall("HealBot_Action_IconSpellPattern")
-    return HealBot_Action_GetSpell("ICON", HealBot_Action_GetComboSpec(HealBot_Action_luVars["CurrentModKey"], click))
+    return HealBot_Action_GetSpell("ICON", HealBot_Action_GetCombo(HealBot_Action_luVars["CurrentModKey"], click))
 end
 
 local vAttribSpellName=""
@@ -5526,7 +5590,7 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,cType,j,unit)
     if strlen(bkey)>1 then
         HB_prefix=strlower(bkey).."-"
     end
-    local HB_combo_prefix=HealBot_Action_GetComboSpec(bkey, bbutton)
+    local HB_combo_prefix=HealBot_Action_GetCombo(bkey, bbutton)
     local sName,sTar,sTrin1,sTrin2,AvoidBC=false,false,false,false,false
     HealBot_Action_UpdateAttribsMinReset(button, HB_prefix, cType, j, false)
     if cType == "Emerg" then
@@ -5558,17 +5622,19 @@ function HealBot_Action_InitBinds(button)
     HealBot_Action_DefaultBinds(button)
 end
 
+local hbBindKey=""
 function HealBot_Action_Binds(bNo)
       --HealBot_setCall("HealBot_Action_Binds")
-    --hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. HealBot_Options_retBindKey(HealBot_Config_Spells.Binds[bNo]) .. [[", self, "Button]] .. bNo .. [[");]]
+    --hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. HealBot_Options_retBindKey(HealBot_SpellBinds_GetData(bNo)) .. [[", self, "Button]] .. bNo .. [[");]]
+    hbBindKey=HealBot_Options_retBindKey(HealBot_SpellBinds_GetData(bNo))
     if bNo == 1 then
-        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. HealBot_Options_retBindKey(HealBot_Config_Spells.Binds[bNo]) .. [[", self, "LeftButton");]]
+        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. hbBindKey .. [[", self, "LeftButton");]]
     elseif bNo == 2 then
-        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. HealBot_Options_retBindKey(HealBot_Config_Spells.Binds[bNo]) .. [[", self, "MiddleButton");]]
+        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. hbBindKey .. [[", self, "MiddleButton");]]
     elseif bNo == 3 then
-        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. HealBot_Options_retBindKey(HealBot_Config_Spells.Binds[bNo]) .. [[", self, "RightButton");]]
+        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. hbBindKey .. [[", self, "RightButton");]]
     else
-        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. HealBot_Options_retBindKey(HealBot_Config_Spells.Binds[bNo]) .. [[", self, "Button]] .. bNo .. [[");]]
+        hbBindTxt[bNo]=[[self:SetBindingClick(1, "]] .. hbBindKey .. [[", self, "Button]] .. bNo .. [[");]]
     end
 end
 
@@ -5617,7 +5683,7 @@ function HealBot_Action_SetAllButtonAttribs(button,cType)
                 hbMaxMouseButtons[cType]=0
             end
             if not button.binds[cType].set then
-                if (x<6 or (x>5 and HealBot_Action_luVars["pluginExtraButtons"])) and HealBot_Config_Spells.Binds[x]>1 then
+                if (x<6 or (x>5 and HealBot_Action_luVars["pluginExtraButtons"])) and HealBot_SpellBinds_GetData(x)>1 then
                     if maxBinds == 0 then
                         HealBot_Action_InitBinds(button)
                     end
@@ -6046,13 +6112,13 @@ function HealBot_Action_UpdateTestButton(button)
                 button.icon.buff.count[1]=x
                 button.icon.buff.id=1
                 button.icon.buff.name="Test"
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][1]["BUFFSDUR"] then
+                if HealBot_Skins_GetIconTextBoolean("BUFFSDUR", button.frame, 1) then
                     button.gref.txt.expire[x]:SetText("9")
                     button.gref.txt.expire[x]:SetTextColor(1,1,1,1)
                 else
                     button.gref.txt.expire[x]:SetText(" ")
                 end
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][1]["BUFFSCNT"] then
+                if HealBot_Skins_GetIconTextBoolean("BUFFSCNT", button.frame, 1) then
                     button.gref.txt.count[x]:SetText("1")
                     button.gref.txt.count[x]:SetTextColor(1,1,1,1)
                 else
@@ -6069,13 +6135,13 @@ function HealBot_Action_UpdateTestButton(button)
                 button.icon.buff.count[2]=(x-8)
                 button.icon.buff.id=1
                 button.icon.buff.name="Test"
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][2]["BUFFSDUR"] then
+                if HealBot_Skins_GetIconTextBoolean("BUFFSDUR", button.frame, 2) then
                     button.gref.txt.expire[x]:SetText("9")
                     button.gref.txt.expire[x]:SetTextColor(1,1,1,1)
                 else
                     button.gref.txt.expire[x]:SetText(" ")
                 end
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][2]["BUFFSCNT"] then
+                if HealBot_Skins_GetIconTextBoolean("BUFFSCNT", button.frame, 2) then
                     button.gref.txt.count[x]:SetText("2")
                     button.gref.txt.count[x]:SetTextColor(1,1,1,1)
                 else
@@ -6092,13 +6158,13 @@ function HealBot_Action_UpdateTestButton(button)
                 button.icon.buff.count[3]=(x-10)
                 button.icon.buff.id=1
                 button.icon.buff.name="Test"
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][3]["BUFFSDUR"] then
+                if HealBot_Skins_GetIconTextBoolean("BUFFSDUR", button.frame, 3) then
                     button.gref.txt.expire[x]:SetText("9")
                     button.gref.txt.expire[x]:SetTextColor(1,1,1,1)
                 else
                     button.gref.txt.expire[x]:SetText(" ")
                 end
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][3]["BUFFSCNT"] then
+                if HealBot_Skins_GetIconTextBoolean("BUFFSCNT", button.frame, 3) then
                     button.gref.txt.count[x]:SetText("3")
                     button.gref.txt.count[x]:SetTextColor(1,1,1,1)
                 else
@@ -6121,13 +6187,13 @@ function HealBot_Action_UpdateTestButton(button)
                 button.icon.debuff.count[1]=(x-50)
                 button.icon.debuff.id=1
                 button.icon.debuff.name="Test"
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][1]["DBSDUR"] then
+                if HealBot_Skins_GetIconTextBoolean("DBSDUR", button.frame, 1) then
                     button.gref.txt.expire[x]:SetText("9")
                     button.gref.txt.expire[x]:SetTextColor(1,1,1,1)
                 else
                     button.gref.txt.expire[x]:SetText(" ")
                 end
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][1]["DBSCNT"] then
+                if HealBot_Skins_GetIconTextBoolean("DBSCNT", button.frame, 1) then
                     button.gref.txt.count[x]:SetText("1")
                     button.gref.txt.count[x]:SetTextColor(1,1,1,1)
                 else
@@ -6144,13 +6210,13 @@ function HealBot_Action_UpdateTestButton(button)
                 button.icon.debuff.count[2]=(x-56)
                 button.icon.debuff.id=1
                 button.icon.debuff.name="Test"
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][2]["DBSDUR"] then
+                if HealBot_Skins_GetIconTextBoolean("DBSDUR", button.frame, 2) then
                     button.gref.txt.expire[x]:SetText("9")
                     button.gref.txt.expire[x]:SetTextColor(1,1,1,1)
                 else
                     button.gref.txt.expire[x]:SetText(" ")
                 end
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][2]["DBSCNT"] then
+                if HealBot_Skins_GetIconTextBoolean("DBSCNT", button.frame, 2) then
                     button.gref.txt.count[x]:SetText("2")
                     button.gref.txt.count[x]:SetTextColor(1,1,1,1)
                 else
@@ -6167,13 +6233,13 @@ function HealBot_Action_UpdateTestButton(button)
                 button.icon.debuff.count[3]=(x-58)
                 button.icon.debuff.id=1
                 button.icon.debuff.name="Test"
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][3]["DBSDUR"] then
+                if HealBot_Skins_GetIconTextBoolean("DBSDUR", button.frame, 3) then
                     button.gref.txt.expire[x]:SetText("9")
                     button.gref.txt.expire[x]:SetTextColor(1,1,1,1)
                 else
                     button.gref.txt.expire[x]:SetText(" ")
                 end
-                if Healbot_Config_Skins.IconSetsText[Healbot_Config_Skins.Current_Skin][button.frame][3]["DBSCNT"] then
+                if HealBot_Skins_GetIconTextBoolean("DBSCNT", button.frame, 3) then
                     button.gref.txt.count[x]:SetText("3")
                     button.gref.txt.count[x]:SetTextColor(1,1,1,1)
                 else
@@ -6465,9 +6531,9 @@ function HealBot_Action_Reset()
         HealBot_Timers_Set("RESET","Frames",0.2)
     else
         for i=1, 10 do
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][i]["X"]=(49+(i*2))
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][i]["Y"]=(49+(i*2))
-            Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][i]["AUTOCLOSE"]=1
+            HealBot_Skins_SetFrameVar((49+(i*2)), "Anchors", "X", i)
+            HealBot_Skins_SetFrameVar((49+(i*2)), "Anchors", "Y", i)
+            HealBot_Skins_SetFrameVar(1, "Frame", "AUTOCLOSE", i)
             HealBot_AutoCloseFrame[i]=1
             if HealBot_Action_FrameIsVisible(i) then
                 --HealBot_Action_ShowPanel(i)
@@ -6483,7 +6549,7 @@ end
 
 function HealBot_Action_unlockFrame(frame)
       --HealBot_setCall("HealBot_Action_unlockFrame")
-    Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["LOCKED"]=1
+    HealBot_Skins_SetFrameVar(1, "Frame", "LOCKED", frame)
 end
 
 local hbFrameSetPoint={[1]=false,[2]=false,[3]=false,[4]=false,[5]=false,[6]=false,[7]=false,[8]=false,[9]=false,[10]=false}
@@ -6530,32 +6596,32 @@ end
 function HealBot_Action_CheckFrameRealXY(frame, HBframe)
     local Hcenter=HealBot_Util_Round(GetScreenWidth()/2)
     local Vcenter=HealBot_Util_Round(GetScreenHeight()/2)
-    if Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 1 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetLeft()-Hcenter)
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(HBframe:GetTop()-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 2 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetLeft()-Hcenter)
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(HBframe:GetBottom()-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 3 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetRight()-Hcenter)
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(HBframe:GetTop()-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 4 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetRight()-Hcenter)
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(HBframe:GetBottom()-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 5 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetCenter()-Hcenter)
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(HBframe:GetTop()-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 6 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetLeft()-Hcenter)
+    if HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 1 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetLeft()-Hcenter), "Anchors", "RealX", frame)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetTop()-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 2 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetLeft()-Hcenter), "Anchors", "RealX", frame)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetBottom()-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 3 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetRight()-Hcenter), "Anchors", "RealX", frame)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetTop()-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 4 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetRight()-Hcenter), "Anchors", "RealX", frame)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetBottom()-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 5 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetCenter()-Hcenter), "Anchors", "RealX", frame)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetTop()-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 6 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetLeft()-Hcenter), "Anchors", "RealX", frame)
         local _, c=HBframe:GetCenter()
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(c-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 7 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetRight()-Hcenter)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(c-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 7 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetRight()-Hcenter), "Anchors", "RealX", frame)
         local _, c=HBframe:GetCenter()
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(c-Vcenter)
-    elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 8 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]=HealBot_Util_Round(HBframe:GetCenter()-Hcenter)
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]=HealBot_Util_Round(HBframe:GetBottom()-Vcenter)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(c-Vcenter), "Anchors", "RealY", frame)
+    elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 8 then
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetCenter()-Hcenter), "Anchors", "RealX", frame)
+        HealBot_Skins_SetFrameVar(HealBot_Util_Round(HBframe:GetBottom()-Vcenter), "Anchors", "RealY", frame)
     end
 end
 
@@ -6564,53 +6630,53 @@ function HealBot_Action_CheckFrame(frame, HBframe, callback)
     HealBot_Action_luVars["ScreenHeight"]=GetScreenHeight()
     HealBot_Action_luVars["ScreenWidth"]=GetScreenWidth()
     if HBframe:GetTop() then
-        if not Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealFixed"] then
+        if not HealBot_Skins_GetFrameBoolean("Anchors", "RealFixed", frame) then
             HealBot_Action_CheckFrameRealXY(frame, HBframe)
         end
-        if Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 1 then
+        if HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 1 then
             local fTop=HealBot_Util_Round(((HBframe:GetTop()/GetScreenHeight())*100),2)
             local fLeft=HealBot_Util_Round(((HBframe:GetLeft()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fTop
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fLeft
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 2 then
+            HealBot_Skins_SetFrameVar(fTop, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fLeft, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 2 then
             local fBottom=HealBot_Util_Round(((HBframe:GetBottom()/GetScreenHeight())*100),2)
             local fLeft=HealBot_Util_Round(((HBframe:GetLeft()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fBottom
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fLeft
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 3 then
+            HealBot_Skins_SetFrameVar(fBottom, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fLeft, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 3 then
             local fTop=HealBot_Util_Round(((HBframe:GetTop()/GetScreenHeight())*100),2)
             local fRight=HealBot_Util_Round(((HBframe:GetRight()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fTop
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fRight
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 4 then
+            HealBot_Skins_SetFrameVar(fTop, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fRight, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 4 then
             local fBottom=HealBot_Util_Round(((HBframe:GetBottom()/GetScreenHeight())*100),2)
             local fRight=HealBot_Util_Round(((HBframe:GetRight()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fBottom
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fRight
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 5 then
+            HealBot_Skins_SetFrameVar(fBottom, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fRight, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 5 then
             local fTop=HealBot_Util_Round(((HBframe:GetTop()/GetScreenHeight())*100),2)
             local fHcenter=HealBot_Util_Round(((HBframe:GetCenter()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fTop
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fHcenter
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 6 then
+            HealBot_Skins_SetFrameVar(fTop, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fHcenter, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 6 then
             local fVcenter=HealBot_Util_Round(((((HBframe:GetTop()+HBframe:GetBottom())/2)/GetScreenHeight())*100),2)
             local fLeft=HealBot_Util_Round(((HBframe:GetLeft()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fVcenter
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fLeft
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 7 then
+            HealBot_Skins_SetFrameVar(fVcenter, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fLeft, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 7 then
             local fVcenter=HealBot_Util_Round(((((HBframe:GetTop()+HBframe:GetBottom())/2)/GetScreenHeight())*100),2)
             local fRight=HealBot_Util_Round(((HBframe:GetRight()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fVcenter
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fRight
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 8 then
+            HealBot_Skins_SetFrameVar(fVcenter, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fRight, "Anchors", "X", frame)
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 8 then
             local fBottom=HealBot_Util_Round(((HBframe:GetBottom()/GetScreenHeight())*100),2)
             local fHcenter=HealBot_Util_Round(((HBframe:GetCenter()/GetScreenWidth())*100),2)
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]=fBottom
-            Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]=fHcenter
+            HealBot_Skins_SetFrameVar(fBottom, "Anchors", "Y", frame)
+            HealBot_Skins_SetFrameVar(fHcenter, "Anchors", "X", frame)
         end
         HealBot_CheckFrame(frame, HBframe) 
-        HealBot_Options_Coords_OnTextChanged(Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"],
-                                             Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"],
+        HealBot_Options_Coords_OnTextChanged(HealBot_Skins_GetFrameVar("Anchors", "RealX", frame),
+                                             HealBot_Skins_GetFrameVar("Anchors", "RealY", frame),
                                              frame)
     elseif HealBot_Action_FrameIsVisible(frame) then
         HealBot_Action_DelayCheckFrameSetPoint(frame, false)
@@ -6625,44 +6691,35 @@ local vFrameSetPointX,vFrameSetPointY=0,0
 function HealBot_Action_FrameSetPoint(frame, gaf, useReal, callback)
       --HealBot_setCall("HealBot_Action_FrameSetPoint")
     if Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin] and 
-       Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame] and
-       Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"] and
-       Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"] then
+       Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame] then
         gaf:ClearAllPoints();
-        if Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"] and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"] and
-          (Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealFixed"] or useReal) then
-            vFrameSetPointY=Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"]+HealBot_Util_Round(GetScreenHeight()/2)
-            vFrameSetPointX=Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"]+HealBot_Util_Round(GetScreenWidth()/2)
+        if HealBot_Skins_GetFrameVar("Anchors", "RealX", frame) and HealBot_Skins_GetFrameVar("Anchors", "RealY", frame) and (HealBot_Skins_GetFrameBoolean("Anchors", "RealFixed", frame) or useReal) then
+            vFrameSetPointY=HealBot_Skins_GetFrameVar("Anchors", "RealY", frame)+HealBot_Util_Round(GetScreenHeight()/2)
+            vFrameSetPointX=HealBot_Skins_GetFrameVar("Anchors", "RealX", frame)+HealBot_Util_Round(GetScreenWidth()/2)
         else
-            vFrameSetPointY=GetScreenHeight()*(Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]/100)
-            vFrameSetPointX=GetScreenWidth()*(Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]/100)
+            vFrameSetPointY=GetScreenHeight()*(HealBot_Skins_GetFrameVar("Anchors", "Y", frame)/100)
+            vFrameSetPointX=GetScreenWidth()*(HealBot_Skins_GetFrameVar("Anchors", "X", frame)/100)
         end
-        if Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 1 then
+        if HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 1 then
             gaf:SetPoint("TOPLEFT","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 2 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 2 then
             gaf:SetPoint("BOTTOMLEFT","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 3 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 3 then
             gaf:SetPoint("TOPRIGHT","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 4 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 4 then
             gaf:SetPoint("BOTTOMRIGHT","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 5 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 5 then
             gaf:SetPoint("TOP","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 6 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 6 then
             gaf:SetPoint("LEFT","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 7 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 7 then
             gaf:SetPoint("RIGHT","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
-        elseif Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"] == 8 then
+        elseif HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame) == 8 then
             gaf:SetPoint("BOTTOM","UIParent","BOTTOMLEFT",vFrameSetPointX,vFrameSetPointY);
         end
-        --if frame == 1 then 
-        --    HealBot_AddDebug("Position X="..vFrameSetPointX.." Y="..vFrameSetPointY,"Frame",true)
-        --    HealBot_AddDebug("HB Relative X="..Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"].." Y="..Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"],"Frame",true)
-        --    HealBot_AddDebug("HB Real X="..Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealX"].." Real Y="..Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RealY"],"Frame",true)
-        --end
+
     elseif not callback then
-        if not Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin] or not Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame] then
-            HealBot_Skins_Check_Skin(Healbot_Config_Skins.Current_Skin)
-        end
+        HealBot_Skins_Check_Skin(Healbot_Config_Skins.Current_Skin)
         HealBot_Action_CheckFrame(frame, gaf)
         HealBot_Action_FrameSetPoint(frame, gaf, useReal, true)
     end
@@ -6780,7 +6837,7 @@ function HealBot_Action_setAutoClose(reset)
       --HealBot_setCall("HealBot_Action_setAutoClose")
     local cVal=1
     for x=1,10 do
-        if not reset then cVal=Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][x]["AUTOCLOSE"] end
+        if not reset then cVal=HealBot_Skins_GetFrameVar("Frame", "AUTOCLOSE", x) end
         if cVal~=HealBot_AutoCloseFrame[x] then
             HealBot_AutoCloseFrame[x]=cVal
             HealBot_Panel_setAutoClose(x)
@@ -6793,8 +6850,8 @@ end
 
 function HealBot_Action_ResetGlobalDimming()
       --HealBot_setCall("HealBot_Action_ResetGlobalDimming")
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
-        HealBot_Action_luVars["GlobalDimming"]=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
+        HealBot_Action_luVars["GlobalDimming"]=HealBot_Skins_GetVar("General", "GLOBALDIMMING")
         HealBot_Action_luVars["GlobalDimmingEnabled"]=true
     else
         HealBot_Action_luVars["GlobalDimming"]=0
@@ -6807,15 +6864,15 @@ end
 function HealBot_Action_UpdateFrameHeaderOpacity(f)
       --HealBot_setCall("HealBot_Action_UpdateFrameHeaderOpacity")
     if HealBot_Action_luVars["GlobalDimmingEnabled"] then
-        grpFrameBar[f]:SetStatusBarColor(Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["R"],
-                              Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["G"],
-                              Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["B"],
-                              (Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["A"]/HealBot_Action_luVars["GlobalDimming"]));
+        grpFrameBar[f]:SetStatusBarColor(HealBot_Skins_GetFrameVar("FrameAliasBar", "R", f),
+                                         HealBot_Skins_GetFrameVar("FrameAliasBar", "G", f),
+                                         HealBot_Skins_GetFrameVar("FrameAliasBar", "B", f),
+                                        (HealBot_Skins_GetFrameVar("FrameAliasBar", "A", f)/HealBot_Action_luVars["GlobalDimming"]));
     else
-        grpFrameBar[f]:SetStatusBarColor(Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["R"],
-                              Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["G"],
-                              Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["B"],
-                              Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][f]["A"]);
+        grpFrameBar[f]:SetStatusBarColor(HealBot_Skins_GetFrameVar("FrameAliasBar", "R", f),
+                                         HealBot_Skins_GetFrameVar("FrameAliasBar", "G", f),
+                                         HealBot_Skins_GetFrameVar("FrameAliasBar", "B", f),
+                                         HealBot_Skins_GetFrameVar("FrameAliasBar", "A", f));
     end
 end
 
@@ -6823,19 +6880,19 @@ function HealBot_Action_UpdateHeaderOpacity(header)
       --HealBot_setCall("HealBot_Action_UpdateHeaderOpacity")
     if header.frame>0 then
         if HealBot_Action_luVars["GlobalDimmingEnabled"] then
-            header.bar:SetStatusBarColor(Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["R"],
-                                      Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["G"],
-                                      Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["B"],
-                                     (Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["A"]/HealBot_Action_luVars["GlobalDimming"]))
+            header.bar:SetStatusBarColor(HealBot_Skins_GetFrameVar("HeadBar", "R", header.frame),
+                                         HealBot_Skins_GetFrameVar("HeadBar", "G", header.frame),
+                                         HealBot_Skins_GetFrameVar("HeadBar", "B", header.frame),
+                                        (HealBot_Skins_GetFrameVar("HeadBar", "A", header.frame)/HealBot_Action_luVars["GlobalDimming"]))
             header.bar.txt:SetTextColor(Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["R"],
                                         Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["G"],
                                         Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["B"],
                                        (Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["A"]/HealBot_Action_luVars["GlobalDimming"]))
         else
-            header.bar:SetStatusBarColor(Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["R"],
-                                      Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["G"],
-                                      Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["B"],
-                                      Healbot_Config_Skins.HeadBar[Healbot_Config_Skins.Current_Skin][header.frame]["A"])
+            header.bar:SetStatusBarColor(HealBot_Skins_GetFrameVar("HeadBar", "R", header.frame),
+                                         HealBot_Skins_GetFrameVar("HeadBar", "G", header.frame),
+                                         HealBot_Skins_GetFrameVar("HeadBar", "B", header.frame),
+                                         HealBot_Skins_GetFrameVar("HeadBar", "A", header.frame))
             header.bar.txt:SetTextColor(Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["R"],
                                         Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["G"],
                                         Healbot_Config_Skins.HeadText[Healbot_Config_Skins.Current_Skin][header.frame]["B"],
@@ -6848,7 +6905,7 @@ function HealBot_Action_EnableGlobalDimming()
       --HealBot_setCall("HealBot_Action_EnableGlobalDimming")
     if not HealBot_Action_luVars["GlobalDimmingEnabled"] and GetTime()>HealBot_Action_luVars["EnableDimmingAfter"] then
         HealBot_Action_luVars["GlobalDimmingEnabled"]=true
-        HealBot_Action_luVars["GlobalDimming"]=Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]
+        HealBot_Action_luVars["GlobalDimming"]=HealBot_Skins_GetVar("General", "GLOBALDIMMING")
         HealBot_Action_ResetOpacity()
     end
 end
@@ -6914,7 +6971,7 @@ function HealBot_Action_HealUnit_OnEnter(self)
             HealBot_Action_AuxSetHighlightBar(self)
         end
     end
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         HealBot_Action_luVars["EnableDimmingAfter"]=GetTime()+1
         C_Timer.After(0.001, HealBot_Action_DisableGlobalDimming)
     end
@@ -6934,7 +6991,7 @@ function HealBot_Action_HealUnit_OnLeave(self)
             HealBot_Action_AuxClearHighlightBar(self)
         end
     end
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         HealBot_Action_luVars["EnableDimmingAfter"]=GetTime()+0.35
         C_Timer.After(0.4, HealBot_Action_EnableGlobalDimming)
     end
@@ -6956,7 +7013,7 @@ function HealBot_Action_EmergUnit_OnEnter(self)
             HealBot_setTooltipUpdateNow()
         end
     end
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         HealBot_Action_luVars["EnableDimmingAfter"]=GetTime()+1
         C_Timer.After(0.001, HealBot_Action_DisableGlobalDimming)
     end
@@ -6966,7 +7023,7 @@ function HealBot_Action_EmergUnit_OnLeave(self)
       --HealBot_setCall("HealBot_Action_EmergUnit_OnLeave", self)
     HealBot_Action_SetActiveButton(0)
     if HealBot_Data["TIPBUTTON"] then HealBot_Action_HideTooltip(HealBot_Data["TIPBUTTON"]) end
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         HealBot_Action_luVars["EnableDimmingAfter"]=GetTime()+0.35
         C_Timer.After(0.4, HealBot_Action_EnableGlobalDimming)
     end
@@ -6987,7 +7044,7 @@ function HealBot_Action_UseSmartCast(self,button)
         if HealBot_Spells_KnownByName(sName) then
             if HEALBOT_GAME_VERSION<4 then
                 uLevel=button.level
-                if uLevel and uLevel>0 then
+                if uLevel and uLevel>0 and HealBot_Data["PCLASSTRIM"] then
                     if HealBot_Data["PCLASSTRIM"] == "PRIE" then
                         if sName == HealBot_WoWAPI_SpellName(HBC_POWER_WORD_FORTITUDE) then
                             if uLevel<12 then
@@ -7293,26 +7350,26 @@ function HealBot_Action_SetFrameColours(frame)
       --HealBot_setCall("HealBot_Action_SetFrameColours")
     if HealBot_Action_luVars["GlobalDimmingEnabled"] then
         frame:SetBackdropColor(
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKR"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKG"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKB"], 
-        (Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKA"]/HealBot_Action_luVars["GlobalDimming"]));
+        HealBot_Skins_GetFrameVar("Frame", "BACKR", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BACKG", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BACKB", frame.id),
+       (HealBot_Skins_GetFrameVar("Frame", "BACKA", frame.id)/HealBot_Action_luVars["GlobalDimming"]));
         frame:SetBackdropBorderColor(
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERR"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERG"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERB"],
-        (Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERA"]/HealBot_Action_luVars["GlobalDimming"]));
+        HealBot_Skins_GetFrameVar("Frame", "BORDERR", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BORDERG", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BORDERB", frame.id),
+       (HealBot_Skins_GetFrameVar("Frame", "BORDERA", frame.id)/HealBot_Action_luVars["GlobalDimming"]));
     else
         frame:SetBackdropColor(
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKR"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKG"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKB"], 
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BACKA"]);
+        HealBot_Skins_GetFrameVar("Frame", "BACKR", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BACKG", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BACKB", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BACKA", frame.id))
         frame:SetBackdropBorderColor(
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERR"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERG"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERB"],
-        Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame.id]["BORDERA"]);
+        HealBot_Skins_GetFrameVar("Frame", "BORDERR", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BORDERG", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BORDERB", frame.id),
+        HealBot_Skins_GetFrameVar("Frame", "BORDERA", frame.id))
     end
 end
 
@@ -7368,11 +7425,11 @@ function HealBot_Action_SetAliasFontSize(frame)
         HealBot_Media_UpdateFont(grpFrameText[frame],
                                  Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][frame]["FONT"],
                                  ceil(Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][frame]["SIZE"]*
-                                      Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["SCALE"]),
+                                      HealBot_Skins_GetFrameVar("Frame", "SCALE", frame)),
                                  Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][frame]["OUTLINE"],
                                  "Action_SetAliasFontSize - FrameAlias")
         grpFrameText[frame]:SetTextHeight(ceil(Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][frame]["SIZE"]*
-                                                    Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["SCALE"]))
+                                               HealBot_Skins_GetFrameVar("Frame", "SCALE", frame)))
         grpFrameText[frame]:ClearAllPoints();
         grpFrameText[frame]:SetPoint("CENTER",0,Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][frame]["OFFSET"]);
         HealBot_Action_SetFrameTextColours(frame)
@@ -7393,7 +7450,7 @@ local modKey=1 -- Not Locked
 function HealBot_Action_IsFrameLocked(frame)
       --HealBot_setCall("HealBot_Action_IsFrameLocked")
     modKey=1 -- Not Locked
-    if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["LOCKED"]>2 then
+    if HealBot_Skins_GetFrameVar("Frame", "LOCKED", frame)>2 then
         if IsAltKeyDown() then 
             if IsControlKeyDown() then
                 modKey=5
@@ -7405,7 +7462,7 @@ function HealBot_Action_IsFrameLocked(frame)
         end
     end
     if (HealBot_Action_luVars["TestBarsOn"] and not Healbot_Config_Skins.StickyFrames[Healbot_Config_Skins.Current_Skin][frame]["STUCK"]) 
-      or Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["LOCKED"] == modKey then
+      or HealBot_Skins_GetFrameVar("Frame", "LOCKED", frame) == modKey then
         return false
     else
         return true
@@ -7417,7 +7474,7 @@ function HealBot_Action_LockFrame(self)
     if not HealBot_Action_IsFrameLocked(self.id) then
         HealBot_Action_luVars["FrameMoving"]=self
         HealBot_StartMoving(self, self.id);
-    elseif Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["STICKYFRAME"] and self.id>1 then
+    elseif HealBot_Skins_GetBoolean("General", "STICKYFRAME") and self.id>1 then
         if Healbot_Config_Skins.StickyFrames[Healbot_Config_Skins.Current_Skin][self.id]["STUCK"] and
            HealBot_Action_FrameIsVisible(Healbot_Config_Skins.StickyFrames[Healbot_Config_Skins.Current_Skin][self.id]["STUCKTO"]) then
             HealBot_Action_LockFrame(grpFrame[Healbot_Config_Skins.StickyFrames[Healbot_Config_Skins.Current_Skin][self.id]["STUCKTO"]])
@@ -7452,7 +7509,7 @@ end
 function HealBot_Action_OnEnter(self)
       --HealBot_setCall("HealBot_Action_OnEnter", self)
     modKey=1
-    if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][self.id]["LOCKED"]>2 then
+    if HealBot_Skins_GetFrameVar("Frame", "LOCKED", self.id)>2 then
         if IsAltKeyDown() then 
             if IsControlKeyDown() then
                 modKey=5
@@ -7463,7 +7520,7 @@ function HealBot_Action_OnEnter(self)
             modKey=3
         end
     end
-    if Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][self.id]["LOCKED"] == modKey then
+    if HealBot_Skins_GetFrameVar("Frame", "LOCKED", self.id) == modKey then
         if not hbFrameTags[self.id] then
             HealBot_Action_ToggleFrameTag(self)
         end
@@ -7471,7 +7528,7 @@ function HealBot_Action_OnEnter(self)
         HealBot_Action_ToggleFrameTag(self)
     end
     HealBot_Action_luVars["ActiveFrame"]=self
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         HealBot_Action_luVars["EnableDimmingAfter"]=GetTime()+1
         C_Timer.After(0.001, HealBot_Action_DisableGlobalDimming)
     end
@@ -7483,7 +7540,7 @@ function HealBot_Action_OnLeave(self)
     if hbFrameTags[self.id] then
         HealBot_Action_ToggleFrameTag(self)
     end
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["GLOBALDIMMING"]>1 then
+    if HealBot_Skins_GetVar("General", "GLOBALDIMMING")>1 then
         HealBot_Action_luVars["EnableDimmingAfter"]=GetTime()+0.25
         C_Timer.After(0.4, HealBot_Action_EnableGlobalDimming)
     end
@@ -7657,42 +7714,42 @@ function HealBot_Action_StickyFrameSetPoint(frame,stuckTo,stuckPoint,stuckToPoin
     if (stuckPoint == "BOTTOMLEFT" or stuckPoint == "BOTTOM" or stuckPoint == "BOTTOMRIGHT") and
        (stuckToPoint == "TOPLEFT" or stuckToPoint == "TOP" or stuckToPoint == "TOPRIGHT") then
         if Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][stuckTo]["SHOW"] then
-            vSticktSetPointY=Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][stuckTo]["HEIGHT"]
+            vSticktSetPointY=HealBot_Skins_GetFrameVar("FrameAliasBar", "HEIGHT", stuckTo)
         end
     elseif (stuckToPoint == "BOTTOMLEFT" or stuckToPoint == "BOTTOM" or stuckToPoint == "BOTTOMRIGHT") and
            (stuckPoint == "TOPLEFT" or stuckPoint == "TOP" or stuckPoint == "TOPRIGHT") then
         if Healbot_Config_Skins.FrameAlias[Healbot_Config_Skins.Current_Skin][frame]["SHOW"] then
-            vSticktSetPointY=0-Healbot_Config_Skins.FrameAliasBar[Healbot_Config_Skins.Current_Skin][frame]["HEIGHT"]
+            vSticktSetPointY=0-HealBot_Skins_GetFrameVar("FrameAliasBar", "HEIGHT", frame)
         end
     end
-    vSticktSetPointX=vSticktSetPointX+Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["SFOFFSETH"]
-    vSticktSetPointY=vSticktSetPointY+Healbot_Config_Skins.Frame[Healbot_Config_Skins.Current_Skin][frame]["SFOFFSETV"]
+    vSticktSetPointX=vSticktSetPointX+HealBot_Skins_GetFrameVar("Frame", "SFOFFSETH", frame)
+    vSticktSetPointY=vSticktSetPointY+HealBot_Skins_GetFrameVar("Frame", "SFOFFSETV", frame)
     HBframe:ClearAllPoints();
     HBframe:SetPoint(stuckPoint,cf,stuckToPoint,vSticktSetPointX,vSticktSetPointY)
     vSticktSetPointOptionUpd=false
-    if stuckPoint == "TOPLEFT" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=1 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=1
+    if stuckPoint == "TOPLEFT" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=1 then
+        HealBot_Skins_SetFrameVar(1, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "BOTTOMLEFT" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=2 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=2
+    elseif stuckPoint == "BOTTOMLEFT" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=2 then
+        HealBot_Skins_SetFrameVar(2, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "TOPRIGHT" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=3 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=3
+    elseif stuckPoint == "TOPRIGHT" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=3 then
+        HealBot_Skins_SetFrameVar(3, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "BOTTOMRIGHT" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=4 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=4
+    elseif stuckPoint == "BOTTOMRIGHT" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=4 then
+        HealBot_Skins_SetFrameVar(4, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "TOP" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=5 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=5
+    elseif stuckPoint == "TOP" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=5 then
+        HealBot_Skins_SetFrameVar(5, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "LEFT" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=6 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=6
+    elseif stuckPoint == "LEFT" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=6 then
+        HealBot_Skins_SetFrameVar(6, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "RIGHT" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=7 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=7
+    elseif stuckPoint == "RIGHT" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=7 then
+        HealBot_Skins_SetFrameVar(7, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
-    elseif stuckPoint == "BOTTOM" and Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]~=8 then
-        Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["FRAME"]=8
+    elseif stuckPoint == "BOTTOM" and HealBot_Skins_GetFrameVar("Anchors", "FRAME", frame)~=8 then
+        HealBot_Skins_SetFrameVar(8, "Anchors", "FRAME", frame)
         vSticktSetPointOptionUpd=true
     end
     if vSticktSetPointOptionUpd then
@@ -7768,10 +7825,10 @@ function HealBot_Action_CheckForStickyFrame(frame,stick)
     vStickyFrameIsSticky=false
     vStickyFrameCurAnchor=0
     vStickyFrameParAnchor=0
-    vStickyFrameLeft=grpFrame[frame]:GetLeft() or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["LEFT"] or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]
-    vStickyFrameRight=grpFrame[frame]:GetRight() or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RIGHT"] or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["X"]
-    vStickyFrameTop=grpFrame[frame]:GetTop() or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["TOP"] or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]
-    vStickyFrameBottom=grpFrame[frame]:GetBottom() or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["BOTTOM"] or Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["Y"]
+    vStickyFrameLeft=grpFrame[frame]:GetLeft() or HealBot_Skins_GetFrameVar("Anchors", "LEFT", frame) or HealBot_Skins_GetFrameVar("Anchors", "X", frame)
+    vStickyFrameRight=grpFrame[frame]:GetRight() or HealBot_Skins_GetFrameVar("Anchors", "RIGHT", frame) or HealBot_Skins_GetFrameVar("Anchors", "X", frame)
+    vStickyFrameTop=grpFrame[frame]:GetTop() or HealBot_Skins_GetFrameVar("Anchors", "TOP", frame) or HealBot_Skins_GetFrameVar("Anchors", "Y", frame)
+    vStickyFrameBottom=grpFrame[frame]:GetBottom() or HealBot_Skins_GetFrameVar("Anchors", "BOTTOM", frame) or HealBot_Skins_GetFrameVar("Anchors", "Y", frame)
     for x=1,frame-1 do
         if HealBot_Action_FrameIsVisible(x) and HealBot_Action_FrameIsVisible(frame) then
             if vStickyFrameLeft and grpFrame[x]:GetLeft() then
@@ -7889,10 +7946,10 @@ function HealBot_Action_CheckForStickyFrame(frame,stick)
             else
                 HealBot_Action_DelayCheckFrameSetPoint(frame, true)
             end
-            if vStickyFrameLeft then Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["LEFT"]=vStickyFrameLeft end
-            if vStickyFrameRight then Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["RIGHT"]=vStickyFrameRight end
-            if vStickyFrameTop then Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["TOP"]=vStickyFrameTop end
-            if vStickyFrameBottom then Healbot_Config_Skins.Anchors[Healbot_Config_Skins.Current_Skin][frame]["BOTTOM"]=vStickyFrameBottom end
+            if vStickyFrameLeft then HealBot_Skins_SetFrameVar(vStickyFrameLeft, "Anchors", "LEFT", frame) end
+            if vStickyFrameRight then HealBot_Skins_SetFrameVar(vStickyFrameRight, "Anchors", "RIGHT", frame) end
+            if vStickyFrameTop then HealBot_Skins_SetFrameVar(vStickyFrameTop, "Anchors", "TOP", frame) end
+            if vStickyFrameBottom then HealBot_Skins_SetFrameVar(vStickyFrameBottom, "Anchors", "BOTTOM", frame) end
         end
     end
     if not vStickyFrameIsSticky and not stick then
@@ -7903,7 +7960,7 @@ end
 function HealBot_Action_StickyFrame(frame)
         --HealBot_setCall("HealBot_Action_StickyFrame")
     vStickyFrameIsSticky=false
-    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["STICKYFRAME"] and frame>1 then
+    if HealBot_Skins_GetBoolean("General", "STICKYFRAME") and frame>1 then
         if Healbot_Config_Skins.StickyFrames[Healbot_Config_Skins.Current_Skin][frame]["STUCK"] and
            HealBot_Action_FrameIsVisible(Healbot_Config_Skins.StickyFrames[Healbot_Config_Skins.Current_Skin][frame]["STUCKTO"]) then
             HealBot_Action_StickyFrameSetPoint(frame,

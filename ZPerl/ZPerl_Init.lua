@@ -280,7 +280,7 @@ local function GetNamesWithoutBuff(spellName, with, filter)
 			local hasBuff
 			for i = 1, 40 do
 				local name, icon, applications, duration, expirationTime, sourceUnit, isStealable
-				if C_UnitAuras then
+				if not IsVanillaClassic and C_UnitAuras then
 					local auraData = C_UnitAuras.GetAuraDataByIndex(unitid, i, filter)
 					if auraData then
 						name = auraData.name
@@ -419,7 +419,7 @@ end
 local function XPerl_ToolTip_AddBuffDuration(self, partyid, buffID, filter)
 	if IsInRaid() or UnitInParty("player") then
 		local name, applications, duration, expirationTime, sourceUnit, isStealable
-		if C_UnitAuras then
+		if not IsVanillaClassic and C_UnitAuras then
 			local auraData = C_UnitAuras.GetAuraDataByIndex(partyid, buffID, filter)
 			if auraData then
 				name = auraData.name
@@ -565,7 +565,7 @@ function ZPerl_Init()
 
 	local name, title, notes, enabled = C_AddOns.GetAddOnInfo("SupportFuncs")
 	if name and enabled then
-		local ver = GetAddOnMetadata and C_AddOns.GetAddOnMetadata(name, "Version")
+		local ver = GetAddOnMetadata and GetAddOnMetadata(name, "Version") or C_AddOns.GetAddOnMetadata(name, "Version")
 		if (tonumber(ver) < 20000.2) then
 			XPerl_Notice("Out-dated version of SupportFuncs detected. This will break the X-Perl Range Finder by replacing standard Blizzard API functions.")
 		end
@@ -573,7 +573,7 @@ function ZPerl_Init()
 
 	name, title, notes, enabled = C_AddOns.GetAddOnInfo("AutoBar")
 	if name and enabled then
-		local ver = GetAddOnMetadata and C_AddOns.GetAddOnMetadata(name, "Version")
+		local ver = GetAddOnMetadata and GetAddOnMetadata(name, "Version") or C_AddOns.GetAddOnMetadata(name, "Version")
 		if (ver < "2.01.00.02") then
 			XPerl_Notice("Out-dated version of AutoBar detected. This will taint the Targetting system for all mods that use them, including X-Perl.")
 		end
@@ -581,7 +581,7 @@ function ZPerl_Init()
 
 	name, title, notes, enabled = C_AddOns.GetAddOnInfo("TrinityBars")
 	if name and enabled then
-		local ver = GetAddOnMetadata and C_AddOns.GetAddOnMetadata(name, "Version")
+		local ver = GetAddOnMetadata and GetAddOnMetadata(name, "Version") or C_AddOns.GetAddOnMetadata(name, "Version")
 		if (ver <= "20003.14") then
 			XPerl_Notice("Out-dated version of TrinityBars detected. This will taint the Targetting system for all mods that use them, including X-Perl.")
 		end

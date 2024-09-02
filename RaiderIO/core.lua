@@ -446,11 +446,12 @@ do
         },
         ["us"] = {
             ["Skullcrusher"] = {
-                ["Aspyrio"] = "Raider.IO Creator",
+                ["Aspyrx"] = "Raider.IO Creator",
                 ["Ulsoga"] = "Raider.IO Creator",
                 ["Mccaffrey"] = "Killing Keys Since 1977!",
                 ["Oscassey"] = "Master of dis guys",
-                ["Rhoma"] = "Plays an MDI Champion on TV"
+                ["Rhoma"] = "Plays an MDI Champion on TV",
+                ["Infoxicated"] = "Pogged out of her mind"
             },
             ["Thrall"] = {
                 ["Firstclass"] = "Author of mythicpl.us"

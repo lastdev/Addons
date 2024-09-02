@@ -237,7 +237,7 @@ local function updateRewardText(mission)
         if rewards then
             for _, reward in pairs(rewards) do
                 if reward.currencyID and (reward.currencyID == 0) then
-                    text = text..GetCoinTextureString(reward.quantity).."; "
+                    text = text..C_CurrencyInfo.GetCoinTextureString(reward.quantity).."; "
                 elseif reward.followerXP then
                     text = text..reward.followerXP.." "..L["BonusFollowerXP"].."; "
                 elseif reward.itemID then

@@ -1,6 +1,6 @@
-## Interface: 110002, 110000, 40400
+## Interface: 110002, 40400
 ## Title: LiteMount
-## Version: 11.0.0-18
+## Version: 11.0.2-6
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## IconTexture: 132247
@@ -50,5 +50,7 @@ ActionButton.lua
 Core.lua
 
 KeyBindingStrings.lua
+
+Fonts\Fonts.xml
 
 UI\UI.xml

@@ -124,11 +124,11 @@ local function RenderLinks(str, nameOnly)
                 end
             end
         elseif type == 'faction' then
-            local name = GetFactionInfoByID(id)
+            local name = ns.api.GetFactionInfoByID(id)
             if nameOnly then return name end
             return ns.color.NPC(name) -- TODO: colorize based on standing?
         elseif type == 'item' then
-            local name, link, _, _, _, _, _, _, _, icon = GetItemInfo(id)
+            local name, link, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(id)
             if link and icon then
                 return nameOnly and (name .. (suffix or '')) or
                            ('|T' .. icon .. ':0|t ' .. link)
@@ -142,11 +142,19 @@ local function RenderLinks(str, nameOnly)
                            ns.color.Yellow('[' .. name .. ']')
             end
         elseif type == 'spell' then
-            local name, _, icon = GetSpellInfo(id)
+            local name, _, icon = ns.api.GetSpellInfo(id)
             if name and icon then
                 if nameOnly then return name end
                 return ns.color.Spell('|T' .. icon .. ':0|t [' .. name .. ']')
             end
+        elseif type == 'map' then
+            local name = C_Map.GetMapInfo(id).name
+            if nameOnly then return name end
+            return ns.color.Yellow(name)
+        elseif type == 'area' then
+            local name = C_Map.GetAreaInfo(id)
+            if nameOnly then return name end
+            return ns.color.Yellow(name)
         end
         return type .. '+' .. id
     end)
@@ -155,7 +163,9 @@ local function RenderLinks(str, nameOnly)
         local result = str:gsub('{(%l+):([^{}]+)}', function(type, text)
             if type == 'bug' then return ns.color.Red(text) end
             if type == 'emote' then return ns.color.Orange(text) end
-            if type == 'location' then return ns.color.Yellow(text) end
+            if type == 'location' or type == 'map' or type == 'area' then
+                return ns.color.Yellow(text)
+            end
             if type == 'note' then return ns.color.Orange(text) end
             if type == 'object' then return ns.color.Yellow(text) end
             if type == 'title' then return ns.color.Yellow(text) end
@@ -188,7 +198,8 @@ end
 -------------------------------------------------------------------------------
 
 local function PlayerHasItem(item, count)
-    return GetItemCount(item, true) >= (count and count > 1 and count or 1)
+    return C_Item.GetItemCount(item, true) >=
+               (count and count > 1 and count or 1)
 end
 
 local function PlayerHasProfession(skillID)
@@ -268,6 +279,20 @@ local function AsIDTable(value)
 end
 
 -------------------------------------------------------------------------------
+---------------------------- REPUTATION FORMATTER -----------------------------
+-------------------------------------------------------------------------------
+
+local REP_LEVELS = {3000, 6000, 12000, 21000}
+
+local function FormatReputation(amount)
+    for i, v in ipairs(REP_LEVELS) do
+        if amount < v then return amount .. '/' .. v end
+        amount = amount - v
+    end
+    return tostring(amount) -- shouldn't get here
+end
+
+-------------------------------------------------------------------------------
 
 ns.AsIDTable = AsIDTable
 ns.AsTable = AsTable
@@ -280,3 +305,4 @@ ns.PlayerHasProfession = PlayerHasProfession
 ns.PrepareLinks = PrepareLinks
 ns.RenderLinks = RenderLinks
 ns.UpdateActiveCalendarEvents = UpdateActiveCalendarEvents
+ns.FormatReputation = FormatReputation

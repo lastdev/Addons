@@ -135,7 +135,7 @@ function DestroyingScrollTable.__private:_HandleQueryUpdate()
 	local hasExistingSelection, nextSelectionSlotId = false, nil
 	for _, row in self._query:Iterator() do
 		local itemString, quantity, name, slotId = row:GetFields("itemString", "quantity", "name", "slotId")
-		tinsert(self._data.item, "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..UIUtils.GetDisplayItemName(itemString))
+		tinsert(self._data.item, "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?"))
 		tinsert(self._data.item_tooltip, itemString)
 		tinsert(self._data.num, quantity)
 		tinsert(self._actionIcon, "iconPack.12x12/Hide")

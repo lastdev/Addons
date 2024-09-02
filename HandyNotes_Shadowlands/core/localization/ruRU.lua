@@ -12,6 +12,7 @@ L['leather'] = 'Кожа'
 L['mail'] = 'Кольчуга'
 L['plate'] = 'Латы'
 L['cosmetic'] = 'Косметический'
+L['tabard'] = 'Гербовая накидка'
 
 L['1h_mace'] = 'Одноручное Дробящее'
 L['1h_sword'] = 'Одноручный Меч'
@@ -44,34 +45,22 @@ L['activation_unknown'] = 'Активация неизвестна!'
 L['requirement_not_found'] = 'Местоположение требования неизвестно!'
 L['multiple_spawns'] = 'Может появляться в нескольких местах.'
 L['shared_drops'] = 'Общий дроп'
+L['zone_drops_label'] = 'Добыча в локации'
+L['zone_drops_note'] = 'Перечисленные ниже предметы могут быть получены от нескольких монстров в этой локации.'
 
 L['requires'] = 'Требуется'
 L['ranked_research'] = '%s (Ранг %d/%d)'
 
 L['focus'] = 'Фокус'
 L['retrieving'] = 'Получение ссылки на предмет ...'
-L['in_cave'] = 'В пещере.'
-L['in_small_cave'] = 'В маленькой пещере.'
-L['in_water_cave'] = 'В подводной пещере.'
-L['in_waterfall_cave'] = 'В пещере за водопадом.'
-L['in_water'] = 'В воде.'
-L['hourly'] = 'Ежечасно'
-L['daily'] = 'Ежедневно'
-L['weekly'] = 'Раз в неделю'
+
 L['normal'] = 'Обычный'
 L['hard'] = 'Сложный'
-L['heirloom'] = 'Наследуемый'
-L['item'] = 'Предмет'
-L['mount'] = 'Маунт'
-L['pet'] = 'Питомец'
-L['recipe'] = 'Рецепт'
-L['spell'] = 'Заклинание'
-L['title'] = 'Звание'
-L['toy'] = 'Игрушка'
-L['currency'] = 'Валюта'
-L['rep'] = 'Реп.'
+
 L['completed'] = 'Получено'
 L['incomplete'] = 'Незавершенно'
+L['claimed'] = nil
+L['unclaimed'] = nil
 L['known'] = 'Известно'
 L['missing'] = 'Отсутствует'
 L['unobtainable'] = 'Недоступно'
@@ -83,16 +72,44 @@ L['quest'] = 'Задание'
 L['quest_repeatable'] = 'Повторяемое задание'
 L['achievement'] = 'Достижение'
 
+---------------------------------- LOCATION -----------------------------------
+L['in_cave'] = 'В пещере.'
+L['in_small_cave'] = 'В маленькой пещере.'
+L['in_water_cave'] = 'В подводной пещере.'
+L['in_waterfall_cave'] = 'В пещере за водопадом.'
+L['in_water'] = 'В воде.'
+L['in_building'] = 'В здании.'
+
+------------------------------------ TIME -------------------------------------
+L['now'] = 'Сейчас'
+L['hourly'] = 'Ежечасно'
+L['daily'] = 'Ежедневно'
+L['weekly'] = 'Раз в неделю'
+
+L['time_format_12hrs'] = '%e.%m - %I:%M %p Местное время'
+L['time_format_24hrs'] = '%e.%m - %H:%M Местное время'
+
+----------------------------------- REWARDS -----------------------------------
+L['heirloom'] = 'Наследуемый'
+L['item'] = 'Предмет'
+L['mount'] = 'Маунт'
+L['pet'] = 'Питомец'
+L['recipe'] = 'Рецепт'
+L['spell'] = 'Заклинание'
+L['title'] = 'Звание'
+L['toy'] = 'Игрушка'
+L['currency'] = 'Валюта'
+L['rep'] = 'Реп.'
+
+---------------------------------- FOLLOWERS ----------------------------------
 L['follower_type_follower'] = 'Последователь'
 L['follower_type_champion'] = 'Чемпион'
 L['follower_type_companion'] = 'Компаньон'
 
+--------------------------------- REPUTATION ----------------------------------
 L['rep_honored'] = 'Уважение'
 L['rep_revered'] = 'Почтение'
 L['rep_exalted'] = 'Превознесение'
-
-L['time_format_12hrs'] = '%e.%m - %I:%M %p Местное время'
-L['time_format_24hrs'] = '%e.%m - %H:%M Местное время'
 
 -------------------------------------------------------------------------------
 --------------------------------- DRAGONRACES ---------------------------------
@@ -107,7 +124,7 @@ L['dr_advanced'] = 'Сложный'
 L['dr_reverse'] = 'Обратный маршрут'
 L['dr_challenge'] = 'Испытание'
 L['dr_reverse_challenge'] = 'Испытание наоборот'
-L['dr_storm_race'] = nil
+L['dr_storm_race'] = 'Гонки Бурь'
 L['dr_bronze'] = 'Завершите гонку, чтобы получить ' .. ns.color.Bronze('Бронзу') .. '.'
 L['dr_vendor_note'] = 'Обмен {currency:2588} на манускрипты и трансмогрификацию.'
 L['options_icons_dragonrace'] = 'Гонка на драконах'
@@ -160,6 +177,8 @@ L['options_show_completed_nodes'] = 'Показать завершеные'
 L['options_show_completed_nodes_desc'] = 'Показать все точки, даже если они уже были получены или завершены сегодня.'
 L['options_toggle_hide_done_rare'] = 'Скрыть редких монстров, если все награды получены'
 L['options_toggle_hide_done_rare_desc'] = 'Скрыть всех редких монстров, с которых получены все награды.'
+L['options_toggle_hide_done_treasure'] = nil
+L['options_toggle_hide_done_treasure_desc'] = nil
 L['options_toggle_hide_minimap'] = 'Скрыть все значки на миникарте'
 L['options_toggle_hide_minimap_desc'] = 'Скрывает все иконки из этого аддона на миникарте и отображает их только на главной карте.'
 L['options_toggle_maximized_enlarged'] = 'Увеличивайте значки на увеличенной карте мира.'
@@ -173,6 +192,8 @@ L['options_restore_hidden_nodes_desc'] = 'Восстановите все скр
 
 L['options_rewards_settings'] = 'Награды'
 L['options_reward_types'] = 'Показать типы наград'
+L['options_manuscript_rewards'] = nil
+L['options_manuscript_rewards_desc'] = nil
 L['options_mount_rewards'] = 'Показать маунтов'
 L['options_mount_rewards_desc'] = 'Отображать маунтов во всплывающих подсказках и отслеживать их собранный статус.'
 L['options_pet_rewards'] = 'Показать питомцев'
@@ -185,6 +206,10 @@ L['options_transmog_rewards'] = 'Показать трансмогрификац
 L['options_transmog_rewards_desc'] = 'Отображать трансмогрификацию во всплывающих подсказках и отслеживать их статус.'
 L['options_all_transmog_rewards'] = 'Показать недоступные награды за трансмогрификацию'
 L['options_all_transmog_rewards_desc'] = 'Показать награды за трансмогрификацию, доступные другим классам.'
+L['options_rep_rewards'] = nil
+L['options_rep_rewards_desc'] = nil
+L['options_claimed_rep_rewards'] = nil
+L['options_claimed_rep_rewards_desc'] = nil
 
 L['options_icons_misc_desc'] = 'Отображение местоположения других разных точек.'
 L['options_icons_misc'] = 'Разное'
@@ -194,6 +219,8 @@ L['options_icons_rares_desc'] = 'Показать местонахождение
 L['options_icons_rares'] = 'Редкие монстры'
 L['options_icons_treasures_desc'] = 'Отображение местоположения спрятанных сокровищ.'
 L['options_icons_treasures'] = 'Сокровища'
+L['options_icons_vendors_desc'] = 'Отобразить местоположения торговцев.'
+L['options_icons_vendors'] = 'Торговцы'
 
 ------------------------------------ FOCUS ------------------------------------
 
@@ -214,6 +241,8 @@ L['options_toggle_show_notes'] = 'Показать заметки'
 L['options_toggle_show_notes_desc'] = 'Добавьте полезные заметки в подсказку, где это возможно'
 L['options_toggle_use_standard_time'] = 'Использовать 12-часовой формат'
 L['options_toggle_use_standard_time_desc'] = 'Используйте 12-часовой формат времени (например, 08:00 вечера) вместо 24-часового формата (например, 20:00) во всплывающих подсказках.'
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

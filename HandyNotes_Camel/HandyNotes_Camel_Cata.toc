@@ -1,5 +1,5 @@
 ## Interface: 40400
-## Version: 1.07
+## Version: 1.11
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Ability_mount_camel_gray
 ## Title: Mysterious Camel Figurine

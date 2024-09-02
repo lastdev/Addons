@@ -175,7 +175,7 @@ function Node:IterateRewards()
             index = index + 1
             if index > #self.rewards then return end
             reward = self.rewards[index]
-        until reward:IsEnabled()
+        until reward and reward:IsEnabled()
         return reward
     end
 end
@@ -220,6 +220,7 @@ function Node:Prepare()
     ns.PrepareLinks(self.sublabel)
     ns.PrepareLinks(self.location)
     ns.PrepareLinks(self.note)
+    ns.PrepareLinks(self.rlabel)
 
     if self.requires then
         for i, req in ipairs(self.requires) do
@@ -282,7 +283,7 @@ function Node:Render(tooltip, focusable)
     if #rlabel > 0 then
         local rtext = _G[tooltip:GetName() .. 'TextRight1']
         rtext:SetTextColor(1, 1, 1)
-        rtext:SetText(rlabel)
+        rtext:SetText(ns.RenderLinks(rlabel, true))
         rtext:Show()
     end
 
@@ -515,6 +516,14 @@ local Rare = Class('Rare', NPC, {scale = 1.2, group = ns.groups.RARE})
 function Rare.getters:icon() return
     self:IsCollected() and 'skull_w' or 'skull_b' end
 
+function Rare.getters:label()
+    local label = NPC.getters.label(self)
+    if ns:GetOpt('show_npc_id') then
+        label = label .. ' (' .. ns.color.White(self.id) .. ')'
+    end
+    return label
+end
+
 function Rare:IsEnabled()
     if ns:GetOpt('hide_done_rares') and self:IsCollected() then return false end
     return NPC.IsEnabled(self)
@@ -540,6 +549,20 @@ function Treasure.getters:label()
     return UNKNOWN
 end
 
+function Treasure:IsEnabled()
+    if ns:GetOpt('hide_done_treasures') and self:IsCollected() then
+        return false
+    end
+    return Node.IsEnabled(self)
+end
+
+-------------------------------------------------------------------------------
+----------------------------------- VENDOR ------------------------------------
+-------------------------------------------------------------------------------
+
+local Vendor = Class('Vendor', Collectible,
+    {icon = 'bag', scale = 1.35, group = ns.groups.VENDOR})
+
 -------------------------------------------------------------------------------
 ------------------------------- Interval Class --------------------------------
 -------------------------------------------------------------------------------
@@ -554,7 +577,7 @@ function Interval:Initialize(attrs)
         [2] = self.initial.kr or self.initial.tw,
         [3] = self.initial.eu,
         [5] = self.initial.cn
-    } -- https://wowpedia.fandom.com/wiki/API_GetCurrentRegion
+    } -- https://warcraft.wiki.gg/wiki/API_GetCurrentRegion
 
     if self.id then
         self.SpawnTime = self.id * self.offset +
@@ -609,7 +632,8 @@ ns.node = {
     PetBattle = PetBattle,
     Quest = Quest,
     Rare = Rare,
-    Treasure = Treasure
+    Treasure = Treasure,
+    Vendor = Vendor
 }
 
 ns.Interval = Interval

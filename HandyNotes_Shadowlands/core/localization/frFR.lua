@@ -12,6 +12,7 @@ L['leather'] = 'Cuir'
 L['mail'] = 'Mailles'
 L['plate'] = 'Plaques'
 L['cosmetic'] = 'Cosmétique'
+L['tabard'] = 'Tabard'
 
 L['1h_mace'] = '1m Masse'
 L['1h_sword'] = '1m Epée'
@@ -43,35 +44,23 @@ L['trinket'] = 'Bijou'
 L['activation_unknown'] = 'Activation inconnue'
 L['requirement_not_found'] = 'Emplacement requis inconnu'
 L['multiple_spawns'] = 'Peut apparaître à plusieurs endroits.'
-L['shared_drops'] = 'Drop partagé'
+L['shared_drops'] = 'Butins partagés'
+L['zone_drops_label'] = 'Butins mondiaux'
+L['zone_drops_note'] = 'Les objets listés ci-dessous peuvent être trouvés sur plusieurs monstres de cette zone.'
 
 L['requires'] = 'Requiert'
 L['ranked_research'] = '%s (Rang %d/%d)'
 
 L['focus'] = 'Focus'
 L['retrieving'] = 'Récupérer le lien de l\'article...'
-L['in_cave'] = 'Dans une grotte.'
-L['in_small_cave'] = 'Dans une petite grotte.'
-L['in_water_cave'] = 'Dans une grotte sous-marine.'
-L['in_waterfall_cave'] = 'Dans une grotte derrière une cascade.'
-L['in_water'] = 'Dans l\'eau.'
-L['hourly'] = 'Une fois par heure'
-L['daily'] = 'Quotidiennement'
-L['weekly'] = 'Hebdomadaire'
+
 L['normal'] = 'Normal'
 L['hard'] = 'Difficile'
-L['heirloom'] = 'Héritage'
-L['item'] = 'Objet'
-L['mount'] = 'Monture'
-L['pet'] = 'Animal de Compagnie'
-L['recipe'] = 'Recette'
-L['spell'] = 'Sort'
-L['title'] = 'Titre'
-L['toy'] = 'Jouet'
-L['currency'] = 'Monnaie'
-L['rep'] = 'Rep'
+
 L['completed'] = 'Complété'
 L['incomplete'] = 'Incomplet'
+L['claimed'] = 'Réclamé'
+L['unclaimed'] = 'Non réclamé'
 L['known'] = 'Connu'
 L['missing'] = 'Inconnu'
 L['unobtainable'] = 'Introuvable'
@@ -83,16 +72,44 @@ L['quest'] = 'Quête'
 L['quest_repeatable'] = 'Quête répétable'
 L['achievement'] = 'Haut-Fait'
 
+---------------------------------- LOCATION -----------------------------------
+L['in_cave'] = 'Dans une grotte.'
+L['in_small_cave'] = 'Dans une petite grotte.'
+L['in_water_cave'] = 'Dans une grotte sous-marine.'
+L['in_waterfall_cave'] = 'Dans une grotte derrière une cascade.'
+L['in_water'] = 'Dans l\'eau.'
+L['in_building'] = 'A l\'intérieur du bâtiment.'
+
+------------------------------------ TIME -------------------------------------
+L['now'] = 'Maintenant'
+L['hourly'] = 'Une fois par heure'
+L['daily'] = 'Quotidiennement'
+L['weekly'] = 'Hebdomadaire'
+
+L['time_format_12hrs'] = '%I:%M %p - %d/%m heure locale'
+L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
+
+----------------------------------- REWARDS -----------------------------------
+L['heirloom'] = 'Héritage'
+L['item'] = 'Objet'
+L['mount'] = 'Monture'
+L['pet'] = 'Animal de Compagnie'
+L['recipe'] = 'Recette'
+L['spell'] = 'Sort'
+L['title'] = 'Titre'
+L['toy'] = 'Jouet'
+L['currency'] = 'Monnaie'
+L['rep'] = 'Rep'
+
+---------------------------------- FOLLOWERS ----------------------------------
 L['follower_type_follower'] = 'Sujet'
 L['follower_type_champion'] = 'Champion'
 L['follower_type_companion'] = 'Compagnon'
 
+--------------------------------- REPUTATION ----------------------------------
 L['rep_honored'] = 'Honoré'
 L['rep_revered'] = 'Révéré'
 L['rep_exalted'] = 'Exalté'
-
-L['time_format_12hrs'] = '%I:%M %p - %d/%m heure locale'
-L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
 
 -------------------------------------------------------------------------------
 --------------------------------- DRAGONRACES ---------------------------------
@@ -160,6 +177,8 @@ L['options_show_completed_nodes'] = 'Afficher les noeuds complétés'
 L['options_show_completed_nodes_desc'] = 'Afficher tous les nœuds même s\'ils ont déjà été looté ou terminés aujourd\'hui.'
 L['options_toggle_hide_done_rare'] = 'Cacher rare si tout le butin est connu'
 L['options_toggle_hide_done_rare_desc'] = 'Cacher toutes les rares pour qui tout le butin est connu.'
+L['options_toggle_hide_done_treasure'] = 'Cacher le trésor si toutes les récompenses sont connues'
+L['options_toggle_hide_done_treasure_desc'] = 'Cachez tous les trésors pour lesquels la totalité du butin est connue.'
 L['options_toggle_hide_minimap'] = 'Cacher toutes les icônes sur la minicarte'
 L['options_toggle_hide_minimap_desc'] = 'Cache toutes les icônes de cet addon sur la minicarte et les affiche uniquement sur la carte principale.'
 L['options_toggle_maximized_enlarged'] = 'Augmenter la taille des icones sur la carte du monde plein écran'
@@ -173,6 +192,8 @@ L['options_restore_hidden_nodes_desc'] = 'Restaure tous les nœuds cachés en ut
 
 L['options_rewards_settings'] = 'Récompenses'
 L['options_reward_types'] = 'Afficher les types de récompenses'
+L['options_manuscript_rewards'] = 'Montrer les Manuscrits guette-drake en récompenses'
+L['options_manuscript_rewards_desc'] = 'Afficher les Manuscrits guette-drake en récompenses dans les infobulles et suivre l\'état de leur acquisition.'
 L['options_mount_rewards'] = 'Afficher les montures en récompense'
 L['options_mount_rewards_desc'] = 'Afficher les montures en récompenses dans les infobulles et suivre leur état de possession.'
 L['options_pet_rewards'] = 'Afficher les familiers en récompense'
@@ -185,6 +206,10 @@ L['options_transmog_rewards'] = 'Afficher les transmos en récompense'
 L['options_transmog_rewards_desc'] = 'Afficher les transmos en récompenses dans les infobulles et suivre leur état de possession.'
 L['options_all_transmog_rewards'] = 'Afficher les transmos plus obtenables en récompense'
 L['options_all_transmog_rewards_desc'] = 'Afficher les transmos en récompenses pouvant être obtenus par d\'autres classes.'
+L['options_rep_rewards'] = 'Afficher les récompenses de réputation'
+L['options_rep_rewards_desc'] = 'Afficher les récompenses de réputation dans les infobulles et suivre l\'état de leur acquisition.'
+L['options_claimed_rep_rewards'] = 'Afficher les récompenses de réputation réclamées'
+L['options_claimed_rep_rewards_desc'] = 'Afficher les récompenses de réputation qui ont déjà été réclamées par votre bataillon.'
 
 L['options_icons_misc_desc'] = 'Afficher les emplacements des nœuds divers'
 L['options_icons_misc'] = 'Divers'
@@ -194,6 +219,8 @@ L['options_icons_rares_desc'] = 'Afficher les emplacements des PNJ rares.'
 L['options_icons_rares'] = 'Rares'
 L['options_icons_treasures_desc'] = 'Afficher les emplacements des trésors cachés'
 L['options_icons_treasures'] = 'Trésors'
+L['options_icons_vendors_desc'] = 'Afficher les emplacements des vendeurs.'
+L['options_icons_vendors'] = 'Vendeurs'
 
 ------------------------------------ FOCUS ------------------------------------
 
@@ -214,6 +241,8 @@ L['options_toggle_show_notes'] = 'Montrer les Notes'
 L['options_toggle_show_notes_desc'] = 'Ajouter les notes utiles à l\'infobulle le cas échéant'
 L['options_toggle_use_standard_time'] = 'Utiliser l\'horloge de 12 heures'
 L['options_toggle_use_standard_time_desc'] = 'Utiliser l\'horloge de 12 heures (ex : 8:00 PM) à la place de l\'horloge de 24 heures (ex : 20:00) dans les infobulles.'
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

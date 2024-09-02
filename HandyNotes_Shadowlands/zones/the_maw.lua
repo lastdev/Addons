@@ -488,12 +488,12 @@ map.nodes[69214521] = Treasure({
     quest = 64256,
     rlabel = ns.status.LightBlue(L['plus_research']),
     rewards = {
-        Achievement({id = 15099, criteria = 52243}), --[[
-        Transmog({item=187014, slot=L['cosmetic']}), -- Shackler's Spiked Shoulders
-        Transmog({item=187018, slot=L['cosmetic']}), -- Ritualist's Shoulder Scythes
-        Transmog({item=187019, slot=L['cosmetic']}), -- Infiltrator's Shoulderguards
-        ]] Transmog({item = 187026, slot = L['cosmetic']}), -- Field Warden's Torture Kit
-        Transmog({item = 187240, slot = L['cosmetic']}) -- Field Warden's Watchful Eye
+        Achievement({id = 15099, criteria = 52243}),
+        -- Transmog({item = 187014}), -- Shackler's Spiked Shoulders
+        -- Transmog({item = 187018}), -- Ritualist's Shoulder Scythes
+        -- Transmog({item = 187019}), -- Infiltrator's Shoulderguards
+        Transmog({item = 187026, slot = L['cloak']}), -- Field Warden's Torture Kit
+        Transmog({item = 187240, slot = L['cloak']}) -- Field Warden's Watchful Eye
     }
 }) -- Helsworn Chest
 
@@ -719,10 +719,13 @@ map.nodes[55626318] = BonusBoss({
 pitu.nodes[41767921] = BonusBoss({
     id = 172524,
     quest = 62211,
-    note = L['nexus_cave_anguish_upper'],
+    note = L['in_cave'] .. ' ' .. L['nexus_cave_anguish_upper'],
     rewards = {
         Achievement({id = 14660, criteria = 49491}),
         Transmog({item = 186240, slot = L['cloak']}) -- Broodmotherhide Cloak
+    },
+    pois = {
+        POI({54407920}) -- Cave entrance
     },
     parent = map.id
 }) -- Skittering Broodmother
@@ -1130,7 +1133,7 @@ local RiftCache = Class('RiftCache', Treasure, {
     assault = NIGHTFAE,
     rewards = {
         Achievement({id = 15001, criteria = {id = 1, qty = true}}),
-        Transmog({item = 187251, slot = L['cosmetic']}) -- Shaded Skull Shoulderguards
+        Transmog({item = 187251}) -- Shaded Skull Shoulderguards
     }
 })
 
@@ -1352,7 +1355,7 @@ local Vault = Class('ZovaalVault', NPC, {
     note = L['zovault_note'],
     rift = 1,
     rewards = {
-        Transmog({item = 187251, slot = L['cosmetic']}), -- Shaded Skull Shoulderguards
+        Transmog({item = 187251}), -- Shaded Skull Shoulderguards
         Toy({item = 187113}), -- Personal Ball and Chain
         Toy({item = 187416}) -- Jailer's Cage
     }
@@ -1818,9 +1821,9 @@ map.nodes[85375524] = Class('Tormentor', ns.node.Node, {
         Transmog({item = 186233, slot = L['plate'], note = '{npc:177981}'}), -- Spaulders of the Skyborn Damned
         Pet({item = 186449, id = 3117, note = '{npc:177979}'}), -- Amaranthine Stinger
         Spacer(), ns.reward.Section('{item:185972}'), -- Tormentor's Cache
-        Transmog({item = 186977, slot = L['cosmetic'], indent = true}), -- Beastcaller's Skull Crescent
-        Transmog({item = 186978, slot = L['cosmetic'], indent = true}), -- Borrowed Eye Crescent
-        Transmog({item = 186562, slot = L['cosmetic'], indent = true}), -- Tormentor's Manacled Backplate
+        Transmog({item = 186977, slot = L['cloak'], indent = true}), -- Beastcaller's Skull Crescent
+        Transmog({item = 186978, slot = L['cloak'], indent = true}), -- Borrowed Eye Crescent
+        Transmog({item = 186562, slot = L['cloak'], indent = true}), -- Tormentor's Manacled Backplate
         Mount({item = 185973, id = 1475, indent = true}) -- Chain of Bahmethra
     },
     getters = {

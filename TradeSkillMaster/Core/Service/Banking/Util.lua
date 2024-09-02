@@ -9,6 +9,7 @@ local Util = TSM.Banking:NewPackage("Util")
 local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
 local Group = TSM.LibTSMTypes:Include("Group")
 local BagTracking = TSM.LibTSMService:Include("Inventory.BagTracking")
+local WarbankTracking = TSM.LibTSMService:Include("Inventory.WarbankTracking")
 local Guild = TSM.LibTSMService:Include("Guild")
 local private = {}
 
@@ -41,6 +42,16 @@ function Util.OpenBankIterator(autoBaseItems)
 				:Select("tab", "slot", "autoBaseItemString", "quantity")
 		else
 			query:Select("tab", "slot", "itemString", "quantity")
+		end
+		return query:IteratorAndRelease()
+	elseif TSM.Banking.IsWarBankOpen() then
+		local query = WarbankTracking.CreateQuerySlot()
+			:OrderBy("slotId", true)
+		if autoBaseItems then
+			query:VirtualField("autoBaseItemString", "string", Group.TranslateItemString, "itemString")
+				:Select("bag", "slot", "autoBaseItemString", "quantity")
+		else
+			query:Select("bag", "slot", "itemString", "quantity")
 		end
 		return query:IteratorAndRelease()
 	else

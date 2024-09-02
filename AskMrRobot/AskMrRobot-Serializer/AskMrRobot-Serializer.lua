@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 140
+local MAJOR, MINOR = "AskMrRobot-Serializer", 144
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -162,16 +162,12 @@ Amr.FactionIds = {
 }
 
 Amr.InstanceIds = {
-	Incarnates = 2522,
-	Aberrus = 2569,
-	Amirdrassil = 2549
+	Nerubar = 2657
 }
 
 -- instances that AskMrRobot currently supports logging for
 Amr.SupportedInstanceIds = {	
-	[2522] = true,
-	[2569] = true,
-	[2549] = true
+	[2657] = true
 }
 
 
@@ -874,7 +870,7 @@ function Amr:SerializePlayerData(data, complete)
 	end
 	]]
 	
-    -- if doing a complete export, include bank/bag items too
+    -- if doing a complete export, include bank/bag items and some other extras
 	if complete then
 		    
         local itemObjects = {}
@@ -905,6 +901,13 @@ function Amr:SerializePlayerData(data, complete)
 			end
 			table.insert(fields, ".gv")
 			appendItemsToExport(fields, itemObjects)
+		end
+
+		if data.HighestItemLevels then
+			table.insert(fields, ".hlv")
+			for slotId, lvls in spairs(data.HighestItemLevels) do
+				table.insert(fields, slotId .. "|" .. "|" .. lvls[1] .. "|" .. lvls[2])
+			end
 		end
     end
 	

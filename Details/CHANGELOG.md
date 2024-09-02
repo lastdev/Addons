@@ -1,9 +1,8 @@
 # Details! Damage Meter
 
-## [Details.12829.159](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.12829.159) (2024-08-07)
-[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.12828.159...Details.12829.159) 
+## [Details.12888.160](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.12888.160) (2024-08-26)
+[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.12879.159...Details.12888.160) 
 
-- Version Up  
-- /key now update the keystone when the player upgrade and downgrade it through the npc  
-- Complete re-write for the mythic+ chart shown in the end of the run  
-- When in open world, if a group member enters in combat, a new segment is created  
+- Libraries Updates, Quick fixes, Version bump for wow 11 launch  
+- Fixed custom display My Spells not using spell school color and tooltip being to small  
+- Duspels  

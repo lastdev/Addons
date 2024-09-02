@@ -2,9 +2,11 @@
 ..\FrameXML\UI.xsd">
     <Script file="Source\Core.lua" />
 
+    <Script file="Source\DBViewer.lua" />
     <Script file="Source\Dump.lua" />
     <Script file="Source\FrameStack.lua" />
     <Script file="Source\Profiling.lua" />
+    <Script file="Source\StateInspect.lua" />
     <Script file="Source\StoryBoard.lua" />
     <Script file="Source\Tracing.lua" />
 </Ui>

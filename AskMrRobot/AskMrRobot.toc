@@ -1,10 +1,12 @@
-## Interface: 110000
+## Interface: 110002
 ## Title: Ask Mr. Robot
 ## Author: Team Robot, Inc.
-## Version: 140
+## Version: 144
 ## Notes: Gear import/export, combat logging, and more.
 ## URL: www.askmrrobot.com
 ## SavedVariables: AskMrRobotDb4
+## AddonCompartmentFunc: AskMrRobot_AddonCompartmentFunc
+## IconTexture: Interface\AddOns\AskMrRobot\Media\icon.tga
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml

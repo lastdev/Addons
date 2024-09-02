@@ -17,6 +17,22 @@ ns.expansion = 11
 ----------------------------------- GROUPS ------------------------------------
 -------------------------------------------------------------------------------
 
+ns.groups.DELVE_REWARDS = Group('delve_rewards', 4203076, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION,
+    HasEnabledNodes = function() return true end
+})
+
+ns.groups.DISTURBED_EARTH = Group('disturbed_earth', 132386, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.PROFESSION_TREASURES = Group('profession_treasures', 4620676, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.SKYRIDING_GLYPH = Group('skyriding_glyph', 4728198, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
@@ -24,10 +40,28 @@ ns.groups.SKYRIDING_GLYPH = Group('skyriding_glyph', 4728198, {
 
 -------------------------------------------------------------------------------
 
-ns.groups.BIBLIO_ARCHIVIST = Group('biblio_archivist', 5341597, {
+ns.groups.BEACON_OF_HOPE = Group('beacon_of_hope', 135922, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40308
+})
+
+ns.groups.BIBLO_ARCHIVIST = Group('biblo_archivist', 5341597, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
     achievement = 40622
+})
+
+ns.groups.BOOKWORM = Group('bookworm', 4549129, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40629
+})
+
+ns.groups.FLAMEGARDS_HOPE = Group('flamegards_hope', 463526, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 20594
 })
 
 ns.groups.FLAT_EARTHEN = Group('flat_earthen', 4620670, {
@@ -36,10 +70,21 @@ ns.groups.FLAT_EARTHEN = Group('flat_earthen', 4620670, {
     achievement = 40606
 })
 
+ns.groups.GOBBLIN_WITH_GLUBLURP = Group('gobblin_with_glublurp', 5763494, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40614
+})
+
 ns.groups.ITSY_BITSY_SPIDER = Group('itsy_bitsy_spider', 5793405, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
     achievement = 40624
+})
+ns.groups.I_ONLY_NEED_ONE_TRIP = Group('i_only_need_one_trip', 236316, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40623
 })
 
 ns.groups.KHAZ_ALGAR_LORE_HUNTER = Group('khaz_algar_lore_hunter', 4419344, {
@@ -54,10 +99,22 @@ ns.groups.LOST_AND_FOUND = Group('lost_and_found', 4635200, {
     achievement = 40618
 })
 
+ns.groups.MERELDAR_MENACE = Group('mereldar_menace', 135232, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40151
+})
+
 ns.groups.MISSING_LYNX = Group('missing_lynx', 5689905, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
     achievement = 40625
+})
+
+ns.groups.NO_HARM_FROM_READING = Group('no_harm_from_reading', 463284, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40632
 })
 
 ns.groups.NOT_SO_QUICK_FIX = Group('not_so_quick_fix', 134067, {
@@ -84,11 +141,40 @@ ns.groups.ROCKED_TO_SLEEP = Group('rocked_to_sleep', 5788303, {
 --     achievement = 40194
 -- })
 
-ns.groups.DISTURBED_DIRT = Group('disturbed_dirt', 132386, {
+ns.groups.SKITTERSHAW_SPIN = Group('skittershaw_spin', 879828, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40727
+})
+
+ns.groups.SMELLING_HISTORY = Group('smelling_history', 4549130, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40542
+})
+
+ns.groups.THE_UNSEEMING = Group('the_unseeming', 1386549, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40633
+})
+
+ns.groups.YOU_CANT_HANG_WITH_US = Group('you_cant_hang_with_us', 5763494, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40634
+})
+
+ns.groups.CRITTER_LOVE = Group('critter_love', 3459801, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40475
+})
+
+ns.groups.DRAGONRACE = Group('dragonrace', 1100022, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
-
 -------------------------------------------------------------------------------
 ---------------------------- KHAZ ALGAR LORE HUNTER ---------------------------
 -------------------------------------------------------------------------------
@@ -163,97 +249,24 @@ for _, profession in pairs(ns.professions) do
     end
 end
 
--- Alchemy
--- map.nodes[0000] = PT.Alchemy({quest = nil, id = 226266}) -- Metal Dornogal Frame
--- map.nodes[0000] = PT.Alchemy({quest = nil, id = 226268}) -- Engraved Stirring Rod
--- map.nodes[0000] = PT.Alchemy({quest = nil, id = 226269}) -- Chemist's Purified Water
--- map.nodes[0000] = PT.Alchemy({quest = nil, id = 226270}) -- Sanctified Mortar and Pestle
--- map.nodes[0000] = PT.Alchemy({quest = nil, id = 226271}) -- Nerubian Mixing Salts
-
--- Enchanting
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226284}) -- Grinded Earthen Gem
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226285}) -- Silver Dornogal Rod
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226286}) -- Soot-Coated Orb
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226287}) -- Animated Enchanting Dust
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226288}) -- Essence of Holy Fire
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226289}) -- Enchanted Arathi Scroll
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226290}) -- Book of Dark Magic
--- map.nodes[0000] = PT.Enchanting({quest = nil, id = 226291}) -- Void Shard
-
--- Engineering
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226292}) -- Rock Engineer's Wrench
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226293}) -- Dornogal Spectacles
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226294}) -- Inert Mining Bomb
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226295}) -- Earthen Construct Blueprints
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226296}) -- Holy Firework Dud
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226297}) -- Arathi Safety Gloves
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226298}) -- Puppeted Mechanical Spider
--- map.nodes[0000] = PT.Engineering({quest = nil, id = 226299}) -- Emptied Venom Canister
-
 -- Herbalism
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226301}) -- Dornogal Gardening Scythe
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 224265}) -- Deepgrove Rose
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226300}) -- Ancient Flower
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226302}) -- Earthen Digging Fork
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226303}) -- Fungarian Slicer's Knife
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226304}) -- Arathi Garden Trowel
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226306}) -- Web-Entangled Lotus
--- map.nodes[0000] = PT.Herbalism({quest = nil, id = 226307}) -- Tunneler's Shovel
-
--- Inscription
--- map.nodes[0000] = PT.Inscription({quest = nil, id = 226309}) -- Historian's Dip Pen
--- map.nodes[0000] = PT.Inscription({quest = nil, id = 226311}) -- Blue Earthen Pigment
--- map.nodes[0000] = PT.Inscription({quest = nil, id = 226312}) -- Informant's Fountain Pen
--- map.nodes[0000] = PT.Inscription({quest = nil, id = 226313}) -- Calligrapher's Chiselled Marker
-
--- Jewelcrafting
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226316}) -- Gentle Jewel Hammer
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226317}) -- Earthen Gem Pliers
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226318}) -- Carved Stone File
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226319}) -- Jeweler's Delicate Drill
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226320}) -- Arathi Sizing Gauges
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226321}) -- Librarian's Magnifiers
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226322}) -- Ritual Caster's Crystal
--- map.nodes[0000] = PT.Jewelcrafting({quest = nil, id = 226323}) -- Nerubian Bench Blocks
-
--- Leatherworking
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226324}) -- Earthen Lacing Tools
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226325}) -- Dornogal Craftsman's Flat Knife
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226326}) -- Underground Stropping Compound
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226327}) -- Earthen Awl
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226328}) -- Arathi Beveler Set
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226329}) -- Arathi Leather Burnisher
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226330}) -- Nerubian Tanning Mallet
--- map.nodes[0000] = PT.Leatherworking({quest = nil, id = 226331}) -- Curved Nerubian Skinning Knife
-
--- Mining
--- map.nodes[0000] = PT.Mining({quest = nil, id = 226336}) -- Arathi Precision Drill
--- map.nodes[0000] = PT.Mining({quest = nil, id = 226339}) -- Nerubian Mining Cart
-
--- Skinning
--- map.nodes[0000] = PT.Skinning({quest = nil, id = 226340}) -- Dornogal Carving Knife
--- map.nodes[0000] = PT.Skinning({quest = nil, id = 226342}) -- Artisan's Drawing Knife
--- map.nodes[0000] = PT.Skinning({quest = nil, id = 226344}) -- Arathi Tanning Agent
-
--- Tailoring
--- map.nodes[0000] = PT.Tailoring({quest = nil, id = 226349}) -- Earthen Tape Measure
--- map.nodes[0000] = PT.Tailoring({quest = nil, id = 226354}) -- Nerubian Quilt
+-- map.nodes[0000] = PT.Herbalism({quest = nil, id = 224265}) -- Deepgrove Rose -- Random Drop 5 per week
 
 -------------------------------------------------------------------------------
 -------------------------------- DISTURBED DIRT -------------------------------
 -------------------------------------------------------------------------------
 
-ns.node.DisturbedDirt = Class('Disturbed_dirt', ns.node.Collectible, {
+ns.node.DisturbedEarth = Class('Disturbed_earth', ns.node.Collectible, {
     icon = 132386,
     scale = 0.7,
-    label = '{npc:206978}', -- review
-    group = ns.groups.DISTURBED_DIRT,
+    label = '{npc:213440}',
+    group = ns.groups.DISTURBED_EARTH,
     requires = {ns.requirement.Reputation(2594, 2, true)}, -- Assembly of the Deeps Renown 2
     rewards = {
         ns.reward.Item({item = 212493}), -- Odd Glob of Wax
         ns.reward.Achievement({id = 40585, criteria = {id = 1, qty = true}}) -- Super Size Snuffling
     }
-}) -- Disturbed Dirt - Not on Minimap but quite visible from some distance
+}) -- Disturbed Earth - Not on Minimap but quite visible from some distance
 -- first loot triggered quest 84543 probably not relevant
 
 -------------------------------------------------------------------------------

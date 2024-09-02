@@ -1,8 +1,8 @@
-## Interface: 100207
+## Interface: 110002
 ## Title: |cff0042ffLust|cffff0000Detector
 ## Author: Viicksmile - Thrall realm.
-## Version: v6.1 version for Dragonflight 10.1.x
-## Notes: This addon will show on your chat when someone cast any Haste Spell. Ex: Bloodlust, Heroism, Drums of Deathly Ferocity
+## Version: v1.5 - Pre-patch The War Within
+## Notes: This addon will show on your chat when someone cast any Haste Spell. Ex: Bloodlust, Heroism, Thunderous Drums
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: LUSTDETECTOR, LUSTDETECTORMode

@@ -3,8 +3,7 @@
 
                                              Noblegarden
 
-                                       v2.30 - 23rd July 2024
-									 
+                                      v2.31 - 21st August 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

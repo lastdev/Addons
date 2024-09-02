@@ -41,8 +41,11 @@ local private = {
 WarbankTracking:OnModuleLoad(function()
 	private.slotDB = Database.NewSchema("WARBANK_TRACKING_SLOTS")
 		:AddUniqueNumberField("slotId")
+		:AddNumberField("bag")
+		:AddNumberField("slot")
 		:AddStringField("itemLink")
 		:AddStringField("itemString")
+		:AddSmartMapField("baseItemString", ItemString.GetBaseMap(), "itemString")
 		:AddSmartMapField("levelItemString", ItemString.GetLevelMap(), "itemString")
 		:AddNumberField("quantity")
 		:AddIndex("slotId")
@@ -104,6 +107,26 @@ end
 ---@param callback fun(updatedItems: table<string,true>) The callback function which is passed a table with the changed base item strings as keys
 function WarbankTracking.RegisterQuantityCallback(callback)
 	tinsert(private.quantityCallbacks, callback)
+end
+
+---Creates a query of the account warbank.
+---@return DatabaseQuery
+function WarbankTracking.CreateQuerySlot()
+	return private.slotDB:NewQuery()
+end
+
+---Creates a query of warbank slots with the specified item.
+---@return DatabaseQuery
+function WarbankTracking.CreateQuerySlotItem(itemString)
+	local query = private.slotDB:NewQuery()
+	if itemString == ItemString.GetBaseFast(itemString) then
+		query:Equal("baseItemString", itemString)
+	elseif ItemString.IsLevel(itemString) then
+		query:Equal("levelItemString", itemString)
+	else
+		query:Equal("itemString", itemString)
+	end
+	return query
 end
 
 ---Iterates over the bag quantities.
@@ -265,6 +288,8 @@ function private.ScanSlot(bag, slot)
 			-- There was nothing here previously so create a new row
 			private.slotDB:NewRow()
 				:SetField("slotId", slotId)
+				:SetField("bag", bag)
+				:SetField("slot", slot)
 				:SetField("itemLink", link)
 				:SetField("itemString", ItemString.Get(link))
 				:SetField("quantity", quantity)

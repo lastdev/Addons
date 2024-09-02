@@ -15,7 +15,7 @@ local Enchant = LibTSMData:Init("Enchant")
 
 Enchant.Recipes = {
 	-- Some scraped from Wowhead (http://www.wowhead.com/items/consumables/item-enhancements-permanent?filter=86;4;0) using the following javascript:
-	-- x = listviewitems.sort((a,b) => a.id - b.id); for (i=0; i<listviewitems.length; i++) { if (!('sourcemore' in listviewitems[i]) || listviewitems[i].sourcemore[0].icon != "trade_engraving") continue; console.log("["+listviewitems[i].sourcemore[0].ti+"] = \"i:"+listviewitems[i].id+"\", -- "+listviewitems[i].name); }
+	-- x = listviewitems.sort((a,b) => a.id - b.id); for (i=0; i<listviewitems.length; i++) { if (!('sourcemore' in listviewitems[i]) || listviewitems[i].sourcemore[0].icon != "inv_misc_enchantedscroll") continue; console.log("["+listviewitems[i].sourcemore[0].ti+"] = \"i:"+listviewitems[i].id+"\", -- "+listviewitems[i].name); }
 	[7418] = "i:38679", -- Enchant Bracer - Minor Health
 	[7420] = "i:38766", -- Enchant Chest - Minor Health
 	[7426] = "i:38767", -- Enchant Chest - Minor Absorption
@@ -583,6 +583,8 @@ Enchant.Recipes = {
 -- Quality Recipes
 -- ============================================================================
 
+-- Generated from https://www.wowhead.com/items?filter=86:166;4:11;0:0#items;50 with:
+-- result = {}; x = listviewitems.sort((a,b) => a.id - b.id); for (const item of listviewitems) { if (!('sourcemore' in item) || item.sourcemore[0].icon != "inv_misc_enchantedscroll") continue; const spellId = item.sourcemore[0].ti; result[spellId] ??= []; result[spellId].push([item.id, item.name]); } console.log(result); for (const [spellId, info] of Object.entries(result)) { const items = info.map(i => `"i:${i[0]}"`).join(', '); console.log(`[${spellId}] = {${items}}, -- ${info[0][1]}`); }
 Enchant.QualityRecipes = {
 	[388930] = {"i:199957", "i:199999", "i:200041"}, -- Enchant Ring - Writ of Critical Strike
 	[389135] = {"i:199958", "i:200000", "i:200042"}, -- Enchant Ring - Writ of Haste
@@ -629,6 +631,56 @@ Enchant.QualityRecipes = {
 	[404859] = {"i:204613", "i:204614", "i:204615"}, -- Enchant Weapon - Spore Tender
 	[405076] = {"i:204621", "i:204622", "i:204623"}, -- Enchant Weapon - Shadowflame Wreathe
 	[416047] = {"i:207085", "i:207086", "i:207087"}, -- Enchant Weapon - Dreaming Devotion
+	[445317] = {"i:223760", "i:223761", "i:223762"}, -- Enchant Weapon - Stormrider's Fury
+	[445320] = {"i:223672", "i:223673", "i:223674"}, -- Enchant Ring - Radiant Haste
+	[445321] = {"i:223687", "i:223688", "i:223689"}, -- Enchant Chest - Oathsworn's Strength
+	[445322] = {"i:223684", "i:223685", "i:223686"}, -- Enchant Chest - Council's Intellect
+	[445325] = {"i:223717", "i:223718", "i:223719"}, -- Enchant Bracer - Chant of Armored Leech
+	[445327] = {"i:223745", "i:223746", "i:223747"}, -- Illusory Adornment: Crystal
+	[445328] = {"i:223696", "i:223697", "i:223698"}, -- Enchant Tool - Algari Finesse
+	[445330] = {"i:223723", "i:223724", "i:223725"}, -- Enchant Bracer - Chant of Armored Speed
+	[445331] = {"i:223773", "i:223774", "i:223775"}, -- Enchant Weapon - Authority of Air
+	[445333] = {"i:223690", "i:223691", "i:223692"}, -- Enchant Chest - Crystalline Radiance
+	[445334] = {"i:223711", "i:223712", "i:223713"}, -- Enchant Bracer - Chant of Armored Avoidance
+	[445335] = {"i:223618", "i:223649", "i:223650"}, -- Enchant Boots - Cavalry's March
+	[445336] = {"i:223770", "i:223771", "i:223772"}, -- Enchant Weapon - Authority of Storms
+	[445337] = {"i:223754", "i:223755", "i:223756"}, -- Illusory Adornment: Shadow
+	[445339] = {"i:223779", "i:223780", "i:223781"}, -- Enchant Weapon - Authority of Radiant Power
+	[445340] = {"i:223669", "i:223670", "i:223671"}, -- Enchant Ring - Glimmering Versatility
+	[445341] = {"i:223782", "i:223783", "i:223784"}, -- Enchant Weapon - Authority of the Depths
+	[445344] = {"i:223726", "i:223727", "i:223728"}, -- Enchant Cloak - Whisper of Silken Avoidance
+	[445348] = {"i:223732", "i:223733", "i:223734"}, -- Enchant Cloak - Whisper of Silken Leech
+	[445349] = {"i:223678", "i:223679", "i:223680"}, -- Enchant Ring - Radiant Versatility
+	[445351] = {"i:223766", "i:223767", "i:223768"}, -- Enchant Weapon - Oathsworn's Tenacity
+	[445353] = {"i:223681", "i:223682", "i:223683"}, -- Enchant Chest - Stormrider's Agility
+	[445358] = {"i:223657", "i:223658", "i:223659"}, -- Enchant Ring - Glimmering Critical Strike
+	[445359] = {"i:223791", "i:223792", "i:223793"}, -- Enchant Ring - Cursed Mastery
+	[445360] = {"i:223751", "i:223752", "i:223753"}, -- Illusory Adornment: Runes
+	[445364] = {"i:223693", "i:223694", "i:223695"}, -- Enchant Tool - Algari Deftness
+	[445368] = {"i:223651", "i:223652", "i:223653"}, -- Enchant Boots - Scout's March
+	[445373] = {"i:223738", "i:223739", "i:223740"}, -- Enchant Cloak - Whisper of Silken Speed
+	[445374] = {"i:223714", "i:223715", "i:223716"}, -- Enchant Bracer - Whisper of Armored Leech
+	[445375] = {"i:223675", "i:223676", "i:223677"}, -- Enchant Ring - Radiant Mastery
+	[445376] = {"i:223720", "i:223721", "i:223722"}, -- Enchant Bracer - Whisper of Armored Speed
+	[445378] = {"i:223699", "i:223700", "i:223701"}, -- Enchant Tool - Algari Ingenuity
+	[445379] = {"i:223757", "i:223758", "i:223759"}, -- Enchant Weapon - Council's Guile
+	[445380] = {"i:223702", "i:223703", "i:223704"}, -- Enchant Tool - Algari Perception
+	[445381] = {"i:223666", "i:223667", "i:223668"}, -- Enchant Ring - Glimmering Mastery
+	[445383] = {"i:223794", "i:223795", "i:223796"}, -- Enchant Ring - Cursed Versatility
+	[445384] = {"i:223663", "i:223664", "i:223665"}, -- Enchant Ring - Glimmering Haste
+	[445385] = {"i:223763", "i:223764", "i:223765"}, -- Enchant Weapon - Stonebound Artistry
+	[445386] = {"i:223729", "i:223730", "i:223731"}, -- Enchant Cloak - Chant of Winged Grace
+	[445387] = {"i:223660", "i:223661", "i:223662"}, -- Enchant Ring - Radiant Critical Strike
+	[445388] = {"i:223788", "i:223789", "i:223790"}, -- Enchant Ring - Cursed Haste
+	[445389] = {"i:223798", "i:223799", "i:223800"}, -- Enchant Cloak - Chant of Burrowing Rapidity
+	[445392] = {"i:223708", "i:223709", "i:223710"}, -- Enchant Bracer - Whisper of Armored Avoidance
+	[445393] = {"i:223735", "i:223736", "i:223737"}, -- Enchant Cloak - Chant of Leeching Fangs
+	[445394] = {"i:223785", "i:223786", "i:223787"}, -- Enchant Ring - Cursed Critical Strike
+	[445396] = {"i:223654", "i:223655", "i:223656"}, -- Enchant Boots - Defender's March
+	[445398] = {"i:223705", "i:223706", "i:223707"}, -- Enchant Tool - Algari Resourcefulness
+	[445401] = {"i:223748", "i:223749", "i:223750"}, -- Illusory Adornment: Radiance
+	[445403] = {"i:223776", "i:223777", "i:223778"}, -- Enchant Weapon - Authority of Fiery Resolve
+	[455488] = {"i:225653", "i:223664", "i:223665"}, -- Enchant Ring - Glimmering Haste
 }
 
 

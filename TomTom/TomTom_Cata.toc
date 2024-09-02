@@ -1,7 +1,7 @@
 ## Interface: 40400
 ## Title: TomTom
 ## Author: Cladhaire, Ludovicus
-## Version: v4.0.1-release
+## Version: v4.0.3-release
 ## License: All Rights Reserved
 ## IconTexture: Interface\AddOns\TomTom\Images\StaticArrow.tga
 ## Notes: Acts as your portable navigation assistant

@@ -1,3 +1,12 @@
+== v1.11 - 26th August 2024
+* Fix for deprecated UnitAuras API call. RIP. Simple way was the best
+
+== v1.10 - 21st August 2024
+* TOC update to 11.0.2
+
+== v1.09 - 23rd July 2024
+* TOC update to 11.0.0
+
 == v1.08 - 20th May 2024
 * Translation fix  "l'figurine" > "la figurine" as reported by @Adal4
 * Removed to unused translations for esES

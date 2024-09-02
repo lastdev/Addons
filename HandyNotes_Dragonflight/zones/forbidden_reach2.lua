@@ -17,6 +17,7 @@ local Dragonglyph = ns.node.Dragonglyph
 local ElusiveCreature = ns.node.ElusiveCreature
 local Flag = ns.node.Flag
 local SignalTransmitter = ns.node.SignalTransmitter
+local WarSupply = ns.node.WarSupply
 
 local Achievement = ns.reward.Achievement
 local Currency = ns.reward.Currency
@@ -33,6 +34,8 @@ local Arrow = ns.poi.Arrow
 local Circle = ns.poi.Circle
 local Path = ns.poi.Path
 local POI = ns.poi.POI
+
+local ItemStatus = ns.tooltip.ItemStatus
 
 local DC = ns.DRAGON_CUSTOMIZATIONS
 
@@ -163,6 +166,7 @@ map.nodes[59695883] = Rare({
     rewards = {
         Achievement({id = 17525, criteria = 58466}), -- Champion of the Forbidden Reach
         Mount({item = 192772, id = 1619}), -- Ancient Salamanther
+        DC.WindborneVelocidrake.PlatedNeck, --
         Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     },
@@ -203,6 +207,7 @@ map.nodes[61723400] = Rare({
     note = L['wymslayer_angvardi_note'],
     rewards = {
         Achievement({id = 17525, criteria = 58469}), -- Champion of the Forbidden Reach
+        DC.WindborneVelocidrake.WhiteHorns, --
         Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     }
@@ -626,6 +631,18 @@ map.nodes[48947352] = ns.node.ElementalChest({
 }) -- Storm-Bound Chest
 
 -------------------------------------------------------------------------------
+------------------------------ WAR SUPPLY CHESTS ------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[15001480] = WarSupply({fgroup = 'supply_forbidden_reach'})
+map.nodes[31405380] = WarSupply({fgroup = 'supply_forbidden_reach'})
+map.nodes[40801240] = WarSupply({fgroup = 'supply_forbidden_reach'})
+map.nodes[41203670] = WarSupply({fgroup = 'supply_forbidden_reach'})
+map.nodes[50104390] = WarSupply({fgroup = 'supply_forbidden_reach'})
+map.nodes[59003900] = WarSupply({fgroup = 'supply_forbidden_reach'})
+map.nodes[70707710] = WarSupply({fgroup = 'supply_forbidden_reach'})
+
+-------------------------------------------------------------------------------
 --------------------------------- BATTLE PETS ---------------------------------
 -------------------------------------------------------------------------------
 
@@ -693,6 +710,7 @@ local ForbiddenHoard = Class('ForbiddenHoard', Collectible, {
     label = L['forbidden_hoard_label'],
     icon = 'chest_pp',
     scale = 1.3,
+    vignette = {5463, 5614},
     group = ns.groups.FORBIDDEN_HOARD,
     rewards = {
         Achievement({id = 17526, criteria = 58487}), -- Treasures of the Forbidden Reach
@@ -1059,27 +1077,10 @@ local RecipeRat = Class('RecipeRat', Collectible, {
 }) -- Recipe Rat
 
 function RecipeRat.getters:note()
-    local function status(id, itemsNeed, itemsNeedString)
-        local itemsHave = GetItemCount(id, true);
-        if ns.PlayerHasItem(id, itemsNeed) then
-            return ns.status.Green(itemsHave .. '/' .. itemsNeedString)
-        else
-            return ns.status.Red(itemsHave .. '/' .. itemsNeedString)
-        end
-    end
-
-    local function getString(id)
-        local s = '??????'
-        return s:sub(1, #tostring(GetItemCount(id))) -- 1/? or 26/?? or 159/???
-    end
-
-    local note = L['recipe_rat_note_1'] .. '\n\n'
-    note = note .. status(202252, 1, '1') .. ' ' .. L['recipe_rat_note_2'] ..
-               '\n\n'
-    note = note .. status(204340, 30, '30') .. ' ' .. L['recipe_rat_note_3'] ..
-               '\n\n'
-    note = note .. status(3927, 1, getString(3927)) .. ' ' ..
-               L['recipe_rat_note_4']
+    local note = L['recipe_rat_note_1']
+    note = note .. ItemStatus(202252, 1, L['recipe_rat_note_2'])
+    note = note .. ItemStatus(204340, 30, L['recipe_rat_note_3'])
+    note = note .. ItemStatus(3927, '?', L['recipe_rat_note_4'])
     return note
 end
 
@@ -1100,7 +1101,7 @@ local MossyMammoth = Class('MossyMammoth', Collectible, {
 }) -- Mossy Mammoth
 
 function MossyMammoth.getters:note()
-    local function HasItem(id) return GetItemCount(id, true) > 0 end
+    local function HasItem(id) return C_Item.GetItemCount(id, true) > 0 end
 
     local function HasMount(id)
         return select(11, C_MountJournal.GetMountInfoByID(id))
@@ -1156,7 +1157,7 @@ map.nodes[30268000] = Collectible({
     label = '{achievement:18559}',
     location = L['in_zskera_vaults'],
     icon = 132762,
-    note = L['tiny_box_of_tiny_rocks_note'], -- TODO: can also be less often found in the waking shores
+    note = L['box_of_rocks_note'],
     fgroup = 'zskera_vaults',
     group = ns.groups.ZSKERA_VAULTS,
     rewards = {
@@ -1337,6 +1338,68 @@ map.nodes[55393586] = ScalecommanderItem({
     pois = {POI({55103837})}, -- Entrance
     item = {204252, 202326}
 }) -- Sending Stone: Initial Report
+
+-------------------------------------------------------------------------------
+---------------------------------- CLUED IN -----------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[55424648] = ns.node.CluedIn({
+    label = L['sun_bleached_vase'], -- Sun-Bleached Vase
+    quest = 77424
+})
+
+map.nodes[54933669] = ns.node.CluedIn({
+    label = L['untranslated_tome'], -- Untranslated Tome
+    quest = 77424,
+    location = L['untranslated_tome_note'],
+    pois = {POI({55103878})} -- Entrance
+})
+
+map.nodes[56383872] = ns.node.CluedIn({
+    label = L['mysterious_boot'], -- Mysterious Boot
+    quest = 77424,
+    location = L['mysterious_boot_note']
+})
+
+map.nodes[19621537] = ns.node.CluedIn({
+    label = L['decaying_fishing_bucket'],
+    quest = 77362,
+    location = L['decaying_fishing_bucket_note']
+})
+
+map.nodes[18241313] = ns.node.CluedIn({
+    label = L['forgotten_fishing_pole'],
+    quest = 77362,
+    location = L['forgotten_fishing_pole_note']
+})
+
+map.nodes[10591156] = ns.node.CluedIn({
+    label = L['overgrown_fishing_bench'],
+    quest = 77362,
+    location = L['overgrown_fishing_bench_note']
+})
+
+-------------------------------------------------------------------------------
+-------------------------------- GOGGLE WOBBLE --------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[77143837] = ns.node.GoggleWobble({
+    rewards = {Achievement({id = 19791, criteria = 65405})}
+})
+
+-------------------------------------------------------------------------------
+----------------------------- JUST ONE MORE THING -----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[53004700] = ns.node.JustOneMoreThing({
+    quest = {79601, 79600, 79599},
+    rewards = {Achievement({id = 19792, criteria = 65408})} -- Lost Atheneum
+}) -- Research: Dracthyr of Forbidden Reach -- 77424
+
+map.nodes[17001600] = ns.node.JustOneMoreThing({
+    quest = {79613, 79612, 79611},
+    rewards = {Achievement({id = 19792, criteria = 65413})} -- Winglord's Perch
+}) -- Research: Drakonid of Forbidden Reach -- 77362
 
 -------------------------------------------------------------------------------
 ----------------------------------- VENDORS -----------------------------------

@@ -16,6 +16,18 @@ Disturbed Earth, (Odd Glob of Wax 212493)
 53493438, just spawned waxy lump
 45042805, fired into the air to catch waxy sprockets
 43551959, waxy lump
+43141756, quest 84543, spawned enemy
+64015855
+53662379
+52131940
+52071557
+52991721
+56573634
+50972280
+51202109
+49911973, under the bridge
+57853703
+58254117
 
 Worldsoul memories (vignette 6358)
 59516981
@@ -28,6 +40,7 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
         criteria=69280,
         quest=79308,
         loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150),
             213254, -- Big Gold Nugget
             213251, -- Cinderbee Wax Jar
             213250, -- Cracked Gem
@@ -35,6 +48,7 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
             213255, -- Wax Canary
             213252, -- Stolen Earthen Contraption
             213257, -- Wax Shovel
+            213256, -- Wax Spoon
         },
         level=71,
         vignette=5994,
@@ -51,7 +65,13 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
     [55401385] = { -- Munderut's Forgotten Stash
         criteria=69282,
         quest=82235,
-        loot={212498}, -- Ambivalent Amber + commendations
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150),
+            212508, -- Stunning Sapphire
+            212505, -- Extravagant Emerald
+            212495, -- Radiant Ruby
+            212498, -- Ambivalent Amber
+        },
         level=71,
         vignette=6233,
     },
@@ -99,10 +119,21 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
         note="At the back of the inn; gather the five shards first",
         related={
             [57272196] = {label="{item:223880:Rough Deepamethyst Shard}", loot={223880}, inbag=223880, color={r=1,g=0,b=1}, minimap=true,},
+            [44702280] = {label="{item:223880:Rough Deepamethyst Shard}", loot={223880}, inbag=223880, color={r=1,g=0,b=1}, minimap=true,},
+            [39801990] = {label="{item:223880:Rough Deepamethyst Shard}", loot={223880}, inbag=223880, color={r=1,g=0,b=1}, minimap=true,},
+            --
             [59043804] = {label="{item:223881:Rough Deepemerald Shard}", loot={223881}, inbag=223881, color={r=0,g=1,b=0}, minimap=true,},
+            [59704080] = {label="{item:223881:Rough Deepemerald Shard}", loot={223881}, inbag=223881, color={r=0,g=1,b=0}, minimap=true,},
+            --
             [68205316] = {label="{item:223882:Rough Deepdiamond Shard}", loot={223882}, inbag=223882, color={r=0,g=0,b=1}, minimap=true,},
+            [67304770] = {label="{item:223882:Rough Deepdiamond Shard}", loot={223882}, inbag=223882, color={r=0,g=0,b=1}, minimap=true,},
+            --
             [57434943] = {label="{item:223878:Rough Deepruby Shard}", loot={223878}, inbag=223878, color={r=1,g=0,b=0}, minimap=true,},
-            [62546313] = {label="{item:223879:Rough Deeptopaz Shard}", loot={223879}, inbag=223879, color={r=0,g=1,b=1}, minimap=true,},
+            [59905300] = {label="{item:223878:Rough Deepruby Shard}", loot={223878}, inbag=223878, color={r=1,g=0,b=0}, minimap=true,},
+            --
+            [62546313] = {label="{item:223879:Rough Deeptopaz Shard}", loot={223879}, inbag=223879, color={r=1,g=1,b=0}, minimap=true,},
+            [67106310] = {label="{item:223879:Rough Deeptopaz Shard}", loot={223879}, inbag=223879, color={r=1,g=1,b=0}, minimap=true,},
+            [59279417] = {label="{item:223879:Rough Deeptopaz Shard}", loot={223879}, inbag=223879, color={r=1,g=1,b=0}, minimap=true,},
         },
         vignette=6286,
     },
@@ -156,7 +187,7 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
     [48932593] = {criteria=68992}, -- Notes On The Machine Speakers: Fragment II
     [51071448] = {criteria=68993}, -- Notes On The Machine Speakers: Fragment III
     [39892099] = {criteria=68994, note="Up on the scaffolding"}, -- Notes On The Machine Speakers: Fragment IV
-    [63705878] = {criteria=68995}, -- Notes On The Machine Speakers: Fragment V
+    [63705878] = {criteria=68995, note="Up on the arch"}, -- Notes On The Machine Speakers: Fragment V
     [65107955] = {criteria=68996}, -- Notes On The Machine Speakers: Fragment VI
 }, {
     achievement=40628,
@@ -164,20 +195,98 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
     minimap=true,
 })
 
+-- Gobblin' with Glublurb
+ns.RegisterPoints(ns.RINGINGDEEPS, {
+    [44335024] = {
+        label="{npc:227132:Glublurb}",
+        texture=ns.atlas_texture("BuildanAbomination-32x32", {r=0, g=1, b=1}),
+        note="Get {spell:456739:Etheral Vision} from a Glimmering Crystal, then go to the pond to the northwest of it to find a {npc:227138:Ethereal Glimmerling}, and bring it here",
+        route={
+            44305020, 58363360, 59904110,
+            highlightOnly=true, r=1, g=0, b=1,
+        },
+    },
+    [58363360] = {
+        label="{npc:227138:Ethereal Glimmerling}",
+        active=ns.conditions.AuraActive(456739), -- Essence of Awakening
+        atlas="Vehicle-TempleofKotmogu-PurpleBall",
+        note="Take this to {npc:227132:Glublurb}; {spell:456739:Etheral Vision} only lasts 5 minutes, but can be refilled from the crystals",
+        route=44305020,
+    },
+    [59954100] = {
+        label="Glimmering Crystal",
+        spell=456739, -- Ethereal Vision
+        texture=ns.atlas_texture("keyflameon-32x32", {r=0, g=0.5, b=1}),
+        note="Get {spell:456739:Etheral Vision}, then go to the pond to the northwest to find a {npc:227138:Ethereal Glimmerling}",
+        route=44305020,
+    },
+}, {
+    achievement=40614,
+    quest=83623,
+    minimap=true,
+})
+
+-- To All the Slimes I Love
+ns.RegisterPoints(ns.RINGINGDEEPS, {
+    [58606920] = {criteria=68670, --[[npc=226626--]]}, -- Spring Mole
+    [51601660] = {criteria=68673, --[[npc=217756--]]}, -- Snake
+    [63805010] = {criteria=68673, --[[npc=217756--]]}, -- Snake
+    [64603380] = {criteria=68674, --[[npc=220173--]]}, -- Lightdarter
+    [45003100] = {criteria=68674, --[[npc=220173--]]}, -- Lightdarter
+    [54405080] = {criteria=68674, --[[npc=220173--]]}, -- Lightdarter
+    [61407520] = {criteria=68674, --[[npc=220173--]]}, -- Lightdarter
+    [52605340] = {criteria=68676, --[[npc=221146--]]}, -- Tiny Sporbit
+    [42601500] = {criteria=68677, --[[npc=220369--]]}, -- Dustcrawler Beetle
+    [48601740] = {criteria=68677, --[[npc=220369--]]}, -- Dustcrawler Beetle
+    [44002880] = {criteria=68677, --[[npc=220369--]]}, -- Dustcrawler Beetle
+    [62604140] = {criteria=68677, --[[npc=220369--]]}, -- Dustcrawler Beetle
+    [61607300] = {criteria=68677, --[[npc=220369--]]}, -- Dustcrawler Beetle
+    [55403560] = {criteria=68677, --[[npc=220369--]]}, -- Dustcrawler Beetle
+    [61208580] = {criteria=68675, --[[npc=219585--]]}, -- Mass of Worms
+    [55006960] = {criteria=68731, --[[npc=217461--]]}, -- Grottoscale Hatchling
+    [57802440] = {criteria=68729, --[[npc=220177--]]}, -- Crackcreeper
+    [48801560] = {criteria=68730, --[[npc=214726--]]}, -- Lava Slug
+    [48601760] = {criteria=68732, --[[npc=220370--]]}, -- Earthenwork Stoneskitterer
+    [71604200] = {criteria=68733, --[[npc=223663--]]}, -- Cavern Skiplet
+    [56006940] = {criteria=68734, --[[npc=217316--]]}, -- Moss Sludglet
+    [60806960] = {criteria=68747, --[[npc=219366--]]}, -- Cavern Mote
+    [61803960] = {criteria=68747, --[[npc=219366--]]}, -- Cavern Mote
+    [43601220] = {criteria=68747, --[[npc=219366--]]}, -- Cavern Mote
+    [64803300] = {criteria=68748, --[[npc=220168--]]}, -- Stumblegrub
+    [53603220] = {criteria=69805, --[[npc=219842--]]}, -- Darkgrotto Hopper
+    [65803920] = {criteria=68749, --[[npc=220413--]]}, -- Oozeling
+    [57405080] = {criteria=68750, --[[npc=217559--]]}, -- Pebble Scarab
+    [51801120] = {criteria=68751, --[[npc=216058--]]}, -- Rock Snail
+    [63205120] = {criteria=68751, --[[npc=216058--]]}, -- Rock Snail
+}, {
+    achievement=40475,
+    texture=ns.atlas_texture("delves-scenario-heart-icon", nil, 0, 0.9, 0, 0.9),
+    note=EMOTE152_CMD1 .. "\nCoords are approximate, these are critters that spawn in this general area", -- /love
+})
+
 -- Rares
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
     [52591991] = { -- Automaxor
         criteria=69634,
-        quest=81674,
+        quest=81674, -- 84046
         npc=220265,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84046}),
+            221218, -- Reinforced Construct's Greaves
+            221238, -- Pillar of Constructs
+        },
         vignette=6128,
     },
     [41361692] = { -- Charmonger
-        -- wowhead says 60802540 too
         criteria=69632,
-        quest=81562,
+        quest=81562, -- 84044
         npc=220267,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84044}),
+            221209, -- Flame Trader's Gloves
+            221249, -- Kobold Rodent Squasher
+        },
         vignette=6104,
     },
     [42773508] = { -- King Splash
@@ -208,17 +317,26 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
     },
     [50864651] = { -- Cragmund
         criteria=69630,
-        quest=80560, -- 84042?
+        quest=80560, -- 84042
         npc=220269,
         loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84042}),
             221205, -- Vest of the River
+            221254, -- Earthshatter Lance
+            221507, -- Earth Golem's Wrap
         },
         vignette=6090,
     },
     [55060843] = { -- Deepflayer Broodmother
         criteria=69636,
-        quest=  80536,
+        quest=80536, -- 85162
         npc=220286,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=85162}),
+            221254, -- Earthshatter Lance
+            221507, -- Earth Golem's Wrap
+            225999, -- Earthen Adventurer's Tabard
+        },
         note="Flys around anticlockwise",
         route={
             55060843, 53000880, 49560836, 49121007, 45290955, 43790822, 42650871, 44220973, 44331083, 45151312,
@@ -241,27 +359,56 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
     },
     [52022657] = { -- Zilthara
         criteria=69629,
-        quest=80506,
+        quest=80506, -- 84041
         npc=220270,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84041}),
+            221220, -- Basilisk Scale Pauldrons
+            221246, -- Fierce Beast Staff
+            221247, -- Cavernous Critter Shooter
+            221251, -- Bestial Underground Cleaver
+            221265, -- Charm of the Underground Beast
+        },
         vignette=6079,
     },
     [57903813] = { -- Coalesced Monstrosity
         criteria=69633,
-        quest=81511,
+        quest=81511, -- 84045
         npc=220266,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84045}),
+            221226, -- Voidtouched Waistguard
+            223006, -- Signet of Dark Horizons
+        },
         vignette=6101,
     },
     [46701209] = { -- Terror of the Forge
         criteria=69628,
-        quest=80507,
+        quest=80507, -- 84040
         npc=220271,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84040}),
+            221233, -- Deephunter's Bloody Hook
+            221234, -- Tidal Pendant
+            221242, -- Forgeborn Helm
+            221248, -- Deep Terror Carver
+            221255, -- Sharpened Scalepiercer
+        },
         vignette=6081,
         note="Walking in the lava",
     },
-    [47074696] = { -- Kelpmire
+    [47224696] = { -- Kelpmire
         criteria=69635,
-        quest=81485,
+        quest=81485, -- 84047
         npc=220287,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84047}),
+            221204, -- Spore Giant's Stompers
+            221250, -- Creeping Lasher Machete
+            221253, -- Cultivator's Plant Puncher
+            221264, -- Fungarian Mystic's Cluster
+            223005, -- String of Fungal Fruits
+        },
         vignette=6099,
     },
     [57025480] = { -- Rampaging Blight
@@ -278,29 +425,64 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
     },
     [71654629] = { -- Trungal
         criteria=69631,
-        quest=80574,
+        quest=80574, -- 84043
         npc=220268,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84043}),
+            221228, -- Infested Fungal Wristwraps
+            221250, -- Creeping Lasher Machete
+            221253, -- Cultivator's Plant Puncher
+            221264, -- Fungarian Mystic's Cluster
+            223005, -- String of Fungal Fruits
+        },
         note="Kill the {npc:220615:Root of Trungal} to spawn",
         path={72534569, 72844444},
         vignette=6126,
     },
-    [68224378] = { -- Spore-infused Shalewing
+    [68404754] = { -- Spore-infused Shalewing
         criteria=69638,
-        quest=81652,
+        quest=81652, -- 84049
         npc=221217,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84049}),
+            223918, -- Specter Stalker's Shotgun
+            223919, -- Abducted Lawman's Gavel
+            223942, -- Spore-Encrusted Ribbon
+        },
         vignette=6121,
-        note="Flies around",
+        note="Flies around clockwise",
+        route={
+            68604852, 68735012, 68675047, 68215137, 68055156, 67745171, 67535176, 67225176, 67075174, 66585120, 66244896,
+            66264870, 66404840, 66234817, 65724779, 65564760, 65474737, 65534711, 65724669, 65834655, 66044644, 66944640,
+            67624608, 67774620, 68094659, 68214680, 68404754,
+            loop=true,
+        },
     },
     [65364949] = { -- Hungerer of the Deeps
         criteria=69639,
-        quest=81648,
+        quest=81648, -- 84048
         npc=221199,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84048}),
+            221233, -- Deephunter's Bloody Hook
+            221234, -- Tidal Pendant
+            221248, -- Deep Terror Carver
+            221255, -- Sharpened Scalepiercer
+            223949, -- Dark Depth Stompers
+        },
         vignette=6119,
     },
     [67085262] = { -- Disturbed Earthgorger
         criteria=69640,
         quest=80003,
         npc=218393,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=84050}),
+            221237, -- Lamentable Vagrant's Lantern
+            223926, -- Earthgorger's Chain Bib
+            223943, -- Cord of the Earthbreaker
+        },
+        note="Stand in the dust cloud and use {spell:437003:Stomp} several times",
         vignette=6031,
     },
     [66716881] = { -- Deathbound Husk
@@ -314,13 +496,37 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
         note="In cave",
         path=67056796,
     },
-    [12009000] = { -- Lurker of the Deeps
+    [60887682] = { -- Lurker of the Deeps
         criteria=69637,
-        quest=81633,
+        quest=81633, -- 85163
         npc=220285,
+        loot={
+            ns.rewards.Currency(ns.CURRENCY_ASSEMBLY, 150, {quest=85163}),
+            {223501, mount=2205}, -- Regurgitated Mole Reins
+            221233, -- Deephunter's Bloody Hook
+            221234, -- Tidal Pendant
+            221248, -- Deep Terror Carver
+            221255, -- Sharpened Scalepiercer
+        },
         vignette=6110,
-        note="UNKNOWN LOCATION",
+        note="Pull 5 levers across the zone at the same time to summon; they stay activated for ~10 seconds, so you'll need a group",
+        related={
+            [49470882] = {label="Inconspicuous Lever", note="Pull all 5 levers simultaneously to summon {npc:220285:Lurker of the Deeps}"},
+            [53912530] = {label="Inconspicuous Lever", note="Pull all 5 levers simultaneously to summon {npc:220285:Lurker of the Deeps}"},
+            [57612358] = {label="Inconspicuous Lever", note="Pull all 5 levers simultaneously to summon {npc:220285:Lurker of the Deeps}"},
+            [59079239] = {label="Inconspicuous Lever", note="Pull all 5 levers simultaneously to summon {npc:220285:Lurker of the Deeps}"},
+            [62854464] = {label="Inconspicuous Lever", note="Pull all 5 levers simultaneously to summon {npc:220285:Lurker of the Deeps}"},
+        },
     },
 }, {
     achievement=40837, -- Adventurer
+})
+
+ns.RegisterPoints(ns.RINGINGDEEPS, {
+    [62805000] = { -- Slatefang
+        quest=nil,
+        npc=228439,
+        requires=ns.conditions.Profession(ns.PROF_WW_SKINNING),
+        active=ns.conditions.Item(219008), -- Supreme Beast Lure
+    },
 })

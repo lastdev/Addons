@@ -15,11 +15,14 @@ local GuildAPI = TSM.LibTSMWoW:Include("API.Guild")
 local Group = TSM.LibTSMTypes:Include("Group")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local BagTracking = TSM.LibTSMService:Include("Inventory.BagTracking")
+local WarbankTracking = TSM.LibTSMService:Include("Inventory.WarbankTracking")
 local Guild = TSM.LibTSMService:Include("Guild")
 local LibTSMClass = LibStub("LibTSMClass")
 local private = {
 	bagToBank = nil,
+	bagToWarbank = nil,
 	bankToBag = nil,
+	warBankToBag = nil,
 	bagToGuildBank = nil,
 	guildBankToBag = nil,
 }
@@ -50,7 +53,7 @@ function BagToBankMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity)
 end
 
 function BagToBankMoveContext.GetSlotQuantity(self, slotId)
-	return private.BagBankGetSlotQuantity(slotId)
+	return private.ContainerGetSlotQuantity(slotId)
 end
 
 function BagToBankMoveContext.SlotIdIterator(self, itemString)
@@ -71,7 +74,24 @@ function BagToBankMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
 end
 
 function BagToBankMoveContext.GetTargetSlotId(self, itemString, emptySlotIds, slotId)
-	return private.BagBankGetTargetSlotId(itemString, emptySlotIds, slotId)
+	return private.ContainerGetTargetSlotId(itemString, emptySlotIds, slotId)
+end
+
+
+
+-- ============================================================================
+-- BagToWarbankMoveContext Class
+-- ============================================================================
+
+local BagToWarbankMoveContext = LibTSMClass.DefineClass("BagToWarbankMoveContext", BagToBankMoveContext)
+
+function BagToWarbankMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
+	local sortValue = Threading.AcquireSafeTempTable()
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.WARBAND_BANK) then
+		for bag in Container.WarbankBagIterator() do
+			private.GetEmptySlotsHelper(bag, emptySlotIds, sortValue)
+		end
+	end
 end
 
 
@@ -92,7 +112,7 @@ function BankToBagMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity)
 end
 
 function BankToBagMoveContext.GetSlotQuantity(self, slotId)
-	return private.BagBankGetSlotQuantity(slotId)
+	return private.ContainerGetSlotQuantity(slotId)
 end
 
 function BankToBagMoveContext.SlotIdIterator(self, itemString)
@@ -109,7 +129,24 @@ function BankToBagMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
 end
 
 function BankToBagMoveContext.GetTargetSlotId(self, itemString, emptySlotIds, slotId)
-	return private.BagBankGetTargetSlotId(itemString, emptySlotIds)
+	return private.ContainerGetTargetSlotId(itemString, emptySlotIds)
+end
+
+
+
+-- ============================================================================
+-- WarbankToBagMoveContext Class
+-- ============================================================================
+
+local WarbankToBagMoveContext = LibTSMClass.DefineClass("WarbankToBagMoveContext", BankToBagMoveContext)
+
+function WarbankToBagMoveContext.SlotIdIterator(self, itemString)
+	itemString = Group.TranslateItemString(itemString)
+	return WarbankTracking.CreateQuerySlotItem(itemString)
+		:VirtualField("autoBaseItemString", "string", Group.TranslateItemString, "itemString")
+		:Equal("autoBaseItemString", itemString)
+		:Select("slotId", "quantity")
+		:IteratorAndRelease()
 end
 
 
@@ -130,7 +167,7 @@ function BagToGuildBankMoveContext.MoveSlot(self, fromSlotId, toSlotId, quantity
 end
 
 function BagToGuildBankMoveContext.GetSlotQuantity(self, slotId)
-	return private.BagBankGetSlotQuantity(slotId)
+	return private.ContainerGetSlotQuantity(slotId)
 end
 
 function BagToGuildBankMoveContext.SlotIdIterator(self, itemString)
@@ -203,7 +240,7 @@ function GuildBankToBagMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
 end
 
 function GuildBankToBagMoveContext.GetTargetSlotId(self, itemString, emptySlotIds, slotId)
-	return private.BagBankGetTargetSlotId(itemString, emptySlotIds)
+	return private.ContainerGetTargetSlotId(itemString, emptySlotIds)
 end
 
 
@@ -217,9 +254,19 @@ function MoveContext.GetBagToBank()
 	return private.bagToBank
 end
 
+function MoveContext.GetBagToWarbank()
+	private.bagToWarbank = private.bagToWarbank or BagToWarbankMoveContext()
+	return private.bagToWarbank
+end
+
 function MoveContext.GetBankToBag()
 	private.bankToBag = private.bankToBag or BankToBagMoveContext()
 	return private.bankToBag
+end
+
+function MoveContext.GetWarbankToBag()
+	private.warBankToBag = private.warBankToBag or WarbankToBagMoveContext()
+	return private.warBankToBag
 end
 
 function MoveContext.GetBagToGuildBank()
@@ -238,7 +285,7 @@ end
 -- Private Helper Functions
 -- ============================================================================
 
-function private.BagBankGetSlotQuantity(slotId)
+function private.ContainerGetSlotQuantity(slotId)
 	return Container.GetStackCount(SlotId.Split(slotId)) or 0
 end
 
@@ -285,7 +332,7 @@ function private.BagSlotHasItem(bag, slot)
 	return Container.GetItemLink(bag, slot) and true or false
 end
 
-function private.BagBankGetTargetSlotId(itemString, emptySlotIds, depositSlotId)
+function private.ContainerGetTargetSlotId(itemString, emptySlotIds, depositSlotId)
 	for i, slotId in ipairs(emptySlotIds) do
 		local bag = SlotId.Split(slotId)
 		if (not depositSlotId or not Container.IsWarbankBag(bag) or Container.CanDepositIntoWarbank(SlotId.Split(depositSlotId))) and BagTracking.ItemWillGoInBag(itemString, bag) then

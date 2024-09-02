@@ -1,5 +1,7 @@
 -- By: Viicksmille-Thrall - Horde 4ever
--- Special thanks for: omsheal, KNARK1337, CommandoCat64 for reports and in special for omsheal
+-- curseforge.com/members/omxheal/projects Many thanks
+-- Lust Detector Reloaded - v1.5
+
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
@@ -12,7 +14,7 @@ local function LUSTDETECTORMSG(msg)
     elseif LUSTDETECTORMode == "TEST" then
         LUSTDETECTORType = "TEST"
     elseif LUSTDETECTORMode == "RAID_WARNING" or LUSTDETECTORMode == "GROUP" then
-        if IsInRaid() and LUSTDETECTORMode == "RAID_WARNING" and (IsEveryoneAssistant() or UnitIsGroupAssistant("player") or UnitIsGroupLeader("player") or UnitIsRaidOfficer("player")) then
+        if IsInRaid() and (IsEveryoneAssistant() or UnitIsGroupAssistant("player") or UnitIsGroupLeader("player") or UnitIsRaidOfficer("player")) then
             LUSTDETECTORType = "RAID_WARNING"
         elseif IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
             LUSTDETECTORType = "INSTANCE_CHAT"
@@ -23,7 +25,9 @@ local function LUSTDETECTORMSG(msg)
         end
     end
 
-    SendChatMessage(msg, LUSTDETECTORType)
+    if LUSTDETECTORType ~= "SELF" then
+        SendChatMessage(msg, LUSTDETECTORType)
+    end
 end
 
 local function handler(msg)
@@ -69,33 +73,29 @@ local HasteItem = {
     [309658] = true, -- Drums of Deathly Ferocity
     [146613] = true, -- Drums of Rage
     [381301] = true, -- Feral Hide Drums - DF
-	[441076] = true, -- Timeless Drums (Event Pandaria remix)
+    [444257] = true, -- Thunderous Drums - TwW
 }
 
 local WarpSpells = {
     [2825] = true, -- Bloodlust
     [32182] = true, -- Heroism
     [80353] = true, -- Time Warp
-    [264667] = true, -- Primal Rage 1
+    [264667] = true, -- Primal Rage (Hunter cast from pet spellbook)
     [390386] = true, -- Fury of the Aspects (Dracthyr Evoker DF)
-    [1626] = true, -- Primal Rage 2
-    [275200] = true, -- Primal Rage 3
-    [204276] = true, -- Primal Rage 4
-    [357650] = true, -- Primal Rage | Raiva Primeva (PTBR) 4.5
-    [272678] = true, -- Primal Rage 6
+    [272678] = true, -- Primal Rage (Hunter cast by command pet)
     [293076] = true, -- Mallet of Thunderous Skins
 }
 
 local ClassSpells = {
     [29893] = false, -- Create soulwell
-	["WARLOCK"] = false, --
+    ["WARLOCK"] = false, --
 }
 
 frame:SetScript("OnEvent", function(self, event, ...)
-    local _, event, _, _, sourceName, _, _, _, _, _, _, spellID, _ = CombatLogGetCurrentEventInfo()
+    local _, eventType, _, _, sourceName, _, _, _, _, _, _, spellID, _ = CombatLogGetCurrentEventInfo()
     local pNum = GetNumGroupMembers()
 
-    if LUSTDETECTOR and event == "SPELL_CAST_SUCCESS" and pNum > 0 and (HasteItem[spellID] or WarpSpells[spellID]) and UnitInParty(sourceName) then
+    if eventType == "SPELL_CAST_SUCCESS" and pNum > 0 and (HasteItem[spellID] or WarpSpells[spellID]) and UnitInParty(sourceName) then
         local chatType = "PARTY"
         local isInstance, instanceType = IsInInstance()
 
@@ -105,17 +105,17 @@ frame:SetScript("OnEvent", function(self, event, ...)
             chatType = "RAID"
         end
 
-        local spellName = GetSpellInfo(spellID)
-        local spellLink = GetSpellLink(spellID)
+        local spellName = C_Spell.GetSpellInfo(spellID).name
+        local spellLink = spellName -- Use spellName instead of GetSpellLink
         local className = select(2, UnitClass(sourceName))
 
         if HasteItem[spellID] then
-            LUSTDETECTORMSG("{rt1} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " used: " .. spellLink .. " and increased +15% haste on the party! {rt1}", chatType)
+            LUSTDETECTORMSG("{rt1} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " used: " .. spellLink .. " and increased +15% haste on the party! {rt1}")
         elseif WarpSpells[spellID] then
-            LUSTDETECTORMSG("{rt2} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " cast: " .. spellLink .. " and increased +30% haste on the party! {rt2}", chatType)
+            LUSTDETECTORMSG("{rt2} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " cast: " .. spellLink .. " and increased +30% haste on the party! {rt2}")
         end
 
-        elseif event == "SPELL_CAST_SUCCESS" and pNum > 0 and ClassSpells[spellID] and UnitInParty(sourceName) then
+    elseif eventType == "SPELL_CAST_SUCCESS" and pNum > 0 and ClassSpells[spellID] and UnitInParty(sourceName) then
         local chatType = "PARTY"
         local isInstance, instanceType = IsInInstance()
 
@@ -125,6 +125,6 @@ frame:SetScript("OnEvent", function(self, event, ...)
             chatType = "RAID"
         end
 
-        LUSTDETECTORMSG("{rt7} LD: " .. UnitName(sourceName) .. " created a Soulwell! Grab your healthstones :D :D ! {rt7}", chatType)
+        LUSTDETECTORMSG("{rt7} LD: " .. UnitName(sourceName) .. " created a Soulwell! Grab your healthstones :D :D ! {rt7}")
     end
 end)

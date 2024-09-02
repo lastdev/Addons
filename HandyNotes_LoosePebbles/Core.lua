@@ -3,7 +3,7 @@
 
                                             Loose Pebbles
 
-                                       v1.27 - 23rd July 2024
+                                      v1.28 - 21st August 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

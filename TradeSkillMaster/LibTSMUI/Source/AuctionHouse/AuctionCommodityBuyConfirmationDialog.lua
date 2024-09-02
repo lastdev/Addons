@@ -47,7 +47,7 @@ AuctionCommodityBuyConfirmationDialog:_ExtendStateSchema()
 	:AddNumberField("quoteDuration", 0)
 	:AddBooleanField("requireManualClick", false)
 	:Commit()
-AuctionCommodityBuyConfirmationDialog:_AddActionScripts("OnBuyoutClicked")
+AuctionCommodityBuyConfirmationDialog:_AddActionScripts("OnBuyoutClicked", "OnCommodityPriceUpdated")
 
 
 
@@ -60,6 +60,7 @@ function AuctionCommodityBuyConfirmationDialog:__init(frame)
 	self._childManager = UIManager.Create("AUCTION_COMMODITY_BUY_CONFIRMATION", self._state, self:__closure("_ActionHandler"))
 		:SuppressActionLog("ACITON_QUANTITY_INPUT_CHANGED")
 	self._quoteTimer = DelayTimer.New("COMMODITY_QUOTE_TIMER", self:__closure("_HandleQuoteTick"))
+	self._closeTimer = DelayTimer.New("COMMODITY_CLOSE_TIMER", self:__closure("_HandleCloseDelayed"))
 	self._marketValueFunc = nil
 end
 
@@ -87,6 +88,7 @@ function AuctionCommodityBuyConfirmationDialog:Release()
 		self._childManager:CancelFuture("future")
 	end
 	self._quoteTimer:Cancel()
+	self._closeTimer:Cancel()
 	self.__super:Release()
 end
 
@@ -439,7 +441,9 @@ function AuctionCommodityBuyConfirmationDialog.__private:_ActionHandler(manager,
 		if not result or result ~= state.prepareTotalBuyout then
 			-- The unit price changed
 			ChatMessage.PrintUser(L["Failed to buy auction."])
-			return manager:ProcessAction("ACTION_CLOSE_DIALOG")
+			self:_SendActionScript("OnCommodityPriceUpdated")
+			self._closeTimer:RunForFrames(0)
+			return
 		end
 		state.prepareSuccess = state.quantity == state.prepareQuantity
 		private.UpdateStatePrices(state)
@@ -494,6 +498,10 @@ function AuctionCommodityBuyConfirmationDialog.__private:_HandleQuoteTick()
 	else
 		self._quoteTimer:RunForTime(1)
 	end
+end
+
+function AuctionCommodityBuyConfirmationDialog.__private:_HandleCloseDelayed()
+	self._childManager:ProcessAction("ACTION_CLOSE_DIALOG")
 end
 
 

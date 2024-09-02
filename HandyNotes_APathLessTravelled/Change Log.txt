@@ -1,3 +1,21 @@
+== v1.49 - 21st August 2024
+* TOC update to 11.0.2
+
+== v1.48 - 14th August 2024
+* The Barrens / Northern Barrens
+* Alterac Valley
+  (All the above with J Staats source credited)
+* Undercity
+* Ancient Dalaran portal
+* Theramore portal
+
+== v1.47 - 7th August 2024
+* Uldaman / linear dungeon design added
+* Molten Core
+* Blackrock Mountain
+* Scarlet Monastery
+  (All the above with J Staats source credited)
+
 == v1.46 - 31st July 2024
 * Grammatical "," added to the Ebonchill tooltips
 * Two new Deadwood entires because, well, who doesn't love Kharazan?

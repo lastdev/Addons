@@ -2727,16 +2727,123 @@ nodes[2274] = { -- Khaz Algar
    [42188673] = { id = 1273, type = "Raid" },  -- Nerub-ar Palace
 }
 
--- if self.db.profile.Zone then
+ if self.db.profile.Zone then
 
---nodes[2274][56904935] = { 
---   id = 1210, 
---   type = "Dungeon", 
---   hideOnContinent = true, 
---   showInZone = true,
---} -- Darkflame Cleft
+   nodes[2216] = {
+      [52164580] = { 
+      id = 1271, type = "Dungeon", 
+      showInZone = true, 
+      hideOnContinent = true, 
+   }, -- Ara-Kara, City of Echoes
+   [35047242] = { 
+      id = 1273, 
+      type = "Raid", 
+      showInZone = true, 
+      hideOnContinent = true, 
+   } -- Nerub-ar Palace 
+} 
 
---end
+   nodes[2214] = {
+      [46860856] = { 
+      id = 1269, type = "Dungeon", 
+      showInZone = true, 
+      hideOnContinent = true, 
+   }, -- The Stonevault
+   [59662149] = { 
+      id = 1210, 
+      type = "Dungeon", 
+      showInZone = true,
+      hideOnContinent = true
+   } -- Darkflame Cleft
+}
+
+
+   nodes[2215] = { 
+      [41324933] = { 
+         id = 1267, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- Priory of the Sacred Flame
+      [54906313] = { 
+         id = 1270, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- The Dawnbreaker
+   }
+
+   nodes[2248] = {
+      [45234108] = { 
+         id = 1268, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- The Rookery
+      [76584378] = { 
+         id = 1272, type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- Cinderbrew Meadery
+   }
+
+   nodes[2255] = {
+      [46746917] = { 
+         id = 1274, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- City of Threads
+      [49538100] = { 
+         id = 1271, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- Ara-Kara, City of Echoes
+      [43559029] = { 
+         id = 1273, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true
+       } -- Nerub-ar Palace
+   }
+
+   nodes[2256] = {
+      [46746917] = { 
+         id = 1274, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- City of Threads
+      [49538100] = { 
+         id = 1271, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true 
+      }, -- Ara-Kara, City of Echoes
+      [43559029] = { 
+         id = 1273, 
+         type = "Raid", 
+         showInZone = true, 
+         showOnContinent = false, 
+         showOnMinimap = false 
+      } -- Nerub-ar Palace
+   }
+   nodes[2213] = { 
+      [52164580] = { id = 1271, 
+      type = "Dungeon", 
+      showInZone = true, 
+      showOnContinent = false
+   }, -- Ara-Kara, City of Echoes
+      [35047242] = { id = 1273, 
+      type = "Raid", 
+      showInZone = true, 
+      showOnContinent = false
+    } -- Nerub-ar Palace
+   }  
+   
+
+end
 
 end
 

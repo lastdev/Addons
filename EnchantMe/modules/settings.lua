@@ -13,11 +13,6 @@ function settings.init()
         Settings.SetOnValueChangedCallback(variable, private.onSettingChanged)
     end
 
-    -- ignore belt
-    addSetting('ignoreBelt', 'Ignore belt', 'boolean', function (setting)
-        Settings.CreateCheckbox(category, setting, 'Ignore missing Shadowed Belt Clasp\n(as it is usually very expensive and only gives a small amount of stamina)')
-    end)
-
     -- indicator position
     addSetting('indicatorPos', 'Indicator position', 'string', function (setting)
         local options = function ()

@@ -18,6 +18,8 @@ if ns.CLASSIC then
     ATLAS_CHECK, ATLAS_CROSS = "Tracker-Check", "Objective-Fail"
 end
 
+local COSMETIC_COLOR = CreateColor(1, 0.5, 1)
+
 ---------------------------------------------------------
 -- Data model stuff:
 
@@ -147,36 +149,72 @@ function ns.RegisterPoints(zone, points, defaults)
         end
         if point.related then
             local relatedNode = ns.nodeMaker(setmetatable({
-                label=point.npc and "Related to nearby NPC" or "Related to nearby treasure",
-                atlas="playerpartyblip",
-                texture=false,
-                note=false,
+                label=point.related.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
+                atlas=point.related.atlas or "playerpartyblip", color=point.related.color,
+                texture=point.related.atlas or false, minimap=point.related.minimap,
+                note=point.related.note or false,
+                active=point.related.active, required=point.related.required,
                 route=coord,
                 _uiMapID=zone,
             }, proxy_meta))
             for rcoord, related in pairs(point.related) do
-                local rpoint = relatedNode(related)
-                rpoint._coord = rcoord
-                if related.color then
-                    rpoint.texture = ns.atlas_texture(rpoint.atlas, related.color)
+                if type(rcoord) == "number" then
+                    local rpoint = relatedNode(related)
+                    rpoint._coord = rcoord
+                    if related.color then
+                        rpoint.texture = ns.atlas_texture(rpoint.atlas, related.color)
+                    end
+                    if not point.routes then point.routes = {} end
+                    table.insert(point.routes, {rcoord, coord, highlightOnly=true})
+                    ns.points[zone][rcoord] = rpoint
                 end
-                if not point.routes then point.routes = {} end
-                table.insert(point.routes, {rcoord, coord, highlightOnly=true})
-                ns.points[zone][rcoord] = rpoint
             end 
         end
-        if point.parent then
-            local x, y = HandyNotes:getXY(coord)
-            local mapinfo = C_Map.GetMapInfo(zone)
-            if mapinfo and mapinfo.parentMapID and mapinfo.parentMapID ~= 0 then
-                local pzone = mapinfo.parentMapID
-                local px, py = HBD:TranslateZoneCoordinates(x, y, zone, pzone)
-                if px and py then
-                    if not ns.points[pzone] then
-                        ns.points[pzone] = {}
+        -- and then variations on "also register this elsewhere":
+        if point.translate or point.parent or point.levels then
+            local translateTo = {}
+            if point.translate then
+                for tzone in pairs(point.translate) do
+                    if tzone ~= zone then
+                        translateTo[tzone] = true
                     end
-                    local pcoord = HandyNotes:getCoord(px, py)
-                    ns.points[pzone][pcoord] = point
+                end
+            end
+            if point.parent then
+                local mapinfo = C_Map.GetMapInfo(zone)
+                if mapinfo and mapinfo.parentMapID and mapinfo.parentMapID ~= 0 then
+                    local pzone = mapinfo.parentMapID
+                    translateTo[pzone] = true
+                end
+            end
+            if point.levels then
+                -- Show on other levels of the same zone
+                local groupID = C_Map.GetMapGroupID(zone)
+                if groupID then
+                    local members = C_Map.GetMapGroupMembersInfo(groupID)
+                    if members then
+                        for _, member in pairs(members) do
+                            if member.mapID ~= zone then
+                                translateTo[member.mapID] = true
+                            end
+                        end
+                    end
+                end
+            end
+            local x, y = HandyNotes:getXY(coord)
+            for tzone in pairs(translateTo) do
+                local tx, ty = HBD:TranslateZoneCoordinates(x, y, zone, tzone)
+                if tx and ty then
+                    if not ns.points[tzone] then
+                        ns.points[tzone] = {}
+                    end
+                    local tcoord = HandyNotes:getCoord(tx, ty)
+                    if ns.DEBUG and ns.points[tzone][tcoord] then
+                        print(myname, "translate point collision", zone, coord, "to", tzone, tcoord)
+                    end
+                    ns.points[tzone][tcoord] = point
+                elseif ns.DEBUG then
+                    print(myname, "translation failed", x, y, zone, tzone)
                 end
             end
         end
@@ -273,6 +311,15 @@ ns.playerClassMask = ({
 ---------------------------------------------------------
 -- All the utility code
 
+function ns.IsCosmeticItem(itemInfo)
+    if _G.C_Item and C_Item.IsCosmeticItem then
+        return C_Item.IsCosmeticItem(itemInfo)
+    elseif _G.IsCosmeticItem then
+        return IsCosmeticItem(itemInfo)
+    end
+    return false
+end
+
 function ns.GetCriteria(achievement, criteriaid)
     local retOK, criteriaString, criteriaType, completed, quantity, reqQuantity, charName, flags, assetID, quantityString, criteriaID, eligible = pcall(criteriaid < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID, achievement, criteriaid, true)
     if not retOK then return end
@@ -334,7 +381,15 @@ local function render_string(s, context)
                 return quick_texture_markup(icon) .. " " .. link:gsub("[%[%]]", "")
             end
         elseif variant == "spell" then
-            local name, _, icon = GetSpellInfo(id)
+            local name, icon, _
+            if C_Spell and C_Spell.GetSpellInfo then
+                local info = C_Spell.GetSpellInfo(id)
+                if info then
+                    name, icon = info.name, info.iconID
+                end
+            else
+                name, _, icon = GetSpellInfo(id)
+            end
             if name and icon then
                 return quick_texture_markup(icon) .. " " .. name
             end
@@ -398,6 +453,9 @@ local function render_string(s, context)
             elseif GetFactionInfoByID then
                 name = GetFactionInfoByID(id)
             end
+            if name then
+                return name
+            end
         elseif variant == "garrisontalent" then
             local info = C_Garrison.GetTalentInfo(id)
             if info then
@@ -413,6 +471,12 @@ local function render_string(s, context)
             local info = C_Map.GetMapInfo(id)
             if info and info.name then
                 return info.name
+            end
+        elseif variant == "area" then
+            -- See: https://wago.tools/db2/AreaTable or C_MapExplorationInfo.GetExploredAreaIDsAtPosition
+            local name = C_Map.GetAreaInfo(id)
+            if name then
+                return name
             end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
@@ -499,12 +563,26 @@ local function work_out_label(point)
     if point.label then
         return (render_string(point.label, point))
     end
-    if point.achievement and point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
-        local criteria = ns.GetCriteria(point.achievement, point.criteria)
-        if criteria then
-            return criteria
+    if point.achievement and point.criteria and point.criteria ~= true then
+        if type(point.criteria) == "table" then
+            local t = {}
+            for _, criteriaid in ipairs(point.criteria) do
+                local criteria = ns.GetCriteria(point.achievement, criteriaid)
+                if criteria then
+                    table.insert(t, criteria)
+                end
+            end
+            if #t == #point.criteria then
+                return string.join(', ', unpack(t))
+            end
+            fallback = 'achievement:'..point.achievement..'.'..string.join('+', unpack(point.criteria))
+        else
+            local criteria = ns.GetCriteria(point.achievement, point.criteria)
+            if criteria then
+                return criteria
+            end
+            fallback = 'achievement:'..point.achievement..'.'..point.criteria
         end
-        fallback = 'achievement:'..point.achievement..'.'..point.criteria
     end
     if point.follower then
         local follower = C_Garrison.GetFollowerInfo(point.follower)
@@ -730,12 +808,12 @@ local function tooltip_loot(tooltip, item)
     if ns.db.tooltip_charloot and not IsShiftKeyDown() then
         -- show loot for the current character only
         -- can't pass in a reusable table for the second argument because it changes the no-data case
-        local specTable = GetItemSpecInfo(id)
+        local specTable = C_Item.GetItemSpecInfo(id)
         -- Some cosmetic items seem to be flagged as not dropping for any spec. I
         -- could only confirm this for some cosmetic back items but let's play it
         -- safe and say that any cosmetic item can drop regardless of what the
         -- spec info says...
-        if specTable and #specTable == 0 and not (_G.IsCosmeticItem and IsCosmeticItem(id)) then
+        if specTable and #specTable == 0 and not ns.IsCosmeticItem(id) then
             return true
         end
         -- then catch covenants / classes / etc
@@ -797,6 +875,9 @@ local function tooltip_loot(tooltip, item)
         else
             link = link .. " " .. CreateAtlasMarkup(known and ATLAS_CHECK or ATLAS_CROSS)
         end
+    end
+    if label and ns.IsCosmeticItem(id) then
+        label = TEXT_MODE_A_STRING_VALUE_TYPE:format(label, COSMETIC_COLOR:WrapTextInColorCode(ITEM_COSMETIC))
     end
     tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link,
         NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b,
@@ -1081,7 +1162,15 @@ end
 
 local function createWaypoint(button, uiMapID, coord)
     local x, y = HandyNotes:getXY(coord)
-    if TomTom then
+    if MapPinEnhanced and MapPinEnhanced.AddPin then
+        MapPinEnhanced:AddPin{
+            mapID = uiMapID,
+            x = x,
+            y = y,
+            setTracked = true,
+            title = get_point_info_by_coord(uiMapID, coord),
+        }
+    elseif TomTom then
         TomTom:AddWaypoint(uiMapID, x, y, {
             title = get_point_info_by_coord(uiMapID, coord),
             persistent = nil,

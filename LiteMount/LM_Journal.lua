@@ -104,28 +104,23 @@ function LM.Journal:GetFlags()
     return flags
 end
 
-function LM.Journal:IsMountable()
+function LM.Journal:IsUsable()
     local usable = select(5, C_MountJournal.GetMountInfoByID(self.mountID))
     return usable
 end
 
 -- This flag is set for the journal mounts in MountRegistry as it's not at all
 -- dynamically queryable and overall just sucks.
-function LM.Journal:IsUsable()
-    return self.isUsable
+function LM.Journal:IsFilterUsable()
+    return self.isFilterUsable
 end
 
 function LM.Journal:IsCastable()
-    local usable = select(5, C_MountJournal.GetMountInfoByID(self.mountID))
-    if not usable then
+    if not self:IsUsable() then
         return false
     end
     if not C_Spell.IsSpellUsable(self.spellID) then
         return false
-    end
-    -- Tarecgosa workarounds for macro
-    if self.mountID == 1727 and GetRunningMacro() ~= nil then
-        if LM.Environment:IsCantSummonForm() then return false end
     end
     return LM.Mount.IsCastable(self)
 end
@@ -135,9 +130,9 @@ function LM.Journal:IsFavorite()
     return isFavorite
 end
 
-function LM.Journal:IsFiltered()
-    local isFiltered = select(10, C_MountJournal.GetMountInfoByID(self.mountID))
-    return isFiltered
+function LM.Journal:IsHidden()
+    local isHidden = select(10, C_MountJournal.GetMountInfoByID(self.mountID))
+    return isHidden
 end
 
 function LM.Journal:IsCollected()
@@ -148,41 +143,69 @@ end
 -- This is a bit complicated.
 --
 -- Casting the spell is better than SummonByID in most ways, because it takes
--- advantages of all the auto-cancelling that spellcasts do.
+-- advantage of all the auto-cancelling that spellcasts do.
 --
--- You can't cast Tarecgosa's Visage (id = 1727) by casting the spell, who
--- knows why, so you have to summon by ID. It's not protected BUT it plain
--- doesn't work if you are in a druid form.
+-- Reworked to never use macro so we can do preUse and preCast even with /click.
 --
--- For keybind use we can cancelform and go, but CancelShapeshiftForm() is
--- protected call from a /click so from the macro Tarecgosa can't work.
---
--- I could maybe work around this by having the Execute happen in the PostClick
--- handler and setting the action to "cancelaura" and the form name, but that's
--- a lot of effort for 1 broken mount spell, one class and only via /click.
+-- Could return functioning of preUse/preCast + cancelform + journal mount using
+-- a macro only from the keybind, but it's probably nicer if everything behaves
+-- the same.
+
+local NeedsCancelFormIDs = {
+    [1] = true,     -- Cat
+    [3] = true,     -- Bear
+    [5] = true,     -- Mount
+    [8] = true,     -- Bear (Classic)
+    [36] = true,    -- Treant
+}
 
 function LM.Journal:GetCastAction(context)
-    if GetRunningMacro() ~= nil and self.mountID == 1727 then
-        -- This relies on not getting here if in a druid form
-        return LM.SecureAction:Execute(function () C_MountJournal.SummonByID(self.mountID) end)
+    local forceSummonByID = false
+
+    -- Can't cast Tarecgosa's Visage (id 1727) by casting the spell, who knows why.
+    if self.mountID == 1727 then
+        forceSummonByID = true
     end
 
-    local castActions
-
-    if self.mountID == 1727 then
-        castActions = { format("/run C_MountJournal.SummonByID(%d)", self.mountID) }
-        if LM.Environment:IsCantSummonForm() then
-            table.insert(castActions, 1, "/cancelform")
+    -- Summon Charger and Summon Warhorse are busted on Cata Classic, though
+    -- weirdly Summon (Great) Exarch's Elekk and Summon (Great) Sunwalker Kodo
+    -- work fine.
+    if WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
+        if self.mountID == 41 or self.mountID == 84 then
+            forceSummonByID = true
         end
     end
 
-    if context and context.preCast then
-        castActions = castActions or { "/cast " .. C_Spell.GetSpellName(self.spellID) }
-        table.insert(castActions, 1, "/cast [@player] " .. context.preCast)
+    local summonFunc = function () C_MountJournal.SummonByID(self.mountID) end
+
+    -- C_MountJournal.SummonByID is completely blocked by some druid forms
+    -- which need to be cancelled. Unfortunately this overrides preX but can't
+    -- do anything about it.
+
+    local druidFormID, druidFormSpellInfo = LM.Environment:GetDruidForm()
+    local needsCancelForm = NeedsCancelFormIDs[druidFormID]
+
+    if context and context.preCast and not needsCancelForm then
+        local act = LM.SecureAction:Spell(context.preCast)
+        act:AddExecute(summonFunc)
+        return act
     end
 
-    if castActions and GetRunningMacro() == nil then
-        return LM.SecureAction:Macro(table.concat(castActions, "\n"))
+    if context and context.preUse and not needsCancelForm then
+        local act = LM.SecureAction:Item(context.preUse)
+        act:AddExecute(summonFunc)
+        return act
+    end
+
+    if forceSummonByID then
+        local act
+        if needsCancelForm then
+            act = LM.SecureAction:CancelAura(druidFormSpellInfo.name)
+        else
+            act = LM.SecureAction:NoAction()
+        end
+        act:AddExecute(summonFunc)
+        return act
     else
         return LM.Mount.GetCastAction(self, context)
     end
@@ -191,7 +214,7 @@ end
 function LM.Journal:Dump(prefix)
     prefix = prefix or ""
     LM.Mount.Dump(self, prefix)
-    LM.Print(prefix .. " isUsable: " .. tostring(self.isUsable))
+    LM.Print(prefix .. " isFilterUsable: " .. tostring(self.isFilterUsable))
     LM.Print(prefix .. " mountTypeID: " .. tostring(self.mountTypeID))
     LM.Print(prefix .. " sourceType: " .. tostring(self.sourceType))
 end

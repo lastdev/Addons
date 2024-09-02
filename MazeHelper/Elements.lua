@@ -793,10 +793,10 @@ local NewColorPicker do
             end
 
             self.r, self.g, self.b, self.opacity = self:GetValue();
-            self.opacity = 1 - self.opacity;
             self.opening = true;
 
-            OpenColorPicker(self);
+            ColorPickerFrame:SetupColorPickerAndShow(self);
+
             ColorPickerFrame:SetFrameStrata('TOOLTIP');
             ColorPickerFrame:Raise();
 
@@ -832,23 +832,27 @@ local NewColorPicker do
             r, g, b = GetFloorValue(r), GetFloorValue(g), GetFloorValue(b);
             a       = a and self.hasOpacity and GetFloorValue(a) or 1;
 
+            if self.OnValueChanged then
+                local cR, cG, cB, cA = self.sample:GetVertexColor();
+                cR, cG, cB, cA = GetFloorValue(cR), GetFloorValue(cG), GetFloorValue(cB), GetFloorValue(cA);
+                if cR ~= r or cG ~= g or cB ~= b or cA ~= a then
+                    self:OnValueChanged(r, g, b, a);
+                end
+            end
+
             self.sample:SetVertexColor(r, g, b, a);
             self.background:SetAlpha(a);
-
-            if self.OnValueChanged then
-                self:OnValueChanged(r, g, b, a);
-            end
         end
 
         holder.hasOpacity = hasOpacity;
 
         holder.cancelFunc = function()
-            holder:SetValue(holder.r, holder.g, holder.b, holder.hasOpacity and (1 - holder.opacity) or 1);
+            holder:SetValue(holder.r, holder.g, holder.b, holder.hasOpacity and holder.opacity or 1);
         end
 
         holder.opacityFunc = function()
             local r, g, b = ColorPickerFrame:GetColorRGB();
-            local a = 1 - OpacitySliderFrame:GetValue();
+            local a = ColorPickerFrame:GetColorAlpha();
 
             holder:SetValue(r, g, b, a);
         end
@@ -859,7 +863,7 @@ local NewColorPicker do
             end
 
             local r, g, b = ColorPickerFrame:GetColorRGB();
-            local a = 1 - OpacitySliderFrame:GetValue();
+            local a = ColorPickerFrame:GetColorAlpha();
 
             holder:SetValue(r, g, b, a);
         end

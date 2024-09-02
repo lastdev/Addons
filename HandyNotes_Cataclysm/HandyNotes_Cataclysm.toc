@@ -1,0 +1,13 @@
+## Interface: 110002
+## Title: HandyNotes: Cataclysm
+## Version: 86
+## Notes: Cataclysm Notes
+## OptionalDeps: Ace3
+## RequiredDeps: HandyNotes
+## X-Embeds: Ace3
+## SavedVariables: HandyNotes_CataclysmDB
+## IconTexture: 409545
+
+embeds.xml
+core\core.xml
+plugin.xml

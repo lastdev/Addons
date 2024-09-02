@@ -462,7 +462,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		state.numConfirmed = 0
 		if not selection then
 			if state.selectedAuction then
-				AuctionScan.StopFindThread(true)
+				AuctionScan.StopFindThread(false)
 				manager:ProcessAction("ACTION_SET_SELECTED_AUCTION", nil)
 			end
 			return
@@ -588,6 +588,8 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 			local numToBuy = selection:GetQuantities()
 			manager:ProcessAction("ACTION_BUY_AUCTION_CONFIRMED", numToBuy)
 		end
+	elseif action == "ACTION_COMMODITY_PRICE_UPDATED" then
+		return manager:ProcessAction("ACTION_FIND_SELECTED_AUCTION")
 	elseif action == "ACTION_BUY_AUCTION_CONFIRMED" then
 		local quantity = ...
 		state.lastBuyQuantity = 0
@@ -816,7 +818,6 @@ function AuctionBuyScan.__private:_ShowConfirmation(isBuy)
 	if dialogFrame then
 		self._state.auctionScrollTable:GetBaseElement():ShowDialogFrame(dialogFrame
 			:SetManager(self._manager)
-			:SetAction("OnBuyoutClicked", isBuy and "ACTION_BUY_AUCTION_CONFIRMED" or "ACTION_BID_AUCTION_CONFIRMED")
 			:SetScript("OnHide", private.ConfirmationDialogOnHide)
 		)
 	end
@@ -898,12 +899,15 @@ function private.GetConfirmationDialog(state, isBuy, alertThreshold)
 			:SetSize(600, 272)
 			:AddAnchor("CENTER")
 			:Configure(state.auctionScan, state.selectedAuction, defaultQuantity, state.maxQuantity, marketValueFunc, marketThreshold, alertThreshold)
+			:SetAction("OnBuyoutClicked", "ACTION_BUY_AUCTION_CONFIRMED")
+			:SetAction("OnCommodityPriceUpdated", "ACTION_COMMODITY_PRICE_UPDATED")
 	else
 		local auctionNum = min(state.numConfirmed + 1, state.defaultBuyQuantity)
 		dialogFrame = UIElements.New("AuctionItemBuyConfirmationDialog", "frame")
 			:SetSize(340, 262)
 			:AddAnchor("CENTER")
 			:Configure(isBuy, state.selectedAuction, quantity, auctionNum, state.defaultBuyQuantity, marketValueFunc(state.selectedAuction))
+			:SetAction("OnBuyoutClicked", isBuy and "ACTION_BUY_AUCTION_CONFIRMED" or "ACTION_BID_AUCTION_CONFIRMED")
 	end
 	private.confirmationVisible = true
 	return true, dialogFrame

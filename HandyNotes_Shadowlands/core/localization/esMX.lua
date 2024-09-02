@@ -12,6 +12,7 @@ L['leather'] = 'Cuero'
 L['mail'] = 'Malla'
 L['plate'] = 'Placas'
 L['cosmetic'] = nil
+L['tabard'] = nil
 
 L['1h_mace'] = '1m Maza'
 L['1h_sword'] = '1m Espada'
@@ -44,34 +45,22 @@ L['activation_unknown'] = nil
 L['requirement_not_found'] = nil
 L['multiple_spawns'] = nil
 L['shared_drops'] = nil
+L['zone_drops_label'] = nil
+L['zone_drops_note'] = nil
 
 L['requires'] = nil
 L['ranked_research'] = nil
 
 L['focus'] = nil
 L['retrieving'] = 'Recuperando el enlace del elemento ...'
-L['in_cave'] = 'En una cueva.'
-L['in_small_cave'] = 'En una cueva pequeña.'
-L['in_water_cave'] = 'En una cueva submarina.'
-L['in_waterfall_cave'] = nil
-L['in_water'] = 'Bajo el agua.'
-L['hourly'] = nil
-L['daily'] = nil
-L['weekly'] = 'Semanal'
+
 L['normal'] = 'Normal'
 L['hard'] = 'Difícil'
-L['heirloom'] = nil
-L['item'] = nil
-L['mount'] = 'Montura'
-L['pet'] = 'Mascota'
-L['recipe'] = nil
-L['spell'] = nil
-L['title'] = nil
-L['toy'] = 'Juguete'
-L['currency'] = nil
-L['rep'] = nil
+
 L['completed'] = 'Terminado'
 L['incomplete'] = 'Incompleto'
+L['claimed'] = nil
+L['unclaimed'] = nil
 L['known'] = 'Conocido'
 L['missing'] = 'Desconocido'
 L['unobtainable'] = 'No se puede obtener'
@@ -83,16 +72,44 @@ L['quest'] = nil
 L['quest_repeatable'] = nil
 L['achievement'] = nil
 
+---------------------------------- LOCATION -----------------------------------
+L['in_cave'] = 'En una cueva.'
+L['in_small_cave'] = 'En una cueva pequeña.'
+L['in_water_cave'] = 'En una cueva submarina.'
+L['in_waterfall_cave'] = nil
+L['in_water'] = 'Bajo el agua.'
+L['in_building'] = nil
+
+------------------------------------ TIME -------------------------------------
+L['now'] = 'Ahora'
+L['hourly'] = nil
+L['daily'] = nil
+L['weekly'] = 'Semanal'
+
+L['time_format_12hrs'] = '%I:%M %p - %d/%m heure locale'
+L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
+
+----------------------------------- REWARDS -----------------------------------
+L['heirloom'] = nil
+L['item'] = nil
+L['mount'] = 'Montura'
+L['pet'] = 'Mascota'
+L['recipe'] = nil
+L['spell'] = nil
+L['title'] = nil
+L['toy'] = 'Juguete'
+L['currency'] = nil
+L['rep'] = nil
+
+---------------------------------- FOLLOWERS ----------------------------------
 L['follower_type_follower'] = nil
 L['follower_type_champion'] = nil
 L['follower_type_companion'] = nil
 
+--------------------------------- REPUTATION ----------------------------------
 L['rep_honored'] = nil
 L['rep_revered'] = nil
 L['rep_exalted'] = nil
-
-L['time_format_12hrs'] = '%I:%M %p - %d/%m heure locale'
-L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
 
 -------------------------------------------------------------------------------
 --------------------------------- DRAGONRACES ---------------------------------
@@ -160,6 +177,8 @@ L['options_show_completed_nodes'] = nil
 L['options_show_completed_nodes_desc'] = nil
 L['options_toggle_hide_done_rare'] = 'Ocultar el raro si todo el botín se conoce'
 L['options_toggle_hide_done_rare_desc'] = 'Ocultar todos los raros de botín conocido.'
+L['options_toggle_hide_done_treasure'] = nil
+L['options_toggle_hide_done_treasure_desc'] = nil
 L['options_toggle_hide_minimap'] = 'Ocultar todos los íconos sobre el minimapa'
 L['options_toggle_hide_minimap_desc'] = 'Oculta todos íconos de este addon sobre el minimapa y los mostra solamente sobre el mapa principal.'
 L['options_toggle_maximized_enlarged'] = nil
@@ -173,6 +192,8 @@ L['options_restore_hidden_nodes_desc'] = nil
 
 L['options_rewards_settings'] = nil
 L['options_reward_types'] = nil
+L['options_manuscript_rewards'] = nil
+L['options_manuscript_rewards_desc'] = nil
 L['options_mount_rewards'] = nil
 L['options_mount_rewards_desc'] = nil
 L['options_pet_rewards'] = nil
@@ -185,6 +206,10 @@ L['options_transmog_rewards'] = nil
 L['options_transmog_rewards_desc'] = nil
 L['options_all_transmog_rewards'] = nil
 L['options_all_transmog_rewards_desc'] = nil
+L['options_rep_rewards'] = nil
+L['options_rep_rewards_desc'] = nil
+L['options_claimed_rep_rewards'] = nil
+L['options_claimed_rep_rewards_desc'] = nil
 
 L['options_icons_misc_desc'] = nil
 L['options_icons_misc'] = 'Miscelánea'
@@ -194,6 +219,8 @@ L['options_icons_rares_desc'] = 'Mostrar los lugares de los NPCs raros.'
 L['options_icons_rares'] = 'Raros'
 L['options_icons_treasures_desc'] = nil
 L['options_icons_treasures'] = 'Tesoros'
+L['options_icons_vendors_desc'] = nil
+L['options_icons_vendors'] = nil
 
 ------------------------------------ FOCUS ------------------------------------
 
@@ -214,6 +241,8 @@ L['options_toggle_show_notes'] = 'Mostrar las Notas'
 L['options_toggle_show_notes_desc'] = 'Agregar las notas útiles al tooltip cuando esté disponible'
 L['options_toggle_use_standard_time'] = nil
 L['options_toggle_use_standard_time_desc'] = nil
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

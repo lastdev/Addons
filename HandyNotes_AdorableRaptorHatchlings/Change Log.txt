@@ -1,3 +1,6 @@
+== v1.33 - 21st August 2024
+* TOC update to 11.0.2
+
 == v1.32 - 23rd July 2024
 * TOC update to 11.0.0
 
@@ -31,18 +34,18 @@
 * Translations for Obsidian and Deviate added
 
 == v1.23 - 28th October 2023
-* TOC update for 10.2.0
+* TOC update to 10.2.0
 
 == v1.22 - 24th October 2023
 * Updated to be dual Retail/Wrath
 
 == v1.21 W - 17th October 2023
-* TOC update for 3.4.3
+* TOC update to 3.4.3
 
 == v1.21 - 18th September 2023
 * Deviate Hatchling added - drops from Deviate Guardians and Deviate Ravagers,
   both found in Wailing Caverns in the first large cave inside the instance
-* TOC version update to 10.1.7
+* TOC update to 10.1.7
 
 == v1.20 - 26th August 2023
 * Added Breanni's purchasable Obsidian raptor hatchling.
@@ -113,22 +116,22 @@
 * Found and fixed a bug preventing continent pins from showing when inside the Wetlands cave.
 
 == v1.06 W - 11th September 2022
-* TOC update for 3.4.0
+* TOC update to 3.4.0
 
 == v1.06 - 4th September 2022
-* TOC update for 9.2.7
+* TOC update to 9.2.7
 
 == v1.05 - 20th March 2022
-* TOC update for 9.2.0
+* TOC update to 9.2.0
 
 == v1.04 - 8th November 2021
-* TOC update for 9.1.5
+* TOC update to 9.1.5
 
 == v1.03 - 13th August 2021
 * Switched tooltip labels for Darting/Leaping Hatchlings. Doh!
 
 == v1.02 - 12th July 2021
-* Version number update for Patch 9.1.0
+* TOC update to 9.1.0
 * enGB language support for players on Oceania realms (i.e. spelling)
 * ptBR support
 

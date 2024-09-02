@@ -44,3 +44,7 @@ function LM.GhostWolf:GetFlags()
 
     return flags
 end
+
+function LM.GhostWolf:IsHidden()
+    return not IsPlayerSpell(self.spellID)
+end

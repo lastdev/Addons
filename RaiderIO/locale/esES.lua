@@ -8,10 +8,8 @@ if ns:IsSameLocale("esES") then
 	L.LOCALE_NAME = "esES"
 
 	L["ALLOW_IN_LFD"] = "Permitir en buscador de mazmorras"
---[[Translation missing --]]
---[[ L["ALLOW_IN_LFD_CLASSIC"] = ""--]] 
---[[Translation missing --]]
---[[ L["ALLOW_IN_LFD_CLASSIC_DESC"] = ""--]] 
+L["ALLOW_IN_LFD_CLASSIC"] = "Permitir en Buscador de grupos"
+L["ALLOW_IN_LFD_CLASSIC_DESC"] = "Haga clic con el botón derecho del ratón en los grupos o candidatos del Buscador de grupos para copiar la URL del perfil de Raider.IO."
 L["ALLOW_IN_LFD_DESC"] = "Click derecho en los grupos o aplicantes en el buscador de mazmorras para copiar la URL de su perfil de Raider.IO"
 L["ALLOW_ON_PLAYER_UNITS"] = "Permitir en marcos de jugador"
 L["ALLOW_ON_PLAYER_UNITS_DESC"] = [=[Click derecho en el marco de un jugador para copiar la URL de su perfil de Raider.IO
@@ -25,36 +23,31 @@ L["API_DEPRECATED_WITH"] = [=[|cffFF0000Warning!|r El addon |cffFFFFFF%s|r está
 ]=]
 L["API_INVALID_DATABASE"] = [=[|cffFF0000Warning!|r Se detectó una base de datos Raider.IO no válida en |cffffffff%s|r. Actualice todas las regiones y facciones en el cliente Raider.IO, o reinstale el addon manualmente.
 ]=]
-L["AUTO_COMBATLOG"] = "Habilitar automáticamente el registro de combate en Bandas y Mazmorras"
-L["AUTO_COMBATLOG_DESC"] = "Activa o desactiva el registro de combate automáticamente al entrar y salir de las mazmorras y bandas admitidas."
+L["AUTO_COMBATLOG"] = "Habilitar automáticamente los registros de combate en Bandas y Mazmorras"
+L["AUTO_COMBATLOG_DESC"] = "Activa o desactiva los registros de combate automáticamente al entrar y salir de las mazmorras y bandas admitidas."
 L["BEST_FOR_DUNGEON"] = "Mejor en esta mazmorra"
 L["BEST_RUN"] = "Mejor mazmorra"
 L["BEST_SCORE"] = "Mejor puntuacion M + (% s)"
---[[Translation missing --]]
---[[ L["BINDING_CATEGORY_RAIDERIO"] = ""--]] 
---[[Translation missing --]]
---[[ L["BINDING_HEADER_RAIDERIO_REPLAYUI"] = ""--]] 
---[[Translation missing --]]
---[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_BOSS"] = ""--]] 
---[[Translation missing --]]
---[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_DUNGEON"] = ""--]] 
---[[Translation missing --]]
---[[ L["BINDING_NAME_RAIDERIO_REPLAYUI_TOGGLE"] = ""--]] 
+L["BINDING_CATEGORY_RAIDERIO"] = "Raider.IO"
+L["BINDING_HEADER_RAIDERIO_REPLAYUI"] = "Replay UI"
+L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_BOSS"] = "Ajustar el tiempo a la hora del boss"
+L["BINDING_NAME_RAIDERIO_REPLAYUI_TIMING_DUNGEON"] = "Ajusta el tiempo a la hora de la mazmorra"
+L["BINDING_NAME_RAIDERIO_REPLAYUI_TOGGLE"] = "Alternar Replay UI"
 L["CANCEL"] = "Cancelar"
 L["CHANGES_REQUIRES_UI_RELOAD"] = "Los cambios se han guardado, pero debes recargar la interfaz para que surtan efecto. ¿Quieres recargar ahora?"
-L["CHARACTER_LF_GUILD_MPLUS"] = "Buscando Guild Mythic+"
-L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = "Buscando Guild Mythic+"
-L["CHARACTER_LF_GUILD_PVP"] = "Buscando Guild PVP"
-L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = "Buscando Guild Raid"
-L["CHARACTER_LF_GUILD_RAID_HEROIC"] = "Buscando Guild Raid HC"
-L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = "Buscando Guild Raid Mítico"
-L["CHARACTER_LF_GUILD_RAID_NORMAL"] = "Buscando Guild Raid Normal"
-L["CHARACTER_LF_GUILD_SOCIAL"] = "Buscando Guild Social"
-L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = "Buscando Equipo Mythic+"
-L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = "Buscando %d+ Equipo Mythic+"
+L["CHARACTER_LF_GUILD_MPLUS"] = "Buscando Hermandad Mythic+"
+L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = "Buscando Hermandad para Mythic+"
+L["CHARACTER_LF_GUILD_PVP"] = "Buscando Hermandad PVP"
+L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = "Buscando Hermandad Raid"
+L["CHARACTER_LF_GUILD_RAID_HEROIC"] = "Buscando Hermandad Raid HC"
+L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = "Buscando Hermandad Raid Mítico"
+L["CHARACTER_LF_GUILD_RAID_NORMAL"] = "Buscando Hermandad Raid Normal"
+L["CHARACTER_LF_GUILD_SOCIAL"] = "Buscando Hermandad Social"
+L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = "Buscando Grupo Mythic+"
+L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = "Buscando %d+ Grupo Mythic+"
 L["CHECKBOX_DISPLAY_WEEKLY"] = [=[Mostrar semanal
 ]=]
-L["CHOOSE_HEADLINE_HEADER"] = "Título del tooltip de míticas+"
+L["CHOOSE_HEADLINE_HEADER"] = "Título Míticas+ en barra de información "
 L["CONFIG_WHERE_TO_SHOW_TOOLTIPS"] = "Dónde mostrar el progreso de míticas+ y bandas"
 L["CONFIRM"] = "Confirmar"
 L["COPY_RAIDERIO_PROFILE_URL"] = "Copiar URL de Raider.IO"
@@ -63,36 +56,24 @@ L["COPY_RAIDERIO_URL"] = "Copiar la URL de Raider.IO"
 L["CURRENT_MAINS_SCORE"] = "Puntuación actual de M+ del Main"
 L["CURRENT_SCORE"] = [=[Actual puntuación M+
 ]=]
---[[Translation missing --]]
---[[ L["DB_MODULES"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_MYTHIC_PLUS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_RAIDING"] = ""--]] 
---[[Translation missing --]]
---[[ L["DB_MODULES_HEADER_RECRUITMENT"] = ""--]] 
-L["DISABLE_DEBUG_MODE_RELOAD"] = "Estás desactivando el modo Debug. Al hacer clic en Confirmar se cargará de nuevo su interfaz."
+L["DB_MODULES"] = "Módulos de base de datos"
+L["DB_MODULES_HEADER_MYTHIC_PLUS"] = "Míticas+"
+L["DB_MODULES_HEADER_RAIDING"] = "Incursión"
+L["DB_MODULES_HEADER_RECRUITMENT"] = "Reclutamiento"
+L["DISABLE_DEBUG_MODE_RELOAD"] = "Estás desactivando el modo Debug. Al hacer clic en Confirmar se recargará de nuevo tu interfaz."
 L["DISABLE_RWF_MODE_BUTTON"] = "Desactivar"
 L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Haz clic para desactivar el modo Race World First. Esto hará que su interfaz se vuelva a cargar."
 L["DISABLE_RWF_MODE_RELOAD"] = "Estás desactivando el modo Race World First. Al hacer clic en Confirmar, volverá a cargar su interfaz."
 L["DPS"] = "DPS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AA"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AD"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BRH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_DHT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_AA"] = "Academia Algeth'ar - AA"
+L["DUNGEON_SHORT_NAME_AD"] = "Atal'Dazar - AD"
+L["DUNGEON_SHORT_NAME_AV"] = "Cámara Azur - AV"
+L["DUNGEON_SHORT_NAME_BH"] = "Hondonada Frondacuero - BH"
+L["DUNGEON_SHORT_NAME_BRH"] = "Torreón Grajo Negro - BRH"
+L["DUNGEON_SHORT_NAME_COS"] = "Corte de las Estrellas - COS"
+L["DUNGEON_SHORT_NAME_DHT"] = "Arboleda Corazón Oscuro - DHT"
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EB"] = ""--]] 
+L["DUNGEON_SHORT_NAME_EB"] = "El Vergel Eterno - EB"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_FALL"] = ""--]] 
 --[[Translation missing --]]
@@ -100,20 +81,15 @@ L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
 L["DUNGEON_SHORT_NAME_GD"] = "Terminal Malavía - GD"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Tazavesh: Gambito - GMBT"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salas de la Expiación - HOA"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_HOI"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_HOV"] = ""--]] 
+L["DUNGEON_SHORT_NAME_HOI"] = "Salas de Infusión - HOI"
+L["DUNGEON_SHORT_NAME_HOV"] = "Cámaras del Valor - HOV"
 L["DUNGEON_SHORT_NAME_ID"] = "Puerto de Hierro - ID"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior - LOWR"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nieblas de Tirna Scithe - MISTS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
-L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW"
+L["DUNGEON_SHORT_NAME_NELT"] = "Neltharus - NELT"
+L["DUNGEON_SHORT_NAME_NL"] = "Guarida de Neltharion - NL"
+L["DUNGEON_SHORT_NAME_NO"] = "Ofensiva Nokhud - NO"
+L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW "
 L["DUNGEON_SHORT_NAME_PF"] = "Bajapeste - PF"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_RISE"] = ""--]] 

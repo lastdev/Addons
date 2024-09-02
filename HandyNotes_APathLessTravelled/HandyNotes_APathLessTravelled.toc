@@ -1,5 +1,5 @@
-## Interface: 110000
-## Version: 1.46
+## Interface: 110002
+## Version: 1.49
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\WoW_Token01
 ## Title: A Path Less Travelled

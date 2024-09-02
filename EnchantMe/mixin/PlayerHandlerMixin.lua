@@ -7,9 +7,6 @@ function PlayerHandlerMixin:Init()
     -- configure
     self.unit = 'player'
     self.slots = addon.SlotMixin.GetDefaultSlots()
-    self.slots.HeadSlot.condition = function ()
-        return C_QuestLog.IsQuestFlaggedCompleted(78429) -- 10.2 raid quest to get [Incandescent Essence]
-    end
 
     -- register event listeners
     addon.on('PLAYER_ENTERING_WORLD', addon.bind(self, 'OnLogin'))

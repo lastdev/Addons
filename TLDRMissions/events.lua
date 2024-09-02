@@ -69,7 +69,7 @@ function addon:GetItemInfo(itemID)
     if itemInfoCache[itemID] then
         return unpack(itemInfoCache[itemID])
     end
-    return GetItemInfo(itemID)
+    return C_Item.GetItemInfo(itemID)
 end
 local function preloadItemRewards()
     local missions = C_Garrison.GetAvailableMissions(123)
@@ -79,7 +79,7 @@ local function preloadItemRewards()
             if reward.itemID then
                 local item = Item:CreateFromItemID(reward.itemID)
                 item:ContinueOnItemLoad(function()
-                	itemInfoCache[reward.itemID] = {GetItemInfo(reward.itemID)}
+                	itemInfoCache[reward.itemID] = {C_Item.GetItemInfo(reward.itemID)}
                 end)
             end
         end

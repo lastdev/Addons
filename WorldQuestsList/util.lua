@@ -828,6 +828,10 @@ do
 		if func then
 			func(self, self.arg1, self.arg2, self.arg3, self.arg4)
 		end
+		local parent = ELib.ScrollDropDown.DropDownList[1].parent
+		if parent.additionalClick then
+			parent.additionalClick(self, button)
+		end
 	end
 	function ELib.ScrollDropDown.OnButtonEnter(self)
 		local func = self.hoverFunc

@@ -130,6 +130,9 @@ ns.conditions.Faction = Class{
         elseif GetFactionInfoByID then
             name, _, standingid = GetFactionInfoByID(self.id)
         end
+        if name and standingid then
+            return self.rank <= standingid
+        end
     end,
 }
 
@@ -140,7 +143,7 @@ ns.conditions.MajorFaction = Class{
         local info = C_MajorFactions.GetMajorFactionData(self.id)
         if info then
             if self.rank then
-                return self.rank <= info.renownLevel 
+                return self.rank <= info.renownLevel
             end
             return info.isUnlocked
         end
@@ -181,7 +184,7 @@ ns.conditions.Item = Class{
         end
         return Condition.Label(self)
     end,
-    Matched = function(self) return GetItemCount(self.id, true) >= (self.count or 1) end,
+    Matched = function(self) return C_Item.GetItemCount(self.id, true) >= (self.count or 1) end,
 }
 
 ns.conditions.Toy = Class{
@@ -310,6 +313,30 @@ ns.conditions.CalendarEventStartTexture = Class{
             end
         end
     end
+}
+
+ns.conditions.DayOfWeek = Class{
+    __parent = Condition,
+    type = "weekday",
+    Label = function(self)
+        if self.DAYS[self.id] then
+            return _G["WEEKDAY_" .. self.DAYS[self.id]]
+        end
+        return "day " .. self.id
+    end,
+    Matched = function(self)
+        return tonumber(date('%w')) == self.id
+    end,
+
+    DAYS = {
+        [0] = "SUNDAY",
+        [1] = "MONDAY",
+        [2] = "TUESDAY",
+        [3] = "WEDNESDAY",
+        [4] = "THURSDAY",
+        [5] = "FRIDAY",
+        [6] = "SATURDAY",
+    },
 }
 
 -- Helpers:

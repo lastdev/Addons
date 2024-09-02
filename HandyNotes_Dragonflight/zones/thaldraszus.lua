@@ -27,11 +27,13 @@ local PM = ns.node.ProfessionMasters
 local PrettyNeat = ns.node.PrettyNeat
 local PT = ns.node.ProfessionTreasures
 local RareElite = ns.node.RareElite
+local RichSoil = ns.node.RichSoil
 local Safari = ns.node.Safari
 local Scoutpack = ns.node.Scoutpack
 local SignalTransmitter = ns.node.SignalTransmitter
 local Squirrel = ns.node.Squirrel
 local TuskarrTacklebox = ns.node.TuskarrTacklebox
+local WarSupply = ns.node.WarSupply
 
 local Achievement = ns.reward.Achievement
 local Appearance = ns.reward.Appearance
@@ -58,10 +60,6 @@ local val = Map({id = 2112, settings = false}) -- Valdrakken
 local tpf = Map({id = 2085, settings = false}) -- The Primalist Future
 
 -------------------------------------------------------------------------------
-
--- war supplies 41974893
-
--------------------------------------------------------------------------------
 ------------------------------------ RARES ------------------------------------
 -------------------------------------------------------------------------------
 
@@ -82,7 +80,7 @@ map.nodes[59075874] = RareElite({
     pois = {POI({60755543, 60736211, 59225648, 59266104})} -- Titanic Reactors
 }) -- Ancient Protector
 
-map.nodes[61507360] = Rare({
+map.nodes[61636958] = Rare({
     id = 193220,
     vignette = 5193,
     quest = 73987,
@@ -209,7 +207,7 @@ map.nodes[59128380] = Rare({
     quest = 73881,
     rewards = {
         Achievement({id = 16679, criteria = 56135}),
-        Transmog({item = 200126, slot = L['cloth']}), -- Mantle of Copious Chronologies
+        Transmog({item = 200126, slot = L['cloak']}), -- Mantle of Copious Chronologies
         Transmog({item = 200133, slot = L['fist']}), -- Volcanic Chakram
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
         Transmog({item = 200247, slot = L['1h_mace']}), -- Inextinguishable Gavel
@@ -238,7 +236,7 @@ map.nodes[62298177] = Rare({
     rewards = {
         Achievement({id = 16679, criteria = 56157}),
         Transmog({item = 200185, slot = L['leather']}), -- Grips of the Everflowing Ocean
-        Transmog({item = 200126, slot = L['cloth']}), -- Mantle of Copious Chronologies
+        Transmog({item = 200126, slot = L['cloak']}), -- Mantle of Copious Chronologies
         Transmog({item = 200151, slot = L['1h_sword']}), -- Seamist Blade
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
         Transmog({item = 200435, slot = L['cloth']}), -- Brackish Breeches
@@ -294,7 +292,7 @@ map.nodes[57218420] = Rare({
     rewards = {
         Achievement({id = 16679, criteria = 56142}),
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
-        Transmog({item = 200126, slot = L['cloth']}), -- Mantle of Copious Chronologies
+        Transmog({item = 200126, slot = L['cloak']}), -- Mantle of Copious Chronologies
         Toy({item = 200148}), -- A Collection Of Me
         DC.CliffsideWylderdrake.NarrowStripesPattern, DC.HighlandDrake.StagHorns
     }
@@ -392,7 +390,7 @@ map.nodes[37607780] = Rare({
     rewards = {
         Achievement({id = 16679, criteria = 56150}),
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
-        Transmog({item = 200126, slot = L['cloth']}), -- Mantle of Copious Chronologies
+        Transmog({item = 200126, slot = L['cloak']}), -- Mantle of Copious Chronologies
         Transmog({item = 200306, slot = L['cloak']}), -- Tempest Shawl
         Transmog({item = 200314, slot = L['cloth']}), -- Skyspeaker's Envelope
         Toy({item = 200148}), -- A Collection Of Me
@@ -597,7 +595,7 @@ tpf.nodes[53536521] = Rare({
         Transmog({item = 200187, slot = L['staff']}), -- Rod of Glacial Force
         Transmog({item = 200245, slot = L['2h_mace']}), -- Leviathan Lure
         Transmog({item = 200135, slot = L['2h_sword']}), -- Corroded Greatsword
-        Transmog({item = 201447, slot = L['cosmetic']}), -- Primal Revenant's Breezeblade
+        Transmog({item = 201447, slot = L['1h_sword']}), -- Primal Revenant's Breezeblade
         DC.HighlandDrake.FinnedBack, DC.CliffsideWylderdrake.FinnedCheek
     }
 }) -- Avalantus
@@ -805,21 +803,21 @@ local TitanChest = Class('TitanChest', ns.node.Node, {
     group = ns.groups.TITAN_CHEST,
     rewards = {
         Item({item = 191784}), -- Dragon Shard of Knowledge
-        Transmog({item = 201048, slot = L['cosmetic']}), -- Tyrhold Epaulets
-        Transmog({item = 201049, slot = L['cosmetic']}), -- Tyrhold Robe
-        Transmog({item = 201050, slot = L['cosmetic']}), -- Tyrhold Leggings
-        Transmog({item = 201051, slot = L['cosmetic']}), -- Tyrhold Slippers
-        Transmog({item = 201052, slot = L['cosmetic']}), -- Tyrhold Visage
-        Transmog({item = 201053, slot = L['cosmetic']}), -- Tyrhold Gloves
-        Transmog({item = 201054, slot = L['cosmetic']}), -- Tyrhold Drape
-        Transmog({item = 201056, slot = L['cosmetic']}), -- Tyrhold Sash
-        Transmog({item = 201455, slot = L['cosmetic']}), -- Tyrhold Broadsword
-        Transmog({item = 201456, slot = L['cosmetic']}), -- Tyrhold Carbine
-        Transmog({item = 201457, slot = L['cosmetic']}), -- Tyrhold Relic
-        Transmog({item = 201458, slot = L['cosmetic']}), -- Aegis of Tyrhold
-        Transmog({item = 201459, slot = L['cosmetic']}), -- Tyrhold Shortsword
-        Transmog({item = 201460, slot = L['cosmetic']}), -- Gavel of Tyrhold
-        Transmog({item = 201461, slot = L['cosmetic']}), -- Tyrhold Pinnacle
+        Transmog({item = 201048, slot = L['cloth']}), -- Tyrhold Epaulets
+        Transmog({item = 201049, slot = L['cloth']}), -- Tyrhold Robe
+        Transmog({item = 201050, slot = L['cloth']}), -- Tyrhold Leggings
+        Transmog({item = 201051, slot = L['cloth']}), -- Tyrhold Slippers
+        Transmog({item = 201052, slot = L['cloth']}), -- Tyrhold Visage
+        Transmog({item = 201053, slot = L['cloth']}), -- Tyrhold Gloves
+        Transmog({item = 201054, slot = L['cloak']}), -- Tyrhold Drape
+        Transmog({item = 201056, slot = L['cloth']}), -- Tyrhold Sash
+        Transmog({item = 201455, slot = L['2h_sword']}), -- Tyrhold Broadsword
+        Transmog({item = 201456, slot = L['gun']}), -- Tyrhold Carbine
+        Transmog({item = 201457, slot = L['offhand']}), -- Tyrhold Relic
+        Transmog({item = 201458, slot = L['shield']}), -- Aegis of Tyrhold
+        Transmog({item = 201459, slot = L['1h_sword']}), -- Tyrhold Shortsword
+        Transmog({item = 201460, slot = L['2h_mace']}), -- Gavel of Tyrhold
+        Transmog({item = 201461, slot = L['staff']}), -- Tyrhold Pinnacle
         Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
         Item({item = 199066, quest = 70535}), -- Letter of Caution
         Item({item = 199068, quest = 70537}), -- Time-Lost Memo
@@ -864,6 +862,21 @@ map.nodes[61906180] = TitanChest()
 map.nodes[54006140] = ns.node.FrostboundChest()
 map.nodes[55206290] = ns.node.FrostboundChest()
 map.nodes[56206450] = ns.node.FrostboundChest()
+
+-------------------------------------------------------------------------------
+------------------------------ WAR SUPPLY CHESTS ------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[37337483] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[41974893] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[43806980] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[49405770] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[50105870] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[53903600] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[57385384] = WarSupply({fgroup = 'supply_thaldraszus'}) -- bug: dispear on openning
+map.nodes[59606171] = WarSupply({fgroup = 'supply_thaldraszus'}) -- bug: dispear on openning
+map.nodes[61903070] = WarSupply({fgroup = 'supply_thaldraszus'})
+map.nodes[64605970] = WarSupply({fgroup = 'supply_thaldraszus'})
 
 -------------------------------------------------------------------------------
 --------------------------------- BATTLE PETS ---------------------------------
@@ -1627,11 +1640,82 @@ val.nodes[57048156] = AncientStone({
     rewards = {Achievement({id = 17564, criteria = 58825})}
 }) -- Valdrakken
 
+-------------------------------------------------------------------------------
+------------------------------ MISC ACHIEVEMENTS ------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[52198159] = Collectible({
+    icon = 4630470,
+    label = '{achievement:19507}',
+    note = L['fringe_benefits_note'],
+    group = ns.groups.FRINGE_BENEFITS,
+    rewards = {
+        Achievement({
+            id = 19507,
+            criteria = {
+                64642, 64643, 64644, 64645, 64646, 64647, 64648, 64649, 64650,
+                64651, 64654, 60757, 64657, 64658, 64659, 64660
+            }
+        })
+    }
+}) -- Fringe Benefits
+
+val.nodes[61261096] = Collectible({
+    icon = 629060,
+    label = '{achievement:16556}',
+    note = L['ruby_feast_gourmand'] .. '\n\n' .. L['rumiastrasza_note'],
+    group = ns.groups.RUBY_FEAST_GOURMAND,
+    rewards = {
+        Achievement({
+            id = 16556,
+            criteria = {
+                55714, 55715, 55716, 55717, 55718, 55719, 55720, 55721, 55722,
+                55723, 55724, 55725, 55726, 55728, 55729, 55730, 55731, 55732,
+                55733, 55734
+            }
+        })
+    }
+}) -- Great Gourmand of the Ruby Feast
+
+val.nodes[13005740] = Collectible({
+    icon = 4719556,
+    label = '{achievement:18384}',
+    note = L['little_scales_daycare_note'],
+    group = ns.groups.WHELP,
+    requires = {
+        ns.requirement.Quest(72664), -- Eggs in Abundance
+        ns.requirement.Quest(72665), -- Whelptender's Wisdom
+        ns.requirement.Quest(72666) -- Daycare Director Agapanthus
+    },
+    rewards = {
+        Achievement({
+            id = 18384,
+            criteria = {
+                60132, 60133, 60134, 60135, 60136, 60137, 60138, 60139, 60140,
+                60141, 60142, 60143, 60144, 60145, 60146, 60147
+            }
+        }), -- Whelp, There It Is
+        Pet({item = 205165, id = 3555}) -- Axel
+    }
+}) -- Whelp, There It Is
+
 ------------------------------------------------------------------------------
 --------------------------------- DREAMSURGE ---------------------------------
 ------------------------------------------------------------------------------
 
 map.nodes[51134337] = ns.node.Celestine()
+map.nodes[61792619] = ns.node.RenewedMagmammoth()
+
+-------------------------------------------------------------------------------
+---------------------------------- RICH SOIL ----------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[71007200] = RichSoil()
+map.nodes[49366061] = RichSoil()
+map.nodes[32406920] = RichSoil()
+map.nodes[46235962] = RichSoil()
+map.nodes[63238021] = RichSoil()
+map.nodes[34687230] = RichSoil()
 
 -------------------------------------------------------------------------------
 ----------------------------------- VENDORS -----------------------------------
@@ -1667,7 +1751,7 @@ local Brendormi = Class('Brendormi', Vendor, {
 }) -- Brendormi <Field Primal Researcher>
 
 function Brendormi.getters:note()
-    local item = GetItemCount(202039, true) -- Essence of the Storm
+    local item = C_Item.GetItemCount(202039, true) -- Essence of the Storm
     local currency = C_CurrencyInfo.GetCurrencyInfo(2118).quantity -- Elemental Overflow
     local note = L['brendormi_note_start'] .. '\n\n'
     note = note .. format(L['brendormi_note_item'], item) .. '\n'
@@ -1683,16 +1767,16 @@ map.nodes[61373139] = Vendor({
     rewards = {
         Mount({item = 192796, id = 1638, count = 20000}), -- Explorer's Stonehide Packbeast
         Spacer(), --
-        Transmog({item = 208456, slot = L['cosmetic'], count = 15000}), -- Archivist's Elegant Bag
-        Transmog({item = 212794, slot = L['cosmetic'], count = 15000}), -- Historian's Hefty Habersack
-        Transmog({item = 208452, slot = L['cosmetic'], count = 15000}), -- Historian's Dapper Cap
-        Transmog({item = 208547, slot = L['cosmetic'], count = 12000}), -- Archivist's Reading Spectacles
-        Transmog({item = 208546, slot = L['cosmetic'], count = 12000}), -- Archivist's Rose-Tinted Glasses
-        Transmog({item = 212637, slot = L['cosmetic'], count = 7000}), -- Historian's Striders
-        Transmog({item = 212636, slot = L['cosmetic'], count = 7000}), -- Historian's Trousers
-        Transmog({item = 212635, slot = L['cosmetic'], count = 5000}), -- Historian's Utility Belt
-        Transmog({item = 212634, slot = L['cosmetic'], count = 5000}), -- Historian's Fingerless Gloves
-        Transmog({item = 212633, slot = L['cosmetic'], count = 5000}), -- Historian's Fitted Vest
+        Transmog({item = 208456, slot = L['cloak'], count = 15000}), -- Archivist's Elegant Bag
+        Transmog({item = 212794, slot = L['cloak'], count = 15000}), -- Historian's Hefty Habersack
+        Transmog({item = 208452, count = 15000}), -- Historian's Dapper Cap
+        Transmog({item = 208547, count = 12000}), -- Archivist's Reading Spectacles
+        Transmog({item = 208546, count = 12000}), -- Archivist's Rose-Tinted Glasses
+        Transmog({item = 212637, count = 7000}), -- Historian's Striders
+        Transmog({item = 212636, count = 7000}), -- Historian's Trousers
+        Transmog({item = 212635, count = 5000}), -- Historian's Utility Belt
+        Transmog({item = 212634, count = 5000}), -- Historian's Fingerless Gloves
+        Transmog({item = 212633, count = 5000}), -- Historian's Fitted Vest
         Spacer(), --
         Transmog({item = 208458, slot = L['offhand'], count = 10000}), -- Archivist's Extravagant Lantern
         Transmog({item = 208450, slot = L['offhand'], count = 10000}), -- Coiled Archivist's Rope
@@ -1715,27 +1799,61 @@ map.nodes[61373139] = Vendor({
 }) -- Provisioner Aristta
 
 -------------------------------------------------------------------------------
--------------------------------- MISCELLANEOUS --------------------------------
+----------------------- HEARTHSTONE'S 10TH ANNIVERSARY ------------------------
 -------------------------------------------------------------------------------
 
----------------- ACHIEVEMENT: GREAT GOURMAND OF THE RUBY FEAST ----------------
-
-val.nodes[61261096] = Collectible({
-    icon = 629060,
-    parent = map.id,
-    label = '{achievement:16556}',
-    note = L['ruby_feast_gourmand'] .. '\n\n' .. L['rumiastrasza_note'],
+local HearthstoneEvent = Class('HearthstoneEvent', Collectible, {
+    label = L['ominous_portal_label'],
+    icon = 1061040,
+    note = L['ominous_portal_note'],
     rewards = {
         Achievement({
-            id = 16556,
+            id = 19724,
             criteria = {
-                55714, 55715, 55716, 55717, 55718, 55719, 55720, 55721, 55722,
-                55723, 55724, 55725, 55726, 55728, 55729, 55730, 55731, 55732,
-                55733, 55734
+                65343, -- Abomination
+                66032, -- Alley Cat
+                65340, -- Ancient of Lore
+                65335, -- Arcane Explosion
+                65341, -- Arcane Golem
+                65334, -- Arcane Shot
+                65338, -- Baron Geddon
+                65337, -- Blessing of Kings
+                65329, -- Cairne Bloodhoof
+                65330, -- Charged Devilsaur
+                65345, -- Chillwind Yeti
+                65336, -- Forbidden Words
+                65344, -- Grove Tender
+                65370, -- Hand of Protection
+                65339, -- Hogger
+                65332, -- Jive, Insect!
+                65333, -- Preparation
+                65328, -- Pyroblast
+                65342, -- Righteousness
+                65347, -- Scarlet Crusader
+                65346 -- Shadow Word: Ruin
             }
-        })
-    }
-}) -- Great Gourmand of the Ruby Feast
+        }), -- Hearthstone Card Collection
+        Mount({item = 212522, id = 1959}), -- Compass Rose
+        Pet({item = 212606, id = 4406}), -- Sarge
+        Toy({item = 212337}), -- Stone of the Hearth
+        Transmog({item = 212607}), -- Reno's Lucky Hat
+        Transmog({item = 212644}), -- Taverner's Belt
+        Transmog({item = 212336, slot = L['tabard']}), -- The Tavern's Tabard
+        Item({item = 212335, note = L['bag']}) -- Collectors Carryall
+    },
+    IsEnabled = function() return ns.IsCalendarEventActive(1462) end
+}) -- Heathstone Event
+
+local stormwind = ns.maps[84] or Map({id = 84, settings = false})
+local durotar = ns.maps[1] or Map({id = 1, settings = false})
+
+val.nodes[62556761] = HearthstoneEvent({parent = map.id})
+stormwind.nodes[34002100] = HearthstoneEvent()
+durotar.nodes[53101620] = HearthstoneEvent()
+
+-------------------------------------------------------------------------------
+-------------------------------- MISCELLANEOUS --------------------------------
+-------------------------------------------------------------------------------
 
 val.nodes[43757494] = Collectible({
     icon = 4048815,
@@ -1755,28 +1873,6 @@ map.nodes[40474531] = Collectible({
     note = L['living_mud_mask_note'],
     rewards = {Pet({item = 200872, id = 3405})}
 }) -- Pet: Living Mud Mask
-
-val.nodes[13005740] = Collectible({ -- TODO
-    label = '{achievement:18384}',
-    icon = 4719556,
-    note = L['little_scales_daycare_note'],
-    -- https://www.wowhead.com/ptr-2/achievement=18384/whelp-there-it-is#comments:id=5611653
-    requires = {
-        ns.requirement.Quest(72664), -- Eggs in Abundance
-        ns.requirement.Quest(72665), -- Whelptender's Wisdom
-        ns.requirement.Quest(72666) -- Daycare Director Agapanthus
-    },
-    rewards = {
-        Achievement({
-            id = 18384,
-            criteria = {
-                60132, 60133, 60134, 60135, 60136, 60137, 60138, 60139, 60140,
-                60141, 60142, 60143, 60144, 60145, 60146, 60147
-            }
-        }), -- Whelp, There It Is
-        Pet({item = 205165, id = 3555}) -- Axel
-    }
-}) -- Pet: "Axel" from Achievement "Whelp, There It Is"
 
 ---------------------------- PET: MOTE OF NASZ'URO ----------------------------
 
@@ -1805,13 +1901,39 @@ map.nodes[62618507] = ns.node.MoteOfNaszuro({
     note = L['naszuro_temporal_conflux']
 }) -- Temporal Conflux
 
+---------------------- TOY: INVESTI-GATOR'S POCKETWATCH -----------------------
+
+map.nodes[54648589] = Collectible({
+    id = 201664,
+    icon = 134376,
+    note = format('%s\n\n%s\n\n%s', L['investigators_pocketwatch_note_a'],
+        L['investigators_pocketwatch_note_b'],
+        L['investigators_pocketwatch_note_c']),
+    rewards = {
+        Toy({item = 206993}) -- Investi-gator's Pocketwatch
+    },
+    pois = {
+        POI({52158140, color = 'Green'}), -- Melly Teletone
+        POI({52138151, color = 'Blue'}) -- Bartender Bob
+    }
+}) -- Temporal Investi-gator
+
 -------------------------------------------------------------------------------
 
-map.nodes[59735374] = ns.node.Node({
+local Catalyst = Class('Catalyst', ns.node.Node, {
     label = L['revival_catalyst_label'],
-    icon = 1394953, -- use new season icon
-    note = L['revival_catalyst_note']
+    icon = 348536 -- Season 4
 }) -- Revival Catalyst
+
+function Catalyst.getters:note()
+    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(2912) -- Season 4
+    local q = currencyInfo.quantity
+    local m = currencyInfo.maxQuantity
+    local note = format(L['revival_catalyst_note'], q, m)
+    return note
+end
+
+map.nodes[59735374] = Catalyst()
 
 ----------------------------- MISCELLANEOUS NPCs ------------------------------
 
@@ -1887,24 +2009,22 @@ val.nodes[50505290] = Collectible({
 
 ----------------------------- PROVISIONER ARISTTA -----------------------------
 
-map.nodes[61373139] = Collectible({
-    label = '{npc:209192}',
-    icon = 'peg_bl',
-    scale = 2.0,
+map.nodes[61373139] = Vendor({
+    id = 209192,
     note = L['provisioner_aristta_note'],
     rewards = {
         Mount({item = 192796, id = 1638, count = 20000}), -- Explorer's Stonehide Packbeast
         Spacer(), --
-        Transmog({item = 208456, slot = L['cosmetic'], count = 15000}), -- Archivist's Elegant Bag
-        Transmog({item = 212794, slot = L['cosmetic'], count = 15000}), -- Historian's Hefty Habersack
-        Transmog({item = 208452, slot = L['cosmetic'], count = 15000}), -- Historian's Dapper Cap
-        Transmog({item = 208547, slot = L['cosmetic'], count = 12000}), -- Archivist's Reading Spectacles
-        Transmog({item = 208546, slot = L['cosmetic'], count = 12000}), -- Archivist's Rose-Tinted Glasses
-        Transmog({item = 212637, slot = L['cosmetic'], count = 7000}), -- Historian's Striders
-        Transmog({item = 212636, slot = L['cosmetic'], count = 7000}), -- Historian's Trousers
-        Transmog({item = 212635, slot = L['cosmetic'], count = 5000}), -- Historian's Utility Belt
-        Transmog({item = 212634, slot = L['cosmetic'], count = 5000}), -- Historian's Fingerless Gloves
-        Transmog({item = 212633, slot = L['cosmetic'], count = 5000}), -- Historian's Fitted Vest
+        Transmog({item = 208456, slot = L['cloak'], count = 15000}), -- Archivist's Elegant Bag
+        Transmog({item = 212794, slot = L['cloak'], count = 15000}), -- Historian's Hefty Habersack
+        Transmog({item = 208452, count = 15000}), -- Historian's Dapper Cap
+        Transmog({item = 208547, count = 12000}), -- Archivist's Reading Spectacles
+        Transmog({item = 208546, count = 12000}), -- Archivist's Rose-Tinted Glasses
+        Transmog({item = 212637, count = 7000}), -- Historian's Striders
+        Transmog({item = 212636, count = 7000}), -- Historian's Trousers
+        Transmog({item = 212635, count = 5000}), -- Historian's Utility Belt
+        Transmog({item = 212634, count = 5000}), -- Historian's Fingerless Gloves
+        Transmog({item = 212633, count = 5000}), -- Historian's Fitted Vest
         Spacer(), --
         Transmog({item = 208458, slot = L['offhand'], count = 10000}), -- Archivist's Extravagant Lantern
         Transmog({item = 208450, slot = L['offhand'], count = 10000}), -- Coiled Archivist's Rope
@@ -1928,59 +2048,22 @@ map.nodes[61373139] = Collectible({
 
 --------------------------------- Ms. Xiulan ----------------------------------
 
-local Xiulan = Class('Xiulan', Collectible, {
-    label = '{npc:189644}',
-    icon = 'peg_bl',
-    scale = 2.0,
+local Xiulan = Class('Xiulan', Vendor, {
+    id = 189644,
     parent = map.id,
     note = L['end_of_august'],
     rewards = {
         Mount({item = 211084, id = 1944, count = 1200000}), -- Gold Resonating Crystal
         Spacer(), --
         Appearance({item = 211300, count = 200000}), -- Arsenal: Whispering Temple Blades
-        Transmog({
-            item = 211099,
-            type = L['shield'],
-            note = L['cosmetic'],
-            count = 100000
-        }), -- Gilded Scarab Bulwark
-        Transmog({
-            item = 211096,
-            type = L['gun'],
-            note = L['cosmetic'],
-            count = 100000
-        }), -- Gold-Plated Witchhunter's Carbine
-        Transmog({
-            item = 211294,
-            type = L['polearm'],
-            note = L['cosmetic'],
-            count = 100000
-        }), -- Marauder King's Body Carver
-        Transmog({
-            item = 211097,
-            type = L['2h_axe'],
-            note = L['cosmetic'],
-            count = 90000
-        }), -- Gilded Crown Splitter
-        Transmog({
-            item = 211159,
-            type = L['shield'],
-            note = L['cosmetic'],
-            count = 80000
-        }), -- Royal Witch Doctor's Guard
-        Transmog({
-            item = 211145,
-            type = L['cloak'],
-            note = L['cosmetic'],
-            count = 80000
-        }), -- Royal Witch Doctor's Trophies
-        Transmog({
-            item = 211295,
-            type = L['plate'],
-            note = L['cosmetic'],
-            count = 75000
-        }), -- Wrathful Crusader's Helm
-        Transmog({item = 211259, note = L['cosmetic'], count = 75000}) -- Regal Gryphon Rider's Headgear
+        Transmog({item = 211099, slot = L['shield'], count = 100000}), -- Gilded Scarab Bulwark
+        Transmog({item = 211096, slot = L['gun'], count = 100000}), -- Gold-Plated Witchhunter's Carbine
+        Transmog({item = 211294, slot = L['polearm'], count = 100000}), -- Marauder King's Body Carver
+        Transmog({item = 211097, slot = L['2h_axe'], count = 90000}), -- Gilded Crown Splitter
+        Transmog({item = 211159, slot = L['shield'], count = 80000}), -- Royal Witch Doctor's Guard
+        Transmog({item = 211145, slot = L['cloak'], count = 80000}), -- Royal Witch Doctor's Trophies
+        Transmog({item = 211295, slot = L['plate'], count = 75000}), -- Wrathful Crusader's Helm
+        Transmog({item = 211259, count = 75000}) -- Regal Gryphon Rider's Headgear
     }
 }) -- Ms. Xiulan <Madam Goya's Assistant>
 

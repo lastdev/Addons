@@ -2,6 +2,7 @@
 -- enUS and enGB Localization file
 
 local L = LibStub("AceLocale-3.0"):NewLocale("LittleSnitch", "enUS", true)
+if not L then return end
 
 L["Enable LittleSnitch"] = "Enable LittleSnitch"
 L["Enable or disable LittleSnitch"] = "Enable or disable LittleSnitch"

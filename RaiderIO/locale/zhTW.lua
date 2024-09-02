@@ -225,28 +225,17 @@ L["RAID_BOSS_AVOTI_5"] = "『超凡者』達西亞"
 L["RAID_BOSS_AVOTI_6"] = "庫洛格‧恐怖圖騰"
 L["RAID_BOSS_AVOTI_7"] = "幼龍守衛者戴恩娜"
 L["RAID_BOSS_AVOTI_8"] = "『噬風者』菈薩葛絲"
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_6"] = ""--]] 
+L["RAID_BOSS_BOT_1"] = "哈福斯．破龍者"
+L["RAID_BOSS_BOT_2"] = "瑟拉里恩和瓦莉歐娜"
+L["RAID_BOSS_BOT_3"] = "卓越者議會"
+L["RAID_BOSS_BOT_4"] = "丘加利"
+L["RAID_BOSS_BOT_5"] = "賽絲特拉"
+L["RAID_BOSS_BWD_1"] = "全能魔像防禦系統"
+L["RAID_BOSS_BWD_2"] = "熔喉"
+L["RAID_BOSS_BWD_3"] = "亞特拉米德"
+L["RAID_BOSS_BWD_4"] = "奇瑪隆"
+L["RAID_BOSS_BWD_5"] = "瑪洛里亞克"
+L["RAID_BOSS_BWD_6"] = "奈法利安的末路"
 L["RAID_BOSS_CN_1"] = "石嘯翼蝠"
 L["RAID_BOSS_CN_10"] = "戴納瑟斯王"
 L["RAID_BOSS_CN_2"] = "獵人亞提默"

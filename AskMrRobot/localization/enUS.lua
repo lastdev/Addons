@@ -79,6 +79,7 @@ L.StatsShort = {
     ["Parry"] = "Parry",
     ["MovementSpeed"] = "Speed",
     ["Avoidance"] = "Avoid",
+    ["Leech"] = "Leech",
     ["Stamina"] = "Stam",
     ["Armor"] = "Armor",
     ["AttackPower"] = "AP",
@@ -98,7 +99,8 @@ L.InstanceNames = {
     [2481] = "Sepulcher of the First Ones",
     [2522] = "Vault of the Incarnates",
     [2569] = "Aberrus, the Shadowed Crucible",
-    [2549] = "Amirdrassil, the Dream's Hope"
+    [2549] = "Amirdrassil, the Dream's Hope",
+    [2657] = "Nerub-ar Palace"
 }
 
 L.DifficultyNames = {

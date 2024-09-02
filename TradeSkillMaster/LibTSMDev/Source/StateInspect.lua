@@ -6,7 +6,7 @@
 
 local LibTSMDev = select(2, ...).LibTSMDev
 local StateInspect = LibTSMDev:Init("StateInspect")
-local SlashCommands = LibTSMDev:Include("Service.SlashCommands")
+local SlashCommands = LibTSMDev:From("LibTSMApp"):Include("Service.SlashCommands")
 local State = LibTSMDev:From("LibTSMUtil"):Include("Reactive.Type.State")
 
 

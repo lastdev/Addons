@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                        v1.08 - 20th May 2024
+                                      v1.11 - 26th August 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -30,13 +30,11 @@ local defaults = { profile = { iconScale = 2.5, iconAlpha = 0.8, showCoords = tr
 local pluginHandler = {}
 
 -- upvalues
+local format, next, select = _G.format, _G.next, _G.select
 local GameTooltip = _G.GameTooltip
+local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex
 local LibStub = _G.LibStub
 local UIParent = _G.UIParent
-local format = _G.format
-local next = _G.next
-local select = _G.select
-local UnitAura = UnitAura
 
 local HandyNotes = _G.HandyNotes
 
@@ -515,11 +513,16 @@ do
 					-- Memory says that patches ago when doing this I got abends when jumping
 					-- in and out of instances and trying to show a map using that code
 					for i = 1, 40 do
-						local spellID = select( 10, UnitAura( "player", i, "HELPFUL" ) )
-						if not spellID then break end
-						if ( spellID == 317785 ) then -- Zidormi buff to see the Cataclysm / Old Uldum
-							found = true
-							break
+						local auraData = GetAuraDataByIndex( "player", i )
+						if auraData == nil then break end
+						for k,v in pairs( auraData ) do
+							if k == "spellId" then
+								if ( v == 317785 ) then 
+									-- Zidormi buff to see the Cataclysm / Old Uldum
+									found = true
+									break
+								end
+							end
 						end
 					end
 					if ( found == false ) then
@@ -668,7 +671,7 @@ local function Slash( options )
 				..ns.colour.highlight .."/sa" ..ns.colour.plaintext .." Show the HandyNotes options panel\n"
 				..ns.colour.highlight .."/sa ?" ..ns.colour.plaintext .." Show this menu\n"
 				..ns.colour.highlight .."/sa u" ..ns.colour.plaintext .." Show the Uldum map" )
-		if ( version > 100000 ) then
+		if ( version >= 100000 ) then
 			print( ns.colour.prefix .."Tip:" ..ns.colour.highlight
 				.." Try the Minimap AddOn Menu (below the Calendar)\nLeft Mouse:" ..ns.colour.plaintext
 				.." MCF options panel; " ..ns.colour.highlight .."Right Mouse:" ..ns.colour.plaintext

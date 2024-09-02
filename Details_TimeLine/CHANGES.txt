@@ -1,10 +1,10 @@
-tag 14b55fe4ec72c8df0a674806816fd6883bdcd660 v11.0.0.123
+tag cfb8679575badecd18d0e9c3c06260a92e8b6af1 v11.0.2.124
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Wed Jul 24 11:48:03 2024 -0300
+Date:	Sat Aug 24 14:38:54 2024 -0300
 
-commit 850a1146054a78c971932df54b572b6e26ca3419
+commit e237cba0503cba94c2c971b7f467b983a33c6cf8
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Jul 24 11:47:06 2024 -0300
+Date:   Sat Aug 24 14:38:35 2024 -0300
 
-    ToC Update
+    GetSpellInfo Fix
 

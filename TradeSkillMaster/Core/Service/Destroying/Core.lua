@@ -382,7 +382,7 @@ function private.SpellCastEventHandler(event, unit, _, spellId)
 	if unit ~= "player" then
 		return
 	end
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) and event == "UNIT_SPELLCAST_START" then
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) and private.destroySpellId and private.destroySpellId == spellId and event ~= "UNIT_SPELLCAST_START" and event ~= "UNIT_SPELLCAST_SUCCEEDED" then
 		private.destroySpellId = nil
 		private.itemSpellId = nil
 	end

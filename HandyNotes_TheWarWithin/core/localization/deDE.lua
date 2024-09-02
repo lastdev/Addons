@@ -12,6 +12,7 @@ L['leather'] = 'Leder'
 L['mail'] = 'Kette'
 L['plate'] = 'Platte'
 L['cosmetic'] = 'Kosmetisch'
+L['tabard'] = 'Wappenrock'
 
 L['1h_mace'] = 'Einhandstreitkolben'
 L['1h_sword'] = 'Einhandschwert'
@@ -58,6 +59,8 @@ L['hard'] = 'Schwer'
 
 L['completed'] = 'Abgeschlossen'
 L['incomplete'] = 'Unvollständig'
+L['claimed'] = 'Erhalten'
+L['unclaimed'] = 'Fehlt'
 L['known'] = 'Bekannt'
 L['missing'] = 'Fehlt'
 L['unobtainable'] = 'Nicht erhältlich'
@@ -78,6 +81,7 @@ L['in_water'] = 'Im Wasser.'
 L['in_building'] = 'Im Gebäude.'
 
 ------------------------------------ TIME -------------------------------------
+L['now'] = 'Jetzt'
 L['hourly'] = 'Stündlich'
 L['daily'] = 'Täglich'
 L['weekly'] = 'Wöchentlich'
@@ -173,6 +177,8 @@ L['options_show_completed_nodes'] = 'Zeige bereits abgeschlossenes'
 L['options_show_completed_nodes_desc'] = 'Zeigt alle Punkte an, auch wenn diese heute bereits geplündert oder abgeschlossen wurden.'
 L['options_toggle_hide_done_rare'] = 'Blende seltene Gegner aus, deren Belohnungen bekannt sind.'
 L['options_toggle_hide_done_rare_desc'] = 'Blendet alle seltenen Gegner deren Beute bereits bekannt ist aus.'
+L['options_toggle_hide_done_treasure'] = nil
+L['options_toggle_hide_done_treasure_desc'] = nil
 L['options_toggle_hide_minimap'] = 'Blende alle Symbole auf der Minikarte aus'
 L['options_toggle_hide_minimap_desc'] = 'Blendet alle Symbole dieses Addons auf der Minikarte aus und zeigt sie nur auf der Hauptkarte an.'
 L['options_toggle_maximized_enlarged'] = 'Symbole bei maximierter Weltkarte vergrößern'
@@ -200,6 +206,10 @@ L['options_transmog_rewards'] = 'Zeige Vorlagenbelohnungen'
 L['options_transmog_rewards_desc'] = 'Zeige Vorlagenbelohnungen für Waffen und Rüstungen in Tooltips an und verfolge ihren Sammlungsstatus.'
 L['options_all_transmog_rewards'] = 'Zeige nicht erhältliche Vorlagenbelohnungen'
 L['options_all_transmog_rewards_desc'] = 'Zeigt Vorlagenbelohnungen an, die nur für andere Klassen erhältlich sind.'
+L['options_rep_rewards'] = 'Zeige Rufbelohnungen'
+L['options_rep_rewards_desc'] = 'Zeige Rufbelohnungen in Tooltips an und verfolge ihren Sammlungsstatus.'
+L['options_claimed_rep_rewards'] = 'Zeige erhaltene Rufbelohnungen'
+L['options_claimed_rep_rewards_desc'] = 'Zeigt Rufbelohnungen an, die bereits von deiner Kriegsmeute erhalten wurden.'
 
 L['options_icons_misc_desc'] = 'Zeigt die Positionen von anderen nicht kategorisierten Punkten an.'
 L['options_icons_misc'] = 'Sonstiges'
@@ -231,6 +241,8 @@ L['options_toggle_show_notes'] = 'Zeige Notizen'
 L['options_toggle_show_notes_desc'] = 'Zeigt hilfreiche Notizen an sofern diese verfügbar sind.'
 L['options_toggle_use_standard_time'] = 'Verwende das 12-Stunden-Format'
 L['options_toggle_use_standard_time_desc'] = 'Zeigt die Uhrzeit im 12-Stunden-Format (z.B.: 8:00 PM) anstelle des 24-Stunden-Formates (z.B.: 20:00) in Tooltips an.'
+L['options_toggle_show_npc_id'] = nil
+L['options_toggle_show_npc_id_desc'] = nil
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

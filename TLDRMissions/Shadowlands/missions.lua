@@ -515,7 +515,7 @@ function addon:GetGearMissions(hard)
     
     for _, mission in pairs(missions) do
         for _, reward in pairs(mission.rewards) do
-            if (reward.itemID and IsEquippableItem(reward.itemID)) then
+            if (reward.itemID and C_Item.IsEquippableItem(reward.itemID)) then
                 local _, _, _, _, _, _, _, _, _, _, sellPrice = addon:GetItemInfo(reward.itemLink)
                 if sellPrice then
                     for category, minMax in pairs(goldCategories) do

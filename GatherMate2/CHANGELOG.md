@@ -1,8 +1,11 @@
 # GatherMate2
 
-## [1.49](https://github.com/Nevcairiel/GatherMate2/tree/1.49) (2024-07-19)
-[Full Changelog](https://github.com/Nevcairiel/GatherMate2/compare/1.48.9...1.49) [Previous Releases](https://github.com/Nevcairiel/GatherMate2/releases)
+## [1.50.2](https://github.com/Nevcairiel/GatherMate2/tree/1.50.2) (2024-08-30)
+[Full Changelog](https://github.com/Nevcairiel/GatherMate2/compare/1.50.1...1.50.2) [Previous Releases](https://github.com/Nevcairiel/GatherMate2/releases)
 
-- Update TOC for 10.2.7, 11.0.0 and 11.0.2  
-- Cleanup some unused variables  
-- API update for WoW 11.0  
+- Added Herbs & Mines transparent icons .tga  
+- Added "Webbed Ore Deposit"  
+    https://www.wowhead.com/object=430335/webbed-ore-deposit  
+- Re-add Kul Tiras to the continent list  
+    It was accidentally removed in f57a97882a993bf4628f860fe599796d54b9333c  
+    Fixes #29  
