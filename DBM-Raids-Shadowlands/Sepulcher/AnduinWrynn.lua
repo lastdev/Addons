@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2469, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024554")
+mod:SetRevision("20240714005600")
 mod:SetCreatureID(181954)
 mod:SetEncounterID(2546)
 mod:SetUsedIcons(4, 5, 6, 7, 8)
@@ -27,7 +27,6 @@ mod:RegisterEventsInCombat(
 --TODO, adjust dark zeal count?
 --TODO, add 10 second timer loop for https://ptr.wowhead.com/spell=362543/remorseless-winter with right events, not even gonna drycode it now in case it's wrong
 --TODO, verify grim reflection auto marking, and number of spawns (still needs doing)
---TODO, dire hopelessness need repeat yell? it's not about partners finding each other this time, just a player walking into the light
 --TODO, track https://ptr.wowhead.com/spell=362394/rain-of-despair maybe? definitely add https://ptr.wowhead.com/spell=362391/rain-of-despair with right trigger
 --[[
 (ability.id = 362405 or ability.id = 361989 or ability.id = 365295 or ability.id = 361815 or ability.id = 362771 or ability.id = 363024 or ability.id = 365120 or ability.id = 365872 or ability.id = 365958 or ability.id = 365805) and type = "begincast"

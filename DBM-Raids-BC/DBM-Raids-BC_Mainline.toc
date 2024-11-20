@@ -1,4 +1,4 @@
-## Interface: 100207, 110000
+## Interface: 110005, 110007
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (BC)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010공격대 (불성)|r
@@ -23,7 +23,7 @@
 ## X-DBM-Mod-MinExpansion: 1
 ## X-Curse-Project-ID: 1016966
 ## X-Wago-ID: E6gLA4K1
-## Version: r4
+## Version: r7
 
 localization.en.lua
 localization.tw.lua

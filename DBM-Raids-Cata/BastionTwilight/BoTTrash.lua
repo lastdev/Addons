@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("BoTrash", "DBM-Raids-Cata", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240315100444")
+mod:SetRevision("20241103125714")
 mod:SetModelID(37193)
+mod:SetZone(671)
 mod.isTrashMod = true
 
 mod:RegisterEvents(

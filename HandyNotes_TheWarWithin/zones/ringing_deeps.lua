@@ -13,7 +13,8 @@ local Rare = ns.node.Rare
 local Treasure = ns.node.Treasure
 local Vendor = ns.node.Vendor
 
-local LoreObject = ns.node.LoreObject
+local FlightMaster = ns.node.FlightMaster
+-- local LoreObject = ns.node.LoreObject
 local SkyridingGlyph = ns.node.SkyridingGlyph
 
 local Achievement = ns.reward.Achievement
@@ -24,9 +25,10 @@ local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 local Reputation = ns.reward.Reputation
 
+local Circle = ns.poi.Circle
+local Entrance = ns.poi.Entrance
 local Path = ns.poi.Path
 local POI = ns.poi.POI
-local Circle = ns.poi.Circle
 
 -------------------------------------------------------------------------------
 
@@ -198,6 +200,7 @@ map.nodes[60887668] = Rare({
     },
     pois = {
         POI({
+            label = '{npc:191865}',
             points = {49460881, 53902529, 57622357, 62844464, 59059239},
             color = 'Red'
         })
@@ -258,7 +261,7 @@ map.nodes[71654630] = Rare({
         Transmog({item = 221253, slot = L['fist']}), -- Cultivator's Plant Puncher
         Transmog({item = 221250, slot = L['1h_sword']}) -- Creeping Lasher Machete
     },
-    pois = {POI({72844447})} -- Entrance
+    pois = {Entrance({72844447})} -- Entrance
 }) -- Trungal
 
 map.nodes[52032657] = Rare({
@@ -315,14 +318,12 @@ map.nodes[49053163] = Treasure({ -- Inside the Inn
         Reputation({id = 2594, gain = 150, quest = 82464})
     },
     pois = {
-        POI({47673217}), -- Entrance
-        POI({
-            57302200, -- Amethyst
-            68205320, -- Diamond
-            57404940, -- Ruby
-            62506300, -- Topaz
-            59103800 -- Emerald
-        })
+        Entrance({47673217}), -- Entrance
+        POI({label = '{item:223880}', points = {57302200}}), -- Amethyst
+        POI({label = '{item:223882}', points = {68205320}}), -- Diamond
+        POI({label = '{item:223878}', points = {57404940}}), -- Ruby
+        POI({label = '{item:223879}', points = {62506300}}), -- Topaz
+        POI({label = '{item:223881}', points = {59103800}}) -- Emerald
     }
 }) -- Dusty Prospector's Chest
 
@@ -349,7 +350,7 @@ map.nodes[50485349] = Treasure({ -- lvl 71
         Reputation({id = 2594, gain = 150, quest = 80485}), --
         Toy({item = 224783}) -- Sovereign's Finery Chest
     },
-    pois = {POI({52065314})} -- Entrance
+    pois = {Entrance({52065314})} -- Entrance
 }) -- Forgotten Treasure
 
 map.nodes[55391385] = Treasure({ -- lvl 71
@@ -359,7 +360,7 @@ map.nodes[55391385] = Treasure({ -- lvl 71
         Achievement({id = 40724, criteria = 69282}),
         Reputation({id = 2594, gain = 150, quest = 82235})
     },
-    pois = {POI({54681421})} -- Entrance
+    pois = {Entrance({54681421})} -- Entrance
 }) -- Munderut's Forgotten Stash
 
 map.nodes[58933027] = Treasure({ -- lvl 71
@@ -386,7 +387,7 @@ map.nodes[68863883] = Treasure({ -- lvl 71
         Achievement({id = 40724, criteria = 69280}),
         Reputation({id = 2594, gain = 150, quest = 79308})
     },
-    pois = {POI({68714072})} -- Entrance
+    pois = {Entrance({68714072})} -- Entrance
 }) -- Webbed Knapsack
 
 -------------------------------------------------------------------------------
@@ -445,7 +446,7 @@ map.nodes[65696190] = PT.Skinning({quest = 83917, id = 226343}) -- Fungarian's R
 map.nodes[48823286] = PT.Tailoring({
     quest = 83924,
     id = 226350,
-    pois = {POI({47703216})} -- Entrance
+    pois = {Entrance({47703216})} -- Entrance
 }) -- Runed Earthen Pins
 map.nodes[64156033] = PT.Tailoring({quest = 83925, id = 226351}) -- Earthen Stitcher's Snips
 
@@ -654,7 +655,11 @@ map.nodes[44315026] = GobblinWithGlublurp({
     rewards = {Achievement({id = 40614, criteria = 68929})},
     note = L['gobblin_with_glublurp_note'],
     pois = {
-        POI({59964103, 61924254, color = 'Red'}),
+        POI({
+            label = '{item:225930}',
+            color = 'Red',
+            points = {59964103, 61924254}
+        }), -- Glimmering Crystal
         Path({color = 'Orange', Circle({origin = 57903351, radius = 1.25})})
     }
 }) -- Glublurp
@@ -663,41 +668,41 @@ map.nodes[44315026] = GobblinWithGlublurp({
 --------------------- ACHIEVEMENT: KHAZ ALGAR LORE HUNTER ---------------------
 -------------------------------------------------------------------------------
 
-map.nodes[39311739] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69374}),
-        Reputation({id = 2594, gain = 250})
-    }
-}) -- A Skull on a Sign
+-- map.nodes[39311739] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69374}),
+--         Reputation({id = 2594, gain = 250})
+--     }
+-- }) -- A Skull on a Sign
 
-map.nodes[64945614] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69378}),
-        Reputation({id = 2594, gain = 250})
-    }
-}) -- Kobold Warning Sign
+-- map.nodes[64945614] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69378}),
+--         Reputation({id = 2594, gain = 250})
+--     }
+-- }) -- Kobold Warning Sign
 
-map.nodes[51477241] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69376}),
-        Reputation({id = 2594, gain = 250})
-    }
-}) -- Submerged Sign
+-- map.nodes[51477241] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69376}),
+--         Reputation({id = 2594, gain = 250})
+--     }
+-- }) -- Submerged Sign
 
-map.nodes[71364240] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69375}),
-        Reputation({id = 2594, gain = 250})
-    }
-}) -- Warning: Collapsed Tunnel
+-- map.nodes[71364240] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69375}),
+--         Reputation({id = 2594, gain = 250})
+--     }
+-- }) -- Warning: Collapsed Tunnel
 
-map.nodes[50215826] = LoreObject({
-    note = L['in_small_cave'],
-    rewards = {
-        Achievement({id = 40762, criteria = 69377}),
-        Reputation({id = 2594, gain = 250})
-    }
-}) -- Wax-Drenched Sign
+-- map.nodes[50215826] = LoreObject({
+--     note = L['in_small_cave'],
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69377}),
+--         Reputation({id = 2594, gain = 250})
+--     }
+-- }) -- Wax-Drenched Sign
 
 -------------------------------------------------------------------------------
 -------------------- ACHIEVEMENT: TO ALL THE SLIMES I LOVE --------------------
@@ -794,3 +799,53 @@ map.nodes[66733837] = DisturbedEarth()
 map.nodes[67753931] = DisturbedEarth()
 map.nodes[67794830] = DisturbedEarth()
 map.nodes[75624339] = DisturbedEarth() -- ?
+
+-------------------------------------------------------------------------------
+-------------------- ACHIEVEMENT: KHAZ ALGAR FLIGHT MASTER --------------------
+-------------------------------------------------------------------------------
+
+map.nodes[46873337] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68190})}
+}) -- Gundargaz
+
+map.nodes[58166405] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68184})}
+}) -- Camp Murroch
+
+map.nodes[61444793] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68191})}
+}) -- Shadowvein Point
+
+map.nodes[64717808] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68183})}
+}) -- Opportunity Point
+
+-------------------------------------------------------------------------------
+----------------------- ACHIEVEMENT: FOR THE COLLECTIVE -----------------------
+-------------------------------------------------------------------------------
+
+local ReclamationMachinist = Class('ReclamationMachinist', Collectible, {
+    label = '{npc:228056}',
+    icon = 'peg_yw',
+    scale = 1.5,
+    group = ns.groups.FOR_THE_COLLECTIVE,
+    note = L['for_the_collective_note'],
+    rewards = {
+        Achievement({
+            id = 40630,
+            criteria = {
+                id = 1,
+                qty = true,
+                suffix = L['for_the_collective_suffix']
+            }
+        })
+    }
+}) -- Reclamation Machinist
+
+map.nodes[63596298] = ReclamationMachinist()
+map.nodes[64026395] = ReclamationMachinist()
+map.nodes[66896425] = ReclamationMachinist()
+map.nodes[64276487] = ReclamationMachinist({
+    location = L['for_the_collective_location'],
+    pois = {POI({64866448})} -- Wood Plank
+})

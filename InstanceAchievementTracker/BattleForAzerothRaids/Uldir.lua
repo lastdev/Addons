@@ -45,7 +45,7 @@ local achievementRedForAttempt = false
 function core._1861:Taloc()
     if core.type == "SPELL_AURA_REMOVED" and core.spellId == 280461 and orbCounter < 4 then
         orbCounter = orbCounter + 1
-        core:sendMessage(core:getAchievement() .. " " .. GetSpellLink(280461) .. " " .. L["Core_Counter"] .. " (" .. orbCounter .. "/4)",true)
+        core:sendMessage(core:getAchievement() .. " " .. C_Spell.GetSpellLink(280461) .. " " .. L["Core_Counter"] .. " (" .. orbCounter .. "/4)",true)
     end
 
     if orbCounter == 4 then
@@ -73,23 +73,23 @@ function core._1861:FetidDevourer()
             local immunityFound = false
             local immunityName = nil
             for i=1,40 do
-                local _, _, _, _, _, _, _, _, _, spellId = UnitBuff(name, i)
-                if spellId == 45438 then
+                local auraData = C_UnitAuras.GetBuffDataByIndex(name, i)
+                if auraData ~= nil and auraData.spellId == 45438 then
                     immunityFound = true
                     immunityName = "Ice Block"
-                elseif spellId == 196555 then
+                elseif auraData ~= nil and auraData.spellId == 196555 then
                     immunityFound = true
                     immunityName = "Netherwalk"
-                elseif spellId == 186265 then
+                elseif auraData ~= nil and auraData.spellId == 186265 then
                     immunityFound = true
                     immunityName = "Aspect of the Turtle"
-                elseif spellId == 1022 then
+                elseif auraData ~= nil and auraData.spellId == 1022 then
                     immunityFound = true
                     immunityName = "Blessing of Protection"
-                elseif spellId == 204018 then
+                elseif auraData ~= nil and auraData.spellId == 204018 then
                     immunityFound = true
                     immunityName = "Blessing of Spellwarding"
-                elseif spellId == 642 then
+                elseif auraData ~= nil and auraData.spellId == 642 then
                     immunityFound = true
                     immunityName = "Divine Shield"
                 end
@@ -100,7 +100,7 @@ function core._1861:FetidDevourer()
                 playersFetid = playersFetid + 1
                 playersFetidTable[core.spawn_uid_dest_Player] = core.spawn_uid_dest_Player
 
-                core:sendMessage(core.destName .. " " .. L["Shared_HasBeenHitWith"] .. " " .. GetSpellLink(262277) .. " (" .. playersFetid .. "/" .. core.groupSizeInInstance .. ")",true)
+                core:sendMessage(core.destName .. " " .. L["Shared_HasBeenHitWith"] .. " " .. C_Spell.GetSpellLink(262277) .. " (" .. playersFetid .. "/" .. core.groupSizeInInstance .. ")",true)
                 InfoFrame_SetPlayerComplete(core.destName)
             end
         end
@@ -118,7 +118,7 @@ function core._1861:Vectis()
 
     --If warmother casts blood ritual then she has been infected
     if core.type == "SPELL_CAST_START" and core.spellId == 277813 and core.sourceID == "142148" and warmotherInfected == false then
-        core:sendMessage(getNPCName(142148) .. " " .. L["Shared_HasBeenInfectedWith"] .. GetSpellLink(266948) .. ". " .. L["Shared_SheCanNowBeKilled"],true)
+        core:sendMessage(getNPCName(142148) .. " " .. L["Shared_HasBeenInfectedWith"] .. C_Spell.GetSpellLink(266948) .. ". " .. L["Shared_SheCanNowBeKilled"],true)
         warmotherInfected = true
     end
 
@@ -178,8 +178,8 @@ function core._1861:Ghuun()
                 if unit ~= nil then
                     local unitType, destID, spawn_uid_dest = strsplit("-",UnitGUID(unit));
                     for i=1,40 do
-                        local _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(unit, i)
-                        if spellId == 263420 then
+                        local auraData = C_UnitAuras.GetDebuffDataByIndex(unit, i)
+                        if auraData ~= nil and auraData.spellId == 263420 then
                             core:getAchievementFailedWithMessageAfter("(" .. UnitName(unit) .. ")")
                         end
                     end
@@ -189,8 +189,8 @@ function core._1861:Ghuun()
             --Player is not in a group
             local unitType, destID, spawn_uid_dest = strsplit("-",UnitGUID("Player"));
             for i=1,40 do
-                local _, _, _, _, _, _, _, _, _, spellId = UnitDebuff("Player", i)
-                if spellId == 263420 then
+                local auraData = C_UnitAuras.GetDebuffDataByIndex("Player", i)
+                if auraData ~= nil and auraData.spellId == 263420 then
                     core:getAchievementFailedWithMessageAfter("(" .. UnitName("Player") .. ")")
 
                     --Stop tracker for working for remainder of fight to reduce lag

@@ -1291,20 +1291,28 @@ local function areBagsFull()
     return freeSlots < numItemRewards
 end
 
-local function isOnQuest()
-    return C_QuestLog.IsOnQuest(61981) or C_QuestLog.IsOnQuest(61982) or C_QuestLog.IsOnQuest(61983) or C_QuestLog.IsOnQuest(61984)
+local function checkAnimaQuests(func)
+    return func(61981) or func(61982) or func(61983) or func(61984)
 end
 
-local function isQuestPreviouslyFinished()
-    return C_QuestLog.IsQuestFlaggedCompleted(61981) or C_QuestLog.IsQuestFlaggedCompleted(61982) or C_QuestLog.IsQuestFlaggedCompleted(61983) or C_QuestLog.IsQuestFlaggedCompleted(61984)
+function addon.isOnWeeklyAnimaQuest()
+    return checkAnimaQuests(C_QuestLog.IsOnQuest)
+end
+
+function addon.isWeeklyAnimaQuestPreviouslyFinished()
+    return checkAnimaQuests(C_QuestLog.IsQuestFlaggedCompleted)
+end
+
+function addon.isWeeklyAnimaQuestPendingTurnin()
+    return checkAnimaQuests(C_QuestLog.IsComplete)
 end
 
 gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
     local blockCompletionReason 
     if addon.db.profile.blockCompletion then
-        if addon.db.profile.blockCompletionFilters.noQuest and (not isOnQuest()) and (not isQuestPreviouslyFinished()) then
+        if addon.db.profile.blockCompletionFilters.noQuest and (not addon.isOnWeeklyAnimaQuest()) and (not addon.isWeeklyAnimaQuestPreviouslyFinished()) then
             blockCompletionReason = L["BlockCompletionErrorNoQuest"]
-        elseif addon.db.profile.blockCompletionFilters.questPreviouslyFinished and isQuestPreviouslyFinished() then
+        elseif addon.db.profile.blockCompletionFilters.questPreviouslyFinished and addon.isWeeklyAnimaQuestPreviouslyFinished() then
             blockCompletionReason = L["BlockCompletionErrorQuestComplete"]
         elseif addon.db.profile.blockCompletionFilters.bagsFull and areBagsFull() then
             blockCompletionReason = L["BlockCompletionErrorBagsFull"]
@@ -1355,7 +1363,7 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
                 
                 local skipThis = false
                 
-                if (not blockCompletionReason) and addon.db.profile.blockCompletion and addon.db.profile.blockCompletionFilters.questFinished and (C_QuestLog.IsComplete(61981) or C_QuestLog.IsComplete(61982) or C_QuestLog.IsComplete(61983) or C_QuestLog.IsComplete(61984)) then
+                if (not blockCompletionReason) and addon.db.profile.blockCompletion and addon.db.profile.blockCompletionFilters.questFinished and addon.isWeeklyAnimaQuestPendingTurnin() then
                     blockCompletionReason = L["BlockCompletionErrorQuestPendingTurnin"]
                 end
                 

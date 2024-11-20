@@ -1,6 +1,6 @@
 local _, addon = ...
 local config, private = addon.module('config')
-local latestVersion = 2
+local latestVersion = 4
 
 function config.init()
     if EnchantMeAddonConfig then
@@ -25,6 +25,8 @@ function config.getDefaultConfig()
         version = latestVersion,
         indicatorPos = 'TOPLEFT',
         flagColor = 'ffff0000',
+        showMissingJewelrySockets = true,
+        showMissingArmorSockets = false,
     }
 end
 
@@ -44,5 +46,13 @@ end
 private.migrations = {
     [2] = function ()
         config.db.ignoreBelt = nil
+    end,
+    [3] = function ()
+        config.db.ignoreSockets = false
+    end,
+    [4] = function ()
+        config.db.showMissingJewelrySockets = not config.db.ignoreSockets
+        config.db.showMissingArmorSockets = false
+        config.db.ignoreSockets = nil
     end,
 }

@@ -8,7 +8,7 @@ addon.Plugins:LoadLocalization(L);
 -- [[ https://legacy.curseforge.com/wow/addons/krowi-achievement-filter/localization ]] --
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
--- [[ Exported at 2024-08-12 15-05-51 ]] --
+-- [[ Exported at 2024-10-24 18-52-21 ]] --
 L["%c"] = true
 L["%d/%m/%Y %I:%M %p"] = true
 L["%m/%d/%Y %I:%M %p"] = true
@@ -202,7 +202,7 @@ L["Current Zone"] = "Aktuelle Zone"
 L["CurseForge"] = true
 L["CurseForge Desc"] = "Öffnet ein Popup-Fenster mit einem Link zur Seite {addonName} {curseForge}."
 L["Custom"] = "Benutzerdefiniert"
-L["Dark Heart"] = "Dunkles Herz"
+L["Dark Heart"] = "Das Dunkle Herz"
 L["Darkmoon Faire"] = "Dunkelmond-Jahrmarkt"
 L["Data Manager"] = "Charakterübersicht"
 L["Date and Time format"] = "Datum und Zeit (Format)"
@@ -259,14 +259,14 @@ L["Dragonbane Keep"] = "Drachenfluchfestung"
 L["Dragonblight"] = "Drachenöde"
 L["Dragonflight (pre-patch)"] = true
 L["Dragonriding"] = "Drachenreiten"
-L["Dragonriding Races"] = "Drachenreiten-Rennen"
+L["Dragonriding Races"] = "Drachenreiten"
 L["Dreamsurge"] = "Traumsprünge"
 L["Dreamsurges"] = "Traumsprünge"
 L["Drops"] = "Beute"
 L["Drustvar"] = true
 L["Dueler's Guild"] = "Duellantengilde"
 L["during"] = "während"
-L["Dustwallow Marsh"] = "Marschen von Dustwallow"
+L["Dustwallow Marsh"] = "Düstermarschen"
 L["Earned By"] = "Erzielt durch"
 L["Earned By Desc"] = [=[Header
 |T:1:8|t- {achievementPointsEarnedBy}: Zeigt {achievementPointsEarnedBy_wc} Ihren aktuellen Charakter und/oder {achievementPointsEarnedBy_wc} Ihren Account an ({achievementPointsEarnedByFormat}) (1).
@@ -405,8 +405,8 @@ L["Exclude"] = "Ausblenden"
 L["Exclude Excluded achievements"] = "Ausgeschlossene Erfolge Suchen"
 L["Exclude Excluded achievements Desc"] = "Ausgeschlossene Erfolge von den Suchergebnissen ausschließen bzw. in die Suchergebnisse aufnehmen."
 L["Excluded"] = "Filter: Erfolg Ausgeblendet"
-L["Expansions"] = "Addons"
-L["Expansions tab"] = "Addon Tab"
+L["Expansions"] = "Erweiterungen"
+L["Expansions tab"] = "Erweiterungen-Tab"
 L["Expansions tab Desc"] = [=[Erfolge werden in Kategorien pro Erweiterung mit einer logischeren Hierarchie gruppiert.
 
 Die Hierarchie ist wie folgt: 
@@ -464,6 +464,7 @@ L["Force two columns"] = "Zwei Spalten erzwingen"
 L["Force two columns Desc"] = "Aktiviere/deaktiviere den Algorithmus zur Erzwingung von zwei Spalten für die Erfolgs-Ziele. Wenn diese Option aktiviert ist und nur eine Spalte mit Zielen angezeigt wird, weil der Text eines oder mehrerer Ziele zu lang ist, wird auf der Grundlage der anderen Einstellungen eine zweite Spalte erzwungen."
 L["Force two columns threshold"] = "Schwelle für zwei Spalten erzwingen"
 L["Force two columns threshold Desc"] = "Die Anzahl der Kriterien, die der Erfolg haben muss, damit eine zweite Spalte angezeigt wird, wenn normalerweise nur eine angezeigt würde."
+L["Forget Me Not: Next"] = "Theatertruppe: Vergissmeinnicht: Bald"
 L["Format"] = true
 L["Fracture Chambers"] = "Frakturkammern"
 L["Fractures in Time"] = "Risse in der Zeit"
@@ -690,7 +691,7 @@ L["Overflow"] = "Überlauf"
 L["Overwatch"] = true
 L["Pandaren"] = true
 L["Pandaria Cup"] = "Pandaria Pokal"
-L["Part of a chain"] = "Teil einer Folgequest"
+L["Part of a chain"] = "Teil eines Serien-Erfolgs"
 L["Passage Pathway"] = "Weg durch die Passage"
 L["Past Obtainable"] = "Erreichbarkeit in der Vergangenheit"
 L["Paste to Chat"] = "Kopiere in das Chat Fenster"
@@ -707,9 +708,9 @@ L["Presets"] = "Voreinstellungen"
 L["Primal Storms"] = "Urstürme"
 L["Primalist Tomorrow"] = "Urzeitliche Primalisten"
 L["Print map info"] = "Karten-ID einfügen"
-L["Print map info Desc"] = "Karten-ID in den Chat einfügen"
-L["Print map info w/o reload"] = "Karten-ID direkt einfügen ohne Neu-Laden"
-L["Print map info w/o reload Desc"] = "Karten-ID direkt einfügen ohne Neu-Laden"
+L["Print map info Desc"] = "Füge die Karten-ID im Chat ein"
+L["Print map info w/o reload"] = "Karten-ID ohne neu laden einfügen"
+L["Print map info w/o reload Desc"] = "Füge die Karten-ID ohne neu laden ein"
 L["PvP"] = true
 L["PvP Season"] = "PvP Saison"
 L["Quick Search"] = "Schnell-Suche"
@@ -868,9 +869,8 @@ L["Show Other faction"] = "Zeige weitere Fraktionen"
 L["Show Other faction Desc"] = [=[Zeige / verstecke {otherFaction}.
 
 Wenn diese Option aktiviert ist, wird der Erfolg der anderen Fraktion im Tooltip angezeigt, sofern verfügbar. Dadurch wird es vielleicht klarer, warum euer neuer Horde-Charakter bestimmte Errungenschaften hat, wenn ihr vorher nur Allianz gespielt habt. ]=]
-L["Show Part of a chain"] = "Zeige {partOfAChan}"
-L["Show Part of a chain Desc"] = [=[Zeige / Verstecke {partOfAChain}.
-Wenn diese Option aktiviert ist, wird der Serien-Erfolg, zu dem er gehört, im Tooltip angezeigt. ]=]
+L["Show Part of a chain"] = "Zeige {partOfAChain}"
+L["Show Part of a chain Desc"] = "{partOfAChain} aktivieren / deaktivieren. Wenn diese Option aktiviert ist, wird im Tooltip die Verkettung angezeigt, zu der der Erfolg gehört."
 L["Show placeholders"] = "Zeige Platzhalter"
 L["Show placeholders Desc"] = "Zeigt eine Reihe von Platzhalter-Ereignissen an, um eine visuelle Anzeige der Wirkung der oben genannten Einstellungen zu ermöglichen. Diese können wieder geschlossen werden, indem du die Maus über sie bewegest oder mit der rechten Maustaste darauf klickst."
 L["Show placeholders filter"] = "Filter \"Platzhalter\" anzeigen"
@@ -898,8 +898,8 @@ L["Show Sub Categories Desc"] = [=[Unterkategorien anzeigen/ausblenden.
 Wenn diese Option aktiviert ist, werden die Erfolge unter ihren ursprünglichen Unterkategorien platziert, anstatt alle zusammen unter der einzigen Kategorie {Kategorie}. ]=]
 L["Show Temporarily obtainable"] = "Zeige {temporarilyObtainable}e Erfolge"
 L["Show Temporarily obtainable Desc"] = "{TemporarilyObtainable} anzeigen/ausblenden. Wenn diese Option aktiviert ist und die Erfolge {temporarilyObtainable} sind, wird diese Information im Tooltip angezeigt."
-L["Show Temporarily obtainable Icon"] = "Zeige {tempObt} Icon"
-L["Show Temporarily obtainable Icon Desc"] = "Zeigt / versteckt ein zusätzliches Symbol auf dem Erfolg, falls dieser nur {tempObt} ist."
+L["Show Temporarily obtainable Icon"] = "Zeige {tempObt} Symbol"
+L["Show Temporarily obtainable Icon Desc"] = "Zeigt / versteckt ein zusätzliches Symbol auf dem Erfolg, wenn es nur {tempObt} ist."
 L["Show world map icon"] = "Zeige Welt-Map Icon"
 L["Show world map icon Desc"] = "Zeige / Verstecke das Welt-Map Icon."
 L["Side Button Anchor"] = "Seitlicher Button-Anker"
@@ -928,6 +928,7 @@ L["Spreading the Light"] = "Schlüsselflammen"
 L["Stables"] = "Ställe"
 L["StarCraft II"] = "StarCraft 2"
 L["Start Time"] = "Beginn (Zeit)"
+L["Stop tracking"] = "Verfolgung beenden"
 L["Stormheim"] = "Sturmheim"
 L["Stormsong Valley"] = "Das Sturmsangtal"
 L["Strand of the Ancients"] = "Strand der Uralten"
@@ -949,8 +950,8 @@ L["Tabs"] = true
 L["Ta's Pet Collection"] = "Ta's Haustier Sammlung"
 L["Temporarily obtainable"] = "Befristet erreichbar"
 L["temporarily obtainable"] = "befristet erreichbar"
-L["Temporarily obtainable Header Colors"] = "{tempObt} Erfolgs Kopfzeilen-Farben"
-L["Temporarily obtainable Header Colors Desc"] = "Wenn diese Option aktiviert ist, werden die standardmäßigen orangefarbenen und blauen Titelfarben durch 3 weitere Farben ergänzt, die anzeigen, dass die Errungenschaft derzeit erreichbar ist (grün), in Zukunft erreichbar sein wird (gelb) oder nicht mehr erreichbar ist (rot)."
+L["Temporarily obtainable Header Colors"] = "{tempObt} Kopfzeilen-Farbe"
+L["Temporarily obtainable Header Colors Desc"] = "Wenn diese Option aktiviert ist, werden die standardmäßigen orangefarbenen und blauen Header-Farben durch grüne, gelbe und rote Farben ergänzt, die anzeigen, dass der Erfolg derzeit erreichbar ist, in Zukunft erreichbar sein wird oder nicht mehr erreichbar ist."
 L["Temporarily Obtainable Text"] = "{isWillBeWas}{neverOnceTempObt}{startText}{startDetail}{endText}{endDetail}"
 L["Thaldraszus"] = true
 L["Thaldraszus: Next"] = "Thaldraszus: Nächstes Event"
@@ -960,17 +961,21 @@ L["The Azure Span Sprint"] = "Sprint des Azurblauen Gebirges"
 L["The Big Dig: Active"] = "Das große Buddeln: Aktiv"
 L["The Big Dig: Next"] = "Das große Buddeln: Nächstes Event"
 L["The Big Dig: Soon"] = "Das große Buddeln: Bald"
+L["The Cruelty of Dornic: Next"] = "Theatertruppe: Die Grausamkeit von Dornic: Bald"
 L["The Entitled"] = "Hochverehrter"
 L["the event name with run time"] = "{eventName} ab {startDate} bis {endDate}"
 L["The Flowing Forest Flight"] = "Flug des Wallenden Walds"
 L["The Iron Tide"] = "Die Eiserne Flut"
+L["The Rivals: Next"] = "Theatertruppe: Die Rivalen: Bald"
 L["The Shattering"] = "Die Zerschlagung Azeroths"
+L["The Thraegar's Descent: Next"] = "Theatertruppe: Der Abstieg des Thraegar: Bald"
 L["The Thunder King"] = "Der Donnerkönig"
 L["The Tomb of Sargeras"] = "Grabmal des Sargeras"
 L["The Vakthros Ascent"] = "Vakthrosaufstieg"
 L["The Waking Shore"] = "Die Küste des Erwachens"
+L["The Wanderer: Next"] = "Theatertruppe: Der Wanderer: Bald"
 L["The War Within (pre-patch)"] = true
-L["Theater Troupe"] = " Theater-Troupe"
+L["Theater Troupe"] = "Theatertruppe"
 L["This achievement"] = "Dieser Erfolg"
 L["This achievement can't be earned by this character."] = "Dieser Erfolg kann nicht von diesem Charakter erzielt werden."
 L["This achievement is no longer obtainable"] = "Dieser Erfolg kann nicht länger erzielt werden."

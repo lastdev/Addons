@@ -3,6 +3,7 @@ local Colors = Addon.CommonUI.Colors
 local locale = Addon:GetLocale()
 local Layouts = Addon.CommonUI.Layouts
 local UI = {}
+local UISystem = {}
 
 --[[ 
     Attempts to resolve the object, resolves and string in the format:  "A.B.C"
@@ -319,6 +320,4 @@ function UI.Dialog(caption, template, implementation, buttons, ...)
 end
 
 Addon.CommonUI.UI = UI
-Addon.Public.UIAttach = function(frame, target)
-    UI.Attach(frame, target)
-end
+Addon.Public.UIAttach = UI.Attach

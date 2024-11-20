@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.49
+local QCADDON_VERSION = 109.51
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -1446,7 +1446,7 @@ local function qcRefreshPins(UiMapID, mapLevel)
                 local questId = qcPins[i][7][questIndex]
                 if qcQuestDatabase[questId] then
                     local questLevel = qcQuestDatabase[questId][3] or 0
-                    local greenCutoff = (UnitLevel("player") - GetQuestGreenRange())
+                    local greenCutoff = (UnitLevel("player") -  UnitQuestTrivialLevelRange("player"))
                     if questLevel < greenCutoff then
                         table.remove(qcPins[i][7], questIndex)
                     end
@@ -1537,6 +1537,21 @@ local function qcRefreshPins(UiMapID, mapLevel)
 					if not ((qcToday >= qcHolidayDates[qcQuestDatabase[qcQuestID][11]][1]) and (qcToday <= qcHolidayDates[qcQuestDatabase[qcQuestID][11]][2])) then
 						TableRemove(qcPins[i][7], qcQuestIndex)
 					end
+				end
+			end
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
+			end
+		end
+	end
+			--[[ Map In progress ]]--
+	if (qcSettings["QC_M_HIDE_INPROGRESS"] == 1) then
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
+				-- Ensure the quest ID is valid and not nil
+				if qcQuestID and C_QuestLog.GetLogIndexForQuestID(qcQuestID) and C_QuestLog.GetLogIndexForQuestID(qcQuestID) > 0 then
+					TableRemove(qcPins[i][7], qcQuestIndex)
 				end
 			end
 			if (#qcPins[i][7] == 0) then

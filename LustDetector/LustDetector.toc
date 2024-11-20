@@ -1,9 +1,10 @@
-## Interface: 110002
+## Interface: 110005
 ## Title: |cff0042ffLust|cffff0000Detector
 ## Author: Viicksmile - Thrall realm.
-## Version: v1.5 - Pre-patch The War Within
-## Notes: This addon will show on your chat when someone cast any Haste Spell. Ex: Bloodlust, Heroism, Thunderous Drums
+## IconTexture: Interface\AddOns\LustDetector\LdIcon.tga
+## Version: v3 - The War Within
+## Notes: Bad lust? Troll? Your problems are over, I'll show when someone use some like Bl, Hero, drums...
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariablesPerCharacter: LUSTDETECTOR, LUSTDETECTORMode
+## SavedVariablesPerCharacter: LustDetectorSettings
 LustDetector.lua

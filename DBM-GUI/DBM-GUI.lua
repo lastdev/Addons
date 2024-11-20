@@ -424,12 +424,13 @@ local function addOptions(mod, catpanel, v)
 					value	= val
 				})
 			end
+			--title, values, vartype, var, callfunc, width, height, parent
 			catbutton = catpanel:CreateDropdown(mod.localization.options[v], dropdownOptions, mod, v, function(value)
 				mod.Options[v] = value
 				if mod.optionFuncs and mod.optionFuncs[v] then
 					mod.optionFuncs[v]()
 				end
-			end, nil, 32)
+			end, nil, 40)
 			if not addSpacer then
 				if lastButton then
 					catbutton:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -12)
@@ -445,6 +446,7 @@ local function addOptions(mod, catpanel, v)
 	end
 end
 
+local isFirstModPanel = true
 ---@param mod DBMMod
 function DBM_GUI:CreateBossModPanel(mod, isTestView)
 	local panel = isTestView and mod.testPanel or mod.panel
@@ -579,6 +581,12 @@ function DBM_GUI:CreateBossModPanel(mod, isTestView)
 			end
 		end
 	end
+	-- For some reason the options aren't loaded in properly if the very first mod view you load is a test view
+	-- But just forcing a call to show fixes this
+	if isFirstModPanel and isTestView then
+		DBM_GUI:ShowHide(true)
+	end
+	isFirstModPanel = true
 end
 
 local function GetSpecializationGroup()
@@ -849,9 +857,9 @@ function DBM_GUI:CreateBossModTab(addon, panel, subtab)
 				follower	= L.FOLLOWER,--no PLAYER_DIFFICULTY entry yet
 				story		= L.STORY,--no PLAYER_DIFFICULTY entry yet
 				lfr25		= PLAYER_DIFFICULTY3,
-				normal		= mod.addon.minExpansion < 5 and RAID_DIFFICULTY1 or PLAYER_DIFFICULTY1,
+				normal		= mod.addon.minExpansion < 5 and not DBM:IsSeasonal("SeasonOfDiscovery") and RAID_DIFFICULTY1 or PLAYER_DIFFICULTY1,
 				normal25	= RAID_DIFFICULTY2,
-				heroic		= mod.addon.minExpansion < 5 and RAID_DIFFICULTY3 or PLAYER_DIFFICULTY2,
+				heroic		= mod.addon.minExpansion < 5 and not DBM:IsSeasonal("SeasonOfDiscovery") and RAID_DIFFICULTY3 or PLAYER_DIFFICULTY2,
 				heroic25	= RAID_DIFFICULTY4,
 				mythic		= PLAYER_DIFFICULTY6,
 				challenge	= (mod.addon.minExpansion < 6 and not mod.upgradedMPlus) and CHALLENGE_MODE or PLAYER_DIFFICULTY6 .. "+",

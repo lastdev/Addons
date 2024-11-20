@@ -74,935 +74,1014 @@ HealBot_Aura_luVars["AuraUpdate"]=0.98
 
 local hbDebuffOnCD={}
 
-local hbTextureUpdate={[HEALBOT_RENEWING_MIST_NAME]=8}
 local hbTextureUpdateId={}
 local hbTextureUpdateTime={}
 
-local hbDebuffBleed={}
-hbDebuffBleed[703]="Garrote"
-hbDebuffBleed[1079]="Rip"
-hbDebuffBleed[1943]="Rupture"
-hbDebuffBleed[3147]="Rend Flesh"
-hbDebuffBleed[5597]="Serious Wound"
-hbDebuffBleed[5598]="Serious Wound"
-hbDebuffBleed[8818]="Garrote"
-hbDebuffBleed[10266]="Lung Puncture"
-hbDebuffBleed[11977]="Rend"
-hbDebuffBleed[12054]="Rend"
-hbDebuffBleed[13318]="Rend"
-hbDebuffBleed[13443]="Rend"
-hbDebuffBleed[13445]="Rend"
-hbDebuffBleed[13738]="Rend"
-hbDebuffBleed[14087]="Rend"
-hbDebuffBleed[14118]="Rend"
-hbDebuffBleed[14331]="Vicious Rend"
-hbDebuffBleed[14874]="Rupture"
-hbDebuffBleed[14903]="Rupture"
-hbDebuffBleed[15583]="Rupture"
-hbDebuffBleed[15976]="Puncture"
-hbDebuffBleed[16095]="Vicious Rend"
-hbDebuffBleed[16393]="Rend"
-hbDebuffBleed[16403]="Rend"
-hbDebuffBleed[16406]="Rend"
-hbDebuffBleed[16509]="Rend"
-hbDebuffBleed[17153]="Rend"
-hbDebuffBleed[17504]="Rend"
-hbDebuffBleed[18075]="Rend"
-hbDebuffBleed[18078]="Rend"
-hbDebuffBleed[18106]="Rend"
-hbDebuffBleed[18200]="Rend"
-hbDebuffBleed[18202]="Rend"
-hbDebuffBleed[19771]="Serrated Bite"
-hbDebuffBleed[21949]="Rend"
-hbDebuffBleed[24192]="Speed Slash"
-hbDebuffBleed[24331]="Rake"
-hbDebuffBleed[24332]="Rake"
-hbDebuffBleed[27555]="Shred"
-hbDebuffBleed[27556]="Rake"
-hbDebuffBleed[27638]="Rake"
-hbDebuffBleed[28913]="Flesh Rot"
-hbDebuffBleed[29574]="Rend"
-hbDebuffBleed[29578]="Rend"
-hbDebuffBleed[29583]="Impale"
-hbDebuffBleed[29906]="Ravage"
-hbDebuffBleed[29935]="Gaping Maw"
-hbDebuffBleed[30285]="Eagle Claw"
-hbDebuffBleed[30639]="Carnivorous Bite"
-hbDebuffBleed[31041]="Mangle"
-hbDebuffBleed[31410]="Coral Cut"
-hbDebuffBleed[31956]="Grievous Wound"
-hbDebuffBleed[32019]="Gore"
-hbDebuffBleed[32901]="Carnivorous Bite"
-hbDebuffBleed[33865]="Singe"
-hbDebuffBleed[33912]="Rip"
-hbDebuffBleed[35144]="Vicious Rend"
-hbDebuffBleed[35318]="Saw Blade"
-hbDebuffBleed[35321]="Gushing Wound"
-hbDebuffBleed[36023]="Deathblow"
-hbDebuffBleed[36054]="Deathblow"
-hbDebuffBleed[36332]="Rake"
-hbDebuffBleed[36383]="Carnivorous Bite"
-hbDebuffBleed[36590]="Rip"
-hbDebuffBleed[36617]="Gaping Maw"
-hbDebuffBleed[36789]="Diminish Soul"
-hbDebuffBleed[36965]="Rend"
-hbDebuffBleed[36991]="Rend"
-hbDebuffBleed[37066]="Garrote"
-hbDebuffBleed[37123]="Saw Blade"
-hbDebuffBleed[37487]="Blood Heal"
-hbDebuffBleed[37641]="Whirlwind"
-hbDebuffBleed[37662]="Rend"
-hbDebuffBleed[37937]="Flayed Flesh"
-hbDebuffBleed[37973]="Coral Cut"
-hbDebuffBleed[38056]="Flesh Rip"
-hbDebuffBleed[38363]="Gushing Wound"
-hbDebuffBleed[38772]="Grievous Wound"
-hbDebuffBleed[38801]="Grievous Wound"
-hbDebuffBleed[38810]="Gaping Maw"
-hbDebuffBleed[38848]="Diminish Soul"
-hbDebuffBleed[39198]="Carnivorous Bite"
-hbDebuffBleed[39215]="Gushing Wound"
-hbDebuffBleed[39382]="Carnivorous Bite"
-hbDebuffBleed[40199]="Flesh Rip"
-hbDebuffBleed[41092]="Carnivorous Bite"
-hbDebuffBleed[41932]="Carnivorous Bite"
-hbDebuffBleed[42395]="Lacerating Slash"
-hbDebuffBleed[42397]="Rend Flesh"
-hbDebuffBleed[42658]="Sic'em!"
-hbDebuffBleed[43093]="Grievous Throw"
-hbDebuffBleed[43104]="Deep Wound"
-hbDebuffBleed[43153]="Lynx Rush"
-hbDebuffBleed[43246]="Rend"
-hbDebuffBleed[43931]="Rend"
-hbDebuffBleed[43937]="Grievous Wound"
-hbDebuffBleed[48130]="Gore"
-hbDebuffBleed[48261]="Impale"
-hbDebuffBleed[48286]="Grievous Slash"
-hbDebuffBleed[48374]="Puncture Wound"
-hbDebuffBleed[48880]="Rend"
-hbDebuffBleed[48920]="Grievous Bite"
-hbDebuffBleed[49678]="Flesh Rot"
-hbDebuffBleed[50729]="Carnivorous Bite"
-hbDebuffBleed[50871]="Savage Rend"
-hbDebuffBleed[51275]="Gut Rip"
-hbDebuffBleed[52401]="Gut Rip"
-hbDebuffBleed[52504]="Lacerate"
-hbDebuffBleed[52771]="Wounding Strike"
-hbDebuffBleed[52873]="Open Wound"
-hbDebuffBleed[53317]="Rend"
-hbDebuffBleed[53499]="Rake"
-hbDebuffBleed[53602]="Dart"
-hbDebuffBleed[54668]="Rake"
-hbDebuffBleed[54703]="Rend"
-hbDebuffBleed[54708]="Rend"
-hbDebuffBleed[55102]="Determined Gore"
-hbDebuffBleed[55249]="Whirling Slash"
-hbDebuffBleed[55250]="Whirling Slash"
-hbDebuffBleed[55276]="Puncture"
-hbDebuffBleed[55550]="Jagged Knife"
-hbDebuffBleed[55604]="Death Plague"
-hbDebuffBleed[55622]="Impale"
-hbDebuffBleed[55645]="Death Plague"
-hbDebuffBleed[57661]="Rip"
-hbDebuffBleed[58459]="Impale"
-hbDebuffBleed[58517]="Grievous Wound"
-hbDebuffBleed[58830]="Wounding Strike"
-hbDebuffBleed[58978]="Impale"
-hbDebuffBleed[59007]="Flesh Rot"
-hbDebuffBleed[59239]="Rend"
-hbDebuffBleed[59256]="Impale"
-hbDebuffBleed[59262]="Grievous Wound"
-hbDebuffBleed[59264]="Gore"
-hbDebuffBleed[59268]="Impale"
-hbDebuffBleed[59269]="Carnivorous Bite"
-hbDebuffBleed[59343]="Rend"
-hbDebuffBleed[59349]="Dart"
-hbDebuffBleed[59444]="Determined Gore"
-hbDebuffBleed[59682]="Grievous Wound"
-hbDebuffBleed[59691]="Rend"
-hbDebuffBleed[59824]="Whirling Slash"
-hbDebuffBleed[59825]="Whirling Slash"
-hbDebuffBleed[59826]="Puncture"
-hbDebuffBleed[59881]="Rake"
-hbDebuffBleed[59989]="Rip"
-hbDebuffBleed[61164]="Impale"
-hbDebuffBleed[61896]="Lacerate"
-hbDebuffBleed[62318]="Barbed Shot"
-hbDebuffBleed[62331]="Impale"
-hbDebuffBleed[62418]="Impale"
-hbDebuffBleed[63468]="Careful Aim"
-hbDebuffBleed[64374]="Savage Pounce"
-hbDebuffBleed[64666]="Savage Pounce"
-hbDebuffBleed[65033]="Constricting Rend"
-hbDebuffBleed[65406]="Rake"
-hbDebuffBleed[66620]="Old Wounds"
-hbDebuffBleed[67280]="Dagger Throw"
-hbDebuffBleed[69203]="Vicious Bite"
-hbDebuffBleed[70278]="Puncture Wound"
-hbDebuffBleed[71926]="Rip"
-hbDebuffBleed[74846]="Bleeding Wound"
-hbDebuffBleed[75160]="Bloody Rip"
-hbDebuffBleed[75161]="Spinning Rake"
-hbDebuffBleed[75388]="Rusty Cut"
-hbDebuffBleed[75930]="Mangle"
-hbDebuffBleed[76507]="Claw Puncture"
-hbDebuffBleed[76524]="Grievous Whirl"
-hbDebuffBleed[76594]="Rend"
-hbDebuffBleed[76807]="Lacerate"
-hbDebuffBleed[78842]="Carnivorous Bite"
-hbDebuffBleed[78859]="Elementium Spike Shield"
-hbDebuffBleed[79444]="Impale"
-hbDebuffBleed[79828]="Mangle"
-hbDebuffBleed[79829]="Rip"
-hbDebuffBleed[80028]="Rock Bore"
-hbDebuffBleed[80051]="Grievous Wound"
-hbDebuffBleed[81043]="Razor Slice"
-hbDebuffBleed[81087]="Puncture Wound"
-hbDebuffBleed[81568]="Spinning Slash"
-hbDebuffBleed[81569]="Spinning Slash"
-hbDebuffBleed[81690]="Scent of Blood"
-hbDebuffBleed[82753]="Ritual of Bloodletting"
-hbDebuffBleed[82766]="Eye Gouge"
-hbDebuffBleed[83783]="Impale"
-hbDebuffBleed[84642]="Puncture"
-hbDebuffBleed[85415]="Mangle"
-hbDebuffBleed[87395]="Serrated Slash"
-hbDebuffBleed[89212]="Eagle Claw"
-hbDebuffBleed[90098]="Axe to the Head"
-hbDebuffBleed[91348]="Tenderize"
-hbDebuffBleed[93587]="Ritual of Bloodletting"
-hbDebuffBleed[93675]="Mortal Wound"
-hbDebuffBleed[95334]="Elementium Spike Shield"
-hbDebuffBleed[96570]="Gaping Wound"
-hbDebuffBleed[96592]="Ravage"
-hbDebuffBleed[96700]="Ravage"
-hbDebuffBleed[97357]="Gaping Wound"
-hbDebuffBleed[98282]="Tiny Rend"
-hbDebuffBleed[99100]="Mangle"
-hbDebuffBleed[102066]="Flesh Rip"
-hbDebuffBleed[102925]="Garrote"
-hbDebuffBleed[112896]="Drain Blood"
-hbDebuffBleed[113344]="Bloodbath"
-hbDebuffBleed[113855]="Bleeding Wound"
-hbDebuffBleed[114056]="Bloody Mess"
-hbDebuffBleed[114860]="Rend"
-hbDebuffBleed[114881]="Hawk Rend"
-hbDebuffBleed[115767]="Deep Wounds"
-hbDebuffBleed[115774]="Vicious Wound"
-hbDebuffBleed[115871]="Rake"
-hbDebuffBleed[118146]="Lacerate"
-hbDebuffBleed[119840]="Serrated Blade"
-hbDebuffBleed[120166]="Serrated Blade"
-hbDebuffBleed[120560]="Rake"
-hbDebuffBleed[120699]="Lynx Rush"
-hbDebuffBleed[121247]="Impale"
-hbDebuffBleed[121411]="Crimson Tempest"
-hbDebuffBleed[122962]="Carnivorous Bite"
-hbDebuffBleed[123422]="Arterial Bleeding"
-hbDebuffBleed[123852]="Gored"
-hbDebuffBleed[124015]="Gored"
-hbDebuffBleed[124296]="Vicious Strikes"
-hbDebuffBleed[124341]="Bloodletting"
-hbDebuffBleed[124678]="Hacking Slash"
-hbDebuffBleed[124800]="Pinch Limb"
-hbDebuffBleed[125099]="Rake"
-hbDebuffBleed[125206]="Rend Flesh"
-hbDebuffBleed[125431]="Slice Bone"
-hbDebuffBleed[125624]="Vicious Rend"
-hbDebuffBleed[126901]="Mortal Rend"
-hbDebuffBleed[126912]="Grievous Whirl"
-hbDebuffBleed[127872]="Consume Flesh"
-hbDebuffBleed[127987]="Bleeding Bite"
-hbDebuffBleed[128051]="Serrated Slash"
-hbDebuffBleed[128903]="Garrote"
-hbDebuffBleed[129463]="Crane Kick"
-hbDebuffBleed[129497]="Pounced"
-hbDebuffBleed[129537]="Snap!"
-hbDebuffBleed[130191]="Rake"
-hbDebuffBleed[130306]="Ankle Bite"
-hbDebuffBleed[130785]="My Eye!"
-hbDebuffBleed[130897]="Vicious Bite"
-hbDebuffBleed[131662]="Vicious Stabbing"
-hbDebuffBleed[133074]="Puncture"
-hbDebuffBleed[133081]="Rip"
-hbDebuffBleed[134691]="Impale"
-hbDebuffBleed[135528]="Bleeding Wound"
-hbDebuffBleed[135892]="Razor Slice"
-hbDebuffBleed[136654]="Rending Charge"
-hbDebuffBleed[136753]="Slashing Talons"
-hbDebuffBleed[137497]="Garrote"
-hbDebuffBleed[138956]="Dark Bite"
-hbDebuffBleed[139514]="Bloodstorm"
-hbDebuffBleed[140274]="Vicious Wound"
-hbDebuffBleed[140275]="Rend"
-hbDebuffBleed[140276]="Rend"
-hbDebuffBleed[140396]="Rend"
-hbDebuffBleed[143198]="Garrote"
-hbDebuffBleed[144113]="Chomp"
-hbDebuffBleed[144263]="Rend"
-hbDebuffBleed[144264]="Rend"
-hbDebuffBleed[144304]="Rend"
-hbDebuffBleed[144853]="Carnivorous Bite"
-hbDebuffBleed[145263]="Chomp"
-hbDebuffBleed[145417]="Rupture"
-hbDebuffBleed[146556]="Pierce"
-hbDebuffBleed[146927]="Rend"
-hbDebuffBleed[147396]="Rake"
-hbDebuffBleed[148033]="Grapple"
-hbDebuffBleed[148375]="Brutal Hemorrhage"
-hbDebuffBleed[150807]="Traumatic Strike"
-hbDebuffBleed[151092]="Traumatic Strike"
-hbDebuffBleed[151475]="Drain Life"
-hbDebuffBleed[152357]="Rend"
-hbDebuffBleed[152623]="Rend"
-hbDebuffBleed[152724]="Lacerating Strike"
-hbDebuffBleed[153897]="Rending Cleave"
-hbDebuffBleed[154489]="Puncturing Horns"
-hbDebuffBleed[154953]="Internal Bleeding"
-hbDebuffBleed[154960]="Pinned Down"
-hbDebuffBleed[155065]="Ripping Claw"
-hbDebuffBleed[155701]="Serrated Slash"
-hbDebuffBleed[155722]="Rake"
-hbDebuffBleed[157344]="Vital Strike"
-hbDebuffBleed[158150]="Goring Swipe"
-hbDebuffBleed[158341]="Gushing Wounds"
-hbDebuffBleed[158453]="Rending Swipe"
-hbDebuffBleed[158667]="Warleader's Spear"
-hbDebuffBleed[159238]="Shattered Bleed"
-hbDebuffBleed[161117]="Puncturing Tusk"
-hbDebuffBleed[161229]="Pounce"
-hbDebuffBleed[161765]="Iron Axe"
-hbDebuffBleed[162487]="Steel Trap"
-hbDebuffBleed[162516]="Whirling Steel"
-hbDebuffBleed[162921]="Peck"
-hbDebuffBleed[162951]="Lacerating Spines"
-hbDebuffBleed[163276]="Shredded Tendons"
-hbDebuffBleed[164218]="Double Slash"
-hbDebuffBleed[164323]="Precise Strike"
-hbDebuffBleed[164427]="Ravage"
-hbDebuffBleed[165308]="Gushing Wound"
-hbDebuffBleed[166185]="Rending Slash"
-hbDebuffBleed[166638]="Gushing Wound"
-hbDebuffBleed[166639]="Item - Druid T17 Feral 4P Bonus Proc Driver"
-hbDebuffBleed[166917]="Savage"
-hbDebuffBleed[167334]="Windfang Bite"
-hbDebuffBleed[167597]="Rending Nails"
-hbDebuffBleed[167978]="Jagged Edge"
-hbDebuffBleed[168097]="Shredder Bomb"
-hbDebuffBleed[168392]="Fangs of the Predator"
-hbDebuffBleed[169584]="Serrated Spines"
-hbDebuffBleed[170367]="Vicious Throw"
-hbDebuffBleed[170373]="Razor Teeth"
-hbDebuffBleed[170936]="Talador Venom"
-hbDebuffBleed[172019]="Stingtail Venom"
-hbDebuffBleed[172035]="Thrash"
-hbDebuffBleed[172139]="Lacerating Bite"
-hbDebuffBleed[172361]="Puncturing Strike"
-hbDebuffBleed[172366]="Jagged Slash"
-hbDebuffBleed[172657]="Serrated Edge"
-hbDebuffBleed[172889]="Charging Slash"
-hbDebuffBleed[173113]="Hatchet Toss"
-hbDebuffBleed[173278]="Spinal Shards"
-hbDebuffBleed[173299]="Rip"
-hbDebuffBleed[173307]="Serrated Spear"
-hbDebuffBleed[173378]="Rending Bite"
-hbDebuffBleed[173643]="Drill Fist"
-hbDebuffBleed[173876]="Rending Claws"
-hbDebuffBleed[174423]="Pinning Spines"
-hbDebuffBleed[174734]="Axe to the Face!"
-hbDebuffBleed[174820]="Rending Claws"
-hbDebuffBleed[175014]="Rupture"
-hbDebuffBleed[175151]="Thousand Fangs"
-hbDebuffBleed[175156]="Painful Pinch"
-hbDebuffBleed[175372]="Sharp Teeth"
-hbDebuffBleed[175461]="Sadistic Slice"
-hbDebuffBleed[175747]="Big Sharp Nasty Claws"
-hbDebuffBleed[176147]="Ignite"
-hbDebuffBleed[176256]="Talon Sweep"
-hbDebuffBleed[176575]="Consume Flesh"
-hbDebuffBleed[176695]="Bone Fragments"
-hbDebuffBleed[177337]="Carnivorous Bite"
-hbDebuffBleed[177422]="Thrash"
-hbDebuffBleed[181346]="Lacerating Swipe"
-hbDebuffBleed[181533]="Jagged Blade"
-hbDebuffBleed[182325]="Phantasmal Wounds"
-hbDebuffBleed[182330]="Coral Cut"
-hbDebuffBleed[182347]="Impaling Coral"
-hbDebuffBleed[182795]="Primal Mangle"
-hbDebuffBleed[182846]="Thrash"
-hbDebuffBleed[183025]="Rending Lash"
-hbDebuffBleed[183952]="Shadow Claws"
-hbDebuffBleed[184025]="Rending Claws"
-hbDebuffBleed[184090]="Bloody Arc"
-hbDebuffBleed[184175]="Primal Rake"
-hbDebuffBleed[185539]="Rapid Rupture"
-hbDebuffBleed[185698]="Bloody Hack"
-hbDebuffBleed[185855]="Lacerate"
-hbDebuffBleed[186191]="Bloodletting Slash"
-hbDebuffBleed[186365]="Sweeping Blade"
-hbDebuffBleed[186594]="Laceration"
-hbDebuffBleed[186639]="Big Sharp Nasty Teeth"
-hbDebuffBleed[186730]="Exposed Wounds"
-hbDebuffBleed[187647]="Bloodletting Pounce"
-hbDebuffBleed[188353]="Rip"
-hbDebuffBleed[189035]="Barbed Cutlass"
-hbDebuffBleed[191977]="Impaling Spear"
-hbDebuffBleed[192090]="Thrash"
-hbDebuffBleed[192131]="Throw Spear"
-hbDebuffBleed[192925]="Blood of the Assassinated"
-hbDebuffBleed[193092]="Bloodletting Sweep"
-hbDebuffBleed[193340]="Fenri's Bite"
-hbDebuffBleed[193585]="Bound"
-hbDebuffBleed[193639]="Bone Chomp"
-hbDebuffBleed[194279]="Caltrops"
-hbDebuffBleed[194636]="Cursed Rend"
-hbDebuffBleed[194639]="Rending Claws"
-hbDebuffBleed[194674]="Barbed Spear"
-hbDebuffBleed[195094]="Coral Slash"
-hbDebuffBleed[195279]="Bind"
-hbDebuffBleed[195506]="Razorsharp Axe"
-hbDebuffBleed[196111]="Jagged Claws"
-hbDebuffBleed[196189]="Bloody Talons"
-hbDebuffBleed[196313]="Lacerating Talons"
-hbDebuffBleed[196376]="Grievous Tear"
-hbDebuffBleed[196497]="Ravenous Leap"
-hbDebuffBleed[197359]="Shred"
-hbDebuffBleed[197381]="Exposed Wounds"
-hbDebuffBleed[199108]="Frantic Gore"
-hbDebuffBleed[199146]="Bucking Charge"
-hbDebuffBleed[199337]="Bear Trap"
-hbDebuffBleed[199847]="Grievous Wound"
-hbDebuffBleed[200182]="Festering Rip"
-hbDebuffBleed[200620]="Frantic Rip"
-hbDebuffBleed[204175]="Rend"
-hbDebuffBleed[204179]="Rend Flesh"
-hbDebuffBleed[204968]="Hemoraging Barbs"
-hbDebuffBleed[205437]="Laceration"
-hbDebuffBleed[207662]="Nightmare Wounds"
-hbDebuffBleed[207690]="Bloodlet"
-hbDebuffBleed[208470]="Necrotic Thrash"
-hbDebuffBleed[208945]="Mangle"
-hbDebuffBleed[208946]="Rip"
-hbDebuffBleed[209336]="Mangle"
-hbDebuffBleed[209378]="Whirling Blades"
-hbDebuffBleed[209667]="Blade Surge"
-hbDebuffBleed[209858]="Necrotic Wound"
-hbDebuffBleed[210013]="Bloodletting Slash"
-hbDebuffBleed[210177]="Spiked Shield"
-hbDebuffBleed[210723]="Ashamane's Frenzy"
-hbDebuffBleed[211672]="Mutilated Flesh"
-hbDebuffBleed[211846]="Bloodletting Lunge"
-hbDebuffBleed[213431]="Gnawing Eagle"
-hbDebuffBleed[213537]="Bloody Pin"
-hbDebuffBleed[213824]="Rending Pounce"
-hbDebuffBleed[213933]="Harpoon Swipe"
-hbDebuffBleed[213990]="Shard Bore"
-hbDebuffBleed[214676]="Razorsharp Teeth"
-hbDebuffBleed[215442]="Shred"
-hbDebuffBleed[215506]="Jagged Quills"
-hbDebuffBleed[215537]="Trauma"
-hbDebuffBleed[215721]="Gut Slash"
-hbDebuffBleed[217023]="Antler Gore"
-hbDebuffBleed[217041]="Shred"
-hbDebuffBleed[217091]="Puncturing Stab"
-hbDebuffBleed[217142]="Mangle"
-hbDebuffBleed[217163]="Rend"
-hbDebuffBleed[217200]="Barbed Shot"
-hbDebuffBleed[217235]="Rending Whirl"
-hbDebuffBleed[217363]="Ashamane's Frenzy"
-hbDebuffBleed[217369]="Rake"
-hbDebuffBleed[217868]="Impale"
-hbDebuffBleed[218506]="Jagged Slash"
-hbDebuffBleed[219167]="Chomp"
-hbDebuffBleed[219240]="Bloody Ricochet"
-hbDebuffBleed[219339]="Thrash"
-hbDebuffBleed[219680]="Impale"
-hbDebuffBleed[220222]="Rending Snap"
-hbDebuffBleed[220874]="Lacerate"
-hbDebuffBleed[221352]="Cut the Flank"
-hbDebuffBleed[221422]="Vicious Bite"
-hbDebuffBleed[221759]="Feathery Stab"
-hbDebuffBleed[221770]="Rend Flesh"
-hbDebuffBleed[222491]="Gutripper"
-hbDebuffBleed[223111]="Rake"
-hbDebuffBleed[223572]="Rend"
-hbDebuffBleed[223954]="Rake"
-hbDebuffBleed[223967]="Tear Flesh"
-hbDebuffBleed[224435]="Ashamane's Rip"
-hbDebuffBleed[225484]="Grievous Rip"
-hbDebuffBleed[225963]="Bloodthirsty Leap"
-hbDebuffBleed[227742]="Garrote"
-hbDebuffBleed[228275]="Rend"
-hbDebuffBleed[228281]="Rend"
-hbDebuffBleed[228305]="Unyielding Rend"
-hbDebuffBleed[229127]="Powershot"
-hbDebuffBleed[229265]="Garrote"
-hbDebuffBleed[229923]="Talon Rend"
-hbDebuffBleed[230011]="Cruel Garrote"
-hbDebuffBleed[231003]="Barbed Talons"
-hbDebuffBleed[231998]="Jagged Abrasion"
-hbDebuffBleed[232135]="Bloody Jab"
-hbDebuffBleed[235832]="Bloodletting Strike"
-hbDebuffBleed[237346]="Rend"
-hbDebuffBleed[238594]="Ripper Blade"
-hbDebuffBleed[238618]="Fel Swipe"
-hbDebuffBleed[240449]="Grievous Wound"
-hbDebuffBleed[240539]="Wild Bite"
-hbDebuffBleed[240559]="Grievous Wound"
-hbDebuffBleed[241070]="Bloodletting Strike"
-hbDebuffBleed[241092]="Rend"
-hbDebuffBleed[241212]="Fel Slash"
-hbDebuffBleed[241465]="Coral Cut"
-hbDebuffBleed[241644]="Mangle"
-hbDebuffBleed[242376]="Puncturing Strike"
-hbDebuffBleed[242828]="Dire Thrash"
-hbDebuffBleed[242931]="Rake"
-hbDebuffBleed[244040]="Eskhandar's Rake"
-hbDebuffBleed[246904]="Smoldering Rend"
-hbDebuffBleed[247932]="Shrapnel Blast"
-hbDebuffBleed[247949]="Shrapnel Blast"
-hbDebuffBleed[250393]="Rake"
-hbDebuffBleed[251332]="Rip"
-hbDebuffBleed[253384]="Slaughter"
-hbDebuffBleed[253516]="Hexabite"
-hbDebuffBleed[253610]="Ripper Blade"
-hbDebuffBleed[254280]="Jagged Maw"
-hbDebuffBleed[254575]="Rend"
-hbDebuffBleed[254901]="Blood Frenzy"
-hbDebuffBleed[255299]="Bloodletting"
-hbDebuffBleed[255595]="Chomp"
-hbDebuffBleed[255814]="Rending Maul"
-hbDebuffBleed[256077]="Gore"
-hbDebuffBleed[256314]="Barbed Strike"
-hbDebuffBleed[256363]="Ripper Punch"
-hbDebuffBleed[256476]="Rending Whirl"
-hbDebuffBleed[256715]="Jagged Maw"
-hbDebuffBleed[256880]="Bone Splinter"
-hbDebuffBleed[256914]="Barbed Blade"
-hbDebuffBleed[256965]="Thorned Barrage"
-hbDebuffBleed[257036]="Feral Charge"
-hbDebuffBleed[257170]="Savage Tempest"
-hbDebuffBleed[257250]="Bramblepelt"
-hbDebuffBleed[257544]="Jagged Cut"
-hbDebuffBleed[257790]="Gutripper"
-hbDebuffBleed[257971]="Leaping Thrash"
-hbDebuffBleed[258058]="Squeeze"
-hbDebuffBleed[258075]="Itchy Bite"
-hbDebuffBleed[258143]="Rending Claws"
-hbDebuffBleed[258718]="Scratched!"
-hbDebuffBleed[258798]="Razorsharp Teeth"
-hbDebuffBleed[258825]="Vampiric Bite"
-hbDebuffBleed[259220]="Barbed Net"
-hbDebuffBleed[259277]="Kill Command"
-hbDebuffBleed[259328]="Gory Whirl"
-hbDebuffBleed[259382]="Shell Slash"
-hbDebuffBleed[259739]="Stone Claws"
-hbDebuffBleed[259873]="Rip"
-hbDebuffBleed[259983]="Pierce"
-hbDebuffBleed[260016]="Itchy Bite"
-hbDebuffBleed[260025]="Rending Whirl"
-hbDebuffBleed[260400]="Rend"
-hbDebuffBleed[260455]="Serrated Fangs"
-hbDebuffBleed[260563]="Gnaw"
-hbDebuffBleed[260582]="Gushing Wound"
-hbDebuffBleed[260741]="Jagged Nettles"
-hbDebuffBleed[261882]="Steel Jaw Trap"
-hbDebuffBleed[262115]="Deep Wounds"
-hbDebuffBleed[262143]="Ravenous Claws"
-hbDebuffBleed[262557]="Rake"
-hbDebuffBleed[262677]="Keelhaul"
-hbDebuffBleed[262875]="Papercut"
-hbDebuffBleed[263144]="Talon Slash"
-hbDebuffBleed[264145]="Shatter"
-hbDebuffBleed[264150]="Shatter"
-hbDebuffBleed[264210]="Jagged Mandible"
-hbDebuffBleed[264556]="Tearing Strike"
-hbDebuffBleed[265019]="Savage Cleave"
-hbDebuffBleed[265074]="Rend"
-hbDebuffBleed[265165]="Charging Gore"
-hbDebuffBleed[265232]="Rend"
-hbDebuffBleed[265377]="Hooked Snare"
-hbDebuffBleed[265533]="Blood Maw"
-hbDebuffBleed[265948]="Denticulated"
-hbDebuffBleed[266035]="Bone Splinter"
-hbDebuffBleed[266191]="Whirling Axe"
-hbDebuffBleed[266231]="Severing Axe"
-hbDebuffBleed[266505]="Rending Claw"
-hbDebuffBleed[267064]="Bleeding"
-hbDebuffBleed[267080]="Blight of G'huun"
-hbDebuffBleed[267103]="Blight of G'huun"
-hbDebuffBleed[267441]="Serrated Axe"
-hbDebuffBleed[267523]="Cutting Surge"
-hbDebuffBleed[269576]="Master Marksman"
-hbDebuffBleed[270084]="Axe Barrage"
-hbDebuffBleed[270139]="Gore"
-hbDebuffBleed[270343]="Internal Bleeding"
-hbDebuffBleed[270473]="Serrated Arrows"
-hbDebuffBleed[270487]="Severing Blade"
-hbDebuffBleed[270979]="Rend and Tear"
-hbDebuffBleed[271178]="Ravaging Leap"
-hbDebuffBleed[271798]="Click"
-hbDebuffBleed[272273]="Rending Cleave"
-hbDebuffBleed[273436]="Gore"
-hbDebuffBleed[273632]="Gaping Maw"
-hbDebuffBleed[273794]="Rezan's Fury"
-hbDebuffBleed[273900]="Bramble Swipe"
-hbDebuffBleed[273909]="Steelclaw Trap"
-hbDebuffBleed[274089]="Rend"
-hbDebuffBleed[274389]="Rat Traps"
-hbDebuffBleed[274838]="Feral Frenzy"
-hbDebuffBleed[275895]="Rend of Kimbul"
-hbDebuffBleed[276868]="Impale"
-hbDebuffBleed[277077]="Big Sharp Nasty Teeth"
-hbDebuffBleed[277309]="Jagged Maw"
-hbDebuffBleed[277431]="Hunter Toxin"
-hbDebuffBleed[277517]="Serrated Slash"
-hbDebuffBleed[277569]="Bloodthirsty Rend"
-hbDebuffBleed[277592]="Blood Frenzy"
-hbDebuffBleed[277794]="Paw Swipe"
-hbDebuffBleed[278175]="Bramble Claw"
-hbDebuffBleed[278570]="Boils and Sores"
-hbDebuffBleed[278733]="Deep Wound"
-hbDebuffBleed[278866]="Carve and Spit"
-hbDebuffBleed[279133]="Rend"
-hbDebuffBleed[280286]="Dagger in the Back"
-hbDebuffBleed[280321]="Garrote"
-hbDebuffBleed[280940]="Mangle"
-hbDebuffBleed[281711]="Cut of Death"
-hbDebuffBleed[282444]="Lacerating Claws"
-hbDebuffBleed[282845]="Bear Trap"
-hbDebuffBleed[283419]="Rend"
-hbDebuffBleed[283667]="Rupture"
-hbDebuffBleed[283668]="Crimson Tempest"
-hbDebuffBleed[283700]="Rake"
-hbDebuffBleed[283708]="Rip"
-hbDebuffBleed[284158]="Circular Saw"
-hbDebuffBleed[285875]="Rending Bite"
-hbDebuffBleed[286269]="Mangle"
-hbDebuffBleed[288091]="Gushing Wound"
-hbDebuffBleed[288266]="Mangle"
-hbDebuffBleed[288535]="Rip"
-hbDebuffBleed[288539]="Mangle"
-hbDebuffBleed[289355]="Smoldering Rend"
-hbDebuffBleed[289373]="Lacerating Pounce"
-hbDebuffBleed[289848]="Rending Claw"
-hbDebuffBleed[292348]="Bloodletting"
-hbDebuffBleed[292611]="Rake"
-hbDebuffBleed[292626]="Rip"
-hbDebuffBleed[293670]="Chainblade"
-hbDebuffBleed[294617]="Rupture"
-hbDebuffBleed[294741]="Saber Slash"
-hbDebuffBleed[294901]="Serrated Blades"
-hbDebuffBleed[295008]="Bloody Cleaver"
-hbDebuffBleed[295929]="Rats!"
-hbDebuffBleed[295945]="Rat Traps"
-hbDebuffBleed[296777]="Bleeding Wound"
-hbDebuffBleed[299474]="Ripping Slash"
-hbDebuffBleed[299502]="Nanoslicer"
-hbDebuffBleed[299923]="Tear Flesh"
-hbDebuffBleed[300610]="Fanged Bite"
-hbDebuffBleed[301061]="Thrash"
-hbDebuffBleed[301712]="Pounce"
-hbDebuffBleed[302295]="Slicing Claw"
-hbDebuffBleed[302474]="Phantom Laceration"
-hbDebuffBleed[303162]="Carve Flesh"
-hbDebuffBleed[303215]="Shell Slash"
-hbDebuffBleed[303501]="Rending Strike"
-hbDebuffBleed[308342]="Bore"
-hbDebuffBleed[308859]="Carnivorous Bite"
-hbDebuffBleed[308891]="Jagged Chop"
-hbDebuffBleed[308938]="Lacerating Swipe"
-hbDebuffBleed[309760]="Raking Claws"
-hbDebuffBleed[311122]="Jagged Wound"
-hbDebuffBleed[311744]="Deep Wound"
-hbDebuffBleed[311748]="Lacerating Swipe"
-hbDebuffBleed[313674]="Jagged Wound"
-hbDebuffBleed[313734]="Ravaging Leap"
-hbDebuffBleed[313747]="Rend"
-hbDebuffBleed[313957]="Rend"
-hbDebuffBleed[314130]="Skewer"
-hbDebuffBleed[314160]="Penetrating Lance"
-hbDebuffBleed[314454]="Thrashing Lunge"
-hbDebuffBleed[314531]="Tear Flesh"
-hbDebuffBleed[314533]="Rend"
-hbDebuffBleed[314568]="Deep Wound"
-hbDebuffBleed[314847]="Decapitate"
-hbDebuffBleed[315311]="Ravage"
-hbDebuffBleed[315711]="Serrated Strike"
-hbDebuffBleed[315805]="Crippler"
-hbDebuffBleed[316511]="Scratch"
-hbDebuffBleed[317561]="Swooping Lunge"
-hbDebuffBleed[317908]="Razor Wing"
-hbDebuffBleed[317916]="Razor Clip"
-hbDebuffBleed[318187]="Gushing Wound"
-hbDebuffBleed[319127]="Gore"
-hbDebuffBleed[319275]="Razor Wing"
-hbDebuffBleed[320007]="Gash"
-hbDebuffBleed[320147]="Bleeding"
-hbDebuffBleed[320200]="Stitchneedle"
-hbDebuffBleed[321538]="Bloodshed"
-hbDebuffBleed[321807]="Boneflay"
-hbDebuffBleed[322429]="Severing Slice"
-hbDebuffBleed[322796]="Wicked Gash"
-hbDebuffBleed[322965]="Tearing Bite"
-hbDebuffBleed[323043]="Bloodletting"
-hbDebuffBleed[323406]="Jagged Gash"
-hbDebuffBleed[324073]="Serrated Bone Spike"
-hbDebuffBleed[324149]="Flayed Shot"
-hbDebuffBleed[324154]="Dark Stride"
-hbDebuffBleed[324447]="Slashing Rend"
-hbDebuffBleed[325021]="Mistveil Tear"
-hbDebuffBleed[325022]="Jagged Swipe"
-hbDebuffBleed[325037]="Death Chakram"
-hbDebuffBleed[326298]="Bleeding Wound"
-hbDebuffBleed[326586]="Crimson Flurry"
-hbDebuffBleed[327258]="Rend"
-hbDebuffBleed[327814]="Wicked Gash"
-hbDebuffBleed[328287]="Heart Strike"
-hbDebuffBleed[328897]="Exsanguinated"
-hbDebuffBleed[328910]="Tantrum"
-hbDebuffBleed[328940]="Gore"
-hbDebuffBleed[329293]="Vorpal Wound"
-hbDebuffBleed[329516]="Swift Slash"
-hbDebuffBleed[329563]="Goring Swipe"
-hbDebuffBleed[329906]="Carnage"
-hbDebuffBleed[329986]="Maul"
-hbDebuffBleed[329990]="Craggy Swipe"
-hbDebuffBleed[330400]="Bleeding Swipe"
-hbDebuffBleed[330457]="Ripping Strike"
-hbDebuffBleed[330532]="Jagged Quarrel"
-hbDebuffBleed[330632]="Maul"
-hbDebuffBleed[331045]="Talon Rake"
-hbDebuffBleed[331066]="Bursting Plumage"
-hbDebuffBleed[331072]="Talon Rake"
-hbDebuffBleed[331340]="Plague Swipe"
-hbDebuffBleed[331415]="Wicked Gash"
-hbDebuffBleed[332168]="Maul"
-hbDebuffBleed[332610]="Penetrating Insight"
-hbDebuffBleed[332678]="Gushing Wound"
-hbDebuffBleed[332792]="Gore"
-hbDebuffBleed[332835]="Ruthless Strikes"
-hbDebuffBleed[332836]="Chop"
-hbDebuffBleed[333235]="Horn Rush"
-hbDebuffBleed[333250]="Reaver"
-hbDebuffBleed[333478]="Gut Slice"
-hbDebuffBleed[333861]="Ricocheting Blade"
-hbDebuffBleed[333985]="Culling Strike"
-hbDebuffBleed[334669]="Tirnenn Wrath"
-hbDebuffBleed[334960]="Vicious Wound"
-hbDebuffBleed[334971]="Jagged Claws"
-hbDebuffBleed[335105]="Dinner Time"
-hbDebuffBleed[336628]="Eternal Polearm"
-hbDebuffBleed[336810]="Ragged Claws"
-hbDebuffBleed[337349]="Triple Thrash"
-hbDebuffBleed[337729]="Kerim's Laceration"
-hbDebuffBleed[337892]="Gore"
-hbDebuffBleed[338935]="Razor Petals"
-hbDebuffBleed[339163]="Wicked Gash"
-hbDebuffBleed[339189]="Chain Bleed"
-hbDebuffBleed[339453]="Darksworn Blast"
-hbDebuffBleed[339789]="Darksworn Blast"
-hbDebuffBleed[339975]="Grievous Strike"
-hbDebuffBleed[340058]="Heart Piercer"
-hbDebuffBleed[340374]="Bloody Tantrum"
-hbDebuffBleed[340431]="Mutilated Flesh"
-hbDebuffBleed[341435]="Lunge"
-hbDebuffBleed[341475]="Crimson Flurry"
-hbDebuffBleed[341833]="Rending Cleave"
-hbDebuffBleed[341863]="Bleeding Out"
-hbDebuffBleed[342250]="Jagged Swipe"
-hbDebuffBleed[342464]="Javelin Flurry"
-hbDebuffBleed[342675]="Bone Spear"
-hbDebuffBleed[343159]="Stone Claws"
-hbDebuffBleed[343722]="Crushing Bite"
-hbDebuffBleed[344312]="Serrated Edge"
-hbDebuffBleed[344464]="Shield Spike"
-hbDebuffBleed[344993]="Jagged Swipe"
-hbDebuffBleed[345548]="Spare Meat Hook"
-hbDebuffBleed[346770]="Grinding Bite"
-hbDebuffBleed[346807]="Rending Roar"
-hbDebuffBleed[347716]="Letter Opener"
-hbDebuffBleed[347807]="Barbed Arrow"
-hbDebuffBleed[348074]="Assailing Lance"
-hbDebuffBleed[348385]="Bloody Cleave"
-hbDebuffBleed[348726]="Lethal Shot"
-hbDebuffBleed[351119]="Shuriken Blitz"
-hbDebuffBleed[351976]="Shredder"
-hbDebuffBleed[353068]="Razor Trap"
-hbDebuffBleed[353466]="Sadistic Glee"
-hbDebuffBleed[353919]="Rury's Sleepy Tantrum"
-hbDebuffBleed[354334]="Hook'd!"
-hbDebuffBleed[355087]="Piercing Quill"
-hbDebuffBleed[355256]="Rending Roar"
-hbDebuffBleed[355416]="Sharpened Hide"
-hbDebuffBleed[355832]="Quickblade"
-hbDebuffBleed[356445]="Sharpened Hide"
-hbDebuffBleed[356620]="Pouch of Razor Fragments"
-hbDebuffBleed[356808]="Spiked"
-hbDebuffBleed[356923]="Sever"
-hbDebuffBleed[356925]="Carnage"
-hbDebuffBleed[357091]="Cleave Flesh"
-hbDebuffBleed[357192]="Dark Flurry"
-hbDebuffBleed[357239]="Cleave Flesh"
-hbDebuffBleed[357322]="Night Glaive"
-hbDebuffBleed[357665]="Crystalline Flesh"
-hbDebuffBleed[357827]="Frantic Rip"
-hbDebuffBleed[357953]="Fanged Bite"
-hbDebuffBleed[358197]="Searing Scythe"
-hbDebuffBleed[358224]="Jagged Swipe"
-hbDebuffBleed[359587]="Bloody Peck"
-hbDebuffBleed[359981]="Rend"
-hbDebuffBleed[360194]="Deathmark"
-hbDebuffBleed[360775]="Puncture"
-hbDebuffBleed[360826]="Rupture"
-hbDebuffBleed[360830]="Garrote"
-hbDebuffBleed[361024]="Thief's Blade"
-hbDebuffBleed[361049]="Bleeding Gash"
-hbDebuffBleed[361756]="Death Chakram"
-hbDebuffBleed[362149]="Ascended Phalanx"
-hbDebuffBleed[362194]="Suffering"
-hbDebuffBleed[362819]="Rend"
-hbDebuffBleed[363830]="Sickle of the Lion"
-hbDebuffBleed[363831]="Bleeding Soul"
-hbDebuffBleed[365336]="Rending Bite"
-hbDebuffBleed[365877]="Jagged Blade"
-hbDebuffBleed[366075]="Bloody Peck"
-hbDebuffBleed[366275]="Rending Bite"
-hbDebuffBleed[366884]="Ripped Secrets"
-hbDebuffBleed[367481]="Bloody Bite"
-hbDebuffBleed[367521]="Bone Bolt"
-hbDebuffBleed[367726]="Lupine's Slash"
-hbDebuffBleed[368401]="Puncture"
-hbDebuffBleed[368637]="The Third Rune"
-hbDebuffBleed[368651]="Vicious Wound"
-hbDebuffBleed[368701]="Boon of Harvested Hope"
-hbDebuffBleed[369408]="Rending Slash"
-hbDebuffBleed[369828]="Chomp"
-hbDebuffBleed[370742]="Jagged Strike"
-hbDebuffBleed[371472]="Rake"
-hbDebuffBleed[372224]="Dragonbone Axe"
-hbDebuffBleed[372397]="Vicious Bite"
-hbDebuffBleed[372570]="Bold Ambush"
-hbDebuffBleed[372718]="Earthen Shards"
-hbDebuffBleed[372796]="Blazing Rush"
-hbDebuffBleed[372860]="Searing Wounds"
-hbDebuffBleed[373735]="Dragon Strike"
-hbDebuffBleed[373947]="Rending Swipe"
-hbDebuffBleed[375201]="Talon Rip"
-hbDebuffBleed[375416]="Bleeding"
-hbDebuffBleed[375475]="Rending Bite"
-hbDebuffBleed[375803]="Mammoth Trap"
-hbDebuffBleed[375893]="Death Chakram"
-hbDebuffBleed[375937]="Rending Strike"
-hbDebuffBleed[376997]="Savage Peck"
-hbDebuffBleed[376999]="Thrash"
-hbDebuffBleed[377002]="Thrash"
-hbDebuffBleed[377344]="Peck"
-hbDebuffBleed[377609]="Dragon Rend"
-hbDebuffBleed[377732]="Jagged Bite"
-hbDebuffBleed[378020]="Gash Frenzy"
-hbDebuffBleed[381575]="Lacerate"
-hbDebuffBleed[381628]="Internal Bleeding"
-hbDebuffBleed[381672]="Mutilated Flesh"
-hbDebuffBleed[381692]="Swift Stab"
-hbDebuffBleed[384134]="Pierce"
-hbDebuffBleed[384148]="Ensnaring Trap"
-hbDebuffBleed[384575]="Crippling Bite"
-hbDebuffBleed[385042]="Gushing Wound"
-hbDebuffBleed[385060]="Odyn's Fury"
-hbDebuffBleed[385511]="Messy"
-hbDebuffBleed[385638]="Razor Fragments"
-hbDebuffBleed[385834]="Bloodthirsty Charge"
-hbDebuffBleed[385905]="Tailstrike"
-hbDebuffBleed[386116]="Messy"
-hbDebuffBleed[386640]="Tear Flesh"
-hbDebuffBleed[387205]="Beak Rend"
-hbDebuffBleed[387473]="Big Sharp Teeth"
-hbDebuffBleed[387809]="Splatter!"
-hbDebuffBleed[388301]="Savage Tear"
-hbDebuffBleed[388377]="Rending Slash"
-hbDebuffBleed[388473]="Feeding Frenzy"
-hbDebuffBleed[388539]="Rend"
-hbDebuffBleed[388912]="Severing Slash"
-hbDebuffBleed[389505]="Rending Slice"
-hbDebuffBleed[389881]="Spearhead"
-hbDebuffBleed[390194]="Rending Slash"
-hbDebuffBleed[390583]="Logcutter"
-hbDebuffBleed[390834]="Primal Rend"
-hbDebuffBleed[391098]="Puncturing Impalement"
-hbDebuffBleed[391114]="Cutting Winds"
-hbDebuffBleed[391140]="Frenzied Assault"
-hbDebuffBleed[391308]="Rending Swoop"
-hbDebuffBleed[391356]="Tear"
-hbDebuffBleed[391725]="Swooping Dive"
-hbDebuffBleed[392006]="Vicious Chomp"
-hbDebuffBleed[392235]="Furious Charge"
-hbDebuffBleed[392236]="Furious Charge"
-hbDebuffBleed[392332]="Horn Gore"
-hbDebuffBleed[392341]="Mighty Swipe"
-hbDebuffBleed[392411]="Beetle Thrust"
-hbDebuffBleed[392416]="Beetle Charge"
-hbDebuffBleed[392841]="Hungry Chomp"
-hbDebuffBleed[393426]="Spear Swipe"
-hbDebuffBleed[393444]="Gushing Wound"
-hbDebuffBleed[393718]="Heartpiercer"
-hbDebuffBleed[393817]="Hardened Shards"
-hbDebuffBleed[393820]="Horn Swing"
-hbDebuffBleed[394021]="Mutilated Flesh"
-hbDebuffBleed[394036]="Serrated Bone Spike"
-hbDebuffBleed[394063]="Rend"
-hbDebuffBleed[394371]="Hit the Mark"
-hbDebuffBleed[394628]="Peck"
-hbDebuffBleed[394647]="Merciless Gore"
-hbDebuffBleed[395827]="Severing Gore"
-hbDebuffBleed[395832]="Jagged Cuts"
-hbDebuffBleed[396007]="Vicious Peck"
-hbDebuffBleed[396093]="Savage Leap"
-hbDebuffBleed[396348]="Dismember"
-hbDebuffBleed[396353]="Fatal Chomp"
-hbDebuffBleed[396476]="Rending Claw"
-hbDebuffBleed[396639]="Bloody Pounce"
-hbDebuffBleed[396641]="Rending Slash"
-hbDebuffBleed[396674]="Rupturing Slash"
-hbDebuffBleed[396675]="Hemorrhaging Rend"
-hbDebuffBleed[396716]="Splinterbark"
-hbDebuffBleed[396807]="Savage Gore"
-hbDebuffBleed[397037]="Slicing Winds"
-hbDebuffBleed[397092]="Impaling Horn"
-hbDebuffBleed[397112]="Primal Devastation"
-hbDebuffBleed[397364]="Thunderous Roar"
-hbDebuffBleed[398392]="Stomp"
-hbDebuffBleed[398497]="Rock Needle"
-hbDebuffBleed[400050]="Claw Rip"
-hbDebuffBleed[400344]="Spike Traps"
-hbDebuffBleed[400941]="Ragged Slash"
-hbDebuffBleed[401370]="Deep Claws"
-hbDebuffBleed[403589]="Gushing Wound"
-hbDebuffBleed[403662]="Garrote"
-hbDebuffBleed[403790]="Vicious Swipe"
-hbDebuffBleed[404907]="Rupturing Slash"
-hbDebuffBleed[404945]="Raking Slice"
-hbDebuffBleed[404978]="Devastating Rend"
-hbDebuffBleed[405233]="Thrash"
-hbDebuffBleed[406183]="Time Slash"
-hbDebuffBleed[406365]="Rending Charge"
-hbDebuffBleed[406499]="Ravening Leaps"
-hbDebuffBleed[407120]="Serrated Axe"
-hbDebuffBleed[407313]="Shrapnel"
-hbDebuffBleed[411101]="Artifact Shards"
-hbDebuffBleed[411437]="Brutal Lacerations"
-hbDebuffBleed[411700]="Slobbering Bite"
-hbDebuffBleed[411924]="Drilljaws"
-hbDebuffBleed[412285]="Stonebolt"
-hbDebuffBleed[412505]="Rending Cleave"
-hbDebuffBleed[413131]="Whirling Dagger"
-hbDebuffBleed[413136]="Whirling Dagger"
-hbDebuffBleed[414466]="Jagged Gills"
-hbDebuffBleed[414552]="Stonecrack"
-hbDebuffBleed[416258]="Stonebolt"
-hbDebuffBleed[418009]="Serrated Arrows"
-hbDebuffBleed[418160]="Sawblade-Storm"
-hbDebuffBleed[418624]="Rending Slash"
+local BleedList={}
+BleedList[703] = "Garrote"
+BleedList[1079] = "Rip"
+BleedList[1943] = "Rupture"
+BleedList[3147] = "Rend Flesh"
+BleedList[5597] = "Serious Wound"
+BleedList[5598] = "Serious Wound"
+BleedList[8818] = "Garrote"
+BleedList[10266] = "Lung Puncture"
+BleedList[11977] = "Rend"
+BleedList[12054] = "Rend"
+BleedList[13318] = "Rend"
+BleedList[13443] = "Rend"
+BleedList[13445] = "Rend"
+BleedList[13738] = "Rend"
+BleedList[14087] = "Rend"
+BleedList[14118] = "Rend"
+BleedList[14331] = "Vicious Rend"
+BleedList[14874] = "Rupture"
+BleedList[14903] = "Rupture"
+BleedList[15583] = "Rupture"
+BleedList[15976] = "Puncture"
+BleedList[16095] = "Vicious Rend"
+BleedList[16393] = "Rend"
+BleedList[16403] = "Rend"
+BleedList[16406] = "Rend"
+BleedList[16509] = "Rend"
+BleedList[17153] = "Rend"
+BleedList[17504] = "Rend"
+BleedList[18075] = "Rend"
+BleedList[18078] = "Rend"
+BleedList[18106] = "Rend"
+BleedList[18200] = "Rend"
+BleedList[18202] = "Rend"
+BleedList[19771] = "Serrated Bite"
+BleedList[21949] = "Rend"
+BleedList[24192] = "Speed Slash"
+BleedList[24331] = "Rake"
+BleedList[24332] = "Rake"
+BleedList[27555] = "Shred"
+BleedList[27556] = "Rake"
+BleedList[27638] = "Rake"
+BleedList[28913] = "Flesh Rot"
+BleedList[29574] = "Rend"
+BleedList[29578] = "Rend"
+BleedList[29583] = "Impale"
+BleedList[29906] = "Ravage"
+BleedList[29935] = "Gaping Maw"
+BleedList[30285] = "Eagle Claw"
+BleedList[30639] = "Carnivorous Bite"
+BleedList[31041] = "Mangle"
+BleedList[31410] = "Coral Cut"
+BleedList[31956] = "Grievous Wound"
+BleedList[32019] = "Gore"
+BleedList[32901] = "Carnivorous Bite"
+BleedList[33865] = "Singe"
+BleedList[33912] = "Rip"
+BleedList[35144] = "Vicious Rend"
+BleedList[35318] = "Saw Blade"
+BleedList[35321] = "Gushing Wound"
+BleedList[36023] = "Deathblow"
+BleedList[36332] = "Rake"
+BleedList[36383] = "Carnivorous Bite"
+BleedList[36590] = "Rip"
+BleedList[36617] = "Gaping Maw"
+BleedList[36789] = "Diminish Soul"
+BleedList[36965] = "Rend"
+BleedList[36991] = "Rend"
+BleedList[37066] = "Garrote"
+BleedList[37123] = "Saw Blade"
+BleedList[37487] = "Blood Heal"
+BleedList[37641] = "Whirlwind"
+BleedList[37662] = "Rend"
+BleedList[37937] = "Flayed Flesh"
+BleedList[37973] = "Coral Cut"
+BleedList[38056] = "Flesh Rip"
+BleedList[38363] = "Gushing Wound"
+BleedList[38772] = "Grievous Wound"
+BleedList[38801] = "Grievous Wound"
+BleedList[38810] = "Gaping Maw"
+BleedList[38848] = "Diminish Soul"
+BleedList[39198] = "Carnivorous Bite"
+BleedList[39215] = "Gushing Wound"
+BleedList[39382] = "Carnivorous Bite"
+BleedList[40199] = "Flesh Rip"
+BleedList[41092] = "Carnivorous Bite"
+BleedList[41932] = "Carnivorous Bite"
+BleedList[42395] = "Lacerating Slash"
+BleedList[42397] = "Rend Flesh"
+BleedList[42658] = "Sic'em!"
+BleedList[43093] = "Grievous Throw"
+BleedList[43104] = "Deep Wound"
+BleedList[43153] = "Lynx Rush"
+BleedList[43246] = "Rend"
+BleedList[43931] = "Rend"
+BleedList[43937] = "Grievous Wound"
+BleedList[48130] = "Gore"
+BleedList[48261] = "Impale"
+BleedList[48286] = "Grievous Slash"
+BleedList[48374] = "Puncture Wound"
+BleedList[48880] = "Rend"
+BleedList[48920] = "Grievous Bite"
+BleedList[49678] = "Flesh Rot"
+BleedList[50729] = "Carnivorous Bite"
+BleedList[50871] = "Savage Rend"
+BleedList[51275] = "Gut Rip"
+BleedList[52401] = "Gut Rip"
+BleedList[52504] = "Lacerate"
+BleedList[52771] = "Wounding Strike"
+BleedList[52873] = "Open Wound"
+BleedList[53317] = "Rend"
+BleedList[53499] = "Rake"
+BleedList[53602] = "Dart"
+BleedList[54668] = "Rake"
+BleedList[54703] = "Rend"
+BleedList[54708] = "Rend"
+BleedList[55102] = "Determined Gore"
+BleedList[55249] = "Whirling Slash"
+BleedList[55250] = "Whirling Slash"
+BleedList[55276] = "Puncture"
+BleedList[55550] = "Jagged Knife"
+BleedList[55604] = "Death Plague"
+BleedList[55622] = "Impale"
+BleedList[55645] = "Death Plague"
+BleedList[57661] = "Rip"
+BleedList[58459] = "Impale"
+BleedList[58517] = "Grievous Wound"
+BleedList[58830] = "Wounding Strike"
+BleedList[58978] = "Impale"
+BleedList[59007] = "Flesh Rot"
+BleedList[59239] = "Rend"
+BleedList[59256] = "Impale"
+BleedList[59262] = "Grievous Wound"
+BleedList[59264] = "Gore"
+BleedList[59268] = "Impale"
+BleedList[59269] = "Carnivorous Bite"
+BleedList[59343] = "Rend"
+BleedList[59349] = "Dart"
+BleedList[59444] = "Determined Gore"
+BleedList[59682] = "Grievous Wound"
+BleedList[59691] = "Rend"
+BleedList[59824] = "Whirling Slash"
+BleedList[59825] = "Whirling Slash"
+BleedList[59826] = "Puncture"
+BleedList[59881] = "Rake"
+BleedList[59989] = "Rip"
+BleedList[61164] = "Impale"
+BleedList[61896] = "Lacerate"
+BleedList[62318] = "Barbed Shot"
+BleedList[62331] = "Impale"
+BleedList[62418] = "Impale"
+BleedList[63468] = "Careful Aim"
+BleedList[64374] = "Savage Pounce"
+BleedList[64666] = "Savage Pounce"
+BleedList[65033] = "Constricting Rend"
+BleedList[65406] = "Rake"
+BleedList[66620] = "Old Wounds"
+BleedList[67280] = "Dagger Throw"
+BleedList[69203] = "Vicious Bite"
+BleedList[70278] = "Puncture Wound"
+BleedList[71926] = "Rip"
+BleedList[74846] = "Bleeding Wound"
+BleedList[75160] = "Bloody Rip"
+BleedList[75161] = "Spinning Rake"
+BleedList[75388] = "Rusty Cut"
+BleedList[75930] = "Mangle"
+BleedList[76507] = "Claw Puncture"
+BleedList[76524] = "Grievous Whirl"
+BleedList[76594] = "Rend"
+BleedList[78842] = "Carnivorous Bite"
+BleedList[78859] = "Elementium Spike Shield"
+BleedList[79444] = "Impale"
+BleedList[79828] = "Mangle"
+BleedList[79829] = "Rip"
+BleedList[80028] = "Rock Bore"
+BleedList[80051] = "Grievous Wound"
+BleedList[81043] = "Razor Slice"
+BleedList[81087] = "Puncture Wound"
+BleedList[81568] = "Spinning Slash"
+BleedList[81569] = "Spinning Slash"
+BleedList[81690] = "Scent of Blood"
+BleedList[82753] = "Ritual of Bloodletting"
+BleedList[82766] = "Eye Gouge"
+BleedList[83783] = "Impale"
+BleedList[84642] = "Puncture"
+BleedList[85415] = "Mangle"
+BleedList[87395] = "Serrated Slash"
+BleedList[89212] = "Eagle Claw"
+BleedList[90098] = "Axe to the Head"
+BleedList[91348] = "Tenderize"
+BleedList[93587] = "Ritual of Bloodletting"
+BleedList[93675] = "Mortal Wound"
+BleedList[95334] = "Elementium Spike Shield"
+BleedList[96570] = "Gaping Wound"
+BleedList[96592] = "Ravage"
+BleedList[96700] = "Ravage"
+BleedList[97357] = "Gaping Wound"
+BleedList[98282] = "Tiny Rend"
+BleedList[99100] = "Mangle"
+BleedList[102066] = "Flesh Rip"
+BleedList[102925] = "Garrote"
+BleedList[112896] = "Drain Blood"
+BleedList[113344] = "Bloodbath"
+BleedList[113855] = "Bleeding Wound"
+BleedList[114056] = "Bloody Mess"
+BleedList[114860] = "Rend"
+BleedList[114881] = "Hawk Rend"
+BleedList[115767] = "Deep Wounds"
+BleedList[115774] = "Vicious Wound"
+BleedList[115871] = "Rake"
+BleedList[118146] = "Lacerate"
+BleedList[119840] = "Serrated Blade"
+BleedList[120166] = "Serrated Blade"
+BleedList[120560] = "Rake"
+BleedList[120699] = "Lynx Rush"
+BleedList[121247] = "Impale"
+BleedList[121411] = "Crimson Tempest"
+BleedList[122962] = "Carnivorous Bite"
+BleedList[123422] = "Arterial Bleeding"
+BleedList[123852] = "Gored"
+BleedList[124015] = "Gored"
+BleedList[124296] = "Vicious Strikes"
+BleedList[124341] = "Bloodletting"
+BleedList[124678] = "Hacking Slash"
+BleedList[124800] = "Pinch Limb"
+BleedList[125099] = "Rake"
+BleedList[125206] = "Rend Flesh"
+BleedList[125431] = "Slice Bone"
+BleedList[125624] = "Vicious Rend"
+BleedList[126901] = "Mortal Rend"
+BleedList[126912] = "Grievous Whirl"
+BleedList[127872] = "Consume Flesh"
+BleedList[127987] = "Bleeding Bite"
+BleedList[128051] = "Serrated Slash"
+BleedList[128903] = "Garrote"
+BleedList[129463] = "Crane Kick"
+BleedList[129497] = "Pounced"
+BleedList[129537] = "Snap!"
+BleedList[130191] = "Rake"
+BleedList[130306] = "Ankle Bite"
+BleedList[130785] = "My Eye!"
+BleedList[130897] = "Vicious Bite"
+BleedList[131662] = "Vicious Stabbing"
+BleedList[133074] = "Puncture"
+BleedList[133081] = "Rip"
+BleedList[134691] = "Impale"
+BleedList[135528] = "Bleeding Wound"
+BleedList[135892] = "Razor Slice"
+BleedList[136654] = "Rending Charge"
+BleedList[136753] = "Slashing Talons"
+BleedList[137497] = "Garrote"
+BleedList[138956] = "Dark Bite"
+BleedList[139514] = "Bloodstorm"
+BleedList[140274] = "Vicious Wound"
+BleedList[140275] = "Rend"
+BleedList[140276] = "Rend"
+BleedList[140396] = "Rend"
+BleedList[143198] = "Garrote"
+BleedList[144113] = "Chomp"
+BleedList[144263] = "Rend"
+BleedList[144264] = "Rend"
+BleedList[144304] = "Rend"
+BleedList[144853] = "Carnivorous Bite"
+BleedList[145263] = "Chomp"
+BleedList[145417] = "Rupture"
+BleedList[146556] = "Pierce"
+BleedList[146927] = "Rend"
+BleedList[147396] = "Rake"
+BleedList[148033] = "Grapple"
+BleedList[148375] = "Brutal Hemorrhage"
+BleedList[150807] = "Traumatic Strike"
+BleedList[151092] = "Traumatic Strike"
+BleedList[151475] = "Drain Life"
+BleedList[152357] = "Rend"
+BleedList[152623] = "Rend"
+BleedList[152724] = "Lacerating Strike"
+BleedList[153897] = "Rending Cleave"
+BleedList[154489] = "Puncturing Horns"
+BleedList[154953] = "Internal Bleeding"
+BleedList[154960] = "Pinned Down"
+BleedList[155065] = "Ripping Claw"
+BleedList[155701] = "Serrated Slash"
+BleedList[155722] = "Rake"
+BleedList[157344] = "Vital Strike"
+BleedList[158150] = "Goring Swipe"
+BleedList[158341] = "Gushing Wounds"
+BleedList[158453] = "Rending Swipe"
+BleedList[158667] = "Warleader's Spear"
+BleedList[159238] = "Shattered Bleed"
+BleedList[161117] = "Puncturing Tusk"
+BleedList[161229] = "Pounce"
+BleedList[161765] = "Iron Axe"
+BleedList[162487] = "Steel Trap"
+BleedList[162516] = "Whirling Steel"
+BleedList[162921] = "Peck"
+BleedList[162951] = "Lacerating Spines"
+BleedList[163276] = "Shredded Tendons"
+BleedList[164218] = "Double Slash"
+BleedList[164323] = "Precise Strike"
+BleedList[164427] = "Ravage"
+BleedList[165308] = "Gushing Wound"
+BleedList[166185] = "Rending Slash"
+BleedList[166638] = "Gushing Wound"
+BleedList[166639] = "Item - Druid T17 Feral 4P Bonus Proc Driver"
+BleedList[166917] = "Savage"
+BleedList[167334] = "Windfang Bite"
+BleedList[167597] = "Rending Nails"
+BleedList[167978] = "Jagged Edge"
+BleedList[168097] = "Shredder Bomb"
+BleedList[168392] = "Fangs of the Predator"
+BleedList[169584] = "Serrated Spines"
+BleedList[170367] = "Vicious Throw"
+BleedList[170373] = "Razor Teeth"
+BleedList[170936] = "Talador Venom"
+BleedList[172019] = "Stingtail Venom"
+BleedList[172035] = "Thrash"
+BleedList[172139] = "Lacerating Bite"
+BleedList[172361] = "Puncturing Strike"
+BleedList[172366] = "Jagged Slash"
+BleedList[172657] = "Serrated Edge"
+BleedList[172889] = "Charging Slash"
+BleedList[173113] = "Hatchet Toss"
+BleedList[173278] = "Spinal Shards"
+BleedList[173299] = "Rip"
+BleedList[173307] = "Serrated Spear"
+BleedList[173378] = "Rending Bite"
+BleedList[173643] = "Drill Fist"
+BleedList[173876] = "Rending Claws"
+BleedList[174423] = "Pinning Spines"
+BleedList[174734] = "Axe to the Face!"
+BleedList[174820] = "Rending Claws"
+BleedList[175014] = "Rupture"
+BleedList[175151] = "Thousand Fangs"
+BleedList[175156] = "Painful Pinch"
+BleedList[175372] = "Sharp Teeth"
+BleedList[175461] = "Sadistic Slice"
+BleedList[175747] = "Big Sharp Nasty Claws"
+BleedList[176147] = "Ignite"
+BleedList[176256] = "Talon Sweep"
+BleedList[176575] = "Consume Flesh"
+BleedList[176695] = "Bone Fragments"
+BleedList[177337] = "Carnivorous Bite"
+BleedList[177422] = "Thrash"
+BleedList[181346] = "Lacerating Swipe"
+BleedList[181533] = "Jagged Blade"
+BleedList[182325] = "Phantasmal Wounds"
+BleedList[182330] = "Coral Cut"
+BleedList[182347] = "Impaling Coral"
+BleedList[182795] = "Primal Mangle"
+BleedList[182846] = "Thrash"
+BleedList[183025] = "Rending Lash"
+BleedList[183952] = "Shadow Claws"
+BleedList[184025] = "Rending Claws"
+BleedList[184090] = "Bloody Arc"
+BleedList[184175] = "Primal Rake"
+BleedList[185539] = "Rapid Rupture"
+BleedList[185698] = "Bloody Hack"
+BleedList[185855] = "Lacerate"
+BleedList[186191] = "Bloodletting Slash"
+BleedList[186365] = "Sweeping Blade"
+BleedList[186594] = "Laceration"
+BleedList[186639] = "Big Sharp Nasty Teeth"
+BleedList[186730] = "Exposed Wounds"
+BleedList[187647] = "Bloodletting Pounce"
+BleedList[188353] = "Rip"
+BleedList[189035] = "Barbed Cutlass"
+BleedList[191977] = "Impaling Spear"
+BleedList[192090] = "Thrash"
+BleedList[192131] = "Throw Spear"
+BleedList[192925] = "Blood of the Assassinated"
+BleedList[193092] = "Bloodletting Sweep"
+BleedList[193340] = "Fenri's Bite"
+BleedList[193585] = "Bound"
+BleedList[193639] = "Bone Chomp"
+BleedList[194636] = "Cursed Rend"
+BleedList[194639] = "Rending Claws"
+BleedList[194674] = "Barbed Spear"
+BleedList[195094] = "Coral Slash"
+BleedList[195279] = "Bind"
+BleedList[195506] = "Razorsharp Axe"
+BleedList[196111] = "Jagged Claws"
+BleedList[196189] = "Bloody Talons"
+BleedList[196313] = "Lacerating Talons"
+BleedList[196376] = "Grievous Tear"
+BleedList[196497] = "Ravenous Leap"
+BleedList[197359] = "Shred"
+BleedList[197381] = "Exposed Wounds"
+BleedList[197546] = "Brutal Glaive"
+BleedList[199108] = "Frantic Gore"
+BleedList[199146] = "Bucking Charge"
+BleedList[199337] = "Bear Trap"
+BleedList[199847] = "Grievous Wound"
+BleedList[200182] = "Festering Rip"
+BleedList[200620] = "Frantic Rip"
+BleedList[204175] = "Rend"
+BleedList[204179] = "Rend Flesh"
+BleedList[204968] = "Hemoraging Barbs"
+BleedList[205437] = "Laceration"
+BleedList[207662] = "Nightmare Wounds"
+BleedList[207690] = "Bloodlet"
+BleedList[208470] = "Necrotic Thrash"
+BleedList[208945] = "Mangle"
+BleedList[208946] = "Rip"
+BleedList[209336] = "Mangle"
+BleedList[209378] = "Whirling Blades"
+BleedList[209667] = "Blade Surge"
+BleedList[209858] = "Necrotic Wound"
+BleedList[210013] = "Bloodletting Slash"
+BleedList[210177] = "Spiked Shield"
+BleedList[210723] = "Ashamane's Frenzy"
+BleedList[211672] = "Mutilated Flesh"
+BleedList[211846] = "Bloodletting Lunge"
+BleedList[213431] = "Gnawing Eagle"
+BleedList[213537] = "Bloody Pin"
+BleedList[213824] = "Rending Pounce"
+BleedList[213933] = "Harpoon Swipe"
+BleedList[213990] = "Shard Bore"
+BleedList[214676] = "Razorsharp Teeth"
+BleedList[215442] = "Shred"
+BleedList[215506] = "Jagged Quills"
+BleedList[215537] = "Trauma"
+BleedList[215721] = "Gut Slash"
+BleedList[217023] = "Antler Gore"
+BleedList[217041] = "Shred"
+BleedList[217091] = "Puncturing Stab"
+BleedList[217142] = "Mangle"
+BleedList[217163] = "Rend"
+BleedList[217200] = "Barbed Shot"
+BleedList[217235] = "Rending Whirl"
+BleedList[217363] = "Ashamane's Frenzy"
+BleedList[217369] = "Rake"
+BleedList[217868] = "Impale"
+BleedList[218506] = "Jagged Slash"
+BleedList[219167] = "Chomp"
+BleedList[219240] = "Bloody Ricochet"
+BleedList[219339] = "Thrash"
+BleedList[219680] = "Impale"
+BleedList[220222] = "Rending Snap"
+BleedList[220874] = "Lacerate"
+BleedList[221352] = "Cut the Flank"
+BleedList[221422] = "Vicious Bite"
+BleedList[221759] = "Feathery Stab"
+BleedList[221770] = "Rend Flesh"
+BleedList[222491] = "Gutripper"
+BleedList[223111] = "Rake"
+BleedList[223572] = "Rend"
+BleedList[223954] = "Rake"
+BleedList[223967] = "Tear Flesh"
+BleedList[224435] = "Ashamane's Rip"
+BleedList[225484] = "Grievous Rip"
+BleedList[225963] = "Bloodthirsty Leap"
+BleedList[227742] = "Garrote"
+BleedList[228275] = "Rend"
+BleedList[228281] = "Rend"
+BleedList[228305] = "Unyielding Rend"
+BleedList[229127] = "Powershot"
+BleedList[229265] = "Garrote"
+BleedList[229923] = "Talon Rend"
+BleedList[230011] = "Cruel Garrote"
+BleedList[231003] = "Barbed Talons"
+BleedList[231998] = "Jagged Abrasion"
+BleedList[232135] = "Bloody Jab"
+BleedList[235832] = "Bloodletting Strike"
+BleedList[237346] = "Rend"
+BleedList[238594] = "Ripper Blade"
+BleedList[238618] = "Fel Swipe"
+BleedList[240449] = "Grievous Wound"
+BleedList[240539] = "Wild Bite"
+BleedList[240559] = "Grievous Wound"
+BleedList[241070] = "Bloodletting Strike"
+BleedList[241092] = "Rend"
+BleedList[241212] = "Fel Slash"
+BleedList[241465] = "Coral Cut"
+BleedList[241644] = "Mangle"
+BleedList[242376] = "Puncturing Strike"
+BleedList[242828] = "Dire Thrash"
+BleedList[242931] = "Rake"
+BleedList[244040] = "Eskhandar's Rake"
+BleedList[246904] = "Smoldering Rend"
+BleedList[247932] = "Shrapnel Blast"
+BleedList[247949] = "Shrapnel Blast"
+BleedList[250393] = "Rake"
+BleedList[251332] = "Rip"
+BleedList[253384] = "Slaughter"
+BleedList[253516] = "Hexabite"
+BleedList[253610] = "Ripper Blade"
+BleedList[254280] = "Jagged Maw"
+BleedList[254575] = "Rend"
+BleedList[254901] = "Blood Frenzy"
+BleedList[255299] = "Bloodletting"
+BleedList[255434] = "Serrated Teeth"
+BleedList[255595] = "Chomp"
+BleedList[255814] = "Rending Maul"
+BleedList[256077] = "Gore"
+BleedList[256314] = "Barbed Strike"
+BleedList[256363] = "Ripper Punch"
+BleedList[256476] = "Rending Whirl"
+BleedList[256709] = "Singing Steel"
+BleedList[256715] = "Jagged Maw"
+BleedList[256880] = "Bone Splinter"
+BleedList[256914] = "Barbed Blade"
+BleedList[256965] = "Thorned Barrage"
+BleedList[257036] = "Feral Charge"
+BleedList[257250] = "Bramblepelt"
+BleedList[257544] = "Jagged Cut"
+BleedList[257790] = "Gutripper"
+BleedList[257971] = "Leaping Thrash"
+BleedList[258058] = "Squeeze"
+BleedList[258075] = "Itchy Bite"
+BleedList[258143] = "Rending Claws"
+BleedList[258718] = "Scratched!"
+BleedList[258798] = "Razorsharp Teeth"
+BleedList[258825] = "Vampiric Bite"
+BleedList[259220] = "Barbed Net"
+BleedList[259277] = "Kill Command"
+BleedList[259328] = "Gory Whirl"
+BleedList[259382] = "Shell Slash"
+BleedList[259739] = "Stone Claws"
+BleedList[259873] = "Rip"
+BleedList[259983] = "Pierce"
+BleedList[260016] = "Itchy Bite"
+BleedList[260025] = "Rending Whirl"
+BleedList[260400] = "Rend"
+BleedList[260455] = "Serrated Fangs"
+BleedList[260563] = "Gnaw"
+BleedList[260582] = "Gushing Wound"
+BleedList[260741] = "Jagged Nettles"
+BleedList[261882] = "Steel Jaw Trap"
+BleedList[262115] = "Deep Wounds"
+BleedList[262143] = "Ravenous Claws"
+BleedList[262557] = "Rake"
+BleedList[262677] = "Keelhaul"
+BleedList[262875] = "Papercut"
+BleedList[263144] = "Talon Slash"
+BleedList[264145] = "Shatter"
+BleedList[264150] = "Shatter"
+BleedList[264210] = "Jagged Mandible"
+BleedList[264556] = "Tearing Strike"
+BleedList[265019] = "Savage Cleave"
+BleedList[265074] = "Rend"
+BleedList[265165] = "Charging Gore"
+BleedList[265232] = "Rend"
+BleedList[265377] = "Hooked Snare"
+BleedList[265533] = "Blood Maw"
+BleedList[265948] = "Denticulated"
+BleedList[266035] = "Bone Splinter"
+BleedList[266191] = "Whirling Axe"
+BleedList[266231] = "Severing Axe"
+BleedList[266505] = "Rending Claw"
+BleedList[267064] = "Bleeding"
+BleedList[267080] = "Blight of G'huun"
+BleedList[267103] = "Blight of G'huun"
+BleedList[267441] = "Serrated Axe"
+BleedList[267523] = "Cutting Surge"
+BleedList[269576] = "Master Marksman"
+BleedList[270084] = "Axe Barrage"
+BleedList[270139] = "Gore"
+BleedList[270343] = "Internal Bleeding"
+BleedList[270473] = "Serrated Arrows"
+BleedList[270487] = "Severing Blade"
+BleedList[270979] = "Rend and Tear"
+BleedList[271178] = "Ravaging Leap"
+BleedList[271798] = "Click"
+BleedList[272273] = "Rending Cleave"
+BleedList[273436] = "Gore"
+BleedList[273632] = "Gaping Maw"
+BleedList[273794] = "Rezan's Fury"
+BleedList[273900] = "Bramble Swipe"
+BleedList[273909] = "Steelclaw Trap"
+BleedList[274089] = "Rend"
+BleedList[274389] = "Rat Traps"
+BleedList[274838] = "Feral Frenzy"
+BleedList[275895] = "Rend of Kimbul"
+BleedList[276868] = "Impale"
+BleedList[277077] = "Big Sharp Nasty Teeth"
+BleedList[277309] = "Jagged Maw"
+BleedList[277431] = "Hunter Toxin"
+BleedList[277517] = "Serrated Slash"
+BleedList[277569] = "Bloodthirsty Rend"
+BleedList[277592] = "Blood Frenzy"
+BleedList[277794] = "Paw Swipe"
+BleedList[278175] = "Bramble Claw"
+BleedList[278570] = "Boils and Sores"
+BleedList[278733] = "Deep Wound"
+BleedList[278866] = "Carve and Spit"
+BleedList[279133] = "Rend"
+BleedList[280286] = "Dagger in the Back"
+BleedList[280321] = "Garrote"
+BleedList[280940] = "Mangle"
+BleedList[281711] = "Cut of Death"
+BleedList[282444] = "Lacerating Claws"
+BleedList[282845] = "Bear Trap"
+BleedList[283419] = "Rend"
+BleedList[283667] = "Rupture"
+BleedList[283668] = "Crimson Tempest"
+BleedList[283700] = "Rake"
+BleedList[283708] = "Rip"
+BleedList[284158] = "Circular Saw"
+BleedList[285875] = "Rending Bite"
+BleedList[286269] = "Mangle"
+BleedList[288091] = "Gushing Wound"
+BleedList[288266] = "Mangle"
+BleedList[288535] = "Rip"
+BleedList[288539] = "Mangle"
+BleedList[289355] = "Smoldering Rend"
+BleedList[289373] = "Lacerating Pounce"
+BleedList[289848] = "Rending Claw"
+BleedList[292348] = "Bloodletting"
+BleedList[292611] = "Rake"
+BleedList[292626] = "Rip"
+BleedList[293670] = "Chainblade"
+BleedList[294617] = "Rupture"
+BleedList[294741] = "Saber Slash"
+BleedList[294901] = "Serrated Blades"
+BleedList[295008] = "Bloody Cleaver"
+BleedList[295929] = "Rats!"
+BleedList[295945] = "Rat Traps"
+BleedList[296777] = "Bleeding Wound"
+BleedList[299474] = "Ripping Slash"
+BleedList[299502] = "Nanoslicer"
+BleedList[299923] = "Tear Flesh"
+BleedList[300610] = "Fanged Bite"
+BleedList[301061] = "Thrash"
+BleedList[301712] = "Pounce"
+BleedList[302295] = "Slicing Claw"
+BleedList[302474] = "Phantom Laceration"
+BleedList[303162] = "Carve Flesh"
+BleedList[303215] = "Shell Slash"
+BleedList[303501] = "Rending Strike"
+BleedList[308342] = "Bore"
+BleedList[308859] = "Carnivorous Bite"
+BleedList[308891] = "Jagged Chop"
+BleedList[308938] = "Lacerating Swipe"
+BleedList[309760] = "Raking Claws"
+BleedList[311122] = "Jagged Wound"
+BleedList[311744] = "Deep Wound"
+BleedList[311748] = "Lacerating Swipe"
+BleedList[313674] = "Jagged Wound"
+BleedList[313734] = "Ravaging Leap"
+BleedList[313747] = "Rend"
+BleedList[313957] = "Rend"
+BleedList[314130] = "Skewer"
+BleedList[314160] = "Penetrating Lance"
+BleedList[314454] = "Thrashing Lunge"
+BleedList[314531] = "Tear Flesh"
+BleedList[314568] = "Deep Wound"
+BleedList[314847] = "Decapitate"
+BleedList[315311] = "Ravage"
+BleedList[315711] = "Serrated Strike"
+BleedList[315805] = "Crippler"
+BleedList[316511] = "Scratch"
+BleedList[317561] = "Swooping Lunge"
+BleedList[317908] = "Razor Wing"
+BleedList[317916] = "Razor Clip"
+BleedList[318187] = "Gushing Wound"
+BleedList[319127] = "Gore"
+BleedList[319275] = "Razor Wing"
+BleedList[320007] = "Gash"
+BleedList[320147] = "Bleeding"
+BleedList[320200] = "Stitchneedle"
+BleedList[321538] = "Bloodshed"
+BleedList[321807] = "Boneflay"
+BleedList[322429] = "Severing Slice"
+BleedList[322796] = "Wicked Gash"
+BleedList[322965] = "Tearing Bite"
+BleedList[323043] = "Bloodletting"
+BleedList[323406] = "Jagged Gash"
+BleedList[324073] = "Serrated Bone Spike"
+BleedList[324149] = "Flayed Shot"
+BleedList[324154] = "Dark Stride"
+BleedList[324447] = "Slashing Rend"
+BleedList[325021] = "Mistveil Tear"
+BleedList[325022] = "Jagged Swipe"
+BleedList[325037] = "Death Chakram"
+BleedList[326298] = "Bleeding Wound"
+BleedList[326586] = "Crimson Flurry"
+BleedList[327814] = "Wicked Gash"
+BleedList[328287] = "Heart Strike"
+BleedList[328897] = "Exsanguinated"
+BleedList[328910] = "Tantrum"
+BleedList[328940] = "Gore"
+BleedList[329293] = "Vorpal Wound"
+BleedList[329516] = "Swift Slash"
+BleedList[329563] = "Goring Swipe"
+BleedList[329906] = "Carnage"
+BleedList[329986] = "Maul"
+BleedList[329990] = "Craggy Swipe"
+BleedList[330400] = "Bleeding Swipe"
+BleedList[330457] = "Ripping Strike"
+BleedList[330532] = "Jagged Quarrel"
+BleedList[330632] = "Maul"
+BleedList[331045] = "Talon Rake"
+BleedList[331066] = "Bursting Plumage"
+BleedList[331072] = "Talon Rake"
+BleedList[331340] = "Plague Swipe"
+BleedList[331415] = "Wicked Gash"
+BleedList[332168] = "Maul"
+BleedList[332610] = "Penetrating Insight"
+BleedList[332678] = "Gushing Wound"
+BleedList[332792] = "Gore"
+BleedList[332835] = "Ruthless Strikes"
+BleedList[332836] = "Chop"
+BleedList[333235] = "Horn Rush"
+BleedList[333250] = "Reaver"
+BleedList[333478] = "Gut Slice"
+BleedList[333861] = "Ricocheting Blade"
+BleedList[333985] = "Culling Strike"
+BleedList[334669] = "Tirnenn Wrath"
+BleedList[334960] = "Vicious Wound"
+BleedList[334971] = "Jagged Claws"
+BleedList[335105] = "Dinner Time"
+BleedList[336628] = "Eternal Polearm"
+BleedList[336810] = "Ragged Claws"
+BleedList[337349] = "Triple Thrash"
+BleedList[337729] = "Kerim's Laceration"
+BleedList[337892] = "Gore"
+BleedList[338935] = "Razor Petals"
+BleedList[339163] = "Wicked Gash"
+BleedList[339189] = "Chain Bleed"
+BleedList[339453] = "Darksworn Blast"
+BleedList[339789] = "Darksworn Blast"
+BleedList[339975] = "Grievous Strike"
+BleedList[340058] = "Heart Piercer"
+BleedList[340374] = "Bloody Tantrum"
+BleedList[340431] = "Mutilated Flesh"
+BleedList[341435] = "Lunge"
+BleedList[341475] = "Crimson Flurry"
+BleedList[341833] = "Rending Cleave"
+BleedList[341863] = "Bleeding Out"
+BleedList[342250] = "Jagged Swipe"
+BleedList[342464] = "Javelin Flurry"
+BleedList[342675] = "Bone Spear"
+BleedList[343159] = "Stone Claws"
+BleedList[343722] = "Crushing Bite"
+BleedList[344312] = "Serrated Edge"
+BleedList[344464] = "Shield Spike"
+BleedList[344993] = "Jagged Swipe"
+BleedList[345548] = "Spare Meat Hook"
+BleedList[346770] = "Grinding Bite"
+BleedList[346807] = "Rending Roar"
+BleedList[347716] = "Letter Opener"
+BleedList[347807] = "Barbed Arrow"
+BleedList[348074] = "Assailing Lance"
+BleedList[348385] = "Bloody Cleave"
+BleedList[348726] = "Lethal Shot"
+BleedList[351119] = "Shuriken Blitz"
+BleedList[351976] = "Shredder"
+BleedList[353068] = "Razor Trap"
+BleedList[353466] = "Sadistic Glee"
+BleedList[353919] = "Rury's Sleepy Tantrum"
+BleedList[354334] = "Hook'd!"
+BleedList[355087] = "Piercing Quill"
+BleedList[355256] = "Rending Roar"
+BleedList[355416] = "Sharpened Hide"
+BleedList[355832] = "Quickblade"
+BleedList[356445] = "Sharpened Hide"
+BleedList[356620] = "Pouch of Razor Fragments"
+BleedList[356808] = "Spiked"
+BleedList[356923] = "Sever"
+BleedList[356925] = "Carnage"
+BleedList[357091] = "Cleave Flesh"
+BleedList[357192] = "Dark Flurry"
+BleedList[357239] = "Cleave Flesh"
+BleedList[357322] = "Night Glaive"
+BleedList[357665] = "Crystalline Flesh"
+BleedList[357827] = "Frantic Rip"
+BleedList[357953] = "Fanged Bite"
+BleedList[358197] = "Searing Scythe"
+BleedList[358224] = "Jagged Swipe"
+BleedList[359587] = "Bloody Peck"
+BleedList[359981] = "Rend"
+BleedList[360194] = "Deathmark"
+BleedList[360775] = "Puncture"
+BleedList[360826] = "Rupture"
+BleedList[360830] = "Garrote"
+BleedList[361024] = "Thief's Blade"
+BleedList[361049] = "Bleeding Gash"
+BleedList[361756] = "Death Chakram"
+BleedList[362149] = "Ascended Phalanx"
+BleedList[362194] = "Suffering"
+BleedList[362819] = "Rend"
+BleedList[363830] = "Sickle of the Lion"
+BleedList[363831] = "Bleeding Soul"
+BleedList[365336] = "Rending Bite"
+BleedList[365877] = "Jagged Blade"
+BleedList[366075] = "Bloody Peck"
+BleedList[366275] = "Rending Bite"
+BleedList[366884] = "Ripped Secrets"
+BleedList[367481] = "Bloody Bite"
+BleedList[367521] = "Bone Bolt"
+BleedList[367726] = "Lupine's Slash"
+BleedList[368401] = "Puncture"
+BleedList[368637] = "The Third Rune"
+BleedList[368651] = "Vicious Wound"
+BleedList[368701] = "Boon of Harvested Hope"
+BleedList[369408] = "Rending Slash"
+BleedList[369828] = "Chomp"
+BleedList[370742] = "Jagged Strike"
+BleedList[371472] = "Rake"
+BleedList[372224] = "Dragonbone Axe"
+BleedList[372397] = "Vicious Bite"
+BleedList[372404] = "Rend"
+BleedList[372570] = "Bold Ambush"
+BleedList[372718] = "Earthen Shards"
+BleedList[372796] = "Blazing Rush"
+BleedList[372860] = "Searing Wounds"
+BleedList[373735] = "Dragon Strike"
+BleedList[373947] = "Rending Swipe"
+BleedList[375201] = "Talon Rip"
+BleedList[375416] = "Bleeding"
+BleedList[375475] = "Rending Bite"
+BleedList[375803] = "Mammoth Trap"
+BleedList[375893] = "Chakram"
+BleedList[375937] = "Rending Strike"
+BleedList[376997] = "Savage Peck"
+BleedList[376999] = "Thrash"
+BleedList[377002] = "Thrash"
+BleedList[377344] = "Peck"
+BleedList[377609] = "Dragon Rend"
+BleedList[377732] = "Jagged Bite"
+BleedList[378020] = "Gash Frenzy"
+BleedList[378118] = "Knocked Down"
+BleedList[378957] = "Spearhead"
+BleedList[381575] = "Lacerate"
+BleedList[381628] = "Internal Bleeding"
+BleedList[381672] = "Mutilated Flesh"
+BleedList[381692] = "Swift Stab"
+BleedList[384134] = "Pierce"
+BleedList[384148] = "Ensnaring Trap"
+BleedList[384575] = "Crippling Bite"
+BleedList[385042] = "Gushing Wound"
+BleedList[385060] = "Odyn's Fury"
+BleedList[385511] = "Messy"
+BleedList[385638] = "Razor Fragments"
+BleedList[385834] = "Bloodthirsty Charge"
+BleedList[385905] = "Tailstrike"
+BleedList[386116] = "Messy"
+BleedList[386640] = "Tear Flesh"
+BleedList[387205] = "Beak Rend"
+BleedList[387473] = "Big Sharp Teeth"
+BleedList[387809] = "Splatter!"
+BleedList[388301] = "Savage Tear"
+BleedList[388377] = "Rending Slash"
+BleedList[388473] = "Feeding Frenzy"
+BleedList[388539] = "Rend"
+BleedList[388912] = "Severing Slash"
+BleedList[389505] = "Rending Slice"
+BleedList[389881] = "Spearhead"
+BleedList[390194] = "Rending Slash"
+BleedList[390583] = "Logcutter"
+BleedList[390834] = "Primal Rend"
+BleedList[391098] = "Puncturing Impalement"
+BleedList[391114] = "Cutting Winds"
+BleedList[391140] = "Frenzied Assault"
+BleedList[391308] = "Rending Swoop"
+BleedList[391356] = "Tear"
+BleedList[391725] = "Swooping Dive"
+BleedList[392006] = "Vicious Chomp"
+BleedList[392235] = "Furious Charge"
+BleedList[392236] = "Furious Charge"
+BleedList[392332] = "Horn Gore"
+BleedList[392341] = "Mighty Swipe"
+BleedList[392411] = "Beetle Thrust"
+BleedList[392416] = "Beetle Charge"
+BleedList[392841] = "Hungry Chomp"
+BleedList[393426] = "Spear Swipe"
+BleedList[393444] = "Gushing Wound"
+BleedList[393718] = "Heartpiercer"
+BleedList[393817] = "Hardened Shards"
+BleedList[393820] = "Horn Swing"
+BleedList[394021] = "Mutilated Flesh"
+BleedList[394036] = "Serrated Bone Spike"
+BleedList[394063] = "Rend"
+BleedList[394371] = "Hit the Mark"
+BleedList[394628] = "Peck"
+BleedList[394647] = "Merciless Gore"
+BleedList[395827] = "Severing Gore"
+BleedList[395832] = "Jagged Cuts"
+BleedList[396007] = "Vicious Peck"
+BleedList[396093] = "Savage Leap"
+BleedList[396348] = "Dismember"
+BleedList[396353] = "Fatal Chomp"
+BleedList[396476] = "Rending Claw"
+BleedList[396639] = "Bloody Pounce"
+BleedList[396641] = "Rending Slash"
+BleedList[396674] = "Rupturing Slash"
+BleedList[396675] = "Hemorrhaging Rend"
+BleedList[396716] = "Splinterbark"
+BleedList[396807] = "Savage Gore"
+BleedList[397037] = "Slicing Winds"
+BleedList[397092] = "Impaling Horn"
+BleedList[397112] = "Primal Devastation"
+BleedList[397364] = "Thunderous Roar"
+BleedList[398392] = "Stomp"
+BleedList[398497] = "Rock Needle"
+BleedList[400050] = "Claw Rip"
+BleedList[400344] = "Spike Traps"
+BleedList[400941] = "Ragged Slash"
+BleedList[401370] = "Deep Claws"
+BleedList[403589] = "Gushing Wound"
+BleedList[403662] = "Garrote"
+BleedList[403790] = "Vicious Swipe"
+BleedList[404907] = "Rupturing Slash"
+BleedList[404945] = "Raking Slice"
+BleedList[404978] = "Devastating Rend"
+BleedList[405233] = "Thrash"
+BleedList[406183] = "Time Slash"
+BleedList[406365] = "Rending Charge"
+BleedList[406499] = "Ravening Leaps"
+BleedList[407120] = "Serrated Axe"
+BleedList[407313] = "Shrapnel"
+BleedList[411101] = "Artifact Shards"
+BleedList[411437] = "Brutal Lacerations"
+BleedList[411700] = "Slobbering Bite"
+BleedList[411924] = "Drilljaws"
+BleedList[412172] = "Ceaseless Nibbling"
+BleedList[412285] = "Stonebolt"
+BleedList[412505] = "Rending Cleave"
+BleedList[413131] = "Whirling Dagger"
+BleedList[413136] = "Whirling Dagger"
+BleedList[414340] = "Drenched Blades"
+BleedList[414466] = "Jagged Gills"
+BleedList[414506] = "Lacerate"
+BleedList[414552] = "Stonecrack"
+BleedList[416258] = "Stonebolt"
+BleedList[418009] = "Serrated Arrows"
+BleedList[418160] = "Sawblade-Storm"
+BleedList[418624] = "Rending Slash"
+BleedList[422466] = "Shadow Spines"
+BleedList[422683] = "Thrash"
+BleedList[423431] = "Crushing Blow"
+BleedList[424065] = "Umbral Destruction"
+BleedList[424414] = "Pierce Armor"
+BleedList[424426] = "Lunging Strike"
+BleedList[424493] = "Shadow Rupture"
+BleedList[425555] = "Crude Weapons"
+BleedList[426284] = "Finishing Wound"
+BleedList[426587] = "Bramble Burst"
+BleedList[426660] = "Razor Jaws"
+BleedList[427182] = "Bloody Pounce"
+BleedList[427621] = "Impale"
+BleedList[427635] = "Grievous Rip"
+BleedList[429233] = "Rezan's Fury"
+BleedList[431491] = "Tainted Slash"
+BleedList[432035] = "Slashing Menace"
+BleedList[432416] = "Treacherous Blow"
+BleedList[433825] = "Blood Feast"
+BleedList[434773] = "Mean Mug"
+BleedList[434860] = "Phase Blades"
+BleedList[438599] = "Bleeding Jab"
+BleedList[438975] = "Shredding Sting"
+BleedList[439037] = "Disembowel"
+BleedList[439468] = "Downward Trend"
+BleedList[439531] = "Bloodseeker Vines"
+BleedList[440107] = "Knife Throw"
+BleedList[440143] = "Feral Swipe"
+BleedList[440231] = "Cleaving Strikes"
+BleedList[440912] = "Lash"
+BleedList[441294] = "Jagged Strike"
+BleedList[441314] = "Lacerated Wound"
+BleedList[441413] = "Shredding Sting"
+BleedList[441812] = "Dreadful Wound"
+BleedList[443694] = "Crude Weapons"
+BleedList[443926] = "Ironweave Garrote"
+BleedList[445184] = "Ambush"
+BleedList[445497] = "Shred"
+BleedList[447268] = "Skullsplitter"
+BleedList[447272] = "Hurl Spear"
+BleedList[448818] = "Scratch"
+BleedList[449233] = "Cull the Herd"
+BleedList[449585] = "Deep Cut"
+BleedList[449886] = "Deephunter's Bloody Hook"
+BleedList[449960] = "Fresh Cut"
+BleedList[450176] = "Jagged Slash"
+BleedList[451177] = "Dreadful Wound"
+BleedList[451246] = "Jagged Slash"
+BleedList[452730] = "Domineering Gore"
+BleedList[452830] = "Gore Charge"
+BleedList[453031] = "Fury of the Roots"
+BleedList[453461] = "Caltrops"
+BleedList[453551] = "Bloodletting Rend"
+BleedList[453792] = "Brutal Strikes"
+BleedList[453919] = "Blood Frenzy"
+BleedList[453947] = "Jagged Maw"
+BleedList[454357] = "Piercing Spear"
+BleedList[454472] = "Gash Frenzy"
+BleedList[454587] = "Serrated Teeth"
+BleedList[454694] = "Headbutt"
+BleedList[454783] = "Void Rift"
+BleedList[455543] = "Crushing Claws"
+BleedList[455815] = "Harvest Cabbage"
+BleedList[455896] = "Flurry of Steel"
+BleedList[455901] = "Gut Stab"
+BleedList[456145] = "Rake"
+BleedList[456147] = "Vicious Peck"
+BleedList[456265] = "Severing Thrash"
+BleedList[456284] = "Heroic Slash"
+BleedList[456516] = "Berserker Charge"
+BleedList[457947] = "Limb-shredder Tornado"
+BleedList[458010] = "Deep Wounds"
+BleedList[459495] = "Soul Reaper"
+BleedList[459560] = "Laceration"
+BleedList[459753] = "Ravenous Leap"
+BleedList[462018] = "Barbed Bolt"
+BleedList[463227] = "Splintered"
 
 function HealBot_Aura_setLuVars(vName, vValue)
     --HealBot_setCall("HealBot_Aura_setLuVars - "..vName)
@@ -1122,18 +1201,18 @@ function HealBot_Aura_RemoveBuffIcons(button)
 end
 
 function HealBot_Aura_RemoveUnusedBuffIconsButton(button)
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][1]["MAXBICONS"]<8 then
-        for i=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][1]["MAXBICONS"]+1,8 do
+    if hbv_Skins_GetIconVar("MAXBICONS", button.frame, 1)<8 then
+        for i=hbv_Skins_GetIconVar("MAXBICONS", button.frame, 1)+1,8 do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXBICONS"]<2 then
-        for i=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXBICONS"]+9,10 do
+    if hbv_Skins_GetIconVar("MAXBICONS", button.frame, 2)<2 then
+        for i=hbv_Skins_GetIconVar("MAXBICONS", button.frame, 2)+9,10 do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXBICONS"]<2 then
-        for i=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXBICONS"]+11,12 do
+    if hbv_Skins_GetIconVar("MAXBICONS", button.frame, 3)<2 then
+        for i=hbv_Skins_GetIconVar("MAXBICONS", button.frame, 3)+11,12 do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
@@ -1156,18 +1235,18 @@ function HealBot_Aura_RemoveDebuffIcons(button)
 end
 
 function HealBot_Aura_RemoveUnusedDebuffIconsButton(button)
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][1]["MAXDICONS"]<6 then
-        for i=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][1]["MAXDICONS"]+51,56 do
+    if hbv_Skins_GetIconVar("MAXDICONS", button.frame, 1)<6 then
+        for i=hbv_Skins_GetIconVar("MAXDICONS", button.frame, 1)+51,56 do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXDICONS"]<2 then
-        for i=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXDICONS"]+57,58 do
+    if hbv_Skins_GetIconVar("MAXDICONS", button.frame, 2)<2 then
+        for i=hbv_Skins_GetIconVar("MAXDICONS", button.frame, 2)+57,58 do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXDICONS"]<2 then
-        for i=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXDICONS"]+59,60 do
+    if hbv_Skins_GetIconVar("MAXDICONS", button.frame, 3)<2 then
+        for i=hbv_Skins_GetIconVar("MAXDICONS", button.frame, 3)+59,60 do
             HealBot_Aura_RemoveIcon(button, i)
         end
     end
@@ -1181,11 +1260,11 @@ end
 HealBot_Aura_luVars["exIconAlpha"]=0
 function HealBot_Aura_UpdateExtraIcon(button, iconData, index)
       --HealBot_setCall("HealBot_Aura_UpdateExtraIcon", button)
-    if (index == 91 and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["CLASSEN"]) or
-       (index == 92 and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["TARGETEN"]) or
-       (index == 93 and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["RCEN"]) or
-       (index == 94 and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["OOREN"]) then
-        HealBot_Aura_luVars["exIconAlpha"]=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+    if (index == 91 and hbv_Skins_GetFrameBoolean("Icons", "CLASSEN", button.frame)) or
+       (index == 92 and hbv_Skins_GetFrameBoolean("Icons", "TARGETEN", button.frame)) or
+       (index == 93 and hbv_Skins_GetFrameBoolean("Icons", "RCEN", button.frame)) or
+       (index == 94 and hbv_Skins_GetFrameBoolean("Icons", "OOREN", button.frame)) then
+        HealBot_Aura_luVars["exIconAlpha"]=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
     else
         HealBot_Aura_luVars["exIconAlpha"]=button.status.alpha
     end
@@ -1197,11 +1276,11 @@ function HealBot_Aura_DebuffIconAlphaValue(button, iconData, secsLeft)
       --HealBot_setCall("HealBot_Aura_DebuffIconAlphaValue", button, nil, nil, true)
     dbNextAuraUpdate=999
     if secsLeft>-3 then
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DFADE"] then
-            if iconData.duration<Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DFADESECS"] then
+        if hbv_Skins_GetIconBoolean("DFADE", button.frame, iconData.iconSet) then
+            if iconData.duration<hbv_Skins_GetIconVar("DFADESECS", button.frame, iconData.iconSet) then
                 dbMaxDur=iconData.duration
             else
-                dbMaxDur=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DFADESECS"]
+                dbMaxDur=hbv_Skins_GetIconVar("DFADESECS", button.frame, iconData.iconSet)
             end
             if secsLeft<dbMaxDur then
                 dbNextAuraUpdate=0.122
@@ -1215,8 +1294,8 @@ function HealBot_Aura_DebuffIconAlphaValue(button, iconData, secsLeft)
                 else
                     dbRetAlpha=1
                 end
-                if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DI15EN"] then
-                    dbMaxAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+                if hbv_Skins_GetIconBoolean("DI15EN", button.frame, iconData.iconSet) then
+                    dbMaxAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
                     if dbRetAlpha>dbMaxAlpha then
                         dbRetAlpha=dbMaxAlpha
                     end
@@ -1225,14 +1304,14 @@ function HealBot_Aura_DebuffIconAlphaValue(button, iconData, secsLeft)
                 end
             else
                 dbNextAuraUpdate=secsLeft-dbMaxDur
-                if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DI15EN"] then
-                    dbRetAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+                if hbv_Skins_GetIconBoolean("DI15EN", button.frame, iconData.iconSet) then
+                    dbRetAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
                 else
                     dbRetAlpha=button.status.alpha
                 end
             end
-        elseif Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DI15EN"] then
-            dbRetAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+        elseif hbv_Skins_GetIconBoolean("DI15EN", button.frame, iconData.iconSet) then
+            dbRetAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
         else
             dbRetAlpha=button.status.alpha
         end
@@ -1252,8 +1331,8 @@ function HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, lastSpe
         dbSecsLeft=floor((iconData.expirationTime-HealBot_TimeNow)-0.5)
         if iconData.expirationTime>0 then
             dbiconAlpha, dbAlphaNextUpdate=HealBot_Aura_DebuffIconAlphaValue(button, iconData, dbSecsLeft)
-        elseif Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["DI15EN"] then
-            dbiconAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+        elseif hbv_Skins_GetIconBoolean("DI15EN", button.frame, iconData.iconSet) then
+            dbiconAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
         else
             dbiconAlpha=button.status.alpha
         end
@@ -1261,9 +1340,9 @@ function HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, lastSpe
         if dbiconAlpha<button.status.alpha then
             dbiconAlpha=button.status.alpha
         end
-        if dbSecsLeft>-2 and HealBot_Skins_GetIconTextBoolean("DBSDUR", button.frame, iconData.iconSet) then
-            if dbSecsLeft<=HealBot_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet) then
-                if dbSecsLeft<=HealBot_Skins_GetIconTextVar("DBDURWARN", button.frame, iconData.iconSet) then
+        if dbSecsLeft>-2 and hbv_Skins_GetIconTextBoolean("DBSDUR", button.frame, iconData.iconSet) then
+            if dbSecsLeft<=hbv_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet) then
+                if dbSecsLeft<=hbv_Skins_GetIconTextVar("DBDURWARN", button.frame, iconData.iconSet) then
                     if UnitIsFriend("player",button.unit) then
                         button.gref.txt.expire[index]:SetTextColor(0,1,0,dbiconAlpha)
                     else
@@ -1282,9 +1361,9 @@ function HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, lastSpe
             else
                 button.gref.txt.expire[index]:SetTextColor(1,1,1,0)
                 button.gref.txt.expire[index]:SetText(" ");
-                dbDurNextUpdate=dbSecsLeft-HealBot_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet)
-                --if (iconData.expirationTime-HealBot_TimeNow-1)>HealBot_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet) then
-                --    dbDurNextUpdate=(iconData.expirationTime-HealBot_TimeNow-1)-HealBot_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet)
+                dbDurNextUpdate=dbSecsLeft-hbv_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet)
+                --if (iconData.expirationTime-HealBot_TimeNow-1)>hbv_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet) then
+                --    dbDurNextUpdate=(iconData.expirationTime-HealBot_TimeNow-1)-hbv_Skins_GetIconTextVar("DBDURTHRH", button.frame, iconData.iconSet)
                 --else
                 --    dbDurNextUpdate=HealBot_Aura_luVars["AuraUpdate"]
                 --end
@@ -1302,7 +1381,7 @@ function HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, lastSpe
             end
         end
         if not srcTimer then
-            if iconData.count > 1 and HealBot_Skins_GetIconTextBoolean("DBSCNT", button.frame, iconData.iconSet) then
+            if iconData.count > 1 and hbv_Skins_GetIconTextBoolean("DBSCNT", button.frame, iconData.iconSet) then
                 button.gref.txt.count[index]:SetText(iconData.count);
                 button.gref.txt.count[index]:SetTextColor(1,1,1,dbiconAlpha);
             else
@@ -1321,7 +1400,7 @@ function HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, lastSpe
 end
 
 local hbGlowSpellName,hbGlowIdx="",1
-local customDebuffPriority=HEALBOT_CUSTOM_en.."15"
+local customDebuffPriority=hbv_Default("cDebuff")
 function HealBot_Aura_UpdateDebuffIcon(button, iconData, index, timer, spellId)
       --HealBot_setCall("HealBot_Aura_UpdateDebuffIcon", button, nil, nil, true)
     HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, spellId, false)
@@ -1370,11 +1449,11 @@ function HealBot_Aura_BuffIconAlphaValue(button, iconData, secsLeft)
       --HealBot_setCall("HealBot_Aura_BuffIconAlphaValue", button, nil, nil, true)
     bNextAuraUpdate=999
     if secsLeft>-3 then
-        if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFFADE"] then
-            if iconData.duration<Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFFADESECS"] then
+        if hbv_Skins_GetIconBoolean("BUFFFADE", button.frame, iconData.iconSet) then
+            if iconData.duration<hbv_Skins_GetIconVar("BUFFFADESECS", button.frame, iconData.iconSet) then
                 bMaxDur=iconData.duration
             else
-                bMaxDur=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFFADESECS"]
+                bMaxDur=hbv_Skins_GetIconVar("BUFFFADESECS", button.frame, iconData.iconSet)
             end
             if secsLeft<bMaxDur then
                 bNextAuraUpdate=0.122
@@ -1388,8 +1467,8 @@ function HealBot_Aura_BuffIconAlphaValue(button, iconData, secsLeft)
                 else
                     bRetAlpha=1
                 end
-                if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFI15EN"] then
-                    bMaxAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+                if hbv_Skins_GetIconBoolean("BUFFI15EN", button.frame, iconData.iconSet) then
+                    bMaxAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
                     if bRetAlpha>bMaxAlpha then
                         bRetAlpha=bMaxAlpha
                     end
@@ -1398,14 +1477,14 @@ function HealBot_Aura_BuffIconAlphaValue(button, iconData, secsLeft)
                 end
             else
                 bNextAuraUpdate=secsLeft-bMaxDur
-                if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFI15EN"] then
-                    bRetAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+                if hbv_Skins_GetIconBoolean("BUFFI15EN", button.frame, iconData.iconSet) then
+                    bRetAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
                 else
                     bRetAlpha=button.status.alpha
                 end
             end
-        elseif Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFI15EN"] then
-            bRetAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+        elseif hbv_Skins_GetIconBoolean("BUFFI15EN", button.frame, iconData.iconSet) then
+            bRetAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
         else
             bRetAlpha=button.status.alpha
         end
@@ -1425,8 +1504,8 @@ function HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, lastSpell
         bSecsLeft=floor((iconData.expirationTime-HealBot_TimeNow)-0.5)
         if iconData.expirationTime>0 then
             bIconAlpha, bAlphaNextUpdate=HealBot_Aura_BuffIconAlphaValue(button, iconData, bSecsLeft)
-        elseif Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconData.iconSet]["BUFFI15EN"] then
-            bIconAlpha=HealBot_Action_BarColourAlpha(button, HealBot_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
+        elseif hbv_Skins_GetIconBoolean("BUFFI15EN", button.frame, iconData.iconSet) then
+            bIconAlpha=HealBot_Action_BarColourAlpha(button, hbv_Skins_GetFrameVar("BarCol", "HA", button.framecol), 1)
         else
             bIconAlpha=button.status.alpha
         end
@@ -1434,10 +1513,10 @@ function HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, lastSpell
         if bIconAlpha<button.status.alpha then
             bIconAlpha=button.status.alpha
         end
-        if bSecsLeft>-2 and HealBot_Skins_GetIconTextBoolean("BUFFSDUR", button.frame, iconData.iconSet)
-                        and (not HealBot_Skins_GetIconTextBoolean("BUFFSSDUR", button.frame, iconData.iconSet) or UnitIsUnit(iconData.unitCaster,"player")) then
-            if bSecsLeft<=HealBot_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet) then
-                if bSecsLeft<=HealBot_Skins_GetIconTextVar("BUFFDURWARN", button.frame, iconData.iconSet) then
+        if bSecsLeft>-2 and hbv_Skins_GetIconTextBoolean("BUFFSDUR", button.frame, iconData.iconSet)
+                        and (not hbv_Skins_GetIconTextBoolean("BUFFSSDUR", button.frame, iconData.iconSet) or UnitIsUnit(iconData.unitCaster,"player")) then
+            if bSecsLeft<=hbv_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet) then
+                if bSecsLeft<=hbv_Skins_GetIconTextVar("BUFFDURWARN", button.frame, iconData.iconSet) then
                     if UnitIsFriend("player",button.unit) then
                         button.gref.txt.expire[index]:SetTextColor(1,0.5,0,bIconAlpha)
                     else
@@ -1456,9 +1535,9 @@ function HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, lastSpell
             else
                 button.gref.txt.expire[index]:SetTextColor(1,1,1,0)
                 button.gref.txt.expire[index]:SetText(" ");
-                bDurNextUpdate=bSecsLeft-HealBot_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet)
-                --if (iconData.expirationTime-HealBot_TimeNow-1)>HealBot_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet) then
-                --    bDurNextUpdate=(iconData.expirationTime-HealBot_TimeNow-1)-HealBot_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet)
+                bDurNextUpdate=bSecsLeft-hbv_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet)
+                --if (iconData.expirationTime-HealBot_TimeNow-1)>hbv_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet) then
+                --    bDurNextUpdate=(iconData.expirationTime-HealBot_TimeNow-1)-hbv_Skins_GetIconTextVar("BUFFDURTHRH", button.frame, iconData.iconSet)
                 --else
                 --    bDurNextUpdate=HealBot_Aura_luVars["AuraUpdate"]
                 --end
@@ -1476,13 +1555,13 @@ function HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, lastSpell
             end
         end
         if not srcTimer then
-            if Healbot_Config_Skins.IconText[Healbot_Config_Skins.Current_Skin][button.frame]["SELFIND"] and UnitIsUnit(iconData.unitCaster,"player") then
+            if hbv_Skins_GetFrameBoolean("IconText", "SELFIND", button.frame) and UnitIsUnit(iconData.unitCaster,"player") then
                 button.gref.indicator.selfcast[index]:SetAlpha(HealBot_Action_BarColourAlpha(button, 1, 1))
             else
                 button.gref.indicator.selfcast[index]:SetAlpha(0)
             end
-            if iconData.count > 1 and HealBot_Skins_GetIconTextBoolean("BUFFSCNT", button.frame, iconData.iconSet)
-                                  and (not HealBot_Skins_GetIconTextBoolean("BUFFSSCNT", button.frame, iconData.iconSet) or UnitIsUnit(iconData.unitCaster,"player")) then
+            if iconData.count > 1 and hbv_Skins_GetIconTextBoolean("BUFFSCNT", button.frame, iconData.iconSet)
+                                  and (not hbv_Skins_GetIconTextBoolean("BUFFSSCNT", button.frame, iconData.iconSet) or UnitIsUnit(iconData.unitCaster,"player")) then
                 button.gref.txt.count[index]:SetText(iconData.count);
                 button.gref.txt.count[index]:SetTextColor(1,1,1,bIconAlpha);
             else
@@ -1500,7 +1579,7 @@ function HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, lastSpell
     end
 end
 
-local customBuffPriority=HEALBOT_CUSTOM_en.."Buff"
+local customBuffPriority=hbv_Default("cBuff")
 function HealBot_Aura_UpdateBuffIcon(button, iconData, index, timer, spellId)
       --HealBot_setCall("HealBot_Aura_UpdateBuffIcon", button, nil, nil, true)
     HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, spellId, false)
@@ -1653,11 +1732,11 @@ function HealBot_Aura_UpdateState(button)
             end
             HealBot_UnitExtraIcons[button.id][93].current=true
             HealBot_Aura_AddExtraIcon(button, 93)
-        elseif button.rank>0 and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWRANK"] then
+        elseif button.rank>0 and hbv_Skins_GetFrameBoolean("Icons", "SHOWRANK", button.frame) then
             HealBot_UnitExtraIcons[button.id][93]["texture"]=hbIconRanks[button.rank]
             HealBot_UnitExtraIcons[button.id][93].current=true
             HealBot_Aura_AddExtraIcon(button, 93)
-        elseif button.player and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWRESTING"] and IsResting() then 
+        elseif button.player and hbv_Skins_GetFrameBoolean("Icons", "SHOWRESTING", button.frame) and IsResting() then 
             HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\rested.tga"
             HealBot_UnitExtraIcons[button.id][93].current=true
             HealBot_Aura_AddExtraIcon(button, 93)
@@ -1779,15 +1858,15 @@ end
 
 function HealBot_Aura_AutoUpdateCustomDebuff(button, name, spellId)
       --HealBot_setCall("HealBot_Aura_AutoUpdateCustomDebuff", button)
-    for dID, x in pairs(HealBot_Globals.HealBot_Custom_Debuffs) do
+    for dID, x in pairs(HealBot_Globals.CustomDebuffs) do
         if not HealBot_WoWAPI_SpellName(dID) and dID == name then
             HealBot_Globals.Custom_Debuff_Categories[spellId]=HealBot_Globals.Custom_Debuff_Categories[name]
-            HealBot_Globals.HealBot_Custom_Debuffs[spellId]=x
+            HealBot_Globals.CustomDebuffs[spellId]=x
             if HealBot_Globals.FilterCustomDebuff[name] then 
                 HealBot_Globals.FilterCustomDebuff[spellId]=HealBot_Globals.FilterCustomDebuff[name]
             end
-            if HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[name] then
-                HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[spellId]=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[name]
+            if HealBot_Globals.CustomDebuffsShowBarCol[name] then
+                HealBot_Globals.CustomDebuffsShowBarCol[spellId]=HealBot_Globals.CustomDebuffsShowBarCol[name]
             end
             if HealBot_Globals.CDCBarColour[name] then
                 HealBot_Globals.CDCBarColour[spellId]=HealBot_Options_copyTable(HealBot_Globals.CDCBarColour[name])
@@ -1795,11 +1874,11 @@ function HealBot_Aura_AutoUpdateCustomDebuff(button, name, spellId)
             if HealBot_Globals.IgnoreCustomDebuff[name] then
                 HealBot_Globals.IgnoreCustomDebuff[spellId]=HealBot_Options_copyTable(HealBot_Globals.IgnoreCustomDebuff[name])
             end
-            if HealBot_Globals.HealBot_Custom_Debuffs_IconSet[name] then
-                HealBot_Globals.HealBot_Custom_Debuffs_IconSet[spellId]=HealBot_Globals.HealBot_Custom_Debuffs_IconSet[name]
+            if HealBot_Globals.CustomDebuffsIconSet[name] then
+                HealBot_Globals.CustomDebuffsIconSet[spellId]=HealBot_Globals.CustomDebuffsIconSet[name]
             end
-            if HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[name] then
-                HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[spellId]=HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[name]
+            if HealBot_Globals.CustomDebuffsIconGlow[name] then
+                HealBot_Globals.CustomDebuffsIconGlow[spellId]=HealBot_Globals.CustomDebuffsIconGlow[name]
             end
             HealBot_Options_DeleteCDebuff(name, name)
             break
@@ -1852,8 +1931,8 @@ local function HealBot_Aura_SortDebuffIconSet(button, iconSet, sIndex)
     button.icon.debuff.count[iconSet]=#debuffSort[iconSet]
     if button.icon.debuff.count[iconSet]>0 then
         table.sort(debuffSort[iconSet])
-        if button.icon.debuff.count[iconSet]>Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconSet]["MAXDICONS"] then
-            button.icon.debuff.count[iconSet]=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconSet]["MAXDICONS"]
+        if button.icon.debuff.count[iconSet]>hbv_Skins_GetIconVar("MAXDICONS", button.frame, iconSet) then
+            button.icon.debuff.count[iconSet]=hbv_Skins_GetIconVar("MAXDICONS", button.frame, iconSet)
         end
         for j=1, button.icon.debuff.count[iconSet], 1 do
             HealBot_Aura_CacheDebuffIcon(button, sIndex+j, HealBot_AuraDebuffXRef[debuffSort[iconSet][j]]["spellID"], HealBot_AuraDebuffXRef[debuffSort[iconSet][j]]["slot"])
@@ -1868,13 +1947,13 @@ end
 function HealBot_Aura_SortDebuffIcons(button)
       --HealBot_setCall("HealBot_Aura_SortDebuffIcons", button)
     debuffIconIdx,debuffIconPrio=0,21
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][1]["MAXDICONS"]>0 then
+    if hbv_Skins_GetIconVar("MAXDICONS", button.frame, 1)>0 then
         HealBot_Aura_SortDebuffIconSet(button, 1, 50)
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXDICONS"]>0 then
+    if hbv_Skins_GetIconVar("MAXDICONS", button.frame, 2)>0 then
         HealBot_Aura_SortDebuffIconSet(button, 2, 56)
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXDICONS"]>0 then
+    if hbv_Skins_GetIconVar("MAXDICONS", button.frame, 3)>0 then
         HealBot_Aura_SortDebuffIconSet(button, 3, 58)
     end
     return debuffIconIdx
@@ -1986,7 +2065,7 @@ function HealBot_Aura_SetGeneralBuff(button, bName)
             HealBot_Text_setNameTag(button)
         end
     end
-    button.aura.buff.colbar=(HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol["DEFAULT"] or 4)-1
+    button.aura.buff.colbar=(HealBot_Globals.CustomBuffsShowBarCol["DEFAULT"] or 4)-1
     if HealBot_Aura_ID[bName] and HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId] then
         if not button.aura.buff.temp.active or button.aura.buff.temp.priority>HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId]["priority"] then
             button.aura.buff.temp.active=true
@@ -1996,6 +2075,11 @@ function HealBot_Aura_SetGeneralBuff(button, bName)
         end
     end
     --button.aura.buff.priority=21
+end
+
+local HealBot_Aura_GetItemCooldown=GetItemCooldown
+if C_Container then
+    HealBot_Aura_GetItemCooldown=C_Container.GetItemCooldown or GetItemCooldown
 end
 
 local buffWatchName=""
@@ -2021,7 +2105,7 @@ function HealBot_Aura_CheckGeneralBuff(button)
         if not PlayerBuffs[buffWatchName] and not HealBot_Aura_HasBuffTypes(buffWatchName, PlayerBuffTypes) then
             buffSpellStart, buffSpellDur=HealBot_WoWAPI_SpellCooldown(buffWatchName)
             if HealBot_Buff_ItemIDs[buffWatchName] and (not buffSpellStart or not buffSpellDur) then
-                buffSpellStart, buffSpellDur=HealBot_GetItemCooldown(HealBot_Buff_ItemIDs[buffWatchName])
+                buffSpellStart, buffSpellDur=HealBot_Aura_GetItemCooldown(HealBot_Buff_ItemIDs[buffWatchName])
             end
             buffSpellStart=buffSpellStart or 0
             buffSpellDur=buffSpellDur or 0
@@ -2044,7 +2128,7 @@ function HealBot_Aura_CheckGeneralBuff(button)
                     buffCheckThis=true
                 elseif buffWatchTarget[button.text.classtrim] then
                     buffCheckThis=true
-                elseif buffWatchTarget["Name"] and button.guid == HealBot_Config.MyFriend then
+                elseif buffWatchTarget["Name"] and button.guid == HealBot_Config.PrivFocus then
                     buffCheckThis=true
                 elseif buffWatchTarget["Focus"] and UnitIsUnit(button.unit, "focus") then
                     buffCheckThis=true
@@ -2071,7 +2155,13 @@ function HealBot_Aura_CheckGeneralBuff(button)
         for x=1,2 do
             if HealBot_Weapon_Enchant[x] then
                 if weaponEnchantState[x]["Active"] then
-                    if not weaponEnchantState[x]["Expire"] then weaponEnchantState[x]["Expire"]=30*60*1000 end
+                    if not weaponEnchantState[x]["Expire"] then 
+                        if HEALBOT_GAME_VERSION<4 then
+                            weaponEnchantState[x]["Expire"]=30*60*1000
+                        else
+                            weaponEnchantState[x]["Expire"]=60*60*1000
+                        end
+                    end
                     if (weaponEnchantState[x]["Expire"]/1000)<HealBot_Config_Buffs.LongBuffTimer then
                         HealBot_Aura_SetGeneralBuff(button, HealBot_Weapon_Enchant[x])
                     else
@@ -2081,6 +2171,7 @@ function HealBot_Aura_CheckGeneralBuff(button)
                         end
                     end
                 else
+                    weaponEnchantState[x]["Expire"]=nil
                     HealBot_Aura_SetGeneralBuff(button, HealBot_Weapon_Enchant[x])
                     button.aura.buff.recheck[HealBot_Weapon_Enchant[x]]=nil
                     HealBot_Aura_MarkCheckBuffsTime(button)
@@ -2132,28 +2223,29 @@ function HealBot_Aura_ShowCustomBuff(button)
       --HealBot_setCall("HealBot_Aura_ShowCustomBuff", button)
     if (hbCustomBuffsDisabled[uaBuffData[button.id][uaBuffSlot].spellId] and (hbCustomBuffsDisabled[uaBuffData[button.id][uaBuffSlot].spellId][HealBot_Aura_luVars["mapName"]] or hbCustomBuffsDisabled[uaBuffData[button.id][uaBuffSlot].spellId]["ALL"])) or
        (hbCustomBuffsDisabled[uaBuffData[button.id][uaBuffSlot].name] and (hbCustomBuffsDisabled[uaBuffData[button.id][uaBuffSlot].name][HealBot_Aura_luVars["mapName"]] or hbCustomBuffsDisabled[uaBuffData[button.id][uaBuffSlot].name]["ALL"])) then
-       return false, true, true
+       return false, false, true
     else
         buffCustomType=HealBot_Watch_HoT[uaBuffData[button.id][uaBuffSlot].name] or HealBot_Watch_HoT[uaBuffData[button.id][uaBuffSlot].spellId] or false
         if buffCustomType then
             if buffCustomType == "S" then
                 if uaBuffData[button.id][uaBuffSlot].sourceUnitIsPlayer then
-                    HealBot_Options_MissingBuffPrio(uaBuffData[button.id][uaBuffSlot].spellId)
                     return true, true, false
                 else
                     return false, true, false
                 end
             elseif buffCustomType == "C" then
                 _, scbUnitClassEN=UnitClass(uaBuffData[button.id][uaBuffSlot].sourceUnit)
-                if scbUnitClassEN and HealBot_Data["PCLASSTRIM"] == strsub(scbUnitClassEN,1,4) then
-                    HealBot_Options_MissingBuffPrio(uaBuffData[button.id][uaBuffSlot].spellId)
-                    HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].always=true
-                    return true, true, false
+                if scbUnitClassEN then
+                    if HealBot_Data["PCLASSTRIM"] == strsub(scbUnitClassEN,1,4) then
+                        HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].always=true
+                        return true, true, false
+                    else
+                        return false, true, true
+                    end
                 else
-                    return false, true, true
+                    return false, true, false
                 end
             elseif buffCustomType == "A" then
-                HealBot_Options_MissingBuffPrio(uaBuffData[button.id][uaBuffSlot].spellId)
                 HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].always=true
                 return true, true, false
             end
@@ -2173,12 +2265,16 @@ function HealBot_Aura_ShowCustomBuff(button)
                         return true, true, false
                     else
                         _, scbUnitClassEN=UnitClass(uaBuffData[button.id][uaBuffSlot].sourceUnit)
-                        if scbUnitClassEN and HealBot_Data["PCLASSTRIM"] == strsub(scbUnitClassEN,1,4) then
-                            HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].always=true
-                            HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].isAuto=true
-                            return true, true, false
+                        if scbUnitClassEN then
+                            if HealBot_Data["PCLASSTRIM"] == strsub(scbUnitClassEN,1,4) then
+                                HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].always=true
+                                HealBot_AuraBuffCache[uaBuffData[button.id][uaBuffSlot].spellId].isAuto=true
+                                return true, true, false
+                            else
+                                return false, true, true
+                            end
                         else
-                            return false, true, true
+                            return false, true, false
                         end
                     end
                 end
@@ -2205,8 +2301,8 @@ function HealBot_Aura_SortBuffIconSet(button, iconSet, sIndex)
     button.icon.buff.count[iconSet]=#buffSort[iconSet]
     if button.icon.buff.count[iconSet]>0 then
         table.sort(buffSort[iconSet])
-        if button.icon.buff.count[iconSet]>Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconSet]["MAXBICONS"] then
-            button.icon.buff.count[iconSet]=Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][iconSet]["MAXBICONS"]
+        if button.icon.buff.count[iconSet]>hbv_Skins_GetIconVar("MAXBICONS", button.frame, iconSet) then
+            button.icon.buff.count[iconSet]=hbv_Skins_GetIconVar("MAXBICONS", button.frame, iconSet)
         end
         for j=1, button.icon.buff.count[iconSet], 1 do
             HealBot_Aura_CacheBuffIcon(button, sIndex+j, HealBot_AuraBuffXRef[buffSort[iconSet][j]]["spellID"], HealBot_AuraBuffXRef[buffSort[iconSet][j]]["slot"])
@@ -2221,13 +2317,13 @@ end
 function HealBot_Aura_SortBuffIcons(button)
       --HealBot_setCall("HealBot_Aura_SortBuffIcons", button)
     buffIconIdx,buffIconPrio=0,21
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][1]["MAXBICONS"]>0 then
+    if hbv_Skins_GetIconVar("MAXBICONS", button.frame, 1)>0 then
         HealBot_Aura_SortBuffIconSet(button, 1, 0)
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][2]["MAXBICONS"]>0 then
+    if hbv_Skins_GetIconVar("MAXBICONS", button.frame, 2)>0 then
         HealBot_Aura_SortBuffIconSet(button, 2, 8)
     end
-    if Healbot_Config_Skins.IconSets[Healbot_Config_Skins.Current_Skin][button.frame][3]["MAXBICONS"]>0 then
+    if hbv_Skins_GetIconVar("MAXBICONS", button.frame, 3)>0 then
         HealBot_Aura_SortBuffIconSet(button, 3, 10)
     end
     return buffIconIdx
@@ -2377,7 +2473,7 @@ function HealBot_Aura_CheckCurDebuff(button)
                     ccdbCheckthis=true
                 elseif ccdbWatchTarget[button.text.classtrim] then
                     ccdbCheckthis=true;
-                elseif ccdbWatchTarget["Name"] and button.guid == HealBot_Config.MyFriend then
+                elseif ccdbWatchTarget["Name"] and button.guid == HealBot_Config.PrivFocus then
                     ccdbCheckthis=true
                 elseif ccdbWatchTarget["Focus"] and UnitIsUnit(button.unit, "focus") then
                     ccdbCheckthis=true;
@@ -2561,7 +2657,7 @@ function HealBot_Aura_DebuffWarnings(button, debuffName, force, debuffIconIndex)
         if button.mouseover and HealBot_Data["TIPBUTTON"] then 
             HealBot_setTooltipUpdateNow()
         end
-        if button.status.range>0 and button.isplayer and button.frame<10 and button.aura.debuff.priority<=HealBot_Aura_retLuVars("HotBarDebuff") then
+        if button.status.range>0 and (button.isplayer or button.isgroupraid) and button.frame<10 and button.aura.debuff.priority<=HealBot_Aura_retLuVars("HotBarDebuff") then
             HealBot_Action_BarHotEnable(button, "DEBUFF")
         elseif button.hotbars.debuff then
             HealBot_Action_BarHotDisable(button, "DEBUFF")
@@ -2743,7 +2839,6 @@ function HealBot_Aura_BuffTagWatch(guid, tag, active, actionicon)
                     end
                 end
             end
-            --HealBot_AddDebug("Buff Tag="..tag,"AuraWatch",true)
         elseif hbbwta[guid] and hbbwta[guid][tag] then
             hbbwta[guid][tag]=nil
         end
@@ -2978,10 +3073,10 @@ local function HealBot_Aura_PostUpdateUnitBuffsData(button, spellID, spellName)
                 HealBot_SpellID_LookupData[spellName]["CHECK"]=false
                 HealBot_SpellID_LookupData[spellName]["ID"]=spellID
                 table.insert(HealBot_SpellID_LookupIdx,spellName)
-                HealBot_Timers_Set("OOC","BuffIdLookup",0.1)
+                HealBot_Timers_Set("OOC","BuffIdLookup",true)
             end
         end
-        HealBot_AuraBuffCache[spellID]["priority"]=HealBot_Globals.HealBot_Custom_Buffs[spellName] or HealBot_Globals.HealBot_Custom_Buffs[spellID] or 20
+        HealBot_AuraBuffCache[spellID]["priority"]=HealBot_Globals.CustomBuffs[spellName] or HealBot_Globals.CustomBuffs[spellID] or 20
         if HealBot_AuraBuffCache[spellID]["priority"]<10 then
             HealBot_AuraBuffCache[spellID]["pid"]="x0"..HealBot_AuraBuffCache[spellID]["priority"]..spellID
         else
@@ -3015,7 +3110,7 @@ local function HealBot_Aura_UpdateUnitBuffsData(button, selfOnly, gSlot)
             uaSlot=uaSlot+1
             if uaBuffData[button.id][uaSlot].spellId~=uaSpellId or uaBuffData[button.id][uaSlot].sourceUnit~=(uaUnitCaster or "nil") then
                 uaBuffData[button.id][uaSlot].name=uaName
-                if hbDebuffBleed[uaSpellId] and (not uaDebuffType or not HealBot_Options_retDebuffCureType(uaDebuffType)) then
+                if BleedList[uaSpellId] and (not uaDebuffType or not HealBot_Options_retDebuffCureType(uaDebuffType)) then
                     uaBuffData[button.id][uaSlot].debuffType=HEALBOT_BLEED_en
                 else
                     uaBuffData[button.id][uaSlot].debuffType=uaDebuffType
@@ -3034,9 +3129,9 @@ local function HealBot_Aura_UpdateUnitBuffsData(button, selfOnly, gSlot)
             uaBuffData[button.id][uaSlot].expirationTime=uaExpirationTime
             uaBuffData[button.id].lastslot=uaSlot
             HealBot_Aura_PostUpdateUnitBuffsData(button, uaSpellId, uaName)
-            if hbTextureUpdate[uaName] and (not hbTextureUpdateId[button.id][uaName] or (hbTextureUpdateId[button.id][uaName]+1)<uaExpirationTime) then
+            if uaName == HEALBOT_RENEWING_MIST_NAME and (not hbTextureUpdateId[button.id][uaName] or (hbTextureUpdateId[button.id][uaName]+1)<uaExpirationTime) then
                 hbTextureUpdateId[button.id][uaName]=uaExpirationTime
-                hbTextureUpdateTime[button.id][uaSpellId]=HealBot_TimeNow+hbTextureUpdate[uaName]
+                hbTextureUpdateTime[button.id][uaSpellId]=HealBot_TimeNow+8
             end
         end
         HealBot_Aura_PostUpdateUnitBuffsCurrent(button, uaSpellId, uaName, uaCount, uaUnitIsPlayer)
@@ -3065,7 +3160,6 @@ function HealBot_Aura_CheckClassicAbsorbs(button)
         if not debugTime[uaName] then debugTime[uaName]=0 end
         if debugTime[uaName]<HealBot_TimeNow then
             debugTime[uaName]=HealBot_TimeNow+30
-            HealBot_AddDebug("ClassicAbsorbs  17="..(uaExtra17 or "nil").."  18="..(uaExtra18 or "nil").."  19="..(uaExtra19 or "nil"),"Absorbs "..uaName,true)
         end
         hbClassicAbsorbsTrack[button.id][uaName]=true
     end
@@ -3083,7 +3177,7 @@ function HealBot_Aura_EndCheckClassicAbsorbs(button)
     end
     if button.health.auraabsorbs~=hbClassicAbsorbValues then
         button.health.auraabsorbs=hbClassicAbsorbValues
-        HealBot_Events_AbsorbsUpdate(button)
+        HealBot_AbsorbsUpdate(button)
     end
 end
 
@@ -3111,7 +3205,7 @@ function HealBot_Aura_UpdateUnitBuffsV1(button, selfOnly)
     end
     if button.health.auraabsorbs~=hbClassicAbsorbTotal then
         button.health.auraabsorbs=hbClassicAbsorbTotal
-        HealBot_Events_AbsorbsUpdate(button)
+        HealBot_AbsorbsUpdate(button)
     end
 end
 
@@ -3194,7 +3288,7 @@ function HealBot_Aura_PostUpdateUnitDebuffsData(button, spellID, spellName, debu
             HealBot_AuraDebuffCache[spellID]["priority"]=99
             HealBot_AuraDebuffCache[spellID]["name"]=spellName
             HealBot_Aura_ID[spellName]=spellID
-            if not HealBot_Globals.HealBot_Custom_Debuffs[spellID] then
+            if not HealBot_Globals.CustomDebuffs[spellID] then
                 HealBot_Aura_AutoUpdateCustomDebuff(button, spellName, spellID)
             end
             if HealBot_Aura_CanDispel[spellID] == nil then
@@ -3235,7 +3329,7 @@ function HealBot_Aura_PostUpdateUnitDebuffsCurrent(button, spellID, spellName, c
     HealBot_Aura_DebuffUpdate_Plugins(button, spellName, HealBot_Globals.CDCTag[spellID] or HealBot_DebuffTagNames[spellName], count, true, casterIsPlayer)
 end
 
---hbDebuffBleed[32407]="Strange Aura"
+--BleedList[32407]="Strange Aura"
 function HealBot_Aura_UpdateUnitDebuffsData(button, selfOnly, gSlot)
       --HealBot_setCall("HealBot_Aura_UpdateUnitDebuffsData", button)
     if uaExpirationTime then
@@ -3259,7 +3353,7 @@ function HealBot_Aura_UpdateUnitDebuffsData(button, selfOnly, gSlot)
             uaSlot=uaSlot+1
             if uaDebuffData[button.id][uaSlot].spellId~=uaSpellId or uaDebuffData[button.id][uaSlot].sourceUnit~=(uaUnitCaster or "nil") then
                 uaDebuffData[button.id][uaSlot].name=uaName
-                if hbDebuffBleed[uaSpellId] and (not uaDebuffType or not HealBot_Options_retDebuffCureSpell(uaDebuffType)) then
+                if BleedList[uaSpellId] and (not uaDebuffType or not HealBot_Options_retDebuffCureSpell(uaDebuffType)) then
                     uaDebuffData[button.id][uaSlot].debuffType=HEALBOT_BLEED_en
                 else
                     uaDebuffData[button.id][uaSlot].debuffType=uaDebuffType or "nil"
@@ -3279,9 +3373,9 @@ function HealBot_Aura_UpdateUnitDebuffsData(button, selfOnly, gSlot)
             uaDebuffData[button.id][uaSlot].expirationTime=uaExpirationTime
             uaDebuffData[button.id].lastslot=uaSlot
             HealBot_Aura_PostUpdateUnitDebuffsData(button, uaSpellId, uaName, uaDebuffData[button.id][uaSlot].debuffType)
-            if hbTextureUpdate[uaName] and (not hbTextureUpdateId[button.id][uaName] or (hbTextureUpdateId[button.id][uaName]+1)<uaExpirationTime) then
+            if uaName == HEALBOT_RENEWING_MIST_NAME and (not hbTextureUpdateId[button.id][uaName] or (hbTextureUpdateId[button.id][uaName]+1)<uaExpirationTime) then
                 hbTextureUpdateId[button.id][uaName]=uaExpirationTime
-                hbTextureUpdateTime[button.id][uaSpellId]=HealBot_TimeNow+hbTextureUpdate[uaName]
+                hbTextureUpdateTime[button.id][uaSpellId]=HealBot_TimeNow+8
             end
         end
         HealBot_Aura_PostUpdateUnitDebuffsCurrent(button, uaSpellId, uaName, uaCount, uaUnitIsPlayer)
@@ -3345,15 +3439,17 @@ end
 function HealBot_Aura_CheckUnitBuffOverDebuff(button, callerIsBuff)
       --HealBot_setCall("HealBot_Aura_CheckUnitBuffOverDebuff", button)
     hbOverDebuff=false
-    if button.aura.buff.priority<button.aura.debuff.priority then
-        if (button.aura.buff.colbar<5 or button.aura.buff.colbar == 7) and (button.aura.debuff.colbar<5 or button.aura.debuff.colbar == 7) then
-            if button.aura.buff.colbar == button.aura.debuff.colbar or (button.aura.buff.colbar == 2 and button.aura.debuff.colbar<4) then
-                HealBot_Aura_SetUnitBuffOverDebuff(button, 0)
-            elseif button.aura.debuff.colbar == 2 then
-                if button.aura.buff.colbar == 1 then
-                    HealBot_Aura_SetUnitBuffOverDebuff(button, 3)
-                elseif button.aura.buff.colbar == 3 then
-                    HealBot_Aura_SetUnitBuffOverDebuff(button, 1)
+    if button.aura.debuff.colbar>0 and button.aura.buff.colbar>0 then
+        if button.aura.buff.priority<button.aura.debuff.priority then
+            if (button.aura.buff.colbar<5 or button.aura.buff.colbar == 7) and (button.aura.debuff.colbar<5 or button.aura.debuff.colbar == 7) then
+                if button.aura.buff.colbar == button.aura.debuff.colbar or (button.aura.buff.colbar == 2 and button.aura.debuff.colbar<4) then
+                    HealBot_Aura_SetUnitBuffOverDebuff(button, 0)
+                elseif button.aura.debuff.colbar == 2 then
+                    if button.aura.buff.colbar == 1 then
+                        HealBot_Aura_SetUnitBuffOverDebuff(button, 3)
+                    elseif button.aura.buff.colbar == 3 then
+                        HealBot_Aura_SetUnitBuffOverDebuff(button, 1)
+                    end
                 end
             end
         end
@@ -3381,7 +3477,7 @@ function HealBot_Aura_CheckUnitBuffs(button, selfOnly)
             if button.player then
                 onlyPlayers=true
             elseif HEALBOT_GAME_VERSION>3 then
-                onlyPlayers=button.isplayer
+                onlyPlayers=button.isplayer or button.isgroupraid
             else
                 onlyPlayers=UnitIsFriend("player",button.unit)
             end
@@ -3444,12 +3540,10 @@ function HealBot_Aura_CheckUnitBuffs(button, selfOnly)
                 end
                 if curBuffName then
                     if HealBot_AuraBuffCache[button.aura.buff.id].isAuto then
-                        buffBarCol=HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS] or 1
+                        buffBarCol=HealBot_Globals.CustomBuffsShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS] or 1
                     else
-                        buffBarCol=HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[HealBot_AuraBuffCache[button.aura.buff.id]["name"]] or 1
-                    end
-                    if (HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[button.aura.buff.id] or 1) > buffBarCol then
-                        buffBarCol=HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[button.aura.buff.id] or 1
+                        buffBarCol=HealBot_Globals.CustomBuffsShowBarCol[button.aura.buff.id] or 
+                                   HealBot_Globals.CustomBuffsShowBarCol[HealBot_AuraBuffCache[button.aura.buff.id]["name"]] or 1
                     end
                     if buffBarCol>1 and button.aura.buff.colbar == 0 then
                         button.aura.buff.colbar=buffBarCol-1
@@ -3487,7 +3581,11 @@ function HealBot_Aura_resetSpellCD()
     hbDebuffOnCD[HEALBOT_POISON_en]=0
     hbDebuffOnCD[HEALBOT_BLEED_en]=0
 end
-HealBot_Aura_resetSpellCD()
+hbDebuffOnCD[HEALBOT_DISEASE_en]=0
+hbDebuffOnCD[HEALBOT_MAGIC_en]=0
+hbDebuffOnCD[HEALBOT_CURSE_en]=0
+hbDebuffOnCD[HEALBOT_POISON_en]=0
+hbDebuffOnCD[HEALBOT_BLEED_en]=0
 
 function HealBot_Aura_setDebuffTypeCD(dType, eTime)
     hbDebuffOnCD[dType]=eTime
@@ -3517,7 +3615,6 @@ function HealBot_Aura_SetBossHealth(inInst)
             HealBot_Aura_luVars["bossHlth"]=HealBot_Aura_luVars["bossHlth"]*2
         end
     end
-    --HealBot_AddDebug("Boss Min Health "..HealBot_Aura_luVars["bossHlth"],"Mobs",true)
 end
 
 function HealBot_Aura_UnitDebuffsUpdateWhenActive(button)
@@ -3579,12 +3676,12 @@ function HealBot_Aura_CheckUnitDebuffs(button, selfOnly)
         end
         if button.aura.debuff.id>0 and HealBot_Panel_RaidPetUnitButtonCheck(button.guid) then
             if HealBot_AuraDebuffCache[button.aura.debuff.id].isAuto then 
-                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] or 4
+                debuffBarCol=HealBot_Globals.CustomDebuffsShowBarCol[HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC] or 4
             elseif HealBot_AuraDebuffCache[button.aura.debuff.id]["debuffType"] == HEALBOT_CUSTOM_en then
-                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[button.aura.debuff.id] or 
-                             HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HealBot_AuraDebuffCache[button.aura.debuff.id]["name"]] or 4
+                debuffBarCol=HealBot_Globals.CustomDebuffsShowBarCol[button.aura.debuff.id] or 
+                             HealBot_Globals.CustomDebuffsShowBarCol[HealBot_AuraDebuffCache[button.aura.debuff.id]["name"]] or 4
             else
-                debuffBarCol=HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol["DEFAULT"] or 4
+                debuffBarCol=HealBot_Globals.CustomDebuffsShowBarCol["DEFAULT"] or 4
             end
             button.aura.debuff.dispellable=HealBot_Aura_CanDispel[button.aura.debuff.id]
             button.aura.debuff.colbar=debuffBarCol-1
@@ -3607,10 +3704,8 @@ function HealBot_Aura_CheckUnitAuras(button, debuff, selfOnly)
       --HealBot_setCall("HealBot_Aura_CheckUnitAuras", button)
     if not HealBot_Aura_luVars["TestBarsOn"] then
         if debuff then
-            button.aura.debuff.updtime=HealBot_TimeNow
             HealBot_Aura_CheckUnitDebuffs(button, selfOnly)
         else
-            button.aura.buff.updtime=HealBot_TimeNow
             HealBot_Aura_CheckUnitBuffs(button, selfOnly)
         end
     end
@@ -3691,7 +3786,7 @@ function HealBot_Aura_SetAuraCheckFlags(debuffMounted, buffMounted, onTaxi, rest
         buffCheck=false
         HealBot_Action_setLuVars("CheckManaDrink", false)
     end
-    
+
     if resting or onTaxi or debuffMounted or tmpDGroup or inVehicle or not HealBot_Config_Cures.DebuffWatch then 
         debuffCheck=false 
     elseif (HealBot_Config_Cures.DebuffWatchInCombat or not HealBot_Data["UILOCK"]) then
@@ -3709,7 +3804,7 @@ function HealBot_Aura_SetAuraCheckFlags(debuffMounted, buffMounted, onTaxi, rest
                 HealBot_Plugin_AuraWatch_CheckAfterCancelBuff()
             end
             HealBot_ActionIcons_setLuVars("AllowBuffs", buffCheck)
-            HealBot_Timers_Set("SKINS","ActionIconsStateChange",0.1)
+            HealBot_Timers_Set("SKINS","ActionIconsStateChange",true)
         end
         HealBot_Timers_Set("AURA","CheckBuffs")
     end    
@@ -3722,7 +3817,7 @@ function HealBot_Aura_SetAuraCheckFlags(debuffMounted, buffMounted, onTaxi, rest
         end
         HealBot_Timers_Set("AURA","CheckDebuffs")
         HealBot_ActionIcons_setLuVars("AllowDebuffs", debuffCheck)
-        HealBot_Timers_Set("SKINS","ActionIconsStateChange",0.1)
+        HealBot_Timers_Set("SKINS","ActionIconsStateChange",true)
     end
 end
 
@@ -4325,11 +4420,11 @@ function HealBot_Aura_ConfigClassHoT()
             else
                 HealBot_Aura_ConfigClassAllHoT(id, sName, "A")
             end
-            if HealBot_Globals.HealBot_Custom_Buffs_IconSet[id] then
-                HealBot_Aura_ConfigBuffIconSetId(id, sName, HealBot_Globals.HealBot_Custom_Buffs_IconSet[id])
+            if HealBot_Globals.CustomBuffsIconSet[id] then
+                HealBot_Aura_ConfigBuffIconSetId(id, sName, HealBot_Globals.CustomBuffsIconSet[id])
             end
-            if HealBot_Globals.HealBot_Custom_Buffs_IconGlow[id] then
-                HealBot_Aura_ConfigBuffIconGlowId(id, sName, HealBot_Globals.HealBot_Custom_Buffs_IconGlow[id])
+            if HealBot_Globals.CustomBuffsIconGlow[id] then
+                HealBot_Aura_ConfigBuffIconGlowId(id, sName, HealBot_Globals.CustomBuffsIconGlow[id])
             end
         end
     end
@@ -4373,14 +4468,14 @@ function HealBot_Aura_ConfigDebuffs()
     for id,_ in pairs(HealBot_DebuffIconSet) do
         HealBot_DebuffIconSet[id]=nil
     end
-    for id, _ in pairs(HealBot_Globals.HealBot_Custom_Debuffs) do
-        if HealBot_Globals.HealBot_Custom_Debuffs_IconSet[id] then
+    for id, _ in pairs(HealBot_Globals.CustomDebuffs) do
+        if HealBot_Globals.CustomDebuffsIconSet[id] then
             local sName=HealBot_WoWAPI_SpellName(id)
-            HealBot_Aura_ConfigDebuffIconSetId(id, sName, HealBot_Globals.HealBot_Custom_Debuffs_IconSet[id])
+            HealBot_Aura_ConfigDebuffIconSetId(id, sName, HealBot_Globals.CustomDebuffsIconSet[id])
         end
-        if HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[id] then
+        if HealBot_Globals.CustomDebuffsIconGlow[id] then
             local sName=HealBot_WoWAPI_SpellName(id)
-            HealBot_Aura_ConfigDebuffIconSetGlow(id, sName, HealBot_Globals.HealBot_Custom_Debuffs_IconGlow[id])
+            HealBot_Aura_ConfigDebuffIconSetGlow(id, sName, HealBot_Globals.CustomDebuffsIconGlow[id])
         end
     end
     HealBot_Timers_Set("AURA","UpdateAllDebuffIcons")
@@ -4424,24 +4519,40 @@ function HealBot_Aura_BuffIdLookup()
             if HealBot_Globals.IgnoreCustomBuff[sName] then
                 HealBot_Globals.IgnoreCustomBuff[sID]=HealBot_Options_copyTable(HealBot_Globals.IgnoreCustomBuff[sName])
             end
-            if HealBot_Globals.HealBot_Custom_Buffs[sName] then
-                HealBot_Globals.HealBot_Custom_Buffs[sID]=HealBot_Globals.HealBot_Custom_Buffs[sName]
+            if HealBot_Globals.CustomBuffs[sName] then
+                if HealBot_Globals.CustomBuffs[sName]<20 then
+                    HealBot_Globals.CustomBuffs[sID]=HealBot_Globals.CustomBuffs[sName]
+                else
+                    HealBot_Globals.CustomBuffs[sName]=nil
+                end
             end
             if HealBot_Globals.CustomBuffBarColour[sName] then
                 HealBot_Globals.CustomBuffBarColour[sID]=HealBot_Options_copyTable(HealBot_Globals.CustomBuffBarColour[sName])
             end
-            if HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[sName] then
-                HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[sID]=HealBot_Globals.HealBot_Custom_Buffs_ShowBarCol[sName]
+            if HealBot_Globals.CustomBuffsShowBarCol[sName] then
+                if HealBot_Globals.CustomBuffsShowBarCol[sName]>1 then
+                    HealBot_Globals.CustomBuffsShowBarCol[sID]=HealBot_Globals.CustomBuffsShowBarCol[sName]
+                else
+                    HealBot_Globals.CustomBuffsShowBarCol[sName]=nil
+                end
             end
-            if HealBot_Globals.HealBot_Custom_Buffs_IconSet[sName] then
-                HealBot_Globals.HealBot_Custom_Buffs_IconSet[sID]=HealBot_Globals.HealBot_Custom_Buffs_IconSet[sName]
+            if HealBot_Globals.CustomBuffsIconSet[sName] then
+                if HealBot_Globals.CustomBuffsIconSet[sName]>1 then
+                    HealBot_Globals.CustomBuffsIconSet[sID]=HealBot_Globals.CustomBuffsIconSet[sName]
+                else
+                    HealBot_Globals.CustomBuffsIconSet[sName]=nil
+                end
             end
-            if HealBot_Globals.HealBot_Custom_Buffs_IconGlow[sName] then
-                HealBot_Globals.HealBot_Custom_Buffs_IconGlow[sID]=HealBot_Globals.HealBot_Custom_Buffs_IconGlow[sName]
+            if HealBot_Globals.CustomBuffsIconGlow[sName] then
+                if HealBot_Globals.CustomBuffsIconGlow[sName]>1 then
+                    HealBot_Globals.CustomBuffsIconGlow[sID]=HealBot_Globals.CustomBuffsIconGlow[sName]
+                else
+                    HealBot_Globals.CustomBuffsIconGlow[sName]=nil
+                end
             end
             HealBot_Options_DeleteBuffHoT(class, sName, sName)
         end
-        HealBot_Timers_Set("OOC","BuffIdLookup",0.2)
+        HealBot_Timers_Set("OOC","BuffIdLookup",true)
     end
 end
 
@@ -4481,46 +4592,64 @@ function HealBot_Aura_UpdateItemData(iName, id)
     return false
 end
 
-local InitItemsDataPrev={["MANADRINK"]=false, ["WELLFED"]=false, ["Vanilla1"]=false, ["Vanilla2"]=false, ["Vanilla3"]=false, ["Vanilla4"]=false, ["Vanilla5"]=false}
-local InitItemsDataUpdate=false
+local InitItemsDataPrev={["MANADRINK"]=false, ["WELLFED"]=false, ["Vanilla1"]=false, ["Vanilla2"]=false, ["Vanilla3"]=false, ["Vanilla4"]=false, ["Vanilla5"]=false, ["Vanilla6"]=false}
+local InitItemsDataUpdate=true
 function HealBot_Aura_InitItemsDataReady()
       --HealBot_setCall("HealBot_Aura_InitItemsDataReady")
     local hbCustomItemID,hbCustomSpellID=0,0
-    InitItemsDataUpdate=false
     
     if HEALBOT_GAME_VERSION<4 then
-        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_BRILLIANT_MANA_OIL_SPELL), HEALBOT_BRILLIANT_MANA_OIL_SPELL) and not InitItemsDataPrev["Vanilla1"] then
-            InitItemsDataPrev["Vanilla1"]=true
-            InitItemsDataUpdate=true
+        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_BRILLIANT_MANA_OIL_SPELL), HEALBOT_BRILLIANT_MANA_OIL_SPELL) then
+            if not InitItemsDataPrev["Vanilla1"] then
+                InitItemsDataPrev["Vanilla1"]=true
+                InitItemsDataUpdate=true
+            end
         elseif InitItemsDataPrev["Vanilla1"] then
             InitItemsDataPrev["Vanilla1"]=false
             InitItemsDataUpdate=true
         end
-        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_BRILLIANT_WIZARD_OIL_SPELL), HEALBOT_BRILLIANT_WIZARD_OIL_SPELL) and not InitItemsDataPrev["Vanilla2"] then
-            InitItemsDataPrev["Vanilla2"]=true
-            InitItemsDataUpdate=true
+        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_BRILLIANT_WIZARD_OIL_SPELL), HEALBOT_BRILLIANT_WIZARD_OIL_SPELL) then
+            if not InitItemsDataPrev["Vanilla2"] then
+                InitItemsDataPrev["Vanilla2"]=true
+                InitItemsDataUpdate=true
+            end
         elseif InitItemsDataPrev["Vanilla2"] then
             InitItemsDataPrev["Vanilla2"]=false
             InitItemsDataUpdate=true
         end
-        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_BLESSED_WIZARD_OIL_SPELL), HEALBOT_BLESSED_WIZARD_OIL_SPELL) and not InitItemsDataPrev["Vanilla3"] then
-            InitItemsDataPrev["Vanilla3"]=true
-            InitItemsDataUpdate=true
+        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_BLESSED_WIZARD_OIL_SPELL), HEALBOT_BLESSED_WIZARD_OIL_SPELL) then
+            if not InitItemsDataPrev["Vanilla3"] then
+                InitItemsDataPrev["Vanilla3"]=true
+                InitItemsDataUpdate=true
+            end
         elseif InitItemsDataPrev["Vanilla3"] then
             InitItemsDataPrev["Vanilla3"]=false
             InitItemsDataUpdate=true
         end
-        if HEALBOT_GAME_VERSION>1 then
-            if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_SUPERIOR_WIZARD_OIL_SPELL), HEALBOT_SUPERIOR_WIZARD_OIL_SPELL) and not InitItemsDataPrev["Vanilla4"] then
-                InitItemsDataPrev["Vanilla4"]=true
+        if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_WIZARD_OIL_SPELL), HEALBOT_WIZARD_OIL_SPELL) then
+            if not InitItemsDataPrev["Vanilla6"] then
+                InitItemsDataPrev["Vanilla6"]=true
                 InitItemsDataUpdate=true
+            end
+        elseif InitItemsDataPrev["Vanilla6"] then
+            InitItemsDataPrev["Vanilla6"]=false
+            InitItemsDataUpdate=true
+        end
+        if HEALBOT_GAME_VERSION>1 then
+            if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_SUPERIOR_WIZARD_OIL_SPELL), HEALBOT_SUPERIOR_WIZARD_OIL_SPELL) then
+                if not InitItemsDataPrev["Vanilla4"] then
+                    InitItemsDataPrev["Vanilla4"]=true
+                    InitItemsDataUpdate=true
+                end
             elseif InitItemsDataPrev["Vanilla4"] then
                 InitItemsDataPrev["Vanilla4"]=false
                 InitItemsDataUpdate=true
             end
-            if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_SUPERIOR_MANA_OIL_SPELL), HEALBOT_SUPERIOR_MANA_OIL_SPELL) and not InitItemsDataPrev["Vanilla5"] then
-                InitItemsDataPrev["Vanilla5"]=true
-                InitItemsDataUpdate=true
+            if HealBot_Aura_UpdateItemData(HealBot_WoWAPI_ItemInfo(HEALBOT_SUPERIOR_MANA_OIL_SPELL), HEALBOT_SUPERIOR_MANA_OIL_SPELL) then
+                if not InitItemsDataPrev["Vanilla5"] then
+                    InitItemsDataPrev["Vanilla5"]=true
+                    InitItemsDataUpdate=true
+                end
             elseif InitItemsDataPrev["Vanilla5"] then
                 InitItemsDataPrev["Vanilla5"]=false
                 InitItemsDataUpdate=true
@@ -4642,9 +4771,11 @@ function HealBot_Aura_InitItemsDataReady()
         end
         HealBot_Options_BuffWeaponEnchantSetAura(1)
         HealBot_Options_BuffWeaponEnchantSetAura(2)
-        --HealBot_AddDebug("InitItemsDataReady","Buff",true)
         HealBot_Timers_Set("AURA","ExtraBuffReset")
         HealBot_Timers_Set("AURA","ResetBuffCache")
+        HealBot_Timers_Set("AURA","CheckPlayer")
+        InitItemsDataUpdate=false
+    elseif HealBot_Weapon_Enchant[1] or HealBot_Weapon_Enchant[2] then
         HealBot_Timers_Set("AURA","CheckPlayer")
     end
 end
@@ -4654,8 +4785,7 @@ function HealBot_Aura_InitItemsData()
     if HealBot_retLuVars("BagsScanned") then
         HealBot_Timers_Set("AURA","InitItemsDataReady")
     else
-        HealBot_Timers_Set("LAST","InitItemsData",1) -- All recall require a delay
-        --HealBot_AddDebug("InitItemsData","Buff",true)
+        HealBot_Timers_Set("LAST","InitItemsData",true,true) -- All recall require a delay
     end
 end
 
@@ -4812,52 +4942,34 @@ function HealBot_Aura_InitData()
             end
 
             if HEALBOT_GAME_VERSION<3 then
-                HealBot_BuffMinLevels={[HealBot_WoWAPI_SpellName(HEALBOT_POWER_WORD_FORTITUDE)]=48,
-                                       [HealBot_WoWAPI_SpellName(HBC_DIVINE_SPIRIT)]=20,
-                                       [HealBot_WoWAPI_SpellName(HBC_PRAYER_OF_SPIRIT)]=60,
-                                       [HealBot_WoWAPI_SpellName(HBC_PRAYER_OF_SHADOW_PROTECTION)]=56,
-                                       [HealBot_WoWAPI_SpellName(HBC_SHADOW_PROTECTION)]=30,
-                                       [HealBot_WoWAPI_SpellName(HBC_GIFT_OF_THE_WILD)]=50,
-                                       [HealBot_WoWAPI_SpellName(HBC_THORNS)]=6,
-                                       [HealBot_WoWAPI_SpellName(HBC_ARCANE_BRILLIANCE)]=56,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_LIGHT)]=60,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_LIGHT)]=40,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_MIGHT)]=52,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_MIGHT)]=4,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_SALVATION)]=60,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_SALVATION)]=26,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_WISDOM)]=54,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_WISDOM)]=14,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_SANCTUARY)]=60,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_KINGS)]=60,
-                                      }
-            elseif HEALBOT_GAME_VERSION<4 then
-                HealBot_BuffMinLevels={[HealBot_WoWAPI_SpellName(HEALBOT_POWER_WORD_FORTITUDE)]=48,
-                                       [HealBot_WoWAPI_SpellName(HBC_DIVINE_SPIRIT)]=20,
-                                       [HealBot_WoWAPI_SpellName(HBC_PRAYER_OF_SPIRIT)]=60,
-                                       [HealBot_WoWAPI_SpellName(HBC_PRAYER_OF_SHADOW_PROTECTION)]=56,
-                                       [HealBot_WoWAPI_SpellName(HBC_SHADOW_PROTECTION)]=30,
-                                       [HealBot_WoWAPI_SpellName(HBC_GIFT_OF_THE_WILD)]=50,
-                                       [HealBot_WoWAPI_SpellName(HBC_THORNS)]=6,
-                                       [HealBot_WoWAPI_SpellName(HBC_ARCANE_BRILLIANCE)]=56,
-                                       [HealBot_WoWAPI_SpellName(HEALBOT_DALARAN_BRILLIANCE)]=56,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_MIGHT)]=52,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_MIGHT)]=4,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_SALVATION)]=26,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_WISDOM)]=54,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_WISDOM)]=14,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_SANCTUARY)]=60,
-                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_KINGS)]=60,
+                HealBot_BuffMinLevels={[HealBot_WoWAPI_SpellName(HEALBOT_POWER_WORD_FORTITUDE) or "x"]=48,
+                                       [HealBot_WoWAPI_SpellName(HBC_DIVINE_SPIRIT) or "x"]=20,
+                                       [HealBot_WoWAPI_SpellName(HBC_PRAYER_OF_SPIRIT) or "x"]=60,
+                                       [HealBot_WoWAPI_SpellName(HBC_PRAYER_OF_SHADOW_PROTECTION) or "x"]=56,
+                                       [HealBot_WoWAPI_SpellName(HBC_SHADOW_PROTECTION) or "x"]=30,
+                                       [HealBot_WoWAPI_SpellName(HBC_GIFT_OF_THE_WILD) or "x"]=50,
+                                       [HealBot_WoWAPI_SpellName(HBC_THORNS) or "x"]=6,
+                                       [HealBot_WoWAPI_SpellName(HBC_ARCANE_BRILLIANCE) or "x"]=56,
+                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_LIGHT) or "x"]=60,
+                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_LIGHT) or "x"]=40,
+                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_MIGHT) or "x"]=52,
+                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_MIGHT) or "x"]=4,
+                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_SALVATION) or "x"]=60,
+                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_SALVATION) or "x"]=26,
+                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_WISDOM) or "x"]=54,
+                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_WISDOM) or "x"]=14,
+                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_SANCTUARY) or "x"]=60,
+                                       [HealBot_WoWAPI_SpellName(HBC_GREATER_BLESSING_OF_KINGS) or "x"]=60,
                                       }
             else
-                HealBot_BuffMinLevels={[HealBot_WoWAPI_SpellName(HEALBOT_POWER_WORD_FORTITUDE)]=48,
-                                       [HealBot_WoWAPI_SpellName(HEALBOT_SHADOW_PROTECTION)]=56,
-                                       [HealBot_WoWAPI_SpellName(HEALBOT_MARK_OF_THE_WILD)]=85,
-                                       [HealBot_WoWAPI_SpellName(HBC_THORNS)]=6,
-                                       [HealBot_WoWAPI_SpellName(HEALBOT_ARCANE_BRILLIANCE)]=86,
-                                       [HealBot_WoWAPI_SpellName(HEALBOT_DALARAN_BRILLIANCE)]=56,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_MIGHT)]=56,
-                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_KINGS)]=65,
+                HealBot_BuffMinLevels={[HealBot_WoWAPI_SpellName(HEALBOT_POWER_WORD_FORTITUDE) or "x"]=48,
+                                       [HealBot_WoWAPI_SpellName(HEALBOT_SHADOW_PROTECTION) or "x"]=56,
+                                       [HealBot_WoWAPI_SpellName(HEALBOT_MARK_OF_THE_WILD) or "x"]=85,
+                                       [HealBot_WoWAPI_SpellName(HBC_THORNS) or "x"]=6,
+                                       [HealBot_WoWAPI_SpellName(HEALBOT_ARCANE_BRILLIANCE) or "x"]=86,
+                                       [HealBot_WoWAPI_SpellName(HEALBOT_DALARAN_BRILLIANCE) or "x"]=56,
+                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_MIGHT) or "x"]=56,
+                                       [HealBot_WoWAPI_SpellName(HBC_BLESSING_OF_KINGS) or "x"]=65,
                                       }
             end
             
@@ -4921,7 +5033,7 @@ function HealBot_Aura_InitData()
         HealBot_Timers_Set("LAST","InitItemsData")
     else
         HealBot_SetPlayerData()
-        HealBot_Timers_Set("AURA","InitAuraData",1)
+        HealBot_Timers_Set("AURA","InitAuraData",true,true)
     end
 end
 

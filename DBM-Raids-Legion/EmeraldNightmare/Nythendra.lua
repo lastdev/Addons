@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1703, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044104")
+mod:SetRevision("20240714050021")
 mod:SetCreatureID(102672)
 mod:SetEncounterID(1853)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -29,7 +29,7 @@ local warnHeartofSwarm				= mod:NewCountAnnounce(203552, 2)
 local warnHeartofSwarmEnd			= mod:NewEndAnnounce(203552, 2)
 local warnInfestedMind				= mod:NewTargetAnnounce(205043, 4)
 
-local specWarnBreath				= mod:NewSpecialWarningDodge(202977, nil, nil, nil, 2, 2)
+local specWarnBreath				= mod:NewSpecialWarningDodgeCount(202977, nil, nil, nil, 2, 2)
 local specWarnVolatileRot			= mod:NewSpecialWarningRun(204463, nil, nil, nil, 3, 2)
 local specWarnVolatileRotSwap		= mod:NewSpecialWarningTaunt(204463, nil, nil, nil, 1, 2)
 local yellVolatileRot				= mod:NewFadesYell(204463)

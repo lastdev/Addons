@@ -1,17 +1,13 @@
 local mod	= DBM:NewMod(198, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
 
---normal,normal25,heroic,heroic25 in classic
-if not mod:IsClassic() then--Future planning, so cata classic uses regular rules defined in toc and not timewalker rules for this zone
-	mod.statTypes = "normal,heroic,timewalker"
-end
-
-mod:SetRevision("20240428104752")
+mod:SetRevision("20241115112135")
 mod:SetCreatureID(52409)
 mod:SetEncounterID(1203)
 mod:SetHotfixNoticeRev(20200918000000)--2020, 09, 18
 mod:SetMinSyncRevision(20200918000000)--2020, 09, 18
 mod:SetUsedIcons(1, 2)
+mod:SetZone(720)
 --mod:SetModelSound("Sound\\Creature\\RAGNAROS\\VO_FL_RAGNAROS_AGGRO.ogg", "Sound\\Creature\\RAGNAROS\\VO_FL_RAGNAROS_KILL_03.ogg")
 --Long: blah blah blah (didn't feel like transcribing it)
 --Short: This is my realm
@@ -107,7 +103,6 @@ local timerDreadFlameCD		= mod:NewCDTimer(40, 100675, nil, false, nil, 5)--Off b
 
 local berserkTimer			= mod:NewBerserkTimer(1080)
 
-mod:AddRangeFrameOption("6/8")
 mod:AddSetIconOption("BlazingHeatIcons", 100460, true, 0, {1, 2})
 mod:AddBoolOption("InfoHealthFrame", "Healer")--Phase 1 info framefor low health detection.
 mod:AddBoolOption("AggroFrame", false)--Phase 2 info frame for seed aggro detection.
@@ -119,7 +114,6 @@ mod.vb.magmaTrapSpawned = 0
 mod.vb.elementalsSpawned = 0
 mod.vb.meteorSpawned = 0
 mod.vb.sonsLeft = 0
-mod.vb.phase = 1
 mod.vb.prewarnedPhase2 = false
 mod.vb.prewarnedPhase3 = false
 mod.vb.phase2Started = false
@@ -131,28 +125,11 @@ local elementalsGUID = {}
 local meteorWarned = false
 local dreadflame, meteorTarget, staffDebuff = DBM:GetSpellName(100675), DBM:GetSpellName(99849), DBM:GetSpellName(101109)
 
-local function showRangeFrame(self)
-	if DBM:UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't change their range finder from 8.
-	if self.Options.RangeFrame then
-		if self.vb.phase == 1 and self:IsRanged() then
-			DBM.RangeCheck:Show(6)--For wrath of rag, only for ranged.
-		elseif self.vb.phase == 2 then
-			DBM.RangeCheck:Show(6)--For seeds
-		end
-	end
-end
-
-local function hideRangeFrame(self)
-	if DBM:UnitDebuff("player", staffDebuff) then return end--Staff debuff, don't hide it either.
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
-	end
-end
-
+---@param self DBMMod
 local function TransitionEnded(self)
 	timerPhaseSons:Stop()
 	timerLavaBoltCD:Stop()
-	if self.vb.phase == 2 then
+	if self:GetStage(2) then
 		if self:IsHeroic() then
 			timerSulfurasSmash:Start(6)
 			if self.Options.warnSeedsLand then
@@ -169,13 +146,12 @@ local function TransitionEnded(self)
 			end
 		end
 		timerFlamesCD:Start()--Probably the only thing that's really consistent.
-		showRangeFrame(self)--Range 6 for seeds
-	elseif self.vb.phase == 3 then
+	elseif self:GetStage(3) then
 		timerSulfurasSmash:Start(15.5)--Also a variation.
 		timerFlamesCD:Start(30)
 		warnLivingMeteorSoon:Schedule(35)
 		timerLivingMeteorCD:Start(45, 1)
-	elseif self.vb.phase == 4 then
+	elseif self:GetStage(4) then
 		timerLivingMeteorCD:Stop()
 		warnLivingMeteorSoon:Cancel()
 		timerFlamesCD:Stop()
@@ -194,9 +170,13 @@ local function warnSeeds()
 	timerMoltenSeedCD:Start()
 end
 
+---@param self DBMMod
+---@param spellId number
+---@param spellName string
+---@param adjustedTime number
 local function splittingBlowCasting(self, spellId, spellName, adjustedTime)
 	self.vb.sonsLeft = self.vb.sonsLeft + 8
-	self.vb.phase = self.vb.phase + 1
+	self:SetStage(0)
 	self:Unschedule(warnSeeds)
 	timerMoltenSeedCD:Stop()
 	timerMagmaTrap:Stop()
@@ -204,7 +184,6 @@ local function splittingBlowCasting(self, spellId, spellName, adjustedTime)
 	timerHandRagnaros:Stop()
 	timerWrathRagnaros:Stop()
 	timerFlamesCD:Stop()
-	hideRangeFrame(self)
 	timerPhaseSons:Stop()
 	if self:IsHeroic() then
 		timerPhaseSons:Start(60 - adjustedTime)--Longer on heroic
@@ -217,7 +196,7 @@ local function splittingBlowCasting(self, spellId, spellName, adjustedTime)
 	timerInvokeSons:Start(17 - adjustedTime)
 	timerLavaBoltCD:Stop()
 	--TODO, verify this myself later probably
-	local boltTime = (self.vb.phase == 2 and 17.3 or 7.3) - adjustedTime
+	local boltTime = (self:GetStage(2) and 17.3 or 7.3) - adjustedTime
 	timerLavaBoltCD:Start(boltTime)--9.3 seconds + cast time for splitting blow
 	if spellId == 98951 then--West
 		warnSplittingBlow:Show(spellName, L.West)
@@ -277,7 +256,7 @@ function mod:OnCombatStart(delay)
 	self.vb.elementalsSpawned = 0
 	self.vb.meteorSpawned = 0
 	self.vb.sonsLeft = 0
-	self.vb.phase = 1
+	self:SetStage(1)
 	self.vb.firstSmash = false
 	self.vb.prewarnedPhase2 = false
 	self.vb.prewarnedPhase3 = false
@@ -288,13 +267,12 @@ function mod:OnCombatStart(delay)
 	table.wipe(magmaTrapGUID)
 	table.wipe(elementalsGUID)
 	meteorWarned = false
-	showRangeFrame(self)
 	if not self:IsHeroic() then--register alternate kill detection, he only dies on heroic.
 		self:RegisterKill("yell", L.Defeat)
 	end
 	--Check if splitting blow started casting before OnCombatStart (ie overpowering fight) and fix mods timers/phase
 	local spellName, _, _, startTime, endTime, _, _, _, spellId = UnitCastingInfo("boss1")
-	if spellId and (spellId == 98951 or spellId == 98952 or spellId == 98953) and self.vb.phase < 2 then
+	if spellId and (spellId == 98951 or spellId == 98952 or spellId == 98953) and self:GetStage(2, 1) then
 		DBM:Debug("Running phase correction code for splitting blow that started before engage")
 		local adjustedTime = GetTime() - (startTime / 1000)
 		splittingBlowCasting(self, spellId, spellName, adjustedTime)
@@ -302,9 +280,6 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
-	end
 	if self.Options.MeteorFrame or self.Options.InfoHealthFrame or self.Options.AggroFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -315,9 +290,9 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 98710 then
 		self.vb.firstSmash = true
 		warnSulfurasSmash:Show()
-		if self.vb.phase == 1 or self.vb.phase == 3 then
+		if self:GetStage(1) or self:GetStage(3) then
 			timerSulfurasSmash:Start()--30 second cd in phase 1 and phase 3 in 3/4 difficulties
-			if self.vb.phase == 1 and self.vb.wrathcount < 2 then--always 12 seconds after smash if 30 second CD (ie wrathcount didn't reach 2 before first smash)
+			if self:GetStage(1) and self.vb.wrathcount < 2 then--always 12 seconds after smash if 30 second CD (ie wrathcount didn't reach 2 before first smash)
 				timerWrathRagnaros:Update(18, 30)--This is most accurate place to put it so we use auto correction here.
 			end
 		else
@@ -343,7 +318,7 @@ function mod:SPELL_CAST_START(args)
 		splittingBlowCasting(self, spellId, args.spellName, 0)
 	elseif args:IsSpellID(99172, 99235, 99236) then--Another scripted spell with a ton of spellids based on location of room.
 		if not self:IsHeroic() then
-			if self.vb.phase == 3 then
+			if self:GetStage(3) then
 				timerFlamesCD:Start(30)--30 second CD in phase 3
 			else
 				timerFlamesCD:Start()--40 second CD in phase 2
@@ -434,9 +409,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnCloudBurst:Show()
 	elseif spellId == 101110 then
 		warnRageRagnaros:Show(args.destName)
-		if self.Options.RangeFrame and args:IsPlayer() then
-			DBM.RangeCheck:Show(8)
-		end
 	end
 end
 
@@ -460,7 +432,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 100171 then--World of Flames, heroic version for engulfing flames.
 		specWarnWorldofFlames:Show()
 		specWarnWorldofFlames:Play("watchstep")
-		if self.vb.phase == 3 then
+		if self:GetStage(3) then
 			timerFlamesCD:Start(30)--30 second CD in phase 3
 		else
 			timerFlamesCD:Start(60)--60 second CD in phase 2
@@ -507,7 +479,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.TransitionEnded1 or msg:find(L.TransitionEnded1) or msg == L.TransitionEnded2 or msg:find(L.TransitionEnded2) or msg == L.TransitionEnded3 or msg:find(L.TransitionEnded3) then--This is more reliable then adds which may or may not add up to 8 cause blizz sucks. Plus it's more precise anyways, timers seem more consistent with this method.
 		TransitionEnded(self)
 	elseif (msg == L.Phase4 or msg:find(L.Phase4)) and self:IsInCombat() then
-		self.vb.phase = 4
+		self:SetStage(4)
 		TransitionEnded(self)--Easier to just trigger this and keep all phase change stuff in one place.
 	end
 end

@@ -8,6 +8,7 @@ local tour
 local groupID
 local side = 1
 local arrow
+local saveTour
 
 -- todo: Activate only during hallow's end
 tcl.Events.RegisterEvent("PLAYER_LOGIN", addon)
@@ -32,8 +33,14 @@ end
 local function isLocationActive(location)
     if (C_QuestLog.IsQuestFlaggedCompleted(location["Quest ID"])) then return false end
     if (location["Faction"]) then
-        local _, _, standingID = GetFactionInfoByID(location["Faction"])
-        if (not standingID or (standingID < 4)) then return false end
+        local factionData = C_Reputation.GetFactionDataByID(location["Faction"])
+        if (factionData) then
+            local reaction = factionData.reaction
+            if (not reaction or (reaction < 4)) then return false end
+            return true
+        else
+            return false
+        end
     end
     if (location["Prerequisite"]) then
         if (not C_QuestLog.IsQuestFlaggedCompleted(location["Prerequisite"])) then return false end
@@ -73,12 +80,27 @@ local function updateTour()
     tour = updatedTour
     announceRoute()
 end
+local savedTour, savedGroupID
+
+function saveTour()
+    savedTour = savedTour or tour
+    savedGroupID = savedGroupID or groupID
+    tour = nil
+    groupID = nil
+end
 
 local function switchTour(newGroupID)
     if (IsInInstance()) then
-        tour = nil
-        groupID = nil
+        saveTour()
         return
+    else
+        if (newGroupID and newGroupID == savedGroupID) then
+            tour = savedTour
+            savedTour = nil
+            groupID = savedGroupID
+            savedGroupID = nil
+            return
+        end
     end
     if (newGroupID == groupID) then
         return
@@ -134,7 +156,7 @@ local function zoneChanged()
     if (mapID) then
         switchTour(findLocationGroupID(mapID))
     else
-        tour = nil
+        saveTour()
     end
     setupArrow()
 end
@@ -156,10 +178,12 @@ local function checkTreats()
 end
 
 local function questComplete(event, ...)
-    local _, texture = GetQuestItemInfo("reward", 1)
-    if (texture and texture == 132940) then
-        if (not checkTreats()) then
-            GetQuestReward(0)
+    if (TomCats_Account.hallowsend.autoEnabled) then
+        local _, texture = GetQuestItemInfo("reward", 1)
+        if (texture and texture == 132940) then
+            if (not checkTreats()) then
+                GetQuestReward(0)
+            end
         end
     end
 end
@@ -191,8 +215,10 @@ local function questLogUpdate(event, ...)
 end
 
 local function bagUpdate()
-    questComplete()
-    questLogUpdate()
+    if (TomCats_Account.hallowsend.autoEnabled) then
+        questComplete()
+        questLogUpdate()
+    end
 end
 
 -- Manual overrides as Dalaran coordinates do not map back to coordinates to its parent map
@@ -243,7 +269,7 @@ end
 --    TomCats:Register(
 --        {
 --            name = "@shortName@",
---            version = "2.5.42",
+--            version = "2.5.54",
 --        }
 --    )
 --end

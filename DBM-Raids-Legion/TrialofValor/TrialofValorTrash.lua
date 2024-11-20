@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TrialofValorTrash", "DBM-Raids-Legion", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618063432")
+mod:SetRevision("20240714050021")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -20,7 +20,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnShatterboneShield:Show(args.destName)
 		specWarnShatterboneShield:Play("stopattack")
 	elseif spellId == 228371 and args:IsPlayer() and self:AntiSpam(2.5, 1) then
-		specWarnBreathOfDread:Show(args.destName)
+		specWarnBreathOfDread:Show()
 		specWarnBreathOfDread:Play("runaway")
 	elseif spellId == 228395 and self:AntiSpam(2.5, 2) then
 		specWarnBindSpirit:Show(args.destName)

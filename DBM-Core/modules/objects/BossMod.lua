@@ -25,21 +25,24 @@ local mt = {__index = bossModPrototype}
 ---@class DBMMod
 ---@field OnCombatStart fun(self: DBMMod, delay: number, startedByCastOrRegenDisabledOrMessage: boolean, startedByEncounter: boolean)
 ---@field OnCombatEnd fun(self: DBMMod, wipe: boolean, delayedSecondCall: boolean?)
+---@field StartNameplateTimers fun(self: DBMMod, guid: string, cid: number, delay: number)
 ---@field OnLeavingCombat fun()
+---@field EnteringZoneCombat fun(self: DBMMod)
+---@field LeavingZoneCombat fun(self: DBMMod)
 ---@field OnSync fun(self: DBMMod, event: string, ...: string)
----@field OnBWSync fun(self: DBMMod, msg: string, extra: string, sender: string)
----@field OnTranscriptorSync fun(self: DBMMod, msg: string, sender: string)
+---@field OnBWSync fun(self: DBMMod, msg: string, extra: string, sender: string) Used to Snoop Bigwigs comms when maintaining compat between DBM and BW on boss fights
+---@field OnTranscriptorSync fun(self: DBMMod, msg: string, sender: string) Used to snoop RAID_BOSS_WHISPER event syncs sent by both DBM and BigWigs
 ---@field OnInitialize fun(self: DBMMod, mod: DBMMod)
 ---@field OnTimerRecovery fun(self: DBMMod)
 ---@field CustomHealthUpdate fun(self: DBMMod): string
 ---@field stats ModStats
 ---@field registeredUnitEvents table<string, boolean>?
 ---@field bossHealthUpdateTime number?
----@field isTrashModBossFightAllowed boolean?
----@field respawnTime number?
----@field noStatistics boolean?
+---@field isTrashModBossFightAllowed boolean? Used to flag a trash mod that is continue firing events during a boss fight (should be true in all M+ mods)
+---@field respawnTime number? Time until the boss respawns after ENCOUNTER_END event
+---@field noStatistics boolean? Used in modules that should not have stats panels such as trash mods
 ---@field statTypes string?
----@field upgradedMPlus boolean?
+---@field upgradedMPlus boolean? Used to flag a dungeon that used to be a challenge mode in MoP or WoD but has since upgraded to M+
 ---@field onlyHighest boolean?
 ---@field soloChallenge boolean?
 ---@field disableHealthCombat boolean?
@@ -103,8 +106,9 @@ function DBM:NewMod(name, modId, modSubTab, instanceId, nameModifier)
 		test.Mocks:SetModEnvironment(2)
 	end
 
-	if tonumber(name) and EJ_GetEncounterInfo and EJ_GetEncounterInfo(tonumber(name)) then
-		local t = EJ_GetEncounterInfo(tonumber(name))
+	local encounterId = tonumber(name)
+	if encounterId and EJ_GetEncounterInfo and EJ_GetEncounterInfo(encounterId) then
+		local t = EJ_GetEncounterInfo(encounterId)
 		if type(nameModifier) == "number" then--Get name form EJ_GetCreatureInfo
 			t = select(2, EJ_GetCreatureInfo(nameModifier, tonumber(name)))
 		elseif type(nameModifier) == "function" then--custom name modify function
@@ -255,13 +259,20 @@ function bossModPrototype:SetStage(stage)
 		DBM:FireEvent("DBM_SetStage", self, self.id, self.vb.phase, self.multiEncounterPullDetection and self.multiEncounterPullDetection[1] or self.encounterId, self.vb.stageTotality)--Mod, modId, Stage, Encounter Id (if available), total number of times SetStage has been called since combat start
 		--Note, some encounters have more than one encounter Id, for these encounters, the first ID from mod is always returned regardless of actual engage ID triggered fight
 		DBM:Debug("DBM_SetStage: " .. self.vb.phase .. "/" .. self.vb.stageTotality)
+		test:Trace(self, "SetStage", self.vb.phase, self.vb.stageTotality)
 	end
 end
 
 ---If args are passed, returns true or false for specific Stage
 ---<br>If no args given, just returns current stage and stage total
+---@meta
+---@alias stageChecks
+---|0: 0 or nil for current stage match
+---|1: 1 for less than check
+---|2: 2 for greater than check
+---|3: 3 not equal check
 ---@param stage number? stage value to checkf or true/false rules
----@param checkType number? 0 or nil for just current stage match, 1 for less than check, 2 for greater than check, 3 not equal check
+---@param checkType stageChecks|nil
 ---@param useTotal boolean? uses stage total instead of current
 function bossModPrototype:GetStage(stage, checkType, useTotal)
 	local currentStage, currentTotal = self.vb.phase or 0, self.vb.stageTotality or 0
@@ -537,7 +548,7 @@ do
 	if private.isClassic then
 		interruptSpells[8042] = true -- Shaman Earth Shock
 	end
-	---@param sourceGUID string
+	---@param sourceGUID string source GUID of the caster
 	---@param checkOnlyTandF boolean? is used when CheckInterruptFilter is actually being used for a simpe target/focus check and nothing more.
 	---@param checkCooldown boolean? should always be passed true except for special rotations like count warnings when you should be alerted it's your turn even if you dropped ball and put it on CD at wrong time
 	---@param ignoreTandF boolean? is usually used when interrupt is on a main boss or event that is global to entire raid and should always be alerted regardless of targetting.

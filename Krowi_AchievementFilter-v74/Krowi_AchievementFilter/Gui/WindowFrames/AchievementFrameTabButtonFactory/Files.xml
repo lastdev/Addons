@@ -1,4 +1,0 @@
-<Ui>
-    <Script file="AchievementFrameTabButtonFactory.lua"/>
-    <Include file="AchievementFrameTabButton.xml"/>
-</Ui>

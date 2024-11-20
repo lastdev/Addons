@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AmirdrassilTrash", "DBM-Raids-Dragonflight", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240207092305")
+mod:SetRevision("20240912084847")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 

@@ -354,18 +354,29 @@ hooksecurefunc("SetItemRef", function(link, text)
     local sender = link:sub(17, string.len(link))
     local name, realm = string.match(sender, "(.*)+(.*)")
     if (not name) or (not realm) then
-      print(string.format(L["receiveErrorUpdate"], sender))
+      local msg = "\nsender: "..sender
+      local escapedText = text:gsub("|", "||")
+      msg = msg.."\nfull text: "..escapedText
+      local cache = MDT.U.TableToString(MDT.transmissionCache)
+      MDT:OnError(msg, cache, "MDT failed to import preset from chat link")
       return
     end
+    -- to get the displayName (name of the preset) we need to get everything between the starting and closing brackets
+    local displayName = text:match("%[(.-)%]")
     sender = name.."-"..realm
-    local preset = MDT.transmissionCache[sender]
+    local preset = MDT.transmissionCache[sender][displayName]
     if preset and type(preset) == "table" then
       MDT:Async(function()
         MDT:ShowInterfaceInternal(true)
         MDT:ImportPreset(CopyTable(preset))
       end, "showInterfaceChatImport")
     else
-      print(string.format(L["receiveErrorUpdate"], sender))
+      local msg = "\nparsed displayName: "..displayName
+      msg = msg.."\nsender: "..sender
+      local escapedText = text:gsub("|", "||")
+      msg = msg.."\nfull text: "..escapedText
+      local cache = MDT.U.TableToString(MDT.transmissionCache)
+      MDT:OnError(msg, cache, "MDT failed to import preset from chat link")
     end
     return
   end
@@ -391,7 +402,11 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
   --the user still decides if he wants to click the chat link and add the preset to his db
   if prefix == presetCommPrefix then
     local preset = MDT:StringToTable(message, false)
-    MDT.transmissionCache[fullName] = preset
+    local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
+    local presetName = preset.text
+    local displayName = dungeon..": "..presetName
+    MDT.transmissionCache[fullName] = MDT.transmissionCache[fullName] or {}
+    MDT.transmissionCache[fullName][displayName] = preset
     --live session preset
     if MDT.liveSessionActive and MDT.liveSessionAcceptingPreset and preset.uid == MDT.livePresetUID then
       if MDT:ValidateImportPreset(preset) then
@@ -647,7 +662,10 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
   if prefix == MDT.liveSessionPrefixes.preset then
     if MDT.liveSessionActive then
       local preset = MDT:StringToTable(message, false)
-      MDT.transmissionCache[fullName] = preset
+      local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
+      local displayName = dungeon..": "..preset.text
+      MDT.transmissionCache[fullName] = MDT.transmissionCache[fullName] or {}
+      MDT.transmissionCache[fullName][displayName] = preset
       if MDT:ValidateImportPreset(preset) then
         MDT.livePresetUID = preset.uid
         MDT:ImportPreset(preset, true)
@@ -720,7 +738,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
     --output chat link
     if not silent and preset then
       local prefix = "[MDT_v2: "
-      local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx)
+      local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
       local presetName = preset.text
       local name, realm = UnitFullName("player")
 
@@ -739,7 +757,6 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
       SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
     end
     numActiveTransmissions = numActiveTransmissions - 1
-    if not fromLiveSession then MDT:RestoreThrottleValues() end
   end
 end
 
@@ -790,7 +807,6 @@ end
 ---SendToGroup
 ---Send current preset to group/raid
 function MDT:SendToGroup(distribution, silent, preset)
-  MDT:SetThrottleValues()
   preset = preset or MDT:GetCurrentPreset()
   --set unique id
   MDT:SetUniqueID(preset)
@@ -809,28 +825,4 @@ function MDT:GetPresetSize(forChat, level)
   local preset = MDT:GetCurrentPreset()
   local export = MDT:TableToString(preset, forChat, level)
   return string.len(export)
-end
-
-do
-  local defaultCPS = _G.ChatThrottleLib.MAX_CPS
-  local defaultBurst = _G.ChatThrottleLib.BURST
-
-  function MDT:SetThrottleValues()
-    if not _G.ChatThrottleLib then return end
-    --10.2 added throttle restrictions for PARTY and RAID
-    --10 messages burst, 1 message per second all per prefix
-    --255 characters per message
-    if numActiveTransmissions ~= 0 then return end
-    defaultCPS = _G.ChatThrottleLib.MAX_CPS
-    defaultBurst = _G.ChatThrottleLib.BURST
-    _G.ChatThrottleLib.MAX_CPS = 255
-    _G.ChatThrottleLib.BURST = 2550
-  end
-
-  function MDT:RestoreThrottleValues()
-    if not _G.ChatThrottleLib then return end
-    if numActiveTransmissions ~= 0 then return end
-    _G.ChatThrottleLib.MAX_CPS = defaultCPS
-    _G.ChatThrottleLib.BURST = defaultBurst
-  end
 end

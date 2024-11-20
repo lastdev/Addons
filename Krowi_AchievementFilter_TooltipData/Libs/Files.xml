@@ -1,7 +1,0 @@
-<Ui>
-    <Script file="LibStub\LibStub.lua" />
-    
-    <Include file="Krowi_Util\Krowi_Util-1.0.xml" />
-    
-    <Script file="Libs.lua" />
-</Ui>

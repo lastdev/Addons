@@ -5,18 +5,6 @@ local L
 ---------------------------
 --L= DBM:GetModLocalization(2480)
 
---L:SetWarningLocalization({
---})
---
---L:SetTimerLocalization{
---}
---
---L:SetOptionLocalization({
---})
---
---L:SetMiscLocalization({
---})
-
 ---------------------------
 --  Terros --
 ---------------------------

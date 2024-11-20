@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1986, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240422191412")
+mod:SetRevision("20240714050021")
 mod:SetCreatureID(122468, 122467, 122469)--122468 Noura, 122467 Asara, 122469 Diima, 125436 Thu'raya (mythic only)
 mod:SetEncounterID(2073)
 mod:SetBossHPInfoToHighest()
@@ -41,7 +41,7 @@ local torment = DBM:EJ_GetSectionInfo(16138)
 local warnActivated						= mod:NewTargetAnnounce(118212, 3, 78740, nil, nil, nil, nil, nil, true)
 
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(245634, nil, nil, nil, 1, 2)
-local specWarnActivated					= mod:NewSpecialWarningSwitchCount(118212, "Tank", nil, 2, 3, 2)
+local specWarnActivated					= mod:NewSpecialWarningSwitchCustom(118212, "Tank", nil, 2, 3, 2)
 
 local timerBossIncoming					= mod:NewTimer(61, "timerBossIncoming", nil, nil, nil, 1)
 --local berserkTimer					= mod:NewBerserkTimer(600)

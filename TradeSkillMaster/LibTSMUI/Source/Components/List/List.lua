@@ -5,7 +5,6 @@
 -- ------------------------------------------------------------------------------ --
 
 local LibTSMUI = select(2, ...).LibTSMUI
-local LibTSMWoW = select(2, ...).LibTSMWoW
 local UIElements = LibTSMUI:Include("Util.UIElements")
 local ListRow = LibTSMUI:IncludeClassType("ListRow")
 local Math = LibTSMUI:From("LibTSMUtil"):Include("Lua.Math")
@@ -409,7 +408,7 @@ end
 
 function List.__private:_HandleRowFrameEvent(row, event, ...)
 	if event == "OnEnter" then
-		local focus = LibTSMWoW.IsRetail() and GetMouseFoci()[1] or GetMouseFocus()
+		local focus = GetMouseFoci()[1]
 		if not focus or (focus ~= row._frame and focus ~= row._frame:GetParent() and focus:GetParent() ~= row._frame) then
 			-- Sometimes we get erronous OnEnter events - just ignore them
 			return

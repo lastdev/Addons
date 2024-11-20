@@ -3,10 +3,11 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(71543)
 mod:SetEncounterID(1602)
 mod:SetReCombatTime(45)--Lets just assume he has same bug as tsulong in advance and avoid problems
+mod:SetZone(1136)
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.Victory)

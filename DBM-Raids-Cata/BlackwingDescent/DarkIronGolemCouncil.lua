@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(169, "DBM-Raids-Cata", 5, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240315100444")
+mod:SetRevision("20241103125714")
 mod:SetCreatureID(42180, 42178, 42179, 42166)
 mod:SetEncounterID(1027)
 mod:SetUsedIcons(1, 3, 6, 7, 8)
+mod:SetZone(669)
 --mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_OmnitronIntro01.ogg", "Sound\\Creature\\Council\\VO_BD_Council_Event01.ogg")
 --Long: Hmm, the Omnotron Defense System. Centuries ago, these constructs were considered the dwarves greatest tactical achievements. With so many counters to each construct's attacks, I'll have to rectify these designs for them to provide me ANY entertainment!
 --Short: Intruders detected. Primary defense matrix initiated.
@@ -46,7 +47,7 @@ local warnBarrierSoon			= mod:NewPreWarnAnnounce(79582, 10, 3, nil, "-Healer")
 local warnBarrier				= mod:NewSpellAnnounce(79582, 4)
 local warnAcquiringTarget		= mod:NewTargetNoFilterAnnounce(79501, 4)
 
-local specWarnBarrier			= mod:NewSpecialWarningSpell(79582, "-Healer", nil, nil, 1, 2)
+local specWarnBarrier			= mod:NewSpecialWarningReflect(79582, "-Healer", nil, nil, 1, 2)
 local specWarnAcquiringTarget	= mod:NewSpecialWarningMoveAway(79501, nil, nil, nil, 1, 2)
 local yellAcquiringTarget		= mod:NewYell(79501)
 local specWarnEncasingShadows	= mod:NewSpecialWarningTarget(92023, nil, nil, nil, 1, 2, 3)--Heroic Ability
@@ -292,7 +293,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		bossActivate(self, cid)
 		if self.vb.pulled then -- prevent show warning when first pulled.
 			if self.Options.SpecWarn78740switch then
-				specWarnActivated:Show(args.destName)
+				specWarnActivated:Show()
 				specWarnActivated:Play("targetchange")
 			else
 				warnActivated:Show(args.destName)
@@ -365,7 +366,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 79629 and args:IsDestTypeHostile() then--Check if Generator buff is gained by a hostile.
 		local targetCID = self:GetUnitCreatureId("target")--Get CID of current target
 		if args:GetDestCreatureID() == targetCID and args:GetDestCreatureID() ~= 42897 then--If target gaining buff is target then not an ooze (only hostiles left filtering oozes is golems)
-			specWarnGenerator:Show(args.destName)--Show special warning to move him out of it.
+			specWarnGenerator:Show()--Show special warning to move him out of it.
 			specWarnGenerator:Play("moveboss")
 		end
 	elseif args.spellId == 92048 then--Shadow Infusion, debuff 5 seconds before shadow conductor.
@@ -415,7 +416,7 @@ function mod:SPELL_INTERRUPT(args)
 			timerArcaneLockout:Start(7.5)
 		elseif args.spellId == 19647 then													--Shield Bash (will be removed in 4.1), Spell Lock (Fel Hunter)
 			timerArcaneLockout:Start(6.5)--Shield bash verified, spell lock assumed since it's same lockout duration.
-		elseif args:IsSpellID(96231, 6552, 47528, 1766) or args:IsSpellID(80964, 80965)  then	--Rebuke, Pummel, Mind Freeze, Kick, Skull Bash (feral and bear)
+		elseif args:IsSpellID(96231, 6552, 47528, 1766, 80964, 80965) then	--Rebuke, Pummel, Mind Freeze, Kick, Skull Bash (feral and bear)
 			timerArcaneLockout:Start(5)--4 out of 6 verified, skull bash needs logs to review for certainty.
 		elseif args:IsSpellID(34490, 15487) then												--Silencing Shot, Silence
 			timerArcaneLockout:Start(3.5)--Drycoded, needs verification for both spells.

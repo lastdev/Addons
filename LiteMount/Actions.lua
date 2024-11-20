@@ -365,7 +365,8 @@ ACTIONS['CopyTargetsMount'] = {
     handler =
         function (args, context)
             local unit = context.rule.unit or "target"
-            if LM.Options:GetOption('copyTargetsMount') and UnitIsPlayer(unit) then
+--          if LM.Options:GetOption('copyTargetsMount') and UnitIsPlayer(unit) then
+            if LM.Options:GetOption('copyTargetsMount') then
                 LM.Debug("  * trying to clone %s's mount", unit)
                 local m = LM.MountRegistry:GetMountFromUnitAura(unit)
                 if m and m:IsCastable() then
@@ -415,7 +416,7 @@ ACTIONS['SwitchFlightStyle'] = {
                 local _, currentStyle = LM.Environment:GetFlightStyle()
                 if #argList == 0 or currentStyle ~= argList[1] then
                     LM.Debug("  * setting action to spell " .. switchSpellInfo.name)
-                    return LM.SecureAction:Spell(switchSpellInfo.name, context.rule.unit)
+                    return LM.SecureAction:Spell(switchSpellID, context.rule.unit)
                 end
             end
         end

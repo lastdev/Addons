@@ -451,7 +451,7 @@ local function ShowInterfaceOptions(self)
 					height = height + 64
 				end
 			end
-			local reload = CreateFrame("Button", "UnifiedTankFramesConfigReloadButton", panel, "OptionsButtonTemplate")
+			local reload = CreateFrame("Button", "UnifiedTankFramesConfigReloadButton", panel, "UIPanelButtonTemplate")
 			reload:SetText("ReloadUI")
 			reload:SetScript("OnClick", function() ReloadUI() end)
 			reload:SetPoint("TOPLEFT", anchorTo, "BOTTOMLEFT", 0, -12)
@@ -476,7 +476,14 @@ local function RegisterInterfaceOptions()
 		end
 		panels.main.okay  = function()
 		end
-		InterfaceOptions_AddCategory(panels.main)
+		if InterfaceOptions_AddCategory then
+			InterfaceOptions_AddCategory(panels.main)
+		else
+			local category, layout = _G.Settings.RegisterCanvasLayoutCategory(panels.main, panels.main.name)
+			panels.main.category = category
+			_G.Settings.RegisterAddOnCategory(category)
+			UnifiedTankFrames.settingsCategoryId = category:GetID()
+		end
 	end
 	if panels.frames == nil then
 		panels.frames = CreateFrame("Frame", "UnifiedTankFramesConfigFrameConfig", panels.main)
@@ -484,7 +491,12 @@ local function RegisterInterfaceOptions()
 		panels.frames:SetScript("OnShow", ShowInterfaceOptions)
 		panels.frames.parent = panels.main.name
 		panels.frames:Hide()
-		InterfaceOptions_AddCategory(panels.frames)
+		if InterfaceOptions_AddCategory then
+			InterfaceOptions_AddCategory(panels.frames)
+		else
+			local category, layout = _G.Settings.RegisterCanvasLayoutSubcategory(panels.main.category, panels.frames, panels.frames.name)
+			panels.frames.category = category
+		end
 	end
 end
 

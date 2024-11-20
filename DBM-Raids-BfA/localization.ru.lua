@@ -90,7 +90,7 @@ L:SetOptionLocalization({
 	timerCallofHexerCD 		= "Show timer for when Hexer pools begin to form",
 	timerCallofCrusherCD	= "Show timer for when Crusher pools begin to form",
 	timerAddIncoming		= "Показать таймер, когда входящий адд может быть атакован",
-	TauntBehavior			= "Установить поведение таунта для смены танков",
+	TauntBehavior			= "Установить режим таунта для смены танков",
 	TwoHardThreeEasy		= "Меняться местами по 2 стака на героическом/эпохальном уровне сложности, по 3 стака на других сложностях",--По умолчанию
 	TwoAlways				= "Всегда меняться на 2 стаках независимо от сложности",
 	ThreeAlways				= "Всегда меняться на 3 стаках независимо от сложности"
@@ -239,7 +239,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2332)
 
 L:SetOptionLocalization({
-	UnstableBehavior2	= "Установить поведение крика при резонансе для рейда (если лидер рейда, переопределяет для рейда)",
+	UnstableBehavior2	= "Установить режим крика при резонансе для рейда (если лидер рейда, переопределяет для рейда)",
 	SetOne				= "Камень Бездны (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:32:48:0:16|t), Трезубец/Океан (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:16:32:16:32|t), Буря/Гроза (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:16:32|t)",--Default
 	SetTwo				= "Камень Бездны (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:32:48:0:16|t), Трезубец/Океан (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:16:32|t), Буря/Гроза (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:16:32:16:32|t)",
 	SetThree			= "Камень Бездны (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:32:48:0:16|t), Трезубец/Океан (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:16:32|t), Буря/Гроза (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:0:16|t)",
@@ -376,7 +376,7 @@ L:SetGeneralLocalization({
 L= DBM:GetModLocalization(2377)
 
 L:SetOptionLocalization({
-	InterruptBehavior	= "Установить поведение прерывания для 'Волны Ужаса' (будет переопределять все остальные настройки, если Вы лидер рейда)",
+	InterruptBehavior	= "Установить режим прерывания для 'Волны Ужаса' (будет переопределять все остальные настройки, если Вы лидер рейда)",
 	Four				= "Ротация из 4 человек ",--По умолчанию
 	Five				= "Ротация из 5 человек ",
 	Six					= "Ротация из 6 человек ",
@@ -428,7 +428,7 @@ L= DBM:GetModLocalization(2374)
 
 L:SetOptionLocalization({
 	SetIconOnlyOnce		= "Установить метку только один раз при сканировании слизи с самым низким уровнем здоровья, затем отключить, пока хотя бы одна не умрет",
-	InterruptBehavior	= "Установить поведение прерывания для 'Прокачивание крови' (будет переопределять все остальные настройки, если Вы лидер рейда)",
+	InterruptBehavior	= "Установить режим прерывания для 'Прокачивание крови' (будет переопределять все остальные настройки, если Вы лидер рейда)",
 	Two					= "Ротация из 2 человек ",--По умолчанию
 	Three				= "Ротация из 3 человек ",
 	Four				= "Ротация из 4 человек ",
@@ -446,7 +446,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2375)
 
 L:SetOptionLocalization({
-	InterruptBehavior	= "Установите поведение прерывания для 'Уничтожение разума' (будет переопределять все остальные настройки, если Вы лидер рейда)",
+	InterruptBehavior	= "Установите режим прерывания для 'Уничтожение разума' (будет переопределять все остальные настройки, если Вы лидер рейда)",
 	Four				= "Ротация из 4 человек ",
 	Five				= "Ротация из 5 человек ",--По умолчанию
 	Six					= "Ротация из 6 человек ",

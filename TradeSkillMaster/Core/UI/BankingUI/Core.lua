@@ -431,7 +431,7 @@ function private.FSMCreate()
 			:Draw()
 
 		-- Update the action button state
-		context.frame:SetTitle(context.isWarBank and L["Warbound Banking"] or L["Banking"])
+		context.frame:SetTitle(context.isWarBank and L["Warbank"] or BANK)
 		local footerButtonsFrame = context.frame:GetElement("content.footer.buttons")
 		if private.settings.tab == "Warehousing" then
 			footerButtonsFrame:GetElement("row1.moveBankBtn")

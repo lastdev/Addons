@@ -1,10 +1,12 @@
-tag e925128c5ec2129a54a18e7be0165b52f5fd855c 9.0.5
+tag 5500b2b7069b9c4dfde945c6d18325543ca1812a 11.0.2
 Author:	AllInOneMighty <mighty@allinonemighty.com>
-Date:	Tue Jun 8 20:30:57 2021 -0700
+Date:	Sun Sep 8 14:37:22 2024 -0700
 
-commit ba923b7f78855866be10d83ee7a5a8a75c792eb3
+Updating to latest game version
+
+commit d027e3078abaec7e9a4a5bdd21a0efc99b2736bf
 Author: AllInOneMighty <mighty@allinonemighty.com>
-Date:   Tue Jun 8 20:30:51 2021 -0700
+Date:   Sun Sep 8 14:36:47 2024 -0700
 
-    Updated TOC
+    Fixing addon and updating to latest TOC
 

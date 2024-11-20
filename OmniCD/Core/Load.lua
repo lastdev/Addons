@@ -6,8 +6,18 @@ local function OmniCD_OnEvent(self, event, ...)
 	if event == 'ADDON_LOADED' then
 		local addon = ...
 		if addon == E.AddOn then
+			if E.isClassic then
+				local seasonID = C_Seasons.GetActiveSeason()
+				if seasonID == 1 or seasonID == 2 then
+					E.write("Seasonal Classic WoW isn't supported.")
+				end
+			end
 			self:OnInitialize()
 			self:UnregisterEvent('ADDON_LOADED')
+			self:RegisterEvent('PLAYER_LOGIN')
+			if not E.preMoP then
+				E:RegisterEvent('PET_BATTLE_OPENING_START')
+			end
 		end
 	elseif event == 'PLAYER_LOGIN' then
 		self:OnEnable()
@@ -20,7 +30,7 @@ local function OmniCD_OnEvent(self, event, ...)
 			local module = E[moduleName]
 			local func = module.Refresh
 			if type(func) == "function" then
-				func(module, true)
+				func(module)
 			end
 		end
 		self:UnregisterEvent('PET_BATTLE_CLOSE')
@@ -31,7 +41,7 @@ local function OmniCD_OnEvent(self, event, ...)
 			if type(func) == "function" and module.isInTestMode then
 				func(module)
 			end
-			func = module.HideAllBars
+			func = module.ReleaseAll
 			if type(func) == "function" then
 				func(module)
 			end
@@ -41,38 +51,10 @@ local function OmniCD_OnEvent(self, event, ...)
 end
 
 E:RegisterEvent('ADDON_LOADED')
-E:RegisterEvent('PLAYER_LOGIN')
-if not E.preMoP then
-	E:RegisterEvent('PET_BATTLE_OPENING_START')
-end
 E:SetScript("OnEvent", OmniCD_OnEvent)
 
-function E:CreateFontObjects()
-	self.IconFont = CreateFont("IconFont-OmniCD")
-	self.IconFont:CopyFontObject("GameFontHighlightSmallOutline")
-	self.AnchorFont = CreateFont("AnchorFont-OmniCD")
-	self.AnchorFont:CopyFontObject("GameFontNormal")
-	self.StatusBarFont = CreateFont("StatusBarFont-OmniCD")
-	self.StatusBarFont:CopyFontObject("GameFontHighlightHuge")
-end
-
-function E:UpdateFontObjects()
-	self:SetFontProperties(self.AnchorFont, self.profile.General.fonts.anchor)
-	self:SetFontProperties(self.IconFont, self.profile.General.fonts.icon)
-	self:SetFontProperties(self.StatusBarFont, self.profile.General.fonts.statusBar)
-end
-
-local BASE_ICON_HEIGHT = 36
-
-function E:SetPixelMult()
-	local pixelMult, uiUnitFactor = E.Libs.OmniCDC:GetPixelMult()
-	self.PixelMult = pixelMult
-	self.uiUnitFactor = uiUnitFactor
-	self.baseIconHeight = BASE_ICON_HEIGHT - ( BASE_ICON_HEIGHT % pixelMult )
-end
-
 function E:OnInitialize()
-	if not OmniCDDB or not OmniCDDB.version or  OmniCDDB.version < 2.51 then
+	if not OmniCDDB or not OmniCDDB.version or OmniCDDB.version < 2.51 then
 		OmniCDDB = { version = DB_VERSION }
 	elseif OmniCDDB.version < DB_VERSION then
 		if OmniCDDB.cooldowns then
@@ -103,14 +85,46 @@ function E:OnInitialize()
 	self.DB.RegisterCallback(self, "OnProfileChanged", "Refresh")
 	self.DB.RegisterCallback(self, "OnProfileCopied", "Refresh")
 	self.DB.RegisterCallback(self, "OnProfileReset", "Refresh")
+
 	self.global = self.DB.global
 	self.profile = self.DB.profile
-	self.db = self.profile.Party.arena
+	local _, instanceType = IsInInstance()
+	self.db = self:GetCurrentZoneSettings(instanceType)
 
 	self:CreateFontObjects()
 	self:UpdateSpellList(true)
 	self:SetupOptions()
 
+end
+
+function E:GetCurrentZoneSettings(instanceType)
+	if instanceType == "none" then
+		instanceType = self.profile.Party.noneZoneSetting
+	elseif instanceType == "scenario" then
+		instanceType = self.profile.Party.scenarioZoneSetting
+	end
+	return self.profile.Party[instanceType]
+end
+
+function E:CreateFontObjects()
+	self.IconFont = CreateFont("IconFont-OmniCDC")
+	self.IconFont:CopyFontObject("GameFontHighlightSmallOutline")
+	self.AnchorFont = CreateFont("AnchorFont-OmniCDC")
+	self.AnchorFont:CopyFontObject("GameFontNormal")
+	self.StatusBarFont = CreateFont("StatusBarFont-OmniCDC")
+	self.StatusBarFont:CopyFontObject("GameFontHighlightHuge")
+end
+
+function E:UpdateFontObjects()
+	self:SetFontProperties(self.AnchorFont, self.profile.General.fonts.anchor)
+	self:SetFontProperties(self.IconFont, self.profile.General.fonts.icon)
+	self:SetFontProperties(self.StatusBarFont, self.profile.General.fonts.statusBar)
+end
+
+function E:SetPixelMult()
+	local pixelMult, uiUnitFactor = E.Libs.OmniCDC:GetPixelMult()
+	self.PixelMult = pixelMult
+	self.uiUnitFactor = uiUnitFactor
 end
 
 function E:OnEnable()

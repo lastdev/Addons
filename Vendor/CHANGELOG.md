@@ -1,8 +1,25 @@
 # Vendor
 
-## [6.1.2-58-gbcf38d2](https://github.com/typicalzergling/vendor/tree/bcf38d23f4a94bc99d771412e7d4a4152c91c8de) (2024-06-12)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...bcf38d23f4a94bc99d771412e7d4a4152c91c8de) 
+## [6.1.2-66-gbaf17b0](https://github.com/typicalzergling/vendor/tree/baf17b0cad551774d61ddcf3d24e83382e3c2ad0) (2024-07-16)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...baf17b0cad551774d61ddcf3d24e83382e3c2ad0) 
 
+- Edit Rule Item Props  
+    Edit rule now leverages the itemdialog feature for generating and displaying items  
+- Follow mouse option  
+    Add a follow mouse option to the stand alone item properties dialog  
+- Improvements to the property dialog  
+    - Update header UX  
+    - Add rank to properties  
+    - Sort by rank  
+    - Minor layout issues  
+- bug fix  
+- Property categories  
+- Add GetCategories  
+- Item Properties dialog  
+    - UI Fixes  
+    - Add ui\_itemdialog feature  
+    - Minimap shows item properties dialog  
+- Update build and toc  
 - Update item properties  
 - Add warbound on equip support  
 - Fix broken slash commands  

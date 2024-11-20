@@ -6,12 +6,14 @@ local Class = ns.Class
 local L = ns.locale
 local Map = ns.Map
 
+local Collectible = ns.node.Collectible
 local DisturbedEarth = ns.node.DisturbedEarth
 local PT = ns.node.ProfessionTreasures
 local Rare = ns.node.Rare
 local Treasure = ns.node.Treasure
 
-local LoreObject = ns.node.LoreObject
+local FlightMaster = ns.node.FlightMaster
+-- local LoreObject = ns.node.LoreObject
 local SkyridingGlyph = ns.node.SkyridingGlyph
 
 local Achievement = ns.reward.Achievement
@@ -25,6 +27,7 @@ local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 
 local Circle = ns.poi.Circle
+local Entrance = ns.poi.Entrance
 local Path = ns.poi.Path
 local POI = ns.poi.POI
 
@@ -89,7 +92,7 @@ map.nodes[47946014] = Rare({
         Transmog({item = 223346, slot = L['plate']}) -- Viper's Stone Handguards
     },
     pois = {
-        POI({45936001, 46206206, 47726173}) -- Entries
+        Entrance({45936001, 46206206, 47726173}) -- Entries
     }
 }) -- Emperor Pitfang
 
@@ -332,7 +335,7 @@ map.nodes[56833477] = Rare({
 map.nodes[59122348] = Treasure({ -- You may have to wait until it spawns.
     quest = 82715,
     -- vignette = 6293,
-    note = L['in_building'] .. '' .. L['web_wrapped_axe_note'],
+    note = L['in_building'] .. ' ' .. L['web_wrapped_axe_note'],
     rewards = {
         Achievement({id = 40434, criteria = 68209}),
         Reputation({id = 2590, gain = 150, quest = 82715}),
@@ -392,7 +395,7 @@ map.nodes[59732868] = Treasure({ -- 59602460, 59102708  follow {npc:222963}
 
     },
     pois = {
-        POI({59602460, 59102708, 59732868}), -- Lost Mosswool
+        POI({label = '{npc:222956}', points = {59602460, 59102708, 59732868}}), -- Lost Mosswool
         Path({59602460, 59102708, 59732868}) -- Walking Path
     }
 }) -- Mosswool Flower (Lost Mosswool)
@@ -410,7 +413,12 @@ map.nodes[55006564] = Treasure({ -- more Boskroot Cap locations ?
         Reputation({id = 2590, gain = 150, quest = 83245})
     },
     pois = {
-        POI({51837032, 52326982, 52466780, 52687038, 52346737, 52646562}) -- Boskroot Caps
+        POI({
+            label = '{item:221550}',
+            points = {
+                51837032, 52326982, 52466780, 52687038, 52346737, 52646562
+            }
+        }) -- Boskroot Caps
     }
 }) -- Mushroom Cap (U'llwort The Self-Exiled)
 
@@ -423,7 +431,7 @@ map.nodes[53951920] = Treasure({
         Reputation({id = 2590, gain = 150, quest = 83244})
     },
     pois = {
-        POI({53081855}) -- Elemental Pearl {item:221504}
+        POI({label = '{item:221504}', points = {53081855}}) -- Elemental Pearl
     }
 }) -- Mysterious Orb (Weary Water Elemental)
 
@@ -436,7 +444,7 @@ map.nodes[48896087] = Treasure({ -- You may have to wait until it spawns.
         Reputation({id = 2590, gain = 150, quest = 82326})
     },
     pois = {
-        POI({45936001, 46206206, 47726173}) -- Entries
+        Entrance({45936001, 46206206, 47726173}) -- Entries
     }
 }) -- Shimmering Opal Lily
 
@@ -460,13 +468,49 @@ map.nodes[48513004] = Treasure({
         Toy({item = 224585}) -- Hanna's Locket
     },
     pois = {
-        POI({48683103}), -- Entrance
-        POI({19735843, quest = 82755, color = 'Green'}), -- Pearlescent Shellcrab
-        POI({38264202, quest = 82756, color = 'Green'}), -- Pearlescent Shellcrab / Up in the Tree
-        POI({41852701, quest = 82754, color = 'Green'}), -- Pearlescent Shellcrab
-        POI({50717057, quest = 82751, color = 'Green'}), -- Pearlescent Shellcrab / under a root
-        POI({70771999, quest = 82753, color = 'Green'}), -- Pearlescent Shellcrab
-        POI({74924939, quest = 82752, color = 'Green'}) -- Pearlescent Shellcrab / on a root
+        Entrance({48683103}), -- Entrance
+        POI({
+            label = '{npc:224548}',
+            note = L['trees_treasure_crab_1_note'],
+            color = 'Green',
+            quest = 82755,
+            points = {19735843}
+        }), -- Pearlescent Shellcrab
+        POI({
+            label = '{npc:224548}',
+            note = L['trees_treasure_crab_2_note'],
+            color = 'Green',
+            quest = 82756,
+            points = {38264202}
+        }), -- Pearlescent Shellcrab / Up in the Tree
+        POI({
+            label = '{npc:224548}',
+            note = L['trees_treasure_crab_3_note'],
+            color = 'Green',
+            quest = 82754,
+            points = {41852701}
+        }), -- Pearlescent Shellcrab
+        POI({
+            label = '{npc:224548}',
+            note = L['trees_treasure_crab_4_note'],
+            color = 'Green',
+            quest = 82751,
+            points = {50717057}
+        }), -- Pearlescent Shellcrab / under a root
+        POI({
+            label = '{npc:224548}',
+            note = L['trees_treasure_crab_5_note'],
+            quest = 82753,
+            color = 'Green',
+            points = {70771999}
+        }), -- Pearlescent Shellcrab
+        POI({
+            label = '{npc:224548}',
+            note = L['trees_treasure_crab_6_note'],
+            quest = 82752,
+            color = 'Green',
+            points = {74924939}
+        }) -- Pearlescent Shellcrab / on a root
     }
 }) -- Tree's Treasure (Pearlescent Shellcrab)
 
@@ -662,41 +706,41 @@ map.nodes[71904721] = SkyridingGlyph({
 --------------------- ACHIEVEMENT: KHAZ ALGAR LORE HUNTER ---------------------
 -------------------------------------------------------------------------------
 
-map.nodes[37295254] = LoreObject({
-    note = L['in_water'],
-    rewards = {
-        Achievement({id = 40762, criteria = 69369}),
-        Reputation({id = 2590, gain = 250})
-    }
-}) -- Galan's Edict
+-- map.nodes[37295254] = LoreObject({
+--     note = L['in_water'],
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69369}),
+--         Reputation({id = 2590, gain = 250})
+--     }
+-- }) -- Galan's Edict
 
-map.nodes[44083014] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69371}),
-        Reputation({id = 2590, gain = 250})
-    }
-}) -- Stone of The Unbound
+-- map.nodes[44083014] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69371}),
+--         Reputation({id = 2590, gain = 250})
+--     }
+-- }) -- Stone of The Unbound
 
-map.nodes[78132785] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69370}),
-        Reputation({id = 2590, gain = 250})
-    }
-}) -- Titan Console
+-- map.nodes[78132785] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69370}),
+--         Reputation({id = 2590, gain = 250})
+--     }
+-- }) -- Titan Console
 
-map.nodes[57222001] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69372}),
-        Reputation({id = 2590, gain = 250})
-    }
-}) -- Watcher of the North
+-- map.nodes[57222001] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69372}),
+--         Reputation({id = 2590, gain = 250})
+--     }
+-- }) -- Watcher of the North
 
-map.nodes[42128025] = LoreObject({
-    rewards = {
-        Achievement({id = 40762, criteria = 69373}),
-        Reputation({id = 2590, gain = 250})
-    }
-}) -- Watcher of the South
+-- map.nodes[42128025] = LoreObject({
+--     rewards = {
+--         Achievement({id = 40762, criteria = 69373}),
+--         Reputation({id = 2590, gain = 250})
+--     }
+-- }) -- Watcher of the South
 
 -------------------------------------------------------------------------------
 -------------------------------- DISTURBED DIRT -------------------------------
@@ -737,8 +781,30 @@ map.nodes[71553114] = DisturbedEarth()
 map.nodes[72613005] = DisturbedEarth()
 
 -------------------------------------------------------------------------------
+-------------------- ACHIEVEMENT: KHAZ ALGAR FLIGHT MASTER --------------------
+-------------------------------------------------------------------------------
 
-dor.nodes[50006188] = ns.node.Collectible({
+map.nodes[41047295] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68171})}
+}) -- Freywold Village
+
+map.nodes[44675116] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68170})}
+}) -- Doronogal
+
+map.nodes[59162859] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68173})}
+}) -- Rambleshire
+
+map.nodes[67484330] = FlightMaster({
+    rewards = {Achievement({id = 40430, criteria = 68172})}
+}) -- Durgaz Cabin
+
+-------------------------------------------------------------------------------
+-------------------------- ACHIEVEMENT: FLAT EARTHEN --------------------------
+-------------------------------------------------------------------------------
+
+dor.nodes[50006188] = Collectible({
     icon = 4620670,
     label = '{achievement:40606}',
     group = ns.groups.FLAT_EARTHEN,
@@ -746,7 +812,13 @@ dor.nodes[50006188] = ns.node.Collectible({
     parent = map.id
 }) -- Flat Earthen
 
-map.nodes[74334530] = ns.node.Collectible({
+-------------------------------------------------------------------------------
+-------------------------------- MISCELLANEOUS --------------------------------
+-------------------------------------------------------------------------------
+
+------------------------ SIZZLING CINDERPOLLEN REWARDS ------------------------
+
+map.nodes[74334530] = Collectible({
     icon = 5633720,
     label = '{npc:226205}',
     note = L['cendvin_note'],
@@ -756,3 +828,90 @@ map.nodes[74334530] = ns.node.Collectible({
     },
     pois = {Path({Circle({origin = 71423755, radius = 3.5})})} -- Sizzling Cinderpollen farm
 }) -- Cendvin
+
+------------------------- TOME OF POLYMORPH: MOSSWOOL -------------------------
+
+dor.nodes[60960531] = ns.node.Node({
+    label = '{item:227710}',
+    icon = 133739,
+    quest = 84438,
+    note = L['tome_of_polymorph_mosswool'],
+    class = 'MAGE',
+    rewards = {Item({item = 227710})}, -- Tome of Polymorph: Mosswool
+    pois = {
+        Entrance({58700650}),
+        Path({58700650, 61420248, 62900470, 62340547, 60980548})
+    }
+}) -- Tome of Polymorph: Mosswool
+
+----------------------- ARADAN: STORMROOK SPIRIT BEAST ------------------------
+
+local rookeryLanding = ns.maps[2315] or Map({id = 2315, settings = false})
+local stormsRoost = ns.maps[2316] or Map({id = 2316, settings = false})
+local stormriderBarracks = ns.maps[2318] or Map({id = 2318, settings = false})
+
+local Aradan = Class('Aradan', ns.node.Node, {
+    label = '{item:220770}',
+    icon = 5357845,
+    class = 'HUNTER',
+    requires = ns.requirement.Specialization(253), -- Beast Mastery
+    -- LuaFormatter off
+    note = format('%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s',
+        L['aradan_note_start'],
+        L['aradan_note_step_1'],
+        L['aradan_note_step_2'],
+        L['aradan_note_step_3'],
+        L['aradan_note_step_4'],
+        L['aradan_note_step_5'],
+        L['aradan_note_end']),
+    -- LuaFormatter on
+    rewards = {
+        Item({item = 220770, note = L['item'], bag = true}) -- Void-Scarred Warhammer
+    }
+}) -- Void-Scarred Warhammer
+
+map.nodes[29063621] = Aradan() -- Step 1
+
+rookeryLanding.nodes[82424706] = Aradan({fgroup = 'aradan'}) -- Step 2
+
+stormsRoost.nodes[50005900] = Aradan({
+    pois = {
+        Path({points = {Circle({origin = 50005000, radius = 9})}, color = 'Red'})
+    }
+}) -- Step 3
+
+stormriderBarracks.nodes[55523425] = Aradan({
+    pois = {
+        Path({points = {Circle({origin = 44882511, radius = 3})}, color = 'Red'}), -- Storm Rookery
+        Path({
+            points = {44882986, 44883425, 55523425, 55522654, 61562654},
+            color = 'Red'
+        }), -- Storm Rookery >> Rookery Landing
+        Path({points = {Circle({origin = 64732654, radius = 3})}, color = 'Red'}) -- Rookery Landing
+
+    }
+}) -- Step 3
+
+rookeryLanding.nodes[12481399] = Aradan({
+    fgroup = 'aradan',
+    pois = {
+        Path({points = {82424706, 13504706}, color = 'Blue'}), -- Entrance >> Storm's Roost
+        Path({
+            points = {Circle({origin = 10334706, radius = 3})},
+            color = 'Blue'
+        }), -- Storm's Roost
+        --
+        Path({
+            points = {Circle({origin = 18344724, radius = 3})},
+            color = 'Green'
+        }), -- Stormrider Barracks
+        Path({
+            points = {18344249, 18343085, 12483085, 12481874},
+            color = 'Green'
+        }), -- Stormrider Barraks >> Targeting
+        Path({
+            points = {Circle({origin = 12481399, radius = 3})},
+            color = 'Green'
+        }) -- Targeting
+    }
+}) -- Step 4

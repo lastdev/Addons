@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(2584, "DBM-Party-WarWithin", 6, 1271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240830215855")
+mod:SetRevision("20241102154000")
 mod:SetCreatureID(215405)
 mod:SetEncounterID(2906)
 mod:SetHotfixNoticeRev(20240817000000)
 mod:SetMinSyncRevision(20240817000000)
+mod:SetZone(2660)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -15,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 435012 439506 433766 442210",
 	"SPELL_CAST_SUCCESS 433740",
 	"SPELL_AURA_APPLIED 433740",
-	"SPELL_AURA_REMOVED 434408"
+	"SPELL_AURA_REMOVED 434408 433740"
 --	"SPELL_AURA_REMOVED"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED"
@@ -36,7 +37,8 @@ local warnImpale							= mod:NewCountAnnounce(433425, 3)
 local warnBurrowCharge						= mod:NewCountAnnounce(439506, 3)
 
 local specWarnInfestation					= mod:NewSpecialWarningMoveAway(433740, nil, nil, nil, 1, 2)
---local yellSomeAbility						= mod:NewYell(372107)
+local yellInfestation						= mod:NewShortYell(433740)
+local yellInfestationFades					= mod:NewShortFadesYell(433740)
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 local specWarnSilkenRestraints				= mod:NewSpecialWarningInterrupt(442210, "HasInterrupt", nil, nil, 1, 2, 4)
 
@@ -60,7 +62,7 @@ local allTimers = {
 	--Initial set
 	[1] = {
 		--Impale
-		[435012] = {4.8, 14.7, 4.6},--Includes the Burrow Charge Impale
+		[435012] = {4.8, 12.2, 4.6},--Includes the Burrow Charge Impale
 		--Infestation
 		[433740] = {0, 10.0, 10.8},--Can queue up to 13, usually 3rd cast is 12.2 but can also be lower
 	},
@@ -150,6 +152,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 433740 and args:IsPlayer() then
 		specWarnInfestation:Show()
 		specWarnInfestation:Play("runout")
+		yellInfestation:Yell()
+		yellInfestationFades:Countdown(spellId)
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -161,9 +165,14 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.impaleCount = 0
 		self.vb.infestationCount = 0
 		--timerInfestationCD:Start(1, 1)--Instantly again
-		timerImpaleCD:Start(5.3, 1)
+		timerImpaleCD:Stop()
+		timerImpaleCD:Start(4.1, 1)
 		timerBurrowChargeCD:Start(15, self.vb.burrowCount+1)
 		timerEyeOfTheStormCD:Start(46.6, self.vb.eyeCount+1)
+	elseif spellId == 433740 then
+		if args:IsPlayer() then
+			yellInfestationFades:Cancel()
+		end
 	end
 end
 

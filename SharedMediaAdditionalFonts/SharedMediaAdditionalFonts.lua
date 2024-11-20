@@ -4,7 +4,7 @@
 ---- PLEASE READ BEFORE DOING ANYTHING ----
 ----
 
-Only fonts should be added to this addon. If you wish to add textures, sounds, 
+Only fonts should be added to this addon. If you wish to add textures, sounds,
 ... create your own addon or use an existing one if there is one.
 All fonts must be able to display special characters such as é, è, à, ü, É, Ç,
 ... Remember that not all the users use the English client!
@@ -27,6 +27,7 @@ SharedMediaAdditionalFonts.revision = (revision > SharedMediaAdditionalFonts.rev
 -- FONT
 -- -----
 SharedMediaAdditionalFonts:Register("font", "Accidental Presidency", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Accidental Presidency.ttf]])
+SharedMediaAdditionalFonts:Register("font", "ACTION MAN", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\ActionMan.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Alba Super", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\ALBAS___.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Arm Wrestler", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\ArmWrestler.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Baar Sophia", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\BAARS___.TTF]])
@@ -34,21 +35,30 @@ SharedMediaAdditionalFonts:Register("font", "Blazed", [[Interface\Addons\SharedM
 SharedMediaAdditionalFonts:Register("font", "Boris Black Bloxx", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\BorisBlackBloxx.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Boris Black Bloxx Dirty", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\BorisBlackBloxxDirty.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Collegiate", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\COLLEGIA.ttf]])
+SharedMediaAdditionalFonts:Register("font", "Continuum Medium", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\ContinuumMedium.ttf]])
+SharedMediaAdditionalFonts:Register("font", "DejaVu Sans", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\DejaVuSans.ttf]])
+SharedMediaAdditionalFonts:Register("font", "DejaVu Sans, Bold", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\DejaVuSans-Bold.ttf]])
+SharedMediaAdditionalFonts:Register("font", "DieDieDie", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\DieDieDie.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Diogenes", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\DIOGENES.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Disko", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Disko.ttf]])
+SharedMediaAdditionalFonts:Register("font", "Expressway, Bold", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Expressway-Bold.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Frakturika Spamless", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\FRAKS___.ttf]])
+SharedMediaAdditionalFonts:Register("font", "Homespun TT BRK", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Homespun.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Impact", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\impact.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Liberation Sans", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\LiberationSans-Regular.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Liberation Serif", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\LiberationSerif-Regular.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Mystic Orbs", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\MystikOrbs.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Pokemon Solid", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Pokemon Solid.ttf]])
+SharedMediaAdditionalFonts:Register("font", "PT Sans Narrow, Bold", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\PTSansNarrow-Bold.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Rock Show Whiplash", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Rock Show Whiplash.ttf]])
 SharedMediaAdditionalFonts:Register("font", "SF Diego Sans", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\SF Diego Sans.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Solange", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Solange.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Star Cine", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\starcine.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Trashco", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\trashco.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Ubuntu Condensed", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Ubuntu-C.ttf]])
+-- Should be "Ubuntu, Light", but has historically bee named this way.
 SharedMediaAdditionalFonts:Register("font", "Ubuntu Light", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Ubuntu-L.ttf]])
+-- Should be "Waltograph UI, Bold", but has historically bee named this way.
 SharedMediaAdditionalFonts:Register("font", "Waltograph UI", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\waltographUI.ttf]])
 SharedMediaAdditionalFonts:Register("font", "X360", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\X360.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Yanone Kaffeesatz Regular", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\YanoneKaffeesatz-Regular.ttf]])

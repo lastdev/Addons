@@ -106,7 +106,7 @@ function core._2217:Hivemind()
 	if core.type == "UNIT_DIED" and (core.destID == "161414" or core.destID == "161369" or core.destID == "161413" or core.destID == "162676") then
 		evolvedSpecimenKilled = evolvedSpecimenKilled + 1
 		core:sendMessage(core:getAchievement() .. " " .. getNPCName(161414) .. " " .. L["Shared_Killed"] .. " (" .. evolvedSpecimenKilled .. "/3)",true)
-	end 
+	end
 
 	if evolvedSpecimenKilled >= 3 then
 		core:getAchievementSuccess()
@@ -123,11 +123,11 @@ function core._2217:DarkInquisitorXanesh()
 			core:sendDebugMessage("Detected Voidwoken Debuff Gained on " .. core.destName)
 			--Set the voidwoken debuff expiration time
 			for i=1,40 do
-				local _, _, _, _, _, expirationTime, _, _, _, spellId = UnitDebuff(core.destName, i)
-				if spellId == 312406 then --312406 --8936
-					if expirationTime > 0 then
-						core:sendDebugMessage("Expiration time is " .. expirationTime)
-						voidWokenExpirationTime = expirationTime			
+				local auraData = C_UnitAuras.GetDebuffDataByIndex(core.destName, i)
+				if auraData ~= nil and auraData.spellId == 312406 then --312406 --8936
+					if auraData.expirationTime > 0 then
+						core:sendDebugMessage("Expiration time is " .. auraData.expirationTime)
+						voidWokenExpirationTime = auraData.expirationTime
 					end
 				end
 			end
@@ -150,14 +150,14 @@ function core._2217:DarkInquisitorXanesh()
 						if voidWokenBlock == false then
 							voidWokenBlock = true
 							voidOrbCounter = voidOrbCounter + 1
-							core:sendMessage(core:getAchievement() .. " " .. GetSpellLink(264908) .. " " .. L["Core_Counter"] .. " (" .. voidOrbCounter .. "/3)",true)
+							core:sendMessage(core:getAchievement() .. " " .. C_Spell.GetSpellLink(264908) .. " " .. L["Core_Counter"] .. " (" .. voidOrbCounter .. "/3)",true)
 						end
 					else
 						core:sendDebugMessage("FAILED")
 					end
-	
+
 					--This stops couter incrementing by 3 each time an orb is returned
-					C_Timer.After(5, function() 
+					C_Timer.After(5, function()
 						core:sendDebugMessage("Unblocking voidWokenBlock")
 						voidWokenBlock = false
 					end)
@@ -176,14 +176,14 @@ function core._2217:DrestAgath()
 	if core:getBlizzardTrackingStatus(14026) == true then
         core:getAchievementSuccess()
 	end
-	
+
 	if core.achievementsCompleted[1] == false then
 		--Temper Tantrum cast. Set initial timer
 		if core.type == "SPELL_CAST_SUCCESS" and core.spellId == 308941 and initialTime == nil then
 			initialTime = GetTime()
 		elseif core.type == "SPELL_CAST_SUCCESS" and core.spellId == 308941 and initialTime ~= nil then
 			secondTime = GetTime()
-			core:sendMessage(core:getAchievement() .. format(L["TimeBetweenLast"],GetSpellLink(308947), core:roundNumber(secondTime - initialTime)),true)
+			core:sendMessage(core:getAchievement() .. format(L["TimeBetweenLast"],C_Spell.GetSpellLink(308947), core:roundNumber(secondTime - initialTime)),true)
 			initialTime = secondTime
 			secondTime = nil
 		end
@@ -205,7 +205,7 @@ function core._2217:ShadharTheInsatiable()
 			if core.destName ~= nil and bittenHandUID[core.spawn_uid_dest_Player] == nil then
 				bittenHandCounter = bittenHandCounter + 1
 				bittenHandUID[core.spawn_uid_dest_Player] = core.spawn_uid_dest_Player
-				core:sendMessage(core.destName .. " " .. L["Shared_HasGained"] .. " " .. GetSpellLink(312590) .. " (" .. bittenHandCounter .. "/" .. core.groupSize .. ")",true)
+				core:sendMessage(core.destName .. " " .. L["Shared_HasGained"] .. " " .. C_Spell.GetSpellLink(312590) .. " (" .. bittenHandCounter .. "/" .. core.groupSize .. ")",true)
 				InfoFrame_SetPlayerComplete(core.destName)
 			end
 		end
@@ -214,7 +214,7 @@ function core._2217:ShadharTheInsatiable()
 			if core.destName ~= nil and bittenHandUID[core.spawn_uid_dest_Player] ~= nil then
 				bittenHandCounter = bittenHandCounter - 1
 				bittenHandUID[core.spawn_uid_dest_Player] = nil
-				core:sendMessage(core.destName .. " " .. L["Shared_HasLost"] .. " " .. GetSpellLink(312590) .. " (" .. bittenHandCounter .. "/" .. core.groupSize .. ")",true)
+				core:sendMessage(core.destName .. " " .. L["Shared_HasLost"] .. " " .. C_Spell.GetSpellLink(312590) .. " (" .. bittenHandCounter .. "/" .. core.groupSize .. ")",true)
 				InfoFrame_SetPlayerFailed(core.destName)
 			end
 		end
@@ -267,7 +267,7 @@ function core._2217:Vexiona()
 						InfoFrame_SetPlayerCompleteWithMessage(core.destName, playerAnnihilationStacks[player])
 						playersWithThirtyStacks = playersWithThirtyStacks + 1
 						core:sendMessage(core.destName .. " " .. L["Shared_HasCompleted"] .. " " .. core:getAchievement() .. " (" .. playersWithThirtyStacks .. "/" .. core.groupSize .. ")",true)
-					
+
 						--Update InfoFrame
 						updateRequired = true
 					end
@@ -286,7 +286,7 @@ function core._2217:Vexiona()
 		InfoFrame_UpdatePlayersOnInfoFrameWithAdditionalInfo()
 		InfoFrame_SetHeaderCounter(L["Shared_PlayersMetCriteria"],playersWithThirtyStacks,core.groupSize)
 		updateRequired = false
-		C_Timer.After(1, function() 
+		C_Timer.After(1, function()
 			lockInfoFrameUpdate = false
 			if core:getBlizzardTrackingStatus(14139) == true and playersWithThirtyStacks == core.groupSize then
 				--Blizzard tracking gone white so achievement completed
@@ -339,14 +339,14 @@ function core._2217:CarapaceOfNZoth()
 
 		if carapaceTimerStarted == false then
 			carapaceTimerStarted = true
-			C_Timer.After(10, function() 
+			C_Timer.After(10, function()
 				blockCounter = true
 
 				--Make sure blizzard tracking has time to change
-				C_Timer.After(2, function() 
+				C_Timer.After(2, function()
 					if core.achievementsCompleted[1] == false then
 						core:getAchievementFailedWithMessageAfter("(" .. (16 - tonumber(synthesisStacks)) .. "/16)")
-					end 
+					end
 				end)
 			end)
 		end
@@ -362,7 +362,7 @@ function core._2217:NZothTheCorruptor()
 	if core.type == "SPELL_AURA_APPLIED" and (core.spellId == 313334 or core.spellId == 313609) and giftOfNZothUID[core.spawn_uid_dest_Player] == nil then
 		giftOfNZothCounter = giftOfNZothCounter + 1
 		giftOfNZothUID[core.spawn_uid_dest_Player] = core.spawn_uid_dest_Player
-		core:sendMessage(core.destName .. " " .. L["Shared_HasGained"] .. " " .. GetSpellLink(313334) .. " (" .. giftOfNZothCounter .. "/" .. core.groupSize .. ")",true)
+		core:sendMessage(core.destName .. " " .. L["Shared_HasGained"] .. " " .. C_Spell.GetSpellLink(313334) .. " (" .. giftOfNZothCounter .. "/" .. core.groupSize .. ")",true)
 		InfoFrame_SetPlayerComplete(core.destName)
 	end
 

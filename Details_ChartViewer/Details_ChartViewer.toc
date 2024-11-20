@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 110000
 ## Title: Details_ChartViewer (plugin)
 ## Notes: Plugin for Details
 ## RequiredDeps: Details

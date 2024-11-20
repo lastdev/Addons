@@ -197,10 +197,10 @@ function ListItem:Notify(event, ...)
             local parent = state.list:GetParent()
             local target = parent[handler]
             if (type(target) == "function") then
-                pcall(target, parent, self, ...)
+                return target(parent, self, ...)
             end
         elseif (type(handler) == "function") then
-            pcall(handler, state.list, ...)
+            return handler(state.list, ...)
         end
     end
 end

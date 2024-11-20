@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240525081132")
+mod:SetRevision("20240714050251")
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 --Could not find south path for this one
@@ -342,7 +342,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.PulverizeRadar = true
 		self.vb.PulverizeCount = 0
 		specWarnPulverize:Show()
-		specWarnPulverize:Show("scatter")
+		specWarnPulverize:Play("scatter")
 		timerShieldChargeCD:Start(polEnergyRate)--Next Special
 		if self.Options.RangeFrame and not DBM:UnitDebuff("player", arcaneDebuff) then--Show range 3 for everyone, unless have arcane debuff, then you already have range 8 showing everyone that's more important
 			DBM.RangeCheck:Show(3, nil)

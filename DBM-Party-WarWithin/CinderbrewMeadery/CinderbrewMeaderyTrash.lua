@@ -1,11 +1,15 @@
 local mod	= DBM:NewMod("CinderbrewMeaderyTrash", "DBM-Party-WarWithin", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240901002640")
+mod:SetRevision("20241105043731")
 --mod:SetModelID(47785)
 mod:SetZone(2661)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
+mod:SetZone(2661)
+if DBM.Options.DebugMode then--Make it easier to collect initial nameplate timers across delves with transcriptor
+	mod:RegisterZoneCombat(2661)
+end
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 434761 434706 437721 434756 434998 448619 441627 442589 439467",
@@ -20,6 +24,7 @@ mod:RegisterEvents(
 
 --TODO, do more with throw chair? can you actually dodge it? is it actually threatening on higher keys?
 --TODO, see if you can target scan downward trend
+--TODO, add Blazing Blelch Frontal, Honey Volley Interrupt, Bee-Zooka Frontal
 --[[
 (ability.id = 437956 or ability.id = 434761 or ability.id = 434706 or ability.id = 437721 or ability.id = 434756 or ability.id = 434998 or ability.id = 448619 or ability.id = 441627 or ability.id = 441214) and type = "begincast"
  or ability.id = 441434 and type1 = "cast"
@@ -52,13 +57,13 @@ local timerMightyStompCD					= mod:NewCDNPTimer(22.2, 434761, nil, nil, nil, 2)
 local timerCinderbrewTossCD					= mod:NewCDNPTimer(10.6, 434706, nil, nil, nil, 3)
 local timerThrowChairCD						= mod:NewCDNPTimer(11.8, 434756, nil, nil, nil, 3)
 local timerHighSteaksCD						= mod:NewCDNPTimer(20.3, 434998, nil, nil, nil, 3)
-local timerRecklessDeliveryCD				= mod:NewCDNPTimer(16.6, 448619, nil, nil, nil, 3)
+local timerRecklessDeliveryCD				= mod:NewCDPNPTimer(16.6, 448619, nil, nil, nil, 3)
 local timerFailedBatchCD					= mod:NewCDNPTimer(22.2, 441434, nil, nil, nil, 5)--22.6-25.6
 local timerSpillDrinkCD						= mod:NewCDNPTimer(20, 441214, nil, nil, nil, 5)
 local timerBeesWaxCD						= mod:NewCDNPTimer(18, 442589, nil, nil, nil, 3)
 local timerDownwardTrendCD					= mod:NewCDNPTimer(12.7, 439467, nil, nil, nil, 3)
-local timerBoilingFlamesCD					= mod:NewCDNPTimer(20.1, 437721, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerRejuvenatingHoneyCD				= mod:NewCDNPTimer(12.7, 441627, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerBoilingFlamesCD					= mod:NewCDPNPTimer(20.1, 437721, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerRejuvenatingHoneyCD				= mod:NewCDPNPTimer(12.7, 441627, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
 mod:AddGossipOption(true, "Buff")
 
@@ -93,6 +98,7 @@ function mod:ThrowChair(targetname)
 end
 
 function mod:SPELL_CAST_START(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 434761 then
@@ -142,6 +148,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 437721 then
@@ -210,6 +217,7 @@ end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:UNIT_DIED(args)
+	if not self.Options.Enabled then return end
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 218671 then--Venture Co Pyromaniac
 		timerEruptingInfernoCD:Stop(args.destGUID)

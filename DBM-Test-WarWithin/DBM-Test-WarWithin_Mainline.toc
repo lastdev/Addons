@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110005, 110007
 ## Title:|cffffe00a<|r|cffff7d0aDBM Tests|r|cffffe00a>|r |cff69ccf0Tests for The War Within mods|r
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## Dependencies: DBM-Test
@@ -6,18 +6,20 @@
 ## LoadOnDemand: 1
 ## X-DBM-Test: true
 
-NerubarPalace/Ulgrax-Mythic-Wipe1.lua
+NerubarPalace/Ulgrax-Mythic-Kill.lua
 NerubarPalace/BloodboundHorror-Mythic-Kill.lua
-NerubarPalace/Sikran-Mythic-Wipe1.lua
-NerubarPalace/Rashanan-Mythic-Wipe1.lua
-NerubarPalace/Ovinax-Mythic-Wipe1.lua
-NerubarPalace/Kyveza-Mythic-Wipe1.lua
-NerubarPalace/SilkenCourt-Mythic-Wipe1.lua
+NerubarPalace/Sikran-Mythic-Kill.lua
+NerubarPalace/Rashanan-Mythic-Kill.lua
+NerubarPalace/Ovinax-Mythic-Kill.lua
+NerubarPalace/Kyveza-Mythic-Kill.lua
+NerubarPalace/SilkenCourt-Mythic-Kill.lua
+NerubarPalace/QueenAnsurek-Mythic-Wipe.lua
 
-NerubarPalace/Reports/Ulgrax-Mythic-Wipe1.lua
+NerubarPalace/Reports/Ulgrax-Mythic-Kill.lua
 NerubarPalace/Reports/BloodboundHorror-Mythic-Kill.lua
-NerubarPalace/Reports/Sikran-Mythic-Wipe1.lua
-NerubarPalace/Reports/Rashanan-Mythic-Wipe1.lua
-NerubarPalace/Reports/Ovinax-Mythic-Wipe1.lua
-NerubarPalace/Reports/Kyveza-Mythic-Wipe1.lua
-NerubarPalace/Reports/SilkenCourt-Mythic-Wipe1.lua
+NerubarPalace/Reports/Sikran-Mythic-Kill.lua
+NerubarPalace/Reports/Rashanan-Mythic-Kill.lua
+NerubarPalace/Reports/Ovinax-Mythic-Kill.lua
+NerubarPalace/Reports/Kyveza-Mythic-Kill.lua
+NerubarPalace/Reports/SilkenCourt-Mythic-Kill.lua
+NerubarPalace/Reports/QueenAnsurek-Mythic-Wipe.lua

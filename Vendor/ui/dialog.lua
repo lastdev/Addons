@@ -65,7 +65,7 @@ function Addon.AttachImplementation(frame, mixin, hook)
 				-- Hook WOW events "ON_<EVENT_NAME>"
 				if (string.find(name, "ON_") == 1) then
 					events = true
-					frame:RegisterEvent(string.sub(name, 3))
+					frame:RegisterEvent(string.sub(name, 4))
 				end
 			end
 		end
@@ -81,7 +81,7 @@ function Addon.AttachImplementation(frame, mixin, hook)
 		-- If we are listening to wow events create an event handler
 		if (events) then
 			frame:SetScript("OnEvent", function(this, event, ...)
-				local func = this["ON_" .. name]
+				local func = this["ON_" .. event]
 				if (not func) then
 					func = this[name]
 				end

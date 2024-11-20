@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(726, "DBM-Raids-MoP", 5, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240521003658")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()--TODO, see if 10.2.7 fixes this
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3)
+mod:SetZone(1008)
 
 mod:RegisterCombat("combat")
 

@@ -48,6 +48,8 @@ L['shared_drops'] = 'Butins partagés'
 L['zone_drops_label'] = 'Butins mondiaux'
 L['zone_drops_note'] = 'Les objets listés ci-dessous peuvent être trouvés sur plusieurs monstres de cette zone.'
 
+L['poi_entrance_label'] = 'Entrée'
+
 L['requires'] = 'Requiert'
 L['ranked_research'] = '%s (Rang %d/%d)'
 
@@ -175,22 +177,28 @@ L['options_visibility_settings'] = 'Visibilité'
 L['options_general_settings'] = 'Général'
 L['options_show_completed_nodes'] = 'Afficher les noeuds complétés'
 L['options_show_completed_nodes_desc'] = 'Afficher tous les nœuds même s\'ils ont déjà été looté ou terminés aujourd\'hui.'
-L['options_toggle_hide_done_rare'] = 'Cacher rare si tout le butin est connu'
-L['options_toggle_hide_done_rare_desc'] = 'Cacher toutes les rares pour qui tout le butin est connu.'
+L['options_toggle_hide_done_rare'] = 'Cacher le rare si tout le butin est connu'
+L['options_toggle_hide_done_rare_desc'] = 'Cacher tous les rares pour lesquels la totalité du butin est connu.'
 L['options_toggle_hide_done_treasure'] = 'Cacher le trésor si toutes les récompenses sont connues'
 L['options_toggle_hide_done_treasure_desc'] = 'Cachez tous les trésors pour lesquels la totalité du butin est connue.'
 L['options_toggle_hide_minimap'] = 'Cacher toutes les icônes sur la minicarte'
 L['options_toggle_hide_minimap_desc'] = 'Cache toutes les icônes de cet addon sur la minicarte et les affiche uniquement sur la carte principale.'
 L['options_toggle_maximized_enlarged'] = 'Augmenter la taille des icones sur la carte du monde plein écran'
-L['options_toggle_maximized_enlarged_desc'] = 'Quand la carte du monde est en plein écran, augmente la taille des icones'
+L['options_toggle_maximized_enlarged_desc'] = 'Quand la carte du monde est en plein écran, augmente la taille des icones.'
 L['options_toggle_use_char_achieves'] = 'Utilisez les hauts faits du joueur'
-L['options_toggle_use_char_achieves_desc'] = 'Afficher la progression du haut fait de ce joueur plutôt que du compte complet'
+L['options_toggle_use_char_achieves_desc'] = 'Afficher la progression du haut-fait de ce personnage plutôt que celle de l\'ensemble du compte.'
 L['options_toggle_per_map_settings'] = 'Utiliser des paramètres spécifiques à chaque zone'
 L['options_toggle_per_map_settings_desc'] = 'Appliquez les paramètres de permutation, d\'échelle et d\'opacité à chaque zone individuellement.'
 L['options_restore_hidden_nodes'] = 'Restaurer les nœuds cachés'
 L['options_restore_hidden_nodes_desc'] = 'Restaure tous les nœuds cachés en utilisant le clic droit du menu contextuel' -- Need review
 
+L['ignore_class_restrictions'] = 'Ignorer les restrictions de classe'
+L['ignore_class_restrictions_desc'] = 'Afficher les groupes, les nœuds et les récompenses qui requièrent une classe différente de celle du personnage actif.'
+L['ignore_faction_restrictions'] = 'Ignorer les restrictions de faction'
+L['ignore_faction_restrictions_desc'] = 'Afficher les groupes, les nœuds et les récompenses qui requièrent la faction opposée.'
+
 L['options_rewards_settings'] = 'Récompenses'
+L['options_reward_behaviors_settings'] = 'Comportements des récompenses'
 L['options_reward_types'] = 'Afficher les types de récompenses'
 L['options_manuscript_rewards'] = 'Montrer les Manuscrits guette-drake en récompenses'
 L['options_manuscript_rewards_desc'] = 'Afficher les Manuscrits guette-drake en récompenses dans les infobulles et suivre l\'état de leur acquisition.'
@@ -225,33 +233,33 @@ L['options_icons_vendors'] = 'Vendeurs'
 ------------------------------------ FOCUS ------------------------------------
 
 L['options_focus_settings'] = 'Point d\'intéret'
-L['options_poi_color'] = 'Couleur POI'
+L['options_poi_color'] = 'Couleur du POI'
 L['options_poi_color_desc'] = 'Définit une couleur pour les points d\'intérêts quand une icône est ciblée'
 L['options_path_color'] = 'Couleur du chemin' -- Need review
-L['options_path_color_desc'] = 'Définit une couleur pour les chemin quand une icône est ciblée'
+L['options_path_color_desc'] = 'Définit une couleur pour les chemins quand une icône est ciblée'
 L['options_reset_poi_colors'] = 'Réinitialiser les couleurs'
-L['options_reset_poi_colors_desc'] = 'Réinitialise les couleurs ci-dessus par celles par défaut'
+L['options_reset_poi_colors_desc'] = 'Réinitialiser les couleurs ci-dessus à leurs valeurs par défaut.'
 
 ---------------------------------- TOOLTIP ---------------------------------
 
 L['options_tooltip_settings'] = 'Infobulle'
 L['options_toggle_show_loot'] = 'Montrer le Butin'
-L['options_toggle_show_loot_desc'] = 'Ajouter l\'information de butin à l\'infobulle'
+L['options_toggle_show_loot_desc'] = 'Ajouter des informations sur le butin à l\'infobulle'
 L['options_toggle_show_notes'] = 'Montrer les Notes'
-L['options_toggle_show_notes_desc'] = 'Ajouter les notes utiles à l\'infobulle le cas échéant'
+L['options_toggle_show_notes_desc'] = 'Ajouter des notes utiles à l\'infobulle lorsqu\'elles sont disponibles'
 L['options_toggle_use_standard_time'] = 'Utiliser l\'horloge de 12 heures'
 L['options_toggle_use_standard_time_desc'] = 'Utiliser l\'horloge de 12 heures (ex : 8:00 PM) à la place de l\'horloge de 24 heures (ex : 20:00) dans les infobulles.'
-L['options_toggle_show_npc_id'] = nil
-L['options_toggle_show_npc_id_desc'] = nil
+L['options_toggle_show_npc_id'] = 'Afficher l\'ID du PNJ'
+L['options_toggle_show_npc_id_desc'] = 'Afficher L\'ID des PNJs afin d\'être utilisés par les addons de détection de rares.'
 
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = 'Développement'
-L['options_toggle_show_debug_currency'] = 'Debug ID monnaies'
+L['options_toggle_show_debug_currency'] = 'Debug les IDs de Monnaies'
 L['options_toggle_show_debug_currency_desc'] = 'Afficher les informations de debug pour les variations de monnaies (rechargement nécessaire)'
-L['options_toggle_show_debug_map'] = 'Debug ID Carte' -- Need review
-L['options_toggle_show_debug_map_desc'] = 'Afficher les informations de déboguage pour les cartes'
-L['options_toggle_show_debug_quest'] = 'Debug ID Quête'
-L['options_toggle_show_debug_quest_desc'] = 'Afficher les informations de déboguage pour les quêtes (rechargement nécessaire)'
+L['options_toggle_show_debug_map'] = 'Debug les IDs de Cartes' -- Need review
+L['options_toggle_show_debug_map_desc'] = 'Afficher les informations de debug pour les cartes'
+L['options_toggle_show_debug_quest'] = 'Debug les IDs de Quêtes'
+L['options_toggle_show_debug_quest_desc'] = 'Afficher les informations de debug pour les quêtes (rechargement nécessaire)'
 L['options_toggle_force_nodes'] = 'Forcer les Nœuds'
 L['options_toggle_force_nodes_desc'] = 'Forcer l\'affichage de tous les nœuds'

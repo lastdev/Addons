@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2553, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240721192753")
+mod:SetRevision("20240912084847")
 mod:SetCreatureID(208445)
 mod:SetEncounterID(2731)
 mod:SetUsedIcons(6, 7, 8)

@@ -183,24 +183,27 @@ function TeleporterSpell:CanUse()
 		haveSpell = true
 	end
 
-	if TeleporterGetOption("hideItems") and isItem then
-		haveSpell = false
-	end
+	if not TeleporterGetSearchString() or not TeleporterGetOption("searchHidden") then
 
-	if TeleporterGetOption("hideConsumable") and consumable then
-		haveSpell = false
-	end
+		if TeleporterGetOption("hideItems") and isItem then
+			haveSpell = false
+		end
 
-	if TeleporterGetOption("hideSpells") and spell:IsSpell() then
-		haveSpell = false
-	end
+		if TeleporterGetOption("hideConsumable") and consumable then
+			haveSpell = false
+		end
 
-	if TeleporterGetOption("hideChallenge") and spell:IsDungeonSpell() then
-		haveSpell = false
-	end
+		if TeleporterGetOption("hideSpells") and spell:IsSpell() then
+			haveSpell = false
+		end
 
-	if TeleporterGetOption("seasonOnly") and spell:IsDungeonSpell() and not self:IsSeasonDungeon() then
-		haveSpell = false
+		if TeleporterGetOption("hideChallenge") and spell:IsDungeonSpell() then
+			haveSpell = false
+		end
+
+		if TeleporterGetOption("seasonOnly") and spell:IsDungeonSpell() and not self:IsSeasonDungeon() then
+			haveSpell = false
+		end
 	end
 
 	if not CustomizeSpells and not spell:IsVisible() then
@@ -215,8 +218,31 @@ function TeleporterSpell:GetZone()
 	return zo[self:GetOptionId()] or self.zone
 end
 
-function TeleporterSpell:SetZone(zone)
+function TeleporterSpell:AddZoneAndParents(mapID)
+	if not self.parentZones then
+		self.parentZones = {}
+	end
+
+	while mapID ~= 0 do
+		local mapInfo = C_Map.GetMapInfo(mapID)
+		if mapInfo then
+			tinsert(self.parentZones, string.lower(mapInfo.name))
+			mapID = mapInfo.parentMapID
+		else
+			mapID = 0
+		end
+	end
+end
+
+function TeleporterSpell:SetZone(zone, mapID)
 	self.zone = zone
+	if mapID then
+		local mapInfo = C_Map.GetMapInfo(mapID)
+		if mapInfo then
+			local parentMapID = mapInfo.parentMapID
+			self:AddZoneAndParents(parentMapID)
+		end
+	end
 end
 
 function TeleporterSpell:OverrideZoneName(zone)
@@ -232,21 +258,38 @@ function TeleporterSpell:Equals(other)
 	return ""..self.spellId == ""..other.spellId and self.spellType == other.spellType
 end
 
--- dungeonID from: https://wowpedia.fandom.com/wiki/LfgDungeonID#Retail
+function TeleporterSpell:MatchesSearch(searchString)
+	local searchLower = string.lower(searchString)
+
+	if self.dungeon then
+		if string.find(string.lower(self.dungeon), searchLower) then
+			return true
+		end
+	end
+
+	if self.parentZones then
+		for i, parentZone in ipairs(self.parentZones) do
+			if string.find(parentZone, searchLower) then
+				return true
+			end
+		end
+	end
+
+	return string.find(string.lower(self.spellName), searchLower) or string.find(string.lower(self.zone), searchLower)
+end
+
+-- dungeonID from: https://warcraft.wiki.gg/wiki/LfgDungeonID, or using GetLFGDungeonInfo().
 function TeleporterSpell:IsSeasonDungeon()
 	-- Dragonflight Season 4
 	return tContains({
-		2335,	-- The Azure Vault
-		2367,	-- Algeth'ar Academy
-		2378,	-- The Nokhud Offensive
-		2376,	-- Ruby Life Pools
-		2359,	-- Neltharus
-		2382,	-- Halls of Infusion
-		2380,	-- Brackenhide Hollow
-		2355,	-- Uldaman: Legacy of Tyr
-		2405,	-- Aberrus
-		2388,	-- Vault of the Incarnates
-		2502,	-- Amirdrassil
+		2654,	-- Ara-Kara, City of Echoes
+		2652,	-- City of Threads
+		2693,	-- The Stonevault
+		2719,	-- The Dawnbreaker
+		2120,	-- Mists of Tirna Scithe
+		2123,	-- The Necrotic Wake
+		1700,	-- Siege of Boralus
+		304,	-- Grim Batol
 	}, self.dungeonID)
 end
 
@@ -269,14 +312,32 @@ function TeleporterCreateItem(id, dest)
 	return spell
 end
 
--- dungeonID from: https://wowpedia.fandom.com/wiki/LfgDungeonID#Retail
-function TeleporterCreateChallengeSpell(id, dungeonID)
+-- dungeonID from: https://warcraft.wiki.gg/wiki/LfgDungeonID
+function TeleporterCreateChallengeSpell(id, dungeonID, mapID)
 	local spell = {}
 	TeleporterInitSpell(spell)
 	spell.spellId = id
 	spell.dungeonID = dungeonID
 	spell.spellType = ST_Challenge
 	spell.dungeon = GetLFGDungeonInfo(dungeonID)
+
+	if mapID then
+		spell:AddZoneAndParents(mapID)
+	else
+		print("Missing mapID for " .. spell.dungeon)
+		for i = 1,3000 do
+			--local name, description, bgImage, buttonImage1, loreImage, buttonImage2, dungeonAreaMapID, link, shouldDisplayDifficulty, mapID = EJ_GetInstanceInfo(i)
+			local mapInfo = C_Map.GetMapInfo(i)
+			if mapInfo and mapInfo.name == spell.dungeon then
+				while mapInfo.parentMapID ~= 0 do
+					print(mapInfo.mapID, mapInfo.name)
+					mapInfo = C_Map.GetMapInfo(mapInfo.parentMapID)
+				end
+			end
+		end
+		print("----")
+	end
+
 	return spell
 end
 

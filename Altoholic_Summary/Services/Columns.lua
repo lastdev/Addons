@@ -79,7 +79,7 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		[25] = { "Name", "Level", "CypherLvl", "Metrial", "Aealic", "Dealic", "Trebalim", "Cur_Cyphers" },
 		
 		-- Weekly Rewards
-		[26] = { "Name", "Level", "RewardMythic", "RewardRaid", "RewardPvP" },
+		[26] = { "Name", "Level", "RewardRaid", "RewardDungeons", "RewardWorld" },
 
 		-- Currencies / Dragonflight 10.0
 		[27] = { "Name", "Level", "Cur_DragonIslesSupplies", "Cur_ElementalOverflow", "Cur_StormSigil", "Cur_ConquestPoints", "Cur_Honor" },
@@ -100,7 +100,19 @@ addon:Service("AltoholicUI.TabSummaryColumnProfiles",  function()
 		[32] = { "Name", "Level", "Cur_ResidualMemories", "Cur_ResonanceCrystals", "Cur_Kej", "Cur_Valorstones", "Cur_MereldarDerbyMark", "Cur_RestoredCofferKey" },
 		
 		-- Currencies / War Within 11.0 / Season 1
-		[33] = { "Name", "Level", "Cur_WeatheredCrest", "Cur_CarvedCrest", "Cur_RunedCrest", "Cur_GildedCrest" },
+		[33] = { "Name", "Level", "Cur_WeatheredCrest", "Cur_CarvedCrest", "Cur_RunedCrest", "Cur_GildedCrest", "Cur_Undercoin", "Cur_BronzeCelebToken" },
+		
+		-- Activity / Mails
+		[34] = { "Name", "Level", "Mails", "LastMailCheck", "Mails_NumReturns", "Mails_ClosestReturn", "Mails_NumDelete", "Mails_ClosestDelete" },
+		
+		-- Activity / Auctions
+		[35] = { "Name", "Level", "Auctions", "AHLastVisit", "Auction_HighBuyout", "Auction_LowBuyout", "Auction_ClosestExpiry" },
+
+		-- Activity / Bids
+		-- [36] = { "Name", "Level", "Bids", "AHLastVisit" },
+
+		-- Equipment
+		[37] = { "Name", "Level", "AiL", "Inv_HighestLevel", "Inv_LowestLevel", "Inv_NumEpics", "Inv_NumBlues", "Inv_NumGreens", "Inv_NumHeirlooms" },
 
 	}
 

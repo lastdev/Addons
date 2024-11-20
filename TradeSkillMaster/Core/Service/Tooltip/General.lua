@@ -197,7 +197,7 @@ function private.PopulateFullDestroyLines(tooltip, itemString)
 		for targetItemString, amountOfMats, matRate, minAmount, maxAmount, targetQuality, sourceQuality in Conversion.TargetItemsByMethodIterator(itemString, method) do
 			local matValue = CustomString.GetSourceValue(private.settings.destroyValueSource, targetItemString) or TSM.Crafting.GetConversionsValue(targetItemString, private.settings.destroyValueSource) or 0
 			if matValue > 0 then
-				local quality = sourceQuality and TSM.Crafting.DFCrafting.GetExpectedSalvageResult(method, sourceQuality)
+				local quality = sourceQuality and TSM.Crafting.Quality.GetExpectedSalvageResult(method, sourceQuality)
 				if not targetQuality or targetQuality == quality then
 					tooltip:AddSubItemValueLine(targetItemString, matValue, amountOfMats, matRate, minAmount, maxAmount)
 				end

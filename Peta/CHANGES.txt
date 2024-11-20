@@ -1,10 +1,10 @@
-lightweight tag efe9b8bf3d7717d92b26cabe17f39a0c57c2316a v10.1.7
+lightweight tag 635e47b33b2e4bc185c20167fc16bcd8d09cb54b v11.0.0
 Author:	ScottIngram <github@ScottIngram.org>
-Date:	Tue Sep 5 10:06:00 2023 -0700
+Date:	Mon Jul 22 21:54:01 2024 -0700
 
-commit efe9b8bf3d7717d92b26cabe17f39a0c57c2316a
+commit 635e47b33b2e4bc185c20167fc16bcd8d09cb54b
 Author: ScottIngram <github@ScottIngram.org>
-Date:   Tue Sep 5 10:06:00 2023 -0700
+Date:   Mon Jul 22 21:54:01 2024 -0700
 
-    verified for 10.1.7
+    adapted to War Within API changes v11.0.0
 

@@ -25,6 +25,7 @@ Addon.c_Config_AutoRepair = "autorepair"
 Addon.c_Config_GuildRepair = "guildrepair"
 Addon.c_Config_MinimapData = "minimapdata"
 Addon.c_Config_MerchantData = "merchantdata"
+Addon.c_Config_ShowItemDialog = "show_item_dialog"
 
 -- Merchant button
 Addon.MerchantButton = {

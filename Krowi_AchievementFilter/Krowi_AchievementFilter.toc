@@ -1,10 +1,11 @@
-## Interface: 110000
+## Interface: 110005
 ## Title: Krowi's |cFF1D92C2Achievement Filter|r
 ## X-Prefix: KrowiAF
 ## X-Acronym: KAF
-## Version: 75.5
+## Version: 79.0
 ## Author: Krowi-Frostmane EU
 ## SavedVariables: KrowiAF_DebugTable, KrowiAF_Options, KrowiAF_SavedData, KrowiAF_Filters, KrowiAF_SearchOptions, KrowiAF_Achievements
+## OptionalDeps: BetterWardrobe, ElvUI, GW2_UI, InstanceAchievementTracker
 ## Notes: Filters your achievements.
 ## AddonCompartmentFuncOnEnter: KrowiAF_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: KrowiAF_OnAddonCompartmentLeave
@@ -29,8 +30,6 @@ Credits.lua
 
 Localization\Files.xml
 
-ExportedTabs.lua
-
 Krowi_AchievementFilter.lua
 Globals.lua
 
@@ -43,11 +42,12 @@ BrowsingHistory.lua
 
 Objects\Files.xml
 
-Data\Files.xml
-Data\Retail\Files.xml
-Data\TooltipData\00_Mainline_Files.xml
-Data\PetBattleLinkData\00_Mainline_Files.xml
-
 Filters.lua
 SearchOptions.lua
 Gui\FilesModern.xml
+
+Data\Files.xml
+Data\Retail\Files.xml
+DataAddons\Shared\Files.xml
+DataAddons\Retail\Files.xml
+DataAddons\Loaders\Files.xml

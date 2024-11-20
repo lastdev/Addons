@@ -51,7 +51,11 @@ SlashCmdList["UNIFIEDTANKFRAMES"] = function(input, editbox)
 			print(NORMAL_FONT_COLOR_CODE.."UnifiedTankFrames"..FONT_COLOR_CODE_CLOSE..": Called /utf while in combat. Please leave combat and try again.")
 		else
 			a:UpdateTankFrames()
-			InterfaceOptionsFrame_OpenToCategory("UnifiedTankFrames")
+			if InterfaceOptionsFrame_OpenToCategory then
+				InterfaceOptionsFrame_OpenToCategory("UnifiedTankFrames")
+			else 
+				_G.Settings.OpenToCategory(a.settingsCategoryId)
+			end
 		end
 	end
 end

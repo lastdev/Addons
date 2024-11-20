@@ -130,6 +130,8 @@ function private.OpenMails(mails, keepMoney, filterType)
 			local _, money, cod, numItems, _, _, textCreated = Inbox.GetHeaderInfo(index)
 			if cod == 0 and (not keepMoney or (keepMoney and money <= 0)) then
 				local message = private.settings.inboxMessages and private.GetOpenMailMessage(index) or nil
+				-- Marks the mail as read
+				Inbox.GetText(index)
 				AutoLootMailItem(index)
 				private.moneyCollected = private.moneyCollected + money
 

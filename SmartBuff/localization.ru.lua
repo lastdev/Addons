@@ -14,7 +14,7 @@ SMARTBUFF_CREDITS = "|cffffffff"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"Кинжалы", "топоры", "мечи", "дробящее", "Посохи", "Кистевое", "Древковое", "Метательное"};
+SMARTBUFF_WEAPON_STANDARD = {"Кинжалы", "топоры", "мечи", "дробящее", "Посохи", "Кистевое", "Древковое", "Метательное", "Щит"};
 SMARTBUFF_WEAPON_BLUNT = {"дробящее", "Посохи", "Кистевое"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "грузик$";
 SMARTBUFF_WEAPON_SHARP = {"Кинжалы", "топоры", "мечи", "Древковое"};
@@ -47,8 +47,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Сбросить таймеры �
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "Исправить кастинг"
-SMARTBUFF_OFTT_FIXBUFF		 = "Отметьте, если применение баффа не удается."
+SMARTBUFF_OFT_FIXBUFF        = "Исправить кастинг"
+SMARTBUFF_OFTT_FIXBUFF       = "Отметьте, если применение баффа не удается."
 
 SMARTBUFF_OFT                = "Вкл/Выкл";
 SMARTBUFF_OFT_MENU           = "Меню опций";
@@ -75,7 +75,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "обычные";
 SMARTBUFF_OFT_MSGWARNING     = "предупреждения";
 SMARTBUFF_OFT_MSGERROR       = "ошибки";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "Спрятать кнопку у карты";
-SMARTBUFF_OFT_INCLUDETOYS	 = "Включить игрушки";
+SMARTBUFF_OFT_INCLUDETOYS    = "Включить игрушки";
 SMARTBUFF_OFT_REBUFFTIMER    = "Таймер ребаффа";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "Менять настройки";
 SMARTBUFF_OFT_SELFFIRST      = "Сначала себя";
@@ -101,9 +101,11 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
 SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Да";
 SMARTBUFF_OFT_NO             = "Нет";
-SMARTBUFF_OFT_OKAY			 = "Продолжать"
+SMARTBUFF_OFT_OKAY           = "Продолжать"
 SMARTBUFF_OFT_PURGE_DATA     = "Вы уверены, что хотите сбросить ВСЕ данные SmartBuff?\nЭто действие приведет к перезагрузке пользовательского интерфейса!";
 SMARTBUFF_OFT_REQ_RELOAD     = "Новые версии требуют перезагрузки графического интерфейса.\nНажмите «Продолжить», когда будете готовы.";
 
@@ -122,7 +124,7 @@ SMARTBUFF_OFTT_ARULES        = "Не кастовать:\n- Шипы на Маг
 SMARTBUFF_OFTT_SUBGRPCHANGED = "Автоматически открывать меню опций SmartBuff,\nкогда вы меняете подгруппу.";
 SMARTBUFF_OFTT_GRPBUFFSIZE   = "Сколько игроков без группового баффа должно\nбыть в группе, чтобы кастовать групповой бафф.";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "Спрятать кнопку SmartBuff рядом с мини-картой.";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "Включите в список игрушки вместе с вашими заклинаниями и едой.";
+SMARTBUFF_OFTT_INCLUDETOYS   = "Включите в список игрушки вместе с вашими заклинаниями и едой.";
 SMARTBUFF_OFTT_REBUFFTIMER   = "За сколько секунд до спадения баффа,\nнапоминака должна предупреждать.\n0 = Отключить";
 SMARTBUFF_OFTT_SELFFIRST     = "Баффать сначала себя, потом других.";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "Баффать, когда вы прокручиваете\nколесо мыши вперёд.";
@@ -147,7 +149,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "Сколько секунд будут отоб�
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "Выберите звук всплеска.";
+SMARTBUFF_OFTT_SOUNDSELECT   = "Выберите звук всплеска.";
 
 
 -- Buffsetup Frame Text
@@ -178,9 +180,9 @@ SMARTBUFF_PSTT_RESIZE        = "Свернуть/развернуть\nосно�
 
 -- Messages
 SMARTBUFF_MSG_LOADED         = "загружен";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff Доступна новая версия, вы используете |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff и ревизия |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff в настоящее время доступен для скачивания. Присоединяйтесь к Discord для получения всей последней информации на https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff Доступна новая версия, вы используете |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff и ревизия |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff в настоящее время доступен для скачивания. Присоединяйтесь к Discord для получения всей последней информации на https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmartBuff отключен!";
 SMARTBUFF_MSG_SUBGROUP       = "Вы присоединились к новой группе, проверьте опции!";
 SMARTBUFF_MSG_NOTHINGTODO    = "Нечего делать";
@@ -200,7 +202,7 @@ SMARTBUFF_MSG_REBUFF         = "Реббафф";
 SMARTBUFF_MSG_LEFT           = "осталось";
 SMARTBUFF_MSG_CLASS          = "Класс";
 SMARTBUFF_MSG_CHARGES        = "зарядов";
-SMARTBUFF_MSG_SOUNDS		 = "Выбранный звук всплеска: "
+SMARTBUFF_MSG_SOUNDS         = "Выбранный звук всплеска: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

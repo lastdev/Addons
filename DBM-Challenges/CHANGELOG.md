@@ -1,6 +1,6 @@
 # <DBM Mod> Challenges
 
-## [r164](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r164) (2024-06-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r163...r164) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
+## [r166](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r166) (2024-11-03)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r165...r166) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
 
-- war within toc updates  
+- remove game version 11.0.2 and add game version 11.0.7  

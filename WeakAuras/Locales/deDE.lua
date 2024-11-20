@@ -34,6 +34,14 @@ L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Player Name/Realm"
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Spell Known"
 --[[Translation missing --]]
+L[ [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
+Find more information:
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
+Find more information:
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
+--[[Translation missing --]]
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Extra Options:|r %s"
 --[[Translation missing --]]
 L["|cFFffcc00Extra Options:|r None"] = "|cFFffcc00Extra Options:|r None"
@@ -100,7 +108,6 @@ L["Absorb Overlay"] = "Absorb Overlay"
 L["Absorbed"] = "Absorbiert"
 --[[Translation missing --]]
 L["Action Button Glow"] = "Action Button Glow"
-L["Action Usable"] = "Aktion nutzbar"
 L["Actions"] = "Aktionen"
 L["Active"] = "Aktiv"
 --[[Translation missing --]]
@@ -380,21 +387,7 @@ L["Character Stats"] = "Charakterwerte"
 L["Character Type"] = "Charaktertyp"
 L["Charge gained/lost"] = "Aufladung erhalten/verloren"
 --[[Translation missing --]]
-L["Charged Combo Point (1)"] = "Charged Combo Point (1)"
---[[Translation missing --]]
-L["Charged Combo Point (2)"] = "Charged Combo Point (2)"
---[[Translation missing --]]
-L["Charged Combo Point (3)"] = "Charged Combo Point (3)"
---[[Translation missing --]]
-L["Charged Combo Point (4)"] = "Charged Combo Point (4)"
---[[Translation missing --]]
-L["Charged Combo Point 1"] = "Charged Combo Point 1"
---[[Translation missing --]]
-L["Charged Combo Point 2"] = "Charged Combo Point 2"
---[[Translation missing --]]
-L["Charged Combo Point 3"] = "Charged Combo Point 3"
---[[Translation missing --]]
-L["Charged Combo Point 4"] = "Charged Combo Point 4"
+L["Charged Combo Points"] = "Charged Combo Points"
 L["Charges"] = "Aufladungen"
 --[[Translation missing --]]
 L["Charges Changed Event"] = "Charges Changed Event"
@@ -423,12 +416,6 @@ L["Color"] = "Farbe"
 --[[Translation missing --]]
 L["Color Animation"] = "Color Animation"
 L["Combat Log"] = "Kampflog"
---[[Translation missing --]]
-L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
 --[[Translation missing --]]
 L["Communities"] = "Communities"
 --[[Translation missing --]]
@@ -463,6 +450,10 @@ L["Critical"] = "Kritisch"
 L["Critical (%)"] = "Critical (%)"
 --[[Translation missing --]]
 L["Critical Rating"] = "Critical Rating"
+--[[Translation missing --]]
+L["Crop X"] = "Crop X"
+--[[Translation missing --]]
+L["Crop Y"] = "Crop Y"
 L["Crowd Controlled"] = "Kontrollverlust"
 L["Crushing"] = "Zerschmettern"
 --[[Translation missing --]]
@@ -471,8 +462,6 @@ L["C'thun"] = "C'thun"
 L["Cumulated time used during profiling"] = "Cumulated time used during profiling"
 --[[Translation missing --]]
 L["Currency"] = "Currency"
---[[Translation missing --]]
-L["Current Combo Point charged"] = "Current Combo Point charged"
 --[[Translation missing --]]
 L["Current Essence"] = "Current Essence"
 --[[Translation missing --]]
@@ -940,9 +929,9 @@ L["Icon Function"] = "Icon Function"
 --[[Translation missing --]]
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
 --[[Translation missing --]]
-L["ID"] = "ID"
---[[Translation missing --]]
 L["Id"] = "Id"
+--[[Translation missing --]]
+L["ID"] = "ID"
 --[[Translation missing --]]
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 --[[Translation missing --]]
@@ -954,6 +943,8 @@ L["Ignore Rune CD"] = "Runen-CD ignorieren"
 L["Ignore Rune CDs"] = "Ignore Rune CDs"
 --[[Translation missing --]]
 L["Ignore Self"] = "Ignore Self"
+--[[Translation missing --]]
+L["Ignore Spell Cooldown/Charges"] = "Ignore Spell Cooldown/Charges"
 --[[Translation missing --]]
 L["Ignore Spell Override"] = "Ignore Spell Override"
 L["Immune"] = "Immun (IMMUNE)"
@@ -996,9 +987,9 @@ L["Install the addons BugSack and BugGrabber for detailed error logs."] = "Insta
 L["Instance"] = "Instanz"
 L["Instance Difficulty"] = "Instanzschwierigkeit"
 --[[Translation missing --]]
-L["Instance ID"] = "Instance ID"
---[[Translation missing --]]
 L["Instance Id"] = "Instance Id"
+--[[Translation missing --]]
+L["Instance ID"] = "Instance ID"
 --[[Translation missing --]]
 L["Instance Info"] = "Instance Info"
 --[[Translation missing --]]
@@ -2104,8 +2095,6 @@ L["Tracking Charge CDs"] = "Tracking Charge CDs"
 --[[Translation missing --]]
 L["Tracking Only Cooldown"] = "Tracking Only Cooldown"
 L["Transmission error"] = "Übertragungsfehler"
---[[Translation missing --]]
-L["Treat charged combo point as 7 combo points"] = "Treat charged combo point as 7 combo points"
 L["Trigger"] = "Auslöser"
 --[[Translation missing --]]
 L["Trigger %i"] = "Trigger %i"
@@ -2209,7 +2198,7 @@ L["Warning"] = "Warning"
 --[[Translation missing --]]
 L["Warning for unknown aura:"] = "Warning for unknown aura:"
 --[[Translation missing --]]
-L["Warning: Anchoring to your own child '%s' in aura '%s' is imposssible."] = "Warning: Anchoring to your own child '%s' in aura '%s' is imposssible."
+L["Warning: Anchoring in aura '%s' is imposssible, due to an anchoring cycle"] = "Warning: Anchoring in aura '%s' is imposssible, due to an anchoring cycle"
 --[[Translation missing --]]
 L["Warning: Full Scan auras checking for both name and spell id can't be converted."] = "Warning: Full Scan auras checking for both name and spell id can't be converted."
 --[[Translation missing --]]

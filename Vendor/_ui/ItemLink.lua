@@ -49,7 +49,7 @@ Addon.CommonUI.ItemLink = Mixin({
         Sets the item to show in this control, this can either be a numeric identifer, 
         an item link, or an item location
     ]]
-    SetItem = function(itemlink, item)
+    SetItem = function(itemlink, item, calback)
         local itemType = type(item)
         
         if (itemType == "table") and type(item.HasAnyLocation) == "function" then
@@ -71,15 +71,23 @@ Addon.CommonUI.ItemLink = Mixin({
                     local color = itemlink:GetItemQualityColor() or GRAY_FONT_COLOR
                     itemlink.text:SetTextColor(color.r, color.g, color.b)
 
-                    -- Pass our parent the item for updates
-                    local handler = itemlink.OnItemChanged
-                    if (type(handler) == "string") then
-                        Addon.Invoke(itemlink:GetParent(), handler, itemlink)
+                    if (calback ~= false) then
+                        -- Pass our parent the item for updates
+                        local handler = itemlink.OnItemChanged
+                        if (type(handler) == "string") then
+                            Addon.Invoke(itemlink:GetParent(), handler, itemlink)
+                        end
                     end
                 else 
                     itemlink:ShowPlaceholder(true)
                 end
             end)
+    end,
+
+    --[[Clear the content from this item link]]
+    ClearItem = function(itemLink)
+        itemLink.text:SetText("")
+        itemLink:ShowPlaceholder(true)
     end,
 
     --[[

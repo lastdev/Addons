@@ -565,6 +565,7 @@ local achievements = {
 		-- The rest have IDs associated, and are picked up fine
 		[216549] = 7, -- Nightclaw
 		[215590] = 8, -- Shadowpouncer
+		[215593] = 9, -- Purrlock
 		[215606] = 9, -- Purrlock
 		[215041] = 10, -- Miral Murder-Mittens
 		[219412] = 11, -- Fuzzy
@@ -574,6 +575,8 @@ local achievements = {
 	[40837] = {}, -- Adventurer of the Ringing Deeps
 	[40840] = {}, -- Adventurer of Azj-Kahet
 	[40851] = {}, -- Adventurer of Hallowfall
+	[40995] = {}, -- The Originals
+	[40997] = {}, -- The Gatecrashers (Anniversary)
 }
 ns.achievements = achievements
 local mobs_to_achievement = {
@@ -592,11 +595,9 @@ function ns:AchievementMobStatus(id)
 	end
 	local criteria = achievements[achievement][id]
 	local _, name, _, achievement_completed, _, _, _, _, _, _, _, _, completedByMe = GetAchievementInfo(achievement)
-	local completed
-	if criteria < 40 then
-		_, _, completed = GetAchievementCriteriaInfo(achievement, criteria)
-	else
-		_, _, completed = GetAchievementCriteriaInfoByID(achievement, criteria)
+	local retOK, _, _, completed = pcall(criteria < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID, achievement, criteria, true)
+	if not retOK then
+		return
 	end
 	return achievement, name, completed, achievement_completed and not completedByMe
 end
@@ -621,7 +622,7 @@ do
 		return false
 	end
 	local function doTest(test, input, ...)
-		if type(input) == "table" and not input.__parent then
+		if ns.xtype(input) == "table" then
 			if input.alliance then
 				return doTest(test, faction == "Alliance" and input.alliance or input.horde, ...)
 			end

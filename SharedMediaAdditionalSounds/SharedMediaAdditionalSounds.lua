@@ -19,24 +19,26 @@ If you edit this file, be careful not to overwrite it when you update this addon
 -- registrations for media from the client itself belongs in LibSharedMedia-3.0
 
 if not SharedMediaAdditionalSounds then return end
+local revision = tonumber(string.sub("$Revision: 63551 $", 12, -3))
+SharedMediaAdditionalSounds.revision = (revision > SharedMediaAdditionalSounds.revision) and revision or SharedMediaAdditionalSounds.revision
 
 -- -----
 -- SOUND
 -- -----
-SharedMediaAdditionalSounds:Register("sound", "Bell Toll Alliance", [[Sound\Doodad\BellTollAlliance.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Bell Toll Horde", [[Sound\Doodad\BellTollHorde.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Auction Window Close", [[Sound\interface\AuctionWindowClose.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Quest Failed", [[Sound\interface\igQuestFailed.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Fel Nova", [[Sound\Spells\SeepingGaseous_Fel_Nova.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Bad Press", [[Sound\Spells\SimonGame_Visual_BadPress.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Simon Large Blue", [[Sound\Doodad\SimonGame_LargeBlueTree.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Simon Small Blue", [[Sound\Doodad\SimonGame_SmallBlueTree.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Portcullis Close", [[Sound\Doodad\PortcullisActive_Closed.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Run Away", [[Sound\Creature\HoodWolf\HoodWolfTransformPlayer01.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "PvP Flag Taken", [[Sound\Spells\PVPFlagTaken.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Arcane Crystal", [[Sound\Doodad\ArcaneCrystalOpen.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Bellow Out", [[Sound\Doodad\BellowOut.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Cannon", [[Sound\Doodad\Cannon01_BlastA.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Firework 3", [[Sound\Doodad\G_FireworkBoomGeneral3.ogg]])
-SharedMediaAdditionalSounds:Register("sound", "Alarm 2", [[Sound\Interface\AlarmClockWarning2.ogg]])
+SharedMediaAdditionalSounds:Register("sound", "Bell Toll Alliance", 566564)
+SharedMediaAdditionalSounds:Register("sound", "Bell Toll Horde", 565853)
+SharedMediaAdditionalSounds:Register("sound", "Auction Window Close", 567499)
+SharedMediaAdditionalSounds:Register("sound", "Quest Failed", 567459)
+SharedMediaAdditionalSounds:Register("sound", "Fel Nova", 568582)
+SharedMediaAdditionalSounds:Register("sound", "Bad Press", 568975)
+SharedMediaAdditionalSounds:Register("sound", "Simon Large Blue", 566076)
+SharedMediaAdditionalSounds:Register("sound", "Simon Small Blue", 567002)
+SharedMediaAdditionalSounds:Register("sound", "Portcullis Close", 566240)
+SharedMediaAdditionalSounds:Register("sound", "Run Away", 552035)
+SharedMediaAdditionalSounds:Register("sound", "PvP Flag Taken", 569200)
+SharedMediaAdditionalSounds:Register("sound", "Arcane Crystal", 565425)
+SharedMediaAdditionalSounds:Register("sound", "Bellow Out", 565530)
+SharedMediaAdditionalSounds:Register("sound", "Cannon", 566101)
+SharedMediaAdditionalSounds:Register("sound", "Firework 3", 566862)
+SharedMediaAdditionalSounds:Register("sound", "Alarm Clock Warning 2", 567399)
 

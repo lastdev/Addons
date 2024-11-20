@@ -398,6 +398,7 @@ SI.defaultDB = {
     Currency3028 = true, -- Restored Coffer Key
     Currency3056 = true, -- Kej
     Currency3008 = true, -- Valorstones
+    Currency2813 = true, -- Harmonized Silk
     Currency2914 = true, -- Weathered Harbinger Crest
     Currency2915 = true, -- Carved Harbinger Crest
     Currency2916 = true, -- Runed Harbinger Crest
@@ -2100,6 +2101,7 @@ hoverTooltip.ShowAccountSummary = function(cell, arg, ...)
   local ttime = 0
   local ttoons = 0
   local tmaxtoons = 0
+  local warbandMoney = C_Bank.FetchDepositedMoney(Enum.BankType.Account)
   local r = {}
   for toon, t in pairs(SI.db.Toons) do -- deliberately include ALL toons
     local realm = toon:match(" %- (.+)$")
@@ -2135,6 +2137,8 @@ hoverTooltip.ShowAccountSummary = function(cell, arg, ...)
   end
 
   -- history information
+  indicatortip:AddLine("")
+  indicatortip:AddLine(L["Warband Money"], SI:formatNumber(warbandMoney, true))
   indicatortip:AddLine("")
   SI:HistoryUpdate()
   local tmp = {}
@@ -2561,7 +2565,7 @@ end
 function SI:OnInitialize()
   local versionString = C_AddOns.GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "11.0.3" then
+  if versionString == "11.0.7" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -4401,7 +4405,11 @@ function SI:ShowTooltip(anchorframe)
                 weeklymax = "/" .. SI:formatNumber(ci.weeklyMax)
               end
               if (ci.totalMax or 0) > 0 then
-                totalmax = "/" .. SI:formatNumber(ci.totalMax)
+                if (ci.totalEarned or 0) > 0 then
+                  totalmax = "/" .. SI:formatNumber(ci.totalMax - ci.totalEarned + ci.amount)
+                else
+                  totalmax = "/" .. SI:formatNumber(ci.totalMax)
+                end
               end
             end
             if SI.db.Tooltip.CurrencyEarned or showall then

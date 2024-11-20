@@ -33,6 +33,7 @@ local EDIT_TEXTURE = "iconPack.12x12/Edit"
 local DELETE_TEXTURE = "iconPack.12x12/Close/Default"
 local ATTENTION_TEXTURE = "iconPack.12x12/Attention"
 local ICON_SIZE = 12
+local CONCENTRATION_ICON = "Interface\\ICONS\\UI_Concentration"
 
 
 
@@ -414,6 +415,10 @@ function CraftingQueueList.__private:_GetNameTooltip(dataIndex)
 		local numNeed = quantity * numQueued
 		local color = Theme.GetColor(numHave >= numNeed and "FEEDBACK_GREEN" or "FEEDBACK_RED")
 		tinsert(tooltipLines, color:ColorText(numHave.."/"..numNeed).." - "..(UIUtils.GetDisplayItemName(matItemString) or "?"))
+	end
+	local concentration = RecipeString.GetConcentration(recipeString)
+	if concentration then
+		tinsert(tooltipLines, "|T"..CONCENTRATION_ICON..":0|t "..PROFESSIONS_CRAFTING_STAT_CONCENTRATION)
 	end
 	local cooldown = Profession.GetRemainingCooldown(CraftString.FromRecipeString(recipeString))
 	if cooldown then

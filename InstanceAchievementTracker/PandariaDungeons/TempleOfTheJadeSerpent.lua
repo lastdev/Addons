@@ -21,7 +21,7 @@ local ShaOfDoubtCounter = 0
 function core._960:WiseMari()
     if core.spellId == 115167 then
         --If someone gets hit by the ability, check if they need the achievement or not
-        
+
         if playersHit[core.destName] == nil then
             --Players has not been hit already
             --Check if the player actually needs the achievement
@@ -38,9 +38,9 @@ function core._960:ShaOfDoubt()
     local name, realm = UnitName("Player")
     if (core.type == "SPELL_AURA_APPLIED" or core.type == "SPELL_AURA_APPLIED_DOSE") and core.spellId == 123916 and core.destName == name then
         for i=1,40 do
-            local _, _, count, _, _, _, _, _, _, spellId = UnitDebuff("Player", i)
-            if spellId == 123916 then
-                ShaOfDoubtCounter = count
+            local auraData = C_UnitAuras.GetDebuffDataByIndex("Player", i)
+            if auraData ~= nil and auraData.spellId == 123916 then
+                ShaOfDoubtCounter = auraData.applications
                 core:sendMessage(GetAchievementLink(core.achievementIDs[2]) .. " Sha of Doubt Counter (" .. ShaOfDoubtCounter .. "/4)")
             end
         end
@@ -53,8 +53,8 @@ end
 
 function core._960:ShaOfDoubt2()
     for i=1,40 do
-        local _, _, _, _, _, _, _, _, _, spellId = UnitAura("Player", i)
-        if spellId == 118714 then
+        local auraData = C_UnitAuras.GetAuraDataByIndex("Player", i)
+        if auraData ~= nil and auraData.spellId == 118714 then
             core:getAchievementFailed(2)
         end
     end

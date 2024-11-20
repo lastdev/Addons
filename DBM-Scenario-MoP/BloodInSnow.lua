@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d646", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240516060654")
+mod:SetRevision("20240714050536")
 
 mod:RegisterCombat("scenario", 1130)
 
@@ -58,7 +58,7 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:141407") and target then--Does show in combat log, but emote gives targetname 2 seconds earlier.
-		target = DBM:GetUnitFullName(target)
+		target = DBM:GetUnitFullName(target) or target
 		specWarnFrozenSolid:Show(target)
 		specWarnFrozenSolid:Play("targetchange")
 		timerFrozenSolidCD:Start()

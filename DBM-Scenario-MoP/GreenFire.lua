@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20240105194056")
+mod:SetRevision("20240714050536")
 
 mod:RegisterCombat("scenario", 1112)
 
@@ -63,7 +63,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHellfire:Show(args.sourceName)
 		timerHellfireCD:Start()
 	elseif args.spellId == 138559 then
-		specWarnChaosBolt:Show()
+		specWarnChaosBolt:Show(args.sourceName)
 	end
 end
 

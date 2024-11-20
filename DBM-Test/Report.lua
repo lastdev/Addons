@@ -56,10 +56,10 @@ function reporter:ObjectToString(obj, skipType, showTriggerTimes)
 		local fileName = obj:match("Interface\\AddOns\\DBM%-VP[^\\]-\\(.-)%.ogg")
 		return ("%sVoicePack/%s"):format(not skipType and "[PlaySound] " or "", fileName)
 	end
-	local spellId = obj.spellId and obj.spellId > 50 and tostring(obj.spellId) or "<none>"
+	local spellId = type(obj.spellId) == "number" and obj.spellId > 50 and tostring(obj.spellId) or "<none>"
 	if obj.objClass == "Timer" then
 		-- FIXME: this should be fixed in timers, not here, can't see a good reason for the late evaluation of the localized text in timers whereas everything else can do it early
-		local text = obj.text or obj.type and obj.mod:GetLocalizedTimerText(obj.type, obj.spellId, obj.name) or obj.name
+		local text = type(obj.text) == "string" and obj.text or obj.type and obj.mod:GetLocalizedTimerText(obj.type, obj.spellId, obj.name) or obj.name
 		return ("%s%s, time=%.2f, type=%s, spellId=%s%s"):format(not skipType and "[Timer] " or "", text, obj.timer, obj.type, spellId, triggerDeltasPretty(showTriggerTimes))
 	elseif obj.objClass == "Announce" then
 		return ("%s%s, type=%s, spellId=%s%s"):format(not skipType and "[Announce] " or "", obj.text, tostring(obj.announceType), spellId, triggerDeltasPretty(showTriggerTimes))
@@ -193,7 +193,7 @@ function reporter:FindSpellIdMismatches(findings)
 				if v.event == "StartTimer" or v.event == "ShowAnnounce" or v.event == "ShowSpecialWarning" or v.event == "ShowYell" then
 					local obj = v[1]
 					-- spellId field is sometimes used for non-spellId things like phases/stages
-					if obj.spellId and obj.spellId > 50 and obj.spellId ~= triggerSpellId then
+					if type(obj.spellId) == "number" and obj.spellId > 50 and obj.spellId ~= triggerSpellId then
 						local ignoreKey, ignoreValue = ignoreSpellIdMismatch(self.testData.ignoreWarnings, triggerSpellId, obj.spellId)
 						if ignoreKey then
 							ignoredTriggerSpells[ignoreKey] = ignoredTriggerSpells[ignoreKey] or {}
@@ -557,7 +557,13 @@ function reporter:EventToStringForReport(event, indent, subIndent)
 		end
 	end
 	if event.event == "AntiSpam" then
+		local targetName = event[2]
 		result[#result] = nil -- filter bool result
+		result[#result] = nil -- filter target name as it's already part of the ID
+		if targetName and targetName == UnitName("player") then -- May refer to the player due to combat log rewriting
+			-- id is "<id> on <targetName>" if targetName is specified
+			result[#result] = result[#result]:gsub("on " .. UnitName("player") .. "$", "on PlayerName")
+		end
 		local filteredSpams = {}
 		if event.filteredAntiSpams and #event.filteredAntiSpams > 0 then
 			for _, v in ipairs(event.filteredAntiSpams) do
@@ -628,7 +634,7 @@ function reporter:FilterTraceEntry(entry, trigger)
 		return true
 	end
 	-- AntiSpams returned false, they are summarized in the previous true event
-	if entry.event == "AntiSpam" and not entry[2] then
+	if entry.event == "AntiSpam" and not entry[3] then
 		return true
 	end
 	-- Generic warning sounds
@@ -826,7 +832,7 @@ function reporter:FlagCombat(waitedFor)
 	self.inCombatAfterTest = waitedFor
 end
 
----@alias DBMTestTaintType "Lang"|"ModEnv"|"DBMOptions"|"ModOptions"|"Perspective"|"StrayObjects"
+---@alias DBMTestTaintType "Lang"|"ModEnv"|"DBMOptions"|"ModOptions"|"Perspective"|"StrayObjects"|"Playground"
 
 ---@type table<DBMTestTaintType, string>
 local taintDescriptions = {
@@ -835,7 +841,8 @@ local taintDescriptions = {
 	DBMOptions = "Running with DBM options set to something other than the test defaults",
 	ModOptions = "Running with mod options set to something other than the test defaults",
 	Perspective = "Test specifies player %s, but running as player %s",
-	StrayObjects = "Encountered stray warning objects during test run, an unexpected mod might have been triggered or mod was loaded without full test support"
+	StrayObjects = "Encountered stray warning objects during test run, an unexpected mod might have been triggered or mod was loaded without full test support",
+	Playground = "Test was started in playground mode"
 }
 
 ---@param taintType DBMTestTaintType

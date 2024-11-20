@@ -44,7 +44,7 @@ function HealBot_Comms_SendTo(inInst,inType)
         hbCommsTo=0
     end
     if lastCommsTo~=hbCommsTo then
-        HealBot_Timers_Set("LAST","CheckVersions",5)
+        HealBot_Timers_Set("LAST","CheckVersions",true,true)
     end
     HealBot_AddDebug("INFO: Comms is "..hbCommsTo,"Comms",true)
 end
@@ -195,13 +195,16 @@ end
 local HealBot_MsgUpdateAvail=nil
 local hbMajor, hbMinor, hbPatch, hbHealbot=string.split(".", HEALBOT_VERSION)
 local hbVersionChecked={}
+function HealBot_Comms_SetVersion()
+    hbMajor, hbMinor, hbPatch, hbHealbot=string.split(".", HEALBOT_VERSION)
+end
 function HealBot_Comms_CheckVer(userName, version)
       --HealBot_setCall("HealBot_Comms_CheckVer")
     if not hbVersionChecked[userName] then
         local tNewVer=nil
         hbVersionChecked[userName]=true
         local tMajor, tMinor, tPatch, tHealbot=string.split(".", version)
-        if tonumber(tMajor) == HEALBOT_GAME_VERSION then
+        if tonumber(tMajor) == HEALBOT_GAME_VERSION and tMinor ~= "x" then
             if tonumber(tMajor)>tonumber(hbMajor) then 
                 tNewVer=true
             elseif tonumber(tMajor) == tonumber(hbMajor) and tonumber(tMinor)>tonumber(hbMinor) then 

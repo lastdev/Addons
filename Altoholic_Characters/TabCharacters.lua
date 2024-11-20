@@ -1,7 +1,7 @@
 local addonTabName = ...
 local addonName = "Altoholic"
 local addon = _G[addonName]
-local colors = addon.Colors
+local colors = AddonFactory.Colors
 
 local L = DataStore:GetLocale(addonName)
 local MVC = LibStub("LibMVC-1.0")
@@ -796,24 +796,5 @@ DataStore:OnAddonLoaded(addonTabName, function()
 	})
 	
 	options = Altoholic_CharactersTab_Options
-		
-	--Temporary: database migration
-	if AltoholicDB and AltoholicDB.global and AltoholicDB.global.options then
-		local source = AltoholicDB.global.options
 
-		for k, v in pairs(source) do
-			local arg1, arg2, arg3 = strsplit(".", k)
-			
-			if arg1 == "UI" and arg2 == "Tabs" and arg3 == "Characters" then
-				local prefix = "UI.Tabs.Characters."
-				local optionName = k:sub(#prefix + 1)
-				
-				-- Create the new entries
-				options[optionName] = v
-				
-				-- Delete the old entries
-				source[k] = nil
-			end
-		end
-	end
 end)

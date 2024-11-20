@@ -702,6 +702,10 @@ local function RunTriggerFunc(allStates, data, id, triggernum, event, arg1, arg2
     elseif (data.statesParameter == "unit") then
       if arg1 then
         if Private.multiUnitUnits[data.trigger.unit] then
+          if data.trigger.unit == "group" and IsInRaid() and Private.multiUnitUnits.party[arg1] then
+            return
+          end
+
           unitForUnitTrigger = arg1
           cloneIdForUnitTrigger = arg1
         else
@@ -1162,6 +1166,7 @@ function HandleEvent(frame, event, arg1, arg2, ...)
   if (event == "PLAYER_ENTERING_WORLD") then
     timer:ScheduleTimer(function()
       HandleEvent(frame, "WA_DELAYED_PLAYER_ENTERING_WORLD", arg1, arg2)
+      Private.ScanForLoads(nil, "WA_DELAYED_PLAYER_ENTERING_WORLD")
       Private.StartProfileSystem("generictrigger WA_DELAYED_PLAYER_ENTERING_WORLD");
       Private.CheckCooldownReady();
       Private.StopProfileSystem("generictrigger WA_DELAYED_PLAYER_ENTERING_WORLD");
@@ -1857,8 +1862,8 @@ function GenericTrigger.Add(data, region)
   end
 
   if warnAboutCLEUEvents then
-    Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning", "warning",
-                L["COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.\nFind more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"])
+    Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning", "error",
+                L["|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r\nCOMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.\nFind more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"], true)
   else
     Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning")
   end
@@ -2268,19 +2273,21 @@ do
     end,
     Schedule = function(self, expirationTime, id)
       if (not self.expirationTime[id] or expirationTime < self.expirationTime[id]) and expirationTime > 0 then
-        if self.handles[id] then
-          timer:CancelTimer(self.handles[id])
-          self.handles[id] = nil
-          self.expirationTime[id] = nil
-        end
-
+        self:Cancel(id)
         local duration = expirationTime - GetTime()
         if duration > 0 then
           self.handles[id] = timer:ScheduleTimerFixed(self.Recheck, duration, self, id)
           self.expirationTime[id] = expirationTime
         end
       end
-    end
+    end,
+    Cancel = function(self, id)
+      if self.handles[id] then
+        timer:CancelTimer(self.handles[id])
+        self.handles[id] = nil
+        self.expirationTime[id] = nil
+      end
+    end,
   }
 
   local function FetchSpellCooldown(self, id)
@@ -2297,6 +2304,7 @@ do
     local nowReady = false
     local time = GetTime()
     if self.expirationTime[id] and self.expirationTime[id] <= time and self.expirationTime[id] ~= 0 then
+      self.readyTime[id] = self.expirationTime[id]
       self.duration[id] = 0
       self.expirationTime[id] = 0
       changed = true
@@ -2419,7 +2427,7 @@ do
   --- @field name string
   --- @field icon number
   --- @field id number
-  --- @field watched number[]
+  --- @field watched table<number, boolean>
 
   -- Basic details like name, icon, charges, times per effective spell id
   -- Also contains the mapping from effective spell id to watched
@@ -2460,16 +2468,19 @@ do
 
     -- Helper functions
     AddEffectiveSpellId = function(self, effectiveSpellId, userSpellId)
+      if self.data[effectiveSpellId] then
+        self.data[effectiveSpellId].watched[userSpellId] = (self.data[effectiveSpellId].watched[userSpellId] or 0) + 1
+        return
+      end
+
       local name, _, icon, _, _, _, spellId = Private.ExecEnv.GetSpellInfo(effectiveSpellId)
       self.data[effectiveSpellId] = {
         name = name,
         icon = icon,
         id = spellId,
-        watched = { effectiveSpellId }
+        watched = {}
       }
-      if effectiveSpellId ~= userSpellId then
-        tinsert(self.data[effectiveSpellId].watched, userSpellId)
-      end
+      self.data[effectiveSpellId].watched[userSpellId] = 1
 
       local spellDetail = self.data[effectiveSpellId]
       spellDetail.known = WeakAuras.IsSpellKnownIncludingPet(effectiveSpellId)
@@ -2506,18 +2517,12 @@ do
               -- There are lots of cases to consider here:
 
               -- For the new effective spell id
-              -- a) We are already tracking it, only add the wathed spell ids
-              -- b) We aren't tracking it yet add it
-              if self.data[newEffectiveSpellId] then
-                tinsert(self.data[newEffectiveSpellId].watched, userSpellId)
-              else
-                self:AddEffectiveSpellId(newEffectiveSpellId, userSpellId)
-              end
+              self:AddEffectiveSpellId(newEffectiveSpellId, userSpellId)
 
               local oldSpellDetail = self.data[oldEffectiveSpellId]
               local newSpellDetail = self.data[newEffectiveSpellId]
 
-              -- Check whether we need to emit the SPEL_CHARGES_CHANGED or SPELL_COOLDOWN_READY events
+              -- Check whether we need to emit the SPELL_CHARGES_CHANGED or SPELL_COOLDOWN_READY events
               local chargesChanged = oldSpellDetail.charges ~= newSpellDetail.charges or oldSpellDetail.count ~= newSpellDetail.count
                 or oldSpellDetail.chargesMax ~= newSpellDetail.maxCharges
               local oldCharge = oldSpellDetail.charges or oldSpellDetail.count or 0
@@ -2530,9 +2535,14 @@ do
               -- For the old effective spell id
               -- * Remove the spell from watched
               -- * If we removed the last mapping, remove the spell details of the effective spell id
-              tremove(oldSpellDetail.watched, userSpellId)
-              if #oldSpellDetail.watched == 0 then
-                self.data[oldEffectiveSpellId] = nil
+              if oldSpellDetail.watched[userSpellId] == 1 then
+                oldSpellDetail.watched[userSpellId] = nil
+                if next(self.data[oldEffectiveSpellId].watched) == nil then
+                  self.data[oldEffectiveSpellId] = nil
+                  RecheckHandles:Cancel(oldEffectiveSpellId)
+                end
+              else
+                oldSpellDetail.watched[userSpellId] = oldSpellDetail.watched[userSpellId] - 1
               end
 
               -- Finally update the watchedSpellIds mapping
@@ -2658,33 +2668,27 @@ do
 
       local effectiveSpellId = Private.ExecEnv.GetEffectiveSpellId(userSpellId, useExact, followoverride)
 
-      self.watchedSpellIds[userSpellId] = self. watchedSpellIds[userSpellId] or {}
+      self.watchedSpellIds[userSpellId] = self.watchedSpellIds[userSpellId] or {}
       self.watchedSpellIds[userSpellId][useExact] = self.watchedSpellIds[userSpellId][useExact] or {}
       if self.watchedSpellIds[userSpellId][useExact][followoverride] == effectiveSpellId then
-        -- We are already watching userSpellId and have the mapping to effectiveSpellId
-        -- Nothing t odo then
+        -- We are already watching userSpellId in the exact useExact/followoverride mode, so there's
+        -- nothing to do then
         return
       end
 
       -- We aren't watching userSpellId yet
       self.watchedSpellIds[userSpellId][useExact][followoverride] = effectiveSpellId
-
-      if self.data[effectiveSpellId] then
-        -- But we are already tracking the effectiveSpellId, so only add the mapping
-        if not tContains(self.data[effectiveSpellId].watched, userSpellId) then
-          tinsert(self.data[effectiveSpellId].watched, userSpellId)
-        end
-        return
-      end
-
       self:AddEffectiveSpellId(effectiveSpellId, userSpellId)
     end,
 
     SendEventsForSpell = function(self, effectiveSpellId, event, ...)
       local watchedSpells = self.data[effectiveSpellId] and self.data[effectiveSpellId].watched
+      Private.ScanEventsByID(event, effectiveSpellId, ...)
       if watchedSpells then
-        for _, userSpellId in ipairs(watchedSpells) do
-          Private.ScanEventsByID(event, userSpellId, ...)
+        for userSpellId in pairs(watchedSpells) do
+          if userSpellId ~= effectiveSpellId then
+            Private.ScanEventsByID(event, userSpellId, ...)
+          end
         end
       end
     end,
@@ -3434,6 +3438,9 @@ do
   end
 
   function Private.ExecEnv.GetEffectiveSpellId(spellId, exactMatch, followoverride)
+    if type(spellId) == "string" then
+      spellId = select(7, Private.ExecEnv.GetSpellInfo(spellId))
+    end
     if not exactMatch then
       local spellName = Private.ExecEnv.GetSpellName(spellId or "")
       if spellName then
@@ -3837,6 +3844,44 @@ function WeakAuras.GetEquipmentSetInfo(itemSetName, partial)
   return bestMatchName, bestMatchIcon, bestMatchNumEquipped, bestMatchNumItems;
 end
 
+-- Workaround Stagger's last tick not resulting in UNIT_ABSORB_AMOUNT_CHANGED
+local staggerWatchFrame
+function Private.WatchStagger()
+  if not staggerWatchFrame then
+    staggerWatchFrame = CreateFrame("FRAME")
+    Private.frames["WeakAuras Stagger Frame"] = staggerWatchFrame
+    staggerWatchFrame:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player")
+    staggerWatchFrame:SetScript("OnEvent", function()
+      Private.StartProfileSystem("stagger")
+      local stagger = UnitStagger("player")
+      if stagger > 0 then
+        if not staggerWatchFrame.onupdate then
+          staggerWatchFrame.onupdate = true
+          staggerWatchFrame:SetScript("OnUpdate", function()
+            Private.StartProfileSystem("stagger")
+            local stagger = UnitStagger("player")
+            if stagger ~= staggerWatchFrame.stagger then
+              staggerWatchFrame.stagger = stagger
+              WeakAuras.ScanEvents("WA_UNIT_STAGGER_CHANGED", "player", stagger)
+            end
+            if stagger == 0 then
+              staggerWatchFrame:SetScript("OnUpdate", nil)
+              staggerWatchFrame.onupdate = nil
+            end
+            Private.StopProfileSystem("stagger")
+          end)
+        end
+      end
+
+      if stagger ~= staggerWatchFrame.stagger then
+        staggerWatchFrame.stagger = stagger
+        WeakAuras.ScanEvents("WA_UNIT_STAGGER_CHANGED", "player", stagger)
+      end
+      Private.StopProfileSystem("stagger")
+    end)
+  end
+end
+
 function Private.ExecEnv.CheckTotemName(totemName, triggerTotemName, triggerTotemPattern, triggerTotemOperator)
   if not totemName or totemName == "" then
     return false
@@ -3978,8 +4023,12 @@ do
   function WeakAuras.TenchInit()
     if not(tenchFrame) then
       tenchFrame = CreateFrame("Frame");
-      tenchFrame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player");
       tenchFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+      if WeakAuras.IsRetail() then
+        tenchFrame:RegisterEvent("WEAPON_ENCHANT_CHANGED")
+      else
+        tenchFrame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player")
+      end
       if WeakAuras.IsClassicEra() then
         tenchFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
       end
@@ -4075,7 +4124,7 @@ do
 
       tenchFrame:SetScript("OnEvent", function()
         Private.StartProfileSystem("generictrigger temporary enchant");
-        timer:ScheduleTimer(tenchUpdate, 0.1);
+        timer:ScheduleTimer(tenchUpdate, 0.1)
         Private.StopProfileSystem("generictrigger temporary enchant");
       end);
 
@@ -5014,16 +5063,20 @@ WeakAuras.GetBonusIdInfo = function(ids, specificSlot)
   end
 end
 
----@param itemName string
+---@param itemId string
 ---@param specificSlot? number
 ---@return boolean|nil isItemEquipped
-WeakAuras.CheckForItemEquipped = function(itemName, specificSlot)
+WeakAuras.CheckForItemEquipped = function(itemId, specificSlot)
   if not specificSlot then
-    return C_Item.IsEquippedItem(itemName or '')
+    return C_Item.IsEquippedItem(itemId or '')
   else
     local item = Item:CreateFromEquipmentSlot(specificSlot)
     if item and not item:IsItemEmpty() then
-      return itemName == item:GetItemName()
+      if type(itemId) == "number" then
+        return itemId == item:GetItemID()
+      else
+        return itemId == item:GetItemName()
+      end
     end
   end
 end

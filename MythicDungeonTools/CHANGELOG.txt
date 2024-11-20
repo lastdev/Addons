@@ -1,2 +1,2 @@
-## 5.0.7 (2024-08-26)
-  - Count and mapping updates
+## 5.2.5 (2024-11-02)
+  - Minor Mapping updates

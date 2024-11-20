@@ -1,7 +1,7 @@
 # <DBM Mod> Raids (WoTLK)
 
-## [r336](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r336) (2024-06-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r334...r336) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
+## [r339](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r339) (2024-11-03)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r338...r339) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
 
-- Fix numerous cases where count was missing, or wrong object type was set (also causing count to be missing)  
-    Disabled some false diagnostics reports as well  
+- remove game version 11.0.2 and add game version 11.0.7  
+- Scope all wrath raids to a single zone id  

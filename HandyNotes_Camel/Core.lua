@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                      v1.11 - 26th August 2024
+                                     v2.01 - 12th November 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -38,7 +38,7 @@ local UIParent = _G.UIParent
 
 local HandyNotes = _G.HandyNotes
 
-local _, _, _, version = GetBuildInfo()
+_, _, _, ns.version = GetBuildInfo()
 
 -- Localisation
 ns.locale = GetLocale()
@@ -84,6 +84,7 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
+	L["Notes"] = "Notizen"
 	L["Left"] = "Links"
 	L["Right"] = "Rechts"
 	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
@@ -98,6 +99,8 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["The Map Pin Size"] = "Tamaño de los pines del mapa"
 	L["Map Pin Alpha"] = "Alfa de los pines del mapa"
 	L["The alpha transparency of the map pins"] = "La transparencia alfa de los pines del mapa"
+	L["Icon Alpha"] = "Transparencia del icono"
+	L["The alpha transparency of the icons"] = "La transparencia alfa de los iconos"
 	L["Show Coordinates"] = "Mostrar coordenadas"
 	L["Show Coordinates Description"] = "Mostrar " ..ns.colour.highlight
 		.."coordenadas\124r en información sobre herramientas en el mapa del mundo y en el minimapa"
@@ -120,6 +123,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
+	L["Notes"] = "Notas"
 	L["Left"] = "Izquierda"
 	L["Right"] = "Derecha"
 	L["Try later"] = "No es posible en este momento. Intenta más tarde"
@@ -156,6 +160,7 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
+	L["Notes"] = "Remarques"
 	L["Left"] = "Gauche"
 	L["Right"] = "Droite"
 	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
@@ -191,6 +196,7 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Notes"] = "Note"
 	L["Left"] = "Sinistra"
 	L["Right"] = "Destra"
 	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
@@ -226,6 +232,7 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
+	L["Notes"] = "메모"
 	L["Left"] = "왼쪽"
 	L["Right"] = "오른쪽"
 	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
@@ -262,6 +269,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Notes"] = "Notas"
 	L["Left"] = "Esquerda"
 	L["Right"] = "Direita"
 	L["Try later"] = "Não é possível neste momento. Tente depois"
@@ -298,6 +306,7 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Notes"] = "Примечания"
 	L["Left"] = "Налево"
 	L["Right"] = "Направо"
 	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
@@ -333,6 +342,7 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
+	L["Notes"] = "笔记"
 	L["Left"] = "左"
 	L["Right"] = "右"
 	L["Try later"] = "目前不可能。稍后再试"
@@ -368,6 +378,7 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Notes"] = "筆記"
 	L["Left"] = "左"
 	L["Right"] = "右"
 	L["Try later"] = "目前不可能。稍後再試"
@@ -507,7 +518,8 @@ do
 						return coord, nil, ns.textures[ns.db.iconChoice],
 								ns.db.iconScale * ns.scaling[ns.db.iconChoice], ns.db.iconAlpha
 					end
-				else
+				elseif ( ns.version >= 80000 ) then
+					-- Prior to BfA 8.3.0 (iirc) there was only one playable version of Uldum
 					local found = false
 					-- C_Map.GetBestMapForUnit( "player" ) == 249 would also work I'd think?
 					-- Memory says that patches ago when doing this I got abends when jumping
@@ -601,8 +613,26 @@ ns.options = {
 							.."\n19 = " ..L["Screw"],
 					min = 1, max = 19, step = 1,
 					arg = "iconChoice",
-					order = 4,
+					order = 10,
 				},
+			},
+		},
+		notes = {
+			type = "group",
+			name = L["Notes"],
+			inline = true,
+			args = {
+				noteMenu = { type = "description", name = "A shortcut to open this panel is via the Minimap"
+					.." AddOn menu, which is immediately below the Calendar icon.\n\n"
+					..NORMAL_FONT_COLOR_CODE .."Mouse " ..L["Left"] ..": " ..HIGHLIGHT_FONT_COLOR_CODE
+					.."This panel\n" ..NORMAL_FONT_COLOR_CODE .."Mouse " ..L["Right"] ..": "
+					..HIGHLIGHT_FONT_COLOR_CODE .."Show the " ..L["Uldum Map"], order = 20, },
+				separator1 = { type = "header", name = "", order = 21, },
+				noteChat = { type = "description", name = "Chat command shortcuts are also supported.\n\n"
+					..NORMAL_FONT_COLOR_CODE .."/mcf" ..HIGHLIGHT_FONT_COLOR_CODE .." - Show this panel\n"
+					..NORMAL_FONT_COLOR_CODE .."/mcf ?" ..HIGHLIGHT_FONT_COLOR_CODE .." - Show the chat options menu\n"
+					..NORMAL_FONT_COLOR_CODE .."/mcf m" ..HIGHLIGHT_FONT_COLOR_CODE .." - Show " ..L["Uldum Map"],
+					order = 22, },
 			},
 		},
 	},
@@ -621,7 +651,7 @@ function HandyNotes_Camel_OnAddonCompartmentClick( addonName, buttonName )
 end
  
 function HandyNotes_Camel_OnAddonCompartmentEnter( ... )
-	GameTooltip:SetOwner( DropDownList1, "ANCHOR_LEFT" )	
+	GameTooltip:SetOwner( MinimapCluster or AddonCompartmentFrame, "ANCHOR_LEFT" )	
 	GameTooltip:AddLine( ns.colour.prefix ..L["Camel"] )
 	GameTooltip:AddLine( ns.colour.highlight .." " )
 	GameTooltip:AddDoubleLine( ns.colour.highlight ..L["Left"], ns.colour.plaintext ..L["Options"] )
@@ -647,13 +677,6 @@ end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_CamelDB", "AceEvent-3.0")
 
---=======================================================================================================
---
---		SLASH CHAT COMMANDS  -- All game versions
---		===================
---
---=======================================================================================================
-
 SLASH_Camel1, SLASH_Camel2 = "/camel", "/mcf"
 
 local function Slash( options )
@@ -661,21 +684,21 @@ local function Slash( options )
 	if ( options == "" ) then
 		Settings.OpenToCategory( "HandyNotes" )
 		LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "Camel" )
-	elseif ( options == "u" ) then
+	elseif ( options == "m" ) then
 		OpenWorldMap( 249 )
 		if WorldMapFrame:IsVisible() ~= true then
 			print( ns.colour.prefix	..L["Camel"] ..": " ..ns.colour.plaintext ..L["Try later"] )
 		end
 	else
-		print( ns.colour.prefix .."Options:\n"
-				..ns.colour.highlight .."/sa" ..ns.colour.plaintext .." Show the HandyNotes options panel\n"
-				..ns.colour.highlight .."/sa ?" ..ns.colour.plaintext .." Show this menu\n"
-				..ns.colour.highlight .."/sa u" ..ns.colour.plaintext .." Show the Uldum map" )
-		if ( version >= 100000 ) then
+		print( ns.colour.prefix ..L["Options"] ..":\n"
+				..ns.colour.highlight .."/mcf" ..ns.colour.plaintext .." Show the HandyNotes options panel\n"
+				..ns.colour.highlight .."/mcf ?" ..ns.colour.plaintext .." Show this menu\n"
+				..ns.colour.highlight .."/mcf m" ..ns.colour.plaintext .." Show " ..L["Uldum Map"] )
+		if ( ns.version >= 100000 ) then
 			print( ns.colour.prefix .."Tip:" ..ns.colour.highlight
-				.." Try the Minimap AddOn Menu (below the Calendar)\nLeft Mouse:" ..ns.colour.plaintext
-				.." MCF options panel; " ..ns.colour.highlight .."Right Mouse:" ..ns.colour.plaintext
-				.." Uldum map" )
+				.." Try the Minimap AddOn Menu (below the Calendar)\n" ..L["Left"] .." Mouse:"
+				..ns.colour.plaintext .." HN options panel; " ..ns.colour.highlight ..L["Right"] .." Mouse: "
+				..ns.colour.plaintext ..L["Uldum Map"] )
 		end
 	end
 end

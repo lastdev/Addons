@@ -117,7 +117,8 @@ C.PVP_TIER_MAP = {
 
 C.COLOR_ENTRY_NEW           = { R = 0.3, G = 1.0, B = 0.3 } -- green
 C.COLOR_ENTRY_DECLINED_SOFT = { R = 1.0, G = 0.4, B = 0.1 } -- orange
-C.COLOR_ENTRY_DECLINED_HARD = { R = 1.0, G = 1.0, B = 0.1 } -- red
+C.COLOR_ENTRY_DECLINED_HARD = { R = 1.0, G = 0.1, B = 0.1 } -- red
+C.COLOR_ENTRY_CANCELED      = { R = 1.0, G = 0.1, B = 0.8 } -- pink
 C.COLOR_LOCKOUT_PARTIAL     = { R = 1.0, G = 0.5, B = 0.1 } -- orange
 C.COLOR_LOCKOUT_FULL        = { R = 0.5, G = 0.1, B = 0.1 } -- red
 C.COLOR_LOCKOUT_MATCH       = { R = 1.0, G = 1.0, B = 1.0 } -- white
@@ -202,6 +203,9 @@ C.SETTINGS_DEFAULT = {
     persistSignUpNote = true,
     signupOnEnter = false,
     skipSignUpDialog = false,
+    cancelOldestApp = false,
+    signUpDeclined = false,
+    rioRatingColors = true,
 }
 
 function PGF.MigrateStateV4()
@@ -269,6 +273,17 @@ function PGF.MigrateStateV6()
     end
 end
 
+function PGF.MigrateStateV7()
+    if PremadeGroupsFilterState.version < 7 then
+        if PremadeGroupsFilterState.c2f4 and PremadeGroupsFilterState.c2f4.dungeon then
+            PremadeGroupsFilterState.c2f4.dungeon.blfit = nil
+            PremadeGroupsFilterState.c2f4.dungeon.brfit = nil
+        end
+        PremadeGroupsFilterState.version = 7
+        print(string.format(L["message.settingsupgraded"], "7"))
+    end
+end
+
 function PGF.MigrateSettingsV2()
     if not PremadeGroupsFilterSettings.version or PremadeGroupsFilterSettings.version < 2 then
         if PGF.IsRetail() then -- disable features now provided by default
@@ -309,6 +324,8 @@ function PGF.OnAddonLoaded(name)
         PGF.MigrateStateV4()
         PGF.MigrateStateV5()
         PGF.MigrateStateV6()
+        -- Note: State might contain unused booleans .c2f4.dungeon.blfit and .c2f4.dungeon.brfit
+        -- which I deliberately did not delete if I need to bring back the features
 
         -- request various player information from the server
         RequestRaidInfo()
@@ -323,7 +340,6 @@ function PGF.OnAddonLoaded(name)
 end
 
 function PGF.OnPlayerLogin()
-    PGF.FixGetPlaystyleStringIfPlayerAuthenticated()
     PGF.FixReportAdvertisement()
     PGF.PersistSignUpNote()
 end

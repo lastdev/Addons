@@ -388,7 +388,9 @@ L = DBM:GetModLocalization("Jindo")
 L:SetGeneralLocalization{
 	name = "Jin'do le Maléficieur"
 }
-
+L:SetMiscLocalization{
+	Ghosts = "Fantômes"
+}
 -----------------
 --  Razorgore  --
 -----------------
@@ -458,7 +460,24 @@ L = DBM:GetModLocalization("Flamegor")
 L:SetGeneralLocalization{
 	name = "Flamegor"
 }
+----------------
+--  Ebonroc and Flamegor  --
+----------------
+L:SetGeneralLocalization{
+	name = "Rochébène et Flamegor"
+}
 
+L:SetTimerLocalization{
+	TimerBrandCD	= "Marque"
+}
+L:SetOptionLocalization{
+	TimerBrandCD	= "Afficher le chronomètre pour le temps de recharge de la marque"
+}
+
+L:SetMiscLocalization{
+	Ebonroc		= "Rochébène",
+	Flamegor	= "Flamegor"
+}
 
 -----------------------
 --  Vulnerabilities  --
@@ -484,7 +503,6 @@ L:SetMiscLocalization{
 	Holy		= "Sacré"
 }
 
-
 ------------------
 --  Chromaggus  --
 ------------------
@@ -499,15 +517,15 @@ L:SetWarningLocalization{
 }
 L:SetTimerLocalization{
 	TimerBreathCD	= "%s recharge",
-	TimerBreath		= "%s lancement",
+	TimerBreath		= "%s incantation",
 	TimerVulnCD		= "Recharge de Vulnérabilité"
 }
 L:SetOptionLocalization{
-	WarnBreath		= "Afficher un avertissement lorsque Chromaggus lance un de ses souffles",
-	WarnVulnerable	= "Afficher un avertissement pour les vulnérabilités des sorts",
-	TimerBreathCD	= "Afficher le temps de recharge de souffle",
-	TimerBreath		= "Afficher le lancement du souffle",
-	TimerVulnCD		= "Afficher le temps de recharge de vulnérabilité"
+	WarnBreath			= "Afficher un avertissement lorsque Chromaggus incante un de ses souffles",
+	WarnVulnerableNew	= "Afficher un avertissement pour les vulnérabilités des sorts",
+	TimerBreathCD		= "Afficher le temps de recharge du souffle",
+	TimerBreath			= "Afficher l'incantation du souffle",
+	TimerVulnCD			= "Afficher le temps de recharge de la vulnérabilité"
 }
 L:SetMiscLocalization{
 	Breath1		= "Premier souffle",
@@ -558,6 +576,26 @@ L:SetMiscLocalization{
     YellMage		= "Les mages aussi ? Vous devriez être plus prudents lorsque vous jouez avec la magie."
 }
 
+----------------------
+--  SoD BWL Trials  --
+----------------------
+L = DBM:GetModLocalization("SoDBWLTrials")
+
+L:SetGeneralLocalization{
+	name = "Épreuves de la saison de la découverte"
+}
+L:SetWarningLocalization{
+	SpecWarnBothBombs		= "Bleu et vert sur >%s<",
+	SpecWarnBothBombsYou	= "Bleu et vert sur VOUS",
+}
+L:SetTimerLocalization{
+	TimerBombs				= DBM_COMMON_L.BOMBS
+}
+L:SetOptionLocalization{
+SpecWarnBothBombs			= "Afficher un avertissement spécial si les bombes bleue et verte sont sur le même joueur",
+SpecWarnBothBombsYou		= "Afficher un avertissement spécial si les bombes bleue et verte sont sur vous",
+TimerBombs					= "Afficher un chronomètre pour les bombes d'épreuve bleue et verte"
+}
 ----------------
 --  Lucifron  --
 ----------------
@@ -673,7 +711,7 @@ L:SetMiscLocalization{
 }
 
 -----------------
---  The Molten Core (Placeholder?_  --
+--  The Molten Core  --
 -----------------
 L = DBM:GetModLocalization("MoltenCore")
 
@@ -681,6 +719,14 @@ L:SetGeneralLocalization{
 	name = "Le Cœur du Magma"
 }
 
+L:SetOptionLocalization{
+	YellHeartCleared	= "Crier lorsque le Cœur de cendre/braise est retiré.",
+	WarnBossPower		= "Afficher des avertissements lorsque l'énergie du boss atteint 50 %, 75 %, 90 % et 100 %"
+}
+
+L:SetWarningLocalization{
+	WarnBossPower		= "L'énergie du boss à %d%%"
+}
 -----------------
 --  MC: Trash  --
 -----------------
@@ -807,8 +853,8 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarningTeleportNow		= "Téléportation!",
-	WarningTeleportSoon		= "Téléportation dans in 20 sec"
+	WarningTeleportNow		= "Téléportation !",
+	WarningTeleportSoon		= "Téléportation dans 20 sec"
 })
 
 L:SetTimerLocalization({
@@ -839,7 +885,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarningTeleportNow		= "Téléportation!",
+	WarningTeleportNow		= "Téléportation !",
 	WarningTeleportSoon		= "Téléporation dans %d sec"
 })
 
@@ -848,9 +894,9 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningTeleportNow		= "Activer l'avertissement de Téléporation",
-	WarningTeleportSoon		= "Activer le pré-avertissement de Téléporation",
-	TimerTeleport			= "Activer le chronomètre pour la Téléporation"
+	WarningTeleportNow		= "Activer l'avertissement de la téléporation",
+	WarningTeleportSoon		= "Activer le pré-avertissement de la téléporation",
+	TimerTeleport			= "Activer le chronomètre pour la téléporation"
 })
 
 L:SetMiscLocalization({
@@ -867,7 +913,7 @@ L:SetGeneralLocalization({
 
 L:SetWarningLocalization({
 	WarningHealSoon		= "Soins possibles dans 3 sec",
-	WarningHealNow		= "SOIGNEZ MAINTENANT!"
+	WarningHealNow		= "SOIGNEZ MAINTENANT !"
 })
 
 L:SetOptionLocalization({
@@ -978,12 +1024,12 @@ L:SetGeneralLocalization({
 
 L:SetOptionLocalization({
 	TimerWave			= "Afficher le chronomètre des vagues",
-	TimerPhase2			= "Afficher le chronomètre pour la Phase 2",
-	WarningWaveSoon		= "Activer le pré-avertissement pour les Vagues",
+	TimerPhase2			= "Afficher le chronomètre pour la phase 2",
+	WarningWaveSoon		= "Activer le pré-avertissement pour les vagues",
 	WarningWaveSpawned	= "Avertir quand une vague est arrivée",
 	WarningRiderDown	= "Avertir quand un Cavalier meurt",
 	WarningKnightDown	= "Avertir quand un Chevalier meurt",
-	WarningPhase2		= "Activer l'avertissement pour la Phase 2"
+	WarningPhase2		= "Activer l'avertissement pour la phase 2"
 })
 
 L:SetTimerLocalization({
@@ -994,8 +1040,8 @@ L:SetTimerLocalization({
 L:SetWarningLocalization({
 	WarningWaveSoon		= "Vague %d: %s dans 3 sec",
 	WarningWaveSpawned	= "Vague %d: %s arrivée",
-	WarningRiderDown	= "Cavalier down",
-	WarningKnightDown	= "Chevalier down",
+	WarningRiderDown	= "Cavalier mort",
+	WarningKnightDown	= "Chevalier mort",
 	WarningPhase2		= "Phase 2"
 })
 
@@ -1019,8 +1065,8 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerMark					= "Afficher le chronomètre des Marques",
-	WarningMarkSoon				= "Activer le pré-avertissement des Marques",
+	TimerMark					= "Afficher le chronomètre des marques",
+	WarningMarkSoon				= "Activer le pré-avertissement des marques",
 	SpecialWarningMarkOnPlayer	= "Avertissement spécial quand vous avez plus de 4 marques sur vous"
 })
 
@@ -1050,10 +1096,10 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningAirPhaseSoon	= "Activer le pré-avertissement de la phase en vol",
-	WarningAirPhaseNow	= "Activer l'avertissement de la phase en vol",
+	WarningAirPhaseSoon		= "Activer le pré-avertissement de la phase en vol",
+	WarningAirPhaseNow		= "Activer l'avertissement de la phase en vol",
 	WarningLanded		    = "Activer l'avertissement pour la phase au sol",
-	TimerAir			    	= "Afficher le chronomètre de la phase en vol",
+	TimerAir			    = "Afficher le chronomètre de la phase en vol",
 	TimerLanding		   	= "Afficher le chronomètre de l'atterrissage",
 	TimerIceBlast		   	= "Afficher le chronomètre du Souffle de givre",
 	WarningDeepBreath		= "Activer l'avertissement spécial pour le Souffle de givre",
@@ -1062,14 +1108,14 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	EmoteBreath			    = "prend une grande inspiration",
-	WarningYellIceblock	= "Je suis un bloc de glace !"
+	WarningYellIceblock		= "Je suis un bloc de glace !"
 })
 
 L:SetWarningLocalization({
-	WarningAirPhaseSoon	= "Envol dans 10 sec",
-	WarningAirPhaseNow	= "Dans les airs",
+	WarningAirPhaseSoon		= "Envol dans 10 sec",
+	WarningAirPhaseNow		= "Dans les airs",
 	WarningLanded		    = "Atterrissage de Sapphiron",
-	WarningDeepBreath	  = "Souffle de givre !"
+	WarningDeepBreath	  	= "Souffle de givre !"
 })
 
 L:SetTimerLocalization({
@@ -1089,8 +1135,8 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerPhase2				= "Afficher le chronomètre pour la Phase 2",
-	specwarnP2Soon 			= "Montre un timer pour prévenir 10 secondes avant l'arrivée de Kel'Thuzad"
+	TimerPhase2				= "Afficher le chronomètre pour la phase 2",
+	specwarnP2Soon 			= "Afficher un chronomètre pour prévenir 10 secondes avant l'arrivée de Kel'Thuzad"
 })
 
 L:SetMiscLocalization({

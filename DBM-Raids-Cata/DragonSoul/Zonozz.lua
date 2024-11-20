@@ -3,9 +3,10 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
 
-mod:SetRevision("20240616044344")
+mod:SetRevision("20241115112135")
 mod:SetCreatureID(55308)
 mod:SetEncounterID(1294)
+mod:SetZone(967)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
 mod:SetUsedIcons()
 --mod:SetModelSound("sound\\CREATURE\\WarlordZonozz\\VO_DS_ZONOZZ_INTRO_01.OGG", "sound\\CREATURE\\WarlordZonozz\\VO_DS_ZONOZZ_SPELL_05.OGG")
@@ -16,21 +17,18 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 104322",
 	"SPELL_AURA_APPLIED 104377 104378 104543 106836 103434",
 	"SPELL_AURA_APPLIED_DOSE 104543 106836",
-	"SPELL_AURA_REMOVED 103434",
 	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnVoidofUnmaking		= mod:NewSpellAnnounce(103571, 4, 103527)
 local warnVoidDiffusion			= mod:NewStackAnnounce(106836, 2)
 local warnFocusedAnger			= mod:NewStackAnnounce(104543, 3, nil, false)
 local warnPsychicDrain			= mod:NewSpellAnnounce(104322, 4)
 local warnShadows				= mod:NewTargetAnnounce(103434, 3)
 
-local specWarnVoidofUnmaking	= mod:NewSpecialWarningSpell(103571, nil, nil, nil, 2)
-local specWarnBlackBlood		= mod:NewSpecialWarningSpell(104378, nil, nil, nil, 2)
-local specWarnPsychicDrain		= mod:NewSpecialWarningSpell(104322, false)
-local specWarnShadows			= mod:NewSpecialWarningYou(103434)
+local specWarnVoidofUnmaking	= mod:NewSpecialWarningSpell(103571, nil, nil, nil, 2, 2)
+local specWarnBlackBlood		= mod:NewSpecialWarningSpell(104378, nil, nil, nil, 2, 2)
+local specWarnShadows			= mod:NewSpecialWarningMoveAway(103434, nil, nil, nil, 1, 2)
 local yellShadows				= mod:NewYell(103434, nil, false, L.ShadowYell)--Requested by 10 man guilds, but a spammy mess in 25s, so off by default. With the option to enable when desired.
 
 local timerVoidofUnmakingCD		= mod:NewNextTimer(90.3, 103571, nil, nil, nil, 5, 103527)
@@ -42,34 +40,14 @@ local timerBlackBlood			= mod:NewBuffActiveTimer(30, 104378, nil, nil, nil, 6)
 
 local berserkTimer				= mod:NewBerserkTimer(360)
 
-mod:AddDropdownOption("CustomRangeFrame", {"Never", "Normal", "DynamicPhase2", "DynamicAlways"}, "Dynamic3Always", "misc")
-
 local shadowsTargets = {}
 local phase2Started = false
 local voidWarned = false
-local filterDebuff = DBM:GetSpellName(103434)
 
 local function warnShadowsTargets()
 	warnShadows:Show(table.concat(shadowsTargets, "<, >"))
 	timerShadowsCD:Start()
 	table.wipe(shadowsTargets)
-end
-
-local shadowsDebuffFilter
-do
-	shadowsDebuffFilter = function(uId)
-		return DBM:UnitDebuff(uId, (filterDebuff))
-	end
-end
-
---"Never", "Normal", "DynamicPhase2", "DynamicAlways"
-function mod:updateRangeFrame()
-	if self:IsDifficulty("normal10", "normal25", "lfr25") or self.Options.CustomRangeFrame == "Never" then return end
-	if self.Options.CustomRangeFrame == "Normal" or DBM:UnitDebuff("player", filterDebuff) or self.Options.CustomRangeFrame == "DynamicPhase2" and not phase2Started then--You have debuff or only want normal range frame or it's phase 1 and you only want dymanic in phase 2
-		DBM.RangeCheck:Show(10, nil)--Show everyone.
-	else
-		DBM.RangeCheck:Show(10, shadowsDebuffFilter)--Show only people who have debuff.
-	end
 end
 
 local function blackBloodEnds()
@@ -87,23 +65,18 @@ function mod:OnCombatStart(delay)
 	timerFocusedAngerCD:Start(10.5-delay)
 	timerPsychicDrainCD:Start(13-delay)
 	timerShadowsCD:Start(-delay)
-	self:updateRangeFrame()
 	if not self:IsDifficulty("lfr25") then
 		berserkTimer:Start(-delay)
 	end
 end
 
 function mod:OnCombatEnd()
-	if self.Options.CustomRangeFrame ~= "Never" then
-		DBM.RangeCheck:Hide()
-	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 104322 then
 		warnPsychicDrain:Show()
-		specWarnPsychicDrain:Show()
 		timerPsychicDrainCD:Start()
 	end
 end
@@ -116,14 +89,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerPsychicDrainCD:Cancel()
 		timerShadowsCD:Cancel()
 		specWarnBlackBlood:Show()
+		specWarnBlackBlood:Play("phasechange")
 		timerBlackBlood:Start()
 		self:Schedule(30, blackBloodEnds)
 		if self:IsDifficulty("heroic10", "heroic25") then
-			if timerVoidofUnmakingCD:GetTime() > 45.3 then--Heroic has a failsafe in place, if CD ends before 15 seconds after black phase ending, it's extended
+			--Heroic has a failsafe in place, if CD ends before 15 seconds after black phase ending, it's extended
+			if timerVoidofUnmakingCD:GetTime() > 45.3 then
 				timerVoidofUnmakingCD:Update(45.3, 90.3)
 			end
 		else
-			if timerVoidofUnmakingCD:GetTime() > 54.3 then--Normal also has a failsafe but much smaller
+			--Normal also has a failsafe but much smaller
+			if timerVoidofUnmakingCD:GetTime() > 54.3 then
 				timerVoidofUnmakingCD:Update(54.3, 90.3)
 			end
 		end
@@ -137,8 +113,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		shadowsTargets[#shadowsTargets + 1] = args.destName
 		if args:IsPlayer() and self:IsDifficulty("heroic10", "heroic25") then
 			specWarnShadows:Show()
+			specWarnShadows:Play("runout")
 			yellShadows:Yell()
-			self:updateRangeFrame()
 		end
 		self:Unschedule(warnShadowsTargets)
 		if (self:IsDifficulty("normal10") and #shadowsTargets >= 3) then--Don't know the rest yet, will tweak as they are discovered
@@ -150,13 +126,6 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 103434 and args:IsPlayer() and self:IsDifficulty("heroic10", "heroic25") then
-		self:updateRangeFrame()
-	end
-end
-
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	--Void of the unmaking cast, do not use spellname because we want to ignore events using spellid 103627 which fires when the sphere dispurses on the boss.
 	--It looks this event doesn't fire in raid finder. It seems to still fire in normal and heroic modes.
@@ -166,8 +135,8 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		end
 		timerVoidofUnmakingCD:Start()
 		voidWarned = true
-		warnVoidofUnmaking:Show()
 		specWarnVoidofUnmaking:Show()
+		specWarnVoidofUnmaking:Play("phasechange")
 	end
 end
 
@@ -177,7 +146,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerPsychicDrainCD:Start(8.3)--Yell comes .2 after unit event in normal and heroic, so we adjust the timers for LFR for yell being later.
 		timerVoidofUnmakingCD:Start(90.1)
 		voidWarned = true
-		warnVoidofUnmaking:Show()
 		specWarnVoidofUnmaking:Show()
+		specWarnVoidofUnmaking:Play("phasechange")
 	end
 end

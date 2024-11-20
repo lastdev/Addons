@@ -598,7 +598,7 @@ function private.ScanProfession()
 					local numResultItems = nil
 					local indirectResult = Data.GetIndirectCraftResult(spellId)
 					if type(indirectResult) == "table" then
-							numResultItems = #indirectResult
+						numResultItems = #indirectResult
 					elseif indirectResult then
 						numResultItems = 1
 					else
@@ -629,11 +629,13 @@ function private.ScanProfession()
 					else
 						assert(numResultItems > 1)
 						-- This is a quality craft
-						local recipeDifficulty, baseRecipeQuality, hasQualityMats, inspirationAmount = TradeSkill.GetRecipeQualityInfo(spellId)
+						local recipeDifficulty, baseRecipeQuality, hasQualityMats = TradeSkill.GetRecipeQualityInfo(spellId)
 						if baseRecipeQuality then
+							local rootCategoryId = TradeSkill.GetRootCategoryId(info.categoryID)
+							local maxMatContribution = Quality.GetMaxMatContribution(rootCategoryId)
 							for i = 1, numResultItems do
 								local qualityCraftString = CraftString.Get(spellId, rank, nil, i)
-								if Quality.GetNeededSkill(i, recipeDifficulty, baseRecipeQuality, numResultItems, hasQualityMats, inspirationAmount) then
+								if Quality.GetNeededSkill(i, recipeDifficulty, baseRecipeQuality, numResultItems, hasQualityMats, maxMatContribution) then
 									local recipeScanResult, matScanResult = private.BulkInsertRecipe(qualityCraftString, info.index, info.name, info.categoryID, difficulty, rank, numSkillUps, 1, info.currentRecipeExperience or -1, info.nextLevelRecipeExperience or -1, recipeType)
 									haveInvalidRecipes = haveInvalidRecipes or not recipeScanResult
 									haveInvalidMats = haveInvalidMats or not matScanResult

@@ -115,13 +115,13 @@ spec:RegisterResource( Enum.PowerType.Mana )
 spec:RegisterTalents( {
     -- Warlock
     abyss_walker                   = {  71954, 389609, 1 }, -- Using Demonic Circle: Teleport or your Demonic Gateway reduces all damage you take by 4% for 10 sec.
-    accrued_vitality               = {  71953, 386613, 2 }, -- Drain Life heals for 15% of the amount drained over 7.5 sec.
+    accrued_vitality               = {  71953, 386613, 2 }, -- Drain Life heals for 15% of the amount drained over 7.6 sec.
     amplify_curse                  = {  71934, 328774, 1 }, -- Your next Curse of Exhaustion, Curse of Tongues or Curse of Weakness cast within 15 sec is amplified. Curse of Exhaustion Reduces the target's movement speed by an additional 20%. Curse of Tongues Increases casting time by an additional 40%. Curse of Weakness Enemy is unable to critically strike.
     banish                         = {  71944,    710, 1 }, -- Banishes an enemy Demon, Aberration, or Elemental, preventing any action for 30 sec. Limit 1. Casting Banish again on the target will cancel the effect.
     burning_rush                   = {  71949, 111400, 1 }, -- Increases your movement speed by 50%, but also damages you for 4% of your maximum health every 1 sec. Movement impairing effects may not reduce you below 100% of normal movement speed. Lasts until canceled.
     curses_of_enfeeblement         = {  71951, 386105, 1 }, -- Grants access to the following abilities: Curse of Tongues: Forces the target to speak in Demonic, increasing the casting time of all spells by 30% for 1 min. Curses: A warlock can only have one Curse active per target. Curse of Exhaustion: Reduces the target's movement speed by 50% for 12 sec. Curses: A warlock can only have one Curse active per target.
     dark_accord                    = {  71956, 386659, 1 }, -- Reduces the cooldown of Unending Resolve by 45 sec.
-    dark_pact                      = {  71936, 108416, 1 }, -- Sacrifices 20% of your current health to shield you for 200% of the sacrificed health plus an additional 28,917 for 20 sec. Usable while suffering from control impairing effects.
+    dark_pact                      = {  71936, 108416, 1 }, -- Sacrifices 5% of your current health to shield you for 800% of the sacrificed health plus an additional 40,012 for 20 sec. Usable while suffering from control impairing effects.
     darkfury                       = {  71941, 264874, 1 }, -- Reduces the cooldown of Shadowfury by 15 sec and increases its radius by 2 yards.
     demon_skin                     = {  71952, 219272, 2 }, -- Your Soul Leech absorption now passively recharges at a rate of 0.2% of maximum health every 1 sec, and may now absorb up to 10% of maximum health. Increases your armor by 45%.
     demonic_circle                 = { 100941, 268358, 1 }, -- Summons a Demonic Circle for 15 min. Cast Demonic Circle: Teleport to teleport to its location and remove all movement slowing effects. You also learn:  Demonic Circle: Teleport Teleports you to your Demonic Circle and removes all movement slowing effects.
@@ -143,7 +143,7 @@ spec:RegisterTalents( {
     lifeblood                      = {  71940, 386646, 2 }, -- When you use a Healthstone, gain 4% Leech for 20 sec.
     mortal_coil                    = {  71947,   6789, 1 }, -- Horrifies an enemy target into fleeing, incapacitating for 3 sec and healing you for 20% of maximum health.
     nightmare                      = {  71916, 386648, 1 }, -- Increases the amount of damage required to break your fear effects by 60%.
-    pact_of_gluttony               = {  71926, 386689, 1 }, -- Healthstones you conjure for yourself are now Demonic Healthstones and can be used multiple times in combat. Demonic Healthstones cannot be traded.  Demonic Healthstone 60 sec cooldown.
+    pact_of_gluttony               = {  71926, 386689, 1 }, -- Healthstones you conjure for yourself are now Demonic Healthstones and can be used multiple times in combat. Demonic Healthstones cannot be traded.  Demonic Healthstone Instantly restores 35% health. 60 sec cooldown.
     resolute_barrier               = {  71915, 389359, 2 }, -- Attacks received that deal at least 5% of your health decrease Unending Resolve's cooldown by 10 sec. Cannot occur more than once every 30 sec.
     sargerei_technique             = {  93179, 405955, 2 }, -- Incinerate damage increased by 5%.
     shadowflame                    = {  71941, 384069, 1 }, -- Slows enemies in a 12 yard cone in front of you by 70% for 6 sec.
@@ -167,25 +167,25 @@ spec:RegisterTalents( {
     backlash                       = {  71983, 387384, 1 }, -- Increases your critical strike chance by 3%. Physical attacks against you have a 25% chance to make your next Incinerate instant cast. This effect can only occur once every 6 sec.
     blistering_atrophy             = { 101996, 456939, 1 }, -- Increases the damage of Shadowburn by 20%. The critical strike chance of Shadowburn is increased by an additional 50% when damaging a target that is at or below 30% health.
     burn_to_ashes                  = {  71964, 387153, 1 }, -- Chaos Bolt and Rain of Fire increase the damage of your next 2 Incinerates by 15%. Shadowburn increases the damage of your next Incinerate by 15%. Stacks up to 6 times.
-    cataclysm                      = {  71974, 152108, 1 }, -- Calls forth a cataclysm at the target location, dealing 39,235 Shadowflame damage to all enemies within 8 yards and afflicting them with Immolate.
-    channel_demonfire              = {  72064, 196447, 1 }, -- Launches 17 bolts of felfire over 2.3 sec at random targets afflicted by your Immolate within 40 yds. Each bolt deals 3,713 Fire damage to the target and 1,477 Fire damage to nearby enemies.
+    cataclysm                      = {  71974, 152108, 1 }, -- Calls forth a cataclysm at the target location, dealing 53,547 Shadowflame damage to all enemies within 8 yards and afflicting them with Immolate.
+    channel_demonfire              = {  72064, 196447, 1 }, -- Launches 17 bolts of felfire over 1.5 sec at random targets afflicted by your Immolate within 40 yds. Each bolt deals 10,146 Fire damage to the target and 5,044 Fire damage to nearby enemies.
     chaos_incarnate                = {  71966, 387275, 1 }, -- Chaos Bolt, Rain of Fire, and Shadowburn always gain at least 70% of the maximum benefit from your Mastery: Chaotic Energies.
-    conflagrate                    = {  72068,  17962, 1 }, -- Triggers an explosion on the target, dealing 19,616 Fire damage. Reduces the cast time of your next Incinerate or Chaos Bolt by 30% for 10 sec. Generates 5 Soul Shard Fragments.
+    conflagrate                    = {  72068,  17962, 1 }, -- Triggers an explosion on the target, dealing 33,464 Fire damage. Reduces the cast time of your next Incinerate or Chaos Bolt by 30% for 10 sec. Generates 5 Soul Shard Fragments.
     conflagration_of_chaos         = {  72061, 387108, 1 }, -- Conflagrate and Shadowburn have a 50% chance to guarantee your next cast of the ability to critically strike, and increase its damage by your critical strike chance.
     crashing_chaos                 = {  71960, 417234, 1 }, -- Summon Infernal increases the damage of your next 8 casts of Chaos Bolt by 25% or your next 8 casts of Rain of Fire by 35%.
-    decimation                     = { 101997, 456985, 1 }, -- Your critical strikes have a chance to reset the cooldown of Soul Fire and reduce the cast time of your next Soul Fire by 80%.
+    decimation                     = { 101997, 456985, 1 }, -- When your direct damaging abilities deal a critical strike, they have a chance to reset the cooldown of Soul Fire and reduce the cast time of your next Soul Fire by 80%.
     demonfire_mastery              = { 101993, 456946, 1 }, -- Increases the damage of Channel Demonfire by 30% and it deals damage 35% faster.
     devastation                    = {  72066, 454735, 1 }, -- Increases the critical strike chance of your Destruction spells by 5%.
     diabolic_embers                = {  71968, 387173, 1 }, -- Incinerate now generates 100% additional Soul Shard Fragments.
     dimension_ripper               = { 102002, 457025, 1 }, -- Incinerate has a chance to tear open a Dimensional Rift or recharge Dimensional Rift if learned.
-    dimensional_rift               = { 102003, 387976, 1 }, -- Rips a hole in time and space, opening a random portal that damages your target: Shadowy Tear Deals 99,592 Shadow damage over 14 sec. Unstable Tear Deals 85,195 Chaos damage over 6 sec. Chaos Tear Fires a Chaos Bolt, dealing 33,226 Chaos damage. This Chaos Bolt always critically strikes and your critical strike chance increases its damage. Generates 3 Soul Shard Fragments.
+    dimensional_rift               = { 102003, 387976, 1 }, -- Rips a hole in time and space, opening a random portal that damages your target: Shadowy Tear Deals 189,282 Shadow damage over 14 sec. Unstable Tear Deals 161,922 Chaos damage over 6 sec. Chaos Tear Fires a Chaos Bolt, dealing 63,483 Chaos damage. This Chaos Bolt always critically strikes and your critical strike chance increases its damage. Generates 3 Soul Shard Fragments.
     emberstorm                     = {  72062, 454744, 1 }, -- Increases the damage done by your Fire spells by 2% and reduces the cast time of your Incinerate spell by 20%.
     eradication                    = {  71984, 196412, 1 }, -- Chaos Bolt and Shadowburn increases the damage you deal to the target by 5% for 7 sec.
     explosive_potential            = {  72059, 388827, 1 }, -- Reduces the cooldown of Conflagrate by 2 sec.
     fiendish_cruelty               = { 101994, 456943, 1 }, -- When Shadowburn fails to kill a target that is at or below 30% health, its cooldown is reduced by 5 sec.
     fire_and_brimstone             = {  71982, 196408, 1 }, -- Incinerate now also hits all enemies near your target for 25% damage.
     flashpoint                     = {  71972, 387259, 1 }, -- When your Immolate deals periodic damage to a target above 80% health, gain 2% Haste for 10 sec. Stacks up to 3 times.
-    grimoire_of_sacrifice          = {  71971, 108503, 1 }, -- Sacrifices your demon pet for power, gaining its command demon ability, and causing your spells to sometimes also deal 6,410 additional Shadow damage. Lasts until canceled or until you summon a demon pet.
+    grimoire_of_sacrifice          = {  71971, 108503, 1 }, -- Sacrifices your demon pet for power, gaining its command demon ability, and causing your spells to sometimes also deal 8,749 additional Shadow damage. Lasts until canceled or until you summon a demon pet.
     havoc                          = {  71979,  80240, 1 }, -- Marks a target with Havoc for 12 sec, causing your single target spells to also strike the Havoc victim for 60% of the damage dealt.
     improved_chaos_bolt            = { 101992, 456951, 1 }, -- Increases the damage of Chaos Bolt by 10% and reduces its cast time by 0.5 sec.
     improved_conflagrate           = {  72065, 231793, 1 }, -- Conflagrate gains an additional charge.
@@ -195,19 +195,19 @@ spec:RegisterTalents( {
     master_ritualist               = {  71962, 387165, 1 }, -- Ritual of Ruin requires 5 less Soul Shards spent.
     mayhem                         = {  71979, 387506, 1 }, -- Your single target spells have a 25% chance to apply Havoc to a nearby enemy for 5.0 sec.  Havoc Marks a target with Havoc for 5.0 sec, causing your single target spells to also strike the Havoc victim for 60% of the damage dealt.
     power_overwhelming             = {  71965, 387279, 1 }, -- Consuming Soul Shards increases your Mastery by 0.5% for 10 sec for each shard spent. Gaining a stack does not refresh the duration.
-    pyrogenics                     = {  71975, 387095, 1 }, -- Enemies affected by your Rain of Fire take 5% increased damage from your Fire spells.
+    pyrogenics                     = {  71975, 387095, 1 }, -- Enemies affected by your Rain of Fire take 3% increased damage from your Fire spells.
     raging_demonfire               = {  72063, 387166, 1 }, -- Channel Demonfire fires an additional 2 bolts. Each bolt increases the remaining duration of Immolate on all targets hit by 0.5 sec.
     rain_of_chaos                  = {  71960, 266086, 1 }, -- While your initial Infernal is active, every Soul Shard you spend has a 15% chance to summon an additional Infernal that lasts 8 sec.
-    rain_of_fire                   = {  72069,   5740, 1 }, -- Calls down a rain of hellfire, dealing 28,756 Fire damage over 6.0 sec to enemies in the area.
+    rain_of_fire                   = {  72069,   5740, 1 }, -- Calls down a rain of hellfire, dealing 44,151 Fire damage over 6.1 sec to enemies in the area.
     reverse_entropy                = {  71980, 205148, 1 }, -- Your spells have a chance to grant you 15% Haste for 8 sec.
-    ritual_of_ruin                 = {  71970, 387156, 1 }, -- Every 20 Soul Shards spent grants Ritual of Ruin, making your next Chaos Bolt or Rain of Fire consume no Soul Shards and have its cast time reduced by 50%.
+    ritual_of_ruin                 = {  71970, 387156, 1 }, -- Every 15 Soul Shards spent grants Ritual of Ruin, making your next Chaos Bolt or Rain of Fire consume no Soul Shards and have its cast time reduced by 50%.
     roaring_blaze                  = {  72065, 205184, 1 }, -- Conflagrate increases your Channel Demonfire, Immolate, Incinerate, and Conflagrate damage to the target by 25% for 8 sec.
     rolling_havoc                  = {  71961, 387569, 1 }, -- Each time your spells duplicate from Havoc, gain 1% increased damage for 6 sec. Stacks up to 5 times.
     ruin                           = {  71967, 387103, 1 }, -- Increases the critical strike damage of your Destruction spells by 5%.
     scalding_flames                = {  71973, 388832, 1 }, -- Increases the damage of Immolate by 25% and its duration by 3 sec.
-    shadowburn                     = {  72060,  17877, 1 }, -- Blasts a target for 15,728 Shadowflame damage, gaining 50% critical strike chance on targets that have 20% or less health. Restores 1 Soul Shard and refunds a charge if the target dies within 5 sec.
-    soul_fire                      = {  71978,   6353, 1 }, -- Burns the enemy's soul, dealing 65,915 Fire damage and applying Immolate. Generates 1 Soul Shard.
-    summon_infernal                = {  71985,   1122, 1 }, -- Summons an Infernal from the Twisting Nether, impacting for 8,299 Fire damage and stunning all enemies in the area for 2 sec. The Infernal will serve you for 30 sec, dealing 7,607 damage to all nearby enemies every 1.5 sec and generating 1 Soul Shard Fragment every 0.5 sec.
+    shadowburn                     = {  72060,  17877, 1 }, -- Blasts a target for 48,297 Shadowflame damage, gaining 50% critical strike chance on targets that have 20% or less health. Restores 1 Soul Shard and refunds a charge if the target dies within 5 sec.
+    soul_fire                      = {  71978,   6353, 1 }, -- Burns the enemy's soul, dealing 94,456 Fire damage and applying Immolate. Generates 1 Soul Shard.
+    summon_infernal                = {  71985,   1122, 1 }, -- Summons an Infernal from the Twisting Nether, impacting for 10,203 Fire damage and stunning all enemies in the area for 2 sec. The Infernal will serve you for 30 sec, dealing 10,382 damage to all nearby enemies every 1.5 sec and generating 1 Soul Shard Fragment every 1 sec.
     summoners_embrace              = {  71971, 453105, 1 }, -- Increases the damage dealt by your spells and your demon by 3%.
     unstable_rifts                 = { 102427, 457064, 1 }, -- Bolts from Dimensional Rift now deal 25% of damage dealt to nearby enemies as Fire damage.
 
@@ -216,46 +216,46 @@ spec:RegisterTalents( {
     annihilans_bellow              = {  94836, 429072, 1 }, -- Howl of Terror cooldown is reduced by 15 sec and range is increased by 5 yds.
     cloven_souls                   = {  94849, 428517, 1 }, -- Enemies damaged by your Overlord have their souls cloven, increasing damage taken by you and your pets by 5% for 15 sec.
     cruelty_of_kerxan              = {  94848, 429902, 1 }, -- Summon Infernal grants Diabolic Ritual and reduces its duration by 3 sec.
-    diabolic_ritual                = {  94855, 428514, 1, "diabolist" }, -- Spending a Soul Shard on a damaging spell grants Diabolic Ritual for 20 sec. While Diabolic Ritual is active, each Soul Shard spent on a damaging spell reduces its duration by 1 sec. When Diabolic Ritual expires you gain Demonic Art, causing your next Chaos Bolt, Rain of Fire, or Shadowburn to summon an Overlord, Mother of Chaos, or Pit Lord that unleashes a devastating attack against your enemies.
-    flames_of_xoroth               = {  94833, 429657, 1 }, -- Fire damage increased 2% and damage dealt by your demons is increased 2%.
+    diabolic_ritual                = {  94855, 428514, 1 }, -- Casting Chaos Bolt, Rain of Fire, or Shadowburn grants Diabolic Ritual for 20 sec. If Diabolic Ritual is already active, its duration is reduced by 1 sec instead. When Diabolic Ritual expires you gain Demonic Art, causing your next Chaos Bolt, Rain of Fire, or Shadowburn to summon an Overlord, Mother of Chaos, or Pit Lord that unleashes a devastating attack against your enemies.
+    flames_of_xoroth               = {  94833, 429657, 1 }, -- Fire damage increased by 2% and damage dealt by your demons is increased by 2%.
     gloom_of_nathreza              = {  94843, 429899, 1 }, -- Enemies marked by your Havoc take 5% increased damage from your single target spells.
     infernal_bulwark               = {  94852, 429130, 1 }, -- Unending Resolve grants Soul Leech equal to 10% of your maximum health and increases the maximum amount Soul Leech can absorb by 10% for 8 sec.
-    infernal_machine               = {  94848, 429917, 1 }, -- Your Soul Shard spending abilities decrease the duration of Diabolic Ritual by 1 additional sec while your Infernal is active.
+    infernal_machine               = {  94848, 429917, 1 }, -- Spending Soul Shards on damaging spells while your Infernal is active decreases the duration of Diabolic Ritual by 1 additional sec.
     infernal_vitality              = {  94852, 429115, 1 }, -- Unending Resolve heals you for 30% of your maximum health over 10 sec.
-    ruination                      = {  94830, 428522, 1 }, -- Summoning a Pit Lord causes your next Chaos Bolt to become Ruination.  Ruination
-    secrets_of_the_coven           = {  94826, 428518, 1 }, -- Mother of Chaos empowers your next Incinerate to become Infernal Bolt.  Infernal Bolt
+    ruination                      = {  94830, 428522, 1 }, -- Summoning a Pit Lord causes your next Chaos Bolt to become Ruination.  Ruination Call down a demon-infested meteor from the depths of the Twisting Nether, dealing 219,312 Chaos damage on impact to all enemies within 8 yds of the target and summoning 1 Diabolic Imp. Damage is further increased by your critical strike chance and is reduced beyond 8 targets.
+    secrets_of_the_coven           = {  94826, 428518, 1 }, -- Mother of Chaos empowers your next Incinerate to become Infernal Bolt.  Infernal Bolt Hurl a bolt enveloped in the infernal flames of the abyss, dealing 87,230 Fire damage to your enemy target and generating 2 Soul Shards.
     souletched_circles             = {  94836, 428911, 1 }, -- You always gain the benefit of Soulburn when casting Demonic Circle: Teleport, increasing your movement speed by 50% and making you immune to snares and roots for 6 sec.
-    touch_of_rancora               = {  94856, 429893, 1 }, -- Demonic Art increases the damage of your next Chaos Bolt, Rain of Fire, or Shadowburn by 100% and reduces its cast time by 50%.
+    touch_of_rancora               = {  94856, 429893, 1 }, -- Demonic Art increases the damage of your next Chaos Bolt, Rain of Fire, or Shadowburn by 100% and reduces its cast time by 50%. Casting Chaos Bolt reduces the duration of Diabolic Ritual by 1 additional sec.
 
     -- Hellcaller
     aura_of_enfeeblement           = {  94822, 440059, 1 }, -- While Unending Resolve is active, enemies within 30 yds are affected by Curse of Tongues and Curse of Weakness at 100% effectiveness.
-    blackened_soul                 = {  94837, 440043, 1 }, -- Spending Soul Shards on damaging spells will further corrupt enemies affected by your Wither, increasing its stack count by 1. Each time Wither increases it has a chance to become acute, dealing 6,460 Shadowflame damage to its host every 1 sec until 1 stack remains. Wither will always become acute after reaching 8 stacks or when its host reaches 20% health.
+    blackened_soul                 = {  94837, 440043, 1 }, -- Spending Soul Shards on damaging spells will further corrupt enemies affected by your Wither, increasing its stack count by 1. Each time Wither gains a stack it has a chance to collapse, consuming a stack every 1 sec to deal 16,620 Shadowflame damage to its host until 1 stack remains.
     bleakheart_tactics             = {  94854, 440051, 1 }, -- Wither damage increased 20%. When Wither gains a stack from Blackened Soul, it has a chance to gain an additional stack.
-    curse_of_the_satyr             = {  94822, 440057, 1 }, -- Curse of Weakness is empowered and transforms into Curse of the Satyr.  Curse of the Satyr
-    hatefury_rituals               = {  94854, 440048, 1 }, -- Wither deals 50% increased periodic damage but its duration is 25% shorter.
+    curse_of_the_satyr             = {  94822, 440057, 1 }, -- Curse of Weakness is empowered and transforms into Curse of the Satyr.  Curse of the Satyr Increases the time between an enemy's attacks by 20% and the casting time of all spells by 30% for 2 min. Curses: A warlock can only have one Curse active per target.
+    hatefury_rituals               = {  94854, 440048, 1 }, -- Wither deals 30% increased periodic damage but its duration is 15% shorter.
     illhoofs_design                = {  94835, 440070, 1 }, -- Sacrifice 10% of your maximum health. Soul Leech now absorbs an additional 15% of your maximum health.
-    malevolence                    = {  94842, 442726, 1 }, -- Dark magic erupts from you and corrupts your soul for 20 sec, causing enemies suffering from your Wither to take 47,445 Shadowflame damage and increase its stack count by 3. While corrupted your active Withers are acute, your haste is increased by 15% and Chaos Bolt grants 1 additional stack of Wither.
+    malevolence                    = {  94842, 442726, 1 }, -- Dark magic erupts from you and corrupts your soul for 20 sec, causing enemies suffering from your Wither to take 64,751 Shadowflame damage and increase its stack count by 6. While corrupted your Haste is increased by 8% and spending Soul Shards on damaging spells grants 1 additional stack of Wither.
     mark_of_perotharn              = {  94844, 440045, 1 }, -- Critical strike damage dealt by Wither is increased by 10%. Wither has a chance to gain a stack when it critically strikes. Stacks gained this way do not activate Blackened Soul.
     mark_of_xavius                 = {  94834, 440046, 1 }, -- Wither damage increased by 25%. Blackened Soul deals 2% increased damage per stack of Wither.
-    seeds_of_their_demise          = {  94829, 440055, 1 }, -- Blackened Soul damage increased by 30%. When Blackened Soul deals damage, you have a chance to gain 2 stacks of Flashpoint.
-    wither                         = {  94840, 445465, 1, "hellcaller" }, -- Replaces Immolate. Bestows a vile malediction upon the target, burning the sinew and muscle of its host, dealing 3,008 Shadowflame damage immediately and an additional 69,530 Shadowflame damage over 21 sec. Periodic damage generates 1 Soul Shard Fragment and has a 50% chance to generate an additional 1 on critical strikes.
-    xalans_cruelty                 = {  94845, 440040, 1 }, -- Your Fire spells gain 10% more critical strike chance from all sources. Your Shadow spells gain 10% more critical strike chance from all sources.
-    xalans_ferocity                = {  94853, 440044, 1 }, -- Shadow damage increased by 2%. Fire damage increased by 2%.
-    zevrims_resilience             = {  94835, 440065, 1 }, -- Dark Pact heals you for 2,522 every 1 sec while active.
+    seeds_of_their_demise          = {  94829, 440055, 1 }, -- After Wither reaches 8 stacks or when its host reaches 20% health, Wither deals 16,620 Shadowflame damage to its host every 1 sec until 1 stack remains. When Blackened Soul deals damage, you have a chance to gain 2 stacks of Flashpoint.
+    wither                         = {  94840, 445468, 1, "hellcaller" }, -- Bestows a vile malediction upon the target, burning the sinew and muscle of its host, dealing 4,725 Shadowflame damage immediately and an additional 108,658 Shadowflame damage over 21 sec. Periodic damage generates 1 Soul Shard Fragment and has a 50% chance to generate an additional 1 on critical strikes. Replaces Immolate.
+    xalans_cruelty                 = {  94845, 440040, 1 }, -- Shadow damage dealt by your spells and abilities is increased by 2% and your Shadow spells gain 10% more critical strike chance from all sources.
+    xalans_ferocity                = {  94853, 440044, 1 }, -- Fire damage dealt by your spells and abilities is increased by 2% and your Fire spells gain 10% more critical strike chance from all sources.
+    zevrims_resilience             = {  94835, 440065, 1 }, -- Dark Pact heals you for 27,988 every 1 sec while active.
 } )
 
 
 -- PvP Talents
 spec:RegisterPvpTalents( {
-    bane_of_havoc    =  164, -- (461917)
-    bonds_of_fel     = 5401, -- (353753) Encircle enemy players with Bonds of Fel. If any affected player leaves the 8 yd radius they explode, dealing 74,083 Fire damage split amongst all nearby enemies.
-    call_observer    = 5544, -- (201996) Summons a demonic Observer to keep a watchful eye over the area for 20 sec. Anytime an enemy within 30 yards casts a harmful magical spell, the Observer will deal up to 8% of the target's maximum health in Shadow damage.
-    fel_fissure      =  157, -- (200586)
-    gateway_mastery  = 5382, -- (248855)
-    impish_instincts = 5580, -- (409835)
-    nether_ward      = 3508, -- (212295) Surrounds the caster with a shield that lasts 3 sec, reflecting all harmful spells cast on you.
-    shadow_rift      = 5393, -- (353294) Conjure a Shadow Rift at the target location lasting 2 sec. Enemy players within the rift when it expires are teleported to your Demonic Circle. Must be within 40 yds of your Demonic Circle to cast.
-    soul_rip         = 5607, -- (410598) Fracture the soul of up to 3 target players within 20 yds into the shadows, reducing their damage done by 25% and healing received by 25% for 8 sec. Souls are fractured up to 20 yds from the player's location. Players can retrieve their souls to remove this effect.
+    bonds_of_fel     = 5545, -- (353753) Encircle enemy players with Bonds of Fel. If any affected player leaves the 8 yd radius they explode, dealing 101,105 Fire damage split amongst all nearby enemies.
+    call_fel_lord    =  162, -- (212459) Summon a fel lord to guard the location for 15 sec. Any enemy that comes within 6 yards will suffer 34,012 Physical damage, and players struck will be stunned for 1 sec.
+    call_observer    =  165, -- (201996) Summons a demonic Observer to keep a watchful eye over the area for 20 sec. Anytime an enemy within 30 yards casts a harmful magical spell, the Observer will deal up to 4% of the target's maximum health in Shadow damage.
+    gateway_mastery  = 3506, -- (248855) Increases the range of your Demonic Gateway by 20 yards, and reduces the cast time by 30%. Reduces the time between how often players can take your Demonic Gateway by 30 sec.
+    impish_instincts = 5577, -- (409835) Taking direct Physical damage reduces the cooldown of Demonic Circle by 3 sec. Cannot occur more than once every 5 sec.
+    master_summoner  = 1213, -- (212628) Reduces the cast time of your Call Dreadstalkers, Summon Vilefiend, and Summon Demonic Tyrant by 15% and reduces the cooldown of Call Dreadstalkers by 5 sec.
+    nether_ward      = 3624, -- (212295) Surrounds the caster with a shield that lasts 3 sec, reflecting all harmful spells cast on you.
+    shadow_rift      = 5394, -- (353294) Conjure a Shadow Rift at the target location lasting 2 sec. Enemy players within the rift when it expires are teleported to your Demonic Circle. Must be within 40 yds of your Demonic Circle to cast.
+    soul_rip         = 5606, -- (410598) Fracture the soul of up to 3 target players within 20 yds into the shadows, reducing their damage done by 25% and healing received by 25% for 8 sec. Souls are fractured up to 20 yds from the player's location. Players can retrieve their souls to remove this effect.
 } )
 
 
@@ -452,24 +452,47 @@ spec:RegisterAuras( {
         duration = 10.0,
         max_stack = 1,
     },
+    demonic_art_mother_of_chaos = {
+        id = 432794,
+        duration = 60,
+        max_stack = 1,
+        copy = { "demonic_art_mother", "art_mother" }
+    },
+    demonic_art_overlord = {
+        id = 428524,
+        duration = 60,
+        max_stack = 1,
+        copy = "art_overlord",
+    },
+    demonic_art_pit_lord = {
+        id = 432795,
+        duration = 60,
+        max_stack = 1,
+        copy = "art_pit_lord",
+    },
+    demonic_art = {
+        alias = { "demonic_art_overlord", "demonic_art_mother_of_chaos", "demonic_art_pit_lord" },
+        aliasMode = "first",
+        aliasType = "buff"
+    },
     -- [428524] Your next Soul Shard spent summons an Overlord that unleashes a devastating attack.
     diabolic_ritual_overlord = {
         id = 431944,
         duration = 20.0,
         max_stack = 1,
-        copy = "demonic_art_overlord"
+        copy = "ritual_overlord"
     },
     diabolic_ritual_mother_of_chaos = {
         id = 432815,
         duration = 20.0,
         max_stack = 1,
-        copy = "demonic_art_mother"
+        copy = "ritual_mother"
     },
     diabolic_ritual_pit_lord = {
         id = 432816,
         duration = 20.0,
         max_stack = 1,
-        copy = "demonic_art_pit_lord"
+        copy = "ritual_pit_lord"
     },
     diabolic_ritual = {
         alias = { "diabolic_ritual_overlord", "diabolic_ritual_mother_of_chaos", "diabolic_ritual_pit_lord" },
@@ -771,6 +794,13 @@ spec:RegisterAuras( {
         type = "Magic",
         max_stack = 1
     },
+    ritual_overlord = {
+
+    },
+    ritual_mother = {
+
+    },
+    ritual_pit_lord = {},
     -- Your next Chaos Bolt or Rain of Fire cost no Soul Shards and has its cast time reduced by 50%.
     ritual_of_ruin = {
         id = 387157,
@@ -1080,6 +1110,32 @@ spec:RegisterHook( "spend", function( amt, resource )
         if amt > 0 then
             if legendary.wilfreds_sigil_of_superior_summoning.enabled then reduceCooldown( "summon_infernal", amt * 1.5 ) end
 
+            if buff.art_overlord.up then
+                summon_demon( "overlord" )
+                removeBuff( "art_overlord" )
+            end
+
+            if buff.art_mother.up then
+                summon_demon( "mother_of_chaos" )
+                removeBuff( "art_mother" )
+                if talent.secrets_of_the_coven.enabled then applyBuff( "infernal_bolt" ) end
+            end
+
+            if buff.art_pit_lord.up then
+                summon_demon( "pit_lord" )
+                removeBuff( "art_pit_lord" )
+                if talent.ruination.enabled then applyBuff( "ruination" ) end
+            end
+
+            if talent.diabolic_ritual.enabled then
+                if buff.diabolic_ritual.down then applyBuff( "diabolic_ritual" )
+                else
+                    if buff.ritual_overlord.up then buff.ritual_overlord.expires = buff.ritual_overlord.expires - amt; if buff.ritual_overlord.down then applyBuff( "art_overlord" ) end end
+                    if buff.ritual_mother.up then buff.ritual_mother.expires = buff.ritual_mother.expires - amt; if buff.ritual_mother.down then applyBuff( "art_mother" ) end end
+                    if buff.ritual_pit_lord.up then buff.ritual_pit_lord.expires = buff.ritual_pit_lord.expires - amt; if buff.ritual_pit_lord.down then applyBuff( "art_pit_lord" ) end end
+                end
+            end
+
             if talent.grand_warlocks_design.enabled then reduceCooldown( "summon_infernal", amt * 1.5 ) end
             if talent.power_overwhelming.enabled then addStack( "power_overwhelming", ( buff.power_overwhelming.up and buff.power_overwhelming.remains or nil ), amt ) end
             if talent.ritual_of_ruin.enabled then
@@ -1093,6 +1149,15 @@ spec:RegisterHook( "spend", function( amt, resource )
             if talent.demonic_inspiration.enabled then applyBuff( "demonic_inspiration" ) end
             if talent.wrathful_minion.enabled then applyBuff( "wrathful_minion" ) end
         end
+    end
+end )
+
+
+spec:RegisterHook( "advance_end", function( time )
+    if buff.art_mother.expires > query_time - time and buff.art_mother.down then
+        summon_demon( "mother_of_chaos" )
+        removeBuff( "art_mother" )
+        if talent.secrets_of_the_coven.enabled then applyBuff( "infernal_bolt" ) end
     end
 end )
 
@@ -1124,12 +1189,12 @@ spec:RegisterStateExpr( "havoc_active", function ()
     return buff.active_havoc.up
 end )
 
-spec:RegisterStateExpr( "diabolic_ritual", function ()
-    return buff.diabolic_ritual_overlord.up or buff.diabolic_ritual_mother_of_chaos.up or buff.diabolic_ritual_pit_lord.up
-end )
-
 spec:RegisterStateExpr( "demonic_art", function ()
     return buff.demonic_art_overlord.up or buff.demonic_art_mother.up or buff.demonic_art_pit_lord.up
+end )
+
+spec:RegisterStateExpr( "diabolic_ritual", function ()
+    return buff.ritual_overlord.up or buff.ritual_mother.up or buff.ritual_pit_lord.up
 end )
 
 
@@ -1336,6 +1401,7 @@ spec:RegisterAbilities( {
         nobuff = "ruination",
         cycle = function () return talent.eradication.enabled and "eradication" or nil end,
 
+        texture = 236291,
         velocity = 16,
 
         handler = function ()
@@ -1776,6 +1842,7 @@ spec:RegisterAbilities( {
 
     ruination = {
         id = 434635,
+        known = 116858,
         cast = function () return 1.5
             * ( buff.ritual_of_ruin.up and 0.5 or 1 )
             * ( buff.backdraft.up and 0.7 or 1 )
@@ -1789,6 +1856,7 @@ spec:RegisterAbilities( {
         buff = "ruination",
         cycle = function () return talent.eradication.enabled and "eradication" or nil end,
 
+        texture = 135800,
         velocity = 16,
 
         handler = function ()
@@ -1813,11 +1881,13 @@ spec:RegisterAbilities( {
                 if debuff.immolate.remains <= 5 then removeDebuff( "target", "immolate" )
                 else debuff.immolate.expires = debuff.immolate.expires - 5 end
             end
-            summon_demon( "diabolic_imp", 1 )
+            -- summon_demon( "diabolic_imp", 1 )
             removeBuff( "ruination" )
         end,
 
         impact = function() end,
+
+        bind = "chaos_bolt"
     },
 
     -- Conjure a Shadow Rift at the target location lasting $d. Enemy players within the rift when it expires are teleported to your Demonic Circle.; Must be within $s2 yds of your Demonic Circle to cast.
@@ -1917,9 +1987,11 @@ spec:RegisterAbilities( {
     -- Bestows a vile malediction upon the target, burning the sinew and muscle of its host, dealing $s1 Shadowflame damage immediately and an additional $445474o1 Shadowflame damage over $445474d.$?s137046[; Periodic damage generates 1 Soul Shard Fragment and has a $s2% chance to generate an additional 1 on critical strikes.; Replaces Immolate.][; Replaces Corruption.]
     wither = {
         id = 445468,
+        known = function() return talent.wither.enabled end,
         cast = 0.0,
         cooldown = 0.0,
         gcd = "spell",
+        school = "fire",
 
         spend = 0.015,
         spendType = 'mana',
@@ -1931,29 +2003,7 @@ spec:RegisterAbilities( {
             applyDebuff( "target", "wither" )
         end,
 
-        -- Effects:
-        -- #0: { 'type': SCHOOL_DAMAGE, 'subtype': NONE, 'sp_bonus': 0.138, 'variance': 0.05, 'target': TARGET_UNIT_TARGET_ENEMY, }
-        -- #1: { 'type': DUMMY, 'subtype': NONE, }
-        -- #2: { 'type': TRIGGER_SPELL, 'subtype': NONE, 'trigger_spell': 445474, 'target': TARGET_UNIT_TARGET_ENEMY, }
-
-        -- Affected by:
-        -- destruction_warlock[137046] #12: { 'type': APPLY_AURA, 'subtype': OVERRIDE_ACTIONBAR_SPELLS, 'spell': 348, 'target': TARGET_UNIT_CASTER, }
-        -- socrethars_guile[405936] #2: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 10.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- bleakheart_tactics[440051] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER_BY_LABEL, 'points': 20.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- emberstorm[454744] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- flames_of_xoroth[429657] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- flames_of_xoroth[429657] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- mark_of_perotharn[440045] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 10.0, 'target': TARGET_UNIT_CASTER, 'modifies': SHOULD_NEVER_SEE_15, }
-        -- mark_of_xavius[440046] #3: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 25.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- scalding_flames[388832] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 25.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- xalans_cruelty[440040] #2: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- xalans_cruelty[440040] #3: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- xalans_ferocity[440044] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- xalans_ferocity[440044] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 2.0, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- xalans_ferocity[440044] #3: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 10.0, 'target': TARGET_UNIT_CASTER, 'modifies': CRIT_CHANCE, }
-        -- absolute_corruption[196103] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 15.0, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- wither[445465] #0: { 'type': APPLY_AURA, 'subtype': OVERRIDE_ACTIONBAR_SPELLS, 'spell': 445468, 'value1': 3, 'target': TARGET_UNIT_CASTER, }
-        -- wither[445465] #1: { 'type': APPLY_AURA, 'subtype': CAST_WHILE_WALKING, 'target': TARGET_UNIT_CASTER, }
+        bind = "immolate"
     },
 } )
 
@@ -1975,7 +2025,7 @@ spec:RegisterOptions( {
     damageDots = false,
     damageExpiration = 6,
 
-    potion = "spectral_intellect",
+    potion = "tempered_potion",
 
     package = "Destruction",
 } )
@@ -2058,4 +2108,4 @@ spec:RegisterSetting( "immolate_macro", nil, {
 } )
 
 
-spec:RegisterPack( "Destruction", 20240824, [[Hekili:S3ZwZTnVY9BXpezr7yfrARV48vj3z6PVCY058IpD6dDQPPLOS5ejrvsQKp3rJ(TxaEbx3faKMYojJFjxexUyXUl2BybXD(39pV72frfX39pcghC14RdUA04RV8pU8Z3DBXZBJV72TrZ)w0JK)XMO1K)8FpoViB38IK0n0N98Q0OfuCKNUlBo55pvuSn)p)0NEmP4PDpmAE66pLNSE3Qi6BmplAzb9)p)t3D7d7swv833C3daeG)1JV8UBJ2v8uA2D3EBY6)gbZjlwexbEC(87ULc(fJV(IGR(Zd3tb5W9BZssZskE(W972sX5HVE4RvG95lcUKa2)8P4d3)FfLr(dc9LS5W9dZtZkoCF6sV7UDvsEroDYKueVM(p(hLSN4nrpSkEXD)Bn8GhIxLMLr(J8WINIdZ3TzE0QvXekDxECy6YLHpoFb9LVnQMrH)gZj0BCws0D3oKqmhUViznHeV5W9bJpC)Gd3ppnD1I0FSzu(U1Rt3eMSzzC2MOvJYIxhLSjNbR3H73VVcfzjB(wCXOc)rj5JWg6sSlcDWi2yXWnfJNC4(VhrOqcpyunWHbHpSB5YAaKhp6eGmsjXlZdFmA9djfL0ga5f0kYZVfKNpi5fyM88AgscgZIsweg)94nfJIwSiFu8FrvnQWN6Z2TT63Z3gVAvyru2JXfMMx3m7W9tymKLjp(uriBgnLkmVRGSyauZlF7ZRJYjkm5H)i(bU(L6VZ1Q2sM5a6meAWVsbdgGPZyAGd1isQg3vJHPFkIVAm60J84llNFxQm)AMj1slFLvgmrCdPgsFHVhZ0bkIwrLiQRsQhHkWa0t(rcrMresXHZj8pbLany52wOtreegeg)xZxTBHaDX1(EkkpSrhgA1aS(TzcjODgjgiVErJzoWcbn1LXITwcFD5aS1TRJ2SlAfJ7GGHWf7YkDOC4(Zlfgu9zfvnI988vPfcAueTURmR1f8QO1f0vTUau1yuToFlADywvTQ(FS06GiOxOwxGfTUaRADbDwRlGQ1nruRtY6CVOGP7cXFcBUGiS5tfhyUe1RTXZlOJ35n(Ui8YksnmEt86K48gfdUJE1NFtJIZtrFpDoBM614Ct31mL59hwDuOSmxlimo72yScwTjXIoWioCXMUXqQQzG2K8oSauqUjTsCBw83PCNr(QVPZ6DEurZNTAnvzTqlfnUVWfx0eGiA6u4K)6iAUwr0GLycLycFkAZIgzf)hOR(ygOaZgkDl5TIlswYXxd80)1QDK)Arkj8scLssamwWI()6H7Pp5hKSWIZA(Dr9brBeLOnSYir1VtXyi1EbuOY1KLbIIOiqYxDvy(trzlQSJFj33yn)nEEgjqEcxRma(5PKi(LeXuDcUD7hsxvWsfO8rlINNSU0iB5VxzZeyy9Oj0UmA3kcf7lov3s0Hs28izO3SiPCMae3S9jltDwdFveRucacUK1ivNPZW5pafSLDsfKuQflORO4UYUW(6Us5qvswcZafVVA(SDI4RC2UCvAAwJNxfpZFYMVyVMili)JtMzgzN33CfVsc0bekMRCVnDRNXQOuhRUoDA7OZJxQ3Mt)sib7ot(doWlCcrx4sIEELEkh3q8Eo5MT27Q4AD(aiNfguSM99I(aBAm)ETO3609OUO3LrV9l6TI1FjKGDNj)bh4foHiOf9A5z33l6vl9cuwm0f9zXOl7Bq5AsCYvHVkexuGpuW3umsaVLrjlJwLrMcmDO(sNgk1WUnmq1tXYKbkJ9gkraEy71bp)q08VTGUzp6rmZFevgcgPPV2VsRB8v8jfjsZLRIEmJUTrajaWjhQmoSAlvM2u3bMwI6yquAgnrOM60NTmjlgkSB(qOGIRgnPQGwvmISOhPHgViMOOsXf5h28TQI5jmDi5BTjEfhkOON5JO6gqq3gRBKk6t9GxlMffbSLCCzBjzxrknVbFb4zKvFJQssHrTrfrZx9C(AOWKBaQrzwFdUgwL5NG2(sYQTNOyqMcvY0RKmNm6QgRavB0s9(5KgUiPABZMOyxhj)ZMkNJ(yfDfpw63sVrrY8VrKVk1mfIYdSq3((naORqryIppFvCZElrx)zOWyngLqy8S1(hD2USvgfMoWdnYYRH)TKHR6OqIbZDk9ue5VFyx2Mrl3r81KftwEtqtdLrw6tRVZ6O)QC1vDDhwexACmolArY8QIgWznIVc30IiSIlXpHTAMmWP5vvMGSAF5kQ7(gqQrYccdKK9oHTNuStQksSkMvbi3KlbZ0IIuIC5cr3y8NUp6egdXUxurw62NEwS4uC7RmgfKpt1kbbZnoRSSeWyu11O7EfgQx76PvB)YfISKQ4os5tUl4pA92S0VhViuqeaagZuQeF)mud4Nljr0F5bUravJXjOdJNKRP6xNYs9hJYt1k2FvXTUazq4JaXBwP(uJFpF8GlGwOA0hQpEKb8zVwSkOXz43IOa(CJMu1Q)6GsX2WgEC0eTYn5KbpIy5iHgKepwyoDPcvjXHhWGb9Dbp2BMNSjUEQsc2Jy)l67XMJ2tEJCgOTw6g2svchIed(8cPIpt7iIWQ)ti1Mrvh4iwO3UvExg3SehYgsNizQAD0ZpfVMl4LlQzixQMBoiWHLlNqtmPPUWov9EHAZVk(7PeWNdgqydyvmQJdXyYb61WEjvJiKtxLlnjUAIYkWmWOgtd)LvlPEwmbdnRX0svaUm8O(qyXku7gwyDVqsLKxk(VINVROXxUyUOsQAijrGTFz6rSX8Wuuvx65PRFyxUMRE4a74jypPC2zmAaVsBccVVsS)xXcedjQn(gNGqe6dVmxSIcQYAsh2D50PRq8icQTn8w5Oq4k(SNlw9L6HG)qbRJ3yHz6zBjHsay8bHXXPGx92WlFuJdcxh5eHar6d1KH21uSPSCPdklVXcYxbriEGN8G3YsJkdq(Hvr)FXsclxsAiGXNba86ggSsS9n)CLvr5NfUoLYM4X1lYObFbsWLzRsZwyhYTjfHYqwPgXMqEnSCPDQuY5lAez4bK(EozoNtgCuPZkDXdNBLHG0l5znkjldZ2Lq3)B0mkmu7o7L5LqIFzSi)VjzcjgHHCnWJO7im6kSqdXR3)JTcxhpiTHM171dcsousWfakrBYxmcf1lvHP89lju8acrRcksLk9XlFdwTAv8HcxRWZFHUvh4MB8k)wKjiZlNTCFXROIA4YxwxZ6HwcawyWlN3fzKmexbQhG7Ftzta4TgJBoaKcO2x1vllzw4YpBSWZOs4PyH5BPMWEGb7au2gPGD4pxKXl67SFcFscfY5blM1ay4vvAIWClZfDfP0QbL(XzYyzZEIsykSw39juhO)Khx0fn1yuCPWIKYmGcN)qyqbs(CcIMlm(QIXCrx5pwY0RujG(hb4UMn1szdmvzXM1)YERedpq1fDaUlAgveTAv6pcZiVvqry(24nlAoNn(2PN6NS95S0hJ3Kmpx6P12dfEkAiGslOaDhRUU0K3DL4rRwvHZ3nWaXJZGROKwZ9SmknZZonfuCqaZG8mmrWdAbO(pdqRXhONKa8anmSy0iZIa0lMFjTZ4S6A1gUOCGFbFw0oRECdkwAVweATIoRa8xebUzgwnYYqEjEsBIflNW3iCJq2pDH4XlqVe6ICV63bnTXl9LPvMzpjcLwLY0ERc4LpTcqHTvQPWxd7VA22JLAVTPKmPAYGVziAZ)QDj6C2t4HsxN(At5CUu2vLsTX)zEJzWT)Q23ldRBFKlO1sZN5RVMT0eQLrJKy9JHE5dn0la9q8QiLEt3njwkxYJHQHk4yJ5kmtfoMsdbvUe2MaMoM)eBHVISNh4opAvoJYjynWkxYsgGg7xbalrxzFdMpVeQZmbINPnWMjrEV6CTO6Ci2ol1XLKy4H3clOox7S4HxkWdw6DdMfjw9BK96JxvC0t9b9b08PwMqcPV(jgkMhEyfaNqYaL1(tmGyN7ibP(huoeiZ16ujoVlR9cmuZrat67POwks0wl)hU7sl9wiOEgwb3Ed2WAky8LdAnOdqeyvrv72UcXOqHOpKSEZytmNqW(l0Q)67UPX8rRkVAVZzTAiZwGcuKqBviSpy4y1m7TKLZdUum)52XNXAVbJ5EKsprQSYvZ8VyScGAL9vq(PvVMfnDzUM)Zzs9uUw5gWDN05G6SeWMwLnnPPoeQI1VE6R1rkayofuRYCy1SJ)S8P(fSsXQorFH8iN675A3kOBpq)3l5dDQ7Mpdi(TJSC3Gu0hrIDzBQIeE2YABCewP8WRtynlHczy0MfHpKLSoViDJLDOcSurMlAOcoYj84V1i4KJLX92pvU4DgQA1wsguPRFiQWCTRyX(Y)6dqeRrRKIYEj1iv6AH9KnaWq92yTI8PmS27AZI0hFKOTVCh1WOyRyw1jQHrBxbvofhqm)qQs)y4q)uiqfpWhk0YV0dqvsPfJtG1XjGpoiN5uSpQc6uC(ZBKIM(7WhL2Cw6PgpZUFWqG4COQ26ij7i4aB9CcZ2iQsgzy8QCYeCmnxQAol4XVOLmQa7mkSVviGNZXJmJcCmDJrbD8dDuZ1YxmWYWiLGDZZR3ft013u2ka0iwZ3MSzXQyiGPgCu(07PdK6NYoiv(Qp7lqvvOfZvlF(bLOSG2mxdCzUg42CnqyUQvGJwmzlzTz7E45WF8u8QTH5K)Cfe7)hpLKVTQuuepmren0I4WK51yxtsu)HhdSmjTG8cCG8cAn5firET)CeiWzuoxYNRAjLqARtYYslBvGLzeuUllEbj8O1e1R0FKx12MJBQ6M2lBq3QUFpXDxXOlWA70IPzGLPzWlzAABjKHPzaW0ejmax9g085S7oKn6fY3jU)cQEQnVjwDO8jhpq8v9uMFjdE8OQMmtaZIHEiapaQP(dLX4fGy0UqVkFWB0MNGE7HMNqFTpmop9DEE67480L1WEAoF9zRIcalSNJFmbG6GfXJLpyDSSVY(7w6qgcZy0x(st0)dnLZiFRemF0cfNvS2kbS8qTG8f6pfPLAOtRXJg7lVMfg0Puq)YxKiAXw8Gxzkt5t(ijnYuAoLeSNhrE8YK5afHhemE9S0tMvj1y8cs12EHnW1(FOrdeipsoInuDVg2FolXX2IHM6dI99c24lNu(D8giPrJBfAZ3LTM1fmDiHerBDpwq7KeGSk5eIkvCsv7RjPV)siG6ZZjqgNTVlp4dPsFyGVLZoC4)WxNv1)K)mD4)GwUcKoIMPI(5OAvn2VFI(YFbheSJYj6RrPOEF8GsAttLaVv5nPqs3d7r1B3OlDnrDDh)958IP28u(sFnauoMy4fbD47nIszw2o1ikLkBT5yIH3XdvTbUZhtS3pOwakU)IFqTy2DmT)CCYrT5MeuBb67jS(Ma7dz17hpmX6G4Yq6C0k2MIE2JzPJhS8UV3No0umVMbRC8dtX4HwFObfCNfZTstEQYWzuFaCt3LJIfKUBtCSUq6TnC3URE6uleDmvqnOh4cN6iPpZ6bKI3psHmPYV6hPWFkphvs90IUdwf1RReH2whWmrU2C4NJkdTFY8xNZrvaEqtgAIg5U15AhlfzzHan2plmvigtJIwNVmD4uX20Y)gOKL92GXCoPlaCqpx(c5Hb9dXz5Xz0Mit(7X8aOr6ghEruLeNjqotLpgqLZ91GX6mrxYvPnLOeZDvA6IWL7YEwGhnWmBf6v6mpvGvYWR5AB)ZkRKU2VCo4mNe6n6mJeq5KHFZ1O)4Xq)nDrF0M507lwAuGrRwvAiNykNepd1)3D134RJVMKjsu2gcLquYlVIwtwVT8AzDj97O)PLBJZP0Ix()UJiOwq9NtdmjAxr66Osoc1fmXt1OdF9)G4aHOY9NhU)VLUHmsLp(0MT51ydorgIIubGn3oueOh6)xEwhs9lbmTXbeKJiYTIwKBYvygeiCos9TrAydANgs979lGjvxLgDd5wrlYfxlmdYU04s1Hb0Ofd7gnPzf3SPG49qjaLR8yhrQv2T9vw9lYpsO91HMV6iQyOHB2sgJkgAp2rKALpyFrE)I8JeAFDO5jhrfdnCRtYnHNyIMfG5OIEje)FUjF3wAKkuutBgnAKknvt5W9)3hUx3A8)Z)YH7jSNSNPvnQSykly48p6111kCI(f54OTh1noM4(Z2vmAXsLJkYXr7XKF0l4(WxbINN1vyN2Qy6dqOqGlQtvY0WD55X2GXrg9hne)oD)oD7cIFJO70TXvqKtSUq81E6WHLx7EK)sSWfFWeY9o337KzqV25dzaRAIR5LVafIAC459bRiXZBq3iBcD38IYVPDYYoU3VVJmZ3CEzBzgFW8uY67FHTtYG3nJ9ieMn8CtW4MvdWS(pzJ1Fm1J)KvKGPhBLSFb6X2XnMES138nNx2wMXprQXTjFdupbWW020zAf6pAi(D6(D62fe)gr3ToqkaKFSDa5MZ)or2Vahq2XT9aPqEZ3CEzBzgFW8uY67R7bkOZEGCmqQ3a9y3C(3jY(fOhBh32dK61xp2nEzBzg)ePgpQU2zltPhD1YVmureSqmt)J4S4Y6nVOYKDbfSMIotpbh02dSObUnPLfEB3gjOxSGc8IOIOhIYJ)ZdFTSXWAOJY2ndP6D1Nj0tBvT7(cCT7aAs0tLlDNH2iv1JjYyWA3mfmR1ESQ4ZFmmcLoWwkif8WCPHyTn6T6LfotgkOf40A4ksv6rufeJ0xRUIC4JwKYyy(8h56qPF0Kugg8ZUK2qGSd4sDbQQGncOdr1qmYoO(YrS2Un1SC)u2XW5uzO7D9lSnbKDkHuxFPD8H0qjY(7uDSeuqN8z85yIkKDcr98)OjhHpEqUI(E1uO)1VHdc7ylOAhq94o4kc7Uf8xd3oVPds3519U3Yxd2qWX0jxaYgm(ITEhGB9wkGlQfCWqUyFqhpTvbDzUNBA(45CQA1d0EStBWtGzKQ9yNk2rx31OJm6pAi(nIU1Qbes9GZhm0e()G9AlmB8(9wbY8UYmBSxZKTJKPvcWnQ0grY42yDdsxlLNIwsFJ(JgIFJOB7A3bAQna4)iODdmkM0UDJmTsaUrL2isg3wlOnMrQ20C32GwsZX4qI(ngeEmnbU7dQ2N7t4bdcm3he5pxOWJGgmsOxlgn2sU2iRSbT7dP7YkRG7(GAxwHcM7dIfzfmmYbuRv(jrDb1pwQWAdaq1IXa9JTk8GzcC5r14bDW6mddQwmgUpZScU8OQLcbJFUnlD(OOnphUyBUPO2WGRVhhPYs3c8Ny5RKjSUHTxPfJU72mScU8OIFQkCJNIdxFpoMLD443bbbG2VTxPfJU7YoRGlpQyP621yjp243fmttyU8y0tlqcX16CihvGa5kT78iGL3UbC7GIZlwxZHJ7IblGDxQ3v87cMDqMGaKR0UZJqRL6ozQ)f7D4klP3DcAzbWYOA)E8CTmNSL1979SH(NpE0KZqwqrEoakOFXQPV5fkVPnwLN3ndnx6dRn6Ng96BLE9rOx7IwpwUUVIYSp9lMmtNEFRLz8LIi76w33vceec8nhxb1g(QKZheWIRhLsdNOfLvhzpiuQKIc9PwNfxp9r96EpIWD7jSJSXMDwz4vcFDylIrW0lA)1rWzVSZwyCY(V7nqgPES5no6sXoRFrRDN79OHpk0A7jiwwXYBbj4kx9lfyntUindthyOyT)sVyzed5vVxQcsR)vuKDCTZI5gRNqFac6zFU1uxCPEfdEQzpIvxvaN2kNIikNRJE(Py1vsv)i2S7y(5j5yQG(A0xpyhs7U20gVgTjuV3upiTL5lY7lgs7f3Vyi)i4)fBO6rhW28d152K592YSlkUhH2Y834gG8L372)Y2iEDWv8Bs721Hapd6VyyXqf)gLxbDcx18TeLVyZpbhl7Abigv6IkeAOWVuA8lO2EDRPklV50pTvb5ID0eAFC3gdhTdQTVxrIwos9yarOn(Chsmfdx9t9pnogD2dgc(6Gw8ReL9AWn7WShl29UGkeFRDWsfOTt6hJ9EX0zVK5n2hgS(a3)QwnIJZNSXdF9VVUXD71YN5uQO(UBZ3gpNEZe857ULScAzYk29qu(i2Pyy2s6LLq666mK(yYYz0MT7MXdozBCXOOv0pP2Fv71oF2NQjqcuWpVzFU(i9oVCg)6Y8JL3OSZksF8XvXJwUJEDn4cgu2mYg0KjUv6SlH4wGVaq8f0z8vTDEFmD7SY7a7A86)r(vv8SXJM8r2DQXm7Do)Rs)9d358TzMh8IN5ADv9RsVFd3v1TzM7hUoAdjelnLsdnN7(9sGH2FvkWP1kSkpxUrwBZKiaEsySdJ5dU5MetbodtcGUXTntc)W4)A(QDlIHefQnQQcRdT1sBdbeGqaGDkRY0UxiaLosqJpa2yJNpuItySRdolySNc8OY9ZcA16OaJ0ostzE(qjMylODZ6STK23MLKss06zv7FbI2)8fS(DK6ZMEP1OG6hXw0Rn2fesTAtV0DuqntxlA3g769EoPoaD52)X6VtheDbIYrwCUBXmXUQ9R1KytfOX4g)rF5ldozOA(ydWtJYRwv1jAr8YgtLEyeQGckinoE0y)bgbz6yY0aMGaVZ(ldyTAgA8Q)hjg2Mc4c)ygtKok63DQ34pb(94xDw0W0RHOeFYxk8vS2g(rUDqP56zhQY7Of7GfLg)XQBUEIzjYeCifc(1E)nZU0Ba3gfpaE7yUcwjKlJ7tM5lOQaJAHRZEkcqJNR5Z0ZSjtKOmMAo9TfUY7fbIj)PWuA6q9MTFWq(9v30zxTFVouLd)0z1xwBeVgdWVSWVzM01APaPuvebb1zGDyH(nus)kj9IjNvHgWl7tVPaxLRNnE0vE73RJRPxUFp0qOpaIZdVPtgOdr1TTP3GHN0KsBd3wm6C1l(YZRreWLE5nGtEpVb63CL3C9Gt0qeW9vPKgdxCjigK2jkds2P(JMSFV(DvUGIX(9kp56bdvQr7GHv6xjoDpvEoiWQ3rLWqPE)u6nTMo9gW14Vzg9ITxCbdBhllTyWfJMUU25SaI2f(fLndSgxwcWWKMqQ4dAuWuMJevVgVHGLPMe9DDj30QVmzXH0hRmISc34s5ekt9(thNTz3u2xg3WdK2)fCsOxqjBFYlLT4ckzJy73FIU8I)J8PUNSJdBUwhme7YiNjVRmfWeJv)3bWx34Ekmp5BjuXf8k7DUgDuTOc0o8qtAP421jbdZVJxb9jCshCkyIy8WClCjIBbbZ4mrNGz85QxpY3OJKJSNGEZpqJOUCvWqqP)lrupf8Y0wG1RoymFYAuHDVYguBCWHT7sAvsR3L1asatm5EsvqXAQKwclgFbBhAEZ)PX9(fbxWJLxkzoGGhz8(lqELMqfMkwNunNsSxg6EKEa(xEuMBgHWgeIj5kUZfjxzMTWl(q1R9zz5Qqdlyi8WQ4BYVzOWf68f(AXn0mfQHWCYhI3rZW6Ac5toIK)gAgyLnuHucyL)s9DK6GQ)tdFUjSRQh2KJgX6XWtqLr72k4Ix(zEQKyhYKtig0Pxn6ZduYnD6SlpV(x4ociXbqnxC5yncqvEtPc1bOrEgOkb5LMsblmB3AJNyV(lpw3mB4vJMCX4r(Njq)ng30quDaaZFMKICT5P8kXjCqoaMUBkaIvt4OoRvdisetQRYyyS(VRKjtN4XKG8HQmD6srM)eqd2(xRPSdf3MJHNXdXAaYetD0us2rrf8QZ1Q125xDM6p5DMuWP0pdY)(M0K2Y0jmEuDS5ASNZfTlbK1L(ARMKuSTOJU91mtlv4F)E6psDGUmjEZI6F1gIKjj)GAL2jQVNKNdftmbJ0ax2xPGjIljgigkyHOMz6nq1RhKoR98QusxsfbvEoaS40nNbKqxzXPv2TvkEzU5kSG1yJMG7d2A5YPrPLLFJnzcyXuM55Mrtw(mi8eWuSFbCfd5c078LMXI4lXnMHd1vVX6psS)iwjQnrl0cY0PLAmvZU644sRnYCTuAposDIXCLL6aYny)(JhCIOBHEAYXshPc3uyQ80oPSy4GPzonya4plfan5LprcQIK507YFcorhZaVZK881RSEqMQVTOI1wa4w(jmVFa5dtF7WOnlcFilzDEr6g2(XnWkcvY3sb(CcJ4Btd4(DypcNWetEQApN618NaqU8EOstdoK7OVPLZys3sSYdSJ7PUQT(bWVsMvDZfThaI75OaGDXdjnSURDCyFJ38UbWYnacfpKe8sy9(w9bm57N665IG5NP6TFm4L9nNuXyDtm)GhJVbg3KuVFv2L0tKkVPODDiBvVVVPOw5TS9P8xtnKB7fs02MEIjG6tmp3TnQ9)V9o22TT1H9TmuaJOMLbBNM3wY599r0G2ehGI21e4KEzafNV9jzlljkskz562UInSxsY0fkskENQdyLF3YxRR1sXcVang4p(STYywHR9dZ)MkN08whyw0PNAkLupSnSqsqM)MOaLG(aX7FhPZm0gYW4uJi58dA8kjrnAMH3A(758A4ej4gefdkRR(w09)Y2Nx2(4flZN2pVc3O9saSdJ7LG)Wfz6Yc)9r)nBSzYWrRbPmDczsgd0yjgPTgT2ImECrkhtt91gy9smFQrYGApehErwmVtHA(yyidCKEJZsCafueJHpAjocjOsDmRrYBEDzqMs4KBeoAeMJ3v)WL4RjQjQLUjSSidq1XBaGdXimbgISmUCHyGskBea5ODbxA7K)W93USKynJASIn7eAjfgMXFkzz0bDxlXKY3n8Ego2Kdm4KukYw08xc23GywgiKL0XvuatwpbXL3pBFFPhfeINV0Lze)ijYqpM3suXFnocg7OdiaohqsrdUoqXiGbvHiLZ8Y84SUVI7eMz(g06L2ECQ(Z4xmX5qZpiqf(A6HW(QLZNbwHbjUmQMGaroVBgVFfoJr(jWqBgITRAUMMDrorvRAR(8xvFy)UDRLCuszmnbENR7vBLa1eJSY8(8hcALigqdJXTYKDWS1XkJGfud(bw9wHlU9jRWfcc2zUKDpEaiOWhck5GaLJC(AtREw9Sd8Yl()UkNas7YLc00I9zH3vlxGm9PmpaDUHYcBuyf9eu2hgBelYZO(pKsjYZG)zjFv5f5OGyvCrooYwZdbDhVB)PUwdTvtNbJBmtS9wFGsNGGi90nsCPe5jTEwEULKc0y66dvqlwz5Z0DNSAxb96zhpcG)cZ4WVDL95cKtqo8qdz8763JTWcbULz76Lwko92(C3n9Smnz60IvWY)r0tsE5OrYltHKxsYZGj5fCKCkzfb4WgjsoExhejVKLKxgGKx(ki5TnaosgjW59(t79k0mL3jHAr6O4ijH)q1MtvBNAlAgTjglv(z63WNfzGssO36yrY647SD(BJsLkSZAyktfgZt9Wpr5AniUg23d1vpQoPsAaIKfpL6jG7kPXDXzRPWDONsLKmd4ZdUtTPRLwdV11Oqv9CjN3H9QVoOBJ))po7SUhvjZ6DZ9pU)w59LN15uqHQ6kTJNQQvt(HJdDhL3hzSFogMEAr(uZG1WieGwNBKAKbT2P3Zdz)tcG3ceL5APfBv1kVShhCv0WeAHgZiTWG9q6BmyWbpCucgFC3(9BxV7H6Fno4JEdjaEhlueLDHyOjJoqybLJSnl8hjsWaerXb4rMmkGNJ4Q73uD8uTkZLs)JgheYNUBjwSs3HxPoO7ZoLQNn2C2NFh7lTJRzn6IUJmcP)hoqH9bcqjUqVhtCdJ(CBSMpwTPw6kSkaqkxG3Sx6VCBy4nu22QQ6aUI1ujkgSScZJltb65CjbqE9MR9FvxqJPT9jmKlTr8aOHayC1J6cqQObRw(OuZR2Unar7CD8qBZD9dhOiI(JPpyiVlz6JJgqi7Te(BxD3fMfJ1xac5bpWzTwd6CyhJ3KDsXs1tGxtd9s)jMwi(YsQznDmowI4VzFQWkneOwc2DZdoX4qv0Lw5a2qGPpCezQOIGVcKIOtFgJBe2hRRv5Q4ggBDwLg3VFOr6h3pX7J2NaUFgOEm4(5w6OC)mt8dhrMkQi4lb6q4(9FD9gvUFBMPTpRCfeVRCHxbLAuV5l)5a6z77ctcAWLgQC(YtY)D5Vd]] )
+spec:RegisterPack( "Destruction", 20241113, [[Hekili:S31)VTTos()wcouhR2gxl54(Lf25WU7Hf4vS37oG8oS)wCuSLteE2w(KKBF5qq(B)iPKO4xMHKswkjTVGDXRTwudhoC4mFMHJiVY)QF7QlxfMhD1Vgmo4CFF)jJi)NVm(JxDz(97JU6Y9Hl)9WBj)LDHBj)3)JOS80dlZJt2rF29BscxrPrwYH0LKNFxE((S)Yh(WTX53D4Mrlt2(HS4Th2esFJLPHRZP)7LF4QlV5q8M8Fz3v3aZaNF1LHhYVlj9QlVmE7FNq54vRIkAEu2YRUK28Z89pZFYF5XRPn5XRpSNsPh)6JFT6HJ9Pp8UWvjF)MdP70AY4VCwW5KM8x3LKFxu6Jx)lB3MSH2IRZ2hU9XRxh)hIn23hRZipC8uYd)hKx461j6KsSHtQA4)kM2TV)XRZtJ397r5z1n7ZeoJ8aYFozmVt3NgNKgNFVE3)PZcOu93UJ0F)RW0cshtgXdZssZF86K1ExD5M4S8m60vCE0w6F5xzkar7cVzt0QR(BezE5uB2(73gMLhLMT47rez(ssVgLghsM0JYhfVBDu6UWnJsJ2ggVl7XRVy(Jx7p(XRhq4rWgmJ0GGIgCZH1Rhj0bPr7jS4OSCIQwbLM8zwdhsL)3Ex(I6UHqKZju5Hh0EeTd8PpZR4X3KKLXOcq7MmUsFwzCMtudrKiLZq(IYccd(TqYFJ0w(qEb9f(wubtCczMnCt0oYO7arDy3cUGPShkAgNiLDYc)fFpEZMfBsYIwSKWFSrvHerRT16eujacbdwe9hl3CyLaFv8Kr5bJUlmBXYKKnKvj7kE(qPNx9S6ztW(qIrcy8l)nvh(sZOfQfNysyoWcdnZL(YRsmciVPkLzA8r9Z3gU7q4gU0bHclwDiLzQ7XRFhBYGQnROaswhMTjjxqJIO1nXSwxWtIwxqB16cqvJr168TO153kTo)(tRdIHosTUalADbw16cATwxavR7CR26u0uV8ar1iH0J3UCf15HGwj8YgxxwvOLzJgUywcwqwsJsFd2wD4GoerZEF0YCARLuM2Ng9nQ0zKV6B68Atp6uZuRgeuMoB4uJ76E4tnbitnyRDno9(JZuZhvMAuf8vtvuMzXDH7wvnxv)d5K)3LvYcqGyj7jVvuE86A6v1E6FBZbYFSkHG0QeLPGrP)9hVM(KVZWww97I6d3f(TKLLg5yKDrbyOIFNsXf5XKFaanujBzGPikcKGb2Si7UW0vLW5QnVxkFJwMsa7sKAli8iXlW3I2jnfZGiYnhFtYM8rh2xIRJ(OvrlJ3Ym5X(9c7RaDRhnAH1Hh2q4yFXH6EIou8UBjD9UvXSrcGty7dwU6Sg9kywjSWcEv0yvN5ZflVbYYTDwfKvkNwqxrv7y5m7R7yZdZOR4ehbkovHSTzN5hwemWMeAGvdHIm4dW2FQhaEvohj)LtMBMyVRRLkEmg0bc6jG5QZgULJyvsQtvxhonT3lvZ6YX0peZGTxi)ghKforOZCjwfpMNYXvmVNtUzl9UkUwVUdKdKaYRzxVOpWMgZpxl6ToC71f9U07nFrVvQ(dXmy7fYVXbzHtecArVwOID9IE1ShuaYLHPecGBnC0sqH3eU83xrZqSosW6hr5nqeu(A)knrFNxBEHGGA9MWBtP5AgayBn7q5Dg(xgyMcmX8rVAFqegJMkK2u6ZwhNgbbNSUlsdJxTi6B0rD4QvzJO5PLix9NQcuUedVOarhApJnk4GQNimgElzoEubuyUOimpC5M7Z2AkhavbwOK5PI)VsKhRtJicecfKZZHs8em(C6OZR01YdtVLQQtE0I8KfRIJysHPkwpqIYPkfJOpwzMZJhKN0BKhV83jaSvsUeeNhyHV99RAGIgY5unKL3VCdP5SxnJUAWqm(ftIOcE(SFVl2b0ZcmPeAuKx2(NtbUkgejbCTPp((fnA9bIfT0OL3rjtfNrSRqZIW2W)GT6Qm62vrmtvrPHRIxweAATOr8vgWxDl2wXL4NWxot64KSI4FJ3Ty9gQtLQMusKvebijgrIypo)GuUk45LPOH1gajuMg6nJ4YPeUYumDJIicgsGNH5Pj7V7EXuGuBTJlOOc3pHkCvul0eGyu8ZT2gDHkCTqkE7(0KVfTAHGavuIxeB6IODrBJJkzXaXfeosNHwmExrgMx1KMXcosBUXDjnHsACIdeqJ54GdGyXjnL8a8hcPpxaAIO3lUONQJ8fuDevswMsOZq4X6oG4DMT(OYpU)y0(aYWJaFUBx0MfRIiaP40chguTWtdjekkgFCymAS2NQ0qlSMvcLRmPAyBwQGzXvKLB7YiCriXKymflwnuYAguTvmUehjKHfYcqr2TmExu5yMGPKyyp8BrMbvkMJt2itXiXfCBqerfbc7YCPC3UmCtrgRiMkPgdl27CX8K2USJYLMmAi7HyQKn4TH3Fx02Ana5CcUOE6nZmwZILLO46RsRQtj)wi12BI(wcP5lJmHHSqq1pmJjKbF2n8w18fBnkXhAyAoMHgCSdQzKonIqHQfBArKaNfBuNJCqqL4lemaietg5LI(JOLhYRaPmqqklPQHeRIQZBCOOCVe5fP1DzY2BoKPHHbgXAD8PtzJoJWC8y2eeE)AdoSGAoN76bboA9(oGWe6DVSuSGdMY9qj32dz0HRaqlb12kzRm8QAfF(ZftErzxu)qbRJxyry6zBjHcYY6oHlXPnV4THx(Ochdxhra4vNOMm0UMInLLjoOS8mpr(emfIJwQgAzAsid5)nBc))IKMSCjAOAiRanKxwxkbTu9ZfwfLF2ITSsZRoGfrbn4lqaONUjjDL9wUpoFHClluJ4diVkrU0g9j58ffAgoQXxd205GnTapDoZxFiy0JgGAZeEvAlRxKEiMUpYyE(naY2H0LsyXVmwCIOk8cjjIHOpmaEU77DfrOkWUETVvK64O1gAEbGoAizmLGReuGDwVQec(lvHH9(mgfhziAEErYfRpEou4IWBPlu4XuQ6mfoBOV7i9VoWn)5foWidqU7oBrdJNHhvCZtgnLpgnHewOZzJ78usOIBa1dWD0PSPd1LyIBEcKqw7R6ZLhvlCc2nMAD0z4zy49TK1Bpqupa5Orc1t9Zff8Ior7gCusKqoGyXWhaXzvOjclTmcZYhj5Xbmh685yzZEIZW02AD3Uq9K(chG0zmiENjVuyvmluOflVzrqosGDctnNz8vfbFrx5pwY0RuUG(1aCxZMknRbwsvzb(ajVvIWduDrhG7IMZfHB2K89fPK3kiFr2(ODROFUj17CPlPoD)9Pj3gTlEzM0tlThk8uuSGslOaDhRUU0K3DfGPfRQWL7geG44mQvuskLEw6LQXzRgckoiGfqEggi4Gwase0a0K9b6jjahOHHfJgfwKgD0YlPDINNGRMifLb(f8jr7S64guS0(zXwRL9zLg)fXgxncl6z5wobp6Tk)feXWcEQ0l2UsrRxwsRUOGSKkOHsoXxMT5waL4zAMltSKvC3MKNwa1cFheOScWgb9o(tQrBwgQxvQpMiBnxjpY4wZbtqR6QpvZWzrlR268NFhNYBI13dJZvb(9s1LVNMc74rbtRS3RS8h87k5hNX5Co0L6LzIqxEbXRxaoNGHuc3XK77ug7PAR9Rsq(WUBVDoITKd3h5lOnefpmFXmNRxJaQf92q2woZaupEKVyO8L2GRc9bZ2ShpfBaKEshrABzBt1mU77ZGHQHQdINfjh96WOXsjJCFOcKbo25AVLZQ2xNbQI(krSW(jYDW6p1w4TiBok(wd0OCkjNaMbwLs2YqKXSOxzkwagbZotHeBOP5F7CgS1U58VZD1pnDYt(y9NFUTo3f9hK()Zo09qV3uXfLdDlKt3RwNPg7BXDxB4RB)rhU9hpIxrEA7acqZEDb1RlO(t1cQbfol5UeNXl8k7lZG8BwS7GCSm8DgsoFcg2fpSVrutPpbh8K2w2XxZZtLK8sE1krsAZoCzfL8xtmOicRq3b5jigAac0tgciKo15ibK(coKtkK59Ktj03k8YdRHmRUYvxWwp7bIisCdrX3SmlFpjGgLedSsCliX2UQESw(KnV7sXrFHq1bpafQlVCt4mPOFnriRvskXDBQULQ(JRXNdR6fOcA91iyWcFPq8XNxXNlXcBrBN24lKb2EvB7TAxiVX2TXNCjow46uX(hRSdn0UR4b4RmLXNayAULXIQTTE1MQmKdOe6bWbF744(ymVrT4PQuFB1wv9Xhcbi7C3G20Q9oQ1rGBj6ATDu6yw8W))92QOs1nfBgxGOaAwZJFQWOL(ZUyvbcwXaSYSULYB7FYFLUwrlAKU)BO0gBvuGOVvvWdyKSJ1EmOm437t8nFxkBpCzywW0oAwmEOuEr4UvlUjnEBwEYolfff2wnmXsHxwtJYJ8Xz80Uxp57(3a1ePaWmS7O7jXcNS9MW8Rm)5OxLk16dokIot4gw4nvDZAQP0KTcLbyaGtN9rA7RSs3A)lgkp52BjlLwFGA(w8ZaQ4RGAr4(nxbSLBoq46Zxe6rXh9uSIo9uC(QMgVV41(RhYtOAwlF86)zYT0)GD4M(3iT8XR)TcsqwFrJ4O8F941xUjH8F9HpzqO9b7twQ5Ncqchoc9chhaFSgW5yKJWeSZOl9XE297KcHc5KzjRYwO5JaM3yi6R6wnNPilz4eVXwp2zMxvpwSPKfrBYidWX0aOlNJy2AuDZ1qbvGDbf2rph4XMrplOa7t3euQH03G1a(JIZgPEm9kTq4sMEEi98hM4EynDLGS6F56uYqjHUiHwHAK2tEWF9)(F(41Bi2rP)tI1)D02LtpAHdRxCTHU4cwpV4Od8kGDvQbdWGxSdWaHbO2gu1GriBk873ftyFw6kj(Ucj6z5rlIxYWj0IbBqxpy5NHRxbTJcny0g0Kr7)GAY()IW8)pzrIdu6sRSQbknYNIF6aTvrRxhTK2O7toqXbUJ0QVhs)VujcRju5ujgaW5vXHAZ)4EfMyPwN4N1oGZKSjGA7fjRl)P8kFsuETbZsY9iukNBWai4jFaeamaqW0qDJivXegDJI76GAQ3MJfR(w(GJh1sf1pHplQ9XJk(SlqWZi0EastDnwfn8fA8iOtBiEe6mGZip67mp6lWJwXMXwrgsxBEtcD1C9s9W0iHf3fGWauCQo)NrvRl996Z1YzLOM2EsqvUiHyJT(OQBHQJBHdVZcA38Z6UVzPoXjtlJ(Yx0dt14gXA80kXtCuXlU6RG2XJgW(cvPT0Yl0H14rJ9LxNc30z0M(LViX0If68vM3HKsjYTKiBtOH5sOEwi5Xe)OaB8cyZUcA3rQ7b1Ccs3)4aXmxkSjlkFkj1H1lNhaxl73kTVQWA5eEFe7azB5VRszKemym9QvtqGN3eorHQe0ITfLgF5y2vwbqCJs7if0SWeH9DJRLje9CJl2qAzwdeoOKLUFJa0HajzxE69eJCK)AbKXn3tnPgUlJMEQvLaYONBE06ILGFHOPVonzlbn3V8F(3Fp1Sxo9vJ3LxKhlM)0SqAgkwFyhJ)c3qS(nYeRlm(W1xPhwK(sdZYJzfG45QPIRfuEn7PuY3QlzFTMT7koVH1STH6)Z(HJIHY0tn)Kp)NokqwEHITrZ7r3Cywu05VEMNKDehvg9YzEcFDEXU0dfdOMkb(3qSjnYzu4CLLCGlvPvz2X)55e1qTAZ9Lo40uoinmE2w5I47pLf5gDt6QnC7qfUjyw01dbcM8mfVY(x2Gt0b3qs4Wbkb3cjJ7KRKv0XOJNmOpjSMIudh81qZ60p1NdgTQ(0gaT)0Y71nEz1kSGaOIBXQTkStczdb3zTSDahg12knciyODJjUaaHNsiNR(dCqBN4wx6mMhBdrp7iFA5b4v7lIahkCUNsip9oyhdNzfstY6k4opn3in5zkDNr9bWQxzIL6FPHOHDH1BkO52RE6uDg2NkOg0dCrs1t6Z8kPkVQmc5E8nxiG4OmTbJ7foa8xyNyloCuF8JXXuXurLlDhSkQxFuS12kaSpjN4x8JPIadz8o(P(yQqRU1ucuaU2XKYbZKXoMYBwQKnwgxCTjU8JswNVIuR5I9jS)eiT5DwNX9tzyMWbDFHl(W3j06BIsZIsPvOP8vjtXck9ByzRVONv1gN50AXCDNbT)cpPIAN5EMCMwkXsI7njjRwS(q69csn9(5cBVYXlLfeU8oaA)x(bs4snuWgmolBHEJJx0cOaZ7iZBs1tGi(NDtfH7wgLLNsbwgUzZvL30ueisuxQ04Ado33FSpDhBs3ryPm62XreWXB3ZUl8z1d6PSnu8uAwv)FpqM6wrHiSTUAvO)a1RoXJ3Oh)6)Kv(ub)LhV(VNSJ0tShFk8ufHM0coc5PvtKKwn0)p8WPDzHxiF9SZPTCPJi8yhjkxSxkMbimqt6rI3tK9PHNN0JkgA0UKH8nRyO9yhjQv5ayt6rI3tK9PHNpVt13u45UL44KTdvM7tApTtNc7vIJt2(uE0j0(XVc4lLxBqN2j(tbUEWvztd3G4wLd6tDvywmn3j0MEL89gHFLVFLVDHWpt8DY(OIwKvuvWNoCi7Y(L8hIbn8gte37D(ENmh61E3qEJX(QEodTfL0WZ7nwjIN3G2X2e(U6fLFt7SLDA)WdTuy(SllBQW4nMhswF)ZSvP8Exm2JWy2OZfbJRwnal6)GnrFFQh)bRebtp2kBFe6X2PnMES138zxw2uHXli1yUb7pApEdupbWTrYrtxt(EJWVY3VY3Uq4Nj(UXaPaiEF7aYnN)TITpchq2PTDGuiV5ZUSSPcJ3yEiz9919af0ApqocK6zqp2nN)TITpc9y702oqQNE9y3KLnvy8csngl7zLF)EN2OCN57dN8mGIU6u5CNzOSSuDzH1j8I2qH0A1BMgbrs5N03rHcrb)gl0imYwWiuKZkKfO8NDLOkfDLcHrkumxjo8xbGsFy(tfW1Us)RiqPBW)md06cKSnlvwvQtSHaLCLgH1Gn1ve(t9HgdcrRlKE1vmAvyVgj)mmjlQCxfYjxg89jP(c20ICjYRnZaxb9Us(o16wW4NXoHxzVQRSvRiyxjyRTjh8u4j5zTtAVSUR9)90ig6t3wbiBH7rypgeue)0670gblcBpXLp(sovn(ATh70wGeyMOAp2P0b029vPNjFVr4Nj(wlljizmnBWqt0)n2J(E(4hEWAJmVVfZh7vnyBjBALbCJlTXKCPTgoO0JlzxkAjDn57nc)mX321Ud0uBaOFpODd0lM0UDJnTYaUXL2ysU0wdhn3iL2zwiGrkO2iPLOb(LRLyN8WTrgCTgcsr2h9i6dEKyQ5Y9Qg0hXrL79Q1Ml3Ryv8P)O9PjlhfU7(fR2NzYNcw766(rkTsA0hRafdCK(4TRR7hZJdhkAXgzbSVPVluMcZJ9jorbPVzt0YCasd2ix5DN7bm0MO0UT4Q6B67cLDqQG0ix5DN7bxL7AoMpbfqhMVWhEa3lPz3KwZL9Bh6)UXJM(weLkYZbib90E0Z7IHMbGATGe06BFR9TFzFxnN8ekl)WZOSuVV7szzTQlsMxBD2uWiiW5uPcPnCswEQ50ieMqZrtdsGq)u10iO)RsTd91suhZf)kgTqsLBhL)1Eo7UDDorXi4R8Re5BtE(FQg6h32UGq0ojJNOIGEyJ6q6QUCJ666CKJrWUsx(Ne(TnR9EQg6h3ApeI2nR9Web9WApKUQlx7HSXmhXENGfbt3QtJaCr8kSdHTns2(F7O7eyB4BgDlWTHrmHtdqfccCvKQsuS9eUJM)X21YEM8DIfe8DCTftEyB(z3WPiHh1ReVDIbe7bDdN2LrjnbZOE1zrKc50U25Qjiy4LfNr6N2OimrkbUTH3FxKQl9IFeD01Jg96ZVuB0z4oSiiWkeR2w5gi(Q6uEgPpAnp)ASwpZXAHvTRhnEVNEGKhlHrYR2XPkILSUJOAlrH62jqDWiFNAgbdx9XxK1iyxBFaPyW2BTfpu01n25A)IkfXYqlc9bRA)6qsvFhORqoHlh9gsYJ2GspuhILegXOsBuH6(Axhefk7Q0(0gbcT7WfBekAlucrKzhLJI(mYkSDjR7rSG0tDiGfmqUDZg09S3hTqBef2FlcgT35Qw7hU35SFYKxiOmAbNHM15MBig01a9Gs(0UWZqNe4FFEaA(JAYq6Nco4XV(lm9akj)C1P7o9AGolNovZUCixspxY)0vxsmRUoEd)6cjBe)BVy(A6zAEY2YR5L3hVEo9Cf)IXdozFu(OWn0dU2VQ9AVB(hkzqsRGFEv9N8E6Dn486BJX3ZUrrNNNC7TBIgT(a9uv)XV(V941T)A933foqPGHQyJuXcbJF53EC8tqt4Naq(r5cdUb0ROmFEFY(5SBs5s66)(6Rk35Jhn998JE)52)EdEs(QiG)EdAYip4Oh5A1I(tsfZdxl6mDqhVt4pQla)MiIRU5)1w9Ovs6Viz)ay2hOI6Bc7Fu3i)nH953u)qIF0cMNnu69RB)MmocqghMl8FHPK8wFZ03e2uPMl1e6GLl)toxgyKlrkQFehCn6UAVjmz1D4UQX5arJZ(cMM7Pc9TtQzAOI13XI9TtQBAOIw3ub)6Yef0DY(7lp2siZsKPn2vNVlKIFdXxohZ5lO(4c6TE)GtgQgx2a8uc4vQe5eViEvgPYpCgvq1bKhPxH9dm2Kz0RUEygc8QMNHZUyeA8gRhMKCPeLmfxUevxZ3xmhb8jpX6WpU(M4HgzrzlOVg)gMx8xvVbYle2vsOm7nLg0Q9wXUahS3SWKO3xCdOtmHqKidvfjt8guBpPoseMrWN6RXD7dNcguAejpGozUViveQEiABrbEwDofnF6uXxNEPN)(SOLZhoKzsXXRYS3b2y1RXm4wPEfM55XM2uA2GNp(zw5TI1BP3P6EdQVzXUiqA(JBtIY)IxgVIRGQw4rBtr3RCxPpyyDhmB(5p8GERyS1S5vSvG3a8BF6lMlDdhkovZsuLGThGTCKE(BPF7uE203wqgW79rVza3QNez35Ep8GoTMn5HhG6c9oqCC4nB6a9wuCXl6ny4jvPnPsAlgbM6DG47kjeW9F4fGdEpVb6xIHx85bNOriGRUqjnM6PlHPbPTM1Wm7m)rtF4b9leBbfJhEq5jFEWlW1vslPMtVP0fxWW3cFMvbtdxIMe(9JmVzvyjeAdFMdsDEqLYKY4HOMvbtbCxDE4HQu4QTDmehqcMhiRWtYYgiDm3rMPWnTWgIvIE(1WTbHMDNaFzCLyrA)i9kT(iF1vJZz9zpXV8Pl8oGorlBW7HhorF(U(hRfuEYUIfGuPFBwFH)0bdXUdR56lfMn4Qbf)ZbW3s1EkYu5lxsrJdkfEIgFuSae0M9qtA54(aiHSuF1Gc6)4Kw4aXeZ4H5czcIlebt(8Pobt(lvVvDVqNi9SxJoZNr1unBvWqWz)JzQEg4DWSGOxTZ4(V14c7EWnO24GZD3NPvzToFUgygWKqUJufuSXkPLWdGtW2HMN)xmqbol4S6qYKIshaOjx2FgYRubRyM4ogO5RI)Yqx)WdCWtMaSdb8lNx7Cr2bNrl8Ipu92cwEETGlyJctqj1VnGNfujyabCunAkBT5yweVAFHv7eYBWise5TlWubCHZoF0NgOek)S5tEx5VuBWL4VLUSCI4MfvWaIFIsyrOv20xJcUDrbxk(KT(8sAmmV0CsnhwBo5zKVUqs2QkoHtmeRiaLYle7xkVEzhu8pQwmvf7JYcicm2tqxiEyVaoz5NPXIQ2SOSJ6I3sllxeaA)Pot4kKIdcX6c6AyOSYmskQYHNpA6zJh5)2HcwmQCBRBfHEIPl96tA8RBjkTklnfGOxE)sI7Rcx8zfZMWbkaa)Pk7WwHbHc4vnOcrkP6PItXY)SWE7mIfHHAIbw6RyMJ9Ncc6X)ZA66qX(4yio1HPmazGP2BkXjpeieu62fPiWXOU6QR5(JLvYVy(hhtpk(1ii2eHgf)mibvB1u2b(VCCOd06u93sNs0iReGcv)5u8ZrEyqs9IMLgb9eGvQVQ38Nn9MbcgXMn1vTiEgSS5iJwRDC3WL(ZHIPqtnLduhslvDFeoS3dxbselrJ6g9EzaGltINbDqJcH2OGFiqiNW1okecMtWxn1t9qQRAzDsXXAT0whQLTe)PKppvcuGkds83kGw1l6Ra1ipQU4CSSjuV6JBx6)V9UA7TTTbc)BXOacMXifsYod7d2EFF)iQrITkwqYSnKDY2am2V9XtIVDK3rkPi3001TVK2Wxo(ChV34PRBTgVHZHElD(9cT18FGDtHWlL2JLcs7MFkM0WXajKzg(nakrsH14aluo2UC1Vylgd)O4WYLwBaExZ7QFFPlmaT2hMSEXgLFJgjNVCnazcmITGZmX1Xb1XrCs(FJOeLKfIUiSMGHsZnZZMGI9SRYmbwihimysLxlvaJQ11I7(8cMStVSmJ8Vgf2SerMGg15h3(K8UMCnz3YsXnUybv(QholIe9lgoEZMQXHzPpEEGuedSCBUF)Unpu)4FE68H9MYBkJp3I6lF4SC6n(tsm8PLLwlBMFfpH5MNY2sTzut4cXIJljni5ZBSEVOl8FJGrZQA9b26(r7xIkX67LN1H53HGyHhzxBO9BHIBKSUASJ9DU8AYO5BeekVdvM7SD)TuBx9Fwmod)106cJ57Px5(AGLJns6PSwBJISZtKfTmMeFuQJPjOhv0vVoLUkUI05hTSLKQaN4u1Nkd6MP57ZF63wKPkKsYLgZvgFyhZv(BwPs56YuQeNqJaF3xOtm(w46eX8pdLdgVlcMfD25A5s9ShAJR3ZaFG7PwLyHqXxZA0Xir7ndtqrIExAoMOA6PzTPtq(aFdVzorpcJIsaLnxdw4(NfAJxH2WRwMVIB8QzY2lb4oJtNu8h)d3zvH)(O(t2KdLfMUOalQt9tKSYayAn4gt3ImESOphtZ3SuK1RNLYe5HJI7YQoCrwQquXw(yeiJCKUYfOvedueJHphkokjOQAlwpL1QLE7fVfLEk3mE0OxNGauUYPTc5BuQjdQULhrrgsaiCdqclg9k4STLX9GpgQmPpg2NlrDbNimkLEo1FRHwAI7kCpJAonO8BTguJLsss7p318Vr)xHuvgjtL0PtuGl7ocgbFmY(XbpkaIhdSKIRscgQXCnHI)3eexQJoIb4CajUgJJ7HrzG9Pni(OFdE(MsNYJGA8tNsA4N(rvvlhZCmAH4Rvct(2dw45dPalwiecc833Ra80wVA(TO9HKreg(vkbEptfrs1UEgFJRnqJMBKN5mIzUgdB((ILteAZoWp3MGECJabwku1zyC2OipJ6xiLLYBnF6Sq1vqRAQ99kK8PFnBkU6CkxKF5Ix6skwKZKiL55rodq38q33fA1qBucA8kPvWjsniq0lbGp(zzKfYTbqwPILGXOBYdRki7fdQE(bSROgPGMxd3NdBtdMqq53UYSKEgkzjt4GHm(DDzQfwic7hf6gvbvlSO9Jl391ezA6dZkwVcX1fDKLxoAS8Y(WYljLzcz5fCS8IEXYlgjwE4UoiwEjllVmclV8nWYHF4GCYsRUs)WcUZZ3(u4LkLH5YoRO3mPo1nttyCVWdltY9KsohR2EUAxdB8yD1RWjvYUceBt)CM9a7kPXU0SxkSlOzIrjIZc5FCWoyt38hqdYWX0kuhpY5D8a8hrzWORAK(3F)tFs3wdnR3J7F9WtspE(BvQCbOs)S6)vvnm5xon0DuEhnMRiPG7zf5ZmdwrOyQAtUX9fVQZTZZJ2JGEqJ3fWJEq6GsvneV0iIAjtwJLKmJ0si2JRVJsrh8BeCcrMNpCy3MV(s9)mIitNjhK8KLuskcrm0Hbmb4beXqZQ)UdhgkjjAeoYHbg8sj3VFB1PZ1WdlD)ZppIqZhZ7qw8rddGbe9p7uyv2SXy7kC2gaNBLwPkrkYCI9BHPgQluqqgMv7Xu3KCo3MIHtvBRRoFcI(wUvYP9A1(2O8m842AG5yy9fbVOhAzfMoRwrqVmRhK8MTp43sZcgZLluFAbiQHGyCT86sqq()GLpj38(D7IW0UrLbS2hz8LJumr)X0feY76M64OiecCqYEzfS1xiUnLOVyzzExioR)D4WQ0cEt)Qulv9u8D1yDhxXScXKvuZA2yCSeP7ZTWdapeQws265HNyAQk5sdPXBi007oq2xOiANtwKC63Ye4HTTtUoxiPRuRZ6(j97NuHUj9t02o)ai9Zq1JH0p3sNu6NzIV7azFHIODp7Hi9730x7S0)xol))V8Fd]] )

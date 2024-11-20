@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2441, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024554")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(175732)
 mod:SetEncounterID(2435)
 mod:SetUsedIcons(1, 2, 3)
@@ -173,7 +173,7 @@ local specWarnBansheesBane							= mod:NewSpecialWarningStack(353929, nil, 1, ni
 local specWarnBansheesBaneDispel					= mod:NewSpecialWarningDispel(353929, "RemoveMagic", nil, nil, 3, 2)--Dispel alert during Fury
 local specWarnBansheeScream							= mod:NewSpecialWarningYou(357720, nil, 31295, nil, 1, 2)
 local yellBansheeScream								= mod:NewYell(357720, 31295)
-local specWarnRaze									= mod:NewSpecialWarningRun(354147, nil, nil, nil, 4, 2)
+local specWarnRaze									= mod:NewSpecialWarningRunCount(354147, nil, nil, nil, 4, 2)
 local specWarnDeathKnives							= mod:NewSpecialWarningMoveAway(358434, nil, nil, nil, 1, 2, 4)--Mythic
 local yellDeathKnives								= mod:NewShortPosYell(358434)
 local yellDeathKnivesFades							= mod:NewIconFadesYell(358434)
@@ -665,6 +665,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			soakCount = 4
 		end
 		if self.Options.SpecWarn358588soakcount then
+			---@diagnostic disable-next-line: param-type-mismatch
 			specWarnMerciless:Show(self.vb.merciCount.." / "..soakCount.."x")
 			specWarnMerciless:Play("helpsoak")
 		else

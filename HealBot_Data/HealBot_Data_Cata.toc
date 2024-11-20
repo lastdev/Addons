@@ -1,14 +1,15 @@
-## Interface: 40400
+## Interface: 40401
 ## Title: HealBot Data
 ## Author: Strife
 ## Notes: HealBot data, localizations, player saved variables and libraries
-## SavedVariablesPerCharacter:  HealBot_Config, HealBot_Config_Spells, HealBot_Config_Buffs, HealBot_Config_Cures, HealBot_Config_ActionIcons, HealBot_Config_ActionIconsData, HealBot_ActionIcons_Loadouts, HealBot_ActionIconsData_Loadouts, HealBot_Spell_Loadouts
-## SavedVariables: Healbot_Config_Skins, Healbot_Config_Aux, HealBot_Globals, HealBot_Class_Spells, HealBot_Class_Buffs, HealBot_Class_Cures, HealBot_Skins_ActionIcons, HealBot_Skins_ActionIconsData, HealBot_Spells_Loadouts
+## SavedVariablesPerCharacter:  HealBot_Config, HealBot_Config_Spells, HealBot_Config_Buffs, HealBot_Config_Cures, HealBot_ActionIcons_Loadouts, HealBot_ActionIconsData_Loadouts, HealBot_Spell_Loadouts
+## SavedVariables: Healbot_Config_Skins, Healbot_Config_Aux, HealBot_Globals, HealBot_Class_Spells, HealBot_Class_Buffs, HealBot_Class_Cures, HealBot_Skins_ActionIcons, HealBot_Skins_ActionIconsData
 ## IconTexture: Interface\AddOns\HealBot\Images\HealBot.tga
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 
+Libs\AceSerializer-3.0\AceSerializer-3.0.xml
 Libs\LibSharedMedia-3.0\lib.xml
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
@@ -25,6 +26,7 @@ Libs\LibRange\HealBot_Range.lua
 Locale\HealBot_Global.lua
 Locale\HealBot_Localization.en.lua
 Libs\HealBot_Libs.lua
+HealBot_Vars.lua
 HealBot_Data.lua
 
 Locale\HealBot_Localization.br.lua

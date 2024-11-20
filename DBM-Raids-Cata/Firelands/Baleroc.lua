@@ -1,15 +1,11 @@
 local mod	= DBM:NewMod(196, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
 
---normal,normal25,heroic,heroic25 in classic
-if not mod:IsClassic() then--Future planning, so cata classic uses regular rules defined in toc and not timewalker rules for this zone
-	mod.statTypes = "normal,heroic,timewalker"
-end
-
-mod:SetRevision("20240428104752")
+mod:SetRevision("20241115112434")
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
+mod:SetZone(720)
 --mod:SetModelSound("Sound\\Creature\\BALEROC\\VO_FL_BALEROC_AGGRO.ogg", "Sound\\Creature\\BALEROC\\VO_FL_BALEROC_KILL_02.ogg")
 --Long: You are forbidden from entering my masters domain mortals.
 --Short: You have been judged
@@ -52,7 +48,6 @@ local timerTormented		= mod:NewBuffFadesTimer(40, 99257, nil, nil, nil, 5)
 
 local berserkTimer			= mod:NewBerserkTimer(360)
 
-mod:AddRangeFrameOption(5, 99257)
 mod:AddInfoFrameOption(99262, "Healer")
 mod:AddSetIconOption("SetIconOnCountdown", 99516, true, 0, {1, 2})
 mod:AddSetIconOption("SetIconOnTorment", 99256, true, 0, {3, 4, 5, 6, 7, 8})
@@ -73,13 +68,6 @@ local function showCountdownWarning(self)
 	table.wipe(countdownTargets)
 end
 
-local tormentDebuffFilter
-do
-	tormentDebuffFilter = function(uId)
-		return DBM:UnitDebuff(uId, tormentDebuff)
-	end
-end
-
 function mod:OnCombatStart(delay)
 	lastStrike = 0
 	currentStrike = 0
@@ -91,9 +79,6 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	if self:IsHeroic() then
 		timerCountdownCD:Start(-delay)
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Show(5, tormentDebuffFilter)--Show only people who have tormented debuff.
-		end
 	end
 	if self.Options.InfoFrame then
 		--DBM.InfoFrame:SetHeader(L.VitalSpark)
@@ -104,9 +89,6 @@ end
 function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
-	end
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
 	end
 end
 
@@ -171,7 +153,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		bladesName = DBM:GetSpellName(99353)
 		lastStrike = GetTime()--Set last strike here too
 		strikeCount = 0--Reset count.
-		timerStrikeCD:Start(self:IsHeroic() and 3 or 6, bladesName)
+		--On retail, it's 3 seconds on heroic any size, and 6 on normal any size
+		--In Classic, it's a 10 vs 25 thing instead
+		if self:IsDifficulty("normal25", "heroic25", "heroic") then--The very first timer is subject to inaccuracis do to variation. But they are minor, usually within 0.5sec
+			timerStrikeCD:Start(3, bladesName)
+		else
+			timerStrikeCD:Start(6, bladesName)--6 seconds on 10 man
+		end
 	elseif spellId == 99350 then--Inferno Blades
 		bladesName = DBM:GetSpellName(99351)
 		lastStrike = GetTime()--Set last strike here too
@@ -186,9 +174,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			if expireTime then
 				local remaining = expireTime-GetTime()
 				timerTormented:Start(remaining)
-			end
-			if self.Options.RangeFrame and self:IsHeroic() and self:IsInCombat() then
-				DBM.RangeCheck:Show(5, nil)--Show everyone, cause you're debuff person and need to stay away from people.
 			end
 		end
 	end
@@ -220,9 +205,6 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 99257 then--Tormented
 		if args:IsPlayer() then
 			timerTormented:Cancel()
-			if self.Options.RangeFrame and self:IsHeroic() and self:IsInCombat() then
-				DBM.RangeCheck:Show(5, tormentDebuffFilter)--Show only debuffed poeple again.
-			end
 		end
 	elseif spellId == 99516 then
 		if args:IsPlayer() then

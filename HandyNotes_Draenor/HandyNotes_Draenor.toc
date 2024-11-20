@@ -1,6 +1,6 @@
-## Interface: 110002
+## Interface: 110005
 ## Title: HandyNotes: Draenor
-## Version: 4.2
+## Version: 4.3
 ## Notes: Draenor Rares and Treasures simplified
 ## Author: Lorade
 ## RequiredDeps: HandyNotes

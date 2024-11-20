@@ -48,7 +48,7 @@ DB.nodes = {
         [56924692] = { icon = "auctioneer", npc = 219037, sublabel = '' }, -- Auctioneer Durzin
         [56834746] = { icon = "auctioneer", npc = 219039, sublabel = '' }, -- Auctioneer Zyrgas
 
-        [51174334] = { icon = "portal", label = L["Portal to The Timeways"], level = 80 }, -- RE(MOVED) / Needs S1?
+        [53963872] = { icon = "portal", label = L["Portal to The Timeways"], level = 80 },
 
         [54023820] = { icon = "vendor", npc=222561 }, -- Agmera
 

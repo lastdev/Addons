@@ -153,6 +153,8 @@ function private.HandleNotification(notification, arg)
 		chatMsg = arg
 	elseif notification == AuctionHouse.NOTIFICATION.BID then
 		chatMsg = arg
+	elseif notification == AuctionHouse.NOTIFICATION.CANCELLED then
+		chatMsg = arg
 	end
 	if not chatMsg then
 		return

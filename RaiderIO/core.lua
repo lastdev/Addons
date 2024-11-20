@@ -394,6 +394,7 @@ do
     ---@field public previousScoreTiersSimple table<number, ScoreTierSimple> @DEPRECATED
     ---@field public CUSTOM_TITLES table<number, RecruitmentTitle>
     ---@field public CLIENT_CHARACTERS table<string, CharacterCollection>
+    ---@field public CLIENT_RECENT_CHARACTERS table<string, RecentCharacterCollection>
     ---@field public CLIENT_COLORS table<number, ScoreColor>
     ---@field public CLIENT_CONFIG ClientConfig
     ---@field public GUILD_BEST_DATA table<string, GuildCollection>
@@ -425,7 +426,7 @@ do
     ns.OUTDATED_BLOCK_CUTOFF = 86400 * 7 -- number of seconds before we hide the data (block showing score as its most likely inaccurate)
     ns.PROVIDER_DATA_TYPE = { MythicKeystone = 1, Raid = 2, Recruitment = 3, PvP = 4 }
     ns.LOOKUP_MAX_SIZE = floor(2^18-1) -- the maximum index we can use in a table before we start to get errors
-    ns.CURRENT_SEASON = 1 -- the current mythic keystone season. dynamically assigned once keystone data is loaded.
+    ns.CURRENT_SEASON = 0 -- the current mythic keystone season. dynamically assigned once keystone data is loaded. 0-index based.
     ns.RAIDERIO_ADDON_DOWNLOAD_URL = "https://rio.gg/addon"
     ns.RAIDERIO_DOMAIN = "raider.io"
 
@@ -442,6 +443,9 @@ do
             },
             ["Ysondre"] = {
                 ["Isakem"] = "Raider.IO Developer"
+            },
+            ["TwistingNether"] = {
+                ["Piccoò"] = "Raider.IO Super Tato"
             }
         },
         ["us"] = {
@@ -454,10 +458,18 @@ do
                 ["Infoxicated"] = "Pogged out of her mind"
             },
             ["Thrall"] = {
-                ["Firstclass"] = "Author of mythicpl.us"
+                ["Firstclass"] = "Author of mythicpl.us",
+                ["Hulahoops"] = "Raider.IO Cool Kid"
             },
             ["Tichondrius"] = {
-                ["Johnsamdi"] = "Raider.IO Developer"
+                ["Johnsamdi"] = "Raider.IO Developer",
+                ["Vitamiinp"] = "Content Manager of Raider.IO"
+            },
+            ["Mal'Ganis"] = {
+                ["Qbgosa"] = "Raider.IO Support Dragon"
+            },
+            ["BurningBlade"] = {
+                ["Pelinal"] = "Raider.IO Developer"
             }
         }
     }
@@ -668,24 +680,6 @@ do
         end
 
     end
-
-    ns.REGIONS_RESET_TIME = { -- Maps each region string to their weekly reset timer.
-        us = 1135695600,
-        eu = 1135753200,
-        tw = 1135810800,
-        kr = 1135810800,
-        cn = 1135810800,
-    }
-
-    ns.KEYSTONE_AFFIX_SCHEDULE = { -- Maps each weekly rotation, primarily for Tyrannical (`9`) and Fortified (`10`) tracking.
-        9,  -- Tyrannical
-        10, -- Fortified
-    }
-
-    ns.KEYSTONE_AFFIX_INTERNAL = { -- Maps each affix ID to a internal string version like `tyrannical` (`9`) and `fortified` (`10`).
-        [9] = "tyrannical",
-        [10] = "fortified",
-    }
 
     ns.KEYSTONE_AFFIX_TEXTURE = { -- Maps each affix to a texture string Tyrannical (`9`/`-9`) and Fortified (`10`/`-10`).
         [-9] = ns.CUSTOM_ICONS.affixes.TYRANNICAL_OFF("TextureMarkup"),
@@ -914,8 +908,15 @@ do
     ---@field public runs CharacterMythicKeystoneRun[]
 
     ---@return table<string, CharacterCollection>
-    function ns:GetClientData()
+    function ns:GetClientCharactersData()
         return ns.CLIENT_CHARACTERS
+    end
+
+    ---@alias RecentCharacterCollection unknown[]
+
+    ---@return table<string, RecentCharacterCollection>
+    function ns:GetClientRecentCharactersData()
+        return ns.CLIENT_RECENT_CHARACTERS
     end
 
     ---@class ScoreColor
@@ -1523,6 +1524,7 @@ do
         useEnglishAbbreviations = false,
         showMainsScore = true,
         showMainBestScore = true,
+        showWarbandScore = true,
         showDropDownCopyURL = true,
         showSimpleScoreColors = false,
         showScoreInCombat = true,
@@ -2527,15 +2529,34 @@ do
         return SCORE_STATS[level]
     end
 
-    ---@param weekOffset? number @optional weekly offset. set this to 1 for next week affixes.
-    ---@return number, string @`affixID`, `affixInternal`
-    function util:GetWeeklyAffix(weekOffset)
-        local timestamp = (time() - util:GetTimeZoneOffset()) + 604800 * (weekOffset or 0)
-        local timestampWeeklyReset = ns.REGIONS_RESET_TIME[ns.PLAYER_REGION]
-        local diff = difftime(timestamp, timestampWeeklyReset)
-        local index = floor(diff / 604800) % #ns.KEYSTONE_AFFIX_SCHEDULE + 1
-        local affixID = ns.KEYSTONE_AFFIX_SCHEDULE[index]
-        return affixID, affixID and ns.KEYSTONE_AFFIX_INTERNAL[affixID]
+    ---@param dungeon Dungeon
+    ---@return number goldTimeLimit, number silverTimeLimit, number bronzeTimeLimit
+    function util:GetKeystoneTimeLimits(dungeon)
+        local timers = dungeon.timers
+        local goldTimeLimit = timers[1]
+        local silverTimeLimit = timers[2]
+        local bronzeTimeLimit = timers[3]
+        return goldTimeLimit, silverTimeLimit, bronzeTimeLimit
+    end
+
+    ---@param goldTimeLimit number
+    ---@param silverTimeLimit number
+    ---@param bronzeTimeLimit number
+    ---@param level? number
+    ---@return number goldTimeLimit, number silverTimeLimit, number bronzeTimeLimit
+    function util:ApplyKeystoneTimeLimitsForLevel(goldTimeLimit, silverTimeLimit, bronzeTimeLimit, level)
+        if level and level >= 7 then
+            if goldTimeLimit > 0 then
+                goldTimeLimit = goldTimeLimit + 90
+            end
+            if silverTimeLimit > 0 then
+                silverTimeLimit = silverTimeLimit + 90
+            end
+            if bronzeTimeLimit > 0 then
+                bronzeTimeLimit = bronzeTimeLimit + 90
+            end
+        end
+        return goldTimeLimit, silverTimeLimit, bronzeTimeLimit
     end
 
     ---@type FontString
@@ -3240,10 +3261,11 @@ do
     ---@field public dungeon? DungeonRaid
 
     ---@class DataProviderMythicKeystone
-    ---@field public currentSeasonId number
+    ---@field public currentSeasonId number 0-index based
     ---@field public numCharacters number
     ---@field public recordSizeInBytes number
     ---@field public encodingOrder number[]
+    ---@field public keystoneMilestoneLevels number[]
 
     -- hack to implement both keystone and raid classes on the dataprovider below so we do this weird inheritance
     ---@class DataProviderRaid : DataProviderMythicKeystone
@@ -3521,17 +3543,20 @@ do
 
     ---@class EncoderMythicPlusFields
     local ENCODER_MYTHICPLUS_FIELDS = { -- TODO: can this be part of the provider? we can see if we can make a more dynamic system
-        CURRENT_SCORE       = 1,  -- current season score
-        CURRENT_ROLES       = 2,  -- current season roles
-        PREVIOUS_SCORE      = 3,  -- previous season score
-        PREVIOUS_ROLES      = 4,  -- previous season roles
-        MAIN_CURRENT_SCORE  = 5,  -- main's current season score
-        MAIN_CURRENT_ROLES  = 6,  -- main's current season roles
-        MAIN_PREVIOUS_SCORE = 7,  -- main's previous season score
-        MAIN_PREVIOUS_ROLES = 8,  -- main's previous season roles
-        DUNGEON_RUN_COUNTS  = 9,  -- number of runs this season for 5+, 10+, 15+, and 20+
-        DUNGEON_LEVELS      = 10, -- dungeon levels and stars for each dungeon completed
-        DUNGEON_BEST_INDEX  = 11  -- best dungeon index
+        CURRENT_SCORE          = 1,     -- current season score
+        CURRENT_ROLES          = 2,     -- current season roles
+        PREVIOUS_SCORE         = 3,     -- previous season score
+        PREVIOUS_ROLES         = 4,     -- previous season roles
+        MAIN_CURRENT_SCORE     = 5,     -- main's current season score
+        MAIN_CURRENT_ROLES     = 6,     -- main's current season roles
+        MAIN_PREVIOUS_SCORE    = 7,     -- main's previous season score
+        MAIN_PREVIOUS_ROLES    = 8,     -- main's previous season roles
+        DUNGEON_RUN_COUNTS     = 9,     -- number of runs this season for 5+, 10+, 15+, and 20+
+        DUNGEON_LEVELS         = 10,    -- dungeon levels and stars for each dungeon completed
+        DUNGEON_BEST_INDEX     = 11,    -- best dungeon index
+        WARBAND_CURRENT_SCORE  = 12,    -- warband current season score
+        WARBAND_PREVIOUS_SCORE = 13,    -- warband previous season score
+        WARBAND_DUNGEON_LEVELS = 14     -- warband dungeon levels and stars for each dungeon completed
     }
 
     ---@class EncoderRecruitmentFields
@@ -3679,7 +3704,7 @@ do
         0,  1,  2,  3,  4,  5,  6,  7,
         8,  9, 10, 11, 12, 13, 14, 15,
        16, 17, 18, 19, 20, 21, 22, 23,
-       24, 25, 30, 35, 40, 45, 50
+       24, 25, 25, 30, 35, 40, 45, 50
     }
 
     ---@param value number
@@ -3802,57 +3827,41 @@ do
     ---@field public mainPreviousScore number
     ---@field public mainPreviousScoreSeason number
     ---@field public mainPreviousRoleOrdinalIndex number
-    ---@field public keystoneFivePlus number
-    ---@field public keystoneTenPlus number
-    ---@field public keystoneFifteenPlus number
-    ---@field public keystoneTwentyPlus number
-    ---@field public fortifiedDungeons number[]
-    ---@field public fortifiedDungeonUpgrades number[]
-    ---@field public fortifiedDungeonTimes number[]
-    ---@field public tyrannicalDungeons number[]
-    ---@field public tyrannicalDungeonUpgrades number[]
-    ---@field public tyrannicalDungeonTimes number[]
-    ---@field public dungeons number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeons` and `tyrannicalDungeons` when possible.
-    ---@field public dungeonUpgrades number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeonUpgrades` and `tyrannicalDungeonUpgrades` when possible.
-    ---@field public dungeonTimes number[] @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedDungeonTimes` and `tyrannicalDungeonTimes` when possible.
-    ---@field public fortifiedMaxDungeonIndex number
-    ---@field public fortifiedMaxDungeonLevel number
-    ---@field public fortifiedMaxDungeon? Dungeon
-    ---@field public tyrannicalMaxDungeonIndex number
-    ---@field public tyrannicalMaxDungeonLevel number
-    ---@field public tyrannicalMaxDungeon? Dungeon
-    ---@field public maxDungeonIndex number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeonIndex` and `tyrannicalMaxDungeonIndex` when possible.
-    ---@field public maxDungeonLevel number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeonLevel` and `tyrannicalMaxDungeonLevel` when possible.
-    ---@field public maxDungeon Dungeon @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedMaxDungeon` and `tyrannicalMaxDungeon` when possible.
-    ---@field public maxDungeonUpgrades number @Proxy table that looks up the correct weekly affix table if used. Part of the override score functionality, possibly client data as well.
+    ---@field public dungeons number[] 
+    ---@field public dungeonUpgrades number[]
+    ---@field public dungeonTimes number[]
+    ---@field public warbandCurrentScore number
+    ---@field public warbandPreviousScore number
+    ---@field public warbandPreviousScoreSeason number
+    ---@field public warbandDungeons number[] 
+    ---@field public warbandDungeonUpgrades number[]
+    ---@field public warbandDungeonTimes number[]
+    ---@field public maxDungeonIndex number
+    ---@field public maxDungeonLevel number
+    ---@field public maxDungeon Dungeon
+    ---@field public maxDungeonUpgrades number
     ---@field public sortedDungeons SortedDungeon[]
     ---@field public sortedMilestones SortedMilestone[]
     ---@field public mplusCurrent DataProviderMythicKeystoneScore
     ---@field public mplusPrevious DataProviderMythicKeystoneScore
     ---@field public mplusMainCurrent DataProviderMythicKeystoneScore
     ---@field public mplusMainPrevious DataProviderMythicKeystoneScore
+    ---@field public mplusWarbandCurrent DataProviderMythicKeystoneScore
+    ---@field public mplusWarbandPrevious DataProviderMythicKeystoneScore
 
     ---@class SortedDungeon
     ---@field public dungeon Dungeon
-    ---@field public level number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedLevel` and `tyrannicalLevel` when possible.
-    ---@field public chests number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedChests` and `tyrannicalChests` when possible.
-    ---@field public fractionalTime number @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedFractionalTime` and `tyrannicalFractionalTime` when possible. If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
-    ---@field public sortOrder string @Proxy table that looks up the correct weekly affix table if used. Use `fortifiedSortOrder` and `tyrannicalSortOrder` when possible.
-    ---@field public fortifiedLevel number @Keystone level
-    ---@field public fortifiedChests number @Number of medals where 1=Bronze, 2=Silver, 3=Gold
-    ---@field public fortifiedFractionalTime number @If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
-    ---@field public fortifiedSortOrder string @The sorting weight assigned this entry. Combination of level, chests and name of the dungeon.
-    ---@field public tyrannicalLevel number @Keystone level
-    ---@field public tyrannicalChests number @Number of medals where 1=Bronze, 2=Silver, 3=Gold
-    ---@field public tyrannicalFractionalTime number @If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
-    ---@field public tyrannicalSortOrder string @The sorting weight assigned this entry. Combination of level, chests and name of the dungeon.
+    ---@field public level number @Keystone level
+    ---@field public chests number @Number of medals where 1=Bronze, 2=Silver, 3=Gold
+    ---@field public fractionalTime number @If we have client data `isEnhanced` is set and the values are then `0.0` to `1.0` is within the timer, anything above is depleted over the timer. If `isEnhanced` is false then this value is 0 to 3 where 3 is depleted, and the rest is in time.
+    ---@field public sortOrder string @The sorting weight assigned this entry. Combination of level, chests and name of the dungeon.
 
     ---@class SortedMilestone
     ---@field public level number
     ---@field public label string
     ---@field public text string
 
-    local CLIENT_CHARACTERS = ns:GetClientData()
+    local CLIENT_CHARACTERS = ns:GetClientCharactersData()
     local DUNGEONS = ns:GetDungeonData()
 
     ---@param a SortedDungeon
@@ -3864,8 +3873,8 @@ do
     ---@param results DataProviderMythicKeystoneProfile
     ---@param bucket string
     ---@param bitOffset number
-    ---@param weeklyAffixInternal string
-    local function ApplyWeeklyAffixForDungeons(results, bucket, bitOffset, weeklyAffixInternal)
+    ---@param mode string
+    local function ReadDungeonLevelStats(results, bucket, bitOffset, mode)
         local dungeons = {}
         local dungeonUpgrades = {}
         local dungeonTimes = {}
@@ -3875,190 +3884,73 @@ do
             dungeonTimes[i] = 3 - dungeonUpgrades[i]
             results.hasRenderableData = results.hasRenderableData or dungeons[i] > 0
         end
-        results[weeklyAffixInternal .. "Dungeons"] = dungeons
-        results[weeklyAffixInternal .. "DungeonUpgrades"] = dungeonUpgrades
-        results[weeklyAffixInternal .. "DungeonTimes"] = dungeonTimes
+        if mode == 'warband' then
+            results.warbandDungeons = dungeons
+            results.warbandDungeonUpgrades = dungeonUpgrades
+            results.warbandDungeonTimes = dungeonTimes
+        else
+            results.dungeons = dungeons
+            results.dungeonUpgrades = dungeonUpgrades
+            results.dungeonTimes = dungeonTimes
+        end
         return bitOffset
     end
 
     ---@param results DataProviderMythicKeystoneProfile
     ---@param bucket string
     ---@param bitOffset any
-    ---@param weeklyAffixInternal string
-    local function ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset, weeklyAffixInternal)
+    local function ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset)
         local value, bitOffset = ReadBitsFromString(bucket, bitOffset, 4)
         local maxDungeonIndex = 1 + value
         if maxDungeonIndex > #DUNGEONS then
             maxDungeonIndex = 1
         end
-        results[weeklyAffixInternal .. "MaxDungeonIndex"] = maxDungeonIndex
-        results[weeklyAffixInternal .. "MaxDungeonLevel"] = results[weeklyAffixInternal .. "Dungeons"][maxDungeonIndex]
-        results[weeklyAffixInternal .. "MaxDungeon"] = DUNGEONS[maxDungeonIndex]
+        results.maxDungeonIndex = maxDungeonIndex
+        results.maxDungeonLevel = results.dungeons[maxDungeonIndex]
+        results.maxDungeon = DUNGEONS[maxDungeonIndex]
         return bitOffset
     end
 
     ---@param results DataProviderMythicKeystoneProfile
-    local function ApplyWeeklyAffixWrapper(results)
-        local dynamicKeys = {
-            dungeons = true,
-            dungeonUpgrades = true,
-            dungeonTimes = true,
-            maxDungeonIndex = true,
-            maxDungeonLevel = true,
-            maxDungeon = true,
-        }
-        setmetatable(results, {
-            __metatable = false,
-            ---@param self DataProviderMythicKeystoneProfile
-            ---@param key string
-            __index = function(self, key)
-                if not dynamicKeys[key] then
-                    return
-                end
-                local _, weeklyAffixInternal = util:GetWeeklyAffix()
-                local destKey = format("%s%s", key:sub(1, 1):upper(), key:sub(2))
-                return self[weeklyAffixInternal .. destKey]
-            end,
-        })
-    end
-
-    ---@param results DataProviderMythicKeystoneProfile
-    ---@param weeklyAffixInternal string?
-    local function ApplySortedDungeonsForAffix(results, weeklyAffixInternal)
-        ---@param sortedDungeon SortedDungeon
-        ---@param weeklyAffixInternal string
-        local function getSortOrderForAffix(sortedDungeon, weeklyAffixInternal)
-            local index = sortedDungeon.dungeon.index
-            local level = results[weeklyAffixInternal .. "Dungeons"][index] ---@type number
-            local chests = results[weeklyAffixInternal .. "DungeonUpgrades"][index] ---@type number
-            -- local fractionalTime = results[weeklyAffixInternal .. "DungeonTimes"][index] ---@type number
-            return format("%02d-%02d", 99 - level, 99 - chests)
-        end
-        ---@param sortedDungeon SortedDungeon
-        ---@param primaryAffixInternal string
-        ---@param secondaryAffixInternal string
-        ---@param focusAffix? number @`nil` = consider both affixes when making the weights, `1` = focus on primary affix, `2` = focus on secondary affix
-        local function getSortOrder(sortedDungeon, primaryAffixInternal, secondaryAffixInternal, focusAffix)
-            local primaryOrder ---@type string?
-            if focusAffix == nil or focusAffix == 1 then
-                primaryOrder = getSortOrderForAffix(sortedDungeon, primaryAffixInternal)
-                if focusAffix == 1 then
-                    return format("%s-%s", primaryOrder, sortedDungeon.dungeon.shortNameLocale)
-                end
-            end
-            local secondaryOrder ---@type string?
-            if focusAffix == nil or focusAffix == 2 then
-                secondaryOrder = getSortOrderForAffix(sortedDungeon, secondaryAffixInternal)
-                if focusAffix == 2 then
-                    return format("%s-%s", secondaryOrder, sortedDungeon.dungeon.shortNameLocale)
-                end
-            end
-            return format("%s-%s-%s", primaryOrder, secondaryOrder, sortedDungeon.dungeon.shortNameLocale)
-        end
-        local sortedDungeonMetatable = {
-            __metatable = false,
-            ---@param self SortedDungeon
-            ---@param key string
-            __index = function(self, key)
-                local index = self.dungeon.index
-                local _, weeklyAffixInternal = util:GetWeeklyAffix()
-                if key == "level" then
-                    return results[weeklyAffixInternal .. "Dungeons"][index]
-                elseif key == "chests" then
-                    return results[weeklyAffixInternal .. "DungeonUpgrades"][index]
-                elseif key == "fractionalTime" then
-                    return results[weeklyAffixInternal .. "DungeonTimes"][index]
-                elseif key == "fortifiedLevel" then
-                    return results.fortifiedDungeons[index]
-                elseif key == "fortifiedChests" then
-                    return results.fortifiedDungeonUpgrades[index]
-                elseif key == "fortifiedFractionalTime" then
-                    return results.fortifiedDungeonTimes[index]
-                elseif key == "tyrannicalLevel" then
-                    return results.tyrannicalDungeons[index]
-                elseif key == "tyrannicalChests" then
-                    return results.tyrannicalDungeonUpgrades[index]
-                elseif key == "tyrannicalFractionalTime" then
-                    return results.tyrannicalDungeonTimes[index]
-                elseif key == "sortOrder" then
-                    return getSortOrder(self, weeklyAffixInternal, weeklyAffixInternal == "fortified" and "tyrannical" or "fortified")
-                -- elseif key == "sortOrder1" then
-                --     return getSortOrder(self, weeklyAffixInternal, weeklyAffixInternal == "fortified" and "tyrannical" or "fortified", 1)
-                -- elseif key == "sortOrder2" then
-                --     return getSortOrder(self, weeklyAffixInternal == "fortified" and "tyrannical" or "fortified", weeklyAffixInternal, 2)
-                elseif key == "fortifiedSortOrder" then
-                    return getSortOrder(self, "fortified", "tyrannical")
-                -- elseif key == "fortifiedSortOrder1" then
-                --     return getSortOrder(self, "fortified", "tyrannical", 1)
-                -- elseif key == "fortifiedSortOrder2" then
-                --     return getSortOrder(self, "fortified", "tyrannical", 2)
-                elseif key == "tyrannicalSortOrder" then
-                    return getSortOrder(self, "tyrannical", "fortified")
-                -- elseif key == "tyrannicalSortOrder1" then
-                --     return getSortOrder(self, "tyrannical", "fortified", 1)
-                -- elseif key == "tyrannicalSortOrder2" then
-                --     return getSortOrder(self, "tyrannical", "fortified", 2)
-                end
-            end,
-        }
+    local function ApplySortedDungeons(results)
         results.sortedDungeons = {}
-        local dungeonKey = "dungeons"
-        local dungeonUpgradeKey = "dungeonUpgrades"
-        local dungeonTimeKey = "dungeonTimes"
-        if weeklyAffixInternal then
-            dungeonKey = weeklyAffixInternal .. "Dungeons" ---@type string
-            dungeonUpgradeKey = weeklyAffixInternal .. "DungeonUpgrades" ---@type string
-            dungeonTimeKey = weeklyAffixInternal .. "DungeonTimes" ---@type string
-        end
         for i = 1, #DUNGEONS do
             local dungeon = DUNGEONS[i]
-            if weeklyAffixInternal then
-                results.sortedDungeons[i] = setmetatable({
-                    dungeon = dungeon,
-                    level = results[dungeonKey][i],
-                    chests = results[dungeonUpgradeKey][dungeon.index],
-                    fractionalTime = results[dungeonTimeKey][dungeon.index],
-                }, sortedDungeonMetatable)
-            else
-                results.sortedDungeons[i] = setmetatable({
-                    dungeon = dungeon,
-                }, sortedDungeonMetatable)
-            end
+            local dungeonLevel = results.dungeons[i]
+            local dungeonChests = results.dungeonUpgrades[dungeon.index]
+            local dungeonFractionalTime = results.dungeonTimes[dungeon.index]
+            local sortOrder = format("%02d-%02d-%s", 99 - dungeonLevel, 99 - dungeonChests, dungeon.shortName)
+            results.sortedDungeons[i] = {
+                dungeon = dungeon,
+                level = dungeonLevel,
+                chests = dungeonChests,
+                fractionalTime = dungeonFractionalTime,
+                sortOrder = sortOrder,
+            }
         end
         table.sort(results.sortedDungeons, SortDungeons)
     end
 
     ---@param results DataProviderMythicKeystoneProfile
-    ---@param weeklyAffixInternal string?
-    local function ApplySortedMilestonesForAffix(results, weeklyAffixInternal)
+    ---@param keystoneMilestoneLevels number[]
+    local function ApplySortedMilestones(results, keystoneMilestoneLevels)
         results.sortedMilestones = {}
-        if results.keystoneTwentyPlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 20,
-                label = L.TIMED_20_RUNS,
-                text = results.keystoneTwentyPlus .. (results.keystoneTwentyPlus > 10 and "+" or "")
-            }
-        end
-        if results.keystoneFifteenPlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 15,
-                label = L.TIMED_15_RUNS,
-                text = results.keystoneFifteenPlus .. (results.keystoneFifteenPlus > 10 and "+" or "")
-            }
-        end
-        if results.keystoneTenPlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 10,
-                label = L.TIMED_10_RUNS,
-                text = results.keystoneTenPlus .. (results.keystoneTenPlus > 10 and "+" or "")
-            }
-        end
-        if results.keystoneFivePlus > 0 then
-            results.sortedMilestones[#results.sortedMilestones + 1] = {
-                level = 5,
-                label = L.TIMED_5_RUNS,
-                text = results.keystoneFivePlus .. (results.keystoneFivePlus > 10 and "+" or "")
-            }
+        for i = 1, #keystoneMilestoneLevels do
+            local milestoneLevel = keystoneMilestoneLevels[i]
+            local milestoneLevelCount = results["keystoneMilestone" .. milestoneLevel] or 0
+            if milestoneLevelCount > 0 then
+                local milestoneLabel
+                if i > 1 then
+                    milestoneLabel = format(L.TIMED_RUNS_RANGE, milestoneLevel, keystoneMilestoneLevels[i - 1] - 1)
+                else
+                    milestoneLabel = format(L.TIMED_RUNS_MINIMUM, milestoneLevel)
+                end
+                results.sortedMilestones[#results.sortedMilestones + 1] = {
+                    level = milestoneLevel,
+                    label = milestoneLabel,
+                    text = milestoneLevelCount .. (milestoneLevelCount > 255 and "+" or ""),
+                }
+            end
         end
         results.mplusCurrent = {
             score = results.currentScore or 0,
@@ -4077,6 +3969,15 @@ do
             season = results.mainPreviousScoreSeason,
             score = results.mainPreviousScore or 0,
             roles = ORDERED_ROLES[results.mainPreviousRoleOrdinalIndex] or ORDERED_ROLES[1]
+        }
+        results.mplusWarbandCurrent = {
+            score = results.warbandCurrentScore or 0,
+            roles = {}  -- no roles for warband scores
+        }
+        results.mplusWarbandPrevious = {
+            season = results.warbandPreviousScoreSeason,
+            score = results.warbandPreviousScore or 0,
+            roles = {} -- no roles for warband scores
         }
     end
 
@@ -4123,12 +4024,13 @@ do
     ---@param bucket string
     ---@param baseOffset number
     ---@param encodingOrder number[]
+    ---@param keystoneMilestoneLevels number[]
     ---@param providerOutdated number
     ---@param providerBlocked number
     ---@param name? string
     ---@param realm? string
     ---@param region? string
-    local function UnpackMythicKeystoneData(bucket, baseOffset, encodingOrder, providerOutdated, providerBlocked, name, realm, region)
+    local function UnpackMythicKeystoneData(bucket, baseOffset, encodingOrder, keystoneMilestoneLevels, providerOutdated, providerBlocked, name, realm, region)
         ---@type DataProviderMythicKeystoneProfile
         local results = { outdated = providerOutdated, hasRenderableData = false } ---@diagnostic disable-line: missing-fields
         if providerBlocked then
@@ -4171,26 +4073,33 @@ do
                 value, bitOffset = ReadBitsFromString(bucket, bitOffset, 7)
                 results.mainPreviousRoleOrdinalIndex = 1 + value -- indexes are one-based
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_RUN_COUNTS then
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 8)
-                results.keystoneFivePlus = DecodeBits8(value)
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 8)
-                results.keystoneTenPlus = DecodeBits8(value)
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 8)
-                results.keystoneFifteenPlus = DecodeBits8(value)
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 8)
-                results.keystoneTwentyPlus = DecodeBits8(value)
-                results.hasRenderableData = results.hasRenderableData or results.keystoneFivePlus > 0 or results.keystoneTenPlus > 0 or results.keystoneFifteenPlus > 0 or results.keystoneTwentyPlus > 0
+                local hasMilestoneData = false
+                for i = 1, #keystoneMilestoneLevels do
+                    value, bitOffset = ReadBitsFromString(bucket, bitOffset, 8)
+                    local milestoneData = DecodeBits8(value)
+                    results["keystoneMilestone" .. keystoneMilestoneLevels[i]] = milestoneData
+                    if milestoneData > 0 then
+                        hasMilestoneData = true
+                    end
+                end
+                results.hasRenderableData = results.hasRenderableData or hasMilestoneData
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_LEVELS then
-                bitOffset = ApplyWeeklyAffixForDungeons(results, bucket, bitOffset, "fortified")
-                bitOffset = ApplyWeeklyAffixForDungeons(results, bucket, bitOffset, "tyrannical")
+                bitOffset = ReadDungeonLevelStats(results, bucket, bitOffset, 'base')
             elseif field == ENCODER_MYTHICPLUS_FIELDS.DUNGEON_BEST_INDEX then
-                bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset, "fortified")
-                bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset, "tyrannical")
+                bitOffset = ApplyWeeklyAffixForDungeonBest(results, bucket, bitOffset)
+            elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_CURRENT_SCORE then
+                results.warbandCurrentScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.hasRenderableData = results.hasRenderableData or results.warbandCurrentScore > 0
+            elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_PREVIOUS_SCORE then
+                results.warbandPreviousScore, bitOffset = ReadBitsFromString(bucket, bitOffset, 12)
+                results.warbandPreviousScoreSeason, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
+                results.hasRenderableData = results.hasRenderableData or results.warbandPreviousScore > 0
+            elseif field == ENCODER_MYTHICPLUS_FIELDS.WARBAND_DUNGEON_LEVELS then
+                bitOffset = ReadDungeonLevelStats(results, bucket, bitOffset, 'warband')
             end
         end
-        ApplyWeeklyAffixWrapper(results)
-        ApplySortedDungeonsForAffix(results)
-        ApplySortedMilestonesForAffix(results)
+        ApplySortedDungeons(results)
+        ApplySortedMilestones(results, keystoneMilestoneLevels)
         -- ApplyClientDataToMythicKeystoneData(results, name, realm) -- TODO: weekly affix handling so we disable this until we know what kind of data we expect here
         return results
     end
@@ -4210,9 +4119,11 @@ do
 
     ---@alias DataProviderRaidProgressFields "progress"|"mainProgress"|"previousProgress"
 
-    ---@class SortedRaidProgress
-    ---@field public obsolete? boolean If this evaluates truthy we hide it unless tooltip is expanded on purpose.
-    ---@field public tier number Weighted number based on current or previous raid, difficulty and boss kill count.
+    ---@class RaidWithTierWeight
+    ---@field public tier number Weighted number based on: current or previous raid, difficulty and boss kill count. This is compared like `tier1 < tier2` to find the most progressed raid with highest difficulty and boss kills.
+
+    ---@class SortedRaidProgress : RaidWithTierWeight
+    ---@field public obsolete? boolean If this evaluates truthy it means this progress is replaced by a better progress. For example a full Normal clear is obsolete if there is a full Heroic clear available.
     ---@field public isProgress? boolean
     ---@field public isProgressPrev? boolean
     ---@field public isMainProgress? boolean
@@ -4224,7 +4135,7 @@ do
     ---@field public progress RaidProgressGroup[]
     ---@field public isMainProgress boolean
 
-    ---@class RaidProgressGroup
+    ---@class RaidProgressGroup : RaidWithTierWeight
     ---@field public difficulty number
     ---@field public progress RaidProgressBossInfo[]
     ---@field public kills? number
@@ -4290,10 +4201,11 @@ do
                     }
                     local diffToIndexMap = {} ---@type number[]
                     local diffNextIndex = 1
+                    ---@param tier number
                     ---@param difficulty number
                     ---@param index number
                     ---@param count number
-                    local function appendBossInfo(difficulty, index, count)
+                    local function appendBossInfo(tier, difficulty, index, count)
                         ---@type RaidProgressBossInfo
                         local bossInfo = {
                             difficulty = difficulty,
@@ -4311,6 +4223,7 @@ do
                         if not diffGroup then
                             ---@type RaidProgressGroup
                             diffGroup = {
+                                tier = tier,
                                 difficulty = difficulty,
                                 progress = {},
                             }
@@ -4328,12 +4241,12 @@ do
                             if progProgress.killsPerBoss then
                                 for k = 1, #progProgress.killsPerBoss do
                                     local killsPerBoss = progProgress.killsPerBoss[k]
-                                    appendBossInfo(progProgress.difficulty, k, killsPerBoss)
+                                    appendBossInfo(prog.tier, progProgress.difficulty, k, killsPerBoss)
                                 end
                             else
                                 for k = 1, progProgress.raid.bossCount do
                                     local killsPerBoss = progProgress.progressCount >= k and 1 or 0
-                                    appendBossInfo(progProgress.difficulty, k, killsPerBoss)
+                                    appendBossInfo(prog.tier, progProgress.difficulty, k, killsPerBoss)
                                 end
                             end
                         end
@@ -4377,10 +4290,7 @@ do
         local prog = { raid = raid } ---@diagnostic disable-line: missing-fields
         local bitOffset = offset
         prog.difficulty, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
-        if not IS_RETAIL then
-            -- TODO: update retail to not set difficulty as one-based
-            prog.difficulty = prog.difficulty + 1
-        end
+        prog.difficulty = prog.difficulty + 1
         prog.progressCount, bitOffset = ReadBitsFromString(bucket, bitOffset, 4)
         if prog.progressCount > 0 then
             local temp = results[field] ---@type DataProviderRaidProgress[]?
@@ -4403,26 +4313,13 @@ do
         local bitOffset = offset
         local value
         prog.difficulty, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
-        if not IS_RETAIL then
-            -- TODO: update retail to not set difficulty as one-based
-            prog.difficulty = prog.difficulty + 1
-        end
+        prog.difficulty = prog.difficulty + 1
         prog.killsPerBoss = {}
-        if IS_RETAIL then
-            for i = 1, raid.bossCount do
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 2)
-                prog.killsPerBoss[i] = DecodeBits2(value)
-                if prog.killsPerBoss[i] > 0 then
-                    prog.progressCount = prog.progressCount + 1
-                end
-            end
-        else
-            for i = 1, raid.bossCount do
-                value, bitOffset = ReadBitsFromString(bucket, bitOffset, 5)
-                prog.killsPerBoss[i] = DecodeBits5(value)
-                if prog.killsPerBoss[i] > 0 then
-                    prog.progressCount = prog.progressCount + 1
-                end
+        for i = 1, raid.bossCount do
+            value, bitOffset = ReadBitsFromString(bucket, bitOffset, 5)
+            prog.killsPerBoss[i] = DecodeBits5(value)
+            if prog.killsPerBoss[i] > 0 then
+                prog.progressCount = prog.progressCount + 1
             end
         end
         if prog.progressCount > 0 then
@@ -4626,7 +4523,7 @@ do
             if cache then
                 return cache
             end
-            local profile = UnpackMythicKeystoneData(nil, nil, nil, true, true, name, realm, provider.region) ---@diagnostic disable-line: param-type-mismatch
+            local profile = UnpackMythicKeystoneData(nil, nil, nil, nil, true, true, name, realm, provider.region) ---@diagnostic disable-line: param-type-mismatch
             profile.blockedPurged = true
             mythicKeystoneProfileCache[guid] = profile
             return profile
@@ -4639,7 +4536,7 @@ do
         if cache then
             return cache
         end
-        local profile = UnpackMythicKeystoneData(bucket, baseOffset, provider.encodingOrder, provider.outdated, provider.blocked, name, realm, provider.region)
+        local profile = UnpackMythicKeystoneData(bucket, baseOffset, provider.encodingOrder, provider.keystoneMilestoneLevels, provider.outdated, provider.blocked, name, realm, provider.region)
         mythicKeystoneProfileCache[guid] = profile
         return profile
     end
@@ -4709,32 +4606,36 @@ do
                 score = 0,
                 roles = {}
             },
-            fortifiedDungeons = {},
-            fortifiedDungeonUpgrades = {},
-            fortifiedDungeonTimes = {},
-            fortifiedMaxDungeonIndex = 1,
-            fortifiedMaxDungeonLevel = 0,
-            fortifiedMaxDungeon = nil,
-            fortifiedMaxDungeonUpgrades = 0,
-            tyrannicalDungeons = {},
-            tyrannicalDungeonUpgrades = {},
-            tyrannicalDungeonTimes = {},
-            tyrannicalMaxDungeonIndex = 1,
-            tyrannicalMaxDungeonLevel = 0,
-            tyrannicalMaxDungeon = nil,
-            tyrannicalMaxDungeonUpgrades = 0,
-            sortedMilestones = {}
+            dungeons = {},
+            dungeonUpgrades = {},
+            dungeonTimes = {},
+            mplusWarbandCurrent = {
+                score = 0,
+                roles = {}
+            },
+            mplusWarbandPrevious = {
+                score = 0,
+                roles = {}
+            },
+            warbandDungeons = {},
+            warbandDungeonUpgrades = {},
+            warbandDungeonTimes = {},
+            maxDungeonIndex = 1,
+            maxDungeonLevel = 0,
+            maxDungeon = nil,
+            maxDungeonUpgrades = 0,
+            sortedMilestones = {},
         }
-        ApplyWeeklyAffixWrapper(results)
         for i = 1, #DUNGEONS do
-            results.fortifiedDungeons[i] = 0
-            results.fortifiedDungeonUpgrades[i] = 0
-            results.fortifiedDungeonTimes[i] = 999
-            results.tyrannicalDungeons[i] = 0
-            results.tyrannicalDungeonUpgrades[i] = 0
-            results.tyrannicalDungeonTimes[i] = 999
+            results.dungeons[i] = 0
+            results.dungeonUpgrades[i] = 0
+            results.dungeonTimes[i] = 999
+
+            results.warbandDungeons[i] = 0
+            results.warbandDungeonUpgrades[i] = 0
+            results.warbandDungeonTimes[i] = 999
         end
-        ApplySortedDungeonsForAffix(results)
+        ApplySortedDungeons(results)
         return results
     end
 
@@ -4742,7 +4643,7 @@ do
     ---@param name string @Character name
     ---@param realm string @Realm name
     ---@param overallScore number @Blizzard keystone score directly from the game.
-    ---@param keystoneRuns? MythicPlusRatingMapSummaryRaiderIOExtended[] @Blizzard keystone runs directly from the game.
+    ---@param keystoneRuns? MythicPlusRatingMapSummary[] @Blizzard keystone runs directly from the game.
     function provider:OverrideProfile(name, realm, overallScore, keystoneRuns)
         if type(name) ~= "string" or type(realm) ~= "string" or (type(overallScore) ~= "number" and type(keystoneRuns) ~= "table") then
             return
@@ -4750,7 +4651,7 @@ do
         local region = ns.PLAYER_REGION
         local guid = format("%s %s %s", region, realm, name)
         local cache = provider:GetProfile(name, realm, region)
-        local mythicKeystoneProfile
+        local mythicKeystoneProfile ---@type DataProviderMythicKeystoneProfile?
         if cache and cache.success and cache.mythicKeystoneProfile and not cache.mythicKeystoneProfile.blocked and cache.mythicKeystoneProfile.hasRenderableData then
             mythicKeystoneProfile = cache.mythicKeystoneProfile
         end
@@ -4767,90 +4668,76 @@ do
             mythicKeystoneProfile.mplusCurrent.score = overallScore
         end
         if type(keystoneRuns) == "table" and keystoneRuns[1] then
-            local isPlayer = util:IsUnitPlayer(name, realm)
-            local _, realWeeklyAffixInternal = util:GetWeeklyAffix()
-            local weeklyAffixInternals = { realWeeklyAffixInternal }
-            if isPlayer then
-                weeklyAffixInternals[1] = "fortified"
-                weeklyAffixInternals[2] = "tyrannical"
-            end
-            for _, weeklyAffixInternal in pairs(weeklyAffixInternals) do
-                local weekDungeons = mythicKeystoneProfile[weeklyAffixInternal .. "Dungeons"] ---@type number[]
-                local weekDungeonUpgrades = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonUpgrades"] ---@type number[]
-                local weekDungeonTimes = mythicKeystoneProfile[weeklyAffixInternal .. "DungeonTimes"] ---@type number[]
-                local maxDungeonIndex = 0
-                -- local maxDungeonTime = 999
-                -- local maxDungeonScore = 0
-                local maxDungeonLevel = 0
-                local maxDungeonUpgrades = 0
-                local maxDungeonRunTimer = 2
-                local needsMaxDungeonUpgrade
-                for i = 1, #keystoneRuns do
-                    local run = keystoneRuns[i]
-                    local runAffixData = run[weeklyAffixInternal] ---@type MythicPlusAffixScoreInfo
-                    local dungeonIndex ---@type number|nil
-                    local dungeon ---@type Dungeon|nil
-                    for j = 1, #DUNGEONS do
-                        dungeon = DUNGEONS[j]
-                        if dungeon.keystone_instance == run.challengeModeID then
-                            dungeonIndex = j
-                            break
-                        end
-                        dungeon = nil
+            local dungeons = mythicKeystoneProfile.dungeons
+            local dungeonUpgrades = mythicKeystoneProfile.dungeonUpgrades
+            local dungeonTimes = mythicKeystoneProfile.dungeonTimes
+            local maxDungeonIndex = 0
+            -- local maxDungeonTime = 999
+            -- local maxDungeonScore = 0
+            local maxDungeonLevel = 0
+            local maxDungeonUpgrades = 0
+            local maxDungeonRunTimer = 2
+            local dungeonsRequireUpdate ---@type boolean?
+            for i = 1, #keystoneRuns do
+                local run = keystoneRuns[i]
+                local dungeonIndex ---@type number?
+                local dungeon ---@type Dungeon?
+                for j = 1, #DUNGEONS do
+                    dungeon = DUNGEONS[j]
+                    if dungeon.keystone_instance == run.challengeModeID then
+                        dungeonIndex = j
+                        break
                     end
-                    if dungeonIndex and (not isPlayer or runAffixData) then
-                        local runBestRunLevel = run.bestRunLevel
-                        local runBestRunDurationMS = run.bestRunDurationMS
-                        local runFinishedSuccess = run.finishedSuccess
-                        -- local runMapScore = run.mapScore
-                        if runAffixData then
-                            runBestRunLevel = runAffixData.level
-                            runBestRunDurationMS = runAffixData.durationSec * 1000
-                            runFinishedSuccess = not runAffixData.overTime
+                    dungeon = nil
+                end
+                if dungeonIndex then
+                    local runBestRunLevel = run.bestRunLevel
+                    local runBestRunDurationMS = run.bestRunDurationMS
+                    local runFinishedSuccess = run.finishedSuccess
+                    -- local runMapScore = run.mapScore
+                    if dungeonIndex and dungeons[dungeonIndex] <= runBestRunLevel then
+                        mythicKeystoneProfile.hasOverrideDungeonRuns = true
+                        local _, _, dungeonTimeLimit = C_ChallengeMode.GetMapUIInfo(run.challengeModeID)
+                        local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = -1, -1, dungeonTimeLimit
+                        if dungeon and dungeon.timers then
+                            goldTimeLimit, silverTimeLimit, bronzeTimeLimit = dungeon.timers[1], dungeon.timers[2], dungeonTimeLimit or dungeon.timers[3] -- TODO: always prefer the game data time limit for bronze or the addons time limit?
                         end
-                        if dungeonIndex and weekDungeons[dungeonIndex] <= runBestRunLevel then
-                            mythicKeystoneProfile.hasOverrideDungeonRuns = true
-                            local _, _, dungeonTimeLimit = C_ChallengeMode.GetMapUIInfo(run.challengeModeID)
-                            local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = -1, -1, dungeonTimeLimit
-                            if dungeon and dungeon.timers then
-                                goldTimeLimit, silverTimeLimit, bronzeTimeLimit = dungeon.timers[1], dungeon.timers[2], dungeonTimeLimit or dungeon.timers[3] -- TODO: always prefer the game data time limit for bronze or the addons time limit?
+                        goldTimeLimit, silverTimeLimit, bronzeTimeLimit = util:ApplyKeystoneTimeLimitsForLevel(goldTimeLimit, silverTimeLimit, bronzeTimeLimit, runBestRunLevel)
+                        local runSeconds = runBestRunDurationMS / 1000
+                        local runNumUpgrades = 0
+                        if runFinishedSuccess then
+                            runNumUpgrades = 1
+                            if runSeconds <= goldTimeLimit then
+                                runNumUpgrades = 3
+                            elseif runSeconds <= silverTimeLimit then
+                                runNumUpgrades = 2
                             end
-                            local runSeconds = runBestRunDurationMS / 1000
-                            local runNumUpgrades = 0
-                            if runFinishedSuccess then
-                                runNumUpgrades = 1
-                                if runSeconds <= goldTimeLimit then
-                                    runNumUpgrades = 3
-                                elseif runSeconds <= silverTimeLimit then
-                                    runNumUpgrades = 2
-                                end
-                            end
-                            local runTimerAsFraction = runSeconds / (dungeonTimeLimit and dungeonTimeLimit > 0 and dungeonTimeLimit or 1) -- convert game timer to a fraction (1 or below is timed, above is depleted)
-                            local fractionalTime = runFinishedSuccess and (mythicKeystoneProfile.isEnhanced and runTimerAsFraction or (3 - runNumUpgrades)) or 3 -- the data here depends if we are using client enhanced data or not
-                            needsMaxDungeonUpgrade = true
-                            weekDungeons[dungeonIndex] = runBestRunLevel
-                            weekDungeonUpgrades[dungeonIndex] = runNumUpgrades
-                            weekDungeonTimes[dungeonIndex] = fractionalTime
-                            -- if runNumUpgrades > 0 and (runMapScore > maxDungeonScore or (runMapScore == maxDungeonScore and fractionalTime < maxDungeonTime)) then
-                            if runNumUpgrades > 0 and (runBestRunLevel > maxDungeonLevel or (runBestRunLevel == maxDungeonLevel and runTimerAsFraction < maxDungeonRunTimer)) then
-                                maxDungeonIndex = dungeonIndex ---@type number
-                                -- maxDungeonTime = fractionalTime
-                                -- maxDungeonScore = runMapScore
-                                maxDungeonLevel = runBestRunLevel
-                                maxDungeonUpgrades = runNumUpgrades
-                                maxDungeonRunTimer = runTimerAsFraction
-                            end
+                        end
+                        local runTimerAsFraction = runSeconds / (dungeonTimeLimit and dungeonTimeLimit > 0 and dungeonTimeLimit or 1) -- convert game timer to a fraction (1 or below is timed, above is depleted)
+                        local fractionalTime = runFinishedSuccess and (mythicKeystoneProfile.isEnhanced and runTimerAsFraction or (3 - runNumUpgrades)) or 3 -- the data here depends if we are using client enhanced data or not
+                        dungeonsRequireUpdate = true
+                        dungeons[dungeonIndex] = runBestRunLevel
+                        dungeonUpgrades[dungeonIndex] = runNumUpgrades
+                        dungeonTimes[dungeonIndex] = fractionalTime
+                        -- if runNumUpgrades > 0 and (runMapScore > maxDungeonScore or (runMapScore == maxDungeonScore and fractionalTime < maxDungeonTime)) then
+                        if runNumUpgrades > 0 and (runBestRunLevel > maxDungeonLevel or (runBestRunLevel == maxDungeonLevel and runTimerAsFraction < maxDungeonRunTimer)) then
+                            maxDungeonIndex = dungeonIndex ---@type number
+                            -- maxDungeonTime = fractionalTime
+                            -- maxDungeonScore = runMapScore
+                            maxDungeonLevel = runBestRunLevel
+                            maxDungeonUpgrades = runNumUpgrades
+                            maxDungeonRunTimer = runTimerAsFraction
                         end
                     end
                 end
-                if needsMaxDungeonUpgrade then
-                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeon"] = DUNGEONS[maxDungeonIndex]
-                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonLevel"] = maxDungeonLevel
-                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonIndex"] = maxDungeonIndex
-                    mythicKeystoneProfile[weeklyAffixInternal .. "MaxDungeonUpgrades"] = maxDungeonUpgrades
-                end
             end
-            table.sort(mythicKeystoneProfile.sortedDungeons, SortDungeons)
+            if dungeonsRequireUpdate then
+                mythicKeystoneProfile.maxDungeon = DUNGEONS[maxDungeonIndex]
+                mythicKeystoneProfile.maxDungeonLevel = maxDungeonLevel
+                mythicKeystoneProfile.maxDungeonIndex = maxDungeonIndex
+                mythicKeystoneProfile.maxDungeonUpgrades = maxDungeonUpgrades
+                ApplySortedDungeons(mythicKeystoneProfile)
+            end
         end
         if mythicKeystoneProfile.hasOverrideScore or mythicKeystoneProfile.hasOverrideDungeonRuns then
             mythicKeystoneProfile.blocked = nil
@@ -4950,46 +4837,10 @@ do
         return cache
     end
 
-    ---@class MythicPlusRatingSummaryRaiderIOExtended : MythicPlusRatingSummary
-    ---@field public runs MythicPlusRatingMapSummaryRaiderIOExtended[]
-
-    ---@class MythicPlusRatingMapSummaryRaiderIOExtended : MythicPlusRatingMapSummary
-    ---@field public fortified? MythicPlusAffixScoreInfo
-    ---@field public tyrannical? MythicPlusAffixScoreInfo
-
-    ---@param bioSummary MythicPlusRatingSummary
-    ---@return MythicPlusRatingSummaryRaiderIOExtended bioSummaryExtended
-    local function ExpandSummaryWithChallengeModeMapData(bioSummary)
-        local mapIDs = C_ChallengeMode.GetMapTable()
-        for _, mapID in ipairs(mapIDs) do
-            local affixScores ---@type MythicPlusAffixScoreInfo[]?
-            local bestOverAllScore ---@type number?
-            local mapRun ---@type MythicPlusRatingMapSummaryRaiderIOExtended?
-            for _, run in ipairs(bioSummary.runs) do
-                if mapID == run.challengeModeID then
-                    affixScores, bestOverAllScore = C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(mapID)
-                    mapRun = run ---@diagnostic disable-line: cast-local-type
-                    break
-                end
-            end
-            if affixScores and mapRun then
-                for _, data in pairs(affixScores) do
-                    if data.name == "Fortified" then
-                        mapRun.fortified = data
-                    elseif data.name == "Tyrannical" then
-                        mapRun.tyrannical = data
-                    end
-                end
-            end
-        end
-        return bioSummary ---@diagnostic disable-line: return-type-mismatch
-    end
-
     local function OverridePlayerData()
         local bioSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player")
         if bioSummary and bioSummary.currentSeasonScore then
-            local bioSummaryExtended = ExpandSummaryWithChallengeModeMapData(bioSummary)
-            provider:OverrideProfile(ns.PLAYER_NAME, ns.PLAYER_REALM, bioSummaryExtended.currentSeasonScore, bioSummaryExtended.runs)
+            provider:OverrideProfile(ns.PLAYER_NAME, ns.PLAYER_REALM, bioSummary.currentSeasonScore, bioSummary.runs)
         end
     end
 
@@ -5305,10 +5156,14 @@ do
         tooltip:Hide()
     end
 
+    ---@param flag number
+    ---@param mask number
     local function Has(flag, mask)
         return band(flag, mask) == mask
     end
 
+    ---@param label string
+    ---@param seasonId? number 0-index based
     local function GetSeasonLabel(label, seasonId)
         if not seasonId then
             seasonId = ns.CURRENT_SEASON
@@ -5331,24 +5186,6 @@ do
         return format("%s %s", table.concat(icons, ""), score)
     end
 
-    ---Takes tripples of `Dungeon, Level, Chests` args, returns the best run back.
-    ---@return Dungeon?, number, number @`arg1`= the Dungeon, `arg2` = keystone level, `arg3` = chests
-    local function GetBestRunOfDungeons(...)
-        local bestDungeon ---@type Dungeon|nil
-        local bestLevel = 0 ---@type number
-        local bestChests = 0 ---@type number
-        local args = {...}
-        for i = 1, #args, 3 do
-            local dungeon = args[i] ---@type Dungeon|nil
-            local level = args[i + 1] ---@type number
-            local chests = args[i + 2] ---@type number
-            if dungeon and dungeon.keystone_instance and (level > bestLevel or (level >= bestLevel and chests > bestChests)) then
-                bestDungeon, bestLevel, bestChests = dungeon, level, chests
-            end
-        end
-        return bestDungeon, bestLevel, bestChests
-    end
-
     ---@class BestRun
     ---@field public dungeon Dungeon|nil @The dungeon.
     ---@field public level number @The keystone level.
@@ -5364,29 +5201,15 @@ do
         local showLFD = Has(options, render.Flags.SHOW_LFD)
         local best = { dungeon = nil, level = 0, chests = 0 } ---@type BestRun
         local overallBest = { dungeon = nil, level = 0, chests = 0 } ---@type BestRun
-        overallBest.dungeon,
-        overallBest.level,
-        overallBest.chests = GetBestRunOfDungeons(
-            keystoneProfile.fortifiedMaxDungeon,
-            keystoneProfile.fortifiedMaxDungeonLevel,
-            keystoneProfile.fortifiedDungeonUpgrades[keystoneProfile.fortifiedMaxDungeonIndex],
-            keystoneProfile.tyrannicalMaxDungeon,
-            keystoneProfile.tyrannicalMaxDungeonLevel,
-            keystoneProfile.tyrannicalDungeonUpgrades[keystoneProfile.tyrannicalMaxDungeonIndex]
-        )
+        overallBest.dungeon = keystoneProfile.maxDungeon
+        overallBest.level = keystoneProfile.maxDungeonLevel
+        overallBest.chests = keystoneProfile.dungeonUpgrades[keystoneProfile.maxDungeonIndex]
         if showLFD then
             local focusDungeon = util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
-            if focusDungeon then
-                best.dungeon,
-                best.level,
-                best.chests = GetBestRunOfDungeons(
-                    focusDungeon,
-                    keystoneProfile.fortifiedDungeons[focusDungeon.index],
-                    keystoneProfile.fortifiedDungeonUpgrades[focusDungeon.index],
-                    focusDungeon,
-                    keystoneProfile.tyrannicalDungeons[focusDungeon.index],
-                    keystoneProfile.tyrannicalDungeonUpgrades[focusDungeon.index]
-                )
+            if focusDungeon and focusDungeon.type == "SEASON" then
+                best.dungeon = focusDungeon
+                best.level = keystoneProfile.dungeons[focusDungeon.index]
+                best.chests = keystoneProfile.dungeonUpgrades[focusDungeon.index]
             end
         end
         local hasHeaderData = false
@@ -5415,6 +5238,62 @@ do
         if isHeader then
             return hasHeaderData
         end
+    end
+
+    local CLIENT_RECENT_CHARACTERS = ns:GetClientRecentCharactersData()
+
+    ---@param tooltip GameTooltip
+    ---@param profile DataProviderCharacterProfile
+    ---@param state TooltipState
+    local function AppendRecentRunsWithCharacter(tooltip, profile, state)
+        if not CLIENT_RECENT_CHARACTERS or not config:Get("enableClientEnhancements") then
+            return
+        end
+        local lookupKey = format("%s-%s", profile.name, profile.realm)
+        local data = CLIENT_RECENT_CHARACTERS[lookupKey]
+        if not data then
+            return
+        end
+        local FIELD_INDEX_DATE = 1
+        local FIELD_INDEX_NUM_RUNS = 2
+        local FIELD_INDEX_FIRST_MAP = 3
+        local NUM_FIELDS = 4
+        local MAP_FIELD_INSTANCE_MAP_ID = 1
+        local MAP_FIELD_KEY_LEVEL = 2
+        local MAP_FIELD_IS_SUCCESS = 3
+        local MAP_FIELD_CLEAR_TIME_MS = 4
+        local MAP_NUM_FIELDS = MAP_FIELD_CLEAR_TIME_MS
+        local MAX_RUNS_TO_SHOW = 3
+        local numRuns = data[FIELD_INDEX_NUM_RUNS]
+        tooltip:AddDoubleLine(L.RECENT_RUNS_WITH_YOU, numRuns, 1, 1, 1, 1, 1, 1)
+        local runsText = {} ---@type string[]
+        for runIndex = 0, min(MAX_RUNS_TO_SHOW - 1, numRuns) do
+            local baseIndex = FIELD_INDEX_FIRST_MAP + (runIndex * MAP_NUM_FIELDS) - 1
+            local instanceMapID = data[baseIndex + MAP_FIELD_INSTANCE_MAP_ID] ---@type number?
+            if not instanceMapID then
+                break
+            end
+            local dungeon = util:GetDungeonByInstanceMapID(instanceMapID)
+            if dungeon then
+                local keyLevel = data[baseIndex + MAP_FIELD_KEY_LEVEL] ---@type number
+                local isSuccess = data[baseIndex + MAP_FIELD_IS_SUCCESS] ~= 0 and true or false ---@type boolean
+                local clearTimeMS = data[baseIndex + MAP_FIELD_CLEAR_TIME_MS] ---@type number
+                local goldTimeLimit, silverTimeLimit, bronzeTimeLimit = util:GetKeystoneTimeLimits(dungeon)
+                goldTimeLimit, silverTimeLimit, bronzeTimeLimit = util:ApplyKeystoneTimeLimitsForLevel(goldTimeLimit, silverTimeLimit, bronzeTimeLimit, keyLevel)
+                local runSeconds = clearTimeMS / 1000
+                local runNumUpgrades = 0
+                if runSeconds <= goldTimeLimit then
+                    runNumUpgrades = 3
+                elseif runSeconds <= silverTimeLimit then
+                    runNumUpgrades = 2
+                elseif runSeconds <= bronzeTimeLimit then
+                    runNumUpgrades = 1
+                end
+                runsText[#runsText + 1] = format("%s%s %s", util:GetNumChests(runNumUpgrades), keyLevel, dungeon.shortName)
+            end
+        end
+        local text = table.concat(runsText, " |cff888888/|r ")
+        tooltip:AddLine(text, 1, 1, 1)
     end
 
     ---@class PartyMember
@@ -5469,32 +5348,23 @@ do
     end
 
     ---@param sortedDungeons SortedDungeon[]
-    local function GetSortedDungeonsTooltipText(sortedDungeons, weeklyAffixInternal, currentWeeklyAffixInternal)
-        local isActive = not currentWeeklyAffixInternal or weeklyAffixInternal == currentWeeklyAffixInternal
-        local lines = {}
-        local lineWidth = {}
-        local maxWidth = 0
+    local function GetSortedDungeonsTooltipText(sortedDungeons)
+        local lines = {} ---@type string[]
         for i = 1, #sortedDungeons do
             local sortedDungeon = sortedDungeons[i]
-            local chests = sortedDungeon[weeklyAffixInternal .. "Chests"]
-            local level = sortedDungeon[weeklyAffixInternal .. "Level"]
-            -- local fractionalTime = sortedDungeon[weeklyAffixInternal .. "FractionalTime"]
+            local chests = sortedDungeon.chests
+            local level = sortedDungeon.level
+            -- local fractionalTime = sortedDungeon.fractionalTime
             local text = {
-                util:GetNumChests(chests, not isActive),
+                util:GetNumChests(chests),
                 "|cff",
-                isActive and util:GetKeystoneChestColor(chests, true) or "bfbfbf",
+                util:GetKeystoneChestColor(chests, true),
                 level > 0 and level or "-",
                 "|r",
             }
-            text = table.concat(text) ---@diagnostic disable-line: cast-local-type
-            lines[i] = text
-            local width = util:GetTooltipTextWidth(text)
-            lineWidth[i] = width
-            if width > maxWidth then
-                maxWidth = width
-            end
+            lines[i] = table.concat(text)
         end
-        return lines, lineWidth, maxWidth
+        return lines
     end
 
     ---@type table<DungeonRaid, string>|nil
@@ -5626,6 +5496,28 @@ do
         end)
     end
 
+    ---@param raidGroup RaidProgressExtended
+    ---@param raidGroups RaidProgressExtended[]
+    local function IsRaidGroupBestMainProgress(raidGroup, raidGroups)
+        local groupProgress = raidGroup.progress
+        if not groupProgress.isMainProgress then
+            return
+        end
+        local currentProg = groupProgress.progress
+        local currentBest = currentProg[#currentProg]
+        for i = 1, #raidGroups do
+            local otherRaidGroup = raidGroups[i]
+            if otherRaidGroup ~= raidGroup then
+                local otherProg = otherRaidGroup.progress.progress
+                local otherBest = otherProg[#otherProg]
+                if currentBest.tier < otherBest.tier then
+                    return true
+                end
+            end
+        end
+        return false
+    end
+
     ---@param tooltip GameTooltip
     ---@param raidProfile DataProviderRaidProfile
     ---@param state TooltipState
@@ -5656,7 +5548,7 @@ do
         end
         for i = 1, #raidGroups do
             local raidGroup = raidGroups[i]
-            if raidGroup.show or hasShown == false then
+            if raidGroup.show or hasShown == false or IsRaidGroupBestMainProgress(raidGroup, raidGroups) then
                 local groupProgress = raidGroup.progress
                 local tempIndex = 0
                 local temp = {}
@@ -5763,6 +5655,24 @@ do
                             end
                         end
                     end
+                    if config:Get("showWarbandScore") then
+                        if not config:Get("showWarbandScore") then
+                            if keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score then
+                                tooltip:AddDoubleLine(L.WARBAND_SCORE, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
+                            end
+                        else
+                            local isWarbandPreviousScoreRelevant = keystoneProfile.mplusWarbandCurrent.score < (ns.PREVIOUS_SEASON_MAIN_SCORE_RELEVANCE_THRESHOLD * keystoneProfile.mplusWarbandPrevious.score)
+                            local isWarbandCurrentScoreBetter = keystoneProfile.mplusWarbandCurrent.score > keystoneProfile.mplusCurrent.score
+                            if isWarbandCurrentScoreBetter or isWarbandPreviousScoreRelevant then
+                                if isWarbandPreviousScoreRelevant then
+                                    tooltip:AddDoubleLine(GetSeasonLabel(L.WARBAND_BEST_SCORE_BEST_SEASON, keystoneProfile.mplusWarbandPrevious.season), GetScoreText(keystoneProfile.mplusWarbandPrevious, true), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandPrevious.score, true))
+                                end
+                                if keystoneProfile.mplusWarbandCurrent.score > 0 or hasMod or hasModSticky then
+                                    tooltip:AddDoubleLine(L.WARBAND_SCORE, GetScoreText(keystoneProfile.mplusWarbandCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusWarbandCurrent.score))
+                                end
+                            end
+                        end
+                    end
                     if config:Get("showMainsScore") then
                         if not config:Get("showMainBestScore") then
                             if keystoneProfile.mplusMainCurrent.score > keystoneProfile.mplusCurrent.score then
@@ -5777,7 +5687,7 @@ do
                                 end
 
                                 if keystoneProfile.mplusMainCurrent.score > 0 or hasMod or hasModSticky then
-                                    tooltip:AddDoubleLine(L.CURRENT_MAINS_SCORE, GetScoreText(keystoneProfile.mplusMainCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusMainCurrent.score))
+                                    tooltip:AddDoubleLine(L.MAINS_SCORE, GetScoreText(keystoneProfile.mplusMainCurrent), 1, 1, 1, util:GetScoreColor(keystoneProfile.mplusMainCurrent.score))
                                 end
                             end
                         end
@@ -5792,6 +5702,9 @@ do
                         local sortedMilestone = keystoneProfile.sortedMilestones[i]
                         tooltip:AddDoubleLine(sortedMilestone.label, sortedMilestone.text, 1, 1, 1, 1, 1, 1)
                     end
+                    do
+                        AppendRecentRunsWithCharacter(tooltip, profile, state)
+                    end
                     if isExtendedProfile and (hasMod or hasModSticky) and keystoneProfile.sortedDungeons[1] then
                         local hasBestDungeons = false
                         for i = 1, #keystoneProfile.sortedDungeons do
@@ -5803,24 +5716,12 @@ do
                         end
                         if hasBestDungeons or true then -- HOTFIX: we prefer to always display this in the expanded profile so even empty profiles can display what dungeons there are for the player to complete
                             local focusDungeon = showLFD and util:GetLFDStatusForCurrentActivity(state.args and state.args.activityID)
-                            local fortifiedLines, fortifiedLinesWidth, fortifiedMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, "fortified")
-                            local tyrannicalLines, tyrannicalLinesWidth, tyrannicalMaxWidth = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons, "tyrannical")
-                            local paddingBetweenColumns = 15 -- additional column padding in order to avoid the columns appearing glued together
-                            tyrannicalMaxWidth = tyrannicalMaxWidth + paddingBetweenColumns
+                            local dungeonLines = GetSortedDungeonsTooltipText(keystoneProfile.sortedDungeons)
                             if showHeader then
                                 if showPadding then
                                     tooltip:AddLine(" ")
                                 end
-                                local weeklyAffixID = util:GetWeeklyAffix()
-                                local leftHeaderText = ns.KEYSTONE_AFFIX_TEXTURE[weeklyAffixID == 10 and 10 or -10]
-                                local rightHeaderText = ns.KEYSTONE_AFFIX_TEXTURE[weeklyAffixID == 9 and 9 or -9]
-                                local rightHeaderTextWidth = util:GetTooltipTextWidth(rightHeaderText)
-                                if rightHeaderTextWidth > tyrannicalMaxWidth then
-                                    tyrannicalMaxWidth = rightHeaderTextWidth + paddingBetweenColumns
-                                end
-                                local paddingTexture = util:GetTextPaddingTexture(tyrannicalMaxWidth - rightHeaderTextWidth)
-                                local text = { leftHeaderText, paddingTexture, rightHeaderText }
-                                tooltip:AddDoubleLine(L.PROFILE_BEST_RUNS, table.concat(text, ""), 1, 0.85, 0, 1, 0.85, 0)
+                                tooltip:AddDoubleLine(L.PROFILE_BEST_RUNS, "", 1, 0.85, 0, 1, 0.85, 0)
                             end
                             for i = 1, #keystoneProfile.sortedDungeons do
                                 local sortedDungeon = keystoneProfile.sortedDungeons[i]
@@ -5828,13 +5729,10 @@ do
                                 if sortedDungeon.dungeon == focusDungeon then
                                     r, g, b = 0, 1, 0
                                 end
-                                local paddingTexture = util:GetTextPaddingTexture(tyrannicalMaxWidth - tyrannicalLinesWidth[i])
-                                if sortedDungeon.fortifiedLevel > 0 or sortedDungeon.tyrannicalLevel > 0 then
-                                    local text = { fortifiedLines[i], paddingTexture, tyrannicalLines[i] }
-                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, table.concat(text, ""), r, g, b, 0.5, 0.5, 0.5)
+                                if sortedDungeon.level > 0 then
+                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, dungeonLines[i], r, g, b, 0.5, 0.5, 0.5)
                                 else
-                                    local text = { "-", paddingTexture, "-" }
-                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, table.concat(text, ""), r, g, b, 0.5, 0.5, 0.5)
+                                    tooltip:AddDoubleLine(sortedDungeon.dungeon.shortNameLocale, "-", r, g, b, 0.5, 0.5, 0.5)
                                 end
                             end
                         end
@@ -8235,6 +8133,19 @@ if IS_RETAIL then
         return floor(ms/1000 + 0.5)
     end
 
+    ---@param ms1 number?
+    ---@param ms2 number?
+    ---@return number deltaRoundedSeconds
+    local function SafelyConvertDeltaMillisecondsToSeconds(ms1, ms2)
+        if not ms1 then
+            ms1 = 0
+        end
+        if not ms2 then
+            ms2 = 0
+        end
+        return ConvertMillisecondsToSeconds(ms1 - ms2)
+    end
+
     ---@alias ReplaySplitStyle
     ---|"NONE"
     ---|"NONE_COLORLESS"
@@ -8469,12 +8380,12 @@ if IS_RETAIL then
                 local delta
                 local comparisonDelta
                 if timing == "BOSS" then
-                    delta = ConvertMillisecondsToSeconds(liveBoss.killed - liveBoss.killedStart)
-                    comparisonDelta = ConvertMillisecondsToSeconds(replayBoss and replayBoss.killed - replayBoss.killedStart or 0)
+                    delta = SafelyConvertDeltaMillisecondsToSeconds(liveBoss.killed, liveBoss.killedStart)
+                    comparisonDelta = SafelyConvertDeltaMillisecondsToSeconds(replayBoss and replayBoss.killed, replayBoss.killedStart)
                 else
                     local prevLiveBoss, prevReplayBoss = self:GetBosses(self.index - 1)
-                    delta = ConvertMillisecondsToSeconds(liveBoss.killed - (prevLiveBoss and prevLiveBoss.killed or 0))
-                    comparisonDelta = ConvertMillisecondsToSeconds(replayBoss.killed - (prevReplayBoss and prevReplayBoss.killed or 0))
+                    delta = SafelyConvertDeltaMillisecondsToSeconds(liveBoss.killed, prevLiveBoss and prevLiveBoss.killed)
+                    comparisonDelta = SafelyConvertDeltaMillisecondsToSeconds(replayBoss.killed, prevReplayBoss and prevReplayBoss.killed)
                 end
                 -- HOTFIX: handles the special case where `ENCOUNTER_START` was never called, but we know about it because the value is `false`, and that means that the boss was defeated (this bug will be resolved in 10.1.7)
                 if timing == "BOSS" and delta <= 0 then
@@ -8483,7 +8394,7 @@ if IS_RETAIL then
                     self.InfoL:SetFormattedText("%s\n%s", liveBoss.killedText, SecondsToTimeTextCompared(delta, comparisonDelta, "PARENTHESIS"))
                 end
             elseif liveBoss and liveBoss.combat then
-                local delta = ConvertMillisecondsToSeconds(timerMS - liveBoss.combatStart)
+                local delta = SafelyConvertDeltaMillisecondsToSeconds(timerMS, liveBoss.combatStart)
                 self.InfoL:SetText(SecondsToTimeText(delta, "NONE_YELLOW"))
             else
                 self.InfoL:SetText("")
@@ -8491,15 +8402,15 @@ if IS_RETAIL then
             if isReplayBossDead then
                 local delta
                 if timing == "BOSS" then
-                    delta = ConvertMillisecondsToSeconds(replayBoss.killed - replayBoss.killedStart)
+                    delta = SafelyConvertDeltaMillisecondsToSeconds(replayBoss.killed, replayBoss.killedStart)
                 else
                     local _, prevReplayBoss = self:GetBosses(self.index - 1)
                     delta = prevReplayBoss and prevReplayBoss.killed or 0
-                    delta = ConvertMillisecondsToSeconds(replayBoss.killed - delta)
+                    delta = SafelyConvertDeltaMillisecondsToSeconds(replayBoss.killed, delta)
                 end
                 self.InfoR:SetFormattedText("%s\n%s", replayBoss.killedText, SecondsToTimeText(delta, "PARENTHESIS", true))
             elseif replayBoss and replayBoss.combat then
-                local delta = ConvertMillisecondsToSeconds(timerMS - replayBoss.combatStart)
+                local delta = SafelyConvertDeltaMillisecondsToSeconds(timerMS, replayBoss.combatStart)
                 self.InfoR:SetText(SecondsToTimeText(delta, "NONE_YELLOW"))
             else
                 self.InfoR:SetText("")
@@ -8698,7 +8609,15 @@ if IS_RETAIL then
         return bossFramePool
     end
 
-    local DEATH_PENALTY = 5
+    ---@class KeystoneDeathPenaltyInfo
+    ---@field public level number
+    ---@field public penalty number seconds
+
+    ---@type KeystoneDeathPenaltyInfo[]
+    local DEATH_PENALTY_MAP = {
+        { level = 7, penalty = 15 },
+        { level = 0, penalty = 5 },
+    }
 
     ---@class ReplayDataProvider
     local ReplayDataProviderMixin = {}
@@ -8731,7 +8650,7 @@ if IS_RETAIL then
 
         function ReplayDataProviderMixin:OnLoad()
             self.replaySummary = self:CreateSummary()
-            self:SetDeathPenalty(DEATH_PENALTY)
+            self:SetDeathPenaltyMap(DEATH_PENALTY_MAP)
         end
 
         ---@param replay? Replay
@@ -8758,14 +8677,22 @@ if IS_RETAIL then
             return self.replay
         end
 
-        ---@param seconds number
-        function ReplayDataProviderMixin:SetDeathPenalty(seconds)
-            self.deathPenalty = seconds
+        ---@param deathPenaltyMap KeystoneDeathPenaltyInfo[]
+        function ReplayDataProviderMixin:SetDeathPenaltyMap(deathPenaltyMap)
+            self.deathPenaltyMap = deathPenaltyMap
         end
 
-        ---@return number deathPenalty
-        function ReplayDataProviderMixin:GetDeathPenalty()
-            return self.deathPenalty
+        ---@param level number
+        ---@return number deathPenalty seconds
+        function ReplayDataProviderMixin:GetDeathPenalty(level)
+            local deathPenaltyMap = self.deathPenaltyMap
+            for _, deathPenalty in ipairs(deathPenaltyMap) do
+                if level >= deathPenalty.level then
+                    return deathPenalty.penalty
+                end
+            end
+            local deathPenalty = deathPenaltyMap[#deathPenaltyMap]
+            return deathPenalty.penalty
         end
 
         ---@return ReplaySummary replaySummary
@@ -10053,6 +9980,8 @@ if IS_RETAIL then
             local mapID = self:GetKeystone()
             local liveDataProvider = self:GetLiveDataProvider()
             local liveSummary = liveDataProvider:GetSummary()
+            local liveDeathPenalty = liveDataProvider:GetDeathPenalty(liveSummary.level)
+            local liveDeathPenaltyMS = liveDeathPenalty * 1000
             ---@type ReplayCompletedSummary
             local summary = {
                 replaySeason = replay.season,
@@ -10061,7 +9990,7 @@ if IS_RETAIL then
                 zoneId = mapID,
                 keyLevel = liveSummary.level,
                 completedAt = time(),
-                clearTimeMS = liveSummary.timer,
+                clearTimeMS = liveSummary.timer + liveDeathPenaltyMS,
             }
             table.insert(_G.RaiderIO_CompletedReplays, summary)
             local delta = ConvertMillisecondsToSeconds(summary.clearTimeMS)
@@ -10138,7 +10067,7 @@ if IS_RETAIL then
             end
             local liveDeathsDuringTimer = self:GetCurrentDeaths()
             local liveDataProvider = self:GetLiveDataProvider()
-            local deathPenalty = liveDataProvider:GetDeathPenalty()
+            local deathPenalty = liveDataProvider:GetDeathPenalty(replay and replay.mythic_level or 0)
             local timeLost = liveDeathsDuringTimer * deathPenalty
             return timer - timeLost
         end
@@ -10401,22 +10330,24 @@ if IS_RETAIL then
             if not _replay then
                 return
             end
-            local liveDataProvider = self:GetLiveDataProvider()
-            local liveSummary = liveDataProvider:GetSummary()
-            local deathPenalty = liveDataProvider:GetDeathPenalty()
-            local deathPenaltyMS = deathPenalty * 1000
             local keystoneTimeMS = self:GetKeystoneTimeMS()
             local replaySummary, _, nextReplayEvent = replayDataProvider:GetReplaySummaryAt(keystoneTimeMS)
+            local liveDataProvider = self:GetLiveDataProvider()
+            local liveSummary = liveDataProvider:GetSummary()
+            local liveDeathPenalty = liveDataProvider:GetDeathPenalty(liveSummary.level)
+            local liveDeathPenaltyMS = liveDeathPenalty * 1000
+            local replayDeathPenalty = replayDataProvider:GetDeathPenalty(replaySummary.level)
+            local replayDeathPenaltyMS = replayDeathPenalty * 1000
             local liveDeathsDuringTimer, replayDeathsDuringTimer = self:GetCurrentDeaths()
-            local liveTimer = ConvertMillisecondsToSeconds(keystoneTimeMS + liveDeathsDuringTimer * deathPenaltyMS)
-            local replayTimer = ConvertMillisecondsToSeconds(keystoneTimeMS + replayDeathsDuringTimer * deathPenaltyMS)
+            local liveTimer = ConvertMillisecondsToSeconds(keystoneTimeMS + liveDeathsDuringTimer * liveDeathPenaltyMS)
+            local replayTimer = ConvertMillisecondsToSeconds(keystoneTimeMS + replayDeathsDuringTimer * replayDeathPenaltyMS)
             local totalTimer = ConvertMillisecondsToSeconds(_replay.clear_time_ms)
             if replayTimer > totalTimer then
                 replayTimer = totalTimer
             end
             self:SetUITimer(liveTimer, replayTimer, totalTimer, not nextReplayEvent, isRunning)
             self:SetUITrash(liveSummary.trash, replaySummary.trash, _replay.dungeon.total_enemy_forces, isRunning)
-            self:SetUIDeaths(liveSummary.deaths, replaySummary.deaths, deathPenalty, isRunning)
+            self:SetUIDeaths(liveSummary.deaths, replaySummary.deaths, liveDeathPenalty, replayDeathPenalty, isRunning)
             self:UpdateUIBosses(liveSummary.bosses, replaySummary.bosses, keystoneTimeMS, isRunning)
             self:UpdateUIBossesCombat(liveSummary.inBossCombat, replaySummary.inBossCombat)
             replay:SetCurrentReplaySummary(_replay, liveSummary, replaySummary)
@@ -10431,24 +10362,26 @@ if IS_RETAIL then
             if not _replay then
                 return
             end
-            local liveDataProvider = self:GetLiveDataProvider()
-            local liveSummary = liveDataProvider:GetSummary()
-            local deathPenalty = liveDataProvider:GetDeathPenalty()
-            local deathPenaltyMS = deathPenalty * 1000
-            local keystoneTimeMS = self:GetKeystoneTimeMS()
             local replayTimeMS = self:GetReplayTimeMS()
             local replayCompletedTimer = ConvertMillisecondsToSeconds(replayTimeMS)
             local replaySummary = replayDataProvider:GetReplaySummaryAt(replayTimeMS)
             local liveDeathsDuringTimer, replayDeathsDuringTimer = self:GetCurrentDeaths()
-            local liveTimer = ConvertMillisecondsToSeconds(keystoneTimeMS + liveDeathsDuringTimer * deathPenaltyMS)
-            local replayTimer = ConvertMillisecondsToSeconds(replayTimeMS + replayDeathsDuringTimer * deathPenaltyMS)
+            local liveDataProvider = self:GetLiveDataProvider()
+            local liveSummary = liveDataProvider:GetSummary()
+            local liveDeathPenalty = liveDataProvider:GetDeathPenalty(liveSummary.level)
+            local liveDeathPenaltyMS = liveDeathPenalty * 1000
+            local replayDeathPenalty = replayDataProvider:GetDeathPenalty(replaySummary.level)
+            local replayDeathPenaltyMS = replayDeathPenalty * 1000
+            local keystoneTimeMS = self:GetKeystoneTimeMS()
+            local liveTimer = ConvertMillisecondsToSeconds(keystoneTimeMS + liveDeathsDuringTimer * liveDeathPenaltyMS)
+            local replayTimer = ConvertMillisecondsToSeconds(replayTimeMS + replayDeathsDuringTimer * replayDeathPenaltyMS)
             local totalTimer = ConvertMillisecondsToSeconds(keystoneTimeMS)
             if replayTimer > totalTimer then
                 replayTimer = totalTimer
             end
             self:SetUITimer(liveTimer, replayTimer, totalTimer, false, true, replayCompletedTimer)
             self:SetUITrash(liveSummary.trash, replaySummary.trash, _replay.dungeon.total_enemy_forces, true)
-            self:SetUIDeaths(liveSummary.deaths, replaySummary.deaths, deathPenalty, true)
+            self:SetUIDeaths(liveSummary.deaths, replaySummary.deaths, liveDeathPenalty, replayDeathPenalty, true)
             self:UpdateUIBosses(liveSummary.bosses, replaySummary.bosses, keystoneTimeMS, true, replayTimeMS)
             self:UpdateUIBossesCombat(false, false)
             replay:SetCurrentReplaySummary(_replay, liveSummary, replaySummary)
@@ -10523,12 +10456,13 @@ if IS_RETAIL then
 
         ---@param liveDeaths number
         ---@param replayDeaths number
-        ---@param deathPenalty number
+        ---@param liveDeathPenalty number
+        ---@param replayDeathPenalty number
         ---@param isRunning? boolean
-        function ReplayFrameMixin:SetUIDeaths(liveDeaths, replayDeaths, deathPenalty, isRunning)
+        function ReplayFrameMixin:SetUIDeaths(liveDeaths, replayDeaths, liveDeathPenalty, replayDeathPenalty, isRunning)
             local deltaDeaths = liveDeaths - replayDeaths
-            local livePenalty = liveDeaths * deathPenalty
-            local replayPenalty = replayDeaths * deathPenalty
+            local livePenalty = liveDeaths * liveDeathPenalty
+            local replayPenalty = replayDeaths * replayDeathPenalty
             if self:IsStyle("MDI") then
                 local redColor = "FF5555"
                 local livePenaltyText = format("|cff%s+%s|r", redColor, SecondsToTimeText(livePenalty, "NONE_COLORLESS"))
@@ -10807,6 +10741,7 @@ if IS_RETAIL then
         end
         if replayCount > 1 then
             local replaySelection = config:Get("replaySelection") ---@type ReplayFrameSelection
+            -- TODO: implement logic that both respects the `replaySelection` but also tries to pick the highest level run that is available
             for _, replay in ipairs(relevantReplays) do
                 local index = util:TableContains(replay.sources, replaySelection)
                 if index == #replay.sources then
@@ -10906,27 +10841,16 @@ if IS_RETAIL then
     end
 
     ---@param replays Replay[]
-    local function SortReplaysByWeeklyAffix(replays)
-        local weeklyAffixID = util:GetWeeklyAffix()
-        ---@param replay Replay
-        ---@return number? replayAffixID
-        local function GetReplayWeeklyAffix(replay)
-            for _, affix in ipairs(replay.affixes) do
-                if affix.id == weeklyAffixID then
-                    return affix.id
-                end
-            end
-        end
+    local function SortReplaysByLevelAndTime(replays)
         table.sort(replays, function(a, b)
-            local x = GetReplayWeeklyAffix(a) or 0
-            local y = GetReplayWeeklyAffix(b) or 0
-            x = x - weeklyAffixID
-            y = y - weeklyAffixID
-            if x == y then
-                x = a.mythic_level
-                y = b.mythic_level
+            local x = a.mythic_level
+            local y = b.mythic_level
+            if x ~= y then
+                return x > y
             end
-            return x > y
+            x = a.clear_time_ms
+            y = b.clear_time_ms
+            return x < y
         end)
     end
 
@@ -10960,7 +10884,7 @@ if IS_RETAIL then
         TrimHistoryFromSV()
         replays = ns:GetReplays()
         util:TableSort(replays, "date", "keystone_run_id")
-        SortReplaysByWeeklyAffix(replays)
+        SortReplaysByLevelAndTime(replays)
         hiddenContainer = CreateFrame("Frame")
         hiddenContainer:SetClipsChildren(true)
         replayFrame = CreateReplayFrame()
@@ -14390,6 +14314,7 @@ do
 
             configOptions:CreateHeadline(L.GENERAL_TOOLTIP_OPTIONS)
             if IS_RETAIL then
+                configOptions:CreateOptionToggle(L.SHOW_WARBAND_SCORE, L.SHOW_WARBAND_SCORE_DESC, "showWarbandScore")
                 configOptions:CreateOptionToggle(L.SHOW_MAINS_SCORE, L.SHOW_MAINS_SCORE_DESC, "showMainsScore")
                 configOptions:CreateOptionToggle(L.SHOW_BEST_MAINS_SCORE, L.SHOW_BEST_MAINS_SCORE_DESC, "showMainBestScore")
                 configOptions:CreateOptionToggle(L.SHOW_ROLE_ICONS, L.SHOW_ROLE_ICONS_DESC, "showRoleIcons")

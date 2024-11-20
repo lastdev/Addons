@@ -1,3 +1,30 @@
+## [2.15.1](https://github.com/edusperoni/Details_Elitism/compare/v2.15.0...v2.15.1) (2024-09-01)
+
+
+### Features
+
+* TWW S1 corrections and cleanup ([#64](https://github.com/edusperoni/Details_Elitism/issues/64)) ([12df8bf](https://github.com/edusperoni/Details_Elitism/commit/12df8bf2a8a5af0a763905b8222ff6ec12aedbdd))
+
+
+
+# [2.15.0](https://github.com/edusperoni/Details_Elitism/compare/v2.14.1...v2.15.0) (2024-08-29)
+
+
+### Features
+
+* The War Within Season 1 ([#61](https://github.com/edusperoni/Details_Elitism/issues/61)) ([5f69d25](https://github.com/edusperoni/Details_Elitism/commit/5f69d25c97f170d2acb2b46c129f0916262db14f))
+
+
+
+## [2.14.1](https://github.com/edusperoni/Details_Elitism/compare/v2.14.0...v2.14.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* use player login to load the remaining hooks ([00177da](https://github.com/edusperoni/Details_Elitism/commit/00177da0532a58e4ef5d49ecbab5a729810a0f28))
+
+
+
 # [2.14.0](https://github.com/edusperoni/Details_Elitism/compare/v2.13.0...v2.14.0) (2024-04-23)
 
 

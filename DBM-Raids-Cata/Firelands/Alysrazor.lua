@@ -1,14 +1,10 @@
 local mod	= DBM:NewMod(194, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
 
---normal,normal25,heroic,heroic25 in classic
-if not mod:IsClassic() then--Future planning, so cata classic uses regular rules defined in toc and not timewalker rules for this zone
-	mod.statTypes = "normal,heroic,timewalker"
-end
-
-mod:SetRevision("20240426180008")
+mod:SetRevision("20241103125714")
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
+mod:SetZone(720)
 --mod:SetModelSound("Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_AGGRO.ogg", "Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_TRANSITION_02.ogg")
 --Long: I serve a new master now, mortals!
 --Short: Reborn in Flame!
@@ -214,7 +210,7 @@ do
 			warnNewInitiate:Show(initiateSpawns[self.vb.initiatesSpawned])
 			if self.vb.initiatesSpawned == 6 then return end--All 6 are spawned, lets not create any timers.
 			local nextText = initiateSpawns[self.vb.initiatesSpawned+1]
-			local nextTimer = self:IsHeroic() and intiateHeroicTimers[self.vb.initiatesSpawned+1] or initiateSpawns[self.vb.initiatesSpawned+1]
+			local nextTimer = self:IsHeroic() and intiateHeroicTimers[self.vb.initiatesSpawned+1] or intiateTimers[self.vb.initiatesSpawned+1]
 			timerNextInitiate:Start(nextTimer, nextText)
 		end
 	end

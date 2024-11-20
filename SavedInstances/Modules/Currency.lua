@@ -131,6 +131,7 @@ local currency = {
   3028, -- Restored Coffer Key
   3056, -- Kej
   3008, -- Valorstones
+  2813, -- Harmonized Silk
   2914, -- Weathered Harbinger Crest
   2915, -- Carved Harbinger Crest
   2916, -- Runed Harbinger Crest
@@ -201,6 +202,11 @@ local specialCurrency = {
   [1755] = { -- BfA - Coalescing Visions
     relatedItem = {
       id = 173363, -- Vessel of Horrific Visions
+    },
+  },
+  [3028] = { -- Restored Coffer Key
+    relatedItem = {
+      id = 229899, -- Coffer Key Shard
     },
   },
 }

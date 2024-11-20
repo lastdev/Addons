@@ -54,8 +54,8 @@ L:SetWarningLocalization{
 	WarnShatter	= "분해 : %d/3"
 }
 L:SetOptionLocalization{
-	WarnFreeze	= "빙결 알림 보기",
-	WarnShatter	= "분해 알림 보기"
+	WarnFreeze	= "빙결 상태 알림",
+	WarnShatter	= "분해 상태 알림"
 }
 L:SetMiscLocalization{
 	Slow	= "느려지기 시작했습니다!",
@@ -130,7 +130,7 @@ L:SetMiscLocalization{
 	Eye			= "쑨의 눈",
 	FleshTent	= "식인 촉수",--Localized so it shows on frame in users language, not senders
 	Weakened 	= "약해집니다!",
-	NotValid	= "안퀴40 레이드를 일부만 클리어 했습니다. 부차적인 네임드가 %s마리 남아있습니다."
+	NotValid	= "안퀴40 레이드를 일부만 클리어 했습니다. 더 잡을 수 있는 보스가 %s마리 남아있습니다."
 }
 ----------------
 -- Ouro --
@@ -327,6 +327,27 @@ L:SetGeneralLocalization{
 	name = "플레임고르"
 }
 
+----------------
+--  Ebonroc and Flamegor  --
+----------------
+L = DBM:GetModLocalization("EbonrocandFlamegor")
+
+L:SetGeneralLocalization{
+	name = "에본로크와 플레임고르"
+}
+
+L:SetTimerLocalization{
+	TimerBrandCD	= "낙인"
+}
+L:SetOptionLocalization{
+	TimerBrandCD	= "낙인 쿨타임 타이머 바 보기"
+}
+
+L:SetMiscLocalization{
+	Ebonroc		= "에본로크",
+	Flamegor	= "플레임고르"
+}
+
 -----------------------
 --  Vulnerabilities  --
 -----------------------
@@ -365,14 +386,16 @@ L:SetWarningLocalization{
 L:SetTimerLocalization{
 	TimerBreathCD	= "%s 쿨타임",
 	TimerBreath		= "%s 시전",
-	TimerVulnCD		= "약화 쿨타임"
+	TimerVulnCD		= "약화 쿨타임",
+	TimerAllBreaths	= "연발 숨결"
 }
 L:SetOptionLocalization{
 	WarnBreath		= "크로마구스가 숨결 시전 시 알림 보기",
-	WarnVulnerable	= "주문 속성 약화 알림 보기",
-	TimerBreathCD	= "숨결 쿨타임 보기",
-	TimerBreath		= "숨결 시전 보기",
-	TimerVulnCD		= "약화 쿨타임 보기"
+	WarnVulnerableNew	= "주문 속성 약화 알림 보기",
+	TimerBreathCD	= "숨결 쿨타임 타이머 바 보기",
+	TimerBreath		= "숨결 시전 타이머 바 보기",
+	TimerVulnCD		= "약화 쿨타임 보기",
+	TimerAllBreaths = "연발 숨결 타이머 바 보기"
 }
 L:SetMiscLocalization{
 	Breath1	= "1번 숨결",
@@ -425,6 +448,36 @@ L:SetMiscLocalization{
 	YellDK		= "죽음의 기사여... 당장 이리 와라!",
 	YellMonk	= "수도사, 그렇게 굴러 다니면 어지럽지 않나?",
 	YellDH		= "악마사냥꾼이라고? 눈을 가리고 있다니 참으로 어리석구나. 네놈 주변 세상을 보는 것이 어렵지 않느냐?"
+}
+
+----------------------
+--  SoD BWL Trials  --
+----------------------
+L = DBM:GetModLocalization("SoDBWLTrials")
+
+L:SetGeneralLocalization{
+	name = "디스커버리 시즌 시련"
+}
+L:SetWarningLocalization{
+	SpecWarnBothBombs		= ">%s<에게 파랑과 녹색",
+	SpecWarnBothBombsYou	= "나에게 파랑과 녹색",
+}
+L:SetOptionLocalization{
+	SpecWarnBothBombs		= "파랑 녹색 폭탄에 같이 걸린 사람이 있을 때 특수 알림을 보여줍니다.",
+	SpecWarnBothBombsYou	= "내가 파랑 녹색 폭탄에 같이 걸렸을 때 특수 알림을 보여줍니다.",
+	TimerBombs				= "파랑 녹색 시련 폭탄 타이머 바 보기"
+}
+
+L:SetMiscLocalization{
+	-- Does not need translation if "BLUE BOMB" is okay, the "Blue"/"Green" strings are just fallbacks if Core is outdated
+	-- Only translate that if you need something like "BOMB BLUE"
+	BlueBomb = (DBM_COMMON_L.BLUE or "파랑") .. " " .. DBM_COMMON_L.BOMB,
+	GreenBomb = (DBM_COMMON_L.GREEN or "녹색") .. " " .. DBM_COMMON_L.BOMB,
+
+	-- Used in options
+	BlueTrial = "푸른용의 시련",
+	GreenTrial = "녹색용의 시련",
+	GreenAndBlue = "녹색과 파랑에 같이 걸린 사람",
 }
 
 ----------------
@@ -541,13 +594,22 @@ L:SetMiscLocalization{
 	Pull		= "건방진 젖먹이! 죽고 싶어 안달이구나! 자, 보아라. 주인님께서 일어나신다!"
 }
 
------------------
---  The Molten Core (Placeholder?_  --
------------------
+----------------------
+--  The Molten Core --
+----------------------
 L = DBM:GetModLocalization("MoltenCore")
 
 L:SetGeneralLocalization{
 	name = "화산 심장부"
+}
+
+L:SetOptionLocalization{
+	YellHeartCleared	= "재/불씨의 심장이 사라질 때 말풍선으로 알립니다.",
+	WarnBossPower		= "보스 기력 50%, 75%, 90%, 100%에 알림 보기"
+}
+
+L:SetWarningLocalization{
+	WarnBossPower		= "보스 기력 %d%%"
 }
 
 -----------------
@@ -680,6 +742,10 @@ L = DBM:GetModLocalization("Jindo")
 
 L:SetGeneralLocalization{
 	name = "주술사 진도"
+}
+
+L:SetMiscLocalization{
+	Ghosts = "망령"
 }
 
 --------------
@@ -1343,3 +1409,43 @@ L = DBM:GetModLocalization("ShadeofEranikusSoD")
 L:SetGeneralLocalization({
 	name = "에라니쿠스의 사령"
 })
+
+---------------------------
+--  Lord Roccor (3042) --
+---------------------------
+--L= DBM:GetModLocalization(2663)
+
+---------------------------
+--  Bael'Gar (3044) --
+---------------------------
+--L= DBM:GetModLocalization(2664)
+
+---------------------------
+--  Lord Incendius (3043) --
+---------------------------
+--L= DBM:GetModLocalization(2665)
+
+---------------------------
+--  Golem Lord Argelmach (3046) --
+---------------------------
+--L= DBM:GetModLocalization(2666)
+
+---------------------------
+--  The Seven (3048) --
+---------------------------
+--L= DBM:GetModLocalization(2667)
+
+---------------------------
+--  General Angerforge (3045) --
+---------------------------
+--L= DBM:GetModLocalization(2668)
+
+---------------------------
+--  Ambassador Flamelash (3047) --
+---------------------------
+--L= DBM:GetModLocalization(2669)
+
+---------------------------
+--  Emperor Dagran Thaurissan (3049) --
+---------------------------
+--L= DBM:GetModLocalization(2670)

@@ -48,6 +48,8 @@ L['shared_drops'] = 'Geteilte Beute'
 L['zone_drops_label'] = 'Zonenbeute'
 L['zone_drops_note'] = 'Die unten aufgeführten Gegenstände können von mehreren Gegnern in dieser Zone fallen gelassen werden.'
 
+L['poi_entrance_label'] = 'Eingang'
+
 L['requires'] = 'Benötigt'
 L['ranked_research'] = '%s (Rang %d/%d)'
 
@@ -175,10 +177,10 @@ L['options_visibility_settings'] = 'Sichtbarkeit'
 L['options_general_settings'] = 'Allgemeines'
 L['options_show_completed_nodes'] = 'Zeige bereits abgeschlossenes'
 L['options_show_completed_nodes_desc'] = 'Zeigt alle Punkte an, auch wenn diese heute bereits geplündert oder abgeschlossen wurden.'
-L['options_toggle_hide_done_rare'] = 'Blende seltene Gegner aus, deren Belohnungen bekannt sind.'
+L['options_toggle_hide_done_rare'] = 'Blende seltene Gegner aus, deren Belohnungen bekannt sind'
 L['options_toggle_hide_done_rare_desc'] = 'Blendet alle seltenen Gegner deren Beute bereits bekannt ist aus.'
-L['options_toggle_hide_done_treasure'] = nil
-L['options_toggle_hide_done_treasure_desc'] = nil
+L['options_toggle_hide_done_treasure'] = 'Blende Schätze aus, deren Belohnungen bekannt sind'
+L['options_toggle_hide_done_treasure_desc'] = 'Blendet alle Schätze deren Beute bereits bekannt ist aus.'
 L['options_toggle_hide_minimap'] = 'Blende alle Symbole auf der Minikarte aus'
 L['options_toggle_hide_minimap_desc'] = 'Blendet alle Symbole dieses Addons auf der Minikarte aus und zeigt sie nur auf der Hauptkarte an.'
 L['options_toggle_maximized_enlarged'] = 'Symbole bei maximierter Weltkarte vergrößern'
@@ -190,7 +192,13 @@ L['options_toggle_per_map_settings_desc'] = 'Die Einstellungen zum Anzeigen/Ausb
 L['options_restore_hidden_nodes'] = 'Versteckte Punkte wiederherstellen'
 L['options_restore_hidden_nodes_desc'] = 'Stellt alle Punkte wieder her, die über das Kontextmenü versteckt wurden.'
 
+L['ignore_class_restrictions'] = 'Zeige Klassenspezifisches'
+L['ignore_class_restrictions_desc'] = 'Zeigt Gruppen, Punkte und Belohnungen an, die eine andere Klasse als die des derzeitigen Charakters benötigen.'
+L['ignore_faction_restrictions'] = 'Zeige Fraktionsspezifisches'
+L['ignore_faction_restrictions_desc'] = 'Zeigt Gruppen, Punkte und Belohnungen an, die eine andere Fraktion als die des derzeitigen Charakters benötigen.'
+
 L['options_rewards_settings'] = 'Belohnungen'
+L['options_reward_behaviors_settings'] = 'Verhalten von Belohnungen'
 L['options_reward_types'] = 'Zeige Belohnungstypen'
 L['options_manuscript_rewards'] = 'Zeige Drachenwächtermanuskriptbelohnungen'
 L['options_manuscript_rewards_desc'] = 'Zeige Drachenwächtermanuskriptbelohnungen in Tooltips an und verfolge ihren Sammlungsstatus.'
@@ -241,8 +249,8 @@ L['options_toggle_show_notes'] = 'Zeige Notizen'
 L['options_toggle_show_notes_desc'] = 'Zeigt hilfreiche Notizen an sofern diese verfügbar sind.'
 L['options_toggle_use_standard_time'] = 'Verwende das 12-Stunden-Format'
 L['options_toggle_use_standard_time_desc'] = 'Zeigt die Uhrzeit im 12-Stunden-Format (z.B.: 8:00 PM) anstelle des 24-Stunden-Formates (z.B.: 20:00) in Tooltips an.'
-L['options_toggle_show_npc_id'] = nil
-L['options_toggle_show_npc_id_desc'] = nil
+L['options_toggle_show_npc_id'] = 'Zeige NPC ID'
+L['options_toggle_show_npc_id_desc'] = 'Zeigt die ID des NPCs im Tooltip an.'
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

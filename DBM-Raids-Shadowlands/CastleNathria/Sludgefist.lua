@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod(2394, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(164407)
 mod:SetEncounterID(2399)
 mod:SetUsedIcons(1)
@@ -51,7 +51,7 @@ local yellChainSlam								= mod:NewShortYell(335470, nil, nil, nil, "YELL")
 local yellChainSlamFades						= mod:NewShortFadesYell(335470, nil, nil, nil, "YELL")
 local specWarnDestructiveStomp					= mod:NewSpecialWarningRun(332318, "Melee", 247733, nil, 4, 2)
 local specWarnColossalRoar						= mod:NewSpecialWarningSpell(332687, nil, 226056, nil, 2, 2)
-local specWarnFallingRubble						= mod:NewSpecialWarningDodge(332572, nil, nil, nil, 2, 2)
+local specWarnFallingRubble						= mod:NewSpecialWarningDodgeCount(332572, nil, nil, nil, 2, 2)
 local specWarnSiesmicShift						= mod:NewSpecialWarningMoveAway(340817, nil, nil, nil, 2, 2, 4)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
 

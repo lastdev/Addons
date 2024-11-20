@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2428, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240915223108")
 mod:SetCreatureID(164261)
 mod:SetEncounterID(2383)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -37,7 +37,7 @@ local warnVolatileEjection						= mod:NewTargetNoFilterAnnounce(334266, 4, nil, 
 local specWarnGluttonousMiasma					= mod:NewSpecialWarningYouPos(329298, nil, 212238, nil, 1, 2)
 local yellGluttonousMiasma						= mod:NewShortPosYell(329298, 212238, false, 2)
 local specWarnEssenceSap						= mod:NewSpecialWarningStack(334755, false, 8, nil, 2, 1, 6)--Mythic, spammy, opt in
-local specWarnConsume							= mod:NewSpecialWarningRun(334522, nil, nil, nil, 4, 2)
+local specWarnConsume							= mod:NewSpecialWarningRunCount(334522, nil, nil, nil, 4, 2)
 local specWarnExpunge							= mod:NewSpecialWarningMoveAway(329725, nil, nil, nil, 1, 2)
 local specWarnVolatileEjectionPerWarn			= mod:NewSpecialWarningSoon(334266, false, 202046, nil, 2, 2)--Optional prewarn special warning, for the cast (before you know the targets)
 local specWarnVolatileEjection					= mod:NewSpecialWarningYou(334266, nil, 202046, nil, 1, 2)
@@ -307,7 +307,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		local icon
 		local uId = DBM:GetRaidUnitId(args.destName)
-		if self:IsMelee(uId, true) and not self.vb.meleeFound then
+		if self:IsMelee(uId) and not self.vb.meleeFound then
 			icon = 1
 			self.vb.meleeFound = true--Some sets can have more than 1 melee, this makes sure star isn't assigned to multiple
 			DBM:Debug("First Melee Miasma found: "..args.destName, 2)
@@ -349,7 +349,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnGrowingHunger:Show(amount)
 				specWarnGrowingHunger:Play("changemt")
 			else
-				local targetName = self:GetBossTarget(164261)
+				local targetName = self:GetBossTarget(164261) or DBM_COMMON_L.UNKNOWN
 				specWarnGrowingHungerOther:Show(targetName)
 				specWarnGrowingHungerOther:Play("tauntboss")
 			end

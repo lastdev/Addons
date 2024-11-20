@@ -3,10 +3,11 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20240602102337")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
+mod:SetZone(1136)
 
 mod:RegisterCombat("combat")
 
@@ -16,6 +17,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 144359 146594 145215 146822 146817 144843 144351 144358 144574 144636 147207 144683 144684",
 	"SPELL_AURA_REMOVED 144351 147207",
 	"UNIT_POWER_UPDATE boss1"
+)
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
 )
 
 --Sha of Pride
@@ -44,7 +48,6 @@ local specWarnCorruptedPrisonYou= mod:NewSpecialWarningYou(144574, false)--Since
 local yellCorruptedPrison		= mod:NewYell(144574, nil, false)
 --Pride
 local specWarnBurstingPride		= mod:NewSpecialWarningMove(144911)--25-49 Energy
-local specWarnBurstingPrideNear	= mod:NewSpecialWarningClose(144911)
 local yellBurstingPride			= mod:NewYell(144911, nil, false)
 local specWarnProjection		= mod:NewSpecialWarningYou(146822, nil, nil, nil, 3)--50-74 Energy
 local specWarnAuraOfPride		= mod:NewSpecialWarningYou(146817)--75-99 Energy
@@ -52,7 +55,7 @@ local yellAuraOfPride			= mod:NewYell(146818, nil, false)
 local specWarnOvercome			= mod:NewSpecialWarningYou(144843, nil, nil, nil, 3)--100 EnergyHonestly, i have a feeling your best option if this happens is to find a way to kill yourself!
 local specWarnBanishment		= mod:NewSpecialWarningYou(145215, nil, nil, nil, 3)--Heroic
 --Manifestation of Pride
-local specWarnManifestation		= mod:NewSpecialWarningSwitch("ej8262", "-Healer")--Spawn warning, need trigger first
+local specWarnManifestation		= mod:NewSpecialWarningSwitch(-8262, "-Healer")--Spawn warning, need trigger first
 local specWarnMockingBlast		= mod:NewSpecialWarningInterrupt(144379)
 
 --Sha of Pride
@@ -63,7 +66,7 @@ local timerSelfReflectionCD		= mod:NewNextTimer(25, 144800, nil, nil, nil, 1, ni
 local timerWoundedPrideCD		= mod:NewNextTimer(30, 144358, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--A tricky on that is based off unit power but with variable timings, but easily workable with an 11, 26 rule
 local timerBanishmentCD			= mod:NewNextTimer(37.5, 145215, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerCorruptedPrisonCD	= mod:NewNextTimer(53, 144574, nil, nil, nil, 3)--Technically 51 for Imprison base cast, but this is timer til debuffs go out.
-local timerManifestationCD		= mod:NewNextTimer(60, "ej8262", nil, nil, nil, 1, "627685")
+local timerManifestationCD		= mod:NewNextTimer(60, -8262, nil, nil, nil, 1, "627685")
 local timerSwellingPrideCD		= mod:NewNextCountTimer(75.5, 144400, nil, nil, nil, 2, nil, nil, nil, 1, 4)
 local timerWeakenedResolve		= mod:NewBuffFadesTimer(60, 147207, nil, false)
 --Pride
@@ -71,6 +74,7 @@ local timerBurstingPride		= mod:NewCastTimer(3, 144911)
 local timerProjection			= mod:NewCastTimer(6, 146822)
 
 local berserkTimer				= mod:NewBerserkTimer(600)
+local timerRP					= mod:NewRPTimer(49.5)
 
 mod:AddInfoFrameOption(-8255)
 mod:AddSetIconOption("SetIconOnMark", 144351, false)
@@ -82,7 +86,6 @@ local UnitPower, UnitPowerMax, UnitIsDeadOrGhost, UnitGUID = UnitPower, UnitPowe
 local prideLevel = DBM:EJ_GetSectionInfo(8255)
 --Not important, don't need to recover
 local manifestationWarned = false
-local bpSpecWarnFired = false
 --Important, needs recover
 mod.vb.woundCount = 0
 mod.vb.swellingCount = 0
@@ -95,13 +98,12 @@ function mod:OnCombatStart(delay)
 	end
 	timerSelfReflectionCD:Start(-delay)
 	timerCorruptedPrisonCD:Start(-delay)
-	timerManifestationCD:Start(-delay)
+	timerManifestationCD:Start(55.1-delay)
 	timerSwellingPrideCD:Start(-delay, 1)
 	berserkTimer:Start(-delay)
 	self.vb.woundCount = 0
 	manifestationWarned = false
 	self.vb.swellingCount = 0
-	bpSpecWarnFired = false
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(prideLevel)
 		DBM.InfoFrame:Show(5, "playerpower", 5, ALTERNATE_POWER_INDEX)
@@ -131,7 +133,7 @@ function mod:SPELL_CAST_START(args)
 		timerSwellingPrideCD:Cancel()
 		if not self:IsDifficulty("lfr25") then
 			timerWoundedPrideCD:Stop()
-			timerWoundedPrideCD:Start()
+			timerWoundedPrideCD:Start(self:IsMythic() and 11 or 30)--It wasn't throwing errors on heroic, but it was on mythic. This should fix it for both
 		end
 		timerSelfReflectionCD:Stop()
 		timerSelfReflectionCD:Start()
@@ -148,7 +150,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 144400 then--Swelling Pride Cast END
 		self.vb.woundCount = 0
-		bpSpecWarnFired = false
 		--Since we register this event anyways for bursting, might as well start cd bars here instead
 		timerMarkCD:Stop()
 		timerMarkCD:Start(10.5)
@@ -177,13 +178,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 					local targetName = DBM:GetUnitFullName(uId)
 					warnBurstingPride:CombinedShow(0.5, targetName)
 					if targetName == UnitName("player") then
-						bpSpecWarnFired = true
 						specWarnBurstingPride:Show()
 						yellBurstingPride:Yell()
 						timerBurstingPride:Start()
-					elseif self:CheckNearby(6, targetName) and not bpSpecWarnFired then
-						bpSpecWarnFired = true
-						specWarnBurstingPrideNear:Show(targetName)
 					end
 				end
 			end
@@ -286,5 +283,13 @@ function mod:UNIT_POWER_UPDATE(uId)
 		specWarnManifestation:Show()--No spawn trigger to speak of. fortunately for us, they spawn based on boss power.
 	elseif power > 10 and power < 82 and manifestationWarned then
 		manifestationWarned = false
+	end
+end
+
+--"<5.42 16:19:29> [CHAT_MSG_MONSTER_SAY] So Hellscream's arrogance unleashed the last of the sha. I am not surprised.#Lady Jaina Proudmoore###Sylveonyx
+--"<54.96 16:20:19> [CHAT_MSG_MONSTER_SAY] Come heroes, through the portal! The siege of Orgrimmar begins!#Lady Jaina Proudmoore###Lady Jaina Proudmoore##0#0##0#3243#nil#0#false#false#false#false"
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if msg:find(L.PortalRP) then
+		timerRP:Start()
 	end
 end

@@ -116,7 +116,7 @@ local _bankOpen = false
 local function scanBag(bagId, isBank, bagTable, bagItemsWithCount)
 
 	local numSlots = C_Container.GetContainerNumSlots(bagId)
-	--local loc = ItemLocation.CreateEmpty()
+	local loc = ItemLocation.CreateEmpty()
 	local item
 	for slotId = 1, numSlots do
 		local itemInfo = C_Container.GetContainerItemInfo(bagId, slotId)
@@ -131,6 +131,10 @@ local function scanBag(bagId, isBank, bagTable, bagItemsWithCount)
 					itemData.guid = strsub(itemData.guid, -9)
 				end
 
+				loc:SetBagAndSlot(bagId, slotId)
+				itemData.warbound = C_Item.IsBoundToAccountUntilEquip(loc)
+				itemData.soulbound = C_Item.IsBound(loc)
+								
 				-- see if this is an azerite item and read azerite power ids
 				--[[loc:SetBagAndSlot(bagId, slotId)
 				if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(loc) then
@@ -410,8 +414,7 @@ end
 
 local function readTalentConfig(configId)
 
-	local talMap = {}
-
+	--[[
 	local config = C_Traits.GetConfigInfo(configId)
 	if not config or config.type ~= Enum.TraitConfigType.Combat then return nil end
 	
@@ -441,6 +444,8 @@ local function readTalentConfig(configId)
 	-- NOTE: the below will also pick up ranks in inactive subtrees... kind of annoying, but that is how they remember your selections
 	--       when switching back and forth, and then the selected subtree implicitly disables the inactive tree
 	
+	local talMap = {}
+
   	for i = 1, #treeIds do
     	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
 			local node = C_Traits.GetNodeInfo(configId, nodeId)
@@ -468,16 +473,15 @@ local function readTalentConfig(configId)
 			end
 
 			-- for reference if ever need it
-			--[[
-			local activeEntryId = node.entryIDs[1]
-			local entry = C_Traits.GetEntryInfo(configId, activeEntryId)
-			local defnId = entry["definitionID"]
-			local defn = C_Traits.GetDefinitionInfo(defnId)
-			local spellId = defn["spellID"]
-			local spellName = C_Spell.GetSpellName(spellId)
-			if spellName == "Lightning Strikes" then
-				print(Amr:dump(node))							
-			end]]
+			--local activeEntryId = node.entryIDs[1]
+			--local entry = C_Traits.GetEntryInfo(configId, activeEntryId)
+			--local defnId = entry["definitionID"]
+			--local defn = C_Traits.GetDefinitionInfo(defnId)
+			--local spellId = defn["spellID"]
+			--local spellName = C_Spell.GetSpellName(spellId)
+			--if spellName == "Lightning Strikes" then
+			--	print(Amr:dump(node))							
+			--end
 
 		end
 	end
@@ -489,12 +493,25 @@ local function readTalentConfig(configId)
 		for i, rank in ipairs(ranks) do
 			table.insert(tals, rank)
 		end
+	end	
+	]]
+
+	local configData = Amr:GetTalentConfigData(configId)
+	if not configData then return nil end
+
+	local tals = {}
+
+	-- sort by node ID
+	for nodeId, nodeData in Amr.spairs(configData.nodes) do
+		for i, rank in ipairs(nodeData.ranks) do
+			table.insert(tals, rank)
+		end
 	end
 
 	return {
 		id = configId,
-		name = config.name,
-		tals = table.concat(tals, "") .. "_" .. activeSubtreeId
+		name = configData.name,
+		tals = table.concat(tals, "") .. "_" .. configData.activeSubtreeId
 	}
 end
 
@@ -606,6 +623,28 @@ local function scanHighestItemLevels()
 	Amr.db.char.HighestItemLevels = lvls	
 end
 
+local function scanAchievements()
+
+	local achieved = {}
+
+	local interestingIds = {
+		40107, -- season 1 weathered crest
+		40115, -- season 1 carved crest
+		40118, -- season 1 runed crest
+		40939, -- season 1 gilded crest
+	}
+
+	for _, achievementId in ipairs(interestingIds) do
+		local _, _, _, completed = GetAchievementInfo(achievementId)
+		if completed then
+			table.insert(achieved, achievementId)
+		end
+	end
+
+	-- replace all achievements every time we scan, prevents unused ones from building up
+	Amr.db.char.Achievements = achieved
+end
+
 -- Returns a data object containing all information about the current player needed for an export:
 -- gear, spec, reputations, bag, bank, and void storage items.
 function Amr:ExportCharacter()
@@ -619,6 +658,9 @@ function Amr:ExportCharacter()
 
 	-- scan highest ilvls in each slot used for determining upgrade discounts
 	scanHighestItemLevels()
+
+	-- scan some achievements, right now used for determining some more upgrade discounts
+	scanAchievements()
 
 	-- scan current inventory just before export so that it is always fresh
 	scanBags()
@@ -636,6 +678,7 @@ function Amr:ExportCharacter()
 	scanGreatVault()
 
 	data.HighestItemLevels = Amr.db.char.HighestItemLevels
+	data.Achievements = Amr.db.char.Achievements
 
 	data.SavedTalentConfigs = Amr.db.char.TalentConfigs.ConfigList
 	data.LastTalentConfig = Amr.db.char.TalentConfigs.LastConfig

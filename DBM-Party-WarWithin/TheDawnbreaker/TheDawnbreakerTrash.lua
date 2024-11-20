@@ -1,10 +1,12 @@
 local mod	= DBM:NewMod("TheDawnbreakerTrash", "DBM-Party-WarWithin", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240901002640")
+mod:SetRevision("20241111094130")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
+mod:SetZone(2662)
+mod:RegisterZoneCombat(2662)
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 451102 450854 451117 451097 431364 431494 432565 432520 431333 431637 451091 451098 431349 446615 450756 431304",
@@ -25,6 +27,7 @@ mod:RegisterEvents(
  or (ability.id = 451112 or ability.id = 432448 or ability.id = 451107) and type = "cast"
  or stoppedAbility.id = 450756 or stoppedAbility.id = 451097 or stoppedAbility.id = 431364 or stoppedAbility.id = 431333 or stoppedAbility.id = 431309 or stoppedAbility.id = 432520
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
+ or (source.type = "NPC" and source.firstSeen = timestamp and source.id = 211261) or (target.type = "NPC" and target.firstSeen = timestamp and target.id = 211261)
  --]]
 local warnReinforcements					= mod:NewSpellAnnounce(446615, 2)
 local warnDarkFloes							= mod:NewSpellAnnounce(431304, 2)
@@ -37,7 +40,7 @@ local warnEnsaringShadows					= mod:NewTargetNoFilterAnnounce(431309, 2, nil, "R
 
 local specWarnShadowyDecay					= mod:NewSpecialWarningSpell(451102, nil, nil, nil, 2, 2)
 local specWarnDarkOrb						= mod:NewSpecialWarningSpell(450854, nil, nil, nil, 2, 2)
-local specWarnBlackEdge						= mod:NewSpecialWarningDodge(431494, nil, nil, nil, 2, 2)
+local specWarnBlackEdge						= mod:NewSpecialWarningDodge(431494, nil, nil, nil, 2, 15)
 local specWarnBlackHail						= mod:NewSpecialWarningDodge(432565, nil, nil, nil, 2, 2)
 local specWarnTerrifyingSlam				= mod:NewSpecialWarningRun(451117, nil, nil, nil, 4, 2)
 local specWarnTackyNova						= mod:NewSpecialWarningRun(451098, nil, nil, nil, 4, 2)
@@ -58,18 +61,18 @@ local specWarnTacticiansRageDispel			= mod:NewSpecialWarningDispel(451112, "Remo
 
 local timerAbyssalBlastCD					= mod:NewCDNPTimer(9.4, 451119, nil, "Tank|Healer", nil, 5)--9.4-23.98 (wildly varient due to lower priority over other abilities)
 local timerShadowyDecayCD					= mod:NewCDNPTimer(23.4, 451102, nil, nil, nil, 2)
-local timerDarkOrbCD						= mod:NewCDNPTimer(14.2, 450854, nil, nil, nil, 3)--14.2-36.8 (wildly varient due to lower priority over other abilities)
+local timerDarkOrbCD						= mod:NewCDPNPTimer(14.2, 450854, nil, nil, nil, 3)--14.2-36.8 (wildly varient due to lower priority over other abilities)
 local timerTerrifyingSlamCD					= mod:NewCDNPTimer(21.2, 451117, nil, nil, nil, 2)
-local timerBlackEdgeCD						= mod:NewCDNPTimer(10.3, 431494, nil, nil, nil, 3)
+local timerBlackEdgeCD						= mod:NewCDPNPTimer(10.3, 431494, nil, nil, nil, 3)
 local timerBlackHailCD						= mod:NewCDNPTimer(12.5, 432565, nil, nil, nil, 3)
 local timerUmbrelRushCD						= mod:NewCDNPTimer(9.1, 431637, nil, nil, nil, 3)
-local timerUmbrelBarrierCD					= mod:NewCDNPTimer(24.2, 432520, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)--Single log with single cast, not great sample
+local timerUmbrelBarrierCD					= mod:NewCDPNPTimer(24.2, 432520, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)--Single log with single cast, not great sample
 local timerTacticiansRageCD					= mod:NewCDNPTimer(18.2, 451112, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
-local timerSilkenShellCD					= mod:NewCDNPTimer(18.4, 451097, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerTormentingRayCD					= mod:NewCDNPTimer(8, 431364, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
-local timerAbyssalHowlCD					= mod:NewCDNPTimer(25.6, 450756, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerSilkenShellCD					= mod:NewCDPNPTimer(18.4, 451097, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerTormentingRayCD					= mod:NewCDPNPTimer(8, 431364, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerAbyssalHowlCD					= mod:NewCDPNPTimer(25.6, 450756, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerTorentingEruptionCD				= mod:NewCDNPTimer(11.2, 431349, nil, nil, nil, 3)
-local timerEnsharingShadowsCD				= mod:NewCDNPTimer(18.1, 431309, nil, nil, nil, 5, nil, DBM_COMMON_L.CURSE_ICON)
+local timerEnsharingShadowsCD				= mod:NewCDPNPTimer(18.1, 431309, nil, nil, nil, 5, nil, DBM_COMMON_L.CURSE_ICON)
 local timerStygianSeedCD					= mod:NewCDNPTimer(21.8, 432448, nil, nil, nil, 3)
 local timerBurstingCacoonCD					= mod:NewCDNPTimer(15.7, 451107, nil, nil, nil, 3)
 
@@ -91,6 +94,7 @@ end
 --]]
 
 function mod:SPELL_CAST_START(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 451102 then
@@ -99,7 +103,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnShadowyDecay:Play("aesoon")
 		end
 	elseif spellId == 450854 then--Trash Version
-		if self:AntiSpam(3, 2) then
+		if self:AntiSpam(2.5, 2) then--Lowered exception since it often overlaps with Black edge, and users then think this warning is broken when it does common warning type aggregation
 			specWarnDarkOrb:Show()
 			specWarnDarkOrb:Play("watchorb")
 		end
@@ -130,7 +134,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 431494 then
 		if self:AntiSpam(3, 2) then
 			specWarnBlackEdge:Show()
-			specWarnBlackEdge:Play("shockwave")
+			specWarnBlackEdge:Play("frontal")
 		end
 	elseif spellId == 432565 then
 		if self:AntiSpam(3, 2) then
@@ -176,6 +180,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 451112 then
@@ -272,6 +277,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:UNIT_DIED(args)
+	if not self.Options.Enabled then return end
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 211261 then--Ascendant Vis'coxria
 		timerAbyssalBlastCD:Stop(args.destGUID)--They all cast this
@@ -294,14 +300,57 @@ function mod:UNIT_DIED(args)
 		timerBlackHailCD:Stop(args.destGUID)
 	elseif cid == 213893 or cid == 228539 then--Nightfall Darkcaster
 		timerUmbrelBarrierCD:Stop(args.destGUID)
+	elseif cid == 213895 or cid == 228537 then--Nightfall Shadowalker
 		timerUmbrelRushCD:Stop(args.destGUID)
 	elseif cid == 214762 then--Nightfall Commander
 		timerAbyssalHowlCD:Stop(args.destGUID)
 	elseif cid == 213885 then--Nightfall Dark Architect
 		timerTorentingEruptionCD:Stop(args.destGUID)
-	elseif cid == 213892 then--Nightfall Shadowmage
+	elseif cid == 213892 or cid == 228540 then--Nightfall Shadowmage (223994 is an RP mage, not engaged)
 		timerEnsharingShadowsCD:Stop(args.destGUID)
 	elseif cid == 210966 then--Sureki Webmage
 		timerBurstingCacoonCD:Stop(args.destGUID)
 	end
+end
+
+--All timers subject to a ~0.5 second clipping due to ScanEngagedUnits
+function mod:StartNameplateTimers(guid, cid)
+	if cid == 211261 then--Ascendant Vis'coxria
+		timerShadowyDecayCD:Start(3.6, guid)--3.6-5.5
+		timerAbyssalBlastCD:Start(13.3, guid)--13.3-15.2
+	elseif cid == 211263 then--Deathscreamer Iken'tak
+		timerAbyssalBlastCD:Start(5.8, guid)--5.8-6.8
+		timerDarkOrbCD:Start(12.8, guid)--12.8-13.1
+	elseif cid == 211262 then--Ixkreten the Unbreakable
+		timerAbyssalBlastCD:Start(2.4, guid)--2.4-5
+		timerTerrifyingSlamCD:Start(7.2, guid)--7.2-9.9
+--	elseif cid == 213932 then--Sureki Militant (players often don't pull this)
+--		timerSilkenShellCD:Start(18.4, guid)
+	elseif cid == 214761 then--Nightfall Ritualist
+--		timerTormentingRayCD:Start(1.4, guid)--0.1-1.8
+		timerStygianSeedCD:Start(9.2, guid)--9.2-11.3
+	elseif cid == 213934 then--Nightfall Tactician
+		timerBlackEdgeCD:Start(3.2, guid)--3.2-6.2
+		timerTacticiansRageCD:Start(7.4, guid)--7.4-11.7
+	elseif cid == 211341 then--Manifested Shadow
+		timerBlackHailCD:Start(5.3, guid)--5.3-8.8
+--	elseif cid == 213893 or cid == 228539 then--Nightfall Darkcaster
+--		timerUmbrelBarrierCD:Start(8.6, guid)--8.6-17 (first cast not likley timer based but health threshold based)
+--	elseif cid == 213895 or cid == 228537 then--Nightfall Shadowalker
+--		timerUmbrelRushCD:Start(9.1, guid)--Used instantly on engage
+	elseif cid == 214762 then--Nightfall Commander
+		timerAbyssalHowlCD:Start(6.5, guid)--6.5-10.0
+	elseif cid == 213885 then--Nightfall Dark Architect
+		timerTorentingEruptionCD:Start(5.4, guid)--5.4-5.9
+	elseif cid == 213892 or cid == 228540 then--Nightfall Shadowmage (223994 is an RP mage, not engaged)
+		timerEnsharingShadowsCD:Start(cid == 228540 and 10.8 or 8.0, guid)--8.0-12.9 (213892) 10.8-14 (228540)
+	elseif cid == 210966 then--Sureki Webmage
+		timerBurstingCacoonCD:Start(1.8, guid)--1.8-11.7
+	end
+end
+
+--Abort timers when all players out of combat, so NP timers clear on a wipe
+--Caveat, it won't calls top with GUIDs, so while it might terminate bar objects, it may leave lingering nameplate icons
+function mod:LeavingZoneCombat()
+	self:Stop()
 end

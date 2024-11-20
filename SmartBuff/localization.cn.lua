@@ -280,8 +280,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "重新设定BUFF定时器";
 -- 设置窗口
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "修复 铸造"
-SMARTBUFF_OFTT_FIXBUFF		 = "如果施放 buff 失败，请勾选此选项。"
+SMARTBUFF_OFT_FIXBUFF        = "修复 铸造"
+SMARTBUFF_OFTT_FIXBUFF       = "如果施放 buff 失败，请勾选此选项。"
 
 SMARTBUFF_OFT                = "启用SmartBuff";
 SMARTBUFF_OFT_MENU           = "显示/隐藏配置菜单";
@@ -308,7 +308,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "正常";
 SMARTBUFF_OFT_MSGWARNING     = "警告";
 SMARTBUFF_OFT_MSGERROR       = "错误";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "隐藏小地图按钮";
-SMARTBUFF_OFT_INCLUDETOYS	 = "展示玩具";
+SMARTBUFF_OFT_INCLUDETOYS    = "展示玩具";
 SMARTBUFF_OFT_REBUFFTIMER    = "提醒时间";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "自动开启配置";
 SMARTBUFF_OFT_SELFFIRST      = "首选自身";
@@ -333,10 +333,12 @@ SMARTBUFF_OFT_HIDESABUTTON   = "隐藏动作按钮";
 SMARTBUFF_OFT_INCOMBAT       = "战斗中触发";
 SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_PURGE_DATA     = "您确定要重置所有 SmartBuff 数据吗？\n此操作将强制重新加载 UI！";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_REQ_RELOAD     = "新版本需要重新加载 GUI\n准备就绪后单击继续。";
 SMARTBUFF_OFT_YES            = "是的";
 SMARTBUFF_OFT_NO             = "不";
-SMARTBUFF_OFT_OKAY			 = "继续"
+SMARTBUFF_OFT_OKAY           = "继续"
 
 -- 设置信息提示
 SMARTBUFF_OFTT               = "启用智能施法";
@@ -353,7 +355,7 @@ SMARTBUFF_OFTT_ARULES        = "设定以下情况不施法：法师、牧师和
 SMARTBUFF_OFTT_SUBGRPCHANGED = "当你所在队伍发生变动后，自动开启Smartbuff配置窗口。";
 SMARTBUFF_OFTT_GRPBUFFSIZE   = "设定所在小队中玩家的BUFF消失的人数上限，来触发群体BUFF的施放。";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "隐藏小地图按钮。";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "将玩具与您的咒语和食物一起列入清单。";
+SMARTBUFF_OFTT_INCLUDETOYS   = "将玩具与您的咒语和食物一起列入清单。";
 SMARTBUFF_OFTT_REBUFFTIMER   = "设定当BUFF消失前多少秒，提示你重新施法。0 = 不提示";
 SMARTBUFF_OFTT_SELFFIRST     = "优先给自己施放BUFF。";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "当鼠标滚轴向上滚动时触发技能。";
@@ -377,7 +379,7 @@ SMARTBUFF_OFTT_HIDESABUTTON  = "隐藏SmartBuff动作按钮。";
 SMARTBUFF_OFTT_INCOMBAT      = "目前只能用于你自己身上。\n你设定的第一个战斗中可释放的BUFF将在战斗前放置到动作按钮上，\n因此你可以在战斗中施放这个法术。\n警告：战斗中所有逻辑判断都将不可用！";
 SMARTBUFF_OFTT_SMARTDEBUFF   = "显示SmartDebuff窗口。";
 SMARTBUFF_OFTT_SPLASHDURATION= "设定多少秒后提示信息消失。";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "选择所需的飞溅声.";
+SMARTBUFF_OFTT_SOUNDSELECT   = "选择所需的飞溅声.";
 
 
 -- BUFF设置内容
@@ -406,9 +408,9 @@ SMARTBUFF_PSTT_RESIZE        = "最小化/最大化\n主设置窗口";
 
 -- 命令行信息提示内容
 SMARTBUFF_MSG_LOADED         = "已加载";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff 有可用的新版本，您正在使用 |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff 和修订 |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff 目前可供下载。 加入 Discord 以获取所有最新信息： https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff 有可用的新版本，您正在使用 |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff 和修订 |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff 目前可供下载。 加入 Discord 以获取所有最新信息： https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmartBuff已禁用！";
 SMARTBUFF_MSG_SUBGROUP       = "你已经加入一个新的队伍，请检查你的设置。";
 SMARTBUFF_MSG_NOTHINGTODO    = "没有指令可以执行。";
@@ -429,7 +431,7 @@ SMARTBUFF_MSG_REBUFF         = "你的BUFF：";
 SMARTBUFF_MSG_LEFT           = "以后消失！";
 SMARTBUFF_MSG_CLASS          = "职业";
 SMARTBUFF_MSG_CHARGES        = "次数";
-SMARTBUFF_MSG_SOUNDS		 = "飞溅声音选择: "
+SMARTBUFF_MSG_SOUNDS         = "飞溅声音选择: "
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "左键：选项菜单\n右键：开/关\nAlt+左键：SmartDebuff\n按Shift拖拽：移动按钮";

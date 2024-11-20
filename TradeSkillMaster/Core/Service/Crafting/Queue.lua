@@ -172,9 +172,9 @@ end
 
 function private.RestockItem(itemString)
 	assert(not next(private.optionalMatTemp) and not next(private.qualityMatTemp))
-	local cheapestCost, cheapestCraftString = TSM.Crafting.Cost.GetLowestCostByItem(itemString, private.optionalMatTemp, private.qualityMatTemp)
-	if not cheapestCraftString then
-		-- can't craft this item
+	local cheapestCost, cheapestCraftString, cheapestConcentration = TSM.Crafting.Cost.GetLowestCostByItem(itemString, private.optionalMatTemp, private.qualityMatTemp)
+	if not cheapestCraftString or (cheapestConcentration or 0) > 0 then
+		-- Can't craft this item (or need concentration)
 		wipe(private.qualityMatTemp)
 		wipe(private.optionalMatTemp)
 		return
@@ -190,7 +190,7 @@ function private.RestockItem(itemString)
 	local profit = itemValue and cheapestCost and (itemValue - cheapestCost) or nil
 	local hasMinProfit, minProfit = CraftingOperation.GetMinProfit(itemString)
 	if hasMinProfit and (not minProfit or not profit or profit < minProfit) then
-		-- profit is too low
+		-- Profit is too low
 		return
 	end
 
@@ -214,16 +214,11 @@ function private.RestockItem(itemString)
 	if neededQuantity == 0 then
 		return
 	end
-	local chance = 1
 	if CraftString.GetQuality(cheapestCraftString) then
 		assert(not next(private.matsTemp) and not next(private.qualityMatTemp))
 		TSM.Crafting.GetMatsAsTable(cheapestCraftString, private.matsTemp)
-		local canCraft, inspirationChance = TSM.Crafting.DFCrafting.GetOptionalMats(cheapestCraftString, private.matsTemp, private.qualityMatTemp)
-		if canCraft then
-			chance = inspirationChance
-		end
 		wipe(private.qualityMatTemp)
 		wipe(private.matsTemp)
 	end
-	Queue.SetNum(recipeString, floor(neededQuantity / (TSM.Crafting.GetNumResult(cheapestCraftString) * chance)))
+	Queue.SetNum(recipeString, floor(neededQuantity / TSM.Crafting.GetNumResult(cheapestCraftString)))
 end

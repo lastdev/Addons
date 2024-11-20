@@ -3,6 +3,7 @@
 -- TODO:
 -- Improve speed
 -- Optional compact UI
+-- Tests for search
 
 -- Known issues:
 -- Overlapping buttons
@@ -128,7 +129,9 @@ local DefaultOptions =
 	["sortDownIcon"] = "Interface/Icons/misc_arrowdown",
 	["showButtonIcon"] = "Interface/Icons/levelupicon-lfd",
 	["removeButtonIcon"] = "Interface/Icons/INV_Misc_Bone_Skull_03",
-	["conciseDungeonSpells"] = 1
+	["conciseDungeonSpells"] = 1,
+	["showSearch"] = 1,
+	["searchHidden"] = 1,
 }
 
 -- Themes. For now there aren't many of these. Message me on curseforge.com
@@ -694,6 +697,18 @@ local function SortSpells(spell1, spell2, sortType)
 	return spellName1 < spellName2
 end
 
+function TeleporterGetSearchString()
+	if GetOption("showSearch") then
+		local searchString = TeleporterSearchBox:GetText()
+		if searchString == "" then
+			return nil
+		else
+			return searchString
+		end
+	else
+		return nil
+	end
+end
 
 local function SetupSpells()
 	local loaded = true
@@ -1358,6 +1373,17 @@ local function GetMaximumHeight()
 	return GetScaledOption("maximumHeight") * GetOption("heightScalePercent") / 100
 end
 
+local function UpdateSearch(searchString)
+	if  UnitAffectingCombat("player") then
+		print("Cannot search while in combat")
+	else
+		IsRefreshing = true
+		TeleporterHideCreatedUI()
+		TeleporterOpenFrame(true)
+		IsRefreshing = false
+	end
+end
+
 local function CreateMainFrame()
 	TeleporterParentFrame = TeleporterFrame
 	TeleporterParentFrame:SetFrameStrata("HIGH")
@@ -1417,6 +1443,25 @@ local function CreateMainFrame()
 	closeButton:SetHeight( buttonHeight )
 	closeButton:SetScript( "OnClick", TeleporterClose )
 
+	-- Search box
+	local searchFrame = CreateFrame("EditBox", "TeleporterSearchBox", TeleporterParentFrame, "InputBoxTemplate")
+	searchFrame:SetPoint("LEFT", TeleporterParentFrame, "LEFT", buttonInset * 2, 0)
+	searchFrame:SetPoint("TOPRIGHT", closeButton, "TOPLEFT", -4, -2)
+	searchFrame:SetHeight(buttonHeight)
+	searchFrame:SetAutoFocus(false)
+	searchFrame:SetMultiLine(false)
+
+	searchFrame:SetScript("OnTextChanged", function(self, userInput)
+		if userInput then
+			UpdateSearch(searchFrame:GetText())
+		end
+	end)
+	if GetOption("showSearch") then
+		searchFrame:Show()
+	else
+		searchFrame:Hide()
+	end
+
 	-- Help text
 	if GetOption("showHelp") then
 		local helpString = TeleporterParentFrame:CreateFontString("TeleporterHelpString", nil, GetOption("titleFont"))
@@ -1441,14 +1486,31 @@ local function GetRandomHearth(validSpells)
 	if ChosenHearth then
 		return ChosenHearth
 	end
-	local hearthSpells = {}
+	local hearthSpellsFastestCooldown = {}
+	local hearthSpellsNotCooldown = {}
+	local fastestCooldownEnd = 0
 	for index, spell in ipairs(validSpells) do
 		if spell:GetZone() == TeleporterHearthString then
-			tinsert(hearthSpells, spell.spellId)
+			local cooldownStart, cooldownDuration = SafeGetItemCooldown(spell.spellId)
+			if cooldownStart and cooldownStart > 0 then
+				local cooldownEnd = cooldownStart + cooldownDuration
+				if fastestCooldownEnd == 0 or cooldownEnd < fastestCooldownEnd then
+					hearthSpellsFastestCooldown = {}
+					fastestCooldownEnd = cooldownEnd
+				end
+				if cooldownEnd == fastestCooldownEnd then
+					tinsert(hearthSpellsFastestCooldown, spell.spellId)
+				end
+			else
+				tinsert(hearthSpellsNotCooldown, spell.spellId)
+			end
 		end
 	end
-	if  #hearthSpells > 0 then
-		ChosenHearth =  hearthSpells[math.random(#hearthSpells)]
+	if  #hearthSpellsNotCooldown > 0 then
+		ChosenHearth =  hearthSpellsNotCooldown[math.random(#hearthSpellsNotCooldown)]
+		return ChosenHearth
+	elseif  #hearthSpellsFastestCooldown > 0 then
+		ChosenHearth =  hearthSpellsFastestCooldown[math.random(#hearthSpellsFastestCooldown)]
 		return ChosenHearth
 	else
 		return nil
@@ -1525,7 +1587,7 @@ function TeleporterSortSpells()
 	table.sort(TeleporterSpells, function(a,b) return SortSpells(a, b, SortType) end)
 end
 
-function TeleporterOpenFrame()
+function TeleporterOpenFrame(isSearching)
 	if UnitAffectingCombat("player") then
 		print( "Cannot use " .. AddonTitle .. " while in combat." )
 		return
@@ -1533,7 +1595,7 @@ function TeleporterOpenFrame()
 
 	InitalizeOptions()
 
-	if not IsVisible then
+	if not IsVisible or isSearching then
 		local buttonHeight = GetScaledOption("buttonHeight")
 		local buttonWidth = GetScaledOption("buttonWidth")
 		local labelHeight = GetScaledOption("labelHeight")
@@ -1582,6 +1644,7 @@ function TeleporterOpenFrame()
 		TeleporterCloseButton:SetWidth( buttonHeight )
 		TeleporterCloseButton:SetHeight( buttonHeight )
 		TeleporterCloseButtonText:SetFont(fontFile, fontHeight, fontFlags)
+		TeleporterSearchBox:SetHeight(buttonHeight)
 
 		if TeleporterHelpString then
 			TeleporterHelpString:SetFont(fontFile, fontHeight, fontFlags)
@@ -1599,6 +1662,16 @@ function TeleporterOpenFrame()
 		end
 
 		local minyoffset = -buttonInset - 10
+
+		local searchString = TeleporterGetSearchString()
+		if GetOption("showSearch") then
+			TeleporterSearchBox:Show()
+			minyoffset = -2 * buttonInset - TeleporterSearchBox:GetHeight()
+			maximumHeight = maximumHeight + TeleporterSearchBox:GetHeight() - buttonInset
+		else
+			TeleporterSearchBox:Hide()
+		end
+
 		local yoffset = minyoffset
 		local maxyoffset = -yoffset
 		local xoffset = buttonInset
@@ -1634,6 +1707,12 @@ function TeleporterOpenFrame()
 			local haveSpell = true
 			if spell:GetZone() == TeleporterHearthString and GetOption("randomHearth") then
 				if spellId ~= onlyHearth and not CustomizeSpells then
+					haveSpell = false
+				end
+			end
+
+			if searchString and searchString ~= "" then
+				if not spell:MatchesSearch(searchString) then
 					haveSpell = false
 				end
 			end
@@ -1758,12 +1837,12 @@ function TeleporterOpenFrame()
 				nameString:SetFont(fontFile, fontHeight, fontFlags)
 				nameString:SetJustifyH("LEFT")
 				nameString:SetJustifyV("MIDDLE")
-				nameString:SetPoint("TOP",cooldownString,"TOPRIGHT",0,0)
-				nameString:SetPoint("LEFT", buttonFrame, "TOPLEFT", iconOffsetX + iconW + 2, iconOffsetY - 1)
+				nameString:SetPoint("TOPLEFT", teleicon, "TOPRIGHT", 2, 0)
 				if CustomizeSpells then
 					nameString:SetPoint("BOTTOMRIGHT",cooldownString,"BOTTOMLEFT",-iconW * 4,0)
 				else
-					nameString:SetPoint("BOTTOMRIGHT",cooldownString,"BOTTOMLEFT",0,0)
+					nameString:SetPoint("RIGHT",cooldownString,"LEFT",0,0)
+					nameString:SetPoint("BOTTOM",teleicon,"BOTTOM",0,0)
 				end
 				nameString:SetText( displaySpellName )
 

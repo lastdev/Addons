@@ -36,7 +36,7 @@ Fitzgerald
 Gentium Plus
 	license: SIL Open Font License
 	source: http://software.sil.org/gentium/
-	version: 6.101
+	version: 6.200
 
 Hack
 	license: MIT License / Bitstream Vera License

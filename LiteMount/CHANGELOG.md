@@ -1,7 +1,6 @@
 # LiteMount
 
-## [11.0.2-6](https://github.com/xod-wow/LiteMount/tree/11.0.2-6) (2024-08-27)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/11.0.2-5...11.0.2-6) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [11.0.5-2](https://github.com/xod-wow/LiteMount/tree/11.0.5-2) (2024-10-24)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/11.0.5-1...11.0.5-2) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Revert "Don't save/restore moonkin form, oops" #287  
-- Update translations  
+- Remove IsPlayer requirement for Copy Target's Mount  

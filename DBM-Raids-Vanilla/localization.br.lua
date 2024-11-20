@@ -311,7 +311,7 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	WarnSimulKill	= "Anunciar o primeiro lacaio morto",
-	TimerSimulKill	= "Mostrar a hora da ressurreição do sacerdote"
+	TimerSimulKill	= "Exibir a hora da ressurreição do sacerdote"
 })
 
 L:SetMiscLocalization({
@@ -387,130 +387,9 @@ L = DBM:GetModLocalization("Jindo")
 L:SetGeneralLocalization{
 	name = "Jin'do, o Bagateiro"
 }
-
--------------------
---  Venoxis  --
--------------------
-L = DBM:GetModLocalization("Venoxis")
-
-L:SetGeneralLocalization{
-	name = "Sumo Sacerdote Venoxis"
-}
-
--------------------
---  Jeklik  --
--------------------
-L = DBM:GetModLocalization("Jeklik")
-
-L:SetGeneralLocalization{
-	name = "Alta-sacerdotisa Jeklik"
-}
-
--------------------
---  Marli  --
--------------------
-L = DBM:GetModLocalization("Marli")
-
-L:SetGeneralLocalization{
-	name = "Alta-sacerdotisa Mar'li"
-}
-
--------------------
---  Thekal  --
--------------------
-L = DBM:GetModLocalization("Thekal")
-
-L:SetGeneralLocalization{
-	name = "Sumo Sacerdote Thekal"
-}
-
-L:SetWarningLocalization({
-	WarnSimulKill	= "Primeiro lacaio morto - ressurreição em ~ 15 segundos"
-})
-
-L:SetTimerLocalization({
-	TimerSimulKill	= "Ressurreição"
-})
-
-L:SetOptionLocalization({
-	WarnSimulKill	= "Anunciar o primeiro lacaio morto",
-	TimerSimulKill	= "Mostrar a hora da ressurreição do sacerdote"
-})
-
-L:SetMiscLocalization({
-	PriestDied	= "%s morre.",
-	YellPhase2	= "Shirvallah! Me preenche com a tua fúria!",
-	YellKill	= "Não sou mais prisioneiro de Hakkar! Enfim, paz!",
-	Thekal		= "Sumo Sacerdote Thekal",
-	Zath		= "Zelote Zath",
-	LorKhan		= "Zelote Lor'Khan"
-})
-
--------------------
---  Arlokk  --
--------------------
-L = DBM:GetModLocalization("Arlokk")
-
-L:SetGeneralLocalization{
-	name = "Alta-sacerdotisa Arlokk"
-}
-
--------------------
---  Hakkar  --
--------------------
-L = DBM:GetModLocalization("Hakkar")
-
-L:SetGeneralLocalization{
-	name = "Hakkar"
-}
-
--------------------
---  Bloodlord  --
--------------------
-L = DBM:GetModLocalization("Bloodlord")
-
-L:SetGeneralLocalization{
-	name = "Sangrelorde Mandokir"
-}
 L:SetMiscLocalization{
-	Bloodlord 	= "Sangrelorde Mandokir",
-	Ohgan		= "Ohgan",
-	GazeYell	= "Estou do olho em você"
+	Ghosts = "Fantasmas"
 }
-
--------------------
---  Edge of Madness  --
--------------------
-L = DBM:GetModLocalization("EdgeOfMadness")
-
-L:SetGeneralLocalization{
-	name = "Beira da Loucura"
-}
-L:SetMiscLocalization{
-	Hazzarah = "Hazza'rah",
-	Renataki = "Renataki",
-	Wushoolay = "Vuxulai",
-	Grilek = "Gri'lek"
-}
-
--------------------
---  Gahz'ranka  --
--------------------
-L = DBM:GetModLocalization("Gahzranka")
-
-L:SetGeneralLocalization{
-	name = "Gahz'ranka"
-}
-
--------------------
---  Jindo  --
--------------------
-L = DBM:GetModLocalization("Jindo")
-
-L:SetGeneralLocalization{
-	name = "Jin'do, o Bagateiro"
-}
-
 -----------------
 --  Razorgore  --
 -----------------
@@ -580,7 +459,24 @@ L = DBM:GetModLocalization("Flamegor")
 L:SetGeneralLocalization{
 	name = "Flamagor"
 }
+----------------
+--  Ebonroc and Flamegor  --
+----------------
+L:SetGeneralLocalization{
+	name = "Petrébano e Flamagor"
+}
 
+L:SetTimerLocalization{
+	TimerBrandCD	= "Marca"
+}
+L:SetOptionLocalization{
+	TimerBrandCD	= "Exibir cronômetro para recarga da marca"
+}
+
+L:SetMiscLocalization{
+	Ebonroc		= "Petrébano",
+	Flamegor	= "Flamagor"
+}
 -----------------------
 --  Vulnerabilities  --
 -----------------------
@@ -624,7 +520,7 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	WarnBreath		= "Exibir aviso quando Cromaggus lançar uma das suas respirações",
-	WarnVulnerable	= "Exibir cronômetro para recarga da respiração",
+	WarnVulnerableNew	= "Exibir cronômetro para recarga da respiração",
 	TimerBreathCD	= "Exibir recarga da respiração",
 	TimerBreath		= "Exibir lançamento da respiração",
 	TimerVulnCD		= "Exibir recarga de Vulnerabilidade"
@@ -679,6 +575,26 @@ L:SetMiscLocalization{
 	YellMage	= "Magos também? Vocês deveriam ter mais cuidado ao brincar com magia..."
 }
 
+----------------------
+--  SoD BWL Trials  --
+----------------------
+L = DBM:GetModLocalization("SoDBWLTrials")
+
+L:SetGeneralLocalization{
+	name = "Provações da Temporada da Descoberta"
+}
+L:SetWarningLocalization{
+	SpecWarnBothBombs		= "Azul e verde em >%s<",
+	SpecWarnBothBombsYou	= "Azul e verde em VOCÊ",
+}
+L:SetTimerLocalization{
+	TimerBombs				= DBM_COMMON_L.BOMBS
+}
+L:SetOptionLocalization{
+SpecWarnBothBombs			= "Exibir aviso especial se as bombas azul e verde estiverem no mesmo jogador",
+SpecWarnBothBombsYou		= "Exibir aviso especial se as bombas azul e verde estiverem em você",
+TimerBombs					= "Exibir cronômetro para as bombas de teste azul e verde"
+}
 ----------------
 --  Lucifron  --
 ----------------
@@ -763,7 +679,7 @@ L:SetTimerLocalization{
 	timerShieldCD		= "Próximo escudo"
 }
 L:SetOptionLocalization{
-	timerShieldCD		= "Mostrar cronômetro para o próximo escudo de dano/reflexão"
+	timerShieldCD		= "Exibir cronômetro para o próximo escudo de dano/reflexão"
 }
 
 ----------------
@@ -783,10 +699,10 @@ L:SetTimerLocalization{
 	TimerEmerge			= "Emersão",
 }
 L:SetOptionLocalization{
-	WarnSubmerge		= "Mostrar aviso para submersão",
-	TimerSubmerge		= "Mostrar cronômetro para submersão",
-	WarnEmerge			= "Mostrar aviso para emersão",
-	TimerEmerge			= "Mostrar cronômetro para emersão",
+	WarnSubmerge		= "Exibir aviso para submersão",
+	TimerSubmerge		= "Exibir cronômetro para submersão",
+	WarnEmerge			= "Exibir aviso para emersão",
+	TimerEmerge			= "Exibir cronômetro para emersão",
 }
 L:SetMiscLocalization{
 	Submerge	= "VENHAM, MEUS SERVOS! DEFENDAM SEU SENHOR!",
@@ -794,7 +710,7 @@ L:SetMiscLocalization{
 }
 
 -----------------
---  The Molten Core (Placeholder?_  --
+--  The Molten Core  --
 -----------------
 L = DBM:GetModLocalization("MoltenCore")
 
@@ -802,6 +718,14 @@ L:SetGeneralLocalization{
 	name = "O Núcleo Derretido"
 }
 
+L:SetOptionLocalization{
+	YellHeartCleared	= "Grite quando o Coração de cinzas/brasas for removido.",
+	WarnBossPower		= "Exibir avisos quando a energia do chefe atingir 50%, 75%, 90% e 100%"
+}
+
+L:SetWarningLocalization{
+	WarnBossPower		= "Energia do chefe em %d%%"
+}
 -----------------
 --  MC: Trash  --
 -----------------
@@ -829,8 +753,8 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerWhelps				= "Mostrar cronômetro para os seguintes Dragonetes Onyxiano",
-	WarnWhelpsSoon			= "Mostrar aviso prévio para os seguintes Dragonetes Onyxiano",
+	TimerWhelps				= "Exibir cronômetro para os seguintes Dragonetes Onyxiano",
+	WarnWhelpsSoon			= "Exibir aviso prévio para os seguintes Dragonetes Onyxiano",
 	SoundWTF3				= "Reproduzir sons engraçados de um lendário raide clássico de Onyxia"
 }
 
@@ -1277,7 +1201,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	TimerImmune	= "Mostrar temporizador para a duração da imunidade de Gelihast durante as transições de fase"
+	TimerImmune	= "Exibir temporizador para a duração da imunidade de Gelihast durante as transições de fase"
 })
 
 ------------------
@@ -1294,7 +1218,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnPriestRemaining	= "Mostrar um aviso indicando quantas Sacerdotisas das Marés da Profundezas Negras ainda estão restantes"
+	warnPriestRemaining	= "Exibir um aviso indicando quantas Sacerdotisas das Marés da Profundezas Negras ainda estão restantes"
 })
 
 ------------------

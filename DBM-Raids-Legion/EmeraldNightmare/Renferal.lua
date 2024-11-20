@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1744, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185020")
+mod:SetRevision("20240714050021")
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -36,7 +36,7 @@ local warnTwistingShadows			= mod:NewTargetCountAnnounce(210864, 3)
 local warnViolentWinds				= mod:NewTargetAnnounce(218124, 4)
 
 --Spider Form
-local specWarnFeedingTime			= mod:NewSpecialWarningSwitch(212364, "-Healer", nil, nil, 1, 2)
+local specWarnFeedingTime			= mod:NewSpecialWarningSwitchCount(212364, "-Healer", nil, nil, 1, 2)
 local specWarnVenomousPool			= mod:NewSpecialWarningMove(213124, nil, nil, nil, 1, 2)
 local specWarnWebWrap				= mod:NewSpecialWarningStack(212512, nil, 5, nil, nil, 1, 6)
 local specWarnNecroticVenom			= mod:NewSpecialWarningMoveAway(218831, nil, nil, nil, 1, 2)

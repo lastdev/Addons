@@ -1,0 +1,127 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">	
+
+    <Frame name="ItemDialog_Content" virtual="true" hidden="true">
+        <Size x="432" y="600"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="label" inherits="GameFontNormal" justifyH="LEFT">
+                    <KeyValues>
+                        <KeyValue key="Color" value="TEXT"/>
+                        <KeyValue key="LocText" value="EDITRULE_ITEM_LABEL"/>
+                    </KeyValues>
+                    <Size x="48" y="26"/>
+                    <Anchors>                    
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="followLabel" inherits="GameFontNormal" justifyH="LEFT" wordwrap="true">
+                    <KeyValues>
+                        <KeyValue key="Color" value="SECONDARY_TEXT"/>
+                        <KeyValue key="LocText" value="ITEMDIALOG_FOLLOW_MOUSE"/>
+                    </KeyValues>
+                    <Anchors>                    
+                        <Anchor point="BOTTOMLEFT" x="40"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>        
+			<Frame inherits="CommonUI_ItemLink" parentKey="item">
+				<KeyValues>
+					<KeyValue key="AllowDrop" value="true" type="boolean"/>
+					<KeyValue key="OnItemChanged" value="OnItemChanged" type="string"/>
+					<KeyValue key="Placeholder" value="EDITRULE_NO_ITEM" type="string"/>
+				</KeyValues>
+				<Size x="1" y="50"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.label"/>
+					<Anchor point="RIGHT"/>
+					<Anchor point="BOTTOM" relativeKey="$parent.label"/>
+				</Anchors>
+			</Frame>
+            <Button inherits="CommonUI_Switch" parentKey="follow">
+                <KeyValues>
+                    <KeyValue key="bit" type="number" value="1"/>
+                </KeyValues>
+                <Size x="28" y="16"/>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="TOP" relativeKey="$parent.followLabel"/>
+                    <Anchor point="LEFT"/>
+                </Anchors>
+            </Button>
+			<Frame parentKey="properties" inherits="CommonUI_List">
+				<Size x="10" y="100"/>
+				<KeyValues>
+					<KeyValue key="ItemSource" value="GetItemProperties" type="string"/>
+					<KeyValue key="ItemCreator" value="CreatePropertyItem" type="string"/>
+					<KeyValue key="EmptyText" value="EDITRULE_ITEM_PROPERTIES_EMPTY" type="string"/>
+					<KeyValue key="OnInsertText" value="InsertScriptText" type="string"/>
+					<KeyValue key="Padding" value="6" type="number"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.label" relativePoint="BOTTOMLEFT" y="-12"/>
+                    <Anchor point="RIGHT"/>
+					<Anchor point="BOTTOM" relativeKey="$parent.follow" relativePoint="TOP" y="12"/>
+				</Anchors>
+			</Frame>
+        </Frames>
+    </Frame>
+
+	<Button name="ItemDialog_ItemProperty" virtual="true" hidden="true">
+		<KeyValues>
+			<KeyValue key="PaddingY" value="8" type="number"/>
+		</KeyValues>
+		<Size x="1" y="1"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="hilite" hidden="true">
+					<Color r="1" g="1" b="1" a=".125"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="name" justifyH="LEFT" justifyV="TOP" inherits="GameFontHighlight" maxLines="1" wordwrap="false">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="-4"/>
+						<Anchor point="RIGHT" relativePoint="LEFT" x="160"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="equals" justifyH="CENTER" justifyV="TOP" inherits="GameFontHighlight" maxLines="1" text="=">
+					<Size x="24"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.name" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.name" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="value" justifyH="LEFT" justifyV="TOP" inherits="GameFontHighlight" wordwrap="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.equals" relativePoint="TOPRIGHT"/>
+						<Anchor point="RIGHT" x="-8" y="4"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Button>
+
+	<Frame name="ItemDialog_ItemCategory" virtual="true" hidden="true">
+        <Size x="1" y="20"/>
+		<KeyValues>
+			<KeyValue key="PaddingY" value="8" type="number"/>
+		</KeyValues>
+		<Size x="1" y="1"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="name" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormal" maxLines="1" wordwrap="false">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="8" y="0"/>
+						<Anchor point="BOTTOMRIGHT" x="-8" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>    
+</Ui>

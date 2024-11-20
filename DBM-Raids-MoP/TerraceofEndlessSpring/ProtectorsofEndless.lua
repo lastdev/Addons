@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(683, "DBM-Raids-MoP", 3, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240602110130")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(60585, 60586, 60583)--60583 Protector Kaolan, 60585 Elder Regail, 60586 Elder Asani
 mod:SetEncounterID(1409)
 mod:SetUsedIcons(5, 4, 3, 2, 1)
 mod:SetBossHPInfoToHighest()
+mod:SetZone(996)
 
 mod:RegisterCombat("combat")
 

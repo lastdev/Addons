@@ -12,7 +12,13 @@ end
 local mod	= DBM:NewMod("Nefarian-Classic","DBM-Raids-Vanilla", catID)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024638")
+if DBM:IsSeasonal("SeasonOfDiscovery") then
+	mod.statTypes = "normal,heroic,mythic"
+else
+	mod.statTypes = "normal"
+end
+
+mod:SetRevision("20241103123604")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 if not mod:IsClassic() then
@@ -22,6 +28,7 @@ mod:RegisterCombat("combat_yell", L.YellP1)--ENCOUNTER_START appears to fire whe
 mod:SetWipeTime(50)--guesswork
 mod:SetHotfixNoticeRev(20200310000000)--2020, Mar, 10th
 mod:SetMinSyncRevision(20200310000000)--2020, Mar, 10th
+mod:SetZone(469)
 
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
@@ -61,6 +68,10 @@ end
 
 function mod:OnCombatEnd(wipe)
 	if not wipe then
+		local sodTrialMod = DBM:GetModByName("SoDBWLTrials")
+		if sodTrialMod then
+			sodTrialMod:StopBombTimerLoop()
+		end
 		DBT:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
 		if firstBossMod.vb.firstEngageTime then
 			local thisTime = GetServerTime() - firstBossMod.vb.firstEngageTime
@@ -111,8 +122,8 @@ function mod:UNIT_DIED(args)
 		if not addsGuidCheck[guid] then
 			addsGuidCheck[guid] = true
 			self.vb.addLeft = self.vb.addLeft - 1
-			--40, 35, 30, 25, 20, 15, 12, 9, 6, 3
-			if self.vb.addLeft >= 15 and (self.vb.addLeft % 5 == 0) or self.vb.addLeft >= 1 and (self.vb.addLeft % 3 == 0) then
+			--40, 35, 30, 25, 20, 15, 12, 9, 6, 3, 1
+			if self.vb.addLeft >= 15 and (self.vb.addLeft % 5 == 0) or self.vb.addLeft < 15 and (self.vb.addLeft % 3 == 0) or self.vb.addLeft == 1 then
 				WarnAddsLeft:Show(self.vb.addLeft)
 			end
 		end
@@ -178,7 +189,10 @@ do
 		if not self:IsInCombat() then return end
 		if msg == "ClassCall" and sender then
 			local className = LOCALIZED_CLASS_NAMES_MALE[arg]
-			if playerClass == className then
+			if arg == "SHAMAN" then
+				specwarnClassCall:Play("attacktotem")
+			end
+			if playerClass == className and arg ~= "SHAMAN" then
 				specwarnClassCall:Show()
 				specwarnClassCall:Play("targetyou")
 			else

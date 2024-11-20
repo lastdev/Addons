@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(172, "DBM-Raids-Cata", 5, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240315100444")
+mod:SetRevision("20241115112135")
 mod:SetCreatureID(43296)
 mod:SetEncounterID(1023)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetZone(669)
 --mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_ChimaronIntro01.ogg", nil)
 --Long: Ah, Chimaeron, truly a living testament to my scientific prowess. I reworked and twisted his form countless times over the years, and the final result is truly something to behold.
 --Short: There isn't one
@@ -19,10 +20,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REFRESH 82881",
 	"SPELL_AURA_REMOVED 88853 82881",
 	"UNIT_HEALTH boss1"
-)
-
-mod:RegisterEvents(
-	"UNIT_DIED"
 )
 
 local warnCausticSlime		= mod:NewTargetAnnounce(82935, 3)
@@ -46,7 +43,6 @@ local timerFailureNext		= mod:NewNextCountTimer(25, 88853, nil, nil, nil, 6, nil
 
 local berserkTimer			= mod:NewBerserkTimer(450)--Heroic
 
-mod:AddRangeFrameOption("6")
 mod:AddSetIconOption("SetIconOnSlime", 82935, false, 7, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddInfoFrameOption(nil, "Healer")
 
@@ -70,9 +66,6 @@ function mod:OnCombatStart(delay)
 	self.vb.massacreCast = 0
 	self.vb.failureCount = 0
 	self:SetStage(1)
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show(6)
-	end
 	berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(L.HealthInfo)
@@ -164,15 +157,6 @@ function mod:UNIT_HEALTH(uId)
 		elseif h > 22 and h < 25 and not self.vb.prewarnedPhase2 then
 			self.vb.prewarnedPhase2 = true
 			warnPhase2Soon:Show()
-		end
-	end
-end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 43296 then
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Hide()
 		end
 	end
 end

@@ -14,6 +14,7 @@ function mod:SPELL_CAST_SUCCESS(args)
         SilencingShot={   "SilenceSh",  34490,   24},
         CounterSpell={    "CounterSp",  2139,    24},
         AvengersShield={  "AvengerSd",  31935,   15},
+        ShambleRush={     "ShamRush",   91802,   30},
         Quell={           "Quell",      351338,  40},
         Rebuke={          "Rebuke",     96231,   15},
         Silence={         "Silence",    15487,   45},

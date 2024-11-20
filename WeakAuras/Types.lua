@@ -1810,18 +1810,20 @@ WeakAuras.spec_types_specific = {}
 
 ---@type table<number, string>
 Private.spec_types_all = {}
+Private.specs_sorted = {}
 local function update_specs()
-  local cataFix = WeakAuras.IsCataClassic() and -1 or 0 -- see https://github.com/Stanzilla/WoWUIBugs/issues/559
-  for classFileName, classID in pairs(WeakAuras.class_ids) do
+  for _, classFileName in pairs(WeakAuras.classes_sorted) do
+    local classID = WeakAuras.class_ids[classFileName]
     WeakAuras.spec_types_specific[classFileName] = {}
-    local numSpecs = WeakAuras.IsCataClassic() and 3 or GetNumSpecializationsForClassID(classID)
+    local numSpecs = WeakAuras.IsCataClassic() and 3 or GetNumSpecializationsForClassID(classID) -- see https://github.com/Stanzilla/WoWUIBugs/issues/559
     for i = 1, numSpecs do
-      local specId, tabName, _, icon = GetSpecializationInfoForClassID(classID, i + cataFix);
+      local specId, tabName, _, icon = GetSpecializationInfoForClassID(classID, i);
       if tabName then
         tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
         local classColor = WA_GetClassColor(classFileName)
         Private.spec_types_all[specId] = CreateAtlasMarkup(GetClassAtlas(classFileName:lower()))
         .. "|T"..(icon or "error")..":0|t "..(WrapTextInColorCode(tabName, classColor) or "error");
+        tinsert(Private.specs_sorted, specId)
       end
     end
   end
@@ -1974,6 +1976,8 @@ Private.texture_types = {
     ["2888300"] = "Demonic Core Vertical",
     ["4699056"] = "Essence Burst",
     ["4699057"] = "Snapfire",
+    ["6160020"] = "Arcane Soul",
+    ["6160021"] = "Hyperthermia",
   },
   ["Icons"] = {
     ["165558"] = "Paw",
@@ -3207,8 +3211,8 @@ end
 -- register options font
 LSM:Register("font", "Fira Mono Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraMono-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 -- Other Fira fonts
-LSM:Register("font", "Fira Sans Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Black.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
-LSM:Register("font", "Fira Sans Condensed Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Black.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Heavy.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Condensed Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Heavy.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 LSM:Register("font", "Fira Sans Condensed Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 LSM:Register("font", "Fira Sans Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 LSM:Register("font", "PT Sans Narrow Regular", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\PTSansNarrow-Regular.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
@@ -3531,7 +3535,8 @@ Private.update_categories = {
       "url",
       "desc",
       "version",
-      "semver"
+      "semver",
+      "wagoID", -- i don't *love* that we're so closely tied to wago, but eh
     },
     default = true,
     label = L["Meta Data"],
@@ -3900,7 +3905,15 @@ Private.difficulty_info = {
   [176] = {
     size = "twentyfive",
     difficulty = "heroic",
-  }
+  },
+  [186] = {
+    size = "fortyman",
+    difficulty = "normal",
+  },
+  [226] = {
+    size = "twenty",
+    difficulty = "normal",
+  },
 }
 
 Private.glow_types = {

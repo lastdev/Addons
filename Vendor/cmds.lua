@@ -13,6 +13,7 @@ function Addon:SetupConsoleCommands()
     self:AddConsoleCommand("history", L.CMD_HISTORY_HELP, "History_Cmd")
     self:AddConsoleCommand("destroy", L.CMD_DESTROY_HELP, "Destroy_Cmd")
     self:AddConsoleCommand("import", "imports", "Import_Cmd")
+    self:AddConsoleCommand("test", "test", "Test_Cmd")
 end
 
 function Addon:Import_Cmd(text)
@@ -136,4 +137,9 @@ end
 -- Prints the public API
 function Addon:PrintAPI_Cmd()
     Addon:PrintPublic()
+end
+
+function Addon:Test_Cmd()
+    local f = Addon:GetFeature("itemdialog");
+    f:ShowDialog();
 end

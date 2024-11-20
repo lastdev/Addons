@@ -162,6 +162,16 @@ end
 ---@param bKeepModsNotInUpdate boolean
 ---@param doNotReload boolean
 function Plater.ImportAndSwitchProfile(profileName, profile, bIsUpdate, bKeepModsNotInUpdate, doNotReload, keepScaleTune)
+	if type(profile) == "string" then -- try decompressing
+		local profileTmp = Plater.DecompressData (profile, "print", true)
+		if type(profileTmp) == "table" then
+			profile = profileTmp
+		end
+	end
+	
+	assert((type(profileName) == "string"), "Plater requires a proper profile name for ImportAndSwitchProfile.")
+	assert((type(profile) == "table"), "Plater requires a proper compressed profile string or decompressed and deserialized profile table for ImportAndSwitchProfile.")
+	assert(profile.plate_config, "Plater requires a proper compressed profile string or decompressed and deserialized profile table for ImportAndSwitchProfile.")
 	local bWasUsingUIParent = Plater.db.profile.use_ui_parent
 	local scriptDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.script_data) or {}
 	local hookDataBackup = (bIsUpdate or bKeepModsNotInUpdate) and DF.table.copy({}, Plater.db.profile.hook_data) or {}
@@ -363,7 +373,10 @@ function Plater.OpenOptionsPanel(pageNumber, bIgnoreLazyLoad)
 
 	if (PlaterOptionsPanelFrame) then
 		PlaterOptionsPanelFrame:Show()
-		Plater.CheckOptionsTab()
+
+		if (not bIgnoreLazyLoad) then
+			Plater.CheckOptionsTab()
+		end
 
 		if (pageNumber) then
 			if (not bIsOptionsPanelFullyLoaded and not bIgnoreLazyLoad) then
@@ -505,6 +518,7 @@ function Plater.OpenOptionsPanel(pageNumber, bIgnoreLazyLoad)
 		{name = "WagoIo", text = "Wago Imports"}, --wago_imports --localize-me
 		{name = "SearchFrame", text = "OPTIONS_TABNAME_SEARCH", createOnDemandFunc = platerInternal.CreateSearchOptions},
 		{name = "PluginsFrame", text = "Plugins"}, --localize-me
+		{name = "BossModConfig", text = "Boss-Mods", createOnDemandFunc = platerInternal.CreateBossModOptions}, --localize-me
 		
 	}, 
 	frame_options, hookList, languageInfo)
@@ -619,6 +633,7 @@ function Plater.OpenOptionsPanel(pageNumber, bIgnoreLazyLoad)
 	local wagoIoFrame 			= mainFrame.AllFrames [25] --wago_imports
 	local searchFrame			= mainFrame.AllFrames [26]
 	local pluginsFrame			= mainFrame.AllFrames [27]
+	local bossModFrame			= mainFrame.AllFrames [28]
 
 	local scriptButton		= mainFrame.AllButtons [6] --also need update on ~changeindex1 and ~changeindex2
 	local modButton		 	= mainFrame.AllButtons [7]
@@ -727,6 +742,8 @@ function Plater.OpenOptionsPanel(pageNumber, bIgnoreLazyLoad)
 		for _, frame in ipairs (f.AllMenuFrames) do
 			if (frame.RefreshOptions) then
 				frame:RefreshOptions()
+			elseif (frame.canvasFrame and frame.canvasFrame.child and frame.canvasFrame.child.RefreshOptions) then
+				frame.canvasFrame.child.RefreshOptions() -- new scroll menus
 			end
 		end
 		Plater.UpdateMaxCastbarTextLength()
@@ -1355,7 +1372,7 @@ function Plater.OpenOptionsPanel(pageNumber, bIgnoreLazyLoad)
 			
 		--profile options (this is the panel in the right side of the profile tab)
 			local scriptUpdatesTitleLocTable = DetailsFramework.Language.CreateLocTable(addonId, "OPTIONS_NOESSENTIAL_TITLE")
-			local scriptUpdatesTitle = DF:CreateLabel(profilesFrame, scriptUpdatesTitleLocTableL, DF:GetTemplate("font", "YELLOW_FONT_TEMPLATE"))
+			local scriptUpdatesTitle = DF:CreateLabel(profilesFrame, scriptUpdatesTitleLocTable, DF:GetTemplate("font", "YELLOW_FONT_TEMPLATE"))
 			scriptUpdatesTitle:SetPoint("topleft", profilesFrame, "topright", -235, startY)
 			scriptUpdatesTitle.textsize = 9
 
@@ -2687,20 +2704,6 @@ local debuff_options = {
 	},
 }
 
-if IS_WOW_PROJECT_CLASSIC_ERA then
-	tinsert(debuff_options, 5, {
-		type = "toggle",
-		boxfirst = true,
-		get = function() return Plater.db.profile.auras_experimental_update_classic_era end,
-		set = function (self, fixedparam, value) 
-			Plater.db.profile.auras_experimental_update_classic_era = value
-			Plater.RefreshAuraCache()
-		end,
-		name = "Enable experimental aura updates",
-		desc = "Enable experimental aura updates for classic era.\nMight help in tracking enemy buffs that are applied while the nameplate is visible.",
-	})
-end
-
 _G.C_Timer.After(0.850, function() --~delay
 	debuff_options.always_boxfirst = true
 	debuff_options.language_addonId = addonId
@@ -3492,7 +3495,7 @@ Plater.CreateAuraTesting()
 				name = "Magic",
 				desc = "When the unit has a magic buff on it, show it.",
 			},
-			--show offensive CDs
+			--show offensive player CDs
 			{
 				type = "toggle",
 				get = function() return Plater.db.profile.extra_icon_show_offensive end,
@@ -3594,155 +3597,6 @@ Plater.CreateAuraTesting()
 				end,
 				name = "Defensive Border Color",
 				desc = "Defensive Border Color",
-			},
-		
-			{type = "blank"},
-			--{type = "blank"},
-			{type = "label", get = function() return "DBM / BigWigs Support:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
-
-			{
-				type = "toggle",
-				get = function() return Plater.db.profile.bossmod_support_enabled end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_support_enabled = value
-					Plater.UpdateAllPlates()
-				end,
-				name = "OPTIONS_ENABLED",
-				desc = "Enable the boss mod icon support for BigWigs and DBM.",
-			},
-			
-			{
-				type = "toggle",
-				get = function() return Plater.db.profile.bossmod_bw_castrename_enabled end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_bw_castrename_enabled = value
-					--Plater.UpdateAllPlates()
-				end,
-				name = "Enable BigWigs cast spell renaming",
-				desc = "Enable cast rename based on BigWigs spell names.",
-			},
-			
-			{
-				type = "toggle",
-				get = function() return Plater.db.profile.bossmod_support_bars_enabled end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_support_bars_enabled = value
-					Plater.UpdateAllPlates()
-				end,
-				name = "DBM CD-Bar Icons enabled",
-				desc = "Enable the boss mod bar support for DBM, to show timer bars as icons on the nameplates.",
-			},
-			
-			--{type = "blank"},
-			
-			{type = "label", get = function() return "Icon Settings:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
-			
-			--width
-			{
-				type = "range",
-				get = function() return Plater.db.profile.bossmod_aura_width end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_aura_width = value
-					Plater.UpdateAllPlates()
-				end,
-				min = 8,
-				max = 64,
-				step = 1,
-				name = "OPTIONS_WIDTH",
-				desc = "OPTIONS_WIDTH",
-			},
-			--height
-			{
-				type = "range",
-				get = function() return Plater.db.profile.bossmod_aura_height end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_aura_height = value
-					Plater.UpdateAllPlates()
-				end,
-				min = 8,
-				max = 64,
-				step = 1,
-				name = "OPTIONS_HEIGHT",
-				desc = "OPTIONS_HEIGHT",
-			},
-			
-			--anchor
-			{
-			type = "select",
-			get = function() return Plater.db.profile.bossmod_icons_anchor.side end,
-			values = function() return build_anchor_side_table (nil, "bossmod_icons_anchor") end,
-			name = "OPTIONS_ANCHOR",
-			desc = "Which side of the nameplate the icons should attach to.",
-			},
-			--x offset
-			{
-				type = "range",
-				get = function() return Plater.db.profile.bossmod_icons_anchor.x end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_icons_anchor.x = value
-					Plater.UpdateAllPlates()
-				end,
-				min = -40,
-				max = 40,
-				step = 1,
-				usedecimals = true,
-				name = "OPTIONS_XOFFSET",
-				desc = "OPTIONS_XOFFSET_DESC",
-			},
-			--y offset
-			{
-				type = "range",
-				get = function() return Plater.db.profile.bossmod_icons_anchor.y end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_icons_anchor.y = value
-					Plater.UpdateAllPlates()
-				end,
-				min = -60,
-				max = 60,
-				step = 1,
-				usedecimals = true,
-				name = "OPTIONS_YOFFSET",
-				desc = "OPTIONS_YOFFSET_DESC",
-			},
-			--text enabled
-			{
-				type = "toggle",
-				get = function() return Plater.db.profile.bossmod_support_bars_text_enabled end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_support_bars_text_enabled = value
-					Plater.UpdateAllPlates()
-				end,
-				name = "Icon text enabled",
-				desc = "Enable Bar Text.",
-			},
-			
-			--{type = "blank"},
-			
-			{type = "label", get = function() return "Cooldown Text:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
-			{
-				type = "toggle",
-				get = function() return Plater.db.profile.bossmod_cooldown_text_enabled end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_cooldown_text_enabled = value
-					Plater.UpdateAllPlates()
-				end,
-				name = "OPTIONS_ENABLED",
-				desc = "Enable Cooldown Text.",
-			},
-			--cd text size
-			{
-				type = "range",
-				get = function() return Plater.db.profile.bossmod_cooldown_text_size end,
-				set = function (self, fixedparam, value) 
-					Plater.db.profile.bossmod_cooldown_text_size = value
-					Plater.RefreshAuras()
-					Plater.UpdateAllPlates()
-				end,
-				min = 6,
-				max = 32,
-				step = 1,
-				name = "OPTIONS_SIZE",
-				desc = "Size",
 			},
 		}
 		
@@ -10698,7 +10552,7 @@ end
 	--overlay frame to indicate the feature is disabled
 	uiParentFeatureFrame.disabledOverlayFrame = CreateFrame ("frame", nil, uiParentFeatureFrame, BackdropTemplateMixin and "BackdropTemplate")
 	uiParentFeatureFrame.disabledOverlayFrame:SetPoint ("topleft", uiParentFeatureFrame, "topleft", 1, -175)
-	uiParentFeatureFrame.disabledOverlayFrame:SetPoint ("bottomright", uiParentFeatureFrame, "bottomright", -1, 21)
+	uiParentFeatureFrame.disabledOverlayFrame:SetPoint ("bottomright", uiParentFeatureFrame, "bottomright", -1, 275)
 	uiParentFeatureFrame.disabledOverlayFrame:SetBackdrop ({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
 	uiParentFeatureFrame.disabledOverlayFrame:SetFrameLevel (uiParentFeatureFrame:GetFrameLevel() + 100)
 	uiParentFeatureFrame.disabledOverlayFrame:SetBackdropColor (.1, .1, .1, 1)
@@ -10707,20 +10561,6 @@ end
 	if (Plater.db.profile.use_ui_parent) then
 		uiParentFeatureFrame.disabledOverlayFrame:Hide()
 	end
-
-	local on_select_strata_level = function (self, fixedParameter, value)
-		Plater.db.profile.ui_parent_base_strata = value
-		Plater.RefreshDBUpvalues()
-		Plater.UpdateAllPlates()
-	end
-
-	local strataTable = {
-		{value = "BACKGROUND", label = "Background", onclick = onStrataSelect, icon = [[Interface\Buttons\UI-MicroStream-Green]], iconcolor = {0, .5, 0, .8}, texcoord = nil}, --Interface\Buttons\UI-MicroStream-Green UI-MicroStream-Red UI-MicroStream-Yellow
-		{value = "LOW", label = "Low", onclick = onStrataSelect, icon = [[Interface\Buttons\UI-MicroStream-Green]] , texcoord = nil}, --Interface\Buttons\UI-MicroStream-Green UI-MicroStream-Red UI-MicroStream-Yellow
-		{value = "MEDIUM", label = "Medium", onclick = onStrataSelect, icon = [[Interface\Buttons\UI-MicroStream-Yellow]] , texcoord = nil}, --Interface\Buttons\UI-MicroStream-Green UI-MicroStream-Red UI-MicroStream-Yellow
-		{value = "HIGH", label = "High", onclick = onStrataSelect, icon = [[Interface\Buttons\UI-MicroStream-Yellow]] , iconcolor = {1, .7, 0, 1}, texcoord = nil}, --Interface\Buttons\UI-MicroStream-Green UI-MicroStream-Red UI-MicroStream-Yellow
-		{value = "DIALOG", label = "Dialog", onclick = onStrataSelect, icon = [[Interface\Buttons\UI-MicroStream-Red]] , iconcolor = {1, 0, 0, 1},  texcoord = nil}, --Interface\Buttons\UI-MicroStream-Green UI-MicroStream-Red UI-MicroStream-Yellow
-	}
 	
 	--anchor table
 	local frame_levels = {"BACKGROUND", "LOW", "MEDIUM", "HIGH", "DIALOG"}
@@ -10749,7 +10589,7 @@ end
 			
 				if (value) then
 					--user is enabling the feature
-					DF:ShowPromptPanel ("Click okay to confirm using this feature (will force a /reload)", function()
+					DF:ShowPromptPanel ("Click 'yes' to confirm using this feature (will force a /reload)", function()
 					Plater.db.profile.use_ui_parent = true
 					Plater.db.profile.use_ui_parent_just_enabled = true
 					Plater.db.profile.reopoen_options_panel_on_tab = TAB_INDEX_UIPARENTING
@@ -10770,6 +10610,25 @@ end
 			end,
 			name = "Use Custom Strata Channels",
 			desc = "Allow nameplates to be placed in custom frame strata channels.\n\n" .. ImportantText .. "a /reload will be triggered on changing this setting.",
+		},
+
+		{type = "blank"},
+		{type = "label", get = function() return "Scaling:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		
+		{
+			type = "range",
+			get = function() return Plater.db.profile.ui_parent_scale_tune end,
+			set = function (self, fixedparam, value) 
+				Plater.db.profile.ui_parent_scale_tune = value
+				Plater.RefreshDBUpvalues()
+				Plater.UpdateAllPlates()
+			end,
+			min = -2.5,
+			max = 2.5,
+			step = 0.01,
+			usedecimals = true,
+			name = "Fine Tune Scale",
+			desc = "Slightly adjust the scale of the unit frame.",
 		},
 		
 		{type = "blank"},
@@ -10824,7 +10683,7 @@ end
 		},
 		
 		{type = "blank"},
-		{type = "label", get = function() return "Frame Levels:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
+		{type = "label", get = function() return "Frame Levels adjustment:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
 		
 		{
 			type = "range",
@@ -10884,25 +10743,6 @@ end
 			step = 1,
 			name = "Buff Special Frame",
 			desc = "Move frames up or down within the strata channel.",
-		},
-		
-		{type = "blank"},
-		{type = "label", get = function() return "Scaling:" end, text_template = DF:GetTemplate ("font", "ORANGE_FONT_TEMPLATE")},
-		
-		{
-			type = "range",
-			get = function() return Plater.db.profile.ui_parent_scale_tune end,
-			set = function (self, fixedparam, value) 
-				Plater.db.profile.ui_parent_scale_tune = value
-				Plater.RefreshDBUpvalues()
-				Plater.UpdateAllPlates()
-			end,
-			min = -2.5,
-			max = 2.5,
-			step = 0.01,
-			usedecimals = true,
-			name = "Fine Tune Scale",
-			desc = "Slightly adjust the scale of the unit frame.",
 		},
 	}
 
@@ -11613,12 +11453,14 @@ end
 		friendly_npc_options_table, -- friendly npc
 		--spell feedback (animations)
 		auto_options, -- auto
-		advanced_options, -- advanced
+		--advanced_options, -- advanced
 		--resources
 	}
 
 	--
-	Plater.CheckOptionsTab()
+	if (not bIgnoreLazyLoad) then
+		Plater.CheckOptionsTab()
+	end
 
 	--__benchmark() --~perf
 end

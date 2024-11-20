@@ -1,15 +1,11 @@
 local mod	= DBM:NewMod(197, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
 
---normal,normal25,heroic,heroic25 in classic
-if not mod:IsClassic() then--Future planning, so cata classic uses regular rules defined in toc and not timewalker rules for this zone
-	mod.statTypes = "normal,heroic,timewalker"
-end
-
-mod:SetRevision("20240428104752")
+mod:SetRevision("20241115112135")
 mod:SetCreatureID(52571)
 mod:SetEncounterID(1185)
 mod:SetUsedIcons(8)
+mod:SetZone(720)
 --mod:SetModelSound("Sound\\Creature\\FandralFlameDruid\\VO_FL_FANDRAL_GATE_INTRO_01.ogg", "Sound\\Creature\\FandralFlameDruid\\VO_FL_FANDRAL_KILL_05.ogg")
 --Long: Well, well. I admire your tenacity. Baleroc stood guard over this keep for a thousand mortal lifetimes.
 --Short: *Laughs, Burn
@@ -48,8 +44,6 @@ local timerNextSpecial			= mod:NewTimer(4, "timerNextSpecial", 97238)--This one 
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("RangeFrameSeeds", true)
-mod:AddBoolOption("RangeFrameCat", false)--Diff options for each ability cause seeds strat is pretty universal, don't blow up raid, but leaps may or may not use a stack strategy, plus melee will never want it on by default.
 mod:AddSetIconOption("IconOnLeapingFlames", 98476, false, 0, {8})
 
 mod.vb.abilityCount = 0
@@ -110,12 +104,6 @@ function mod:OnCombatStart(delay)
 	self.vb.kitty = false
 end
 
-function mod:OnCombatEnd()
-	if self.Options.RangeFrameSeeds or self.Options.RangeFrameCat then
-		DBM.RangeCheck:Hide()
-	end
-end
-
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 98451 then
@@ -138,17 +126,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.abilityCount = 0
 		timerNextSpecial:Cancel()
 		timerNextSpecial:Start(abilityTimers[self.vb.abilityCount], leap, self.vb.abilityCount+1)
-		if self.Options.RangeFrameCat then
-			DBM.RangeCheck:Show(10)
-		end
 	elseif spellId == 98379 then	-- Scorpion Form
 		self.vb.kitty = false
 		self.vb.abilityCount = 0
 		timerNextSpecial:Cancel()
 		timerNextSpecial:Start(abilityTimers[self.vb.abilityCount], swipe, self.vb.abilityCount+1)
-		if self.Options.RangeFrameCat and not DBM:UnitDebuff("player", seedsDebuff) then--Only hide range finder if you do not have seed.
-			DBM.RangeCheck:Hide()
-		end
 	elseif spellId == 97238 then
 		self.vb.abilityCount = (args.amount or 1)--This should change your ability account to his current stack, which is disconnect friendly.
 		warnAdrenaline:Show(args.destName, args.amount or 1)
@@ -172,9 +154,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnSearingSeed:Schedule(remaining-5)	-- Show "move away" warning 5secs before explode
 			specWarnSearingSeed:ScheduleVoice(remaining-5, "runout")
 			timerSearingSeed:Start(remaining)
-			if self.Options.RangeFrameSeeds then
-				DBM.RangeCheck:Show(12)
-			end
 		end
 	end
 end
@@ -186,8 +165,5 @@ function mod:SPELL_AURA_REMOVED(args)
 		specWarnSearingSeed:Cancel()
 		specWarnSearingSeed:CancelVoice()
 		timerSearingSeed:Cancel()
-		if self.Options.RangeFrameSeeds then
-			DBM.RangeCheck:Hide()
-		end
 	end
 end

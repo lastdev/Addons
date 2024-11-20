@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-parameter
 --- Class used to build lightweight widgets for configuration options.
 -- You can obtain it calling GetFactory() method.
 --
@@ -26,6 +27,7 @@ local CreateFrame=CreateFrame
 local type=type
 local tostring=tostring
 
+---@diagnostic disable-next-line: param-type-mismatch
 local factory=LibStub:NewLibrary("LibInit-Factory",MINOR_VERSION) --#factory
 if (not factory) then return end
 factory.nonce=factory.nonce or 0

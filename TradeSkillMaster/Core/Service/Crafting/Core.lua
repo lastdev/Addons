@@ -472,7 +472,7 @@ function Crafting.SetSpellDBQueryUpdatesPaused(paused)
 	private.spellDB:SetQueryUpdatesPaused(paused)
 end
 
-function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numResult, player, hasCD, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance)
+function Crafting.CreateOrUpdate(craftString, itemString, profession, rootCategoryId, name, numResult, player, hasCD, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality)
 	local craftInfo = private.settings.crafts[craftString]
 	if craftInfo then
 		local row = private.spellDB:GetUniqueRow("craftString", craftString)
@@ -494,6 +494,7 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 			craftInfo.profession = profession
 			row:SetField("profession", profession)
 		end
+		craftInfo.rootCategoryId = rootCategoryId
 		if name ~= craftInfo.name then
 			craftInfo.name = name
 			row:SetField("name", name)
@@ -513,8 +514,6 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 			craftInfo.players[player].baseRecipeDifficulty = baseRecipeDifficulty
 			craftInfo.players[player].baseRecipeQuality = baseRecipeQuality
 			craftInfo.players[player].maxRecipeQuality = maxRecipeQuality
-			craftInfo.players[player].inspirationAmount = inspirationAmount
-			craftInfo.players[player].inspirationChance = inspirationChance
 		else
 			craftInfo.players[player] = true
 		end
@@ -538,13 +537,12 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 					baseRecipeDifficulty = baseRecipeDifficulty,
 					baseRecipeQuality = baseRecipeQuality,
 					maxRecipeQuality = maxRecipeQuality,
-					inspirationAmount = inspirationAmount,
-					inspirationChance = inspirationChance,
 				} or true,
 			},
 			itemString = itemString,
 			name = name,
 			profession = profession,
+			rootCategoryId = rootCategoryId,
 			numResult = numResult,
 			hasCD = hasCD,
 		}
@@ -563,7 +561,7 @@ function Crafting.CreateOrUpdate(craftString, itemString, profession, name, numR
 	end
 end
 
-function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance)
+function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality)
 	local craftPlayers = private.settings.crafts[craftString].players
 	if craftPlayers[player] then
 		if ClientInfo.HasFeature(ClientInfo.FEATURES.CRAFTING_QUALITY) then
@@ -572,8 +570,6 @@ function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty
 			craftPlayers[player].baseRecipeDifficulty = baseRecipeDifficulty
 			craftPlayers[player].baseRecipeQuality = baseRecipeQuality
 			craftPlayers[player].maxRecipeQuality = maxRecipeQuality
-			craftPlayers[player].inspirationAmount = inspirationAmount
-			craftPlayers[player].inspirationChance = inspirationChance
 		end
 		return
 	end
@@ -590,8 +586,6 @@ function Crafting.CreateOrUpdatePlayer(craftString, player, baseRecipeDifficulty
 		baseRecipeDifficulty = baseRecipeDifficulty,
 		baseRecipeQuality = baseRecipeQuality,
 		maxRecipeQuality = maxRecipeQuality,
-		inspirationAmount = inspirationAmount,
-		inspirationChance = inspirationChance,
 	} or true
 end
 
@@ -719,19 +713,22 @@ end
 function Crafting.GetQualityInfo(craftString, playerFilter)
 	local craftInfo = private.settings.crafts[craftString]
 	if not craftInfo or not ClientInfo.HasFeature(ClientInfo.FEATURES.CRAFTING_QUALITY) then
-		return nil, nil, nil, nil, nil
+		return nil, nil, nil
 	end
-	local baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance = nil, nil, nil, nil
+	local baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality = nil, nil, nil
 	for player, info in pairs(craftInfo.players) do
 		if (not playerFilter or player == playerFilter) and type(info) == "table" and info.baseRecipeQuality and (not baseRecipeQuality or info.baseRecipeQuality > baseRecipeQuality) then
 			baseRecipeDifficulty = info.baseRecipeDifficulty
 			baseRecipeQuality = info.baseRecipeQuality
 			maxRecipeQuality = info.maxRecipeQuality
-			inspirationAmount = info.inspirationAmount
-			inspirationChance = info.inspirationChance
 		end
 	end
-	return baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality, inspirationAmount, inspirationChance
+	return baseRecipeDifficulty, baseRecipeQuality, maxRecipeQuality
+end
+
+function Crafting.GetRootCategoryId(craftString)
+	local craftInfo = private.settings.crafts[craftString]
+	return craftInfo and craftInfo.rootCategoryId or nil
 end
 
 ---Gets the conversion value for an item.
@@ -775,7 +772,7 @@ function Crafting.GetConversionsValue(itemString, customPrice, method)
 	local value = 0
 	for targetItemString, rate, _, _, _, targetQuality, sourceQuality, _, targetItemMethod in Conversion.TargetItemsByMethodIterator(itemString, method) do
 		method = method or targetItemMethod
-		local quality = sourceQuality and TSM.Crafting.DFCrafting.GetExpectedSalvageResult(method, sourceQuality)
+		local quality = sourceQuality and TSM.Crafting.Quality.GetExpectedSalvageResult(method, sourceQuality)
 		if not targetQuality or targetQuality == quality then
 			local matValue = INDIRECT_RESULT_MATERIALS[targetItemString] and Crafting.GetConversionsValue(targetItemString, customPrice, method) or CustomString.GetValue(customPrice, targetItemString)
 			value = value + (matValue or 0) * rate

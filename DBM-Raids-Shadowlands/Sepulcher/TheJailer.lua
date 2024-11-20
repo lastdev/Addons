@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2464, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024554")
+mod:SetRevision("20240714005600")
 mod:SetCreatureID(180990)
 mod:SetEncounterID(2537)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -24,7 +24,6 @@ mod:RegisterEventsInCombat(
 --TODO, is tyranny warning appropriate? maybe track debuff for mythic?
 --TODO, verify add marking
 --TODO, what type of warning for Unholy Attunement
---TODO, do something with https://www.wowhead.com/spell=365810/falling-debris ?
 --TODO, maybe short name chains in all phases to "chains"? might remove ability to tell them apart though. maybe use Anguish, Oppression instead
 --TODO, azeroth health tracking on infoframe? (Widget ID: 3554). Feels like something people will prefer weak auras for so hands offing it for no unless requested enough
 --[[

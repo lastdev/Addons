@@ -15,7 +15,7 @@ SMARTBUFF_CREDITS = "|cffffffff"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"匕首", "斧", "劍", "錘", "法杖", "拳套", "長柄武器", "投擲武器"};
+SMARTBUFF_WEAPON_STANDARD = {"匕首", "斧", "劍", "錘", "法杖", "拳套", "長柄武器", "投擲武器", "護盾"};
 SMARTBUFF_WEAPON_BLUNT = {"錘", "法杖", "拳套"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "平衡石$";
 SMARTBUFF_WEAPON_SHARP = {"匕首", "斧", "劍", "長柄武器"};
@@ -51,8 +51,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "重置 Buff 時間";
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "修復演員表"
-SMARTBUFF_OFTT_FIXBUFF		 = "如果施放增益失败，请勾选。"
+SMARTBUFF_OFT_FIXBUFF        = "修復演員表"
+SMARTBUFF_OFTT_FIXBUFF       = "如果施放增益失败，请勾选。"
 
 SMARTBUFF_OFT                = "SmartBuff 開/關";
 SMARTBUFF_OFT_MENU           = "選項視窗 顯示/隱藏";
@@ -79,7 +79,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "一般";
 SMARTBUFF_OFT_MSGWARNING     = "警告";
 SMARTBUFF_OFT_MSGERROR       = "錯誤";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "隱藏小地圖按鈕";
-SMARTBUFF_OFT_INCLUDETOYS	 = "包括玩具";
+SMARTBUFF_OFT_INCLUDETOYS    = "包括玩具";
 SMARTBUFF_OFT_REBUFFTIMER    = "重新buff計時器";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "自動切換方案";
 SMARTBUFF_OFT_SELFFIRST      = "自己優先";
@@ -105,9 +105,11 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "團隊buff檢查";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "自我buff檢查";
 SMARTBUFF_OFT_RESETALL       = "重置設定";
 SMARTBUFF_OFT_RESETLIST      = "重置法術清單";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "是";
 SMARTBUFF_OFT_NO             = "否";
-SMARTBUFF_OFT_OKAY			 = "继续"
+SMARTBUFF_OFT_OKAY           = "继续"
 SMARTBUFF_OFT_PURGE_DATA     = "您确定要重置所有 SmartBuff 数据吗？\n此操作将强制重新加载 UI！";
 SMARTBUFF_OFT_REQ_RELOAD     = "新版本需要重新加载 GUI\n准备就绪后单击继续。";
 SMARTBUFF_OFT_SPLASHICON     = "顯示圖示";
@@ -129,7 +131,7 @@ SMARTBUFF_OFTT_ARULES        = "設定以下情況不施法:\n法師、牧師和
 SMARTBUFF_OFTT_SUBGRPCHANGED = "所在小隊變動後,自動開啟Smartbuff選項視窗.";
 SMARTBUFF_OFTT_GRPBUFFSIZE   = "小隊補充群體buff的人數門檻.";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "隱藏小地圖按鈕.";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "將玩具與你的咒語和食物一起列入清單。";
+SMARTBUFF_OFTT_INCLUDETOYS   = "將玩具與你的咒語和食物一起列入清單。";
 SMARTBUFF_OFTT_REBUFFTIMER   = "Buff消失前多少秒,\n提示你重新施法.\n0 = 不提示";
 SMARTBUFF_OFTT_SELFFIRST     = "優先對自己施放buff";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "當滑鼠滾輪向前滾動時buff";
@@ -154,7 +156,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "閃爍訊息持續秒數.";
 SMARTBUFF_OFTT_INSHAPESHIFT  = "在變身型態下是否也施放buff.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "檢查其他職業\n是否已經施放\n相同類型的buff.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "檢查自己身上\n是否有只能\n單一存在的Buff.";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "選擇所需的飛濺聲。";
+SMARTBUFF_OFTT_SOUNDSELECT   = "選擇所需的飛濺聲。";
 
 
 -- Buffsetup Frame Text
@@ -185,9 +187,9 @@ SMARTBUFF_PSTT_RESIZE        = "最小化/最大化 設定視窗";
 
 -- Messages
 SMARTBUFF_MSG_LOADED         = "已載入";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff 有可用的新版本，您正在使用 |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff 和修订 |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff 目前可供下载。 加入 Discord 以获取所有最新信息： https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff 有可用的新版本，您正在使用 |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff 和修订 |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff 目前可供下载。 加入 Discord 以获取所有最新信息： https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmarBuff已停用!";
 SMARTBUFF_MSG_SUBGROUP       = "你已經加入一個新的小隊,請檢查你的設定!";
 SMARTBUFF_MSG_NOTHINGTODO    = "不需執行任何指令";
@@ -208,7 +210,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff:";
 SMARTBUFF_MSG_LEFT           = "剩餘";
 SMARTBUFF_MSG_CLASS          = "職業";
 SMARTBUFF_MSG_CHARGES        = "次";
-SMARTBUFF_MSG_SOUNDS		 = "飛濺聲音選擇: "
+SMARTBUFF_MSG_SOUNDS         = "飛濺聲音選擇: "
 SMARTBUFF_MSG_SPECCHANGED    = "天賦已更改(%s), 重設buff模組...";
 
 -- Support

@@ -1,6 +1,71 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 79.0 - 2024-11-15
+### Added
+- Guild achievements tab keybind
+- WoW's 20th Anniversary achievement
+
+### Changed
+- Achievements and Categories are now moved to the new API system
+- Data loading time is reduced by 50%
+
+### Cata Classic
+- Additional (promotional) achievements marked as unobtainable
+
+## 78.0 - 2024-11-01
+### Added
+- Transmog sets for The War Within raid and season 1
+
+### Changed
+- Transmog sets are now moved to the new API system
+
+### Removed
+- Khaz Algar Lore Hunter achievement
+
+## 77.0 - 2024-10-31
+### Changed
+- Backend data is now prepared to be more API friendly (in case KAF support ever stops)
+
+### Cata Classic
+- Opening a category from the event reminders or going to an achievement from a link, tracker, ... should once again work without errors
+
+## 76.2 - 2024-10-27
+### Fixed
+- Compatibility with GW2_UI and BetterWardrobe addons
+
+## 76.1 - 2024-10-24
+### Fixed
+- Loading of KAF should once again load everything
+
+## 76.0 - 2024-10-23
+### Added
+- Storm Rider races tooltip data
+- WoW's 20th Anniversary achievements 
+
+### Changed
+- Event Data rework
+
+### Cata Classic
+- Added Protocol Inferno achievements
+
+## 75.8 - 2024-09-02
+### Added
+- Categorized more achievements (thank you Seb)
+
+## 75.7 - 2024-08-23
+### Added
+- Missing map data for the 4 main zones
+
+## 75.6 - 2024-08-21
+### Added
+- Achievements added in 11.0.2
+
+### Fixed
+- Tracking achievements should once again show as a category when it's enabled
+- Temporarily shown achievements icon is not update and no longer uses the flight path icon
+- Achievements without a category should no longer cause an error
+
 ## 75.5 - 2024-08-15
 ### Fixed
 - Library bug

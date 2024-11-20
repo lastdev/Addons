@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1984, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104720")
+mod:SetRevision("20240714050021")
 mod:SetCreatureID(121975)
 mod:SetEncounterID(2063)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -496,7 +496,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnRavenousBlaze:CombinedShow(0.3, args.destName)
 		local icon = self.vb.blazeIcon
 		if args:IsPlayer() then
-			specWarnRavenousBlaze:Show(self:IconNumToTexture(icon))
+			specWarnRavenousBlaze:Show()
 			specWarnRavenousBlaze:Play("scatter")
 			yellRavenousBlaze:Yell(icon, args.spellName, icon)
 			warnRavenousBlazeCount:Schedule(2, 5)

@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/DeadlyBossMods/DBM-Shadowlands/workflows/CI/badge.svg)](https://github.com/DeadlyBossMods/DBM-Shhadowlands/actions?workflow=CI)
+[![Build Status](https://github.com/DeadlyBossMods/DBM-Shadowlands/workflows/CI/badge.svg)](https://github.com/DeadlyBossMods/DBM-Shadowlands/actions?workflow=CI)
 [![DeadlyBossMods on Discord](https://img.shields.io/badge/discord-DeadlyBossMods-738bd7.svg?style=flat)](https://discord.gg/DeadlyBossMods) 
 
 <p><img src="http://mysticalos.com/images/DBM/support_on_patreon.png" width="408" height="80" /></p>

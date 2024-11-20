@@ -7,8 +7,10 @@ SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
   .."          |cffffffffDragonflight version by Codermik, additional retail\n"
   .."          programming by Speedwaystar/MrWizard.\n"
   .."\n\n"
-  .."          Changes in r29.010924:\n\n"
-  .."             * Various fixes by MrWizard\n"
+  .."          Changes in r32.151124:\n\n"
+  .."             * Purge buffs, not options on new release\n"
+  .."             * No forced UI reloads, less disruptions\n"
+  .."             * Bunch of minor bug fixes\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -42,8 +44,8 @@ SMARTBUFF_UNDEAD    = "Undead";
 SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, The Shadowed Crucible", "Amirdrassil, the Dream's Hope", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Castle Nathria", "Sanctum of Domination", "Sepulcher of the First Ones", "Vault of the Incarnates", "Aberrus, the Shadowed Crucible", "Amirdrassil, the Dream's Hope" };
+SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Vault of the Incarnates", "Aberrus, The Shadowed Crucible", "Amirdrassil, the Dream's Hope", "Nerub-ar Palace", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
+SMARTBUFF_INSTANCES = {"Vault of the Incarnates", "Aberrus, the Shadowed Crucible", "Amirdrassil, the Dream's Hope", "Nerub-ar Palace"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Increases speed by (%d+)%%.";
@@ -60,8 +62,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Reset buff timers";
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "Fix Casting"
-SMARTBUFF_OFTT_FIXBUFF		 = "Only tick this option if Smartbuff is failing to cast buffs while using the\nscroll mouse, action button or macro. Combat buffing will not work with\nthis setting active but you will be notified its missing for manual buffing."
+SMARTBUFF_OFT_FIXBUFF        = "Fix Casting"
+SMARTBUFF_OFTT_FIXBUFF       = "Only tick this option if Smartbuff is failing to cast buffs while using the\nscroll mouse, action button or macro. Combat buffing will not work with\nthis setting active but you will be notified its missing for manual buffing."
 
 SMARTBUFF_OFT                = "SmartBuff On/Off";
 SMARTBUFF_OFT_MENU           = "Show/hide options menu";
@@ -85,7 +87,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "normal";
 SMARTBUFF_OFT_MSGWARNING     = "warning";
 SMARTBUFF_OFT_MSGERROR       = "error";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "Hide minimap button";
-SMARTBUFF_OFT_INCLUDETOYS	 = "Include toys";
+SMARTBUFF_OFT_INCLUDETOYS    = "Include toys";
 SMARTBUFF_OFT_REBUFFTIMER    = "Rebuff Timer";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "Switch template";
 SMARTBUFF_OFT_SELFFIRST      = "Self first";
@@ -108,9 +110,11 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
 SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Yes";
 SMARTBUFF_OFT_NO             = "No";
-SMARTBUFF_OFT_OKAY			 = "Continue"
+SMARTBUFF_OFT_OKAY           = "Continue"
 SMARTBUFF_OFT_PURGE_DATA     = "New version, reset ALL SmartBuff data?\nThis action will force a reload of the UI!";
 SMARTBUFF_OFT_REQ_RELOAD     = "New versions require a reload of the GUI\nClick Continue when ready.";
 SMARTBUFF_OFT_SPLASHICON     = "Show Icon";
@@ -133,7 +137,7 @@ SMARTBUFF_OFTT_HUNTERPETS    = "Buff the Hunter pets as well.";
 SMARTBUFF_OFTT_WARLOCKPETS   = "Buff the Warlock pets as well, except the " .. SMARTBUFF_DEMONTYPE .. ".";
 SMARTBUFF_OFTT_ARULES        = "Does not cast:\n- Thorns on Mages, Priests and Warlocks\n- Arcane Intellect on units without Mana\n- Divine Spirit on units without Mana";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "Hides the SmartBuff minimap button.";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "Include toys in the list alongside your spells and food.";
+SMARTBUFF_OFTT_INCLUDETOYS   = "Include toys in the list alongside your spells and food.";
 SMARTBUFF_OFTT_REBUFFTIMER   = "How many seconds before a buff expires,\nthe reminder should alert you.\n0 = Deactivated";
 SMARTBUFF_OFTT_SELFFIRST     = "Buffs your character first of all others.";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "Cast buffs when you roll your\nscrollwheel forward.";
@@ -155,7 +159,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "How many seconds the splash\nmessage will displa
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "Select the required splash sound.";
+SMARTBUFF_OFTT_SOUNDSELECT   = "Select the required splash sound.";
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Myself only";
@@ -185,9 +189,9 @@ SMARTBUFF_PSTT_RESIZE        = "Minimize/maximize\nthe main options frame";
 
 -- Messages
 SMARTBUFF_MSG_LOADED         = "(Retail) loaded. Please report any problems on Curse or join discord at discord.gg/R6EkZ94TKK.";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff There is a new version available, you are using |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff and revision |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff is currently available for download.  Join Discord for all the latest information at https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff There is a new version available, you are using |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff and revision |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff is currently available for download.  Join Discord for all the latest information at https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmartBuff is disabled!";
 SMARTBUFF_MSG_SUBGROUP       = "You've joined a new subgroup, please check the options!";
 SMARTBUFF_MSG_NOTHINGTODO    = "Nothing to do";
@@ -208,7 +212,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff";
 SMARTBUFF_MSG_LEFT           = "left";
 SMARTBUFF_MSG_CLASS          = "Class";
 SMARTBUFF_MSG_CHARGES        = "charges";
-SMARTBUFF_MSG_SOUNDS		 = "Splash Sound Selection: "
+SMARTBUFF_MSG_SOUNDS         = "Splash Sound Selection: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

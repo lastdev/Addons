@@ -6,11 +6,15 @@
 -- Cast the most important buffs on you, tanks or party/raid members/pets.
 -------------------------------------------------------------------------------
 
-SMARTBUFF_DATE               = "010924";
+-- Version/Release info, bump these as needed:
+-- Bump .toc file and optionally update notes in localization.en.lua
 
-SMARTBUFF_VERSION            = "r29." .. SMARTBUFF_DATE;
--- Update the NR below to force full reload of SB_Data on first login
-SMARTBUFF_VERSIONNR          = 110002;
+SMARTBUFF_DATE               = "151124"; -- EU Date
+SMARTBUFF_VERSION            = "r32." .. SMARTBUFF_DATE;
+-- Update the NR below to force  reload of SB_Buffs on first login
+SMARTBUFF_VERSIONNR          = 110006;
+-- End of version info
+
 SMARTBUFF_TITLE              = "SmartBuff";
 SMARTBUFF_SUBTITLE           = "Supports you in casting buffs";
 SMARTBUFF_DESC               = "Cast the most important buffs on you, your tanks, party/raid members/pets";
@@ -23,7 +27,6 @@ local SmartbuffPrefix        = "Smartbuff";
 local SmartbuffSession       = true;
 local SmartbuffVerCheck      = false; -- for my use when checking guild users/testers versions  :)
 local buildInfo              = select(4, GetBuildInfo())
-local SmartbuffRevision      = 29;
 local SmartbuffVerNotifyList = {}
 
 local SG                     = SMARTBUFF_GLOBALS;
@@ -31,9 +34,6 @@ local OG                     = nil; -- Options global
 local O                      = nil; -- Options local
 local B                      = nil; -- Buff settings local
 local _;
-
-BINDING_HEADER_SMARTBUFF     = "SmartBuff";
-SMARTBUFF_BOOK_TYPE_SPELL    = "spell";
 
 local GlobalCd               = 1.5;
 local maxSkipCoolDown        = 3;
@@ -180,12 +180,23 @@ local sounds = sharedMedia:HashTable("sound")
 
 local DebugChatFrame = DEFAULT_CHAT_FRAME;
 
--- Popup
+-- Popup reset all data
 StaticPopupDialogs["SMARTBUFF_DATA_PURGE"] = {
   text = SMARTBUFF_OFT_PURGE_DATA,
   button1 = SMARTBUFF_OFT_YES,
   button2 = SMARTBUFF_OFT_NO,
   OnAccept = function() SMARTBUFF_ResetAll() end,
+  timeout = 0,
+  whileDead = 1,
+  hideOnEscape = 1
+}
+
+-- Popup reset buffs
+StaticPopupDialogs["SMARTBUFF_BUFFS_PURGE"] = {
+  text = SMARTBUFF_OFT_PURGE_BUFFS,
+  button1 = SMARTBUFF_OFT_YES,
+  button2 = SMARTBUFF_OFT_NO,
+  OnAccept = function() SMARTBUFF_ResetBuffs() end,
   timeout = 0,
   whileDead = 1,
   hideOnEscape = 1
@@ -430,7 +441,7 @@ local function SendSmartbuffVersion(player, unit)
   end
   -- not announced, add the player and announce.
   tinsert(SmartbuffVerNotifyList, { player, unit, GetTime() })
-  C_ChatInfo.SendAddonMessage(SmartbuffPrefix, SmartbuffRevision, "WHISPER", player)
+  C_ChatInfo.SendAddonMessage(SmartbuffPrefix, SMARTBUFF_VERSION, "WHISPER", player)
   SMARTBUFF_AddMsgD(string.format("%s was sent version information.", player))
 end
 
@@ -471,6 +482,8 @@ function SMARTBUFF_OnLoad(self)
   self:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
   self:RegisterEvent("UNIT_SPELLCAST_FAILED");
   self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+  self:RegisterEvent("PLAYER_LEVEL_UP");
+  self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
   --auto template events
   self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   self:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -505,15 +518,15 @@ function SMARTBUFF_OnEvent(self, event, ...)
 
   if ((event == "UNIT_NAME_UPDATE" and arg1 == "player") or event == "PLAYER_ENTERING_WORLD") then
     if IsPlayerInGuild() and event == "PLAYER_ENTERING_WORLD" then
-      C_ChatInfo.SendAddonMessage(SmartbuffPrefix, SmartbuffRevision, "GUILD")
+      C_ChatInfo.SendAddonMessage(SmartbuffPrefix, SMARTBUFF_VERSION, "GUILD")
     end
     isPlayer = true;
     if (event == "PLAYER_ENTERING_WORLD" and isInit and O.Toggle) then
       isSetZone = true;
       tStartZone = GetTime();
-
-      --    elseif (event == "PLAYER_ENTERING_WORLD" and isLoaded and isPlayer and not isInit and not InCombatLockdown()) then
-      --        SMARTBUFF_Options_Init(self);
+    end
+    if (event == "PLAYER_ENTERING_WORLD" and isLoaded and isPlayer and not isInit and not InCombatLockdown()) then
+      SMARTBUFF_Options_Init(self);
     end
   elseif (event == "ADDON_LOADED" and arg1 == SMARTBUFF_TITLE) then
     isLoaded = true;
@@ -529,8 +542,7 @@ function SMARTBUFF_OnEvent(self, event, ...)
     if arg1 == SmartbuffPrefix then
       -- its us.
       if arg2 then
-        arg2 = tonumber(arg2)
-        if arg2 > SmartbuffRevision and SmartbuffSession then
+        if arg2 > SMARTBUFF_VERSION and SmartbuffSession then
           DEFAULT_CHAT_FRAME:AddMessage(SMARTBUFF_MSG_NEWVER1 ..
           SMARTBUFF_VERSION .. SMARTBUFF_MSG_NEWVER2 .. arg2 .. SMARTBUFF_MSG_NEWVER3)
           SmartbuffSession = false
@@ -621,30 +633,6 @@ function SMARTBUFF_OnEvent(self, event, ...)
     if (UnitAffectingCombat("player") and (arg1 == "player" or string.find(arg1, "^party") or string.find(arg1, "^raid"))) then
       isSyncReq = true;
     end
-
-    -- checks if aspect of cheetah or pack is active and cancel it if someone gets dazed
-    if (sPlayerClass == "HUNTER" and O.AntiDaze and (arg1 == "player" or string.find(arg1, "^party") or string.find(arg1, "^raid") or string.find(arg1, "pet"))) then
-      local _, stuntex = C_Spell.GetSpellTexture(1604); --get Dazed icon
-      if (SMARTBUFF_IsDebuffTexture(arg1, stuntex)) then
-        buff = nil;
-        if (arg1 == "player" and SMARTBUFF_CheckBuff(arg1, SMARTBUFF_AOTC)) then
-          buff = SMARTBUFF_AOTC;
-        elseif (SMARTBUFF_CheckBuff(arg1, SMARTBUFF_AOTP, true)) then
-          buff = SMARTBUFF_AOTP;
-        end
-        if (buff) then
-          if (O.ToggleAutoSplash and not SmartBuffOptionsFrame:IsVisible()) then
-            SmartBuffSplashFrame:Clear();
-            SmartBuffSplashFrame:SetTimeVisible(1);
-            SmartBuffSplashFrame:AddMessage("!!! CANCEL " .. buff .. " !!!", O.ColSplashFont.r, O.ColSplashFont.g,
-              O.ColSplashFont.b, 1.0);
-          end
-          if (O.ToggleAutoChat) then
-            SMARTBUFF_AddMsgWarn("!!! CANCEL " .. buff .. " !!!", true);
-          end
-        end
-      end
-    end
   end
 
   if (event == "UI_ERROR_MESSAGE") then
@@ -703,7 +691,12 @@ function SMARTBUFF_OnEvent(self, event, ...)
     end
   end
 
-  if event == "ZONE_CHANGED_NEW_AREA" or event == "GROUP_ROSTER_UPDATE" then
+  -- TODO: This is a blizzard bug workaround that spams GROUP_ROSTER_UPDATE during delves
+  local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID =
+  GetInstanceInfo()
+  -- Any other event here
+  if event == "ZONE_CHANGED_NEW_AREA" or (event == "GROUP_ROSTER_UPDATE" and instanceType ~= "scenario") or
+    event == PLAYER_LEVEL_UP or event == PLAYER_SPECIALIZATION_CHANGED then
     SMARTBUFF_SetTemplate()
   end
 end
@@ -901,7 +894,7 @@ function SMARTBUFF_SetTemplate()
         -- attempt to announce the addon version (if they have it)
         -- seems to be an issue with cross-realm, need to look at this later
         -- but in the meantime I am disabling it...  CM
-        --		if online then SendSmartbuffVersion(name, sRUnit) end
+        -- if online then SendSmartbuffVersion(name, sRUnit) end
       end
     end --end for
 
@@ -1033,6 +1026,7 @@ end
 
 -- Set the buff array
 function SMARTBUFF_SetBuffs()
+  if (InCombatLockdown()) then return end
   if (B == nil) then return; end
 
   local n = 1;
@@ -1042,7 +1036,7 @@ function SMARTBUFF_SetBuffs()
   if (B[CS()] == nil) then
     B[CS()] = {};
   end
-  
+
   SMARTBUFF_InitSpellIDs();
   SMARTBUFF_InitItemList();
   SMARTBUFF_InitSpellList();
@@ -1533,13 +1527,15 @@ function SMARTBUFF_SyncBuffTimers()
             rbTime = 0;
             buffS = cBuffs[i].BuffS;
 
-            -- TOCHECK
-            rbTime = B[CS()][ct][buffS].RBTime;
-            if (rbTime <= 0) then
-              rbTime = O.RebuffTimer;
+            -- CHECK FOR NOT NIL; possible overkill with double check
+            if (B[CS()][ct][buffS] ~= nil) and (B[CS()][ct][buffS].RBTime ~= nil) then
+              rbTime = B[CS()][ct][buffS].RBTime;
+              if (rbTime <= 0) then
+                rbTime = O.RebuffTimer;
+              end
             end
 
-            if (buffS and B[CS()][ct][buffS].EnableS and cBuffs[i].IDS ~= nil and cBuffs[i].DurationS > 0) then
+            if (buffS and (B[CS()][ct][buffS] ~= nil) and B[CS()][ct][buffS].EnableS and cBuffs[i].IDS ~= nil and cBuffs[i].DurationS > 0) then
               if (cBuffs[i].Type ~= SMARTBUFF_CONST_SELF or (cBuffs[i].Type == SMARTBUFF_CONST_SELF and SMARTBUFF_IsPlayer(unit))) then
                 SMARTBUFF_SyncBuffTimer(unit, unit, cBuffs[i]);
               end
@@ -2115,7 +2111,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                 --isShapeshifted = true;
                 if (isShapeshifted) then
                   -- Buff linked to shapeshift form... or not
-                  -- Params is buff[5] in buffs 
+                  -- Params is buff[5] in buffs
                   if (cBuff.Params == sShapename) then
                     --SMARTBUFF_AddMsgD("Cast " .. buff .. " while shapeshifted");
                   else
@@ -2792,10 +2788,10 @@ end
 
 -- IsFishing(unit)
 function SMARTBUFF_IsFishing(unit)
-  -- spell, rank, displayName, icon, startTime, endTime, isTradeSkill = UnitChannelInfo("unit")
+  -- name, displayName, textureID, startTimeMs, endTimeMs, isTradeskill, notInterruptible, spellID, isEmpowered, numEmpowerStages = UnitChannelInfo(unitToken)
   local spell = UnitChannelInfo(unit);
   if (spell ~= nil and SMARTBUFF_FISHING.name ~= nil and spell == SMARTBUFF_FISHING.name) then
-    SMARTBUFF_AddMsgD("Channeling "..SMARTBUFF_FISHING);
+    SMARTBUFF_AddMsgD("Channeling "..SMARTBUFF_FISHING.name);
     return true;
   end
   return false;
@@ -3043,7 +3039,6 @@ function SMARTBUFF_Options_Init(self)
   if (O.BuffInCities == nil) then O.BuffInCities = true; end
   if (O.LinkSelfBuffCheck == nil) then O.LinkSelfBuffCheck = true; end
   if (O.LinkGrpBuffCheck == nil) then O.LinkGrpBuffCheck = true; end
-  if (O.AntiDaze == nil) then O.AntiDaze = true; end
 
   if (O.ScrollWheel ~= nil and O.ScrollWheelUp == nil) then O.ScrollWheelUp = O.ScrollWheel; end
   if (O.ScrollWheel ~= nil and O.ScrollWheelDown == nil) then O.ScrollWheelDown = O.ScrollWheel; end
@@ -3173,15 +3168,16 @@ function SMARTBUFF_Options_Init(self)
     end
   end
 
-  -- major version changes are backwards incompatible by definition, so trigger a RESET ALL
+  -- Do a reset of buff data on changes
   O.VersionNr = O.VersionNr or SMARTBUFF_VERSIONNR -- don't reset if O.VersionNr == nil
-  if O.VersionNr < SMARTBUFF_VERSIONNR then
+  if (O.VersionNr ~= SMARTBUFF_VERSIONNR) then
     O.VersionNr = SMARTBUFF_VERSIONNR;
-    StaticPopup_Show("SMARTBUFF_DATA_PURGE");
-    SMARTBUFF_SetBuffs();
+    StaticPopup_Show("SMARTBUFF_BUFFS_PURGE");
+    SMARTBUFF_SetTemplate()
     InitBuffOrder(true);
+    SMARTBUFF_AddMsg("Upgraded SmartBuff to " .. SMARTBUFF_VERSION, true);
   end
-  SMARTBUFF_AddMsg("Upgraded SmartBuff to " .. SMARTBUFF_VERSION);
+  -- TODO: Bring back major reset of everything but also there's a UI button still to do it
 
   if (SMARTBUFF_OptionsGlobal == nil) then
     SMARTBUFF_OptionsGlobal = {};
@@ -3196,6 +3192,7 @@ function SMARTBUFF_Options_Init(self)
 
   if (OG.FirstStart ~= SMARTBUFF_VERSION) then
     SMARTBUFF_OptionsFrame_Open(true);
+    OG.FirstStart = SMARTBUFF_VERSION;
     if (OG.Tutorial == nil) then
       OG.Tutorial = SMARTBUFF_VERSIONNR;
       SMARTBUFF_ToggleTutorial();
@@ -3232,10 +3229,20 @@ function SMARTBUFF_InitActionButtonPos()
   --print(format("x = %.0f, y = %.0f", O.ActionBtnX, O.ActionBtnY));
 end
 
+-- Reset all options, buffs and window position
 function SMARTBUFF_ResetAll()
   wipe(SMARTBUFF_Buffs);
   wipe(SMARTBUFF_Options);
   ReloadUI();
+end
+
+-- Reset only buffs. Useful for upgrades, keep UI options
+-- Don't reload UI. Since buffs are after reset
+function SMARTBUFF_ResetBuffs()
+  wipe(SMARTBUFF_Buffs);
+  SMARTBUFF_SetTemplate()
+  InitBuffOrder(true);
+  SMARTBUFF_OptionsFrame_Close(true)
 end
 
 function SMARTBUFF_SetButtonPos(self)
@@ -3465,10 +3472,6 @@ function SMARTBUFF_OLinkGrpBuffCheck()
   O.LinkGrpBuffCheck = not O.LinkGrpBuffCheck;
 end
 
-function SMARTBUFF_OAntiDaze()
-  O.AntiDaze = not O.AntiDaze;
-end
-
 function SMARTBUFF_OScrollWheelUp()
   O.ScrollWheelUp = not O.ScrollWheelUp;
   isKeyUpChanged = true;
@@ -3520,6 +3523,9 @@ function SMARTBUFF_OSelfFirst()
 end
 
 function SMARTBUFF_OToggleBuff(s, i)
+  if (cBuffs[i] == nil) then
+    return
+  end
   local bs = GetBuffSettings(cBuffs[i].BuffS);
   if (bs == nil) then
     return;
@@ -3561,11 +3567,6 @@ function SMARTBUFF_OptionsFrame_Toggle()
       SmartBuff_PlayerSetup:Hide();
     end
     SmartBuffOptionsFrame:Hide();
-    -- if we were a new build then request a reloadui.
-    if (OG.FirstStart ~= SMARTBUFF_VERSION) then
-      OG.FirstStart = SMARTBUFF_VERSION;
-      StaticPopup_Show("SMARTBUFF_GUI_RELOAD");
-    end
   else
     SmartBuffOptionsCredits_lblText:SetText(SMARTBUFF_CREDITS);
     SmartBuffOptionsFrame:Show();
@@ -3579,6 +3580,13 @@ function SMARTBUFF_OptionsFrame_Open(force)
   if (not isInit) then return; end
   if (not SmartBuffOptionsFrame:IsVisible() or force) then
     SmartBuffOptionsFrame:Show();
+  end
+end
+
+function SMARTBUFF_OptionsFrame_Close(force)
+  if (not isInit) then return; end
+  if (SmartBuffOptionsFrame:IsVisible() or force) then
+    SmartBuffOptionsFrame:Hide();
   end
 end
 
@@ -3841,7 +3849,6 @@ function SMARTBUFF_Options_OnShow()
   SmartBuffOptionsFrame_cbInShapeshift:SetChecked(O.InShapeshift);
   SmartBuffOptionsFrame_cbFixBuffIssue:SetChecked(O.SBButtonFix);
 
-  SmartBuffOptionsFrame_cbAntiDaze:SetChecked(O.AntiDaze);
   SmartBuffOptionsFrame_cbLinkGrpBuffCheck:SetChecked(O.LinkGrpBuffCheck);
   SmartBuffOptionsFrame_cbLinkSelfBuffCheck:SetChecked(O.LinkSelfBuffCheck);
 
@@ -3970,16 +3977,6 @@ function SMARTBUFF_SetCheckButtonBuffs(mode)
     SMARTBUFF_SetBuffs();
   end
 
-  SmartBuffOptionsFrame_cbAntiDaze:Hide();
-
-  if (sPlayerClass == "HUNTER" or sPlayerClass == "ROGUE" or sPlayerClass == "WARRIOR") then
-    SmartBuffOptionsFrameBLDuration:Hide();
-    if (sPlayerClass == "HUNTER") then
-      SmartBuffOptionsFrame_cbLinkGrpBuffCheck:Hide();
-      SmartBuffOptionsFrame_cbAntiDaze:Show();
-    end
-  end
-
   if (sPlayerClass == "DRUID" or sPlayerClass == "SHAMAN") then
     SmartBuffOptionsFrame_cbInShapeshift:Show();
   else
@@ -4023,6 +4020,7 @@ function SMARTBUFF_DropDownTemplate_OnClick(self)
   UIDropDownMenu_SetSelectedValue(SmartBuffOptionsFrame_ddTemplates, i);
   tmp = SMARTBUFF_TEMPLATES[i];
   --SMARTBUFF_AddMsgD("Selected/Current Buff-Template: " .. tmp .. "/" .. currentTemplate);
+  SMARTBUFF_SetBuffs()
   if (currentTemplate ~= tmp) then
     SmartBuff_BuffSetup:Hide();
     iLastBuffSetup = -1;
@@ -4533,9 +4531,9 @@ local function CreateScrollButton(name, parent, cBtn, onClick, onDragStop)
   local btn = CreateFrame("CheckButton", name, parent, "UICheckButtonTemplate");
   btn:SetWidth(ScrBtnSize);
   btn:SetHeight(ScrBtnSize);
-  --btn:RegisterForClicks("LeftButtonUp");
+  --  btn:RegisterForClicks("LeftButtonUp");
   btn:SetScript("OnClick", onClick);
-  --	btn:SetScript("OnMouseUp", onClick);
+  --  btn:SetScript("OnMouseUp", onClick);
 
   if (onDragStop ~= nil) then
     btn:SetMovable(true);
@@ -4610,7 +4608,9 @@ local function OnScroll(self, cData, sBtnName)
         btn:SetNormalFontObject("GameFontNormalSmall");
         btn:SetHighlightFontObject("GameFontHighlightSmall");
         btn:SetText(cData[n]);
-        btn:SetChecked(t[cData[n]].EnableS);
+        if (t[cData[n]] ~= nil) then
+          btn:SetChecked(t[cData[n]].EnableS);
+        end
         btn:Show();
       else
         btn:Hide();

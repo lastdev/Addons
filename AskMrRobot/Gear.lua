@@ -816,8 +816,7 @@ local function setTalents(setup)
 
 	if setup.Talents and not Amr.db.profile.options.disableTal then
 		
-		if setup.TalentConfigId then	
-			
+		if setup.TalentConfigId then				
 			-- load one of the player's saved loadouts... calling methods on C_ClassTalents fails miserably, leaves the UI in a broken state
 			-- and doesn't actually activate the loadout... seems going through ClassTalentHelper.SwitchToLoadoutByName is more reliable
 			local c = C_Traits.GetConfigInfo(setup.TalentConfigId)
@@ -825,7 +824,6 @@ local function setTalents(setup)
 				ClassTalentHelper.SwitchToLoadoutByName(c.name)
 			end
 		else
-
 			-- UI needs to be opened once to create it, or else this stuff doesn't really work
 			local uiOpened = false
 			if not PlayerSpellsFrame then
@@ -850,13 +848,37 @@ local function setTalents(setup)
 				return
 			end
 
+			-- get nodes and entries
+			local configData = Amr:GetTalentConfigData(configId)
+			if not configData then
+				Amr:Print(L.GearTalentError1)
+				return
+			end
+
+			-- go in order by node ID and then the order the entry IDs appear in the data, which is the same order that we export/store the talent string
+			local path = {}
+			local pos = 1
+			for nodeId, nodeData in Amr.spairs(configData.nodes) do
+				for i, entryId in ipairs(nodeData.entryIds) do
+					if #setup.Talents >= pos and setup.Talents[pos] > 0 then
+						table.insert(path, {
+							nodeId = nodeId,
+							entryId = entryId,
+							rank = setup.Talents[pos],
+							isSelection = #nodeData.entryIds > 1
+						})				
+					end
+					pos = pos + 1
+				end
+			end
+
+			--[[
 			local config = C_Traits.GetConfigInfo(configId)
 			if not config or config.type ~= Enum.TraitConfigType.Combat then 
 				Amr:Print(L.GearTalentError1)
 				return
 			end
 
-			-- get nodes and entries
 			local talMap = {}
 			local treeIds = config["treeIDs"]
 			local heroTreeNodeId
@@ -873,9 +895,7 @@ local function setTalents(setup)
 				end		
 			end
 
-			-- this seems to work alright now with the jank above that ensures default loadout is selected before you start
-
-			-- go in order by node ID and then entry ID, which is the same order that we export/store the talent string
+			-- go in order by node ID and then entry ID, which is the same order that we export/store the talent string				
 			local path = {}
 			local pos = 1
 			for nodeId, entryIds in Amr.spairs(talMap) do
@@ -891,6 +911,13 @@ local function setTalents(setup)
 					pos = pos + 1
 				end
 			end
+			]]
+
+
+			local treeIds = configData.treeIds
+			local heroTreeNodeId = configData.heroTreeNodeId
+			
+			-- this seems to work alright now with the jank above that ensures default loadout is selected before you start
 
 			-- reset the trees
 			for i = 1, #treeIds do

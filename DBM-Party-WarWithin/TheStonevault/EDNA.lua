@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(2572, "DBM-Party-WarWithin", 4, 1269)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240830215855")
+mod:SetRevision("20241102154000")
 mod:SetCreatureID(210108)
 mod:SetEncounterID(2854)
 mod:SetHotfixNoticeRev(20240717000000)
 --mod:SetMinSyncRevision(20211203000000)
+mod:SetZone(2652)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -117,9 +118,10 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 424795 then
-		self.vb.laserCount = self.vb.laserCount + 1
 		if self:AntiSpam(4, 1) then
+			self.vb.laserCount = self.vb.laserCount + 1
 			if self:IsMythic() then
+				--14.0, 20.0, 28.0, 20.0, 28.0, 20.0
 				if self.vb.laserCount % 2 == 0 then
 					timerRefractingBeamCD:Start(28, self.vb.laserCount+1)
 				else

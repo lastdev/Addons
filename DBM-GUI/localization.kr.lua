@@ -92,9 +92,10 @@ L.Editbox_WindowWidth		= "설정 창 너비"
 L.Editbox_WindowHeight		= "설정 창 높이"
 
 L.UIGroupingOptions			= "UI 그룹 설정 (이미 로딩이 된 모드는 UI 재시작을 해야 변경됩니다)"
-L.GroupOptionsExcludeIcon	= "주문별로 형성된 그룹에서 '공격대 징표' 설정은 제외 (대신 '공격대 징표' 카테고리로 배치됩니다)"
+L.GroupOptionsExcludeIcon	= "주문 단위로 형성된 그룹에서 '공격대 징표' 설정 제외 (제외된 설정들은 '공격대 징표' 카테고리에 배치)"
+L.GroupOptionsExcludePrivateAura	= "주문 단위로 형성된 그룹에서 '비공개 오라' 효과음 설정 제외 (제외된 설정들은 '비공개 오라' 카테고리에 배치)"
 
-L.AutoExpandSpellGroups		= "주문별로 그룹이 형성된 설정들을 자동으로 펼치기"
+L.AutoExpandSpellGroups		= "주문 단위로 그룹이 형성된 설정들을 자동으로 펼치기"
 L.ShowWAKeys				= "보스 모드 활성 조건을 이용한 WeakAuras 제작을 지원하기 위해 주문 이름 옆에 WeakAuras 키를 표시합니다."
 --L.ShowSpellDescWhenExpanded	= "설정 그룹이 펼쳐진 상태에서도 주문 설명 계속 표시"--Might not be used
 L.NoDescription				= "이 능력에 대한 설명이 없습니다"
@@ -300,6 +301,7 @@ L.EventDungeonMusic			= "던전/레이드에서 재생할 배경음 설정"
 L.EventEngageMusic			= "보스 전투 도중 재생할 배경음 설정"
 L.Area_EventSoundsExtras	= "이벤트 효과음 설정"
 L.EventMusicCombined		= "던전과 보스 전투 배경음에 모든 음악 사용 (변경사항을 적용하려면 UI 리로드 필요)"
+L.DisableBuiltInMusic			= "내장 이벤트 효과음과 음악을 사용하지 않고 써드파티 음악팩만 로드"
 L.Area_EventSoundsFilters	= "이벤트 효과음 필터 적용 조건"
 L.EventFilterDungMythicMusic		= "신화/신화+ 난이도에선 던전 배경음을 재생하지 않음"
 L.EventFilterMythicMusic		= "신화/신화+ 난이도에선 보스 전투 배경음을 재생하지 않음"
@@ -433,9 +435,10 @@ L.SpamBlockNoShowUTimers	= "사용자 전송 타이머 표시 안함 (사용자 
 L.SpamBlockNoCountdowns		= "초읽기 음성 재생 안함"
 
 L.Area_SpamFilter_Nameplates		= "이름표"
-L.SpamBlockNoNameplate				= "특수한 보스 패턴에선 이름표 아이콘을 표시 안함"
-L.SpamBlockNoNameplateCD			= "스킬 쿨타임 타이머의 이름표 아이콘을 표시 안함"
-L.SpamBlockNoBossGUIDs				= "단일 보스 전투시엔 스킬 쿨타임 이름표 아이콘을 표시 안함\n(이 설정을 활성화했어도 일반몹이나 다중 대상 보스 전투에선 아이콘이 표시됩니다)"
+L.SpamBlockNoNameplate				= "특수한 보스 패턴의 스킬 아이콘을 이름표에 표시 안함 (예: 적에게 버프나 디버프 거는 패턴)"
+L.SpamBlockNoNameplateCD			= "스킬 쿨타임 타이머 아이콘을 이름표에 표시 안함"
+L.SpamBlockNoNameplateCasts			= "스킬 시전시 아이콘을 이름표에 표시 안함"
+L.SpamBlockNoBossGUIDs				= "타이머도 있는 스킬의 쿨타임 타이머 아이콘을 이름표에 표시 안함\n(보통 던전 보스에 적용)"
 
 L.Area_SpamFilter_Misc		= "기타"
 L.SpamBlockNoSetIcon		= "대상에 공격대 징표를 자동으로 설정하지 않음"
@@ -574,7 +577,8 @@ L.Panel_Range				= "거리 창"
 
 -- Panel: Nameplate
 L.Panel_Nameplates			= "이름표"
-L.Area_NPStyle				= "외형 (알림: DBM이 이름표를 관리할 때만 적용됩니다)"
+L.Plater_Config						= "Plater 설정창 열기"
+L.Area_NPStyle				= "외형 (알림: Plater를 사용하지 않을 때만 설정이 가능합니다)"
 L.NPAuraText					= "이름표 아이콘에 타이머 텍스트 표시"
 L.NPAuraSize				= "아이콘 픽셀 크기 (정사각형): %d"
 L.NPIcon_BarOffSetX 				= "아이콘 위치 조정 X: %d"
@@ -587,6 +591,19 @@ L.NPDemo							= "테스트 (이름표 보이는데서만 작동)"
 L.FontTypeTimer						= "타이머 글꼴 선택"
 L.FontTypeText						= "텍스트 글꼴 선택"
 
+L.Area_NPGlow						= "반짝임 (알림: Plater를 사용하지 않을 때만 반짝임 설정이 가능합니다)"
+L.NPIcon_GlowBehavior 		    	= "쿨타임 아이콘 반짝임 작동 방식"
+L.NPIcon_CastGlowBehavior 		   	= "시전 아이콘 반짝임 작동 방식"
+L.NPIcon_GlowNone			    	= "반짝임 사용 안함"
+L.NPIcon_GlowImportant			   	= "중요한 주문의 쿨타임/시전 시간 만료시 반짝임"
+L.NPIcon_GlowAll			    	= "모든 주문의 쿨타임/시전 시간 만료시 반짝임"
+L.NPIcon_GlowTypeCD		        	= "쿨타임 아이콘 반짝임 종류"
+L.NPIcon_GlowTypeCast		        = "시전 아이콘 반짝임 종류"
+L.NPIcon_Pixel  			    	= "픽셀"
+L.NPIcon_Proc  			        	= "스킬 발동"
+L.NPIcon_AutoCast					= "자동 시전"
+L.NPIcon_Button						= "버튼"
+
 -- Misc
 L.Area_General				= "일반"
 L.Area_Position				= "위치"
@@ -597,3 +614,62 @@ L.FontStyle				= "글꼴 속성"
 L.FontColor			= "글꼴 색상"
 L.FontShadow				= "그림자"
 L.FontType				= "글꼴 선택"
+
+L.FontHeight	= 16
+
+
+
+-- Testing
+L.DevPanel							= "개발 및 테스트"
+L.DevPanelArea						= "개발 및 테스트 UI"
+L.DevPanelExplanation				= "DBM이 의도한 대로 작동하고 있는지 전투 로그를 재생해서 검증하는 개발 및 테스트 UI입니다." -- Test UI panel under options
+L.DevModPanelExplanation			= [[본 모듈의 개발 및 시험장에 오신 것을 환영합니다.
+이곳에선 보스 전투 로그를 재생해서 해당 모듈이 어떻게 작동하는지 관찰하고 DBM 콜백들의 통합을 테스트합니다. 통합과 콜백에 관한 자세한 사항은 DBM-Test/README.md를 참고하시기 바랍니다. DBM에서 제공하는 여러 레이드의 예제 로그가 있으며 Transcriptor로 작성된 로그를 가져올 수도 있습니다.
+]] -- Playground mode in mods
+
+L.TimewarpSetting					= "시간 흐름: %dx"
+L.TimewarpDynamic					= "시간 흐름: 동적 (가장 빠름)"
+L.TestSupportArea					= "모듈 로딩 설정"
+L.ModNotLoadedWithTests				= "경고: 이 모듈은 현재 완전한 테스트가 가능하게 로딩되지 않았습니다. 이 모듈이 UnitHealth()나 UnitName()같은 API 함수를 직접 호출할 경우 제대로 작동하지 않을 것입니다. 유닛의 생명력, 자원, 대상과 관련된 함수에서 자주 발생합니다."
+L.ModLoadedWithTests				= "모듈이 완전한 테스트가 가능하도록 로딩되지 않았습니다. 애드온에서 최소 1개 이상의 모듈은 테스트 모드를 활성화해야 합니다."
+L.AlwaysLoadModWithTests			= "이 모듈을 항상 완전한 테스트가 가능하도록 로드 (로딩 속도 약간 느려짐)"
+L.ModLoadRequiresReload				= ", UI 재시작 필요" -- Appended to L.AlwaysLoadModWithTests
+L.TestSelectArea					= "데이터 테스트" -- Title of the UI area
+L.SelectPerspective					= "로그 관점 (플레이어로 가정)"
+L.ImportTranscriptor				= "Transcriptor 로그 가져오기"
+L.ImportTranscriptorHeader			= [[
+아래 상자의 아무곳이나 붙여넣으면 Transcriptor 로그를 가져올 수 있습니다. 붙여넣기 속도는 대략 2 MiB/s 정도 되며, 이는 아주 큰 용량의 로그 파일을 붙여넣기하면 수 초 가량 게임이 멈춘다는 뜻입니다.
+우측의 가져오기 버튼으로 Transcriptor의 저장된 데이터 중에서 현재 세션만 가져올 수도 있습니다.]]
+L.PasteLogHere						= (IsMacClient() and "Cmd-V" or "Ctrl-V") .. "를 눌러서 이곳에 로그를 붙여넣기 하세요."
+L.LogPasted							= "%.2f MiB를 %.1f초간 붙여넣었습니다. (%.2f MiB/s)"
+L.ImportLocalTranscriptor			= "현재 Transcriptor\n세션 붙여넣기"
+L.NoLocalTranscriptor				= "로컬 Transcriptor 데이터를 찾을 수 없습니다."
+L.LocalImportDone					= "Transcriptor에서 로그 %d개 보스 전투 %d개를 가져왔습니다."
+L.Parsing							= "분석중..."
+L.SelectLogDropdown					= "보스 전투 선택"
+L.CreateTest						= "테스트 작성"
+L.CreatedTest						= "%d개의 이벤트로 테스트를 %.1f초에 걸쳐 작성했습니다."
+L.NoLogsFound						= "Transcriptor 가져오기에 로그 데이터가 들어있지 않습니다."
+L.NoTestDataAvailable				= "사용 가능한 테스트 데이터 없음"
+L.NoLogSelected						= "테스트 작성 실패: 선택한 로그가 없습니다."
+L.LogAlreadyImported				= "테스트 작성 실패: 이미 가져온 것입니다."
+
+L.RewriteAllToYou					= "모든 플레이어를 동시에"
+L.RealModOptionsBelow				= "아래의 모듈 설정은 시험장 모드와 실제 설정간의 동기화에 관한 것입니다."
+L.Test								= "테스트"
+L.Tests								= "테스트"
+L.AllTests							= "모든 테스트"
+L.RunTest							= "테스트 실행"
+L.RunTestShort						= "실행" -- Same intend as RunTest, but a smaller button
+L.StopTest							= "테스트 중지"
+L.StopTests							= "테스트 중지"
+L.RunAllTests						= "모든 테스트 실행"
+L.Queued							= "대기중"
+L.Running							= "실행중"
+L.Failed							= "실패"
+L.ShowReport						= "보고서 보기"
+L.ShowDiff							= "차이점 보기"
+L.ShowErrors						= "오류 보기"
+L.TestModEntry						= "[시험장] %s"
+L.EnterTestMode						= "시험장 모드"
+L.SkipPhase							= "다음 단계로 넘어가기"

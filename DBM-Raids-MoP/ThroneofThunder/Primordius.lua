@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(820, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240525221104")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Although if you have 8 viscous horrors up, you are probably doing fight wrong.
+mod:SetZone(1098)
 
 mod:RegisterCombat("combat")
 
@@ -218,7 +219,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 140546 and args:IsPlayer() and self:IsInCombat() then
 		timerFullyMutated:Cancel()--Can be dispeled
-		specWarnFullyMutatedFaded:Show(args.spellName)
+		specWarnFullyMutatedFaded:Show()
 	end
 end
 

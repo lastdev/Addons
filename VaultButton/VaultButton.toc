@@ -1,0 +1,13 @@
+## Interface: 110005
+## Title:|cffd6266cVaultButton|r
+## Title-ruRU: |cffd6266cКнопка Великого Хранилища|r
+## Notes: Displays an icon on the minimap that opens the great treasury.
+## Notes-ruRU: Отображает на миникарте иконку, которая позволяет мгновенно открыть Великое Хранилище.
+## Author: BloodDragon2580
+## Version: 4.7
+## SavedVariables: VaultButtonDB
+## IconTexture: Interface\AddOns\VaultButton\Media\Texture\logo
+
+embeds.xml
+locale\locale.xml
+VaultButton.lua

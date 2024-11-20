@@ -1377,7 +1377,6 @@ L["WARNING: The macro was too long, so was truncated to fit by WoW."] = "ATTENTI
 L["WARNING: Your minimum price for %s is below its vendorsell price (with AH cut taken into account). Consider raising your minimum price, or vendoring the item."] = "AVERTISSEMENT : votre prix minimum pour %s est inférieur à son prix de vente (avec la réduction HV prise en compte). Envisagez d'augmenter votre prix minimum ou de vendre l'article."
 L["WOW UI"] = "interface WoW"
 L["Warbank"] = "Warbank"
-L["Warbound Banking"] = "Warbound Banking"
 L["Warehousing"] = "Entreposage"
 L["Warehousing operation"] = "Opération d'entreposage"
 L["Warehousing operations control moving in and out of the bank."] = "Les opérations d'entreposage contrôlent l'entrée et la sortie des banques."

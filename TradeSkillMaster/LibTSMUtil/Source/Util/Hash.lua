@@ -31,7 +31,7 @@ function Hash.Calculate(data, hash)
 	local dataType = type(data)
 	if dataType == "string" then
 		-- iterate through 8 bytes at a time
-		for i = 1, ceil(#data / 8) do
+		for i = 1, ceil(strlenutf8(data) / 8) do
 			local b1, b2, b3, b4, b5, b6, b7, b8 = strbyte(data, (i - 1) * 8 + 1, i * 8)
 			hash = (hash * 33 + b1) % maxValue
 			if not b2 then break end

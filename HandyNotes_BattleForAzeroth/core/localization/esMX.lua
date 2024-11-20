@@ -48,6 +48,8 @@ L['shared_drops'] = nil
 L['zone_drops_label'] = nil
 L['zone_drops_note'] = nil
 
+L['poi_entrance_label'] = nil
+
 L['requires'] = nil
 L['ranked_research'] = nil
 
@@ -190,7 +192,13 @@ L['options_toggle_per_map_settings_desc'] = nil
 L['options_restore_hidden_nodes'] = nil
 L['options_restore_hidden_nodes_desc'] = nil
 
+L['ignore_class_restrictions'] = nil
+L['ignore_class_restrictions_desc'] = nil
+L['ignore_faction_restrictions'] = nil
+L['ignore_faction_restrictions_desc'] = nil
+
 L['options_rewards_settings'] = nil
+L['options_reward_behaviors_settings'] = nil
 L['options_reward_types'] = nil
 L['options_manuscript_rewards'] = nil
 L['options_manuscript_rewards_desc'] = nil

@@ -17,6 +17,7 @@ local Guild = TSM.LibTSMWoW:Include("API.Guild")
 local DefaultUI = TSM.LibTSMWoW:Include("UI.DefaultUI")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
+local Event = TSM.LibTSMWoW:Include("Service.Event")
 local private = {
 	moveThread = nil,
 	moveItems = {},
@@ -25,6 +26,7 @@ local private = {
 	callback = nil,
 	openFrame = nil,
 	frameCallbacks = {},
+	bankFrameOpen = false,
 }
 local MOVE_WAIT_TIMEOUT = 2
 
@@ -38,6 +40,8 @@ function Banking.OnInitialize()
 	private.moveThread = Threading.New("BANKING_MOVE", private.MoveThread)
 
 	if ClientInfo.IsRetail() then
+		Event.Register("BANKFRAME_OPENED", private.BankFrameOpened)
+		Event.Register("BANKFRAME_CLOSED", private.BankFrameClosed)
 		hooksecurefunc("BankFrame_ShowPanel", function()
 			local isWarBank = Container.CanAccessWarbank() and BankFrame:GetActiveBankType() == Enum.BankType.Account or false
 			private.BankVisibilityChanged(true, isWarBank)
@@ -243,6 +247,29 @@ end
 -- ============================================================================
 -- Private Helper Functions
 -- ============================================================================
+
+function private.GlobalMouseUp(_, button)
+	if button == "LeftButton" then
+		local isWarBank = Container.CanAccessWarbank() and BankFrame:GetActiveBankType() == Enum.BankType.Account or false
+		private.BankVisibilityChanged(BankFrame:IsShown(), isWarBank)
+	end
+end
+
+function private.BankFrameOpened()
+	if private.bankFrameOpen then
+		return
+	end
+	private.bankFrameOpen = true
+	Event.Register("GLOBAL_MOUSE_UP", private.GlobalMouseUp)
+end
+
+function private.BankFrameClosed()
+	if not private.bankFrameOpen then
+		return
+	end
+	private.bankFrameOpen = false
+	Event.Unregister("GLOBAL_MOUSE_UP", private.GlobalMouseUp)
+end
 
 function private.BankVisibilityChanged(visible, isWarBank)
 	if visible then

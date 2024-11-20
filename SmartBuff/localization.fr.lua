@@ -16,7 +16,7 @@ SMARTBUFF_CREDITS = "|cffffffff"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"Dagues", "Haches", "Ep\195\169es", "Masses", "B\195\162tons", "Armes de pugilat", "Armes d\'hast", "Armes de jet"};
+SMARTBUFF_WEAPON_STANDARD = {"Dagues", "Haches", "Ep\195\169es", "Masses", "B\195\162tons", "Armes de pugilat", "Armes d\'hast", "Armes de jet", "Bouclier"};
 SMARTBUFF_WEAPON_BLUNT = {"Masses", "B\195\162tons", "Armes de pugilat"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "^Pierre de lest ";
 SMARTBUFF_WEAPON_SHARP = {"Dagues", "Haches", "Ep\195\169es", "Armes d\'hast"};
@@ -49,8 +49,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Reset buff timers";
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "buff Correctif "
-SMARTBUFF_OFTT_FIXBUFF		 = "Cochez si Smartbuff ne parvient pas à lancer des buffs."
+SMARTBUFF_OFT_FIXBUFF        = "buff Correctif "
+SMARTBUFF_OFTT_FIXBUFF       = "Cochez si Smartbuff ne parvient pas à lancer des buffs."
 
 SMARTBUFF_OFT                = "ON/OFF SmartBuff";
 SMARTBUFF_OFT_MENU           = "Afficher/Cacher le menu d\'options";
@@ -77,7 +77,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "Normal";
 SMARTBUFF_OFT_MSGWARNING     = "Avertissement";
 SMARTBUFF_OFT_MSGERROR       = "Erreur";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "Cacher: Bouton Minimap";
-SMARTBUFF_OFT_INCLUDETOYS	 = "Inclure des jouets";
+SMARTBUFF_OFT_INCLUDETOYS    = "Inclure des jouets";
 SMARTBUFF_OFT_REBUFFTIMER    = "Timer: Rebuff";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "Changer de config";
 SMARTBUFF_OFT_SELFFIRST      = "Moi en premier";
@@ -103,9 +103,11 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
 SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Oui";
 SMARTBUFF_OFT_NO             = "No";
-SMARTBUFF_OFT_OKAY			 = "Continuer"
+SMARTBUFF_OFT_OKAY           = "Continuer"
 SMARTBUFF_OFT_PURGE_DATA     = "Voulez-vous vraiment réinitialiser TOUTES les données SmartBuff ?\nCette action forcera un rechargement de l'interface utilisateur !";
 SMARTBUFF_OFT_REQ_RELOAD     = "Les nouvelles versions nécessitent un rechargement de l'interface graphique\nCliquez sur Continuer lorsque vous êtes prêt.";
 
@@ -124,7 +126,7 @@ SMARTBUFF_OFTT_ARULES        = "Ne peut \195\170tre lanc\195\169:\n- Epines sur 
 SMARTBUFF_OFTT_SUBGRPCHANGED = "Ouvre Automatiquement le menu d\'options de SmartBuff,\nlorsque vous changez de sous groupe.";
 SMARTBUFF_OFTT_GRPBUFFSIZE   = "Le nombre de joueurs que vous avez \ndans le groupe pour utiliser le Buff de groupe.";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "Cache le bouton SmartBuff de la Minimap.";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "Incluez des jouets dans la liste à côté de vos sorts et de votre nourriture.";
+SMARTBUFF_OFTT_INCLUDETOYS   = "Incluez des jouets dans la liste à côté de vos sorts et de votre nourriture.";
 SMARTBUFF_OFTT_REBUFFTIMER   = "Indique le temps en secondes avant que le Buff expire,\nle rappel vous lancera une alerte.\n0 = D\195\169sactiv\195\169";
 SMARTBUFF_OFTT_SELFFIRST     = "Buffs votre personnage en premier avant tous les autres.";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "Applique les buffs \nlorsque vous utilisez la molette de la souris.";
@@ -149,7 +151,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "How many seconds the splash\nmessage will displa
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "Sélectionnez le son d'éclaboussure requis.";
+SMARTBUFF_OFTT_SOUNDSELECT   = "Sélectionnez le son d'éclaboussure requis.";
 
 
 -- Buffsetup Frame Text
@@ -180,9 +182,9 @@ SMARTBUFF_PSTT_RESIZE        = "Minimize/maximize\nthe main options frame";
 
 -- Messages
 SMARTBUFF_MSG_LOADED         = "lanc\195\169";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff Une nouvelle version est disponible, vous utilisez |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff et construire |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff est actuellement disponible en téléchargement. Rejoignez Discord pour toutes les dernières informations sur https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff Une nouvelle version est disponible, vous utilisez |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff et construire |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff est actuellement disponible en téléchargement. Rejoignez Discord pour toutes les dernières informations sur https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmartBuff est d\195\169sactiv\195\169 !";
 SMARTBUFF_MSG_SUBGROUP       = "Vous venez de rejoindre un nouveau sous groupe, merci de v\195\169rifier les options !";
 SMARTBUFF_MSG_NOTHINGTODO    = "STOP, IL N\'Y A PLUS RIEN A LANCER !!! Tous les Buffs sont deja lanc\195\169s ;-)";
@@ -203,7 +205,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff";
 SMARTBUFF_MSG_LEFT           = "temps restant";
 SMARTBUFF_MSG_CLASS          = "Classe";
 SMARTBUFF_MSG_CHARGES        = "charges";
-SMARTBUFF_MSG_SOUNDS		 = "Son Splash sélectionné: "
+SMARTBUFF_MSG_SOUNDS         = "Son Splash sélectionné: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

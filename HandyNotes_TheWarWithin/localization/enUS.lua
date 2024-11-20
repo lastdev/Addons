@@ -19,6 +19,9 @@ L['options_icons_profession_treasures_desc'] = 'Display locations of treasures w
 L['options_icons_khaz_algar_lore_hunter'] = '{achievement:40762}'
 L['options_icons_khaz_algar_lore_hunter_desc'] = 'Display lore object locations for {achievement:40762} achievement.'
 
+L['options_icons_flight_master'] = '{achievement:40430}'
+L['options_icons_flight_master_desc'] = 'Display {npc:Flight Master} locations for {achievement:40430}.'
+
 -------------------------------------------------------------------------------
 -------------------------------- ISLE OF DORN ---------------------------------
 -------------------------------------------------------------------------------
@@ -33,6 +36,12 @@ L['mushroom_cap_note'] = 'Collect a {object:Boskroot Cap} in the nearby forest a
 L['mysterious_orb_note'] = 'Bring the {object:Elemental Pearl} back to the {npc:222847}.'
 L['thaks_treasure_note'] = 'Speak with {npc:223227} and follow him.'
 L['trees_treasure_note'] = 'Speak with {npc:222940} to get a {item:224185}. Guide 6x {npc:224548s} ({dot:Green}) around the {location:Isle of Dorn} back to {npc:222940}. When you have guided all the crabs back, go back in the cave to {npc:222940} and speak with her.'
+L['trees_treasure_crab_1_note'] = 'Under the tree.'
+L['trees_treasure_crab_2_note'] = 'On a branch in the tree.'
+L['trees_treasure_crab_3_note'] = 'Under the tree.'
+L['trees_treasure_crab_4_note'] = 'Under a root of the tree.'
+L['trees_treasure_crab_5_note'] = 'On a ledge.'
+L['trees_treasure_crab_6_note'] = 'On a root of the tree.'
 L['turtles_thanks_1_note'] = 'Hand in 5x {item:220143} (can be fished from {object:Calm Surfacing Ripple} pools or bought from the auction house). {note:Leave the area and return immediately to hand in the next fish.}'
 L['turtles_thanks_2_note'] = 'Hand in 1x {item:222533} (can be fished from {object:Glimmerpool}, {object:Festering Rotpool}, {object:Infused Ichor Spill} pool or bought from the auction house).'
 L['turtles_thanks_3_note'] = 'Meet the {npc:223338} in {location:Dornogal} and speak with her to reveal the treasure.'
@@ -42,13 +51,23 @@ L['faithful_dog_note'] = [[
 2. Build the {object:Herb Garden} in your {area:7490} in {map:572}.
 3. Find a {item:147420} in the {map:619} {map:627} then talk with {npc:87553} in your {area:7490} {object:Herb Garden}.
 The {npc:87553} will now be at the {location:Magical Menagerie} in {map:627}
-4. Interact with the {object:Half-Buried Dog Bowl} in {map:2248} then speak with {npc:87553} to receive the pet.
+4. Interact with the {object:Half-Buried Dog Bowl} in {map:2248} then pet the {npc:87553} to receive the pet.
 ]]
 
 L['cendvin_note'] = 'Farm 900x {item:225557} in {location:Cinderwold} from elite mobs to purchase the {item:223153} mount from {npc:226205}.'
 
 L['options_icons_flat_earthen'] = '{achievement:40606}'
 L['options_icons_flat_earthen_desc'] = 'Display location for {achievement:40606} achievement.'
+
+L['tome_of_polymorph_mosswool'] = 'Enter the tunnel and continue to {location:The Kindling Parlor}.\n\nAccept {quest:84438} from {npc:229128} to receive the {item:227710}.'
+
+L['aradan_note_start'] = '{npc:213428} can be found in the dungeon {location:The Rookery} in {location:Dornogal} in the {location:Isle of Dorn}.\n\n{note:{npc:213428} can be tamed while in Follower Dungeon mode.}'
+L['aradan_note_step_1'] = '1. Collect {item:220770} from the deep in the water outside of {location:Isle of Dorn.}'
+L['aradan_note_step_2'] = '2. ({dot:Blue}) Enter {location:The Rookery} and defeat {npc:209230}.'
+L['aradan_note_step_3'] = '3. ({dot:Red}) Jump down the shaft then run up the stairs from where {npc:215967} spawns.'
+L['aradan_note_step_4'] = '4. ({dot:Green}) Run to the edge of the cliff and use the {item:220770} while targeting {npc:213428}.'
+L['aradan_note_step_5'] = '5. {npc:213428} will recognize the hammer and fly down, allowing you to tame him.'
+L['aradan_note_end'] = '{note:{item:220770} is not consumed on use so you can tame all 5 model variations or help a fellow hunter.}'
 
 -------------------------------------------------------------------------------
 -------------------------------- RINGING DEEPS --------------------------------
@@ -116,6 +135,12 @@ L['gobblin_with_glublurp_note'] = 'Click on a {dot:Red}{object:Glimmering Crysta
 L['critter_love_note'] = 'You must use the emote {emote:/love} on critters, not battle pets.'
 L['options_icons_critter_love'] = '{achievement:40475}'
 L['options_icons_critter_love_desc'] = 'Display critter locations for {achievement:40475} achievement.'
+
+L['for_the_collective_note'] = 'Requires {wq:Courier Mission: Ore Recovery}\n\nContribute up to 20x {npc:224281} at each {npc:228056}.\n\n{note:Contribution progress is realm-wide and resets after 2 hours.}'
+L['for_the_collective_suffix'] = 'ore contributed'
+L['for_the_collective_location'] = 'On top of the building. Use the nearby {object:Wooden Plank} to build a ramp.'
+L['options_icons_for_the_collective'] = '{achievement:40630}'
+L['options_icons_for_the_collective_desc'] = 'Display {npc:228056} locations for {achievement:40630}.'
 
 -------------------------------------------------------------------------------
 --------------------------------- HALLOWFALL ----------------------------------
@@ -193,6 +218,7 @@ L['beledars_spawn_note'] = 'This rare spawns at one of several locations at a fi
 L['croakit_note'] = 'Fish up 10x {item:211474} from a nearby {object:Shadowblind Grouper School} (or purchase from the auction house) and throw them to him to make the rare attackable.'
 L['deathtide_note'] = 'Collect an {item:220122} {dot:Red} and a {item:220124} {dot:Green}. Combine them to {item:220123} to summon the rare at the {object:Ominous Altar}.'
 L['murkshade_note'] = 'Interact with the {npc:218455}.'
+L['spreading_the_light_rares_note'] = 'Rare spawns after the lit {object:Keyflame} at the current location is extinguished.'
 
 L['options_icons_mereldar_menace'] = '{achievement:40151}'
 L['options_icons_mereldar_menace_desc'] = 'Display target locations for {achievement:40151} achievement.'
@@ -213,6 +239,13 @@ L['options_icons_flamegards_hope'] = '{achievement:20594}'
 L['options_icons_flamegards_hope_desc'] = 'Display location for the {achievement:20594} achievement.'
 L['flamegards_hope_note'] = 'Help out {npc:213319} for 20 Days healing the {npc:220225s}.\n\nYou can also use a {spell:372009} or {item:211878} if your class can\'t heal.'
 
+L['hallowfall_sparkfly_label'] = 'Hallowfall Sparkfly'
+L['hallowfall_sparkfly_note'] = 'Use 3x {item:206350} at the {object:Lesser Keyflame} in {location:Stillstone Pond} to summon {npc:215956}.\n\nPurchase {item:218107} for 2x {item:206350} and use it to reveal {npc:222308} nearby until {object:Hallowfall Sparkfly} appears.'
+
+L['nightfarm_growthling_note'] = 'Use 3x {item:206350} at the {object:Lesser Keyflame} in {location:The Whirring Field} to summon {npc:208186}.\n\nPurchase {item:219148} for 2x {item:206350} and use it to reveal {item:221546}.'
+
+L['thunder_lynx_note'] = '1. Use 3x {item:206350} at the {object:Lesser Keyflame} in {location:Torchlight Mine} to summon {npc:212419}.\n\n2. Speak with {npc:212419} and follow all extra dialog prompts to reveal {quest:82007}.\n\n3. Locate each baby lynx: {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}), and {npc:222374} ({dot:Red}).\n\n{note:Be sure to start {quest:76169} at the same to to receive {item:219198} or use a similar item such as {item:219148}. You\'ll need a light to reveal {npc:222373} within {location:Coldshadow Cave}.}\n\n4. Rescue each lynx kitten and return to {npc:212419}.'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -220,14 +253,7 @@ L['flamegards_hope_note'] = 'Help out {npc:213319} for 20 Days healing the {npc:
 L['options_icons_itsy_bitsy_spider'] = '{achievement:40624}'
 L['options_icons_itsy_bitsy_spider_desc'] = 'Display weave-rat locations for {achievement:40624} achievement.'
 
-L['itsy_bitsy_spider_note'] = 'Wave ({emote:/wave}) to the weave-rat.'
-L['webster_location'] = 'PH'
-L['spindle_location'] = 'PH'
-L['swift_location'] = 'PH'
-L['rumurh_location'] = 'PH'
-L['thimble_location'] = 'PH'
-L['scampering_weave_rat_location'] = 'PH'
-L['generals_scouting_shadecaster_location'] = 'PH'
+L['itsy_bitsy_spider_note'] = '{emote:/wave} to the {npc:weave-rat}.'
 
 L['options_icons_bookworm'] = '{achievement:40629}'
 L['options_icons_bookworm_desc'] = 'Display book locations for the {achievement:40629} achievement.'
@@ -272,9 +298,11 @@ Once you have found all 4 {npc:227421}, head back to the {object:Fleshy Grimoire
 ]]
 L['another_you_4_note'] = 'Patrols along the marked path.'
 
+L['concealed_contraband_note'] = 'Remove the {object:Web Cocoon} from the Treasure to reveal it.'
 L['memory_cache_note'] = 'Get {spell:420847} from a nearby ({dot:Red}) {object:Extractor Storage}. After kill the {npc:223908} to get the {item:223870} to open the {object:Memory Cache}.'
 L['niffen_stash_note'] = 'Located under the bridge.'
 L['trapped_trove_note'] = 'In a building that hangs from the ceiling. Avoid the spiderwebs on the floor.'
+L['weaving_supplies_note'] = 'Collect silk scraps from the nearby platform to open the treasure.\n\n{item:223901} ({dot:Purple})\n{item:223903} ({dot:Yellow})\n{item:223902} ({dot:Red})'
 
 L['tkaktath_note'] = 'Starts a quest chain to get the {item:224150} mount.'
 
@@ -285,6 +313,13 @@ L['the_unseeming_note'] = 'Stand in the pool until you have 100x stacks {spell:4
 L['options_icons_you_cant_hang_with_us'] = '{achievement:40634}'
 L['options_icons_you_cant_hang_with_us_desc'] = 'Display locations for the {achievement:40634} achievement.'
 L['you_cant_hang_with_us_note'] = 'Find a {npc:211816} with the {spell:434734} buff and attack him, to get the {spell:443190} debuff (1 minute). A {npc:225408} ({note:Do not kill him!}) will interfere and stack the {spell:454666} debuff on you. At 10 stacks, you will be forcibly removed from the City.'
+
+L['kej_pet_vendor_note'] = 'Each pet has a limited stock and costs 2,250x {currency:3056}.\n\n{note:Estimated respawn time is 3-4 hours for each pet item at any vendor.}'
+
+L['options_icons_back_to_the_wall'] = '{achievement:40620}'
+L['options_icons_back_to_the_wall_desc'] = 'Display {npc:222119} locations for {achievement:40620}.'
+L['arathi_prisoner_suffix'] = 'Arathi prisoners saved'
+L['arathi_prisoner_note'] = 'Free webbed-wrapped {npc:222119} during the {wq:Special Assignment: A Pound of Cure}.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
@@ -301,7 +336,7 @@ L['kvr_chest_2_location'] = 'On top of the wooden scaffold.'
 L['nfs_chest_2_location'] = 'On the plant.'
 L['nfs_chest_3_location'] = 'Inside the building.'
 L['nfs_chest_4_location'] = 'Jump down from the skyship.'
-L['ski_chest_3_location'] = 'Inside the building.'
+L['ski_chest_3_location'] = 'On a ledge.'
 L['tra_chest_2_location'] = 'On top of the coral.'
 L['tsw_chest_2_location'] = 'High up on the beam.'
 L['tsw_chest_2_note'] = '{note:Only available in the "From the Weaver with Love" story variant.}'
@@ -310,3 +345,24 @@ L['tsw_chest_4_location'] = 'High up on a beam. Drop down from the pillar near t
 L['tuk_chest_1_note'] = 'Behind the Statue.'
 L['tuk_chest_2_note'] = '{note:Only available in the "Runaway Evolution" and "Torture Victims" story variants.}'
 L['tuk_chest_3_note'] = '{note:Only available in the "Runaway Evolution" and "Weaver Rescue" story variants.}'
+
+-------------------------------------------------------------------------------
+----------------------------- SECRETS OF AZEROTH ------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_secrets_of_azeroth'] = 'Secrets of Azeroth'
+L['options_icons_secrets_of_azeroth_desc'] = 'Display clue locations for {location:Secrets of Azeroth}.'
+
+L['alyx_kickoff_note'] = 'Speak with {npc:226683} to enable the new Secrets of Azeroth puzzles.'
+
+L['celebration_crates_label'] = 'Celebration Crates'
+L['celebration_crates_note'] = 'Find and return all {object:Celebration Crates} hidden throughout {location:Azeroth}.'
+
+L['1_soggy_celebration_crate_note'] = 'Purchase a {item:225996} from {npc:143029} ({dot:Blue}) at {location:The Dive Bar} and give it to {npc:189119} to reveal the {item:226200}.'
+L['2_hazy_celebration_crate_note'] = 'While alive, look for the area with glowing green light. {note:However, you must be dead to reveal the {item:232263}.}'
+L['3_dirt_caked_celebration_crate_note'] = '{note:You do NOT need to collect the {item:228321} from the call board near {npc:226683} for this crate.}\n\n1. Enter the {location:Forgotten Crypt} behind {location:Karazhan}.\n\n2. Walk down the stairs, through the {location:Well of the Forgotten}, down the ramp of {location:Pauper\'s Walk}, and into the next level of the {location:Forgotten Crypt}.\n\n3. Turn right and follow the tunnel through {location:Pauper\'s Walk}.\n\n4. Cross the large room diagonally towards {location:The Upside-down Sinners}.\n\n5. Go straight across the water into {location:The Slough of Dispair} to grab the {item:228322}.'
+L['4_sandy_celebration_crate'] = '1. Collect the {item:228768} from the {location:Sunken Dig Site} in {location:Thousand Needles} in {location:Kalimdor}.\n\n2. Find {npc:91079} wandering along the eastern road in {location:Azsuna}.\n\n3. Purchase {item:228767} for %s.'
+L['5_battered_celebration_crate'] = 'Against the rocks of the cave near the {npc:24026}.'
+L['6_waterlogged_celebration_crate'] = 'Underwater on the second floor of the Gnomish building.\n\n{note:Do not touch the elevator. Currently it will crash your game.}'
+
+L['water_resistant_receipt_note'] = '1. Enter the tunnel filled with {npc:47390}, turn right, and collect the {item:228768} from the {object:Water-Resistant Receipt of Sale} behind the pipe.\n\n2. Find {npc:91079} in {location:Azsuna} in the {location:Broken Isles}.'

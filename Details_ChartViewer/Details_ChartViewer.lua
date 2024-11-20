@@ -97,8 +97,11 @@ local function CreatePluginFrames(data)
 			ChartViewer:OnCombatEnter()
 
 		elseif (event == "COMBAT_CHARTTABLES_CREATING") then
-			--create data captures
+			---@alias chartname string
+			---@type chartname[]
 			ChartViewer.ChartsCreated = {}
+
+			--tabs are the opened tabs in the plugin window
 			for index, tab in ipairs(ChartViewer.tabs) do
 				if (tab.data and tab.data:find("PRESET_")) then
 					ChartViewer:BuildAndAddPresetFunction(tab.data)
@@ -112,6 +115,12 @@ local function CreatePluginFrames(data)
 				if (t[1]:find("PRESET_")) then
 					Details:TimeDataUnregister(t[1])
 				end
+			end
+
+		elseif (event == "DETAILS_INSTANCE_CHANGESEGMENT") then -- ... instance, segmentSlotId
+			local instanceObject, segmentSlotId = ...
+			if (instanceObject == Details:GetActiveWindowFromBreakdownWindow()) then
+				ChartViewer:RefreshGraphic()
 			end
 		end
 	end
@@ -174,7 +183,9 @@ local function CreatePluginFrames(data)
 
 	--if is a boss encounter, force close the window
 	local checkForBoss = function()
-		if (Details and Details.tabela_vigente and Details.tabela_vigente.is_boss) then
+		local currentCombat = Details:GetCurrentCombat()
+		local bossInfo = currentCombat:GetBossInfo()
+		if (bossInfo) then
 			if (CVF and CVF:IsShown()) then
 				CVF:Hide()
 			end
@@ -231,9 +242,9 @@ local function CreatePluginFrames(data)
 			end
 
 		elseif (self.options.show_method == 4) then --automatic
-			local segments = Details:GetCombatSegments()
-			for i = 1, #segments do
-				local thisCombatObject = segments[i]
+			local segmentsTable = Details:GetCombatSegments()
+			for i = 1, #segmentsTable do
+				local thisCombatObject = segmentsTable[i]
 				if ( (not thisCombatObject.is_trash and thisCombatObject.is_boss and thisCombatObject.TimeData) or (thisCombatObject.is_arena)) then
 					local charts = thisCombatObject.TimeData
 					if (charts) then
@@ -273,16 +284,6 @@ local function CreatePluginFrames(data)
 
     --window functions
 	function ChartViewer.RefreshWindow()
-		local segments = Details:GetCombatSegments()
-		for i = 1, #segments do
-			local thisCombatObject = segments[i]
-			if (thisCombatObject.is_boss and thisCombatObject.is_boss.index) then
-				ChartViewer.current_segment = i
-				ChartViewer.segments_dropdown:Refresh()
-				ChartViewer.segments_dropdown:Select(1, true)
-				break
-			end
-		end
 		ChartViewer:TabRefresh()
 	end
 
@@ -367,13 +368,26 @@ function ChartViewer:OnEvent(_, event, ...)
 		if (AddonName == "Details_ChartViewer") then
 			if (Details) then
 				local version = 1
-				--database
-				ChartViewerDB = ChartViewerDB or {
-					__version = version,
-					chartData = {},
-				}
 
-				ChartViewerDB.chartData = ChartViewerDB.chartData or {}
+				---@class chartviewerdb : table
+				---@field __version number
+				---@field chartData table<number, table<string, number[]>>
+
+				---@class chartviewertab : table
+				---@field name string
+				---@field segment_type number
+				---@field version string
+				---@field data string
+				---@field texture string
+
+				--savedvariables database
+				if (not ChartViewerDB) then
+					ChartViewerDB = {}
+					ChartViewerDB.__version = version
+					ChartViewerDB.chartData = {}
+				else
+					ChartViewerDB.chartData = ChartViewerDB.chartData or {}
+				end
 
 				--ChartViewerDB.chartData[combatUniquieID] = {[chartName1] = {number[]}, [chartName2] = {number[]}}
 
@@ -396,20 +410,33 @@ function ChartViewer:OnEvent(_, event, ...)
 					end
 				end
 
-				--register player damage done chart data, this chart is consistent (record for all combats)
+				--register player damage done chart data, this chart is persistent (recorded on all combats)
 				ChartViewer:TimeDataRegister("Player Damage Done", ChartViewer.PlayerDamageDoneChartCode, nil, "Chart Viewer", "1.0", [[Interface\ICONS\Ability_MeleeDamage]], true)
 
 				--create widgets
 				CreatePluginFrames()
 
+				--this is the minimal core version of Details! that this plugin need to work
 				local MINIMAL_DETAILS_VERSION_REQUIRED = 153
 
-				--Install
-				local install, saveddata, is_enabled = _G.Details:InstallPlugin("TOOLBAR", Loc ["STRING_PLUGIN_NAME"], [[Interface\Addons\Details_ChartViewer\icon]], ChartViewer, "DETAILS_PLUGIN_CHART_VIEWER", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", plugin_version)
+				--install the plugin
+				local install, saveddata, bIsEnabled = _G.Details:InstallPlugin(
+					"TOOLBAR",
+					Loc ["STRING_PLUGIN_NAME"],
+					[[Interface\Addons\Details_ChartViewer\icon]],
+					ChartViewer,
+					"DETAILS_PLUGIN_CHART_VIEWER",
+					MINIMAL_DETAILS_VERSION_REQUIRED,
+					"Details! Team",
+					plugin_version
+				)
+
 				if (type(install) == "table" and install.error) then
 					print(Loc ["STRING_PLUGIN_NAME"], install.errortext)
 					return
 				end
+
+				--C_Timer.After(3, function()dumpt (saveddata) end)
 
 				--detect 1.x versions
 				if (saveddata.tabs and saveddata.tabs[1] and saveddata.tabs[1].captures) then
@@ -441,7 +468,7 @@ function ChartViewer:OnEvent(_, event, ...)
 				CVF:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 				CVF:RegisterEvent("PLAYER_ENTERING_WORLD")
 
-				if (is_enabled) then
+				if (bIsEnabled) then
 					ChartViewer:CanShowOrHideButton()
 				else
 					ChartViewer:HideButton()
@@ -456,15 +483,16 @@ function ChartViewer:OnEvent(_, event, ...)
 				Details:RegisterEvent(ChartViewer, "COMBAT_CHARTTABLES_CREATING")
 				Details:RegisterEvent(ChartViewer, "COMBAT_CHARTTABLES_CREATED")
 
+				Details:RegisterEvent(ChartViewer, "DETAILS_INSTANCE_CHANGESEGMENT")
+
 				C_Timer.After(5, function()
 					ChartViewer.CreateSegmentDropdown()
+					ChartViewer.CreateAddTabPanel()
+					ChartViewer.CreateAddTabButton()
+					ChartViewer.NewTabPanel:Hide()
 				end)
-				ChartViewer.CreateAddTabPanel()
-				ChartViewer.CreateAddTabButton()
 
 				ChartViewer.current_segment = 1
-
-				ChartViewer.NewTabPanel:Hide()
 
 				--replace the built-in frame with the outside frame
 				ChartViewer.Frame = _G.ChartViewerWindowFrame
@@ -472,7 +500,7 @@ function ChartViewer:OnEvent(_, event, ...)
 				--summary for the breakdown window
 				local onClickBreakdownButton = function()
 					ChartViewer:OpenWindow()
-					
+
 				end
 				local breakdownButton = detailsFramework:CreateButton(ChartViewer.Frame, onClickBreakdownButton, 1, 1, "Chart Viewer", "main")
 

@@ -25,6 +25,7 @@ L["API_INVALID_DATABASE"] = [=[|cffFF0000Warning!|r Se detectó una base de dato
 ]=]
 L["AUTO_COMBATLOG"] = "Habilitar automáticamente los registros de combate en Bandas y Mazmorras"
 L["AUTO_COMBATLOG_DESC"] = "Activa o desactiva los registros de combate automáticamente al entrar y salir de las mazmorras y bandas admitidas."
+L["AUTO_COMBATLOG_DISABLED_DESC"] = "El registro de combate está desactivado en Timerunner."
 L["BEST_FOR_DUNGEON"] = "Mejor en esta mazmorra"
 L["BEST_RUN"] = "Mejor mazmorra"
 L["BEST_SCORE"] = "Mejor puntuacion M + (% s)"
@@ -67,10 +68,16 @@ L["DISABLE_RWF_MODE_RELOAD"] = "Estás desactivando el modo Race World First. Al
 L["DPS"] = "DPS"
 L["DUNGEON_SHORT_NAME_AA"] = "Academia Algeth'ar - AA"
 L["DUNGEON_SHORT_NAME_AD"] = "Atal'Dazar - AD"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_ARAK"] = ""--]] 
 L["DUNGEON_SHORT_NAME_AV"] = "Cámara Azur - AV"
 L["DUNGEON_SHORT_NAME_BH"] = "Hondonada Frondacuero - BH"
 L["DUNGEON_SHORT_NAME_BRH"] = "Torreón Grajo Negro - BRH"
 L["DUNGEON_SHORT_NAME_COS"] = "Corte de las Estrellas - COS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_COT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_DAWN"] = ""--]] 
 L["DUNGEON_SHORT_NAME_DHT"] = "Arboleda Corazón Oscuro - DHT"
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
 L["DUNGEON_SHORT_NAME_EB"] = "El Vergel Eterno - EB"
@@ -78,6 +85,8 @@ L["DUNGEON_SHORT_NAME_EB"] = "El Vergel Eterno - EB"
 --[[ L["DUNGEON_SHORT_NAME_FALL"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_GB"] = ""--]] 
 L["DUNGEON_SHORT_NAME_GD"] = "Terminal Malavía - GD"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Tazavesh: Gambito - GMBT"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salas de la Expiación - HOA"
@@ -98,8 +107,12 @@ L["DUNGEON_SHORT_NAME_PF"] = "Bajapeste - PF"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SBG"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SD"] = "Cavernas Sanguinas - SD"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SIEGE"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SOA"] = "Agujas de Ascensión - SOA"
 L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh: Calles - STRT"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_SV"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro del Dolor - TOP"
@@ -127,18 +140,14 @@ L["ENABLE_NO_SCORE_COLORS"] = "Desactivar colores de puntuación"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "Desactiva los colores de las puntuaciones. Todas las puntuaciones se mostrarán de color blanco."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "Habilitar mejoras del cliente de RaiderIO"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Permite ver información detallada del cliente de RaiderIO de tus personajes confirmados."
---[[Translation missing --]]
---[[ L["ENABLE_REPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_REPLAY_DESC"] = ""--]] 
+L["ENABLE_REPLAY"] = "Mostrar el sistema de repetición Miticas+"
+L["ENABLE_REPLAY_DESC"] = "Si activas esta opción, podrás competir contra Míticas+ ya registradas."
 L["ENABLE_RWF_MODE_BUTTON"] = "Habilitar"
 L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Haz clic para habilitar el modo Race World First. Esto hará que su interfaz se vuelva a cargar."
---[[Translation missing --]]
---[[ L["ENABLE_RWF_MODE_RELOAD"] = ""--]] 
+L["ENABLE_RWF_MODE_RELOAD"] = "Estás habilitando el modo Race World First. Esto está pensado para ser usado en Mythic World First, y sólo debe ser usado para este propósito junto con el Cliente Raider.IO para la carga de datos. Al hacer clic en Confirmar se recargará la interfaz."
 L["ENABLE_SIMPLE_SCORE_COLORS"] = "Usar colores de puntuación simples"
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "Muestra las puntuaciones usando solo los colores estándar de calidad de objeto. Facilita la distinción de puntuaciones para personas con defectos de visión cromática."
---[[Translation missing --]]
---[[ L["ENTER_REALM_AND_CHARACTER"] = ""--]] 
+L["ENTER_REALM_AND_CHARACTER"] = "Introduzca el reino y el nombre del personaje:"
 L["EXPORTJSON_COPY_TEXT"] = "Copia este texto y pégalo en |cff00C8FFhttps://raider.io|r para ver información de todos los jugadores."
 L["GENERAL_TOOLTIP_OPTIONS"] = "Opciones generales del tooltip"
 L["GUILD_BEST_SEASON"] = "Hermandad: mejor de la temporada"
@@ -157,30 +166,25 @@ L["HIDE_OWN_PROFILE"] = "Ocultar ventana emergente de perfil personal de RaiderI
 L["HIDE_OWN_PROFILE_DESC"] = "Oculta la ventana emergente de tu perfil personal de RaiderIO. No afecta a las ventanas emergentes de otros jugadores."
 L["INVERSE_PROFILE_MODIFIER"] = "Invertir modificador de marco de perfil"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "Invierte el comportamiento del modificador del marco de perfil (mayús/ctrl/alt) para que muestre por defecto el perfil del líder del grupo."
---[[Translation missing --]]
---[[ L["LOCALE_NAME"] = ""--]] 
+L["LOCALE_NAME"] = "esES"
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: bloqueando el marco de perfil de M+."
-L["MAINS_BEST_SCORE_BEST_SEASON"] = "Mejor puntuación en M+ con el main (%s)"
+L["MAINS_BEST_SCORE_BEST_SEASON"] = "Mejor Puntuación M+ pj principal (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progreso de personaje principal"
 L["MAINS_SCORE"] = "Puntuación de personaje principal"
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_ENABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_ENABLE_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_HEADER"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_HELP"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_HELP_LEFT_CLICK"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_HELP_RIGHT_CLICK"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_HELP_SEARCH"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_HELP_SETTINGS"] = ""--]] 
---[[Translation missing --]]
---[[ L["MINIMAP_SHORTCUT_LOCK"] = ""--]] 
+L["MINIMAP_SHORTCUT_BROKER_ENABLE"] = "Mostrar icono del addon en el compartimento"
+L["MINIMAP_SHORTCUT_BROKER_ENABLE_DESC"] = "Activa la visualización del icono en la lista desplegable de los addons. Esto también hace que esté disponible en todos los demás complementos compatibles de gestión de iconos."
+L["MINIMAP_SHORTCUT_ENABLE"] = "Activar el botón"
+L["MINIMAP_SHORTCUT_ENABLE_DESC"] = "Habilitar para mostrar el icono alrededor del minimapa. Esto también hará que esté disponible en cualquier otro addon que gestiones los iconos en el minimapa."
+L["MINIMAP_SHORTCUT_HEADER"] = "Minimapa"
+L["MINIMAP_SHORTCUT_HELP"] = "|A:newplayertutorial-icon-mouse-leftbutton:16:12|a Búsqueda |A:newplayertutorial-icon-mouse-rightbutton:16:12|a Configuración"
+L["MINIMAP_SHORTCUT_HELP_LEFT_CLICK"] = "Clic izquierdo"
+L["MINIMAP_SHORTCUT_HELP_RIGHT_CLICK"] = "Clic derecho"
+L["MINIMAP_SHORTCUT_HELP_SEARCH"] = "Búsqueda"
+L["MINIMAP_SHORTCUT_HELP_SETTINGS"] = "Configuración"
+L["MINIMAP_SHORTCUT_LOCK"] = "Bloquear Botón"
+L["MINIMAP_SHORTCUT_MINIMAP_ENABLE"] = "Habilitar el botón del minimapa"
+L["MINIMAP_SHORTCUT_MINIMAP_ENABLE_DESC"] = "Habilitar para mostrar el icono alrededor del minimapa."
+L["MINIMAP_SHORTCUT_MINIMAP_LOCK"] = "Bloquear botón del minimapa"
 L["MODULE_AMERICAS"] = "América"
 L["MODULE_EUROPE"] = "Europa"
 L["MODULE_KOREA"] = "Corea"
@@ -192,21 +196,19 @@ L["NO_GUILD_RECORD"] = "No hay récords de hermandad"
 L["OPEN_CONFIG"] = "Abrir configuración"
 L["OUT_OF_SYNC_DATABASE_S"] = "|cffFFFFFF%s|r tiene datos de facción sin sincronizar. Por favor, actualiza tu configuración del cliente de RaiderIO para sincronizar ambas facciones."
 L["OUTDATED_DATABASE"] = "Estas puntuaciones son de hace %d día(s)"
-L["OUTDATED_DATABASE_HOURS"] = "Estas puntuaciones son de hace %d hora(s)"
+L["OUTDATED_DATABASE_HOURS"] = "Las puntuaciones tienen %d horas"
 L["OUTDATED_DOWNLOAD_LINK"] = "Descargar: |cffffbd0a%s|r"
-L["OUTDATED_EXPIRED_ALERT"] = "|cffFFFFFF%s|r está utilizando datos caducados. Actualice ahora para ver los datos más precisos: |cffFFFFFF%s|r"
-L["OUTDATED_EXPIRED_TITLE"] = "Raider.IO Los datos han expirado"
-L["OUTDATED_EXPIRES_IN_DAYS"] = "Raider.IO Los Datos caducan en %d días"
-L["OUTDATED_EXPIRES_IN_HOURS"] = "Raider.IO Los Datos caducan en %d horas"
-L["OUTDATED_EXPIRES_IN_MINUTES"] = "Raider.IO Los Datos caducan en %d minutos"
-L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "Actualice su complemento ahora para ver los datos más precisos. Los jugadores trabajan duro para mejorar su progreso y mostrar datos muy antiguos es un flaco favor para ellos. Puede utilizar Raider.IO Client para mantener sus datos sincronizados automáticamente."
+L["OUTDATED_EXPIRED_ALERT"] = "|cffFFFFFF%s|r está usando datos caducados. Por favor actualiza ahora para ver los datos más precisos: |cffFFFFFF%s|r"
+L["OUTDATED_EXPIRED_TITLE"] = "Datos de Raider.IO han caducado"
+L["OUTDATED_EXPIRES_IN_DAYS"] = "Los datos de Raider.IO caducan en %d días"
+L["OUTDATED_EXPIRES_IN_HOURS"] = "Los datos de Raider.IO caducan en %d horas"
+L["OUTDATED_EXPIRES_IN_MINUTES"] = "Los datos de Raider.IO caducan en %d minutos"
+L["OUTDATED_PROFILE_TOOLTIP_MESSAGE"] = "Por favor, actualiza tu addon ahora para ver los datos más precisos. Los jugadores trabajan duro para mejorar su progreso, y mostrar datos antiguos es un perjuicio para ellos. Puedes usar el Cliente de Raider.IO para mantener tus datos sincronizados automáticamente."
 L["PREVIOUS_SCORE"] = "Puntuación M+ anterior (%s)"
 L["PROFILE_BEST_RUNS"] = "Mejor de cada mazmorra"
---[[Translation missing --]]
---[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
-L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede encontrar datos para tu facción actual. Compruebe la configuración de |cffFFFFFF/raiderio|r y habilite los datos de información sobre herramientas para |cffFFFFFF%s|r."
---[[Translation missing --]]
---[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Bloquear el marco del Perfil Raider.IO o activar el Posicionamiento Automático para ocultar este anclaje."
+L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede encontrar datos para tu facción actual. Por favor, revisa tus configuraciones de |cffFFFFFF/raiderio|r y habilita los datos de la descripción emergente para |cffFFFFFF%s|r."
+L["PVP_DATA_HEADER"] = "Perfil PvP de Raider.IO"
 --[[Translation missing --]]
 --[[ L["RAID_AATDH"] = ""--]] 
 --[[Translation missing --]]
@@ -312,6 +314,22 @@ L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede enc
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_BOT_5"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_BRD_8"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_BWD_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_BWD_2"] = ""--]] 
@@ -343,6 +361,20 @@ L["RAID_BOSS_FCN_6"] = "Lady Inerva Venaoscura"
 L["RAID_BOSS_FCN_7"] = "El Consejo de Sangre"
 L["RAID_BOSS_FCN_8"] = "Puñolodo"
 L["RAID_BOSS_FCN_9"] = "Generales de la Legión Pétrea"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_FL_7"] = ""--]] 
 L["RAID_BOSS_FSFO_1"] = "Guardián Vigilante"
 L["RAID_BOSS_FSFO_10"] = "Rygelon"
 L["RAID_BOSS_FSFO_11"] = "El Carcelero"
@@ -389,6 +421,22 @@ L["RAID_BOSS_FSOD_9"] = "Kel'Thuzad"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ICC_9"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_NP_8"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_RS_1"] = ""--]] 
 L["RAID_BOSS_SFO_1"] = "Guardián vigilante"
 L["RAID_BOSS_SFO_10"] = "Rygelon"
@@ -434,130 +482,87 @@ L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
 --[[Translation missing --]]
 --[[ L["RAID_BOT"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BRD"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BWD"] = ""--]] 
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Heroico"
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_HEROIC10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_HEROIC25"] = ""--]] 
+L["RAID_DIFFICULTY_NAME_HEROIC10"] = "Heroico 10"
+L["RAID_DIFFICULTY_NAME_HEROIC25"] = "Heroico 25"
 L["RAID_DIFFICULTY_NAME_MYTHIC"] = "Mítico"
 L["RAID_DIFFICULTY_NAME_NORMAL"] = "Normal"
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_NORMAL10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_NAME_NORMAL25"] = ""--]] 
+L["RAID_DIFFICULTY_NAME_NORMAL10"] = "Normal 10"
+L["RAID_DIFFICULTY_NAME_NORMAL25"] = "Normal 25"
 L["RAID_DIFFICULTY_SUFFIX_HEROIC"] = "H"
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_HEROIC25"] = ""--]] 
+L["RAID_DIFFICULTY_SUFFIX_HEROIC10"] = "H10"
+L["RAID_DIFFICULTY_SUFFIX_HEROIC25"] = "H25"
 L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = ""--]] 
+L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
+L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encuentros de banda derrotados"
 --[[Translation missing --]]
+--[[ L["RAID_FL"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_ICC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_NP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_RS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_TOTFW"] = ""--]] 
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Puntuación media de +%s en tiempo"
-L["RAIDERIO_BEST_RUN"] = "Raider.IO Mejor resultado en M+"
+L["RAIDERIO_BEST_RUN"] = "Mejor resultado M+ de Raider.IO"
 L["RAIDERIO_CLIENT_CUSTOMIZATION"] = "Personalización del cliente de RaiderIO"
-L["RAIDERIO_LIVE_TRACKING"] = "Raider.IO seguimiento en vivo"
+L["RAIDERIO_LIVE_TRACKING"] = "Seguimiento en vivo de Raider.IO"
 L["RAIDERIO_MP_BASE_SCORE"] = "Puntuación de M+ base"
-L["RAIDERIO_MP_BEST_SCORE"] = "Raider.IO Puntuación M+ (%s)"
+L["RAIDERIO_MP_BEST_SCORE"] = "Puntuación M+ de Raider.IO (%s)"
 L["RAIDERIO_MP_SCORE"] = "Puntuación de M+"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Opciones de Raider.IO Mythic Plus"
 L["RAIDING_DATA_HEADER"] = "Progreso de banda de Raider.IO"
 L["RAIDING_DB_MODULES"] = "Raiding Database Modulos"
---[[Translation missing --]]
---[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
+L["RECRUITMENT_DB_MODULES"] = "Módulos de bases de datos de reclutamiento"
 L["RELOAD_LATER"] = "La reiniciaré más tarde"
 L["RELOAD_NOW"] = "Reiniciarla ahora"
---[[Translation missing --]]
---[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_STARRED"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_DISABLE_CONFIRM"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_FRAME_ALPHA"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_DOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_LOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_POSITION"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_REPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_STYLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_TIMING"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_REPLAY_CHANGING"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
---[[Translation missing --]]
---[[ L["RESET_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["RESET_CONFIRM_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["RESET_CONFIRM_TEXT"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_SUBTITLE_LOGGING_LOOT"] = ""--]] 
---[[Translation missing --]]
---[[ L["RWF_TITLE"] = ""--]] 
+L["RELOAD_RWF_MODE_BUTTON"] = "Guardar"
+L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Haga clic para guardar el registro en la carpeta de almacenamiento. Esto hará que se recargue la interfaz."
+L["REPLAY_AUTO_SELECTION"] = "Tipo de repetición preferido"
+L["REPLAY_AUTO_SELECTION_DESC"] = "Elija el tipo de repetición que desea que se seleccione automáticamente."
+L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = "Mejor de Guild"
+L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = "Más recientes"
+L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = "Marca personal"
+L["REPLAY_AUTO_SELECTION_STARRED"] = "Favoritos"
+L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "Mejor equipo"
+L["REPLAY_BACKGROUND_COLOR"] = "Color de fondo de la repetición"
+L["REPLAY_BACKGROUND_COLOR_DESC"] = "Especifique el color de fondo utilizado en la ventana de repetición."
+L["REPLAY_DISABLE_CONFIRM"] = "Si desactivas el |cffFFBD0AMythic+ Replay System|r puedes volver a activarlo a través del panel de Configuración en la categoría |cffFFBD0ARaider.IO Client Customization|r."
+L["REPLAY_FRAME_ALPHA"] = "Opacidad de la ventana de repetición"
+L["REPLAY_FRAME_ALPHA_DESC"] = "Opacidad del marco de la repetición."
+L["REPLAY_MENU_COPY_URL"] = "Copiar URL de repetición"
+L["REPLAY_MENU_DISABLE"] = "Desactivar"
+L["REPLAY_MENU_DOCK"] = "Ajuste"
+L["REPLAY_MENU_LOCK"] = "Bloquear"
+L["REPLAY_MENU_POSITION"] = "Posición"
+L["REPLAY_MENU_REPLAY"] = "Repetición"
+L["REPLAY_MENU_STYLE"] = "Estilo"
+L["REPLAY_MENU_TIMING"] = "Tiempo"
+L["REPLAY_MENU_UNDOCK"] = "Separar"
+L["REPLAY_MENU_UNLOCK"] = "Desbloquear"
+L["REPLAY_REPLAY_CHANGING"] = "Al cambiar la repetición, se restablecerán los datos en vivo."
+L["REPLAY_SETTINGS_TOOLTIP"] = "Configuración"
+L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
+L["REPLAY_STYLE_TITLE_MODERN"] = "Estándar"
+L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "Compacto"
+L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = "Sólo jefes"
+L["REPLAY_SUMMARY_LOGGED"] = "|cffFFFFFF%s|r registrado su finalización de |cffFFFFFF+%s|r en |cffFFFF%s|r."
+L["REPLAY_TIMING_TITLE_BOSS"] = "Tiempo de Jefe"
+L["REPLAY_TIMING_TITLE_DUNGEON"] = "Tiempo de mazmorra"
+L["RESET_BUTTON"] = "Restablecer valores"
+L["RESET_CONFIRM_BUTTON"] = "Reiniciar y recargar"
+L["RESET_CONFIRM_TEXT"] = "¿Estás seguro de que quieres restablecer Raider.IO a la configuración predeterminada?"
+L["RWF_MINIBUTTON_TOOLTIP"] = "Clic izquierdo siempre que haya botín pendiente. Esto hará que tu Interfaz se Recargue. Clic derecho para abrir la ventaneada del Race World First."
+L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "(registro de objetos relevantes)"
+L["RWF_SUBTITLE_LOGGING_LOOT"] = "(registro de botín)"
+L["RWF_TITLE"] = "|cffFFFFFFRaider.IO|r Race World First"
 L["SEARCH_NAME_LABEL"] = "Nombre"
 L["SEARCH_REALM_LABEL"] = "Reino"
 L["SEARCH_REGION_LABEL"] = "Región"
@@ -571,21 +576,18 @@ L["SHOW_BEST_MAINS_SCORE"] = "Mostrar puntuación de M+ del personaje principal 
 L["SHOW_BEST_MAINS_SCORE_DESC"] = "Muestra la puntuación conseguida con el personaje principal en la mejor temporada de míticas+ y bandas en el tooltip. Los jugadores deben haberse registrado en Raider.IO y haber declarado un personaje como personaje principal."
 L["SHOW_BEST_RUN"] = "Mostrar la mejor mítica+ realizada en el título"
 L["SHOW_BEST_RUN_DESC"] = "Muestra la mejor mítica+ realizada por el jugador en la temporada actual como título del tooltip."
-L["SHOW_BEST_SEASON"] = "Mostrar la mejor puntuación de la temporada de Míticas+ como título"
-L["SHOW_BEST_SEASON_DESC"] = "Muestra la mejor puntuación de la temporada de Míticas+ del jugador como título del tooltip. Si la puntuación es de una temporada anterior, la temporada se indicará en el título del tooltip."
---[[Translation missing --]]
---[[ L["SHOW_CHESTS_AS_MEDALS"] = ""--]] 
---[[Translation missing --]]
---[[ L["SHOW_CHESTS_AS_MEDALS_DESC"] = ""--]] 
+L["SHOW_BEST_SEASON"] = "Mostrar la mejor puntuación de la temporada de M+ en la descripción"
+L["SHOW_BEST_SEASON_DESC"] = "Muestra la mejor puntuación de la temporada de Míticas+ del jugador en la descripción emergente al pasar el ratón por encima de un jugador. Si la puntuación es de una temporada anterior, la temporada se indicará en la descripción."
+L["SHOW_CHESTS_AS_MEDALS"] = "Mostrar iconos de medallas de míticas"
+L["SHOW_CHESTS_AS_MEDALS_DESC"] = "Muestra las medallas de piedras angulares ganadas como iconos en lugar de signos más (+)."
 L["SHOW_CLIENT_GUILD_BEST"] = "Mostrar mejores puntuaciones de mazmorra en el buscador de grupos"
 L["SHOW_CLIENT_GUILD_BEST_DESC"] = "Muestra las cinco mejores puntuaciones de tu hermandad (tanto de temporada como semanales) en la pestaña 'Piedra angular mítica' de la ventana del buscador de grupos."
-L["SHOW_CURRENT_SEASON"] = "Mostrar la puntuación actual de la temporada de Míticas+ como título"
-L["SHOW_CURRENT_SEASON_DESC"] = "Muestra la puntuación actual de la temporada de Míticas+ del jugador como título del tooltip."
+L["SHOW_CURRENT_SEASON"] = "Mostrar la puntuación de la temporada actual de M+ en la descripción"
+L["SHOW_CURRENT_SEASON_DESC"] = "Muestra la puntuación actual de la temporada de Míticas+ del jugador como información en la ventana de descripción emergente al pasar el ratón por un jugador."
 L["SHOW_IN_FRIENDS"] = "Mostrar en la lista de amigos"
 L["SHOW_IN_FRIENDS_DESC"] = "Muestra la puntuación de M+ de tus amigos cuando pasas el ratón por encima."
 L["SHOW_IN_LFD"] = "Mostrar en el buscador de grupos"
---[[Translation missing --]]
---[[ L["SHOW_IN_LFD_CLASSIC"] = ""--]] 
+L["SHOW_IN_LFD_CLASSIC"] = "Mostrar en el buscador de grupos"
 L["SHOW_IN_LFD_DESC"] = "Muestra la puntuación de M+ cuando pasas el ratón por encima de grupos ya creados del buscador o jugadores que soliciten unirse a tu grupo."
 L["SHOW_IN_SLASH_WHO_RESULTS"] = "Mostrar en resultados de /who"
 L["SHOW_IN_SLASH_WHO_RESULTS_DESC"] = "Muestra la puntuación de M+ cuando usas \"/who\" con un jugador específico."
@@ -603,41 +605,42 @@ L["SHOW_ON_PLAYER_UNITS"] = "Mostrar en marcos de jugador"
 L["SHOW_ON_PLAYER_UNITS_DESC"] = "Muestra la puntuación de M+ de los jugadores en su ventana emergente cuando pasas el ratón sobre ellos."
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE"] = "Mostrar encuentros de banda en la ventana emergente de perfil"
 L["SHOW_RAID_ENCOUNTERS_IN_PROFILE_DESC"] = "Muestra el progreso de banda en la ventana emergente de perfil de RaiderIO."
-L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Experimental) Priorizar mostrar la mejor carrera de Raider.IO "
-L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Esta es una característica experimental. En lugar de mostrar la puntuación de Raider.IO como la primera línea, muestra la mejor carrera del jugador."
+L["SHOW_RAIDERIO_BESTRUN_FIRST"] = "(Experimental) Priorizar Mostrar la Mejor piedra de Raider.IO"
+L["SHOW_RAIDERIO_BESTRUN_FIRST_DESC"] = "Esta es una característica experimental. En lugar de mostrar la puntuación de Raider.IO como primera línea, muestra la mejor piedra completada por el jugador."
 L["SHOW_RAIDERIO_PROFILE"] = "Mostrar marco de perfil en el buscador de grupos"
 L["SHOW_RAIDERIO_PROFILE_DESC"] = "Muestra el marco de perfil de Raider.IO en el buscador de grupos."
---[[Translation missing --]]
---[[ L["SHOW_RAIDERIO_PROFILE_OPTION"] = ""--]] 
+L["SHOW_RAIDERIO_PROFILE_OPTION"] = "Mostrar perfil de Raider.IO"
 L["SHOW_ROLE_ICONS"] = "Mostrar iconos de rol en el tooltip"
 L["SHOW_ROLE_ICONS_DESC"] = "Cuando está activado, se muestran los mejores roles del jugador en míticas+ en el tooltip."
 L["SHOW_SCORE_IN_COMBAT"] = "Mostrar puntuación en combate"
 L["SHOW_SCORE_IN_COMBAT_DESC"] = "Desactiva esta opción para mejorar el rendimiento al pasar el ratón por encima de jugadores cuando estás en combate."
-L["SHOW_SCORE_WITH_MODIFIER"] = "Mostrar Raider.IO en la información sobre herramientas con modificador"
-L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Desactiva la visualización de datos al colocar el cursor sobre un jugadores a menos que se mantenga presionada una tecla modificada."
+L["SHOW_SCORE_WITH_MODIFIER"] = "Mostrar información de Raider.IO en la descripción emergente con modificador"
+L["SHOW_SCORE_WITH_MODIFIER_DESC"] = "Desactiva la visualización de datos al colocar el ratón sobre un jugador, a menos que se mantenga presionada una tecla previamente seleccionada."
+L["SHOW_WARBAND_SCORE"] = "Mostrar puntuación y progreso M+ de la Banda guerrera en la descripción"
+L["SHOW_WARBAND_SCORE_DESC"] = "Muestra la puntuación de Mítica+ de la banda de guerra del jugador en la temporada actual y el progreso de la banda en la descripción emergente. Los jugadores deben haberse registrado en Raider.IO y haber sincronizado su BNET para que el progreso de la banda de guerra funcione."
 L["TANK"] = "Tanque"
---[[Translation missing --]]
---[[ L["TEAM_LF_MPLUS_DEFAULT"] = ""--]] 
---[[Translation missing --]]
---[[ L["TEAM_LF_MPLUS_WITH_SCORE"] = ""--]] 
+L["TEAM_LF_MPLUS_DEFAULT"] = "Reclutar jugadores para Míticas+"
+L["TEAM_LF_MPLUS_WITH_SCORE"] = "Reclutando %d+ jugadores M+"
 L["TIMED_10_RUNS"] = "+10-14 en tiempo"
 L["TIMED_15_RUNS"] = "+15 en tiempo"
 L["TIMED_20_RUNS"] = "+20 en tiempo"
 L["TIMED_5_RUNS"] = "+5-9 en tiempo"
+L["TIMED_RUNS_MINIMUM"] = "En tiempo %d+ completadas"
+L["TIMED_RUNS_RANGE"] = "En tiempo +%d-%d Completadas"
 L["TOOLTIP_PROFILE"] = "Personalización del marco de perfil"
 L["UNKNOWN_SERVER_FOUND"] = "|cffFFFFFF%s|r ha encontrado un nuevo servidor. Por favor, apunta esta información |cffFF9999{|r |cffFFFFFF%s|r |cffFF9999,|r |cffFFFFFF%s|r |cffFF9999}|r y envíasela a los desarrolladores. ¡Gracias!"
 L["UNLOCKING_PROFILE_FRAME"] = "RaiderIO: desbloqueando el marco de perfil de M+."
 L["USE_ENGLISH_ABBREVIATION"] = "Forzar abreviaturas en inglés para mazmorras"
 L["USE_ENGLISH_ABBREVIATION_DESC"] = "Cuando está activado, se sustituyen las abreviaturas usadas para referirse a las mazmorras por sus versiones en inglés, en vez de usar las de tu idioma actual."
-L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Permitir que el cliente Raider.IO controle el registro de combate"
-L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Permita que el Cliente Raider.IO (cuando esté presente) controle la configuración del Registro de combate automáticamente."
+L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "Permitir que el cliente de Raider.IO controle el registro de combate"
+L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "Permitir que el cliente de Raider.IO (cuando esté presente) controle automáticamente la configuración de registro de combate."
+L["WARBAND_BEST_SCORE_BEST_SEASON"] = "Mejor puntuación M+ Banda de guerra (%s)"
+L["WARBAND_SCORE"] = "Puntuación M+ Banda de guerra"
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r El modo depuración está activado. Puedes desactivarlo escribiendo |cffFFFFFF/raiderio debug|r."
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: primero debes deshabilitar el posicionamiento automático del marco de perfil de RaiderIO."
---[[Translation missing --]]
---[[ L["WARNING_RWF_MODE_ENABLE"] = ""--]] 
+L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r Race World First.-Está activado. Puedes desactivarlo introduciendo |cffFFFFFF/raiderio rwf|r."
 L["WIPE_RWF_MODE_BUTTON"] = "Wipe"
---[[Translation missing --]]
---[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "Haga clic para borrar el Registro del almacenamiento. Esto hará que la interfaz se recargue."
 
 
 end

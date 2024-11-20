@@ -1,0 +1,16 @@
+## Interface: 110005
+## Title: MDT Legacy
+## Author: Nnoggie
+## Version: 1.0.3
+## Notes: MDT Plugin cotaining dungeons from previous expansions
+## Dependencies: MythicDungeonTools
+## X-Curse-Project-ID: 1115573
+## X-Wago-ID: mKOv1k6x
+
+locale.lua
+versionCheck.lua
+core.lua
+Legion\load_legion.xml
+BattleForAzeroth\load_bfa.xml
+Shadowlands\load_shadowlands.xml
+Dragonflight\load_dragonflight.xml

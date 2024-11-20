@@ -1,4 +1,4 @@
-## Interface: 11503
+## Interface: 11504
 ## X-Min-Interface-Classic: 11403
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (Vanilla)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010공격대 (클래식)|r
@@ -28,7 +28,7 @@
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
 ## X-Wago-ID: 7x61xpN1
-## Version: r739
+## Version: r760
 
 localization.en.lua
 localization.tw.lua
@@ -87,12 +87,14 @@ VanillaZG\EdgeOfMadness.lua
 VanillaZG\Gahzranka.lua
 VanillaZG\Jindo.lua
 
+BWL\SoDTrials.lua
 BWL\Razorgore.lua
 BWL\Vaelastrasz.lua
 BWL\Broodlord.lua
 BWL\Firemaw.lua
 BWL\Ebonroc.lua
 BWL\Flamegor.lua
+BWL\Ebonroc_and_Flamegor.lua
 BWL\Chromaggus.lua
 BWL\Nefarian.lua
 BWL\TalonGuards.lua

@@ -3,10 +3,11 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20240525081141")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
+mod:SetZone(1136)
 
 mod:RegisterCombat("combat")
 
@@ -223,16 +224,15 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 143503 then
 		specWarnWarSong:Show()
 	elseif spellId == 143420 then
-		local source = args.sourceName
-		warnIronstorm:Show()
 		if self:CheckInterruptFilter(args.sourceGUID, true) then
-			specWarnIronstorm:Show(source)
+			specWarnIronstorm:Show()
+		else
+			warnIronstorm:Show()
 		end
 	elseif spellId == 143473 then
-		local source = args.sourceName
 		warnEmpoweredChainHeal:Show()
-		specWarnEmpoweredChainHeal:Show(source)
-		timerEmpoweredChainHealCD:Start(source, args.sourceGUID)
+		specWarnEmpoweredChainHeal:Show(args.sourceName)
+		timerEmpoweredChainHealCD:Start(args.sourceName, args.sourceGUID)
 	elseif spellId == 143502 then
 		timerExecuteCD:Start()
 		if self:IsTanking("player", "boss1", nil, true) then--threat check instead of target because we may be helping dps adds

@@ -9,7 +9,7 @@ end
 function Addon:GetVersion()
     local version = Addon:GetAddOnMetadata(AddonName, "version")
     if (Addon.IsDebug) then
-        if version == "6.1.2-58-gbcf38d2" then
+        if version == "6.1.2-66-gbaf17b0" then
             version = "Debug"
         else
             version = "Debug "..version

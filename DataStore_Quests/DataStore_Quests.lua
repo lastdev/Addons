@@ -633,6 +633,12 @@ local function _IterateQuests(character, category, callback)
 	end
 end
 
+local function _GetQuestLink(questID, questTitle)
+	if questID and questTitle then
+		-- Ex: "|cffffff00|Hquest:65436:2573|h[The Dragon Isles Await]|h|r"
+		return format("|cffffff00|Hquest:%d:-1|h[%s]|h|r", questID, questTitle)
+	end
+end
 
 DataStore:OnAddonLoaded(addonName, function()
 	DataStore:RegisterModule({
@@ -673,6 +679,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	DataStore:RegisterMethod(addon, "GetQuestLevel", _GetQuestLevel)
 	DataStore:RegisterMethod(addon, "GetQuestGroupSize", _GetQuestGroupSize)
 	DataStore:RegisterMethod(addon, "GetCharactersOnQuest", _GetCharactersOnQuest)
+	DataStore:RegisterMethod(addon, "GetQuestLink", _GetQuestLink)
 
 	if isRetail then
 		DataStore:RegisterMethod(addon, "IsEmissaryQuest", _IsEmissaryQuest)

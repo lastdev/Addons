@@ -73,7 +73,7 @@ function private.HandleThrottledAuctionsUpdate()
 	end
 end
 
-function private.PostAuctionHookHandler(duration, itemLink, quantity, unitPrice)
+function private.PostAuctionHookHandler(duration)
 	local days = nil
 	if duration == 1 then
 		days = 0.5

@@ -129,7 +129,7 @@ local popupData = {
 		wagoUrl = "https://addons.wago.io/addons/deadly-boss-mods-dbm-bc-vanilla-mods",
 		curseUrl = "https://www.curseforge.com/wow/addons/dbm-vanilla",
 	},
-	Wrath = {
+	WoTLK = {
 		package = L.DBM_INSTALL_PACKAGE_WRATH,
 		wagoUrl = "https://addons.wago.io/addons/deadly-boss-mods-dbm-wrath-of-the-lich-king-mods",
 		curseUrl = "https://www.curseforge.com/wow/addons/deadly-boss-mods-wotlk",
@@ -161,6 +161,7 @@ local annoyingPopupZonesVanilla = {
 	[509]  = {addon = "DBM-Raids-Vanilla", package = "Vanilla"},  -- Ruins of Ahn'Qiraj
 	[531]  = {addon = "DBM-Raids-Vanilla", package = "Vanilla"},  -- Temple of Ahn'Qiraj
 	[533]  = {addon = "DBM-Raids-Vanilla", package = "Vanilla"},  -- Naxxramas
+	[2217]  = {addon = "DBM-Raids-Vanilla", package = "Vanilla"},  -- BRD Raid
 }
 
 --No hard dungeons in wrath, so just popup for raids
@@ -187,15 +188,6 @@ local annoyingPopupZonesCata = {
 }
 
 local annoyingPopupZonesRetail = {
-	--DF Season 4 M+ Dungeons
-	[2516]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2526]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2515]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2521]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2527]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2519]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2451]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
-	[2520]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
 	--TWW Season 1 M+ Dungeons
 	[2652]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???
 	[2662]  = {addon = "DBM-Party-Dragonflight", package = "Dungeons"},  -- ???

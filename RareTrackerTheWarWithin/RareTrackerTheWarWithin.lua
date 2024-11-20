@@ -94,6 +94,8 @@ if RareTracker.db.global.window.force_display_in_english then
     L[216048] = "Jix'ak the Crazed"
     L[216050] = "Harvester Qixt"
     L[222624] = "Deepcrawler Tx'kesh"
+    L[216047] = "The One Left"
+    L[216046] = "Tka'ktath"
 end
 
 RareTracker.RegisterRaresForModule({
@@ -221,5 +223,7 @@ RareTracker.RegisterRaresForModule({
         [216048] = {L[216048], 82034, {67.0, 83.6}}, --"Jix'ak the Crazed"
         [216050] = {L[216050], 82036, {65.0, 83.6}}, --"Harvester Qixt"
         [222624] = {L[222624], 82077, {64.6, 8.6}}, --"Deepcrawler Tx'kesh"
+        [216047] = {L[216047], 82290, {63.5, 95}}, --"The One Left"
+        [216046] = {L[216046], 82289, {62.8, 66.6}}, --"Tka'ktath"
     }
 })

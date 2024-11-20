@@ -1,14 +1,10 @@
 local mod	= DBM:NewMod(193, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
 
---normal,normal25,heroic,heroic25 in classic
-if not mod:IsClassic() then--Future planning, so cata classic uses regular rules defined in toc and not timewalker rules for this zone
-	mod.statTypes = "normal,heroic,timewalker"
-end
-
-mod:SetRevision("20240315100444")
+mod:SetRevision("20241103125714")
 mod:SetCreatureID(52558)--or does 53772 die instead?didn't actually varify this fires right unit_died event yet so we'll see tonight
 mod:SetEncounterID(1204)
+mod:SetZone(720)
 --mod:SetModelSound("Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_AGGRO.ogg", "Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_KILL_02.ogg")
 --Long: Blah blah blah Nuisances, Nuisances :)
 --Short: So Soft
@@ -47,7 +43,6 @@ local timerSuperheated		= mod:NewNextTimer(10, 101304, nil, nil, nil, 5, nil, DB
 local timerMoltenSpew		= mod:NewCastTimer(6, 98034, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)		--6secs after Drinking Magma
 local timerMagmaFlowActive	= mod:NewBuffActiveTimer(10, 97225)	--10 second buff volcano has, after which the magma line explodes.
 
-mod.vb.phase = 1
 mod.vb.addCount = 0
 mod.vb.prewarnedPhase2 = false
 
@@ -60,7 +55,7 @@ function mod:OnCombatStart(delay)
 	else
 		timerSuperheated:Start(360-delay)--6 min on normal
 	end
-	self.vb.phase = 1
+	self:SetStage(1)
 	self.vb.addCount = 0
 	self.vb.prewarnedPhase2 = false
 end
@@ -101,7 +96,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 99846 and self.vb.phase < 2 then
-		self.vb.phase = 2
+		self:SetStage(2)
 		warnPhase2:Show()
 		if timerFlameStomp:GetTime() > 0 then--This only happens if it was still on CD going into phase
 			timerFlameStomp:Cancel()

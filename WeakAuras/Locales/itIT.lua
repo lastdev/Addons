@@ -31,6 +31,14 @@ L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000Not|r Bonus Id oggetto 
 L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Oggetto Equipaggiato "
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Nome Giocatore/Reame"
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Incantesimo Conosciuto"
+--[[Translation missing --]]
+L[ [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
+Find more information:
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
+Find more information:
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Opzioni Extra:|r %s"
 L["|cFFffcc00Extra Options:|r None"] = "|cFFffcc00Opzioni Extra:|r Nessuna"
 L[ [=[• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00ff00Pet|r correspond directly to those individual unitIDs.
@@ -74,7 +82,6 @@ L["Absorb Heal Overlay"] = "Assorbe la copertura di guarigione"
 L["Absorb Overlay"] = "Absorb Overlay"
 L["Absorbed"] = "Assorbito"
 L["Action Button Glow"] = "Bagliore Pulsante Azioni"
-L["Action Usable"] = "Azione utilizzabile"
 L["Actions"] = "Azioni"
 L["Active"] = "Attivo"
 L[ [=[Active boss mod addon: |cFFffcc00BigWigs|r
@@ -297,14 +304,8 @@ L["Channel (Spell)"] = "Canale (Magia)"
 L["Character Stats"] = "Statistiche del Personaggio "
 L["Character Type"] = "Tipo di carattere"
 L["Charge gained/lost"] = "Carica guadagnata/persa"
-L["Charged Combo Point (1)"] = "Punto Combo Caricato (1)"
-L["Charged Combo Point (2)"] = "Punto Combo Caricato (2)"
-L["Charged Combo Point (3)"] = "Punto Combo Caricato (3)"
-L["Charged Combo Point (4)"] = "Punto Combo Caricato (4)"
-L["Charged Combo Point 1"] = "Punto Combo Caricato 1"
-L["Charged Combo Point 2"] = "Punto Combo Caricato 2"
-L["Charged Combo Point 3"] = "Punto Combo Caricato 3"
-L["Charged Combo Point 4"] = "Punto Combo Caricato 4"
+--[[Translation missing --]]
+L["Charged Combo Points"] = "Charged Combo Points"
 L["Charges"] = "Cariche"
 L["Charges Changed Event"] = "Evento modificato caricato"
 L["Charging"] = "In carica"
@@ -327,9 +328,6 @@ L["Clone per Match"] = "Clona per partita"
 L["Color"] = "Colore"
 L["Color Animation"] = "Animazione a colori"
 L["Combat Log"] = "Registro di combattimento"
-L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = "COMBAT_LOG_EVENT_UNFILTERED senza filtro è generalmente sconsigliato poiché è molto costoso in termini di prestazioni. Trova ulteriori informazioni: https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"
 --[[Translation missing --]]
 L["Communities"] = "Communities"
 L["Condition Custom Text"] = "Condizione Testo Personalizzato"
@@ -356,13 +354,16 @@ L["Critical"] = "Critico"
 L["Critical (%)"] = "Critico (%)"
 L["Critical Rating"] = "Grado del Critico"
 --[[Translation missing --]]
+L["Crop X"] = "Crop X"
+--[[Translation missing --]]
+L["Crop Y"] = "Crop Y"
+--[[Translation missing --]]
 L["Crowd Controlled"] = "Crowd Controlled"
 L["Crushing"] = "Frantumazione "
 --[[Translation missing --]]
 L["C'thun"] = "C'thun"
 L["Cumulated time used during profiling"] = "Tempo cumulativo utilizzato durante la profilazione"
 L["Currency"] = "Corrente"
-L["Current Combo Point charged"] = "Punto combo attuale caricato"
 L["Current Essence"] = "Essenza Attuale"
 L["Current Experience"] = "Esperienza Attuale"
 L["Current Instance"] = "Spedizione Attuale "
@@ -940,9 +941,9 @@ L["Icon Function"] = "Icon Function"
 --[[Translation missing --]]
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
 --[[Translation missing --]]
-L["ID"] = "ID"
---[[Translation missing --]]
 L["Id"] = "Id"
+--[[Translation missing --]]
+L["ID"] = "ID"
 --[[Translation missing --]]
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 --[[Translation missing --]]
@@ -955,6 +956,8 @@ L["Ignore Rune CD"] = "Ignore Rune CD"
 L["Ignore Rune CDs"] = "Ignore Rune CDs"
 --[[Translation missing --]]
 L["Ignore Self"] = "Ignore Self"
+--[[Translation missing --]]
+L["Ignore Spell Cooldown/Charges"] = "Ignore Spell Cooldown/Charges"
 --[[Translation missing --]]
 L["Ignore Spell Override"] = "Ignore Spell Override"
 --[[Translation missing --]]
@@ -1012,9 +1015,9 @@ L["Instance"] = "Instance"
 --[[Translation missing --]]
 L["Instance Difficulty"] = "Instance Difficulty"
 --[[Translation missing --]]
-L["Instance ID"] = "Instance ID"
---[[Translation missing --]]
 L["Instance Id"] = "Instance Id"
+--[[Translation missing --]]
+L["Instance ID"] = "Instance ID"
 --[[Translation missing --]]
 L["Instance Info"] = "Instance Info"
 --[[Translation missing --]]
@@ -2354,8 +2357,6 @@ L["Tracking Only Cooldown"] = "Tracking Only Cooldown"
 --[[Translation missing --]]
 L["Transmission error"] = "Transmission error"
 --[[Translation missing --]]
-L["Treat charged combo point as 7 combo points"] = "Treat charged combo point as 7 combo points"
---[[Translation missing --]]
 L["Trigger"] = "Trigger"
 --[[Translation missing --]]
 L["Trigger %i"] = "Trigger %i"
@@ -2480,7 +2481,7 @@ L["Warning"] = "Warning"
 --[[Translation missing --]]
 L["Warning for unknown aura:"] = "Warning for unknown aura:"
 --[[Translation missing --]]
-L["Warning: Anchoring to your own child '%s' in aura '%s' is imposssible."] = "Warning: Anchoring to your own child '%s' in aura '%s' is imposssible."
+L["Warning: Anchoring in aura '%s' is imposssible, due to an anchoring cycle"] = "Warning: Anchoring in aura '%s' is imposssible, due to an anchoring cycle"
 --[[Translation missing --]]
 L["Warning: Full Scan auras checking for both name and spell id can't be converted."] = "Warning: Full Scan auras checking for both name and spell id can't be converted."
 --[[Translation missing --]]

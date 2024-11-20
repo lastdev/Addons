@@ -1,9 +1,9 @@
 local addonName, addon = ...
 _G[addonName] = addon
 
-addon.Version = "v11.0.003"
+addon.Version = "v11.0.005"
 -- addon.VersionNum = 11 00 006
-addon.VersionNum = 1100003
+addon.VersionNum = 1100005
 
 LibStub("LibMVC-1.0"):Embed(addon)
 
@@ -13,63 +13,7 @@ local commPrefix = addonName
 
 AddonFactory:AddKeyBinding("ALTOHOLIC", addonName, "Altoholic - Toggle UI")
 
-addon.Colors = {
-	white	= "|cFFFFFFFF",
-	red = "|cFFFF0000",
-	darkred = "|cFFF00000",
-	green = "|cFF00FF00",
-	orange = "|cFFFF7F00",
-	yellow = "|cFFFFFF00",
-	gold = "|cFFFFD700",
-	teal = "|cFF00FF9A",
-	cyan = "|cFF1CFAFE",
-	lightBlue = "|cFFB0B0FF",
-	battleNetBlue = "|cff82c5ff",
-	grey = "|cFF909090",
-	
-	-- classes
-	classMage = "|cFF69CCF0",
-	classHunter = "|cFFABD473",
-	
-	-- recipes
-	recipeGrey = "|cFF808080",
-	recipeGreen = "|cFF40C040",
-	recipeOrange = "|cFFFF8040",
-	
-	-- rarity : http://wow.gamepedia.com/Quality
-	common = "|cFFFFFFFF",
-	uncommon = "|cFF1EFF00",
-	rare = "|cFF0070DD",
-	epic = "|cFFA335EE",
-	legendary = "|cFFFF8000",
-	heirloom = "|cFFE6CC80",
-
-	Alliance = "|cFF2459FF",
-	Horde = "|cFFFF0000"
-}
-
-local colors = addon.Colors
-
-addon.Icons = {
-	ready = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t",
-	waiting = "\124TInterface\\RaidFrame\\ReadyCheck-Waiting:14\124t",
-	notReady = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t",
-	questionMark = "Interface\\RaidFrame\\ReadyCheck-Waiting",
-
-	Alliance = "Interface\\Icons\\INV_BannerPVP_02",
-	Horde = "Interface\\Icons\\INV_BannerPVP_01",
-	Neutral = "Interface\\Icons\\Achievement_character_pandaren_female",
-}
-
--- Place Enums in a separate file when there are enough to justify it
-addon.Enum = {
-	ArmorTypes = {
-		[1] = C_Item.GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Cloth), -- "Cloth"
-		[2] = C_Item.GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Leather), -- "Leather"
-		[3] = C_Item.GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Mail), -- "Mail"
-		[4] = C_Item.GetItemSubClassInfo(Enum.ItemClass.Armor, Enum.ItemArmorSubclass.Plate) -- "Plate"
-	},
-}
+local colors = AddonFactory.Colors
 
 addon.TradeSkills = {
 	Recipes = {},
@@ -98,9 +42,6 @@ addon.TradeSkills = {
 		TAILORING = C_Spell.GetSpellName(3908),
 	},
 }
-
--- One empty function to rule them all
-addon.EmptyFunc = function() end
 
 -- ** LDB Launcher **
 LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject(addonName, {
@@ -169,7 +110,7 @@ local commandLineCommands = {
 local function CommandLineCallback(args)
 	-- No arguments ? show the options
 	if not args or args == "" then
-		local yellow = addon.Colors.yellow
+		local yellow = colors.yellow
 	
 		addon:Print(format("Arguments to %s/Alto :", yellow))
 		print(format("  %sshow|r - %s", yellow, L["Shows the UI"]))
@@ -307,7 +248,7 @@ DataStore:OnAddonLoaded(addonName, function()
 			-- On Yes
 			function() DataStore:SendBankTabToGuildMember(sender, tabName) end, 
 		
-			-- On no
+			-- On No
 			function() DataStore:RejectBankTabRequest(sender) end)
 
 	end)
@@ -361,92 +302,6 @@ DataStore:OnAddonLoaded(addonName, function()
 	if Altoholic_UI_Options.moreRecentVersion and addon.VersionNum >= Altoholic_UI_Options.moreRecentVersion then
 		Altoholic_UI_Options.moreRecentVersion = nil
 	end
-		
-	--Temporary: database migration	
-	if not AltoholicDB or not AltoholicDB.global or not AltoholicDB.global.options then return end		-- just being extra safe here ..
-	
-	local source = AltoholicDB.global.options
-	
-	local dest = Altoholic_UI_Options
-	dest.Scale = source["UI.Scale"] or dest.Scale
-	dest.Transparency = source["UI.Transparency"] or dest.Transparency
-	dest.ClampWindowToScreen = source["UI.ClampWindowToScreen"] or dest.ClampWindowToScreen
-	source["UI.Scale"] = nil
-	source["UI.Transparency"] = nil
-	source["UI.ClampWindowToScreen"] = nil
-	
-	dest.Mail.GuildMailWarning = source["UI.Mail.GuildMailWarning"] or dest.Mail.GuildMailWarning
-	dest.Mail.AutoCompleteRecipient = source["UI.Mail.AutoCompleteRecipient"] or dest.Mail.AutoCompleteRecipient
-	dest.Mail.AutoCompletePriority = source["UI.Mail.AutoCompletePriority"] or dest.Mail.AutoCompletePriority
-	dest.Mail.LastExpiryWarning = source["UI.Mail.LastExpiryWarning"] or dest.Mail.LastExpiryWarning
-	dest.Mail.TimeToNextWarning = source["UI.Mail.TimeToNextWarning"] or dest.Mail.TimeToNextWarning
-	
-	source["UI.Mail.GuildMailWarning"] = nil
-	source["UI.Mail.AutoCompleteRecipient"] = nil
-	source["UI.Mail.AutoCompletePriority"] = nil
-	source["UI.Mail.LastExpiryWarning"] = nil
-	source["UI.Mail.TimeToNextWarning"] = nil
-	
-	-- not yet, requires update of AddonFactory -> MinimapButton
-	-- dest.Minimap.ShowIcon = source["UI.Minimap.ShowIcon"] or dest.Minimap.ShowIcon
-	-- dest.Minimap.IconAngle = source["UI.Minimap.IconAngle"] or dest.Minimap.IconAngle
-	-- dest.Minimap.IconRadius = source["UI.Minimap.IconRadius"] or dest.Minimap.IconRadius
-	-- source["UI.Minimap.ShowIcon"] = nil
-	-- source["UI.Minimap.IconAngle"] = nil
-	-- source["UI.Minimap.IconRadius"] = nil
-	
-	dest = Altoholic_Calendar_Options
-	dest.WarningsEnabled = source["UI.Calendar.WarningsEnabled"] or dest.WarningsEnabled
-	dest.WeekStartsOnMonday = source["UI.Calendar.WeekStartsOnMonday"] or dest.WeekStartsOnMonday
-	dest.UseDialogBoxForWarnings = source["UI.Calendar.UseDialogBoxForWarnings"] or dest.UseDialogBoxForWarnings
-	dest.WarningType1 = source.WarningType1 or dest.WarningType1
-	dest.WarningType2 = source.WarningType2 or dest.WarningType2
-	dest.WarningType3 = source.WarningType3 or dest.WarningType3
-	dest.WarningType4 = source.WarningType4 or dest.WarningType4
-	
-	source["UI.Calendar.WarningsEnabled"] = nil
-	source["UI.Calendar.WeekStartsOnMonday"] = nil
-	source["UI.Calendar.UseDialogBoxForWarnings"] = nil
-	source.WarningType1 = nil
-	source.WarningType2 = nil
-	source.WarningType3 = nil
-	source.WarningType4 = nil
-	
-	dest = Altoholic_Tooltip_Options
-
-	for k, v in pairs(source) do
-		local arg1, arg2, arg3, arg4 = strsplit(".", k)
-		
-		if arg1 == "UI" and arg2 == "Tooltip" then
-			local prefix = "UI.Tooltip."
-			local optionName = k:sub(#prefix + 1)
-			
-			-- Create the new entries
-			dest[optionName] = v
-			
-			-- Delete the old entries
-			source[k] = nil
-		end
-		
-		if arg4 and arg4 == "HideInTooltip" then
-			local guildKey = format("%s.%s.%s", arg1, arg2, arg3)
-			
-			-- Create the new entries
-			dest.HiddenGuilds[guildKey] = v
-			
-			-- Delete the old entries
-			source[k] = nil
-		end
-	end
-	
-	-- move account sharing options
-	dest = Altoholic_Sharing_Options
-	dest.IsEnabled = source["UI.AccountSharing.IsEnabled"] or dest.IsEnabled
-	source["UI.AccountSharing.IsEnabled"] = nil
-	
-	-- guild bank tab auto update not really part of the guild tab options, it's a sharing option.
-	dest.GuildBankAutoUpdate = source["UI.Tabs.Guild.BankAutoUpdate"] or dest.GuildBankAutoUpdate
-	source["UI.Tabs.Guild.BankAutoUpdate"] = nil
 	
 end)
 

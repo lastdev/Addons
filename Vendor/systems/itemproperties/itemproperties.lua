@@ -236,7 +236,7 @@ local function doGetItemProperties(itemObj)
             local hasSource = C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(item.SourceId)
             if hasSource then
                 if Addon.IsDebug then
-                    item.TransmogInfoSource = "PlayerHasTransmogItemModifiedAppearance"
+                    item.TransmogInfoSource = "ItemModifiedAppearance"
                 end
                 item.IsAppearanceCollected = true
             else

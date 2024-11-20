@@ -101,6 +101,7 @@ function HealBot_Lang_enALL()
 
     HEALBOT_OPTIONS_TITLE                  =HEALBOT_HEALBOT;
     HEALBOT_OPTIONS_DEFAULTS               ="Global Defaults";
+    HEALBOT_OPTIONS_UNUSEDDEFAULTS         ="Unused Defaults";
     HEALBOT_OPTIONS_LOCALDEFAULTS          ="Local Defaults";
     HEALBOT_OPTIONS_CLOSE                  ="Close";
     HEALBOT_OPTIONS_HARDRESET              ="Reload UI"
@@ -139,6 +140,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_ALPHA                  ="Opacity";
     HEALBOT_OPTIONS_MINALPHA               ="Min opacity";
     HEALBOT_OPTIONS_MAXALPHA               ="Max opacity";
+    HEALBOT_OPTIONS_MINUNITS               ="Min number of Players";
     HEALBOT_OPTIONS_BARALPHA               ="Enabled opacity";
     HEALBOT_OPTIONS_BARALPHAINHEAL         ="Incoming heals opacity";
     HEALBOT_OPTIONS_BARALPHABACK           ="Background bar opacity";
@@ -270,7 +272,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SELFHEALS              ="Self"
     HEALBOT_OPTIONS_PETHEALS               ="Pets"
     HEALBOT_WORD_PET                       ="Pet"
-    HEALBOT_OPTIONS_GROUPHEALS             ="Group";
+    HEALBOT_OPTIONS_GROUPHEALS             ="Group Heals";
     HEALBOT_OPTIONS_TANKHEALS              ="Main tanks";
     HEALBOT_OPTIONS_SINGLE                 ="Single ";
     HEALBOT_OPTIONS_SINGLETANK             ="Single tank";
@@ -290,6 +292,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_HIGHLIGHTSTATE         ="Highlight State";
     HEALBOT_OPTIONS_CONFIG                 ="Configure"
     HEALBOT_OPTIONS_RAID10                 =HEALBOT_OPTIONS_EMERGENCYHEALS.." 10";
+    HEALBOT_OPTIONS_RAID15                 =HEALBOT_OPTIONS_EMERGENCYHEALS.." 15";
     HEALBOT_OPTIONS_RAID20                 =HEALBOT_OPTIONS_EMERGENCYHEALS.." 20";
     HEALBOT_OPTIONS_RAID25                 =HEALBOT_OPTIONS_EMERGENCYHEALS.." 25";
     HEALBOT_OPTIONS_RAID40                 =HEALBOT_OPTIONS_EMERGENCYHEALS.." 40";
@@ -603,7 +606,7 @@ function HealBot_Lang_enALL()
 
 
     HEALBOT_ASSIST                         ="Assist";
-    HEALBOT_FOCUS                          ="Focus";
+    HEALBOT_WORD_FOCUS                     ="Focus";
     HEALBOT_MENU                           ="Menu";
     HEALBOT_MAINTANK                       ="MainTank";
     HEALBOT_STOP                           ="Stop";
@@ -667,8 +670,10 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_USEFOCUSGROUPS          ="Use focus groups"
     HEALBOT_OPTION_FOCUSGROUPDIMMING       ="Unfocused groups - Opacity reduction"
     HEALBOT_OPTION_NONHOTBARSDIMMING       ="Non Hot Bars - Opacity reduction"
+    HEALBOT_OPTION_NONGHDIMMING            ="Heal not needed - Opacity reduction"
     HEALBOT_OPTION_GLOBALDIMMING           ="Mouse not over frames - Opacity reduction"
     HEALBOT_OPTION_FLUIDBARS               ="Fluid Bars"
+    HEALBOT_OPTION_GROUPBARS               ="Group Bars"
     HEALBOT_OPTION_HEALTHDROPALERT         ="Health Drop Alert"
     HEALBOT_OPTION_HOTBARS                 ="Hot Bars"
     HEALBOT_OPTION_HOTBARSDEBUFFPRIO       ="Debuff Priority threshold"
@@ -709,7 +714,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_TTMAXBUTTONS           ="Max buttons"
     HEALBOT_TOOLTIP_TARGETBAR              ="Target Bar"
     HEALBOT_OPTIONS_MYTARGET               ="Private List"
-    HEALBOT_OPTIONS_MYFRIEND               ="My Friend"
 
     HEALBOT_DISCONNECTED_LABEL             ="Disconnected"
     HEALBOT_DISCONNECTED_TAG               ="DC "
@@ -786,7 +790,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_MAXCHARS               ="Max Characters"
     HEALBOT_OPTIONS_PLAYERMAXCHARS         ="Max Characters - Player Name"
     HEALBOT_OPTIONS_MOBMAXCHARS            ="Max Characters - Mob Name"
-    HEALBOT_VEHICLE                        ="Vehicle"
+    HEALBOT_WORD_VEHICLE                   ="Vehicle"
     HEALBOT_WORDS_ERROR                    ="Error"
     HEALBOT_SPELL_NOT_FOUND                ="Spell Not Found"
     HEALBOT_OPTIONS_DISABLETOOLTIPINCOMBAT ="Hide Tooltip in Combat"
@@ -849,6 +853,9 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTION_FRAMEPADDING            ="Frame padding"
     HEALBOT_OPTIONS_ONBARS                 ="On health bars"
     HEALBOT_OPTIONS_ONICONS                ="On icons and emergency bars"
+    HEALBOT_OPTIONS_TARGETOFFOCUS          ="Target of Focus"
+    HEALBOT_OPTIONS_TARGETOFPRIVFOCUSTAR   ="Private Focus ToT"
+    HEALBOT_OPTIONS_PRIVFOCUS              ="Private Focus"
 
     HEALBOT_OPTIONS_TAB_CHAT               ="Chat"
     HEALBOT_OPTIONS_TAB_HEADERS            ="Headers"
@@ -876,6 +883,8 @@ function HealBot_Lang_enALL()
     HEALBOT_WORD_BATTLEGROUND              ="Battle Ground"
     HEALBOT_WORD_BG10                      ="BG 10";
     HEALBOT_WORD_BG15                      ="BG 15";
+    HEALBOT_WORD_BG20                      ="BG 20";
+    HEALBOT_WORD_BG25                      ="BG 25";
     HEALBOT_WORD_BG40                      ="BG 40";
     HEALBOT_OPTIONS_TEXTOPTIONS            ="Bar Text"
     HEALBOT_WORD_PARTY                     ="Party"
@@ -1197,10 +1206,10 @@ function HealBot_Lang_enALL()
     HEALBOT_RANDOMPET                      ="Random Pet"
     HEALBOT_RANDOMFAVMOUNT                 ="Random Favourite Mount"
     HEALBOT_RANDOMFAVPET                   ="Random Favourite Pet"
-    HEALBOT_EXTRASKINS_CAT_GROUP           ="Group"
     HEALBOT_EXTRASKINS_CAT_SRAID           ="Small Raid"
     HEALBOT_EXTRASKINS_CAT_LRAID           ="Large Raid"
     HEALBOT_MACRO                          ="Macro"
+    HEALBOT_ACTION                         ="Action"
     HEALBOT_EMOTE                          ="Emote"
     HEALBOT_EMOTES                         ="Emotes"
     HEALBOT_EMOTE_CAT_COMBAT               ="Combat"
@@ -1297,8 +1306,6 @@ function HealBot_Lang_enALL()
     HEALBOT_RESLAG_INDICATOR               ="Keep name green after res set to"
     HEALBOT_CLASSIC_HOT_IHDUR              ="Classic HoT incoming heal duration set to"
     HEALBOT_RESLAG_INDICATOR_ERROR         ="Invalid number - The number must be between 1 and 30"
-    HEALBOT_RESTRICTTARGETBAR_ON           ="Restrict Target bar turned On"
-    HEALBOT_RESTRICTTARGETBAR_OFF          ="Restrict Target bar turned Off"
     HEALBOT_AGGRO2_ERROR_MSG               ="To set aggro level 2, threat percentage must be between 25 and 95"
     HEALBOT_AGGRO3_ERROR_MSG               ="To set aggro level 3, threat percentage must be between 75 and 100"
     HEALBOT_AGGRO2_SET_MSG                 ="Aggro level 2 set at threat percentage "
@@ -1492,6 +1499,7 @@ function HealBot_Lang_enALL()
 
     HEALBOT_OPTION_ISFALLING               ="Is Falling"
     HEALBOT_OPTION_ISSWIMMING              ="Is Swimming"
+    HEALBOT_OPTION_GOURPHEALSEFFECT        ="Group Heals Effect Active"
 
     HEALBOT_CUSTOM_CAT_CUSTOM_AUTOMATIC    ="Automatic Debuffs"
     HEALBOT_CUSTOM_CAT_CUSTOM_AUTOBUFFS    ="Automatic Buffs"
@@ -1762,7 +1770,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_HIDERAIDFRAMES         ="Hide raid frames";
     HEALBOT_OPTIONS_HIDEFOCUSFRAME         ="Hide focus frame";
     HEALBOT_OPTIONS_FRAME_ALIAS            ="Alias"
-    HEALBOT_OPTIONS_CONTENT_SKINS_HEALGROUP="        " .. "Heal Groups"
+    HEALBOT_OPTIONS_HEALGROUPS             ="Heal Groups"
+    HEALBOT_OPTIONS_CONTENT_SKINS_HEALGROUP="        " .. HEALBOT_OPTIONS_HEALGROUPS
     HEALBOT_OPTIONS_CONTENT_SKINS_BARCOLOUR="        " .. "Bar Col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s"
     HEALBOT_OPTIONS_SET_ALL_FRAMES         ="Copy current frame and tabs to other frames"
     HEALBOT_OPTIONS_CURRENT_FRAME          ="Current frame: "
@@ -1794,8 +1803,6 @@ function HealBot_Lang_enALL()
     HEALBOT_ENEMY_TARGET_SIZE              ="Enemy target size"
     HEALBOT_ENEMY_TARUSESENEMYCOLS         ="Player target always uses enemy frame col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s"
     HEALBOT_ENEMY_TOTUSESENEMYCOLS         ="Player target of target always uses enemy frame col"..HEALBOT_enWORD_COLOUR_SUFFIX.."s"
-    HEALBOT_OPTIONS_SHOW_ONLY_FRIEND       ="Only show Friendly"
-    HEALBOT_OPTIONS_EXCLUDE_RAID           ="Exclude Self, Group and Raid"
     HEALBOT_OPTIONS_PROFILE                ="Profile for".."\n".."Spells/Buffs/Debuffs"
     HEALBOT_OPTIONS_PROFILE_CHARACTER      ="Character"
     HEALBOT_OPTIONS_PROFILE_CLASS          ="Class"

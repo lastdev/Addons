@@ -1,3 +1,24 @@
+== v2.01 12th November 2024
+* TOC update to 4.4.1
+
+== v2.00 - 29th October 2024
+* Curse and Wago Project IDs added
+* Fix for missing AddOn Compartment popup Tooltip
+* Improved translations / partial translations
+* The options panel now has a lot of helpful notes
+* Title text improved
+* Improved chat command layout
+* Supress the "X" icon for non-Retail
+
+== v1.14 - 17th October 2024
+* TOC update to 11.0.5
+
+== v1.13 - 18th September 2024
+* Location at (52.15,51.23) tweaked due to author sighting
+
+== v1.12 - 4th September 2024
+* Added (33.23,28.09) - "To the left of the door" from player @f_lambda reported sighting!
+
 == v1.11 - 26th August 2024
 * Fix for deprecated UnitAuras API call. RIP. Simple way was the best
 

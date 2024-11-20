@@ -250,9 +250,10 @@ function PGF.DoFilterSearchResults(results)
         env.groupid = activityInfo.groupFinderActivityGroupID
         env.autoinv = searchResultInfo.autoAccept
         env.questid = searchResultInfo.questID
-        env.declined = PGF.IsHardDeclinedGroup(searchResultInfo)
-        env.harddeclined = env.declined
+        env.harddeclined = PGF.IsHardDeclinedGroup(searchResultInfo)
         env.softdeclined = PGF.IsSoftDeclinedGroup(searchResultInfo)
+        env.declined = env.harddeclined or env.softdeclined
+        env.canceled = PGF.IsCanceledGroup(searchResultInfo)
         env.warmode = searchResultInfo.isWarMode or false
         env.playstyle = searchResultInfo.playstyle
         env.earnconq  = searchResultInfo.playstyle == 1
@@ -369,12 +370,20 @@ function PGF.ColorGroupTexts(self, searchResultInfo)
         if PGF.IsSoftDeclinedGroup(searchResultInfo) then
             local color = C.COLOR_ENTRY_DECLINED_SOFT
             self.Name:SetTextColor(color.R, color.G, color.B)
-            self.PendingLabel:SetTextColor(color.R, color.G, color.B)
+            if not PremadeGroupsFilterSettings.signUpDeclined then
+                self.PendingLabel:SetTextColor(color.R, color.G, color.B)
+            end
         end
         if PGF.IsHardDeclinedGroup(searchResultInfo) then
             local color = C.COLOR_ENTRY_DECLINED_HARD
             self.Name:SetTextColor(color.R, color.G, color.B)
-            self.PendingLabel:SetTextColor(color.R, color.G, color.B)
+            if not PremadeGroupsFilterSettings.signUpDeclined then
+                self.PendingLabel:SetTextColor(color.R, color.G, color.B)
+            end
+        end
+        if PGF.IsCanceledGroup(searchResultInfo) then
+            local color = C.COLOR_ENTRY_CANCELED
+            self.Name:SetTextColor(color.R, color.G, color.B)
         end
         -- color activity if lockout
         local numGroupDefeated, numPlayerDefeated, maxBosses,
@@ -418,3 +427,14 @@ end
 
 hooksecurefunc("LFGListSearchEntry_Update", PGF.OnLFGListSearchEntryUpdate)
 hooksecurefunc("LFGListSearchPanel_UpdateResultList", PGF.OnLFGListSearchPanelUpdateResultList)
+
+-- Allow other addons to overwrite the sorting function
+local originalSortSearchResults = PGF.SortSearchResults
+PremadeGroupsFilter.OverwriteSortSearchResults = function(addonName, func)
+    PGF.SortSearchResults = func
+    print(string.format(L["message.sortingoverwritten"], (addonName or "<?>")))
+end
+PremadeGroupsFilter.RestoreSortSearchResults = function(addonName)
+    PGF.SortSearchResults = originalSortSearchResults
+    print(string.format(L["message.sortingrestored"], (addonName or "<?>")))
+end

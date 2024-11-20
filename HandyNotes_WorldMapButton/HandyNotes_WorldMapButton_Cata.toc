@@ -1,6 +1,6 @@
 ## Interface: 40400
 ## Title: HandyNotes_WorldMapButton
-## Version: 100207.01-Release
+## Version: 110002.02-Release
 ## Notes: Adds a Button to the Worldmap that can toggle HandyNotes Icons
 ## Author: fuba
 ## IconTexture: Interface\AddOns\HandyNotes_WorldMapButton\fubaLogo

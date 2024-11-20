@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 319 $
+Revision: $Rev: 321 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 319 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 321 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -5144,13 +5144,13 @@ do
 	transports["DALARANBROKENISLES_DALARANCRATER_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Hillsbrad Foothills"])
 
 	transports["DALARANBROKENISLES_DRAGONBLIGHT_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Dragonblight"])
-	transports["DRAGONBLIGHT_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dragonblight"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
+--	transports["DRAGONBLIGHT_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dragonblight"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
 	
-	transports["DALARANBROKENISLES_DUSTWALLOW_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Dustwallow Marsh"])
-	transports["DUSTWALLOW_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dustwallow Marsh"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
+--	transports["DALARANBROKENISLES_DUSTWALLOW_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Dustwallow Marsh"])
+--	transports["DUSTWALLOW_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dustwallow Marsh"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
 
-	transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Searing Gorge"])
-	transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Searing Gorge"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
+--	transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Searing Gorge"])
+--	transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Searing Gorge"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
 	
 	
 	local zones = {}
@@ -5159,7 +5159,6 @@ do
 
 	zones[BZ["Azeroth"]] = {
 		type = "Continent",
---		yards = 44531.82907938571,
 		yards = 33400.121,
 		x_offset = 0,
 		y_offset = 0,
@@ -6984,43 +6983,42 @@ do
 		type = "Portal",
 	}
 
-	zones[transports["DRAGONBLIGHT_DALARANBROKENISLES_PORTAL"]] = {
-		paths = {
-			[BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"] = true,
-		},
-		type = "Portal",
-	}
+--	zones[transports["DRAGONBLIGHT_DALARANBROKENISLES_PORTAL"]] = {
+--		paths = {
+--			[BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"] = true,
+--		},
+--		type = "Portal",
+--	}
 	
 	
-	zones[transports["DALARANBROKENISLES_DUSTWALLOW_PORTAL"]] = {
-		paths = {
-			[BZ["Dustwallow Marsh"]] = true,
-		},
-		type = "Portal",
-	}
+--	zones[transports["DALARANBROKENISLES_DUSTWALLOW_PORTAL"]] = {
+--		paths = {
+--			[BZ["Dustwallow Marsh"]] = true,
+--		},
+--		type = "Portal",
+--	}
 
-	zones[transports["DUSTWALLOW_DALARANBROKENISLES_PORTAL"]] = {
-		paths = {
-			[BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"] = true,
-		},
-		type = "Portal",
-	}	
+--	zones[transports["DUSTWALLOW_DALARANBROKENISLES_PORTAL"]] = {
+--		paths = {
+--			[BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"] = true,
+--		},
+--		type = "Portal",
+--	}	
 	
 	
-	
-	zones[transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"]] = {
-		paths = {
-			[BZ["Searing Gorge"]] = true,
-		},
-		type = "Portal",
-	}
+--	zones[transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"]] = {
+--		paths = {
+--			[BZ["Searing Gorge"]] = true,
+--		},
+--		type = "Portal",
+--	}
 
-	zones[transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"]] = {
-		paths = {
-			[BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"] = true,
-		},
-		type = "Portal",
-	}	
+--	zones[transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"]] = {
+--		paths = {
+--			[BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"] = true,
+--		},
+--		type = "Portal",
+--	}	
 	
 	
 	-- ZONES, INSTANCES AND COMPLEXES ---------------------------------------------------------
@@ -7684,7 +7682,7 @@ do
 			[BZ["Badlands"]] = true,
 			[BZ["Loch Modan"]] = not isHorde and true or nil,
 			[transports["SEARINGGORGE_KELPTHAR_FLIGHTPATH"]] = true,
-			[transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"]] = true,
+--			[transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"]] = true,
 		},
 		flightnodes = {
 			[673] = true,    -- Iron Summit, Searing Gorge (N)
@@ -8399,7 +8397,7 @@ do
 			[BZ["Southern Barrens"]] = true,
 			[BZ["Thousand Needles"]] = true,
 			[transports["THERAMORE_MENETHIL_BOAT"]] = true,
-			[transports["DUSTWALLOW_DALARANBROKENISLES_PORTAL"]] = true,
+--			[transports["DUSTWALLOW_DALARANBROKENISLES_PORTAL"]] = true,
 		},
 		flightnodes = {
 			[55] = true,     -- Brackenwall Village, Dustwallow Marsh (H)
@@ -9047,7 +9045,7 @@ do
 			[BZ["The Obsidian Sanctum"]] = true,
 			[BZ["Strand of the Ancients"]] = true,
 			[BZ["The Ruby Sanctum"]] = true,	
-			[transports["DRAGONBLIGHT_DALARANBROKENISLES_PORTAL"]] = true,
+--			[transports["DRAGONBLIGHT_DALARANBROKENISLES_PORTAL"]] = true,
 		},
 		flightnodes = {
 			[252] = true,    -- Wyrmrest Temple, Dragonblight (N)
@@ -9920,8 +9918,8 @@ do
 			[transports["DALARANBROKENISLES_KARAZHAN_PORTAL"]] = true,
 			[transports["DALARANBROKENISLES_DALARANCRATER_PORTAL"]] = true,
 			[transports["DALARANBROKENISLES_DRAGONBLIGHT_PORTAL"]] = true,
-			[transports["DALARANBROKENISLES_DUSTWALLOW_PORTAL"]] = true,
-			[transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"]] = true,
+--			[transports["DALARANBROKENISLES_DUSTWALLOW_PORTAL"]] = true,
+--			[transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"]] = true,
 		},
 		flightnodes = {
 			[1774] = true,    -- Dalaran (N)

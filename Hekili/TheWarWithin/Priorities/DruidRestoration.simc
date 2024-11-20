@@ -7,11 +7,11 @@ actions.precombat+=/prowl,if=talent.rake.enabled
 actions+=/skull_bash
 actions+=/berserking
 actions+=/natures_vigil,if=!buff.prowl.up&!buff.shadowmeld.up
-## actions+=/run_action_list,name=healing,if=!buff.prowl.up&!buff.shadowmeld.up&druid.time_spend_healing,line_cd=20
+actions+=/call_action_list,name=healing,if=settings.healing_mode
 actions+=/heart_of_the_wild,if=!buff.prowl.up&!buff.shadowmeld.up
 actions+=/use_items,if=!buff.prowl.up&!buff.shadowmeld.up
 actions+=/potion,if=!buff.prowl.up&!buff.shadowmeld.up
-actions+=/run_action_list,name=cat,strict=1,if=talent.rake.enabled
+actions+=/run_action_list,name=cat,strict=1,if=talent.rake.enabled|buff.cat_form.up
 actions+=/cat_form,if=talent.rake.enabled
 actions+=/convoke_the_spirits,if=(buff.heart_of_the_wild.up|cooldown.heart_of_the_wild.remains>60-30*talent.cenarius_guidance.enabled|!talent.heart_of_the_wild.enabled)
 actions+=/sunfire,cycle_targets=1,if=refreshable&target.time_to_die>5&talent.improved_sunfire.enabled
@@ -34,11 +34,22 @@ actions.cat+=/sunfire,if=prev_gcd.1.moonfire&remains<duration*0.8
 actions.cat+=/starsurge,if=active_enemies=1|(active_enemies<8&!buff.cat_form.up)
 actions.cat+=/cat_form,if=!buff.cat_form.up&energy>50
 actions.cat+=/pool_resource,for_next=1
-actions.cat+=/ferocious_bite,cycle_targets=1,if=(combo_points>3&target.time_to_die<3)|(combo_points=5&energy>=50&dot.rip.remains>10)&spell_targets.swipe_cat<4
+actions.cat+=/ferocious_bite,cycle_targets=1,if=combo_points>3&target.time_to_die<3|combo_points=5&energy>=50
 actions.cat+=/thrash_cat,cycle_targets=1,if=refreshable&target.time_to_die>6&(spell_targets.thrash_cat>1|talent.liveliness.enabled)
 actions.cat+=/swipe_cat,if=active_enemies>3&combo_points<5&talent.improved_swipe.enabled
 actions.cat+=/sunfire,cycle_targets=1,if=refreshable&target.time_to_die>5&active_enemies<7&!talent.improved_sunfire.enabled
 actions.cat+=/pool_resource,for_next=1
 actions.cat+=/shred,if=energy>60&combo_points<5
 
-## actions.healing+=/strict_sequence,name=healregrowthregrowthregrowthregrowth
+# On the tank
+actions.healing+=/rejuvenation,if=active_dot.rejuvenation<1
+# On an ally
+actions.healing+=/lifebloom,if=(active_dot.lifebloom<1)|(active_dot.lifebloom<2&buff.lifebloom.up&talent.undergrowth.enabled)
+# On yourself
+actions.healing+=/lifebloom,if=(active_dot.lifebloom<2&buff.lifebloom.down&talent.undergrowth.enabled)
+# Maintain Efflo
+actions.healing+=/efflorescence,if=buff.efflorescence.down
+# transform into tree
+actions.healing+=/swiftmend,if=(active_dot.regrowth+active_dot.wild_growth+active_dot.rejuvenation)>1&talent.reforestation.enabled&buff.reforestation.stack=3
+# Always wild growth after swiftmend
+actions.healing+=/wild_growth,if=prev.1.swiftmend

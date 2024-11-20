@@ -31,6 +31,12 @@ function GeneralSettings:CreateList(parent)
 	local merchantbutton = Addon.Features.MerchantButton:CreateSettingForMerchantButton()
 	list:AddSetting(merchantbutton, "OPTIONS_SETTINGNAME_MERCHANT", "OPTIONS_SETTINGDESC_MERCHANT")
 
+	if Addon:GetFeature("itemdialog") then
+		local itemdialog = Settings.CreateSetting(Addon.c_Config_ShowItemDialog, false)
+		local setting = list:AddSetting(itemdialog, "OPTIONS_ITEM_DIALOG", "OPTIONS_ITEM_DIALOG_DESC")
+		setting.isNew = true
+	end
+
 	self:CreateSell(list)
 	self:CreateRepair(list)
 	self:CreateTooltip(list)

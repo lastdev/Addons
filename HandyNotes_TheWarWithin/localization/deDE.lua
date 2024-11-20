@@ -20,6 +20,9 @@ L['options_icons_profession_treasures_desc'] = 'Zeigt die Positionen der Schätz
 L['options_icons_khaz_algar_lore_hunter'] = '{achievement:40762}'
 L['options_icons_khaz_algar_lore_hunter_desc'] = 'Zeigt die Positionen der Geschichtsobjekte für den Erfolg {achievement:40762} an.'
 
+L['options_icons_flight_master'] = '{achievement:40430}'
+L['options_icons_flight_master_desc'] = 'Zeigt die Positionen der {npc:Flugmeister} für den Erfolg {achievement:40430} an.'
+
 -------------------------------------------------------------------------------
 -------------------------------- ISLE OF DORN ---------------------------------
 -------------------------------------------------------------------------------
@@ -34,16 +37,39 @@ L['mushroom_cap_note'] = 'Sammle eine {object:Holzwurzelkappe} in dem nahegelege
 L['mysterious_orb_note'] = 'Bringe die {object:Elementarperle} zurück zu {npc:222847}.'
 L['thaks_treasure_note'] = 'Sprich mit {npc:223227} und folge ihm.'
 L['trees_treasure_note'] = 'Sprich mit {npc:222940}, um den {item:224185} zu erhalten. Führe 6x {npc:224548} ({dot:Green}), die sich überall auf der {location:Insel von Dorn} befinden, zurück zu {npc:222940}. Wenn du alle Krabben zurückgeführt hast, gehe in die Höhle zu {npc:222940} zurück und sprich mit ihr.'
+L['trees_treasure_crab_1_note'] = 'Unter dem Baum.'
+L['trees_treasure_crab_2_note'] = 'Auf einem Ast im Baum.'
+L['trees_treasure_crab_3_note'] = 'Unter dem Baum.'
+L['trees_treasure_crab_4_note'] = 'Unter einer Wurzel des Baumes.'
+L['trees_treasure_crab_5_note'] = 'Auf einem Felsvorsprung.'
+L['trees_treasure_crab_6_note'] = 'Auf einer Wurzel des Baumes.'
 L['turtles_thanks_1_note'] = 'Biete 5x {item:220143} an (kann in dem Schwarm {object:Ruhige Oberflächenwellen} geangelt oder im Auktionshaus gekauft werden). {note:Verlasse das Gebiet und kehre sofort zurück, um den nächsten Fisch anzubieten.}'
 L['turtles_thanks_2_note'] = 'Biete 1x {item:222533} an (kann in den Schwärmen {object:Glimmerbecken}, {object:Schwärender Fäulnisteich}, {object:Energieerfüllter Sekretfleck} geangelt oder im Auktionshaus gekauft werden).'
 L['turtles_thanks_3_note'] = 'Treffe dich mit der {npc:223338} in {location:Dornogal} und spreche mit ihr, um den Schatz zu enthüllen.'
 L['web_wrapped_axe_note'] = 'In der ersten Etage.\n\n{note:Erscheint erst wieder nach 1 bis 2 Stunden.}'
-L['faithful_dog_note'] = nil
+L['faithful_dog_note'] = [[
+1. Schließe die Quest {quest:30526} von {npc:59533} in {location:Das Kernland} ({map:424}, {map:376}) ab.
+2. Baue den {object:Kräutergarten} in deiner {area:7490} in {map:572}.
+3. Find ein {item:147420} auf den Straßen in {map:627} ({map:619}).
+4. Spreche mit dem {npc:87553} im {object:Kräutergarten} deiner {area:7490}.
+Der {npc:87553} erscheit jetzt in {location:Die Magische Menagerie} ({map:619}, {map:627})
+4. Interagiere mit {object:Halb vergrabener Hundenapf} am Strand der {map:2248} und streichel den {npc:87553}, um dein Haustier zu erhalten.
+]]
 
 L['cendvin_note'] = 'Plündere 900x {item:225557} in {location:Aschenholtz} von Elitegegnern, um das Reittier {item:223153} von {npc:226205} kaufen zu können.'
 
 L['options_icons_flat_earthen'] = '{achievement:40606}'
 L['options_icons_flat_earthen_desc'] = 'Zeigt die Position für den Erfolg {achievement:40606} an.'
+
+L['tome_of_polymorph_mosswool'] = 'Betrette den Tunnel und gehe zum {location:Der Zundersalon}.\n\nNimm die Quest {quest:84438} von {npc:229128} an, um den {item:227710} zu erhalten.'
+
+L['aradan_note_start'] = '{npc:213428} befindet sich auf der {location:Insel von Dorn} in {location:Dornogal} im Dungeon {location:Die Brutstätte}.\n\n{note:{npc:213428} kann auch in einem Anhängerdungeon gezähmt werden.}'
+L['aradan_note_step_1'] = '1. Sammle den {item:220770} aus den tiefen Gewässern außerhalb der {location:Insel von Dorn}.'
+L['aradan_note_step_2'] = '2. Betrete den Dungeon {location:Die Brutstätte} und besiege {npc:209230} ({dot:Blue}).'
+L['aradan_note_step_3'] = '3. Springe den Schacht runter ({dot:Red}) und laufen die Treppe hoch, von der {npc:215967} erscheint.'
+L['aradan_note_step_4'] = '4. Laufe zur Klippe und benutze den {item:220770} während du {npc:213428} anvisierst.'
+L['aradan_note_step_5'] = '5. {npc:213428} wird den Hammer erkennen und fliegt herunter, so dass du ihn zähmen kannst.'
+L['aradan_note_end'] = '{note:{item:220770} wird bei Benutzung nicht verbraucht, so dass du alle 5 Varianten zähmen oder einem anderen Jäger helfen kannst.}'
 
 -------------------------------------------------------------------------------
 -------------------------------- RINGING DEEPS --------------------------------
@@ -111,6 +137,12 @@ L['gobblin_with_glublurp_note'] = 'Klicke einen {object:Funkelnder Kristall} ({d
 L['critter_love_note'] = 'Du musst das Emote {emote:/liebe} auf Kleintiere anwenden (KEINE Kampfhaustiere).'
 L['options_icons_critter_love'] = '{achievement:40475}'
 L['options_icons_critter_love_desc'] = 'Zeigt die Positionen der Kleintiere für den Erfolg {achievement:40475} an.'
+
+L['for_the_collective_note'] = 'Benötigt die Weltquest {wq:Kuriermission: Erzsammlung}.\n\nSteuere bis zu 20x {npc:224281} bei jeder {npc:228056} bei.\n\n{note:Der Fortschritt ist Realmweit und wird nach 2 Stunden zurückgesetzt.}'
+L['for_the_collective_suffix'] = 'Erz beigesteuert'
+L['for_the_collective_location'] = 'Oben auf dem Gebäude. Benutze die {npc:Holzplanke} in der Nähe, um eine Rampe zu bauen.'
+L['options_icons_for_the_collective'] = '{achievement:40630}'
+L['options_icons_for_the_collective_desc'] = 'Zeigt die Positionen von {npc:228056} für den Erfolg {achievement:40630} an.'
 
 -------------------------------------------------------------------------------
 --------------------------------- HALLOWFALL ----------------------------------
@@ -188,6 +220,7 @@ L['beledars_spawn_note'] = 'Dieser Gegner erscheint an einem von mehreren Positi
 L['croakit_note'] = 'Angle 10x {item:211474} aus einem {object:Schwarm schattenblinder Barsche} in der Nähe (oder kaufe diese im Auktionshaus) und wirf sie ihm zu, damit der seltene Gegner angreifbar wird.'
 L['deathtide_note'] = 'Sammle eine {item:220122} ({dot:Red}) und ein {item:220124} ({dot:Green}). Kombiniere diese zu {item:220123}, um damit den seltenen Gegner am {object:Ominöser Altar} zu beschwören.'
 L['murkshade_note'] = 'Interagiere mit {npc:218455}.'
+L['spreading_the_light_rares_note'] = 'Dieser seltene Gegner erscheint nachdem die {object:Schlüsselflamme} an dieser Position erloschen ist.'
 
 L['options_icons_mereldar_menace'] = '{achievement:40151}'
 L['options_icons_mereldar_menace_desc'] = 'Zeigt die Positionen der Ziele für den Erfolg {achievement:40151} an.'
@@ -200,13 +233,20 @@ L['barracks_doorway_location'] = 'Ziele auf den Eingang des rot-goldenen Zeltes 
 L['options_icons_beacon_of_hope'] = '{achievement:40308}'
 L['options_icons_beacon_of_hope_desc'] = 'Zeigt die Positionen der kleinen Schlüsselflammen für den Erfolg {achievement:40308} an.'
 
-L['beacon_of_hope_note'] = 'Steuere {item:206350} bei, um kleinere Schlüsselflammen zu entzünden und die folgenden Quests abzuschließen. '
+L['beacon_of_hope_note'] = 'Steuere {item:206350} bei, um kleinere Schlüsselflammen zu entzünden und die folgenden Quests abzuschließen.'
 
 L['parasidious_note'] = 'Kaufe 1x {item:206670} von {npc:206533} (entfache die {object:Kleine Schlüsselflamme}, damit dieser erscheint). Gehe zum {location:Dämmerhöhenacker} und ziehe an {npc:206870} bis der seltene Gegner erscheint. {note: Kann nur erscheinen, wenn {npc:206978} an dieser Position ist.}'
 
 L['options_icons_flamegards_hope'] = '{achievement:20594}'
 L['options_icons_flamegards_hope_desc'] = 'Zeigt die Position für den Erfolg {achievement:20594} an.'
 L['flamegards_hope_note'] = 'Hilf {npc:213319} 20 Tage lang die {npc:verletzten Soldaten} zu heilen.\n\nDu kannst auch einen {spell:372009} oder {item:211878} nutzen, wenn deine Klasse nicht heilen kann.'
+
+L['hallowfall_sparkfly_label'] = 'Heilsturzfunkenflieger'
+L['hallowfall_sparkfly_note'] = 'Entfache mit 3x {item:206350} die {object:Kleine Schlüsselflamme} im {location:Stillsteintümpel}, damit {npc:215956} erscheint.\n\nKaufe ein {item:218107} für 2x {item:206350} und benutze dieses, um {npc:222308} in der Nähe aufzudecken, bis ein {object:Heilsturzfunkenflieger} erscheint.'
+
+L['nightfarm_growthling_note'] = 'Entfache mit 3x {item:206350} die {object:Kleine Schlüsselflamme} in {location:Das Surrende Feld}, damit {npc:208186} erscheint.\n\nKaufe eine {item:219148} für 2x {item:206350} und benutze diese, bis ein {item:221546} erscheint.'
+
+L['thunder_lynx_note'] = '1. Entfache mit 3x {item:206350} die {object:Kleine Schlüsselflamme} in {location:Fackelscheinmine}, damit {npc:212419} erscheint.\n\n2. Spreche mit {npc:212419}, damit du die Quest {quest:82007} erhalten kannst.\n\n3. Finde die Luchswelpen: {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}) und {npc:222374} ({dot:Red}).\n\n{note:Starte gleichzeitig die Quest {quest:76169}, um eine {item:219198} zu erhalten oder benutze einen vergleichbaren Gegenstand, wie die {item:219148}. Du brauchst eine Fackel, um {npc:222373} in der {location:Kaltschattenhöhle} zu finden.}\n\n4. Rette alle Luchswelpen und kehre dann zu {npc:212419} zurück.'
 
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
@@ -216,13 +256,6 @@ L['options_icons_itsy_bitsy_spider'] = '{achievement:40624}'
 L['options_icons_itsy_bitsy_spider_desc'] = 'Zeigt die Positionen der Webratten für den Erfolg {achievement:40624} an.'
 
 L['itsy_bitsy_spider_note'] = 'Winke ({emote:/winken}) der Webratte zu.'
-L['webster_location'] = nil
-L['spindle_location'] = nil
-L['swift_location'] = nil
-L['rumurh_location'] = nil
-L['thimble_location'] = nil
-L['scampering_weave_rat_location'] = nil
-L['generals_scouting_shadecaster_location'] = nil
 
 L['options_icons_bookworm'] = '{achievement:40629}'
 L['options_icons_bookworm_desc'] = 'Zeigt die Positionen von Büchern für den Erfolg {achievement:40629} an.'
@@ -253,7 +286,7 @@ L['options_icons_skittershaw_spin_desc'] = 'Zeigt die Position des Krabblertaxis
 L['skittershaw_spin_note'] = 'Fahre mit dem {npc:224973} eine ganze Runde um den Distrikt.\n\nDas {npc:224973} hält an verschiedenen Stellen ({dot:Red}) entlang der Runde.'
 
 L['options_icons_no_harm_from_reading'] = '{achievement:40632}'
-L['options_icons_no_harm_from_reading_desc'] = 'Display {npc:227421} locations for the {achievement:40632} achievement.'
+L['options_icons_no_harm_from_reading_desc'] = 'Zeigt die Positionen von {npc:227421} für den Erfolg {achievement:40632} an.'
 L['no_harm_from_reading_note'] = [[
 Gehe in die Höhle ({dot:Yellow}) zur Wand mit den drei Spinnen ({dot:Red}).
 Klettere die Wand hoch und springe in das Loch.
@@ -268,9 +301,11 @@ Sobald du alle vier {npc:227421} gefunden hast, gehen zurück zum Buch {object:F
 ]]
 L['another_you_4_note'] = 'Läuft im {location:Nest der Weberin} herum.'
 
+L['concealed_contraband_note'] = 'Entferne den {object:Netzkokon}, um den Schatz zu enthüllen.'
 L['memory_cache_note'] = 'Hole dir den Schwächungszauber {spell:420847} von einem {object:Extraktor} ({dot:Red}) in der Nähe und töte dann die {npc:223908} vor der Kiste, um den {item:223870} zu erhalten.'
 L['niffen_stash_note'] = 'Hängt unter der Brücke.'
 L['trapped_trove_note'] = 'In einem Gebäude das von der Decke hängt. Vermeide die Spinnweben am Boden.'
+L['weaving_supplies_note'] = 'Sammle Seidenfetzen von der Plattform in der Nähe, um den Schatz zu öffen.\n\n{item:223901} ({dot:Purple})\n{item:223903} ({dot:Yellow})\n{item:223902} ({dot:Red})'
 
 L['tkaktath_note'] = 'Startet eine Questreihe, um das Reittier {item:224150} zu erhalten.'
 
@@ -281,6 +316,13 @@ L['the_unseeming_note'] = 'Stelle dich in die Pfütze bis du 100x Stapel {spell:
 L['options_icons_you_cant_hang_with_us'] = '{achievement:40634}'
 L['options_icons_you_cant_hang_with_us_desc'] = 'Zeigt die Positionen für den Erfolg {achievement:40634} an.'
 L['you_cant_hang_with_us_note'] = 'Finde einen {npc:211816} mit dem Stärkungszauber {spell:434734} und greife ihn an, um den Schwächungszauber {spell:443190} (1 Minute) zu erhalten. Ein {npc:225408} ({note:Töte ihn nicht!}) wird sich einmischen und den Schwächungszauber {spell:454666} auf dir stapeln. Bei 10 Stapeln wirst du gewaltsam aus der Stadt entfernt.'
+
+L['kej_pet_vendor_note'] = 'Jedes Haustier hat einen begrenzten Bestand und kostet 2.250x {currency:3056}.\n\n{note:Es kann 3 bis 4 Stunden dauern, bis eines dieser Haustiere wieder beim Händler verfügbar ist.}'
+
+L['options_icons_back_to_the_wall'] = '{achievement:40620}'
+L['options_icons_back_to_the_wall_desc'] = 'Zeigt die Positionen von {npc:222119} für den Erfolg {achievement:40620} an.'
+L['arathi_prisoner_suffix'] = 'gefangene Arathi gerettet'
+L['arathi_prisoner_note'] = 'Rette {npc:222119} aus Spinnennetzen während der Weltquest {wq:Spezialauftrag: Besser als Nachsicht}.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
@@ -297,7 +339,7 @@ L['kvr_chest_2_location'] = 'Auf dem Holzgerüst.'
 L['nfs_chest_2_location'] = 'Auf der Pflanze.'
 L['nfs_chest_3_location'] = 'Im Gebäude'
 L['nfs_chest_4_location'] = 'Springe vom Himmelsschiff runter.'
-L['ski_chest_3_location'] = 'Im Gebäude'
+L['ski_chest_3_location'] = 'Außerhalb des Gebäudes am Rand.'
 L['tra_chest_2_location'] = 'Oben in der Koralle.'
 L['tsw_chest_2_location'] = 'Oben auf dem Balken.'
 L['tsw_chest_2_note'] = '{note:Nur in der Geschichtenvariantion "Alles Liebe von der Weberin" verfügbar.}'
@@ -306,3 +348,24 @@ L['tsw_chest_4_location'] = 'Oben auf dem Balken. Springe von der Säule runter,
 L['tuk_chest_1_note'] = 'Hinter der Statue.'
 L['tuk_chest_2_note'] = '{note:Nur in den Geschichtenvariantionen "Ausreißersevolution" und "Folteropfer" verfügbar.}'
 L['tuk_chest_3_note'] = '{note:Nur in den Geschichtenvariantionen "Ausreißersevolution" und "Weberrettung" verfügbar.}'
+
+-------------------------------------------------------------------------------
+----------------------------- SECRETS OF AZEROTH ------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_secrets_of_azeroth'] = 'Geheimnisse von Azeroth'
+L['options_icons_secrets_of_azeroth_desc'] = 'Zeigt die Positionen für die {location:Geheimnisse von Azeroth} an.'
+
+L['alyx_kickoff_note'] = 'Spreche mit {npc:226683}, um die neuen {location:Geheimnisse von Azeroth} freizuschalten.'
+
+L['celebration_crates_label'] = 'Feierkiste'
+L['celebration_crates_note'] = 'Finde und bringe alle {object:Feierkisten} zurück, die in ganz {location:Azeroth} versteckt sind.'
+
+L['1_soggy_celebration_crate_note'] = 'Kaufe ein {item:225996} von {npc:143029} ({dot:Blue}) in {location:The Dive Bar} und gib dieses {npc:189119}, um {item:226200} auszudecken.'
+L['2_hazy_celebration_crate_note'] = 'Du musst jedoch tot sein, um die {item:232263} öffnen zu können.}'
+L['3_dirt_caked_celebration_crate_note'] = '{note:Du musst die {item:228321} von der Anschlagtafel bei {npc:226683} für diese Kiste NICHT sammeln.}\n\n1. Betrete {location:Die Vergessene Krypta} hinter {location:Karazhan}.\n\n2. Laufe die Treppen herunter dann durch den {location:Brunnen der Vergessenen} und die {location:Bettlergasse} entlang.\n\n3. Gehe nach rechts in den Eingang zur {location:Bettlergasse} und folge dem Tunnel.\n\n4. Durchquere den großen Raum diagonal in Richtung des Wassers.\n\n5. Schwimme durch das Wasser zu {location:Der Sumpf der Verzweiflung}.'
+L['4_sandy_celebration_crate'] = '1. Sammle {item:228768} in eine Höhle der {location:Versunkene Ausgrabungsstätte} ({location:Kalimdor}, {location:Tausend Nadeln}).\n\n2. Kaufe {item:228767} von {npc:91079} für %s. {note:Lauft den östlichen Weg entlang}.'
+L['5_battered_celebration_crate'] = 'An den Felsen der Höhle in der Nähe von {npc:24026}.'
+L['6_waterlogged_celebration_crate'] = 'Unterwasser auf der zweiten Ebene des Gebäudes hinter einem Bett.\n\n{note:Berühre den Aufzug nicht, dabei kann derzeit das Spiel abstürzen.}'
+
+L['water_resistant_receipt_note'] = '1. Betrete die Höhle, gehe nach rechts und hebe den {item:228768} hinter dem Rohr auf.\n\n2. Finde {npc:91079} in {location:Azsuna} in the {location:Die Verheerten Inseln}.'

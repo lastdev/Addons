@@ -431,6 +431,10 @@ function AuctionScrollTable.__protected:_HandleUpdatedAuctionRow(updatedRow)
 		tinsert(private.subRowsTemp, subRow)
 	end
 	local numNewSubRows = #private.subRowsTemp
+	if numNewSubRows == 0 then
+		self:_UpdateSelectionData()
+		return
+	end
 	assert(numNewSubRows > 0)
 	Table.SortWithValueLookup(private.subRowsTemp, private.subRowSortValueTemp, not sortAscending, private.SubRowSecondarySort)
 

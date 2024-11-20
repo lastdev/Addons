@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20240526083516")
+mod:SetRevision("20240714050536")
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetZone(1136)
@@ -21,8 +21,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5",--This boss can change boss ID any time you jump into one of tests, because he gets unregistered as boss1 then registered as boss2 when you leave, etc
 	"CHAT_MSG_ADDON"
 )
-
-mod:AddBoolOption("AGStartNorushen", true)
 
 mod:RegisterEvents(
 	"ENCOUNTER_START",
@@ -44,7 +42,7 @@ local warnDishearteningLaugh			= mod:NewSpellAnnounce(146707, 3)
 local specWarnUnleashedAnger			= mod:NewSpecialWarningDefensive(145216, nil, nil, nil, 1, 2)
 local specWarnSelfDoubtOther			= mod:NewSpecialWarningTaunt(146124, nil, nil, nil, 1, 2)--Stack warning, to taunt off other tank
 local specWarnBlindHatred				= mod:NewSpecialWarningSpell(145226, nil, nil, nil, 2, 2)
-local specWarnManifestation				= mod:NewSpecialWarningSwitch(-8232, "-Healer", nil, nil, 1, 2)--Unleashed Manifestation of Corruption
+local specWarnManifestation				= mod:NewSpecialWarningSwitchCount(-8232, "-Healer", nil, nil, 1, 2)--Unleashed Manifestation of Corruption
 --Test of Serenity (DPS)
 local specWarnTearReality				= mod:NewSpecialWarningDodge(144482, nil, nil, nil, 2, 2)
 --Test of Reliance (Healer)
@@ -76,6 +74,8 @@ local timerHurlCorruptionCD				= mod:NewNextTimer(20, 144649, nil, nil, nil, 4, 
 local timerExpelCorruptionCD			= mod:NewCDNPTimer(10.9, 144479)
 
 local berserkTimer						= mod:NewBerserkTimer(418)
+
+mod:AddGossipOption(true, "Encounter")
 
 --Upvales, don't need variables
 local Ambiguate = Ambiguate
@@ -287,7 +287,7 @@ end
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		if self.Options.AGStartNorushen and gossipOptionID == 42038 then
+		if self.Options.AutoGossipEncounter and gossipOptionID == 42038 then
 			self:SelectGossip(gossipOptionID, true)
 		end
 	end

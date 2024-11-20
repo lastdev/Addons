@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1154, "DBM-Raids-WoD", 2, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185029")
+mod:SetRevision("20240714050251")
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
@@ -52,7 +52,6 @@ local yellRupture				= mod:NewYell(156932)
 --Phase 2
 local specWarnFixate			= mod:NewSpecialWarningYou(155196, nil, nil, nil, 1, 2)
 local specWarnMeltYou			= mod:NewSpecialWarningYou(155225, nil, nil, nil, 1, 2)
-local specWarnMeltNear			= mod:NewSpecialWarningClose(155225, false, nil, nil, 1, 2)
 local specWarnMelt				= mod:NewSpecialWarningMove(155223, nil, nil, nil, 1, 2)
 local yellMelt					= mod:NewYell(155223)
 local specWarnCauterizeWounds	= mod:NewSpecialWarningInterrupt(155186, "-Healer", nil, nil, 1, 2)
@@ -511,9 +510,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMeltYou:Show()
 			yellMelt:Schedule(5)--yell after 5 sec to warn nearby player (aoe actually after 6 sec). like expel magic: fel
 			specWarnMeltYou:Play("runout")
-		elseif self:CheckNearby(8, args.destName) then
-			specWarnMeltNear:Show()
-			specWarnMeltNear:Play("runaway")
 		end
 	elseif spellId == 156934 then
 		--Increase to 50 should fix any rare issues not get timer if on same area as boss.

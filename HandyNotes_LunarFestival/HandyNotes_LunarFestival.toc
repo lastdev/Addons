@@ -1,5 +1,5 @@
-## Interface: 110002
-## Version: 2.14
+## Interface: 110005
+## Version: 3.00
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_elvencoins
 ## Title: Lunar Festival
@@ -14,21 +14,23 @@
 ## Title-ruRU: Лунный фестиваль
 ## Title-zhCN: 春节
 ## Title-zhTW: 春節
-## Notes: Helps you with the |cFFFDBD01Lunar Festival|r world event
-## Notes-deDE: Hilft bei der |cFFFDBD01Mondfest|r 
-## Notes-esES: Ayuda con el suceso mundial |cFFFDBD01Festival Lunar|r
-## Notes-esMX: Ayuda con el suceso mundial |cFFFDBD01Festival Lunar|r
-## Notes-frFR: Aide à l'événement mondial |cFFFDBD01Fête lunaire|r
-## Notes-itIT: Assiste con l'evento mondiale |cFFFDBD01Celebrazione della Luna|r
-## Notes-koKR: |cFFFDBD01달의 축제|r 대규모 이벤트 지원
-## Notes-ptBR: Auxilia no evento mundial |cFFFDBD01Festival da Lua|r
-## Notes-ptPT: Auxilia no evento mundial |cFFFDBD01Festival da Lua|r
-## Notes-ruRU: Помогает с игровое событие |cFFFDBD01Лунный фестиваль|r
-## Notes-zhCN: 协助 |cFFFDBD01春节|r 活动
-## Notes-zhTW: 協助 |cFFFDBD01春節|r 活動
+## Notes: |cFFFDBD01Helps you with the |cFFC11B17Lunar Festival|cFFFDBD01 world event
+## Notes-deDE: |cFFFDBD01Hilft bei der |cFFC11B17Mondfest 
+## Notes-esES: |cFFFDBD01Ayuda con el suceso mundial |cFFC11B17Festival Lunar
+## Notes-esMX: |cFFFDBD01Ayuda con el suceso mundial |cFFC11B17Festival Lunar
+## Notes-frFR: |cFFFDBD01Aide à l'événement mondial |cFFC11B17Fête lunaire
+## Notes-itIT: |cFFFDBD01Assiste con l'evento mondiale |cFFC11B17Celebrazione della Luna
+## Notes-koKR: |cFFC11B17달의 축제|cFFFDBD01 대규모 이벤트 지원
+## Notes-ptBR: |cFFFDBD01Auxilia no evento mundial |cFFC11B17Festival da Lua
+## Notes-ptPT: |cFFFDBD01Auxilia no evento mundial |cFFC11B17Festival da Lua
+## Notes-ruRU: |cFFFDBD01Помогает с игровое событие |cFFC11B17Лунный фестиваль
+## Notes-zhCN: |cFFFDBD01协助 |cFFC11B17春节|cFFFDBD01 活动
+## Notes-zhTW: |cFFFDBD01協助 |cFFC11B17春節|cFFFDBD01 活動
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_LunarFestivalDB
 ## AddonCompartmentFunc: HandyNotes_LunarFestival_OnAddonCompartmentClick
+## X-Curse-Project-ID: 776143
+## X-Wago-ID: baND0oNo
 
 Core.lua
 Data.lua

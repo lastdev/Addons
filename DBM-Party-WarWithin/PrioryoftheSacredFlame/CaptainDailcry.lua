@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(2571, "DBM-Party-WarWithin", 2, 1267)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240808043723")
+mod:SetRevision("20241102154000")
 mod:SetCreatureID(207946)
 mod:SetEncounterID(2847)
 mod:SetHotfixNoticeRev(20240608000000)
 --mod:SetMinSyncRevision(20211203000000)
+mod:SetZone(2649)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -39,7 +40,7 @@ local specWarnHurlSpear						= mod:NewSpecialWarningDodgeCount(447272, nil, nil,
 local specWarnPierceArmor					= mod:NewSpecialWarningDefensive(424414, nil, nil, nil, 1, 2)
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
-local timerSavageMaulingCD					= mod:NewCDCountTimer(25.7, 447439, nil, nil, nil, 3)--It's either 25.7 from last ones REMOVAL, or ~30.3 from last ones application
+local timerSavageMaulingCD					= mod:NewCDCountTimer(15.7, 447439, nil, nil, nil, 3)--It's either 25.7 from last ones REMOVAL, or ~30.3 from last ones application
 local timerBattleCryCD						= mod:NewCDCountTimer(15.8, 424419, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--15.8-18.2
 local timerHurlSpearCD						= mod:NewCDCountTimer(15.8, 447272, nil, nil, nil, 3)--15.8-19.4
 local timerPierceArmorCD					= mod:NewCDCountTimer(7.3, 424414, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -108,8 +109,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 447439 then
 		warnSavageMauling:Show(args.destName)
 	elseif spellId == 424419 then
-		specWarnBattleCryDispel:Show(args.destName)
-		specWarnBattleCryDispel:Play("enrage")
+		specWarnBattleCryDispel:CombinedShow(0.3, args.destName)
+		specWarnBattleCryDispel:ScheduleVoice(0.3, "enrage")
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -117,7 +118,7 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 447443 then
-		timerSavageMaulingCD:Start(nil, self.vb.savageCount+1)
+		timerSavageMaulingCD:Start(nil, self.vb.savageCount+1)--15 after last one now?
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()
 		end

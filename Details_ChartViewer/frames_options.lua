@@ -8,7 +8,9 @@ local ChartViewer = addonTable.ChartViewer
 local ChartViewerWindowFrame = ChartViewerWindowFrame
 
 local buildOptionsPanel = function()
-	local optionsFrame = ChartViewer:CreatePluginOptionsFrame("ChartViewerOptionsWindow", Loc ["STRING_OPTIONS"], 2)
+	local pluginIcon = [[Interface\HELPFRAME\ReportLagIcon-Spells]]
+	local pluginIconCoords = {0.15, 0.85, 0.15, 0.85}
+	local optionsFrame = ChartViewer:CreatePluginOptionsFrame("ChartViewerOptionsWindow", Loc ["STRING_OPTIONS"], 3, pluginIcon, pluginIconCoords)
 
 	local set = function (_, _, value)
 		ChartViewer.options.show_method = value
@@ -42,7 +44,14 @@ local buildOptionsPanel = function()
 			usedecimals = true,
 		},
 	}
-	detailsFramework:BuildMenu(optionsFrame, menu, 15, -75, 260)
+
+	local options_text_template = detailsFramework:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
+	local options_dropdown_template = detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
+	local options_switch_template = detailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
+	local options_slider_template = detailsFramework:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
+	local options_button_template = detailsFramework:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
+
+	detailsFramework:BuildMenu(optionsFrame, menu, 15, -75, 260, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
 end
 
 ChartViewer.OpenOptionsPanel = function()

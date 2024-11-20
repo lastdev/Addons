@@ -1,5 +1,68 @@
 # Changelog
 
+## Changed in v2024.31
+
+* Add vignettes and achievement status for The Originals
+* Avoid a potential error when checking achievement status for some unusual criteria
+
+## Changed in v2024.30
+
+* Add new world bosses in the 20th anniversary celebration
+
+## Changed in v2024.29
+
+* Added a bunch of Vanilla rares and loot that were re-added back in 10.1.7
+* Fix an issue in classic / cataclysm when showing popups for mobs with loot
+
+## Changed in v2024.28
+
+* Fix an issue in classic / cataclysm when showing loot windows on popups
+
+## Changed in v2024.27
+
+* Added quests for this week's world boss Kordac
+* Made dark magic scanning a little more efficient
+
+## Changed in v2024.26
+
+* Added quests for this week's world boss Orta
+* Ignore Xal'atath in mythics, even though she's flagged as a rare
+
+## Changed in v2024.25
+
+* Fix particularly short minimap route segments not being displayed
+* Fix for occasional mobs with *very specific* arrangements of loot not showing a loot icon in the LDB popup
+* Minor data improvements in Suramar
+
+## Changed in v2024.24
+
+* Added quests for this week's world boss Shurrai
+* Fixed the display of the quest for Deathtide
+
+## Changed in v2024.23
+
+* War Within data updates: added a few missing weekly reputation quests, filled out the loot in Treasures vignettes for Hallowfall and Azj-Kahet
+
+## Changed in v2024.22
+
+* Don't update the macro if the Blizzard macro frame is visible -- it resets edits you're making to macros.
+
+## Changed in v2024.21
+
+* Include season 1 world bosses
+* Macros are rewritten for the 11.0 limitations (finally); now tries to target as many of the mobs close to you as will fit in 255 character, now can include (zone-specific) custom mobs, and has an option to target with `/tar` rather than `/targetexact` to save space
+* Option in target-scanning to completely skip dead rares (this is more extreme than the existing option to not announce them, because it'll stop them from being added to the last-seen)
+* Fix an issue in classic when showing loot windows on popups
+
+## Changed in v2024.20
+
+* Absolutely massive behind-the-scenes change to how I track loot, which you will hopefully notice nothing about apart from it allowing me to...
+* Add weekly reputation quests and reputation rewards to War Within rares
+* Show how long the shadow phase has left on the Spawn of Beledar
+* Announcements: fix missing label for the Effects channel, add a test button that'll play the sound actually on the channel you selected so you can tell how loud it'll be
+* Overlay: fix showing requirement colors inverted in overlay tooltips
+* It's been 8 years: remove the database migration code from SilverDragon 2
+
 ## Changed in v2024.19
 
 * History: fixed the frame not hiding immediately at the start of combat

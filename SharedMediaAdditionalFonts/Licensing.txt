@@ -20,6 +20,10 @@ Licenses\Ubuntu Font Licence v1.0.txt
 Licenses\SIL Open Font License.txt
  * Yanone Kaffeesatz
 
+Licenses\DejaVu License.txt
+ * DejaVu Sans
+ * DejaVu Sans, Bold
+
 ////////////////////////
 
 The following fonts do not have a specific license bundled with

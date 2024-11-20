@@ -1,6 +1,6 @@
 # Details! Cast Log (plugin)
 
-## [v11.0.0.012](https://github.com/Tercioo/CastLog/tree/v11.0.0.012) (2024-07-24)
-[Full Changelog](https://github.com/Tercioo/CastLog/compare/v10.2.5.011...v11.0.0.012) 
+## [v11.0.2.014](https://github.com/Tercioo/CastLog/tree/v11.0.2.014) (2024-08-15)
+[Full Changelog](https://github.com/Tercioo/CastLog/compare/v11.0.2.013...v11.0.2.014) 
 
-- ToC Update  
+- Fixed the start time of spells with a cast time  

@@ -24,6 +24,7 @@ local private = {
 local ROW_HEIGHT = 20
 local ICON_SIZE = 12
 local ICON_SPACING = 4
+local CONCENTRATION_ICON = "Interface\\ICONS\\UI_Concentration"
 
 
 
@@ -112,6 +113,17 @@ function CraftingMatList:SetRecipeString(recipeString)
 			self:_AddMaterial(itemString, Profession.GetMatQuantity(craftString, itemId), matString)
 		end
 		wipe(private.optionalMatTemp)
+		local concentration = RecipeString.GetConcentration(recipeString)
+		if concentration then
+			tinsert(self._itemString, "")
+			tinsert(self._text, PROFESSIONS_CRAFTING_STAT_CONCENTRATION)
+			tinsert(self._icon, CONCENTRATION_ICON)
+			-- TODO: display concentration amount
+			tinsert(self._quantity, 0)
+			tinsert(self._playerQuantity, 0)
+			tinsert(self._isQualityMat, false)
+			tinsert(self._matString, "")
+		end
 	end
 	self._recipeString = recipeString
 
@@ -204,13 +216,18 @@ end
 
 ---@param row ListRow
 function CraftingMatList.__private:_DrawRowQty(row, bagQuantity, quantity)
-	local color = bagQuantity >= quantity and "FEEDBACK_GREEN" or "FEEDBACK_RED"
 	local qty = row:GetText("qty")
-	qty:TSMSetTextColor(color)
-	qty:SetText(format("%d / %d", bagQuantity, quantity))
-	-- Adjust the width of the qty text to fit the text string
-	qty:SetWidth(10000)
-	qty:SetWidth(qty:GetStringWidth())
+	if quantity == 0 then
+		qty:SetText("")
+		qty:SetWidth(4)
+	else
+		local color = bagQuantity >= quantity and "FEEDBACK_GREEN" or "FEEDBACK_RED"
+		qty:TSMSetTextColor(color)
+		qty:SetText(format("%d / %d", bagQuantity, quantity))
+		-- Adjust the width of the qty text to fit the text string
+		qty:SetWidth(10000)
+		qty:SetWidth(qty:GetStringWidth())
+	end
 end
 
 ---@param row ListRow

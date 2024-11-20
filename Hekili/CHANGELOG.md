@@ -1,6 +1,6 @@
 # Hekili
 
-## [v11.0.2-1.0.6b](https://github.com/Hekili/hekili/tree/v11.0.2-1.0.6b) (2024-08-30)
-[Full Changelog](https://github.com/Hekili/hekili/compare/v11.0.2-1.0.6a...v11.0.2-1.0.6b) [Previous Releases](https://github.com/Hekili/hekili/releases)
+## [v11.0.5-1.0.15a](https://github.com/Hekili/hekili/tree/v11.0.5-1.0.15a) (2024-11-18)
+[Full Changelog](https://github.com/Hekili/hekili/compare/v11.0.5-1.0.15...v11.0.5-1.0.15a) [Previous Releases](https://github.com/Hekili/hekili/releases)
 
-- Protection Paladin divine\_armaments  
+- Assassination Ambush  

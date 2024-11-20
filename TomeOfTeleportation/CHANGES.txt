@@ -1,10 +1,10 @@
-lightweight tag 6492c8bcfedcc16fa461135149586c2838de2bc6 5.4
+lightweight tag 986210125fde639e94408f056a5ac09ba4cff566 5.6.1
 Author:	Remeen <wow@meen.co.uk>
-Date:	Wed Aug 14 16:56:29 2024 +0100
+Date:	Tue Oct 29 07:44:50 2024 +0000
 
-commit 6492c8bcfedcc16fa461135149586c2838de2bc6
+commit 986210125fde639e94408f056a5ac09ba4cff566
 Author: Remeen <wow@meen.co.uk>
-Date:   Wed Aug 14 16:56:29 2024 +0100
+Date:   Tue Oct 29 07:44:50 2024 +0000
 
-    Spells for The War Within
+    Patch 11.0.5
 

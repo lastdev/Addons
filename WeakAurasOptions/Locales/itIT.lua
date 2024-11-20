@@ -119,6 +119,8 @@ local L = WeakAuras.L
 	L[ [=[A timer will automatically be displayed according to default Interface Settings (overridden by some addons).
 Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=] ] = "Un timer verrà automaticamente visualizzato in base alle impostazioni dell'interfaccia predefinite (sostituite da alcuni componenti aggiuntivi). Abilita questa impostazione se vuoi che questo timer sia nascosto o quando usi un testo WeakAuras per visualizzare il timer"
 	L["A Unit ID (e.g., party1)."] = "Un Unit ID (p.es., party1)"
+	--[[Translation missing --]]
+	L["Ace: Funkeh, Nevcairiel"] = "Ace: Funkeh, Nevcairiel"
 	L["Actions"] = "Azioni"
 	L["Active Aura Filters and Info"] = "Filtri e informazioni sull'aura attiva"
 	L["Actual Spec"] = "Attuale Spec"
@@ -142,6 +144,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Affected Unit Filters and Info"] = "Filtri e informazioni sulle unità interessate"
 	L["Align"] = "Allinea"
 	L["Alignment"] = "Allineamento"
+	--[[Translation missing --]]
+	L["All maintainers of the libraries we use, especially:"] = "All maintainers of the libraries we use, especially:"
 	L["All of"] = "Tutto di"
 	L["Allow Full Rotation"] = "Consenti rotazione completa"
 	L["Alpha"] = "Alfa"
@@ -153,6 +157,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["and %s"] = "e %s"
 	L["and aligned left"] = "e allineato a sinistra"
 	L["and aligned right"] = "e allineato a destra"
+	--[[Translation missing --]]
+	L["And our Patreons, Discord Regulars and Subscribers, and Friends of the Addon:"] = "And our Patreons, Discord Regulars and Subscribers, and Friends of the Addon:"
 	L["and rotated left"] = "e ruotato a sinistra"
 	L["and rotated right"] = "e ruotato a destra"
 	L["and with width |cFFFF0000%s|r and %s"] = "e con larghezza |cFFFF0000%s|r e %s"
@@ -830,7 +836,19 @@ Bleed classification via LibDispel]=]
 	--[[Translation missing --]]
 	L["Length of |cFFFF0000%s|r"] = "Length of |cFFFF0000%s|r"
 	--[[Translation missing --]]
+	L["LibCompress: Galmok"] = "LibCompress: Galmok"
+	--[[Translation missing --]]
+	L["LibCustomGlow: Dooez"] = "LibCustomGlow: Dooez"
+	--[[Translation missing --]]
+	L["LibDeflate: Yoursafety"] = "LibDeflate: Yoursafety"
+	--[[Translation missing --]]
+	L["LibDispel: Simpy"] = "LibDispel: Simpy"
+	--[[Translation missing --]]
+	L["LibSerialize: Sanjo"] = "LibSerialize: Sanjo"
+	--[[Translation missing --]]
 	L["LibSharedMedia"] = "LibSharedMedia"
+	--[[Translation missing --]]
+	L["LibSpecialization: Funkeh"] = "LibSpecialization: Funkeh"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
 	--[[Translation missing --]]
@@ -1032,6 +1050,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Orientation"] = "Orientation"
 	--[[Translation missing --]]
+	L["Our translators (too many to name)"] = "Our translators (too many to name)"
+	--[[Translation missing --]]
 	L["Outer"] = "Outer"
 	--[[Translation missing --]]
 	L["Outline"] = "Outline"
@@ -1129,6 +1149,10 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Remaining Time"] = "Remaining Time"
 	--[[Translation missing --]]
 	L["Remove"] = "Remove"
+	--[[Translation missing --]]
+	L["Remove All Sounds"] = "Remove All Sounds"
+	--[[Translation missing --]]
+	L["Remove All Text To Speech"] = "Remove All Text To Speech"
 	--[[Translation missing --]]
 	L["Remove this display from its group"] = "Remove this display from its group"
 	--[[Translation missing --]]
@@ -1252,9 +1276,13 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Show On"] = "Show On"
 	--[[Translation missing --]]
+	L["Show Sound Setting"] = "Show Sound Setting"
+	--[[Translation missing --]]
 	L["Show Spark"] = "Show Spark"
 	--[[Translation missing --]]
 	L["Show Text"] = "Show Text"
+	--[[Translation missing --]]
+	L["Show Text To Speech Setting"] = "Show Text To Speech Setting"
 	--[[Translation missing --]]
 	L["Show this group's children"] = "Show this group's children"
 	--[[Translation missing --]]
@@ -1416,6 +1444,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Texture Y Offset"] = "Texture Y Offset"
 	--[[Translation missing --]]
+	L["Thanks"] = "Thanks"
+	--[[Translation missing --]]
 	L["The addon ElvUI is enabled. It might add cooldown numbers to the swipe. You can configure these in the ElvUI settings"] = "The addon ElvUI is enabled. It might add cooldown numbers to the swipe. You can configure these in the ElvUI settings"
 	--[[Translation missing --]]
 	L["The addon OmniCC is enabled. It might add cooldown numbers to the swipe. You can configure these in the OmniCC settings"] = "The addon OmniCC is enabled. It might add cooldown numbers to the swipe. You can configure these in the OmniCC settings"
@@ -1429,6 +1459,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."] = "The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."
 	--[[Translation missing --]]
 	L["The type of trigger"] = "The type of trigger"
+	--[[Translation missing --]]
+	L["The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"] = "The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"
 	--[[Translation missing --]]
 	L["Then "] = "Then "
 	--[[Translation missing --]]
@@ -1554,7 +1586,11 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	--[[Translation missing --]]
 	L["Unknown"] = "Unknown"
 	--[[Translation missing --]]
+	L["Unknown Encounter's Spell Id"] = "Unknown Encounter's Spell Id"
+	--[[Translation missing --]]
 	L["Unknown property '%s' found in '%s'"] = "Unknown property '%s' found in '%s'"
+	--[[Translation missing --]]
+	L["Unknown Spell"] = "Unknown Spell"
 	--[[Translation missing --]]
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."
 	--[[Translation missing --]]
@@ -1611,6 +1647,8 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["View custom code"] = "View custom code"
 	--[[Translation missing --]]
 	L["Voice"] = "Voice"
+	--[[Translation missing --]]
+	L["We thank"] = "We thank"
 	--[[Translation missing --]]
 	L["WeakAuras %s on WoW %s"] = "WeakAuras %s on WoW %s"
 	--[[Translation missing --]]

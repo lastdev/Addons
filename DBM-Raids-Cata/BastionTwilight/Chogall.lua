@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(167, "DBM-Raids-Cata", 4, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240601045021")
+mod:SetRevision("20241115112135")
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetZone(671)
 --mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent15.ogg", "Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent42.ogg")
 --Long: Foolish mortals-(Usurper's children!) nothing you have done- (Spawn of a lesser god!) I am TRYING to speak here. (Words, words, words. The Master wants murder.) ALL falls to chaos. ALL will be destroyed. (Chaos, chaos!) Your work here today changes nothing. (Chaos, chaos, all things end) No mortal may see what you have and live. Your end has come.
 --Short: (The Master sees, the Master sees!)
@@ -62,7 +63,6 @@ local berserkTimer					= mod:NewBerserkTimer(600)
 
 mod:AddSetIconOption("SetIconOnWorship", 91317, true, 0, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnCreature", 82411, false, 5, {1, 2, 3, 4, 5, 6, 7, 8})
-mod:AddRangeFrameOption(5, 82235)
 mod:AddInfoFrameOption(-3165, true)
 
 mod.vb.prewarned_Phase2 = false
@@ -113,9 +113,6 @@ end
 function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
-	end
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
 	end
 end
 
@@ -257,8 +254,5 @@ function mod:UNIT_AURA(uId)
 		specWarnSickness:Show()
 		specWarnSickness:Play("range5")
 		timerSickness:Start()
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Show(5)
-		end
 	end
 end

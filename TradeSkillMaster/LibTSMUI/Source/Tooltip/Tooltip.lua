@@ -97,7 +97,8 @@ function Tooltip.Show(parent, data, noWrapping, xOffset)
 				info.quantity = 1
 				tinsert(private.optionalMatTable, info)
 			end
-			GameTooltip:SetRecipeResultItem(spellId, private.optionalMatTable, nil, level)
+			local quality = RecipeString.GetQuality(data)
+			GameTooltip:SetRecipeResultItem(spellId, private.optionalMatTable, nil, level, quality)
 		else
 			local index = Profession.GetIndexByCraftString(CraftString.Get(spellId))
 			if index then

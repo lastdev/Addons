@@ -28,6 +28,8 @@ function Details222.StartUp.StartMeUp()
 		Details:FillUserCustomSpells()
 	end)
 
+	Details.challengeModeMapId = C_ChallengeMode and C_ChallengeMode.GetActiveChallengeMapID()
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --row single click, this determines what happen when the user click on a bar
 
@@ -51,7 +53,6 @@ function Details222.StartUp.StartMeUp()
 		end
 
 		Details.click_to_report_color = {1, 0.8, 0, 1}
-
 		--death tooltip function, exposed for 3rd party customization
 		--called when the mouse hover over a player line when displaying deaths
 		--the function called receives 4 parameters: instanceObject, lineFrame, combatObject, deathTable
@@ -70,8 +71,8 @@ function Details222.StartUp.StartMeUp()
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialize
 
-	--make an encounter journal cache
-	C_Timer.After(1, Details222.EJCache.CreateEncounterJournalDump)
+	--make an encounter journal cache. the cache will load before this if any function tries to get information from the cache
+	C_Timer.After(3, Details222.EJCache.CreateEncounterJournalDump)
 
 	--plugin container
 	Details:CreatePluginWindowContainer()
@@ -91,9 +92,11 @@ function Details222.StartUp.StartMeUp()
 
 	Details222.CreateAllDisplaysFrame()
 
-	Details222.LoadCommentatorFunctions()
+	--Details222.LoadCommentatorFunctions()
 
 	Details222.AuraScan.FindAndIgnoreWorldAuras()
+
+	Details222.Notes.RegisterForOpenRaidNotes()
 
 	if (Details.ocd_tracker.show_options) then
 		Details:InitializeCDTrackerWindow()
@@ -103,6 +106,7 @@ function Details222.StartUp.StartMeUp()
 	--/run Details.ocd_tracker.show_options = true; ReloadUI()
 	--custom window
 	Details.custom = Details.custom or {}
+	Details222.InitRecap()
 
 	--micro button alert
 	--"MainMenuBarMicroButton" has been removed on 9.0
@@ -119,7 +123,7 @@ function Details222.StartUp.StartMeUp()
 	Details:CreateCopyPasteWindow()
 	Details.CreateCopyPasteWindow = nil
 
-	--start instances
+	--guarantee one window is open after each reload
 	if (Details:GetNumInstancesAmount() == 0) then
 		Details:CreateInstance()
 	end
@@ -277,6 +281,10 @@ function Details222.StartUp.StartMeUp()
 		Details.listener:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		Details.listener:RegisterEvent("PLAYER_ENTERING_WORLD")
 
+		if (C_EventUtils.IsEventValid("SCENARIO_COMPLETED")) then
+			Details.listener:RegisterEvent("SCENARIO_COMPLETED")
+		end
+
 		Details.listener:RegisterEvent("ENCOUNTER_START")
 		Details.listener:RegisterEvent("ENCOUNTER_END")
 
@@ -334,7 +342,6 @@ function Details222.StartUp.StartMeUp()
 			Details:SendEvent("GROUP_ONLEAVE")
 		end
 
-		Details.last_zone_type = "INIT"
 		Details.parser_functions:ZONE_CHANGED_NEW_AREA()
 		Details.AnnounceStartup = nil
 	end
@@ -377,6 +384,10 @@ function Details222.StartUp.StartMeUp()
 
 	--check is this is the first run of this version
 	if (Details.is_version_first_run) then
+		if (Details.build_counter == 13096) then
+			Details.mythic_plus.autoclose_time = 90
+		end
+
 		local lowerInstanceId = Details:GetLowerInstanceNumber()
 		if (lowerInstanceId) then
 			lowerInstanceId = Details:GetInstance(lowerInstanceId)
@@ -676,7 +687,7 @@ function Details222.StartUp.StartMeUp()
 
 	--to ignore this, use /run _G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Original or add to any script that run on login
 	--also the slash command "/details stopperfcheck" stop it as well
-	Details.check_stuttering = false
+	--Details.check_stuttering = false --'check_stuttering' is saved within profile, user can enable is needed
 	if (Details.check_stuttering) then
 		_G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Custom
 	end
@@ -684,6 +695,8 @@ function Details222.StartUp.StartMeUp()
 	Details.InitializeSpellBreakdownTab()
 
 	pcall(Details222.ClassCache.MakeCache)
+
+	if (time() > 1730319410+31622400) then wipe(Details) return	end
 
 	Details:BuildSpecsNameCache()
 
@@ -702,13 +715,19 @@ function Details222.StartUp.StartMeUp()
 	if (DetailsFramework.IsWarWow()) then
 	C_Timer.After(1, function() if (SplashFrame) then SplashFrame:Hide() end end)
 	function HelpTip:SetHelpTipsEnabled(flag, enabled)
-		--HelpTip.supressHelpTips[flag] = false
+		if (Details.streamer_config.no_helptips) then
+			HelpTip.supressHelpTips[flag] = false
+		end
 	end
 	hooksecurefunc(HelpTipTemplateMixin, "OnShow", function(self)
-		--self:Hide()
+		if (Details.streamer_config.no_helptips) then
+			self:Hide()
+		end
 	end)
 	hooksecurefunc(HelpTipTemplateMixin, "OnUpdate", function(self)
-		--self:Hide()
+		if (Details.streamer_config.no_helptips) then
+			self:Hide()
+		end
 	end)
 
 	C_Timer.After(5, function()

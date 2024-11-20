@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2425, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(168112, 168113)
 mod:SetEncounterID(2417)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -86,7 +86,7 @@ local specWarnReverberatingLeap					= mod:NewSpecialWarningYou(334009, nil, 3374
 local yellReverberatingLeap						= mod:NewYell(334009, 337445)--Short text "Leap"
 local yellReverberatingLeapFades				= mod:NewFadesYell(334009, 337445)--Short text "Leap"
 local specWarnEchoingAnnihilation				= mod:NewSpecialWarningMoveTo(344721, false, nil, nil, 1, 2, 4)--Off by default since strats may vary. Auto asigns reverb soak by remember which one you spawned
-local specWarnSeismicUpheaval					= mod:NewSpecialWarningDodge(334498, nil, nil, nil, 2, 2)
+local specWarnSeismicUpheaval					= mod:NewSpecialWarningDodgeCount(334498, nil, nil, nil, 2, 2)
 local specWarnCrystalize						= mod:NewSpecialWarningYou(339690, nil, nil, nil, 1, 2)
 local specWarnCrystalizeTarget					= mod:NewSpecialWarningMoveTo(339690, false, nil, nil, 1, 2)
 local yellCrystalize							= mod:NewYell(339690, nil, nil, nil, "YELL")
@@ -149,6 +149,7 @@ mod.vb.grashDead = false
 --Heart rend triggers 2.3 second ICD
 --Stone fist triggers 3-3.5 second ICD
 --Serrated swipe triggers 2.4 second ICD
+
 --Exclusions:
 --1-Heart rend DC not extended by crystalize most of time
 --2-To prevent swipe from altering it's OWN CD since it's started in success and not start (where timer update is)

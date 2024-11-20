@@ -9,6 +9,7 @@ local ProfessionScanner = TSM.Crafting:NewPackage("ProfessionScanner") ---@type 
 local Log = TSM.LibTSMUtil:Include("Util.Log")
 local MatString = TSM.LibTSMTypes:Include("Crafting.MatString")
 local TradeSkill = TSM.LibTSMWoW:Include("API.TradeSkill")
+local ClientInfo = TSM.LibTSMWoW:Include("Util.ClientInfo")
 local SessionInfo = TSM.LibTSMWoW:Include("Util.SessionInfo")
 local Profession = TSM.LibTSMService:Include("Profession")
 local private = {
@@ -68,9 +69,11 @@ function private.ScanRecipe(professionName, craftString)
 
 	local numResultItems = Profession.GetNumResultItems(craftString)
 	local hasCD = Profession.HasCooldown(craftString)
-	local recipeDifficulty, baseRecipeQuality, _, inspirationAmount, inspirationChance = Profession.GetRecipeQualityInfo(craftString)
+	local recipeDifficulty, baseRecipeQuality = Profession.GetRecipeQualityInfo(craftString)
+	local categoryId = Profession.GetCategoryIdByCraftString(craftString)
+	local rootCategoryId = ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) and TradeSkill.GetRootCategoryId(categoryId) or -1
 
-	TSM.Crafting.CreateOrUpdate(craftString, itemString, professionName, craftName, numResult, SessionInfo.GetCharacterName(), hasCD, recipeDifficulty, baseRecipeQuality, numResultItems, inspirationAmount, inspirationChance)
+	TSM.Crafting.CreateOrUpdate(craftString, itemString, professionName, rootCategoryId, craftName, numResult, SessionInfo.GetCharacterName(), hasCD, recipeDifficulty, baseRecipeQuality, numResultItems)
 
 	assert(not next(private.matQuantitiesTemp))
 	for _, matString, quantity in Profession.MatIterator(craftString) do

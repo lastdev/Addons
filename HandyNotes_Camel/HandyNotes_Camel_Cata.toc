@@ -1,5 +1,5 @@
-## Interface: 40400
-## Version: 1.11
+## Interface: 40401
+## Version: 2.01
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Ability_mount_camel_gray
 ## Title: Mysterious Camel Figurine
@@ -31,6 +31,8 @@
 ## AddonCompartmentFunc: HandyNotes_Camel_OnAddonCompartmentClick
 ## AddonCompartmentFuncOnEnter: HandyNotes_Camel_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: HandyNotes_Camel_OnAddonCompartmentLeave
+## X-Curse-Project-ID: 934562
+## X-Wago-ID: BNBeMeGx
 
 Core.lua
 Data.lua

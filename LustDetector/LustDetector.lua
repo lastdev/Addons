@@ -1,32 +1,32 @@
 -- By: Viicksmille-Thrall - Horde 4ever
--- curseforge.com/members/omxheal/projects Many thanks
--- Lust Detector Reloaded - v1.5
+-- Lust Detector - v3 for The War Within
+-- special thanks for: @stormsparkpegasus - https://legacy.curseforge.com/members/stormsparkpegasus
+-- special thanks for: @YouToo - https://legacy.curseforge.com/members/youtoo
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+frame:RegisterEvent("PLAYER_LOGIN")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD") -- Evento para reiniciar cooldown ao entrar em uma nova instância
 
-local function LUSTDETECTORMSG(msg)
-    local LUSTDETECTORType = LUSTDETECTORMode
+-- Per-character saved variables
+LustDetectorSettings = LustDetectorSettings or { enabled = false, mode = "SELF", expireNotification = true }
 
-    if LUSTDETECTORMode == "SELF" then
+local function sendMessage(msg)
+    local chatType = LustDetectorSettings.mode
+
+    if chatType == "SELF" then
         print(msg)
-        return
-    elseif LUSTDETECTORMode == "TEST" then
-        LUSTDETECTORType = "TEST"
-    elseif LUSTDETECTORMode == "RAID_WARNING" or LUSTDETECTORMode == "GROUP" then
-        if IsInRaid() and (IsEveryoneAssistant() or UnitIsGroupAssistant("player") or UnitIsGroupLeader("player") or UnitIsRaidOfficer("player")) then
-            LUSTDETECTORType = "RAID_WARNING"
+    elseif chatType == "TEST" then
+        print("[Test Mode] " .. msg)
+    else
+        if IsInRaid(LE_PARTY_CATEGORY_HOME) then
+            chatType = "RAID"
         elseif IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-            LUSTDETECTORType = "INSTANCE_CHAT"
-        elseif IsInRaid() then
-            LUSTDETECTORType = "RAID"
-        elseif IsInGroup() then
-            LUSTDETECTORType = "PARTY"
+            chatType = "INSTANCE_CHAT"
+        elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
+            chatType = "PARTY"
         end
-    end
-
-    if LUSTDETECTORType ~= "SELF" then
-        SendChatMessage(msg, LUSTDETECTORType)
+        SendChatMessage(msg, chatType)
     end
 end
 
@@ -34,30 +34,34 @@ local function handler(msg)
     msg = string.upper(msg)
 
     if msg == 'ON' or msg == 'OFF' then
-        LUSTDETECTOR = (msg == 'ON')
+        LustDetectorSettings.enabled = (msg == 'ON')
 
-        if LUSTDETECTOR then
+        if LustDetectorSettings.enabled then
             frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         else
             frame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         end
 
-        print("Lust Detector is now |cff0042ff" .. (LUSTDETECTOR and "On" or "Off") .. "|r.")
+        print("Lust Detector is now |cff0042ff" .. (LustDetectorSettings.enabled and "On" or "Off") .. "|r.")
 
     elseif msg == 'SAY' or msg == 'GROUP' or msg == 'SELF' or msg == 'YELL' then
-        LUSTDETECTORMode = msg
-        print("Lust Detector is now set for announcing to |cffff0000" .. LUSTDETECTORMode .. "|r.")
+        LustDetectorSettings.mode = msg
+        print("Lust Detector is now set for announcing to |cffff0000" .. LustDetectorSettings.mode .. "|r.")
 
     elseif msg == "RW" or msg == "RAIDWARNING" then
-        LUSTDETECTORMode = "RAID_WARNING"
-        print("Lust Detector is now set for announcing to |cffff0000" .. LUSTDETECTORMode .. "|r.")
+        LustDetectorSettings.mode = "RAID_WARNING"
+        print("Lust Detector is now set for announcing to |cffff0000" .. LustDetectorSettings.mode .. "|r.")
 
     elseif msg == 'TEST' then
-        LUSTDETECTORMSG("[LD Test] {rt8} ADDON: Lust Detector is working correctly!")
+        sendMessage("[LD Test] {rt8} ADDON: Lust Detector is working correctly!")
+
+    elseif msg == 'TEXT' then
+        LustDetectorSettings.expireNotification = not LustDetectorSettings.expireNotification
+        print("Lust Detector expire notification is now " .. (LustDetectorSettings.expireNotification and "Enabled" or "Disabled") .. ".")
 
     else
-        print("Lust Detector Status: is |cff1cb619" .. (LUSTDETECTOR and "On" or "Off") .. "|r and announcing to: |cff1cb619" .. LUSTDETECTORMode .. "|r.")
-        print("Commands: \n/ld on, /ld off, /ld test, /ld group, /ld self")
+        print("Lust Detector Status: is |cff1cb619" .. (LustDetectorSettings.enabled and "On" or "Off") .. "|r and announcing to: |cff1cb619" .. LustDetectorSettings.mode .. "|r.")
+        print("Commands: \n/ld on, /ld off, /ld test, /ld group, /ld self, /ld text")
     end
 end
 
@@ -86,45 +90,74 @@ local WarpSpells = {
     [293076] = true, -- Mallet of Thunderous Skins
 }
 
-local ClassSpells = {
-    [29893] = false, -- Create soulwell
-    ["WARLOCK"] = false, --
-}
+local cooldowns = {} -- Table to store cooldowns
+local expiredSpells = {} -- Table to track when the spell effect has expired
+
+local function startCooldown(spellID, spellName)
+    if cooldowns[spellID] or not LustDetectorSettings.expireNotification then return end -- If already on cooldown, do nothing
+    cooldowns[spellID] = true
+    C_Timer.After(600, function()
+        cooldowns[spellID] = nil
+        sendMessage("{rt3} Lust Detector: " .. spellName .. " is now off cooldown and can be used again! {rt3}")
+    end)
+end
+
+local function getHunterPetOwner(sourceGUID)
+    local groupType = IsInRaid() and "raid" or "party"
+    for i = 1, GetNumGroupMembers() do
+        local unit = groupType .. i
+        if UnitGUID(unit .. "pet") == sourceGUID then
+            return UnitName(unit .. "pet"), UnitName(unit)
+        end
+    end
+    return nil, nil
+end
 
 frame:SetScript("OnEvent", function(self, event, ...)
-    local _, eventType, _, _, sourceName, _, _, _, _, _, _, spellID, _ = CombatLogGetCurrentEventInfo()
-    local pNum = GetNumGroupMembers()
-
-    if eventType == "SPELL_CAST_SUCCESS" and pNum > 0 and (HasteItem[spellID] or WarpSpells[spellID]) and UnitInParty(sourceName) then
-        local chatType = "PARTY"
-        local isInstance, instanceType = IsInInstance()
-
-        if isInstance and (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or instanceType == "pvp") then
-            chatType = "INSTANCE_CHAT"
-        elseif IsInRaid() then
-            chatType = "RAID"
+    if event == "PLAYER_LOGIN" then
+        -- Load saved settings
+        if LustDetectorSettings.enabled then
+            frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         end
+        print("Lust Detector Loaded. Status: " .. (LustDetectorSettings.enabled and "On" or "Off") .. ". Announcing to: " .. LustDetectorSettings.mode)
 
-        local spellName = C_Spell.GetSpellInfo(spellID).name
-        local spellLink = spellName -- Use spellName instead of GetSpellLink
-        local className = select(2, UnitClass(sourceName))
+    elseif event == "PLAYER_ENTERING_WORLD" then
+        -- Reset cooldown tracking when entering a new instance
+        cooldowns = {}
+        expiredSpells = {}
 
-        if HasteItem[spellID] then
-            LUSTDETECTORMSG("{rt1} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " used: " .. spellLink .. " and increased +15% haste on the party! {rt1}")
-        elseif WarpSpells[spellID] then
-            LUSTDETECTORMSG("{rt2} Lust Detector: [" .. className .. "] " .. UnitName(sourceName) .. " cast: " .. spellLink .. " and increased +30% haste on the party! {rt2}")
+    elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+        local _, eventType, _, sourceGUID, sourceName, _, _, _, _, _, _, spellID = CombatLogGetCurrentEventInfo()
+        local pNum = GetNumGroupMembers()
+
+        if pNum > 0 then
+            local spellLink = C_Spell.GetSpellLink(spellID)
+
+            if eventType == "SPELL_CAST_SUCCESS" then
+                if HasteItem[spellID] and UnitInParty(sourceName) then
+                    sendMessage("{rt1} Lust Detector: [" .. UnitClass(sourceName) .. "] " .. UnitName(sourceName) .. " used: " .. spellLink .. " and increased +15% haste on the party! {rt1}")
+                    startCooldown(spellID, spellLink)
+                elseif WarpSpells[spellID] and UnitInParty(sourceName) then
+                    sendMessage("{rt2} Lust Detector: [" .. UnitClass(sourceName) .. "] " .. UnitName(sourceName) .. " cast: " .. spellLink .. " and increased +30% haste on the party! {rt2}")
+                    startCooldown(spellID, spellLink)
+                end
+
+                if WarpSpells[spellID] and string.match(sourceGUID, "Pet") then
+                    local petName, ownerName = getHunterPetOwner(sourceGUID)
+                    if petName and ownerName then
+                        sendMessage("{rt2} Lust Detector: Pet [" .. petName .. "] from " .. ownerName .. " cast: " .. spellLink .. " and increased +30% haste on the party! {rt2}")
+                        startCooldown(spellID, spellLink)
+                    end
+                end
+            elseif eventType == "SPELL_AURA_REMOVED" then
+                if WarpSpells[spellID] and LustDetectorSettings.expireNotification and not expiredSpells[spellID] then
+                    expiredSpells[spellID] = true
+                    sendMessage("{rt7} Lust Detector: " .. spellLink .. " effect has expired. It can be used again in 10 minutes! {rt7}")
+                    C_Timer.After(600, function()
+                        expiredSpells[spellID] = nil
+                    end)
+                end
+            end
         end
-
-    elseif eventType == "SPELL_CAST_SUCCESS" and pNum > 0 and ClassSpells[spellID] and UnitInParty(sourceName) then
-        local chatType = "PARTY"
-        local isInstance, instanceType = IsInInstance()
-
-        if isInstance and (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or instanceType == "pvp") then
-            chatType = "INSTANCE_CHAT"
-        elseif IsInRaid() then
-            chatType = "RAID"
-        end
-
-        LUSTDETECTORMSG("{rt7} LD: " .. UnitName(sourceName) .. " created a Soulwell! Grab your healthstones :D :D ! {rt7}")
     end
 end)

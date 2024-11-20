@@ -1,5 +1,5 @@
-## Interface: 110000
-## Version: 1.43
+## Interface: 110005
+## Version: 1.45
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_faction_lorewalkers
 ## Title: Exploration Achievements - Pandaria

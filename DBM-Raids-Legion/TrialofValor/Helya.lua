@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1829, "DBM-Raids-Legion", 4, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240422191412")
+mod:SetRevision("20240714050021")
 mod:SetCreatureID(114537)
 mod:SetEncounterID(2008)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -59,10 +59,10 @@ local specWarnBilewaterBreath		= mod:NewSpecialWarningCount(227967, nil, nil, ni
 local specWarnBilewaterRedox		= mod:NewSpecialWarningTaunt(227982, nil, nil, nil, 1, 2)
 local specWarnBilewaterCorrosion	= mod:NewSpecialWarningMove(227998, nil, nil, nil, 1, 2)
 local specWarnBilewaterSlimes		= mod:NewSpecialWarningSwitch("ej14217", "Dps", nil, nil, 1, 2)
-local specWarnTentacleStrike		= mod:NewSpecialWarningCount(228730, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(228730), nil, 2)
+local specWarnTentacleStrike		= mod:NewSpecialWarningTarget(228730, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(228730), nil, 2)
 --Stage Two: From the Mists (65%)
 ----Helya
-local specWarnFuryofMaw				= mod:NewSpecialWarningSpell(228032, nil, nil, nil, 2)
+local specWarnFuryofMaw				= mod:NewSpecialWarningCount(228032, nil, nil, nil, 2)
 ----Grimelord
 local specWarnGrimeLord				= mod:NewSpecialWarningSwitch("ej14263", "Tank", nil, nil, 1, 2)
 local specWarnSludgeNova			= mod:NewSpecialWarningRun(228390, "Melee", nil, nil, 4, 3)

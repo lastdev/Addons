@@ -1,7 +1,7 @@
-## Interface: 110000, 110002
+## Interface: 110002, 110005, 110007
 ## Title: Raider.IO |cffFFFFFFMythic Plus|r (Korea)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
-## Version: 10.2.7 (v202409010600)
+## Version: 11.0.5 (v202411180600)
 ## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## Dependencies: RaiderIO
 ## DefaultState: enabled

@@ -3,7 +3,7 @@
 Author: Trelis @ Proudmoore
 stassart @ curse
 
-Original version SharedMediaAdditionalFonts author: pb_ee1
+Original version SharedMediaAdditionalFonts author: AllInOneMighty
 
 ]]
 
@@ -12,15 +12,9 @@ local LSM2 = LibStub("LibSharedMedia-2.0", true)
 local SML = LibStub("SharedMedia-1.0", true)
 
 SharedMediaAdditionalSounds = {}
+SharedMediaAdditionalSounds.revision = tonumber(string.sub("$Revision$", 12, -3)) or 1
 
 SharedMediaAdditionalSounds.registry = { ["sound"] = {} }
-
-local meta_version = GetAddOnMetadata("SharedMediaAdditionalSounds","Version")
-local curse_version = GetAddOnMetadata("SharedMediaAdditionalSounds","X-Curse-Packaged-Version")
-if (not curse_version) then
-	curse_version = ""
-end
-SharedMediaAdditionalSounds.revision = ("v%s-%s"):format(meta_version, curse_version)
 
 function SharedMediaAdditionalSounds:Register(mediatype, key, data, langmask)
 	if LSM3 then

@@ -1,17 +1,13 @@
 local mod	= DBM:NewMod(195, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
-local Riplimb	= DBM:EJ_GetSectionInfo(2581)
-local Rageface	= DBM:EJ_GetSectionInfo(2583)
+--local Riplimb	= DBM:EJ_GetSectionInfo(2581)--Unused
+--local Rageface	= DBM:EJ_GetSectionInfo(2583)--Unused
 
---normal,normal25,heroic,heroic25 in classic
-if not mod:IsClassic() then--Future planning, so cata classic uses regular rules defined in toc and not timewalker rules for this zone
-	mod.statTypes = "normal,heroic,timewalker"
-end
-
-mod:SetRevision("20240428104752")
+mod:SetRevision("20241111004119")
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:SetUsedIcons(1, 2) -- cross(7) is hard to see in redish environment?
+mod:SetZone(720)
 --mod:SetModelSound("Sound\\Creature\\SHANNOX\\VO_FL_SHANNOX_SPAWN.ogg", "Sound\\Creature\\SHANNOX\\VO_FL_SHANNOX_KILL_04.ogg")
 --Long: Yes, I smell them too, Riplimb. Outsiders encroach on the Firelord's private grounds. Find their trail. Find them for me, that I may dispense punishment!
 --Short: Dog food!
@@ -212,7 +208,7 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 53694 then
+	if cid == 53694 then--Riplimb
 		timerSpearCD:Cancel()--Cancel it and replace it with other timer
 		timerMagmaRuptureCD:Start(10)
 		self.vb.ripLimbDead = true

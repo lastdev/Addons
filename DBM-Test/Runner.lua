@@ -231,6 +231,12 @@ function test:Trace(mod, event, ...)
 		obj.testUsedWithPreciseShowSucess[maxTotal] = true
 		return
 	end
+	if event == "SetStage" then
+		if self.timeWarper then
+			self.timeWarper:OnStageChanged(...)
+		end
+		return
+	end
 	local key = currentEventKey or "Unknown trigger" -- TODO: can we somehow include the timestamp here without messing up determinism?
 	-- FIXME: this logic will get real messy real fast as we add more events -- come up with a way to define per-event behavior somehow
 	if key == "InternalLoading" then
@@ -291,7 +297,7 @@ function test:Trace(mod, event, ...)
 			traceEntry.didTriggerCombatEnd = true
 		end
 		if event == "AntiSpam" then
-			local id, result = ...
+			local id, _, result = ...
 			antiSpams[mod] = antiSpams[mod] or {}
 			if result then -- starting to filter next events
 				antiSpams[mod][id] = {}
@@ -364,7 +370,7 @@ function test:SetupModOptions()
 	enableAllWarnings(mod, mod.yells)
 end
 
-function test:SetupDBMOptions()
+function test:SetupDBMOptions(defaults, disableFilters, deterministicSorting)
 	-- Change settings to not depend on user configuration
 	-- Set DBM settings to default, but don't touch DBM.Options itself because it is saved
 	local dbmOptions = {
@@ -372,30 +378,36 @@ function test:SetupDBMOptions()
 		DebugLevel = DBM.Options.DebugLevel,
 		DebugSound = DBM.Options.DebugSound
 	}
-	DBM:AddDefaultOptions(dbmOptions, DBM.DefaultOptions)
+	DBM:AddDefaultOptions(dbmOptions, defaults)
 	self:HookDbmVar("Options", dbmOptions)
-	DBM.Options.EventSoundVictory2 = false
-	DBM.Options.DontShowTargetAnnouncements = false
-	DBM.Options.FilterTankSpec = false
-	DBM.Options.FilterBTargetFocus = false
-	DBM.Options.FilterBInterruptCooldown = false
-	DBM.Options.FilterTTargetFocus = false
-	DBM.Options.FilterTInterruptCooldown = false
-	DBM.Options.FilterDispel = false
-	DBM.Options.FilterCrowdControl = false
-	DBM.Options.FilterTrashWarnings2 = false
-	DBM.Options.FilterVoidFormSay2 = false
+	if disableFilters then
+		DBM.Options.EventSoundVictory2 = false
+		DBM.Options.DontShowTargetAnnouncements = false
+		DBM.Options.FilterTankSpec = false
+		DBM.Options.FilterBTargetFocus = false
+		DBM.Options.FilterBInterruptCooldown = false
+		DBM.Options.FilterTTargetFocus = false
+		DBM.Options.FilterTInterruptCooldown = false
+		DBM.Options.FilterDispel = false
+		DBM.Options.FilterCrowdControl = false
+		DBM.Options.FilterTrashWarnings2 = false
+		DBM.Options.FilterVoidFormSay2 = false
+	end
+	if deterministicSorting then
+		-- Order player names by log order because the default is non-deterministic due to the replaying player's name sneaking in during replay
+		DBM.Options.WarningAlphabetical = false
+		DBM.Options.SWarningAlphabetical = false
+	end
+	-- Forced settings for all tests
 	-- Don't spam guild members when testing
 	DBM.Options.DisableGuildStatus = true
 	DBM.Options.AutoRespond = false
 	-- Don't show intro messages
 	DBM.Options.SettingsMessageShown = true
 	DBM.Options.NewsMessageShown2 = 3
-	-- Order player names by log order because the default is non-deterministic due to the replaying player's name sneaking in during replay
-	DBM.Options.WarningAlphabetical = false
-	DBM.Options.SWarningAlphabetical = false
 end
 
+---@param testOptions DBMTestOptions
 function test:Setup(testData, testOptions)
 	trace = {}
 	table.wipe(antiSpams)
@@ -414,9 +426,14 @@ function test:Setup(testData, testOptions)
 		mod.lastKillTime = nil
 		-- TODO: validate that stats was changed as expected on test end
 	end
-	-- Change settings to not depend on user configuration
-	self:SetupDBMOptions()
-	self:SetupModOptions()
+	if testOptions.playground then
+		-- Even in playground mode we still need this, there are some options we simply must always override: syncing to your guild, auto-reply etc
+		self:SetupDBMOptions(DBM.Options)
+	else
+		-- Change settings to not depend on user configuration
+		self:SetupDBMOptions(DBM.DefaultOptions, true, true)
+		self:SetupModOptions()
+	end
 end
 
 function test:ForceCVar(cvar, value)
@@ -425,6 +442,14 @@ function test:ForceCVar(cvar, value)
 		self.restoreCVars[cvar] = GetCVar(cvar)
 	end
 	SetCVar(cvar, value)
+end
+
+function test:RestoreCVar(cvar)
+	self.restoreCVars = self.restoreCVars or {}
+	if self.restoreCVars[cvar] then
+		SetCVar(cvar, self.restoreCVars[cvar])
+		self.restoreCVars[cvar] = nil
+	end
 end
 
 function test:Teardown()
@@ -474,6 +499,9 @@ function test:InjectEvent(event, ...)
 		self.Mocks:SetEncounterInProgress(...)
 		return
 	end
+	if event == "DBM_MOCK_UPDATE_INSTANCE_INFO" then
+		self.Mocks:SetInstanceInfo(...)
+	end
 	if event == "PLAYER_REGEN_DISABLED" then
 		self.Mocks:SetUnitAffectingCombat("player", UnitName("player"), UnitGUID("player"), true)
 	elseif event == "PLAYER_REGEN_ENABLED" then
@@ -485,7 +513,7 @@ function test:InjectEvent(event, ...)
 		if target == "??" then
 			target = nil
 		end
-		if target == self.logPlayerName then
+		if target == self.logPlayerName or self.allOnYou and self.players[target] then
 			target = UnitName("player")
 		end
 		self.Mocks:UpdateTarget(uId, unitName, target)
@@ -497,15 +525,19 @@ function test:InjectEvent(event, ...)
 		if unitTarget == "??" then
 			unitTarget = nil
 		end
-		if unitTarget == self.logPlayerName then
+		if unitTarget == self.logPlayerName or self.allOnYou and self.players[unitTarget] then
 			unitTarget = UnitName("player")
 		end
-		self.Mocks:UpdateTarget(uId, unitName, unitTarget)
-		self.Mocks:UpdateUnitHealth(uId, unitName, unitHealth)
-		self.Mocks:UpdateUnitPower(uId, unitName, unitPower)
+		-- For some reason UNIT_SPELLCAST events from units where UnitName() is nil exist and for some reason those come from arena unit IDs in raids...?
+		if unitName then
+			self.Mocks:UpdateTarget(uId, unitName, unitTarget)
+			self.Mocks:UpdateUnitHealth(uId, unitName, unitHealth)
+			self.Mocks:UpdateUnitPower(uId, unitName, unitPower)
+		end
 		-- UNIT_HEALTH is usually used like this: UnitGUID(uId), check cid, then call UnitHealth(uId)
 		if uId:match("^boss") then
 			self:InjectExtraEvent("UNIT_HEALTH", uId)
+			self:InjectExtraEvent("UNIT_POWER_UPDATE", uId)
 		else
 			-- Relevant for classic :(
 			local guessedGuid = self.Mocks:GuessGuid(unitName)
@@ -516,6 +548,7 @@ function test:InjectEvent(event, ...)
 				self.Mocks:UpdateTarget("target", unitName, unitTarget)
 				self.Mocks:UpdateUnitHealth("target", nil, unitHealth)
 				self:InjectExtraEvent("UNIT_HEALTH", "target")
+				self:InjectExtraEvent("UNIT_POWER_UPDATE", "target")
 			end
 		end
 		return self:InjectEvent(event, uId, castGuid, spellId) -- strip extra params
@@ -536,7 +569,7 @@ function test:InjectEvent(event, ...)
 		self.Mocks:UpdateUnitPower(uid, name, power)
 		return self:InjectEvent(event, uid, powerType)
 	end
-	if event == "CHAT_MSG_RAID_BOSS_WHISPER" and select(2, ...) ~= self.logPlayerName then
+	if event == "CHAT_MSG_RAID_BOSS_WHISPER" and select(2, ...) ~= self.logPlayerName and not self.allOnYou then
 		return
 	end
 	if event == "COMBAT_LOG_EVENT_UNFILTERED" then
@@ -576,7 +609,7 @@ local function findRecordingPlayer(testData)
 end
 
 ---@param testData TestDefinition
-local function adjustFlagsForPerspective(testData, playerName)
+local function adjustFlagsForPerspective(testData, playerName, allOnYou)
 	local clearFlags = bit.bnot(bit.bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID))
 	for _, v in ipairs(testData.log) do
 		if v[2] == "COMBAT_LOG_EVENT_UNFILTERED" then
@@ -586,7 +619,7 @@ local function adjustFlagsForPerspective(testData, playerName)
 			local dstFlags = v[10]
 			if bband(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0 then
 				srcFlags = bband(srcFlags, clearFlags)
-				if srcName == playerName then
+				if srcName == playerName or allOnYou then
 					srcFlags = srcFlags + COMBATLOG_OBJECT_AFFILIATION_MINE
 				else
 					srcFlags = srcFlags + COMBATLOG_OBJECT_AFFILIATION_PARTY
@@ -595,7 +628,7 @@ local function adjustFlagsForPerspective(testData, playerName)
 			end
 			if bband(dstFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0 then
 				dstFlags = bband(dstFlags, clearFlags)
-				if dstName == playerName then
+				if dstName == playerName or allOnYou then
 					dstFlags = dstFlags + COMBATLOG_OBJECT_AFFILIATION_MINE
 				else
 					dstFlags = dstFlags + COMBATLOG_OBJECT_AFFILIATION_PARTY
@@ -633,7 +666,6 @@ end
 ---@param testData TestDefinition
 ---@param testOptions DBMTestOptions
 function test:Playback(testData, timeWarp, testOptions)
-	DBM.TaintedByTests = true
 	coroutine.yield() -- To make sure all calls including the first come from the coroutine OnUpdate handler to correctly handle errors
 	DBM:AddMsg("Starting test: " .. testData.name)
 	if self.testCallback then
@@ -646,15 +678,22 @@ function test:Playback(testData, timeWarp, testOptions)
 	-- However, this would mean we'd need to update all old tests, so preparsing it is for now. It should fine the player within the first few
 	-- 100 messages or so anyways, so whatever.
 	local perspective = findRecordingPlayer(testData)
-	if testOptions.perspective and testOptions.perspective ~= perspective then
-		self.reporter:Taint("Perspective", perspective, testOptions.perspective)
+	if testOptions.perspective and testOptions.perspective ~= perspective or testOptions.allOnYou then
+		self.reporter:Taint("Perspective", perspective, testOptions.perspective or testOptions.allOnYou and "Everyone")
 	end
 	self.logPlayerName = testOptions.perspective or perspective
-	adjustFlagsForPerspective(testData, self.logPlayerName)
+	self.allOnYou = testOptions.allOnYou
+	self.players = {}
+	if testData.players then
+		for _, v in ipairs(testData.players) do
+			self.players[v[1]] = true
+		end
+	end
+	adjustFlagsForPerspective(testData, self.logPlayerName, self.allOnYou)
 	self.Mocks:SetInstanceInfo(testData.instanceInfo)
+	DBM:ScenarioCheck(0)
 	if testData.instanceInfo.difficultyModifier then
-		-- Only MC is supported right now
-	   if testData.instanceInfo.instanceID == 409 then
+	   if testData.instanceInfo.instanceID == 409 then -- Molten Core
 			local heatLevel = testData.instanceInfo.difficultyModifier
 			if heatLevel == 1 then
 				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 458841, "Sweltering Heat", "DEBUFF")
@@ -663,7 +702,24 @@ function test:Playback(testData, timeWarp, testOptions)
 			elseif heatLevel == 3 then
 				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 458843, "Molten Heat", "DEBUFF")
 			end
-	   end
+		elseif testData.instanceInfo.instanceID == 469 then -- BWL
+			local trials = testData.instanceInfo.difficultyModifier or 0
+			if bit.band(trials, DBM.Difficulties.SOD_BWL_TRIAL_BLACK) ~= 0 then
+				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 467047, "Black Essence", "BUFF")
+			end
+			if bit.band(trials, DBM.Difficulties.SOD_BWL_TRIAL_GREEN) ~= 0 then
+				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 466416, "Green Trial", "BUFF")
+			end
+			if bit.band(trials, DBM.Difficulties.SOD_BWL_TRIAL_BLUE) ~= 0 then
+				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 466277, "Blue Trial", "BUFF")
+			end
+			if bit.band(trials, DBM.Difficulties.SOD_BWL_TRIAL_BRONZE) ~= 0 then
+				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 466071, "Bronze Trial", "BUFF")
+			end
+			if bit.band(trials, DBM.Difficulties.SOD_BWL_TRIAL_RED) ~= 0 then
+				self.Mocks:ApplyUnitAura(UnitName("player"), UnitGUID("player"), 466261, "Red Trial", "BUFF")
+			end
+		end
    end
 	local maxTimestamp = testData.log[#testData.log][1]
 	local timeWarper = test.TimeWarper:New()
@@ -705,7 +761,7 @@ function test:Playback(testData, timeWarp, testOptions)
 		currentRawEvent = nil
 		currentEventKey = nil
 	end
-	if timeWarp <= 5 then
+	if timeWarper.factor <= 5 then
 		DBM:AddMsg("Test playback finished, waiting for delayed cleanup events (3 seconds)")
 	end
 	timeWarper:WaitFor(3.1) -- Events like AURA_REMOVED are only unregistered after 3 seconds for icon cleanup
@@ -716,6 +772,7 @@ function test:Playback(testData, timeWarp, testOptions)
 		DBM:AddMsg("DBM is still reporting in combat, waiting for " .. math.floor(extraTime) .. " more seconds")
 		timeWarper:WaitFor(extraTime)
 	end
+	DBM:AddMsg("Test playback for test " .. testData.name .. " finished.")
 	local reporter = self.reporter
 	if DBM:InCombat() then
 		reporter:FlagCombat(extraTime + 3.1)
@@ -723,14 +780,15 @@ function test:Playback(testData, timeWarp, testOptions)
 	---@type DBMTestCallbackStop
 	local testStopCallbackArgs = {
 		Name = test.testData.name,
-		Report = reporter:Report(),
+		Reporter = reporter,
 		Canceled = false
 	}
 	DBM:FireEvent("DBMTest_Stop", testStopCallbackArgs) -- Must fire before stopping the time warper otherwise Public/Example.lua breaks
 	timeWarper:Stop()
-	local report = reporter:ReportWithHeader()
-	DBM_TestResults_Export = DBM_TestResults_Export or {}
-	DBM_TestResults_Export[testData.name] = report
+	if not reporter:IsTainted() then
+		DBM_TestResults_Export = DBM_TestResults_Export or {}
+		DBM_TestResults_Export[testData.name] = reporter:ReportWithHeader()
+	end
 	local cb = self.testCallback
 	if cb then
 		self.testCallback = nil -- coroutine scheduler also attempts to call this on failure, prevent calling it twice if this throws
@@ -776,6 +834,7 @@ end)
 ---@field perspective string? Player name from whose perspective the log gets replayed
 ---@field players DBMTestPlayerDefinition[]? Players participating in the fight (some players may have no log entries due to filtering)
 ---@field log TestLogEntry[] Log to replay
+---@field ephemeral boolean? Set to true for tests imported from Transcriptor via the test UI
 
 
 --[[
@@ -799,14 +858,16 @@ Maybe a better solution would be to support some kind of comment in the report?
 
 -- TODO: this isn't checked or used yet, also, we probably only need to distinguish the 3 main versions because SoD should be able to run all era mods
 -- TODO: this also depends on how we load/not load mods for era vs. sod, will probably be relevant once MC releases
----@alias GameVersion "Retail"|"Classic"|"ClassicEra"|"SeasonOfDiscovery"
+---@alias GameVersion "Any"|"Retail"|"Classic"|"ClassicEra"|"SeasonOfDiscovery"
 
 ---@alias TestCallbackEvent "TestStart"|"TestFinish"
 
 
 ---@class DBMTestOptions
 ---@field perspective string? Override the perspective from which the log is played back
+---@field allOnYou boolean? Rewrite every single combat log entry to match the player
 ---@field allowErrors boolean? Throw errors immediately
+---@field playground boolean? True if the test was started from playground mode
 
 function test:OnBeforeLoadAddOn()
 	self.testRunning = true
@@ -825,12 +886,19 @@ end
 
 ---@param callback? fun(event: TestCallbackEvent, testData: TestDefinition, testOptions: DBMTestOptions, reporter: TestReporter?)
 ---@param testOptions? DBMTestOptions
-function test:RunTest(testName, timeWarp, testOptions, callback)
+function test:RunTest(testNameOrdata, timeWarp, testOptions, callback)
 	testOptions = testOptions or {}
 	timeWarp = timeWarp or DBM_Test_DefaultTimeWarp or 0
-	local testData = self.Registry.tests[testName]
-	if not testData then
-		error("test " .. testName .. " not found", 2)
+	local testData
+	if type(testNameOrdata) == "string" then
+		testData = self.Registry.tests[testNameOrdata]
+		if not testData then
+			error("test " .. testNameOrdata .. " not found", 2)
+		end
+	elseif type(testNameOrdata) == "table" then
+		testData = testNameOrdata
+	else
+		error("RunTest(): expected test name or definition as first parameter, got " .. type(testNameOrdata))
 	end
 	if self.testRunning then
 		error("only a single test can run at a time")
@@ -848,7 +916,6 @@ function test:RunTest(testName, timeWarp, testOptions, callback)
 	local loadingEvents = loadingTrace[modUnderTest]
 	if not loadingEvents then
 		self.reporter:Taint("ModEnv")
-		--error("could not observe mod loading events -- make sure that the addon is not yet loaded when starting the test")
 	else
 		local fakeLoadingEvent = {0, "ADDON_LOADED", testData.addon}
 		currentEventKey = eventToString(fakeLoadingEvent, testData.log[#testData.log][1])
@@ -859,6 +926,9 @@ function test:RunTest(testName, timeWarp, testOptions, callback)
 	end
 	if not GetLocale():match("^en") then
 		self.reporter:Taint("Lang", GetLocale())
+	end
+	if testOptions.playground then
+		self.reporter:Taint("Playground")
 	end
 	currentEventKey = nil
 	currentRawEvent = nil

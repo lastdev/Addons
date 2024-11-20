@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2470, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(183501)
 mod:SetEncounterID(2553)
 mod:SetUsedIcons(1, 2, 3, 5, 6, 7, 8)
@@ -43,7 +43,7 @@ local specWarnDimensionalTear					= mod:NewSpecialWarningYouPos(362615, nil, 678
 local yellDimensionalTear						= mod:NewPosYell(362615, 67833)
 local yellDimensionalTearFades					= mod:NewIconFadesYell(362615, 67833)
 local specWarnCartelElite						= mod:NewSpecialWarningSwitch(363485, "-Healer", nil, nil, 1, 2, 4)
-local specWarnGlyphofRelocation					= mod:NewSpecialWarningMoveAway(362803, nil, nil, nil, 1, 2)
+local specWarnGlyphofRelocation					= mod:NewSpecialWarningMoveAwayCount(362803, nil, nil, nil, 1, 2)
 local yellGlyphofRelocation						= mod:NewYell(362803)
 local yellGlyphofRelocationFades				= mod:NewShortFadesYell(362803)
 local specWarnGlyphofRelocationTaunt			= mod:NewSpecialWarningTaunt(362803, nil, nil, nil, 1, 2)

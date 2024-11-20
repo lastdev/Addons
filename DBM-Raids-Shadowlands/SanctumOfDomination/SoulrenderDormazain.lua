@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2445, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(175727)
 mod:SetEncounterID(2434)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -48,7 +48,7 @@ local warnSpawnMawsworn						= mod:NewCountAnnounce(350615, 3)
 
 --BOSS
 local specWarnTorment						= mod:NewSpecialWarningDodge(352158, nil, nil, nil, 2, 2)
-local specWarnTormentedEruptions			= mod:NewSpecialWarningDodge(349985, nil, nil, nil, 2, 2)
+local specWarnTormentedEruptions			= mod:NewSpecialWarningDodgeCount(349985, nil, nil, nil, 2, 2)
 local specWarnBrandofTorment				= mod:NewSpecialWarningYou(350647, nil, nil, nil, 1, 2)
 local yellBrandofTorment					= mod:NewYell(350647)
 local specWarnRuinblade						= mod:NewSpecialWarningStack(350422, nil, 1, nil, nil, 1, 6)
@@ -56,7 +56,7 @@ local specWarnRuinbladeTaunt				= mod:NewSpecialWarningTaunt(350422, nil, nil, n
 --Mawsworn Agonizer
 local specWarnAgonizingSpike				= mod:NewSpecialWarningInterruptCount(351779, "false", nil, nil, 1, 2)--Opt in
 --Garrosh Hellscream
-local specWarnWarmongerShackles				= mod:NewSpecialWarningSwitch(350415, nil, nil, nil, 1, 2)
+local specWarnWarmongerShackles				= mod:NewSpecialWarningSwitchCount(350415, nil, nil, nil, 1, 2)
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
 local timerTormentCD						= mod:NewCDCountTimer(35, 352158, nil, nil, nil, 3, nil, nil, true)--Ability is reset by eruption?

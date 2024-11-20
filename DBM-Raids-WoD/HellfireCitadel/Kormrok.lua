@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1392, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024620")
+mod:SetRevision("20240714050251")
 mod:SetCreatureID(90435)
 mod:SetEncounterID(1787)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -30,7 +30,7 @@ local specWarnSwat					= mod:NewSpecialWarningCount(181305, "Tank", nil, nil, 1,
 local specWarnExplosiveBurst		= mod:NewSpecialWarningYouCount(181306)
 local yellExplosiveBurst			= mod:NewYell(181306)
 local specWarnExplosiveBurstNear	= mod:NewSpecialWarningClose(181306, nil, nil, nil, 3, 2)
-local specWarnFoulCrush				= mod:NewSpecialWarningSwitch(181307, "Dps|Tank")--Tweak it as needed once can figure out how to detect what tank it's on
+local specWarnFoulCrush				= mod:NewSpecialWarningSwitchCount(181307, "Dps|Tank")--Tweak it as needed once can figure out how to detect what tank it's on
 local specWarnFelOutpouring			= mod:NewSpecialWarningDodge(181292, nil, nil, nil, 2, 2)
 local specWarnExplosiveRunes		= mod:NewSpecialWarningSpell(181296, "-Tank")--Leaving as a spell warning, MoveTo gives misleading info that everyone just runs toward them, only a few do who know what to do
 local specWarnGraspingHands			= mod:NewSpecialWarningSwitch(181299)

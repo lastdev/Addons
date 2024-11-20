@@ -53,8 +53,17 @@ local plugin_definition = {
             -- Right click -> Open Profiles
             Vendor.ShowProfiles()
         else
-            -- Left click -> Open Rules
-            Vendor.ShowRules()
+            local profile = Addon:GetProfile();
+            local showItemDialog = profile:GetValue(Addon.c_Config_ShowItemDialog) or false
+            local itemDialog = Addon:GetFeature("ItemDialog")
+
+            local item = C_Cursor.GetCursorItem()
+            if item and itemDialog and showItemDialog then
+                itemDialog:ShowDialog()
+            else
+                -- Left click -> Open Rules
+                Vendor.ShowRules()
+            end
         end
     end,
     OnTooltipShow = function(self)

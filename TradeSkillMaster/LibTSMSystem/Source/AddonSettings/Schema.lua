@@ -154,7 +154,8 @@ function Schema.Get()
 	-- [126] added realm.coreOptions.auctionDBAltRealm
 	-- [127] added global.internalData.warbankQuantity
 	-- [128] added global.internalData.{warbankMoney,warbankGoldLog,warbankGoldLogLastUpdate}
-	return Settings.NewSchema(128, 10)
+	-- [129] updated factionrealm.internalData.crafts
+	return Settings.NewSchema(129, 10)
 		:EnterScope("global")
 			:EnterNamespace("debug")
 				:AddBoolean("chatLoggingEnabled", false, 19)
@@ -355,7 +356,7 @@ function Schema.Get()
 				:AddString("mailDisenchantablesChar", "", 49)
 				:AddString("mailExcessGoldChar", "", 49)
 				:AddNumber("mailExcessGoldLimit", 10000000000, 49)
-				:AddTable("crafts", {}, 120)
+				:AddTable("crafts", {}, 129)
 				:AddTable("craftingQueue", {}, 101)
 				:AddTable("mats", {}, 10)
 				:AddTable("guildGoldLog", {}, 25)

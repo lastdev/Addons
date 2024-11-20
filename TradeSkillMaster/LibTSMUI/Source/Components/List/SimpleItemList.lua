@@ -91,7 +91,7 @@ function SimpleItemList.__private:_HandleQueryUpdate()
 	wipe(self._itemString)
 	for _, row in self._query:Iterator() do
 		local itemString = row:GetFields("itemString")
-		tinsert(self._text, "|T"..ItemInfo.GetTexture(itemString)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?"))
+		tinsert(self._text, "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or "?"))
 		tinsert(self._itemString, itemString)
 	end
 	self:_SetNumRows(#self._text)

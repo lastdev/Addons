@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-Raids-WoD", 1, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185029")
+mod:SetRevision("20240714050251")
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -125,6 +125,7 @@ local function warnSeeds(self)
 		local targetName = seedsTargets[i]
 		if targetName == playerName then
 			if self.Options.SpecWarn181508you then
+				---@diagnostic disable-next-line: param-type-mismatch
 				specWarnSeedPosition:Show(currentType[i])
 			end
 			if self.Options.Yell181508 then

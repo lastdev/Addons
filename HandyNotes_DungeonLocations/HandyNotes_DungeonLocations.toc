@@ -1,6 +1,6 @@
-## Interface: 110002
+## Interface: 110002, 110005
 ## Title: HandyNotes: DungeonLocations
-## Version: 2.7.0
+## Version: 2.7.2
 ## Notes: Shows locations of old and new world dungeon and raid entrances
 ## Author: Caliaha of Cairne & BadBoyBarny
 ## X-Updated-By: previous expansions up to TWW by BadBoyBarny

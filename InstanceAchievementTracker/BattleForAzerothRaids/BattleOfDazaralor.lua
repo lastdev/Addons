@@ -73,8 +73,8 @@ function core._2070:ChampionOfTheLight()
                     local unitType, destID, spawn_uid_dest = strsplit("-",UnitGUID(unit));
                     local debuffFound = false
                     for i=1,40 do
-                        local _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(unit, i)
-                        if spellId == 288579 then
+                        local auraData = C_UnitAuras.GetDebuffDataByIndex(unit, i)
+                        if auraData ~= nil and auraData.spellId == 288579 then
                             debuffFound = true
                             core:sendDebugMessage(UnitName(unit) .. " has debuff")
                         end
@@ -83,7 +83,7 @@ function core._2070:ChampionOfTheLight()
                         --Player has not picked up debuff before boss pull so fail achievement
                         core:sendDebugMessage(UnitName(unit) .. " does not have debuff")
                         C_Timer.After(4, function()
-                            core:getAchievementFailedWithMessageAfter(L["Shared_MissingDebuff"] .. " " .. GetSpellLink(288579))
+                            core:getAchievementFailedWithMessageAfter(L["Shared_MissingDebuff"] .. " " .. C_Spell.GetSpellLink(288579))
                         end)
                     end
                 end
@@ -93,14 +93,14 @@ function core._2070:ChampionOfTheLight()
             local unitType, destID, spawn_uid_dest = strsplit("-",UnitGUID("Player"));
             local debuffFound = false
             for i=1,40 do
-                local _, _, _, _, _, _, _, _, _, spellId = UnitDebuff("Player", i)
-                if spellId == 288579 then
+                local auraData = C_UnitAuras.GetDebuffDataByIndex("Player", i)
+                if auraData ~= nil and auraData.spellId == 288579 then
                     debuffFound = true
                 end
                 if debuffFound == false then
                     --Player has not picked up debuff before boss pull so fail achievement
                     C_Timer.After(4, function()
-                        core:getAchievementFailedWithMessageAfter(L["Shared_MissingDebuff"] .. " " .. GetSpellLink(288579))
+                        core:getAchievementFailedWithMessageAfter(L["Shared_MissingDebuff"] .. " " .. C_Spell.GetSpellLink(288579))
                     end)
                 end
             end
@@ -237,8 +237,8 @@ function core._2070:JadefireMasters()
     if core.type == "SPELL_DAMAGE" and core.spellId == 286565 and core.destName ~= nil then
         --Check if the player that has been hit has the egg debuff on them
         for i=1,40 do
-            local _, _, _, _, _, _, _, _, _, spellId = UnitAura(core.destName, i)
-            if spellId == 289547 then
+            local auraData = C_UnitAuras.GetAuraDataByIndex(core.destName, i)
+            if auraData ~= nil and auraData.spellId == 289547 then
                 core:getAchievementSuccess()
             end
         end
@@ -305,8 +305,8 @@ end
 function core._2070:Opulence()
     --Defeat the Opulence in Battle of Dazar'alor after /praising a Singing Sunflower while under the effects of Brilliant Aura on Normal Difficulty or higher.
     if initialMessageAnnounced == false then
-        RaidNotice_AddMessage(RaidBossEmoteFrame, format(L["BattleOfDazzarlor_OpulenceRangeWarning"], UnitName("player"), getNPCName(51090), GetSpellLink(284645)), ChatTypeInfo["RAID_WARNING"])
-        core:sendMessageSafe(format(L["BattleOfDazzarlor_OpulenceRangeWarning"], UnitName("player"), getNPCName(51090), GetSpellLink(284645)),true)
+        RaidNotice_AddMessage(RaidBossEmoteFrame, format(L["BattleOfDazzarlor_OpulenceRangeWarning"], UnitName("player"), getNPCName(51090), C_Spell.GetSpellLink(284645)), ChatTypeInfo["RAID_WARNING"])
+        core:sendMessageSafe(format(L["BattleOfDazzarlor_OpulenceRangeWarning"], UnitName("player"), getNPCName(51090), C_Spell.GetSpellLink(284645)),true)
         initialMessageAnnounced = true
     end
 
@@ -350,7 +350,7 @@ function core._2070:JainaProudmoore()
     --Player has collected a snow mound. Output player to chat.
     if core.type == "SPELL_AURA_APPLIED" and (core.spellId == 289408 or core.spellId == 289405) then
         snowCounter = snowCounter + 1
-        core:sendMessage(core:getAchievement() .. " " .. core.destName .. " " .. L["Shared_HasGained"] .. " " .. GetSpellLink(289408) .. " (" .. snowCounter .. "/3)", true)
+        core:sendMessage(core:getAchievement() .. " " .. core.destName .. " " .. L["Shared_HasGained"] .. " " .. C_Spell.GetSpellLink(289408) .. " (" .. snowCounter .. "/3)", true)
 
         if snowCounter == 3 then
             snowComplete = true
@@ -439,8 +439,8 @@ function core._2070.Events:CHAT_MSG_TEXT_EMOTE(self, message, sender, lineID, se
                         --core:sendDebugMessage("Detected Singing Sunflower Self")
                         --They have praised the correct npc. Check if they have the correct buff
                         for i=1,40 do
-                            local _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(sender, i)
-                            if spellId == 284802 then
+                            local auraData = C_UnitAuras.GetDebuffDataByIndex(sender, i)
+                            if auraData ~= nil and auraData.spellId == 284802 then
                                 --Check if the player actually needs the achievement since it is personal
                                 --core:sendDebugMessage("Found player who hugged singing sunflower")
                                 --core:sendDebugMessage(sender)
@@ -465,8 +465,8 @@ function core._2070.Events:CHAT_MSG_TEXT_EMOTE(self, message, sender, lineID, se
                         --core:sendDebugMessage("Detected Singing Sunflower in other")
                         --They have praised the correct npc. Check if they have the correct buff
                         for i=1,40 do
-                            local _, _, _, _, _, _, _, _, _, spellId = UnitDebuff(sender, i)
-                            if spellId == 284802 then
+                            local auraData = C_UnitAuras.GetDebuffDataByIndex(sender, i)
+                            if auraData ~= nil and auraData.spellId == 284802 then
                                 --Check if the player actually needs the achievement since it is personal
                                 --core:sendDebugMessage("Found player who hugged singing sunflower in other")
                                 --core:sendDebugMessage(sender)

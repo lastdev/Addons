@@ -3,16 +3,28 @@ local SlotMixin, private = addon.namespace('SlotMixin')
 
 function SlotMixin:Init(props)
     self.enchantable = props.enchantable or false
+    self.enchantCondition = props.enchantCondition
     self.socketable = props.socketable or 0
-    self.condition = props.condition
+    self.socketCondition = props.socketCondition
 end
 
 function SlotMixin.GetDefaultSlots()
+    local function showMissingJewelrySockets()
+        return addon.config.db.showMissingJewelrySockets
+    end
+
+    local function showMissingArmorSockets()
+        return addon.config.db.showMissingArmorSockets
+    end
+
     return {
-        -- HeadSlot = addon.new(SlotMixin, {
-        -- }),
+        HeadSlot = addon.new(SlotMixin, {
+            socketable = 1,
+            socketCondition = showMissingArmorSockets,
+        }),
         NeckSlot = addon.new(SlotMixin, {
             socketable = 2,
+            socketCondition = showMissingJewelrySockets,
         }),
         -- ShoulderSlot = addon.new(SlotMixin, {
         -- }),
@@ -24,13 +36,15 @@ function SlotMixin.GetDefaultSlots()
         }),
         WristSlot = addon.new(SlotMixin, {
             enchantable = true,
+            socketable = 1,
+            socketCondition = showMissingArmorSockets,
         }),
         MainHandSlot = addon.new(SlotMixin, {
             enchantable = true,
         }),
         SecondaryHandSlot = addon.new(SlotMixin, {
             enchantable = true,
-            condition = function (item)
+            enchantCondition = function (item)
                 -- off hand weapons can be enchanted
                 local invType = item:GetInvType()
 
@@ -39,8 +53,10 @@ function SlotMixin.GetDefaultSlots()
         }),
         -- HandsSlot = addon.new(SlotMixin, {
         -- }),
-        -- WaistSlot = addon.new(SlotMixin, {
-        -- }),
+        WaistSlot = addon.new(SlotMixin, {
+            socketable = 1,
+            socketCondition = showMissingArmorSockets,
+        }),
         LegsSlot = addon.new(SlotMixin, {
             enchantable = true,
         }),
@@ -50,10 +66,12 @@ function SlotMixin.GetDefaultSlots()
         Finger0Slot = addon.new(SlotMixin, {
             enchantable = true,
             socketable = 2,
+            socketCondition = showMissingJewelrySockets,
         }),
         Finger1Slot = addon.new(SlotMixin, {
             enchantable = true,
             socketable = 2,
+            socketCondition = showMissingJewelrySockets,
         }),
         -- Trinket0Slot = addon.new(SlotMixin, {
         -- }),
@@ -76,7 +94,11 @@ function SlotMixin:GetFlags(itemLink)
         table.insert(flags, 'G')
     end
 
-    if self.socketable and numSockets < self.socketable then
+    if
+        self.socketable
+        and numSockets < self.socketable
+        and (not self.socketCondition or self.socketCondition(item))
+    then
         table.insert(flags, 'S')
     end
 
@@ -88,7 +110,7 @@ function SlotMixin:NeedsEnchant(item)
         return false -- not enchantable or already enchanted
     end
 
-    if self.condition and not self.condition(item) then
+    if self.enchantCondition and not self.enchantCondition(item) then
         return false -- condition not satisfied
     end
 

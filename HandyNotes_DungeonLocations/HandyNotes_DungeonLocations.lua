@@ -2495,7 +2495,7 @@ nodes[1550]= { -- Shadowlands
 
 if self.db.profile.Zone then
  
-nodes[1533][60007577] = {
+nodes[1533][40145521] = {
    id = 1182,
    type = "Dungeon",
    hideOnContinent = true, 

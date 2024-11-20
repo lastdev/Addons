@@ -1,17 +1,17 @@
-## Interface: 110000
-## Author: John Stephen
+## Interface: 40401, 30403, 20504, 11504
+
+## Author: GovtGeek
+## X-Original-Author: John Stephen
+## X-Credits: Mundocani, Miv, Gogo, LemonDrake
 ## Title: Outfitter
-## Version: 11.0.0.6
+## Version: 4.4.1
 ## Notes: Clothing and weapon management and automated equipment changes
 ## OptionalDeps:
 ## RequiredDeps:
 ## SavedVariablesPerCharacter: gOutfitter_Settings
 ## SavedVariables: gOutfitter_GlobalSettings
-## IconTexture: Interface\Icons\INV_Chest_Cloth_21
-## AddonCompartmentFunc: Outfitter_OnAddonCompartmentClick
 ## X-ReloadTag: 2
-
-Compat.lua
+## X-Curse-Project-ID:
 
 Libraries/UTF8/utf8data.lua
 Libraries/UTF8/utf8.lua
@@ -19,7 +19,6 @@ Libraries/UTF8/utf8.lua
 Libraries/LibStub.lua
 Libraries/CallbackHandler-1.0.lua
 Libraries/LibDataBroker-1.1.lua
-Libraries/LibWithFreeDragDBIcon-1.0.lua
 Libraries/LibBabble-3.0.lua
 Libraries/LibBabble-SubZone-3.0.lua
 Libraries/LibBabble-Inventory-3.0.lua

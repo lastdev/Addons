@@ -1,12 +1,16 @@
 # SavedInstances
 
-## [11.0.3](https://github.com/SavedInstances/SavedInstances/tree/11.0.3) (2024-08-27)
-[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/11.0.2...11.0.3) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
+## [11.0.7](https://github.com/SavedInstances/SavedInstances/tree/11.0.7) (2024-10-13)
+[Full Changelog](https://github.com/SavedInstances/SavedInstances/compare/11.0.6...11.0.7) [Previous Releases](https://github.com/SavedInstances/SavedInstances/releases)
 
-- feat: add LFR Nerub-ar Palace  
-- fix: set size for new template  
-- fix: remove :SetPropagateKeyboardInput as no longer allow to be call in combat  
-- fix: fix +1 day at daily reset  
-    fixes #865  
-- feat: update trade skill spell list  
-- feat: remove Radiant Echoes Weeklies  
+- TWW Services and Treatise (#903)  
+    * TWW Services and Treatise  
+    * Update Quest.lua  
+    * Update Progress.lua  
+    remove trailing whitespace on comment  
+    * Update Quest.lua  
+    fix whitespace  
+    * Add locale string Progress.lua  
+    Add locale string for Algari Treatise in Progress.lua  
+    * Update Quest.lua  
+    Moved TWW Profession Services to QuestExceptions  

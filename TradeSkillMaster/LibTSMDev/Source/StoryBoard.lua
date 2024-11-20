@@ -286,22 +286,22 @@ end
 
 function private.CreateCraftTierButtonPage(button)
 	private.GetAndClearContent(button)
-		:AddChild(private.CreateCraftTierButton(1, 137000, -15000, 1))
-		:AddChild(private.CreateCraftTierButton(2, 546100, 15400, 1))
-		:AddChild(private.CreateCraftTierButton(3, 1576400, 456400, 1))
-		:AddChild(private.CreateCraftTierButton(4, 4610500, 640000, 1))
-		:AddChild(private.CreateCraftTierButton(5, 8087600, -5046500, 0.15))
+		:AddChild(private.CreateCraftTierButton(1, 137000, -15000, 0))
+		:AddChild(private.CreateCraftTierButton(2, 546100, 15400, 0))
+		:AddChild(private.CreateCraftTierButton(3, 1576400, 456400, 0))
+		:AddChild(private.CreateCraftTierButton(4, 4610500, 640000, 0))
+		:AddChild(private.CreateCraftTierButton(5, 8087600, -5046500, 55))
 		:Draw()
 end
 
-function private.CreateCraftTierButton(quality, cost, profit, chance)
+function private.CreateCraftTierButton(quality, cost, profit, concentration)
 	return UIElements.New("Frame", "q"..quality)
 		:SetLayout("HORIZONTAL")
 		:SetHeight(80)
 		:SetMargin(0, 0, 0, 16)
 		:AddChild(UIElements.New("CraftTierButton", "button")
 			:SetWidth(120)
-			:SetCraftString("c:0:q"..quality, chance)
+			:SetCraftString("c:0:q"..quality, concentration)
 			:SetPrices(cost, profit)
 			:SetScript("OnClick", private.ButtonOnClick)
 		)
@@ -317,8 +317,8 @@ function private.FrameOnHide()
 	private.manager:ProcessAction("ACTION_FRAME_ON_HIDE")
 end
 
-function private.ButtonOnClick()
-	print("Click!")
+function private.ButtonOnClick(_, ...)
+	print("Click!", ...)
 end
 
 function private.SelectionChanged(_, selection)

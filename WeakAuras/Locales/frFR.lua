@@ -18,7 +18,7 @@ L["/wa pstart - Start profiling. Optionally include a duration in seconds after 
 L["/wa pstop - Finish profiling"] = "/wa pstop - Arrêter le profilage"
 L["/wa repair - Repair tool"] = "/wa repair - Utilitaire de réparation"
 L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fClic-Gauche|r pour déclencher l'affichage de la fenêtre principale."
-L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fClic-Milieu|r pour activer ou désactiver l'icône de la mini-carte."
+L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "Clique du milieu pour activer ou désactiver l'icône de la mini-carte."
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55fClic-Droit|r pour basculer la fenêtre de profilage des performances."
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fMaj-Clic|r Pour suspendre l'exécution de l'addon."
 --[[Translation missing --]]
@@ -29,6 +29,14 @@ L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Item Equipped"
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Nom du joueur / serveur"
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Spell Known"
+--[[Translation missing --]]
+L[ [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
+Find more information:
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
+Find more information:
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Options supplémentaires :|r %s"
 L["|cFFffcc00Extra Options:|r None"] = "|cFFffcc00Options supplémentaires :|r Aucun"
 L[ [=[• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00ff00Pet|r correspond directly to those individual unitIDs.
@@ -84,7 +92,6 @@ L["Absorb Heal Overlay"] = "Absorb Heal Overlay"
 L["Absorb Overlay"] = "Absorb Overlay"
 L["Absorbed"] = "Absorbé"
 L["Action Button Glow"] = "Bouton d'action brillant"
-L["Action Usable"] = "Action utilisable"
 L["Actions"] = "Actions"
 L["Active"] = [=[Actif
 ]=]
@@ -165,9 +172,9 @@ L["At Value"] = "At Value"
 L["At War"] = "At War"
 L["Attach to End"] = "Attacher à la Fin"
 L["Attach to Start"] = "Attacher au Début"
-L["Attack Power"] = "Pouvoir d'Attaque"
+L["Attack Power"] = "Puissance d'attaque"
 L["Attackable"] = "Attaquable"
-L["Attackable Target"] = "Cible attackable"
+L["Attackable Target"] = "Cible attaquable"
 L["Aura"] = "Aura"
 L["Aura '%s': %s"] = "Aura '%s' : %s"
 L["Aura Applied"] = "Aura appliquée"
@@ -336,14 +343,8 @@ L["Channel (Spell)"] = "Canalisation"
 L["Character Stats"] = "Stats Personnage"
 L["Character Type"] = "Type de Personnage"
 L["Charge gained/lost"] = "Charge gagné/perdu"
-L["Charged Combo Point (1)"] = "Point de combo chargé (1)"
-L["Charged Combo Point (2)"] = "Point de combo chargé (2)"
-L["Charged Combo Point (3)"] = "Point de combo chargé (3)"
-L["Charged Combo Point (4)"] = "Point de combo chargé (4)"
-L["Charged Combo Point 1"] = "Point de combo chargé 1"
-L["Charged Combo Point 2"] = "Point de combo chargé 2"
-L["Charged Combo Point 3"] = "Point de combo chargé 3"
-L["Charged Combo Point 4"] = "Point de combo chargé 4"
+--[[Translation missing --]]
+L["Charged Combo Points"] = "Charged Combo Points"
 L["Charges"] = "Charges"
 --[[Translation missing --]]
 L["Charges Changed Event"] = "Charges Changed Event"
@@ -370,12 +371,6 @@ L["Color"] = "Couleur"
 --[[Translation missing --]]
 L["Color Animation"] = "Color Animation"
 L["Combat Log"] = "Journal de combat"
---[[Translation missing --]]
-L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
 --[[Translation missing --]]
 L["Communities"] = "Communities"
 --[[Translation missing --]]
@@ -408,6 +403,10 @@ L["Create"] = "Créer"
 L["Critical"] = "Critique"
 L["Critical (%)"] = "Critique (%)"
 L["Critical Rating"] = "Évaluation Critique"
+--[[Translation missing --]]
+L["Crop X"] = "Crop X"
+--[[Translation missing --]]
+L["Crop Y"] = "Crop Y"
 L["Crowd Controlled"] = "Contrôlé"
 L["Crushing"] = "Ecrasant"
 L["C'thun"] = "C'thun"
@@ -415,8 +414,6 @@ L["C'thun"] = "C'thun"
 L["Cumulated time used during profiling"] = "Cumulated time used during profiling"
 --[[Translation missing --]]
 L["Currency"] = "Currency"
---[[Translation missing --]]
-L["Current Combo Point charged"] = "Current Combo Point charged"
 --[[Translation missing --]]
 L["Current Essence"] = "Current Essence"
 --[[Translation missing --]]
@@ -663,8 +660,7 @@ L["Every Frame"] = "Chaque image"
 L["Every Frame (High CPU usage)"] = "Chaque image (utilisation importante du CPU)"
 --[[Translation missing --]]
 L["Evoker Essence"] = "Evoker Essence"
---[[Translation missing --]]
-L["Exact Spell ID(s)"] = "Exact Spell ID(s)"
+L["Exact Spell ID(s)"] = "Correspondance exacte de l'ID du/des sort(s)"
 L["Experience (%)"] = "Expérience (%)"
 --[[Translation missing --]]
 L["Expertise Bonus"] = "Expertise Bonus"
@@ -672,7 +668,7 @@ L["Expertise Bonus"] = "Expertise Bonus"
 L["Expertise Rating"] = "Expertise Rating"
 L["Extend Outside"] = "Étendre à l'extérieur"
 L["Extra Amount"] = "Quantité extra"
-L["Extra Attacks"] = "Attaque extra"
+L["Extra Attacks"] = "Attaques supplémentaires"
 --[[Translation missing --]]
 L["Extra Spell Id"] = "Extra Spell Id"
 L["Extra Spell Name"] = "Nom de Sort supplémentaire"
@@ -812,7 +808,7 @@ L["Guild"] = "Guilde"
 --[[Translation missing --]]
 L["Hakkar"] = "Hakkar"
 L["Has Target"] = "A une Cible"
-L["Has Vehicle UI"] = "Dans un véhicule"
+L["Has Vehicle UI"] = "Interface véhicule"
 L["HasPet"] = "Avoir un familier (vivant)"
 L["Haste (%)"] = "Hâte (%)"
 L["Haste Rating"] = "Score de hâte"
@@ -867,9 +863,9 @@ L["Icon Function"] = "Icon Function"
 --[[Translation missing --]]
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
 --[[Translation missing --]]
-L["ID"] = "ID"
---[[Translation missing --]]
 L["Id"] = "Id"
+--[[Translation missing --]]
+L["ID"] = "ID"
 --[[Translation missing --]]
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 L["Ignore Dead"] = "Ignorer la mort"
@@ -877,6 +873,8 @@ L["Ignore Disconnected"] = "Ignorer les déconnectés"
 L["Ignore Rune CD"] = "Ignorer le rechargement des runes"
 L["Ignore Rune CDs"] = "Ignorer les rechargements des runes"
 L["Ignore Self"] = "Ignorer soi-même"
+--[[Translation missing --]]
+L["Ignore Spell Cooldown/Charges"] = "Ignore Spell Cooldown/Charges"
 --[[Translation missing --]]
 L["Ignore Spell Override"] = "Ignore Spell Override"
 L["Immune"] = "Immunité"
@@ -893,15 +891,12 @@ L["In Raid"] = "En raid"
 L["In Range"] = "In Range"
 L["In Vehicle"] = "Dans un véhicule"
 L["In War Mode"] = "En mode guerre"
-L["Include Bank"] = "Inclure Banque"
+L["Include Bank"] = "Inclure la Banque"
 L["Include Charges"] = "Inclure charges"
---[[Translation missing --]]
-L["Include Death Runes"] = "Include Death Runes"
+L["Include Death Runes"] = "Inclure les Runes de la mort"
 L["Include Pets"] = "Inclure les familiers"
---[[Translation missing --]]
-L["Include Reagent Bank"] = "Include Reagent Bank"
---[[Translation missing --]]
-L["Include War Band Bank"] = "Include War Band Bank"
+L["Include Reagent Bank"] = "Inclure la Banque de composants"
+L["Include War Band Bank"] = "Inclure la Banque de bataillon"
 L["Incoming Heal"] = "Soins en Cours"
 --[[Translation missing --]]
 L["Increase Precision Below"] = "Increase Precision Below"
@@ -915,9 +910,9 @@ L["Install the addons BugSack and BugGrabber for detailed error logs."] = "Insta
 L["Instance"] = "Instance"
 L["Instance Difficulty"] = "Difficulté de l'Instance"
 --[[Translation missing --]]
-L["Instance ID"] = "Instance ID"
---[[Translation missing --]]
 L["Instance Id"] = "Instance Id"
+--[[Translation missing --]]
+L["Instance ID"] = "Instance ID"
 --[[Translation missing --]]
 L["Instance Info"] = "Instance Info"
 --[[Translation missing --]]
@@ -1145,8 +1140,7 @@ L["Name Function"] = "Name Function"
 --[[Translation missing --]]
 L["Name Function (fallback state)"] = "Name Function (fallback state)"
 L["Name of Caster's Target"] = "Nom de la cible du lanceur"
---[[Translation missing --]]
-L["Name of the (sub-)zone currently shown above the minimap."] = "Name of the (sub-)zone currently shown above the minimap."
+L["Name of the (sub-)zone currently shown above the minimap."] = "Nom de la (sous-)zone actuellement affichée au-dessus de la mini-carte."
 --[[Translation missing --]]
 L["Name(s)"] = "Name(s)"
 L["Name/Realm of Caster's Target"] = "Nom/Royaume de la Cible du Lanceur de sort"
@@ -1903,8 +1897,6 @@ L["Tracking Charge %i"] = "Suivi de charge %i"
 L["Tracking Charge CDs"] = "Suivi des CD de charge"
 L["Tracking Only Cooldown"] = "Suivi du temps de recharge"
 L["Transmission error"] = "Erreur de transmission"
---[[Translation missing --]]
-L["Treat charged combo point as 7 combo points"] = "Treat charged combo point as 7 combo points"
 L["Trigger"] = "Déclencheur"
 --[[Translation missing --]]
 L["Trigger %i"] = "Trigger %i"
@@ -1967,7 +1959,7 @@ L["Up, then Right"] = "Haut, puis droite"
 --[[Translation missing --]]
 L["Update Position"] = "Update Position"
 L["Usage:"] = "Utilisation:"
-L["Use /wa minimap to show the minimap icon again."] = "Utiliser /wa minimap pour afficher à nouveau l'icône de la mini-carte."
+L["Use /wa minimap to show the minimap icon again."] = "Utilisez /wa minimap pour afficher à nouveau l’icône de la mini-carte."
 L["Use Custom Color"] = "Utiliser couleur personnalisée"
 --[[Translation missing --]]
 L["Use Legacy floor rounding"] = "Use Legacy floor rounding"
@@ -1997,7 +1989,7 @@ L["Warning"] = "Attention"
 --[[Translation missing --]]
 L["Warning for unknown aura:"] = "Warning for unknown aura:"
 --[[Translation missing --]]
-L["Warning: Anchoring to your own child '%s' in aura '%s' is imposssible."] = "Warning: Anchoring to your own child '%s' in aura '%s' is imposssible."
+L["Warning: Anchoring in aura '%s' is imposssible, due to an anchoring cycle"] = "Warning: Anchoring in aura '%s' is imposssible, due to an anchoring cycle"
 L["Warning: Full Scan auras checking for both name and spell id can't be converted."] = "Avertissement : Les auras à balayage complet vérifiant à la fois le nom et l'identifiant du sort ne peuvent pas être converties."
 --[[Translation missing --]]
 L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."

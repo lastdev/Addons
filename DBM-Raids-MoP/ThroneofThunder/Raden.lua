@@ -3,10 +3,11 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,heroic25"
 
-mod:SetRevision("20240614022422")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(69473)--69888
 mod:SetEncounterID(1580, 1581)
 mod:SetUsedIcons(1)
+mod:SetZone(1098)
 
 mod:RegisterCombat("combat")
 

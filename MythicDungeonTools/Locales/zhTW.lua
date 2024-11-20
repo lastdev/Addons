@@ -64,6 +64,8 @@ L["Alcruux"] = "阿尔克鲁克斯"
 L["Algeth'ar Echoknight"] = "Algeth'ar Echoknight"
 L["AlgetharAcademy"] = "阿爾蓋薩學院"
 --[[Translation missing --]]
+L["algetharShortName"] = "AA"
+--[[Translation missing --]]
 L["Alliance Archer"] = "Alliance Archer"
 --[[Translation missing --]]
 L["Alliance Berserker"] = "Alliance Berserker"
@@ -139,6 +141,10 @@ L["Aqu'sirr"] = "阿库希尔"
 --[[Translation missing --]]
 L["Arachnopod Destroyer"] = "Arachnopod Destroyer"
 L["AraKara"] = "『回音之城』厄拉卡拉"
+--[[Translation missing --]]
+L["araKaraItemDescription"] = "Usable by Khaz Algar Tailors (25)"
+--[[Translation missing --]]
+L["araKaraShortName"] = "ARAK"
 L["Aranasi Broodmother"] = "阿兰纳丝蛛后"
 L["Arcane Anomaly"] = "奥术畸体"
 --[[Translation missing --]]
@@ -159,6 +165,8 @@ L["Arcanid"] = "奥能蛛"
 L["Archdruid Glaidalis"] = "大德鲁伊格兰达里斯"
 --[[Translation missing --]]
 L["Archmage Sol"] = "Archmage Sol"
+--[[Translation missing --]]
+L["arcwayShortName"] = "ARC"
 L["Ardenweald"] = "亞登曠野"
 --[[Translation missing --]]
 L["Armored Mistral"] = "Armored Mistral"
@@ -198,6 +206,8 @@ L["Atal'ai High Priest"] = "阿塔莱高阶祭司"
 L["Atal'ai Hoodoo Hexxer"] = "阿塔莱灾厄妖术师"
 L["Atal'Dazar"] = "阿塔達薩"
 L["Atal'Dazar Sublevel"] = "阿塔達薩"
+--[[Translation missing --]]
+L["atalDazarShortName"] = "AD"
 L["atalTeemingNote"] = "擁擠時請注意: %s%sG29 可能不會出現。%s G2 的擁擠敵人可能不會出現。%sG27 可能不會出現。"
 --[[Translation missing --]]
 L["Atik"] = "Atik"
@@ -245,6 +255,8 @@ L["Azure Stalker"] = "Azure Stalker"
 L["Azure Warder"] = "Azure Warder"
 --[[Translation missing --]]
 L["Azureblade"] = "Azureblade"
+--[[Translation missing --]]
+L["azureVaultShortName"] = "AV"
 L["Baalgar the Watchful"] = "警惕的巴尔戈"
 L["Backup Singer"] = "替补歌手"
 --[[Translation missing --]]
@@ -304,6 +316,8 @@ L["Bitterbrine Scavenger"] = "苦水清道夫"
 L["Bitterbrine Slave"] = "苦水奴隶"
 L["Black and Yellow"] = "黑和黃"
 L["Black Rook Hold"] = "玄鴉堡"
+--[[Translation missing --]]
+L["blackrookHoldShortName"] = "BRH"
 L["Blacktar Bomber"] = "黑油投弹者"
 L["Blacktooth"] = "黑牙"
 L["Blacktooth Arsonist"] = "黑齿纵火犯"
@@ -349,6 +363,8 @@ L["Bloodthirsty Cub"] = "Bloodthirsty Cub"
 L["Bloodthirsty Tundra Wolf"] = "Bloodthirsty Tundra Wolf"
 --[[Translation missing --]]
 L["Bloodworker"] = "Bloodworker"
+--[[Translation missing --]]
+L["Bloody Javelin"] = "Bloody Javelin"
 L["Bolstering"] = "激勵"
 L["Bomb Tonk"] = "炸弹坦克"
 L["Bone Magus"] = "白骨魔导师"
@@ -388,6 +404,8 @@ L["Brackenhide Shaper"] = "Brackenhide Shaper"
 --[[Translation missing --]]
 L["brackenhideCage"] = "Meat Storage"
 L["BrackenhideHollow"] = "蕨皮谷"
+--[[Translation missing --]]
+L["brackenhideShortName"] = "BH"
 --[[Translation missing --]]
 L["Brain of Yogg-Saron"] = "Brain of Yogg-Saron"
 L["Brawling Patron"] = "打架的顾客"
@@ -433,6 +451,8 @@ L["Cartel Wiseguy"] = "财团智囊"
 L["Catacombs"] = "墓窖"
 L["Cathedral of Eternal Night"] = "永夜聖殿"
 --[[Translation missing --]]
+L["cathedralOfEternalNightShortName"] = "COEN"
+--[[Translation missing --]]
 L["Cavern Seeker"] = "Cavern Seeker"
 --[[Translation missing --]]
 L["Centrifuge Construct"] = "Centrifuge Construct"
@@ -473,6 +493,8 @@ L["Chrono-Lord Epoch"] = "Chrono-Lord Epoch"
 --[[Translation missing --]]
 L["CityofEchoes"] = "CityofEchoes"
 L["CityOfThreads"] = "蛛絲城"
+--[[Translation missing --]]
+L["cityOfThreadsShortName"] = "COT"
 --[[Translation missing --]]
 L["Claw Fighter"] = "Claw Fighter"
 L["Click the fullscreen button for a maximized view of MDT."] = "點一下全螢幕按鈕來最大化 MDT 的畫面"
@@ -542,6 +564,8 @@ L["Corsair Officer"] = "海盗船军官"
 L["Corstilax"] = "科蒂拉克斯"
 L["Court of Stars"] = "眾星之廷"
 L["Court of Stars Sublevel"] = "眾星之廷"
+--[[Translation missing --]]
+L["courtOfStarsShortName"] = "COS"
 L["Cove Seagull"] = "海湾沙鸥"
 L["Coven Diviner"] = "女巫会占卜者"
 L["Coven Thornshaper"] = "女巫会塑棘者"
@@ -648,15 +672,23 @@ L["Dark Touched Warrior"] = "Dark Touched Warrior"
 L["Darkheart Thicket"] = "暗心灌木林"
 L["Darkheart Thicket Sublevel"] = "暗心灌木林"
 --[[Translation missing --]]
+L["darkheartThicketShortName"] = "DHT"
+--[[Translation missing --]]
 L["Darkweb Hatchling"] = "Darkweb Hatchling"
 --[[Translation missing --]]
 L["Darkweb Recluse"] = "Darkweb Recluse"
 L["DataImportButtonTooltip"] = "匯入外部 NPC 資料。"
+--[[Translation missing --]]
+L["dawnBreakerShortName"] = "DAWN"
+--[[Translation missing --]]
+L["dawnlowerShortName"] = "FALL"
 L["DawnOfTheInfiniteLower"] = "恆龍黎明: 葛拉克朗殞命之地"
 L["DawnOfTheInfiniteUpper"] = "恆龍黎明: 姆多茲諾高地"
 --[[Translation missing --]]
 L["dawnPortalNote"] = [=[Infinite Riftmage 2 and 4 need to be defeated for the portals to activate.
 Temporal Deviations will keep respawning but give no count.]=]
+--[[Translation missing --]]
+L["dawnupperShortName"] = "RISE"
 L["Dazar'ai Augur"] = "达萨莱占卜师"
 L["Dazar'ai Colossus"] = "达萨莱巨像"
 L["Dazar'ai Confessor"] = "达萨莱神官"
@@ -720,6 +752,12 @@ L["Demolishing Terror"] = "攻城恐魔"
 L["Demon"] = "惡魔"
 --[[Translation missing --]]
 L["DenOfDecay"] = "Den of Decay"
+--[[Translation missing --]]
+L["deOtherSideShortName"] = "DOS"
+--[[Translation missing --]]
+L["Depleted Anima Seed"] = "Depleted Anima Seed"
+--[[Translation missing --]]
+L["depletedAnimaSeedDescription"] = "Updates the graveyard location"
 L["Depraved Collector"] = "堕落的搜集者"
 L["Depraved Darkblade"] = "堕落的黑暗剑士"
 L["Depraved Houndmaster"] = "堕落的驯犬者"
@@ -743,6 +781,10 @@ L["Devouring Ghoul"] = "Devouring Ghoul"
 L["Devouring Maggot"] = "贪吃的蛆虫"
 L["Devout Blood Priest"] = "虔诚鲜血祭司"
 L["Dinomancer Kish'o"] = "恐龙统领吉什奥"
+--[[Translation missing --]]
+L["Discarded Shield"] = "Discarded Shield"
+--[[Translation missing --]]
+L["Discharged Anima"] = "Discharged Anima"
 --[[Translation missing --]]
 L["Disease Slasher"] = "Disease Slasher"
 L["Diseased Horror"] = "染病恐魔"
@@ -882,6 +924,7 @@ L["Drust Spiteclaw"] = "德鲁斯特恶爪者"
 L["Dulhu"] = "Dulhu"
 L["Dul'zak"] = "杜尔扎克"
 L["Dungeon Data Missing"] = "缺少地城資料"
+L["Dungeon Entrance"] = "地城入口"
 L["Dungeon Level"] = "地城層數"
 L["Duskwatch Arcanist"] = "暮色卫队奥术师"
 L["Duskwatch Guard"] = "暮色卫队卫兵"
@@ -1008,6 +1051,8 @@ L["Everbloom Mender"] = "Everbloom Mender"
 L["Everbloom Naturalist"] = "Everbloom Naturalist"
 --[[Translation missing --]]
 L["Everbloom Tender"] = ""
+--[[Translation missing --]]
+L["everbloomShortName"] = "EB"
 L["Executioner Varruth"] = "刽子手瓦卢斯"
 --[[Translation missing --]]
 L["Executor of the Caliph"] = "Executor of the Caliph"
@@ -1032,6 +1077,8 @@ L["Eye of Taldaram"] = "Eye of Taldaram"
 L["Eye Of The Queen"] = "Eye Of The Queen"
 --[[Translation missing --]]
 L["Eye Stalk"] = "Eye Stalk"
+--[[Translation missing --]]
+L["eyeOfAzsharaShortName"] = "EoA"
 L["Faceless Corruptor"] = "无面腐蚀者"
 --[[Translation missing --]]
 L["Faceless Horror"] = "Faceless Horror"
@@ -1153,6 +1200,8 @@ L["freeholdBeguilingPatrolNote"] = "第 2/5/8/11 週: G53 固定在海潮使者 
 L["freeholdGraveyardDescription1"] = "擊敗天空隊長克拉格後開放"
 L["freeholdGraveyardDescription2"] = "擊敗船長議會後開放"
 --[[Translation missing --]]
+L["freeholdShortName"] = "FH"
+--[[Translation missing --]]
 L["Frenzied Bat"] = "Frenzied Bat"
 --[[Translation missing --]]
 L["Frenzied Geist"] = "Frenzied Geist"
@@ -1246,6 +1295,8 @@ L["Graveyard"] = "墓地"
 L["Grease Bot"] = "油滋滋"
 L["Grievous"] = "兇殘"
 L["Grim Batol"] = "格瑞姆巴托"
+--[[Translation missing --]]
+L["grimBatolShortName"] = "GB"
 L["Grimhorn the Enslaver"] = "奴役者格里霍恩"
 L["Grimrail Bombardier"] = "恐轨投弹手"
 L["Grimrail Laborer"] = "恐轨劳工"
@@ -1254,6 +1305,8 @@ L["Grimrail Overseer"] = "恐轨监工"
 L["Grimrail Scout"] = "恐轨斥候"
 L["Grimrail Technician"] = "恐轨技师"
 L["GrimrailDepot"] = "恐軌車站"
+--[[Translation missing --]]
+L["grimrailDepotShortName"] = "GB"
 L["Grip"] = "緊抓"
 L["Gripping Terror"] = "攫握恐魔"
 L["Gritslime Snail"] = "砂泥蜗牛"
@@ -1323,7 +1376,13 @@ L["Halls of Valor Sublevel"] = "英靈殿"
 L["HallsOfAtonementFloor1"] = "贖罪之殿"
 L["HallsOfAtonementFloor2"] = "痛苦中殿"
 L["HallsOfAtonementFloor3"] = "靈魂聖所"
+--[[Translation missing --]]
+L["hallsOfAtonementShortName"] = "HOA"
 L["HallsOfInfusion"] = "灌注迴廊"
+--[[Translation missing --]]
+L["hallsOfInfusionShortName"] = "HOI"
+--[[Translation missing --]]
+L["hallsOfValorShortName"] = "HOV"
 --[[Translation missing --]]
 L["Hapless Assistant"] = "Hapless Assistant"
 L["Harbaron"] = "哈布隆"
@@ -1445,6 +1504,8 @@ L["Ignis the Furnace Master"] = "Ignis the Furnace Master"
 L["Illysanna Ravencrest"] = "伊莉萨娜·拉文凯斯"
 L["Imacu'tya"] = "伊玛库塔"
 L["Imbued Stormcaller"] = "灌注能量的唤雷者"
+--[[Translation missing --]]
+L["imbuedIronBarDescription"] = "Usable by Warriors, Dwarves, and Khaz Algar Blacksmiths (25)"
 L["Immoliant Fury"] = "不朽之怒"
 L["Import"] = "匯入"
 L["Import a preset from a text string"] = "從文字字串匯入路線"
@@ -1544,6 +1605,8 @@ L["Iron Star"] = "Iron Star"
 L["IronDocks"] = "鋼鐵碼頭"
 --[[Translation missing --]]
 L["ironDocksIronStar"] = "Iron Star"
+--[[Translation missing --]]
+L["ironDocksShortName"] = "ID"
 L["Ironhull Apprentice"] = "铁舟学徒"
 --[[Translation missing --]]
 L["Ironroot Lasher"] = "Ironroot Lasher"
@@ -1592,6 +1655,10 @@ L["Junkyard D.0.G."] = "D.0.G.型垃圾场巡犬"
 L["Juvenile Runestag"] = "幼年符文牡鹿"
 L["K.U.-J.0."] = "狂犬K.U.-J.0."
 --[[Translation missing --]]
+L["karaLowerShortName"] = "LOWER"
+--[[Translation missing --]]
+L["karaUpperShortName"] = "UPPER"
+--[[Translation missing --]]
 L["Kel'Thuzad"] = "Kel'Thuzad"
 --[[Translation missing --]]
 L["Keristrasza"] = "Keristrasza"
@@ -1616,6 +1683,8 @@ L["King Tor"] = "托尔国王"
 L["King Ymiron"] = "King Ymiron"
 L["Kings' Rest"] = "諸王之眠"
 L["Kings' Rest Sublevel"] = "諸王之眠"
+--[[Translation missing --]]
+L["kingsRestShortName"] = "KR"
 L["Kin-Tara"] = "金-塔拉"
 L["Klotos"] = "克罗托斯"
 L["Knight Captain Valyri"] = "骑士队长瓦莱莉"
@@ -1786,6 +1855,8 @@ L["Matron Bryndle"] = "主母布琳德尔"
 L["Mature Krolusk"] = "成年三叶虫"
 L["MausoleumOfLegends"] = "傳說陵墓"
 L["Maw of Souls"] = "靈魂之喉"
+--[[Translation missing --]]
+L["mawOfSoulsShortName"] = "MOS"
 L["Mchimba the Embalmer"] = "殓尸者姆沁巴"
 L["MDI Mode"] = "MDI 模式"
 --[[Translation missing --]]
@@ -1810,6 +1881,10 @@ L["Mechagon Prowler"] = "麦卡贡徘徊者"
 L["Mechagon Renormalizer"] = "麦卡贡重整者"
 L["Mechagon Tinkerer"] = "麦卡贡工匠"
 L["Mechagon Trooper"] = "麦卡贡步兵"
+--[[Translation missing --]]
+L["mechagonCityShortName"] = "WORK"
+--[[Translation missing --]]
+L["mechagonIslandShortName"] = "YARD"
 L["Mechanical"] = "機械"
 L["Mechanized Peacekeeper"] = "机械化维和者"
 --[[Translation missing --]]
@@ -1847,6 +1922,8 @@ L["Mire Soldier"] = "泽地士兵"
 L["Misguided Nymph"] = "Misguided Nymph"
 L["Mistcaller"] = "唤雾者"
 L["Mists of Tirna Scithe"] = "特那希迷霧"
+--[[Translation missing --]]
+L["mistsShortName"] = "MISTS"
 L["Mistveil Defender"] = "纱雾防御者"
 L["Mistveil Gorgegullet"] = "纱雾噬喉者"
 L["Mistveil Guardian"] = "纱雾守护者"
@@ -1878,6 +1955,8 @@ L["Moragg"] = "Moragg"
 L["Morchie"] = "Morchie"
 L["Mordretha, the Endless Empress"] = "无尽女皇莫德蕾莎"
 L["Moroes"] = "莫罗斯"
+--[[Translation missing --]]
+L["motherlodeShortName"] = "ML"
 L["Mouseover a patrolling enemy with a blue border to view the patrol path."] = "滑鼠指向藍色邊框的巡邏敵人來檢視巡邏路線。"
 L["Mouseover the Live button while in a group to learn more about Live mode."] = "在隊伍中時將滑鼠指向即時連線按鈕，可學習到更多關於即時連線模式的用法。"
 L["Move Object"] = "移動物件"
@@ -1929,14 +2008,20 @@ L["Naz'jar Tempest Witch"] = "Naz'jar Tempest Witch"
 L["Necro Knight"] = "Necro Knight"
 L["Necrotic"] = "壞死"
 L["Necrotic Spiderling"] = "死疽小蜘蛛"
+--[[Translation missing --]]
+L["necroticWakeShortName"] = "NW"
 L["Neesa Nox"] = "妮莎·诺克斯"
 L["Nefarious Darkspeaker"] = "卑劣的暗语者"
 L["Nekthara the Mangler"] = "裂伤者耐克萨拉"
 L["Neltharion's Lair"] = "奈薩里奧巢穴"
 L["Neltharion's Lair Sublevel"] = "奈薩里奧巢穴"
+--[[Translation missing --]]
+L["neltharionsLairShortName"] = "NL"
 L["Neltharus"] = "奈薩魯斯堡"
 --[[Translation missing --]]
 L["neltharusChain"] = "Burning Chain"
+--[[Translation missing --]]
+L["neltharusShortName"] = "NELT"
 --[[Translation missing --]]
 L["Nerubian Hauler"] = "Nerubian Hauler"
 --[[Translation missing --]]
@@ -2006,6 +2091,8 @@ L["Nokhud Warhound"] = "Nokhud Warhound"
 L["Nokhud Warsmith"] = "Nokhud Warsmith"
 --[[Translation missing --]]
 L["Nokhud Warspear"] = "Nokhud Warspear"
+--[[Translation missing --]]
+L["nokhudOffensiveShortName"] = "NO"
 L["Not specified"] = "未分類"
 L["Note Text:"] = "註記文字:"
 --[[Translation missing --]]
@@ -2053,6 +2140,10 @@ L["Ossified Conscript"] = "骨化的援兵"
 L["Overflowing"] = "溢流"
 --[[Translation missing --]]
 L["Overgrown Ancient"] = "Overgrown Ancient"
+--[[Translation missing --]]
+L["Overgrown Roots"] = "Overgrown Roots"
+--[[Translation missing --]]
+L["overgrownRootsDescription"] = "Usable by Night Elves, Tauren, Highmountain Tauren, Druids, and Khaz Algar Herbalists (25)"
 L["Overloaded Mailemental"] = "过载的邮件元素"
 L["Overseer Korgus"] = "科古斯狱长"
 --[[Translation missing --]]
@@ -2130,6 +2221,8 @@ L["Plagued Rat"] = "天灾鼠"
 L["Plaguefall"] = "瘟疫之臨"
 --[[Translation missing --]]
 L["plaguefallDevotedNote"] = "Plaguefall Devoted which have already been transformed by Oozing Carcass before engaging Ickor Bileflesh do not award Enemy Forces."
+--[[Translation missing --]]
+L["plaguefallShortName"] = "PF"
 L["Plagueroc"] = "凋零大鹏"
 L["Plain Texture"] = "一般材質"
 L["Players can join the live session by either clicking this button or the Live Session chat link"] = "玩家可以按下此按鈕或是即時連線的聊天連結來加入即時連線"
@@ -2264,6 +2357,8 @@ L["Rancid Gasbag"] = "腐臭的气囊怪"
 --[[Translation missing --]]
 L["Rashanan"] = "Rashanan"
 L["Rat"] = "老鼠"
+--[[Translation missing --]]
+L["Ravenous Crawler"] = "Ravenous Crawler"
 L["Ravenous Dreadbat"] = "贪婪的恐惧蝠"
 --[[Translation missing --]]
 L["Ravenous Scarab"] = "Ravenous Scarab"
@@ -2407,6 +2502,8 @@ L["Royal Swarmguard"] = "Royal Swarmguard"
 L["Royal Venomshell"] = "Royal Venomshell"
 L["Ruby Overlook"] = "晶紅瞰臺"
 L["RubyLifePools"] = "晶紅生命之池"
+--[[Translation missing --]]
+L["rubyLifePoolsShortName"] = "RLP"
 L["Ruin's Descent"] = "荒滅之淪"
 --[[Translation missing --]]
 L["Ruins Dweller"] = "Ruins Dweller"
@@ -2442,6 +2539,8 @@ L["Sanguine Cadet"] = "赤红学员"
 L["Sanguine Depths"] = "血紅深淵"
 L["Sanguine DepthsFloor1"] = "絕望深境"
 L["Sanguine DepthsFloor2"] = "悲傷展演廳"
+--[[Translation missing --]]
+L["sanguineDepthsShortName"] = "SD"
 L["Sap"] = "悶棍"
 L["Sapped Voidlord"] = "被榨干的空灵领主"
 --[[Translation missing --]]
@@ -2488,6 +2587,8 @@ L["Seaspray Crab"] = "逐潮蟹"
 L["Seat of the Archon"] = "御靈者之座"
 L["Seat of the Triumvirate"] = "三傑議會之座"
 L["Seat of the Triumvirate Sublevel"] = "三傑議會之座"
+--[[Translation missing --]]
+L["seatOfTheTriumvirateShortName"] = "SEAT"
 L["Select all"] = "全選"
 L["Select the dungeon level"] = "選擇地城層數"
 L["Sending: %.1f"] = "正在傳送: %.1f"
@@ -2540,6 +2641,8 @@ L["Shadowmoon Exhumer"] = "Shadowmoon Exhumer"
 --[[Translation missing --]]
 L["Shadowmoon Loyalist"] = "Shadowmoon Loyalist"
 L["ShadowmoonBurialGrounds"] = "影月墓地"
+--[[Translation missing --]]
+L["shadowmoonShortName"] = "SBG"
 L["Shady Dealer"] = "神秘卖家"
 L["Shalebiter"] = "页岩啃噬者"
 L["Shambling Arbalest"] = "蹒跚的弩手"
@@ -2566,6 +2669,8 @@ L["Shrine of the Storm"] = "風暴聖壇"
 L["Shrine of the Storm Sublevel"] = "風暴聖壇"
 L["Shrine Templar"] = "神殿骑士"
 L["shrineGraveyardNote1"] = "擊敗斯陀頌恩領主後開放"
+--[[Translation missing --]]
+L["shrineOfTheStormsShortName"] = "SOTS"
 L["Shroud Hound"] = "迷雾猎犬"
 L["Shrouded"] = "隱蔽"
 L["Shrouded Fang"] = "隐秘之牙"
@@ -2581,6 +2686,8 @@ L["siegeGutterNote2"] = "G72 Gutters 可用來算入敵方部隊，方法是靠�
 L["siegeGuttersNote"] = "Gutters 備註:%s當玩家靠近時，步兵會秒殺掉 Gutters。如果他們死亡時，隊伍中玩家都沒有對他們造成傷害的話，將不會算入敵方部隊%。"
 L["Siegemaster Olugar"] = "攻城大师奥鲁加"
 L["Siegemaster Rokra"] = "攻城大师罗卡尔"
+--[[Translation missing --]]
+L["siegeOfBoralusShortName"] = "SIEGE"
 L["Silence"] = "沉默"
 L["Silt Crab"] = "淤泥螃蟹"
 --[[Translation missing --]]
@@ -2606,6 +2713,8 @@ L["Skeletal Smith"] = "Skeletal Smith"
 L["Skeletal Usher"] = "骷髅招待员"
 L["Skeletal Waiter"] = "骷髅服务员"
 L["Skeletal Warrior"] = "骷髅战士"
+--[[Translation missing --]]
+L["Skittering Assistant"] = "Skittering Assistant"
 --[[Translation missing --]]
 L["Skittering Crawler"] = "Skittering Crawler"
 --[[Translation missing --]]
@@ -2698,6 +2807,8 @@ L["Spinemaw Larva"] = "锥喉幼虫"
 L["Spinemaw Reaver"] = "锥喉掠夺者"
 L["Spinemaw Staghorn"] = "锥喉鹿角巨虫"
 L["Spires of Ascension"] = "晉升之巔"
+--[[Translation missing --]]
+L["spiresOfAscensionShortName"] = "SOA"
 L["Spirit of Vengeance"] = "复仇之魂"
 --[[Translation missing --]]
 L["Spiteful"] = "Spiteful"
@@ -2737,6 +2848,8 @@ L["Stitched Giant"] = "Stitched Giant"
 L["Stitched Vanguard"] = "缝合先锋"
 L["Stitchflesh's Creation"] = "缝肉的造物"
 L["Stitching Assistant"] = "缝合助理"
+--[[Translation missing --]]
+L["stolenPowerDescription"] = "Usable by Rogues, Priests, and Khaz Algar Engineers (25)"
 L["Stoneborn Eviscerator"] = "石裔剔骨者"
 L["Stoneborn Reaver"] = "石裔掠夺者"
 L["Stoneborn Slasher"] = "石裔切割者"
@@ -2748,6 +2861,8 @@ L["Stonefury"] = "巨石之怒"
 L["Stoneskin Gargoyle"] = "Stoneskin Gargoyle"
 --[[Translation missing --]]
 L["Stonevault Geomancer"] = "Stonevault Geomancer"
+--[[Translation missing --]]
+L["stoneVaultShortName"] = "SV"
 L["Stonewall Gargon"] = "石墙加尔贡"
 L["Storm Drake"] = "风暴幼龙"
 --[[Translation missing --]]
@@ -2844,7 +2959,11 @@ L["TazaveshFloor6"] = "阿格拉瑪寶庫"
 L["TazaveshFloor7"] = "波拉勒斯港"
 L["TazaveshFloor8"] = "富饒樞核"
 L["TazaveshLower"] = "塔札維許: 奇觀街道"
+--[[Translation missing --]]
+L["tazaveshLowerShortName"] = "STRT"
 L["TazaveshUpper"] = "塔札維許: 索利亞的險招"
+--[[Translation missing --]]
+L["tazaveshUpperShortName"] = "GMBT"
 L["tdBuffGateNote"] = "裡面可能有盟友，會依據他們的種族給你增益效果:%s獸人/矮人: 10%% 力量/敏捷%s不死族/人類: 10%% 耐力%s牛頭人/德萊尼: 每 10 秒回復 1%% 血量+法力%s血精靈/地精: 10%% 智力"
 L["tdGraveyardNote1"] = "擊敗沙后後開放"
 L["tdGraveyardNote2"] = "擊敗傑斯·嚎里斯後開放"
@@ -2867,7 +2986,11 @@ L["Temple of Sethraliss Sublevel"] = "瑟沙利斯神廟"
 L["templeEyeNote"] = "瑟沙利斯之眼%s將兩個眼球帶到瑟沙利斯的骸骨%s每放入一個眼球都會給予 12 敵方部隊的獎勵"
 L["templeGraveyardNote1"] = "擊敗莫芮克莎後開放"
 L["templeGraveyardNote2"] = "完成瑟沙利斯的骸骨事件後開放"
+--[[Translation missing --]]
+L["templeOfSethralisShortName"] = "TOS"
 L["TempleOfTheJadeSerpent"] = "玉蛟寺"
+--[[Translation missing --]]
+L["templeOfTheJadeSerpentShortName"] = "TJS"
 --[[Translation missing --]]
 L["Temporal Deviation"] = "Temporal Deviation"
 --[[Translation missing --]]
@@ -2986,6 +3109,8 @@ L["TheaterOfPainFloor2"] = "征戰之聽"
 L["TheaterOfPainFloor3"] = "痛苦祭壇"
 L["TheaterOfPainFloor4"] = "血肉戮穴上層"
 L["TheaterOfPainFloor5"] = "血肉戮穴下層"
+--[[Translation missing --]]
+L["theaterOfPainShortName"] = "TOP"
 L["TheAzureVault"] = "蒼藍密庫"
 L["TheBurningCauldron"] = "燃燒大鍋"
 --[[Translation missing --]]
@@ -3003,6 +3128,8 @@ L["Thorim"] = "Thorim"
 L["Thornguard"] = "荆棘卫士"
 L["Thrashbite the Scornful"] = "轻蔑的萨什比特"
 L["Throne of Tides"] = "海潮王座"
+--[[Translation missing --]]
+L["throneOfTidesShortName"] = "TOTT"
 --[[Translation missing --]]
 L["Thunderhead"] = "Thunderhead"
 --[[Translation missing --]]
@@ -3029,6 +3156,8 @@ L["Time-Lost Wakethrasher"] = "Time-Lost Wakethrasher"
 --[[Translation missing --]]
 L["Time-Lost Waveshaper"] = "Time-Lost Waveshaper"
 --[[Translation missing --]]
+L["Timer"] = "Timer"
+--[[Translation missing --]]
 L["Timestream Anomaly"] = "Timestream Anomaly"
 --[[Translation missing --]]
 L["Timestream Leech"] = "Timestream Leech"
@@ -3054,6 +3183,8 @@ L["Toggle Window"] = "切換顯示地城規劃工具"
 L["Toiling Groundskeeper"] = "劳苦的管理员"
 L["Tol Dagor"] = "托達戈爾"
 L["Tol Dagor Sublevel1"] = "托達戈爾"
+--[[Translation missing --]]
+L["tolDagorShortName"] = "TD"
 --[[Translation missing --]]
 L["Tomb Horror"] = "Tomb Horror"
 --[[Translation missing --]]
@@ -3154,6 +3285,8 @@ L["Ularogg Cragshaper"] = "乌拉罗格·塑山"
 L["Uldaman: Legacy of Tyr"] = "奧達曼：提爾的遺產"
 L["UldamanLegacyOfTyr"] = "奧達曼：提爾的遺產"
 --[[Translation missing --]]
+L["uldamanShortName"] = "ULD"
+--[[Translation missing --]]
 L["Ulduar"] = "Ulduar"
 L["Umbral War-Adept"] = "暗影战争精锐"
 --[[Translation missing --]]
@@ -3166,6 +3299,8 @@ L["Uncategorized"] = "Uncategorized"
 L["Undead"] = "不死生物"
 L["Underrot Tick"] = "地渊孢林蜱虫"
 L["underrotMatronNote"] = "Matron 4+5 在左側或右側平台都有可能重生。"
+--[[Translation missing --]]
+L["underrotShortName"] = "UR"
 L["underrotSkipNote"] = "捷徑%s擊敗喚孢者贊查後開放"
 L["underrotVoidNote"] = "虛無特使 2 和 3 重生是隨機的。%s同時間只有其中一個會重生。"
 L["Understone Demolisher"] = "顶石粉碎者"
@@ -3245,6 +3380,8 @@ L["Vault of the Betrayer"] = "背叛者牢獄"
 L["Vault of the Wardens"] = "看守者鐵獄"
 L["Vault of the Wardens Sublevel"] = "看守者鐵獄"
 --[[Translation missing --]]
+L["vaultOfTheWardensShortName"] = "VOTW"
+--[[Translation missing --]]
 L["Venom Stalker"] = "Venom Stalker"
 L["Venomfang"] = "毒牙蛛"
 L["Venomous Ophidian"] = "喷毒盘蛇"
@@ -3319,6 +3456,8 @@ L["Volkhan"] = "Volkhan"
 L["Vol'zith the Whisperer"] = "低语者沃尔兹斯"
 L["VortexPinnacle"] = "漩渦尖塔"
 --[[Translation missing --]]
+L["vortexPinnacleShortName"] = "VP"
+--[[Translation missing --]]
 L["Vx"] = "Vx"
 L["Vy Relic"] = "维型圣物"
 --[[Translation missing --]]
@@ -3346,6 +3485,8 @@ L["Watchful Inquisitor"] = "警觉的审判者"
 L["Waterlogged Soul Guard"] = "浸水的灵魂卫士"
 L["Waycrest Manor"] = "威奎斯特莊園"
 L["Waycrest Reveler"] = "维克雷斯狂欢者"
+--[[Translation missing --]]
+L["waycrestManorShortName"] = "WCM"
 L["wcmWorldquestNote"] = "G52 備註:%s有要擊敗 Matron Christiane 的世界任務時，G52 不會出現。"
 L["Weald Shimmermoth"] = "仙野烁光蛾"
 L["Weaponized Crawler"] = "战争机械爬蛛"

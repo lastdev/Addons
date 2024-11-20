@@ -3,10 +3,11 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20240526084056")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetUsedIcons(7)
+mod:SetZone(1136)
 
 mod:RegisterCombat("combat")
 
@@ -248,7 +249,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 143840 then
 		warnMarked:Show(args.destName)
 		if args:IsPlayer() then
-			specWarnMarked:Show(args.destName)
+			specWarnMarked:Show()
 			specWarnMarked:Play("targetyou")
 			yellMarked:Yell()
 		end
@@ -320,6 +321,7 @@ end
 
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:143330") then--Emote giving ONLY to the person tanking boss. Better than scanning boss 1-5 for this one which fails from time to time
+		---@diagnostic disable-next-line: param-type-mismatch
 		specWarnGouge:Show(Softfoot)--So show tank warning
 		specWarnGouge:Play("turnaway")
 	end

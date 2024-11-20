@@ -13,6 +13,7 @@ local Theme = TSM.LibTSMService:Include("UI.Theme")
 local TempTable = TSM.LibTSMUtil:Include("BaseType.TempTable")
 local CustomString = TSM.LibTSMTypes:Include("CustomString")
 local private = {}
+local CONCENTRATION_ICON = "Interface\\ICONS\\UI_Concentration"
 
 
 
@@ -72,7 +73,7 @@ function private.PopulateDetailedMatsLines(tooltip, itemString)
 
 	local optionalMats = TempTable.Acquire()
 	local qualityMats = TempTable.Acquire()
-	local _, craftString = TSM.Crafting.Cost.GetLowestCostByItem(itemString, optionalMats, qualityMats)
+	local _, craftString, concentration = TSM.Crafting.Cost.GetLowestCostByItem(itemString, optionalMats, qualityMats)
 	for _, matItemString in ipairs(qualityMats) do
 		tinsert(optionalMats, matItemString)
 	end
@@ -103,6 +104,9 @@ function private.PopulateDetailedMatsLines(tooltip, itemString)
 			local matQuantity = TSM.Crafting.GetOptionalMatQuantity(craftString, ItemString.ToId(matItemString))
 			tooltip:AddSubItemValueLine(matItemString, CustomString.GetSourceValue("MatPrice", matItemString), matQuantity / numResult)
 		end
+	end
+	if (concentration or 0) > 0 then
+		tooltip:AddLine("|T"..CONCENTRATION_ICON..":0|t "..tooltip:ApplyValueColor(PROFESSIONS_CRAFTING_STAT_CONCENTRATION))
 	end
 	TempTable.Release(hasOptionalMat)
 	TempTable.Release(optionalMats)

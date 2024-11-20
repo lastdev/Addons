@@ -23,6 +23,7 @@ function HealBot_Lang_Options_enALL()
     local hbSpellsTips7="\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: Debuff types can also be set on the Debuffs General tab."
     local hbSpellsTips8="\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."NOTE: In case of a conflict between these settings, the following applies.\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."The settings used will be the first found in the following order:.\n".._G["ORANGE_FONT_COLOR_CODE"].."1. Target\n".._G["ORANGE_FONT_COLOR_CODE"].."2. Private List targets\n".._G["ORANGE_FONT_COLOR_CODE"].."3. Tank targets\n".._G["ORANGE_FONT_COLOR_CODE"].."4. Group targets\n".._G["ORANGE_FONT_COLOR_CODE"].."4. Raid targets.\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."An example of a conflict that may arise, is when a tank is part of\n".._G["ORANGE_FONT_COLOR_CODE"].."your group and both the Tank targets and Group targets are turned on.\n".._G["ORANGE_FONT_COLOR_CODE"].."In this case, Tank target settings will be used."
     local hbSpellsTips9="\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Using Players frame is Experimental, feedback welcome."
+    local hbSpellsTips10="\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: This option only works with spells."
     HEALBOT_OPTIONS_HELP_TITLES={
                         -- Reset Colours
                                  ["RESETCOLS"]="Reset Col"..HEALBOT_enWORD_COLOUR_SUFFIX,
@@ -111,6 +112,10 @@ function HealBot_Lang_Options_enALL()
                                  ["USEFOCUSGROUPS"]=HEALBOT_OPTION_USEFOCUSGROUPS,
                                  ["HOTBARSDEBUFFPRIO"]=HEALBOT_OPTION_HOTBARSDEBUFFPRIO,
                                  ["UNITINCOMBAT"]=HEALBOT_OPTIONS_UNITINCOMBAT,
+                                 ["GROUPHEALTHRANGE"]=HEALBOT_PLUGIN_ALERTRANGE,
+                                 ["GROUPHEALTHMINUNITS"]=HEALBOT_OPTIONS_MINUNITS,
+                                 ["GROUPHEALTHTHRES"]=HEALBOT_PLUGIN_AURAWATCHHEALTHBELOW,
+                                 ["GROUPHEALTHDIMMING"]=HEALBOT_OPTION_NONGHDIMMING,
                                  ["FOCUSGROUPDIMMING"]=HEALBOT_OPTION_FOCUSGROUPDIMMING,
                                  ["NONHOTBARSDIMMING"]=HEALBOT_OPTION_NONHOTBARSDIMMING,
                                  ["FLUIDBARSREFRESHSPEED"]=HEALBOT_OPTION_BARUPDFREQ,
@@ -146,7 +151,7 @@ function HealBot_Lang_Options_enALL()
                                  ["COLROLEDPS"]=HEALBOT_WORD_DAMAGER,
                                  ["COLPOWERASTRAL"]=HEALBOT_ASTRALPOWER,
                                  ["COLPOWERENERGY"]=HEALBOT_ENERGY,
-                                 ["COLPOWERFOCUS"]=HEALBOT_FOCUS,
+                                 ["COLPOWERFOCUS"]=HEALBOT_WORD_FOCUS,
                                  ["COLPOWERFURY"]=HEALBOT_FURY,
                                  ["COLPOWERMANA"]=HEALBOT_MANA,
                                  ["COLPOWERRAGE"]=HEALBOT_RAGE,
@@ -216,6 +221,8 @@ function HealBot_Lang_Options_enALL()
                                  ["SELECTFRAMEFORGROUPTARGET"]=HEALBOT_OPTIONS_FRAME,
                                  ["SELECTFRAMEFORGROUPFOCUS"]=HEALBOT_OPTIONS_FRAME,
                                  ["ENABLEHEALGROUP"]=HEALBOT_OPTIONS_FRAME,
+                                 ["ENABLEHEALGROUPVIS"]=HEALBOT_OPTIONS_FRAME,
+                                 ["ENABLEHEALGROUPENEMY"]=HEALBOT_OPTIONS_FRAME,
                                  ["HEALGROUPDOWN"]="Heal Group Down",
                                  ["HEALGROUPUP"]="Heal Group Up",
                                  ["HEALGROUPSALLOWDUPS"]=HEALBOT_ALLOW_DUPLICATES,
@@ -291,14 +298,15 @@ function HealBot_Lang_Options_enALL()
                                  ["BARSVISIBILITY"]="Bars Visibility",
                                  ["HEALBARSVISALERTIC"]=HEALBOT_OPTIONS_INCOMBATALERTLEVEL,
                                  ["HEALBARSVISALERTOC"]=HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL,
-                                 ["HEALBARSVISVEHICLEIC"]=HEALBOT_VEHICLE.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
+                                 ["HEALBARSVISVEHICLEIC"]=HEALBOT_WORD_VEHICLE.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
                                  ["HEALBARSVISPLISTPETSIC"]=HEALBOT_OPTIONS_MYTARGET.." "..HEALBOT_OPTIONS_PETHEALS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
                                  ["HEALBARSVISHIDE100"]=HEALBOT_HIDE_BARS,
                                  ["HEALBARSVISTARGETIC"]=HEALBOT_DISABLED_TARGET.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
-                                 ["HEALBARSVISFOCUSIC"]=HEALBOT_FOCUS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
-                                 ["HEALBARSVISTARGETFRIEND"]=HEALBOT_OPTIONS_SHOW_ONLY_FRIEND,
-                                 ["HEALBARSVISEXCLUDERAID"]=HEALBOT_OPTIONS_EXCLUDE_RAID,
-                                 ["HEALBARSVISFOCUSFRIEND"]=HEALBOT_OPTIONS_SHOW_ONLY_FRIEND,
+                                 ["HEALBARSVISPFTOTIC"]=HEALBOT_OPTIONS_TARGETOFPRIVFOCUSTAR.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
+                                 ["HEALBARSVISFOCUSIC"]=HEALBOT_WORD_FOCUS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
+                                 ["HEALBARSVISFOCUSTARIC"]=HEALBOT_OPTIONS_TARGETOFFOCUS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
+                                 ["HEALBARSVISPRIVFOCUSIC"]=HEALBOT_OPTIONS_PRIVFOCUS.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
+                                 ["HEALBARSVISTOTIC"]=HEALBOT_OPTIONS_TAB_TARGETOFTARGET.." "..HEALBOT_OPTIONS_ENTERINGCOMBAT,
                                  ["HEALBARSVISFILTER"]=HEALBOT_OPTIONS_EMERGFILTER,
                                  ["HEALBARSVISFILTERGROUPS"]=HEALBOT_OPTIONS_EMERGFILTERGROUPS,
                                  ["HEALBARSVISENEMYSHOWBUFFAURA"]=HEALBOT_OPTIONS_SHOWENEMYAURA,
@@ -640,6 +648,7 @@ function HealBot_Lang_Options_enALL()
                                  ["DEBUFFSCUSTOMFILTER"]=HEALBOT_PLUGIN_FILTER,
                         -- Debuffs Warning tab
                                  ["DEBUFFSWARNINGBAR"]=HEALBOT_OPTIONS_CDCSHOWHBARS,
+                                 ["DEBUFFSWARNINGBARDISPELONLY"]=HEALBOT_OPTIONS_WARNINGDISPELLONLY,
                                  ["DEBUFFSWARNINGENABLEBAR"]=HEALBOT_OPTIONS_ALWAYSENABLEBAR,
                                  ["DEBUFFSWARNINGBARRANGE"]="Range",
                                  ["DEBUFFSWARNINGSHOW"]=HEALBOT_OPTIONS_SHOWDEBUFFWARNING,
@@ -801,6 +810,12 @@ function HealBot_Lang_Options_enALL()
                                  ["INOUTIMPORTPRESETCOLS"]=HEALBOT_OPTIONS_BUTTONIMPORT,
                         -- Plugin Tab
                                  ["SELECTPLUGIN"]=HEALBOT_OPTIONS_PLUGINS,
+                        -- Buttons
+                                 ["GLOBALDEFAULT"]=HEALBOT_OPTIONS_DEFAULTS,
+                                 ["UNUSEDDEFAULT"]=HEALBOT_OPTIONS_UNUSEDDEFAULTS,
+                                 ["LOCALDEFAULT"]=HEALBOT_OPTIONS_LOCALDEFAULTS,
+                                 ["RESET"]=HEALBOT_OPTIONS_SOFTRESET,
+                                 ["RELOADUI"]=HEALBOT_OPTIONS_HARDRESET,
                               }
     HEALBOT_OPTIONS_HELP_TEXT={
                         -- Reset Colours
@@ -843,10 +858,10 @@ function HealBot_Lang_Options_enALL()
                                ["SPELLSUSEICONCMDS"]="Turn On/Off the use of Icon Commands set on this tab.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."On: Click on buff/debuff icons to run commands with icon tooltips.\n".._G["GREEN_FONT_COLOR_CODE"].."Off: Click through icons to cast spells on the health/emergancy bar with normal tooltips.",
                                ["SPELLSBUTTON"]="Modifier key held when casting.\n--\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination.",
                                ["SPELLSBUTTONCAST"]="Timing of the spell cast\n".._G["GREEN_FONT_COLOR_CODE"].."Cast when the button is Pressed or Released.",
-                               ["SPELLSAVOIDBLUE"]="Cast an invalid spell and ended up with\na blue cursor? this option is your friend.",
-                               ["SPELLSAUTOTARGET"]="Set the healers target to the character\nreceiving the current spell cast.",
+                               ["SPELLSAVOIDBLUE"]="Cast an invalid spell and ended up with\na blue cursor? this option is your friend."..hbSpellsTips10,
+                               ["SPELLSAUTOTARGET"]="Set the healers target to the character\nreceiving the current spell cast."..hbSpellsTips10,
                                ["SPELLSTARGETLASTTARGET"]="Target the last target after the cast has started.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Only applies to clicks using Auto Target.",
-                               ["SPELLSAUTOTRINKET"]="Attempt to use trinkets automatically when casting spells..\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Errors can be automatically suppressed when using Auto Trinkets.\n".._G["YELLOW_FONT_COLOR_CODE"].."Check the bottom of the HealBot tab for current settings.\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."Some trinkets break the cast using this method\n".._G["ORANGE_FONT_COLOR_CODE"].."ensure the trinket works with the spell selected.",
+                               ["SPELLSAUTOTRINKET"]="Attempt to use trinkets automatically when casting spells.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Errors can be automatically suppressed when using Auto Trinkets.\n".._G["YELLOW_FONT_COLOR_CODE"].."Check the bottom of the HealBot tab for current settings.\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING\n".._G["ORANGE_FONT_COLOR_CODE"].."-------------\n".._G["ORANGE_FONT_COLOR_CODE"].."Some trinkets break the cast using this method\n".._G["ORANGE_FONT_COLOR_CODE"].."ensure the trinket works with the spell selected."..hbSpellsTips10,
                                ["SPELLSBUTTONCLICK"]="Spell to cast on the Left Button."..hbSpellsTips1.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: For each modifier key combination, range checking is done on the Left click.\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: On the Left click, range checking is only done when a spell is set.\n".."|cff77c8ff".."TIP: Do not set a macro, item or command on the Left click.\n".."|cff77c8ff".."TIP: Set spells with the same range on the same modifier keys combination."..hbSpellsTips3,
                                ["SPELLSBUTTONSHIFTCLICK"]="Spell to cast on the Middle Button."..hbSpellsTips1..hbSpellsTips2..hbSpellsTips3,
                                ["SPELLSBUTTONCTRLCLICK"]="Spell to cast on the Right Button."..hbSpellsTips1..hbSpellsTips2..hbSpellsTips3,
@@ -890,8 +905,12 @@ function HealBot_Lang_Options_enALL()
                                ["HOTBARSDEBUFFPRIO"]="Mark the bar as hot when the debuff priority is at the level set or higher.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."Recommendation: Use priority 1 for debuff hot bars.",
                                ["UNITINCOMBAT"]="When a visible Group/Raid member enters combat and your out of combat, do the following:\n--\n* Do nothing - ".._G["GREEN_FONT_COLOR_CODE"].."Keep Healbot unlocked and do nothing.\n* Show enemy frame - ".._G["GREEN_FONT_COLOR_CODE"].."Show the enemy frame when used with HealBot out of combat mode.\n* Lockdown HealBot - ".._G["GREEN_FONT_COLOR_CODE"].."Lockdown HealBot in combat mode.",
                                ["FADEWHENNOMOUSE"]="Fades all frames when the mouse is not over any frame.",
-                               ["FOCUSGROUPDIMMING"]="Set the intensity of the opacity reduction on unfocused groups.",
-                               ["NONHOTBARSDIMMING"]="Set the intensity of the opacity reduction on non hot bars.",
+                               ["GROUPHEALTHRANGE"]="Include players that are within the range selected.",
+                               ["GROUPHEALTHMINUNITS"]="Minimum number of players required to activate Group Health.",
+                               ["GROUPHEALTHTHRES"]="The minimum number of players required must be\nbelow this health threshold to activate Group Health.",
+                               ["GROUPHEALTHDIMMING"]="Players on or above the threshold have their bar opacity reduced by this setting.",
+                               ["FOCUSGROUPDIMMING"]="Set the opacity reduction on unfocused groups.",
+                               ["NONHOTBARSDIMMING"]="Set the opacity reduction on non hot bars.",
                                ["HEALTHDROPTHRESHOLD"]="Show effect when health drop by at least the Alert Threshold.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: This setting applies to the Border hazard and Aux bars.",
                                ["HEALTHDROPSPEED"]="In seconds, how long the hazard is shown.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: This setting only applies to the Border hazard.",
                                ["HEALTHDROPCANCEL"]="Cancel the effect when health has regained pass the threshold.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: This setting only applies to the Border hazard.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."NOTE: Border hazard will end automatically if the player has over 80% health.",
@@ -925,7 +944,7 @@ function HealBot_Lang_Options_enALL()
                                ["COLROLEDPS"]="Set the role col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for damagers.",
                                ["COLPOWERASTRAL"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_ASTRALPOWER..".",
                                ["COLPOWERENERGY"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_ENERGY..".",
-                               ["COLPOWERFOCUS"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_FOCUS..".",
+                               ["COLPOWERFOCUS"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_WORD_FOCUS..".",
                                ["COLPOWERFURY"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_FURY..".",
                                ["COLPOWERMANA"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_MANA..".",
                                ["COLPOWERRAGE"]="Set the power col"..HEALBOT_enWORD_COLOUR_SUFFIX.." for "..HEALBOT_RAGE..".",
@@ -996,9 +1015,11 @@ function HealBot_Lang_Options_enALL()
                                ["SELECTFRAMEFORGROUPTARGET"]="Select a frame for the group.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Using the Target frame is more efficient.",
                                ["SELECTFRAMEFORGROUPFOCUS"]="Select a frame for the group.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Using the Focus frame is more efficient.",
                                ["ENABLEHEALGROUP"]="Include/Exclude the heal group.",
+                               ["ENABLEHEALGROUPVIS"]="Include/Exclude the heal group.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: With this Heal Group, go to the Bars>Visibility\n".._G["YELLOW_FONT_COLOR_CODE"].."tab, to set what happens when entering combat.",
+                               ["ENABLEHEALGROUPENEMY"]="Include/Exclude the heal group.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: With this Heal Group, go to the Enemy tabs,\n".._G["YELLOW_FONT_COLOR_CODE"].."to set what happens when entering combat.",
                                ["HEALGROUPDOWN"]="Move the heal group down.\nHeal Groups sharing frames are initially\nsorted by the order of this list.",
                                ["HEALGROUPUP"]="Move the heal group up.\nHeal Groups sharing frames are initially\nsorted by the order of this list.",
-                               ["HEALGROUPSALLOWDUPS"]="Allow a duplicate bar in the Raid/Group/Pets Heal Group\nwhen a bar exists in the Tank/Healers/Self/Private List Heal Group.",
+                               ["HEALGROUPSALLOWDUPS"]="Allow a duplicate bar in the Group or Raid Heal Group\nwhen a bar exists in any other Heal Group in this column.",
                                ["HEALGROUPCONFIGENEMY"]="Configure the units shown in the Enemy frame.",
                                ["ENEMYAURATAB"]="Show the Enemy Auras tab.",
                                ["ENEMYUNITTARGETTAB"]="Show the Unit Targets tab.\nThis is player targets.",
@@ -1076,9 +1097,10 @@ function HealBot_Lang_Options_enALL()
                                ["HEALBARSVISPLISTPETSIC"]="Always show the pets of players on your private list when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Ensure players have been added to your private lists.\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Ensure pets is selected on the Heals Group tab\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: The private list Heal Group is not required.",
                                ["HEALBARSVISTARGETIC"]="Always Show/No Change/Always Hide\nthe target frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure target is selected on the Heals Group tab.",
                                ["HEALBARSVISFOCUSIC"]="Always Show/No Change/Always Hide\nthe focus frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure focus is selected on the Heals Group tab.",
-                               ["HEALBARSVISTARGETFRIEND"]="Do not show hostile targets when out of combat.",
-                               ["HEALBARSVISEXCLUDERAID"]="Do not show yourself or members of your group/raid when out of combat.",
-                               ["HEALBARSVISFOCUSFRIEND"]="Do not show hostile focus when out of combat.",
+                               ["HEALBARSVISFOCUSTARIC"]="Always Show/No Change/Always Hide\nthe target of focus frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure target of focus is selected on the Heals Group tab.",
+                               ["HEALBARSVISPFTOTIC"]="Always Show/No Change/Always Hide\nthe private focus target of target frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure private focus tot is selected on the Heals Group tab.",
+                               ["HEALBARSVISPRIVFOCUSIC"]="Always Show/No Change/Always Hide\nthe private focus frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure private focus is selected on the Heals Group tab.",
+                               ["HEALBARSVISTOTIC"]="Always Show/No Change/Always Hide\nthe target of target frame when entering combat.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: ensure target of target is selected on the Heals Group tab.",
                                ["HEALBARSVISFILTER"]="Various classes and types can be filtered out using the dropdown.",
                                ["HEALBARSVISFILTERGROUPS"]="Select the groups to be focused.",
                                ["HEALBARSVISENEMYINCSELF"]="Include an enemy bar for your targets.",
@@ -1324,7 +1346,7 @@ function HealBot_Lang_Options_enALL()
                                ["ACTIONICONSONLYIG"]="Only highlight the icon when in a group or raid.",
                                ["ACTIONICONSONLYII"]="Only highlight the icon when in an instance.",
                                ["ACTIONICONSHIGHLIGHTFILTER"]="Only highlight when the following condition is met.",
-                               ["ACTIONICONSALERTFILTER"]="Only alert when the all the conditions are met.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Some condition types can only be set once.\n".._G["ORANGE_FONT_COLOR_CODE"].."For example: If condition 1 is set to Low Health\n".._G["ORANGE_FONT_COLOR_CODE"].."Then Low Health cannot be used on conditions 2 and 3.\n--\n".."|cff77c8ff".."The following can only be set once:\n|cff77c8ff - Health below.\n|cff77c8ff - Health above.\n|cff77c8ff - Mana below.\n|cff77c8ff - Mana above.\n|cff77c8ff - Aggro level.\n|cff77c8ff - Is Falling.\n|cff77c8ff - Is Swimming.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Buffs require monitoring on the Buffs tab.\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Debuffs require monitoring on the Debuffs tab.",
+                               ["ACTIONICONSALERTFILTER"]="Only alert when the all the conditions are met.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Some condition types can only be set once.\n".._G["ORANGE_FONT_COLOR_CODE"].."For example: If condition 1 is set to Low Health\n".._G["ORANGE_FONT_COLOR_CODE"].."Then Low Health cannot be used on conditions 2 and 3.\n--\n".."|cff77c8ff".."The following can only be set once:\n|cff77c8ff - Health below.\n|cff77c8ff - Health above.\n|cff77c8ff - Mana below.\n|cff77c8ff - Mana above.\n|cff77c8ff - Aggro level.\n|cff77c8ff - Is Falling.\n|cff77c8ff - Is Swimming.\n|cff77c8ff - "..HEALBOT_OPTION_GOURPHEALSEFFECT..".\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Buffs require monitoring on the Buffs tab.\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Debuffs require monitoring on the Debuffs tab.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: "..HEALBOT_OPTION_GOURPHEALSEFFECT.." may not include the Target set on this tab\n".._G["YELLOW_FONT_COLOR_CODE"].."although the spell will be cast on the Target, a Tank is recommended.",
                                ["ACTIONICONSBUFFNAME"]="Enter the buff name.",
                                ["ACTIONICONSBUFFTAG"]="Enter the buff tag.",
                                ["ACTIONICONSAURAMINSTACK"]="Minimum number of stacks.",
@@ -1583,7 +1605,13 @@ function HealBot_Lang_Options_enALL()
                                ["INOUTIMPORTPRESETCOLS"]="Import loads in the data from the large text box.",
                         -- Plugin Tab
                                ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 20\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Tweaks: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal settings.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Requests: ".._G["FONT_COLOR_CODE_CLOSE"].."Players can whisper you to request a buff or ability.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot AuraWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor your cooldowns and optionally other player conditions to run alerts.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot HealthWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor players and alert on low health.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ManaWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor players and alert on low mana.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Media: ".._G["FONT_COLOR_CODE_CLOSE"].."Exclude unwanted textures, fonts and sounds from HealBot options.",
-                              }
+                        -- Buttons
+                               ["GLOBALDEFAULT"]="Reset all settings for all characters to default values\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING: All existing settings for all characters on all realms will be lost.",
+                               ["UNUSEDDEFAULT"]="Reset all settings for unused frames in the current skin to default values\n--\n".._G["GREEN_FONT_COLOR_CODE"].."To save memory, this is highly recommended.",
+                               ["LOCALDEFAULT"]="Reset spells, general buffs and general debuffs on your current character to default values\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING: Your existing spells, buffs and debuffs on this character will be lost.",
+                               ["RESET"]="Reset HealBot frames.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."This does not affect your settings.",
+                               ["RELOADUI"]="Reload the entire UI.",
+                              }                               
 
 end
 

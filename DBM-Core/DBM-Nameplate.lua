@@ -8,9 +8,11 @@ local DBM = DBM
 local nameplateFrame = {}
 DBM.Nameplate = nameplateFrame
 -- locals
+local LCG = LibStub and LibStub:GetLibrary("LibCustomGlow-1.0")
 local units = {}
 local nameplateTimerBars = {}
 local num_units = 0
+local lastOptionsUpdateTime = GetTime()
 local playerName, playerGUID = UnitName("player"), UnitGUID("player")--Cache these, they never change
 local GetNamePlateForUnit, GetNamePlates = C_NamePlate.GetNamePlateForUnit, C_NamePlate.GetNamePlates
 ---@cast GetNamePlates fun(): table[] -- https://github.com/Ketho/vscode-wow-api/issues/122
@@ -19,7 +21,7 @@ local CooldownFrame_Set = CooldownFrame_Set
 --function locals
 local NameplateIcon_Hide, Nameplate_UnitAdded, CreateAuraFrame
 
----@class DBMNameplate: NameplateBase
+---@class DBMNameplate: Frame, NamePlateBaseMixin
 ---@field DBMAuraFrame DBMAuraFrame
 
 --Hard code STANDARD_TEXT_FONT since skinning mods like to taint it (or worse, set it to nil, wtf?)
@@ -74,18 +76,35 @@ end
 -- Aura frame functions --
 --------------------------
 do
+	local function AuraFrame_ApplyOptions(self, iconFrame)
+		if iconFrame.lastOptionsUpdateTime and (lastOptionsUpdateTime < iconFrame.lastOptionsUpdateTime) then return end
+
+		iconFrame:SetSize(DBM.Options.NPIconSize+2, DBM.Options.NPIconSize+2)
+
+		iconFrame.icon:SetSize(DBM.Options.NPIconSize, DBM.Options.NPIconSize)
+
+		local timerFont = DBM.Options.NPIconTimerFont == "standardFont" and standardFont or DBM.Options.NPIconTimerFont
+		local timerFontSize = DBM.Options.NPIconTimerFontSize
+		local timerStyle = DBM.Options.NPIconTimerFontStyle == "None" and nil or DBM.Options.NPIconTimerFontStyle
+		iconFrame.cooldown.timer:SetFont(timerFont, timerFontSize, timerStyle)
+
+		local textFont = DBM.Options.NPIconTextFont == "standardFont" and standardFont or DBM.Options.NPIconTextFont
+		local textFontSize = DBM.Options.NPIconTextFontSize
+		local textStyle = DBM.Options.NPIconTextFontStyle == "None" and nil or DBM.Options.NPIconTextFontStyle
+		iconFrame.text:SetFont(textFont, textFontSize, textStyle)
+
+		iconFrame.lastOptionsUpdateTime = GetTime()
+	end
 	local function AuraFrame_CreateIcon(frame)
 		-- base frame
 		---@class DBMNamePlateIconFrame: Button, BackdropTemplate
 		local iconFrame = CreateFrame("Button", "DBMNameplateAI" .. #frame.icons, DBMNameplateFrame, "BackdropTemplate")
 		iconFrame:EnableMouse(false)
 		iconFrame:SetBackdrop({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1})
-		iconFrame:SetSize(DBM.Options.NPIconSize+2, DBM.Options.NPIconSize+2)
 		iconFrame:Hide()
 
 		-- texture icon
 		iconFrame.icon = iconFrame:CreateTexture(nil, 'BORDER')
-		iconFrame.icon:SetSize(DBM.Options.NPIconSize, DBM.Options.NPIconSize)
 		iconFrame.icon:SetPoint("CENTER")
 
 		-- CD swipe
@@ -103,25 +122,20 @@ do
 		-- CD text
 		iconFrame.cooldown.timer = iconFrame.cooldown:CreateFontString (nil, "OVERLAY", "NumberFontNormal")
 		iconFrame.cooldown.timer:SetPoint ("CENTER")
-		local timerFont = DBM.Options.NPIconTimerFont == "standardFont" and standardFont or DBM.Options.NPIconTimerFont
-		local timerFontSize = DBM.Options.NPIconTimerFontSize
-		local timerStyle = DBM.Options.NPIconTimerFontStyle == "None" and nil or DBM.Options.NPIconTimerFontStyle
-		iconFrame.cooldown.timer:SetFont(timerFont, timerFontSize, timerStyle)
 		iconFrame.cooldown.timer:Show()
 		iconFrame.timerText = iconFrame.cooldown.timer
 
 		iconFrame.text = iconFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 		iconFrame.text:SetPoint("BOTTOM", iconFrame, "TOP", 0, 2)
-		local textFont = DBM.Options.NPIconTextFont == "standardFont" and standardFont or DBM.Options.NPIconTextFont
-		local textFontSize = DBM.Options.NPIconTextFontSize
-		local textStyle = DBM.Options.NPIconTextFontStyle == "None" and nil or DBM.Options.NPIconTextFontStyle
-		iconFrame.text:SetFont(textFont, textFontSize, textStyle)
 		iconFrame.text:Hide()
 
 		iconFrame:SetScript ("OnUpdate", frame.UpdateTimerText)
 
 		tinsert(frame.icons,iconFrame)
 		iconFrame.parent = frame
+
+
+		frame:ApplyOptions(iconFrame)
 
 		return iconFrame
 	end
@@ -255,7 +269,7 @@ do
 				if not prev then
 					total_width = 0
 					first_icon = iconFrame
-					iconFrame:SetPoint(mainAnchor,frame.parent,mainAnchorRel, DBM.Options.NPIconXOffset, DBM.Options.NPIconYOffset)
+					iconFrame:SetPoint(mainAnchor,frame.parent,mainAnchorRel, DBM.Options.NPIconOffsetX, DBM.Options.NPIconOffsetY)
 				else
 					local spacing = (prev.aura_tbl.auraType ~= iconFrame.aura_tbl.auraType) and typeOffset or 0 + iconSpacing
 					total_width = total_width + iconFrame:GetWidth() + spacing --width equals height, so we're fine
@@ -269,8 +283,8 @@ do
 		if first_icon and total_width and total_width > 0 then
 			-- shift first icon to match anchor point
 			first_icon:SetPoint(mainAnchor,frame.parent,mainAnchorRel,
-				-floor((centered and not vertical and total_width or 0)/2) + DBM.Options.NPIconXOffset,
-				-floor((centered and vertical and total_width or 0)/2) + DBM.Options.NPIconYOffset) -- icons are squares. tracking one total size is ok.
+				-floor((centered and not vertical and total_width or 0)/2) + DBM.Options.NPIconOffsetX,
+				-floor((centered and vertical and total_width or 0)/2) + DBM.Options.NPIconOffsetY) -- icons are squares. tracking one total size is ok.
 		end
 	end
 	local function AuraFrame_AddAura(frame,aura_tbl,batch)
@@ -282,6 +296,7 @@ do
 		end
 
 		local iconFrame = frame:GetIcon(aura_tbl.index)
+		frame:ApplyOptions(iconFrame)
 		iconFrame.aura_tbl = aura_tbl
 		iconFrame.icon:SetTexture(aura_tbl.texture)
 		iconFrame.icon:SetDesaturated(aura_tbl.desaturate)
@@ -332,6 +347,91 @@ do
 		frame:ArrangeIcons()
 		twipe(frame.texture_index)
 	end
+	local function AuraFrame_StartGlow(self, iconFrame, glowType)
+		local aura_tbl = iconFrame.aura_tbl
+		if glowType == 1 then--Pixel
+			local options = {
+				glowType = "pixel",
+				color = aura_tbl.color, -- all plater color types accepted, from lib: {r,g,b,a}, color of lines and opacity, from 0 to 1. Defaul value is {0.95, 0.95, 0.32, 1}
+				N = 8, -- number of lines. Defaul value is 8;
+				frequency = 0.25, -- frequency, set to negative to inverse direction of rotation. Default value is 0.25;
+				length = 3, -- length of lines. Default value depends on region size and number of lines;
+				th = 3, -- thickness of lines. Default value is 2;
+				xOffset = 0,
+				yOffset = 0, -- offset of glow relative to region border;
+				border = false, -- set to true to create border under lines;
+				key = "DBM_ImportantMinDurationGlow", -- key of glow, allows for multiple glows on one frame;
+			}
+
+			if (not iconFrame.__DBM_NPIconGlowFrame) then
+				iconFrame.__DBM_NPIconGlowFrame = CreateFrame("Frame", nil, iconFrame, BackdropTemplateMixin and "BackdropTemplate");
+				iconFrame.__DBM_NPIconGlowFrame:SetAllPoints(iconFrame);
+				iconFrame.__DBM_NPIconGlowFrame:SetSize(iconFrame:GetSize());
+			end
+			LCG.PixelGlow_Start(iconFrame.__DBM_NPIconGlowFrame, options.color, options.N, options.frequency, options.length, options.th, options.xOffset, options.yOffset, options.border, options.key or "")
+		elseif glowType == 2 then--Proc
+			local options = {
+				color = aura_tbl.color,
+				--frameLevel = 8,
+				startAnim = true,
+				xOffset = 0,
+				yOffset = 0,
+				duration = 1,
+				key = "DBM_ImportantMinDurationGlow",
+			}
+			if (not iconFrame.__DBM_NPIconGlowFrame) then
+				iconFrame.__DBM_NPIconGlowFrame = CreateFrame("Frame", nil, iconFrame, BackdropTemplateMixin and "BackdropTemplate");
+				iconFrame.__DBM_NPIconGlowFrame:SetAllPoints(iconFrame);
+				iconFrame.__DBM_NPIconGlowFrame:SetSize(iconFrame:GetSize());
+			end
+			LCG.ProcGlow_Start(iconFrame.__DBM_NPIconGlowFrame, options)
+		elseif glowType == 3 then--Auto Cast Glow
+			local options = {
+				color = aura_tbl.color,
+				N = 4, -- number of particle groups. Default value is 4
+				frequency = 0.125, -- frequency, set to negative to inverse direction of rotation. Default value is 0.125
+				scale = 1,-- scale of particles.
+				xOffset = 0,
+				yOffset = 0,
+				duration = 1,
+				key = "DBM_ImportantMinDurationGlow",
+			}
+			if (not iconFrame.__DBM_NPIconGlowFrame) then
+				iconFrame.__DBM_NPIconGlowFrame = CreateFrame("Frame", nil, iconFrame, BackdropTemplateMixin and "BackdropTemplate");
+				iconFrame.__DBM_NPIconGlowFrame:SetAllPoints(iconFrame);
+				iconFrame.__DBM_NPIconGlowFrame:SetSize(iconFrame:GetSize());
+			end
+			LCG.AutoCastGlow_Start(iconFrame.__DBM_NPIconGlowFrame, options.color, options.N, options.frequency, options.scale, options.xOffset, options.yOffset, "DBM_ImportantMinDurationGlow")
+		elseif glowType == 4 then--Button Glow (similar to proc but different enough to give users the option) Proc is basically successor with more options and this is the OG
+			local options = {
+				color = {aura_tbl.color[1], aura_tbl.color[2], aura_tbl.color[3], 1},--This one also expects alpha
+				frequency = 0.125,--Default value is 0.125
+			}
+			if (not iconFrame.__DBM_NPIconGlowFrame) then
+				iconFrame.__DBM_NPIconGlowFrame = CreateFrame("Frame", nil, iconFrame, BackdropTemplateMixin and "BackdropTemplate");
+				iconFrame.__DBM_NPIconGlowFrame:SetAllPoints(iconFrame);
+				iconFrame.__DBM_NPIconGlowFrame:SetSize(iconFrame:GetSize());
+			end
+			LCG.ButtonGlow_Start(iconFrame.__DBM_NPIconGlowFrame, options.color, options.frequency)--This one doesn't use a key
+		end
+	end
+	local function AuraFrame_StopGlow(self, iconFrame, glowType)
+		if not iconFrame.__DBM_NPIconGlowFrame then return end
+		if glowType == 1 then
+			LCG.PixelGlow_Stop(iconFrame.__DBM_NPIconGlowFrame, "DBM_ImportantMinDurationGlow")
+		elseif glowType == 2 then
+			LCG.ProcGlow_Stop(iconFrame.__DBM_NPIconGlowFrame, "DBM_ImportantMinDurationGlow")
+		elseif glowType == 3 then
+			LCG.AutoCastGlow_Stop(iconFrame.__DBM_NPIconGlowFrame, "DBM_ImportantMinDurationGlow")
+		elseif glowType == 4 then
+			LCG.ButtonGlow_Stop(iconFrame.__DBM_NPIconGlowFrame)
+		else--In event of failure of glowtype, cleanup all
+			LCG.PixelGlow_Stop(iconFrame.__DBM_NPIconGlowFrame, "DBM_ImportantMinDurationGlow")
+			LCG.ProcGlow_Stop(iconFrame.__DBM_NPIconGlowFrame, "DBM_ImportantMinDurationGlow")
+			LCG.AutoCastGlow_Stop(iconFrame.__DBM_NPIconGlowFrame, "DBM_ImportantMinDurationGlow")
+			LCG.ButtonGlow_Stop(iconFrame.__DBM_NPIconGlowFrame)
+		end
+	end
 	local function AuraFrame_UpdateTimerText (self) --has deltaTime as second parameter, not needed here.
 		local now = GetTime()
 		local aura_tbl = self.aura_tbl
@@ -346,9 +446,31 @@ do
 			else
 				self.cooldown.timer:SetText ("")
 			end
+
+			local canGlow = false
+			--cooldown nameplate icon. 1 = priority only, 2 = always
+			if aura_tbl.barType ~= "castnp" and ((DBM.Options.NPIconGlowBehavior == 1 and aura_tbl.isPriority) or DBM.Options.NPIconGlowBehavior == 2) and aura_tbl.remaining < 4 then
+				canGlow = true
+			--cast nameplate icon. 1 = priority only. There is no "always" for cast timers at this time
+			elseif aura_tbl.barType == "castnp" and DBM.Options.CastNPIconGlowBehavior == 1 and aura_tbl.isPriority and aura_tbl.remaining < 4 then
+				canGlow = true
+			end
+			local glowType = aura_tbl.barType == "castnp" and DBM.Options.CastNPIconGlowType or DBM.Options.CDNPIconGlowType
+			if canGlow and not self.isGlowing then -- glow below 4sec if important
+				self.parent:StartGlow(self, glowType)
+				self.isGlowing = true
+			elseif not canGlow and self.isGlowing then
+				self.parent:StopGlow(self, glowType)
+				self.isGlowing = false
+			end
+
 			self.lastUpdateCooldown = now
 
 			if (aura_tbl.duration or 0) > 0 and aura_tbl.remaining < 0 and not aura_tbl.keep then
+				if self.isGlowing then
+					self.isGlowing = false
+					self.parent:StopGlow(self, 0)
+				end
 				self.parent:RemoveAura(aura_tbl.index)
 				if aura_tbl.id then
 					nameplateTimerBars[aura_tbl.id] = nil --ensure CDs cleanup
@@ -361,11 +483,14 @@ do
 	local auraframe_proto = {
 		CreateIcon = AuraFrame_CreateIcon,
 		GetIcon = AuraFrame_GetIcon,
+		ApplyOptions = AuraFrame_ApplyOptions,
 		ArrangeIcons = AuraFrame_ArrangeIcons,
 		AddAura = AuraFrame_AddAura,
 		RemoveAura = AuraFrame_RemoveAura,
 		RemoveAll = AuraFrame_RemoveAll,
 		UpdateTimerText = AuraFrame_UpdateTimerText,
+		StartGlow = AuraFrame_StartGlow,
+		StopGlow = AuraFrame_StopGlow,
 	}
 	auraframe_proto.__index = auraframe_proto
 
@@ -391,15 +516,14 @@ local function SupportedNPModIcons()
 end
 local function SupportedNPModBars()
 	if not DBM.Options.UseNameplateHandoff then return false end
-	if _G["Plater"] then return true end
+	if _G["Plater"] then return true end--Plater support disabled for time being due to bugs in plater that prevent using glow types correctly
 	return false
 end
 
 local function NameplateIcon_UpdateUnitAuras(isGUID,unit)
 	-- find frame for this unit;
 	if not isGUID then
-		local frame = GetNamePlateForUnit(unit)
-		---@cast frame DBMNameplate?
+		local frame = GetNamePlateForUnit(unit) --[[@as DBMNameplate?]]
 		if frame and frame.DBMAuraFrame then
 			frame.DBMAuraFrame:ArrangeIcons()
 		end
@@ -482,8 +606,7 @@ function NameplateIcon_Hide(isGUID, unit, index, force)
 	-- find frame for this unit
 	-- (or hide all visible textures if force ~= nil)
 	if not isGUID and not force then --Only need to find one unit
-		local frame = GetNamePlateForUnit(unit)
-		---@cast frame DBMNameplate?
+		local frame = GetNamePlateForUnit(unit) --[[@as DBMNameplate?]]
 		if frame and frame.DBMAuraFrame then
 			if not index then
 				frame.DBMAuraFrame:RemoveAll()
@@ -587,60 +710,21 @@ end
 --register callbacks for aura icon CDs
 local barsTestMode = false --this is to handle the "non-guid" test bars. just turn on for testing.
 do
-	--test mode start
-	local testModeStartCallback = function(event, timer)
-		if event ~= "DBM_TestModStarted" then return end
-		-- Supported by nameplate mod, passing to their handler
-		if SupportedNPModBars() then return end
-		if DBM.Options.DontShowNameplateIconsCD then return end--Globally disabled
-
-		barsTestMode = true
-		C_Timer.After (tonumber(timer) or 10, function() barsTestMode = false end)
-	end
-	DBM:RegisterCallback("DBM_TestModStarted", testModeStartCallback)
-
-	--timer start
-	local timerStartCallback = function(event, id, msg, timer, icon, barType, spellId, colorType, modId, keep, fade, name, guid)
+	--test start
+	local testStartCallback = function(event, id, msg, timer, icon, barType, spellId, colorType, modId, keep, fade, name, guid, timerCount, isPriority)
 		if event ~= "DBM_TimerStart" then return end
 		-- Supported by nameplate mod, passing to their handler
 		if SupportedNPModBars() then return end
-		if DBM.Options.DontShowNameplateIconsCD then return end--Globally disabled
+		--Disable cooldown icons for any timer designated as a nameplate only cooldown timer
+		--NOTE, bosses that send GUID send "cd" and not "cdnp" so if DontSendBossGUIDs isn't enabled, they will still be passed even if DontShowNameplateIconsCD is
+		--This is intended behavior as I want the option to toggle separately.
+		if DBM.Options.DontShowNameplateIconsCD and barType == "cdnp" then return end
+		--Disable cast icons for any timer designated as a nameplate only cast timer
+		if DBM.Options.DontShowNameplateIconsCast and barType == "castnp" then return end--Globally disabled
+		--Disables cooldown icons for hybrid timers (ie timers that are both regular timer and nameplate timer)
+		if DBM.Options.DontSendBossGUIDs and barType ~= "cdnp" and barType ~= "castnp" then return end--Basically all other bar types
 
-		if (id and guid) then
-			local color = {DBT:GetColorForType(colorType)}
-			local display = CleanSubString(string.match(name or msg or "", "^%s*(.-)%s*$" ), 1, DBM.Options.NPIconTextMaxLen)
-			--local display = string.match(name or msg or "", "^%s*(.-)%s*$" )
-			local curTime =  GetTime()
-
-			if not units[guid] then
-				units[guid] = {}
-				num_units = num_units + 1
-			end
-
-			local aura_tbl = {
-				msg = msg or "",
-				display = display or name or msg or "",
-				id = id,
-				texture = icon or DBM:GetSpellTexture(spellId),
-				spellId = spellId,
-				duration = timer or 0,
-				desaturate = fade or false,
-				startTime = curTime,
-				barType = barType,
-				color = color,
-				colorType = colorType,
-				modId = modId,
-				keep = keep,
-				name = name,
-				guid = guid,
-				paused = false,
-				auraType = 2, -- 1 = nameplate aura; 2 = nameplate CD timers
-				index = id,
-			}
-			nameplateTimerBars[id] = aura_tbl
-			NameplateIcon_Show(true, guid, aura_tbl)
-
-		elseif id and not guid and barsTestMode then
+		if id and not guid and barsTestMode then
 			for _, curGuid in pairs(getAllShownGUIDs()) do
 				local tmpId = id .. curGuid
 				local color = {DBT:GetColorForType(colorType)}
@@ -669,6 +753,8 @@ do
 					keep = keep,
 					name = name,
 					guid = curGuid,
+					timerCount = timerCount,
+					isPriority = isPriority,
 					paused = false,
 					auraType = 2, -- 1 = nameplate aura; 2 = nameplate CD timers
 					index = tmpId,
@@ -678,10 +764,103 @@ do
 			end
 		end
 	end
-	DBM:RegisterCallback("DBM_TimerStart", timerStartCallback)
+
+	--test stop
+	local testEndCallback = function (event, id)
+		if event ~= "DBM_TimerStop" then return end
+
+		-- Supported by nameplate mod, passing to their handler
+		if SupportedNPModBars() then return end
+		if DBM.Options.DontShowNameplateIconsCD then return end--Globally disabled
+
+		if not id then return end
+		local guid = nameplateTimerBars[id] and nameplateTimerBars[id].guid
+		if not guid and barsTestMode then
+			for _, curGuid in pairs(getAllShownGUIDs()) do
+				for _,aura_tbl in ipairs(units[curGuid] or {}) do
+					if aura_tbl.id == id then
+						NameplateIcon_Hide(true, curGuid, aura_tbl.index, false)
+						break
+					end
+				end
+			end
+		end
+		nameplateTimerBars[id] = nil
+	end
+
+	--test mode start
+	local testModeStartCallback = function(event, timer)
+		if event ~= "DBM_TestModStarted" then return end
+		-- Supported by nameplate mod, passing to their handler
+		if SupportedNPModBars() then return end
+		if DBM.Options.DontShowNameplateIconsCD then return end--Globally disabled
+
+		barsTestMode = true
+		C_Timer.After (tonumber(timer) or 10, function()
+			barsTestMode = false
+			DBM:UnregisterCallback("DBM_TimerStart", testStartCallback)
+			DBM:UnregisterCallback("DBM_TimerStop", testEndCallback)
+		end)
+		DBM:RegisterCallback("DBM_TimerStart", testStartCallback)
+		DBM:RegisterCallback("DBM_TimerStop", testEndCallback)
+	end
+	DBM:RegisterCallback("DBM_TestModStarted", testModeStartCallback)
+
+	--timer start
+	local timerStartCallback = function(event, id, msg, timer, icon, barType, spellId, colorType, modId, keep, fade, name, guid, timerCount, isPriority)
+		if event ~= "DBM_NameplateStart" then return end
+		-- Supported by nameplate mod, passing to their handler
+		if SupportedNPModBars() then return end
+		--Disable cooldown icons for any timer designated as a nameplate only cooldown timer
+		--NOTE, bosses that send GUID send "cd" and not "cdnp" so if DontSendBossGUIDs isn't enabled, they will still be passed even if DontShowNameplateIconsCD is
+		--This is intended behavior as I want the option to toggle separately.
+		if DBM.Options.DontShowNameplateIconsCD and barType == "cdnp" then return end
+		--Disable cast icons for any timer designated as a nameplate only cast timer
+		if DBM.Options.DontShowNameplateIconsCast and barType == "castnp" then return end--Globally disabled
+		--Disables cooldown icons for hybrid timers (ie timers that are both regular timer and nameplate timer)
+		if DBM.Options.DontSendBossGUIDs and barType ~= "cdnp" and barType ~= "castnp" then return end--Basically all other bar types
+
+		if (id and guid) then
+			local color = {DBT:GetColorForType(colorType)}
+			local display = CleanSubString(string.match(name or msg or "", "^%s*(.-)%s*$" ), 1, DBM.Options.NPIconTextMaxLen)
+			--local display = string.match(name or msg or "", "^%s*(.-)%s*$" )
+			local curTime =  GetTime()
+
+			if not units[guid] then
+				units[guid] = {}
+				num_units = num_units + 1
+			end
+
+			local aura_tbl = {
+				msg = msg or "",
+				display = display or name or msg or "",
+				id = id,
+				texture = icon or DBM:GetSpellTexture(spellId),
+				spellId = spellId,
+				duration = timer or 0,
+				desaturate = fade or false,
+				startTime = curTime,
+				barType = barType,
+				color = color,
+				colorType = colorType,
+				modId = modId,
+				keep = keep,
+				name = name,
+				guid = guid,
+				timerCount = timerCount,
+				isPriority = isPriority,
+				paused = false,
+				auraType = 2, -- 1 = nameplate aura; 2 = nameplate CD timers
+				index = id,
+			}
+			nameplateTimerBars[id] = aura_tbl
+			NameplateIcon_Show(true, guid, aura_tbl)
+		end
+	end
+	DBM:RegisterCallback("DBM_NameplateStart", timerStartCallback)
 
 	local timerUpdateCallback = function(event, id, elapsed, totalTime)
-		if event ~= "DBM_TimerUpdate" then return end
+		if event ~= "DBM_NameplateUpdate" then return end
 
 		-- Supported by nameplate mod, passing to their handler
 		if SupportedNPModBars() then return end
@@ -701,10 +880,10 @@ do
 			NameplateIcon_UpdateUnitAuras(true,guid)
 		end
 	end
-	DBM:RegisterCallback("DBM_TimerUpdate", timerUpdateCallback)
+	DBM:RegisterCallback("DBM_NameplateUpdate", timerUpdateCallback)
 
 	local timerPauseCallback = function(event, id)
-		if event ~= "DBM_TimerPause" then return end
+		if event ~= "DBM_NameplatePause" then return end
 
 		-- Supported by nameplate mod, passing to their handler
 		if SupportedNPModBars() then return end
@@ -721,10 +900,10 @@ do
 			NameplateIcon_UpdateUnitAuras(true,guid)
 		end
 	end
-	DBM:RegisterCallback("DBM_TimerPause", timerPauseCallback)
+	DBM:RegisterCallback("DBM_NameplatePause", timerPauseCallback)
 
 	local timerResumeCallback = function(event, id)
-		if event ~= "DBM_TimerResume" then return end
+		if event ~= "DBM_NameplateResume" then return end
 
 		-- Supported by nameplate mod, passing to their handler
 		if SupportedNPModBars() then return end
@@ -741,11 +920,11 @@ do
 			NameplateIcon_UpdateUnitAuras(true,guid)
 		end
 	end
-	DBM:RegisterCallback("DBM_TimerResume", timerResumeCallback)
+	DBM:RegisterCallback("DBM_NameplateResume", timerResumeCallback)
 
 	--timer stop
 	local timerEndCallback = function (event, id)
-		if event ~= "DBM_TimerStop" then return end
+		if event ~= "DBM_NameplateStop" then return end
 
 		-- Supported by nameplate mod, passing to their handler
 		if SupportedNPModBars() then return end
@@ -760,20 +939,10 @@ do
 					break
 				end
 			end
-
-		elseif not guid and barsTestMode then
-			for _, curGuid in pairs(getAllShownGUIDs()) do
-				for _,aura_tbl in ipairs(units[curGuid] or {}) do
-					if aura_tbl.id == id then
-						NameplateIcon_Hide(true, curGuid, aura_tbl.index, false)
-						break
-					end
-				end
-			end
 		end
 		nameplateTimerBars[id] = nil
 	end
-	DBM:RegisterCallback("DBM_TimerStop", timerEndCallback)
+	DBM:RegisterCallback("DBM_NameplateStop", timerEndCallback)
 end
 
 function DBM.PauseTestTimer(text)
@@ -815,8 +984,9 @@ end
 ---@param texture number|string? accepts texture ID or spell ID
 ---@param duration number? adds countdown duration to icon
 ---@param desaturate boolean?
+---@param isPriority boolean? true for high priority/important cooldowns or casts. false or nil otherwise
 ---@param forceDBM boolean? makes it use internal handler even when 3rd party nameplate mod exists
-function nameplateFrame:Show(isGUID, unit, spellId, texture, duration, desaturate, forceDBM)
+function nameplateFrame:Show(isGUID, unit, spellId, texture, duration, desaturate, isPriority, forceDBM)
 
 	-- nameplate icons are disabled;
 	if DBM.Options.DontShowNameplateIcons then return end
@@ -834,15 +1004,16 @@ function nameplateFrame:Show(isGUID, unit, spellId, texture, duration, desaturat
 		spellId = spellId,
 		duration = duration or 0,
 		desaturate = desaturate or false,
+		isPriority = isPriority or false,
 		startTime = curTime,
-		auraType = 1, -- 1 = nameplate aura; 2 = nameplate CD timers
+		auraType = 1, -- 1 = nameplate aura; 2 = nameplate CD/Cast timers
 		index = currentTexture,
 	}
 
 	-- Supported by nameplate mod, passing to their handler
 	if SupportedNPModIcons() and not forceDBM then
 		DBM:FireEvent("BossMod_EnableHostileNameplates") --TODO: is this needed?
-		DBM:FireEvent("BossMod_ShowNameplateAura", isGUID, unit, aura_tbl.texture, aura_tbl.duration, aura_tbl.desaturate)
+		DBM:FireEvent("BossMod_ShowNameplateAura", isGUID, unit, aura_tbl.texture, aura_tbl.duration, aura_tbl.desaturate, aura_tbl.isPriority)
 		DBM:Debug("DBM.Nameplate Found supported NP mod, only sending Show callbacks", 3)
 		return
 	end
@@ -887,4 +1058,16 @@ end
 
 function nameplateFrame:IsShown()
 	return DBMNameplateFrame and DBMNameplateFrame:IsShown()
+end
+
+function nameplateFrame:UpdateIconOptions()
+	lastOptionsUpdateTime = GetTime()
+	for _, frame in pairs(GetNamePlates()) do
+		local dbmAuraFrame = frame.DBMAuraFrame
+		if dbmAuraFrame then
+			for _, iconFrame in pairs(dbmAuraFrame.icons or {}) do
+				dbmAuraFrame:ApplyOptions(iconFrame)
+			end
+		end
+	end
 end

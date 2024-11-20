@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod(729, "DBM-Raids-MoP", 3, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240601045013")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
+mod:SetZone(996)
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.Victory)--Kill detection is aweful. No death, no special cast. yell is like 40 seconds AFTER victory. terrible.

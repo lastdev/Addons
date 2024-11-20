@@ -47,6 +47,11 @@ function AuctionUI.OnInitialize(settingsDB)
 		:AddKey("global", "internalData", "warbankMoney")
 		:AddKey("sync", "internalData", "money")
 	UIParent:UnregisterEvent("AUCTION_HOUSE_SHOW")
+	if ClientInfo.IsRetail() then
+		UIParent:UnregisterEvent("AUCTION_HOUSE_SHOW_NOTIFICATION")
+		UIParent:UnregisterEvent("AUCTION_HOUSE_SHOW_FORMATTED_NOTIFICATION")
+		UIParent:UnregisterEvent("AUCTION_HOUSE_SHOW_COMMODITY_WON_NOTIFICATION")
+	end
 	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionFrameInit, true)
 	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionFrameHidden, false)
 	AuctionScan.ConfigureLock(L["A scan is already in progress. Please stop that scan before starting another one."], private.ScanLockCallback)

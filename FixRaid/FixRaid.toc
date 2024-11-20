@@ -1,7 +1,8 @@
-## Interface: 100002
+## Interface: 110005
 ## Title: FixRaid
 ## Author: denalb
-## Version: 1.0.8
+## Version: 1.0.17
+## IconTexture: Interface/AddOns/FixRaid/media/cubeIcon0_64.tga
 ## Notes: Automatically set up groups in raids.
 ## DefaultState: Enabled
 ## SavedVariables: FixRaidDB

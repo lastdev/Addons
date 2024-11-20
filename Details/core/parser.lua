@@ -8,6 +8,8 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --local pointers
 
+	Details.challengeModeMapId = nil
+
 	local UnitAffectingCombat = UnitAffectingCombat
 	local UnitHealth = UnitHealth
 	local UnitHealthMax = UnitHealthMax
@@ -86,7 +88,6 @@
 	--heaing
 		local healing_cache = setmetatable({}, Details.weaktable)
 		local banned_healing_spells = {
-			[326514] = true, --remove on 10.0 - Forgeborne Reveries - necrolords ability
 		}
 	--energy
 		local energy_cache = setmetatable({}, Details.weaktable)
@@ -114,10 +115,6 @@
 		local shield_spellid_cache = {}
 	--pets
 		local petCache = petContainer.Pets
-
-	--store the unit names from all group members
-		---@type table<guid, unitname>
-		local group_roster_name_cache = {}
 
 	--ignore deaths
 		local ignore_death_cache = {}
@@ -218,11 +215,10 @@
 			[194384] = true, --atonement uptime
 			[378134] = true, --rallied to victory
 		}
+		Details.CreditBuffToTarget = buffs_on_target
 
 		---@type table<spellid, boolean>
 		local ignoredWorldAuras = Details222.IgnoredWorldAuras
-
-		Details.CreditBuffToTarget = buffs_on_target
 
 		--store all information about augmentation evokers ~roskash
 		local augmentation_cache = {
@@ -236,6 +232,20 @@
 			shield = {},
 			ss = {},
 			infernobless = {},
+		}
+
+		---@class bombardmentinfo : table
+		---@field only_one_scalecomander boolean
+		---@field spellId number
+		---@field evoker_name string
+		---@field serial string
+		
+		---@type bombardmentinfo
+		local bombardment_stuff = {
+			only_one_scalecomander = true,
+			spellId = 434481,
+			evoker_name = "",
+			serial = "",
 		}
 
 		Details.augmentation_cache = augmentation_cache
@@ -431,6 +441,13 @@
 			[424094] = 414532,
 
 			[228649] = 100784, --monk blackout kick
+
+			[436304] = 439843, --frost dk reaper's mark
+			[439594] = 439843, --frost dk reaper's mark
+			[66198] = 222024, --frost dk obliterate offhand
+			[66196] = 222026, --frost dk frost strike offhand
+			[383312] = 383313, --frost dk abom limb
+			[441424] = 441426, --frost dk exterminate
 		}
 
 		--all totem
@@ -553,6 +570,8 @@
 		--the damage that the warlock apply to its pet through soullink is ignored
 		--it is not useful for damage done or friendly fire
 		[SPELLID_WARLOCK_SOULLINK] = true,
+		[74040] = true, --grim batol drake
+		[457658] = true, --grim batol drake
 	}
 
 	--expose the ignore spells table to external scripts
@@ -839,6 +858,12 @@
 		--> if the parser are allowed to replace spellIDs
 			if (is_using_spellId_override) then
 				spellId = override_spellId[spellId] or spellId
+			end
+
+			if (spellId == bombardment_stuff.spellId) then
+				if (bombardment_stuff.only_one_scalecomander) then
+					sourceSerial, sourceName = bombardment_stuff.serial, bombardment_stuff.evoker_name
+				end
 			end
 
 		--> npcId check for ignored npcs
@@ -2320,13 +2345,17 @@
 			12/14 21:14:44.545  SPELL_SUMMON,Creature-0-4391-615-3107-15439-00001A8313,"Fire Elemental Totem",0x2112,0x0,Creature-0-4391-615-3107-15438-00001A8313,"Greater Fire Elemental",0x2112,0x0,32982,"Fire Elemental Totem",0x1
 			]]
 
+
 		if (isWOTLK or isCATA) then
 			if (npcId == 15439) then
 				petContainer.AddPet(petGuid:gsub("%-15439%-", "%-15438%-"), "Greater Fire Elemental", petFlags, sourceSerial, sourceName, sourceFlags, summonSpellId)
 			elseif (npcId == 15438) then
 				return
 			end
-		end
+        -- Brann Bronzebeard in delves
+        elseif (npcId == 210759) then
+            return
+        end
 
 		--send the summonSpellId to spellcache in order to identify if the pet is from an item, for instance: a trinket
 		local newPetName = Details222.Pets.GetPetNameFromCustomSpells(petName, summonSpellId, npcId)
@@ -2368,6 +2397,7 @@
 		[86273] = true, -- Illuminated Healing
 		[114908] = true, --Spirit Shell
 		[152118] = true, --Clarity of Will
+        [447134] = true, --Ravenous Scarab
 	}
 
 	function parser:heal_denied(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellIdAbsorb, spellNameAbsorb, spellSchoolAbsorb, serialHealer, nameHealer, flagsHealer, flags2Healer, spellIdHeal, spellNameHeal, typeHeal, amountDenied)
@@ -5003,15 +5033,15 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		Details:Destroy(Details.capture_schedules)
 	end
 
-	function Details:CaptureTimeout (table)
-		local capture_type, schedule_id = unpack(table)
+	function Details:CaptureTimeout (table3)
+		local capture_type, schedule_id = unpack(table3)
 		Details.capture_current [capture_type] = Details.capture_real [capture_type]
 		Details:CaptureRefresh()
 
-		for index, table in ipairs(Details.capture_schedules) do
-			local id = table [2]
+		for index, table2 in ipairs(Details.capture_schedules) do
+			local id = table2 [2]
 			if (schedule_id == id) then
-				tremove(Details.capture_schedules, index)
+				table.remove(Details.capture_schedules, index)
 				break
 			end
 		end
@@ -5331,17 +5361,23 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 	end
 
+	function Details.parser_functions:SCENARIO_COMPLETED(...)
+
+	end
+
 	function Details.parser_functions:ZONE_CHANGED_NEW_AREA(...)
 		return Details.Schedules.After(1, Details.Check_ZONE_CHANGED_NEW_AREA)
 	end
 
 	--~zone ~area
 	function Details:Check_ZONE_CHANGED_NEW_AREA()
-		local zoneName, zoneType, _, _, _, _, _, zoneMapID = GetInstanceInfo()
+		local zoneName, zoneType, difficultyID, difficultyName, _, _, _, zoneMapID = GetInstanceInfo()
 
 		Details.zone_type = zoneType
 		Details.zone_id = zoneMapID
 		Details.zone_name = zoneName
+
+		--Details222.ContextManager:CheckContextInterest(zoneMapID, zoneName, zoneType, difficultyID)
 
 		_in_resting_zone = IsResting()
 
@@ -5450,8 +5486,17 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 				--if the current raid is current tier raid, pre-load the storage database
 				if (zoneType == "raid") then
-					if (Details:IsZoneIdFromCurrentExpansion(zoneMapID)) then
-						Details.ScheduleLoadStorage()
+					if (not Details222.EJCache.CacheCreated) then
+						--this is running right after the player login, wait a few seconds for the cache to be created
+						C_Timer.After(5, function()
+							if (Details:IsZoneIdFromCurrentExpansion(zoneMapID)) then
+								Details.ScheduleLoadStorage()
+							end
+						end)
+					else
+						if (Details:IsZoneIdFromCurrentExpansion(zoneMapID)) then
+							Details.ScheduleLoadStorage()
+						end
 					end
 				end
 
@@ -5507,6 +5552,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 
 		if (Details:IsZoneIdFromCurrentExpansion(zoneMapID)) then
+			print("encouter is from current expansion")
 			Details.current_exp_raid_encounters[encounterID] = true
 		end
 
@@ -5688,6 +5734,88 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		end)
 
+		if (detailsFramework.ExpansionHasEvoker()) then
+			if (IsInRaid()) then
+				--check if there is only one bombardment evoker in the group
+				local evokerCount = 0
+				local evokerName = ""
+				local evokerSerial = ""
+				--get the open raid lib
+				local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+				for i = 1, #Details222.UnitIdCache.Raid do
+					local unitId = Details222.UnitIdCache.Raid[i]
+					if (UnitExists(unitId)) then
+						local unitName = GetUnitName(unitId, true)
+						local unitInfo = openRaidLib.GetUnitInfo(unitId)
+						local unitClass = select(2, UnitClass(unitName))
+						if (unitClass == "EVOKER") then
+							if (unitInfo and unitInfo.specId and unitInfo.specId ~= 1468) then
+								evokerCount = evokerCount + 1
+								evokerName = unitName
+								evokerSerial = UnitGUID(unitId)
+							else
+								evokerCount = evokerCount + 1
+								evokerName = unitName
+								evokerSerial = UnitGUID(unitId)
+							end
+						end
+					else
+						break
+					end
+				end
+
+				if (evokerCount == 1) then
+					--this combat can reatribute bombardments
+					bombardment_stuff.only_one_scalecomander = true
+					bombardment_stuff.evoker_name = evokerName
+					bombardment_stuff.serial = evokerSerial
+					--print("only one scaler commander found, yoinking bombardments damage for:", bombardment_stuff.evoker_name)
+				else
+					bombardment_stuff.only_one_scalecomander = false
+					bombardment_stuff.evoker_name = ""
+					bombardment_stuff.serial = ""
+				end
+
+			elseif (IsInGroup()) then
+				local evokerCount = 0
+				local evokerName = ""
+				local evokerSerial = ""
+				--get the open raid lib
+				local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+				for i = 1, #Details222.UnitIdCache.Party do
+					local unitId = Details222.UnitIdCache.Party[i]
+					if (UnitExists(unitId)) then
+						local unitName = GetUnitName(unitId, true)
+						local unitInfo = openRaidLib.GetUnitInfo(unitId)
+						local unitClass = select(2, UnitClass(unitName))
+						if (unitClass == "EVOKER") then
+							if (unitInfo and unitInfo.specId and unitInfo.specId ~= 1468) then
+								evokerCount = evokerCount + 1
+								evokerName = unitName
+								evokerSerial = UnitGUID(unitId)
+							else
+								evokerCount = evokerCount + 1
+								evokerName = unitName
+								evokerSerial = UnitGUID(unitId)
+							end
+						end
+					end
+				end
+
+				if (evokerCount == 1) then
+					--this combat can reatribute bombardments
+					bombardment_stuff.only_one_scalecomander = true
+					bombardment_stuff.evoker_name = evokerName
+					bombardment_stuff.serial = evokerSerial
+					--print("only one scaler commander found, yoinking bombardments damage for:", bombardment_stuff.evoker_name)
+				else
+					bombardment_stuff.only_one_scalecomander = false
+					bombardment_stuff.evoker_name = ""
+					bombardment_stuff.serial = ""
+				end
+			end
+		end
+
 		if (Details.auto_swap_to_dynamic_overall) then
 			Details:InstanceCall(autoSwapDynamicOverallData, true)
 		end
@@ -5750,7 +5878,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 			elseif (IsInGroup()) then
 				local unitIdCache = Details222.UnitIdCache.Party
-				for i = 1, 4 do
+				for i = 1, 5 do
 					local unitId = unitIdCache[i]
 					local guid = UnitGUID(unitId)
 					if (guid) then
@@ -5919,6 +6047,11 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			Details222.MythicPlus.WorldStateTimerStartAt = nil
 			Details222.MythicPlus.WorldStateTimerEndAt = nil
 			Details222.MythicPlus.LogStep("Event: CHALLENGE_MODE_START")
+
+			local activeKeystoneLevel, activeAffixIDs, wasActiveKeystoneCharged = C_ChallengeMode.GetActiveKeystoneInfo()
+			Details222.MythicPlus.Level = activeKeystoneLevel or 2
+
+			Details.challengeModeMapId = C_ChallengeMode.GetActiveChallengeMapID()
 		end
 	end
 
@@ -5970,23 +6103,25 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--wait until the keystone is updated and send it to the party
 		saveGroupMembersKeystoneAndRatingLevel()
 
-		---@type number mapID
-		---@type number level
-		---@type number time
-		---@type boolean onTime
-		---@type number keystoneUpgradeLevels
-		---@type boolean practiceRun
-		---@type number oldDungeonScore
-		---@type number newDungeonScore
-		---@type boolean isMapRecord
-		---@type boolean isAffixRecord
-		---@type number primaryAffix
-		---@type boolean isEligibleForScore
-		---@type table upgradeMembers
-		local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = C_ChallengeMode.GetCompletionInfo()
+		local completionInfo = C_ChallengeMode.GetChallengeCompletionInfo()
+
+		local primaryAffix = 0
+		local mapID = completionInfo.mapChallengeModeID or Details.challengeModeMapId or C_ChallengeMode.GetActiveChallengeMapID()
+		local upgradeMembers = completionInfo.members
+		local level = completionInfo.level
+		local time = completionInfo.time
+		local onTime = completionInfo.onTime
+		local keystoneUpgradeLevels = completionInfo.keystoneUpgradeLevels
+		local practiceRun = completionInfo.practiceRun
+		local isAffixRecord = completionInfo.isAffixRecord
+		local isMapRecord = completionInfo.isMapRecord
+		local isEligibleForScore = completionInfo.isEligibleForScore
+		local oldDungeonScore = completionInfo.oldOverallDungeonScore
+		local newDungeonScore = completionInfo.newOverallDungeonScore
 
 		Details222.MythicPlus.MapID = mapID
 		Details222.MythicPlus.Level = level --level of the key just finished
+		Details222.MythicPlus.ElapsedTime = time --total time of the mythic+ run
 		Details222.MythicPlus.OnTime = onTime
 		Details222.MythicPlus.KeystoneUpgradeLevels = keystoneUpgradeLevels
 		Details222.MythicPlus.PracticeRun = practiceRun
@@ -6007,6 +6142,17 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		Details222.MythicPlus.BackgroundTexture = backgroundTexture
 
 		if (time) then
+            --Subtract death time from time of run to get the true time
+            local deaths = C_ChallengeMode.GetDeathCount()
+            if deaths and deaths > 0 then
+                local secondsPerDeath = 5
+                if level >= 7 then
+                    secondsPerDeath = 15
+                end
+
+                time = time - deaths * (secondsPerDeath * 1000)
+            end
+
         	Details222.MythicPlus.time = math.floor(time / 1000)
 			Details:Msg("run elapsed time:", DetailsFramework:IntegerToTimer(time / 1000))
 		else
@@ -6015,9 +6161,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		if (Details.mythic_plus.show_damage_graphic) then
 			C_Timer.After(0, function()
-				if (ChallengeModeCompleteBanner) then
-					ChallengeModeCompleteBanner.timeToHold = 0.01
-				end
+				--if (ChallengeModeCompleteBanner) then
+				--	ChallengeModeCompleteBanner.timeToHold = 0.01
+				--end
 			end)
 		end
 
@@ -6212,40 +6358,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		return Details.in_group
 	end
 
-	local update_persistant_unitname_cache = function()
-		Details.UpdatePersistantCacheTimer = nil
-
-		local unitIdCache
-
-		if (IsInRaid()) then
-			unitIdCache = Details222.UnitIdCache.Raid
-		else
-			unitIdCache = Details222.UnitIdCache.Party
-		end
-
-		for i, unitId in ipairs(unitIdCache) do
-			if (UnitExists(unitId)) then
-				local unitGUID = UnitGUID(unitId)
-				if (unitGUID) then
-					if (not group_roster_name_cache[unitGUID]) then
-						local unitFullName = Details:GetFullName(unitId)
-						if (unitFullName) then
-							group_roster_name_cache[unitGUID] = unitFullName
-						end
-					end
-				end
-			else
-				break
-			end
-		end
-	end
-
 	function Details.parser_functions:GROUP_ROSTER_UPDATE(...)
 		local bIsInGroup = IsInGroup() or IsInRaid()
-
-		if (not Details.UpdatePersistantCacheTimer) then
-			Details.UpdatePersistantCacheTimer = C_Timer.NewTimer(2, update_persistant_unitname_cache)
-		end
 
 		if (not Details.in_group) then
 			Details.in_group = bIsInGroup
@@ -6410,8 +6524,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--load auto run code
 		Details222.AutoRunCode.StartAutoRun()
 
-		update_persistant_unitname_cache()
-
 		Details.isLoaded = true
 	end
 
@@ -6458,15 +6570,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 	function Details.parser_functions:UNIT_NAME_UPDATE(unitId)
 		Details:SchedulePetUpdate(5)
-		local unitGUID = UnitGUID(unitId)
-		if (unitGUID) then
-			if (unitGUID:match("^Pl")) then
-				local unitFullName = Details:GetFullName(unitId)
-				if (unitFullName) then
-					group_roster_name_cache[unitGUID] = unitFullName
-				end
-			end
-		end
 	end
 
 	function Details.parser_functions:PLAYER_TARGET_CHANGED(...)
@@ -6570,7 +6673,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			local writeLog = function()
 				_detalhes_global = _detalhes_global or {}
 				tinsert(_detalhes_global.exit_errors, 1, currentStep .. " | " .. Details222.Date.GetDateForLogs() .. " | " .. Details.GetVersionString() .. " | " .. errortext .. " | " .. debugstack())
-				tremove(_detalhes_global.exit_errors, exitErrorsMaxSize)
+				table.remove(_detalhes_global.exit_errors, exitErrorsMaxSize)
 				addToExitErrors(currentStep .. " | " .. Details222.Date.GetDateForLogs() .. " | " .. Details.GetVersionString() .. " | " .. errortext .. " | " .. debugstack())
 			end
 			xpcall(writeLog, addToExitErrors)
@@ -6604,7 +6707,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			xpcall(clearInstances, logSaverError)
 		else
 			tinsert(_detalhes_global.exit_errors, 1, "not _detalhes.tabela_instancias")
-			tremove(_detalhes_global.exit_errors, exitErrorsMaxSize)
+			table.remove(_detalhes_global.exit_errors, exitErrorsMaxSize)
 			addToExitErrors("not _detalhes.tabela_instancias | " .. Details.GetVersionString())
 		end
 
@@ -6665,8 +6768,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		local func = token_list[token]
 
 		if (func) then
-			who_name = group_roster_name_cache[who_serial] or who_name
-			target_name = group_roster_name_cache[target_serial] or target_name
 			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end
@@ -6676,24 +6777,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		local func = token_list[token]
 
 		if (func) then
-			if (group_roster_name_cache[sourceGUID]) then
-				sourceName = group_roster_name_cache[sourceGUID]
-			else
-				if (sourceGUID:match("^Pl")) then
-					sourceName = sourceName:gsub("-%a+$", "")
-					group_roster_name_cache[sourceGUID] = sourceName
-				end
-			end
-
-			if (group_roster_name_cache[targetGUID]) then
-				targetName = group_roster_name_cache[targetGUID]
-			else
-				if (targetGUID:match("^Pl")) then
-					targetName = targetName:gsub("-%a+$", "")
-					group_roster_name_cache[targetGUID] = targetName
-				end
-			end
-
 			return func(nil, token, time, sourceGUID, sourceName, sourceFlags, targetGUID, targetName, targetFlags, targetFlags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end
@@ -6719,8 +6802,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
 		local func = out_of_combat_interresting_events[token]
 		if (func) then
-			who_name = group_roster_name_cache[who_serial] or who_name
-			target_name = group_roster_name_cache[target_serial] or target_name
 			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end
@@ -6985,7 +7066,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		elseif (IsInGroup()) then
 			local unitIdCache = Details222.UnitIdCache.Party
-			for i = 1, GetNumGroupMembers()-1 do
+			for i = 1, GetNumGroupMembers() do
 				local unitId = unitIdCache[i]
 
 				local unitName = GetUnitName(unitId, true)

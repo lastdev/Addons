@@ -240,4 +240,8 @@ addon.rareData = {
   [69768] = {
     name = 'Zandalari Warscout',
   },
+  [70530] = {
+    name = 'Ra\'Sha',
+    description = 'Inside cave.',
+  },
 };

@@ -1377,7 +1377,6 @@ L["WARNING: The macro was too long, so was truncated to fit by WoW."] = "警告�
 L["WARNING: Your minimum price for %s is below its vendorsell price (with AH cut taken into account). Consider raising your minimum price, or vendoring the item."] = "警告：%s的最低價低於賣店價（扣除AH手續費等）。請提高最低價，或直接賣給NPC。"
 L["WOW UI"] = "WOW UI"
 L["Warbank"] = "Warbank"
-L["Warbound Banking"] = "Warbound Banking"
 L["Warehousing"] = "倉儲"
 L["Warehousing operation"] = "倉儲作業"
 L["Warehousing operations control moving in and out of the bank."] = "倉庫選項控制銀行物品的進出。"

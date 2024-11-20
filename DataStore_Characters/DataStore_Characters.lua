@@ -24,7 +24,7 @@ local isCoreDataMissing
 local MAX_LOGOUT_TIMESTAMP = 5000000000	-- 5 billion, current values are at ~1.4 billion, in seconds, that leaves us 110+ years, I think we're covered..
 local MAX_ALT_LEVEL = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 	and MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
-	or MAX_PLAYER_LEVEL
+	or 80
 
 
 -- *** Scanning functions ***
@@ -176,6 +176,10 @@ local function _GetCharacterClass(character)
 
 	-- Localized name, e.g. "Warrior" or "Guerrier" + "WARRIOR" + 1
 	return info.className or "", info.classFile or "", classID
+end
+
+local function _IsCharacterClass(character, classID)
+	return classID == bit64:GetBits(character.BaseInfo, 7, 4)	-- bits 7-10 = classID
 end
 
 local classColors
@@ -432,6 +436,7 @@ DataStore:OnAddonLoaded(addonName, function()
 				GetCharacterLevel = _GetCharacterLevel,
 				GetCharacterRace = _GetCharacterRace,
 				GetCharacterClass = _GetCharacterClass,
+				IsCharacterClass = _IsCharacterClass,
 				GetCharacterClassColor = _GetCharacterClassColor,
 				GetColoredCharacterName = _GetColoredCharacterName,
 				GetCharacterFaction = _GetCharacterFaction,

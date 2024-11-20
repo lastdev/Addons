@@ -1,3 +1,12 @@
+== v3.00 - 29th October 2024
+* Slash/chat commands added
+* Lots of helpful text added to the Options panel
+* Added Curse and Wago Project IDs
+* Title text improved too
+
+== v2.15 - 17th October 2024
+* TOC update to 11.0.5
+
 == v2.14 - 21st August 2024
 * TOC update to 11.0.2
 

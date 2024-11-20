@@ -12,6 +12,7 @@ local bossModPrototype = private:GetPrototype("DBMMod")
 
 ---@class Difficulties
 local difficulties = private:GetPrototype("Difficulties")
+DBM.Difficulties = difficulties
 
 local test = private:GetPrototype("DBMTest")
 
@@ -25,7 +26,7 @@ local groupSize = 0
 
 --[InstanceID] = {level,zoneType}
 --zoneType: 1 = outdoor, 2 = dungeon, 3 = raid
-local instanceDifficultyBylevel
+local instanceDifficultyBylevel, seasonalDungeons
 if private.isRetail then
 	instanceDifficultyBylevel = {
 		--World
@@ -37,7 +38,7 @@ if private.isRetail then
 		[1643] = {50, 1}, [1642] = {50, 1}, [1718] = {50, 1}, [1943] = {50, 1}, [1876] = {50, 1}, [2105] = {50, 1}, [2111] = {50, 1}, [2275] = {50, 1},--Bfa World bosses and warfronts
 		[2222] = {60, 1}, [2374] = {60, 1},--Shadowlands World Bosses
 		[2444] = {70, 1}, [2512] = {70, 1}, [2574] = {70, 1}, [2454] = {70, 1}, [2548] = {70, 1},--Dragonflight World Bosses
-		[2774] = {80, 1},--War Within World Bosses
+		[2774] = {80, 1}, [2552] = {80, 1}, [2601] = {80, 1},--War Within World Bosses
 		--Raids
 		[509] = {30, 3}, [531] = {30, 3}, [469] = {30, 3}, [409] = {30, 3},--Classic Raids
 		[564] = {30, 3}, [534] = {30, 3}, [532] = {30, 3}, [565] = {30, 3}, [544] = {30, 3}, [548] = {30, 3}, [580] = {30, 3}, [550] = {30, 3},--BC Raids
@@ -49,7 +50,7 @@ if private.isRetail then
 		[1861] = {50, 3}, [2070] = {50, 3}, [2096] = {50, 3}, [2164] = {50, 3}, [2217] = {50, 3},--BfA Raids
 		[2296] = {60, 3}, [2450] = {60, 3}, [2481] = {60, 3},--Shadowlands Raids (yes, only 3 kekw, seconded)
 		[2522] = {70, 3}, [2569] = {70, 3}, [2549] = {70, 3},--Dragonflight Raids
-		[2657] = {80, 3},--War Within Raids
+		[2657] = {80, 3}, [2792] = {80, 3},--War Within Raids
 		--Dungeons
 		[48] = {30, 2}, [230] = {30, 2}, [429] = {30, 2}, [389] = {30, 2}, [34] = {30, 2},--Classic Dungeons
 		[540] = {30, 2}, [558] = {30, 2}, [556] = {30, 2}, [555] = {30, 2}, [542] = {30, 2}, [546] = {30, 2}, [545] = {30, 2}, [547] = {30, 2}, [553] = {30, 2}, [554] = {30, 2}, [552] = {30, 2}, [557] = {30, 2}, [269] = {30, 2}, [560] = {30, 2}, [543] = {30, 2}, [585] = {30, 2},--BC Dungeons
@@ -65,6 +66,7 @@ if private.isRetail then
 		--Delves
 		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}--War Within Delves
 	}
+	seasonalDungeons = {[2652]={80, 2}, [2662]=true, [2660]=true, [2669]=true, [670]=true, [1822]=true, [2286]=true, [2290]=true}--TWW Season 1
 elseif private.isCata then--Since 2 dungeons were changed from vanilla to cata dungeons, it has it's own table and it's NOT using retail table cause the dungeons reworked in Mop are still vanilla dungeons in classic (plus diff level caps)
 	instanceDifficultyBylevel = {
 		--World
@@ -81,6 +83,7 @@ elseif private.isCata then--Since 2 dungeons were changed from vanilla to cata d
 		[619] = {80, 2}, [601] = {80, 2}, [595] = {80, 2}, [600] = {80, 2}, [604] = {80, 2}, [602] = {80, 2}, [599] = {80, 2}, [576] = {80, 2}, [578] = {80, 2}, [574] = {80, 2}, [575] = {80, 2}, [608] = {80, 2}, [658] = {80, 2}, [632] = {80, 2}, [668] = {80, 2}, [650] = {80, 2},--Wrath Dungeons
 		[755] = {85, 2}, [645] = {85, 2}, [36] = {85, 2}, [670] = {85, 2}, [644] = {85, 2}, [33] = {85, 2}, [643] = {85, 2}, [725] = {85, 2}, [657] = {85, 2}, [309] = {85, 2}, [859] = {85, 2}, [568] = {85, 2}, [938] = {85, 2}, [940] = {85, 2}, [939] = {85, 2}, [646] = {85, 2},--Cata Dungeons
 	}
+	seasonalDungeons = {}--None
 elseif private.isWrath then--Since naxx is moved to northrend, wrath and cata can't use tbc/classics table
 	instanceDifficultyBylevel = {
 		--World
@@ -95,6 +98,7 @@ elseif private.isWrath then--Since naxx is moved to northrend, wrath and cata ca
 		[540] = {70, 2}, [558] = {70, 2}, [556] = {70, 2}, [555] = {70, 2}, [542] = {70, 2}, [546] = {70, 2}, [545] = {70, 2}, [547] = {70, 2}, [553] = {70, 2}, [554] = {70, 2}, [552] = {70, 2}, [557] = {70, 2}, [269] = {70, 2}, [560] = {70, 2}, [543] = {70, 2}, [585] = {70, 2},--BC Dungeons
 		[619] = {80, 2}, [601] = {80, 2}, [595] = {80, 2}, [600] = {80, 2}, [604] = {80, 2}, [602] = {80, 2}, [599] = {80, 2}, [576] = {80, 2}, [578] = {80, 2}, [574] = {80, 2}, [575] = {80, 2}, [608] = {80, 2}, [658] = {80, 2}, [632] = {80, 2}, [668] = {80, 2}, [650] = {80, 2},--Wrath Dungeons
 	}
+	seasonalDungeons = {}--None
 else--TBC and Vanilla
 	instanceDifficultyBylevel = {
 		--World
@@ -107,6 +111,7 @@ else--TBC and Vanilla
 		[429] = {45, 2}, [389] = {18, 2}, [349] = {52, 2}, [329] = {60, 2}, [289] = {60, 2}, [230] = {60, 2}, [229] = {60, 2}, [209] = {54, 2}, [189] = {45, 2}, [129] = {47, 2}, [109] = {60, 2}, [90] = {34, 2}, [70] = {52, 2}, [48] = {32, 2}, [47] = {42, 2}, [43] = {27, 2}, [36] = {25, 2}, [34] = {32, 2}, [33] = {30, 2},--Classic Dungeons
 		[540] = {70, 2}, [558] = {70, 2}, [556] = {70, 2}, [555] = {70, 2}, [542] = {70, 2}, [546] = {70, 2}, [545] = {70, 2}, [547] = {70, 2}, [553] = {70, 2}, [554] = {70, 2}, [552] = {70, 2}, [557] = {70, 2}, [269] = {70, 2}, [560] = {70, 2}, [543] = {70, 2}, [585] = {70, 2},--BC Dungeons
 	}
+	seasonalDungeons = {}--None
 	-- Season of Discovery
 	if Enum.SeasonID and private.currentSeason == Enum.SeasonID.SeasonOfDiscovery then
 		instanceDifficultyBylevel[48] = {25, 3} -- Blackfathom deeps level up raid
@@ -115,6 +120,11 @@ else--TBC and Vanilla
 		instanceDifficultyBylevel[2784] = {60, 2} -- Demon Fall Canyon dungeon
 		instanceDifficultyBylevel[2789] = {60, 3} -- Lord kazzak
 		instanceDifficultyBylevel[2791] = {60, 3} -- Azuregos
+		instanceDifficultyBylevel[2784] = {60, 3} -- Azgaloth
+		instanceDifficultyBylevel[2804] = {60, 3} -- Prince Thunderaan
+		instanceDifficultyBylevel[2806] = {60, 2} -- Shadow Hold
+		instanceDifficultyBylevel[2807] = {60, 2} -- Burning of Andorhal
+		instanceDifficultyBylevel[2817] = {60, 2} -- Starfall Barrow Den
 	end
 end
 
@@ -144,6 +154,10 @@ function difficulties:InstanceType(instanceId)
 	return instanceDifficultyBylevel[instanceId] and instanceDifficultyBylevel[instanceId][2]
 end
 
+function difficulties:IsSeasonalDungeon(instanceId)
+	return seasonalDungeons[instanceId] or false
+end
+
 ---@param self DBM|DBMMod
 function DBM:IsTrivial(customLevel)
 	if test.testRunning then
@@ -152,6 +166,10 @@ function DBM:IsTrivial(customLevel)
 	local lastInstanceMapId = DBM:GetCurrentArea()
 	--if timewalking or chromie time or challenge modes. it's always non trivial content
 	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or self:IsRemix() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 then
+		return false
+	end
+	--if current season dungeon (which blizzard auto scales up to current level on ALL difficulties now)
+	if seasonalDungeons[lastInstanceMapId] then
 		return false
 	end
 	--if custom level passed, we always hard check that level for trivial vs non trivial
@@ -272,6 +290,12 @@ function bossModPrototype:IsMythicPlus()
 	return diff == "challenge5"
 end
 
+-- Check if the SoD "Black Essence" buff in BWL is enabled. Do not use outside of SoD BWL.
+function bossModPrototype:IsBwlBlackEssenceEnabled()
+	-- I don't really like having something specific to SoD BWL in here, but it's cleaner than putting that logic in BWL mods
+	return difficulties.difficultyModifier and difficulties.difficultyModifier % 2 == 1
+end
+
 function bossModPrototype:IsEvent()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "event5" or diff == "event20" or diff == "event40"
@@ -297,13 +321,18 @@ function bossModPrototype:IsDelve()
 	return diff == "delves"
 end
 
+difficulties.SOD_BWL_TRIAL_BLACK  = 1
+difficulties.SOD_BWL_TRIAL_GREEN  = 2
+difficulties.SOD_BWL_TRIAL_BLUE	  = 4
+difficulties.SOD_BWL_TRIAL_BRONZE = 8
+difficulties.SOD_BWL_TRIAL_RED    = 16
 
 --TODO C_IslandsQueue.GetIslandDifficultyInfo(), if 38-40 don't work
 function DBM:GetCurrentInstanceDifficulty()
-	local _, instanceType, difficulty, difficultyName, _, _, _, _, instanceGroupSize = private.GetInstanceInfo()
+	local _, instanceType, difficulty, difficultyName, _, _, _, instanceID, instanceGroupSize = private.GetInstanceInfo()
 	if difficulty == 0 or difficulty == 172 or (difficulty == 1 and instanceType == "none") or (C_Garrison and C_Garrison:IsOnGarrisonMap()) then--draenor field returns 1, causing world boss mod bug.
 		return "worldboss", RAID_INFO_WORLD_BOSS .. " - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 1 or difficulty == 173 or difficulty == 184 or difficulty == 150 or difficulty == 201 then--5 man Normal Dungeon / 201 is SoD 5 man ID for a dungeon that's also a 10/20 man SoD Raid
+	elseif difficulty == 1 or difficulty == 173 or difficulty == 184 or difficulty == 150 or difficulty == 201 then--5 man Normal Dungeon / 201 is SoD 5 man ID for a dungeon that's also a 10/20 man SoD Raid.
 		return "normal5", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 2 or difficulty == 174 then--5 man Heroic Dungeon
 		return "heroic5", difficultyName .. " - ", difficulty, instanceGroupSize, 0
@@ -320,9 +349,19 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 8 then--Dungeon, Mythic+ (Challenge modes in mists and wod)
 		local keystoneLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() or 0
 		return "challenge5", PLAYER_DIFFICULTY6 .. "+ (" .. keystoneLevel .. ") - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 148 or difficulty == 185 or difficulty == 215 or difficulty == 226 then--20 man classic raid / 226 is SoD 20
+	 --20 man classic raids:
+	 -- 226 is SoD 20 (and 10/20 flex)
+	 -- 186 is era 40 and SoD 20/40 flex, only SoD 186 is handled here because they are considered 20 player raids
+	elseif difficulty == 148 or difficulty == 185 or difficulty == 215 or difficulty == 226 or (difficulty == 186 and DBM:IsSeasonal("SeasonOfDiscovery")) then
+		if instanceID == 309 then --ZG, force return 10 man
+			return "normal10", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+		end
 		local modifierLevel = 0
-		if difficulty == 226 then--Molten Core SoD
+		local difficultyId = "normal20" -- Keep as "normal20" here even though some are technically 40 in SoD to not mess with old stats before the 20/40 mess was added
+		local modifierName = ""
+		if DBM:IsSeasonal("SeasonOfDiscovery") and (difficulty == 226 or difficulty == 186) then -- SoD difficulties
+			-- Note: not necessary to check for actual instance, the buffs are only active in the instances anyways
+			-- Molten Core heat levels
 			if self:UnitDebuff("player", 458841) then--Sweltering Heat
 				modifierLevel = 1
 			elseif self:UnitDebuff("player", 458842) then--Blistering Heat
@@ -330,11 +369,52 @@ function DBM:GetCurrentInstanceDifficulty()
 			elseif self:UnitDebuff("player", 458843) then--Molten Heat
 				modifierLevel = 3
 			end
+			-- BWL trials: we follow the definition from Warcraft Logs: https://www.archon.gg/classic-sod/articles/news/phase-5-bwl-and-zg-on-warcraft-logs
+			-- That unfortunately means that you can have something that is considered Heroic but does not include the extra mechanics from Black Essence
+			-- So mods will need to check explicitly for this modifier instead of relying on :IsHeroic()/:IsMythic() :()
+			-- Trials are stored by using difficultyModifier as bit field, see definitions of SOD_BWL_TRIAL_* above
+			local trialCount = 0 -- bit.popcount() would be great to have
+			if self:UnitBuff("player", 467047) then
+				modifierLevel = modifierLevel + difficulties.SOD_BWL_TRIAL_BLACK
+				modifierName = modifierName .. CL.BLACK .. " + "
+				trialCount = trialCount + 1
+			end
+			if self:UnitBuff("player", 466416) then -- Green
+				modifierLevel = modifierLevel + difficulties.SOD_BWL_TRIAL_GREEN
+				modifierName = modifierName .. CL.GREEN .. " + "
+				trialCount = trialCount + 1
+			end
+			if self:UnitBuff("player", 466277) then
+				modifierLevel = modifierLevel + difficulties.SOD_BWL_TRIAL_BLUE
+				modifierName = modifierName .. CL.BLUE .. " + "
+				trialCount = trialCount + 1
+			end
+			if self:UnitBuff("player", 466071) then
+				modifierLevel = modifierLevel + difficulties.SOD_BWL_TRIAL_BRONZE
+				modifierName = modifierName .. CL.BRONZE .. " + "
+				trialCount = trialCount + 1
+			end
+			if self:UnitBuff("player", 466261) then
+				modifierLevel = modifierLevel + difficulties.SOD_BWL_TRIAL_RED
+				modifierName = modifierName .. CL.RED .. " + "
+				trialCount = trialCount + 1
+			end
+			modifierName = modifierName:sub(0, -4)
+			-- BWL Heroic: "1-2 trials, or 3-4 trials without Black" (Warcraft Logs)
+			if trialCount == 1 or trialCount == 2 or (trialCount >= 3 and modifierLevel % 2 == 0) then
+				difficultyId = "heroic" -- Just use heroic/mythic without player qualifiers like flex raids would do
+				difficultyName = PLAYER_DIFFICULTY2
+			-- BWL Mythic: "3+ trials with Black required" (Warcraft Logs)
+			elseif trialCount >= 3 and modifierLevel % 2 == 1 then
+				difficultyId = "mythic"
+				difficultyName = PLAYER_DIFFICULTY6
+			end
 		end
 		if modifierLevel == 0 then
-			return "normal20", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+			return difficultyId, difficultyName .. " - ", difficulty, instanceGroupSize, 0
 		else
-			return "normal20", difficultyName .. "(" .. modifierLevel .. ") - ", difficulty, instanceGroupSize, modifierLevel
+			modifierName = modifierName == "" and tostring(modifierLevel) or modifierName
+			return difficultyId, difficultyName .. " (" .. modifierName .. ") - ", difficulty, instanceGroupSize, modifierLevel
 		end
 	elseif difficulty == 9 or difficulty == 186 then--Legacy 40 man raids, no longer returned as index 3 (normal 10man raids)
 		return "normal40", difficultyName .. " - ", difficulty, instanceGroupSize, 0
@@ -386,18 +466,43 @@ function DBM:GetCurrentInstanceDifficulty()
 --		return "delve1", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 205 then--Follower (Party Dungeon - Dragonflight 10.2.5+)
 		return "follower", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 207 then--SoD 1 player dungeon? Assigning as follower for now but will sort it out later
+		return "follower", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 208 then--Delves (War Within 11.0.0+)
-		local delveInfo = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183)
+		local delveInfo, delveInfo2, delveInfo3 = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183), C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6184), C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6185)
+		local usedDelveInfo
+		if delveInfo and delveInfo.shownState and delveInfo.shownState == 1 then
+			usedDelveInfo = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183)
+		--Zekvir Hack to normal/mythic since his tiers aren't numbers
+		elseif delveInfo2 and delveInfo2.shownState and delveInfo2.shownState == 1 then
+			return "normal", difficultyName .. "(?) - ", difficulty, instanceGroupSize, 0
+		elseif delveInfo3 and delveInfo3.shownState and delveInfo3.shownState == 1 then
+			return "mythic", difficultyName .. "(??) - ", difficulty, instanceGroupSize, 0
+		end
 		local delveTier = 0
-		if delveInfo and delveInfo and delveInfo.tierText then
+		if usedDelveInfo and usedDelveInfo.tierText then
 			---@diagnostic disable-next-line: cast-local-type
-			delveTier = tonumber(delveInfo.tierText)
+			delveTier = tonumber(usedDelveInfo.tierText)
 		end
 		return "delves", difficultyName .. "(" .. delveTier .. ") - ", difficulty, instanceGroupSize, delveTier
+	elseif difficulty == 213 then--Infinite Dungeon (timewalking in sod?)
+		return "timewalker", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 216 then--Quest (Party Dungeon - War Within 11.0.0+)
 		return "quest", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 220 then--Story (Raid Dungeon - War Within 11.0.0+)
 		return "story", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 231 then--SoD BWL (and other raids?)
+		--Do fancy stuff here, TODO for paul :D
+		--if Enum.SeasonID and private.currentSeason == Enum.SeasonID.SeasonOfDiscovery then--Molten Core SoD
+		--	if self:UnitDebuff("player", 458841) then--Sweltering Heat
+		--		return "normal", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+		--	elseif self:UnitDebuff("player", 458842) then--Blistering Heat
+		--		return "heroic", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+		--	elseif self:UnitDebuff("player", 458843) then--Molten Heat
+		--		return "mythic", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+		--	end
+		--end
+		return "normal", "", difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
 	end

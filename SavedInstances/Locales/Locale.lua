@@ -31,6 +31,8 @@ Ld["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open week
 Ld["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Left-click|r to detach tooltip"
 Ld["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Middle-click|r to show Blizzard's Raid Information"
 Ld["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Right-click|r to configure SavedInstances"
+Ld["A Call to Battle"] = "A Call to Battle"
+Ld["A Call to Delves"] = "A Call to Delves"
 Ld["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 Ld["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
 Ld["AA"] = "AA"
@@ -43,6 +45,18 @@ Ld["Add Entry"] = "Add Entry"
 Ld["Aiding the Accord"] = "Aiding the Accord"
 Ld["Air"] = "Air"
 Ld["Air Core"] = "Air Core"
+Ld["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+Ld["Algari Treatise on Alchemy"] = "Algari Treatise on Alchemy"
+Ld["Algari Treatise on Blacksmithing"] = "Algari Treatise on Blacksmithing"
+Ld["Algari Treatise on Enchanting"] = "Algari Treatise on Enchanting"
+Ld["Algari Treatise on Engineering"] = "Algari Treatise on Engineering"
+Ld["Algari Treatise on Herbalism"] = "Algari Treatise on Herbalism"
+Ld["Algari Treatise on Inscription"] = "Algari Treatise on Inscription"
+Ld["Algari Treatise on Jewelcrafting"] = "Algari Treatise on Jewelcrafting"
+Ld["Algari Treatise on Leatherworking"] = "Algari Treatise on Leatherworking"
+Ld["Algari Treatise on Mining"] = "Algari Treatise on Mining"
+Ld["Algari Treatise on Skinning"] = "Algari Treatise on Skinning"
+Ld["Algari Treatise on Tailoring"] = "Algari Treatise on Tailoring"
 Ld["Always show"] = "Always show"
 Ld["Amathet Reliquary"] = "Amathet Reliquary"
 Ld["Ambered Coffer"] = "Ambered Coffer"
@@ -56,6 +70,7 @@ Ld["Automatically shrink the tooltip to fit on the screen"] = "Automatically shr
 Ld["Azuregos"] = "Azuregos"
 Ld["Battleground Deserter"] = "Battleground Deserter"
 Ld["BH"] = "BH"
+Ld["Biergoth Dungeon Quest"] = "Biergoth Dungeon Quest"
 Ld["Bind a key to toggle the SavedInstances tooltip"] = "Bind a key to toggle the SavedInstances tooltip"
 Ld["Blooming Dreamseeds"] = "Blooming Dreamseeds"
 Ld["Bonus loot frame"] = "Bonus loot frame"
@@ -64,6 +79,7 @@ Ld[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=]
 Ld["Bouldron"] = "Bouldron"
+Ld["Brawl Weekly"] = "Brawl Weekly"
 Ld["BREW"] = "BREW"
 Ld["BRH"] = "BRH"
 Ld["Calling Missing"] = "Calling Missing"
@@ -126,9 +142,11 @@ Ld["FH"] = "FH"
 Ld["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 Ld["Fire"] = "Fire"
 Ld["Fire Core"] = "Fire Core"
+Ld["First Cache"] = "First Cache"
 Ld["Fit to screen"] = "Fit to screen"
 Ld["Flex"] = "Flex"
 Ld["Format large numbers"] = "Format large numbers"
+Ld["Fourth Cache"] = "Fourth Cache"
 Ld["Frozion"] = "Frozion"
 Ld["Full Clear + 1 Mask"] = "Full Clear + 1 Mask"
 Ld["Full Clear + 2 Masks"] = "Full Clear + 2 Masks"
@@ -140,6 +158,7 @@ Ld["Full Objective"] = "Full Objective"
 Ld["Gaelzion"] = "Gaelzion"
 Ld["GB"] = "GB"
 Ld["GD"] = "GD"
+Ld["Gearing Up for Trouble"] = "Gearing Up for Trouble"
 Ld["General settings"] = "General settings"
 Ld["GMBT"] = "GMBT"
 Ld["Grand Hunt"] = "Grand Hunt"
@@ -175,6 +194,7 @@ Ld["Khaz Algar Transmute"] = "Khaz Algar Transmute"
 Ld["KR"] = "KR"
 Ld["Last updated"] = "Last updated"
 Ld["Legion Transmute"] = "Legion Transmute"
+Ld["Lesser Keyflame"] = "Lesser Keyflame"
 Ld["Lesser Visions of N'Zoth"] = "Lesser Visions of N'Zoth"
 Ld["Level %d Characters"] = "Level %d Characters"
 Ld["LFG cooldown"] = "LFG cooldown"
@@ -223,6 +243,7 @@ Ld["Primal Storms Core"] = "Primal Storms Core"
 Ld["Primal Storms Elementals"] = "Primal Storms Elementals"
 Ld["Progress Persists"] = "Progress Persists"
 Ld["PSF"] = "PSF"
+Ld["PvP Weekly"] = "PvP Weekly"
 Ld["Quest ID"] = "Quest ID"
 Ld["Quest Name"] = "Quest Name"
 Ld["Quest progresses"] = "Quest progresses"
@@ -231,21 +252,27 @@ Ld["Raids before dungeons"] = "Raids before dungeons"
 Ld["Recent Bonus Rolls"] = "Recent Bonus Rolls"
 Ld["Recent Instances"] = "Recent Instances"
 Ld["Recover Dailies"] = "Recover Dailies"
+Ld["Replenish the Reservoir"] = "Replenish the Reservoir"
 Ld["Report instance resets to group"] = "Report instance resets to group"
 Ld["Researchers Under Fire"] = "Researchers Under Fire"
 Ld["Reset Characters"] = "Reset Characters"
+Ld["Return Lost Souls"] = "Return Lost Souls"
 Ld["Reverse ordering"] = "Reverse ordering"
 Ld["RISE"] = "RISE"
 Ld["RLP"] = "RLP"
 Ld["Roll Bonus"] = "Roll Bonus"
+Ld["Rollin' Down in the Deeps"] = "Rollin' Down in the Deeps"
 Ld["ROOK"] = "ROOK"
 Ld["Rouen Icewind"] = "Rouen Icewind"
 Ld["Row Highlight"] = "Row Highlight"
 Ld["SBG"] = "SBG"
 Ld["SD"] = "SD"
 Ld["SEAT"] = "SEAT"
+Ld["Second Cache"] = "Second Cache"
 Ld["Secured Shipment"] = "Secured Shipment"
+Ld["Services Requested"] = "Services Requested"
 Ld["Set All"] = "Set All"
+Ld["Shaping Fate"] = "Shaping Fate"
 Ld["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 Ld["Shipment of Goods"] = "Shipment of Goods"
 Ld["Show all emissary names"] = "Show all emissary names"
@@ -289,6 +316,8 @@ Ld["Sorting"] = "Sorting"
 Ld["SOTS"] = "SOTS"
 Ld["Space between categories"] = "Space between categories"
 Ld["Sparks of Life"] = "Sparks of Life"
+Ld["Special Assignments"] = "Special Assignments"
+Ld["Spreading the Light"] = "Spreading the Light"
 Ld["Storm Surge"] = "Storm Surge"
 Ld["Storm's Fury"] = "Storm's Fury"
 Ld["STRT"] = "STRT"
@@ -297,10 +326,15 @@ Ld["TAV"] = "TAV"
 Ld["TD"] = "TD"
 Ld["Text"] = "Text"
 Ld["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
+Ld["The Call of the Worldsoul"] = "The Call of the Worldsoul"
 Ld["The Four Celestials"] = "The Four Celestials"
+Ld["The Key to Success"] = "The Key to Success"
+Ld["The Severed Threads"] = "The Severed Threads"
 Ld["The Superbloom"] = "The Superbloom"
+Ld["The Theater Troupe"] = "The Theater Troupe"
 Ld["The World Awaits"] = "The World Awaits"
 Ld["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "These are the instances that count towards the %i instances per hour account limit, and the time until they expire."
+Ld["Third Cache"] = "Third Cache"
 Ld["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."
 Ld["Time /played"] = "Time /played"
 Ld["Time Left"] = "Time Left"
@@ -322,6 +356,9 @@ Ld["Trade skills"] = "Trade skills"
 Ld["Transmute"] = "Transmute"
 Ld["Trial of Elements"] = "Trial of Elements"
 Ld["Trial of Flood"] = "Trial of Flood"
+Ld["TWW Algari Treatise"] = "TWW Algari Treatise"
+Ld["TWW Services Requested"] = "TWW Services Requested"
+Ld["TWW Weekly Cache"] = "TWW Weekly Cache"
 Ld["Type"] = "Type"
 Ld["ULD"] = "ULD"
 Ld["UNDR"] = "UNDR"
@@ -333,6 +370,7 @@ Ld["Vision Boss Only"] = "Vision Boss Only"
 Ld["Voraazka"] = "Voraazka"
 Ld["VOTW"] = "VOTW"
 Ld["VP"] = "VP"
+Ld["Warband Money"] = "Warband Money"
 Ld["Warfronts"] = "Warfronts"
 Ld["Warn about instance limit"] = "Warn about instance limit"
 Ld["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."
@@ -344,6 +382,7 @@ Ld["WM"] = "WM"
 Ld["WORK"] = "WORK"
 Ld["World Boss"] = "World Boss"
 Ld["World Bosses"] = "World Bosses"
+Ld["World PvP Weekly"] = "World PvP Weekly"
 Ld["Wrath of the Jailer"] = "Wrath of the Jailer"
 Ld["YARD"] = "YARD"
 Ld["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."
@@ -355,6 +394,10 @@ if locale == "frFR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic-gauche|r pour détacher l'infobulle."
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic-milieu|r pour afficher les Infos Raid de Blizzard."
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Clic-droit|r pour configurer SavedInstances."
+--[[Translation missing --]]
+La["A Call to Battle"] = "A Call to Battle"
+--[[Translation missing --]]
+La["A Call to Delves"] = "A Call to Delves"
 La["A Worthy Ally: Dream Wardens"] = "Une précieuse alliance : les Gardiens du Rêve"
 La["A Worthy Ally: Loamm Niffen"] = "Une précieuse alliance : les Flairans de Terreau"
 --[[Translation missing --]]
@@ -372,6 +415,30 @@ La["Aiding the Accord"] = "Aider le concordat"
 La["Air"] = "Air"
 --[[Translation missing --]]
 La["Air Core"] = "Air Core"
+--[[Translation missing --]]
+La["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+--[[Translation missing --]]
+La["Algari Treatise on Alchemy"] = "Algari Treatise on Alchemy"
+--[[Translation missing --]]
+La["Algari Treatise on Blacksmithing"] = "Algari Treatise on Blacksmithing"
+--[[Translation missing --]]
+La["Algari Treatise on Enchanting"] = "Algari Treatise on Enchanting"
+--[[Translation missing --]]
+La["Algari Treatise on Engineering"] = "Algari Treatise on Engineering"
+--[[Translation missing --]]
+La["Algari Treatise on Herbalism"] = "Algari Treatise on Herbalism"
+--[[Translation missing --]]
+La["Algari Treatise on Inscription"] = "Algari Treatise on Inscription"
+--[[Translation missing --]]
+La["Algari Treatise on Jewelcrafting"] = "Algari Treatise on Jewelcrafting"
+--[[Translation missing --]]
+La["Algari Treatise on Leatherworking"] = "Algari Treatise on Leatherworking"
+--[[Translation missing --]]
+La["Algari Treatise on Mining"] = "Algari Treatise on Mining"
+--[[Translation missing --]]
+La["Algari Treatise on Skinning"] = "Algari Treatise on Skinning"
+--[[Translation missing --]]
+La["Algari Treatise on Tailoring"] = "Algari Treatise on Tailoring"
 La["Always show"] = "Toujours afficher"
 La["Amathet Reliquary"] = "Reliquaire amathet"
 La["Ambered Coffer"] = "Coffre ambré"
@@ -388,6 +455,8 @@ La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Déserteur"
 --[[Translation missing --]]
 La["BH"] = "BH"
+--[[Translation missing --]]
+La["Biergoth Dungeon Quest"] = "Biergoth Dungeon Quest"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Associez une touche à l'affichage de l'infobulle de SavedInstance."
 La["Blooming Dreamseeds"] = "Graines oniriques florissantes"
 La["Bonus loot frame"] = "Cadre de jet de butin bonus"
@@ -396,6 +465,8 @@ La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = "Les informations de mort des boss manquent pour ce verrouillage d'instance.\\\\nC'est un bogue de Blizzard qui touche certains vieux raids."
 --[[Translation missing --]]
 La["Bouldron"] = "Bouldron"
+--[[Translation missing --]]
+La["Brawl Weekly"] = "Brawl Weekly"
 --[[Translation missing --]]
 La["BREW"] = "BREW"
 --[[Translation missing --]]
@@ -488,9 +559,13 @@ La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
+--[[Translation missing --]]
+La["First Cache"] = "First Cache"
 La["Fit to screen"] = "Ajuster à la taille de l'écran"
 La["Flex"] = "Dynamique"
 La["Format large numbers"] = "Formater les grands nombres"
+--[[Translation missing --]]
+La["Fourth Cache"] = "Fourth Cache"
 --[[Translation missing --]]
 La["Frozion"] = "Frozion"
 La["Full Clear + 1 Mask"] = "Full Clear + 1 Masque"
@@ -507,6 +582,8 @@ La["Gaelzion"] = "Gaelzion"
 La["GB"] = "GB"
 --[[Translation missing --]]
 La["GD"] = "GD"
+--[[Translation missing --]]
+La["Gearing Up for Trouble"] = "Gearing Up for Trouble"
 La["General settings"] = "Options générales"
 --[[Translation missing --]]
 La["GMBT"] = "GMBT"
@@ -558,6 +635,8 @@ La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
 La["KR"] = "KR"
 La["Last updated"] = "Dernière mise à jour :"
 La["Legion Transmute"] = "Transmutation Légion"
+--[[Translation missing --]]
+La["Lesser Keyflame"] = "Lesser Keyflame"
 La["Lesser Visions of N'Zoth"] = "Visions inférieures de N'Zoth"
 La["Level %d Characters"] = "Personnages de niveau %d"
 La["LFG cooldown"] = "Recherche de groupe"
@@ -631,6 +710,8 @@ La["Progress Persists"] = "Progress Persists"
 --[[Translation missing --]]
 La["PSF"] = "PSF"
 --[[Translation missing --]]
+La["PvP Weekly"] = "PvP Weekly"
+--[[Translation missing --]]
 La["Quest ID"] = "Quest ID"
 --[[Translation missing --]]
 La["Quest Name"] = "Quest Name"
@@ -641,16 +722,22 @@ La["Raids before dungeons"] = "Raids avant les donjons"
 La["Recent Bonus Rolls"] = "Jets de dé bonus récents"
 La["Recent Instances"] = "instance(s) récente(s) "
 La["Recover Dailies"] = "Récupérer les journalières"
+--[[Translation missing --]]
+La["Replenish the Reservoir"] = "Replenish the Reservoir"
 La["Report instance resets to group"] = "Indiquer les réinitialisations d'instances au groupe"
 --[[Translation missing --]]
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Remise à zéro des personnages"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "Ordre inversé"
 --[[Translation missing --]]
 La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Jets de dé bonus"
+--[[Translation missing --]]
+La["Rollin' Down in the Deeps"] = "Rollin' Down in the Deeps"
 --[[Translation missing --]]
 La["ROOK"] = "ROOK"
 --[[Translation missing --]]
@@ -662,8 +749,14 @@ La["SD"] = "SD"
 --[[Translation missing --]]
 La["SEAT"] = "SEAT"
 --[[Translation missing --]]
+La["Second Cache"] = "Second Cache"
+--[[Translation missing --]]
 La["Secured Shipment"] = "Secured Shipment"
+--[[Translation missing --]]
+La["Services Requested"] = "Services Requested"
 La["Set All"] = "Tout régler sur :"
+--[[Translation missing --]]
+La["Shaping Fate"] = "Shaping Fate"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 --[[Translation missing --]]
@@ -714,6 +807,10 @@ La["Space between categories"] = "Espacer les catégories"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
 --[[Translation missing --]]
+La["Special Assignments"] = "Special Assignments"
+--[[Translation missing --]]
+La["Spreading the Light"] = "Spreading the Light"
+--[[Translation missing --]]
 La["Storm Surge"] = "Storm Surge"
 --[[Translation missing --]]
 La["Storm's Fury"] = "Storm's Fury"
@@ -728,12 +825,22 @@ La["TD"] = "TD"
 La["Text"] = "Texte"
 --[[Translation missing --]]
 La["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
+--[[Translation missing --]]
+La["The Call of the Worldsoul"] = "The Call of the Worldsoul"
 La["The Four Celestials"] = "Les Quatre Astres"
+--[[Translation missing --]]
+La["The Key to Success"] = "The Key to Success"
+--[[Translation missing --]]
+La["The Severed Threads"] = "The Severed Threads"
 --[[Translation missing --]]
 La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
+La["The Theater Troupe"] = "The Theater Troupe"
+--[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Ces instances comptent dans la limite de %i instances par heure pour le compte, et le temps avant qu'elles n'expirent."
+--[[Translation missing --]]
+La["Third Cache"] = "Third Cache"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Ceci ne devrait être utilisé que pour les personnages qui ont été renommés ou supprimés car les personnages seront de toutes façons ré-affichés lorsque vous vous connecterez avec."
 La["Time /played"] = "Temps /joué"
 La["Time Left"] = "Temps restant "
@@ -765,6 +872,12 @@ La["Transmute"] = "Transmutation"
 La["Trial of Elements"] = "Trial of Elements"
 --[[Translation missing --]]
 La["Trial of Flood"] = "Trial of Flood"
+--[[Translation missing --]]
+La["TWW Algari Treatise"] = "TWW Algari Treatise"
+--[[Translation missing --]]
+La["TWW Services Requested"] = "TWW Services Requested"
+--[[Translation missing --]]
+La["TWW Weekly Cache"] = "TWW Weekly Cache"
 La["Type"] = "Type"
 --[[Translation missing --]]
 La["ULD"] = "ULD"
@@ -783,6 +896,8 @@ La["Voraazka"] = "Voraazka"
 La["VOTW"] = "VOTW"
 --[[Translation missing --]]
 La["VP"] = "VP"
+--[[Translation missing --]]
+La["Warband Money"] = "Warband Money"
 La["Warfronts"] = "Fronts de guerre"
 La["Warn about instance limit"] = "Alerte sur la limite d'instance"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Attention : vous êtes entré dans %i instances récemment et approchez la limite de %i instances par heure pour ce compte. Plus d'instances seront disponibles dans environ %s."
@@ -798,6 +913,8 @@ La["WM"] = "WM"
 La["WORK"] = "WORK"
 La["World Boss"] = "Boss extérieur"
 La["World Bosses"] = "Boss extérieurs"
+--[[Translation missing --]]
+La["World PvP Weekly"] = "World PvP Weekly"
 La["Wrath of the Jailer"] = "Courroux du Geôlier"
 --[[Translation missing --]]
 La["YARD"] = "YARD"
@@ -810,6 +927,10 @@ elseif locale == "deDE" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Linksklick|r, um den Tooltip zu lösen"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Mittelklick|r , um die Blizzard-Schlachtszugsinfo anzuzeigen"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Rechtsklick|r, um SavedInstances zu konfigurieren"
+--[[Translation missing --]]
+La["A Call to Battle"] = "A Call to Battle"
+--[[Translation missing --]]
+La["A Call to Delves"] = "A Call to Delves"
 La["A Worthy Ally: Dream Wardens"] = "Ein würdiger Verbündeter: Traumwächter"
 La["A Worthy Ally: Loamm Niffen"] = "Ein würdiger Verbündeter: Die Niffen von Loamm"
 La["AA"] = "AA"
@@ -822,10 +943,33 @@ La["Add Entry"] = "Füge Eintrag hinzu"
 La["Aiding the Accord"] = "Unterstützt das Abkommen"
 La["Air"] = "Luft"
 La["Air Core"] = "Luftkern"
+--[[Translation missing --]]
+La["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+--[[Translation missing --]]
+La["Algari Treatise on Alchemy"] = "Algari Treatise on Alchemy"
+--[[Translation missing --]]
+La["Algari Treatise on Blacksmithing"] = "Algari Treatise on Blacksmithing"
+--[[Translation missing --]]
+La["Algari Treatise on Enchanting"] = "Algari Treatise on Enchanting"
+--[[Translation missing --]]
+La["Algari Treatise on Engineering"] = "Algari Treatise on Engineering"
+--[[Translation missing --]]
+La["Algari Treatise on Herbalism"] = "Algari Treatise on Herbalism"
+--[[Translation missing --]]
+La["Algari Treatise on Inscription"] = "Algari Treatise on Inscription"
+--[[Translation missing --]]
+La["Algari Treatise on Jewelcrafting"] = "Algari Treatise on Jewelcrafting"
+--[[Translation missing --]]
+La["Algari Treatise on Leatherworking"] = "Algari Treatise on Leatherworking"
+--[[Translation missing --]]
+La["Algari Treatise on Mining"] = "Algari Treatise on Mining"
+--[[Translation missing --]]
+La["Algari Treatise on Skinning"] = "Algari Treatise on Skinning"
+--[[Translation missing --]]
+La["Algari Treatise on Tailoring"] = "Algari Treatise on Tailoring"
 La["Always show"] = "Immer anzeigen"
 La["Amathet Reliquary"] = "Reliquiar der Amathet"
 La["Ambered Coffer"] = "Bernbesetzte Kiste"
---[[Translation missing --]]
 La["ARAK"] = "ARAK"
 La["ARC"] = "ARC"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "Bist du sicher, dass du %s aus der SavedInstances Charakterdatenbank löschen möchtest?"
@@ -836,6 +980,8 @@ La["Automatically shrink the tooltip to fit on the screen"] = "Den Tooltip autom
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Schlachtfelddeserteur Abklingzeit"
 La["BH"] = "BH"
+--[[Translation missing --]]
+La["Biergoth Dungeon Quest"] = "Biergoth Dungeon Quest"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Wähle Tastenkombination zum Umschalten des SavedInstances Tooltip"
 La["Blooming Dreamseeds"] = "Erblühende Traumsaat"
 La["Bonus loot frame"] = "Bonusbeutefenster"
@@ -844,7 +990,7 @@ La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = [=[Informationen über getötete Bosse fehlen für diese Instanzsperre.
 Dies ist ein Fehler von Blizzard, der einige ältere Schlachtzüge betrifft.]=]
 La["Bouldron"] = "Brockon"
---[[Translation missing --]]
+La["Brawl Weekly"] = "Rauferei Weekly"
 La["BREW"] = "BREW"
 La["BRH"] = "BRH"
 La["Calling Missing"] = "Berufung fehlt!"
@@ -861,7 +1007,6 @@ La["Combine World Bosses"] = "Weltbosse zusammenfassen"
 La["Community Feast"] = "Gemeinschaftliches Festmahl"
 La["Connected Realms"] = "Verknüpfte Realms"
 La["COS"] = "COS"
---[[Translation missing --]]
 La["COT"] = "COT"
 La["Covenant"] = "Pakt"
 La["Covenant Assaults"] = "Paktangriffe"
@@ -869,12 +1014,10 @@ La["Crystalus"] = "Kristallus"
 La["Currency settings"] = "Abzeicheneinstellungen"
 La["Cursed Coffer"] = "Kiste des Schwarzen Imperiums"
 La["Daily Quests"] = "Tägliche Quests"
---[[Translation missing --]]
 La["DAWN"] = "DAWN"
 La["Day"] = "Tag"
 La["Debug Mode"] = "Debugmodus"
 La["Delete Entry"] = "Lösche Eintrag"
---[[Translation missing --]]
 La["DFC"] = "DFC"
 La["DHT"] = "DHT"
 La["Disable mouseover"] = "Mouseover deaktivieren"
@@ -910,9 +1053,13 @@ La["FH"] = "FH"
 La["Fighting is Its Own Reward"] = "Kampf ist eine Belohnung in sich"
 La["Fire"] = "Feuer"
 La["Fire Core"] = "Feuerkern"
+--[[Translation missing --]]
+La["First Cache"] = "First Cache"
 La["Fit to screen"] = "An Bildschirm anpassen"
 La["Flex"] = "Flex"
 La["Format large numbers"] = "Große Zahlen formatieren"
+--[[Translation missing --]]
+La["Fourth Cache"] = "Fourth Cache"
 La["Frozion"] = "Frozion"
 La["Full Clear + 1 Mask"] = "Full Clear + 1 Maske"
 La["Full Clear + 2 Masks"] = "Full Clear + 2 Masken"
@@ -922,9 +1069,9 @@ La["Full Clear + 5 Masks"] = "Full Clear + 5 Masken"
 La["Full Clear No Masks"] = "Full Clear, keine Masken"
 La["Full Objective"] = "Volles Ziel"
 La["Gaelzion"] = "Gaelzion"
---[[Translation missing --]]
 La["GB"] = "GB"
 La["GD"] = "GD"
+La["Gearing Up for Trouble"] = "In Sachen Probleme einen Gang hochschalten"
 La["General settings"] = "Allgemeine Einstellungen"
 La["GMBT"] = "GMBT"
 La["Grand Hunt"] = "Große Jagd"
@@ -956,11 +1103,11 @@ La["Interleave"] = "Verschachteln"
 La["Kain Firebrand"] = "Kain Feuermal"
 La["Karantun"] = "Karantun"
 La["Keystone report target"] = "Sende Schlüsselstein an Ziel"
---[[Translation missing --]]
-La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
+La["Khaz Algar Transmute"] = "Khaz Algar Transmutieren"
 La["KR"] = "KR"
 La["Last updated"] = "Zuletzt aktualisiert"
 La["Legion Transmute"] = "Legion Transmutation"
+La["Lesser Keyflame"] = "Kleinere Schlüsselflamme"
 La["Lesser Visions of N'Zoth"] = "Geringe Vision von N'Zoth"
 La["Level %d Characters"] = "Stufe-%d-Charaktere"
 La["LFG cooldown"] = "Dungeonbrowser-Abklingzeit"
@@ -972,8 +1119,7 @@ La["Loot Aspect Crest Fragment"] = "Schattenflammenwappenbruchstück des Aspekts
 La["Loot Drake Crest Fragment"] = "Schattenflammenwappenbruchstück des Drachen"
 La["Loot Spark of Awakening"] = "Funke der Erweckung"
 La["Loot Spark of Dreams"] = "Gesplitterter Funke der Träume"
---[[Translation missing --]]
-La["Loot Spark of Omens"] = "Loot Spark of Omens"
+La["Loot Spark of Omens"] = "Plündere Funke der Omen"
 La["Loot Spark of Shadowflame"] = "Funke der Schattenflamme"
 La["Loot Whelpling Crest Fragment"] = "Schattenflammenwappenbruchstück des Welplings"
 La["Loot Wyrm Crest Fragment"] = "Schattenflammenwappenbruchstück des Wyrms"
@@ -1010,8 +1156,8 @@ La["Presets"] = "Voreinstellungen"
 La["Primal Storms Core"] = "Primalistensturm Kerne"
 La["Primal Storms Elementals"] = "Primalistensturm Elementare"
 La["Progress Persists"] = "Fortschrittsbalken"
---[[Translation missing --]]
 La["PSF"] = "PSF"
+La["PvP Weekly"] = "PvP Weekly"
 La["Quest ID"] = "Quest ID"
 La["Quest Name"] = "Quest Name"
 La["Quest progresses"] = "Questfortschritte"
@@ -1020,22 +1166,32 @@ La["Raids before dungeons"] = "Schlachtzüge vor Dungeons"
 La["Recent Bonus Rolls"] = "Letzte Bonuswürfe"
 La["Recent Instances"] = "Kürzliche Instanzen"
 La["Recover Dailies"] = "Dailies wiederherstellen"
+--[[Translation missing --]]
+La["Replenish the Reservoir"] = "Replenish the Reservoir"
 La["Report instance resets to group"] = "Instanzzurücksetzungen an die Gruppe berichten"
 La["Researchers Under Fire"] = "Forscher unter Feuer"
 La["Reset Characters"] = "Charaktere zurücksetzen"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "Umgekehrte Anordung"
 La["RISE"] = "RISE"
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Bonuswürfe"
---[[Translation missing --]]
+La["Rollin' Down in the Deeps"] = "In tiefsten Tiefen"
 La["ROOK"] = "ROOK"
 La["Rouen Icewind"] = "Rouen Eiswind"
 La["Row Highlight"] = "Zeilenhervorhebung"
 La["SBG"] = "SBG"
 La["SD"] = "SD"
 La["SEAT"] = "SEAT"
+--[[Translation missing --]]
+La["Second Cache"] = "Second Cache"
 La["Secured Shipment"] = "Gesicherte Lieferung"
+--[[Translation missing --]]
+La["Services Requested"] = "Services Requested"
 La["Set All"] = "Alle festlegen"
+--[[Translation missing --]]
+La["Shaping Fate"] = "Shaping Fate"
 La["Shaping the Dreamsurge"] = "Den Traumsprung formen"
 La["Shipment of Goods"] = "Warenlieferung"
 La["Show all emissary names"] = "Zeige alle Namen der Abgesandten"
@@ -1079,6 +1235,9 @@ La["Sorting"] = "Sortierung"
 La["SOTS"] = "SOTS"
 La["Space between categories"] = "Freiraum zwischen Kategorien"
 La["Sparks of Life"] = "Funken des Lebens"
+La["Special Assignments"] = "Spezialaufträge"
+--[[Translation missing --]]
+La["Spreading the Light"] = "Spreading the Light"
 La["Storm Surge"] = "Sturmflut"
 La["Storm's Fury"] = "Zorn des Sturms"
 La["STRT"] = "STRT"
@@ -1088,10 +1247,17 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Text"
 La["The Big Dig: Traitor's Rest"] = "Das große Buddeln: Ruhestätte des Verräters"
+La["The Call of the Worldsoul"] = "Der Ruf der Weltenseele"
 La["The Four Celestials"] = "Die Vier Erhabenen"
+La["The Key to Success"] = "Der Schlüssel zum Erfolg"
+La["The Severed Threads"] = "Die Durchtrennten Fäden"
 La["The Superbloom"] = "Die Superblüte"
+--[[Translation missing --]]
+La["The Theater Troupe"] = "The Theater Troupe"
 La["The World Awaits"] = "Die Welt wartet"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Diese Instanzen zählen zum %i-Instanzen-pro-Stunde-pro-Account-Limit, gefolgt von der Zeit, bis sie ablaufen."
+--[[Translation missing --]]
+La["Third Cache"] = "Third Cache"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Dies sollte nur für Charaktere, die umbenannt oder gelöscht wurden, verwendet werden, da Charaktere erneut in die Datenbank eingetragen werden, wenn du dich mit ihnen einloggst."
 La["Time /played"] = "Zeit /gespielt"
 La["Time Left"] = "Verbleibende Zeit"
@@ -1113,6 +1279,12 @@ La["Trade skills"] = "Berufsfertigkeiten"
 La["Transmute"] = "Transmutieren"
 La["Trial of Elements"] = "Prüfung der Elemente"
 La["Trial of Flood"] = "Prüfung der Flut"
+--[[Translation missing --]]
+La["TWW Algari Treatise"] = "TWW Algari Treatise"
+--[[Translation missing --]]
+La["TWW Services Requested"] = "TWW Services Requested"
+--[[Translation missing --]]
+La["TWW Weekly Cache"] = "TWW Weekly Cache"
 La["Type"] = "Wert"
 La["ULD"] = "ULD"
 La["UNDR"] = "UNDR"
@@ -1124,6 +1296,8 @@ La["Vision Boss Only"] = "nur der Visions Boss"
 La["Voraazka"] = "Voraazka"
 La["VOTW"] = "VOTW"
 La["VP"] = "VP"
+--[[Translation missing --]]
+La["Warband Money"] = "Warband Money"
 La["Warfronts"] = "Kriegsfronten"
 La["Warn about instance limit"] = "Vor Instanzlimit warnen"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Achtung: Du hast kürzlich %i Instanzen betreten und näherst Dich dem Limit von %i Instanzen pro Stunde für Deinen Account. Weitere Instanzen sollten in %s verfügbar sein."
@@ -1135,6 +1309,7 @@ La["WM"] = "WM"
 La["WORK"] = "WORK"
 La["World Boss"] = "Weltboss"
 La["World Bosses"] = "Weltbosse"
+La["World PvP Weekly"] = "Welt PvP Weekly"
 La["Wrath of the Jailer"] = "Zorn des Kerkermeisters"
 La["YARD"] = "YARD"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "Nach Wunsch können Icons und Text in einem einzelnen Indikator kombiniert werden. Wähle ein Symbol und gebe das Wort ICON in das Textfeld ein. Wo auch immer das Wort ICON gefunden wird, wird das gewählte Symbol angefügt."
@@ -1145,6 +1320,8 @@ elseif locale == "koKR" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00좌-클릭|r으로 툴팁 떼어내기"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00가운데-클릭|r 블리자드 공격대 정보 보기"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00우-클릭|r으로 SavedInstances 설정"
+La["A Call to Battle"] = "전장의 부름"
+La["A Call to Delves"] = "구렁의 부름"
 La["A Worthy Ally: Dream Wardens"] = "가치 있는 동맹: 꿈의 감독관"
 La["A Worthy Ally: Loamm Niffen"] = "가치 있는 동맹: 로암 니펜"
 La["AA"] = "대학"
@@ -1157,11 +1334,22 @@ La["Add Entry"] = "추가"
 La["Aiding the Accord"] = "협의회 지원"
 La["Air"] = "폭풍"
 La["Air Core"] = "바람의 핵"
+La["Alchemy Thaumaturgy"] = "연금술 기적술"
+La["Algari Treatise on Alchemy"] = "연금술에 관한 알가르 논문"
+La["Algari Treatise on Blacksmithing"] = "대장기술에 관한 알가르 논문"
+La["Algari Treatise on Enchanting"] = "마법부여에 관한 알가르 논문"
+La["Algari Treatise on Engineering"] = "기계공학에 관한 알가르 논문"
+La["Algari Treatise on Herbalism"] = "약초채집에 관한 알가르 논문"
+La["Algari Treatise on Inscription"] = "주문각인에 관한 알가르 논문"
+La["Algari Treatise on Jewelcrafting"] = "보석세공에 관한 알가르 논문"
+La["Algari Treatise on Leatherworking"] = "가죽세공에 관한 알가르 논문"
+La["Algari Treatise on Mining"] = "채광에 관한 알가르 논문"
+La["Algari Treatise on Skinning"] = "무두질에 관한 알가르 논문"
+La["Algari Treatise on Tailoring"] = "재봉술에 관한 알가르 논문"
 La["Always show"] = "항상 표시"
 La["Amathet Reliquary"] = "아마셋 성물함"
 La["Ambered Coffer"] = "호박석 박힌 함"
---[[Translation missing --]]
-La["ARAK"] = "ARAK"
+La["ARAK"] = "아라카라"
 La["ARC"] = "비전로"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "SavedInstances 캐릭터 데이터베이스에서 %s를(을) 제거하시겠습니까?"
 La["Are you sure you want to report all your keys to %s?"] = "%s 에게 쐐기돌을 알려주시겠습니까?"
@@ -1171,6 +1359,7 @@ La["Automatically shrink the tooltip to fit on the screen"] = "화면에 맞게 
 La["Azuregos"] = "아주어고스"
 La["Battleground Deserter"] = "전장 탈영 대기시간 추적"
 La["BH"] = "담쟁이"
+La["Biergoth Dungeon Quest"] = "비어고스 던전 퀘스트"
 La["Bind a key to toggle the SavedInstances tooltip"] = "SavedInstances 툴팁을 보거나 숨기는 키 설정"
 La["Blooming Dreamseeds"] = "만발하는 꿈씨앗"
 La["Bonus loot frame"] = "추가 전리품 창"
@@ -1178,8 +1367,8 @@ La["Bonus rolls"] = "추가 전리품 주사위 추적"
 La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = "보스 처지 정보가 누락되어 잠겨 있습니다.\\n 이것은 특정 낭만 공격대에 영향을 미치는 블리자드 버그입니다."
 La["Bouldron"] = "볼드론"
---[[Translation missing --]]
-La["BREW"] = "BREW"
+La["Brawl Weekly"] = "주간 난투"
+La["BREW"] = "양조장"
 La["BRH"] = "검떼"
 --[[Translation missing --]]
 La["Calling Missing"] = "Calling Missing"
@@ -1194,23 +1383,20 @@ La["Combine emissaries of same expansion"] = "확팩별 사절퀘 모음"
 La["Combine LFR"] = "공찾/탄공 합침"
 La["Combine World Bosses"] = "야외 보스 합침"
 La["Community Feast"] = "공동체 잔치"
-La["Connected Realms"] = "연동 서버"
+La["Connected Realms"] = "연합 서버"
 La["COS"] = "별궁"
---[[Translation missing --]]
-La["COT"] = "COT"
+La["COT"] = "실타래"
 La["Covenant"] = "성약의 단"
 La["Covenant Assaults"] = "성약의 단 습격"
 La["Crystalus"] = "크리스탈루스"
 La["Currency settings"] = "화폐 설정"
 La["Cursed Coffer"] = "저주받은 함"
 La["Daily Quests"] = "일일 퀘스트"
---[[Translation missing --]]
-La["DAWN"] = "DAWN"
+La["DAWN"] = "새벽"
 La["Day"] = "일"
 La["Debug Mode"] = "디버그 모드"
 La["Delete Entry"] = "삭제"
---[[Translation missing --]]
-La["DFC"] = "DFC"
+La["DFC"] = "동굴"
 La["DHT"] = "어숲"
 La["Disable mouseover"] = "마우스오버 사용안함"
 La["Disable tooltip display on icon mouseover"] = "아이콘 마우스 오버시 툴팁 표시 안함"
@@ -1245,9 +1431,11 @@ La["FH"] = "자유"
 La["Fighting is Its Own Reward"] = "전투의 보람"
 La["Fire"] = "불"
 La["Fire Core"] = "화염의 핵"
+La["First Cache"] = "첫번째 보관함"
 La["Fit to screen"] = "화면에 맞춤"
 La["Flex"] = "탄력적 공격대"
 La["Format large numbers"] = "천 단위 구분자(,) 사용 여부"
+La["Fourth Cache"] = "네번째 보관함"
 La["Frozion"] = "프로지온"
 La["Full Clear + 1 Mask"] = "1가면 5상"
 La["Full Clear + 2 Masks"] = "2가면 5상"
@@ -1257,9 +1445,9 @@ La["Full Clear + 5 Masks"] = "5가면 5상"
 La["Full Clear No Masks"] = "0가면 5상"
 La["Full Objective"] = "完整目標"
 La["Gaelzion"] = "게일지온"
---[[Translation missing --]]
-La["GB"] = "GB"
+La["GB"] = "그림 바톨"
 La["GD"] = "정비소"
+La["Gearing Up for Trouble"] = "문제대비"
 La["General settings"] = "일반 설정"
 La["GMBT"] = "타자:소레아"
 La["Grand Hunt"] = "사냥의 제전"
@@ -1291,11 +1479,11 @@ La["Interleave"] = "끼워넣기"
 La["Kain Firebrand"] = "케인 파이어브랜드"
 La["Karantun"] = "카란툰"
 La["Keystone report target"] = "쐐기돌 보고 대상"
---[[Translation missing --]]
-La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
+La["Khaz Algar Transmute"] = "카즈 알가르 변환"
 La["KR"] = "왕안"
 La["Last updated"] = "마지막 갱신"
 La["Legion Transmute"] = "군단 변환식"
+La["Lesser Keyflame"] = "하급 열쇠불꽃"
 La["Lesser Visions of N'Zoth"] = "미니 환영"
 La["Level %d Characters"] = "레벨 %d 캐릭터"
 La["LFG cooldown"] = "무작위 던전 대기시간 추적"
@@ -1345,8 +1533,8 @@ La["Primal Storms Core"] = "원시 폭풍 핵"
 La["Primal Storms Elementals"] = "원시 폭풍 정령"
 --[[Translation missing --]]
 La["Progress Persists"] = "Progress Persists"
---[[Translation missing --]]
-La["PSF"] = "PSF"
+La["PSF"] = "수도원"
+La["PvP Weekly"] = "주간 PVP"
 La["Quest ID"] = "퀘스트 ID"
 La["Quest Name"] = "퀘스트 이름"
 La["Quest progresses"] = "퀘스트 진행도"
@@ -1355,22 +1543,30 @@ La["Raids before dungeons"] = "던전 앞에 공격대"
 La["Recent Bonus Rolls"] = "최근 추가 보상"
 La["Recent Instances"] = "최근 인던"
 La["Recover Dailies"] = "일일퀘스트 복구"
+--[[Translation missing --]]
+La["Replenish the Reservoir"] = "Replenish the Reservoir"
 La["Report instance resets to group"] = "던전 초기화를 파티에 알림"
 La["Researchers Under Fire"] = "위기의 연구원들"
 La["Reset Characters"] = "캐릭터 초기화"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "순서를 거꾸로"
 La["RISE"] = "여명:현신"
 La["RLP"] = "루비"
 La["Roll Bonus"] = "추가 보상"
---[[Translation missing --]]
-La["ROOK"] = "ROOK"
+La["Rollin' Down in the Deeps"] = "심연에서 구르고 굴러"
+La["ROOK"] = "부화장"
 La["Rouen Icewind"] = "루엔 아이스윈드"
 La["Row Highlight"] = "열 강조"
 La["SBG"] = "어둠달"
 La["SD"] = "심연"
 La["SEAT"] = "삼두정"
+La["Second Cache"] = "두번째 보관함"
 La["Secured Shipment"] = "보호되는 화물"
+La["Services Requested"] = "지원 요청"
 La["Set All"] = "모든 설정"
+--[[Translation missing --]]
+La["Shaping Fate"] = "Shaping Fate"
 La["Shaping the Dreamsurge"] = "꿈결쇄도 빚어내기"
 La["Shipment of Goods"] = "상품 화물"
 La["Show all emissary names"] = "모든 사절 이름 표시"
@@ -1414,19 +1610,25 @@ La["Sorting"] = "정렬"
 La["SOTS"] = "폭사"
 La["Space between categories"] = "카테고리 사이에 공백"
 La["Sparks of Life"] = "생명의 불꽃"
+La["Special Assignments"] = "특별 과제"
+La["Spreading the Light"] = "퍼져나가는 빛"
 La["Storm Surge"] = "용솟음치는 폭풍"
 La["Storm's Fury"] = "폭풍의 격노"
 La["STRT"] = "타자:경이"
---[[Translation missing --]]
-La["SV"] = "SV"
+La["SV"] = "바위금고"
 La["TAV"] = "하늘빛"
 La["TD"] = "톨다고르"
 La["Text"] = "글자"
 La["The Big Dig: Traitor's Rest"] = "대규모 발굴: 배신자의 안식처"
+La["The Call of the Worldsoul"] = "세계혼의 부름"
 La["The Four Celestials"] = "네 천신"
+La["The Key to Success"] = "성공의 열쇠"
+La["The Severed Threads"] = "단절된 실톳"
 La["The Superbloom"] = "만개화"
+La["The Theater Troupe"] = "극장 공연단"
 La["The World Awaits"] = "세상이 기다린다"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "계정당 1시간 내에 입장이 제한된 %i 개의 인스턴스에 포함된 인스턴스와 만료 될 때까지 남은 시간입니다"
+La["Third Cache"] = "세번째 보관함"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "이름이 변경되거나 삭제된 캐릭터만 사용해야 하며 재로그인시 캐릭터의 정보가 다시 채워집니다."
 La["Time /played"] = "플레이 시간 표시"
 La["Time Left"] = "남은 시간"
@@ -1448,6 +1650,9 @@ La["Trade skills"] = "전문 기술"
 La["Transmute"] = "변환"
 La["Trial of Elements"] = "정령의 시험"
 La["Trial of Flood"] = "홍수의 시험"
+La["TWW Algari Treatise"] = "내부전쟁 알가르 논문"
+La["TWW Services Requested"] = "내부전쟁 지원 요청"
+La["TWW Weekly Cache"] = "내부전쟁 주간 보관함"
 La["Type"] = "유형"
 La["ULD"] = "울다만"
 La["UNDR"] = "썩굴"
@@ -1459,6 +1664,7 @@ La["Vision Boss Only"] = "주 목표만 달성"
 La["Voraazka"] = "보라즈카"
 La["VOTW"] = "금고"
 La["VP"] = "누각"
+La["Warband Money"] = "전투부대 돈"
 La["Warfronts"] = "격전지"
 La["Warn about instance limit"] = "인스턴스 제한 경고"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "경고 : 최근 %i 개의 인스턴스에 입장하였고, 귀하의 계정에 대해 시간 당 제한된 %i 개의 인스턴스에 근접하고 있습니다. 더 많은 인스턴스는 %s 후에 이용가능합니다."
@@ -1470,6 +1676,7 @@ La["WM"] = "저택"
 La["WORK"] = "메카곤:작업장"
 La["World Boss"] = "월드보스"
 La["World Bosses"] = "야외 우두머리"
+La["World PvP Weekly"] = "주간 필드 PVP"
 La["Wrath of the Jailer"] = "간수의 분노"
 La["YARD"] = "메카곤:고철장"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "원할 경우 단일 표시기에 아이콘과 문자를 조합하여 사용이 가능합니다. 단순히 아이콘을 선택하면 문자 영역에 문자열 아이콘을 삽입합니다. 어디에서든 문자열 아이콘을 찾을 수 있으며, 선택한 아이콘으로 대체됩니다."
@@ -1481,6 +1688,10 @@ La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r to open week
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Click-Izquierdo|r para separar la descripción"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Click-Medio|r para mostrar Información de banda de Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
+--[[Translation missing --]]
+La["A Call to Battle"] = "A Call to Battle"
+--[[Translation missing --]]
+La["A Call to Delves"] = "A Call to Delves"
 --[[Translation missing --]]
 La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
 --[[Translation missing --]]
@@ -1503,6 +1714,30 @@ La["Aiding the Accord"] = "Aiding the Accord"
 La["Air"] = "Air"
 --[[Translation missing --]]
 La["Air Core"] = "Air Core"
+--[[Translation missing --]]
+La["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+--[[Translation missing --]]
+La["Algari Treatise on Alchemy"] = "Algari Treatise on Alchemy"
+--[[Translation missing --]]
+La["Algari Treatise on Blacksmithing"] = "Algari Treatise on Blacksmithing"
+--[[Translation missing --]]
+La["Algari Treatise on Enchanting"] = "Algari Treatise on Enchanting"
+--[[Translation missing --]]
+La["Algari Treatise on Engineering"] = "Algari Treatise on Engineering"
+--[[Translation missing --]]
+La["Algari Treatise on Herbalism"] = "Algari Treatise on Herbalism"
+--[[Translation missing --]]
+La["Algari Treatise on Inscription"] = "Algari Treatise on Inscription"
+--[[Translation missing --]]
+La["Algari Treatise on Jewelcrafting"] = "Algari Treatise on Jewelcrafting"
+--[[Translation missing --]]
+La["Algari Treatise on Leatherworking"] = "Algari Treatise on Leatherworking"
+--[[Translation missing --]]
+La["Algari Treatise on Mining"] = "Algari Treatise on Mining"
+--[[Translation missing --]]
+La["Algari Treatise on Skinning"] = "Algari Treatise on Skinning"
+--[[Translation missing --]]
+La["Algari Treatise on Tailoring"] = "Algari Treatise on Tailoring"
 La["Always show"] = "Mostrar siempre"
 --[[Translation missing --]]
 La["Amathet Reliquary"] = "Amathet Reliquary"
@@ -1523,6 +1758,8 @@ La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Sigue la duración del perjuicio Desertor"
 --[[Translation missing --]]
 La["BH"] = "BH"
+--[[Translation missing --]]
+La["Biergoth Dungeon Quest"] = "Biergoth Dungeon Quest"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la descripción SavedInstances"
 --[[Translation missing --]]
 La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
@@ -1535,6 +1772,8 @@ This is a Blizzard bug affecting certain old raids.]=] ] = [=[Boss kill informat
 This is a Blizzard bug affecting certain old raids.]=]
 --[[Translation missing --]]
 La["Bouldron"] = "Bouldron"
+--[[Translation missing --]]
+La["Brawl Weekly"] = "Brawl Weekly"
 --[[Translation missing --]]
 La["BREW"] = "BREW"
 --[[Translation missing --]]
@@ -1641,9 +1880,13 @@ La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
+--[[Translation missing --]]
+La["First Cache"] = "First Cache"
 La["Fit to screen"] = "Ajustar a Pantalla"
 La["Flex"] = "Flexible"
 La["Format large numbers"] = "Formatear números extensos"
+--[[Translation missing --]]
+La["Fourth Cache"] = "Fourth Cache"
 --[[Translation missing --]]
 La["Frozion"] = "Frozion"
 --[[Translation missing --]]
@@ -1666,6 +1909,8 @@ La["Gaelzion"] = "Gaelzion"
 La["GB"] = "GB"
 --[[Translation missing --]]
 La["GD"] = "GD"
+--[[Translation missing --]]
+La["Gearing Up for Trouble"] = "Gearing Up for Trouble"
 La["General settings"] = "Opciones generales"
 --[[Translation missing --]]
 La["GMBT"] = "GMBT"
@@ -1726,6 +1971,8 @@ La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
 La["KR"] = "KR"
 La["Last updated"] = "Última Actualización"
 La["Legion Transmute"] = "Transmutación de Legión"
+--[[Translation missing --]]
+La["Lesser Keyflame"] = "Lesser Keyflame"
 --[[Translation missing --]]
 La["Lesser Visions of N'Zoth"] = "Lesser Visions of N'Zoth"
 La["Level %d Characters"] = "Leveleá %d Personajes"
@@ -1812,6 +2059,8 @@ La["Progress Persists"] = "Progress Persists"
 --[[Translation missing --]]
 La["PSF"] = "PSF"
 --[[Translation missing --]]
+La["PvP Weekly"] = "PvP Weekly"
+--[[Translation missing --]]
 La["Quest ID"] = "Quest ID"
 --[[Translation missing --]]
 La["Quest Name"] = "Quest Name"
@@ -1823,16 +2072,22 @@ La["Raids before dungeons"] = "Bandas antes que mazmorras"
 La["Recent Bonus Rolls"] = "Tiradas Extra Recientes"
 La["Recent Instances"] = "Instancias recientes"
 La["Recover Dailies"] = "Recuperar diarias"
+--[[Translation missing --]]
+La["Replenish the Reservoir"] = "Replenish the Reservoir"
 La["Report instance resets to group"] = "Informar de reinicializaciones de instancias al grupo"
 --[[Translation missing --]]
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Reinicializar personajes"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "Invertir orden"
 --[[Translation missing --]]
 La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Bonos de tirada"
+--[[Translation missing --]]
+La["Rollin' Down in the Deeps"] = "Rollin' Down in the Deeps"
 --[[Translation missing --]]
 La["ROOK"] = "ROOK"
 --[[Translation missing --]]
@@ -1845,8 +2100,14 @@ La["SD"] = "SD"
 --[[Translation missing --]]
 La["SEAT"] = "SEAT"
 --[[Translation missing --]]
+La["Second Cache"] = "Second Cache"
+--[[Translation missing --]]
 La["Secured Shipment"] = "Secured Shipment"
+--[[Translation missing --]]
+La["Services Requested"] = "Services Requested"
 La["Set All"] = "Ajustar todos"
+--[[Translation missing --]]
+La["Shaping Fate"] = "Shaping Fate"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 --[[Translation missing --]]
@@ -1908,6 +2169,10 @@ La["Space between categories"] = "Espacio entre categorías"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
 --[[Translation missing --]]
+La["Special Assignments"] = "Special Assignments"
+--[[Translation missing --]]
+La["Spreading the Light"] = "Spreading the Light"
+--[[Translation missing --]]
 La["Storm Surge"] = "Storm Surge"
 --[[Translation missing --]]
 La["Storm's Fury"] = "Storm's Fury"
@@ -1922,12 +2187,22 @@ La["TD"] = "TD"
 La["Text"] = "Texto"
 --[[Translation missing --]]
 La["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
+--[[Translation missing --]]
+La["The Call of the Worldsoul"] = "The Call of the Worldsoul"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
+--[[Translation missing --]]
+La["The Key to Success"] = "The Key to Success"
+--[[Translation missing --]]
+La["The Severed Threads"] = "The Severed Threads"
 --[[Translation missing --]]
 La["The Superbloom"] = "The Superbloom"
 --[[Translation missing --]]
+La["The Theater Troupe"] = "The Theater Troupe"
+--[[Translation missing --]]
 La["The World Awaits"] = "The World Awaits"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas instancias cuentan para el límite de %i por hora por cuenta, y expirará a la hora indicada."
+--[[Translation missing --]]
+La["Third Cache"] = "Third Cache"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Esto sólo debe ser usado para personajes que han sido renombrados o borrados, ya que los personajes serán cargados de nuevo cuando te conectes con ellos."
 La["Time /played"] = "Tiempo /jugado"
 La["Time Left"] = "Tiempo Restante"
@@ -1963,6 +2238,12 @@ La["Transmute"] = "Transmutar"
 La["Trial of Elements"] = "Trial of Elements"
 --[[Translation missing --]]
 La["Trial of Flood"] = "Trial of Flood"
+--[[Translation missing --]]
+La["TWW Algari Treatise"] = "TWW Algari Treatise"
+--[[Translation missing --]]
+La["TWW Services Requested"] = "TWW Services Requested"
+--[[Translation missing --]]
+La["TWW Weekly Cache"] = "TWW Weekly Cache"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
 La["ULD"] = "ULD"
@@ -1984,6 +2265,8 @@ La["VOTW"] = "VOTW"
 --[[Translation missing --]]
 La["VP"] = "VP"
 --[[Translation missing --]]
+La["Warband Money"] = "Warband Money"
+--[[Translation missing --]]
 La["Warfronts"] = "Warfronts"
 --[[Translation missing --]]
 La["Warn about instance limit"] = "Warn about instance limit"
@@ -2001,6 +2284,8 @@ La["WORK"] = "WORK"
 La["World Boss"] = "Jefe del mundo"
 La["World Bosses"] = "Jefes de Mundo"
 --[[Translation missing --]]
+La["World PvP Weekly"] = "World PvP Weekly"
+--[[Translation missing --]]
 La["Wrath of the Jailer"] = "Wrath of the Jailer"
 --[[Translation missing --]]
 La["YARD"] = "YARD"
@@ -2013,6 +2298,8 @@ elseif locale == "ruRU" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00ЛКМ|r, чтобы показать информацию в отдельном окне"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "Нажмите на колёсико мышки, чтобы показать информацию о рейдах от Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00ПКМ|r, чтобы настроить SavedInstances"
+La["A Call to Battle"] = "Призыв к бою"
+La["A Call to Delves"] = "Вызов в вылазку"
 La["A Worthy Ally: Dream Wardens"] = "Достойный союзник: Стражи Сна"
 La["A Worthy Ally: Loamm Niffen"] = "Достойный союзник: лоаммские ниффы"
 La["AA"] = "АА"
@@ -2025,11 +2312,22 @@ La["Add Entry"] = "Добавить запись"
 La["Aiding the Accord"] = "Помощь союзу"
 La["Air"] = "Воздух"
 La["Air Core"] = "Воздушное ядро"
+La["Alchemy Thaumaturgy"] = "Алхимия Тауматургия"
+La["Algari Treatise on Alchemy"] = "Алгарийский трактат об алхимии"
+La["Algari Treatise on Blacksmithing"] = "Алгарийский трактат о кузнечном деле"
+La["Algari Treatise on Enchanting"] = "Алгарийский трактат о наложении чар"
+La["Algari Treatise on Engineering"] = "Алгарийский трактат об инженерном деле"
+La["Algari Treatise on Herbalism"] = "Алгарийский трактат о травничестве"
+La["Algari Treatise on Inscription"] = "Алгарийский трактат о начертании"
+La["Algari Treatise on Jewelcrafting"] = "Алгарийский трактат о ювелирном деле"
+La["Algari Treatise on Leatherworking"] = "Алгарийский трактат о кожевничестве"
+La["Algari Treatise on Mining"] = "Алгарийский трактат о горном деле"
+La["Algari Treatise on Skinning"] = "Алгарийский трактат о снятии шкур"
+La["Algari Treatise on Tailoring"] = "Алгарийский трактат о портняжном деле"
 La["Always show"] = "Всегда отображать"
 La["Amathet Reliquary"] = "Реликварий аматетов"
 La["Ambered Coffer"] = "Покрытый янтарем сундук"
---[[Translation missing --]]
-La["ARAK"] = "ARAK"
+La["ARAK"] = "АК, ГО"
 La["ARC"] = "КС"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "Вы уверены, что хотите удалить %s из базы данных персонажей SavedInstances?"
 La["Are you sure you want to report all your keys to %s?"] = "Вы уверены, что хотите сообщить обо всех своих ключах %s?"
@@ -2039,6 +2337,7 @@ La["Automatically shrink the tooltip to fit on the screen"] = "Автомати�
 La["Azuregos"] = "Азурегос"
 La["Battleground Deserter"] = "Дезертир с Поля Боя"
 La["BH"] = "ЛОЩИНА"
+La["Biergoth Dungeon Quest"] = "Задание в подземелье Биргота"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Клавиша для вкл./выкл. подсказок SavedInstances"
 La["Blooming Dreamseeds"] = "Цветение во Сне"
 La["Bonus loot frame"] = "Окно дополнительной добычи"
@@ -2047,8 +2346,8 @@ La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = [=[Отсутствует информация об убийстве босса для этого сохранения рейда.
 Это является ошибкой компании Blizzard, затрагивающей некоторые старые рейды.]=]
 La["Bouldron"] = "Валурон"
---[[Translation missing --]]
-La["BREW"] = "BREW"
+La["Brawl Weekly"] = "Еженедельные задания потасовки"
+La["BREW"] = "ИСКРА"
 La["BRH"] = "КЧЛ"
 La["Calling Missing"] = "Призыв отсутствует"
 La["Categories"] = "Категории"
@@ -2064,21 +2363,18 @@ La["Combine World Bosses"] = "Объединять мировых босcов"
 La["Community Feast"] = "Большое пиршество"
 La["Connected Realms"] = "Соединенные сервера"
 La["COS"] = "КЗ"
---[[Translation missing --]]
-La["COT"] = "COT"
+La["COT"] = "ГН"
 La["Covenant"] = "Ковенант"
 La["Covenant Assaults"] = "Атаки ковенантов"
 La["Crystalus"] = "Кристалий"
 La["Currency settings"] = "Настройки валюты"
 La["Cursed Coffer"] = "Проклятый сундук"
 La["Daily Quests"] = "Ежедневные задания"
---[[Translation missing --]]
-La["DAWN"] = "DAWN"
+La["DAWN"] = "СР"
 La["Day"] = "День"
 La["Debug Mode"] = "Режим отладки"
 La["Delete Entry"] = "Удалить запись"
---[[Translation missing --]]
-La["DFC"] = "DFC"
+La["DFC"] = "РТП"
 La["DHT"] = "ЧАЩА"
 La["Disable mouseover"] = "Откл. отобр. по наведению"
 La["Disable tooltip display on icon mouseover"] = "Отключить отображение подсказки по наведению на иконку"
@@ -2113,9 +2409,11 @@ La["FH"] = "ГАВАНЬ"
 La["Fighting is Its Own Reward"] = "Славный бой – это уже награда"
 La["Fire"] = "Огонь"
 La["Fire Core"] = "Огненное ядро"
+La["First Cache"] = "Первый тайник"
 La["Fit to screen"] = "Подогнать под размер экрана"
 La["Flex"] = "Гибкий"
 La["Format large numbers"] = "Формат больших чисел"
+La["Fourth Cache"] = "Четвёртый тайник"
 La["Frozion"] = "Ледозион"
 La["Full Clear + 1 Mask"] = "Полный проход + 1 Маска"
 La["Full Clear + 2 Masks"] = "Полный проход + 2 Маски"
@@ -2125,9 +2423,9 @@ La["Full Clear + 5 Masks"] = "Полный проход + 5 Масок"
 La["Full Clear No Masks"] = "Полный проход без масок"
 La["Full Objective"] = "Полная задача"
 La["Gaelzion"] = "Шторморон"
---[[Translation missing --]]
-La["GB"] = "GB"
+La["GB"] = "ГБ"
 La["GD"] = "ДЕПО"
+La["Gearing Up for Trouble"] = "Шестеренки неприятностей"
 La["General settings"] = "Общие настройки"
 La["GMBT"] = "ГАМБИТ"
 La["Grand Hunt"] = "Великая охота"
@@ -2159,11 +2457,11 @@ La["Interleave"] = "Смешивать в пределах соединенно�
 La["Kain Firebrand"] = "Кайн Жгучее Клеймо"
 La["Karantun"] = "Карантун"
 La["Keystone report target"] = "Цель отчета по ключам"
---[[Translation missing --]]
-La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
+La["Khaz Algar Transmute"] = "Трансмутация Каз Алгара"
 La["KR"] = "ГК"
 La["Last updated"] = "Последнее обновление"
 La["Legion Transmute"] = "Трансмутация Легиона"
+La["Lesser Keyflame"] = "Малый ключевой огонь"
 La["Lesser Visions of N'Zoth"] = "Малое Видение Н'Зота"
 La["Level %d Characters"] = "Персонажи уровня %d"
 La["LFG cooldown"] = "Отслеживать время задержки Поиска группы для подземелий"
@@ -2175,8 +2473,7 @@ La["Loot Aspect Crest Fragment"] = "Добыча Фрагмента гребня
 La["Loot Drake Crest Fragment"] = "Добыча Фрагмента гребня дракона из пламени Тьмы"
 La["Loot Spark of Awakening"] = "Искра пробуждения"
 La["Loot Spark of Dreams"] = "Искра снов"
---[[Translation missing --]]
-La["Loot Spark of Omens"] = "Loot Spark of Omens"
+La["Loot Spark of Omens"] = "Искра Знамения"
 La["Loot Spark of Shadowflame"] = "Добыча Искры пламени Тьмы"
 La["Loot Whelpling Crest Fragment"] = "Добыча Фрагмента гребня дракончика из пламени Тьмы"
 La["Loot Wyrm Crest Fragment"] = "Добыча Фрагмента гребня змея из пламени Тьмы"
@@ -2202,8 +2499,7 @@ La["NW"] = "СТ"
 La["Opacity of the tooltip row highlighting"] = "Прозрачность подсказки подсвеченной строки"
 La["Open config"] = "Открыть настройки"
 La["Order must be a number in [0 - 999]"] = "Заказ должен быть числом в диапазоне [0 - 999]"
---[[Translation missing --]]
-La["Outland Cut Jewel"] = "Outland Cut Jewel"
+La["Outland Cut Jewel"] = "Драгоценный камень Запределья"
 La["Paragon Chests"] = "Сундуки за Репутацию"
 La["Party"] = "Группа"
 La["Patterns Within Patterns"] = "Закономерности в закономерностях"
@@ -2213,8 +2509,8 @@ La["Presets"] = "Предустановки"
 La["Primal Storms Core"] = "Ядро Изначальных Штормов"
 La["Primal Storms Elementals"] = "Элементали Изначальных Штормов"
 La["Progress Persists"] = "Прогресс сохраняется"
---[[Translation missing --]]
-La["PSF"] = "PSF"
+La["PSF"] = "ПСП"
+La["PvP Weekly"] = "Еженедельные задания PvP"
 La["Quest ID"] = "ID квеста"
 La["Quest Name"] = "Название квеста"
 La["Quest progresses"] = "Прогресс квеста"
@@ -2223,22 +2519,27 @@ La["Raids before dungeons"] = "Рейды перед подземельями"
 La["Recent Bonus Rolls"] = "Недавние бонусные броски"
 La["Recent Instances"] = "Недавние подземелья"
 La["Recover Dailies"] = "Восстановление Ежедневных заданий"
+La["Replenish the Reservoir"] = "Наполнение резервуара"
 La["Report instance resets to group"] = "Сообщать группе об обновлении подземелья"
 La["Researchers Under Fire"] = "Исследователи под огнем"
 La["Reset Characters"] = "Сброс персонажей"
+La["Return Lost Souls"] = "Вернуть потерянные души"
 La["Reverse ordering"] = "Обратный порядок"
 La["RISE"] = "Подъем"
 La["RLP"] = "РОЖ"
 La["Roll Bonus"] = "Бонусный бросок"
---[[Translation missing --]]
-La["ROOK"] = "ROOK"
+La["Rollin' Down in the Deeps"] = "Вниз в глубины"
+La["ROOK"] = "ГНЕЗДО"
 La["Rouen Icewind"] = "Руан Ледяной Ветер"
 La["Row Highlight"] = "Подсветка строки"
 La["SBG"] = "НпЛ"
 La["SD"] = "КК"
 La["SEAT"] = "ПТ"
+La["Second Cache"] = "Второй тайник"
 La["Secured Shipment"] = "Защищенные ресурсы"
+La["Services Requested"] = "Требуются услуги"
 La["Set All"] = "Установить значение для всех"
+La["Shaping Fate"] = "Определяя судьбу"
 La["Shaping the Dreamsurge"] = "Укрощение Прилива Снов"
 La["Shipment of Goods"] = "Партия товаров"
 La["Show all emissary names"] = "Показать все имена эмиссаров"
@@ -2282,19 +2583,25 @@ La["Sorting"] = "Сортировка"
 La["SOTS"] = "СШ"
 La["Space between categories"] = "Промежуток между категориями"
 La["Sparks of Life"] = "Искры жизни"
+La["Special Assignments"] = "Особое поручение"
+La["Spreading the Light"] = "Принеси им свет"
 La["Storm Surge"] = "Пробуждение бури"
 La["Storm's Fury"] = "Неистовство бури"
 La["STRT"] = "УЛИЦЫ"
---[[Translation missing --]]
-La["SV"] = "SV"
+La["SV"] = "КС"
 La["TAV"] = "ЛХ"
 La["TD"] = "ТД"
 La["Text"] = "Текст"
 La["The Big Dig: Traitor's Rest"] = "Большие раскопки: Удел Предателя"
+La["The Call of the Worldsoul"] = "Зов души мира"
 La["The Four Celestials"] = "Четыре небожителя"
+La["The Key to Success"] = "Ключ к успеху"
+La["The Severed Threads"] = "Отрезанные нити"
 La["The Superbloom"] = "Цветочный бум"
+La["The Theater Troupe"] = "Театральная труппа"
 La["The World Awaits"] = "Мир ждёт"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Это те подземелья, на которые существуют ограничения в %i подземелий в час."
+La["Third Cache"] = "Третий тайник"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Используйте только для переименованных или удаленных персонажей, так как данные все равно будут заполнены заново при входе на персонажа."
 La["Time /played"] = "Общее время игры"
 La["Time Left"] = "Обновится через"
@@ -2316,6 +2623,9 @@ La["Trade skills"] = "Отслеживать восстановление спо
 La["Transmute"] = "Трансмутация (алхимия)"
 La["Trial of Elements"] = "Испытание стихий"
 La["Trial of Flood"] = "Испытание наводнения"
+La["TWW Algari Treatise"] = "Алгарийский трактат"
+La["TWW Services Requested"] = "Требуемые услуги"
+La["TWW Weekly Cache"] = "Еженедельный тайник TWW"
 La["Type"] = "Тип"
 La["ULD"] = "УЛЬДАМАН"
 La["UNDR"] = "ПОДГН"
@@ -2327,6 +2637,7 @@ La["Vision Boss Only"] = "Только Босс Видения"
 La["Voraazka"] = "Вораазка"
 La["VOTW"] = "КС"
 La["VP"] = "ВС"
+La["Warband Money"] = "Деньги отряда"
 La["Warfronts"] = "Фронты"
 La["Warn about instance limit"] = "Предупреждать о пределе подземелий"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Внимание! За последнее время Вы вошли в %i подземелий и приближаетесь к ограничению в \"%i подземелий в час\" для Вашего аккаунта. Новые подземелья будут доступны через %s."
@@ -2338,6 +2649,7 @@ La["WM"] = "УУ"
 La["WORK"] = "МАСТЕР"
 La["World Boss"] = "Мировой босс"
 La["World Bosses"] = "Мировые боcсы"
+La["World PvP Weekly"] = "Еженедельные задания мирового PvP"
 La["Wrath of the Jailer"] = "Гнев Тюремщика"
 La["YARD"] = "СВАЛКА"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "Вы можете комбинировать иконки и текст в одном индикаторе. Выберите иконку и вставьте слово ICON в текстовое поле. Слово ICON будет автоматически заменено на выбранную иконку."
@@ -2348,6 +2660,8 @@ elseif locale == "zhCN" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左键点击|r 显示独立窗口"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中键点击|r 显示游戏内建的团队信息"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右键点击|r 设置SavedInstances"
+La["A Call to Battle"] = "战斗的呼唤"
+La["A Call to Delves"] = "地下堡的召唤"
 La["A Worthy Ally: Dream Wardens"] = "强大的盟友：梦境守望者"
 La["A Worthy Ally: Loamm Niffen"] = "强大的盟友：峈姆鼹鼠人"
 La["AA"] = "学院"
@@ -2360,6 +2674,18 @@ La["Add Entry"] = "添加项目"
 La["Aiding the Accord"] = "援助联军"
 La["Air"] = "空气"
 La["Air Core"] = "原始空气核心"
+La["Alchemy Thaumaturgy"] = "炼金奇术"
+La["Algari Treatise on Alchemy"] = "炼金阿加论述"
+La["Algari Treatise on Blacksmithing"] = "锻造阿加论述"
+La["Algari Treatise on Enchanting"] = "附魔阿加论述"
+La["Algari Treatise on Engineering"] = "工程学阿加论述"
+La["Algari Treatise on Herbalism"] = "草药学阿加论述"
+La["Algari Treatise on Inscription"] = "铭文阿加论述"
+La["Algari Treatise on Jewelcrafting"] = "珠宝加工阿加论述"
+La["Algari Treatise on Leatherworking"] = "制皮阿加论述"
+La["Algari Treatise on Mining"] = "采矿阿加论述"
+La["Algari Treatise on Skinning"] = "剥皮阿加论述"
+La["Algari Treatise on Tailoring"] = "裁缝阿加论述"
 La["Always show"] = "总是显示"
 La["Amathet Reliquary"] = "阿玛赛特圣箱"
 La["Ambered Coffer"] = "琥珀制成的箱子"
@@ -2373,6 +2699,7 @@ La["Automatically shrink the tooltip to fit on the screen"] = "根据屏幕大�
 La["Azuregos"] = "艾索雷苟斯"
 La["Battleground Deserter"] = "追踪战场逃亡者冷却"
 La["BH"] = "山谷"
+La["Biergoth Dungeon Quest"] = "贝尔苟兹地下城任务"
 La["Bind a key to toggle the SavedInstances tooltip"] = "为显示/隐藏SavedInstances界面绑定一个按键"
 La["Blooming Dreamseeds"] = "盛放的梦境之种"
 La["Bonus loot frame"] = "额外拾取提示框架"
@@ -2381,6 +2708,7 @@ La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = [=[首领击杀信息遗失
 这是一个会影响特定旧副本的暴雪BUG]=]
 La["Bouldron"] = "波德隆"
+La["Brawl Weekly"] = "与众不同"
 La["BREW"] = "酒庄"
 La["BRH"] = "黑鸦"
 La["Calling Missing"] = "使命任务缺失"
@@ -2443,9 +2771,11 @@ La["FH"] = "自由镇"
 La["Fighting is Its Own Reward"] = "战斗就是最好的奖赏"
 La["Fire"] = "火焰"
 La["Fire Core"] = "原始火焰核心"
+La["First Cache"] = "第一个宝箱"
 La["Fit to screen"] = "适应屏幕大小"
 La["Flex"] = "弹性"
 La["Format large numbers"] = "格式化大数字"
+La["Fourth Cache"] = "第四个宝箱"
 La["Frozion"] = "弗洛基昂"
 La["Full Clear + 1 Mask"] = "五箱一面具"
 La["Full Clear + 2 Masks"] = "五箱二面具"
@@ -2457,6 +2787,7 @@ La["Full Objective"] = "完整目标"
 La["Gaelzion"] = "盖尔基昂"
 La["GB"] = "格瑞姆巴托"
 La["GD"] = "车站"
+La["Gearing Up for Trouble"] = "谨防麻烦"
 La["General settings"] = "综合"
 La["GMBT"] = "宏图"
 La["Grand Hunt"] = "洪荒狩猎"
@@ -2492,6 +2823,7 @@ La["Khaz Algar Transmute"] = "卡兹阿加转化"
 La["KR"] = "诸王"
 La["Last updated"] = "最后更新"
 La["Legion Transmute"] = "军团转化"
+La["Lesser Keyflame"] = "小型钥焰"
 La["Lesser Visions of N'Zoth"] = "恩佐斯的小型幻象"
 La["Level %d Characters"] = "等级 %d 人物"
 La["LFG cooldown"] = "随机地下城冷却"
@@ -2540,6 +2872,7 @@ La["Primal Storms Core"] = "原始元素核心"
 La["Primal Storms Elementals"] = "原始元素"
 La["Progress Persists"] = "延续进度"
 La["PSF"] = "隐修院"
+La["PvP Weekly"] = "PvP周常"
 La["Quest ID"] = "任务ID"
 La["Quest Name"] = "任务名称"
 La["Quest progresses"] = "任务进度"
@@ -2548,21 +2881,27 @@ La["Raids before dungeons"] = "团队副本于地下城前"
 La["Recent Bonus Rolls"] = "近期额外拾取情况"
 La["Recent Instances"] = "近期副本"
 La["Recover Dailies"] = "提取日常任务"
+La["Replenish the Reservoir"] = "补充储备"
 La["Report instance resets to group"] = "报告副本重置"
 La["Researchers Under Fire"] = "研究员遇袭"
 La["Reset Characters"] = "重置角色"
+La["Return Lost Souls"] = "带回失落之魂"
 La["Reverse ordering"] = "反转排序"
 La["RISE"] = "崛起"
 La["RLP"] = "红玉"
 La["Roll Bonus"] = "额外拾取情况"
+La["Rollin' Down in the Deeps"] = "滚滚深邃都是蜡"
 La["ROOK"] = "栖巢"
 La["Rouen Icewind"] = "鲁恩·冰风"
 La["Row Highlight"] = "透明度"
 La["SBG"] = "墓地"
 La["SD"] = "赤红"
 La["SEAT"] = "执政团"
+La["Second Cache"] = "第二个宝箱"
 La["Secured Shipment"] = "夺得的货物"
+La["Services Requested"] = "指名服务"
 La["Set All"] = "设置所有"
+La["Shaping Fate"] = "塑造命运"
 La["Shaping the Dreamsurge"] = "塑造梦涌"
 La["Shipment of Goods"] = "一批货物"
 La["Show all emissary names"] = "显示所有大使名称"
@@ -2606,6 +2945,8 @@ La["Sorting"] = "排序"
 La["SOTS"] = "风暴"
 La["Space between categories"] = "显示分类间距"
 La["Sparks of Life"] = "生命火花"
+La["Special Assignments"] = "特别任务"
+La["Spreading the Light"] = "散布圣光"
 La["Storm Surge"] = "风起云涌"
 La["Storm's Fury"] = "暴风之怒"
 La["STRT"] = "天街"
@@ -2614,10 +2955,15 @@ La["TAV"] = "魔馆"
 La["TD"] = "托尔"
 La["Text"] = "文本"
 La["The Big Dig: Traitor's Rest"] = "盛大发掘：叛徒之眠"
+La["The Call of the Worldsoul"] = "世界之魂的呼唤"
 La["The Four Celestials"] = "四大天神"
+La["The Key to Success"] = "成功之匙"
+La["The Severed Threads"] = "斩离之丝"
 La["The Superbloom"] = "超然盛放"
+La["The Theater Troupe"] = "剧场巡演"
 La["The World Awaits"] = "世界在等待"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "这些是角色每个小时进入 %i 次副本限制的记录，以及其过期时间。"
+La["Third Cache"] = "第三个宝箱"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "此项仅可在人物重命名或者删除后使用，当你重新登入时原人物会被转移到新人物"
 La["Time /played"] = "已游戏时间"
 La["Time Left"] = "剩余时间"
@@ -2639,6 +2985,9 @@ La["Trade skills"] = "商业技能"
 La["Transmute"] = "转化"
 La["Trial of Elements"] = "元素试炼"
 La["Trial of Flood"] = "洪水试炼"
+La["TWW Algari Treatise"] = "地心之战阿加论述"
+La["TWW Services Requested"] = "地心之战指名服务"
+La["TWW Weekly Cache"] = "地心之战每周宝箱"
 La["Type"] = "类型"
 La["ULD"] = "奥达曼"
 La["UNDR"] = "孢林"
@@ -2650,6 +2999,7 @@ La["Vision Boss Only"] = "一箱"
 La["Voraazka"] = "沃拉兹卡"
 La["VOTW"] = "地窟"
 La["VP"] = "云巅"
+La["Warband Money"] = "战团货币"
 La["Warfronts"] = "战争前线"
 La["Warn about instance limit"] = "达到副本进入限制时警告"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "警告：你最近已经进入 %i 次副本，并且已经接近账号每小时 %i 次的进入限制，更多的副本可以在 %s 后允许进入。"
@@ -2661,6 +3011,7 @@ La["WM"] = "庄园"
 La["WORK"] = "车间"
 La["World Boss"] = "世界首领"
 La["World Bosses"] = "世界首领"
+La["World PvP Weekly"] = "战争火花"
 La["Wrath of the Jailer"] = "典狱长之怒"
 La["YARD"] = "垃圾场"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "你可以在指示器上同时显示图标和文字。先选择一个图标，然后在文本中插入“ICON”到想要图标被展示的位置，显示时将被替换为指定图标。"
@@ -2672,10 +3023,11 @@ elseif locale == "esES" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Clic|r para separar la ventana de información"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Clic medio|r para mostrar la Información de banda"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click-Derecho|r para configurar SavedInstances"
+La["A Call to Battle"] = "Llamada a la batalla"
 --[[Translation missing --]]
-La["A Worthy Ally: Dream Wardens"] = "A Worthy Ally: Dream Wardens"
---[[Translation missing --]]
-La["A Worthy Ally: Loamm Niffen"] = "A Worthy Ally: Loamm Niffen"
+La["A Call to Delves"] = "A Call to Delves"
+La["A Worthy Ally: Dream Wardens"] = "Un aliado digno: Celadores Oníricos"
+La["A Worthy Ally: Loamm Niffen"] = "Un aliado digno: Niffen de Loamm"
 --[[Translation missing --]]
 La["AA"] = "AA"
 La["Abbreviate keystones"] = "Abreviar piedras angulares"
@@ -2686,17 +3038,38 @@ La["Account Summary"] = "Resumen de la cuenta"
 La["AD"] = "AD"
 --[[Translation missing --]]
 La["Add Entry"] = "Add Entry"
---[[Translation missing --]]
-La["Aiding the Accord"] = "Aiding the Accord"
+La["Aiding the Accord"] = "Ayudar al Acuerdo de Valdrakken"
 --[[Translation missing --]]
 La["Air"] = "Air"
 --[[Translation missing --]]
 La["Air Core"] = "Air Core"
+--[[Translation missing --]]
+La["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+--[[Translation missing --]]
+La["Algari Treatise on Alchemy"] = "Algari Treatise on Alchemy"
+--[[Translation missing --]]
+La["Algari Treatise on Blacksmithing"] = "Algari Treatise on Blacksmithing"
+--[[Translation missing --]]
+La["Algari Treatise on Enchanting"] = "Algari Treatise on Enchanting"
+--[[Translation missing --]]
+La["Algari Treatise on Engineering"] = "Algari Treatise on Engineering"
+--[[Translation missing --]]
+La["Algari Treatise on Herbalism"] = "Algari Treatise on Herbalism"
+--[[Translation missing --]]
+La["Algari Treatise on Inscription"] = "Algari Treatise on Inscription"
+--[[Translation missing --]]
+La["Algari Treatise on Jewelcrafting"] = "Algari Treatise on Jewelcrafting"
+--[[Translation missing --]]
+La["Algari Treatise on Leatherworking"] = "Algari Treatise on Leatherworking"
+--[[Translation missing --]]
+La["Algari Treatise on Mining"] = "Algari Treatise on Mining"
+--[[Translation missing --]]
+La["Algari Treatise on Skinning"] = "Algari Treatise on Skinning"
+--[[Translation missing --]]
+La["Algari Treatise on Tailoring"] = "Algari Treatise on Tailoring"
 La["Always show"] = "Mostrar siempre"
---[[Translation missing --]]
-La["Amathet Reliquary"] = "Amathet Reliquary"
---[[Translation missing --]]
-La["Ambered Coffer"] = "Ambered Coffer"
+La["Amathet Reliquary"] = "Relicario amathet"
+La["Ambered Coffer"] = "Arca de ámbar"
 --[[Translation missing --]]
 La["ARAK"] = "ARAK"
 --[[Translation missing --]]
@@ -2710,16 +3083,18 @@ La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Desertor del Campo de Batalla"
 --[[Translation missing --]]
 La["BH"] = "BH"
-La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la ventana de información de SavedInstances"
 --[[Translation missing --]]
-La["Blooming Dreamseeds"] = "Blooming Dreamseeds"
+La["Biergoth Dungeon Quest"] = "Biergoth Dungeon Quest"
+La["Bind a key to toggle the SavedInstances tooltip"] = "Asignar una tecla para mostrar/ocultar la ventana de información de SavedInstances"
+La["Blooming Dreamseeds"] = "Las semillas del Sueño florecientes"
 --[[Translation missing --]]
 La["Bonus loot frame"] = "Bonus loot frame"
 La["Bonus rolls"] = "Tiradas extra"
 La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = "Informacion de jefes muertos faltante para este registro de banda. Esto es una falla que afecta ciertas bandas antigüas."
+La["Bouldron"] = "Rocadrion"
 --[[Translation missing --]]
-La["Bouldron"] = "Bouldron"
+La["Brawl Weekly"] = "Brawl Weekly"
 --[[Translation missing --]]
 La["BREW"] = "BREW"
 --[[Translation missing --]]
@@ -2747,8 +3122,7 @@ La["COS"] = "COS"
 La["COT"] = "COT"
 La["Covenant"] = "Curia"
 La["Covenant Assaults"] = "Asaltos de Curias"
---[[Translation missing --]]
-La["Crystalus"] = "Crystalus"
+La["Crystalus"] = "Cristalus"
 La["Currency settings"] = "Ajustes de moneda"
 --[[Translation missing --]]
 La["Cursed Coffer"] = "Cursed Coffer"
@@ -2765,8 +3139,7 @@ La["DFC"] = "DFC"
 La["DHT"] = "DHT"
 La["Disable mouseover"] = "Deshabilitar tooltip"
 La["Disable tooltip display on icon mouseover"] = "Deshabilita el tooltip al pasar el ratón por encima del icono"
---[[Translation missing --]]
-La["Disciple of Fyrakk"] = "Disciple of Fyrakk"
+La["Disciple of Fyrakk"] = "Discípulo de Fyrakk"
 La["Display instances in order of recommended level from lowest to highest"] = "Mostrar instancias en orden de nivel recomendado de menor a mayor"
 La["Display instances with space inserted between categories"] = "Mostrar instancias con espacio entre categorías"
 --[[Translation missing --]]
@@ -2817,9 +3190,13 @@ La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
 La["Fire"] = "Fire"
 --[[Translation missing --]]
 La["Fire Core"] = "Fire Core"
+--[[Translation missing --]]
+La["First Cache"] = "First Cache"
 La["Fit to screen"] = "Ajustar a pantalla"
 La["Flex"] = "Flexible"
 La["Format large numbers"] = "Dar formato a números grandes"
+--[[Translation missing --]]
+La["Fourth Cache"] = "Fourth Cache"
 --[[Translation missing --]]
 La["Frozion"] = "Frozion"
 La["Full Clear + 1 Mask"] = "Limpieza completa + 1 Máscara"
@@ -2836,6 +3213,7 @@ La["Gaelzion"] = "Gaelzion"
 La["GB"] = "GB"
 --[[Translation missing --]]
 La["GD"] = "GD"
+La["Gearing Up for Trouble"] = "Esperando problemas"
 La["General settings"] = "Opciones generales"
 --[[Translation missing --]]
 La["GMBT"] = "GMBT"
@@ -2890,6 +3268,7 @@ La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
 La["KR"] = "KR"
 La["Last updated"] = "Última actualización"
 La["Legion Transmute"] = "Transmutación de Legión"
+La["Lesser Keyflame"] = "Llave ardiente inferior"
 La["Lesser Visions of N'Zoth"] = "Vision de N'zoth menor"
 La["Level %d Characters"] = "Personajes de nivel %d"
 La["LFG cooldown"] = "Tiempo de reutilización del Buscador de Grupo."
@@ -2968,6 +3347,8 @@ La["Progress Persists"] = "Progress Persists"
 --[[Translation missing --]]
 La["PSF"] = "PSF"
 --[[Translation missing --]]
+La["PvP Weekly"] = "PvP Weekly"
+--[[Translation missing --]]
 La["Quest ID"] = "Quest ID"
 --[[Translation missing --]]
 La["Quest Name"] = "Quest Name"
@@ -2978,16 +3359,21 @@ La["Raids before dungeons"] = "Bandas antes que mazmorras"
 La["Recent Bonus Rolls"] = "Tiradas extra recientes"
 La["Recent Instances"] = "Instancias recientes"
 La["Recover Dailies"] = "Recuperar diarias"
+--[[Translation missing --]]
+La["Replenish the Reservoir"] = "Replenish the Reservoir"
 La["Report instance resets to group"] = "Informar de reinicios de estancia al grupo"
 --[[Translation missing --]]
 La["Researchers Under Fire"] = "Researchers Under Fire"
 La["Reset Characters"] = "Reiniciar personajes"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "Invertir orden"
 --[[Translation missing --]]
 La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Bonos de tirada"
+La["Rollin' Down in the Deeps"] = "Dar cera, pulir cera"
 --[[Translation missing --]]
 La["ROOK"] = "ROOK"
 --[[Translation missing --]]
@@ -2999,8 +3385,14 @@ La["SD"] = "CS (SD)"
 --[[Translation missing --]]
 La["SEAT"] = "SEAT"
 --[[Translation missing --]]
+La["Second Cache"] = "Second Cache"
+--[[Translation missing --]]
 La["Secured Shipment"] = "Secured Shipment"
+--[[Translation missing --]]
+La["Services Requested"] = "Services Requested"
 La["Set All"] = "Establecer todos"
+--[[Translation missing --]]
+La["Shaping Fate"] = "Shaping Fate"
 --[[Translation missing --]]
 La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
 --[[Translation missing --]]
@@ -3052,6 +3444,8 @@ La["SOTS"] = "SOTS"
 La["Space between categories"] = "Espacio entre categorías"
 --[[Translation missing --]]
 La["Sparks of Life"] = "Sparks of Life"
+La["Special Assignments"] = "Tareas especiales"
+La["Spreading the Light"] = "Propagar la Luz"
 --[[Translation missing --]]
 La["Storm Surge"] = "Storm Surge"
 --[[Translation missing --]]
@@ -3067,12 +3461,17 @@ La["TD"] = "TD"
 La["Text"] = "Texto"
 --[[Translation missing --]]
 La["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
+La["The Call of the Worldsoul"] = "La llamada del alma-mundo"
 La["The Four Celestials"] = "Los Cuatro Celestiales"
+La["The Key to Success"] = "La clave del éxito"
+La["The Severed Threads"] = "Los Hilos Cortados"
 --[[Translation missing --]]
 La["The Superbloom"] = "The Superbloom"
---[[Translation missing --]]
-La["The World Awaits"] = "The World Awaits"
+La["The Theater Troupe"] = "La compañía teatral"
+La["The World Awaits"] = "El mundo aguarda"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas instancias cuentan para el límite de %i por hora por cuenta, y expirará a la hora indicada."
+--[[Translation missing --]]
+La["Third Cache"] = "Third Cache"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Esto sólo debe ser usado para personajes que han sido renombrados o borrados, ya que los personajes serán cargados de nuevo cuando te conectes con los mismos."
 La["Time /played"] = "Tiempo jugado (/played)"
 La["Time Left"] = "Tiempo restante"
@@ -3104,6 +3503,11 @@ La["Transmute"] = "Transmutar"
 La["Trial of Elements"] = "Trial of Elements"
 --[[Translation missing --]]
 La["Trial of Flood"] = "Trial of Flood"
+--[[Translation missing --]]
+La["TWW Algari Treatise"] = "TWW Algari Treatise"
+--[[Translation missing --]]
+La["TWW Services Requested"] = "TWW Services Requested"
+La["TWW Weekly Cache"] = "TWW Alijo semanal"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
 La["ULD"] = "ULD"
@@ -3122,6 +3526,8 @@ La["Voraazka"] = "Voraazka"
 La["VOTW"] = "VOTW"
 --[[Translation missing --]]
 La["VP"] = "VP"
+--[[Translation missing --]]
+La["Warband Money"] = "Warband Money"
 La["Warfronts"] = "Frentes de guerra"
 La["Warn about instance limit"] = "Advertencia sobre límite de instancias"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Advertencia: Has entrado en %i estancias recientemente, y te estás acercando al límite de %i estancias por hora para tu cuenta. Tendrás más disponibles después de %s."
@@ -3138,6 +3544,8 @@ La["WORK"] = "WORK"
 La["World Boss"] = "Jefe del mundo"
 La["World Bosses"] = "Jefes del mundo"
 --[[Translation missing --]]
+La["World PvP Weekly"] = "World PvP Weekly"
+--[[Translation missing --]]
 La["Wrath of the Jailer"] = "Wrath of the Jailer"
 --[[Translation missing --]]
 La["YARD"] = "YARD"
@@ -3150,6 +3558,8 @@ elseif locale == "zhTW" then
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00左鍵|r 分離滑鼠提示"
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00中鍵|r 顯示暴雪的團隊資訊"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00右鍵|r 設定 SavedInstances"
+La["A Call to Battle"] = "戰鬥的呼喚"
+La["A Call to Delves"] = "來探究吧"
 La["A Worthy Ally: Dream Wardens"] = "寶貴的盟友：夢境守望者"
 La["A Worthy Ally: Loamm Niffen"] = "寶貴的盟友：洛姆鼴鼠人"
 La["AA"] = "學院"
@@ -3162,14 +3572,24 @@ La["Add Entry"] = "添加條目"
 La["Aiding the Accord"] = "支援協調者"
 La["Air"] = "風"
 La["Air Core"] = "風核心"
+--[[Translation missing --]]
+La["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+La["Algari Treatise on Alchemy"] = "阿爾加煉金概論"
+La["Algari Treatise on Blacksmithing"] = "阿爾加鍛造概論"
+La["Algari Treatise on Enchanting"] = "阿爾加附魔概論"
+La["Algari Treatise on Engineering"] = "阿爾加工程學概論"
+La["Algari Treatise on Herbalism"] = "阿爾加草藥學概論"
+La["Algari Treatise on Inscription"] = "阿爾加銘文學概論"
+La["Algari Treatise on Jewelcrafting"] = "阿爾加珠寶設計概論"
+La["Algari Treatise on Leatherworking"] = "阿爾加製皮概論"
+La["Algari Treatise on Mining"] = "阿爾加採礦概論"
+La["Algari Treatise on Skinning"] = "阿爾加剝皮概論"
+La["Algari Treatise on Tailoring"] = "阿爾加裁縫概論"
 La["Always show"] = "永遠顯示"
 La["Amathet Reliquary"] = "阿瑪賽特聖匣"
---[[Translation missing --]]
-La["Ambered Coffer"] = "Ambered Coffer"
---[[Translation missing --]]
-La["ARAK"] = "ARAK"
---[[Translation missing --]]
-La["ARC"] = "ARC"
+La["Ambered Coffer"] = "琥珀寶箱"
+La["ARAK"] = "回音"
+La["ARC"] = "灌注"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "是否確定要從 SavedInstances 的角色資料庫中移除 %s?"
 La["Are you sure you want to report all your keys to %s?"] = "你確定想報告所有你的鑰石給%s嗎？"
 La["Are you sure you want to reset the SavedInstances character database? Characters will be re-populated as you log into them."] = "是否確定要重置 SavedInstances 的角色資料庫? 登入角色時將會重新擷取資料。"
@@ -3178,6 +3598,7 @@ La["Automatically shrink the tooltip to fit on the screen"] = "自動縮小滑�
 La["Azuregos"] = "艾索雷苟斯"
 La["Battleground Deserter"] = "戰場逃亡者冷卻"
 La["BH"] = "蕨皮"
+La["Biergoth Dungeon Quest"] = "畢爾果絲地城任務"
 La["Bind a key to toggle the SavedInstances tooltip"] = "綁定按鍵來切換顯示 SavedInstances 滑鼠提示"
 La["Blooming Dreamseeds"] = "綻放的夢境種子"
 La["Bonus loot frame"] = "額外戰利品框架"
@@ -3186,15 +3607,14 @@ La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = [=[缺少這個進度的首領擊殺資訊。
 這是暴雪的 BUG，會影響舊團隊。]=]
 La["Bouldron"] = "礫石"
---[[Translation missing --]]
-La["BREW"] = "BREW"
+La["Brawl Weekly"] = "亂鬥"
+La["BREW"] = "酒莊"
 La["BRH"] = "玄鴉"
 La["Calling Missing"] = "沒有使命"
 La["Categories"] = "分類"
 La["Characters"] = "角色"
 La["Clean Entry"] = "清除條目"
---[[Translation missing --]]
-La["COEN"] = "COEN"
+La["COEN"] = "永夜"
 La["Color currency by cap"] = "依據數量上限顯示兌換通貨顏色"
 La["Combine Callings"] = "合併使命"
 La["Combine Emissaries"] = "合併特使"
@@ -3204,21 +3624,18 @@ La["Combine World Bosses"] = "合併世界首領"
 La["Community Feast"] = "集體盛宴"
 La["Connected Realms"] = "連結伺服器"
 La["COS"] = "眾星"
---[[Translation missing --]]
-La["COT"] = "COT"
+La["COT"] = "蛛絲"
 La["Covenant"] = "誓盟"
 La["Covenant Assaults"] = "誓盟進攻戰"
 La["Crystalus"] = "晶體"
 La["Currency settings"] = "兌換通貨設定"
 La["Cursed Coffer"] = "黑暗帝國大寶箱"
 La["Daily Quests"] = "每日任務"
---[[Translation missing --]]
-La["DAWN"] = "DAWN"
+La["DAWN"] = "破曉"
 La["Day"] = "日"
 La["Debug Mode"] = "偵錯模式"
 La["Delete Entry"] = "刪除條目"
---[[Translation missing --]]
-La["DFC"] = "DFC"
+La["DFC"] = "暗焰"
 La["DHT"] = "暗心"
 La["Disable mouseover"] = "停用滑鼠提示"
 La["Disable tooltip display on icon mouseover"] = "滑鼠指向圖示時不要顯示滑鼠提示"
@@ -3233,14 +3650,13 @@ La["Dragonflight Experimentation"] = "巨龍崛起實驗性"
 La["Dragonflight Transmute"] = "巨龍崛起變化"
 La["Dump quest debugging information"] = "傾印任務偵錯資訊"
 La["Dump time debugging information"] = "傾印時間偵錯資訊"
-La["Dungeon Runs"] = "地下城次數"
+La["Dungeon Runs"] = "地城紀錄"
 La["Earth"] = "地"
 La["Earth Core"] = "地核心"
 La["EB"] = "永茂"
 La["Emblazion"] = "紋章"
 La["Emissary Missing"] = "沒有特使"
---[[Translation missing --]]
-La["Emissary of War"] = "Emissary of War"
+La["Emissary of War"] = "戰爭使節"
 La["Emissary Quests"] = "特使任務"
 La["Emissary quests"] = "特使任務"
 La["EOA"] = "艾眼"
@@ -3254,11 +3670,12 @@ La["FH"] = "自由"
 La["Fighting is Its Own Reward"] = "戰鬥本身就是獎勵"
 La["Fire"] = "火"
 La["Fire Core"] = "火核心"
+La["First Cache"] = "第一個寶箱"
 La["Fit to screen"] = "不超出畫面"
 La["Flex"] = "彈性"
 La["Format large numbers"] = "格式化大數目"
---[[Translation missing --]]
-La["Frozion"] = "Frozion"
+La["Fourth Cache"] = "第四個寶箱"
+La["Frozion"] = "佛茲昂"
 La["Full Clear + 1 Mask"] = "全清 + 1面具"
 La["Full Clear + 2 Masks"] = "全清 + 2面具"
 La["Full Clear + 3 Masks"] = "全清 + 3面具"
@@ -3266,21 +3683,18 @@ La["Full Clear + 4 Masks"] = "全清 + 4面具"
 La["Full Clear + 5 Masks"] = "全清 + 5面具"
 La["Full Clear No Masks"] = "全清 無面具"
 La["Full Objective"] = "完整目標"
---[[Translation missing --]]
-La["Gaelzion"] = "Gaelzion"
---[[Translation missing --]]
-La["GB"] = "GB"
+La["Gaelzion"] = "蓋爾席昂"
+La["GB"] = "格瑞"
 La["GD"] = "車站"
+La["Gearing Up for Trouble"] = "應付麻煩"
 La["General settings"] = "一般設定"
 La["GMBT"] = "險招"
 La["Grand Hunt"] = "大狩獵"
 La["Grand Hunts: Mythic Reward"] = "大狩獵：傳奇獎勵"
 La["Grand Hunts: Rare Reward"] = "大狩獵：稀有獎勵"
 La["Grand Hunts: Uncommon Reward"] = "大狩獵：精良獎勵"
---[[Translation missing --]]
-La["Gravlion"] = "Gravlion"
---[[Translation missing --]]
-La["Grizzlerock"] = "Grizzlerock"
+La["Gravlion"] = "葛弗里昂"
+La["Grizzlerock"] = "熊岩"
 La["Group"] = "群組"
 La["Guild"] = "公會"
 La["HOA"] = "贖罪"
@@ -3292,44 +3706,36 @@ La["Hunt: Death Elementals"] = "獵殺：死亡元素"
 La["Hunt: Shadehounds"] = "獵殺：暗影獵犬"
 La["Hunt: Soul Eaters"] = "獵殺：靈魂吞噬者"
 La["Hunt: Winged Soul Eaters"] = "獵殺：飛翼靈魂噬者"
---[[Translation missing --]]
-La["Iceblade Trio"] = "Iceblade Trio"
+La["Iceblade Trio"] = "冰刃特里歐"
 La["ID"] = "碼頭"
 La["Ignore"] = "忽略"
 La["Indicators"] = "指示器"
---[[Translation missing --]]
-La["Infernum"] = "Infernum"
+La["Infernum"] = "因弗奴"
 --[[Translation missing --]]
 La["Infested Strongbox"] = "Infested Strongbox"
 La["Instance limit in Broker"] = "顯示副本限制 (Broker 資訊列)"
 La["Instances"] = "副本"
 La["Interleave"] = "交錯"
---[[Translation missing --]]
-La["Kain Firebrand"] = "Kain Firebrand"
---[[Translation missing --]]
-La["Karantun"] = "Karantun"
+La["Kain Firebrand"] = "凱恩‧火烙"
+La["Karantun"] = "卡倫棠"
 La["Keystone report target"] = "報告目標鑰石"
---[[Translation missing --]]
-La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
---[[Translation missing --]]
-La["KR"] = "KR"
+La["Khaz Algar Transmute"] = "卡茲阿爾加轉化"
+La["KR"] = "諸王"
 La["Last updated"] = "最近更新"
 La["Legion Transmute"] = "軍臨天下塑形"
+La["Lesser Keyflame"] = "低階鑰炎"
 La["Lesser Visions of N'Zoth"] = "恩若司的小幻象"
 La["Level %d Characters"] = "等級 %d 角色"
 La["LFG cooldown"] = "隨機隊伍冷卻"
 La["LFR"] = "隨機團隊"
 La["List categories from the current expansion pack first"] = "優先列出目前資料片中的分類"
 La["List raid categories before dungeon categories"] = "在地城分類之前列出團隊分類"
---[[Translation missing --]]
-La["Loot Antique Bronze Bullion"] = "Loot Antique Bronze Bullion"
+La["Loot Antique Bronze Bullion"] = "拾取古老銅條"
 La["Loot Aspect Crest Fragment"] = "拾取守護巨龍紋章碎片"
 La["Loot Drake Crest Fragment"] = "拾取飛龍紋章碎片"
---[[Translation missing --]]
-La["Loot Spark of Awakening"] = "Loot Spark of Awakening"
+La["Loot Spark of Awakening"] = "拾取覺醒火花"
 La["Loot Spark of Dreams"] = "拾取夢境火花"
---[[Translation missing --]]
-La["Loot Spark of Omens"] = "Loot Spark of Omens"
+La["Loot Spark of Omens"] = "碎裂的預兆火花"
 La["Loot Spark of Shadowflame"] = "拾取暗焰火花"
 La["Loot Whelpling Crest Fragment"] = "拾取幼龍紋章碎片"
 La["Loot Wyrm Crest Fragment"] = "拾取巨龍紋章碎片"
@@ -3339,18 +3745,15 @@ La["Manage"] = "管理"
 La["Mechanized Chest"] = "機械箱"
 La["Miscellaneous Tracking"] = "其他追蹤"
 La["MISTS"] = "迷霧"
---[[Translation missing --]]
-La["ML"] = "ML"
+La["ML"] = "晶喜鎮"
 --[[Translation missing --]]
 La["Mogu Strongbox"] = "Mogu Strongbox"
---[[Translation missing --]]
-La["MOS"] = "MOS"
+La["MOS"] = "靈魂"
 La["Most recent first"] = "最近的優先"
 La["Mythic Best"] = "最佳傳奇"
 La["Mythic Keystone"] = "傳奇鑰石"
 La["Nathanos Blightcaller"] = "納撒諾斯·凋零者"
---[[Translation missing --]]
-La["Neela Firebane"] = "Neela Firebane"
+La["Neela Firebane"] = "倪菈‧火禍"
 La["NELT"] = "奈堡"
 La["Never show"] = "永不顯示"
 La["New Single Quest"] = "新單人任務"
@@ -3359,22 +3762,18 @@ La["NW"] = "死靈"
 La["Opacity of the tooltip row highlighting"] = "顯著標示滑鼠提示列的透明度"
 La["Open config"] = "開啟設定選項"
 La["Order must be a number in [0 - 999]"] = "順序必須是 [0-999] 的數字"
---[[Translation missing --]]
-La["Outland Cut Jewel"] = "Outland Cut Jewel"
+La["Outland Cut Jewel"] = "外域切寶石"
 La["Paragon Chests"] = "巔峰獎勵箱"
 La["Party"] = "隊伍"
---[[Translation missing --]]
-La["Patterns Within Patterns"] = "Patterns Within Patterns"
+La["Patterns Within Patterns"] = "計畫中的計畫"
 La["PF"] = "瘟疫"
---[[Translation missing --]]
-La["Pipspark Thundersnap"] = "Pipspark Thundersnap"
+La["Pipspark Thundersnap"] = "星火‧雷劈"
 La["Presets"] = "預設"
 La["Primal Storms Core"] = "元素風暴核心"
 La["Primal Storms Elementals"] = "洪荒風暴元素"
---[[Translation missing --]]
-La["Progress Persists"] = "Progress Persists"
---[[Translation missing --]]
-La["PSF"] = "PSF"
+La["Progress Persists"] = "進度延續"
+La["PSF"] = "隱修院"
+La["PvP Weekly"] = "PvP 週任"
 La["Quest ID"] = "任務ID"
 La["Quest Name"] = "任務名稱"
 La["Quest progresses"] = "任務進度"
@@ -3383,25 +3782,29 @@ La["Raids before dungeons"] = "團隊在地城之前"
 La["Recent Bonus Rolls"] = "最近的額外骰子"
 La["Recent Instances"] = "最近的副本"
 La["Recover Dailies"] = "恢復每日"
+La["Replenish the Reservoir"] = "補充靈魄庫"
 La["Report instance resets to group"] = "重置副本時通報團隊"
 La["Researchers Under Fire"] = "被攻擊的研究員"
 La["Reset Characters"] = "重置角色"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "反向排序"
 La["RISE"] = "崛起"
 La["RLP"] = "晶紅"
 La["Roll Bonus"] = "使用額外骰子"
---[[Translation missing --]]
-La["ROOK"] = "ROOK"
---[[Translation missing --]]
-La["Rouen Icewind"] = "Rouen Icewind"
+La["Rollin' Down in the Deeps"] = "滾入深處"
+La["ROOK"] = "培育所"
+La["Rouen Icewind"] = "若恩‧冰風"
 La["Row Highlight"] = "顯著標示橫列"
 La["SBG"] = "影月"
 La["SD"] = "血紅"
---[[Translation missing --]]
-La["SEAT"] = "SEAT"
+La["SEAT"] = "三傑"
+La["Second Cache"] = "第二個寶箱"
 --[[Translation missing --]]
 La["Secured Shipment"] = "Secured Shipment"
+La["Services Requested"] = "手藝不可或缺"
 La["Set All"] = "設定全部"
+La["Shaping Fate"] = "塑造未來"
 La["Shaping the Dreamsurge"] = "轉化夢境湧現"
 La["Shipment of Goods"] = "補給貨品"
 La["Show all emissary names"] = "顯示所有特使名稱"
@@ -3432,7 +3835,7 @@ La["Show When"] = "何時顯示"
 La["Show when completed"] = "當完成時顯示"
 La["Show when saved"] = "已保存時顯示"
 La["Show/Hide the SavedInstances tooltip"] = "顯示/隱藏 SavedInstances 滑鼠提示"
-La["SIEGE"] = "攻打龍禍要塞"
+La["SIEGE"] = "圍城"
 La["Siege on Dragonbane Keep"] = "攻打龍禍要塞"
 La["Similarly, the words KILLED and TOTAL will be substituted with the number of bosses killed and total in the lockout."] = "同樣的，「KILLED」和「TOTAL」字樣也會被替換為首領已擊殺與總數的數字。"
 La["Single category name"] = "單一分類名稱"
@@ -3442,28 +3845,28 @@ La["Sort by server"] = "按伺服器排序"
 La["Sort categories by"] = "排序分類按"
 La["Sort Order"] = "排列順序"
 La["Sorting"] = "排序"
---[[Translation missing --]]
-La["SOTS"] = "SOTS"
+La["SOTS"] = "風暴"
 La["Space between categories"] = "分類間距"
 La["Sparks of Life"] = "生命火花"
---[[Translation missing --]]
-La["Storm Surge"] = "Storm Surge"
+La["Special Assignments"] = "特殊任務"
+La["Spreading the Light"] = "散布光芒"
+La["Storm Surge"] = "風暴洶湧"
 La["Storm's Fury"] = "風暴之怒"
 La["STRT"] = "街道"
---[[Translation missing --]]
-La["SV"] = "SV"
---[[Translation missing --]]
-La["TAV"] = "TAV"
---[[Translation missing --]]
-La["TD"] = "TD"
+La["SV"] = "石庫"
+La["TAV"] = "蒼藍"
+La["TD"] = "托達"
 La["Text"] = "文字"
---[[Translation missing --]]
-La["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
+La["The Big Dig: Traitor's Rest"] = "重大挖掘：背叛者之眠"
+La["The Call of the Worldsoul"] = "世界之魂的呼喚"
 La["The Four Celestials"] = "四大天尊"
+La["The Key to Success"] = "成功關鍵"
+La["The Severed Threads"] = "斷裂絲線"
 La["The Superbloom"] = "繁盛綻放"
---[[Translation missing --]]
-La["The World Awaits"] = "The World Awaits"
+La["The Theater Troupe"] = "劇團"
+La["The World Awaits"] = "世界任務正等著你"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "有些副本有每個帳號每小時可進入 %i 個副本和時間的限制，直到時間過為止。"
+La["Third Cache"] = "第三個寶箱"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "這個功能只適用於已經更名或刪除的角色，登入這些角色時會重新擷取資料。"
 La["Time /played"] = "已遊玩時間"
 La["Time Left"] = "剩餘時間"
@@ -3475,10 +3878,8 @@ La["TNO"] = "諾庫德"
 La["Tooltip Scale"] = "滑鼠提示縮放大小"
 La["TOP"] = "劇場"
 La["Tormentors of Torghast"] = "托迦司的折磨者"
---[[Translation missing --]]
-La["TOS"] = "TOS"
---[[Translation missing --]]
-La["TOTT"] = "TOTT"
+La["TOS"] = "神廟"
+La["TOTT"] = "海潮"
 La["Track Mythic keystone acquisition"] = "追蹤獲得的傳奇鑰石"
 La["Track Mythic keystone best run"] = "追蹤傳奇鑰石最佳紀錄"
 La["Track Timeworn Mythic keystone acquisition"] = "追蹤時光漫遊傳奇鑰石獲取"
@@ -3487,6 +3888,10 @@ La["Trade skills"] = "專業技能"
 La["Transmute"] = "轉化"
 La["Trial of Elements"] = "元素的試煉"
 La["Trial of Flood"] = "洪流的試煉"
+La["TWW Algari Treatise"] = "阿爾加概論"
+--[[Translation missing --]]
+La["TWW Services Requested"] = "TWW Services Requested"
+La["TWW Weekly Cache"] = "地心之戰每週寶箱"
 La["Type"] = "類型"
 La["ULD"] = "奧達曼"
 La["UNDR"] = "幽腐"
@@ -3495,10 +3900,10 @@ La["Use class color"] = "使用職業顏色"
 La["User"] = "使用者"
 La["Vision Boss + 2 Bonus Objectives"] = "幻象首領 + 2個獎勵目標"
 La["Vision Boss Only"] = "只有幻象首領"
---[[Translation missing --]]
-La["Voraazka"] = "Voraazka"
+La["Voraazka"] = "沃拉茲卡"
 La["VOTW"] = "看守"
 La["VP"] = "漩渦"
+La["Warband Money"] = "戰隊金錢"
 La["Warfronts"] = "戰爭前線"
 La["Warn about instance limit"] = "警告副本限制"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "警告：你最近已經進入副本 %i 次，並且已經接近每小時 %i 次的帳號進入限制。 %s 後允許進入更多副本。"
@@ -3510,17 +3915,19 @@ La["WM"] = "莊園"
 La["WORK"] = "工坊"
 La["World Boss"] = "世界首領"
 La["World Bosses"] = "世界首領"
+La["World PvP Weekly"] = "戰爭火花"
 La["Wrath of the Jailer"] = "典獄長之怒"
 La["YARD"] = "廢料場"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "如果想要的話，可以在同個指標上顯示圖示與文字。首先選擇一個圖示，並在文字框中插入「ICON」到想要出現圖示的位置，就會自動替換成你選擇的圖示。"
---[[Translation missing --]]
-La["Zurgaz Corebreaker"] = "Zurgaz Corebreaker"
+La["Zurgaz Corebreaker"] = "祖嘉茲‧破核者"
 
 elseif locale == "ptBR" then
   La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Click|r para abrir recompensas semanais"
 La["|cffffff00Left-click|r to detach tooltip"] = "|cffffff00Botão Esquerdo | Para destacar as Dicas"
-La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Botão do Meio|r para mostrar informações da Raid dadas pela Blizzard"
+La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Botão do Meio|r para mostrar informações da Raide dadas pela Blizzard"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Botão Direito|r Para configurar o SavedInstances"
+La["A Call to Battle"] = "Chamado à batalha"
+La["A Call to Delves"] = "Chamado às imersões"
 La["A Worthy Ally: Dream Wardens"] = "Aliados dignos: Guardiões do Sonho"
 La["A Worthy Ally: Loamm Niffen"] = "Aliados dignos: farins de Argília"
 --[[Translation missing --]]
@@ -3533,10 +3940,20 @@ La["Account Summary"] = "Sumário da conta"
 La["AD"] = "AD"
 La["Add Entry"] = "Adicionar"
 La["Aiding the Accord"] = "Ajudando o Acordo"
---[[Translation missing --]]
-La["Air"] = "Air"
---[[Translation missing --]]
-La["Air Core"] = "Air Core"
+La["Air"] = "Ar"
+La["Air Core"] = "Núcleo de Ar"
+La["Alchemy Thaumaturgy"] = "Taumaturgia (Alquimia)"
+La["Algari Treatise on Alchemy"] = "Tratado Algari sobre Alquimia"
+La["Algari Treatise on Blacksmithing"] = "Tratado Algari sobre Ferraria"
+La["Algari Treatise on Enchanting"] = "Tratado Algari sobre Encantamento"
+La["Algari Treatise on Engineering"] = "Tratado Algari sobre Engenharia"
+La["Algari Treatise on Herbalism"] = "Tratado Algari sobre Herborismo"
+La["Algari Treatise on Inscription"] = "Tratado Algari sobre Escrivania"
+La["Algari Treatise on Jewelcrafting"] = "Tratado Algari sobre Joalheria"
+La["Algari Treatise on Leatherworking"] = "Tratado Algari sobre Couraria"
+La["Algari Treatise on Mining"] = "Tratado Algari sobre Mineração"
+La["Algari Treatise on Skinning"] = "Tratado Algari sobre Esfolamento"
+La["Algari Treatise on Tailoring"] = "Tratado Algari sobre Alfaiataria"
 La["Always show"] = "Mostrar sempre"
 La["Amathet Reliquary"] = "Relicário Amatet"
 La["Ambered Coffer"] = "Cofre Ambarino"
@@ -3545,7 +3962,7 @@ La["ARAK"] = "ARAK"
 --[[Translation missing --]]
 La["ARC"] = "ARC"
 La["Are you sure you want to remove %s from the SavedInstances character database?"] = "Você tem certeza de que deseja remover %s do banco de dados do SavedInstances?"
-La["Are you sure you want to report all your keys to %s?"] = "Você tem certeza que quer mostrar todas as suas chaves para %s?"
+La["Are you sure you want to report all your keys to %s?"] = "Você tem certeza que quer relatar todas as suas chaves para %s?"
 La["Are you sure you want to reset the SavedInstances character database? Characters will be re-populated as you log into them."] = "Você tem certeza de que desejar reiniciar a base de dados de personagens do SavedInstances? Personagens serão contabilizados quando você se conectar com eles."
 La["Attempt to recover completed daily quests for this character. Note this may recover some additional, linked daily quests that were not actually completed today."] = "Tentar buscar missões diárias completadas por este personagem. Isto pode buscar algumas missões adicionais relacionadas que na verdade não foram completadas hoje."
 La["Automatically shrink the tooltip to fit on the screen"] = "Encolher ajuda automaticamente para caber na tela"
@@ -3553,26 +3970,23 @@ La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Acompanhar tempo de espera de Desertor para campo de batalha"
 --[[Translation missing --]]
 La["BH"] = "BH"
+La["Biergoth Dungeon Quest"] = "Missão de Masmorra de Biergoth"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Vincule uma tecla para as dicas do SavedInstances"
 La["Blooming Dreamseeds"] = "Brotos de sementes do sonho"
---[[Translation missing --]]
-La["Bonus loot frame"] = "Bonus loot frame"
+La["Bonus loot frame"] = "Quadro de Saque de bônus"
 La["Bonus rolls"] = "Saque de bônus"
---[[Translation missing --]]
 La[ [=[Boss kill information is missing for this lockout.
-This is a Blizzard bug affecting certain old raids.]=] ] = [=[Boss kill information is missing for this lockout.
-This is a Blizzard bug affecting certain old raids.]=]
---[[Translation missing --]]
-La["Bouldron"] = "Bouldron"
+This is a Blizzard bug affecting certain old raids.]=] ] = "Informação sobre a morte do chefe não encontrada para esse vínculo. Isso é um bug da Blizzard que afeta algumas raides antigas."
+La["Bouldron"] = "Pedreguso"
+La["Brawl Weekly"] = "Contenda Semanal"
 --[[Translation missing --]]
 La["BREW"] = "BREW"
 --[[Translation missing --]]
 La["BRH"] = "BRH"
---[[Translation missing --]]
-La["Calling Missing"] = "Calling Missing"
+La["Calling Missing"] = "Chamado não encontrado"
 La["Categories"] = "Categorias"
 La["Characters"] = "Personagens"
-La["Clean Entry"] = "Limpar"
+La["Clean Entry"] = "Limpar item"
 --[[Translation missing --]]
 La["COEN"] = "COEN"
 La["Color currency by cap"] = "Colorir moedas por limite"
@@ -3605,57 +4019,46 @@ La["DHT"] = "DHT"
 La["Disable mouseover"] = "Desativar mouseover"
 La["Disable tooltip display on icon mouseover"] = "Desabilitar exibição de ajuda ao passar o mouse no ícone"
 La["Disciple of Fyrakk"] = "Discípulo de Fyrakk"
-La["Display instances in order of recommended level from lowest to highest"] = "Exibir instâncias em ordem de nível recomendado menor para o maior"
+La["Display instances in order of recommended level from lowest to highest"] = "Exibir instâncias em ordem de nível recomendado do menor para o maior"
 La["Display instances with space inserted between categories"] = "Exibir instâncias com espaço inserido entre as categorias"
 La["Disturbed Dirt / Expedition Scout's Pack"] = "Poeira Revolvida / Mochila do Batedor da Expedição"
 La["Doomwalker"] = "Armagedom"
 --[[Translation missing --]]
 La["DOS"] = "DOS"
---[[Translation missing --]]
-La["Dragon of Nightmare"] = "Dragon of Nightmare"
---[[Translation missing --]]
-La["Dragonflight Experimentation"] = "Dragonflight Experimentation"
---[[Translation missing --]]
-La["Dragonflight Transmute"] = "Dragonflight Transmute"
---[[Translation missing --]]
-La["Dump quest debugging information"] = "Dump quest debugging information"
+La["Dragon of Nightmare"] = "Dragões do Pesadelo"
+La["Dragonflight Experimentation"] = "Experimento (Alquimia de Dragonflight)"
+La["Dragonflight Transmute"] = "Transmutação (Alquimia de Dragonflight)"
+La["Dump quest debugging information"] = "Extrair informações de debug da missão"
 La["Dump time debugging information"] = "Gerar informações de tempo de depuração"
---[[Translation missing --]]
-La["Dungeon Runs"] = "Dungeon Runs"
---[[Translation missing --]]
-La["Earth"] = "Earth"
---[[Translation missing --]]
-La["Earth Core"] = "Earth Core"
+La["Dungeon Runs"] = "Sessões de Masmorra"
+La["Earth"] = "Terra"
+La["Earth Core"] = "Núcleo de Terra"
 --[[Translation missing --]]
 La["EB"] = "EB"
---[[Translation missing --]]
-La["Emblazion"] = "Emblazion"
+La["Emblazion"] = "Fulgorion"
 La["Emissary Missing"] = "Emissários Faltando"
---[[Translation missing --]]
-La["Emissary of War"] = "Emissary of War"
-La["Emissary Quests"] = "Missões de emissário"
-La["Emissary quests"] = "Missões de emissário"
+La["Emissary of War"] = "Emissário da Guerra"
+La["Emissary Quests"] = "Missões de Emissários"
+La["Emissary quests"] = "Missões de Emissários"
 --[[Translation missing --]]
 La["EOA"] = "EOA"
 La["Expansion"] = "Expansão"
-La["Expired Lockout - Can be extended"] = "Bloqueio de expirado - Pode ser estendida"
+La["Expired Lockout - Can be extended"] = "Vínculo expirado - Pode ser estendido"
 La["Export"] = "Exportar"
-La["Extended Lockout - Not yet saved"] = "Bloqueiar de Extensão - Ainda não salva"
+La["Extended Lockout - Not yet saved"] = "Vínculo estendido - Ainda não salvo"
 La["Facets of Research"] = "Facetas da Pesquisa"
 --[[Translation missing --]]
 La["FALL"] = "FALL"
 --[[Translation missing --]]
 La["FH"] = "FH"
---[[Translation missing --]]
-La["Fighting is Its Own Reward"] = "Fighting is Its Own Reward"
---[[Translation missing --]]
-La["Fire"] = "Fire"
---[[Translation missing --]]
-La["Fire Core"] = "Fire Core"
+La["Fighting is Its Own Reward"] = "A luta já é uma recompensa"
+La["Fire"] = "Fogo"
+La["Fire Core"] = "Núcleo de Fogo"
+La["First Cache"] = "Primeiro Baú"
 La["Fit to screen"] = "Ajustar à tela"
 La["Flex"] = "Flexível"
 La["Format large numbers"] = "Formatar números grandes"
---[[Translation missing --]]
+La["Fourth Cache"] = "Quarto Baú"
 La["Frozion"] = "Frozion"
 La["Full Clear + 1 Mask"] = "Completo +1 Máscara"
 La["Full Clear + 2 Masks"] = "Completo +2 Máscaras"
@@ -3663,28 +4066,22 @@ La["Full Clear + 3 Masks"] = "Completo +3 Máscaras"
 La["Full Clear + 4 Masks"] = "Completo +4 Máscaras"
 La["Full Clear + 5 Masks"] = "Completo +5 Máscaras"
 La["Full Clear No Masks"] = "Completo Sem Máscara"
---[[Translation missing --]]
-La["Full Objective"] = "Full Objective"
---[[Translation missing --]]
+La["Full Objective"] = "Objetivo completo "
 La["Gaelzion"] = "Gaelzion"
 --[[Translation missing --]]
 La["GB"] = "GB"
 --[[Translation missing --]]
 La["GD"] = "GD"
+La["Gearing Up for Trouble"] = "Engrena que vem treta"
 La["General settings"] = "Configurações Gerais"
 --[[Translation missing --]]
 La["GMBT"] = "GMBT"
 La["Grand Hunt"] = "Grande Caçada"
---[[Translation missing --]]
-La["Grand Hunts: Mythic Reward"] = "Grand Hunts: Mythic Reward"
---[[Translation missing --]]
-La["Grand Hunts: Rare Reward"] = "Grand Hunts: Rare Reward"
---[[Translation missing --]]
-La["Grand Hunts: Uncommon Reward"] = "Grand Hunts: Uncommon Reward"
---[[Translation missing --]]
+La["Grand Hunts: Mythic Reward"] = "Grandes Caçadas: Recompensa Épica"
+La["Grand Hunts: Rare Reward"] = "Grandes Caçadas: Recompensa Rara"
+La["Grand Hunts: Uncommon Reward"] = "Grandes Caçadas: Recompensa Incomum"
 La["Gravlion"] = "Gravlion"
---[[Translation missing --]]
-La["Grizzlerock"] = "Grizzlerock"
+La["Grizzlerock"] = "Rochacinza"
 La["Group"] = "Grupo"
 La["Guild"] = "Guilda"
 --[[Translation missing --]]
@@ -3704,49 +4101,38 @@ La["Iceblade Trio"] = "Trio Lamigelo"
 La["ID"] = "ID"
 La["Ignore"] = "Ignorar"
 La["Indicators"] = "Indicadores"
---[[Translation missing --]]
 La["Infernum"] = "Infernum"
 La["Infested Strongbox"] = "Caixa-forte Infestada"
 --[[Translation missing --]]
 La["Instance limit in Broker"] = "Instance limit in Broker"
-La["Instances"] = "Instância"
---[[Translation missing --]]
-La["Interleave"] = "Interleave"
+La["Instances"] = "Instâncias"
+La["Interleave"] = "Intercalar"
 La["Kain Firebrand"] = "Kain Temerário"
 La["Karantun"] = "Karantun"
 --[[Translation missing --]]
 La["Keystone report target"] = "Keystone report target"
---[[Translation missing --]]
-La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
+La["Khaz Algar Transmute"] = "Transmutação (Alquimia de Khaz Algar)"
 --[[Translation missing --]]
 La["KR"] = "KR"
 La["Last updated"] = "Ultima atualização"
 La["Legion Transmute"] = "Transmutação de Legion"
---[[Translation missing --]]
-La["Lesser Visions of N'Zoth"] = "Lesser Visions of N'Zoth"
+La["Lesser Keyflame"] = "Chama-chave Inferior"
+La["Lesser Visions of N'Zoth"] = "Visões menores de N'Zoth"
 La["Level %d Characters"] = "Personagens nível %d"
 La["LFG cooldown"] = "Recarga do Localizador de Masmorras"
 La["LFR"] = "LdR"
 La["List categories from the current expansion pack first"] = "Listar primeiro o pacote de expansão atual"
-La["List raid categories before dungeon categories"] = "Categorias de raide antes de categorias de masmorras"
---[[Translation missing --]]
-La["Loot Antique Bronze Bullion"] = "Loot Antique Bronze Bullion"
---[[Translation missing --]]
-La["Loot Aspect Crest Fragment"] = "Loot Aspect Crest Fragment"
---[[Translation missing --]]
-La["Loot Drake Crest Fragment"] = "Loot Drake Crest Fragment"
---[[Translation missing --]]
-La["Loot Spark of Awakening"] = "Loot Spark of Awakening"
+La["List raid categories before dungeon categories"] = "Categorias de raide listadas antes de categorias de masmorras"
+La["Loot Antique Bronze Bullion"] = "Lingote de Bronze Antigo"
+La["Loot Aspect Crest Fragment"] = "Fragmento de Brasão do Aspecto"
+La["Loot Drake Crest Fragment"] = "Fragmento de Brasão do Draco"
+La["Loot Spark of Awakening"] = "Centelha do Despertar"
 La["Loot Spark of Dreams"] = "Centelha dos Sonhos"
---[[Translation missing --]]
-La["Loot Spark of Omens"] = "Loot Spark of Omens"
-La["Loot Spark of Shadowflame"] = "Centelha da Chama Sombria"
---[[Translation missing --]]
-La["Loot Whelpling Crest Fragment"] = "Loot Whelpling Crest Fragment"
---[[Translation missing --]]
-La["Loot Wyrm Crest Fragment"] = "Loot Wyrm Crest Fragment"
---[[Translation missing --]]
-La["Lord Kazzak"] = "Lord Kazzak"
+La["Loot Spark of Omens"] = "Fagulha dos Agouros"
+La["Loot Spark of Shadowflame"] = "Centelha de Chama Sombria"
+La["Loot Whelpling Crest Fragment"] = "Fragmento de Brasão do Dragonetinho"
+La["Loot Wyrm Crest Fragment"] = "Fragmento de Brasão da Serpe"
+La["Lord Kazzak"] = "Lorde Kazzak"
 --[[Translation missing --]]
 La["LOWR"] = "LOWR"
 La["Manage"] = "Gerenciar"
@@ -3760,66 +4146,58 @@ La["Mogu Strongbox"] = "Caixa-forte Mogu"
 --[[Translation missing --]]
 La["MOS"] = "MOS"
 La["Most recent first"] = "Mais recente primeiro"
---[[Translation missing --]]
-La["Mythic Best"] = "Mythic Best"
+La["Mythic Best"] = "Melhor mítica"
 La["Mythic Keystone"] = "Pedra-chave Mítica"
 La["Nathanos Blightcaller"] = "Nathanos Arauto da Praga"
 La["Neela Firebane"] = "Neela Fogazar"
 --[[Translation missing --]]
 La["NELT"] = "NELT"
 La["Never show"] = "Nunca mostrar"
-La["New Single Quest"] = "Nova missão"
+La["New Single Quest"] = "Nova Missão"
 --[[Translation missing --]]
 La["NL"] = "NL"
 --[[Translation missing --]]
 La["NW"] = "NW"
 La["Opacity of the tooltip row highlighting"] = "Opacidade do destaque da linha de ajuda "
 La["Open config"] = "Abrir configuração"
---[[Translation missing --]]
-La["Order must be a number in [0 - 999]"] = "Order must be a number in [0 - 999]"
---[[Translation missing --]]
-La["Outland Cut Jewel"] = "Outland Cut Jewel"
---[[Translation missing --]]
-La["Paragon Chests"] = "Paragon Chests"
---[[Translation missing --]]
-La["Party"] = "Party"
+La["Order must be a number in [0 - 999]"] = "Ordem deve ser um número entre [0 - 999]"
+La["Outland Cut Jewel"] = "Jóia lapidada de Terralém"
+La["Paragon Chests"] = "Baús de Paragão"
+La["Party"] = "Grupo"
 La["Patterns Within Patterns"] = "Padrões de Padrões"
 --[[Translation missing --]]
 La["PF"] = "PF"
---[[Translation missing --]]
-La["Pipspark Thundersnap"] = "Pipspark Thundersnap"
---[[Translation missing --]]
-La["Presets"] = "Presets"
---[[Translation missing --]]
-La["Primal Storms Core"] = "Primal Storms Core"
---[[Translation missing --]]
-La["Primal Storms Elementals"] = "Primal Storms Elementals"
---[[Translation missing --]]
-La["Progress Persists"] = "Progress Persists"
+La["Pipspark Thundersnap"] = "Chispipo Trovestalo"
+La["Presets"] = "Predefinições"
+La["Primal Storms Core"] = "Núcleo de Tempestades Primevas"
+La["Primal Storms Elementals"] = "Elementais de Tempestades Primevas"
+La["Progress Persists"] = "Progresso persistente"
 --[[Translation missing --]]
 La["PSF"] = "PSF"
+La["PvP Weekly"] = "JXJ Semanal"
 La["Quest ID"] = "ID da Missão"
 La["Quest Name"] = "Nome da missão"
-La["Quest progresses"] = "Progresso da missão"
+La["Quest progresses"] = "Progresso das missões"
 La["Quest Reset Type"] = "Periodicidade da missão"
-La["Raids before dungeons"] = "Reide antes de masmorras"
+La["Raids before dungeons"] = "Raides antes de masmorras"
 La["Recent Bonus Rolls"] = "Saque de bônus recentes"
 La["Recent Instances"] = "Instâncias recentes"
 La["Recover Dailies"] = "Recuperar missões diárias"
-La["Report instance resets to group"] = "Redefinir relatório da Instância para o grupo"
---[[Translation missing --]]
-La["Researchers Under Fire"] = "Researchers Under Fire"
+La["Replenish the Reservoir"] = "Reabasteça o reservatório"
+La["Report instance resets to group"] = "Informar o reinício de instâncias para o grupo"
+La["Researchers Under Fire"] = "Pesquisadores sob fogo"
 La["Reset Characters"] = "Reiniciar personagens"
+La["Return Lost Souls"] = "Almas perdidas precisam de resgate"
 La["Reverse ordering"] = "Ordem inversa"
 --[[Translation missing --]]
 La["RISE"] = "RISE"
 --[[Translation missing --]]
 La["RLP"] = "RLP"
 La["Roll Bonus"] = "Rolar saque de bônus"
+La["Rollin' Down in the Deeps"] = "Rolando nas profundezas"
 --[[Translation missing --]]
 La["ROOK"] = "ROOK"
---[[Translation missing --]]
-La["Rouen Icewind"] = "Rouen Icewind"
+La["Rouen Icewind"] = "Rouen Sopragelo"
 La["Row Highlight"] = "Realçar fileira"
 --[[Translation missing --]]
 La["SBG"] = "SBG"
@@ -3827,29 +4205,25 @@ La["SBG"] = "SBG"
 La["SD"] = "SD"
 --[[Translation missing --]]
 La["SEAT"] = "SEAT"
---[[Translation missing --]]
-La["Secured Shipment"] = "Secured Shipment"
+La["Second Cache"] = "Segundo Baú"
+La["Secured Shipment"] = "Carregamento Protegido"
+La["Services Requested"] = "Encomendas"
 La["Set All"] = "Ajustar todos"
---[[Translation missing --]]
-La["Shaping the Dreamsurge"] = "Shaping the Dreamsurge"
---[[Translation missing --]]
-La["Shipment of Goods"] = "Shipment of Goods"
---[[Translation missing --]]
-La["Show all emissary names"] = "Show all emissary names"
---[[Translation missing --]]
-La["Show both factions' emissay name"] = "Show both factions' emissay name"
---[[Translation missing --]]
-La["Show calling line when all quests completed"] = "Show calling line when all quests completed"
+La["Shaping Fate"] = "Um destino para decidir"
+La["Shaping the Dreamsurge"] = "Moldando o Surto Onírico"
+La["Shipment of Goods"] = "Remessa de Mercadorias"
+La["Show all emissary names"] = "Mostrar nomes dos emissários"
+La["Show both factions' emissay name"] = "Mostrar nomes dos emissários de ambas as facções"
+La["Show calling line when all quests completed"] = "Mostrar linha dos Chamados quando todas as missões estiverem concluídas"
 La["Show category names"] = "Mostrar nome das categorias"
 La["Show category names in the tooltip"] = "Mostrar nome das categorias nas Dicas"
 La["Show cooldown for characters to use battleground system"] = "Mostrar tempo de espera para personagens poderem usar o sistema de campo de batalha"
 La["Show cooldown for characters to use LFG dungeon system"] = "Mostrar tempo de espera do personagens para usr o Localizador Masmorra LFG"
 La["Show currency earned"] = "Mostrar quantidade atual"
 La["Show currency max"] = "Mostrar quantidade máxima"
---[[Translation missing --]]
-La["Show emissary line when all quests completed"] = "Show emissary line when all quests completed"
+La["Show emissary line when all quests completed"] = "Mostrar linha dos Emissários quando todas as missões estiverem concluídas"
 La["Show Expired"] = "Mostrar expirados"
-La["Show expired instance lockouts"] = "Mostrar bloqueios expirados de instância"
+La["Show expired instance lockouts"] = "Mostrar vínculos expirados de instância"
 La["Show Holiday"] = "Mostrar Feriados"
 La["Show holiday boss rewards"] = "Mostrar Chefes de Eventos"
 La["Show minimap button"] = "Mostrar botão do minimapa"
@@ -3863,31 +4237,29 @@ La["Show server name"] = "Mostrar nome do servidor"
 La["Show the SavedInstances minimap button"] = "Mostrar o botão do SavedInstances no minimapa"
 La["Show tooltip hints"] = "Mostrar Dicas"
 La["Show When"] = "Mostrar quando"
---[[Translation missing --]]
-La["Show when completed"] = "Show when completed"
-La["Show when saved"] = "Mostrar Quando salvo"
+La["Show when completed"] = "Mostrar quando concluído"
+La["Show when saved"] = "Mostrar quando salvo"
 La["Show/Hide the SavedInstances tooltip"] = "Mostrar/Ocultar as dicas do SavedInstances"
 --[[Translation missing --]]
 La["SIEGE"] = "SIEGE"
 La["Siege on Dragonbane Keep"] = "Cerco à Bastilha de Ruína Dragônica"
-La["Similarly, the words KILLED and TOTAL will be substituted with the number of bosses killed and total in the lockout."] = "Da mesma forma, as palavras mortas e TOTAL será substituído com o número de chefes mortos e total do bloqueio."
+La["Similarly, the words KILLED and TOTAL will be substituted with the number of bosses killed and total in the lockout."] = "Da mesma forma, as palavras KILLED e TOTAL serão substituídas pelo número de chefes mortos e o total no vínculo."
 La["Single category name"] = "Nome da categoria única"
 --[[Translation missing --]]
 La["SOA"] = "SOA"
 La["Sort by currency name"] = "Ordenar por nome"
 La["Sort by server"] = "Organizar por servidor"
 La["Sort categories by"] = "Ordenar categorias por"
-La["Sort Order"] = "Organizar por"
+La["Sort Order"] = "Ordem de exibição"
 La["Sorting"] = "Ordenação"
 --[[Translation missing --]]
 La["SOTS"] = "SOTS"
 La["Space between categories"] = "Espaço entre as categorias"
---[[Translation missing --]]
-La["Sparks of Life"] = "Sparks of Life"
---[[Translation missing --]]
-La["Storm Surge"] = "Storm Surge"
---[[Translation missing --]]
-La["Storm's Fury"] = "Storm's Fury"
+La["Sparks of Life"] = "Centelhas de Vida"
+La["Special Assignments"] = "Designações Especiais"
+La["Spreading the Light"] = "Semeando a Luz"
+La["Storm Surge"] = "Torrente de tempestade"
+La["Storm's Fury"] = "A fúria da tempestade"
 --[[Translation missing --]]
 La["STRT"] = "STRT"
 --[[Translation missing --]]
@@ -3897,21 +4269,22 @@ La["TAV"] = "TAV"
 --[[Translation missing --]]
 La["TD"] = "TD"
 La["Text"] = "Texto"
---[[Translation missing --]]
-La["The Big Dig: Traitor's Rest"] = "The Big Dig: Traitor's Rest"
+La["The Big Dig: Traitor's Rest"] = "Grande Escavação: Descanso do Traidor"
+La["The Call of the Worldsoul"] = "O chamado da Alma do Mundo"
 La["The Four Celestials"] = "Os Quatro Celestiais"
+La["The Key to Success"] = "A chave do sucesso"
+La["The Severed Threads"] = "Os Fios Cortados"
 La["The Superbloom"] = "A Superflorada"
-La["The World Awaits"] = "O Mundo Aguarda"
+La["The Theater Troupe"] = "Os saltimbancos"
+La["The World Awaits"] = "O mundo aguarda"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Estas são as instâncias que contam para %i instâncias por hora em cada conta, e o tempo até que expirem."
+La["Third Cache"] = "Terceiro Baú"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Isto deve ser usado apenas para personagens que foram removidos ou deletados, ou para personagens que serão contabilizados quando você se conectar neles."
 La["Time /played"] = "Tempo /played"
 La["Time Left"] = "Tempo restante"
---[[Translation missing --]]
-La["Time Rift"] = "Time Rift"
---[[Translation missing --]]
-La["Timewalking Weekend Event"] = "Timewalking Weekend Event"
---[[Translation missing --]]
-La["Timeworn Mythic Keystone"] = "Timeworn Mythic Keystone"
+La["Time Rift"] = "Fenda Temporal"
+La["Timewalking Weekend Event"] = "Evento de Caminhada Temporal"
+La["Timeworn Mythic Keystone"] = "Pedra-chave Memorial"
 --[[Translation missing --]]
 La["TJS"] = "TJS"
 --[[Translation missing --]]
@@ -3919,25 +4292,22 @@ La["TNO"] = "TNO"
 La["Tooltip Scale"] = "Escala da janela"
 --[[Translation missing --]]
 La["TOP"] = "TOP"
---[[Translation missing --]]
-La["Tormentors of Torghast"] = "Tormentors of Torghast"
+La["Tormentors of Torghast"] = "Atormentadores da Thanator"
 --[[Translation missing --]]
 La["TOS"] = "TOS"
 --[[Translation missing --]]
 La["TOTT"] = "TOTT"
---[[Translation missing --]]
-La["Track Mythic keystone acquisition"] = "Track Mythic keystone acquisition"
---[[Translation missing --]]
-La["Track Mythic keystone best run"] = "Track Mythic keystone best run"
---[[Translation missing --]]
-La["Track Timeworn Mythic keystone acquisition"] = "Track Timeworn Mythic keystone acquisition"
+La["Track Mythic keystone acquisition"] = "Rastrear a aquisição de Pedra-chave Mítica"
+La["Track Mythic keystone best run"] = "Rastrear melhor sessão de Pedra-chave Mítica"
+La["Track Timeworn Mythic keystone acquisition"] = "Rastrear a aquisição de Pedra-chave Memorial"
 La["Trade Skill Cooldowns"] = "Recarga de Habilidades"
 La["Trade skills"] = "Habilidades de profissão"
 La["Transmute"] = "Transmutação"
---[[Translation missing --]]
-La["Trial of Elements"] = "Trial of Elements"
---[[Translation missing --]]
-La["Trial of Flood"] = "Trial of Flood"
+La["Trial of Elements"] = "Prova dos Elementos"
+La["Trial of Flood"] = "Prova da Inundação"
+La["TWW Algari Treatise"] = "Tratado Algari de TWW"
+La["TWW Services Requested"] = "Encomendas de TWW"
+La["TWW Weekly Cache"] = "Baús Semanais de TWW"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
 La["ULD"] = "ULD"
@@ -3947,46 +4317,43 @@ La["UNDR"] = "UNDR"
 La["UPPR"] = "UPPR"
 La["Use class color"] = "Usar cor das classes"
 La["User"] = "Usuário"
---[[Translation missing --]]
-La["Vision Boss + 2 Bonus Objectives"] = "Vision Boss + 2 Bonus Objectives"
---[[Translation missing --]]
-La["Vision Boss Only"] = "Vision Boss Only"
---[[Translation missing --]]
+La["Vision Boss + 2 Bonus Objectives"] = "Chefe da Visão + 2 Objetivos Bônus"
+La["Vision Boss Only"] = "Apenas o Chefe da Visão"
 La["Voraazka"] = "Voraazka"
 --[[Translation missing --]]
 La["VOTW"] = "VOTW"
 --[[Translation missing --]]
 La["VP"] = "VP"
+La["Warband Money"] = "Dinheiro do Bando de Guerra"
 La["Warfronts"] = "Fronts de Guerra"
---[[Translation missing --]]
-La["Warn about instance limit"] = "Warn about instance limit"
+La["Warn about instance limit"] = "Avisar sobre o limite de instâncias"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Atenção: Você entrou em cerca de%i Instância e esta se aproximando de %i , limite por hora para a sua conta. Mais instâncias devem estar disponíveis em %s."
---[[Translation missing --]]
-La["Water"] = "Water"
---[[Translation missing --]]
-La["Water Core"] = "Water Core"
+La["Water"] = "Água"
+La["Water Core"] = "Núcleo de Água"
 La["Weekly Quests"] = "Missões Semanais"
---[[Translation missing --]]
-La["Wild Transmute"] = "Wild Transmute"
+La["Wild Transmute"] = "Transmutação Selvagem"
 --[[Translation missing --]]
 La["WM"] = "WM"
 --[[Translation missing --]]
 La["WORK"] = "WORK"
 La["World Boss"] = "Chefes de Mundo"
 La["World Bosses"] = "Chefes de Mundo"
---[[Translation missing --]]
-La["Wrath of the Jailer"] = "Wrath of the Jailer"
+La["World PvP Weekly"] = "Semanal de JxJ Mundial"
+La["Wrath of the Jailer"] = "Ira do Carceireiro"
 --[[Translation missing --]]
 La["YARD"] = "YARD"
 La["You can combine icons and text in a single indicator if you wish. Simply choose an icon, and insert the word ICON into the text field. Anywhere the word ICON is found, the icon you chose will be substituted in."] = "Você pode combinar os ícones e texto em um único indicador, se desejar. Basta escolher um ícone, e inserir o ícone no campo de texto. Em qualquer lugar do ícone for encontrado, o ícone que você escolheu será substituída dentro"
---[[Translation missing --]]
-La["Zurgaz Corebreaker"] = "Zurgaz Corebreaker"
+La["Zurgaz Corebreaker"] = "Zurgaz Rompecerne"
 
 elseif locale == "itIT" then
   La["|cffffff00Click|r to open weekly rewards"] = "|cffffff00Clicca|r per aprire le ricompense settimanali "
 La["|cffffff00Left-click|r to detach tooltip"] = " |cffffff00Click sinistro|r per sganciare la descrizione "
 La["|cffffff00Middle-click|r to show Blizzard's Raid Information"] = "|cffffff00Click-centrale|r per mostrare le informazioni Blizzard sul Raid"
 La["|cffffff00Right-click|r to configure SavedInstances"] = "|cffffff00Click destro|r per configurare SavedInstances"
+--[[Translation missing --]]
+La["A Call to Battle"] = "A Call to Battle"
+--[[Translation missing --]]
+La["A Call to Delves"] = "A Call to Delves"
 La["A Worthy Ally: Dream Wardens"] = "Un degno alleato: i custodi dei sogni"
 La["A Worthy Ally: Loamm Niffen"] = "Un degno alleato: Loamm Niffen"
 La["AA"] = "ADA"
@@ -4000,6 +4367,30 @@ La["Add Entry"] = "Aggiungi Iscrizione "
 La["Aiding the Accord"] = "Aiutare l'Accordo"
 La["Air"] = "Aria"
 La["Air Core"] = "Nucleo d'aria"
+--[[Translation missing --]]
+La["Alchemy Thaumaturgy"] = "Alchemy Thaumaturgy"
+--[[Translation missing --]]
+La["Algari Treatise on Alchemy"] = "Algari Treatise on Alchemy"
+--[[Translation missing --]]
+La["Algari Treatise on Blacksmithing"] = "Algari Treatise on Blacksmithing"
+--[[Translation missing --]]
+La["Algari Treatise on Enchanting"] = "Algari Treatise on Enchanting"
+--[[Translation missing --]]
+La["Algari Treatise on Engineering"] = "Algari Treatise on Engineering"
+--[[Translation missing --]]
+La["Algari Treatise on Herbalism"] = "Algari Treatise on Herbalism"
+--[[Translation missing --]]
+La["Algari Treatise on Inscription"] = "Algari Treatise on Inscription"
+--[[Translation missing --]]
+La["Algari Treatise on Jewelcrafting"] = "Algari Treatise on Jewelcrafting"
+--[[Translation missing --]]
+La["Algari Treatise on Leatherworking"] = "Algari Treatise on Leatherworking"
+--[[Translation missing --]]
+La["Algari Treatise on Mining"] = "Algari Treatise on Mining"
+--[[Translation missing --]]
+La["Algari Treatise on Skinning"] = "Algari Treatise on Skinning"
+--[[Translation missing --]]
+La["Algari Treatise on Tailoring"] = "Algari Treatise on Tailoring"
 La["Always show"] = "Mostra sempre"
 La["Amathet Reliquary"] = "Reliquiario di Amathet"
 La["Ambered Coffer"] = "Forziere Ambrato"
@@ -4015,6 +4406,8 @@ La["Automatically shrink the tooltip to fit on the screen"] = "Adatta automatica
 La["Azuregos"] = "Azuregos"
 La["Battleground Deserter"] = "Disertore di campi di battaglia"
 La["BH"] = "CDF"
+--[[Translation missing --]]
+La["Biergoth Dungeon Quest"] = "Biergoth Dungeon Quest"
 La["Bind a key to toggle the SavedInstances tooltip"] = "Abbina un tasto per mostrare la finestra di SavedInstances "
 La["Blooming Dreamseeds"] = "Fioritura dei Semi Onirici"
 La["Bonus loot frame"] = "Frame del Bottino Bonus"
@@ -4022,6 +4415,8 @@ La["Bonus rolls"] = "Tiri bonus"
 La[ [=[Boss kill information is missing for this lockout.
 This is a Blizzard bug affecting certain old raids.]=] ] = "Mancano le informazioni sull'uccisione del boss per questo blocco. Questo è un bug Blizzard che colpisce alcuni vecchi raid."
 La["Bouldron"] = "Pietron"
+--[[Translation missing --]]
+La["Brawl Weekly"] = "Brawl Weekly"
 --[[Translation missing --]]
 La["BREW"] = "BREW"
 La["BRH"] = "FC"
@@ -4088,9 +4483,13 @@ La["FH"] = "CDL"
 La["Fighting is Its Own Reward"] = "Combattere è la sua ricompensa"
 La["Fire"] = "Fuoco"
 La["Fire Core"] = "Nucleo di Fuoco"
+--[[Translation missing --]]
+La["First Cache"] = "First Cache"
 La["Fit to screen"] = "Adatta allo schermo"
 La["Flex"] = "Flettere"
 La["Format large numbers"] = "Adatta i numeri grandi"
+--[[Translation missing --]]
+La["Fourth Cache"] = "Fourth Cache"
 --[[Translation missing --]]
 La["Frozion"] = "Frozion"
 La["Full Clear + 1 Mask"] = "Completamente Trasparente + 1 Maschera"
@@ -4105,6 +4504,8 @@ La["Gaelzion"] = "Gaelzion"
 --[[Translation missing --]]
 La["GB"] = "GB"
 La["GD"] = "TF"
+--[[Translation missing --]]
+La["Gearing Up for Trouble"] = "Gearing Up for Trouble"
 La["General settings"] = "Opzioni generali"
 --[[Translation missing --]]
 La["GMBT"] = "GMBT"
@@ -4146,6 +4547,8 @@ La["Khaz Algar Transmute"] = "Khaz Algar Transmute"
 La["KR"] = "RDR"
 La["Last updated"] = "Ultimo aggiornamento"
 La["Legion Transmute"] = "Trasmutazione di Legion"
+--[[Translation missing --]]
+La["Lesser Keyflame"] = "Lesser Keyflame"
 La["Lesser Visions of N'Zoth"] = "Visioni Inferiori di N'zoth"
 La["Level %d Characters"] = "Personaggio di livello %d "
 La["LFG cooldown"] = "Tempo rimanente ricerca delle spedizioni"
@@ -4201,6 +4604,8 @@ La["Primal Storms Elementals"] = "Elementali delle Tempeste Primordiali"
 La["Progress Persists"] = "Il Progresso Persiste"
 --[[Translation missing --]]
 La["PSF"] = "PSF"
+--[[Translation missing --]]
+La["PvP Weekly"] = "PvP Weekly"
 La["Quest ID"] = "ID Missione "
 La["Quest Name"] = "Nome della Missione"
 La["Quest progresses"] = "La missione procede"
@@ -4209,13 +4614,19 @@ La["Raids before dungeons"] = "Incursioni prima delle spedizioni"
 La["Recent Bonus Rolls"] = "Tiri bonus recenti"
 La["Recent Instances"] = "Istanze recenti"
 La["Recover Dailies"] = "Recupera le Missioni Giornaliere"
+--[[Translation missing --]]
+La["Replenish the Reservoir"] = "Replenish the Reservoir"
 La["Report instance resets to group"] = "Informa il gruppo del ripristino dell'istanza"
 La["Researchers Under Fire"] = "Ricercatori Sotto Attacco "
 La["Reset Characters"] = "Azzera Personaggi"
+--[[Translation missing --]]
+La["Return Lost Souls"] = "Return Lost Souls"
 La["Reverse ordering"] = "Ordinamento inverso"
 La["RISE"] = "ADM"
 La["RLP"] = "PDVDR"
 La["Roll Bonus"] = "Tiro Bonus"
+--[[Translation missing --]]
+La["Rollin' Down in the Deeps"] = "Rollin' Down in the Deeps"
 --[[Translation missing --]]
 La["ROOK"] = "ROOK"
 La["Rouen Icewind"] = "Rouen Ventogelido"
@@ -4223,8 +4634,14 @@ La["Row Highlight"] = "Evidenzia Riga"
 La["SBG"] = "NDT"
 La["SD"] = "PS"
 La["SEAT"] = "SDT"
+--[[Translation missing --]]
+La["Second Cache"] = "Second Cache"
 La["Secured Shipment"] = "Spedizione in Sicurezza"
+--[[Translation missing --]]
+La["Services Requested"] = "Services Requested"
 La["Set All"] = "Imposta tutto"
+--[[Translation missing --]]
+La["Shaping Fate"] = "Shaping Fate"
 La["Shaping the Dreamsurge"] = "Plasmare il Sovronirico "
 La["Shipment of Goods"] = "Spedizione di Benì"
 La["Show all emissary names"] = "Mostra tutti i nomi degli emissari"
@@ -4268,6 +4685,10 @@ La["Sorting"] = "Ordinamento"
 La["SOTS"] = "SDT"
 La["Space between categories"] = "Spazio tra le categorie"
 La["Sparks of Life"] = "Scintille di Vita"
+--[[Translation missing --]]
+La["Special Assignments"] = "Special Assignments"
+--[[Translation missing --]]
+La["Spreading the Light"] = "Spreading the Light"
 La["Storm Surge"] = "Tempesta"
 La["Storm's Fury"] = "La Furia della Tempesta"
 --[[Translation missing --]]
@@ -4280,10 +4701,20 @@ La["TAV"] = "TAV"
 La["TD"] = "TD"
 La["Text"] = "Testo"
 La["The Big Dig: Traitor's Rest"] = "Il Grande Scavo: Riposo del Traditore"
+--[[Translation missing --]]
+La["The Call of the Worldsoul"] = "The Call of the Worldsoul"
 La["The Four Celestials"] = "I quattro Celestiali"
+--[[Translation missing --]]
+La["The Key to Success"] = "The Key to Success"
+--[[Translation missing --]]
+La["The Severed Threads"] = "The Severed Threads"
 La["The Superbloom"] = "La Superfioritura"
+--[[Translation missing --]]
+La["The Theater Troupe"] = "The Theater Troupe"
 La["The World Awaits"] = "Il Mondo Attende"
 La["These are the instances that count towards the %i instances per hour account limit, and the time until they expire."] = "Queste sono le istanze conteggiate per il limite orario per account di %i, e il tempo prima che scadano"
+--[[Translation missing --]]
+La["Third Cache"] = "Third Cache"
 La["This should only be used for characters who have been renamed or deleted, as characters will be re-populated when you log into them."] = "Questo dovrebbe essere usato solo per personaggi che sono stati rinominati o cancellati, poichè i personaggi saranno riesaminati quando ci accedi nuovamente"
 La["Time /played"] = "Tempo /giocato"
 La["Time Left"] = "Tempo Rimanente"
@@ -4307,6 +4738,12 @@ La["Trade skills"] = "Professioni"
 La["Transmute"] = "Trasmutazioni"
 La["Trial of Elements"] = "Prova degli Elementi "
 La["Trial of Flood"] = "Prova del Torrente"
+--[[Translation missing --]]
+La["TWW Algari Treatise"] = "TWW Algari Treatise"
+--[[Translation missing --]]
+La["TWW Services Requested"] = "TWW Services Requested"
+--[[Translation missing --]]
+La["TWW Weekly Cache"] = "TWW Weekly Cache"
 La["Type"] = "Tipo"
 --[[Translation missing --]]
 La["ULD"] = "ULD"
@@ -4320,6 +4757,8 @@ La["Vision Boss Only"] = "Solo Boss della Visione"
 La["Voraazka"] = "Voraazka"
 La["VOTW"] = "SDC"
 La["VP"] = "PDV"
+--[[Translation missing --]]
+La["Warband Money"] = "Warband Money"
 La["Warfronts"] = "Fronti di Guerra"
 La["Warn about instance limit"] = "Avvisa sul limite di istanze"
 La["Warning: You've entered about %i instances recently and are approaching the %i instance per hour limit for your account. More instances should be available in %s."] = "Attenzione: Sei entrato in circa %i istanze, recentemente e ti stai avvicinando al limite orario di %i istanze per account. Altre istanze saranno disponibili in %s."
@@ -4332,6 +4771,8 @@ La["WM"] = "MDC"
 La["WORK"] = "WORK"
 La["World Boss"] = "Boss Mondiale"
 La["World Bosses"] = "Boss Mondiali"
+--[[Translation missing --]]
+La["World PvP Weekly"] = "World PvP Weekly"
 La["Wrath of the Jailer"] = "L'Ira del Carceriere"
 --[[Translation missing --]]
 La["YARD"] = "YARD"

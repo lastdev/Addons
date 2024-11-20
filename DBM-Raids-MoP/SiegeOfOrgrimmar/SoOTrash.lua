@@ -3,8 +3,9 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20230617070727")
+mod:SetRevision("20241103134004")
 --mod:SetModelID(47785)
+mod:SetZone(1136)
 
 mod.isTrashMod = true
 
@@ -45,10 +46,9 @@ function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 146728 and not galakrasMod:IsInCombat() then
-		local source = args.sourceName
 		warnChainHeal:Show()
-		if source == UnitName("target") or source == UnitName("focus") then
-			specWarnChainheal:Show(source)
+		if args.sourceName == UnitName("target") or args.sourceName == UnitName("focus") then
+			specWarnChainheal:Show(args.sourceName)
 		end
 	elseif spellId == 147884 and self:AntiSpam(3, 2) then
 		specWarnInfusion:Show()

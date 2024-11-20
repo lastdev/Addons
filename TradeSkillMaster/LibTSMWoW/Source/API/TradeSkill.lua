@@ -12,7 +12,9 @@ local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
 local EnumType = LibTSMWoW:From("LibTSMUtil"):Include("BaseType.EnumType")
 local private = {
 	buggedQuantityRangeSpells = {},
-	inspirationDescPattern = nil,
+	categoryRootCache = {
+		lastUpdate = 0,
+	},
 	categorySkillLevelCache = {
 		lastUpdate = 0,
 	},
@@ -80,22 +82,6 @@ local BUGGED_QUANTITY_RANGE_SPELLS = {
 	[209664] = {42, 42}, -- Felwort (amount is variable but the values are conservative)
 	[247861] = {4, 4}, -- Astral Glory (amount is variable but the values are conservative)
 }
-
-
-
--- ============================================================================
--- Module Loading
--- ============================================================================
-
-TradeSkill:OnModuleLoad(function()
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
-		private.inspirationDescPattern = gsub(PROFESSIONS_CRAFTING_STAT_TT_CRIT_DESC, "%%d", "([0-9%.]+)")
-		if private.inspirationDescPattern == PROFESSIONS_CRAFTING_STAT_TT_CRIT_DESC then
-			-- This locale uses positional format specifiers, so we'll use a different mechanism to try to extract the inspiration
-			private.inspirationDescPattern = nil
-		end
-	end
-end)
 
 
 
@@ -464,39 +450,20 @@ end
 ---@return number? baseDifficulty
 ---@return number? quality
 ---@return boolean? hasQualityMats
----@return number? inspirationAmount
----@return number? inspirationChance
 function TradeSkill.GetRecipeQualityInfo(spellId)
 	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI))
 	local info = C_TradeSkillUI.GetRecipeSchematic(spellId, false, 1)
 	local recipeType = private.MapRecipeType(info.recipeType)
 	if not info.hasCraftingOperationInfo or info.hasGatheringOperationInfo then
-		return nil, nil, nil, nil, nil
+		return nil, nil, nil
 	elseif recipeType == RECIPE_TYPE.UNKNOWN then
-		return nil, nil, nil, nil, nil
+		return nil, nil, nil
 	elseif recipeType == RECIPE_TYPE.ITEM and not info.outputItemID then
-		return nil, nil, nil, nil, nil
+		return nil, nil, nil
 	end
 	local operationInfo = C_TradeSkillUI.GetCraftingOperationInfo(spellId, EMPTY_TABLE, nil, false)
 	if not operationInfo then
-		return nil, nil, nil, nil, nil
-	end
-	local inspirationChance, inspirationAmount = 0, 0
-	for _, statInfo in ipairs(operationInfo.bonusStats) do
-		if statInfo.bonusStatName == PROFESSIONS_CRAFTING_STAT_TT_CRIT_HEADER then
-			if private.inspirationDescPattern then
-				inspirationChance, inspirationAmount = strmatch(statInfo.ratingDescription, private.inspirationDescPattern)
-			end
-			if not inspirationChance or inspirationChance == 0 then
-				-- Try another way to parse the chance / amount
-				inspirationChance = strmatch(statInfo.ratingDescription, "([0-9%.]+)%%")
-				inspirationAmount = strmatch(statInfo.ratingDescription, "([0-9]+)[^%%%.,]") or strmatch(statInfo.ratingDescription, "([0-9]+)%.$")
-			end
-			inspirationChance = tonumber(inspirationChance) / 100
-			inspirationAmount = tonumber(inspirationAmount)
-			assert(inspirationChance and inspirationAmount)
-			break
-		end
+		return nil, nil, nil
 	end
 	local hasQualityMats = false
 	for _, data in ipairs(info.reagentSlotSchematics) do
@@ -505,7 +472,7 @@ function TradeSkill.GetRecipeQualityInfo(spellId)
 			break
 		end
 	end
-	return operationInfo.baseDifficulty, operationInfo.quality, hasQualityMats, inspirationAmount, inspirationChance
+	return operationInfo.baseDifficulty, operationInfo.quality, hasQualityMats
 end
 
 ---Gets the item IDs which can be used with a salvage recipe.
@@ -545,6 +512,25 @@ function TradeSkill.CategoryInfo(categoryId)
 		local name = TradeSkill.IsClassicCrafting() and GetCraftDisplaySkillLine() or (categoryId and GetTradeSkillInfo(categoryId) or nil)
 		return name, 0, nil, nil, nil
 	end
+end
+
+---Gets the root category of a category.
+---@param categoryId number The category ID
+---@return number
+function TradeSkill.GetRootCategoryId(categoryId)
+	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI))
+	if private.categoryRootCache.lastUpdate ~= GetTime() then
+		wipe(private.categoryRootCache)
+		private.categoryRootCache.lastUpdate = GetTime()
+	end
+	if not private.categoryRootCache[categoryId] then
+		local categoryInfo = C_TradeSkillUI.GetCategoryInfo(categoryId)
+		while not categoryInfo.skillLineCurrentLevel and categoryInfo.parentCategoryID do
+			categoryInfo = C_TradeSkillUI.GetCategoryInfo(categoryInfo.parentCategoryID)
+		end
+		private.categoryRootCache[categoryId] = categoryInfo and categoryInfo.categoryID or -1
+	end
+	return private.categoryRootCache[categoryId]
 end
 
 ---Gets the current skill level of a category.
@@ -730,21 +716,22 @@ end
 ---@param level? number The recipe level
 ---@param enchantSlotId? number The slotId of the item to enchant
 ---@param salvageSlotId? number The slotId of the item to salvage
+---@param applyConcentration? boolean Whether or not to apply concentration
 ---@return string?
-function TradeSkill.Craft(spellId, quantity, optionalMats, level, enchantSlotId, salvageSlotId)
+function TradeSkill.Craft(spellId, quantity, optionalMats, level, enchantSlotId, salvageSlotId, applyConcentration)
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
 		if enchantSlotId then
-			assert(not level and not next(optionalMats) and not salvageSlotId)
+			assert(not level and not salvageSlotId)
 			private.itemLocation:SetBagAndSlot(SlotId.Split(enchantSlotId))
-			C_TradeSkillUI.CraftEnchant(spellId, quantity, optionalMats, private.itemLocation)
+			C_TradeSkillUI.CraftEnchant(spellId, quantity, optionalMats, private.itemLocation, applyConcentration)
 		elseif salvageSlotId then
 			assert(not level and not next(optionalMats))
 			if TradeSkill.IsValiMatSlotId(salvageSlotId) then
 				private.itemLocation:SetBagAndSlot(SlotId.Split(salvageSlotId))
-				C_TradeSkillUI.CraftSalvage(spellId, quantity, private.itemLocation)
+				C_TradeSkillUI.CraftSalvage(spellId, quantity, private.itemLocation, nil, applyConcentration)
 			end
 		else
-			C_TradeSkillUI.CraftRecipe(spellId, quantity, optionalMats, level)
+			C_TradeSkillUI.CraftRecipe(spellId, quantity, optionalMats, level, nil, applyConcentration)
 		end
 		return nil
 	else

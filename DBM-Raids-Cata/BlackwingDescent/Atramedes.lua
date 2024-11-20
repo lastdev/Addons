@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(171, "DBM-Raids-Cata", 5, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426180008")
+mod:SetRevision("20241103125714")
 mod:SetCreatureID(41442)
 mod:SetEncounterID(1022)
 mod:SetUsedIcons(8)
+mod:SetZone(669)
 --mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_AtramedesIntro.ogg", "Sound\\Creature\\Atramedes\\VO_BD_Atramedes_Event03.ogg")
 --Long: Atramedes, are you going deaf as well as blind? Hurry up and kill them all.
 --Short: Death waits in the darkness!
@@ -133,7 +134,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif args.spellId == 92681 then--Phase shift removed, add targetable/killable.
-		specWarnAddTargetable:Show(args.destName)
+		specWarnAddTargetable:Show()
 		specWarnAddTargetable:Play("killmob")
 	end
 end

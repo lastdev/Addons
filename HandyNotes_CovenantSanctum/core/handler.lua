@@ -32,8 +32,8 @@ local NPClinkSanctum = CreateFrame("GameTooltip", "NPClinkSanctum", UIParent, "G
 local function GetCreatureNameByID(id)
     if (not id) then return end
 
-	NPClinkSanctum:SetOwner(UIParent, "ANCHOR_NONE")
-	NPClinkSanctum:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
+    NPClinkSanctum:SetOwner(UIParent, "ANCHOR_NONE")
+    NPClinkSanctum:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
     local name      = _G["NPClinkSanctumTextLeft1"]:GetText()
     local sublabel  = _G["NPClinkSanctumTextLeft2"]:GetText()
     return name, sublabel

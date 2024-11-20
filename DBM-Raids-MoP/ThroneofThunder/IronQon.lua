@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(817, "DBM-Raids-MoP", 2, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044127")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
 mod:SetUsedIcons(8)
+mod:SetZone(1098)
 
 mod:RegisterCombat("combat")
 

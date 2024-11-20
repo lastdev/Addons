@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 144
+local MAJOR, MINOR = "AskMrRobot-Serializer", 148
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -152,7 +152,8 @@ Amr.RaceIds = {
 	["KulTiran"] = 21,
 	["Vulpera"] = 22,
 	["Mechagnome"] = 23,
-	["Dracthyr"] = 24
+	["Dracthyr"] = 24,
+	["Earthen"] = 25
 }
 
 Amr.FactionIds = {
@@ -463,7 +464,7 @@ end
 -- get currently equipped items, store with currently active spec
 local function readEquippedItems(ret)
 	local equippedItems = {};
-	--local loc = ItemLocation.CreateEmpty()
+	local loc = ItemLocation.CreateEmpty()
 	local item
 	for slotNum = 1, #Amr.SlotIds do
 		local slotId = Amr.SlotIds[slotNum]
@@ -479,6 +480,9 @@ local function readEquippedItems(ret)
 				if itemData.guid and strlen(itemData.guid) > 9 then
 					itemData.guid = strsub(itemData.guid, -9)
 				end
+
+				-- an equipped item is always soulbound
+				itemData.soulbound = true
 
 				--[[
 				-- see if this is an azerite item and read azerite power ids
@@ -650,6 +654,10 @@ local function appendItemsToExport(fields, itemObjects)
 		end
 		if itemData.craftQuality and itemData.craftQuality ~= 0 then
 			table.insert(itemParts, "l" .. itemData.craftQuality)
+		end
+
+		if itemData.warbound or itemData.soulbound then
+			table.insert(itemParts, "d" .. (itemData.warbound and 5 or 1))
 		end
 
 		--[[
@@ -907,6 +915,13 @@ function Amr:SerializePlayerData(data, complete)
 			table.insert(fields, ".hlv")
 			for slotId, lvls in spairs(data.HighestItemLevels) do
 				table.insert(fields, slotId .. "|" .. "|" .. lvls[1] .. "|" .. lvls[2])
+			end
+		end
+
+		if data.Achievements then
+			table.insert(fields, ".ach")
+			for _, achievementId in ipairs(data.Achievements) do
+				table.insert(fields, achievementId)
 			end
 		end
     end

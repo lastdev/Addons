@@ -20,6 +20,9 @@ L['options_icons_profession_treasures_desc'] = 'Afficher les emplacements des tr
 L['options_icons_khaz_algar_lore_hunter'] = '{achievement:40762}'
 L['options_icons_khaz_algar_lore_hunter_desc'] = 'Afficher les emplacements des objets d\'histoire pour le haut-fait {achievement:40762}.'
 
+L['options_icons_flight_master'] = '{achievement:40430}'
+L['options_icons_flight_master_desc'] = 'Afficher les emplacements des {npc:Maîtres de vol} pour le haut-fait {achievement:40430}.'
+
 -------------------------------------------------------------------------------
 -------------------------------- ISLE OF DORN ---------------------------------
 -------------------------------------------------------------------------------
@@ -34,22 +37,38 @@ L['mushroom_cap_note'] = 'Ramassez un {object:Chapeau de Boscracine} dans la for
 L['mysterious_orb_note'] = 'Ramenez la {object:Perle élémentaire} à l\'{npc:222847}.'
 L['thaks_treasure_note'] = 'Parlez à {npc:223227} et suivez-le.'
 L['trees_treasure_note'] = 'Parlez à {npc:222940} pour obtenir une {item:224185}. Guidez 6x {npc:224548} ({dot:Green}) répartis dans l\'{location:Île de Dorn} vers {npc:222940}. Lorsque vous avez guidé tous les crabes, retournez dans la grotte pour parler à nouveau avec {npc:222940}.'
+L['trees_treasure_crab_1_note'] = 'Sous l\'arbre.'
+L['trees_treasure_crab_2_note'] = 'Sur une branche de l\'arbre.'
+L['trees_treasure_crab_3_note'] = 'Sous l\'arbre.'
+L['trees_treasure_crab_4_note'] = 'Sous une racine de l\'arbre.'
+L['trees_treasure_crab_5_note'] = 'Sur un rebord.'
+L['trees_treasure_crab_6_note'] = 'Sur une racine de l\'arbre.'
 L['turtles_thanks_1_note'] = 'Apportez 5x {item:220143} (à pêcher dans les {object:Clapotis de surface calme} ou à acheter à l\'hôtel des ventes). {note:Quittez la zone et revenez aussitôt pour donner le poisson suivant}.'
 L['turtles_thanks_2_note'] = 'Apportez 1x {item:222533} (à pêcher dans les {object:Bassin scintillant}, {object:Bassin de pourriture purulente}, {object:Éclaboussure d\'ichor imprégné} ou à acheter à l\'hôtel des ventes).'
 L['turtles_thanks_3_note'] = 'Rencontrez la {npc:223338} à {location:Dornogal} et parlez-lui pour faire apparaître le trésor.'
 L['web_wrapped_axe_note'] = 'Au premier étage.\n\n{note:A un temps de réapparition de 1 à 2 heures.}'
 L['faithful_dog_note'] = [[
-1. Trouvez le {npc:59533} aux coordonnées 42.40 50.00 à {map:376} dans la {map:424} et terminez {quest:30526}.
+1. Trouvez le {npc:59533} aux coordonnées 42.40 50.00 à la {map:376} en {map:424} et terminez {quest:30526}.
 2. Construisez le {object:Jardin des simples} dans votre {area:7490} en {map:572}.
-3. Trouvez un {item:147420} à {map:619} {map:627}, puis parlez avec le {npc:87553} dans le {object:Jardin des simples} de votre {area:7490}.
+3. Trouvez un {item:147420} à {map:627} ({map:619}), puis parlez avec le {npc:87553} dans le {object:Jardin des simples} de votre {area:7490}.
 Le {npc:87553} sera maintenant situé à la {location:Ménagerie magique} à {map:627}.
-4. Interagissez avec la {object:Gamelle pour chien partiellement enterrée} sur l'{map:2248}, puis parlez avec le {npc:87553} pour recevoir la mascotte.
+4. Interagissez avec la {object:Gamelle pour chien partiellement enterrée} sur l'{map:2248}, puis caressez le {npc:87553} pour recevoir la mascotte.
 ]]
 
 L['cendvin_note'] = 'Obtenez 900x {item:225557} sur les monstres élites à {location:Braiselande} pour acheter la monture {item:223153} à {npc:226205}.'
 
 L['options_icons_flat_earthen'] = '{achievement:40606}'
 L['options_icons_flat_earthen_desc'] = 'Afficher l\'emplacement pour le haut-fait {achievement:40606}.'
+
+L['tome_of_polymorph_mosswool'] = 'Entrez dans le tunnel et continuez jusqu\'au {location:Salon de Fagotin}.\n\nAcceptez {quest:84438} donnée par {npc:229128} pour recevoir le {item:227710}.'
+
+L['aradan_note_start'] = '{npc:213428} se trouve dans le donjon {location:La colonie} à {location:Dornogal} sur l\'{location:Île de Dorn}.\n\n{note:{npc:213428} peut être dompté en mode Donjon avec sujets.}'
+L['aradan_note_step_1'] = '1. Récupérez le {item:220770} dans les profondeurs marines au large de l\'{location:Île de Dorn}.'
+L['aradan_note_step_2'] = '2. ({dot:Blue}) Entrez dans {location:La colonie} et vainquez {npc:209230}.'
+L['aradan_note_step_3'] = '3. ({dot:Red}) Descendez dans le puits puis montez les escaliers d\'où le {npc:215967} apparaît.'
+L['aradan_note_step_4'] = '4. ({dot:Green}) Allez jusqu\'au bord de la falaise et utilisez le {item:220770} tout en ciblant {npc:213428}.'
+L['aradan_note_step_5'] = '5. {npc:213428} reconnaîtra le marteau et atterrira, ce qui vous permettra de le dompter.'
+L['aradan_note_end'] = '{note:Le {item:220770} reste intact après utilisation, ce qui vous permet d\'apprivoiser les 5 variantes existantes ou d\'aider un autre chasseur.}'
 
 -------------------------------------------------------------------------------
 -------------------------------- RINGING DEEPS --------------------------------
@@ -117,6 +136,12 @@ L['gobblin_with_glublurp_note'] = 'Cliquez sur un {dot:Red}{object:Cristal scint
 L['critter_love_note'] = 'Vous devez utiliser l\'émote {emote:/amour} sur les bestioles, pas sur les familiers de combat.'
 L['options_icons_critter_love'] = '{achievement:40475}'
 L['options_icons_critter_love_desc'] = 'Afficher les emplacements des bestioles pour le haut-fait {achievement:40475}.'
+
+L['for_the_collective_note'] = 'Requiert l\'expédition {wq:Mission de messagerie : récupération de minerai}\n\nContribuez jusqu\'à 20x {npc:224281} à chaque {npc:228056}.\n\n{note:La progression des contributions est commune au serveur et se réinitialise au bout de 2 heures.}'
+L['for_the_collective_suffix'] = 'minerai contribué'
+L['for_the_collective_location'] = 'Sur le toit du bâtiment. Utilisez la {npc:Planche en bois} à proximité pour construire une rampe.'
+L['options_icons_for_the_collective'] = '{achievement:40630}'
+L['options_icons_for_the_collective_desc'] = 'Afficher les emplacements des {npc:228056} pour le haut-fait {achievement:40630}.'
 
 -------------------------------------------------------------------------------
 --------------------------------- HALLOWFALL ----------------------------------
@@ -194,6 +219,7 @@ L['beledars_spawn_note'] = 'Ce rare apparaît à un de ces endroits à intervall
 L['croakit_note'] = 'Pêchez 10x {item:211474} au sein du {object:Banc de mérous sombrœil} proche (ou achetez-les à l\'hôtel des ventes) et lancez-les vers lui pour le rendre attaquable.'
 L['deathtide_note'] = 'Récupérez une {item:220122} {dot:Red} et un {item:220124} {dot:Green}. Combinez-les en l\'{item:220123} utilisée pour invoquer le rare à l\'{object:Autel menaçant}.'
 L['murkshade_note'] = 'Interagissez avec la {npc:218455}.'
+L['spreading_the_light_rares_note'] = 'Le monstre rare apparaît lorsque la {object:Flammeclé} allumée à cet endroit s\'éteint.'
 
 L['options_icons_mereldar_menace'] = '{achievement:40151}'
 L['options_icons_mereldar_menace_desc'] = 'Afficher les emplacements des cibles pour le haut-fait {achievement:40151}.'
@@ -214,6 +240,13 @@ L['options_icons_flamegards_hope'] = '{achievement:20594}'
 L['options_icons_flamegards_hope_desc'] = 'Afficher l\'emplacement pour le haut-fait {achievement:20594}.'
 L['flamegards_hope_note'] = 'Aidez {npc:213319} à soigner les {npc:220225} pendant 20 jours.\n\nVous pouvez également utiliser un {spell:372009} ou une {item:211878} si votre classe ne peut pas soigner.'
 
+L['hallowfall_sparkfly_label'] = 'Mouchétincelle de Sainte-Chute'
+L['hallowfall_sparkfly_note'] = 'Utilisez 3x {item:206350} pour allumer la {object:Flammeclé inférieure} à l\'{location:Étang de Roche-Tranquille} pour faire apparaître {npc:215956}.\n\nAchetez une {item:218107} contre 2x {item:206350} et utilisez-la pour faire apparaître les {npc:222308} à proximité jusqu\'à ce que la {object:Mouchétincelle de Sainte-Chute} apparaisse.'
+
+L['nightfarm_growthling_note'] = 'Utilisez 3x {item:206350} pour allumer la {object:Flammeclé inférieure} au {location:Champ Bourdonnant} pour faire apparaître {npc:208186}.\n\nAchetez une {item:219148} contre 2x {item:206350} et utilisez-la pour faire apparaître le {item:221546}.'
+
+L['thunder_lynx_note'] = '1. Utilisez 3x {item:206350} pour allumer la {object:Flammeclé inférieure} à la {location:Mine Torche-Vive} pour faire apparaître {npc:212419}.\n\n2. Parlez à {npc:212419} et écoutez toutes les lignes de dialogue supplémentaires pour révéler {quest:82007}.\n\n3. Trouvez chaque bébé lynx : {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}), et {npc:222374} ({dot:Red}).\n\n{note:Assurez-vous de commencer {quest:76169} au même moment pour recevoir la {item:219198} ou utilisez un objet similaire tel qu\'une {item:219148}. Vous aurez besoin de lumière pour faire apparaître {npc:222373} dans la {location:Grotte d’Ombre-Froid}.}\n\n4. Sauvez chaque jeune lynx et retournez auprès d\'{npc:212419}.'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -221,14 +254,7 @@ L['flamegards_hope_note'] = 'Aidez {npc:213319} à soigner les {npc:220225} pend
 L['options_icons_itsy_bitsy_spider'] = '{achievement:40624}'
 L['options_icons_itsy_bitsy_spider_desc'] = 'Afficher les emplacements des tisse-rats pour le haut-fait {achievement:40624}.'
 
-L['itsy_bitsy_spider_note'] = 'Faites signe ({emote:/signe}) au tisse-rat.'
-L['webster_location'] = nil
-L['spindle_location'] = nil
-L['swift_location'] = nil
-L['rumurh_location'] = nil
-L['thimble_location'] = nil
-L['scampering_weave_rat_location'] = nil
-L['generals_scouting_shadecaster_location'] = nil
+L['itsy_bitsy_spider_note'] = 'Faites signe ({emote:/signe}) au {npc:tisse-rat}.'
 
 L['options_icons_bookworm'] = '{achievement:40629}'
 L['options_icons_bookworm_desc'] = 'Afficher les emplacements des livres pour le haut-fait {achievement:40629}.'
@@ -273,9 +299,11 @@ Une fois que vous avez trouvé les 4 {npc:227421}, retournez au {object:Grimoire
 ]]
 L['another_you_4_note'] = 'Patrouille le long du chemin indiqué.'
 
+L['concealed_contraband_note'] = 'Retirez le {object:Cocon de toile} du trésor pour le faire apparaître.'
 L['memory_cache_note'] = 'Obtenez le buff {spell:420847} à partir d\'une ({dot:Red}) {object:Remise de l\'extracteur} proche. Tuez le {npc:223908} pour obtenir la {item:223870} permettant d\'ouvrir la {object:Cache de souvenirs}.'
 L['niffen_stash_note'] = 'Situé sous le pont.'
 L['trapped_trove_note'] = 'Dans un bâtiment suspendu au plafond. Évitez les toiles d\'araignées au sol.'
+L['weaving_supplies_note'] = 'Ramassez les lambeaux de soie sur la plate-forme à proximité pour ouvrir le trésor.\n\n{item:223901} ({dot:Purple})\n{item:223903} ({dot:Yellow})\n{item:223902} ({dot:Red})'
 
 L['tkaktath_note'] = 'Démarre une suite de quêtes pour obtenir la monture {item:224150}.'
 
@@ -286,6 +314,13 @@ L['the_unseeming_note'] = 'Restez dans le bassin jusqu\'à ce que vous ayez 100x
 L['options_icons_you_cant_hang_with_us'] = '{achievement:40634}'
 L['options_icons_you_cant_hang_with_us_desc'] = 'Afficher les emplacements pour le haut-fait {achievement:40634}.'
 L['you_cant_hang_with_us_note'] = 'Trouvez une {npc:211816} avec l\'effet {spell:434734} et attaquez-la pour obtenir l\'affaiblissement {spell:443190} (1 minute). Un {npc:225408} interviendra ({note:Ne le tuez pas !}) et vous appliquera des charges de l\'affaiblissement {spell:454666}. À 10 charges, vous serez expulsé de force de la Cité.'
+
+L['kej_pet_vendor_note'] = 'Chaque mascotte est limitée en stock et coûte 2250x {currency:3056}.\n\n{note:Le temps de réapparition estimé est de 3 à 4 heures pour chaque mascotte auprès de n\'importe quel vendeur.}'
+
+L['options_icons_back_to_the_wall'] = '{achievement:40620}'
+L['options_icons_back_to_the_wall_desc'] = 'Afficher les emplacements des {npc:222119} pour le haut-fait {achievement:40620}.'
+L['arathi_prisoner_suffix'] = 'Prisonniers arathi sauvés'
+L['arathi_prisoner_note'] = 'Libérez les {npc:222119} enveloppés de toiles pendant l\'expédition {wq:Mission spéciale : une livre de remède}.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
@@ -302,7 +337,7 @@ L['kvr_chest_2_location'] = 'En haut de l\'échafaudage en bois.'
 L['nfs_chest_2_location'] = 'Sur la plante.'
 L['nfs_chest_3_location'] = 'À l\'intérieur du bâtiment.'
 L['nfs_chest_4_location'] = 'Sautez du dirigeable.'
-L['ski_chest_3_location'] = 'À l\'intérieur du bâtiment.'
+L['ski_chest_3_location'] = 'Sur un rebord.'
 L['tra_chest_2_location'] = 'Sur le corail.'
 L['tsw_chest_2_location'] = 'En haut de la poutre.'
 L['tsw_chest_2_note'] = '{note:Disponible uniquement pendant la variante de l’histoire "Avec les compliments de la Tisserande".}'
@@ -311,3 +346,24 @@ L['tsw_chest_4_location'] = 'En haut d\'une poutre. Descendez du pilier près de
 L['tuk_chest_1_note'] = 'Derrière la statue.'
 L['tuk_chest_2_note'] = '{note:Disponible uniquement pendant les variantes d’histoires "Évolution incontrôlable" et "Victimes de tortures".}'
 L['tuk_chest_3_note'] = '{note:Disponible uniquement pendant les variantes d’histoires "Évolution incontrôlable" et "Sauvetage de tisserande".}'
+
+-------------------------------------------------------------------------------
+----------------------------- SECRETS OF AZEROTH ------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_secrets_of_azeroth'] = 'Secrets d\'Azeroth'
+L['options_icons_secrets_of_azeroth_desc'] = 'Afficher les emplacements des indices pour les {location:Secrets d\'Azeroth}.'
+
+L['alyx_kickoff_note'] = 'Parlez à {npc:226683} pour activer les nouvelles énigmes des Secrets d\'Azeroth.'
+
+L['celebration_crates_label'] = 'Caisses d’anniversaire'
+L['celebration_crates_note'] = 'Trouvez et rapportez toutes les {object:Caisses d’anniversaire} cachées à travers {location:Azeroth}.'
+
+L['1_soggy_celebration_crate_note'] = 'Achetez un {item:225996} à {npc:143029} ({dot:Blue}) au {location:Barboteur} et donnez-le à {npc:189119} pour faire apparaître la {item:226200}.'
+L['2_hazy_celebration_crate_note'] = 'Tant que vous êtes en vie, repérez la zone où la lumière verte brille. {note:Cependant, vous devez être mort pour faire apparaître la {item:232263}.}'
+L['3_dirt_caked_celebration_crate_note'] = '{note:Vous n\'avez PAS besoin de récupérer la {item:228321} sur le panneau d\'appel près d\'{npc:226683} pour cette caisse.}.\n\n1. Entrez dans la {location:Crypte oubliée} derrière {location:Karazhan}.\n\n2. Descendez les escaliers, traversez le {location:Puits de l\'oublié}, descendez la rampe de la {location:Croisée du Pauvre}, et entrez dans le niveau suivant de la {location:Crypte oubliée}.\n\n3. Tournez à droite et suivez le tunnel à travers la {location:Croisée du Pauvre}.\n\n4. Traversez la grande pièce en diagonale vers {location:Les Pécheurs fous}.\n\n5. Traversez l\'eau et entrez dans le {location:Marais du Désespoir} pour ramasser la {item:228322}.'
+L['4_sandy_celebration_crate'] = '1. Ramassez le {item:228768} situé au {location:Site de fouilles englouti} aux {location:Mille pointes} en {location:Kalimdor}.\n\n2. Trouvez le {npc:91079} errant le long de la route à l\'est à {location:Azsuna}.\n\n3. Achetez la {item:228767} pour %s.'
+L['5_battered_celebration_crate'] = 'Près des rochers de la grotte et des {npc:24026}.'
+L['6_waterlogged_celebration_crate'] = 'Sous l\'eau, au deuxième étage du bâtiment Gnome.\n\n{note:Ne touchez pas à l\'ascenseur. Actuellement, il provoque un crash de votre jeu.}'
+
+L['water_resistant_receipt_note'] = '1. Entrez dans le tunnel rempli de {npc:47390}, tournez à droite et récupérez le {item:228768} à partir du {object:Récépissé de vente imperméable} derrière le tuyau.\n\n2. Trouvez le {npc:91079} à {location:Azsuna} sur les {location:Îles Brisées}.'

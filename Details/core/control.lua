@@ -1018,6 +1018,9 @@
 			Details:Msg("(debug) starting a new arena segment.")
 		end
 
+		--cleanup the first death of the arena
+		Details.first_arena_deathlog = nil
+
 		local _, timeSeconds = select(1, ...)
 
 		if (Details.start_arena) then
@@ -1524,7 +1527,7 @@
 			if (instance.rows_showing == 0 and instance:GetSegment() == -1) then -- -1 overall data
 				if (not instance:IsShowingOverallDataWarning()) then
 					local tutorial = Details:GetTutorialCVar("OVERALLDATA_WARNING1") or 0
-					if ((type(tutorial) == "number") and (tutorial < 60)) then
+					if ((type(tutorial) == "number") and (tutorial < 10)) then
 						Details:SetTutorialCVar ("OVERALLDATA_WARNING1", tutorial + 1)
 						instance:ShowOverallDataWarning (true)
 					end

@@ -60,7 +60,7 @@
 <!--	<Include file="lunarfestival/Main.xml" />-->
 <!--	<Include file="loveisintheair/Main.xml" />-->
 	<Include file="midsummer/Main.xml" />
-<!--	<Include file="hallowsend/Main.xml" />-->
+	<Include file="hallowsend/Main.xml" />
 	<Script file="announcements.lua" />
 	<!-- <Include file="configuration.xml" /> -->
 	<!-- <Script file="configuration.lua" /> -->
@@ -76,7 +76,9 @@
 	<!-- <Include file="primalstorms/Main.xml" /> -->
 	<Include file="dragonflyingglyphs/Main.xml" />
 <!--	<Include file="kalimdorcup/Main.xml" />-->
+<!--	<Include file="wowanniversary/Main.xml" />-->
 	<Script file="soundoverride/soundoverride.lua" />
+	<Script file="delveinfo.lua" />
 <!--	<Include file="mopremix/Main.xml" />-->
 	<Script file="notaint.lua" />
 </Ui>

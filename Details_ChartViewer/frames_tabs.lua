@@ -3,6 +3,8 @@ local addonId, addonTable = ...
 local AceLocale = LibStub("AceLocale-3.0")
 local Loc = AceLocale:GetLocale("Details_ChartViewer")
 local Details = Details
+
+---@type detailsframework
 local detailsFramework = DetailsFramework
 local ChartViewer = addonTable.ChartViewer
 local ChartViewerWindowFrame = ChartViewerWindowFrame
@@ -282,7 +284,7 @@ function ChartViewer.CreateAddTabButton()
     createNewTabButton:SetAlpha(0.8)
 	createNewTabButton:SetFrameLevel(10)
 
-	createNewTabButton:SetPoint("left", ChartViewer.segments_dropdown, "right", 4, 0)
+    createNewTabButton:SetPoint("topleft", ChartViewerWindowFrame, "topleft", 2, -49)
 	ChartViewer.NewTabButton = createNewTabButton
 end
 

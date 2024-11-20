@@ -1,10 +1,10 @@
-lightweight tag 90f8bbad6e0a0795d0c2dbe37987eea732846a69 patch-11.0.2-02
+lightweight tag cdb842d47b6b67586451888e8451153d89d5650b patch-11.0.5-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Sat Aug 31 12:43:50 2024 -0700
+Date:	Thu Oct 24 14:37:04 2024 -0700
 
-commit 90f8bbad6e0a0795d0c2dbe37987eea732846a69
+commit cdb842d47b6b67586451888e8451153d89d5650b
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Aug 31 12:43:50 2024 -0700
+Date:   Thu Oct 24 14:37:04 2024 -0700
 
-    Tweak corrupt talent loadout message that has been confusing
+    Add item upgrade achievements to /simc export, bump WoW version
 

@@ -14,7 +14,7 @@ SMARTBUFF_CREDITS = "|cffffffff"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"Dolche", "äxte", "schwerter", "streitkolben", "Stäbe", "Faustwaffen", "Stangenwaffen", "Wurfwaffe"};
+SMARTBUFF_WEAPON_STANDARD = {"Dolche", "äxte", "schwerter", "streitkolben", "Stäbe", "Faustwaffen", "Stangenwaffen", "Wurfwaffe", "Schild"};
 SMARTBUFF_WEAPON_BLUNT = {"streitkolben", "Faustwaffen", "Stäbe"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "ewichtsstein$";
 SMARTBUFF_WEAPON_SHARP = {"Dolche", "äxte", "schwerter", "Stangenwaffen"};
@@ -50,8 +50,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Buff Timer löschen";
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "Gießen reparieren"
-SMARTBUFF_OFTT_FIXBUFF		 = "Ankreuzen, wenn Smartbuff keine Buffs wirkt."
+SMARTBUFF_OFT_FIXBUFF        = "Gießen reparieren"
+SMARTBUFF_OFTT_FIXBUFF       = "Ankreuzen, wenn Smartbuff keine Buffs wirkt."
 
 SMARTBUFF_OFT                = "SmartBuff An/Aus";
 SMARTBUFF_OFT_MENU           = "Zeige/verberge Optionen Menü";
@@ -78,7 +78,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "Normal";
 SMARTBUFF_OFT_MSGWARNING     = "Warnung";
 SMARTBUFF_OFT_MSGERROR       = "Fehler";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "Verberge Minimap-Knopf";
-SMARTBUFF_OFT_INCLUDETOYS	 = "Spielzeug einbeziehen";
+SMARTBUFF_OFT_INCLUDETOYS    = "Spielzeug einbeziehen";
 SMARTBUFF_OFT_REBUFFTIMER    = "Rebuff Timer";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "Vorlagenwechsel";
 SMARTBUFF_OFT_SELFFIRST      = "Mich zuerst";
@@ -104,9 +104,11 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp Link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Selbst Link";
 SMARTBUFF_OFT_RESETALL       = "Reset Alles";
 SMARTBUFF_OFT_RESETLIST      = "Reset Liste";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Ja";
 SMARTBUFF_OFT_NO             = "Nein";
-SMARTBUFF_OFT_OKAY			 = "Neu laden"
+SMARTBUFF_OFT_OKAY           = "Neu laden"
 SMARTBUFF_OFT_PURGE_DATA     = "Sind Sie sicher, dass Sie ALLE SmartBuff-Daten zurücksetzen möchten?\nDiese Aktion erzwingt ein Neuladen der Benutzeroberfläche!";
 SMARTBUFF_OFT_REQ_RELOAD     = "Neue Versionen erfordern ein Neuladen der GUI\nKlicke um Fortzufahren";
 SMARTBUFF_OFT_SPLASHICON     = "Symbol anzeigen";
@@ -127,7 +129,7 @@ SMARTBUFF_OFTT_ARULES        = "Bufft nicht:\n- Dornen auf Magier, Priester und 
 SMARTBUFF_OFTT_SUBGRPCHANGED = "Öffnet automatisch das SmartBuff Menü,\nwenn du die Sub-Gruppe gewechselt hast.";
 SMARTBUFF_OFTT_GRPBUFFSIZE   = "Anzahl Spieler die in der Gruppe/Raid sein\nmüssen und den Gruppen-Buff nicht haben,\ndamit der Gruppen-Buff verwendet wird.";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "Verbirgt den SmartBuff Minimap-Knopf.";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "Fügen Sie neben Ihren Zaubersprüchen und Lebensmitteln auch Spielzeuge in die Liste ein.";
+SMARTBUFF_OFTT_INCLUDETOYS   = "Fügen Sie neben Ihren Zaubersprüchen und Lebensmitteln auch Spielzeuge in die Liste ein.";
 SMARTBUFF_OFTT_REBUFFTIMER   = "Wieviele Sekunden vor Ablauf der Buffs,\nsoll daran erinnert werden.\n0 = Deaktivert";
 SMARTBUFF_OFTT_SELFFIRST     = "Bufft den eigenen Charakter immer zuerst.";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "Bufft beim Bewegen des Scrollrads nach vorne.";
@@ -152,7 +154,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "Wieviele Sekunden die Splash Meldung angezeigt w
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Bufft auch wenn du\nverwandelt bist.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Prüft ob schon ein Buff\nmit gleichem Effekt von einer\nanderen Klasse aktiv ist.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Prüft ob ein Eigen-Buff\naktiv ist, von welchen jeweils\nnur einer aktiv sein kann.";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "Wählen Sie den gewünschten Splash.";
+SMARTBUFF_OFTT_SOUNDSELECT   = "Wählen Sie den gewünschten Splash.";
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "Nur mich";
@@ -182,9 +184,9 @@ SMARTBUFF_PSTT_RESIZE        = "Minimiert/Maximiert\ndas Optionenfenster";
 
 -- Messages
 SMARTBUFF_MSG_LOADED         = "geladen";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff Es ist eine neue Version verfügbar. Du benutzt |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff und Überarbeitung |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff steht aktuell zum Download bereit. Tritt Discord bei, um die neuesten Informationen zu erhalten https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff Es ist eine neue Version verfügbar. Du benutzt |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff und Überarbeitung |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff steht aktuell zum Download bereit. Tritt Discord bei, um die neuesten Informationen zu erhalten https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmartBuff ist deaktiviert!";
 SMARTBUFF_MSG_SUBGROUP       = "Du hast die Subgruppe gewechselt, bitte überprüfe die Einstellungen!";
 SMARTBUFF_MSG_NOTHINGTODO    = "Nichts zu buffen";
@@ -205,7 +207,7 @@ SMARTBUFF_MSG_REBUFF         = "ReBuff";
 SMARTBUFF_MSG_LEFT           = "übrig";
 SMARTBUFF_MSG_CLASS          = "Klasse";
 SMARTBUFF_MSG_CHARGES        = "Aufladungen";
-SMARTBUFF_MSG_SOUNDS		 = "Splash-Sound-Auswahl: "
+SMARTBUFF_MSG_SOUNDS         = "Splash-Sound-Auswahl: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec gewechselt (%s), lade Buff-Vorlagen...";
 
 -- Support

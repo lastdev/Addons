@@ -17,7 +17,7 @@ local CraftString = LibTSMTypes:Init("Crafting.CraftString")
 ---@param spellId number The craft's spell ID
 ---@param rank? number The rank of the craft
 ---@param level? number The level of the craft
----@param level? number The quality of the craft
+---@param quality? number The quality of the craft
 ---@return string
 function CraftString.Get(spellId, rank, level, quality)
 	local suffix = ""

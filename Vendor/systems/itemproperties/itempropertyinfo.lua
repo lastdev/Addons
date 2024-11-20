@@ -22,93 +22,118 @@ local L = Addon:GetLocale()
 
 ]]
 
+local ITEM_PROPERTIES_CATEGORIES = {
+    {Name = "General", Display = true },
+    {Name = "Location", Display = true },
+    {Name = "Type", Display = true },
+    {Name = "Binding", Display = true },
+    {Name = "Equipment", Display = true },
+    {Name = "Transmog", Display = true },
+    {Name = "Pet", Display = true },
+    {Name = "System", Display = false },
+    {Name = "Debug", Display = Addon.IsDebug },
+}
+
 local ITEM_PROPERTIES = {
     -- Core properties
     -- GUID is intentionally defaulted to false. If we dont have it, we dont have item properties.
-    GUID                    = { Default=false,  Hide=1,  Category="General",    Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Link                    = { Default="",     Hide=1,  Category="General",    Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Count                   = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Name                    = { Default="",     Hide=0,  Category="General",    Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Id                      = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
+    GUID                    = { Default=false,  Hide=1,  Category="General",    Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=1 },
+    Name                    = { Default="",     Hide=0,  Category="General",    Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=2 },
+    Id                      = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=3 },
+    Link                    = { Default="",     Hide=1,  Category="General",    Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=4 },
+    Count                   = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=5 },
 
     -- Location properties
-    IsBagAndSlot            = { Default=false,  Hide=0,  Category="Location",   Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Bag                     = { Default=-1,     Hide=0,  Category="Location",   Parent="IsBagAndSlot",        Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Slot                    = { Default=-1,     Hide=0,  Category="Location",   Parent="IsBagAndSlot",        Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsEquipped              = { Default=false,  Hide=0,  Category="Location",   Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    EquipLoc                = { Default="",     Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    EquipLocName            = { Default="",     Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
+    IsBagAndSlot            = { Default=false,  Hide=0,  Category="Location",   Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=6 },
+    Bag                     = { Default=-1,     Hide=0,  Category="Location",   Parent="IsBagAndSlot",        Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=7 },
+    Slot                    = { Default=-1,     Hide=0,  Category="Location",   Parent="IsBagAndSlot",        Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=8 },
+    IsEquipped              = { Default=false,  Hide=0,  Category="Location",   Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=9 },
+    EquipLoc                = { Default="",     Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=10 },
+    EquipLocName            = { Default="",     Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=11 },
 
     -- Base properties
-    Level                   = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    MinLevel                = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Quality                 = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    Type                    = { Default="",     Hide=0,  Category="Type",       Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    TypeId                  = { Default=0,      Hide=0,  Category="Type",       Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    SubType                 = { Default="",     Hide=0,  Category="Type",       Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    SubTypeId               = { Default=0,      Hide=0,  Category="Type",       Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    StackSize               = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    UnitValue               = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsCraftingReagent       = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    HasUseAbility           = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsEquipment             = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    ExpansionPackId         = { Default=0,      Hide=0,  Category="Type",       Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    InventoryType           = { Default=0,      Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsConduit               = { Default=false,  Hide=2,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsAzeriteItem           = { Default=false,  Hide=2,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    CraftedQuality          = { Default=0,      Hide=2,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsUsable                = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsUpgradeable           = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
+    Level                   = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=12 },
+    MinLevel                = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=13 },
+    Quality                 = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=14 },
+    Type                    = { Default="",     Hide=0,  Category="Type",       Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=15 },
+    TypeId                  = { Default=0,      Hide=0,  Category="Type",       Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=16 },
+    SubType                 = { Default="",     Hide=0,  Category="Type",       Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=17 },
+    SubTypeId               = { Default=0,      Hide=0,  Category="Type",       Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=18 },
+    StackSize               = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=19 },
+    UnitValue               = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=20 },
+    IsCraftingReagent       = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=21 },
+    HasUseAbility           = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=22 },
+    IsEquipment             = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=23 },
+    ExpansionPackId         = { Default=0,      Hide=0,  Category="Type",       Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=24 },
+    InventoryType           = { Default=0,      Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=25 },
+    IsConduit               = { Default=false,  Hide=2,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=26 },
+    IsAzeriteItem           = { Default=false,  Hide=2,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=27 },
+    CraftedQuality          = { Default=0,      Hide=2,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=28 },
+    IsUsable                = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=29 },
+    IsUpgradeable           = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=30 },
 
     -- Derived base properties - not given directly by Blizzard
-    UnitGoldValue           = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    TotalValue              = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    TotalGoldValue          = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsUnsellable            = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsProfessionEquipment   = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsEquippable            = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsPet                   = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
+    UnitGoldValue           = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=31 },
+    TotalValue              = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=32 },
+    TotalGoldValue          = { Default=0,      Hide=0,  Category="General",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=33 },
+    IsUnsellable            = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=34 },
+    IsProfessionEquipment   = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=35 },
+    IsEquippable            = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=36 },
+    IsPet                   = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=37 },
 
     -- Bind properties
-    BindType                = { Default=0,      Hide=0,  Category="Binding",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsSoulbound             = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsBindOnEquip           = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsBindOnUse             = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsWarbound              = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
-    IsWarboundUntilEquip    = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=false, Classic=false, RetailNext=true, ClassicNext=false } },
+    BindType                = { Default=0,      Hide=0,  Category="Binding",    Parent=nil,                   Type="number",     Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=38 },
+    IsSoulbound             = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=39 },
+    IsBindOnEquip           = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=40 },
+    IsBindOnUse             = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=41 },
+    IsWarbound              = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true }, Rank=42 },
+    IsWarboundUntilEquip    = { Default=false,  Hide=0,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=false, Classic=false, RetailNext=true, ClassicNext=false }, Rank=43 },
 
     -- Transmog properties
-    IsTransmogEquipment     = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsAppearanceCollected   = { Default=false,  Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    HasAppearance           = { Default=false,  Hide=0,  Category="Transmog",   Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsUnknownAppearance     = { Default=false,  Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    AppearanceId            = { Default=0,      Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    SourceId                = { Default=0,      Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
+    IsTransmogEquipment     = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=44 },
+    IsAppearanceCollected   = { Default=false,  Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=45 },
+    HasAppearance           = { Default=false,  Hide=0,  Category="Transmog",   Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=46 },
+    IsUnknownAppearance     = { Default=false,  Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=47 },
+    AppearanceId            = { Default=0,      Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=48 },
+    SourceId                = { Default=0,      Hide=0,  Category="Transmog",   Parent="HasAppearance",       Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=49 },
 
     -- Tooltip-derived Properties (excluding IsAccountBound)
-    IsCosmetic              = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsAlreadyKnown          = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsToy                   = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
+    IsCosmetic              = { Default=false,  Hide=0,  Category="Equipment",  Parent="IsEquipment",         Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=50 },
+    IsAlreadyKnown          = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=51 },
+    IsToy                   = { Default=false,  Hide=0,  Category="Type",       Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=53 },
 
     -- Pet properties
-    PetName                 = { Default="",     Hide=0,  Category="Pet",        Parent="IsPet",               Type="string",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    PetType                 = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsPetTradeable          = { Default=false,  Hide=0,  Category="Pet",        Parent="IsPet",               Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    PetSpeciesId            = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    PetCount                = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    PetLimit                = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
-    IsPetCollectable        = { Default=false,  Hide=0,  Category="Pet",        Parent="IsPet",               Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
+    PetName                 = { Default="",     Hide=0,  Category="Pet",        Parent="IsPet",               Type="string",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=54 },
+    PetType                 = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=55 },
+    IsPetTradeable          = { Default=false,  Hide=0,  Category="Pet",        Parent="IsPet",               Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=56 },
+    PetSpeciesId            = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=57 },
+    PetCount                = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=58 },
+    PetLimit                = { Default=0,      Hide=0,  Category="Pet",        Parent="IsPet",               Type="number",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=59 },
+    IsPetCollectable        = { Default=false,  Hide=0,  Category="Pet",        Parent="IsPet",               Type="boolean",    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=60 },
 
     -- Aliased properties for compat (hidden)
-    IsAccountBound          = { Default=false,  Hide=1,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } },
+    IsAccountBound          = { Default=false,  Hide=1,  Category="Binding",    Parent=nil,                   Type="boolean",    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true } , Rank=61},
 
     -- Deprecated Properties for old Tooltip scanning in classic
-    TooltipLeft             = { Default=nil,    Hide=1,  Category="System",     Parent=nil,                   Type="table",     Supported={ Retail=false, Classic=true, RetailNext=false, ClassicNext=true } },
-    TooltipRight            = { Default=nil,    Hide=1,  Category="System",     Parent=nil,                   Type="table",     Supported={ Retail=false, Classic=true, RetailNext=false, ClassicNext=true } },
+    TooltipLeft             = { Default=nil,    Hide=1,  Category="System",     Parent=nil,                   Type="table",     Supported={ Retail=false, Classic=true, RetailNext=false, ClassicNext=true }, Rank=62 },
+    TooltipRight            = { Default=nil,    Hide=1,  Category="System",     Parent=nil,                   Type="table",     Supported={ Retail=false, Classic=true, RetailNext=false, ClassicNext=true }, Rank=63 },
 
     -- Used for data only
-    TooltipData             = { Default=nil,    Hide=1,  Category="System",     Parent=nil,                   Type="table",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false } },
+    TooltipData             = { Default=nil,    Hide=1,  Category="System",     Parent=nil,                   Type="table",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=64 },
+
+    -- Debug properties
+    TransmogInfoSource      = { Default=nil,    Hide=0,  Category="Debug",     Parent=nil,                   Type="string",     Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false }, Rank=65 }
 }
+
+function Addon.Systems.ItemProperties:GetPropertyCategories()
+    local categories = {}
+    for i, v in ipairs(ITEM_PROPERTIES_CATEGORIES) do
+        if v.Display then
+            table.insert(categories, v.Name)
+        end
+    end
+    return categories
+end
 
 -- Property info accessors
 function Addon.Systems.ItemProperties:IsPropertyDefined(name)
@@ -150,6 +175,12 @@ function Addon.Systems.ItemProperties:IsPropertySupported(name)
 
 
     return ITEM_PROPERTIES[name].Supported[Addon.Systems.Info.ReleaseName]
+end
+
+function Addon.Systems.ItemProperties:GetPropertyRank(name)
+
+
+    return ITEM_PROPERTIES[name].Rank or 0
 end
 
 -- Creates a list of properties that are supported on the current platform.

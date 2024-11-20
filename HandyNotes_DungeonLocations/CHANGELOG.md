@@ -1,4 +1,4 @@
 # HandyNotes: DungeonLocations
-## [2.7.0](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-08-30)
+## [2.7.1](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-09-27)
 - Note: 
-• add more zone nodes
+• pre toc update

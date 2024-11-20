@@ -1,6 +1,7 @@
 # DBM - The Burning Crusade mods
 
-## [r4](https://github.com/DeadlyBossMods/DBM-BurningCrusade/tree/r4) (2024-06-29)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BurningCrusade/compare/r3...r4) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BurningCrusade/releases)
+## [r7](https://github.com/DeadlyBossMods/DBM-BurningCrusade/tree/r7) (2024-11-03)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BurningCrusade/compare/r6...r7) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BurningCrusade/releases)
 
-- Fix deprecated stage timers  
+- remove game version 11.0.2 and add game version 11.0.7  
+- scope all tbc raids to a single map id  

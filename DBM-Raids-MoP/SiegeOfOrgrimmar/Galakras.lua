@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20240601045013")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
 --mod:DisableESCombatDetection()--Doesn't appear bugged anymore, IEEU still is
@@ -12,6 +12,7 @@ mod:SetMainBossID(72249)
 mod:SetUsedIcons(8, 7, 2)
 mod:SetHotfixNoticeRev(20240530000000)
 mod:SetMinSyncRevision(20240530000000)
+mod:SetZone(1136)
 
 mod:RegisterCombat("combat")
 

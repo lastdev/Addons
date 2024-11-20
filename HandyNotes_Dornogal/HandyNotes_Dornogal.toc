@@ -1,16 +1,16 @@
-## Interface: 110002
+## Interface: 110005
 ## Title: HandyNotes: Dornogal
 ## Title-zhCN: HandyNotes：多恩诺嘉尔
 ## Notes: Shows the NPC and POI locations in Dornogal.
 ## Notes-deDE: Zeigt die Positionen von NPCs und anderen Orten von Interesse in Dornogal an.
 ## Notes-zhCN: 显示多恩诺嘉尔各种NPC及传送门位置。
 ## Author: |cFFFF8C00Dathwada EU-Eredar|r
-## Version: v2
+## Version: v4
 ## RequiredDeps: HandyNotes
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_DornogalDB
 ## IconTexture: 4661645
-## X-Date: 2024-08-30
+## X-Date: 2024-10-27
 ## X-Category: Map
 
 # LOCALIZATION FILES

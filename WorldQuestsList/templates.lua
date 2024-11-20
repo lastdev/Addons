@@ -135,3 +135,14 @@ function WQL_HolidayPinMixin:OnClick(button)
 	C_Map.SetUserWaypoint(uiMapPoint)
 	C_SuperTrack.SetSuperTrackedUserWaypoint(true)
 end
+
+
+WQL_WorldQuestPinMixin = CreateFromMixins(WorldMap_WorldQuestPinMixin)
+
+local old_CheckMouseButtonPassthrough = WQL_WorldQuestPinMixin.CheckMouseButtonPassthrough
+function WQL_WorldQuestPinMixin.CheckMouseButtonPassthrough(...)
+	if InCombatLockdown() then
+		return
+	end
+	return old_CheckMouseButtonPassthrough(...)
+end

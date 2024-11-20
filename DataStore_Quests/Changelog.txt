@@ -2,6 +2,17 @@ DataStore Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 2024.11.11 (11/11/2024)
+
+- Added the TWW weekly World Boss quests.
+- Added the TWW weekly PvP quests (Thanks Eschaton !).
+- ToC Update.
+
+Version 2024.09.15 (15/09/2024)
+
+- Added generic GetQuestLink.
+- ToC Update.
+
 Version 2024.08.14 (14/08/2024)
 
 - ToC Update.

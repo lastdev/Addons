@@ -3,7 +3,7 @@
 
                                              EA Pandaria
 
-                                       v1.43 - 23rd July 2024
+                                      v1.45 - 17th October 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

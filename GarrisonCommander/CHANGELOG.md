@@ -1,6 +1,8 @@
 # GarrisonCommander
 
-## [3.9.1](https://github.com/alarofrunetotem/GarrisonCommander/tree/3.9.1) (2024-08-16)
-[Full Changelog](https://github.com/alarofrunetotem/GarrisonCommander/compare/3.9.0...3.9.1) [Previous Releases](https://github.com/alarofrunetotem/GarrisonCommander/releases)
+## [3.10.0](https://github.com/alarofrunetotem/GarrisonCommander/tree/3.10.0) (2024-10-29)
+[Full Changelog](https://github.com/alarofrunetotem/GarrisonCommander/compare/3.9.2...3.10.0) [Previous Releases](https://github.com/alarofrunetotem/GarrisonCommander/releases)
 
-- Rebuild: Libraries update  
+- Merge branch 'hotfix/3.10.0'  
+- Toc 11.0.5  
+- Fixed for 11.0.5  

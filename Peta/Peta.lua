@@ -109,6 +109,17 @@ end
 -- Tooltip "Local" Functions
 -------------------------------------------------------------------------------
 
+function findBagWithMouseFocus()
+    if GetMouseFocus then --v10
+        return GetMouseFocus()
+    end
+
+    local foci  = GetMouseFoci() --v11
+    for i, frame in ipairs(foci) do
+        if frame.GetBagID and frame:GetBagID() then return frame end
+    end
+end
+
 function addHelpTextToToolTip(tooltip, data)
     if tooltip ~= GameTooltip then return end
 
@@ -117,12 +128,13 @@ function addHelpTextToToolTip(tooltip, data)
     local notPet = cagey == CAGEY.NOT_PET
     if notPet then return end
 
-    local mouseFocus = GetMouseFocus()
-    if not mouseFocus.GetSlotAndBagID then return end -- the cagerclick function will fail so don't lie in the tooltip
+    local bag = findBagWithMouseFocus()
 
-    local hasPeta = mouseFocus.hasPeta
+    if not bag then return end
+
+    local hasPeta = bag.hasPeta
     if not hasPeta then
-        local didHook = hookSlot(mouseFocus)
+        local didHook = hookSlot(bag)
         if didHook then return end
     end
 

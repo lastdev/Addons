@@ -63,13 +63,13 @@ NumberFontNormalHuge
 ---@return table
 function Enum.MakeEnum(...)
   return tInvert({...})
-	-- 	for i = 1, #t do
-	-- 		local v = t[i]
-	-- 		--t[i] = nil
-	-- 		t[v] = i
-	-- end
-	-- return t
-	end
+    --  for i = 1, #t do
+    --      local v = t[i]
+    --      --t[i] = nil
+    --      t[v] = i
+    -- end
+    -- return t
+    end
 
 -- Returns an unumerated table from an existing table.
 ---## Example
@@ -91,11 +91,11 @@ end
 ---@param tbl table
 ---@return table
 function Enum.MakeDict(tbl)
-	local t = {};
-	for k, v in ipairs(tbl) do
-		t[v] = v;
-	end
-	return t;
+    local t = {};
+    for k, v in ipairs(tbl) do
+        t[v] = v;
+    end
+    return t;
 end
 
 -- Returns a copy of `list` with `keys` and `values` inverted
@@ -155,7 +155,7 @@ end
 --- [View documents](command:extension.lua.doc?["en-us/51/manual.html/pdf-print"])
 ---
 function printd(...)
-	print("   ",SMARTBUFF_TITLE,"::",...)
+    print("   ",SMARTBUFF_TITLE,"::",...)
 end
 
 --- Prints the value of any global variable, table value, frame, function result, or any valid Lua expression. Output is color coded for easier reading. Tables display up to 30 values, the rest are skipped and a message is shown.

@@ -14,7 +14,7 @@ goto end_of_file
 
 :has_folder
 echo Creating the TOC...
-echo ## Interface: 100002 > ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
+echo ## Interface: 11503, 40400, 110000, 110002 > ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
 echo ## Title: SharedMedia_MyMedia >> ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
 echo ## Dependencies: SharedMedia >> ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc
 echo MyMedia.lua >> ..\SharedMedia_MyMedia\SharedMedia_MyMedia.toc

@@ -1,7 +1,6 @@
 # TL;DR Missions
 
-##  (2024-08-21)
+##  (2024-10-26)
  
 
-- Update some namespace changes  
-    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/640  
+- Update TLDRMissions\_Mainline.toc  

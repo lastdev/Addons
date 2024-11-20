@@ -12,10 +12,12 @@ end
 local mod = DBM:NewMod("Thekal", "DBM-Raids-Vanilla", catID)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20240811195641")
+mod:SetRevision("20241103123604")
 mod:SetCreatureID(14509, 11348, 11347)
 mod:SetEncounterID(789)
 mod:SetBossHPInfoToHighest()
+mod:SetZone(309)
+
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.YellKill)
 
@@ -27,6 +29,8 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_EMOTE",
 	"CHAT_MSG_MONSTER_YELL"
 )
+
+mod:AddInfoFrameOption()
 
 local warnSimulKill		= mod:NewAnnounce("WarnSimulKill", 1, 24173)
 local warnBlind			= mod:NewTargetAnnounce(21060, 2)
@@ -43,6 +47,14 @@ local timerGouge		= mod:NewTargetTimer(4, 12540, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Show(10, "bosshealth", self)
+		self.bossHealthUpdateTime = 0.5
+	end
+end
+
+function mod:OnCombatEnd()
+	DBM.InfoFrame:Hide()
 end
 
 function mod:SPELL_CAST_START(args)
@@ -98,6 +110,7 @@ function mod:OnSync(msg)
 			timerSimulKill:Start()
 		end
 	elseif msg == "YellPhase2" and self.vb.phase < 2 then
+		DBM.InfoFrame:Hide()
 		self:SetStage(2)
 		warnPhase2:Show()
 		timerSimulKill:Stop()

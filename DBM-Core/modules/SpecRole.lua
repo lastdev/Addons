@@ -20,6 +20,7 @@ DBMExtraGlobal = {}
 ---|"RemoveCurse" From ally
 ---|"RemoveMagic" From ally
 ---|"RemoveEnrage" Can remove enemy enrage. returned in 8.x+!
+---|"RemoveBleed" Can remove player bleeds
 ---|"MagicDispeller" From ENEMY, not debuffs on players. use "Healer" or "RemoveMagic" for ally magic dispels. ALL healers can do that on retail, and warlock Imps
 ---|"ImmunityDispeller" Priest mass dispel or Warrior Shattering Throw (shadowlands)
 ---|"HasInterrupt" Has an interrupt that is 24 seconds or less CD that is BASELINE (not a talent)
@@ -358,7 +359,6 @@ function DBMExtraGlobal:rebuildSpecTable()
 			[270] = {	--Mistweaver Monk
 				["Healer"] = true,
 				["Melee"] = true,
-				["Ranged"] = true,
 				["ManaUser"] = true,
 				["SpellCaster"] = true,
 				["RaidCooldown"] = true,--Revival
@@ -410,6 +410,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["RemovePoison"] = IsSpellKnown(365585),--Expunge. Must be specced
 				["RemoveCurse"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveDisease"] = IsSpellKnown(374251),--Cauterizing Flame
+				["RemoveBleed"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveEnrage"] = IsSpellKnown(374346),--Overawe
 			},
 			[1468] = {	--Evoker Preservation
@@ -423,6 +424,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 				["RemoveCurse"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveDisease"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RemoveEnrage"] = IsSpellKnown(374346),--Overawe
+				["RemoveBleed"] = IsSpellKnown(374251),--Cauterizing Flame
 				["RaidCooldown"] = IsSpellKnown(363534),--Rewind
 			},
 			[1465] = {	--Evoker Initial (treated as both healer and dps for basic leveling purposes)

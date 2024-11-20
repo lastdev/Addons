@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod(2573, "DBM-Party-WarWithin", 2, 1267)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240830215855")
+mod:SetRevision("20241102154000")
 mod:SetCreatureID(207940)
 mod:SetEncounterID(2848)
 mod:SetHotfixNoticeRev(20240608000000)
 --mod:SetMinSyncRevision(20211203000000)
+mod:SetZone(2649)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
@@ -102,8 +103,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 444609 then--Stoke the flame (cast after interrupting Inner Light
 --		self.vb.holyFlameCount = 0
 		self:SetStage(2)
+		timerHolyFlameCD:Start(4.3, self.vb.holyFlameCount+1)--If it's not cast before purifying Light, it gets delayed til after
 		timerPurifyingLightCD:Start(4.5, self.vb.purifyingCount+1)
-		timerHolyFlameCD:Start(8.4, self.vb.holyFlameCount+1)
 		timerInnerLightCD:Start(10.9, self.vb.innerCount+1)
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2463, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(180906)
 mod:SetEncounterID(2529)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
@@ -45,13 +45,13 @@ local warnEternityOverdrive						= mod:NewCastAnnounce(368529, 2)
 
 --Mythic
 local specWarnVolatileCharges					= mod:NewSpecialWarningCount(368957, nil, nil, nil, 2, 6, 4)
-local specWarnVolatileChargeYou					= mod:NewSpecialWarningCount(368969, nil, nil, nil, 1, 2, 12)
+local specWarnVolatileChargeYou					= mod:NewSpecialWarningYou(368969, nil, nil, nil, 1, 2, 12)
 local yellVolatileCharge						= mod:NewYell(368969, nil, false, 2)
 local yellVolatileChargeFades					= mod:NewShortFadesYell(368969)
 --Stage One: The Reclaimer
 local specWarnReclaim							= mod:NewSpecialWarningCount(360115, nil, nil, nil, 1, 2)
 local specWarnSeismicTremors					= mod:NewSpecialWarningCount(367079, false, nil, nil, 1, 2)--I don't even understand mechanic anymore it's been changed so much, no idea if it should be on or off by default
-local specWarnEarthbreakerMissiles				= mod:NewSpecialWarningMoveAway(361676, nil, 183426, nil, 2, 2)
+local specWarnEarthbreakerMissiles				= mod:NewSpecialWarningMoveAwayCount(361676, nil, 183426, nil, 2, 2)
 local specWarnCrushingPrism						= mod:NewSpecialWarningYou(365297, nil, nil, nil, 1, 2)
 local specWarnLightshatterBeam					= mod:NewSpecialWarningMoveTo(360977, nil, 202046, nil, 1, 2)
 local specWarnLightshatterBeamTaunt				= mod:NewSpecialWarningTaunt(360977, nil, 202046, nil, 1, 2)

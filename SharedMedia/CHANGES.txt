@@ -1,4 +1,19 @@
 ------------------------------------------------------------------------
+r200 | elkano | 2024-07-27 15:09:40 +0000 (Sat, 27 Jul 2024) | 2 lines
+Changed paths:
+   M /trunk/INSTRUCTIONS for MyMedia.txt
+   M /trunk/MyMedia.bat.txt
+   M /trunk/SharedMedia.toc
+   D /trunk/SharedMedia_TBC.toc
+   D /trunk/SharedMedia_Vanilla.toc
+   D /trunk/SharedMedia_Wrath.toc
+   M /trunk/fonts/font info.txt
+   M /trunk/fonts/gentium_plus/GentiumPlus-Regular.ttf
+   M /trunk/fonts/gentium_plus/OFL.txt
+
+updates and fixes for 11.0.x
+updated Gentium Plus to 6.200
+------------------------------------------------------------------------
 r199 | elkano | 2023-01-05 13:30:01 +0000 (Thu, 05 Jan 2023) | 1 line
 Changed paths:
    M /trunk/.pkgmeta

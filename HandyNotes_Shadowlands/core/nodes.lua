@@ -106,10 +106,13 @@ Return the "collected" status of this node. A node is collected if all
 associated rewards have been obtained (achievements, toys, pets, mounts).
 --]]
 
-function Node:IsCollected()
+function Node:IsCollected(type)
     for reward in self:IterateRewards() do
-        if reward:IsEnabled() and reward:IsObtainable() and
-            not reward:IsObtained() then return false end
+        if (not type or ns.IsInstance(reward, type)) and reward:IsEnabled() then
+            if reward:IsObtainable() and not reward:IsObtained() then
+                return false
+            end
+        end
     end
     return true
 end
@@ -158,7 +161,17 @@ function Node:IsEnabled()
         if self:IsCompleted() then return false end
     end
 
-    if self.class and self.class ~= ns.class then return false end
+    -- Check faction
+    if self.faction then
+        if ns:GetOpt('ignore_faction_restrictions') then return true end
+        if self.faction ~= ns.faction then return false end
+    end
+
+    -- Check class
+    if self.class then
+        if ns:GetOpt('ignore_class_restrictions') then return true end
+        if self.class ~= ns.class then return false end
+    end
 
     return true
 end
@@ -513,8 +526,15 @@ end
 
 local Rare = Class('Rare', NPC, {scale = 1.2, group = ns.groups.RARE})
 
-function Rare.getters:icon() return
-    self:IsCollected() and 'skull_w' or 'skull_b' end
+function Rare.getters:icon()
+    if self:IsCollected() then
+        return 'skull_w'
+    elseif not self:IsCollected(ns.reward.Reputation) then
+        return 'skull_p'
+    else
+        return 'skull_b'
+    end
+end
 
 function Rare.getters:label()
     local label = NPC.getters.label(self)
@@ -576,7 +596,7 @@ function Interval:Initialize(attrs)
         [1] = self.initial.us,
         [2] = self.initial.kr or self.initial.tw,
         [3] = self.initial.eu,
-        [5] = self.initial.cn
+        [4] = self.initial.cn
     } -- https://warcraft.wiki.gg/wiki/API_GetCurrentRegion
 
     if self.id then

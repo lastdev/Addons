@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2439, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(175726)--Skyja (TODO, add other 2 and set health to highest?)
 mod:SetEncounterID(2429)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -102,7 +102,7 @@ local warnLinkEssence							= mod:NewTargetNoFilterAnnounce(350483, 3)
 local specWarnPierceSoul						= mod:NewSpecialWarningStack(350475, nil, 4, nil, nil, 1, 6)
 local specWarnPierceSoulTaunt					= mod:NewSpecialWarningTaunt(350475, nil, nil, nil, 1, 2)
 local specWarnLinkEssence						= mod:NewSpecialWarningDefensive(350483, nil, nil, nil, 1, 2, 3)
-local specWarnWordofRecall						= mod:NewSpecialWarningSpell(350687, nil, nil, nil, 2, 2, 3)
+local specWarnWordofRecall						= mod:NewSpecialWarningCount(350687, nil, nil, nil, 2, 2, 3)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
 local timerPierceSoulCD							= mod:NewCDTimer(9.7, 350475, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -388,7 +388,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if amount == 1 then--Initial application from boss only
 			if args:IsPlayer() then
-				specWarnFragmentsofDestiny:Show(self:IconNumToTexture(icon))
+				specWarnFragmentsofDestiny:Show()
 				specWarnFragmentsofDestiny:Play("targetyou")
 				if icon > 0 and icon < 9 then
 					yellFragmentsofDestiny:Yell(icon, icon)

@@ -26,6 +26,7 @@ local hbMountTypes={[230]="G",
                     [424]="F",
                     [428]="F",
                     [436]="F",
+                    [444]="F",
                     }
 
 local function HealBot_MountsPets_CanMount()
@@ -214,7 +215,7 @@ function HealBot_MountsPets_ZoneChange()
                 local mapAreaID=C_Map.GetBestMapForUnit("player") or 0
                 if mapAreaID>0 then
                     if mapAreaID == 125 then
-                        HealBot_Timers_Set("LAST","MountsPetsDalaran",2)
+                        HealBot_Timers_Set("LAST","MountsPetsDalaran",true,true)
                     else
                         HealBot_mountData["incFlying"]=true
                     end

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(158, "DBM-Raids-Cata", 4, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240609210355")
+mod:SetRevision("20241115112135")
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
+mod:SetZone(671)
 --mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent14.ogg", "Sound\\Creature\\Terrastra\\VO_BT_Terrastra_Event02.ogg")
 --Long: Brothers of Twilight! The Hammer calls to you! Fire, water, earth, air! Leave your mortal shell behind! Fire, water, earth, air! Embrace your new forms, for here and ever after... Burn and drown and crush and sufficate!...and use your gifts to destroy the unbelievers! Burn and drown and crush and sufficate!
 --Short: We will handle them!
@@ -26,7 +27,6 @@ mod:RegisterEventsInCombat(
 --General
 local specWarnBossLow		= mod:NewSpecialWarning("specWarnBossLow")
 
-mod:AddRangeFrameOption("10")
 mod:AddInfoFrameOption(nil, true)
 --Feludius
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(3110))
@@ -213,16 +213,10 @@ function mod:OnCombatStart(delay)
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerGravityCoreCD:Start(25-delay)
 		timerStaticOverloadCD:Start(20-delay)
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Show(10)
-		end
 	end
 end
 
 function mod:OnCombatEnd()
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
-	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -342,9 +336,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			else--You only have rod so do normal yell
 				yellLightningRod:Yell()
 			end
-			--if self.Options.RangeFrame then
-			--	DBM.RangeCheck:Show(10)
-			--end
 		end
 		if self.Options.LightningRodIcon then
 			self:SetIcon(args.destName, self.vb.lightningRodIcon)
@@ -569,8 +560,5 @@ function mod:OnSync(msg, boss)
 		timerFrostBeaconCD:Cancel()--Cancel here to avoid problems with orbs that spawn during the transition.
 		timerLavaSeedCD:Start(18)
 		timerGravityCrushCD:Start(28)
-		--if self.Options.RangeFrame then
-		--	DBM.RangeCheck:Show(10)
-		--end
 	end
 end

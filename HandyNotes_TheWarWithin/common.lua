@@ -40,6 +40,12 @@ ns.groups.SKYRIDING_GLYPH = Group('skyriding_glyph', 4728198, {
 
 -------------------------------------------------------------------------------
 
+ns.groups.BACK_TO_THE_WALL = Group('back_to_the_wall', 236681, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40620
+})
+
 ns.groups.BEACON_OF_HOPE = Group('beacon_of_hope', 135922, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
@@ -70,6 +76,18 @@ ns.groups.FLAT_EARTHEN = Group('flat_earthen', 4620670, {
     achievement = 40606
 })
 
+ns.groups.FLIGHT_MASTER = Group('flight_master', 'flight_point_y', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40430
+})
+
+ns.groups.FOR_THE_COLLECTIVE = Group('for_the_collective', 975747, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 40630
+})
+
 ns.groups.GOBBLIN_WITH_GLUBLURP = Group('gobblin_with_glublurp', 5763494, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
@@ -87,11 +105,11 @@ ns.groups.I_ONLY_NEED_ONE_TRIP = Group('i_only_need_one_trip', 236316, {
     achievement = 40623
 })
 
-ns.groups.KHAZ_ALGAR_LORE_HUNTER = Group('khaz_algar_lore_hunter', 4419344, {
-    defaults = ns.GROUP_HIDDEN,
-    type = ns.group_types.ACHIEVEMENT,
-    achievement = 40762
-})
+-- ns.groups.KHAZ_ALGAR_LORE_HUNTER = Group('khaz_algar_lore_hunter', 4419344, {
+--     defaults = ns.GROUP_HIDDEN,
+--     type = ns.group_types.ACHIEVEMENT,
+--     achievement = 40762
+-- })
 
 ns.groups.LOST_AND_FOUND = Group('lost_and_found', 4635200, {
     defaults = ns.GROUP_HIDDEN,
@@ -141,6 +159,11 @@ ns.groups.ROCKED_TO_SLEEP = Group('rocked_to_sleep', 5788303, {
 --     achievement = 40194
 -- })
 
+ns.groups.SECRETS_OF_AZEROTH = Group('secrets_of_azeroth', 'peg_gn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.SKITTERSHAW_SPIN = Group('skittershaw_spin', 879828, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
@@ -179,12 +202,12 @@ ns.groups.DRAGONRACE = Group('dragonrace', 1100022, {
 ---------------------------- KHAZ ALGAR LORE HUNTER ---------------------------
 -------------------------------------------------------------------------------
 
-local LoreObject = Class('LoreObject', Collectible, {
-    icon = 4419344,
-    group = ns.groups.KHAZ_ALGAR_LORE_HUNTER
-})
+-- local LoreObject = Class('LoreObject', Collectible, {
+--     icon = 4419344,
+--     group = ns.groups.KHAZ_ALGAR_LORE_HUNTER
+-- })
 
-ns.node.LoreObject = LoreObject
+-- ns.node.LoreObject = LoreObject
 
 -------------------------------------------------------------------------------
 ------------------------------- SKYRIDING GLYPH -------------------------------
@@ -256,7 +279,7 @@ end
 -------------------------------- DISTURBED DIRT -------------------------------
 -------------------------------------------------------------------------------
 
-ns.node.DisturbedEarth = Class('Disturbed_earth', ns.node.Collectible, {
+ns.node.DisturbedEarth = Class('Disturbed_earth', ns.node.Node, {
     icon = 132386,
     scale = 0.7,
     label = '{npc:213440}',
@@ -268,6 +291,18 @@ ns.node.DisturbedEarth = Class('Disturbed_earth', ns.node.Collectible, {
     }
 }) -- Disturbed Earth - Not on Minimap but quite visible from some distance
 -- first loot triggered quest 84543 probably not relevant
+
+-------------------------------------------------------------------------------
+-------------------- ACHIEVEMENT: KHAZ ALGAR FLIGHT MASTER --------------------
+-------------------------------------------------------------------------------
+
+local FlightMaster = Class('FlightMaster', Collectible, {
+    icon = 'flight_point_y',
+    scale = 2,
+    group = ns.groups.FLIGHT_MASTER
+}) -- Flight Point
+
+ns.node.FlightMaster = FlightMaster
 
 -------------------------------------------------------------------------------
 ------------------------------ KHAZ ALGAR SAFARI ------------------------------

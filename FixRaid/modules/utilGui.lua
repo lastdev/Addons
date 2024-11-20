@@ -43,14 +43,27 @@ function M:ToggleRaidTab()
 end
 
 function M:OpenConfig()
-  InterfaceOptionsFrame_OpenToCategory(A.NAME)
-  InterfaceOptionsFrame_OpenToCategory(A.NAME)
+  -- Use the new Settings API to open the specific category for your addon
+  if Settings and Settings.OpenToCategory then
+    local category = Settings.GetCategory(A.NAME)
+    if category then
+      Settings.OpenToCategory(A.NAME)
+    else
+      -- If for some reason the category isn't found, fall back to opening the settings menu
+      Settings.OpenToCategory(Settings.Categories.Interface)
+    end
+  else
+    -- Fallback for older versions or issues
+    InterfaceOptionsFrame_OpenToCategory(A.NAME)
+  end
 end
 
 function M:CloseConfig()
-  if InterfaceOptionsFrame:IsShown() then
-    InterfaceOptionsFrame:Hide()
-  end
+    -- Check if the config panel is shown and hide it using the newer method
+    local panel = SettingsPanel or InterfaceOptionsFrame
+    if panel and panel:IsShown() then
+        panel:Hide()
+    end
 end
 
 function M:InsertText(text)
@@ -66,7 +79,7 @@ function M:InsertText(text)
 end
 
 function M:GetElvUISkinModule()
-  if IsAddOnLoaded("ElvUI") and ElvUI then
+  if C_AddOns.IsAddOnLoaded("ElvUI") and ElvUI then
     local E = ElvUI[1]
     if E.private.skins.blizzard.enable and E.private.skins.blizzard.nonraid then
       return E:GetModule("Skins")
@@ -87,22 +100,20 @@ function M:AddTexturedButton(registry, button, style)
   registry[button] = true
 end
 
---- Remove custom modifications done to frames owned by AceGUI. This should
--- be called prior to releasing the widget back into the pool (i.e.,
--- calling AceGUI:Release).
+--- Remove custom modifications done to frames owned by AceGUI.
 function M:CleanupWindow(window, texturedButtonRegistry)
-  if texturedButtonRegistry then
-    for button, _ in pairs(texturedButtonRegistry) do
-      texturedButtonRegistry[button] = nil
-      button.frame:SetNormalTexture(nil)
-      button.frame:SetHighlightTexture(nil)
+    if texturedButtonRegistry then
+        for button, _ in pairs(texturedButtonRegistry) do
+            texturedButtonRegistry[button] = nil
+            button.frame:SetNormalTexture("")  -- Set to an empty string instead of nil
+            button.frame:SetHighlightTexture("")
+        end
     end
-  end
-  window.frame:SetPropagateKeyboardInput(false)
-  window.frame:SetScript("OnKeyDown", nil)
-  window.frame:SetScript("OnDragStart", nil)
-  window.frame:SetScript("OnDragStop", nil)
-  window.frame:RegisterForDrag()
-  window._CloseWithSound = nil
-  window._SetStatusText = nil
+    window.frame:SetPropagateKeyboardInput(false)
+    window.frame:SetScript("OnKeyDown", nil)
+    window.frame:SetScript("OnDragStart", nil)
+    window.frame:SetScript("OnDragStop", nil)
+    window.frame:RegisterForDrag()
+    window._CloseWithSound = nil
+    window._SetStatusText = nil
 end

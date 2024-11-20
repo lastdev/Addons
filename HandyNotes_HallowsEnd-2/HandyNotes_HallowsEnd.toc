@@ -1,0 +1,16 @@
+## Interface: 110005
+## Title: HandyNotes: Hallow's End
+## Notes: Marks the locations of Hallow's End candy buckets on the worldmap and minimap.
+## IconTexture: Interface\Icons\Achievement_Halloween_Candy_01
+## Author: Ravendwyr
+## Version: v1.5.4
+## X-Category: Map & Minimap
+## X-Curse-Project-ID: 46114
+## X-Wago-ID: Rn6VDWGd
+## Dependencies: HandyNotes
+## SavedVariables: HandyNotes_HallowsEndDB
+
+Core.lua
+
+Alliance.lua
+Horde.lua

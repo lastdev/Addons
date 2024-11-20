@@ -1,8 +1,8 @@
---	14.08.2024
+--	12.11.2024
 
 local GlobalAddonName, MRT = ...
 
-MRT.V = 4900
+MRT.V = 5080
 MRT.T = "R"
 
 MRT.Slash = {}			--> функции вызова из коммандной строки
@@ -356,7 +356,6 @@ end
 ---------------> Mods <---------------
 
 MRT.F = {}
-MRT.mds = MRT.F
 
 -- Moved to Functions.lua
 
@@ -862,28 +861,41 @@ local sendTmr
 local _SendAddonMessage = SendAddonMessage
 local SEND_LIMIT = 10
 local sendLimit = {SEND_LIMIT}
+
+local count5 = 0
+local count5_t = 0
+
 local function send(self)
 	if self then
 		sendTmr = nil
 	end
 	local t = debugprofilestop()
+	if t - count5_t > 5000 then
+		count5 = 0
+		count5_t = t
+	end
 	for p=1,#prefix_sorted do
-		sendLimit[p] = (sendLimit[p] or SEND_LIMIT) + floor((t - (sendPrev[p] or 0))/1000)
-		if sendLimit[p] > SEND_LIMIT then
-			sendLimit[p] = SEND_LIMIT
-		elseif sendLimit[p] < -30 and sendPrev[p] and t < sendPrev[p] then
+		local limitNow = (sendLimit[p] or SEND_LIMIT) + floor((t - (sendPrev[p] or 0))/1000)
+		if limitNow > SEND_LIMIT then
+			limitNow = SEND_LIMIT
+		elseif limitNow < -30 and sendPrev[p] and t < sendPrev[p] then
 			sendPrev[p] = t
 			sendLimit[p] = 0
+			limitNow = 0
 		end
-		if sendLimit[p] > 0 then
+		if limitNow > 0 then
 			local cp = 1
 			for i=1,#sendPending do
-				if sendLimit[p] <= 0 then
+				if limitNow <= 0 then
 					break
 				end
 				local pendingNow = sendPending[cp]
-				if (not pendingNow.prefixNum) or (pendingNow.prefixNum == p) then
-					sendLimit[p] = sendLimit[p] - 1
+				if pendingNow.maxPer5Sec and count5 > pendingNow.maxPer5Sec then
+					--skip
+					cp = cp + 1
+				elseif (not pendingNow.prefixNum or pendingNow.prefixNum == p) and (not pendingNow.prefixMax or p <= pendingNow.prefixMax) then
+					limitNow = limitNow - 1
+					sendLimit[p] = limitNow
 					pendingNow[1] = prefix_sorted[p] --override prefix
 					_SendAddonMessage(unpack(pendingNow))
 					sendPrev[p] = debugprofilestop()
@@ -891,6 +903,7 @@ local function send(self)
 						pendingNow.ondone()
 					end
 					tremove(sendPending, cp)
+					count5 = count5 + 1
 					if not next(sendPending) then
 						return
 					end
@@ -911,8 +924,14 @@ local specialOpt = nil
 SendAddonMessage = function (...)
 	local entry = {...}
 	if type(specialOpt)=="table" then
+		if type(specialOpt.maxPer5Sec)=="number" then
+			entry.maxPer5Sec = specialOpt.maxPer5Sec
+		end
 		if type(specialOpt.prefixNum)=="number" and specialOpt.prefixNum <= #prefix_sorted and specialOpt.prefixNum > 0 then
 			entry.prefixNum = specialOpt.prefixNum
+		end
+		if type(specialOpt.prefixMax)=="number" and specialOpt.prefixMax <= #prefix_sorted and specialOpt.prefixMax > 0 then
+			entry.prefixMax = specialOpt.prefixMax
 		end
 		if type(specialOpt.ondone)=="function" then
 			entry.ondone = specialOpt.ondone

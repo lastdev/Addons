@@ -9,9 +9,6 @@ addon.Localization.SetColors(addon.L);
 addon.Event = {};
 LibStub(addon.Libs.AceEvent):Embed(addon.Event);
 
--- [[ Tabs ]] --
-addon.Tabs.Load();
-
 -- [[ Binding names ]] --
 BINDING_HEADER_KrowiAF = addon.Metadata.Title;
 BINDING_NAME_KrowiAF_BROWSER_HISTORY_PREV = addon.L["Go back one achievement"];
@@ -34,17 +31,14 @@ loadHelper:RegisterEvent("ACHIEVEMENT_EARNED");
 local function LoadKrowi_AchievementFilter()
     addon.Diagnostics.Load();
 
-    addon.Data.SpecialCategories.InjectDynamicOptions();
-    addon.Data.ExportedCalendarEvents.InjectDynamicOptions();
-    if addon.Data.ExportedWidgetEvents then
-        addon.Data.ExportedWidgetEvents.InjectDynamicOptions();
-    end
-    if addon.Data.ExportedWorldEvents then
-        addon.Data.ExportedWorldEvents.InjectDynamicOptions();
-    end
+    KrowiAF.LoadTabs();
 
-    addon.Gui:PrepareTabsOrder();
-    addon.Tabs.InjectDynamicOptions();
+    addon.Data.SpecialCategories.InjectDynamicOptions();
+    KrowiAF.InjectEventDataDynamicOptions();
+
+    -- addon.Gui:PrepareTabsOrder();
+    -- addon.Tabs.InjectDynamicOptions();
+    KrowiAF.InjectTabDataDynamicOptions();
     addon.Gui.AchievementFrameHeader:InjectDynamicOptions();
     addon.Filters:InjectDefaults();
     addon.Plugins:InjectOptions();

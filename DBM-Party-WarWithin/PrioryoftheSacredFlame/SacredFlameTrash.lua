@@ -1,10 +1,14 @@
 local mod	= DBM:NewMod("SacredFlameTrash", "DBM-Party-WarWithin", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240827000137")
+mod:SetRevision("20241105043731")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
+mod:SetZone(2649)
+if DBM.Options.DebugMode then--Make it easier to collect initial nameplate timers across delves with transcriptor
+	mod:RegisterZoneCombat(2649)
+end
 
 mod:RegisterEvents(
 	"SPELL_CAST_START 424621 424423 424431 448515 427583 424462 424420 427484 427356 427601",
@@ -17,6 +21,7 @@ mod:RegisterEvents(
 --TODO, target scan lunging strike?
 --TODO, longer pulls for Trusted Guard timers
 --TODO, nameplate timer for https://www.wowhead.com/beta/spell=424421/fireball on Taener Duelmal?
+--TODO, add more abilities and timers from quazii's SS like Battle Cry, Burning Light, Fireball Volley
 --All normal Trash
 local warnMortalStrike						= mod:NewStackAnnounce(426964, 2, nil, "Tank|Healer")
 local warnBurstofLight						= mod:NewCastAnnounce(427601, 4)--SUPER obvious so doesn't need a special warning for now i think
@@ -31,7 +36,7 @@ local specWarnGTFO							= mod:NewSpecialWarningGTFO(424430, nil, nil, nil, 1, 8
 
 local timerCaltropsCD						= mod:NewCDNPTimer(16.9, 453458, nil, nil, nil, 3)
 local timerFlamestrikeCD					= mod:NewCDNPTimer(17.4, 427484, nil, nil, nil, 3)
---local timerGreaterHealCD					= mod:NewCDNPTimer(20.4, 427356, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Currently too much of a PITA to add due to stuns not putting it on CD
+--local timerGreaterHealCD					= mod:NewCDPNPTimer(20.4, 427356, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 ----Everything below here are the adds from Captain Dailcry. treated as trash since they are pulled as trash, just like Court of Stars
 --The Trusted Guard
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(27840))
@@ -58,7 +63,7 @@ local specWarnEmberStorm					= mod:NewSpecialWarningDodge(424462, nil, nil, nil,
 local specWarnCinderblast					= mod:NewSpecialWarningInterrupt(424420, "HasInterrupt", nil, nil, 1, 2)
 
 --local timerEmberStormCD					= mod:NewCDNPTimer(12.1, 424462, nil, nil, nil, 3)
-local timerCinderblastCD					= mod:NewCDNPTimer(15.7, 424420, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerCinderblastCD					= mod:NewCDPNPTimer(15.7, 424420, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 
 --local playerName = UnitName("player")
 
@@ -78,6 +83,7 @@ end
 --]]
 
 function mod:SPELL_CAST_START(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 424621 then
@@ -142,6 +148,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
+	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 453458 then
@@ -171,6 +178,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:UNIT_DIED(args)
+	if not self.Options.Enabled then return end
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 211291 then--sergeant-shaynemail
 		--timerBrutalSmashCD:Stop(args.destGUID)

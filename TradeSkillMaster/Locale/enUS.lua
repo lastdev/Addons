@@ -1377,7 +1377,6 @@ L["WARNING: The macro was too long, so was truncated to fit by WoW."] = "WARNING
 L["WARNING: Your minimum price for %s is below its vendorsell price (with AH cut taken into account). Consider raising your minimum price, or vendoring the item."] = "WARNING: Your minimum price for %s is below its vendorsell price (with AH cut taken into account). Consider raising your minimum price, or vendoring the item."
 L["WOW UI"] = "WOW UI"
 L["Warbank"] = "Warbank"
-L["Warbound Banking"] = "Warbound Banking"
 L["Warehousing"] = "Warehousing"
 L["Warehousing operation"] = "Warehousing operation"
 L["Warehousing operations control moving in and out of the bank."] = "Warehousing operations control moving in and out of the bank."

@@ -4,6 +4,9 @@ local diagnostics = addon.Diagnostics;
 addon.Data = {};
 local data = addon.Data;
 
+data.Tabs = {};
+data.TabsOrder = {};
+
 data.TasksGroups = {};
 
 data.TransmogSets = {};
@@ -15,6 +18,7 @@ data.Achievements = {};
 data.AchievementIds = {};
 
 data.Categories, data.SummaryCategories = {}, {};
+KrowiAF_Categories = data.Categories;
 data.WatchListCategories, data.CurrentZoneCategories, data.SelectedZoneCategories = {}, {}, {};
 data.SearchResultsCategories, data.TrackingAchievementsCategories, data.ExcludedCategories = {}, {}, {};
 data.UncategorizedCategories = {};
@@ -23,11 +27,28 @@ data.RightClickMenuExtras = {};
 
 data.Maps = {};
 
-data.CalendarEvents, data.WidgetEvents, data.WorldEvents = {}, {}, {};
+data.Events = {};
+data.Events[addon.Objects.EventType.Calendar] = {};
+data.Events[addon.Objects.EventType.Widget] = {};
+data.Events[addon.Objects.EventType.World] = {};
 
-function data:RegisterTooltipDataTasks()
-    local name = "Additional Tooltip Data: ";
-    for k, v in next, KrowiAF.TooltipData do
+function data:RegisterAchievementDataTasks()
+    local name = "Achievement Data: ";
+    for k, v in next, KrowiAF.AchievementData do
+        self.InjectLoadingDebug(v, name .. k);
+        tinsert(self.TasksGroups, 1, v);
+    end
+end
+
+function data:RegisterCategoryDataTasks()
+    local name = "Category Data: ";
+    self.InjectLoadingDebug({KrowiAF.CreateCategories}, name .. 1);
+    tinsert(self.TasksGroups, 1, {KrowiAF.CreateCategories});
+end
+
+function data:RegisterEventDataTasks()
+    local name = "Event Data: ";
+    for k, v in next, KrowiAF.EventData do
         self.InjectLoadingDebug(v, name .. k);
         tinsert(self.TasksGroups, 1, v);
     end
@@ -41,10 +62,24 @@ function data:RegisterPetBattleLinkDataTasks()
     end
 end
 
+function data:RegisterTooltipDataTasks()
+    local name = "Additional Tooltip Data: ";
+    for k, v in next, KrowiAF.TooltipData do
+        self.InjectLoadingDebug(v, name .. k);
+        tinsert(self.TasksGroups, 1, v);
+    end
+end
+
+function data:RegisterTransmogSetDataTasks()
+    local name = "Transmog Set Data: ";
+    for k, v in next, KrowiAF.TransmogSetData do
+        self.InjectLoadingDebug(v, name .. k);
+        tinsert(self.TasksGroups, 1, v);
+    end
+end
+
 local LoadBlizzardTabAchievements;
 local function PostLoadOnPlayerLogin(self, start)
-    self.ExportedAchievements.Load(self.AchievementIds);
-
     local custom = LibStub("AceConfigRegistry-3.0"):GetOptionsTable(addon.Metadata.Prefix .. "_Layout", "cmd", "KROWIAF-0.0").args.Summary.args.Summary.args.NumAchievements; -- cmd and KROWIAF-0.0 are just to make the function work
     custom.max = #self.AchievementIds;
 
@@ -52,11 +87,11 @@ local function PostLoadOnPlayerLogin(self, start)
 
     data.SpecialCategories:Load();
 
-    self.LoadWatchedAchievements();
-    self.LoadTrackingAchievements();
-    self.LoadExcludedAchievements();
-
     local function PostBuildCache()
+        self.LoadWatchedAchievements();
+        self.LoadTrackingAchievements();
+        self.LoadExcludedAchievements();
+
         if AchievementFrame and AchievementFrame:IsShown() then
             addon.Gui:RefreshViewAfterPlayerLogin();
         end
@@ -74,24 +109,16 @@ function data:LoadOnPlayerLogin()
 
     self.TemporaryObtainable:Load();
     addon.EventData.BuildCalendarEventsCache();
+    KrowiAF.CreateBuildVersions();
 
-    if self.ExportedTransmogSets then
-        self.ExportedTransmogSets.RegisterTasks(self.TransmogSets);
-    end
-    self.ExportedBuildVersions.RegisterTasks(self.BuildVersions);
-    self.ExportedAchievements.RegisterTasks(self.Achievements, self.BuildVersions, self.TransmogSets);
-    self.ExportedCategories.RegisterTasks(self.Categories, self.Achievements, addon.Tabs);
-    self.ExportedCalendarEvents.RegisterTasks(self.CalendarEvents, self.Categories);
-    if self.ExportedWidgetEvents then
-        self.ExportedWidgetEvents.RegisterTasks(self.WidgetEvents, self.Categories);
-    end
-    if self.ExportedWorldEvents then
-        self.ExportedWorldEvents.RegisterTasks(self.WorldEvents, self.Categories);
-    end
+    self:RegisterAchievementDataTasks();
+    self:RegisterCategoryDataTasks();
+    self:RegisterEventDataTasks();
     self.ExportedUiMaps.RegisterTasks(self.Maps, self.Achievements);
 
     self:RegisterTooltipDataTasks();
     self:RegisterPetBattleLinkDataTasks();
+    self:RegisterTransmogSetDataTasks();
 
     local overallStart = debugprofilestop();
     addon.StartTasksGroups(
@@ -252,9 +279,8 @@ function data.InjectLoadingDebug(workload, name)
         return;
     end
 
-    -- Data is in reverse order in the tables so add 'Start' to the end and 'Finished' to the beginning
-    tinsert(workload, function() addon.Diagnostics.Trace(name .. ": Start loading data"); end);
-    tinsert(workload, 1, function() addon.Diagnostics.Trace(name .. ": Finished loading data"); end);
+    tinsert(workload, 1, function() addon.Diagnostics.Trace(name .. ": Start loading data"); end);
+    tinsert(workload, function() addon.Diagnostics.Trace(name .. ": Finished loading data"); end);
 end
 
 local freeCategoryId = 0;

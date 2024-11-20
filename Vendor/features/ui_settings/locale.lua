@@ -8,5 +8,6 @@ SETTINGS_BETA_FEATURES_HELP = [[
 Beta features are features which are currently in development and may be less stable than older features.
 If you experience problems with beta features, you can disable them here.
 ]],
-
+OPTIONS_ITEM_DIALOG = "Enable Minimap Item Dialog",
+OPTIONS_ITEM_DIALOG_DESC = [[todo: fill me in]],
 }}

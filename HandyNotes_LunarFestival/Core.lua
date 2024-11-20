@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                      v2.14 - 21st August 2024
+                                      v3.00 - 29th October 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -49,6 +49,8 @@ local next = _G.next
 local pairs = _G.pairs
 
 local HandyNotes = _G.HandyNotes
+
+_, _, _, ns.version = GetBuildInfo()
 
 ns.faction = UnitFactionGroup( "player" )
 ns.name = UnitName( "player" ) or "Character"
@@ -103,6 +105,7 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
+	L["Notes"] = "Notizen"
 	L["Left"] = "Links"
 	L["Right"] = "Rechts"
 	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
@@ -141,6 +144,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
+	L["Notes"] = "Notas"
 	L["Left"] = "Izquierda"
 	L["Right"] = "Derecha"
 	L["Try later"] = "No es posible en este momento. Intenta más tarde"
@@ -177,6 +181,7 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
+	L["Notes"] = "Remarques"
 	L["Left"] = "Gauche"
 	L["Right"] = "Droite"
 	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
@@ -212,6 +217,7 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Notes"] = "Note"
 	L["Left"] = "Sinistra"
 	L["Right"] = "Destra"
 	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
@@ -247,6 +253,7 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
+	L["Notes"] = "메모"
 	L["Left"] = "왼쪽"
 	L["Right"] = "오른쪽"
 	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
@@ -283,6 +290,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Notes"] = "Notas"
 	L["Left"] = "Esquerda"
 	L["Right"] = "Direita"
 	L["Try later"] = "Não é possível neste momento. Tente depois"
@@ -319,6 +327,7 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Notes"] = "Примечания"
 	L["Left"] = "Налево"
 	L["Right"] = "Направо"
 	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
@@ -354,6 +363,7 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
+	L["Notes"] = "笔记"
 	L["Left"] = "左"
 	L["Right"] = "右"
 	L["Try later"] = "目前不可能。稍后再试"
@@ -389,6 +399,7 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Notes"] = "筆記"
 	L["Left"] = "左"
 	L["Right"] = "右"
 	L["Try later"] = "目前不可能。稍後再試"
@@ -997,7 +1008,7 @@ ns.options = {
 							.."\n16 = " ..L["Original Coin"], 
 					min = 1, max = 16, step = 1,
 					arg = "iconZoneElders",
-					order = 7,
+					order = 10,
 				},
 				iconDungeonElders = {
 					type = "range",
@@ -1011,7 +1022,7 @@ ns.options = {
 							.."\n16 = " ..L["Original Coin"], 
 					min = 1, max = 16, step = 1,
 					arg = "iconDungeonElders",
-					order = 8,
+					order = 11,
 				},
 				iconFactionElders = {
 					type = "range",
@@ -1025,7 +1036,7 @@ ns.options = {
 							.."\n16 = " ..L["Original Coin"], 
 					min = 1, max = 16, step = 1,
 					arg = "iconFactionElders",
-					order = 9,
+					order = 12,
 				},
 				iconPreservation = {
 					type = "range",
@@ -1039,7 +1050,7 @@ ns.options = {
 							.."\n16 = " ..L["Original Coin"], 
 					min = 1, max = 16, step = 1,
 					arg = "iconPreservation",
-					order = 10,
+					order = 13,
 				},
 				iconCrown = {
 					type = "range",
@@ -1053,8 +1064,21 @@ ns.options = {
 							.."\n16 = " ..L["Original Coin"], 
 					min = 1, max = 16, step = 1,
 					arg = "iconCrown",
-					order = 11,
+					order = 14,
 				},
+			},
+		},
+		notes = {
+			type = "group",
+			name = L["Notes"],
+			inline = true,
+			args = {
+				noteMenu = { type = "description", name = "A shortcut to open this panel is via the Minimap AddOn"
+					.." menu, which is immediately below the Calendar icon. Just click your mouse\n\n", order = 20, },
+				separator1 = { type = "header", name = "", order = 21, },
+				noteChat = { type = "description", name = "Chat command shortcuts are also supported.\n\n"
+					..NORMAL_FONT_COLOR_CODE .."/lf" ..HIGHLIGHT_FONT_COLOR_CODE .." - Show this panel\n",
+					order = 22, },
 			},
 		},
 	},
@@ -1144,3 +1168,17 @@ frameOnUpdate:HookScript("OnUpdate", function(self, elapsed)
 		end
 	end
 end)
+
+SLASH_LunarFestival1, SLASH_LunarFestival2 = "/lf", "/lunar"
+
+local function Slash( options )
+
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LunarFestival" )
+	if ( ns.version >= 100000 ) then
+		print( ns.colour.prefix ..L["Lunar Festival"] ..": " ..ns.colour.highlight 
+			.."Try the Minimap AddOn Menu (below the Calendar)" )
+	end
+end
+
+SlashCmdList[ "LunarFestival" ] = function( options ) Slash( options ) end

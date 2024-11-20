@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(743, "DBM-Raids-MoP", 4, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240602104531")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetUsedIcons(1, 2)
+mod:SetZone(1009)
 
 mod:RegisterCombat("combat")
 

@@ -98,12 +98,24 @@ L:SetGeneralLocalization({
 -----------------------------
 --  Forge Speakers  --
 -----------------------------
---L = DBM:GetModLocalization(2590)
+L = DBM:GetModLocalization(2590)
+
+L:SetMiscLocalization{
+	SafeVent		= "Safe Vent"
+}
 
 -----------------------------
 --  High Speaker Eirich  --
 -----------------------------
---L = DBM:GetModLocalization(2582)
+L = DBM:GetModLocalization(2582)
+
+L:SetWarningLocalization({
+	specWarnVoidCorruption	= "Void Corruption - Move NEAR (not into) Rift"
+})
+
+L:SetOptionLocalization({
+	specWarnVoidCorruption	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.moveto:format(427329)
+})
 
 ---------
 --Trash--
@@ -211,7 +223,11 @@ L:SetOptionLocalization({
 -----------------------------
 --  Fangs of the Queen  --
 -----------------------------
---L = DBM:GetModLocalization(2595)
+L = DBM:GetModLocalization(2595)
+
+L:SetMiscLocalization{
+	RolePlay		= "The Transformatory was once the home of our sacred evolution."
+}
 
 -----------------------------
 --  The Coaglamation  --

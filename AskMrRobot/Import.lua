@@ -365,16 +365,20 @@ function Amr:ImportCharacter(data, isTest, isChild)
         end
         
         -- require race match
+        --[[
         local race = tonumber(parts[6])
         if race ~= Amr.RaceIds[currentPlayerData.Race] then
             return L.ImportErrorRace
         end
-        
+        ]]
+
         -- require faction match
+        --[[
         local faction = tonumber(parts[7])
         if faction ~= Amr.FactionIds[currentPlayerData.Faction] then
             return L.ImportErrorFaction
         end
+        ]]
         
         -- require level match
         local level = tonumber(parts[8])

@@ -3,7 +3,10 @@ local addonId, addonTable = ...
 local AceLocale = LibStub ("AceLocale-3.0")
 local Loc = AceLocale:GetLocale ("Details_ChartViewer")
 local Details = Details
+
+---@type detailsframework
 local detailsFramework = DetailsFramework
+
 local ChartViewer = addonTable.ChartViewer
 local ChartViewerWindowFrame = ChartViewerWindowFrame
 local IsInInstance = IsInInstance
@@ -20,7 +23,7 @@ chartPanel:SetPoint("topleft", ChartViewerWindowFrame, "topleft", 2, -72)
 chartPanel:SetPoint("bottomright", ChartViewerWindowFrame, "bottomright", -1, 20)
 
 chartPanel:SetLineThickness(3)
-detailsFramework:ApplyStandardBackdrop(chartPanel)
+--detailsFramework:ApplyStandardBackdrop(chartPanel)
 
 --refresh the graphic
 local colors = {
@@ -28,35 +31,15 @@ local colors = {
     {0.1, 1, 0.9}, {0.1, 1, 0.5}, {0.1, 1, 0.1}, {0.4, 0.5, 0.5}, {0.7, 0.3, 0.3}, {1, 0.5, 1}, {0.8, 0.5, 0.8}, {0.9, 0.5, 0.8}, {1, 0.4, 0.8}, {0.4, 0.4, 0.8}
 }
 
-function ChartViewer:RefreshGraphic(combatObject)
-    if (not combatObject) then
-        combatObject = Details:GetCombat(ChartViewer.current_segment)
-        if (not combatObject) then
-            ChartViewer.current_segment = 1
-            combatObject = ChartViewer:GetCurrentCombat()
-            ChartViewer.segments_dropdown:Select(1, true)
-        end
-    end
+function ChartViewer:RefreshGraphic()
+    local combatObject = Details:GetCombatFromBreakdownWindow()
 
     local currentTab = ChartViewer:TabGetCurrent()
     local captureName = currentTab.data
     local tabType = currentTab.segment_type
     local options = currentTab.options
 
-    local segments = Details:GetCombatSegments()
     local segments_start_index = 1
-
-    --avoid selecting a trash segment during raids
-    if (IsInInstance() and (combatObject.is_trash or not combatObject.is_boss)) then
-        for i = 1, #segments do
-            local thisCombat = segments [i]
-            if (not thisCombat.is_trash) then
-                combatObject = thisCombat
-                segments_start_index = i
-                break
-            end
-        end
-    end
 
     local elapsedTime = combatObject:GetCombatTime()
     local texture = currentTab.texture
@@ -192,13 +175,11 @@ function ChartViewer:RefreshGraphic(combatObject)
     if (#data > 0) then
         for index, chart in ipairs(data) do
             --get the tables and color
-            local chart_data = chart[1]
-            local chart_color = chart[2]
-            local combat_time = chart[3]
-            local line_name = chart[4]
-            local texture = chart[5]
+            local chartData = chart[1]
+            local chartColor = chart[2]
+            local lineName = chart[4]
 
-            chartPanel:AddData(chart_data, 3, line_name, chart_color)
+            chartPanel:AddData(chartData, 3, lineName, chartColor)
         end
 
         ---@type number[]

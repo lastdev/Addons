@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(689, "DBM-Raids-MoP", 5, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240525101145")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(60009)--60781 Soul Fragment
 mod:SetEncounterID(1390)
 mod:SetUsedIcons(1, 2, 3, 4, 7)
+mod:SetZone(1008)
 
 mod:RegisterCombat("combat")
 

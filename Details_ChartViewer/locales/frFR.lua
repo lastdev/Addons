@@ -11,3 +11,4 @@ L["STRING_PLUGIN_DESC"] = "Voir les données collectées par Details! sur des gr
 L["STRING_PLUGIN_NAME"] = "Visualiseur de graphiques"
 L["STRING_TOOLTIP"] = "Ouvrir la visionneuse de graphiques"
 L["STRING_TOOSHORTNAME"] = "Le nom est trop court."
+

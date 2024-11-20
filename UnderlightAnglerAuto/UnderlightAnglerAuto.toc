@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110005
 ## Author: Teelo
 ## Title: Underlight Angler Auto
 ## X-Curse-Project-ID: 724426

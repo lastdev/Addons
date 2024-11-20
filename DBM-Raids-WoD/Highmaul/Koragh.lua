@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Raids-WoD", 3, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240525083508")
+mod:SetRevision("20240714050251")
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
@@ -131,7 +131,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:ArcaneTarget()
-	local targetName, uId = self:GetBossTarget(79015)
+	local targetName = self:GetBossTarget(79015) or DBM_COMMON_L.UNKNOWN
 	local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 	if tanking or (status == 3) then--Player is current target
 		specWarnExpelMagicArcaneYou:Show()--So show tank warning

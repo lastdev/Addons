@@ -1,6 +1,9 @@
 local addonName = ...
 local addon = _G[addonName]
 
+local LibStub = addon.LibStub
+local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
+
 local eventFrame = CreateFrame("Frame")
 local tldrButton = CreateFrame("Button", "TLDRMissionsToggleButton", UIParent, "UIPanelButtonTemplate")
 tldrButton:SetText("TL;DR")
@@ -32,6 +35,39 @@ shortcutButton:SetScript("OnClick", function(self, button)
 end)
 
 addon.GUI.shortcutButton = shortcutButton
+
+function addon.isWeeklyAnimaQuestReadyForTurnin()
+    return C_QuestLog.IsComplete(61981) or C_QuestLog.IsComplete(61982) or C_QuestLog.IsComplete(61983) or C_QuestLog.IsComplete(61984)
+end
+
+local weeklyButton = CreateFrame("Button", "TLDRMissionsWeeklyButton", tldrButton, "MainHelpPlateButton")
+weeklyButton:SetPoint("TOPLEFT", tldrButton, "TOPRIGHT", -10, 10)
+weeklyButton:SetScript("OnEnter", function()
+    if addon.isWeeklyAnimaQuestReadyForTurnin() then
+        weeklyButton.MainHelpPlateButtonTooltipText = L["HelpButtonTooltipQuestPendingTurnin"]
+    elseif addon.db.profile.blockCompletionFilters.noQuest and (not addon.isOnWeeklyAnimaQuest()) and (not addon.isWeeklyAnimaQuestPreviouslyFinished()) then
+        weeklyButton.MainHelpPlateButtonTooltipText = L["HelpButtonTooltipNoQuest"]
+    elseif addon.db.profile.blockCompletionFilters.questFinished and addon.isWeeklyAnimaQuestPreviouslyFinished() then
+        weeklyButton.MainHelpPlateButtonTooltipText = L["HelpButtonTooltipQuestAlreadyFinished"]
+    else
+        return
+    end
+    
+    Main_HelpPlate_Button_OnEnter(weeklyButton)
+end)
+weeklyButton:RegisterEvent("QUEST_LOG_UPDATE")
+weeklyButton:RegisterEvent("ADDON_LOADED")
+weeklyButton:SetScript("OnEvent", function(self)
+    if addon.isWeeklyAnimaQuestReadyForTurnin() then
+        self:Show()
+    elseif addon.db.profile.blockCompletionFilters.noQuest and (not addon.isOnWeeklyAnimaQuest()) and (not addon.isWeeklyAnimaQuestPreviouslyFinished()) then
+        self:Show()
+    elseif addon.db.profile.blockCompletionFilters.questFinished and addon.isWeeklyAnimaQuestPreviouslyFinished() then
+        self:Show()
+    else
+        self:Hide()
+    end
+end)
 
 local function adventureMapOpenHandler(followerTypeID)
     if followerTypeID ~= 123 then return end

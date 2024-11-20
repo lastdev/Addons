@@ -1,12 +1,12 @@
-## Interface: 100002
+## Interface: 11503, 40400, 110000, 110002
 ## Title: SharedMedia
 ## Notes: Inserts some media into LibSharedMedia's storage.
-## Version: 3.1.1-199
+## Version: 3.1.2-200
 ## Author: Elkano
 ## X-Category: Miscellaneous
 
-## X-Revision: 199
-## X-Date: 2023-01-05T13:30:01Z
+## X-Revision: 200
+## X-Date: 2024-07-27T15:09:40Z
 
 ## OptionalDeps: LibStub, LibSharedMedia-3.0
 

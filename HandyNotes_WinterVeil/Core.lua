@@ -3,7 +3,7 @@
 
                                              Winter Veil
 
-                                      v2.10 - 21st August 2024
+                                      v3.00 - 29th October 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -47,6 +47,8 @@ local gsub = string.gsub
 local next = _G.next
 
 local HandyNotes = _G.HandyNotes
+
+ns.version = select( 4, GetBuildInfo() )
 
 continents[ 12 ] = true -- Kalimdor
 continents[ 13 ] = true -- Eastern Kingdoms
@@ -99,6 +101,7 @@ if ns.locale == "deDE" then
 	L["Raptor egg"] = "Raptor-Ei"
 	L["Stars"] = "Sternen"
 	L["Screw"] = "Schraube"
+	L["Notes"] = "Notizen"
 	L["Left"] = "Links"
 	L["Right"] = "Rechts"
 	L["Try later"] = "Derzeit nicht möglich. Versuche es späte"
@@ -137,6 +140,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	L["Raptor egg"] = "Huevo de raptor"	
 	L["Stars"] = "Estrellas"
 	L["Screw"] = "Tornillo"
+	L["Notes"] = "Notas"
 	L["Left"] = "Izquierda"
 	L["Right"] = "Derecha"
 	L["Try later"] = "No es posible en este momento. Intenta más tarde"
@@ -173,6 +177,7 @@ elseif ns.locale == "frFR" then
 	L["Raptor egg"] = "Œuf de Rapace"
 	L["Stars"] = "Étoiles"
 	L["Screw"] = "Vis"
+	L["Notes"] = "Remarques"
 	L["Left"] = "Gauche"
 	L["Right"] = "Droite"
 	L["Try later"] = "Pas possible pour le moment. Essayer plus tard"
@@ -208,6 +213,7 @@ elseif ns.locale == "itIT" then
 	L["Raptor egg"] = "Raptor Uovo"
 	L["Stars"] = "Stelle"
 	L["Screw"] = "Vite"
+	L["Notes"] = "Note"
 	L["Left"] = "Sinistra"
 	L["Right"] = "Destra"
 	L["Try later"] = "Non è possibile in questo momento. Prova più tardi"
@@ -243,6 +249,7 @@ elseif ns.locale == "koKR" then
 	L["Raptor egg"] = "랩터의 알"
 	L["Stars"] = "별"
 	L["Screw"] = "나사"
+	L["Notes"] = "메모"
 	L["Left"] = "왼쪽"
 	L["Right"] = "오른쪽"
 	L["Try later"] = "지금은 불가능합니다. 나중에 시도하세요"
@@ -279,6 +286,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["Raptor egg"] = "Ovo de raptor"
 	L["Stars"] = "Estrelas"
 	L["Screw"] = "Parafuso"
+	L["Notes"] = "Notas"
 	L["Left"] = "Esquerda"
 	L["Right"] = "Direita"
 	L["Try later"] = "Não é possível neste momento. Tente depois"
@@ -315,6 +323,7 @@ elseif ns.locale == "ruRU" then
 	L["Raptor egg"] = "Яйцо ящера"
 	L["Stars"] = "Звезды"
 	L["Screw"] = "Винт"
+	L["Notes"] = "Примечания"
 	L["Left"] = "Налево"
 	L["Right"] = "Направо"
 	L["Try later"] = "В настоящее время это невозможно. Попробуй позже"
@@ -350,6 +359,7 @@ elseif ns.locale == "zhCN" then
 	L["Raptor egg"] = "迅猛龙蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "拧"
+	L["Notes"] = "笔记"
 	L["Left"] = "左"
 	L["Right"] = "右"
 	L["Try later"] = "目前不可能。稍后再试"
@@ -385,6 +395,7 @@ elseif ns.locale == "zhTW" then
 	L["Raptor egg"] = "迅猛龍蛋"
 	L["Stars"] = "星星"
 	L["Screw"] = "擰"
+	L["Notes"] = "筆記"
 	L["Left"] = "左"
 	L["Right"] = "右"
 	L["Try later"] = "目前不可能。稍後再試"
@@ -964,7 +975,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_bbKing",
-					order = 8,
+					order = 10,
 				},
 				icon_caroling = {
 					type = "range",
@@ -980,7 +991,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_caroling",
-					order = 9,
+					order = 11,
 				},
 				icon_dailies = {
 					type = "range",
@@ -996,7 +1007,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_dailies",
-					order = 10,
+					order = 12,
 				},
 				icon_frostyShake = {
 					type = "range",
@@ -1012,7 +1023,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_frostyShake",
-					order = 11,
+					order = 13,
 				},
 				icon_gourmet = {
 					type = "range",
@@ -1028,7 +1039,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_gourmet",
-					order = 12,
+					order = 14,
 				},
 				icon_holidayBromance = {
 					type = "range",
@@ -1044,7 +1055,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_holidayBromance",
-					order = 13,
+					order = 15,
 				},
 				icon_ironArmada = {
 					type = "range",
@@ -1060,7 +1071,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_ironArmada",
-					order = 14,
+					order = 16,
 				},
 				icon_letItSnow = {
 					type = "range",
@@ -1076,7 +1087,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_letItSnow",
-					order = 15,
+					order = 17,
 				},
 				icon_LittleHelper = {
 					type = "range",
@@ -1092,7 +1103,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_LittleHelper",
-					order = 16,
+					order = 18,
 				},
 				icon_ogrila = {
 					type = "range",
@@ -1108,7 +1119,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_ogrila",
-					order = 17,
+					order = 19,
 				},
 				icon_onMetzen = {
 					type = "range",
@@ -1124,7 +1135,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_onMetzen",
-					order = 18,
+					order = 20,
 				},
 				icon_tisSeason = {
 					type = "range",
@@ -1140,7 +1151,7 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_tisSeason",
-					order = 19,
+					order = 21,
 				},
 				icon_vendor = {
 					type = "range",
@@ -1156,8 +1167,21 @@ ns.options = {
 							..L["Ginger Bread"] .."\n20 = " ..L["Holly"], 
 					min = 1, max = 20, step = 1,
 					arg = "icon_vendor",
-					order = 20,
+					order = 22,
 				},
+			},
+		},
+		notes = {
+			type = "group",
+			name = L["Notes"],
+			inline = true,
+			args = {
+				noteMenu = { type = "description", name = "A shortcut to open this panel is via the Minimap AddOn"
+					.." menu, which is immediately below the Calendar icon. Just click your mouse\n\n", order = 30, },
+				separator1 = { type = "header", name = "", order = 31, },
+				noteChat = { type = "description", name = "Chat command shortcuts are also supported.\n\n"
+					..NORMAL_FONT_COLOR_CODE .."/wv" ..HIGHLIGHT_FONT_COLOR_CODE .." - Show this panel\n",
+					order = 32, },
 			},
 		},
 	},
@@ -1241,3 +1265,17 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_WinterVeilDB", "AceEvent-3.0")
+
+SLASH_WinterVeil1, SLASH_WinterVeil2 = "/wv", "/winter"
+
+local function Slash( options )
+
+	Settings.OpenToCategory( "HandyNotes" )
+	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "WinterVeil" )
+	if ( ns.version >= 100000 ) then
+		print( ns.colour.prefix ..L["Winter Veil"] ..": " ..ns.colour.highlight
+			.."Try the Minimap AddOn Menu (below the Calendar)" )
+	end
+end
+
+SlashCmdList[ "WinterVeil" ] = function( options ) Slash( options ) end

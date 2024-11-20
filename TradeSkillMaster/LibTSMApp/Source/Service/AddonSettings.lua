@@ -286,41 +286,6 @@ function private.ProcessUpgrade(db, upgradeObj)
 			db:Set("global", upgradeObj:GetScopeKey(key), "tooltipOptions", "moduleTooltips", value)
 		end
 	end
-	if prevVersion < 120 then
-		if LibTSMApp.IsRetail() then
-			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
-				if prevVersion < 99 then
-					local newValue = {}
-					for spellId, data in pairs(value) do
-						newValue["c:"..spellId] = data
-					end
-					value = newValue
-				end
-				if prevVersion < 114 then
-					for _, craft in pairs(value) do
-						if craft.mats then
-							for itemString in pairs(craft.mats) do
-								if strmatch(itemString, "^o:") then
-									craft.mats[itemString] = 1
-								end
-							end
-						end
-					end
-				end
-				if prevVersion < 118 then
-					for _, craft in pairs(value) do
-						for _, info in pairs(craft.players) do
-							if type(info) == "table" and info.baseRecipeDifficulty then
-								info.inspirationAmount = 0
-								info.inspirationChance = 0
-							end
-						end
-					end
-				end
-				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
-			end
-		end
-	end
 	if prevVersion < 121 then
 		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "userData", "operations") do
 			db:Set("global", upgradeObj:GetScopeKey(key), "userData", "sharedOperations", value)
@@ -372,6 +337,45 @@ function private.ProcessUpgrade(db, upgradeObj)
 		MigrateScrollTableContext("auctionUIContext", "auctioningAuctionScrollingTable")
 		MigrateScrollTableContext("auctionUIContext", "shoppingAuctionScrollingTable")
 		MigrateScrollTableContext("auctionUIContext", "sniperScrollingTable")
+	end
+	if prevVersion < 129 then
+		if LibTSMApp.IsRetail() then
+			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
+				if prevVersion < 99 then
+					local newValue = {}
+					for spellId, data in pairs(value) do
+						newValue["c:"..spellId] = data
+					end
+					value = newValue
+				end
+				if prevVersion < 114 then
+					for _, craft in pairs(value) do
+						if craft.mats then
+							for itemString in pairs(craft.mats) do
+								if strmatch(itemString, "^o:") then
+									craft.mats[itemString] = 1
+								end
+							end
+						end
+					end
+				end
+				if prevVersion < 129 then
+					for _, craft in pairs(value) do
+						for _, info in pairs(craft.players) do
+							if type(info) == "table" and info.baseRecipeDifficulty then
+								info.inspirationAmount = nil
+								info.inspirationChance = nil
+							end
+						end
+					end
+				end
+				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
+			end
+		else
+			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "internalData", "crafts") do
+				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "internalData", "crafts", value)
+			end
+		end
 	end
 	-- NOTE: When adding migrations, be careful of multiple migrations modifying the same key, as
 	-- the RemovedSettingIterator value could be stale.

@@ -252,16 +252,14 @@ function Profession.GetMatInfo(craftString, index)
 	return Scanner.GetMatInfo(craftString, index)
 end
 
----Gets quality info for a DF recipe.
+---Gets quality info for a quality recipe.
 ---@param craftString string The craft string for the recipe
 ---@return number? baseDifficulty
 ---@return number? quality
 ---@return boolean? hasQualityMats
----@return number? inspirationAmount
----@return number? inspirationChance
 function Profession.GetRecipeQualityInfo(craftString)
 	if not ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
-		return nil, nil, nil, nil, nil
+		return nil, nil, nil
 	end
 	local spellId = CraftString.GetSpellId(craftString)
 	return TradeSkill.GetRecipeQualityInfo(spellId)
@@ -410,12 +408,12 @@ end
 ---@param recipeQuality number The base recipe quality
 ---@param recipeMaxQuality number The max number of qualities for the recipe
 ---@param hasQualityMats boolean Whether or not the recipe has quality mats
----@param inspirationAmount number The inspiration amount
+---@param maxMatContribution number The max material contribution
 ---@return number neededSkill
 ---@return number maxAddedSkill
 ---@return number maxQualityMatSkill
-function Profession.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality, hasQualityMats, inspirationAmount)
-	return Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality, hasQualityMats, inspirationAmount)
+function Profession.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality, hasQualityMats, maxMatContribution)
+	return Quality.GetNeededSkill(targetQuality, recipeDifficulty, recipeQuality, recipeMaxQuality, hasQualityMats, maxMatContribution)
 end
 
 ---Iterates over the possible combinations of quality mats.

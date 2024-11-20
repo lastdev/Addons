@@ -50,6 +50,24 @@ local weeklyWorldQuests = {
 	-- [] = true,		-- Zaralek Cavern - The Zaqali Elders ?
 	[76367] = true,		-- Emerald Dream - Aurostor 
 	
+	-- The War Within
+	[81630] = true,		-- Isle of Dorn - Kordac
+	[82653] = true,		-- The Ringing Deeps - Aggregation of Horrors
+	[81653] = true,		-- Hammerfall - Shurrai
+	[81624] = true,		-- City of Threads - Orta, the Broken Mountain
+	[80184] = true,		-- PvP : Random Battlegrounds
+	[80186] = true,		-- PvP : Epic Battlegrounds
+	[80187] = true,		-- PvP : Arena Skirmishes
+	[80189] = true,		-- PvP : Rated Battlegrounds
+	[81793] = true,		-- Sparks of War: Isle of Dorn
+	[81794] = true,		-- Sparks of War: The Ringing Deeps
+	[81795] = true,		-- Sparks of War: Hallowfall
+	[81796] = true,		-- Sparks of War: Azj-Kahet
+
+	[82787] = true,		-- Special Assignment: Rise of the Colossals
+	[82355] = true,		-- Special Assignment: Cinderbee Surge
+	[83229] = true,		-- Special Assignment: When the Deeps Stir
+
 }
 
 local function InsertQuest(questID, title)

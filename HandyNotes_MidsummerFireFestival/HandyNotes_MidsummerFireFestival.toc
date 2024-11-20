@@ -1,5 +1,5 @@
-## Interface: 110002
-## Version: 1.19
+## Interface: 110005
+## Version: 2.00
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_summerfest_firespirit
 ## Title: Midsummer Fire Festival
@@ -29,6 +29,8 @@
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_MidsummerFireFestivalDB
 ## AddonCompartmentFunc: HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick
+## X-Curse-Project-ID: 878385
+## X-Wago-ID: jK8Xg5Ky
 
 Core.lua
 Data.lua

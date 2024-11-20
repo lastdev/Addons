@@ -1,8 +1,8 @@
-## Interface: 11502
+## Interface: 11504
 ## Title: Raider.IO Mythic Plus, Raiding, and Recruitment
 ## Notes: Shows Raider.IO Mythic+ Score, Raid Progress, and Recruitment status in-game. Make sure to load one or more region DB.
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
-## Version: 1.15.2 (v202409010600)
+## Version: 1.15.4 (v202411180600)
 ## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## SavedVariables: RaiderIO_Config, RaiderIO_LastCharacter, RaiderIO_MissingCharacters, RaiderIO_MissingServers, RaiderIO_CachedRuns, RaiderIO_RWF, RaiderIO_CompletedReplays
 ## X-Website: https://raider.io
@@ -10,7 +10,6 @@
 ## X-Curse-Project-ID: 279257
 ## X-Wago-ID: b6mb0XKP
 db/db_era_client_characters.lua
-db/db_era_client_colors.lua
 db/db_era_client_config.lua
 db/db_era_client_guilds.lua
 db/db_era_client_replays.lua

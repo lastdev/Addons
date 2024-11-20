@@ -3,13 +3,13 @@ local UI = Addon.CommonUI.UI
 local Dialogs = { 
     NAME = "Dialogs", 
     VERSION = 1,
-    DEPENDENCIES = { "Rules" }
+    DEPENDENCIES = { "Rules", "itemdialog" }
 }
 
 function Dialogs:OnInitialize(a, b, host)
 end
 
-function Dialogs:GetEditRule()    
+function Dialogs:GetEditRule()
     if (not self.editRule) then
         local BUTTONS = {
             close = { id="close", label = CLOSE, handler = "Toggle" },

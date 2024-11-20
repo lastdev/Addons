@@ -545,10 +545,12 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 			else
 				state.findResult = result
 				state.numFound = min(#result, maxQuantity and Math.Ceil(maxQuantity / state.selectedAuction:GetQuantities()) or math.huge)
-				state.maxQuantity = maxQuantity or 1
+				state.maxQuantity = maxQuantity and min(maxQuantity, state.numFound) or 1
 				state.defaultBuyQuantity = state.numFound
 			end
-			assert(state.numBidOrBought == 0 and state.numConfirmed == 0)
+			state.numBid = 0
+			state.numBought = 0
+			state.numConfirmed = 0
 		else
 			if state.selectedAuction:IsSubRow() then
 				-- Failed to find this auction, so remove it

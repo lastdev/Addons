@@ -1,8 +1,8 @@
-## Interface: 40400
+## Interface: 40401
 ## Author: Deepac
 ## IconTexture: 982414
 ## Title: MacroToolkit Icon Data
-## Version: v2.3.3
+## Version: v2.3.7
 ## Notes: Load on demand data for MacroToolkit
 ## LoadOnDemand: 1
 ## RequiredDeps: MacroToolkit

@@ -72,7 +72,7 @@
 ---|"cleave" 12
 ---|"cntnuemove"
 ---|"com_go"
----|"crowdcontrol"
+---|"crowdcontrol" 3
 ---|"crusher" 12
 ---|"debuffyou" 17
 ---|"defensive"
@@ -99,6 +99,7 @@
 ---|"farfromline"
 ---|"fearsoon"
 ---|"felinfusion"
+---|"findclearvent" 17
 ---|"findcrab" 12
 ---|"finddragon" 12
 ---|"findflamejet" 12
@@ -216,6 +217,8 @@
 ---|"movetostatue" 17
 ---|"movetotank"
 ---|"movetoweb" 17
+---|"movetoflamethrower" 17
+---|"movetotendrils" 17
 ---|"mpurple"
 ---|"myellow"
 ---|"negative" 13
@@ -241,18 +244,21 @@
 ---|"pullin" 12
 ---|"pulverize" 12
 ---|"purpleyou" 17
----|"pushbackincoming"
+---|"pushbackincoming" 13
 ---|"quake" 12
 ---|"rageyou" 17
 ---|"range5"
 ---|"readyrescue"
 ---|"redyou" 17
+---|"riftdispel" 17
 ---|"right"
+---|"rollincoming" 17
 ---|"runaway" 2
 ---|"runin" 2
 ---|"runintofire" 12
 ---|"runout" 2
 ---|"runoverflowers" 12
+---|"runovermobs" 17
 ---|"runtoedge"
 ---|"safenow"
 ---|"scatter"
@@ -268,6 +274,7 @@
 ---|"shockwave" 2
 ---|"silencesoon"
 ---|"slagelementalcoming" 12
+---|"soakbeam" 17
 ---|"soulcleave" 12
 ---|"south"
 ---|"southeast"

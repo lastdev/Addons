@@ -1,5 +1,14 @@
 ## Revision History:
 
+#### v4 (October 27, 2024)
+-------------------------------
+* Bump .toc to 110005
+
+#### v3 (September 11, 2024)
+-------------------------------
+* Updated coordinates for Portal to The Timeways
+* Updated zhCN [[PR#3](https://github.com/Dathwada/handynotes-dornogal/pull/3)]
+
 #### v2 (August 30, 2024)
 -------------------------------
 * Added profile management [[CF#1](https://legacy.curseforge.com/wow/addons/handynotes-dornogal?comment=1)]

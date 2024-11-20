@@ -48,6 +48,8 @@ L['shared_drops'] = 'Shared Drops'
 L['zone_drops_label'] = 'Zone Drops'
 L['zone_drops_note'] = 'The items listed below can be dropped by several mobs in this zone.'
 
+L['poi_entrance_label'] = 'Entrance'
+
 L['requires'] = 'Requires'
 L['ranked_research'] = '%s (Rank %d/%d)'
 
@@ -190,7 +192,13 @@ L['options_toggle_per_map_settings_desc'] = 'Apply toggle, scale and opacity set
 L['options_restore_hidden_nodes'] = 'Restore hidden nodes'
 L['options_restore_hidden_nodes_desc'] = 'Restore all nodes hidden using the right-click context menu.'
 
+L['ignore_class_restrictions'] = 'Ignore class restrictions'
+L['ignore_class_restrictions_desc'] = 'Show groups, nodes and rewards that require a different class than the active character.'
+L['ignore_faction_restrictions'] = 'Ignore faction restrictions'
+L['ignore_faction_restrictions_desc'] = 'Show groups, nodes and rewards that require the opposite faction.'
+
 L['options_rewards_settings'] = 'Rewards'
+L['options_reward_behaviors_settings'] = 'Reward Behaviors'
 L['options_reward_types'] = 'Show reward types'
 L['options_manuscript_rewards'] = 'Show drakewatcher manuscript rewards'
 L['options_manuscript_rewards_desc'] = 'Display drakewatcher manuscript rewards in tooltips and track their collected status.'

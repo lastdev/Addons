@@ -1,8 +1,8 @@
-## Interface: 100207
+## Interface: 110005
 ## Title: RareTrackerMechagon
 ## Notes: Track and coordinate rare spawn timers in Mechagon.
 ## Author: Melroy
-## Version: 7.1.23
+## Version: 7.1.25
 ## SavedVariables: RareTrackerMechagonDB
 ## Dependencies: RareTrackerCore
 ## IconTexture: Interface\AddOns\RareTrackerCore\Icons\RareTrackerIcon

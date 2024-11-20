@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(859, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240412041201")
+mod:SetRevision("20240714050536")
 mod:SetCreatureID(71954)
 mod:SetReCombatTime(20)
 mod:EnableWBEngageSync()--Enable syncing engage in outdoors
@@ -46,7 +46,7 @@ function mod:SPELL_CAST_START(args)
 			local bossTarget, bossTargetUID = self:GetBossTarget(71954)
 			if bossTargetUID then
 				if self:IsTanking(bossTargetUID, nil, nil, true, args.sourceGUID) then
-					specWarnHeadbuttTaunt:Show(bossTarget)
+					specWarnHeadbuttTaunt:Show(bossTarget or DBM_COMMON_L.UNKNOWN)
 					specWarnHeadbuttTaunt:Play("tauntboss")
 				end
 			end

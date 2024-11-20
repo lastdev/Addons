@@ -11,10 +11,12 @@ local ChatMessage = TSM.LibTSMService:Include("UI.ChatMessage")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
 local AuctionSearchContext = TSM.LibTSMService:IncludeClassType("AuctionSearchContext")
+local LibTSMClass = LibStub("LibTSMClass")
+local VendorSearchContext = LibTSMClass.DefineClass("VendorSearchContext", AuctionSearchContext) ---@class VendorSearchContext: AuctionSearchContext
 local private = {
 	itemList = {},
 	scanThreadId = nil,
-	searchContext = nil,
+	searchContext = nil ---@type VendorSearchContext,
 }
 
 
@@ -26,7 +28,7 @@ local private = {
 function VendorSearch.OnInitialize()
 	-- initialize thread
 	private.scanThreadId = Threading.New("VENDOR_SEARCH", private.ScanThread)
-	private.searchContext = AuctionSearchContext(private.scanThreadId, private.MarketValueFunction)
+	private.searchContext = VendorSearchContext(private.scanThreadId, private.MarketValueFunction)
 end
 
 function VendorSearch.GetSearchContext()
@@ -81,4 +83,15 @@ end
 
 function private.MarketValueFunction(row)
 	return ItemInfo.GetVendorSell(row:GetItemString() or row:GetBaseItemString())
+end
+
+
+
+-- ============================================================================
+-- VendorSearchContext Class
+-- ============================================================================
+
+function VendorSearchContext:GetMaxCanBuy()
+	-- Buy everything that's below the vendor cost
+	return math.huge
 end

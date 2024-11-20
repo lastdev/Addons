@@ -1,20 +1,21 @@
 local mod	= DBM:NewMod(2585, "DBM-Party-WarWithin", 6, 1271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240818054948")
+mod:SetRevision("20241109164648")
 mod:SetCreatureID(215407)
 mod:SetEncounterID(2901)
 mod:SetHotfixNoticeRev(20240818000000)
 mod:SetMinSyncRevision(20240818000000)
+mod:SetZone(2660)
 --mod.respawnTime = 29
 mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 432117 432227 432130 461487"
+	"SPELL_CAST_START 432117 432227 432130 461487",
 --	"SPELL_CAST_SUCCESS 431985"
---	"SPELL_AURA_APPLIED"
+	"SPELL_AURA_APPLIED 432031"
 --	"SPELL_AURA_REMOVED"
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED"
@@ -29,6 +30,7 @@ mod:RegisterEventsInCombat(
 --]]
 local warnVenomVolley						= mod:NewCountAnnounce(432227, 3)
 local warnCultivatedPoisons					= mod:NewCountAnnounce(461487, 3)
+local warnSingularity						= mod:NewCastAnnounce(432117, 4)
 
 local specWarnCosmicSingularity				= mod:NewSpecialWarningMoveTo(432117, nil, nil, nil, 3, 15)
 local specWarnVenomVolley					= mod:NewSpecialWarningDispel(432227, "RemovePoison", nil, nil, 1, 2)
@@ -68,10 +70,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 432117 then
 		self.vb.cosmicCount = self.vb.cosmicCount + 1
-		specWarnCosmicSingularity:Show(DBM_COMMON_L.POOL)
-		specWarnCosmicSingularity:Play("movetopool")
-		--Timer has predictable spell queuing after first cast, but first cast is 46.1-48
-		timerCosmicSingularityCD:Start(self.vb.cosmicCount == 1 and 46.1 or 47.2, self.vb.cosmicCount+1)
+		warnSingularity:Show()
+		specWarnCosmicSingularity:Schedule(3.5, DBM_COMMON_L.POOL)
+		specWarnCosmicSingularity:ScheduleVoice(3.5, "movetopool")
+		timerCosmicSingularityCD:Start(46.1, self.vb.cosmicCount+1)
 
 		--Do some timer adjustments if needed
 		if self:IsMythic() then
@@ -91,10 +93,10 @@ function mod:SPELL_CAST_START(args)
 				timerVenomVolleyCD:Update(elapsed, total+extend, self.vb.venomCount+1)
 			end
 		end
-		--if time remaining on Erupting Webs is < 13.3, it's extended by this every time
-		if timerEruptingWebsCD:GetRemaining(self.vb.eruptingCount+1) < 13.3 then
+		--if time remaining on Erupting Webs is < 7.3, it's extended by this every time (well not every time anymore?)
+		if timerEruptingWebsCD:GetRemaining(self.vb.eruptingCount+1) < 7.3 then
 			local elapsed, total = timerEruptingWebsCD:GetTime(self.vb.eruptingCount+1)
-			local extend = 13.3 - (total-elapsed)
+			local extend = 7.3 - (total-elapsed)
 			DBM:Debug("timerEruptingWebsCD extended by: "..extend, 2)
 			timerEruptingWebsCD:Update(elapsed, total+extend, self.vb.eruptingCount+1)
 		end
@@ -144,17 +146,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 --]]
 
---[[
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 432031 then
 		if args:IsPlayer() then
-
+			specWarnCosmicSingularity:Cancel()
+			specWarnCosmicSingularity:CancelVoice()
 		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
---]]
 
 --[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)

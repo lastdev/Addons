@@ -4,9 +4,10 @@ local Anshal	= DBM:EJ_GetSectionInfo(3166)
 local Nezir		= DBM:EJ_GetSectionInfo(3178)
 local Rohash	= DBM:EJ_GetSectionInfo(3172)
 
-mod:SetRevision("20240412064728")
+mod:SetRevision("20241103125714")
 mod:SetCreatureID(45870, 45871, 45872)
 mod:SetEncounterID(1035)
+mod:SetZone(754)
 mod:SetBossHPInfoToHighest()
 
 mod:RegisterCombat("combat")
@@ -29,7 +30,7 @@ local warnNurture			= mod:NewSpellAnnounce(85422, 3)
 local warnSoothingBreeze	= mod:NewTargetNoFilterAnnounce(86207, 3)	-- using a spellID here with a better description of the spell
 local warnSummonTornados	= mod:NewSpellAnnounce(86192, 3)
 local warnWindBlast			= mod:NewSpellAnnounce(86193, 3)
-local warnStormShield		= mod:NewSpellAnnounce(93059, 3)
+--local warnStormShield		= mod:NewSpellAnnounce(93059, 3)
 local warnPoisonToxic	 	= mod:NewSpellAnnounce(86281, 3)
 local warnGatherStrength	= mod:NewTargetNoFilterAnnounce(86307, 4)
 local warnSpecialSoon		= mod:NewAnnounce("warnSpecialSoon", 2, "132866")--Hurricane/Sleet Storm/Zephyr in single announce

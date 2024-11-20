@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(709, "DBM-Raids-MoP", 3, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240524055927")
+mod:SetRevision("20241103134004")
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
+mod:SetZone(996)
 
 mod:RegisterCombat("combat")
 

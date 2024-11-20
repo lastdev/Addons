@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2461, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(182169)
 mod:SetEncounterID(2539)
 mod:SetUsedIcons(1, 2)
@@ -48,7 +48,7 @@ local warnFormSentry							= mod:NewSpellAnnounce(365257, 2)
 local specWarnHarmonicAlignment					= mod:NewSpecialWarningYou(368738, nil, nil, nil, 1, 12, 4)
 local specWarnMelodicAlignment					= mod:NewSpecialWarningYou(368740, nil, nil, nil, 1, 12, 4)
 
-local specWarnCosmicShift						= mod:NewSpecialWarningCount(363088, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(363088), nil, 2, 13)
+local specWarnCosmicShift						= mod:NewSpecialWarningTarget(363088, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(363088), nil, 2, 13)
 local specWarnUnstableMote						= mod:NewSpecialWarningYou(362622, nil, nil, nil, 1, 2)
 local specWarnProtoformCascade					= mod:NewSpecialWarningDodge(364652, nil, 260885, nil, 1, 2)
 local specWarnResonance							= mod:NewSpecialWarningDefensive(368027, false, nil, nil, 1, 2)
@@ -257,9 +257,11 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 363088 then
 		self.vb.cosmicCount = self.vb.cosmicCount + 1
 		if playerGrip then
+			---@diagnostic disable-next-line: param-type-mismatch
 			specWarnCosmicShift:Show(grip)
 			specWarnCosmicShift:Play("pullin")
 		else
+			---@diagnostic disable-next-line: param-type-mismatch
 			specWarnCosmicShift:Show(push)
 			specWarnCosmicShift:Play("pushbackincoming")
 		end
@@ -338,7 +340,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnKineticResonance:Show(args.destName, args.amount or 1)
 		end
 		if not args:IsPlayer() and not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") then
-			specWarnKinResonanceTaunt:Show()
+			specWarnKinResonanceTaunt:Show(args.destName)
 			specWarnKinResonanceTaunt:Play("tauntboss")
 		end
 	elseif spellId == 368025 then--Sundering Resonance
@@ -347,7 +349,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnSunderingResonance:Show(args.destName, args.amount or 1)
 		end
 		if not args:IsPlayer() and not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") then
-			specWarnSunResonanceTaunt:Show()
+			specWarnSunResonanceTaunt:Show(args.destName)
 			specWarnSunResonanceTaunt:Play("tauntboss")
 		end
 	elseif spellId == 361200 then--Realignment

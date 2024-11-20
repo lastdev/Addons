@@ -72,6 +72,12 @@ lib:RegisterItems({
 	[36930] = SetReagent(2, e.Jewelcrafting), -- Monarch Topaz
 	[36932] = SetReagent(2, e.Jewelcrafting), -- Dark Jade
 	[36933] = SetReagent(2, e.Jewelcrafting), -- Forest Emerald
+	[36919] = SetReagent(2, e.Jewelcrafting), -- Cardinal Ruby
+	[36922] = SetReagent(2, e.Jewelcrafting), -- King's Amber
+	[36925] = SetReagent(2, e.Jewelcrafting), -- Majestic Zircon
+	[36928] = SetReagent(2, e.Jewelcrafting), -- Dreadstone
+	[36934] = SetReagent(2, e.Jewelcrafting), -- Eye of Zul
+	[36931] = SetReagent(2, e.Jewelcrafting), -- Ametrine
 	[42225] = SetReagent(2, e.Jewelcrafting), -- Dragon's Eye
 	
 	-- 4.0 Cataclysm
@@ -82,6 +88,12 @@ lib:RegisterItems({
 	[52181] = SetReagent(3, e.Jewelcrafting), -- Hessonite
 	[52182] = SetReagent(3, e.Jewelcrafting), -- Jasper
 	[52188] = SetReagent(3, e.Jewelcrafting), -- Jeweler's Setting
+	[52190] = SetReagent(3, e.Jewelcrafting), -- Inferno Ruby
+	[52191] = SetReagent(3, e.Jewelcrafting), -- Ocean Sapphire
+	[52192] = SetReagent(3, e.Jewelcrafting), -- Dream Emerald
+	[52193] = SetReagent(3, e.Jewelcrafting), -- Ember Topaz
+	[52194] = SetReagent(3, e.Jewelcrafting), -- Demonseye
+	[52195] = SetReagent(3, e.Jewelcrafting), -- Amberjewel	
 	[52196] = SetReagent(3, e.Jewelcrafting), -- Chimera's Eye
 	
 	[71805] = SetReagent(3, e.Jewelcrafting), -- Queen's Garnet
@@ -93,12 +105,18 @@ lib:RegisterItems({
 	
 	-- 5.0 Mists of Pandaria
 	[76130] = SetReagent(4, e.Jewelcrafting), -- Tiger Opal
+	[76131] = SetReagent(4, e.Jewelcrafting), -- Primordial Ruby
 	[76132] = SetReagent(4, e.Jewelcrafting), -- Primal Diamond
 	[76133] = SetReagent(4, e.Jewelcrafting), -- Lapis Lazuli
 	[76134] = SetReagent(4, e.Jewelcrafting), -- Sunstone
 	[76135] = SetReagent(4, e.Jewelcrafting), -- Roguestone
 	[76136] = SetReagent(4, e.Jewelcrafting), -- Pandarian Garnet
 	[76137] = SetReagent(4, e.Jewelcrafting), -- Alexandrite
+	[76138] = SetReagent(4, e.Jewelcrafting), -- River's Heart
+	[76139] = SetReagent(4, e.Jewelcrafting), -- Wild Jade
+	[76140] = SetReagent(4, e.Jewelcrafting), -- Vermilion Onyx
+	[76141] = SetReagent(4, e.Jewelcrafting), -- Imperial Amethyst
+	[76142] = SetReagent(4, e.Jewelcrafting), -- Sun's Radiance
 	[76734] = SetReagent(4, e.Jewelcrafting), -- Serpent's Eye
 	[90407] = SetReagent(4, e.Jewelcrafting), -- Sparkling Shard	
 	
@@ -244,5 +262,32 @@ lib:RegisterItems({
 	[192859] = SetReagent(9, e.Jewelcrafting), -- Ysemerald 1
 	[192860] = SetReagent(9, e.Jewelcrafting), -- Ysemerald 2
 	[192861] = SetReagent(9, e.Jewelcrafting), -- Ysemerald 3
+	
+	-- 11.0 The War Within
+	[212498] = SetReagent(10, e.Jewelcrafting), -- Ambivalent Amber
+	[212514] = SetReagent(10, e.Jewelcrafting), -- Blasphemite
+	[212505] = SetReagent(10, e.Jewelcrafting), -- Extravagant Emerald
+	[213399] = SetReagent(10, e.Jewelcrafting), -- Glittering Glass
+	[213398] = SetReagent(10, e.Jewelcrafting), -- Handful of Pebbles
+	[212511] = SetReagent(10, e.Jewelcrafting), -- Ostentatious Onyx
+	[212495] = SetReagent(10, e.Jewelcrafting), -- Radiant Ruby
+	[212508] = SetReagent(10, e.Jewelcrafting), -- Stunning Sapphire
+	[215236] = SetReagent(10, e.Jewelcrafting), -- Vicious Bloodstone
+	
+	[213219] = SetReagent(10, e.Jewelcrafting), -- Crushed Gemstones 1
+	[213220] = SetReagent(10, e.Jewelcrafting), -- Crushed Gemstones 2
+	[213221] = SetReagent(10, e.Jewelcrafting), -- Crushed Gemstones 3
+	[213753] = SetReagent(10, e.Jewelcrafting), -- Decorative Lens 1
+	[213754] = SetReagent(10, e.Jewelcrafting), -- Decorative Lens 2
+	[213755] = SetReagent(10, e.Jewelcrafting), -- Decorative Lens 3
+	[213750] = SetReagent(10, e.Jewelcrafting), -- Engraved Gemcutter 1
+	[213751] = SetReagent(10, e.Jewelcrafting), -- Engraved Gemcutter 2
+	[213752] = SetReagent(10, e.Jewelcrafting), -- Engraved Gemcutter 3
+	[213759] = SetReagent(10, e.Jewelcrafting), -- Inverted Prism 1
+	[213760] = SetReagent(10, e.Jewelcrafting), -- Inverted Prism 2
+	[213761] = SetReagent(10, e.Jewelcrafting), -- Inverted Prism 3
+	[213756] = SetReagent(10, e.Jewelcrafting), -- Marbled Stone 1
+	[213757] = SetReagent(10, e.Jewelcrafting), -- Marbled Stone 2
+	[213758] = SetReagent(10, e.Jewelcrafting), -- Marbled Stone 3
 	
 })

@@ -48,6 +48,8 @@ L['shared_drops'] = '共享掉落'
 L['zone_drops_label'] = '区域掉落'
 L['zone_drops_note'] = '下面列出的物品可以由该区域中的多个怪物掉落。'
 
+L['poi_entrance_label'] = '入口'
+
 L['requires'] = '需要'
 L['ranked_research'] = '%s（等级 %d/%d）'
 
@@ -190,7 +192,13 @@ L['options_toggle_per_map_settings_desc'] = '应用切换，缩放和透明度�
 L['options_restore_hidden_nodes'] = '恢复隐藏项'
 L['options_restore_hidden_nodes_desc'] = '使用右击菜单恢复全部隐藏项。'
 
+L['ignore_class_restrictions'] = '忽略职业限制'
+L['ignore_class_restrictions_desc'] = '显示需要与当前角色不同职业的组、项和奖励。'
+L['ignore_faction_restrictions'] = '忽略阵营限制'
+L['ignore_faction_restrictions_desc'] = '显示需要对立阵营的组、项和奖励。'
+
 L['options_rewards_settings'] = '奖励'
+L['options_reward_behaviors_settings'] = '奖励行为'
 L['options_reward_types'] = '显示奖励类型'
 L['options_manuscript_rewards'] = '显示观龙者手稿奖励'
 L['options_manuscript_rewards_desc'] = '在提示中显示龙观察者手稿奖励并跟踪其收集状态。'
@@ -241,8 +249,8 @@ L['options_toggle_show_notes'] = '显示注释'
 L['options_toggle_show_notes_desc'] = '在提示中添加注释'
 L['options_toggle_use_standard_time'] = '使用12小时时钟'
 L['options_toggle_use_standard_time_desc'] = '在提示中使用12小时时钟（如：8:00 PM）而不是24小时时钟（如：20:00）。'
-L['options_toggle_show_npc_id'] = nil
-L['options_toggle_show_npc_id_desc'] = nil
+L['options_toggle_show_npc_id'] = '显示 NPC ID'
+L['options_toggle_show_npc_id_desc'] = '显示 NPC ID 以供稀有扫描插件使用。'
 
 --------------------------------- DEVELOPMENT ---------------------------------
 

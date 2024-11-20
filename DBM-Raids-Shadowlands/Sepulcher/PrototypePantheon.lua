@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod(2460, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240714045739")
 mod:SetCreatureID(181548, 181551, 181546, 181549)
 mod:SetEncounterID(2544)
 mod:SetBossHPInfoToHighest()
@@ -731,7 +731,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if args:IsPlayer() then
-			specWarnDeathtouch:Show(self:IconNumToTexture(icon))
+			specWarnDeathtouch:Show()
 			specWarnDeathtouch:Play("targetyou")
 			if icon > 0 and icon < 9 then
 				yellDeathtouch:Yell(icon, icon)

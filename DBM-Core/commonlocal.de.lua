@@ -95,3 +95,15 @@ CL.BOSSAPART				= "Bosses Apart"
 --CL.CURSE							= "Curse"
 --CL.CURSES							= "Curses"
 --CL.SWIRLS							= "Swirls"--Plural of Swirl
+
+-- Colors
+CL.BLACK	= "Schwarz"
+CL.BLUE		= "Blau"
+CL.GREEN	= "Grün"
+CL.RED		= "Rot"
+CL.BRONZE	= "Bronze"
+
+
+-- Conjunctions, used to join words, e.g., "Spell1 *and* Spell2 on you!"
+CL.AND		= "und"
+CL.OR		= "oder"

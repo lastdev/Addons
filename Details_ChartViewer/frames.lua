@@ -3,6 +3,8 @@ local addonId, addonTable = ...
 local AceLocale = LibStub("AceLocale-3.0")
 local Loc = AceLocale:GetLocale("Details_ChartViewer")
 local Details = Details
+
+---@type detailsframework
 local detailsFramework = DetailsFramework
 local ChartViewer = addonTable.ChartViewer
 local ChartViewerWindowFrame = ChartViewerWindowFrame
@@ -82,36 +84,4 @@ function ChartViewer.CreateSegmentDropdown()
 			end
 		end)
 	end
-
-	local onSelectSegment = function(self, _, segmentId)
-		ChartViewer.current_segment = segmentId
-		ChartViewer:RefreshGraphic(Details:GetCombat(segmentId))
-	end
-
-	local buildSegmentMenuFunc = function(self)
-		local segmentsTable = Details:GetCombatSegments()
-		local result = {}
-
-		for index, combatObject in ipairs(segmentsTable) do
-			local combatUniquieID = combatObject:GetCombatUID()
-			local charts = ChartViewerDB.chartData[combatUniquieID]
-
-			if (charts) then
-				if (combatObject.is_boss and combatObject.is_boss.index) then
-					local bossIcon = Details:GetBossEncounterTexture(combatObject.is_boss.name)
-					result[#result+1] = {value = index, label = "#" .. index .. " " .. combatObject.is_boss.name, icon = bossIcon, iconsize = {32, 20}, texcoord = {0, 1, 0, 0.9}, onclick = onSelectSegment}
-				else
-					result[#result+1] = {value = index, label = "#" .. index .. " " .. (combatObject.enemy or "unknown"), icon = [[Interface\Buttons\UI-GuildButton-PublicNote-Up]], onclick = onSelectSegment}
-				end
-			end
-		end
-
-		return result
-	end
-
-	local segmentsDropdown = detailsFramework:CreateDropDown(ChartViewerWindowFrame, buildSegmentMenuFunc, 1, 215, 20)
-	segmentsDropdown:SetPoint("topleft", ChartViewerWindowFrame.headerFrame, "topleft", 3, -49)
-	segmentsDropdown:SetFrameLevel(10)
-	segmentsDropdown:SetTemplate(detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE"))
-	ChartViewer.segments_dropdown = segmentsDropdown
 end

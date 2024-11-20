@@ -41,7 +41,8 @@ local SPECID_ROLE = {
   [253] = "ranged",  -- Beast Mastery Hunter
   [254] = "ranged",  -- Marksmanship Hunter
   [255] = "melee",   -- Survival Hunter
-  [1467] = "ranged",  --Devastation Evoker
+  [1467] = "ranged", --Devastation Evoker
+  [1473] = "ranged", --Augmentation Evoker
 }
 -- Lazily populated.
 local BUFF_ROLE = false
@@ -162,13 +163,13 @@ local function guessMeleeOrRangedFromBuffs(name)
   if not BUFF_ROLE then
     BUFF_ROLE = {}
     for buff, role in pairs({
-      [188033]  = A.group.ROLE.MELEE,   -- Flask of the Seventh Demon
-      [251836]  = A.group.ROLE.MELEE,   -- Flask of the Currents
-      [188031]  = A.group.ROLE.RANGED,  -- Flask of the Whispered Pact
-      [251837]  = A.group.ROLE.RANGED,  -- Flask of Endless Fathoms
-      [24858]   = A.group.ROLE.RANGED,  -- Moonkin Form
+      --[188033]  = A.group.ROLE.MELEE,   -- Flask of the Seventh Demon
+      --[251836]  = A.group.ROLE.MELEE,   -- Flask of the Currents
+      --[188031]  = A.group.ROLE.RANGED,  -- Flask of the Whispered Pact
+     --[251837]  = A.group.ROLE.RANGED,  -- Flask of Endless Fathoms
+      --[24858]   = A.group.ROLE.RANGED,  -- Moonkin Form
     }) do
-      buff = GetSpellInfo(buff)
+      buff = C_Spell.GetSpellInfo(buff)
       if A.DEBUG >= 1 then A.console:Debugf(M, "buff=%s role=%s", tostring(buff), role) end
       if buff then
         BUFF_ROLE[buff] = role

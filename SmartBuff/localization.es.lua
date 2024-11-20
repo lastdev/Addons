@@ -7,15 +7,15 @@ if (GetLocale() == "esES") then
 
 -- credits
 SMARTBUFF_CREDITS = "|cffffffff"
-  .."Versión de Shadowlands por Codermik. Informe cualquier problema en CurseForge o mi discordia en:\n\n"
+  .."VersiÃ³n de Shadowlands por Codermik. Informe cualquier problema en CurseForge o mi discordia en:\n\n"
   .."|cff00e0ffhttps://discord.gg/R6EkZ94TKK\n\n"
-  .."|cffffffffSi aprecia la cantidad de trabajo involucrado y el tiempo que se tomó para brindarle estos diversos complementos, considere apoyarme de la siguiente manera:\n\n"
+  .."|cffffffffSi aprecia la cantidad de trabajo involucrado y el tiempo que se tomÃ³ para brindarle estos diversos complementos, considere apoyarme de la siguiente manera:\n\n"
   .."|cffffffffTwitch: |cff00e0ffhttps://www.twitch.tv/codermik\n"
   .."|cffffffffPayPal.Me: |cff00e0ffhttps://paypal.me/codermik\n\n"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"Dagas", "Hachas", "Espadas", "Mazas", "Bastones", "Armas de pu\195\177o", "Lanzas", "Arma arrojadiza"};
+SMARTBUFF_WEAPON_STANDARD = {"Dagas", "Hachas", "Espadas", "Mazas", "Bastones", "Armas de pu\195\177o", "Lanzas", "Arma arrojadiza", "Escudo"};
 SMARTBUFF_WEAPON_BLUNT = {"Mazas", "Bastones", "Armas de pu\195\177o"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "^Contrapeso %a+";
 SMARTBUFF_WEAPON_SHARP = {"Dagas", "Hachas", "Espadas", "Lanzas"};
@@ -48,8 +48,8 @@ BINDING_NAME_SMARTBUFF_BIND_RESETBUFFTIMERS = "Restaurar temporizador de buffs";
 -- Options Frame Text
 
 -- experimental feature - for testing.
-SMARTBUFF_OFT_FIXBUFF		 = "Corregir fundición"
-SMARTBUFF_OFTT_FIXBUFF		 = "Marque si Smartbuff falla al lanzar beneficios."
+SMARTBUFF_OFT_FIXBUFF        = "Corregir fundiciÃ³n"
+SMARTBUFF_OFTT_FIXBUFF       = "Marque si Smartbuff falla al lanzar beneficios."
 
 SMARTBUFF_OFT                = "SmartBuff On/Off";
 SMARTBUFF_OFT_MENU           = "Mostrar/Ocultar men\195\186 de opciones";
@@ -76,7 +76,7 @@ SMARTBUFF_OFT_MSGNORMAL      = "normal";
 SMARTBUFF_OFT_MSGWARNING     = "aviso";
 SMARTBUFF_OFT_MSGERROR       = "error";
 SMARTBUFF_OFT_HIDEMMBUTTON   = "Ocultar bot\195\179n de minimapa";
-SMARTBUFF_OFT_INCLUDETOYS	 = "Incluir juguetes";
+SMARTBUFF_OFT_INCLUDETOYS    = "Incluir juguetes";
 SMARTBUFF_OFT_REBUFFTIMER    = "Temporizador de Rebuff";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "Cambiar plantilla";
 SMARTBUFF_OFT_SELFFIRST      = "Primero uno mismo";
@@ -102,11 +102,13 @@ SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "Grp link";
 SMARTBUFF_OFT_LINKSELFBUFFCHECK = "Self link";
 SMARTBUFF_OFT_RESETALL       = "Reset All";
 SMARTBUFF_OFT_RESETLIST      = "Reset List";
+SMARTBUFF_OFT_RESETBUFFS     = "Reset Buffs";
+SMARTBUFF_OFT_PURGE_BUFFS    = "New Version, reset ALL SmartBuff buff data?\nThis will reset all buff profiles!";
 SMARTBUFF_OFT_YES            = "Yes";
 SMARTBUFF_OFT_NO             = "No";
-SMARTBUFF_OFT_OKAY			 = "Continuar"
-SMARTBUFF_OFT_PURGE_DATA     = "¿Está seguro de que desea restablecer TODOS los datos de SmartBuff?\n¡Esta acción forzará una recarga de la interfaz de usuario!";
-SMARTBUFF_OFT_REQ_RELOAD     = "Las nuevas versiones requieren una recarga de la GUI\nHaga clic en Continuar cuando esté lista.";
+SMARTBUFF_OFT_OKAY           = "Continuar"
+SMARTBUFF_OFT_PURGE_DATA     = "Â¿EstÃ¡ seguro de que desea restablecer TODOS los datos de SmartBuff?\nÂ¡Esta acciÃ³n forzarÃ¡ una recarga de la interfaz de usuario!";
+SMARTBUFF_OFT_REQ_RELOAD     = "Las nuevas versiones requieren una recarga de la GUI\nHaga clic en Continuar cuando estÃ© lista.";
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "Alterna SmartBuff On/Off";
@@ -123,7 +125,7 @@ SMARTBUFF_OFTT_ARULES        = "No lanzar:\n- Espinas en Magos, Sacerdotes y Bru
 SMARTBUFF_OFTT_SUBGRPCHANGED = "Abrir autom\195\161ticamente el men\195\186 de opciones,\ncuando has cambiado de subgrupo.";
 SMARTBUFF_OFTT_GRPBUFFSIZE   = "A cu\195\161ntos jugadores con el buff de grupo\nperdido y que deber\195\173an estar en el grupo,\n va a buffar el buff de grupo.";
 SMARTBUFF_OFTT_HIDEMMBUTTON  = "Oculta el bot\195\179n de SmartBuff del minimapa.";
-SMARTBUFF_OFTT_INCLUDETOYS	 = "Incluye juguetes en la lista junto con tus hechizos y comida.";
+SMARTBUFF_OFTT_INCLUDETOYS     = "Incluye juguetes en la lista junto con tus hechizos y comida.";
 SMARTBUFF_OFTT_REBUFFTIMER   = "Cu\195\161ntos segundos antes de que el buff expire,\nte debe alertar el recordatorio.\n0 = Desactivado";
 SMARTBUFF_OFTT_SELFFIRST     = "Buffar tu personaje antes que los dem\195\161s.";
 SMARTBUFF_OFTT_SCROLLWHEELUP = "Lanzar buffs cuando muevas tu\nrueda del rat\195\179n adelante.";
@@ -148,7 +150,7 @@ SMARTBUFF_OFTT_SPLASHDURATION= "Cu\195\161ntos segundos estar\195\161 en pantall
 SMARTBUFF_OFTT_INSHAPESHIFT  = "Cast buffs also if you\nare shapeshifted.";
 SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "Checks if a buff of an other\nclass with similar effect\nis already active.";
 SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "Checks if a self buff is active,\nwhose only one can be\nactive at a time.";
-SMARTBUFF_OFTT_SOUNDSELECT	 = "Seleccione el sonido de advertencia.";
+SMARTBUFF_OFTT_SOUNDSELECT     = "Seleccione el sonido de advertencia.";
 
 
 -- Buffsetup Frame Text
@@ -179,9 +181,9 @@ SMARTBUFF_PSTT_RESIZE        = "Minimiza/maximiza\nla ventana principal de opcio
 
 -- Messages
 SMARTBUFF_MSG_LOADED         = "cargado";
-SMARTBUFF_MSG_NEWVER1		 = "|cff00e0ffSmartbuff : |cffffffff Hay una nueva versión disponible, estás usando |cffFFFF00";
-SMARTBUFF_MSG_NEWVER2		 = "|cffffffff y construir |cffFFFF00r"
-SMARTBUFF_MSG_NEWVER3		 = "|cffffffff está actualmente disponible para su descarga. Únase a Discord para obtener la información más reciente en https://discord.gg/R6EkZ94TKK.";
+SMARTBUFF_MSG_NEWVER1        = "|cff00e0ffSmartbuff : |cffffffff Hay una nueva versiÃ³n disponible, estÃ¡s usando |cffFFFF00";
+SMARTBUFF_MSG_NEWVER2        = "|cffffffff y construir |cffFFFF00r"
+SMARTBUFF_MSG_NEWVER3        = "|cffffffff estÃ¡ actualmente disponible para su descarga. Ãšnase a Discord para obtener la informaciÃ³n mÃ¡s reciente en https://discord.gg/R6EkZ94TKK.";
 SMARTBUFF_MSG_DISABLED       = "SmartBuff est\195\161 deshabilitado!";
 SMARTBUFF_MSG_SUBGROUP       = "Te has unido a un nuevo subgrupo, por favor comprueba las opciones!";
 SMARTBUFF_MSG_NOTHINGTODO    = "Nada que hacer";
@@ -202,7 +204,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff";
 SMARTBUFF_MSG_LEFT           = "tiempo restante";
 SMARTBUFF_MSG_CLASS          = "Clase";
 SMARTBUFF_MSG_CHARGES        = "cargas";
-SMARTBUFF_MSG_SOUNDS		 = "Selección de sonido: "
+SMARTBUFF_MSG_SOUNDS         = "SelecciÃ³n de sonido: "
 SMARTBUFF_MSG_SPECCHANGED    = "Spec changed (%s), loading buff templates...";
 
 -- Support

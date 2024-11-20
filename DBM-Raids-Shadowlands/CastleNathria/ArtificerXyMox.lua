@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2418, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20240717000402")
 mod:SetCreatureID(166644)
 mod:SetEncounterID(2405)
 mod:SetUsedIcons(1, 2)
@@ -61,7 +61,7 @@ local warnSeedsofExtinction							= mod:NewSpellAnnounce(329834, 3, nil, nil, 20
 local warnUnleashPower								= mod:NewCountAnnounce(342854, 4)
 
 local specWarnFixate								= mod:NewSpecialWarningRun(327902, nil, nil, nil, 4, 2)
-local specWarnEdgeofAnnihilation					= mod:NewSpecialWarningRun(328789, nil, 307421, nil, 4, 2)
+local specWarnEdgeofAnnihilation					= mod:NewSpecialWarningRunCount(328789, nil, 307421, nil, 4, 2)
 
 local timerFleetingSpiritsCD						= mod:NewCDTimer(40.8, 340758, 263222, nil, nil, 3)--40.8-46
 local timerSeedsofExtinctionCD						= mod:NewCDTimer(43.7, 329770, 205446, nil, nil, 5)--43-49. Shortname "Planting Seeds"
@@ -103,7 +103,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 328437 or spellId == 342310 then
+	if spellId == 328437 or spellId == 342310 then--Dimensional Tear (328437 is one that fires with spell rotator, 342310 is one that fires with phase change)
 		self.vb.tearIcon = 1
 		if spellId == 328437 then--One scripted to rotator
 			if self.vb.phase == 1 then
@@ -177,7 +177,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 340807 then--Annihilate 2+ cast by boss, for timer handling
 		if self.vb.p3FirstCast == 0 then
 			self.vb.p3FirstCast = 2
-			DBM:AddMsg("This is very likely a bugged pull. This may cause you to wipe. Refer to https://us.forums.blizzard.com/en/wow/t/feedback-mythic-artificer-xymox/617893/5")
+			DBM:AddMsg("This is very likely a bugged pull. This may cause you to wipe.")
+			--Thread no longer exists, TL/DR of bug is there are no rifts to deal with mechanic that requires rifts to be up
 		end
 		timerDimensionalTearCD:Start(25.2)
 	elseif spellId == 328789 then--Script for the actual annihilate, where warning handling is done
@@ -189,7 +190,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 342854 then--Unleash Power, cast in mythic phase 3 to activate all relics at once (replaces 340807 which is not cast on mythic)
 		if self.vb.p3FirstCast == 0 then
 			self.vb.p3FirstCast = 2
-			DBM:AddMsg("This is very likely a bugged pull. This may cause you to wipe. Refer to https://us.forums.blizzard.com/en/wow/t/feedback-mythic-artificer-xymox/617893/5")
+			DBM:AddMsg("This is very likely a bugged pull. This may cause you to wipe.")
+			--Thread no longer exists, TL/DR of bug is there are no rifts to deal with mechanic that requires rifts to be up
 		end
 		self.vb.unleashCount = self.vb.unleashCount + 1
 		warnUnleashPower:Show(self.vb.unleashCount)
@@ -226,8 +228,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerStasisTrapCD:Start()
 	elseif spellId == 325399 then
 		self.vb.hyperInProgress = false
-	elseif spellId == 181089 then
-		self:SetStage(0)
+	elseif spellId == 181089 then--Encounter Event
+		self:SetStage(0)--Increments stage by 1
 		if self.vb.phase == 2 then
 			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 			warnPhase:Play("ptwo")

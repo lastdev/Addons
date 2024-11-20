@@ -70,7 +70,6 @@ function Gathering.OnEnable()
 		private.dbUpdateTimer:RunForTime(1)
 	end)
 	WarbankTracking.RegisterQuantityCallback(function()
-		-- TODO: Fully support gathering from the warbank
 		private.dbUpdateTimer:RunForTime(1)
 	end)
 end
@@ -537,7 +536,13 @@ end
 
 function private.GetCrafterInventoryQuantity(itemString)
 	local crafter = private.settings.crafter
-	return AltTracking.GetBagQuantity(itemString, crafter) + (ClientInfo.IsRetail() and AltTracking.GetReagentBankQuantity(itemString, crafter) + AltTracking.GetBankQuantity(itemString, crafter) or 0)
+	local quantity = AltTracking.GetBagQuantity(itemString, crafter)
+	if ClientInfo.IsRetail() then
+		quantity = quantity + AltTracking.GetReagentBankQuantity(itemString, crafter)
+		quantity = quantity + AltTracking.GetBankQuantity(itemString, crafter)
+		quantity = quantity + WarbankTracking.GetQuantity(itemString)
+	end
+	return quantity
 end
 
 function private.HandleNumHave(itemString, numNeed, numHave)

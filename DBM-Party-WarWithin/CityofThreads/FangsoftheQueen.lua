@@ -1,14 +1,20 @@
 local mod	= DBM:NewMod(2595, "DBM-Party-WarWithin", 8, 1274)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240819062911")
+mod:SetRevision("20241114153405")
 mod:SetCreatureID(216648, 216649)--Nx, Vx
 mod:SetEncounterID(2908)
 mod:SetHotfixNoticeRev(20240818000000)
 mod:SetMinSyncRevision(20240818000000)
+mod:SetZone(2669)
+
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 441384 441381 439621 440468 439692 440218 440238",
@@ -16,7 +22,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 441298 458741 440238"
 --	"SPELL_AURA_REMOVED 439989"
 --	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED"
+--	"SPELL_PERIODIC_MISSED",
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -32,13 +38,14 @@ mod:RegisterEventsInCombat(
 --General
 local warnSynergicStep						= mod:NewCountAnnounce(439989, 3)
 
+local timerRP								= mod:NewRPTimer(8)
 local timerNextSwapCD						= mod:NewCDCountTimer(44.9, 439989, nil, nil, nil, 6)
 --Nx Active (Vx support)
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(28876))
 local warnIceSickles						= mod:NewTargetNoFilterAnnounce(440238, 3, nil, "RemoveMagic")
 
-local specWarnShadeSlash					= mod:NewSpecialWarningDefensive(439621, nil, nil, nil, 1, 2)
-local specWarnDuskbringer					= mod:NewSpecialWarningDodgeCount(439692, nil, nil, nil, 2, 2)
+local specWarnShadeSlash					= mod:NewSpecialWarningDodgeCount(439621, nil, nil, nil, 1, 15)
+local specWarnDuskbringer					= mod:NewSpecialWarningDodgeCount(439692, nil, nil, nil, 2, 15)
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
 local timerShadeSlashCD						= mod:NewCDCountTimer(7.8, 439621, nil, "Tank|Healer", nil, 5)
@@ -77,7 +84,7 @@ function mod:OnCombatStart(delay)
 	timerDuskbringerCD:Start(18.5-delay, 1)
 	timerIceSicklesCD:Start(20.4-delay, 1)
 	self:Schedule(25.4, buggedIceSicklesCast, self)
-	timerNextSwapCD:Start(28.5-delay, 1)
+	timerNextSwapCD:Start(28.1-delay, 1)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -99,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			self:SetStage(1)
 			--Start Nx Active timers, Vx Inactive timers
-			timerShadeSlashCD:Start(25.4, self.vb.tankCount+1)
+			timerShadeSlashCD:Start(24.0, self.vb.tankCount+1)
 			timerDuskbringerCD:Start(39.5, self.vb.duskCount+1)
 			timerIceSicklesCD:Start(42.3, self.vb.iceCount+1)
 			self:Schedule(47.3, buggedIceSicklesCast, self)
@@ -112,8 +119,8 @@ function mod:SPELL_CAST_START(args)
 			timerShadeSlashCD:Start(9.4, self.vb.tankCount+1)
 		end
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
-			specWarnShadeSlash:Show()
-			specWarnShadeSlash:Play("defensive")
+			specWarnShadeSlash:Show(self.vb.tankCount)
+			specWarnShadeSlash:Play("frontal")
 		end
 	elseif spellId == 440468 then
 		self.vb.tankCount = self.vb.tankCount + 1
@@ -123,7 +130,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnRimeDagger:Show()
-			specWarnRimeDagger:Play("defensive")
+			specWarnRimeDagger:Play("frontal")
 		end
 	elseif spellId == 439692 then
 		self.vb.duskCount = self.vb.duskCount + 1
@@ -161,6 +168,21 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
+
+--"<777.33 09:52:11> [CHAT_MSG_MONSTER_SAY] The Transformatory was once the home of our sacred evolution.#Executor Nizrek###Junghee##0#0##0#517#nil#0#false#false#false#false",
+--"<803.71 09:52:37> [NAME_PLATE_UNIT_ADDED] Nx#Creature-0-3776-2669-3094-216648-00007B52C3",
+--"<803.74 09:52:37> [NAME_PLATE_UNIT_ADDED] Vx#Creature-0-3776-2669-3094-216649-00007B52C3",
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.RolePlay or msg:find(L.RolePlay)) and self:LatencyCheck() then
+		self:SendSync("openingRP")
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "openingRP" and self:AntiSpam(10, 3) then
+		timerRP:Start(26.3)
+	end
+end
 
 --[[
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)

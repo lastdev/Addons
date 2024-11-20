@@ -68,6 +68,7 @@ local function initializeDb()
 			JunkData = {},             -- imported data about items that can be vendored/scrapped/disenchanted
 			ExtraEnchantData = {},     -- enchant id to enchant display information and material information
 			HighestItemLevels = {},    -- highest item levels for determining upgrade discounts
+			Achievements = {},         -- achievements of interest on this character
 			Logging = {                -- character logging settings
 				Enabled = false,       -- whether logging is currently on or not
 				LastZone = nil,        -- last zone the player was in
@@ -627,6 +628,101 @@ function Amr:IsUnique(bagId, slotId)
 end
 ]]
 
+-- helper to parse the talent data into a consistent format that represents what is actually available to this player
+function Amr:GetTalentConfigData(configId)
+
+	local config = C_Traits.GetConfigInfo(configId)
+	if not config or config.type ~= Enum.TraitConfigType.Combat then return nil end
+	
+	local treeIds = config["treeIDs"]
+
+	-- at least for a while, scanning nodes would return subtrees not available to this spec, so we need to do a pre-scan for available subtrees
+	-- and use that to actively prune out bad subtrees... very gross	
+
+	local allowedSubtrees = {}
+	local heroTreeNodeId = 0
+	local activeSubtreeId = 0
+	for i = 1, #treeIds do
+    	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
+			local node = C_Traits.GetNodeInfo(configId, nodeId)
+			if node.ID and node.isVisible and node.maxRanks > 0 and node.type == 3 then
+				-- this is the special node that picks your subtree, scan its entries to see which are allowed and also which is active
+				heroTreeNodeId = node.ID
+				for e = 1, #node.entryIDs do
+					local entry = C_Traits.GetEntryInfo(configId, node.entryIDs[e])
+					allowedSubtrees[entry.subTreeID] = true
+					if node.activeEntry and node.activeEntry.entryID == node.entryIDs[e] then
+						activeSubtreeId = entry.subTreeID
+					end
+				end
+				break
+			end
+		end
+	end
+
+	-- NOTE: the below will also pick up ranks in inactive subtrees... kind of annoying, but that is how they remember your selections
+	--       when switching back and forth, and then the selected subtree implicitly disables the inactive tree
+	
+	local talMap = {}
+
+  	for i = 1, #treeIds do
+    	for _, nodeId in pairs(C_Traits.GetTreeNodes(treeIds[i])) do
+			local node = C_Traits.GetNodeInfo(configId, nodeId)
+			if node.ID and node.isVisible and node.maxRanks > 0 and (not node.subTreeID or allowedSubtrees[node.subTreeID]) and node.type ~= 3 then
+				local nodeData = {
+					id = node.ID,
+					ranks = {}
+				}
+				talMap[node.ID] = nodeData
+
+				-- need to check node type b/c blizz abandoned a few selection node entries in the data which still show up in a scan here... super annoying and gross
+				if #node.entryIDs > 1 and node.type == 2 then
+					nodeData.entryIds = node.entryIDs
+					
+					for e = 1, #node.entryIDs do
+						if node.activeEntry and node.entryIDs[e] == node.activeEntry.entryID then
+							table.insert(nodeData.ranks, node.activeRank)
+						else
+							table.insert(nodeData.ranks, 0)
+						end
+					end
+
+				else
+					-- single choice node, ignore all but the 1st entry, anything else is bad/abandoned data
+					nodeData.entryIds = { node.entryIDs[1] }
+
+					if node.activeEntry and node.activeRank then
+						table.insert(nodeData.ranks, node.activeRank)
+					else
+						table.insert(nodeData.ranks, 0)
+					end
+				end
+			end
+
+			-- for reference if ever need it
+			--[[
+			local activeEntryId = node.entryIDs[1]
+			local entry = C_Traits.GetEntryInfo(configId, activeEntryId)
+			local defnId = entry["definitionID"]
+			local defn = C_Traits.GetDefinitionInfo(defnId)
+			local spellId = defn["spellID"]
+			local spellName = C_Spell.GetSpellName(spellId)
+			if spellName == "Lightning Strikes" then
+				print(Amr:dump(node))							
+			end]]
+
+		end
+	end	
+
+	return {
+		id = configId,
+		name = config.name,
+		heroTreeNodeId = heroTreeNodeId,
+		activeSubtreeId = activeSubtreeId,
+		treeIds = treeIds,
+		nodes = talMap
+	}
+end
 
 ----------------------------------------------------------------------------------------
 -- Inter-Addon Communication
@@ -737,5 +833,6 @@ end
 
 
 function Amr:Test()
+	
 	
 end

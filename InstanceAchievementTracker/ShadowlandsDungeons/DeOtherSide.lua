@@ -39,14 +39,14 @@ function core._2291:TheManastorms()
     if core.type == "SPELL_DAMAGE" and core.spellId == 323992 and core.destID == "164556" and echoFingerLaserXtremeCompleted == false then
         echoFingerLaserXtremeCompleted = true
         stepsCompleted = stepsCompleted + 1
-        core:sendMessage(core:getAchievement() .. " " .. GetSpellLink(323992) .. " " .. L["Shared_Completed"] .. " (" .. stepsCompleted .. "/2)",true)
+        core:sendMessage(core:getAchievement() .. " " .. C_Spell.GetSpellLink(323992) .. " " .. L["Shared_Completed"] .. " (" .. stepsCompleted .. "/2)",true)
     end
 
     --Echo Shadowfury
     if core.type == "SPELL_DAMAGE" and core.spellId == 320132 and core.destID == "164555" and shadowfuryCompleted == false then
         shadowfuryCompleted = true
         stepsCompleted = stepsCompleted + 1
-        core:sendMessage(core:getAchievement() .. " " .. GetSpellLink(320132) .. " " .. L["Shared_Completed"] .. " (" .. stepsCompleted .. "/2)",true)
+        core:sendMessage(core:getAchievement() .. " " .. C_Spell.GetSpellLink(320132) .. " " .. L["Shared_Completed"] .. " (" .. stepsCompleted .. "/2)",true)
     end
 
     if stepsCompleted == 2 then
@@ -119,9 +119,9 @@ function core._2291:TrackAdditional()
                     if core.InfoFrame_PlayersTable ~= nil then
                         for player,status in pairs(core.InfoFrame_PlayersTable) do
                             for i=1,40 do
-                                local _, _, _, _, _, expirationTime, _, _, _, spellId = UnitDebuff(player, i)
-                                if spellId == 322746 then ----322746
-                                    core.InfoFrame_PlayersTable[player] = {2, math.floor(expirationTime - GetTime())}
+                                local auraData = C_UnitAuras.GetDebuffDataByIndex(player, i)
+                                if auraData ~= nil and auraData.spellId == 322746 then ----322746
+                                    core.InfoFrame_PlayersTable[player] = {2, math.floor(auraData.expirationTime - GetTime())}
                                     InfoFrame_UpdatePlayersOnInfoFrameWithAdditionalInfo()
                                     updatePerformed = true
                                 end

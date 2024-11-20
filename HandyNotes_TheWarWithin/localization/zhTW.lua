@@ -19,6 +19,9 @@ L['options_icons_profession_treasures_desc'] = '顯示會給予專業技能知�
 L['options_icons_khaz_algar_lore_hunter'] = '{achievement:40762}'
 L['options_icons_khaz_algar_lore_hunter_desc'] = '顯示成就 {achievement:40762} 所需的知識位置.'
 
+L['options_icons_flight_master'] = '{achievement:40430}'
+L['options_icons_flight_master_desc'] = nil
+
 -------------------------------------------------------------------------------
 -------------------------------- ISLE OF DORN ---------------------------------
 -------------------------------------------------------------------------------
@@ -26,23 +29,45 @@ L['options_icons_khaz_algar_lore_hunter_desc'] = '顯示成就 {achievement:4076
 L['alunira_note'] = '收集 10x {item:224025} 並組合成 {item:224026} 來移除她的 {spell:451570}.'
 L['violet_hold_prisoner'] = '紫羅蘭堡囚犯'
 
-L['elemental_geode_label'] = nil
+L['elemental_geode_label'] = '元素晶簇'
 L['magical_treasure_chest_note'] = '把 {npc:223104} 推回水裡, 接著在附近收集 5x{npc:223159} 餵給他.'
 L['mosswool_flower_note'] = '點擊 {npc:222956} 並跟著牠.'
 L['mushroom_cap_note'] = '在附近平原蒐集 {object:叢根傘菇} 並帶回來給 {npc:222894}.'
 L['mysterious_orb_note'] = '帶著底下的 {object:元素珍珠} 回去找 {npc:222847}.'
 L['thaks_treasure_note'] = '和 {npc:223227} 說話並跟著他.'
 L['trees_treasure_note'] = '和 {npc:222940} 說話來取得 {item:224185}. 引導多恩島上的 6x {npc:224548} ({dot:Green}) 回到 {npc:222940}. 當你引導所有的螃蟹回去後, 回到山洞內和 {npc:222940} 說話.'
+L['trees_treasure_crab_1_note'] = nil
+L['trees_treasure_crab_2_note'] = nil
+L['trees_treasure_crab_3_note'] = nil
+L['trees_treasure_crab_4_note'] = nil
+L['trees_treasure_crab_5_note'] = nil
+L['trees_treasure_crab_6_note'] = nil
 L['turtles_thanks_1_note'] = '繳交 5x {item:220143} (可以從 {object:平靜水面漣漪} 魚群釣到, 或是從拍賣場購買). {note:離開此區域再馬上回來可以再交下條魚.}'
 L['turtles_thanks_2_note'] = '繳交 1x {item:222533} (可以從 {object:微光水池}, {object:膿瘡腐池}, {object:倒翻的灌注膿液} 等魚群釣到, 或是從拍賣場購買).'
 L['turtles_thanks_3_note'] = '在 {location:多恩諾加} 找到 {npc:223338} 並和他說話來接露寶藏.'
 L['web_wrapped_axe_note'] = '在一樓.\n\n{note:重生時間1-2小時.}'
-L['faithful_dog_note'] = nil
+L['faithful_dog_note'] = [[
+1. 在 {map:424} {map:376} 的 {area:11053} 找到 {npc:59533} 並完成 {quest:30526}.
+2. 在 {map:572} 你的 {area:7490} 建造 {object:草藥園}.
+3. 在 {map:619} {map:627} 找到一個 {item:147420} 並在你的 {area:7490} {object:草藥園} 和 {npc:87553} 對話.
+{npc:87553} 現在會在 {map:627} 的 {location:魔法動物園}
+4. 和在 {map:2248} 的 {object:半埋住的狗狗碗} 互動並撫摸 {npc:87553} 來取得寵物.
+]]
 
 L['cendvin_note'] = '在 {location:火渣林} 的菁英怪農 900x {item:225557} 來從 {npc:226205} 購買 {item:223153} 坐騎.'
 
 L['options_icons_flat_earthen'] = '{achievement:40606}'
 L['options_icons_flat_earthen_desc'] = '顯示成就 {achievement:40606} 的位置.'
+
+L['tome_of_polymorph_mosswool'] = nil
+
+L['aradan_note_start'] = nil
+L['aradan_note_step_1'] = nil
+L['aradan_note_step_2'] = nil
+L['aradan_note_step_3'] = nil
+L['aradan_note_step_4'] = nil
+L['aradan_note_step_5'] = nil
+L['aradan_note_end'] = nil
 
 -------------------------------------------------------------------------------
 -------------------------------- RINGING DEEPS --------------------------------
@@ -111,6 +136,12 @@ L['critter_love_note'] = '你必須要對小動物而不是戰寵使用表情 {e
 L['options_icons_critter_love'] = '{achievement:40475}'
 L['options_icons_critter_love_desc'] = '顯示成就 {achievement:40475} 所需的小動物位置.'
 
+L['for_the_collective_note'] = nil
+L['for_the_collective_suffix'] = nil
+L['for_the_collective_location'] = nil
+L['options_icons_for_the_collective'] = '{achievement:40630}'
+L['options_icons_for_the_collective_desc'] = nil
+
 -------------------------------------------------------------------------------
 --------------------------------- HALLOWFALL ----------------------------------
 -------------------------------------------------------------------------------
@@ -137,8 +168,8 @@ L['lost_necklace_note'] = '在祭壇邊緣拾取 {object:遺失的紀念物}.'
 L['priory_satchel_location'] = '在 {location:聖焰隱修院} 拾取掛在角落的 {object:疾風背袋}.'
 L['smugglers_treasure_note'] = '從懸崖底下的 ({dot:Blue}) {npc:226025} 處拾取需要的 {item:225335}.'
 L['smugglers_treasure_location'] = '在懸崖高處的石頭間.'
-L['coral_fused_clam'] = nil
-L['coral_fused_clam_note'] = nil
+L['coral_fused_clam'] = '珊瑚融合蚌'
+L['coral_fused_clam_note'] = '從 {object:採蚌者的工具組} 拾取 {item:218354} 來開啟蚌殼.'
 
 L['options_icons_biblo_archivist'] = '{achievement:40622}'
 L['options_icons_biblo_archivist_desc'] = '顯示成就 {achievement:40622} 所需的書本位置.'
@@ -183,10 +214,11 @@ L['furball_location'] = nil
 L['dander_location'] = nil
 L['gobbo_location'] = nil
 
-L['beledars_spawn_note'] = nil
+L['beledars_spawn_note'] = '此稀有會於固定時間在數個位置之一出現.\n\n下次刷新時間:\n{note:%s (%s)}'
 L['croakit_note'] = nil
 L['deathtide_note'] = nil
 L['murkshade_note'] = nil
+L['spreading_the_light_rares_note'] = nil
 
 L['options_icons_mereldar_menace'] = '{achievement:40151}'
 L['options_icons_mereldar_menace_desc'] = '顯示成就 {achievement:40151} 所需的目標位置.'
@@ -207,6 +239,13 @@ L['options_icons_flamegards_hope'] = '{achievement:20594}'
 L['options_icons_flamegards_hope_desc'] = nil
 L['flamegards_hope_note'] = nil
 
+L['hallowfall_sparkfly_label'] = '聖落之地螢花蟲'
+L['hallowfall_sparkfly_note'] = '在 {area:14852} 對 {object:低階鑰炎} 使用 3x{item:206350} 來召喚 {npc:215956}.\n\n使用 2x{item:206350} 購買 {item:218107} 並使用他來在附近的 {dot:Blue} 找尋 {npc:222308} 直到發現 {object:聖落之地螢花蟲}.'
+
+L['nightfarm_growthling_note'] = nil
+
+L['thunder_lynx_note'] = nil
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -214,14 +253,7 @@ L['flamegards_hope_note'] = nil
 L['options_icons_itsy_bitsy_spider'] = '{achievement:40624}'
 L['options_icons_itsy_bitsy_spider_desc'] = '顯示成就 {achievement:40624} 所需的小織蛛位置.'
 
-L['itsy_bitsy_spider_note'] = '向小織蛛揮手 ({emote:/wave}).'
-L['webster_location'] = nil
-L['spindle_location'] = nil
-L['swift_location'] = nil
-L['rumurh_location'] = nil
-L['thimble_location'] = nil
-L['scampering_weave_rat_location'] = nil
-L['generals_scouting_shadecaster_location'] = nil
+L['itsy_bitsy_spider_note'] = '向小織蛛揮手 ({emote:/wave}).' -- REVIEW
 
 L['options_icons_bookworm'] = '{achievement:40629}'
 L['options_icons_bookworm_desc'] = '顯示成就 {achievement:40629} 所需的書籍位置.'
@@ -256,9 +288,11 @@ L['options_icons_no_harm_from_reading_desc'] = '顯示成就 {achievement:40632}
 L['no_harm_from_reading_note'] = nil
 L['another_you_4_note'] = nil
 
-L['memory_cache_note'] = '從附近 {spell:420847} from a nearby ({dot:Blue}) {object:Extractor Storage}. After kill the {npc:223908} to get the {item:223870} to open the {object:記憶寶箱}.'
+L['concealed_contraband_note'] = nil
+L['memory_cache_note'] = '從附近的 ({dot:Red}) {object:吸取器儲藏室} 獲得 {spell:420847}. 殺掉 {npc:223908} 後取得 {item:223870} 來開啟 {object:記憶寶箱}.'
 L['niffen_stash_note'] = '在橋的下面。'
 L['trapped_trove_note'] = nil
+L['weaving_supplies_note'] = nil
 
 L['tkaktath_note'] = '開始取得坐騎 {item:224150} 的任務線.'
 
@@ -270,27 +304,55 @@ L['options_icons_you_cant_hang_with_us'] = '{achievement:40634}'
 L['options_icons_you_cant_hang_with_us_desc'] = '顯示成就 {achievement:40634} 的位置.'
 L['you_cant_hang_with_us_note'] = nil
 
+L['kej_pet_vendor_note'] = nil
+
+L['options_icons_back_to_the_wall'] = '{achievement:40620}'
+L['options_icons_back_to_the_wall_desc'] = nil
+L['arathi_prisoner_suffix'] = nil
+L['arathi_prisoner_note'] = nil
+
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
 -------------------------------------------------------------------------------
 
-L['sturdy_chest'] = nil
-L['sturdy_chest_suffix'] = nil
+L['sturdy_chest'] = '結實的箱子'
+L['sturdy_chest_suffix'] = '結實的箱子已發現'
 
-L['ecm_chest_3_location'] = nil
-L['fol_chest_1_location'] = nil
-L['fol_chest_3_location'] = nil
-L['fol_use_mushrooms'] = nil
-L['kvr_chest_2_location'] = nil
-L['nfs_chest_2_location'] = nil
-L['nfs_chest_3_location'] = nil
-L['nfs_chest_4_location'] = nil
-L['ski_chest_3_location'] = nil
-L['tra_chest_2_location'] = nil
-L['tsw_chest_2_location'] = nil
-L['tsw_chest_2_note'] = nil
-L['tsw_chest_3_location'] = nil
-L['tsw_chest_4_location'] = nil
-L['tuk_chest_1_note'] = nil
-L['tuk_chest_2_note'] = nil
-L['tuk_chest_3_note'] = nil
+L['ecm_chest_3_location'] = '在鷹架上. 從樓上跳下來.'
+L['fol_chest_1_location'] = '在樹叢中的蘑菇下的石頭上.'
+L['fol_chest_3_location'] = '在瀑布底.'
+L['fol_use_mushrooms'] = '跳上沿著小路的蘑菇.'
+L['kvr_chest_2_location'] = '在木製鷹架的頂端.'
+L['nfs_chest_2_location'] = '在植物上.'
+L['nfs_chest_3_location'] = '在建築內.'
+L['nfs_chest_4_location'] = '從空艇上跳下去.'
+L['ski_chest_3_location'] = '在岩架上.'
+L['tra_chest_2_location'] = '在珊瑚頂端.'
+L['tsw_chest_2_location'] = '在橫樑上.'
+L['tsw_chest_2_note'] = '{note:只能在 "來自織絲者的愛" 故事劇情取得.}'
+L['tsw_chest_3_location'] = '在往藏寶室下方入口旁的柱子上方'
+L['tsw_chest_4_location'] = '在橫樑上. 從有其他箱子的柱子往下.'
+L['tuk_chest_1_note'] = '在雕像後方.'
+L['tuk_chest_2_note'] = '{note:只能在 "逃跑者進化" 和 "折磨受害者" 故事劇情取得.}'
+L['tuk_chest_3_note'] = '{note:只能在 "逃跑者進化" 和 "織絲者救援" 故事劇情取得.}'
+
+-------------------------------------------------------------------------------
+----------------------------- SECRETS OF AZEROTH ------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_secrets_of_azeroth'] = nil
+L['options_icons_secrets_of_azeroth_desc'] = nil
+
+L['alyx_kickoff_note'] = nil
+
+L['celebration_crates_label'] = nil
+L['celebration_crates_note'] = nil
+
+L['1_soggy_celebration_crate_note'] = nil
+L['2_hazy_celebration_crate_note'] = nil
+L['3_dirt_caked_celebration_crate_note'] = nil
+L['4_sandy_celebration_crate'] = nil
+L['5_battered_celebration_crate'] = nil
+L['6_waterlogged_celebration_crate'] = nil
+
+L['water_resistant_receipt_note'] = nil

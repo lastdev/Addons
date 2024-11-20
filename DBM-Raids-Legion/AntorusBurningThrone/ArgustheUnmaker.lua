@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2031, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024612")
+mod:SetRevision("20240714050021")
 mod:SetCreatureID(124828)
 mod:SetEncounterID(2092)
 mod:SetBossHPInfoToHighest()--Because of heal on mythic
@@ -133,7 +133,7 @@ local specWarnSargSentence			= mod:NewSpecialWarningYou(257966, nil, nil, nil, 1
 local yellSargSentence				= mod:NewShortYell(257966, L.Sentence)
 local yellSargSentenceFades			= mod:NewShortFadesYell(257966)
 local specWarnApocModule			= mod:NewSpecialWarningSwitchCount(258029, "Dps", nil, nil, 3, 2)--EVERYONE
-local specWarnEdgeofAnni			= mod:NewSpecialWarningDodge(258834, nil, nil, nil, 2, 2)
+local specWarnEdgeofAnni			= mod:NewSpecialWarningDodgeCount(258834, nil, nil, nil, 2, 2)
 local specWarnSoulrendingScythe		= mod:NewSpecialWarningStack(258838, nil, 2, nil, nil, 1, 2)
 local specWarnSoulrendingScytheTaunt= mod:NewSpecialWarningTaunt(258838, nil, nil, nil, 1, 2)
 
