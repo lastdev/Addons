@@ -1,8 +1,8 @@
 @cont1nuity:
-- Fixing performance units.
-- Fixing aura frame 1 frame levels.
-- Fixing DBM integration.
-- Fixing default 'Countdown' and 'Fixate on you' scripts.
-- Adding LibCustomGlow 'proc' glow support.
-- Adding override flags for performance units to re-enable specific updates (threat, casts, auras).
+- Reset Boss-Mod integration icon glow properly.
+- Fixing an issue with spell-name truncation.
+- Toc bump for classic.
+
+@Terciob:
+- Framework updates.
 

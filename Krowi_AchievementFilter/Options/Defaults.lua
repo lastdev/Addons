@@ -84,7 +84,11 @@ addon.Options.Defaults = {
             },
             MouseWheelPanScalar = 1,
             ShowTemporarilyObtainableIcon = true,
-            TemporarilyObtainableHeaderColors = true
+            TemporarilyObtainableHeaderColors = true,
+            EnableTabPriority = false,
+            TabPriority = 5,
+            ShowWarbandIcon = true,
+            WarbandHeaderColor = true,
         },
         RightClickMenu = {
             ShowButtonOnAchievement = false,
@@ -149,6 +153,7 @@ addon.Options.Defaults = {
             MouseWheelPanScalar = 5
         },
         EventReminders = {
+            Enabled = true,
             PopUps = {
                 FadeDelay = 10,
                 MaxAlerts = 5,

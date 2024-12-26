@@ -536,10 +536,10 @@ function HealBot_CheckFrame(frame)
     end
 end
 
-HealBot_luVars["ClassicInteractDistance"]=3 --4
---if HEALBOT_GAME_VERSION<3 then
---    HealBot_luVars["ClassicInteractDistance"]=3
---end
+HealBot_luVars["ClassicInteractDistance"]=1
+if HEALBOT_GAME_VERSION<3 then
+    HealBot_luVars["ClassicInteractDistance"]=3
+end
 
 function HealBot_TalentQuery(button)
       --HealBot_setCall("HealBot_TalentQuery", button)
@@ -550,12 +550,12 @@ function HealBot_TalentQuery(button)
     end
     if s~=" " then
         if button.spec~=s then
-            HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPlayers",1)
+            HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPlayers",true)
         else
             button.specupdate=0
         end
         button.spec=s
-    elseif not HealBot_Globals.DenyTalentQuery and HealBot_Panel_AllUnitButtonCheck(button.guid) and UnitExists(button.unit) and CanInspect(button.unit) then
+    elseif not HealBot_Globals.DenyTalentQuery and UnitExists(button.unit) and CanInspect(button.unit) then
         if button.status.range<0 then
             HealBot_SpecUpdate(button, HealBot_TimeNow+15)
         elseif HEALBOT_GAME_VERSION>5 then
@@ -579,12 +579,12 @@ function HealBot_TalentQuery(button)
         else
             HealBot_SpecUpdate(button, HealBot_TimeNow+5)
         end
+        if hbInspect then
+            HealBot_luVars["TalentQueryEnd"]=HealBot_TimeNow+5
+            NotifyInspect(button.unit);
+            button.specupdate=0
+        end
     else
-        button.specupdate=0
-    end
-    if hbInspect then
-        HealBot_luVars["TalentQueryEnd"]=HealBot_TimeNow+5
-        NotifyInspect(button.unit);
         button.specupdate=0
     end
 end
@@ -1319,7 +1319,6 @@ function HealBot_RecalcParty(changeType)
     if changeType == 5 and not HealBot_luVars["UpdateEnemyFrame"] then
         HealBot_Timers_Set("OOC","RefreshPartyNextRecalcEnemy")
     else
-        HealBot_luVars["RefreshListsComplete"]=false
         HealBot_Action_resetShouldHealSomeFrames()
         HealBot_Panel_PartyChanged(HealBot_Data["UILOCK"], changeType)
     end
@@ -1710,7 +1709,6 @@ function HealBot_Load()
         HealBot_ActionIcons_InitFrames()
         HealBot_Timers_Set("INIT","CheckTalentInfo")
         HealBot_Timers_Set("INIT","SeparateInHealsAbsorbs")
-        HealBot_Timers_Set("INIT","InitPlugins")
         HealBot_Timers_Set("INIT","RegEvents")
         HealBot_Timers_Set("PLAYER","LoadProfile")
         HealBot_Timers_Set("SKINS","RaidTargetUpdate")
@@ -3546,11 +3544,7 @@ function HealBot_UnitSlowUpdate(button)
                         HealBot_Action_EmergBarCheck(button, true)
                     end
                     if button.text.updatealpha then
-                        button.text.tagupdate=true
-                        button.text.aggroupdate=true
-                        button.text.nameupdate=true
-                        button.text.healthupdate=true
-                        HealBot_Text_UpdateText(button)
+                        HealBot_Update_TextPlayersAlphaButtonNow(button)
                     end
                     button.status.slowupdate=false
                 end
@@ -3686,9 +3680,7 @@ function HealBot_ProcessRefreshTypes()
             --end
         elseif HealBot_RefreshTypes[5] then
             HealBot_RecalcParty(5)
-        elseif HealBot_luVars["TestBarsOn"] then
-            HealBot_luVars["RefreshListsComplete"]=true
-        elseif HealBot_luVars["RefreshListsComplete"] then
+        else
             if HealBot_luVars["resetOnNoTargetFrames"] and HealBot_luVars["NumEnemyUnitsInQueue"] == 0 then
                 HealBot_luVars["resetOnNoTargetFrames"]=false
                 HealBot_Panel_PlayersTargetsQueueResetSkins()
@@ -3710,9 +3702,10 @@ function HealBot_ProcessRefreshTypes()
             HealBot_Skins_setLuVars("AuxReset", false)
             HealBot_SetTargetBar()
             HealBot_ProcessPluginClearDown()
+            if not HealBot_luVars["TestBarsOn"] then 
+                HealBot_ResetRefreshLists()
+            end
             return
-        else
-            HealBot_ResetRefreshLists()
         end
         HealBot_Timers_Set("OOC","ProcessRefreshTypes")
     else
@@ -3869,7 +3862,7 @@ end
 
 function HealBot_CheckUnitRange(button)
       --HealBot_setCall("HealBot_CheckUnitRange", button, nil, nil, true)
-    if button.status.range<2 or not HealBot_Range_InteractDistance(button.unit, 4) then
+    if button.status.range<2 or not HealBot_Range_InteractDistance(button.unit, 1) then
         return true
     else
         return false
@@ -3992,7 +3985,7 @@ function HealBot_UpdateUnit_Buttons()
     HealBot_UpdateTimers()
 end
 
-function HealBot_UpdateTimers()
+function HealBot_UpdateTimers(test)
       --HealBot_setCall("HealBot_UpdateTimers", nil, nil, nil, true)
     if HealBot_luVars["HealBot_RunTimers"] then
         HealBot_Timers_Run()
@@ -4221,7 +4214,6 @@ function HealBot_Update_ResetRefreshLists()
         HealBot_Update_RefreshList(xButton)
     end
     HealBot_TestBarsState(HealBot_luVars["TestBarsOn"])
-    HealBot_luVars["RefreshListsComplete"]=true
 end
 
 function HealBot_ResetRefreshLists()
@@ -4249,28 +4241,32 @@ function HealBot_OnUpdate()
     end
 end
 
-function HealBot_Register_IncHeals()
+function HealBot_Register_IncHeals(callback)
       --HealBot_setCall("HealBot_Register_IncHeals")
     if HEALBOT_GAME_VERSION<4 then
-        libCHC=libCHC or HealBot_Libs_CHC()
-        if libCHC and not HealBot_luVars["LibCHCLoaded"] then
-            libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealStarted",
-                function(event, casterGUID, spellID, healType, endTime, ...)
-                HealBotClassic_HealsInUpdate(spellID, ...) end)
+        if libCHC then 
+            if not HealBot_luVars["LibCHCLoaded"] then
+                libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealStarted",
+                    function(event, casterGUID, spellID, healType, endTime, ...)
+                    HealBotClassic_HealsInUpdate(spellID, ...) end)
 
-            libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealUpdated",
-                function(event, casterGUID, spellID, healType, endTime, ...)
-                HealBotClassic_HealsInUpdate(spellID, ...) end)
+                libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealUpdated",
+                    function(event, casterGUID, spellID, healType, endTime, ...)
+                    HealBotClassic_HealsInUpdate(spellID, ...) end)
 
-            libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealDelayed",
-                function(event, casterGUID, spellID, healType, endTime, ...)
-                HealBotClassic_HealsInUpdate(spellID, ...) end)
+                libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealDelayed",
+                    function(event, casterGUID, spellID, healType, endTime, ...)
+                    HealBotClassic_HealsInUpdate(spellID, ...) end)
 
-            libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealStopped",
-                function(event, casterGUID, spellID, healType, interrupted, ...)
-                HealBotClassic_HealsInUpdate(spellID, ...) end)
+                libCHC.RegisterCallback(HEALBOT_HEALBOT, "HealComm_HealStopped",
+                    function(event, casterGUID, spellID, healType, interrupted, ...)
+                    HealBotClassic_HealsInUpdate(spellID, ...) end)
 
-            HealBot_luVars["LibCHCLoaded"]=true
+                HealBot_luVars["LibCHCLoaded"]=true
+            end
+        elseif not callback then
+            libCHC=HealBot_Libs_CHC()
+            HealBot_Register_IncHeals(true)
         end
     end
 end
@@ -4894,9 +4890,9 @@ function HealBot_ReadyCheckUpdate(button,response)
       --HealBot_setCall("HealBot_ReadyCheckUpdate", button)
     if HealBot_luVars["rcEnd"] and button.isplayer and hbv_Skins_GetFrameBoolean("Icons", "SHOWRC", button.frame) then
         if response then
-            button.icon.extra.readycheck=HealBot_ReadyCheckStatus["READY"]
+            button.icon.extra.readycheck=hbv_GetStatic("rcREADY")
         else
-            button.icon.extra.readycheck=HealBot_ReadyCheckStatus["NOTREADY"]
+            button.icon.extra.readycheck=hbv_GetStatic("rcNOTREADY")
         end
         HealBot_Aura_UpdateState(button)
     end
@@ -5007,7 +5003,7 @@ function HealBot_InitSmartCast()
       --HealBot_setCall("HealBot_InitSmartCast")
     if HealBot_Data["PCLASSTRIM"] then
         HealBot_Events_SetResSpells()
-        HealBot_Range_SetSpells()
+        HealBot_Timers_Set("PLAYER","SetRangeSpells",true)
         HealBot_Init_SmartCast();
     else
         HealBot_SetPlayerData()
@@ -5034,53 +5030,57 @@ function HealBot_Cycle_Skins()
 end
 
 local ldb=nil
-function HealBot_MMButton_Init()
+function HealBot_MMButton_Init(callback)
       --HealBot_setCall("HealBot_MMButton_Init")
-    if LDBIcon and ldb and not LDBIcon:IsRegistered(HEALBOT_HEALBOT) then
-        LDBIcon:Register(HEALBOT_HEALBOT, ldb, HealBot_Globals.MinimapIcon)
-        HealBot_MMButton_Toggle()
-    end
-end
-
-if LDB11 then
-    ldb=LDB11:NewDataObject(HEALBOT_HEALBOT, {
-        type="data source",
-        label=HEALBOT_HEALBOT,
-        icon="Interface\\AddOns\\HealBot\\Images\\HealBot",
-    })
-
-    function ldb.OnClick(self, button)
-        if button == "LeftButton" then
-            if IsShiftKeyDown() then
-                HealBot_Cycle_Skins()
-            else
-                HealBot_Options_ShowHide()
-            end
-        elseif button == "RightButton" then
-            if IsShiftKeyDown() then
-                if HealBot_Config.DisableHealBot then
-                    HealBot_Config.DisableHealBot=false
+    if LDB11 and LDBIcon then
+        ldb=LDB11:NewDataObject(HEALBOT_HEALBOT, {
+            type="data source",
+            label=HEALBOT_HEALBOT,
+            icon="Interface\\AddOns\\HealBot\\Images\\HealBot",
+        })
+        if ldb then
+            function ldb.OnClick(self, button)
+                if button == "LeftButton" then
+                    if IsShiftKeyDown() then
+                        HealBot_Cycle_Skins()
+                    else
+                        HealBot_Options_ShowHide()
+                    end
+                elseif button == "RightButton" then
+                    if IsShiftKeyDown() then
+                        if HealBot_Config.DisableHealBot then
+                            HealBot_Config.DisableHealBot=false
+                        else
+                            HealBot_Config.DisableHealBot=true
+                        end
+                        HealBot_Options_DisableHealBotOpt:SetChecked(HealBot_Config.DisableHealBot)
+                        HealBot_Timers_Set("OOC","DisableCheck")
+                    else
+                        HealBot_SetResetFlag("SOFT")
+                    end
                 else
-                    HealBot_Config.DisableHealBot=true
+                    HealBot_Options_ShowHide()
                 end
-                HealBot_Options_DisableHealBotOpt:SetChecked(HealBot_Config.DisableHealBot)
-                HealBot_Timers_Set("OOC","DisableCheck")
-            else
-                HealBot_SetResetFlag("SOFT")
             end
-        else
-            HealBot_Options_ShowHide()
-        end
-    end
 
-    function ldb.OnTooltipShow(tt)
-        tt:AddLine(HEALBOT_ADDON)
-        tt:AddLine(" ")
-        tt:AddLine(HEALBOT_LDB_LEFT_TOOLTIP)
-        tt:AddLine(HEALBOT_LDB_SHIFTLEFT_TOOLTIP)
-        tt:AddLine(" ")
-        tt:AddLine(HEALBOT_LDB_RIGHT_TOOLTIP)
-        tt:AddLine(HEALBOT_LDB_SHIFTRIGHT_TOOLTIP)
+            function ldb.OnTooltipShow(tt)
+                tt:AddLine(HEALBOT_ADDON)
+                tt:AddLine(" ")
+                tt:AddLine(HEALBOT_LDB_LEFT_TOOLTIP)
+                tt:AddLine(HEALBOT_LDB_SHIFTLEFT_TOOLTIP)
+                tt:AddLine(" ")
+                tt:AddLine(HEALBOT_LDB_RIGHT_TOOLTIP)
+                tt:AddLine(HEALBOT_LDB_SHIFTRIGHT_TOOLTIP)
+            end
+            if not LDBIcon:IsRegistered(HEALBOT_HEALBOT) then
+                LDBIcon:Register(HEALBOT_HEALBOT, ldb, HealBot_Globals.MinimapIcon)
+                HealBot_MMButton_Toggle()
+            end
+        end
+    elseif not callback then
+        LDB11=HealBot_Libs_LDB11()
+        LDBIcon=HealBot_Libs_LDBIcon()
+        HealBot_MMButton_Init(true)
     end
 end
 
@@ -5276,7 +5276,7 @@ function HealBot_Reset_Icons()
     HealBot_Globals.IgnoreCustomBuff={}
     HealBot_Globals.CustomBuffs={}
     HealBot_Globals.CustomBuffsShowBarCol={}
-    HealBot_Globals.CustomBuffBarColour={[hbv_Default("cBuff")]={ R=0.25, G=0.58, B=0.8, },}
+    HealBot_Globals.CustomBuffBarColour={[hbv_GetStatic("cBuff")]={ R=0.25, G=0.58, B=0.8, },}
     HealBot_Globals.WatchHoT=HealBot_Options_copyTable(HealBot_GlobalsDefaults.WatchHoT)
     HealBot_Globals.CustomBuffTag=HealBot_Options_copyTable(HealBot_GlobalsDefaults.CustomBuffTag)
     HealBot_Timers_InitExtraOptions()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FatedAffixes", "DBM-Raids-Shadowlands", 0)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240601045004")
+mod:SetRevision("20241214213155")
 --mod:SetModelID(47785)
 mod:SetZone(2296, 2450, 2481)--Shadowlands Raids
 
@@ -31,6 +31,7 @@ mod:RegisterEvents(
  or (ability.id = 348974 or ability.id = 328117 or ability.id = 333932 or ability.id = 352293 or ability.id = 359235 or ability.id = 359236 or ability.id = 363130 or ability.id = 360717 or ability.id = 363533 or ability.id = 364114 or ability.id = 367851 or ability.id = 367290 or ability.id = 352660 or ability.id = 352538 or ability.id = 365872) and type = "begincast"
  or ability.id = 371597 or ability.id = 372634
 --]]
+--SPECIAL NOTE: This timer table doesn't need 0's replaced with 0.000001 because it specifically caught the bug with local > 0 checks
 local warnChaoticDestruction					= mod:NewCastAnnounce(372638, 3)--Add activating
 local warnChaoticEssence						= mod:NewSpellAnnounce(372634, 2)--Clicked add
 local warnCreationSpark							= mod:NewTargetNoFilterAnnounce(369505, 3)

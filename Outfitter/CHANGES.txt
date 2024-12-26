@@ -1,22 +1,28 @@
-lightweight tag 77850d98962a479666437767c1b43db68fd252a9 4.4.1.0
+lightweight tag 160d96f5644192bd0930a1cd789d6bb695e9a851 4.4.1.4
 Author:	GitHub <noreply@github.com>
-Date:	Wed Oct 30 00:28:24 2024 -0700
+Date:	Wed Dec 18 23:38:54 2024 -0800
 
-commit 02240c9d112ce631cf4642fde1e2a06e77b4971f
-Author: GovtGeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Tue Oct 29 23:59:26 2024 -0700
+commit 448f07ed864bbc2367f8fe9d4867b9df5c77c9e0
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Wed Dec 18 23:38:03 2024 -0800
 
-    Bumped era version
+    Bumped version
 
-commit 02240c9d112ce631cf4642fde1e2a06e77b4971f
-Author: GovtGeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Tue Oct 29 23:59:26 2024 -0700
+commit 448f07ed864bbc2367f8fe9d4867b9df5c77c9e0
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Wed Dec 18 23:38:03 2024 -0800
 
-    Bumped era version
+    Bumped version
 
-commit 7212f35baa340adb0617e0a5e13ee8408348525e
-Author: GovtGeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Tue Oct 29 23:51:03 2024 -0700
+commit 119530736d2984c94df05607b1de1d3e17e1be96
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Wed Dec 18 23:33:34 2024 -0800
 
-    Bump to 1.15.04
+    Added check for classic era to disable flyout slots (they don't exist in classic)
+
+commit 119530736d2984c94df05607b1de1d3e17e1be96
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Wed Dec 18 23:33:34 2024 -0800
+
+    Added check for classic era to disable flyout slots (they don't exist in classic)
 

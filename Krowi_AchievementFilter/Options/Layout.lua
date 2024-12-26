@@ -462,6 +462,24 @@ local function TemporarilyObtainableHeaderColorsSet(_, value)
     KrowiAF_AchievementsFrame:ForceUpdate();
 end
 
+local function ShowWarbandIconSet(_, value)
+    addon.Options.db.profile.Achievements.ShowWarbandIcon = value;
+    if not KrowiAF_AchievementsFrame then
+        return;
+    end
+    KrowiAF_SummaryFrame:Update();
+    KrowiAF_AchievementsFrame:ForceUpdate();
+end
+
+local function WarbandHeaderColorSet(_, value)
+    addon.Options.db.profile.Achievements.WarbandHeaderColor = value;
+    if not KrowiAF_AchievementsFrame then
+        return;
+    end
+    KrowiAF_SummaryFrame:Update();
+    KrowiAF_AchievementsFrame:ForceUpdate();
+end
+
 local function SetAchievementsMouseWheelPanScalar(_, value)
     if addon.Options.db.profile.Achievements.MouseWheelPanScalar == value then return; end
     addon.Options.db.profile.Achievements.MouseWheelPanScalar = value;
@@ -1047,9 +1065,23 @@ local achievementsOptions = {
                         TemporarilyObtainableHeaderColors = {
                             order = OrderPP(), type = "toggle", width = AdjustedWidth(1.35),
                             name = addon.L["Temporarily obtainable Header Colors"]:K_ReplaceVars(addon.L["Temporarily obtainable"]),
-                            desc = addon.L["Temporarily obtainable Header Colors Desc"]:K_ReplaceVars(addon.L["Temporarily obtainable"]):KAF_AddDefaultValueText("Achievements.TemporarilyObtainableHeaderColors"),
+                            desc = addon.L["Temporarily obtainable Header Colors Desc"]:KAF_AddDefaultValueText("Achievements.TemporarilyObtainableHeaderColors"),
                             get = function() return addon.Options.db.profile.Achievements.TemporarilyObtainableHeaderColors; end,
                             set = TemporarilyObtainableHeaderColorsSet,
+                        },
+                        ShowWarbandIcon = {
+                            order = OrderPP(), type = "toggle", width = AdjustedWidth(1.35),
+                            name = addon.L["Show Warband Icon"]:K_ReplaceVars(addon.L["Warband"]),
+                            desc = addon.L["Show Warband Icon Desc"]:K_ReplaceVars(addon.L["Warband"]):KAF_AddDefaultValueText("Achievements.ShowWarbandIcon"),
+                            get = function() return addon.Options.db.profile.Achievements.ShowWarbandIcon; end,
+                            set = ShowWarbandIconSet,
+                        },
+                        WarbandHeaderColor = {
+                            order = OrderPP(), type = "toggle", width = AdjustedWidth(1.35),
+                            name = addon.L["Warband Header Color"]:K_ReplaceVars(addon.L["Warband"]),
+                            desc = addon.L["Warband Header Color Desc"]:K_ReplaceVars(addon.L["Show Warband Icon"]:K_ReplaceVars(addon.L["Warband"])):KAF_AddDefaultValueText("Achievements.WarbandHeaderColor"),
+                            get = function() return addon.Options.db.profile.Achievements.WarbandHeaderColor; end,
+                            set = WarbandHeaderColorSet,
                         },
                         Objectives = {
                             order = OrderPP(), type = "header",
@@ -1096,6 +1128,27 @@ local achievementsOptions = {
                             min = 1, max = 50, step = 1,
                             get = function() return addon.Options.db.profile.Achievements.MouseWheelPanScalar; end,
                             set = SetAchievementsMouseWheelPanScalar
+                        }
+                    }
+                },
+                TabPriority = {
+                    order = OrderPP(), type = "group", inline = true,
+                    name = addon.L["Tab Priority"],
+                    args = {
+                        EnableTabPriority = {
+                            order = OrderPP(), type = "toggle", width = AdjustedWidth(1.35),
+                            name = addon.L["Enable Tab Priority"],
+                            desc = addon.L["Enable Tab Priority Desc"]:KAF_AddDefaultValueText("Achievements.EnableTabPriority"),
+                            get = function() return addon.Options.db.profile.Achievements.EnableTabPriority; end,
+                            set = function(_, value) addon.Options.db.profile.Achievements.EnableTabPriority = value; end
+                        },
+                        TabPriority = {
+                            order = OrderPP(), type = "select", width = AdjustedWidth(1.5),
+                            name = addon.L["Tab Priority"],
+                            desc = function() return addon.L["Tab Priority Desc"]:K_ReplaceVars(addon.L["Achievements"]):KAF_AddDefaultValueText("Achievements.TabPriority", KrowiAF_SavedData.TabKeys) end,
+                            values = function() return KrowiAF_SavedData.TabKeys; end,
+                            get = function() return addon.Options.db.profile.Achievements.TabPriority; end,
+                            set = function (_, value) addon.Options.db.profile.Achievements.TabPriority = value; end
                         }
                     }
                 }

@@ -260,6 +260,11 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SOUNDBUFFWARNING       ="Play sound on buff";
     HEALBOT_OPTIONS_SOUND                  ="Sound"
     HEALBOT_OPTIONS_SOUNDS                 ="Sounds"
+    HEALBOT_OPTIONS_SOUNDCHAN              ="Sound Channel"
+    HEALBOT_OPTIONS_SOUNDCHAN1             ="Master"
+    HEALBOT_OPTIONS_SOUNDCHAN2             ="Effects"
+    HEALBOT_OPTIONS_SOUNDCHAN3             ="Ambience"
+    HEALBOT_OPTIONS_SOUNDCHAN4             ="Dialog"
     HEALBOT_OPTIONS_WARN_CLASSCOL          ="Unable to change text col"..HEALBOT_enWORD_COLOUR_SUFFIX.." when\nCol"..HEALBOT_enWORD_COLOUR_SUFFIX.." text by class is on"
 
     HEALBOT_OPTIONS_PLAYERVISIBILITY       ="Player and Pet Visibility";
@@ -609,6 +614,7 @@ function HealBot_Lang_enALL()
     HEALBOT_WORD_FOCUS                     ="Focus";
     HEALBOT_MENU                           ="Menu";
     HEALBOT_MAINTANK                       ="MainTank";
+    HEALBOT_OFFTANK                        ="OffTank";
     HEALBOT_STOP                           ="Stop";
     HEALBOT_CANCELPLUGINALERT              ="Cancel Plugin Alert";
     HEALBOT_MOUSELOOK                      ="Mouselook"
@@ -735,6 +741,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWGUILDRANK          ="Include guild rank";
     HEALBOT_OPTIONS_SHOWTITLE              ="Show title";
     HEALBOT_OPTIONS_SHOWUNITBUFFREQUIRED   ="Show required buffs";
+    HEALBOT_OPTIONS_TIPSSHOWDEBUFFS        ="Show monitored debuffs";
     HEALBOT_OPTIONS_BUFFSTEXTTIMER         ="Show buff before it expires";
     HEALBOT_OPTIONS_SHORTBUFFTIMER         ="Short buffs"
     HEALBOT_OPTIONS_LONGBUFFTIMER          ="Long buffs"

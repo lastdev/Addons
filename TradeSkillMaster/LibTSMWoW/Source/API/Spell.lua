@@ -6,7 +6,6 @@
 
 local LibTSMWoW = select(2, ...).LibTSMWoW
 local Spell = LibTSMWoW:Init("API.Spell")
-local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
 
 
 
@@ -20,13 +19,9 @@ local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
 ---@return number? icon
 ---@return number? castTime
 function Spell.GetInfo(spellId)
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_SPELL) then
-		local info = C_Spell.GetSpellInfo(spellId)
-		if not info then
-			return nil, nil, nil
-		end
-		return info.name, info.originalIconID, info.castTime
-	else
-		return GetSpellInfo(spellId)
+	local info = C_Spell.GetSpellInfo(spellId)
+	if not info then
+		return nil, nil, nil
 	end
+	return info.name, info.originalIconID, info.castTime
 end

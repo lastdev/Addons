@@ -97,7 +97,7 @@ function CraftingMatList:SetRecipeString(recipeString)
 			elseif matType == MatString.TYPE.QUALITY then
 				local itemString = "i:"..RecipeString.GetOptionalMat(recipeString, MatString.GetSlotId(matString))
 				self:_AddMaterial(itemString, quantity, matString)
-			else
+			elseif not Profession.IsSalvage(craftString) then
 				local slotId = MatString.GetSlotId(matString)
 				if RecipeString.GetOptionalMat(recipeString, slotId) then
 					tinsert(private.optionalMatTemp, slotId)

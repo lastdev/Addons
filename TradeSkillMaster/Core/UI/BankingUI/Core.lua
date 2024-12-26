@@ -481,6 +481,7 @@ function private.FSMCreate()
 					context.frame:Hide()
 					context.frame:Release()
 					context.frame = nil
+					context.isWarBank = false
 				end
 				context.activeButton = nil
 			end)
@@ -502,7 +503,7 @@ function private.FSMCreate()
 					context.frame:Hide()
 					context.frame:Release()
 					context.frame = nil
-					context.isWarBank = nil
+					context.isWarBank = false
 				end
 				context.activeButton = nil
 			end)

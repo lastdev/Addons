@@ -1589,6 +1589,15 @@ function HealBot_Update_TextNames_EnemyOnly()
     HealBot_Update_TextNames(true)
 end
 
+function HealBot_Update_TextPlayersAlphaButtonNow(button)
+    button.text.updatealpha=false
+    button.text.tagupdate=true
+    button.text.aggroupdate=true
+    button.text.nameupdate=true
+    button.text.healthupdate=true
+    HealBot_Text_UpdateText(button)
+end
+
 function HealBot_Update_TextPlayersAlphaButton(button)
     button.text.updatealpha=true
     button.status.slowupdate=true
@@ -1766,8 +1775,8 @@ function HealBot_Update_NilOnVal(t, key, v)
 end
 
 function HealBot_Update_GlobalVars()
-    local customDebuffPriority=hbv_Default("cDebuff")
-    local customBuffPriority=hbv_Default("cBuff")
+    local customDebuffPriority=hbv_GetStatic("cDebuff")
+    local customBuffPriority=hbv_GetStatic("cBuff")
     for sid,_  in pairs(HealBot_Globals.CustomBuffBarColour) do
         if sid~=customBuffPriority then
             if HealBot_Globals.CustomBuffBarColour[sid].R == 0.25 and HealBot_Globals.CustomBuffBarColour[sid].G == 0.58 and HealBot_Globals.CustomBuffBarColour[sid].B == 0.8 then

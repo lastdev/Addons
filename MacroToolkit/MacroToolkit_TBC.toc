@@ -5,10 +5,11 @@
 ## Notes-esES: Marco de macros mejorado con herramientas adicionales
 ## Author: Deepac, marciowb, The_Junksterr, Numy
 ## IconTexture: 982414
-## Version: v2.3.7
+## Version: v2.3.11
 ## SavedVariables: MacroToolkitDB
 ## OptionalDeps: ElvUI, Ace3
 ## X-Curse-Project-ID: 47117
+## X-Wago-ID: jK8XprKy
 
 #@no-lib-strip@
 # Libraries

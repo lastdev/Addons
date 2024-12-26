@@ -628,20 +628,26 @@ function ItemInfo.CanHaveVariations(item)
 	end
 end
 
----Fetch info for the item.
+---Fetch info for the item and returns whether or not it was kicked off.
+---
 ---This function can be called ahead of time for items which we know we need to have info cached for.
 ---@param item? string The item
+---@return boolean
 function ItemInfo.FetchInfo(item)
 	if item == ItemString.GetUnknown() or item == ItemString.GetPlaceholder() or ItemString.ParseLevel(item) then
-		return
+		return false
 	end
 	local itemString = ItemString.Get(item)
-	if not itemString then return end
-	if ItemString.IsPet(itemString) then
+	if not itemString then
+		return false
+	elseif ItemString.IsPet(itemString) then
 		if not private.cache:GetField(itemString, "name") then
 			private.StoreGetItemInfoInstant(itemString)
 		end
-		return
+		return true
+	elseif private.numRequests[itemString] == math.huge then
+		-- We've given up on this item
+		return false
 	end
 	private.pendingItems[itemString] = private.pendingItems[itemString] or PENDING_STATE.NEW
 	if private.priorityPendingTime ~= ClientInfo.GetFrameNumber() then
@@ -651,6 +657,7 @@ function ItemInfo.FetchInfo(item)
 	private.priorityPendingItems[itemString] = true
 
 	private.processInfoTimer:RunForTime(0)
+	return true
 end
 
 ---Generalize an item link.

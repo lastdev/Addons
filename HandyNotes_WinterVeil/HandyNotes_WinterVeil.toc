@@ -1,8 +1,8 @@
-## Interface: 110005
-## Version: 3.00
+## Interface: 110007
+## Version: 4.05
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_holiday_christmas_present_01
-## Title: Winter Veil
+## Title: Feast of Winter Veil
 ## Title-deDE: Winterhauchfest
 ## Title-esES: El festín del Festival de Invierno
 ## Title-esMX: El festín del Festival de Invierno
@@ -14,23 +14,24 @@
 ## Title-ruRU: Зимний Покров
 ## Title-zhCN: 冬幕节
 ## Title-zhTW: 冬幕節
-## Notes: |cFF52D017Helps you with the |cFF5FFB17Winter Veil|cFF52D017 world event
-## Notes-deDE: |cFF52D017Hilft bei der |cFF5FFB17Winterhauchfest
-## Notes-esES: |cFF52D017Ayuda con el suceso mundial |cFF5FFB17El festín del Festival de Invierno
-## Notes-esMX: |cFF52D017Ayuda con el suceso mundial |cFF5FFB17El festín del Festival de Invierno
-## Notes-frFR: |cFF52D017Aide à l'événement mondial |cFF5FFB17Voile d'hiver
-## Notes-itIT: |cFF52D017Assiste con l'evento mondiale |cFF5FFB17Vigilia di Grande Inverno
-## Notes-koKR: |cFF5FFB17겨울맞이 축제|cFF52D017 대규모 이벤트 지원
-## Notes-ptBR: |cFF52D017Auxilia no evento mundial |cFF5FFB17Festa do Véu de Inverno
-## Notes-ptPT: |cFF52D017Auxilia no evento mundial |cFF5FFB17Festa do Véu de Inverno
-## Notes-ruRU: |cFF52D017Помогает с игровое событие |cFF5FFB17Зимний Покров
-## Notes-zhCN: |cFF52D017协助 |cFF5FFB17冬幕节|cFF52D017 活动
-## Notes-zhTW: |cFF52D017協助 |cFF5FFB17冬幕節|cFF52D017 活動
+## Notes: |cFF52D017Help for the |cFF5FFB17Feast of Winter Veil|cFF52D017 achievements and quests
+## Notes-deDE: |cFF52D017Hilfe für Erfolge und Quests in |cFF5FFB17Winterhauchfest
+## Notes-esES: |cFF52D017Ayuda para los logros y misiones del |cFF5FFB17El festín del Festival de Invierno
+## Notes-esMX: |cFF52D017Ayuda para los logros y misiones del |cFF5FFB17El festín del Festival de Invierno
+## Notes-frFR: |cFF52D017Aide pour les succès et quêtes du |cFF5FFB17Voile d'hiver
+## Notes-itIT: |cFF52D017Aiuto per gli obiettivi e le missioni di |cFF5FFB17Vigilia di Grande Inverno
+## Notes-koKR: |cFF5FFB17겨울맞이 축제|cFF52D017 업적 및 퀘스트에 대한 도움말
+## Notes-ptBR: |cFF52D017Ajuda para conquistas e missões do |cFF5FFB17Festa do Véu de Inverno
+## Notes-ptPT: |cFF52D017Ajuda para conquistas e missões do |cFF5FFB17Festa do Véu de Inverno
+## Notes-ruRU: |cFF52D017Помощь в получении достижений и квестов |cFF5FFB17Зимний Покров
+## Notes-zhCN: |cFF52D017帮助完成 |cFF5FFB17冬幕节|cFF52D017 成就和任务
+## Notes-zhTW: |cFF52D017幫助完成 |cFF5FFB17冬幕節|cFF52D017 成就和任務
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_WinterVeilDB
 ## AddonCompartmentFunc: HandyNotes_WinterVeil_OnAddonCompartmentClick
 ## X-Curse-Project-ID: 739812
 ## X-Wago-ID: rkGrBnGy
 
+Localisations.lua
 Core.lua
 Data.lua

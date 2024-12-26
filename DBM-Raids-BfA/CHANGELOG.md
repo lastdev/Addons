@@ -1,6 +1,6 @@
 # <DBM Mod> Raids (BfA)
 
-## [r38](https://github.com/DeadlyBossMods/DBM-BfA/tree/r38) (2024-11-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r37...r38) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
+## [r39](https://github.com/DeadlyBossMods/DBM-BfA/tree/r39) (2024-12-14)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r38...r39) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
 
-- remove game version 11.0.2 and add game version 11.0.7  
+- work around annoying core bug where starting a timer of 0 uses self.timer instead. But that annoying bug has to stay since over a decade worth of mods has assumed that to be valid  

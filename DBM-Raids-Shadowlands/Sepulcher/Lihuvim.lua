@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2461, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045739")
+mod:SetRevision("20241214213155")
 mod:SetCreatureID(182169)
 mod:SetEncounterID(2539)
 mod:SetUsedIcons(1, 2)
@@ -168,7 +168,7 @@ local allTimers = {
 		},
 	},
 }
---local alignmentTimers = {0, 36.1, 42.5, 34.9, 43.6, 62.2, 34.8, 43.7, 62.1, 34.9, 43.6, 62.2}
+--local alignmentTimers = {0.000001, 36.1, 42.5, 34.9, 43.6, 62.2, 34.8, 43.7, 62.1, 34.9, 43.6, 62.2}
 
 function mod:OnCombatStart(delay)
 	self.vb.energyIcon = 1

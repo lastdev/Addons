@@ -50,6 +50,31 @@ function GroupExport.__static.New(ignoredOperationTypes)
 	return obj
 end
 
+---Generates a group export string.
+---@param groupName name The name of the group
+---@param items table<string,GroupPathValue> The items
+---@param groups table<GroupPathValue,boolean> The groups
+---@param groupOperations? table<GroupPathValue,table> The group operations
+---@param operations? table<string,table<string,OperationSettings>> The operations and their settings
+---@param customSources? table<string,string> The custom sources
+---@return string
+function GroupExport.__static.GenerateString(groupName, items, groups, groupOperations, operations, customSources)
+	groupOperations = groupOperations or EMPTY_GROUP_OPERATIONS
+	operations = operations or EMPTY_OPERATIONS
+	customSources = customSources or EMPTY_CUSTOM_SOURCES
+	assert(not next(private.isOperationSettingsTable))
+	for _, moduleOperations in pairs(operations) do
+		for _, operationSettings in pairs(moduleOperations) do
+			private.isOperationSettingsTable[operationSettings] = true
+		end
+	end
+	local serialized = LibSerialize:SerializeEx(SERIALIZE_OPTIONS, MAGIC_STR, VERSION, groupName, items, groups, groupOperations, operations, customSources)
+	wipe(private.isOperationSettingsTable)
+	local str = LibDeflate:EncodeForPrint(LibDeflate:CompressDeflate(serialized))
+	collectgarbage()
+	return str
+end
+
 
 
 -- ============================================================================
@@ -208,7 +233,7 @@ function GroupExport.__private:_Execute()
 		self._str = nil
 	end
 	if not self._str then
-		self:_GenerateString()
+		self:_UpdateString()
 	end
 end
 
@@ -273,18 +298,13 @@ function GroupExport.__private:_GetCustomSources(str)
 	end
 end
 
-function GroupExport.__private:_GenerateString()
-	assert(not next(private.isOperationSettingsTable))
-	for _, moduleOperations in pairs(self._operations) do
-		for _, operationSettings in pairs(moduleOperations) do
-			private.isOperationSettingsTable[operationSettings] = true
-		end
+function GroupExport.__private:_UpdateString()
+	if self._includeOperations and self._includeCustomSources then
+		self._str = GroupExport.GenerateString(Group.GetName(self._groupPath), self._items, self._groups, self._groupOperations, self._operations, self._customSources)
+	elseif self._includeOperations then
+		self._str = GroupExport.GenerateString(Group.GetName(self._groupPath), self._items, self._groups, self._groupOperations, self._operations)
+	else
+		assert(not self._includeCustomSources)
+		self._str = GroupExport.GenerateString(Group.GetName(self._groupPath), self._items, self._groups)
 	end
-	local groupOperations = self._includeOperations and self._groupOperations or EMPTY_GROUP_OPERATIONS
-	local operations = self._includeOperations and self._operations or EMPTY_OPERATIONS
-	local customSources = self._includeCustomSources and self._customSources or EMPTY_CUSTOM_SOURCES
-	local serialized = LibSerialize:SerializeEx(SERIALIZE_OPTIONS, MAGIC_STR, VERSION, Group.GetName(self._groupPath), self._items, self._groups, groupOperations, operations, customSources)
-	wipe(private.isOperationSettingsTable)
-	self._str = LibDeflate:EncodeForPrint(LibDeflate:CompressDeflate(serialized))
-	collectgarbage()
 end

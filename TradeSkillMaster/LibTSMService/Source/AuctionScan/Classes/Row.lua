@@ -142,15 +142,18 @@ end
 
 ---Populates necessary item data ahead of a browse query and returns whether or not this was completed.
 ---@param missingItemIds table<number,boolean> A table to populate with missing item IDs (as keys)
----@return boolean
+---@return boolean success
+---@return boolean giveUp
 function AuctionRow:PopulateBrowseData(missingItemIds)
 	assert(self._baseItemString)
 	if self._hasItemInfo then
 		-- Already have our item info
-		return true
-	elseif not Util.HasItemInfo(self._baseItemString) then
+		return true, false
+	end
+	local hasBaseInfo, fetchedBaseInfo = Util.HasItemInfo(self._baseItemString)
+	if not hasBaseInfo then
 		-- Don't have item info yet
-		return false
+		return false, not fetchedBaseInfo
 	end
 
 	-- Cache the commodity status since it's referenced a ton
@@ -160,7 +163,7 @@ function AuctionRow:PopulateBrowseData(missingItemIds)
 	end
 
 	-- Check if we have info for all the items and try to fetch it if not
-	local missingInfo = false
+	local missingInfo, fetchedMissingInfo = false, false
 	ItemInfo.SetQueryUpdatesPaused(true)
 	for _, item in ipairs(self._items) do
 		if LibTSMService.IsRetail() and not item._hasInfo then
@@ -180,6 +183,7 @@ function AuctionRow:PopulateBrowseData(missingItemIds)
 				else
 					missingItemIds[item.itemID] = true
 					missingInfo = true
+					fetchedMissingInfo = true
 				end
 			else
 				item._name = ItemInfo.GetName(self._baseItemString)
@@ -188,17 +192,21 @@ function AuctionRow:PopulateBrowseData(missingItemIds)
 				assert(item._name and item._itemLevel and item._quality)
 				item._hasInfo = true
 			end
-		elseif not LibTSMService and not Util.HasItemInfo(ItemString.Get(item)) then
-			missingInfo = true
+		elseif not LibTSMService.IsRetail() then
+			local hasInfo, fetchedInfo = Util.HasItemInfo(ItemString.Get(item))
+			if not hasInfo then
+				missingInfo = true
+				fetchedMissingInfo = fetchedMissingInfo or fetchedInfo
+			end
 		end
 	end
 	ItemInfo.SetQueryUpdatesPaused(false)
 	if missingInfo then
-		return false
+		return false, not fetchedMissingInfo
 	end
 
 	self._hasItemInfo = true
-	return true
+	return true, false
 end
 
 ---Returns whether or not this row is filtered by a query.

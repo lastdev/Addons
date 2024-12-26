@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 80.2 - 2024-12-18
+### Added
+- Lingering Shadows achievement
+
+## 80.1 - 2024-12-18
+### Added
+- Patch 11.0.7 to the filters
+
+## 80.0 - 2024-12-17
+### Added
+- Achievements added in 11.0.7
+- Feature to prioritize which tab is used when getting redirected to an achievement
+- Has Reward filter (dev note: reward type filters will come in a later version)
+- Option to show a Warband icon on Warband achievements
+- Option to hide the blue Warband achievement color
+- Option to completely turn off the Event Reminders Module with 1 option
+
 ## 79.0 - 2024-11-15
 ### Added
 - Guild achievements tab keybind

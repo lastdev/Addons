@@ -32,6 +32,7 @@ local private = {
 	fsm = nil,
 	retryTimer = nil,
 	doneTimer = nil,
+	updateTimer = nil,
 	missingItemIds = {},
 }
 local BROWSE_MISSING_INFO_RETRY_DELAY = 0.5
@@ -51,6 +52,11 @@ local SORT_RETRY_DELAY = 0.5
 Scanner:OnModuleLoad(function()
 	private.retryTimer = DelayTimer.New("AUCTION_SCANNER_RETRY", private.RetryHandler)
 	private.doneTimer = DelayTimer.New("AUCTION_SCANNER_DONE", private.RequestDoneHandler)
+	private.updateTimer = DelayTimer.New("AUCTION_SCANNER_RETRY", function()
+		private.fsm:SetLoggingEnabled(false)
+		private.fsm:ProcessEvent("EV_BROWSE_RESULTS_UPDATED")
+		private.fsm:SetLoggingEnabled(true)
+	end)
 	private.requestFuture:SetScript("OnCleanup", function()
 		private.doneTimer:Cancel()
 		private.fsm:ProcessEvent("EV_CANCEL")
@@ -70,9 +76,7 @@ Scanner:OnModuleLoad(function()
 		end)
 	else
 		Event.Register("AUCTION_ITEM_LIST_UPDATE", function()
-			private.fsm:SetLoggingEnabled(false)
-			private.fsm:ProcessEvent("EV_BROWSE_RESULTS_UPDATED")
-			private.fsm:SetLoggingEnabled(true)
+			private.updateTimer:RunForFrames(0)
 		end)
 	end
 
@@ -495,16 +499,20 @@ function private.CheckBrowseResults()
 		end
 	end
 
-	-- Check if there's data still pending
+	-- Attempt to populate the browse results
 	wipe(private.missingItemIds)
-	if private.query:_PopulateBrowseData(private.missingItemIds) then
+	local populated, numRemoved = private.query:_PopulateBrowseData(private.missingItemIds)
+	if numRemoved > 0 then
+		Log.Info("Removed %d results while populing data", numRemoved)
+	end
+	if not populated then
 		return false
 	end
 
 	-- Filter the results
-	local numRemoved = private.query:_FilterBrowseResults()
+	numRemoved = private.query:_FilterBrowseResults()
 	if numRemoved > 0 then
-		Log.Info("Removed %d results", numRemoved)
+		Log.Info("Removed %d filtered results", numRemoved)
 	end
 
 	return true

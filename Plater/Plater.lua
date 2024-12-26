@@ -630,6 +630,10 @@ Plater.AnchorNamesByPhraseId = {
 					if IsPlayerSpell(53351) or IsPlayerSpell(320976) then -- Kill Shot
 						lowExecute = 0.2
 					end
+					if IsPlayerSpell(466930) then --> Black Arrow
+						lowExecute = 0.2
+						highExecute = 0.8
+					end
 					if IsPlayerSpell(273887) then --> is using killer instinct?
 						lowExecute = 0.35
 					end
@@ -1403,6 +1407,17 @@ Plater.AnchorNamesByPhraseId = {
 		
 		Plater.UpdateSettingsCache()
 	end
+				
+	function Plater:RefreshConfigProfileReset() --private
+		Plater:RefreshConfig()
+		
+		Plater.db.profile.use_ui_parent = true
+		Plater.db.profile.use_ui_parent_just_enabled = false
+		Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
+		
+		--call the user to /reload his UI
+		DF:ShowPromptPanel ("Plater profile reset, do you want /reload now (recommended)?", function() ReloadUI() end, function() end, true, 500)
+	end
 	
 	function Plater:RefreshConfigProfileChanged() --private
 		Plater:RefreshConfig()
@@ -1833,6 +1848,7 @@ Plater.AnchorNamesByPhraseId = {
 	function Plater.UpdateUIParentScale (self, w, h) --private
 		local unitFrame = self.unitFrame
 		if (unitFrame) then
+			local defaultScale = self:GetEffectiveScale() / self:GetScale()
 			local defaultScale = self:GetEffectiveScale()
 			--local defaultScale = UIParent:GetEffectiveScale()
 			
@@ -2529,13 +2545,9 @@ Plater.AnchorNamesByPhraseId = {
 			if (Plater.db.profile.use_ui_parent_just_enabled) then
 				Plater.db.profile.use_ui_parent_just_enabled = false
 				if (Plater.db.profile.ui_parent_scale_tune == 0) then
-					--@Ariani - march 9
 					Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
-					
-					--@Tercio:
-					--if (UIParent:GetEffectiveScale() < 1) then
-					--	Plater.db.profile.ui_parent_scale_tune = 1 - UIParent:GetEffectiveScale()
-					--end
+					Plater.RefreshDBUpvalues()
+					Plater.UpdateAllPlates()
 				end
 			end
 			
@@ -4376,9 +4388,14 @@ function Plater.OnInit() --private --~oninit ~init
 				
 				--enable UIParent nameplates for new installs of Plater
 				--this setting is disabled by default and will be enabled for new people
-				Plater.db.profile.use_ui_parent = true
-				--adjust the fine tune to player's screen scale
-				Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
+				if not Plater.db.profile.use_ui_parent or Plater.db.profile.ui_parent_scale_tune == 0 then
+					Plater.db.profile.use_ui_parent = true
+					--adjust the fine tune to player's screen scale
+					Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
+					Plater.db.profile.use_ui_parent_just_enabled = false
+					Plater.RefreshDBUpvalues()
+					Plater.UpdateAllPlates()
+				end
 				
 			elseif (not PlaterDBChr.first_run3 [UnitGUID ("player")]) then
 				--do not run cvars for individual characters
@@ -5171,6 +5188,7 @@ function Plater.OnInit() --private --~oninit ~init
 					local curTime = GetTime()
 					--local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo (unitCast)
 					self.SpellName = 		self.spellName
+					self.SpellNameRenamed = self.spellName
 					self.SpellID = 		self.spellID
 					self.SpellTexture = 	self.spellTexture
 					self.SpellStartTime = 	self.spellStartTime or curTime
@@ -5206,9 +5224,6 @@ function Plater.OnInit() --private --~oninit ~init
 					self.Spark:SetAlpha (profile.cast_statusbar_spark_alpha)
 					PixelUtil.SetSize(self.Spark, profile.cast_statusbar_spark_width, self:GetHeight())
 
-					--cut the spell name text to fit within the castbar
-					Plater.UpdateSpellNameSize (self.Text, unitFrame.ActorType, nil, isInCombat)
-
 					Plater.UpdateCastbarTargetText (self)
 
 					--castbar icon
@@ -5222,7 +5237,6 @@ function Plater.OnInit() --private --~oninit ~init
 					--cast color (from options tab Cast Colors)
 					local castColors = profile.cast_colors
 					local customColor = castColors[self.spellID]
-					local customRenamed = false
 					if (customColor) then
 						local isEnabled, color, customSpellName = customColor[1], customColor[2], customColor[3]
 						if (color and isEnabled) then
@@ -5236,11 +5250,6 @@ function Plater.OnInit() --private --~oninit ~init
 								self:SetColor(color)
 							end
 
-							if (customSpellName and customSpellName ~= "") then
-								self.Text:SetText(customSpellName)
-								customRenamed = true
-							end
-
 							--check if the original cast color is enabled
 							if (originalCastColor) then
 								--get the original cast color
@@ -5251,18 +5260,27 @@ function Plater.OnInit() --private --~oninit ~init
 								self.castColorTexture:SetHeight(self:GetHeight() + profile.cast_color_settings.height_offset)
 							end
 						end
+						
+						if (customSpellName and customSpellName ~= "") then
+							self.SpellNameRenamed = customSpellName
+						end
 					end
 					
-					if not customRenamed and Plater.db.profile.bossmod_support_enabled and Plater.db.profile.bossmod_castrename_enabled then
+					if self.SpellNameRenamed == self.SpellName and Plater.db.profile.bossmod_support_enabled and Plater.db.profile.bossmod_castrename_enabled then
 						local bmSpellName = ((BigWigsAPI and BigWigsAPI.GetSpellRename and BigWigsAPI.GetSpellRename(self.spellID)) or (DBM and DBM.GetAltSpellName and DBM:GetAltSpellName(self.spellID))) or nil
 						if bmSpellName then
-							self.Text:SetText(bmSpellName)
+							self.SpellNameRenamed = bmSpellName
 						end
 					end
 					
 					if (self.channeling and (self.SpellStartTime + 0.25 > curTime)) then
 						platerInternal.Audio.PlaySoundForCastStart(self.spellID) --fallback for edge cases. should not double play
 					end
+
+					self.Text:SetText(self.SpellNameRenamed)
+					
+					--cut the spell name text to fit within the castbar
+					Plater.UpdateSpellNameSize (self.Text, unitFrame.ActorType, nil, isInCombat)
 					
 					-- in some occasions channeled casts don't have a CLEU entry... check this here
 					if (unitFrame.ActorType == "enemynpc" and event == "UNIT_SPELLCAST_CHANNEL_START" and (not DB_CAPTURED_SPELLS[self.spellID] or DB_CAPTURED_SPELLS[self.spellID].isChanneled == nil)) then
@@ -5614,7 +5632,7 @@ function Plater.OnInit() --private --~oninit ~init
 	--> profile changes and refreshes ~db
 		Plater.db.RegisterCallback (Plater, "OnProfileChanged", "RefreshConfigProfileChanged")
 		Plater.db.RegisterCallback (Plater, "OnProfileCopied", "RefreshConfig")
-		Plater.db.RegisterCallback (Plater, "OnProfileReset", "RefreshConfig")
+		Plater.db.RegisterCallback (Plater, "OnProfileReset", "RefreshConfigProfileReset")
 		--Plater.db.RegisterCallback (Plater, "OnDatabaseShutdown", "SaveConsoleVariables")
 		
 		function Plater.OnProfileCreated()
@@ -5622,11 +5640,15 @@ function Plater.OnInit() --private --~oninit ~init
 				Plater:Msg ("new profile created, applying patches and adding default scripts.")
 				platerInternal.Scripts.UpdateFromLibrary()
 				
-				--enable UIParent nameplates for new installs of Plater
 				--this setting is disabled by default and will be enabled for new users and new profiles
-				Plater.db.profile.use_ui_parent = true
-				--adjust the fine tune to player's screen scale
-				Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
+				if not Plater.db.profile.use_ui_parent or Plater.db.profile.ui_parent_scale_tune == 0 then
+					--enable UIParent nameplates for new installs of Plater
+					Plater.db.profile.use_ui_parent = true
+					--adjust the fine tune to player's screen scale
+					Plater.db.profile.ui_parent_scale_tune = 1 / UIParent:GetEffectiveScale()
+					Plater.RefreshDBUpvalues()
+					Plater.UpdateAllPlates()
+				end
 				
 				--call major refresh
 				Plater:RefreshConfig()
@@ -7710,7 +7732,7 @@ end
 			end
 		end
 		
-		while (nameString:GetStringWidth() > maxLength) do
+		while (nameString:GetUnboundedStringWidth() > maxLength) do
 			spellName = strsub (spellName, 1, #spellName - 1)
 			nameString:SetText (spellName)
 			if (string.len (spellName) <= 1) then
@@ -7759,7 +7781,7 @@ end
 			return
 		end
 		
-		while (nameString:GetStringWidth() > stringSize) do
+		while (nameString:GetUnboundedStringWidth() > stringSize) do
 			name = strsub (name, 1, #name-1)
 			nameString:SetText (name)
 			if (string.len (name) <= 1) then
@@ -10471,7 +10493,7 @@ end
 			return
 		end
 		
-		while (fontString:GetStringWidth() > maxWidth) do
+		while (fontString:GetUnboundedStringWidth() > maxWidth) do
 			text = strsub (text, 1, #text - 1)
 			fontString:SetText (text)
 			if (string.len (text) <= 1) then
@@ -10608,7 +10630,7 @@ end
 		elseif options.glowType == "ants" then
 			LCG.AutoCastGlow_Start(frame.__PlaterGlowFrame, options.color, options.N, options.frequency, options.scale, options.xOffset, options.yOffset, options.key or "", options.framelevel)
 		elseif options.glowType == "proc" then
-			LCG.ProcGlow_Start(frame.__PlaterGlowFrame, options.color, options.frequency, options.framelevel)
+			LCG.ProcGlow_Start(frame.__PlaterGlowFrame, options)
 		end
 	end
 	

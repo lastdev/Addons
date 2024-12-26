@@ -78,14 +78,24 @@ function SessionInfo.GetRegion()
 	return GetCVar("Portal")
 end
 
----Checks if we're in an active hardcore season.
+---Checks if we're on a hardcore realm.
 ---@return boolean
 function SessionInfo.IsHardcore()
 	return C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == Enum.SeasonID.Hardcore
 end
 
----Checks if we're in an active season of discovery.
+---Checks if we're on a season of discovery realm.
 ---@return boolean
 function SessionInfo.IsSeasonOfDiscovery()
-	return C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == 2 -- Boo Blizzard
+	return C_Seasons.HasActiveSeason() and C_Seasons.GetActiveSeason() == Enum.SeasonID.SeasonOfDiscovery
+end
+
+---Checks if we're on a fresh realm.
+---@return boolean
+function SessionInfo.IsFresh()
+	if not C_Seasons.HasActiveSeason() then
+		return false
+	end
+	local season = C_Seasons.GetActiveSeason()
+	return season == Enum.SeasonID.Fresh or season == Enum.SeasonID.FreshHardcore
 end

@@ -43,12 +43,12 @@ function Banking.OnInitialize()
 		Event.Register("BANKFRAME_OPENED", private.BankFrameOpened)
 		Event.Register("BANKFRAME_CLOSED", private.BankFrameClosed)
 		hooksecurefunc("BankFrame_ShowPanel", function()
-			local isWarBank = Container.CanAccessWarbank() and BankFrame:GetActiveBankType() == Enum.BankType.Account or false
-			private.BankVisibilityChanged(true, isWarBank)
+			private.WarBankVisibilityChanged(true)
 		end)
 	end
 
 	DefaultUI.RegisterBankVisibleCallback(private.BankVisibilityChanged)
+	DefaultUI.RegisterAccountBankVisibleCallback(private.WarBankVisibilityChanged)
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.GUILD_BANK) then
 		DefaultUI.RegisterGuildBankVisibleCallback(private.GuildBankVisibilityChanged)
 	end
@@ -269,6 +269,11 @@ function private.BankFrameClosed()
 	end
 	private.bankFrameOpen = false
 	Event.Unregister("GLOBAL_MOUSE_UP", private.GlobalMouseUp)
+end
+
+function private.WarBankVisibilityChanged(visible)
+	local isWarBank = Container.CanAccessWarbank() and BankFrame:GetActiveBankType() == Enum.BankType.Account or false
+	private.BankVisibilityChanged(visible, isWarBank)
 end
 
 function private.BankVisibilityChanged(visible, isWarBank)

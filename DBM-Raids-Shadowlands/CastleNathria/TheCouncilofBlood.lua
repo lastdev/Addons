@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2426, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044044")
+mod:SetRevision("20241214213155")
 mod:SetCreatureID(166971, 166969, 166970)--Castellan Niklaus, Baroness Frieda, Lord Stavros
 mod:SetEncounterID(2412)
 mod:SetBossHPInfoToHighest()
@@ -159,25 +159,25 @@ local allTimers = {
 		--Dutiful Attendant
 		[346698] = {60, 60, 29.9},
 		--Dreger Servants (P2+)
-		[330978] = {0, 60, 60},
+		[330978] = {0.000001, 60, 60},
 		--Castellan's Cadre (P3+)
-		[330965] = {0, 0, 60},
+		[330965] = {0.000001, 0.000001, 60},
 
 		--Drain Essence
 		[346654] = {27.3, 19.8, 46.6},
 		--Prideful Eruption (P2+)
-		[346657] = {0, 43.3, 46.6},
+		[346657] = {0.000001, 43.3, 46.6},
 		--Soul Spikes (P3+)
-		[346762] = {0, 0, 46.6},
+		[346762] = {0.000001, 0.000001, 46.6},
 
 		--Evasive Lunge
 		[327497] = {25, 19.6, 13.3},--Phase 2 lunge can get in a bugged state and spam every 10 seconds in rare cases
 		--Dark Recital
 		[331634] = {60, 80, 26.6},
 		--Waltz of Blood (P2+)
-		[346800] = {0, 80, 110},
+		[346800] = {0.000001, 80, 110},
 		--Dancing Fools (P3+)
-		[346826] = {0, 0, 110},
+		[346826] = {0.000001, 0.000001, 110},
 	},
 	["normal"] = {--Heroic and Normal same, for now, but separated for time being in case this changes
 		--Duelist Riposte
@@ -185,25 +185,25 @@ local allTimers = {
 		--Dutiful Attendant
 		[346698] = {51.4, 51.4, 25.6},
 		--Dreger Servants (P2+)
-		[330978] = {0, 51.4, 51.4},
+		[330978] = {0.000001, 51.4, 51.4},
 		--Castellan's Cadre (P3+)
-		[330965] = {0, 0, 51.4},
+		[330965] = {0.000001, 0.000001, 51.4},
 
 		--Drain Essence
 		[346654] = {25.7, 19.9, 41.3},--not a bug, verified in two logs at least.
 		--Prideful Eruption (P2+)
-		[346657] = {0, 65, 40.9},
+		[346657] = {0.000001, 65, 40.9},
 		--Soul Spikes (P3+)
-		[346762] = {0, 0, 40.9},
+		[346762] = {0.000001, 0.000001, 40.9},
 
 		--Evasive Lunge
 		[327497] = {21.4, 17.1, 11.4},
 		--Dark Recital
 		[331634] = {51.4, 68.1, 22.8},
 		--Waltz of Blood (P2+)
-		[346800] = {0, 68.1, 68.1},
+		[346800] = {0.000001, 68.1, 68.1},
 		--Dancing Fools (P3+)
-		[346826] = {0, 0, 68.1},
+		[346826] = {0.000001, 0.000001, 68.1},
 	},
 	["heroic"] = {--Heroic and Normal same, for now, but separated for time being in case this changes
 		--Duelist Riposte
@@ -211,25 +211,25 @@ local allTimers = {
 		--Dutiful Attendant
 		[346698] = {51.4, 51.4, 25.6},
 		--Dreger Servants (P2+)
-		[330978] = {0, 51.4, 51.4},
+		[330978] = {0.000001, 51.4, 51.4},
 		--Castellan's Cadre (P3+)
-		[330965] = {0, 0, 51.4},
+		[330965] = {0.000001, 0.000001, 51.4},
 
 		--Drain Essence
 		[346654] = {25.7, 19.9, 41.3},--not a bug, verified in two logs at least.
 		--Prideful Eruption (P2+)
-		[346657] = {0, 68.1, 40.9},--68.1 is guessed, did not find any logs it was cast twice in phase 2
+		[346657] = {0.000001, 68.1, 40.9},--68.1 is guessed, did not find any logs it was cast twice in phase 2
 		--Soul Spikes (P3+)
-		[346762] = {0, 0, 40.9},
+		[346762] = {0.000001, 0.000001, 40.9},
 
 		--Evasive Lunge
 		[327497] = {21.4, 17.1, 11.4},
 		--Dark Recital
 		[331634] = {51.4, 68.1, 22.8},
 		--Waltz of Blood (P2+)
-		[346800] = {0, 68.1, 68.1},
+		[346800] = {0.000001, 68.1, 68.1},
 		--Dancing Fools (P3+)
-		[346826] = {0, 0, 68.1},
+		[346826] = {0.000001, 0.000001, 68.1},
 	},
 	["mythic"] = {
 		--Duelist Riposte
@@ -237,29 +237,29 @@ local allTimers = {
 		--Dutiful Attendant (Living)
 		[346698] = {44.9, 44.9, 22.5},--Verified final mythic test
 		--Dreger Servants (P2+)
-		[330978] = {0, 44.9, 44.9},
+		[330978] = {0.000001, 44.9, 44.9},
 		--Castellan's Cadre (P3+)
-		[330965] = {0, 0, 44.9},
+		[330965] = {0.000001, 0.000001, 44.9},
 
 		--Drain Essence
 		[346654] = {22.5, 17.4, 36.1},--17 and 36 are extrapolated based on non mythic timers, could be wrong
 		--Prideful Eruption (P2+)
-		[346657] = {0, 60, 35.7},--Guessed based on math differential, but both could be wrong.
+		[346657] = {0.000001, 60, 35.7},--Guessed based on math differential, but both could be wrong.
 		--Soul Spikes (P3+)
-		[346762] = {0, 0, 35.7},--Guessed based on math differential, but both could be wrong
+		[346762] = {0.000001, 0.000001, 35.7},--Guessed based on math differential, but both could be wrong
 		--Dreadbolt Volley (Dead)
-		[337110] = {0, 44.9, 37.5},
+		[337110] = {0.000001, 44.9, 37.5},
 
 		--Evasive Lunge
 		[327497] = {18.7, 14.9, 10},
 		--Dark Recital (Living)
 		[331634] = {44.9, 59.9, 20},
 		--Dark Recital (Dead)
-		[331635] = {0, 60, 36.9},
+		[331635] = {0.000001, 60, 36.9},
 		--Waltz of Blood (P2+)
-		[346800] = {0, 60, 60},
+		[346800] = {0.000001, 60, 60},
 		--Dancing Fools (P3+)
-		[346826] = {0, 0, 60},
+		[346826] = {0.000001, 0.000001, 60},
 	},
 }
 local function warndarkRecitalTargets(self)

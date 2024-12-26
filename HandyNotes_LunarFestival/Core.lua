@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                      v3.00 - 29th October 2024
+                                     v3.02 - 10th December 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -61,6 +61,8 @@ continents[ 113 ] = true -- Northrend
 continents[ 947 ] = true -- Azeroth
 continents[ 1978 ] = true -- Dragon Isles
 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
 -- Localisation
 ns.locale = GetLocale()
 local L = {}
@@ -70,7 +72,7 @@ ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar 
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
 			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
-			Penance = true, Shadowstrike = true }			
+			Penance = true, Shadowstrike = true, Maladath = true, }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -89,6 +91,7 @@ if ns.locale == "deDE" then
 	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
 		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
+	L["Gold"] = "Gold"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -689,6 +692,8 @@ else
 	L["AddOn Description"] = "Help for the Lunar Festival achievements"
 end
 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
 -- Plugin handler for HandyNotes
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
@@ -798,6 +803,8 @@ end
 function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 local function ShowConditionallyE( aID, index )
 	local completed;
@@ -921,6 +928,8 @@ do
 		return iterator, ns.points[mapID]
 	end
 end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Interface -> Addons -> Handy Notes -> Plugins -> Lunar Festival options
 ns.options = {
@@ -1084,10 +1093,14 @@ ns.options = {
 	},
 }
 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
 function HandyNotes_LunarFestival_OnAddonCompartmentClick( addonName, buttonName )
 	Settings.OpenToCategory( "HandyNotes" )
 	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LunarFestival" )
  end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
@@ -1144,7 +1157,9 @@ end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_LunarFestivalDB", "AceEvent-3.0")
 
-ns.timeElapsed, ns.oldCount, ns.countUA, ns.spellUA = 0;
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
+ns.timeElapsed, ns.timeElapsed2, ns.oldCount, ns.countUA, ns.spellUA = 0, 0;
 local frameOnUpdate = CreateFrame( "Frame", "LunarFestivalOnUpdate", UIParent )
 frameOnUpdate:HookScript("OnUpdate", function(self, elapsed)
 	ns.timeElapsed = ns.timeElapsed + elapsed
@@ -1167,7 +1182,14 @@ frameOnUpdate:HookScript("OnUpdate", function(self, elapsed)
 			ns.db.lpBuffCount[ns.name] = nil
 		end
 	end
+	ns.timeElapsed2 = ns.timeElapsed2 + elapsed
+	if ns.timeElapsed2 > 3 then
+		ns.timeElapsed2 = 0
+		pluginHandler:Refresh()
+	end
 end)
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 SLASH_LunarFestival1, SLASH_LunarFestival2 = "/lf", "/lunar"
 

@@ -272,20 +272,13 @@ L["RAID_BOSS_FCN_6"] = "Lady Inerva Dunkelader"
 L["RAID_BOSS_FCN_7"] = "Rat des Blutes"
 L["RAID_BOSS_FCN_8"] = "Schlickfaust"
 L["RAID_BOSS_FCN_9"] = "Generäle der Steinlegion"
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_7"] = ""--]] 
+L["RAID_BOSS_FL_1"] = "Beth'tilac"
+L["RAID_BOSS_FL_2"] = "Lord Rhyolith"
+L["RAID_BOSS_FL_3"] = "Shannox"
+L["RAID_BOSS_FL_4"] = "Alysrazor"
+L["RAID_BOSS_FL_5"] = "Baleroc"
+L["RAID_BOSS_FL_6"] = "Majordomus Hirschhaupt"
+L["RAID_BOSS_FL_7"] = "Ragnaros"
 L["RAID_BOSS_FSFO_1"] = "Aufmerksamer Wächter"
 L["RAID_BOSS_FSFO_10"] = "Rygelon"
 L["RAID_BOSS_FSFO_11"] = "Der Kerkermeister"
@@ -377,8 +370,7 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Schlachtzugsbegegnungen besiegt"
---[[Translation missing --]]
---[[ L["RAID_FL"] = ""--]] 
+L["RAID_FL"] = "Feuerlande"
 L["RAID_ICC"] = "Die Eiskronenzitadelle"
 L["RAID_NP"] = "Palast der Nerub'ar"
 L["RAID_RS"] = "Das Rubinsanktum"

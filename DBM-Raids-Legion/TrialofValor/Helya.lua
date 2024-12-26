@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1829, "DBM-Raids-Legion", 4, 861)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714050021")
+mod:SetRevision("20241214213210")
 mod:SetCreatureID(114537)
 mod:SetEncounterID(2008)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -130,7 +130,7 @@ local seenMobs = {}
 --]]
 local mythicTentacleSpawns = {"2x"..DBM_COMMON_L.FRONT, "1x"..DBM_COMMON_L.FRONT.."/1x"..DBM_COMMON_L.BACK, "2x"..DBM_COMMON_L.BACK, "2x"..DBM_COMMON_L.BACK.."/1x"..DBM_COMMON_L.FRONT, "2x"..DBM_COMMON_L.FRONT}
 local phase3MythicOrbs = {6, 13.0, 13.0, 27.1, 10.7, 13.0, 25.0, 13.0, 13.0, 25.0, 13.0, 17.6, 19.5, 13.0, 13.0, 12.0, 12.0, 15, 8.2}--last being 8.2 in one log, but 13 in another. leaving 8.2 for now
-local phase3MythicTaint = {0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 17, 14, 11, 11}--Assumed that rest are 11 (if you someone survive past berserk)
+local phase3MythicTaint = {0.000001, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 17, 14, 11, 11}--Assumed that rest are 11 (if you someone survive past berserk)
 
 mod.vb.phase = 1
 mod.vb.rottedPlayers = 0

@@ -1,6 +1,6 @@
 ## Interface: 110005, 110007
 ## X-Min-Interface: 100107
-## Version: r2
+## Version: r3
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (DF)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010공격대 (용군단)|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010團隊副本-巨龍崛起|r
@@ -28,7 +28,7 @@
 ## X-DBM-Mod-MinExpansion: 9
 ## X-Curse-Project-ID: 1101373
 ## X-Wago-ID: j6jzXW6R
-## Version: r2
+## Version: r3
 
 localization.en.lua
 localization.kr.lua

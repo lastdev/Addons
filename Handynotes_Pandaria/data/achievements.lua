@@ -115,6 +115,7 @@ addon.onOnce('PLAYER_LOGIN', function ()
   if (addon.isPandariaTimerunning()) then
     local achievementData = addon.achievementData;
     local timeRunningRareAchievements = {
+      8533, -- Ordos (Original), Adding this to Timerunning cause it can be achieved here
       19993, -- Elusive Foes: The Jade Forest
       19994, -- Elusive Foes: Valley of the Four Winds
       19995, -- Elusive Foes: Krasarang Wilds
@@ -126,6 +127,7 @@ addon.onOnce('PLAYER_LOGIN', function ()
       20001, -- Elusive Foes: Timeless Isle
       20069, -- Elusive Foes: Vale of Eternal Blossoms
       20002, -- Powerful Enemies: Timeless Isle
+      20025, -- Ordos
     };
 
     local timeRunningTreasureAchievements = {

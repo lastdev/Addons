@@ -1,4 +1,4 @@
-local VERSION = 114
+local VERSION = 115
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -1194,11 +1194,11 @@ end
 WorldQuestList.Arrow = WQLdb.Arrow
 
 local TomTomCache = {}
-function WorldQuestList.AddArrow(x,y,questID,name,hideRange)
+function WorldQuestList.AddArrow(x,y,questID,name,hideRange,arrowFunc)
 	if VWQL.DisableArrow or VWQL.ArrowStyle == 2 then
 		return
 	end
-	WQLdb.Arrow:ShowRunTo(x,y,hideRange or 40,nil,true)
+	WQLdb.Arrow:ShowRunTo(x,y,hideRange or 40,nil,true,nil,nil,arrowFunc)
 end
 
 function WorldQuestList.AddArrowNWC(x,y,mapID,questID,name,hideRange)
@@ -1621,7 +1621,7 @@ do
 		if self.clickData then
 			local x,y = WorldQuestList:GetQuestWorldCoord2(-1,self.clickData.mapID,self.clickData.x,self.clickData.y,true)
 			if x and y then
-				WorldQuestList.AddArrow(x,y,nil,nil,5)
+				WorldQuestList.AddArrow(x,y,nil,nil,5,self.arrowFunc)
 			end
 		elseif self.questID then
 			local mapCanvas = self:GetMap()
@@ -2402,7 +2402,7 @@ do
 
 		[82580] = {40623,40630},
 		[83101] = 40507,
-		[82133] = 16556,
+		[82133] = 16566,
 	}
 	function WorldQuestList:IsQuestForAchievement(questID)
 		if questID and questToAchievement[questID] then
@@ -7854,7 +7854,7 @@ local slashfunc = function(arg)
 			print("Added multiline")
 			WorldQuestList.MultiArrow = true
 		end
-		local x,y = argL:match("([%d%.,%-]+) ([%d%.,%-]+)")
+		local id,x,y = argL:match("#?(%d*) ?([%d%.,%-]+) ([%d%.,%-]+)")
 		if x and y then
 			x = tonumber( x:gsub(",$",""):gsub(",","."),nil )
 			y = tonumber( y:gsub(",$",""):gsub(",","."),nil )
@@ -7862,6 +7862,9 @@ local slashfunc = function(arg)
 				local mapID = C_Map.GetBestMapForUnit("player")
 				if WorldMapFrame:IsVisible() then
 					mapID = GetCurrentMapID()
+				end
+				if id and id ~= "" then
+					mapID = tonumber(id)
 				end
 				if mapID then
 					local wX,wY --= WorldQuestList:GetQuestWorldCoord2(-10,mapID,x / 100,y / 100,true)
@@ -9090,6 +9093,7 @@ LFGListFrameEntryCreationShowerFrame:SetScript("OnHide",function()
 end)
 
 
+--[[
 QuestCreationBox:RegisterEvent("LFG_LIST_SEARCH_RESULTS_RECEIVED")
 QuestCreationBox:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
 QuestCreationBox:RegisterEvent("PARTY_INVITE_REQUEST")
@@ -9098,6 +9102,7 @@ QuestCreationBox:RegisterEvent("QUEST_ACCEPTED")
 QuestCreationBox:RegisterEvent("QUEST_REMOVED")
 QuestCreationBox:RegisterEvent("PARTY_LEADER_CHANGED")
 QuestCreationBox:RegisterEvent("GROUP_ROSTER_UPDATE")
+]]
 QuestCreationBox:SetScript("OnEvent",function (self,event,arg1,arg2)
 	if event == "LFG_LIST_SEARCH_RESULTS_RECEIVED" then
 		--if LFGListFrameSearchPanelStartGroup:IsShown() then
@@ -10332,6 +10337,40 @@ WorldMapFrame:RegisterCallback("WorldQuestsUpdate", function()
 	WorldQuestList:WQIcons_UpdateScale()
 end)
 
+local ArrowHolidayFuncCheck = {
+	prev = nil,
+	tmr = GetTime(),
+	sound = 0,
+	prevmin = nil,
+}
+function ArrowHolidayFuncCheck.func(y)
+	local t = GetTime()
+	if t - ArrowHolidayFuncCheck.tmr < 1 then
+		return
+	end
+	ArrowHolidayFuncCheck.tmr = t
+
+	y = floor(y + 0.5)
+	if ArrowHolidayFuncCheck.prev == y and (ArrowHolidayFuncCheck.sound ~= y) then
+		--PlaySoundFile([[Interface\AddOns\SharedMedia_Causese\sound\Stop.ogg]],"Master")
+		ArrowHolidayFuncCheck.sound = y
+	end 
+	if y < 200 and not ArrowHolidayFuncCheck.prevmin then
+		--Interface\AddOns\SharedMedia_Causese\sound\Next.ogg
+		PlaySoundFile([[Interface\AddOns\BigWigs\Media\Sounds\Info.ogg]],"Master")
+		ArrowHolidayFuncCheck.prevmin = y
+	end 
+	if y > (ArrowHolidayFuncCheck.prev or math.huge) then
+		ArrowHolidayFuncCheck.prevmin = nil
+		local diff = y - (ArrowHolidayFuncCheck.prev or math.huge)
+		if diff < 50 and diff > 0 then
+			--PlaySoundFile([[Interface\AddOns\SharedMedia_Causese\sound\Dodge.ogg]],"Master")
+		end
+	end
+	ArrowHolidayFuncCheck.prev = y
+end
+
+
 
 WQL_HolidayDataProviderMixin = CreateFromMixins(AreaPOIDataProviderMixin)
 
@@ -10415,6 +10454,7 @@ function WQL_HolidayDataProviderMixin:RefreshAllData()
 						x = x,
 						y = y,
 						mapID = mapID,
+						arrowFunc = ArrowHolidayFuncCheck.func,
 					},
 					data = data,
 				})
@@ -10423,5 +10463,6 @@ function WQL_HolidayDataProviderMixin:RefreshAllData()
 	end
 end
 WQL_HolidayDataProviderMixin.WQL_Signature = true
+
 
 WorldMapFrame:AddDataProvider(WQL_HolidayDataProviderMixin)

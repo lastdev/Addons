@@ -1,13 +1,10 @@
-lightweight tag e96fbcfbceadc51de8566dd9d52cc2a52dea7e97 v1.6.0
+lightweight tag 9bbf7382513172a77acf060ced997842da034fd6 v1.6.1
 Author:	romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:	Mon Nov 11 20:49:55 2024 +0100
+Date:	Wed Dec 18 14:39:05 2024 +0100
 
-commit e96fbcfbceadc51de8566dd9d52cc2a52dea7e97
+commit 9bbf7382513172a77acf060ced997842da034fd6
 Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:   Mon Nov 11 20:49:55 2024 +0100
+Date:   Wed Dec 18 14:39:05 2024 +0100
 
-    1.6.0
-    
-    Add separate options to show missing jewelry and armor sockets
-    Update TOC for 11.0.5
+    Update TOC
 

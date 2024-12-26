@@ -1,3 +1,54 @@
+== v4.05 - 20th December 2024
+* Hotoppik Copperpinch name corrected
+* Large number of Eastern Kingdoms NPC translations added
+* Some other continent NPCs too
+
+== v4.04 - 19th December 2024
+* Description in game and in menus enhanced
+* Cata Classic had a double Wondervolt down Booty Bay way. Fixed
+* Notes translation added
+* Removed unnecessary English translations
+* PX-238 translation added
+* Sagorne Creststrider spelling fixed
+* Removed hyphen from Horde Greatfather Winter but retained for quests, as per in game
+* Large number of Kalimdor NPC translations added
+
+== v4.03 - 18th December 2024
+* Food & Beverage NPCs quests simplified/corrected, using the OnMetzen pin,
+    levels added
+* Bug in quest name appearing as "?" even though I hard coded it
+
+== v4.02 - 17th December 2024
+* Translations
+* Tidy up the Options panel
+
+== v4.01 - 16th December 2024
+* Coordinates improved for those NPCs I had to guess in Classic versions
+* Added a World Map ID for Classic
+* Some tidying with allocation of icons between vendor a dn Msic Quests givers
+
+== v4.00 - 15th December 2024
+* Total rewrite
+* There are now Retail, Classic Cataclysm and Classic SoD versions
+* The Gingerbread texture has been improved for see-ability
+* More consistent usage of icons
+* Way better decision logic for whether to show / not show a pin
+* Now includes descriptions for achievements (localised for languages too)
+* Layout of the tooltips is vastly improved
+* Vastly improved colour scheme - specifically Winter Veil theme
+* This will become my event template going forward - all other event AddOns will be converted
+
+== v3.02 - 10th December 2024
+* TOC update to 11.0.7
+
+== v3.01 - 26th November 2024
+* Minimap pins now disappear/appear around the same time as they do on the World Map
+  I arbitrarily set the timer to checking every 3 seconds - to avoid FPS / DPS hits
+  If show/hide via the options panel then that's instant
+  If in combat then I rely wholly on the HandyNotes engine to avoid taint errors
+  (a main reason I moved to the HN ecosystem years ago)
+* Maladath added to the OCE server list
+
 == v3.00 - 29th October 2024
 * Slash/chat commands added
 * Lots of helpful text added to the Options panel

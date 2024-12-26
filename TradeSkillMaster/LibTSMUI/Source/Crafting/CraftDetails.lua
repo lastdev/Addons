@@ -73,7 +73,7 @@ function CraftDetails:__init(frame)
 	self._craftableQuantityFunc = nil
 	self._qualityCraftingOptionalMatsFunc = nil
 	self._craftStringCostsFunc = nil
-	BagTracking.RegisterCallback(self:__closure("_HandleInventoryUpdate"))
+	BagTracking.RegisterCallback(self:__closure("_HandleCraftableUpdate"))
 end
 
 function CraftDetails:Acquire()
@@ -148,35 +148,38 @@ function CraftDetails:Acquire()
 	self:AddChild(UIElements.New("HorizontalLine", "line"))
 	self:AddChild(UIElements.New("Frame", "content")
 		:SetLayout("HORIZONTAL")
-		:AddChild(UIElements.New("Frame", "selection")
+		:AddChild(UIElements.New("Frame", "left")
 			:SetLayout("VERTICAL")
-			:AddChild(UIElements.New("Text", "description")
-				:SetSize("AUTO", 32)
-				:SetMargin(8, 8, 4, 0)
-				:SetFont("BODY_BODY3")
-			)
-			:AddChild(UIElements.New("Frame", "content")
-				:SetLayout("HORIZONTAL")
-				:SetHeight(50)
-				:SetMargin(8, 12, 4, 4)
-				:AddChild(UIElements.New("ItemSelector", "itemSelector")
-					:SetSize(32, 32)
-					:SetScript("OnSelectionChanged", self:__closure("_HandleItemSelectionChanged"))
+			:AddChild(UIElements.New("Frame", "selection")
+				:SetLayout("VERTICAL")
+				:AddChild(UIElements.New("Text", "description")
+					:SetSize("AUTO", 32)
+					:SetMargin(8, 8, 4, 0)
+					:SetFont("BODY_BODY3")
+				)
+				:AddChild(UIElements.New("Frame", "content")
+					:SetLayout("HORIZONTAL")
+					:SetHeight(50)
+					:SetMargin(8, 12, 4, 4)
+					:AddChild(UIElements.New("ItemSelector", "itemSelector")
+						:SetSize(32, 32)
+						:SetScript("OnSelectionChanged", self:__closure("_HandleItemSelectionChanged"))
+					)
+					:AddChild(UIElements.New("Spacer", "spacer"))
 				)
 				:AddChild(UIElements.New("Spacer", "spacer"))
 			)
-			:AddChild(UIElements.New("Spacer", "spacer"))
-		)
-		:AddChild(UIElements.New("Frame", "mats")
-			:SetLayout("VERTICAL")
-			:SetMargin(4, 8, 4, 4)
-			:AddChild(UIElements.New("CraftingMatList", "matList")
-				:SetScript("OnMatQualityChanged", self:__closure("_HandleDialogRecipeStringChanged"))
-			)
-			:AddChild(UIElements.New("OptionalMatsRow", "optionalMats")
-				:SetHeight(32)
-				:SetMargin(0, 0, 4, 0)
-				:SetScript("OnRecipeStringChanged", self:__closure("_HandleDialogRecipeStringChanged"))
+			:AddChild(UIElements.New("Frame", "mats")
+				:SetLayout("VERTICAL")
+				:SetMargin(4, 8, 4, 4)
+				:AddChild(UIElements.New("CraftingMatList", "matList")
+					:SetScript("OnMatQualityChanged", self:__closure("_HandleDialogRecipeStringChanged"))
+				)
+				:AddChild(UIElements.New("OptionalMatsRow", "optionalMats")
+					:SetHeight(32)
+					:SetMargin(0, 0, 4, 0)
+					:SetScript("OnRecipeStringChanged", self:__closure("_HandleDialogRecipeStringChanged"))
+				)
 			)
 		)
 		:AddChild(UIElements.New("Frame", "buttons")
@@ -241,7 +244,7 @@ function CraftDetails:Acquire()
 			)
 		)
 	)
-	self:GetElement("content.mats.optionalMats"):Hide()
+	self:GetElement("content.left.mats.optionalMats"):Hide()
 	local buttons = self:GetElement("content.buttons")
 
 	self._state:PublisherForKeyChange("craftString")
@@ -318,25 +321,25 @@ function CraftDetails:Acquire()
 		:CallMethod(rankText, "SetShown")
 
 	self._state:PublisherForKeyChange("recipeString")
-		:CallMethod(self:GetElement("content.mats.optionalMats"), "SetRecipeString")
+		:CallMethod(self:GetElement("content.left.mats.optionalMats"), "SetRecipeString")
 
 	self._state:PublisherForKeyChange("recipeString")
-		:CallMethod(self:GetElement("content.mats.matList"), "SetRecipeString")
+		:CallMethod(self:GetElement("content.left.mats.matList"), "SetRecipeString")
 
-	self._state:PublisherForKeyChange("craftType")
-		:MapBooleanNotEquals("SALVAGE")
-		:CallMethod(self:GetElement("content.mats"), "SetShown")
+	self._state:PublisherForKeyChange("craftString")
+		:MapWithFunction(private.CraftStringToMatsShown)
+		:CallMethod(self:GetElement("content.left.mats"), "SetShown")
 
 	self._state:PublisherForKeyChange("craftType")
 		:MapBooleanEquals("SALVAGE")
-		:CallMethod(self:GetElement("content.selection"), "SetShown")
+		:CallMethod(self:GetElement("content.left.selection"), "SetShown")
 
 	self._state:PublisherForKeyChange("recipeString")
-		:CallFunction(self:__closure("_HandleInventoryUpdate"))
+		:CallFunction(self:__closure("_HandleCraftableUpdate"))
 
 	self._state:PublisherForKeyChange("craftString")
 		:MapWithFunction(Profession.GetRecipeDescription)
-		:CallMethod(self:GetElement("content.selection.description"), "SetText")
+		:CallMethod(self:GetElement("content.left.selection.description"), "SetText")
 
 	self._state:PublisherForKeyChange("craftString")
 		:MapWithFunction(private.CraftStringToRankDropdownShown)
@@ -384,9 +387,6 @@ end
 function CraftDetails:SetCraftableQuantityFunction(func)
 	assert(func and not self._craftableQuantityFunc)
 	self._craftableQuantityFunc = func
-	self._state:PublisherForKeyChange("recipeString")
-		:MapWithFunction(private.RecipeStringToNumCraftable, func)
-		:AssignToTableKey(self._state, "numCraftable")
 	return self
 end
 
@@ -507,7 +507,7 @@ end
 -- Private Class Methods
 -- ============================================================================
 
-function CraftDetails.__private:_HandleInventoryUpdate()
+function CraftDetails.__private:_HandleCraftableUpdate()
 	if not self._acquired or not self._state.recipeString then
 		return
 	end
@@ -515,18 +515,22 @@ function CraftDetails.__private:_HandleInventoryUpdate()
 	if Profession.IsSalvage(self._state.craftString) then
 		local matString = Profession.GetOptionalMatString(self._state.craftString, 1)
 		local requiredQty = Profession.GetCraftedQuantityRange(self._state.craftString)
-		self:GetElement("content.selection.content.itemSelector")
+		self:GetElement("content.left.selection.content.itemSelector")
 			:SetMatString(matString, requiredQty)
+
+		local qualityCraftable, salvageCraftable = self:_GetSalvageCraftNum()
+		self._state.numCraftable = qualityCraftable
+
+		if salvageCraftable == 0 and qualityCraftable == 0 then
+			self:GetElement("content.left.selection.content.itemSelector")
+				:SetSelection(nil)
+		end
+	else
+		self._state.numCraftable = self._craftableQuantityFunc(self._state.recipeString)
 	end
 
 	self._state.neededTools = private.CraftStringToNeededTools(self._state.craftString)
-	self._state.numCraftable = self:_GetSalvageCraftNum() or self._craftableQuantityFunc(self._state.recipeString)
 	self._state.hasVellum = self._hasVellumFunc(self._state.recipeString)
-
-	if self._state.numCraftable == 0 then
-		self:GetElement("content.selection.content.itemSelector")
-			:SetSelection(nil)
-	end
 end
 
 function CraftDetails.__private:_UpdateRecipeString(wipeExisting)
@@ -545,7 +549,7 @@ function CraftDetails.__private:_UpdateRecipeString(wipeExisting)
 	end
 
 	-- Clear the salvage Item Selector
-	self:GetElement("content.selection.content.itemSelector")
+	self:GetElement("content.left.selection.content.itemSelector")
 		:SetSelection(nil)
 	-- Populate the quality mats
 	assert(not next(private.matsTemp) and not next(private.qualityMatsTemp))
@@ -609,38 +613,46 @@ function CraftDetails.__private:_HandleItemSelectionChanged(itemSelector)
 		return
 	end
 	self._state.neededTools = private.CraftStringToNeededTools(self._state.craftString)
-	self._state.numCraftable = self:_GetSalvageCraftNum() or self._craftableQuantityFunc(self._state.recipeString)
+	self._state.numCraftable = Profession.IsSalvage(self._state.craftString) and self:_GetSalvageCraftNum() or self._craftableQuantityFunc(self._state.recipeString)
 	self._state.hasVellum = self._hasVellumFunc(self._state.recipeString)
 end
 
 function CraftDetails.__private:_GetSalvageCraftNum()
-	if not Profession.IsSalvage(self._state.craftString) then
-		return false
-	end
-	local slotId = self:GetElement("content.selection.content.itemSelector"):GetNextSalvageSlotId()
+	local slotId = self:GetElement("content.left.selection.content.itemSelector"):GetNextSalvageSlotId()
 	if not slotId then
-		return false
+		return 0, 0
 	end
 	local requiredQty = Profession.GetCraftedQuantityRange(self._state.craftString)
 	local craftable = floor(BagTracking.GetQuantityBySlotId(slotId) / requiredQty)
-	if craftable > 0 then
-		self:GetElement("content.buttons.quantity.input")
-			:SetValue(craftable)
-			:Draw()
+	local _, _, hasQualityMats = Profession.GetRecipeQualityInfo(self._state.craftString)
+	if hasQualityMats then
+		local qualityCraftable = min(craftable, self._craftableQuantityFunc(self._state.recipeString))
+		if qualityCraftable > 0 then
+			self:GetElement("content.buttons.quantity.input")
+				:SetValue(qualityCraftable)
+				:Draw()
+		end
+		return qualityCraftable, craftable
+	else
+		if craftable > 0 then
+			self:GetElement("content.buttons.quantity.input")
+				:SetValue(craftable)
+				:Draw()
+		end
+		return craftable, 0
 	end
-	return craftable
 end
 
 function CraftDetails.__private:_HandleCraftButtonMouseDown(button)
 	local isVellum = button == self:GetElement("content.buttons.content.craftVellumBtn")
-	self:_SendActionScript("OnCraftButtonMouseDown", self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.selection.content.itemSelector"):GetNextSalvageSlotId())
+	self:_SendActionScript("OnCraftButtonMouseDown", self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.left.selection.content.itemSelector"):GetNextSalvageSlotId())
 end
 
 function CraftDetails.__private:_HandleCraftButtonClick(button)
 	button:SetPressed(true)
 	button:Draw()
 	local isVellum = button == self:GetElement("content.buttons.content.craftVellumBtn")
-	self:_SendActionScript("OnCraftButtonClick", self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.selection.content.itemSelector"):GetNextSalvageSlotId())
+	self:_SendActionScript("OnCraftButtonClick", self._state.recipeString, self:_GetQuantityValue(), isVellum, self:GetElement("content.left.selection.content.itemSelector"):GetNextSalvageSlotId())
 end
 
 function CraftDetails.__private:_HandleDialogRecipeStringChanged(_, recipeString)
@@ -648,7 +660,7 @@ function CraftDetails.__private:_HandleDialogRecipeStringChanged(_, recipeString
 end
 
 function CraftDetails.__private:_HandleMaxBtnOnClick(button)
-	local numCraftable = self:_GetSalvageCraftNum() or self._craftableQuantityFunc(self._state.recipeString)
+	local numCraftable = Profession.IsSalvage(self._state.craftString) and self:_GetSalvageCraftNum() or self._craftableQuantityFunc(self._state.recipeString)
 	if numCraftable < 1 then
 		return
 	end
@@ -770,6 +782,18 @@ function private.CraftStringToRankTextShown(craftString)
 	return rank > 0 or level > 0
 end
 
+function private.CraftStringToMatsShown(craftString)
+	if not craftString then
+		return false
+	end
+	if Profession.IsSalvage(craftString) then
+		local _, _, hasQualityMats = Profession.GetRecipeQualityInfo(craftString)
+		return hasQualityMats
+	else
+		return true
+	end
+end
+
 function private.CraftStringToRankDropdownShown(craftString)
 	local level = craftString and CraftString.GetLevel(craftString) or -1
 	return level > 0
@@ -785,7 +809,7 @@ function private.RecipeStringToResultTooltip(recipeString)
 		if TradeSkill.IsClassicCrafting() then
 			return "craft:"..(Profession.GetIndexByCraftString(craftString) or craftString)
 		else
-			return "enchant:"..RecipeString.GetSpellId(recipeString)
+			return recipeString
 		end
 	end
 
@@ -851,10 +875,6 @@ function private.CraftStringToCraftType(craftString)
 	else
 		return "ITEM"
 	end
-end
-
-function private.RecipeStringToNumCraftable(recipeString, func)
-	return recipeString and func(recipeString) or 0
 end
 
 function private.RecipeStringToHasVellum(recipeString, func)

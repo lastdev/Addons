@@ -1760,6 +1760,7 @@ function HealBot_Skins_Check_Skin(SkinName)
             Healbot_Config_Skins.HealGroups[SkinName][7]["FRAME"]=1
             Healbot_Config_Skins.HealGroups[SkinName][7]["STATE"]=false
             Healbot_Config_Skins.HealGroups[SkinName][8]["FRAME"]=5
+            Healbot_Config_Skins.HealGroups[SkinName][8]["STATE"]=false
             Healbot_Config_Skins.HealGroups[SkinName][12]["FRAME"]=8
             Healbot_Config_Skins.HealGroups[SkinName][14]["FRAME"]=9
             Healbot_Config_Skins.HealGroups[SkinName][15]["FRAME"]=10

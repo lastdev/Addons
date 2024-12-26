@@ -1,12 +1,13 @@
 # DBM - Core
 
-## [11.0.29](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.0.29) (2024-11-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.0.28...11.0.29) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [11.0.38](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.0.38) (2024-12-14)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.0.37...11.0.38) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- Prep a new core release  
-- Fixed bug where initial nameplate timers could start off enemies not actually engaged in combat with player  
-    Fixed a bug where nameplate initial timers could start off friendly units such as Bill. Should only engage when unit actually becomes hostile to player  
-- Create some utility functions older classic modules might need to use to determine certain buffs or debuff auras for unique hard modes (such as sartherian in wrath and probably some classic sod stuff can use this too)  
-- also add rollincoming  
-- Add "movetotendrils"  
+- bump core version  
+- Update localization.fr.lua (#1436)  
+- Update localization.br.lua (#1437)  
+- Update localization.es.lua (#1435)  
+- Timers: Fix timers with a negative offset, commonly used at combat start (#1438)  
+- work around annoying core bug where starting a timer of 0 uses self.timer instead. But that annoying bug has to stay since over a decade worth of mods has assumed that to be valid  
+- auto set "keep" on variance timers in debugmode  
 - bump alpha  

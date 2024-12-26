@@ -2,521 +2,1368 @@ local _, ns = ...
 local points = ns.points
 local textures = ns.textures
 local scaling = ns.scaling
-local colourPrefix		= ns.colour.prefix
-local colourHighlight	= ns.colour.highlight
-local colourPlaintext	= ns.colour.plaintext
 
-local airRifle = " sells the \"Red Rider Air Rifle\" that\n"
-				.."you need for this Achievement. He pats through here.\n\n"
-				.."Note that you must \"pelt\". This effect doesn't\n"
-				.."happen every time you fire the rifle.\n\n"
-				.."Reality check: You are going to die a lot. If you\n"
-				.."have invisibility and patience then much less so"
-local almiePizzle = "offers four dailies. \"Grumpus\" will require help.\n"
-				.."The quests are clustered just south-west of the\n"
-				.."Bloodmaul Slag Mines dungeon at about (46.2, 27.5).\n\n"
-				.."The point of the dailies is to apply Winter Veil\n"
-				.."decorations to your Garrison. Beware! These will\n"
-				.."replace your Hallows End decorations. Choose wisely!\n\n"
-				.."And... to obtain the Minion of Grumpus from a\n"
-				.."Savage Gift. 3% drop chance. Sellable on the AH"
-local armada = "\"Flamer\": Do the \"You're a mean one...\" daily\n"
-				.."and then check your stolen present each time.\n\n"
-				.."\"Killdozer\": You need a level 3 Garrison.\n"
-				.."Complete the Winter Veil dailies for tokens,\n"
-				.."five of which allows you to purchase from Izzy.\n\n"
-				.."\"Mortar\": Dropped by Smashum Grabb, a rare elite\n"
-				.."in Tanaan Jungle. Can drop all year so no stress.\n\n"
-				.."\"Cannon\": Dropped by Gondar, a rare elite in\n"
-				.."Tanaan Jungle. Can drop all year so no stress.\n\n"
-				.."\"Roller\": Dropped by Drakum, a rare elite in\n"
-				.."Tanaan Jungle. Can drop all year so no stress.\n\n"
-				.."(I've marked the Tanaan mob locations. Be patient,\n"
-				.."drop rates are 10%. This pin marks your progress)"
-local blizzPoetry = "'Twas the feast of Great-Winter\nAnd all through the land\nAll the races were running\n"
-						.."With snowballs in hand.\nThe cooks were all frantic\nAnd for those \"in the know\"\n"
-						.."Swoops and owls were crashing\nLike new-fallen snow.\n\nCookies and eggnog\n"
-						.."Were consumed by all\nAs the snowballs flew freely\nAnd drunks smashed into walls.\n\n"
-						.."May your feast of Great-Winter\nBe one merry and bright\nAnd from all here at Blizzard\n"
-						.."We wish you a fun night!\n\n(From the original holiday description!)"
-local brothers = "If some brothers are missing then deal\n"
-				.."with Anduin, who will be nearby"
-local caroling = "Use your \"Winter Veil Chorus Book\". Look for it in\n"
-				.."your Toy Box or else in your bags if newly received."
-local dance = "No dance partner? No problem. All you need is TWO toons as follows:\n"
-				.."(1) Create TWO clients on your computer. The MOST important step.\n"
-				.."Do this by navigating to \"_retail_\" and double clicking TWICE on\n"
-				.."\"Wow.exe\" or twice launching the game through Battlenet.\n"
-				.."(2) On client one position your first character in Dalaran.\n"
-				.."(3) Alt-tab to client two. Get your second character ready too.\n"
-				.."(4) Note the message from Blizzard about the other client. Ignore.\n"
-				.."(5) Alt-tab to client one. Login toon one. Select toon two and \dance.\n"
-				.."(6) Congratulations. Continue Alt-tabbing for the other toon if you want!"
-local gourmet = "Wulmort and Macey in IF and Penny and Kaymard\n"
-				.."in Org have most of what you need, except:\n\n"
-				..colourHighlight .."Small Egg:" ..colourPlaintext .." By far the best place to farm is the dragonhawks\n"
-				.."just outside Silvermoon. The most accessible for Alliance\n"
-				.."are the barn owls along the western edge of Duskwood.\n\n"
-				..colourHighlight .."Ice Cold Milk:" ..colourPlaintext .." The nearby inn sells it.\n\n"
+ns.armada = "\"Flamer\": Do the \"You're a mean one...\" daily and then check your stolen present each time.\n\n\"Killdozer\": You "
+			.."need a level 3 Garrison. Complete the Winter Veil dailies for tokens, five of which allows you to purchase from "
+			.."Izzy.\n\n\"Mortar\": Dropped by Smashum Grabb, a rare elite in Tanaan Jungle. Can drop all year so no stress.\n\n"
+			.."\"Cannon\": Dropped by Gondar, a rare elite in Tanaan Jungle. Can drop all year so no stress.\n\n\"Roller\": "
+			.."Dropped by Drakum, a rare elite in Tanaan Jungle. Can drop all year so no stress.\n\n(I've marked the Tanaan mob "
+			.."locations. Be patient, drop rates are 10%. This pin marks your progress)"
+ns.baine = "Baine is in his large teepee at Thunderbluff"
+ns.bbDarnassus1 = "Once through the Magenta Portal you'll be facing due east. You need to turn 90 degrees and proceed south.\n\n"
+			.."Hippogryph Riders patrol. The dome of the Temple of the Moon is NOT a safe place to rest."
+ns.bbDarnassus2 = "The position is safe and yet still within the city"
+ns.bbDarnassus3 = "Here's the trick. Inside, the Temple is one large open area. There is a mezzanine level which skirts the "
+			.."entire perimeter. It is accessed by a ramp. There are guards at intervals. You'll die a few times.\n\n"
+			.."Alternatively... Tyrande is on a platform on this mezzanine. The platform is directly above the entrance. You can "
+			.."take advantage of dismount delays by flying straight in and then straight up and spining around 180 degrees. You'll "
+			.."now be facing her.\n\nSpam your macro. Ensure the pond is below you. Fall into it for zero damage. Spin 180 degrees."
+			.." Use an invisibility potion/spell.\n\nIf you must die then veer to the left of the exit - you need to rez and hearth"
+			.." away from the guards"
+ns.bbExodar1 = "Enter The Exodar through the side entrance"
+ns.bbExodar2 = "No guards in this section. Pause for any cooldowns, trip to the fridge, toke, etc"
+ns.bbExodar3 = "Two guards here. Hard left plus jump down then straight forward, bearing left a little"
+ns.bbExodar4 = "Two guards here, three at the top of the stairs. Then take a hard right. Spam your macro now"
+ns.bbExodar5 = "The Prophet is right here. Pelt him damn it!"
+ns.bbExodar6 = "Safe to respawn and hearth/portal from here. Ideal place to die"
+ns.bbMacro = "\n/stopmacro [noexists]\n/cancelaura Right In The Eye!\n/use Red Rider Air Rifle\n\nImportant! \"pelt\" is just one "
+			.."of five outcomes of using the rifle. A short cancelable stun \"buff\" (say what) is possible. In other words, just "
+			.."keep spamming. If your combat log says your ranged shot hit for one damage then you're good!" 
+ns.bbMacroAR = "#showtooltip\n/cleartarget\n/tar Eitrigg\n/tar Lady Sylvanas\n/tar Lor'themar" ..ns.bbMacro
+ns.bbMacroAC= "#showtooltip\n/cleartarget\n/tar Baine Bloodhoof\n/tar Garrosh\n/tar Lady Sylvanas\n/tar Lor'themar" ..ns.bbMacro
+ns.bbMacroHR = "#showtooltip\n/cleartarget\n/tar Muradin\n/tar Prophet\n/tar Tyrande" ..ns.bbMacro
+ns.bbMacroHC = "#showtooltip\n/cleartarget\n/tar Muradin\n/tar Prophet\n/tar Tyrande\n/tar King Varian" ..ns.bbMacro
+ns.bbMuradin1 = "Fly in and stay up as high as possible. Use a small, stable mount for best visibilty and clearance"
+ns.bbMuradin2 = "Fly over to this tunnel. Wait out your invisibility cooldown if necessary"
+ns.bbMuradin3 = "There is a high up ledge here. Safe to pause and say your last prayers"
+ns.bbMuradin4 = "Descend to here and enter \"The High Seat\" chamber"
+ns.bbMuradin5 = "Try to die as close as possible to here so that you may rez safely down in the side passage"
+ns.bbMuradin6 = "Spam your macro, staying close to your planned die location. Invisibility after you tag him is a nice bonus"
+ns.bbOrg1 = "If finished and invisible then run to here and hearth. It's a nook behind the AH"
+ns.bbOrg2 = "He's here. There's no sugar coating this: You'll die. It may take a few tries if you luck out spamming the macro"
+ns.bbOrg3 = "Through here. Just inside is an okay spot to rez or pause (if you are lucky). Best to fly in - drop suddenly from "
+			.."height. The doorway has a chicane. Do your best to surge through it and commence macro spamming. He's at the back. "
+			.."Hopefully you get the pelt before you quickly die. A quick invisibility is always an option"
+ns.bbSC1 = "The nearest flightpoint is Zul'Aman in Ghostlands. Toughest of the four. You will die. Make a dash for inside then a "
+			.."sharp left and hide as per marker. BYO Invisibility pots (a LOT) or purchase a class change as a Mage!!!"
+ns.bbSC2 = "He's right here. Try to pelt him from ranged as he has a lot of guards behind him. Decide where you will hearth (after "
+			.."invis/rez). The translocation room at the rear or the earlier side room (with trainer NPCs)"
+ns.bbSC3 = "Pinch point. The two pats are in opposite directions and you lose all visibility here. Wait at the earlier marker to "
+			.."gain a sense of timing. Should be clear by now: without invisibility you'll die a lot"
+ns.bbSC4 = "A couple of pats come through the Walk of Elders. You could try hiding in here with the vendors"
+ns.bbSC5 = "A couple of pats come through Murder Row. You can pause over to the side as necessary"
+ns.bbSC6 = "Wait out your invisibility/hearth cooldown here"
+ns.bbSC7 = "So many guards here. Invisibility"
+ns.bbSC8 = "2 guards here. Invisibility"
+ns.bbSC9 = "12 nasty guards up ahead. Now is the time to go invisible"
+ns.bbSC10 = "No guards here. A good place to hearth from invisibility"
+ns.bbSC11 = "The side rooms are safe for hiding and hearthing. The NPCs here are all trainers. Also, if you used invisibility to "
+			.."enter then wait out the CD here"
+ns.bbSC12 = "Two guards and up ahead many more. Use invisibility"
+ns.bbSC13 = "Two guards and up ahead many more. Use invisibility. For details on how to get here please see the "
+			.."\"A-Caroling We Will Go\" markers"
+ns.bbSeller = "Sells the Red Rider Air Rifle. Pats in this area"
+ns.bbTB = "It's obvious enough that you simply swoop in and spam your macro but you really do need to plan your exit strategy in "
+			.."order to minimise the unpleasant walk back to get your corpse. A movement speed buff to get you to the edge of the "
+			.."mesa and then a means to slow your fall when you jump is ideal. Mages have it all with invisibility too of course. "
+			.."Failing that, try to die so that you may rez at the rear of the teepee"
+ns.bbUC1 = "Two guards here. Do not come this way as there's no chance later to cooldown your invisibility"
+ns.bbUC2 = "Relax. No guards in this section. Use a small, stable mount for best visibility and clearance"
+ns.bbUC3 = "Go this way. Guard up ahead"
+ns.bbUC4 = "One guard here. Use invisibility"
+ns.bbUC5 = "No guards through to here. Pause for invisibility cooldown if necessary"
+ns.bbUC6 = "Enter here. Invisibility is your friend"
+ns.bbUC7 = "There are two guards at each archway. Got invisibility?"
+ns.bbUC8 = "The Dark Lady is up ahead. Just fire like crazy and die"
+
+ns.blizzPoetry = "'Twas the feast of Great-Winter\nAnd all through the land\nAll the races were running\n"
+			.."With snowballs in hand.\nThe cooks were all frantic\nAnd for those \"in the know\"\n"
+			.."Swoops and owls were crashing\nLike new-fallen snow.\n\nCookies and eggnog\n"
+			.."Were consumed by all\nAs the snowballs flew freely\nAnd drunks smashed into walls.\n\n"
+			.."May your feast of Great-Winter\nBe one merry and bright\nAnd from all here at Blizzard\n"
+			.."We wish you a fun night!\n\n(From the original holiday description!)"
+
+ns.broBenjamin = "He pats along the righthand side.\n\nNote: There is quest/story phasing here. If some Brothers are missing then "
+			.."it's no coincdence that Anduin is nearby. Deal with him first"
+ns.broCassius = "He's in tne first room on the right side"
+ns.broCrowley = "He is in the basement. The stairs are in the second room on the right side"
+ns.broDurkot = "Go to the ground floor. He pats through here"
+ns.broJoshua = "In the Cathedral at the altar area"
+ns.broKeltan = "He's on Orgrim's Hammer, a huge flying airship. Check your map for the current location"
+ns.broKristoff = "Not inside the Cathedral. Near the fountain in the Cathedral's Square"
+
+ns.caroling = "Purchase the Chorus Book from a Winter Veil vendor in any capital city, Shattrath or a level 3 Garrison. "
+			.."It's a toy so place it on your hot bar and be ready to press the key."
+ns.carolingCata = "The Gaudy Winter Veil Sweater is from a present from under the tree. Not before 25th December! "
+			.."Place it on your hot bar and be ready to press the key"
+ns.carolingDarn = "Find a quiet area on the city perimeter. A tree bough which is out of line of sight of everything is perfect!"
+ns.carolingIF = "Here is a safe place. It's above the Gates of Ironforge"
+ns.carolingOrg = "Fly in and land up high at the perimeter. Easy as!"
+ns.carolingSC1 = "Don't bother with the old \"crack in the wall\" exploit. I tried it for testing. There is an invisible wall. "
+			.."Baby Spice will not help too. If you must try then this is the location"
+ns.carolingSC2 = "Without invisibility you will draw agro. Better to die/rez right here as there are more guards inside too!"
+ns.carolingSC3 = "This is where you will rez, if you were wondering. Fairbreeze Village. Yeah... I took a hit for the team"
+ns.carolingSC4 = "Farstrider Retreat will be to your left"
+ns.carolingSC5 = "Come this way. Thuron's Livery on your left"
+ns.carolingSC6 = "From Zul'Aman ride up to here. Stay on the left side of Lake Elrendar. Continue north into Eversong Woods"
+ns.carolingSC7 = "Start here at the Zul'Aman flight point. If that is not possible then begin at Light's Hope Chapel in the "
+			.."Eastern Plaguelands"
+ns.carolingTB = "Just fly in and land on the very edge of any of the mesas. Easy peasy!"
+ns.carolingUC1 = "Do NOT descend into Undercity"
+ns.carolingUC1 = "The sewer entrance works perfectly fine. Stop entering when the Undercity map appears"
+
+ns.falala = "Go here and speak to Chu'a'lor. Complete \"The Crystals\" then talk to Torkus and complete \"Our Boy wants...\" then "
+			.."go to Chu'a'lor and complete \"The Skyguard Outpost\" then talk to Sky Commander Keller -> Vanderlip and complete "
+			.."\"Bombing Run\". Only now is the daily \"Bomb Them Again\" available. Use your Fresh/Preserved Holly now!"
+ns.gourmet = "Wulmort and Macey in IF and Penney and Kaymard in Org have most of what you need, except:\n\n"
+				.."Small Egg:" .." By far the best place to farm is the dragonhawks "
+				.."just outside Silvermoon. The most accessible for Alliance are the barn owls along the western edge of "
+				.."Duskwood.\n\n" .."Ice Cold Milk:" .." The nearby inn sells it.\n\n"
 				.."Note the vanilla cooking level requirements for the recipes!"
-local threeSet = "Strictly must be the \"Winter Garb\" set, no other similarly\n"
-				.."named gear will do. The hat and chest/clothes may be red\n"
-				.."or green. You are ready once you have the \"set bonus\".\n\n"
-				..colourHighlight .."Red Hat:" ..colourPlaintext .." Easiest is Grand Magus Telestra in The Nexus\n"
-				.."dungeon in Coldarra, Borean Tundra, Northrend. Bottom\n"
-				.."entrance. Must be Heroic. Turn left after entering. It's the\n"
-				.."second boss fight.\n\n"
-				..colourHighlight .."Green Hat:" ..colourPlaintext .." Easiest is Mage-Lord Urom, the 3rd boss in\n"
-				.."heroic The Oculus. The entrance is above The Nexus.\n"
-				.."Don't timewalk either dungeon.\n\n"
-				..colourHighlight .."Red/Green Winter Clothes & Winter Boots:" ..colourPlaintext .." Use the AH\n"
-				.."or hire a tailor.\n\n"
-				..colourHighlight .."Tailoring Patterns:" ..colourPlaintext .." Any capital city vendor, your level 3\n"
-				.."garrison or Eebee Jinglepocket at The Aldor Bank in\n"
-				.."Shattrath for the boots. Alliance cities or your level\n"
-				.."3 garrison for Red Clothes. Eebee or Horde cities for the\n"
-				.."Green Clothes"
-local vendor = " will happily sell you a snowball,\n"
-				.."a Winter Veil Chorus Book, patterns, recipes, spices,\n"
-				.."spirits and wrapping paper! Time is money friend!"
+ns.snowballs = "Snow Balls are simply purchasable from Smokywood Pastures vendors but the Holiday Snow mounds in the Alterac "
+			.."Mountains / Hillsbrad Foothills (SoD/Retail), Dun Morogh (R) and Winterspring (R) will contain 3 to 6 Snowballs. "
+			.."\n\nWhile doing your Level 3 Garrison dailies in Frostfire Ridge, the Snow Mounds will give a snowball 50% of the "
+			.."time but the main reason for farming is the 5% chance of a cool Grumpling pet (#10 P/B)"
+ns.frostyShake = "Important!!! The Winter Veil Disguise Kit is mailed to you 24 hours after you complete this small quest chain. "
+			.."Give yourself enough time as the achievement must be completed while the event is ongoing.\n\n"
+			.."No dance partner? No problem. All you need is two characters in Dalaran as follows:\n\n(1) Create TWO game "
+			.."clients on your computer. The MOST important step. Do this by twice launching the game through Battlenet.\n\n(2) On "
+			.."both clients position your characters in Dalaran. Notice that you eventually get logged out when you switch "
+			.."clients. That's the key: It's not instant. Ignore any message from Blizzard.\n\n(3) Let's start. We need to be "
+			.."smooth here. Quickly select the other game client. With your character you must select the other character and "
+			.."/dance. Quickly as it will disappear soon! Congratulations!\n\n(4) Rinse and repeat for the second character."
+			.."\n\n" ..ns.snowballs
+ns.garrison = "The quests are clustered just south-west of the Bloodmaul Slag Mines dungeon in Frostfire Ridge. Grumpus will be "
+			.."tough to solo.\n\nThe point of the dailies is to gain currency to then decorate your Garrison, which must be at "
+			.."level 3 to even see the quest givers. Careful: Applying the Winter Veil decorations will cancel some of your "
+			.."Hallow's End decorations.\n\nThe reward currency may also be used to purchase a Savage Gift, which has a 3% chance "
+			.."to contain the coveted Minion of Grumpus ground mount! It can be traded on the AH.\n\nThere's a 14% chance to "
+			.."obtain a Medallion of the Legion. It rewards 1000 across Draenor reputations"
+ns.letItSnow = "You obtain the Snowflakes randomly by /kiss Winter Revellers in town and city Inns!"
+ns.magentaPortal = "Fly into the magenta portal fast and then press the space bar / \"up\" key immediately to go straight up. This "
+			.."is especially important as the guards are very agressive"
+ns.owlbeast = ". While the drop rate here is barely 60%, the mobs are plentiful and with fast respawns!"
+ns.pepe = "\n\nLook at the cart that's behind the vendors/quest givers. Perched on one end is Greatfather Pepe. Click on Pepe!"
+ns.smallEgg = "Good Small Egg drop rate. Dragonhawk mobs in Eversong Woods have 100% drop rate. Numerous other mobs have >= 60% "
+			.."drop rate. Look for this icon across all of Kalimdor / Eastern Kingdoms"
+ns.tanaanSpawns = "Spawns here. Every 5 to 10 minutes but is farmable once per day. Drop rate is about 10%"
+ns.teldrassil = "Why not use the Darkshore (before \"Teldrassil fire\" phase) to Rut'theran Village boat! Flying is possible too. "
+			.."Make sure you choose a short fatigue path. At Rut'theran another boat takes you to Azuremyst Isle or a magenta "
+			.."portal will transport you to the top of the world tree into Darnassus"
+ns.threeSet = "Strictly must be the \"Winter Garb\" set, no other similarly named gear will do. The hat and chest/clothes may be "
+			.."red or green. You are ready once you have the \"set bonus\".\n\n"
+			.."Red Hat:" .." Easiest is Grand Magus Telestra in The Nexus dungeon in Coldarra, "
+			.."Borean Tundra, Northrend. Bottom entrance. Must be Heroic. Turn left after entering. It's the second boss fight.\n\n"
+			.."Green Hat:" .." Easiest is Mage-Lord Urom, the 3rd boss in heroic The Oculus. "
+			.."The entrance is above The Nexus. Don't timewalk either dungeon.\n\n"
+			.."Red/Green Winter Clothes & Winter Boots:" .." Use the AH or hire a tailor.\n\n"
+			.."Tailoring Patterns:" .." Any capital city vendor, your level 3 Garrison or "
+			.."Eebee Jinglepocket at The Aldor Bank in Shattrath for the boots. Alliance cities or your level 3 garrison for Red "
+			.."Clothes. Eebee or Horde cities for the Green Clothes.\n\n"
+			.."Graccu's Fruitcake: Any Smokywood Pastures food and beverage vendor"
+ns.threeSetNexus = "Don't forget to set \"Heroic\". You need both The Nexus and The Oculus"
+ns.vendor = "Will happily sell you a snowball, a Winter Veil Chorus Book, patterns, recipes, spices, spirits and wrapping "
+			.."paper! Time is money friend!"
+ns.vendorFB = "Seller of Winter Veil food and beverages"
+ns.vendorL3Garr = ".\n\nYou must have a level 3 garrison"
+ns.withHelper = "Get the buff here. Then queue for the Isle of Conquest BG. Man a cannon. Quick and easy way for PvEers!\n\n"
+			.."Another devious way: Enter the AV BG as a healer. Spam heals. You'll get their HKs"
+ns.yourHub = "Your Feast of Winter Veil hub!"
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
+ns.setBlizzPoetry = { special=true, name="The Feast of Great-Winter", faction=ns.faction, noCoords=true, noContinent=true,
+			tip=ns.blizzPoetry }
+ns.setHolidaySnow = { armada=true, name="Holiday Snow", achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, },
+			{ id=259, showAllCriteria=true, faction="Horde", guide=ns.baine, },
+			{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, }
+ns.setIronArmada = { armada=true, name="Iron Armada", faction=ns.faction, noCoords=true, version=60202, noContinent=true,
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, }
+ns.setSantaTreatsQ = { { id=7025, name="Treats for Great-father Winter", qType="Seasonal", faction="Alliance", },
+						{ id=6962, name="Treats for Great-father Winter", qType="Seasonal", faction="Horde", }, }
+ns.setSantaTreatsA = { { id=1688, showAllCriteria=true, guide=ns.gourmet, }, }
+ns.setTisSeason = { tisSeason=true, name="'Tis the Season", faction=ns.faction, noCoords=true, noContinent=true,
+				achievements={ { id=277, showAllCriteria=true, guide=ns.threeSet, }, }, }
+ns.setWondervolt = { wondervolt=true, name="PX-238 Winter Wondervolt", showAnyway=true,
+			achievements={ { id=252, guide=ns.withHelper, } }, }
+ns.setWondervoltOver = { wondervolt=true, name="PX-238 Winter Wondervolt", showAnyway=true, version=40101,
+			achievements={ { id=252, guide=ns.withHelper, } }, }
+ns.setWondervoltUnder = { wondervolt=true, name="PX-238 Winter Wondervolt", showAnyway=true, versionUnder=40101,
+			achievements={ { id=252, guide=ns.withHelper, } }, }
+ns.setGourmet = { gourmet=true, name="The Winter Veil Gourmet", faction=ns.faction, noCoords=true, noContinent=true,
+			achievements=ns.setSantaTreatsA, }
+				
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Achievements:
 -- With a Little Helper From My Friends - 252 Alliance/Horde
 -- BB King - 4436 Alliance, 4437 Horde
--- 'Yis the Season - 277 Alliance/Horde
+-- A-Caroling We Will Go - 5853 Alliance, 5854 Horde
+-- Fa-la-la-la-Ogri'la - 1282 Alliance/Horde
+
+-- 'Tis the Season - 277 Alliance/Horde
 -- Let it Snow - 1687 Alliance/Horde
 -- Gourmet - 1688 Alliance/Horde
 -- A Frosty Shake - 1690 Alliance/Horde
 -- On Metzen - 273 Alliance/Horde
 -- Iron Armada - 10353 Alliance/Horde
--- Fa-la-la-la-Ogri'la - 1282 Alliance/Horde
--- A-Caroling We Will Go - 5853 Alliance, 5854 Horde
 -- Holiday Bromance - 1686 Alliance, 1685 Horde
--- Vendors - 1
 
--- ===================================================
--- aIDA, aIDH, aIndexA, aIndexH, aQuestA, aQuestH, tip
--- ===================================================
+--==================================================================================================================================
+--
+-- KALIMDOR
+--
+--==================================================================================================================================
+
+points[ 76 ] = { -- Azshara
+	[46007800] = { gourmet=true, name="Static-Charged Hippogryph", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[48001700] = { gourmet=true, name="Thunderhead Hippogryph", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1447 ] = { -- Azshara
+	[46007800] = { gourmet=true, name="Static-Charged Hippogryph", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[48001700] = { gourmet=true, name="Thunderhead Hippogryph", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
 
 points[ 97 ] = { -- Azuremyst Isle
-	[28404273] = { vendor=true, tip="Wolgren Jinglepocket" ..vendor },
-	[34634441] = { aID=252, tip="Winter Wondervolt machine" },
-	[24674933] = { aIDH=5854, indexH=2, tip="It is sufficient to stand here" },
-	[22415318] = { aIDH=4437, indexH=2, tip="For details on how to get here please see the\n"
-										.."\"A-Caroling We Will Go\" markers" },
-	[23504620] = { aIDH=4437, indexH=2, tip="Use this entrance into The Exodar. No guards (yet)" },
+	[14008300] = { gourmet=true, name="Owlbeast mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg ..ns.owlbeast, },
+	[24674933] = { bbKing=true, caroling=true, name="The Exodar Side Entrance", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR,
+					tip="Look at The Exodar map before you go too far inside", },
+					{ id=5854, index=2, showAllCriteria=true, guide=ns.caroling,
+						tip="No need to go very far inside The Exodar. No guards in this section", }, },
+					tip="Enter The Exodar through the side entrance", },
+	[28404273] = { vendor=true, name="Wolgren Jinglepocket", faction="Alliance", tip=ns.vendor },
+	[34634441] = ns.setWondervolt,
+	[40002300] = { gourmet=true, name="Timberstrider mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[53006100] = { gourmet=true, name="Timberstrider mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
 }
-points[ 105 ] = { -- Blade's Edge Mountains
-	[34404140] = { aID=1282, tip="You do the bombing runs here" },
-	[28765737] = { aID=1282, tip="Go here and speak to Chu'a'lor. Complete \"The Crystals\"\n"
-					.."then talk to Torkus and complete \"Our Boy wants...\" then\n"
-					.."go to Chu'a'lor and complete \"The Skyguard Outpost\" then\n"
-					.."talk to Sky Commander Keller -> Vanderlip and complete\n"
-					.."\"Bombing Run\". Only now is the daily \"Bomb Them Again\"\n"
-					.."available. Use your Fresh/Preserved Holly now!" },
+
+points[ 1943 ] = { -- Azuremyst Isle
+	[14008300] = { gourmet=true, name="Owlbeast mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg ..ns.owlbeast, },
+	[24674933] = { bbKing=true, caroling=true, name="The Exodar Side Entrance", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC,
+					tip="Look at The Exodar map before you go too far inside", },
+					{ id=5854, index=3, showAllCriteria=true, guide=ns.carolingCata,
+						tip="No need to go very far inside The Exodar. No guards in this section", }, },
+					tip="Enter The Exodar through the side entrance", },
+	[28404273] = { vendor=true, name="Wolgren Jinglepocket", faction="Alliance", tip=ns.vendor },
+	[34634441] = ns.setWondervolt,
+	[40002300] = { gourmet=true, name="Timberstrider mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[53006100] = { gourmet=true, name="Timberstrider mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
 }
-points[ 114 ] = { -- Borean Tundra
-	[40205500] = { aIDH=1685, indexH=2, tip="Go to the ground floor. He pats through here" },
-	[31003000] = { aID=277, tip="Don't forget to set \"Heroic\". You\n"
-										.."need both The Nexus and The Oculus" },
+
+points[ 62 ] = { -- Darkshore
+	[43605290] = { gourmet=true, name="Moonkin mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg .."\n(Early Zidormi phase)", },
+	[44604540] = { gourmet=true, name="Moonkin mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg .."\n(Early Zidormi phase)", },
 }
-points[ 127 ] = { -- Crystalsong Forest
-	[29563287] = { aID=1690, tip=dance },
-	[27003850] = { aID=252, tip="Winter Wondervolt machine" },
+
+points[ 1439 ] = { -- Darkshore
+	[43605290] = { gourmet=true, name="Moonkin mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg .."\n(Early Zidormi phase)", },
+	[44604540] = { gourmet=true, name="Moonkin mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg .."\n(Early Zidormi phase)", },
 }
-points[ 125 ] = { -- Dalaran
-	-- Dalaran will not show in Crystalsong Forest but it will propagate upwards
-	[24203880] = { vendor=true, tip=blizzPoetry },
-	[49394373] = { aID=252, tip="Winter Wondervolt machine" },
-	[49832909] = { aID=1690, tip=dance },
+
+points[ 89 ] = { -- Darnassus	
+	[36125035] = { bbKing=true, caroling=true, name="Magenta Portal to Rut'theran Village", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, },
+					{ id=5854, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingDarn, }, },
+					tip=ns.teldrassil .."\n\n" ..ns.magentaPortal, },
+	[36989615] = { bbKing=true, caroling=true, name="Chillax", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip="Good location to pause", },
+					{ id=5854, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingDarn, }, }, tip=ns.bbDarnassus2, },
+	[39558020] = { bbKing=true, caroling=true, name="Rez and Hearth", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, },
+					{ id=5854, index=2, showAllCriteria=true, }, }, },
+	[42977433] = { bbKing=true, name="Temple of the Moon Entrance", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbDarnassus3, }, }, },
+	[87004500] = ns.setIronArmada,
+	[89004000] = ns.setGourmet,
+	[87003700] = ns.setTisSeason,
+	[87004100] = ns.setBlizzPoetry,
 }
-points[ 89 ] = { -- Darnassus
-	[39204320] = { vendor=true, tip=blizzPoetry },
-	[44048492] = { aIDH=4437, indexH=3, tip="3) Two guards here. Go up this ramp" },
-	[42977300] = { aIDH=4437, indexH=3, tip="1) Entrance is this way. Two guards, blow\n"
-										.."your invisibility here and pause at the\n"
-										.."next marker for a refresh" },
-	[42977428] = { aIDH=4437, indexH=3, tip="5) Upstairs. Along the mezzanine perimeter are\n"
-										.."more guards at intervals. Aside from invisibility\n"
-										.." you'll just need to soldier on, die and rez" },
-	[43808505] = { aIDH=4437, indexH=3, tip="4) Two guards here at the top of the ramp. Turning\n"
-										.."right is a little more optimal than a left. There\n"
-										.."is no longer an opportunity to wait out a CD so\n"
-										.."delaying any rez will be optimal in that respect" },
-	[46508027] = { aIDH=4437, indexH=3, tip="2) A safe place to wait out cooldowns. You'll\n"
-										.."now have one more chance to go invisible" },
-	[43017807] = { aIDH=4437, indexH=3, tip="6) Upstairs. Exact location of the High Priestess.\n"
-										.."Use a \"tar tyrande\" macro and as soon as you\n"
-										.."\"pelt\" surge straight past her and fall into\n"
-										.."the shallow pool below for zero fall damage.\n"
-										.."No guards here. Spin around 180 degrees and run\n"
-										.."forward, veering left to avoid the two guards at\n"
-										.."the exit. With luck you'll be okay to hearth but\n"
-										.."certainly in a good place to rez" },
+
+points[ 1457 ] = { -- Darnassus
+	[36125035] = { bbKing=true, caroling=true, name="Magenta Portal to Rut'theran Village", faction="Horde",
+					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, },
+					{ id=5854, index=1, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingDarn, }, },
+					tip=ns.teldrassil .."\n\n" ..ns.magentaPortal, },
+	[36989615] = { bbKing=true, caroling=true, name="Chillax", faction="Horde",
+					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, tip="Good location to pause", },
+					{ id=5854, index=1, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingDarn, }, },
+					tip=ns.bbDarnassus2, },
+	[39558020] = { bbKing=true, caroling=true, name="Rez and Hearth", faction="Horde",
+					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, },
+					{ id=5854, index=1, showAllCriteria=true, guide=ns.carolingCata, }, }, },
+	[42977433] = { bbKing=true, name="Temple of the Moon Entrance", faction="Horde",
+					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbDarnassus3, }, }, },
+	[81005800] = ns.setIronArmada,
+	[83005300] = ns.setGourmet,
+	[81005000] = ns.setTisSeason,
+	[81005400] = ns.setBlizzPoetry,
 }
-points[ 27 ] = { -- Dun Morogh
-	[60333394] = { aID=252, tip="Winter Wondervolt machine" },
-	[39804480] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
-	[63505550] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
-	[48204150] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
-	[59303200] = { questA=7043, tip="Wulmort Jinglepocket" ..vendor .."\n\n"
-									.."A daily is also offered, leading to the \"On Metzen!\"\n"
-									.."and \"Simply Abominable\" achievements" },
-	[60813290] = { aIDH=5854, indexH=3, tip="Here is a safe place. It's above the Gates of Ironforge" },
-	[63503400] = { aIDA=277, tip=threeSet },
-	[63503100] = { aIDA=1688, tip=gourmet },
-	[63502800] = { aIDA=10353, tip=armada },
-	[59203010] = { aIDH=4437, indexH=1, tip="Fly in and stay up as high as possible. Use a small,\n"
-										.."stable mount for best visibilty and clearance" },
-}
+
 points[ 1 ] = { -- Durotar
-	[44000210] = { aID=252, tip="Winter Wondervolt machine" },
-	[46530618] = { questH=6983, tip="Penny Copperpinch" ..vendor .."\n\n"
-									.."A daily is also offered, leading to the \"On Metzen!\"\n"
-									.."and \"Simply Abominable\" achievements" },
-	[50000980] = { aIDH=5854, indexH=1, tip="The Hyjal portal might be an option for you. Fly\n"
-										.."over to Teldrassil via Darkshore. Speak to Zidormi\n"
-										.."if Teldrassil is destroyed!" },
-	[50000980] = { aIDH=5854, indexH=2, tip="The Hyjal portal might be an option for you. Fly\n"
-										.."over to Teldrassil via Darkshore. Speak to Zidormi\n"
-										.."if Teldrassil is destroyed! Then look\n"
-										.."for the Azuremyst Isle portal at the wharves" },
-	[42000980] = { aIDH=5854, indexH=4, tip="The Zeppelin to Grom'gol is your best bet" },
-	[42000980] = { aIDH=5854, indexH=3, tip="The Zeppelin to Grom'gol is your best bet" },
-	[46000980] = { aIDH=1688, tip=gourmet },
-	[44000980] = { aIDH=10353, tip=armada },
-	[48000980] = { aIDH=277, tip=threeSet },
+	[44000210] = ns.setWondervolt,
+	[46480610] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", tip=ns.vendorFB,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+						{ id=6983, name="You're a Mean One...", level=80, qType="Daily", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+						{ id=8799, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
+	[46530618] = { vendor=true, name="Penney Copperpinch", tip=ns.vendor },
 }
-points[ 47 ] = { -- Duskwood
-	[11605000] = { aIDA=1688, tip="Best place for Alliance to farm small eggs.\n"
-										.."Drop rate is about 2/3rds from the barn owls" },
+
+points[ 1411 ] = { -- Durotar
+	[45730120] = ns.setWondervoltOver,
+	[50031351] = ns.setWondervoltUnder,
+	[45530641] = { miscQuests=true, name="Greatfather Winter", faction="Horde", version=40101, 
+					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[46530618] = { vendor=true, name="Penney Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
+	[46610428] = { vendor=true, name="Penney Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
+	[46640444] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendorFB,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+						{ id=6963, name="Stolen Winter Veil Treats", level=30, qType="Seasonal", },
+						{ id=6983, name="You're a Mean One...", level=30, qType="Daily", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+						{ id=8746, name="Metzen the Reindeer", level=40, qType="Seasonal", },
+						{ id=8799, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
+	[46480610] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", version=40101, tip=ns.vendorFB,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+						{ id=6983, name="You're a Mean One...", level=80, qType="Daily", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+						{ id=8799, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
 }
+
 points[ 70 ] = { -- Dustwallow Marsh
-	[67394741] = { aIDA=1686, indexA=3, tip="Speak to Zidormi if you can't find him" },
+	[67404720] = { bromance=true, name="Brother Karman", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=3, tip="Old Theramore" }, }, },
 }
-points[ 23 ] = { -- Eastern Plaguelands
-	[75465322] = { aIDA=5853, indexA=2, tip="There is a direct flightpath from Ironforge to\n"
-										.."Light's Hope Chapel. If possible continue\n"
-										.."flying into Ghostlands and follow the markers" },
+
+points[ 1445 ] = { -- Dustwallow Marsh
+	[67404720] = { bromance=true, name="Brother Karman", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=5, tip="Old Theramore" }, }, },
 }
-points[ 37 ] = { -- Elwynn Forest
-	[41086595] = { aIDA=1686, indexA=2, tip="He's at the Blacksmith building" },
-	[22202290] = { aIDA=1686, tip="Various Brothers at the Cathedral" },
-	[30003050] = { aID=252, tip="Winter Wondervolt machine" },
-	[24503220] = { vendor=true, tip="Khole Jinglepocket" ..vendor },
-	[20475698] = { aIDH=5854, indexH=4, tip="Here is a safe place" },
-	[36910742] = { aIDH=5854, indexH=4, tip="Here is a safe place" },
-	[35003700] = { aIDA=277, tip=threeSet },
-	[35003400] = { aIDA=1688, tip=gourmet },
-	[35003100] = { aIDA=10353, tip=armada },
-}
-points[ 94 ] = { -- Eversong Woods
-	[54504654] = { vendor=true, tip="Hotoppik Jinglepocket" ..vendor },
-	[56435164] = { aID=252, tip="Winter Wondervolt machine" },
-	[52542968] = { aIDA=5853, indexA=2, tip="Don't bother with the old \"crack in the wall\" exploit.\n"
-										.."I tried it for testing. There is an invisible wall.\n"
-										.."Baby Spice will not help too." },
-	[56654980] = { aIDA=5853, indexA=2, tip="Without invisibility you will draw agro. Better to die/\n"
-										.."rez as per marker as there are more guards inside too!" },
-	[62076312] = { aIDA=5853, indexA=2, tip="Farstrider Retreat will be to your left." },
-	[61865339] = { aIDA=5853, indexA=2, tip="Come this way. Thuron's Livery on your left." },
-	[44347124] = { aIDA=5853, indexA=2, tip="This is where you will rez, if you were wondering.\n"
-										.."Fairbreeze Village. Yeah... I took a hit for the team." },
-	[59305160] = { aIDH=1688, tip="Best place for Horde to farm small eggs.\n"
-										.."Drop rate is 100% from the dragonhawks" },
-	[57205050] = { aIDA=4436, indexA=2, tip="Two guards and up ahead many more. Use invisibility.\n"
-										.."For details on how to get here please see the\n"
-										.."\"A-Caroling We Will Go\" markers" },
-}
-points[ 95 ] = { -- Ghostlands
-	[72606400] = { aIDA=5853, indexA=2, tip="Start here at the Zul'Aman flight point. If that is not possible\n"
-										.."then begin at Light's Hope Chapel in the Eastern Plaguelands" },
-	[69503080] = { aIDA=5853, indexA=2, tip="From Zul'Aman ride up to here. Stay on the left side of\n"
-										.."Lake Elrendar. Continue north into Eversong Woods" },
-}
-points[ 25 ] = { -- Hillsbrad Foothills
-	[43503880] = { aID=273, tip="The Abominable Greench needs to be slayed.\nWait a while for a respawn" },
-	[43904090] = { aID=1687, tip="Try hanging out here, but Dalaran works too!" },
-	[50002260] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
-	[45903650] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
-}
-points[ 118 ] = { -- Icecrown
-	[69404240] = { aIDH=1685, indexH=3, tip="He's on Orgrim's Hammer, a huge flying airship.\n"
-										.."Check your map for the current location" },
-}
-points[ 87 ] = { -- Ironforge
-	[26005840] = { vendor=true, tip=blizzPoetry },
-	[33586794] = { questA=7043, tip="Wulmort Jinglepocket" ..vendor .."\n\n"
-									.."A daily is also offered, leading to the \"On Metzen!\"\n"
-									.."and \"Simply Abominable\" achievements" },
-	[16128462] = { aIDH=5854, indexH=3, tip="Here is a safe place. It's above the Gates of Ironforge" },
-	[39675542] = { aIDH=4437, indexH=1, tip="Sure, blast Muradin until you \"pelt\" him but consider\n"
-										.."your exit strategy. You need to be close to that side\n"
-										.."passage so use your range and back-up ASAP. Once he\n"
-										.."is tagged then use invisibility if you have it and get\n"
-										.."to that side passage for hearthing or a mount and dash" },
-	[45755272] = { aIDH=4437, indexH=1, tip="Try to die as close as possible to here so that\n"
-										.."you may rez safely down in the side passage" },
-	[45324853] = { aIDH=4437, indexH=1, tip="Descend to here and enter \"The High Seat\" chamber" },
-	[37356678] = { aIDH=4437, indexH=1, tip="Fly over to this tunnel. Wait out your\n"
-										.."invisibility cooldown if necessary" },
-	[12918923] = { aIDH=4437, indexH=1, tip="Fly in and stay up as high as possible. Use a small,\n"
-										.."stable mount for best visibilty and clearance" },
-	[24107473] = { aIDH=4437, indexH=1, tip="There is a high up ledge here. Safe\n"
-										.."to pause and say your last prayers" },
-	[34006000] = { aIDA=1688, tip=gourmet },
-	[34005700] = { aIDA=10353, tip=armada },
-	[34006300] = { aIDA=277, tip=threeSet },
-	[54004800] = { aIDA=5853, indexA=2, tip="There is a direct flightpath from Ironforge to\n"
-										.."Light's Hope Chapel. If possible continue\n"
-										.."flying into Ghostlands and follow the markers" },
-	[54005100] = { aIDA=5853, indexA=4, tip="Just fly straight up to the Sewer entrance as marked" },
-	[58254700] = { aIDA=5853, indexA=1, tip="Probably best to fly to Menethil Harbour,\n"
-										.."boat to Kalimdor and then as per markers" },
-	[56905050] = { aIDA=5853, indexA=3, tip="Probably best to fly to Menethil Harbour,\n"
-										.."boat to Kalimdor and then as per markers" },
-}
-points[ 198 ] = { -- Mount Hyjal
-	[56002000] = { aIDH=5854, tip="From Nordrassil fly over to Darkshore.\n"
-										.."You may need to speak to Zidormi" },
-}
+
 points[ 7 ] = { -- Mulgore
-	[39003100] = { 1, 1, tip="Seersa Copperpinch" ..vendor .."\n"
-									.."Alliance, if quick, can buy the Green Winter Clothes\n"
-									.."pattern before you die" },
-	[42003400] = { aIDA=5853, indexA=3, tip="Just fly in and land on the very edge\n"
-										.."of any of the mesas. Easy peasy!\n" ..caroling },
+	[42003400] = { caroling=true, faction="Alliance",
+					achievements={ { id=5853, index=3, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingTB }, }, },
+	[42512865] = { armada=true, name="Baine Bloodhoof", tip=ns.baine,
+					achievements={ { id=259, showAllCriteria=true, faction="Horde", }, }, },
+	[52004500] = { gourmet=true, name="Wiry Swoop", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ, },
 }
-points[ 50 ] = { -- Northern Stranglethorn
-	[47251110] = { aIDA=1686, indexA=1 },
+
+points[ 1412 ] = { -- Mulgore
+	[38682887] = { vendor=true, name="Seersa Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
+	[39062927] = { vendor=true, name="Seersa Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
+	[38702880] = { vendor=true, name="Whulwert Copperpinch", versionUnder=40101, faction="Horde",
+					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+	[39102933] = { vendor=true, name="Whulwert Copperpinch", version=40101, faction="Horde",
+					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+	[42003400] = { caroling=true, faction="Alliance", version=40300,
+					achievements={ { id=5853, index=1, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingTB }, }, },
+	[42512865] = { armada=true, bbKing=true, name="Baine Bloodhoof",  tip=ns.baine,
+					achievements={ { id=259, showAllCriteria=true, faction="Horde", },
+						{ id=4436, index=4, showAllCriteria=true, faction="Alliance", guide=ns.bbMacroAR, tip=ns.bbTB, }, }, },
+	[52004500] = { gourmet=true, name="Wiry Swoop", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ, },
 }
+
 points[ 85 ] = { -- Orgrimmar
-	[52687728] = { questH=6983, tip="Penny Copperpinch" ..vendor .."\n\n"
-									.."A daily is also offered, leading to the \"On Metzen!\"\n"
-									.."and \"Simply Abominable\" achievements" },
-	[70007000] = { aIDA=5853, indexA=1, tip="Fly in and land up high at the perimeter. Easy as!\n" .. caroling },
-	[56606800] = { aIDH=10353, tip=armada },
-	[56607400] = { aIDH=277, tip=threeSet },
-	[50256215] = { aID=252, tip="Winter Wondervolt machine" },
-	[51133829] = { aIDH=5854, indexH=2, tip="The Hyjal portal might be an option for you. Fly\n"
-										.."over to Teldrassil via Darkshore. Speak to Zidormi\n"
-										.."if Teldrassil is destroyed! Then look for the\n"
-										.."Azuremyst Isle portal at the wharves" },
-	[55005334] = { aIDH=5854, indexH=4, tip="The Zeppelin to Grom'gol is your best bet" },
-	[55005334] = { aIDH=5854, indexH=3, tip="The Zeppelin to Grom'gol is your best bet" },
-	[56607100] = { aIDH=1688, tip=gourmet },
-	[57306810] = { vendor=true, tip=blizzPoetry },
-	[58806040] = { aIDH=4437, tip="Blax Bottlerocket" ..airRifle  },
-	[58605380] = { aIDH=4437, tip="Blax Bottlerocket" ..airRifle },
-	[55487852] = { aIDA=4436, indexA=3, tip="If finished and invisible then run to here\n"
-										.."and hearth. It's a nook behind the AH" },
-	[48047028] = { aIDA=4436, indexA=3, tip="Eitrigg is here. There's no sugar coating this...\n"
-										.."you'll die and it may take a few tries if you\n"
-										.."luck out with the \"pelt\" buff." },
-	[50137633] = { aIDA=4436, indexA=3, tip="Through here. Just inside is an okay spot\n"
-										.."to rez or pause if you are lucky. Best\n"
-										.."approach is to simply fly in, dropping\n"
-										.."down from some height. If nimble then\n"
-										.."surge past the chicane and use your\n"
-										.."\"/tar Eitrigg\" macro and get that \"pelt\"\n"
-										.."before you die. If lucky a quick\n"
-										.."invisibility will save you" },
+	[39534733] = { miscQuests=true, name="Sagorne Creststrider", faction="Horde",
+					quests={ { id=7061, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
+	[48047028] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg2, }, }, },
+	[49637799] = { miscQuests=true, name="Greatfather Winter", faction="Horde", version=40101, 
+					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[50137633] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg3, }, }, },
+	[50256215] = ns.setWondervolt,
+	[51307100] = { miscQuests=true, name="Furmund", faction="Horde",
+					quests={ { id=6964, name="The Reason for the Season", level=10, qType="Seasonal", }, }, },
+	[52687728] = { vendor=true, name="Penney Copperpinch", faction="Horde", tip=ns.vendor },
+	[53207640] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", tip=ns.vendorFB,
+						achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+						quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+						{ id=6983, name="You're a Mean One...", level=30, qType="Daily", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", }, }, },
+	[55487852] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg1, }, }, },
+	[58605380] = { bbKing=true, name="Blax Bottlerocket", faction="Horde",
+					achievements={ { id=4437, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbSeller, }, }, },
+	[58806040] = { bbKing=true, name="Blax Bottlerocket", faction="Horde",
+					achievements={ { id=4437, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbSeller, }, }, },
+	[70007000] = { caroling=true, faction="Alliance",
+					achievements={ { id=5853, index=1, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingOrg }, }, },
+	[77006500] = ns.setIronArmada,
+	[79006000] = ns.setGourmet,
+	[77005700] = ns.setTisSeason,
+	[77006100] = ns.setBlizzPoetry,
 }
-points[ 111 ] = { -- Shattrath City
-	[80105846] = { aID=252, tip="Winter Wondervolt machine" },
-	[51262966] = { vendor=true, tip="Eebee Jinglepocket" ..vendor },
-	[60903350] = { vendor=true, tip=blizzPoetry },
+
+points[ 1454 ] = { -- Orgrimmar
+	[38803660] = { miscQuests=true, name="Sagorne Creststrider", faction="Horde", versionUnder=40000,
+					quests={ { id=7061, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
+	[39534733] = { miscQuests=true, name="Sagorne Creststrider", faction="Horde", version=40000,
+					quests={ { id=7061, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
+	[48047028] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg2, }, }, },
+	[50137633] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg3, }, }, },
+	[50256215] = ns.setWondervoltOver,
+	[51027099] = { miscQuests=true, name="Furmund", faction="Horde", version=40101,
+					quests={ { id=6964, name="The Reason for the Season", level=10, qType="Seasonal", }, }, },
+	[49637799] = { miscQuests=true, name="Greatfather Winter", faction="Horde", version=40101, 
+					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[52506919] = { miscQuests=true, name="Greatfather Winter", faction="Horde", versionUnder=40101, 
+					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[52687728] = { vendor=true, name="Penney Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
+	[53216590] = { vendor=true, name="Penney Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
+	[53346648] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendorFB,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+						{ id=6963, name="Stolen Winter Veil Treats", level=30, qType="Seasonal", },
+						{ id=6983, name="You're a Mean One...", level=30, qType="Daily", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+						{ id=8746, name="Metzen the Reindeer", level=40, qType="Seasonal", },
+						{ id=8799, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
+	[52537705] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", version=40101, tip=ns.vendorFB,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+						{ id=6983, name="You're a Mean One...", level=80, qType="Daily", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+						{ id=8799, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
+	[55487852] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg1, }, }, },
+	[58605380] = { bbKing=true, name="Blax Bottlerocket", faction="Horde",
+					achievements={ { id=4437, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbSeller, }, }, },
+	[58806040] = { bbKing=true, name="Blax Bottlerocket", faction="Horde",
+					achievements={ { id=4437, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbSeller, }, }, },
+	[70007000] = { caroling=true, faction="Alliance", version=40300,
+					achievements={ { id=5853, index=3, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingOrg }, }, },
+	[30005500] = ns.setIronArmada,
+	[32005000] = ns.setGourmet,
+	[30004700] = ns.setTisSeason,
+	[30005100] = ns.setBlizzPoetry,
 }
-points[ 110 ] = { -- Silvermoon City
-	[63647932] = { vendor=true, tip="Hotoppik Jinglepocket" ..vendor },
-	[66602630] = { vendor=true, tip=blizzPoetry },
-	-- Check. Wowhead says not the two patterns or the Hot Apple Cider recipe
-	[70708900] = { aIDA=5853, indexA=2, tip="The nearest flightpoint is Zul'Aman in Ghostlands.\n"
-										.."Toughest of the four. You will die. Make a dash for\n"
-										.."inside then a sharp left and hide as per marker.\n"
-										.."Invisibility (Mages/potions) works here.\n" },
-	[53792021] = { aIDA=4436, indexA=2, tip="He's right here. Try to pelt him from ranged\n"
-										.."as he has a lot of guards behind him. Decide\n"
-										.."where you will hearth (after invis/rez). The\n"
-										.."translocation room at the rear or the earlier\n"
-										.."side room (with trainer NPCs)" },
-	[74405860] = { aIDA=4436, indexA=2, tip="Pinch point. The two pats are in opposite directions\n"
-										.."and you lose all visibility here. Wait at the earlier\n"
-										.."marker to gain a sense of timing" },
-	[69956595] = { aIDA=4436, indexA=2, tip="A couple of pats come through the Walk of Elders.\n"
-										.."You could try hiding in here with the vendors" },
-	[73645221] = { aIDA=4436, indexA=2, tip="A couple of pats come through Murder Row.\n"
-										.."You can pause over to the side as necessary" },
-	[59283759] = { aIDA=4436, indexA=2, tip="Wait out your invisibility/hearth cooldown here" },
-	[72298479] = { aIDA=4436, indexA=2, tip="So many guards here. Invisibility" },
-	[72644365] = { aIDA=4436, indexA=2, tip="2 guards here. Invisibility" },
-	[61532949] = { aIDA=4436, indexA=2, tip="12 nasty guards up ahead. Now is the time to go invisible" },
-	[50661633] = { aIDA=4436, indexA=2, tip="No guards here. A good place to hearth from invisibility" },
-	[54422662] = { aIDA=4436, indexA=2, tip="The side rooms are safe for hiding and hearthing.\n"
-										.."The NPCs here are all trainers. Also, if you used\n"
-										.."invisibility to enter then wait out the CD here" },
-	[72299178] = { aIDA=4436, indexA=2, tip="Two guards and up ahead many more. Use invisibility" },
-}
-points[ 84 ] = { -- Stormwind City
-	[68057148] = { aID=252, tip="Winter Wondervolt machine" },
-	[62807005] = { vendor=true, tip="Khole Jinglepocket" ..vendor },
-	[55045417] = { aIDA=1686, indexA=4, tip="" },
-	[49514522] = { aIDA=1686, indexA=5, tip=brothers },
-	[52604392] = { aIDA=1686, indexA=6, tip="Go downstairs.\n" ..brothers },
-	[52414580] = { aIDA=1686, indexA=7, tip=brothers },
-	[52104760] = { aIDA=1686, indexA=8, tip="He pats up and down here.\n" ..brothers },
-	[51003500] = { aIDA=277, tip=threeSet },
-	[51003200] = { aIDA=1688, tip=gourmet },
-	[51002900] = { aIDA=10353, tip=armada },
-	[51749780] = { aIDH=5854, indexH=4, tip="There is a safe place off the map, due south but still in Stormwind" },
-	[84530997] = { aIDH=5854, indexH=4, tip="Here is a safe place" },
-	[56607040] = { aIDA=4436, tip="Craggle Wobbletop" ..airRifle },
-	[64606140] = { aIDA=4436, tip="Craggle Wobbletop" ..airRifle },
-	[73006900] = { aIDA=5853, indexA=2, tip="There is a direct flightpath from Ironforge to\n"
-										.."Light's Hope Chapel. If possible continue\n"
-										.."flying into Ghostlands and follow the markers" },
-	[73908250] = { vendor=true, tip=blizzPoetry },
-	[74007200] = { aIDA=5853, indexA=4, tip="Just fly straight up to the Sewer entrance as marked" },
-	[73007430] = { aIDA=5853, indexA=1, tip="Probably best to fly to Booty Bay, boat\n"
-										.."to Kalimdor and then as per markers" },
-	[71207050] = { aIDA=5853, indexA=3, tip="Probably best to fly to Booty Bay, boat\n"
-										.."to Kalimdor and then as per markers" },
-}
-points[ 224 ] = { -- Stranglethorn Vale
-	[37567622] = { aID=252, tip="Winter Wondervolt machine" },
-	[48390814] = { aIDA=1686, indexA=1 },
-}
-points[ 534 ] = { -- Tanaan Jungle
-	[88135583] = { aID=10353, index=3, tip="Smashum Grabb spawns here. Every 5 to 10 minutes\n"
-											.."but is farmable once per day. Drop rate is about 10%" },
-	[80375685] = { aID=10353, index=4, tip="Gondar spawns here. Every 5 to 10 minutes but\n"
-											.."is farmable once per day. Drop rate is about 10%" },
-	[83454366] = { aID=10353, index=5, tip="Drakum spawns here. Every 5 to 10 minutes but\n"
-											.."is farmable once per day. Drop rate is about 10%" },
-}
+
 points[ 71 ] = { -- Tanaris
-	[52522806] = { aID=252, tip="Winter Wondervolt machine" },
+	[52522806] = ns.setWondervolt,
 }
+
+points[ 1446 ] = { -- Tanaris
+	[53602800] = ns.setWondervolt,
+--	[52522806] = ns.setWondervolt,
+	[73204800] = { onMetzen=true, name="Metzen the Reindeer", versionUnder=40300, guide=ns.greench,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=8746, qType="Seasonal", faction="Horde", },
+					{ id=8762, qType="Seasonal", faction="Alliance", }, }, },
+}
+
 points[ 57 ] = { -- Teldrassil
-	[55008810] = { aIDH=5854, indexH=1, tip="Fly through the pink portal and press your\n"
-										.."up key (spacebar) to fly straight up in Darnassus\n"
-										.."and then perch on a high safe ledge" },
-	[52288947] = { aIDH=5854, indexH=2, tip="The portal to Azuremyst Isle" },
-	[26224308] = { aIDH=5854, indexH=1, tip="From your safe vantage point you can now reverse\n"
-										.."the procedure if you don't want to wait out a hearth\n"
-										.."cooldown. As soon as you take the pink portal down,\n"
-										.."surge forward and up as the guards will instantly\n"
-										.."hit you and you'll not want a dismount" },
+	[42003300] = { gourmet=true, name="Strigid mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[42005800] = { gourmet=true, name="Strigid mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[55038822] = { bbKing=true, caroling=true, name="Magenta Portal", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbDarnassus, },
+					{ id=5854, index=2, showAllCriteria=true, guide=ns.caroling, }, },
+					tip=ns.teldrassil .."\n\n" ..ns.magentaPortal, },
+	[52288948] = { bbKing=true, caroling=true, name="Portal to Azuremyst Isle", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, },
+					{ id=5854, index=2, showAllCriteria=true, guide=ns.caroling, }, },
+					tip=ns.teldrassil, },
 }
-points[ 210 ] = { -- The Cape of Stranglethorn
-	[40356756] = { aID=252, tip="Winter Wondervolt machine" },
+
+points[ 1438 ] = { -- Teldrassil
+	[42003300] = { gourmet=true, name="Strigid mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[42005800] = { gourmet=true, name="Strigid mobs", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[55038822] = { bbKing=true, caroling=true, name="Magenta Portal", faction="Horde", version=40300,
+					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbDarnassus, },
+					{ id=5854, index=1, showAllCriteria=true, guide=ns.carolingCata, }, },
+					tip=ns.teldrassil .."\n\n" ..ns.magentaPortal, },
+	[52288948] = { bbKing=true, caroling=true, name="Portal to Azuremyst Isle", faction="Horde", version=40300,
+					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, },
+					{ id=5854, index=1, showAllCriteria=true, guide=ns.carolingCata, }, }, tip=ns.teldrassil, },
 }
+
 points[ 103 ] = { -- The Exodar
-	[64006000] = { vendor=true, tip=blizzPoetry },
-	[79795530] = { aID=252, tip="Winter Wondervolt machine" },
-	[55824883] = { vendor=true, tip="Wolgren Jinglepocket" ..vendor },
-	[41437425] = { aIDH=5854, indexH=2, tip="It is sufficient to stand here" },
-	[32865450] = { aIDH=4437, indexH=2, tip="The Prophet is right here. Get that \"pelt\"\n"
-										.."and die. Nothing could be simpler" },
-	[31486188] = { aIDH=4437, indexH=2, tip="Two guards here, three at the top of the stairs.\n"
-										.."Then take a hard right. a \"/tar Prophet Velen\"\n"
-										.."macro would be most useful. Spam it from now" },
-	[42107240] = { aIDH=4437, indexH=2, tip="Enter The Exodar this way" },
-	[37405993] = { aIDH=4437, indexH=2, tip="No guards through here. Pause for any cooldowns" },
-	[26354940] = { aIDH=4437, indexH=2, tip="Safe to respawn and hearth/portal from here" },
-	[35127476] = { aIDH=4437, indexH=2, tip="Two guards here. Left 90 degrees, jump down,\n"
-										.."straight forward, bearing left a little" },
+	[26354940] = { bbKing=true, name="BB King (6)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar6, }, }, },
+	[31486188] = { bbKing=true, name="BB King (4)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar4, }, }, },
+	[32865450] = { bbKing=true, name="BB King (5)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar5, }, }, },
+	[35127476] = { bbKing=true, name="BB King (3)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar3, }, }, },
+	[37405993] = { bbKing=true, name="BB King (2)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar2, }, }, },
+	[42107240] = { bbKing=true, name="BB King (1)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar1, }, }, },
+	[55604980] = { vendor=true, name="Bessbi Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[55824883] = { vendor=true, name="Wolgren Jinglepocket", faction="Alliance", tip=ns.vendor },
+	[75007000] = ns.setIronArmada,
+	[77006500] = ns.setGourmet,
+	[75006200] = ns.setTisSeason,
+	[75006600] = ns.setBlizzPoetry,
+	[79795530] = ns.setWondervolt,
 }
-points[ 129 ] = { -- The Nexus
-	[27503420] = { aID=277, tip="You need Grand Magus Telestra. Must be Heroic!" },
-	[31507440] = { aID=277, tip="Go this way!" },
+
+points[ 1947 ] = { -- The Exodar
+	[26354940] = { bbKing=true, name="BB King (6)", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar6, }, }, },
+	[31486188] = { bbKing=true, name="BB King (4)", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar4, }, }, },
+	[32865450] = { bbKing=true, name="BB King (5)", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar5, }, }, },
+	[35127476] = { bbKing=true, name="BB King (3)", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar3, }, }, },
+	[37405993] = { bbKing=true, name="BB King (2)", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar2, }, }, },
+	[42107240] = { bbKing=true, name="BB King (1)", faction="Horde",
+					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar1, }, }, },
+	[55604980] = { vendor=true, name="Bessbi Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[55824883] = { vendor=true, name="Wolgren Jinglepocket", faction="Alliance", tip=ns.vendor },
+	[75007000] = ns.setIronArmada,
+	[77006500] = ns.setGourmet,
+	[75006200] = ns.setTisSeason,
+	[75006600] = ns.setBlizzPoetry,
+	[79795530] = ns.setWondervolt,
 }
-points[ 143 ] = { -- The Oculus
-	[63004200] = { aID=277, tip="You need Mage-Lord Urom, the 3rd boss. Must be Heroic!" },
-}
+
 points[ 88 ] = { -- Thunder Bluff
-	[42005520] = { vendor=true, tip="Seersa Copperpinch" ..vendor .."\n"
-									.."Alliance, if quick, can buy the Green Winter Clothes\n"
-									.."pattern before you die" },
-	[72504780] = { vendor=true, tip=blizzPoetry },
-	[63003300] = { aIDA=5853, indexA=3, tip="Just fly in and land on the very edge\n"
-										.."of any of the mesas. Easy peasy!\n" ..caroling },
+	[42505580] = { vendor=true, name="Seersa Copperpinch", faction="Horde", tip=ns.vendor },
+	[42605660] = { vendor=true, name="Whulwert Copperpinch", faction="Horde",
+					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+	[60305169] = { armada=true, name="Baine Bloodhoof", tip=ns.baine,
+					achievements={ { id=259, showAllCriteria=true, faction="Horde", }, }, },
+	[63003300] = { caroling=true, faction="Alliance",
+					achievements={ { id=5853, index=3, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingTB }, }, },
+	[77005500] = ns.setIronArmada,
+	[79005000] = ns.setGourmet,
+	[77004700] = ns.setTisSeason,
+	[77005100] = ns.setBlizzPoetry,
 }
-points[ 18 ] = { -- Tirisfal Glades
-	[61105929] = { aID=252, tip="Winter Wondervolt machine" },
-	[63197694] = { aIDA=5853, indexA=4, tip="Do NOT try to descend into Undercity. Land on a dome\n"
-										.."in the ruins. This dome is fine. The largest one too.\n" ..caroling },
-	[51607070] = { aIDA=5853, indexA=4, tip="The sewer entrance works perfectly fine.\n"
-										.."Stop entering when the Undercity map appears.\n" ..caroling },
-	[60006900] = { aIDH=1685, indexH=1, tip="Descend into Undercity" },
-	[51037152] = { aIDA=4436, indexA=1, tip="Enter Undercity through the Sewers. No guards here" },
+
+points[ 1456 ] = { -- Thunder Bluff
+	[43685918] = { vendor=true, name="Seersa Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
+	[42285495] = { vendor=true, name="Seersa Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
+	[43805884] = { vendor=true, name="Whulwert Copperpinch", versionUnder=40101, faction="Horde",
+					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+	[42465526] = { vendor=true, name="Whulwert Copperpinch", version=40101, faction="Horde",
+					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+--	[42605660] = { vendor=true, name="Whulwert Copperpinch", faction="Horde",
+--					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+	[60305169] = { armada=true, bbKing=true, name="Baine Bloodhoof",  tip=ns.baine,
+					achievements={ { id=259, showAllCriteria=true, faction="Horde", },
+						{ id=4436, index=4, showAllCriteria=true, faction="Alliance", guide=ns.bbMacroAR, tip=ns.bbTB, }, }, },
+	[63003300] = { caroling=true, faction="Alliance", version=40300,
+					achievements={ { id=5853, index=1, cguide=ns.carolingCata, tip=ns.carolingTB }, }, },
+	[77005500] = ns.setIronArmada,
+	[79005000] = ns.setGourmet,
+	[77004700] = ns.setTisSeason,
+	[77005100] = ns.setBlizzPoetry,
 }
-points[ 90 ] = { -- Undercity
-	[68233886] = { vendor=true, tip="Nardstrum Copperpinch" ..vendor },
-	[81605070] = { vendor=true, tip=blizzPoetry },
-	[58504390] = { aIDA=5853, indexA=4, tip="Do NOT descend into Undercity" },
-	[15203050] = { aIDA=5853, indexA=4, tip="The sewer entrance works perfectly fine.\n"
-										.."Stop entering when the Undercity map appears.\n" ..caroling },
-	[50862166] = { aIDH=1685, indexH=1, tip="Descend into Undercity" },
-	[46722712] = { aIDA=4436, indexA=1, tip="Two guards here. Do not come this way as there's\n"
-										.."no chance later to cooldown you invisibility" },
-	[23633914] = { aIDA=4436, indexA=1, tip="Relax. No guards in this section. Use a small,\n"
-										.."stable mount for best visibility and clearance" },
-	[34713321] = { aIDA=4436, indexA=1, tip="Go this way. Guard up ahead" },
-	[41433333] = { aIDA=4436, indexA=1, tip="One guard here. Use invisibility" },
-	[46944393] = { aIDA=4436, indexA=1, tip="No guards through to here. Pause for\n"
-										.."invisibility cooldown if necessary" },
-	[52446384] = { aIDA=4436, indexA=1, tip="Enter here. Invisibility is your friend" },
-	[45978314] = { aIDA=4436, indexA=1, tip="There are two guards at each archway. Got invisibility?" },
-	[54539037] = { aIDA=4436, indexA=1, tip="The Dark Lady is up ahead. Just fire like crazy and die" },
-}
-points[ 56 ] = { -- Wetlands
-	[09236089] = { aID=252, tip="Winter Wondervolt machine" },
-}
+
 points[ 83 ] = { -- Winterspring
-	[58505730] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
-	[41104910] = { aID=1690, tip="The \"Holdiay Snow\" mounds contain 3-6 snowballs." },
+	[33005300] = ns.setHolidaySnow,
+	[54503450] = ns.setHolidaySnow,
+	[57007900] = ns.setHolidaySnow,
 }
 
-points[ 12 ] = { -- Kalimdor
-	[47001680] = { aIDH=5854, tip="You can easily fly from Darkshore to Teldrassil.\n"
-										.."There's a portal to The Exodar at the docks" },
-	[42001100] = { aIDH=4437, indexH=3, tip="The High Priestess is in the Temple. There is a\n"
-										.."mezzanine inside upon which she is located. You'll\n"
-										.."take a ramp upstairs.\n\n"
-										.."There is one safe location to wait out cooldowns\n"
-										.."once inside then no other opportunities until after\n"
-										.."you have hit her.\n\n"
-										.."Follow the \"A-Caroling we Will Go\" markers for a\n"
-										.."guide on how to get to Darnassus/Teldrassil. Click\n"
-										.."on Darnassus from the Teldrassil map for details" },
-	[57906130] = { aIDA=4436, indexA=3, tip="You could consider approaching via\n"
-										.."Ironforge -> Menethil Harbor -> Theramore.\n"
-										.."Eitrigg is in Orgrimmar" },
-	[56505040] = { aIDA=4436, indexA=3, tip="You could consider approaching via\n"
-										.."Stormwind -> Booty Bay -> Ratchet.\n"
-										.."Eitrigg is in Orgrimmar" },
+--==================================================================================================================================
+--
+-- EASTERN KINGDOMS
+--
+--==================================================================================================================================
+
+						
+points[ 1416 ] = { -- Alterac Mountains
+	[33586794] = { onMetzen=true, name="Strange Snowman", versionUnder=40300, guide=ns.greench, faction="",
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
+						{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[34006300] = { letItSnow=true, tip="Try hanging out here, but Dalaran works too!",
+					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
+	[35406130] = ns.setHolidaySnow,
+	[40306580] = ns.setHolidaySnow,
+	[46304800] = ns.setHolidaySnow,
+}	
+
+points[ 27 ] = { -- Dun Morogh
+	[40004500] = ns.setHolidaySnow, -- Research says none in Classic or Classic Cata
+	[53006000] = ns.setHolidaySnow,
+	[51505410] = ns.setHolidaySnow,
+	[59203010] = { bbKing=true, name="BB King", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin1, }, }, },
+	[59303200] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", tip=ns.vendor,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=7022, name="Greatfather Winter is Here!", level=10, qType="Seasonal", },
+					{ id=7043, name="You're a Mean One...", level=30, qType="Daily", },
+					{ id=7045, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", }, }, },
+	[60333394] = ns.setWondervolt,
+	[60813290] = { caroling=true, name="Caroling", faction="Horde",
+					achievements={ { id=5854, index=3, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingIF }, }, },
+	[61003000] = { armada=true, name="Muradin Bronzebeard", achievements={
+					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
+	[63572980] = { miscQuests=true, name="Greatfather Winter", faction="Alliance",
+					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[72004900] = ns.setHolidaySnow,
 }
 
-points[ 582 ] = { -- Lunarfall Garrison in Draenor
-	[41754789] = { vendorA=true, tip="Tradurjo Jinglepocket" ..vendor .."\n\nYou must have a level 3 garrison" },
-	[43755100] = { questA=39651, tip="Almie " ..almiePizzle },
-	[41105050] = { aIDA=10353, tip=armada },
+points[ 1426 ] = { -- Dun Morogh
+	[59203010] = { bbKing=true, name="BB King", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin1, }, }, },
+	[56493188] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendor,
+					quests={ { id=7022, name="Greatfather Winter is Here!", level=10, qType="Seasonal", },
+					{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+					{ id=7042, name="Stolen Winter Veil Treats", level=30, qType="Seasonal", },
+					{ id=7043, name="You're a Mean One...", level=30, qType="Seasonal", },
+					{ id=8762, name="Metzen the Reindeer", level=40, qType="Seasonal", },
+					{ id=8763, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
+	[63633020] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", version=40101, tip=ns.vendor,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=7022, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+					{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+					{ id=7043, name="You're a Mean One...", level=80, qType="Daily", }, }, },
+	[53183571] = ns.setWondervolt,
+--	[60333394] = ns.setWondervolt,
+	[56413159] = { miscQuests=true, name="Greatfather Winter", faction="Alliance", versionUnder=40101, 
+					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[63572980] = { miscQuests=true, name="Greatfather Winter", faction="Alliance", version=40101,
+					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[56473196] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendorFB },
+	[63643009] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", version=40101, tip=ns.vendorFB },
+	[60813290] = { caroling=true, name="Caroling", faction="Horde", version=40300,
+					achievements={ { id=5854, index=4, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingIF }, }, },
+	[61003000] = { armada=true, name="Muradin Bronzebeard", achievements={
+					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
+	[72004900] = ns.setHolidaySnow,
 }
+
+points[ 47 ] = { -- Duskwood
+	[11605000] = { gourmet=true, name="Barn Owls", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[17002800] = { gourmet=true, name="Barn Owls", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1431 ] = { -- Duskwood
+	[11605000] = { gourmet=true, name="Barn Owls", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[17002800] = { gourmet=true, name="Barn Owls", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 37 ] = { -- Elwynn Forest
+	[20475698] = { caroling=true, name="Caroling", faction="Horde", achievements={
+					{ id=5854, index=4, showAllCriteria=true, guide=ns.caroling, tip="Example safe location" }, }, },
+	[22202290] = { bromance=true, name="Brothers (several)", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, tip="Cathedral area" }, }, },
+	[25793766] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", qType="Seasonal", }, }, },
+	[25893766] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[28663820] = ns.setWondervolt,
+	[36910742] = { caroling=true, name="Caroling", faction="Horde", achievements={ 	
+					{ id=5854, index=4, showAllCriteria=true, guide=ns.caroling, tip="Example safe location" }, }, },
+	[41086595] = { bromance=true, name="Brother Wilhelm", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=2, tip="Blacksmith workshop" }, }, },
+}
+
+points[ 1429 ] = { -- Elwynn Forest
+	[20475698] = { caroling=true, name="Caroling", faction="Horde", version=40300, achievements={
+					{ id=5854, index=4, showAllCriteria=true, guide=ns.carolingCata, tip="Example safe location" }, }, },
+	[22202290] = { bromance=true, name="Brothers (several)", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, tip="Cathedral area" }, }, },
+	[25743752] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[26033748] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", version=40101, tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[25833750] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendorFB },
+	[25913763] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", version=40101, tip=ns.vendorFB },
+	[28673819] = ns.setWondervoltUnder,
+	[28673819] = ns.setWondervoltOver,
+	[36910742] = { caroling=true, name="Caroling", faction="Horde", version=40300, achievements={
+					{ id=5854, index=4, showAllCriteria=true, guide=ns.carolingCata, tip="Example safe location" }, }, },
+	[41086595] = { bromance=true, name="Brother Wilhelm", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=7, tip="Blacksmith workshop" }, }, },
+}
+
+points[ 94 ] = { -- Eversong Woods
+	[43405640] = { gourmet=true, name="Dragonhawk mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg, },
+	[44347124] = { caroling=true, name="Caroling", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC3, }, }, },
+	[52542968] = { caroling=true, name="Caroling", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC1, }, }, },
+	[54504654] = { vendor=true, name="Hotoppik Copperpinch", faction="Horde", tip=ns.vendor },
+	[56435164] = ns.setWondervolt,
+	[56654980] = { caroling=true, name="Caroling (5)", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC2 }, }, },
+	[58005160] = { gourmet=true, name="Dragonhawk mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg, },
+	[59405160] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC13, }, }, },
+	[61865339] = { caroling=true, name="Caroling (4)", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC5, }, }, },
+	[62076312] = { caroling=true, name="Caroling (3)", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC4, }, }, },
+}
+
+points[ 1941 ] = { -- Eversong Woods
+	[43405640] = { gourmet=true, name="Dragonhawk mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg, },
+	[44347124] = { caroling=true, name="Caroling", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC3, }, }, },
+	[52542968] = { caroling=true, name="Caroling", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingSC1, }, }, },
+	[54504654] = { vendor=true, name="Hotoppik Copperpinch", faction="Horde", tip=ns.vendor },
+	[56435164] = ns.setWondervolt,
+	[56654980] = { caroling=true, name="Caroling (5)", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC2 }, }, },
+	[58005160] = { gourmet=true, name="Dragonhawk mobs", achievements=ns.setSantaTreatsA,
+					quests=ns.setSantaTreatsQ, tip=ns.smallEgg, },
+	[59405160] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC13, }, }, },
+	[61865339] = { caroling=true, name="Caroling (4)", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC5, }, }, },
+	[62076312] = { caroling=true, name="Caroling (3)", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC4, }, }, },
+}
+
+points[ 95 ] = { -- Ghostlands
+	[69503080] = { caroling=true, name="Caroling (2)", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC6, }, }, },
+	[72606400] = { caroling=true, name="Caroling (1)", faction="Alliance",
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC7, }, }, },
+}
+
+points[ 1942 ] = { -- Ghostlands
+	[69503080] = { caroling=true, name="Caroling (2)", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC6, }, }, },
+	[72606400] = { caroling=true, name="Caroling (1)", faction="Alliance", version=40300,
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingSC7, }, }, },
+}
+
+points[ 25 ] = { -- Hillsbrad Foothills
+	[42002900] = ns.setHolidaySnow,
+	[43904090] = { letItSnow=true, tip="Try hanging out here, but Dalaran works too!",
+					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
+	[45003900] = { onMetzen=true, name="Metzen the Reindeer", guide=ns.greench,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
+					{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[47103620] = ns.setHolidaySnow,
+	[50002500] = ns.setHolidaySnow,
+	[65006800] = { gourmet=true, name="Rampaging Owlbeast", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1424 ] = { -- Hillsbrad Foothills
+	[42002900] = ns.setHolidaySnow,
+	[43904090] = { letItSnow=true, tip="Try hanging out here, but Dalaran works too!",
+					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
+	[45003900] = { onMetzen=true, name="Metzen the Reindeer", guide=ns.greench,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
+					{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[47103620] = ns.setHolidaySnow,
+	[50002500] = ns.setHolidaySnow,
+	[65006800] = { gourmet=true, name="Rampaging Owlbeast", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 87 ] = { -- Ironforge
+	[12918923] = { bbKing=true, name="BB King (1)", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin1, }, }, },
+	[16128462] = { caroling=true, name="Caroling", faction="Horde",
+					achievements={ { id=5854, index=3, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingIF }, }, },
+	[24107473] = { bbKing=true, name="BB King (2)", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin3, }, }, },
+	[30506050] = { miscQuests=true, name="Goli Krumn", faction="Alliance",
+					quests={ { id=7062, name="The Reason for the Season", level=10, qType="Seasonal", }, }, },
+	[33216542] = { miscQuests=true, name="Greatfather Winter", faction="Alliance",
+					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[33586794] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", tip=ns.vendor,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=7022, name="Greatfather Winter is Here!", level=10, qType="Seasonal", },
+					{ id=7043, name="You're a Mean One...", level=30, qType="Daily", },
+					{ id=7045, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", }, }, },
+	[33616769] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendorFB },
+	[33666727] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", version=40101, tip=ns.vendorFB },
+	[37356678] = { bbKing=true, name="BB King (3)", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin2, }, }, },
+	[39675542] = { bbKing=true, name="BB King (5)", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin6, }, }, },
+	[45007400] = ns.setIronArmada,
+	[47006900] = ns.setGourmet,
+	[45006600] = ns.setTisSeason,
+	[45007000] = ns.setBlizzPoetry,
+	[40005500] = { armada=true, name="Muradin Bronzebeard", achievements={
+					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
+	[45324853] = { bbKing=true, name="BB King (4)", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin4, }, }, },
+	[45755272] = { bbKing=true, name="BB King (6)", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin5, }, }, },
+	[77551183] = { miscQuests=true, name="Historian Karnik", faction="Alliance",
+					quests={ { id=7063, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
+}
+
+points[ 1455 ] = { -- Ironforge
+	[12918923] = { bbKing=true, name="BB King (1)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin1, }, }, },
+	[13119105] = ns.setWondervolt,
+	[16128462] = { caroling=true, name="Caroling", faction="Horde", version=40300,
+					achievements={ { id=5854, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingIF }, }, },
+	[24107473] = { bbKing=true, name="BB King (2)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin3, }, }, },
+	[30255938] = { miscQuests=true, name="Goli Krumn", faction="Alliance",
+					quests={ { id=7062, name="The Reason for the Season", level=10, qType="Seasonal", faction="Alliance", }, }, },
+	[32806580] = { miscQuests=true, name="Greatfather Winter", faction="Alliance", versionUnder=40101,
+					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[33206542] = { miscQuests=true, name="Greatfather Winter", faction="Alliance", version=40101,
+					quests={ { id=7025, name="Treats for Greatfather Winter", level=10, qType="Seasonal", }, }, },
+	[33706723] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendor,
+					quests={ { id=7022, name="Greatfather Winter is Here!", level=10, qType="Seasonal", },
+					{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+					{ id=7042, name="Stolen Winter Veil Treats", level=30, qType="Seasonal", },
+					{ id=7043, name="You're a Mean One...", level=30, qType="Seasonal", },
+					{ id=8762, name="Metzen the Reindeer", level=40, qType="Seasonal", },
+					{ id=8763, name="The Hero of the Day", level=40, qType="Seasonal", }, }, },
+	[33596793] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", version=40101, tip=ns.vendor,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=7022, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
+					{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
+					{ id=7043, name="You're a Mean One...", level=80, qType="Daily", }, }, },					
+	[33806770] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[37356678] = { bbKing=true, name="BB King (3)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin2, }, }, },
+	[39675542] = { bbKing=true, name="BB King (5)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin6, }, }, },
+	[45007400] = ns.setIronArmada,
+	[47006900] = ns.setGourmet,
+	[45006600] = ns.setTisSeason,
+	[45007000] = ns.setBlizzPoetry,
+	[39185611] = { armada=true, name="Muradin Bronzebeard", achievements={
+					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
+	[45324853] = { bbKing=true, name="BB King (4)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin4, }, }, },
+	[45755272] = { bbKing=true, name="BB King (6)", faction="Horde",
+					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin5, }, }, },
+	[77551183] = { miscQuests=true, name="Historian Karnik", faction="Alliance", version=40101,
+					quests={ { id=7063, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
+	[77601160] = { miscQuests=true, name="Historian Karnik", faction="Alliance", versionUnder=40101,
+					quests={ { id=7063, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
+}
+
+points[ 48 ] = { -- Loch Modan
+	[17002800] = { gourmet=true, name="Loch Buzzard", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[58005200] = { gourmet=true, name="Loch Buzzard", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[79006700] = { gourmet=true, name="Golden Eagle", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1432 ] = { -- Loch Modan
+	[17002800] = { gourmet=true, name="Loch Buzzard", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[58005200] = { gourmet=true, name="Loch Buzzard", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[79006700] = { gourmet=true, name="Golden Eagle", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 50 ] = { -- Northern Stranglethorn
+	[47251110] = { bromance=true, name="Brother Nimetz", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=1, }, }, },
+}
+
+points[ 50 ] = { -- Redridge Mountains
+	[18006400] = { gourmet=true, name="Dire Condor", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1433 ] = { -- Redridge Mountains
+	[18006400] = { gourmet=true, name="Dire Condor", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1427 ] = { -- Searing Gorge
+	[68753423] = { onMetzen=true, name="Metzen the Reindeer", versionUnder=40300, guide=ns.greench,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=8746, qType="Seasonal", faction="Horde", },
+					{ id=8762, qType="Seasonal", faction="Alliance", }, }, },
+}
+
+points[ 110 ] = { -- Silvermoon City
+	[31004300] = ns.setIronArmada,
+	[33003800] = ns.setGourmet,
+	[31003500] = ns.setTisSeason,
+	[31003900] = ns.setBlizzPoetry,
+	[63647932] = { vendor=true, name="Hotoppik Copperpinch", faction="Horde", tip=ns.vendor },
+	[63607900] = { vendor=true, name="Morshelz Copperpinch", faction="Horde", tip=ns.vendorFB },
+	[70708900] = { bbKing=true, caroling=true, faction="Alliance", tip=ns.bbSC1, 
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, }, 
+						{ id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, }, }, },
+	[53792021] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC2, }, }, },
+	[74405860] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC3, }, }, },
+	[69956595] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC4, }, }, },
+	[73645221] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC5, }, }, },
+	[59283759] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC6, }, }, },
+	[72298479] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC7, }, }, },
+	[72644365] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC8, }, }, },
+	[61532949] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC9, }, }, },
+	[50661633] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC10, }, }, },
+	[54422662] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC11, }, }, },
+	[72299178] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC12, }, }, },
+}
+
+points[ 1954 ] = { -- Silvermoon City
+	[31004300] = ns.setIronArmada,
+	[33003800] = ns.setGourmet,
+	[31003500] = ns.setTisSeason,
+	[31003900] = ns.setBlizzPoetry,
+	[63647932] = { vendor=true, name="Hotoppik Copperpinch", faction="Horde", tip=ns.vendor },
+	[63607900] = { vendor=true, name="Morshelz Copperpinch", faction="Horde", tip=ns.vendorFB },
+	[70708900] = { bbKing=true, caroling=true, faction="Alliance", version=40300, tip=ns.bbSC1, 
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, }, 
+						{ id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, }, }, },
+	[53792021] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC2, }, }, },
+	[74405860] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC3, }, }, },
+	[69956595] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC4, }, }, },
+	[73645221] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC5, }, }, },
+	[59283759] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC6, }, }, },
+	[72298479] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC7, }, }, },
+	[72644365] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC8, }, }, },
+	[61532949] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC9, }, }, },
+	[50661633] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC10, }, }, },
+	[54422662] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC11, }, }, },
+	[72299178] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=2, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSC12, }, }, },
+}
+
+points[ 84 ] = { -- Stormwind City
+	[49514522] = { bromance=true, name="Brother Joshua", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=5, tip=ns.broJoshua }, }, },
+	[52104760] = { bromance=true, name="Brother Benjamin", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=8, tip=ns.broBenjamin }, }, },
+	[52414580] = { bromance=true, name="Brother Cassius", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=7, tip=ns.broCassius }, }, },
+	[52604392] = { bromance=true, name="Brother Crowley", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=6, tip=ns.broCrowley }, }, },
+	[55045417] = { bromance=true, name="Brother Kristoff", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=4, tip=ns.broKristoff }, }, },
+	[56607040] = { bbKing=true, name="Craggle Wobbletop", faction="Alliance",
+					achievements={ { id=4436, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSeller, }, }, },
+	[62307040] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", qType="Seasonal", }, }, },
+	[62507040] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[65606292] = { bbKing=true, name="Craggle Wobbletop", faction="Alliance",
+					achievements={ { id=4436, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSeller, }, }, },
+	[68057148] = ns.setWondervolt,
+	[86007700] = ns.setIronArmada,
+	[88007200] = ns.setGourmet,
+	[86006900] = ns.setTisSeason,
+	[86007300] = ns.setBlizzPoetry,
+}
+
+points[ 1453 ] = { -- Stormwind City
+	[49514522] = { bromance=true, name="Brother Joshua", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=1, tip=ns.broJoshua }, }, },
+	[52104760] = { bromance=true, name="Brother Benjamin", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=8, tip=ns.broBenjamin }, }, },
+	[52414580] = { bromance=true, name="Brother Cassius", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=6, tip=ns.broCassius }, }, },
+	[52604392] = { bromance=true, name="Brother Crowley", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=3, tip=ns.broCrowley }, }, },
+	[55045417] = { bromance=true, name="Brother Kristoff", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=4, tip=ns.broKristoff }, }, },
+	[56607040] = { bbKing=true, name="Craggle Wobbletop", faction="Alliance",
+					achievements={ { id=4436, showAllCriteria=true, guide=ns.bbMacroAC, tip=ns.bbSeller, }, }, },
+	[54985905] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[62807004] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", version=40101, tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[55195898] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendorFB },
+	[62567033] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", version=40101, tip=ns.vendorFB },
+	[65606292] = { bbKing=true, name="Craggle Wobbletop", faction="Alliance",
+					achievements={ { id=4436, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSeller, }, }, },
+	[62536077] = ns.setWondervoltUnder,
+	[68067146] = ns.setWondervoltOver,
+	[83002800] = { bbKing=true, name="BB King", faction="Horde",
+					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHC,
+					tip="Dive down into the garden. You will need to deal with guards two at a time", }, }, },
+	[86007700] = ns.setIronArmada,
+	[88007200] = ns.setGourmet,
+	[86006900] = ns.setTisSeason,
+	[86007300] = ns.setBlizzPoetry,
+}
+
+points[ 224 ] = { -- Stranglethorn Vale
+	[37567622] = ns.setWondervolt,
+	[48390814] = { bromance=true, name="Brother Nimetz", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=1, }, }, },
+}
+
+points[ 1434 ] = { -- Stranglethorn Vale / Northern Stranglethorn (Cata Classic)
+	[26717347] = ns.setWondervoltUnder,
+--	[37567622] = ns.setWondervolt,
+	[48390814] = { bromance=true, name="Brother Nimetz", showAllCriteria=true, faction="Alliance",
+					achievements={ { id=1686, index=1, }, }, },
+}
+
+points[ 210 ] = { -- The Cape of Stranglethorn
+	[40356756] = ns.setWondervolt,
+}
+
+points[ 18 ] = { -- Tirisfal Glades
+	[60006900] = { bromance=true, name="Brother Malach", showAllCriteria=true, faction="Horde",
+					achievements={ { id=1685, index=1, tip="Descend into Undercity" }, }, },
+	[61105929] = ns.setWondervolt,
+}
+
+points[ 1420 ] = { -- Tirisfal Glades
+	[60006900] = { bromance=true, name="Brother Malach", showAllCriteria=true, faction="Horde",
+					achievements={ { id=1685, index=1, tip="Descend into Undercity" }, }, },
+	[61105929] = ns.setWondervolt,
+	[62277325] = { vendor=true, name="Jaycrue Copperpinch", faction="Horde", tip=ns.vendorFB },
+	[62297330] = { vendor=true, name="Nardstrum Copperpinch", faction="Horde", tip=ns.vendor,
+					quests={ { id=7024, name="Great-father Winter is Here", level=10, qType="Seasonal", }, }, },
+}
+
+points[ 90 ] = { -- Undercity
+	[15203050] = { caroling=true, faction="Alliance",
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingUC2 }, }, },
+	[23633914] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC2, }, }, },
+	[34713321] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC3, }, }, },
+	[36005300] = ns.setIronArmada,
+	[38004800] = ns.setGourmet,
+	[36004500] = ns.setTisSeason,
+	[36004900] = ns.setBlizzPoetry,
+	[41433333] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC4, }, }, },
+	[45978314] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC7, }, }, },
+	[46722712] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC1, }, }, },
+	[46944393] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC5, }, }, },
+	[50862166] = { bromance=true, name="Brother Malach", showAllCriteria=true, faction="Horde",
+					achievements={ { id=1685, index=1, }, }, },
+	[52446384] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC6, }, }, },
+	[54539037] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC8, }, }, },
+	[58504390] = { caroling=true, faction="Alliance",
+					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingUC1 }, }, },
+	[68233886] = { vendor=true, name="Nardstrum Copperpinch", faction="Horde",
+					quests={ { id=7024, qType="Seasonal", }, }, tip=ns.vendor, },
+	[68604000] = { vendor=true, name="Jaycrue Copperpinch", faction="Horde", tip=ns.vendorFB },
+}
+
+points[ 1458 ] = { -- Undercity
+	[15203050] = { caroling=true, faction="Alliance", version=40300,
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingUC2 }, }, },
+	[23633914] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC2, }, }, },
+	[34713321] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC3, }, }, },
+	[36005300] = ns.setIronArmada,
+	[38004800] = ns.setGourmet,
+	[36004500] = ns.setTisSeason,
+	[36004900] = ns.setBlizzPoetry,
+	[41433333] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC4, }, }, },
+	[45978314] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC7, }, }, },
+	[46722712] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC1, }, }, },
+	[46944393] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC5, }, }, },
+	[50862166] = { bromance=true, name="Brother Malach", showAllCriteria=true, faction="Horde",
+					achievements={ { id=1685, index=3, }, }, },
+	[52446384] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC6, }, }, },
+	[54539037] = { bbKing=true, faction="Alliance",
+					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC8, }, }, },
+	[58504390] = { caroling=true, faction="Alliance", version=40300,
+					achievements={ { id=5853, index=2, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingUC1 }, }, },
+	[68233886] = { vendor=true, name="Nardstrum Copperpinch", faction="Horde", tip=ns.vendor,
+					quests={ { id=7024, name="Great-father Winter is Here", level=10, qType="Seasonal", }, }, },
+	[68153860] = { vendor=true, name="Jaycrue Copperpinch", faction="Horde", tip=ns.vendorFB },
+}
+
+points[ 52 ] = { -- Westfall
+	[49003100] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[51001920] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[62005760] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 1436 ] = { -- Westfall
+	[49003100] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[51001920] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[57604160] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+	[62005760] = { gourmet=true, name="Young Fleshripper", achievements=ns.setSantaTreatsA, quests=ns.setSantaTreatsQ,
+					tip=ns.smallEgg, },
+}
+
+points[ 56 ] = { -- Wetlands
+	[09236089] = ns.setWondervolt,
+}
+
+points[ 1437 ] = { -- Wetlands
+	[09345831] = ns.setWondervolt,
+--	[09236089] = ns.setWondervolt,
+}
+
+--==================================================================================================================================
+--
+-- OUTLAND
+--
+--==================================================================================================================================
+
+points[ 105 ] = { -- Blade's Edge Mountains
+	[28765737] = { falala=true, name="Quest Hub", achievements={ { id=1282, guide=ns.falala, }, },
+					quests={ { id=11025, qType="One Time", }, { id=11030, qType="One Time", },
+						{ id=11062, qType="One Time", }, { id=11010, qType="One Time", },
+						{ id=11102, qType="One Time", class="Druid", }, { id=11023, qType="Daily", }, }, },
+	[34404140] = { falala=true, name="Bombing Run Area", achievements={ { id=1282, tip="You do the bombing runs here" }, }, },
+}
+
+points[ 1949 ] = { -- Blade's Edge Mountains
+	[28765737] = { falala=true, name="Quest Hub", achievements={ { id=1282, guide=ns.falala, }, }, },
+	[34404140] = { falala=true, name="Bombing Run Area", achievements={ { id=1282, tip="You do the bombing runs here" }, }, },
+}
+
+points[ 111 ] = { -- Shattrath City
+	[51262966] = { vendor=true, name="Eebee Jinglepocket", tip=ns.vendor },
+	[60605720] = { vendor=true, name="Olnayvi Copperpinch", tip=ns.vendorFB },
+	[66008700] = ns.setIronArmada,
+	[68008200] = ns.setGourmet,
+	[66007900] = ns.setTisSeason,
+	[66008300] = ns.setBlizzPoetry,
+	[80105846] = ns.setWondervolt,
+}
+
+--==================================================================================================================================
+--
+-- NORTHREND
+--
+--==================================================================================================================================
+
+points[ 114 ] = { -- Borean Tundra
+	[40205500] = { bromance=true, name="Durkot Wolfbrother", showAllCriteria=true, faction="Horde",
+					achievements={ { id=1685, index=2, tip=ns.broDurkot }, }, },
+	[31003000] = { tisSeason=true, name="'Tis the Season", noCoords=true,
+					achievements={ { id=277, showAllCriteria=true, guide=ns.threeSet, tip=ns.threeSetNexus, }, }, },
+}
+
+points[ 127 ] = { -- Crystalsong Forest
+	[29563287] = { frostyShake=true, achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, }, },
+					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
+						{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", }, 
+						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[27003850] = ns.setWondervolt,
+}
+
+points[ 125 ] = { -- Dalaran
+	[49394373] = ns.setWondervolt,
+	[49832909] = { frostyShake=true, achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, }, },
+					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
+						{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", }, 
+						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[55005400] = { letItSnow=true, tip="Try hanging out here, but Alterac Mountains might be best!",
+					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
+	[90004900] = ns.setIronArmada,
+	[92004400] = ns.setGourmet,
+	[90004100] = ns.setTisSeason,
+	[90004500] = ns.setBlizzPoetry,
+}
+
+points[ 118 ] = { -- Icecrown
+	[69404240] = { bromance=true, name="Brother Keltan", showAllCriteria=true, version=60000, faction="Horde",
+					achievements={ { id=1685, index=3, tip=ns.broKeltan }, }, },
+}
+
+points[ 129 ] = { -- The Nexus
+	[27503420] = { tisSeason=true, name="'Tis the Season", noCoords=true,
+					achievements={ { id=277, showAllCriteria=true, tip="You need Grand Magus Telestra. Must be Heroic!", }, }, },
+	[31507440] = { tisSeason=true, name="'Tis the Season", noCoords=true,
+					achievements={ { id=277, showAllCriteria=true, tip="You need Grand Magus Telestra. Must be Heroic!", }, }, },
+}
+
+points[ 143 ] = { -- The Oculus
+	[63004200] = { tisSeason=true, name="'Tis the Season", noCoords=true,
+					achievements={ { id=277, showAllCriteria=true,
+					tip="You need Mage-Lord Urom, the 3rd boss. Must be Heroic!", }, }, },
+}
+
+--==================================================================================================================================
+--
+-- GARRISON / DRAENOR
+--
+--==================================================================================================================================
+
+points[ 525 ] = { -- Frostfire Ridge
+	[46202750] = { miscQuests=true, name="Daily Hub", guide=ns.garrison,
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, },
+					tip="The Snow Mounds in this area have a 5% chance of a Grumpling pet!", },
+	[48556369] = { vendor=true, name="Tradurjo Jinglepocket", faction="Horde", tip=ns.vendor ..ns.vendorL3Garr },
+	[48266473] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[48306477] = { armada=true, name="Izzy Hollyfizzle", faction="Horde", version=60202,
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+}
+
+points[ 590 ] = { -- Frostwall Garrison
+	[36002400] = ns.setGourmet,
+	[34002100] = ns.setTisSeason,
+	[34002500] = ns.setBlizzPoetry,
+	[50403360] = { vendor=true, name="Ashanem Jinglepocket", faction="Horde", tip=ns.vendorFB ..ns.vendorL3Garr },
+	[50653236] = { vendor=true, name="Tradurjo Jinglepocket", faction="Horde", tip=ns.vendor ..ns.vendorL3Garr },
+	[47043812] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[47353844] = { armada=true, name="Izzy Hollyfizzle", faction="Horde", version=60202,
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+}
+
+points[ 543 ] = { -- Gorgrond
+	[06267254] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[06287257] = { armada=true, name="Izzy Hollyfizzle", faction="Horde", version=60202,
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+}
+
+points[ 582 ] = { -- Lunarfall Garrison
+	[41754789] = { vendor=true, name="Tradurjo Jinglepocket", faction="Alliance", tip=ns.vendor ..ns.vendorL3Garr },
+	[42204720] = { vendor=true, name="Ashanem Jinglepocket", faction="Alliance", tip=ns.vendorFB ..ns.vendorL3Garr },
+	[44005135] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[44305104] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+	[64007000] = ns.setGourmet,
+	[62006700] = ns.setTisSeason,
+	[62007100] = ns.setBlizzPoetry,
+}
+
 points[ 539 ] = { -- Shadowmoon Valley in Draenor
-	[29901740] = { vendorA=true, tip="Tradurjo Jinglepocket" ..vendor .."\n\nYou must have a level 3 garrison" },
-	[31001400] = { questA=39651, tip="Almie " ..almiePizzle },
-	[30201550] = { aIDA=10353, tip=armada },
+	[29901740] = { vendor=true, name="Tradurjo Jinglepocket", faction="Alliance", tip=ns.vendor ..ns.vendorL3Garr },
+	[30231795] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+	[30201798] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, }, },
 }
-points[ 590 ] = { -- Frostwall Garrison in Draenor
-	[50653236] = { vendorH=true, tip="Tradurjo Jinglepocket" ..vendor .."\n\nYou must have a level 3 garrison" },
-	[47173796] = { questH=39651, tip="Pizzle " ..almiePizzle },
-	[48703530] = { aIDH=10353, tip=armada },
+
+points[ 535 ] = { -- Talador
+	[93726470] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[93766466] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
 }
-points[ 525 ] = { -- Frostfire Ridge in Draenor
-	[48556369] = { vendorH=true, tip="Tradurjo Jinglepocket" ..vendor .."\n\nYou must have a level 3 garrison" },
-	[48376495] = { questH=39651, tip="Pizzle " ..almiePizzle },
-	[48606420] = { aIDH=10353, tip=armada },
+
+points[ 534 ] = { -- Tanaan Jungle
+	[80375685] = { armada=true, name="Gondar", version=60202,
+					achievements={ { id=10353, index=4, guide=ns.armada, tip=ns.tanaanSpawns }, }, },
+	[83454366] = { armada=true, name="Drakum", version=60202,
+					achievements={ { id=10353, index=5, guide=ns.armada, tip=ns.tanaanSpawns }, }, },
+	[88135583] = { armada=true, name="Smashum Grabb", version=60202,
+					achievements={ { id=10353, index=3, guide=ns.armada, tip=ns.tanaanSpawns }, }, },
+}
+
+--==================================================================================================================================
+--
+-- WORLD / OTHER
+--
+--==================================================================================================================================
+
+ns.yourHub = "Your Feast of Winter Veil hub!"
+
+points[ 946 ] = { -- Azeroth
+	[45704570] = { wondervolt=true, name="Orgrimmar", showAnyway=true, faction="Horde", tip=ns.yourHub },
+	[58305160] = { wondervolt=true, name="Ironforge", showAnyway=true, faction="Alliance", tip=ns.yourHub },
+	[79005150] = { miscQuests=true, name="Daily Hub", guide=ns.garrison,
+					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", qType="Daily", },
+						{ id=39648, name="Where Are the Children?", qType="Daily", },
+						{ id=39651, name="Grumpus", qType="Daily", }, },
+					tip="Pickup the dailies from your level 3 Garrison", },
+	[89805850] = { armada=true, name="Gondar, Drakum, Smashum Grab", version=60202,
+					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, tip=ns.tanaanSpawns }, }, },
 }
 
 -- Choice of texture
@@ -561,5 +1408,5 @@ scaling[15] = 0.48
 scaling[16] = 0.48
 scaling[17] = 0.48
 scaling[18] = 0.48
-scaling[19] = 0.48
+scaling[19] = 0.60
 scaling[20] = 0.48

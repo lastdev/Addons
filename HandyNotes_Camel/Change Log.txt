@@ -1,3 +1,10 @@
+== v2.03 10th December 2024
+* TOC update to 11.0.7
+
+== v2.02 26th November 2024
+* Improved map "X" message - makes it really clear which version of Uldum you are
+  in and which version of Uldum you are looking at
+
 == v2.01 12th November 2024
 * TOC update to 4.4.1
 
@@ -8,7 +15,7 @@
 * The options panel now has a lot of helpful notes
 * Title text improved
 * Improved chat command layout
-* Supress the "X" icon for non-Retail
+* Supress the "X" for non-Retail
 
 == v1.14 - 17th October 2024
 * TOC update to 11.0.5

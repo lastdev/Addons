@@ -1,3 +1,11 @@
+== v2.01 - 26th November 2024
+* Minimap pins now disappear/appear around the same time as they do on the World Map
+  I arbitrarily set the timer to checking every 3 seconds - to avoid FPS / DPS hits
+  If show/hide via the options panel then that's instant
+  If in combat then I rely wholly on the HandyNotes engine to avoid taint errors
+  (a main reason I moved to the HN ecosystem years ago)
+* Maladath added to the OCE server list
+
 == v2.00 - 29th October 2024
 * Slash/chat commands added
 * Lots of helpful text added to the Options panel

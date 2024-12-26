@@ -1,0 +1,24 @@
+## Interface: 110005
+## Title: Chat Sound Customizer
+## Notes: Don't miss chat messages anymore by not listening to them.
+## Notes-ptBR: Não perca mais as mensagens no chat por não ouvi-las.
+## Author: Canettieri & Eliote
+## Version: v2.3.0
+## SavedVariables: ChatSoundCustomizerDB
+
+## X-Curse-Project-ID: 417213
+## X-Wago-ID: rkGreMKy
+
+libs\embeds.xml
+
+Localization.lua
+Chat_Sound_Customizer.lua
+Options.lua
+SoundsRegistry.lua
+LDB.lua
+
+modules\IgnoreList.lua
+modules\Newcomer.lua
+modules\PlayerList.lua
+modules\ZoneChannel.lua
+modules\CustomChannel.lua

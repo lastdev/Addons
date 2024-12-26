@@ -1,7 +1,7 @@
 # BadBoy_Levels
 
-## [v10.2.6](https://github.com/funkydude/BadBoy_Levels/tree/v10.2.6) (2024-07-10)
-[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v10.2.5...v10.2.6) [Previous Releases](https://github.com/funkydude/BadBoy_Levels/releases)
+## [v11.0.0](https://github.com/funkydude/BadBoy_Levels/tree/v11.0.0) (2024-11-21)
+[Full Changelog](https://github.com/funkydude/BadBoy_Levels/compare/v10.2.6...v11.0.0) [Previous Releases](https://github.com/funkydude/BadBoy_Levels/releases)
 
-- Fix luacheck  
-- Compat code for WoW 11  
+- bump toc  
+- bump toc  

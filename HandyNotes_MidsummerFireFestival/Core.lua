@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                      v2.00 - 29th October 2024
+                                      v2.01 - 26th November 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -33,6 +33,7 @@ local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
 local GetQuestObjectives = C_QuestLog.GetQuestObjectives
+local GetTime = GetTime
 local GetTitleForQuestID = C_QuestLog.GetTitleForQuestID
 local IsOnQuest = C_QuestLog.IsOnQuest
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
@@ -61,6 +62,8 @@ continents[ 876 ] = true -- Kul Tiras
 continents[ 947 ] = true -- Azeroth
 continents[ 1978 ] = true -- Dragon Isles
 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
 -- Localisation
 ns.locale = GetLocale()
 local L = {}
@@ -70,7 +73,7 @@ ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar 
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
 			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
-			Penance = true, Shadowstrike = true }			
+			Penance = true, Shadowstrike = true, Maladath = true, }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -89,6 +92,7 @@ if ns.locale == "deDE" then
 	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
 		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
+	L["Gold"] = "Gold"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -470,6 +474,8 @@ else
 		..ns.colour.highlight .." achievements"
 end
 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
 -- Plugin handler for HandyNotes
 function pluginHandler:OnEnter(mapFile, coord)
 	if self:GetCenter() > UIParent:GetCenter() then
@@ -526,6 +532,8 @@ end
 function pluginHandler:OnLeave()
 	GameTooltip:Hide()
 end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 local function ShowConditionallyE( aID, index )
 	local completed;
@@ -595,6 +603,8 @@ do
 		return iterator, ns.points[mapID]
 	end
 end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Interface -> Addons -> Handy Notes -> Plugins -> Midsummer Fire Festival options
 ns.options = {
@@ -715,10 +725,14 @@ ns.options = {
 	},
 }
 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
 function HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick( addonName, buttonName )
 	Settings.OpenToCategory( "HandyNotes" )
 	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "MidsummerFireFestival" )
  end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 function pluginHandler:OnEnable()
 	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
@@ -756,6 +770,22 @@ function pluginHandler:Refresh()
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_MidsummerFireFestivalDB", "AceEvent-3.0")
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
+ns.eventFrame = CreateFrame( "Frame" )
+ns.timeSinceLastUpdate, ns.curTime = 0, 0
+
+local function OnUpdate()
+	ns.curTime = GetTime()
+	if ns.curTime - ns.timeSinceLastUpdate <= 3 then return end
+	ns.timeSinceLastUpdate = ns.curTime
+	pluginHandler:Refresh()
+end
+
+ns.eventFrame:SetScript( "OnUpdate", OnUpdate )
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
 
 SLASH_Midsummer1, SLASH_Midsummer2 = "/mff", "/midsummer"
 

@@ -1,7 +1,6 @@
 # <DBM Mod> Raids (DF)
 
-## [r2](https://github.com/DeadlyBossMods/DBM-Dragonflight/tree/r2) (2024-11-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dragonflight/compare/r1...r2) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dragonflight/releases)
+## [r3](https://github.com/DeadlyBossMods/DBM-Dragonflight/tree/r3) (2024-12-14)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dragonflight/compare/r2...r3) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dragonflight/releases)
 
-- remove game version 11.0.2 and add game version 11.0.7  
-- cleanup  
+- work around annoying core bug where starting a timer of 0 uses self.timer instead. But that annoying bug has to stay since over a decade worth of mods has assumed that to be valid  

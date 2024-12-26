@@ -719,7 +719,6 @@ function MT:CreateMTFrame()
 			if MT.db.profile.override then
 				if not (MacroFrameText == MacroToolkitText) then MacroFrameText = MacroToolkitText end
 			end
-			--MT:Skin(mtframe)
 			mtframe:ClearAllPoints()
 			mtframe:SetPoint("BOTTOMLEFT", MT.db.profile.x, MT.db.profile.y)
 			mtframe:Raise()
@@ -1118,7 +1117,7 @@ function MT:CreateSecureActionButton(index)
 	frame:SetAttribute("type", "macro")
 	frame:SetAttribute("macrotext", "")
 	frame:SetAttribute("dynamic", false)
-	frame:RegisterForClicks("AnyUp", "AnyDown")
+	frame:RegisterForClicks("AnyDown")
 	--[[
 	 	As of 10.0.2, setting the attribute pressAndHoldAction to 1 will allow you to force it to run on down,
 		regardless of the ActionButtonUseKeyDown CVar. So now we can just `/click [btn:x] btnName 1` and it will work

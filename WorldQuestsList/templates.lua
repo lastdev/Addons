@@ -126,7 +126,7 @@ function WQL_HolidayPinMixin:OnClick(button)
 	if worldPos then
 		local wy,wx = worldPos:GetXY()
 		if wx and wy then
-			WorldQuestList.AddArrow(wx,wy,nil,self.data[8])
+			WorldQuestList.AddArrow(wx,wy,nil,self.data[8],nil,data.arrowFunc)
 		end
 	end
 	WorldQuestList.AddArrowNWC(data.x,data.y,data.mapID,0,self.data[8])

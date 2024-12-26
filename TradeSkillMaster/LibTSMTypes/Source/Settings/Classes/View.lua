@@ -15,6 +15,8 @@ local Reactive = LibTSMTypes:From("LibTSMUtil"):Include("Reactive")
 local private = {
 	context = {}, ---@type table<SettingsView, ViewContext>
 }
+-- Make the keys weak so we clean up our context if the view is GC'd
+setmetatable(private.context, { __mode = "k" })
 
 ---@class ViewContext
 ---@field settingsDB SettingsDB

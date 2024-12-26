@@ -2183,8 +2183,8 @@ function HealBot_Action_UpdateDebuffButton(button)
     end
     if button.status.current<HealBot_Unit_Status["PLUGINBARCOL"] then
         if HealBot_Config_Cures.CDCshownHB and (button.aura.debuff.colbar == 2 or button.aura.debuff.colbar == 3) and (button.aura.debuff.dispellable or not HealBot_Config_Cures.CDCshownHBDispelOnly) then 
-            if HealBot_Aura_IsCureSpell(button) and button.status.rangespell~=button.aura.debuff.curespell then
-                HealBot_Range_ButtonSpell(button, true, button.aura.debuff.curespell)
+            if HealBot_Aura_IsCureSpell(button) then
+                HealBot_Range_ButtonSpell(button, button.aura.debuff.curespell)
             end
             if HealBot_Range_WarnInRange(button, button.aura.debuff.curespell, HealBot_Config_Cures.WarnRange_Bar) then
                 button.status.r,button.status.g,button.status.b=button.aura.debuff.r,button.aura.debuff.g,button.aura.debuff.b
@@ -2226,8 +2226,8 @@ function HealBot_Action_UpdateBuffButton(button)
     end
     if button.status.current<HealBot_Unit_Status["DEBUFFBARCOL"] then
         if HealBot_Config_Buffs.CBshownHB and (button.aura.buff.colbar == 2 or button.aura.buff.colbar == 3) and (button.aura.buff.missingbuff or not HealBot_Config_Buffs.CBshownHBMissingOnly) then 
-            if button.status.current<HealBot_Unit_Status["DEBUFFNOCOL"] and button.aura.buff.missingbuff and button.status.rangespell~=button.aura.buff.missingbuff then
-                HealBot_Range_ButtonSpell(button, true, button.aura.buff.missingbuff)
+            if button.status.current<HealBot_Unit_Status["DEBUFFNOCOL"] and button.aura.buff.missingbuff then
+                HealBot_Range_ButtonSpell(button, button.aura.buff.missingbuff)
             end
             if HealBot_Range_WarnInRange(button, button.aura.buff.name, HealBot_Config_Buffs.WarnRange_Bar) then
                 HealBot_Action_setState(button, HealBot_Unit_Status["BUFFBARCOL"])
@@ -2388,7 +2388,7 @@ function HealBot_Action_UpdateTheDeadButton(button)
                     HealBot_Plugin_TimeToLive_UnitUpdate(button, true)
                 end
                 HealBot_Action_setState(button, HealBot_Unit_Status["DEAD"])
-                HealBot_Range_ButtonSpell(button, true, HealBot_Action_retResSpell(button))
+                HealBot_Range_ButtonSpell(button, HealBot_Action_retResSpell(button))
                 if button.player then 
                     HealBot_Data["PALIVE"]=false
                     HealBot_setLuVars("pluginCDsCheckExisting", 0)
@@ -3506,6 +3506,7 @@ function HealBot_Action_InitFrames()
             HealBot_Panel_ParentFrameID(x)
         end
     end
+    if not lGlow then lGlow=HealBot_Libs_LibGlow() end
     HealBot_Events_Frame()
     HealBot_Action_luVars["FrameInitDone"]=true
 end
@@ -3993,6 +3994,7 @@ function HealBot_Action_InitButton(button, prefix)
     erButton.r,erButton.g,erButton.b,erButton.a=0,0,0,0
     erButton:EnableMouse(false)
     erButton.regClicks=false
+    erButton.frame=0
     button:EnableMouse(false)
     button.regClicks=false
     button.text.r=1
@@ -4162,9 +4164,8 @@ function HealBot_Action_InitButton(button, prefix)
     button.status.isdead=false
     button.status.isspirit=false
     button.status.resstart=0
-    button.status.range=0
+    button.status.range=-9
     button.status.rangespell=HealBot_Range_Spell("HEAL")
-    button.status.rangemodkeyupd=0
     button.status.deadnextcheck=0
     button.status.unittype=0
     button.status.enabled=false
@@ -4431,8 +4432,8 @@ function HealBot_Action_CreateNewButton(frame, buttonId, prefix)
         iBtns=CreateFrame("Frame", prefix.."ID"..buttonId.."Icon"..x, ghb, BackdropTemplateMixin and "BackdropTemplate")
         iBtns.id=buttonId
         iBtns.size=HealBot_Action_luVars["IconGlowSize"]
-        iBtns:SetScript("OnEnter", function() HealBot_Options_BuffIconTooltip(ghb, x) end)
-        iBtns:SetScript("OnLeave", function() HealBot_Action_HideTooltipFrame() end)
+        iBtns:SetScript("OnEnter", function() HealBot_Action_BuffIcon_OnEnter(ghb, x) end)
+        iBtns:SetScript("OnLeave", function() HealBot_Action_BuffIcon_OnLeave(ghb, x) end)
         iBtns:SetScript("OnMouseDown", function(self, button) HealBot_Options_BuffClick(ghb, x, button) end)
         iBtns:SetFrameLevel(0)
         if prefix~="hbTest_" then
@@ -4449,8 +4450,8 @@ function HealBot_Action_CreateNewButton(frame, buttonId, prefix)
         iBtns=CreateFrame("Frame", prefix.."ID"..buttonId.."Icon"..x, ghb, BackdropTemplateMixin and "BackdropTemplate")
         iBtns.id=buttonId
         iBtns.size=HealBot_Action_luVars["IconGlowSize"]
-        iBtns:SetScript("OnEnter", function() HealBot_Options_DebuffIconTooltip(ghb, x) end)
-        iBtns:SetScript("OnLeave", function() HealBot_Action_HideTooltipFrame() end)
+        iBtns:SetScript("OnEnter", function() HealBot_Action_DebuffIcon_OnEnter(ghb, x) end)
+        iBtns:SetScript("OnLeave", function() HealBot_Action_DebuffIcon_OnLeave(ghb, x) end)
         iBtns:SetScript("OnMouseDown", function(self, button) HealBot_Options_DebuffClick(ghb, x, button) end)
         if prefix~="hbTest_" then
             iBtns:SetBackdrop({edgeFile="Interface\\Buttons\\WHITE8X8",
@@ -6133,6 +6134,7 @@ function HealBot_Action_SetHealButton(unit,guid,frame,unitType,duplicate,role,pr
                     erButton:ClearAllPoints()
                     erButton:SetParent(grpFrame[frame])
                     hButton.frame=frame
+                    erButton.frame=frame
                     hButton.skin=Healbot_Config_Skins.Current_Skin
                     HealBot_Action_UpdateBackground(hButton)
                     for x=1,9 do
@@ -6186,7 +6188,6 @@ function HealBot_Action_SetHealButton(unit,guid,frame,unitType,duplicate,role,pr
                     hButton.special.unit=false
                 elseif unitType<10 then
                     HealBot_Private_Button[unit]=hButton
-                    hbShouldHealSomePrivateFrames[frame]=true
                     hButton:SetAttribute("toggleForVehicle", true)
                     if unitType == 8 then
                         hButton.special.unit=true
@@ -6203,7 +6204,6 @@ function HealBot_Action_SetHealButton(unit,guid,frame,unitType,duplicate,role,pr
                     end
                 else
                     HealBot_Unit_Button[unit]=hButton
-                    hbShouldHealSomePlayerFrames[frame]=true
                     hButton:SetAttribute("toggleForVehicle", true)
                     hButton.special.unit=false
                 end
@@ -6254,8 +6254,10 @@ function HealBot_Action_SetHealButton(unit,guid,frame,unitType,duplicate,role,pr
             end
             if unitType<10 then
                 HealBot_Panel_setButtonpGUID(hButton)
+                hbShouldHealSomePrivateFrames[frame]=true
             elseif unitType<20 then
                 HealBot_Panel_setButtonGUID(hButton)
+                hbShouldHealSomePlayerFrames[frame]=true
             elseif unitType<30 then
                 HealBot_Panel_setButtonPetGUID(hButton)
             end
@@ -6493,7 +6495,7 @@ function HealBot_Action_UpdateTestButton(button)
             elseif (testBarsDat["cnt"] % 2 == 0) and hbv_Skins_GetFrameBoolean("Icons", "SHOWCOMBAT", button.frame) then
                 button.status.incombat=true
             elseif hbv_Skins_GetFrameBoolean("Icons", "SHOWRC", button.frame) then
-                button.icon.extra.readycheck=HealBot_ReadyCheckStatus["WAITING"]
+                button.icon.extra.readycheck=hbv_GetStatic("rcWAITING")
             end
         elseif button.frame<8 then
             if (testBarsDat["cnt"] % 5 == 0) and hbv_Skins_GetFrameBoolean("Icons", "SHOWHOSTILE", button.frame) then
@@ -7029,6 +7031,7 @@ function HealBot_Action_CheckHideFrames()
         if not HealBot_Action_ShouldHealSome(hbHideFrame[1]) then
             HealBot_Action_HidePanel(hbHideFrame[1])
         end
+        hbHideFrameList[hbHideFrame[1]]=false
         table.remove(hbHideFrame, 1)
         HealBot_Timers_Set("SKINS","CheckHideFrames",true)
     else
@@ -7043,6 +7046,7 @@ function HealBot_Action_ShowHideFrames(button)
             HealBot_Action_ShowPanel(button.frame)
         elseif HealBot_Action_FrameIsVisible(button.frame) then
             if not hbHideFrameList[button.frame] then
+                hbHideFrameList[button.frame]=true
                 table.insert(hbHideFrame, button.frame)
             end
             if not HealBot_Action_luVars["CheckingHideFrames"] then
@@ -7248,6 +7252,30 @@ function HealBot_Action_EmergUnit_OnLeave(self)
     grpFrameBar[self.frame].active=false
     HealBot_Action_SetActiveButton(0)
     if HealBot_Data["TIPBUTTON"] then HealBot_Action_HideTooltip(HealBot_Data["TIPBUTTON"]) end
+    HealBot_Action_UpdateGlobalDimming(0)
+end
+
+function HealBot_Action_BuffIcon_OnEnter(button, id)
+    grpFrameBar[button.frame].active=true
+    HealBot_Options_BuffIconTooltip(button, id)
+    HealBot_Action_UpdateGlobalDimming(button.frame)
+end
+
+function HealBot_Action_BuffIcon_OnLeave(button, id)
+    grpFrameBar[button.frame].active=false
+    HealBot_Action_HideTooltipFrame()
+    HealBot_Action_UpdateGlobalDimming(0)
+end
+
+function HealBot_Action_DebuffIcon_OnEnter(button, id)
+    grpFrameBar[button.frame].active=true
+    HealBot_Options_DebuffIconTooltip(button, id)
+    HealBot_Action_UpdateGlobalDimming(button.frame)
+end
+
+function HealBot_Action_DebuffIcon_OnLeave(button, id)
+    grpFrameBar[button.frame].active=false
+    HealBot_Action_HideTooltipFrame()
     HealBot_Action_UpdateGlobalDimming(0)
 end
 

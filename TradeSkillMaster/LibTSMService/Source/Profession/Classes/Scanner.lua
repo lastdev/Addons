@@ -828,31 +828,33 @@ function private.BulkInsertMats(craftString)
 		if salvageItems then
 			local matString = MatString.Create(MatString.TYPE.REQUIRED, 1, salvageItems)
 			private.matDB:BulkInsertNewRow(craftString, matString, salvageQuantityMin, "")
-		else
-			for _, matType, quantityRequired, dataSlotIndex, slotTextOrId, reagents in TradeSkill.SpecialMatIterator(spellId, level, categorySkillLevel) do
-				assert(not next(private.matStringItemsTemp))
-				for _, craftingReagent in ipairs(reagents) do
-					tinsert(private.matStringItemsTemp, craftingReagent.itemID)
-				end
-				local matStringType = nil
-				if matType == TradeSkill.MAT_TYPE.REQUIRED then
-					matStringType = MatString.TYPE.REQUIRED
-				elseif matType == TradeSkill.MAT_TYPE.QUALITY then
-					matStringType = MatString.TYPE.QUALITY
-				elseif matType == TradeSkill.MAT_TYPE.OPTIONAL then
-					matStringType = MatString.TYPE.OPTIONAL
-				elseif matType == TradeSkill.MAT_TYPE.FINISHING then
-					matStringType = MatString.TYPE.FINISHING
-				else
-					error("Unexpected mat type: "..tostring(matType))
-				end
-				if type(slotTextOrId) == "number" then
-					slotTextOrId = ItemInfo.GetName("i:"..slotTextOrId) or ""
-				end
-				local matString = MatString.Create(matStringType, dataSlotIndex, private.matStringItemsTemp)
-				wipe(private.matStringItemsTemp)
-				private.matDB:BulkInsertNewRow(craftString, matString, quantityRequired, slotTextOrId)
+		end
+		for _, matType, quantityRequired, dataSlotIndex, slotTextOrId, reagents in TradeSkill.SpecialMatIterator(spellId, level, categorySkillLevel) do
+			assert(not next(private.matStringItemsTemp))
+			for _, craftingReagent in ipairs(reagents) do
+				tinsert(private.matStringItemsTemp, craftingReagent.itemID)
 			end
+			local matStringType = nil
+			if matType == TradeSkill.MAT_TYPE.REQUIRED then
+				matStringType = MatString.TYPE.REQUIRED
+			elseif matType == TradeSkill.MAT_TYPE.QUALITY then
+				matStringType = MatString.TYPE.QUALITY
+			elseif matType == TradeSkill.MAT_TYPE.OPTIONAL then
+				matStringType = MatString.TYPE.OPTIONAL
+			elseif matType == TradeSkill.MAT_TYPE.FINISHING then
+				matStringType = MatString.TYPE.FINISHING
+			else
+				error("Unexpected mat type: "..tostring(matType))
+			end
+			if type(slotTextOrId) == "number" then
+				slotTextOrId = ItemInfo.GetName("i:"..slotTextOrId) or ""
+			end
+			if salvageItems then
+				dataSlotIndex = dataSlotIndex + 1
+			end
+			local matString = MatString.Create(matStringType, dataSlotIndex, private.matStringItemsTemp)
+			wipe(private.matStringItemsTemp)
+			private.matDB:BulkInsertNewRow(craftString, matString, quantityRequired, slotTextOrId)
 		end
 	end
 

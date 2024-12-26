@@ -17,6 +17,7 @@ local FRAMES = EnumType.New("DEFAULT_UI_FRAMES", {
 	MAIL = EnumType.NewValue(),
 	AUCTION_HOUSE = EnumType.NewValue(),
 	BANK = EnumType.NewValue(),
+	ACCOUNTBANK = EnumType.NewValue(),
 	GUILDBANK = EnumType.NewValue(),
 	MERCHANT = EnumType.NewValue(),
 })
@@ -42,6 +43,8 @@ DefaultUI:OnModuleLoad(function()
 			private.HandleEvent(FRAMES.AUCTION_HOUSE, false)
 		elseif frameType == Enum.PlayerInteractionType.Banker then
 			private.HandleEvent(FRAMES.BANK, false)
+		elseif frameType == Enum.PlayerInteractionType.AccountBanker then
+			private.HandleEvent(FRAMES.ACCOUNTBANK, false)
 		elseif frameType == Enum.PlayerInteractionType.GuildBanker then
 			private.HandleEvent(FRAMES.GUILDBANK, false)
 		elseif frameType == Enum.PlayerInteractionType.Merchant then
@@ -80,6 +83,12 @@ function DefaultUI.IsBankVisible()
 	return private.visible[FRAMES.BANK]
 end
 
+---Returns whether or not the account bank UI is visible.
+---@return boolean
+function DefaultUI.IsAccountBankVisible()
+	return private.visible[FRAMES.ACCOUNTBANK]
+end
+
 ---Returns whether or not the guild bank UI is visible.
 ---@return boolean
 function DefaultUI.IsGuildBankVisible()
@@ -113,6 +122,13 @@ function DefaultUI.RegisterBankVisibleCallback(callback, visibleFilter)
 	private.RegisterCallback(FRAMES.BANK, callback, visibleFilter)
 end
 
+---Registers a callback for when the account bank UI is visible.
+---@param callback fun(visible: boolean)|fun() Callback function
+---@param visibleFilter? boolean Only call the callback when the UI is visible
+function DefaultUI.RegisterAccountBankVisibleCallback(callback, visibleFilter)
+	private.RegisterCallback(FRAMES.ACCOUNTBANK, callback, visibleFilter)
+end
+
 ---Registers a callback for when the guild bank UI is visible.
 ---@param callback fun(visible: boolean)|fun() Callback function
 ---@param visibleFilter? boolean Only call the callback when the UI is visible
@@ -140,6 +156,8 @@ function private.PlayerInteractionShowHandler(_, interactionType)
 		private.HandleEvent(FRAMES.AUCTION_HOUSE, true)
 	elseif interactionType == Enum.PlayerInteractionType.Banker then
 		private.HandleEvent(FRAMES.BANK, true)
+	elseif interactionType == Enum.PlayerInteractionType.AccountBanker then
+		private.HandleEvent(FRAMES.ACCOUNTBANK, true)
 	elseif interactionType == Enum.PlayerInteractionType.GuildBanker then
 		private.HandleEvent(FRAMES.GUILDBANK, true)
 	elseif interactionType == Enum.PlayerInteractionType.Merchant then

@@ -1,5 +1,5 @@
-## Interface: 110005
-## Version: 3.00
+## Interface: 110007
+## Version: 3.02
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_elvencoins
 ## Title: Lunar Festival

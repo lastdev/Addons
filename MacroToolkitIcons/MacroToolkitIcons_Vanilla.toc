@@ -1,11 +1,12 @@
-## Interface: 11504
+## Interface: 11505
 ## Author: Deepac
 ## IconTexture: 982414
 ## Title: MacroToolkit Icon Data
-## Version: v2.3.7
+## Version: v2.3.11
 ## Notes: Load on demand data for MacroToolkit
 ## LoadOnDemand: 1
 ## RequiredDeps: MacroToolkit
 ## X-Curse-Project-ID: 47117
+## X-Wago-ID: jK8XprKy
 
 ..\MacroToolkit\modules\textures.lua

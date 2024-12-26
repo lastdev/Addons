@@ -4,7 +4,7 @@
 ## Author: QartemisT
 ## LoadOnDemand: 0
 ## RequiredDeps: DBM-Core
-## Version: r18
+## Version: r19
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER

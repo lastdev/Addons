@@ -35,10 +35,10 @@ L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Incantesimo Conosciuto"
 L[ [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
 COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
 Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
+https://github.com/WeakAuras/WeakAuras2/wiki/Deprecated-CLEU]=] ] = [=[|cFFFF0000Support for unfiltered COMBAT_LOG_EVENT_UNFILTERED is deprecated|r
 COMBAT_LOG_EVENT_UNFILTERED without a filter is advised against as it’s very performance costly.
 Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
+https://github.com/WeakAuras/WeakAuras2/wiki/Deprecated-CLEU]=]
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Opzioni Extra:|r %s"
 L["|cFFffcc00Extra Options:|r None"] = "|cFFffcc00Opzioni Extra:|r Nessuna"
 L[ [=[• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00ff00Pet|r correspond directly to those individual unitIDs.
@@ -301,7 +301,13 @@ L["Centered Vertical, then Right"] = "Centrato verticalmente, poi a destra"
 L["Changed"] = "Modificato"
 L["Channel"] = "Canale"
 L["Channel (Spell)"] = "Canale (Magia)"
+--[[Translation missing --]]
+L["Character GUID"] = "Character GUID"
+--[[Translation missing --]]
+L["Character Name"] = "Character Name"
 L["Character Stats"] = "Statistiche del Personaggio "
+--[[Translation missing --]]
+L["Character Transferred Quantity"] = "Character Transferred Quantity"
 L["Character Type"] = "Tipo di carattere"
 L["Charge gained/lost"] = "Carica guadagnata/persa"
 --[[Translation missing --]]
@@ -323,6 +329,8 @@ L["Class and Specialization"] = "Classe e Specializzazione"
 L["Classic"] = "Classic"
 L["Classification"] = "Classificazione"
 L["Clockwise"] = "Senso Orario"
+--[[Translation missing --]]
+L["Clone per Character"] = "Clone per Character"
 L["Clone per Event"] = "Clona per evento"
 L["Clone per Match"] = "Clona per partita"
 L["Color"] = "Colore"
@@ -330,7 +338,8 @@ L["Color Animation"] = "Animazione a colori"
 L["Combat Log"] = "Registro di combattimento"
 --[[Translation missing --]]
 L["Communities"] = "Communities"
-L["Condition Custom Text"] = "Condizione Testo Personalizzato"
+--[[Translation missing --]]
+L["Condition Custom Test"] = "Condition Custom Test"
 L["Conditions"] = "Condizioni"
 L["Contains"] = "Contiene"
 L["Continuously update Movement Speed"] = "Aggiorna continuamente la velocità di movimento"
@@ -414,6 +423,8 @@ L["DBM Announce"] = "DBM Announce"
 L["DBM Stage"] = "DBM Stage"
 --[[Translation missing --]]
 L["DBM Timer"] = "DBM Timer"
+--[[Translation missing --]]
+L["Dead"] = "Dead"
 --[[Translation missing --]]
 L["Death"] = "Death"
 L["Death Knight Rune"] = "Rune del cavaliere della morte"
@@ -550,6 +561,8 @@ L["Edge"] = "Edge"
 --[[Translation missing --]]
 L["Edge of Madness"] = "Edge of Madness"
 --[[Translation missing --]]
+L["Effective Spell Id"] = "Effective Spell Id"
+--[[Translation missing --]]
 L["Elide"] = "Elide"
 --[[Translation missing --]]
 L["Elite"] = "Elite"
@@ -675,6 +688,8 @@ L["Every Frame (High CPU usage)"] = "Every Frame (High CPU usage)"
 L["Evoker Essence"] = "Evoker Essence"
 --[[Translation missing --]]
 L["Exact Spell ID(s)"] = "Exact Spell ID(s)"
+--[[Translation missing --]]
+L["Execute Conditions"] = "Execute Conditions"
 --[[Translation missing --]]
 L["Experience (%)"] = "Experience (%)"
 --[[Translation missing --]]
@@ -866,6 +881,8 @@ L["Guardian"] = "Guardian"
 L["Guild"] = "Guild"
 --[[Translation missing --]]
 L["Hakkar"] = "Hakkar"
+--[[Translation missing --]]
+L["Hardcore"] = "Hardcore"
 --[[Translation missing --]]
 L["Has Target"] = "Has Target"
 --[[Translation missing --]]
@@ -1192,6 +1209,8 @@ L["Maexxna"] = "Maexxna"
 L["Magic"] = "Magic"
 --[[Translation missing --]]
 L["Magmadar"] = "Magmadar"
+--[[Translation missing --]]
+L["Main Character"] = "Main Character"
 --[[Translation missing --]]
 L["Main Stat"] = "Main Stat"
 --[[Translation missing --]]
@@ -1789,6 +1808,10 @@ L["Require Valid Target"] = "Require Valid Target"
 --[[Translation missing --]]
 L["Requires syncing the specialization via LibSpecialization."] = "Requires syncing the specialization via LibSpecialization."
 --[[Translation missing --]]
+L["Resilience (%)"] = "Resilience (%)"
+--[[Translation missing --]]
+L["Resilience Rating"] = "Resilience Rating"
+--[[Translation missing --]]
 L["Resist"] = "Resist"
 --[[Translation missing --]]
 L["Resistances"] = "Resistances"
@@ -1804,6 +1827,8 @@ L["Rested Experience (%)"] = "Rested Experience (%)"
 L["Resting"] = "Resting"
 --[[Translation missing --]]
 L["Resurrect"] = "Resurrect"
+--[[Translation missing --]]
+L["Resurrect Pending"] = "Resurrect Pending"
 --[[Translation missing --]]
 L["Right"] = "Right"
 --[[Translation missing --]]
@@ -1874,6 +1899,8 @@ L["Scenario (Normal)"] = "Scenario (Normal)"
 L["Screen"] = "Screen"
 --[[Translation missing --]]
 L["Screen/Parent Group"] = "Screen/Parent Group"
+--[[Translation missing --]]
+L["Season of Discovery"] = "Season of Discovery"
 --[[Translation missing --]]
 L["Second"] = "Second"
 --[[Translation missing --]]
@@ -2135,6 +2162,8 @@ L["Sulfuron Harbinger"] = "Sulfuron Harbinger"
 --[[Translation missing --]]
 L["Summon"] = "Summon"
 --[[Translation missing --]]
+L["Summon Pending"] = "Summon Pending"
+--[[Translation missing --]]
 L["Sun"] = "Sun"
 --[[Translation missing --]]
 L["Supports multiple entries, separated by commas"] = "Supports multiple entries, separated by commas"
@@ -2222,6 +2251,10 @@ L["The Four Horsemen"] = "The Four Horsemen"
 L["The 'ID' value can be found in the BigWigs options of a specific spell"] = "The 'ID' value can be found in the BigWigs options of a specific spell"
 --[[Translation missing --]]
 L["The Prophet Skeram"] = "The Prophet Skeram"
+--[[Translation missing --]]
+L["The total quantity a warband character can transfer after paying the transfer cost"] = "The total quantity a warband character can transfer after paying the transfer cost"
+--[[Translation missing --]]
+L["The total quantity after transferring everything to your current character and paying the transfer cost"] = "The total quantity after transferring everything to your current character and paying the transfer cost"
 --[[Translation missing --]]
 L["The War Within"] = "The War Within"
 --[[Translation missing --]]
@@ -2471,6 +2504,12 @@ L["Visibility"] = "Visibility"
 --[[Translation missing --]]
 L["Visions of N'Zoth"] = "Visions of N'Zoth"
 --[[Translation missing --]]
+L["Warband Quantity Total"] = "Warband Quantity Total"
+--[[Translation missing --]]
+L["Warband Transfer Percentage"] = "Warband Transfer Percentage"
+--[[Translation missing --]]
+L["Warband Transferred Quantity"] = "Warband Transferred Quantity"
+--[[Translation missing --]]
 L["Warfront (Heroic)"] = "Warfront (Heroic)"
 --[[Translation missing --]]
 L["Warfront (Normal)"] = "Warfront (Normal)"
@@ -2490,6 +2529,8 @@ L["Warning: Name info is now available via %affected, %unaffected. Number of aff
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."
 --[[Translation missing --]]
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"
+--[[Translation missing --]]
+L["WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/weakauras."] = "WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/weakauras."
 --[[Translation missing --]]
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.

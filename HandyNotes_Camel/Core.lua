@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                     v2.01 - 12th November 2024
+                                      v2.03 10th December 2024
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -49,7 +49,7 @@ ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar 
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
 			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
-			Penance = true, Shadowstrike = true }			
+			Penance = true, Shadowstrike = true, Maladath = true, }			
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -68,6 +68,7 @@ if ns.locale == "deDE" then
 	L["Show Coordinates Description"] = "Zeigen sie die " ..ns.colour.highlight 
 		.."koordinaten\124r in QuickInfos auf der Weltkarte und auf der Minikarte an"
 	L["Map Pin Selections"] = "Karten-Pin-Auswahl"
+	L["Gold"] = "Gold"
 	L["Red"] = "Rot"
 	L["Blue"] = "Blau"
 	L["Green"] = "Grün"
@@ -467,6 +468,28 @@ else
 	L["AddOn Description"] = ns.colour.highlight .."Helps you to obtain the " ..ns.colour.prefix
 		.."Mysterious Camel Figurine" ..ns.colour.highlight .." in Uldum"
 	L["Camel"] = "Mysterious Camel Figurine"
+	L["Correct Map"] = "You are looking at the correct map"
+	L["Incorrect Map"] = "You are looking at the incorrect map"
+	L["Wrong version of Uldum"] = "@ is in the wrong version of Uldum"
+end
+
+local function VersionOfUldum()
+
+	-- C_Map.GetBestMapForUnit( "player" ) == 249 would also work I'd think?
+	-- Memory says that patches ago when doing this I got abends when jumping
+	-- in and out of instances and trying to show a map using that code
+	for i = 1, 40 do
+		local auraData = GetAuraDataByIndex( "player", i )
+		if auraData == nil then break end
+		for k,v in pairs( auraData ) do
+			if k == "spellId" then
+				if ( v == 317785 ) then -- Zidormi buff to see the Cataclysm / Old Uldum
+					return true
+				end
+			end
+		end
+	end
+	return false
 end
 
 -- Plugin handler for HandyNotes
@@ -481,16 +504,24 @@ function pluginHandler:OnEnter( mapFile, coord )
 	
 	if pin.camel then
 		GameTooltip:SetText( ns.colour.prefix ..L["Camel"] )
+		if pin.tip then
+			GameTooltip:AddLine( ns.colour.plaintext ..pin.tip )
+		end
 	else
 		GameTooltip:SetText( ns.colour.prefix ..L["Camel"] )
-		GameTooltip:AddLine( ns.colour.highlight ..L["Speak to Zidormi"] .." (56.02,35.14)" )
-		GameTooltip:AddLine( ns.colour.highlight ..L["Wrong version of Uldum"] )
+		if ( VersionOfUldum() == false ) then
+			GameTooltip:AddLine( ns.colour.highlight ..L["Speak to Zidormi"] .." (56.02,35.14)\n" )
+			local version = string.gsub( L["Wrong version of Uldum"], "@", ns.name )
+			GameTooltip:AddLine( ns.colour.highlight ..version )
+		end
+		if ns.mapID == 249 then
+			GameTooltip:AddLine( ns.colour.plaintext .."\n" ..L["Correct Map"] )
+		else
+			GameTooltip:AddLine( ns.colour.plaintext .."\n" ..L["Incorrect Map"] )
+		end
+		if ( ns.db.showCoords == true ) then GameTooltip:AddLine( "\n" ) end
 	end
 	
-	if pin.tip then
-		GameTooltip:AddLine( ns.colour.plaintext ..pin.tip )
-	end
-
 	if ns.db.showCoords == true then
 		local mX, mY = HandyNotes:getXY(coord)
 		mX, mY = mX*100, mY*100
@@ -520,24 +551,7 @@ do
 					end
 				elseif ( ns.version >= 80000 ) then
 					-- Prior to BfA 8.3.0 (iirc) there was only one playable version of Uldum
-					local found = false
-					-- C_Map.GetBestMapForUnit( "player" ) == 249 would also work I'd think?
-					-- Memory says that patches ago when doing this I got abends when jumping
-					-- in and out of instances and trying to show a map using that code
-					for i = 1, 40 do
-						local auraData = GetAuraDataByIndex( "player", i )
-						if auraData == nil then break end
-						for k,v in pairs( auraData ) do
-							if k == "spellId" then
-								if ( v == 317785 ) then 
-									-- Zidormi buff to see the Cataclysm / Old Uldum
-									found = true
-									break
-								end
-							end
-						end
-					end
-					if ( found == false ) then
+					if ( VersionOfUldum() == false ) or ( ns.mapID ~= 249 ) then
 						return coord, nil, ns.textures[ 15 ], -- Red Cross and * 3 to make it big!
 								ns.db.iconScale * ns.scaling[ 15 ] * 3, ns.db.iconAlpha
 					end
@@ -547,6 +561,7 @@ do
 		end
 	end
 	function pluginHandler:GetNodes2(mapID)
+		ns.mapID = mapID
 		return iterator, ns.points[mapID]
 	end
 end

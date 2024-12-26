@@ -799,13 +799,13 @@ function HealBot_Events_ReadyCheck(unitName,timer)
         HealBot_setLuVars("rcEnd", HealBot_TimeNow+timer)
         for _,xButton in pairs(HealBot_Unit_Button) do
             if hbv_Skins_GetFrameBoolean("Icons", "SHOWRC", xButton.frame) then
-                xButton.icon.extra.readycheck=HealBot_ReadyCheckStatus["WAITING"]
+                xButton.icon.extra.readycheck=hbv_GetStatic("rcWAITING")
                 HealBot_Aura_UpdateState(xButton)
             end
         end
         for _,xButton in pairs(HealBot_Private_Button) do
             if hbv_Skins_GetFrameBoolean("Icons", "SHOWRC", xButton.frame) then
-                xButton.icon.extra.readycheck=HealBot_ReadyCheckStatus["WAITING"]
+                xButton.icon.extra.readycheck=hbv_GetStatic("rcWAITING")
                 HealBot_Aura_UpdateState(xButton)
             end
         end

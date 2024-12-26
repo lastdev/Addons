@@ -8,12 +8,25 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 
-			{1729585511, "Bug Fix", "Oct 23rd, 2024", "Fixing performance units.", "cont1nuity"},
-			{1729585511, "Bug Fix", "Oct 23rd, 2024", "Fixing aura frame 1 frame levels.", "cont1nuity"},
-			{1729585511, "Bug Fix", "Oct 22nd, 2024", "Fixing DBM integration.", "cont1nuity"},
-			{1729585511, "Bug Fix", "Oct 22nd, 2024", "Fixing default 'Countdown' and 'Fixate on you' scripts.", "cont1nuity"},
-			{1729585511, "New Feature", "Oct 21st, 2024", "Adding LibCustomGlow 'proc' glow support.", "cont1nuity"},
-			{1729585511, "New Feature", "Oct 21st, 2024", "Adding override flags for performance units to re-enable specific updates (threat, casts, auras).", "cont1nuity"},
+			{1734100705, "Bug Fix", "Dec 4th, 2024", "Reset Boss-Mod integration icon glow properly.", "cont1nuity"},
+			{1734100705, "Backend Change", "Dec 13th, 2024", "Framework updates.", "Terciob"},
+			{1734100705, "Bug Fix", "Dec 4th, 2024", "Fixing an issue with spell-name truncation.", "cont1nuity"},
+			{1734100705, "Backend Change", "Nov 20th, 2024", "Toc bump for classic.", "cont1nuity"},
+			
+			{1732096266, "Bug Fix", "Nov 19th, 2024", "Fixing erros on the cast npc color dropdowns.", "Terciob"},
+			{1732096266, "Bug Fix", "Nov 15th, 2024", "Added missing references to castBar.InterruptSourceName and castBar.InterruptSourceGUID in scripting panels.", "Linaori"},
+			{1732096266, "Backend Change", "Nov 14th, 2024", "Changed default values for DBM boss mod support and enabled it by default.", "cont1nuity"},
+			{1732096266, "New Feature", "Nov 14th, 2024", "Added glow options for expiring DBM boss mod icons.", "cont1nuity"},
+			{1732096266, "New Feature", "Nov 7th, 2024", "Added castBar.SpellNameRenamed, which contains either the customized or boss mods spell rename.", "Linaori"},
+			{1732096266, "Bug Fix", "Nov 3rd, 2024", "Fixing issue with aura swipe texture in cata high-res.", "cont1nuity"},
+			{1732096266, "Bug Fix", "Oct 29th, 2024", "Fixing profile reset values for fine tune scale.", "cont1nuity"},
+			{1732096266, "Bug Fix", "Oct 23rd, 2024", "Fixing Hunter execute with Black Arrow.", "cont1nuity"},
+			{1732096266, "Bug Fix", "Oct 23rd, 2024", "Fixing performance units.", "cont1nuity"},
+			{1732096266, "Bug Fix", "Oct 23rd, 2024", "Fixing aura frame 1 frame levels.", "cont1nuity"},
+			{1732096266, "Bug Fix", "Oct 22nd, 2024", "Fixing DBM integration.", "cont1nuity"},
+			{1732096266, "Bug Fix", "Oct 22nd, 2024", "Fixing default 'Countdown' and 'Fixate on you' scripts.", "cont1nuity"},
+			{1732096266, "New Feature", "Oct 21st, 2024", "Adding LibCustomGlow 'proc' glow support.", "cont1nuity"},
+			{1732096266, "New Feature", "Oct 21st, 2024", "Adding override flags for performance units to re-enable specific updates (threat, casts, auras).", "cont1nuity"},
 			
 			{1728642912, "Bug Fix", "Oct 11th, 2024", "Fixing error on health animations preview.", "cont1nuity"},
 			{1728642912, "Bug Fix", "Oct 10th, 2024", "Fixing mod/script error handling.", "cont1nuity"},

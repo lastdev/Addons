@@ -725,10 +725,10 @@ function TradeSkill.Craft(spellId, quantity, optionalMats, level, enchantSlotId,
 			private.itemLocation:SetBagAndSlot(SlotId.Split(enchantSlotId))
 			C_TradeSkillUI.CraftEnchant(spellId, quantity, optionalMats, private.itemLocation, applyConcentration)
 		elseif salvageSlotId then
-			assert(not level and not next(optionalMats))
+			assert(not level)
 			if TradeSkill.IsValiMatSlotId(salvageSlotId) then
 				private.itemLocation:SetBagAndSlot(SlotId.Split(salvageSlotId))
-				C_TradeSkillUI.CraftSalvage(spellId, quantity, private.itemLocation, nil, applyConcentration)
+				C_TradeSkillUI.CraftSalvage(spellId, quantity, private.itemLocation, optionalMats, applyConcentration)
 			end
 		else
 			C_TradeSkillUI.CraftRecipe(spellId, quantity, optionalMats, level, nil, applyConcentration)

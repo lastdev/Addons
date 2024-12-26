@@ -2300,6 +2300,19 @@ do
         return fallback
     end
 
+    ---@param data LfgEntryData|LfgSearchResultData
+    ---@return number? activityID
+    function util:GetLFDActivityID(data)
+        -- TODO `pre-11.0.7`
+        if type(data.activityID) == "number" then
+            return data.activityID
+        end
+        -- TODO `11.0.7`
+        if type(data.activityIDs) == "table" then
+            return data.activityIDs[1]
+        end
+    end
+
     ---@class LFDStatusResult
     ---@field dungeon Dungeon
     ---@field resultID number
@@ -2319,25 +2332,31 @@ do
         }
         local index = 0
         local activityInfo = C_LFGList.GetActiveEntryInfo()
-        if activityInfo and activityInfo.activityID then
-            temp.dungeon = util:GetDungeonByLFDActivityID(activityInfo.activityID) or util:GetRaidByLFDActivityID(activityInfo.activityID)
-            temp.hosting = true
+        if activityInfo then
+            local activityID = util:GetLFDActivityID(activityInfo)
+            if activityID then
+                temp.dungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
+                temp.hosting = true
+            end
         end
         local applications = C_LFGList.GetApplications() ---@type number[]
         for _, resultID in ipairs(applications) do
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-            if searchResultInfo and searchResultInfo.activityID and not searchResultInfo.isDelisted then
-                local dungeon = util:GetDungeonByLFDActivityID(searchResultInfo.activityID) or util:GetRaidByLFDActivityID(searchResultInfo.activityID)
-                if dungeon then
-                    local _, appStatus, pendingStatus = C_LFGList.GetApplicationInfo(resultID)
-                    if not pendingStatus and (appStatus == "applied" or appStatus == "invited") then
-                        temp.dungeon = dungeon
-                        temp.queued = true
-                        index = index + 1
-                        temp[index] = {
-                            dungeon = dungeon,
-                            resultID = resultID
-                        }
+            if searchResultInfo and not searchResultInfo.isDelisted then
+                local activityID = util:GetLFDActivityID(searchResultInfo)
+                if activityID then
+                    local dungeon = util:GetDungeonByLFDActivityID(activityID) or util:GetRaidByLFDActivityID(activityID)
+                    if dungeon then
+                        local _, appStatus, pendingStatus = C_LFGList.GetApplicationInfo(resultID)
+                        if not pendingStatus and (appStatus == "applied" or appStatus == "invited") then
+                            temp.dungeon = dungeon
+                            temp.queued = true
+                            index = index + 1
+                            temp[index] = {
+                                dungeon = dungeon,
+                                resultID = resultID
+                            }
+                        end
                     end
                 end
             end
@@ -2356,7 +2375,7 @@ do
         return util:GetDungeonByInstanceMapID(instanceMapID) or util:GetRaidByInstanceMapID(instanceMapID)
     end
 
-    ---@param activityID number
+    ---@param activityID? number
     ---@param includeExpansionDungeons? boolean
     function util:GetLFDStatusForCurrentActivity(activityID, includeExpansionDungeons)
         ---@type Dungeon|DungeonRaid|nil
@@ -2608,21 +2627,24 @@ do
         return format("https://%s/characters/%s/%s/%s/%s?utm_source=addon", ns.RAIDERIO_DOMAIN, ns.PLAYER_REGION, realmSlug, name, urlSuffix), name, realm, realmSlug
     end
 
-    ---@class InternalStaticPopupDialog : Frame
+    ---@class InternalStaticPopupFrame : Frame
+    ---@field public OnAcceptCallback? function
+
+    ---@class InternalStaticPopupDialog
     ---@field public id string
     ---@field public which? string
     ---@field public text string|fun(): string
     ---@field public button1? string
     ---@field public button2? string
-    ---@field public EditBoxOnEscapePressed? fun(self: InternalStaticPopupDialog)
+    ---@field public EditBoxOnEscapePressed? fun(self: InternalStaticPopupFrame)
     ---@field public editBoxWidth? number
     ---@field public hasEditBox? boolean
     ---@field public hasWideEditBox? boolean
     ---@field public hideOnEscape? boolean
-    ---@field public OnAccept? fun(self: InternalStaticPopupDialog)
-    ---@field public OnCancel? fun(self: InternalStaticPopupDialog)
-    ---@field public OnShow? fun(self: InternalStaticPopupDialog)
-    ---@field public OnHide? fun(self: InternalStaticPopupDialog)
+    ---@field public OnAccept? fun(self: InternalStaticPopupFrame)
+    ---@field public OnCancel? fun(self: InternalStaticPopupFrame)
+    ---@field public OnShow? fun(self: InternalStaticPopupFrame)
+    ---@field public OnHide? fun(self: InternalStaticPopupFrame)
     ---@field public preferredIndex? number
     ---@field public timeout? number
     ---@field public whileDead? boolean
@@ -3126,9 +3148,12 @@ do
             data.group = GetGroupData(unitPrefix, startIndex, endIndex)
         end
         local entry = C_LFGList.GetActiveEntryInfo()
-        if entry and entry.activityID then
-            data.activity = entry.activityID
-            data.queue = GetApplicantsData()
+        if entry then
+            local activityID = util:GetLFDActivityID(entry)
+            if activityID then
+                data.activity = activityID
+                data.queue = GetApplicantsData()
+            end
         end
         return TableToJSON(data)
     end
@@ -7100,12 +7125,13 @@ if not IS_CLASSIC_ERA then
             return
         end
         local leaderFaction = util:FactionGroupToFactionId(entry.leaderFactionGroup)
-        local activityInfo = C_LFGList.GetActivityInfoTable(entry.activityID, nil, entry.isWarMode)
+        local activityID = util:GetLFDActivityID(entry)
+        local activityInfo = activityID and C_LFGList.GetActivityInfoTable(activityID, nil, entry.isWarMode)
         if activityInfo and activityInfo.isMythicPlusActivity and entry.leaderOverallDungeonScore then
             local leaderName, leaderRealm = util:GetNameRealm(entry.leaderName)
             provider:OverrideProfile(leaderName, leaderRealm, entry.leaderOverallDungeonScore)
         end
-        currentResult.activityID = entry.activityID
+        currentResult.activityID = activityID
         currentResult.leaderName = entry.leaderName
         currentResult.leaderFaction = leaderFaction
         currentResult.keystoneLevel = util:GetKeystoneLevelFromText(entry.name) or util:GetKeystoneLevelFromText(entry.comment) or 0
@@ -7168,7 +7194,7 @@ if not IS_CLASSIC_ERA then
     function OnEnter(self)
         local entry = C_LFGList.GetActiveEntryInfo()
         if entry then
-            currentResult.activityID = entry.activityID
+            currentResult.activityID = util:GetLFDActivityID(entry)
         end
         if not currentResult.activityID or not config:Get("enableLFGTooltips") then
             return
@@ -8001,7 +8027,7 @@ if IS_RETAIL then
         [5] = "watched_replay",
     }
 
-    ---@class ConfigReplayColor : ColorMixin
+    ---@class ConfigReplayColor : ColorType
     ---@field public r number
     ---@field public g number
     ---@field public b number
@@ -9439,13 +9465,13 @@ if IS_RETAIL then
             barMin = 0,
             barMax = 100,
             barValue = 0,
-            -- text = "text",
-            -- tooltip = "tooltip",
+            text = "",
+            tooltip = "",
             barValueTextType = Enum.StatusBarValueTextType.Percentage,
-            -- overrideBarText = "0/500 (500)",
+            overrideBarText = "", -- 0/500 (500)
             overrideBarTextShownType = Enum.StatusBarOverrideBarTextShownType.OnlyOnMouseover,
             colorTint = Enum.StatusBarColorTintValue.Blue,
-            -- partitionValues = {},
+            partitionValues = {},
             tooltipLoc = Enum.UIWidgetTooltipLocation.BottomLeft,
             fillMotionType = Enum.UIWidgetMotionType.Smooth,
             barTextEnabledState = Enum.WidgetEnabledState.White,
@@ -9454,18 +9480,23 @@ if IS_RETAIL then
             widgetSizeSetting = 120,
             frameTextureKit = "widgetstatusbar", -- "ui-frame-bar" | "widgetstatusbar" | "cosmic-bar"
             textureKit = "white", -- "blue" | "green" | "red" | "white" | "yellow"
-            -- hasTimer = false,
+            hasTimer = false,
             orderIndex = 0,
-            -- widgetTag = "",
-            -- inAnimType = Enum.WidgetAnimationType.Fade,
-            -- outAnimType = Enum.WidgetAnimationType.Fade,
+            widgetTag = "",
+            inAnimType = Enum.WidgetAnimationType.Fade,
+            outAnimType = Enum.WidgetAnimationType.Fade,
             widgetScale = Enum.UIWidgetScale.OneHundred,
             layoutDirection = Enum.UIWidgetLayoutDirection.Horizontal,
-            -- modelSceneLayer = Enum.UIWidgetModelSceneLayer.None,
-            -- scriptedAnimationEffectID = 0,
+            modelSceneLayer = Enum.UIWidgetModelSceneLayer.None,
+            scriptedAnimationEffectID = 0,
             textEnabledState = Enum.WidgetEnabledState.White,
             textFontType = Enum.UIWidgetFontType.Shadow,
             textSizeType = Enum.UIWidgetTextSizeType.Standard14Pt,
+            -- TODO `11.0.7`
+            fillMaxOpacity = Enum.WidgetOpacityType.OneHundred,
+            fillMinOpacity = Enum.WidgetOpacityType.OneHundred,
+            glowAnimType = Enum.WidgetGlowAnimType.None,
+            showGlowState = Enum.WidgetShowGlowState.HideGlow,
         }
 
         ---@param barValue number
@@ -14111,7 +14142,8 @@ do
                 r = value.r,
                 g = value.g,
                 b = value.b,
-                opacity = value.a,
+                a = value.a,
+                opacity = value.a, -- TODO `pre-11.0.7`
                 hasOpacity = true,
                 swatchFunc = function() update() end,
                 opacityFunc = function() update() end,

@@ -1400,7 +1400,7 @@ function HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, lastSpe
 end
 
 local hbGlowSpellName,hbGlowIdx="",1
-local customDebuffPriority=hbv_Default("cDebuff")
+local customDebuffPriority=hbv_GetStatic("cDebuff")
 function HealBot_Aura_UpdateDebuffIcon(button, iconData, index, timer, spellId)
       --HealBot_setCall("HealBot_Aura_UpdateDebuffIcon", button, nil, nil, true)
     HealBot_Aura_DoUpdateDebuffIcon(button, iconData, index, timer, spellId, false)
@@ -1579,7 +1579,7 @@ function HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, lastSpell
     end
 end
 
-local customBuffPriority=hbv_Default("cBuff")
+local customBuffPriority=hbv_GetStatic("cBuff")
 function HealBot_Aura_UpdateBuffIcon(button, iconData, index, timer, spellId)
       --HealBot_setCall("HealBot_Aura_UpdateBuffIcon", button, nil, nil, true)
     HealBot_Aura_DoUpdateBuffIcon(button, iconData, index, timer, spellId, false)
@@ -1721,9 +1721,9 @@ function HealBot_Aura_UpdateState(button)
             elseif button.status.incombat then
                 HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\Addons\\HealBot\\Images\\incombat.tga"
             else
-                if button.icon.extra.readycheck == HealBot_ReadyCheckStatus["WAITING"] then
+                if button.icon.extra.readycheck == hbv_GetStatic("rcWAITING") then
                     HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\RAIDFRAME\\ReadyCheck-Waiting"
-                elseif button.icon.extra.readycheck == HealBot_ReadyCheckStatus["NOTREADY"] then
+                elseif button.icon.extra.readycheck == hbv_GetStatic("rcNOTREADY") then
                     HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\RAIDFRAME\\ReadyCheck-NotReady"
                 else
                     HealBot_UnitExtraIcons[button.id][93]["texture"]="Interface\\RAIDFRAME\\ReadyCheck-Ready"
@@ -2190,10 +2190,10 @@ function HealBot_Aura_setCustomBuffFilterDisabled()
     for id, _ in pairs(HealBot_Globals.IgnoreCustomBuff) do
         local name=HealBot_WoWAPI_SpellName(id)
         if (HealBot_Globals.CustomBuffIDMethod[id] or 3)<3 then
-            if HealBot_Globals.CustomBuffIDMethod[id] == 1 then
-                hbCustomBuffsDisabled[id]={}
-            elseif name then 
+            if HealBot_Globals.CustomBuffIDMethod[id] == 2 and name then
                 hbCustomBuffsDisabled[name]={}
+            else
+                hbCustomBuffsDisabled[id]={}
             end
         else
             if name then hbCustomBuffsDisabled[name]={} end
@@ -2201,10 +2201,10 @@ function HealBot_Aura_setCustomBuffFilterDisabled()
         end
         for instName, disabled in pairs(HealBot_Globals.IgnoreCustomBuff[id]) do
             if (HealBot_Globals.CustomBuffIDMethod[id] or 3)<3 then
-                if HealBot_Globals.CustomBuffIDMethod[id] == 1 then
-                    hbCustomBuffsDisabled[id][instName]=disabled
-                elseif name then 
+                if HealBot_Globals.CustomBuffIDMethod[id] == 2 and name then
                     hbCustomBuffsDisabled[name][instName]=disabled
+                else
+                    hbCustomBuffsDisabled[id][instName]=disabled
                 end
             else
                 if name then hbCustomBuffsDisabled[name][instName]=disabled end
@@ -2347,10 +2347,10 @@ function HealBot_Aura_setCustomDebuffFilterCastBy()
     for id, x in pairs(HealBot_Globals.FilterCustomDebuff) do
         local name=HealBot_WoWAPI_SpellName(id)
         if (HealBot_Globals.CustomDebuffIDMethod[id] or 3)<3 then
-            if HealBot_Globals.CustomDebuffIDMethod[id] == 1 then
-                hbCustomDebuffsCastBy[id]=x
-            elseif name then 
+            if HealBot_Globals.CustomDebuffIDMethod[id] == 2 and name then
                 hbCustomDebuffsCastBy[name]=x
+            else
+                hbCustomDebuffsCastBy[id]=x
             end
         else
             if name then hbCustomDebuffsCastBy[name]=x end
@@ -2371,10 +2371,10 @@ function HealBot_Aura_setCustomDebuffFilterDisabled()
     for id, _ in pairs(HealBot_Globals.IgnoreCustomDebuff) do
         local name=HealBot_WoWAPI_SpellName(id)
         if (HealBot_Globals.CustomDebuffIDMethod[id] or 3)<3 then
-            if HealBot_Globals.CustomDebuffIDMethod[id] == 1 then
-                hbCustomDebuffsDisabled[id]={}
-            elseif name then 
+            if HealBot_Globals.CustomDebuffIDMethod[id] == 2 and name then
                 hbCustomDebuffsDisabled[name]={}
+            else
+                hbCustomDebuffsDisabled[id]={}
             end
         else
             if name then hbCustomDebuffsDisabled[name]={} end
@@ -2383,10 +2383,10 @@ function HealBot_Aura_setCustomDebuffFilterDisabled()
         for instName, disabled in pairs(HealBot_Globals.IgnoreCustomDebuff[id]) do
             if disabled then
                 if (HealBot_Globals.CustomDebuffIDMethod[id] or 3)<3 then
-                    if HealBot_Globals.CustomDebuffIDMethod[id] == 1 then
-                        hbCustomDebuffsDisabled[id][instName]=disabled
-                    elseif name then 
+                    if HealBot_Globals.CustomDebuffIDMethod[id] == 2 and name then
                         hbCustomDebuffsDisabled[name][instName]=disabled
+                    else
+                        hbCustomDebuffsDisabled[id][instName]=disabled
                     end
                 else
                     if name then hbCustomDebuffsDisabled[name][instName]=disabled end
@@ -2585,7 +2585,7 @@ function HealBot_Aura_BuffWarnings(button, buffName, force)
             end
             if HealBot_Config_Buffs.SoundBuffWarning and (button.aura.buff.missingbuff or not HealBot_Config_Buffs.SoundBuffWarningMissingOnly) and
                HealBot_Range_WarnInRange(button, button.aura.buff.name, HealBot_Config_Buffs.WarnRange_Sound) then
-                HealBot_Media_PlaySound(HealBot_Config_Buffs.SoundBuffPlay)
+                HealBot_Media_PlaySound(HealBot_Config_Buffs.SoundBuffPlay, HealBot_Config_Buffs.SoundBuffChan)
             end
         end
         HealBot_RefreshUnit(button)
@@ -2673,7 +2673,7 @@ function HealBot_Aura_DebuffWarnings(button, debuffName, force, debuffIconIndex)
             end
             if HealBot_Config_Cures.SoundDebuffWarning and (button.aura.debuff.dispellable or not HealBot_Config_Cures.SoundDebuffWarningDispelOnly) then
                 if HealBot_Range_WarnInRange(button, button.aura.debuff.curespell, HealBot_Config_Cures.WarnRange_Sound) then
-                    HealBot_Media_PlaySound(HealBot_Config_Cures.SoundDebuffPlay)
+                    HealBot_Media_PlaySound(HealBot_Config_Cures.SoundDebuffPlay, HealBot_Config_Cures.SoundDebuffChan)
                 end
             end
         end

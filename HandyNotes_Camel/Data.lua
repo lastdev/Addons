@@ -57,6 +57,8 @@ points[ 249 ] = {
 	[72024388] = { camel=true, author=true, tip="In this nook" },
 	[73447361] = { camel=true, author=true,
 					tip="Inside the altar structure. At the\nbase and to one side of a purple\nbird statue. Two baskets are nearby" },
+
+	[26002700] = { testUldum=true },	
 }
 points[ 1527 ] = {
 	[26002700] = { testUldum=true },	

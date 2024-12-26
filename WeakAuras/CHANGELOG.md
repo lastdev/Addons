@@ -1,49 +1,57 @@
-# [5.17.5](https://github.com/WeakAuras/WeakAuras2/tree/5.17.5) (2024-11-06)
+# [5.18.1](https://github.com/WeakAuras/WeakAuras2/tree/5.18.1) (2024-12-17)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.17.4...5.17.5)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.18.0...5.18.1)
 
 ## Highlights
 
-- cataclysm classic: fixed spec load option dropdown ordering
-- custom code: aura_env.saved no longer wipes on update if user accepts "display" category
-  - 🚨 note - since most people don't fiddle with the defaults when updating auras, this effectively meant that aura_env.saved was always wiped on update.
-    It's possible that some authors of custom code have come to rely on this to not have to fixup old saved data with custom code updates, please fix your code if so!
-- other minor fixes
+- Bug fixes for Cata and Vanilla
+- Performance improvements
 
 ## Commits
 
-InfusOnWoW (4):
+InfusOnWoW (13):
 
-- BT2: Treat Auras with expirationTime == 0 as having an unknown time
-- Temporary Enchants: Use WEAPON_ENCHANGT_CHANGED on retail
-- Update Atlas File List from wago.tools
 - Update Discord List
+- Discord Update: Allow overriding the display name via a DM
+- Fix Spell Cache for Season of Discovery Phase 6
+- On renaming an aura, don't clear filter
+- Enchant Trigger: Fix regression on weapon switching
+- CondtionOptions: Fix lua error on choosing manual icon in merged case
+- Rename "Position Settings" to "Position and Size Settings"
+- Update Discord List
+- Update Atlas File List from wago.tools
+- Load: Add Hardcode and Season of Discovery load options for Classic
+- Fix lua error on editing conditions for manual progress
+- Print a warning on finding empty settings
+- Add Effective Spell ID condition to Spell Cooldown Trigger
 
-Stanzilla (1):
+Stanzilla (4):
 
 - Update WeakAurasModelPaths from wago.tools
-
-Zachary Smith (1):
-
-- New Mage Spell Alerts (#5523)
+- Update WeakAurasModelPaths from wago.tools
+- Update WeakAurasModelPaths from wago.tools
+- Update WeakAurasModelPaths from wago.tools
 
 dependabot[bot] (1):
 
-- Bump cbrgm/mastodon-github-action from 2.1.8 to 2.1.9
+- Bump cbrgm/mastodon-github-action from 2.1.9 to 2.1.10
 
-emptyrivers (1):
+emptyrivers (7):
 
-- fix recurseDiff ignore algorithm
+- bump toc for 11.0.7
+- unit characteristics - disable summon pending for classic
+- harden conditions against garbage in custom state
+- upgrade Unit Characteristics - Ignore Dead, and add Summon/Resurrect Pending properties
+- fix a typo
+- be more careful about getting tooltip data
+- defer calls to ScanEvents & friends if it doesn't come from WeakAuras
 
-mrbuds (2):
+mrbuds (1):
 
-- bump minitalent minor
-- Rename WeakAurasMiniTalent widget file for retail from DF to TWW
+- Edit CLEU deprecated warning link
 
-nullKomplex (4):
+nullKomplex (2):
 
-- Sort Specializations on the user's end.
-- Allow Multiselect Load Options to use a sort order.
-- Remove Cataclysm Classic offset on specializations.
-- Allow the Select Talent button to close the MiniTalent pane.
+- Add Resilience to Cataclysm Classic.
+- Add Mastery to Cataclysm Classic.
 

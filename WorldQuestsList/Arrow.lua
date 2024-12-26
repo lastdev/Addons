@@ -15,6 +15,7 @@ local hideTime, hideDistance
 local dontHide
 local isWorldCoord
 local currWaypoint
+local funcOnEveryStep
 
 local textureArrow,textureTop = "Interface\\AddOns\\WorldQuestsList\\Arrows", "Interface\\AddOns\\WorldQuestsList\\Arrows-Down"
 
@@ -180,6 +181,8 @@ do
 				arrow:SetVertexColor(1, 1, 0)
 			end
 		end
+
+		if funcOnEveryStep then funcOnEveryStep(distance) end
 	end
 	function updateArrowPoint(direction, distance)
 		if showDownArrow then
@@ -217,6 +220,8 @@ do
 		else
 			arrow:SetVertexColor(1, 1, 0)
 		end
+
+		if funcOnEveryStep then funcOnEveryStep(distance) end
 	end
 	function IsArrowDown()
 		return showDownArrow
@@ -369,7 +374,7 @@ end
 ----------------------
 --  Public Methods  --
 ----------------------
-local function show(runAway, x, y, distance, time, world, hide, waypoint)
+local function show(runAway, x, y, distance, time, world, hide, waypoint, arrowDistFunc)
 	local player
 	currPoint = nil
 	frame:Hide()
@@ -408,6 +413,7 @@ local function show(runAway, x, y, distance, time, world, hide, waypoint)
 	isWorldCoord = world
 	dontHide = hide
 	currWaypoint = waypoint
+	funcOnEveryStep = type(arrowDistFunc)=="function" and arrowDistFunc
 end
 
 function arrowFrame:ShowRunTo(...)

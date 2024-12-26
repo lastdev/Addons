@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GrobbulusVanilla", "DBM-Raids-Vanilla", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241103123604")
+mod:SetRevision("20241214191036")
 mod:SetCreatureID(15931)
 mod:SetEncounterID(1111)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -49,7 +49,7 @@ end
 
 function mod:OnCombatStart(delay)
 	table.wipe(mutateIcons)
-	enrageTimer:Start(-delay)
+	enrageTimer:Start(720-delay)
 end
 
 function mod:OnCombatEnd()

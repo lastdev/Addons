@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2375, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045844")
+mod:SetRevision("20241214213203")
 mod:SetCreatureID(158041)
 mod:SetEncounterID(2344)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -278,7 +278,7 @@ local allTimers = {
 	["mythic"] = {
 		[1] = {--Unique to Mythic
 			--Basher tentacles
-			[318714] = {0, 35, 35, 50, 35},
+			[318714] = {0.000001, 35, 35, 50, 35},
 			--Paranoia
 			[315927] = {15, 85.1},
 			--Eternal Torment

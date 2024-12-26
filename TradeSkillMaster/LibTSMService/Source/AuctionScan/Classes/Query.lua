@@ -637,14 +637,21 @@ end
 
 ---@private
 function AuctionQuery:_PopulateBrowseData(missingItemIds)
-	local hasPendingData = false
-	for _, row in pairs(self._browseResults) do
-		if not row:PopulateBrowseData(missingItemIds) then
-			hasPendingData = true
+	local success = true
+	local numRemoved = 0
+	for baseItemString, row in pairs(self._browseResults) do
+		local hasInfo, giveUp = row:PopulateBrowseData(missingItemIds)
+		if not hasInfo and giveUp then
+			-- Remove this row completely
+			self._browseResults[baseItemString]:Release()
+			self._browseResults[baseItemString] = nil
+			numRemoved = numRemoved + 1
+		elseif not hasInfo then
+			success = false
 			-- Keep going so we issue requests for all pending rows
 		end
 	end
-	return hasPendingData
+	return success, numRemoved
 end
 
 

@@ -378,16 +378,14 @@ local function getShoppingData(player, gear)
 		-- find gem/enchant differences on the best-matching item
 		
 		-- gems
-		if not optimalItem.relicBonusIds and (not matchItem or not matchItem.relicBonusIds) then
-			for i = 1, 3 do
-				local g = optimalItem.gemIds[i]
-				local isGemEquipped = g == 0 or (matchItem and matchItem.gemIds and matchItem.gemIds[i] == g)
-				if not isGemEquipped then
-					if not ret[inventoryId] then
-						ret[inventoryId] = { gems = {}, enchants = {}, materials = {} }
-					end
-					incrementTableItem(ret[inventoryId].gems, g, 1)
+		for i = 1, 3 do				
+			local g = optimalItem.gemIds[i]
+			local isGemEquipped = g == 0 or (matchItem and matchItem.gemIds and matchItem.gemIds[i] == g)
+			if not isGemEquipped then
+				if not ret[inventoryId] then
+					ret[inventoryId] = { gems = {}, enchants = {}, materials = {} }
 				end
+				incrementTableItem(ret[inventoryId].gems, g, 1)
 			end
 		end
 		

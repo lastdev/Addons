@@ -8,6 +8,11 @@ local socketStats = {
     'EMPTY_SOCKET_PRISMATIC',
 }
 
+local itemMaxSocketOverrides =  {
+	
+	[228411] = 3,	-- Cyrce's Circlet https://www.wowhead.com/item=228411/cyrces-circlet
+}
+
 function ItemMixin:Init(itemLink)
     self._link = itemLink
 end
@@ -49,6 +54,9 @@ function ItemMixin:GetGemStats()
         numSockets = numSockets + (stats[stat] or 0)
     end
 
+	local itemNumber = tonumber(values[1])
+	numSockets = itemMaxSocketOverrides[itemNumber] or numSockets
+	
     return numGems, numSockets
 end
 

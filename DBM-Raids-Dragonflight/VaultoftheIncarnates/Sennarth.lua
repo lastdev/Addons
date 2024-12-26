@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2482, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20241214213146")
 mod:SetCreatureID(187967)
 mod:SetEncounterID(2592)
 mod:SetUsedIcons(1, 2, 3)
@@ -101,7 +101,7 @@ local allTimers = {
 			--Gossamer Burst
 			[373405] = {31.4, 37.7, 63.1, 36.5, 59.6, 37.6},
 			--Call Spiderlings
-			[372238] = {0, 25.5, 25.5, 25.9, 35.1, 25.5, 25.5, 25.5, 19.5, 26.7, 26.7},--5th has largest variance, 14-23 because sequencing isn't right way to do this, just the lazy way
+			[372238] = {0.000001, 25.5, 25.5, 25.9, 35.1, 25.5, 25.5, 25.5, 19.5, 26.7, 26.7},--5th has largest variance, 14-23 because sequencing isn't right way to do this, just the lazy way
 		},
 		--[2] = {
 		--	--Chilling Blast
@@ -119,7 +119,7 @@ local allTimers = {
 			--Gossamer Burst
 			[373405] = {31.4, 37.7, 63.1, 36.5, 59.6, 37.6},--likely 36 sec cd that resets on encounter events
 			--Call Spiderlings
-			[372238] = {0, 25.5, 25.5, 25.9, 35.1, 25.5, 25.5, 25.5, 18.2, 26.7, 26.7},--likely 25 sec cd that resets on encounter events
+			[372238] = {0.000001, 25.5, 25.5, 25.9, 35.1, 25.5, 25.5, 25.5, 18.2, 26.7, 26.7},--likely 25 sec cd that resets on encounter events
 		},
 		--[2] = {
 		--	--Chilling Blast
