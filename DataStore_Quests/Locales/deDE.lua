@@ -1,5 +1,5 @@
 local addonName = ...
-local L = DataStore:SetLocale(addonName, "deDE")
+local L = AddonFactory:SetLocale(addonName, "deDE")
 if not L then return end
 
 L["AUTO_UPDATE_DISABLED"] = "Der Questverlauf wird den aktuellen Status beibehalten, entweder leer oder veraltet."

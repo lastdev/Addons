@@ -1,12 +1,18 @@
-tag 09d7d749185181d8bc073e0de2c109e8a0d083a8 Release-11.0.5-1
+tag a7cd6ab2886eb78dc91ef402af4011084cbdff88 Release-11.0.7-1
 Author:	Shauren <shauren.trinity@gmail.com>
-Date:	Wed Oct 23 17:25:32 2024 +0200
+Date:	Mon Dec 23 12:36:06 2024 +0100
 
 Bump TOC
 
-commit 97f24a7f8b1e26491977711e6073cf9da7f554e8
+commit 01a5a300a4997d292589ad50a6f99049dea931df
 Author: Shauren <shauren.trinity@gmail.com>
-Date:   Wed Oct 23 17:24:57 2024 +0200
+Date:   Mon Dec 23 12:35:30 2024 +0100
 
-    Bump TOC to 11.0.5
+    Bump TOC to 11.0.7
+
+commit 0486d1119797990438a1a697db3f3fbdc304de7f
+Author: Shauren <shauren.trinity@gmail.com>
+Date:   Mon Dec 23 12:35:21 2024 +0100
+
+    Improve delve instance detection
 

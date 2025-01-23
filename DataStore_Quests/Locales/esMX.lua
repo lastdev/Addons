@@ -1,5 +1,5 @@
 local addonName = ...
-local L = DataStore:SetLocale(addonName, "esMX")
+local L = AddonFactory:SetLocale(addonName, "esMX")
 if not L then return end
 
 L["AUTO_UPDATE_DISABLED"] = "El historial de misiones permanecerá en su estado actual, ya sea vacío o desactualizado."

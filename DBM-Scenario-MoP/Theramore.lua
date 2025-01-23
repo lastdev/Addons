@@ -3,7 +3,8 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20240516060654")
+mod:SetRevision("20241118070307")
+mod:SetZone(1000, 999)
 
 mod:RegisterCombat("scenario", 1000, 999)
 

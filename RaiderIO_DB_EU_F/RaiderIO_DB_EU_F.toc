@@ -1,7 +1,7 @@
 ## Interface: 110002, 110005, 110007
 ## Title: Raider.IO |cffFFFFFFRecruitment|r (Europe)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
-## Version: 11.0.5 (v202412200600)
+## Version: 11.0.5 (v202501220600)
 ## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## Dependencies: RaiderIO
 ## DefaultState: enabled

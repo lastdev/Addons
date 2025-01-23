@@ -1,10 +1,22 @@
-lightweight tag 986210125fde639e94408f056a5ac09ba4cff566 5.6.1
+lightweight tag 01da91c461fd4ba322613c36f73cea70d4a9148a 5.7
 Author:	Remeen <wow@meen.co.uk>
-Date:	Tue Oct 29 07:44:50 2024 +0000
+Date:	Fri Jan 17 18:57:47 2025 +0000
 
-commit 986210125fde639e94408f056a5ac09ba4cff566
+commit 01da91c461fd4ba322613c36f73cea70d4a9148a
 Author: Remeen <wow@meen.co.uk>
-Date:   Tue Oct 29 07:44:50 2024 +0000
+Date:   Fri Jan 17 18:57:47 2025 +0000
 
-    Patch 11.0.5
+    Key binding to open with focus on the search box.
+
+commit a99b8dbadbd8a9a815a1db2e9f8cd6103cde99e8
+Author: Remeen <wow@meen.co.uk>
+Date:   Fri Jan 17 18:39:10 2025 +0000
+
+    Clear search box when spell is cast
+
+commit 788122c52325b10bfa8bba36081ca5eac8ec52c4
+Author: Remeen <wow@meen.co.uk>
+Date:   Fri Jan 17 18:30:36 2025 +0000
+
+    Sort by expansion
 

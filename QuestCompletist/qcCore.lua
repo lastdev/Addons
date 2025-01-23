@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.51
+local QCADDON_VERSION = 109.92
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -58,13 +58,10 @@ local QC_ICON_COORDS_ITEMDROPSTANDARD = {0.375,0.5,0,0.25}
 local QC_ICON_COORDS_ITEMDROPREPEATABLE = {0.375,0.5,0.25,0.5}
 local QC_ICON_COORDS_CLASS = {0.5,0.625,0,0.25}
 local QC_ICON_COORDS_KILL = {0.25,0.375,0,0.25}
+--
+local QC_ICON_COORDS_UNAVAILABLE = {0.25,0.375,0,0.25}
 
 local qcCategoryDropDownMenu = CreateFrame("Frame", "qcCategoryDropDownMenu")
--- Beta reset daily and weekly
-local lastDailyResetTime = 0
-local lastWeeklyResetTime = 0
-local prof1, prof2, archaeology, fishing, cooking = GetProfessions()
-
 
 --[[ Bitwise Values ]]--
 qcFactionBits = {
@@ -147,11 +144,11 @@ qcQuestFactionLevelBits = {
 	["Exalted"]=32,
 }
 local qcHolidayDates = {
-	[1]={"180920","111006"},		-- Brewfest 2018
+	[1]={"240920","241006"},		-- Brewfest 2024
 	[2]={"180425","180502"},		-- Children's Week 2018
 	[4]={"181101","181103"},		-- Day of the Dead 2018
-	[8]={"181216","190102"},		-- Feast of Winter Veil 2018-2019
-	[16]={"181018","181101"},		-- Hallow's End 2018
+	[8]={"241216","250102"},		-- Feast of Winter Veil 2024-2025
+	[16]={"241018","241101"},		-- Hallow's End 2024
 	[32]={"180918","180925"},		-- Harvest Festival 2018
 	[64]={"190205","190219"},		-- Love is in the Air 2019
 	[128]={"190128","190211"},		-- Lunar Festival 2019
@@ -256,7 +253,8 @@ local function qcGetCategoryQuests(categoryId, searchText)
         end
     end
     qcCategoryQuests = qcCopyTable(holdingTable)
-
+	
+	-- Quest Completed
 	if (qcSettings.QC_L_HIDE_COMPLETED == 1) then
 		for i = #qcCategoryQuests, 1, -1 do
 			if (qcCompletedQuests[qcCategoryQuests[i][1]]) then
@@ -266,16 +264,25 @@ local function qcGetCategoryQuests(categoryId, searchText)
 			end
 		end
 	end
--- Quest Hide low level
-	--	if (qcSettings.QC_L_HIDE_LOWLEVEL == 1) then
-		--	local questLevel = qcQuestDatabase[questId][3] or 0
-		--	local greenCutoff = (UnitLevel("player") - GetQuestGreenRange())
-		--	if (questLevel < greenCutoff) then
-			--TableRemove(qcPins[i][7],questIndex)
-		--	end	
-		--end	
-		
---     Bitband Code for Hideing Daily quest
+	-- Quest Hide low level
+		if (qcSettings.QC_L_HIDE_LOWLEVEL == 1) then
+			local playerLevel = UnitLevel("player")
+			local trivialLevelRange = UnitQuestTrivialLevelRange("player")
+			local greenCutoff = playerLevel - trivialLevelRange
+			
+			for i = #qcCategoryQuests, 1, -1 do
+				local questId = qcCategoryQuests[i][1]
+				
+				if qcQuestDatabase[questId] then
+					local questLevel = qcQuestDatabase[questId][3] or 0
+					
+					if questLevel < greenCutoff then
+						table.remove(qcCategoryQuests, i)
+					end
+				end
+			end
+		end
+	--  Bitband Code for Hideing Daily quest
 		if (qcSettings.QC_L_HIDE_DAILYQUEST == 1) then
 			local questType = 4
 			for i = #qcCategoryQuests, 1, -1 do
@@ -284,7 +291,7 @@ local function qcGetCategoryQuests(categoryId, searchText)
 			end
 		end
 	end
---      Bitband Code for Hideing Repeatable quest	
+	--  Bitband Code for Hideing Repeatable quest	
 		if (qcSettings.QC_L_HIDE_REPEATABLEQUEST == 1) then
 			local questType = 2
 			for i = #qcCategoryQuests, 1, -1 do
@@ -293,7 +300,7 @@ local function qcGetCategoryQuests(categoryId, searchText)
 			end
 		end
 	end
---      Bitband Code for Hideing World quest	
+	--  Bitband Code for Hideing World quest	
 		if (qcSettings.QC_L_HIDE_WORLDQUEST == 1) then
 			local questType = 128
 			for i = #qcCategoryQuests, 1, -1 do
@@ -345,149 +352,160 @@ local function qcGetCategoryQuests(categoryId, searchText)
 		end
 	end
 	-- Hide other Covenant Quest
-if (qcSettings.QC_ML_HIDE_COVENANT == 1) then
-    local activeCovenantID = C_Covenants.GetActiveCovenantID()
+if (qcSettings.QC_ML_HIDE_COVENANTS == 1) then
+    local playerCovenantID = C_Covenants.GetActiveCovenantID()
+    local playerCovenantBit = qcCovenantsBits[playerCovenantID] or 0
+
     for i = #qcCategoryQuests, 1, -1 do
-        local questCovenantID = qcCategoryQuests[i][16]
-        if questCovenantID ~= nil and questCovenantID ~= activeCovenantID then
+        local questId = qcCategoryQuests[i][1]  -- Get the quest ID
+        local questCovenant = qcQuestDatabase[questId] and qcQuestDatabase[questId][12]  -- Retrieve covenant bit from the database (index 12)
+
+        -- Ensure questCovenant is not nil before proceeding
+        if questCovenant and questCovenant ~= 0 and BitBand(questCovenant, playerCovenantBit) == 0 then
             table.remove(qcCategoryQuests, i)
         end
     end
 end
-
+	-- Hide Warband Quest
+	if (qcSettings["QC_ML_HIDE_WARBANDS"] == 1) then
+		for i = #qcCategoryQuests, 1, -1 do
+			local questId = qcCategoryQuests[i][1]
+			if C_QuestLog.IsQuestFlaggedCompletedOnAccount(questId) then
+				table.remove(qcCategoryQuests, i)
+			end
+		end
+	end
+	
     -- Sorting quests
-    if (qcSettings.SORT == 1) then
-        tableSort(qcCategoryQuests, function(a, b) return a[3] < b[3] or (a[3] == b[3] and a[2] < b[2]) end)
-    elseif (qcSettings.SORT == 2) then
-        tableSort(qcCategoryQuests, function(a, b) return a[2] < b[2] end)
-    else
-        tableSort(qcCategoryQuests, function(a, b) return a[3] < b[3] or (a[3] == b[3] and a[2] < b[2]) end)
+	if (qcSettings.SORT == 1) then
+		tableSort(qcCategoryQuests,function(a,b) return (a[3]<b[3] or (a[3] == b[3] and a[2]<b[2])) end)
+	elseif (qcSettings.SORT == 2) then
+		tableSort(qcCategoryQuests,function(a,b) return a[2]<b[2] end)
+	else
+		tableSort(qcCategoryQuests,function(a,b) return (a[3]<b[3] or (a[3] == b[3] and a[2]<b[2])) end)
+	end
+end
+
+--Beta Reset Daily and Weekly Start
+-- Function to reset daily quests (type 4)
+function ResetDailyQuests()
+    if quests == nil then
+        print("No quests to reset. The quests table is nil.")
+        return
+    end
+    
+    for questID, questData in pairs(quests) do
+        if questData.type == 4 then  -- Type 4 for daily quests
+            questData.status = "incomplete"
+        end
     end
 end
 
---local lastDailyResetTime = 0
---local lastWeeklyResetTime = 0
-if not GetQuestsCompleted then
-    function GetQuestsCompleted()
-        local completedQuests = {}
-        for questID in pairs(C_QuestLog.GetAllCompletedQuestIDs()) do
-            completedQuests[questID] = true
+-- Function to reset weekly quests (type 128)
+function ResetWeeklyQuests()
+    if quests == nil then
+        print("No quests to reset. The quests table is nil.")
+        return
+    end
+    
+    for questID, questData in pairs(quests) do
+        if questData.type == 128 then  -- Type 128 for weekly quests
+            questData.status = "incomplete"
         end
-        return completedQuests
     end
 end
-local function qcUpdateQuestList(categoryId, startIndex, searchText)
-    if not (qcQuestCompletistUI:IsVisible()) then return nil end
-    local stringFormat = string.format
 
-    -- Reset daily quests of type 2, 4, and 128
-    local currentTime = time()
-    local oneDay = 24 * 60 * 60 -- 1 day in seconds
-    if (currentTime - lastDailyResetTime >= oneDay) then
-        ResetDailyQuests()
-        lastDailyResetTime = currentTime
-    end
 
-    -- Reset weekly quests of type 2, 4, and 128
-    local oneWeek = 7 * oneDay -- 1 week in seconds
-    if (currentTime - lastWeeklyResetTime >= oneWeek) then
-        ResetWeeklyQuests()
-        lastWeeklyResetTime = currentTime
-    end
+--Beta Reset Daily and Weekly End
 
-    if categoryId then
-        qcQuestCompletistUI.qcSearchBox:SetText("")
-        qcCurrentCategoryID = categoryId
-        qcUpdateCurrentCategoryText(categoryId)
-        qcGetCategoryQuests(categoryId)
-        qcCurrentCategoryQuestCount = (#qcCategoryQuests)
-        if qcCurrentCategoryQuestCount < 16 then
-            qcMenuSlider:SetMinMaxValues(1, 1)
-        else
-            qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
-        end
-        qcMenuSlider:SetValue(startIndex)
-    else
-        if searchText then
-            qcGetCategoryQuests(nil, searchText)
-            qcCurrentCategoryQuestCount = (#qcCategoryQuests)
-            qcQuestCompletistUI.qcSelectedCategory:SetText("Search Results")
-            if qcCurrentCategoryQuestCount < 16 then
-                qcMenuSlider:SetMinMaxValues(1, 1)
-            else
-                qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
-            end
-            qcMenuSlider:SetValue(startIndex)
-        end
-    end
-    qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringFormat("%d Quests Found", qcCurrentCategoryQuestCount))
 
-    local completedQuests = GetQuestsCompleted()
-
-    for i = 1, 16 do
-        local offset = ((i + startIndex) - 1)
-        local questRecord = _G["qcMenuButton" .. i]
-        if qcCurrentCategoryQuestCount >= offset then
-            local e = qcCategoryQuests[offset]
-            local questId = e[1]
-            local questType = e[6]
-            local questFaction = e[7]
-            local questRequired = e[15] -- Beta Code
-            questRecord.QuestName:SetText(stringFormat("[%d] %s", e[3], e[2]))
-            questRecord.QuestID = questId
-
-            -- Quest Type Icons and Text Colors
-            if questType == 1 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-            elseif questType == 2 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
-                questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-            elseif questType == 4 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
-                questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-            elseif questType == 8 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
-                questRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
-            elseif questType == 16 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-            elseif questType == 32 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
-                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-            elseif questType == 64 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
-                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-            elseif questType == 128 then
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_WORLD))
-                questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-            else
-                questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-                questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-            end
-
-            questRecord.QuestIcon:Show()
-
-            -- Faction Icons
-            if questFaction == 0 or questFaction == 3 then
-                questRecord.FactionIcon:Hide()
-            elseif questFaction == 1 then
-                questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AllianceIcon")
-                questRecord.FactionIcon:Show()
-            elseif questFaction == 2 then
-                questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\HordeIcon")
-                questRecord.FactionIcon:Show()
-            else
-                questRecord.FactionIcon:Hide()
-            end
-
-            -- Quest Completion Status
+function qcUpdateQuestList(categoryId, startIndex, searchText) -- *
+	if not (qcQuestCompletistUI:IsVisible()) then return nil end
+	local stringFormat = string.format
+	if (categoryId) then
+		qcQuestCompletistUI.qcSearchBox:SetText("")
+		qcCurrentCategoryID = categoryId
+		qcUpdateCurrentCategoryText(categoryId)
+		qcGetCategoryQuests(categoryId)
+		qcCurrentCategoryQuestCount = (#qcCategoryQuests)
+		if (qcCurrentCategoryQuestCount < 16) then
+			qcMenuSlider:SetMinMaxValues(1, 1)
+		else
+			qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
+		end
+		qcMenuSlider:SetValue(startIndex)
+	else
+		if (searchText) then
+			qcGetCategoryQuests(nil, searchText)
+			qcCurrentCategoryQuestCount = (#qcCategoryQuests)
+			qcQuestCompletistUI.qcSelectedCategory:SetText("Search Results")
+			if (qcCurrentCategoryQuestCount < 16) then
+				qcMenuSlider:SetMinMaxValues(1, 1)
+			else
+				qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
+			end
+			qcMenuSlider:SetValue(startIndex)
+		end
+	end
+	qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringFormat("%d Quests Found",qcCurrentCategoryQuestCount))
+	for i = 1, 16 do
+		local offset = ((i + startIndex) - 1)
+		local questRecord = _G["qcMenuButton" .. i]
+		if (qcCurrentCategoryQuestCount >= offset) then
+			local e = qcCategoryQuests[offset]
+			local questId = e[1]
+			local questType = e[6]
+			local questFaction = e[7]
+			local questRequired = e[15] -- Beta Code
+			questRecord.QuestName:SetText(stringFormat("[%d] %s",e[3],e[2]))
+			questRecord.QuestID = questId
+			-- TODO: Possible to reduce code with call to _G[]?
+			if (questType == 1) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 2) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
+				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+			elseif (questType == 4) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
+				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+			elseif (questType == 8) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
+				questRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
+			elseif (questType == 16) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 32) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 64) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 128) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_WORLD))-- Todo?? Maybe make own worldquest icon
+				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+			else
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			end
+			questRecord.QuestIcon:Show()
+			if ((questFaction == 0) or (questFaction == 3)) then
+				questRecord.FactionIcon:Hide()
+			elseif (questFaction == 1) then
+				questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AllianceIcon")
+				questRecord.FactionIcon:Show()
+			elseif(questFaction == 2) then
+				questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\HordeIcon")
+				questRecord.FactionIcon:Show()
+			else
+				questRecord.FactionIcon:Hide()
+			end
             if not (C_QuestLog.GetLogIndexForQuestID(questId) == nil) then
-                local isComplete = GetQuestsCompleted(questId)
-                if isComplete then
+                local isComplete = C_QuestLog.IsComplete(questId)
+                if (isComplete) then
                     questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_READY))
                     questRecord.QuestName:SetTextColor(1.0, 0.8196078431372549, 0.0, 1.0)
-                elseif isComplete == false then
+                elseif (isComplete == false) then
                     questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROGRESS))
                     questRecord.QuestName:SetTextColor(0.5803921568627451, 0.5882352941176471, 0.5803921568627451, 1.0)
                 else
@@ -506,41 +524,15 @@ local function qcUpdateQuestList(categoryId, startIndex, searchText)
 					end
 				end
 			end
-            questRecord:Show()
-            questRecord:Enable()
-        else
-            questRecord.QuestName:SetText("#")
-            questRecord:Hide()
-            questRecord:Disable()
-        end
-    end
+			questRecord:Show()
+			questRecord:Enable()
+		else
+			questRecord.QuestName:SetText("#")
+			questRecord:Hide()
+			questRecord:Disable()
+		end
+	end
 end
-
---- BEta code for reset av daily and weekly
-local QUEST_TYPE_DAILY = 4
-local QUEST_TYPE_WEEKLY = 128
-
-function ResetDailyQuests()
-    for _, questInfo in ipairs(qcCategoryQuests) do
-        local questType = questInfo[6]
-        if questType == QUEST_TYPE_DAILY then
-            local questId = questInfo[1]
-            qcCompletedQuests[questId] = nil
-        end
-    end
-end
-
-function ResetWeeklyQuests()
-    for _, questInfo in ipairs(qcCategoryQuests) do
-        local questType = questInfo[6]
-        if questType == QUEST_TYPE_WEEKLY then
-            local questId = questInfo[1]
-            qcCompletedQuests[questId] = nil
-        end
-    end
-end
-
--- Beta code for reset av daily and weekly End
 
 -- Search function start
 
@@ -841,64 +833,206 @@ local function qcZoneChangedNewArea() -- *
 	end
 end
 
--- Tooltip when mouse over quest name
-function qcUpdateTooltip(index)
-	local stringFormat = string.format
-	local questId = _G["qcMenuButton" .. index].QuestID
+-- Start Tooltip when mouse over quest name
+-- Ensure the necessary tables from qcQuest.lua are loaded
+local qcAreaIDToCategoryID = qcAreaIDToCategoryID or {} -- Maps zone ID to internal category ID
+local qcQuestCategories = qcQuestCategories or {} -- Maps internal category ID to zone name
 
-if not (questId == nil) then
-    qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI,"ANCHOR_BOTTOMRIGHT",-30,500)
-    qcQuestInformationTooltip:ClearLines()
-    qcQuestInformationTooltip:SetHyperlink(string.format("quest:%d",questId))
-    qcQuestInformationTooltip:AddLine(" ")
- 	       if not C_AddOns.IsAddOnLoaded("AllTheThings") then
-            -- Add the line if the addon is not loaded
-            qcQuestInformationTooltip:AddDoubleLine("Quest ID:", string.format("|cFF69CCF0%d|r",questId))
+-- Function to get the zone name from a zone ID with enhanced handling for array-style lookup
+function GetZoneNameFromZoneID(zoneId)
+    -- First, check if the zoneId is present in qcAreaIDToCategoryID
+    local categoryID = qcAreaIDToCategoryID[zoneId]
+    if not categoryID then
+        -- Fall back to a default message if the mapping is missing
+        return "Unknown Zone (Invalid Area ID)"
+    end
+
+    -- Now, search through qcQuestCategories for the categoryID
+    local zoneName = nil
+    for _, categoryData in ipairs(qcQuestCategories) do
+        if categoryData[1] == categoryID then
+            zoneName = categoryData[2] -- Retrieve the zone name
+            break
         end
- 	    	if not C_AddOns.IsAddOnLoaded("AllTheThings") then
-			qcQuestInformationTooltip:AddLine(" ")
-		end	
-	local prereqQuestIndex = qcQuestDatabase[questId][13]
+    end
 
-		if prereqQuestIndex and type(prereqQuestIndex) == "number" and prereqQuestIndex ~= 0 then
-			local prereqQuestInfo = qcQuestDatabase[prereqQuestIndex]
-			local prereqQuestName = prereqQuestInfo and prereqQuestInfo[2] or "Unknown Quest"
-			qcQuestInformationTooltip:AddDoubleLine("Prerequired Completed Quest/Quests:", string.format("%s %d", prereqQuestName, prereqQuestIndex))
-			qcQuestInformationTooltip:AddLine(" ")
-		end
+    if not zoneName or zoneName == "" then
+        -- Handle cases where the zone name is missing or empty
+        return "Unknown Zone (No Zone Name)"
+    end
 
-        if not (qcQuestDatabase[questId][14] == nil) then
-            for qcInitiatorIndex, qcInitiatorEntry in pairs { qcQuestDatabase[questId][14] } do
-                -- local qcInitiatorID = qcInitiatorEntry[1]
-                -- local qcInitiatorName = qcInitiatorEntry[2]
-                -- local qcInitiatorUiMapID = qcInitiatorEntry[3]
-                -- local qcInitiatorMapLevel = qcInitiatorEntry[4]
-                -- local qcInitiatorX = qcInitiatorEntry[5]
-                -- local qcInitiatorY = qcInitiatorEntry[6]
-                if not (qcInitiatorID == 0) then
-                    if not (qcInitiatorName == nil) then
-                        qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s %d", COLOUR_HUNTER, qcInitiatorName, qcInitiatorID))
-                    else
-                        qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s %d", COLOUR_HUNTER, "Self-provided Quest", qcInitiatorID))
-                    end
-                else
-                    if not (qcInitiatorName == nil) then
-                        qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s", COLOUR_HUNTER, qcInitiatorName))
-                    else
-                        qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", string.format("%s%s", COLOUR_HUNTER, "Self-provided Quest"))
-                    end
-                end
-                if not (qcInitiatorMapLevel == 0) then
-                    -- qcQuestInformationTooltip:AddDoubleLine("  - Location:", string.format("%s%s, Floor %d @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorUiMapID) or nil),qcInitiatorMapLevel,qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
-                else
-                    qcQuestInformationTooltip:AddDoubleLine("  - Location:", string.format("%s%s @ %.1f,%.1f", COLOUR_HUNTER, tostring(GetMapNameByID(qcInitiatorUiMapID) or nil), qcInitiatorX, qcInitiatorY), nil, nil, nil, true)
+    -- Return the valid zone name if all checks passed
+    return zoneName
+end
+
+-- Function to perform a topological sort on storyline quests
+local function topologicalSortStorylineQuests(storylineQuests)
+    local sortedQuests = {}
+    local visited = {}
+    local tempMarked = {}
+
+    -- Function to visit each node (quest) recursively
+    local function visit(questId)
+        if tempMarked[questId] then
+            return -- Detect cycles, but we assume there's no cycle in quest prerequisites
+        end
+        if not visited[questId] then
+            tempMarked[questId] = true
+            local prereqQuestId = qcQuestDatabase[questId][14] -- Get the prerequisite quest ID
+            if prereqQuestId and prereqQuestId ~= 0 then
+                visit(prereqQuestId) -- Recursively visit the prerequisite quest
+            end
+            tempMarked[questId] = false
+            visited[questId] = true
+            table.insert(sortedQuests, questId) -- Add to sorted list
+        end
+    end
+
+    -- Visit all quests in the storyline
+    for _, questData in ipairs(storylineQuests) do
+        visit(questData[1]) -- questData[1] is the quest ID
+    end
+
+    return sortedQuests
+end
+
+-- Function to update the quest tooltip
+function qcUpdateTooltip(index)
+    local stringFormat = string.format
+    local questId = _G["qcMenuButton" .. index].QuestID
+
+    if not (questId == nil) then
+        qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI, "ANCHOR_BOTTOMRIGHT", -30, 500)
+        qcQuestInformationTooltip:ClearLines()
+        qcQuestInformationTooltip:SetHyperlink(string.format("quest:%d", questId))
+        qcQuestInformationTooltip:AddLine(" ")
+
+        if not C_AddOns.IsAddOnLoaded("AllTheThings") then
+            qcQuestInformationTooltip:AddDoubleLine("Quest ID:", string.format("|cFF69CCF0%d|r", questId))
+        end
+
+        if not C_AddOns.IsAddOnLoaded("AllTheThings") then
+            qcQuestInformationTooltip:AddLine(" ")
+        end
+
+        -- Storyline information
+        local storylineId = qcQuestDatabase[questId][13]
+        if storylineId and qcQuestLines[storylineId] then
+            local storylineName = qcQuestLines[storylineId]
+            qcQuestInformationTooltip:AddDoubleLine("Storyline:", string.format("%s%s", COLOUR_HUNTER, storylineName))
+            qcQuestInformationTooltip:AddLine(" ")
+
+            -- Collect all quests in this storyline
+            local storylineQuests = {}
+            for id, questData in pairs(qcQuestDatabase) do
+                if questData[13] == storylineId then
+                    table.insert(storylineQuests, questData)
                 end
             end
+
+            -- Sort the quests by prerequisite dependencies
+            local sortedQuestIds = topologicalSortStorylineQuests(storylineQuests)
+
+            -- Display each quest in the storyline with its completion status
+            for _, sortedQuestId in ipairs(sortedQuestIds) do
+                local questData = qcQuestDatabase[sortedQuestId]
+                local questName = questData[2]
+                local questStatus
+
+                if C_QuestLog.IsOnQuest(sortedQuestId) then
+                    -- Highlight the current quest's status if it's being tracked
+                    questStatus = "|cFFFFFF00You are on this quest|r"
+                else
+                    questStatus = C_QuestLog.IsQuestFlaggedCompleted(sortedQuestId) and "|cFF00FF00Completed|r" or "|cFFFF0000Not Completed|r"
+                end
+
+                qcQuestInformationTooltip:AddDoubleLine(" - " .. questName, questStatus)
+            end
+
+            qcQuestInformationTooltip:AddLine(" ")
         end
 
-        -- Modification to include faction information from qcFactions table based on value in [15]
-        local factionValue = qcQuestDatabase[questId][15]
+        -- Prerequisite quest logic
+        local prereqQuestId = qcQuestDatabase[questId][14]
+        if prereqQuestId and prereqQuestId ~= 0 then
+            local prereqQuestInfo = qcQuestDatabase[prereqQuestId]
+            local prereqQuestName = prereqQuestInfo and prereqQuestInfo[2] or "Unknown Quest"
+            local prereqQuestStatus = C_QuestLog.IsQuestFlaggedCompleted(prereqQuestId) and "|cFF00FF00Completed|r" or "|cFFFF0000Not Completed|r"
+            qcQuestInformationTooltip:AddDoubleLine("Prerequired Completed Quest:", string.format("%s - %s", prereqQuestName, prereqQuestStatus))
+            qcQuestInformationTooltip:AddLine(" ")
+        end
+		-- Renown and Faction requirements Start
+        -- Check for game version 8.x and above before handling renown
+        if tonumber(GetBuildInfo():match("^(%d+)")) >= 8 then
+            local renownInfo = qcRenownLevelRequirements[questId]
 
+            if renownInfo then
+                if type(renownInfo) == "table" then
+                    local factionId = renownInfo[1]
+                    local requiredRenownLevel = renownInfo[2]
+                    local factionName = qcFactions[factionId] or "Unknown Faction"
+                    local currentRenownLevel = C_MajorFactions.GetCurrentRenownLevel(factionId)
+
+                    qcQuestInformationTooltip:AddDoubleLine("Required Faction:", string.format("%s%s", COLOUR_DRUID, factionName))
+
+                    if currentRenownLevel then
+                        if currentRenownLevel >= requiredRenownLevel then
+                            qcQuestInformationTooltip:AddDoubleLine("Required Renown Level:", string.format("|cFF00FF00%d (Requirement Fulfilled)|r", requiredRenownLevel))
+                        else
+                            qcQuestInformationTooltip:AddDoubleLine("Required Renown Level:", string.format("|cFFFF0000%d (Requirement Not Fulfilled)|r", requiredRenownLevel))
+                        end
+                    else
+                        qcQuestInformationTooltip:AddDoubleLine("Required Renown Level:", "|cFFFF0000Data Unavailable|r")
+                    end
+                elseif type(renownInfo) == "number" then
+                    local factionName = qcFactions[renownInfo] or "Unknown Faction"
+                    qcQuestInformationTooltip:AddDoubleLine("Required Faction:", string.format("%s%s", COLOUR_DRUID, factionName))
+                end
+
+                qcQuestInformationTooltip:AddLine(" ")
+            end
+        end
+		-- Renown and Faction requirements End
+
+        -- Quest Giver Information from qcPinDB.lua
+        local questGiverInfoFound = false
+        for zoneId, npcs in pairs(qcPinDB) do
+            -- Retrieve the zone name for the current zone ID
+            local zoneName = GetZoneNameFromZoneID(zoneId)
+
+            for _, npcData in ipairs(npcs) do
+                local npcId = npcData[3]
+                local npcName = npcData[4]
+                local xCoord = npcData[5]
+                local yCoord = npcData[6]
+                local quests = npcData[7]
+
+                if type(quests) == "table" then
+                    for _, quest in ipairs(quests) do
+                        if quest == questId then
+                            qcQuestInformationTooltip:AddDoubleLine(
+                                "Quest Giver:",
+                                string.format("%s (%s, %.1f, %.1f)", npcName or "Unknown NPC", zoneName, xCoord or 0, yCoord or 0)
+                            )
+                            questGiverInfoFound = true
+                            break
+                        end
+                    end
+                end
+
+                if questGiverInfoFound then break end
+            end
+
+            if questGiverInfoFound then break end
+        end
+
+        -- Handle case where quest giver information isn't found
+        if not questGiverInfoFound then
+            qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", "Unknown or Auto-Accepted Quest")
+        end
+
+        -- Faction and reputation information
+        local factionValue = qcQuestDatabase[questId][16]
         if not (factionValue == nil) then
             local factionName = qcFactions[factionValue]
             if not (factionName == nil) then
@@ -906,31 +1040,55 @@ if not (questId == nil) then
             end
         end
 
-        qcQuestInformationTooltip:Show()
-        qcQuestReputationTooltip:SetOwner(qcQuestInformationTooltip, "ANCHOR_BOTTOMRIGHT", -qcQuestInformationTooltip:GetWidth())
-        qcQuestReputationTooltip:ClearLines()
+        -- Reputation tooltip logic, handle both single numbers and tables
+        local reputationEntries = qcQuestDatabase[questId][17]
+        local hasReputation = false
 
-        if not (qcQuestDatabase[questId][12] == nil) then
-            qcReputationCount = 0
+        if type(reputationEntries) == "table" then
+            -- If it's a table, check for any non-zero values
+            for _, repValue in pairs(reputationEntries) do
+                if repValue ~= 0 then
+                    hasReputation = true
+                    break
+                end
+            end
+        elseif type(reputationEntries) == "number" and reputationEntries ~= 0 then
+            -- If it's a single number, ensure it's non-zero
+            hasReputation = true
+        end
+
+        if hasReputation then
+            qcQuestReputationTooltip:SetOwner(qcQuestInformationTooltip, "ANCHOR_BOTTOMRIGHT", -qcQuestInformationTooltip:GetWidth())
+            qcQuestReputationTooltip:ClearLines()
             qcQuestReputationTooltip:AddLine(GetText("COMBAT_TEXT_SHOW_REPUTATION_TEXT"))
             qcQuestReputationTooltip:AddLine(" ")
 
-            for qcReputationIndex, qcReputationEntry in pairs { qcQuestDatabase[questId][12] } do
-                qcReputationCount = (qcReputationCount + 1)
-                qcQuestReputationTooltip:AddDoubleLine(tostring(qcFactions[qcReputationIndex] or qcReputationIndex), stringFormat("%s%d rep", COLOUR_DRUID, qcReputationEntry))
+            if type(reputationEntries) == "table" then
+                for qcReputationIndex, qcReputationEntry in pairs(reputationEntries) do
+                    qcQuestReputationTooltip:AddDoubleLine(
+                        tostring(qcFactions[qcReputationIndex] or qcReputationIndex),
+                        stringFormat("%s%d rep", COLOUR_DRUID, qcReputationEntry)
+                    )
+                end
+            elseif type(reputationEntries) == "number" then
+                -- Assuming there's only one reputation entry
+                qcQuestReputationTooltip:AddDoubleLine("Reputation", stringFormat("%s%d rep", COLOUR_DRUID, reputationEntries))
             end
 
-            if (qcReputationCount > 0) then
-                qcQuestReputationTooltip:Show()
-            else
-                qcQuestReputationTooltip:Hide()
-            end
+            qcQuestReputationTooltip:Show()
+        else
+            qcQuestReputationTooltip:Hide()
         end
+
+        -- Make sure the main tooltip is shown
+        qcQuestInformationTooltip:Show()
 
     else
         qcQuestReputationTooltip:Hide()
     end
 end
+
+-- End Tooltip when mouse over quest name
 
 function qcQuestClick(qcButtonIndex)
 	local qcQuestID = _G["qcMenuButton" .. qcButtonIndex].QuestID
@@ -1384,37 +1542,75 @@ local function qcShowPin(index, icon)
     pin:SetPoint('CENTER', canvas, 'TOPLEFT', x, y)
     pin.PinIndex = index
     local iconCoords
+
+    -- Initialize isGrey as true, and turn it to false if ANY quest is available
+    local isGrey = true -- Assume initially that all quests are unavailable (grey)
+    local playerLevel = UnitLevel("player") -- Get the player's current level
+
+    -- Check all quests associated with this quest giver
+    for _, questId in ipairs(qcPins[index][7]) do
+        -- If the quest exists in the database and has a valid prereq field
+        if questId and qcQuestDatabase[questId] then
+            local prereqQuestId = qcQuestDatabase[questId][14]
+            local requiredLevel = qcQuestDatabase[questId][3] -- Required level is stored in [3]
+
+            -- Check if the player meets the level requirement and either the quest has no prerequisites or the prerequisite is completed
+            if playerLevel >= requiredLevel then
+                if prereqQuestId == 0 or (prereqQuestId and C_QuestLog.IsQuestFlaggedCompleted(prereqQuestId)) then
+                    isGrey = false -- At least one quest is available and player meets the level requirement
+                    break -- No need to check further if we already found one available quest
+                end
+            end
+        end
+    end
+
+    -- Set the icon coordinates based on the icon type
     if icon == 1 then
         iconCoords = QC_ICON_COORDS_NORMAL
-    elseif icon == 4 then
-        iconCoords = QC_ICON_COORDS_DAILY
     elseif icon == 2 then
         iconCoords = QC_ICON_COORDS_REPEATABLE
+    elseif icon == 3 then
+        iconCoords = QC_ICON_COORDS_PROFESSION
+    elseif icon == 4 then
+        iconCoords = QC_ICON_COORDS_DAILY
     elseif icon == 5 then
         iconCoords = QC_ICON_COORDS_SEASONAL
-    elseif icon == 3 then
-        iconCoords = QC_ICON_COORDS_SPECIAL
     elseif icon == 6 then
-        iconCoords = QC_ICON_COORDS_PROFESSION
+        iconCoords = QC_ICON_COORDS_SPECIAL
     elseif icon == 7 then
-        iconCoords = QC_ICON_COORDS_ITEMDROPSTANDARD
+        iconCoords = QC_ICON_COORDS_WEEKLY
     elseif icon == 8 then
-        iconCoords = QC_ICON_COORDS_ITEMDROPREPEATABLE
+        iconCoords = QC_ICON_COORDS_MONTHLY
     elseif icon == 9 then
         iconCoords = QC_ICON_COORDS_CLASS
     elseif icon == 10 then
         iconCoords = QC_ICON_COORDS_KILL
     elseif icon == 11 then
-        iconCoords = QC_ICON_COORDS_WORLDQUEST
+        iconCoords = QC_ICON_COORDS_LEGENDARY
     else
-        iconCoords = QC_ICON_COORDS_NORMAL
+        -- Fallback in case iconCoords is nil
+        iconCoords = QC_ICON_COORDS_NORMAL or {0, 0, 1, 1} -- Ensure a valid table is assigned
     end
-    pin.Texture:SetTexCoord(unpack(iconCoords))
-    
-    local mapScale = qcGetMapScale() -- Get the scale factor
-    pin:SetSize(16 * mapScale, 16 * mapScale) -- Adjust pin size based on the map scale
-    pin.Texture:SetSize(16 * mapScale, 16 * mapScale) -- Adjust texture size based on the map scale
-    
+
+    -- Apply the texture coordinates safely
+    if iconCoords then
+        pin.Texture:SetTexCoord(unpack(iconCoords))
+    else
+        -- Handle the case where iconCoords is nil
+        print("Error: iconCoords is nil for icon type " .. tostring(icon))
+    end
+
+    local mapScale = qcGetMapScale()
+    pin:SetSize(16 * mapScale, 16 * mapScale)
+    pin.Texture:SetSize(16 * mapScale, 16 * mapScale)
+
+    -- Recolor the icon based on the prerequisite quest completion status and level requirement
+    if isGrey then
+        pin.Texture:SetVertexColor(0.5, 0.5, 0.5) -- Apply grey color
+    else
+        pin.Texture:SetVertexColor(1, 1, 1) -- Set to normal color
+    end
+
     pin:Show()
 end
 
@@ -1439,14 +1635,14 @@ local function qcRefreshPins(UiMapID, mapLevel)
             table.remove(qcPins, i)
         end
     end
-	
+		--[[ Map Low Level ]]--	
     if qcSettings.QC_M_HIDE_LOWLEVEL == 1 then
         for i = #qcPins, 1, -1 do
             for questIndex = #qcPins[i][7], 1, -1 do
                 local questId = qcPins[i][7][questIndex]
                 if qcQuestDatabase[questId] then
                     local questLevel = qcQuestDatabase[questId][3] or 0
-                    local greenCutoff = (UnitLevel("player") -  UnitQuestTrivialLevelRange("player"))
+					local greenCutoff = (UnitLevel("player") -  UnitQuestTrivialLevelRange("player"))
                     if questLevel < greenCutoff then
                         table.remove(qcPins[i][7], questIndex)
                     end
@@ -1459,7 +1655,7 @@ local function qcRefreshPins(UiMapID, mapLevel)
             end
         end
     end
-
+		--[[ Map Completed ]]--
     if qcSettings["QC_M_HIDE_COMPLETED"] == 1 then
         for i = #qcPins, 1, -1 do
             for qcQuestIndex = #qcPins[i][7], 1, -1 do
@@ -1473,7 +1669,7 @@ local function qcRefreshPins(UiMapID, mapLevel)
             end
         end
     end
-	--[[ Map and Quest Faction ]]--
+		--[[ Map and Quest Faction ]]--
 	if (qcSettings["QC_ML_HIDE_FACTION"] == 1) then
 		for i = #qcPins, 1, -1 do
 			for qcQuestIndex = #qcPins[i][7], 1, -1 do
@@ -1490,8 +1686,8 @@ local function qcRefreshPins(UiMapID, mapLevel)
 		end
 	end
 
-	--[[ Map and Quest Faction ]]--
-	if (qcSettings["QC_ML_HIDE_FACTION"] == 1) then
+		--[[ Map and Quest Covenant ]]--
+	if (qcSettings["QC_ML_HIDE_COVENANT"] == 1) then
 		for i = #qcPins, 1, -1 do
 			for qcQuestIndex = #qcPins[i][7], 1, -1 do
 				local qcQuestID = qcPins[i][7][qcQuestIndex]
@@ -1507,7 +1703,7 @@ local function qcRefreshPins(UiMapID, mapLevel)
 		end
 	end
 
-	--[[  Map and Quest Race\Class ]]--
+		--[[  Map and Quest Race\Class ]]--
 	if (qcSettings["QC_ML_HIDE_RACECLASS"] == 1) then
 		for i = #qcPins, 1, -1 do
 			for qcQuestIndex = #qcPins[i][7], 1, -1 do
@@ -1544,7 +1740,7 @@ local function qcRefreshPins(UiMapID, mapLevel)
 			end
 		end
 	end
-			--[[ Map In progress ]]--
+		--[[ Map In progress ]]--
 	if (qcSettings["QC_M_HIDE_INPROGRESS"] == 1) then
 		for i = #qcPins, 1, -1 do
 			for qcQuestIndex = #qcPins[i][7], 1, -1 do
@@ -1559,20 +1755,113 @@ local function qcRefreshPins(UiMapID, mapLevel)
 			end
 		end
 	end
---[[ Professions ]]--
-if qcSettings.QC_M_HIDE_PROFESSION == 1 then
-    local professionBitwise = 0
-    local playerProfessions = {GetProfessions()}
+		--[[ Map Covenants ]]--
+	local version, build, date, tocVersion = GetBuildInfo()
+	local majorVersion = tonumber(version:match("^%d+"))
 
-    -- Calculate the player's profession bitwise flag
-    for _, prof in ipairs(playerProfessions) do
-        if prof then
-            local _, _, _, _, _, _, professionID = GetProfessionInfo(prof)
-            if professionID and qcProfessionBits[professionID] then
-                professionBitwise = professionBitwise + qcProfessionBits[professionID]
-            end
-        end
-    end
+	if majorVersion and majorVersion >= 11 then -- Only run in Retail
+		if (qcSettings["QC_ML_HIDE_COVENANTS"] == 1) then
+			local playerCovenantID = C_Covenants.GetActiveCovenantID()
+			local playerCovenantBit = qcCovenantsBits[playerCovenantID] or 0
+
+			for i = #qcPins, 1, -1 do
+				for qcQuestIndex = #qcPins[i][7], 1, -1 do
+					local qcQuestID = qcPins[i][7][qcQuestIndex]
+					if qcQuestDatabase[qcQuestID] and qcQuestDatabase[qcQuestID][12] then
+						local questCovenant = qcQuestDatabase[qcQuestID][12]
+						if questCovenant > 0 and BitBand(questCovenant, playerCovenantBit) == 0 then
+							TableRemove(qcPins[i][7], qcQuestIndex)
+						end
+					end
+				end
+				if #qcPins[i][7] == 0 then
+					TableRemove(qcPins, i)
+				end
+			end
+		end
+	end
+		--[[ Map Warbands ]]--
+	local version, build, date, tocVersion = GetBuildInfo()
+	local majorVersion = tonumber(version:match("^%d+"))
+
+	if majorVersion and majorVersion >= 11 then -- Only run in Retail
+		if (qcSettings["QC_ML_HIDE_WARBANDS"] == 1) then 
+			for i = #qcPins, 1, -1 do
+				for qcQuestIndex = #qcPins[i][7], 1, -1 do
+					local qcQuestID = qcPins[i][7][qcQuestIndex]
+					if C_QuestLog.IsQuestFlaggedCompletedOnAccount(qcQuestID) then
+						TableRemove(qcPins[i][7], qcQuestIndex)
+					end
+				end
+				if #qcPins[i][7] == 0 then
+					TableRemove(qcPins, i)
+				end
+			end
+		end
+	end
+		--[[ Map Prerequisites Not Met ]] --
+	local version, build, date, tocVersion = GetBuildInfo()
+	local majorVersion = tonumber(version:match("^%d+"))
+
+	if (qcSettings["QC_M_HIDE_REQUIREMENTSNOTMET"] == 1) then
+		local playerLevel = UnitLevel("player")
+		local playerFaction, _ = UnitFactionGroup("player")
+
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
+				local questData = qcQuestDatabase[qcQuestID]
+
+				if questData then
+					local questLevel = questData[3] or 0  -- Assuming quest level is at index 3
+					local prequestID = questData[14] or 0 -- Assuming prequest ID is at index 14
+
+					-- Check if the player's level is below the required quest level
+					local belowRequiredLevel = questLevel > playerLevel
+
+					-- Check if a prerequisite quest is not completed
+					local prequestNotCompleted = prequestID > 0 and not C_QuestLog.IsQuestFlaggedCompleted(prequestID)
+
+					-- Check faction standing from qcRenownLevelRequirements (Retail only)
+					local factionStandingTooLow = false
+					if majorVersion and majorVersion >= 11 then -- Retail check
+						local renownRequirement = qcRenownLevelRequirements[qcQuestID]
+						if renownRequirement then
+							local factionID = renownRequirement[1]  -- First value is faction ID
+							local requiredRenown = renownRequirement[2]  -- Second value is required renown level
+							local currentRenown = C_MajorFactions.GetCurrentRenownLevel(factionID)
+
+							-- If player's renown is lower than required, mark the quest for removal
+							factionStandingTooLow = currentRenown < requiredRenown
+						end
+					end
+
+					-- Remove the quest if any of the requirements are not met
+					if belowRequiredLevel or prequestNotCompleted or factionStandingTooLow then
+						TableRemove(qcPins[i][7], qcQuestIndex)
+					end
+				end
+			end
+			if #qcPins[i][7] == 0 then
+				TableRemove(qcPins, i)
+			end
+		end
+	end
+		
+		--[[ Map Professions ]]--
+	if qcSettings.QC_M_HIDE_PROFESSION == 1 then
+		local professionBitwise = 0
+		local playerProfessions = {GetProfessions()}
+
+		-- Calculate the player's profession bitwise flag
+		for _, prof in ipairs(playerProfessions) do
+			if prof then
+				local _, _, _, _, _, _, professionID = GetProfessionInfo(prof)
+				if professionID and qcProfessionBits[professionID] then
+					professionBitwise = professionBitwise + qcProfessionBits[professionID]
+				end
+			end
+		end
 
     -- Iterate through pins and filter out quests based on profession bitwise flag
     for i = #qcPins, 1, -1 do
@@ -1631,8 +1920,15 @@ qcEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 qcEventFrame:RegisterEvent("ZONE_CHANGED")
 qcEventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 qcEventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-qcEventFrame:RegisterEvent("WORLD_MAP_OPEN")
 qcEventFrame:RegisterEvent("PLAYER_LOGIN")
+
+-- Check game version and conditionally register WORLD_MAP_OPEN for Retail
+local version, build, date, tocVersion = GetBuildInfo()
+local majorVersion = tonumber(version:match("^%d+"))
+
+if majorVersion and majorVersion >= 11 then -- Only in Retail
+    qcEventFrame:RegisterEvent("WORLD_MAP_OPEN")
+end
 
 -- Hook into the world map opening
 WorldMapFrame:HookScript("OnShow", function()
@@ -1645,7 +1941,6 @@ end)
 function qcQuestCompletistUI_OnLoad(self)
     -- Your initialization code here
 end
-
 --[[ ##### MAP PINS END ##### ]]--
 
 --[[ ##### INTERFACE OPTIONS START ##### ]]--
@@ -1711,6 +2006,12 @@ function qcCheckSettings()
     if (qcSettings.QC_ML_HIDE_COVENANTS == nil) then
         qcSettings.QC_ML_HIDE_COVENANTS = 1
     end
+	if (qcSettings.QC_ML_HIDE_WARBANDS == nil) then
+        qcSettings.QC_ML_HIDE_WARBANDS = 1
+    end    
+	if (qcSettings.QC_M_HIDE_REQUIREMENTSNOTMET == nil) then
+        qcSettings.QC_M_HIDE_REQUIREMENTSNOTMET = 1
+    end
     if (qcSettings.QC_SERVER_QUERY_COMPLETE == nil) then
         qcSettings.QC_SERVER_QUERY_COMPLETE = 0
     end
@@ -1775,11 +2076,36 @@ function qcApplySettings()
     else
         qcIO_L_HIDE_REPEATABLEQUEST:SetChecked(true)
     end
-    if (qcSettings.QC_L_HIDE_WORLDQUEST == 0) then
-        qcIO_L_HIDE_WORLDQUEST:SetChecked(false)
-    else
-        qcIO_L_HIDE_WORLDQUEST:SetChecked(true)
+
+    -- Only handle qcIO_L_HIDE_WORLDQUEST for Legion and later
+    local version, build, date, tocVersion = GetBuildInfo()
+    local majorVersion = tonumber(version:match("^%d+"))
+    if majorVersion and majorVersion >= 7 then
+        if (qcSettings.QC_L_HIDE_WORLDQUEST == 0) then
+            qcIO_L_HIDE_WORLDQUEST:SetChecked(false)
+        else
+            qcIO_L_HIDE_WORLDQUEST:SetChecked(true)
+        end
     end
+
+    -- Only handle qcIO_ML_HIDE_COVENANTS for Battle for Azeroth (8.x) and later
+    if majorVersion and majorVersion >= 8 then
+        if (qcSettings.QC_ML_HIDE_COVENANTS == 0) then
+            qcIO_ML_HIDE_COVENANTS:SetChecked(false)
+        else
+            qcIO_ML_HIDE_COVENANTS:SetChecked(true)
+        end
+    end
+
+    -- Only handle qcIO_ML_HIDE_WARBANDS for Dragonflight (11.x) and later
+    if majorVersion and majorVersion >= 11 then
+        if (qcSettings.QC_ML_HIDE_WARBANDS == 0) then
+            qcIO_ML_HIDE_WARBANDS:SetChecked(false)
+        else
+            qcIO_ML_HIDE_WARBANDS:SetChecked(true)
+        end
+    end
+
     if (qcSettings.QC_ML_HIDE_FACTION == 0) then
         qcIO_ML_HIDE_FACTION:SetChecked(false)
     else
@@ -1789,6 +2115,11 @@ function qcApplySettings()
         qcIO_ML_HIDE_RACECLASS:SetChecked(false)
     else
         qcIO_ML_HIDE_RACECLASS:SetChecked(true)
+    end
+    if (qcSettings.QC_M_HIDE_REQUIREMENTSNOTMET == 0) then
+        qcIO_M_HIDE_REQUIREMENTSNOTMET:SetChecked(false)
+    else
+        qcIO_M_HIDE_REQUIREMENTSNOTMET:SetChecked(true)
     end
 end
 
@@ -1907,10 +2238,21 @@ function qcInterfaceOptions_OnShow(self)
             qcSettings.QC_M_HIDE_INPROGRESS = 1
         end
     end)
+	
+    qcIO_M_HIDE_REQUIREMENTSNOTMET = CreateFrame("CheckButton", "qcIO_M_HIDE_REQUIREMENTSNOTMET", self, "InterfaceOptionsCheckButtonTemplate")
+    qcIO_M_HIDE_REQUIREMENTSNOTMET:SetPoint("TOPLEFT", qcIO_M_HIDE_INPROGRESS, "BOTTOMLEFT", 0, 0)
+    _G[qcIO_M_HIDE_REQUIREMENTSNOTMET:GetName().."Text"]:SetText(qcL.HIDEREQUIREMENTSNOTMET)
+    qcIO_M_HIDE_REQUIREMENTSNOTMET:SetScript("OnClick", function(self)
+        if (qcIO_M_HIDE_REQUIREMENTSNOTMET:GetChecked() == false) then
+            qcSettings.QC_M_HIDE_REQUIREMENTSNOTMET = 0
+        else
+            qcSettings.QC_M_HIDE_REQUIREMENTSNOTMET = 1
+        end
+    end)	
 
     --- Quest List Filters Start ---
     qcListFiltersTitle = self:CreateFontString("qcListFiltersTitle", "ARTWORK", "GameFontNormal")
-    qcListFiltersTitle:SetPoint("TOPLEFT", qcConfigSubtitle, "BOTTOMLEFT", 16, -185)
+    qcListFiltersTitle:SetPoint("TOPLEFT", qcConfigSubtitle, "BOTTOMLEFT", 16, -210)
     qcListFiltersTitle:SetText(qcL.QUESTLISTFILTERS)
 
     qcIO_L_HIDE_COMPLETED = CreateFrame("CheckButton", "qcIO_L_HIDE_COMPLETED", self, "InterfaceOptionsCheckButtonTemplate")
@@ -1926,7 +2268,7 @@ function qcInterfaceOptions_OnShow(self)
 
     qcIO_L_HIDE_LOWLEVEL = CreateFrame("CheckButton", "qcIO_L_HIDE_LOWLEVEL", self, "InterfaceOptionsCheckButtonTemplate")
     qcIO_L_HIDE_LOWLEVEL:SetPoint("TOPLEFT", qcIO_L_HIDE_COMPLETED, "BOTTOMLEFT", 0, 0)
-    _G[qcIO_L_HIDE_LOWLEVEL:GetName().."Text"]:SetText(qcL.HIDELOWLEVELQUESTS .. COLOUR_DEATHKNIGHT .. " (Not Yet Implemented)")
+    _G[qcIO_L_HIDE_LOWLEVEL:GetName().."Text"]:SetText(qcL.HIDELOWLEVELQUESTS)
     qcIO_L_HIDE_LOWLEVEL:SetScript("OnClick", function(self)
         if (qcIO_L_HIDE_LOWLEVEL:GetChecked() == false) then
             qcSettings.QC_L_HIDE_LOWLEVEL = 0
@@ -1968,19 +2310,22 @@ function qcInterfaceOptions_OnShow(self)
         end
     end)
 
-    qcIO_L_HIDE_WORLDQUEST = CreateFrame("CheckButton", "qcIO_L_HIDE_WORLDQUEST", self, "InterfaceOptionsCheckButtonTemplate")
-    qcIO_L_HIDE_WORLDQUEST:SetPoint("TOPLEFT", qcIO_L_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, -75)
-    _G[qcIO_L_HIDE_WORLDQUEST:GetName().."Text"]:SetText(qcL.HIDEWORLDQUEST .. COLOUR_DEATHKNIGHT .. " ")
-    qcIO_L_HIDE_WORLDQUEST:SetScript("OnClick", function(self)
-        if (qcIO_L_HIDE_WORLDQUEST:GetChecked() == false) then
-            qcSettings.QC_L_HIDE_WORLDQUEST = 0
-        else
-            qcSettings.QC_L_HIDE_WORLDQUEST = 1
-        end
-    end)
+	-- Only create the checkbox if the expansion is Legion or later
+	if majorVersion and majorVersion >= 7 then
+		qcIO_L_HIDE_WORLDQUEST = CreateFrame("CheckButton", "qcIO_L_HIDE_WORLDQUEST", self, "InterfaceOptionsCheckButtonTemplate")
+		qcIO_L_HIDE_WORLDQUEST:SetPoint("TOPLEFT", qcIO_L_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, -75)
+		_G[qcIO_L_HIDE_WORLDQUEST:GetName().."Text"]:SetText(qcL.HIDEWORLDQUEST .. COLOUR_DEATHKNIGHT .. " ")
+		qcIO_L_HIDE_WORLDQUEST:SetScript("OnClick", function(self)
+			if (qcIO_L_HIDE_WORLDQUEST:GetChecked() == false) then
+				qcSettings.QC_L_HIDE_WORLDQUEST = 0
+			else
+				qcSettings.QC_L_HIDE_WORLDQUEST = 1
+			end
+		end)
+	end
 
     qcCombinedFiltersTitle = self:CreateFontString("qcCombinedFiltersTitle", "ARTWORK", "GameFontNormal")
-    qcCombinedFiltersTitle:SetPoint("TOPLEFT", qcConfigSubtitle, "BOTTOMLEFT", 16, -375)
+    qcCombinedFiltersTitle:SetPoint("TOPLEFT", qcConfigSubtitle, "BOTTOMLEFT", 16, -400)
     qcCombinedFiltersTitle:SetText(qcL.COMBINEDMAPANDQUESTFILTERS)
 
     qcIO_ML_HIDE_FACTION = CreateFrame("CheckButton", "qcIO_ML_HIDE_FACTION", self, "InterfaceOptionsCheckButtonTemplate")
@@ -2005,17 +2350,37 @@ function qcInterfaceOptions_OnShow(self)
         end
     end)
 
-    qcIO_ML_HIDE_COVENANTS = CreateFrame("CheckButton", "qcIO_ML_HIDE_COVENANTS", self, "InterfaceOptionsCheckButtonTemplate")
-    qcIO_ML_HIDE_COVENANTS:SetPoint("TOPLEFT", qcIO_ML_HIDE_FACTION, "BOTTOMLEFT", 0, -25)
-    _G[qcIO_ML_HIDE_COVENANTS:GetName().."Text"]:SetText(qcL.HIDEOTHERCOVENANTQUESTS .. COLOUR_DEATHKNIGHT .. " (Not Yet Implemented)")
-    qcIO_ML_HIDE_COVENANTS:SetScript("OnClick", function(self)
-        if (qcIO_ML_HIDE_COVENANTS:GetChecked() == false) then
-            qcSettings.QC_ML_HIDE_COVENANTS = 0
-        else
-            qcSettings.QC_ML_HIDE_COVENANTS = 1
-        end
-    end)
+	local version, build, date, tocVersion = GetBuildInfo()
+	local majorVersion = tonumber(version:match("^%d+"))
 
+	-- Create Covenant Checkbox (for Battle for Azeroth (8.x) and later)
+	if majorVersion and majorVersion >= 8 then
+		qcIO_ML_HIDE_COVENANTS = CreateFrame("CheckButton", "qcIO_ML_HIDE_COVENANTS", self, "InterfaceOptionsCheckButtonTemplate")
+		qcIO_ML_HIDE_COVENANTS:SetPoint("TOPLEFT", qcIO_ML_HIDE_FACTION, "BOTTOMLEFT", 0, -25)
+		_G[qcIO_ML_HIDE_COVENANTS:GetName().."Text"]:SetText(qcL.HIDEOTHERCOVENANTQUESTS)
+		qcIO_ML_HIDE_COVENANTS:SetScript("OnClick", function(self)
+			if (qcIO_ML_HIDE_COVENANTS:GetChecked() == false) then
+				qcSettings.QC_ML_HIDE_COVENANTS = 0
+			else
+				qcSettings.QC_ML_HIDE_COVENANTS = 1
+			end
+		end)
+	end
+
+	-- Create Warband Checkbox (for Dragonflight (11.x) and later)
+	if majorVersion and majorVersion >= 11 then
+		qcIO_ML_HIDE_WARBANDS = CreateFrame("CheckButton", "qcIO_ML_HIDE_WARBANDS", self, "InterfaceOptionsCheckButtonTemplate")
+		qcIO_ML_HIDE_WARBANDS:SetPoint("TOPLEFT", qcIO_ML_HIDE_FACTION, "BOTTOMLEFT", 0, -50)
+		_G[qcIO_ML_HIDE_WARBANDS:GetName().."Text"]:SetText(qcL.HIDEWARBANDS)
+		qcIO_ML_HIDE_WARBANDS:SetScript("OnClick", function(self)
+			if (qcIO_ML_HIDE_WARBANDS:GetChecked() == false) then
+				qcSettings.QC_ML_HIDE_WARBANDS = 0
+			else
+				qcSettings.QC_ML_HIDE_WARBANDS = 1
+			end
+		end)
+	end
+	
     self:SetScript("OnShow", qcConfigRefresh)
     qcConfigRefresh(self)
 end

@@ -1,13 +1,13 @@
-tag b7690dee4aa071a00e69d579a7dee811d3b95a48 WoW-11.0.5-release1
+tag 00f1845444d54ad03192c6c8e1995e9a1b2d3f50 WoW-11.0.7-release1
 Author:	Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:	Thu Oct 31 19:11:37 2024 +0100
+Date:	Sun Dec 22 17:40:34 2024 +0100
 
-Tagged as WoW-11.0.5-release1
+Tagged as WoW-11.0.7-release1
 
-commit f03f5ce5cad77954e56d841852f47bf67ef6daf2
+commit 5b68aac6757f597c44d3fb438aa725dc672f3747
 Author: Odica Jaedenar <odica.jaedenar@gmail.com>
-Date:   Thu Oct 31 18:27:41 2024 +0100
+Date:   Sun Dec 22 17:39:54 2024 +0100
 
-    - updated version in TOC to 110005
-    - included updated LibTourist library
+    Updated version in TOC to 110007
+    Includes updated LibTourist library
 

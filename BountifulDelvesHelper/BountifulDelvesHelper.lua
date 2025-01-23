@@ -450,7 +450,7 @@ function showUI()
     BountifulDelvesHelperMainFrame = AceGUI:Create("Frame")
     BountifulDelvesHelperMainFrame:EnableResize(false)
     BountifulDelvesHelperMainFrame:SetTitle("Bountiful Delves Helper")
-    BountifulDelvesHelperMainFrame:SetStatusText("Bountiful Delves Helper - v1.1.9")
+    BountifulDelvesHelperMainFrame:SetStatusText("Bountiful Delves Helper - v1.2.0")
     BountifulDelvesHelperMainFrame:SetCallback("OnClose", function(widget)
         isFrameVisible = false
     end)

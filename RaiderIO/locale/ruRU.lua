@@ -312,6 +312,22 @@ L["RAID_BOSS_ICC_6"] = "Гниломорд"
 L["RAID_BOSS_ICC_7"] = "Профессор Мерзоцид"
 L["RAID_BOSS_ICC_8"] = "Совет кровавых принцев"
 L["RAID_BOSS_ICC_9"] = "Кровавая королева Лана'тель"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_8"] = ""--]] 
 L["RAID_BOSS_NP_1"] = "Улгракс Пожиратель"
 L["RAID_BOSS_NP_2"] = "Скованный кровью ужас"
 L["RAID_BOSS_NP_3"] = "Капитан суреки Сик'ран"
@@ -372,6 +388,7 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "О25"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Побежденные рейдовые боссы"
 L["RAID_FL"] = "Огненные Просторы"
 L["RAID_ICC"] = "Цитадель Ледяной Короны"
+L["RAID_LOU"] = "Освобождение Нижней Шахты"
 L["RAID_NP"] = "Неруб'арский дворец"
 L["RAID_RS"] = "Рубиновое святилище"
 L["RAID_TOTFW"] = "Трон Четырех Ветров"
@@ -385,6 +402,8 @@ L["RAIDERIO_MP_SCORE"] = "[Raider.IO] М+ рейтинг"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Настройки аддона Raider.IO"
 L["RAIDING_DATA_HEADER"] = "[Raider.IO] Рейдовый прогресс"
 L["RAIDING_DB_MODULES"] = "Модули базы данных рейдинга"
+--[[Translation missing --]]
+--[[ L["RECENT_RUNS_WITH_YOU"] = ""--]] 
 L["RECRUITMENT_DB_MODULES"] = "Модули базы данных рекрутинга"
 L["RELOAD_LATER"] = "Перезагрузить позже"
 L["RELOAD_NOW"] = "Перезагрузить сейчас"

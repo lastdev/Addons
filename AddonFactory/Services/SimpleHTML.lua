@@ -11,6 +11,16 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 		return format("<html><body>%s</body></html>", code)
 	end
 
+	local function TextArgs(...)
+		local line = ""
+		
+		for i = 1, select("#", ...) do
+			line = format("%s%s", line, tostring(select(i, ...)))
+		end
+		
+		return line
+	end
+
 	return {
 		Initialize = function()
 			wipe(content)
@@ -78,6 +88,8 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 		GetSpellIconAndLink = function(spellID)
 			local link = C_Spell.GetSpellLink(spellID)
 			local info = C_Spell.GetSpellInfo(spellID)
+			
+			if not info then print(spellID) end
 
 			local name = info.name 
 			local icon = info.iconID
@@ -116,7 +128,7 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 			-- Note : the quest title may be wrong, it will be displayed as is in the link, but properly in the tooltip. (Tested!)
 			return (questID and questTitle)
 				and format("|cffffff00|Hquest:%d:0|h[%s]|h|r", questID, questTitle)
-				or "|cFFFF0000invalid quest link|r"
+				or "|cFFFF0000Invalid quest link|r"
 		end,
 		AddQuestLink = function(questID, questTitle)
 			-- ex: "|cffffff00|Hquest:74381:0|h[Hidden Legacies]|h|r"
@@ -146,15 +158,6 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 			return format("|cff71d5ff|Hworldmap:%d:%d0:%d0:%d:%s:%s|h[%s]|h|r", uiMapID, locX, locY, npcID, faction, npcName, npcName)
 		end,
 		
-		GetNPCLink_GOOD = function(faction, npcName, uiMapID, locX, locY)
-			-- ex: $npc:A:Jaluu the Generous:630:222
-			-- faction is A, H or B for both
-			
-			-- Create an enhanced worldmap link (we're adding the faction and the npc name between |H and |h, because that's all we get in OnHyperlinkEnter
-			-- return format("|cff71d5ff|Hworldmap:%d:%d0:%d0:%s:%s|h[|A:Waypoint-MapPin-ChatIcon:13:13:0:0|a %s]|h|r", uiMapID, locX, locY, faction, npcName, npcName)
-			return format("|cff71d5ff|Hworldmap:%d:%d0:%d0:%s:%s|h[%s]|h|r", uiMapID, locX, locY, faction, npcName, npcName)
-		end,
-		
 		GetMapLink = function(mapName, uiMapID, locX, locY)
 			-- expected: $map:Timeless Isle:554:346:536
 			-- but if the map name is the same as the map ID, then passing 0 suffices
@@ -176,19 +179,9 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 					mapName = "Missing map name!"
 				end
 			end
-			
-			-- if mapName == "0" then
-				-- local info = C_Map.GetMapInfo(uiMapID)
-				-- if info and info.name then
-					-- mapName = info.name
-				-- else
-					-- mapName = "Missing map name!"
-				-- end
-			-- end
 		
 			return format("|cff71d5ff|Hworldmap:%d:%d0:%d0|h[%s]|h|r", uiMapID, locX, locY, mapName)
 		end,
-		
 		
 		
 		-- Does not work
@@ -198,26 +191,31 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 		
 		-- Add n lines of spacing
 		AddSpacing = function(num)
-			num = num or 1
-			for i = 1, num do
-				TableInsert(content, "<br/>")
-			end
+			TableInsert(content, string.rep("<br/>", num or 1))
 		end,
 
+		-- General container
+		NewPage = function(...) return TextArgs(...)	end,
+		
 		-- Create a new paragraph, with a variable list of parameters
-		NewParagraph = function(...)
-			local para = "<p>"
+		NewParagraph = function(...) return format("<p>%s</p>", TextArgs(...)) end,
+
+		-- Insert a line with n <br/> tags at the end
+		NewLine = function(n, ...) return format("%s%s", TextArgs(...), string.rep("<br/>", n)) end,
+		NewHeader1 = function(...) return format("<h1>%s</h1><br/>", TextArgs(...)) end,
+		NewHeader2 = function(...) return format("<h2>%s</h2><br/>", TextArgs(...)) end,
+
+		-- Slightly similar to a UL/LI tag in HTML. Show the content in a bulleted list
+		NewUnorderedList = function(...)
+			local list = ""
 			
 			for i = 1, select("#", ...) do
-				para = format("%s%s", para, tostring(select(i, ...)))
+				-- Note: bullet is ALT + 0149
+				list = format("%s|cFFFFD700•|r %s", list, tostring(select(i, ...)))
 			end
 
-			return format("%s<br/></p>", para)
+			return format("%s<br/>", list)
 		end,
 
-		-- Functions to insert a line with one or two <br/> tags (Li stands for Line, obviously)
-		NewLine1BR = function(line) return format("%s<br/>", line) end,
-		NewLine2BR = function(line) return format("%s<br/><br/>", line) end,
-		
 	}
 end)

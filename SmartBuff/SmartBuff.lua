@@ -359,7 +359,7 @@ local function InitBuffSettings(cBI, reset)
     cBuff.ManaLimit = 0;
     if (cBI.Type == SMARTBUFF_CONST_GROUP or cBI.Type == SMARTBUFF_CONST_ITEMGROUP) then
       for n in pairs(cClasses) do
-        if (cBI.Type == SMARTBUFF_CONST_GROUP and n <= 13 and not string.find(cBI.Params, cClasses[n])) then
+        if (cBI.Type == SMARTBUFF_CONST_GROUP and not string.find(cBI.Params, cClasses[n])) then
           cBuff[cClasses[n]] = true;
         else
           cBuff[cClasses[n]] = false;
@@ -793,7 +793,8 @@ Enum.SmartBuffGroup = {
 
 -- Set the current template and create an array of units
 function SMARTBUFF_SetTemplate()
-  if (InCombatLockdown()) then return end
+  -- Don't init things when mounted or in combat
+  if (InCombatLockdown() or IsMounted() or IsFlying()) then return end
   if (SmartBuffOptionsFrame:IsVisible()) then return end
 
   local newTemplate = currentTemplate -- default to old template

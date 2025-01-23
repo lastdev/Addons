@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                      v2.01 - 26th November 2024
+                                      v2.04 - 7th January 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -766,7 +766,7 @@ function pluginHandler:OnEnable()
 end
 
 function pluginHandler:Refresh()
-	self:SendMessage("HandyNotes_NotifyUpdate", "MidsummerFireFestival")
+	if not ns.delay then self:SendMessage("HandyNotes_NotifyUpdate", "MidsummerFireFestival") end
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_MidsummerFireFestivalDB", "AceEvent-3.0")
@@ -774,16 +774,29 @@ LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_MidsummerFireFestiva
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
 ns.eventFrame = CreateFrame( "Frame" )
-ns.timeSinceLastUpdate, ns.curTime = 0, 0
+ns.timeSinceLastRefresh, ns.curTime = 0, 0
 
 local function OnUpdate()
 	ns.curTime = GetTime()
-	if ns.curTime - ns.timeSinceLastUpdate <= 3 then return end
-	ns.timeSinceLastUpdate = ns.curTime
+	if ns.curTime - ns.timeSinceLastRefresh <= 7 then return end
+	ns.timeSinceLastRefresh = ns.curTime
 	pluginHandler:Refresh()
 end
 
 ns.eventFrame:SetScript( "OnUpdate", OnUpdate )
+
+local function OnEventHandler( self, event, ... )
+	-- This is based upon my own research as documented in my WDW AddOn
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		ns.delay = true
+	elseif ( event == "SPELLS_CHANGED" ) then
+		ns.delay = nil
+	end
+end
+
+ns.eventFrame:RegisterEvent( "PLAYER_ENTERING_WORLD" )
+ns.eventFrame:RegisterEvent( "SPELLS_CHANGED" )
+ns.eventFrame:SetScript( "OnEvent", OnEventHandler )
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
 

@@ -143,7 +143,8 @@ ns.letItSnow = "You obtain the Snowflakes randomly by /kiss Winter Revellers in 
 ns.magentaPortal = "Fly into the magenta portal fast and then press the space bar / \"up\" key immediately to go straight up. This "
 			.."is especially important as the guards are very agressive"
 ns.owlbeast = ". While the drop rate here is barely 60%, the mobs are plentiful and with fast respawns!"
-ns.pepe = "\n\nLook at the cart that's behind the vendors/quest givers. Perched on one end is Greatfather Pepe. Click on Pepe!"
+ns.pepe = "Look at the vendors' cart. Perched on one end is Greatfeather Pepe. Click on Pepe. You're welcome <3\n\n"
+			.."Click on Pepe any time to renew the buff"
 ns.smallEgg = "Good Small Egg drop rate. Dragonhawk mobs in Eversong Woods have 100% drop rate. Numerous other mobs have >= 60% "
 			.."drop rate. Look for this icon across all of Kalimdor / Eastern Kingdoms"
 ns.tanaanSpawns = "Spawns here. Every 5 to 10 minutes but is farmable once per day. Drop rate is about 10%"
@@ -179,8 +180,10 @@ ns.setHolidaySnow = { armada=true, name="Holiday Snow", achievements={ { id=1690
 			{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, }
 ns.setIronArmada = { armada=true, name="Iron Armada", faction=ns.faction, noCoords=true, version=60202, noContinent=true,
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, }
-ns.setSantaTreatsQ = { { id=7025, name="Treats for Great-father Winter", qType="Seasonal", faction="Alliance", },
-						{ id=6962, name="Treats for Great-father Winter", qType="Seasonal", faction="Horde", }, }
+ns.setMerrymaker = { frostyShake=true, name="Merrymaker", faction=ns.faction, noCoords=true, noContinent=true,
+				achievements={ { id=1691, showAllCriteria=true, }, }, }
+ns.setSantaTreatsQ = { { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", faction="Alliance", },
+						{ id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", faction="Horde", }, }
 ns.setSantaTreatsA = { { id=1688, showAllCriteria=true, guide=ns.gourmet, }, }
 ns.setTisSeason = { tisSeason=true, name="'Tis the Season", faction=ns.faction, noCoords=true, noContinent=true,
 				achievements={ { id=277, showAllCriteria=true, guide=ns.threeSet, }, }, }
@@ -290,10 +293,11 @@ points[ 89 ] = { -- Darnassus
 					{ id=5854, index=2, showAllCriteria=true, }, }, },
 	[42977433] = { bbKing=true, name="Temple of the Moon Entrance", faction="Horde",
 					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbDarnassus3, }, }, },
-	[87004500] = ns.setIronArmada,
-	[89004000] = ns.setGourmet,
+	[84004200] = ns.setMerrymaker,
 	[87003700] = ns.setTisSeason,
 	[87004100] = ns.setBlizzPoetry,
+	[87004500] = ns.setIronArmada,
+	[89004000] = ns.setGourmet,
 }
 
 points[ 1457 ] = { -- Darnassus
@@ -310,14 +314,17 @@ points[ 1457 ] = { -- Darnassus
 					{ id=5854, index=1, showAllCriteria=true, guide=ns.carolingCata, }, }, },
 	[42977433] = { bbKing=true, name="Temple of the Moon Entrance", faction="Horde",
 					achievements={ { id=4437, index=3, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbDarnassus3, }, }, },
-	[81005800] = ns.setIronArmada,
-	[83005300] = ns.setGourmet,
+	[78005500] = ns.setMerrymaker,
 	[81005000] = ns.setTisSeason,
 	[81005400] = ns.setBlizzPoetry,
+	[81005800] = ns.setIronArmada,
+	[83005300] = ns.setGourmet,
 }
 
 points[ 1 ] = { -- Durotar
 	[44000210] = ns.setWondervolt,
+	[45600656] = { miscQuests=true, name="Greatfather Winter", faction="Horde",
+					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
 	[46480610] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", tip=ns.vendorFB,
 					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
 					quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
@@ -330,8 +337,6 @@ points[ 1 ] = { -- Durotar
 points[ 1411 ] = { -- Durotar
 	[45730120] = ns.setWondervoltOver,
 	[50031351] = ns.setWondervoltUnder,
-	[45530641] = { miscQuests=true, name="Greatfather Winter", faction="Horde", version=40101, 
-					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
 	[46530618] = { vendor=true, name="Penney Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
 	[46610428] = { vendor=true, name="Penney Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
 	[46640444] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendorFB,
@@ -372,9 +377,9 @@ points[ 1412 ] = { -- Mulgore
 	[38682887] = { vendor=true, name="Seersa Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
 	[39062927] = { vendor=true, name="Seersa Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
 	[38702880] = { vendor=true, name="Whulwert Copperpinch", versionUnder=40101, faction="Horde",
-					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+					quests={ { id=7021, name="Great-father Winter is Here!", level=10, qType="Seasonal", }, }, tip=ns.vendorFB },
 	[39102933] = { vendor=true, name="Whulwert Copperpinch", version=40101, faction="Horde",
-					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+					quests={ { id=7021, name="Great-father Winter is Here!", level=10, qType="Seasonal", }, }, tip=ns.vendorFB },
 	[42003400] = { caroling=true, faction="Alliance", version=40300,
 					achievements={ { id=5853, index=1, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingTB }, }, },
 	[42512865] = { armada=true, bbKing=true, name="Baine Bloodhoof",  tip=ns.baine,
@@ -388,7 +393,7 @@ points[ 85 ] = { -- Orgrimmar
 					quests={ { id=7061, name="The Feast of Winter Veil", level=10, qType="Seasonal", }, }, },
 	[48047028] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg2, }, }, },
-	[49637799] = { miscQuests=true, name="Greatfather Winter", faction="Horde", version=40101, 
+	[49877845] = { miscQuests=true, name="Greatfather Winter", faction="Horde",
 					quests={ { id=6962, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
 	[50137633] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg3, }, }, },
@@ -396,11 +401,13 @@ points[ 85 ] = { -- Orgrimmar
 	[51307100] = { miscQuests=true, name="Furmund", faction="Horde",
 					quests={ { id=6964, name="The Reason for the Season", level=10, qType="Seasonal", }, }, },
 	[52687728] = { vendor=true, name="Penney Copperpinch", faction="Horde", tip=ns.vendor },
-	[53207640] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", tip=ns.vendorFB,
+	[52547706] = { onMetzen=true, name="Kaymard Copperpinch", faction="Horde", tip=ns.vendorFB,
 						achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
 						quests={ { id=6961, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
 						{ id=6983, name="You're a Mean One...", level=30, qType="Daily", },
 						{ id=6984, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", }, }, },
+	[52997743] = { falala=true, name="Greatfeather Pepe", faction="Horde", tip=ns.pepe, buff=316936,
+					quests={ { id=58901, name="Greatfeather Pepe", qType="One Time", }, }, },
 	[55487852] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbOrg1, }, }, },
 	[58605380] = { bbKing=true, name="Blax Bottlerocket", faction="Horde",
@@ -409,10 +416,11 @@ points[ 85 ] = { -- Orgrimmar
 					achievements={ { id=4437, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbSeller, }, }, },
 	[70007000] = { caroling=true, faction="Alliance",
 					achievements={ { id=5853, index=1, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingOrg }, }, },
-	[77006500] = ns.setIronArmada,
-	[79006000] = ns.setGourmet,
+	[74006200] = ns.setMerrymaker,
 	[77005700] = ns.setTisSeason,
 	[77006100] = ns.setBlizzPoetry,
+	[77006500] = ns.setIronArmada,
+	[79006000] = ns.setGourmet,
 }
 
 points[ 1454 ] = { -- Orgrimmar
@@ -455,10 +463,11 @@ points[ 1454 ] = { -- Orgrimmar
 					achievements={ { id=4437, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbSeller, }, }, },
 	[70007000] = { caroling=true, faction="Alliance", version=40300,
 					achievements={ { id=5853, index=3, showAllCriteria=true, guide=ns.carolingCata, tip=ns.carolingOrg }, }, },
-	[30005500] = ns.setIronArmada,
-	[32005000] = ns.setGourmet,
+	[27005200] = ns.setMerrymaker,
 	[30004700] = ns.setTisSeason,
 	[30005100] = ns.setBlizzPoetry,
+	[30005500] = ns.setIronArmada,
+	[32005000] = ns.setGourmet,
 }
 
 points[ 71 ] = { -- Tanaris
@@ -470,8 +479,8 @@ points[ 1446 ] = { -- Tanaris
 --	[52522806] = ns.setWondervolt,
 	[73204800] = { onMetzen=true, name="Metzen the Reindeer", versionUnder=40300, guide=ns.greench,
 					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
-					quests={ { id=8746, qType="Seasonal", faction="Horde", },
-					{ id=8762, qType="Seasonal", faction="Alliance", }, }, },
+					quests={ { id=8746, name="Metzen the Reindeer", level=40, qType="Seasonal", faction="Horde", },
+					{ id=8762, name="Metzen the Reindeer", level=40, qType="Seasonal", faction="Alliance", }, }, },
 }
 
 points[ 57 ] = { -- Teldrassil
@@ -518,11 +527,12 @@ points[ 103 ] = { -- The Exodar
 					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbExodar1, }, }, },
 	[55604980] = { vendor=true, name="Bessbi Jinglepocket", faction="Alliance", tip=ns.vendorFB },
 	[55824883] = { vendor=true, name="Wolgren Jinglepocket", faction="Alliance", tip=ns.vendor },
-	[75007000] = ns.setIronArmada,
-	[77006500] = ns.setGourmet,
+	[72006700] = ns.setMerrymaker,
 	[75006200] = ns.setTisSeason,
 	[75006600] = ns.setBlizzPoetry,
 	[79795530] = ns.setWondervolt,
+	[75007000] = ns.setIronArmada,
+	[77006500] = ns.setGourmet,
 }
 
 points[ 1947 ] = { -- The Exodar
@@ -540,34 +550,36 @@ points[ 1947 ] = { -- The Exodar
 					achievements={ { id=4437, index=4, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbExodar1, }, }, },
 	[55604980] = { vendor=true, name="Bessbi Jinglepocket", faction="Alliance", tip=ns.vendorFB },
 	[55824883] = { vendor=true, name="Wolgren Jinglepocket", faction="Alliance", tip=ns.vendor },
-	[75007000] = ns.setIronArmada,
-	[77006500] = ns.setGourmet,
+	[72006700] = ns.setMerrymaker,
 	[75006200] = ns.setTisSeason,
 	[75006600] = ns.setBlizzPoetry,
+	[75007000] = ns.setIronArmada,
+	[77006500] = ns.setGourmet,
 	[79795530] = ns.setWondervolt,
 }
 
 points[ 88 ] = { -- Thunder Bluff
 	[42505580] = { vendor=true, name="Seersa Copperpinch", faction="Horde", tip=ns.vendor },
 	[42605660] = { vendor=true, name="Whulwert Copperpinch", faction="Horde",
-					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+					quests={ { id=7021, name="Great-father Winter is Here!", level=10, qType="Seasonal", }, }, tip=ns.vendorFB },
 	[60305169] = { armada=true, name="Baine Bloodhoof", tip=ns.baine,
 					achievements={ { id=259, showAllCriteria=true, faction="Horde", }, }, },
 	[63003300] = { caroling=true, faction="Alliance",
 					achievements={ { id=5853, index=3, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingTB }, }, },
-	[77005500] = ns.setIronArmada,
-	[79005000] = ns.setGourmet,
+	[74005200] = ns.setMerrymaker,
 	[77004700] = ns.setTisSeason,
 	[77005100] = ns.setBlizzPoetry,
+	[77005500] = ns.setIronArmada,
+	[79005000] = ns.setGourmet,
 }
 
 points[ 1456 ] = { -- Thunder Bluff
 	[43685918] = { vendor=true, name="Seersa Copperpinch", faction="Horde", versionUnder=40101, tip=ns.vendor, },
 	[42285495] = { vendor=true, name="Seersa Copperpinch", faction="Horde", version=40101, tip=ns.vendor, },
 	[43805884] = { vendor=true, name="Whulwert Copperpinch", versionUnder=40101, faction="Horde",
-					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+					quests={ { id=7021, name="Great-father Winter is Here!", level=10, qType="Seasonal", }, }, tip=ns.vendorFB },
 	[42465526] = { vendor=true, name="Whulwert Copperpinch", version=40101, faction="Horde",
-					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
+					quests={ { id=7021, name="Great-father Winter is Here!", level=10, qType="Seasonal", }, }, tip=ns.vendorFB },
 --	[42605660] = { vendor=true, name="Whulwert Copperpinch", faction="Horde",
 --					quests={ { id=7021, qType="Seasonal", }, }, tip=ns.vendorFB },
 	[60305169] = { armada=true, bbKing=true, name="Baine Bloodhoof",  tip=ns.baine,
@@ -575,10 +587,11 @@ points[ 1456 ] = { -- Thunder Bluff
 						{ id=4436, index=4, showAllCriteria=true, faction="Alliance", guide=ns.bbMacroAR, tip=ns.bbTB, }, }, },
 	[63003300] = { caroling=true, faction="Alliance", version=40300,
 					achievements={ { id=5853, index=1, cguide=ns.carolingCata, tip=ns.carolingTB }, }, },
-	[77005500] = ns.setIronArmada,
-	[79005000] = ns.setGourmet,
+	[74005200] = ns.setMerrymaker,
 	[77004700] = ns.setTisSeason,
 	[77005100] = ns.setBlizzPoetry,
+	[77005500] = ns.setIronArmada,
+	[79005000] = ns.setGourmet,
 }
 
 points[ 83 ] = { -- Winterspring
@@ -595,12 +608,12 @@ points[ 83 ] = { -- Winterspring
 
 						
 points[ 1416 ] = { -- Alterac Mountains
-	[33586794] = { onMetzen=true, name="Strange Snowman", versionUnder=40300, guide=ns.greench, faction="",
+	[33586794] = { onMetzen=true, name="Strange Snowman", versionUnder=40300, guide=ns.greench,
 					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
-					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
-						{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", },
-						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
-						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+					quests={ { id=6983, name="You're a Mean One...", level=80, qType="Daily", faction="Horde", },
+						{ id=7043, name="You're a Mean One...", level=80, qType="Daily", faction="Alliance", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", faction="Alliance", }, }, },
 	[34006300] = { letItSnow=true, tip="Try hanging out here, but Dalaran works too!",
 					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
 	[35406130] = ns.setHolidaySnow,
@@ -626,6 +639,7 @@ points[ 27 ] = { -- Dun Morogh
 					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
 	[63572980] = { miscQuests=true, name="Greatfather Winter", faction="Alliance",
 					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
+	[63643009] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", tip=ns.vendorFB },
 	[72004900] = ns.setHolidaySnow,
 }
 
@@ -644,8 +658,7 @@ points[ 1426 ] = { -- Dun Morogh
 					quests={ { id=7022, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
 					{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
 					{ id=7043, name="You're a Mean One...", level=80, qType="Daily", }, }, },
-	[53183571] = ns.setWondervolt,
---	[60333394] = ns.setWondervolt,
+	[53183571] = ns.setWondervolt, -- check again. use under over?
 	[56413159] = { miscQuests=true, name="Greatfather Winter", faction="Alliance", versionUnder=40101, 
 					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
 	[63572980] = { miscQuests=true, name="Greatfather Winter", faction="Alliance", version=40101,
@@ -678,9 +691,9 @@ points[ 37 ] = { -- Elwynn Forest
 					{ id=5854, index=4, showAllCriteria=true, guide=ns.caroling, tip="Example safe location" }, }, },
 	[22202290] = { bromance=true, name="Brothers (several)", showAllCriteria=true, faction="Alliance",
 					achievements={ { id=1686, tip="Cathedral area" }, }, },
-	[25793766] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", tip=ns.vendor,
-					quests={ { id=7023, name="Greatfather Winter Is Here", qType="Seasonal", }, }, },
-	[25893766] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[26033749] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[25923763] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", tip=ns.vendorFB },
 	[28663820] = ns.setWondervolt,
 	[36910742] = { caroling=true, name="Caroling", faction="Horde", achievements={ 	
 					{ id=5854, index=4, showAllCriteria=true, guide=ns.caroling, tip="Example safe location" }, }, },
@@ -765,6 +778,12 @@ points[ 1942 ] = { -- Ghostlands
 
 points[ 25 ] = { -- Hillsbrad Foothills
 	[42002900] = ns.setHolidaySnow,
+	[42344114] = { onMetzen=true, name="Strange Snowman", guide=ns.greench,
+					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
+					quests={ { id=6983, name="You're a Mean One...", level=30, qType="Daily", faction="Horde", },
+						{ id=7043, name="You're a Mean One...", level=30, qType="Daily", faction="Alliance", },
+						{ id=6984, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", faction="Horde", },
+						{ id=7045, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", faction="Alliance", }, }, },
 	[43904090] = { letItSnow=true, tip="Try hanging out here, but Dalaran works too!",
 					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
 	[45003900] = { onMetzen=true, name="Metzen the Reindeer", guide=ns.greench,
@@ -798,12 +817,13 @@ points[ 1424 ] = { -- Hillsbrad Foothills
 points[ 87 ] = { -- Ironforge
 	[12918923] = { bbKing=true, name="BB King (1)", faction="Horde",
 					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin1, }, }, },
+	[13139105] = ns.setWondervolt,
 	[16128462] = { caroling=true, name="Caroling", faction="Horde",
 					achievements={ { id=5854, index=3, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingIF }, }, },
 	[24107473] = { bbKing=true, name="BB King (2)", faction="Horde",
 					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin3, }, }, },
-	[30506050] = { miscQuests=true, name="Goli Krumn", faction="Alliance",
-					quests={ { id=7062, name="The Reason for the Season", level=10, qType="Seasonal", }, }, },
+	[30255938] = { miscQuests=true, name="Goli Krumn", faction="Alliance",
+					quests={ { id=7062, name="The Reason for the Season", level=10, qType="Seasonal", faction="Alliance", }, }, },
 	[33216542] = { miscQuests=true, name="Greatfather Winter", faction="Alliance",
 					quests={ { id=7025, name="Treats for Great-father Winter", level=10, qType="Seasonal", }, }, },
 	[33586794] = { onMetzen=true, name="Wulmort Jinglepocket", faction="Alliance", tip=ns.vendor,
@@ -811,17 +831,19 @@ points[ 87 ] = { -- Ironforge
 					quests={ { id=7022, name="Greatfather Winter is Here!", level=10, qType="Seasonal", },
 					{ id=7043, name="You're a Mean One...", level=30, qType="Daily", },
 					{ id=7045, name="A Smokywood Pastures' Thank You!", level=10, qType="Seasonal", }, }, },
-	[33616769] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendorFB },
-	[33666727] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", version=40101, tip=ns.vendorFB },
+	[33656727] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[33956820] = { falala=true, name="Greatfeather Pepe", faction="Alliance", tip=ns.pepe, buff=316936,
+					quests={ { id=58901, name="Greatfeather Pepe", qType="One Time", }, }, },
 	[37356678] = { bbKing=true, name="BB King (3)", faction="Horde",
 					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin2, }, }, },
 	[39675542] = { bbKing=true, name="BB King (5)", faction="Horde",
 					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin6, }, }, },
-	[45007400] = ns.setIronArmada,
-	[47006900] = ns.setGourmet,
+	[42007100] = ns.setMerrymaker,
 	[45006600] = ns.setTisSeason,
 	[45007000] = ns.setBlizzPoetry,
-	[40005500] = { armada=true, name="Muradin Bronzebeard", achievements={
+	[45007400] = ns.setIronArmada,
+	[47006900] = ns.setGourmet,
+	[39165609] = { armada=true, name="Muradin Bronzebeard", achievements={
 					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
 	[45324853] = { bbKing=true, name="BB King (4)", faction="Horde",
 					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHR, tip=ns.bbMuradin4, }, }, },
@@ -857,15 +879,17 @@ points[ 1455 ] = { -- Ironforge
 					quests={ { id=7022, name="Great-father Winter is Here!", level=10, qType="Seasonal", },
 					{ id=7045, name="A Smokywood Pastures' Thank You!", level=30, qType="Seasonal", },
 					{ id=7043, name="You're a Mean One...", level=80, qType="Daily", }, }, },					
-	[33806770] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[33616769] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", versionUnder=40101, tip=ns.vendorFB },
+	[33666727] = { vendor=true, name="Macey Jinglepocket", faction="Alliance", version=40101, tip=ns.vendorFB },
 	[37356678] = { bbKing=true, name="BB King (3)", faction="Horde",
 					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin2, }, }, },
 	[39675542] = { bbKing=true, name="BB King (5)", faction="Horde",
 					achievements={ { id=4437, index=2, showAllCriteria=true, guide=ns.bbMacroHC, tip=ns.bbMuradin6, }, }, },
-	[45007400] = ns.setIronArmada,
-	[47006900] = ns.setGourmet,
+	[42007100] = ns.setMerrymaker,
 	[45006600] = ns.setTisSeason,
 	[45007000] = ns.setBlizzPoetry,
+	[45007400] = ns.setIronArmada,
+	[47006900] = ns.setGourmet,
 	[39185611] = { armada=true, name="Muradin Bronzebeard", achievements={
 					{ id=1255, showAllCriteria=true, faction="Alliance", guide="Muradin is on his throne in Ironforge", }, }, },
 	[45324853] = { bbKing=true, name="BB King (4)", faction="Horde",
@@ -914,15 +938,16 @@ points[ 1433 ] = { -- Redridge Mountains
 points[ 1427 ] = { -- Searing Gorge
 	[68753423] = { onMetzen=true, name="Metzen the Reindeer", versionUnder=40300, guide=ns.greench,
 					achievements={ { id=273, showAllCriteria=true, }, { id=279, showAllCriteria=true, }, },
-					quests={ { id=8746, qType="Seasonal", faction="Horde", },
-					{ id=8762, qType="Seasonal", faction="Alliance", }, }, },
+					quests={ { id=8746, name="Metzen the Reindeer", level=40, qType="Seasonal", faction="Horde", },
+					{ id=8762, name="Metzen the Reindeer", level=40, qType="Seasonal", faction="Alliance", }, }, },
 }
 
 points[ 110 ] = { -- Silvermoon City
-	[31004300] = ns.setIronArmada,
-	[33003800] = ns.setGourmet,
+	[28004000] = ns.setMerrymaker,
 	[31003500] = ns.setTisSeason,
 	[31003900] = ns.setBlizzPoetry,
+	[31004300] = ns.setIronArmada,
+	[33003800] = ns.setGourmet,
 	[63647932] = { vendor=true, name="Hotoppik Copperpinch", faction="Horde", tip=ns.vendor },
 	[63607900] = { vendor=true, name="Morshelz Copperpinch", faction="Horde", tip=ns.vendorFB },
 	[70708900] = { bbKing=true, caroling=true, faction="Alliance", tip=ns.bbSC1, 
@@ -953,10 +978,11 @@ points[ 110 ] = { -- Silvermoon City
 }
 
 points[ 1954 ] = { -- Silvermoon City
-	[31004300] = ns.setIronArmada,
-	[33003800] = ns.setGourmet,
+	[28004000] = ns.setMerrymaker,
 	[31003500] = ns.setTisSeason,
 	[31003900] = ns.setBlizzPoetry,
+	[31004300] = ns.setIronArmada,
+	[33003800] = ns.setGourmet,
 	[63647932] = { vendor=true, name="Hotoppik Copperpinch", faction="Horde", tip=ns.vendor },
 	[63607900] = { vendor=true, name="Morshelz Copperpinch", faction="Horde", tip=ns.vendorFB },
 	[70708900] = { bbKing=true, caroling=true, faction="Alliance", version=40300, tip=ns.bbSC1, 
@@ -999,16 +1025,17 @@ points[ 84 ] = { -- Stormwind City
 					achievements={ { id=1686, index=4, tip=ns.broKristoff }, }, },
 	[56607040] = { bbKing=true, name="Craggle Wobbletop", faction="Alliance",
 					achievements={ { id=4436, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSeller, }, }, },
-	[62307040] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", tip=ns.vendor,
-					quests={ { id=7023, name="Greatfather Winter Is Here", qType="Seasonal", }, }, },
-	[62507040] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", tip=ns.vendorFB },
+	[62807005] = { vendor=true, name="Khole Jinglepocket", faction="Alliance", tip=ns.vendor,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[62577033] = { vendor=true, name="Guchie Jinglepocket", faction="Alliance", tip=ns.vendorFB },
 	[65606292] = { bbKing=true, name="Craggle Wobbletop", faction="Alliance",
 					achievements={ { id=4436, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbSeller, }, }, },
 	[68057148] = ns.setWondervolt,
-	[86007700] = ns.setIronArmada,
-	[88007200] = ns.setGourmet,
+	[83007400] = ns.setMerrymaker,
 	[86006900] = ns.setTisSeason,
 	[86007300] = ns.setBlizzPoetry,
+	[86007700] = ns.setIronArmada,
+	[88007200] = ns.setGourmet,
 }
 
 points[ 1453 ] = { -- Stormwind City
@@ -1037,10 +1064,11 @@ points[ 1453 ] = { -- Stormwind City
 	[83002800] = { bbKing=true, name="BB King", faction="Horde",
 					achievements={ { id=4437, index=1, showAllCriteria=true, guide=ns.bbMacroHC,
 					tip="Dive down into the garden. You will need to deal with guards two at a time", }, }, },
-	[86007700] = ns.setIronArmada,
-	[88007200] = ns.setGourmet,
+	[83007400] = ns.setMerrymaker,
 	[86006900] = ns.setTisSeason,
 	[86007300] = ns.setBlizzPoetry,
+	[86007700] = ns.setIronArmada,
+	[88007200] = ns.setGourmet,
 }
 
 points[ 224 ] = { -- Stranglethorn Vale
@@ -1082,10 +1110,11 @@ points[ 90 ] = { -- Undercity
 					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC2, }, }, },
 	[34713321] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC3, }, }, },
-	[36005300] = ns.setIronArmada,
-	[38004800] = ns.setGourmet,
+	[33005000] = ns.setMerrymaker,
 	[36004500] = ns.setTisSeason,
 	[36004900] = ns.setBlizzPoetry,
+	[36005300] = ns.setIronArmada,
+	[38004800] = ns.setGourmet,
 	[41433333] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC4, }, }, },
 	[45978314] = { bbKing=true, faction="Alliance",
@@ -1102,8 +1131,8 @@ points[ 90 ] = { -- Undercity
 					achievements={ { id=4436, index=1, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC8, }, }, },
 	[58504390] = { caroling=true, faction="Alliance",
 					achievements={ { id=5853, index=4, showAllCriteria=true, guide=ns.caroling, tip=ns.carolingUC1 }, }, },
-	[68233886] = { vendor=true, name="Nardstrum Copperpinch", faction="Horde",
-					quests={ { id=7024, qType="Seasonal", }, }, tip=ns.vendor, },
+	[68233886] = { vendor=true, name="Nardstrum Copperpinch", faction="Horde", tip=ns.vendor,
+					quests={ { id=7024, name="Great-father Winter is Here", level=10, qType="Seasonal", }, }, },
 	[68604000] = { vendor=true, name="Jaycrue Copperpinch", faction="Horde", tip=ns.vendorFB },
 }
 
@@ -1114,10 +1143,11 @@ points[ 1458 ] = { -- Undercity
 					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC2, }, }, },
 	[34713321] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC3, }, }, },
-	[36005300] = ns.setIronArmada,
-	[38004800] = ns.setGourmet,
+	[33005000] = ns.setMerrymaker,
 	[36004500] = ns.setTisSeason,
 	[36004900] = ns.setBlizzPoetry,
+	[36005300] = ns.setIronArmada,
+	[38004800] = ns.setGourmet,
 	[41433333] = { bbKing=true, faction="Alliance",
 					achievements={ { id=4436, index=3, showAllCriteria=true, guide=ns.bbMacroAR, tip=ns.bbUC4, }, }, },
 	[45978314] = { bbKing=true, faction="Alliance",
@@ -1176,9 +1206,12 @@ points[ 1437 ] = { -- Wetlands
 
 points[ 105 ] = { -- Blade's Edge Mountains
 	[28765737] = { falala=true, name="Quest Hub", achievements={ { id=1282, guide=ns.falala, }, },
-					quests={ { id=11025, qType="One Time", }, { id=11030, qType="One Time", },
-						{ id=11062, qType="One Time", }, { id=11010, qType="One Time", },
-						{ id=11102, qType="One Time", class="Druid", }, { id=11023, qType="Daily", }, }, },
+					quests={ { id=11025, name="The Crystals", level=20, qType="One Time", },
+						{ id=11030, name="Our Boy Wants To Be A Skyguard Ranger", level=20, qType="One Time", },
+						{ id=11062, name="The Skyguard Outpost", level=20, qType="One Time", },
+						{ id=11010, name="Bombing Run", level=20, qType="One Time", },
+						{ id=11102, name="Bombing Run", level=20, qType="One Time", class="Druid", },
+						{ id=11023, name="Bomb Them Again!", level=20, qType="Daily", }, }, },
 	[34404140] = { falala=true, name="Bombing Run Area", achievements={ { id=1282, tip="You do the bombing runs here" }, }, },
 }
 
@@ -1190,10 +1223,11 @@ points[ 1949 ] = { -- Blade's Edge Mountains
 points[ 111 ] = { -- Shattrath City
 	[51262966] = { vendor=true, name="Eebee Jinglepocket", tip=ns.vendor },
 	[60605720] = { vendor=true, name="Olnayvi Copperpinch", tip=ns.vendorFB },
-	[66008700] = ns.setIronArmada,
-	[68008200] = ns.setGourmet,
+	[63008400] = ns.setMerrymaker,
 	[66007900] = ns.setTisSeason,
 	[66008300] = ns.setBlizzPoetry,
+	[66008700] = ns.setIronArmada,
+	[68008200] = ns.setGourmet,
 	[80105846] = ns.setWondervolt,
 }
 
@@ -1211,27 +1245,20 @@ points[ 114 ] = { -- Borean Tundra
 }
 
 points[ 127 ] = { -- Crystalsong Forest
-	[29563287] = { frostyShake=true, achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, }, },
-					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
-						{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", }, 
-						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
-						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[29563287] = { frostyShake=true, achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, }, }, },
 	[27003850] = ns.setWondervolt,
 }
 
 points[ 125 ] = { -- Dalaran
 	[49394373] = ns.setWondervolt,
-	[49832909] = { frostyShake=true, achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, }, },
-					quests={ { id=6983, name="You're a Mean One...", qType="Daily", faction="Horde", },
-						{ id=7043, name="You're a Mean One...", qType="Daily", faction="Alliance", }, 
-						{ id=6984, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Horde", },
-						{ id=7045, name="A Smokywood Pastures' Thank You!", qType="Seasonal", faction="Alliance", }, }, },
+	[49832909] = { frostyShake=true, achievements={ { id=1690, showAllCriteria=true, guide=ns.frostyShake, }, }, },
 	[55005400] = { letItSnow=true, tip="Try hanging out here, but Alterac Mountains might be best!",
 					achievements={ { id=1687, showAllCriteria=true, guide=ns.letItSnow, }, }, },
-	[90004900] = ns.setIronArmada,
-	[92004400] = ns.setGourmet,
+	[87004600] = ns.setMerrymaker,
 	[90004100] = ns.setTisSeason,
 	[90004500] = ns.setBlizzPoetry,
+	[90004900] = ns.setIronArmada,
+	[92004400] = ns.setGourmet,
 }
 
 points[ 118 ] = { -- Icecrown
@@ -1240,16 +1267,15 @@ points[ 118 ] = { -- Icecrown
 }
 
 points[ 129 ] = { -- The Nexus
-	[27503420] = { tisSeason=true, name="'Tis the Season", noCoords=true,
-					achievements={ { id=277, showAllCriteria=true, tip="You need Grand Magus Telestra. Must be Heroic!", }, }, },
-	[31507440] = { tisSeason=true, name="'Tis the Season", noCoords=true,
-					achievements={ { id=277, showAllCriteria=true, tip="You need Grand Magus Telestra. Must be Heroic!", }, }, },
+	[27503420] = { tisSeason=true, name="Grand Magus Telestra", noCoords=true,
+					achievements={ { id=277, showAllCriteria=true, tip="Must be Heroic!", }, }, },
+	[31507440] = { tisSeason=true, name="Grand Magus Telestra", noCoords=true,
+					achievements={ { id=277, showAllCriteria=true, tip="Must be Heroic!", }, }, },
 }
 
 points[ 143 ] = { -- The Oculus
-	[63004200] = { tisSeason=true, name="'Tis the Season", noCoords=true,
-					achievements={ { id=277, showAllCriteria=true,
-					tip="You need Mage-Lord Urom, the 3rd boss. Must be Heroic!", }, }, },
+	[63004200] = { tisSeason=true, name="Mage-Lord Urom", noCoords=true, achievements={ { id=277, showAllCriteria=true,
+					tip="The 3rd boss. Must be Heroic!", }, }, },
 }
 
 --==================================================================================================================================
@@ -1260,78 +1286,86 @@ points[ 143 ] = { -- The Oculus
 
 points[ 525 ] = { -- Frostfire Ridge
 	[46202750] = { miscQuests=true, name="Daily Hub", guide=ns.garrison,
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, },
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, },
 					tip="The Snow Mounds in this area have a 5% chance of a Grumpling pet!", },
-	[48556369] = { vendor=true, name="Tradurjo Jinglepocket", faction="Horde", tip=ns.vendor ..ns.vendorL3Garr },
-	[48266473] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[48286469] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, }, },
 	[48306477] = { armada=true, name="Izzy Hollyfizzle", faction="Horde", version=60202,
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+	[48636413] = { vendor=true, name="Ashanem Jinglepocket", faction="Horde", tip=ns.vendorFB ..ns.vendorL3Garr },
+	[48706412] = { vendor=true, name="Tradurjo Jinglepocket", faction="Horde", tip=ns.vendor ..ns.vendorL3Garr,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
 }
 
 points[ 590 ] = { -- Frostwall Garrison
-	[36002400] = ns.setGourmet,
+	[31002600] = ns.setMerrymaker,
 	[34002100] = ns.setTisSeason,
 	[34002500] = ns.setBlizzPoetry,
-	[50403360] = { vendor=true, name="Ashanem Jinglepocket", faction="Horde", tip=ns.vendorFB ..ns.vendorL3Garr },
-	[50653236] = { vendor=true, name="Tradurjo Jinglepocket", faction="Horde", tip=ns.vendor ..ns.vendorL3Garr },
-	[47043812] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+	[36002400] = ns.setGourmet,
+	[47193776] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, }, },
 	[47353844] = { armada=true, name="Izzy Hollyfizzle", faction="Horde", version=60202,
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
+	[50273293] = { vendor=true, name="Ashanem Jinglepocket", faction="Horde", tip=ns.vendorFB ..ns.vendorL3Garr },
+	[50823285] = { vendor=true, name="Tradurjo Jinglepocket", faction="Horde", tip=ns.vendor ..ns.vendorL3Garr,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
 }
 
 points[ 543 ] = { -- Gorgrond
 	[06267254] = { miscQuests=true, name="Pizzle", guide=ns.garrison, faction="Horde",
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, }, },
 	[06287257] = { armada=true, name="Izzy Hollyfizzle", faction="Horde", version=60202,
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
 }
 
 points[ 582 ] = { -- Lunarfall Garrison
-	[41754789] = { vendor=true, name="Tradurjo Jinglepocket", faction="Alliance", tip=ns.vendor ..ns.vendorL3Garr },
-	[42204720] = { vendor=true, name="Ashanem Jinglepocket", faction="Alliance", tip=ns.vendorFB ..ns.vendorL3Garr },
-	[44005135] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, }, },
-	[44305104] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
+	[41864776] = { vendor=true, name="Tradurjo Jinglepocket", faction="Alliance", tip=ns.vendor ..ns.vendorL3Garr,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[42354729] = { vendor=true, name="Ashanem Jinglepocket", faction="Alliance", tip=ns.vendorFB ..ns.vendorL3Garr },
+	[43985143] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, }, },
+	[44295102] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
-	[64007000] = ns.setGourmet,
+	[59007200] = ns.setMerrymaker,
 	[62006700] = ns.setTisSeason,
 	[62007100] = ns.setBlizzPoetry,
+	[64007000] = ns.setGourmet,
 }
 
 points[ 539 ] = { -- Shadowmoon Valley in Draenor
-	[29901740] = { vendor=true, name="Tradurjo Jinglepocket", faction="Alliance", tip=ns.vendor ..ns.vendorL3Garr },
-	[30231795] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
+	[29981761] = { vendor=true, name="Tradurjo Jinglepocket", faction="Alliance", tip=ns.vendor ..ns.vendorL3Garr,
+					quests={ { id=7023, name="Greatfather Winter Is Here", level=10, qType="Seasonal", }, }, },
+	[30031756] = { vendor=true, name="Ashanem Jinglepocket", faction="Alliance", tip=ns.vendorFB ..ns.vendorL3Garr },
+	[30201799] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, }, },
+	[30231794] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
-	[30201798] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, }, },
 }
 
 points[ 535 ] = { -- Talador
 	[93726470] = { miscQuests=true, name="Almie", guide=ns.garrison, faction="Alliance",
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, }, },
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, }, },
 	[93766466] = { armada=true, name="Izzy Hollyfizzle", version=60202, faction="Alliance",
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, }, }, },
 }
@@ -1351,16 +1385,14 @@ points[ 534 ] = { -- Tanaan Jungle
 --
 --==================================================================================================================================
 
-ns.yourHub = "Your Feast of Winter Veil hub!"
-
 points[ 946 ] = { -- Azeroth
 	[45704570] = { wondervolt=true, name="Orgrimmar", showAnyway=true, faction="Horde", tip=ns.yourHub },
 	[58305160] = { wondervolt=true, name="Ironforge", showAnyway=true, faction="Alliance", tip=ns.yourHub },
 	[79005150] = { miscQuests=true, name="Daily Hub", guide=ns.garrison,
-					quests={ { id=39649, name="Menacing Grumplings", qType="Daily", },
-						{ id=39668, name="What Horrible Presents!", qType="Daily", },
-						{ id=39648, name="Where Are the Children?", qType="Daily", },
-						{ id=39651, name="Grumpus", qType="Daily", }, },
+					quests={ { id=39649, name="Menacing Grumplings", level=40, qType="Daily", },
+						{ id=39668, name="What Horrible Presents!", level=40, qType="Daily", },
+						{ id=39648, name="Where Are the Children?", level=40, qType="Daily", },
+						{ id=39651, name="Grumpus", level=40, qType="Daily", }, },
 					tip="Pickup the dailies from your level 3 Garrison", },
 	[89805850] = { armada=true, name="Gondar, Drakum, Smashum Grab", version=60202,
 					achievements={ { id=10353, showAllCriteria=true, guide=ns.armada, tip=ns.tanaanSpawns }, }, },

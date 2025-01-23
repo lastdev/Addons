@@ -412,6 +412,22 @@ L["RAID_BOSS_FSOD_9"] = "켈투자드"
 --[[ L["RAID_BOSS_ICC_8"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ICC_9"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_8"] = ""--]] 
 L["RAID_BOSS_NP_1"] = "포식자 울그락스"
 L["RAID_BOSS_NP_2"] = "피결속 공포"
 L["RAID_BOSS_NP_3"] = "수레키 대장 시크란"
@@ -488,6 +504,8 @@ L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "공격대 보스 처치"
 --[[ L["RAID_FL"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_ICC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_LOU"] = ""--]] 
 L["RAID_NP"] = "네룹아르 궁전"
 --[[Translation missing --]]
 --[[ L["RAID_RS"] = ""--]] 
@@ -505,6 +523,8 @@ L["RAIDERIO_MYTHIC_OPTIONS"] = "Raider.IO M+ 설정"
 L["RAIDING_DATA_HEADER"] = "Raider.IO 공격대 진행상황"
 --[[Translation missing --]]
 --[[ L["RAIDING_DB_MODULES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RECENT_RUNS_WITH_YOU"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RECRUITMENT_DB_MODULES"] = ""--]] 
 L["RELOAD_LATER"] = "나중에 다시 불러오겠습니다."

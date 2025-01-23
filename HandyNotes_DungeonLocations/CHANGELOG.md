@@ -1,4 +1,4 @@
 # HandyNotes: DungeonLocations
-## [2.7.5](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-12-17)
+## [2.7.6a](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2024-01-14)
 - Note: 
-• toc update
+• toc update for PTR

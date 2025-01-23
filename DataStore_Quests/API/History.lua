@@ -97,7 +97,7 @@ local function _IsQuestCompletedBy(character, questID)
 	end
 end
 
-DataStore:OnAddonLoaded(addonName, function() 
+AddonFactory:OnAddonLoaded(addonName, function() 
 	DataStore:RegisterTables({
 		addon = addon,
 		characterTables = {
@@ -115,7 +115,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	thisCharacter.Quests = thisCharacter.Quests or {}
 end)
 
-DataStore:OnPlayerLogin(function()
+AddonFactory:OnPlayerLogin(function()
 	options = DataStore_Quests_Options
 	
 	if options.AutoUpdateHistory then			-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)

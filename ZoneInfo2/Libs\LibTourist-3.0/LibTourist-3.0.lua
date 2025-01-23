@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 321 $
+Revision: $Rev: 323 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 321 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 323 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -115,6 +115,7 @@ local X_Y_PORTAL = "%s - %s Portal"
 local X_Y_TELEPORT = "%s - %s Teleport"
 local X_Y_WAYSTONE = "%s - %s Waystone"
 local X_Y_FLIGHTPATH = "%s - %s Flight path" -- used for path connections between zones that can only be reached using the taxi service
+local X_Y_MOLEMACHINE = "%s - %s Mole machine"
 
 if GetLocale() == "zhCN" then
 	X_Y_ZEPPELIN = "%s - %s 飞艇"
@@ -123,6 +124,7 @@ if GetLocale() == "zhCN" then
 	X_Y_TELEPORT = "%s - %s 传送门"
 	X_Y_WAYSTONE = "%s - %s 路石"
 	X_Y_FLIGHTPATH = "%s - %s 飞行路径"
+	X_Y_MOLEMACHINE = "%s - %s 打洞机"
 elseif GetLocale() == "zhTW" then
 	X_Y_ZEPPELIN = "%s - %s 飛艇"
 	X_Y_BOAT = "%s - %s 船"
@@ -130,6 +132,7 @@ elseif GetLocale() == "zhTW" then
 	X_Y_TELEPORT = "%s - %s 傳送門"
 	X_Y_WAYSTONE = "%s - %s 路石"
 	X_Y_FLIGHTPATH = "%s - %s 飛行路徑"
+	X_Y_MOLEMACHINE = "%s - %s 打地鼠機"
 elseif GetLocale() == "frFR" then
 	X_Y_ZEPPELIN = "Zeppelin %s - %s"
 	X_Y_BOAT = "Bateau %s - %s"
@@ -137,6 +140,7 @@ elseif GetLocale() == "frFR" then
 	X_Y_TELEPORT = "Téléport %s - %s"
 	X_Y_WAYSTONE = "Pierre de chemin %s - %s"
 	X_Y_FLIGHTPATH = "Trajectoire de vol %s - %s"
+	X_Y_MOLEMACHINE = "%s - %s Machine à taupe"
 elseif GetLocale() == "koKR" then
 	X_Y_ZEPPELIN = "%s - %s 비행선"
 	X_Y_BOAT = "%s - %s 배"
@@ -144,6 +148,7 @@ elseif GetLocale() == "koKR" then
 	X_Y_TELEPORT = "%s - %s 차원문"
 	X_Y_WAYSTONE = "%s - %s 웨이 스톤"
 	X_Y_FLIGHTPATH = "%s - %s 비행 경로"
+	X_Y_MOLEMACHINE = "%s - %s 두더지 기계"
 elseif GetLocale() == "deDE" then
 	X_Y_ZEPPELIN = "%s - %s Zeppelin"
 	X_Y_BOAT = "%s - %s Schiff"
@@ -151,6 +156,7 @@ elseif GetLocale() == "deDE" then
 	X_Y_TELEPORT = "%s - %s Teleport"
 	X_Y_WAYSTONE = "%s - %s Wegstein"
 	X_Y_FLIGHTPATH = "%s - %s Flugbahn"
+	X_Y_MOLEMACHINE = "%s - %s Maulwurfsmaschine"
 elseif GetLocale() == "esES" then
 	X_Y_ZEPPELIN = "%s - %s Zepelín"
 	X_Y_BOAT = "%s - %s Barco"
@@ -158,6 +164,7 @@ elseif GetLocale() == "esES" then
 	X_Y_TELEPORT = "%s - %s Teletransportador"
 	X_Y_WAYSTONE = "%s - %s Piedra de camino"
 	X_Y_FLIGHTPATH = "%s - %s Trayectoria de vuelo"
+	X_Y_MOLEMACHINE = "%s - %s Máquina de topos"
 elseif GetLocale() == "esMX" then
 	X_Y_ZEPPELIN = "%s - %s Zepelín"
 	X_Y_BOAT = "%s - %s Barco"
@@ -165,6 +172,7 @@ elseif GetLocale() == "esMX" then
 	X_Y_TELEPORT = "%s - %s Teletransportador"
 	X_Y_WAYSTONE = "%s - %s Piedra de camino"
 	X_Y_FLIGHTPATH = "%s - %s Trayectoria de vuelo"
+	X_Y_MOLEMACHINE = "%s - %s Máquina de topos"
 elseif GetLocale() == "itIT" then
 	X_Y_ZEPPELIN = "%s - %s Zeppelin"
 	X_Y_BOAT = "%s - %s Barca"
@@ -172,6 +180,7 @@ elseif GetLocale() == "itIT" then
 	X_Y_TELEPORT = "%s - %s Teletrasporto"	
 	X_Y_WAYSTONE = "%s - %s Pietra del cammino"
 	X_Y_FLIGHTPATH = "%s - %s Percorso di volo"
+	X_Y_MOLEMACHINE = "%s - %s Macchina talpa"
 elseif GetLocale() == "ptBR" then
 	X_Y_ZEPPELIN = "%s - %s Zepelim"
 	X_Y_BOAT = "%s - %s Barco"
@@ -179,6 +188,7 @@ elseif GetLocale() == "ptBR" then
 	X_Y_TELEPORT = "%s - %s Teleporte"
 	X_Y_WAYSTONE = "%s - %s Pedra caminho"
 	X_Y_FLIGHTPATH = "%s - %s Rota de Vôo"
+	X_Y_MOLEMACHINE = "%s - %s Máquina de toupeira"
 end
 
 local recZones = {}
@@ -2003,11 +2013,17 @@ local MapIdLookupTable = {
     [2345] = "Deephaul Ravine",
     [2347] = "The Spiral Weave",
     [2348] = "Zekvir's Lair",
+	[2354] = "Silithus",
     [2357] = "City of Echos",
     [2358] = "City of Echos",
     [2359] = "The Dawnbreaker",
-    [2367] = "Vault of Memory",
+    [2362] = "Blackrock Depths",
+    [2363] = "Blackrock Depths", 
+	[2367] = "Vault of Memory",
 	[2368] = "Hall of Awakening",
+    [2369] = "Siren Isle",
+    [2373] = "The War Creche",
+    [2375] = "The Forgotten Vault",
 }
 
 
@@ -5152,6 +5168,13 @@ do
 --	transports["DALARANBROKENISLES_SEARINGGORGE_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dalaran"].." ("..BZ["Broken Isles"]..")", BZ["Searing Gorge"])
 --	transports["SEARINGGORGE_DALARANBROKENISLES_PORTAL"] = string.format(X_Y_PORTAL, BZ["Searing Gorge"], BZ["Dalaran"].." ("..BZ["Broken Isles"]..")")
 	
+	-- Siren Isle (11.0.7)
+	transports["DORNOGAL_SIRENISLE_ZEPPELIN"] = string.format(X_Y_ZEPPELIN, BZ["Dornogal"], BZ["Siren Isle"])
+	transports["SIRENISLE_DORNOGAL_ZEPPELIN"] = string.format(X_Y_ZEPPELIN, BZ["Siren Isle"], BZ["Dornogal"])
+	transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["The Ringing Deeps"], BZ["Siren Isle"])
+	transports["SIRENISLE_RINGINGDEEPS_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["Siren Isle"], BZ["The Ringing Deeps"])
+
+	
 	
 	local zones = {}
 
@@ -6927,7 +6950,7 @@ do
 	
 	-- The War Within
 	
-		zones[transports["ORGRIMMAR_DORNOGAL_PORTAL"]] = {
+	zones[transports["ORGRIMMAR_DORNOGAL_PORTAL"]] = {
 		paths = {
 			[BZ["Dornogal"]] = true,
 		},
@@ -7019,6 +7042,40 @@ do
 --		},
 --		type = "Portal",
 --	}	
+	
+	-- ---
+	
+	zones[transports["DORNOGAL_SIRENISLE_ZEPPELIN"]] = {
+		paths = {
+			[BZ["Siren Isle"]] = true,
+		},
+		type = "Portal",
+	}
+
+	zones[transports["SIRENISLE_DORNOGAL_ZEPPELIN"]] = {
+		paths = {
+			[BZ["Dornogal"]] = true,
+		},
+		type = "Portal",
+	}
+	
+	
+
+	zones[transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"]] = {
+		paths = {
+			[BZ["Siren Isle"]] = true,
+		},
+		type = "Portal",
+	}
+
+	zones[transports["SIRENISLE_RINGINGDEEPS_MOLEMACHINE"]] = {
+		paths = {
+			[BZ["The Ringing Deeps"]] = true,
+		},
+		type = "Portal",
+	}
+
+	
 	
 	
 	-- ZONES, INSTANCES AND COMPLEXES ---------------------------------------------------------
@@ -11095,6 +11152,7 @@ do
 			[BZ["Isle of Dorn"]] = true,
 			[transports["DORNOGAL_ORGRIMMAR_PORTAL"]] = true,
 			[transports["DORNOGAL_STORMWIND_PORTAL"]] = true,
+			[transports["DORNOGAL_SIRENISLE_ZEPPELIN"]] = true,
 			[BZ["The Ringing Deeps"]] = true,
 		},
 		flightnodes = {
@@ -11145,6 +11203,7 @@ do
 			[BZ["Deephaul Ravine"]] = true,
 			[BZ["The Dread Pit"]] = true,
 			[BZ["The Waterworks"]] = true,
+			[transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"]] = true,
 		},
 		paths = {
 			[BZ["Dornogal"]] = true,
@@ -11275,7 +11334,22 @@ do
 		expansion = TheWarWithin,
 	}
 
-
+	-- patch 11.0.7
+	-- 10416
+	zones[BZ["Siren Isle"]] = {
+		low = 80,
+		high = 80,
+		instances = {
+		},
+		paths = {
+			[transports["SIRENISLE_DORNOGAL_ZEPPELIN"]] = true,
+			[transports["SIRENISLE_RINGINGDEEPS_MOLEMACHINE"]] = true,
+		},
+		flightnodes = {
+		},
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+	}
 
 	-- ============= DUNGEONS ===============
 	

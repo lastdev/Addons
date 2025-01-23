@@ -16,6 +16,7 @@ local private = {
 	postHookFuncs = {},
 	itemPostedCallbacks = {},
 	purchaseHookFuncs = {},
+	getAllHookFuncs = {},
 	lastPurchase = {
 		link = nil,
 		name = nil,
@@ -217,6 +218,16 @@ function AuctionHouse.SecureHookPurchase(func)
 	tinsert(private.purchaseHookFuncs, func)
 end
 
+---Register a secure hook function for when a GetAll scan is started
+---@param func fun() The function to call
+function AuctionHouse.SecureHookGetAllScan(func)
+	assert(not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
+	if #private.getAllHookFuncs == 0 then
+		hooksecurefunc("QueryAuctionItems", private.QueryAuctionItemsHook)
+	end
+	tinsert(private.getAllHookFuncs, func)
+end
+
 ---Gets info on the last purchase made.
 ---@return string|number|nil link
 ---@return string? name
@@ -339,6 +350,18 @@ function AuctionHouse.GetBrowseResult(index)
 		seller = sellerFull
 	end
 	return rawName, itemLink, stackSize, timeLeft, buyout, seller, minIncrement, minBid, bid, isHighBidder
+end
+
+---Gets a limited subset of browse query result data appropriate for a GetAll scan.
+---@param index number The result index
+---@return string? itemLink
+---@return number? stackSize
+---@return number? buyout
+function AuctionHouse.GetGetAllResult(index)
+	assert(not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
+	local itemLink = GetAuctionItemLink("list", index)
+	local _, _, stackSize, _, _, _, _, _, _, buyout = GetAuctionItemInfo("list", index)
+	return itemLink, stackSize, buyout
 end
 
 ---Gets the search result info.
@@ -551,5 +574,14 @@ end
 function private.HandleCommodityNotification(_, _, quantity)
 	for _, callback in ipairs(private.notificationCallbacks) do
 		callback(NOTIFICATION.BUY, quantity)
+	end
+end
+
+function private.QueryAuctionItemsHook(_, _, _, _, _, _, isGetAll)
+	if not isGetAll then
+		return
+	end
+	for _, func in ipairs(private.getAllHookFuncs) do
+		func()
 	end
 end

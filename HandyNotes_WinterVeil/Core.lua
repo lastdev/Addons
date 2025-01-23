@@ -3,7 +3,7 @@
 
                                              Winter Veil
 
-                                     v4.05 - 20th December 2024
+                                      v4.13 - 7th January 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -96,7 +96,8 @@ end
 local function PassFactionCheck( pin )
 	if ( pin.faction == nil)
 			or ( ( ns.faction == "Horde" ) and ( ( pin.faction == "Neutral" ) or ( pin.faction == "Horde" ) ) )
-			or ( ( ns.faction == "Alliance" ) and ( ( pin.faction == "Neutral" ) or ( pin.faction == "Alliance" ) ) ) then
+			or ( ( ns.faction == "Alliance" ) and ( ( pin.faction == "Neutral" ) or ( pin.faction == "Alliance" ) ) )
+			or ( ( ns.faction == "Neutral" ) and ( pin.faction == "Neutral" ) ) then
 		return true
 	end
 	return false
@@ -126,13 +127,14 @@ end
 
 local function CompletionShow( completed, whatever, colour, name )
 	GameTooltip:AddDoubleLine( ( whatever and ( colour ..whatever) or " " ), 
-			( ( completed == true ) and ( ns.colour.completeG ..ns.L["Completed"] ) or ( ns.colour.completeR ..ns.L["Not Completed"] ) )
-			..( ( name == nil ) and "" or ( " (" ..( ( name == true ) and ns.name or ns.L["Account"] ) ..")" ) ) )
+		( ( completed == true ) and ( ns.colour.completeG ..ns.L["Completed"] ) or ( ns.colour.completeR ..ns.L["Not Completed"] ) )
+		..( ( name == nil ) and "" or ( " (" ..( ( name == true ) and ns.name or ns.L["Account"] ) ..")" ) ) )
 end
 
 local function GuideTip( pin )
 	if pin.guide then
-		GameTooltip:AddLine( ns.colour.highlight .."\n" ..ns.L[ "Guide" ] .."\n" ..ns.colour.Guide ..pin.guide, nil, nil, nil, true )
+		GameTooltip:AddLine( ns.colour.highlight .."\n" ..ns.L[ "Guide" ] .."\n" ..ns.colour.Guide ..pin.guide,
+				nil, nil, nil, true )
 	end
 	if pin.tip then
 		GameTooltip:AddLine( ns.colour.plaintext .."\n" ..pin.tip, nil, nil, nil, true )
@@ -158,7 +160,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 
-	local firstTime, aName, completed, description, earnedByMe, completedMe;
+	local firstTime, aName, completed, description, earnedByMe, completedMe, cType, assetID;
 	
 	if pin.name then
 		GameTooltip:SetText( ns.colour.prefix ..ns.L[ pin.name ] )
@@ -173,13 +175,26 @@ function pluginHandler:OnEnter(mapFile, coord)
 				_, aName, _, completed, _, _, _, description, _, _, _, _, earnedByMe = GetAchievementInfo( v.id )
 				SpacerFirstTimeHeader( firstTime, ns.L[ "Achievement" ], ns.colour.highlight )
 				CompletionShow( completed, aName, ns.colour.achieveH, false )
+				-- Strictly speaking the results are NOT correct from the API for the Merrymaker meta for earnedByMe
 				CompletionShow( earnedByMe , nil, nil, true )
 				if v.showAllCriteria then
 					GameTooltip:AddLine( ns.colour.achieveD ..description, nil, nil, nil, true )
 					numCriteria = GetAchievementNumCriteria( v.id )
 					for i = 1, numCriteria do
-						aName, _, completed = GetAchievementCriteriaInfo( v.id, i )
-						CompletionShow( completed, aName, ns.colour.achieveI, true )
+						aName, cType, completed, _, _, _, _, assetID = GetAchievementCriteriaInfo( v.id, i )
+						if ( cType ~= 8 ) then
+							CompletionShow( completed, aName, ns.colour.achieveI, true )
+							description = select( 8, GetAchievementInfo( assetID ) )
+						else
+							-- Achievement type. Merrmaker. cType will show each line as an achievement
+							-- Must do it this way as "completed" for the criteria becomes account wide for meta achievements
+							_, aName, _, completed, _, _, _, description, _, _, _, _, earnedByMe = GetAchievementInfo( assetID )
+							CompletionShow( earnedByMe, aName, ns.colour.achieveH, true )
+							completed = earnedByMe
+						end
+						if completed == false and description then
+							GameTooltip:AddLine( ns.colour.plaintext ..description, nil, nil, nil, true )
+						end
 					end
 				else
 					GameTooltip:AddLine( ns.colour.achieveD ..description, nil, nil, nil, true )
@@ -280,11 +295,11 @@ end
 
 local function ShowSeasonal( pin )
 	if not pin.quests then return false end
-	if ns.db.removeSeasonal == false then return true end
 
 	local completed;
 	for _,v in ipairs( pin.quests ) do
 		if PassFactionCheck( v ) and PassVersionCheck( v ) and ( v.qType == "Seasonal" ) then
+			if ns.db.removeSeasonal == false then return true end
 			if ( v.id == 7022 ) or ( v.id == 7023 ) then
 				v.id = 7022
 			elseif ( v.id == 6961 ) or ( v.id == 7021 ) or ( v.id == 7024 ) then
@@ -299,11 +314,24 @@ end
 
 local function ShowDailies( pin )
 	if not pin.quests then return false end
-	if ns.db.removeDailies == false then return true end
 
 	local completed;
 	for _,v in ipairs( pin.quests ) do
 		if PassFactionCheck( v ) and PassVersionCheck( v ) and ( v.qType == "Daily" ) then
+			if ns.db.removeDailies == false then return true end
+			completed = IsQuestFlaggedCompleted( v.id )
+			if completed == false then return true end
+		end
+	end
+	return false
+end
+
+local function ShowOneTime( pin )
+	if not pin.quests then return false end
+
+	local completed;
+	for _,v in ipairs( pin.quests ) do
+		if PassFactionCheck( v ) and PassVersionCheck( v ) and ( v.qType == "One Time" ) then
 			completed = IsQuestFlaggedCompleted( v.id )
 			if completed == false then return true end
 		end
@@ -318,7 +346,7 @@ do
 		while coord do
 			if pin and PassFactionCheck( pin ) and PassVersionCheck( pin ) then			
 				if pin.miscQuests then
-					if ShowSeasonal( pin ) or ShowDailies( pin ) then
+					if pin.showAnyway or ShowSeasonal( pin ) or ShowDailies( pin ) or ShowOneTime( pin ) then
 						return coord, nil, ns.textures[ ns.db.icon_ironArmada ],
 							ns.db.iconScale * ns.scaling[ ns.db.icon_ironArmada ], ns.db.iconAlpha
 					end
@@ -329,7 +357,8 @@ do
 					return coord, nil, ns.textures[ ns.db.icon_special ],
 						ns.db.iconScale * 2 * ns.scaling[ ns.db.icon_special ], ns.db.iconAlpha
 				else
-					if pin.showAnyway or ShowAchievements( pin ) or ShowSeasonal( pin ) or ShowDailies( pin ) then
+					if pin.showAnyway or ShowAchievements( pin ) or ShowSeasonal( pin )
+							or ShowDailies( pin ) or ShowOneTime( pin ) then
 						if pin.wondervolt then
 							return coord, nil, ns.textures[ ns.db.icon_LittleHelper ],
 								ns.db.iconScale * ns.scaling[ ns.db.icon_LittleHelper ], ns.db.iconAlpha
@@ -512,7 +541,7 @@ ns.options = {
 				},]]
 				icon_frostyShake = {
 					type = "range",
-					name = ns.L["Frosty Shake"],
+					name = ns.L["Frosty Shake"] .."/" ..ns.L["Merrymaker"],
 					desc = ns.iconStandard, 
 					min = 1, max = 20, step = 1,
 					arg = "icon_frostyShake",
@@ -560,7 +589,7 @@ ns.options = {
 				},
 				icon_ogrila = {
 					type = "range",
-					name = ns.L["Ogri'la"],
+					name = ns.L["Ogri'la"] .."/" ..ns.L["Pepe"],
 					desc = ns.iconStandard, 
 					min = 1, max = 20, step = 1,
 					arg = "icon_ogrila",
@@ -623,6 +652,18 @@ function HandyNotes_WinterVeil_OnAddonCompartmentClick( addonName, buttonName )
 	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "WinterVeil" )
 end
  
+function HandyNotes_WinterVeil_OnAddonCompartmentEnter( ... )
+	GameTooltip:SetOwner( MinimapCluster or AddonCompartmentFrame, "ANCHOR_LEFT" )	
+	GameTooltip:AddLine( ns.colour.prefix ..ns.L["Winter Veil"] )
+	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddDoubleLine( ns.colour.highlight ..ns.L["Left"] .."/" ..ns.L["Right"], ns.colour.plaintext ..ns.L["Options"] )
+	GameTooltip:Show()
+end
+
+function HandyNotes_WinterVeil_OnAddonCompartmentLeave( ... )
+	GameTooltip:Hide()
+end
+
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
 function pluginHandler:OnEnable()
@@ -668,7 +709,7 @@ function pluginHandler:OnEnable()
 end
 
 function pluginHandler:Refresh()
-	self:SendMessage("HandyNotes_NotifyUpdate", "WinterVeil")
+	if not ns.delay then self:SendMessage("HandyNotes_NotifyUpdate", "WinterVeil") end
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_WinterVeilDB", "AceEvent-3.0")
@@ -686,6 +727,19 @@ local function OnUpdate()
 end
 
 ns.eventFrame:SetScript( "OnUpdate", OnUpdate )
+
+local function OnEventHandler( self, event, ... )
+	-- This is based upon my own research as documented in my WDW AddOn
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		ns.delay = true
+	elseif ( event == "SPELLS_CHANGED" ) then
+		ns.delay = nil
+	end
+end
+
+ns.eventFrame:RegisterEvent( "PLAYER_ENTERING_WORLD" )
+ns.eventFrame:RegisterEvent( "SPELLS_CHANGED" )
+ns.eventFrame:SetScript( "OnEvent", OnEventHandler )
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
 

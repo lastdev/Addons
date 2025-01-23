@@ -160,9 +160,11 @@ MVC:Controller("AddonFactory.AuctionHouseMainFrame", {
 		end
 
 		-- Hide all except current
+		local newTab
 		for _, tabFrame in pairs(frame.TabFrames) do
 			if tabFrame:GetID() == tabID then
 				tabFrame:Show()
+				newTab = tabFrame
 			else
 				tabFrame:Hide()
 			end
@@ -171,6 +173,9 @@ MVC:Controller("AddonFactory.AuctionHouseMainFrame", {
 		-- call the onClick callback
 		if info.onClick then
 			info.onClick(self, button)
-		end		
+		end
+
+		-- return the new tab being displayed
+		return newTab
 	end,
 })

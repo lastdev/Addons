@@ -377,6 +377,7 @@ L['runed_storm_chest_note'] = 'Suivez le vent jusqu\'à une {object:Cache de la 
 L['flame_blessed_iron_item'] = 'Rapportez cet objet pour obtenir des {currency:3090} supplémentaires.'
 
 L['barnacle_encrusted_chest'] = 'Coffre incrustré de bigorneaux'
+L['pilfered_earthen_chest'] = 'Coffre terrestre pillé'
 
 L['soweezi_note'] = 'Échangez vos {currency:3090} contre une monture, un jouet, une mascotte ou des objets de transmogrification.'
 
@@ -402,6 +403,7 @@ L['pris_quest_4'] = 'Un ami loyal'
 
 L['unsolved_amethyst_runelock'] = 'Verrou runique en améthyste non résolu'
 L['bilge_rat_supply_chest'] = 'Coffre de fournitures des Soutaillons'
+L['bilge_rat_supply_chest_note'] = 'Récupérez la {item:228621} lachée par le {npc:228582} non loin de là pour ouvrir le coffre.'
 
 L['stone_carvers_scamseax_note'] = 'Ramassez une {object:Citrine radieuse} ({dot:Yellow}) pour bénéficier de l\'amélioration {spell:1216785} pendant 2 minutes, ce qui vous permet de récupérer le {item:233834}.'
 
@@ -416,7 +418,7 @@ L['options_icons_secrets_of_azeroth_desc'] = 'Afficher les emplacements des indi
 
 L['alyx_kickoff_note'] = 'Parlez à {npc:226683} pour activer les nouvelles énigmes des Secrets d\'Azeroth.'
 
-L['celebration_crates_label'] = 'Caisses d’anniversaire'
+-- L['celebration_crates_label'] = 'Caisses d’anniversaire'
 L['celebration_crates_note'] = 'Trouvez et rapportez toutes les {object:Caisses d’anniversaire} cachées à travers {location:Azeroth}.'
 
 L['1_soggy_celebration_crate_note'] = 'Achetez un {item:225996} à {npc:143029} ({dot:Blue}) au {location:Barboteur} et donnez-le à {npc:189119} pour faire apparaître la {item:226200}.'

@@ -8,6 +8,14 @@ function Plater.GetChangelogTable()
 	if (not Plater.ChangeLogTable) then
 		Plater.ChangeLogTable = {
 
+			{1736722279, "Bug Fix", "Jan 11th, 2024", "Fixing broken nameplate anchoring for WAs on forced blizzard nameplates (via LibGetFrame).", "cont1nuity"},
+			{1736722279, "Bug Fix", "Jan 10th, 2024", "Fixing range check for Dark Ranger hunters (via LibRangeCheck).", "cont1nuity"},
+			{1736722279, "Bug Fix", "Jan 10th, 2024", "Fixing range check for cases when no range can be selected.", "cont1nuity"},
+			
+			{1735420632, "Backend Change", "Dec 19th, 2024", "Framework updates.", "Terciob"},
+			{1735420632, "Backend Change", "Dec 18th, 2024", "Retail TOC update.", "cont1nuity"},
+			{1735420632, "New Feature", "Dec 18th, 2024", "Adding Blizzard addon profiling information to profiler.", "cont1nuity"},
+			
 			{1734100705, "Bug Fix", "Dec 4th, 2024", "Reset Boss-Mod integration icon glow properly.", "cont1nuity"},
 			{1734100705, "Backend Change", "Dec 13th, 2024", "Framework updates.", "Terciob"},
 			{1734100705, "Bug Fix", "Dec 4th, 2024", "Fixing an issue with spell-name truncation.", "cont1nuity"},

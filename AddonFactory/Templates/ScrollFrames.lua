@@ -64,6 +64,12 @@ MVC:Controller("AddonFactory.UIPanelScrollFrame", {
 	end,
 	SetOffset = function(frame, offset)
 		frame.offset = offset
+		
+		-- when setting a new offset, also adjust the scrollbar accordingly
+		local scrollBar = frame.ScrollBar
+		local newMax = offset * frame.rowHeight
+		scrollBar:SetMinMaxValues(0, newMax)
+		scrollBar:SetValue(newMax)			
 	end,
 	OnScrollRangeChanged = function(frame, xrange, yrange)
 		local scrollBar = frame.ScrollBar
@@ -147,11 +153,12 @@ MVC:Controller("AddonFactory.UIPanelScrollFrame", {
 		else
 			value = value + scrollStep
 		end
-		
+
 		scrollBar:SetValue(value)
 	end,
 	OnVerticalScroll = function(frame, offset, rowHeight, updateFunction, arg1, arg2, arg3)
 		local scrollBar = frame.ScrollBar
+
 		scrollBar:SetValue(offset)
 		
 		frame.offset = floor((offset / rowHeight) + 0.5)

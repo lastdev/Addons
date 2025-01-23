@@ -16,11 +16,13 @@ local private = {
 	},
 	registeredEventCount = {},
 	eventFrame = nil,
+	allEventsFrame = nil,
 	temp = {},
 	eventQueue = {},
 	processingEvent = false,
 	stream = nil,
 	publisherEvent = {},
+	allEventsCallbacks = {},
 }
 local TIME_WARNING_THRESHOLD = 0.02
 
@@ -34,6 +36,9 @@ Event:OnModuleLoad(function()
 	private.eventFrame = CreateFrame("Frame")
 	private.eventFrame:SetScript("OnEvent", private.EventHandler)
 	private.eventFrame:Show()
+	private.allEventsFrame = CreateFrame("Frame")
+	private.allEventsFrame:SetScript("OnEvent", private.AllEventsHandler)
+	private.allEventsFrame:Show()
 
 	private.stream = Reactive.CreateStream()
 	private.stream:SetScript("OnPublisherCancelled", function(_, publisher)
@@ -92,6 +97,32 @@ function Event.GetPublisher(event)
 	assert(not private.publisherEvent[publisher])
 	private.publisherEvent[publisher] = event
 	return publisher
+end
+
+---Registers a callback for all events (should be used with great care).
+---@param callback fun(event: string, ...) The function to be called from the event handler
+function Event.RegisterAllEvents(callback)
+	if #private.allEventsCallbacks == 0 then
+		private.allEventsFrame:RegisterAllEvents()
+	end
+	tinsert(private.allEventsCallbacks, callback)
+end
+
+---Unregisters a callback for all events.
+---@param callback function The function which was passed to @{Event.RegisterAllEvents}
+function Event.UnregisterAllEvents(callback)
+	local index = nil
+	for i = 1, #private.allEventsCallbacks do
+		if private.allEventsCallbacks[i] == callback then
+			assert(not index)
+			index = i
+		end
+	end
+	assert(index)
+	tremove(private.allEventsCallbacks, index)
+	if #private.allEventsCallbacks == 0 then
+		private.allEventsFrame:UnregisterAllEvents()
+	end
 end
 
 
@@ -156,4 +187,10 @@ function private.EventHandler(_, event, ...)
 		TempTable.Release(queuedContext)
 	end
 	private.processingEvent = false
+end
+
+function private.AllEventsHandler(_, event, ...)
+	for _, func in ipairs(private.allEventsCallbacks) do
+		func(event, ...)
+	end
 end

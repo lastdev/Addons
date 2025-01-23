@@ -1094,7 +1094,13 @@ do  -- TokenFrame   -- Money   -- Coin
         if self.tokenType == 0 and self.currencyID then
             GameTooltip:SetCurrencyByID(self.currencyID);
         elseif self.tokenType == 1 and self.itemID then
-            GameTooltip:SetItemByID(self.itemID);
+            if self.merchantSlot and self.metchantCostIndex then
+                GameTooltip:SetMerchantCostItem(self.merchantSlot, self.metchantCostIndex)
+            elseif self.link then
+                GameTooltip:SetHyperlink(self.link);
+            else
+                GameTooltip:SetItemByID(self.itemID);
+            end
             AppendItemCount(GameTooltip, self.itemID);
             self.UpdateTooltip = function()
                 TokenButton_OnEnter(self)
@@ -1116,10 +1122,14 @@ do  -- TokenFrame   -- Money   -- Coin
         --For Vendors
         local numRequired = currencyData[3];
         local icon = currencyData[4];
+        local link = currencyData[5];
         local quantity;
         local grayColor = false;    --0.6   NumberFontNormalRightGray
 
         tokenButton.tokenType = tokenType;
+        tokenButton.link = link;
+        tokenButton.merchantSlot = currencyData[6];
+        tokenButton.metchantCostIndex = currencyData[7];
 
         if tokenType == TOKEN_TYPE_CURRENCY then
             --Currency
@@ -1479,6 +1489,8 @@ do  -- PeudoActionButton (a real ActionButtonTemplate will be attached to the bu
             self.Icon:SetVertexColor(1, 1, 1);
         elseif index == 2 then
             self.Icon:SetVertexColor(0.4, 0.4, 0.4);
+        elseif index == 3 then
+            self.Icon:SetVertexColor(0.8, 0.8, 0.8);
         else
             self.Icon:SetVertexColor(1, 1, 1);
         end
@@ -1515,9 +1527,11 @@ do  -- PeudoActionButton (a real ActionButtonTemplate will be attached to the bu
                 self.Count:SetText("");
             end
         elseif self.actionType == "spell" then
-            local currentCharges, maxCharges = GetSpellCharges(self.id);
+            local chargeInfo = GetSpellCharges(self.id);
+            local currentCharges = chargeInfo and chargeInfo.currentCharges;
             if currentCharges then
                 count = currentCharges;
+                self.Count:SetText(count);
             else
                 count = 1;
                 self.Count:SetText("");
@@ -1527,7 +1541,11 @@ do  -- PeudoActionButton (a real ActionButtonTemplate will be attached to the bu
         if count > 0 then
             self:SetIconState(1);
         else
-            self:SetIconState(2);
+            if self.actionType == "item" then
+                self:SetIconState(2);
+            else
+                self:SetIconState(3);
+            end
         end
 
         self.charges = count;
@@ -1568,6 +1586,11 @@ do  -- PeudoActionButton (a real ActionButtonTemplate will be attached to the bu
             self.PushedTexture:SetSize(64, 64);
             self.PushedTexture:SetTexture("Interface/AddOns/Plumber/Art/Button/ActionButtonCircle-Highlight-Full");
         end
+    end
+
+    function PeudoActionButtonMixin:HideCooldownNumber(state)
+        self.Cooldown:SetHideCountdownNumbers(state);
+        --TO-DO --For OmniCC: https://github.com/tullamods/OmniCC/blob/f4cb9745a077920b12fca43d2bb74e7fc1141fab/OmniCC/core/cooldown.lua#L408
     end
 
     local function CreatePeudoActionButton(parent)
@@ -3818,7 +3841,6 @@ do  --Frame Reposition Button
 end
 
 do  --Slider
-    local Round = API.Round;
     local SliderFrameMixin = {};
 
     local TEXTURE_FILE = "Interface/AddOns/Plumber/Art/Frame/Slider";
@@ -3945,6 +3967,23 @@ do  --Slider
         DisableSharpening(self.Slider.Right);
 
         self:SetLabelWidth(144);
+
+        local function OnEnter()
+            self:OnEnter();
+        end
+
+        local function OnLeave()
+            self:OnLeave();
+        end
+
+        self:SetScript("OnEnter", OnEnter);
+        self:SetScript("OnLeave", OnLeave);
+        self.Back:SetScript("OnEnter", OnEnter);
+        self.Back:SetScript("OnLeave", OnLeave);
+        self.Forward:SetScript("OnEnter", OnEnter);
+        self.Forward:SetScript("OnLeave", OnLeave);
+        self.Slider:SetScript("OnEnter", OnEnter);
+        self.Slider:SetScript("OnLeave", OnLeave);
     end
 
     function SliderFrameMixin:Enable()
@@ -4015,6 +4054,33 @@ do  --Slider
         self.Label:SetWidth(width);
         self:SetWidth(242 + width);
         self.Slider:SetPoint("LEFT", self, "LEFT", 28 + width, 0);
+    end
+
+    function SliderFrameMixin:OnEnter()
+        if self.tooltip then
+            local f = GameTooltip;
+            f:Hide();
+            f:SetOwner(self, "ANCHOR_RIGHT");
+            f:SetText(self.Label:GetText(), 1, 1, 1, true);
+            f:AddLine(self.tooltip, 1, 0.82, 0, true);
+            if self.tooltip2 then
+                local tooltip2;
+                if type(self.tooltip2) == "function" then
+                    tooltip2 = self.tooltip2();
+                else
+                    tooltip2 = self.tooltip2;
+                end
+                if tooltip2 then
+                    f:AddLine(" ", 1, 0.82, 0, true);
+                    f:AddLine(tooltip2, 1, 0.82, 0, true);
+                end
+            end
+            f:Show();
+        end
+    end
+
+    function SliderFrameMixin:OnLeave()
+        GameTooltip:Hide();
     end
 
     local function FormatValue(value)
@@ -4451,6 +4517,12 @@ do  --EditMode
     end
 
     function EditModeSettingsDialogMixin:ReleaseAllWidgets()
+        for _, widget in ipairs(self.activeWidgets) do
+            if widget.isCustomWidget then
+                widget:Hide();
+                widget:ClearAllPoints();
+            end
+        end
         self.activeWidgets = {};
 
         self.checkboxPool:ReleaseAll();
@@ -4478,13 +4550,16 @@ do  --EditMode
                 if widget.widgetType == "Divider" then
                     preOffset = 2;
                     postOffset = 2;
+                elseif widget.widgetType == "Custom" then
+                    preOffset = 0;
+                    postOffset = 2;
                 else
                     preOffset = 0;
                     postOffset = 0;
                 end
 
                 height = height + preOffset;
-
+                widget:ClearAllPoints();
                 if widget.align and widget.align ~= "left" then
                     if widget.align == "center" then
                         if widget.effectiveWidth then
@@ -4557,8 +4632,14 @@ do  --EditMode
             slider:SetObeyStepOnDrag(false);
         end
 
-        slider:SetFormatValueFunc(widgetData.formatValueFunc);
+        if widgetData.formatValueFunc then
+            slider:SetFormatValueFunc(widgetData.formatValueFunc);
+        else
+            slider:SetFormatValueFunc(function(value) return value end);
+        end
+
         slider:SetOnValueChangedFunc(widgetData.onValueChangedFunc);
+        slider.tooltip = widgetData.tooltip;
 
         if widgetData.dbKey and addon.GetDBValue(widgetData.dbKey) then
             slider:SetValue(addon.GetDBValue(widgetData.dbKey));
@@ -4632,6 +4713,15 @@ do  --EditMode
                         widget = self:CreateHeader(widgetData);
                     elseif widgetData.type == "Keybind" then
                         widget = self:CreateKeybindButton(widgetData);
+                    elseif widgetData.type == "Custom" then
+                        widget = widgetData.onAcquire();
+                        if widget then
+                            widget:SetParent(self);
+                            widget:ClearAllPoints();
+                            widget:Show();
+                            widget.isCustomWidget = true;
+                            widget.align = widgetData.align or "center";
+                        end
                     end
 
                     if widget then
@@ -4661,6 +4751,16 @@ do  --EditMode
 
     function EditModeSettingsDialogMixin:OnDragStop()
         self:StopMovingOrSizing();
+        self:ConvertAnchor();
+    end
+
+    function EditModeSettingsDialogMixin:ConvertAnchor()
+        --Convert any anchor to the top left
+        --so that changing frame height don't affect the positions of most buttons
+        local left = self:GetLeft();
+        local top = self:GetTop();
+        self:ClearAllPoints();
+        self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top);
     end
 
     function EditModeSettingsDialogMixin:SetTitle(title)
@@ -4669,6 +4769,10 @@ do  --EditMode
 
     function EditModeSettingsDialogMixin:IsOwner(parent)
         return parent == self.parent
+    end
+
+    function EditModeSettingsDialogMixin:IsFromSchematic(schematic)
+        return schematic and self.schematic == schematic;
     end
 
     function EditModeSettingsDialogMixin:HideOption(parent)
@@ -4742,6 +4846,10 @@ do  --EditMode
             f.keybindButtonPool = API.CreateObjectPool(CreateKeybindButton);
         end
 
+        if EditModeSettingsDialog:IsShown() and not EditModeSettingsDialog:IsOwner(parent) then
+            EditModeSettingsDialog:Exit();
+        end
+
         if (schematic ~= EditModeSettingsDialog.schematic) then
             EditModeSettingsDialog.requireResetPosition = true;
             EditModeSettingsDialog.schematic = schematic;
@@ -4757,6 +4865,21 @@ do  --EditMode
         return EditModeSettingsDialog
     end
     addon.SetupSettingsDialog = SetupSettingsDialog;
+
+    local function ToggleSettingsDialog(parent, schematic, forceUpdate)
+        if EditModeSettingsDialog and EditModeSettingsDialog:IsShown() and EditModeSettingsDialog:IsOwner(parent) then
+            EditModeSettingsDialog:Exit();
+        else
+            local f = SetupSettingsDialog(parent, schematic, forceUpdate);
+            if f then
+                f:Show();
+                f:ClearAllPoints();
+                f:SetPoint("LEFT", UIParent, "CENTER", 256, 0);
+                return f
+            end
+        end
+    end
+    addon.ToggleSettingsDialog = ToggleSettingsDialog;
 end
 
 do  --Radial Progress Bar
@@ -5399,4 +5522,78 @@ do  --Displayed required items on nameplate widget set
         f:SetInteractable(true);
         return f
     end
+end
+
+do  --Simple Tooltip (2 FontString)
+    local SimpleTooltipMixin = {};
+
+    function SimpleTooltipMixin:SetText(title, description)
+        local textHeight, textWidth;
+        if not (title or description) then
+            self.Text1:SetText(nil);
+            self.Text2:SetText(nil);
+            textHeight = 12;
+            textWidth = 12;
+        else
+            self.Text2:ClearAllPoints();
+            if description then
+                self.Text2:SetPoint("TOPLEFT", self.Text1, "BOTTOMLEFT", 0, -self.titleDescGap);
+                self.Text1:SetText(title);
+                self.Text2:SetText(description);
+                textHeight = self.Text1:GetHeight() + self.titleDescGap + self.Text2:GetHeight();
+                textWidth = math.max(self.Text1:GetWrappedWidth(), self.Text2:GetWrappedWidth());
+            else
+                self.Text2:SetPoint("TOPLEFT", self, "TOPLEFT", self.padding, -self.padding);
+                self.Text1:SetText(nil);
+                self.Text2:SetText(title);
+                textHeight = self.Text2:GetHeight();
+                textWidth = self.Text2:GetWrappedWidth();
+            end
+        end
+        self:SetSize(API.Round(textWidth + 2*self.padding), API.Round(textHeight + 2*self.padding));
+    end
+
+    function SimpleTooltipMixin:SetPadding()
+        self.padding = 8;
+    end
+
+    function SimpleTooltipMixin:SetTitleDescGap(titleDescGap)
+        self.titleDescGap = titleDescGap;
+    end
+
+    function SimpleTooltipMixin:SetMaxLineWidth(width)
+        self.Text1:SetWidth(width);
+        self.Text2:SetWidth(width);
+    end
+
+    local function CreateSimpleTooltip(parent)
+        local f = CreateFrame("Frame", nil, parent);
+        f.padding = 8;
+        f.titleDescGap = 4;
+
+        Mixin(f, SimpleTooltipMixin);
+
+        local bg = addon.CreateNineSliceFrame(f, "NineSlice_GenericBox_Black");
+        bg:SetUsingParentLevel(true);
+        bg:SetCornerSize(8);
+        bg:SetAllPoints(true);
+
+        f.Text1 = f:CreateFontString(nil, "OVERLAY", "GameTooltipHeaderText");
+        f.Text1:SetJustifyH("LEFT");
+        f.Text1:SetJustifyV("TOP");
+        f.Text1:SetPoint("TOPLEFT", f, "TOPLEFT", f.padding, -f.padding);
+        f.Text1:SetTextColor(1, 0.82, 0);
+        f.Text1:SetSpacing(2);
+
+        f.Text2 = f:CreateFontString(nil, "OVERLAY", "GameTooltipText");
+        f.Text2:SetJustifyH("LEFT");
+        f.Text2:SetJustifyV("TOP");
+        f.Text2:SetPoint("TOPLEFT", f.Text1, "BOTTOMLEFT", 0, -f.titleDescGap);
+        f.Text2:SetSpacing(2);
+
+        f:SetMaxLineWidth(290);
+
+        return f
+    end
+    addon.CreateSimpleTooltip = CreateSimpleTooltip;
 end

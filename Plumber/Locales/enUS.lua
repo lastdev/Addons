@@ -178,6 +178,19 @@ L["ModuleDescription TooltipSnapdragonTreats"] = "Show additional info for Snapd
 L["Color Applied"] = "This is the currently applied color.";
 
 
+--Tooltip Item Reagents
+L["ModuleName TooltipItemReagents"] = "Reagents";
+L["ModuleDescription TooltipItemReagents"] = "If an item can be used to combine into something new, display all \"reagents\" used in the process.\n\nPress and hold Shift to display the crafted item if supported.";
+L["Can Create Multiple Item Format"] = "You have the resources to create |cffffffff%d|r items.";
+
+
+--Plunderstore
+L["ModuleName Plunderstore"] = "Plunderstore";
+L["ModuleDescription Plunderstore"] = "Modify the store opened via Group Finder:\n\n- Added a checkbox to hide collected items.\n\n- Display the number of uncollected items on the category buttons.\n\n- Added weapon and armor equip location to their tooltips.\n\n- Allow you to view equippable items in the Dressing Room.";
+L["Store Full Purchase Price Format"] = "Earn |cffffffff%s|r Plunder to purchase everything in the store.";
+L["Store Item Fully Collected"] = "You have collected everything in the store!";
+
+
 --Merchant UI Price
 L["ModuleName MerchantPrice"] = "Merchant Price";
 L["ModuleDescription MerchantPrice"] = "Modify Merchant UI's behaviors:\n\n- Grey out only the insufficient currencies.\n\n- Show all required items in the coin box.";
@@ -249,6 +262,31 @@ L["ModuleName NameplateWidget"] = "Nameplate: Keyflame";
 L["ModuleDescription NameplateWidget"] = "Show the number of owned Radiant Remnant on the nameplate.";
 
 
+--PartyInviterInfo
+L["ModuleName PartyInviterInfo"] = "Group Inviter Info";
+L["ModuleDescription PartyInviterInfo"] = "Show the inviter's level and class when you are invited to a group or a guild.";
+L["Additional Info"] = "Additional Info";
+L["Race"] = RACE or "Race";
+L["Faction"] = FACTION or "Faction";
+L["Click To Search Player"] = "Search This Player";
+L["Searching Player In Progress"] = FRIENDS_FRIENDS_WAITING or "Searching...";
+L["Player Not Found"] = ERR_FRIEND_NOT_FOUND or "Player not found.";
+
+
+--PlayerTitleUI
+L["ModuleName PlayerTitleUI"] = "Title Manager";
+L["ModuleDescription PlayerTitleUI"] = "Add a search box and a filter to the default Character Pane.";
+L["Right Click To Reset Filter"] = "Right click to reset.";
+L["Earned"] = ACHIEVEMENTFRAME_FILTER_COMPLETED or "Earned";
+L["Unearned"] = "Unearned";
+L["Unearned Filter Tooltip"] = "You may see duplicated titles that are unavailable to your faction.";
+
+
+--BlizzardSuperTrack
+L["ModuleName BlizzardSuperTrack"] = "Waypoint: Event Timer";
+L["ModuleDescription BlizzardSuperTrack"] = "Add a timer to your active waypoint if its map pin tooltip has one.";
+
+
 --Loot UI
 L["ModuleName LootUI"] = HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Loot Window";
 L["ModuleDescription LootUI"] = "Replace the default Loot Window and provide some optional features:\n\n- Loot items fast.\n\n- Fix Auto Loot failure bug.\n\n- Show a Take All button when looting manually.";
@@ -269,12 +307,21 @@ L["LootUI Option New Transmog Tooltip"] = "Add a marker %s if you have not colle
 L["LootUI Option Use Hotkey"] = "Press Key To Take All Items";
 L["LootUI Option Use Hotkey Tooltip"] = "While in Manual Looting mode, press the following hotkey to take all items.";
 L["LootUI Option Fade Delay"] = "Fade Out Delay Per Item";
+L["LootUI Option Items Per Page"] = "Items Per Page";
+L["LootUI Option Items Per Page Tooltip"] = "Adjust the amount of items that can be displayed on one page when receiving loots.\n\nThis option doesn't affect Manual Loot Mode or Edit Mode.";
 L["LootUI Option Replace Default"] = "Replace Default Loot Alert";
 L["LootUI Option Replace Default Tooltip"] = "Replace the default loot alerts that usually appear above the action bars.";
 L["LootUI Option Loot Under Mouse"] = LOOT_UNDER_MOUSE_TEXT or "Open Loot Window at Mouse";
 L["LootUI Option Loot Under Mouse Tooltip"] = "While in |cffffffffManual Loot|r mode, the window will appear under the current mouse location";
 L["LootUI Option Use Default UI"] = "Use Default Loot Window";
 L["LootUI Option Use Default UI Tooltip"] = "Use WoW\'s default loot window.\n\n|cffff4800Enabling this option nullifies all settings above.|r";
+
+
+--Quick Slot For Third-party Dev
+L["Quickslot Module Info"] = "Module Info";
+L["QuickSlot Error 1"] = "Quick Slot: You have already added this controller.";
+L["QuickSlot Error 2"] = "Quick Slot: The controller is missing \"%s\"";
+L["QuickSlot Error 3"] = "Quick Slot: A controller with the same key \"%s\" already exists.";
 
 
 --Generic
@@ -288,6 +335,7 @@ L["Paragon Reputation"] = "Paragon";
 L["Level Maxed"] = "(Maxed)";   --Reached max level
 L["Current Colon"] = ITEM_UPGRADE_CURRENT or "Current:";
 L["Unclaimed Reward Alert"] = WEEKLY_REWARDS_UNCLAIMED_TITLE or "You have unclaimed rewards";
+L["Total Colon"] = FROM_TOTAL or "Total:";
 
 
 

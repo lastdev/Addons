@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                     v3.02 - 10th December 2024
+                                      v3.04 - 7th January 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -26,7 +26,7 @@ local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true
 								removeOneOff = true, removeSeasonal = true, removeEver = false,
 								iconZoneElders = 16, iconDungeonElders = 14, iconCrown = 13,
 								iconFactionElders = 11, iconPreservation = 10,
-								lpBuffCount = {} } }
+								lpBuffCount = 0 } }
 local continents = {}
 local pluginHandler = {}
 
@@ -754,7 +754,7 @@ function pluginHandler:OnEnter(mapFile, coord)
 						GameTooltip:AddLine( ns.colour.plaintext .."Ready to turn in" )
 					else
 						GameTooltip:AddLine( ns.colour.plaintext .."Wells so far: "
-							..ns.db.lpBuffCount[ns.name] )
+							..ns.db.lpBuffCount )
 					end
 				else
 					GameTooltip:AddLine( ns.colour.plaintext .."Not yet begun" )
@@ -1152,42 +1152,57 @@ function pluginHandler:OnEnable()
 end
 
 function pluginHandler:Refresh()
-	self:SendMessage("HandyNotes_NotifyUpdate", "LunarFestival")
+	if not ns.delay then self:SendMessage("HandyNotes_NotifyUpdate", "LunarFestival") end
 end
 
 LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_LunarFestivalDB", "AceEvent-3.0")
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
-ns.timeElapsed, ns.timeElapsed2, ns.oldCount, ns.countUA, ns.spellUA = 0, 0;
-local frameOnUpdate = CreateFrame( "Frame", "LunarFestivalOnUpdate", UIParent )
-frameOnUpdate:HookScript("OnUpdate", function(self, elapsed)
-	ns.timeElapsed = ns.timeElapsed + elapsed
-	if ns.timeElapsed > 1 then 
-		ns.timeElapsed = 0
+ns.eventFrame = CreateFrame( "Frame" )
+ns.timeSinceLastRefresh, ns.timeSinceLastBuffCheck = 0, 0
+
+local function OnUpdate()
+	ns.curTime = GetTime()
+	if ns.curTime - ns.timeSinceLastBuffCheck > 1 then	
+		ns.timeSinceLastBuffCheck = ns.curTime
 		if ( IsOnQuest( 56842 ) == true ) then -- Lunar Preservation
-			if ( ns.db.lpBuffCount[ns.name] == nil ) then ns.db.lpBuffCount[ns.name] = 0 end
+			if ( ns.db.lpBuffCount == nil ) then ns.db.lpBuffCount = 0 end
 			for i = 1, 40 do
 				_, _, ns.countUA, _, _, _, _, _, _, ns.spellUA = UnitAura( "player", i, "HELPFUL" )
 				if ns.spellUA == 303601 then
 					if ( ns.oldCount == nil ) then ns.oldCount = ns.countUA end
 					if ns.countUA > ns.oldCount then
-						ns.db.lpBuffCount[ns.name] = ns.db.lpBuffCount[ns.name] + 1
+						ns.db.lpBuffCount = ns.db.lpBuffCount + 1
 						ns.oldCount = ns.countUA
 					end
 					break
 				end
 			end
 		else
-			ns.db.lpBuffCount[ns.name] = nil
+			ns.db.lpBuffCount = 0
 		end
 	end
-	ns.timeElapsed2 = ns.timeElapsed2 + elapsed
-	if ns.timeElapsed2 > 3 then
-		ns.timeElapsed2 = 0
-		pluginHandler:Refresh()
+	
+	if ns.curTime - ns.timeSinceLastRefresh <= 7 then return end
+	ns.timeSinceLastRefresh = ns.curTime
+	pluginHandler:Refresh()
+end
+
+ns.eventFrame:SetScript( "OnUpdate", OnUpdate )
+
+local function OnEventHandler( self, event, ... )
+	-- This is based upon my own research as documented in my WDW AddOn
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		ns.delay = true
+	elseif ( event == "SPELLS_CHANGED" ) then
+		ns.delay = nil
 	end
-end)
+end
+
+ns.eventFrame:RegisterEvent( "PLAYER_ENTERING_WORLD" )
+ns.eventFrame:RegisterEvent( "SPELLS_CHANGED" )
+ns.eventFrame:SetScript( "OnEvent", OnEventHandler )
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
 

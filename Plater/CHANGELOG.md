@@ -1,8 +1,5 @@
 @cont1nuity:
-- Reset Boss-Mod integration icon glow properly.
-- Fixing an issue with spell-name truncation.
-- Toc bump for classic.
-
-@Terciob:
-- Framework updates.
+- Fixing broken nameplate anchoring for WAs on forced blizzard nameplates (via LibGetFrame).
+- Fixing range check for Dark Ranger hunters (via LibRangeCheck).
+- Fixing range check for cases when no range can be selected.
 

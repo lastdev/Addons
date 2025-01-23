@@ -142,7 +142,7 @@ local function ClearExpiries()
 	end
 end
 
-DataStore:OnAddonLoaded(addonName, function() 
+AddonFactory:OnAddonLoaded(addonName, function() 
 	DataStore:RegisterTables({
 		addon = addon,
 		characterIdTables = {
@@ -157,7 +157,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	weeklies = DataStore_Quests_Weeklies
 end)
 
-DataStore:OnPlayerLogin(function()
+AddonFactory:OnPlayerLogin(function()
 	options = DataStore_Quests_Options
 	
 	addon:ListenTo("QUEST_TURNED_IN", OnQuestTurnedIn)

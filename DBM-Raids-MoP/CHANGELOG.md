@@ -1,7 +1,14 @@
 # <DBM Mod> Raids (MoP)
 
-## [r178](https://github.com/DeadlyBossMods/DBM-MoP/tree/r178) (2024-11-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r177...r178) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
+## [r179](https://github.com/DeadlyBossMods/DBM-MoP/tree/r179) (2025-01-08)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r178...r179) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
 
-- remove game version 11.0.2 and add game version 11.0.7  
-    Scope all raid modules to use only 1 zone id  
+- Blizzard code is ass, so partial revert of last  
+- Assign groups and categories for new addon manager in 11.1  
+- sync core changes  
+- remove 11.0.5 and Add 11.1  
+- Push trash timer stop tweak  
+- rename  
+- Scope scenario modules  
+- in fact, go ahead and prep that mod for improvement (athough that improvement might not happen til well after mop classic launch)  
+- improve warlock greenfire mod for MoP Classic  

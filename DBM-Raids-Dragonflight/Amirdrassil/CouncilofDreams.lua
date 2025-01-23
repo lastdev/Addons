@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2555, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250105060434")
 mod:SetCreatureID(208363, 208365, 208367)--Urctos, Aerwynn, Pip
 mod:SetEncounterID(2728)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -76,7 +76,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(27302))
 local warnCaptivatingFinale							= mod:NewTargetNoFilterAnnounce(421032, 4)--You done fucked up
 local warnPolymorphBomb								= mod:NewIncomingCountAnnounce(418720, 2)
 --local warnPolymorphBombTargets						= mod:NewTargetCountAnnounce(418720, 3, nil, nil, nil, nil, nil, nil, true)--Blizzard finally fixed RBW detection, but maybe they'll unprivate in season 4?
-local warnSongFaded									= mod:NewFadesAnnounce(421029, 1)
+local warnSongFaded									= mod:NewFadesAnnounce(421029, 1, nil, nil, nil, nil, nil, 2)
 
 local specWarnSongoftheDragon						= mod:NewSpecialWarningMoveTo(421029, nil, nil, nil, 2, 2)
 local specWarnCaptivatingFinale						= mod:NewSpecialWarningYou(421032, nil, nil, nil, 1, 2)
@@ -576,6 +576,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 421031 and args:IsPlayer() then
 		playerSong = false
 		warnSongFaded:Show()
+		warnSongFaded:Play("safenow")
 		self:Unschedule(checkSong)
 	end
 end

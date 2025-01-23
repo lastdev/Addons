@@ -1,5 +1,5 @@
 local addonName = ...
-local L = DataStore:SetDefaultLocale(addonName, "enUS")
+local L = AddonFactory:SetDefaultLocale(addonName, "enUS")
 
 L["AUTO_UPDATE_DISABLED"] = "The quest history will remain in its current state, either empty or outdated."
 L["AUTO_UPDATE_ENABLED"] = "A character's quest history will be refreshed every time you login with that character."

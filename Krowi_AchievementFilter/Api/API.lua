@@ -88,7 +88,7 @@ function KrowiAF_SelectCategory(category, collapsed)
 	-- Select tab
 	local categoriesTree = category:GetTree();
 	-- print("toggle")
-	addon.Gui:ToggleAchievementFrame(addonName, categoriesTree[1].TabName, nil, true); -- This will call both category and achievement update
+	KrowiAF_ToggleAchievementFrame(addonName, categoriesTree[1].TabName, nil, true); -- This will call both category and achievement update
 	-- print("end toggle")
 
 	-- Get the merged category now we're sure it's loaded
@@ -122,8 +122,8 @@ function KrowiAF_SelectCategory(category, collapsed)
 	return category;
 end
 
-function KrowiAF_ToggleAchievementFrame(_addonName, tabName)
-    addon.Gui:ToggleAchievementFrame(_addonName, tabName);
+function KrowiAF_ToggleAchievementFrame(_addonName, tabName, resetView, forceOpen)
+    addon.Gui:ToggleAchievementFrame(_addonName, tabName, resetView, forceOpen);
 end
 
 function KrowiAF_OpenCurrentZone(collapsed)
@@ -131,9 +131,9 @@ function KrowiAF_OpenCurrentZone(collapsed)
         C_AddOns.LoadAddOn("Blizzard_AchievementUI");
     end
 
-	for i = 1, #addon.Data.CurrentZoneCategories do
+	for i = 1, #addon.SpecialCategories.CurrentZone do
 		if addon.Options.db.profile.AdjustableCategories.CurrentZone[i] then
-			KrowiAF_SelectCategory(addon.Data.CurrentZoneCategories[i], collapsed);
+			KrowiAF_SelectCategory(addon.SpecialCategories.CurrentZone[i], collapsed);
 			return;
 		end
 	end

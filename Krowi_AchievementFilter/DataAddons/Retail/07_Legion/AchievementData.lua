@@ -1,6 +1,7 @@
 local _, addon = ...;
 local shared = addon.Data.AchievementData.Shared;
-local faction = addon.Objects.Faction;
+local faction = KrowiAF.Enum.Faction;
+local rewardType = KrowiAF.Enum.RewardType;
 
 KrowiAF.AchievementData["07_00_03"] = {
     {KrowiAF.SetAchievementPatch, 7, 0, 3},
@@ -16,13 +17,13 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Dragons!
         9689,
     },
-    { -- "Ragnaros, Watch and Learn"
+    { -- Ragnaros, Watch and Learn
         9690,
     },
     { -- Flock Together
         9691,
     },
-    { -- "Murlocs, Harpies, and Wolvar, Oh My!"
+    { -- Murlocs, Harpies, and Wolvar, Oh My!
         9692,
     },
     { -- Master of Magic
@@ -36,6 +37,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Family Familiar
         9696,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Ain't No Mountain High Enough
         10059,
@@ -48,6 +52,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Poor Unfortunate Souls
         10412,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Instant Karma
         10413,
@@ -192,6 +199,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- No Stone Unturned
         10609,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Waiting for Gerdo
         10610,
@@ -201,6 +211,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Nightfallen But Not Forgotten
         10617,
+        {
+            RewardType = rewardType.Other,
+        },
     },
     { -- Zoom!
         10626,
@@ -210,6 +223,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Fledgling Hero of Warcraft
         10657,
+        {
+            RewardType = rewardType.Other,
+        },
     },
     { -- Imagined Dragons World Tour
         10663,
@@ -285,6 +301,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Fabulous
         10694,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- I've Got My Eyes On You
         10696,
@@ -304,7 +323,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Training the Troops
         10706,
     },
-    { -- "A Specter, Illuminated"
+    { -- A Specter, Illuminated
         10707,
     },
     { -- You Used to Scrawl Me In Your Fel Tome
@@ -423,6 +442,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Hatchling of the Talon
         10774,
+        {
+            RewardType = rewardType.Toy,
+        },
     },
     { -- Clean House
         10775,
@@ -460,7 +482,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Mythic: Halls of Valor
         10789,
     },
-    { -- "Vrykul Story, Bro"
+    { -- Vrykul Story, Bro
         10790,
     },
     { -- What a Ripoff!
@@ -549,6 +571,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Mythic: Xavius
         10827,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Arcing Aqueducts
         10829,
@@ -594,6 +619,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Mythic: Gul'dan
         10850,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Elementalry!
         10851,
@@ -658,6 +686,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         10998,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -667,6 +696,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         10997,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -704,6 +734,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11004,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -713,6 +744,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11003,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -722,6 +754,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11008,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -731,6 +764,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11005,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -740,6 +774,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11010,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -749,6 +784,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11009,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -756,6 +792,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Gladiator: Legion Season 1
         11011,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -763,6 +800,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Vindictive Gladiator: Legion Season 1
         11012,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -770,6 +808,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Gladiator: Legion Season 2
         11013,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -777,6 +816,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Fearless Gladiator: Legion Season 2
         11014,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -784,6 +824,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Duelist: Legion Season 1
         11015,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -791,6 +832,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Rival: Legion Season 1
         11016,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -798,6 +840,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Challenger: Legion Season 1
         11017,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -825,6 +868,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11021,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -834,6 +878,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11020,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -843,6 +888,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11023,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -852,6 +898,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11022,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -861,6 +908,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11025,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -870,6 +918,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11024,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 19},
         },
@@ -877,6 +926,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Duelist: Legion Season 2
         11026,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -884,6 +934,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Rival: Legion Season 2
         11027,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -891,6 +942,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Challenger: Legion Season 2
         11028,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -918,6 +970,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11032,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -927,6 +980,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11031,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -936,6 +990,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11034,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -945,6 +1000,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11033,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -954,6 +1010,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11036,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -963,6 +1020,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11035,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 20},
         },
@@ -970,6 +1028,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Cruel Gladiator: Legion Season 3
         11037,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -977,6 +1036,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Gladiator: Legion Season 3
         11038,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -984,6 +1044,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Challenger: Legion Season 3
         11039,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -991,6 +1052,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Rival: Legion Season 3
         11040,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -998,6 +1060,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Duelist: Legion Season 3
         11041,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1025,6 +1088,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11045,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1034,6 +1098,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11044,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1043,6 +1108,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11047,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1052,6 +1118,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11046,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1061,6 +1128,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11049,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1070,6 +1138,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11048,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 21},
         },
@@ -1079,6 +1148,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11051,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1088,6 +1158,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11050,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1097,6 +1168,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11053,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1106,6 +1178,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11052,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1115,6 +1188,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Alliance,
         11055,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1124,6 +1198,7 @@ KrowiAF.AchievementData["07_00_03"] = {
         faction.Horde,
         11054,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1149,6 +1224,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Duelist: Legion Season 4
         11058,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1156,6 +1232,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Rival: Legion Season 4
         11059,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1163,6 +1240,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Challenger: Legion Season 4
         11060,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1170,6 +1248,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Gladiator: Legion Season 4
         11061,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1177,6 +1256,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Ferocious Gladiator: Legion Season 4
         11062,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 22},
         },
@@ -1192,6 +1272,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Underbelly Tycoon
         11066,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Good Suramaritan
         11124,
@@ -1217,7 +1300,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- 5000 World Quests Completed
         11131,
     },
-    { -- "10,000 World Quests Completed"
+    { -- 10,000 World Quests Completed
         11132,
     },
     { -- Why Can't I Hold All This Mana?
@@ -1241,6 +1324,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Field Medic
         11139,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {8, 0, 1}},
         },
     },
@@ -1264,6 +1348,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Glory of the Legion Hero
         11163,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Legion Dungeon Hero
         11164,
@@ -1332,9 +1419,15 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Higher Dimensional Learning
         11175,
+        {
+            RewardType = rewardType.Other,
+        },
     },
     { -- Remember to Share
         11176,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- 70 Exalted Reputations
         11177,
@@ -1344,6 +1437,9 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Glory of the Legion Raider
         11180,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Legion Keymaster
         11181,
@@ -1369,8 +1465,11 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- Variety is the Spice of Life
         11189,
     },
-    { -- "Broken Isles Pathfinder, Part One"
+    { -- Broken Isles Pathfinder, Part One
         11190,
+        {
+            RewardType = rewardType.Other,
+        },
     },
     { -- Cutting Edge: Xavius
         11191,
@@ -1410,13 +1509,19 @@ KrowiAF.AchievementData["07_00_03"] = {
     },
     { -- Fight for the Alliance
         11210,
+        faction.Alliance,
+        11211,
         {
+            RewardType = rewardType.Transmog,
             {"From", "Date", {2016, 5, 25}, "Until", "Date", {2016, 8, 1}},
         },
     },
     { -- Fight for the Horde
         11211,
+        faction.Horde,
+        11210,
         {
+            RewardType = rewardType.Transmog,
             {"From", "Date", {2016, 5, 25}, "Until", "Date", {2016, 8, 1}},
         },
     },
@@ -1435,7 +1540,7 @@ KrowiAF.AchievementData["07_00_03"] = {
     { -- So Many Missions
         11216,
     },
-    { -- "Many Many Missions, Handle It!"
+    { -- Many Many Missions, Handle It!
         11217,
     },
     { -- There's a Boss In There
@@ -1466,11 +1571,17 @@ KrowiAF.AchievementData["07_00_03"] = {
             {"Once"},
         },
     },
-    { -- "Lock, Stock and Two Smoking Goblins"
+    { -- Lock, Stock and Two Smoking Goblins
         11232,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Broken Isles Safari
         11233,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Harbinger
         11240,
@@ -1599,6 +1710,9 @@ KrowiAF.AchievementData["07_02_00"] = {
     },
     { -- Raiding with Leashes IV: Wrath of the Lick King
         11320,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Season Tickets
         11335,
@@ -1621,6 +1735,7 @@ KrowiAF.AchievementData["07_02_00"] = {
     { -- The Chosen
         11387,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {8, 0, 1}},
         },
     },
@@ -1653,6 +1768,9 @@ KrowiAF.AchievementData["07_02_00"] = {
     },
     { -- No Shellfish Endeavor
         11427,
+        {
+            RewardType = rewardType.Toy,
+        },
     },
     { -- Mythic: Return to Karazhan
         11429,
@@ -1669,8 +1787,11 @@ KrowiAF.AchievementData["07_02_00"] = {
     { -- Burn After Reading
         11433,
     },
-    { -- "Broken Isles Pathfinder, Part Two"
+    { -- Broken Isles Pathfinder, Part Two
         11446,
+        {
+            RewardType = rewardType.Other,
+        },
     },
     { -- Alive for Five
         11468,
@@ -1693,23 +1814,24 @@ KrowiAF.AchievementData["07_02_00"] = {
             {"From", "PvP Season", 19, "Until", "PvP Season", 25},
         },
     },
-    { -- "Don't Hate, Grind to Eight"
+    { -- Don't Hate, Grind to Eight
         11471,
         {
             IsPvP = true,
             {"From", "PvP Season", 19, "Until", "PvP Season", 25},
         },
     },
-    { -- "Hell, It's About Nine"
+    { -- Hell, It's About Nine
         11472,
         {
             IsPvP = true,
             {"From", "PvP Season", 19, "Until", "PvP Season", 25},
         },
     },
-    { -- "Free For All, More For Me"
+    { -- Free For All, More For Me
         11474,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
         },
     },
@@ -1774,6 +1896,7 @@ KrowiAF.AchievementData["07_02_00"] = {
         faction.Alliance,
         11564,
         {
+            RewardType = rewardType.Other,
             {"Before", "Version", {8, 0, 1}},
         },
     },
@@ -1782,6 +1905,7 @@ KrowiAF.AchievementData["07_02_00"] = {
         faction.Horde,
         11563,
         {
+            RewardType = rewardType.Other,
             {"Before", "Version", {8, 0, 1}},
         },
     },
@@ -1790,6 +1914,7 @@ KrowiAF.AchievementData["07_02_00"] = {
         faction.Alliance,
         11566,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {8, 0, 1}},
         },
     },
@@ -1798,6 +1923,7 @@ KrowiAF.AchievementData["07_02_00"] = {
         faction.Horde,
         11565,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {8, 0, 1}},
         },
     },
@@ -1890,7 +2016,7 @@ KrowiAF.AchievementData["07_02_00"] = {
     { -- Paragon of the Broken Isles
         11653,
     },
-    { -- "Great Soul, Great Purpose"
+    { -- Great Soul, Great Purpose
         11674,
     },
     { -- Sky Walker
@@ -1968,7 +2094,7 @@ KrowiAF.AchievementData["07_02_00"] = {
             {"From", "PvP Season", 19, "Until", "PvP Season", 25},
         },
     },
-    { -- "Hell, It's About Nineteen"
+    { -- Hell, It's About Nineteen
         11694,
         {
             IsPvP = true,
@@ -2094,7 +2220,7 @@ KrowiAF.AchievementData["07_02_00"] = {
     { -- Accessor-Eyes
         11743,
     },
-    { -- "Drop Dead, Gorgeous"
+    { -- Drop Dead, Gorgeous
         11744,
     },
     { -- Outlandish Style
@@ -2106,7 +2232,7 @@ KrowiAF.AchievementData["07_02_00"] = {
     { -- Black is the New Black
         11748,
     },
-    { -- "Suns Out, Thori'dals Out"
+    { -- Suns Out, Thori'dals Out
         11749,
     },
     { -- Undying Aesthetic
@@ -2144,15 +2270,24 @@ KrowiAF.AchievementData["07_02_00"] = {
     },
     { -- Azeroth's Next Top Model
         11761,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Can I Get A Helya
         11762,
     },
     { -- Glory of the Tomb Raider
         11763,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Pet Battle Challenge: Wailing Caverns
         11765,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Mythic: Goroth
         11767,
@@ -2172,7 +2307,7 @@ KrowiAF.AchievementData["07_02_00"] = {
             {"Before", "Version", {8, 0, 1}},
         },
     },
-    { -- "Wax On, Wax Off"
+    { -- Wax On, Wax Off
         11773,
     },
     { -- Mythic: Demonic Inquisition
@@ -2198,6 +2333,9 @@ KrowiAF.AchievementData["07_02_00"] = {
     },
     { -- Mythic: Kil'jaeden
         11781,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Terrors of the Shore
         11786,
@@ -2238,9 +2376,15 @@ KrowiAF.AchievementData["07_02_05"] = {
     },
     { -- Pet Battle Challenge: Deadmines
         11856,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- I'll Hold These For You Until You Get Out
         11869,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- Ahead of the Curve: Kil'jaeden
         11874,
@@ -2254,7 +2398,7 @@ KrowiAF.AchievementData["07_02_05"] = {
             {"Before", "Version", {7, 3, 0}},
         },
     },
-    { -- "Hey, You're a Rockstar!"
+    { -- Hey, You're a Rockstar!
         11918,
         {
             {"Event", 374},
@@ -2283,6 +2427,9 @@ KrowiAF.AchievementData["07_02_05"] = {
     },
     { -- Chromie Homie
         11941,
+        {
+            RewardType = rewardType.Title,
+        },
     },
 };
 
@@ -2290,6 +2437,9 @@ KrowiAF.AchievementData["07_03_00"] = {
     {KrowiAF.SetAchievementPatch, 7, 3, 0},
     { -- Fisherfriend of the Isles
         11725,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- Don't Play With That In The House
         11913,
@@ -2311,6 +2461,9 @@ KrowiAF.AchievementData["07_03_00"] = {
     },
     { -- Glory of the Argus Raider
         11987,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Light's Breach
         11988,
@@ -2356,6 +2509,9 @@ KrowiAF.AchievementData["07_03_00"] = {
     },
     { -- Mythic: Argus the Unmaker
         12002,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Welcome the Void
         12004,
@@ -2375,6 +2531,7 @@ KrowiAF.AchievementData["07_03_00"] = {
     { -- Fierce Gladiator: Legion Season 5
         12010,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2399,6 +2556,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Horde,
         12032,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2408,6 +2566,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Alliance,
         12031,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2415,6 +2574,7 @@ KrowiAF.AchievementData["07_03_00"] = {
     { -- Duelist: Legion Season 5
         12034,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2422,6 +2582,7 @@ KrowiAF.AchievementData["07_03_00"] = {
     { -- Rival: Legion Season 5
         12035,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2429,6 +2590,7 @@ KrowiAF.AchievementData["07_03_00"] = {
     { -- Challenger: Legion Season 5
         12036,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2447,6 +2609,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Alliance,
         12042,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2456,6 +2619,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Alliance,
         12043,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2465,6 +2629,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Alliance,
         12044,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2483,6 +2648,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Horde,
         12038,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2492,6 +2658,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Horde,
         12039,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2501,6 +2668,7 @@ KrowiAF.AchievementData["07_03_00"] = {
         faction.Horde,
         12040,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2508,6 +2676,7 @@ KrowiAF.AchievementData["07_03_00"] = {
     { -- Gladiator: Legion Season 5
         12045,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 23},
         },
@@ -2526,6 +2695,9 @@ KrowiAF.AchievementData["07_03_00"] = {
     },
     { -- Explore Argus
         12069,
+        {
+            RewardType = rewardType.Other,
+        },
     },
     { -- Crucible's Promise
         12071,
@@ -2542,7 +2714,7 @@ KrowiAF.AchievementData["07_03_00"] = {
     { -- Locked and Loaded
         12073,
     },
-    { -- "Shoot First, Loot Later"
+    { -- Shoot First, Loot Later
         12074,
     },
     { -- Protector of the Argussian Reach
@@ -2553,15 +2725,24 @@ KrowiAF.AchievementData["07_03_00"] = {
     },
     { -- Commander of Argus
         12078,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- Raiding with Leashes V: Cuteaclysm
         12079,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Officer of the Light
         12081,
     },
     { -- Paragon of Argus
         12083,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Infused and Abused
         12084,
@@ -2608,6 +2789,9 @@ KrowiAF.AchievementData["07_03_00"] = {
     },
     { -- Family Fighter
         12100,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- We Came Here For Two Reasons
         12101,
@@ -2617,9 +2801,15 @@ KrowiAF.AchievementData["07_03_00"] = {
     },
     { -- ...And Chew Mana Buns
         12103,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- And We're All Out of Mana Buns
         12104,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Double Decade of Dominance
         12108,
@@ -2660,6 +2850,7 @@ KrowiAF.AchievementData["07_03_02"] = {
     { -- Dominant Gladiator: Legion Season 6
         12134,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2676,6 +2867,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Horde,
         12137,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2685,6 +2877,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Alliance,
         12136,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2706,6 +2899,7 @@ KrowiAF.AchievementData["07_03_02"] = {
     { -- Gladiator: Legion Season 6
         12167,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2713,6 +2907,7 @@ KrowiAF.AchievementData["07_03_02"] = {
     { -- Gladiator: Legion Season 7
         12168,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2720,6 +2915,7 @@ KrowiAF.AchievementData["07_03_02"] = {
     { -- Challenger: Legion Season 6
         12169,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2727,6 +2923,7 @@ KrowiAF.AchievementData["07_03_02"] = {
     { -- Rival: Legion Season 6
         12170,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2734,6 +2931,7 @@ KrowiAF.AchievementData["07_03_02"] = {
     { -- Duelist: Legion Season 6
         12171,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2761,6 +2959,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Horde,
         12175,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2770,6 +2969,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Alliance,
         12174,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2779,6 +2979,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Horde,
         12177,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2788,6 +2989,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Alliance,
         12176,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2797,6 +2999,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Horde,
         12179,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2806,6 +3009,7 @@ KrowiAF.AchievementData["07_03_02"] = {
         faction.Alliance,
         12178,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 24},
         },
@@ -2848,6 +3052,7 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Demonic Gladiator: Legion Season 7
         12185,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2855,6 +3060,7 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Duelist: Legion Season 7
         12186,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2862,6 +3068,7 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Challenger: Legion Season 7
         12187,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2869,6 +3076,7 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Rival: Legion Season 7
         12188,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2878,6 +3086,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Alliance,
         12190,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2887,6 +3096,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Horde,
         12189,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2896,6 +3106,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Alliance,
         12192,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2905,6 +3116,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Horde,
         12191,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2914,6 +3126,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Horde,
         12195,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2923,6 +3136,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Alliance,
         12194,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2957,6 +3171,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Horde,
         12200,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2966,6 +3181,7 @@ KrowiAF.AchievementData["07_03_05"] = {
         faction.Alliance,
         12199,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 25},
         },
@@ -2973,18 +3189,30 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Allied Races: Void Elf
         12242,
         faction.Alliance,
+        {
+            RewardType = rewardType.AlliedRace,
+        },
     },
     { -- Allied Races: Lightforged Draenei
         12243,
         faction.Alliance,
+        {
+            RewardType = rewardType.AlliedRace,
+        },
     },
     { -- Allied Races: Nightborne
         12244,
         faction.Horde,
+        {
+            RewardType = rewardType.AlliedRace,
+        },
     },
     { -- Allied Races: Highmountain Tauren
         12245,
         faction.Horde,
+        {
+            RewardType = rewardType.AlliedRace,
+        },
     },
     { -- Mechanical Brawler
         12279,
@@ -3049,12 +3277,16 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Family Brawler
         12290,
         {
+            RewardType = rewardType.Tabard,
             IsPvP = true,
         },
     },
     { -- Heritage of the Void
         12291,
         faction.Alliance,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- Highmountain Tribe
         12292,
@@ -3104,7 +3336,7 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- A Quick Shave
         12321,
     },
-    { -- "Iron Dwarf, Medium Rare"
+    { -- Iron Dwarf, Medium Rare
         12322,
     },
     { -- Shattered
@@ -3131,13 +3363,13 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Heartbreaker
         12330,
     },
-    { -- "I Choose You, Runemaster Molgeim"
+    { -- I Choose You, Runemaster Molgeim
         12332,
     },
-    { -- "I Choose You, Stormcaller Brundir"
+    { -- I Choose You, Stormcaller Brundir
         12333,
     },
-    { -- "I Choose You, Steelbreaker"
+    { -- I Choose You, Steelbreaker
         12334,
     },
     { -- But I'm On Your Side
@@ -3209,10 +3441,10 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Knock on Wood
         12364,
     },
-    { -- "Knock, Knock on Wood"
+    { -- Knock, Knock on Wood
         12365,
     },
-    { -- "Knock, Knock, Knock on Wood"
+    { -- Knock, Knock, Knock on Wood
         12366,
     },
     { -- Set Up Us the Bomb
@@ -3259,12 +3491,18 @@ KrowiAF.AchievementData["07_03_05"] = {
     },
     { -- Observed
         12399,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Supermassive
         12400,
     },
     { -- Glory of the Ulduar Raider
         12401,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Claim Jumper
         12404,
@@ -3317,20 +3555,30 @@ KrowiAF.AchievementData["07_03_05"] = {
     { -- Master of Seething Shore
         12412,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
         },
     },
     { -- Heritage of the Nightborne
         12413,
         faction.Horde,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- Heritage of the Lightforged
         12414,
         faction.Alliance,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- Heritage of Highmountain
         12415,
         faction.Horde,
+        {
+            RewardType = rewardType.Transmog,
+        },
     },
     { -- The Total Package
         12416,
@@ -3345,9 +3593,15 @@ KrowiAF.AchievementData["07_03_05"] = {
     },
     { -- Post Haste
         12431,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Priority Mail
         12439,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Westfall & Duskwood Quests
         12455,

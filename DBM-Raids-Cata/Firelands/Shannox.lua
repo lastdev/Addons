@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 --local Riplimb	= DBM:EJ_GetSectionInfo(2581)--Unused
 --local Rageface	= DBM:EJ_GetSectionInfo(2583)--Unused
 
-mod:SetRevision("20241111004119")
+mod:SetRevision("20241129215649")
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:SetUsedIcons(1, 2) -- cross(7) is hard to see in redish environment?
@@ -60,7 +60,7 @@ local timerCrystalPrison		= mod:NewTargetTimer(10, 99837, nil, nil, nil, 5)--Dog
 local timerCrystalPrisonCD		= mod:NewCDTimer(25.5, 99836, nil, nil, nil, 3)--Seems consistent timing, other trap is not.
 local timerSpearCD				= mod:NewCDTimer(42, 100002, nil, nil, nil, 3)--Before riplimb dies
 local timerMagmaRuptureCD		= mod:NewCDTimer(15, 99840, nil, nil, nil, 2)--After riplimb dies
-local timerFaceRageCD			= mod:NewCDTimer(27, 99947, nil, false, nil, 3)--Has a 27-30 sec cd but off by default as it's subject to wild variation do to traps.
+local timerFaceRageCD			= mod:NewCDTimer(27, 99947, nil, nil, nil, 3)--Has a 27-30 sec cd but off by default as it's subject to wild variation do to traps.
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 

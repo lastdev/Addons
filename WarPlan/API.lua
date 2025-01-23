@@ -359,6 +359,10 @@ function W.GetAvailableMissions(mtype, inProgressMissions, followerMissionInfo)
 			local rq = er1 and 4 or 0
 			if ecid == 0 then
 				rq = 2
+			elseif ecid == 1553 then -- Azerite
+				rq = 1
+			elseif ecid == 1166 then -- Timewarped Badge
+				rq = 5
 			elseif ecid then
 				local fid = W.CURRENCY_FACTION_ID[ecid]
 				if fid and not C_Reputation.IsFactionParagon(fid) then
@@ -844,7 +848,7 @@ do -- PrepareAllMissionGroups/GetMissionGroups
 		local mi = C.GetBasicMissionInfo(mid)
 		if not mi then
 			return false
-		elseif mi.numFollowers > #mmFollowerIDs then
+		elseif (mi.requiredChampionCount or 1) > mmFollowerIDs.numChampions then
 			mmGroups[mid] = {hasBonusEffect=mi.hasBonusEffect}
 			return mmGroups[mid]
 		end
@@ -861,10 +865,9 @@ do -- PrepareAllMissionGroups/GetMissionGroups
 		suppressFollowerEvents(mt)
 		
 		local fn, t, fm, m, mn = #mmFollowerIDs, {}, {}, {hasBonusEffect=mi.hasBonusEffect}, 1
-		local nf = mi.numFollowers
 		local af, rf = C.AddFollowerToMission, C.RemoveFollowerFromMission
 		local GetPartyMissionInfo, GetMissionCost = C.GetPartyMissionInfo, C.GetMissionCost
-		repeat
+		for nf=math.min(#mmFollowerIDs, mi.numFollowers), mi.requiredChampionCount or 1, -1 do
 			fm[1] = fn
 			for i=2,nf do
 				fm[1], fm[2], fm[3] = fm[1] - 1, fm[1], fm[2]
@@ -896,8 +899,7 @@ do -- PrepareAllMissionGroups/GetMissionGroups
 			for i=1,nf do
 				C.RemoveFollowerFromMission(mid, mmFollowerIDs[t[i]])
 			end
-			nf = nf - 1
-		until nf == 0
+		end
 		
 		mmGroups[mid], ret = m, m
 		releaseFollowerEvents(mt)

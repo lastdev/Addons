@@ -87,3 +87,56 @@ L:SetGeneralLocalization({
 L:SetMiscLocalization({
 	AutoPotioned	= "Автоматически используемое зелье (Примечание: DBM не будет автоматически использовать зелье, если у Вас уже есть дебафф). Вы можете отключить это в настройках, если не хотите, чтобы зелье использовалось автоматически."
 })
+
+---------------------------
+--  Vexie and the Geargrinders) --
+---------------------------
+--L= DBM:GetModLocalization(2639)
+
+---------------------------
+--  Cauldron of Carnage --
+---------------------------
+L= DBM:GetModLocalization(2640)
+
+L:SetOptionLocalization({
+	AdvancedBossFiltering	= "Активно сканировать расстояние до каждого из боссов и автоматически скрывать определенные оповещения и таймеры исчезновения для боссов, рядом с которыми Вы НЕ находитесь (более 60 м.)"
+})
+
+---------------------------
+--  Rik Reverb --
+---------------------------
+--L= DBM:GetModLocalization(2641)
+
+---------------------------
+--  Stix Bunkjunker --
+---------------------------
+--L= DBM:GetModLocalization(2642)
+
+---------------------------
+--  Sprocketmonger Lockenstock --
+---------------------------
+--L= DBM:GetModLocalization(2653)
+
+---------------------------
+--  The One-Armed Bandit --
+---------------------------
+--L= DBM:GetModLocalization(2644)
+
+---------------------------
+--  Mug'Zee, Heads of Security --
+---------------------------
+--L= DBM:GetModLocalization(2645)
+
+---------------------------
+--  Chrome King Gallywix --
+---------------------------
+--L= DBM:GetModLocalization(2646)
+
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("UndermineTrash")
+
+L:SetGeneralLocalization({
+	name =	"Трэш мобы Освобождение Нижней Шахты"
+})

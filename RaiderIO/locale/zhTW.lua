@@ -310,6 +310,22 @@ L["RAID_BOSS_ICC_6"] = "腐臉"
 L["RAID_BOSS_ICC_7"] = "普崔希德教授"
 L["RAID_BOSS_ICC_8"] = "血親王議會"
 L["RAID_BOSS_ICC_9"] = "血腥女王菈娜薩爾"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_8"] = ""--]] 
 L["RAID_BOSS_NP_1"] = "烏格拉斯"
 L["RAID_BOSS_NP_2"] = "血縛之懼"
 L["RAID_BOSS_NP_3"] = "錫克朗"
@@ -370,6 +386,7 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "已擊敗的團隊首領"
 L["RAID_FL"] = "火源之界"
 L["RAID_ICC"] = "冰冠城塞"
+L["RAID_LOU"] = "解放幽坑城"
 L["RAID_NP"] = "奈幽巴宮殿"
 L["RAID_RS"] = "晶紅聖所"
 L["RAID_TOTFW"] = "四風王座"
@@ -383,6 +400,7 @@ L["RAIDERIO_MP_SCORE"] = "Raider.IO M+分數"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Raider.IO 插件選項"
 L["RAIDING_DATA_HEADER"] = "Raider.IO 團隊副本進度"
 L["RAIDING_DB_MODULES"] = "團隊 數據庫模組"
+L["RECENT_RUNS_WITH_YOU"] = "最近同場"
 L["RECRUITMENT_DB_MODULES"] = "招募 數據庫模組"
 L["RELOAD_LATER"] = "稍後重載"
 L["RELOAD_NOW"] = "立即重載"

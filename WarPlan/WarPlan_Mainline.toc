@@ -1,8 +1,8 @@
-## Interface: 110005
+## Interface: 110007
 ## Title: War Plan
 ## Notes: Interface replacement for War Campaign missions.
 ## Author: foxlit
-## Version: 3.27a
+## Version: 3.28
 ## X-Website: https://www.townlong-yak.com/addons/war-plan/
 ## Notes-deDE: Schnittstellenersatz für Kriegskampagne Missionen.
 ## Notes-esES: Reemplazo de Interfaz para las misiones de Campaña de Guerra

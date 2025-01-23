@@ -8,6 +8,7 @@ local LibTSMService = select(2, ...).LibTSMService
 local Auction = LibTSMService:Init("Auction")
 local BlackMarket = LibTSMService:Include("Auction.BlackMarket")
 local Expiring = LibTSMService:Include("Auction.Expiring")
+local FullScan = LibTSMService:Include("Auction.FullScan")
 local Scanner = LibTSMService:Include("Auction.Scanner")
 local SaleHint = LibTSMService:Include("Auction.SaleHint")
 
@@ -103,4 +104,16 @@ end
 ---@return number? soldGold
 function Auction.GetSummaryInfo()
 	return Scanner.GetSummaryInfo()
+end
+
+---Enables the full scan code.
+function Auction.EnableFullScan()
+	FullScan.Enable()
+end
+
+---Gets any available full scan data.
+---@return string? data
+---@return number? scanTime
+function Auction.GetFullScanData()
+	return FullScan.GetData()
 end

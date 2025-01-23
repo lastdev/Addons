@@ -1,0 +1,20 @@
+AddonFactory Changelog (dates in dd/mm/yyyy)
+======================
+
+
+Version 2024.12.23 (23/12/2024)
+
+- Added GetSize() to SQLTable.
+- Added GetSize() to SQLTableView.
+- Added the Dictionary class.
+- Added the ScrollFrameViewHandler class.
+
+Version 2024.12.22 (22/12/2024)
+
+- Added the 'Dates' service.
+- Added the 'Classes' service, to support basic OOP functionality.
+- Updated LibMVC to support a controller's metatable functions, required for proper OOP support.
+- Transferred the loading event handler, the locales and the communication handlers from DataStore to AddonFactory.
+- Transferred ChatThrottleLib from DataStore to AddonFactory.
+- Added the SQLTable class.
+- Added the SQLTableView class.

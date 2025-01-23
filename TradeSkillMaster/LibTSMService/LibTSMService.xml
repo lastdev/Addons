@@ -21,6 +21,7 @@
     <Script file="Source\Auction\Classes\Scanner.lua" />
     <Script file="Source\Auction\Classes\Expiring.lua" />
     <Script file="Source\Auction\Classes\SaleHint.lua" />
+    <Script file="Source\Auction\Classes\FullScan.lua" />
     <Script file="Source\Auction\Auction.lua" />
 
     <Script file="Source\Mail\Classes\Util.lua" />

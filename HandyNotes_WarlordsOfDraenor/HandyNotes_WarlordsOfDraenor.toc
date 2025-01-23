@@ -1,6 +1,6 @@
 ## Interface: 110007
 ## Title: HandyNotes: Warlords of Draenor
-## Version: 111
+## Version: 113
 ## Notes: Warlords of Draenor Notes
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes

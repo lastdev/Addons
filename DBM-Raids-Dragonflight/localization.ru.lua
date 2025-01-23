@@ -6,18 +6,6 @@ local L
 ---------------------------
 --L= DBM:GetModLocalization(2480)
 
---L:SetWarningLocalization({
---})
---
---L:SetTimerLocalization{
---}
---
---L:SetOptionLocalization({
---})
---
---L:SetMiscLocalization({
---})
-
 ---------------------------
 --  Terros --
 ---------------------------
@@ -135,8 +123,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	northWall		= "Commanders ascend the northern battlement!",
-	southWall		= "Commanders ascend the southern battlement!"
+	northWall		= "Помощники вождя поднимаются на северное укрепление!",
+	southWall		= "Помощники вождя поднимаются на южное укрепление!"
 })
 
 ---------------------------

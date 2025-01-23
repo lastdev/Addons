@@ -20,7 +20,7 @@ local private = {}
 ---@param searchValue V The value to search for
 ---@param valueFunc fun(index: number, ...): V A function to call to get a comparable value for the specified index
 ---@param ... any Extra values to pass to valueFunc
----@return number|nil index
+---@return number? index
 ---@return number insertIndex
 function BinarySearch.Raw(numEntries, searchValue, valueFunc, ...)
 	local insertIndex = 1
@@ -44,21 +44,26 @@ end
 
 ---Performs a binary search on a table.
 ---@generic V: number|string
----@param tbl V[] The table to search
+---@generic T: any
+---@param tbl V[]|T[] The table to search
 ---@param searchValue V The value to search for
+---@param valueFunc? fun(value: T): V An optional function to get the value from a table entry
 ---@return number|nil index
 ---@return number insertIndex
-function BinarySearch.Table(tbl, searchValue)
-	return BinarySearch.Raw(#tbl, searchValue, private.TableLookup, tbl)
+function BinarySearch.Table(tbl, searchValue, valueFunc)
+	return BinarySearch.Raw(#tbl, searchValue, private.TableLookup, tbl, valueFunc)
 end
 
 
 
-
 -- ============================================================================
--- Module Functions
+-- Private Helper Functions
 -- ============================================================================
 
-function private.TableLookup(index, tbl)
-	return tbl[index]
+function private.TableLookup(index, tbl, valueFunc)
+	if valueFunc then
+		return valueFunc(tbl[index])
+	else
+		return tbl[index]
+	end
 end

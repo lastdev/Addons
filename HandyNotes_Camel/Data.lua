@@ -63,6 +63,12 @@ points[ 249 ] = {
 points[ 1527 ] = {
 	[26002700] = { testUldum=true },	
 }
+points[ 12 ] = { -- Kalimdor
+	[49509300] = { camel=true },
+}
+points[ 947 ] = { -- Azeroth
+	[17507460] = { camel=true },
+}
 
 -- Choice of texture
 -- Note that these textures are all repurposed and as such have non-uniform sizing. I've copied my scaling factors from my old AddOn
@@ -88,22 +94,22 @@ textures[17] = "Interface\\PlayerFrame\\UI-PlayerFrame-DeathKnight-Frost"
 textures[18] = "Interface\\HelpFrame\\HelpIcon-CharacterStuck"	
 textures[19] = "Interface\\Vehicles\\UI-Vehicles-Raid-Icon"
 
-scaling[1] = 0.55
-scaling[2] = 0.55
-scaling[3] = 0.55
-scaling[4] = 0.55
-scaling[5] = 0.55
-scaling[6] = 0.55
-scaling[7] = 0.65
-scaling[8] = 0.63
-scaling[9] = 0.75
-scaling[10] = 0.75
-scaling[11] = 0.38
-scaling[12] = 0.5
-scaling[13] = 0.5
-scaling[14] = 0.5
-scaling[15] = 0.46
-scaling[16] = 0.45
-scaling[17] = 0.41
-scaling[18] = 0.6
-scaling[19] = 0.43
+scaling[1] = 0.413
+scaling[2] = 0.413
+scaling[3] = 0.413
+scaling[4] = 0.413
+scaling[5] = 0.413
+scaling[6] = 0.413
+scaling[7] = 0.489
+scaling[8] = 0.465
+scaling[9] = 0.563
+scaling[10] = 0.563
+scaling[11] = 0.278
+scaling[12] = 0.368
+scaling[13] = 0.368
+scaling[14] = 0.368
+scaling[15] = 0.323
+scaling[16] = 0.308
+scaling[17] = 0.296
+scaling[18] = 0.428
+scaling[19] = 0.323

@@ -1,3 +1,10 @@
+== v2.05 7th January 2025
+* Added Kalimdor and Azeroth pins
+* More appropriate pin sizing
+
+== v2.04 24th December 2024
+* Translations added for the new map checks
+
 == v2.03 10th December 2024
 * TOC update to 11.0.7
 

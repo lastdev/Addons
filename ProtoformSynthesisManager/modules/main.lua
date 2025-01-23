@@ -40,7 +40,7 @@ local UpdateItemFrame = function(self)
 		self.text:Show();
 	else
 		-- Mats
-		local count = GetItemCount(self.itemID, true);
+		local count = C_Item.GetItemCount(self.itemID, true, false, true, true);
 		if count then
 			self.text:SetTextColor(1, 1, 1, 1);
 			self.text:SetText(tostring(count));
@@ -61,7 +61,7 @@ SetItemInfo = function(self)
 	local isNeedRetry = false;
 
 	if self.itemInfo == nil then
-		local itemInfo = {GetItemInfo(self.itemID)};
+		local itemInfo = { C_Item.GetItemInfo(self.itemID) };
 		if #itemInfo > 0 then
 			self.itemInfo = itemInfo;
 		else
@@ -70,7 +70,7 @@ SetItemInfo = function(self)
 	end
 
 	if self.questItemID and self.questItemInfo == nil then
-		local questItemInfo = {GetItemInfo(self.questItemID)};
+		local questItemInfo = { C_Item.GetItemInfo(self.questItemID) };
 		if #questItemInfo > 0 then
 			self.questItemInfo = questItemInfo;
 		else
@@ -199,7 +199,7 @@ SetupFuncs["Blizzard_Collections"] = function(addOnName)
 	local parent = _G["MountJournalSummonRandomFavoriteButton"];
 	local ToggleButton = CreateFrame("Button", "TestTest", parent, "ProtoformSynthesisManagerToggleButtonTemplate");
 
-	local loaded, finished = IsAddOnLoaded("MountJournalEnhanced");
+	local loaded, finished = C_AddOns.IsAddOnLoaded("MountJournalEnhanced");
 	if loaded and finished then
 		ToggleButton:SetPoint("TOPRIGHT", parent, "TOPLEFT", -220, -1);
 		ToggleButton.Text:Hide();

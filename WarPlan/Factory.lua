@@ -268,10 +268,10 @@ local function TroopButton_OnEnter(self)
 	if self.followerID then
 		local fid, gfid, NC = self.followerID, self.gfollowerID, NORMAL_FONT_COLOR
 		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-		local rc = fid and ITEM_QUALITY_COLORS[C.GetFollowerQuality(fid)] or nil
+		local rc, tr = fid and ITEM_QUALITY_COLORS[C.GetFollowerQuality(fid)] or nil, _G[GameTooltip:GetName() .. "TextRight1"]
 		GameTooltip:SetText(C.GetFollowerName(fid), rc and rc.r, rc and rc.g, rc and rc.b)
-		GameTooltipTextRight1:SetText("|T" .. C.GetFollowerPortraitIconID(fid) .. ":42:42:4:-22:1:1:1:0:0:1|t")
-		GameTooltipTextRight1:Show()
+		tr:SetText("|T" .. C.GetFollowerPortraitIconID(fid) .. ":42:42:2:-26:1:1:1:0:0:1|t")
+		tr:Show()
 		if gfid then
 			GameTooltip:AddLine("|cff49C8F2" .. (C.GetFollowerClassSpecName(self.gfollowerID) or "?"))
 		end
@@ -751,7 +751,10 @@ function Factory.RewardFrame(parent)
 	t:SetPoint("TOP", 0, 7)
 	t:SetSize(20, 20)
 	t:SetAtlas("VignetteLoot")
-	f.OvermaxRewardIcon = t
+	t, f.OvermaxRewardIcon = f:CreateMaskTexture(), t
+	t:SetTexture("Interface/FrameGeneral/UIFrameIconMask")
+	t:SetAllPoints(f.Icon)
+	f.Icon:AddMaskTexture(t)
 	f:SetScript("OnClick", CommonLinkable_OnClick)
 	return f
 end

@@ -1,4 +1,53 @@
-== v4.05 - 20th December 2024
+== v4.13 - 7th January 2025
+* Added another HandyNotes Refresh() delay for logins (both new and character swap),
+  reloads, and loading screen situations (various - enter/exit instances or Mage
+  teleport, etc). This will assist players with slow internet, unusual Blizzard
+  server glitches, too many AddOns, potato PCs
+  Note: This is a preemptive change due to a report for another of my AddOns
+  
+== v4.12 - 5th January 2025
+* AddOn compartment functionality improved (that's the drop down menu immediately
+  below the calendar icon, top right corner of the screen)
+
+== v4.11 - 3rd January 2025
+* Adding Merrymaker broke BB King as it returns a nul "description" from an API call
+    unlike all the other achievements
+	
+== v4.10 - 31st December 2024
+* Merrymaker will now show more detail if the character hasn't completed an achievement
+* Retail Ironforge now has a Wondervolt pin, even though it's technically in Dun Morogh
+* Added explicit Neutral faction check to routine - planning ahead for Classic MoP
+
+== v4.09 - 29th December 2024
+* Merrymaker added
+* Translation for plain Pepe as well as Merrymaker added
+
+== v4.08 - 27th December 2024
+* Greatfeather Pepe!
+* Garrison NPCs coordinates tweaked. Added daily to Tradurjo
+
+== v4.07 - 25th December 2024
+* Bug fix for seasonal/Dailies/One Time quest show/hide pin logic
+* "Great-father Winter is Here!" in Thunderbluff (all game versions) needed a hard-coded name plus level
+* "Treats for Great-father Winter" level added (affects all the green gingerbread pins)
+* Used the final colour scheme for the AddOn title
+* Various retail NPCs coordinates adjusted slightly
+
+== v4.06 - 22nd December 2024
+* Draenor NPC translations completed
+* Tidied The Nexus/Oculus. Added translations too
+* Quest levels added in Garrisons
+* Removed quest list from Frosty Shake achievement pin in Crystalsong Forest and Dalaran
+    as it's confusing or potentially misleading
+* Added levels to the Fa-La-La-... lead in quests
+* Hard coded Fa-La-La lead in quest names to work around server / API quirk
+* Retail Undercity version of "Great-father Winter is Here" needed hard-coded name and level
+* Retail Stormwind "Greatfather Winter Is Here" needed a quest level
+* Vanilla "Metzen the Reindeer" needed name/level for Searing Gorge and Tanaris
+* Retail "Greatfather Winter Is Here" in Elwynn Forest needed a level
+* Strange Snowman in Alterac Mountains in Classic Cataclysm now has levels for his quests
+
+== v4.05 - 21st December 2024
 * Hotoppik Copperpinch name corrected
 * Large number of Eastern Kingdoms NPC translations added
 * Some other continent NPCs too

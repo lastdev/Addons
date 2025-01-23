@@ -1,5 +1,5 @@
 local addonName = ...
-local L = DataStore:SetLocale(addonName, "koKR")
+local L = AddonFactory:SetLocale(addonName, "koKR")
 if not L then return end
 
 L["AUTO_UPDATE_DISABLED"] = "퀘스트 기록은 비거나 오래된 현 상태로 유지됩니다."

@@ -49,6 +49,41 @@ COMMANDS[''] =
         end
     end
 
+-- These are here because I don't export _G.LM except to myself
+
+COMMANDS['dbget'] =
+    function (argstr, key)
+        if key == nil then return end
+        local ftext = string.format("return LM.db.%s", key)
+        local f, err = loadstring(ftext)
+        if f then
+            setfenv(f, { LM = LM })
+            local v = f()
+            if type(v) == 'table' then
+                LM.Print('%s =', key)
+                for i, line in ipairs(LM.TableToLines(v)) do
+                    LM.Print(line)
+                end
+            else
+                LM.Print("%s = %s", key, tostring(v))
+            end
+         else
+            LM.Print(err)
+        end
+    end
+
+COMMANDS['dbset'] =
+    function (argstr, key, val)
+        if key == nil or val == nil then return end
+        local f, err = loadstring(string.format("LM.db.%s = %s", key, val))
+        if f then
+            setfenv(f, { LM = LM })
+            f()
+        else
+            LM.Print(err)
+        end
+    end
+
 COMMANDS['macro'] =
     function ()
         if not InCombatLockdown() then

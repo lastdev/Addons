@@ -1,6 +1,7 @@
 local _, addon = ...;
 local shared = addon.Data.AchievementData.Shared;
-local faction = addon.Objects.Faction;
+local faction = KrowiAF.Enum.Faction;
+local rewardType = KrowiAF.Enum.RewardType;
 
 KrowiAF.AchievementData["05_00_04"] = {
     {KrowiAF.SetAchievementPatch, 5, 0, 4},
@@ -42,25 +43,33 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Challenge Conqueror: Bronze
         6374,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
     { -- Challenge Conqueror: Silver
         6375,
         {
+            RewardType = rewardType.Mount,
             {"Before", "Version", {6, 0, 2}},
         },
     },
     { -- Challenge Conqueror: Gold
         6378,
         {
+            RewardType = rewardType.Transmog,
             {"Before", "Version", {6, 0, 2}},
         },
     },
     {6394}, -- Rattle No More
     {6396}, -- Sanguinarian
     {6400}, -- How Did He Get Up There?
-    {6402}, -- Ling-Ting's Herbal Journey
+	{ -- Ling-Ting's Herbal Journey
+		6402,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {6420}, -- Hopocalypse Now!
     {6427}, -- Mosh Pit
     { -- Realm First! Challenge Conqueror: Gold
@@ -85,7 +94,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6477}, -- Respect
     {6478}, -- Glintrok N' Roll
     {6479}, -- Bomberman
-    {6480}, -- "Settle Down, Bro"
+    {6480}, -- Settle Down, Bro
     {6485}, -- Return to Sender
     {6517}, -- Extinction Event
     {6518}, -- I Heard You Like Amber...
@@ -129,7 +138,7 @@ KrowiAF.AchievementData["05_00_04"] = {
         faction.Horde,
         6537,
     },
-    {6539}, -- "One Steppe Forward, Two Steppes Back"
+    {6539}, -- One Steppe Forward, Two Steppes Back
     {6540}, -- Dread Haste Makes Dread Waste
     {6541}, -- Loremaster of Pandaria
     {6543}, -- The August Celestials
@@ -144,12 +153,22 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6553}, -- Like an Arrow to the Face
     {6554}, -- He's Mine!
     {6555}, -- Building a Team
-    {6556}, -- Going to Need More Traps
+	{ -- Going to Need More Traps
+		6556,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {6557}, -- Master Pet Hunter
     {6558}, -- Local Pet Mauler
     {6559}, -- Traveling Pet Mauler
     {6560}, -- World Pet Mauler
-    {6566}, -- Just a Pup
+	{ -- Just a Pup
+		6566,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {6567}, -- Growing Up
     {6568}, -- Time for a Leash
     {6569}, -- Old Timer
@@ -158,8 +177,18 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6578}, -- Pro Pet Group
     {6579}, -- Rookie Pet Group
     {6580}, -- Rookie Pet Crew
-    {6581}, -- Pro Pet Crew
-    {6582}, -- Pro Pet Mob
+	{ -- Pro Pet Crew
+		6581,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+	{ -- Pro Pet Mob
+		6582,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {6583}, -- Rookie Pet Mob
     {6584}, -- Big City Pet Brawlin' - Alliance
     {6585}, -- Kalimdor Safari
@@ -167,7 +196,12 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6587}, -- Outland Safari
     {6588}, -- Northrend Safari
     {6589}, -- Pandaria Safari
-    {6590}, -- World Safari
+    { -- World Safari
+        6590,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
     {6591}, -- Grand Master Pet Battler
     {6592}, -- Legendary Pet Battler
     {6593}, -- Experienced Pet Battler
@@ -208,16 +242,43 @@ KrowiAF.AchievementData["05_00_04"] = {
         6602,
         faction.Horde,
         6603,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
     { -- Taming Eastern Kingdoms
         6603,
         faction.Alliance,
         6602,
+        {
+            RewardType = rewardType.Pet,
+        },
     },
-    {6604}, -- Taming Outland
-    {6605}, -- Taming Northrend
-    {6606}, -- Taming Pandaria
-    {6607}, -- Taming Azeroth
+
+	{ -- Taming Outland
+		6604,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+	{ -- Taming Northrend
+		6605,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+	{ -- Taming Pandaria
+		6606,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+    { -- Taming Azeroth
+        6607,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
     {6608}, -- Family Reunion
     {6609}, -- No Favorites
     {6610}, -- All Pets Allowed
@@ -238,7 +299,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6621}, -- Big City Pet Brawlin' - Horde
     {6622}, -- Big City Pet Brawler
     {6671}, -- Seeds of Doubt
-    {6674}, -- "Anything You Can Do, I Can Do Better..."
+    {6674}, -- Anything You Can Do, I Can Do Better...
     {6683}, -- Less Than Three
     {6684}, -- Humane Society
     {6686}, -- Straight Six
@@ -255,7 +316,12 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6721}, -- Heroic: Gara'jal the Spiritbinder
     {6722}, -- Heroic: Four Kings
     {6723}, -- Heroic: Elegon
-    {6724}, -- Heroic: Will of the Emperor
+	{ -- Heroic: Will of the Emperor
+		6724,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {6725}, -- Heroic: Imperial Vizier Zor'lok
     {6726}, -- Heroic: Blade Lord Ta'yak
     {6727}, -- Heroic: Garalon
@@ -265,7 +331,12 @@ KrowiAF.AchievementData["05_00_04"] = {
     {6731}, -- Heroic: Protectors of the Endless
     {6732}, -- Heroic: Tsulong
     {6733}, -- Heroic: Lei Shi
-    {6734}, -- Heroic: Sha of Fear
+	{ -- Heroic: Sha of Fear
+		6734,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {6736}, -- What Does This Button Do?
     { -- Silvershard Mines Victory
         6739,
@@ -286,7 +357,12 @@ KrowiAF.AchievementData["05_00_04"] = {
             {"PvP Season", 11},
         },
     },
-    {6742}, -- 60 Exalted Reputations
+	{ -- 60 Exalted Reputations
+		6742,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     { -- Realm First! Level 90 Druid (Legacy)
         6743,
         {
@@ -378,11 +454,17 @@ KrowiAF.AchievementData["05_00_04"] = {
         6827,
         faction.Horde,
         6828,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Pandaren Ambassador
         6828,
         faction.Alliance,
         6827,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Realm First! Pandaren Ambassador
         6829,
@@ -528,6 +610,9 @@ KrowiAF.AchievementData["05_00_04"] = {
         6874,
         faction.Alliance,
         7509,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Temple of Kotmogu Veteran
         6882,
@@ -562,6 +647,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Temple of the Jade Serpent: Gold
         6887,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -586,6 +672,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Stormstout Brewery: Gold
         6891,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -646,6 +733,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Mogu'shan Palace: Gold
         6901,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -664,6 +752,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Shado-Pan Monastery: Gold
         6904,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -682,6 +771,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Gate of the Setting Sun: Gold
         6907,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -700,6 +790,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Scarlet Halls: Gold
         6910,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -718,6 +809,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Scarlet Monastery: Gold
         6913,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -736,6 +828,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Scholomance: Gold
         6916,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -754,6 +847,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     { -- Siege of Niuzao Temple: Gold
         6919,
         {
+            RewardType = rewardType.Teleport,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -765,20 +859,35 @@ KrowiAF.AchievementData["05_00_04"] = {
     },
     {6922}, -- Timing is Everything
     {6923}, -- Brewmoon Festival
-    { -- "100,000 Valor Points"
+    { -- 100,000 Valor Points
         6924,
         {
             {"Before", "Version", {6, 0, 2}},
         },
     },
     {6925}, -- Pandaria Dungeon Hero
-    {6926}, -- Tranquil Master
-    {6927}, -- Glory of the Pandaria Hero
+	{ -- Tranquil Master
+		6926,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
+	{ -- Glory of the Pandaria Hero
+		6927,
+		{
+			RewardType = rewardType.Mount,
+		},
+	},
     {6928}, -- Burning Man
     {6929}, -- And Stay Dead!
     {6930}, -- Yaungolian Barbecue
     {6931}, -- Binan Village All-Star
-    {6932}, -- Glory of the Pandaria Raider
+	{ -- Glory of the Pandaria Raider
+		6932,
+		{
+			RewardType = rewardType.Mount,
+		},
+	},
     {6933}, -- Who's Got Two Green Thumbs?
     {6936}, -- Candle in the Wind
     {6937}, -- Overzealous
@@ -811,13 +920,19 @@ KrowiAF.AchievementData["05_00_04"] = {
         6941,
         faction.Horde,
         6942,
-        true,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+        },
     },
     { -- Hero of the Alliance
         6942,
         faction.Alliance,
         6941,
-        true,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+        },
     },
     {6943}, -- Queuing Spree
     {6945}, -- Mantid Swarm
@@ -889,7 +1004,7 @@ KrowiAF.AchievementData["05_00_04"] = {
             IsPvP = true,
         },
     },
-    {7056}, -- "Sorry, Were You Looking for This?"
+    {7056}, -- Sorry, Were You Looking for This?
     { -- End of the Line
         7057,
         {
@@ -936,7 +1051,7 @@ KrowiAF.AchievementData["05_00_04"] = {
     {7231}, -- Spill No Evil
     {7232}, -- The Keg Runner
     {7239}, -- Monkey in the Middle
-    {7248}, -- "Monkey See, Monkey Kill"
+    {7248}, -- Monkey See, Monkey Kill
     {7249}, -- Unga Ingoo
     {7252}, -- A Brewing Storm
     {7257}, -- Don't Shake the Keg
@@ -954,7 +1069,12 @@ KrowiAF.AchievementData["05_00_04"] = {
     {7281}, -- Lost and Found
     {7282}, -- Finders Keepers
     {7283}, -- One Man's Trash...
-    {7284}, -- Is Another Man's Treasure
+	{ -- Is Another Man's Treasure
+		7284,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {7285}, -- Every Day I'm Pand-a-ren
     {7286}, -- Finish Them!
     {7287}, -- Champion of Chi-Ji
@@ -976,7 +1096,12 @@ KrowiAF.AchievementData["05_00_04"] = {
     {7303}, -- Master of the Steamer
     {7304}, -- Master of the Oven
     {7305}, -- Master of the Brew
-    {7306}, -- Master of Pandaren Cooking
+	{ -- Master of Pandaren Cooking
+		7306,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {7307}, -- Silent Assassin
     {7308}, -- Know Your Role
     {7309}, -- Fire in the Yaung-hole!
@@ -1056,16 +1181,41 @@ KrowiAF.AchievementData["05_00_04"] = {
     {7379}, -- Pandaren Master of All
     {7380}, -- Double Agent
     {7381}, -- Restore Balance
-    {7382}, -- Dynamic Duo
-    {7383}, -- Terrific Trio
-    {7384}, -- Quintessential Quintet
-    {7385}, -- Pub Crawl
+    { -- Dynamic Duo
+		7382,
+		{
+			RewardType = rewardType.Other,
+		},
+	},
+    { -- Terrific Trio
+		7383,
+		{
+			RewardType = rewardType.Other,
+		},
+	},
+    { -- Quintessential Quintet
+		7384,
+		{
+			RewardType = rewardType.Other,
+		},
+	},
+	{ -- Pub Crawl
+		7385,
+		{
+			RewardType = rewardType.Toy,
+		},
+	},
     {7386}, -- Grand Expedition Yak
     {7410}, -- 5000 Daily Quests Completed
     {7411}, -- 10000 Daily Quests Completed
     {7412}, -- Collector's Edition: Fetish Shaman
     {7413}, -- Scarlet Halls
-    {7433}, -- Newbie
+	{ -- Newbie
+		7433,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {7436}, -- Zen Pet Hunter
     {7437}, -- A Worthy Opponent
     {7438}, -- Could We Find More Like That?
@@ -1090,7 +1240,12 @@ KrowiAF.AchievementData["05_00_04"] = {
             {"Never"},
         },
     },
-    {7479}, -- The Shado-Master
+	{ -- The Shado-Master
+		7479,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {7482}, -- Trainer Extraordinaire
     {7483}, -- Battle Master
     { -- Cutting Edge: Will of the Emperor
@@ -1112,18 +1267,46 @@ KrowiAF.AchievementData["05_00_04"] = {
         },
     },
     {7498}, -- Taming the Great Outdoors
-    {7499}, -- Taming the World
-    {7500}, -- Going to Need More Leashes
-    {7501}, -- That's a Lot of Pet Food
+	{ -- Taming the World
+		7499,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+	{ -- Going to Need More Leashes
+		7500,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+	{ -- That's a Lot of Pet Food
+		7501,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {7502}, -- Savior of Stoneplow
     { -- Scenaturday
         7509,
         faction.Horde,
         6874,
+        {
+            RewardType = rewardType.Title,
+        },
     },
-    {7518}, -- "Wanderers, Dreamers, and You"
-    {7520}, -- The Loremaster
-    {7521}, -- Time to Open a Pet Store
+    {7518}, -- Wanderers, Dreamers, and You
+	{ -- The Loremaster
+		7520,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
+	{ -- Time to Open a Pet Store
+		7521,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {7522}, -- Crypt of Forgotten Kings
     { -- Theramore's Fall
         7523,
@@ -1135,7 +1318,12 @@ KrowiAF.AchievementData["05_00_04"] = {
         faction.Horde,
         7523,
     },
-    {7525}, -- Taming Cataclysm
+	{ -- Taming Cataclysm
+		7525,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     { -- Kite Fight
         7526,
         faction.Alliance,
@@ -1199,7 +1387,12 @@ KrowiAF.AchievementData["05_00_04"] = {
         },
     },
     {7611}, -- Pandarian Angler
-    {7612}, -- The Seat of Knowledge
+	{ -- The Seat of Knowledge
+		7612,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {7614}, -- Locking Down the Docks
     {7842}, -- Collector's Edition: Baneling
 };
@@ -1217,13 +1410,24 @@ KrowiAF.AchievementData["05_01_00"] = {
         7860,
         faction.Alliance,
         7862,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- We're Going to Need More Saddles
         7862,
         faction.Horde,
         7860,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
-    {7908}, -- I Choose You
+    { -- I Choose You
+		7908,
+		{
+			RewardType = rewardType.Other,
+		},
+	},
     { -- Operation: Shieldwall Campaign
         7928,
         faction.Alliance,
@@ -1234,10 +1438,20 @@ KrowiAF.AchievementData["05_01_00"] = {
         faction.Horde,
         7928,
     },
-    {7932}, -- "I'm In Your Base, Killing Your Dudes"
+    {7932}, -- I'm In Your Base, Killing Your Dudes
     {7933}, -- And... It's Good!
-    {7934}, -- Raiding with Leashes
-    {7936}, -- Pandaren Spirit Tamer
+	{ -- Raiding with Leashes
+		7934,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
+	{ -- Pandaren Spirit Tamer
+		7936,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     { -- You Are Not Your $#*@! Legplates (Season 1)
         7937,
         faction.Alliance,
@@ -1267,6 +1481,7 @@ KrowiAF.AchievementData["05_01_00"] = {
         faction.Alliance,
         7942,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -1275,6 +1490,7 @@ KrowiAF.AchievementData["05_01_00"] = {
         faction.Horde,
         7941,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -1368,7 +1584,7 @@ KrowiAF.AchievementData["05_01_00"] = {
         faction.Alliance,
         8014,
     },
-    { -- "Waste Not, Want Not"
+    { -- Waste Not, Want Not
         8012,
         faction.Alliance,
         8015,
@@ -1383,7 +1599,7 @@ KrowiAF.AchievementData["05_01_00"] = {
         faction.Horde,
         8011,
     },
-    { -- "Waste Not, Want Not"
+    { -- Waste Not, Want Not
         8015,
         faction.Horde,
         8012,
@@ -1406,7 +1622,12 @@ KrowiAF.AchievementData["05_01_00"] = {
             {"Before", "Version", {6, 0, 2}},
         },
     },
-    {8023}, -- Wakener
+	{ -- Wakener
+		8023,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     { -- A Test of Valor
         8030,
         faction.Alliance,
@@ -1475,13 +1696,19 @@ KrowiAF.AchievementData["05_02_00"] = {
         8052,
         faction.Alliance,
         8055,
-        true,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+        },
     },
     { -- Khan
         8055,
         faction.Horde,
         8052,
-        true,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+        },
     },
     {8056}, -- Heroic: Jin'rokh the Breaker
     {8057}, -- Heroic: Horridon
@@ -1494,7 +1721,12 @@ KrowiAF.AchievementData["05_02_00"] = {
     {8064}, -- Heroic: Dark Animus
     {8065}, -- Heroic: Iron Qon
     {8066}, -- Heroic: Twin Empyreans
-    {8067}, -- Heroic: Lei Shen
+	{ -- Heroic: Lei Shen
+		8067,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {8068}, -- Heroic: Ra-den
     {8069}, -- Last Stand of the Zandalari
     {8070}, -- Forgotten Depths
@@ -1503,7 +1735,12 @@ KrowiAF.AchievementData["05_02_00"] = {
     {8073}, -- Cage Match
     {8077}, -- One-Up
     {8078}, -- Zul'Again
-    {8080}, -- Fabled Pandaren Tamer
+	{ -- Fabled Pandaren Tamer
+		8080,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {8081}, -- Ritualist Who?
     {8082}, -- Head Case
     {8086}, -- From Dusk 'til Dawn
@@ -1536,7 +1773,7 @@ KrowiAF.AchievementData["05_02_00"] = {
     {8105}, -- The Crumble Bundle
     {8106}, -- In the Hall of the Thunder King
     {8107}, -- Ready for RAAAAIIIIDDD?!?ing
-    {8108}, -- "When in Ihgaluk, Do as the Skumblade Do"
+    {8108}, -- When in Ihgaluk, Do as the Skumblade Do
     {8109}, -- The Mogu Below-gu
     {8110}, -- These Mogu Have Gotta Go-gu
     {8111}, -- This Isn't Even My Final Form
@@ -1548,9 +1785,19 @@ KrowiAF.AchievementData["05_02_00"] = {
     {8118}, -- Boop
     {8119}, -- Our Powers Combined
     {8120}, -- Direhorn in a China Shop
-    {8121}, -- Stormbreaker
+	{ -- Stormbreaker
+		8121,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     {8123}, -- Millions of Years of Evolution vs. My Fist
-    {8124}, -- Glory of the Thundering Raider
+	{ -- Glory of the Thundering Raider
+		8124,
+		{
+			RewardType = rewardType.Mount,
+		},
+	},
     { -- Operation: Shieldwall
         8205,
         faction.Alliance,
@@ -1671,9 +1918,14 @@ KrowiAF.AchievementData["05_02_00"] = {
 
 KrowiAF.AchievementData["05_03_00"] = {
     {KrowiAF.SetAchievementPatch, 5, 3, 0},
-    {8293}, -- Raiding with Leashes II: Attunement Edition
+	{ -- Raiding with Leashes II: Attunement Edition
+		8293,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     {8294}, -- The Secrets of Ragefire
-    {8295}, -- "The Few, the Proud, the Gob Squad"
+    {8295}, -- The Few, the Proud, the Gob Squad
     { -- Merciless Pet Brawler
         8297,
         {
@@ -1689,12 +1941,14 @@ KrowiAF.AchievementData["05_03_00"] = {
     { -- Brutal Pet Brawler
         8300,
         {
+            RewardType = rewardType.Pet,
             IsPvP = true,
         },
     },
     { -- Deadly Pet Brawler
         8301,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
         },
     },
@@ -1702,17 +1956,24 @@ KrowiAF.AchievementData["05_03_00"] = {
         8302,
         faction.Horde,
         8304,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Mount Parade
         8304,
         faction.Alliance,
         8302,
+        {
+            RewardType = rewardType.Mount,
+        },
     },
     { -- Hordebreaker
         8306,
         faction.Alliance,
         8307,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {5, 4, 0}},
         },
     },
@@ -1721,6 +1982,7 @@ KrowiAF.AchievementData["05_03_00"] = {
         faction.Horde,
         8306,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {5, 4, 0}},
         },
     },
@@ -1744,6 +2006,7 @@ KrowiAF.AchievementData["05_03_00"] = {
     { -- Chapter V: Judgment of the Black Prince
         8325,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -1834,7 +2097,12 @@ KrowiAF.AchievementData["05_03_00"] = {
     },
     {8345}, -- Hearthstoned
     {8347}, -- Keep those Bombs Away! (From Me)
-    {8348}, -- The Longest Day
+	{ -- The Longest Day
+		8348,
+		{
+			RewardType = rewardType.Pet,
+		},
+	},
     { -- Mine! Mine! Mine!
         8350,
         {
@@ -1880,6 +2148,7 @@ KrowiAF.AchievementData["05_03_00"] = {
     { -- Master of Deepwind Gorge
         8360,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"Before", "Version", {8, 3, 0}},
         },
@@ -1905,6 +2174,7 @@ KrowiAF.AchievementData["05_03_00"] = {
     { -- Tournament Glory 2013
         8392,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"From", "Date", {2013, 6, 18}, "Until", "Date", {2013, 8, 27}},
         },
@@ -1931,16 +2201,23 @@ KrowiAF.AchievementData["05_04_00"] = {
             {"PvP Season", 14},
         },
     },
-    {8397}, -- Crazy for Cats
+	{ -- Crazy for Cats
+		8397,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     { -- Ahead of the Curve: Garrosh Hellscream (10 player)
         8398,
         {
+            RewardType = rewardType.Mount,
             {"Before", "Version", {6, 0, 2}},
         },
     },
     { -- Ahead of the Curve: Garrosh Hellscream (25 player)
         8399,
         {
+            RewardType = rewardType.Mount,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -2031,7 +2308,12 @@ KrowiAF.AchievementData["05_04_00"] = {
         },
     },
     {8453}, -- Rescue Raiders
-    {8454}, -- Glory of the Orgrimmar Raider
+	{ -- Glory of the Orgrimmar Raider
+		8454,
+		{
+			RewardType = rewardType.Mount,
+		},
+	},
     {8458}, -- Vale of Eternal Sorrows
     {8459}, -- Gates of Retribution
     {8461}, -- The Underhold
@@ -2049,12 +2331,18 @@ KrowiAF.AchievementData["05_04_00"] = {
     {8479}, -- Mythic: Thok the Bloodthirsty
     {8480}, -- Mythic: Siegecrafter Blackfuse
     {8481}, -- Mythic: Paragons of the Klaxxi
-    {8482}, -- Mythic: Garrosh Hellscream
+	{ -- Mythic: Garrosh Hellscream
+		8482,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     { -- Grievous Combatant
         8484,
         faction.Horde,
         8485,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2064,6 +2352,7 @@ KrowiAF.AchievementData["05_04_00"] = {
         faction.Alliance,
         8484,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2161,18 +2450,21 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Proving Yourself: Endless Damage (Wave 30) (Level 90)
         8507,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
     { -- Proving Yourself: Endless Tank (Wave 30) (Level 90)
         8508,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
     { -- Proving Yourself: Endless Healer (Wave 30) (Level 90)
         8509,
         {
+            RewardType = rewardType.Title,
             {"Before", "Version", {6, 0, 2}},
         },
     },
@@ -2197,6 +2489,7 @@ KrowiAF.AchievementData["05_04_00"] = {
         faction.Horde,
         8642,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2206,6 +2499,7 @@ KrowiAF.AchievementData["05_04_00"] = {
         faction.Alliance,
         8641,
         {
+            RewardType = rewardType.Mount,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2213,6 +2507,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Grievous Gladiator: Season 14
         8643,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2220,6 +2515,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Gladiator: Season 14
         8644,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2227,6 +2523,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Duelist: Season 14
         8645,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2234,6 +2531,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Rival: Season 14
         8646,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2241,6 +2539,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Challenger: Season 14
         8649,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 14},
         },
@@ -2302,6 +2601,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Prideful Gladiator: Season 15
         8666,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2309,6 +2609,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Gladiator: Season 15
         8667,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2316,6 +2617,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Duelist: Season 15
         8668,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2323,6 +2625,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Rival: Season 15
         8669,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2330,6 +2633,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Challenger: Season 15
         8670,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
             {"PvP Season", 15},
         },
@@ -2345,11 +2649,17 @@ KrowiAF.AchievementData["05_04_00"] = {
         8679,
         faction.Alliance,
         8680,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- Liberator of Orgrimmar
         8680,
         faction.Horde,
         8679,
+        {
+            RewardType = rewardType.Title,
+        },
     },
     { -- You're Doing it Wrong (Level 90)
         8697,
@@ -2409,6 +2719,7 @@ KrowiAF.AchievementData["05_04_00"] = {
     { -- Fire-Watcher
         8721,
         {
+            RewardType = rewardType.Title,
             IsPvP = true,
         },
     },
@@ -2417,9 +2728,9 @@ KrowiAF.AchievementData["05_04_00"] = {
     {8724}, -- Pilgrimage
     {8725}, -- Eyes On The Ground
     {8726}, -- Extreme Treasure Hunter
-    {8727}, -- "Where There's Pirates, There's Booty"
+    {8727}, -- Where There's Pirates, There's Booty
     {8728}, -- Going To Need A Bigger Bag
-    {8729}, -- "Treasure, Treasure Everywhere"
+    {8729}, -- Treasure, Treasure Everywhere
     {8730}, -- Rolo's Riddle
     {8743}, -- Zarhym Altogether
     {8784}, -- Timeless Legends

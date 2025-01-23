@@ -1,14 +1,6 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Main.lua"></Script>
-	
-	<!-- Template used for the tab containers -->
-	<Frame name="AddonFactory_AuctionHouseTabFrameTemplate" parentArray="TabFrames" virtual="true">
-		<Anchors>
-			<Anchor point="TOPLEFT"/>
-			<Anchor point="BOTTOMRIGHT"/>
-		</Anchors>
-	</Frame>
-	
+
 	<Frame name="AddonFactory_AuctionHouseMainFrameTemplate" toplevel="true" parent="UIParent" inherits="PortraitFrameTemplate" enableMouse="true" movable="true" resizable="true" hidden="true" virtual="true">
 		<Size x="800" y="538" />
 		<Anchors>

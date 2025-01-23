@@ -78,7 +78,7 @@ local function ClearExpiries()
 	end
 end
 
-DataStore:OnAddonLoaded(addonName, function() 
+AddonFactory:OnAddonLoaded(addonName, function() 
 	DataStore:RegisterTables({
 		addon = addon,
 		characterIdTables = {
@@ -93,7 +93,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	dailies = DataStore_Quests_Dailies
 end)
 
-DataStore:OnPlayerLogin(function()
+AddonFactory:OnPlayerLogin(function()
 	options = DataStore_Quests_Options
 	
 	ClearExpiries()

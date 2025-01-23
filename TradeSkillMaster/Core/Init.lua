@@ -40,7 +40,7 @@ do
 			if not TSM.LibTSMCore.UnloadAll(maxTime) then
 				return false
 			end
-			for _, component, path, _, moduleUnloadTime in TSM.LibTSMCore.ModuleInfoIterator() do
+			for _, component, path, moduleUnloadTime in TSM.LibTSMCore.ModuleInfoIterator() do
 				if moduleUnloadTime > TIME_WARNING_THRESHOLD then
 					Log.Warn("Unloading %s->%s took %0.5fs", component, path, moduleUnloadTime)
 				end

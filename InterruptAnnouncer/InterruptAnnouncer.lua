@@ -27,6 +27,7 @@ end
 local interr = CreateFrame("Frame", "InterruptTrackerFrame", UIParent);
 interr:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 interr:RegisterEvent("PLAYER_ENTERING_WORLD");
+interr:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 interr:SetScript("OnEvent", function(self, event, ...)
     if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
         local type, _, sourceGUID, sourceName, _, _, destGUID, destName, _, destRaidFlags, spellId = select(2, CombatLogGetCurrentEventInfo());
@@ -60,7 +61,7 @@ interr:SetScript("OnEvent", function(self, event, ...)
                 DEFAULT_CHAT_FRAME:AddMessage(msg);
             end
         end
-    elseif (event == "PLAYER_ENTERING_WORLD") then
+    elseif (event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED_NEW_AREA") then
         local _, iType = IsInInstance();
         InstanceType = iType;
     end

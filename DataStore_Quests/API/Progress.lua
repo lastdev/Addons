@@ -199,7 +199,7 @@ local function _GetCampaignChaptersInfo(character, campaignID, storyline)
 end
 
 
-DataStore:OnAddonLoaded(addonName, function() 
+AddonFactory:OnAddonLoaded(addonName, function() 
 	DataStore:RegisterTables({
 		addon = addon,
 		characterTables = {
@@ -219,7 +219,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	thisCharacter.Storylines = thisCharacter.Storylines or {}
 end)
 
-DataStore:OnPlayerLogin(function()
+AddonFactory:OnPlayerLogin(function()
 	addon:ListenTo("PLAYER_ALIVE", ScanQuests)
 	addon:ListenTo("UNIT_QUEST_LOG_CHANGED", function() 
 		-- triggered when accepting/validating a quest .. but too soon to refresh data

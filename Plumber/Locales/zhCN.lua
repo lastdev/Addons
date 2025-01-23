@@ -178,6 +178,19 @@ L["ModuleDescription TooltipSnapdragonTreats"] = "在毒鳍龙鼠标提示上显
 L["Color Applied"] = "你正在使用这个配色。";
 
 
+--Tooltip Item Reagents
+L["ModuleName TooltipItemReagents"] = "合成材料";
+L["ModuleDescription TooltipItemReagents"] = "如果一个物品可被使用来合成新物品，显示所有所需的物品和你拥有的数量。\n\n如果游戏支持的话，按住Shift键可显示最终物品的信息。";
+L["Can Create Multiple Item Format"] = "你拥有的材料能够合成|cffffffff%d|r件物品。";
+
+
+--Plunderstore
+L["ModuleName Plunderstore"] = "霸业风暴：珍宝商店";
+L["ModuleDescription Plunderstore"] = "调整从队伍查找器界面打开的珍宝商店：\n\n- 允许仅显示未收集物品。\n\n- 在类别按钮上显示未收集物品的数量。\n\n- 在武器和护甲的鼠标提示上显示其穿戴位置。\n\n- 允许你在试衣间里显示可穿戴的物品。";
+L["Store Full Purchase Price Format"] = "再获取|cffffffff%s|r枚珍宝就能购买商店里所有物品。";
+L["Store Item Fully Collected"] = "你已经拥有商店里的所有物品！";
+
+
 --Merchant UI Price
 L["ModuleName MerchantPrice"] = "商品价格";
 L["ModuleDescription MerchantPrice"] = "改变商人界面的默认行为：\n\n- 只把数量不足的货币变灰。\n\n- 在钱币方框内显示当前页面所需的所有货币。";
@@ -249,6 +262,31 @@ L["ModuleName NameplateWidget"] = "姓名版: 钥焰";
 L["ModuleDescription NameplateWidget"] = "在钥焰的姓名版进度条上显示你拥有的光耀残渣的数量。";
 
 
+--PartyInviterInfo
+L["ModuleName PartyInviterInfo"] = "队伍邀请人信息";
+L["ModuleDescription PartyInviterInfo"] = "显示队伍以及公会邀请人的等级、职业等信息。";
+L["Additional Info"] = "额外信息";
+L["Race"] = "种族";
+L["Faction"] = "阵营";
+L["Click To Search Player"] = "搜索此玩家";
+L["Searching Player In Progress"] = "搜索中...";
+L["Player Not Found"] = "未找到玩家。";
+
+
+--PlayerTitleUI
+L["ModuleName PlayerTitleUI"] = "头衔管理";
+L["ModuleDescription PlayerTitleUI"] = "在游戏自带头衔选择界面上增加搜索栏和筛选器。";
+L["Right Click To Reset Filter"] = "右键单击来重置。";
+L["Earned"] = "已获得";
+L["Unearned"] = "未获得";
+L["Unearned Filter Tooltip"] = "某些头衔可能重复，且无法由当前阵营获取。";
+
+
+--BlizzardSuperTrack
+L["ModuleName BlizzardSuperTrack"] = "导航：事件倒计时";
+L["ModuleDescription BlizzardSuperTrack"] = "如果你正在追踪的地图标记的鼠标提示里包含时间信息，在屏幕导航下方显示此时间。";
+
+
 --Loot UI
 L["ModuleName LootUI"] = "拾取窗口";
 L["ModuleDescription LootUI"] = "替换默认的拾取窗口并提供以下功能：\n\n- 快速拾取所有物品\n\n- 修复自动拾取有时失效的问题\n\n- 手动拾取时显示“全部拾取”按钮";
@@ -269,6 +307,8 @@ L["LootUI Option New Transmog Tooltip"] = "用 %s 标记出还未收集外观的
 L["LootUI Option Use Hotkey"] = "按快捷键拾取全部物品";
 L["LootUI Option Use Hotkey Tooltip"] = "在手动拾取模式下按快捷键来拾取全部物品。";
 L["LootUI Option Fade Delay"] = "每件物品推迟自动隐藏倒计时";
+L["LootUI Option Items Per Page"] = "每页显示物品数";
+L["LootUI Option Items Per Page Tooltip"] = "改变通知模式下每页最多显示物品的数量。\n\n此选项不影响手动拾取和编辑模式下物品的数量。";
 L["LootUI Option Replace Default"] = "替换获得物品提示";
 L["LootUI Option Replace Default Tooltip"] = "替换默认的获得物品提示。这些提示通常出现在技能栏上方。";
 L["LootUI Option Loot Under Mouse"] = "鼠标位置打开拾取窗口";

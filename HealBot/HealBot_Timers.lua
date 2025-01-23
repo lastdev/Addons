@@ -601,6 +601,7 @@ local hbTimerFuncs={["INIT"]={
                         ["EnteringWorld2"]=HealBot_Timers_EnteringWorld2,
                         ["SetPlayerData"]=HealBot_SetPlayerData,
                         ["InitSpellsDefaults"]=HealBot_Init_Spells_Defaults,
+                        ["UpdateLang"]=HealBot_Options_UpdateLang,
                     },
                     ["RESET"]={
                         ["Reload"]=HealBot_Options_ReloadUIAreYouSure,
@@ -677,6 +678,7 @@ local hbTimerFuncs={["INIT"]={
                         ["UpdateGlobalDimming"]=HealBot_Action_ResetOpacity,
                         ["CheckHideFrames"]=HealBot_Action_CheckHideFrames,
                         ["ResetGlobalDimming"]=HealBot_Action_ResetGlobalDimming,
+                        ["VarsHasSkin"]=hbv_Skins_VarsHasSkin,
                     },
                     ["AUX"]={
                         ["ClearBars"]=HealBot_Options_clearAuxBars,

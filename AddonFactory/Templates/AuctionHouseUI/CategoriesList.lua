@@ -28,7 +28,9 @@ MVC:Controller("AddonFactory.AuctionHouseCategoryButton", {
 		frame.data = data
 		
 		-- let the data point back to a parent button
-		if data then data._parentButton = frame end
+		if data then
+			data._parentButton = frame 
+		end
 	end,
 	SetSelected = function(frame, data)
 		if data.isSelected then
@@ -162,19 +164,23 @@ MVC:Controller("AddonFactory.AuctionHouseCategoriesList", {
 	
 	ClickCategory = function(frame, field, value)
 		-- parse all categories, find the one that matches the field with the right value
-		local soughtCategory
+		local soughtCategory, parent, grandParent = frame:FindCategory(frame.categories, field, value)
+		if soughtCategory then
 		
-		frame:IterateCategories(frame.categories, function(category, parent, grandParent) 
-			if soughtCategory then return end	-- already found ? stop searching
+			-- be sure it is visible by expanding both its parent and grand-parent
+			if parent then parent.isExpanded = true end
+			if grandParent then grandParent.isExpanded = true end
 			
-			if category[field] and category[field] == value then
-				soughtCategory = category	-- if the sought item exists, save it
-				
-				-- be sure it is visible by expanding both its parent and grand-parent
-				if parent then parent.isExpanded = true end
-				if grandParent then grandParent.isExpanded = true end
+			local offset = frame:GetCategoryOffset(frame.categories, soughtCategory)
+			
+			local scrollFrame = frame.ScrollFrame
+			local numRows = scrollFrame.numRows
+			
+			if offset > numRows then
+				local actualOffset = offset - numRows + 1
+				scrollFrame:SetOffset(actualOffset)
 			end
-		end)
+		end
 		
 		-- Update, to apply the expansion of categories
 		if soughtCategory then 
@@ -194,23 +200,76 @@ MVC:Controller("AddonFactory.AuctionHouseCategoriesList", {
 	end,
 	
 	IterateCategories = function(frame, categories, callback)
-	
-		-- Loop on all 3 levels
-		for _, category in pairs(categories) do
+		-- Level 1
+		for _, category in ipairs(categories) do
 			callback(category)
 			
 			if category.subMenu then
-				for _, subCategory in pairs(category.subMenu) do
+				-- Level 2
+				for _, subCategory in ipairs(category.subMenu) do
 					callback(subCategory, category)
 					
 					if subCategory.subMenu then
-						for _, subSubCategory in pairs(subCategory.subMenu) do
+						-- Level 3
+						for _, subSubCategory in ipairs(subCategory.subMenu) do
 							callback(subSubCategory, subCategory, category)
 						end
 					end
 				end
 			end
 		end
+	end,
+	
+	-- Find the category matching a field/value combination
+	FindCategory = function(frame, categories, field, value)
+		-- Level 1
+		for _, category in ipairs(categories) do
+			if category[field] == value then return category end
+			
+			if category.subMenu then
+				-- Level 2
+				for _, subCategory in ipairs(category.subMenu) do
+					if subCategory[field] == value then return subCategory, category end
+					
+					if subCategory.subMenu then
+						-- Level 3
+						for _, subSubCategory in ipairs(subCategory.subMenu) do
+							if subSubCategory[field] == value then return subSubCategory, subCategory, category end
+						end
+					end
+				end
+			end
+		end
+	end,
+	
+	GetCategoryOffset = function(frame, categories, soughtCategory)
+		local offset = 0
+		
+		-- Level 1
+		for _, category in ipairs(categories) do
+			if category == soughtCategory then return offset end
+			offset = offset + 1
+			
+			if category.subMenu and category.isExpanded then
+			
+				-- Level 2
+				for _, subCategory in ipairs(category.subMenu) do
+					if subCategory == soughtCategory then return offset end
+					offset = offset + 1
+					
+					if subCategory.subMenu and subCategory.isExpanded then
+						-- Level 3
+						for _, subSubCategory in ipairs(subCategory.subMenu) do
+							if subSubCategory == soughtCategory then return offset end
+							
+							offset = offset + 1
+						end
+					end
+				end
+			end
+		end
+
+		return offset
 	end,
 	
 	SetCategories = function(frame, categories)
@@ -259,7 +318,7 @@ MVC:Controller("AddonFactory.AuctionHouseCategoriesList", {
 		
 		return count
 	end,
-	
+
 	UpdateCategories = function(frame)
 		local currentButton = 0
 		

@@ -26,6 +26,7 @@ addon.Colors = {
 	-- classes
 	classMage = "|cFF69CCF0",
 	classHunter = "|cFFABD473",
+	classRogue = "|cFFFFF468",
 	
 	-- recipes
 	recipeGrey = "|cFF808080",
@@ -37,6 +38,7 @@ addon.Colors = {
 	uncommon = "|cFF1EFF00",
 	rare = "|cFF0070DD",
 	epic = "|cFFA335EE",
+	softEpic = "|cffae57ed",
 	legendary = "|cFFFF8000",
 	heirloom = "|cFFE6CC80",
 

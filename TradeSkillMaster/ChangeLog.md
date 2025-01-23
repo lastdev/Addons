@@ -1,6 +1,5 @@
-## v4.14.23 Changes
+## v4.14.24 Changes
 
-* [Classic] Updated for 1.15.5
-* [Classic] Fixed icon/tooltip for enchant crafts
+* [All] Fixed error on logout
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

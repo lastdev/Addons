@@ -312,6 +312,22 @@ L["RAID_BOSS_ICC_6"] = "Modermiene"
 L["RAID_BOSS_ICC_7"] = "Professor Seuchenmord"
 L["RAID_BOSS_ICC_8"] = "Rat des Blutes"
 L["RAID_BOSS_ICC_9"] = "Blutkönigin Lana'thel"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_8"] = ""--]] 
 L["RAID_BOSS_NP_1"] = "Ulgrax"
 L["RAID_BOSS_NP_2"] = "Blutgebundener Schrecken"
 L["RAID_BOSS_NP_3"] = "Sikran"
@@ -372,6 +388,7 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Schlachtzugsbegegnungen besiegt"
 L["RAID_FL"] = "Feuerlande"
 L["RAID_ICC"] = "Die Eiskronenzitadelle"
+L["RAID_LOU"] = "Befreiung von Lorenhall"
 L["RAID_NP"] = "Palast der Nerub'ar"
 L["RAID_RS"] = "Das Rubinsanktum"
 L["RAID_TOTFW"] = "Thron der Vier Winde"
@@ -385,6 +402,7 @@ L["RAIDERIO_MP_SCORE"] = "Raider.IO M+ Wertung"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Raider.IO Addon Optionen"
 L["RAIDING_DATA_HEADER"] = "Raider.IO Schlachtzugsfortschritt"
 L["RAIDING_DB_MODULES"] = "Schlachtzugsdatenbankmodule"
+L["RECENT_RUNS_WITH_YOU"] = "Neue Läufe mit dir"
 L["RECRUITMENT_DB_MODULES"] = "Rekrutierungsdatenbankmodule"
 L["RELOAD_LATER"] = "Ich werde später neu laden"
 L["RELOAD_NOW"] = "Jetzt neu laden"

@@ -2,6 +2,8 @@ local _, T = ...
 local EV, W, L, C, CreateObject = T.Evie, T.WrappedAPI, T.L, C_Garrison, T.CreateObject
 local GameTooltip = T.NotGameTooltip or GameTooltip
 
+local WAR_RESOURCES_CID = 1560
+
 local manualMemberSet, manualMemberCount = {}, 0
 local function toggleFollowerFocus(followerID, removeOnly, audible)
 	if manualMemberSet[followerID] then
@@ -216,7 +218,7 @@ function EV:I_UPDATE_MISSION_SUGGESTIONS()
 	end
 
 	W.PrepareAllMissionGroups(22)
-	local curResources = (C_CurrencyInfo.GetCurrencyInfo(1560) or "").quantity or 0
+	local curResources = (C_CurrencyInfo.GetCurrencyInfo(WAR_RESOURCES_CID) or "").quantity or 0
 	local followers = W.GetFollowers(22)
 	
 	local Missions = TaskBoard.Missions
@@ -632,6 +634,11 @@ function EV:I_LOAD_MAINUI()
 	end
 	function EV:I_ARM_FOLLOWER_UPDATE()
 		EV.GARRISON_FOLLOWER_LIST_UPDATE = syncOnce
+	end
+	function EV:CURRENCY_DISPLAY_UPDATE(cid)
+		if cid == WAR_RESOURCES_CID then
+			queueTableSync()
+		end
 	end
 
 	BFAMissionFrame:SetScript("OnHide", function(self)

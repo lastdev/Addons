@@ -1,6 +1,9 @@
 # DBM - Dungeons, Delves, & Events
 
-## [r177](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r177) (2024-12-18)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r176...r177) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
+## [r181](https://github.com/DeadlyBossMods/DBM-Dungeons/tree/r181) (2025-01-13)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dungeons/compare/r180...r181) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dungeons/releases)
 
-- Update timers changed in todays hotfixes  
+- tweak event usage  
+- rework rpgg timer around the reload mechanic  
+- stops seem to put trickshot on CD  
+- Fix bug with trickshot timer not starting with correct GUID  

@@ -1,5 +1,28 @@
 # Changelog
 
+## Changed in v2025.2
+
+* Siren Isle: update the storm phase mobs
+
+## Changed in v2025.1
+
+* Siren Isle: quest updates, add the Proper Parrot to pirate rares
+* Don't get the wrong coordinates for mobs when the vignette is in the parent zone and doesn't have location data in the child zone (see: the Forbidden Vault)
+* General better display of unknown coordinates
+* Make macro updates less spammy (only edit the macro if it has actually changed)
+
+## Changed in v2024.34
+
+* Siren Isle updates for the pirate phase
+* Proper data update for Cataclysm Classic
+
+## Changed in v2024.33
+
+* More Siren Isle data
+* Fixed the locations for a few enemies in Dun Morogh
+* Port the right-click menus on map icons to the new menu system
+* Sneakily disable the AddOnSkins integration with SilverDragon if it's installed, since it's been completely broken and my single biggest source of bug reports for several years now
+
 ## Changed in v2024.32
 
 * Updated for 11.0.7 / 1.15.5

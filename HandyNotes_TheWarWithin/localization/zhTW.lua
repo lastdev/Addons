@@ -376,6 +376,7 @@ L['runed_storm_chest_note'] = '跟著風來找到隱藏的 {object:符文風暴�
 L['flame_blessed_iron_item'] = '繳回這個物品來取得獎勵的 {currency:3090}.'
 
 L['barnacle_encrusted_chest'] = '嵌滿藤壺的箱子'
+L['pilfered_earthen_chest'] = nil
 
 L['soweezi_note'] = '使用 {currency:3090} 交換1個坐騎, 玩具, 戰寵和塑形.'
 
@@ -396,11 +397,12 @@ L['prismatic_day'] = '第 %d 天'
 
 L['pris_quest_1'] = '生命線' -- https://www.wowhead.com/quest=86482/a-lifeline
 L['pris_quest_2'] = nil -- https://www.wowhead.com/ptr/quest=86483/snap-to-it
-L['pris_quest_3'] = nil -- https://www.wowhead.com/ptr/quest=86484/temper-like-a-tempest
-L['pris_quest_4'] = nil -- https://www.wowhead.com/ptr/quest=86485/a-loyal-friend
+L['pris_quest_3'] = '暴風壞脾氣' -- https://www.wowhead.com/ptr/quest=86484/temper-like-a-tempest
+L['pris_quest_4'] = '忠誠的朋友' -- https://www.wowhead.com/ptr/quest=86485/a-loyal-friend
 
 L['unsolved_amethyst_runelock'] = '未解的紫晶符文鎖'
-L['bilge_rat_supply_chest'] = nil
+L['bilge_rat_supply_chest'] = '污鼠會補給箱'
+L['bilge_rat_supply_chest_note'] = '從附近的 {npc:228582} 收集 {item:228621} 來打開箱子.'
 
 L['stone_carvers_scamseax_note'] = '收集一個 {object:璀璨黃水晶} ({dot:Yellow}) 來獲得2分鐘的增益 {spell:1216785} 以允許你拾取 {item:233834}.'
 
@@ -415,7 +417,7 @@ L['options_icons_secrets_of_azeroth_desc'] = '顯示 {location:艾澤拉斯祕�
 
 L['alyx_kickoff_note'] = '和 {npc:226683} 說話來啟動新的艾澤拉斯祕聞謎題.'
 
-L['celebration_crates_label'] = '節慶木箱'
+-- L['celebration_crates_label'] = '節慶木箱'
 L['celebration_crates_note'] = '在 {location:艾澤拉斯} 找到並返還所有的 {object:節慶木箱}.'
 
 L['1_soggy_celebration_crate_note'] = nil

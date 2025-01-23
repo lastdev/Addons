@@ -49,10 +49,12 @@ local AddSpellButton = nil
 local DebugUnsupported = nil
 local ChosenHearth = nil
 local IsRefreshing = nil
+local StartSearch = false
 
 TomeOfTele_ShareOptions = true
 
 BINDING_NAME_TOMEOFTELEPORTATION = "Tome of Teleportation"
+BINDING_NAME_TOMEOFTELEPORTATIONSEARCH = "Search Teleports"
 
 local InvTypeToSlot =
 {
@@ -78,6 +80,7 @@ local InvTypeToSlot =
 local SortByDestination = 1
 local SortByType = 2
 local SortCustom = 3
+local SortByExpansion = 4
 
 local TitleFrameBG
 
@@ -302,10 +305,12 @@ function Teleporter_OnEvent(self, event, ...)
 		if player == "player" then
 			if C_Spell and C_Spell.GetSpellInfo then
 				if C_Spell.GetSpellInfo(spell).name == CastSpell then
+					if TeleporterSearchBox then TeleporterSearchBox:SetText("") end
 					TeleporterClose()
 				end
 			else
 				if GetSpellInfo(spell) == CastSpell then
+					if TeleporterSearchBox then TeleporterSearchBox:SetText("") end
 					TeleporterClose()
 				end
 			end
@@ -610,6 +615,13 @@ local function InitTeleporterOptionsMenu(frame, level, menuList, topLevel)
 		info.checked = function(info) return GetOption("sort") == 2; end
 		UIDropDownMenu_AddButton(info, level)
 
+		info.text = "Expansion"
+		info.value = 4
+		info.func = function(info) TomeOfTele_SetSort(4) end
+		info.owner = frame
+		info.checked = function(info) return GetOption("sort") == 4; end
+		UIDropDownMenu_AddButton(info, level)
+
 		info.text = "Custom"
 		info.value = 3
 		info.func = function(info) TomeOfTele_SetSort(3) end
@@ -663,6 +675,8 @@ local function SortSpells(spell1, spell2, sortType)
 	local spellName2 = spell2.spellName
 	local spellType1 = spell1.spellType
 	local spellType2 = spell2.spellType
+	local spellExpansion1 = spell1.expansion or -1
+	local spellExpansion2 = spell2.expansion or -1
 	local zone1 = spell1:GetZone()
 	local zone2 = spell2:GetZone()
 
@@ -687,6 +701,10 @@ local function SortSpells(spell1, spell2, sortType)
 	elseif sortType == SortByType then
 		if spellType1 ~= spellType2 then
 			return spellType1 < spellType2
+		end
+	elseif sortType == SortByExpansion then
+		if spellExpansion1 ~= spellExpansion2 then
+			return spellExpansion1 < spellExpansion2
 		end
 	end
 
@@ -2024,11 +2042,16 @@ function TeleporterSlashCmdFunction(args)
 		TeleporterDebugMode = 1
 	elseif splitArgs[1] == "debugunsupported" then
 		DebugUnsupported = 1
-	elseif splitArgs[1] == nil then
+	elseif splitArgs[1] == nil or splitArgs[1] == "search" then
 		if IsVisible then
 			TeleporterClose()
 		else
 			TeleporterOpenFrame()
+		end
+		if splitArgs[1] == "search" and GetOption("showSearch") and TeleporterSearchBox then
+			TeleporterSearchBox:SetText("")
+			-- Don't set the focus immediately because the hot key will be put in the search box
+			StartSearch = true
 		end
 	else
 		print("Tome of Teleportation usage")
@@ -2189,6 +2212,10 @@ end
 
 function Teleporter_OnUpdate()
 	if IsVisible then
+		if StartSearch and GetTime() > OpenTime + 0.1 then
+			TeleporterSearchBox:SetFocus()
+			StartSearch = false
+		end
 		-- The first time the UI is opened toy ownership may be incorrect. Reopen once it's correct.
 		if NeedUpdate then
 			-- If it's still wrong then will try again later.

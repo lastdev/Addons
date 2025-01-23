@@ -1,5 +1,5 @@
-## Interface: 110005, 110007
-## Version: 1.5.1
+## Interface: 110007, 110100
+## Version: 1.5.8
 
 ## Title: Plumber
 
@@ -19,7 +19,7 @@ API.lua
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
 #Modules\DirectionArrow.lua
-Modules\SuperTrack.xml
+#Modules\SuperTrack.xml
 
 ControlCenter.lua
 
@@ -28,12 +28,11 @@ Modules\BackpackItemTracker.lua
 Modules\AutoJoinEvents.lua
 Modules\PlayerChoiceFrameToken.lua
 #Modules\DruidModelFix.lua
-Modules\QuickSlot.lua
+Modules\QuickSlot.xml
 Modules\QuestAreaTrigger.lua
 Modules\Dreamseed.lua
 #Modules\EventMap.lua
 Modules\MapPin.xml
-Modules\Navigator_Dreamseed.lua
 Modules\RareAnnouncement.lua
 Modules\PlayerChoiceUI.lua
 Modules\Lockpicking.lua
@@ -48,14 +47,19 @@ Modules\DelvesDashboard.lua
 Modules\ExpansionLandingPage.xml
 Modules\GameTooltipExtension.xml
 Modules\LootUI.xml
-Modules\WoWAnniversary.lua
 Modules\UnderlightAngler.lua
-Modules\QuestItemDestroyAlert.lua
 Modules\SpellcastInfo.lua
 Modules\ChatOptions.lua
 Modules\NameplateResources.lua
+Modules\StaticPopupEnhancement.xml
+Modules\PlayerTitleUI.lua
+Modules\BlizzardSuperTrack.lua
+Modules\AccountStore.lua
 
+#Modules\MovieSubtitle.lua
 #Modules\QuestSpecialItemCooldown.lua
 #Modules\SecretOfAzeroth.lua
 #Modules\AddonList.lua
 #Modules\BlizzFix_WardrobeTrackingHelpTip.lua
+#Modules\WoWAnniversary.lua
+#Modules\Navigator_Dreamseed.lua

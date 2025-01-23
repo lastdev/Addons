@@ -369,13 +369,22 @@ L.CVoiceTwo					= "倒數語音 2"
 L.CVoiceThree				= "倒數語音 3"
 
 -- Panel: Bar Appearance
-L.Panel_Appearance	 		= "計時條外觀"
-L.Panel_Behavior	 		= "計時條動作"
-L.AreaTitle_BarSetup		= "計時條外觀選項"
-L.AreaTitle_Behavior		= "計時條動作選項"
-L.AreaTitle_BarSetupSmall 	= "小型計時條設置"
-L.AreaTitle_BarSetupHuge	= "大型計時條設置"
-L.EnableHugeBar 			= "開啟大型計時條(2號計時條)"
+L.Panel_Appearance	 			= "計時條外觀"
+L.Panel_Behavior	 			= "計時條動作"
+L.AreaTitle_BarSetup			= "計時條外觀選項"
+L.AreaTitle_Behavior			= "計時條動作選項"
+L.AreaTitle_BarSetupSmall 		= "小型計時條設置"
+L.AreaTitle_BarSetupHuge		= "大型計時條設置"
+L.AreaTitle_BarSetupVariance	= "差異條選項"
+L.EnableHugeBar 				= "開啟大型計時條(2號計時條)"
+L.EnableVarianceBar 				= "啟用差異條"
+L.VarianceTimerTextBehavior			= "設定差異計時器文字行為"
+L.ZeroatWindowEnds					= "計時器文字在冷卻視窗的末端達到0"--Not final, still a bit unclear
+L.ZeroatWindowStart					= "計時器文字在冷卻視窗的開始達到0"--Not final, still a bit unclear
+L.VarianceTimerSubZeroBehavior		= "設定差異計時器低於零的行為"--Not final, still a bit unclear
+L.ZeroGoesNegative					= "計時器文字在零後計數為負"--Not final, still a bit unclear
+L.ZeroGoesRestart					= "計時器文字在零之後重新啟動"--Not final, still a bit unclear
+
 L.BarIconLeft 				= "左側顯示圖示"
 L.BarIconRight 				= "右側顯示圖示"
 L.ExpandUpwards				= "計時條向上延伸"
@@ -464,7 +473,7 @@ L.SpamBlockNoTrivialSpecWarnSound	= "如果相對你等級是不重要的內容�
 L.Area_SpamFilter					= "垃圾過濾選項"
 L.DontShowFarWarnings				= "不發送距離過遠的事件提示/計時器"
 L.StripServerName					= "隱藏警告、計時器、距離檢測以及資訊框架的玩家伺服器名稱"
-L.FilterVoidFormSay2					= "在虛空型態時不要發送圖示/倒數計時聊天喊話(仍會發送標準聊天喊話)"
+L.FilterVoidFormSay2				= "在虛空型態時不要發送圖示/倒數計時聊天喊話(仍會發送標準聊天喊話)"
 
 L.Area_SpecFilter					= "角色職責過濾選項"
 L.FilterDispels						= "如果你的驅散技能正在冷卻中，不顯示可驅散技能通告"
@@ -666,3 +675,7 @@ L.EnterTestMode						= "操練場模式"
 L.AnonymizeTest						= "匿名玩家名字以及標誌"
 L.ShowThisTestEverywhere			= "顯示此測試在所有模組"
 L.SaveThisTest						= "永久儲存此測試紀錄"
+
+L.BossModTColor						= "計時條顏色"
+L.BossModCVoice						= "倒數語音"
+L.BossModSWSound					= "警報聲音"

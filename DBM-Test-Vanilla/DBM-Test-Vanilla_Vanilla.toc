@@ -1,10 +1,16 @@
 ## Interface: 11505
+## Category: DBM
+## Group: DBM Tests
 ## Title:|cffffe00a<|r|cffff7d0aDBM Tests|r|cffffe00a>|r |cff69ccf0Tests for Vanilla and Season of Discovery mods|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM Тесты|r|cffffe00a>|r |cff69ccf0Тесты модов для Классики и Сезона открытий|r
 ## Dependencies: DBM-Test
 ## DefaultState: enabled
 ## LoadOnDemand: 1
 ## X-DBM-Test: true
+
+# Nax
+Season of Discovery/Naxxramas/Razuvious-PTR.lua
+Season of Discovery/Naxxramas/Reports/Razuvious-PTR.lua
 
 # AQ40
 Season of Discovery/AQ40/Skeram-Hardmode.lua

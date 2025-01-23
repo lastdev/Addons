@@ -1,3 +1,0 @@
-local myname, ns = ...
-
-ns.RegisterPoints(876, {}) -- Kul Tiras

@@ -22,7 +22,7 @@ local GetNumQuestLogChoices, GetQuestLogChoiceInfo, GetQuestLogItemLink = GetNum
 local GetNumQuestLogRewards, GetQuestLogRewardInfo, GetQuestLogRewardMoney = GetNumQuestLogRewards, GetQuestLogRewardInfo, GetQuestLogRewardMoney
 local C_QuestLog, C_TaskQuest, C_QuestInfoSystem, C_CovenantCallings = C_QuestLog, C_TaskQuest, C_QuestInfoSystem, C_CovenantCallings
 
-local L = DataStore:GetLocale(addonName)
+local L = AddonFactory:GetLocale(addonName)
 local bit64 = LibStub("LibBit64")
 
 local emissaryQuests = {
@@ -640,7 +640,7 @@ local function _GetQuestLink(questID, questTitle)
 	end
 end
 
-DataStore:OnAddonLoaded(addonName, function()
+AddonFactory:OnAddonLoaded(addonName, function()
 	DataStore:RegisterModule({
 		addon = addon,
 		addonName = addonName,
@@ -704,7 +704,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	questColors = DataStore:CreateSetAndList(DataStore_Quests_Colors)
 end)
 
-DataStore:OnPlayerLogin(function()
+AddonFactory:OnPlayerLogin(function()
 	options = DataStore:SetDefaults("DataStore_Quests_Options", {
 		AutoUpdateHistory = true,	-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
 		TrackTurnIns = true,			-- by default, save the ids of completed quests in the history

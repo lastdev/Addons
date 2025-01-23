@@ -1,5 +1,5 @@
-local VERSION_TEXT = "v1.5.1";
-local VERSION_DATE = 1734400000;
+local VERSION_TEXT = "v1.5.8";
+local VERSION_DATE = 1737460000;
 
 
 local addonName, addon = ...
@@ -98,6 +98,7 @@ local DefaultValues = {
     TooltipChestKeys = true,            --Show keys that unlocked the current chest or door
     TooltipRepTokens = true,            --Show faction info for items that grant rep
     TooltipSnapdragonTreats = true,     --Show info on Snapdragon Treats (An item that changes this mount's color)
+    TooltipItemReagents = false,        --For items with "use to combine": show the reagent count
     PlayerChoiceFrameToken = true,      --Add owned token count to PlayerChoiceFrame
     ExpansionLandingPage = true,        --Display extra info on the ExpansionLandingPage
     Delves_SeasonProgress = true,       --Display Seaonal Journey changes on a progress bar
@@ -108,19 +109,27 @@ local DefaultValues = {
     SpellcastingInfo = false,           --Show the spell info when hovering over target/focus cast bars. Logging target spells and displayed it on UnitPopupMenu
     ChatOptions = true,                 --Add Leave button to Channel Context Menu
     NameplateWidget = true,             --Show required items on nameplate widget set
+    PartyInviterInfo = false,           --Show the inviter's level and class
+        PartyInviter_Race = false,
+        PartyInviter_Faction = false,
+    PlayerTitleUI = false,              --Add search box and filter to TitleManagerPane
+    Plunderstore = true,
+        Plunderstore_HideCollected = true,
+    BlizzardSuperTrack = false,         --Add timer to the SuperTrackedFrame when tracking a POI with time format
 
 
     --Custom Loot Window
     LootUI = false,
         LootUI_FontSize = 14,
+        LootUI_FadeDelayPerItem = 0.25,
+        LootUI_ItemsPerPage = 6,
         LootUI_ShowItemCount = false,
+        LootUI_NewTransmogIcon = true,
+        LootUI_ForceAutoLoot = true,
+        LootUI_LootUnderMouse = false;
         LootUI_UseHotkey = true,
         LootUI_HotkeyName = "E",
-        LootUI_ForceAutoLoot = true,
-        LootUI_NewTransmogIcon = true,
-        LootUI_FadeDelayPerItem = 0.25,
         LootUI_ReplaceDefaultAlert = false,
-        LootUI_LootUnderMouse = false;
         LootUI_UseStockUI = false,
 
 

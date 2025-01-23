@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "lfr,normal,heroic"
 
-mod:SetRevision("20241126154047")
+mod:SetRevision("20250105060534")
 mod:SetCreatureID(226307, 226310, 226309, 226313, 226311, 226312, 226308)--226307 Anger'rel, 226310/doomrel, 226309/doperel, 226313/gloomrel, 226311/haterel, 226312/seethrel, 226308/vilerel
 mod:SetEncounterID(3048)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -165,7 +165,7 @@ function mod:StartEngageTimers(guid, cid, delay)
 	elseif cid == 226313 then--Gloom'rel (First activation)
 		timerRampageCD:Start(6.1-delay, guid)
 		timerRendCD:Start(12.2-delay, guid)
-		timerRecklessnessCD:Start(self:IsHeroic() and 26.7 or 36.1-delay, guid)
+		timerRecklessnessCD:Start(self:IsHeroic() and (26.7-delay) or (36.1-delay), guid)
 --	elseif cid == 226310 then--Doom'rel (First activation)
 		--Empowered timers handled by corporeal activation
 		--Volley cast instantly on pull

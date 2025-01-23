@@ -96,7 +96,7 @@ local function _GetBattlePetInfoFromLink(link)
 	end
 end
 
-DataStore:OnAddonLoaded(addonName, function() 
+AddonFactory:OnAddonLoaded(addonName, function() 
 	DataStore:RegisterModule({
 		addon = addon,
 		addonName = addonName,
@@ -129,7 +129,7 @@ DataStore:OnAddonLoaded(addonName, function()
 	petGUIDs = DataStore_Pets_GUIDs
 end)
 
-DataStore:OnPlayerLogin(function() 
+AddonFactory:OnPlayerLogin(function() 
 	addon:ListenTo("PLAYER_ALIVE", ScanCritters)
 	addon:ListenTo("COMPANION_LEARNED", ScanCritters)
 	addon:ListenTo("COMPANION_UPDATE", function()

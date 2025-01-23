@@ -1,3 +1,16 @@
+== v3.04 - 7th January 2025
+* Added another HandyNotes Refresh() delay for logins (both new and character swap),
+  reloads, and loading screen situations (various - enter/exit instances or Mage
+  teleport, etc). This will assist players with slow internet, unusual Blizzard
+  server glitches, too many AddOns, potato PCs
+  Note: This is a preemptive change due to a report for another of my AddOns
+* Lunar Preservation buff counting overhauled
+
+== v3.03 - 24th December 2024
+* The Refresh() timer now checks every 7 seconds to avoid server issues when the
+  API is unreliable during loading screens.
+  Note: This is a preemptive change due to a report for another of my AddOns
+
 == v3.02 - 10th December 2024
 * TOC update to 11.0.7
 

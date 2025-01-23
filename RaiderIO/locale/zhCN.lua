@@ -332,6 +332,22 @@ L["RAID_BOSS_ICC_6"] = "腐面"
 L["RAID_BOSS_ICC_7"] = "普崔塞德教授"
 L["RAID_BOSS_ICC_8"] = "鲜血王子议会"
 L["RAID_BOSS_ICC_9"] = "鲜血女王兰娜瑟尔"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_LOU_8"] = ""--]] 
 L["RAID_BOSS_NP_1"] = "乌格拉克斯"
 L["RAID_BOSS_NP_2"] = "血缚恐魔"
 L["RAID_BOSS_NP_3"] = "席克兰"
@@ -394,6 +410,8 @@ L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "已击杀团队副本首领"
 --[[Translation missing --]]
 --[[ L["RAID_FL"] = ""--]] 
 L["RAID_ICC"] = "冰冠堡垒"
+--[[Translation missing --]]
+--[[ L["RAID_LOU"] = ""--]] 
 L["RAID_NP"] = "尼鲁巴尔王宫"
 L["RAID_RS"] = "红玉圣所"
 L["RAID_TOTFW"] = "风神王座"
@@ -407,6 +425,8 @@ L["RAIDERIO_MP_SCORE"] = "大秘境分数"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Raider.IO插件选项"
 L["RAIDING_DATA_HEADER"] = "团队副本进度"
 L["RAIDING_DB_MODULES"] = "团本数据库模块"
+--[[Translation missing --]]
+--[[ L["RECENT_RUNS_WITH_YOU"] = ""--]] 
 L["RECRUITMENT_DB_MODULES"] = "招募数据库模块"
 L["RELOAD_LATER"] = "我一会儿再重载界面（Reload）"
 L["RELOAD_NOW"] = "现在重载界面（Reload）"

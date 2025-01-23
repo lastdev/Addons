@@ -1,10 +1,10 @@
-lightweight tag d9e5093b2878a37201b1b01f284a922dbd03e5b6 patch-11.0.7-01
+lightweight tag 36ad308c868b9080bb40e5f22505b625c5aecdb3 patch-11.0.7-02
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Tue Dec 17 12:08:56 2024 -0800
+Date:	Thu Jan 9 16:20:47 2025 -0800
 
-commit d9e5093b2878a37201b1b01f284a922dbd03e5b6
+commit 36ad308c868b9080bb40e5f22505b625c5aecdb3
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Tue Dec 17 12:08:56 2024 -0800
+Date:   Thu Jan 9 16:20:47 2025 -0800
 
-    Version bump for 11.0.7
+    Add 11.1 upgrade currencies and items
 

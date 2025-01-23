@@ -86,3 +86,31 @@ function addon:InstallMethodHook(widget, method, preHook, postHook)
 	widget[method] = stub
 end
 
+
+
+-- ** Table pool **
+local tablePool = {}
+
+--[[ Example usage
+
+-- Get a table from the pool
+local myTable = AddonFactory:GetTable()
+myTable[1] = "Hello"
+myTable[2] = "World"
+
+-- Use the table...
+-- Release the table back to the pool
+AddonFactory:ReleaseTable(myTable)
+
+--]] 
+
+function addon:GetTable()
+	-- Get a table from the pool or create a new one if the pool is empty
+    return #tablePool > 0 and table.remove(tablePool) or {}
+end
+
+-- Return a table to the pool
+function addon:ReleaseTable(t)
+    wipe(t)
+    table.insert(tablePool, t)
+end

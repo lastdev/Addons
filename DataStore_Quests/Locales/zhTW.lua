@@ -1,5 +1,5 @@
 local addonName = ...
-local L = DataStore:SetLocale(addonName, "zhTW")
+local L = AddonFactory:SetLocale(addonName, "zhTW")
 if not L then return end
 
 L["AUTO_UPDATE_DISABLED"] = "任務紀錄將繼續留在目前的狀態，無論是空的或過時."

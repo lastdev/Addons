@@ -1,5 +1,4 @@
-## Changed in v2024.32
+## Changed in v2025.2
 
-* Updated for 11.0.7 / 1.15.5
-* Partial data for Siren Isle
+* Siren Isle: update the storm phase mobs
 
