@@ -1,0 +1,41 @@
+## Interface: 110007
+## Version: 1.09
+## Author: Taraezor
+## IconTexture: Interface\Icons\inv_valentinesboxofchocolates02
+## Title: Love is in the Air
+## Title-deDE: Liebe liegt in der Luft
+## Title-esES: Amor en el aire
+## Title-esMX: Amor en el aire
+## Title-frFR: De l’amour dans l’air
+## Title-itIT: Amore nell'Aria
+## Title-koKR: 온누리에 사랑을
+## Title-ptBR: O amor está no ar
+## Title-ptPT: O amor está no ar
+## Title-ruRU: Любовная лихорадка
+## Title-zhCN: 情人节
+## Title-zhTW: 情人節
+## Notes: |cFFF433FFHelp for the |cFFFF007FLove is in the Air|cFFF433FF achievements and quests
+## Notes-deDE: |cFFF433FFHilfe für die |cFFFF007FLiebe liegt in der Luft|cFFF433FF-Erfolge und Quests
+## Notes-esES: |cFFF433FFAyuda para los logros y misiones |cFFFF007FAmor en el aire
+## Notes-esMX: |cFFF433FFAyuda para los logros y misiones |cFFFF007FAmor en el aire
+## Notes-frFR: |cFFF433FFAide pour les succès et quêtes |cFFFF007FDe De l’amour dans l’air
+## Notes-itIT: |cFFF433FFAiuto per gli obiettivi e le missioni |cFFFF007FAmore nell'Aria
+## Notes-koKR: |cFFFF007F온누리에 사랑을|cFFF433FF 업적 및 퀘스트에 대한 도움말
+## Notes-ptBR: |cFFF433FFAjuda para as |cFFFF007FO amor está no ar |cFFFF007Fconquistas e missões
+## Notes-ptPT: |cFFF433FFAjuda para as |cFFFF007FO amor está no ar |cFFFF007Fconquistas e missões
+## Notes-ruRU: |cFFF433FFПомощь по |cFFFF007FЛюбовная лихорадка |cFFF433FFдостижениям и квестам
+## Notes-zhCN: |cFFF433FF帮助完成 |cFFFF007F情人节|cFFF433FF 成就和任务
+## Notes-zhTW: |cFFF433FF幫助完成 |cFFFF007F情人節|cFFF433FF 成就和任務
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_LoveIsInTheAirDB
+## AddonCompartmentFunc: HandyNotes_LoveIsInTheAir_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_LoveIsInTheAir_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_LoveIsInTheAir_OnAddonCompartmentLeave
+## X-Curse-Project-ID: 99280
+## X-Wago-ID: b6XVEbGp
+
+Localisations_Common.lua
+Localisations_Events.lua
+Localisations_LIITA.lua
+Core.lua
+Data.lua

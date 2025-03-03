@@ -269,7 +269,8 @@ local regionTable = {
 	[3] = "EU", 
 	[4] = "TW", 
 	[5] = "CN",
-	[72] = "US" -- for beta testing
+	[72] = "US", -- for beta testing
+	[90] = "US" -- for ptr testing
 }
 local regionKey = regionTable[GetCurrentRegion()]
 local factionrealmregionKey = factionrealmKey .. " - " .. regionKey

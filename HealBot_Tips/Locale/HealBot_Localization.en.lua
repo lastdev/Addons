@@ -44,6 +44,7 @@ function HealBot_Lang_Options_enALL()
                                  ["IGNOREAURAEVENTS"]=HEALBOT_OPTION_IGNORE_AURA_RESTED,
                                  ["DISABLEHEALBOT"]=HEALBOT_OPTIONS_DISABLEHEALBOT,
                                  ["DISABLEHEALBOTSOLO"]=HEALBOT_OPTIONS_DISABLEHEALBOT,
+                                 ["DISABLEHEALBOTSPEC"]=HEALBOT_OPTIONS_DISABLEHEALBOT,
                                  ["OPTIONSOPACITY"]=HEALBOT_OPTIONS_OPTIONSOPACITY,
                                  ["LANG"]=HEALBOT_OPTIONS_LANG,
                                  ["SETLANG"]=HEALBOT_OPTIONS_LANG,
@@ -853,6 +854,7 @@ function HealBot_Lang_Options_enALL()
                                ["IGNOREAURAEVENTS"]="Ignore required buffs when resting.",
                                ["DISABLEHEALBOT"]="Put Healbot into a deep sleep.",
                                ["DISABLEHEALBOTSOLO"]="Healbot is only sleeping when\nnot in a group or raid.",
+                               ["DISABLEHEALBOTSPEC"]="Put Healbot into a deep sleep on the current spec.",
                                ["OPTIONSOPACITY"]="Set the opaticy of the option panels.",
                                ["LANG"]="Select the language used by healbot options.\nThis can be independent to the UI.",
                                ["SETLANG"]="Set the language selected.",
@@ -1572,7 +1574,7 @@ function HealBot_Lang_Options_enALL()
                                ["TOOLTIPRANKS"]="Show ranks such as Raid Leader or Master Looter.",
                                ["TOOLTIPROLES"]="Show roles in groups and raids.",
                                ["TOOLTIPHIDEROLEWHENRANK"]="Only show roles when the palyer has no rank such as Raid Leader.",
-                               ["TOOLTIPMAXBUTTONS"]="Maximum number of buttons to show\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Includes unassigned buttons.\n".._G["YELLOW_FONT_COLOR_CODE"].."Example: When set to 3 only Left, Middle and Right\n".._G["YELLOW_FONT_COLOR_CODE"].."will show when assigned, Button 4 will never show.",
+                               ["TOOLTIPMAXBUTTONS"]="Maximum number of buttons to show\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Excludes unassigned buttons.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."Example: With Max buttons set to 5, when\n".._G["YELLOW_FONT_COLOR_CODE"].."only Left, Middle and Right are assigned\n".._G["YELLOW_FONT_COLOR_CODE"].."button 4 and button 5 will not show.",
                                ["TOOLTIPSHOWSPELLCLICK"]="Show spells assigned to button clicks.",
                                ["TOOLTIPSPELLEXTRA"]="Show additional spell information on the right side.",
                                ["TOOLTIPSPELLCD"]="Show the cooldown remaining on the spell.",
@@ -1592,7 +1594,7 @@ function HealBot_Lang_Options_enALL()
                                ["TOOLTIPSCALE"]="Scale the tooltip.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Scale is not available when using the game tooltip.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Reset the custom anchor after changing the scale.",
                                ["TOOLTIPALPHA"]="Scale the tooltip.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Opacity is not available when using the game tooltip.",
                         -- Binds tab
-                               ["BINDTOCLICK"]="Select a key to bind to a button click.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Depending on OS/WoW config, some\n".._G["YELLOW_FONT_COLOR_CODE"].."binds will not work with specific modifier keys.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."If intending to use key modifiers with\n".._G["YELLOW_FONT_COLOR_CODE"].."key binds, test the key modifiers work.\n--\n".."|cff77c8ff".."Tip: If a bind does not work, bind and unbind\n".."|cff77c8ff".."the modifier + key in the WoW UI Key Binding settings.",
+                               ["BINDTOCLICK"]="Select a key to bind to a button click.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."NOTE: Depending on OS/WoW config, some\n".._G["YELLOW_FONT_COLOR_CODE"].."binds will not work with specific modifier keys.\n--\n".._G["YELLOW_FONT_COLOR_CODE"].."If intending to use key modifiers with\n".._G["YELLOW_FONT_COLOR_CODE"].."key binds, test the key modifiers work.\n--\n".."|cff77c8ff".."Tip: If a bind does not work, bind and unbind\n".."|cff77c8ff".."the modifier + key in the WoW UI Key Binding settings.\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING: Do not use ALT-F4, ALT-F4 exits the game.",
                         -- Test tab
                                ["TESTUSE"]="Click to Turn On/Turn Off the test bars.\n--\n".."|cff77c8ff".."Tip: Turn on the test bars to easily move frames.",
                                ["TESTPROFILE"]="Profile limits the total number of bars for Groups or Raids.",
@@ -1641,7 +1643,7 @@ function HealBot_Lang_Options_enALL()
                                ["SELECTPLUGIN"]="Select plugin.\n--\nInformation on plugins can be found at "..HEALBOT_ABOUT_URL.."\n--\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Threat: ".._G["FONT_COLOR_CODE_CLOSE"].."See threat for all players on multiple mobs.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToDie: ".._G["FONT_COLOR_CODE_CLOSE"].."Player damage tracker showing how soon players will die.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot TimeToLive: ".._G["FONT_COLOR_CODE_CLOSE"].."Resurrection monitor tracking incoming and pending resurrections.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ExtraButtons: ".._G["FONT_COLOR_CODE_CLOSE"].."Set spells for use with an MMO mouse on buttons 6 - 20\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot CombatProt: ".._G["FONT_COLOR_CODE_CLOSE"].."Reserve bars for missing players, protects against missing bars in combat.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Performance: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal timers and effects.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot MyCooldowns: ".._G["FONT_COLOR_CODE_CLOSE"].."Track cooldowns for your spells and abilities.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Tweaks: ".._G["FONT_COLOR_CODE_CLOSE"].."Tweak internal settings.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Requests: ".._G["FONT_COLOR_CODE_CLOSE"].."Players can whisper you to request a buff or ability.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot AuraWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor your cooldowns and optionally other player conditions to run alerts.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot HealthWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor players and alert on low health.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot ManaWatch: ".._G["FONT_COLOR_CODE_CLOSE"].."Monitor players and alert on low mana.\n".._G["GREEN_FONT_COLOR_CODE"].."- HealBot Media: ".._G["FONT_COLOR_CODE_CLOSE"].."Exclude unwanted textures, fonts and sounds from HealBot options.",
                         -- Buttons
                                ["GLOBALDEFAULT"]="Reset all settings for all characters to default values\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING: All existing settings for all characters on all realms will be lost.",
-                               ["UNUSEDDEFAULT"]="Reset all settings for unused frames in the current skin to default values\n--\n".._G["GREEN_FONT_COLOR_CODE"].."To save memory, this is highly recommended.",
+                               ["UNUSEDDEFAULT"]="Reset all settings for unused frames in the current skin to defaults\n--\n".._G["GREEN_FONT_COLOR_CODE"].."To save memory, this is highly recommended.",
                                ["LOCALDEFAULT"]="Reset spells, general buffs and general debuffs on your current character to default values\n--\n".._G["ORANGE_FONT_COLOR_CODE"].."WARNING: Your existing spells, buffs and debuffs on this character will be lost.",
                                ["RESET"]="Reset HealBot frames.\n--\n".._G["GREEN_FONT_COLOR_CODE"].."This does not affect your settings.",
                                ["RELOADUI"]="Reload the entire UI.",

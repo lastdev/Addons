@@ -7,7 +7,7 @@ else
 	mod.statTypes = "normal"
 end
 
-mod:SetRevision("20241222110740")
+mod:SetRevision("20250213212102")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -15,7 +15,11 @@ mod:SetMinCombatTime(60)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetZone(533)
 
-mod:RegisterCombat("combat_yell", L.Yell)
+if DBM:IsSeasonal("SeasonOfDiscovery") then
+	mod:RegisterCombat("combat")
+else
+	mod:RegisterCombat("combat_yell", L.Yell)
+end
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 27808 27819 28410",
@@ -24,6 +28,13 @@ mod:RegisterEventsInCombat(
 	"UNIT_HEALTH mouseover target",
 	"UNIT_TARGETABLE_CHANGED"
 )
+
+-- New spell ID found in logs on SoD
+-- 364341 (Survivor of the Damned) cast on kill, ID looks like SoM, seems irrelevant
+
+-- On SoD ENCOUNTER_START triggers shortly before the yell and is the better trigger. Phase 1 is shorter on SoD
+-- Not sure about Era, still using old logic there until we can confirm that ENCOUTNER_START works the same way.
+local phase1Duration = DBM:IsSeasonal("SeasonOfDiscovery") and 237.6 or 330
 
 --[[
 ability.id = 27810 or ability.id = 27819 or ability.id = 27808 and type = "cast"
@@ -43,12 +54,16 @@ local specWarnFissureYou	= mod:NewSpecialWarningYou(27810, nil, nil, nil, 3, 2)
 local yellManaBomb			= mod:NewShortYell(27819)
 local yellFissure			= mod:NewYell(27810)
 
+-- Frost blast is a mess on SoD, consider removing it completely
+-- 	"Frost Blast-27808-npc:15990-00002CE928 = pull:265.1, 116.6, 40.1, 31.5, 58.2",
+-- 	"Frost Blast-27808-npc:15990-00002D1657 = pull:290.0, 30.3, 52.2, 36.4",
+
 --Fissure timer is 13-30 or something pretty wide, so no timer
 local timerManaBomb			= mod:NewCDTimer(20, 27819, nil, nil, nil, 3)--20-50 (still true in vanilla, kind of shitty variation too)
-local timerFrostBlastCD		= mod:NewCDTimer(33.5, 27808, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--33-46
+local timerFrostBlastCD		= mod:NewVarTimer(DBM:IsSeasonal("SeasonOfDiscovery") and "v30.3-58.2" or "v33.5-46", 27808, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--33-46
 local timerfrostBlast		= mod:NewBuffActiveTimer(4, 27808, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
-local timerMCCD				= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
-local timerPhase2			= mod:NewTimer(330, "TimerPhase2", "136116", nil, nil, 6)
+local timerMCCD				= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--Probably should also be made a var timer with good variance data
+local timerPhase2			= mod:NewTimer(phase1Duration, "TimerPhase2", "136116", nil, nil, 6)
 
 mod:AddSetIconOption("SetIconOnMC2", 28410, false, 0, {1, 2, 3, 4, 5})
 mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, 0, {8})
@@ -84,12 +99,12 @@ function mod:OnCombatStart(delay)
 	self.vb.warnedAdds = false
 	self.vb.MCIcon1 = 1
 	self.vb.MCIcon2 = 5
-	specwarnP2Soon:Schedule(320-delay)
+	specwarnP2Soon:Schedule(phase1Duration - 10 - delay)
 	timerPhase2:Start()
-	warnPhase2:Schedule(330)
-	warnPhase2:ScheduleVoice(330, "ptwo")
+	warnPhase2:Schedule(phase1Duration - delay)
+	warnPhase2:ScheduleVoice(phase1Duration - delay, "ptwo")
 	if self.Options.RangeFrame then
-		self:Schedule(330-delay, RangeToggle, true)
+		self:Schedule(phase1Duration - delay, RangeToggle, true)
 	end
 end
 

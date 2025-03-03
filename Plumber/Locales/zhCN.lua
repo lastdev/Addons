@@ -32,6 +32,7 @@ L["Module Category Tooltip"] = "鼠标提示";   --Additional Info on Tooltips
 L["Module Category Class"] = "职业";   --Player Class (rogue, paladin...)
 
 L["Module Category Dragonflight"] = "巨龙时代";
+L["Module Category Plumber"] = "Plumber";   --This addon's name
 
 --Deprecated
 L["Module Category Dreamseeds"] = "梦境之种";     --Added in patch 10.2.0
@@ -254,6 +255,7 @@ L["Chat Leave All Characters"] = "在所有角色上离开此频道";
 L["Chat Leave All Characters Tooltip"] = "当你登录一个角色后自动离开此频道。";
 L["Chat Auto Leave Alert Format"] = "你是否希望你所有角色都自动离开 |cffffc0c0[%s]|r ？";
 L["Chat Auto Leave Cancel Format"] = "此频道的自动离开已禁用： %s。请使用 /join 命令重新加入频道。";
+L["Auto Leave Channel Format"] = "自动离开 \"%s\"";
 L["Click To Disable"] = "点击禁用";
 
 
@@ -315,6 +317,36 @@ L["LootUI Option Loot Under Mouse"] = "鼠标位置打开拾取窗口";
 L["LootUI Option Loot Under Mouse Tooltip"] = "处于|cffffffff手动拾取|r模式时, 在鼠标位置打开拾取窗口。";
 L["LootUI Option Use Default UI"] = "使用默认拾取窗口";
 L["LootUI Option Use Default UI Tooltip"] = "使用WoW默认的拾取窗口。\n\n|cffff4800勾选此选项会使以上所有选项无效。|r";
+L["LootUI Option Background Opacity"] = "不透明度";
+L["LootUI Option Background Opacity Tooltip"] = "改变通知模式下背景的不透明度。\n\n此选项不影响手动拾取模式。";
+
+
+--Quick Slot For Third-party Dev
+L["Quickslot Module Info"] = "模块信息";
+L["QuickSlot Error 1"] = "快捷按钮：You have already added this controller.";
+L["QuickSlot Error 2"] = "快捷按钮：YThe controller is missing \"%s\"";
+L["QuickSlot Error 3"] = "快捷按钮：A controller with the same key \"%s\" already exists.";
+
+
+--Plumber Macro
+L["PlumberMacro Drive"] = "Plumber赛车坐骑宏";
+L["PlumberMacro Drawer"] = "Plumber技能收纳宏";
+L["PlumberMacro DrawerFlag Combat"] = "技能收纳宏将在你离开战斗后更新。";
+L["PlumberMacro DrawerFlag Stuck"] = "更新技能收纳宏时遇到了错误。";
+L["PlumberMacro Error Combat"] = "战斗中不可用";
+L["PlumberMacro Error NoAction"] = "无可用技能";
+L["Dismiss Battle Pet"] = "解散小宠物";
+L["Drag And Drop Item Here"] = "拖拽一个东西放在这里";
+L["Drag To Reorder"] = "左键单击并拖拽以更改位置";
+L["Unsupported Action Type Format"] = "不支持的动作类别： %s";
+L["Drawer Add Action Format"] = "添加 |cffffffff%s|r";
+L["Drawer Option Global Tooltip"] = "所有的收纳宏共用此设置。";
+L["Drawer Option CloseAfterClick"] = "点击后关闭";
+L["Drawer Option CloseAfterClick Tooltip"] = "在你点击菜单中任何一个按钮后关闭菜单，无论动作是否成功。";
+L["Drawer Option SingleRow"] = "单行排布";
+L["Drawer Option SingleRow Tooltip"] = "勾选此选项后，所有按钮都在一排显示，而不是每排最多4个。";
+L["Drawer Option Hide Unusable"] = "隐藏不可用的动作";
+L["Drawer Option Hide Unusable Tooltip"] = "隐藏身上没有的物品和未学会的法术。\n\n消耗品例如药水不受此选项影响。";
 
 
 --Generic
@@ -328,6 +360,13 @@ L["Paragon Reputation"] = "巅峰";
 L["Level Maxed"] = "已满级";   --Reached max level
 L["Current Colon"] = "当前：";
 L["Unclaimed Reward Alert"] = "你有未领取的巅峰宝箱";
+
+
+--Plumber AddOn Settings
+L["ModuleName EnableNewByDefault"] = "默认开启新功能";
+L["ModuleDescription EnableNewByDefault"] = "自动开启所有新加入的功能。\n\n*如果一个功能因此自动启用，你将会在聊天窗口内看到相关提示。";
+L["New Feature Auto Enabled Format"] = "已开启新功能 %s";
+L["Click To See Details"] = "点击以查看详情";
 
 
 
@@ -358,5 +397,5 @@ L["Match Pattern Gold"] = "([%d%,]+) 金";
 L["Match Pattern Silver"] = "([%d]+) 银";
 L["Match Pattern Copper"] = "([%d]+) 铜";
 
-L["Match Patter Rep 1"] = "你的战团在(.+)中的声望值提高了([%d%,]+)点";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
-L["Match Patter Rep 2"] = "你在(.+)中的声望值提高了([%d%,]+)点";   --FACTION_STANDING_INCREASED
+L["Match Pattern Rep 1"] = "你的战团在(.+)中的声望值提高了([%d%,]+)点";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
+L["Match Pattern Rep 2"] = "你在(.+)中的声望值提高了([%d%,]+)点";   --FACTION_STANDING_INCREASED

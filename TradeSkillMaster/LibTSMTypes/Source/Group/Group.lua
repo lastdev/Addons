@@ -155,8 +155,8 @@ function Group.GetItemDBForJoin()
 end
 
 ---Creates an item DB query.
----@param groupPathFilter GroupPathValue The group path to filter on
----@param includeSubGroups boolean Whether or not to include subgroups
+---@param groupPathFilter? GroupPathValue The group path to filter on
+---@param includeSubGroups? boolean Whether or not to include subgroups
 ---@return DatabaseQuery
 function Group.CreateItemsQuery(groupPathFilter, includeSubGroups)
 	return private.itemDB:CreateQuery(groupPathFilter, includeSubGroups)

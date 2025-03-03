@@ -211,7 +211,6 @@ end
 
 local function RefreshSettings()
     TeleporterSettings.settingsPanel.scrollChild:SetWidth(TeleporterSettings.settingsPanel:GetWidth() - 18)
-    TeleporterSettings.spellsPanel.scrollChild:SetWidth(TeleporterSettings.settingsPanel:GetWidth() - 18)
 
     for i,c in pairs(SettingControls) do
         c.loadValue()
@@ -325,6 +324,8 @@ local function CreateSettings(panel)
     p = AddColourOption("Unequiped Colour",     "unequipedColour",                      scrollChild, false, p)
     p = AddColourOption("Cooldown Colour",      "cooldownColour",                       scrollChild, false, p)
     p = AddColourOption("Disabled Colour",      "disabledColour",                       scrollChild, false, p)
+    p = AddColourOption("Druid Form Colour",    "druidFormColour",                      scrollChild, false, p)
+
 
     p = AddSliderOption("Quick Menu Size",      "QuickMenuSize", 20, 100, 1,             scrollChild, p)
 end
@@ -457,6 +458,8 @@ local LoadSpells = false
 local function RefreshSpells(panel)
     if not LoadSpells then return end
 
+    TeleporterSettings.spellsPanel.scrollChild:SetWidth(TeleporterSettings.spellsPanel:GetWidth() - 18)
+
     for i,label in ipairs(ZoneLabels) do
         label:Hide()
     end
@@ -557,7 +560,7 @@ local function CreateSpell(spellType, id, zone)
 end
 
 local function CreateSpellCustomiser(panel)
-    local scrollFrame = CreateFrame("ScrollFrame", nil, panel, "UIPanelScrollFrameTemplate")
+    local scrollFrame = CreateFrame("ScrollFrame", "TeleporterSpellsScrollFrame", panel, "UIPanelScrollFrameTemplate")
     scrollFrame:SetPoint("TOPLEFT", 3, -80)
     scrollFrame:SetPoint("RIGHT", -27, 4)
 

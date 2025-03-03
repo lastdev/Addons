@@ -1,0 +1,63 @@
+== v1.09 - 16th February 2025
+* Feralas improvements
+
+== v1.08 - 14th February 2025
+* Daily givers for Horde and Alliance will now disappear off the map as per
+  your options - this required special grouping code for the dailies
+* Small easter egg I noticed for Alliance added to Gabbo quest text
+
+== v1.07 - 13th February 2025
+* This update focuses on the popup text being more helpful,
+  especially for dailies
+
+== v1.06 - 10th February 2025
+* Nagrand live
+* Lots of NPC changes throughout all zones, especially  adding Commoners
+
+== v1.05 - 9th February 2025
+* Durotar live
+* Feralas fixed I hope
+
+== v1.04 - 8th February 2025
+* Grizzly Hills is now live
+* Text for the food eating daily: Added that you MUST purchase a PACKAGE from
+  a vendor and eat it FULLY
+
+== v1.03 - 7th February 2025
+* NPCs added
+* Formatting improved
+* Too many changes top list
+
+== v1.02 - 5th February 2025
+* Further slight formatting improvements
+* Coordinates of Elwynn/Stormwind and Durotar NPCs much more exact
+* Silverpine Forest added
+* Double Raising a Stink is now just one
+* Cologne texture is now bright pink. Previously grey.
+  - Saturated it with magenta as it really couldn't previously be seen
+* Translation problem resolved - but rather than erroneous dispays...
+  now when a translated message/title does not appear then the English is used
+  
+== v1.01 - 4th February 2025
+* Wago project ID added
+* Formatting improvements, especially for Ying/Ning
+
+== v1.00 - 3rd February 2025
+* LoveBB texture was still the GIMP XCF file. Doh!
+* Increased the size of the Cologne and perfume textures
+* A few texture defaults were altered as they were just too hard to see
+* The cluster of pins had their positions altered
+* Final text colour scheme - lots of pinks
+* TOC file colour scheme changed
+
+== v0.01 - 3rd February 2025
+* Initial release for 11.0.7
+
+
+
+
+
+
+
+
+

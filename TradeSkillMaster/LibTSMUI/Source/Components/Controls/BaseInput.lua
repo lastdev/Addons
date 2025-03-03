@@ -614,7 +614,7 @@ function private.CustomPriceValidateFunc(_, value, badSources)
 end
 
 function private.UndercutValidateFunction(_, value, badSources)
-	if LibTSMUI.IsRetail() then
+	if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
 		if Money.FromString(Money.ToStringExact(value) or value) == 0 then
 			return true
 		elseif (Money.FromString(Money.ToStringExact(value) or value) or math.huge) < COPPER_PER_SILVER then

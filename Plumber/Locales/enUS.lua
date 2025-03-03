@@ -32,6 +32,7 @@ L["Module Category Tooltip"] = "Tooltip";   --Additional Info on Tooltips
 L["Module Category Class"] = "Class";   --Player Class (rogue, paladin...)
 
 L["Module Category Dragonflight"] = EXPANSION_NAME9 or "Dragonflight";  --Merge Expansion Feature (Dreamseeds, AzerothianArchives) Modules into this
+L["Module Category Plumber"] = "Plumber";   --This addon's name
 
 --Deprecated
 L["Module Category Dreamseeds"] = "Dreamseeds";     --Added in patch 10.2.0
@@ -254,7 +255,8 @@ L["Chat Leave All Characters"] = "Leave On All Characters";
 L["Chat Leave All Characters Tooltip"] = "You will automatically leave this channel when you log in on a character.";
 L["Chat Auto Leave Alert Format"] = "Do you wish to automatically leave |cffffc0c0[%s]|r on all your characters?";
 L["Chat Auto Leave Cancel Format"] = "Auto Leave Disabled for %s. Please use /join command to rejoin the channel.";
-L["Click To Disable"] = "Click to Disable";
+L["Auto Leave Channel Format"] = "Auto Leave \"%s\"";
+L["Click To Disable"] = "Click to disable";
 
 
 --NameplateWidget
@@ -305,16 +307,18 @@ L["LootUI Option Owned Count"] = "Show Number Of Owned Items";
 L["LootUI Option New Transmog"] = "Mark Uncollected Appearance";
 L["LootUI Option New Transmog Tooltip"] = "Add a marker %s if you have not collected the item's appearance.";
 L["LootUI Option Use Hotkey"] = "Press Key To Take All Items";
-L["LootUI Option Use Hotkey Tooltip"] = "While in Manual Looting mode, press the following hotkey to take all items.";
+L["LootUI Option Use Hotkey Tooltip"] = "While in Manual Loot Mode, press the following hotkey to take all items.";
 L["LootUI Option Fade Delay"] = "Fade Out Delay Per Item";
 L["LootUI Option Items Per Page"] = "Items Per Page";
 L["LootUI Option Items Per Page Tooltip"] = "Adjust the amount of items that can be displayed on one page when receiving loots.\n\nThis option doesn't affect Manual Loot Mode or Edit Mode.";
 L["LootUI Option Replace Default"] = "Replace Default Loot Alert";
 L["LootUI Option Replace Default Tooltip"] = "Replace the default loot alerts that usually appear above the action bars.";
 L["LootUI Option Loot Under Mouse"] = LOOT_UNDER_MOUSE_TEXT or "Open Loot Window at Mouse";
-L["LootUI Option Loot Under Mouse Tooltip"] = "While in |cffffffffManual Loot|r mode, the window will appear under the current mouse location";
+L["LootUI Option Loot Under Mouse Tooltip"] = "While in |cffffffffManual Loot|r Mode, the window will appear under the current mouse location";
 L["LootUI Option Use Default UI"] = "Use Default Loot Window";
 L["LootUI Option Use Default UI Tooltip"] = "Use WoW\'s default loot window.\n\n|cffff4800Enabling this option nullifies all settings above.|r";
+L["LootUI Option Background Opacity"] = "Opacity";
+L["LootUI Option Background Opacity Tooltip"] = "Set the background's opacity in Loot Notification Mode.\n\nThis option doesn't affect Manual Loot Mode.";
 
 
 --Quick Slot For Third-party Dev
@@ -324,10 +328,31 @@ L["QuickSlot Error 2"] = "Quick Slot: The controller is missing \"%s\"";
 L["QuickSlot Error 3"] = "Quick Slot: A controller with the same key \"%s\" already exists.";
 
 
+--Plumber Macro
+L["PlumberMacro Drive"] = "Plumber D.R.I.V.E. Macro";
+L["PlumberMacro Drawer"] = "Plumber Drawer Macro";
+L["PlumberMacro DrawerFlag Combat"] = "The drawer will be updated after leaving combat.";
+L["PlumberMacro DrawerFlag Stuck"] = "Something went wrong when updating the drawer.";
+L["PlumberMacro Error Combat"] = "Unavailable in combat";
+L["PlumberMacro Error NoAction"] = "No supported actions";
+L["Dismiss Battle Pet"] = "Dismiss Battle Pet";
+L["Drag And Drop Item Here"] = "Drag and drop an item here.";
+L["Drag To Reorder"] = "Left click and drag to reorder";
+L["Unsupported Action Type Format"] = "Unsupported action type: %s";
+L["Drawer Add Action Format"] = "Add |cffffffff%s|r";
+L["Drawer Option Global Tooltip"] = "This setting is shared across all drawer macros.";
+L["Drawer Option CloseAfterClick"] = "Close After Clicks";
+L["Drawer Option CloseAfterClick Tooltip"] = "Close the drawer after clicking any button in it, regardless of successful or not.";
+L["Drawer Option SingleRow"] = "Single Row";
+L["Drawer Option SingleRow Tooltip"] = "If checked, align all buttons on the same row instead of 4 items per row.";
+L["Drawer Option Hide Unusable"] = "Hide Unusable Actions";
+L["Drawer Option Hide Unusable Tooltip"] = "Hide unowned items and unlearned spells.\n\nConsumable items like potions will always be shown.";
+
+
 --Generic
 L["Reposition Button Horizontal"] = "Move Horizontally";   --Move the window horizontally
 L["Reposition Button Vertical"] = "Move Vertically";
-L["Reposition Button Tooltip"] = "Left-click and drag to move the window.";
+L["Reposition Button Tooltip"] = "Left click and drag to move the window";
 L["Font Size"] = FONT_SIZE or "Font Size";
 L["Reset To Default Position"] = HUD_EDIT_MODE_RESET_POSITION or "Reset To Default Position";
 L["Renown Level Label"] = RENOWN_LEVEL_LABEL or "Renown ";  --There is a space
@@ -336,6 +361,13 @@ L["Level Maxed"] = "(Maxed)";   --Reached max level
 L["Current Colon"] = ITEM_UPGRADE_CURRENT or "Current:";
 L["Unclaimed Reward Alert"] = WEEKLY_REWARDS_UNCLAIMED_TITLE or "You have unclaimed rewards";
 L["Total Colon"] = FROM_TOTAL or "Total:";
+
+
+--Plumber AddOn Settings
+L["ModuleName EnableNewByDefault"] = "Always Enable New Features";
+L["ModuleDescription EnableNewByDefault"] = "Always enable newly added features.\n\n*You will see a notification in the chat window when a new module is enabled this way.";
+L["New Feature Auto Enabled Format"] = "New Module %s has been enabled.";
+L["Click To See Details"] = "Click to see details";
 
 
 
@@ -351,7 +383,6 @@ L["currency-2915"] = "Carved";
 L["currency-2916"] = "Runed";
 L["currency-2917"] = "Gilded";
 
-
 L["Scenario Delves"] = "Delves";
 L["GameObject Door"] = "Door";
 L["Delve Chest 1 Rare"] = "Bountiful Coffer";   --We'll use the GameObjectID once it shows up in the database
@@ -361,10 +392,18 @@ L["Delve Chest 1 Rare"] = "Bountiful Coffer";   --We'll use the GameObjectID onc
 L["Bountiful Delve"] =  "Bountiful Delves";
 L["Special Assignment"] = "Special Assignments";
 
-
 L["Match Pattern Gold"] = "([%d%,]+) Gold";
 L["Match Pattern Silver"] = "([%d]+) Silver";
 L["Match Pattern Copper"] = "([%d]+) Copper";
 
-L["Match Patter Rep 1"] = "Your Warband's reputation with (.+) increased by ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
-L["Match Patter Rep 2"] = "Reputation with (.+) increased by ([%d%,]+)";   --FACTION_STANDING_INCREASED
+L["Match Pattern Rep 1"] = "Your Warband's reputation with (.+) increased by ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
+L["Match Pattern Rep 2"] = "Reputation with (.+) increased by ([%d%,]+)";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Item Level"] = "^Item Level (%d+)";
+L["Match Pattern Item Upgrade Tooltip"] = "^Upgrade Level: (.+) (%d+)/(%d+)";  --See ITEM_UPGRADE_TOOLTIP_FORMAT_STRING
+L["Upgrade Track 1"] = "Adventurer";
+L["Upgrade Track 2"] = "Explorer";
+L["Upgrade Track 3"] = "Veteran";
+L["Upgrade Track 4"] = "Champion";
+L["Upgrade Track 5"] = "Hero";
+L["Upgrade Track 6"] = "Myth";

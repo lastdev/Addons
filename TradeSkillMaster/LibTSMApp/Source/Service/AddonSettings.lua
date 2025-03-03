@@ -377,6 +377,22 @@ function private.ProcessUpgrade(db, upgradeObj)
 			end
 		end
 	end
+	if prevVersion >= 122 and prevVersion < 131 and not LibTSMApp.IsCataClassicPatch442() then
+		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "auctioningAuctionScrollingTable") do
+			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "auctioningAuctionScrollingTable", value)
+		end
+		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "myAuctionsScrollingTable") do
+			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "myAuctionsScrollingTable", value)
+		end
+		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "shoppingAuctionScrollingTable") do
+			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "shoppingAuctionScrollingTable", value)
+		end
+		if not LibTSMApp.IsRetail() then
+			for _, key, value in upgradeObj:RemovedSettingIterator("factionrealm", nil, "auctioningOperations", "whitelist") do
+				db:Set("factionrealm", upgradeObj:GetScopeKey(key), "auctioningOperations", "whitelist", value)
+			end
+		end
+	end
 	-- NOTE: When adding migrations, be careful of multiple migrations modifying the same key, as
 	-- the RemovedSettingIterator value could be stale.
 end

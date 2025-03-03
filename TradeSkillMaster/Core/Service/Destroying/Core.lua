@@ -20,6 +20,7 @@ local Conversion = TSM.LibTSMTypes:Include("Item.Conversion")
 local Reactive = TSM.LibTSMUtil:Include("Reactive")
 local Future = TSM.LibTSMUtil:IncludeClassType("Future")
 local Log = TSM.LibTSMUtil:Include("Util.Log")
+local BinarySearch = TSM.LibTSMUtil:Include("Util.BinarySearch")
 local Threading = TSM.LibTSMTypes:Include("Threading")
 local ItemInfo = TSM.LibTSMService:Include("Item.ItemInfo")
 local CustomString = TSM.LibTSMTypes:Include("CustomString")
@@ -55,7 +56,8 @@ local SPELL_IDS = {
 local ITEM_SUB_CLASS_METAL_AND_STONE = 7
 local ITEM_SUB_CLASS_HERB = 9
 local TARGET_SLOT_ID_MULTIPLIER = 1000000
-local CLEANUP_THRESHOLD = 60 * 24 * 60 * 60
+local CLEANUP_TIME_THRESHOLD = 60 * 24 * 60 * 60
+local CLEANUP_MAX_ENTRIES = 100
 local GEM_CHIPS = {
 	["i:129099"] = "i:129100",
 	["i:130200"] = "i:129100",
@@ -93,17 +95,12 @@ function Destroying.OnInitialize(settingsDB)
 		:RegisterCallback("deMaxQuality", private.UpdateBagDB)
 		:RegisterCallback("includeSoulbound", private.UpdateBagDB)
 
-	local cleanupTime = time() - CLEANUP_THRESHOLD
+	local cleanupTime = time() - CLEANUP_TIME_THRESHOLD
 	for spellId, entries in pairs(private.settings.destroyingHistory) do
 		-- Rely on the entries being sorted in ascending time
-		local removeThroughIndex = nil
-		for i = 1, #entries do
-			if entries[i].time > cleanupTime then
-				break
-			end
-			removeThroughIndex = i
-		end
-		if removeThroughIndex then
+		local index, insertIndex = BinarySearch.Table(entries, cleanupTime, private.GetHistoryEntryTime)
+		local removeThroughIndex = max((index or insertIndex) - 1, #entries - CLEANUP_MAX_ENTRIES)
+		if removeThroughIndex > 0 then
 			Log.Info("Removing %d old entries for %s", removeThroughIndex, tostring(spellId))
 			Table.RemoveRange(entries, 1, removeThroughIndex)
 		end
@@ -551,4 +548,8 @@ function private.IsDestroyable(itemString)
 	end
 
 	return private.canDestroyCache[itemString], private.destroyQuantityCache[itemString]
+end
+
+function private.GetHistoryEntryTime(entry)
+	return entry.time
 end

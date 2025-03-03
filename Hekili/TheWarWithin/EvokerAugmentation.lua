@@ -1,5 +1,5 @@
 -- EvokerAugmentation.lua
--- October 2023
+-- January 2025
 
 if UnitClassBase( "player" ) ~= "EVOKER" then return end
 
@@ -23,7 +23,7 @@ spec:RegisterTalents( {
     attuned_to_the_dream            = {  93292, 376930, 2 }, -- Your healing done and healing received are increased by 2%.
     blast_furnace                   = {  93309, 375510, 1 }, -- Fire Breath's damage over time lasts 4 sec longer.
     bountiful_bloom                 = {  93291, 370886, 1 }, -- Emerald Blossom heals 2 additional allies.
-    cauterizing_flame               = {  93294, 374251, 1 }, -- Cauterize an ally's wounds, removing all Bleed, Poison, Curse, and Disease effects. Heals for 41,237 upon removing any effect.
+    cauterizing_flame               = {  93294, 374251, 1 }, -- Cauterize an ally's wounds, removing all Bleed, Poison, Curse, and Disease effects. Heals for 65,292 upon removing any effect.
     clobbering_sweep                = { 103844, 375443, 1 }, -- Tail Swipe's cooldown is reduced by 2 min.
     draconic_legacy                 = {  93300, 376166, 1 }, -- Your Stamina is increased by 6%.
     enkindled                       = {  93295, 375554, 2 }, -- Living Flame deals 3% more damage and healing.
@@ -42,46 +42,46 @@ spec:RegisterTalents( {
     lush_growth                     = {  93347, 375561, 2 }, -- Green spells restore 5% more health.
     natural_convergence             = {  93312, 369913, 1 }, -- Disintegrate channels 20% faster and Eruption's cast time is reduced by 20%.
     obsidian_bulwark                = {  93289, 375406, 1 }, -- Obsidian Scales has an additional charge.
-    obsidian_scales                 = {  93304, 363916, 1 }, -- Reinforce your scales, reducing damage taken by 30%. Lasts 13.9 sec.
+    obsidian_scales                 = {  93304, 363916, 1 }, -- Reinforce your scales, reducing damage taken by 30%. Lasts 13.5 sec.
     oppressing_roar                 = {  93298, 372048, 1 }, -- Let out a bone-shaking roar at enemies in a cone in front of you, increasing the duration of crowd controls that affect them by 50% in the next 10 sec.
     overawe                         = {  93297, 374346, 1 }, -- Oppressing Roar removes 1 Enrage effect from each enemy, and its cooldown is reduced by 30 sec.
-    panacea                         = {  93348, 387761, 1 }, -- Emerald Blossom and Verdant Embrace instantly heal you for 18,409 when cast.
+    panacea                         = {  93348, 387761, 1 }, -- Emerald Blossom and Verdant Embrace instantly heal you for 29,148 when cast.
     potent_mana                     = {  93715, 418101, 1 }, -- Source of Magic increases the target's healing and damage done by 3%.
     protracted_talons               = {  93307, 369909, 1 }, -- Azure Strike damages 1 additional enemy.
     quell                           = {  93311, 351338, 1 }, -- Interrupt an enemy's spellcasting and prevent any spell from that school of magic from being cast for 4 sec.
     recall                          = {  93301, 371806, 1 }, -- You may reactivate Breath of Eons within 3 sec after landing to travel back in time to your takeoff location.
     regenerative_magic              = {  93353, 387787, 1 }, -- Your Leech is increased by 2%.
-    renewing_blaze                  = {  93354, 374348, 1 }, -- The flames of life surround you for 9.3 sec. While this effect is active, 100% of damage you take is healed back over 8 sec.
-    rescue                          = {  93288, 370665, 1 }, -- Swoop to an ally and fly with them to the target location.
-    scarlet_adaptation              = {  93340, 372469, 1 }, -- Store 20% of your effective healing, up to 23,667. Your next damaging Living Flame consumes all stored healing to increase its damage dealt.
+    renewing_blaze                  = {  93354, 374348, 1 }, -- The flames of life surround you for 9.0 sec. While this effect is active, 100% of damage you take is healed back over 8 sec.
+    rescue                          = {  93288, 370665, 1 }, -- Swoop to an ally and fly with them to the target location. Clears movement impairing effects from you and your ally.
+    scarlet_adaptation              = {  93340, 372469, 1 }, -- Store 20% of your effective healing, up to 40,315. Your next damaging Living Flame consumes all stored healing to increase its damage dealt.
     sleep_walk                      = {  93293, 360806, 1 }, -- Disorient an enemy for 20 sec, causing them to sleep walk towards you. Damage has a chance to awaken them.
-    source_of_magic                 = {  93344, 369459, 1 }, -- Redirect your excess magic to a friendly healer for 1.2 |4hour:hrs;. When you cast an empowered spell, you restore 0.25% of their maximum mana per empower level. Limit 1.
-    spatial_paradox                 = {  93351, 406732, 1 }, -- Evoke a paradox for you and a friendly healer, allowing casting while moving and increasing the range of most spells by 100% for 11.6 sec. Affects the nearest healer within 60 yds, if you do not have a healer targeted.
+    source_of_magic                 = {  93344, 369459, 1 }, -- Redirect your excess magic to a friendly healer for 1.1 |4hour:hrs;. When you cast an empowered spell, you restore 0.25% of their maximum mana per empower level. Limit 1.
+    spatial_paradox                 = {  93351, 406732, 1 }, -- Evoke a paradox for you and a friendly healer, allowing casting while moving and increasing the range of most spells by 100% for 11.2 sec. Affects the nearest healer within 60 yds, if you do not have a healer targeted.
     tailwind                        = {  93290, 375556, 1 }, -- Hover increases your movement speed by 70% for the first 4 sec.
     terror_of_the_skies             = {  93342, 371032, 1 }, -- Breath of Eons stuns enemies for 3 sec.
-    time_spiral                     = {  93351, 374968, 1 }, -- Bend time, allowing you and your allies within 40 yds to cast their major movement ability once in the next 11.6 sec, even if it is on cooldown.
+    time_spiral                     = {  93351, 374968, 1 }, -- Bend time, allowing you and your allies within 40 yds to cast their major movement ability once in the next 11.2 sec, even if it is on cooldown.
     tip_the_scales                  = {  93350, 370553, 1 }, -- Compress time to make your next empowered spell cast instantly at its maximum empower level.
-    twin_guardian                   = {  93287, 370888, 1 }, -- Rescue protects you and your ally from harm, absorbing damage equal to 30% of your maximum health for 5.8 sec.
-    unravel                         = {  93308, 368432, 1 }, -- Sunder an enemy's protective magic, dealing 110,279 Spellfrost damage to absorb shields.
-    verdant_embrace                 = {  93341, 360995, 1 }, -- Fly to an ally and heal them for 73,873, or heal yourself for the same amount.
-    walloping_blow                  = {  93286, 387341, 1 }, -- Wing Buffet and Tail Swipe knock enemies further and daze them, reducing movement speed by 70% for 4 sec.
-    zephyr                          = {  93346, 374227, 1 }, -- Conjure an updraft to lift you and your 4 nearest allies within 20 yds into the air, reducing damage taken from area-of-effect attacks by 20% and increasing movement speed by 30% for 9.3 sec.
+    twin_guardian                   = {  93287, 370888, 1 }, -- Rescue protects you and your ally from harm, absorbing damage equal to 30% of your maximum health for 5.6 sec.
+    unravel                         = {  93308, 368432, 1 }, -- Sunder an enemy's protective magic, dealing 174,613 Spellfrost damage to absorb shields.
+    verdant_embrace                 = {  93341, 360995, 1 }, -- Fly to an ally and heal them for 116,966, or heal yourself for the same amount.
+    walloping_blow                  = {  93286, 387341, 1 }, -- Wing Buffet and Tail Swipe knock enemies further and daze them, reducing movement speed by 70% for 4 sec. 
+    zephyr                          = {  93346, 374227, 1 }, -- Conjure an updraft to lift you and your 4 nearest allies within 20 yds into the air, reducing damage taken from area-of-effect attacks by 20% and increasing movement speed by 30% for 9.0 sec.
 
     -- Augmentation
     accretion                       = {  93229, 407876, 1 }, -- Eruption reduces the remaining cooldown of Upheaval by 1.0 sec.
     anachronism                     = {  93223, 407869, 1 }, -- Prescience has a 35% chance to grant Essence Burst.
     arcane_reach                    = {  93225, 454983, 1 }, -- The range of your helpful magics is increased by 5 yards.
-    aspects_favor                   = {  93217, 407243, 2 }, -- Obsidian Scales activates Black Attunement, and amplifies it to increase maximum health by 4.0% for 13.9 sec. Hover activates Bronze Attunement, and amplifies it to increase movement speed by 25% for 4.6 sec.
+    aspects_favor                   = {  93217, 407243, 2 }, -- Obsidian Scales activates Black Attunement, and amplifies it to increase maximum health by 4.0% for 13.5 sec. Hover activates Bronze Attunement, and amplifies it to increase movement speed by 25% for 4.5 sec.
     bestow_weyrnstone               = {  93195, 408233, 1 }, -- Conjure a pair of Weyrnstones, one for your target ally and one for yourself. Only one ally may bear your Weyrnstone at a time. A Weyrnstone can be activated by the bearer to transport them to the other Weyrnstone's location, if they are within 100 yds.
-    blistering_scales               = {  93209, 360827, 1 }, -- Protect an ally with 15 explosive dragonscales, increasing their Armor by 20% of your own. Melee attacks against the target cause 1 scale to explode, dealing 3,675 Volcanic damage to enemies near them. This damage can only occur every few sec. Blistering Scales can only be placed on one target at a time. Casts on your enemy's target if they have one.
-    breath_of_eons                  = {  93234, 403631, 1 }, -- Fly to the targeted location, exposing Temporal Wounds on enemies in your path for 11.6 sec. Temporal Wounds accumulate 10% of damage dealt by your allies affected by Ebon Might, then critically strike for that amount as Arcane damage. Applies Ebon Might for 5 sec. Removes all root effects. You are immune to movement impairing and loss of control effects while flying.
+    blistering_scales               = {  93209, 360827, 1 }, -- Protect an ally with 20 explosive dragonscales, increasing their Armor by 20% of your own. Melee attacks against the target cause 1 scale to explode, dealing 5,820 Volcanic damage to enemies near them. This damage can only occur every few sec. Blistering Scales can only be placed on one target at a time. Casts on your enemy's target if they have one.
+    breath_of_eons                  = {  93234, 403631, 1 }, -- Fly to the targeted location, exposing Temporal Wounds on enemies in your path for 11.2 sec. Temporal Wounds accumulate 12% of damage dealt by your allies affected by Ebon Might, then critically strike for that amount as Arcane damage. Applies Ebon Might for 5 sec. Removes all root effects. You are immune to movement impairing and loss of control effects while flying.
     chrono_ward                     = {  93235, 409676, 1 }, -- When allies deal damage with Temporal Wounds, they gain a shield for 100% of the damage dealt. Absorption cannot exceed 30% of your maximum health.
-    defy_fate                       = {  93222, 404195, 1 }, -- Fatal attacks are diverted into a nearby timeline, preventing the damage, and your death, in this one. The release of temporal energy restores 168,392 health to you, and 56,131 to 4 nearby allies, over 9 sec. Healing starts high and declines over the duration. May only occur once every 6 min.
+    defy_fate                       = {  93222, 404195, 1 }, -- Fatal attacks are diverted into a nearby timeline, preventing the damage, and your death, in this one. The release of temporal energy restores 241,416 health to you, and 80,472 to 4 nearby allies, over 9 sec. Healing starts high and declines over the duration. May only occur once every 6 min.
     draconic_attunements            = {  93218, 403208, 1 }, -- Learn to attune yourself to the essence of the Black or Bronze Dragonflights: Black Attunement: You and your 4 nearest allies have 2% increased maximum health. Bronze Attunement:You and your 4 nearest allies have 10% increased movement speed.
     dream_of_spring                 = {  93359, 414969, 1 }, -- Emerald Blossom no longer has a cooldown, deals 35% increased healing, and increases the duration of your active Ebon Might effects by 1 sec, but costs 3 Essence.
-    ebon_might                      = {  93198, 395152, 1 }, -- Increase your 4 nearest allies' primary stat by 5.0% of your own, and cause you to deal 20% more damage, for 11.6 sec. May only affect 4 allies at once, and prefers to imbue damage dealers. Eruption, Breath of Eons, and your empower spells extend the duration of these effects.
+    ebon_might                      = {  93198, 395152, 1 }, -- Increase your 4 nearest allies' primary stat by 5.0% of your own, and cause you to deal 25% more damage, for 11.2 sec. May only affect 4 allies at once, and does not affect tanks and healers. Eruption, Breath of Eons, and your empower spells extend the duration of these effects.
     echoing_strike                  = {  93221, 410784, 1 }, -- Azure Strike deals 15% increased damage and has a 10% chance per target hit to echo, casting again.
-    eruption                        = {  93200, 395160, 1 }, -- Cause a violent eruption beneath an enemy's feet, dealing 34,309 Volcanic damage split between them and nearby enemies. Increases the duration of your active Ebon Might effects by 1 sec.
+    eruption                        = {  93200, 395160, 1 }, -- Cause a violent eruption beneath an enemy's feet, dealing 54,324 Volcanic damage split between them and nearby enemies. Increases the duration of your active Ebon Might effects by 1 sec.
     essence_attunement              = {  93219, 375722, 1 }, -- Essence Burst stacks 2 times.
     essence_burst                   = {  93220, 396187, 1 }, -- Your Living Flame has a 20% chance, and your Azure Strike has a 15% chance, to make your next Eruption cost no Essence. Stacks 2 times.
     fate_mirror                     = {  93367, 412774, 1 }, -- Prescience grants the ally a chance for their spells and abilities to echo their damage or healing, dealing 15% of the amount again.
@@ -90,33 +90,33 @@ spec:RegisterTalents( {
     ignition_rush                   = {  93230, 408775, 1 }, -- Essence Burst reduces the cast time of Eruption by 40%.
     imminent_destruction            = { 102248, 459537, 1 }, -- Breath of Eons reduces the Essence cost of Eruption by 1 and increases its damage by 10% for 15 sec after you land.
     imposing_presence               = {  93199, 371016, 1 }, -- Quell's cooldown is reduced by 20 sec.
-    infernos_blessing               = {  93197, 410261, 1 }, -- Fire Breath grants the inferno's blessing for 9.3 sec to you and your allies affected by Ebon Might, giving their damaging attacks and spells a high chance to deal an additional 10,782 Fire damage.
+    infernos_blessing               = {  93197, 410261, 1 }, -- Fire Breath grants the inferno's blessing for 9.0 sec to you and your allies affected by Ebon Might, giving their damaging attacks and spells a high chance to deal an additional 17,073 Fire damage.
     inner_radiance                  = {  93199, 386405, 1 }, -- Your Living Flame and Emerald Blossom are 30% more effective on yourself.
     interwoven_threads              = {  93369, 412713, 1 }, -- The cooldowns of your spells are reduced by 10%.
-    molten_blood                    = {  93211, 410643, 1 }, -- When cast, Blistering Scales grants the target a shield that absorbs up to 106,038 damage for 34.9 sec based on their missing health. Lower health targets gain a larger shield.
+    molten_blood                    = {  93211, 410643, 1 }, -- When cast, Blistering Scales grants the target a shield that absorbs up to 167,897 damage for 33.7 sec based on their missing health. Lower health targets gain a larger shield.
     molten_embers                   = { 102249, 459725, 1 }, -- Fire Breath causes enemies to take up to 40% increased damage from your Black spells, increased based on its empower level.
-    momentum_shift                  = {  93207, 408004, 1 }, -- Consuming Essence Burst grants you 5% Intellect for 7.0 sec. Stacks up to 2 times.
-    motes_of_possibility            = {  93227, 409267, 1 }, -- Eruption has a 15% chance to form a mote of diverted essence near you. Allies who comes in contact with the mote gain a random buff from your arsenal.
+    momentum_shift                  = {  93207, 408004, 1 }, -- Consuming Essence Burst grants you 5% Intellect for 6.7 sec. Stacks up to 2 times.
+    motes_of_possibility            = {  93227, 409267, 1 }, -- Eruption has a 25% chance to form a mote of diverted essence near you. Allies who comes in contact with the mote gain a random buff from your arsenal.
     overlord                        = {  93213, 410260, 1 }, -- Breath of Eons casts an Eruption at the first 3 enemies struck. These Eruptions have a 100% chance to create a Mote of Possibility.
-    perilous_fate                   = {  93235, 410253, 1 }, -- Breath of Eons reduces enemies' movement speed by 70%, and reduces their attack speed by 50%, for 11.6 sec.
+    perilous_fate                   = {  93235, 410253, 1 }, -- Breath of Eons reduces enemies' movement speed by 70%, and reduces their attack speed by 50%, for 11.2 sec.
     plot_the_future                 = {  93226, 407866, 1 }, -- Breath of Eons grants you Fury of the Aspects for 15 sec after you land, without causing Exhaustion.
     power_nexus                     = {  93201, 369908, 1 }, -- Increases your maximum Essence to 6.
-    prescience                      = {  93358, 409311, 1 }, -- Grant an ally the gift of foresight, increasing their critical strike chance by 3% and occasionally copying their damage and healing spells at 15% power for 20.9 sec. Affects the nearest ally within 25 yds, preferring damage dealers, if you do not have an ally targeted.
+    prescience                      = {  93358, 409311, 1 }, -- Grant an ally the gift of foresight, increasing their critical strike chance by 3% and occasionally copying their damage and healing spells at 15% power for 20.2 sec. Affects the nearest ally within 25 yds, preferring damage dealers, if you do not have an ally targeted.
     prolong_life                    = {  93359, 410687, 1 }, -- Your effects that extend Ebon Might also extend Symbiotic Bloom.
     pupil_of_alexstrasza            = {  93221, 407814, 1 }, -- When cast at an enemy, Living Flame strikes 1 additional enemy for 100% damage.
-    reactive_hide                   = {  93210, 409329, 1 }, -- Each time Blistering Scales explodes it deals 15% more damage for 13.9 sec, stacking 10 times.
+    reactive_hide                   = {  93210, 409329, 1 }, -- Each time Blistering Scales explodes it deals 15% more damage for 13.5 sec, stacking 10 times.
     regenerative_chitin             = {  93211, 406907, 1 }, -- Blistering Scales has 5 more scales, and casting Eruption restores 1 scale.
     ricocheting_pyroclast           = {  93208, 406659, 1 }, -- Eruption deals 30% more damage per enemy struck, up to 150%.
+    rockfall                        = {  93368, 1219236, 1 }, -- Upheaval reaches maximum empower level 20% faster and has a 60% chance to grant Essence Burst.
     rumbling_earth                  = {  93205, 459120, 1 }, -- Upheaval causes an aftershock at its location, dealing 50% of its damage 2 additional times.
-    seismic_slam                    = {  93368, 408543, 1 }, -- Landslide causes enemies who are mid-air to be slammed to the ground, stunning them for 4 sec.
     stretch_time                    = {  93382, 410352, 1 }, -- While flying during Breath of Eons, 50% of damage you would take is instead dealt over 10 sec.
-    symbiotic_bloom                 = {  93215, 410685, 2 }, -- Emerald Blossom increases targets' healing received by 3% for 11.6 sec.
+    symbiotic_bloom                 = {  93215, 410685, 2 }, -- Emerald Blossom increases targets' healing received by 3% for 11.2 sec.
     tectonic_locus                  = {  93202, 408002, 1 }, -- Upheaval deals 50% increased damage to the primary target, and launches them higher.
     time_skip                       = {  93232, 404977, 1 }, -- Surge forward in time, causing your cooldowns to recover 1,000% faster for 2 sec.
-    timelessness                    = {  93360, 412710, 1 }, -- Enchant an ally to appear out of sync with the normal flow of time, reducing threat they generate by 30% for 34.9 min. Less effective on tank-specialized allies. May only be placed on one target at a time.
+    timelessness                    = {  93360, 412710, 1 }, -- Enchant an ally to appear out of sync with the normal flow of time, reducing threat they generate by 30% for 33.7 min. Less effective on tank-specialized allies. May only be placed on one target at a time.
     tomorrow_today                  = {  93369, 412723, 1 }, -- Time Skip channels for 1 sec longer.
     unyielding_domain               = {  93202, 412733, 1 }, -- Upheaval cannot be interrupted, and has an additional 10% chance to critically strike.
-    upheaval                        = {  93203, 396286, 1 }, -- Gather earthen power beneath your enemy's feet and send them hurtling upwards, dealing 52,689 Volcanic damage to the target and nearby enemies. Increases the duration of your active Ebon Might effects by 2 sec. Empowering expands the area of effect. I: 3 yd radius. II: 6 yd radius. III: 9 yd radius.
+    upheaval                        = {  93203, 396286, 1 }, -- Gather earthen power beneath your enemy's feet and send them hurtling upwards, dealing 83,426 Volcanic damage to the target and nearby enemies. Increases the duration of your active Ebon Might effects by 2 sec. Empowering expands the area of effect. I: 3 yd radius. II: 6 yd radius. III: 9 yd radius.
     volcanism                       = {  93206, 406904, 1 }, -- Eruption's Essence cost is reduced by 1.
 
     -- Chronowarden
@@ -136,11 +136,11 @@ spec:RegisterTalents( {
     warp                            = {  94948, 429483, 1 }, -- Hover now causes you to briefly warp out of existence and appear at your destination. Hover's cooldown is also reduced by 5 sec. Hover continues to allow Evoker spells to be cast while moving.
 
     -- Scalecommander
-    bombardments                    = {  94936, 434300, 1 }, -- Mass Eruption marks your primary target for destruction for the next 6 sec. You and your allies have a chance to trigger a Bombardment when attacking marked targets, dealing 46,562 Volcanic damage split amongst all nearby enemies.
+    bombardments                    = {  94936, 434300, 1 }, -- Mass Eruption marks your primary target for destruction for the next 6 sec. You and your allies have a chance to trigger a Bombardment when attacking marked targets, dealing 73,725 Volcanic damage split amongst all nearby enemies.
     diverted_power                  = {  94928, 441219, 1 }, -- Bombardments have a chance to generate Essence Burst.
     extended_battle                 = {  94928, 441212, 1 }, -- Essence abilities extend Bombardments by 1 sec.
     hardened_scales                 = {  94933, 441180, 1 }, -- Obsidian Scales reduces damage taken by an additional 10%.
-    maneuverability                 = {  94941, 433871, 1 }, -- Breath of Eons can now be steered in your desired direction. In addition, Breath of Eons burns targets for 92,245 Volcanic damage over 12 sec.
+    maneuverability                 = {  94941, 433871, 1 }, -- Breath of Eons can now be steered in your desired direction. In addition, Breath of Eons burns targets for 109,334 Volcanic damage over 12 sec.
     mass_eruption                   = {  98931, 438587, 1, "scalecommander" }, -- Empower spells cause your next Eruption to strike up to 3 targets. When striking less than 3 targets, Eruption damage is increased by 15% for each missing target.
     melt_armor                      = {  94921, 441176, 1 }, -- Breath of Eons causes enemies to take 20% increased damage from Bombardments and Essence abilities for 12 sec.
     menacing_presence               = {  94933, 441181, 1 }, -- Knocking enemies up or backwards reduces their damage done to you by 15% for 8 sec.
@@ -152,18 +152,16 @@ spec:RegisterTalents( {
     wingleader                      = {  94953, 441206, 1 }, -- Bombardments reduce the cooldown of Breath of Eons by 1 sec for each target struck, up to 3 sec.
 } )
 
-
 -- PvP Talents
 spec:RegisterPvpTalents( { 
-    born_in_flame        = 5612, -- (414937) Casting Ebon Might grants 2 charges of Burnout, reducing the cast time of Living Flame by 100%.
+    born_in_flame        = 5612, -- (414937) 
     chrono_loop          = 5564, -- (383005) Trap the enemy in a time loop for 5 sec. Afterwards, they are returned to their previous location and health. Cannot reduce an enemy's health below 20%.
-    divide_and_conquer   = 5557, -- (384689) Breath of Eons forms curtains of fire, preventing line of sight to enemies outside its walls and burning enemies who walk through them for 366,531 Fire damage. Lasts 6 sec.
-    dream_catcher        = 5613, -- (410962) Sleep Walk no longer has a cooldown, but its cast time is increased by 0.2 sec.
-    dream_projection     = 5559, -- (377509) Summon a flying projection of yourself that heals allies you pass through for 73,423. Detonating your projection dispels all nearby allies of Magical effects, and heals for 363,446 over 20 sec.
-    dreamwalkers_embrace = 5615, -- (415651) Verdant Embrace tethers you to an ally, increasing movement speed by 40% and slowing and siphoning 63,634 life from enemies who come in contact with the tether. The tether lasts up to 10 sec or until you move more than 30 yards away from your ally.
+    divide_and_conquer   = 5557, -- (384689) Breath of Eons forms curtains of fire, preventing line of sight to enemies outside its walls and burning enemies who walk through them for 139,690 Fire damage. Lasts 6 sec.
+    dreamwalkers_embrace = 5615, -- (415651) Verdant Embrace tethers you to an ally, increasing movement speed by 40% and slowing and siphoning 24,251 life from enemies who come in contact with the tether. The tether lasts up to 10 sec or until you move more than 30 yards away from your ally.
     nullifying_shroud    = 5558, -- (378464) Wreathe yourself in arcane energy, preventing the next 3 full loss of control effects against you. Lasts 30 sec.
     obsidian_mettle      = 5563, -- (378444) While Obsidian Scales is active you gain immunity to interrupt, silence, and pushback effects.
     scouring_flame       = 5561, -- (378438) Fire Breath burns away 1 beneficial Magic effect per empower level from all targets.
+    seismic_slam         = 5454, -- (408543) 
     swoop_up             = 5562, -- (370388) Grab an enemy and fly with them to the target location.
     time_stop            = 5619, -- (378441) Freeze an ally's timestream for 5 sec. While frozen in time they are invulnerable, cannot act, and auras do not progress. You may reactivate Time Stop to end this effect early.
     unburdened_flight    = 5560, -- (378437) Hover makes you immune to movement speed reduction effects.
@@ -315,7 +313,7 @@ spec:RegisterAuras( {
     essence_burst = {
         id = 392268,
         duration = function() return 15.0 * ( 1 + 1.25 * stat.mastery_value ) end,
-        max_stack = function() return 1 + ( talent.essence_attunement.enabled and 1 or 0 ) end,
+        max_stack = function() return 1 + talent.essence_attunement.rank end,
     },
     -- Movement speed increased by $w2%.$?e0[ Area damage taken reduced by $s1%.][]; Evoker spells may be cast while moving. Does not affect empowered spells.$?e9[; Immune to movement speed reduction effects.][]
     hover = {
@@ -446,6 +444,11 @@ spec:RegisterAuras( {
     prescience_applied = {
         duration = function() return 18.0 * ( 1 + 1.25 * stat.mastery_value ) end,
         max_stack = 1,
+    },
+    primacy = {
+        id = 431654,
+        duration = 8,
+        max_stack = 3
     },
     -- Blistering Scales deals $w1% increased damage.
     reactive_hide = {
@@ -658,7 +661,10 @@ spec:RegisterHook( "runHandler", function( action )
     empowerment.active = false
 end )
 
+-- TheWarWithin
+spec:RegisterGear( "tww2", 229283, 229281, 229279, 229280, 229278 )
 
+-- Dragonflight
 spec:RegisterGear( "tier29", 200381, 200383, 200378, 200380, 200382 )
 spec:RegisterGear( "tier30", 202491, 202489, 202488, 202487, 202486 )
 spec:RegisterGear( "tier31", 207225, 207226, 207227, 207228, 207230, 217178, 217180, 217176, 217177, 217179 )
@@ -730,7 +736,7 @@ do
             power_level = min( settings.fire_breath_fixed, max_empower )
         end
 
-        return stages[ power_level ] * ( talent.font_of_magic.enabled and 0.8 or 1 ) * haste
+        return stages[ power_level ] * ( talent.font_of_magic.enabled and 0.8 or 1 ) * ( talent.rockfall.enabled and action == "upheaval" and 0.8 or 1 ) * haste
     end, state )
 end
 
@@ -777,8 +783,8 @@ spec:RegisterAbilities( {
         color = "black",
         cast = 0.0,
         charges = function() return talent.regenerative_chitin.enabled and 2 or nil end,
-        cooldown = 30.0,
-        recharge = function() return talent.regenerative_chitin.enabled and 30 or nil end,
+        cooldown = function() return 30 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
+        recharge = function() return talent.regenerative_chitin.enabled and 30 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) or nil end,
         gcd = "spell",
 
         talent = "blistering_scales",
@@ -796,7 +802,7 @@ spec:RegisterAbilities( {
         color = "bronze",
         cast = 4.0,
         channeled = true,
-        cooldown = 120.0,
+        cooldown = function() return 120 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
         gcd = "spell",
 
         talent = "breath_of_eons",
@@ -807,10 +813,22 @@ spec:RegisterAbilities( {
             applyBuff( "breath_of_eons" )
             if buff.ebon_might.up then buff.ebon_might.expires = buff.ebon_might.expires + 5
             else applyBuff( "ebon_might", 5 ) end
+            if talent.overlord.enabled then
+                for i = 1, ( max( 3, active_enemies ) ) do
+                    spec.abilities.eruption.handler()
+                end
+            end
+            if set_bonus.tww2 >= 2 then
+                local ebon = buff.ebon_might.remains
+                spec.abilities.upheaval.handler()
+                -- Except ebon might extensions. Why blizz.
+                buff.ebon_might.remains = ebon
+            end
         end,
 
         finish = function()
             removeBuff( "breath_of_eons" )
+            if talent.plot_the_future.enabled then applyBuff( "fury_of_the_aspects", 15 ) end
         end,
 
         copy = { 403631, 442204 }
@@ -856,7 +874,7 @@ spec:RegisterAbilities( {
         id = 395152,
         color = "black",
         cast = 1.5,
-        cooldown = 30.0,
+        cooldown = function() return 30 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
         gcd = "spell",
 
         spend = 0.010,
@@ -883,7 +901,7 @@ spec:RegisterAbilities( {
 
         spend = function()
             if buff.essence_burst.up then return 0 end
-            return 3 - ( talent.volcanism.enabled and 1 or 0 )
+            return 3 - talent.volcanism.rank - ( buff.imminent_destruction.up and 1 or 0 )
         end,
         spendType = "essence",
         cycle = function() if talent.bombardments.enabled and buff.mass_eruption_stacks.up then return "bombardments" end end,
@@ -892,17 +910,72 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         handler = function()
-            removeBuff( "essence_burst" )
-            removeBuff( "trembling_earth" )
-            removeBuff( "mass_eruption_stacks" )
+
+            removeStack( "essence_burst" )
+
+            if buff.mass_disintegrate_stacks.up then
+                if talent.bombardments.enabled then applyDebuff( "target", "bombardments" ) end
+                removeStack( "mass_disintegrate_stacks" )
+            end
 
             if buff.ebon_might.up then
                 buff.ebon_might.expires = buff.ebon_might.expires + 1 + ( set_bonus.tier31_4pc > 0 and ( active_dot.prescience * 0.2 ) or 0 )
             end
-
-
+            if talent.accretion.enabled then reduceCooldown( "upheaval", 1 ) end
             if talent.regenerative_chitin.enabled and buff.blistering_scales.up then addStack( "blistering_scales" ) end
+
+            if talent.reverberations.enabled then
+                applyDebuff( "target", "upheaval" )
+                active_dot.upheaval = active_enemies
+                if talent.primacy.enabled then applyBuff( "primacy", max( 3, active_dot.upheaval ) ) end
+            end
+
+
+            -- Legacy
+            removeBuff( "trembling_earth" )
         end
+    },
+
+    -- Inhale, stoking your inner flame. Release to exhale, burning enemies in a cone in front of you for 8,395 Fire damage, reduced beyond 5 targets. Empowering causes more of the damage to be dealt immediately instead of over time. I: Deals 2,219 damage instantly and 6,176 over 20 sec. II: Deals 4,072 damage instantly and 4,323 over 14 sec. III: Deals 5,925 damage instantly and 2,470 over 8 sec. IV: Deals 7,778 damage instantly and 618 over 2 sec.
+    fire_breath = {
+        id = function() return talent.font_of_magic.enabled and 382266 or 357208 end,
+        known = 357208,
+        cast = empowered_cast_time,
+        empowered = true,
+        cooldown = function() return 30 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
+        gcd = "off",
+        school = "fire",
+        color = "red",
+
+        spend = 0.026,
+        spendType = "mana",
+
+        startsCombat = true,
+        caption = function()
+            local power_level = settings.fire_breath_fixed
+            if power_level > 0 then return power_level end
+        end,
+
+        spell_targets = function () return active_enemies end,
+        damage = function () return 1.334 * stat.spell_power * ( 1 + 0.1 * talent.blast_furnace.rank ) * ( debuff.shattering_star.up and 1.2 or 1 ) end,
+        critical = function () return stat.crit + conduit.spark_of_savagery.mod end,
+        critical_damage = function () return talent.tyranny.enabled and 2.2 or 2 end,
+
+        handler = function()
+            -- Many Color, Essence and Empower interactions have been moved to the runHandler hook
+            if talent.leaping_flames.enabled then applyBuff( "leaping_flames", nil, empowerment_level ) end
+            if talent.mass_eruption.enabled then addStack( "mass_eruption_stacks" ) end -- ???
+
+            applyDebuff( "target", "fire_breath" )
+            applyDebuff( "target", "fire_breath_damage" )
+            if talent.infernos_blessing.enabled then applyBuff( "infernos_blessing" ) end
+
+            -- Legacy
+            if set_bonus.tier29_2pc > 0 then applyBuff( "limitless_potential" ) end
+            if set_bonus.tier30_4pc > 0 then applyBuff( "blazing_shards" ) end
+        end,
+
+        copy = { 382266, 357208 }
     },
 
     -- Form a protective barrier of molten rock around an ally, absorbing up to $<shield> damage. While the barrier holds, your ally cannot be interrupted or silenced.
@@ -935,6 +1008,34 @@ spec:RegisterAbilities( {
         -- spatial_paradox[415305] #2: { 'type': APPLY_AURA, 'subtype': CAST_WHILE_WALKING, 'target': TARGET_UNIT_CASTER, }
     },
 
+    -- Send a flickering flame towards your target, dealing 2,625 Fire damage to an enemy or healing an ally for 3,089.
+    living_flame = {
+        id = function() return talent.chrono_flame.enabled and 431443 or 361469 end,
+        cast = function() return 2 * ( buff.ancient_flame.up and 0.6 or 1 ) * haste end,
+        cooldown = 0,
+        gcd = "spell",
+        school = "fire",
+        color = "red",
+
+        spend = 0.12,
+        spendType = "mana",
+
+        startsCombat = true,
+
+        damage = function () return 1.61 * stat.spell_power * ( talent.engulfing_blaze.enabled and 1.4 or 1 ) end,
+        healing = function () return 2.75 * stat.spell_power * ( talent.engulfing_blaze.enabled and 1.4 or 1 ) * ( 1 + 0.03 * talent.enkindled.rank ) * ( talent.inner_radiance.enabled and 1.3 or 1 ) end,
+        spell_targets = function () return buff.leaping_flames.up and min( active_enemies, 1 + buff.leaping_flames.stack ) end,
+
+        handler = function ()
+            if buff.burnout.up then removeStack( "burnout" )
+            else removeBuff( "ancient_flame" ) end
+
+            removeBuff( "leaping_flames" )
+            removeBuff( "scarlet_adaptation" )
+        end,
+
+        copy = { 361469, "chrono_flame", 431443 }
+    },
     -- Wreathe yourself in arcane energy, preventing the next $s1 full loss of control effects against you. Lasts $d.
     nullifying_shroud = {
         id = 378464,
@@ -959,9 +1060,9 @@ spec:RegisterAbilities( {
         id = 409311,
         color = "bronze",
         cast = 0,
-        cooldown = 12,
+        cooldown = function() return 10 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
         charges = 2,
-        recharge = 12,
+        recharge = function() return 10 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
         gcd = "spell",
 
         talent = "prescience",
@@ -997,7 +1098,7 @@ spec:RegisterAbilities( {
         id = 406732,
         color = "bronze",
         cast = 0.0,
-        cooldown = 120.0,
+        cooldown = function() return 120 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
         gcd = "off",
         icd = 0.5,
 
@@ -1057,7 +1158,7 @@ spec:RegisterAbilities( {
         color = "black",
         cast = empowered_cast_time,
         empowered = true,
-        cooldown = 40.0,
+        cooldown = function() return 40 * ( talent.interwoven_threads.enabled and 0.9 or 1 ) end,
         gcd = "spell",
 
         talent = "upheaval",
@@ -1066,7 +1167,9 @@ spec:RegisterAbilities( {
         handler = function()
             if buff.ebon_might.up then buff.ebon_might.expires = buff.ebon_might.expires + 2 end
             if talent.mass_disintegrate.enabled then addStack( "mass_disintegrate_stacks" ) end
-            if talent.mass_eruption.enabled then applyBuff( "mass_eruption_stacks" ) end -- ???
+            if talent.mass_eruption.enabled then applyBuff( "mass_eruption_stacks" ) end
+            -- This was reduced to 50% chance, can't gaurantee it atm
+            -- if set_bonus.tww2 >= 4 then addStack( "essence_burst" ) end
         end,
 
         copy = { 396286, 408092 }
@@ -1186,4 +1289,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Augmentation", 20241206, [[Hekili:T3ZAZTnYr(BrvQLMqYIgasw2BIO2kzZ9WUUSjxuYLVjqqIHM4miadaOKvkw83(19GxZBmGKYE362nv86LtJU7PFmt390yWdEp83E4(OWsYd)KVR)1E(U3mX97DF)vx9W9LpVH8W9Bcx85Wpb)L0W1WF(73(P1K0YWY4SuCWNtYcJqKuKTnFbaWQYYnf)238MNE6PjXlE(YhjXPftwKT(npL90BczE8ljpM9zs(LBEKCz0MIlZZQ)9fzzjrzpLwCz484K4YysXd3pFBCs5hsFyUk(9DxDdWbBilE4N8U(DaVVkokIubmPyXd3JaFPN)LU38B3p7(41)4(zB3G4z)h3)XQbDV0)kyqpVjUtEl3p7z4zOi8VKdejMKUGSF26SC4ph))(Mp)A(NYH7X8eESesrrlaUF)L(xdpo(VFpa4FIIZ)T1BYEIKtI2p7n7N9hYjHLR2pBz8xi8pPp8e)9c4b(3JXhRbqkJXchYc)vYJXfGmVaquw((zfzjz7N9yXK9Z(uE22n)U258SL5zRRNrmyX7Taw(V3sssaqjPfBrs(33SIe(yyY(zlclklW)v6(zHjpf(msO404IvDi5Dx6)UQjR73JSUb69UkD0FBfm()ie43)rC5QyWqmjgOdAggxswJ)LFIAztsdNNqIE4p8W9HlQmztFE9wsrW208WhjjXPFkOytCAucy6UihE684q4VvBbozov4fKTmGacPj5K1HXOW62P7ND1(zJan9(zL5XPFMuoP0BsCXeTeGc(JHabaEAs9dfSjpodO7Z7NbO0B)SD7yqO)XIq)9ZCQWjWNTZQLGHrq1uJFkDDfSTaUTwrkbLdL29kMUdMsUuqpJYbrK5BxUCcOJ2KLhMe8u220iGkvKDto5XGpTiAINacBO3jvw7FQL1GYZPzzs9wzLWkxcMMvps4CsEEyAjaj4nbEJ4IUnwTQgeW0vAmYlbX3IveWdUiOeEUI1XLGP9GnXRvELHjWI2tEcMhjKWis(KAAwjcNNbRDHWTm(tRkd4XWBBMF64jyACTMPrXMNxdlGqYlcEImNL7pj2sQy3RGz8L0rX)2fWVa2jN3kcItbg4PShjPbLRa8gv0jkCybuLScWRVllqLXRjbfFoEthmNZ7P2bbhB(9UnK7mBzT61amPRqMdbdf)pscIYkLKDGdTRUh)gxT(P8ksjy8N0oHJ2MtdcG6r5k5I2cx3sm1MPiGs(N(bKVSizBePveW7U3dF5zjF5nu(YJJVCAwHKAqZZtGbDJdKG3a438wTU)uY4X6XOGhqYv0qBfJVomDlUjUwaANevYTJ0PuJgKJlvzkGyVIbyWpZwCs0EBB4jvsEkltMNLgSMAvxqswsXAR1Sjdle58C2QWIGgUZclyLZBPDwKm5qUoOZSeT3eCkhv5UdwojzLmwfGLZnMTC8nA543JLJFFwo(FnSC80y549T1YXtVLJNjlhvRX0VLJVQf(oulhF0Y5D9UMJG129BliG2AjkcXWYzSSuVQYPEzPwiIcxdzYgOZfZkhvgauV)H4A45eWEUCsrjKhnSpzvCfCko0moGBFdFdB8PAJOE23RsmGwWSbM7oXtDqTEbzaSbyQB0iAXmOZJ3uPM)WY9ZYstEg)tc(hqcIyUM1pm6TK9ym8iqyevcJx3abM0wg8N5vpw7mA)S)m8tXaItjXvJ3p2MNHUNC4bToFFVRRjyrpqRZt)sFwzDkMRIUfdya4RO1zpHj1t0pd060N36e05FFVRi9RR4myD6Pyfh1Yk(fxKdnXZTxF4F1hDW6ZtHpQAzLb9jnGbpDvIdz3GvHPrnpfZpOFvz(fkMwTYX6WVqZg2DYnc7xrleA7Uuprc3aYkGTaYLTHKsYdwgNKqYvvYWmi1Rcszhh3m7X)wYwctOX14kIKecwd39dmsQ1XPXR3UoGfeDMW1WSiQaGRKSOetEVs4xvzwux1B65ouglOkRroYQO4th8K8syjmtesS2u9tOElj1DT2Rv4qeWQQLetlOo4NG)Nk4qwPRQQpPiZhb1ly1Dv38GKVTYytrg5D4QwRb4zDmgpdZoav1VzZ2nXj4ub(p)srzEyX)kuOoB4cdjGjmwpXLjWCQGwEGggjj(X2rAtYRTcI)RTqEnaEJ)mHLfPUcrKLHBtkBDcAEO)jwyFEORmGAaOUaNcGmCvV6S)Qv8S6qeIQrvP6Qju8Yd3kJLySRRQs7ACE1GKna9cwMLhehXAp0u1U1W6dWFbSTaDZ2kZ6gs0QxU3TL9hRDDFWI)9nRwtkkWZvAcGG4fXL1LJQzhVQ0wRab2SmVOeTJmuwGnTNuLqryRwvQztRoWMWYv1250duIcmZkyByodSBBYxDutrbwUnjbMGlwfMJB7c(ZvLAKDn)RQWERATlDC(AMk8mv0qzc8Tp2LspLtfUu(yD7REoRoQdQnWwBG3)cA9zlwb8BTFTHAYELRCfoeu7tP6DMvsctdxSkplnUyD3cin6iLgC16LAtIgLwLXIYtnQ(bot1zf1v)JAVAnMfSIwmOUNxKa6yutxwGRdPOydgcdap02U4uYdJJcipIsJ1zpsWZCEc5lX0dJCKIcudzzMg(LIG1K8fBbcKeq(0Nuf)TgaRvrQiBCAD5XPBm34rTcgoxkohfzWQy3iz9VRngsmUZzn7xjM7K0(vOpANjmBiJ249uVnnJljgOyTJ8j2xQB6Tiew1O6)iapy4QJhUznDehjzFkEHXKnmIJQdzwvST9h7qZbOuvFTgYLVnvl14JtfPk3wWreYMA3sHTH9e3hwA3N6dkc3dCzyjHB1IXgR6A)MBCM7LXBanfe)bixjvIon7DBZo3DNkw96q6ppTr2Eez4eIu1HfqquSl2XUz(Y5blYsJIB8F80hWxRba3ZyNb2s6X74PB74MLAvSO591ZHGYShU3JxLJavjJkZcIIjuRrghYlWvr972QqRNn8yDoOJuECLVykM25okG0V)aBwvSkaPu6LZDUDiCvLGg5jT9yqEPJRfcGKJJ1G)PnU)goMyNHzKORKN)CZizmROBDwsjOSjRNtYfKC4oomEFbv1CbyPfFgewcb7PStwAo612ij7pXYtLA3OAf1w63W1WJsTxuOyW55BBCLA5)omGC)cACZWpz1I2DMp8ZsAIFI7vYLjWylcb)AM8y1FQzcm2DTtsMORcJGLiWiRQhfrR4eQn4zPDBvm30Vr(xH5wFC)zwmbeRRJ2jGAxMFGcew2WlQCEy6sLS1z55zpb2DrHpZ1ujouWhBSJXoCu7uxQfx(nzm5e77YgZr9Mou5tVXcfbODnI1In0nAKYCsmHzPTsk2aiaM(jS1dwZO85IhMI5hvwv6gH9o5hJvensFq4nNBUuDayswqEovxI5PkhesvlOgGr94pCxvpcYuImiDPqyv15jGzC2AQcrxtFXvflz106WIIGMsUjRK4gUIFlyYwT3uG1lvU1cPICzxA009MT0DvPiAvPmUrib75zRNhMhHPBwWLIDt(xTIRVqwSTSPskvSL1LFSoJqHky6OoZDFD9MeFDi)v17xj1lzXQmABOsf8Ccwr96Dg1R6YjPTk48780BmI888381SKIMIV8TQKi6tcHPgkZXa3PzWuNdmtUaQRacWOmB4l(4ukRl0FtvtOTmcL0Y6UaTT6k8pdYW8XZj9wE72T1yQwT3dAoOjlWN6JlJPq4h05l84aonUEZj10PEn8QAyK1OXmPSusQolHdIJvDOgwONuDyAcQjXLk6xwWxu28TZFo4PvKKnbfWFMiupwkmpTkUytLJrC6IW80qyTK4fzYTpNLv5LcOYEXVBUlDi5QQv9aMT(wmB9hYS1uPQLb0YzRp7SvCPNbmB77n3qwDi2KeYqO9fEGRza(jkr3plUa3my9MK4fGam617N9NQ7iK)ZWQxfiv66QUgrvvZhWKVV3YezTJXjVVXjVkDy3SqQ23dyAqf6ZbYcBXuMrlT7CYZzPrQfDT9iIYIMpa66pe66lq3H36dmZxS1CXtRb3SUsjWFisYJ)1Eq5yxKxNsP2bF8cLhyWaKq(9iHun(x7b1lH8njH8zKqdSJdKf2fpNUq5XeiOpAJFVtDROdU(o8fuYTjwsNA1sajPaiQ7K32QN8uEAfdK797N791W9k7NWbY9AINWwUVPB90DmbQuady(X37(9zNvzPEMK7Chg09EniWb9kKFdha4ZY07)onVXz0Jp)cd(ov9)GjiAXLcwgTBARPNeFR00(nCaynFlUQOmFRyDtn8TxhFxbHxt9o55(4KhtON3nJSP63COZdpx32AAYBK71AI7R8aTS0extFPoel9(6KwPPgwrdbzG55MMqgX5gxjdyr6aJvYaWT1l9a93fFri(JzBNNW2BPxIVq)XzLX)l4)4dqQyqE2lkLFfjaCH9(X(zvrJ(A6BEp20n4V(eiiONYf9TLinlFngvkTDfGFlB)SpTnedvNaJILgPks2Cip(YjMxZtZo4A0vQIW1IKcfp6mMmcVr5rizjE7PXp6s7CY1kpnhljJUtotmXwPdBP6XpK3GBdNlr)vpQV6drdwPbe(6Q3rrALG03e0YvZt(WkqhriVIWMZGb)NUn4654v42KJ)qsypdxXQuo9u1)SChuHyl0Q)u1oZWjVmAFphEthaG2kpbCudJc3uD9NOPfjmD8ugpgjvcoMY2kFYm6Ti)QnN1pBgBLmrTbPJfYdyn4i0lLSEEE4csBj9ADJn1g1m9wMyNu3jYK99MB2VtZj3gg9S(QhZ2w4Y9ELOvDdKCn9eBpICTQMiPJdLpv7Rz13lZabkOLGyuIxi2JzkzFwuX07jI6FdDrIHdKgpILUdK(A2ZJEEcsSLBZtbDFhcVKEMmTDaSdZYj8c36Ltu4e1Ri(QHkIF)ViLG(2ibXXu3lE1sxDNDSwPRQ(l2O01Z)xKIxpwXRrrOUZNvRi0BWIWB(fPi01ArOUJc9N7lJACUr3tQKUriEXGvFpR5cXPE)tH5PvHdtVaUIX3vNY6loSxvfb5R2plN8p3gtVLYG4jaWc3wMToK(MSTyvy6NaF89F8)kgF7XXBGSFmlfifD4xPEB9xvL5JMrBeeauJ9(ItF4wvuIceWuGKIuXxnv4cDra9kdpYs8kh5KaY1hALLu4Ki7V6fsQObVNqPIgkCKsL9FuHddxB9pm)M3(cBBRKFRtb(KWPQArhbo10lgNOw7gD2BTVhuswBsVHuI48DI4SUqt6pi5wAWv)kDGAfX0FoUseZiO8RmQXix4LbrqKP5vfrc5xRb5nnJPiAfFZaSfHYn7GObK2UHqIeASFoCEwdcpL8SKjtfg4Bowb0RUZ1Tf1DvhtaTYTSUekFVAuYfCNawvg4NTi(uig0G6Jrm89NCu6RzFC(oRw0awzBx)1e1Vm7ZAg5hD4h(AwkIRPufTIv1pR2I4t2g61KrZUXhp)RbX8nDQaMv3rQVYCqiTDS4RguyiASioHRh)YVlL0EkSbKi28yVszSikGYEsOT3ZutltGBprTl2h7d0YiXuCenQjLAaTpIUE1w6GYEsyV2QxWTNO2PTSpsvJeZgTLba5iK0w9SMfApuz1ghMa3EIY31FQPKem2JEnTmOA6OhyockfCdR2YEHyVGBpr7riQgg7rVTcXEaMperxtQnvD(OADMgi5PLunYyNDwrltqYtlPGjBNxSDJJIjJWWdbR0IIg30kgAWTeqNCkCmCFLT5ZM49oqoXy)y4BySIWs8R3HrENhSxaQCmZHvO0Xe33aWjfZhdhJNLGjgUE8tjE1YUsXC3U4IrhEPHhcw7XDudqNCkCmCVoxsLGCIX(XW3MCf1c2lavoM5GA3sfaCsX8XWXkDmLh)uIxTSRukWTRJi1DVkwlrfmVS4xlMZGmHOGGVQqPaA01YOJgBIaF33557o11PHzoqSuJKoUvQylTQV(LdQHHxoFQXVwm3VC2xscPGa9kNTdlsYzD1kGVv)14LWmmV0vFfimIvPHTdRhQo7Lg)2G5n5zlMeM(Cq0MctyxhC2odSLoOruWbGFRdBONatobuq7A3wG7JiWKJg7dMVp09eEPXVny2o7r9Wz7mWw6Cy29di)4d0UFau4aSF61Y0ImWpASFa8n(E4OaB1)SDyXxnw8Tcls7QFM2aFSANA299gjJR23OUD7otq618uo72PNsMdkGzqo3aNZh7o5TxOzzQZVs3iWZP5TJZX5UXMdeuNlPiV4PLx86LxQEJ3Gr8UGJBqf)LcgcoFNNRRJtBCx)cwp)MFgPNFZp70ZVPwp35YB4GzgWchgAXQbSi23KZUrlvhqWy9ST3jGcA3(qpUhKmRxWTJQdyJ8duMnakmyzwVgoVq2zdIQ9cEnvPTCXYSKKmS1JWEQipSa)UPGFwNbrtu1E603o1Q2DF)m8vpeBa9Yg4sZO9RX2uoOJIqGJcldNhwq(T7)iTN7XcnPPxpIXBz7xnO(8q3bA1Rq)O0rFDvr))TzQME35i6zUx(E1rdfo988b3IQFdKbSwOhF7nOd9hAfPEHr)qqC9RTJj82bYq56bGClqB)QslAYItDH9FHr)qqSoPTsqgkxpaK3IwlkU)2nMmoOJYXPNcuAbYyZ0tb2egEOC4aClErrEVO1(62zv9bpEYWLJQi6TO(PkSneh9KJslqMrZnZNgJfC4aCDFrrEVO1(JhXkZTJNmgn30xxIEfo97OFArUfO9KS5QfC9GcK5fg9TiwF629kT73j60IClqB)Qslc51cUEqbY8cJ(weRVjA7vA3Vx5Pf5wG2(vLw4vAbxpi3Mxy03IydTNCVI7(DlpXy3g82V20chtB47b568sJ)jAk52sCQnG6TP5neK7MQOLHumM2xOm149OFDr1GxUReeb8Q86creVAQr1rZVAW7rZV6Ergpw(vdEpA(v3lU4XYVAW7rZVsH5E0(f7)4hOEQi6EhFT3r3XhUh8sxHx4I3hssa)C4b)WINV8)Hale6872p7(41)i(bFiBzCs7TsyXK23NYlM(MMdj814Tz402BIVxxFXpm171zBMsVff3)X(FEvFndArqloDTbvCOGEnvoT9anvsM4LtptB9kFjO4fTJkYhNc2G9BSWbkcR3nO7MaVEwXTrO4lC4UDCdR9DeuaoLVAFcWO4DYBitdFntdFZtdFlNg(wmn09QfU)J)MMR21()qdmK5CZhGavAoThMIGyNpmgHb18gQneE0xnpA(aFeKP64rtVfDdHhz(AeOsuQ6LzBiO3xl61(UYne0x3snsCo7rxVB3y(b4p4Bw1UyFOPCSh7EPluo(k8zvocE6UokAMN2LHgYu3x5u3x3uxvFsWAnPFQ73Zux896q5i6M6(hYuVQDDW1(Pxy21IaVx3Dfop1DYBFD7x52PABflgldP0cAAK(HWz(hnNj1lyksa9q4SMR(ArEZNL38y4SJP)1oO2x7q6EnvcNUXuwevH(gtLFbtZJj7yyzVSPYGQBmB4mvlwXWzYRwzDNTj0yB89VOngvAUG9pb2wQmvQgHNBVBk)KHgNXp)Ue6TryEWsrgjGH4jgzYsxiEc9i5mtwLyK9JTJBSLGoJuzlBE9hRmDfVt(LZG4gBqJXRGFfzLm5ABWQUBCFRtZb34hBuSk0zDAfs3x(Ogfbu3fUVo6ZEHXJzPxddmY)ClWcS)qToN9Ne8laTuWtyFZv7iu)9)e)9SCibe6ynL3upEy)KZl6B1UgTMVIYArkZ3bt28AvCln2PYQjEnP7SVzzWBFVZiHV4N3n1B0z0zU0NCzg2d0cf4L21cYR5UuDHvmqVZISKSruK0byZS8wVD7(eKdXMrmQ8oWU1hCghVCBscWKlwHOLEZ5E7uiYE8Bk65xTBxRGu(JjkdCJgxnpuFX8EzlCo3ovjGn7uEENSZKF4UD43j8rCxKW3o9kx2yl4e(tFpS(uLQK5oXSsUP57OBJ26wqj1keyVA6bq6gO9QzE7gNr12ZkuinccFyBTFtt5T6xlBuhzd5Gi4Q(W6dlyaXNS9t4hzxQehLl0rYZWfEdt)SdR13kCJYxJR(KTCzaGVkgcrCnrUdd8D04Zy(Q1VgEiKatiFbRB3i(TqSPGdkHb0UQisC6TtVHJP3Kr9pb(uJ1GRodiwSaRhMW(5LLz)bAmcclL2zWIO3S)qfwzDPAV2QprEi9prOTDmlycFnD5knx1T3lNeLTcG35ocLNSylIq20CnIZ8Z83c(mRWkCVRoAmyo)iAWbgn8RHR15x)I6lNh0gDL4geDTqk4ql2wPJ0xF1D70CPP3RKF5CobjlZXTpA9sksli0DvRx5mw7atz6YSGOyYDTMtx4oXFKjBX7AmSgDALinCVTIJZukpgPEZ076KEIH9H5DwFcgcwnkX0u3MzyxiAoFl1cJpt1b7SBhUedJvwqvMAa5w8zGXz2NM)RNsT4YZf2QVNyIoiHQzHhp0mE7DWpsHCBQ3BzYxuxSZ2SgUmdmESXiAUgWQk9eUTohLUd4rMDJcJIkaxc4x3TJNJGfMKwC8fLTuXaNjYbT(ZcexL1Zpm239cp3ZBwkG7QV1X5IXYrbz5J6ChOVg1RDPpNov4t5eJvLWfN7iLXwZSKs7z)n1Nz5HUFTj8CXVqtJAdLK53D0ed82nW6I8b(tJ)qM3OFb)NQyG2pV)JmyKC31CUESjSPkKYMvzyV3Bh1u0PUFQIUf0GDngTSU5ZTgNpIze5zorI7MEtpzKCtB03ZXuxZJWqeBnLUTjWR2l63VqwSTSkKAmgzQmr1Dn8UD1H6v)90AQhN0M9ZL1VkThK0M)(rEeVy(oEXCdMuMjSXPclP)Q5pYSjgtzf42iy41NrDCeit0BW8vrXZu(MjDzZGs3wCYcYY5kdBxZogHrpRMbzkQrfkzEo2yPUwz(VCBXD9iv9ssp2YTXIPnclT7ID7uCxSRpxvNXC5nNFLJtT5J0N4lh7MZx1)C(9FZME(6NE6sbYYPTF)tBp)VzZBpCEFuZpplMF38nB(5E0ZVxCxvTmi36t0f1eJ4PDdbXy32Td)GzIXuI)txIncXoQmEqmjkXWaAtbsDuduEq6BXQJc2xryTNPzLuLXF28JYFeOgPzoQl6wXPOcM9r(pFONuMvntnwRIIvF6ydZZgSgRLeTIyxiEwlApjlUDbvN6cKo6ilp)m5d)Q5ydP2ywD2AgWHp4lzmlpAoMgwlbIMPV808ChD2y1NLd63PTGEoNazK)jqgXeRPgBbJN7M6hrtNCzLXJNIItPUQhEVL7afA5LOSanmaSQDXNLlS)HO)el4aWn9kj57(TdLYGLJiPVY9YXx5EHNFZ(EY1P05CjP6L(D1OOPYiNpwrfrBj0376CU(sHIEBQ0t(UTjssdVNB2CNRi434k6BWl3m2mrywnkgUn5opxLDItD)74ySDfn2FvSew(1vrdHBBvohN6Ta4Pixces2ufjzLnTnHhx11f7XavDOsvZCAQ)9gn(Gmpn0QtNPq1GBZXGmMvP5isZIZo6Y0svpwOQXS47MltwlkMimlBYQUv2au3XhwiF9qnRn9vQn9n0vrA1M(NETPNO207RJ20R32SZKlOjTPpNJ)a0M42p)EmYQ9ZUVKgAv1lB1F()4h)JD9J1K9Z(qeelDYZyBxHDufi5tI2pBobBPRMtWU674B9nRiiZWgtT(UxQ6PW)Fr86ny9mMfI3atfe88mP9T1kypFSHUOxrtXli4mD)SO4LWU3vyhr7F8VC)e17AYvnp2nQracwef45DT3eUsj3PyABl6rASjAFgnnBhF8EI6o1RPitu)bsuFtgmyZdcYPpSe7Wou1LLsKB2U9ZaZLhJJW3iGWQpvZVUbcSd7YG)mV6XAjayFa)umG4usC149JT5z43MAE8OF1e(yCK2PyiTSODBv0RS2Oc28(UI7mMtW3wQ6I)ELRMt58oAGhkOj7w2gIfy0y2g(WDINCu0mg(Mc(tVYWxTY4yxPVxLHrd)DMEVsojkdnXpzi(ilug(2Pm(vFHdYxq1eEWY7F1C3AZDvtyw5nSZ0FVGD)ONiHBYs7nctK9cwbbp0t)T10fDUtUHTCrCTg1fd5vRKR1P(H2Fw774P4dY(IsoI2bOgZQ05uZZx6nqmY9MDAvd6ExDIYzsauLlEm2zM4FvpN0EyHX66ATPxP)PfRM8jPUV6jhBiNpuc)Vh()(d]] )
+spec:RegisterPack( "Augmentation", 20250208, [[Hekili:T3ZAZTnYr(BrvQLMWYIga6XANiQTs2CpSRlBYfLC5BceKyOjodcWaakzLIf)TFDp418gdiPS3TUnPIJnrJU7PFmt390ZGh8E4V9W9rHLKh(jFx)RD9DF3epxVl9E)d3x(8gYd3VjCXNd)e8xsdxd)5VF7NwtsldlJZsXh(CswyeIKIST5laawvwUP43(23(0tpnjEXZx8ijoTyYIS1V9PSNEBiZRFb5XSptYVyZJKlI2uCrEw9VVilljk7P0IlcNhNexgtkE4(5BJtk)q6dZvXV(xDnWbBilE4N8U67Ve4I4OisfWKIfpCpa8vx45FH7n)29ZUpE9pUF22niE2)X9FS6HUx4Fj8qpVjUtUM7N9m8oue(xYbIetsxq2pBDwo8NJ)FF7NFd)B5W9AEcVwcPOOfa33FH)vWRJ))Vda8prX5)26nzprYjr7N929Z(d5KWYv7NTm(le(30hEJ)Eb8c)7X4R1aiLXyHdzH)k5X4cqMxaiklF)SISKS9ZESyY(zFkpB7MFx7yE2Y8S11JigS4DnGL)7TKKeausAXwKK)9nRiHpgMSF2IWIYc8)lD)SWKNcFgjuCACXQoK89x4)9vdw33JSUb699v6O)2k45)JqGF)hXLRIbdXKyGoOzyCjzn(x(jQLnjnCEcj6H)Wd3hUOYKn951BjfbBtZdFKKeN(PGInXPrjGP7IC4TZJdH)wTf4K5uHxq2YaciKMKtwhgJcRBNUF2L7Nnc007NvMhN(zs5KsVjXft0sak4pgcea4Pj1VuWM84mGUpVFgGsV9Z2TJbH(hlc93pZPcNaF2oQwcggbvdn(H0vvW2c42AfPeuouA3Ry6oyi5sb9mkherMVD5YjGoAtwEysWtzBtJaQur2n5Khd(0IOjEciSHENuzT)PwwdkpNMPj1BLvcZCjyAw9kHZj55HPLaKG3e4nIt62y1Q6HaMUuJrEji(wSIaEWfbLW7vSoUemThSjETYRmmbM0EYtW4iHegrYNutZkr48myUleULXFAvzapgUUz8PJNGHXvAggfBEEnmbcjVi4jYCwU)KylPIDVegXxqFk(3oh(fWo51TIG4uGbEk7rsAq5kaVrfDIchwavjRa867Ycuz8AsqXNJ30bZR59u7GGJnFVBd5oZwwREoat6kK5qWqX)JKGOSsjzh4q7Q71VXvRFkVIucg)jTd4OT50GaOEuUsUOTW1nftTzkcOK)PFa5lls2grAfb8U79WxEwYxEdLV844lNMziPg088eyq34aj4na(nxR19Nsgpwpgf8asUIgAR45Rdt3IlIRfG2brLC7iDk1Ob54svMci2Ryag8ZSeNeT32gEsLKNYYK5zPbRPw1fKKLuS2AnBYWcropNTkSiOH7SWcw54wALfjtoKRd6mlr7nbNYrvU7GLtswjJvby5CJzlhFJwo(9y543NLJ)xdlhpnwoEFBTC80B54zYYr1Cm9B54RAIVd1YXhTC((ENZrWA7(TfeqBTefHyy5mwwQNv5upTulerHRHmzd05IzLJkdaQx)qCo8CcypxoPOeYJgwNSkUcofhAghWTUHVHf(uTqupR7vjgqly2aZDN4PoOwVGma2am1nAeTyg05XBQuZFy5(zzPjpJ)jb)dibrmxZ6xg9wYEmgEfimIkHXBAGatAld(Z8QxRDeTF2Fg(PyaXPK4QN3p2MNHUNC4bToFxVZRjyrpqRZt)uFwzDkMRIUjdya4RO1zpHj1t0pd060N36e05VV3zK(1zCgSo9umJJAzf)KlYHM452Rp8V6Joy95PWhvTSYG(KgWGNUkXHSBWQW0OM3I5h0pRm)eftRM5yD4xOzd7o5gH1ROfcTDvQNiHBazfWwa5Y2qsj5blJtsi5QkzygK6vbPSJJBg94FlzlHj04ACfrscbRH7(bgj164041BxhWcIot4AywevaWvswuIjVxj8RQmlQR6n9ChkJfuL1ihzvu8PdEqEbmfMjcjwBQ(juVLK6Uw71kCicyv1sIPfuh8tW)PcoKv6QQ6tkY8rq9cwDx2noi5BRm2uKrEhUQ1AaEwhJXZWScqv9B2SDtCcouG)5xkkZdl(xHc1zdNyibmHX6jUmbgtf0Yd0WijXp2(K2K8ARG4)AlKxdG34ptyzrQRqezz42KYwNGMx6FIf2Nh6kdOgaQlWPaidx1Ro7VAfpRoeHO6PQuD1ekE5HBLXsm25vvPDnoUAqYgGEblZYdIJyThAQA3Ay(b4Va2wGUzBLzDdjA1l372Y(J1oVpyX)UMzRjff4(knbqq8I4Y6Yr1SIxvARvGalwMxuI2rgklWM2DQsOiSvZk1SOvhyty5QA7C6gkrbMzgSnm7b2Tn5RoQPOal3MKadWfRcZXLDb)5QsnYoN)LvyVvT2LooFntfENkAOmb(2x7cP3YPcxkFTU1vFnRoQdQnWsBG3)cA9zlwb8BTFTHAYEPRCfoeu7tP6DMzsctdxSkplnUyD3ein6iLgC16LAtIgLwLXIYDnQ(fot1Ef1v)JAVAnMfSIwmOUNxKa6yutxwGZdPOydgcda302U4uYdJJcipIsJ1zpsW9CEc5lX0nJCKIcudzzMg(LIG1K8fBbcKeq(0Nuf)TgaRvrQiBCAD5XPlm34rTcECUuCokYGvXQrY6FxBmKyCNZAwVsm3jP1RqF0oty2qgTX7PEzAgxsmqXAh5tSVu3WBrimRr1)ia3y4QThUzoDehjzFkEHXKnmIJQnzwvST9h7qZgOuvFTgYLVnvl14JtfPk3sWreYMA3sHLH9exhwA1N6nkcxdCzyjHB2IXgR6A)MBCM7LXBanfe)bixjvIonRDBZk3D7kw98q63pTr2Ufz4aIu1HfqquSt2XUy(Y5blYsJIB8F80hWxRba37yNb2s6274PB54MPAvmP591JHGYShU3JxLJavjJkZcIIjuRrghYZXzr97wQqRNn8ADoOJuUDLVykM2XokG0V(aBwvSkaPu6LZDU9r4SkbnYtA7XG8shxleajhhRb)tBC)nSnXodZirxjp)5MrYywr36SKsqztwpNKli5WvCy8(cQQ5cWsl(miSec2tzNS0S1RTrs2FILNk1Ur1kQT0VGRHxLAVOqXGJZRBCLA5)omGC)cACZWpz1K2DMp8JsAIFIRvYLjWylcb)kM8y1VRzcm2DTdsMORcJGPiWiRQFkIwXbuBWZsR2QySPFH8VcJT(4(ZSyaiwxhTda1Um)afiSSHNx58W0LkzRZYZZEcS7IcFMRPsCOGp2yhJD4O2PUulU8lYyYj23LnMJ6fDOYNEJfkcq7AeRfBOl0iL5KycZslLuSbqam8tyRhSMNYNlEykMFuzvPBew7K)zSIOr6dcVzFZLQdatYcYJP6smpv5dHu1cQbyup(d3v1JGmLidsxkeMvDEcygNTMQq010xCvXswnToSOiOPKBYkjUhxXVfmzR2BkW6Lk3AHurUSlnA6EZw6UQueTQug3iKG98S1ZdZJW0nl4sXUj)RwX1xil2w2ujLk2Y6YpwNrOqfmDuN5UVUEtIVoK)Q69RK6LSyvgTnuPcEobROE9oJ6vD5K0wfC(vE6ngrEE(B(CwsrtXx(wvse9jHWudL5yG70myQZbMjxa1vabyuMf8fFDkL1f6VPQj0wgHsAzDxG2wDf(Nbzy(45KElVD7YAmvR27bnB0Kf4t92LXui8dA)fECa7gxV5KAAxVgEvnmYA0yMuwkjv7LWbXXQ2udl0tQ2mnb1K4uf9ll4lkB(25ph80ksYMGc4pteQhlfMNwfxSPYXioDryEAimxs8Im52NZYQ8sbuzV43n2L2KCv1QEaJwFlgT(dz0AQu1YaA5O1ND0ko1ZagT9DYnKvhInjHmeApWdCndWprj6(zXf4IbR3KeVaeGrVz)S)uDhH8FgwDuGuPRR6AevvnFad((oLjYAhJdEFJdEv6WUrHuTVhWWGk0NdKfwIPmJwA35KNZsJul6A7reLfnFa01Fi01xGUdV1hygVyR5I7wdUyDLsGFtKKF(x7hkh7I88uk1o4RxOCddgGeYVhjKQN)1(H6Lq(MKq(msOb2XbYc7INtxOCBce0hTXV3PUv0bxFhEaLCBIL0PwTeqskaI6o56w9KNYDRyGCVF)CVVgUxz)eoqUxt8e2Y9nDRNUTjqLcyaJp(E3Vp7Skl1ZKCN7WGUZ1Gah0Rq(TCaGVltV)70CIZOBF(5g8DQ6)btq0IlfSmA30wtpj(wPP9B5aWA(wCwrz(wX8MA4BVo(UccVM6DYZ9XjpMq3VBgzt1V5qhhEUUT10K3i3R1e3x5gAzPjUM(sDiw691jTsdnSIgcYaZJnnHmIJnUsgWI0bgRKbGBRx6b6VlEqi(JzBNNW2BPxGhO)4SY4)f8p(aKkgKN9Is5JibGlS3p2pRkA03qp59yt3G)6tGGGUlx0tlrAw(AmQuA7ka)w2(zFABigQobEkwAKQizZH84lNyEopnRGRrxPkcxlskuCRZyYi8gLBHKL4TNg)OlTZjxPC3CSKm625mXeBL2SLQx)qob3g2xI(REuF1hIgSsdi81vVJI0kbPVjOLRMN8MvGoIqEfHn7bd(F6wGRNTxHBro(njHDpCfRs50tv)ZYTrfITqR(Dv7md78YO99S5nDaaAR8eWrnmkCt11FIMwKW02tzCBKuj4ykBR8oZO3I8R2yw)OzSvYe1gKowipG5GJqVuY655HliTL0R1n2uBuVCUzpin7bBy0Z6RdmBdEl3fvI2NnqY1(sSD7XvQAhKoouE)PVIvZTmdenG8gI2iEHy3IPK9zrftxKiQjn0pig2AzCZs62A5Ry3z55jiXwUnpf0IDi8c6UR02lVomtmWlCRNyqH7qVI4lhQi(D)Iuc6BJeeFM6UQRw6QBxG1kDv1PWgLUE()Iu86XkEnkc1TtRAfHEdweEZVifHUwlc1TPMAfH4glw)VhQW8LzcvJJYQvNy68zXZ5thrextRKUKiEfHrVX1UYZ39giq5W80QaJPxfxX4P2PS(ke7vvXs(Q9ZYj)ZTX07RmiYcaSWTLzRdPNPTfRct)emhX(p(FfJNJC8Ui7hZsbsrF8RuVa)RQYbsZtBeFauJ9(ItF4wv8IceWuiLIuXxnv4cIra9kduYs8khdLaY1hKLLu4Ki7V8fsQObVNqPIgkCKsL9FuHddxd(pm)MRFHTTvYV1jdFs4uvnRJaNA6iYjQ1UrN9w7jIsYAt6SsjIZVxeN1LCs)wk3sdUkzPduRiM(D0vIygbLFMrng5chlebrMMdnIeYVsdYBAltr0kEgbSfHYT9GObK2(IqIeASFoCEwdcpL8SKjtfg4Btwb0RUh2Tf1D1jtaTYnVUekFNAuYfCOawvg4OTi(uig0G6Jrm8(tok91SooFpwlAaRSbS)AI6xM1znJ8Jo8dFntfX1EQIwXQ6SvBr8jBb9AYOz14JN)1Gy(2pvaZQ7n1xzoiK2Ex8vdkmenweNW5JF5xLsAnf2aseBJSxPmwefqzpj02fAQPLjWTNO2f7J9bAzKyk2Sg1KsnG2hrxVAlDqzpjSxB1l42tu70w2hPQrIzJ2YaGCesAPEwZcTBVSAJdtGBpr57)p1uscg7rVMMhunD0dmhbLcUHvBzVqSxWTNO9ievdJ9O3wHypaZhIORj1MQEGuTotdK80sQgzSJoROLji5PLuWKTJl2(YrXGr4XdbR0sPg30ugAWTeqNCkCmCFLT5ZM49oqoXy)y4B4zfHL43XdJ8opyVau5ygdRqPJjUVbGtkMpgog3bctmC9ZpL4vl7kfZD7KlgD4LE8qWApUJAa6KtHJH715sQeKtm2pg(2KROwWEbOYXmgu7wQaGtkMpgowPJP8ZpL4vl7kLcC78is95RI5subZll(1I5mitiki4HgkfqJUMhD0yte47(opF3PUonmZbILAK0XTsfBPv91VCqnm8Y5tn(1I5(LZ(ssifeOx5SDyrsoRRwb8n9VgVeMhZlD1xbcJyv6X2H1dvN9sJFBW8M8SftctFoiAtHjSRdoBhb2sh0ik4aWV1Hn0tGjNakODUBlW9reyYrJ9bZ3h6AcV043gmBN9OE4SDeylDom7(bKF8bA3pakCa2p9AzArg4hn2pa(gprokWw9pBhw8vJfFRWI0Q6NPnWhRwPMDDVrY4Q9S1TB3zcsVM3Yz3o9uYCqbmpKZnW51JDNC95AMM61xQ7jW7P5CY54C3yZbcQZLuKx80YlE9YlvN9n4jENZXnOI)cbdbNVZZ11XPnURFbRNF7pJ0ZV9ND653wRN7C5nSXmdyIddTy1aMe7BYE3OLQdiySEw27eqbTlFOh3dsM1l42r1bSq(bkZgafgSmRxdNxi7Sbr1EbVMQ0wUyzwssg26rypvKhwGFbvWpWZGOjQAnD65uTQnY3pdpeIyBRx2axAgTFn2MYbDuecCuyz48WcYVD)hP9SpwOjn96rmEFB)Qb1Nh62qREf6hLo6RRk6)Vns107ohrpZ9Y3RoAOWPNNp4wu9BGmG1c94BVbDO)qRi1lm6hcIRpSpMWBhidLRhaYTaT9RkTOjlo1f2)fg9dbX6K2kbzOC9aqElATO4(B3yY4G(uoo9uGslqgBMEkWMWJhkhoa3IxuK3lATVUDwvFWJNmC5OkIElQFQcBdXNEYrPfiZO5M5DJXcoCaUUVOiVx0A)2JyL52XtgJMB6RlrVcN(D0pTi3c0EswC1cUEqbY8cJ(weRpD7EL297eDArUfOTFvPfH8AbxpOazEHrFlI13eT9kT73R80IClqB)Qsl8kTGRhKBZlm6BrSH2tUxXD)ULNySBdE7xBAHJPn89GCDEPX)enLCBjo0gq920Ccb5UFlAzifpt7bktnEp6JlQg8YDLIiGxLx3iI4vtnQoA(vdEpA(v3bz8y5xn49O5xDhCXJLF1G3JMFLcZ9O9l2)Xpq9ur09981EhDhF4EWlDfE1lEFijb8ZHx8dlE(I)hcmrOZVB)S7Jx)J4N(HSLXjT3pHftAppLNp9TnBs4BW71WPT3jFVP(IFyQ3BY2mLEFkU)J9)(Q(Ug0IGwC6AdQ4qb9cRCA7gAQKmXlNEM26v(sqXZBFQiFCkyd2V2chOiSE1GU7e86rf3cHIh4WD74ES2ZiOaCkpAFcWO4m5nKHHVMHHV5HHVLddFlgg6oAH7)4VP5sET)p5adzm38PiqLMt7MPii25dJr4HAoHAdHh9vZJM3WhbzQoE00POBi8iZ3LavIsvhMTHGEFTOx7zLBiOVULAK4C2TUE3UX8pGFJVzv7I9HMYN9y3HUq5ZxHVRYNG7URJIM5PDAOHm09vo091n0v1NeSwt6h6(9m0fpxhkFIUHU)Hm0RAxhCUF6vNDTiW7nDxMZtDNC9BA)E3ovBRyXyziLwqtJ0peoZ)O5mPEbtrcOhcN1CjylYB(S8MhdNDm9V2b1(Ahs3RPs409mLfrvOVXu5xW08yYogw2lBQmO6EMnCMQjRy4m5zRSUZ2eASn((x0gJknx1(NaBlvMkvpHNBVBk)GHgNXp)Uo6TryEWsrgjGH4jgzYsxiEc9i5mtwLyK9JTJBSLGoJuzlBE(hRmDfVD(LZG4gBqJXlJFfzLm5kBWQU7EFRtZbx4hBuSk0zDAfs3C(Ogfbu3vVVo6ZE1XJzPxdd8K)5wGfy)HADo7pj4xaAPGNW(MR2rO(lbk(7z5qci0N1uEt94H9JpVOVv7C0A(EkRfPmFrmzZRvXT0yNkRM41KUZ(MLbV9DoJe(2FE3uVrNrh5sF8LzypqluGxAxliVH7Q4fMXa9olYsYgrrshGnJYB92T7tqoeBgXOY7a7wFWzC8YTjjatUyfIw69T7TtHi7XVUOV(YD7AfKYFwrzGB04QXH6RZ3lAHZ52PkbSzLYx3j7m5hUBh(fdFe31p8TtV0Ln2coH)03bZpvPkzUtmRKBA(I62OTUfusTcb2R2EaKUh0E1oVDJZOA7zfkKgbHpSS2VPP8w9RLnQJSHCqeCvFI9HjmG4t2(j8ZTlvIJYf6tYZWjEdt)SdR13kCHY3GZ(KTCzaGVkgcrCnrUdd8D04Zy((1VgEjKatiFbRB3i(LqSPGdkHb0UQisC6TtVHJP3Kr9pb(uJ1GRodiwSaZhMW(HMLz9bAmcctL2zWIO3S)qfwzDPAVSRprEi9pqOTDmlycFxD5knx1T3lNeLTcG35ocLNSylIq20CnKZ8Z83I(mZWkCVRoAmyo)iAWbgn8ZHR15x)K6lNh0gDL4ceDTqk4ql2wPJ0xF1D70CPR3RKF5CobjlZXToA9uksti0DvTx5mw7atz6YSGOyYDTMtN7oXFKjBX7AmSgDALinCVTIJZukpgPEX076KEIH9H5DwVdgcwnkX0u3MryxiAoFl1cJpt1g7SBhofdJvwqvMAa5w8zGXzwNM)RVsT4YZfwQVNyIoiHQzHhp0mE7DWpsHCBQ31m5lQl2zBMdxMbgp2yenxbyvLEcxwNJs3b8iZQrHrrfGlb8R72XZrWetsto(IYwQyGZe5Gw)zbIRY65hg77EUN7RBMkG7QV1X58XYrbz5R6ChOVg1RDPpNov4J6eJvLWfN7iLXwZmLs7E)n1Nz6HUFTj8CXVvtJAdLK53D0ed82nW8I8b(tJ)qM3OFl)NQ4bTFO)hzWi5UR4C9ytytviLnZYWEV3oQPOtD)ufDlOb7AmAzDJNBnoEeZiYZCIe3n9MEYi5M2OVNJPUMhHHi2AkDBtGxTx0VFHSyBzvi1ymYuzIQ7A4D7Qd1R(lR1upoPn7hoRFvApiPn)9J8iEX8D8I5gmPmtyJdfws)vZFKzrmMYkWTqWWRpJ64iqMO3G5RIINP8nt6YMbLUT4KfKLZvg2UMvmcJEwndYuuJkuY8ESXsDLY8F5wI7QrQ6LKESLBJftBewAxf72P4Qyx9AvDgZf386lDCQnFK(eH5y3y(Y(hZV7B2WZx)WtxkqwoS97Fy75)nBC7HJ7JA85zX47MVzJp3JE8btd2)i84Cw1YICZqrNwtmMN2LeeJEB3o8JNjgvj(F6sTri6rLreIPrjgiqBsqQJBGYdsFxwDuW(kcS9mnZLQmc0MFu(Za1inJrDX3koevWSpY)Pe9KYSQzQXAvuS6thByE2W1yTKO1e7CXDBr7EzXToO6KxGeshz5oOjV9xnBCi1gZQDxZao8bFjJ55rZY0WSjq8m9LPMN7OZgRE3Cq)oTL0Z5eiJ8pbYiMOn1ylyCN3u)kA6LlRmE8uuEk119W7AUTuOLxIYc0WaWS2fFwU0(hI(tSKda30RKKV)3oukdwoIK(s3lgFP75E(nR8jxPsNxljvVWVRkfn1g51Jvut0wc9ExNxRVyOO3Mk9KVBBQK0a85gn35kc(nUI(g8YnJTteMxJIh3MENNRYEXPUdECm2WIg7WkwclFGv0q42MLZXPEjaEkYLcHKnvrswztJt4XvFDXUmqvpQu1oNM6GVrJpiZtdn70zkun4YCmiJzwAoI0m5SJUCTu1LfQAnl((5YK1IIbcZ0MSQBLTa1D8HfYxruZAtFLAtFd9vKwTP)PxB6jQn9(6On96Tr7m5cAsB6Z54paTjU8ZVhJSA)S7lPHwvDCR(Z)h)4FSRJSMSF2hIGyPtEgB8kSNQajFs0(zZjytD1Sh2vF)FRVBfbzg2AQ13(svVf()kIxVbROXSq8oyQGG7OjTZTwbR5JT0f9sAkEbbhP7NffVew9Uc7iA)J)L7NOEvtU65XUqncqWIOapVR8MWvm5oftBJrpsJnr77OPD74J3tu3PEofzI6pqI6BYGbBFqqo9HLyp2HQUSuIC72TFgyU8yCeEMacR(ep)MgiWESld(Z8QxRLaG9b8tXaItjXvpVFSnpd)6wZJh9ZMWhJJ0kfdPPfTBPIEL1gvWMx3vCLXCcEEPQl)7LUA2NZ7ObEOGMSlzBiwGrJzB5d3jEYrrZy4Bk4p9kdF1kJJDM(Evggn83z6KLCsugAIFYq8rwOm8Ttz8R(chKVGQb8GL3)Q5U1M7QgWSYByLP)Eb76rprc3KL2BeMi7fSccEONoCRPp6CNCdB5I4AoQZhYHRKR5P(H2Fw7P8u8fzpQKJO9aQXSkDo188fEdeJCNTtRAr37QtuotcGQCXJXEZe)R65K2TlmwxFRn9s9VTy1Kpj19vp5yd58Hs4)(W)3p]] )

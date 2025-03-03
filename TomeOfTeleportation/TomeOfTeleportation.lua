@@ -120,6 +120,9 @@ local DefaultOptions =
 	["unequipedColourR"] = 1,
 	["unequipedColourG"] = 0,
 	["unequipedColourB"] = 0,
+	["druidFormColourR"] = 1,
+	["druidFormColourG"] = 0.49,
+	["druidFormColourB"] = 0.04,
 	["cooldownColourR"] = 1,
 	["cooldownColourG"] = 0.7,
 	["cooldownColourB"] = 0,
@@ -353,25 +356,32 @@ local function RebuildSpellList()
 		tinsert(TeleporterSpells, spell)
 	end
 
+	if not GetOption("extraSpellsAndItems") then
+		SetOption("extraSpellsAndItems", {})
+	end
+
+	local extraSpellsAndItems = GetOption("extraSpellsAndItems")
+
 	local extraSpells = GetOption("extraSpells")
 	if extraSpells then
 		for id,dest in pairs(extraSpells) do
 			local spell = TeleporterCreateSpell(id,dest)
 			spell.isCustom = true
-			tinsert(TeleporterSpells, spell)
+			tinsert(extraSpellsAndItems, spell)
 		end
 	end
+	SetOption("extraSpells", nil)
 
 	local extraItems = GetOption("extraItems")
 	if extraItems then
 		for id,dest in pairs(extraItems) do
 			local spell = TeleporterCreateItem(id,dest)
 			spell.isCustom = true
-			tinsert(TeleporterSpells, spell)
+			tinsert(extraSpellsAndItems, spell)
 		end
 	end
+	SetOption("extraItems", nil)
 
-	local extraSpellsAndItems = GetOption("extraSpellsAndItems")
 	if extraSpellsAndItems then
 		for index = #extraSpellsAndItems,1,-1 do
 			local spell = extraSpellsAndItems[index]
@@ -669,8 +679,8 @@ end
 
 
 local function SortSpells(spell1, spell2, sortType)
-	local spellId1 = spell1.spellId
-	local spellId2 = spell2.spellId
+	local spellId1 = tonumber(spell1.spellId)
+	local spellId2 = tonumber(spell2.spellId)
 	local spellName1 = spell1.spellName
 	local spellName2 = spell2.spellName
 	local spellType1 = spell1.spellType
@@ -712,11 +722,15 @@ local function SortSpells(spell1, spell2, sortType)
 		return zone1 < zone2
 	end
 
-	return spellName1 < spellName2
+	if spellName1 ~= spellName2 then
+		return spellName1 < spellName2
+	end
+
+	return spellId1 < spellId2
 end
 
 function TeleporterGetSearchString()
-	if GetOption("showSearch") then
+	if GetOption("showSearch") and TeleporterSearchBox then
 		local searchString = TeleporterSearchBox:GetText()
 		if searchString == "" then
 			return nil
@@ -963,6 +977,13 @@ function TeleporterUpdateButton(button)
 	local onCooldown = false
 	local buttonInset = GetScaledOption("buttonInset")
 
+	-- Detect druid flight form - only check if player is a druid
+	local isFlyingDruid = false;
+	local _, playerClass = UnitClass("player");
+	if playerClass == "DRUID" then
+		_, isFlyingDruid, _, _ = GetShapeshiftFormInfo(3);
+	end
+
 	if item then
 		local cooldownStart, cooldownDuration
 		if isItem then
@@ -1036,12 +1057,20 @@ function TeleporterUpdateButton(button)
 		elseif onCooldown then
 			if cooldownDuration >2 then
 				button.backdrop:SetBackdropColor(GetOption("cooldownColourR"), GetOption("cooldownColourG"), GetOption("cooldownColourB"), 1)
+			elseif isFlyingDruid then
+				button.backdrop:SetBackdropColor(GetOption("druidFormColourR"), GetOption("druidFormColourG"), GetOption("druidFormColourB"), 1)
 			else
 				button.backdrop:SetBackdropColor(GetOption("readyColourR"), GetOption("readyColourG"), GetOption("readyColourB"), 1)
 			end
 			button:SetAttribute(
 				"macrotext",
 				"/script print( \"" .. item .. " is currently on cooldown.\")")
+		elseif isFlyingDruid then
+			button.backdrop:SetBackdropColor(GetOption("druidFormColourR"), GetOption("druidFormColourG"), GetOption("druidFormColourB"), 1)
+
+			button:SetAttribute(
+				"macrotext",
+				"/cancelform")
 		else
 			button.backdrop:SetBackdropColor(GetOption("readyColourR"), GetOption("readyColourG"), GetOption("readyColourB"), 1)
 

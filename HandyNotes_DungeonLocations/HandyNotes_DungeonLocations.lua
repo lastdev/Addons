@@ -1,6 +1,7 @@
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
 if not HandyNotes then return end
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_DungeonLocations")
+local version, build, date, tocversion = GetBuildInfo()
 
 icons = { }
 icons["Dungeon"] = "Interface\\MINIMAP\\Dungeon"
@@ -2714,18 +2715,22 @@ nodes[2215] = { } -- Hallowfall
 nodes[2213] = { } -- Nerub'ar
 nodes[2216] = { } -- Nerub'ar_Lower
 nodes[2214] = { } -- The Ringing Deeps
+nodes[2346] = { } -- Undermine
 
-nodes[2274] = { -- Khaz Algar
+   nodes[2274] = { -- Khaz Algar
    [56904935] = { id = 1210, type = "Dungeon" }, -- Darkflame Cleft
    [35095289] = { id = 1267, type = "Dungeon" }, -- Priory of the Sacred Flame
    [40465803] = { id = 1270, type = "Dungeon" }, -- The Dawnbreaker
    [52514448] = { id = 1269, type = "Dungeon" }, -- The Stonevault
+   [52655545] = { id = 1298, type = "Dungeon" }, -- The Floodgate
    [70301908] = { id = 1268, type = "Dungeon" }, -- The Rookery
    [84362059] = { id = 1272, type = "Dungeon" }, -- Cinderbrew Meadery
    [43337984] = { id = 1274, type = "Dungeon" }, -- City of Threads
    [44338372] = { id = 1271, type = "Dungeon" }, -- Ara-Kara, City of Echoes
    [42188673] = { id = 1273, type = "Raid" },  -- Nerub-ar Palace
+   [82357267] = { id = 1296, type = "Raid" },  -- Liberation of Undermine
 }
+
 
  if self.db.profile.Zone then
 
@@ -2741,21 +2746,28 @@ nodes[2274] = { -- Khaz Algar
       showInZone = true, 
       hideOnContinent = true, 
    } -- Nerub-ar Palace 
-} 
+}
 
    nodes[2214] = {
-      [46860856] = { 
+      [42700856] = { 
       id = 1269, type = "Dungeon", 
       showInZone = true, 
       hideOnContinent = true, 
    }, -- The Stonevault
-   [59662149] = { 
+   [55452162] = { 
       id = 1210, 
       type = "Dungeon", 
       showInZone = true,
-      hideOnContinent = true
-   } -- Darkflame Cleft
-}
+      hideOnContinent = true,
+   }, -- Darkflame Cleft
+   [42083948] = { 
+      id = 1298, 
+      type = "Dungeon", 
+      showInZone = true, 
+      hideOnContinent = true,
+   }, -- Operation: Floodgate
+   }
+
 
 
    nodes[2215] = { 
@@ -2825,22 +2837,32 @@ nodes[2274] = { -- Khaz Algar
          id = 1273, 
          type = "Raid", 
          showInZone = true, 
-         showOnContinent = false, 
+         hideOnContinent = true, 
          showOnMinimap = false 
       } -- Nerub-ar Palace
    }
+
    nodes[2213] = { 
       [52164580] = { id = 1271, 
       type = "Dungeon", 
       showInZone = true, 
-      showOnContinent = false
+      hideOnContinent = true
    }, -- Ara-Kara, City of Echoes
       [35047242] = { id = 1273, 
       type = "Raid", 
       showInZone = true, 
-      showOnContinent = false
+      hideOnContinent = true
     } -- Nerub-ar Palace
-   }  
+   }
+
+   nodes[2346] = {
+      [41554877] = { 
+         id = 1296, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true,
+       }, -- Liberation of Undermine
+   }
    
 
 end

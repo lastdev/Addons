@@ -1,11 +1,12 @@
 <Bindings>
-  <Binding name="SMARTBUFF_BIND_TRIGGER" header="SMARTBUFF">
+  <Binding name="SMARTBUFF_BIND_TRIGGER" category="SmartBuff">
+    SMARTBUFF_RebindKeys();
     SMARTBUFF_Check(0);
   </Binding>
-  <Binding name="SMARTBUFF_BIND_OPTIONS">
+  <Binding name="SMARTBUFF_BIND_OPTIONS" category="SmartBuff">
     SMARTBUFF_OptionsFrame_Toggle();
   </Binding>
-  <Binding name="SMARTBUFF_BIND_RESETBUFFTIMERS">
+  <Binding name="SMARTBUFF_BIND_RESETBUFFTIMERS" category="SmartBuff">
     SMARTBUFF_ResetBuffTimers(0);
   </Binding>
 </Bindings>

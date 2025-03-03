@@ -1,3 +1,9 @@
+== v2.06 - 20th February 2025
+* TOC update to 11.1.0
+
+== v2.05 - 2nd February 2025
+* Better Refresh delay to prevent that annoying GetAchievementCriteriaInfo abend
+
 == v2.04 - 7th January 2025
 * Added another HandyNotes Refresh() delay for logins (both new and character swap),
   reloads, and loading screen situations (various - enter/exit instances or Mage

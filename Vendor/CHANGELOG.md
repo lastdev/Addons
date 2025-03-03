@@ -1,8 +1,9 @@
 # Vendor
 
-## [6.1.2-66-gbaf17b0](https://github.com/typicalzergling/vendor/tree/baf17b0cad551774d61ddcf3d24e83382e3c2ad0) (2024-07-16)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...baf17b0cad551774d61ddcf3d24e83382e3c2ad0) 
+## [6.1.2-67-g761b8f9](https://github.com/typicalzergling/vendor/tree/761b8f9183af4383bbcf6c4ef31174ec79d85da3) (2025-02-21)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...761b8f9183af4383bbcf6c4ef31174ec79d85da3) 
 
+- Update for Undermine, fix itemproperty issue  
 - Edit Rule Item Props  
     Edit rule now leverages the itemdialog feature for generating and displaying items  
 - Follow mouse option  

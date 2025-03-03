@@ -361,6 +361,10 @@ do
 
 						local combatTime = combatCastLogData.combatTime --seconds elapsed
 						local combatStartTime = combatCastLogData.combatStartTime --gettime
+						if (not combatStartTime) then
+							castLog:Msg("there's no data for this combat or the combat is not finish.")
+							return
+						end
 
 						castLog.currentPlayerClass = playerObject.classe
 
@@ -473,7 +477,7 @@ do
 							end
 						end
 
-						local allLines = tab.frame.timeLineFrame.lines
+						local allLines = tab.frame.timeLineFrame:GetAllLines()
 						for i = 1, #allLines do
 							local lineHeader = allLines[i].lineHeader
 
@@ -1201,7 +1205,7 @@ do
 				local dataToPack = {{(playerObject:Name() or ""), (playerObject.spec or 0)}}
 
 				--amount of fractions of a second to store
-				local timeResolution = 1
+				local timeResolution = 0
 
 				for index, spellData in ipairs(timelineData) do
 					---@cast spellData spelldata

@@ -160,8 +160,66 @@ Home:SetScript("OnShow", function(self)
 			"Enables or disables the TomCat's Tours icon on the minimap"
 		}, minimapButtonConfig.Label, minimapButtonConfig.checkButton)
 
+		local last = minimapButtonConfig
+
+		if (addon.lunarfestival and addon.lunarfestival:IsEventActive()) then
+			local lunarfestivalMinimapButtonConfig = CreateFrame("Frame", nil, configurationFrame)
+			lunarfestivalMinimapButtonConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
+			lunarfestivalMinimapButtonConfig:SetPoint("RIGHT")
+			lunarfestivalMinimapButtonConfig:SetHeight(30)
+			lunarfestivalMinimapButtonConfig.Label = lunarfestivalMinimapButtonConfig:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			lunarfestivalMinimapButtonConfig.Label:SetJustifyH("LEFT")
+			lunarfestivalMinimapButtonConfig.Label:SetPoint("LEFT", 32, 0)
+			lunarfestivalMinimapButtonConfig.Label:SetText("Lunar Festival Minimap Button")
+			lunarfestivalMinimapButtonConfig.checkButton = CreateFrame("CheckButton", nil, lunarfestivalMinimapButtonConfig)
+			lunarfestivalMinimapButtonConfig.checkButton:SetSize(30, 29)
+			lunarfestivalMinimapButtonConfig.checkButton:SetPoint("LEFT", 230, 0)
+			lunarfestivalMinimapButtonConfig.checkButton:SetNormalAtlas("checkbox-minimal", true)
+			lunarfestivalMinimapButtonConfig.checkButton:SetPushedAtlas("checkbox-minimal", true)
+			lunarfestivalMinimapButtonConfig.checkButton:SetCheckedAtlas("checkmark-minimal", true)
+			lunarfestivalMinimapButtonConfig.checkButton:SetDisabledCheckedAtlas("checkmark-minimal-disabled", true)
+			lunarfestivalMinimapButtonConfig.checkButton:SetScript("OnClick", function(self)
+				addon.lunarfestival.charm:SetEnabled(self:GetChecked())
+			end)
+
+			lunarfestivalMinimapButtonConfig.checkButton:SetChecked(addon.lunarfestival.charm:IsEnabled())
+			AttachTooltip({
+				"Lunar Festival Minimap Button",
+				"Enables or disables the Lunar Festival icon on the minimap"
+			}, lunarfestivalMinimapButtonConfig.Label, lunarfestivalMinimapButtonConfig.checkButton)
+			last = lunarfestivalMinimapButtonConfig
+		end
+
+		if (addon.loveisintheair and addon.loveisintheair:IsEventActive()) then
+			local loveIsInTheAirMinimapButtonConfig = CreateFrame("Frame", nil, configurationFrame)
+			loveIsInTheAirMinimapButtonConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
+			loveIsInTheAirMinimapButtonConfig:SetPoint("RIGHT")
+			loveIsInTheAirMinimapButtonConfig:SetHeight(30)
+			loveIsInTheAirMinimapButtonConfig.Label = loveIsInTheAirMinimapButtonConfig:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			loveIsInTheAirMinimapButtonConfig.Label:SetJustifyH("LEFT")
+			loveIsInTheAirMinimapButtonConfig.Label:SetPoint("LEFT", 32, 0)
+			loveIsInTheAirMinimapButtonConfig.Label:SetText("Love is in the Air Minimap Btn")
+			loveIsInTheAirMinimapButtonConfig.checkButton = CreateFrame("CheckButton", nil, loveIsInTheAirMinimapButtonConfig)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetSize(30, 29)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetPoint("LEFT", 230, 0)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetNormalAtlas("checkbox-minimal", true)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetPushedAtlas("checkbox-minimal", true)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetCheckedAtlas("checkmark-minimal", true)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetDisabledCheckedAtlas("checkmark-minimal-disabled", true)
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetScript("OnClick", function(self)
+				addon.loveisintheair.charm:SetEnabled(self:GetChecked())
+			end)
+
+			loveIsInTheAirMinimapButtonConfig.checkButton:SetChecked(addon.loveisintheair.charm:IsEnabled())
+			AttachTooltip({
+				"Love is in The Air Minimap Button",
+				"Enables or disables the Love is in the Air icon on the minimap"
+			}, loveIsInTheAirMinimapButtonConfig.Label, loveIsInTheAirMinimapButtonConfig.checkButton)
+			last = loveIsInTheAirMinimapButtonConfig
+		end
+
 		local mapIconSizeConfig = CreateFrame("Frame", nil, configurationFrame)
-		mapIconSizeConfig:SetPoint("TOPLEFT", minimapButtonConfig, "BOTTOMLEFT", 0, -8)
+		mapIconSizeConfig:SetPoint("TOPLEFT", last, "BOTTOMLEFT", 0, -8)
 		mapIconSizeConfig:SetPoint("RIGHT")
 		mapIconSizeConfig:SetHeight(30)
 		mapIconSizeConfig.Label = mapIconSizeConfig:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -182,8 +240,11 @@ Home:SetScript("OnShow", function(self)
 				0)
 		mapIconSizeConfig.slider.Slider:SetScript("OnValueChanged", function(_, value)
 			addon.SetIconScale(value)
-			if (addon.hallowsend) then
+			if (addon.hallowsend:IsEventActive()) then
 				addon.hallowsend.SetIconScale()
+			end
+			if (addon.lunarfestival:IsEventActive()) then
+				addon.lunarfestival.SetIconScale()
 			end
 			local trueScale = 0.7 * WorldMapFrame:GetScale() * addon.GetIconScale()
 			mapIconSizeConfig.icon:ClearAllPoints()
@@ -223,7 +284,7 @@ Home:SetScript("OnShow", function(self)
 			"Map Icon Animation",
 			"Sets if the map icons will animate when there is an active rare or treasure"
 		}, mapIconAnimationConfig.Label, mapIconAnimationConfig.checkButton)
-		local last
+
 		if (not (mopremix and mopremix.active)) then
 			local accessoryWindowConfig = CreateFrame("Frame", nil, configurationFrame)
 			accessoryWindowConfig:SetPoint("TOPLEFT", mapIconAnimationConfig, "BOTTOMLEFT", 0, -8)
@@ -751,10 +812,10 @@ Home:SetScript("OnShow", function(self)
 			}, noblegardenConfig.Label, noblegardenConfig.checkButton)
 		end
 
-		local featuresTitle = CreateOptionsTitle(contents, "Recently Added and Upcoming Features", configurationFrame)
-		local features = CreateFrame("SimpleHTML",nil, contents, "TomCats_HTML_Features")
-		features:SetPoint("TOPLEFT", featuresTitle, "BOTTOMLEFT", 0, 0)
-		features:SetPoint("RIGHT")
+		--local featuresTitle = CreateOptionsTitle(contents, "Recently Added and Upcoming Features", configurationFrame)
+		--local features = CreateFrame("SimpleHTML",nil, contents, "TomCats_HTML_Features")
+		--features:SetPoint("TOPLEFT", featuresTitle, "BOTTOMLEFT", 0, 0)
+		--features:SetPoint("RIGHT")
 	end
 	ScrollBox.Acquire(self, contents, spacing * 3)
 end)

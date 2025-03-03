@@ -121,9 +121,10 @@ end
 function MerchantButton:UpdateSellState()
 	self.totalCount, self.sellValue, self.sellCount, self.destroyCount, self.sellItems, self.destroyItems, self.nextDestroy = Addon:GetEvaluationStatus()
 
-	local isDisabled = self.isAutoSellInProgress or self.isDestroyInProgress
-	self.frame:SetSellState(isDisabled, self.isUpdatePending, MERCHANT_SELL_ITEMS, self.sellCount)
-	self.frame:SetDestroyState(isDisabled, self.isUpdatePending, MERCHANT_DESTROY_ITEMS, self.destroyCount)
+	local isSellDisabled = self.isAutoSellInProgress or self.isDestroyInProgress or not C_MerchantFrame.IsSellAllJunkEnabled()
+	self.frame:SetSellState(isSellDisabled, self.isUpdatePending, MERCHANT_SELL_ITEMS, self.sellCount)
+	local isDestroyDisabled = (self.isAutoSellInProgress or self.isDestroyInProgress)
+	self.frame:SetDestroyState(isDestroyDisabled, self.isUpdatePending, MERCHANT_DESTROY_ITEMS, self.destroyCount)
 end
 
 local MerchantButtonFrame = {}

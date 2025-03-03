@@ -76,7 +76,7 @@ function MyAuctions.OnInitialize(settingsDB)
 	TSM.UI.AuctionUI.RegisterTopLevelPage(L["My Auctions"], GetFrame, OnItemLinked)
 
 	-- Set up some computed state properties
-	if ClientInfo.IsRetail() then
+	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
 		private.manager:SetStateFromPublisher("canCancel", state:PublisherForExpression([[numPending == 0 and selectedAuctionId or nil]])
 			:MapNonNilWithFunction(C_AuctionHouse.GetCancelCost)
 			:MapWithFunction(function(cancelCost) return (cancelCost or math.huge) <= GetMoney() end)
@@ -159,7 +159,7 @@ function private.GetMyAuctionsFrame(state)
 			)
 		)
 		:AddChild(UIElements.New("MyAuctionsScrollTable", "auctions")
-			:SetSortingDisabled(not ClientInfo.IsRetail())
+			:SetSortingDisabled(not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442())
 			:SetSettings(private.settings, "myAuctionsScrollingTable")
 			:SetQuery(TSM.MyAuctions.CreateQuery())
 			:SetAction("OnSelectionChanged", "ACTION_SELECTION_CHANGED")

@@ -108,6 +108,7 @@ local API_EVENT_INFO = not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_H
 			["UI_ERROR_MESSAGE"..GENERIC_EVENT_SEP..ERR_AUCTION_WRAPPED_ITEM] = { result = false },
 			["UI_ERROR_MESSAGE"..GENERIC_EVENT_SEP..ERR_AUCTION_BAG] = { result = false },
 			["UI_ERROR_MESSAGE"..GENERIC_EVENT_SEP..ERR_NOT_ENOUGH_MONEY] = { result = false },
+			["AUCTION_HOUSE_POST_ERROR"] = { result = false },
 		}
 	} or
 	{ -- Retail
@@ -258,6 +259,14 @@ AuctionHouseWrapper:OnModuleLoad(function()
 	else
 		private.canSendAuctionQueryTimer = DelayTimer.New("CHECK_CAN_SEND_AUCTION_QUERY", private.CheckCanSendAuctionQuery)
 		private.canSendAuctionQueryTimer:RunForTime(0.1)
+		if AUCTION_POSTING_ERROR_TEXT then
+			local function PostErrorHandler()
+				-- Just display once per session
+				print(AUCTION_POSTING_ERROR_TEXT)
+				Event.Unregister("AUCTION_HOUSE_POST_ERROR", PostErrorHandler)
+			end
+			Event.Register("AUCTION_HOUSE_POST_ERROR", PostErrorHandler)
+		end
 	end
 end)
 
@@ -552,7 +561,7 @@ function AuctionHouseWrapper.PostAuction(bag, slot, duration, stackSize, numAuct
 		ClearCursor()
 		Container.PickupItem(bag, slot)
 		ClickAuctionSellItemButton(AuctionsItemButton, "LeftButton")
-		local result = private.wrappers.PostAuction:Start(bid, buyout, duration, stackSize, numAuctions)
+		local result = private.wrappers.PostAuction:Start(bid, buyout, duration, stackSize, numAuctions, true)
 		ClearCursor()
 		return result
 	end
@@ -580,7 +589,7 @@ end
 ---@param useEmptySorts boolean Use an empty sorts list
 ---@return boolean
 function AuctionHouseWrapper.SetSort(useEmptySorts)
-	if ClientInfo.IsRetail() then
+	if LibTSMWoW.IsRetail() or LibTSMWoW.IsCataClassicPatch442() then
 		return true
 	end
 

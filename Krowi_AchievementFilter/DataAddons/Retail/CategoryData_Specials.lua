@@ -244,6 +244,8 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                     19503, -- Draconic Gladiator's Drake
                     40393, -- Gladiator: The War Within Season 1
                     40398, -- Forged Gladiator's Fel Bat
+                    41032, -- Gladiator: The War Within Season 2
+                    41362, -- Prized Gladiator's Fel Bat
                 },
             },
             {
@@ -913,6 +915,8 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 16395, -- Vaulternative Fashion
                 17765, -- What We Wear In The Shadowflame
                 19442, -- Fire Catwalk With Me
+                40469, -- I'm Bringing Nerub-ack
+                41525, -- Can You Please Spell "Gobanna?"
             },
         },
         { -- Player vs. Player
@@ -951,6 +955,7 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 18249, -- Obsidian Tie Event
                 19276, -- Verdant Vogue
                 40728, -- Forged Finery
+                41595, -- Prized Guise
             },
         },
         {
@@ -1497,10 +1502,14 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 addon.L["Season"] .. " " .. 2,
                 true,
                 {
-                    20579, -- Keystone Hero: The Rookery
-                    20581, -- Keystone Hero: Priory of the Sacred Flame
+                    41348, -- Keystone Hero: Operation: Floodgate
                     20583, -- Keystone Hero: Cinderbrew Meadery
                     20584, -- Keystone Hero: Darkflame Cleft
+                    20579, -- Keystone Hero: The Rookery
+                    20581, -- Keystone Hero: Priory of the Sacred Flame
+                    15050, -- Keystone Hero: Theater of Pain
+                    40966, -- Keystone Hero: Operation: Mechagon - Workshop
+                    40965, -- Keystone Hero: The MOTHERLODE!!
                 },
             },
         },

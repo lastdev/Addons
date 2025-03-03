@@ -27,7 +27,7 @@ function Sniper.PopulateItemList(itemList)
 	for _ in GroupOperation.OperationIterator(Group.GetRootPath(), "Sniper") do
 		baseHasOperation = true
 	end
-	if baseHasOperation and not ClientInfo.IsRetail() then
+	if baseHasOperation and not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() then
 		return false
 	end
 

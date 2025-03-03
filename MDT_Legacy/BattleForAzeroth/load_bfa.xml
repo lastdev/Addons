@@ -4,10 +4,8 @@
 	<Script file='KingsRest.lua'/>
 	<Script file='ShrineoftheStorm.lua'/>
 	<Script file='TempleofSethraliss.lua'/>
-	<Script file='TheMotherlode.lua'/>
 	<Script file='TheUnderrot.lua'/>
 	<Script file='TolDagor.lua'/>
 	<Script file='WaycrestManor.lua'/>
 	<Script file='MechagonIsland.lua'/>
-	<Script file='MechagonCity.lua'/>
 </Ui>

@@ -1,5 +1,5 @@
 -- RogueSubtlety.lua
--- November 2022
+-- January 2025
 
 if UnitClassBase( "player" ) ~= "ROGUE" then return end
 
@@ -629,6 +629,15 @@ spec:RegisterHook( "spend", function( amt, resource )
 end )
 
 
+local Shadowcraft = setfenv( function ()
+
+    if buff.shadow_techniques.stack >= combo_points.max then
+        gain( combo_points.max, "combo_points" )
+        removeStack( "shadow_techniques", combo_points.max )
+    end
+
+end, state )
+
 local function st_gain( token )
     local amount = action[ token ].cp_gain
     local st_addl_gain = max( 0, min( combo_points.deficit - amount, buff.shadow_techniques.stack ) )
@@ -856,6 +865,17 @@ spec:RegisterGear( "will_of_valeera", 137069 )
 
 --- The War Within
 spec:RegisterGear( "tww1", 212039, 212037, 212041, 212038, 212036 )
+spec:RegisterGear( "tww2", 229290, 229288, 229289, 229287, 229292 )
+spec:RegisterAuras( {
+    -- 2-set
+    -- https://www.wowhead.com/spell=1218439
+    -- Winning Streak!  
+    winning_streak = {
+        id = 121843,
+        duration = 3600,
+        max_stack = 10,
+    },
+} )
 
 -- DF Tier Set
 spec:RegisterGear( "tier31", 207234, 207235, 207236, 207237, 207239, 217208, 217210, 217206, 217207, 217209 )
@@ -974,7 +994,8 @@ spec:RegisterAbilities( {
             if set_bonus.tier29_2pc > 0 then applyBuff( "honed_blades", nil, effective_combo_points ) end
 
             spend( combo_points.current, "combo_points" )
-            
+            if talent.shadowcraft.enabled and buff.symbols_of_death.up then Shadowcraft() end
+   
             if talent.deeper_daggers.enabled or conduit.deeper_daggers.enabled then applyBuff( "deeper_daggers" ) end
         end,
     },
@@ -1062,6 +1083,7 @@ spec:RegisterAbilities( {
             else applyBuff( "slice_and_dice", effective_combo_points * 3 ) end
 
             spend( combo_points.current, "combo_points" )
+            if talent.shadowcraft.enabled and buff.symbols_of_death.up then Shadowcraft() end
 
             if talent.deeper_daggers.enabled or conduit.deeper_daggers.enabled then applyBuff( "deeper_daggers" ) end
         end,
@@ -1229,6 +1251,7 @@ spec:RegisterAbilities( {
             applyBuff( "secret_technique" ) -- fake buff for APL logic.
             if talent.goremaws_bite.enabled and buff.goremaws_bite.up then removeStack( "goremaws_bite" ) end
             spend( combo_points.current, "combo_points" )
+            if talent.shadowcraft.enabled and buff.symbols_of_death.up then Shadowcraft() end
         end,
     },
 

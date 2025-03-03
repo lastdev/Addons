@@ -1,6 +1,6 @@
 # HandyNotes_WorldMapButton
 
-## [110002.02-Release](https://github.com/fubaWoW/HandyNotes_WorldMapButton/tree/110002.02-Release) (2024-08-14)
-[Full Changelog](https://github.com/fubaWoW/HandyNotes_WorldMapButton/compare/110002.01-Release...110002.02-Release) [Previous Releases](https://github.com/fubaWoW/HandyNotes_WorldMapButton/releases)
+## [110100.01-Release](https://github.com/fubaWoW/HandyNotes_WorldMapButton/tree/110100.01-Release) (2025-02-25)
+[Full Changelog](https://github.com/fubaWoW/HandyNotes_WorldMapButton/compare/110007.01-Release...110100.01-Release) [Previous Releases](https://github.com/fubaWoW/HandyNotes_WorldMapButton/releases)
 
-- update for 11.0.2  
+- TOC Bump  

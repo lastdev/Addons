@@ -1,3 +1,4 @@
+---@diagnostic disable: param-type-mismatch
 ---------------------------------------------------------------------------------------------------------------------
 -- A minimal Crayon like implementation for managing color.
 -- @name Colorize
@@ -39,6 +40,7 @@ local strlower=strlower
 local type=type
 local unpack=unpack
 local _G=_G
+---@diagnostic disable-next-line: undefined-global
 local UIERRORS_HOLD_TIME=UIERRORS_HOLD_TIME or 1
 local UIErrorsFrame=UIErrorsFrame
 local ChatTypeInfo=ChatTypeInfo

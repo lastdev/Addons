@@ -1,4 +1,4 @@
-local lib = LibStub:NewLibrary("LibAHTab-1-0", 2)
+local lib = LibStub:NewLibrary("LibAHTab-1-0", 3)
 
 if not lib or lib.internalState then return end
 
@@ -12,11 +12,12 @@ function lib:DoesIDExist(tabID)
   return lib.internalState and lib.internalState.usedIDs[tabID] ~= nil
 end
 
-function lib:CreateTab(tabID, attachedFrame, displayText)
+function lib:CreateTab(tabID, attachedFrame, displayText, tabHeader)
   assert(AuctionHouseFrame, "Wait for the AH to open before creating your tab")
   assert(type(tabID) == "string", tabIDErrorMessage)
   assert(type(attachedFrame) == "table" and attachedFrame.IsObjectType and attachedFrame:IsObjectType("Frame"), "attachedFrame should be a frame")
   assert(type(displayText) == "string", "displayText should be a string")
+  assert(tabHeader == nil or type(tabHeader) == "string", "tabHeader should be a string")
 
   if not lib.internalState then
     lib.internalState = {
@@ -42,7 +43,7 @@ function lib:CreateTab(tabID, attachedFrame, displayText)
     error("The tab id already exists")
   end
 
-  local newTab = CreateFrame("Button", nil, lib.internalState.rootFrame, "AuctionHouseFrameDisplayModeTabTemplate")
+  local newTab = CreateFrame("Button", "LibAHFrame-1.0-" .. tabID, lib.internalState.rootFrame, "AuctionHouseFrameDisplayModeTabTemplate")
   table.insert(lib.internalState.Tabs, newTab)
 
   newTab:SetText(displayText)
@@ -60,6 +61,7 @@ function lib:CreateTab(tabID, attachedFrame, displayText)
   PanelTemplates_DeselectTab(newTab)
 
   newTab.frameRef = attachedFrame
+  newTab.tabHeader = tabHeader or displayText
 
   attachedFrame:Hide()
 
@@ -94,5 +96,6 @@ function lib:SetSelected(tabID)
   local selectedTab = lib:GetButton(tabID)
   PanelTemplates_SelectTab(selectedTab)
 
+  AuctionHouseFrame:SetTitle(selectedTab.tabHeader)
   selectedTab.frameRef:Show()
 end

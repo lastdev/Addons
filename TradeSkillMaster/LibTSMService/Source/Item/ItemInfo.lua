@@ -596,7 +596,7 @@ function ItemInfo.IsDisenchantable(item)
 	return Item.IsQualityDisenchantable(quality) and Item.IsClassDisenchantable(classId)
 end
 
----Get whether or not the item is a commodity in WoW 8.3 (and above).
+---Get whether or not the item is a commodity.
 ---@param item string The item
 ---@return boolean?
 function ItemInfo.IsCommodity(item)

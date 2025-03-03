@@ -934,13 +934,13 @@ do
         -- Improve Pocket-Sized Computronic Device.
         if state.equipped.pocketsized_computation_device then
             local tName = CGetItemInfo( 167555 )
-            local redName, redLink = GetItemGem( tName, 1 )
+            local redName, redLink = C_Item.GetItemGem( tName, 1 )
 
             if redName and redLink then
                 local redID = tonumber( redLink:match("item:(%d+)") )
                 local action = class.itemMap[ redID ]
 
-                if action then
+                if action and class.abilities[ action ] and redID then
                     state.set_bonus[ action ] = 1
                     state.set_bonus[ redID ] = 1
                     class.abilities.pocketsized_computation_device = class.abilities[ action ]
@@ -948,8 +948,10 @@ do
                     insert( state.items, action )
                 end
             else
-                class.abilities.pocketsized_computation_device = class.abilities.inactive_red_punchcard
-                class.abilities[ tName ] = class.abilities.inactive_red_punchcard
+                if class.abilities.inactive_red_punchcard then
+                    class.abilities.pocketsized_computation_device = class.abilities.inactive_red_punchcard
+                    class.abilities[ tName ] = class.abilities.inactive_red_punchcard
+                end
             end
         end
 
@@ -1074,7 +1076,7 @@ end )
 
 
 local dynamic_keys = setmetatable( {}, {
-    __index = function( t, k, v )
+    __index = function( t, k )
         local name = GetSpellInfo( k )
         local key = name and formatKey( name ) or k
         t[k] = key
@@ -1641,6 +1643,7 @@ local death_events = {
 local dmg_filtered = {
     [280705] = true, -- Laser Matrix.
     [450412] = true, -- Sentinel.
+    [462952] = true, -- Squall Sailor's Citrine
 }
 
 
@@ -1808,9 +1811,10 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                     end
 
                 elseif subtype == "SPELL_CAST_FAILED" then
-                    state:RemoveSpellEvent( ability.key, true, "CAST_FINISH" ) -- remove next cast finish.
-                    if ability.isProjectile then state:RemoveSpellEvent( ability.key, true, "PROJECTILE_IMPACT", true ) end -- remove last impact.
-                    -- Hekili:ForceUpdate( "SPELL_CAST_FAILED" )
+                    if state:RemoveSpellEvent( ability.key, true, "CAST_FINISH" ) then -- remove next cast finish.
+                        if ability.isProjectile then state:RemoveSpellEvent( ability.key, true, "PROJECTILE_IMPACT", true ) end -- remove last impact.
+                    end
+                    -- Hekili:ForceUpdate( "SPELL_CAST_FAILED" ) ]]
 
                 elseif subtype == "SPELL_AURA_REMOVED" and ability.channeled then
                     state:RemoveSpellEvents( ability.key, true ) -- remove ticks, finish, impacts.

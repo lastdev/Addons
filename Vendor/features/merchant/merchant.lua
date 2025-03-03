@@ -74,9 +74,9 @@ function Merchant:IsAutoSelling()
     return not not Addon:GetThread(threadName)
 end
 
--- If this merchant has no items it is not a sellable merchant (such as an autohammer).
 function Merchant:CanSellAtMerchant()
-    return GetMerchantNumItems() > 0
+    -- Assuming that if the Junk sell is enabled by blizzard then it is a sellable merchant.
+    return C_MerchantFrame.IsSellAllJunkEnabled()
 end
 
 local function setIsAutoSelling(isSelling, limit)

@@ -17,7 +17,7 @@ local private = {
 	scanThreadId = nil,
 	searchContext = nil,
 }
-local RESCAN_DELAY = ClientInfo.IsRetail() and 30 or 0
+local RESCAN_DELAY = (ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442()) and 30 or 0
 
 
 
@@ -48,7 +48,7 @@ function private.ScanThread(auctionScan)
 	if numQueries == 0 then
 		local query = auctionScan:NewQuery()
 			:AddCustomFilter(private.QueryFilter)
-		if not ClientInfo.IsRetail() then
+		if not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() then
 			query:SetPage("LAST")
 		end
 	end
@@ -79,7 +79,7 @@ function private.QueryFilter(_, subRow, isSubRow, itemKey)
 	elseif itemString then
 		-- Filter if the buyout is too high
 		return itemBuyout > maxPrice
-	elseif ClientInfo.IsRetail() or not ItemInfo.CanHaveVariations(baseItemString) then
+	elseif (ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442()) or not ItemInfo.CanHaveVariations(baseItemString) then
 		-- Check the buyout against the base item
 		maxPrice = SniperOperation.GetMaxPrice(baseItemString) or 0
 		return itemBuyout > maxPrice

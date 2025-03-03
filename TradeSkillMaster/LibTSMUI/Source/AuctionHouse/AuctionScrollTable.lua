@@ -42,17 +42,17 @@ local COL_INFO = {
 		justifyH = "RIGHT",
 		font = "TABLE_TABLE1",
 	},
-	qty = LibTSMUI.IsRetail() and {
+	qty = (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and {
 		title = L["Qty"],
 		justifyH = "RIGHT",
 		font = "TABLE_TABLE1",
 	} or nil,
-	posts = not LibTSMUI.IsRetail() and {
+	posts = not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() and {
 		title = L["Posts"],
 		justifyH = "RIGHT",
 		font = "TABLE_TABLE1",
 	} or nil,
-	stack = not LibTSMUI.IsRetail() and {
+	stack = not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() and {
 		title = L["Stack"],
 		justifyH = "RIGHT",
 		font = "TABLE_TABLE1",
@@ -73,7 +73,7 @@ local COL_INFO = {
 		font = "TABLE_TABLE1",
 	},
 	bid = {
-		title = LibTSMUI.IsRetail() and L["Bid (stack)"] or L["Bid (total)"],
+		title = (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and L["Bid (stack)"] or L["Bid (total)"],
 		justifyH = "RIGHT",
 		font = "TABLE_TABLE1",
 	},
@@ -83,7 +83,7 @@ local COL_INFO = {
 		font = "TABLE_TABLE1",
 	},
 	buyout = {
-		title = LibTSMUI.IsRetail() and L["Buyout (stack)"] or L["Buyout (total)"],
+		title = (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and L["Buyout (stack)"] or L["Buyout (total)"],
 		justifyH = "RIGHT",
 		font = "TABLE_TABLE1",
 	},
@@ -646,7 +646,7 @@ function AuctionScrollTable.__protected:_SetDataForRow(index, row, isFirstSubRow
 	end
 
 	local quantity, numAuctions = row:GetQuantities()
-	if LibTSMUI.IsRetail() then
+	if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
 		self._data.qty[index] = quantity and numAuctions and (quantity * numAuctions) or ""
 	else
 		self._data.posts[index] = numAuctions or ""

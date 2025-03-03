@@ -1,11 +1,22 @@
-## Interface: 110007
+## Interface: 110100, 110007
 ## Title: MDT Legacy
 ## Author: Nnoggie
-## Version: 1.0.5
-## Notes: MDT Plugin cotaining dungeons from previous expansions
+## Version: 1.1.0
+## Notes: MDT Plugin containing dungeons from previous expansions
+## Notes-deDE: MDT-Plugin mit Dungeons aus vorherigen Erweiterungen
+## Notes-esES: Complemento de MDT que contiene mazmorras de expansiones anteriores
+## Notes-esMX: Complemento de MDT que contiene mazmorras de expansiones anteriores
+## Notes-frFR: Plugin MDT contenant des donjons des extensions précédentes
+## Notes-itIT: Plugin MDT che include spedizioni delle espansioni precedenti
+## Notes-ptBR: Plugin MDT contendo masmorras de expansões anteriores
+## Notes-ruRU: Плагин MDT, включающий подземелья из предыдущих дополнений
+## Notes-koKR: 이전 확장팩 던전이 포함된 MDT 플러그인
+## Notes-zhCN: 包含往期资料片地下城的MDT插件
+## Notes-zhTW: 包含過往資料片地城的 MDT 外掛
 ## Dependencies: MythicDungeonTools
 ## X-Curse-Project-ID: 1115573
 ## X-Wago-ID: mKOv1k6x
+## IconTexture: Interface\AddOns\MDT_Legacy\MDTFull
 
 locale.lua
 versionCheck.lua

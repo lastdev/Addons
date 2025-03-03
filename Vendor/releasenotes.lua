@@ -2,6 +2,32 @@ local _, Addon = ...
 
 Addon.ReleaseNotes = {
 {
+Release = "6.7.2 (February 25, 2025)",
+Notes = [[
+# Bugfixes and Partial Russian Translation
+Added partial Russian translation, thanks to ZamestroTV!
+
+Generally fixed the merchant is sellable logic so it should no longer try to sell at merchants that cannot vendor items, such as Autohammers,
+but will allow merchants that are sellable which dont have items, such as the Grizzled Hills Packmaster.
+
+# Bugfixes
+* Fixed "HasStat" function, which was due to GetItemStats now being a C_Item API in 11.1.
+* Fixed autosell not working on some merchants that have no items like the Grizzled Hills Packmaster.
+* Fixed merchant button allowing autosell at unsellable merchants. It will now be disabled if you cannot sell at the merchant.
+]]
+},
+{
+Release = "6.7.1 (February 21, 2025)",
+Notes = [[
+# TWW 11.1 update
+
+Updated TOC for TWW 11.1.
+
+No significant changes were made.
+
+]]
+},
+{
 Release = "6.7 (September 8, 2024)",
 Notes = [[
 # Properties Display update

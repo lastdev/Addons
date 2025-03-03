@@ -1,12 +1,16 @@
 local mod	= DBM:NewMod(2417, "DBM-Party-Shadowlands", 6, 1187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250101235718")
+mod:SetRevision("20250216045047")
 mod:SetCreatureID(165946)
 mod:SetEncounterID(2404)
 mod:SetZone(2293)
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 324079 323608 324589 323683 339573 339550 339706",
@@ -27,7 +31,7 @@ mod:RegisterEventsInCombat(
 local warnDeathGrasp				= mod:NewTargetNoFilterAnnounce(323831, 4)
 
 local specWarnReapingScythe			= mod:NewSpecialWarningDefensive(324079, nil, nil, nil, 1, 2)
-local specWarnDarkDevastation		= mod:NewSpecialWarningDodgeCount(323608, nil, nil, nil, 2, 2)
+local specWarnDarkDevastation		= mod:NewSpecialWarningDodgeCount(323608, nil, nil, nil, 2, 15)
 local specWarnManifestDeath			= mod:NewSpecialWarningMoveAway(324449, nil, nil, nil, 1, 2)
 local yellManifestDeath				= mod:NewShortYell(324449)--Everyone gets, so short yell (no player names)
 local yellManifestDeathFades		= mod:NewShortFadesYell(324449)
@@ -42,6 +46,7 @@ local timerGraspingriftCD			= mod:NewCDCountTimer(30.4, 323685, nil, nil, nil, 3
 
 local timerEchoofBattleCD			= mod:NewCDCountTimer(23.5, 339550, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--23.5-30.3
 local timerGhostlyChargeCD			= mod:NewCDCountTimer(24.2, 339706, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)--24.2-31.6
+local timerRP						= mod:NewRPTimer(29)
 
 mod.vb.reapingCount = 0
 mod.vb.darkCount = 0
@@ -76,7 +81,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 323608 then
 		self.vb.darkCount = self.vb.darkCount + 1
 		specWarnDarkDevastation:Show(self.vb.darkCount)
-		specWarnDarkDevastation:Play("farfromline")
+		specWarnDarkDevastation:Play("frontal")
 		timerDarkDevastationCD:Start(nil, self.vb.darkCount+1)
 	elseif spellId == 324589 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnDeathBolt:Show(args.sourceName)
@@ -127,7 +132,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 324449 then
 		if args:IsPlayer() then
 			specWarnManifestDeath:Show()
-			specWarnManifestDeath:Play("runout")
+			specWarnManifestDeath:Play("scatter")
 			yellManifestDeath:Yell()
 			yellManifestDeathFades:Countdown(spellId)
 		end
@@ -160,3 +165,15 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	end
 end
 --]]
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.RolePlay or msg:find(L.RolePlay)) and self:LatencyCheck() then
+		self:SendSync("Roleplay")
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "Roleplay" and self:AntiSpam(10, 3) then
+		timerRP:Start()
+	end
+end

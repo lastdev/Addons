@@ -682,7 +682,7 @@ end
 -- ============================================================================
 
 function private.SanitizeSettings(operation)
-	if not private.includeStackSize and operation.stackSize then
+	if not private.includeStackSize and operation.stackSize and tonumber(operation.postCap) and tonumber(operation.stackSize) then
 		operation.postCap = tonumber(operation.postCap) * tonumber(operation.stackSize)
 	end
 	if private.defaultZeroUndercut and (type(operation.undercut) == "number" and operation.undercut or Money.FromString(operation.undercut) or math.huge) < COPPER_PER_SILVER then

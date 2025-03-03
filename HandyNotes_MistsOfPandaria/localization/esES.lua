@@ -36,6 +36,7 @@ Para romper la barrera de entrada a la cueva del {npc:71864}, encuentra uno de l
 Si no puedes encontrar un artefacto, puedes usar la {item:70161} (u otro juguete para sentarse) justo enfrente de las rocas. Te sientas, y cuando te levantes camina recto hacia dentro.
 ]]
 L['zhugon_note'] = 'Cuando el evento de la cerveza esté activo, mata varios {npc:71908} y rompe barriles hasta que aparezca {npc:71919}.'
+L['garnia_note'] = 'Usa un {npc:73531} para volar a lo alto de la montaña para matar a {npc:73282}.\n\n{note:El {npc:73531} se puede provocar usando la {item:119083} o juguetes similares sin matarlo.}'
 
 L['blazing_chest'] = 'Cofre llameante'
 L['moss_covered_chest'] = 'Cofre cubierto de musgo'
@@ -43,6 +44,8 @@ L['skull_covered_chest'] = 'Cofre adornado de calaveras'
 L['smoldering_chest'] = 'Cofre humeante'
 L['sturdy_chest'] = 'Cofre robusto'
 L['sturdy_chest_note'] = 'Golpea a un {npc:73531} para ser llevado aquí.'
+L['timeless_chest'] = 'Cofre intemporal'
+L['timeless_chest_note'] = 'Puedes comprar la llave al {npc:72007} por 500x {currency:777}.'
 
 L['gleaming_treasure_satchel_note'] = 'Camina por las cuerdas del barco y salta al poste donde está colgando la cartera.'
 L['gleaming_treasure_chest_note'] = 'Salta por los pilares hasta llegar al tesoro.'

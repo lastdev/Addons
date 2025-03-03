@@ -2,7 +2,6 @@
 -- August 2024
 -- 11.0.2
 
-
 if UnitClassBase( "player" ) ~= "WARRIOR" then return end
 
 local addon, ns = ...
@@ -35,8 +34,8 @@ spec:RegisterResource( Enum.PowerType.Rage, {
 
         stop = function () return state.time == 0 or state.swings.mainhand == 0 end,
         value = function ()
-            return ( ( ( state.talent.war_machine.enabled and 1.2 or 1 ) * base_rage_gen * fury_rage_mult * state.swings.mainhand_speed )
-            )
+            local baseAmt = base_rage_gen * fury_rage_mult * ( state.talent.war_machine.enabled and 1.2 or 1 ) -- "static" amount
+            return ( baseAmt * ( state.buff.recklessness.up and 2 or 1 ) * state.swings.mainhand_speed ) -- Dynamic factors
         end
     },
 
@@ -54,7 +53,8 @@ spec:RegisterResource( Enum.PowerType.Rage, {
 
         stop = function () return state.time == 0 or state.swings.offhand == 0 end,
         value = function ()
-            return ( ( state.talent.war_machine.enabled and 1.1 or 1 ) * base_rage_gen * fury_rage_mult * state.swings.offhand_speed * offhand_mod )
+            local baseAmt = base_rage_gen * fury_rage_mult * ( state.talent.war_machine.enabled and 1.2 or 1 ) -- "static" amount
+            return ( baseAmt * ( state.buff.recklessness.up and 2 or 1 ) * state.swings.offhand_speed * offhand_mod ) -- Dynamic factors
         end,
     },
 
@@ -104,69 +104,67 @@ spec:RegisterResource( Enum.PowerType.Rage, {
     },
 } )
 
-
 -- Talents
 spec:RegisterTalents( {
     -- Warrior
-    armored_to_the_teeth         = {  90258, 384124, 2 }, -- Gain Strength equal to 5% of your Armor.
-    avatar                       = {  92640, 107574, 1 }, -- Transform into a colossus for 20 sec, causing you to deal 20% increased damage and removing all roots and snares. Generates 10 Rage.
-    barbaric_training            = {  95955, 390674, 1 }, -- Slam and Whirlwind deal 20% increased damage and 10% increased critical strike damage.
+    armored_to_the_teeth         = {  90366, 384124, 2 }, -- Gain Strength equal to 5% of your Armor.
+    avatar                       = {  90365, 107574, 1 }, -- Transform into a colossus for 20 sec, causing you to deal 20% increased damage and removing all roots and snares. Generates 10 Rage.
+    barbaric_training            = {  90340, 383082, 1 }, -- Slam, Thunder Clap, and Whirlwind deal 20% more damage and 10% increased critical strike damage.
     berserker_shout              = {  90348, 384100, 1 }, -- Go berserk, removing and granting immunity to Fear, Sap, and Incapacitate effects for 6 sec. Also remove fear effects from group members within 12 yds.
     berserker_stance             = {  90325, 386196, 1 }, -- An aggressive combat state that increases the damage of your auto-attacks by 15% and reduces the duration of Fear, Sap and Incapacitate effects on you by 10%. Lasts until canceled.
     berserkers_torment           = {  90362, 390123, 1 }, -- Activating Avatar or Recklessness grants 8 sec of the other.
-    bitter_immunity              = {  90356, 383762, 1 }, -- Restores 20% health instantly and removes all diseases, poisons and curses affecting you.
+    bitter_immunity              = {  90356, 383762, 1 }, -- Restores 20% health instantly and removes all diseases, poisons and curses affecting you. 
     bounding_stride              = {  90355, 202163, 1 }, -- Reduces the cooldown of Heroic Leap by 15 sec, and Heroic Leap now also increases your movement speed by 70% for 3 sec.
     cacophonous_roar             = {  90383, 382954, 1 }, -- Intimidating Shout can withstand 200% more damage before breaking.
     champions_might              = {  90323, 386284, 1 }, -- The duration of Champion's Spear is increased by 2 sec. You deal 25% increased critical strike damage to targets chained to your Spear.
-    champions_spear              = {  90380, 376079, 1 }, -- Throw a spear at the target location, dealing 26,945 Physical damage instantly and an additional 28,091 damage over 4 sec. Deals reduced damage beyond 5 targets. Enemies hit are chained to the spear's location for the duration. Generates 10 Rage.
+    champions_spear              = {  90380, 376079, 1 }, -- Throw a spear at the target location, dealing 43,399 Physical damage instantly and an additional 48,350 damage over 4 sec. Deals reduced damage beyond 5 targets. Enemies hit are chained to the spear's location for the duration. Generates 10 Rage.
     concussive_blows             = {  90354, 383115, 1 }, -- Cooldown of Pummel reduced by 1.0 sec. Successfully interrupting an enemy increases the damage you deal to them by 5% for 10 sec.
     crackling_thunder            = {  95959, 203201, 1 }, -- Thunder Clap's radius is increased by 50%, and it reduces movement speed by an additional 20%.
-    cruel_strikes                = {  90381, 392777, 2 }, -- Critical strike chance increased by 1% and critical strike damage of Execute increased by 5%.
-    crushing_force               = {  90349, 382764, 2 }, -- Bloodthirst deals an additional 5% damage and deals 5% increased critical damage.
+    cruel_strikes                = {  90381, 392777, 2 }, -- Critical strike chance increased by 1% and critical strike damage of Execute increased by 5%. 
+    crushing_force               = {  90347, 382764, 2 }, -- Bloodthirst deals an additional 5% damage and deals 5% increased critical strike damage.
     defensive_stance             = {  92538, 386208, 1 }, -- A defensive combat state that reduces all damage you take by 15%, and all damage you deal by 10%. Lasts until canceled.
     double_time                  = {  90382, 103827, 1 }, -- Increases the maximum number of charges on Charge by 1, and reduces its cooldown by 3 sec.
-    dual_wield_specialization    = {  90373, 382900, 1 }, -- Increases your damage while dual wielding by 5%.
-    endurance_training           = {  90376, 391997, 2 }, -- Increases Stamina by 5% and reduces the duration of movement impairing effects on you by 10.0%.
+    dual_wield_specialization    = {  90373, 382900, 2 }, -- While dual wielding your damage is increased by 3% and movement speed is increased by 2%.
     fast_footwork                = {  90344, 382260, 1 }, -- Movement speed increased by 5%.
-    frothing_berserker           = {  90350, 215571, 1 }, -- Rampage has a 20% chance to immediately refund 10% of the Rage spent.
-    heroic_leap                  = {  90346,   6544, 1 }, -- Leap through the air toward a target location, slamming down with destructive force to deal 2,646 Physical damage to all enemies within 8 yards.
+    frothing_berserker           = {  90352, 392792, 1 }, -- Rampage has a 20% chance to immediately refund 10% of the Rage spent.
+    heroic_leap                  = {  90346,   6544, 1 }, -- Leap through the air toward a target location, slamming down with destructive force to deal 4,263 Physical damage to all enemies within 8 yards.
     honed_reflexes               = {  95956, 391271, 1 }, -- Cooldown of Enraged Regeneration, Pummel, Intervene, Spell Reflection, and Storm Bolt reduced by 5%.
-    impending_victory            = {  90326, 202168, 1 }, -- Instantly attack the target, causing 6,644 damage and healing you for 30% of your maximum health. Killing an enemy that yields experience or honor resets the cooldown of Impending Victory and makes it cost no Rage.
+    impending_victory            = {  90326, 202168, 1 }, -- Instantly attack the target, causing 10,702 damage and healing you for 30% of your maximum health. Killing an enemy that yields experience or honor resets the cooldown of Impending Victory and makes it cost no Rage.
     intervene                    = {  90329,   3411, 1 }, -- Run at high speed toward an ally, intercepting all melee and ranged attacks against them for 6 sec while they remain within 10 yds.
     intimidating_shout           = {  90384,   5246, 1 }, -- Causes the targeted enemy to cower in fear, and up to 5 additional enemies within 8 yards to flee. Targets are disoriented for 8 sec.
     leeching_strikes             = {  90371, 382258, 1 }, -- Leech increased by 3%.
     menace                       = {  90383, 275338, 1 }, -- Intimidating Shout will knock back all nearby enemies except your primary target, and cause them all to cower in fear for 15 sec instead of fleeing.
-    overwhelming_rage            = {  90378, 382767, 2 }, -- Maximum Rage increased by 15.
+    overwhelming_rage            = {  90378, 382767, 1 }, -- Maximum Rage increased by 30.
     pain_and_gain                = {  90353, 382549, 1 }, -- When you take any damage, heal for 2.00% of your maximum health. This can only occur once every 10 sec.
     piercing_challenge           = {  90379, 382948, 1 }, -- Champion's Spear's damage increased by 50% and its Rage generation is increased by 100%.
     piercing_howl                = {  90348,  12323, 1 }, -- Snares all enemies within 12 yards, reducing their movement speed by 70% for 8 sec.
     rallying_cry                 = {  90331,  97462, 1 }, -- Lets loose a rallying cry, granting all party or raid members within 40 yards 10% temporary and maximum health for 10 sec.
-    reinforced_plates            = {  90368, 382939, 1 }, -- Armor increased by 10%.
+    reinforced_plates            = {  90368, 382939, 2 }, -- Stamina increased by 5% and Armor increased by 5%.
     rumbling_earth               = {  90374, 275339, 1 }, -- Shockwave's range increased by 6 yards and when Shockwave strikes at least 3 targets, its cooldown is reduced by 15 sec.
     second_wind                  = {  90332,  29838, 1 }, -- Restores 6% health every 1 sec when you have not taken damage for 5 sec. While you are below 35% health, restores 1.0% health every 1 sec. The amount restored increases the closer you are to death.
-    seismic_reverberation        = {  90354, 382956, 1 }, -- If Whirlwind hits 3 or more enemies, it hits them 1 additional time for 30% damage.
-    shattering_throw             = {  90351,  64382, 1 }, -- Hurl your weapon at the enemy, causing 11,057 Physical damage, ignoring armor, and removing any magical immunities. Deals up to 500% increased damage to absorb shields.
-    shockwave                    = {  90375,  46968, 1 }, -- Sends a wave of force in a frontal cone, causing 2,252 damage and stunning all enemies within 16 yards for 2 sec.
-    sidearm                      = {  95955, 384404, 1 }, -- Your auto-attacks have a 20% chance to hurl weapons at your target and 3 other enemies in front of you, dealing an additional 2,815 Physical damage.
+    seismic_reverberation        = {  90354, 382956, 1 }, -- If Whirlwind or Thunder Clap hits 3 or more enemies, it hits them 1 additional time for 30% damage.
+    shattering_throw             = {  90351,  64382, 1 }, -- Hurl your weapon at the enemy, causing 19,717 Physical damage, ignoring armor, and removing any magical immunities. Deals up to 500% increased damage to absorb shields.
+    shockwave                    = {  90375,  46968, 1 }, -- Sends a wave of force in a frontal cone, causing 3,628 damage and stunning all enemies within 10 yards for 2 sec.
+    sidearm                      = {  90340, 384404, 1 }, -- Your auto-attacks have a 20% chance to hurl weapons at your target and 3 other enemies in front of you, dealing an additional 4,535 Physical damage.
     spell_reflection             = {  90385,  23920, 1 }, -- Raise your weapon, reflecting the first spell cast on you, and reduce magic damage you take by 20% for 5 sec.
-    storm_bolt                   = {  90337, 107570, 1 }, -- Hurls your weapon at an enemy, causing 3,210 Physical damage and stunning for 4 sec.
-    thunder_clap                 = {  90343,   6343, 1 }, -- Blasts all enemies within 8 yards for 11,999 Physical damage and reduces their movement speed by 20% for 10 sec. Deals reduced damage beyond 5 targets.
-    thunderous_roar              = {  90359, 384318, 1 }, -- Roar explosively, dealing 28,219 Physical damage to enemies within 12 yds and cause them to bleed for 48,514 physical damage over 10 sec. Deals reduced damage beyond 5 targets.
-    thunderous_words             = {  90358, 384969, 1 }, -- Increases the duration of Thunderous Roar's Bleed effect by 2.0 sec and Thunderous Roar's Bleed effect causes enemies to take 30% increased damage from all your bleeds.
-    titans_torment               = {  90362, 390135, 1 }, -- Activating Avatar casts Odyn's Fury and activating Odyn's Fury grants 4 sec of Avatar.
+    storm_bolt                   = {  90337, 107570, 1 }, -- Hurls your weapon at an enemy, causing 5,170 Physical damage and stunning for 4 sec.
+    thunder_clap                 = {  90343,   6343, 1 }, -- Blasts all enemies within 8 yards for 33,823 Physical damage and reduces their movement speed by 20% for 10 sec. Deals reduced damage beyond 5 targets. Generates 8 Rage.
+    thunderous_roar              = {  90359, 384318, 1 }, -- Roar explosively, dealing 45,451 Physical damage to enemies within 12 yds and cause them to bleed for 66,880 physical damage over 8 sec. Deals reduced damage beyond 5 targets.
+    thunderous_words             = {  90358, 384969, 1 }, -- Increases the duration of Thunderous Roar's Bleed effect by 2.0 sec and Thunderous Roar's Bleed effect causes enemies to take 20% increased damage from all your bleeds.
+    titans_torment               = {  90362, 390135, 1 }, -- While Avatar is active Rampage's Rage cost is reduced by 20 and Bloodthirst's cooldown is reduced by 1.5 sec.
     uproar                       = {  90357, 391572, 1 }, -- Thunderous Roar's cooldown reduced by 45 sec.
-    war_machine                  = {  90386, 346002, 1 }, -- Your auto attacks generate 20% more Rage. Killing an enemy instantly generates 5 Rage, and increases your movement speed by 30% for 8 sec.
+    war_machine                  = {  90328, 262231, 1 }, -- Your auto attacks generate 20% more Rage. Killing an enemy instantly generates 5 Rage, and increases your movement speed by 30% for 8 sec.
     wild_strikes                 = {  90360, 382946, 2 }, -- Haste increased by 1% and your auto-attack critical strikes increase your auto-attack speed by 10% for 10 sec.
-    wrecking_throw               = {  90351, 384110, 1 }, -- Hurl your weapon at the enemy, causing 11,057 Physical damage, ignoring armor. Deals up to 500% increased damage to absorb shields.
+    wrecking_throw               = {  90351, 384110, 1 }, -- Hurl your weapon at the enemy, causing 19,717 Physical damage, ignoring armor. Deals up to 500% increased damage to absorb shields.
 
     -- Fury
     anger_management             = {  90415, 152278, 1 }, -- Every 20 Rage you spend reduces the remaining cooldown on Recklessness, Bladestorm, and Ravager by 1 sec.
     ashen_juggernaut             = {  90409, 392536, 1 }, -- Execute increases the critical strike chance of Execute by 10% for 15 sec, stacking up to 5 times.
-    bladestorm                   = {  90388, 227847, 1 }, -- Become an unstoppable storm of destructive force, striking all nearby enemies for 93,118 Physical damage over 3.5 sec. Deals reduced damage beyond 8 targets. You are immune to movement impairing and loss of control effects, but can use defensive abilities and can avoid attacks. Generates 10 Rage each time you deal damage.
-    bloodborne                   = {  90401, 385703, 1 }, -- Bleed damage of Odyn's Fury, Thunderous Roar and Gushing Wound increased by 20%.
+    bladestorm                   = {  90388, 227847, 1 }, -- Become an unstoppable storm of destructive force, striking all nearby enemies for 155,542 Physical damage over 3.3 sec. Deals reduced damage beyond 8 targets. You are immune to movement impairing and loss of control effects, but can use defensive abilities and can avoid attacks. Generates 10 Rage each time you deal damage.
+    bloodborne                   = {  90401, 385703, 1 }, -- Bleed damage of Odyn's Fury, Thunderous Roar, Bloodbath, and Gushing Wound increased by 20%.
     bloodcraze                   = {  90405, 393950, 1 }, -- Raging Blow increases the critical strike chance of your next Bloodthirst by 15% until it critically strikes, stacking up to 5 times.
-    bloodthirst                  = {  90392,  23881, 1 }, -- Assault the target in a bloodthirsty craze, dealing 26,445 Physical damage and restoring 3% of your health. Generates 8 Rage.
-    cold_steel_hot_blood         = {  90402, 383959, 1 }, -- Bloodthirst critical strikes generate 4 additional Rage, and inflict a Gushing Wound that leeches 16,420 health over 6 sec.
+    bloodthirst                  = {  90392,  23881, 1 }, -- Assault the target in a bloodthirsty craze, dealing 80,155 Physical damage and restoring 3% of your health. Generates 8 Rage.
+    cold_steel_hot_blood         = {  90402, 383959, 1 }, -- Bloodthirst critical strikes generate 4 additional Rage, and inflict a Gushing Wound that leeches 26,447 health over 6 sec.
     critical_thinking            = {  90425, 383297, 2 }, -- Critical Strike chance increased by 1% and Raging Blow's critical strikes deal 5% increased damage.
     cruelty                      = {  90428, 392931, 1 }, -- While Enraged, Raging Blow deals 15% increased damage.
     dancing_blades               = {  90417, 391683, 1 }, -- Odyn's Fury increases your auto-attack damage and speed by 30% for 10 sec.
@@ -181,30 +179,30 @@ spec:RegisterTalents( {
     improved_bloodthirst         = {  90397, 383852, 1 }, -- Bloodthirst damage increased by 10%.
     improved_execute             = {  90430, 316402, 1 }, -- Execute no longer costs Rage and now generates 20 Rage.
     improved_raging_blow         = {  90390, 383854, 1 }, -- Raging Blow has 2 charges and has a 25% chance to instantly reset its own cooldown.
-    improved_whirlwind           = {  90427,  12950, 1 }, -- Whirlwind causes your next 4 single-target attacks to strike up to 4 additional targets for 55% damage. Whirlwind generates 3 Rage, plus an additional 1 per target hit. Maximum 8 Rage.
+    improved_whirlwind           = {  90427,  12950, 1 }, -- Whirlwind and Thunder Clap cause your next 4 single-target attacks to strike up to 4 additional targets for 55% damage. Whirlwind generates 3 Rage, plus an additional 1 per target hit. Maximum 8 Rage.
     invigorating_fury            = {  90393, 383468, 1 }, -- Enraged Regeneration lasts 3 sec longer and instantly heals for 10% of your maximum health.
     massacre                     = {  90410, 206315, 1 }, -- Execute is now usable on targets below 35% health, and its cooldown is reduced by 1.5 sec.
-    meat_cleaver                 = {  90391, 280392, 1 }, -- Whirlwind deals 25% more damage and now affects your next 4 single-target melee attacks, instead of the next 2 attacks.
-    odyns_fury                   = {  90418, 385059, 1 }, -- Unleashes your power, dealing 41,330 Physical damage and an additional 21,202 Physical damage over 4 sec to all enemies within 12 yards. Deals reduced damage beyond 5 targets. Generates 15 Rage.
-    onslaught                    = {  90424, 315720, 1 }, -- Brutally attack an enemy for 35,855 Physical damage. Generates 30 Rage.
+    meat_cleaver                 = {  90391, 280392, 1 }, -- Whirlwind and Thunder Clap deal 25% more damage and now affect your next 4 single-target melee attacks, instead of the next 2 attacks.
+    odyns_fury                   = {  90418, 385059, 1 }, -- Unleashes your power, dealing 81,570 Physical damage and an additional 39,272 Physical damage over 4 sec to all enemies within 12 yards. Deals reduced damage beyond 5 targets. Generates 15 Rage. 
+    onslaught                    = {  90424, 315720, 1 }, -- Brutally attack an enemy for 75,074 Physical damage. Generates 30 Rage.
     powerful_enrage              = {  90398, 440277, 1 }, -- Enrage increases the damage your abilities deal by an additional 15% and Enrage's duration is increased by 1 sec.
-    raging_blow                  = {  90396,  85288, 1 }, -- A mighty blow with both weapons that deals a total of 23,031 Physical damage. Raging Blow has a 25% chance to instantly reset its own cooldown. Generates 12 Rage.
-    rampage                      = {  90408, 184367, 1 }, -- Enrages you and unleashes a series of 4 brutal strikes for a total of 31,890 Physical damage.
-    ravager                      = {  90388, 228920, 1 }, -- Throws a whirling weapon at the target location that chases nearby enemies, inflicting 80,762 Physical damage to all enemies over 10.5 sec. Deals reduced damage beyond 8 targets. Generates 10 Rage each time it deals damage.
-    reckless_abandon             = {  90415, 396749, 1 }, -- Recklessness generates 50 Rage and Rampage empowers your next Bloodthirst and Raging Blow.
-    recklessness                 = {  90412,   1719, 1 }, -- Go berserk, increasing all Rage generation by 100% and granting your abilities 20% increased critical strike chance for 12 sec.
+    raging_blow                  = {  90396,  85288, 1 }, -- A mighty blow with both weapons that deals a total of 56,918 Physical damage. Raging Blow has a 25% chance to instantly reset its own cooldown. Generates 12 Rage.
+    rampage                      = {  90408, 184367, 1 }, -- Enrages you and unleashes a series of 4 brutal strikes for a total of 128,125 Physical damage and empowering your next Bloodthirst and Raging Blow.
+    ravager                      = {  90388, 228920, 1 }, -- Throws a whirling weapon at the target location that chases nearby enemies, inflicting 130,080 Physical damage to all enemies over 9.8 sec. Deals reduced damage beyond 8 targets. Generates 10 Rage each time it deals damage.
+    reckless_abandon             = {  90415, 396749, 1 }, -- Activating Recklessness generates 50 Rage and while Recklessness is active, Raging Blow and Bloodthirst are replaced by Crushing Blow and Bloodbath.  Crushing Blow Strike a mighty blow with both weapons that deals a total of 68,301 Physical damage. Crushing Blow has a 25% chance to instantly reset its own cooldown and its critical strikes deal 20% additional damage. Generates 12 Rage.  Bloodbath Assault the target in a bloodthirsty craze, dealing 96,187 Physical damage and restoring 3% of your health. Bloodbath causes the target to bleed for 13,060 damage over 6 sec. Using Bloodbath on a target that is affected by Bloodbath extends the bleed by 6 sec. Generates 8 Rage.
+    recklessness                 = {  90412,   1719, 1 }, -- Go berserk, increasing all Rage generation by 100% and granting your abilities 20% increased critical strike chance for 12 sec. Generates 50 Rage.
     singleminded_fury            = {  90400,  81099, 1 }, -- While dual-wielding a pair of one-handed weapons, your damage done is increased by 5%, your auto-attack damage with one-handed weapons is increased by 30%, your movement speed is increased by 5%, and your auto-attack critical strikes have a 50% chance to Enrage you.
     slaughtering_strikes         = {  90411, 388004, 1 }, -- Raging Blow causes every strike of your next Rampage to deal an additional 20% damage, stacking up to 5 times.
     storm_of_steel               = {  90389, 382953, 1 }, -- Bladestorm and Ravager's damage are reduced by 30% but they now have 2 charges and generate 10 additional Rage each time they deal damage.
     sudden_death                 = {  90429, 280721, 1 }, -- Your attacks have a chance to reset the cooldown of Execute and make it usable on any target, regardless of their health.
     swift_strikes                = {  90416, 383459, 2 }, -- Haste increased by 1% and Raging Blow and Bloodthirst generate an additional 1 Rage.
     tenderize                    = {  90423, 388933, 1 }, -- Onslaught Enrages you, and if you have Slaughtering Strikes grants you 3 stacks of Slaughtering Strikes.
-    titanic_rage                 = {  90417, 394329, 1 }, -- Odyn's Fury's Enrages you, deals 10% increased damage and grants you 4 stacks of Whirlwind.
+    titanic_rage                 = {  90417, 394329, 1 }, -- Odyn's Fury's Enrages you, deals 10% increased damage and grants you 4 stacks of Whirlwind. 
     unbridled_ferocity           = {  90414, 389603, 1 }, -- Rampage has a 6% chance to grant Recklessness for 4 sec.
-    unhinged                     = {  90389, 386628, 1 }, -- Every other time Bladestorm or Ravager deal damage, you automatically cast a Bloodthirst at your target or random nearby enemy.
+    unhinged                     = {  90389, 386628, 1 }, -- Every other time Bladestorm or Ravager deal damage, you automatically cast a Bloodthirst at your target or random nearby enemy. 
     vicious_contempt             = {  90404, 383885, 2 }, -- Bloodthirst deals 25% increased damage to enemies who are below 35% health.
     warpaint                     = {  90394, 208154, 1 }, -- You take 10% reduced damage while Enrage is active.
-    wrath_and_fury               = {  90387, 392936, 1 }, -- Raging Blow deals 15% increased damage and while Enraged, Raging Blow has a 10% increased chance to instantly reset its own cooldown.
+    wrath_and_fury               = {  90387, 392936, 1 }, -- Raging Blow deals 15% increased damage and while Enraged, Raging Blow has a 10% increased chance to instantly reset its own cooldown. 
 
     -- Mountain Thane
     avatar_of_the_storm          = {  94805, 437134, 1 }, -- Casting Avatar grants you 2 charges of Thunder Blast and resets the cooldown of Thunder Clap. While Avatar is not active, Lightning Strikes have a 10% chance to grant you Avatar for 4 secs. Thunder Blast Your next Thunder Clap becomes a Thunder Blast that deals Stormstrike damage.
@@ -212,16 +210,16 @@ spec:RegisterTalents( {
     crashing_thunder             = {  94816, 436707, 1 }, -- Stormstrike or Nature damage your abilities deal is increased by 5%. Stormstrike damage ignores Armor. Thunder Clap damage increased by 40%, and it generates 8 Rage. Seismic Reverberations, Improved Whirlwind, Meat Cleaver, and Barbaric Training now affect Thunder Clap in addition to Whirlwind.
     flashing_skies               = {  94797, 437079, 1 }, -- Thunder Blast calls down a Lightning Strike on an enemy it hits.
     gathering_clouds             = {  94792, 436201, 1 }, -- Your attacks trigger Lightning Strikes 30% more often.
-    ground_current               = {  94800, 436148, 1 }, -- Lightning Strikes also deal 5,036 to enemies near their target. Damage reduced beyond 5 targets.
+    ground_current               = {  94800, 436148, 1 }, -- Lightning Strikes also deal 8,516 to enemies near their target. Damage reduced beyond 5 targets.
     keep_your_feet_on_the_ground = {  94798, 438590, 1 }, -- Physical damage taken reduced by 2%. Thunder Blast reduces damage you take by 8% for 5 sec.
-    lightning_strikes            = {  94803, 434969, 1, "mountain_thane" }, -- Damaging enemies with Thunder Clap, Raging Blow, or Execute has a 25% chance to also strike one with a lightning bolt, dealing 17,468 Nature damage. Lightning Strikes occur 30% more often during Avatar.
+    lightning_strikes            = {  94803, 434969, 1, "mountain_thane" }, -- Damaging enemies with Thunder Clap, Raging Blow, or Execute has a 25% chance to also strike one with a lightning bolt, dealing 38,403 Nature damage. Lightning Strikes occur 30% more often during Avatar.
     snap_induction               = {  94797, 456270, 1 }, -- Activating Recklessness grants a charge of Thunder Blast.
-    steadfast_as_the_peaks       = {  94798, 434970, 1 }, -- Stamina increased by 5%. Impending Victory increases your maximum health by 10% for 5 sec. When this health increase expires, you heal for any amount of the original Impending Victory that healed you in excess of your full health.
+    steadfast_as_the_peaks       = {  94798, 434970, 1 }, -- Stamina increased by 5%. Victory Rush increases your maximum health by 10% for 5 sec. When this health increase expires, you heal for any amount of the original Victory Rush that healed you in excess of your full health.
     storm_bolts                  = {  94817, 436162, 1 }, -- Storm Bolt also hits 2 additional nearby targets, stunning them for 2 sec, but its cooldown is increased by 10 sec.
     storm_shield                 = {  94817, 438597, 1 }, -- Intervening a target grants them a shield for 5 sec that absorbs magic damage equal to 3 times your Armor.
-    strength_of_the_mountain     = {  94808, 437068, 1 }, -- Shield Slam damage increased by 10%. Bloodthirst and Rampage damage increased by 30%.
+    strength_of_the_mountain     = {  94808, 437068, 1 }, -- Shield Slam damage increased by 10%. Bloodthirst and Rampage damage increased by 25%.
     thorims_might                = {  94792, 436152, 1 }, -- Lightning Strikes generate 3 Rage. Raging Blow and Execute damage increased by 25%.
-    thunder_blast                = {  94785, 435607, 1 }, -- Shield Slam and Bloodthirst have a 35% chance to grant you Thunder Blast, stacking up to 2 charges. Thunder Blast Your next Thunder Clap becomes a Thunder Blast that deals Stormstrike damage and generates 2 Rage.
+    thunder_blast                = {  94785, 435607, 1 }, -- Shield Slam and Bloodthirst have a 35% chance to grant you Thunder Blast, stacking up to 2 charges. Thunder Blast Your next Thunder Clap becomes a Thunder Blast that deals Stormstrike damage and generates 10 Rage.
 
     -- Slayer
     brutal_finish                = {  94786, 446085, 1 }, -- Your next Rampage after Bladestorm ends deals 50% additional damage.
@@ -231,10 +229,10 @@ spec:RegisterTalents( {
     imminent_demise              = {  94788, 444769, 1 }, -- Every 3 Slayer's Strikes you gain Sudden Death. Using Sudden Death accelerates your next Bladestorm, striking 1 additional time (max 3). Bladestorm's total duration is unchanged.
     opportunist                  = {  94787, 444774, 1 }, -- When Raging Blow resets its own cooldown, your next Raging Blow deals 20% additional damage and 20% additional critical damage.
     overwhelming_blades          = {  94810, 444772, 1 }, -- Each strike of Bladestorm applies Overwhelmed to all enemies affected, increasing damage you deal to them by 1% for 20 sec, max 10 stacks.
-    reap_the_storm               = {  94809, 444775, 1 }, -- Bloodthirst has a 20% chance to cause you to unleash a flurry of steel, striking all nearby enemies for 25,720 damage and applying Overwhelmed. Deals reduced damage beyond 8 targets.
-    relentless_pursuit           = {  94795, 444776, 1 }, -- Charge grants you 70% movement speed for 3 sec. Charge removes all movement impairing effects, this effect cannot occur more than once every 30 sec.
+    reap_the_storm               = {  94809, 444775, 1 }, -- Bloodthirst has a 20% chance to cause you to unleash a flurry of steel, striking all nearby enemies for 51,783 damage and applying Overwhelmed. Deals reduced damage beyond 8 targets. 
+    relentless_pursuit           = {  94795, 444776, 1 }, -- Charge grants you 70% movement speed for 3 sec. Charge removes all movement impairing effects, this effect cannot occur more than once every 30 sec. 
     show_no_mercy                = {  94784, 444771, 1 }, -- Marked for Execution increases the critical strike chance and critical strike damage of your next Execute on the target by 15%.
-    slayers_dominance            = {  94814, 444767, 1, "slayer" }, -- Your attacks against your primary target have a high chance to overwhelm their defenses and trigger a Slayer's Strike, dealing 32,661 damage and applying Marked for Execution, increasing the damage they take from your next Execute by 15%. Stacks 3 times.
+    slayers_dominance            = {  94814, 444767, 1, "slayer" }, -- Your attacks against your primary target have a high chance to overwhelm their defenses and trigger a Slayer's Strike, dealing 60,496 damage and applying Marked for Execution, increasing the damage they take from your next Execute by 15%. Stacks 3 times.
     slayers_malice               = {  94801, 444779, 1 }, -- Raging Blow damage increased by 30%.
     unrelenting_onslaught        = {  94820, 444780, 1 }, -- When you Execute a target that you've Marked for Execution, you both reduce the cooldown of Bladestorm by 5 sec and apply 2 stacks of Overwhelmed to the target per stack of Marked for Execution consumed. You can now use Pummel and Storm Bolt while Bladestorming.
     vicious_agility              = {  94795, 444777, 1 }, -- Heroic Leap reduces the cooldown of Charge by 5 sec and Charge reduces the cooldown of Heroic Leap by 2 sec.
@@ -300,7 +298,11 @@ spec:RegisterAuras( {
         end,
         copy = { 227847, 389774, 446035 }
     },
-    
+    bloodbath_dot = {
+        id = 113344,
+        duration = 6,
+        max_stack = 1
+    },
     bloodcraze = {
         id = 393951,
         duration = 20,
@@ -421,6 +423,11 @@ spec:RegisterAuras( {
         duration = 8,
         max_stack = 1,
     },
+    overwhelmed = {
+        id = 445836,
+        duration = 20,
+        max_stack = 10
+    },
     piercing_howl = {
         id = 12323,
         duration = 8,
@@ -446,18 +453,6 @@ spec:RegisterAuras( {
         duration = 12,
         tick_time = 2,
         max_stack = 1
-    },
-    reckless_abandon_bloodbath = {
-        id = 461288,
-        duration = 12,
-        max_stack = 1,
-        copy = "bloodbath"
-    },
-    reckless_abandon_crushing_blow = {
-        id = 396752,
-        duration = 12,
-        max_stack = 1,
-        copy = "crushing_blow"
     },
     recklessness = {
         id = 1719,
@@ -540,16 +535,40 @@ spec:RegisterAuras( {
     },
 } )
 
+-- The War Within
+spec:RegisterGear( "tww2", 229235, 229233, 229238, 229236, 229234 )
+spec:RegisterAuras( {
+    -- 2-set
+    -- https://www.wowhead.com/ptr-2/spell=1216561/winning-streak
+    -- Rampage damage increased by 2%.
+    winning_streak = {
+        id = 1216561,
+        duration = 30,
+        max_stack = 10,
+        copy = "winning_streak_fury"
+    },
+    -- https://www.wowhead.com/ptr-2/spell=1216565/double-down
+    -- Bloodthirst damage increased by 15% and critical strike chance increased by 25%.
+    double_down_bt = {
+        id = 1216565,
+        duration = 12,
+        max_stack = 1
+    },
+    --https://www.wowhead.com/ptr-2/spell=1216569/double-down
+    --Raging Blow damage increased by 15% and Rage generated increased by (w2 / 10).
+    double_down_rb = {
+        id = 1216569,
+        duration = 12,
+        max_stack = 1
+    },
+} )
 
+-- Dragonflight
 spec:RegisterGear( "tier29", 200426, 200428, 200423, 200425, 200427 )
 spec:RegisterSetBonuses( "tier29_2pc", 393708, "tier29_4pc", 393709 )
--- 2-Set - Execute's chance to critically strike increased by 10%.
--- 4-Set - Sudden Death's chance to reset the cooldown of Execute and make it usable on any target, regardless of health, is greatly increased.
 
 spec:RegisterGear( "tier30", 202446, 202444, 202443, 202442, 202441, 217218, 217220, 217216, 217217, 217219 )
 spec:RegisterSetBonuses( "tier30_2pc", 405579, "tier30_4pc", 405580 )
---(2) Rampage damage and critical strike chance increased by 10%.
---(4) Rampage causes your next Bloodthirst to have a 10% increased critical strike chance, deal 25% increased damage and generate 2 additional Rage. Stacking up to 10 times.
 spec:RegisterAura( "merciless_assault", {
     id = 409983,
     duration = 14,
@@ -558,16 +577,12 @@ spec:RegisterAura( "merciless_assault", {
 
 spec:RegisterGear( "tier31", 207180, 207181, 207182, 207183, 207185 )
 spec:RegisterSetBonuses( "tier31_2pc", 422925, "tier31_4pc", 422926 )
--- (2) Odyn's Fury deals 50% increased damage and causes your next 3 Bloodthirsts to deal 150% additional damage and have 100% increased critical strike chance against its primary target.
--- (4) Bloodthirst critical strikes reduce the cooldown of Odyn's Fury by 2.5 sec.
 spec:RegisterAura( "furious_bloodthirst", {
     id = 423211,
     duration = 20,
     max_stack = 3
 } )
--- (4) Bloodthirst critical strikes reduce the cooldown of Odyn's Fury by 2.5 sec.
-
-
+-- Legacy
 spec:RegisterGear( 'tier20', 147187, 147188, 147189, 147190, 147191, 147192 )
     spec:RegisterAura( "raging_thirst", {
         id = 242300,
@@ -669,7 +684,6 @@ spec:RegisterCombatLogEvent( function(  _, subtype, _, sourceGUID, sourceName, s
     end
 end )
 
-
 local wipe = table.wipe
 
 spec:RegisterEvent( "PLAYER_REGEN_ENABLED", function()
@@ -679,7 +693,6 @@ end )
 spec:RegisterHook( "UNIT_ELIMINATED", function( id )
     fresh_meat_actual[ id ] = nil
 end )
-
 
 local RAGE = Enum.PowerType.Rage
 local lastRage = -1
@@ -707,6 +720,11 @@ spec:RegisterStateExpr( "glory_rage", function ()
     return gloryRage
 end )
 
+spec:RegisterHook( "prespend", function( amt, resource, overcap, clean )
+    if buff.recklessness.up and resource == "rage" and amt < 0 then
+        return amt * 2, resource, overcap, true
+    end
+end )
 
 spec:RegisterHook( "spend", function( amt, resource )
     if resource == "rage" then
@@ -927,6 +945,7 @@ spec:RegisterAbilities( {
             if talent.merciless_bonegrinder.enabled then
                 state:QueueAuraExpiration( "bladestorm_merciless_bonegrinder", ExpireBladestorm, buff.bladestorm.expires )
             end
+            if talent.overwhelming_blades.enabled then applyDebuff( "target", "overwhelmed", nil, 10 ) end
 
             if talent.brutal_finish.enabled then applyBuff( "brutal_finish" ) end
             removeBuff( "imminent_demise" )
@@ -950,6 +969,7 @@ spec:RegisterAbilities( {
             + ( talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 and -4 or 0 )
             + ( buff.burst_of_power.up and -2 or 0 )
             + ( -1 * talent.swift_strikes.rank )
+            + ( buff.double_down_rb.up and -2 or 0 )
         end,
         spendType = "rage",
 
@@ -957,7 +977,8 @@ spec:RegisterAbilities( {
 
         startsCombat = true,
         texture = 236304,
-        buff = "reckless_abandon_bloodbath",
+        talent = "reckless_abandon",
+        buff = "recklessness",
         bind = "bloodthirst",
 
         critical = function()
@@ -973,35 +994,38 @@ spec:RegisterAbilities( {
             if buff.enrage.up and talent.deft_experience.enabled then
                 buff.enrage.remains = buff.enrage.remains + ( 0.5 * talent.deft_experience.rank )
             end
-        
+
             if talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 then
                 applyDebuff( "target", "gushing_wound" )
                 gain( 4, "rage" )
             end
-        
+
             if set_bonus.tier31_4pc > 0 and action.bloodthirst.crit_pct_current >= 100 then
                 reduceCooldown( "odyns_fury", 2.5 )
             end
-        
+
             removeBuff( "merciless_assault" )
             if talent.bloodcraze.enabled then
                 if action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" )
                 else addStack( "bloodcraze" ) end
             end
-        
+
+            -- Always extends by 6 seconds or applies a 6 second one
+            applyDebuff( "target", "bloodbath_dot", debuff.bloodbath_dot.remains + 6 )
+
             gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
-        
+
             if talent.fresh_meat.enabled and debuff.hit_by_fresh_meat.down then
                 applyBuff( "enrage" )
                 applyDebuff( "target", "hit_by_fresh_meat" )
             end
-        
+
             if legendary.cadence_of_fujieda.enabled then
                 if buff.cadence_of_fujieda.stack < 5 then stat.haste = stat.haste + 0.01 end
                 addStack( "cadence_of_fujieda" )
             end
-        
-            if buff.reckless_abandon_bloodbath.up then removeBuff( "reckless_abandon_bloodbath" ) end
+
+            removeBuff( "double_down_bt" )
         end,
     },
 
@@ -1028,7 +1052,7 @@ spec:RegisterAbilities( {
     bloodthirst = {
         id = 23881,
         cast = 0,
-        cooldown = function () return buff.burst_of_power.up and 0 or ( 4.5 ) * haste end,
+        cooldown = function () return buff.burst_of_power.up and 0 or ( 4.5 - ( talent.titans_torment.enabled and buff.avatar.up and 1.5 or 0 ) ) * haste end,
         gcd = "spell",
 
         spend = function()
@@ -1044,7 +1068,7 @@ spec:RegisterAbilities( {
 
         talent = "bloodthirst",
         texture = 136012,
-        nobuff = "reckless_abandon_bloodbath",
+        nobuff = function() if talent.reckless_abandon.enabled then return "recklessness" end end,
         startsCombat = true,
         bind = "bloodbath",
 
@@ -1060,35 +1084,30 @@ spec:RegisterAbilities( {
             if buff.enrage.up and talent.deft_experience.enabled then
                 buff.enrage.remains = buff.enrage.remains + ( 0.5 * talent.deft_experience.rank )
             end
-        
+
             if talent.cold_steel_hot_blood.enabled and action.bloodthirst.crit_pct_current >= 100 then
                 applyDebuff( "target", "gushing_wound" )
-                gain( 4, "rage" )
             end
-        
-            if set_bonus.tier31_4pc > 0 and action.bloodthirst.crit_pct_current >= 100 then
-                reduceCooldown( "odyns_fury", 2.5 )
-            end
-        
-            removeBuff( "merciless_assault" )
-            if talent.bloodcraze.enabled then
-                if action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" )
-                else addStack( "bloodcraze" ) end
-            end
-        
+
+            if talent.bloodcraze.enabled and action.bloodthirst.crit_pct_current >= 100 then removeBuff( "bloodcraze" ) end
+
             gain( health.max * ( buff.enraged_regeneration.up and 0.23 or 0.03 ) , "health" )
-        
+
             if talent.fresh_meat.enabled and debuff.hit_by_fresh_meat.down then
                 applyBuff( "enrage" )
                 applyDebuff( "target", "hit_by_fresh_meat" )
             end
 
+            -- Legacy
+            if set_bonus.tier30_4pc > 0 then removeBuff( "merciless_assault" ) end
+            if set_bonus.tier31_4pc > 0 and action.bloodthirst.crit_pct_current >= 100 then
+                reduceCooldown( "odyns_fury", 2.5 )
+            end
             if legendary.cadence_of_fujieda.enabled then
                 if buff.cadence_of_fujieda.stack < 5 then stat.haste = stat.haste + 0.01 end
                 addStack( "cadence_of_fujieda" )
             end
-        
-            if buff.reckless_abandon_bloodbath.up then removeBuff( "reckless_abandon_bloodbath" ) end
+            removeBuff( "double_down_bt" )
         end,
 
         auras = {
@@ -1169,17 +1188,16 @@ spec:RegisterAbilities( {
         texture = 132215,
 
         talent = "reckless_abandon",
-        buff = "reckless_abandon_crushing_blow",
+        buff = "recklessness",
         bind = "raging_blow",
 
         handler = function ()
             removeStack( "whirlwind" )
             removeBuff( "opportunist" )
-            removeBuff( "reckless_abandon" )
             spendCharges( "raging_blow", 1 )
             if buff.will_of_the_berserker.up then buff.will_of_the_berserker.expires = query_time + 12 end
 
-            if buff.reckless_abandon_crushing_blow.up then removeBuff( "reckless_abandon_crushing_blow" ) end
+            removeBuff( "double_down_rb" )
         end,
     },
 
@@ -1443,10 +1461,12 @@ spec:RegisterAbilities( {
         startsCombat = false,
         texture = 1278409,
 
+        spend = 15,
+        spendType = "rage",
+
         handler = function ()
             applyDebuff( "target", "odyns_fury" )
             active_dot.odyns_fury = max( active_dot.odyns_fury, active_enemies )
-            if pvptalent.slaughterhouse.enabled then applyDebuff( "target", "slaughterhouse", nil, debuff.slaughterhouse.stack + 1 ) end
             if talent.dancing_blades.enabled then applyBuff( "dancing_blades" ) end
             if talent.titanic_rage.enabled then
                 applyBuff( "enrage" )
@@ -1457,6 +1477,9 @@ spec:RegisterAbilities( {
             if state.spec.fury and set_bonus.tier31_2pc > 0 then
                 applyBuff( "furious_bloodthirst", nil, 3 )
             end
+
+            -- PvP
+            if pvptalent.slaughterhouse.enabled then applyDebuff( "target", "slaughterhouse", nil, debuff.slaughterhouse.stack + 1 ) end
         end,
     },
 
@@ -1529,22 +1552,19 @@ spec:RegisterAbilities( {
     raging_blow = {
         id = 85288,
         cast = 0,
-        charges = function () return
-            ( talent.raging_blow.enabled and 1 or 0 )
-          + ( talent.improved_raging_blow.enabled and 1 or 0 )
-          + ( talent.raging_armaments.enabled and 1 or 0 )
-        end,
-        cooldown = function() return 8 * state.haste end,
-        recharge = function() return 8 * state.haste end,
+        charges = function () if talent.improved_raging_blow.enabled then return 2 end end,
+        cooldown = 8,
+        hasteCD = true,
+        recharge = function () if talent.improved_raging_blow.enabled then return 8 * haste end end,
         gcd = "spell",
 
-        spend = function () return -12 - talent.swift_strikes.rank end,
+        spend = function () return -12 - talent.swift_strikes.rank - ( buff.double_down_rb.up and 2 or 0 )end,
         spendType = "rage",
 
         talent = "raging_blow",
         texture = 589119,
         startsCombat = true,
-        nobuff = "reckless_abandon_crushing_blow",
+        nobuff = function() if talent.reckless_abandon.enabled then return "recklessness" end end,
         bind = "crushing_blow",
 
         handler = function ()
@@ -1553,6 +1573,7 @@ spec:RegisterAbilities( {
             removeBuff( "opportunist" )
             if buff.will_of_the_berserker.up then buff.will_of_the_berserker.expires = query_time + 12 end
             if talent.slaughtering_strikes.enabled then addStack( "slaughtering_strikes_raging_blow" ) end
+            removeBuff( "double_down_rb" )
         end,
     },
 
@@ -1584,7 +1605,7 @@ spec:RegisterAbilities( {
         cooldown = 0,
         gcd = "spell",
 
-        spend = 80,
+        spend = function() return 80 - ( talent.titans_torment.enabled and buff.avatar.up and 20 or 0 ) end,
         spendType = "rage",
 
         startsCombat = true,
@@ -1594,14 +1615,15 @@ spec:RegisterAbilities( {
         handler = function ()
             applyBuff( "enrage" )
             removeStack( "whirlwind" )
-            if pvptalent.slaughterhouse.enabled then applyDebuff( "target", "slaughterhouse", nil, debuff.slaughterhouse.stack + 1 ) end
-            if talent.frenzy.enabled then addStack( "frenzy" ) end
-            if talent.reckless_abandon.enabled then 
-                applyBuff( "reckless_abandon_bloodbath" )
-                applyBuff( "reckless_abandon_crushing_blow" )
-            end
-            if set_bonus.tier30_4pc > 0 then addStack( "merciless_assault" ) end
+            removeBuff( "slaughtering_strikes" )
+            if talent.frenzy.enabled then addStack( "frenzy" ) end -- TODO: resets on target swap
             removeBuff( "brutal_finish" )
+
+            -- PvP
+            if pvptalent.slaughterhouse.enabled then applyDebuff( "target", "slaughterhouse", nil, debuff.slaughterhouse.stack + 1 ) end
+
+            -- Legacy
+            if set_bonus.tier30_4pc > 0 then addStack( "merciless_assault" ) end
         end,
     },
 
@@ -1633,6 +1655,8 @@ spec:RegisterAbilities( {
         gcd = "off",
 
         toggle = "cooldowns",
+        spend = function() return talent.reckless_abandon.enabled and -50 or 0 end,
+        spendType = "rage",
 
         talent = "recklessness",
         startsCombat = false,
@@ -1640,9 +1664,6 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "recklessness" )
-            if talent.reckless_abandon.enabled then
-                gain( 50, "rage" )
-            end
             if talent.berserkers_torment.enabled then applyBuff( "avatar", 8 ) end
 
             if talent.snap_induction.enabled then addStack( "thunder_blast " ) end
@@ -1761,7 +1782,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         hasteCD = true,
 
-        spend = 15,
+        spend = 10,
         spendType = "rage",
 
         talent = "thunder_blast",
@@ -1790,7 +1811,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         hasteCD = true,
 
-        spend = 20,
+        spend = 8,
         spendType = "rage",
 
         talent = "thunder_clap",
@@ -1799,11 +1820,10 @@ spec:RegisterAbilities( {
         texture = 136105,
 
         handler = function ()
-            if ( talent.crashing_thunder.enabled ) then
-                if ( talent.improved_whirlwind.enabled ) then
-                    applyBuff ( "whirlwind", nil, talent.meat_cleaver.enabled and 4 or 2 )
-                end
+            if talent.crashing_thunder.enabled and talent.improved_whirlwind.enabled then
+                applyBuff ( "whirlwind", nil, talent.meat_cleaver.enabled and 4 or 2 )
             end
+
             applyDebuff( "target", "thunder_clap" )
             active_dot.thunder_clap = max( active_dot.thunder_clap, active_enemies )
         end,
@@ -1871,8 +1891,14 @@ spec:RegisterAbilities( {
         texture = 132369,
 
         usable = function ()
-            if action.taunt.known and action.heroic_throw.known and settings.check_ww_range and not ( action.taunt.in_range and not action.heroic_throw.in_range ) then return false, "target is outside of whirlwind range" end
-            return true
+            if settings.check_ww_range and target.distance > 8 then return false, "target is outside of whirlwind range" end
+        end,
+
+        -- Modify Syrif's solution; in multi-target using WW while Meat Cleaver is up is fine; the restriction was only intended for single-target.
+        -- Checking both active_enemies and true_active_enemies lets WW slip through with Meat Cleaver up when single-target mode is active but there are actually more targets.
+        nobuff = function()
+            if max( active_enemies, true_active_enemies ) > 1 then return end
+            return "meat_cleaver"
         end,
 
         handler = function ()
@@ -1987,4 +2013,4 @@ spec:RegisterOptions( {
     package = "Fury",
 } )
 
-spec:RegisterPack( "Fury", 20241119, [[Hekili:S31EZnoUr(plUsfnwz9OrKE88i3AxvUuj1TtD1MQI37Y)jkAkAlUdfPcF4z8uU0N90aGpaardasrj7zx)hJhBcGgnA0p(HgeGlCw8llUELFr4IF2DU7BDCDUyMZfNp)c3fxx8W2WfxV1p4Z(3b)sI)g4N)9YShip8H4u)vKgNNwMfafSUOyB(F(nV5UOI1L3mliDZBYJ2ug7xeLMeK5FBb5VdEZIRVPmkU4NswCJ6EEX1(LfRtZwC91rB(RaHJwTkKv7W8GfxtQ9RDCETZh)Z7w(3J(6ULxh7)qy2UL)TVgguweUB595Z2T8F6VzlW47(0Upv3K5nn5Fgg854W88Dl)l34NSknz3s4)GFeqy3xhhLxSBz(24OIIOK7APX8xF(CGgeoB3YYTe(NVqxxOqhNzZNDrDX)x7wgM4FtmWwBZcF9)tyw6ULf(XHjf5cn1rdDN)UAgVilk5ZHfV5E)SicvHrqA2ky0xx75F81Zp)SDlj))fS)3zo7)PCNYUy(hET7fqH)FShVSmNmQx(tbp86))WOKC(k6CbJkDjY7BeoQkZ9COSFznq9)Lpmz9Va9KOeqvkl92OyqbIj6ZNbsjq55g)IF4Y3a)Sio0lFDAzXUpPSgHz5HzFomZlVWpji8SI07Ulo8sygvz9RLBNruNVSil0pynmLuM7vK5NKVbMWbA10cVa)8IZU3pUm8sx1uSmp0lQiCJwkQUPzvAHjW)ol62lpj8FxgTDB4Qz3(qMpy6S2RyDO3kGMBYctwHrh)79l8ZOuGPznRicKgahKMTb(t7efuflphVWVgexUkSAux98zoZIYN1RrNA67IqFxT0)paw3K6d6uGgVFJDa8hbPPXRs)scOJVk6(OvHGz8npavIkuiMhW)w9aOeV82YmWXWpD7ULrfVc(BkhSB5AF43taZYSWn(ruXm8RfLzGxbhGSHX5HTpbSTN1NbSJx(djbNLU9Y8WIOBRg2oS)3Jq7lbsEwqAYQicn5K4aJ5ruVUP82BNCA7ZRhYZwvMr9V(h)JnpInSBk5Y5p(ODnKkJ8ar0dCnEAFgPUdDK6ImsDh6ivFd3)rQdLrZ7yIWpmE8XtflaCqvmZp5bVvBZNCsnHN1XWRxCIRsoXfJtCTHtCheNSnlknlQ4b55Fx(5FhUzFvIa6GzIcoIwWJpIvYKt1Q00wgeUjOEO3u(0)0PoZU4hefse6olh8iLCxXAOgk6AI6(0PxDQwtZ2YSPVDSRVDQ67(mb54TXpP0pwLJD)47clw7dr(k)23GiU3K(1(qAx1K2fL0nehi52YnBcJjrVaZzOUZwfsh)KqVamKzKycf8niynPE0geTj8hjovE8XnP3hsI1nBvedjWvxW3gsqLOaV4q)TKg2T2UcvFBk534FI4aph03J9tsa(RAmtQ59GwEs4MOW8lDWBR)Qv5ESqnkB7vxEbEJdzyC92cQj1HqpTkO)g)8C)GSWzmaNRMujpxh6hxSE22GIF88lMcEj78y35qi2)qn838A1ms3Vk1ddLuHF(N55uRqcrK(nQZCIcoBBoHlnY)VuXnvWhRyUDl)caHe(tYZwhD36qcMD4hrBaucRQIUFgPAXXaKakSwYZVnkJutkE)T(rzKNXi1FHfrr5ykpoTOwX2ryqi79sLFnM5XKtpHQzxf5QC7eohhG2UhrF(kio2jkF(uIxov47Mihtee9REaMPpvQ7udpCkqy8GaCCdZXyDNPmClBYuLN664dx6mLhsIsNIxD5TWeArLQr(KBsHLQzAwXv5SIl6SIRXzfxKzf3NSzfhfZkoiZko9AwXDk)8zpMv(dme1PjXpq(zi5hutnolvGCeK5mO7Kr)z11Gy8Mc)mJ1SgoE3Y)b8OiGWjHrSYntTBsjwXI0XKwd1wghkYPkTeNiPXGBXQ1zG5EvLLLknzAZMka5CiS7Jp2vNL2RGA32WaWT6vUCiL1AjIYMcJoRysxtYuxnY0o9Qk7c0PIPcGNhc7UVYusD9wdrRSldbAuR05AyQgrNoh9cmEmX9qU3VwU6oIhmcdtfs855ygP1t4LD0hK5Fx4p(H5ScUjonDfG3CnxLdYkZxdic8Gc)c3ZZljPh0Bvyt1pPHhVj2hCtq8NY89cJXMYQasXkGxbqaHLWW7g)78sVfaZef858FZn4yjsJaOv5iRCRqTjdc6sO5FkGSkKwc)djORHLY4h7f4daX4XzcLgLCF6NbOVFfGgMa1H6oNIFCB6xamMrj3wMd1THPeTHUY5IjcbLU6sNZVGloNWaEISjRqt)XlfxdqwzIh7V8i5dUc4pnxZEz(WIOplNOkuCPdBTl0y4SYZ9wLUjkHm0NuvqTW0ZNLW5j6wWGUU2FJ1DDnUe)K7GgcUib9qIHjXxLAUA6GzlqISXs2YojYvw31GeX2UE)LiwWwWQDtcvOICYEkrSyYG11DvrW769xIynB1vfzFLiwpz0vf5qkriSvB6t4TB)HUj9)0tq6pfRFG5NYzI6fmqwzVbohBFbK4X2nuazPnSLWeMqISr9KYxTOapYZbif1zYzT)MTK(XBdXHBfAjwlKkB60EZSfRljaFi5zilLX1IChAlB778THvJxXMQwsJoZCxWQM131sdK13HYwT5NMWrRsl4YyDDR92SMtFWUPdeUgLpQIDszc2e5g)SphcX9tZ8yfcnBwEHFWNV88wTV81aMLFT8U7iH0llQI6k90gU39Xh7I1HrtxfOGQB27v1mqyJ3cxCts2wfZf5OfC1e1aUQqmat4tobvlhTdBjvxT1jNYHXMdawdaNpIUIcOmCTkA35DtAClUCUrKgMfEuSFjmI4Kpf01Ae9Tkiv3Kvcf4DBusu(AD0ItsFILgPq51iJBy80TBtZkkHEZGygWIwSMKVpgV3nDO1g43hfer8GeKMaR8ABbhw9Gm)VfY0iV6sRuIy1yghNpJLZAqJXHUAaaMQZf2Y3QzfWGlilQWdghEbLzWQ)kU6YpGtuoUXMo2KxbtYHHPoH2QVamv8xIyRcUQvBcjBqFCO)98BbTSAFS)M9WMOttPW6uegVNbRTokxt)zVLtDt(UikEnZ2)O41T8zwu8A26PokUcfNdBWT6ouBWn8ixO0ZSrksd)np(LgvTricD7Sxv6POo1ueGPIV7gA8CClu(0BnSrHD8BFIWBJbdEO62kJhvTdlAQl1tbK4YsA7MfVO1O3XyBSqvfJ1EZxvHN3ihJfTsFxeLRMz7FuU6w(mlkxnB9uhLRMpe0Dz(650CR8hpFInA11KKl8XWImqdGA507rlkDDhoSO0kxEXg7mZX0G6LBFftos8UfH6TzwWei7w5O2Lmjtww4D2aggHqOdssj)CyU2fyUXuOgJIft8M5PhZME7HUHQOhDcbq95nIzl1sF31SYZXanMCV0igrvSr84JsP(hbRULpZIGvZwp1rWumfDyJau3HdlcWhfu5QFSsS)wA7J0WrmIEnjpkr0B0RgNfL134sTZUCRlIuh(xW03HBKAAPAIexFnAtHP9mWWcSp05bBK40fbISgq5aZC9HQG8MzsBeO2WiMnR2dl22MYTFZkcwJeQ2CKxrYwfYbgx(CjexHjGyZEogVgvYbm7D8EUukbSjORydveZvYQ6unrxXgftX6UNSyPISXH1pV8m3HoSTy)PnQDfhuMqCHhUcJgMTWrMETZvQsbe(4rAp6OuTZ2XPmZEvCEN9Od0Bj6Evgv1sCSQFooNRWDAF10SyCBG4MClge7JoJzEMwULzi7V1yUWR9mUqM)GIlK9mEBXm4SPzsrDyIS(VhAIn8ifMi7PERXezdZgV7FyISJ2UWj2F7tyImRZCVXXk6QvK5wHnXX(qa2SzusQ6QxGJKcAFc0PyytxYG4(gjxx0qlDKjARG0BjcxAqycMsOuYlTo9TP28CMbtfJYll4vtEZvfolR37qLKMSWgu1xTCfbxp45MCpdr6lUFt2gI0)7I9ut9qKO30mc7FQIusu7JK2MoDSfYHLdu7O7tCit)JYEIjlkpoHm9TyhXWAJzNhitN9jaJp2w1iZ)6wrHsBfsT4tlNQLcHNzjCABCyBq)cRyfjVsA(qHJE7NRueIqPJ(E6o3wpAz(dYPD23J7pL6r8O4dpR)7uL00n6QSgMp8SN6DAsKnog(WZoABQLy)1hF4zwNVBKPZ(4dxHaX8AJADRJSoaM(OHv0i3V0Uv6SD(4J0LSOEfldF0Qh2VXWgz62xde2ZGaWGrbwXObESvjAX1GNkYbzT66o0X5JlU(l(zKl5K8fxtVytI2qovd7wEl5kl7vT7ktEXRix)y)7s2DvsE6gOYGbzA1fDcyEaltiF2Up9)grU)fi3KG)10eOdPf)kLEMbswKIv4SQBqgOsN681PhbkF(tcLRCHQIUvf1tQk5PsIWY(X6hThbzXfFhs53DqM)EVAQ2AZkrtoJzmBJ5QjPCyujc3jklg5XS9Q9blleQFokbF7ytqeDa5e5jrx5IXiVlIzbpuqjslGGSdz39jfEDBwYWi50voboYZ(sf)IJxtgUFF64vNtS9JYioY2tP8hoO(Y(4rZ5B9wCirW6hJso3X23iIZ2rY3OdI(1EpFP0hj)7l0VpCsE4OmMI2HLYd3Xacvhf3VhozXHZX(Hd37HJYFVJOEWi(0JKEVDwEOIDGeUCWe0fraO6nwvI2QQILrn4YxYRgJGgJGHWHJYhohoVGQULYiGQ2t)diyF3tjmIr8y50bXv5(49fBEBOUDCWeS9NGkDWSk8w)Y4E6CPZ0s37f1g2QQOcXY0plpYKB0mDoIuU5UdL)AkUJuOtXwsuUllj6ohPGWkQYbK4gjlYDETc9cS6zf3BF3q2TcpmY31Zs3B5wvIfmv6dp9gnn5JkPBM10AL0PyBPQrnzLv5qsDZ0f5AixH2HvgkJq)O3sPdCY9Z5)rJEdZp3HL6MP7ylfgk96SCV90F2XIEdZQ9WsDZ0DSLcdLEDahVxJ7dl1nt3HzJAlxpmQ3qxxKWWS0qZDZ9(kXiXDkhnFiiDG818Re9LlEaPBzK4)dBA1Xi)yjEqYx24jEq6GXI)rwN84X)iDWyn9Iq(Xs8GKKMXt8G0bJf)JKh(XJ)r6GXA6fH8JL4bzZegpXdshmw8pY2wmE8pshmwtViKFVfpktXwZxcWx1RKSDeF7hAakH)1K9vDHmPTYcDyNCy2GXPhDOHkl0H4P3H)t8PIXKuXws0gyyAYxKQ6Cqj)bJWpr8D62qwnYbdSe8PT2VzvQiVDFkCn0s1FlCnOozGVgmBzIRAxQbEQC0Av0PyXfWOj1KgN)vxNdl9pCu(jJZXnnW(irRI(wAAOVLwAA0l(AWSLjUQvGINFR9iGHbQY)bLgHYsvrK64zNzFmN1tvT8SYQisDlY2rVmjo003gkBBEWTlF77F)OpF740VZ3qBKjy56m20hv10Ie8HkwSaiZOtFBOSDtQwURMJq)mmLhfFa2r8OnmLh7PVTkpDczEG(W6RmUeMXQ0N1Ej7bl)C6ReKi2mSCp6yShR)i6xl)pIYT3C0LBV5ai3Avj7KdUgTDyLU(X3fwS2pZBB53(wmq30VQqLhTIIk)DsNvffCTTN0urDP(O5GbnsV(IJu(FoCVcJFVY3hUx3WxE1lBP8lV6L4RnM1(NhV6L6oap)o6uo(9kFF4osmVC8Gm6m7znL1D8Gg(83H6CeYO(X7icnapL6D9oshutSx1KbZVyVCgdoqSHag9f97HZO9fhyhd3mhokFuDGnyZbToUgj3IiOE3h3IJ3LfI(ZY3l4hFEZ3hUfa(YIHn60zeO8l3Uh6q5n0B3JdlgpS7bPb48Tc3acbhCqTDF6NOUZjeZzo4WMEL2TBzCuEbXx9IRP)2IFzX183cDWF)ZoKhwrWf)3lUM8fcgyEF43K2A76BHYL)i0j7wobyqDA(7w(4J7wEIHAT4AgVU4A(lWWffl(zxugdOjD7wAUPf5ic7sbK0(ZrB)Pg5CySDQCNWgpAmk3TCADlXVMlLekiE6OKAAFLGS5jYy)TOJDmbN0DRkHixOtaklBmRna1qNg1DbRMTX)RndB19HjHb082XK096kzm9o0XKXBVvo9(HRBGibA55wwGWUVhLDrD1k2nDViwHHXLCsBMmfvFvPL1hSu7s)C(vaB8Xw63YPKU4J67cPBIZAA0ENDsOHZC8jBtFsz3Te4UZfMwXIwshLuYHD)6s1CCzeJTpXD(YYt7p3wsP67fpLmVhJmvIB9T2TvwvD)Osfu4XaWIO12xYFYd5uLRVbxP9bU7C5Vj9mvJpCb3iv(ZbcRkNZR9uDN6s7lQR)gVa83MU8SaPM4okXg5yJpCVLD(mNqNko)cENMyqrWgH4(Xi2EmXJdWtQmFDEpV4jR9Q4vw48b(612)s16JIuJ1nI1XDEhkXUdHLRNdF9Q1qLQJlFDANdKQfE0FnaQAPBZ1dmLyVLVlj3i9Y9g(KV1URkiXGBUQk1JmR2JeYQr7lUb7rEza9a7cU)fWxcge0REEjfgd6l2Hpd3hGIWWNAj6lBg0MazHJA5zjilC4mJrKFjWwyZVCHJXX(8uc6tdAk81ciVWDm4EAqGyTduDqm6BW8ZnhtZm0bSy6vcinGc0G5XTXevXhettnwgWuvq4g4lwGja3PJbJf1ipFVDadeHIOgyGiqe(VcbkrJSFkBf8jszJHW1NY7sfpOTHfiBvkx6Dyl7J9)BRa3ADg3glhhhtNKqzv(ju6A9LS1GaK4LS1mcbUhXS10XOPTyPGlhXC5qjs3pTu0mQmNxvVhR4ZCgroYycha2goWawMIME4StnerChzKA3(DPJPo9oPi)nj3qalI2038UoWhuLHcC7sByloqs9YusxogXMLnc93weSAW4uLGi88d5Au5x3LgSAuKf9lXnMre6(w7aS6kOm1AKlvldRL2gFuah2CBk0GhSzG4xueh6LVoTSZiHuVI07UloKiw4AtywEiO8Kro2IjbY4DLTwtbglpSOT91hZdYVfxc)Nl9zEj(BG)a52kWRzm4fuLlhzRATTNdJcsf0IvbC0qE3t2UfwZ4TpK5hdMZEfRd9wbuBtgv7Fbk4v8zrtirwOa7NSBdZcyXd)cQeIFsO(a4e(1G4Yvkdy3J(v39qHQ(1LVFLD(u1Vr3k4bq9PkQgOLUdS0UL)XUamAlKfUMImZAIO4StxtOPKD5jhy8TmH2FJiR8liE59B6I8wADg4Xo6(OvKaN38aujk)TBj51JI2n7wc9ZSDl)jyWgv8k4VPs)Dlb5WULjPKxBksaEqdL8RfLzaV4aKnmopS9jZNDXm1QaKZGf6KShHklUgADZSUJsGrCZAQivxnaw3Qyg2v)mSIdbx)NHnse9ZW6fnYXX6HHKS2D1ACKkN)4KxdoxXHRRYgRIJ7oXt6ICLO86bhlpBjZXDpa8OCSRbo2LJJrIczR632SOuqZ7bjF1yNBtklJDcnzJz8sz6VgvHFJqfiT1RTqyDH)jknCMDXUL)qh5BR8VPMiNVZ6KvCvhUsPxV3iubR5kz9yCUYHJRenSC4aqOcLFpusXouOQTl24Nu6h3UKGH1Nyhpu1A2n9zbj(b9(NFHH9IJMi361KdyMaKOZiHG54UTLB2eg3G2tnHIiVQTK1goFw1EFVj9EwocxfXGasvx4qThSM07Qqd2sx1eXLJkeScrbEWkJ32G3RHZtz)Va0Z(pBiVqlY2tZpbKdUcI9tiF8uvbKR)DazLCxW3d(RwL7XIqpmWDT5)CJFEUFqwOLj0FAD(MuvbyHACmz1Ab92cwTkXcAcCn38EJfo3ixYfjVu3aSEf4dB5fQXJdjL4Pf8)TcMrLdD1o8zwI1UTRZarfOI6KyY5ZS(M9LQEpVnlWAQYu(GcdiFO(REOtgqfzqtR7OokWeSqfnrILhoIFEfWHv1K1jLbhRJ)YSiB1vrd1qSRULKUrpH9CkfwaMiE7FHrcOC6XnOII7w(LOI1WFsE2AGoWQQbeYGtZQZxa1y7ms1IH5(BGAbbVwr6tYNC6L(jWVV1ND4eyK6VWe4kbdlPI6QvL01GkPB)ujDnRsQOkp7vjDWvjD0Ps29AS2gvs3UQKDWKPtLuWJKRYvf0h3yMGMEQE)ntuQ0yTJkl9tAnhI5LqTYFfnMQAXqJ6iLulK9Ha092ggqDuqWWOyz(KvNNMe)a5NHKFqDGW5)zBwkzv(S0aqyWZQRbXLuk8ZmwZAyHDl)hWJIacNegXk3m1UjL4BsGokxHNopuANh6oxoS5auFqw6c0AoeZbGwnwfABJ8iTVABk8OiJ9UEoLqeV1(KSn3VmCALXSrVRtTAwYiUHMXC7Wr1QaLYyoFQzNXchmrCkQ5HSnKaWc)H5TvQzZCKASW2bjvMWR9CtrNGTbR0qLnsOM6uHbVUcYQOcq03XVb2XKyq5E)A5Q7iXtvUU1xKs34FNx6TWAlIc(mlfsg27fbze)UVuT)ivlzuXRseBJ5fx6Q4BseGQmKwv5Aj8Uerw0CoSyOyVa)4yPQQzN2A3Tm13S4u5AvLWU)UP1r9QNjB8waHzB50SYep2V7roWxSJ9v9sS5p4xfwUnFAy8waQ2(EiJpgNo6dt2BrDr92oo8HPrExbJF1EW4S3NScBEf2FQNF2NHj9MNGomXdK0YzJ)u0G0T4oL8uwx7(yAfRF4NK2JbARnKnBS64phni9lUVkXuwh)L)Www)WphThd0A7OcrTZNzVpQg7lr5NP9O3(xAvkcIxoWkj999E9LZWckJ9S8vp9LZWInVkSMElsFwFgwoXU3btJOgh4XsHO32UMtJhTKMxMtbpjAFzo1DcAz2lw(Yp(S70XARgx9u8nLzqyEyvYBt)syM4IEfFLufpzTiN(2r(u1QIvKQNWKUUJIJX58E8sB7k82aR6y6I7u3Al0cPvWi)IEkanrQ7)Dcedv4jW9k1dWc4RuuHSXm2ud4BpohXfCdGNL4mmGxBKpgggpqnhzungrz9KGQPxHyq14REHzqW2mchzslounwhG32f8rhYwEzVOCgFKotmMdzAANcuEKl4pxWQ793zjygdrgnC4K(GzqiIzuhfGHaCg0tRXiG0UqktXVKWKxGI8cuKFBafXsh(IwA7dsIN13Uxgbr9KaAPxhLs(e)jSDWcOx(O2xMJM6mfdKZb(CkJHXPDI12ZPlEGklXKya(u6wYDjAjWfYtFchOtTPAA4x5zCYd13akQHt1G1sjdXAXmUrWm27oFLUmZ3LfzhY4n9vhwUXtdPQQUN7Whp9c9Mfym79TOIURZTEPKJOkB(DqOhRwumhwQY)JHq)2yHxiUXBVaB0kOt)(BF2uH80WRm3(N8eHmTQfrxpG6k5es1wb2)vpQa(joIGNLWpnUdx7fIY(NBkZipEsW5zAxXumOKs9KbNo2402IDfZ2iwoV1C8rXlWenXJXxcdPXYhNTZXn0h2MwPzJzgs6Aq2zjHThbnLoh1y3wCNTT3rK7xqIrks7)zJeRPfVfqoALVJw57Ov(scPngcu5lwnjICKpWSMzSTOnqjxhExZkeiZhA7DbizhGokd4zqgi48ms0bywsCTeb1kYX3c2WqIRHgKZ6jbhd2GjerBmOJhYxGM4OcsnzGL7AeyEXbi]] )
+spec:RegisterPack( "Fury", 20250226.2, [[Hekili:v31)VnUnw()wcoup2BZ6yjhNz2I4aCBXDyBXHEaN7VTyTSSmDSAKL8QVKzsrG)B)EKuFHI89OKDINPfOntIi5h(477pkkPLol)1Ll24NZw(lUtCNnX19UXotCMn9JlxK)Yb2Yfh8dEY)r4xI93d)8)Ui9f(fFjkXFdFWzjfPbqd7YZpK9d3CZJH57kwpoiz)nzH7lI8ZdtIds93MZ)7GBwUyDryu(pfVCn(m7UCHFr(UK0LlweU)hbKd3SHj7olly5cE3)RtC)RU39dhxT4L4GJR(mmPWVl6(H0KTHraf5hWN6SXhsza1S2p)7NFd8Z8iMx2UKI8J)mApyPzS0NyPEz5(XbSRZtE8Xi28Ky8()SFAO)6i21C(Z88uMFWowAsrMxEQFC2(W8CaR6r4f4NLF9Z(rfS5U4iwKX8cZz7TIi(qHF9Piwwwm8)xhUD(vS)Dr4HdSnJ3(sQpil25LVJ5TbWCFklEdfo(p7N7t0M(com(jwUNJh7lbrfByLRTYRp2zCy24tAnGJVlb(UwX))44Q)lE)b1SSJR8pUQCyWFeKKeTj5ZXxFC1MWNd3W2CC16xGojx6Rs4))MxIHUUTiD8Xv)02JRcZ)a83ck44QD(WVhNCCvkBVFOGzc)AErA8XvoaSSOmwZvMmE24tzb74LbQ2xNCyEglpCB5Y2r(VECSNdqEDqs8MqoMkCCGW84krRl2UDWWMRxTKhVPivyw(DFx9LKl76wMp51x73af8ipGf9IYGhDkRu3ZDL6sSsDp3vQ9b(2xPoccnZWerDz86RdB3a4gkFSF8lEBoKn4QkGhBy4DsuIlkL4srjU9HsCplk5qAysAy(l6YFxv5VJI0hJfiwmdqOirdV(kvldgAvPPPniOsq1sVU9r)LHoJN99TzsCChNbEKIFmFh0dKPMRUpA0ddTAA20wFMBN(n3oLZ9PiGC827hx4hH5y3p6rw(oFi(wXV)7qC11jF5uG2fhA33a0SVWckYzEha(rvSIH5(rS48X79ZY8dszJzX8bSza4haMKX7y(r57gFii)(PZgbUdmUS7K(m3jXEpgSXl1pi0pQY2situJlpMlNhiUCLRi(fsHKSU)ttKnKvWt5XBddIylB(QAnK1r(qEq5jP7by938YGHnTvU6Ln86RnMkTylG4VE5alIdf73ZI4PluUW3WeebptLW4h5GfKRoGGD8(jgq4E29CVZV(6(KNz75C5nHYeNEyM6y4rNdd8Iy(h4d0S3UT6(He(VX756KmWmDB4J7Y9KbAZEy6eWPDRlDpCPbAxz2atEFXb9b6oBK6e3ZKVGulGCl(vPclKgWVUJvNCrv6O58RTdMmqAbzdamZ9qEiBkZF4AE3IIGKoGEbZkC9THP8E6hd)(b)Wu(1Kq9Fkvuqj0SOK8kthhohJ0)iMNtPbiOdPQqwCyGIRjqnWJlOFay6xHE9rd0gnMxVYGdkyiDywP8IggUukH4bVkUXCNrQPQG6S8H5TK5DYgDrzJUKSr3ozJUeSr3tKn6GWgDiyJoNeB0DKQaOFSrUnapT4K4Ox4)KX)HqBwXyaGINETm)B(c86QEWTpsGFMkhwn1EC1)lCPqa4ywOS9UrBDc3qPnoDjNfMl05tmevzFGMmM2OWQ9w3ZkMzaMUNyyJAL345qUV(QEkYLZkOYDGfaEUEWDcUVsdBhsYS1QRxePBx8uxl8uJzfZMGuumQvgWNd52xEk3q6F(pypfgf(VoU6)JXdpUHx74wgKmxa3yjHhPGhqMZSZSOBZX3BheePFBaGfvrBUsgzHDBZtUwUhrChkzE)wXMh5Pdic4)hYeMAi51(p6LSfshim4PS)uqWYD0csLdNAlo0Q3rjjBev5QEvi1eMOf1lYZBdQ2WpYlWhYKrOf30Ay8Zjpb1V9fiHPyOpcN1ISQoK8zwQxy82ISQK8u4vvj55mRDcDpm3z6mLiyTwWd0niBNK382zxMwe7j)lVii)tjvLf5)clvy0uwVGq5mg4BqLVPHpXY6edOGLyzIXKi0uiHCc121oKMLRkoQkgtkYp9SAAgzjlQHdNTd05(TIhFKlskY55yG3qnJdkObbyOcG9h4xYl7atsBcCyXCLCrQl4AZLssxfhJyT7C3GYIq27N(ed0hts9KRgywHsC9dEA(0riuwdAyevPyPI955Vg8tMepGWlnqO3Ylhumi)yG5WJ1aGX9vnWQ0Gpum6RztK403W2ey9CLhcffbLlXV(ikQdb9pVlmn6ZHsF)8wFgmaJz7dzCcAqvDWm((qdLI9m4(xYLvUIWBupuMA5btkrCr8TvPj9ro3xRU6h4g0Mx1fcWQvYogR0kbvPzJslUFBOLW97dJbKGlVpmJjzA3pDGftbO8ueALxBRgrHVRfDqQ2SXQi61PfWu5TnmomtSukheKHs6N3XI2d5wixiotW03H8v8laVGkEfZfjEe(7m8zaZdj4UXxULdxPBYi53YjbqTXxRKSEy(TyoWslY2X7leu7ZvglWQgqT6QJLBZrg3zfoNy4vv7usT7W9Ch(cYISPbeTu54a84Ij2Y3vW5A8DIinb1L7v9LB(2dlm981Rk9DJ66gYVynyWutyIReK6)7SkzPdpLCPwuXboFyWMK8X1J0J)xve5TtQmsKTNKgZgvklB4AQ)z1iXd6POB0qH66eDOnE)SVUAnkgo0A43p3rKCkWENuZZmc3jMEJ0CPKJ574BML0ON271ZHbHCn6GKyO(Ld5eUCWezM6gGDQEiVz2zjLl6PyoUm7MtnzBK)GjVPBvHh62iyiXkfskjinm3dyMEbfPqHC5pm)tZWuaA5ORR57uev2WQNgpjhoKKMxas5CChvVDnjtLKEjQpjZG(q6NMG0o)Z(Sz3Z85NkHD(wLp541PHBI4o9HqvbH5VqpmAc9utJOReHl7F4E(Mhc0wDJiduK9L36KivXwDwzCrDZGev799u1Vv1Q(zPOEuqdpYqAOmspiR9vuEAC)HKfpnibrYB4ImGSEA(OveO7e1LeD6KrmhsNLmAoKlsTsnS)ALxvGBhtRQZTSGK(f0snQh1rpOR1RP9uJQN1IeeOtNwH5mzTk5ABzECd2gSr3DIAiknFDJOwR3Hha0yTGO(1pFoAlpIPqnkgEaluxZ0P6CLivxPpKkfbQUp1mZO7WwaiHy6VfqhoYSYxiNp7o2wUa8xX3dr1Zq4YfF2pLVNBzlxiUTSGFFinJJR2YpsxFqGZh47T()UqElwZs2d9cwbjL3FwWccu857X()ti)EAD7pCC1pMedZLO5pG408dYDOhRPQtBa0LHoFzunQZUiO(jCuvDsQHQAtuO6mbhwDDanOnChsbVdo8nUP0awXhifKU4qw5vtdWQltchHoGUFlny1BMe(psi2QC3OlZQUojG)nCa196OHREZuW7siWEZ6dh)zetwzYzNMnlH117K8IaD9If0x(AntH(DxeBycvSlJ)MQAj0ru7eyPJgHw7zIgLxRZfocxkNVrkbZtUZw6EOex8uHQzNVm8Gw1aPnoLp)3hLCkxiVxEOMErDa4syJ(Er9xw33tVSI2PujmDE2Dtj82AUzd6MmgDGCkOsB6CnTNsian3dcnKn7qpdsUHT1ViIlYoHOKgAXMNmOA6RSP82TzpW1LbU2NBqdenAUNGQFuvqagPlxqW7ewIJ7icpMQF9I67)0WR)0JcEJeqmpYuyCfkTJVsW5yxzZO5EcAN6dOD5ccENWsCOqr4X9sz7Tpnwv2mCO)2Cf9vcUZZpXff8oH9DMfCMWzeV9T5n4ReCNNP6ff8oH9DMfCMWzwB3BAvFzrVBCppBZ(s1Nh6n4sS1bgNUXp0oxwJ2p1QxFhMa0CLRFeU(WjLTmDax6Nbze1dRDUx(iT9qpJiz7)es7kr9bdfznP1CpbTwLZskLy95Ic)fd4Vr0DYbMShzGzqmTyR5HKad((9au3XiXFcQ7qDQd66SjRUOQ(4w1QvHrZNSZAlj)2P617o(xoK)Mr50MguVAbWWVNMg2hzpnnoj66SjRUOQggQXM4(EeWOduvFneqGSwxAJUX24)UyoBhvR0mAxAJUXUz)gnjU043hK7BD(9A7eEhMhR7NGf8nEZlqiG17Z7n(KQMuqFUzACPXVpi3pHAp34Z3H558uEqETDq4r78uE6p(9v5XiK5f61XcACjkJvTxgkA2d98LWcAsIusy9z0PZzS6vVsf))RiF7MV68TBUa8TgvsJBVyT2o(7ngevEYo2w534opwIa1BOgepZDnth)5FsS3eC8VT65N94k(ZukFNhwUq8B830EItUg8l)I4L2NSJlxOEgjxUOC)pw(3xMV8xCv7NmhqTEmTfsYdtOwxUL3LMRSGFE1zGmI)E8R1XzD1ayXxEhDro4inZtRJfiFkMzFkmF4e7yQeT3(apEC1dZpUY1KiehJqGgURNltdeQod0Cq(4jdI2PIMdYNibzO8nEHkp)1xR5eyNbOJRgjyg6vcuUfFn0rtI(Cs4V1R1bhqvThXXFLpCNjKJV6KeqCqWeeRyoOoj1hxDpiiFmyZ49(FPP7iS2YtqQGGC6IGmpqHT5BMh6Atc5QJRipc248j3EXNBBBPFsfBqUHgfGp1o46NsydlK6tgTanA3aCAuoyhNzQuk1zPPrQP)y0u3a9z8wottX5NZuDN16GFR5uZ5o1E2Ss16fT9m15arXIQ60Jlq6tTD0kjzTzJ2QRJJ3tjtx74JdkO8ZotdtLqIlDIWvEnpq5Dn4PYbJ5R9on(R8GElclnPnZ4rcHKBNwTuUrqDc42kCy7GqAt8udTJsQxRF3Q2VQPsRpZWMv5HxxTJa2YJ56jhGhLbv74c7DtGrsbvzcq7Ta5re(e9vJktoPKlg2H)yfT5o7NZDci78bv(4kPw(iRHS7ibgJLrFCqseYUCzEBRq)uhmV2aH(sdPgUrubsOZm6Rw(i0(HrZYRx5hINAzdfuF(7SNtMmCLXRcdHEJRsanKxdfch0FSrNWW)9ds)3sEkwRUtQs8G4Ou2sSQy31rcEAV9k6XYW9BYYWsIM2xhOVjoKbm7rEFafpZY6TjSl5YHGxCVKxqSyPdhA)94HsqC93nek(anEFEiihGdJsl0rEOYmIMkOYzIoK0v4oE6vQJ3IN6iDKizVXEVjuzKxp3O83H2RmqoClnpGS1gF4kfImIkd46eK7BGQR6uEHucSthfsFUjs0kNFvnr6yd9m4ooSD4XhpDyhPWSjcF7hAdPSK69vIyrE7evhhMpKgIaO16BTLxQxsftJeWAxzxhXcq1P70sdM2zFJ1(vlSOUQJt2c)EPyfidL6CN0skzn7lbPB8wtb1hK16D6okJ1Qd7quIOizTArS0UMrxWhD0cfM60j4Cf6Wa)XzNhCPdFm0k)SmpEE3vFjGiB8tZ0slxXS1T371HlTh53IAffD9rJANr2zf3oCV2(nddTnTTTm58xADAeqQPpL2jZ7L7dI9sCkTZJZx9JED2AVuO3cNP9CNuMsB)0hb5PLGnAa)P0PgvVXRupnz4cK7AZIW2YVPTmwW3aPP0MkN4MqoTZnyK(HpRbYw1fFBhfG16vNtdgnVKDwk25RYNDTLvB9LnfbSpobnil)wgi8nqdui)C(YdSpzCzDPgFocezvOO)lZhqWfjXfhexfuu(iii4E0mVKSSQ0NA)oxxunn3bcNS1A6(YMgG2Ymlr)WbZTD8h53KboHRBRi)0GrCgJvkxGOd5MBYuZqe3ivhvMd1noVQOfY366kjKkl3O61fS0xIY9ZU6PoqWUNuVd526YiLYyAH7qekQ(RHGj0TF6fl9KHCZ9Rfu8oq(A9xuIJtDvdu3wEPd)wAa89JojxrcKBUpCAsjxRsj3oKsUNMuYTBPesxojPKdTuYXMuY8jaPpsjxtPK7PkLC5sj9ag2SLWnxAeudTR0pavm1BRLEAS2BkKY8axDReJrnfTFHwPIuSW3X76Vda1Be6imdp9i32m8SUynzyN3cL00QNw29McPSLSQwGisFNxPVjrQWk1yVRRKPCqeF)g0eQD(LCOxwmD6OAuVKsDgvQEn3SCYTUh2MjMuFuFufr1xuwpfKLYNM00jJVQcvsz8n03FZlkR26(uMiEvh0v3A9HhOvgsAFnleR4ooJh)jFf36JHHy92XnsMSw2MVsfcyU1OWr5DdSDXrTpXh1FKk07vRsXA)vRqVR0BN8v1LBs(yhQuVx7VoeYtXNNmp5Y7ZFU1Dz(9zQKhzqrnw1pZJl1pGbRv(M4QXoekVYpaU8IjnKw1FLC1lAvBDLac6mMsDAvQw8FlQa(hxX18SwjH2xrxSsOE7vIqVpa9XhSIyr9yBuvHtToi2HXux1RBMMIJC6NXZ2m2QWbLz2ILV4jmV2E2sXMxx15vpPMY5nCBl7GMLO6jf2wEcnPl)DMbPBACEDnd9heKNhQkGgj)8uNgEqY0(J03DyCva(5QMuil(URUCbm6APUdAAlksnmOm1aKtlIe21Ueg5GTF6s4obXUe2oRrp5MtWqsx72SIe9hrmlfqvx16iCbViho0KtobkwxAzMWDVPy3oOyxfkMiYsFv)QQ4URcMuRW0EwWDvjtNQW3yRGFiB8)Iadh(wv(9g83g(FDpriOmXhj)rI)7bdQc1R3n22SiAQsxpMMQCuOQ2gwokjfKJC0mobLuQh0dC7czvQn5vEEZj1J8bUMTYCQVhODpNnh0aZ7aYGJwoBsvB0e5DiPHuBL7pAkYDtN)zUsNgor7pVZllV3fzqX(qUBUI)A5))p]] )

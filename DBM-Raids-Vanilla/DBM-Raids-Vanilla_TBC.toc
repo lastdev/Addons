@@ -34,7 +34,9 @@
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
 ## X-Wago-ID: 7x61xpN1
-## Version: r775
+## Version: r781
+
+locale.generated.lua
 
 localization.en.lua
 localization.tw.lua

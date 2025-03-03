@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 150
+local MAJOR, MINOR = "AskMrRobot-Serializer", 151
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -23,7 +23,8 @@ Amr.RegionNames = {
 	[3] = "EU",
 	[4] = "TW",
 	[5] = "CN",
-	[72] = "US" -- beta testing
+	[72] = "US", -- beta testing
+	[90] = "US" -- ptr testing
 }
 
 -- map of the skillLine returned by profession API to the AMR profession name
@@ -163,12 +164,14 @@ Amr.FactionIds = {
 }
 
 Amr.InstanceIds = {
-	Nerubar = 2657
+	Nerubar = 2657,
+	Undermine = 2769
 }
 
 -- instances that AskMrRobot currently supports logging for
 Amr.SupportedInstanceIds = {	
-	[2657] = true
+	[2657] = true,
+	[2769] = true
 }
 
 

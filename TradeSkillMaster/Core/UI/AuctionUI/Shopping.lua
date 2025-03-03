@@ -33,7 +33,7 @@ local STATE_SCHEMA = Reactive.CreateStateSchema("SHOPPING_UI_STATE")
 	:AddOptionalTableField("scanFrame")
 	:AddStringField("contentPath", "selection")
 	:AddStringField("searchName", "")
-	:AddBooleanField("filterIsValid", ClientInfo.IsRetail())
+	:AddBooleanField("filterIsValid", ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442())
 	:AddBooleanField("groupSelectionCleared", true)
 	:AddOptionalStringField("greatDealsFilter")
 	:Commit()
@@ -399,7 +399,7 @@ function private.ActionHandler(manager, state, action, ...)
 		manager:ProcessAction("ACTION_START_SEARCH", TSM.Shopping.FilterSearch.GetGreatDealsSearchContext(state.greatDealsFilter))
 	elseif action == "ACTION_FILTER_INPUT_CHANGED" then
 		local value = state.frame:GetElement("selection.content.search.header.filterInput"):GetValue()
-		state.filterIsValid = ClientInfo.IsRetail() or value ~= ""
+		state.filterIsValid = (not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442()) or value ~= ""
 	elseif action == "ACTION_START_FILTER_INPUT_SEARCH" then
 		local path = state.frame:GetPath()
 		local filter = nil
@@ -410,7 +410,7 @@ function private.ActionHandler(manager, state, action, ...)
 		else
 			error("Invalid path: "..tostring(path))
 		end
-		if not ClientInfo.IsRetail() and filter == "" then
+		if not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() and filter == "" then
 			return
 		end
 		manager:ProcessAction("ACTION_START_SEARCH", TSM.Shopping.FilterSearch.GetSearchContext(filter))

@@ -1,5 +1,6 @@
-## Interface: 40401
-## Version: 1.5.8
+## X-Flavor: classic
+## Interface: 40401, 40402
+## Version: 1.6.2
 
 ## Title: Plumber
 
@@ -16,9 +17,13 @@ Initialization.lua
 Locales\Localization.xml
 API.lua
 
+Modules\SharedData.lua
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
 
 ControlCenter.lua
 
 Modules\LootUI.xml
+Modules\QuickSlot.xml
+Modules\SpellFlyout_Secure.lua
+Modules\Macros.lua

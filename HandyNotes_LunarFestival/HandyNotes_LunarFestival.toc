@@ -1,5 +1,5 @@
-## Interface: 110007
-## Version: 3.04
+## Interface: 110100
+## Version: 4.16
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_elvencoins
 ## Title: Lunar Festival
@@ -14,23 +14,28 @@
 ## Title-ruRU: Лунный фестиваль
 ## Title-zhCN: 春节
 ## Title-zhTW: 春節
-## Notes: |cFFFDBD01Helps you with the |cFFC11B17Lunar Festival|cFFFDBD01 world event
-## Notes-deDE: |cFFFDBD01Hilft bei der |cFFC11B17Mondfest 
-## Notes-esES: |cFFFDBD01Ayuda con el suceso mundial |cFFC11B17Festival Lunar
-## Notes-esMX: |cFFFDBD01Ayuda con el suceso mundial |cFFC11B17Festival Lunar
-## Notes-frFR: |cFFFDBD01Aide à l'événement mondial |cFFC11B17Fête lunaire
-## Notes-itIT: |cFFFDBD01Assiste con l'evento mondiale |cFFC11B17Celebrazione della Luna
-## Notes-koKR: |cFFC11B17달의 축제|cFFFDBD01 대규모 이벤트 지원
-## Notes-ptBR: |cFFFDBD01Auxilia no evento mundial |cFFC11B17Festival da Lua
-## Notes-ptPT: |cFFFDBD01Auxilia no evento mundial |cFFC11B17Festival da Lua
-## Notes-ruRU: |cFFFDBD01Помогает с игровое событие |cFFC11B17Лунный фестиваль
-## Notes-zhCN: |cFFFDBD01协助 |cFFC11B17春节|cFFFDBD01 活动
-## Notes-zhTW: |cFFFDBD01協助 |cFFC11B17春節|cFFFDBD01 活動
+## Notes: |cFFE9AB17Help for the |cFFC11B17Lunar Festival|cFFE9AB17 achievements and quests
+## Notes-deDE: |cFFE9AB17Hilfe für Erfolge und Quests in |cFFC11B17Mondfest 
+## Notes-esES: |cFFE9AB17Ayuda para los logros y misiones del |cFFC11B17Festival Lunar
+## Notes-esMX: |cFFE9AB17Ayuda para los logros y misiones del |cFFC11B17Festival Lunar
+## Notes-frFR: |cFFE9AB17Aide pour les succès et quêtes du |cFFC11B17Fête lunaire
+## Notes-itIT: |cFFE9AB17Aiuto per gli obiettivi e le missioni di |cFFC11B17Celebrazione della Luna
+## Notes-koKR: |cFFC11B17달의 축제|cFFE9AB17 업적 및 퀘스트에 대한 도움말
+## Notes-ptBR: |cFFE9AB17Ajuda para conquistas e missões do |cFFC11B17Festival da Lua
+## Notes-ptPT: |cFFE9AB17Ajuda para conquistas e missões do |cFFC11B17Festival da Lua
+## Notes-ruRU: |cFFE9AB17Помощь в получении достижений и квестов |cFFC11B17Лунный фестиваль
+## Notes-zhCN: |cFFE9AB17帮助完成 |cFFC11B17春节|cFFE9AB17 成就和任务
+## Notes-zhTW: |cFFE9AB17幫助完成 |cFFC11B17春節|cFFE9AB17 成就和任務
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_LunarFestivalDB
 ## AddonCompartmentFunc: HandyNotes_LunarFestival_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_LunarFestival_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_LunarFestival_OnAddonCompartmentLeave
 ## X-Curse-Project-ID: 776143
 ## X-Wago-ID: baND0oNo
 
+Localisations_Common.lua
+Localisations_Events.lua
+Localisations_LF.lua
 Core.lua
 Data.lua

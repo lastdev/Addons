@@ -174,12 +174,14 @@ end
 function Addon.Systems.ItemProperties:IsPropertySupported(name)
 
 
+    if not ITEM_PROPERTIES[name] then return false end
     return ITEM_PROPERTIES[name].Supported[Addon.Systems.Info.ReleaseName]
 end
 
 function Addon.Systems.ItemProperties:GetPropertyRank(name)
 
 
+    if not ITEM_PROPERTIES[name] then return false end
     return ITEM_PROPERTIES[name].Rank or 0
 end
 

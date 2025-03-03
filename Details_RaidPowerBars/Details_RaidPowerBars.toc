@@ -1,0 +1,22 @@
+## Interface: 110100
+## Title: Details Raid Power Bars (plugin)
+## Notes: Plugin for Details
+## SavedVariablesPerCharacter: _detalhes_databaseRaidPowerBar
+## RequiredDeps: Details
+## OptionalDeps: Ace3
+
+## X-Wago-ID: BO679ZG3
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+Details_RaidPowerBars.lua

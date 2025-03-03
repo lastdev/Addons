@@ -380,9 +380,11 @@ function private.GetStackFrame(level, thread)
 		stackLine = Debug.Stack(level, 1, 0) or ""
 	end
 	stackLine = gsub(stackLine, "^%[string \"@([^%.]+%.lua)\"%]", "%1")
+	stackLine = gsub(stackLine, "^%[(Interface[^%.]+%.lua)%]", "%1")
 	local locals = not thread and Debug.GetLocals(level) or nil
 	stackLine = gsub(stackLine, "%.%.%.T?r?a?d?e?S?k?i?l?l?M?a?ster([_A-Za-z]*[\\/])", "TradeSkillMaster%1")
 	stackLine = gsub(stackLine, "%.%.%.", "")
+	stackLine = gsub(stackLine, "in function '([^']+)'", "in function <%1>")
 	if LibTSMService.IsTestVersion() then
 		stackLine = gsub(stackLine, "'", "<", 1)
 	else
@@ -600,7 +602,7 @@ do
 			-- look at the stack trace to see if this is a TSM error
 			for i = 2, MAX_STACK_DEPTH do
 				local stackLine = Debug.Stack(i, 1, 0)
-				if not strmatch(stackLine, "^%[C%]:") and not strmatch(stackLine, "%(tail call%):") and not strmatch(stackLine, "^%[string \"[^@]") and not strmatch(stackLine, "lMaster[\\/]External[\\/][A-Za-z0-9%-_%.]+[\\/]") and not strmatch(stackLine, "SharedXML") and not strmatch(stackLine, "CallbackHandler") and not strmatch(stackLine, "!BugGrabber") and not strmatch(stackLine, "ErrorHandler%.lua") then
+				if not strmatch(stackLine, "^%[C%]:") and not strmatch(stackLine, "[%(%[]tail call[%)%]]:") and not strmatch(stackLine, "%[tsm error check%]") and not strmatch(stackLine, "^%[string \"[^@]") and not strmatch(stackLine, "lMaster[\\/]External[\\/][A-Za-z0-9%-_%.]+[\\/]") and not strmatch(stackLine, "SharedXML") and not strmatch(stackLine, "CallbackHandler") and not strmatch(stackLine, "!BugGrabber") and not strmatch(stackLine, "ErrorHandler%.lua") then
 					if not private.IsTSMAddon(stackLine) then
 						tsmErrMsg = nil
 					end

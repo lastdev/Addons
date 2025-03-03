@@ -1,6 +1,7 @@
 # Auctionator
 
-## [257](https://github.com/Auctionator/Auctionator/tree/257) (2025-01-20)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/256...257) 
+## [266](https://github.com/Auctionator/Auctionator/tree/266) (2025-02-26)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/265...266) 
 
-- Classic: Fix disenchant odds to use greater magic on weapons ilvl 21-30  
+- [Fixes #1653] Cata: Full Scan: Workaround for missing FrameXML global  
+    Now uses internal item data loading code  

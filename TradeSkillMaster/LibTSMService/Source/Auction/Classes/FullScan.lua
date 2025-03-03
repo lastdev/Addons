@@ -43,9 +43,6 @@ FullScan:OnModuleLoad(function()
 		else
 			private.gameVersion = "Classic Era"
 		end
-	elseif ClientInfo.IsCataClassic() then
-		-- Backend still uses "Wrath"
-		private.gameVersion = "Wrath"
 	else
 		-- Ignore for retail
 		return

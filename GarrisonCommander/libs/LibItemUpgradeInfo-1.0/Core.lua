@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 31
+local MAJOR, MINOR = "LibItemUpgradeInfo-1.0", 32
 local type,tonumber,select,strsplit,GetItemInfoFromHyperlink=type,tonumber,select,strsplit,GetItemInfoFromHyperlink
 ---@diagnostic disable-next-line: deprecated
 local unpack,GetDetailedItemLevelInfo=unpack,C_Item.GetDetailedItemLevelInfo
@@ -8,8 +8,8 @@ local lib,previous = _G.LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 local pp=print
 --[==[@debug@
-LoadAddOn("Blizzard_DebugTools")
-LoadAddOn("LibDebug")
+C_AddOns.LoadAddOn("Blizzard_DebugTools")
+C_AddOns.LoadAddOn("LibDebug")
 if LibDebug then LibDebug() end
 --@end-debug@]==]
 --@non-debug@

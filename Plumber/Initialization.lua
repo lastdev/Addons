@@ -1,5 +1,5 @@
-local VERSION_TEXT = "v1.5.8";
-local VERSION_DATE = 1737460000;
+local VERSION_TEXT = "v1.6.2";
+local VERSION_DATE = 1740600000;
 
 
 local addonName, addon = ...
@@ -123,6 +123,7 @@ local DefaultValues = {
         LootUI_FontSize = 14,
         LootUI_FadeDelayPerItem = 0.25,
         LootUI_ItemsPerPage = 6,
+        LootUI_BackgroundAlpha = 0.5,
         LootUI_ShowItemCount = false,
         LootUI_NewTransmogIcon = true,
         LootUI_ForceAutoLoot = true,
@@ -164,6 +165,15 @@ local DefaultValues = {
         QuickSlotHighContrastMode = false,
 
 
+    --SpellFlyout DrawerMacro
+        SpellFlyout_CloseAfterClick = true,
+        SpellFlyout_SingleRow = false,
+        SpellFlyout_HideUnusable = false,
+
+
+    EnableNewByDefault = false,             --Always enable newly added features
+
+
     --Declared elsewhere:
         --DreamseedChestABTesting = math.random(100) >= 50
 
@@ -179,14 +189,23 @@ local function LoadDatabase()
 
     DB = PlumberDB;
 
+    local alwaysEnableNew = DB.EnableNewByDefault or false;
+    local newDBKeys = {};
+
     for dbKey, value in pairs(DefaultValues) do
         if DB[dbKey] == nil then
             DB[dbKey] = value;
+            if alwaysEnableNew and type(value) == "boolean" then
+                --Not all Booleans are the master switch of individual module
+                --Send these new ones to ControlCenter
+                --Test: /run PlumberDB = {EnableNewByDefault = true}
+                newDBKeys[dbKey] = true;
+            end
         end
     end
 
     for dbKey, value in pairs(DB) do
-        addon.CallbackRegistry:Trigger("SettingChanged."..dbKey, value);
+        CallbackRegistry:Trigger("SettingChanged."..dbKey, value);
     end
 
     if not DB.installTime or type(DB.installTime) ~= "number" then
@@ -194,6 +213,8 @@ local function LoadDatabase()
     end
 
     DefaultValues = nil;
+
+    CallbackRegistry:Trigger("NewDBKeysAdded", newDBKeys);
 end
 
 local EL = CreateFrame("Frame");
@@ -216,4 +237,6 @@ do
         return tocVersion >= targetVersion
     end
     addon.IsToCVersionEqualOrNewerThan = IsToCVersionEqualOrNewerThan;
+
+    addon.IS_CLASSIC = C_AddOns.GetAddOnMetadata(addonName, "X-Flavor") ~= "retail";
 end

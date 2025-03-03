@@ -25,7 +25,7 @@ do
 		Theme.GetColor("FEEDBACK_GREEN"),
 	}
 	local hours = {}
-	if LibTSMUI.IsRetail() then
+	if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
 		hours = { 1, 2, 24, 48 }
 	else
 		hours = { 0.5, 2, 8, 24 }

@@ -181,7 +181,7 @@ do  -- DEBUG
     API.SaveDataUnderKey = SaveDataUnderKey;
 end
 
-do  --Math
+do  -- Math
     local function Clamp(value, min, max)
         if value > max then
             return max
@@ -552,6 +552,10 @@ do  -- Item
         return spellID
     end
     API.GetItemSpellID = GetItemSpellID;
+
+    function API.IsToyItem(item)
+       return C_ToyBox.GetToyInfo(item) ~= nil
+    end
 end
 
 do  -- Tooltip Parser
@@ -697,7 +701,7 @@ do  -- Holiday
     API.GetActiveMajorHolidayInfo = GetActiveMajorHolidayInfo;
 end
 
-do  --Fade Frame
+do  -- Fade Frame
     local abs = math.abs;
     local tinsert = table.insert;
     local wipe = wipe;
@@ -1095,6 +1099,11 @@ do  -- Map
     API.ConvertMapPositionToContinentPosition = ConvertMapPositionToContinentPosition;
 
 
+    function API.GetPlayerMap()
+        return GetBestMapForUnit("player");
+    end
+
+
     --Calculate a list of map positions (cache data) and run callback
     local Converter;
 
@@ -1293,7 +1302,7 @@ do  -- Map
     API.IsInDelves = IsInDelves;
 end
 
-do  --Instance --Map
+do  -- Instance -- Map
     local GetInstanceInfo = GetInstanceInfo;
 
     local function GetMapID()
@@ -1303,7 +1312,7 @@ do  --Instance --Map
     API.GetMapID = GetMapID;
 end
 
-do  --Pixel
+do  -- Pixel
     local GetPhysicalScreenSize = GetPhysicalScreenSize;
 
     local function GetPixelForScale(scale, pixelSize)
@@ -1323,7 +1332,7 @@ do  --Pixel
     API.GetPixelForWidget = GetPixelForWidget;
 end
 
-do  --Easing
+do  -- Easing
     local EasingFunctions = {};
     addon.EasingFunctions = EasingFunctions;
 
@@ -1366,7 +1375,7 @@ do  --Easing
     end
 end
 
-do  --Currency
+do  -- Currency
     local GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo;
     local CurrencyDataProvider = CreateFrame("Frame");
     CurrencyDataProvider.cache = {};
@@ -1445,7 +1454,7 @@ do  --Currency
     end
 end
 
-do  --Chat Message
+do  -- Chat Message
     --Check if the a rare spawn info has been announced by other players
     local function SearchChatHistory(searchFunc)
         local pool = ChatFrame1 and ChatFrame1.fontStringPool;
@@ -1465,7 +1474,7 @@ do  --Chat Message
     API.SearchChatHistory = SearchChatHistory;
 end
 
-do  --Cursor Position
+do  -- Cursor Position
     local UI_SCALE_RATIO = 1;
     local UIParent = UIParent;
     local EL = CreateFrame("Frame");
@@ -1481,9 +1490,15 @@ do  --Cursor Position
         return x*UI_SCALE_RATIO, y*UI_SCALE_RATIO
     end
     API.GetScaledCursorPosition = GetScaledCursorPosition;
+
+    function API.GetScaledCursorPositionForFrame(frame)
+        local uiScale = frame:GetEffectiveScale();
+        local x, y = GetCursorPosition();
+        return x / uiScale, y / uiScale;
+    end
 end
 
-do  --TomTom Compatibility
+do  -- TomTom Compatibility
     local TomTomUtil = {};
     addon.TomTomUtil = TomTomUtil;
 
@@ -1575,14 +1590,14 @@ do  --TomTom Compatibility
     end
 end
 
-do  --Game UI
+do  -- Game UI
     local function IsInEditMode()
         return EditModeManagerFrame and EditModeManagerFrame:IsEditModeActive();
     end
     API.IsInEditMode = IsInEditMode;
 end
 
-do  --Reputation
+do  -- Reputation
     local C_Reputation = C_Reputation;
     local C_MajorFactions = C_MajorFactions;
     local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation;
@@ -1769,9 +1784,9 @@ do  --Reputation
 
     local function GetReputationChangeFromText(text)
         local name, amount;
-        name, amount = match(text, L["Match Patter Rep 1"]);
+        name, amount = match(text, L["Match Pattern Rep 1"]);
         if not name then
-            name, amount = match(text, L["Match Patter Rep 2"]);
+            name, amount = match(text, L["Match Pattern Rep 2"]);
         end
         if name then
             if amount then
@@ -1784,29 +1799,62 @@ do  --Reputation
     API.GetReputationChangeFromText = GetReputationChangeFromText;
 end
 
-do  --Spell
-    if true then    --IS_TWW
-        local GetSpellInfo_Table = C_Spell.GetSpellInfo;
-        local SPELL_INFO_KEYS = {"name", "rank", "iconID", "castTime", "minRange", "maxRange", "spellID", "originalIconID"};
-        local function GetSpellInfo_Flat(spellID)
-            local info = spellID and GetSpellInfo_Table(spellID);
-            if info then
-                local tbl = {};
-                local n = 0;
-                for _, key in ipairs(SPELL_INFO_KEYS) do
-                    n = n + 1;
-                    tbl[n] = info[key];
-                end
-                return unpack(tbl)
+do  -- Spell
+    local GetSpellInfo_Table = C_Spell.GetSpellInfo;
+    local SPELL_INFO_KEYS = {"name", "rank", "iconID", "castTime", "minRange", "maxRange", "spellID", "originalIconID"};
+    local function GetSpellInfo_Flat(spellID)
+        local info = spellID and GetSpellInfo_Table(spellID);
+        if info then
+            local tbl = {};
+            local n = 0;
+            for _, key in ipairs(SPELL_INFO_KEYS) do
+                n = n + 1;
+                tbl[n] = info[key];
+            end
+            return unpack(tbl)
+        end
+    end
+    API.GetSpellInfo = GetSpellInfo_Flat;
+
+    if C_Spell.GetSpellCooldown then
+        API.GetSpellCooldown = C_Spell.GetSpellCooldown;
+    else
+        local GetSpellCooldown = GetSpellCooldown;
+        function API.GetSpellCooldown(spell)
+            local startTime, duration, isEnabled, modRate = GetSpellCooldown(spell);
+            if startTime ~= nil then
+                local tbl = {
+                    startTime = startTime,
+                    duration = duration,
+                    isEnabled = isEnabled,
+                    modRate = modRate,
+                };
+                return tbl
             end
         end
-        API.GetSpellInfo = GetSpellInfo_Flat;
+    end
+    
+    if C_Spell.GetSpellCharges then
+        API.GetSpellCharges = C_Spell.GetSpellCharges;
     else
-        API.GetSpellInfo = GetSpellInfo;
+        local GetSpellCharges = GetSpellCharges;
+        function API.GetSpellCharges(spell)
+            local currentCharges, maxCharges, cooldownStartTime, cooldownDuration, chargeModRate = GetSpellCharges(spell);
+            if currentCharges then
+                local tbl = {
+                    currentCharges = currentCharges,
+                    maxCharges = maxCharges,
+                    cooldownStartTime = cooldownStartTime,
+                    cooldownDuration = cooldownDuration,
+                    chargeModRate = chargeModRate,
+                };
+                return tbl
+            end
+        end
     end
 end
 
-do  --System
+do  -- System
     if true then    --IS_TWW
         local GetMouseFoci = GetMouseFoci;
 
@@ -1843,7 +1891,7 @@ do  --System
     end
 end
 
-do  --Player
+do  -- Player
     local function GetPlayerMaxLevel()
         local serverExpansionLevel = GetServerExpansionLevel();
 		local maxLevel = GetMaxLevelForExpansionLevel(serverExpansionLevel);
@@ -1859,7 +1907,7 @@ do  --Player
     API.IsPlayerAtMaxLevel = IsPlayerAtMaxLevel;
 end
 
-do  --Scenario
+do  -- Scenario
     --[[
     local SCENARIO_DELVES = addon.L["Scenario Delves"] or "Delves";
 
@@ -1873,7 +1921,7 @@ do  --Scenario
     --]]
 end
 
-do  --ObjectPool
+do  -- ObjectPool
     local ObjectPoolMixin = {};
 
     function ObjectPoolMixin:RemoveObject(obj)
@@ -1959,6 +2007,10 @@ do  --ObjectPool
         --Override
     end
 
+    function ObjectPoolMixin:GetActiveObjects()
+        return self.activeObjects
+    end
+
     local function CreateObjectPool(createObjectFunc)
         local pool = {};
         API.Mixin(pool, ObjectPoolMixin);
@@ -1979,7 +2031,7 @@ do  --ObjectPool
     API.CreateObjectPool = CreateObjectPool;
 end
 
-do  --Transmog
+do  -- Transmog
     local GetItemInfo = C_TransmogCollection.GetItemInfo;
     local PlayerKnowsSource = C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance;
 
@@ -1997,7 +2049,7 @@ do  --Transmog
     end
 end
 
-do  --Quest
+do  -- Quest
     local function GetQuestName(questID)
         local questName = C_TaskQuest.GetQuestInfoByQuestID(questID);
         if not questName then
@@ -2013,7 +2065,7 @@ do  --Quest
     API.GetQuestName = GetQuestName;
 end
 
-do  --Tooltip
+do  -- Tooltip
     if C_TooltipInfo then
         addon.TooltipAPI = C_TooltipInfo;
     else
@@ -2178,7 +2230,7 @@ do  --Tooltip
     API.SetTooltipWithPostCall = SetTooltipWithPostCall;
 end
 
-do  --AsyncCallback
+do  -- AsyncCallback
     local AsyncCallback = CreateFrame("Frame");
 
     --LoadQuestAPI is not available in 60 Classic
@@ -2319,7 +2371,7 @@ do  --AsyncCallback
     end
 end
 
-do  --Container Item Processor
+do  -- Container Item Processor
     local GetItemCount = C_Item.GetItemCount
     local GetContainerNumSlots = C_Container.GetContainerNumSlots;
     local GetContainerItemID = C_Container.GetContainerItemID;
@@ -2462,6 +2514,11 @@ do  --Container Item Processor
         Processor.t = 0;
         Processor:SetScript("OnUpdate", Processor.OnUpdate_Queue);
     end
+
+    function API.DoesItemReallyExist(item)
+        local a = item and GetItemInfoInstant(item);
+        return a ~= nil
+    end
 end
 
 do  -- Chat Message
@@ -2475,7 +2532,68 @@ do  -- Chat Message
     API.PrintMessage = PrintMessage;
 end
 
-do  --11.0 Menu Formatter
+do  -- Custom Hyperlink ItemRef
+
+    --[[--Example
+        local CustomLink = {};
+    
+        CustomLink.typeName = "Test";
+        CustomLink.colorCode = "66bbff";	--LINK_FONT_COLOR
+    
+        function CustomLink.callback(arg1, arg2, arg3)
+            print(arg1, arg2, arg3);
+        end
+    
+        API.AddCustomLinkType(CustomLink.typeName, CustomLink.callback, CustomLink.colorCode);
+    
+        function CustomLink.GenerateLink(arg1, arg2, arg3)
+            return API.GenerateCustomLink(CustomLink.typeName, L["Click To See Details"], arg1, arg2, arg3);
+        end
+    --]]
+
+    local CustomLinkUtil = {};
+
+    function API.AddCustomLinkType(typeName, callback, colorCode)
+        CustomLinkUtil[typeName] = {
+            callback = callback,
+            colorCode = colorCode,
+        };
+    end
+
+    function API.GenerateCustomLink(typeName, displayedText, ...)
+        if CustomLinkUtil[typeName] then
+            if not CustomLinkUtil.registered then
+                CustomLinkUtil.registered = true;
+                EventRegistry:RegisterCallback("SetItemRef", function(_, link, text, button, chatFrame)
+                    if link then
+                        local _typeName, subText = match(link, "plumber:([^:]+):([^|]+)");
+                        if _typeName and CustomLinkUtil[_typeName] then
+                            local args = {};
+                            for arg in string.gmatch(subText, "[^:]+") do
+                                tinsert(args, arg);
+                            end
+                            CustomLinkUtil[_typeName].callback(unpack(args));
+                        end
+                    end
+                end);
+            end
+
+            --|cffxxxxxx|Htype:payload|h[text]|h|r
+            local args = {...};
+            local link = "|Haddon:plumber:"..typeName;
+
+            for i, v in ipairs(args) do
+                link = link..":"..v;
+            end
+
+            link = format("|cff%s%s|h[%s]|h|r", CustomLinkUtil[typeName].colorCode or "ffd100", link, displayedText);
+
+            return link
+        end
+    end
+end
+
+do  -- 11.0 Menu Formatter
     function API.ShowBlizzardMenu(ownerRegion, schematic, contextData)
         contextData = contextData or {};
 
@@ -2559,7 +2677,116 @@ do  --11.0 Menu Formatter
     end
 end
 
+do  -- Slash Commands
+    local SlashCmdUtil = {};
+    SlashCmdUtil.functions = {};
+    SlashCmdUtil.alias = "plmr";
+    SlashCmdUtil.cmdID = {
+        DrawerMacro = 1,
+    };
 
+    function SlashCmdUtil.Process(input)
+        if input and type(input) == "string" then
+            input = " "..input;
+            local token;
+            local args = {};
+            for arg in string.gmatch(input, "%s+([%S]+)") do
+                if not token then
+                    token = arg;
+                else
+                    tinsert(args, arg);
+                end
+            end
+
+            if token and SlashCmdUtil.functions[token] then
+                SlashCmdUtil.functions[token](unpack(args));
+            end
+        end
+    end
+
+    function SlashCmdUtil.CreateSlashCommand(func, alias1, alias2)
+        local name = "PLUMBERCMD";
+        if alias1 then
+            _G["SLASH_"..name.."1"] = "/"..alias1;
+        end
+        if alias2 then
+            _G["SLASH_"..name.."2"] = "/"..alias2;
+        end
+        SlashCmdList[name] = func;
+    end
+
+    function API.AddSlashSubcommand(name, func)
+        if not SlashCmdUtil.cmdID[name] then return end;
+
+        if not SlashCmdUtil.cmdAdded then
+            SlashCmdUtil.CreateSlashCommand(SlashCmdUtil.Process, SlashCmdUtil.alias);
+        end
+
+        local token = tostring(SlashCmdUtil.cmdID[name]);
+        SlashCmdUtil.functions[token] = func;
+    end
+
+    function API.GetSlashSubcommand(name)
+        if SlashCmdUtil.cmdID[name] then
+            return string.format("/%s %s", SlashCmdUtil.alias, SlashCmdUtil.cmdID[name]);
+        end
+    end
+end
+
+do  -- Macro Util
+    local WoWAPI = {
+        IsSpellKnown = IsSpellKnownOrOverridesKnown or IsSpellKnown,
+        IsPlayerSpell = IsPlayerSpell,
+        PlayerHasToy = PlayerHasToy or Nop,
+        GetItemCount = C_Item.GetItemCount,
+        GetItemCraftedQualityByItemInfo = C_TradeSkillUI and C_TradeSkillUI.GetItemCraftedQualityByItemInfo or Nop,
+        GetItemReagentQualityByItemInfo = C_TradeSkillUI and C_TradeSkillUI.GetItemReagentQualityByItemInfo or Nop,
+        --IsConsumableItem = C_Item.IsConsumableItem or Nop,    --This is not what we thought it is
+        GetItemInfoInstant = C_Item.GetItemInfoInstant,
+        FindPetIDByName = C_PetJournal and C_PetJournal.FindPetIDByName or Nop,
+        GetPetInfoBySpeciesID = C_PetJournal and C_PetJournal.GetPetInfoBySpeciesID or Nop,
+    };
+
+    function API.CanPlayerPerformAction(actionType, arg1, arg2)
+        if actionType == "spell" then
+            return WoWAPI.IsSpellKnown(arg1) or WoWAPI.IsPlayerSpell(arg1)
+        elseif actionType == "item" then
+            if API.IsToyItem(arg1) then
+                return WoWAPI.PlayerHasToy(arg1)
+            else
+                local _, _, _, _, _, classID, subClassID = WoWAPI.GetItemInfoInstant(arg1);
+
+                --always return true for conumable items in case player needs to restock
+                if classID == 0 then
+                    return true
+                end
+
+                local count = WoWAPI.GetItemCount(arg1, true, true, true, true);
+                return count > 0
+            end
+        end
+
+        return true     --always return true for unrecognized action
+    end
+
+    function API.GetItemCraftingQuality(item)
+        local quality = WoWAPI.GetItemCraftedQualityByItemInfo(item);
+        if not quality then
+            quality = WoWAPI.GetItemReagentQualityByItemInfo(item);
+        end
+        return quality
+    end
+
+    function API.GetPetNameAndUsability(speciesID, checkUsability)
+        local name = WoWAPI.GetPetInfoBySpeciesID(speciesID);
+        if checkUsability then
+            local _, petGUID = WoWAPI.FindPetIDByName(name);
+            return name, petGUID ~= nil
+        else
+            return name
+        end
+    end
+end
 
 
 --[[

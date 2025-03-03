@@ -23,7 +23,7 @@ function Util.HasItemInfo(itemString)
 	local itemLevel = ItemInfo.GetItemLevel(itemString)
 	local quality = ItemInfo.GetQuality(itemString)
 	local minLevel = ItemInfo.GetMinLevel(itemString)
-	local hasIsCommodity = not LibTSMService.IsRetail() or ItemInfo.IsCommodity(itemString) ~= nil
+	local hasIsCommodity = (not LibTSMService.IsRetail() and not LibTSMService.IsCataClassicPatch442()) or ItemInfo.IsCommodity(itemString) ~= nil
 	local hasCanHaveVariations = ItemInfo.CanHaveVariations(itemString) ~= nil
 	if itemName and itemLevel and quality and minLevel and hasIsCommodity and hasCanHaveVariations then
 		return true, false

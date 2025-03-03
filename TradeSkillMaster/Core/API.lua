@@ -10,6 +10,7 @@
 local TSM = select(2, ...) ---@type TSM
 local API = TSM:NewPackage("API") ---@type AddonPackage
 local Money = TSM.LibTSMUtil:Include("UI.Money")
+local Log = TSM.LibTSMUtil:Include("Util.Log")
 local ItemString = TSM.LibTSMTypes:Include("Item.ItemString")
 local Group = TSM.LibTSMTypes:Include("Group")
 local GroupOperation = TSM.LibTSMTypes:Include("GroupOperation")
@@ -27,7 +28,10 @@ TSM_API = {}
 local private = {
 	settingsDB = nil,
 	settings = nil,
+	groupItemQuery = nil,
+	groupItemCallbacks = {},
 }
+local TIME_WARNING_THRESHOLD = 0.02
 
 
 
@@ -155,6 +159,25 @@ function TSM_API.GetGroupItems(path, includeSubGroups, result)
 		tinsert(result, itemString)
 	end
 	return result
+end
+
+--- Registers a callback function to be called when the items within any group changes.
+-- @within UI
+-- @tparam string addonTag An arbitrary string which uniquely identifies the addon making this call and its usage (i.e. "MyAddon:CraftingButton")
+-- @tparam function func The function to call
+function TSM_API.RegisterGroupItemCallback(addonTag, func)
+	private.CheckCallMethod(addonTag)
+	private.ValidateArgumentType(addonTag, "string", "addonTag")
+	if addonTag == "" then
+		error("Invalid `addonTag` argument (cannot be an empty string)", 2)
+	end
+	private.ValidateArgumentType(func, "function", "func")
+	if private.groupItemCallbacks[addonTag] then
+		error("Callback already registered for addonTag: "..tostring(addonTag), 3)
+	end
+	private.groupItemQuery = private.groupItemQuery or Group.CreateItemsQuery()
+		:SetUpdateCallback(private.GroupsUpdated)
+	private.groupItemCallbacks[addonTag] = func
 end
 
 
@@ -521,5 +544,16 @@ end
 function private.CheckCallMethod(firstArg)
 	if firstArg == TSM_API then
 		error("Invalid usage of colon operator to call TSM_API function", 3)
+	end
+end
+
+function private.GroupsUpdated()
+	for addonTag, func in pairs(private.groupItemCallbacks) do
+		local startTime = GetTimePreciseSec()
+		func()
+		local timeTaken = GetTimePreciseSec() - startTime
+		if timeTaken > TIME_WARNING_THRESHOLD then
+			Log.Info("API function (%s) took %0.5fs", addonTag, GetTimePreciseSec() - timeTaken)
+		end
 	end
 end

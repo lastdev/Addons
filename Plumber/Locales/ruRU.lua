@@ -1,4 +1,4 @@
---Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.5.6
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.6.0
 
 if not (GetLocale() == "ruRU") then return end;
 
@@ -32,6 +32,7 @@ L["Module Category NPC Interaction"] = "Взаимодействие с НПС";
 L["Module Category Class"] = "Класс";   --Player Class (rogue, paladin...)
 
 L["Module Category Dragonflight"] = EXPANSION_NAME9 or "Dragonflight";  --Merge Expansion Feature (Dreamseeds, AzerothianArchives) Modules into this
+L["Module Category Plumber"] = "Plumber";   --This addon's name
 
 --Deprecated
 L["Module Category Dreamseeds"] = "Семя сна";     --Added in patch 10.2.0
@@ -105,7 +106,7 @@ L["Instruction Pick Lock"] = "<Щелкните ПКМ, чтобы выбрат�
 
 
 --BlizzFixEventToast (Make the toast banner (Level-up, Weekly Reward Unlocked, etc.) non-interactable so it doesn't block your mouse clicks)
-L["ModuleName BlizzFixEventToast"] = "Blitz Fix: События";
+L["ModuleName BlizzFixEventToast"] = "Исправление: События";
 L["ModuleDescription BlizzFixEventToast"] = "Измените поведение всплывающих окон событий, чтобы для этого не требовалось ваших щелчков мыши. Также позволяет щелкнуть ПКМ на всплывающем окне и немедленно закрыть его.\n\n*Баннеры по событиям - это баннеры, которые появляются в верхней части экрана, когда вы выполняете определенные действия.";
 
 
@@ -147,7 +148,7 @@ L["Stop Tracking Dreamseed Tooltip"] = "Прекратите отслежива�
 
 
 --BlizzFixWardrobeTrackingTip (Permanently disable the tip for wardrobe shortcuts)
-L["ModuleName BlizzFixWardrobeTrackingTip"] = "Blitz Fix: Совет по гардеробу";
+L["ModuleName BlizzFixWardrobeTrackingTip"] = "Исправление: Совет по гардеробу";
 L["ModuleDescription BlizzFixWardrobeTrackingTip"] = "Скрыть руководство по гардеробу.";
 
 
@@ -182,6 +183,13 @@ L["Color Applied"] = "Это текущий цвет.";
 L["ModuleName TooltipItemReagents"] = "Реагенты";
 L["ModuleDescription TooltipItemReagents"] = "Если предметы можно использовать для объединения во что-то новое, показать все \"реагенты\" использованые в процессе.\n\nНажмите и удерживайте Shift, чтобы отобразить созданный предмет, если поддерживается.";
 L["Can Create Multiple Item Format"] = "У вас есть ресурсы для создания |cffffffff%d|r предмета.";
+
+
+--Plunderstore
+L["ModuleName Plunderstore"] = "Пиратская буря";
+L["ModuleDescription Plunderstore"] = "Изменить магазин, открытый через Заранее собранные группы:\n\n- Добавлен флажок, позволяющий скрыть собранные предметы.\n\n- Отображение количества несобранных предметов на кнопках категорий.\n\n- В подсказки добавлено место экипировки оружия и брони.\n\n- Позволяет просматривать экипируемые предметы в примерочной.";
+L["Store Full Purchase Price Format"] = "Заработайте |cffffffff%s|r Награбленного, чтобы купить все в магазине.";
+L["Store Item Fully Collected"] = "Вы собрали все в магазине!";
 
 
 --Merchant UI Price
@@ -247,6 +255,7 @@ L["Chat Leave All Characters"] = "Покинуть на всех персона�
 L["Chat Leave All Characters Tooltip"] = "Вы автоматически покинете этот канал, когда войдете в игру персонажем.";
 L["Chat Auto Leave Alert Format"] = "Хотите ли вы автоматически покинуть |cffffc0c0[%s]|r на всех ваших персонажах?";
 L["Chat Auto Leave Cancel Format"] = "Автоматический выход отключен для %s. Используйте команду /join, чтобы снова присоединиться к каналу.";
+L["Auto Leave Channel Format"] = "Автоматический выход \"%s\"";
 L["Click To Disable"] = "Нажмите, чтобы отключить";
 
 
@@ -273,6 +282,11 @@ L["Right Click To Reset Filter"] = "ПКМ чтобы сбросить наст�
 L["Earned"] = ACHIEVEMENTFRAME_FILTER_COMPLETED or "Получено";
 L["Unearned"] = "Не получено";
 L["Unearned Filter Tooltip"] = "Вы можете увидеть дублирующиеся звания, которые недоступны вашей фракции.";
+
+
+--BlizzardSuperTrack
+L["ModuleName BlizzardSuperTrack"] = "Точка маршрута: Таймер событий";
+L["ModuleDescription BlizzardSuperTrack"] = "Добавьте таймер к вашей активной точке маршрута, если в подсказке к ее маркеру на карте есть такой таймер.";
 
 
 --Loot UI
@@ -303,7 +317,8 @@ L["LootUI Option Loot Under Mouse"] = LOOT_UNDER_MOUSE_TEXT or "Открыть �
 L["LootUI Option Loot Under Mouse Tooltip"] = "В режиме |cffffffffручного сбора добычи|r окно будет отображаться под текущим местоположением мыши.";
 L["LootUI Option Use Default UI"] = "Использовать окно добычи по умолчанию";
 L["LootUI Option Use Default UI Tooltip"] = "Использовать стандартное окно добычи WoW.\n\n|cffff4800Включение этой опции отменяет все настройки выше.|r";
-
+L["LootUI Option Background Opacity"] = "Непрозрачность";
+L["LootUI Option Background Opacity Tooltip"] = "Установите прозрачность фона в режиме уведомления о добыче.\n\nЭта опция не влияет на режим ручной добычи.";
 
 
 --Quick Slot For Third-party Dev
@@ -311,6 +326,13 @@ L["Quickslot Module Info"] = "Информация о модуле";
 L["QuickSlot Error 1"] = "Быстрый слот: вы уже добавили этот контроллер.";
 L["QuickSlot Error 2"] = "Быстрый слот: Контроллер отсутствует \"%s\"";
 L["QuickSlot Error 3"] = "Быстрый слот: контроллер с той же клавишей \"%s\" уже существует.";
+
+
+--Plumber Macro
+L["PlumberMacro Drive"] = "Макрос Plumber Р.А.З.Г.О.Н.";
+L["PlumberMacro Drawer"] = "Plumber макрос ящика";
+L["PlumberMacro Error Combat"] = "Недоступно в бою";
+L["PlumberMacro Error NoAction"] = "Нет поддерживаемых действий";
 
 
 --Generic
@@ -324,6 +346,14 @@ L["Paragon Reputation"] = "Парагон";
 L["Level Maxed"] = "(Максимально)";   --Reached max level
 L["Current Colon"] = ITEM_UPGRADE_CURRENT or "Текущий:";
 L["Unclaimed Reward Alert"] = WEEKLY_REWARDS_UNCLAIMED_TITLE or "У вас есть невостребованные награды";
+L["Total Colon"] = FROM_TOTAL or "Всего:";
+
+
+--Plumber AddOn Settings
+L["ModuleName EnableNewByDefault"] = "Всегда включайте новые функции";
+L["ModuleDescription EnableNewByDefault"] = "Всегда включайте новые добавленные функции.\n\n*При включении нового модуля таким образом вы увидите уведомление в окне чата.";
+L["New Feature Auto Enabled Format"] = "Новый модуль %s был включен.";
+L["Click To See Details"] = "Нажмите, чтобы увидеть подробности";
 
 
 
@@ -339,7 +369,6 @@ L["currency-2915"] = "Резной";
 L["currency-2916"] = "Рунический";
 L["currency-2917"] = "Позолоченный";
 
-
 L["Scenario Delves"] = "Вылазка";
 L["GameObject Door"] = "Дверь";
 L["Delve Chest 1 Rare"] = "Богатый сундук";   --We'll use the GameObjectID once it shows up in the database
@@ -349,10 +378,18 @@ L["Delve Chest 1 Rare"] = "Богатый сундук";   --We'll use the GameO
 L["Bountiful Delve"] =  "Многообещающая вылазка";
 L["Special Assignment"] = "Особое поручение";
 
-
 L["Match Pattern Gold"] = "([%d%,]+) Золото";
 L["Match Pattern Silver"] = "([%d]+) Серебро";
 L["Match Pattern Copper"] = "([%d]+) Медь";
 
-L["Match Patter Rep 1"] = "Отношение (.+) к вашему отряду улучшилось на ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
-L["Match Patter Rep 2"] = "Отношение (.+) к вам улучшилось на ([%d%,]+)";   --FACTION_STANDING_INCREASED
+L["Match Pattern Rep 1"] = "Отношение (.+) к вашему отряду улучшилось на ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
+L["Match Pattern Rep 2"] = "Отношение (.+) к вам улучшилось на ([%d%,]+)";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Item Level"] = "^Уровень предмета (%d+)";
+L["Match Pattern Item Upgrade Tooltip"] = "^Уровень улучшения: (.+) (%d+)/(%d+)";  --See ITEM_UPGRADE_TOOLTIP_FORMAT_STRING
+L["Upgrade Track 1"] = "Исследователь";
+L["Upgrade Track 2"] = "Искатель приключений";
+L["Upgrade Track 3"] = "Ветеран";
+L["Upgrade Track 4"] = "Защитник";
+L["Upgrade Track 5"] = "Герой";
+L["Upgrade Track 6"] = "Эпохальный";

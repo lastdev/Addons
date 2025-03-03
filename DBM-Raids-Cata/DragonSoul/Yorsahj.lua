@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25,heroic,heroic25,lfr"
 
-mod:SetRevision("20241115112135")
+mod:SetRevision("20250208214513")
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 mod:SetZone(967)
@@ -34,7 +34,7 @@ local specWarnManaVoid		= mod:NewSpecialWarningSpell(105530, "ManaUser", nil, ni
 local specWarnPurple		= mod:NewSpecialWarningSpell(104896, "Tank|Healer", nil, nil, 1, 2)
 
 local timerOozesCD			= mod:NewNextTimer(90, -3978, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372, nil, nil, 1, DBM_COMMON_L.DAMAGE_ICON) -- varies (7.0~8.5)
+local timerOozesActive		= mod:NewTimer("v7-8.5", "timerOozesActive", 16372, nil, nil, 1, DBM_COMMON_L.DAMAGE_ICON) -- varies (7.0~8.5)
 local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372, nil, nil, 1, DBM_COMMON_L.DAMAGE_ICON)
 local timerAcidCD			= mod:NewNextTimer(8.3, 105573, nil, nil, nil, 2)--Green ooze aoe
 local timerSearingCD		= mod:NewNextTimer(6, 105033, nil, nil, nil, 2)--Red ooze aoe

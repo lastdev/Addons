@@ -307,34 +307,44 @@ local function MountToInfo(m) return { val = m.spellID, text = m.name } end
 local function GroupToInfo(v) return { val = v, text = LM.UIFilter.GetGroupText(v) } end
 local function FlagToInfo(v) return { val = v, text = LM.UIFilter.GetFlagText(v) } end
 local function FamilyToInfo(v) return { val = "family:"..v, text = LM.UIFilter.GetFamilyText(v) } end
+local function PriorityToInfo(v) return { val = "prio:"..v, text = LM.UIFilter.GetPriorityText(v) } end
 local function TypeToInfo(v) return { val = "mt:"..v, text = LM.UIFilter.GetTypeText(v) } end
 
 local function MountArgsMenu()
+    local menuList = { nosort = true }
+
+    local mountMenuList = { text=MOUNT, val="PICKER" }
+    table.insert(menuList, mountMenuList)
+
     local groupMenuList = LM.tMap(LM.UIFilter.GetGroups(), GroupToInfo)
     groupMenuList.text = L.LM_GROUP
-
---  local familyMenuList = LM.tMap(LM.UIFilter.GetFamilies(), FamilyToInfo)
---  familyMenuList.text = L.LM_FAMILY
-
---  local typeMenuList = LM.tMap(LM.UIFilter.GetTypes(), TypeToInfo)
---  typeMenuList.text = TYPE
+    table.insert(menuList, groupMenuList)
 
     local flagMenuList = LM.tMap(LM.UIFilter.GetFlags(), FlagToInfo)
     flagMenuList.text = TYPE
+    table.insert(menuList, flagMenuList)
 
-    local mountMenuList = { text=MOUNT, val="PICKER" }
+    local priorityMenuList = LM.tMap(LM.UIFilter.GetPriorities(), PriorityToInfo)
+    priorityMenuList.text = L.LM_PRIORITY
+    table.insert(menuList, priorityMenuList)
 
-    return {
-        nosort = true,
-        mountMenuList,
-        groupMenuList,
-        flagMenuList,
---      typeMenuList,
---      familyMenuList,
-        { val = "FAVORITES", text = FAVORITES:upper() },
-        { val = "ALL", text = ALL:upper() },
-        { val = "NONE", text = NONE:upper() },
-    }
+--  local typeMenuList = LM.tMap(LM.UIFilter.GetTypes(), TypeToInfo)
+--  typeMenuList.text = TYPE
+--  table.insert(menuList, typeMenuList)
+
+--  local familyMenuList = LM.tMap(LM.UIFilter.GetFamilies(), FamilyToInfo)
+--  familyMenuList.text = L.LM_FAMILY
+--  table.insert(menuList, familyMenuList)
+
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        table.insert(menuList, { val = "ZONEMATCH", text = L.LM_ZONEMATCH })
+    end
+
+    table.insert(menuList, { val = "FAVORITES", text = FAVORITES:upper() })
+    table.insert(menuList, { val = "ALL", text = ALL:upper() })
+    table.insert(menuList, { val = "NONE", text = NONE:upper() })
+
+    return menuList
 end
 
 local function ActionArgButtonClick(button, mouseButton)

@@ -195,6 +195,18 @@ function addon.AddToTrackingAchievementsCategories(achievement, update)
     end
 end
 
+function addon.AddToUncategorizedAchievementsCategories(achievement, update)
+    for i = 1, #addon.SpecialCategories.Uncategorized do
+        if addon.Options.db.profile.AdjustableCategories.Uncategorized[i] then
+            addon.SpecialCategories.Uncategorized[i]:AddAchievement(achievement);
+        end
+    end
+    if update ~= false then
+        KrowiAF_CategoriesFrame:Update(true);
+        KrowiAF_AchievementsFrame:ForceUpdate();
+    end
+end
+
 function addon.IncludeAchievement(achievement, update)
     achievement:Include();
     local numExcludedCategories = achievement.ExcludedCategories and #achievement.ExcludedCategories or 0;
@@ -244,13 +256,11 @@ local function CheckDecFlags(flags, flag)
     return (flags / flag) % 2 >= 1;
 end
 
-local function AddToUncategorizedCategories(achievement)
-    addon.Data.Achievements[achievement.Id].Uncategorized = true;
-    for i = 1, #addon.Data.UncategorizedCategories do
-        if addon.Options.db.profile.AdjustableCategories.Uncategorized[i] then
-            addon.Data.UncategorizedCategories[i]:AddAchievement(achievement);
-        end
-	end
+addon.UncategorizedAchievements = {};
+local function AddToUncategorizedCategories(achievementInfo)
+    local achievementId = achievementInfo.Id;
+    addon.Data.Achievements[achievementId].Uncategorized = true;
+    addon.UncategorizedAchievements[achievementId] = true;
 end
 
 local function HandleAchievementExistence(achievementInfo)
@@ -918,10 +928,10 @@ function addon.StartTasksGroups(tasksGroups, onFinish, onDelay)
         local task = tasks[taskIndex];
         while task do
             RunTask(task);
-            if task ~= KrowiAF.CreateCategories and Delay(continue, startTime, maxDuration, onDelay, tasksGroups, tasks) then -- Really need to solve this in a different way!!!
+            tasks, task = GetNextTask(tasks, tasksGroups); -- Get the new task first so in case the task takes longer than a frame duration, the current tasks keeps looping
+            if Delay(continue, startTime, maxDuration, onDelay, tasksGroups, tasks) then -- Really need to solve this in a different way!!!
                 return false;
             end
-            tasks, task = GetNextTask(tasks, tasksGroups);
         end
         if onFinish then
             onFinish();

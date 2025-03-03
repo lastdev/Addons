@@ -40,9 +40,11 @@ function DebugStack.GetLocation(targetLevel, thread)
 		if not stackLine or stackLine == "" then
 			return
 		end
-		local numSubs = nil
-		stackLine, numSubs = gsub(stackLine, "^%s*%[string \"@*([^%.]+%.lua)\"%](:%d+).*$", "%1%2")
-		stackLine = numSubs > 0 and stackLine or nil
+		local parsedStackLine, numSubs = gsub(stackLine, "^%s*%[string \"@*([^%.]+%.lua)\"%](:%d+).*$", "%1%2")
+		if numSubs == 0 then
+			parsedStackLine, numSubs = gsub(stackLine, "^%s*%[(Interface[^%.]+%.lua)%](:%d+).*$", "%1%2")
+		end
+		stackLine = numSubs > 0 and parsedStackLine or nil
 		if stackLine then
 			local ignored = false
 			for _, matchStr in ipairs(IGNORED_STACK_LEVEL_MATCHERS) do

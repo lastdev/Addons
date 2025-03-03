@@ -125,7 +125,7 @@ function Util.GetCancelScanResult(subRows, itemString, operationSettings, lowest
 			resultTbl.isPlayerOnlySeller = false
 		end
 	end
-	if ClientInfo.IsRetail() and resultTbl.playerLowestItemBuyout then
+	if (ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442()) and resultTbl.playerLowestItemBuyout then
 		for _, subRow in ipairs(subRows) do
 			local _, itemBuyout = subRow:GetBuyouts()
 			local quantity = subRow:GetQuantities()

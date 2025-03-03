@@ -67,12 +67,15 @@ function GroupItemDB:GetForJoin()
 end
 
 ---Creates an query.
----@param groupPathFilter GroupPathValue The group path to filter on
----@param includeSubGroups boolean Whether or not to include subgroups
+---@param groupPathFilter? GroupPathValue The group path to filter on
+---@param includeSubGroups? boolean Whether or not to include subgroups
 ---@return DatabaseQuery
 function GroupItemDB:CreateQuery(groupPathFilter, includeSubGroups)
-	assert(not Path.IsRoot(groupPathFilter))
-	if includeSubGroups then
+	assert(groupPathFilter == nil or not Path.IsRoot(groupPathFilter))
+	if not groupPathFilter then
+		assert(not includeSubGroups)
+		return self._db:NewQuery()
+	elseif includeSubGroups then
 		return self._db:NewQuery()
 			:StartsWith("groupPath", groupPathFilter)
 			:Custom(private.ItemInGroupQueryFilter, groupPathFilter)

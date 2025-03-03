@@ -1,5 +1,5 @@
-## Interface: 11504, 11505, 20504, 30403, 40400, 40401, 110005, 110007, 110002
-## Version: v11.0.0
+## Interface: 11506, 11505, 20504, 30403, 40402, 40401, 110005, 110007, 110100
+## Version: v11.1.0
 ## Title: BadBoy_Guilded
 ## Notes: Removes guild advertising from public channels.
 ## Notes-frFR: Enlève les publicités des guildes des canaux publiques.

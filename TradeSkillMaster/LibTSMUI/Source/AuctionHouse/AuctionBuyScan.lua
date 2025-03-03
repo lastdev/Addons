@@ -122,7 +122,7 @@ function AuctionBuyScan.__private:__init(scanType, scanTypeName, isPlayerFunc, a
 
 	BagTracking.RegisterQuantityCallback(self._manager:CallbackToProcessAction("ACTION_BAG_QUANTITY_UPDATED"))
 	AuctionHouseWrapper.RegisterAuctionIdUpdateCallback(self._manager:CallbackToProcessAction("ACTION_AUCTION_ID_UPDATED"))
-	if not LibTSMUI.IsRetail() then
+	if not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() then
 		AuctionHouseWrapper.RegisterCanSendAuctionQueryCallback(function(canSendAuctionQuery)
 			state.canSendAuctionQuery = canSendAuctionQuery
 		end)
@@ -300,7 +300,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		local searchContext = ...
 		local resolveSellers = nil
 		if state.scanType == SCAN_TYPE.BROWSE then
-			resolveSellers = not LibTSMUI.IsRetail()
+			resolveSellers = not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442()
 		elseif state.scanType == SCAN_TYPE.SNIPER then
 			resolveSellers = false
 		else
@@ -499,7 +499,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 			state.selectedAuction = selection
 			state.selectionCanBid = not isPlayerOrAlt and state.auctionScan:CanBid(selection)
 			state.selectionCanBuy = not isPlayerOrAlt and state.auctionScan:CanBuy(selection)
-			state.selectionCanCancel = LibTSMUI.IsRetail() and self._isPlayerFunc(ownerStr, false)
+			state.selectionCanCancel = (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and self._isPlayerFunc(ownerStr, false)
 			state.findHashIsSelection = state.findHash == selection:GetHashes()
 		else
 			state.selectedAuction = selection
@@ -535,7 +535,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		if result then
 			local itemString = state.selectedAuction:GetItemString()
 			local maxQuantity = state.searchContext:GetMaxCanBuy(itemString)
-			if LibTSMUI.IsRetail() then
+			if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
 				local maxCommodity = state.selectedAuction:IsCommodity() and state.selectedAuction:GetResultRow():GetMaxQuantities()
 				local numCanBuy = min(maxCommodity or result, maxQuantity or math.huge)
 				state.findResult = numCanBuy > 0 and RETAIL_FIND_RESULT_PLACEHOLDER or nil
@@ -596,14 +596,14 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		local quantity = ...
 		state.lastBuyQuantity = 0
 		state.lastBuyIndex = nil
-		local index = not LibTSMUI.IsRetail() and tremove(state.findResult, #state.findResult) or nil
-		if not LibTSMUI.IsRetail() and not index then
+		local index = not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() and tremove(state.findResult, #state.findResult) or nil
+		if not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() and not index then
 			-- Didn't find the full amount
 			return manager:ProcessAction("ACTION_BUYOUT_FUTURE_DONE", false)
 		end
 		-- Buy the auction
 		local buyout = state.selectedAuction:GetBuyouts()
-		if not LibTSMUI.IsRetail() and buyout ~= select(5, AuctionHouse.GetBrowseResult(index)) then
+		if not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() and buyout ~= select(5, AuctionHouse.GetBrowseResult(index)) then
 			-- The list of auctions changed
 			return manager:ProcessAction("ACTION_BUYOUT_FUTURE_DONE", false)
 		end
@@ -613,13 +613,13 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		end
 		state.lastBuyQuantity = quantity
 		state.lastBuyIndex = index
-		state.numBought = state.numBought + (LibTSMUI.IsRetail() and quantity or 1)
+		state.numBought = state.numBought + ((LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and quantity or 1)
 		manager:ManageFuture("pendingFuture", future, "ACTION_BUYOUT_FUTURE_DONE")
 	elseif action == "ACTION_BUYOUT_FUTURE_DONE" then
 		local result = ...
 		if result then
 			Mail.HandleAuctionPurchase(ItemString.ToLevel(state.selectedAuction:GetItemString()), state.lastBuyQuantity)
-			state.numConfirmed = min(state.numConfirmed + (LibTSMUI.IsRetail() and state.lastBuyQuantity or 1), state.numFound)
+			state.numConfirmed = min(state.numConfirmed + ((LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and state.lastBuyQuantity or 1), state.numFound)
 			manager:ProcessAction("ACTION_REMOVE_BOUGHT_AUCTIONS", state.lastBuyQuantity)
 			if state.numConfirmed == state.numFound then
 				state.numBid = 0
@@ -630,8 +630,8 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 			local _, rawLink = state.selectedAuction:GetLinks()
 			ChatMessage.PrintfUser(L["Failed to buy auction of %s."], rawLink)
 			if state.lastBuyQuantity > 0 then
-				state.numBought = state.numBought - (LibTSMUI.IsRetail() and state.lastBuyQuantity or 1)
-				if not LibTSMUI.IsRetail() then
+				state.numBought = state.numBought - ((LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and state.lastBuyQuantity or 1)
+				if not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() then
 					tinsert(state.findResult, state.lastBuyIndex)
 				end
 				state.lastBuyQuantity = 0
@@ -658,7 +658,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		else
 			local maxQuantity = state.searchContext:GetMaxCanBuy(itemString)
 			if maxQuantity then
-				if not LibTSMUI.IsRetail() and selection then
+				if not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() and selection then
 					maxQuantity = maxQuantity / selection:GetQuantities()
 				end
 				state.defaultBuyQuantity = min(state.defaultBuyQuantity, maxQuantity)
@@ -675,8 +675,11 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		local quantity = ...
 		state.lastBuyQuantity = 0
 		state.lastBuyIndex = nil
-		local index = not LibTSMUI.IsRetail() and tremove(state.findResult, #state.findResult) or nil
-		assert(LibTSMUI.IsRetail() or index)
+		local index = nil
+		if not LibTSMUI.IsRetail() and not LibTSMUI.IsCataClassicPatch442() then
+			index = tremove(state.findResult, #state.findResult)
+			assert(index)
+		end
 		-- Bid on the auction
 		local result, future = state.auctionScan:PrepareForBidOrBuyout(index, state.selectedAuction, false, quantity)
 		assert(not future)
@@ -686,7 +689,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		end
 		state.lastBuyQuantity = quantity
 		state.lastBuyIndex = index
-		state.numBid = state.numBid + (LibTSMUI.IsRetail() and quantity or 1)
+		state.numBid = state.numBid + ((LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and quantity or 1)
 		manager:ManageFuture("pendingFuture", future, "ACTION_BID_FUTURE_DONE")
 	elseif action == "ACTION_BID_FUTURE_DONE" then
 		local result = ...
@@ -715,7 +718,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 			end
 		end
 	elseif action == "ACTION_CANCEL_AUCTION" then
-		assert(LibTSMUI.IsRetail() and state.selectedAuction and state.selectedAuction:IsSubRow())
+		assert((LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and state.selectedAuction and state.selectedAuction:IsSubRow())
 		local _, auctionId = state.selectedAuction:GetListingInfo()
 		Log.Info("Canceling (auctionId=%d)", auctionId)
 		local future = AuctionHouseWrapper.CancelAuction(auctionId)
@@ -741,10 +744,10 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 			return
 		end
 
-		local undercut = (LibTSMUI.IsRetail() or self._isPlayerFunc(ownerStr, true)) and 0 or 1
+		local undercut = (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() or self._isPlayerFunc(ownerStr, true)) and 0 or 1
 		local bid = itemDisplayedBid - undercut
 		local buyout = itemBuyout - undercut
-		if LibTSMUI.IsRetail() then
+		if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
 			bid = Math.Round(bid, COPPER_PER_SILVER)
 			buyout = Math.Round(buyout, COPPER_PER_SILVER)
 		end
@@ -752,7 +755,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		buyout = Math.Bound(buyout, 0, MAXIMUM_BID_PRICE)
 
 		state.auctionScrollTable:GetBaseElement():ShowDialogFrame(UIElements.New("ShoppingPostDialog", "dialog")
-			:SetSize(326, LibTSMUI.IsRetail() and 344 or 380)
+			:SetSize(326, (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and 344 or 380)
 			:AddAnchor("CENTER")
 			:SetAuction(itemString, bid, buyout, quantity, undercut, state.postDuration)
 			:SetManager(manager)
@@ -771,7 +774,7 @@ function AuctionBuyScan.__private:_ActionHandler(manager, state, action, ...)
 		if not postBag or not postSlot then
 			return
 		end
-		if LibTSMUI.IsRetail() then
+		if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
 			numStacks = 1
 		elseif ItemString.IsPet(itemString) then
 			stackSize = 1
@@ -878,7 +881,7 @@ function private.GetConfirmationDialog(state, isBuy, alertThreshold)
 	local quantity = state.selectedAuction:GetQuantities()
 	local itemString = state.selectedAuction:GetItemString()
 	local _, _, _, isHighBidder = state.selectedAuction:GetBidInfo()
-	local isCommodity = LibTSMUI.IsRetail() and state.selectedAuction:IsCommodity()
+	local isCommodity = (LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442()) and state.selectedAuction:IsCommodity()
 	assert(not isCommodity or isBuy)
 	local marketValueFunc = state.searchContext:GetMarketValueFunc()
 	if not isCommodity and (not isBuy or not isHighBidder) and (not alertThreshold or ceil(buyout / quantity) < alertThreshold) then

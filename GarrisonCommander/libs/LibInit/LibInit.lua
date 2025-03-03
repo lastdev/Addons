@@ -15,7 +15,7 @@ local me, ns = ...
 ---@diagnostic disable-next-line: undefined-field
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):16:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 75
+local MINOR_VERSION = 76
 local LibStub=LibStub
 local dprint=function(...) end
 local encapsulate  = function ()

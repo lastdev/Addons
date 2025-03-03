@@ -1,3 +1,96 @@
+== v4.16 - 27th February 2025
+* TOC update to 11.1.0
+
+== v4.15 - 20th February 2025
+* TOC update to 4.4.2
+
+== v4.14 - 10th February 2025
+* Small change to align with routines used in the LIITA seasonal world event
+* A few NPCs added/tweaked - quite minimal really
+
+== v4.13 - 7th February 2025
+* New style of Zone achievement pins (the large ones) - now check QUEST completion
+   (i.e. the current season) and no longer achievement index (ie. ever for the character)
+* Large Dragon Isles zone pin on Azeroth repositioned as it conflicts with one of my other AddOns
+* Improved formatting. Gone are the seemingly doubled/repeated achievement descriptions
+* Better Refresh delay to prevent that annoying GetAchievementCriteriaInfo abend
+* Added The Maelstrom Elder pins to Azeroth map
+* Better positioning of Classic Cataclysm's Cataclysm zone meta pin
+* General tidyup of Continent code
+* Many small changes as I prepare for modularising across my AddOns,
+    sharing common code and translations
+
+== v4.12 - 6th February 2025
+* Added large Meta pins for Khaz Algar and Dragon Isles Elders
+* Shuffled the pin contents of the city / world map clusters to 
+    squeeze in the Dragon Isles and Khaz Algar meta achievements
+* Neighbouring zone pins added to Dun Morogh from Ironforge
+* Added neighbouring zone pins for Dragon Isles
+* Tiny coordinate adjustments (plus one larger one) for Dragon Isles Elders
+* Cataclysm version of the Stormwind/Elwynn NPC pins moved to their Cata location
+
+== v4.11 - 4th February 2025
+* Elune's Blessing is now internally a "Seasonal" quest
+* Entire Lunar Preservation quest chain is now "One Time" from "Seasonal" previously
+   - My bad. As I played through on various characters I realised something was up
+* "Dailies" option replaced by "One Time" option - this event has no dailies
+    - it was just my generic leftover template code for my AddOns
+* A lot more translations added
+* zhCN by @枫聖御雷. Many thanks!
+* Chat commands formatting in the Options panel altered slightly
+* Moonglade pins added to neighbouring zones to assist with flying etc
+* Remove unnecessary Zidormi phase message from pins in neighbouring zones
+
+== v4.10 - 3rd February 2025
+* Meta achievements added, along with pin clusters in every city
+* Removed one of the Undercity pins to avoid confusion - it all happpens above!
+
+== v4.09 - 2nd February 2025
+* Better messages / management of different Zidormi phases. Retains immersion too
+
+== v4.08 - 1st February 2025
+* Cataclysm version launched!
+* Elder Ironband finally added as a neighbour zone (on to do list since before v2.00 lol)
+
+== v4.07 - 31st January 2025
+* Numerous Harbingers added plus any neighbouring zones
+
+== v4.06 - 30th January 2025
+* Zul'Drak Elders were incorrectly colour coded as Dungeons
+    (but worked correctly as regular Elders)
+* More zhCN translations provided by @枫聖御雷. Many thanks! 	
+* Added "Quests" translation for all languages	
+* Delay for pin refresh increased slightly to avoid server busy abend
+* "Crown of... Quests" translated
+
+== v4.05 - 29th January 2025
+* Blasted Lands pin neighbour added to Stranglethorne Vale
+* Elder Hammershout (Elwynn Forest) got moved so the pin moved too!
+* "Not yet begun" message for completed Lunar Preservation fixed
+* Crown Flowers now visible - due to naming copy/pasta error
+
+== v4.04 - 29th January 2025
+* The counting of moonwell progress hack is no longer required in 2025 so removed
+    as would give erroneous progress tally
+* Logic for Achievement/Seasonal pin suppression corrected	
+
+== v4.03 - 29th January 2025
+* zhCN translations provided by @枫聖御雷. Many thanks!
+* Further changes to the hack to track Moonwell progress
+
+== v4.02 - 29th January 2025
+* Fix for deprecated UnitAura API call
+* Seasonal quests now active
+
+== v4.01 - 29th January 2025
+* TOC files updated - better translated AddOn titles and colour selection
+* Better shade of yellow for certain text - easier on the eye plus is more "golden"
+    which is essential for the gold/red immersion for Lunar New Year
+* Khaz Algar added (thanks to @枫聖御雷)
+
+== v4.00 - 28th January 2025
+* Rewrite for 2025, building upon the success of the Winter Veil AddOn
+
 == v3.04 - 7th January 2025
 * Added another HandyNotes Refresh() delay for logins (both new and character swap),
   reloads, and loading screen situations (various - enter/exit instances or Mage

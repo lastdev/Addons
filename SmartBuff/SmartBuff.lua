@@ -9,10 +9,11 @@
 -- Version/Release info, bump these as needed:
 -- Bump .toc file and optionally update notes in localization.en.lua
 
-SMARTBUFF_DATE               = "151124"; -- EU Date
-SMARTBUFF_VERSION            = "r32." .. SMARTBUFF_DATE;
+SMARTBUFF_DATE               = "300125"; -- EU Date
+SMARTBUFF_VERSION            = "r33." .. SMARTBUFF_DATE;
 -- Update the NR below to force  reload of SB_Buffs on first login
-SMARTBUFF_VERSIONNR          = 110006;
+-- This is needed for buff changes or major patches
+SMARTBUFF_VERSIONNR          = 110007;
 -- End of version info
 
 SMARTBUFF_TITLE              = "SmartBuff";
@@ -276,6 +277,20 @@ local function treorder(t, i, n)
     else
       tinsert(t, i + n, s);
     end
+  end
+end
+
+-- Debug util to dump a variable (primarily table to string)
+local function dump(o)
+  if type(o) == 'table' then
+     local s = '{ '
+     for k,v in pairs(o) do
+        if type(k) ~= 'number' then k = '"'..k..'"' end
+        s = s .. '['..k..'] = ' .. dump(v) .. ','
+     end
+     return s .. '} '
+  else
+     return tostring(o)
   end
 end
 
@@ -3254,11 +3269,12 @@ function SMARTBUFF_SetButtonPos(self)
 end
 
 function SMARTBUFF_RebindKeys()
+  ClearOverrideBindings(SmartBuffFrame);
   local i;
   isRebinding = true;
   for i = 1, GetNumBindings(), 1 do
     local s = "";
-    local command, key1, key2 = GetBinding(i);
+    local command, category, key1, key2 = GetBinding(i);
 
     --if (command and key1) then
     --  SMARTBUFF_AddMsgD(i .. " = " .. command .. " - " .. key1;
@@ -3276,11 +3292,11 @@ function SMARTBUFF_RebindKeys()
       --s = i .. " = " .. command;
       if (key1) then
         --s = s .. ", key1 = " .. key1 .. " rebound";
-        SetBindingClick(key1, "SmartBuff_KeyButton");
+        SetOverrideBindingClick(SmartBuffFrame, false, key1, "SmartBuff_KeyButton");
       end
       if (key2) then
         --s = s .. ", key2 = " .. key2 .. " rebound";
-        SetBindingClick(key2, "SmartBuff_KeyButton");
+        SetOverrideBindingClick(SmartBuffFrame, false, key2, "SmartBuff_KeyButton");
       end
       --SMARTBUFF_AddMsgD(s);
       break;

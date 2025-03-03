@@ -1,5 +1,6 @@
+## X-Flavor: retail
 ## Interface: 110007, 110100
-## Version: 1.5.8
+## Version: 1.6.2
 
 ## Title: Plumber
 
@@ -16,6 +17,7 @@ Initialization.lua
 Locales\Localization.xml
 API.lua
 
+Modules\SharedData.lua
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
 #Modules\DirectionArrow.lua
@@ -27,8 +29,9 @@ Modules\GossipFrameMedal.lua
 Modules\BackpackItemTracker.lua
 Modules\AutoJoinEvents.lua
 Modules\PlayerChoiceFrameToken.lua
-#Modules\DruidModelFix.lua
 Modules\QuickSlot.xml
+#Modules\SpellFlyout.lua
+Modules\SpellFlyout_Secure.lua
 Modules\QuestAreaTrigger.lua
 Modules\Dreamseed.lua
 #Modules\EventMap.lua
@@ -55,7 +58,10 @@ Modules\StaticPopupEnhancement.xml
 Modules\PlayerTitleUI.lua
 Modules\BlizzardSuperTrack.lua
 Modules\AccountStore.lua
+Modules\EquipmentFlyout.xml
+Modules\Macros.lua
 
+#Modules\DruidModelFix.lua
 #Modules\MovieSubtitle.lua
 #Modules\QuestSpecialItemCooldown.lua
 #Modules\SecretOfAzeroth.lua

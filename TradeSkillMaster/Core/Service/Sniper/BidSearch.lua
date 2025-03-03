@@ -30,7 +30,7 @@ function BidSearch.OnInitialize(settingsDB)
 end
 
 function BidSearch.GetSearchContext()
-	assert(not ClientInfo.IsRetail())
+	assert(not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442())
 	return private.searchContext
 end
 
@@ -41,7 +41,7 @@ end
 -- ============================================================================
 
 function private.ScanThread(auctionScan)
-	assert(not ClientInfo.IsRetail())
+	assert(not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442())
 	local numQueries = auctionScan:GetNumQueries()
 	if numQueries == 0 then
 		auctionScan:NewQuery()

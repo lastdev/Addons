@@ -1,10 +1,8 @@
 local _, ns = ...
+ns.map = {}
 local points = ns.points
 local textures = ns.textures
 local scaling = ns.scaling
-local colourPrefix		= ns.colour.prefix
-local colourHighlight	= ns.colour.highlight
-local colourPlaintext	= ns.colour.plaintext
 
 -- Achievements:
 -- Elders of the Dungeons		910		Alliance/Horde
@@ -16,736 +14,1637 @@ local colourPlaintext	= ns.colour.plaintext
 -- Elders of Cataclysm			6006	Alliance/Horde
 -- Elders of the Dragon Isles	17321	Alliance/Horde
 
--- ===================================================
--- aIDA, aIDH, aIndexA, aIndexH, aQuestA, aQuestH, tip
--- ===================================================
+ns.elderBluewolf = "He is through here. If your faction is not in control then see my Easy Glitch Guide!\n\nIf your faction is in "
+			.."control then the Defender's Portal will work"
+ns.elderNurgenExit = "After you exit the dungeon, use the path here and very soon after you may mount"
+ns.taraezorPromo = "\n\nThanks for using my AddOn. Hope I helped! :)\n\nI'm at X, BlueSky and Ko-fi as @Taraezor. There's also my "
+			.."project page at curseforge where you might find more useful AddOns!"
 
-local elderBluewolf = "He is through here. If your faction is not in control then see\n"
-		.."my Easy Glitch Guide!\n\nIf your faction is in control then the Defender's Portal will work"
-local elderNurgenExit = "After you exit the dungeon, use the path\nhere and very soon after you may mount"
+ns.metaGuide = "For zone Elders look for an icon on the zone map. The faction/dungeon Elder pins are in the event cluster in each "
+			.."capital city. Cataclysm is near the Maelstrom on the World Map. These pins will breakdown your progress"
+ns.setHistory = { history=true, name="Lunar Festival", noCoords=true, noContinent=true,
+					tip="The Lunar Festival is a time of celebration for the peoples of Azeroth. At the beginning of each year, "
+						.."elders of generations past manifest around the world to impart their wisdom upon all who listen. Should "
+						.."you encounter these venerable spirits in your travels and take the time to heed their words, they may "
+						.."even pass along tokens of their gratitude - Coins of Ancestry, the lessons of a past age in physical "
+						.."form.\n\nThe Cenarion Circle has good cause to celebrate, for the Lunar Festival marks the return of "
+						.."many Ancients that fell in battles past: Goldrinn, Malorne, Aviana, and Cenarius himself. But this "
+						.."celebration is darkened by the eternal torment of one of their own - Omen, a wolf Ancient blessed by "
+						.."the moon goddess Elune, has risen from the depths of Moonglade’s lake.\n\nThough Omen was once as noble "
+						.."and proud as any Ancient, he was driven mad by the Burning Legion’s tainted magics during the War of "
+						.."the Ancients. Turning against his allies, he raged across Azeroth, leaving death and terror in his "
+						.."wake. Omen was finally defeated in Moonglade, and he now sleeps among the silt of Lake Elune'ara. But "
+						.."each year, at the beginning of the festival, he stirs, forever cursed to return in his maddened state, "
+						.."growing further in power each new year.\n\n((From Blizzard's offical webpage c.2025))", }
+ns.setHonorElders = { meta=true, noCoords=true, noContinent=true, achievements={ { id=913, showAllCriteria=true, }, }, 
+				guide=ns.metaGuide, }
+ns.setMetaFaction = { metaFaction=true, noCoords=true, noContinent=true,
+				achievements={ { id=914, showAllCriteria=true, }, { id=915, showAllCriteria=true, },
+					{ id=910, showAllCriteria=true, }, }, }
+ns.set50Coins = { coins=true, noCoords=true, noContinent=true,
+				achievements={ { id=605, }, { id=606, }, { id=607, }, { id=608, }, { id=609, }, }, }
+ns.setPyro = { coins=true, noCoords=true, noContinent=true,
+				achievements={ { id=1552, showAllCriteria=true, }, { id=1281, showAllCriteria=true, }, }, }
+					
+if ( ns.version < 60000 ) then
+	ns.setElune = { elune=true, noCoords=true, noContinent=true, achievements={ { id=937, }, },
+				quests={ { id=8868, name="Elune's Blessing", qType="Seasonal", }, }, }
+	ns.setNewZones = { newZones=true, noCoords=true, noContinent=true, achievements={ { id=626, }, }, }
+else
+	ns.setElune = { elune=true, noCoords=true, noContinent=true, achievements={ { id=937, }, { id=626, }, },
+				quests={ { id=8868, name="Elune's Blessing", qType="Seasonal", }, }, }
+	ns.setNewZones = { newZones=true, noCoords=true, noContinent=true, guide=ns.metaGuide,
+				achievements={ { id=41130, showAllCriteria=true, }, { id=17321, showAllCriteria=true, }, }, }
+end
 
-points[ 63 ] = { -- Ashenvale
-	[35544891] = { aID=911, index=9, quest=8725 },
-	[60207290] = { index=4, quest=56842, title="Lunar Preservation" },
-	[53744600] = { index=3, quest=56842, title="Lunar Preservation" },
-	[04365241] = { index=5, quest=56842, title="Lunar Preservation" },
+ns.setFFortitude = { crown=true, tip="Flower of Fortitude",
+					quests={ { id=56903, index=1, name="Crown of Courage", version=80205, qType="One Time", }, }, }
+ns.setFSincerity = { crown=true, tip="Flower of Sincerity",
+					quests={ { id=56903, index=2, name="Crown of Courage", version=80205, qType="One Time", }, }, }
+ns.setFVigor = { crown=true, tip="Flower of Vigor",
+					quests={ { id=56903, index=3, name="Crown of Courage", version=80205, qType="One Time", }, }, }
+ns.setFWealth = { crown=true, tip="Flower of Wealth",
+					quests={ { id=56904, index=1, name="Crown of Prosperity", version=80205, qType="One Time", }, }, }
+ns.setFPeace = { crown=true, tip="Flower of Peace",
+					quests={ { id=56904, index=2, name="Crown of Prosperity", version=80205, qType="One Time", }, }, }
+ns.setFFelicity = { crown=true, tip="Flower of Felicity",
+					quests={ { id=56904, index=3, name="Crown of Prosperity", version=80205, qType="One Time", }, }, }
+ns.setFCompassion = { crown=true, tip="Flower of Compassion",
+					quests={ { id=56905, index=1, name="Crown of Dark Blossoms", version=80205, qType="One Time", }, }, }
+ns.setFReflection = { crown=true, tip="Flower of Reflection",
+					quests={ { id=56905, index=2, name="Crown of Dark Blossoms", version=80205, qType="One Time", }, }, }
+ns.setFSolemnity = { crown=true, noZidormi=true, tip="Flower of Solemnity",
+					quests={ { id=56905, index=3, name="Crown of Dark Blossoms", version=80205, qType="One Time", }, }, }
+ns.setFThoughtfulness = { crown=true, tip="Flower of Thoughtfulness",
+					quests={ { id=56906, index=1, name="Crown of Good Fortune", version=80205, qType="One Time", }, }, }
+ns.setFLuck = { crown=true, tip="Flower of Luck",
+					quests={ { id=56906, index=2, name="Crown of Good Fortune", version=80205, qType="One Time", }, }, }
+ns.setFGenerosity = { crown=true, tip="Flower of Generosity",
+					quests={ { id=56906, index=3, name="Crown of Good Fortune", version=80205, qType="One Time", }, }, }
+
+--==================================================================================================================================
+--
+-- KALIMDOR
+--
+--==================================================================================================================================
+
+ns.map.ashenvale = ( ns.version < 60000 ) and 1440 or 63
+ns.map.azshara = ( ns.version < 60000 ) and 1447 or 76
+ns.map.azuremyst = ( ns.version < 60000 ) and 1943 or 97
+ns.map.darkshore = ( ns.version < 60000 ) and 1439 or 62
+ns.map.darnassus = ( ns.version < 60000 ) and 1457 or 89
+ns.map.desolace = ( ns.version < 60000 ) and 1443 or 66
+ns.map.durotar =  ( ns.version < 60000 ) and 1411 or 1
+ns.map.dustwallow =  ( ns.version < 60000 ) and 1445 or 70
+ns.map.felwood =  ( ns.version < 60000 ) and 1448 or 77
+ns.map.feralas =  ( ns.version < 60000 ) and 1444 or 69
+ns.map.moonglade =  ( ns.version < 60000 ) and 1450 or 80
+ns.map.mulgore =  ( ns.version < 60000 ) and 1412 or 7
+ns.map.northernBarrens =  ( ns.version < 60000 ) and 1413 or 10
+ns.map.orgrimmar =  ( ns.version < 60000 ) and 1454 or 85
+ns.map.silithus =  ( ns.version < 60000 ) and 1451 or 81
+ns.map.stonetalon =  ( ns.version < 60000 ) and 1442 or 65
+ns.map.tanaris =  ( ns.version < 60000 ) and 1446 or 71
+ns.map.teldrassil =  ( ns.version < 60000 ) and 1438 or 57
+ns.map.theExodar =  ( ns.version < 60000 ) and 1947 or 103
+ns.map.thousand =  ( ns.version < 60000 ) and 1441 or 64
+ns.map.thunder =  ( ns.version < 60000 ) and 1456 or 88
+ns.map.ungoro =  ( ns.version < 60000 ) and 1449 or 78
+ns.map.winterspring =  ( ns.version < 60000 ) and 1452 or 83
+ns.map.kalimdor =  ( ns.version < 60000 ) and 1414 or 12
+
+ns.setMyraelLunarbloom = { preservation=true, noZidormi=true, name="Myrael Lunarbloom",
+			quests={ { id=56842, name="Lunar Preservation", version=80205, qType="One Time", }, 
+				{ id=56903, name="Crown of Courage", version=80205, qType="One Time", }, 
+				{ id=56905, name="Crown of DarkBlossoms", version=80205, qType="One Time", }, 
+				{ id=56906, name="Crown of Good Fortune", version=80205, qType="One Time", }, 
+				{ id=56904, name="Crown of Prosperity", version=80205, qType="One Time", }, }, }
+ns.setNighthavenMoonwell = { preservation=true, noZidormi=true, tip="Nighthaven Moonwell",
+			quests={ { id=56842, index=1, name="Lunar Preservation", version=80205, qType="One Time", }, }, }				
+ns.setValadarStarsong = { seasonalQuest=true, noZidormi=true, name="Valadar Starsong",
+			quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, { id=8868, qType="Seasonal", }, }, }
+
+points[ ns.map.ashenvale ] = { -- Ashenvale
+	[35544891] = { elder=true, achievements={ { id=911, index=9, version=60000, }, 
+					{ id=911, index=4, versionUnder=60000, }, },
+					quests={ { id=8725, qType="Seasonal", tip="Horde be quick here!", }, }, },
+	[53744600] = { preservation=true, tip="Moonwell of Purity",
+					quests={ { id=56842, index=3, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[60207290] = { preservation=true, tip="Moonwell of Cleansing",
+					quests={ { id=56842, index=4, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[04365241] = { preservation=true, tip="Stonetalon Moonwell",
+					quests={ { id=56842, index=5, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[65240609] = { elder=true, achievements={ { id=6006, index=6, }, }, quests={ { id=29739, qType="Seasonal", }, }, },
 }
-points[ 159 ] = { -- Azjol-Nerub - The Guilded Gate
-	[54374440] = { aID=910, index=9, quest=13022, tip="1) Enter the gate. You must kill the boss" },
-	[66004350] = { aID=910, index=9, quest=13022, tip="2) Jump down onto the left side stairs" },
-	[70003450] = { aID=910, index=9, quest=13022, tip="3) Go this way" },
+
+points[ ns.map.azshara ] = { -- Azshara
+	[64737934] = { elder=true, achievements={ { id=911, index=2, version=60000, },
+					{ id=911, index=8, versionUnder=60000, }, }, quests={ { id=8720, qType="Seasonal", }, }, },
+	[18919764] = { elderFaction=true, achievements={ { id=914, index=1, }, },
+					quests={ { id=8677, qType="Seasonal", tip="Alliance need to be very quick with this one", }, }, },
 }
-points[ 158 ] = { -- Azjol-Nerub - Hadronox's Lair
-	[41533715] = { aID=910, index=9, quest=13022, tip="3) Go this way" },
-	[61752850] = { aID=910, index=9, quest=13022, tip="4) Keep going this way!" },
-	[47176569] = { aID=910, index=9, quest=13022, tip="5) Ignore Hadronox. Jump down here" },
-	[49005820] = { aID=910, index=9, quest=13022, tip="6) Now jump down again!" },
+
+points[ ns.map.azuremyst ] = { -- Azuremyst Isle
+	[33134498] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
 }
-points[ 157 ] = { -- Azjol-Nerub - The Brood Pt
-	[23005217] = { aID=910, index=9, quest=13022, tip="7) You land here" },
-	[21724319] = { aID=910, index=9, quest=13022, tip="8) Elder is here" },
-	[36854877] = { aID=910, index=9, quest=13022, tip="9) Exit is this way" },
-	[75744913] = { aID=910, index=9, quest=13022, tip="10) No need to kill Anub'arak" },
-	[88527649] = { aID=910, index=9, quest=13022, tip="11) You're welcome! :)" },
+
+points[ ns.map.darkshore  ] = { -- Darkshore
+	[49541895] = { elder=true, achievements={ { id=911, index=7, version=60000, },
+					{ id=911, index=16, versionUnder=60000, }, }, quests={ { id=8721, qType="Seasonal", }, }, },
+	[54827242] = { elder=true, noZidormi=true, achievements={ { id=911, index=12, version=60000, },
+					{ id=911, index=1, versionUnder=60000, }, }, quests={ { id=8723, qType="Seasonal", }, }, },
+	[78578779] = { elder=true, noZidormi=true, achievements={ { id=6006, index=6, }, },
+					quests={ { id=29739, qType="Seasonal", }, }, },
+	[85400553] = ns.setNighthavenMoonwell,
+	[86990663] = ns.setMyraelLunarbloom,
+	[87190636] = ns.setValadarStarsong,
 }
-points[ 76 ] = { -- Azshara
-	[64737934] = { aID=911, index=2, quest=8720 },
-	[18919764] = { aID=914, index=1, quest=8677, tip="Alliance need to be very quick with this one" },
+
+points[ ns.map.darnassus ] = { -- Darnassus
+	[38583028] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[39203185] = { elderFaction=true, achievements={ { id=915, index=1, version=60000, },
+					{ id=915, index=3, versionUnder=60000, }, }, quests={ { id=8718, qType="Seasonal", }, }, },
+	[37325047] = { elderFaction=true, achievements={ { id=915, index=1, version=60000, },
+					{ id=915, index=3, versionUnder=60000, }, },
+					quests={ { id=8718, qType="Seasonal", faction="Horde", 
+					tip="Immediately go left and up high - don't delay", }, }, },
+	[30402709] = { elderFaction=true, achievements={ { id=915, index=1, version=60000, },
+					{ id=915, index=3, versionUnder=60000, }, },
+					quests={ { id=8718, qType="Seasonal", faction="Horde", 
+					tip="Hide here for respite/cooldowns, as necessary", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
 }
-points[ 15 ] = { -- Badlands
-	[06957986] = { aID=912, index=10, quest=8683 },
+
+points[ ns.map.desolace ] = { -- Desolace
+	[29626248] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, tip=ns.taraezorPromo, }, },
+					quests={ { id=8635, qType="Seasonal", tip="Enter Maraudon. Follow the markers", }, }, },
+	[50225001] = ns.setFCompassion,
+	[50284566] = ns.setFCompassion,
+	[50904702] = ns.setFCompassion,
+	[51074943] = ns.setFCompassion,
+	[51384509] = ns.setFCompassion,
+	[52095157] = ns.setFCompassion,
+	[52774955] = ns.setFCompassion,
+	[53104525] = ns.setFCompassion,
+	[53335138] = ns.setFCompassion,
+	[54784717] = ns.setFCompassion,
+	[99184999] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[99614885] = { elderFaction=true, achievements={ { id=914, index=2, version=60000, },
+					{ id=914, index=3, versionUnder=60000, }, }, quests={ { id=8678, qType="Seasonal", }, }, },
 }
+
+points[ ns.map.durotar ] = { -- Durotar
+	[53234361] = { elder=true, achievements={ { id=911, index=1, version=60000, },
+					{ id=911, index=9, versionUnder=60000, }, },
+					quests={ { id=8670, qType="Seasonal", tip="Alliance need to be very quick with this one", }, }, },
+	[47000300] = { elderFaction=true, achievements={ { id=914, index=1, }, },
+					quests={ { id=8677, qType="Seasonal", tip="Alliance need to be very quick with this one", }, }, },
+	[00334697] = ns.setFWealth,
+	[00594848] = ns.setFWealth,
+	[00675268] = ns.setFWealth,
+	[00805135] = ns.setFWealth,
+	[33357598] = { elder=true, achievements={ { id=911, index=5, version=60000, },
+					{ id=911, index=7, versionUnder=60000, }, }, quests={ { id=8680, qType="Seasonal", }, }, },
+	[11796435] = { elder=true, achievements={ { id=911, index=3, version=60000, },
+					{ id=911, index=17, versionUnder=60000, }, }, quests={ { id=8717, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.dustwallow ] = { -- Dustwallow Marsh
+	[28529858] = { elder=true, achievements={ { id=911, index=13, version=60000, },
+					{ id=911, index=19, versionUnder=60000, }, }, quests={ { id=8682, qType="Seasonal", }, }, },
+	[14330306] = { elder=true, achievements={ { id=911, index=4, version=60000, },
+					{ id=911, index=21, versionUnder=60000, }, }, quests={ { id=8686, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.felwood ] = { -- Felwood
+	[38365285] = { elder=true, achievements={ { id=911, index=12, version=60000, },
+					{ id=911, index=1, versionUnder=60000, }, }, quests={ { id=8723, qType="Seasonal", }, }, },
+	[44042841] = { preservation=true, tip="Whisperwind Grove Moonwell",
+					quests={ { id=56842, index=2, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[63676924] = { elder=true, achievements={ { id=6006, index=6, version=60000, },
+					{ id=6006, index=6, versionUnder=60000, }, }, quests={ { id=29739, qType="Seasonal", }, }, },
+	[88784176] = { elder=true, achievements={ { id=6006, index=7, version=60000, },
+					{ id=6006, index=7, versionUnder=60000, }, }, quests={ { id=29740, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.feralas ] = { -- Feralas
+	[76713790] = { elder=true, achievements={ { id=911, index=10, version=60000, },
+					{ id=911, index=20, versionUnder=60000, }, },
+					quests={ { id=8679, qType="Seasonal", tip="In the Lariss Pavillion", }, }, },
+	[62563107] = { elder=true, achievements={ { id=911, index=11, version=60000, },
+					{ id=911, index=15, versionUnder=60000, }, },
+					quests={ { id=8685, qType="Seasonal", tip="In the Dire Maul arena - she's not in the instance", }, }, },
+	[60214625] = { preservation=true, tip="Dire Maul Moonwell",
+					quests={ { id=56842, index=6, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[53368345] = { elder=true, achievements={ { id=911, index=20, version=60000, },
+					{ id=911, index=12, versionUnder=60000, }, },
+					quests={ { id=8654, qType="Seasonal", }, }, },
+	[66339639] = { elder=true, achievements={ { id=911, index=21, version=60000, },
+					{ id=911, index=18, versionUnder=60000, }, },
+					quests={ { id=8719, qType="Seasonal", }, }, },
+}
+
+points[ 68 ] = { -- Maraudon - Foulspore Cavern
+	[46788822] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, }, quests={ { id=8635, qType="Seasonal",
+					tip="If you are here then you have come the correct way. It's a linear path. The instance portal is "
+						.."ahead", }, }, },
+}
+
+points[ 67 ] = { -- Maraudon - The Wicked Grotto
+	[19345583] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, },
+					quests={ { id=8635, qType="Seasonal", tip="This is where you respawn if you were wondering", }, }, },
+	[25004335] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, },
+					quests={ { id=8635, qType="Seasonal", tip="Instance entrance/exit", }, }, },
+	[17005350] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, }, quests={ { id=8635, qType="Seasonal",
+					tip="Follow the path.\n\nAt \"Zaetar's Choice\" enter the arch that is guarded by two centaurs. Do not take "
+						.."the left pink/purple path, nor the right red/orange path", }, }, },
+}
+
+points[ 281 ] = { -- Maraudon - Zaelar's Grave
+	[28083508] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, }, quests={ { id=8635, qType="Seasonal",
+					tip="This is where you \"land\" upon entry to the instance. Go straight ahead, jumping down and through the "
+						.."cutting", }, }, },
+	[33006070] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, },
+					quests={ { id=8635, qType="Seasonal", tip="Through here and follow the path", }, }, },
+	[45405480] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, }, quests={ { id=8635, qType="Seasonal",
+					tip="You now have a choice. Go right. In other words, do not take the (left) ramp upwards", }, }, },
+	[40007340] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, }, quests={ { id=8635, qType="Seasonal",
+					tip="You're now in an area with a waterfall, a Primordial Behemoth, a bridge and a river. Continue over the "
+						.."bridge. Don't jump down. It's a linear path, you can't get lost!", }, }, },
+	[51379385] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, },
+					quests={ { id=8635, qType="Seasonal", tip="Elder Splitrock is here", }, }, },
+	[54708660] = { elderDungeon=true, achievements={ { id=910, index=3, version=60000, },
+					{ id=910, index=10, versionUnder=60000, }, }, quests={ { id=8635, qType="Seasonal",
+					tip="After Elder Splitrock, don't bother looking for a way out down here. There isn't one. Hearth or "
+						.."portal", }, }, },
+}
+
+points[ ns.map.moonglade ] = { -- Moonglade
+	[48643293] = { preservation=true, tip="Nighthaven Moonwell",
+					quests={ { id=56842, index=1, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[53083602] = ns.setMyraelLunarbloom,
+	[53653525] = ns.setValadarStarsong,
+}
+
+points[ ns.map.mulgore ] = { -- Mulgore
+	[44582416] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[48495323] = { elder=true, achievements={ { id=911, index=8, version=60000, },
+					{ id=911, index=11, versionUnder=60000, }, }, quests={ { id=8673, qType="Seasonal", }, }, },
+	[44942322] = { elderFaction=true, achievements={ { id=914, index=2, version=60000, },
+					{ id=914, index=2, versionUnder=60000, }, }, quests={ { id=8678, qType="Seasonal", }, }, },
+	[47473458] = ns.setFSincerity,
+	[47653056] = ns.setFSincerity,
+	[48112717] = ns.setFSincerity,
+	[49122970] = ns.setFSincerity,
+	[50982986] = ns.setFSincerity,
+	[51273853] = ns.setFSincerity,
+	[52423242] = ns.setFSincerity,
+	[53843626] = ns.setFSincerity,
+	[56472982] = ns.setFSincerity,
+	[57053049] = ns.setFSincerity,
+	[72145427] = { elder=true, achievements={ { id=911, index=4, version=60000, },
+					{ id=911, index=21, versionUnder=60000, }, }, quests={ { id=8686, qType="Seasonal", }, }, },
+	[04192417] = ns.setFCompassion,
+	[04242059] = ns.setFCompassion,
+	[04762171] = ns.setFCompassion,
+	[04902370] = ns.setFCompassion,
+	[05152012] = ns.setFCompassion,
+	[05742547] = ns.setFCompassion,
+	[06302380] = ns.setFCompassion,
+	[06572025] = ns.setFCompassion,
+	[06762530] = ns.setFCompassion,
+	[07962183] = ns.setFCompassion,
+	[87890802] = { elder=true, achievements={ { id=911, index=3, version=60000, },
+					{ id=911, index=17, versionUnder=60000, }, }, quests={ { id=8717, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.northernBarrens ] = { -- Northern Barrens
+	[48525926] = { elder=true, achievements={ { id=911, index=3, version=60000, },
+					{ id=911, index=17, versionUnder=60000, }, }, quests={ { id=8717, qType="Seasonal", }, }, },
+	[68366996] = { elder=true, achievements={ { id=911, index=5, version=60000, },
+					{ id=911, index=7, versionUnder=60000, }, }, quests={ { id=8680, qType="Seasonal", }, }, },
+	[35654710] = ns.setFWealth,
+	[36174300] = ns.setFWealth,
+	[36204512] = ns.setFWealth,
+	[37054770] = ns.setFWealth,
+	[37504278] = ns.setFWealth,
+	[37624591] = ns.setFWealth,
+	[37974327] = ns.setFWealth,
+	[38214466] = ns.setFWealth,
+	[38294852] = ns.setFWealth,
+	[38414730] = ns.setFWealth,	
+	[10188445] = ns.setFSincerity,
+	[10358064] = ns.setFSincerity,
+	[10797743] = ns.setFSincerity,
+	[11757982] = ns.setFSincerity,
+	[13517998] = ns.setFSincerity,
+	[13788820] = ns.setFSincerity,
+	[14888240] = ns.setFSincerity,
+	[16238605] = ns.setFSincerity,
+	[18727994] = ns.setFSincerity,
+	[19278058] = ns.setFSincerity,
+	[07447457] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[07787368] = { elderFaction=true, achievements={ { id=914, index=2, version=60000, },
+					{ id=914, index=3, versionUnder=60000, }, }, quests={ { id=8678, qType="Seasonal", }, }, },
+	[80370051] = { elderFaction=true, achievements={ { id=914, index=1, }, },
+					quests={ { id=8677, qType="Seasonal", tip="Alliance need to be very quick with this one", }, }, },
+	[86654018] = { elder=true, achievements={ { id=911, index=1, version=60000, },
+					{ id=911, index=9, versionUnder=60000, }, },
+					quests={ { id=8670, qType="Seasonal", tip="Alliance need to be very quick with this one", }, }, },
+}
+
+points[ ns.map.orgrimmar ] = { -- Orgrimmar
+	[49095581] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[52266001] = { elderFaction=true, achievements={ { id=914, index=1, }, },
+					quests={ { id=8677, qType="Seasonal", tip="Alliance need to be very quick with this one", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+}
+
+points[ ns.map.silithus ] = { -- Silithus
+	[30801332] = { elder=true, achievements={ { id=911, index=20, version=60000, },
+					{ id=911, index=12, versionUnder=60000, }, },
+					quests={ { id=8654, qType="Seasonal", }, }, },
+	[53023547] = { elder=true, achievements={ { id=911, index=21, version=60000, },
+					{ id=911, index=18, versionUnder=60000, }, },
+					quests={ { id=8719, qType="Seasonal", }, }, },
+}
+
+points[ 199 ] = { -- Southern Barrens
+	[41604745] = { elder=true, achievements={ { id=911, index=4, version=60000, },
+					{ id=911, index=21, versionUnder=60000, }, }, quests={ { id=8686, qType="Seasonal", }, }, },
+	[24224668] = { elder=true, achievements={ { id=911, index=8, version=60000, },
+					{ id=911, index=11, versionUnder=60000, }, }, quests={ { id=8673, qType="Seasonal", }, }, },
+	[23463297] = ns.setFSincerity,
+	[23603002] = ns.setFSincerity,
+	[23932753] = ns.setFSincerity,
+	[24682938] = ns.setFSincerity,
+	[26052950] = ns.setFSincerity,
+	[26263587] = ns.setFSincerity,
+	[27103138] = ns.setFSincerity,
+	[28153421] = ns.setFSincerity,
+	[30082947] = ns.setFSincerity,
+	[30512997] = ns.setFSincerity,
+	[21602462] = { elderFaction=true, achievements={ { id=914, index=2, version=60000, },
+					{ id=914, index=2, versionUnder=60000, }, }, quests={ { id=8678, qType="Seasonal", }, }, },
+	[43210401] = ns.setFWealth,
+	[43600083] = ns.setFWealth,
+	[43630248] = ns.setFWealth,
+	[44290448] = ns.setFWealth,
+	[44640066] = ns.setFWealth,
+	[44730309] = ns.setFWealth,
+	[44740309] = ns.setFWealth,
+	[45010104] = ns.setFWealth,
+	[45190212] = ns.setFWealth,
+	[45250511] = ns.setFWealth,
+	[45350417] = ns.setFWealth,
+	[53181344] = { elder=true, achievements={ { id=911, index=3, version=60000, },
+					{ id=911, index=17, versionUnder=60000, }, }, quests={ { id=8717, qType="Seasonal", }, }, },
+	[68562174] = { elder=true, achievements={ { id=911, index=5, version=60000, },
+					{ id=911, index=7, versionUnder=60000, }, }, quests={ { id=8680, qType="Seasonal", }, }, },
+	[21342531] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.stonetalon ] = { -- Stonetalon Mountains
+	[41591896] = { preservation=true, tip="Stonetalon Peak Moonwell",
+					quests={ { id=56842, index=5, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[72061554] = { elder=true, achievements={ { id=911, index=9, version=60000, },
+					{ id=911, index=4, versionUnder=60000, }, }, quests={ { id=8725, qType="Seasonal", }, }, },
+	[96163898] = { preservation=true, tip="Moonwell of Cleansing",
+					quests={ { id=56842, index=4, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[89851270] = { preservation=true, tip="Moonwell of Purity",
+					quests={ { id=56842, index=3, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+}
+
+points[ ns.map.tanaris ] = { -- Tanaris
+	[37247906] = { elder=true, achievements={ { id=911, index=15, version=60000, },
+					{ id=911, index=13, versionUnder=60000, }, }, quests={ { id=8671, qType="Seasonal", }, }, },
+	[51402881] = { elder=true, achievements={ { id=911, index=16, version=60000, },
+					{ id=911, index=2, versionUnder=60000, }, }, quests={ { id=8684, qType="Seasonal", }, }, },
+	[39222134] = { elderDungeon=true, achievements={ { id=910, index=1, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=8676, qType="Seasonal", tip="Enter Zul'Farrak. Follow the markers", }, }, },
+	[17584315] = { elder=true, achievements={ { id=911, index=17, version=60000, },
+					{ id=911, index=6, versionUnder=60000, }, }, quests={ { id=8681, qType="Seasonal", }, }, },
+	[23711968] = ns.setFFelicity,
+	[24651944] = ns.setFFelicity,
+	[25081689] = ns.setFFelicity,
+	[25251996] = ns.setFFelicity,
+	[25301790] = ns.setFFelicity,
+	[25881559] = ns.setFFelicity,
+	[25982071] = ns.setFFelicity,
+	[26551851] = ns.setFFelicity,
+	[26932084] = ns.setFFelicity,
+	[27491962] = ns.setFFelicity,
+	[52170860] = { elder=true, achievements={ { id=911, index=14, version=60000, },
+					{ id=911, index=14, versionUnder=60000, }, }, quests={ { id=8724, qType="Seasonal", }, }, },
+	[21556299] = { elder=true, achievements={ { id=6006, index=2, version=60000, },
+					{ id=6006, index=4, versionUnder=60000, }, }, quests={ { id=29742, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.teldrassil ] = { -- Teldrassil
+	[27954326] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[28114367] = { elderFaction=true, achievements={ { id=915, index=1, version=60000, },
+					{ id=915, index=3, versionUnder=60000, }, }, quests={ { id=8718, qType="Seasonal", }, }, },
+	[56855310] = { elder=true, achievements={ { id=911, index=6, version=60000, },
+					{ id=911, index=5, versionUnder=60000, }, }, quests={ { id=8715, qType="Seasonal", }, }, },
+	[55108853] = { elderFaction=true, achievements={ { id=915, index=1, version=60000, },
+					{ id=915, index=3, versionUnder=60000, }, },
+					quests={ { id=8718, qType="Seasonal", faction="Horde",
+					tip="Fly straight into the pink portal at Rut'theran. Immediately turn left and fly up high", }, }, },
+}
+
+points[ ns.map.theExodar ] = { -- The Exodar
+	[74015747] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+}
+
+points[ ns.map.thousand ] = { -- Thousand Needles
+	[46345101] = { elder=true, achievements={ { id=911, index=13, version=60000, },
+					{ id=911, index=19, versionUnder=60000, }, }, quests={ { id=8682, qType="Seasonal", }, }, },
+	[77097561] = { elder=true, achievements={ { id=911, index=14, version=60000, },
+					{ id=911, index=14, versionUnder=60000, }, }, quests={ { id=8724, qType="Seasonal", }, }, },
+	[30449376] = ns.setFFelicity,
+	[31989337] = ns.setFFelicity,
+	[32698920] = ns.setFFelicity,
+	[32969423] = ns.setFFelicity,
+	[33049085] = ns.setFFelicity,
+	[33998706] = ns.setFFelicity,
+	[34179545] = ns.setFFelicity,
+	[35089184] = ns.setFFelicity,
+	[35729567] = ns.setFFelicity,
+	[36639366] = ns.setFFelicity,
+	[55869648] = { elderDungeon=true, achievements={ { id=910, index=1, version=60000, },
+					{ id=910, index=8, versionUnder=60000, }, },
+					quests={ { id=8676, qType="Seasonal", tip="Enter Zul'Farrak. Follow the markers", }, }, },
+}
+
+points[ ns.map.thunder ] = { -- Thunder Bluff
+	[71112823] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[72982335] = { elderFaction=true, achievements={ { id=914, index=2, version=60000, },
+					{ id=914, index=3, versionUnder=60000, }, }, quests={ { id=8678, qType="Seasonal", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+}
+
+points[ ns.map.ungoro ] = { -- Un'Goro
+	[50377617] = { elder=true, achievements={ { id=911, index=17, version=60000, },
+					{ id=911, index=6, versionUnder=60000, }, }, quests={ { id=8681, qType="Seasonal", }, }, },
+	[62323042] = ns.setFFelicity,
+	[64162995] = ns.setFFelicity,
+	[65002499] = ns.setFFelicity,
+	[65323097] = ns.setFFelicity,
+	[65422696] = ns.setFFelicity,
+	[66542244] = ns.setFFelicity,
+	[66763242] = ns.setFFelicity,
+	[67852814] = ns.setFFelicity,
+	[68603269] = ns.setFFelicity,
+	[69683030] = ns.setFFelicity,
+	[95553366] = { elderDungeon=true, achievements={ { id=910, index=1, version=60000, },
+					{ id=910, index=8, versionUnder=60000, }, },
+					quests={ { id=8676, qType="Seasonal", tip="Enter Zul'Farrak. Follow the markers", }, }, },
+}
+
+points[ ns.map.winterspring ] = { -- Winterspring
+	[24591973] = { preservation=true, tip="Nighthaven Moonwell",
+					quests={ { id=56842, index=1, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[26262089] = ns.setMyraelLunarbloom,
+	[26472061] = ns.setValadarStarsong,
+	[42167912] = { elder=true, achievements={ { id=6006, index=7, }, }, quests={ { id=29740, qType="Seasonal", }, }, },
+	[53225675] = { elder=true, achievements={ { id=911, index=18, version=60000, },
+					{ id=911, index=3, versionUnder=60000, }, }, quests={ { id=8726, qType="Seasonal", }, }, },
+	[59964994] = { elder=true, achievements={ { id=911, index=19, version=60000, },
+					{ id=911, index=10, versionUnder=60000, }, }, quests={ { id=8672, qType="Seasonal", }, }, },
+	[56173028] = ns.setFGenerosity,
+	[55892949] = ns.setFGenerosity,
+	[56173028] = ns.setFGenerosity,
+	[56812862] = ns.setFGenerosity,
+	[56843730] = ns.setFGenerosity,
+	[57083253] = ns.setFGenerosity,
+	[57682999] = ns.setFGenerosity,
+	[57693201] = ns.setFGenerosity,
+	[57713710] = ns.setFGenerosity,
+	[57913552] = ns.setFGenerosity,
+	[58883399] = ns.setFGenerosity,
+}
+
+points[ 219 ] = { -- Zul'Farrak
+	[34393931] = { elderDungeon=true, achievements={ { id=910, index=1, version=60000, },
+					{ id=910, index=8, versionUnder=60000, }, },
+					quests={ { id=8676, qType="Seasonal", tip="Follow the map directly, no need for way-markers!", }, }, },
+}
+
+points[ ns.map.kalimdor ] = { -- Kalimdor
+	[65006700] = { metaLarge=true, noCoords=true, achievements={ { id=911, showAllCriteria=true, }, }, },
+}
+
+--==================================================================================================================================
+--
+-- EASTERN KINGDOMS
+--
+--==================================================================================================================================
+
+ns.map.badlands = ( ns.version < 60000 ) and 1418 or 15
+ns.map.blastedLands = ( ns.version < 60000 ) and 1419 or 17
+ns.map.burningSteppes = ( ns.version < 60000 ) and 1428 or 36
+ns.map.dunMorogh = ( ns.version < 60000 ) and 1426 or 27
+ns.map.duskwood = ( ns.version < 60000 ) and 1431 or 47
+ns.map.easternP = ( ns.version < 60000 ) and 1423 or 23
+ns.map.elwynn = ( ns.version < 60000 ) and 1429 or 37
+ns.map.eversong = ( ns.version < 60000 ) and 1941 or 94
+ns.map.hillsbrad = ( ns.version < 60000 ) and 1424 or 25
+ns.map.ironforge = ( ns.version < 60000 ) and 1455 or 87
+ns.map.lochModan = ( ns.version < 60000 ) and 1432 or 48
+ns.map.northStrangle = ( ns.version < 60000 ) and 1434 or 50 -- 1434 is listed as "stranglethorne"
+ns.map.searingGorge = ( ns.version < 60000 ) and 1427 or 32
+ns.map.silvermoon = ( ns.version < 60000 ) and 1954 or 110
+ns.map.silverpine = ( ns.version < 60000 ) and 1421 or 21
+ns.map.stormwind = ( ns.version < 60000 ) and 1453 or 84
+ns.map.swampOS = ( ns.version < 60000 ) and 1435 or 51
+ns.map.TheHint = ( ns.version < 60000 ) and 1425 or 26
+ns.map.tirisfal = ( ns.version < 60000 ) and 1420 or 18
+ns.map.undercity = ( ns.version < 60000 ) and 1458 or 90
+ns.map.westfall = ( ns.version < 60000 ) and 1436 or 52
+ns.map.westernP = ( ns.version < 60000 ) and 1422 or 22
+ns.map.easternK = ( ns.version < 60000 ) and 1415 or 13
+
+points[ ns.map.badlands ] = { -- Badlands
+	[06957986] = { elder=true, achievements={ { id=912, index=10, version=60000, },
+					{ id=912, index=16, versionUnder=60000, }, }, quests={ { id=8683, qType="Seasonal", }, }, },
+}
+
 points[ 242 ] = { -- Blackrock Depths - Detention Block
-	[38007650] = { aID=910, index=5, quest=8619, tip="1) This way" },
-	[49007200] = { aID=910, index=5, quest=8619, tip="2) This way" },
-	[51406770] = { aID=910, index=5, quest=8619, tip="3) Enter the Ring here, turn\n"
-											.."in the quest and reverse to exit" },
+	[38007650] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="1) This way", }, }, },
+	[49007200] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="2) This way", }, }, },
+	[51406770] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal",
+					tip="3) Enter the Ring here, turn in the quest and reverse to exit", }, }, },
 }
+
 points[ 34 ] = { -- Blackrock Mountain - Blackrock Caverns
-	[53127138] = { aID=910, index=4, quest=8644, tip="2) Continue past the barrier" },
-	[52654551] = { aID=910, index=4, quest=8644, tip="3) Go straight up" },
-	[60142748] = { aID=910, index=4, quest=8644, tip="4) Go up the ramp" },
+	[53127138] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="2) Continue past the barrier", }, }, },
+	[52654551] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="3) Go straight up", }, }, },
+	[60142748] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="4) Go up the ramp", }, }, },
 }
+
 points[ 35 ] = { -- Blackrock Mountain - Blackrock Depths
-	[54848478] = { aID=910, index=5, quest=8619, tip="1) Fly down to here" },
-	[55818208] = { aID=910, index=5, quest=8619, tip="2) Come this way" },
-	[45716843] = { aID=910, index=5, quest=8619, tip="3) This way" },
-	[37714228] = { aID=910, index=5, quest=8619, tip="4) This way" },
-	[39171822] = { aID=910, index=5, quest=8619, tip="5) Enter through here and follow the markers" },
+	[54848478] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="1) Fly down to here", }, }, },
+	[55818208] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="2) Come this way", }, }, },
+	[45716843] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="3) This way", }, }, },
+	[37714228] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="4) This way", }, }, },
+	[39171822] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal",
+					tip="5) Enter through here and follow the markers", }, }, },
 }
+
 points[ 33 ] = { -- Blackrock Mountain - Blackrock Spire
-	[65676078] = { aID=910, index=4, quest=8644, tip="1) Enter through here" },
-	[72524765] = { aID=910, index=4, quest=8644, tip="5) Continue upwards" },
-	[70775311] = { aID=910, index=4, quest=8644, tip="6) Continue upwards" },
-	[63454416] = { aID=910, index=4, quest=8644, tip="7) Shortcut upwards. You can fly up to here!" },
-	[72903983] = { aID=910, index=4, quest=8644, tip="8) Continue forward and down the ramp.\n"
-											.."Portal is to your right" },
-	[80324026] = { aID=910, index=4, quest=8644, tip="9) Enter through here and follow the markers" },
-	[39494029] = { aID=910, index=5, quest=8619, tip="1) Fly down to here" },
+	[65676078] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="1) Enter through here", }, }, },
+	[72524765] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="5) Continue upwards", }, }, },
+	[70775311] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="6) Continue upwards", }, }, },
+	[63454416] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="7) Shortcut upwards. You can fly up to here!", }, }, },
+	[72903983] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, }, quests={ { id=8644, qType="Seasonal",
+					tip="8) Continue forward and down the ramp. Portal is to your right", }, }, },
+	[80324026] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="9) Enter through here and follow the markers", }, }, },
+	[39494029] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="1) Fly down to here", }, }, },
 }
+
 points[ 251 ] = { -- Blackrock Spire - Skitterweb Tunnels
-	[58904260] = { aID=910, index=4, quest=8644, tip="3) Cross the bridge" },
-	[61934012] = { aID=910, index=4, quest=8644, tip="4) Turn in the quest. Reverse to exit" },
+	[58904260] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="3) Cross the bridge", }, }, },
+	[61934012] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, }, quests={ { id=8644, qType="Seasonal",
+					tip="4) Turn in the quest. Reverse to exit", }, }, },
 }
+
 points[ 252 ] = { -- Blackrock Spire - Hordemar City
-	[39004800] = { aID=910, index=4, quest=8644, tip="1) Begin by following the path down\n"
-												.."and then left to here. Keep going" },
-	[60404270] = { aID=910, index=4, quest=8644, tip="3) Cross the bridge" },
+	[39004800] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal",
+					tip="1) Begin by following the path down and then left to here. Keep going", }, }, },
+	[60404270] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="3) Cross the bridge", }, }, },
 }
+
 points[ 253 ] = { -- Blackrock Spire - Hall of Blackhand
-	[48004100] = { aID=910, index=4, quest=8644, tip="2) Plough on past the mobs. Depending upon your\n"
-					.."graphics settings, you can see Elder Stonefort from here" },
+	[48004100] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, }, quests={ { id=8644, qType="Seasonal",
+					tip="2) Plough on past the mobs. Depending upon your graphics settings, you can see Elder Stonefort from "
+						.."here", }, }, },
 }
-points[ 17 ] = { -- Blasted Lands
-	[54284950] = { aID=912, index=2, quest=8647, tip="Can't find him? Speak to Zidormi" },
+
+points[ ns.map.blastedLands ] = { -- Blasted Lands
+	[54284950] = { elder=true, achievements={ { id=912, index=2, version=60000, },
+					{ id=912, index=12, versionUnder=60000, }, }, quests={ { id=8647, qType="Seasonal", }, }, },
 }
+
+points[ ns.map.burningSteppes ] = { -- Burning Steppes
+	[10581387] = { elder=true, achievements={ { id=912, index=12, version=60000, },
+					{ id=912, index=1, versionUnder=60000, }, }, quests={ { id=8651, qType="Seasonal", }, }, },
+	[70114538] = { elder=true, achievements={ { id=912, index=9, version=60000, },
+					{ id=912, index=9, versionUnder=60000, }, }, quests={ { id=8636, qType="Seasonal", }, }, },
+	[52382393] = { elder=true, achievements={ { id=912, index=10, version=60000, },
+					{ id=912, index=16, versionUnder=60000, }, }, quests={ { id=8683, qType="Seasonal", }, }, },
+	[20201803] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+	[20201603] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+	[21023744] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+	[21023944] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+}
+
+points[ ns.map.dunMorogh ] = { -- Dun Morogh
+	[53904991] = { elder=true, achievements={ { id=912, index=1, version=60000, },
+					{ id=912, index=13, versionUnder=60000, }, }, quests={ { id=8653, qType="Seasonal", }, }, },
+	[60173345] = { elderFaction=true, achievements={ { id=915, index=2, }, },
+					quests={ { id=8866, qType="Seasonal", faction="Horde", tip="Fly through here, keep to the left", }, }, }, 
+	[62922198] = { elderFaction=true, achievements={ { id=915, index=2, }, }, quests={ { id=8866, qType="Seasonal", }, }, },
+	[62872185] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[45775808] = ns.setFLuck,
+	[46125820] = ns.setFLuck,
+	[46226042] = ns.setFLuck,
+	[47485862] = ns.setFLuck,
+	[48205348] = ns.setFLuck,
+	[48265985] = ns.setFLuck,
+	[48355544] = ns.setFLuck,
+	[49965302] = ns.setFLuck,
+	[51705259] = ns.setFLuck,
+	[52545662] = ns.setFLuck,
+}
+
+points[ ns.map.duskwood ] = { -- Duskwood
+	[49153323] = { preservation=true, tip="Twilight Grove Moonwell",
+					quests={ { id=56842, index=7, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+	[59012185] = ns.setFReflection,
+	[60082518] = ns.setFReflection,
+	[60152031] = ns.setFReflection,
+	[63013300] = ns.setFReflection,
+	[63872163] = ns.setFReflection,
+	[64132513] = ns.setFReflection,
+	[64982878] = ns.setFReflection,
+	[66163376] = ns.setFReflection,
+	[67682256] = ns.setFReflection,
+	[68321900] = ns.setFReflection,
+}
+
+points[ ns.map.easternP ] = { -- Eastern Plaguelands
+	[35586882] = { elder=true, achievements={ { id=912, index=15, version=60000, },
+					{ id=912, index=15, versionUnder=60000, }, }, quests={ { id=8688, qType="Seasonal", }, }, },
+	[75505450] = { elder=true, achievements={ { id=912, index=16, version=60000, },
+					{ id=912, index=8, versionUnder=60000, }, }, quests={ { id=8650, qType="Seasonal", }, }, },
+	[26531159] = { elderDungeon=true, achievements={ { id=910, index=6, version=60000, },
+					{ id=910, index=12, versionUnder=60000, }, },
+					quests={ { id=8727, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+	[02575390] = { elder=true, achievements={ { id=912, index=4, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8722, qType="Seasonal", tip="Enter The Weeping Cave", }, }, },
+}
+
+points[ ns.map.elwynn ] = { -- Elwynn Forest
+	[32135280] = { elderFaction=true, version=60000, achievements={ { id=915, index=3, }, },
+					quests={ { id=8646, qType="Seasonal", }, }, },
+	[32475305] = { seasonalQuest=true, name="Lunar Festival Harbinger", version=60000,
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[34245056] = { seasonalQuest=true, name="Lunar Festival Harbinger", versionUnder=60000,
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[34565026] = { elderFaction=true, versionUnder=60000, achievements={ { id=915, index=1, }, }, 
+					quests={ { id=8646, qType="Seasonal", }, }, },
+	[39796367] = { elder=true, achievements={ { id=912, index=3, version=60000, },
+					{ id=912, index=7, versionUnder=60000, }, }, quests={ { id=8649, qType="Seasonal", }, }, },
+	[66139377] = ns.setFReflection,
+	[69929383] = ns.setFReflection,
+	[66969636] = ns.setFReflection,
+	[67029257] = ns.setFReflection,
+	[70119632] = ns.setFReflection,
+	[70789916] = ns.setFReflection,
+	[72889432] = ns.setFReflection,
+	[73389155] = ns.setFReflection,
+}
+
+points[ ns.map.eversong ] = { -- Eversong Woods
+	[39426745] = ns.setFFortitude,
+	[40786500] = ns.setFFortitude,
+	[40847300] = ns.setFFortitude,
+	[42696870] = ns.setFFortitude,
+	[43456364] = ns.setFFortitude,
+	[44167339] = ns.setFFortitude,
+	[44946799] = ns.setFFortitude,
+	[46226210] = ns.setFFortitude,
+	[46447190] = ns.setFFortitude,
+	[46506526] = ns.setFFortitude,
+	[56824734] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.hillsbrad ] = { -- Hillsbrad Foothills
+	[46622052] = ns.setFThoughtfulness,
+	[47201864] = ns.setFThoughtfulness,
+	[47862141] = ns.setFThoughtfulness,
+	[48082546] = ns.setFThoughtfulness,
+	[48281758] = ns.setFThoughtfulness,
+	[49772611] = ns.setFThoughtfulness,
+	[50092111] = ns.setFThoughtfulness,
+	[51052305] = ns.setFThoughtfulness,
+	[52902309] = ns.setFThoughtfulness,
+	[53052549] = ns.setFThoughtfulness,
+	[90650679] = { elder=true, achievements={ { id=912, index=17, version=60000, },
+					{ id=912, index=14, versionUnder=60000, }, }, quests={ { id=8714, qType="Seasonal", }, }, },
+	[05942981] = { elder=true, achievements={ { id=912, index=14, version=60000, },
+					{ id=912, index=10, versionUnder=60000, }, }, quests={ { id=8645, qType="Seasonal", }, }, },
+	[13752469] = ns.setFSolemnity,
+	[14292187] = ns.setFSolemnity,
+	[15312379] = ns.setFSolemnity,
+	[15682052] = ns.setFSolemnity,
+	[15832453] = ns.setFSolemnity,
+	[15851879] = ns.setFSolemnity,
+	[16042264] = ns.setFSolemnity,
+	[16602521] = ns.setFSolemnity,
+	[17712461] = ns.setFSolemnity,
+}
+
+points[ ns.map.ironforge ] = { -- Ironforge
+	[28861626] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[29191705] = { elderFaction=true, achievements={ { id=915, index=2, }, }, quests={ { id=8866, qType="Seasonal", }, }, },
+	[12158801] = { elderFaction=true, achievements={ { id=915, index=2, }, },
+					quests={ { id=8866, qType="Seasonal", faction="Horde", tip="1) Fly through here, keep to the left", }, }, },
+	[24365947] = { elderFaction=true, achievements={ { id=915, index=2, }, }, quests={ { id=8866, qType="Seasonal", faction="Horde",
+					tip="2) Drop straight down into here and follow to the left", }, }, },
+	[23683637] = { elderFaction=true, achievements={ { id=915, index=2, }, }, quests={ { id=8866, qType="Seasonal", faction="Horde",
+					tip="3) Stick your head up a little and assess the situation", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+}
+
+points[ ns.map.lochModan ] = { -- Loch Modan
+	[33334655] = { elder=true, achievements={ { id=912, index=7, version=60000, },
+					{ id=912, index=17, versionUnder=60000, }, }, quests={ { id=8642, qType="Seasonal", }, }, },
+}
+
+points[ 469 ] = { -- New Tinkertown
+	[92376843] = { elder=true, achievements={ { id=912, index=1, version=60000, },
+					{ id=912, index=13, versionUnder=60000, }, }, quests={ { id=8653, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.northStrangle ] = { -- Northern Stranglethorn
+	[71043430] = { elder=true, achievements={ { id=912, index=5, version=60000, },
+					{ id=912, index=4, versionUnder=60000, }, },
+					quests={ { id=8716, qType="Seasonal", tip="Outside the instance", }, }, },
+}
+
+points[ ns.map.searingGorge ] = { -- Searing Gorge
+	[21297911] = { elder=true, achievements={ { id=912, index=12, version=60000, },
+					{ id=912, index=1, versionUnder=60000, }, }, quests={ { id=8651, qType="Seasonal", }, }, },
+	[34898498] = { elderDungeon=true, achievements={ { id=910, index=4, version=60000, },
+					{ id=910, index=9, versionUnder=60000, }, },
+					quests={ { id=8644, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+	[34898298] = { elderDungeon=true, achievements={ { id=910, index=5, version=60000, },
+					{ id=910, index=11, versionUnder=60000, }, },
+					quests={ { id=8619, qType="Seasonal", tip="Enter through here and follow the markers", }, }, },
+	[80349331] = { elder=true, achievements={ { id=912, index=10, version=60000, },
+					{ id=912, index=16, versionUnder=60000, }, }, quests={ { id=8683, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.silvermoon ] = { -- Sivermoon City
+	[73068260] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[31505320] = ns.setNewZones,
+	[31505750] = ns.setHonorElders,
+	[33706030] = ns.setElune,
+	[34005600] = ns.setHistory,
+	[34205200] = ns.setMetaFaction,
+	[36305900] = ns.setPyro,
+	[36405480] = ns.set50Coins,
+}
+
+points[ ns.map.silverpine ] = { -- Silverpine Forest
+	[44974114] = { elder=true, achievements={ { id=912, index=14, version=60000, },
+					{ id=912, index=10, versionUnder=60000, }, }, quests={ { id=8645, qType="Seasonal", }, }, },
+	[54013521] = ns.setFSolemnity,
+	[54023150] = ns.setFSolemnity,
+	[54643194] = ns.setFSolemnity,
+	[55823416] = ns.setFSolemnity,
+	[56253038] = ns.setFSolemnity,
+	[56423502] = ns.setFSolemnity,
+	[56452838] = ns.setFSolemnity,
+	[56663283] = ns.setFSolemnity,
+	[57313581] = ns.setFSolemnity,
+	[58603512] = ns.setFSolemnity,
+}
+
+points[ ns.map.stormwind ] = { -- Stormwind City
+	[79199617] = { seasonalQuest=true, name="Lunar Festival Harbinger", versionUnder=60000,
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[79839557] = { elderFaction=true, versionUnder=60000, achievements={ { id=915, index=1, }, }, 
+					quests={ { id=8646, qType="Seasonal", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+}
+
+points[ 224 ] = { -- Stranglethorn Vale
+	[63282265] = { elder=true, achievements={ { id=912, index=5, version=60000, },
+					{ id=912, index=4, versionUnder=60000, }, },
+					quests={ { id=8716, qType="Seasonal", tip="Outside the instance", }, }, },
+	[37327920] = { elder=true, achievements={ { id=912, index=6, version=60000, },
+					{ id=912, index=3, versionUnder=60000, },}, quests={ { id=8674, qType="Seasonal", }, }, },
+	[38814669] = ns.setFPeace,
+	[40134704] = ns.setFPeace,
+	[40874783] = ns.setFPeace,
+	[41294516] = ns.setFPeace,
+	[41604731] = ns.setFPeace,
+	[41954612] = ns.setFPeace,
+	[42254482] = ns.setFPeace,
+	[42684748] = ns.setFPeace,
+	[42904573] = ns.setFPeace,
+	[43234966] = ns.setFPeace,
+	[94001894] = { elder=true, achievements={ { id=912, index=2, version=60000, },
+					{ id=912, index=12, versionUnder=60000, }, }, quests={ { id=8647, qType="Seasonal", }, }, },
+}
+
+points[ 317 ] = { -- Stratholme
+	[73505480] = { elderDungeon=true, achievements={ { id=910, index=6, version=60000, },
+					{ id=910, index=12, versionUnder=60000, }, },
+					quests={ { id=8727, qType="Seasonal", tip="Lift the portcullis", }, }, },
+	[78622176] = { elderDungeon=true, achievements={ {id=910, index=6, version=60000, },
+					{ id=910, index=12, versionUnder=60000, }, },
+					quests={ { id=8727, qType="Seasonal", tip="Exit the same way you entered", }, }, },
+}
+
+points[ ns.map.swampOS ] = { -- Swamp of Sorrows
+	[69425487] = { elderDungeon=true, achievements={ {id=910, index=2, version=60000, },
+					{ id=910, index=13, versionUnder=60000, }, }, quests={ { id=8713, qType="Seasonal",
+					tip="Enter the Temple of Atal'Hakkar, also known as the Sunken Temple.\n\n1) Descend the twisting path. 2) "
+						.."Momentarily submerge into the pool. 3) Resurface and follow the path and enter the portal and follow "
+						.."the markers", }, }, },
+}
+
+points[ 210 ] = { -- The Cape of Stranglethorn
+	[39967251] = { elder=true, achievements={ {id=912, index=6, version=60000, },
+					{ id=912, index=3, versionUnder=60000, }, }, quests={ { id=8674, qType="Seasonal", }, }, },
+	[42431854] = ns.setFPeace,
+	[44611912] = ns.setFPeace,
+	[45852043] = ns.setFPeace,
+	[46541599] = ns.setFPeace,
+	[47071956] = ns.setFPeace,
+	[47631759] = ns.setFPeace,
+	[48141543] = ns.setFPeace,
+	[48851984] = ns.setFPeace,
+	[49221694] = ns.setFPeace,
+	[49762346] = ns.setFPeace,
+}
+
+points[ ns.map.TheHint ] = { -- The Hinterlands
+	[50004805] = { elder=true, achievements={ { id=912, index=11, version=60000, },
+					{ id=912, index=5, versionUnder=60000, }, }, quests={ { id=8643, qType="Seasonal", }, }, },
+	[49123983] = ns.setFVigor,
+	[51853858] = ns.setFVigor,
+	[54953518] = ns.setFVigor,
+	[59543908] = ns.setFVigor,
+	[62224140] = ns.setFVigor,
+	[63644153] = ns.setFVigor,
+	[65213765] = ns.setFVigor,
+	[66234105] = ns.setFVigor,
+	[71434483] = ns.setFVigor,
+	[73114802] = ns.setFVigor,
+	[25530801] = { elder=true, achievements={ { id=912, index=17, version=60000, },
+					{ id=912, index=14, versionUnder=60000, }, }, quests={ { id=8714, qType="Seasonal", }, }, },
+}
+
+points[ 220 ] = { -- The Temple of Atal'Hakkar
+	[63073436] = { elderDungeon=true, achievements={ { id=910, index=2, version=60000, },
+					{ id=910, index=13, versionUnder=60000, }, }, quests={ { id=8713, qType="Seasonal", }, }, },
+	[50002500] = { elderDungeon=true, achievements={ { id=910, index=2, version=60000, },
+					{ id=910, index=13, versionUnder=60000, }, },
+					quests={ { id=8713, qType="Seasonal", tip="Head straight for the other marker", }, }, },
+}
+
+points[ ns.map.tirisfal ] = { -- Tirisfal Glades
+	[61737269] = { seasonalQuest=true, name="Lunar Festival Harbinger", tip="Not in the Undercity. She's above it",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[61865391] = { elder=true, achievements={ { id=912, index=13, version=60000, },
+					{ id=912, index=2, versionUnder=60000, }, }, quests={ { id=8652, qType="Seasonal", }, }, },
+	[61957317] = { elderFaction=true, achievements={ { id=914, index=3, version=60000, },
+					{ id=914, index=2, versionUnder=60000, }, }, quests={ { id=8648, qType="Seasonal", }, }, },
+	[61817153] = { elderFaction=true, achievements={ { id=914, index=3, version=60000, },
+					{ id=914, index=2, versionUnder=60000, }, }, quests={ { id=8648, qType="Seasonal",
+					tip="Drop down in to here. Elder Darkcore is a short walk away", }, }, },
+	[43259844] = ns.setFSolemnity,
+}
+
+points[ 2070 ] = points[ ns.map.tirisfal ] -- Wrong Tirisfal
+
+points[ ns.map.undercity ] = { -- Undercity
+	[65613597] = { seasonalQuest=true, name="Lunar Festival Harbinger", tip="Not in the Undercity. She's above it",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[66633821] = { elderFaction=true, achievements={ { id=914, index=3, version=60000, },
+					{ id=914, index=2, versionUnder=60000, }, }, quests={ { id=8648, qType="Seasonal",
+					tip="The achievement text is wrong. Elder Darkcore is NOT in the Undercity. Darkcore is above, in the Ruins "
+						.."of Lordaeron", }, }, },
+	[31505320] = ns.setNewZones,
+	[31505750] = ns.setHonorElders,
+	[33706030] = ns.setElune,
+	[34005600] = ns.setHistory,
+	[34205200] = ns.setMetaFaction,
+	[36305900] = ns.setPyro,
+	[36405480] = ns.set50Coins,
+}
+
+points[ ns.map.westfall ] = { -- Westfall
+	[56644709] = { elder=true, achievements={ { id=912, index=8, version=60000, },
+					{ id=912, index=6, versionUnder=60000, }, },
+					quests={ { id=8675, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.westernP ] = { -- Western Plaguelands
+	[65303876] = { elder=true, achievements={ { id=912, index=4, version=60000, },
+					{ id=912, index=11, versionUnder=60000, }, },
+					quests={ { id=8722, qType="Seasonal", tip="Enter The Weeping Cave", }, }, },
+	[63513611] = { elder=true, achievements={ { id=912, index=4, version=60000, },
+					{ id=912, index=11, versionUnder=60000, }, },
+					quests={ { id=8722, qType="Seasonal", tip="Inside The Weeping Cave", }, }, },
+	[69187345] = { elder=true, achievements={ { id=912, index=17, version=60000, },
+					{ id=912, index=14, versionUnder=60000, }, }, quests={ { id=8714, qType="Seasonal", }, }, },
+	[04154023] = { elder=true, achievements={ { id=912, index=13, version=60000, },
+					{ id=912, index=2, versionUnder=60000, }, }, quests={ { id=8652, qType="Seasonal", }, }, },
+	[96255275] = { elder=true, achievements={ { id=912, index=15, version=60000, },
+					{ id=912, index=15, versionUnder=60000, }, }, quests={ { id=8688, qType="Seasonal", }, }, },
+}
+
+points[ ns.map.easternK ] = { -- Eastern Kingdoms
+	[65005300] = { metaLarge=true, noCoords=true, achievements={ { id=912, showAllCriteria=true, }, }, },
+}
+
+--==================================================================================================================================
+--
+-- OUTLAND
+--
+--==================================================================================================================================
+
+ns.map.shattrath = ( ns.version < 60000 ) and 1955 or 111
+ns.map.terokkar = ( ns.version < 60000 ) and 1952 or 108
+
+points[ ns.map.shattrath ] = { -- Shattrath
+	[48143685] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[53293309] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+}
+
+points[ ns.map.terokkar ] = { -- Terokkar Forest
+	[30452117] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+}
+
+--==================================================================================================================================
+--
+-- NORTHREND
+--
+--==================================================================================================================================
+
+points[ 159 ] = { -- Azjol-Nerub - The Guilded Gate
+	[54374440] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="1) Enter the gate. You must kill the boss", }, }, },
+	[66004350] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="2) Jump down onto the left side stairs", }, }, },
+	[70003450] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="3) Go this way", }, }, },
+}
+
+points[ 158 ] = { -- Azjol-Nerub - Hadronox's Lair
+	[41533715] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="3) Go this way", }, }, },
+	[61752850] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="4) Keep going this way!", }, }, },
+	[47176569] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="5) Ignore Hadronox. Jump down here", }, }, },
+	[49005820] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="6) Now jump down again!", }, }, },
+}
+
+points[ 157 ] = { -- Azjol-Nerub - The Brood Pt
+	[23005217] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="7) You land here", }, }, },
+	[21724319] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="8) Elder is here", }, }, },
+	[36854877] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="9) Exit is this way", }, }, },
+	[75744913] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="10) No need to kill Anub'arak", }, }, },
+	[88527649] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip="11) You're welcome! :)", }, }, },
+}
+
 points[ 114 ] = { -- Borean Tundra
-	[27512594] = { aID=910, index=8, quest=13021,
-					tip="Enter through here and follow the markers.\n\nThe lowest portal is for The Nexus" },
-	[33803436] = { aID=1396, index=6, quest=13016 },
-	[42934957] = { aID=1396, index=15, quest=13029, tip="Actually above the Mightstone Quarry" },
-	[57404372] = { aID=1396, index=5, quest=13033 },
-	[59096564] = { aID=1396, index=1, quest=13012 },
+	[27512594] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, }, quests={ { id=13021, qType="Seasonal",
+					tip="Enter through here and follow the markers.\n\nThe lowest portal is for The Nexus", }, }, },
+	[33803436] = { elder=true, achievements={ { id=1396, index=6, version=60000, },
+					{ id=1396, index=1, versionUnder=60000, }, }, quests={ { id=13016, qType="Seasonal", }, }, },
+	[42934957] = { elder=true, achievements={ { id=1396, index=15, version=60000, },
+					{ id=1396, index=5, versionUnder=60000, }, },
+					quests={ { id=13029, qType="Seasonal", tip="Actually above the Mightstone Quarry", }, }, },
+	[57404372] = { elder=true, achievements={ { id=1396, index=5, version=60000, },
+					{ id=1396, index=16, versionUnder=60000, }, }, quests={ { id=13033, qType="Seasonal", }, }, },
+	[59096564] = { elder=true, achievements={ { id=1396, index=1, version=60000, },
+					{ id=1396, index=6, versionUnder=60000, }, }, quests={ { id=13012, qType="Seasonal", }, }, },
 }
-points[ 36 ] = { -- Burning Steppes
-	[70114538] = { aID=912, index=9, quest=8636 },
-	[52382393] = { aID=912, index=10, quest=8683 },
-	[20201803] = { aID=910, index=4, quest=8644, tip="Enter through here and follow the markers" },
-	[20201603] = { aID=910, index=5, quest=8619, tip="Enter through here and follow the markers" },
-	[21023744] = { aID=910, index=4, quest=8644, tip="Enter through here and follow the markers" },
-	[21023944] = { aID=910, index=5, quest=8619, tip="Enter through here and follow the markers" },
-	[10581387] = { 912, 912, 12, 12, 8651, 8651, },
-}
+
 points[ 127 ] = { -- Crystalsong Forest
-	[92911771] = { aID=1396, index=13, quest=13028 },
+	[92911771] = { elder=true, achievements={ { id=1396, index=13, version=60000, },
+					{ id=1396, index=13, versionUnder=60000, }, }, quests={ { id=13028, qType="Seasonal", }, }, },
+	[29243808] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
 }
-points[ 62 ] = { -- Darkshore
-	[49541895] = { aID=911, index=7, quest=8721, tip="If Teldrassil looks destroyed then have a chat with Zidormi!\n\n"
-					.."Thanks for using my AddOn. Hope I helped! :)\n\n"
-					.."I'm at Twitter and Ko-fi as @Taraezor.\nThere's also my project page at curseforge\n"
-					.."where you might find more useful AddOns!" },
+
+points[ 125 ] = { -- Dalaran
+	[47654374] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
 }
-points[ 89 ] = { -- Darnassus
-	[39203185] = { aID=915, index=1, quest=8718 },
-	[37325047] = { aID=915, index=1, quest=8718, faction="Horde", tip="Immediately go left and up high - don't delay" },
-	[30402709] = { aID=915, index=1, quest=8718, faction="Horde", tip="Hide here for respite/cooldowns, as necessary" },
-}
-points[ 207 ] = { -- Deepholm
-	[49705488] = { aID=6006, index=1, quest=29735 },
-	[27706918] = { aID=6006, index=9, quest=29734 },
-}
-points[ 66 ] = { -- Desolace
-	[29626248] = { aID=910, index=3, quest=8635, tip="Enter Maraudon. Follow the markers" },
-	[50225001] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[50284566] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[50904702] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[51074943] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[51384509] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[52095157] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[52774955] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[53104525] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[53335138] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[54784717] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[99614885] = { aID=914, index=2, quest=8678 },
-}
+
 points[ 115 ] = { -- Dragonblight
-	[14000484] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
-	[26134950] = { aID=910, index=9, quest=13022, tip="Drop down here, face south and locate the portal and enter" },
-	[26814899] = { aID=910, index=9, quest=13022, tip=elderNurgenExit },
-	[29755591] = { aID=1396, index=3, quest=13014 },
-	[35104835] = { aID=1396, index=17, quest=13031 },
-	[48777817] = { aID=1396, index=12, quest=13019 },
+	[14000484] = { elder=true, achievements={ { id=1396, index=10, version=60000, },
+					{ id=1396, index=17, versionUnder=60000, }, },
+					quests={ { id=13026, qType="Seasonal", tip=ns.elderBluewolf, }, }, },
+	[26134950] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, }, quests={ { id=13022, qType="Seasonal",
+					tip="Drop down here, face south and locate the portal and enter", }, }, },
+	[26814899] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip=ns.elderNurgenExit, }, }, },
+	[29755591] = { elder=true, achievements={ { id=1396, index=3, version=60000, },
+					{ id=1396, index=4, versionUnder=60000, }, }, quests={ { id=13014, qType="Seasonal", }, }, },
+	[35104835] = { elder=true, achievements={ { id=1396, index=17, version=60000, },
+					{ id=1396, index=8, versionUnder=60000, }, }, quests={ { id=13031, qType="Seasonal", }, }, },
+	[48777817] = { elder=true, achievements={ { id=1396, index=12, version=60000, },
+					{ id=1396, index=14, versionUnder=60000, }, }, quests={ { id=13019, qType="Seasonal", }, }, },
 }
+
 points[ 161 ] = { -- Drak'Tharon Keep - Drak'Tharon Overlook
-	[36554553] = { aID=910, index=10, quest=13023, tip="5) So you did decide to come this way. Awesome!\n"
-													.."Keep going, it's all linear" },
-	[43271321] = { aID=910, index=10, quest=13023, tip="6) Ignore The Prophet. Just keep going" },
-	[38051726] = { aID=910, index=10, quest=13023,
-					tip="7) Jump down and turn around and you'll see a\nshort hallway then jump "
-					.."again into the water\nand then jump once more into the water!" },
+	[36554553] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, }, quests={ { id=13023, qType="Seasonal",
+					tip="5) So you did decide to come this way. Awesome! Keep going, it's all linear", }, }, },
+	[43271321] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, }, quests={ { id=13023, qType="Seasonal",
+					tip="6) Ignore The Prophet. Just keep going", }, }, },
+	[38051726] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, }, quests={ { id=13023, qType="Seasonal",
+					tip="7) Jump down and turn around and you'll see a short hallway then jump again into the water and then "
+						.."jump once more into the water!", }, }, },
 }
+
 points[ 160 ] = { -- Drak'Tharon Keep - The Vestibules of Drak'Tharon
-	[50654047] = { aID=910, index=10, quest=13023, tip="1) Go through here" },
-	[60971879] = { aID=910, index=10, quest=13023, tip="2) Through here. No need to whoop Trollie" },
-	[67875507] = { aID=910, index=10, quest=13023, tip="3) Through here. You can bypass Novos too" },
-	[55636125] = { aID=910, index=10, quest=13023, tip="4) Exit here" },
-	[46031310] = { aID=910, index=10, quest=13023, tip="8) You made it! Follow the passage. You know the rest!" },
-	[69077927] = { aID=910, index=10, quest=13023,
-					tip="Elder Kilias is located here. Whew! now the exit :(...\n\nA sad choice of "
-					.."backtracking or go up stairs, kill the\nlast boss (optional) and jump down. Your call" },
+	[50654047] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="1) Go through here", }, }, },
+	[60971879] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="2) Through here. No need to whoop Trollie", }, }, },
+	[67875507] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="3) Through here. You can bypass Novos too", }, }, },
+	[55636125] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="4) Exit here", }, }, },
+	[46031310] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="8) You made it! Follow the passage. You know the rest!", }, }, },
+	[69077927] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, }, quests={ { id=13023, qType="Seasonal",
+					tip="Elder Kilias is located here. Whew! now the exit :(...\n\nA sad choice of backtracking or go up stairs, "
+						.."kill the last boss (optional) and jump down. Your call", }, }, },
 }
-points[ 27 ] = { -- Dun Morogh
-	[53904991] = { aID=912, index=1, quest=8653 },
-	[60173345] = { aID=915, index=2, quest=8866, faction="Horde", tip="Fly through here, keep to the left" }, 
-	[45775808] = { index=2, quest=56906, obj="Flower of Luck" },
-	[46125820] = { index=2, quest=56906, obj="Flower of Luck" },
-	[46226042] = { index=2, quest=56906, obj="Flower of Luck" },
-	[47485862] = { index=2, quest=56906, obj="Flower of Luck" },
-	[48205348] = { index=2, quest=56906, obj="Flower of Luck" },
-	[48265985] = { index=2, quest=56906, obj="Flower of Luck" },
-	[48355544] = { index=2, quest=56906, obj="Flower of Luck" },
-	[49965302] = { index=2, quest=56906, obj="Flower of Luck" },
-	[51705259] = { index=2, quest=56906, obj="Flower of Luck" },
-	[52545662] = { index=2, quest=56906, obj="Flower of Luck" },
-}
-points[ 1 ] = { -- Durotar
-	[53234361] = { aID=911, index=1, quest=8670, tip="Alliance need to be very quick with this one" },
-	[47000300] = { aID=914, index=1, quest=8677, tip="Alliance need to be very quick with this one" },
-	[00334697] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[00594848] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[00675268] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[00805135] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[33357598] = { aID=911, index=5, quest=8680 },
-	[11796435] = { aID=911, index=3, quest=8717 },
-}
-points[ 47 ] = { -- Duskwood
-	[49153323] = { index=7, quest=56842, title="Lunar Preservation" },
-	[59012185] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[60082518] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[60152031] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[63013300] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[63872163] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[64132513] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[64982878] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[66163376] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[67682256] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[68321900] = { index=2, quest=56905, obj="Flower of Reflection" },
-}
-points[ 70 ] = { -- Dustwallow Marsh
-	[28529858] = { aID=911, index=13, quest=8682 },
-	[14330306] = { aID=911, index=4, quest=8686 },
-}
-points[ 23 ] = { -- Eastern Plaguelands
-	[35586882] = { aID=912, index=15, quest=8688 },
-	[75505450] = { aID=912, index=16, quest=8650 },
-	[26531159] = { aID=910, index=6, quest=8727, tip="Enter through here and follow the markers" },
-	[02575390] = { aID=912, index=4, quest=8722, tip="Enter The Weeping Cave" },
-}
-points[ 37 ] = { -- Elwynn Forest
-	[39796367] = { aID=912, index=3, quest=8649 },
-	[34565025] = { aID=915, index=3, quest=8646 },
-	[66139377] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[69929383] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[66969636] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[67029257] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[70119632] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[70789916] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[72889432] = { index=2, quest=56905, obj="Flower of Reflection" },
-	[73389155] = { index=2, quest=56905, obj="Flower of Reflection" },
-}
-points[ 1644 ] = { -- Ember Court
-	[38365285] = { quest=63213, tip="Elder Naladu" },
-}
-points[ 94 ] = { -- Eversong Woods
-	[39426745] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[40786500] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[40847300] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[42696870] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[43456364] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[44167339] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[44946799] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[46226210] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[46447190] = { index=1, quest=56903, obj="Flower of Fortitude" },
-	[46506526] = { index=1, quest=56903, obj="Flower of Fortitude" },
-}
-points[ 77 ] = { -- Felwood
-	[38365285] = { aID=911, index=12, quest=8723 },
-	[44042841] = { index=2, quest=56842, title="Lunar Preservation" },
-	[53225675] = { aID=911, index=18, quest=8726 },
-}
-points[ 69 ] = { -- Feralas
-	[76713790] = { aID=911, index=10, quest=8679, tip="In the Lariss Pavillion" },
-	[62563107] = { aID=911, index=11, quest=8685, tip="In the Dire Maul arena - she's not in the instance" },
-	[60214625] = { index=6, quest=56842, title="Lunar Preservation" },
-	[53368345] = { aID=911, index=20, quest=8654, tip="Visit Zidormi if you see a\n"
-												.."huge sword stuck into Azeroth" },
-	[66339639] = { aID=911, index=21, quest=8719, tip="Visit Zidormi if you see a\n"
-												.."huge sword stuck into Azeroth" },
-}
+
 points[ 116 ] = { -- Grizzly Hills
-	[60572768] = { aID=1396, index=2, quest=13013 },
-	[80533711] = { aID=1396, index=9, quest=13025 },
-	[64184699] = { aID=1396, index=16, quest=13030 },
-	[17792703] = { aID=910, index=10, quest=13023, tip="The portal is through here" },
+	[60572768] = { elder=true, achievements={ { id=1396, index=2, version=60000, },
+					{ id=1396, index=12, versionUnder=60000, }, }, quests={ { id=13013, qType="Seasonal", }, }, },
+	[80533711] = { elder=true, achievements={ { id=1396, index=9, version=60000, },
+					{ id=1396, index=18, versionUnder=60000, }, }, quests={ { id=13025, qType="Seasonal", }, }, },
+	[64184699] = { elder=true, achievements={ { id=1396, index=16, version=60000, },
+					{ id=1396, index=10, versionUnder=60000, }, }, quests={ { id=13030, qType="Seasonal", }, }, },
+	[17792703] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="The portal is through here", }, }, },
 }
+
 points[ 154 ] = { -- Gundrak
-	[58634038] = { aID=910, index=11, quest=13065, tip="1) Jump in the water and exit here" },
-	[58635714] = { aID=910, index=11, quest=13065, tip="2) Through this doorway" },
-	[47007325] = { aID=910, index=11, quest=13065, tip="3) This way" },
-	[45556119] = { aID=910, index=11, quest=13065, tip="4) After Elder Ohanzee, reverse to exit" },
+	[58634038] = { elderDungeon=true, achievements={ { id=910, index=11, version=60000, },
+					{ id=910, index=6, versionUnder=60000, }, }, quests={ { id=13065, qType="Seasonal",
+					tip="1) Jump in the water and exit here", }, }, },
+	[58635714] = { elderDungeon=true, achievements={ { id=910, index=11, version=60000, },
+					{ id=910, index=6, versionUnder=60000, }, },
+					quests={ { id=13065, qType="Seasonal", tip="2) Through this doorway", }, }, },
+	[47007325] = { elderDungeon=true, achievements={ { id=910, index=11, version=60000, },
+					{ id=910, index=6, versionUnder=60000, }, },
+					quests={ { id=13065, qType="Seasonal", tip="3) This way", }, }, },
+	[45556119] = { elderDungeon=true, achievements={ { id=910, index=11, version=60000, },
+					{ id=910, index=6, versionUnder=60000, }, },
+					quests={ { id=13065, qType="Seasonal", tip="4) After Elder Ohanzee, reverse to exit", }, }, },
 }
+
 points[ 140 ] = { -- Halls of Stone
-	[29176225] = { aID=910, index=12, quest=13066, tip="Here he is!" },
-}
-points[ 25 ] = { -- Hillsbrad Foothills
-	[46622052] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[47201864] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[47862141] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[48082546] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[48281758] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[49772611] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[50092111] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[51052305] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[52902309] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[53052549] = { index=1, quest=56906, obj="Flower of Thoughtfulness" },
-	[90650679] = { aID=912, index=17, quest=8714 },
-	[05942981] = { aID=912, index=14, quest=8645 },	
-	[13752469] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[14292187] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[15312379] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[15682052] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[15832453] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[15851879] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[16042264] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[16602521] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[17712461] = { index=3, quest=56905, obj="Flower of Solemnity" },
+	[29176225] = { elderDungeon=true, achievements={ { id=910, index=12, version=60000, },
+					{ id=910, index=5, versionUnder=60000, }, },
+					quests={ { id=13066, qType="Seasonal", tip="Here he is!", }, }, },
 }
 
 points[ 117 ] = { -- Howling Fjord
-	[58854834] = { aID=910, index=7, quest=13017, tip="Utgarde Keep is this way. It at the base" },
-	[57254671] = { aID=910, index=13, quest=13067, tip="This is the correct portal. It's up quite high" },
+	[58854834] = { elderDungeon=true, achievements={ { id=910, index=7, version=60000, },
+					{ id=910, index=1, versionUnder=60000, }, },
+					quests={ { id=13017, qType="Seasonal", tip="Utgarde Keep is this way. It's at the base", }, }, },
+	[57254671] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="This is the correct portal. It's up quite high", }, }, },
 }
+
 points[ 118 ] = { -- Icecrown
-	[10899536] = { aID=1396, index=7, quest=13018 },
-	[20638522] = { aID=1396, index=8, quest=13024, },
-	[41499646] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
-	[90216517] = { aID=1396, index=4, quest=13015, },
-	[92902422] = { aID=1396, index=14, quest=13020, },
+	[10899536] = { elder=true, achievements={ { id=1396, index=7, version=60000, },
+					{ id=1396, index=2, versionUnder=60000, }, }, quests={ { id=13018, qType="Seasonal", }, }, },
+	[20638522] = { elder=true, achievements={ { id=1396, index=8, version=60000, },
+					{ id=1396, index=15, versionUnder=60000, }, }, quests={ { id=13024, qType="Seasonal", }, }, },
+	[41499646] = { elder=true, achievements={ { id=1396, index=10, version=60000, },
+					{ id=1396, index=17, versionUnder=60000, }, },
+					quests={ { id=13026, qType="Seasonal", tip=ns.elderBluewolf, }, }, },
+	[90216517] = { elder=true, achievements={ { id=1396, index=4, version=60000, },
+					{ id=1396, index=3, versionUnder=60000, }, }, quests={ { id=13015, qType="Seasonal", }, }, },
+	[92902422] = { elder=true, achievements={ { id=1396, index=14, version=60000, },
+					{ id=1396, index=11, versionUnder=60000, }, }, quests={ { id=13020, qType="Seasonal", }, }, },
 }
-points[ 87 ] = { -- Ironforge
-	[29191705] = { aID=915, index=2, quest=8866 }, 
-	[12158801] = { aID=915, index=2, quest=8866, faction="Horde", tip="1) Fly through here, keep to the left" }, 
-	[24365947] = { aID=915, index=2, quest=8866, faction="Horde", tip="2) Drop straight down into here and follow to the left" }, 
-	[23683637] = { aID=915, index=2, quest=8866, faction="Horde", tip="3) Stick your head up a little and assess the situation" }, 
-}
-points[ 48 ] = { -- Loch Modan
-	[33334655] = { aID=912, index=7, quest=8642 },
-}
-points[ 68 ] = { -- Maraudon - Foulspore Cavern
-	[46788822] = { aID=910, index=3, quest=8635, tip="If you are here then you have come the correct way.\n"
-												.."It's a linear path. The instance portal is ahead" },
-}
-points[ 67 ] = { -- Maraudon - The Wicked Grotto
-	-- 68 - Foulspore Cavern
-	[19345583] = { aID=910, index=3, quest=8635, tip="This is where you respawn if you were wondering" },
-	[25004335] = { aID=910, index=3, quest=8635, tip="Instance entrance/exit" },
-	[17005350] = { aID=910, index=3, quest=8635,
-					tip="Follow the path.\n\nAt \"Zaetar's Choice\" enter the arch that is\nguarded by "
-					.."two centaurs. Do not take the left\npink/purple path, nor the right red/orange path" },
-}
-points[ 281 ] = { -- Maraudon - Zaelar's Grave
-	[28083508] = { aID=910, index=3, quest=8635, tip="This is where you \"land\" upon entry\n"
-					.."to the instance. Go straight ahead,\njumping down and through the cutting" },
-	[33006070] = { aID=910, index=3, quest=8635, tip="Through here and follow the path" },
-	[45405480] = { aID=910, index=3, quest=8635, tip="You now have a choice. Go right. In other\n"
-												.."words, do not take the (left) ramp upwards" },
-	[40007340] = { aID=910, index=3, quest=8635,
-					tip="You're now in an area with a waterfall, a\nPrimordial Behemoth, a bridge and a river.\n"
-					.."Continue over the bridge. Don't jump down.\nIt's a linear path, you can't get lost!" },
-	[51379385] = { aID=910, index=3, quest=8635, tip="Elder Splitrock is here" },
-	[54708660] = { aID=910, index=3, quest=8635,
-					tip="After Elder Splitrock, don't bother looking\nfor a way out down here. "
-					.."There isn't one.\nHearth or portal" },
-}
-points[ 80 ] = { -- Moonglade
-	[48643293] = { index=1, quest=56842, title="Lunar Preservation" },
-}
-points[ 198 ] = { -- Mount Hyjal
-	[26696205] = { aID=6006, index=6, quest=29739 },
-	[62542282] = { aID=6006, index=7, quest=29740 },
-	[60522631] = { index=8, quest=56842, title="Lunar Preservation" },
-}
-points[ 7 ] = { -- Mulgore
-	[48495323] = { aID=911, index=8, quest=8673 },
-	[44942322] = { aID=914, index=2, quest=8678 },
-	[47473458] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[47653056] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[48112717] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[49122970] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[50982986] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[51273853] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[52423242] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[53843626] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[56472982] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[57053049] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[72145427] = { aID=911, index=4, quest=8686 },
-	[04192417] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[04242059] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[04762171] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[04902370] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[05152012] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[05742547] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[06302380] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[06572025] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[06762530] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[07962183] = { index=1, quest=56905, obj="Flower of Compassion" },
-	[87890802] = { aID=911, index=3, quest=8717 },
-}
-points[ 10 ] = { -- Northern Barrens
-	[48525926] = { aID=911, index=3, quest=8717 },
-	[68366996] = { aID=911, index=5, quest=8680 },
-	[35654710] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[36174300] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[36204512] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[37054770] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[37504278] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[37624591] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[37974327] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[38214466] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[38294852] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[38414730] = { index=1, quest=56904, obj="Flower of Wealth" },	
-	[10188445] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[10358064] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[10797743] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[11757982] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[13517998] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[13788820] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[14888240] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[16238605] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[18727994] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[19278058] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[07787368] = { aID=914, index=2, quest=8678 },
-	[80370051] = { aID=914, index=1, quest=8677, "Alliance need to be very quick with this one" },
-	[86654018] = { aID=911, index=1, quest=8670, "Alliance need to be very quick with this one" },
-}
-points[ 50 ] = { -- Northern Stranglethorn
-	[71043430] = { aID=912, index=5, quest=8716, tip="Outside the instance" },
-}
-points[ 2023 ] = { -- Ohn'ahran Plains
-	[58393146] = { aID=17321, index=4, quest=73717 },
-	[83934803] = { aID=17321, index=3, quest=73172 },
-}
-points[ 85 ] = { -- Orgrimmar
-	[52266001] = { aID=914, index=1, quest=8677, tip="Alliance need to be very quick with this one" },
-}
-points[ 32 ] = { -- Searing Gorge
-	[21297911] = { aID=912, index=12, quest=8651 },
-	[34898498] = { aID=910, index=4, quest=8644, tip="Enter through here and follow the markers" },
-	[34898298] = { aID=910, index=5, quest=8619, tip="Enter through here and follow the markers" },
-	[80349331] = { aID=912, index=10, quest=8683 },
-}
-points[ 205 ] = { -- Shimmering Expanse in Vashj'ir
-	[57258614] = { aID=6006, index=8, quest=29738 },
-}
+
 points[ 119 ] = { -- Sholazar Basin
-	[49786362] = { aID=1396, index=7, quest=13018 },
-	[63804902] = { aID=1396, index=8, quest=13024 },
-	[93836520] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
+	[49786362] = { elder=true, achievements={ { id=1396, index=7, version=60000, },
+					{ id=1396, index=2, versionUnder=60000, }, }, quests={ { id=13018, qType="Seasonal", }, }, },
+	[63804902] = { elder=true, achievements={ { id=1396, index=8, version=60000, },
+					{ id=1396, index=15, versionUnder=60000, }, }, quests={ { id=13024, qType="Seasonal", }, }, },
+	[93836520] = { elder=true, achievements={ { id=1396, index=10, version=60000, },
+					{ id=1396, index=17, versionUnder=60000, }, },
+					quests={ { id=13026, qType="Seasonal", tip=ns.elderBluewolf, }, }, },
 }
-points[ 81 ] = { -- Silithus
-	[30801332] = { aID=911, index=20, quest=8654,
-					tip="Visit Zidormi if you see a\nhuge sword stuck into Azeroth" },
-	[53023547] = { aID=911, index=21, quest=8719,
-					tip="Visit Zidormi if you see a\nhuge sword stuck into Azeroth" },
-}
-points[ 21 ] = { -- Silverpine Forest
-	[44974114] = { aID=912, index=14, quest=8645 },
-	[54013521] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[54023150] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[54643194] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[55823416] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[56253038] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[56423502] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[56452838] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[56663283] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[57313581] = { index=3, quest=56905, obj="Flower of Solemnity" },
-	[58603512] = { index=3, quest=56905, obj="Flower of Solemnity" },
-}
-points[ 199 ] = { -- Southern Barrens
-	[41604745] = { aID=911, index=4, quest=8686 },
-	[24224668] = { aID=911, index=8, quest=8673 },
-	[23463297] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[23603002] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[23932753] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[24682938] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[26052950] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[26263587] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[27103138] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[28153421] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[30082947] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[30512997] = { index=2, quest=56903, obj="Flower of Sincerity" },
-	[21602462] = { aID=914, index=2, quest=8678 },
-	[43210401] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[43600083] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[43630248] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[44290448] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[44640066] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[44730309] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[44740309] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[45010104] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[45190212] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[45250511] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[45350417] = { index=1, quest=56904, obj="Flower of Wealth" },
-	[68562174] = { aID=911, index=5, quest=8680 },
-	[53181344] = { aID=911, index=3, quest=8717 },
-}
-points[ 65 ] = { -- Stonetalon Mountains
-	[41591896] = { index=5, quest=56842, title="Lunar Preservation" },
-	[72061554] = { aID=911, index=9, quest=8725 },
-	[96163898] = { index=4, quest=56842, title="Lunar Preservation" },
-	[89851270] = { index=3, quest=56842, title="Lunar Preservation" },
-}
+
 points[ 120 ] = { -- Storm Peaks
-	[28897372] = { aID=1396, index=4, quest=13015 },
-	[41168472] = { aID=1396, index=13, quest=13028 },
-	[31263761] = { aID=1396, index=14, quest=13020 },
-	[64595134] = { aID=1396, index=18, quest=13032, tip="BM Hunters doing the Hati quest chain\n"
-					.."(to get Hati back) will be phased out.\n\nElder Muraco is below Camp Tunka'lo" },
-	[39482691] = { aID=910, index=12, quest=13066, tip="Enter through here" },
-	[75699264] = { aID=1396, index=11, quest=13027 },
-	[87776802] = { aID=910, index=11, quest=13065, tip="Use this entrance, not the other one" },
+	[28897372] = { elder=true, achievements={ { id=1396, index=4, version=60000, },
+					{ id=1396, index=3, versionUnder=60000, }, }, quests={ { id=13015, qType="Seasonal", }, }, },
+	[41168472] = { elder=true, achievements={ { id=1396, index=13, version=60000, },
+					{ id=1396, index=13, versionUnder=60000, }, }, quests={ { id=13028, qType="Seasonal", }, }, },
+	[31263761] = { elder=true, achievements={ { id=1396, index=14, version=60000, },
+					{ id=1396, index=11, versionUnder=60000, }, }, quests={ { id=13020, qType="Seasonal", }, }, },
+	[64595134] = { elder=true, achievements={ { id=1396, index=18, version=60000, },
+					{ id=1396, index=7, versionUnder=60000, }, }, quests={ { id=13032, qType="Seasonal",
+					tip="BM Hunters doing the Hati quest chain (to get Hati back) will be phased out.\n\nElder Muraco is below "
+						.."Camp Tunka'lo", }, }, },
+	[39482691] = { elderDungeon=true, achievements={ { id=910, index=12, version=60000, },
+					{ id=910, index=5, versionUnder=60000, }, },
+					quests={ { id=13066, qType="Seasonal", tip="Enter through here", }, }, },
+	[75699264] = { elder=true, achievements={ { id=1396, index=11, version=60000, },
+					{ id=1396, index=9, versionUnder=60000, }, }, quests={ { id=13027, qType="Seasonal", }, }, },
+	[87776802] = { elderDungeon=true, achievements={ { id=910, index=11, version=60000, },
+					{ id=910, index=6, versionUnder=60000, }, }, quests={ { id=13065, qType="Seasonal",
+					tip="Use this entrance, not the other one", }, }, },
 }
-points[ 84 ] = { -- Stormwind City
-	[79839556] = { aID=915, index=3, quest=8646 },
-}
-points[ 224 ] = { -- Stranglethorn Vale
-	[63282265] = { aID=912, index=5, quest=8716, tip="Outside the instance" },
-	[37327920] = { aID=912, index=6, quest=8674 },
-	[38814669] = { index=2, quest=56904, obj="Flower of Peace" },
-	[40134704] = { index=2, quest=56904, obj="Flower of Peace" },
-	[40874783] = { index=2, quest=56904, obj="Flower of Peace" },
-	[41294516] = { index=2, quest=56904, obj="Flower of Peace" },
-	[41604731] = { index=2, quest=56904, obj="Flower of Peace" },
-	[41954612] = { index=2, quest=56904, obj="Flower of Peace" },
-	[42254482] = { index=2, quest=56904, obj="Flower of Peace" },
-	[42684748] = { index=2, quest=56904, obj="Flower of Peace" },
-	[42904573] = { index=2, quest=56904, obj="Flower of Peace" },
-	[43234966] = { index=2, quest=56904, obj="Flower of Peace" },
-}
-points[ 317 ] = { -- Stratholme
-	[73505480] = { aID=910, index=6, quest=8727, tip="Lift the portcullis" },
-	[78622176] = { aID=910, index=6, quest=8727, tip="Exit the same way you entered" },
-}
-points[ 51 ] = { -- Swamp of Sorrows
-	[69425487] = { aID=910, index=2, quest=8713,
-					tip="Enter the Temple of Atal'Hakkar,\nalso known as the Sunken Temple.\n\n1) "
-					.."Descend the twisting path.\n2) Momentarily submerge into the pool.\n3) "
-					.."Resurface and follow the path and\nenter the portal and follow the markers" },
-}
-points[ 71 ] = { -- Tanaris
-	[37247906] = { aID=911, index=15, quest=8671 },
-	[51402881] = { aID=911, index=16, quest=8684 },
-	[39222134] = { aID=910, index=1, quest=8676, tip="Enter Zul'Farrak. Follow the markers" },
-	[17584315] = { aID=911, index=17, quest=8681 },
-	[23711968] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[24651944] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[25081689] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[25251996] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[25301790] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[25881559] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[25982071] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[26551851] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[26932084] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[27491962] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[52170860] = { aID=911, index=14, quest=8724 },
-	[21556299] = { aID=6006, index=2, quest=29742 },
-}
-points[ 57 ] = { -- Teldrassil
-	[56855310] = { aID=911, index=6, quest=8715 },
-	[28114367] = { aID=915, index=1, quest=8718 },
-	[55108853] = { aID=915, index=1, quest=8718, faction="Horde",
-					tip="Fly straight into the pink portal at Rut'theran.\nImmediately turn left and fly up high" },
-}
-points[ 2025 ] = { -- Thaldraszus
-	[54864337] = { aID=17321, index=7, quest=73859 },
-	[50056654] = { aID=17321, index=8, quest=73861 },
-}
-points[ 2024 ] = { -- The Azure Span
-	[12894905] = { aID=17321, index=5, quest=73858 },
-	[67424949] = { aID=17321, index=6, quest=73860 },
-}
-points[ 210 ] = { -- The Cape of Stranglethorn
-	[39967251] = { aID=912, index=6, quest=8674 },
-	[42431854] = { index=2, quest=56904, obj="Flower of Peace" },
-	[44611912] = { index=2, quest=56904, obj="Flower of Peace" },
-	[45852043] = { index=2, quest=56904, obj="Flower of Peace" },
-	[46541599] = { index=2, quest=56904, obj="Flower of Peace" },
-	[47071956] = { index=2, quest=56904, obj="Flower of Peace" },
-	[47631759] = { index=2, quest=56904, obj="Flower of Peace" },
-	[48141543] = { index=2, quest=56904, obj="Flower of Peace" },
-	[48851984] = { index=2, quest=56904, obj="Flower of Peace" },
-	[49221694] = { index=2, quest=56904, obj="Flower of Peace" },
-	[49762346] = { index=2, quest=56904, obj="Flower of Peace" },
-}
-points[ 26 ] = { -- The Hinterlands
-	[50004805] = { aID=912, index=11, quest=8643 },
-	[49123983] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[51853858] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[54953518] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[59543908] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[62224140] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[63644153] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[65213765] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[66234105] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[71434483] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[73114802] = { index=3, quest=56903, obj="Flower of Vigor" },
-	[25530801] = { aID=912, index=17, quest=8714 },
-}
+
 points[ 129 ] = { -- The Nexus
-	[38707760] = { aID=910, index=8, quest=13021, tip="1) This way!" },
-	[50006600] = { aID=910, index=8, quest=13021, tip="2) This way!" },
-	[61505220] = { aID=910, index=8, quest=13021, tip="3) This way!" },
-	[61906400] = { aID=910, index=8, quest=13021, tip="4) This way!" },
-	[54976461] = { aID=910, index=8, quest=13021, tip="5) He is here" },
-	[52756990] = { aID=910, index=8, quest=13021, tip="6) Come up this way for a shortcut exit!" },
+	[38707760] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, },
+					quests={ { id=13021, qType="Seasonal", tip="1) This way!", }, }, },
+	[50006600] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, },
+					quests={ { id=13021, qType="Seasonal", tip="2) This way!", }, }, },
+	[61505220] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, },
+					quests={ { id=13021, qType="Seasonal", tip="3) This way!", }, }, },
+	[61906400] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, },
+					quests={ { id=13021, qType="Seasonal", tip="4) This way!", }, }, },
+	[54976461] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, },
+					quests={ { id=13021, qType="Seasonal", tip="5) He is here", }, }, },
+	[52756990] = { elderDungeon=true, achievements={ { id=910, index=8, version=60000, },
+					{ id=910, index=3, versionUnder=60000, }, }, quests={ { id=13021, qType="Seasonal",
+					tip="6) Come up this way for a shortcut exit!", }, }, },
 }
-points[ 220 ] = { -- The Temple of Atal'Hakkar
-	[63073436] = { aID=910, index=2, quest=8713 },
-	[50002500] = { aID=910, index=2, quest=8713, tip="Head straight for the other marker" },
-}
-points[ 2022 ] = { -- The Waking Shores
-	[46703094] = { aID=17321, index=1, quest=73848 },
-	[44306379] = { aID=17321, index=2, quest=73716 },
-}
-points[ 64 ] = { -- Thousand Needles
-	[46345101] = { aID=911, index=13, quest=8682 },
-	[77097561] = { aID=911, index=14, quest=8724 },
-	[30449376] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[31989337] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[32698920] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[32969423] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[33049085] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[33998706] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[34179545] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[35089184] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[35729567] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[36639366] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[55869648] = { aID=910, index=1, quest=8676, tip="Enter Zul'Farrak. Follow the markers" },
-}
-points[ 88 ] = { -- Thunder Bluff
-	[72982335] = { aID=914, index=2, quest=8678 },
-}
-points[ 18 ] = { -- Tirisfal Glades
-	[61865391] = { aID=912, index=13, quest=8652 },
-	[61957317] = { aID=914, index=3, quest=8648 },
-	[61817153] = { aID=914, index=3, quest=8648, tip="Drop down in to here. Elder Darkcore is a short walk away" },
-	[43259844] = { index=3, quest=56905, obj="Flower of Solemnity" },
-}
-points[ 241 ] = { -- Twilight Highlands
-	[50917045] = { aID=6006, index=4, quest=29737 },
-	[51883307] = { aID=6006, index=5, quest=29736 },
-}
-points[ 249 ] = { -- Uldum
-	[65521866] = { aID=6006, index=2, quest=29742,  },
-	[31586298] = { aID=6006, index=3, quest=29741 },
-	[83793788] = { aID=911, index=15, quest=8671 },
-}
-points[ 1527 ] = { -- Uldum
-	[65521866] = { aID=6006, index=2, quest=29742, tip="\124cFFFF0000Wrong version of Uldum. Speak to Zidormi" },
-	[31606300] = { aID=6006, index=3, quest=29741, tip="\124cFFFF0000Wrong version of Uldum. Speak to Zidormi" },
-}
-points[ 90 ] = { -- Undercity
-	[65993053] = { aID=914, index=3, quest=8648, tip="Drop down in to here. Elder Darkcore is a short walk away" },
-	[66633821] = { aID=914, index=3, quest=8648, tip="The achievement text is wrong. Elder Darkcore\n"
-					.."is NOT in the Undercity. Darkcore is above, in\nThe Ruins of Lordaeron" },
-}
-points[ 78 ] = { -- Un'Goro
-	[50377617] = { aID=911, index=17, quest=8681 },
-	[62323042] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[64162995] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[65002499] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[65323097] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[65422696] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[66542244] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[66763242] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[67852814] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[68603269] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[69683030] = { index=3, quest=56904, obj="Flower of Felicity" },
-	[95553366] = { aID=910, index=1, quest=8676, tip="Enter Zul'Farrak. Follow the markers" },
-}
+
 points[ 133 ] = { -- Utgarde Keep - Njorndir Preparation
-	[50652851] = { aID=910, index=7, quest=13017, tip="1) Defeat Dragonflayer Forgemasters\n"
-												.."to remove the flaming wall barriers" },
-	[23047190] = { aID=910, index=7, quest=13017, tip="2) Through this way" },
-	[47236936] = { aID=910, index=7, quest=13017, tip="3) And when done, just retrace your steps" },
+	[50652851] = { elderDungeon=true, achievements={ { id=910, index=7, version=60000, },
+					{ id=910, index=1, versionUnder=60000, }, }, quests={ { id=13017, qType="Seasonal",
+					tip="1) Defeat Dragonflayer Forgemasters to remove the flaming wall barriers", }, }, },
+	[23047190] = { elderDungeon=true, achievements={ { id=910, index=7, version=60000, },
+					{ id=910, index=1, versionUnder=60000, }, },
+					quests={ { id=13017, qType="Seasonal", tip="2) Through this way", }, }, },
+	[47236936] = { elderDungeon=true, achievements={ { id=910, index=7, version=60000, },
+					{ id=910, index=1, versionUnder=60000, }, }, quests={ { id=13017, qType="Seasonal",
+					tip="3) And when done, just retrace your steps", }, }, },
 }
+
 points[ 136 ] = { -- Utgarde Pinnacle - Lower Pinnacle
-	[45858315] = { aID=910, index=13, quest=13067, tip="3) Up the stairs" },
-	[56112473] = { aID=910, index=13, quest=13067, tip="8) Now that you're done, it's easiest to keep going" },
-	[49154425] = { aID=910, index=13, quest=13067, tip="9) Up the ramp" },
-	[48672327] = { aID=910, index=13, quest=13067, tip="Elder is here" },
+	[45858315] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="3) Up the stairs", }, }, },
+	[56112473] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="8) Now that you're done, it's easiest to keep going", }, }, },
+	[49154425] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="9) Up the ramp", }, }, },
+	[48672327] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="Elder is here", }, }, },
 }
+
 points[ 137 ] = { -- Utgarde Pinnacle - Upper Pinnacle
-	[40033590] = { aID=910, index=13, quest=13067, tip="1) Through this way" },
-	[39906910] = { aID=910, index=13, quest=13067, tip="2) Keep going, ignore Svala, she appears\n"
-												.."to have enough of her own problems" },
-	[64276947] = { aID=910, index=13, quest=13067, tip="4) This way" },
-	[68893930] = { aID=910, index=13, quest=13067,
-					tip="5) You've got to do this fight. Kill mobs here.\nThey randomly drop harpoons. Use the harpoon\n"
-						.."launcher to kill Grauf. Probably three shots.\nSkadi dismounts. You kill Skadi" },
-	[64153634] = { aID=910, index=13, quest=13067, tip="6) The portcullis is now open" },
-	[58633831] = { aID=910, index=13, quest=13067, tip="7) Jump down" },
-	[44114416] = { aID=910, index=13, quest=13067,
-					tip="10) Kill Ymiron to open the portcullis.\nStraight through and exit" },
+	[40033590] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="1) Through this way", }, }, },
+	[39906910] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, }, quests={ { id=13067, qType="Seasonal",
+					tip="2) Keep going, ignore Svala, she appears to have enough of her own problems", }, }, },
+	[64276947] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="4) This way", }, }, },
+	[68893930] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, }, quests={ { id=13067, qType="Seasonal",
+					tip="5) You've got to do this fight. Kill mobs here. They randomly drop harpoons. Use the harpoon launcher to "
+						.."kill Grauf. Probably three shots. Skadi dismounts. You kill Skadi", }, }, },
+	[64153634] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="6) The portcullis is now open", }, }, },
+	[58633831] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, },
+					quests={ { id=13067, qType="Seasonal", tip="7) Jump down", }, }, },
+	[44114416] = { elderDungeon=true, achievements={ { id=910, index=13, version=60000, },
+					{ id=910, index=2, versionUnder=60000, }, }, quests={ { id=13067, qType="Seasonal",
+					tip="10) Kill Ymiron to open the portcullis. Straight through and exit", }, }, },
 }
-points[ 203 ] = { -- Vashj'ir
-	[69828250] = { aID=912, index=8, quest=8675 },
-}
-points[ 52 ] = { -- Westfall
-	[56644709] = { aID=912, index=8, quest=8675 },
-}
-points[ 22 ] = { -- Western Plaguelands
-	[65303876] = { aID=912, index=4, quest=8722, tip="Enter The Weeping Cave"},
-	[63513611] = { aID=912, index=4, quest=8722, tip="Inside The Weeping Cave"},
-	[69187345] = { aID=912, index=17, quest=8714 },
-	[04154023] = { aID=912, index=13, quest=8652 },
-	[96255275] = { aID=912, index=15, quest=8688 },
-}
+
 points[ 123 ] = { -- Wintergrasp
-	[50001627] = { aID=1396, index=10, quest=13026, tip=elderBluewolf },
-	[49491452] = { aID=1396, index=10, quest=13026, 
-					tip="Glitch Guide: 1) You MUST stand exactly here with your face\nburied into the corner.\n\n"
-					.."If that is not possible then you are on the wrong ledge - fly\naround a bit.\n\n"
-					.."With your face buried in the corner you must use a \"Lounge\nCushion\" toy such as the "
+	[50001627] = { elder=true, achievements={ { id=1396, index=10, version=60000, },
+					{ id=1396, index=17, versionUnder=60000, }, },
+					quests={ { id=13026, qType="Seasonal", tip=ns.elderBluewolf, }, }, },
+	[49491452] = { elder=true, achievements={ { id=1396, index=10, version=60000, },
+					{ id=1396, index=17, versionUnder=60000, }, }, quests={ { id=13026, qType="Seasonal",
+					tip="Glitch Guide: 1) You MUST stand exactly here with your face buried into the corner.\n\n"
+					.."If that is not possible then you are on the wrong ledge - fly around a bit.\n\n"
+					.."With your face buried in the corner you must use a \"Lounge Cushion\" toy such as the "
 					.."\"Pineapple\", \"Safari\" or \"Zhevra\".\n\nYou may receive a warning you are going to "
-					.."be teleported\noutside Wintergrasp, so don't muck around!\n\nYou are now \"inside\". "
-					.."The problem now is to stand up.\nBlizzard stopped that. A mage blink works though. YMMV." },
-	[49471373] = { aID=1396, index=10, quest=13026, 
-					tip="Glitch Guide: 2) After using your Lounge Cushion, walk\nexactly to here and rotate "
-					.."your downwards view so that\nyou can see the glitched interior.\n\n"
-					.."If standing here then facing at about 201 degrees\n(my \"X and Y\" AddOn shows "
-					.."degrees) you can jump\ndown onto a circular raised ledge.\n\nCannot see the interior? "
-					.."Just jump down blindly!\n\nContinue with the Elder then use the Violet Citadel\n"
-					.."portal or the Defender's Portal" },
-	[74149952] = { aID=910, index=9, quest=13022, tip=elderNurgenExit },
-	[89779830] = { aID=1396, index=17, quest=13031 },
+					.."be teleported outside Wintergrasp, so don't muck around!\n\nYou are now \"inside\". "
+					.."The problem now is to stand up. Blizzard stopped that. A mage blink works though. YMMV", }, }, },
+	[49471373] = { elder=true, achievements={ { id=1396, index=10, version=60000, },
+					{ id=1396, index=17, versionUnder=60000, }, }, quests={ { id=13026, qType="Seasonal",
+					tip="Glitch Guide: 2) After using your Lounge Cushion, walk exactly to here and rotate "
+					.."your downwards view so that you can see the glitched interior.\n\n"
+					.."If standing here then facing at about 201 degrees (my \"X and Y\" AddOn shows "
+					.."degrees) you can jump down onto a circular raised ledge.\n\nCannot see the interior? "
+					.."Just jump down blindly!\n\nContinue with the Elder then use the Violet Citadel "
+					.."portal or the Defender's Portal", }, }, },
+	[74149952] = { elderDungeon=true, achievements={ { id=910, index=9, version=60000, },
+					{ id=910, index=4, versionUnder=60000, }, },
+					quests={ { id=13022, qType="Seasonal", tip=ns.elderNurgenExit, }, }, },
+	[89779830] = { elder=true, achievements={ { id=1396, index=17, version=60000, },
+					{ id=1396, index=8, versionUnder=60000, }, }, quests={ { id=13031, qType="Seasonal", }, }, },
 }
-points[ 83 ] = { -- Winterspring
-	[53225675] = { aID=911, index=18, quest=8726 },
-	[59964994] = { aID=911, index=19, quest=8672 },
-	[56173028] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[55892949] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[56173028] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[56812862] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[56843730] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[57083253] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[57682999] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[57693201] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[57713710] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[57913552] = { index=3, quest=56906, obj="Flower of Generosity" },
-	[58883399] = { index=3, quest=56906, obj="Flower of Generosity" },
-}
+
 points[ 121 ] = { -- Zul'Drak
-	[58915597] = { aID=1396, index=11, quest=13027 },
-	[28978375] = { aID=910, index=10, quest=13023, tip="The portal is through here" },
-	[76112091] = { aID=910, index=11, quest=13065,
-					tip="Use this entrance, not the other one.\n\nThanks for using my AddOn. Hope I helped! :)\n\n"
-					.."I'm at Twitter and Ko-fi as @Taraezor.\nThere's also my project page at curseforge\n"
-					.."where you might find more useful AddOns!" },
-	[73899374] = { aID=1396, index=2, quest=13013 },
-	[09734470] = { aID=1396, index=13, quest=13028 },
-}
-points[ 219 ] = { -- Zul'Farrak
-	[34393931] = { aID=910, index=1, quest=8676, tip="Follow the map directly, no need for way-markers!" },
+	[58915597] = { elder=true, achievements={ { id=1396, index=11, version=60000, },
+					{ id=1396, index=9, versionUnder=60000, }, }, quests={ { id=13027, qType="Seasonal", }, }, },
+	[28978375] = { elderDungeon=true, achievements={ { id=910, index=10, version=60000, },
+					{ id=910, index=7, versionUnder=60000, }, },
+					quests={ { id=13023, qType="Seasonal", tip="The portal is through here", }, }, },
+	[76112091] = { elderDungeon=true, achievements={ { id=910, index=11, version=60000, },
+					{ id=910, index=6, versionUnder=60000, }, }, quests={ { id=13065, qType="Seasonal",
+					tip="Use this entrance, not the other one." ..ns.taraezorPromo, }, }, },
+	[73899374] = { elder=true, achievements={ { id=1396, index=2, version=60000, },
+					{ id=1396, index=12, versionUnder=60000, }, }, quests={ { id=13013, qType="Seasonal", }, }, },
+	[09734470] = { elder=true, achievements={ { id=1396, index=13, version=60000, },
+					{ id=1396, index=13, versionUnder=60000, }, }, quests={ { id=13028, qType="Seasonal", }, }, },
 }
 
--- ===========================
--- Continents & Sub-Continents
--- ===========================
+points[ 113 ] = { -- Northrend
+	[45008000] = { metaLarge=true, noCoords=true, achievements={ { id=1396, showAllCriteria=true, }, }, },
+}
 
--- Choice of texture
--- Note that these textures are all repurposed and as such have non-uniform sizing. I've copied my scaling factors from my old AddOn
--- in order to homogenise the sizes. I should also allow for non-uniform origin placement as well as adjust the x,y offsets
+--==================================================================================================================================
+--
+-- CATACLYSM
+--
+--==================================================================================================================================
+
+points[ 207 ] = { -- Deepholm
+	[49705488] = { elder=true, achievements={ { id=6006, index=1, version=60000, },
+					{ id=6006, index=5, versionUnder=60000, }, }, quests={ { id=29735, qType="Seasonal", }, }, },
+	[27706918] = { elder=true, achievements={ { id=6006, index=9, version=60000, },
+					{ id=6006, index=9, versionUnder=60000, }, }, quests={ { id=29734, qType="Seasonal", }, }, },
+}
+
+points[ 198 ] = { -- Mount Hyjal
+	[26696205] = { elder=true, achievements={ { id=6006, index=6, version=60000, },
+					{ id=6006, index=6, versionUnder=60000, }, }, quests={ { id=29739, qType="Seasonal", }, }, },
+	[62542282] = { elder=true, achievements={ { id=6006, index=7, version=60000, },
+					{ id=6006, index=7, versionUnder=60000, }, }, quests={ { id=29740, qType="Seasonal", }, }, },
+	[60522631] = { preservation=true, tip="Nordrassil Moonwell",
+					quests={ { id=56842, index=8, name="Lunar Preservation", version=80205, qType="One Time", }, }, },
+}
+
+points[ 205 ] = { -- Shimmering Expanse in Vashj'ir
+	[57258614] = { elder=true, achievements={ { id=6006, index=8, version=60000, },
+					{ id=6006, index=2, versionUnder=60000, }, }, quests={ { id=29738, qType="Seasonal", }, }, },
+}
+
+points[ 948 ] = { -- The Maelstrom
+	-- Cannot auto populate as a pseudo Continent. Must do it manually. Used a gradient of -0.65 for the two points
+	[50903050] = { elder=true, achievements={ { id=6006, index=1, version=60000, },
+					{ id=6006, index=5, versionUnder=60000, }, }, quests={ { id=29735, qType="Seasonal", }, }, },
+	[44503470] = { elder=true, achievements={ { id=6006, index=9, version=60000, },
+					{ id=6006, index=9, versionUnder=60000, }, }, quests={ { id=29734, qType="Seasonal", }, }, },
+}
+
+points[ 241 ] = { -- Twilight Highlands
+	[50917045] = { elder=true, achievements={ { id=6006, index=4, version=60000, },
+					{ id=6006, index=8, versionUnder=60000, }, }, quests={ { id=29737, qType="Seasonal", }, }, },
+	[51883307] = { elder=true, achievements={ { id=6006, index=5, version=60000, },
+					{ id=6006, index=3, versionUnder=60000, }, }, quests={ { id=29736, qType="Seasonal", }, }, },
+}
+
+points[ 249 ] = { -- Uldum
+	[65521866] = { elder=true, achievements={ { id=6006, index=2, version=60000, },
+					{ id=6006, index=4, versionUnder=60000, }, }, quests={ { id=29742, qType="Seasonal", }, }, },
+	[31586298] = { elder=true, achievements={ { id=6006, index=3, version=60000, },
+					{ id=6006, index=1, versionUnder=60000, }, }, quests={ { id=29741, qType="Seasonal", }, }, },
+	[83793788] = { elder=true, noZidormi=true, achievements={ { id=911, index=15, version=60000, },			
+					{ id=911, index=13, versionUnder=60000, }, }, quests={ { id=8671, qType="Seasonal", }, }, },
+}
+
+points[ 1527 ] = { -- Wrong Uldum
+	[65521866] = { elder=true, achievements={ { id=6006, index=2, version=60000, },
+					{ id=6006, index=4, versionUnder=60000, }, }, quests={ { id=29742, qType="Seasonal", }, }, },
+	[31586298] = { elder=true, achievements={ { id=6006, index=3, version=60000, },
+					{ id=6006, index=1, versionUnder=60000, }, }, quests={ { id=29741, qType="Seasonal", }, }, },
+	[83793788] = { elder=true, noZidormi=true, achievements={ { id=911, index=15, version=60000, },			
+					{ id=911, index=13, versionUnder=60000, }, }, quests={ { id=8671, qType="Seasonal", }, }, },
+}
+
+--==================================================================================================================================
+--
+-- PANDARIA
+--
+--==================================================================================================================================
+
+points[ 501 ] = { -- The Situation in Dalaran
+	[47654374] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+}
+
+points[ 390 ] = { -- Vale of Eternal Blossoms
+	[62921928] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+	[85296487] = { seasonalQuest=true, name="Lunar Festival Harbinger",
+					quests={ { id=8867, qType="Seasonal", }, { id=8883, qType="Seasonal", }, }, },
+}
+
+--==================================================================================================================================
+--
+-- DRAGON ISLES
+--
+--==================================================================================================================================
+
+points[ 2023 ] = { -- Ohn'ahran Plains
+	[58413146] = { elder=true, achievements={ { id=17321, index=4, }, }, quests={ { id=73717, qType="Seasonal", }, }, },
+	[83894802] = { elder=true, achievements={ { id=17321, index=3, }, }, quests={ { id=73172, qType="Seasonal", }, }, },
+}
+
+points[ 2025 ] = { -- Thaldraszus
+	[54854347] = { elder=true, achievements={ { id=17321, index=7, }, }, quests={ { id=73859, qType="Seasonal", }, }, },
+	[50066652] = { elder=true, achievements={ { id=17321, index=8, }, }, quests={ { id=73861, qType="Seasonal", }, }, },
+	[07136478] = { elder=true, achievements={ { id=17321, index=4, }, }, quests={ { id=73717, qType="Seasonal", }, }, },
+	[19743301] = { elder=true, achievements={ { id=17321, index=2, }, }, quests={ { id=73716, qType="Seasonal", }, }, },
+	[21600740] = { elder=true, achievements={ { id=17321, index=1, }, }, quests={ { id=73848, qType="Seasonal", }, }, },
+	[26207718] = { elder=true, achievements={ { id=17321, index=3, }, }, quests={ { id=73172, qType="Seasonal", }, }, },
+}
+
+points[ 2024 ] = { -- The Azure Span
+	[12894905] = { elder=true, achievements={ { id=17321, index=5, }, }, quests={ { id=73858, qType="Seasonal", }, }, },
+	[67414947] = { elder=true, achievements={ { id=17321, index=6, }, }, quests={ { id=73860, qType="Seasonal", }, }, },
+	[46180105] = { elder=true, achievements={ { id=17321, index=3, }, }, quests={ { id=73172, qType="Seasonal", }, }, },
+}
+
+points[ 2022 ] = { -- The Waking Shores
+	[46663131] = { elder=true, achievements={ { id=17321, index=1, }, }, quests={ { id=73848, qType="Seasonal", }, }, },
+	[44306380] = { elder=true, achievements={ { id=17321, index=2, }, }, quests={ { id=73716, qType="Seasonal", }, }, },
+	[88857707] = { elder=true, achievements={ { id=17321, index=7, }, }, quests={ { id=73859, qType="Seasonal", }, }, },
+}
+
+points[ 1978 ] = { -- Dragon Isles
+	[76007700] = { metaLarge=true, noCoords=true, achievements={ { id=17321, showAllCriteria=true, }, }, },
+}
+
+--==================================================================================================================================
+--
+-- KHAZ ALGAR / THE WAR WITHIN
+--
+--==================================================================================================================================
+
+points[ 2255 ] = { -- Azj-Kahet
+	[66918553] = { elder=true, achievements={ { id=41130, index=7, }, }, quests={ { id=85935, qType="Seasonal", }, }, },
+	[46825721] = { elder=true, achievements={ { id=41130, index=8, }, }, quests={ { id=85936, qType="Seasonal", }, }, },
+}
+
+points[ 2215 ] = { -- Hallowfall
+	[25885193] = { elder=true, achievements={ { id=41130, index=5, }, }, quests={ { id=85933, qType="Seasonal", }, }, },
+	[66274628] = { elder=true, achievements={ { id=41130, index=6, }, }, quests={ { id=85934, qType="Seasonal", }, }, },
+}
+
+points[ 2248 ] = { -- Isle of Dorn
+	[40918735] = { elder=true, achievements={ { id=41130, index=1, }, }, quests={ { id=85929, qType="Seasonal", }, }, },
+	[48621395] = { elder=true, achievements={ { id=41130, index=2, }, }, quests={ { id=85930, qType="Seasonal", }, }, },
+}
+
+points[ 2214 ] = { -- The Ringing Deeps
+	[48906730] = { elder=true, achievements={ { id=41130, index=3, }, }, quests={ { id=85931, qType="Seasonal", }, }, },
+	[67295298] = { elder=true, achievements={ { id=41130, index=4, }, }, quests={ { id=85932, qType="Seasonal", }, }, },
+}
+
+points[ 2274 ] = { -- Khaz Algar
+	[50348484] = { elder=true, achievements={ { id=41130, index=7, }, }, quests={ { id=85935, qType="Seasonal", }, }, },
+	[43157606] = { elder=true, achievements={ { id=41130, index=8, }, }, quests={ { id=85936, qType="Seasonal", }, }, },
+	[29065408] = { elder=true, achievements={ { id=41130, index=5, }, }, quests={ { id=85933, qType="Seasonal", }, }, },
+	[45345183] = { elder=true, achievements={ { id=41130, index=6, }, }, quests={ { id=85934, qType="Seasonal", }, }, },
+	[68014019] = { elder=true, achievements={ { id=41130, index=1, }, }, quests={ { id=85929, qType="Seasonal", }, }, },
+	[71360702] = { elder=true, achievements={ { id=41130, index=2, }, }, quests={ { id=85930, qType="Seasonal", }, }, },
+	[53446488] = { elder=true, achievements={ { id=41130, index=3, }, }, quests={ { id=85931, qType="Seasonal", }, }, },
+	[61666176] = { elder=true, achievements={ { id=41130, index=4, }, }, quests={ { id=85932, qType="Seasonal", }, }, },
+	[83508520] = ns.setNewZones,
+	[83508950] = ns.setHonorElders,
+	[85709230] = ns.setElune,
+	[86008800] = ns.setHistory,
+	[86208400] = ns.setMetaFaction,
+	[88309100] = ns.setPyro,
+	[88408680] = ns.set50Coins,
+	[72007900] = { metaLarge=true, noCoords=true, achievements={ { id=41130, showAllCriteria=true, }, }, },
+}
+
+--==================================================================================================================================
+--
+-- WORLD / OTHER
+--
+--==================================================================================================================================
+
+if ( ns.version < 60000 ) then
+	points[ 947 ] = { -- Azeroth
+		[44904700] = { metaLarge=true, noCoords=true, achievements={ { id=6006, showAllCriteria=true, }, }, },
+		[53508520] = ns.setNewZones,
+		[53508950] = ns.setHonorElders,
+		[55709230] = ns.setElune,
+		[56008800] = ns.setHistory,
+		[56208400] = ns.setMetaFaction,
+		[58309100] = ns.setPyro,
+		[58408680] = ns.set50Coins,
+		[51305190] = { elder=true, achievements={ { id=6006, index=1, version=60000, }, -- Gradient -0.65
+						{ id=6006, index=5, versionUnder=60000, }, }, quests={ { id=29735, qType="Seasonal", }, }, },
+		[48705360] = { elder=true, achievements={ { id=6006, index=9, version=60000, },
+						{ id=6006, index=9, versionUnder=60000, }, }, quests={ { id=29734, qType="Seasonal", }, }, },
+	} 
+else
+	points[ 947 ] = { -- Azeroth
+		[42004500] = { metaLarge=true, noCoords=true, achievements={ { id=6006, showAllCriteria=true, }, }, },
+		[83508520] = ns.setNewZones,
+		[83508950] = ns.setHonorElders,
+		[85709230] = ns.setElune,
+		[86008800] = ns.setHistory,
+		[86208400] = ns.setMetaFaction,
+		[88309100] = ns.setPyro,
+		[88408680] = ns.set50Coins,
+		[34008700] = { metaLarge=true, noCoords=true, achievements={ { id=41130, showAllCriteria=true, }, }, },
+		[46004850] = { elder=true, achievements={ { id=6006, index=1, version=60000, }, -- Gradient -0.65
+						{ id=6006, index=5, versionUnder=60000, }, }, quests={ { id=29735, qType="Seasonal", }, }, },
+		[44504950] = { elder=true, achievements={ { id=6006, index=9, version=60000, },
+						{ id=6006, index=9, versionUnder=60000, }, }, quests={ { id=29734, qType="Seasonal", }, }, },
+	}
+end
+
+--==================================================================================================================================
+--
+-- TEXTURES
+--
+-- These textures are all repurposed and as such have non-uniform sizing. In order to homogenise the sizes. I should also allow for
+-- non-uniform origin placement as well as adjust the x,y offsets
+--==================================================================================================================================
+
 textures[1] = "Interface\\PlayerFrame\\MonkLightPower"
 textures[2] = "Interface\\PlayerFrame\\MonkDarkPower"
 textures[3] = "Interface\\Common\\Indicator-Red"

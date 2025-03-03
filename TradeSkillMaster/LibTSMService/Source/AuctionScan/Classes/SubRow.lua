@@ -73,7 +73,7 @@ end
 ---Merges another sub row into this one.
 ---@param other AuctionSubRow
 function AuctionSubRow:Merge(other)
-	if LibTSMService.IsRetail() then
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
 		if self:IsCommodity() then
 			self._quantity = self._quantity + other._quantity
 			self._numOwnerItems = self._numOwnerItems + other._numOwnerItems
@@ -187,7 +187,7 @@ end
 ---@return number
 function AuctionSubRow:GetRequiredBid()
 	local requiredBid = nil
-	if LibTSMService.IsRetail() then
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
 		requiredBid = self._minBid
 	else
 		requiredBid = self._currentBid == 0 and self._minBid or (self._currentBid + self._minIncrement)
@@ -245,7 +245,7 @@ end
 function AuctionSubRow:GetHashes()
 	if not self._hash then
 		assert(self:HasRawData())
-		if LibTSMService.IsRetail() then
+		if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
 			local baseItemString = self:GetBaseItemString()
 			local itemMinBid = Math.Floor(self._minBid / self._quantity, COPPER_PER_SILVER)
 			local itemBuyout = floor(self._buyout / self._quantity)
@@ -279,7 +279,7 @@ end
 ---@param noSeller boolean Don't check the seller name
 ---@return boolean
 function AuctionSubRow:EqualsIndex(index, noSeller)
-	assert(not LibTSMService.IsRetail())
+	assert(not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
 	local _, itemLink, stackSize, timeLeft, buyout, seller, minIncrement, minBid, bid, isHighBidder = AuctionHouse.GetBrowseResult(index)
 	seller = seller or "?"
 	if minBid ~= self._minBid or minIncrement ~= self._minIncrement or buyout ~= self._buyout or bid ~= self._currentBid or stackSize == self._quantity and isHighBidder ~= self._isHighBidder then
@@ -297,7 +297,7 @@ end
 ---Decrements the quantity of the row's item.
 ---@param amount number The amount to decrement by
 function AuctionSubRow:DecrementQuantity(amount)
-	if LibTSMService.IsRetail() then
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
 		if self:IsCommodity() then
 			self._resultRow:DecrementQuantity(amount)
 		else
@@ -346,7 +346,7 @@ function AuctionSubRow:_SetRawData(data, browseId, itemLink)
 	self._hashNoSeller = nil
 	self._browseId = browseId
 	if data then
-		if LibTSMService.IsRetail() then
+		if LibTSMService.IsRetail() or LibTSMService.IsCataClassicPatch442() then
 			if self._resultRow:IsCommodity() then
 				local baseItemString = self._resultRow:GetBaseItemString()
 				self._itemLink = ItemInfo.GetLink(baseItemString)

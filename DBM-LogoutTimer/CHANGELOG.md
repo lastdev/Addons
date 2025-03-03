@@ -1,6 +1,7 @@
 # <DBM Extra> Logout Timer
 
-## [r19](https://github.com/QartemisT/DBM-LogoutTimer/tree/r19) (2024-12-20)
-[Full Changelog](https://github.com/QartemisT/DBM-LogoutTimer/compare/r18...r19) [Previous Releases](https://github.com/QartemisT/DBM-LogoutTimer/releases)
+## [r20](https://github.com/QartemisT/DBM-LogoutTimer/tree/r20) (2025-02-26)
+[Full Changelog](https://github.com/QartemisT/DBM-LogoutTimer/compare/r19...r20) [Previous Releases](https://github.com/QartemisT/DBM-LogoutTimer/releases)
 
-- Bump TOC  
+- TOC Bump  
+- Update DBM-LogoutTimer.toc  

@@ -184,6 +184,7 @@ end
 local enemyExclusions = {
     [23775]  = true,      -- Head of the Horseman
     [120651] = true,      -- Explosives
+    [128652] = true,      -- Viq'Goth (Siege of Boralus - untargetable background boss)
     [156227] = true,      -- Neferset Denizen
     [160966] = true,      -- Thing from Beyond?
     [161895] = true,      -- Thing from Beyond?
@@ -204,7 +205,8 @@ local enemyExclusions = {
     [168112] = 329636,    -- Kaal (when shielded)
     [193760] = true,      -- Surging Ruiner (Raszageth) -- gives bad range information.
     [204560] = true,      -- Incorporeal Being
-    [229296] = true       -- Orb of Ascendance (TWW S1 Affix)
+    [229296] = true,      -- Orb of Ascendance (TWW S1 Affix)
+    [218884] = true,      -- Silken Court: Scattershell Scarab
 }
 
 local requiredForInclusion = {

@@ -1185,8 +1185,8 @@ function QuickSlot:UpdateItemCooldowns()
 end
 
 do  --Spell Cooldown
-    local GetSpellCooldown = C_Spell.GetSpellCooldown;
-    local GetSpellCharges = C_Spell.GetSpellCharges;
+    local GetSpellCooldown = API.GetSpellCooldown;
+    local GetSpellCharges = API.GetSpellCharges;
 
     local Throttler = CreateFrame("Frame", nil, QuickSlot);
     QuickSlot.Throttler = Throttler;
@@ -1216,6 +1216,7 @@ do  --Spell Cooldown
     end
 
     function QuickSlot:UpdateSpellCooldowns()
+        if not self.SpellButtons then return end;
         local cooldownInfo, chargeInfo, startTime, duration, modRate, fromChargeCooldown;
         for _, button in ipairs(self.SpellButtons) do
             if button.id and button.actionType == "spell" then

@@ -278,11 +278,11 @@ do
 		end,
 		SetMerchantCostItem = function(self, ...) PreHookHelper(self, Merchant.GetCostItemInfo, 2, ...) end,
 		SetBuybackItem = function(self, ...) PreHookHelper(self, Merchant.GetBuybackItemInfo, 2, ...) end,
-		SetAuctionItem = not ClientInfo.IsRetail() and function(self, ...)
+		SetAuctionItem = not LibTSMWoW.IsRetail() and not LibTSMWoW.IsCataClassicPatch442() and function(self, ...)
 			local reg = PreHookHelper(self, GetAuctionItemInfo, 3, ...)
 			reg.item = GetAuctionItemLink(...)
 		end or nil,
-		SetAuctionSellItem = not ClientInfo.IsRetail() and function(self, ...) PreHookHelper(self, GetAuctionSellItemInfo, 3, ...) end or nil,
+		SetAuctionSellItem = not LibTSMWoW.IsRetail() and not LibTSMWoW.IsCataClassicPatch442() and function(self, ...) PreHookHelper(self, GetAuctionSellItemInfo, 3, ...) end or nil,
 		SetInboxItem = function(self, index) PreHookHelper(self, GetInboxItem, 4, index, 1) end,
 		SetSendMailItem = function(self, ...) PreHookHelper(self, GetSendMailItem, 4, ...) end,
 		SetLootItem = function(self, ...) PreHookHelper(self, GetLootSlotInfo, 3, ...) end,

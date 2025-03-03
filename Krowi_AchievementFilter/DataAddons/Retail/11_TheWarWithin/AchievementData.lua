@@ -203,7 +203,7 @@ KrowiAF.AchievementData["11_00_00"] = {
 		},
 	},
     {40100}, -- Undying Caver
-    { -- Nemesis
+    { -- My First Nemesis
         40103,
         {
             {"PvE Season", 13},
@@ -213,18 +213,21 @@ KrowiAF.AchievementData["11_00_00"] = {
 		40107,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
     { -- Harbinger of the Carved
 		40115,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
     { -- Harbinger of the Runed
 		40118,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
     { -- Algari Dungeoneer
@@ -567,7 +570,7 @@ KrowiAF.AchievementData["11_00_00"] = {
             {"PvE Season", 13},
         },
     },
-    { -- Let Me Solo Him
+    { -- Let Me Solo Him: Zekvir
         40433,
         {
             {"PvE Season", 13},
@@ -758,46 +761,53 @@ KrowiAF.AchievementData["11_00_00"] = {
 			RewardType = rewardType.Other,
 		},
 	},
-    { -- War Within Delves: Tier 4
+    { -- War Within Delves: Tier 4 (Season 1)
 		40515,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
-    { -- War Within Delves: Tier 5
+    { -- War Within Delves: Tier 5 (Season 1)
 		40516,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
-    { -- War Within Delves: Tier 6
+    { -- War Within Delves: Tier 6 (Season 1)
 		40517,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
-    { -- War Within Delves: Tier 7
+    { -- War Within Delves: Tier 7 (Season 1)
 		40518,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
-    { -- War Within Delves: Tier 8
+    { -- War Within Delves: Tier 8 (Season 1)
 		40519,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
-    { -- War Within Delves: Tier 9
+    { -- War Within Delves: Tier 9 (Season 1)
 		40520,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
-    { -- War Within Delves: Tier 10
+    { -- War Within Delves: Tier 10 (Season 1)
 		40521,
 		{
 			RewardType = rewardType.Other,
+            {"PvE Season", 13},
 		},
 	},
     {40523}, -- On Brand
@@ -910,14 +920,20 @@ KrowiAF.AchievementData["11_00_00"] = {
 			RewardType = rewardType.Other,
 		},
 	},
-	{ -- War Within Delves: Tier 11
+	{ -- War Within Delves: Tier 11 (Season 1)
 		40726,
 		{
 			RewardType = rewardType.Title,
+            {"PvE Season", 13},
 		},
 	},
     {40727}, -- Skittershaw Spin
-    {40728}, -- Forged Finery
+    { -- Forged Finery
+        40728,
+        {
+            IsPvP = true,
+        },
+    },
     {40729}, -- Light's Gambit Champion
     {40730}, -- Love is in the Lair
     {40731}, -- Panhandled
@@ -1031,7 +1047,12 @@ KrowiAF.AchievementData["11_00_02"] = {
     -- {40905}, -- From Many, One [Removed in 11.0.7, replaced by 41166]
     -- {40906}, -- The Flame Burns Within [Removed in 11.0.7, replaced by 41168]
     -- {40907}, -- We Rise Anew [Removed in 11.0.7, replaced by 41164]
-    {40939}, -- Harbinger of the Gilded
+    { -- Harbinger of the Gilded
+        40939,
+        {
+            {"PvE Season", 13},
+        }
+    },
 };
 
 KrowiAF.AchievementData["11_00_05"] = {
@@ -1370,4 +1391,579 @@ KrowiAF.AchievementData["11_00_07"] = {
     {41206}, -- Songs of Storms
     {41207}, -- When the Drust Settles
     {41209}, -- Dressed to Kill: Battle for Azeroth
+};
+
+KrowiAF.AchievementData["11_01_00"] = {
+    {KrowiAF.SetAchievementPatch, 11, 1, 0},
+    {40142}, -- Learning to Share
+    {40145}, -- So Much Sharing
+    {40894}, -- Sojourner of Undermine
+    {40900}, -- Undermined
+    { -- The War Within Season 2: Master Blaster
+        40911,
+		{
+			RewardType = rewardType.Transmog,
+		},
+    },
+    {40936}, -- Undermine Skyrocketing: Bronze
+    {40937}, -- Undermine Skyrocketing: Silver
+    { -- Undermine Skyrocketing: Gold
+        40938,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    {-- Weathered of the Undermine
+        40942,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- Carved of the Undermine
+        40943,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- Runed of the Undermine
+        40944,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- Gilded of the Undermined
+        40945,
+        {
+            {"PvE Season", 14},
+        }
+    },
+    {40948}, -- Nine-Tenths of the Law
+    { -- The War Within Keystone Explorer: Season Two
+        40949,
+        {
+            {"PvE Season", 14},
+        },
+    },
+    { -- The War Within Keystone Conqueror: Season Two
+        40950,
+        {
+            RewardType = rewardType.Title,
+            {"PvE Season", 14},
+        },
+    },
+    { -- The War Within Keystone Legend: Season Two
+        40951,
+        {
+            RewardType = rewardType.Mount,
+            {"PvE Season", 14},
+        },
+    },
+    { -- The War Within Keystone Hero: Season Two
+        40952,
+        {
+            {"PvE Season", 14},
+        },
+    },
+    { -- Enterprising Hero: The War Within Season Two
+        40954,
+        {
+            RewardType = rewardType.Title,
+            {"PvE Season", 14},
+        },
+    },
+    { -- Keystone Hero: The MOTHERLODE!!
+        40965,
+        {
+            RewardType = rewardType.Teleport,
+            {"PvE Season", 14},
+        },
+    },
+    { -- Keystone Hero: Operation: Mechagon - Workshop
+        40966,
+        {
+            RewardType = rewardType.Teleport,
+            {"PvE Season", 14},
+        },
+    },
+    { -- Rival I: The War Within Season 2
+        41016,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Rival II: The War Within Season 2
+        41017,
+        {
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Duelist: The War Within Season 2
+        41018,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Elite: The War Within Season 2
+        41019,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Combatant I: The War Within Season 2
+        41020,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Combatant II: The War Within Season 2
+        41021,
+        {
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Challenger I: The War Within Season 2
+        41022,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Challenger II: The War Within Season 2
+        41023,
+        {
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Gladiator: The War Within Season 2
+        41032,
+        {
+            RewardType = {rewardType.Title, rewardType.Mount, rewardType.Transmog},
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Prized Weapons of Conquest
+        41047,
+        {
+            RewardType = rewardType.Transmog,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Undermine Breaknecking: Bronze
+        41081,
+		{
+			RewardType = rewardType.Mount,
+		},
+    },
+    {41083}, -- Undermine Breaknecking: Silver
+    { -- Undermine Breaknecking: Gold
+        41084,
+		{
+			RewardType = {rewardType.Mount, rewardType.Title},
+		},
+    },
+    { -- Ally of Undermine
+        41086,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    { -- Undermine Safari
+        41092,
+        {
+            RewardType = rewardType.Pet,
+        },
+    },
+    { -- Delve Beyond
+        41095,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    { -- Delve Infinite
+        41096,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    {41097}, -- Curiosity Never Killed the Looter
+    {41098}, -- Excavation Site 9 Stories
+    {41099}, -- Sidestreet Sluice Stories
+    {41100}, -- Excavation Site 9 Discoveries
+    {41101}, -- Sidestreet Sluice Discoveries
+    {41105}, -- Prodigious Plentiful Perplexing Puzzles
+    {41106}, -- Algari Delver Damage Dealer
+    {41107}, -- Algari Delver Healer
+    {41108}, -- Algari Delver Tank
+    {41109}, -- Algari Delver Damage Dealer II
+    {41110}, -- Algari Delver Damage Dealer III
+    {41111}, -- Algari Delver Healer II
+    {41112}, -- Algari Delver Healer III
+    {41113}, -- Algari Delver Tank II
+    {41114}, -- Algari Delver Tank III
+    {41115}, -- Algari Delver
+    {41116}, -- Algari Delver II
+    {41119}, -- One Rank Higher
+    {41120}, -- Two Ranks Higher
+    {41121}, -- Three Ranks Higher
+    { -- Best In Class
+        41122,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    { -- War Within Delves: Tier 4 (Season 2)
+        41191,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 5 (Season 2)
+        41192,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 7 (Season 2)
+        41193,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 8 (Season 2)
+        41194,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 9 (Season 2)
+        41195,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 10 (Season 2)
+        41196,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 11 (Season 2)
+        41197,
+        {
+            RewardType = rewardType.Title,
+            {"PvE Season", 14},
+        },
+    },
+    { -- War Within Delves: Tier 6 (Season 2)
+        41198,
+        {
+            RewardType = rewardType.Other,
+            {"PvE Season", 14},
+        },
+    },
+    {41208}, -- Hold My Gear!
+    { -- Let Me Solo Him: The Underpin
+        41210,
+        {
+            RewardType = rewardType.Mount,
+            {"PvE Season", 14},
+        },
+    },
+    { -- A Good Day to Dye Hard
+        41211,
+        {
+            RewardType = rewardType.Toy,
+        },
+    },
+    {41214}, -- Under the Echoes
+    {41215}, -- Echoes of Deeper Dangers
+    {41216}, -- Adventurer of Undermine
+    {41217}, -- Treasures of Undermine
+    {41222}, -- Liberation of Undermine
+    {41223}, -- Heroic: Liberation of Undermine
+    {41224}, -- Mythic: Liberation of Undermine
+    {41225}, -- Shock and Awesome
+    {41226}, -- Maniacal Machinist
+    {41227}, -- Beating the Odds
+    {41228}, -- Fall of the Chrome King
+    {41229}, -- Mythic: Vexie and the Geargrinders
+    {41230}, -- Mythic: Cauldron of Carnage
+    {41231}, -- Mythic: Rik Reverb
+    {41232}, -- Mythic: Stix Bunkjunker
+    {41233}, -- Mythic: Sprocketmonger Lockenstock
+    {41234}, -- Mythic: The One-Armed Bandit
+    {41235}, -- Mythic: Mug'Zee, Heads of Security
+    { -- Mythic: Chrome King Gallywix
+        41236,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    { -- Glory of the Liberation of Undermine Raider
+        41286,
+        {
+            RewardType = rewardType.Mount,
+        },
+    },
+    { -- Cutting Edge: Chrome King Gallywix
+        41297,
+        {
+            {"PvE Season", 14},
+        },
+    },
+    { -- Ahead of the Curve: Chrome King Gallywix
+        41298,
+        {
+            {"PvE Season", 14},
+        },
+    },
+    {41337}, -- Sleep with the Fishes
+    {41338}, -- Just /Dance
+    {41339}, -- Operation: Floodgate
+    {41340}, -- Heroic: Operation: Floodgate
+    {41341}, -- Mythic: Operation: Floodgate
+    {41347}, -- Scheming on a Thing
+    { -- Keystone Hero: Operation: Floodgate
+        41348,
+        {
+            RewardType = rewardType.Teleport,
+            {"PvE Season", 14},
+        },
+    },
+    { -- In with the Cartels
+        41349,
+        {
+            RewardType = rewardType.Pet,
+        },
+    },
+    { -- A Long Fuse
+        41350,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    { -- Cartels Bestie
+        41351,
+        {
+            RewardType = rewardType.Transmog,
+        },
+    },
+    { -- Trade-Duke
+        41352,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    { -- Prized Gladiator: The War Within Season 2
+        41354,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Prized Legend: The War Within Season 2
+        41355,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Prized Warlord: The War Within Season 2
+        41356,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Prized Marshal: The War Within Season 2
+        41357,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Legend: The War Within Season 2
+        41358,
+        {
+            RewardType = {rewardType.Title, rewardType.Toy},
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Battle Mender: The War Within Season 2
+        41359,
+        {
+            RewardType = rewardType.Title,
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Hero of the Horde: Prized
+        41360,
+        {
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Hero of the Alliance: Prized
+        41361,
+        {
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Prized Gladiator's Fel Bat
+        41362,
+        {
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    { -- Strategist: The War Within Season 2
+        41363,
+        {
+            RewardType = {rewardType.Title, rewardType.Toy},
+            IsPvP = true,
+            {"PvP Season", 39},
+        },
+    },
+    {41522}, -- Tour of Duty: Undermine
+    {41525}, -- Can You Please Spell "Gobanna?"
+    { -- Breaking the Bank
+        41529,
+        {
+            RewardType = rewardType.Title,
+            {"PvE Season", 14},
+        },
+    },
+    { -- My New Nemesis
+        41530,
+        {
+            RewardType = rewardType.Mount,
+            {"PvE Season", 14},
+        },
+    },
+    { -- The Hataclysm
+        41531,
+        {
+            {"PvE Season", 14},
+        },
+    },
+    {41532}, -- I've Got a Flying Machine?
+    { -- The War Within Keystone Master: Season Two
+        41533,
+        {
+            RewardType = rewardType.Mount,
+            {"PvE Season", 14},
+        },
+    },
+    {41537}, -- Buddy System VII
+    {41541}, -- Critter Battler of Undermine
+    {41542}, -- Aquatic Battler of Undermine
+    {41543}, -- Beast Battler of Undermine
+    {41544}, -- Dragonkin Battler of Undermine
+    {41545}, -- Elemental Battler of Undermine
+    {41546}, -- Flying Battler of Undermine
+    {41547}, -- Humanoid Battler of Undermine
+    {41548}, -- Magic Battler of Undermine
+    {41549}, -- Mechanical Battler of Undermine
+    {41550}, -- Undead Battler of Undermine
+    { -- Family Battler of Undermine
+        41551,
+        {
+            RewardType = rewardType.Pet,
+        },
+    },
+    {41554}, -- The Splash Zone
+    { -- All That Khaz
+        41555,
+        {
+            RewardType = rewardType.WarbandCampsite,
+        },
+    },
+    { -- Going Goblin Mode
+        41586,
+        {
+            RewardType = rewardType.WarbandCampsite,
+        },
+    },
+    {41587}, -- Explore Undermine
+    { -- Read Between the Lines
+        41588,
+        {
+            RewardType = rewardType.Toy,
+        },
+    },
+    {41589}, -- That Can-Do Attitude
+    {41590}, -- No Littering
+    {41591}, -- Really No Littering
+    {41592}, -- Absolutely Zero Littering
+    {41593}, -- Cleanin' the Streets
+    {41594}, -- Can You Believe What People Throw Away?
+    { -- Prized Guise
+        41595,
+        {
+            IsPvP = true,
+        }
+    },
+    { -- Garbage In, Garbage Out
+        41596,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    {41626, }, -- C.H.E.T.T. a Look
+    {41627, }, -- C.H.E.T.T.ing it Twice
+    { -- C.H.E.T.T.mate
+        41629,
+        {
+            RewardType = rewardType.Title,
+        },
+    },
+    {41630, }, -- "Employee" of the Month
+    { -- Dressed to the Mines
+        41665,
+		{
+			RewardType = rewardType.Transmog,
+		},
+    },
+    {41694}, -- Flarendo's Biggest Fan
+    {41695}, -- Torq's Biggest Fan
+    {41708}, -- You're My Friend Now
+    { -- Journey's End (Season 2)
+        41709,
+        {
+            {"PvE Season", 14},
+        },
+    },
+    {41711}, -- Conveyor Slayer
+    {41714}, -- From Trash to Treasure
+    {41723}, -- Buddy System VIII
 };

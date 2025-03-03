@@ -191,13 +191,28 @@ map.nodes[44003400] = Rare({
 
 map.nodes[64002700] = Rare({
     id = 73282,
+    note = L['garnia_note'],
     quest = {33275, 33300},
     rewards = {
         Achievement({id = 8714, criteria = 23982}),
         Achievement({id = 8728, criteria = 24027}), -- Ruby Droplet
         Pet({id = 1328, item = 104159}) -- Ruby Droplet
+    },
+    pois = {
+        POI({34305520}) -- Highwind Albatross
     }
 }) -- Garnia
+-- Highwind Albatross flight path:
+-- 29245546, 27875597, 26575690, 25825819, 25675892, 25586050, 25696209, 25986369,
+-- 26206446, 26826589, 27666723, 28726849, 29346912, 30397008, 31497099, 32637189,
+-- 33257236, 34567330, 35937420, 37347502, 38047537, 39417595, 40807633, 42237656,
+-- 42967662, 44407665, 45847661, 47237653, 47917648, 49287642, 50737656, 52217671,
+-- 52987664, 54357617, 55577542, 56847437, 57337389, 58407278, 59427165, 60337060,
+-- 60807004, 61756890, 62726772, 63686653, 64166594, 65116475, 66036361, 66916251,
+-- 67336199, 68376071, 69295962, 70525831, 71165780, 72515775, 73135629, 73395483,
+-- 73485410, 73645252, 73775082, 73864907, 73904820, 73954653, 73984509, 74034364,
+-- 74054291, 74084142, 74073994, 74003849, 73943778, 73763644, 73353482, 72813355,
+-- 72483295, 71713182, 70863077, 69812965, 69212905, 68092794, 66782695, 65382636
 
 map.nodes[62086372] = Rare({
     id = 72970,
@@ -255,6 +270,14 @@ map.nodes[65875660] = Rare({
         Achievement({id = 8714, criteria = 23984}),
         Achievement({id = 8728, criteria = 24081}), -- Reins of the Thundering Onyx Cloud Serpent
         Mount({item = 104269, id = 561}) -- Thundering Onyx Cloud Serpent
+    },
+    pois = {
+        Path({
+            66595967, 67895864, 69515799, 71195827, 72745706, 73195463,
+            73165267, 73625120, 74474980, 75304861, 75264705, 75054547,
+            74264424, 73814261, 73404081, 72093982, 70623894, 69323823,
+            67983779, 66533830, 65313914, 63603966, 62514052, 61364126
+        })
     }
 }) -- Huolon
 
@@ -464,11 +487,11 @@ map.nodes[37797773] = Rare({
 ---------------------------------- TREASURES ----------------------------------
 -------------------------------------------------------------------------------
 
-local MossCoveredChest = Class('MossCoveredChest', Treasure)
-
-MossCoveredChest.label = L['moss_covered_chest']
-MossCoveredChest.icon = 'chest_gn'
-MossCoveredChest.rewards = {Achievement({id = 8729, criteria = 1})}
+local MossCoveredChest = Class('MossCoveredChest', Treasure, {
+    label = L['moss_covered_chest'],
+    icon = 'chest_gn',
+    rewards = {Achievement({id = 8729, criteria = 1})}
+})
 
 map.nodes[36703410] = MossCoveredChest({quest = 33170})
 map.nodes[25502720] = MossCoveredChest({quest = 33171})
@@ -517,39 +540,28 @@ map.nodes[47602760] = Treasure({
     quest = 33210,
     label = L['blazing_chest'],
     icon = 'chest_rd',
-    rewards = {Achievement({id = 8729, criteria = 24118})}
+    rewards = {Achievement({id = 8729, criteria = 24118})},
+    pois = {
+        Path({
+            47062684, 45452644, 43752583, 42002554, 40792611, 40792780,
+            41302937, 41883088, 42523233, 43373348, 44943468, 46533578,
+            48183671, 49913713, 51603783
+        })
+    }
 }) -- Blazing Chest
 
-map.nodes[28203520] = Treasure({
-    quest = 33204,
-    label = L['sturdy_chest'],
-    note = L['sturdy_chest_note'],
+local SturdyChest = Class('SturdyChest', Treasure {
     icon = 'chest_bn',
+    label = L['sturdy_chest'],
     rewards = {Achievement({id = 8729, criteria = 4})}
-}) -- Sturdy Chest
+})
 
-map.nodes[26806490] = Treasure({
-    quest = 33205,
-    label = L['sturdy_chest'],
-    note = L['sturdy_chest_note'],
-    icon = 'chest_bn',
-    rewards = {Achievement({id = 8729, criteria = 4})}
-}) -- Sturdy Chest
-
-map.nodes[64607040] = Treasure({
-    quest = 33206,
-    label = L['sturdy_chest'],
-    icon = 'chest_bn',
-    rewards = {Achievement({id = 8729, criteria = 4})}
-}) -- Sturdy Chest
-
-map.nodes[59204950] = Treasure({
-    quest = 33207,
-    label = L['sturdy_chest'],
-    note = L['spelurk_cave'],
-    icon = 'chest_bn',
-    rewards = {Achievement({id = 8729, criteria = 4})}
-}) -- Sturdy Chest
+map.nodes[28203520] =
+    SturdyChest({quest = 33204, note = L['sturdy_chest_note']}) -- Sturdy Chest
+map.nodes[26806490] =
+    SturdyChest({quest = 33205, note = L['sturdy_chest_note']}) -- Sturdy Chest
+map.nodes[64607040] = SturdyChest({quest = 33206}) -- Sturdy Chest
+map.nodes[59204950] = SturdyChest({quest = 33207, note = L['spelurk_cave']}) -- Sturdy Chest
 
 map.nodes[69503290] = Treasure({
     quest = 33208,
@@ -564,6 +576,13 @@ map.nodes[54007820] = Treasure({
     icon = 'chest_yw',
     rewards = {Achievement({id = 8729, criteria = 5})}
 }) -- Smoldering Chest
+
+map.nodes[59164040] = Treasure({
+    label = L['timeless_chest'],
+    note = L['timeless_chest_note'],
+    requires = ns.requirement.Item(101538),
+    rewards = {Pet({item = 104202, id = 1343})} -- Bonkers
+})
 
 -------------------------------------------------------------------------------
 --------------------------- EXTREME TREASURE HUNTER ---------------------------

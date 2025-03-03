@@ -1,18 +1,30 @@
-== v2.05 7th January 2025
+== v2.08 - 27th February 2025
+* TOC update to 11.1.0
+
+== v2.07 - 20th February 2025
+* TOC update to 4.4.2
+
+== v2.06 - 21st January 2025
+* Translation for "Go to Uldum" added
+* "Wrong version of Uldum" improved for Korean
+* Show coords supressed for the "X" icon
+* Maladath added
+
+== v2.05 - 7th January 2025
 * Added Kalimdor and Azeroth pins
 * More appropriate pin sizing
 
-== v2.04 24th December 2024
+== v2.04 - 24th December 2024
 * Translations added for the new map checks
 
-== v2.03 10th December 2024
+== v2.03 - 10th December 2024
 * TOC update to 11.0.7
 
-== v2.02 26th November 2024
+== v2.02 - 26th November 2024
 * Improved map "X" message - makes it really clear which version of Uldum you are
   in and which version of Uldum you are looking at
 
-== v2.01 12th November 2024
+== v2.01 - 12th November 2024
 * TOC update to 4.4.1
 
 == v2.00 - 29th October 2024

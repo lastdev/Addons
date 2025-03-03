@@ -77,7 +77,7 @@ function CraftingOperation.IsValid(itemString)
 	if not minRestock then
 		return false, operationName, errType, errArg
 	end
-	maxRestock, errType = private.GetMaxRestock(operationSettings, itemString)
+	maxRestock, errType, errArg = private.GetMaxRestock(operationSettings, itemString)
 	if not maxRestock then
 		return false, operationName, errType, errArg
 	end

@@ -85,7 +85,8 @@ L.InstanceNames = {
     [2522] = "Vault of the Incarnates",
     [2569] = "Aberrus, the Shadowed Crucible",
     [2549] = "Amirdrassil, the Dream's Hope",
-    [2657] = "Nerub-ar Palace"
+    [2657] = "Nerub-ar Palace",
+    [2769] = "Liberation of Undermine"
 }
 
 L.DifficultyNames = {

@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                      v2.04 - 7th January 2025
+                                     v2.06 - 20th February 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -735,7 +735,7 @@ function HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick( addonName, bu
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
 function pluginHandler:OnEnable()
-	local HereBeDragons = LibStub("HereBeDragons-2.0", true)
+	local HereBeDragons = LibStub( "HereBeDragons-2.0", true )
 	if not HereBeDragons then return end
 	
 	for continentMapID in next, continents do
@@ -760,16 +760,19 @@ function pluginHandler:OnEnable()
 			end
 		end
 	end
-	HandyNotes:RegisterPluginDB("MidsummerFireFestival", pluginHandler, ns.options)
-	ns.db = LibStub("AceDB-3.0"):New("HandyNotes_MidsummerFireFestivalDB", defaults, "Default").profile
+	HandyNotes:RegisterPluginDB( "MidsummerFireFestival", pluginHandler, ns.options )
+	ns.db = LibStub( "AceDB-3.0" ):New("HandyNotes_MidsummerFireFestivalDB", defaults, "Default" ).profile
 	pluginHandler:Refresh()
 end
 
 function pluginHandler:Refresh()
-	if not ns.delay then self:SendMessage("HandyNotes_NotifyUpdate", "MidsummerFireFestival") end
+	if GetTime() > ( ns.delay or 0 ) then
+		ns.delay = nil
+		self:SendMessage( "HandyNotes_NotifyUpdate", "MidsummerFireFestival" )
+	end
 end
 
-LibStub("AceAddon-3.0"):NewAddon(pluginHandler, "HandyNotes_MidsummerFireFestivalDB", "AceEvent-3.0")
+LibStub( "AceAddon-3.0" ):NewAddon( pluginHandler, "HandyNotes_MidsummerFireFestivalDB", "AceEvent-3.0" )
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -777,24 +780,24 @@ ns.eventFrame = CreateFrame( "Frame" )
 ns.timeSinceLastRefresh, ns.curTime = 0, 0
 
 local function OnUpdate()
-	ns.curTime = GetTime()
-	if ns.curTime - ns.timeSinceLastRefresh <= 7 then return end
-	ns.timeSinceLastRefresh = ns.curTime
-	pluginHandler:Refresh()
+	if GetTime() > ( ns.saveTime or 0 ) then
+		ns.saveTime = GetTime() + 5
+		pluginHandler:Refresh()
+	end
 end
 
 ns.eventFrame:SetScript( "OnUpdate", OnUpdate )
 
 local function OnEventHandler( self, event, ... )
-	-- This is based upon my own research as documented in my WDW AddOn
-	if ( event == "PLAYER_ENTERING_WORLD" ) then
-		ns.delay = true
+	if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "PLAYER_LEAVING_WORLD" ) then
+		ns.delay = GetTime() + 60 -- Some arbitrary large amount
 	elseif ( event == "SPELLS_CHANGED" ) then
-		ns.delay = nil
+		ns.delay = GetTime() + 5 -- Allow a 5 second safety buffer before we resume refreshes
 	end
 end
 
 ns.eventFrame:RegisterEvent( "PLAYER_ENTERING_WORLD" )
+ns.eventFrame:RegisterEvent( "PLAYER_LEAVING_WORLD" )
 ns.eventFrame:RegisterEvent( "SPELLS_CHANGED" )
 ns.eventFrame:SetScript( "OnEvent", OnEventHandler )
 

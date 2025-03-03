@@ -1,5 +1,5 @@
-## Interface: 110005
-## Title: |cFFFFFF00<WA Soundpack>|r |cff69ccf0by Causese|r
+## Interface: 110007
+## Title: Causese_SharedMedia
 
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua

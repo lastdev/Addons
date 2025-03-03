@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                      v2.05 - 7th January 2025
+                                     v2.08 - 27th February 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -49,7 +49,7 @@ ns.oceania = { AmanThul = true, Barthilas = true, Caelestrasz = true, DathRemar 
 			Dreadmaul = true, Frostmourne = true, Gundrak = true, JubeiThos = true, 
 			Khazgoroth = true, Nagrand = true, Saurfang = true, Thaurissan = true,
 			Yojamba = true, Remulos = true, Arugal = true, Felstriker = true,
-			Penance = true, Shadowstrike = true, Maladath = true, }			
+			Penance = true, Shadowstrike = true, Maladath = true, }
 if ns.oceania[realm] then
 	ns.locale = "enGB"
 end
@@ -399,6 +399,7 @@ if ns.locale == "deDE" then
 		.."Mysteriöse Kamelfigur" ..ns.colour.highlight .." in Uldum zu erhalten"
 	L["Camel"] = "Mysteriöse Kamelfigur"
 	L["Correct Map"] = "Sie sehen die richtige Karte"
+	L["Go to Uldum"] = "Gehe nach Uldum"
 	L["Incorrect Map"] = "Sie sehen die falsche Karte"
 	L["Speak to Zidormi"] = "Sprich mit Zidormi"
 	L["Uldum Map"] = "Uldum-Karte"
@@ -409,6 +410,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 		.."el Figurilla de camello misteriosa" ..ns.colour.highlight .." en Uldum"
 	L["Camel"] = "Figurilla de camello misteriosa"
 	L["Correct Map"] = "Estás mirando el mapa correcto"
+	L["Go to Uldum"] = "Ir a Uldum"
 	L["Incorrect Map"] = "Estás mirando el mapa incorrecto."
 	L["Speak to Zidormi"] = "Hablar con Zidormi"
 	L["Uldum Map"] = "Mapa de Uldum"
@@ -419,6 +421,7 @@ elseif ns.locale == "frFR" then
 		.."la figurine de dromadaire mystérieuse" ..ns.colour.highlight .." à Uldum"
 	L["Camel"] = "Figurine de dromadaire mystérieuse"
 	L["Correct Map"] = "Vous regardez la bonne carte"
+	L["Go to Uldum"] = "Aller à Uldum"
 	L["Incorrect Map"] = "Vous regardez la mauvaise carte"
 	L["Speak to Zidormi"] = "Parlez à Zidormi"
 	L["Uldum Map"] = "Carte de Uldum"
@@ -429,6 +432,7 @@ elseif ns.locale == "itIT" then
 		.."Statuetta di Dromedario Misteriosa" ..ns.colour.highlight .." a Uldum"
 	L["Camel"] = "Statuetta di Dromedario Misteriosa"
 	L["Correct Map"] = "Stai guardando la mappa corretta"
+	L["Go to Uldum"] = "Vai a Uldum"
 	L["Incorrect Map"] = "Stai guardando la mappa sbagliata"
 	L["Speak to Zidormi"] = "Parla con Zidormi"
 	L["Uldum Map"] = "Mappa di Uldum"
@@ -439,16 +443,18 @@ elseif ns.locale == "koKR" then
 		..ns.colour.plaintext .."를 얻는 데 도움이 됩니다."
 	L["Camel"] = "수수께끼 낙타 조각상"
 	L["Correct Map"] = "당신은 올바른 지도를 보고 있습니다."
+	L["Go to Uldum"] = "울둠으로 이동"
 	L["Incorrect Map"] = "당신은 잘못된 지도를 보고 있습니다."
 	L["Speak to Zidormi"] = "지도르미님과 대화"
 	L["Uldum Map"] = "울둠 지도"
-	L["Wrong version of Uldum"] = "@는 잘못된 버전의 Uldum을 사용하고 있습니다."
+	L["Wrong version of Uldum"] = "@는 잘못된 버전의 울둠을 사용하고 있습니다."
 
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	L["AddOn Description"] = ns.colour.highlight .."Ajuda você a obter o " ..ns.colour.prefix
 		.."Estátua de Camelo Misteriosa" ..ns.colour.highlight .." em Uldum"
 	L["Camel"] = "Estátua de Camelo Misteriosa"
 	L["Correct Map"] = "Você está olhando para o mapa correto"
+	L["Go to Uldum"] = "Vá para Uldum"
 	L["Incorrect Map"] = "Você está olhando para o mapa incorreto"
 	L["Speak to Zidormi"] = "Fale com Zidormi"
 	L["Uldum Map"] = "Mapa de Uldum"
@@ -459,6 +465,7 @@ elseif ns.locale == "ruRU" then
 		.."Странная фигурка верблюда" ..ns.colour.highlight .." в Ульдум"
 	L["Camel"] = "Странная фигурка верблюда"
 	L["Correct Map"] = "Вы смотрите на правильную карту"
+	L["Go to Uldum"] = "Отправиться в Ульдум"
 	L["Incorrect Map"] = "Вы смотрите на неправильную карту"
 	L["Speak to Zidormi"] = "Поговори с Зидорми"
 	L["Uldum Map"] = "Карта Ульдума"
@@ -468,6 +475,7 @@ elseif ns.locale == "zhCN" then
 	L["AddOn Description"] = ns.colour.highlight .."帮助您获取奥丹姆中的" ..ns.colour.prefix .."神秘的骆驼雕像"
 	L["Camel"] = "神秘的骆驼雕像"
 	L["Correct Map"] = "您正在查看正确的地图"
+	L["Go to Uldum"] = "前往奥丹姆"
 	L["Incorrect Map"] = "您正在查看错误的地图"
 	L["Speak to Zidormi"] = "与 希多尔米 通话"
 	L["Uldum Map"] = "奥丹姆地图"
@@ -477,6 +485,7 @@ elseif ns.locale == "zhTW" then
 	L["AddOn Description"] = ns.colour.highlight .."幫助您獲取奧丹姆中的" ..ns.colour.prefix .."神秘的駱駝雕像"
 	L["Camel"] = "神秘的駱駝雕像"
 	L["Correct Map"] = "您正在查看正確的地圖"
+	L["Go to Uldum"] = "前往奧丹姆"
 	L["Incorrect Map"] = "您正在查看不正確的地圖"
 	L["Speak to Zidormi"] = "與 希多爾米 通話"
 	L["Uldum Map"] = "奧丹姆地圖"
@@ -520,18 +529,21 @@ function pluginHandler:OnEnter( mapFile, coord )
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
 	
-	if pin.camel then
-		GameTooltip:SetText( ns.colour.prefix ..L["Camel"] )
+	GameTooltip:SetText( ns.colour.prefix ..L["Camel"] )
 
+	if pin.camel then
 		if ( ns.mapID == 12 ) or ( ns.mapID == 947 ) then
 			GameTooltip:AddLine( L["Go to Uldum"] )
-		end
-		
+		end		
 		if pin.tip then
 			GameTooltip:AddLine( ns.colour.plaintext ..pin.tip )
 		end
+		if ( ns.db.showCoords == true ) and ( ns.mapID ~= 12 ) and ( ns.mapID ~= 947 ) then
+			local mX, mY = HandyNotes:getXY(coord)
+			mX, mY = mX*100, mY*100
+			GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
+		end
 	else
-		GameTooltip:SetText( ns.colour.prefix ..L["Camel"] )
 		if ( VersionOfUldum() == false ) then
 			GameTooltip:AddLine( ns.colour.highlight ..L["Speak to Zidormi"] .." (56.02,35.14)\n" )
 			local version = string.gsub( L["Wrong version of Uldum"], "@", ns.name )
@@ -544,13 +556,6 @@ function pluginHandler:OnEnter( mapFile, coord )
 		end
 	end
 	
-	if ( ns.db.showCoords == true ) and ( ns.mapID ~= 12 ) and ( ns.mapID ~= 947 ) then
-		if ( pin.camel == nil) then GameTooltip:AddLine( "\n" ) end
-		local mX, mY = HandyNotes:getXY(coord)
-		mX, mY = mX*100, mY*100
-		GameTooltip:AddLine( ns.colour.highlight .."(" ..format( "%.02f", mX ) .."," ..format( "%.02f", mY ) ..")" )
-	end
-
 	GameTooltip:Show()
 end
 
@@ -564,7 +569,7 @@ do
 		local coord, pin = next(t, prev)
 		while coord do
 			if pin then
-				if pin.camel or ( ns.mapID == 12 ) or ( ns.mapID == 947 ) then
+				if pin.camel then
 					if pin.author and ns.author == true then
 						return coord, nil, ns.textures[3],
 								ns.db.iconScale * ns.scaling[3], ns.db.iconAlpha
