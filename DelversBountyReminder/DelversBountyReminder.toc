@@ -1,0 +1,18 @@
+## Interface: 111059
+## Title: Delver's Bounty Reminder
+## Author: Erzo (Erzo-Lightbringer/US-Horde)
+## Version: 1.0.0
+## IconTexture:1064187
+## AddonCompartmentFunc: MyAddOnToggleWindow
+## Notes: Track's the status of your Delver's Bounty across your characters.
+## SavedVariables: DelversBountyReminderDB
+## Dependencies: 
+
+## Libraries (ensure they are loaded in the correct order)
+Libs/LibStub.lua
+Libs/CallbackHandler-1.0.lua
+Libs/LibDataBroker-1.1.lua
+Libs/LibDBIcon-1.0.lua
+
+## Main addon files
+DelversBountyReminder.lua

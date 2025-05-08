@@ -1,0 +1,20 @@
+## Interface: 110105
+## Title: Krowi's |cFF1D92C2AF|r - Khamuls Expansion Meta Achievement Filters
+## Version: 1.1.4
+## Author: Khamûl-Antonidas
+## X-Email: neytiri-amanthul@gmx.at
+## Notes: Additional Filters for Krowi's Achievement Filter Addon, providing lists for expansion meta achievements
+## IconTexture: interface/icons/inv_radientazeriteheart
+## Dependencies: Krowi_AchievementFilter
+## X-CurseForge: https://www.curseforge.com/wow/addons/krowis-achievement-filter-khamuls-expansion-meta
+## X-Curse-Project-ID: 1143362
+## X-Wago: https://addons.wago.io/addons/krowi-achievementfilter-khamuls-expmetaachievementfilter
+## X-Wago-Project-ID: vNAeqRNo
+
+Libs\Files.xml
+Localization\Files.xml
+
+Utilities.lua
+Data\Files.xml
+
+Krowi_AchievementFilter_Khamuls_ExpMetaAchievementFilter.lua

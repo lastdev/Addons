@@ -1,0 +1,52 @@
+== v1.08 - 6th May 2025
+* Revamp of the help for Horde Caverns of Time quest improved, including new pins
+* Different shade of blue for "guide" elements as it was too close to another
+  blue used for different elements
+* Reposition a few pins Alliance/Horde
+
+== v1.07 - 4th May 2025
+* One line bug fix. Missing return false
+
+== v1.06 - 4th May 2025
+* Restructured files that are commonly shared between my event AddOns
+* "Childrens Week" needs an apostrophe
+
+== v1.05 - 1st May 2025
+* Translations added for Options
+* Cup cake changed to Cupcake coz I dun know much bout cakes
+* Second Utgarde label changed to Vendors
+* Cleaned up the Localisations_CW file
+* Helpful Workshop Bot's name corrected as well as its SpeciesID
+* Note about checking level requirements of the foods in Bad Example added
+* Sadly, I have had to remove my "attempt" at showing individual character progress.
+  It does work with some world events. Not this one. Only applies to RETAIL
+  
+== v1.04 - 30th April 2025
+* Fix for the pin cluster progress - looks like Cata Classic uses the "old way"
+  (seems true for the meta as well as individual achievement criteria
+* Various repositions for Cata Classic
+* Underciy typo fixed
+* Azshara corrected - you ride the special CW rocket and not the regular rocket
+* Cruisin' the Chasm changed to available from 40100 rather than mid MoP
+  - Yup - WoW Wiki got it wrong!
+  (Outside the events I can only do so much. The real test is during the event!)
+* The Stonewrought Dam tooltip corrected
+
+== v1.03 - 29th April 2025
+* Khaz Algar / Dornogal orphan quest chain added
+* New Dornogal pets added to the Pet Parade
+* A few repositions in Stormwind and Orgrimmar
+* Kul Tiras repositions and improvements
+
+== v1.02 - 28th April 2025
+* All Battle for Azeroth coordinates and help enhanced
+* Added a level 10 flag to every quest
+
+== v1.01 - 27th April 2025
+* Stormwind icecream pin Tooltips between game versions improved
+* Likewise a change to a Durotar pin that directs players to Orgrimmar
+* Pet Parade pin in the cluster is now live!
+* Pin cluster reworked to be better for all game versions
+
+== v1.00 - 26th April 2025
+* Initial release for 11.1.5, 5.5.0, 4.4.2, 3.4.4, 2.5.4, 11.5.7

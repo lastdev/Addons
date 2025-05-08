@@ -1,0 +1,44 @@
+## Interface: 110105
+## Version: 1.08
+## Author: Taraezor
+## IconTexture: Interface\Icons\INV_Misc_Food_31
+## Title: Children's Week
+## Title-deDE: Kinderwoche
+## Title-esES: Semana de los Niños
+## Title-esMX: Semana de los Niños
+## Title-frFR: Semaine des enfants
+## Title-itIT: Settimana dei Bambini
+## Title-koKR: 어린이 주간
+## Title-ptBR: Semana das Crianças
+## Title-ptPT: Semana das Crianças
+## Title-ruRU: Детская неделя
+## Title-zhCN: 儿童周
+## Title-zhTW: 兒童週
+## Notes: |cFFFF5F1FHelp for the |cFF64E986Children's Week|cFFFF5F1F achievements and quests
+## Notes-deDE: |cFFFF5F1FHilfe für Erfolge und Quests in |cFF64E986Kinderwoche
+## Notes-esES: |cFFFF5F1FAyuda para logros y misiones en |cFF64E986Semana de los Niños
+## Notes-esMX: |cFFFF5F1FAyuda para logros y misiones en |cFF64E986Semana de los Niños
+## Notes-frFR: |cFFFF5F1FAide pour les réalisations et les quêtes dans |cFF64E986Semaine des enfants
+## Notes-itIT: |cFFFF5F1FAiuto per obiettivi e missioni in |cFF64E986Settimana dei Bambini
+## Notes-koKR: |cFF64E986어린이 주간|cFFFF5F1F업적 및 퀘스트에 대한 도움말
+## Notes-ptBR: |cFFFF5F1FAjuda para conquistas e missões em |cFF64E986Semana das Crianças
+## Notes-ptPT: |cFFFF5F1FAjuda para conquistas e missões em |cFF64E986Semana das Crianças
+## Notes-ruRU: |cFFFF5F1FСправка по достижениям и квестам в |cFF64E986Детская неделя
+## Notes-zhCN: |cFFFF5F1F帮助|cFF64E986儿童周|cFFFF5F1F的成就和任务
+## Notes-zhTW: |cFFFF5F1F幫助|cFF64E986兒童週|cFFFF5F1F的成就和任務
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_ChildrensWeekDB
+## AddonCompartmentFunc: HandyNotes_ChildrensWeek_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_ChildrensWeek_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_ChildrensWeek_OnAddonCompartmentLeave
+## X-Curse-Project-ID: 102506
+## X-Wago-ID: qGYM3vGg
+
+Colours_CW.lua
+Common.lua
+Localisations_Common.lua
+Localisations_Events.lua
+Localisations_CW.lua
+Mapping.lua
+Data.lua
+Core.lua

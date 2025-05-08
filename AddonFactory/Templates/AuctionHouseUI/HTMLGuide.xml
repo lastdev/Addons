@@ -1,0 +1,31 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Template used for the HTML guides -->
+	<Frame name="AddonFactory_AuctionHouseHTMLGuideTemplate" virtual="true">
+		<Frames>
+			<ScrollFrame parentKey="ScrollFrame" inherits="UIPanelScrollFrameTemplate">
+				<Size x="600" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="10" y="-50" />
+					<Anchor point="BOTTOMRIGHT" x="-26" y="1"/>
+				</Anchors>
+				<ScrollChild>
+					<Frame parentKey="ScrollChild">
+						<Size x="620" y="372"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="0" y="0"/>
+						</Anchors>
+						<Frames>
+							<SimpleHTML parentKey="Content" setAllPoints="true" inherits="InlineHyperlinkFrameTemplate">
+								<Size x="650" y="10"/>
+								<FontString inherits="GameFontNormal" spacing="2" justifyH="LEFT" justifyV="TOP" />
+								<FontStringHeader1 inherits="GameFontNormalLarge" spacing="4" justifyH="LEFT" />
+								<FontStringHeader2 inherits="GameFontNormal" spacing="4" justifyH="LEFT" />
+								<FontStringHeader3 inherits="GameFontNormal" spacing="4" justifyH="LEFT" />
+							</SimpleHTML>
+						</Frames>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+		</Frames>
+	</Frame>
+</Ui>

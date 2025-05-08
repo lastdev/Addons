@@ -1,0 +1,11 @@
+<Ui>
+    <Script file="enUS.lua" />
+    <Script file="deDE.lua" />
+    <Script file="zhCN.lua" />
+    <Script file="frFR.lua" />
+    <Script file="ruRU.lua" />
+    <Script file="itIT.lua" />
+    <Script file="ptBR.lua" />
+    <Script file="koKR.lua" />
+    <Script file="esES.lua" />
+</Ui>
