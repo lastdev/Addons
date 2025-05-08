@@ -298,6 +298,8 @@ The {npc:227421} will then disappear and reappear around the map.
 Track down each {npc:227421} and interact with them to return them back to the {object:Fleshy Grimoire}.
 
 Once you have found all 4 {npc:227421}, head back to the {object:Fleshy Grimoire} and talk to the {npc:227421}.
+
+{note:Requires passing through the flight point to spawn {npc:227421}.}
 ]]
 L['another_you_4_note'] = 'Patrols along the marked path.'
 
@@ -457,7 +459,7 @@ L['peculiar_gem_note'] = 'Take the hidden hole entrance within the cave down to 
 
 -- KARAZHAN CATACOMBS
 L['karazhan_catacombs_label'] = 'Karazhan Catacombs'
-L['karazhan_catacombs_entrance_note'] = 'Collect the {item:44124} starting in {location:Un\'Goro Crater} in {location:Kalimdor}\n\nCollect the {item:228938} starting in {location:Dornogal} in {location:Khaz Algar}\n\nCombine the gem and the key to form the {item:44124}.\n\nWith the {item:44124} in your bag and the {item:208092} active approach the gate to reveal a red instance entrance.'
+L['karazhan_catacombs_entrance_note'] = 'Collect the {item:228941} starting in {location:Un\'Goro Crater} in {location:Kalimdor}\n\nCollect the {item:228938} starting in {location:Dornogal} in {location:Khaz Algar}\n\nCombine the gem and the key to form the {item:44124}.\n\nWith the {item:44124} in your bag and the {item:208092} active approach the gate to reveal a red instance entrance.'
 
 -- ORB 1
 L['orb_1_label'] = 'Orb 1'
@@ -587,8 +589,21 @@ L['impotent_potable_location'] = 'Below the dock next to the {location:Plunder P
 L['abandoned_toolbox_location'] = 'High on the roof of {location:The Scrapshop}.\n\nFollow the stairs to the top.'
 L['trick_deck_of_cards_location'] = 'On the desk next to {npc:231045} inside {location:The Incontinental Hotel}.'
 
+L['breakneck_customization'] = 'G-99 Breakneck'
+
 L['ditty_fuzeboy_note'] = 'Exchange {item:234741} for pets.'
-L['angelo_rustbin_note'] = 'Exchange {currency:3220} for pets and {object:G-99 Breakneck} customizations.'
+L['skedgit_cinderbangs_note'] = 'Exchange {item:234741} for mounts.\n\n{note:Mounts can be bought and sold from the auction house.}'
+L['angelo_rustbin_note'] = 'Exchange {currency:3218} for a toy and a {object:G-99 Breakneck} customization. Exchange {item:233557} for a chance to receive pet and mount.\n\nExchange {currency:3220} for pets.\n\n{note:Collecting {currency:3218} can done at any time but collecting {item:229810} requires {faction:2653} Renown 14.}'
+L['blair_bass_note'] = 'Exchange {item:227673} for toys.\n\n{item:227673} can be fished up from {object:Steamwheedle Runoff} pools.'
+L['greexit_coarsebub_note'] = 'Exchange gold for goblin cartel transmogs.\n\n{note:Only items associated with your current cartel are available to purchase.}'
+
+L['quartermaster'] = '%s Quartermaster'
+L['quartermaster_note'] = 'Exchange {currency:2815} for a variety of collectibles.'
+
+L['rocco_razzboom_location'] = 'Bottom floor of {location:The Scrapshop}.'
+L['lab_assistant_laszly_location'] = 'Deep inside {location:Steamwheedle Laboratories}.'
+L['boatswain_hardee_location'] = 'First floor of {location:Port Authority}.'
+L['shrez_the_scrapper_location'] = 'First floor of {location:Venture Plaza}.'
 
 L['options_icons_nine_tenths'] = '{achievement:40948}'
 L['options_icons_nine_tenths_desc'] = 'Display all {object:Muff\'s Auto-Locker} locations for {achievement:40948}.'
@@ -615,3 +630,19 @@ L['options_icons_youre_my_friend_now'] = '{achievement:41708}'
 L['options_icons_youre_my_friend_now_desc'] = 'Display {npc:239248} locations for {achievement:41708}.'
 L['rat_in_building_rail'] = 'Inside the building on the rail.'
 L['rat_2nd_floor_trash_can'] = 'Inside the building on the second floor on the trash can.'
+
+L['sewer_cheese_label'] = 'Sewer Cheese'
+L['undermine_undershirt_note'] = '1. Collect the {object:Sewer Cheese} from within the sewer below {location:The Vatworks} to receive the {spell:1221472} buff.\n\n2. Interact with the nearby {npc:238661} to trade your cheese for a {item:237129}.\n\n3. Bring the {item:237129} to {npc:237412}, upstairs in the {location:Port Authority} building at {location:Blackwater Marina}, and exchange it for {item:237130}.'
+
+L['undermine_clam_chowder_label'] = 'The Undermine Guide to Authentic Cooking'
+L['undermine_clam_chowder_location'] = 'On top of a shelf behind {npc:226728} in the alley in {location:The Vatworks}.'
+L['undermine_clam_chowder_note'] = '1. To collect this recipe you must first know {item:16767} which can be purchased from two {object:Classic} vendors for %s.\n\n{npc:54232} at {location:Booty Bay} in {location:The Cape of Stranglethorn}\n\n{npc:48060} at {location:Fuselight} in {location:Badlands}\n\n2. Once you know the old recipe, open {object:The Undermine Guide to Authentic Cooking} and read to the last page. Jot down the recipe to recieve {item:235800}.'
+
+L['breakneck_race_note'] = 'The following {object:G-99 Breakneck} upgrades are recommended to make earning |cFFFFD700Gold|r a little easier:\n\n%s\n\n%s\n\n%s'
+L['upgrade_the_pozzik_standard'] = '{item:232982} (Engine): Earn |cFFCD7F32Bronze|r in all normal and reverse {object:Breakneck} races.'
+L['upgrade_22h_slicks'] = '{item:232985} (Wheels): Crafted by engineers and sold on the auction house.'
+L['upgrade_turbo_handcrank'] = '{item:232984} (Turbo): Combine all 5 pieces collected from rares or the auction house.'
+
+L['blazefeather_peacock_note'] = 'After completing the {quest:83421} storyline, speak with {npc:226555} to pay %s to summon a trainable {npc:226561}.'
+L['radioactive_subject_note'] = 'Use nearby pipes and combination of {item:237276}, {item:109076}, {item:231099} or any other jumping puzzle tricks to reach the roof of the {location:Steamwheedle Laboratories} building in {location:The Vatworks}.'
+L['george_the_big_pinch_note'] = 'Quickly click all 5 {npc:238189} to recieve {spell:1219679} and allow you to tame {npc:233938}.'

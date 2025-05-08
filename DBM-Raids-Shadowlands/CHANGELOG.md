@@ -1,8 +1,8 @@
 # <DBM Mod> Raids (SL)
 
-## [r23](https://github.com/DeadlyBossMods/DBM-Shadowlands/tree/r23) (2025-01-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Shadowlands/compare/r22...r23) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Shadowlands/releases)
+## [r24](https://github.com/DeadlyBossMods/DBM-Shadowlands/tree/r24) (2025-04-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Shadowlands/compare/r23...r24) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Shadowlands/releases)
 
-- Blizzard code is ass, so partial revert of last  
-- Assign groups and categories for new addon manager in 11.1  
-- remove 11.0.5 and Add 11.1  
+- apparently i never remembered to bump tocs  
+- Because DBT can't get it's shit together, all 77 (and counting) mods that do this just need to work around core bug  
+- Update localization.ru.lua (#8)  

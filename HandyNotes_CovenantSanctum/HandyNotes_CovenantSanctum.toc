@@ -1,14 +1,14 @@
-## Interface: 110100
+## Interface: 110105
 ## Title: HandyNotes: CovenantSanctum
 ## Notes: Shows the NPC and POI locations in your covenant sanctum.
 ## Notes-deDE: Zeigt die Positionen von NPCs und anderer POIs im Paktsanktum an.
 ## Author: |cFFFF8C00Dathwada EU-Eredar|r
-## Version: v31
+## Version: v32
 ## RequiredDeps: HandyNotes
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_CovenantSanctumDB
 ## IconTexture: 3601566
-## X-Date: 2025-02-25
+## X-Date: 2025-05-01
 ## X-Category: Map
 
 # LOCALIZATION FILES

@@ -4,6 +4,14 @@ local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 
+local isWOD = false
+do
+    local interfaceVersion = select(4, GetBuildInfo())
+    if (interfaceVersion >= 50000) and (interfaceVersion < 60000) then
+        isWOD = true
+    end
+end
+
 local gui = addon.WODGUI
 gui:Hide()
 gui:SetSize(350, 640)
@@ -83,10 +91,16 @@ gui.MainTabButton:SetID(1)
 gui.MainTabPanel = CreateFrame("Frame", "TLDRMissionsWODFrameMainPanel", gui)
 gui.MainTabPanel:SetPoint("TOPLEFT", gui, "TOPLEFT")
 
-local function setupButton(categoryName, setPointTo, text, acSetPointTo)
+gui.priorityLabels = {}
+gui.checkButtons = {}
+
+local lastCheckButton
+local lastDD
+
+local function setupButton(categoryName, text, dontInsert)
     local name = categoryName.."CheckButton"
     gui[name] = CreateFrame("CheckButton", "TLDRMissionsWODFrame"..categoryName.."CheckButton", gui.MainTabPanel, "UICheckButtonTemplate")
-    gui[name]:SetPoint("TOPLEFT", setPointTo, 0, -22)
+    gui[name]:SetPoint("TOPLEFT", lastCheckButton or gui.TitleBarTexture, 0, -22)
     _G["TLDRMissionsWODFrame"..categoryName.."CheckButtonText"]:SetText(text)
     
     gui[name].ExclusionLabel = gui[name]:CreateFontString("TLDRMissionsWOD"..categoryName.."ExclusionLabel", "OVERLAY", "GameFontNormalLarge")
@@ -101,26 +115,48 @@ local function setupButton(categoryName, setPointTo, text, acSetPointTo)
 
     local resourceCostName = categoryName.."GarrisonResourceCostDropDown"
     gui[resourceCostName] = LibDD:Create_UIDropDownMenu("TLDRMissions"..categoryName.."GarrisonResourceCostDropDown", gui.MainTabPanel)
-    gui[resourceCostName]:SetPoint("TOPRIGHT", acSetPointTo, 0, -22)
+    gui[resourceCostName]:SetPoint("TOPRIGHT", lastDD or gui.TitleBarTexture, 0, -22)
     LibDD:UIDropDownMenu_SetWidth(gui[resourceCostName], 10)
     LibDD:UIDropDownMenu_SetText(gui[resourceCostName], "")
+    
+    if not dontInsert then
+        table.insert(gui.priorityLabels, gui[plname])
+        table.insert(gui.checkButtons, gui[name])
+    end
+    
+    lastCheckButton = gui[name]
+    lastDD = gui[resourceCostName]
 end
 
-setupButton("GarrisonResources", gui.TitleBarTexture, C_CurrencyInfo.GetBasicCurrencyInfo(824).name, gui.TitleBarTexture)
-gui.GarrisonResourcesCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 20, 0)
-gui.GarrisonResourcesGarrisonResourceCostDropDown:SetPoint("TOPRIGHT", gui.TitleBarTexture, "BOTTOMRIGHT", 10, 0)
+if isWOD then
+    setupButton("Gold", BONUS_ROLL_REWARD_MONEY)
+    gui.GoldCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 20, 0)
+    gui.GoldAnimaCostDropDown:SetPoint("TOPRIGHT", gui.TitleBarTexture, "BOTTOMRIGHT", 10, 0)
+    
+    setupButton("GarrisonResources", C_CurrencyInfo.GetBasicCurrencyInfo(824).name)
+else
+    setupButton("GarrisonResources", C_CurrencyInfo.GetBasicCurrencyInfo(824).name)
+    gui.GarrisonResourcesCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 20, 0)
+    gui.GarrisonResourcesGarrisonResourceCostDropDown:SetPoint("TOPRIGHT", gui.TitleBarTexture, "BOTTOMRIGHT", 10, 0)
+end
 
-setupButton("FollowerItems", gui.GarrisonResourcesCheckButton, GARRISON_FOLLOWER_ITEMS, gui.GarrisonResourcesGarrisonResourceCostDropDown)
+setupButton("FollowerItems", GARRISON_FOLLOWER_ITEMS)
 
 --setupButton("PetCharms", gui.FollowerXPItemsCheckButton, L["PetCharms"], gui.FollowerXPItemsAnimaCostDropDown)
 --setupButton("AugmentRunes", gui.PetCharmsCheckButton, L["AugmentRunes"], gui.PetCharmsAnimaCostDropDown)
 --setupButton("Reputation", gui.AugmentRunesCheckButton, L["ReputationTokens"], gui.AugmentRunesAnimaCostDropDown)
 
-setupButton("FollowerXP", gui.FollowerItemsCheckButton, L["BonusFollowerXP"], gui.FollowerItemsGarrisonResourceCostDropDown)
+setupButton("FollowerXP", L["BonusFollowerXP"])
 
-setupButton("Gear", gui.FollowerXPCheckButton, WORLD_QUEST_REWARD_FILTERS_EQUIPMENT, gui.FollowerXPGarrisonResourceCostDropDown)
+setupButton("Gear", WORLD_QUEST_REWARD_FILTERS_EQUIPMENT)
 
-setupButton("AnythingForXP", gui.GearCheckButton, L["AnythingForXPLabel"], gui.GearGarrisonResourceCostDropDown)
+setupButton("Apexis", "Apexis Crystal")
+
+setupButton("Oil", "Oil")
+
+setupButton("Seal", "Seal of Tempered Fate")
+
+setupButton("AnythingForXP", L["AnythingForXPLabel"], true)
 
 gui.SacrificeCheckButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameSacrificeCheckButton", gui.MainTabPanel, "UICheckButtonTemplate")
 gui.SacrificeCheckButton:SetPoint("TOPLEFT", gui.AnythingForXPCheckButton, 0, -22)
@@ -131,18 +167,6 @@ gui.CalculateButton:SetPoint("TOPLEFT", gui.SacrificeCheckButton, -10, -30)
 gui.CalculateButton:SetText(L["Calculate"])
 gui.CalculateButton:SetWidth(100)
 gui.CalculateButton:SetEnabled(false)
-
-gui.AbortButton = CreateFrame("Button", "TLDRMissionsWODFrameAbortButton", gui.MainTabPanel, "UIPanelButtonTemplate")
-gui.AbortButton:SetPoint("TOPLEFT", gui.CalculateButton, "TOPRIGHT", 10, 0)
-gui.AbortButton:SetText(CANCEL)
-gui.AbortButton:SetWidth(60)
-gui.AbortButton:SetEnabled(false)
-
-gui.SkipCalculationButton = CreateFrame("Button", "TLDRMissionsWODFrameSkipCalculationButton", gui.MainTabPanel, "UIPanelButtonTemplate")
-gui.SkipCalculationButton:SetPoint("TOPLEFT", gui.AbortButton, "TOPRIGHT", 10, 0)
-gui.SkipCalculationButton:SetText(L["Skip"])
-gui.SkipCalculationButton:SetWidth(60)
-gui.SkipCalculationButton:SetEnabled(false)
 
 gui.FailedCalcLabel = gui.MainTabPanel:CreateFontString("TLDRMissionsWODFrameFailedCalcLabel", "OVERLAY", "GameFontNormal")
 gui.FailedCalcLabel:SetPoint("TOPLEFT", gui.CalculateButton, 0, -30)
@@ -167,7 +191,7 @@ gui.NextFollower3Label = gui.MainTabPanel:CreateFontString("TLDRMissionsWODFrame
 gui.NextFollower3Label:SetPoint("TOPLEFT", gui.NextFollower2Label, 0, -15)
 
 gui.RewardsLabel = gui.MainTabPanel:CreateFontString("TLDRMissionsWODFrameRewardsLabel", "OVERLAY", "GameFontNormal")
-gui.RewardsLabel:SetPoint("TOPLEFT", gui.NextFollower5Label, 0, -20)
+gui.RewardsLabel:SetPoint("TOPLEFT", gui.NextFollower3Label, 0, -20)
 gui.RewardsLabel:SetText(GUILD_TAB_REWARDS..":")
 
 gui.RewardsDetailLabel = gui.MainTabPanel:CreateFontString("TLDRMissionsWODFrameRewardsDetailLabel", "OVERLAY", "GameFontNormal")
@@ -226,6 +250,144 @@ gui.CompleteMissionsButton:SetWidth(240)
 gui.CompleteMissionsButton:SetHeight(25)
 gui.CompleteMissionsButton:SetEnabled(true)
 
+gui.WarningLabel = gui.MainTabPanel:CreateFontString("TLDRMissionsWODFrameWarningLabel", "OVERLAY", "GameFontNormal")
+gui.WarningLabel:SetPoint("TOPLEFT", gui.EstimateLabel, "BOTTOMLEFT", 0, -30)
+gui.WarningLabel:SetText("This module for WOD is still heavily in development. Expect bugs, errors, and maybe it won't even work!")
+gui.WarningLabel:SetSize(300, 40)
+
+--
+-- Advanced tab
+--
+
+gui.AdvancedTabPanel = CreateFrame("Frame", "TLDRMissionsWODFrameAdvancedPanel", gui)
+gui.AdvancedTabPanel:SetPoint("TOPLEFT", gui, "TOPLEFT")
+gui.AdvancedTabPanel:Hide()
+
+gui.AdvancedTabButton = CreateFrame("Button", "TLDRMissionsWODFrameTab2", gui, "PanelTabButtonTemplate")
+gui.AdvancedTabButton:SetPoint("TOPLEFT", gui.MainTabButton, "TOPRIGHT", 0, 0)
+gui.AdvancedTabButton:SetText(ADVANCED_LABEL)
+gui.AdvancedTabButton:SetScript("OnClick", function()
+    PanelTemplates_SetTab(gui, 2)
+    gui.AdvancedTabPanel:Show()
+    gui.MainTabPanel:Hide()
+end)
+gui.AdvancedTabButton:SetID(2)
+
+gui.FollowerXPSpecialTreatmentCheckButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameFollowerXPSpecialTreatmentCheckButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
+gui.FollowerXPSpecialTreatmentCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 25, 0)
+TLDRMissionsWODFrameFollowerXPSpecialTreatmentCheckButtonText:SetText(L["FollowerXPSpecialTreatment"])
+
+gui.FollowerXPSpecialTreatmentCheckButton:SetScript("OnEnter", function()
+    GameTooltip:SetOwner(gui.FollowerXPSpecialTreatmentCheckButton, "ANCHOR_RIGHT")
+    GameTooltip:SetText(L["FollowerXPSpecialTreatmentTooltip"], 1, 1, 1,  0.75, true)
+    GameTooltip:Show()
+end)
+gui.FollowerXPSpecialTreatmentCheckButton:SetScript("OnLeave", function()
+    GameTooltip:Hide()
+end)
+
+gui.FollowerXPSpecialTreatmentCheckButton:HookScript("OnClick", function()
+    addon.db.profile.followerXPSpecialTreatment = gui.FollowerXPSpecialTreatmentCheckButton:GetChecked()
+end)
+
+gui.FollowerXPSpecialTreatmentAlgorithmDropDown = LibDD:Create_UIDropDownMenu("TLDRMissionsFollowerXPSpecialTreatmentAlgorithmDropDown", gui.AdvancedTabPanel)
+gui.FollowerXPSpecialTreatmentAlgorithmDropDown:SetPoint("TOPLEFT", TLDRMissionsWODFrameFollowerXPSpecialTreatmentCheckButtonText, "TOPRIGHT", -10, 8)
+LibDD:UIDropDownMenu_SetWidth(gui.FollowerXPSpecialTreatmentAlgorithmDropDown, 10)
+LibDD:UIDropDownMenu_SetText(gui.FollowerXPSpecialTreatmentAlgorithmDropDown, "")
+
+gui.LowerBoundLevelRestrictionLabel = gui.AdvancedTabPanel:CreateFontString("TLDRMissionsLowerBoundLevelRestrictionLabel", "OVERLAY", "GameFontNormal")
+gui.LowerBoundLevelRestrictionLabel:SetPoint("TOPLEFT", gui.FollowerXPSpecialTreatmentCheckButton, 0, -40)
+gui.LowerBoundLevelRestrictionLabel:SetText(L["LevelRestriction"])
+gui.LowerBoundLevelRestrictionLabel:SetWordWrap(true)
+gui.LowerBoundLevelRestrictionLabel:SetWidth(300)
+
+gui.LowerBoundLevelRestrictionSlider = CreateFrame("Slider", "TLDRMissionsWODFrameSlider", gui.AdvancedTabPanel, "OptionsSliderTemplate")
+gui.LowerBoundLevelRestrictionSlider:SetPoint("TOPLEFT", gui.LowerBoundLevelRestrictionLabel, 20, -20)
+gui.LowerBoundLevelRestrictionSlider:SetSize(280, 20)
+TLDRMissionsWODFrameSliderLow:SetText("1")
+TLDRMissionsWODFrameSliderHigh:SetText("60")
+TLDRMissionsWODFrameSliderText:SetText("3")
+TLDRMissionsWODFrameSliderText:ClearAllPoints()
+TLDRMissionsWODFrameSliderText:SetPoint("TOP", TLDRMissionsWODFrameSlider, "BOTTOM", 0, 3)
+TLDRMissionsWODFrameSliderText:SetFontObject("GameFontHighlightSmall")
+TLDRMissionsWODFrameSliderText:SetTextColor(0, 1, 0)
+gui.LowerBoundLevelRestrictionSlider:SetOrientation('HORIZONTAL')
+gui.LowerBoundLevelRestrictionSlider:SetValueStep(1)
+gui.LowerBoundLevelRestrictionSlider:SetObeyStepOnDrag(true)
+gui.LowerBoundLevelRestrictionSlider:SetMinMaxValues(1, 60)
+gui.LowerBoundLevelRestrictionSlider:SetValue(3)
+
+gui.AnimaCostLimitLabel = gui.AdvancedTabPanel:CreateFontString("TLDRMissionsAnimaCostLimitLabel", "OVERLAY", "GameFontNormal")
+gui.AnimaCostLimitLabel:SetPoint("TOPLEFT", gui.LowerBoundLevelRestrictionSlider, -20, -40)
+gui.AnimaCostLimitLabel:SetText(L["AnimaCostLimit"])
+gui.AnimaCostLimitLabel:SetWordWrap(true)
+gui.AnimaCostLimitLabel:SetWidth(300)
+
+gui.AnimaCostLimitSlider = CreateFrame("Slider", "TLDRMissionsWODFrameAnimaCostSlider", gui.AdvancedTabPanel, "OptionsSliderTemplate")
+gui.AnimaCostLimitSlider:SetPoint("TOPLEFT", gui.AnimaCostLimitLabel, 20, -10)
+gui.AnimaCostLimitSlider:SetSize(280, 20)
+TLDRMissionsWODFrameAnimaCostSliderLow:SetText("10")
+TLDRMissionsWODFrameAnimaCostSliderHigh:SetText("300")
+TLDRMissionsWODFrameAnimaCostSliderText:SetText("300")
+TLDRMissionsWODFrameAnimaCostSliderText:ClearAllPoints()
+TLDRMissionsWODFrameAnimaCostSliderText:SetPoint("TOP", TLDRMissionsWODFrameAnimaCostSlider, "BOTTOM", 0, 3)
+TLDRMissionsWODFrameAnimaCostSliderText:SetFontObject("GameFontHighlightSmall")
+TLDRMissionsWODFrameAnimaCostSliderText:SetTextColor(0, 1, 0)
+gui.AnimaCostLimitSlider:SetOrientation('HORIZONTAL')
+gui.AnimaCostLimitSlider:SetValueStep(10)
+gui.AnimaCostLimitSlider:SetObeyStepOnDrag(true)
+gui.AnimaCostLimitSlider:SetMinMaxValues(10, 300)
+gui.AnimaCostLimitSlider:SetValue(300)
+
+gui.DurationLabel = gui.AdvancedTabPanel:CreateFontString("TLDRMissionsDurationLabel", "OVERLAY", "GameFontNormal")
+gui.DurationLabel:SetPoint("TOPLEFT", gui.AnimaCostLimitSlider, -20, -40)
+gui.DurationLabel:SetText(L["DurationLabel"])
+gui.DurationLabel:SetWidth(300)
+gui.DurationLabel:SetWordWrap(true)
+
+gui.DurationLowerSlider = CreateFrame("Slider", "TLDRMissionsWODFrameDurationLowerSlider", gui.AdvancedTabPanel, "OptionsSliderTemplate")
+gui.DurationLowerSlider:SetPoint("TOPLEFT", gui.DurationLabel, 20, -10)
+gui.DurationLowerSlider:SetSize(280, 20)
+TLDRMissionsWODFrameDurationLowerSliderLow:SetText("1")
+TLDRMissionsWODFrameDurationLowerSliderHigh:SetText("24")
+TLDRMissionsWODFrameDurationLowerSliderText:ClearAllPoints()
+TLDRMissionsWODFrameDurationLowerSliderText:SetPoint("TOP", TLDRMissionsWODFrameDurationLowerSlider, "BOTTOM", 0, 3)
+TLDRMissionsWODFrameDurationLowerSliderText:SetFontObject("GameFontHighlightSmall")
+TLDRMissionsWODFrameDurationLowerSliderText:SetTextColor(0, 1, 0)
+gui.DurationLowerSlider:SetOrientation("HORIZONTAL")
+gui.DurationLowerSlider:SetValueStep(1)
+gui.DurationLowerSlider:SetObeyStepOnDrag(true)
+gui.DurationLowerSlider:SetMinMaxValues(1, 24)
+gui.DurationLowerSlider:SetValue(1)
+
+gui.DurationHigherSlider = CreateFrame("Slider", "TLDRMissionsWODFrameDurationHigherSlider", gui.AdvancedTabPanel, "OptionsSliderTemplate")
+gui.DurationHigherSlider:SetPoint("TOPLEFT", gui.DurationLabel, 20, -40)
+gui.DurationHigherSlider:SetSize(280, 20)
+TLDRMissionsWODFrameDurationHigherSliderLow:SetText("")
+TLDRMissionsWODFrameDurationHigherSliderHigh:SetText("")
+TLDRMissionsWODFrameDurationHigherSliderText:SetText("")
+gui.DurationHigherSlider:SetOrientation("HORIZONTAL")
+gui.DurationHigherSlider:SetValueStep(1)
+gui.DurationHigherSlider:SetObeyStepOnDrag(true)
+gui.DurationHigherSlider:SetMinMaxValues(1, 24)
+gui.DurationHigherSlider:SetValue(24)
+
+gui.AutoShowButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameAutoShowButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
+gui.AutoShowButton:SetPoint("TOPLEFT", gui.DurationHigherSlider, -20, -30)
+TLDRMissionsWODFrameAutoShowButtonText:SetText(L["AutoShowLabel"])
+
+gui.AutoShowButton:HookScript("OnClick", function()
+    addon.db.profile.autoShowUI = gui.AutoShowButton:GetChecked()
+end)
+
+gui.AutoStartButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameAutoStartButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
+gui.AutoStartButton:SetPoint("TOPLEFT", gui.AutoShowButton, 0, -25)
+TLDRMissionsWODFrameAutoStartButtonText:SetText(L["AutoStart"])
+
+gui.AutoStartButton:HookScript("OnClick", function()
+    addon.db.profile.autoStart = gui.AutoStartButton:GetChecked()
+end)
+
 --
 -- Tab 3
 --
@@ -241,5 +403,5 @@ end)
 --
 --
 
-PanelTemplates_SetNumTabs(gui, 2)
+PanelTemplates_SetNumTabs(gui, 3)
 PanelTemplates_SetTab(gui, 1)

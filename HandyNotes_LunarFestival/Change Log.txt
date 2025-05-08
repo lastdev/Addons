@@ -1,3 +1,41 @@
+== v4.21 - 5th May 2025
+* Restructured files that are commonly shared between my event AddOns
+* Improved various common AddOn routines
+
+== v4.20 - 8th April 2025
+* TOC update to 11.1.5
+
+== v4.19 - 8th April 2025
+* Duplicate colour in the pin cluster! Doh!
+* Small change to one pin's positioning in the pin cluster
+* Switched load order of Data and Core
+* Renamed setHistory to setFlavour because I wanted to lol
+* Rarely encountered space line bug fixed
+* Potential missing Achievement criteria in the pin cluster resolved
+
+== v4.18 - 29th March 2025
+* Colours in their own file
+* Map ID numbers use a standardised format which works across all game versions
+* Various other changes to align code with the latest code base from my Noblegarden AddOn
+* The Pin clusters in cities / sometimes continents / Azeroth are now solely continents.
+  Why the change: Planning ahead. There will be a cluster for every one of my event AddOns.
+  Each AddOn will have a fixed (ie familiar) location for its pin cluster. They will not
+  overlap. Too many difficulties shunting around on the city map and Azeroth map as those
+  maps are way too crowded with quest markers and such
+  
+== v4.17 - 13th March 2025
+* Better layout based upon LIITA World Event AddOn
+* Completed check for indexed quests in achievements now tests a different field.
+  - In line with LIITA AddOn
+* Better coding for Tooltip Quest information
+* Localised GetTime
+* pairs localisation changed to ipairs
+* Localised QuestUtils_GetQuestName
+* Tab indexing of options improved
+* GetMapChildrenInfo is now used as localised
+* Localised GetAchievementNumCriteria
+* Continent setup for Shadowlands, Dragon Isles, Khaz algar corrected/setup
+
 == v4.16 - 27th February 2025
 * TOC update to 11.1.0
 

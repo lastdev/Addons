@@ -116,5 +116,5 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 		end
 	end
 	
-	DataStore:Broadcast("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
+	AddonFactory:Broadcast("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
 end)

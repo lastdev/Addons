@@ -1,6 +1,18 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.5160
+* 11.1.5 update
+
+v.5150
+* Reminder: added timelines for Liberation of Undermine mythic bosses
+* Raid check: added custom ilvl column
+* Raid check: added sort by name
+
+v.5140
+* Note: added autoload support for Liberation of Undermine
+* Reminder: updated timelines for Liberation of Undermine HC bosses
+
 v.5120
 * 11.1 update
 * Raid groups: added "split raid" option

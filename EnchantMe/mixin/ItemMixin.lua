@@ -1,16 +1,17 @@
 local _, addon = ...
-local ItemMixin, private = addon.namespace('ItemMixin')
+local ItemMixin = addon.namespace('ItemMixin')
 local socketStats = {
+    -- generic sockets
     'EMPTY_SOCKET_RED',
     'EMPTY_SOCKET_YELLOW',
     'EMPTY_SOCKET_BLUE',
     'EMPTY_SOCKET_META',
     'EMPTY_SOCKET_PRISMATIC',
-}
 
-local itemMaxSocketOverrides =  {
-	
-	[228411] = 3,	-- Cyrce's Circlet https://www.wowhead.com/item=228411/cyrces-circlet
+    -- 11.0.7 Cyrce's Circlet
+    'EMPTY_SOCKET_SINGINGSEA',
+    'EMPTY_SOCKET_SINGINGTHUNDER',
+    'EMPTY_SOCKET_SINGINGWIND',
 }
 
 function ItemMixin:Init(itemLink)
@@ -54,9 +55,6 @@ function ItemMixin:GetGemStats()
         numSockets = numSockets + (stats[stat] or 0)
     end
 
-	local itemNumber = tonumber(values[1])
-	numSockets = itemMaxSocketOverrides[itemNumber] or numSockets
-	
     return numGems, numSockets
 end
 

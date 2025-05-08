@@ -1,4 +1,4 @@
-## Interface: 110100
+## Interface: 110105
 ## Title: Details!: Time Line (plugin)
 ## Notes: Show debuff, cooldown, enemy casts and enemy debuffs on a clear timeline.
 ## RequiredDeps: Details

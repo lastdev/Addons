@@ -43,8 +43,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerOrbLands	 =	"Show timer for when Orb of Corruption Lands",
-	EarlyTankSwap	 =	"Show tank swap warning immediately after Shatter, instead of waiting for 2nd Void Lash"
+	timerOrbLands	 =	"Показывать таймер, когда приземлится $spell:267239",
+	EarlyTankSwap	 =	"Показывать предупреждение о замене танка сразу после $spell:12982, вместо ожидания 2-го $spell:265264"
 })
 
 L:SetMiscLocalization({
@@ -59,13 +59,13 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2166)
 
 L:SetOptionLocalization({
-	ShowHighestFirst3	 =	"Sort Lingering Infection Infoframe by highest debuff stack (instead of lowest). Only applies if not set to party only.",
-	ShowOnlyParty		 =	"Show Lingering Infection only for your party. This option always sorts the frame by party order.",
-	SetIconsRegardless	 =	"Set icons regardless of whether or not a BW user has assist (Advanced)"
+	ShowHighestFirst3	 =	"Сортировать инфофрейм $spell:265127 по самому высокому стаку дебаффов (вместо самого низкого). Применяется только в том случае, если не установлено значение 'Только для группы'.",
+	ShowOnlyParty		 =	"Показывать $spell:265127 только для Вашей группы. Эта опция всегда сортирует фрейм по порядку группы.",
+	SetIconsRegardless	 =	"Устанавливать метки независимо от того, есть ли у пользователя BW помощник (Улучшенный)"
 })
 
 L:SetMiscLocalization({
-	BWIconMsg			 =	"DBM's has passed icon marking to a promoted BW user in raid to avoid icon conflicts. Make sure they have marking enabled, or demote them to enable DBM marking, or enable the override option in Vectis options"
+	BWIconMsg			 =	"DBM передал маркировку иконок в рейде игроку-помощнику BigWigs, чтобы избежать конфликтов с иконоками. Убедитесь, что у него включена маркировка, или разжалуйте его, чтобы включить маркировку DBM, или включите опцию переопределения в параметрах Вектиса."
 })
 
 ---------------

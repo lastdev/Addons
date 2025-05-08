@@ -437,7 +437,7 @@ function private.QueryBuyoutFilter(_, row)
 end
 
 function private.QueryIsBrowseDoneFunction(query)
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+	if not ClientInfo.IsVanillaClassic() then
 		return false
 	end
 	local isDone = true

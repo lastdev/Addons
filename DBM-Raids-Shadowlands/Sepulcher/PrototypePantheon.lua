@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod(2460, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045739")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(181548, 181551, 181546, 181549)
 mod:SetEncounterID(2544)
 mod:SetBossHPInfoToHighest()
@@ -467,7 +467,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnNecroticRitual:Play("killmob")
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.ritualCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerNecroticRitualCD:Start(timer, self.vb.ritualCount+1)
 			end
 		end
@@ -475,7 +475,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.deathtouchCount = self.vb.deathtouchCount + 1
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.deathtouchCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerRunecarversDeathtouchCD:Start(timer, self.vb.deathtouchCount+1)
 			end
 		end
@@ -487,7 +487,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.humblingCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerHumblingStrikesCD:Start(timer, self.vb.humblingCount+1)
 			end
 		end
@@ -496,7 +496,7 @@ function mod:SPELL_CAST_START(args)
 		warnAscensionsCall:Show(self.vb.callCount)
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.callCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerAscensionsCallCD:Start(timer, self.vb.callCount+1)
 			end
 		end
@@ -513,7 +513,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnWildStampede:Play("watchstep")
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.stampedeCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerWildStampedeCD:Start(timer, self.vb.stampedeCount+1)
 			end
 		end
@@ -522,7 +522,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.seedIcon = 1
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.seedCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerWitheringSeedCD:Start(timer, self.vb.seedCount+1)
 			end
 		end
@@ -534,7 +534,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.painCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerWrackingPainCD:Start(timer, self.vb.painCount+1)
 			end
 		end
@@ -547,7 +547,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHandofDestruction:Play("justrun")
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][361791][self.vb.handCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerHandofDestructionCD:Start(timer-2, self.vb.handCount+1)
 			end
 		end
@@ -677,7 +677,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.nightCount = self.vb.nightCount + 1
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.nightCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerNightHunterCD:Start(timer, self.vb.nightCount+1)
 			end
 		end
@@ -687,7 +687,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnPinningVolley:Play("watchstep")
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.volleyCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerPinningVolleyCD:Start(timer, self.vb.volleyCount+1)
 			end
 		end
@@ -768,7 +768,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnAnimastorm:Play("findshelter")
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.animaCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerAnimastormCD:Start(timer, self.vb.animaCount+1)
 			end
 		end
@@ -868,7 +868,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		specWarnHandofDestruction:Play("justrun")
 		if self.vb.phase then
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.handCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerHandofDestructionCD:Start(timer, self.vb.handCount+1)
 			end
 		end

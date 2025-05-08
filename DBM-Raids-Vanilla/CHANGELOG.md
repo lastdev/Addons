@@ -1,6 +1,8 @@
 # DBM - Vanilla and Season of Discovery
 
-## [r781](https://github.com/DeadlyBossMods/DBM-Vanilla/tree/r781) (2025-02-15)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Vanilla/compare/r780...r781) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Vanilla/releases)
+## [r805](https://github.com/DeadlyBossMods/DBM-Vanilla/tree/r805) (2025-04-23)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Vanilla/compare/r803...r805) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Vanilla/releases)
 
-- Naxx/Gothik: Add 20 sec teleport timer on SoD  
+- Scarlet Enclave/Reborn Council: Add a bit of nameplate stuff  
+- Scarlet Enclave/Trash: Add Blizzard GTFO warning  
+- Scarlet Enclave/Trash: Add missing flight path timer  

@@ -626,6 +626,18 @@ function Simulationcraft:GetSlotHighWatermarks()
   end
 end
 
+function Simulationcraft:GetCatalystCurrencies()
+  local catalystCurrencies = {}
+  for currencyId, currencyName in pairs(Simulationcraft.catalystCurrencies) do
+    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(currencyId)
+    if currencyInfo then
+      catalystCurrencies[#catalystCurrencies + 1] = table.concat({ currencyId, currencyInfo.quantity }, ':')
+    end
+  end
+
+  return table.concat(catalystCurrencies, '/')
+end
+
 function Simulationcraft:GetUpgradeCurrencies()
   local upgradeCurrencies = {}
   -- Collect actual currencies
@@ -715,21 +727,24 @@ function Simulationcraft:GetMainFrame(text)
     eb:SetFontObject("ChatFontNormal")
     eb:SetScript("OnEscapePressed", function() f:Hide() end)
     eb:SetScript("OnKeyDown", function(self, key)
-      if key == "LCTRL" or key == "RCTRL" then
+      if key == "LCTRL" or key == "RCTRL" or key == "LMETA" or key == "RMETA" then
         ctrlDown = true
       end
     end)
     eb:SetScript("OnKeyUp", function(self, key)
-      if key == "LCTRL" or key == "RCTRL" then
+      if key == "LCTRL" or key == "RCTRL" or key == "LMETA" or key == "RMETA" then
         -- Add a small grace period. In testing, the way I press Ctrl-C would sometimes have Ctrl keyup bfore C
         C_Timer.After(0.2, function() ctrlDown = false end)
       end
-      if ctrlDown and key == "C" then
-        if OptionsDB.profile.closeOnCopy then
-          -- Just in case there's some weird way that WoW could close the window before the OS copies
-          C_Timer.After(0.1, function()
-            f:Hide()
-          end)
+      if ctrlDown then
+        -- handle copy or cut
+        if key == "C" or key == "X" then
+          if OptionsDB.profile.closeOnCopy then
+            -- Just in case there's some weird way that WoW could close the window before the OS copies
+            C_Timer.After(0.1, function()
+              f:Hide()
+            end)
+          end
         end
       end
     end)
@@ -856,6 +871,13 @@ function Simulationcraft:GetSimcProfile(debugOutput, noBags, showMerchant, links
   end
   local playerSpec = specNames[ globalSpecID ] or 'unknown'
 
+  -- Loot spec
+  local lootSpecId = GetLootSpecialization()
+  if lootSpecId == 0 then
+    lootSpecId = globalSpecID
+  end
+  local playerLootSpec = specNames[ lootSpecId ]
+
   -- Professions
   local pid1, pid2 = GetProfessions()
   local firstProf, firstProfRank, secondProf, secondProfRank, profOneId, profTwoId
@@ -898,6 +920,7 @@ function Simulationcraft:GetSimcProfile(debugOutput, noBags, showMerchant, links
   local playerSpecStr = 'spec=' .. Tokenize(playerSpec)
   playerRealm = 'server=' .. Tokenize(playerRealm)
   playerRegion = 'region=' .. Tokenize(playerRegion)
+  local playerLootSpecStr = 'loot_spec=' .. Tokenize(playerLootSpec)
 
   -- Build the output string for the player (not including gear)
   local simcPrintError = nil
@@ -923,6 +946,7 @@ function Simulationcraft:GetSimcProfile(debugOutput, noBags, showMerchant, links
   simulationcraftProfile = simulationcraftProfile .. playerRole .. '\n'
   simulationcraftProfile = simulationcraftProfile .. playerProfessions .. '\n'
   simulationcraftProfile = simulationcraftProfile .. playerSpecStr .. '\n'
+  simulationcraftProfile = simulationcraftProfile .. '# ' .. playerLootSpecStr .. '\n'
   simulationcraftProfile = simulationcraftProfile .. '\n'
 
   if playerSpec == 'unknown' then -- luacheck: ignore
@@ -1067,6 +1091,10 @@ function Simulationcraft:GetSimcProfile(debugOutput, noBags, showMerchant, links
 
   simulationcraftProfile = simulationcraftProfile .. '\n'
   simulationcraftProfile = simulationcraftProfile .. '### Additional Character Info\n'
+
+  local catalystCurrenciesStr = Simulationcraft:GetCatalystCurrencies()
+  simulationcraftProfile = simulationcraftProfile .. '#\n'
+  simulationcraftProfile = simulationcraftProfile .. '# catalyst_currencies=' .. catalystCurrenciesStr .. '\n'
 
   local upgradeCurrenciesStr = Simulationcraft:GetUpgradeCurrencies()
   simulationcraftProfile = simulationcraftProfile .. '#\n'

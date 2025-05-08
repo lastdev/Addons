@@ -11,5 +11,5 @@ function addon.namespace(...)
         namespace = namespace[key]
     end
 
-    return namespace, {}
+    return namespace
 end

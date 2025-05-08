@@ -91,8 +91,12 @@ function LM.MountRegistry:OnEvent(event, ...)
         self.needRefresh = true
     elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
         local _, _, spellID = ...
-        local m = self.indexes.spellID[spellID] or self.indexes.overrideSpellID[spellID]
+        local baseSpellID = FindBaseSpellByID(spellID)
+        local m = self.indexes.spellID[spellID]
+                    or self.indexes.spellID[baseSpellID]
+                    or self.indexes.overrideSpellID[spellID]
         if m then
+            self.lastSummoned = m
             m:OnSummon()
             self.callbacks:Fire("OnMountSummoned", m)
         end
@@ -138,7 +142,7 @@ end
 
 local CopyAttributesFromJournal = {
     'modelID', 'sceneID', 'mountID', 'isSelfMount', 'description',
-    'sourceType', 'sourceText'
+    'sourceType', 'sourceText', 'family'
 }
 
 function LM.MountRegistry:AddMount(m)
@@ -146,7 +150,7 @@ function LM.MountRegistry:AddMount(m)
 
     if existing then
         for _, attr in ipairs(CopyAttributesFromJournal) do
-            existing[attr] = existing[attr] or m[attr]
+            existing[attr] = m[attr]
         end
     else
         tinsert(self.mounts, m)
@@ -383,4 +387,9 @@ function LM.MountRegistry:GetJournalTotals()
         end
     end
     return c
+end
+
+
+function LM.MountRegistry:GetLastSummoned()
+    return self.lastSummoned
 end

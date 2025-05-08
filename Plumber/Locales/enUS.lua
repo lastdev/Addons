@@ -17,6 +17,8 @@ L["Quick Slot Layout Linear"] = "Linear";
 L["Quick Slot Layout Radial"] = "Radial";
 L["Restriction Combat"] = "Does not work in combat";    --Indicate a feature can only work when out of combat
 L["Map Pin Change Size Method"] = "\n\n*You can change the pin size in World Map - Map Filter - Plumber";
+L["Toggle Plumber UI"] = "Toggle Plumber UI";
+L["Toggle Plumber UI Tooltip"] = "Show the following Plumber UI in the Edit Mode:\n%s\n\nThis checkbox only controls their visibility in the Edit Mode. It will not enable or disable these modules.";
 
 
 --Module Categories
@@ -203,9 +205,17 @@ L["Number Millions"] = "M";     --1.5M 1,500,000
 
 --Landing Page (Expansion Summary Minimap)
 L["ModuleName ExpansionLandingPage"] = WAR_WITHIN_LANDING_PAGE_TITLE or "Khaz Algar Summary";
-L["ModuleDescription ExpansionLandingPage"] = "Display extra info on the landing page:\n\n- Severed Threads Pact Level";
+L["ModuleDescription ExpansionLandingPage"] = "Display extra info on the landing page:\n\n- Paragon Progress\n\n- Severed Threads Pact Level\n\n- Undermine Cartel Standings";
 L["Instruction Track Reputation"] = "<Shift click to track this reputation>";
 L["Instruction Untrack Reputation"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Shift click to stop tracking>";
+L["Error Show UI In Combat"] = "You cannot toggle this UI while in combat.";
+
+
+--Landing Page Switch
+L["ModuleName LandingPageSwitch"] = "Minimap Mission Report";
+L["ModuleDescription LandingPageSwitch"] = "Access Garrison and Class Hall mission reports by right-clicking on the Renown Summary button on the minimap.";
+L["Mission Complete Count Format"] = "%d Ready to complete";
+L["Open Mission Report Tooltip"] = "Right click to open mission reports.";
 
 
 --WorldMapPin_TWW (Show Pins On Continent Map)
@@ -220,6 +230,10 @@ L["Item Level Abbr"] = ITEM_LEVEL_ABBR or "iLvl";
 L["Delves Reputation Name"] = "Delver's Journey";
 L["ModuleName Delves_SeasonProgress"] = "Delves: Delver's Journey";
 L["ModuleDescription Delves_SeasonProgress"] = "Display a progress bar on the top of the screen whenever you earn Delver's Journey";
+L["ModuleName Delves_Dashboard"] = "Delves: Weekly Reward";
+L["ModuleDescription Delves_Dashboard"] = "Show your Great Vault and Gilded Stash progress on the Delves Dashboard.";
+L["Delve Crest Stash No Info"] = "This info is unavailable in your current location.";
+L["Delve Crest Stash Requirement"] = "Appears in Tier 11 Bountiful Delves.";
 
 
 --WoW Anniversary
@@ -289,6 +303,23 @@ L["ModuleName BlizzardSuperTrack"] = "Waypoint: Event Timer";
 L["ModuleDescription BlizzardSuperTrack"] = "Add a timer to your active waypoint if its map pin tooltip has one.";
 
 
+--ProfessionsBook
+L["ModuleName ProfessionsBook"] = PROFESSIONS_SPECIALIZATION_UNSPENT_POINTS or "Unspent Knowledge";
+L["ModuleDescription ProfessionsBook"] = "Display the number of your unspent Profession Specialization Knowledge on the Professions Book UI";
+L["Unspent Knowledge Tooltip Format"] = "You have |cffffffff%s|r unspent Profession Specialization Knowledge."  --see PROFESSIONS_UNSPENT_SPEC_POINTS_REMINDER
+
+
+--TooltipProfessionKnowledge
+L["ModuleName TooltipProfessionKnowledge"] = L["ModuleName ProfessionsBook"];
+L["ModuleDescription TooltipProfessionKnowledge"] = "Show the number of your unspent Profession Specialization Knowledge.";
+L["Available Knowledge Format"] = "Available Knowledge: |cffffffff%s|r";
+
+
+--MinimapMouseover (click to /tar creature on the minimap)
+L["ModuleName MinimapMouseover"] = "Minimap Target";
+L["ModuleDescription MinimapMouseover"] = "Alt Click a creature on the Minimap to set it as your target.".."\n\n|cffd4641c- " ..L["Restriction Combat"].."|r";
+
+
 --Loot UI
 L["ModuleName LootUI"] = HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Loot Window";
 L["ModuleDescription LootUI"] = "Replace the default Loot Window and provide some optional features:\n\n- Loot items fast.\n\n- Fix Auto Loot failure bug.\n\n- Show a Take All button when looting manually.";
@@ -334,19 +365,27 @@ L["PlumberMacro Drawer"] = "Plumber Drawer Macro";
 L["PlumberMacro DrawerFlag Combat"] = "The drawer will be updated after leaving combat.";
 L["PlumberMacro DrawerFlag Stuck"] = "Something went wrong when updating the drawer.";
 L["PlumberMacro Error Combat"] = "Unavailable in combat";
-L["PlumberMacro Error NoAction"] = "No supported actions";
+L["PlumberMacro Error NoAction"] = "No usable actions";
+L["PlumberMacro Error EditMacroInCombat"] = "Cannot edit macros while in combat";
+L["Random Favorite Mount"] = "Random Favorite Mount"; --A shorter version of MOUNT_JOURNAL_SUMMON_RANDOM_FAVORITE_MOUNT
 L["Dismiss Battle Pet"] = "Dismiss Battle Pet";
 L["Drag And Drop Item Here"] = "Drag and drop an item here.";
 L["Drag To Reorder"] = "Left click and drag to reorder";
+L["Click To Set Macro Icon"] = "Ctrl click to set as macro icon";
 L["Unsupported Action Type Format"] = "Unsupported action type: %s";
 L["Drawer Add Action Format"] = "Add |cffffffff%s|r";
+L["Drawer Add Profession1"] = "First Profession";
+L["Drawer Add Profession2"] = "Second Profession";
 L["Drawer Option Global Tooltip"] = "This setting is shared across all drawer macros.";
 L["Drawer Option CloseAfterClick"] = "Close After Clicks";
 L["Drawer Option CloseAfterClick Tooltip"] = "Close the drawer after clicking any button in it, regardless of successful or not.";
 L["Drawer Option SingleRow"] = "Single Row";
 L["Drawer Option SingleRow Tooltip"] = "If checked, align all buttons on the same row instead of 4 items per row.";
 L["Drawer Option Hide Unusable"] = "Hide Unusable Actions";
-L["Drawer Option Hide Unusable Tooltip"] = "Hide unowned items and unlearned spells.\n\nConsumable items like potions will always be shown.";
+L["Drawer Option Hide Unusable Tooltip"] = "Hide unowned items and unlearned spells.";
+L["Drawer Option Hide Unusable Tooltip 2"] = "Consumable items like potions will always be shown."
+L["Drawer Option Update Frequently"] = "Update Frequently";
+L["Drawer Option Update Frequently Tooltip"] = "Attempt to update the button states whenever there is a change in your bags or spellbooks. Enabling this option may slightly increase resource usage.";
 
 
 --Generic
@@ -386,6 +425,8 @@ L["currency-2917"] = "Gilded";
 L["Scenario Delves"] = "Delves";
 L["GameObject Door"] = "Door";
 L["Delve Chest 1 Rare"] = "Bountiful Coffer";   --We'll use the GameObjectID once it shows up in the database
+
+L["Season Maximum Colon"] = "Season Maximum:";  --CURRENCY_SEASON_TOTAL_MAXIMUM
 
 
 --Map Pin Filter Name (name should be plural)

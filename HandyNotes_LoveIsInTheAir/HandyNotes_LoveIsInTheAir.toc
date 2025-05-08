@@ -1,5 +1,5 @@
-## Interface: 110007
-## Version: 1.09
+## Interface: 110105
+## Version: 1.15
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\inv_valentinesboxofchocolates02
 ## Title: Love is in the Air
@@ -34,8 +34,11 @@
 ## X-Curse-Project-ID: 99280
 ## X-Wago-ID: b6XVEbGp
 
+Colours_LIITA.lua
+Common.lua
 Localisations_Common.lua
 Localisations_Events.lua
 Localisations_LIITA.lua
-Core.lua
+Mapping.lua
 Data.lua
+Core.lua

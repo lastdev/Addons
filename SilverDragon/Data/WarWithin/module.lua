@@ -560,6 +560,112 @@ core:RegisterTreasureData("WarWithin", {
 		quest=84529, -- 84873
 		notes="Get the {item:228621:Bilge Rat Supply Key} from {npc:228582:First Mate Shellshock}",
 	},
+
+	-- Undermine
+	[6657] = {
+		name="Unexploded Fireworks",
+		achievement=41217, criteria=71613,
+		quest=85683,
+		loot={235042}, -- Imminently Exploding Fireworks
+		note="On the roof; there's a door you can click to open",
+	},
+	[6679] = {
+		name="Suspicious Book",
+		achievement=41217, criteria=71624,
+		quest=85868,
+		loot={235283}, -- Bashful Book
+		note="Pick it up three times",
+	},
+	[6677] = {
+		name="Fireworks Hat",
+		achievement=41217, criteria=71614,
+		quest=85856, -- first attempt 85838 @ 57845269, second attempt 85839 @ 56015172
+		loot={{235220, toy=true}}, -- Fireworks Hat
+		note="Pick it up twice",
+	},
+	[6658] = {
+		name="Inert Plunger?",
+		achievement=41217, criteria=71615,
+		quest=85698, -- 85694 first press
+		loot={235238}, -- Exploded Plunder
+	},
+	[6672] = {
+		name="Exploded Plunder",
+		achievement=41217, criteria=71615,
+		quest=85698,
+		loot={235238}, -- Exploded Plunder
+	},
+	[6671] = {
+		name="Blackened Dice",
+		achievement=41217, criteria=71625,
+		quest=85814, -- 84813 for the valve
+		loot={235255}, -- Durable Dice
+		note="Use the Pipe Valve",
+	},
+	[6678] = {
+		name="Lonely Tub",
+		achievement=41217, criteria=71626,
+		quest=85858, -- 85860 extinguished
+		loot={235279}, -- Scorched Shorts
+		note="Use the {spell:471345:Fire Extinguisher}",
+	},
+	[6646] = {
+		name="Potent Potable",
+		achievement=41217, criteria=71627,
+		quest=85426,
+		loot={235230}, -- Impotent Potable
+	},
+	[6643] = {
+		name="Abandoned Toolbox",
+		achievement=41217, criteria=71628,
+		quest=85422,
+		loot={}, -- assorted engineering items
+	},
+	[6644] = {
+		name="Papa's Prized Putter",
+		achievement=41217, criteria=71629,
+		quest=85424,
+		loot={234821}, -- Papa's Prized Putter
+	},
+	[6645] = {
+		name="Unsupervised Takeout",
+		achievement=41217, criteria=71630,
+		quest=85425,
+		loot={
+			7341, -- Cubic Zirconia Ring
+			233118, -- Incontinental Takeout
+		},
+	},
+	[6651] = {
+		name="Particularly Nice Lamp",
+		achievement=41217, criteria=71631,
+		quest=85492,
+		loot={235221}, -- Particularly Bright Lightbulb
+	},
+	[6654] = {
+		name="Uncracked Cold Ones",
+		achievement=41217, criteria=71632,
+		quest=85495,
+		loot={{234951, toy=true}}, -- Uncracked Cold Ones
+	},
+	[6653] = {
+		name="Marooned Floatmingo",
+		achievement=41217, criteria=71633,
+		quest=85494,
+		loot={235273}, -- Distracting Floatmingo
+	},
+	[6655] = {
+		name="Trick Deck of Cards",
+		achievement=41217, criteria=71634,
+		quest=85496,
+		loot={235268}, -- Misprinted Card
+	},
+	[6713] = {
+		name="Crumpled Schematics",
+		achievement=41217, criteria=71635,
+		quest=86487,
+		loot={235038}, -- Crumpled Schematic
+	},
 }, true)
 
 -- Hallowfall treasures with shared loot:
@@ -729,6 +835,11 @@ core:RegisterMobData("WarWithin", {
 	[229536] = {name="Xal'atath", hidden=true},
 	[229635] = {name="Xal'atath", hidden=true},
 	[230937] = {name="Xal'atath", hidden=true},
+	-- Random things that are flagged as rare for no particular reason
+	[209780] = {name="Abandoned Restoration Stone", hidden=true},
+	-- Court of Rats adds
+	[230935] = {name="Grease", hidden=true},
+	[230936] = {name="Grime", hidden=true},
 }, true)
 
 -- Isle of Dorn
@@ -2441,15 +2552,17 @@ ns.RegisterPoints(ns.FORGOTTENVAULT, {
 })
 
 ns.RegisterPoints(ns.UNDERMINE, {
-	[42007460] = {
+	[42227600] = {
 		label="Candy Stickemup",
-		-- [42007460, 42207640, 42207700, 42207820]
 		criteria=71599,
 		quest=84927, --v
 		npc=231012, -- 238119
 		loot={
+			--234741, -- Miscellaneous Mechanica
 			235304, -- Gutter Rat Mask
-			{234380, quest=85783}, -- Steamboil Fuel Tank
+			235348, -- Back Alley Shank
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6605,
 	},
@@ -2460,39 +2573,43 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=84928, --v
 		npc=231017,
 		loot={
+			--234741, -- Miscellaneous Mechanica
 			235303, -- Seafused Brimstone Band
 			235319, -- Tidebomb Chestpiece
 			235323, -- Blastshell Bracers
-			{234386, quest=85784}, -- Handcrank Fuel Injector
-			{234420, quest=85784}, -- Handcrank Mounting System
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6606,
 	},
-	[36604140] = {
+	[37074526] = {
 		label="Tally Doublespeak",
-		-- [36604140, 36604540, 37404160, 37604240, 37604500, 37804260]
 		criteria=71593,
 		quest=84919,
 		npc=230940,
 		loot={
 			234218, -- Goo-blin Grenade
-			{234380, quest=85783}, -- Steamboil Fuel Tank
-			{234420, quest=85784}, -- Handcrank Mounting System
+			--234741, -- Miscellaneous Mechanica
+			235328, -- Boots of the Silver Tongue
+			235355, -- Gossi-blin's Baton
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6600,
 	},
-	[37207820] = {
+	[36847814] = {
 		label="V.V. Goosworth",
-		-- [37207820, 37607880, 38007820]
 		criteria=71595,
 		quest=84920, --v
 		npc=230946,
 		loot={
-			234741, -- Miscellaneous Mechanica
+			--234741, -- Miscellaneous Mechanica
+			235306, -- Ooze-fused Mantle
+			235327, -- Mend-and-Match Shoulderpads
 			235347, -- 100% Sharp Glimmerblade
-			{234380, quest=85783}, -- Steamboil Fuel Tank
-			{234418, quest=85783}, -- Steamboil Gears
-			{234381, quest=85784}, -- Handcrank Fuel Tank
+			235329, -- Cowl of Acidic Mire
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6601,
 		note="Accompanied by {npc:230947:Slimesby}",
@@ -2506,15 +2623,18 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		vignette=6601, -- V.V.
 		note="Accompanies {npc:230946:V.V. Goosworth}",
 	},
-	[25606840] = {
+	[26516830] = {
 		label="Ephemeral Agent Lathyd",
-		-- [25606840, 26006720]
 		criteria=71602,
 		quest=84877, --v
 		npc=230746,
 		loot={
-			{234416, quest=85783}, -- Steamboil Casing
-			{234417, quest=85784}, -- Handcrank Gears
+			--234741, -- Miscellaneous Mechanica
+			235309, -- Gloomshroud Robe
+			235350, -- Void-forged Cudgel
+			235352, -- Netherflare Wand
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6593,
 	},
@@ -2525,46 +2645,55 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=84917, --v
 		npc=230931,
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235301, -- Drape of the Dazzling Feather
 			235305, -- Golfer's Truestrike Gloves
-			{234419, quest=85783}, -- Steamboil Mounting System
-			{234386, quest=85784}, -- Handcrank Fuel Injector
+			235321, -- Feather-Spike Girdle
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6598,
 	},
-	[46605740] = {
+	[46915565] = {
 		label="Nitro",
-		-- [46605740, 46805620, 47005520, 48205660, 48405580]
 		criteria=71598,
 		quest=84926, --v
 		npc=230995,
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235318, -- Ironfang Plate Legguards
+			235324, -- Scavenger's Lost Bind
 			235325, -- Rusthide Gloves
-			{234418, quest=85783}, -- Steamboil Gears
-			{234419, quest=85783}, -- Steamboil Mounting System
-			{234381, quest=85784}, -- Handcrank Fuel Tank
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6604,
 	},
-	[50603960] = {
+	[52354107] = {
 		label="Slugger the Smart",
-		-- [50603960, 52004120, 52604120]
 		criteria=71604,
 		quest=84895, --v
 		npc=230800,
 		loot={
-			{234380, quest=85783}, -- Steamboil Fuel Tank
-			{234417, quest=85784}, -- Handcrank Gears
+			--234741, -- Miscellaneous Mechanica
+			235349, -- Shadowfume Club
+			235363, -- Suspicious Energy Drink
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6595,
 	},
-	[57808640] = {
+	[58408663] = {
 		label="Chief Foreman Gutso",
-		-- [57808640, 59008760, 59208340]
 		criteria=71605,
 		quest=84907, --v
 		npc=230828,
 		loot={
-			{234380, quest=85783}, -- Steamboil Fuel Tank
+			--234741, -- Miscellaneous Mechanica
+			235311, -- Rocket-Powered Shoulderguards
+			235357, -- Bulletscar Barricade
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6596,
 	},
@@ -2574,73 +2703,86 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=85778, --v
 		npc=233471,
 		loot={
+			--234741, -- Miscellaneous Mechanica
 			235829, -- Welded Scrap Hood
+			235830, -- Unstable Missilecaps
+			235831, -- Battery-Powered Longshank
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6667, -- 6752
 		note="Talk to {npc:236035:Scrapminer Krazzik} to summon",
 	},
-	[63204920] = {
+	[63354975] = {
 		label="The Junk-Wall",
-		-- [63204920, 63604920, 64205020]
 		criteria=71603,
 		quest=84884, --v
 		npc=230793,
 		loot={
-			{234420, quest=85784}, -- Handcrank Mounting System
+			--234741, -- Miscellaneous Mechanica
+			235313, -- Shockproof Helm
+			235354, -- Scrapblaster Lance
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6594,
 	},
-	[60200880] = {
+	[60550987] = {
 		label="Flyboy Snooty",
-		-- [60200880, 60600980]
 		criteria=71606,
 		quest=84911, --v
 		npc=230840,
 		loot={
+			--234741, -- Miscellaneous Mechanica
 			235312, -- Snooty's Aviator Bindings
+			235316, -- Whirly-Giggle Windwhir Wrap
+			235322, -- Junkyard Clawguards
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6597,
 	},
-	[41404300] = {
+	[41334367] = {
 		label="Swigs Farsight",
-		-- [41404300, 41404380, 41604380]
 		criteria=71601,
 		quest=85004, --v
 		npc=231288,
 		loot={
+			--234741, -- Miscellaneous Mechanica
 			235307, -- Smoketrail Belt
 			235314, -- Knightrider's Steelfists
-			{234415, quest=85784}, -- Handcrank Casing
-			{234420, quest=85784}, -- Handcrank Mounting System
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6609,
 	},
-	[52004940] = {
+	[54045018] = {
 		label="Thwack",
-		-- [52004940, 52605260, 52805180, 53805040, 54005080, 54605060, 54805160]
 		criteria=71596,
 		quest=84921, --v
 		npc=230951,
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235310, -- Flashy Patchwork Trousers
 			235317, -- Chestplate of the Ultimatum
-			{234419, quest=85783}, -- Steamboil Mounting System
+			235353, -- Debtsmasher Axe
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6602,
 	},
-	[40002680] = {
+	[42012566] = {
 		label="S.A.L.",
-		-- [40002680, 40402620, 40802400, 41202540, 41402560, 41602520, 41802560]
 		criteria=71597,
 		quest=84922, --v
 		npc=230979,
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235302, -- Shockwave Pendant
+			235315, -- Rocketstep Boots
 			235356, -- Sapper's Spark Reactor
-			{234381, quest=85784}, -- Handcrank Fuel Tank
-			{234386, quest=85784}, -- Handcrank Fuel Injector
-			{234417, quest=85784}, -- Handcrank Gears
-			{234420, quest=85784}, -- Handcrank Mounting System
-			{234416, quest=85783}, -- Steamboil Casing
-			{234418, quest=85783}, -- Steamboil Gears
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6603,
 	},
@@ -2650,29 +2792,43 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=86298, --v
 		npc=234480,
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235300, -- Cloak of Mecha Shards
 			235318, -- Ironfang Plate Legguards
+			235835, -- Braided Wire Wrap
+			235836, -- Gas-Powered Chainblade
 		},
 		vignette=6689,
 	},
-	[25203680] = {
+	[25453654] = {
 		label="Ratspit",
-		-- [25203680, 25603540, 25803560]
 		criteria=71592,
 		quest=84918,
 		npc=230934, -- accompanied by Grease (230935) and Grime (230936)
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235308, -- Filthtread Boots
 			235326, -- Ratspit's Heirloom Wristwraps
-			{234381, quest=85784}, -- Handcrank Fuel Tank
-			{234419, quest=85783}, -- Steamboil Mounting System
-			{234420, quest=85784}, -- Handcrank Mounting System
+			235359, -- Ratfang Toxin
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6599, -- Court of Rats
 	},
 	[32027652] = {
 		label="Giovante",
 		criteria=71609,
-		quest=86307, -- v
+		quest=86307, -- v + 90489
 		npc=234499,
+		loot={
+			--234741, -- Miscellaneous Mechanica
+			235310, -- Flashy Patchwork Trousers
+			235320, -- S.1.Z.Z.L.E.S.T.E.P Boots
+			235823, -- Scrap-Plated Pants
+			235824, -- Flame Sputterer
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
+		},
 		vignette=6694, -- Noggenfogger Nuisance + 6710
 		note="Talk to {npc:234751:Noggenfogger Recall Technician} to summon",
 	},
@@ -2682,7 +2838,13 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=85777, --v
 		npc=233472,
 		loot={
+			--234741, -- Miscellaneous Mechanica
+			235373, -- Abyssal Volt
+			235826, -- Electric Wristrags
 			235827, -- Statically Charged Vest
+			235828, -- Electrocution Warning
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6668, -- 6753
 		note="Talk to {npc:234834:Boatwright Frankle} to summon",
@@ -2693,7 +2855,12 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=85010, --v
 		npc=231310,
 		loot={
-			{229955, mount=true}, -- Darkfuse Spy-Eye
+			{229955, mount=true,}, -- Darkfuse Spy-Eye
+			235467, -- Ominous Oil Residue
+			235832, -- Oil-Splattered Cloak
+			235833, -- Serrated Slickgrip
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		vignette=6613, -- 6614
 		note="Talk to {npc:231329:De-Pollution Station X1119} with a {item:229823:Canister of Darkfuse Solution} to summon",
@@ -2709,9 +2876,16 @@ ns.RegisterPoints(ns.UNDERMINE, {
 		quest=nil,
 		npc=234621,
 		loot={
-			{229953, mount=true}, -- Salvaged Goblin Gazillionaire's Flying Machine
+			{229953, mount=true,}, -- Salvaged Goblin Gazillionaire's Flying Machine
+			--234741, -- Miscellaneous Mechanica
 			235819, -- Lucky Penny Locket
+			235820, -- Hole-Punched Doubloon
+			235821, -- Pressed-Gold Pantaloons
+			235822, -- Coin-Woven Shawl
+			235854, -- Gold-Inlaid Jetpack
 			235910, -- Mint Condition Gallagio Anniversary Coin
+			{232983, quest=85783}, -- Steamboil
+			{232984, quest=85784}, -- Handcrank
 		},
 		notes="Appears during S.C.R.A.P. jobs",
 	},

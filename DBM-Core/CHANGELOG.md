@@ -1,27 +1,40 @@
 # DBM - Core
 
-## [11.1.4](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.1.4) (2025-02-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.1.3...11.1.4) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [11.1.17](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.1.17) (2025-04-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.1.16...11.1.17) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- Prep new tag  
-- Core: Align SoD Naxx difficulties with warcraftlogs (#1526)  
-- Fix year in timestamp (#1530)  
-- Update localization.br.lua  
-- Update localization.br.lua  
-- Update localization.br.lua  
-- Update localization.br.lua  
-- Update localization.es.lua  
-- Update localization.es.lua  
-- Update localization.fr.lua  
-- Update localization.fr.lua  
-- Update localization.fr.lua  
-- Variance: remove obsolete code  
-    This has no place being in Start method. Bar attributes on creation are to be managed in DBT:CreateBar  
-- Variance: fix var to non-var getting kept on debug  
-    Fix related to this https://github.com/DeadlyBossMods/DeadlyBossMods/blob/master/DBM-Core/modules/objects/Timer.lua#L225-L227  
-- Variance: code cleanup (#1525)  
-- Tests: Get player names from PLAYER\_INFO as well and explicitly filter to CLEU events for other sources  
-- Tests: Get server name from CHAT\_MSG\_RAID\_BOSS\_WHISPER\_SYNC (which always has it)  
-- Tests: Set GUID for raid warning messages coming from yourself correctly  
-- play voice pack count sound when changing voice pack in dropdown menu  
+- prep new tag  
+- apparently i never remembered to bump tocs  
+- CI: Update globals  
+- Tests: Fix Scarlet Enclave test name generation  
+- Tests: Add Perfy integration  
+- Tests: Add simple performance report for in-game tests  
+- Update localization.ru.lua (#1632)  
+- kill old deprecated color picker calls  
+- just handle it this way  
+- change event order for logging purposes.  
+- Fixed a bug where a cast count timer might get stuck if it clipped before expiring  
+    Changed timer debug to always fire regardless of debugmode to improve transcriptor logging.  
+- Update RU locale and micro fix for The One Armed Bandit (#1629)  
+    * Update TheOneArmedBandit.lua  
+    * Update localization.ru.lua  
+- silene and close https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1628  
+- throttle blaze of glory  
+- remove useless countdown yell by default on cauldron and instead add a new one for tank waves  
+- maybe fix https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1630  
+- eliminate redundant events  
+- fix a bug where delay wasn't applied to NP scans  
+- Add callback for trash enemy engages  
+- Tests: Simplify mod guessing (#1620)  
+    Basically the test generator will put the encounterId into the metadata which removes the mess with compressed logs  
+- update translations (#1621)  
+    Co-authored-by: anon1231823 <anon1231823@users.noreply.github.com>  
+- Update Announce.lua (#1625)  
+    * Update Announce.lua  
+    * Update SpecialWarning.lua  
+- Fix and close https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1626  
+- Fix most of errors in https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1622  
+- Update SpecialWarning.lua (#1624)  
+- Update localization.tw.lua  
+- Update localization.ru.lua (#1617)  
 - bump alpha  

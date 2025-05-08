@@ -1,22 +1,12 @@
-lightweight tag ed49e284a5a65aa4fd23c3e4da98869179de0a3d 4.4.2.0
-Author:	GitHub <noreply@github.com>
-Date:	Mon Feb 17 23:43:39 2025 -0800
+tag 9dbbc5e0a8f14e4437fe91d44968777ed76f6313 5.22.1
+Author:	John Stephen <john@wobbleworks.com>
+Date:	Tue Jan 8 10:05:09 2019 -0800
 
-commit ecfc143630193282ddc610af626fd70d2cd2f8d0
-Author: GovtGeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Mon Feb 17 23:41:02 2025 -0800
+5.22.1
 
-    Bumped Outfitter version
+commit 3b5cfd97b115e34596b191615e97177b0a713f03
+Author: John Stephen <john@wobbleworks.com>
+Date:   Tue Jan 8 10:04:23 2019 -0800
 
-commit ecfc143630193282ddc610af626fd70d2cd2f8d0
-Author: GovtGeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Mon Feb 17 23:41:02 2025 -0800
-
-    Bumped Outfitter version
-
-commit 6473014ab1dd658de393303dce9afa01e12e3415
-Author: GovtGeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Mon Feb 17 23:40:04 2025 -0800
-
-    Bumped for Cata Classic
+    Bumped version
 

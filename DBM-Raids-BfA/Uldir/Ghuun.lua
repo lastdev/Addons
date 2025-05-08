@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2147, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044055")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -311,7 +311,7 @@ function mod:SPELL_CAST_START(args)
 			warnThousandMaws:Show(self.vb.mawCastCount)
 		end
 		local timer = self:IsLFR() and thousandMawsTimersLFR[self.vb.mawCastCount+1] or thousandMawsTimers[self.vb.mawCastCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerThousandMawsCD:Start(timer, self.vb.mawCastCount+1)
 		end
 	elseif spellId == 267427 and self:CheckInterruptFilter(args.sourceGUID, false, true) then

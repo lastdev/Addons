@@ -1,6 +1,6 @@
-## Interface: 110007, 110100
+## Interface: 110100, 110105
 ## X-Min-Interface: 100107
-## Version: r4
+## Version: r5
 ## Category: DBM
 
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cffff6010Raids (DF)|r
@@ -30,7 +30,7 @@
 ## X-DBM-Mod-MinExpansion: 9
 ## X-Curse-Project-ID: 1101373
 ## X-Wago-ID: j6jzXW6R
-## Version: r4
+## Version: r5
 
 localization.en.lua
 localization.kr.lua

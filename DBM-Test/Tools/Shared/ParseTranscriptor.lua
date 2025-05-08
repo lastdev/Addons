@@ -520,19 +520,19 @@ local function transcribeEvent(event, params, anon, flagState)
 			return prefix .. anon:ScrubName(name, guid) .. separator .. anon:ScrubGUID(guid)
 		end)
 	end
-	if event == "INSTANCE_ENCOUNTER_ENGAGE_UNIT" then
-		-- capture limits prevents us from doing this a single glorious regex
-		local prefix, suffix
-		prefix, params = params:match("([^#]*#)(.*)")
-		params, suffix = params:match("(" .. ("[^#]*#"):rep(8 * 5) .. ")(.*)")
-		local newParams = ""
-		for boss in params:gmatch("(" .. ("[^#]*#"):rep(8) .. ")") do
-			newParams = newParams .. boss:gsub("^" .. ("([^#]*)#"):rep(8), function(arg1, arg2, arg3, arg4, arg5, guid, arg7, arg8)
-				return ("%s#"):rep(8):format(arg1, arg2, arg3, arg4, arg5, guid == "nil" and guid or anon:ScrubGUID(guid), arg7, arg8)
-			end)
-		end
-		params = prefix .. newParams .. suffix
-	end
+	--if event == "INSTANCE_ENCOUNTER_ENGAGE_UNIT" then
+	--	-- capture limits prevents us from doing this a single glorious regex
+	--	local prefix, suffix
+	--	prefix, params = params:match("([^#]*#)(.*)")
+	--	params, suffix = params:match("(" .. ("[^#]*#"):rep(8 * 5) .. ")(.*)")
+	--	local newParams = ""
+	--	for boss in params:gmatch("(" .. ("[^#]*#"):rep(8) .. ")") do
+	--		newParams = newParams .. boss:gsub("^" .. ("([^#]*)#"):rep(8), function(arg1, arg2, arg3, arg4, arg5, guid, arg7, arg8)
+	--			return ("%s#"):rep(8):format(arg1, arg2, arg3, arg4, arg5, guid == "nil" and guid or anon:ScrubGUID(guid), arg7, arg8)
+	--		end)
+	--	end
+	--	params = prefix .. newParams .. suffix
+	--end
 	if event == "GOSSIP_SHOW" then
 		local guid, suffix = params:match("([^#]*)#(.*)")
 		params = anon:ScrubGUID(guid) .. "#" .. suffix
@@ -674,7 +674,7 @@ function testGenerator:guessTestName()
 	end
 	local name = self:guessMod() .. "/" .. difficulty .. (self.metadata.encounterInfo.kill and "Kill" or "Wipe")
 	if self.metadata.instanceInfo then
-		local instanceName = mappedInstanceNames[self.metadata.instanceInfo.instanceID] or self.metadata.instanceInfo.name
+		local instanceName = mappedInstanceNames[self.metadata.instanceInfo.instanceID] or self.metadata.instanceInfo.name:gsub(" ", "")
 		if instanceName then
 			name = instanceName .. "/" .. name
 		end
@@ -697,8 +697,8 @@ function testGenerator:guessAddon()
 	if self.metadata.gameVersion == "SeasonOfDiscovery" then
 		local instanceInfo = self.metadata.instanceInfo
 		if instanceInfo.instanceType == "raid" then
-			-- Onyxia and the outdoor bosses are for 40 players, but luckily Onyxia uses a different difficulty ID
-			return instanceInfo.maxPlayers == 40 and instanceInfo.difficultyID == 9 and "DBM-Azeroth"
+			-- Onyxia and the outdoor bosses are for 40 players, but luckily they use a different difficulty ID (except Scarlet Enclave...)
+			return instanceInfo.maxPlayers == 40 and instanceInfo.difficultyID == 9 and instanceInfo.instanceID ~= 2856 and "DBM-Azeroth"
 				or "DBM-Raids-Vanilla"
 		elseif instanceInfo.instanceType == "party" then -- UBRS & co also return party here
 			return "DBM-Party-Vanilla"
@@ -720,13 +720,15 @@ DBM.Test:DefineTest{
 	name = %s,
 	gameVersion = %s,
 	addon = %s,
-	mod = %s,
+	%s = %s,
 	instanceInfo = %s,]]
 
 function testGenerator:GetHeaderString()
 	local def = self:GetTestDefinition()
 	return headerTemplate:format(
-		literal(def.name), literal(def.gameVersion), literal(def.addon), literal(def.mod),
+		literal(def.name), literal(def.gameVersion), literal(def.addon),
+		def.encounterId and "encounterId" or "mod",
+		def.encounterId and literal(def.encounterId) or literal(def.mod),
 		instanceInfoLiteral(def.instanceInfo)
 	)
 end
@@ -770,6 +772,7 @@ function testGenerator:GetTestDefinition()
 		gameVersion = self.metadata.gameVersion,
 		addon = self:guessAddon(),
 		mod = self:guessMod(),
+		encounterId = self.metadata.encounterInfo.id,
 		instanceInfo = self.metadata.instanceInfo,
 		perspective = self.metadata.player,
 		players = resultPlayers,

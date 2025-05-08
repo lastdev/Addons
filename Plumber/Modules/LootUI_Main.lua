@@ -34,6 +34,9 @@ MainFrame:SetAlpha(0);
 MainFrame:SetFrameStrata("DIALOG");
 MainFrame:SetToplevel(true);
 MainFrame:SetClampedToScreen(true);
+MainFrame.HeaderWidgetContainer = CreateFrame("Frame", nil, MainFrame);
+MainFrame.HeaderWidgetContainer:Hide();
+MainFrame.HeaderWidgets = {};
 
 
 local P_Loot = {};
@@ -104,8 +107,9 @@ do
         self.DOT_SIZE = Round(1.5 * normalizedFontSize);
         self.COUNT_NAME_GAP = Round(0.5 * normalizedFontSize);
         self.NAME_WIDTH = Round(16 * fontSize);
-        self.BUTTON_WIDTH = self.ICON_SIZE + self.ICON_TEXT_GAP + self.BASE_FONT_SIZE + self.COUNT_NAME_GAP + self.NAME_WIDTH;
+        self.BUTTON_WIDTH = self.ICON_SIZE + self.ICON_TEXT_GAP + fontSize + self.COUNT_NAME_GAP + self.NAME_WIDTH;
         self.BUTTON_SPACING = 12;
+        self.UI_BUTTON_HEIGHT = Round(fontSize + 2 * 12);
 
         self.numberWidths = {};
 
@@ -162,7 +166,10 @@ do
             self.t = nil;
             self:SetScript("OnUpdate", nil);
             if self.object and self.object:IsMouseMotionFocus() then
+                self:RegisterEvent("MODIFIER_STATE_CHANGED");
                 self.object:OnFocused();
+            else
+                self:UnregisterEvent("MODIFIER_STATE_CHANGED");
             end
         end
     end
@@ -176,6 +183,7 @@ do
             self.t = 0;
         else
             self:SetScript("OnUpdate", nil);
+            self:UnregisterEvent("MODIFIER_STATE_CHANGED");
             self.t = nil;
         end
     end
@@ -183,6 +191,15 @@ do
     function FocusSolver:IsLastFocus(itemFrame)
         return self.object and self.object == itemFrame
     end
+
+    function FocusSolver:OnEvent(event, ...)
+        if event == "MODIFIER_STATE_CHANGED" then
+            if self.object and self.object:IsMouseMotionFocus() then
+                self.object:OnFocused();
+            end
+        end
+    end
+    FocusSolver:SetScript("OnEvent", FocusSolver.OnEvent);
 end
 
 
@@ -589,7 +606,7 @@ do  --UI ItemButton
         MainFrame:SetFocused(false);
     end
 
-    function ItemFrameMixin:OnFocused()
+    function ItemFrameMixin:ShowTooltip()
         --Effective during Manual Mode
         local tooltip = GameTooltip;
         if self.enableState == 1 then
@@ -619,6 +636,10 @@ do  --UI ItemButton
                 tooltip:SetHyperlink(self.data.link);
             end
         end
+    end
+
+    function ItemFrameMixin:OnFocused()
+        self:ShowTooltip();
     end
 
     function ItemFrameMixin:OnMouseDown(button)
@@ -971,7 +992,7 @@ do  --UI Generic Button (Hotkey Button)
         --self.Background:SetScale(scale);
         self.Text:ClearAllPoints();
         local padding = 12;  --Hotkey Padding
-        local buttonHeight = Round(Formatter.BASE_FONT_SIZE + 2*padding);
+        local buttonHeight = Formatter.UI_BUTTON_HEIGHT;
         local buttonWidth;
         local minWidth = 2 * buttonHeight;
         if self.hotkeyName then
@@ -1110,6 +1131,57 @@ do  --TakeAllButton
         self:SetScript("OnShow", self.OnShow);
         self:SetScript("OnHide", self.OnHide);
         self:SetScript("OnClick", self.OnClick);
+    end
+end
+
+
+local CloseButtonMixin = {};
+do  --CloseButton
+    function CloseButtonMixin:OnLoad()
+        local file = "Interface/AddOns/Plumber/Art/LootUI/LootUI.png";
+        self.Icon:SetTexture(file);
+        self.Icon:SetTexCoord(64/1024, 96/1024, 104/512, 136/512);
+        self.Background:SetTexture(file);
+        self:SetHighlighted(false);
+        self:SetScript("OnEnter", self.OnEnter);
+        self:SetScript("OnLeave", self.OnLeave);
+        self:SetScript("OnShow", self.OnShow);
+        self:SetScript("OnClick", self.OnClick);
+        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+    end
+
+    function CloseButtonMixin:SetHighlighted(state)
+        if state then
+            self.Background:SetTexCoord(32/1024, 64/1024, 104/512, 136/512);
+        else
+            self.Background:SetTexCoord(0, 32/1024, 104/512, 136/512);
+        end
+    end
+
+    function CloseButtonMixin:OnEnter()
+        self:SetHighlighted(true);
+        MainFrame:SetFocused(true);
+    end
+
+    function CloseButtonMixin:OnLeave()
+        self:SetHighlighted(false);
+        MainFrame:SetFocused(false);
+    end
+
+    function CloseButtonMixin:OnShow()
+        local a = Formatter.UI_BUTTON_HEIGHT;
+        self:SetSize(a, a);
+    end
+
+    function CloseButtonMixin:OnClick()
+        if not self.pauseUpdate then
+            self.pauseUpdate = true;
+            CloseLoot();
+            C_Timer.After(0.5, function()
+                self.pauseUpdate = nil;
+            end);
+        end
+        MainFrame:TryHide(true);
     end
 end
 
@@ -1359,6 +1431,14 @@ do  --UI Basic
         self:SetBackgroundSize(backgroundWidth * scale, (frameHeight + Formatter.ICON_BUTTON_HEIGHT) * scale);
     end
 
+    function MainFrame:EnableHeaderWidgets(state)
+        for _, widget in ipairs(self.HeaderWidgets) do
+            widget:SetEnabled(state);
+            widget:EnableMouseMotion(state);
+            widget:EnableMouse(state);
+        end
+    end
+
     function MainFrame:Init()
         self.Init = nil;
 
@@ -1425,14 +1505,21 @@ do  --UI Basic
         ButtonHighlight:UpdatePixel();
         ButtonHighlight:ShowMouseUpFeedback();
 
-        local TakeAllButton = CreateUIButton(self);
+        local CloseButton = CreateFrame("Button", nil, self.HeaderWidgetContainer, "PlumberLootUISquareIconButtonTemplate");
+        self.CloseButton = CloseButton;
+        CloseButton:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, Formatter.BUTTON_SPACING);
+        API.Mixin(CloseButton, CloseButtonMixin);
+        CloseButton:OnLoad();
+        table.insert(self.HeaderWidgets, CloseButton);
+
+        local TakeAllButton = CreateUIButton(self.HeaderWidgetContainer);
         self.TakeAllButton = TakeAllButton;
         TakeAllButton:SetButtonText(L["Take All"]);
-        TakeAllButton:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, Formatter.BUTTON_SPACING);
-        TakeAllButton:Hide();
+        TakeAllButton:SetPoint("RIGHT", CloseButton, "LEFT", -Formatter.BUTTON_SPACING + 4, 0);
         API.Mixin(TakeAllButton, TakeAllButtonMixin);
         TakeAllButton:OnLoad();
         TakeAllButton:UpdateHotKey();
+        table.insert(self.HeaderWidgets, TakeAllButton);
 
         self:LoadPosition();
     end
@@ -1593,14 +1680,12 @@ end
 do  --Rare Items
     local RareItems = {
         --[210796] = true,    --debug
-        [210939] = true,    --Null Stone
         [224025] = true,    --Crackling Shard
-        [221758] = true,    --Profaned Tinderbox
     };
 
     function IsRareItem(data)
         if RareItems[data.id] then
-            return true;
+            return true
         elseif data.classID == 15 and data.subclassID == 5 then
             --Mount
             return true

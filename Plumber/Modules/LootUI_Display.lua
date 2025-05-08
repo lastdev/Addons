@@ -45,6 +45,8 @@ local BG_OPACITY = 0.5;             --Base Alpha: 0.9 (This parameter doesn't af
 
 
 local EL = CreateFrame("Frame");
+local EventGenerator = CreateFrame("Frame");
+
 
 local ENABLE_MODULE = false;
 local IS_CLASSIC = not addon.IsToCVersionEqualOrNewerThan(110000);
@@ -81,6 +83,8 @@ local CLASS_SORT_ORDER = {
     [18] = 18,  --WoWToken
     [19] = 19,  --Profession
 };
+
+local OverflowWarningShown = {};    --[currencyID] = true
 
 local function SortFunc_LootSlot(a, b)
     if a.looted ~= b.looted then
@@ -319,9 +323,19 @@ do  --Event Handler
             elseif currencyID then
                 id = currencyID;
                 slotType = Defination.SLOT_TYPE_CURRENCY;
-                local overflow, numOwned = API.WillCurrencyRewardOverflow(currencyID, quantity);
+                local overflow, numOwned, useTotalEarnedForMaxQty, maxQuantity = API.WillCurrencyRewardOverflow(currencyID, quantity);
                 if overflow then    --debug
-                    itemOverflow = true;
+                    if useTotalEarnedForMaxQty then
+                        if not OverflowWarningShown[currencyID] then
+                            OverflowWarningShown[currencyID] = true;
+                            if maxQuantity and maxQuantity > 0 and addon.GetPersonalData("CurrencyCap:"..currencyID) ~= maxQuantity then
+                                itemOverflow = true;
+                                addon.SetPersonalData("CurrencyCap:"..currencyID, maxQuantity);
+                            end
+                        end
+                    else
+                        itemOverflow = true;
+                    end
                 end
             end
         end
@@ -1063,7 +1077,7 @@ do  --UI Manually Pickup Mode
         self:HighlightItemFrame(nil);
         if state then
             self.Header:Hide();
-            self.TakeAllButton:Show();
+            self.HeaderWidgetContainer:Show();
             self:SetBackgroundAlpha(1);
             self.isFocused = false;
             if LOOT_UNDER_MOUSE then
@@ -1071,13 +1085,15 @@ do  --UI Manually Pickup Mode
             end
 
             EL:ListenDynamicEvents(false);
+            EventGenerator:WatchLootCleared();
         else
             self.Header:Show();
-            self.TakeAllButton:Hide();
+            self.HeaderWidgetContainer:Hide();
             self:SetBackgroundAlpha(BG_OPACITY);
             if LOOT_UNDER_MOUSE then
                 self:LoadPosition();
             end
+            EventGenerator:Stop();
         end
         self:EnableMouseScript(state);
     end
@@ -1346,10 +1362,10 @@ do  --Edit Mode
 
         self.manualMode = nil;
         self.Header:Hide();
-        self.TakeAllButton:Show();
+        self.HeaderWidgetContainer:Show();
         self.TakeAllButton:Layout();
         self.TakeAllButton:SetScript("OnKeyDown", nil);
-        self.TakeAllButton:Disable();
+        self:EnableHeaderWidgets(false);
     end
 
     function MainFrame:EnterEditMode()
@@ -1371,6 +1387,8 @@ do  --Edit Mode
 
         self:LoadPosition();
         self:UnregisterEvent("GLOBAL_MOUSE_UP");
+
+        EventGenerator:Stop();
     end
 
     function MainFrame:ExitEditMode()
@@ -1385,7 +1403,7 @@ do  --Edit Mode
         self:SetAlpha(0);
         self:Hide();
 
-        self.TakeAllButton:Enable();
+        self:EnableHeaderWidgets(true);
 
         if self.Selection then
             self.Selection:Hide();
@@ -1623,15 +1641,31 @@ do  --Edit Mode
 end
 
 
-do
-    local EDITMODE_HOOKED = false;
-
-    local function EditMode_Enter()
-        if ENABLE_MODULE then
-            MainFrame:EnterEditMode();
+do  --EventGenerator
+    function EventGenerator:OnUpdate(elapsed)
+        self.t = self.t + elapsed;
+        if self.t > 0.5 then
+            self.t = 0;
+            if GetNumLootItems() <= 0 then
+                self:SetScript("OnUpdate", nil);
+                EL:OnEvent("LOOT_CLOSED");
+            end
         end
     end
 
+    function EventGenerator:WatchLootCleared()
+        self.t = 0;
+        self:SetScript("OnUpdate", self.OnUpdate);
+    end
+
+    function EventGenerator:Stop()
+        self.t = 0;
+        self:SetScript("OnUpdate", nil);
+    end
+end
+
+
+do
     local STOCK_UI_MUTED = false;
 
     local function SettingChanged_UseStockUI(state, userInput)
@@ -1684,12 +1718,6 @@ do
 
             MainFrame:OnUIScaleChanged();
 
-            if not EDITMODE_HOOKED then
-                EDITMODE_HOOKED = true;
-                EventRegistry:RegisterCallback("EditMode.Enter", EditMode_Enter);
-                EventRegistry:RegisterCallback("EditMode.Exit", MainFrame.ExitEditMode, MainFrame);
-            end
-
             if addon.GetDBBool("LootUI_ReplaceDefaultAlert") and (not addon.GetDBBool("LootUI_UseStockUI")) then
                 EL:ListenAlertSystemEvent(true);
             else
@@ -1734,6 +1762,14 @@ do
         uiOrder = 1115,
         moduleAddedTime = 1727793830,
         optionToggleFunc = OptionToggle_OnClick,
+
+        visibleInEditMode = true,
+        enterEditMode = function()
+            MainFrame:EnterEditMode();
+        end,
+        exitEditMode = function()
+            MainFrame:ExitEditMode();
+        end,
     };
 
     addon.ControlCenter:AddModule(moduleData);

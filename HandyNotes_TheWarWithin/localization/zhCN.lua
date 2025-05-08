@@ -298,6 +298,8 @@ L['no_harm_from_reading_note'] = [[
 追踪每个 {npc:227421} 并与他们互动，将他们送回 {object:血肉魔典}。
 
 找到所有4个 {npc:227421} 后，返回 {object:血肉魔典} 并与 {npc:227421} 交谈。
+
+需要先路过飞行点才会生成{npc:227421}。
 ]]
 L['another_you_4_note'] = '沿着标记的路径巡逻。'
 
@@ -446,7 +448,7 @@ L['options_icons_ratts_revenge'] = '{achievement:40967}'
 L['options_icons_ratts_revenge_desc'] = '显示 {achievement:40967} 成就中秘密的位置。'
 
 -- INERT PECULIAR KEY
-L['inert_peculiar_key_note'] = '藏在巨大的中空树干里板条箱后面。\n\n{note:下一个位置：}\n如果 {bug:*没有*} {item:228938}，请前往 {location:卡兹阿加} 的 {location:多恩诺加尔}。\n\n如果 |cFF00FF00*有*|r {item:228938}，请前往 {location:东部王国} 的 {location:逆风小径}。'
+L['inert_peculiar_key_note'] = '藏在巨大的中空树干里板条箱后面。\n\n{note:下一个位置：}\n如果 {bug:*没有*} {item:228938}，请前往 {location:卡兹阿加} 的 {location:多恩诺嘉尔}。\n\n如果 |cFF00FF00*有*|r {item:228938}，请前往 {location:东部王国} 的 {location:逆风小径}。'
 
 -- PECULIAR GEM
 L['carefully_penned_note'] = '佩戴 {title:侦探} 头衔与 {npc:230042} 交谈以接受 {quest:84684}。\n\n{note:下一个位置：}{location:艾基-卡赫特}'
@@ -457,7 +459,7 @@ L['peculiar_gem_note'] = '到达 {location:沃什柱巢}，穿过山洞内隐藏
 
 -- KARAZHAN CATACOMBS
 L['karazhan_catacombs_label'] = '卡拉赞墓穴'
-L['karazhan_catacombs_entrance_note'] = '从 {location:卡利姆多} 的 {location:安格洛环形山} 开始收集 {item:44124}\n\n从 {location:卡兹阿加} 的 {location:多恩诺加尔} 开始收集 {item:228938}\n\n将宝石和钥匙组合成 {item:44124}。\n\n将 {item:44124} 放入包中并激活 {item:208092}，接近大门即可看到一个红色的副本入口。'
+L['karazhan_catacombs_entrance_note'] = '从 {location:卡利姆多} 的 {location:安格洛环形山} 开始收集 {item:228941}\n\n从 {location:卡兹阿加} 的 {location:多恩诺嘉尔} 开始收集 {item:228938}\n\n将宝石和钥匙组合成 {item:44124}。\n\n将 {item:44124} 放入包中并激活 {item:208092}，接近大门即可看到一个红色的副本入口。'
 
 -- ORB 1
 L['orb_1_label'] = '1号球'
@@ -493,7 +495,7 @@ L['code_machine_note_8'] = '输入代码并打开 {object:加密的宝箱} 获�
 L['slot_machine_label'] = '“试试手气！”游戏机'
 L['slot_machine_note_a'] = '收集五个幸运物品然后输入代码：\n\n'
 L['slot_machine_note_b'] = '{location:暴风城} 的 {npc:2795}：\n'
-L['slot_machine_note_c'] = '{location:多恩诺加尔} 的 {npc:219197}：\n'
+L['slot_machine_note_c'] = '{location:多恩诺嘉尔} 的 {npc:219197}：\n'
 L['slot_machine_note_d'] = '{location:欧恩哈拉平原} 的 {npc:186650}\n'
 L['slot_machine_note_e'] = '{object:代码}：777、77777 或 7777777'
 L['slot_machine_vendor_note'] = '为 {object:“试试手气！”游戏机} 购买这些物品。'
@@ -578,28 +580,41 @@ L['and_slimesby'] = '和 {npc:230947}'
 L['inert_plunger_label'] = '无力的马桶搋子？'
 L['exploded_plunger_label'] = '爆炸的马桶搋子'
 
-L['unexploded_fireworks_location'] = '在 {location:尾门公园} 的屋顶上。'
+L['unexploded_fireworks_location'] = '在 {location:聚会公园} 的屋顶上。'
 L['suspicious_book_note'] = '1. {dot:Red} 隐藏在一楼的书架上。尝试收集它，它会飞到楼上的新书架上。\n\n2. {dot:Green} 隐藏在二楼的书架后面。尝试收集它，它会飞到楼上的桌子上。\n\n3. 在三楼的桌子上。最后，收集这本书！'
 L['fireworks_hat_note'] = '尝试抓住帽子，导致它从屋顶飞到这里。'
 L['blackened_dice_note'] = '转动附近的 {object:管道阀门} 以释放骰子。'
-L['lonely_tub_note'] = '拿起附近的 {object:灭火器}（{dot:Blue}）来扑灭 {object:孤独浴缸} 上的火焰。'
-L['impotent_potable_location'] = '在码头下方，靠近 {location:掠夺派对}'
-L['abandoned_toolbox_location'] = '在 {location:废品店} 的屋顶高处。\n\n跟随楼梯到顶部。'
-L['trick_deck_of_cards_location'] = '在 {location:大陆酒店} 内 {npc:231045} 旁边的桌子上。'
+L['lonely_tub_note'] = '拿起附近的 {object:灭火器}（{dot:Blue}）来扑灭 {object:偏僻的澡盆} 上的火焰。'
+L['impotent_potable_location'] = '在码头下方，靠近 {location:谋财聚会}'
+L['abandoned_toolbox_location'] = '在 {location:废渣铺} 的屋顶高处。\n\n跟随楼梯到顶部。'
+L['trick_deck_of_cards_location'] = '在 {location:洋际酒店} 内 {npc:231045} 旁边的桌子上。'
 
-L['ditty_fuzeboy_note'] = '用 {item:234741} 交换宠物。'
-L['angelo_rustbin_note'] = '用 {currency:3220} 交换宠物和 {object:G-99 极速} 自定义选项。'
+L['breakneck_customization'] = 'G-99疾飙飞车'
+
+L['ditty_fuzeboy_note'] = '用 {item:234741} 兑换宠物。'
+L['skedgit_cinderbangs_note'] = '用 {item:234741} 兑换坐骑。\n\n{note:坐骑可以在拍卖行买卖。}'
+L['angelo_rustbin_note'] = '用 {currency:3218} 兑换玩具和一个 {object:G-99疾飙飞车} 自定义外观。兑换的 {item:233557} 有机会获得宠物和坐骑。\n\n用 {currency:3220} 兑换宠物。\n\n{note:收集 {currency:3218} 可以随时进行，但收集 {item:229810} 需要 {faction:2653} 名望达到14级。}'
+L['blair_bass_note'] = '用 {item:227673} 兑换玩具。\n\n{item:227673} 可以从 {object:热砂径流} 渔点中钓到。'
+L['greexit_coarsebub_note'] = '用金币兑换地精财阀幻化装备。\n\n{note:只能购买当前所属财阀相关的物品。}'
+
+L['quartermaster'] = '%s 军需官'
+L['quartermaster_note'] = '使用 {currency:2815} 兑换各种收藏品。'
+
+L['rocco_razzboom_location'] = '{location:废渣铺} 底层。'
+L['lab_assistant_laszly_location'] = '{location:热砂试验室} 深处。'
+L['boatswain_hardee_location'] = '{location:港务局} 一楼。'
+L['shrez_the_scrapper_location'] = '{location:风险广场} 一楼。'
 
 L['options_icons_nine_tenths'] = '{achievement:40948}'
-L['options_icons_nine_tenths_desc'] = '显示 {achievement:40948} 的所有 {object:马夫的自锁箱} 位置。'
+L['options_icons_nine_tenths_desc'] = '显示 {achievement:40948} 的所有 {object:傻瓜式自动锁柜} 位置。'
 L['muffs_auto_locker_label'] = '马夫的自锁箱'
-L['muffs_auto_locker_note'] = '收集所有 5 个 Gorillion 部件并完成 {quest:87406} 以制作 {item:232843}。'
+L['muffs_auto_locker_note'] = '收集所有5个超新猩部件并完成 {quest:87406} 以制作 {item:232843}。'
 L['muffs_auto_locker_suffix'] = '马夫的自锁箱已打开'
 
 L['options_icons_between_the_lines'] = '{achievement:41588}'
 L['options_icons_between_the_lines_desc'] = '显示 {achievement:41588} 的书籍位置。'
-L['a_threatening_letter_location'] = '在 {location:蒸汽轮实验室} 的底层楼梯下。'
-L['gallywixs_notes_location'] = '在 {location:藏宝室} 后面的桌子上。'
+L['a_threatening_letter_location'] = '在 {location:热砂试验室} 的底层楼梯下。'
+L['gallywixs_notes_location'] = '在 {location:囤宝室} 后面的桌子上。'
 
 L['options_icons_can_do_attitude'] = '{achievement:41589}'
 L['options_icons_can_do_attitude_desc'] = '显示 {achievement:41589} 的 {npc:237103} 位置。'
@@ -607,11 +622,27 @@ L['discarded_can_label'] = '{npc:237103}'
 L['discarded_can_note'] = '踢几次 {npc:237103}。'
 L['discarded_can_suffix'] = '罐头被踢'
 
-L['options_icons_scrap_rewards'] = 'S.C.R.A.P. 堆'
-L['options_icons_scrap_rewards_desc'] = '显示 {object:S.C.R.A.P. 堆} 的奖励。'
+L['options_icons_scrap_rewards'] = 'S.C.R.A.P.废料堆'
+L['options_icons_scrap_rewards_desc'] = '显示 {object:S.C.R.A.P.废料堆} 的奖励。'
 L['scrap_heap_suffix'] = 'S.C.R.A.P. 任务完成'
 
 L['options_icons_youre_my_friend_now'] = '{achievement:41708}'
 L['options_icons_youre_my_friend_now_desc'] = '显示 {achievement:41708} 成就中 {npc:239248} 的位置。'
 L['rat_in_building_rail'] = '在建筑物内的栏杆上。'
 L['rat_2nd_floor_trash_can'] = '在建筑物二楼垃圾桶上。'
+
+L['sewer_cheese_label'] = '下水道奶酪'
+L['undermine_undershirt_note'] = '1. 从 {location:罐缸工坊} 下方的下水道中收集 {object:下水道奶酪}，以获得 {spell:1221472} 增益效果。\n\n2. 与附近的 {npc:238661} 互动，用奶酪交换一个 {item:237129}。\n\n3. 将 {item:237129} 带到 {location:黑水码头} 的 {location:港务局} 大楼楼上的 {npc:237412} 处，并交换为 {item:237130}。'
+
+L['undermine_clam_chowder_label'] = '安德麦正宗烹饪法指南'
+L['undermine_clam_chowder_location'] = '在 {location:罐缸工坊} 的小巷中，{npc:226728} 后面的架子上。'
+L['undermine_clam_chowder_note'] = '1. 要收集此食谱，必须首先学会 {item:16767}，该食谱可以从两个 {object:旧世经典} 供应商处以 %s 的价格购买。\n\n{npc:54232} 位于 {location:荆棘谷海角} 的 {location:藏宝海湾}\n\n{npc:48060} 位于 {location:荒芜之地} 的 {location:熔光镇}\n\n2. 一旦学会了旧食谱，打开 {object:安德麦正宗烹饪法指南} 并阅读到最后一页。记下食谱以获得 {item:235800}。'
+
+L['breakneck_race_note'] = '以下推荐的 {object:G-99疾飙飞车} 升级可以让赚取 |cFFFFD700金币|r 变得更容易一些：\n\n%s\n\n%s\n\n%s'
+L['upgrade_the_pozzik_standard'] = '{item:232982}（引擎）：在所有普通和反向 {object:疾飙竞速} 比赛中获得 |cFFCD7F32铜牌|r。'
+L['upgrade_22h_slicks'] = '{item:232985}（轮胎）：由工程师制作并在拍卖行出售。'
+L['upgrade_turbo_handcrank'] = '{item:232984}（涡轮）：从稀有怪物或拍卖行收集并组合所有5个部件。'
+
+L['blazefeather_peacock_note'] = '完成 {quest:83421} 任务线后，与 {npc:226555} 对话并支付 %s 以召唤一只可驯服的 {npc:226561}。'
+L['radioactive_subject_note'] = '使用附近的管道和 {item:237276}、{item:109076}、{item:231099} 或其他跳跃谜题技巧，到达 {location:罐缸工坊} 的 {location:热砂试验室} 建筑屋顶。'
+L['george_the_big_pinch_note'] = '快速点击所有5个 {npc:238189} 以获得 {spell:1219679}，并允许驯服 {npc:233938}。'

@@ -1,18 +1,33 @@
 -- PaladinProtection.lua
--- January 2025
+-- April 2025
 
 if UnitClassBase( "player" ) ~= "PALADIN" then return end
 
 local addon, ns = ...
 local Hekili = _G[ addon ]
 local class, state = Hekili.Class, Hekili.State
-local FindUnitBuffByID = ns.FindUnitBuffByID
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 
 local spec = Hekili:NewSpecialization( 66 )
 local QueenGlyphed = IsSpellKnownOrOverridesKnown
 local strformat = string.format
 
 local GetSpellInfo = ns.GetUnpackedSpellInfo
+local spellwardingFilters = {}
+
+for zoneID, zoneData in pairs( class.spellFilters ) do
+    for npcID, npcData in pairs( zoneData ) do
+        if npcID ~= "name" then
+            for spellID, spellData in pairs( npcData ) do
+                if spellID ~= "name" and spellData.spell_reflection then
+                    spellwardingFilters[ spellID ] = true
+                end
+            end
+        end
+    end
+end
+
+class.spellwardingFilters = spellwardingFilters
 
 spec:RegisterResource( Enum.PowerType.HolyPower )
 spec:RegisterResource( Enum.PowerType.Mana )
@@ -318,36 +333,36 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=26573
     consecration = {
         id = 26573,
-        duration = function() return talent.consecration_in_flame.enabled and 14 or 12 end,
+        duration = function() return 12 + ( talent.consecration_in_flame.enabled and 2 or 0 ) + ( talent.sanctuary.enabled and 4 or 0 ) end,
         tick_time = 1,
         type = "Magic",
         max_stack = 1,
         generate = function( c, type )
-            if type == "buff" and FindUnitBuffByID( "player", 188370 ) then
-                local dropped, expires
+            local cons = GetPlayerAuraBySpellID( 188370 )
 
-                for i = 1, 5 do
-                    local up, name, start, duration = GetTotemInfo( i )
+            if type == "buff" and cons then
+                local expires = 0
+                local duration = class.auras.consecration.duration
 
-                    if up and name == class.abilities.consecration.name then
-                        dropped = start
-                        expires = dropped + duration
-                        break
-                    end
+                if cons.expirationTime == 0 then
+                    expires = action.consecration.lastCast + duration
+                    if talent.undisputed_ruling.enabled then expires = max( expires, action.hammer_of_light.lastCast + duration ) end
+                else
+                    expires = cons.expirationTime
                 end
 
-                if dropped and expires > query_time then
-                    c.expires = expires
-                    c.applied = dropped
-                    c.count = 1
-                    c.caster = "player"
-                    return
-                end
+                c.expires = expires
+                c.applied = expires - duration
+                c.duration = duration
+                c.count = 1
+                c.caster = "player"
+                return
             end
 
             c.count = 0
             c.expires = 0
             c.applied = 0
+
             c.caster = "unknown"
         end
     },
@@ -374,7 +389,10 @@ spec:RegisterAuras( {
     devotion_aura = {
         id = 465,
         duration = 3600,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        shared = "player",
+        friendly = true
     },
     divine_guidance = {
         id = 460822,
@@ -1250,7 +1268,27 @@ spec:RegisterAbilities( {
         talent = "blessing_of_spellwarding",
         startsCombat = false,
         nodebuff = "forbearance",
+		toggle = "defensives",
 
+        usable = function()
+            if not settings.bosp_filter then return true end
+
+            local zone = state.instance_id
+            local npcid = target.npcid or -1
+            local t = debuff.casting
+
+            -- Only use on a spell targeted at the player.
+            if not t.up then
+                return false, "target is not casting"
+            end
+            if not state.target.is_dummy and not class.spellFilters[ t.v1 ] then
+                return false, "spell[" .. t.v1 .. "] in zone[" .. zone .. "] by npc[" .. npcid .. "] is not on filter"
+            end
+            if not UnitIsUnit( "player", t.caster .. "target" ) then
+                return false, "player is not target of cast"
+            end
+            return true
+        end,
         handler = function ()
             applyBuff( "blessing_of_spellwarding" )
             applyDebuff( "player", "forbearance" )
@@ -1532,7 +1570,7 @@ spec:RegisterAbilities( {
                     spec.abilities.consecration.handler()
                     applyBuff( "shield_of_the_righteous", buff.shield_of_the_righteous.remains + 4.5 )
                 end
-                
+
 
                 if buff.hammer_of_light_free.up then
                     removeBuff( "hammer_of_light_free" )
@@ -1814,7 +1852,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up then return 0 end
-            return 3 - ( buff.the_magistrates_judgment.up and 1 or 0 )
+            return 3
         end,
         spendType = "holy_power",
 
@@ -1825,7 +1863,6 @@ spec:RegisterAbilities( {
         handler = function ()
             removeBuff( "bulwark_of_righteous_fury" )
             removeBuff( "divine_purpose" )
-            removeBuff( "the_magistrates_judgment" )
             removeDebuff( "target", "judgment" )
 
             if talent.faiths_armor.enabled then applyBuff( "faiths_armor" ) end
@@ -1874,7 +1911,7 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.divine_purpose.up or buff.shining_light_full.up or buff.royal_decree.up or buff.bastion_of_light.up then return 0 end
-            return 3 - ( buff.the_magistrates_judgment.up and 1 or 0 )
+            return 3
         end,
         spendType = "holy_power",
 
@@ -1888,7 +1925,6 @@ spec:RegisterAbilities( {
             elseif buff.bastion_of_light.up then removeStack( "bastion_of_light" )
             else removeBuff( "shining_light_full" ) end
 
-            removeBuff( "the_magistrates_judgment" )
             gain( 2.9 * stat.spell_power * ( 1 + stat.versatility_atk_mod ), "health" )
             removeBuff( "recompense" )
 
@@ -1906,10 +1942,11 @@ spec:RegisterAbilities( {
     },
 } )
 
+local wog_str = Hekili:GetSpellLinkWithTexture( spec.abilities.word_of_glory.id )
 
 spec:RegisterSetting( "wog_health", 40, {
-    name = "|T133192:0|t Word of Glory Health Threshold",
-    desc = "When set above zero, the addon may recommend |T133192:0|t Word of Glory when your health falls below this percentage.",
+    name = format( "%s Health Threshold", wog_str ),
+    desc = format( "If set above zero, %s may be recommended when your health falls below this percentage.", wog_str ),
     type = "range",
     min = 0,
     max = 100,
@@ -1921,13 +1958,11 @@ spec:RegisterStateExpr( "wog_health", function ()
     return settings.wog_health or 0
 end )
 
+local loh_str = Hekili:GetSpellLinkWithTexture( spec.abilities.lay_on_hands.id )
 
-spec:RegisterSetting( "goak_damage", 40, {
-    name = "|T135919:0|t Guardian of Ancient Kings Damage Threshold",
-    desc = function() return "When set above zero, the addon may recommend |T135919:0|t " .. ( GetSpellInfo( class.abilities.guardian_of_ancient_kings.id ) or "Guardian of Ancient Kings" )
-            .. " when you take this percentage of your maximum health in damage in the past 5 seconds.\n\n"
-            .. "By default, your Defensives toggle must also be enabled."
-        end,
+spec:RegisterSetting( "loh_health", 30, {
+    name = format( "%s Health Threshold", loh_str ),
+    desc = format( "If set above zero, %s may be recommended when your health falls below this percentage.", loh_str ),
     type = "range",
     min = 0,
     max = 100,
@@ -1935,17 +1970,17 @@ spec:RegisterSetting( "goak_damage", 40, {
     width = "full",
 } )
 
-spec:RegisterStateExpr( "goak_damage", function ()
-    return ( settings.goak_damage or 0 ) * health.max * 0.01
+spec:RegisterStateExpr( "loh_health", function ()
+    return settings.loh_health or 0
 end )
 
+local ad_str = Hekili:GetSpellLinkWithTexture( spec.abilities.ardent_defender.id )
 
 spec:RegisterSetting( "ad_damage", 40, {
-    name = "|T135870:0|t Ardent Defender Damage Threshold",
-    desc = function() return "When set above zero, the addon may recommend |T135870:0|t " .. ( GetSpellInfo( class.abilities.ardent_defender.id ) or "Ardent Defender" )
-            .. " when you take this percentage of your maximum health in damage in the past 5 seconds.\n\n"
-            .. "By default, your Defensives toggle must also be enabled."
-        end,
+    name = format( "%s Damage Threshold", ad_str ),
+    desc = format( "If set above zero, %s may be recommended when you take this percentage of your maximum health in damage over 5 seconds.\n\n"
+        .. "It is better to learn to use your defensive abilities proactively before taking damage, but this setting may help you learn (and prevent death).\n\n"
+        .. "By default, your |cFFFFD100Defensives|r toggle must also be enabled.", ad_str ),
     type = "range",
     min = 0,
     max = 100,
@@ -1957,13 +1992,32 @@ spec:RegisterStateExpr( "ad_damage", function ()
     return ( settings.ad_damage or 0 ) * health.max * 0.01
 end )
 
+local goak_str = Hekili:GetSpellLinkWithTexture( spec.abilities.guardian_of_ancient_kings.id )
+
+spec:RegisterSetting( "goak_damage", 40, {
+    name = format( "%s Damage Threshold", goak_str ),
+    desc = format( "If set above zero, %s may be recommended when you take this percentage of your maximum health in damage over 5 seconds.\n\n"
+        .. "It is better to learn to use your defensive abilities proactively before taking damage, but this setting may help you learn (and prevent death).\n\n"
+        .. "By default, your |cFFFFD100Defensives|r toggle must also be enabled.", goak_str ),
+    type = "range",
+    min = 0,
+    max = 100,
+    step = 1,
+    width = "full",
+} )
+
+spec:RegisterStateExpr( "goak_damage", function ()
+    return ( settings.goak_damage or 0 ) * health.max * 0.01
+end )
+
+local ds_str = Hekili:GetSpellLinkWithTexture( spec.abilities.divine_shield.id )
 
 spec:RegisterSetting( "ds_damage", 60, {
-    name = "|T524354:0|t Divine Shield Damage Threshold",
-    desc = function() return "When set above zero, the addon may recommend |T524354:0|t " .. ( GetSpellInfo( class.abilities.divine_shield.id ) or "Divine Shield" )
-            .. " when you take this percentage of your maximum health in damage in the past 5 seconds.\n\n"
-            .. "By default, your Defensives toggle must also be enabled."
-        end,
+    name = format( "%s Damage Threshold", ds_str ),
+    desc = format( "If set above zero, %s may be recommended when you take this percentage of your maximum health in damage over 5 seconds.\n\n"
+        .. "It is better to learn to use your defensive abilities proactively before taking damage, but this setting may help you learn (and prevent death).\n\n"
+        .. "If you are actively tanking for a group and use %s, you will lose threat on all enemies and need to taunt to regain it.\n\n"
+        .. "By default, your |cFFFFD100Defensives|r toggle must also be enabled.", ds_str, spec.abilities.divine_shield.name ),
     type = "range",
     min = 0,
     max = 100,
@@ -1975,13 +2029,22 @@ spec:RegisterStateExpr( "ds_damage", function ()
     return ( settings.ds_damage or 0 ) * health.max * 0.01
 end )
 
+local bosp_str = Hekili:GetSpellLinkWithTexture( spec.abilities.blessing_of_spellwarding.id )
+
+spec:RegisterSetting( "bosp_filter", false, {
+    name = format( "%s: Cast Filter", bosp_str ),
+    desc = format( "If checked, %s may be recommended |cffff0000ONLY|r when your target is casting specific spells on you.\n\n"
+        .. "The spell filter is updated behind the scenes for each season and raid tier.", bosp_str ),
+    type = "toggle",
+    width = "full",
+} )
+
+local sent_str = Hekili:GetSpellLinkWithTexture( 389539 )
 
 spec:RegisterSetting( "sentinel_def", false, {
-    name = strformat( "%s: Use Defensively", Hekili:GetSpellLinkWithTexture( 389539 ) ),
-    desc = function()
-        return strformat( "When enabled, %s is placed on the Defensives toggle by default (rather than Cooldowns) and is recommended based on your Guardian of Ancient Kings "
-            .. "Damage Threshold setting.", Hekili:GetSpellLinkWithTexture( 389539 ) )
-    end,
+    name = strformat( "%s: Use Defensively", sent_str ),
+    desc = format( "If enabled, %s is placed on the |cFFFFD100Defensives|r toggle by default (rather than |cFFFFD100Cooldowns|r) and is recommended based on your %s Damage Threshold Setting.",
+        sent_str, goak_str ),
     type = "toggle",
     width = "full",
 } )
@@ -2013,4 +2076,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Protection Paladin", 20250221, [[Hekili:nVvBVTnos4FlglGxBCjUwYXPPfXb4U9(W2Gdflo3d73SmJeTn3il5tukP(GH)TFZq9gPePKStsBawSUvC4WzgoZZmKC6cRfFBXCpsmDXxThBpDST94rwtMoDS1I5X73rxmFhX9rYA4peq2c)))ikmM6gZcdoU8pi(epwasZE)qIhYlEysKlq3M44D8p)HpSMfVj5HrUHB)aNTnXNGt1nISkg)7UFyX8hsy(XFjyXdQcYy7r2wJ)0KRwmNKeVjmAX85ST)gWzMNhnLCk3DXCK8lhBd)3NpU8VhbJfFC5)KUIg4rJoUmzhYvVJ3F8EGYRU0A8LwwxCCj8RT4xRlTTZ(DkWH)JG(JlxffU94sCjlM64pD54Bas(3uECyeqZwwmBnj1yqYmk(mESYmqMJ)Ev2ViheSnt0kj(MujZ2UfX4JxApbi5BBGX)tcOJ)jyKX9bCT5IDu6ksIFm8h)Qyhov4wmpI(qYJWUdnG8Gp1BX)yrmyVrkk)sbXUeFFN0)IdY5u(7K6huQ6ilMCoSWnm03l85aoYHRohoehXcEKglyW0ZHb8ysGhjYdyamWUik4N(aPUDZJ(uOGdKKiIoZxoH(S1BI5o)vI36TGJyfsNitkjYLeqDapPO6uELmLUHbCkeZK(3uORQwhUdukAC5CFIeXWrX)KFc8JL4BQgqh((axhUFimr3iwmfMtXGJITgTHWDY3UoUS)XLvgdSJXJib7D82XfJp44YEsuzRHQdhuyto7h5LeLfsD3mfwOHIHPSP(sLtlAJU(KTr2NUnYUbBKoTVUnsNLuXgP1cCxBgrnMiRQMOy5GXCFFjlwP(Y3rHWPys0AiSBufV90Dm7IfmIW8COpbJmI45Xhr)oIpLoC1XyP6YhNQF4KDMJXQgdsGPTMfS25zWgSrxiOwv7HKvRgPoxLLDxyoAxvSQsEaBP6yteDlHfaA(TqEMmneinMTLk0ARXI9PHLl22qu1Ccx5S2pmAVUqDtBk8nmQVho14nuNi0yrdt4PBotKW0ypXe4p((6IsAZWKQffoCg1yCrhxUQpq4cGuq8e7J4s)XtAPlyny4UPKXRyqYn)WWmS8IudACNXGyEbjwL8O8lkBP54dJQbfCCjOEw5rZnzOwHkRJIz5QXfrNTVi26HvlS)ruI3(IiptsYqz8GMwXH6kmq1UzxZUzFA2n7Fe2nl9qTVL2TyLQJAeofk)4ryLeYOyTne8oQiPcOjBc937Sl8zA0iOopMllvthNkGc2KfBVljAxiNMQcLBxgweDB5LI6gkXhSg7CJfWyphU2j9tVmXQymqOcqJUavWzveTMy)CyKNcIOzS8yIpM6yflG47ikYBugDPzMLm7SaOMpCH9iBHZ54mnfzXJN9bbr9K8tfNWWXl7agQkX6eyygraVrcCziL4kXvjlZoKUpOouAwMQQUYeAofuh0T1HKhFpPDg5BZP9ecjN9eSuWmGL0VRBUV3ma5YFZ5H7GIr8EpPwvw0Mt1xbFXAQubFK9oqjdBGWyEk(AX52AeD1DdwsexPS0vjqPsW58ed5KwbgMuzTR3OTKVxUOLhHZDVRpnV8kC9AeNuyp2q2ULgvuKtkCMCvG2kiFKhPcOyWga5E4Q1lQMCQoX1kfJUNkW23hPYOrt1NsfKMs1UIK3mmlI6VBnucPJThbtqbgYPfYBgimWkVe(JGNf6CIYxos8WS4vbzzv1VoH5b(G0CQkLSs1Q1AWRjuwsMBygCog6GcgkpGZK7JIWNXVmzYmu1azdsrcxNDPxMwyuPnrzNudLomWrTyVBMKmN7Hu13tuHJYjzAi)Vz0NUEidOC)YYzEiX)zs0JiDL6YQKO9fg9z50xw(GWLCsxJenJO0RvHadDk3TntNCTdD1oOEylrnL0iUuk8BAgcr4Ms9CiCoCwE07ltA7OaCBUH1yzT6c6R5q8P3psz(ALkTOWzn(nx6S7Q05gLWjqwoOCZi2JuH49tj1Kvl5MYsJxaQLfjIq3l0FLJitnNeiG(9yhs0ws6vab8HtCJaR(ZuYUWaPZFLMatEWIKxd0oQCoQRBEJqmAhVnIQx2Ia6jxdeE9wk3)Az4HUBuYAQmTY3Qsf6mJT2CY9seQ6JxlJKgGglZqKdKZj(YcuMuCezJQsNaCSmJl(ZsA1a8ygw8vuiTpfHud(JDv4XUbGyBg261sZM0jxb7wqYEDfK67Y2TCzXVcRVDZBGMRYTx3lsTkKG4DtJy7sh9lacnwoSpf5ikXxCC53OB35JVSiFtyIpu4ZUiwiS2S)h(QNawAmrCBnhxohDkHzIVf5VN6wcUR7bSy8IErkegdE6dJI1qH30)VdYmwO3Vr89bIgjuwZLp3dH2ltiP63xjtLTzy2bf2mwW2qECAbYkv3P9zjW7Cm7ynDCNnRS2IcZv3Q8O(SNOrD5if2MXURN3vKhlRk2MYUzFJCgRk(9QjTS)K(eHQXQQZzYy55u1TUcTTG1y4wbtlPiVU9AHHkNMAqBrkQLoKQJRWxnw)rTA8gjR)quYbEQQUz0LxIhZeZygMTOnPsMdlRCKnPYhR822iBUwXPW4lAlUEhqv54iyRG8rllazyo4thiUsW5I2EGTDxye41Vkew7FT4H7)vicM(Ftyr4UkpeRGMKehUv0bilHkRH9d(OJ3)VGA0ab(ZacuyaSAIH)183hq99rbEghknACTHhy99HDKPYpVRbgxHKoX86VWCnMRLKoXCnpRSgrxhnVPSVvgR59Y1yvoB5(CzFhyCJUF1gwrAV(hptFHUDMy(RsaJzj)828EJzFRm(Cdw6OCFUSVdm(SGupEVg0(SzXpnWER23Qe3uAt7t5eOylF9yCblTBF7rpl1qGIS(6XyXMZxe7liNUwTbirZU4kJDx81RVg7SUWvmSbR(LFjNq(OIS2)TzFaRPal7GdL4eZwXCt7EP7BJEI3FL3Pt3RJoLg3tpjvBIjTePwqJEAKlQrpf5DoWfyNLnlZ4w2(axiA)SzwxWwntFGtFZGJ9h0ZmS8HdneHF3SgGTgE4qp95qEjQOTSkARxfRRfsQyD9Vuf1Of31G6lRHv60X7l0r0Lt07SYFPARLMQZsnfCR0MVs82jnh1RDkZFCujXVqR51D4XTIgBRV7MzdMi9nZ3Hd1pX8DFCA9pdNAtRWOEtT6Pj91Lr50WD)QDwvAHoC6d0n)St4DRfi1dWBD)oRXdhQNNs3UBDZMHBd4Uzt0ZSQTcNzf8WHcVwdc)SjJvblLxiwWtHpsDOFho3g2qm4IK6Qio8Mdlyvc)mSWfTCNPjMjD3DJSRyz8bWcd2mb8qA7o0p)uRg7lQ(dQ36rZgF4G8RDu2Yrdnijkh8fx)Ygs42YMD60wRSVR9i3MKdLUSi1oyQxM6NBIQ3ni3v0)s97L51xRdqYKUM6(dvfROZpY(CrxFysxmYA59xncVu)58Zu8ZBlhuAR3Srnz9FNOavwZwS6fnp0ptrwUxFQefAnvggjplhmNImzkVMrADuzp0Qihw9hy92zzpUQw(wPtkkq5AQ7EU1UiO3qx9CRfKn1ajkq917JNBTgbjPu6FNBT1k6LZvK3tUHyMnfl4P5EZzy)wUY0tDnTYSkpOT5BUB8zTGnK8yqV2B2gjtDlnAZmq(6PDRpV5Aoz)YUv6WK0SFT0gnqfg9ltlD7eTctLlJgLHETW8KD97ARX0VB6Zm9YMH3vOiGt3dT1Tv82jzBCnusJKGO(wi)4x)kpwYRHayFscWBfuQ8zJl0kTDIYSP6DruEflKfkV)1mLghboOykaBLEnbkWxZ3ZrsV2KLQFhQ(w(edA9SRC(gjAKouXPf5Ql)r)2AvKtnaCWl1bCYqJze7Cu4pbHqtO4lwkSpzPWu84PUl(sLC942VbWLDDV4LUqqztWPLFx08dDoO)mkrQkUBVk9rrxkKRHEMOVMB)z2vqbMDAtakhaQRQ1x6(SYhi3leDW39uIN6IlQwAQDfdzybAUDG(dAR5gWlRQr)HYSw6BPHzMYzvX1RdUiN5E4jyp0lOkxkV40ILvbRVmc17OVKK8BxfijHtDyX0T8le)7Dm)IxfLanW8)2)Mz1x71lIvDOEITzxngYd0eRSvUmF1xEj)WJ1wMH4fzBMPdpfL1UnL1(1tzTuUw)xjLv0hjl())]] )
+spec:RegisterPack( "Protection Paladin", 20250425, [[Hekili:nZvBVnUns4FlbfWRn6ghl5KSzxeBG2E4W1f9wS4sl2pCOwM2I2MnYs(eLs2ae4F73mK6fsjsjzhVPlqrtS1OHZB8HZmC2mZz2Vp7oFscD2NCh5E1OlDVAOJJ71UZUl5PD0z3TJS8EYA4xcjBH))NJJsOltyrH7N)zsaXNfI08uqeXhzfpknEjq3MKKD8pCXfRzjBsxmCz02l4STPbe8vxgtwLGFE5fZUBrkli5xdNTWOC48(z3rst2efp7U7yB)fGZmFFQKCkF5S7qYpF0LN7E1h2p)FY(6(5)C0DFE)8vaBPX7)4(pMtXiKcKjW))PWLLpYf(p4r)umW4K9Z)h0v0qF4DNNUdfj)mkV8CNrN74829ZHF6k(PZ5UUz)ez(FiOhw74OTzlv(Ro69Np6gGK)dLNefd0SLLWwtKwssMfnGXt0EdK54pVm7N3uObsrRK4BKsMRBlIX7o3DmqYVVbE(xiGo(fWdHorCT5IOb6ksAqc8RFseDifUz3ftxKEp4APHKfbu)z)8SeWzHuu(nfeVKee4j)GhYzj)9KbrLQoYIXhdlwgff4h9yih5WLhdhsIzH3ttem4QJHb8esOpj2hya8GDXuiiFbPUDZN(qKGdK0yIjZxoHbS1Bs4E)vQ)6TqGyfshRskjEjjK6brsX1P8svkxgfYPWgo5N0ORQwhTdukAs57(ajMHpf)TGu4hoa)IzW2kgPWaomXz4gc3l3JSFEV9ZR8mWuLmKe(KN)oU4593p)mfQCnq1ZpRXMC2p0pnoBxZ0jASWafdKSP(sLtRqh1di84a2GhpicDRF66d2g5A0g52GnYK2x3gzYsQzJmAbM2Mr0GjY5GmrjQBgZJ9vSyLgd(okSDkHeVg22nSs0U0D6winXeMVh9b4jdj((8H0VI4tYhx9zmPI(URm)40D23JvDpibET1SW1EpcgOnM2cAu1wKUA1q93vBz3fLJ2vfRQKhG)2eBIPBjSqqZVfoNjtdbstyBPcT2zKWjoOCX2gHQMx0kV1brXpzARUnNcFdJg4JVAYgQxmASOrPCPZzScMg7bMa)jiW0UK2mmsTOiA0QgJl6OYvDbHlasbXt4hXL(Dh0sxWAWWDtjJxXGd3cIIYWYloAWq4C(RKag5cbH7LdYxtayHH0yVykNfWOHlPIWISDtwyrdhRMjzovIBYbHgwBd6(5Gn0jhpPjVXkuk80S9xoQaFO9fX1mWEHtoMs8FQy7TnjzGkIutRieVJ)cxXM0qUez04Ey2n3xd7MJzW(xn7MRmMViBMgI5lZmP0kUCdcDW1GVxLcqkq(qIh5jrQq7Y6L(d3s(k8spTmGMd6GRNHq(k7J2q2Uf2iLVDXBvmLQHnMT2cI5Bi3tfqyBOOXIRJIQBnRtCnak6tInQjpfRZOHxzogaKMsRwfjV5dsG4Gn7wdaREU(emrbWSDv5r0Ka8unGv(P879apMhs1WmwjIb6vqwgUY6uMpbrEYxWcjRuTA9KPAcLJI5gEdohJhrbdLhiyA59cq2rVmzY(5w9vnifhu5TtwFAuCPnrZtAGspgeww47MOiZ5rivJ9eBj1oF3Y5MMoBSTxruwBmBx2bTPWU01qLHPObnAfOYyLB(XKh7)7F5lqq)LFEaFhbQZJhLaLZraDyB6YnYFBxe4yGvE)8hHY8IsbaGhXdrrwcQn8PnuSy0C6uTWTP9AGJO8LRlOWP8Cm6jk4jVDrpI1u)J7NNJJ4P(9tLr6L4MFBDVIuMmK)WH5EalkN5tLEgd(O3IM2OaPfa)DHQAZhLebwt4NKIpbAp(cg4m6rdbDMlDTadfDvqzDoyFjuxJ3IOWu(qyvEKe)OOZaECkHdjD56D5ULhQpTIlTtVJmoO3X5vrx6nwbno7GuYVTbGNk8L3Fahw31K9H0UfcOeDpnaStID3LA3Q04NkG5NKtVQF8wrbdMoP3zutoOwwZSy1mhJD6kCpyGDhvB9ACezzrJHAUfVGqYTxCB5bHuFpcNdfylZ2)qKGBZnKwZ0ZuAf1cjCAjxQxtXmFTKIRq6APm6tG052vPBzCkN4dMroKn89uH4zppib3Yk9TidMSnbiQLLUUHm1EImH0VM4rI3sKDbb4dNSmg0)hPKDrHkGrYSvvFyrMQ9n(u1esVUztIoGBZfKxTFdID95AGma8A1EQugPAQPkoVtLw1gluHo7W65O00vSquQXY5RNzPP9Zhc4zdgUmbitrX0YjHpWckLbJf8yhgSEmHWgNH2j9v51DnrVyJA(c3ounNjPZogsZfovAoQ)8U4tCBS4OtfcX4I0sSQkDcQ1T9(59AlT1rCDBSmQtLq6EicPbGxx7Dr8SUx)OPik79i8me0ReQwxeRGH7AhaQFH8Xc3gXtK5XPLdIXEwJ9kkR6(oANZY1Qi)rDZIpnG9anUlvw7wf6RROpnH1mEKkwELarD48XoMpIOs1w6VJwR6RgcvH2wYYaSWIZku6MuzjR5zxwBtrHhnVl8ngvQFOQuhxHxPOTIxk0ThJIfE)Ig4pw7s9QgKxr1TVD)LeXmULU8B0I2KkzFBzL6iusSQYfFIS5gTGcRx3zI29o34fvLqcVx0IKEfyzg3ooS4U80QTDOpKiYswsURTasml5MDPXqn)Y4nfFEd14z76awO04nbacSb1h(CLUu8F)x07zbS)eN(GLrquyOF(usWY7Pq24smNXXUoKf(IGuaFHkIJeSIpC)8FjLNGJvWUyweyXyyoiGpz)8uonNRYosefR02jOkBGWvusskKCMwrP0eSHu8HlI478KYHWXAp8GscGKV2TmreE8y0Ap5x9Y8fkhDzeBOP9N2tdiB)gKAkjWt0LDn4b1ynwi4DWf2NSLSM6DLSwCFE2xKd6xCJeIbwb2dlNxfDLyDkglqe3wgS9MHuEVWoRrwMDqg8P)i5Lwwv11Ebu1TJ20bDBDe5(VN0oR8f1u7aGcHKdiPEC4nGLmORo3V3ma5YpQV2bO7GIr8)EsTQSOO2zpDUk4lbrBYWxk5xa5jVOqi1MqF(SSXGaohLJpmBc2g9EaNGehkIEUtmWvST7IIbMUcHgFtXid9gi9q6)lfQA1hBJpEDzKuaKvm7zyLEWH9a07h)nqNHtd)aachfcRM4XVj)sd1hBJ3iBG8BSmvhWJ7781bDKPQtDIfgxHKoX86d(snMBKKoXCdt7Ibr3enFtzFRm2Wy8yWQC0Y9XY(oW4gd)Q9ynP96xFM(cd7SX8tYgg7s(X58(gZ(wz8XUzPJY9XY(oW4JcsD)hnG2N9w8ddS3TDxL42IAYpLtGMT80X4cwoUD3JzwAGanz90XyHZ5xf(fKtxRp61OzhNK3iOie6S7(HFaQKOJZX(IGOfxOEJIx8tcg)zzvsp9Bi7VyNCI5ZVBqmpf8T3)rCP(JDsXxo72YsOWz3gu()nu2l8jNXGFdYTy)8Zbb)g)XV7sXSPJVTup4dlsQ4hNCbMqJO0qitQeguhKCMpBLEI)FLpFOF0eDAt0SzsQoDNgjsVyEZ0OwqVzkYN2P3Itv3KmFF5ip9wXC5oX5TSvtmVVUNDS7E9pZ(Pgp)CdaqtN0aQ6GNF(mZhX9surxvv01SkwxluuX66FPkAqlM2G6RQHvMp8pwOJyiN4FubQFt1zUxQZk)RLOvAZxjE7KMdk3oL5ZhNI4xO186b8OROX5DE6exWezEkNF(56DlE67UQ(xdf5yuy0VLkZ0iRtcLtlxSLX3QYSfJVEFtVFw3nV1bK6(4eao1z0GbM5PYD(v3SzPRytNm2mZQoJW2vWNFUiQ1IWpz8iDWs1fIf(q09up6xHIgXw7GlImur04jpw4Qu(ryHlMfzBVyM0n9g1qXY9halSyZeWdYc371ABn71VEt0Mm65Nn38mWZcMPV)6ZOfdKT(Mkc)m0oslSrRlG47w24GBlBk5HzjZ(EJTGCGf5qRBisVSTEo2lpaOExBMw0NXEN13sNAYKUM6sJUIv0HMSVUO7m20fRSwn61GWR0hT)of)82NHsB9Mc2K1)7efOYA2IvVOjF)DkYQ9IRYUWYw3PcwMFwo8UfNxRndeYSfZgXcXj11hP9BNKno7g5BLr6RalVPXy)w3In)wgF9BDGCgSqI2bA1hy9BDgchfRnO636Au0lFxXP7Qt(9KRW06AEi0h0RLlf9qxtNmRYcJtz(0rh1c2WrK9pR9P(uXu3YeFobKVZm66lM9w8OZx558(qTjnRb9K79nmd496RC43pAyEFNo5kOuHtUjFGmHKVNhp7tSlOdZ1C7odHVOvhwVdXrCWQzNuKtD8sRBrpWJo6wnmJLPH3YawdL60R0(F7yJctLjcPmGPPjPUxxNI6EDtFMyw2SmCpfNjUWWSN1Tv82XzoUgQTsrqwOnqsV(RFLjw6uiaU2faSW1yQFkS64yCfa5w9HYsz7yG8ljhi1w3vORghF6jxzoWrBaZqwOnAAt0M2zauqMzuLbKgq0m895PaDTn7xVo0CalOBvM3zJ0O0ZJUUFUPPC(GbOSO0TmiZhLxsD4b7LfpnXCQN2K4UAISNBCV2Mj5df5Q)lDN74bwZ2VZWx)niegWWEXsH7blfM89hrvavrOoRYWa3LAvAyWF7zOnUtUeQHQtMf44uiVKwhxZx8EYoeRDiBo6suJrAQ1nTSqcdncRx)2MqxSRZngpuIVBEUCTM7ALqVoeICK(WdWEywq1UDnrJrkZI08bU6x2wjj5xtcqskN6XsOBZU)eZ)jSOqAn8x)Ig5k)TI)4eKFVmIJQ6B)pNbtC6z82hWt91B1XKlhH120aRC1URp97noVRl1wMb49CzNPdoeL1TnL190PSoA363jszf)7lD5SpD91I5HB2))d]] )

@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 83.0 - 2025-04-22
+### Added
+- Nightfall event achievements (4)
+- Dastardly Duos event achievements (19)
+- Horrific Visions Revisited achievements (29)
+
+## 82.4 - 2025-04-14
+### Fixed
+- The default Blizzard Achievements tab should once again know all its categories
+- Tasks should no longer be empty (dev note: this is a "temporary" fix until I have more time to find the source of the issue)
+
+## 82.3 - 2025-03-01
+### Added
+- Addon category
+
 ## 82.2 - 2025-02-26
 ### Fixed
 - Another potential memory leak addressed

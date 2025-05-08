@@ -25,4 +25,12 @@ MVC:Controller("AddonFactory.Tooltip", {
 	ShowSpellInfo = function(frame, owner, spellID, anchor)
 		frame:ShowLink(owner, format("spell:%d", spellID), anchor)
 	end,
+	
+	ShowAtCursor = function(frame, owner, callback)
+		frame:SetOwner(owner, "ANCHOR_CURSOR")
+		frame:ClearLines()
+		callback(frame)
+		frame:Show()
+	end,
+	
 })

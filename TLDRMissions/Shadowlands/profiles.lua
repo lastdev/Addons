@@ -5,7 +5,6 @@ local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 
-
 function addon:RefreshProfile()
     local defaults = {
         profile = {

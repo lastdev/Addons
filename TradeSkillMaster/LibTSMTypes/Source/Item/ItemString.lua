@@ -292,6 +292,9 @@ function private.ToItemString(item)
 	end
 
 	local result = strmatch(item, "^\124cff[0-9a-z]+\124[Hh](.+)\124h%[.+%]\124h\124r$")
+	if not result then
+		result = strmatch(item, "^\124cnIQ[0-9]:\124[Hh](.+)\124h%[.+%]\124h\124r$")
+	end
 	if result then
 		-- it was a full item link which we've extracted the itemString from
 		item = result

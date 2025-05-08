@@ -171,6 +171,23 @@ function TeleporterSpell:CanUse()
 		haveSpell = GetItemCount( spellId ) > 0 or haveToy
 	else
 		haveSpell = IsSpellKnown( spellId )
+
+		if not haveSpell then
+			if C_MountJournal then
+				local mountId = C_MountJournal.GetMountFromSpell(spellId)
+				if mountId then
+					local _, _,_,_,isUsable = C_MountJournal.GetMountInfoByID(mountId)
+					haveSpell = isUsable
+				end
+			end
+			if C_PetJournal then
+				local petId, petGuid = C_PetJournal.FindPetIDByName(self.spellName)
+				if petId and C_PetJournal.PetIsSummonable(petGuid) then
+					haveSpell = true
+					self.isPet = true
+				end
+			end
+		end
 	end
 
 	if condition and not CustomizeSpells then
@@ -207,7 +224,9 @@ function TeleporterSpell:CanUse()
 	end
 
 	if not CustomizeSpells and not spell:IsVisible() then
-		haveSpell = false
+		if not TeleporterGetSearchString() or not TeleporterGetOption("searchHidden") then
+			haveSpell = false
+		end
 	end
 
 	return haveSpell
@@ -286,18 +305,20 @@ function TeleporterSpell:MatchesSearch(searchString)
 	return string.find(string.lower(self.spellName), searchLower) or string.find(string.lower(self.zone), searchLower)
 end
 
--- dungeonID from: https://warcraft.wiki.gg/wiki/LfgDungeonID, or using GetLFGDungeonInfo().
+-- Use this script in-game to get the dungeon IDs:
+-- /script for i=1,3000 do d=GetLFGDungeonInfo(i);if d=="Dungeon Name" then print(i); end;end
 function TeleporterSpell:IsSeasonDungeon()
 	-- Dragonflight Season 4
 	return tContains({
-		2654,	-- Ara-Kara, City of Echoes
-		2652,	-- City of Threads
-		2693,	-- The Stonevault
-		2719,	-- The Dawnbreaker
-		2120,	-- Mists of Tirna Scithe
-		2123,	-- The Necrotic Wake
-		1700,	-- Siege of Boralus
-		304,	-- Grim Batol
+		2791,	-- Operation: Floodgate
+		2689,	-- Cinderbrew Meadery
+		2653,	-- The Rookery
+		2655,	-- Darkflame Cleft
+		2695,	-- Priory of the Sacred Flame
+		1707,	-- The MOTHERLODE!!
+		2124,	-- Theater of Pain
+		2006,	-- Operation: Mechagon
+		2779,	-- Liberation of Undermine
 	}, self.dungeonID)
 end
 

@@ -967,6 +967,8 @@ do  -- Map
                 end
             end);
 
+            --Note: if the player enters an unmapped area like The Great Sea then re-enter a regular zone
+            --GetBestMapForUnit will still return the continent mapID when ZONE_CHANGED_NEW_AREA triggers
             controller:RegisterEvent("ZONE_CHANGED_NEW_AREA");
             controller:RegisterEvent("PLAYER_ENTERING_WORLD");
         end
@@ -1421,7 +1423,8 @@ do  -- Currency
         end
         local currencyInfo = GetCurrencyInfo(currencyID);
         local quantity = currencyInfo and (currencyInfo.useTotalEarnedForMaxQty and currencyInfo.totalEarned or currencyInfo.quantity);
-        return quantity and currencyInfo.maxQuantity > 0 and rewardQuantity + quantity > currencyInfo.maxQuantity, quantity
+        local overflow = quantity and currencyInfo.maxQuantity > 0 and rewardQuantity + quantity > currencyInfo.maxQuantity;
+        return overflow, quantity, currencyInfo.useTotalEarnedForMaxQty, currencyInfo.maxQuantity
     end
     API.WillCurrencyRewardOverflow = WillCurrencyRewardOverflow;
 
@@ -1728,7 +1731,7 @@ do  -- Reputation
                 factionStandingtext = L["Renown Level Label"] .. majorFactionData.renownLevel;
 
                 if isParagon then
-                    local totalEarned, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID);
+                    local totalEarned, threshold, rewardQuestID, hasRewardPending = GetFactionParagonInfo(factionID);
                     if totalEarned and threshold and threshold ~= 0 then
                         local paragonLevel = floor(totalEarned / threshold);
                         local currentValue = totalEarned - paragonLevel * threshold;
@@ -2530,6 +2533,21 @@ do  -- Chat Message
         print(ADDON_ICON.." |cffb8c8d1Plumber:|r "..msg);
     end
     API.PrintMessage = PrintMessage;
+
+    function API.DisplayErrorMessage(msg)
+        if not msg then return end;
+        local messageType = 0;
+        UIErrorsFrame:TryDisplayMessage(messageType, (ADDON_ICON.." |cffb8c8d1Plumber:|r ")..msg, RED_FONT_COLOR:GetRGB());
+    end
+
+    function API.CheckAndDisplayErrorIfInCombat()
+        if InCombatLockdown() then
+            API.DisplayErrorMessage(L["Error Show UI In Combat"]);
+            return true
+        else
+            return false
+        end
+    end
 end
 
 do  -- Custom Hyperlink ItemRef
@@ -2617,12 +2635,25 @@ do  -- 11.0 Menu Formatter
                     elementDescription = rootDescription:CreateCheckbox(info.name, info.IsSelected, info.ToggleSelected);
                 end
 
+                if info.IsEnabledFunc then
+                    local enabled = info.IsEnabledFunc();
+                    elementDescription:SetEnabled(enabled);
+                end
+
                 if info.tooltip then
                     elementDescription:SetTooltip(function(tooltip, elementDescription)
-                        GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                        GameTooltip_AddNormalLine(tooltip, info.tooltip);
                         --GameTooltip_AddInstructionLine(tooltip, "Test Tooltip Instruction");
                         --GameTooltip_AddErrorLine(tooltip, "Test Tooltip Colored Line");
+                        if info.DynamicTooltipFunc then
+                            local text, r, g, b = info.DynamicTooltipFunc();
+                            if text then
+                                GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                                tooltip:AddLine(text, r, g, b, true);
+                            end
+                        else
+                            GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                            GameTooltip_AddNormalLine(tooltip, info.tooltip);
+                        end
                     end);
                 end
 
@@ -2757,12 +2788,13 @@ do  -- Macro Util
                 local _, _, _, _, _, classID, subClassID = WoWAPI.GetItemInfoInstant(arg1);
 
                 --always return true for conumable items in case player needs to restock
-                if classID == 0 then
-                    return true
-                end
+                --if classID == 0 then
+                --    return true
+                --end
+                local isConsumable = classID == 0;
 
                 local count = WoWAPI.GetItemCount(arg1, true, true, true, true);
-                return count > 0
+                return count > 0, isConsumable
             end
         end
 
@@ -2784,6 +2816,103 @@ do  -- Macro Util
             return name, petGUID ~= nil
         else
             return name
+        end
+    end
+end
+
+do  --Professions
+    --/dump ProfessionsBook_GetSpellBookItemSlot(GetMouseFoci()[1]) --Used on ProfessionsBookFrame SpellButton
+
+    local GetProfessions = GetProfessions;
+    local GetProfessionInfo = GetProfessionInfo;
+    local GetSpellBookItemType = (C_SpellBook and C_SpellBook.GetSpellBookItemType) or GetSpellBookItemInfo;
+
+    function API.GetProfessionSpellInfo(professionOrderIndex)
+        local prof1, prof2, archaeology, fishing, cooking = GetProfessions();
+        local index;
+
+        if professionOrderIndex == 2 then
+            index = prof2;
+        else
+            index = prof1;
+        end
+
+        if not index then return end;
+
+        local name, texture, rank, maxRank, numSpells, spellOffset, skillLine, rankModifier, specializationIndex, specializationOffset, skillLineName = GetProfessionInfo(index);
+        if not spellOffset then return end;
+
+        local buttonID = 1;     --PrimaryProfessionSpellButtonBottom
+        local slotIndex = spellOffset + buttonID;
+        local activeSpellBank = 0;  --Enum.SpellBookSpellBank.Player
+        local itemType, actionID, spellID = GetSpellBookItemType(slotIndex, activeSpellBank);
+
+        --Classic
+        if not spellID then
+            spellID = actionID;
+        end
+
+        local tbl = {
+            spellID = spellID,
+            texture = texture,
+            name = name,
+            slotIndex = slotIndex,
+            activeSpellBank = activeSpellBank,
+            skillLine = skillLine,
+        };
+
+        return tbl
+    end
+
+    if C_TradeSkillUI and C_TradeSkillUI.OpenTradeSkill then
+        --Retail
+        function API.OpenProfessionFrame(professionOrderIndex)
+            local info = API.GetProfessionSpellInfo(professionOrderIndex);
+            if info then
+                local currBaseProfessionInfo = C_TradeSkillUI.GetBaseProfessionInfo();
+                if (not currBaseProfessionInfo) or (currBaseProfessionInfo.professionID ~= info.skillLine) then
+                    C_TradeSkillUI.OpenTradeSkill(info.skillLine);
+                    --C_SpellBook.CastSpellBookItem(info.slotIndex, info.activeSpellBank);
+                else
+                    C_TradeSkillUI.CloseTradeSkill();
+                end
+            end
+        end
+    else
+        --Classic
+        function API.OpenProfessionFrame(professionOrderIndex)
+            local info = API.GetProfessionSpellInfo(professionOrderIndex);
+            if info then
+                CastSpell(info.slotIndex, "professions");
+            end
+        end
+    end
+    PlumberGlobals.OpenProfessionFrame = API.OpenProfessionFrame;
+end
+
+do  --Addon Skin
+    local AddOnSkinHandler = {
+        ElvUI = {
+            global = "ElvUI",
+            root = function() local E = ElvUI[1]; return E:GetModule("Skins") end,
+            handlerKey = {
+                editbox = "HandleEditBox";
+            };
+        },
+    };
+
+    function API.SetupSkinExternal(object)
+        local objectType = object:GetObjectType();
+        objectType = string.lower(objectType);
+
+        for addOnName, v in pairs(AddOnSkinHandler) do
+            if _G[v.global] then
+                local root = v.root();
+                if v.handlerKey[objectType] then
+                    root[v.handlerKey[objectType]](root, object);
+                    return true, addOnName
+                end
+            end
         end
     end
 end

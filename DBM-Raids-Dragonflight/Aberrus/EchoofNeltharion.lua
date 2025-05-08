@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2523, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(201668)
 mod:SetEncounterID(2684)
 mod:SetUsedIcons(6)
@@ -138,7 +138,7 @@ end
 local function fixBrokenHeartTimer(self)
 	self.vb.volcanicCount = self.vb.volcanicCount + 1
 	local timer = volcanicP2Timers[self.vb.volcanicCount+1]
-	if timer then
+	if timer and timer > 0 then
 		timerVolcanicHeartCD:Start(timer-5, self.vb.volcanicCount+1)
 	end
 end
@@ -301,7 +301,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			--21.3, 15.7, 17.0, 17.0, 17.3, 16.7, 19.4, 14.5
 			self:Unschedule(fixBrokenHeartTimer)
 			local timer = self:IsLFR() and volcanicP2LFRTimers[self.vb.volcanicCount+1] or volcanicP2Timers[self.vb.volcanicCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerVolcanicHeartCD:Start(timer, self.vb.volcanicCount+1)
 				self:Schedule(timer+5, fixBrokenHeartTimer, self)--Should only be needed for 5-6th cast, but letting it run for all for good measure
 			end
@@ -317,12 +317,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:IsMythic() then
 			if self.vb.phase == 1 then
 				local timer = mythicTwistedP1Timers[self.vb.twistedEarthCount+1]
-				if timer then
+				if timer and timer > 0 then
 					timerTwistedEarthCD:Start(timer, self.vb.twistedEarthCount+1)
 				end
 			else
 				local timer = mythicTwistedP2Timers[self.vb.twistedEarthCount+1]
-				if timer then
+				if timer and timer > 0 then
 					timerTwistedEarthCD:Start(timer, self.vb.twistedEarthCount+1)
 				end
 			end

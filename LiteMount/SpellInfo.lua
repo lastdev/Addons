@@ -57,7 +57,7 @@ LM.SPELL.AQUATIC_FORM_CLASSIC = 1066
 LM.SPELL.SOAR = 369536
 LM.SPELL.FLIGHT_STYLE_SKYRIDING = 404464
 LM.SPELL.FLIGHT_STYLE_STEADY_FLIGHT = 404468
-LM.SPELL.G_99_BREAKNECK = 460013
+LM.SPELL.G_99_BREAKNECK = 1215279
 
 LM.ITEM = { }
 LM.ITEM.MAGIC_BROOM = 37011
@@ -268,6 +268,16 @@ LM.MOUNT_TYPE_INFO = {
             FLY = true,
             DRAGONRIDING = true,
         },
+    },
+    [446] = {
+        -- Unstable Rocket whatever that is
+        name = C_MountJournal.GetMountInfoByID(1796),
+        skip = true,
+    },
+    [447] = {
+        -- Unstable Rocket whatever that is
+        name = C_MountJournal.GetMountInfoByID(1796),
+        skip = true,
     },
 }
 

@@ -86,8 +86,12 @@ DBT.DefaultOptions = {
 	Bar7CustomInline = true,
 	-- Variance
 	VarianceEnabled = true,
+	VarColorR = 1,
+	VarColorG = 1,
+	VarColorB = 1,
 	VarianceAlpha = 0.5,
 	VarianceBehavior = "ZeroAtMinTimerAndNeg",
+	VarianceTexture = "Interface\\AddOns\\DBM-StatusBarTimers\\textures\\default.blp",
 	-- Small bar
 	BarXOffset = 0,
 	BarYOffset = 0,
@@ -279,10 +283,10 @@ do
 		varianceTex:SetPoint("RIGHT", bar, "RIGHT")
 		varianceTex:SetPoint("TOPRIGHT", bar, "TOPRIGHT")
 		varianceTex:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT")
-		varianceTex:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		varianceTex:SetTexture(self.Options.VarianceTexture)
 		varianceTex:SetWidth(20)
 		varianceTex:SetBlendMode("ADD")
-		varianceTex:SetAlpha(0.5)
+		varianceTex:SetVertexColor(1, 1, 1, 0.5)
 
 		local varianceTexBorder = bar:CreateTexture("$parentVarianceBorder", "OVERLAY")
 		varianceTexBorder:SetVertexColor(0, 0, 0, 1)
@@ -346,11 +350,11 @@ do
 			newBar.lastUpdate = GetTime()
 			newBar.huge = huge or nil
 			newBar.paused = nil
-			newBar.keep = keep
 			newBar.minTimer = varianceMinTimer or nil
 			newBar.varianceDuration = varianceDuration or 0
 			newBar.hasVariance = varianceMinTimer and true or false
 			newBar:SetTimer(timer) -- This can kill the timer and the timer methods don't like dead timers
+			newBar.keep = keep -- keep this after SetTimer, not before, otherwise the bar will turn dead if Debug mode enabled and switching from var to non-var, since Update(0) will Cancel the timer
 			if newBar.dead then
 				return
 			end
@@ -417,6 +421,7 @@ do
 				}, mt)
 				newFrame.obj = newBar
 			end
+			newBar.callback = nil
 			self.numBars = self.numBars + 1
 			-- Bars that start huge by config (important color type or huge flag)
 			-- These are never resized to small
@@ -895,7 +900,8 @@ function barPrototype:SetVariance()
 			varianceTexBorder:SetPoint("BOTTOMRIGHT", varianceTex, "BOTTOMRIGHT", 1, 0)
 		end
 
-		varianceTex:SetAlpha(DBT.Options.VarianceAlpha)
+		varianceTex:SetVertexColor(DBT.Options.VarColorR, DBT.Options.VarColorG, DBT.Options.VarColorB, DBT.Options.VarianceAlpha)
+		varianceTex:SetTexture(DBT.Options.VarianceTexture)
 
 		varianceTex:Show()
 		varianceTexBorder:Show()
@@ -1100,6 +1106,9 @@ function barPrototype:Update(elapsed)
 		self:Enlarge()
 	end
 	DBT:UpdateBars()
+	if self.callback then
+		self:callback("OnUpdate", elapsed, timerValue, totaltimeValue)
+	end
 end
 
 function barPrototype:RemoveFromList()
@@ -1109,6 +1118,9 @@ function barPrototype:RemoveFromList()
 end
 
 function barPrototype:Cancel()
+	if self.callback then
+		self:callback("Cancel")
+	end
 	self.frame:Hide()
 	self:RemoveFromList()
 	DBT.bars[self] = nil
@@ -1182,6 +1194,7 @@ function barPrototype:ApplyStyle()
 	end
 	local r, g, b = bar:GetStatusBarColor()
 	bar:SetStatusBarColor(r, g, b, 1)
+	bar:SetStatusBarTexture(barOptions.Texture)
 	local barFont = barOptions.Font == "standardFont" and standardFont or barOptions.Font
 	local barFontSize, barFontFlag = barOptions.FontSize, barOptions.FontFlag
 	name:SetFont(barFont, barFontSize, barFontFlag)
@@ -1289,6 +1302,10 @@ function barPrototype:AnimateEnlarge(elapsed)
 		DBT:UpdateBars(true)
 		self:ApplyStyle()
 	end
+end
+
+function barPrototype:SetCallback(f)
+	self.callback = f
 end
 
 do

@@ -142,6 +142,12 @@ Private.round_types = {
 }
 
 ---@type table<string, string>
+Private.pad_types = {
+  left = L["Left"],
+  right = L["Right"]
+}
+
+---@type table<string, string>
 Private.unit_color_types = {
   none = L["None"],
   class = L["Class"]
@@ -316,11 +322,45 @@ Private.format_types = {
           return not get(symbol .. "_abbreviate")
         end
       })
+      addOption(symbol .. "_pad", {
+        type = "toggle",
+        name = L["Pad"],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_mode", {
+        type = "select",
+        name = L["Pad Mode"],
+        width = WeakAuras.halfWidth,
+        values = Private.pad_types,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_max", {
+        type = "range",
+        control = "WeakAurasSpinBox",
+        name = L["Pad to"],
+        width = WeakAuras.halfWidth,
+        min = 1,
+        max = 20,
+        hidden = hidden,
+        step = 1,
+      })
     end,
     CreateFormatter = function(symbol, get)
       local abbreviate = get(symbol .. "_abbreviate", false)
       local abbreviateMax = get(symbol .. "_abbreviate_max", 8)
-      if abbreviate then
+      local pad = get(symbol .. "_pad", false)
+      local padMode = get(symbol .. "_pad_mode", "left")
+      local padLength = get(symbol .. "_pad_max", 8)
+      if abbreviate and pad then
+        return function(input)
+          return WeakAuras.PadString(WeakAuras.WA_Utf8Sub(input, abbreviateMax), padMode, padLength)
+        end
+      elseif pad then
+        return function(input)
+          return WeakAuras.PadString(input, padMode, padLength)
+        end
+      elseif abbreviate then
         return function(input)
           return WeakAuras.WA_Utf8Sub(input, abbreviateMax)
         end
@@ -564,7 +604,7 @@ Private.format_types = {
   },
   BigNumber = {
     display = L["Big Number"],
-    AddOptions = function(symbol, hidden, addOption)
+    AddOptions = function(symbol, hidden, addOption, get)
       addOption(symbol .. "_big_number_format", {
         type = "select",
         name = L["Format"],
@@ -578,15 +618,49 @@ Private.format_types = {
         width = WeakAuras.normalWidth,
         hidden = hidden
       })
+      addOption(symbol .. "_pad", {
+        type = "toggle",
+        name = L["Pad"],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_mode", {
+        type = "select",
+        name = L["Pad Mode"],
+        width = WeakAuras.halfWidth,
+        values = Private.pad_types,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_max", {
+        type = "range",
+        control = "WeakAurasSpinBox",
+        name = L["Pad to"],
+        width = WeakAuras.halfWidth,
+        min = 1,
+        max = 20,
+        hidden = hidden,
+        step = 1,
+      })
     end,
     CreateFormatter = function(symbol, get)
       local format = get(symbol .. "_big_number_format", "AbbreviateNumbers")
+      local pad = get(symbol .. "_pad", false)
+      local padMode = get(symbol .. "_pad_mode", "left")
+      local padLength = get(symbol .. "_pad_max", 8)
+      local formatterFunc
       if (format == "AbbreviateNumbers") then
-        return simpleFormatters.AbbreviateNumbers
+        formatterFunc = simpleFormatters.AbbreviateNumbers
       elseif (format == "BreakUpLargeNumbers") then
-        return simpleFormatters.BreakUpLargeNumbers
+        formatterFunc = simpleFormatters.BreakUpLargeNumbers
+      else
+        formatterFunc = simpleFormatters.AbbreviateLargeNumbers
       end
-      return simpleFormatters.AbbreviateLargeNumbers
+      if pad then
+        return function(input)
+          return WeakAuras.PadString(formatterFunc(input), padMode, padLength)
+        end
+      end
+      return formatterFunc
     end
   },
   Number = {
@@ -609,18 +683,51 @@ Private.format_types = {
           return get(symbol .. "_decimal_precision") ~= 0
         end
       })
+      addOption(symbol .. "_pad", {
+        type = "toggle",
+        name = L["Pad"],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_mode", {
+        type = "select",
+        name = L["Pad Mode"],
+        width = WeakAuras.halfWidth,
+        values = Private.pad_types,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_max", {
+        type = "range",
+        control = "WeakAurasSpinBox",
+        name = L["Pad to"],
+        width = WeakAuras.halfWidth,
+        min = 1,
+        max = 20,
+        hidden = hidden,
+        step = 1,
+      })
     end,
     CreateFormatter = function(symbol, get)
       local precision = get(symbol .. "_decimal_precision", 1)
+      local pad = get(symbol .. "_pad", false)
+      local padMode = get(symbol .. "_pad_mode", "left")
+      local padLength = get(symbol .. "_pad_max", 8)
+      local formatterFunc
       if precision == 0 then
         local type = get(symbol .. "_round_type", "floor")
-        return simpleFormatters[type]
+        formatterFunc = simpleFormatters[type]
       else
         local format = "%." .. precision .. "f"
-        return function(value)
+        formatterFunc = function(value)
           return (type(value) == "number") and string.format(format, value) or value
         end
       end
+      if pad then
+        return function(input)
+          return WeakAuras.PadString(formatterFunc(input), padMode, padLength)
+        end
+      end
+      return formatterFunc
     end
   },
   Unit = {
@@ -651,7 +758,7 @@ Private.format_types = {
       addOption(symbol .. "_abbreviate_max", {
         type = "range",
         control = "WeakAurasSpinBox",
-        name = L["Max Char "],
+        name = L["Max Char"],
         width = WeakAuras.normalWidth,
         min = 1,
         max = 20,
@@ -661,12 +768,38 @@ Private.format_types = {
           return not get(symbol .. "_abbreviate")
         end
       })
+      addOption(symbol .. "_pad", {
+        type = "toggle",
+        name = L["Pad"],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_mode", {
+        type = "select",
+        name = L["Pad Mode"],
+        width = WeakAuras.halfWidth,
+        values = Private.pad_types,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_max", {
+        type = "range",
+        control = "WeakAurasSpinBox",
+        name = L["Pad to"],
+        width = WeakAuras.halfWidth,
+        min = 1,
+        max = 20,
+        hidden = hidden,
+        step = 1,
+      })
     end,
     CreateFormatter = function(symbol, get, withoutColor)
       local color = not withoutColor and get(symbol .. "_color", true)
       local realm = get(symbol .. "_realm_name", "never")
       local abbreviate = get(symbol .. "_abbreviate", false)
       local abbreviateMax = get(symbol .. "_abbreviate_max", 8)
+      local pad = get(symbol .. "_pad", false)
+      local padMode = get(symbol .. "_pad_mode", "left")
+      local padLength = get(symbol .. "_pad_max", 8)
 
       local nameFunc
       local colorFunc
@@ -685,7 +818,7 @@ Private.format_types = {
 
       if realm == "never" then
         nameFunc = function(unit)
-          return unit and WeakAuras.UnitName(unit)
+          return unit and WeakAuras.UnitName(unit) or ""
         end
       elseif realm == "star" then
         nameFunc = function(unit)
@@ -696,7 +829,7 @@ Private.format_types = {
           if realm then
             return name .. "*"
           end
-          return name
+          return name or ""
         end
       elseif realm == "differentServer" then
         nameFunc = function(unit)
@@ -707,7 +840,7 @@ Private.format_types = {
           if realm then
             return name .. "-" .. realm
           end
-          return name
+          return name or ""
         end
       elseif realm == "always" then
         nameFunc = function(unit)
@@ -719,7 +852,15 @@ Private.format_types = {
         end
       end
 
-      if abbreviate then
+      if pad and abbreviate then
+        abbreviateFunc = function(input)
+          return WeakAuras.PadString(WeakAuras.WA_Utf8Sub(input, abbreviateMax), padMode, padLength)
+        end
+      elseif pad then
+        abbreviateFunc = function(input)
+          return WeakAuras.PadString(input, padMode, padLength)
+        end
+      elseif abbreviate then
         abbreviateFunc = function(input)
           return WeakAuras.WA_Utf8Sub(input, abbreviateMax)
         end
@@ -788,12 +929,38 @@ Private.format_types = {
           return not get(symbol .. "_abbreviate")
         end
       })
+      addOption(symbol .. "_pad", {
+        type = "toggle",
+        name = L["Pad"],
+        width = WeakAuras.normalWidth,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_mode", {
+        type = "select",
+        name = L["Pad Mode"],
+        width = WeakAuras.halfWidth,
+        values = Private.pad_types,
+        hidden = hidden,
+      })
+      addOption(symbol .. "_pad_max", {
+        type = "range",
+        control = "WeakAurasSpinBox",
+        name = L["Pad to"],
+        width = WeakAuras.halfWidth,
+        min = 1,
+        max = 20,
+        hidden = hidden,
+        step = 1,
+      })
     end,
     CreateFormatter = function(symbol, get, withoutColor)
       local color = not withoutColor and get(symbol .. "_color", true)
       local realm = get(symbol .. "_realm_name", "never")
       local abbreviate = get(symbol .. "_abbreviate", false)
       local abbreviateMax = get(symbol .. "_abbreviate_max", 8)
+      local pad = get(symbol .. "_pad", false)
+      local padMode = get(symbol .. "_pad_mode", "left")
+      local padLength = get(symbol .. "_pad_max", 8)
 
       local nameFunc
       local colorFunc
@@ -838,7 +1005,15 @@ Private.format_types = {
         end
       end
 
-      if abbreviate then
+      if pad and abbreviate then
+        abbreviateFunc = function(input)
+          return WeakAuras.PadString(WeakAuras.WA_Utf8Sub(input, abbreviateMax), padMode, padLength)
+        end
+      elseif pad then
+        abbreviateFunc = function(input)
+          return WeakAuras.PadString(input, padMode, padLength)
+        end
+      elseif abbreviate then
         abbreviateFunc = function(input)
           return WeakAuras.WA_Utf8Sub(input, abbreviateMax)
         end
@@ -2324,7 +2499,21 @@ Private.texture_types = {
   }
 }
 
-if Private.AtlasList then
+if C_Texture and C_Texture.GetAtlasElements then
+  if WeakAuras.buildType == "dev" and Private.AtlasList then
+    WeakAuras.prettyPrint("Private.AtlasList can be removed now.")
+  end
+
+  Private.texture_types["Blizzard Atlas"] = function()
+    local atlasList = C_Texture.GetAtlasElements()
+    table.sort(atlasList)
+    local atlasTable = {}
+    for _, atlas in ipairs(atlasList) do
+      atlasTable[atlas] = atlas
+    end
+    return atlasTable
+  end
+elseif Private.AtlasList then
   Private.texture_types["Blizzard Atlas"] = {}
   for _, atlas in ipairs(Private.AtlasList) do
     Private.texture_types["Blizzard Atlas"][atlas] = atlas
@@ -2991,6 +3180,26 @@ Private.classification_types = {
   minus = L["Minus (Small Nameplate)"]
 }
 
+if WeakAuras.IsRetail() then
+  ---@type table<number, string>
+  Private.creature_type_types = {}
+  for _, creatureID in ipairs(C_CreatureInfo.GetCreatureTypeIDs()) do
+    local creatureInfo = C_CreatureInfo.GetCreatureTypeInfo(creatureID)
+    if creatureInfo then
+      Private.creature_type_types[creatureID] = creatureInfo.name
+    end
+  end
+
+  ---@type table<number, string>
+  Private.creature_family_types = {}
+  for _, familyID in ipairs(C_CreatureInfo.GetCreatureFamilyIDs()) do
+    local familyInfo = C_CreatureInfo.GetCreatureFamilyInfo(familyID)
+    if familyInfo then
+      Private.creature_family_types[familyID] = familyInfo.name
+    end
+  end
+end
+
 ---@type table<string, string>
 Private.anim_start_preset_types = {
   slidetop = L["Slide from Top"],
@@ -3475,7 +3684,8 @@ Private.bool_types = {
 ---@type table<string, string>
 Private.absorb_modes = {
   OVERLAY_FROM_START = L["Attach to Start"],
-  OVERLAY_FROM_END = L["Attach to End"]
+  OVERLAY_FROM_END = L["Attach to End"],
+  OVERLAY_FROM_END_REVERSE = L["Attach to End, backwards"]
 }
 
 ---@type table
@@ -4195,23 +4405,7 @@ WeakAuras.StopMotion.texture_types.Basic = {
 }
 
 WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stopmotion"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\circle"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\checkmark"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\redx"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\leftarc"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\rightarc"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\fireball"] = { count = 7, rows = 5, columns = 5 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\AURARUNE8"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionv"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionw"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionf"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionword"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\CellRing"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Gadget"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Radar"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\RadarComplex"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Saber"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Waveform"] = { count = 32, rows = 8, columns = 4 }
+
 
 WeakAuras.StopMotion.animation_types = {
   loop = L["Loop"],

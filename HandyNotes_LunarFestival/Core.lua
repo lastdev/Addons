@@ -3,7 +3,7 @@
 
                                            Lunar Festival
 
-                                     v4.16 - 27th February 2025
+                                        v4.21 - 5th May 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -11,107 +11,87 @@
 ]]
 
 local addonName, ns = ...
-ns.db = {}
 
--- From Data.lua
-ns.points = {}
-ns.textures = {}
-ns.scaling = {}
-
--- Red/Gold theme
-ns.colour = {}
-ns.colour.prefix	= "\124cFFC11B17" -- Chilli Pepper
-ns.colour.highlight = "\124cFFE9AB17" -- Bee Yellow
-ns.colour.achieveH	= "\124cFFF70D1A" -- Ferrari Red
-ns.colour.achieveI	= "\124cFFF6BE00" -- Deep Yellow
-ns.colour.achieveD	= "\124cFFC3FDB8" -- Light Jade
-ns.colour.seasonal	= "\124cFF5EFB6E" -- Jade Green
-ns.colour.daily		= "\124cFF00BFFF" -- Deep Sky Blue
-ns.colour.Guide		= "\124cFF12AD2B" -- Parrot Green
-ns.colour.plaintext = "\124cFF00A36C" -- Jade
-ns.colour.completeR	= "\124cFFFF0000" -- Red
-ns.colour.completeG	= "\124cFF00FF00" -- Green
-
-local defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
-								removeOneTime = true, removeSeasonal = true, removeAchieveChar = true,
-								removeAchieveAcct = false,
-								iconZoneElders = 15, iconDungeonElders = 14, iconCrown = 13,
-								iconFactionElders = 11, iconPreservation = 9, iconSeasonal=12,
-								iconMeta = 16, iconHistory = 10, iconSpecial = 8, } }
+ns.defaults = { profile = { iconScale = 2.5, iconAlpha = 1, showCoords = true,
+					remove = { true, true, true }, -- Seasonal, Daily, One Time
+					removeAchieveChar = false, removeAchieveAcct = false,
+					removeOneTime = true, removeSeasonal = true, removeDaily = true,
+					iconZoneElders = 15, iconDungeonElders = 14, iconCrown = 13,
+					iconFactionElders = 11, iconPreservation = 9, iconSeasonal=12,
+					iconMeta = 16, iconHistory = 10, iconSpecial = 8, } }
 local pluginHandler = {}
 
--- upvalues
+-- Localised
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
 local GetAchievementInfo = GetAchievementInfo
+local GetAchievementNumCriteria = GetAchievementNumCriteria
 local GetMapChildrenInfo = C_Map.GetMapChildrenInfo
+local GetTime = GetTime
 local IsComplete = C_QuestLog.IsComplete
 local IsOnQuest = C_QuestLog.IsOnQuest
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
-local UnitAura = C_UnitAuras.GetAuraDataByIndex
 local LibStub = _G.LibStub
+local QuestUtils_GetQuestName = QuestUtils_GetQuestName
 local UIParent = _G.UIParent
+local UnitAura = C_UnitAuras.GetAuraDataByIndex
 local format = _G.format
 local gsub = string.gsub
+local ipairs = _G.ipairs
 local next = _G.next
-local pairs = _G.pairs
 
 local HandyNotes = _G.HandyNotes
 
-_, _, _, ns.version = GetBuildInfo()
-ns.faction = UnitFactionGroup( "player" )
-ns.name = UnitName( "player" ) or "Character"
-
-ns.continents = {}
-if ( ns.version < 60000) then
-	ns.continents[ 1414 ] = true -- Kalimdor
-	ns.continents[ 1415 ] = true -- Eastern Kingdoms
-	ns.continents[ 1945 ] = ( ns.version >= 20000) and true or nil -- Outland
-else
-	ns.continents[ 12 ] = true -- Kalimdor
-	ns.continents[ 13 ] = true -- Eastern Kingdoms
-	ns.continents[ 101 ] = true -- Outland
-end
-ns.continents[ 113 ] = ( ns.version >= 30000) and true or nil -- Northrend
-ns.continents[ 203 ] = ( ns.version >= 40000) and true or nil -- Vashj'ir
-ns.continents[ 948 ] = ( ns.version >= 40000) and true or nil -- Vashj'ir
-ns.continents[ 424 ] = ( ns.version >= 50000) and true or nil -- Pandaria
-ns.continents[ 572 ] = ( ns.version >= 60000) and true or nil -- Draenor
-ns.continents[ 619 ] = ( ns.version >= 70000) and true or nil -- Broken Isles
-ns.continents[ 875 ] = ( ns.version >= 80000) and true or nil -- Zandalar
-ns.continents[ 876 ] = ( ns.version >= 80000) and true or nil -- Kul Tiras
-ns.continents[ 1978 ] = ( ns.version >= 90000) and true or nil -- Dragon Isles
-ns.continents[ 947 ] = true -- Azeroth
-
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
-local function PassClassCheck( pin )
-	if ( pin.class == nil) or ( ns.class == pin.class ) then
-		return true
+local function PassAllChecks( pin )
+	-- Class
+	if ( pin.class == nil) or ( pin.class == ns.class ) then
+	else
+		return false
+	end
+	-- Faction
+	if ( pin.faction == nil ) or ( ( pin.faction == "Horde" ) and ( ns.faction == "Horde" ) ) or
+								( ( pin.faction == "Alliance" ) and ( ns.faction == "Alliance" ) ) then
+	else
+		return false
+	end
+	-- Game Version
+	if pin.version and pin.versionUnder then
+		if ( ns.version >= pin.version ) and ( ns.version < pin.versionUnder ) then
+			return true
+		end
+	elseif pin.version then
+		if ( ns.version >= pin.version ) then
+			return true
+		end
+	elseif pin.versionUnder then
+		if ( ns.version < pin.versionUnder ) then
+			return true
+		end
+	else	
+ 		return true
 	end
 	return false
 end
 
-local function PassFactionCheck( pin )
-	if ( pin.faction == nil)
-			or ( ( ns.faction == "Horde" ) and ( ( pin.faction == "Neutral" ) or ( pin.faction == "Horde" ) ) )
-			or ( ( ns.faction == "Alliance" ) and ( ( pin.faction == "Neutral" ) or ( pin.faction == "Alliance" ) ) )
-			or ( ( ns.faction == "Neutral" ) and ( pin.faction == "Neutral" ) ) then
+local function CharacterCompleted( character )
+	-- Pass it parm #14 from GetAchievementInfo(). Returns if the character has really completed the achievement.
+	-- This fuction disregards sharing and Warbands and effectively relies upon a data return quirk to work.
+	-- _, _, _, completedA, _, _, _, _, _, _, _, _, _, charName = GetAchievementInfo( v.id )
+	-- _, _, completedC, _,  _, charName, _, _, _, _, eligible = GetAchievementCriteriaInfo( v.id, v.index )
+	-- Testing late March 2025, retail 11.1.0:
+	-- Eligible is always true - at least outside of the event. CompletedA is an account wide completion boolean
+	-- CompletedC is always false except if the character has actually (for real) completed all of the criteria
+	-- CharName is always nil except if the character has actually (for real) completed the achievement
+	-- The above testing outcomes indicate that the Wow Wiki GG website's API data is incorrect / not up to date as of March 2025
+	-- Going with CharName rather than CompletedC purely on a hunch that it'll need less maintenance over time lol
+	-- 22/4/25: Classic Cataclysm has nil charNames. Retail would have been ""
+	if ( character == nil ) or ( character ~= ns.name ) then
+		return false
+	else
 		return true
 	end
-	return false
-end
-
-local function PassVersionCheck( pin )
-	if pin.version then
-		if ns.version >= pin.version then return true end
-		return false
-	end
-	if pin.versionUnder then
-		if ns.version < pin.versionUnder then return true end
-		return false
-	end	
-	return true
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
@@ -122,15 +102,17 @@ local function CorrectMapPhase( mapID, old )
 
 	if ( mapID == 17 ) or -- Blasted Lands
 			( mapID == 18 ) or ( mapID == 2070 ) or -- Tirisfal Glades
-			( mapID == 57 ) or ( mapID == 62 ) or ( mapID == 81 ) or -- Teldrassil, Silithus, Darkshore
+			( mapID == 57 ) or ( mapID == 62 ) or ( mapID == 70 ) or ( mapID == 81 ) or
+				-- Teldrassil, Silithus, Darkshore, Theramore, Darnassus
 			( mapID == 249 ) or ( mapID == 1527 ) then -- Uldum
 		for i = 1, 40 do -- 40 is rather arbitrary these days I think
 			local auraData = UnitAura( "player", i, "HELPFUL" )
 			if auraData == nil then break end
 			if auraData.spellId then
 				if ( auraData.spellId == 372329 ) or ( auraData.spellId == 276827 ) or ( auraData.spellId == 255152 ) or
-						( auraData.spellId == 290246 ) or ( auraData.spellId == 317785 ) then
-					-- Time Travelling buff for Blasted Lands, Tirisfal Glades, Silithus, Darkshore/Teldrassil/Darnassus, Uldum
+					-- Time Travelling buff for Blasted Lands, Tirisfal Glades, Silithus
+						( auraData.spellId == 290246 ) or ( auraData.spellId == 123979 ) or ( auraData.spellId == 317785 )  then
+					-- Time Travelling buff for Darkshore/Teldrassil/Darnassus, Theramore, Uldum
 					return old
 				end
 			end
@@ -139,14 +121,6 @@ local function CorrectMapPhase( mapID, old )
 	else
 		return true
 	end
-end
-
-local function SpacerFirstTimeHeader( firstTime, heading, colour )
-	if firstTime == true then
-		GameTooltip:AddLine( "\n" )
-		GameTooltip:AddLine( colour ..heading )
-	end
-	return false
 end
 
 local function CompletionShow( completed, whatever, colour, name, completionS ) -- Last two parms are optional
@@ -159,31 +133,58 @@ end
 
 local function Tip( tip )
 	if tip then
-		GameTooltip:AddLine( ns.colour.plaintext .."\n" ..ns.L[ tip ], nil, nil, nil, true )
+		GameTooltip:AddLine( ns.spaceLine ..ns.colour.plaintext ..ns.L[ tip ], nil, nil, nil, true )
+		ns.spaceLine = ""
 	end
 end
 
 local function GuideTip( pin )
+	-- Guides preceed Tips. Guides and Tips are not shown for completed Quests/Achievements
+	-- A Guide will be extensive, way beyond the scope of a Google Translate, for example.
+	-- A tip should be quite short, perhaps finessing a generic guide. A tip often should be translated
 	if pin.guide then
-		GameTooltip:AddLine( ns.colour.highlight .."\n" ..ns.L[ "Guide" ] .."\n" ..ns.colour.Guide ..pin.guide,
-				nil, nil, nil, true )
+		GameTooltip:AddLine( ns.spaceLine ..ns.colour.Guide ..pin.guide, nil, nil, nil, true )
+		ns.spaceLine = ""
 	end
 	if pin.tip then
 		Tip( pin.tip )
 	end
+	return ( pin.tip or pin.guide ) and true or false
 end
 
-local function GetQuestName( pin )
-	-- Favour the returned name as it'll be translated but only if a name was returned from the API
-	local result = QuestUtils_GetQuestName( pin.id )
-	local level = pin.level and ( ns.colour.plaintext .." (" ..ns.L[ "Level" ] .." " ..pin.level ..")" ) or ""
-	if result and result ~= "" then return result ..level end
-	if pin.name then return ns.L[ pin.name ] ..level end
-	return ns.L[ "Try again" ]
+local function ShowQuestStatus( quest, colour, backupName )
+	if ns.firstOne == true then
+		GameTooltip:AddLine( ns.colour.highlight .."\n" ..ns.L[ quest.qType ] )
+		ns.firstOne = false
+	end
+	local level = quest.level and ( ns.colour.plaintext .." (" ..ns.L[ "Level" ] .." " ..quest.level ..")" ) or ""
+	local questName = QuestUtils_GetQuestName( quest.id )
+	-- Reminder: C_QuestLog.GetTitleForQuestID() works too for Retail but not for Classic Cata
+	-- These calls return localised text. Doesn't need to be in the Quest Log. Server won't immediately respond. 
+	questName = ( questName ~= "" ) and ( questName ..level ) or ( quest.name and ( quest.name ..level ) ) or
+				( backupName and ( backupName ..level ) ) or ns.L[ "Try again" ]
+	local completed = IsQuestFlaggedCompleted( quest.id )
+	CompletionShow( completed, questName, colour, ns.name )
+	
+	 -- Lunar Preservation
+	if quest.id == 56842 then
+		if ( IsOnQuest( 56842 ) == true ) then
+			completed = IsComplete( 56842 )
+			if ( completed == true ) then
+				GameTooltip:AddLine( ns.colour.plaintext ..ns.L[ "Ready to turn in" ] )
+			else
+				GameTooltip:AddLine( ns.colour.plaintext ..ns.L[ "Wells so far: " ] ..( ns.lpBuffCount or 0 ) )
+			end
+		elseif completed == false then
+			GameTooltip:AddLine( ns.colour.plaintext ..ns.L[ "Not yet begun" ] )
+		end
+	end
+	
+	if completed == false then GuideTip( quest ) end
 end
 
 -- Plugin handler for HandyNotes
-function pluginHandler:OnEnter(mapFile, coord)
+function pluginHandler:OnEnter( mapFile, coord )
 	if self:GetCenter() > UIParent:GetCenter() then
 		GameTooltip:SetOwner( self, "ANCHOR_LEFT" )
 	else
@@ -191,107 +192,85 @@ function pluginHandler:OnEnter(mapFile, coord)
 	end
 
 	local pin = ns.points[ mapFile ] and ns.points[ mapFile ][ coord ]
-
-	local firstTime, aName, completed, completedQ, description, earnedByMe, cType, assetID;
+	if pin == nil then return end
 	
-	if pin.name then
-		GameTooltip:SetText( ns.colour.prefix ..ns.L[ pin.name ] )
-	else
-		GameTooltip:SetText( ns.colour.prefix ..( ns.L[ "Lunar Festival" ] ) )
-	end
+	local aName, completedA, completedC, completedQ, description, charName, cType, numCriteria, assetID;
+	ns.spaceLine = ""
 
-	if pin.achievements and ( ns.version > 30002 ) then
-		firstTime = true
-		for _,v in ipairs( pin.achievements ) do
-			if PassFactionCheck( v ) and PassVersionCheck( v ) then
-				_, aName, _, completed, _, _, _, description, _, _, _, _, earnedByMe = GetAchievementInfo( v.id )
-				SpacerFirstTimeHeader( firstTime, ns.L[ "Achievement" ], ns.colour.highlight )
-				CompletionShow( completed, aName, ns.colour.achieveH )
-				-- Strictly speaking the results are NOT correct from the API for the event's meta for earnedByMe
-				CompletionShow( earnedByMe , nil, nil, ns.name )
+	GameTooltip:SetText( ns.colour.prefix ..( pin.title or ns.L[ "Lunar Festival" ] ) )
+
+	if pin.achievements and ( ns.version > 30002 ) and PassAllChecks( pin.achievements ) then
+		for _, v in ipairs( pin.achievements ) do
+			if PassAllChecks( v ) then
+				_, aName, _, completedA, _, _, _, description, _, _, _, _, _, charName = GetAchievementInfo( v.id )
+				-- 13th "Earned By Me" parameter is no longer useful. Always true if any other character has the achievement
+				GameTooltip:AddLine( "\n" )
+				GameTooltip:AddLine( ns.colour.highlight ..ns.L[ "Achievement" ] )
+				CompletionShow( completedA, aName, ns.colour.achieveH )
 				if v.showAllCriteria then
+					-- A pin with completion criteria or a meta pin
 					GameTooltip:AddLine( ns.colour.achieveD ..description, nil, nil, nil, true )
 					numCriteria = GetAchievementNumCriteria( v.id )					
 					for i = 1, numCriteria do
-						aName, cType, completed, _, _, _, _, assetID = GetAchievementCriteriaInfo( v.id, i )
-						if ( cType == 27 ) then
-							-- Quest type
-								if i == 1 then GameTooltip:AddLine( ns.colour.achieveH ..ns.L[ "Seasonal" ] ) end
-								completedQ = IsQuestFlaggedCompleted( assetID )
-								CompletionShow( completedQ, aName, ns.colour.achieveI, ns.name, completed )
-						elseif ( cType == 8 ) then
+						aName, cType, completedC, _, _, _, _, assetID = GetAchievementCriteriaInfo( v.id, i )
+						-- Due to shared achievements and now Warbands there is no indiviudual achievement data available for Retail
+						if ( cType == 8 ) then
 							-- Achievement type. Meta. cType will show each line as an achievement
-							-- Must do it this way as "completed" for the criteria becomes account wide for meta achievements
-							_, aName, _, completed, _, _, _, description, _, _, _, _, earnedByMe = GetAchievementInfo( assetID )
-							CompletionShow( earnedByMe, aName, ns.colour.achieveH, ns.name )
-							if earnedByMe == false and description then
+							-- Must do it this way as "completed" for the criteria is account wide and for the overall meta
+							_, aName, _, _, _, _, _, description, _, _, _, _, _, charName = GetAchievementInfo( assetID )
+							completedC = CharacterCompleted( charName )
+							CompletionShow( completedC, aName, ns.colour.achieveH, ns.name )
+							if completedC == false and description then
 								GameTooltip:AddLine( ns.colour.achieveD ..description, nil, nil, nil, true )
 							end
-						elseif ( cType == 0 ) or ( cType == 29 ) then -- Monster ID or Craft spell ID. Whatever lol
-							CompletionShow( earnedByMe, aName, ns.colour.achieveH, ns.name )
+						elseif ( cType == 27 ) then
+							-- Quests, eg zones. During the event we can track indiviudual progress towards the achievement
+							if i == 1 then GameTooltip:AddLine( ns.colour.achieveH ..ns.L[ "Seasonal" ] ) end
+							completedQ = IsQuestFlaggedCompleted( assetID )
+							CompletionShow( completedQ, aName, ns.colour.achieveI, ns.name, completedC )
+						elseif ns.version < 60000 then
+							CompletionShow( completedC, aName, ns.colour.achieveI, ns.name )
+						else
+--							CompletionShow( CharacterCompleted( charName ), aName, ns.colour.achieveH, ns.name )
+							GameTooltip:AddLine( ns.colour.achieveI ..aName )
 						end
 					end
 				else
 					GameTooltip:AddLine( ns.colour.achieveD ..description, nil, nil, nil, true )
-					if v.index then
-						aName, _, completed = GetAchievementCriteriaInfo( v.id, v.index )
-						CompletionShow( completed, aName, ns.colour.achieveI, ns.name )
+					if v.index and ( completedC == false ) then
+						aName = GetAchievementCriteriaInfo( v.id, v.index )
+						CompletionShow( completedC, aName, ns.colour.achieveI, ns.name )
 					end
 				end
 				GuideTip( v )
 			end
 		end
+	elseif pin.name then
+		GameTooltip:AddLine( "\n" )
+		GameTooltip:AddLine( ns.colour.highlight ..ns.L[ pin.name ] )
 	end
 
-	if pin.quests then
-		firstTime = true
-		for _,v in ipairs( pin.quests ) do
-			if PassFactionCheck( v ) and PassVersionCheck( v ) and PassClassCheck( v ) and ( v.qType == "Seasonal" ) then
-				completed = IsQuestFlaggedCompleted( v.id )
-				firstTime = SpacerFirstTimeHeader( firstTime, ns.L[ "Seasonal" ], ns.colour.highlight )
-				CompletionShow( completed, GetQuestName( v ), ns.colour.seasonal, ns.name )
-				if v.id == 56842 then -- Lunar Preservation
-					if ( IsOnQuest( 56842 ) == true ) then
-						completed = IsComplete( 56842 )
-						if ( completed == true ) then
-							GameTooltip:AddLine( ns.colour.plaintext ..ns.L[ "Ready to turn in" ] )
-						else
-							GameTooltip:AddLine( ns.colour.plaintext ..ns.L[ "Wells so far: " ] ..( ns.lpBuffCount or 0 ) )
-						end
-					elseif completed == false then
-						GameTooltip:AddLine( ns.colour.plaintext ..ns.L[ "Not yet begun" ] )
-					end
-				end
-				GuideTip( v )
-			end
-		end
-		
-		firstTime = true
-		for _,v in ipairs( pin.quests ) do
-			if PassFactionCheck( v ) and PassVersionCheck( v ) and PassClassCheck( v ) and ( v.qType == "Daily" ) then
-				completed = IsQuestFlaggedCompleted( v.id )
-				firstTime = SpacerFirstTimeHeader( firstTime, ns.L[ "Daily" ], ns.colour.highlight )
-				CompletionShow( completed, GetQuestName( v ), ns.colour.daily, ns.name )
-				GuideTip( v )
-			end
-		end
-		
-		firstTime = true
-		for _,v in ipairs( pin.quests ) do
-			if PassFactionCheck( v ) and PassVersionCheck( v ) and PassClassCheck( v ) and ( v.qType == "One Time" ) then
-				completed = IsQuestFlaggedCompleted( v.id )
-				firstTime = SpacerFirstTimeHeader( firstTime, ns.L[ "One Time" ], ns.colour.highlight )
-				CompletionShow( completed, GetQuestName( v ), ns.colour.seasonal, ns.name )
-				GuideTip( v )
-			end
-		end
-	end
+	ns.spaceLine = ""
 	
-	if ( pin.noZidormi == nil ) and ( CorrectMapPhase( mapFile, true ) == false ) then -- True = old
-		Tip( ns.L[ "ZidormiWrongPhase" ] )
+	if pin.quests and PassAllChecks( pin.quests ) then
+		for i, v in ipairs( ns.questTypes ) do
+			ns.firstOne = true
+			for _, q in ipairs( pin.quests ) do
+				if PassAllChecks( q ) and ( q.qType == v ) then
+					ShowQuestStatus( q, ns.questColours[ i ] )
+				end
+			end
+		end
+		GuideTip( pin.quests )
+		ns.spaceLine = "\n"
 	end
 
 	GuideTip( pin )
+
+	if ( pin.noZidormi == nil ) and ( CorrectMapPhase( mapFile, true ) == false ) then -- True = old
+		ns.spaceLine = "\n"
+		Tip( ns.L[ "ZidormiWrongPhase" ] )
+	end
 
 	if ( ns.db.showCoords == true ) and not pin.noCoords then
 		local mX, mY = HandyNotes:getXY(coord)
@@ -311,136 +290,97 @@ end
 local function ShowAchievements( pin )
 	if not pin.achievements then return false end
 	if ns.version < 30002 then return false end -- Achievements began with WotLK patch 3.0.2
-	if ns.db.removeAchieveChar == false then return true end
+	if PassAllChecks( pin.achievements ) == false then return false end
+	if ( ns.db.removeAchieveChar == false ) and ( ns.db.removeAchieveAcct == false ) then return true end
 
-	local completed, earnedByMe;
+	local completed, charName;
+	
+	local acctCompleted, charCompleted = true, true
 	for _,v in ipairs( pin.achievements ) do
-		if PassFactionCheck( v ) and PassVersionCheck( v ) then
-			_, _, _, completed, _, _, _, _, _, _, _, _, earnedByMe = GetAchievementInfo( v.id )
-			-- We now know the account and character situation
-			if ( ns.db.removeAchieveAcct == true ) and ( completed == true ) then
-				-- We don't wanna see this pin
-			elseif earnedByMe == true then
-				-- Again, we don't wanna see it ( we know that the DB options flag must be true too )
-			else
-				-- We must now check if it's an indexed achievement pin
-				if not v.index then
-					-- We definitely need to see this pin
-					return true
+		if PassAllChecks( v ) then
+			_, _, _, completed, _, _, _, _, _, _, _, _, _, charName = GetAchievementInfo( v.id )
+			if completed == false then acctCompleted = false end
+			if ( charName == nil ) or ( charName ~= ns.name ) then charCompleted = false end
+			-- Using this hack for character specific status as due to sharing/Warbands data is otherwise unavailable
+		end
+	end
+	if ( ns.db.removeAchieveAcct == true ) and ( acctCompleted == true ) then
+		return false
+	end
+	if ( ns.db.removeAchieveChar == true ) and ( charCompleted == true ) then
+		return false
+	end
+	
+	return true
+end
+
+local function ShowQuests( pin )
+	if not pin.quests then return false end
+	if PassAllChecks( pin.quests ) == true then
+		for i, v in ipairs( ns.questTypes ) do
+			for _, q in ipairs( pin.quests ) do
+				if PassAllChecks( q ) and ( q.qType == v ) then
+					if ns.db[ ns.questTypesDB[ i ] ] == false then return true end
+					if IsQuestFlaggedCompleted( q.id ) == false then return true end
 				end
-				_, _, completed = GetAchievementCriteriaInfo( v.id, v.index )
-				if completed == false then return true end
 			end
 		end
-		-- To here if we don't want to see the pin but, we may be showing > 1 achievements on the pin
 	end
 	return false
 end
 
-local function ShowSeasonal( pin )
-	if not pin.quests then return false end
-
-	local completed;
-	for _,v in ipairs( pin.quests ) do
-		if PassFactionCheck( v ) and PassVersionCheck( v ) and ( v.qType == "Seasonal" ) then
-			if ns.db.removeSeasonal == false then return true end
-			completed = IsQuestFlaggedCompleted( v.id )
-			if completed == false then return true end
-		end
-	end
-	return false
-end
-
-local function ShowDailies( pin )
-	if not pin.quests then return false end
-
-	local completed;
-	for _,v in ipairs( pin.quests ) do
-		if PassFactionCheck( v ) and PassVersionCheck( v ) and ( v.qType == "Daily" ) then
-			if ns.db.removeDailies == false then return true end
-			completed = IsQuestFlaggedCompleted( v.id )
-			if completed == false then return true end
-		end
-	end
-	return false
-end
-
-local function ShowOneTime( pin )
-	if not pin.quests then return false end
-
-	local completed;
-	for _,v in ipairs( pin.quests ) do
-		if PassFactionCheck( v ) and PassVersionCheck( v ) and ( v.qType == "One Time" ) then
-			if ns.db.removeOneTime == false then return true end
-			completed = IsQuestFlaggedCompleted( v.id )
-			if completed == false then return true end
-		end
-	end
-	return false
+local function ShowAnyway( pin)
+	if pin.achievements or pin.quests then return false end
+	return true
 end
 
 do	
-	local function iterator(t, prev)
+	local function iterator( t, prev )
 		if not t then return end
-		local coord, pin = next(t, prev)
+		local coord, pin = next( t, prev )
 		while coord do
-			if pin and PassFactionCheck( pin ) and PassVersionCheck( pin ) then			
-				if pin.elder or pin.elderDungeon or pin.elderFaction then
-					if ShowAchievements( pin ) and ShowSeasonal( pin ) then
-						if pin.elder then
-							return coord, nil, ns.textures[ns.db.iconZoneElders],
-								ns.db.iconScale * ns.scaling[ns.db.iconZoneElders], ns.db.iconAlpha
-						elseif pin.elderDungeon then
-							return coord, nil, ns.textures[ns.db.iconDungeonElders],
-								ns.db.iconScale * ns.scaling[ns.db.iconDungeonElders], ns.db.iconAlpha
-						elseif pin.elderFaction then
-							return coord, nil, ns.textures[ns.db.iconFactionElders],
-								ns.db.iconScale * ns.scaling[ns.db.iconFactionElders], ns.db.iconAlpha
-						end
-					end
-				elseif pin.meta then
-					return coord, nil, ns.textures[ns.db.iconMeta],
-						ns.db.iconScale * ns.scaling[ns.db.iconMeta], ns.db.iconAlpha
-				elseif pin.metaLarge then
-					return coord, nil, ns.textures[ns.db.iconMeta],
-						ns.db.iconScale * 2 * ns.scaling[ns.db.iconMeta], ns.db.iconAlpha
+			if pin and PassAllChecks( pin ) and 
+					( pin.alwaysShow or ShowAchievements( pin ) or ShowQuests( pin ) or ShowAnyway( pin) ) then
+				if pin.elder then
+					return coord, nil, ns.textures[ns.db.iconZoneElders],
+						ns.db.iconScale * ns.scaling[ns.db.iconZoneElders], ns.db.iconAlpha
+				elseif pin.elderDungeon then
+					return coord, nil, ns.textures[ns.db.iconDungeonElders],
+						ns.db.iconScale * ns.scaling[ns.db.iconDungeonElders], ns.db.iconAlpha
+				elseif pin.elderFaction then
+					return coord, nil, ns.textures[ns.db.iconFactionElders],
+						ns.db.iconScale * ns.scaling[ns.db.iconFactionElders], ns.db.iconAlpha
 				elseif pin.history then
 					return coord, nil, ns.textures[ns.db.iconHistory],
 						ns.db.iconScale * 2 * ns.scaling[ns.db.iconHistory], ns.db.iconAlpha
-				elseif pin.metaFaction then
-					return coord, nil, ns.textures[ns.db.iconFactionElders],
-						ns.db.iconScale * ns.scaling[ns.db.iconFactionElders], ns.db.iconAlpha
-				elseif pin.elune then
-					return coord, nil, ns.textures[ns.db.iconSeasonal],
-						ns.db.iconScale * ns.scaling[ns.db.iconSeasonal], ns.db.iconAlpha
-				elseif pin.coins then
-					return coord, nil, ns.textures[ns.db.iconDungeonElders],
-						ns.db.iconScale * ns.scaling[ns.db.iconDungeonElders], ns.db.iconAlpha
+				elseif pin.metaLarge then
+					return coord, nil, ns.textures[ns.db.iconMeta],
+						ns.db.iconScale * 1.7 * ns.scaling[ns.db.iconMeta], ns.db.iconAlpha
+				elseif pin.honor then
+					return coord, nil, ns.textures[ns.db.iconMeta],
+						ns.db.iconScale * ns.scaling[ns.db.iconMeta], ns.db.iconAlpha
 				elseif pin.pyro then
 					return coord, nil, ns.textures[ns.db.iconSpecial],
 						ns.db.iconScale * ns.scaling[ns.db.iconSpecial], ns.db.iconAlpha
-				elseif pin.newZones then
-					return coord, nil, ns.textures[ns.db.iconZoneElders],
-						ns.db.iconScale * ns.scaling[ns.db.iconZoneElders], ns.db.iconAlpha
-				elseif pin.showAnyway or ShowSeasonal( pin ) or ShowDailies( pin ) or ShowOneTime( pin ) then
-					if pin.preservation then
-						return coord, nil, ns.textures[ns.db.iconPreservation],
-							ns.db.iconScale * ns.scaling[ns.db.iconPreservation], ns.db.iconAlpha
-					elseif pin.seasonalQuest then
-						return coord, nil, ns.textures[ns.db.iconSeasonal],
-							ns.db.iconScale * ns.scaling[ns.db.iconSeasonal], ns.db.iconAlpha
-					end
-					if pin.crown and ( IsQuestFlaggedCompleted( 56842 ) == true ) then -- Lunar Preservation
-						return coord, nil, ns.textures[ns.db.iconCrown],
-							ns.db.iconScale * ns.scaling[ns.db.iconCrown] * 0.5, ns.db.iconAlpha
-					end
+				elseif pin.preservation then
+					return coord, nil, ns.textures[ns.db.iconPreservation],
+						ns.db.iconScale * ns.scaling[ns.db.iconPreservation], ns.db.iconAlpha
+				elseif pin.seasonalQuest then
+					return coord, nil, ns.textures[ns.db.iconSeasonal],
+						ns.db.iconScale * ns.scaling[ns.db.iconSeasonal], ns.db.iconAlpha
+				elseif pin.coins then
+					return coord, nil, ns.textures[ns.db.iconCrown],
+						ns.db.iconScale * ns.scaling[ns.db.iconCrown], ns.db.iconAlpha
+				elseif pin.crown and ( IsQuestFlaggedCompleted( 56842 ) == true ) then -- Lunar Preservation
+					return coord, nil, ns.textures[ns.db.iconCrown],
+						ns.db.iconScale * ns.scaling[ns.db.iconCrown] * 0.5, ns.db.iconAlpha
 				end
 			end
-			coord, pin = next(t, coord)
+			coord, pin = next( t, coord )
 		end
 	end
-	function pluginHandler:GetNodes2(mapID)
-		return iterator, ns.points[mapID]
+	function pluginHandler:GetNodes2( mapID )
+		return iterator, ns.points[ mapID ]
 	end
 end
 
@@ -456,47 +396,49 @@ local function SubstitutePlayerOrElseAcct( theType, character )
 end
 
 ns.iconStandard = "1 = " ..ns.L["White"] .."\n2 = " ..ns.L["Purple"] .."\n3 = " ..ns.L["Red"] .."\n4 = " ..ns.L["Yellow"]
-				.."\n5 = " ..ns.L["Green"] .."\n6 = " ..ns.L["Grey"] .."\n7 = " .. ns.L["Blue Coin"]
-				.."\n8 = " ..ns.L["Deep Green Coin"] .."\n9 = " ..ns.L["Deep Pink Coin"] .."\n10 = " ..ns.L["Deep Red Coin"]
-				.."\n11 = " ..ns.L["Green Coin"] .."\n12 = " ..ns.L["Light Blue Coin"] .."\n13 = " ..ns.L["Pink Coin"]
-				.."\n14 = " ..ns.L["Purple Coin"] .."\n15 = " ..ns.L["Teal Coin"] .."\n16 = " ..ns.L["Original Coin"]
+				.."\n5 = " ..ns.L["Green"] .."\n6 = " ..ns.L["Grey"] .."\n7 = " ..ns.L["Coin"] .." - " ..ns.L[ "Blue" ]
+				.."\n8 = " ..ns.L["Coin"] .." - " ..ns.L["Deep Green"] .."\n9 = " ..ns.L["Coin"] .." - " ..ns.L["Deep Pink"]
+				.."\n10 = " ..ns.L["Coin"] .." - " ..ns.L["Deep Red"] .."\n11 = " ..ns.L["Coin"] .." - " ..ns.L["Green"]
+				.."\n12 = " ..ns.L["Coin"] .." - " ..ns.L["Light Blue"] .."\n13 = " ..ns.L["Coin"] .." - " ..ns.L["Pink"]
+				.."\n14 = " ..ns.L["Coin"] .." - " ..ns.L["Purple"] .."\n15 = " ..ns.L["Coin"] .." - " ..ns.L["Teal"]
+				.."\n16 = " ..ns.L["Coin"] .." - " ..ns.L["Original"]
 
 -- Interface -> Addons -> Handy Notes -> Plugins -> Lunar Festival options
 ns.options = {
 	type = "group",
-	name = ns.L["Lunar Festival"],
+	name = ns.L[ "Lunar Festival" ],
 	desc = AddColouredText( "AddOn Description" ),
-	get = function(info) return ns.db[info[#info]] end,
-	set = function(info, v)
-		ns.db[info[#info]] = v
+	get = function( info ) return ns.db[ info[ #info ] ] end,
+	set = function( info, v )
+		ns.db[ info[ #info ] ] = v
 		pluginHandler:Refresh()
 	end,
 	args = {
 		options = {
 			type = "group",
 			-- Add a " " to force this to be before the first group. HN arranges alphabetically on local language
-			name = " " ..ns.L["Options"],
+			name = " " ..ns.L[ "Options" ],
 			inline = true,
 			args = {
 				iconScale = {
 					type = "range",
-					name = ns.L["Map Pin Size"],
-					desc = ns.L["The Map Pin Size"],
+					name = ns.L[ "Map Pin Size" ],
+					desc = ns.L[ "The Map Pin Size" ],
 					min = 1, max = 4, step = 0.1,
 					arg = "iconScale",
 					order = 1,
 				},
 				iconAlpha = {
 					type = "range",
-					name = ns.L["Map Pin Alpha"],
-					desc = ns.L["The alpha transparency of the map pins"],
+					name = ns.L[ "Map Pin Alpha" ],
+					desc = ns.L[ "The alpha transparency of the map pins" ],
 					min = 0, max = 1, step = 0.01,
 					arg = "iconAlpha",
 					order = 2,
 				},
 				showCoords = {
-					name = ns.L["Show Coordinates"],
-					desc = ns.L["Show Coordinates Description"] ..ns.colour.highlight .."\n(xx.xx,yy.yy)",
+					name = ns.L[ "Show Coordinates" ],
+					desc = ns.L[ "Show Coordinates Description" ] ..ns.colour.highlight .."\n(xx.xx,yy.yy)",
 					type = "toggle",
 					width = "full",
 					arg = "showCoords",
@@ -524,7 +466,7 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeAchieveChar",
-					order = 6,
+					order = 7,
 				},
 				removeAchieveAcct = {
 					name = SubstitutePlayerOrElseAcct( "RWCAchievements" ),
@@ -532,18 +474,18 @@ ns.options = {
 					type = "toggle",
 					width = "full",
 					arg = "removeAchieveAcct",
-					order = 7,
+					order = 8,
 				},
 			},
 		},
 		icon = {
 			type = "group",
-			name = ns.L["Map Pin Selections"],
+			name = ns.L[ "Map Pin Selections" ],
 			inline = true,
 			args = {
 				iconZoneElders = {
 					type = "range",
-					name = ns.L["Zones"],
+					name = ns.L[ "Zones" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconZoneElders",
@@ -551,7 +493,7 @@ ns.options = {
 				},
 				iconDungeonElders = {
 					type = "range",
-					name = ns.L["Dungeons"],
+					name = ns.L[ "Dungeons" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconDungeonElders",
@@ -559,7 +501,7 @@ ns.options = {
 				},
 				iconFactionElders = {
 					type = "range",
-					name = ns.L["Factions"],
+					name = ns.L[ "Factions" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconFactionElders",
@@ -567,7 +509,7 @@ ns.options = {
 				},
 				iconPreservation = {
 					type = "range",
-					name = ns.L["Lunar Preservation"],
+					name = ns.L[ "Lunar Preservation" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconPreservation",
@@ -575,7 +517,7 @@ ns.options = {
 				},
 				iconCrown = {
 					type = "range",
-					name = ns.L["Crown of... Quests"],
+					name = ns.L[ "Crown of... Quests" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconCrown",
@@ -583,7 +525,7 @@ ns.options = {
 				},
 				iconSeasonal = {
 					type = "range",
-					name = ns.L["Seasonal"] .." " ..ns.L["Quests"],
+					name = ns.L[ "Seasonal" ] .." " ..ns.L[ "Quests" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconSeasonal",
@@ -591,7 +533,7 @@ ns.options = {
 				},
 				iconMeta = {
 					type = "range",
-					name = ns.L["HonorElders"],
+					name = ns.L[ "HonorElders" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconMeta",
@@ -599,7 +541,7 @@ ns.options = {
 				},
 				iconHistory = {
 					type = "range",
-					name = ns.L["History"],
+					name = ns.L[ "History" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconHistory",
@@ -607,7 +549,7 @@ ns.options = {
 				},
 				iconSpecial = {
 					type = "range",
-					name = ns.L["Special"],
+					name = ns.L[ "Special" ],
 					desc = ns.iconStandard, 
 					min = 1, max = 16, step = 1,
 					arg = "iconSpecial",
@@ -617,15 +559,15 @@ ns.options = {
 		},
 		notes = {
 			type = "group",
-			name = ns.L["Notes"],
+			name = ns.L[ "Notes" ],
 			inline = true,
 			args = {
-				noteMenu = { type = "description", name = ns.L[ "MinimapMenu" ], order = 20, },
-				separator1 = { type = "header", name = "", order = 21, },
+				noteMenu = { type = "description", name = ns.L[ "MinimapMenu" ], order = 30, },
+				separator1 = { type = "header", name = "", order = 31, },
 				noteChat = { type = "description", name = ns.L[ "ChatCommands" ]
 					..NORMAL_FONT_COLOR_CODE .."/lf" ..HIGHLIGHT_FONT_COLOR_CODE ..", "
 					..NORMAL_FONT_COLOR_CODE .."/lunar" ..HIGHLIGHT_FONT_COLOR_CODE ..ns.L[ "ShowPanel" ],
-					order = 22, },
+					order = 32, },
 			},
 		},
 	},
@@ -636,14 +578,13 @@ ns.options = {
 function HandyNotes_LunarFestival_OnAddonCompartmentClick( addonName, buttonName )
 	Settings.OpenToCategory( "HandyNotes" )
 	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LunarFestival" )
- end
+end
 
 function HandyNotes_LunarFestival_OnAddonCompartmentEnter( ... )
 	GameTooltip:SetOwner( MinimapCluster or AddonCompartmentFrame, "ANCHOR_LEFT" )	
-	GameTooltip:AddLine( ns.colour.prefix ..ns.L[ "Lunar Festival" ] )
-	GameTooltip:AddLine( ns.colour.highlight .." " )
+	GameTooltip:AddLine( ns.colour.prefix ..ns.L[ "Lunar Festival" ] .."\n\n" )
 	GameTooltip:AddDoubleLine( ns.colour.highlight ..ns.L[ "Left" ] .."/" ..ns.L[ "Right" ], ns.colour.plaintext
-			..ns.L[ "Options" ] )
+		..ns.L[ "Options" ] )
 	GameTooltip:Show()
 end
 
@@ -658,10 +599,9 @@ function pluginHandler:OnEnable()
 	if not HereBeDragons then return end
 	
 	for continentMapID in next, ns.continents do
-		local children = C_Map.GetMapChildrenInfo(continentMapID, nil, true)
+		local children = GetMapChildrenInfo( continentMapID, nil, true )
 		for _, map in next, children do
-			if ns.points[map.mapID] then
-				-- Maps here will not propagate upwards
+			if ns.points[ map.mapID ] then -- Maps here will not propagate upwards
 				if ( map.mapID == 33 ) or -- Blackrock Mountain - Blackrock Spire
 					( map.mapID == 34 ) or -- Blackrock Mountain - Blackrock Caverns
 					( map.mapID == 35 ) or -- Blackrock Mountain - Blackrock Depths					
@@ -676,13 +616,13 @@ function pluginHandler:OnEnable()
 					( map.mapID == 2214 ) or -- The Ringing Deeps
 					( map.mapID == 2274 ) then -- Khaz Algar
 				else
-					for coord, v in next, ns.points[map.mapID] do
+					for coord, v in next, ns.points[ map.mapID ] do
 						if v.noContinent == nil then
-							local mx, my = HandyNotes:getXY(coord)
-							local cx, cy = HereBeDragons:TranslateZoneCoordinates(mx, my, map.mapID, continentMapID)
+							local mx, my = HandyNotes:getXY( coord )
+							local cx, cy = HereBeDragons:TranslateZoneCoordinates( mx, my, map.mapID, continentMapID )
 							if cx and cy then
-								ns.points[continentMapID] = ns.points[continentMapID] or {}
-								ns.points[continentMapID][HandyNotes:getCoord(cx, cy)] = v
+								ns.points[ continentMapID ] = ns.points[ continentMapID ] or {}
+								ns.points[ continentMapID ][ HandyNotes:getCoord( cx, cy ) ] = v
 							end
 						end
 					end
@@ -691,7 +631,7 @@ function pluginHandler:OnEnable()
 		end
 	end
 	HandyNotes:RegisterPluginDB( "LunarFestival", pluginHandler, ns.options )
-	ns.db = LibStub( "AceDB-3.0" ):New( "HandyNotes_LunarFestivalDB", defaults, "Default" ).profile
+	ns.db = LibStub( "AceDB-3.0" ):New( "HandyNotes_LunarFestivalDB", ns.defaults, "Default" ).profile
 	pluginHandler:Refresh()
 end
 
@@ -751,7 +691,6 @@ ns.eventFrame:SetScript( "OnEvent", OnEventHandler )
 SLASH_LunarFestival1, SLASH_LunarFestival2 = "/lf", "/lunar"
 
 local function Slash( options )
-
 	Settings.OpenToCategory( "HandyNotes" )
 	LibStub( "AceConfigDialog-3.0" ):SelectGroup( "HandyNotes", "plugins", "LunarFestival" )
 	if ( ns.version >= 100000 ) then

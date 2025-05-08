@@ -16,7 +16,7 @@ No data binding is implemented at this point, maybe later.
 
 --]]
 
-local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibMVC-1.0", 5
+local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibMVC-1.0", 6
 local lib = LibStub:NewLibrary(LIB_VERSION_MAJOR, LIB_VERSION_MINOR)
 
 if not lib then return end -- No upgrade needed
@@ -176,7 +176,14 @@ function lib:BindViewToController(frame, controller, inherits)
 	
 	-- .. then the actual controller's OnBind
 	if frame.OnBind then
-		frame:OnBind()
+		-- if a __Parent is defined, then set it
+		local parent = frame.__Parent
+		if parent then
+			frame:SetParent(parent)
+		end
+	
+		frame:OnBind(parent)
+		frame.__Parent = nil
 	end
 end
 

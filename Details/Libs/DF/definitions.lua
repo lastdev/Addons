@@ -189,6 +189,7 @@ GameCooltipFrame2 = {}
 ---@field TalentExporter table
 ---@field FormatNumber fun(number:number) : string abbreviate a number, e.g. 1000 -> 1k 1000 -> 1천, depending on the client language
 ---@field UnitGroupRolesAssigned fun(unitId: unit, bUseSupport:boolean?, specId: specializationid?) : string there's no self here
+---@field ConvertRole fun(self:table, value:string|number, valueType:string?) : string|number if passed a role name return a number, if passed a number return the role name, if value type is passed it forces the return to be a number or a string
 ---@field IsDragonflight fun():boolean
 ---@field IsDragonflightAndBeyond fun():boolean
 ---@field IsDragonflightOrBelow fun():boolean
@@ -215,6 +216,7 @@ GameCooltipFrame2 = {}
 ---@field CreateTextureInfo fun(self:table, texture:atlasname|texturepath|textureid, width:number?, height:number?, left:number?, right:number?, top:number?, bottom:number?, imageWidthnumber?, imageHeightnumber?) : table deprecated, use: DetailsFramework:CreateAtlas()
 ---@field CreateLabel fun(self:table, parent:frame, text:any, size:any?, color:any?, font:string?, member:string?, name:string?, layer:drawlayer?) : df_label
 ---@field CreateDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
+---@field CreateDropDownWithText fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown_text
 ---@field CreateFontDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?, bIncludeDefault:boolean?) : df_dropdown
 ---@field CreateColorDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
 ---@field CreateOutlineDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown

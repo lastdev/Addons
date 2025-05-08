@@ -19,6 +19,7 @@ Amr.FactionIds = Amr.Serializer.FactionIds
 Amr.InstanceIds = Amr.Serializer.InstanceIds
 Amr.SupportedInstanceIds = Amr.Serializer.SupportedInstanceIds
 Amr.ParseItemLink = Amr.Serializer.ParseItemLink
+Amr.ParseExtraItemInfo = Amr.Serializer.ParseExtraItemInfo
 Amr.IsSupportedInstanceId = Amr.Serializer.IsSupportedInstanceId
 Amr.IsSupportedInstance = Amr.Serializer.IsSupportedInstance
 --Amr.GetItemTooltip = Amr.Serializer.GetItemTooltip

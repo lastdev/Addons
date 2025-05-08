@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2553, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(208445)
 mod:SetEncounterID(2731)
 mod:SetUsedIcons(6, 7, 8)
@@ -287,7 +287,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.ignitingCount = self.vb.ignitingCount + 1
 		warnIgnitingGrowth:Show(self.vb.ignitingCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerIgnitingGrowthCD:Start(timer, self.vb.ignitingCount+1)
 		end
 		--Charge timer correction
@@ -320,7 +320,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.scorchingRootCount = self.vb.scorchingRootCount + 1
 		warnScorchingRoots:Show(self.vb.scorchingRootCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.scorchingRootCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerScorchingRootsCD:Start(timer, self.vb.scorchingRootCount+1)
 		end
 	elseif spellId == 418637 then
@@ -336,7 +336,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnFuriousChargePreTaunt:ScheduleVoice(1.5, "tauntboss")
 		end
 		--local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.furiousChargeCount+1) or 22
-		--if timer then
+		--if timer and timer > 0 then
 		--	timerFuriousChargeCD:Start(timer, self.vb.furiousChargeCount+1)
 		--end
 		timerFuriousChargeCD:Start(22.0, self.vb.furiousChargeCount+1)
@@ -349,7 +349,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnBlazingThornsSoak:ScheduleVoice(4, "helpsoak")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.thornsCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerBlazingThornsCD:Start(timer, self.vb.thornsCount+1)
 		end
 		if self:IsHard() then
@@ -372,7 +372,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFallingEmbers:Show(self.vb.scorchingRootCount)
 		specWarnFallingEmbers:Play("helpsoak")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.scorchingRootCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFallingEmbersCD:Start(timer, self.vb.scorchingRootCount+1)
 		end
 	elseif spellId == 427343 then
@@ -380,7 +380,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFireWhirl:Show(self.vb.infernoCount)
 		specWarnFireWhirl:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.infernoCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFireWhirlCD:Start(timer, self.vb.infernoCount+1)
 		end
 	elseif spellId == 429973 then
@@ -390,14 +390,14 @@ function mod:SPELL_CAST_START(args)
 			specWarnSmolderingBackdraft:Play("defensive")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.furiousChargeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerSmolderingBackdraftCD:Start(timer, self.vb.furiousChargeCount+1)
 		end
 	elseif spellId == 421325 then
 		self.vb.forcesCount = self.vb.forcesCount + 1
 		warnAshenCall:Show(self.vb.forcesCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.forcesCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerAshenCallCD:Start(timer, self.vb.forcesCount+1)
 		end
 	end
@@ -410,7 +410,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnForces:Show(self.vb.forcesCount)
 		self.vb.treeIcon = 8
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.forcesCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFieryForceofNatureCD:Start(timer, self.vb.forcesCount+1)
 		end
 	elseif spellId == 419485 then
@@ -422,13 +422,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 427299 and self:AntiSpam(5, 1) then
 		self.vb.thornsCount = self.vb.thornsCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.thornsCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFlashFireCD:Start(timer, self.vb.thornsCount+1)
 		end
 --	elseif spellId == 428901 and self:AntiSpam(5, 2) then
 --		self.vb.ignitingCount = self.vb.ignitingCount + 1
 --		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
---		if timer then
+--		if timer and timer > 0 then
 --			timerAshenDevestationCD:Start(timer, self.vb.ignitingCount+1)
 --		end
 	end
@@ -631,7 +631,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		self.vb.ignitingCount = self.vb.ignitingCount + 1
 		warnAshenDevastation:Show(self.vb.ignitingCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.ignitingCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerAshenDevestationCD:Start(timer, self.vb.ignitingCount+1)
 		end
 	end

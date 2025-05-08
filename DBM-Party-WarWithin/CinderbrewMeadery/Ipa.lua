@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2587, "DBM-Party-WarWithin", 7, 1272)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241102154000")
+mod:SetRevision("20250320200628")
 mod:SetCreatureID(210267)
 mod:SetEncounterID(2929)
 mod:SetHotfixNoticeRev(20240425000000)
@@ -15,7 +15,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 439365 439202 439031",
 	"SPELL_CAST_SUCCESS 440082",
-	"SPELL_AURA_APPLIED 440147 442122",
+	"SPELL_AURA_APPLIED 440147 442122 439325",
 	"SPELL_AURA_REMOVED 440147 442122",
 	"SPELL_PERIODIC_DAMAGE 441179 440087",
 	"SPELL_PERIODIC_MISSED 441179 440087"
@@ -32,17 +32,18 @@ or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnFillerUp							= mod:NewTargetNoFilterAnnounce(440147, 4)
 local warnFillerUpFaded						= mod:NewFadesAnnounce(440147, 1)
+local warnBurningFermentation				= mod:NewCountAnnounce(439202, 2)
 
 local specWarnSpoutingStout					= mod:NewSpecialWarningCount(439365, nil, nil, nil, 1, 2)
 --local yellSomeAbility						= mod:NewYell(372107)
-local specWarnBurningFermentation			= mod:NewSpecialWarningCount(439202, nil, nil, nil, 2, 2)
+local specWarnBurningFermentation			= mod:NewSpecialWarningYou(439202, false, nil, nil, 1, 17)
 local specWarnBottomsUppercut				= mod:NewSpecialWarningDefensive(439031, nil, nil, nil, 1, 2)
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(441179, nil, nil, nil, 1, 8)
 
-local timerSpoutingStoutCD					= mod:NewCDCountTimer(47.3, 439365, nil, nil, nil, 1)
+local timerSpoutingStoutCD					= mod:NewNextCountTimer(47.3, 439365, nil, nil, nil, 1)
 local timerRelocationForm					= mod:NewCastTimer(20, 448718, nil, nil, nil, 1)
-local timerBurningFermentationCD			= mod:NewCDCountTimer(47.3, 439202, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)
-local timerBottomsUppercutCD				= mod:NewCDCountTimer(47.3, 439031, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBurningFermentationCD			= mod:NewNextCountTimer(47.3, 439202, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)
+local timerBottomsUppercutCD				= mod:NewNextCountTimer(47.3, 439031, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 mod:AddNamePlateOption("NPOnFrothy", 442122)
 
@@ -55,7 +56,7 @@ function mod:OnCombatStart(delay)
 	self.vb.fermCount = 0
 	self.vb.uppercutCount = 0
 	timerSpoutingStoutCD:Start(10, 1)
-	timerBottomsUppercutCD:Start(26.4, 1)
+	timerBottomsUppercutCD:Start(26.3, 1)
 	timerBurningFermentationCD:Start(35.1, 1)
 	if self.Options.NPOnFrothy then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -78,8 +79,7 @@ function mod:SPELL_CAST_START(args)
 		timerSpoutingStoutCD:Start(nil, self.vb.stoutCount+1)
 	elseif spellId == 439202 then
 		self.vb.fermCount = self.vb.fermCount + 1
-		specWarnBurningFermentation:Show(self.vb.fermCount)
-		specWarnBurningFermentation:Play("aesoon")
+		warnBurningFermentation:Show(self.vb.fermCount)
 		timerBurningFermentationCD:Start(nil, self.vb.fermCount+1)
 	elseif spellId == 439031 then
 		self.vb.uppercutCount = self.vb.uppercutCount + 1
@@ -106,6 +106,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.NPOnFrothy then
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
 		end
+	elseif spellId == 439325 and args:IsPlayer() then
+		specWarnBurningFermentation:Show()
+		specWarnBurningFermentation:Play("debuffyou")
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

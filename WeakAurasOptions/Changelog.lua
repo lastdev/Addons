@@ -10,53 +10,27 @@ local AddonName = ...
 ---@class OptionsPrivate
 local OptionsPrivate = select(2, ...)
 OptionsPrivate.changelog = {
-  versionString = '5.19.4',
-  dateString = '2025-02-26',
-  fullChangeLogUrl = 'https://github.com/WeakAuras/WeakAuras2/compare/5.19.3...5.19.4',
+  versionString = '5.19.9',
+  dateString = '2025-04-25',
+  fullChangeLogUrl = 'https://github.com/WeakAuras/WeakAuras2/compare/5.19.8...5.19.9',
   highlightText = [==[
-Update for The War Within 11.1
+Bump .toc files]==],  commitText = [==[InfusOnWoW (4):
 
-New in this version:
+- Bump .toc files
+- Icon: If OmniCC or ElvUI are installed hide blizzard cooldown numbers
+- Currency trigger: Add type checking to guard against unexpected data
+- Update Discord List
 
-- models now have an alpha slider to set transparency
-- TSU-type custom triggers have some new convenience functions available. Documentation is avaliable at https://github.com/WeakAuras/WeakAuras2/wiki/Trigger-State-Updater-(TSU)#all-states-
-helper-methods
-  - this is unlikely to matter, but note that the choice of plumbing used means this is techni
-cally a breaking change if you ever created a state with the "__changed" key.
+Stanzilla (2):
 
-Fixes:
+- Update WeakAurasModelPaths from wago.tools
+- Update WeakAurasModelPaths from wago.tools
 
-- x-realm transfer of auras should fail less often
-- improve performance
-cally a breaking change if you ever created a state with the "__changed" key.
+mrbuds (3):
 
-Fixes:
-
-- x-realm transfer of auras should fail less often
-- improve performance
-- large, deply nested groups should load significantly faster (i.e. https://wago.io/twwdungeons should be less prone to throw errors when you start an encounter)
-- "Hide Cooldown Text" condition property remembered how to function
-- x-realm data transfer (for sharing auras) should be more likely to actually succeed now]==],  commitText = [==[InfusOnWoW (6):
-
-- Use Chomp for cross-realm transfer
-- Fix EnsureRegion repeately creating parents
-- Group: Don't calculate group size if not needed
-- Fix Hide Cooldown Text condition
-- Models: Fix Alpha animations
-- Be extra picky on noValidation spell inputs
-
-Stanzilla (1):
-
-- chore(toc): bump version for retail
-
-emptyrivers (1):
-
-- put the mixins in private exec_env too
-
-mrbuds (2):
-
-- cache buildup optimization for 11.1
-- Add alpha setting for model region
+- Unit Characteristics trigger: add creature type & family (Retail only)
+- Textute Atlas Picker: use C_Texture.GetAtlasElements on Retail
+- TSUHelper: hide __changed from pairs()
 
 ]==]
 }

@@ -1,5 +1,5 @@
 local _, addon = ...
-local config, private = addon.module('config')
+local config, private = addon.module('config'), {}
 local latestVersion = 4
 
 function config.init()

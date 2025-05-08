@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2426, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213155")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(166971, 166969, 166970)--Castellan Niklaus, Baroness Frieda, Lord Stavros
 mod:SetEncounterID(2412)
 mod:SetBossHPInfoToHighest()
@@ -467,12 +467,12 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 331634 then
 		if args:GetSrcCreatureID() == 166970 then--Main boss
 			local timer = allTimers[difficultyName][spellId][self.vb.phase]
-			if timer then
+			if timer and timer > 0 then
 				timerDarkRecitalCD:Start(timer)
 			end
 		else--173053
 			local timer = allTimers[difficultyName][331635][self.vb.phase]
-			if timer then
+			if timer and timer > 0 then
 				timerDarkRecitalCD:Start(timer)
 				timerDarkRecitalCD:UpdateInline(DBM_COMMON_L.MYTHIC_ICON)
 			end
@@ -480,32 +480,32 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 330965 then
 		warnCastellansCadre:Show()
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerCastellansCadreCD:Start(timer)
 		end
 	elseif spellId == 330978 then
 		warnDredgerServants:Show()
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerDredgerServantsCD:Start(timer)
 		end
 	elseif spellId == 327497 then
 		specWarnEvasiveLunge:Show()
 		specWarnEvasiveLunge:Play("chargemove")
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerEvasiveLungeCD:Start(timer)
 		end
 	elseif spellId == 346654 then
 		self.vb.drainCount = self.vb.drainCount + 1
 		warnDrainEssence:Show(self.vb.drainCount)
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerDrainEssenceCD:Start(timer)
 		end
 	elseif spellId == 346690 then
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerDualistsRiposteCD:Start(timer)
 		end
 	elseif spellId == 337110 then--Cast in sets of 2 or 3
@@ -532,7 +532,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnPridefulEruption:Show()
 		specWarnPridefulEruption:Play("scatter")
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerPridefulEruptionCD:Start(timer)
 		end
 		if self.Options.RangeFrame then
@@ -540,7 +540,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 346762 then
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerSoulSpikesCD:Start(timer)
 		end
 	elseif spellId == 346303 then
@@ -565,7 +565,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		if args:GetSrcCreatureID() == 166971 then--Main boss
 			local timer = allTimers[difficultyName][spellId][self.vb.phase]
-			if timer then
+			if timer and timer > 0 then
 				timerDutifulAttendantCD:Start(timer)
 			end
 		else
@@ -579,7 +579,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnWaltzofBlood:Show()
 		specWarnWaltzofBlood:Play("watchstep")
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerWaltzofBloodCD:Start(timer)
 		end
 	end
@@ -903,7 +903,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			warnDancingFools:Show()
 		end
 		local timer = allTimers[difficultyName][spellId][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerDancingFoolsCD:Start(timer)
 		end
 		if self.Options.SetIconOnDancingFools then
@@ -921,7 +921,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 			self:ScanForMobs(172803, 2, 6, 1, nil, 10, "SetIconOnImage")--creatureID, iconSetMethod, mobIcon, maxIcon, scanInterval, scanningTime, optionName
 		end
 		local timer = allTimers[difficultyName][337110][self.vb.phase]
-		if timer then
+		if timer and timer > 0 then
 			timerDreadboltVolleyCD:Start(timer)
 		end
 	end

@@ -71,16 +71,14 @@ L["DUNGEON_SHORT_NAME_ARAK"] = "AraK"
 --[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BREW"] = ""--]] 
+L["DUNGEON_SHORT_NAME_BREW"] = "Hydro"
 L["DUNGEON_SHORT_NAME_BRH"] = "BdF"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_COEN"] = ""--]] 
 L["DUNGEON_SHORT_NAME_COS"] = "CoS"
 L["DUNGEON_SHORT_NAME_COT"] = "CdF"
 L["DUNGEON_SHORT_NAME_DAWN"] = "LBA"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_DFC"] = ""--]] 
+L["DUNGEON_SHORT_NAME_DFC"] = "Faille"
 L["DUNGEON_SHORT_NAME_DHT"] = "FS"
 L["DUNGEON_SHORT_NAME_DOS"] = "AC"
 L["DUNGEON_SHORT_NAME_EB"] = "LFé"
@@ -89,9 +87,8 @@ L["DUNGEON_SHORT_NAME_EB"] = "LFé"
 L["DUNGEON_SHORT_NAME_FALL"] = "AdIRdG"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_FLOOD"] = ""--]] 
-L["DUNGEON_SHORT_NAME_GB"] = "GB "
+L["DUNGEON_SHORT_NAME_FLOOD"] = "OVo"
+L["DUNGEON_SHORT_NAME_GB"] = "GB"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
 --[[Translation missing --]]
@@ -106,9 +103,8 @@ L["DUNGEON_SHORT_NAME_HOV"] = "SdI"
 --[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
-L["DUNGEON_SHORT_NAME_MISTS"] = "BRUMES"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ML"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MISTS"] = "Brumes"
+L["DUNGEON_SHORT_NAME_ML"] = "Filon"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NELT"] = "NELT"
@@ -117,13 +113,11 @@ L["DUNGEON_SHORT_NAME_NL"] = "RdN"
 --[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "SN"
 L["DUNGEON_SHORT_NAME_PF"] = "MP"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_PSF"] = ""--]] 
+L["DUNGEON_SHORT_NAME_PSF"] = "Prieuré"
 L["DUNGEON_SHORT_NAME_RISE"] = "AdIcdM"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_RLP"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ROOK"] = ""--]] 
+L["DUNGEON_SHORT_NAME_ROOK"] = "Colonie"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SBG"] = ""--]] 
 L["DUNGEON_SHORT_NAME_SD"] = "PS"
@@ -140,7 +134,7 @@ L["DUNGEON_SHORT_NAME_SV"] = "CAVE"
 --[[ L["DUNGEON_SHORT_NAME_TD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
-L["DUNGEON_SHORT_NAME_TOP"] = "TdlS"
+L["DUNGEON_SHORT_NAME_TOP"] = "Théâtre"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TOS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOTT"] = "TdM"
@@ -154,8 +148,7 @@ L["DUNGEON_SHORT_NAME_ULD"] = "ULD"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WM"] = "MM"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
+L["DUNGEON_SHORT_NAME_WORK"] = "Mécagone"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
 L["ENABLE_AUTO_FRAME_POSITION"] = "Positionner automatiquement le cadre de profil Raider.IO"
@@ -284,44 +277,25 @@ L["RAID_BOSS_AVOTI_5"] = "Dathéa, transcendée"
 L["RAID_BOSS_AVOTI_6"] = "Kurog Totem-Sinistre"
 L["RAID_BOSS_AVOTI_7"] = "Garde-couvée Diurna"
 L["RAID_BOSS_AVOTI_8"] = "Raszageth la Mange-tempêtes"
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BOT_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BWD_6"] = ""--]] 
+L["RAID_BOSS_BOT_1"] = "Halfus Brise-Wyrm"
+L["RAID_BOSS_BOT_2"] = "Theralion et Valiona"
+L["RAID_BOSS_BOT_3"] = "Conseil d’ascendants"
+L["RAID_BOSS_BOT_4"] = "Cho’gall"
+L["RAID_BOSS_BOT_5"] = "Sinestra"
+L["RAID_BOSS_BRD_1"] = "Seigneur Roccor"
+L["RAID_BOSS_BRD_2"] = "Bael’Gar"
+L["RAID_BOSS_BRD_3"] = "Seigneur Incendius"
+L["RAID_BOSS_BRD_4"] = "Seigneur golem Argelmach"
+L["RAID_BOSS_BRD_5"] = "Les sept"
+L["RAID_BOSS_BRD_6"] = "Général Forgehargne"
+L["RAID_BOSS_BRD_7"] = "Ambassadeur Cinglefouet"
+L["RAID_BOSS_BRD_8"] = "Empereur Dagran Thaurissan"
+L["RAID_BOSS_BWD_1"] = "Système de défense Omnitron"
+L["RAID_BOSS_BWD_2"] = "Magmagueule"
+L["RAID_BOSS_BWD_3"] = "Atramédès"
+L["RAID_BOSS_BWD_4"] = "Chimaeron"
+L["RAID_BOSS_BWD_5"] = "Maloriak"
+L["RAID_BOSS_BWD_6"] = "Fin de Nefarian"
 L["RAID_BOSS_CN_1"] = "Hurlaile"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor le Veneur"
@@ -332,198 +306,102 @@ L["RAID_BOSS_CN_6"] = "Dame Inerva Sombreveine"
 L["RAID_BOSS_CN_7"] = "Le Conseil du Sang"
 L["RAID_BOSS_CN_8"] = "Fangepoing"
 L["RAID_BOSS_CN_9"] = "Généraux de la Légion de Pierre"
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FCN_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSFO_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FSOD_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_12"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ICC_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_NP_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_RS_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SFO_9"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_SOD_9"] = ""--]] 
+L["RAID_BOSS_DS_1"] = "Morchok"
+L["RAID_BOSS_DS_2"] = "Seigneur de guerre Zon’ozz"
+L["RAID_BOSS_DS_3"] = "Yor’sahj l’Insomniaque"
+L["RAID_BOSS_DS_4"] = "Hagara la Lieuse des tempêtes"
+L["RAID_BOSS_DS_5"] = "Ultraxion"
+L["RAID_BOSS_DS_6"] = "Maître de guerre Corne-Noire"
+L["RAID_BOSS_DS_7"] = "Échine d'Aile de mort"
+L["RAID_BOSS_DS_8"] = "Folie d'Aile de mort"
+L["RAID_BOSS_FCN_1"] = "Hurlaile"
+L["RAID_BOSS_FCN_10"] = "Sire Denathrius"
+L["RAID_BOSS_FCN_2"] = "Altimor le Veneur"
+L["RAID_BOSS_FCN_3"] = "Salut du roi-soleil"
+L["RAID_BOSS_FCN_4"] = "Artificier Xy’mox"
+L["RAID_BOSS_FCN_5"] = "Destructeur affamé"
+L["RAID_BOSS_FCN_6"] = "Dame Inerva Sombreveine"
+L["RAID_BOSS_FCN_7"] = "Le conseil du Sang"
+L["RAID_BOSS_FCN_8"] = "Fangepoing"
+L["RAID_BOSS_FCN_9"] = "Généraux de la Légion de pierre"
+L["RAID_BOSS_FL_1"] = "Beth'tilac"
+L["RAID_BOSS_FL_2"] = "Seigneur Rhyolith"
+L["RAID_BOSS_FL_3"] = "Shannox"
+L["RAID_BOSS_FL_4"] = "Alysrazor"
+L["RAID_BOSS_FL_5"] = "Baleroc"
+L["RAID_BOSS_FL_6"] = "Chambellan Forteramure"
+L["RAID_BOSS_FL_7"] = "Ragnaros"
+L["RAID_BOSS_FSFO_1"] = "Gardien vigilant"
+L["RAID_BOSS_FSFO_10"] = "Rygelon"
+L["RAID_BOSS_FSFO_11"] = "Le Geôlier"
+L["RAID_BOSS_FSFO_2"] = "Skolex, l’Insatiable vorace"
+L["RAID_BOSS_FSFO_3"] = "Artificier Xy’mox"
+L["RAID_BOSS_FSFO_4"] = "Dausegne, l’Oracle déchu"
+L["RAID_BOSS_FSFO_5"] = "Panthéon des prototypes"
+L["RAID_BOSS_FSFO_6"] = "Lihuvim, architecte principal"
+L["RAID_BOSS_FSFO_7"] = "Halondrus le Récupérateur"
+L["RAID_BOSS_FSFO_8"] = "Anduin Wrynn"
+L["RAID_BOSS_FSFO_9"] = "Seigneurs de l’effroi"
+L["RAID_BOSS_FSOD_1"] = "Le Naphtrémens"
+L["RAID_BOSS_FSOD_10"] = "Sylvanas Coursevent"
+L["RAID_BOSS_FSOD_2"] = "Oeil du Geôlier"
+L["RAID_BOSS_FSOD_3"] = "Les Neufs"
+L["RAID_BOSS_FSOD_4"] = "Vestige de Ner'zhul"
+L["RAID_BOSS_FSOD_5"] = "Etripeur d'âme Dormazain"
+L["RAID_BOSS_FSOD_6"] = "Mal-ferrant Raznal"
+L["RAID_BOSS_FSOD_7"] = "Gardien des Fondateurs"
+L["RAID_BOSS_FSOD_8"] = "Scribe du destin Roh-Kalo"
+L["RAID_BOSS_FSOD_9"] = "Kel'Thuzad"
+L["RAID_BOSS_ICC_1"] = "Seigneur Gargamoelle"
+L["RAID_BOSS_ICC_10"] = "Valithria Marcherêve"
+L["RAID_BOSS_ICC_11"] = "Sindragosa"
+L["RAID_BOSS_ICC_12"] = "Le roi-liche"
+L["RAID_BOSS_ICC_2"] = "Dame Murmemort"
+L["RAID_BOSS_ICC_3"] = "Bataille des canonnières de la Couronne de glace"
+L["RAID_BOSS_ICC_4"] = "Haut seigneur Saurcroc"
+L["RAID_BOSS_ICC_5"] = "Pulentraille"
+L["RAID_BOSS_ICC_6"] = "Trognepus"
+L["RAID_BOSS_ICC_7"] = "Professeur Putricide"
+L["RAID_BOSS_ICC_8"] = "Conseil du sang"
+L["RAID_BOSS_ICC_9"] = "Reine de sang Lana'thel"
+L["RAID_BOSS_LOU_1"] = "Vexie et les Écrouabouilles"
+L["RAID_BOSS_LOU_2"] = "Chaudron du carnage"
+L["RAID_BOSS_LOU_3"] = "Rik Rebond"
+L["RAID_BOSS_LOU_4"] = "Stix Jettetout"
+L["RAID_BOSS_LOU_5"] = "Pignonneur Crosseplatine"
+L["RAID_BOSS_LOU_6"] = "Le Bandit manchot"
+L["RAID_BOSS_LOU_7"] = "Verr’Minh, chefs de la sécurité"
+L["RAID_BOSS_LOU_8"] = "Roi du chrome Gallywix"
+L["RAID_BOSS_NP_1"] = "Ulgrax le Dévoreur"
+L["RAID_BOSS_NP_2"] = "L'horreur liée par le sang"
+L["RAID_BOSS_NP_3"] = "Sikran"
+L["RAID_BOSS_NP_4"] = "Rasha'nan"
+L["RAID_BOSS_NP_5"] = "Toressaim Ovi'nax"
+L["RAID_BOSS_NP_6"] = "Princesse-nexus Ky'veza"
+L["RAID_BOSS_NP_7"] = "Anub'arash"
+L["RAID_BOSS_NP_8"] = "Reine Ansurek"
+L["RAID_BOSS_RS_1"] = "Halion"
+L["RAID_BOSS_SFO_1"] = "Gardien vigilant"
+L["RAID_BOSS_SFO_10"] = "Rygelon"
+L["RAID_BOSS_SFO_11"] = "Le Geôlier"
+L["RAID_BOSS_SFO_2"] = "Skolex"
+L["RAID_BOSS_SFO_3"] = "Artificier Xy’mox"
+L["RAID_BOSS_SFO_4"] = "Dausegne"
+L["RAID_BOSS_SFO_5"] = "Prototype de la guerre"
+L["RAID_BOSS_SFO_6"] = "Lihuvim"
+L["RAID_BOSS_SFO_7"] = "Halondrus"
+L["RAID_BOSS_SFO_8"] = "Anduin Wrynn"
+L["RAID_BOSS_SFO_9"] = "Seigneurs de l’effroi"
+L["RAID_BOSS_SOD_1"] = "Le Naphtrémens"
+L["RAID_BOSS_SOD_10"] = "Sylvanas Coursevent"
+L["RAID_BOSS_SOD_2"] = "L’œil du Geôlier"
+L["RAID_BOSS_SOD_3"] = "Les Neuf"
+L["RAID_BOSS_SOD_4"] = "Vestige de Ner’zhul"
+L["RAID_BOSS_SOD_5"] = "Étripeur d’âme Dormazain"
+L["RAID_BOSS_SOD_6"] = "Mal-ferrant Raznal"
+L["RAID_BOSS_SOD_7"] = "Gardien des Fondateurs"
+L["RAID_BOSS_SOD_8"] = "Scribe du destin Roh-Kalo"
+L["RAID_BOSS_SOD_9"] = "Kel’Thuzad"
 L["RAID_BOSS_TOTFW_1"] = "Conclave du Vent"
 L["RAID_BOSS_TOTFW_2"] = "Al’Akir"
 L["RAID_BOSS_VOTI_1"] = "Eranog"
@@ -535,8 +413,7 @@ L["RAID_BOSS_VOTI_6"] = "Kurog Totem-Sinistre"
 L["RAID_BOSS_VOTI_7"] = "Garde-couvée Diurna"
 L["RAID_BOSS_VOTI_8"] = "Raszageth la Mange-tempêtes"
 L["RAID_BOT"] = "Le bastion du Crépuscule"
---[[Translation missing --]]
---[[ L["RAID_BRD"] = ""--]] 
+L["RAID_BRD"] = "Profondeurs de Rochenoire"
 L["RAID_BWD"] = "Descente de l’Aile noire"
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "Héroïque"
 L["RAID_DIFFICULTY_NAME_HEROIC10"] = "Héroïque 10"
@@ -552,14 +429,11 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
---[[Translation missing --]]
---[[ L["RAID_DS"] = ""--]] 
+L["RAID_DS"] = "L’Âme des dragons"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Rencontres de Raid vaincues"
---[[Translation missing --]]
---[[ L["RAID_FL"] = ""--]] 
+L["RAID_FL"] = "Terres de Feu"
 L["RAID_ICC"] = "Citadelle de la Couronne de glace"
---[[Translation missing --]]
---[[ L["RAID_LOU"] = ""--]] 
+L["RAID_LOU"] = "Libération de Terremine"
 L["RAID_NP"] = "Palais des Nérub’ar"
 L["RAID_RS"] = "Le sanctum Rubis"
 L["RAID_TOTFW"] = "Trône des quatre vents"
@@ -573,8 +447,7 @@ L["RAIDERIO_MP_SCORE"] = "Score Raider.IO M+"
 L["RAIDERIO_MYTHIC_OPTIONS"] = "Options de l'addon Raider.IO"
 L["RAIDING_DATA_HEADER"] = "Progression de Raid Raider.IO"
 L["RAIDING_DB_MODULES"] = "Modules de base de données de raid"
---[[Translation missing --]]
---[[ L["RECENT_RUNS_WITH_YOU"] = ""--]] 
+L["RECENT_RUNS_WITH_YOU"] = "Mes clés récentes"
 L["RECRUITMENT_DB_MODULES"] = "Modules de base de données de recrutement"
 L["RELOAD_LATER"] = "Je rechargerai l'interface plus tard"
 L["RELOAD_NOW"] = "Recharger l'interface maintenant"
@@ -677,8 +550,7 @@ L["SHOW_WARBAND_SCORE"] = "Afficher le score et la progression M+ de votre Batai
 L["SHOW_WARBAND_SCORE_DESC"] = "Affiche le score Mythique+ de votre Bataillon pour la saison en cours ainsi que la progression du raid dans l'info-bulle. Les joueurs doivent s'être inscrits sur Raider.IO et avoir synchronisé leur compte Battle.net pour que la progression de Bataillon fonctionne."
 L["TANK"] = "Tank"
 L["TEAM_LF_MPLUS_DEFAULT"] = "Recrutement de joueurs Mythique+"
---[[Translation missing --]]
---[[ L["TEAM_LF_MPLUS_WITH_SCORE"] = ""--]] 
+L["TEAM_LF_MPLUS_WITH_SCORE"] = "Recrutement de %d joueurs Mythique+"
 L["TIMED_10_RUNS"] = "10-14+ dans les temps"
 L["TIMED_15_RUNS"] = "15+ dans les temps"
 L["TIMED_20_RUNS"] = "20+ dans les temps"

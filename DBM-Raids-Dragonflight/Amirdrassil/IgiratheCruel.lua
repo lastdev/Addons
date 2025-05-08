@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2554, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(200926)
 mod:SetEncounterID(2709)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -132,7 +132,7 @@ function mod:SPELL_CAST_START(args)
 			timerBlisteringSpearCD:Start(30, self.vb.spearTotal+1)
 		elseif self.vb.tormentCount >= 1 then--Timers will follow sequence of event during active weapons basically
 			local timer = self:IsMythic() and blisteringMythicTimers[self.vb.spearCount+1] or self:IsHeroic() and blisteringHeroicTimers[self.vb.spearCount+1] or blisteringEasyTimers[self.vb.spearCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerBlisteringSpearCD:Start(timer, self.vb.spearTotal+1)
 			end
 		end

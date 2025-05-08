@@ -195,7 +195,7 @@ function private.RecordMail(index, subIndex, resolveNames)
 			return false
 		end
 		local copper = floor(bid / quantity + 0.5)
-		if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+		if not ClientInfo.IsVanillaClassic() then
 			quantity = itemQuantity
 		end
 		local buyTime = (time() + (daysLeft - 30) * SECONDS_PER_DAY)
@@ -406,7 +406,7 @@ function private.GetItemLink(index, attachIndex)
 end
 
 function private.GetQuantity(index, attachIndex)
-	if attachIndex or (not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442()) then
+	if attachIndex or ClientInfo.IsVanillaClassic() then
 		local _, quantity = Inbox.GetAttachment(index, attachIndex or 1)
 		return quantity or 0
 	else

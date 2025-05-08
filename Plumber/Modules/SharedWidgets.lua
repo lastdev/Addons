@@ -5609,12 +5609,12 @@ do  --Displayed required items on nameplate widget set
     end
 
     function NameplateTokenMixin:OnEnter()
-        GameTooltip:Hide();
+        NamePlateTooltip:Hide();
         DelayedTooltip:OnObjectEnter(self);
     end
 
     function NameplateTokenMixin:OnLeave()
-        GameTooltip:Hide();
+        NamePlateTooltip:Hide();
         DelayedTooltip:OnObjectLeave(self);
     end
 
@@ -5625,16 +5625,16 @@ do  --Displayed required items on nameplate widget set
 
         if self.type == "item" then
             method = "SetItemByID";
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-
         elseif self.type == "currency" then
             method = "GetCurrencyByID";
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
         end
 
         if method then
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            GameTooltip[method](GameTooltip, self.id);
+            --Anchor the GameTooltip to nameplate nullify its "clampedToScreen"
+            --Blizzard_NamePlates use NamePlateTooltip, so we'll do that too.
+            local tooltip = NamePlateTooltip;
+            tooltip:SetOwner(self, "ANCHOR_RIGHT");
+            tooltip[method](tooltip, self.id);
         end
     end
 
@@ -5774,6 +5774,122 @@ do  --SliceFrame
         API.Mixin(f, NewSliceFrameMixin);
         f:SetLayoutByName(layoutName);
         f:UpdatePixel();
+        return f
+    end
+end
+
+do  --Small Golden Border Circle, See "MainHelpPlateButton" in Blizzard_SharedXML/SharedUIPanelTemplates
+    function API.CreateGoldPlateButton(parent, onEnterFunc, onLeaveFunc, onClickFunc)
+        local f = CreateFrame("Button", nil, parent);
+        f:SetSize(32, 32);
+
+        f.Ring = f:CreateTexture(nil, "BORDER");
+        f.Ring:SetSize(64, 64);
+        f.Ring:SetPoint("CENTER", f, "CENTER", 12 ,-13);
+        f.Ring:SetTexture("Interface/Minimap/MiniMap-TrackingBorder");
+
+        f.Icon = f:CreateTexture(nil, "BACKGROUND");
+        f.Icon:SetSize(23, 23);
+        f.Icon:SetPoint("CENTER", f, "CENTER", 0, 0);
+        f.Icon:SetColorTexture(1, 0, 0)
+
+        f:SetScript("OnEnter", onEnterFunc);
+        f:SetScript("OnLeave", onLeaveFunc);
+        f:SetScript("OnClick", onClickFunc);
+
+        return f
+    end
+end
+
+do  --Blizzard Check Button
+    local BlizzardCheckButtonMixin = {};
+    
+    BlizzardCheckButtonMixin.ButtonMixin = {};
+    do
+        function BlizzardCheckButtonMixin.ButtonMixin:OnEnter()
+            if self.tooltip1 then
+                local tooltip1, tooltip2;
+                if type(self.tooltip1 == "function") then
+                    tooltip1, tooltip2 = self.tooltip1();
+                else
+                    tooltip1 = self.tooltip1;
+                    tooltip2 = self.tooltip2;
+                end
+
+                if tooltip1 then
+                    local GameTooltip = GameTooltip;
+                    GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                    GameTooltip:SetText(tooltip1, 1, 1, 1);
+                    if tooltip2 then
+                        GameTooltip:AddLine(tooltip2, 1, 0.82, 0, true);
+                    end
+                    GameTooltip:Show();
+                end
+            end
+        end
+
+        function BlizzardCheckButtonMixin.ButtonMixin:OnLeave()
+            GameTooltip:Hide();
+        end
+
+        function BlizzardCheckButtonMixin.ButtonMixin:OnClick()
+            local checked = self:GetChecked();
+            local dbKey = self:GetParent().dbKey;
+
+            if dbKey then
+                addon.SetDBValue(dbKey, checked, true);
+            end
+            if self.onCheckedFunc then
+                self.onCheckedFunc(self, checked);
+            end
+
+            if checked then
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+            else
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
+            end
+        end
+    end
+
+    function BlizzardCheckButtonMixin:SetLabel(label)
+        self.Label:SetText(label);
+        self:Layout();
+    end
+
+    function BlizzardCheckButtonMixin:Layout()
+        local textWidth = 5 + self.Label:GetWrappedWidth();
+        self:SetSize(API.Round(32 + textWidth + 6), 32);
+        self.Button:SetHitRectInsets(0, -textWidth, 0, 0);
+    end
+
+    function BlizzardCheckButtonMixin:SetTooltip(tooltip1, tooltip2)
+        self.Button.tooltip1 = tooltip1;
+        self.Button.tooltip2 = tooltip2;
+    end
+
+    function BlizzardCheckButtonMixin:SetChecked(state)
+        self.Button:SetChecked(state);
+    end
+
+    function BlizzardCheckButtonMixin:GetChecked()
+        return self.Button:GetChecked();
+    end
+
+    function BlizzardCheckButtonMixin:SetDBKey(dbKey)
+        self.dbKey = dbKey;
+    end
+
+    function BlizzardCheckButtonMixin:SetOnCheckedFunc(onCheckedFunc)
+        self.Button.onCheckedFunc = onCheckedFunc;
+    end
+
+    function API.CreateBlizzardCheckButton(parent)
+        local f = CreateFrame("Frame", nil, parent, "PlumberBlizzardCheckButtonTemplate");
+        Mixin(f, BlizzardCheckButtonMixin);
+        Mixin(f.Button, BlizzardCheckButtonMixin.ButtonMixin);
+        for method, func in pairs(BlizzardCheckButtonMixin.ButtonMixin) do
+            f.Button:SetScript(method, func);
+        end
         return f
     end
 end

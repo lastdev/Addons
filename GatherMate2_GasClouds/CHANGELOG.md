@@ -1,6 +1,6 @@
 # GatherMate2 <Gas Clouds>
 
-## [2.10](https://github.com/michaelnpsp/GatherMate2GasClouds/tree/2.10) (2025-02-26)
-[Full Changelog](https://github.com/michaelnpsp/GatherMate2GasClouds/compare/2.9...2.10) [Previous Releases](https://github.com/michaelnpsp/GatherMate2GasClouds/releases)
+## [2.11](https://github.com/michaelnpsp/GatherMate2GasClouds/tree/2.11) (2025-04-09)
+[Full Changelog](https://github.com/michaelnpsp/GatherMate2GasClouds/compare/2.10...2.11) [Previous Releases](https://github.com/michaelnpsp/GatherMate2GasClouds/releases)
 
-- Retail TOC Updated  
+- Classic TOC Updated  

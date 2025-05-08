@@ -9,11 +9,11 @@
 -- Version/Release info, bump these as needed:
 -- Bump .toc file and optionally update notes in localization.en.lua
 
-SMARTBUFF_DATE               = "300125"; -- EU Date
-SMARTBUFF_VERSION            = "r33." .. SMARTBUFF_DATE;
+SMARTBUFF_DATE               = "250425"; -- EU Date
+SMARTBUFF_VERSION            = "r34." .. SMARTBUFF_DATE;
 -- Update the NR below to force  reload of SB_Buffs on first login
 -- This is needed for buff changes or major patches
-SMARTBUFF_VERSIONNR          = 110007;
+SMARTBUFF_VERSIONNR          = 110105;
 -- End of version info
 
 SMARTBUFF_TITLE              = "SmartBuff";
@@ -520,6 +520,8 @@ function SMARTBUFF_OnLoad(self)
   SLASH_SmartReloadUI1 = "/rui";
 
   SMARTBUFF_InitSpellIDs();
+  SMARTBUFF_InitItemList();
+  SMARTBUFF_InitSpellList();
 
   --DEFAULT_CHAT_FRAME:AddMessage("SB OnLoad");
 end
@@ -807,9 +809,9 @@ Enum.SmartBuffGroup = {
 }
 
 -- Set the current template and create an array of units
-function SMARTBUFF_SetTemplate()
+function SMARTBUFF_SetTemplate(force)
   -- Don't init things when mounted or in combat
-  if (InCombatLockdown() or IsMounted() or IsFlying()) then return end
+  if (not force and (InCombatLockdown() or IsMounted() or IsFlying())) then return end
   if (SmartBuffOptionsFrame:IsVisible()) then return end
 
   local newTemplate = currentTemplate -- default to old template
@@ -1616,6 +1618,7 @@ end
 
 local IsChecking = false;
 function SMARTBUFF_Check(mode, force)
+  -- print("precheck "..tostring(SMARTBUFF_PreCheck(mode, force)))
   if (IsChecking or not SMARTBUFF_PreCheck(mode, force)) then return; end
   IsChecking = true;
 
@@ -2406,7 +2409,7 @@ function SMARTBUFF_CanApplyWeaponBuff(buff, slot)
   end
 
   local itemLink = GetInventoryItemLink("player", slot);
-  local _, _, itemCode = string.find(itemLink, "(%d+):");
+  local _, _, itemCode = string.find(itemLink, "item:(%d+):");
   local _, _, _, _, _, itemType, itemSubType = C_Item.GetItemInfo(itemCode);
 
   --if (itemType and itemSubType) then
@@ -3225,7 +3228,7 @@ function SMARTBUFF_Options_Init(self)
     SmartBuff_KeyButton:SetPoint("CENTER", UIParent, "CENTER", 0, 100);
   end
 
-  SMARTBUFF_SetTemplate();
+  SMARTBUFF_SetTemplate(true);
   SMARTBUFF_RebindKeys();
   isSyncReq = true;
 end
@@ -4697,15 +4700,15 @@ function SMARTBUFF_ToggleTutorial(close)
   local helpPlate = HelpPlateList;
   if (not helpPlate) then return end;
 
-  local b = HelpPlate_IsShowing(helpPlate);
+  local b = HelpPlate.IsShowingHelpInfo(helpPlate);
   if (close) then
-    HelpPlate_Hide(false);
+    HelpPlate.Hide(false);
     return;
   end
 
   if (not b) then
-    HelpPlate_Show(helpPlate, SmartBuffOptionsFrame, SmartBuffOptionsFrame_TutorialButton, true);
+    HelpPlate.Show(helpPlate, SmartBuffOptionsFrame, SmartBuffOptionsFrame_TutorialButton, true);
   else
-    HelpPlate_Hide(true);
+    HelpPlate.Hide(true);
   end
 end

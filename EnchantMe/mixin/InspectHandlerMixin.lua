@@ -1,5 +1,5 @@
 local _, addon = ...
-local InspectHandlerMixin, private = addon.namespace('InspectHandlerMixin')
+local InspectHandlerMixin = addon.namespace('InspectHandlerMixin')
 
 addon.mixin(InspectHandlerMixin, addon.HandlerMixin)
 

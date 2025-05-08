@@ -116,10 +116,6 @@ function LibTSMComponent.__static.IsCataClassic()
 	return GAME_VERSION == "CATA"
 end
 
-function LibTSMComponent.__static.IsCataClassicPatch442()
-	return GAME_VERSION == "CATA" and select(4, GetBuildInfo()) >= 40402
-end
-
 ---Returns whether or not we're running within the retail version of the game.
 ---@return boolean
 function LibTSMComponent.__static.IsRetail()

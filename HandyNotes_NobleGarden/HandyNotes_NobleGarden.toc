@@ -1,5 +1,5 @@
-## Interface: 110100
-## Version: 3.06
+## Interface: 110105
+## Version: 4.10
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
 ## Title: Noblegarden
@@ -14,23 +14,30 @@
 ## Title-ruRU: Сада Чудес
 ## Title-zhCN: 复活节
 ## Title-zhTW: 復活節
-## Notes: |cFFCA64EFHelp for the |cFFE641EFNoble Garden|r holiday
-## Notes-deDE: |cFFCA64EFHilfe für die |cFFE641EFNobelgarten|r-Feiertage
-## Notes-esES: |cFFCA64EFAyuda para las vacaciones de |cFFE641EFJardín Noble
-## Notes-esMX: |cFFCA64EFAyuda para las vacaciones de |cFFE641EFJardín Noble
-## Notes-frFR: |cFFCA64EFAide pour les vacances de |cFFE641EFJardin des nobles
-## Notes-itIT: |cFFCA64EFAiuto per le vacanze di |cFFE641EFFesta di Nobiluova
-## Notes-koKR: |cFFE641EF귀족의 정원|cFFCA64EF 휴가를 도와주세요
-## Notes-ptBR: |cFFCA64EFAjuda para o feriado de |cFFE641EFJardinova
-## Notes-ptPT: |cFFCA64EFAjuda para o feriado de |cFFE641EFJardinova
-## Notes-ruRU: |cFFCA64EFППомощь на празднике |cFFE641EFСада Чудес
-## Notes-zhCN: |cFFE641EF复活节|cFFCA64EF假期的帮助
-## Notes-zhTW: |cFFE641EF復活節|cFFCA64EF假期的幫助
+## Notes: |cFFFF1493Help for the |cFF00CED1Noble Garden|cFFFF1493 achievements and quests
+## Notes-deDE: |cFFFF1493Hilfe für Erfolge und Quests in |cFF00CED1Nobelgarten-Feiertage
+## Notes-esES: |cFFFF1493Ayuda para logros y misiones en |cFF00CED1Jardín Noble
+## Notes-esMX: |cFFFF1493Ayuda para logros y misiones en |cFF00CED1Jardín Noble
+## Notes-frFR: |cFFFF1493Aide pour les réalisations et les quêtes dans |cFF00CED1Jardin des nobles
+## Notes-itIT: |cFFFF1493Aiuto per obiettivi e missioni in |cFF00CED1Festa di Nobiluova
+## Notes-koKR: |cFF00CED1귀족의 정원|cFFFF1493업적 및 퀘스트에 대한 도움말
+## Notes-ptBR: |cFFFF1493Ajuda para conquistas e missões em |cFF00CED1Jardinova
+## Notes-ptPT: |cFFFF1493Ajuda para conquistas e missões em |cFF00CED1Jardinova
+## Notes-ruRU: |cFFFF1493Справка по достижениям и квестам в |cFF00CED1Сада Чудес
+## Notes-zhCN: |cFFFF1493帮助|cFF00CED1复活节|cFFFF1493的成就和任务
+## Notes-zhTW: |cFFFF1493幫助|cFF00CED1復活節|cFFFF1493的成就和任務
 ## RequiredDeps: HandyNotes
 ## SavedVariables: HandyNotes_NobleGardenDB
 ## AddonCompartmentFunc: HandyNotes_NobleGarden_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_NobleGarden_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_NobleGarden_OnAddonCompartmentLeave
 ## X-Curse-Project-ID: 678724
 ## X-Wago-ID: e56nxdG9
 
-Core.lua
+ColoursEtc.lua
+Localisations_Common.lua
+Localisations_Events.lua
+Localisations_NG.lua
+Mapping.lua
 Data.lua
+Core.lua

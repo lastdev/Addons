@@ -1,5 +1,5 @@
 local _, addon = ...
-local main, private = addon.module('main')
+local main = addon.module('main')
 local playerHandler
 local inspectHandler
 

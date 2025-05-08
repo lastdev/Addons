@@ -1,9 +1,9 @@
-## Interface: 40401
+## Interface: 40402
 ## Title: Chat Sound Customizer
 ## Notes: Don't miss chat messages anymore by not listening to them.
 ## Notes-ptBR: Não perca mais as mensagens no chat por não ouvi-las.
 ## Author: Canettieri & Eliote
-## Version: v2.3.0
+## Version: v2.5.0
 ## SavedVariables: ChatSoundCustomizerDB
 
 ## X-Curse-Project-ID: 417213

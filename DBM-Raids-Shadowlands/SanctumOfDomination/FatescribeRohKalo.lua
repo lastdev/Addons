@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2447, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045739")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(175730)
 mod:SetEncounterID(2431)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -227,7 +227,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 351680 then
 		self.vb.destinyCount = self.vb.destinyCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.destinyCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerInvokeDestinyCD:Start(timer, self.vb.destinyCount+1)
 		end
 	elseif spellId == 350554 then--Two sub cast IDs, but one primary?
@@ -235,7 +235,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.EternityIcon = 1
 		self.vb.eternityCount = self.vb.eternityCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.eternityCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerCallofEternityCD:Start(timer, self.vb.eternityCount+1)
 			--if (self.vb.eternityCount+1) == 2 and self.vb.phase == 3 then
 			--	self:Schedule(50, fixEternity, self)
@@ -246,7 +246,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFatedConjunction:Show()
 		specWarnFatedConjunction:Play("watchstep")
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][350421][self.vb.conjunctionCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerFatedConjunctionCD:Start(timer, self.vb.conjunctionCount+1)
 		end
 		timerFatedConjunction:Start()--6.7
@@ -255,14 +255,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.DebuffIcon = 1
 		self.vb.portentCount = self.vb.portentCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.portentCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerGrimPortentCD:Start(timer, self.vb.portentCount+1)
 		end
 	elseif spellId == 354265 then--Twist Fate
 		self.vb.twistCount = self.vb.twistCount + 1
 		warnTwistFate:Show(self.vb.twistCount)
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.twistCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerTwistFateCD:Start(timer, self.vb.twistCount+1)
 		end
 	elseif spellId == 357144 then
@@ -371,7 +371,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnExtemporaneousFate:Play("specialsoon")
 		timerDarkestDestiny:Start(30)
 		local timer = allTimers[difficultyName][3][spellId][self.vb.extemporaneousCount+1] or 39--(technically timer is always 39 unless spell queued behind other spells. this seems to be lowest cast order priority)
-		if timer then
+		if timer and timer > 0 then
 			timerExtemporaneousFateCD:Start(timer, self.vb.extemporaneousCount+1)
 		end
 	elseif spellId == 354964 then
@@ -384,7 +384,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.affinityCount = self.vb.affinityCount + 1
 			--The same timer a Extemporaneous fate, just earlier, offset self handled
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][353195][self.vb.affinityCount+1] or 39
-			if timer then
+			if timer and timer > 0 then
 				timerRunicAffinityCD:Start(timer, self.vb.affinityCount+1)
 			end
 		end

@@ -1,6 +1,6 @@
 ## X-Flavor: classic
-## Interface: 40401, 40402
-## Version: 1.6.2
+## Interface: 40402
+## Version: 1.6.8
 
 ## Title: Plumber
 
@@ -20,6 +20,7 @@ API.lua
 Modules\SharedData.lua
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
+Modules\BlizzardEditMode.lua
 
 ControlCenter.lua
 

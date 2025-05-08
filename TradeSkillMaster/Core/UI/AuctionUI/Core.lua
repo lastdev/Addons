@@ -56,7 +56,7 @@ function AuctionUI.OnInitialize(settingsDB)
 	DefaultUI.RegisterAuctionHouseVisibleCallback(private.AuctionFrameHidden, false)
 	AuctionScan.ConfigureLock(L["A scan is already in progress. Please stop that scan before starting another one."], private.ScanLockCallback)
 	ItemLinked.RegisterCallback(private.ItemLinkedCallback, true)
-	local loadTimer = DelayTimer.New("AUCTION_UI_LOAD_BLIZZ", function() C_AddOns.LoadAddOn((ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442()) and "Blizzard_AuctionHouseUI" or "Blizzard_AuctionUI") end)
+	local loadTimer = DelayTimer.New("AUCTION_UI_LOAD_BLIZZ", function() C_AddOns.LoadAddOn(ClientInfo.IsVanillaClassic() and "Blizzard_AuctionUI" or "Blizzard_AuctionHouseUI") end)
 	loadTimer:RunForTime(1)
 end
 
@@ -110,23 +110,16 @@ function private.AuctionFrameInit()
 		return
 	end
 	local tabTemplateName = nil
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
-		private.defaultFrame = AuctionHouseFrame
-		tabTemplateName = "AuctionHouseFrameTabTemplate"
-	else
+	if ClientInfo.IsVanillaClassic() then
 		private.defaultFrame = AuctionFrame
 		tabTemplateName = "AuctionTabTemplate"
+	else
+		private.defaultFrame = AuctionHouseFrame
+		tabTemplateName = "AuctionHouseFrameTabTemplate"
 	end
 	if not private.hasShown then
 		private.hasShown = true
-		if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
-			LibAHTab:CreateTab(AH_TAB_ID, CreateFrame("Frame"), Theme.GetColor("INDICATOR_ALT"):ColorText("TSM"))
-			ScriptWrapper.Set(LibAHTab:GetButton(AH_TAB_ID), "OnClick", private.TSMTabOnClick)
-			AuctionHouseFrame:HookScript("OnShow", private.UnregisterDefaultUIEvents)
-			if private.defaultFrame:IsVisible() then
-				private.UnregisterDefaultUIEvents()
-			end
-		else
+		if ClientInfo.IsVanillaClassic() then
 			local tabId = private.defaultFrame.numTabs + 1
 			local tab = CreateFrame("Button", "AuctionFrameTab"..tabId, private.defaultFrame, tabTemplateName)
 			tab:Hide()
@@ -138,14 +131,21 @@ function private.AuctionFrameInit()
 			PanelTemplates_SetNumTabs(private.defaultFrame, tabId)
 			PanelTemplates_EnableTab(private.defaultFrame, tabId)
 			ScriptWrapper.Set(tab, "OnClick", private.TSMTabOnClick)
+		else
+			LibAHTab:CreateTab(AH_TAB_ID, CreateFrame("Frame"), Theme.GetColor("INDICATOR_ALT"):ColorText("TSM"))
+			ScriptWrapper.Set(LibAHTab:GetButton(AH_TAB_ID), "OnClick", private.TSMTabOnClick)
+			AuctionHouseFrame:HookScript("OnShow", private.UnregisterDefaultUIEvents)
+			if private.defaultFrame:IsVisible() then
+				private.UnregisterDefaultUIEvents()
+			end
 		end
 	end
 	if private.settings.showDefault then
-		if not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() then
+		if ClientInfo.IsVanillaClassic() then
 			UIParent_OnEvent(UIParent, "AUCTION_HOUSE_SHOW")
 		end
 	else
-		if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+		if not ClientInfo.IsVanillaClassic() then
 			private.defaultFrame:SetScale(0.001)
 			LibAHTab:SetSelected(AH_TAB_ID)
 		end
@@ -177,7 +177,7 @@ function private.AuctionFrameHidden()
 	if not private.frame then
 		return
 	end
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+	if not ClientInfo.IsVanillaClassic() then
 		private.defaultFrame:SetScale(1)
 		private.defaultFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
 	end
@@ -190,7 +190,7 @@ function private.HideAuctionFrame()
 	end
 	private.frame:Hide()
 	-- For some reason, on retail the OnHide callback isn't called immediately
-	if not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() then
+	if ClientInfo.IsVanillaClassic() then
 		assert(not private.frame)
 	end
 	for _, callback in ipairs(private.updateCallbacks) do
@@ -205,7 +205,7 @@ function private.CreateMainFrame()
 		:SetSettingsContext(private.settings, "frame")
 		:SetMinResize(MIN_FRAME_SIZE.width, MIN_FRAME_SIZE.height)
 		:SetStrata("HIGH")
-		:SetProtected(not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() and private.settings.protectAuctionHouse)
+		:SetProtected(ClientInfo.IsVanillaClassic() and private.settings.protectAuctionHouse)
 		:AddPlayerGold(private.settings)
 		:AddAppStatusIcon(AppHelper.GetRegion(), AppHelper.GetLastSync(), TSM.AuctionDB.GetAppDataUpdateTimes())
 		:AddSwitchButton(private.SwitchBtnOnClick)
@@ -242,11 +242,11 @@ function private.BaseFrameOnHide(frame)
 	private.frame = nil
 	if not private.isSwitching then
 		PlaySound(SOUNDKIT.AUCTION_WINDOW_CLOSE)
-		if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+		if ClientInfo.IsVanillaClassic() then
+			CloseAuctionHouse()
+		else
 			private.defaultFrame:SetScale(1)
 			C_AuctionHouse.CloseAuctionHouse()
-		else
-			CloseAuctionHouse()
 		end
 	end
 	UIUtils.AnalyticsRecordClose("auction")
@@ -256,7 +256,7 @@ function private.SwitchBtnOnClick(button)
 	private.isSwitching = true
 	private.settings.showDefault = true
 	private.HideAuctionFrame()
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+	if not ClientInfo.IsVanillaClassic() then
 		private.defaultFrame:SetScale(1)
 		private.defaultFrame:SetDisplayMode(AuctionHouseFrameDisplayMode.Buy)
 	end
@@ -266,20 +266,20 @@ end
 
 function private.TSMTabOnClick()
 	private.settings.showDefault = false
-	if not ClientInfo.IsRetail() and not ClientInfo.IsCataClassicPatch442() then
+	if ClientInfo.IsVanillaClassic() then
 		ClearCursor()
 		ClickAuctionSellItemButton(AuctionsItemButton, "LeftButton")
 	end
 	ClearCursor()
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
-		private.defaultFrame:SetScale(0.001)
-		LibAHTab:SetSelected(AH_TAB_ID)
-	else
+	if ClientInfo.IsVanillaClassic() then
 		-- Replace CloseAuctionHouse() with a no-op while hiding the AH frame so we don't stop interacting with the AH NPC
 		local origCloseAuctionHouse = CloseAuctionHouse
 		CloseAuctionHouse = NoOp
 		AuctionFrame_Hide()
 		CloseAuctionHouse = origCloseAuctionHouse
+	else
+		private.defaultFrame:SetScale(0.001)
+		LibAHTab:SetSelected(AH_TAB_ID)
 	end
 	private.ShowAuctionFrame()
 end

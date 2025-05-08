@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2424, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024554")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(167406)
 mod:SetEncounterID(2407)
 mod:SetUsedIcons(1, 2, 3, 4, 7, 8)
@@ -379,7 +379,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHandofDestruction:Show()
 		specWarnHandofDestruction:Play("justrun")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.HandCount+1) or 41.2--Or part may not be accurate
-		if timer then
+		if timer and timer > 0 then
 			timerHandofDestructionCD:Start(timer, self.vb.HandCount+1)
 		end
 --		if self:IsFated() then--Disabled until further review with multiple affixes, also seems to only affect barrier so far
@@ -412,14 +412,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.DebuffIcon = 1
 		self.vb.DebuffCount = self.vb.DebuffCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.DebuffCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerNightHunterCD:Start(timer, self.vb.DebuffCount+1)
 		end
 	elseif spellId == 329943 then
 		self.vb.DebuffIcon = 1
 		self.vb.ImpaleCount = self.vb.ImpaleCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.ImpaleCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerImpaleCD:Start(timer, self.vb.ImpaleCount+1)
 		end
 	elseif spellId == 339196 and self.vb.phase == 3 then
@@ -492,7 +492,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnShatteringPain:Show(self.vb.painCount)
 		if self:IsMythic() then
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.painCount+1) or 21.9--TODO< hardcore more timer data
-			if timer then
+			if timer and timer > 0 then
 				timerShatteringPainCD:Start(timer, self.vb.painCount+1)
 			end
 			if selfInMirror then
@@ -535,7 +535,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(5, 1) then--Cast event isn't in combat log, hava to use debuffs
 			self.vb.DebuffCount = self.vb.DebuffCount + 1
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.DebuffCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerFeedingTimeCD:Start(timer, self.vb.DebuffCount+1)
 			end
 		end
@@ -624,7 +624,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self.vb.DebuffIcon = 1
 			self.vb.DebuffCount = self.vb.DebuffCount + 1
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.DebuffCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerFatalFitnesseCD:Start(timer, self.vb.DebuffCount+1)
 			end
 		end
@@ -656,7 +656,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.addCount = self.vb.addCount + 1
 		warnCrimsonCabalists:Show(self.vb.addCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.addCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerCrimsonCabalistsCD:Start(timer, self.vb.addCount+1)
 		end
 		if self.Options.SetIconOnBalefulShadows then--Only use up to 5 icons
@@ -782,7 +782,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		if not P3Transition then--We can't let a cast that slips through during Indignation screw up counts/timers
 			self.vb.HandCount = self.vb.HandCount + 1
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 333932, self.vb.HandCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerHandofDestructionCD:Start(timer, self.vb.HandCount+1)
 			end
 			if self:IsFated() then

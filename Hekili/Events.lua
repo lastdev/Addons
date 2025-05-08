@@ -333,10 +333,11 @@ RegisterEvent( "PLAYER_ENTERING_WORLD", function( event, login, reload )
             state.combat = GetTime() - 0.01
         end
 
-        local _, zone = GetInstanceInfo()
+        local _, zone, _, _, _, _, _, instanceID = GetInstanceInfo()
         state.bg = zone == "pvp"
         state.arena = zone == "arena"
         state.torghast = IsInJailersTower()
+        state.instance_id = instanceID or -1
 
         Hekili:BuildUI()
     end
@@ -378,10 +379,11 @@ end
 
 do
     local function UpdateZoneInfo()
-        local _, zone = GetInstanceInfo()
+        local _, zone, _, _, _, _, _, instanceID = GetInstanceInfo()
         state.bg = zone == "pvp"
         state.arena = zone == "arena"
         state.torghast = IsInJailersTower()
+        state.instance_id = instanceID or -1
     end
 
     RegisterEvent( "ZONE_CHANGED", UpdateZoneInfo )
@@ -1236,6 +1238,7 @@ do
 
         empowerment.spell = ability.key
         empowerment.start = start
+        empowerment.active = true
 
         for i = 1, 4 do
             local n = GetUnitEmpowerStageDuration( "player", i - 1 )
@@ -1254,6 +1257,7 @@ do
     RegisterUnitEvent( "UNIT_SPELLCAST_EMPOWER_STOP", "player", nil, function( event, unit, cast, spellID )
         empowerment.spell = "none"
 
+        empowerment.active = false
         empowerment.start = 0
         empowerment.finish = 0
         empowerment.hold = 0
@@ -1926,7 +1930,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                 -- Aura Tracking
                 if subtype == 'SPELL_AURA_APPLIED' or subtype == 'SPELL_AURA_REFRESH' or subtype == 'SPELL_AURA_APPLIED_DOSE' then
                     ns.trackDebuff( spellID, destGUID, time, true )
-                    if ( not minion or countPets ) and countDots then ns.updateTarget( destGUID, time, amSource ) end
+                    if ( not minion or countPets ) and countDots then ns.updateTarget( destGUID, time, amSource, spellID ) end
 
                     --[[ if spellID == 48108 or spellID == 48107 then
                         Hekili:ForceUpdate( "SPELL_AURA_SUPER", true )
@@ -1966,7 +1970,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                 ns.eliminateUnit( destGUID, true )
                 -- Hekili:ForceUpdate( "SPELL_DAMAGE_OVERKILL" )
             elseif not ( subtype == "SPELL_MISSED" and amount == "IMMUNE" ) then
-                ns.updateTarget( destGUID, time, amSource )
+                ns.updateTarget( destGUID, time, amSource, spellID )
             end
         end
     end

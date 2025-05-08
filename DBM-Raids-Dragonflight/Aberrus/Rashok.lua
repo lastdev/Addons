@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2525, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(201320)
 mod:SetEncounterID(2680)
 mod:SetUsedIcons(1)
@@ -117,7 +117,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 405821 then
 		self.vb.slamCount = self.vb.slamCount + 1
 		local timer = (self.vb.slamCount == 1) and 45.9 or (self.vb.slamCount == 2) and 32.9
-		if timer then
+		if timer and timer > 0 then
 			timerSearingSlamCD:Start(nil, self.vb.slamCount+1)
 		end
 	elseif spellId == 406851 then
@@ -173,7 +173,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnUnleashedShadowflame:Play("specialsoon")--Better voice?
 		--4.1, 45.9, 32.9
 		local timer = (self.vb.shadowflameCount == 1) and 45.9 or (self.vb.shadowflameCount == 2) and 32.9
-		if timer then
+		if timer and timer > 0 then
 			timerUnleashedShadowflameCD:Start(timer, self.vb.shadowflameCount+1)
 		end
 	end
@@ -186,7 +186,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.tankCombo = self.vb.tankCombo + 1
 		self.vb.comboCount = 0
 		local timer = (self.vb.tankCombo == 1) and 14.9 or (self.vb.tankCombo == 2) and 32.9
-		if timer then
+		if timer and timer > 0 then
 			timerVolcanicComboCD:Start(timer, self.vb.tankCombo+1)
 		end
 	end

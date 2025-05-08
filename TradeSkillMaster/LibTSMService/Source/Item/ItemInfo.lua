@@ -198,6 +198,9 @@ function ItemInfo.GetName(item)
 	if not name then
 		-- if we got passed an item link, we can maybe extract the name from it
 		name = strmatch(item, "^\124cff[0-9a-z]+\124[Hh].+\124h%[(.+)%]\124h\124r$")
+		if not name then
+			name = strmatch(item, "^\124cnIQ[0-9]:\124[Hh].+\124h%[(.+)%]\124h\124r$")
+		end
 		if name then
 			name = gsub(name, " \124A:.+\124a", "")
 		end

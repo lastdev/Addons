@@ -15,6 +15,14 @@ local hbCommands={ [strlower(HEALBOT_DISABLED_TARGET)]=true,
                    [strlower(HEALBOT_IGNOREAURAALL)]=true,
                    [strlower(HEALBOT_CANCELPLUGINALERT)]=true,
                    [strlower(HEALBOT_MOUSELOOK)]=true,
+                   [strlower(HEALBOT_TOGGLE_MYTARGETS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PRIVTANKS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PRIVHEALS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PRIVDPS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PERMPRIVLISTS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PERMPRIVTANKS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PERMPRIVHEALS)]=true,
+                   [strlower(HEALBOT_TOGGLE_PERMPRIVDPS)]=true,
                   }
 local hbPlayerCommands={}
 if HEALBOT_GAME_VERSION>3 then
@@ -489,6 +497,7 @@ function HealBot_ToolTip_ShowDebug(button)
             GlobalDimmingFrame="false"
         end
         HealBot_Tooltip_SetLine("GlobalDimmingFrame is "..GlobalDimmingFrame,0.4,1,1,1,"GlobalDimmingFrame ID is "..GlobalDimmingFrameID)
+        HealBot_Tooltip_SetLine("Button Text Name is "..(button.text.name or "nil"),0.4,1,1,1,"Button Text Nameonly is "..(button.text.nameonly or "nil"))
     end
 end
 
@@ -646,9 +655,9 @@ function HealBot_Action_DoRefreshTooltip()
     xGUID=UnitGUID(xUnit)
     local uName=""
     if HealBot_Globals.Tooltip_ShowTitle then
-        uName=UnitPVPName(xButton.unit) or xButton.text.nameonly
+        uName=UnitPVPName(xButton.unit) or xButton.text.nameonly or UnitName(xUnit)
     else
-        uName=xButton.text.nameonly
+        uName=xButton.text.nameonly or UnitName(xUnit)
     end
     if HealBot_Tooltip_luVars["doInit"] then
         HealBot_Tooltip_Init()
@@ -1768,8 +1777,8 @@ function HealBot_Tooltip_ShowCustomAnchor()
     if not hbCustomTipAnchor then
 		hbCustomTipAnchor=CreateFrame("Frame", "HealBot_Custom_Anchor_Frame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 		hbCustomTipAnchor:SetBackdrop({
-			bgFile="Interface\\Addons\\HealBot\\Images\\WhiteLine",
-			edgeFile="Interface\\Addons\\HealBot\\Images\\border",
+			bgFile="Interface\\Addons\\HealBot\\Images\\frame\\WhiteLine.tga",
+			edgeFile="Interface\\Addons\\HealBot\\Images\\frame\\border.tga",
 			tile=true,
 			tileSize=8,
 			edgeSize=8,

@@ -14,3 +14,5 @@ L["The east."] = true
 L["The west."] = true
 L["East"] = true
 L["West"] = true
+
+L["Rostrum of Transformation"] = true

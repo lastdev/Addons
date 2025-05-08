@@ -1,10 +1,7 @@
-## Interface: 40401
-## Title: HealBot Options
+## Interface: 00001
+## Title: HealBot Options <No Longer in use>
 ## Author: Strife
-## Notes: HealBot options and player settings
-## RequiredDeps: HealBot_Data
-## OptionalDeps: LibSharedMedia-3.0
-## IconTexture: Interface\AddOns\HealBot\Images\HealBot.tga
+## RequiredDeps: HealBot
+## Notes: This is no longer in use. A future release will recommend deleting the HealBot_Options folder in Addons.
 
-HealBot_Options_cata.xml
-HealBot_Options.xml
+HealBot_NotInUse.lua

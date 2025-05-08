@@ -1,10 +1,16 @@
-lightweight tag 9bbf7382513172a77acf060ced997842da034fd6 v1.6.1
+lightweight tag 848be4fe073c7a15af6dfb0e9adf91fadecec7d4 v1.6.3
 Author:	romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:	Wed Dec 18 14:39:05 2024 +0100
+Date:	Sat Mar 1 23:12:45 2025 +0100
 
-commit 9bbf7382513172a77acf060ced997842da034fd6
+commit 848be4fe073c7a15af6dfb0e9adf91fadecec7d4
 Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:   Wed Dec 18 14:39:05 2024 +0100
+Date:   Sat Mar 1 23:12:45 2025 +0100
 
-    Update TOC
+    Recognize Cyrce's Circlet sockets
+
+commit d25bf712ff68ee1402b24b340e7137c3405f7829
+Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
+Date:   Sat Mar 1 11:43:21 2025 +0100
+
+    Make icon smaller
 

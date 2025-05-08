@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2469, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714005600")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(181954)
 mod:SetEncounterID(2546)
 mod:SetUsedIcons(4, 5, 6, 7, 8)
@@ -249,7 +249,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnKingsmourneHungers:Show(self.vb.hungersCount)
 		specWarnKingsmourneHungers:Play("shockwave")
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.hungersCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerKingsmourneHungersCD:Start(timer, self.vb.hungersCount+1)
 		end
 		if self.Options.SetIconOnAnduinsHope then
@@ -264,7 +264,7 @@ function mod:SPELL_CAST_START(args)
 		table.wipe(overconfidentTargets)
 		table.wipe(hopelessnessTargets)
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.blastphemyCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerBlasphemyCD:Start(timer, self.vb.blastphemyCount+1)
 		end
 	elseif spellId == 365958 then
@@ -276,7 +276,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.befouledCount = self.vb.befouledCount + 1
 		warnBefouledBarrier:Show(self.vb.befouledCount)
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.befouledCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerBefouledBarrierCD:Start(timer, self.vb.befouledCount+1)
 		end
 	elseif spellId == 361815 then
@@ -286,7 +286,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnHopebreaker:Play("aesoon")
 		end
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.hopebreakerCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerHopebreakerCD:Start(timer, self.vb.hopebreakerCount+1)
 		end
 	elseif spellId == 365805 then
@@ -310,7 +310,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnGrimReflections:Show()
 		specWarnGrimReflections:Play("killmob")
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.blastphemyCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerGrimReflectionsCD:Start(timer, self.vb.blastphemyCount+1)
 		end
 	elseif spellId == 365008 then
@@ -363,7 +363,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.vb.phase then
 			if self.vb.phase < 3 then
 				local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 365030, self.vb.wickedCount+1)
-				if timer then
+				if timer and timer > 0 then
 					timerWickedStarCD:Start(timer, self.vb.wickedCount+1)
 				end
 			else
@@ -628,7 +628,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 366849 then
 		self.vb.domCount = self.vb.domCount + 1
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.domCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerDominationWordPainCD:Start(timer, self.vb.domCount+1)
 		end
 	end

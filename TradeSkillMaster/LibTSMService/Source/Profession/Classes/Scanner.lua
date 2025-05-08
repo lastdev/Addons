@@ -605,17 +605,15 @@ function private.ScanProfession()
 						local result = TradeSkill.GetResult(spellId)
 						if type(result) == "table" then
 							numResultItems = #result
-						else
-							if ItemString.GetBase(result) then
-								local ilvlBonuses = info.qualityIlvlBonuses
-								if ilvlBonuses then
-									numResultItems = #ilvlBonuses
-								else
-									numResultItems = 1
-								end
+						elseif ItemString.GetBase(result) then
+							local ilvlBonuses = info.qualityIlvlBonuses
+							if ilvlBonuses then
+								numResultItems = #ilvlBonuses
 							else
 								numResultItems = 1
 							end
+						else
+							numResultItems = 1
 						end
 					end
 					if not info.supportsQualities or info.isSalvageRecipe then

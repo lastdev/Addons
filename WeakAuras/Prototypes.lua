@@ -145,6 +145,7 @@ end
 local constants = {
   nameRealmFilterDesc = L[" Filter formats: 'Name', 'Name-Realm', '-Realm'. \n\nSupports multiple entries, separated by commas\nCan use \\ to escape -."],
   instanceFilterDeprecated = L["This filter has been moved to the Location trigger. Change your aura to use the new Location trigger or join the WeakAuras Discord server for help."],
+  guildFilterDesc = L["Supports multiple entries, separated by commas. Escape with \\. Prefix with '-' for negation."]
 }
 
 if WeakAuras.IsClassicOrCata() then
@@ -1782,6 +1783,12 @@ Private.load_prototype = {
       hidden = true
     },
     {
+      name = "guild",
+      init = "arg",
+      enable = false,
+      hidden = true
+    },
+    {
       name = "namerealm",
       display = L["Player Name/Realm"],
       type = "string",
@@ -1798,6 +1805,16 @@ Private.load_prototype = {
       test = "not nameRealmIgnoreChecker:Check(player, realm)",
       preamble = "local nameRealmIgnoreChecker = Private.ExecEnv.ParseNameCheck(%q)",
       desc = constants.nameRealmFilterDesc,
+    },
+    {
+      name = "guildcheck",
+      display = L["Guild"],
+      type = "string",
+      multiline = true,
+      test = "guildChecker:Check(guild)",
+      preamble = "local guildChecker = Private.ExecEnv.ParseStringCheck(%q)",
+      desc = constants.guildFilterDesc,
+      events = {"PLAYER_GUILD_UPDATE"}
     },
     {
       name = "race",
@@ -2025,8 +2042,9 @@ Private.load_prototype = {
       multiEntry = {
         operator = "or"
       },
-      test = "C_Item.IsEquippedItem(C_Item.GetItemInfo(%s) or '')",
-      events = { "UNIT_INVENTORY_CHANGED", "PLAYER_EQUIPMENT_CHANGED"}
+      test = "C_Item.IsEquippedItem(%s or '')",
+      events = { "UNIT_INVENTORY_CHANGED", "PLAYER_EQUIPMENT_CHANGED"},
+      only_exact = true,
     },
     {
       name = "not_itemequiped",
@@ -2035,8 +2053,9 @@ Private.load_prototype = {
       multiEntry = {
         operator = "or"
       },
-      test = "not C_Item.IsEquippedItem(C_Item.GetItemInfo(%s) or '')",
-      events = { "UNIT_INVENTORY_CHANGED", "PLAYER_EQUIPMENT_CHANGED"}
+      test = "not C_Item.IsEquippedItem(%s or '')",
+      events = { "UNIT_INVENTORY_CHANGED", "PLAYER_EQUIPMENT_CHANGED"},
+      only_exact = true,
     },
     {
       name = "itemtypeequipped",
@@ -2425,6 +2444,48 @@ Private.event_prototypes = {
         conditionType = "select"
       },
       {
+        name = "creatureTypeIndex",
+        display = L["Creature Type"],
+        type = "multiselect",
+        init = "select(2, UnitCreatureType(unit))",
+        values = "creature_type_types",
+        store = true,
+        sorted = true,
+        conditionType = "select",
+        enable = WeakAuras.IsRetail(),
+        hidden = not WeakAuras.IsRetail(),
+      },
+      {
+        name = "creatureType",
+        display = L["Creature Type Name"],
+        init = "UnitCreatureType(unit)",
+        store = true,
+        test = "true",
+        hidden = true,
+        enable = WeakAuras.IsRetail(),
+      },
+      {
+        name = "creatureFamilyIndex",
+        display = L["Creature Family"],
+        type = "multiselect",
+        init = "select(2, UnitCreatureFamily(unit))",
+        values = "creature_family_types",
+        store = true,
+        sorted = true,
+        conditionType = "select",
+        enable = WeakAuras.IsRetail(),
+        hidden = not WeakAuras.IsRetail(),
+      },
+      {
+        name = "creatureFamily",
+        display = L["Creature Family Name"],
+        init = "UnitCreatureFamily(unit)",
+        store = true,
+        test = "true",
+        hidden = true,
+        enable = WeakAuras.IsRetail(),
+      },
+      {
         name = "role",
         display = L["Assigned Role"],
         type = "select",
@@ -2676,7 +2737,7 @@ Private.event_prototypes = {
             minValue, maxValue = 0, majorFactionData.renownLevelThreshold
             isCapped = C_MajorFactions.HasMaximumRenown(factionID)
 		        currentValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
-            standing = RENOWN_LEVEL_LABEL .. majorFactionData.renownLevel
+            standing = RENOWN_LEVEL_LABEL:format(majorFactionData.renownLevel)
             renownLevel = majorFactionData.renownLevel
             local renownLevels = C_MajorFactions.GetRenownLevels(factionID)
             maxRenownLevel = renownLevels and renownLevels[#renownLevels].level
@@ -3543,10 +3604,22 @@ Private.event_prototypes = {
         name = L["Absorb"],
         func = function(trigger, state)
           local absorb = state.absorb
+          if not absorb then
+            return
+          end
           if (trigger.absorbMode == "OVERLAY_FROM_START") then
             return 0, absorb;
-          else
+          elseif (trigger.absorbMode == "OVERLAY_FROM_END") then
             return "forward", absorb;
+          else
+            if not state.total then
+              return
+            end
+            local total = state.total
+            if not total then
+              return
+            end
+            return total - absorb, total
           end
         end,
         enable = function(trigger)
@@ -3557,10 +3630,19 @@ Private.event_prototypes = {
         name = L["Heal Absorb"],
         func = function(trigger, state)
           local healabsorb = state.healabsorb
+          if not healabsorb then
+            return
+          end
           if (trigger.absorbHealMode == "OVERLAY_FROM_START") then
             return 0, healabsorb;
-          else
+          elseif (trigger.absorbMode == "OVERLAY_FROM_END") then
             return "forward", healabsorb;
+          else
+            local total = state.total
+            if not total then
+              return
+            end
+            return total - healabsorb, total
           end
         end,
         enable = function(trigger)
@@ -7972,6 +8054,9 @@ Private.event_prototypes = {
         if Private.chat_message_leader_event[trigger.messageType] then
           table.insert(events, Private.chat_message_leader_event[trigger.messageType])
         end
+        if trigger.messageType == "CHAT_MSG_EMOTE" then
+          table.insert(events, "CHAT_MSG_TEXT_EMOTE")
+        end
         return { events = events }
       end
       return {
@@ -8017,7 +8102,7 @@ Private.event_prototypes = {
         if (event == 'CHAT_MSG_TEXT_EMOTE') then
           event = 'CHAT_MSG_EMOTE';
         end
-         local use_cloneId = %s;
+        local use_cloneId = %s;
       ]];
       return ret:format(trigger.use_cloneId and "true" or "false");
     end,
@@ -8701,17 +8786,10 @@ Private.event_prototypes = {
         local itemSlot = %s
       ]]
 
-      if trigger.use_exact_itemName then
-        ret = ret ..[[
-          local itemName = triggerItemName
-          local equipped = WeakAuras.CheckForItemEquipped(triggerItemName, itemSlot)
-        ]]
-      else
-        ret = ret ..[[
-          local itemName = C_Item.GetItemInfo(triggerItemName)
-          local equipped = WeakAuras.CheckForItemEquipped(itemName, itemSlot)
-        ]]
-      end
+      ret = ret ..[[
+        local itemName = triggerItemName
+        local equipped = WeakAuras.CheckForItemEquipped(triggerItemName, itemSlot)
+      ]]
 
       return ret:format(trigger.use_inverse and "true" or "false", itemName, trigger.use_itemSlot and trigger.itemSlot or "nil");
     end,
@@ -8728,7 +8806,7 @@ Private.event_prototypes = {
         type = "item",
         required = true,
         test = "true",
-        showExactOption = true
+        only_exact = true
       },
       {
         name = "itemId",
@@ -11462,12 +11540,16 @@ Private.event_prototypes = {
 
       local function createQuantityCheck(property, operator, value, primary, use)
         if not use then return nil end
-        return([[
-          if not primaryCheckFailed and not ((currencyInfo["%s"] or 0) %s %s) then
-            active = false
-            %s
-          end
-        ]]):format(property, operator or "<", tonumber(value) or 0, primary and "primaryCheckFailed = true" or "")
+        if type(property) == "string" and type(operator) == "string" then
+          return([[
+            if not primaryCheckFailed and not ((currencyInfo["%s"] or 0) %s %s) then
+              active = false
+              %s
+            end
+          ]]):format(property, operator or "<", tonumber(value) or 0, primary and "primaryCheckFailed = true" or "")
+        else
+          return ""
+        end
       end
 
       local function createTristateCheck(property, value, primary)
@@ -11481,21 +11563,23 @@ Private.event_prototypes = {
       end
 
       local function createCloneCheck(property, operator, value, check_type, condition, use)
-        if check_type == "number" and use then
-          return([[
-            if cloneActive and not ((currencyData["%s"] or 0) %s %s) then
-              cloneActive = false
-            end
-          ]]):format(property, operator or "<", tonumber(value) or 0)
-        elseif check_type == "tristate" and value ~= nil then
-          return([[
-            if cloneActive and %s ~= %s then
-              cloneActive = false
-            end
-          ]]):format(condition, value and "true" or "false")
-        else
-          return nil
+        if type(property) == "string" and type(operator) == "string" then
+          if check_type == "number" and use then
+            return([[
+              if cloneActive and not ((currencyData["%s"] or 0) %s %s) then
+                cloneActive = false
+              end
+            ]]):format(property, operator or "<", tonumber(value) or 0)
+          elseif check_type == "tristate" and value ~= nil then
+            return([[
+              if cloneActive and %s ~= %s then
+                cloneActive = false
+              end
+            ]]):format(condition, value and "true" or "false")
+          else
+          end
         end
+        return ""
       end
 
       table.insert(quantityChecks, createQuantityCheck("quantity", trigger.value_operator, trigger.value, nil, trigger.use_value))
@@ -12001,6 +12085,7 @@ if WeakAuras.IsClassicEra() then
   Private.event_prototypes["Death Knight Rune"] = nil
   Private.event_prototypes["Currency"] = nil
   Private.event_prototypes["Alternate Power"] = nil
+  Private.event_prototypes["Spell Activation Overlay"] = nil
 end
 if WeakAuras.IsCataClassic() then
   Private.event_prototypes["Swing Timer"] = nil
@@ -12011,7 +12096,6 @@ if WeakAuras.IsClassicOrCata() then
   end
   Private.event_prototypes["Evoker Essence"] = nil
   Private.event_prototypes["Equipment Set"] = nil
-  Private.event_prototypes["Spell Activation Overlay"] = nil
   Private.event_prototypes["PvP Talent Selected"] = nil
   Private.event_prototypes["Class/Spec"] = nil
   Private.event_prototypes["Loot Specialization"] = nil

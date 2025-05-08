@@ -1,5 +1,5 @@
-local VERSION_TEXT = "v1.6.2";
-local VERSION_DATE = 1740600000;
+local VERSION_TEXT = "v1.6.8";
+local VERSION_DATE = 1745700000;
 
 
 local addonName, addon = ...
@@ -7,6 +7,9 @@ local addonName, addon = ...
 local L = {};       --Locale
 local API = {};     --Custom APIs used by this addon
 local DB;
+local DB_PC;        --Per Character
+
+PlumberGlobals = {};
 
 addon.L = L;
 addon.API = API;
@@ -81,6 +84,18 @@ end
 addon.GetDBBool = GetDBBool;
 
 
+local function GetPersonalData(dbKey)
+    --From SavedVariablesPerCharacter
+    return DB_PC[dbKey]
+end
+addon.GetPersonalData = GetPersonalData;
+
+local function SetPersonalData(dbKey, value, userInput)
+    DB_PC[dbKey] = value;
+end
+addon.SetPersonalData = SetPersonalData;
+
+
 local DefaultValues = {
     AutoJoinEvents = true,
     BackpackItemTracker = true,
@@ -101,6 +116,7 @@ local DefaultValues = {
     TooltipItemReagents = false,        --For items with "use to combine": show the reagent count
     PlayerChoiceFrameToken = true,      --Add owned token count to PlayerChoiceFrame
     ExpansionLandingPage = true,        --Display extra info on the ExpansionLandingPage
+    Delves_Dashboard = true,            --Show Great Vault Progress on DelvesDashboardFrame
     Delves_SeasonProgress = true,       --Display Seaonal Journey changes on a progress bar
     WoWAnniversary = true,              --QuickSlot for Mount Maniac Event
         VotingResultsExpanded = true,
@@ -116,18 +132,22 @@ local DefaultValues = {
     Plunderstore = true,
         Plunderstore_HideCollected = true,
     BlizzardSuperTrack = false,         --Add timer to the SuperTrackedFrame when tracking a POI with time format
+    ProfessionsBook = true,             --Show unspent points on ProfessionsBookFrame
+    TooltipProfessionKnowledge = true,  --Show unspent points on GameTooltip
+    EditModeShowPlumberUI = true,
+    LandingPageSwitch = true,           --Right click on ExpansionLandingPageMinimapButton to open a menu to access mission report
 
 
     --Custom Loot Window
     LootUI = false,
-        LootUI_FontSize = 14,
+        LootUI_FontSize = 12,
         LootUI_FadeDelayPerItem = 0.25,
         LootUI_ItemsPerPage = 6,
         LootUI_BackgroundAlpha = 0.5,
         LootUI_ShowItemCount = false,
         LootUI_NewTransmogIcon = true,
         LootUI_ForceAutoLoot = true,
-        LootUI_LootUnderMouse = false;
+        LootUI_LootUnderMouse = false,
         LootUI_UseHotkey = true,
         LootUI_HotkeyName = "E",
         LootUI_ReplaceDefaultAlert = false,
@@ -143,7 +163,7 @@ local DefaultValues = {
 
     --Modify default interface behavior:
     BlizzFixEventToast = true,          --Make Toast non-interactable
-    MerchantPrice = false;              --Merchant Price (Alt Currency) Overview, gray insufficient items
+    MerchantPrice = false,              --Merchant Price (Alt Currency) Overview, gray insufficient items
 
 
     --In-game Navigation: Use waypoint (Super Tracking) to navigate players. Generally default to false, since it will mute WoW's own SuperTrackedFrame
@@ -169,6 +189,7 @@ local DefaultValues = {
         SpellFlyout_CloseAfterClick = true,
         SpellFlyout_SingleRow = false,
         SpellFlyout_HideUnusable = false,
+        SpellFlyout_UpdateFrequently = false,
 
 
     EnableNewByDefault = false,             --Always enable newly added features
@@ -179,15 +200,18 @@ local DefaultValues = {
 
 
     --Deprecated:
-    --DruidModelFix = true,               --Fixed by Blizzard in 10.2.0
-    --BlizzFixWardrobeTrackingTip = true, --Hide Wardrobe tip that cannot be disabled   --Tip removed by Blizzard
+    --DruidModelFix = true,                 --Fixed by Blizzard in 10.2.0
+    --BlizzFixWardrobeTrackingTip = true,   --Hide Wardrobe tip that cannot be disabled   --Tip removed by Blizzard
+    --MinimapMouseover = false,             --Ridden with compatibility issue
 };
 
 local function LoadDatabase()
     PlumberDB = PlumberDB or {};
     PlumberStorage = PlumberStorage or {};  --Save large data (Spell)
+    PlumberDB_PC = PlumberDB_PC or {};
 
     DB = PlumberDB;
+    DB_PC = PlumberDB_PC;
 
     local alwaysEnableNew = DB.EnableNewByDefault or false;
     local newDBKeys = {};

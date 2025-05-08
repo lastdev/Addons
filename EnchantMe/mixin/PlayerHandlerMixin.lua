@@ -1,5 +1,5 @@
 local _, addon = ...
-local PlayerHandlerMixin, private = addon.namespace('PlayerHandlerMixin')
+local PlayerHandlerMixin = addon.namespace('PlayerHandlerMixin')
 local equipmentUpdated = false
 
 addon.mixin(PlayerHandlerMixin, addon.HandlerMixin)

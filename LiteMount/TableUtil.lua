@@ -22,24 +22,14 @@ function LM.tMap(t, f, isIndexTable)
     return out
 end
 
-function LM.tCopyShallow(t)
-    local out = {}
-    for k,v in pairs(t) do out[k] = v end
-    return out
-end
-
 function LM.tSlice(t, from, to)
     return { unpack(t, from, to) }
-end
-
-local function tostringCompare(a, b)
-    return tostring(a) < tostring(b)
 end
 
 function LM.PairsByKeys (t, f)
     local a = {}
     for n in pairs(t) do table.insert(a, n) end
-    table.sort(a, f or tostringCompare)
+    table.sort(a, f)
     local i = 0      -- iterator variable
     local iter = function ()   -- iterator function
         i = i + 1

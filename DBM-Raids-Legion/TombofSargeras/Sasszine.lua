@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240502130828")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -197,7 +197,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.crashingWaveCount = self.vb.crashingWaveCount + 1
 		if self:IsMythic() and self.vb.phase == 3 then
 			local timer = p3MythicCrashingWave[self.vb.crashingWaveCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerCrashingWaveCD:Start(timer, self.vb.crashingWaveCount+1)
 			else
 				timerCrashingWaveCD:Start(30.9, self.vb.crashingWaveCount+1)

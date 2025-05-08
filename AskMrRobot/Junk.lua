@@ -35,14 +35,7 @@ local function scanBag(bagId, matchItem, usedItems)
             if itemLink ~= nil then
                 local itemData = Amr.Serializer.ParseItemLink(itemLink)
                 if itemData ~= nil then
-                    -- see if this is an azerite item and read azerite power ids
-                    --[[loc:SetBagAndSlot(bagId, slotId)
-                    if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(loc) then
-                        local powers = Amr.ReadAzeritePowers(loc)
-                        if powers then
-                            itemData.azerite = powers
-                        end
-                    end]]
+                    Amr.ParseExtraItemInfo(itemData, bagId, slotId, false)
                     
                     -- see if it matches
                     local diffs = Amr.CountItemDifferences(matchItem, itemData)
@@ -409,16 +402,7 @@ local function findMatchingNonBagItem(matchItem, usedItems)
             if itemLink then
                 local itemData = Amr.ParseItemLink(itemLink)
                 if itemData then
-
-                    --[[
-                    -- see if this is an azerite item and read azerite power ids
-                    loc:SetEquipmentSlot(slotId)
-                    if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(loc) then
-                        local powers = Amr.ReadAzeritePowers(loc)
-                        if powers then
-                            itemData.azerite = powers
-                        end
-                    end]]
+                    Amr.ParseExtraItemInfo(itemData, 0, slotId, true)
 
                     -- see if it matches
                     if Amr.CountItemDifferences(matchItem, itemData) == 0 then

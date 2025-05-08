@@ -238,9 +238,9 @@ function LM.Environment:GetDruidForm()
             local _, _, _, spellID = GetShapeshiftFormInfo(index)
             if spellID then
                 return id, C_Spell.GetSpellInfo(spellID)
-            else
-                LM.PrintError('Uh-oh, druid form query failure please tell the author')
-                LM.PrintError('id=%d, index=%d, spellID=nil', id, index)
+--          else
+--              LM.PrintError('Uh-oh, druid form query failure please tell the author')
+--              LM.PrintError('id=%d, index=%d, spellID=nil', id, index)
             end
         end
     end
@@ -440,19 +440,11 @@ function LM.Environment:CanFly(mapPath)
     return self:IsFlyableArea(mapPath)
 end
 
--- Blizzard's IsDrivableArea is always false so far
-function LM.Environment:IsDrivableArea(mapPath)
-    if C_ZoneAbility then
-        local zoneAbilities = C_ZoneAbility.GetActiveAbilities()
-        for _,info in ipairs(zoneAbilities) do
-            local zoneSpellName = C_Spell.GetSpellName(info.spellID)
-            local zoneSpellID = C_Spell.GetSpellInfo(zoneSpellName).spellID
-            if zoneSpellID == LM.SPELL.G_99_BREAKNECK then
-                return true
-            end
-        end
-    end
-    return false
+-- Blizzard's IsDrivableArea is always false so far. If the mount is usable
+-- then we are in the right area. Save duplicating all the code.
+
+function LM.Environment:IsDrivableArea()
+    return LM.Drive.IsUsable()
 end
 
 function LM.Environment:CantBreathe()

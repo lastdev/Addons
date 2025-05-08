@@ -1,9 +1,14 @@
 # DBM - The Burning Crusade mods
 
-## [r8](https://github.com/DeadlyBossMods/DBM-BurningCrusade/tree/r8) (2025-01-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BurningCrusade/compare/r7...r8) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BurningCrusade/releases)
+## [r9](https://github.com/DeadlyBossMods/DBM-BurningCrusade/tree/r9) (2025-04-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BurningCrusade/compare/r8...r9) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BurningCrusade/releases)
 
-- Add cataclysm PTR toc  
-- Blizzard code is ass, so partial revert of last  
-- Assign groups and categories for new addon manager in 11.1  
-- remove 11.0.5 and Add 11.1  
+- apparently i never remembered to bump tocs  
+- bump wrath toc  
+- Massive update RU locale and micro upd. Eng locale (#2)  
+    * Update localization.ru.lua  
+    * Update localization.en.lua  
+    Micro typo  
+    * Update localization.ru.lua  
+    * Update localization.ru.lua  
+    * Update localization.ru.lua  

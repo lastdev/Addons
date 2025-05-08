@@ -22,9 +22,9 @@ spec:RegisterTalents( {
     binding_heals              = {  82678, 368275, 1 }, -- 20% of Flash Heal healing on other targets also heals you.
     blessed_recovery           = {  82720, 390767, 1 }, -- After being struck by a melee or ranged critical hit, heal 20% of the damage taken over 6 sec.
     body_and_soul              = {  82706,  64129, 1 }, -- Power Word: Shield and Leap of Faith increase your target's movement speed by 40% for 3 sec.
-    cauterizing_shadows        = {  82687, 459990, 1 }, -- When your Shadow Word: Pain expires or is refreshed with less than 5 sec remaining, a nearby ally within 40 yards is healed for 183,145. 
+    cauterizing_shadows        = {  82687, 459990, 1 }, -- When your Shadow Word: Pain expires or is refreshed with less than 5 sec remaining, a nearby ally within 40 yards is healed for 183,145.
     crystalline_reflection     = {  82681, 373457, 2 }, -- Power Word: Shield instantly heals the target for 31,116 and reflects 10% of damage absorbed.
-    death_and_madness          = {  82711, 321291, 1 }, -- If your Shadow Word: Death fails to kill a target at or below 20% health, its cooldown is reset. Cannot occur more than once every 10 sec. 
+    death_and_madness          = {  82711, 321291, 1 }, -- If your Shadow Word: Death fails to kill a target at or below 20% health, its cooldown is reset. Cannot occur more than once every 10 sec.
     dispel_magic               = {  82715,    528, 1 }, -- Dispels Magic on the enemy target, removing 1 beneficial Magic effect.
     divine_star                = {  82682, 110744, 1 }, -- Throw a Divine Star forward 27 yds, healing allies in its path for 53,417 and dealing 49,786 Holy damage to enemies. After reaching its destination, the Divine Star returns to you, healing allies and damaging enemies in its path again. Healing reduced beyond 6 targets.
     dominate_mind              = {  82710, 205364, 1 }, -- Controls a mind up to 1 level above yours for 30 sec while still controlling your own mind. Does not work versus Demonic, Mechanical, or Undead beings or players. This spell shares diminishing returns with other disorienting effects.
@@ -39,9 +39,9 @@ spec:RegisterTalents( {
     inspiration                = {  82696, 390676, 1 }, -- Reduces your target's physical damage taken by 5% for 15 sec after a critical heal with Flash Heal or Penance.
     leap_of_faith              = {  82716,  73325, 1 }, -- Pulls the spirit of a party or raid member, instantly moving them directly in front of you.
     lights_inspiration         = {  82679, 373450, 2 }, -- Increases the maximum health gained from Desperate Prayer by 8%.
-    manipulation               = {  82672, 459985, 1 }, -- You take 2% less damage from enemies affected by your Shadow Word: Pain. 
+    manipulation               = {  82672, 459985, 1 }, -- You take 2% less damage from enemies affected by your Shadow Word: Pain.
     mass_dispel                = {  82699,  32375, 1 }, -- Dispels magic in a 15 yard radius, removing all harmful Magic from 5 friendly targets and 1 beneficial Magic effect from 5 enemy targets. Potent enough to remove Magic that is normally undispellable.
-    mental_agility             = {  82698, 341167, 1 }, -- Reduces the mana cost of Purify and Mass Dispel by 50% and Dispel Magic by 10%. 
+    mental_agility             = {  82698, 341167, 1 }, -- Reduces the mana cost of Purify and Mass Dispel by 50% and Dispel Magic by 10%.
     mind_control               = {  82710,    605, 1 }, -- Controls a mind up to 1 level above yours for 30 sec. Does not work versus Demonic, Undead, or Mechanical beings. Shares diminishing returns with other disorienting effects.
     move_with_grace            = {  82702, 390620, 1 }, -- Reduces the cooldown of Leap of Faith by 30 sec.
     petrifying_scream          = {  82695,  55676, 1 }, -- Psychic Scream causes enemies to tremble in place instead of fleeing in fear.
@@ -73,7 +73,7 @@ spec:RegisterTalents( {
     void_shift                 = {  82674, 108968, 1 }, -- Swap health percentages with your ally. Increases the lower health percentage of the two to 25% if below that amount.
     void_tendrils              = {  82708, 108920, 1 }, -- Summons shadowy tendrils, rooting all enemies within 8 yards for 15 sec or until the tendril is killed.
     words_of_the_pious         = {  82721, 377438, 1 }, -- For 12 sec after casting Power Word: Shield, you deal 10% additional damage and healing with Smite and Holy Nova.
-    
+
     -- Discipline
     abyssal_reverie            = {  82583, 373054, 2 }, -- Atonement heals for 10% more when activated by Shadow spells.
     atonement                  = {  82594,  81749, 1 }, -- Power Word: Shield, Flash Heal, Renew, Power Word: Radiance, and Power Word: Life apply Atonement to your target for 15 sec. Your spell damage heals all targets affected by Atonement for 35% of the damage done. Healing increased by 100% when not in a raid.
@@ -87,7 +87,7 @@ spec:RegisterTalents( {
     encroaching_shadows        = {  82590, 472568, 1 }, -- Shadow Word: Pain Spreads to 2 nearby enemies when you cast Penance on the target.
     enduring_luminescence      = {  82591, 390685, 1 }, -- Reduces the cast time of Power Word: Radiance by 30% and causes it to apply Atonement at an additional 10% of its normal duration.
     eternal_barrier            = {  86730, 238135, 1 }, -- Power Word: Shield absorbs 20% additional damage and lasts 5 sec longer.
-    evangelism                 = {  82598, 472433, 1 }, -- Extends Atonement on all allies by 6 sec and heals for 3.2 million, split evenly among them. 
+    evangelism                 = {  82598, 472433, 1 }, -- Extends Atonement on all allies by 6 sec and heals for 3.2 million, split evenly among them.
     expiation                  = {  82585, 390832, 2 }, -- Increases the damage of Mind Blast and Shadow Word: Death by 10%. Mind Blast and Shadow Word: Death consume 3 sec of Shadow Word: Pain, instantly dealing that damage.
     harsh_discipline           = {  82572, 373180, 2 }, -- Power Word: Radiance causes your next Penance to fire 3 additional bolts, stacking up to 2 times.
     indemnity                  = {  82576, 373049, 1 }, -- Atonements granted by Power Word: Shield last an additional 4 sec.
@@ -117,24 +117,24 @@ spec:RegisterTalents( {
     ultimate_penitence         = {  82577, 421453, 1 }, -- Ascend into the air and unleash a massive barrage of Penance bolts, causing 2.4 million Holy damage to enemies or 6 million healing to allies over 5.1 sec. While ascended, gain a shield for 100% of your health. In addition, you are unaffected by knockbacks or crowd control effects.
     void_summoner              = {  82570, 390770, 1 }, -- Mind Blast and Penance casts reduce the cooldown of Mindbender by 4.0 sec.
     weal_and_woe               = {  82569, 390786, 1 }, -- Your Penance bolts increase the damage of your next Smite by 20%, or the absorb of your next Power Word: Shield by 10%. Stacks up to 8 times.
-    
+
     -- Oracle
     assured_safety             = {  94691, 440766, 1 }, -- Power Word: Shield casts apply 4 stacks of Prayer of Mending to your target.
     clairvoyance               = {  94687, 428940, 1 }, -- Casting Premonition of Solace invokes Clairvoyance, expanding your mind and opening up all possibilities of the future.  Premonition of Clairvoyance Grants Premonition of Insight, Piety, and Solace at 100% effectiveness.
     desperate_measures         = {  94690, 458718, 1 }, -- Desperate Prayer lasts an additional 10 sec. Angelic Bulwark's absorption effect is increased by 15% of your maximum health.
-    divine_feathers            = {  94675, 440670, 1 }, -- Your Angelic Feathers increase movement speed by an additional 10%. When an ally walks through your Angelic Feather, you are also granted 100% of its effect. 
+    divine_feathers            = {  94675, 440670, 1 }, -- Your Angelic Feathers increase movement speed by an additional 10%. When an ally walks through your Angelic Feather, you are also granted 100% of its effect.
     fatebender                 = {  94700, 440743, 1 }, -- Increases the effects of Premonition by 40%.
     foreseen_circumstances     = {  94689, 440738, 1 }, -- Pain Suppression reduces damage taken by an additional 10%.
-    miraculous_recovery        = {  94679, 440674, 1 }, -- Reduces the cooldown of Power Word: Life by 3 sec and allows it to be usable on targets below 50% health. 
-    perfect_vision             = {  94700, 440661, 1 }, -- Reduces the cooldown of Premonition by 15 sec. 
-    preemptive_care            = {  94674, 440671, 1 }, -- Increases the duration of Atonement and Renew by 4 sec. 
+    miraculous_recovery        = {  94679, 440674, 1 }, -- Reduces the cooldown of Power Word: Life by 3 sec and allows it to be usable on targets below 50% health.
+    perfect_vision             = {  94700, 440661, 1 }, -- Reduces the cooldown of Premonition by 15 sec.
+    preemptive_care            = {  94674, 440671, 1 }, -- Increases the duration of Atonement and Renew by 4 sec.
     premonition                = {  94683, 428924, 1, "oracle" }, -- Gain access to a spell that gives you an advantage against your fate. Premonition rotates to the next spell when cast.  Premonition of Insight Reduces the cooldown of your next 3 spell casts by 7 sec.  Premonition of Piety Increases your healing done by 15% and causes 70% of overhealing on players to be redistributed to up to 4 nearby allies for 15 sec.  Premonition of Solace Your next single target healing spell grants your target a shield that absorbs 301,473 damage and reduces their damage taken by 15% for 15 sec.
-    preventive_measures        = {  94698, 440662, 1 }, -- Power Word: Shield absorbs 40% additional damage. All damage dealt by Penance, Smite and Holy Nova increased by 40%. 
+    preventive_measures        = {  94698, 440662, 1 }, -- Power Word: Shield absorbs 40% additional damage. All damage dealt by Penance, Smite and Holy Nova increased by 40%.
     prophets_will              = {  94690, 433905, 1 }, -- Your Flash Heal and Power Word: Shield are 30% more effective when cast on yourself.
     save_the_day               = {  94675, 440669, 1 }, -- For 6 sec after casting Leap of Faith you may cast it a second time for free, ignoring its cooldown.
     twinsight                  = {  94673, 440742, 1 }, -- 3 additional Penance bolts are fired at an enemy within 40 yards when healing an ally with Penance, or fired at an ally within 40 yards when damaging an enemy with Penance.
-    waste_no_time              = {  94679, 440681, 1 }, -- Premonition causes your next Power Word: Radiance cast to be instant and cost 15% less mana. 
-    
+    waste_no_time              = {  94679, 440681, 1 }, -- Premonition causes your next Power Word: Radiance cast to be instant and cost 15% less mana.
+
     -- Voidweaver
     collapsing_void            = {  94694, 448403, 1 }, -- Each time Penance damages or heals, Entropic Rift is empowered, increasing its damage and size by 10%. After Entropic Rift ends it collapses, dealing 242,533 Shadow damage split amongst enemy targets within 15 yds.
     dark_energy                = {  94693, 451018, 1 }, -- While Entropic Rift is active, you move 20% faster.
@@ -154,7 +154,7 @@ spec:RegisterTalents( {
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
+spec:RegisterPvpTalents( {
     absolute_faith         = 5480, -- (408853) Leap of Faith also pulls the spirit of the 3 furthest allies within 40 yards and shields you and the affected allies for 555,659.
     archangel              =  123, -- (197862) Evangelism healing increased by 30%, and Evangelism increases your healing and absorption effects by 20% for 15 sec.
     catharsis              = 5487, -- (391297) 15% of all damage you take is stored. The stored amount cannot exceed 12% of your maximum health. The initial damage of your next Shadow Word: Pain deals this stored damage to your target.
@@ -164,10 +164,10 @@ spec:RegisterPvpTalents( {
     mindgames              = 5640, -- (375901) Assault an enemy's mind, dealing 266,715 Shadow damage and briefly reversing their perception of reality. For 7 sec, the next 777,921 damage they deal will heal their target, and the next 777,921 healing they deal will damage their target.
     phase_shift            = 5570, -- (408557) Step into the shadows when you cast Fade, avoiding all attacks and spells for 1 sec. Interrupt effects are not affected by Phase Shift.
     purification           =  100, -- (196439) Purify now has a maximum of 2 charges. Removing harmful effects with Purify grants your target an absorption shield equal to 5% of their maximum health. Lasts 8 sec.
-    strength_of_soul       =  111, -- (197535) 
+    strength_of_soul       =  111, -- (197535)
     thoughtsteal           =  855, -- (316262) Peer into the mind of the enemy, attempting to steal a known spell. If stolen, the victim cannot cast that spell for 20 sec. Can only be used on Humanoids with mana. If you're unable to find a spell to steal, the cooldown of Thoughtsteal is reset.
-    trinity                =  109, -- (214205) 
-    ultimate_radiance      =  114, -- (236499) 
+    trinity                =  109, -- (214205)
+    ultimate_radiance      =  114, -- (236499)
 } )
 
 -- Auras
@@ -185,7 +185,9 @@ spec:RegisterAuras( {
     atonement = {
         id = 194384,
         duration = 15,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        friendly = true
     },
     body_and_soul = {
         id = 65081,
@@ -281,11 +283,6 @@ spec:RegisterAuras( {
         duration = 60,
         max_stack = 1
     },
-    mindbender = { -- TODO: Check Aura (https://wowhead.com/beta/spell=123040)
-        id = 123040,
-        duration = 12,
-        max_stack = 1
-    },
     mindgames = {
         id = 375901,
         duration = function() return talent.shattered_perceptions.enabled and 7 or 5 end,
@@ -294,12 +291,9 @@ spec:RegisterAuras( {
     pain_suppression = {
         id = 33206,
         duration = 8,
-        max_stack = 1
-    },
-    power_infusion = {
-        id = 10060,
-        duration = 20,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        shared = "player"
     },
     power_of_the_dark_side = {
         id = 198069,
@@ -315,18 +309,46 @@ spec:RegisterAuras( {
         id = 21562,
         duration = 3600,
         max_stack = 1,
-        shared = "player" -- use anyone's buff on the player
+        shared = "player", -- use anyone's buff on the player
+        dot = "buff",
+        friendly = true
     },
     power_word_shield = {
         id = 17,
         duration = function() return 15 + ( 5 * talent.eternal_barrier.rank ) end,
         tick_time = 1,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        friendly = true
     },
     prayer_of_mending = {
         id = 41635,
         duration = 30,
-        max_stack = 5
+        max_stack = 5,
+        dot = "buff",
+        friendly = true
+    },
+    premonition_of_insight = {
+        id = 428933,
+        duration = 20,
+        max_stack = 3
+    },
+    premonition_of_piety = {
+        id = 428930,
+        duration = 15,
+        max_stack = 1
+    },
+    premonition_of_solace = {
+        id = 428934,
+        duration = 20,
+        max_stack = 1
+    },
+    premonition_of_solace_absorb = {
+        id = 443526,
+        duration = 15,
+        max_stack = 1,
+        dot = "buff",
+        friendly = true
     },
     psychic_scream = {
         id = 8122,
@@ -348,7 +370,9 @@ spec:RegisterAuras( {
         id = 139,
         duration = 15,
         tick_time = 3,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        friendly = true
     },
     schism = {
         id = 214621,
@@ -374,12 +398,53 @@ spec:RegisterAuras( {
     shadowfiend = {
         id = 34433,
         duration = 15,
-        max_stack = 1
+        type = "Magic",
+        max_stack = 1,
+        generate = function( t, auraType )
+            if auraType == "debuff" then return end
+
+            local remains = pet.shadowfiend.remains
+            if remains == 0 then return end
+
+            t.expires = query_time + remains
+            t.applied = t.expires - 15
+            t.count = 1
+        end
+    },
+    mindbender = {
+        duration = 15,
+        max_stack = 1,
+        generate = function( t, auraType )
+            if auraType == "debuff" then return end
+
+            local remains = pet.mindbender.remains
+            if remains == 0 then return end
+
+            t.expires = query_time + remains
+            t.applied = t.expires - 15
+            t.count = 1
+        end
+    },
+    voidwraith = {
+        duration = 15,
+        max_stack = 1,
+        generate = function( t, auraType )
+            if auraType == "debuff" then return end
+
+            local remains = pet.voidwraith.remains
+            if remains == 0 then return end
+
+            t.expires = query_time + remains
+            t.applied = t.expires - 15
+            t.count = 1
+        end
     },
     shield_of_absolution = {
         id = 394624,
         duration = 15,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        friendly = true
     },
     surge_of_light = {
         id = 114255,
@@ -410,7 +475,9 @@ spec:RegisterAuras( {
         id = 421453,
         duration = 6,
         max_stack = 1,
-        copy = 421454
+        copy = 421454,
+        dot = "buff",
+        friendly = true
     },
     vampiric_embrace = {
         id = 15286,
@@ -421,6 +488,11 @@ spec:RegisterAuras( {
     void_tendrils = {
         id = 108920,
         duration = 0.5,
+        max_stack = 1
+    },
+    waste_no_time = {
+        id = 440683,
+        duration = 20,
         max_stack = 1
     },
     weal_and_woe = {
@@ -512,6 +584,40 @@ spec:RegisterHook( "reset_precast", function ()
     rift_extensions = nil
 end )
 
+spec:RegisterHook( "TALENTS_UPDATED", function()
+    -- For ability/cooldown, Mindbender takes precedent.
+    local sf = talent.mindbender.enabled and "mindbender_actual" or talent.voidwraith.enabled and "voidwraith" or "shadowfiend"
+
+    class.abilities.shadowfiend = class.abilities[ sf ]
+    class.abilities.mindbender = class.abilities.mindbender_actual
+
+    rawset( cooldown, "shadowfiend", cooldown[ sf ] )
+    rawset( cooldown, "mindbender", cooldown.mindbender_actual )
+    rawset( cooldown, "fiend", cooldown.shadowfiend )
+
+    -- For totem/pet/buff, Voidwraith takes precedent.
+    sf = talent.voidwraith.enabled and "voidwraith" or talent.mindbender.enabled and "mindbender" or "shadowfiend"
+
+    class.totems.fiend = spec.totems[ sf ]
+    totem.fiend = totem[ sf ]
+    pet.fiend = pet[ sf ]
+    buff.fiend = buff[ sf ]
+end )
+
+spec:RegisterTotems( {
+    mindbender = {
+        id = 136214,
+        copy = "mindbender_actual"
+    },
+    shadowfiend = {
+        id = 136199,
+        copy = "shadowfiend_actual"
+    },
+    voidwraith = {
+        id = 615099
+    },
+} )
+
 spec:RegisterHook( "runHandler", function( action )
     if talent.twilight_equilibrium.enabled then
         local ability = class.abilities[ action ]
@@ -533,9 +639,26 @@ end )
 local InescapableTorment = setfenv( function ()
     if buff.mindbender.up then buff.mindbender.expires = buff.mindbender.expires + 0.7
     elseif buff.shadowfiend.up then buff.shadowfiend.expires = buff.shadowfiend.expires + 0.7
-    elseif buff.voidwraith.up then buff.voidwraith.expires = buff.voidwraith.expires + 0.7 
+    elseif buff.voidwraith.up then buff.voidwraith.expires = buff.voidwraith.expires + 0.7
     end
 end, state )
+
+local insight_value = 7
+
+spec:RegisterHook( "runHandler", function( a )
+    -- Note: setCooldown will have already run in regular ability flow.
+    if buff.premonition_of_insight.up then
+        reduceCooldown( a, insight_value )
+        removeStack( "premonition_of_insight" )
+    end
+end )
+
+local Solace = setfenv( function ()
+    if buff.premonition_of_solace.down then return end
+    applyBuff( "premonition_of_solace_absorb" )
+    removeBuff( "premonition_of_solace" )
+end, state )
+
 
 -- Abilities
 spec:RegisterAbilities( {
@@ -637,6 +760,7 @@ spec:RegisterAbilities( {
             removeBuff( "from_darkness_comes_light" )
             removeStack( "surge_of_light" )
             if talent.protective_light.enabled then applyBuff( "protective_light" ) end
+            Solace()
             applyBuff( "atonement" )
         end,
     },
@@ -736,36 +860,88 @@ spec:RegisterAbilities( {
 
     -- Talent: Summons a Mindbender to attack the target for $d.     |cFFFFFFFFGenerates ${$123051m1/100}.1% mana each time the Mindbender attacks.|r
     mindbender = {
-        id = function() return talent.voidwraith.enabled and 451235 or talent.mindbender.enabled and 123040 or 34433 end,
+        id = function() return state.spec.shadow and 200174 or 123040 end,
         known = 34433,
-        flash = { 34433, 123040, 200174 },
+        flash = { 34433, 123040, 200174, 451235 },
         cast = 0,
-        cooldown = function () return talent.mindbender.enabled and 60 or 180 * ( talent.void_summoner.enabled and 0.5 or 1 ) end,
+        cooldown = 30,
         gcd = "spell",
         school = "shadow",
 
-        toggle = function()
-            if not talent.mindbender.enabled then return "cooldowns" end
-        end,
+        talent = "mindbender",
         startsCombat = true,
-        -- texture = function() return talent.mindbender.enabled and 136214 or 136199 end,
+        texture = 136214,
 
         handler = function ()
-            local fiend = talent.voidwraith.enabled and "voidwraith" or talent.mindbender.enabled and "mindbender" or "shadowfiend"
-            summonPet( fiend, 15 )
-            applyBuff( fiend )
+            local sf = talent.voidwraith.enabled and "voidwraith" or "mindbender"
+            summonPet( sf, 12 )
+            applyBuff( sf )
+            if talent.shadow_covenant.enabled then applyBuff( "shadow_covenant" ) end
+        end,
+
+        bind = { "shadowfiend", "voidwraith" },
+
+        copy = { "mindbender_actual", 123040, 200174 }
+    },
+
+    shadowfiend = {
+        id = 34433,
+        flash = { 34433, 123040, 200174, 451235 },
+        cast = 0,
+        cooldown = function() return talent.void_summoner.enabled and 90 or 180 end,
+        gcd = "spell",
+        school = "shadow",
+
+        toggle = "cooldowns",
+
+        notalent = function() return talent.mindbender.enabled and "mindbender" or "voidwraith" end,
+
+        startsCombat = true,
+        texture = 136199,
+
+        handler = function ()
+            summonPet( "shadowfiend" )
+            applyBuff( "shadowfiend" )
 
             if talent.shadow_covenant.enabled then applyBuff( "shadow_covenant" ) end
         end,
 
-        copy = { "shadowfiend", 34433, 123040, 200174, "voidwraith", 451235 }
+        bind = { "mindbender", "voidwraith" },
+
+        copy = "shadowfiend_actual"
+    },
+
+    voidwraith = {
+        id = 451235,
+        known = 34433,
+        flash = { 34433, 123040, 200174, 451235 },
+        cast = 0,
+        cooldown = function() return talent.void_summoner.enabled and 90 or 180 end,
+        gcd = "spell",
+        school = "shadow",
+
+        toggle = "cooldowns",
+
+        talent = "voidwraith",
+        notalent = "mindbender",
+
+        startsCombat = true,
+        texture = 615099,
+
+        handler = function ()
+            summonPet( "voidwraith" )
+            applyBuff( "voidwraith" )
+
+            if talent.shadow_covenant.enabled then applyBuff( "shadow_covenant" ) end
+        end,
+
+        bind = { "shadowfiend", "mindbender" }
     },
 
     mind_blast = {
         id = 8092,
         cast = 1.5,
         cooldown = 9,
-        hasteCD = true,
         gcd = "spell",
         school = "shadow",
         damage = 1,
@@ -781,28 +957,23 @@ spec:RegisterAbilities( {
                 applyBuff( "entropic_rift" )
                 if talent.voidheart.enabled then applyBuff( "voidheart" ) end
             end
-            if talent.void_summoner.enabled then
-                reduceCooldown( "mindbender", 4 )
-            end
             if talent.manipulation.enabled then
                 reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank )
             end
             if talent.inescapable_torment.enabled then InescapableTorment() end
-            if talent.expiation.enabled then
-                    if debuff.shadow_word_pain.remains <= 6 then
-                        removeDebuff( "shadow_word_pain" )
-                    else
-                        debuff.shadow_word_pain.expires = debuff.shadow_word_pain.expires - 6
-                    end
-            end
+
+            local swp_reduction = 3 * talent.expiation.rank
+            if swp_reduction > 0 then debuff.shadow_word_pain.expires = max( 0, debuff.shadow_word_pain.expires - swp_reduction ) end
         end,
     },
 
--- Reduces all damage taken by a friendly target by $s1% for $d. Castable while stunned.
+    -- Reduces all damage taken by a friendly target by $s1% for $d. Castable while stunned.
     pain_suppression = {
         id = 33206,
         cast = 0.0,
-        cooldown = 1.5,
+        charges = function() if talent.protector_of_the_frail.enabled then return 2 end end,
+        cooldown = 180,
+        recharge = function() if talent.protector_of_the_frail.enabled then return 180 end end,
         gcd = "off",
 
         spend = 0.016,
@@ -852,13 +1023,10 @@ spec:RegisterAbilities( {
         start = function ()
             removeBuff( "power_of_the_dark_side" )
             removeStack( "harsh_discipline" )
-            if set_bonus.tier29_4pc > 0 then
-                applyBuff( "shield_of_absolution" )
-            end
-            if talent.manipulation.enabled then
-                reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank )
-            end
+
+            if set_bonus.tier29_4pc > 0 then applyBuff( "shield_of_absolution" ) end
             if talent.inescapable_torment.enabled then InescapableTorment() end
+            if talent.manipulation.enabled then reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank ) end
 
             if debuff.shadow_word_pain.up then
                 if talent.painful_punishment.enabled then
@@ -869,18 +1037,21 @@ spec:RegisterAbilities( {
                 end
             end
 
+            Solace()
+
             if talent.weal_and_woe.enabled then
-                    addStack( "weal_and_woe", spec.abilities.penance.bolts )
+                addStack( "weal_and_woe", spec.abilities.penance.bolts )
             end
             if talent.void_summoner.enabled then
                 reduceCooldown( "mindbender", 4 )
             end
+
+            setCooldown( buff.shadow_covenant.up and "penance" or "dark_reprimand", action.penance.cooldown )
         end,
 
         copy = { 47540, 186720, 400169, "dark_reprimand" }
 
     },
-
 
     power_infusion = {
         id = 10060,
@@ -925,14 +1096,14 @@ spec:RegisterAbilities( {
 
     power_word_radiance = {
         id = 194509,
-        cast = function() return buff.radiant_providence.up and 0 or ( 2 * ( talent.enduring_luminescence.enabled and 0.7 or 1 ) ) end,
+        cast = function() return ( buff.radiant_providence.up or buff.waste_no_time.up ) and 0 or ( 2 * ( talent.enduring_luminescence.enabled and 0.7 or 1 ) ) end,
         charges = function() if talent.lights_promise.enabled then return 2 end end,
         cooldown = function() return 18 - ( 3 * talent.bright_pupil.rank ) end,
         recharge = function() if talent.lights_promise.enabled then return 18 - ( 3 * talent.bright_pupil.rank ) end end,
         gcd = "spell",
         school = "radiant",
 
-        spend = function() return buff.radiant_providence.up and 0.03 or 0.06 end,
+        spend = function() return ( buff.radiant_providence.up and 0.03 or 0.06 ) * ( buff.waste_no_time.up and 0.85 or 1 ) end,
         spendType = "mana",
 
         talent = "power_word_radiance",
@@ -948,6 +1119,12 @@ spec:RegisterAbilities( {
             end
 
             if talent.harsh_discipline.enabled then addStack( "harsh_discipline" ) end
+
+            if buff.radiant_providence.up then
+                removeStack( "radiant_providence" )
+            elseif buff.waste_no_time.up then
+                removeStack( "waste_no_time" )
+            end
         end,
     },
 
@@ -982,86 +1159,64 @@ spec:RegisterAbilities( {
         end,
     },
 
-    --[[ power_word_solace = {
-        id = 129250,
+    premonition_of_insight = {
+        id = 428933,
         cast = 0,
-        cooldown = 15,
-        gcd = "spell",
-        school = "holy",
-        damage = 1,
+        charges = 2,
+        cooldown = function() return talent.perfect_vision.enabled and 45 or 60 end,
+        recharge = function() return action.premonition_of_insight.cooldown end,
+        gcd = "off",
 
-        talent = "power_word_solace",
-        startsCombat = true,
-        texture = 612968,
+        talent = "premonition",
 
-        handler = function ()
-            gain( 0.01 * mana.max, "mana" )
-            if talent.train_of_thought.enabled then
-                reduceCooldown( "penance", 0.5 )
-            end
-            if talent.harsh_discipline.enabled then
-                if buff.harsh_discipline.stack == buff.harsh_discipline.max_stack - 1 then
-                    applyBuff( "harsh_discipline_ready" )
-                    removeBuff( "harsh_discipline" )
-                else
-                    addStack( "harsh_discipline" )
-                end
-            end
-            if talent.weal_and_woe.enabled then
-                removeBuff( "weal_and_woe" )
-            end
-            if talent.void_summoner.enabled then
-                reduceCooldown( "mindbender", 2 )
-            end
+        handler = function()
+            applyBuff( "premonition_of_insight", nil, 3 )
         end,
-    }, ]]
+    },
 
-
-    --[[purge_the_wicked = {
-        id = 204197,
+    premonition_of_clairvoyance = {
+        id = 440725,
         cast = 0,
-        cooldown = 0,
-        gcd = "spell",
-        school = "holyfire",
-        damage = 1,
+        cooldown = function() return talent.perfect_vision.enabled and 45 or 60 end,
+        recharge = function() return action.premonition_of_insight.cooldown end,
+        gcd = "off",
 
-        spend = 0.02,
-        spendType = "mana",
+        talent = "premonition",
 
-        talent = "purge_the_wicked",
-        startsCombat = true,
-        texture = 236216,
-        cycle = "purge_the_wicked",
-
-        handler = function ()
-            applyDebuff( "target", "purge_the_wicked" )
+        handler = function()
+            applyBuff( "premonition_of_insight" )
+            applyBuff( "premonition_of_piety" )
+            applyBuff( "premonition_of_solace" )
         end,
-    },--]]
+    },
 
-
-    --[[rapture = {
-        id = 47536,
+    premonition_of_piety = {
+        id = 428930,
         cast = 0,
-        cooldown = 90,
-        gcd = "spell",
-        school = "holy",
+        cooldown = function() return talent.perfect_vision.enabled and 45 or 60 end,
+        recharge = function() return action.premonition_of_insight.cooldown end,
+        gcd = "off",
 
-        spend = 0.03,
-        spendType = "mana",
+        talent = "premonition",
 
-        talent = "rapture",
-        startsCombat = false,
-        texture = 237548,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-            applyBuff( "rapture", nil, 3 )
-            applyBuff( "power_word_shield" )
-            applyBuff( "target", "atonement" )
+        handler = function()
+            applyBuff( "premonition_of_piety" )
         end,
-    },--]]
+    },
 
+    premonition_of_solace = {
+        id = 428934,
+        cast = 0,
+        cooldown = function() return talent.perfect_vision.enabled and 45 or 60 end,
+        recharge = function() return action.premonition_of_insight.cooldown end,
+        gcd = "off",
+
+        talent = "premonition",
+
+        handler = function()
+            applyBuff( "premonition_of_solace" )
+        end,
+    },
 
     renew = {
         id = 139,
@@ -1079,10 +1234,11 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "renew" )
+            Solace()
+
             applyBuff( "atonement" )
         end,
     },
-
 
     shadow_word_pain = {
         id = 589,
@@ -1129,8 +1285,6 @@ spec:RegisterAbilities( {
             if talent.manipulation.enabled then
                 reduceCooldown( "mindgames", 0.5 * talent.manipulation.rank )
             end
-
-        
 
             if talent.darkening_horizon.enabled and rift_extensions < 3 then
                 buff.entropic_rift.expires = buff.entropic_rift.expires + 1
@@ -1203,4 +1357,4 @@ spec:RegisterSetting( "sw_death_protection", 50, {
     width = "full",
 } )
 
-spec:RegisterPack( "Discipline", 20240811, [[Hekili:T3ZAZTnos(Bj1uNTCgBfB5xzt54QUBYU3KuZmBQ15Q5BwIwKYIxKi1ssfhFLl9B)q3aeeVjifKtYT3wzZeBc2O7g9B0e42tU9t3EtCuvYT)XOJhD2XV(Ktgs(Rxp6YBVP6Xvj3EZQOPFo6EY)ilAj5VFxA500vlsZWh94I8OyaeL5RlMs(vZRQwv(Mx9Q7tRMV(UHtZx(QY0LRxevLMNnTiAwf8ZtF1T3C360fvVp727KM)lp94BVjAD188IBV5M0L)cbKPXXj0XLuo92B(1KOfjfBMSQinViTknPCZKOIKntE3hV5Oz5txxMeVzsE2Ih38HnFaG6rhF5rNE8B2m5tZjd7pJiV8FsWV0SBVzrAzvjYdsMfTErf5F(hipjjl6UfjX3(FqqNPaYF7ntJwSym9hgdVh9Tht5ltZZxeN)qw5Tvesrbc5RiCOKQgq9LOIu4PW)AXAY)5fBMC36zZgw9q6I07Nxno5Fs4pP3vKUE5455lECC0YvdxVAZK92mX5GlNhrWd2WXzIHHvjJZYjlBe870oJFEoFBM80tBMu)2dRNszSG(g0LZI0v0z8tmyVzYFTb4BMKwsP10S73mH(IBMehTeKijeYzbKqK4YEqgW47braVMijCENjHkI8Fw1qgJFA(xiVn5NRHHawUip7(XLKrOGN)woGj3WyN1qGIO1GHGAx0zuRwlGHCZstYI58tK1RI1YYOtJYgtOTKcty9)ijkMW6QYjscvrfvncenuWQ5rLiB9YoJ7hlIim0SCvYIfLJJxxGgWgVm6RaWFTbGhfh7a4J8h4)LodC6dgUmnlE8DlIkjYcFnz6AImAv6Ye)N5toUltThW0xeuAzEfSuc(si)kIKqAexIpoQ4ZJjWy9I7tiJyOGO6jQgT9MRXq)hYlIhhNevnVpmpDC1ayfWwtoi(UeBr)n1SF4bJJiRHlJIZsklvguX9jvdNt8otE9vtjkJxTzYOJr61KdhVOxqK5Ec9ugg6uaCcRgM8I4f2fN(fsGqJbRrHb)KaOagAYjHxy48Of5Hb1OqsaNm5Dy2ICiWnRy1alEbQN7ntosWVRD8BZKd2m5vBMC)04Hmdn1ef5hhB278aWNcX1R4Cv7bHohnpKc()ZF5DebBcxBZK3s8mws(NKqvjbxoR2pE979qcaR81likdzjGkb4MIekkcs0XFfe8zwYxb)wiI8aryeM7ntO(JP)2KVsIbzrcjA1bNCoIJNmIInNm8CepgHiwjZtiXCjgURkgb(3ZlQma2lnc1JoD4PEb4bqSqhGIaBPt2IKLrPzeMJLfSFjFDwfY7QHZH1SX1lVdYbawiiOZrZkOZy0Int4qTgXNsC4a5i8LO0fiYaOE3DHZflLKWCrnW8yYBoHfLoZGkwvbbaJZNnMK(ZAsyKMcPl5RRsMwLepM5MCCrs8AokxhRHfIyCYIs6IGCyR)9393FtJS)465OoY17V)rQGaBoFf4igy0KuWws8hCiiPJm8im0SQ0PWtz4f53ww)KS4Jsj)Iz5fW62dyUsMc6OdcrMnsOkjfTykKeAcitqu5wUE6CQGrT(nX1x1CQaLQnbq3EE0xi)901ffKfkqOIlnnKKmzctv3mUq1NItil2e)pKHLoteO05hgYdj4Va4qrzpQQ3bJyvroH1wXtZqi)LHiZStHb1glSrEsIz(r9a04X9ZKq4X8pa)J2JP6kLYM7TlAJM7VYIVdoSqBsJ6uOvEYbAjyejUZVxpiJ8NgqiWHm8ugrjOk6j53PiT6g53wSNsSbqNiAXdrpsWmsCHm72ZslavUB(Z38oJSh9PWeBsFuCMGNCPofX3oKlDtY0CWllWqy1SAYdZtYQJ5gw4JGbqJUMysadVMAJGbxIP2OS7LuhDZScolf)ZEiaTLfaDgzpfyeJRYhtE8y4rx5hICGxjJGRVDkE5UT(kKe705a9qWSxswL6skU)7XXmt8pqSXdowQHe4)bGbHNdarCr1X8Fnj(Ttqc3uq5HNW9I0eJjtJ(q4agfIQGaHxGXTrhfv4McAjr6bM4YmipwC2q2bkS434VcJPMldt)ZjOZjVNZJW3GQkyuCOM8gt937Ldn8pnUr9dtUQgt0Pg)aqGPauU0uMcbsU0Es4scMVdhgXulzCg99ichtMifFEhmoIKFNY2OBKVHm8LO7FL8CJ0l(IMiu8bDLc7uEogk)UPCDOjutsNItZ2QFGX4jTfnorO8AU8D5scYPW)SK4HLSNENTa7tYGS4QtaNQ0iKCQAe)wIRNIPFbXDsUgVNnfX5z7xvptF6V2eWWHnXDnlIGWK35)IMCgsQ7xwh4aYlAs(aYMlPmbkIEeMouz1rKeKGSAMsyYfP5yggN2901mUPa8vSFUzPq4X2kzfu)eE(bgK2)B0amzP8xxrMAgYDeQ5xFhKgvYQJUUw65ORlNopTC5rxdptj3wKM7vwvgqvgdHx1kju)9oeEQfEHfx0bRyTnAn1qrvqU2Hw5kqTcSCTNAC)lxFNJ14teP82QRZ)aYRJqJ5RlaZoQf5brHUVfLMYZ0CDfBprt(qnUikUBv17wbGZDF3iTppOIXin5PYhInMhbRKf)jjS53SzY7GGJXsaI5vGvXjPQcQygjIlcvMtYgROP0c12TWTrxk1cC)0Ok(9kMAfK(hffaJ785ZRcqVIyYm7wiuUwlFbBmGWdiXaRgeXQ3a)myvmBF4)IVo8iIStg8lI(c8tGegSYvmnzfvBcYPDF6J)6QuyfupMEBBnJy2ELmGdQS1qxyGnrj7eyVG)8eg2KjbJdSTrwqcf0DY60EfjxRllTNx1V3KuOjfAMIEJEmgDGGQSCyyUOWoT)ZbKcRRfIq6HYLcXlsqQgb23V4Z61wD7Kk7rEiSI7abCZm(2XvvgaKcgKlB73(l6wMVn9gKx2PWJ8E3jvy2A0I4gsgaIO79SLJAwzyRu0IQquosmIcYVhrOUhbuNJMOrX0MjhMI4Mjc)qxcNqxGL3HoN1RIWAgV)bjUIZm2SxpRXvCwVQqOtUUu6BEw4BSmHIM323CONTyZN3HjN1)WLcozbB1PuD9Lllqmn4C0WnR21MSu37MT5S(hIslScVcGezb8rQs8PvBu3AdVDE15G6qUHxfMspqfR1vw1CDZ7Wzx2Qwl04a8kHV7lUSS7aT1wlMCC3JaFAoy9h()eP8fPvvWUxChSQwMUCf0p0PtpesuGyKK22l3Lds7w3aGCAvz4BNo5FI7la5FSmFjwokXDoSElcGESPS51HE(EirDJzIoNG0lt)FyP(xxfiyGRYlltbEciBCE3RLvVCXIcT28WYutOEyR1zO83ANS5SSP6UZwxkyadOtrU5KU(bXd85F7lT159Al6DX07JNkBvgs0YTM3yYAe05o5RRktJtOkZYJOrEusQJN)o0dr8e4HI5xbJSfR)U2s5bUYPxY9qB1qaxB2Uysd0AtqIIWgtZZTq)8(xUp3Cc)kgqlL7WA8fUIFWy8bNVDXdVT0zhl6Hdb92R5X5DVDnn0zs(KARoNrnIjAhsbiLPOvdSpyHQE0wfzquQ)vatFM(bXV4fgdf6z1V4f9pyeRS9(y9v3Z46SfeRJT43JQ2Y1nPqGqN(v8sPMKYU1Ql6v3ngEE03dEOUO)Xr1gVWpB3A(OA2MzqUXhl3iD0)yocdD0hFqoCZCr)JCWh6P1cqOMhvBlkALvajIT4BFuSi7nBaTMtsteROBsHNJyKQ37AePyDM8xLSgfQ2TmIHni5H)UKS4Kc8BYu4tBg8hngAzcenu9x7bAWPB(3Jko18FT6x9PWC38fScZTQJznkD1ASiiZtg)q60pNelrQnTNkWUHgqnonbDbsEYXWx)YlHKrmafPEhI3zDqQfKNJoYyPIuKmRiHWUVdkKrZOyihXd5S1lgVADwA58LjIReYPY4AKuOAenf7zltDdrF66EP)0SARo3WYZLQXq0S8iWecYkKOZkGz9D6kKgA(mUcPo34kKAiwtf3lEPuLnBWq6ZINTzvo23CAnPnIsORDeNudPXxFn4KIDd4Q8hi2oWVBQKX4OHW0gcCwzBCAS5Re(ecRXsHc6cONAugBnlJHeYQtj8Ui6s1WbmPf5)SjwEAluOQ)6TMcfYo)aV7Idz0JNF4LQoI3AStsK1rc16gJQ)EfQThDoApYJTb2LUzJIGQd(TMs1wh8Syy2wkuD93bjZgqcBBpcn7oZ7j5keWKe3wjqQxB3nvpNybjQNBHMxJw05db6WxrAduWVHe6208L3f1C42Wn7GgoriolVOkTADS(R3CY244SXPj6r1IRqldm(5rUkbAk36Vh6swploLF4Dq)GOlpK8Vi2MWbbFpYMf0eIxvuR9fw6q81y0RT6RP7q1elOs)i2rMLdbpusfofzwZZH9P6JVFtZxp(dPqs068k1TvTtAJQrZ4kbHbAcREDQUSH)TFO6pRHtuPZbkFmBkSlDufakX)X3lsCcE8R5ISfxv)y1teHpoM82llnoxvePXpJcM(pBukVjSc5NZJUa2Vywkr1JLQs1KrLdvkTqSLX(psEDSLXarfm7jDXevHI6yH7sO2TKmKBTk3T()v0IzQSF0cgLkIIt5DxTlR2HHuCLDtLyUOgw1KwBKpFL(f(QHztf2zFu)rCFn8VhgU(RPhTN8jxvTmbpViCJJht5yLdP9EiiPEQUp62I9DNIzsUZvqqfx62dzoe4jTs5UYRukPsBbcSdek1m5nTtLx1ACVBnltCPTLiyAl((DbIiMU1Z207u5BKUYN9OTFgWmnLVrwv(CvuohYGHMiArmt7Sntl0VNBTb5SW1oaZ0WpNPS9mGR88a1o9Y(gXkBpHR2(WvBrK55Z9Nno9U1XMxYLTvDODbkuBcu7mg75yYvmVPDixT7WHDUa9U1LstCsQvKOYWbHLuaZ)3RlzTUi9togYSTyDgUL7wouMWK1Wwdn6UC8WzkplofnkA0rp9CMsxntQChSdqjdQckdBK4W0z2kJ(uXrlkFPmUZehhQeOmGZLMwtv7b6c5KcS2ccNOYpevanNbHAXJa50LRWJgo8C4AF2rF8(1TTlyUUmh6MMO1v5WjExm24Tz3NuoCZh(nSzzo)nqInzK5cF8(MRKW(00tT80AVdKrn4KVEah2NCSzGRSraka3Y2eOb8tCI5nlIMX9h0oIm1MGrFJMaTULqLbzRBk0MGtnpbCLgfaRTd6Aa8mlyCJQGkUQ)HQPbulIGGEJc0e)uX0aZfYGjNeDfg7cRdy3FGZtSYJemmIJWWPv5b)BSnzQgTcaiFvniBiK)Iz(H6PkOcVX2HoOkFAKT1Wqj1nYg(B40crLgCCGIOonNEzGfUTbqJXRRRZBpMEFNOGJ58W3vaOwy9Aa0YsyqmCFMnVcBJreBaT3SGZS4EPJwLSbM(JxwwRdM67zVoWsN2ayVzbNBXTwWbyW18pFxB79Cl(s7pR5INjagetlxeATTl21HODrOLLVWMiwq4VweV6TTHlS7ZD7t)4clEXulaVc0T1zBEdETwktDcS2ZzFdMIlT44mqmjRG)zGcc4u4oxZTtm9sB2ycHg7L2DTfam3ITMWa8DzLjCa8W6X)slU7cdveANZxUlnh7a4bMNBjGZWqfwmjheG)AlMY2sGV5dgQwiVli2pe1lS3IC2Qry)bODB1HvmZw576bMV5dVhxBaWCEDVgbNldLvaNhA9V8zPl4nxt5qEVa(ZV9vM6(paMSXsgH6nE3HWhLXB5neO4qRRzfDiv0BmTdZx92YKQdXVqM3(cVU712ZXWysSSlPTp8tBM4ZnUg9TQVZ1CI00HkJ2EIop9K4EHauV3iO4vcNt0dgOViNal1cQ5XTaNDSHBgqgFmBAbNoVV(2SpPYFOqYZSLMu8PNS1GIwNLsRvDvEgpMqw)uTwxxbtuCmdm03Fi9mODO4h22HPZ4mu8P9fNBMSrBpiy4BZEJjHZ4sD9N4WoEUe4pkH1gSzMnClFvSIlqQd87auyVAMJAvf2tRZCUA0XbdHfYE3mI28DjeQP02zVOOeIqhnfQPv78luy(WE7cug()V2Xc41oM9LoHBLlyTcVj6yRwby72Q3bpCfDhDVKzN20oDf0Ce1P3SroMt6cCpAylFRUsWStk2)mizCJ0zhY7bKATq1D3S2ni9)IN1zOFCYI6)cCfH1vdF6X7quVzrI09qF6sypnrZrFoei3a1FjRXNUYvxrDaI0FSFbKOe7KeI1CtNrWSb2(etBmUyx89apiGFVVUm7OhAdh4pYS(MFpd)4Mg8GkA9sbliux7bm58YXssqt75(lZfW72RNj2Il6oi8Ld2BGPipF6jJD84vTpDhynexCjW77zRGWGfYsHnpVS98xS(Ux)2tuOHT)c1k0KPMa0aRKJW5zkHY2ZNXD1iI8YGbNCKxq9Oto4ad8BPtg1wS0Eayj3N56QtyyMpdERXkumq6yJpelJUszY4rzJSfad3gwEyt8xXKIca2BmZl5BWkz8v8sTYde9FDUuNCTCW60BxXxBO0JoZ6slUiZl6hCDTxlT7NlLq3XLRGFTpzNRODOd6rzize9pl5jw)IUcjLD3zcyhPPgDowUVGkgFztlXYRpMvLxNh0FDmt1Y13XWHtCxvygYlVwOhvUEo)UclNpi9dAsmapwsG7OlDPwwUQV(iKjz7O8pp6BR4Li((DNO1pbRayEn7Sl(OEXEeICWC(AdgOwt19CTNKqeoAVWlu3OXdoqVaXx)2rhZZeDBUiI2w(G19bWgc36XB4ZjgTNT9RqneVD6nd02qXDRu7MfK0f52gmQTQWV94a7q(XPNEthHpn1gr2UCn5WvOyYLH(A2PfUAJW7puEsmG2Fp6qX3R4MTHALcO09weAAd)4LxytxpjFFMq6oT9L1utZ2l23lFMaqD(VjOMme1Sdm)FMlCf3wxByPMs2u3zRXQkvh2VHA4iC17eYYjjBKuvUqorvPQ4)8FFV4HmnIn)W5kqgR)E0tW3331kBblUdwYnv1)bQg(4McnN8Yo2H1oHkDVbfB91CY2twoZGXGFPTnDQWIswZNQnNnikyjG(gF3TfiVmX0Hc1B8eG)hfRUMW7FmS7gIBYJTI5Sv2sG9j1Gg5UXI4oKo6Onr5BWHqG2DWatqS5fiKYurJCEBxek0YVezCB0vyYSy2109MHI9wvmwCkvUakOZm)KwvaHv2sQ9KS7ZVcm2O0HtMbp0RJ0Mrx0CxZVEp(VtU31BfXB6VEraZ)T(ax1V1sbwG6J49LbWuzhwLxp44HN(sNhrLqdD8c2jHjjCoHJbt43ZMQi1VwYMa)0F2EdCDZwC121Nv4)tKdjA(cWfGd9IEXIuH0oNfPnHbLfjl6t3NurMJIkKnEkAGh3MclVOWxMcRgRg26bLEtxOubwnnUxB3le7zJlDfVrFfuKyBUO)ec7nyCsYF(BqUCV7J3qIh73GWTiMOFOiIE0ERVz1q1vucsH172OxNhZxdUE(CchiqCnrLZRBaCc(dLJjzJExjJ7NEjTwyatQeA)aANkuKGTPCuAmelrfek2HSjBze0dv4NOdaFAqKai41o6UK7tZO9abmnr1y80hNc1ycBVxIVfSEoW0alVKrpuvwddgTCmsxcRV4ppUHmTkp436tZ7OcjAEb(VsZFNdCUXBbwdrjjivtt0(NdSoD(l9yBkKnkULCbNPWlopWwZ4PnfXyh8hPeElntAcF7JL5lIKZyCRxGc66bQXY6ZfFo035V7qEWpwcgO2VuV9(BzQ0pa3HzZvNXCf)CG3FSV)inYknFgT3m98qTyQe0adLKJKgJYxON0ZQf1h8cXqePnxfXvV(VSj8UQ6pkvsGeyjGLo8OV(TNAEg10yc4elaBRZVXfSEHeqY9YbrjedLUQM)sbgxenP57kfwbBW9I6QzXw4IIbEeEWVdflh9nwS0Y87)672HA2nJOf56UvcsYzUlpZ7Kz3c7oO0TnNTT0JVTYS2oSYhbGDXmegv6NbL3oiWSDtupLpS5Mxn)K(HCuNAw4bq8EBpOj4FypvTD6IQffQ2uh8uAOv5s7kfo41yaH)eedi)Cnb2hNT)IlRzo5hzkCQcd)vm9hHIpMqp8nyNekQYOchDfsWTbacwz7eu)jCtII75nqMzSs(UXYr(E14xtPVSmG9u)m0A9O(GPoy(UfZgAxXqxl3aynau)ceZmi5xdz2H6tp1uwkJ3PyxZZI62Bi6StHJe(lWt99B)F)]] )
+spec:RegisterPack( "Discipline", 20250424, [[Hekili:TZ1EZTnsY9plUCfzsVI0sup8fxYkvYQ9Y6T29oxR8v()ejeaOiIjbyaaLSsPIF2t3ZlmpbgackBNlxPBTeWGz6UNE6(x3Zm9nhFZNU56OGY4B(BtoAYzhD6KthF8Bp60to9MRlFCD8nxVoi8lb3b)sAWk4)EvsryY6LjPKx94YSGiSlkY2KhcpArz56I39M3Cxs5In3oomB1BkswTzzqzswAyEW8s8VdFZnxF7MKLLFi9MBTp(NCZ1bBkxKLFZ1xNS6NHEojkkM284IWBU(xJdwgNVD268KS8KYK4ITZcYJ3o7QpE9O5zHBkIJ2ollD5JB)TT)g25Jo60rto5DBN9NXRYUhA5h)0NzV70rh92rNCe8UpTaEXNdGo(ZalKKEZ1ltkkliIP45bBwwc)6FJi2ItdUDzC0n)haPgI83nxhgSC5u6Fmf)o6xpLk6cZYwgL9qAXnLa3Q1dzRbHyCzvxDFqEc(w83wUb(NxSD2TBMpFC5djltUBr504)BqeMCBEYMvtxKT8XPbRwpEZ6TZoy7SABCXIaGoynNmsmkSmEAAgmZc03jTM(8C82o7PN2oJ)1J5djzwnpznTZ)eRB2o7xQ6NTZskOSvs6DBNr71TZIcwr0pvyd6lrg50EKruKY9eBG9PdMaFfYcN1AwOewBKwoMj4dbT90a4V59Hkv(7ziDCntCYBmLmfFrfHTeA(0cOziPDERjn(QagXnpjonsipjIEDQg1rvi4)moicKzLzGsqzqEzLUqfXVErqHI8mmiDkitIZf0(BBnTFKChYiZI1XlxwmnAtoXg30vbFf78)ILopikQMoFI)D()AR7C6lgVkjnA6TldkaDHVghUbuYktwf7)iF8rTzO9OpVgMwHjLKaHsBuq(xMc05ML3fNgg7qPDnoph6ndIKUUrBVLAmY)HS8OPrXbLl0eEgSGLpWCDudcABoiEMPwINe(Sc(IPbG0DvquACrHwJYVlUC8cWNm85RdHfGxSD2KwSE5yBoC8IFXP87GrOOj(uQHTE2WMxeVOUOK7bSstr7unrFknT1uOnNeErHlcwM1ePrBtRPjBEhMVmdb15KQg4WlaVZ3oBKKFx3eW2zd3o7nBNDxy0yIHgfZhdqNaGBx5oL7eH2zvVK2p)N)8vGEoiE2o79GFXc4xbyRacZ5CF48V7HySVY2SewBKgJRqqpvaEusxsC6xIOmtJ)k66Iqipa6M4yVDg1Bm9PXFfaBSmgGLo44Zi04XtOuZXJpJqhtiewbZziyuKG5vNIqV7z5Lw623ATxhDY4t8QJhGGEgkRraI6PsqxoUtozvMQ(5SnPLePgVPhYfGBwDlgcaofaeYO550ony52z5XRcssLqyfc(eWqeUpizPU)jrJvi927cxOwklfACCS5nherjZTSqSmh6GPzZNcHgTbqw6W74N(7x93FxLg804VUooSevfPypV7UhPtNm3OVbD6IcniAQvGr(dr9vIWlGGXQmjeFB0Mq6QLGc(BsJgLapyEwooh8Gm3Yh0PSbzQOdCkcNgVSiMHZIbkcJvYgOJwQefSmeJcngvhG1zR2eUGQtWxudU)kxq1L0neGlOxeGrmgUjphMgq9jHI0yiuXy26B7MJOlIIIHPsWhe0SK5YDkD8XM8qm5bOani9r9fBylwNNbZeLI4kKIozCZgMjcZwbdQH(tsbvGRNnBlW0pG8JXRPRfkunN7wLHyo)ch(ge91qTP9RdxKuarC9rn0Iu1QwbXQdsIkahsYclVLr(sRsBnJ(h8oZt0ri73kexDG9nXvAtmy2kbt2APaUomy5dbpcVdWJYCtmpjhxMF9NF3v6sNgWkJsPwH8ZFPu9IGExqr(5ash6cRoDezVfz)PLztHxpfF1f(rid9kKb9fPXHzi8cCcILXUzpSioL3r4cIaSbuAdmlsiDQDs28f4Dki9U4om)2kCZ(p)AgpA4cK8bH0LacRJ1Kb)7rrmB(pag9rpn8wJoKWEbMIXUX26B9b41qx1y4WtSboVhyCQ5ENu3uzqAejbrLXV2FbbWRqtM(ZXexiEpMJiFbDbHvbvEm9ZMs9l7LBhYpvo78JsUGtjMCJFDqpZbovjLhtd9sYqIwAdkXWywsWEtBfDfkpbtEMMMj2IyOh0lfMVKdZ2MDw533clSAsVRi9cyud6gDU3zobq2VvrD0b2NekVn(M8IUZW)k856mQzQfqoSvX7yjn8oCJCLl81XPyOs8GFPRjKcpuh4Td410fA3teSaK)pWgIOS0xvYhPp9lv(SoSckY8aiQg4B(h0qQkwbm5Rk4(UsYsLJbaJblUigZHDajQKIYrqCkyWfHaJNNKPb0ht0aepP)Xu5kdlwrK7kIgWGXLcBpeoYyI(K2h2M1nhqqx)u1ak9A1uxPOs8xPi)yH(ZZjdFA5wqM(RxHXufVE0LCXWOllibnm6s8DAXfll5X03iItrWZDk6kZUsALGyQWi7bKPa9iD)qn6(8Ppu3KyDxo5ingGPywINsnKFTUpMBUTM5yDOp)jgIhqQzBYrRr6j7rwozn)jN0(TQ0w8O2ZVyZbKkAQLjX7v29j(wwG0C73vs3JdzHXeDq1SCy8za6772o7ke8ljrGeq2KSafxwIzpd8CdmtgeQuEvUg4wqj7OUcoBYgRn2q7T4HOQfbDctTA38dZcaR7a6Z7cGoHyYP4Ealkr77zICaEGvyufIS6ipmMWosnScsCTD2leVhwSLq9Vk3hdDTdty0dt0N9zdbQQJ63OAaSi4D4FJ2XtFf(VeDz8vGMEk(GG7X)IWmW3X5f8nz4xGVMrB6qCCNFLt6esoNtl(ka(JQyfTToNT(VA5nb(I0kCBmOdO6N0Q9HU7COssf8A3H5Puqkaf1mk0cU80oTL31WLU2SV61ZBATsnXFWsFcIgNzrVL6eSoqbRRGa0fL1fDZPTcE0USlL7QWSg3BN2(ZUvn5oZYE0yGQOspsfrb8Ccb1EeqTenXFuToA7mP)On4imvQmoJoeIPAPyLeVtjH1AV9JcUItTEOVEwXvCANYqytsD3hveZSpjBy6v2rIQBNO5m(EA3HlvlBTthtglzEd0TusmUAsnIOa6j2LzdvhefDhIsZIIwJ2ZMuq0j68Fs5w9ThWp3tUbSDQxjMYeWGZmBBFt5)0c0Qj()HP4LjLLy6(Vf5NIKvRXZlCs4HiwvWab90ICBgov7mZRz0uzi2qA4xjjKf(LvzRizssEFW45MfpAkfvFoEEPhd6AmZtzarVk5)Hfsmp1jydxNvuKGMn19gvjsCAKYwUOSMVC8auiy49F69vDhAXd0zTpxwDWflttN6ILR2tvu4EzZyrM0EVTnSgXy1nz8ReaTc5wDD2pkEGp7BFQToRtBrFdc963)3b1fnUI97MI(xpKmhjEs2cVH3Dy2epyrzBklsIIPM(uBrLsVIQTG4WJ4KG6WeFxITSrVen778SDdtABNBA)2Q)SHI4SUNUV6KeEbsOHSD4e(qTWdCKiGZ2n8WTJp)2MZJZA)X20Y5AYNqB1LmMqkOhRjKOSHwTx9bRVPTkZHs51Oso19mGz0D)O4x8CRqHEw9lEE3bJuNyVPtgLxwKm9ZTjDjyxTbVy0LQIoN2dGGXXA3MTkFENoDJ7Gm67ypuN3DCu1ll8sJWWhv1gqJkiTWS85DhZHh8XZVBMZ7oYbp4hJeq4oIl)MvSN2GZ3H7aPCUYR2aAdNKMmRQBsP3tOiDV3gIg9J(HmOdfh53gNgfNtUcMCUjFtQZR4m6ZzkEEkiKHU)Alo4exMuYqlES2L10RXw9EPQ7youE)n1oKRrjXe)QWBocV4lVgdrq9EXTgCcnw50Vio3EyerjHFH4bJfbvE888y4ZVftgtvROYESRMVz501BstkwSkww8RgbwDTK2Rwjt5ZWLTt6qxo59k)unFOp2OO)T64due9kXpAxhu5IvZ2MJA2gywguTrseVbeAshWGVg)idk50sTo7bqDKCZBINsAn6mFmkzvx2yiMVq6sOXPsPCLHKNUV6DwKXicLjlPZFYB1DiwnGDz0SL5pnou3Z1oZHsH2n07dLGk5jIS4T6(H2zQtrLTMi8mngXpX9C7rNrSh5Xgiw3AZQfc6oR2zo1yEWZme5AQWTVRgPUQUe3jysV52fuhzxjxTksBnxWVTw)pDzGL0OEUvA(lel6IMGh2tzEdxGFn40pmB1TbvLhfHzhIHtspoplVmPCtK5NxvBuQP6QiDQp1dCNM7pYDWBDmEyp5302c25GluuziOx12ciG4haJtKgrVPRJgrbcws2GM47rqT8n7aJa5Xvz5X)BAAKUQyfLML4fV(oLvfu0xyFvR96g7R7ZsIEipiHoDQBkwDIcHCuqvPLLWqO3G(3h)W2QlZ8djyKzMcy9nQRvRH1Xavhs1bgQ4Evnry68LMfwLkjrPPeO4X0quHGUSHY8F8dYmNeobUuKPkOB1LpqGCCk81RkSowLGk8xiAZ(pAuoVcmI67fysW9NKbKM3w6cXku0wwiQqJQLnMFMjFDPa3echHToXbAxOjy7vhOw7D4kHcC5KDeBk1kzXy6jFc55tm9r4EP1ZaLP4orJa1CP4gbLp5KXj8JELdBWrstWS2heIeQ3MW(0FdFT6GtSGt5BjLzOdoXPoOB4u1Qd23mrdQzUXE9nAXGASqg1qjBPNPUTwDVtRc04g1mPVrIYMH924LvRwngJQT0(BbOlj9ZNBiN6LnfJ((Ge4wanQFrphdUM1nJ6v0(Jg27k07xpk0TquZumjUWslfohfyJ)xBkyNmj6TAeJuiFtkz7XCu(viGFjhHTGBZiLHLS0OeIrrR(5PvuhZLzkbDYQQmwwkO1mLGznf2ATEICRL1V0A3jYTJSiqRbNEtJXCxLT9AcAwk878GOeAzqrzg5JqpqUvayKDKSUBgvNScu9xsZlOBTmF7rie69X5Kqk514vaK7db54U6ctkKkUAYQ1KcufPoc9kwLw9v8tbj6vPid30(GnLzyD3kICogtVlUy82F73jBA)XN)ommKuyWiVpd8Ds8mXozrVAqT1vSrsQ9KwyPMIn8FHLi3xrfw9rx(gExogRfTFGihqY)mEaA4HeTOe5tygFDCiwZkoht4s28KLInOQySidm)07FJTCUGDpRTql0RuThIBIY7fPHrUPCUG2KsALo9WS1VViU8qYoA9(x4vnt9GAAgtcXkUQ)2l3oZNINkxnLw(uRLOPnvLS9KCE6jzBFi37nbkxDxRL8Wg6lXjjsDqAEusxDtnIuaOsp2tidz48UGS6Eqv3Xp1r2rsEE6jxj4X5O4EDO6iEeWwVKVaSTDtqueRBOF)y6fkxzJJpmzUqGsRrvDKMRgSj7ExWOxh7ypzQMVXs75Xss(OTZC92iB4k35eKEd)oGeoW1rT5aJaXVaau2xeS9tbHeHwTBq91q666ekRHiLaJ(AynUVHsJhjvo4IH))QiApwfrDp1jvnnX5ksfKLnB1daW4y6iZO7PInQBEZ48nA4iQvFzLESG1LKEuylFRQnOUzf3h(eM0iz(HIy(4Rc1lfQC3G0)LCtJi(XHj1)jO4F2wdFM4DGL3mKiTh6tBG9uHMJ(Eei3a9hYcN8I6YcYqcr)XUbird7KcHvvbtbkBGRd2tLXf3QVd9Gb(JU6YSLEOTwwsLf9vpNrFctdEWfnw6n7fURzat1wunvu0mEV)6C9yfR8zsSuhF3lYLHhmWgYZNEYAgoVO5HBOtiUKPaVlyM9Iawkkf2486MJFX53E57pwJh29kSyFZMgkqdCYos3)wGZoWN2DXeqFzWGJh5vVo64HdTiVvUjVnyPDiAj3NX6IJzuMpnENPkIAGsPAPpMgRlKjhLbtzlawkaMEyt8xjbf1duV1iV0lFLY0RCHR0dc9FEQtK1nDW2zN6WxBj1J1g1LbUi7t6dVK71YOQrQbDNmD171Wr3sfJljOhPHKX0)KINyZctjHv2F3tVwYtvR5yX(IlXetBgbwE5rSS8w7T2RLrQwS5wgnCC9zfMr8QZfMOYnJ5Voy5IgzEXqja8ybbUNQEInmDXl3tQSSBs(NM8Tv9sME)Ut16L4majUM9wnbStIhjKd2JxBWa9CQEqDhpieHJXh8c9tPZWHMji(Y3p5irKO7sPdCxLdo3haxeCJ3fXNtk6ax7xHoeV9A14Bx442LQD7ksMQC7cf1uw43DAGD1kQ1tVTlorvUruTlZzhXckMEzFx28AqQwP8(dLNelK93Jou8T40TlCRcGY63IqBB4Ni9cBB71R)zIOB12xY5MQTxSRLdUEG78FtqTziQAhy()mfcU6TUwjsTfSPPZwRzvId73soCKkvC9z6KunsQRxOgOQsw8F(lFBEOtxvID(rYvGkv)9ONGVVRQz7GiUfwYTL1)b6g(eMcTh8YE2H1EHlRFdk25kt2UZw1gbJf)s7A4u9lj5mEQMC2qibha6R8D3eqEvMPfjQ3AfB5hfRU2O7FmS72hvzRDs4St2sW9j1YkY9JfX9iF0sBIQ1CP(GSBHbMEXMxpru2sAuT1NQ(IS8lqM6n6knyom7ARoxPzVvNILhsTY(eDKf3(fjcwBlPoWETSAR2jCYE3JN1r6Hrx2Cx1Jpq8m1ZUEJeE15RxUJfp1N(vEXjw3Li5lw7KweLeF5GJgFYRRTwwHhCJxWQFvaSnPkxf(CQu1SouvbWZ8DhmOUQs1f725PI8)0N)OB2hkdEHD9axIoIvkISZXhkD9kyjk0s(Z1oG1sX76C99bnvsPoWLu6cXPvTAe57qM)mc7lyss4N)kgqYvF8AauXVJyga7mpKhqRVhM74kMIanpTSdGmX05JzBq7NFjw0jOZ5GIf8tXmq)yofI3AE0AjBkCbnHoOqQa3dD62TNhtoRTbjrOdXsepXHSbBvaEqGi3ZeS)PiHWUqKaKBJVljLUr(4WeWP4WhdXeLqoJQGbsssjWHbNEHwpwxxJGOQykHVKMFj)90k20P(GFZpvFJEprb36)mT4Bgw7Uh1ZRq0qYRBAIEiWqRtN9ApY1(WH9OuO24qLhhC)f80MISdq)jkPVYWKM0f4RiBzGAyp78euVoFqwXYoSg(CvsfF7yHhCvgMFnvrUQUZCXfI7zkB0TxrAQgpHlwMwefqGIOxPnA3mlL3X1og8czOb0dvd4D08HvU1l5xgrW3lj1Fk1iKlF)j2hrdLSECGL6BNJVvTU6IbqA9)orR2jhfNE9F3VhNFN8nE(1X47)87UrAUxpAGAA)QbP4iPoVc7Lr3H4Ux5Bxg6B4qs2OWA3OkFua2hJq)SK(zyXBluy2TbQJ6hU8xQJnUBehMYpNYaeRXU31a93VLHKADr1WcQMwo4P2qJ6LUxuuJSMGS6LiykrHHate(Zx52SI2e1Mcb3tqdsGO3uHaq5JRG(1(VTQsAw)3(sss5J6yfZ0(yRwlhRj0eEP4QklnoAWb6x7NglTcSvp2RfMUi7sg56OIvw1HMf8s7DPOSz6UxF6PQmOyTgyEPi2csnQ5M)3)]] )

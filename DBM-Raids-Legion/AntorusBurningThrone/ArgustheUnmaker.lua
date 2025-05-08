@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2031, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714050021")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(124828)
 mod:SetEncounterID(2092)
 mod:SetBossHPInfoToHighest()--Because of heal on mythic
@@ -58,11 +58,11 @@ local yellGiftofSea					= mod:NewPosYell(258647, L.SeaText)
 local specWarnGiftofSky				= mod:NewSpecialWarningYou(258646, nil, nil, nil, 1, 2)
 local yellGiftofSky					= mod:NewPosYell(258646, L.SkyText)
 
-local timerSweepingScytheCD			= mod:NewCDCountTimer(5.6, 248499, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--5.6-15.7
-local timerConeofDeathCD			= mod:NewCDCountTimer(19.4, 248165, nil, nil, nil, 3)--19.4-24
-local timerBlightOrbCD				= mod:NewCDCountTimer(22, 248317, nil, nil, nil, 3)--22-32
-local timerTorturedRageCD			= mod:NewCDCountTimer(13, 257296, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--13-16
-local timerSkyandSeaCD				= mod:NewCDCountTimer(24.9, 255594, nil, nil, nil, 5)--24.9-27.8
+local timerSweepingScytheCD			= mod:NewVarCountTimer("v5.6-15.7", 248499, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--5.6-15.7
+local timerConeofDeathCD			= mod:NewVarCountTimer("v19.4-24", 248165, nil, nil, nil, 3)--19.4-24
+local timerBlightOrbCD				= mod:NewVarCountTimer("v22-32", 248317, nil, nil, nil, 3)--22-32
+local timerTorturedRageCD			= mod:NewVarCountTimer("v13-16", 257296, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--13-16
+local timerSkyandSeaCD				= mod:NewVarCountTimer("v24.9-27.8", 255594, nil, nil, nil, 5)--24.9-27.8
 
 mod:AddSetIconOption("SetIconGift", 255594, true)--5 and 6
 --Stage one Mythic
@@ -222,7 +222,7 @@ local function startAnnihilationStuff(self, quiet)
 		specWarnEdgeofAnni:Play("watchstep")
 	end
 	local timer = edgeofAnni[self.vb.EdgeofObliteration+1]
-	if timer then
+	if timer and timer > 0 then
 		timerEdgeofAnniCD:Start(timer, self.vb.EdgeofObliteration+1)
 		self:Schedule(timer, startAnnihilationStuff, self, timer < 6)
 	end
@@ -233,7 +233,7 @@ local function checkForMissingSentence(self)
 	self:Unschedule(checkForMissingSentence)
 	self.vb.sentenceCount = self.vb.sentenceCount + 1
 	local timer = sargSentenceTimers[self.vb.sentenceCount+1]
-	if timer then
+	if timer and timer > 0 then
 		timerSargSentenceCD:Start(timer-10, self.vb.sentenceCount+1)--Timer minus 10 or next expected sentence cast
 		self:Schedule(timer, checkForMissingSentence, self)--10 seconds after expected sentence cast
 	end
@@ -354,7 +354,7 @@ function mod:SPELL_CAST_START(args)
 		warnTorturedRage:Show(self.vb.TorturedRage)
 		if self:IsMythic() and self.vb.phase == 3 then
 			local timer = torturedRage[self.vb.TorturedRage+1]
-			if timer then
+			if timer and timer > 0 then
 				timerTorturedRageCD:Start(timer, self.vb.TorturedRage+1)
 			end
 		else
@@ -436,7 +436,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.vb.scytheCastCount == 3 then
 			self.vb.firstscytheSwap = true
 		end
-		timerSweepingScytheCD:Start(5.6, self.vb.scytheCastCount+1)
+		timerSweepingScytheCD:Start(nil, self.vb.scytheCastCount+1)
 	elseif spellId == 258039 then
 		timerDeadlyScytheCD:Start()
 	elseif spellId == 258838 then--Mythic Scythe
@@ -684,7 +684,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			--self:Unschedule(checkForMissingSentence)
 			self.vb.sentenceCount = self.vb.sentenceCount + 1
 			local timer = sargSentenceTimers[self.vb.sentenceCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerSargSentenceCD:Start(timer, self.vb.sentenceCount+1)
 				--self:Schedule(timer+10, checkForMissingSentence, self)--Check for missing sentence event 10 seconds after expected to recover timer if all immuned
 			end
@@ -841,7 +841,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			timerSargGazeCD:Start(59.7, self.vb.gazeCount+1)
 		elseif self.vb.phase == 3 then
 			local timer = sargGazeTimers[self.vb.gazeCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerSargGazeCD:Start(timer, self.vb.gazeCount+1)
 				self:Unschedule(ToggleRangeFinder)
 				self:Schedule(5, ToggleRangeFinder, self, true)--Call hide 2 seconds after rages go out, function will check player for debuff and decide

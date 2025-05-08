@@ -2,10 +2,12 @@
 ---------------------------------- NAMESPACE ----------------------------------
 -------------------------------------------------------------------------------
 local ADDON_NAME, ns = ...
+local L = ns.locale
 
+local Rare = ns.node.Rare
 local Safari = ns.node.Safari
 
--- local Achievement = ns.reward.Achievement
+local Transmog = ns.reward.Transmog
 
 local POI = ns.poi.POI
 
@@ -14,6 +16,29 @@ local POI = ns.poi.POI
 -------------------------------------------------------------------------------
 
 local map = ns.Map({id = 22, settings = true})
+
+-------------------------------------------------------------------------------
+------------------------------------ RARES ------------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[66205560] = Rare({
+    id = 50931,
+    rewards = {Transmog({item = 7418, slot = L['mail']})} -- Phalanx Breastplate
+}) -- Mange
+
+map.nodes[35805260] = Rare({
+    id = 50809,
+    rewards = {
+        Transmog({item = 7454, slot = L['mail']}), -- Knight's Breastplate
+        Transmog({item = 7440, slot = L['leather']}), -- Sentinel Trousers
+        Transmog({item = 9875, slot = L['cloth']}) -- Sorcerer Sash
+    }
+}) -- Heress
+
+map.nodes[62414723] = Rare({
+    id = 51031,
+    rewards = {Transmog({item = 9848, slot = L['cloth']})} -- Conjurer's Gloves
+}) -- Tracker
 
 -------------------------------------------------------------------------------
 ------------------------------------ SAFARI -----------------------------------
@@ -28,26 +53,8 @@ map.nodes[43005220] = Safari.Squirrel({
 }) -- Squirrel
 
 -------------------------------------------------------------------------------
---------------------------------- DRAGONRACES ---------------------------------
+-------------------------- THE SCAVENGER ACHIEVEMENT --------------------------
 -------------------------------------------------------------------------------
-
--- map.nodes[10001000] = ns.node.Dragonrace({
---     label = '{quest:76510}',
---     normal = {nil, nil, nil},
---     advanced = {nil, nil, nil},
---     reverse = {nil, nil, nil},
---     rewards = {
---         Achievement({id = 18566, criteria = 10, oneline = true}), -- normal bronze
---         Achievement({id = 18567, criteria = 10, oneline = true}), -- normal silver
---         Achievement({id = 18568, criteria = 10, oneline = true}), -- normal gold
---         Achievement({id = 18569, criteria = 10, oneline = true}), -- advanced bronze
---         Achievement({id = 18570, criteria = 10, oneline = true}), -- advanced silver
---         Achievement({id = 18571, criteria = 10, oneline = true}), -- advanced gold
---         Achievement({id = 18572, criteria = 10, oneline = true}), -- reverse bronze
---         Achievement({id = 18573, criteria = 10, oneline = true}), -- reverse silver
---         Achievement({id = 18574, criteria = 10, oneline = true}) -- reverse gold
---     }
--- }) -- Plaguelands Plunge
 
 map.nodes[29906890] = ns.node.ScavengerPool(3875)
 map.nodes[32607040] = ns.node.ScavengerPool(3875)

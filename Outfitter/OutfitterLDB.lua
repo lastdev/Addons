@@ -4,7 +4,7 @@ function Outfitter.LDB:Initialize()
 	self.LDB = LibStub("LibDataBroker-1.1", true)
 	self.DataObj = self.LDB:NewDataObject(Outfitter.cTitle,
 	{
-		type = "data source",
+		type = "launcher",
 		icon = "Interface\\AddOns\\Outfitter\\Textures\\Icon",
 		text = "Outfitter",
 		OnClick = function(pFrame, pButton) self:OnClick(pFrame, pButton) end
@@ -13,6 +13,20 @@ function Outfitter.LDB:Initialize()
 	Outfitter:RegisterOutfitEvent("WEAR_OUTFIT", function (...) self:OutfitEvent(...) end)
 	Outfitter:RegisterOutfitEvent("UNWEAR_OUTFIT", function (...) self:OutfitEvent(...) end)
 	Outfitter:RegisterOutfitEvent("OUTFITTER_INIT", function (...) self:OutfitEvent(...) end)
+end
+
+function Outfitter.LDB:CreateIcon(minimapButton)
+    self.icon = LibStub("LibWithFreeDragDBIcon-1.0")
+
+    self.icon:Register(Outfitter.cTitle, self.DataObj, minimapButton)
+end
+
+function Outfitter.LDB:ShowIcon()
+    self.icon:Show(Outfitter.cTitle)
+end
+
+function Outfitter.LDB:HideIcon()
+    self.icon:Hide(Outfitter.cTitle)
 end
 
 function Outfitter.LDB:OnClick(pFrame, pButton)

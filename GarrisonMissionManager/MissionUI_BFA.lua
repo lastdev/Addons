@@ -8,8 +8,8 @@ if not addon_env.load_this then return end
 -- [AUTOLOCAL START]
 local C_Garrison = C_Garrison
 local CreateFrame = CreateFrame
+local Enum_GarrisonFollowerType_FollowerType_8_0_GarrisonFollower = Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower
 local GetFollowers = C_Garrison.GetFollowers
-local LE_FOLLOWER_TYPE_GARRISON_8_0 = Enum.GarrisonFollowerType.FollowerType_8_0
 local dump = DevTools_Dump
 -- [AUTOLOCAL END]
 
@@ -26,7 +26,7 @@ function addon_env.BFAInitUI()
 
    -- Hardcoded
    local prefix = "BFA" -- hardcoded, because it is used in OUR frame names and should be static for GMM_Click
-   local follower_type = LE_FOLLOWER_TYPE_GARRISON_8_0
+   local follower_type = Enum_GarrisonFollowerType_FollowerType_8_0_GarrisonFollower
    local o = addon_env.InitGMMFollowerOptions({
       follower_type                = follower_type,
       gmm_prefix                   = prefix,
@@ -54,8 +54,8 @@ function addon_env.BFAInitUI()
       MissionList_Update_More(MissionList, MissionList_Update_More_With_Settings, mission_list_prefix, follower_type, currency)
    end
 
-   hooksecurefunc(MissionList,            "Update", MissionList_Update_More_With_Settings)
-   hooksecurefunc(MissionList.listScroll, "update", MissionList_Update_More_With_Settings)
+   hooksecurefunc(MissionList,           "Update", MissionList_Update_More_With_Settings)
+   hooksecurefunc(MissionList.ScrollBox, "Update", MissionList_Update_More_With_Settings)
    MissionList_Update_More_With_Settings()
    addon_env.update_if_visible[MissionList] = MissionList_Update_More_With_Settings
 
@@ -68,4 +68,4 @@ if BFAMissionFrame and addon_env.BFAInitUI then
    addon_env.BFAInitUI()
 end
 
--- /dump C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_8_0)
+-- /dump C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower)

@@ -524,6 +524,7 @@ CONDITIONS["false"] = {
 
 CONDITIONS["flightstyle"] = {
     name = L.LM_FLIGHT_STYLE,
+    disabled = ( IsAdvancedFlyableArea == nil ),
     toDisplay =
         function (v)
             if v ==  "steady" then
@@ -921,6 +922,10 @@ CONDITIONS["member"] = {
         end
 }
 
+local ModifierKeys = IsMacClient()
+                        and { "alt", "cmd", "ctrl", "shift" }
+                        or { "alt", "ctrl", "shift" }
+
 CONDITIONS["mod"] = {
     name = L.LM_MODIFIER_KEY,
     toDisplay =
@@ -933,19 +938,16 @@ CONDITIONS["mod"] = {
                 return _G[v:upper().."_KEY_TEXT"] or v
             end
         end,
-    menu = {
-        nosort = true,
-        { val = "mod" },
-        { val = "mod:alt" },
-        { val = "mod:lalt" },
-        { val = "mod:ralt" },
-        { val = "mod:ctrl" },
-        { val = "mod:lctrl" },
-        { val = "mod:rctrl" },
-        { val = "mod:shift" },
-        { val = "mod:lshift" },
-        { val = "mod:rshift" },
-    },
+    menu =
+        function ()
+            local out = { nosort = true }
+            for _, m in ipairs(ModifierKeys) do
+                table.insert(out, { val = "mod:"..m })
+                table.insert(out, { val = "mod:l"..m })
+                table.insert(out, { val = "mod:r"..m })
+            end
+            return out
+        end,
     handler =
         function (cond, context, v)
             if not v then
@@ -955,10 +957,11 @@ CONDITIONS["mod"] = {
                 if IsLeftAltKeyDown() then i = i + 1 end
                 if IsLeftShiftKeyDown() then i = i + 1 end
                 if IsLeftControlKeyDown() then i = i + 1 end
+                if IsLeftMetaKeyDown() then i = i + 1 end
                 if IsRightAltKeyDown() then i = i + 1 end
                 if IsRightShiftKeyDown() then i = i + 1 end
                 if IsRightControlKeyDown() then i = i + 1 end
-                if IsRightControlKeyDown() then i = i + 1 end
+                if IsRightMetaKeyDown() then i = i + 1 end
                 return tonumber(v) == i
             elseif v == "alt" then
                 return IsAltKeyDown()
@@ -970,14 +973,20 @@ CONDITIONS["mod"] = {
                 return IsControlKeyDown()
             elseif v == "lctrl" then
                 return IsLeftControlKeyDown()
-            elseif v == "rtrl" then
-                return IsRightoControlKeyDown()
+            elseif v == "rctrl" then
+                return IsRightControlKeyDown()
             elseif v == "shift" then
                 return IsShiftKeyDown()
             elseif v == "lshift" then
                 return IsLeftShiftKeyDown()
             elseif v == "rshift" then
                 return IsRightShiftKeyDown()
+            elseif v == "cmd" then
+                return IsMetaKeyDown()
+            elseif v == "lcmd" then
+                return IsLeftMetaKeyDown()
+            elseif v == "rcmd" then
+                return IsRightMetaKeyDown()
             else
                 return false
             end
@@ -1314,9 +1323,15 @@ CONDITIONS["shapeshift"] = {
         end
 }
 
+-- This sort-of can work on classic, using
+--      i = GetPrimaryTalentTree()
+--      GetTalentTabInfo(i)
+-- but there doesn't seem to be the concept of a global ID or any way to query
+-- the trees for a class you are not, so the menu can't work unless hardcoded.
+
 CONDITIONS["spec"] = {
     name = SPECIALIZATION,
-    disabled = ( GetSpecializationInfoByID == nil ),
+    disabled = ( GetSpecialization == nil ),
     toDisplay =
         function (v)
             local _, name, _, _, _, _, class = GetSpecializationInfoByID(v)
@@ -1632,6 +1647,10 @@ function LM.Conditions:GetConditions()
     table.sort(out, function (a, b) return a.name < b.name end)
     return out
 end
+
+-- This appears to have no terminating condition, but relies on the fact that
+-- the terminal items are purely text keys and ipairs() returns no elements.
+-- Probably a bit sketchy to be honest. Past me was a bit of a jerk.
 
 local function FillMenuTextsRecursive(t)
     for _,item in ipairs(t) do

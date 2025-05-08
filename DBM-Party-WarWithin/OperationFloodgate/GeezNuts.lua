@@ -2,7 +2,7 @@ if DBM:GetTOC() < 110100 then return end
 local mod	= DBM:NewMod(2651, "DBM-Party-WarWithin", 9, 1298)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250216024530")
+mod:SetRevision("20250330040931")
 mod:SetCreatureID(236950)
 mod:SetEncounterID(3054)
 mod:SetHotfixNoticeRev(20250215000000)
@@ -36,7 +36,7 @@ mod:RegisterEventsInCombat(
 local warnTurboChargeOver					= mod:NewEndAnnounce(465463, 1)
 local warnDam								= mod:NewCountAnnounce(468276, 2)
 local warnShockWaterStun					= mod:NewTargetNoFilterAnnounce(468741, 2)
-local warnLeapingSpark						= mod:NewTargetNoFilterAnnounce(468841, 2)
+local warnLeapingSpark						= mod:NewTargetNoFilterAnnounce(468841, 2, nil, false, 2)--off by default since it's spammmy in bad groups
 local warnGigaZapLater						= mod:NewTargetNoFilterAnnounce(468815, 3, nil, "Healer")--Pre target is private aura, but dot is not, we can still warn the healer who has dots
 
 local specWarnTurboCharge					= mod:NewSpecialWarningDodgeCount(465463, nil, nil, nil, 2, 2)
@@ -82,15 +82,17 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 465463 then
 		self.vb.turboChargeCount = self.vb.turboChargeCount + 1
 		specWarnTurboCharge:Show(self.vb.turboChargeCount)
-		specWarnTurboCharge:Play("farfromline")
+		specWarnTurboCharge:Play("aesoon")
+		specWarnTurboCharge:ScheduleVoice(2, "farfromline")
 		timerTurboChargeCD:Start(nil, self.vb.turboChargeCount+1)
 	elseif spellId == 468841 then
 		self.vb.sparksCount = self.vb.sparksCount + 1
 		timerLeapingSparksCD:Start(nil, self.vb.sparksCount+1)
 	elseif spellId == 468813 then
 		self.vb.gigaZapCount = self.vb.gigaZapCount + 1
-		local timer = (self.vb.gigaZapCount % 2 == 0) and 34 or 26
+		local timer = (self.vb.gigaZapCount % 2 == 0) and 36 or 28
 		timerGigazapCD:Start(timer, self.vb.gigaZapCount+1)
+		--"Gigazap-468813-npc:226404-00004BAEAB = pull:28.0, 28.0, 36.0, 28.0, 36.0",
 		--"<35.71 21:43:09> [CLEU] SPELL_CAST_START#Creature-0-5769-2773-2529-226404-00007DDBE7#Geezle Gigazap(54.3%-90.0%)##nil#468813#Gigazap#nil#nil#nil#nil#nil#nil",
 		--"<35.84 21:43:10> [UNIT_TARGET] boss1#Geezle Gigazap#Target: Crenna Earth-Daughter#TargetOfTarget: Omegal",
 		--"<38.74 21:43:12> [CLEU] SPELL_AURA_APPLIED#Creature-0-5769-2773-2529-226404-00007DDBE7#Geezle Gigazap#Vehicle-0-5769-2773-2529-209072-00007DDBF6#Crenna Earth-Daughter#468815#Gigazap#DEBUFF#nil#nil#nil#nil#nil",
@@ -100,7 +102,8 @@ function mod:SPELL_CAST_START(args)
 			specWarnThunderPunch:Show()
 			specWarnThunderPunch:Play("defensive")
 		end
-		local timer = (self.vb.gigaZapCount % 2 == 0) and 34 or 26
+		local timer = (self.vb.punchCount % 2 == 0) and 36 or 24
+		--"Thunder Punch-466190-npc:226404-00004BAEAB = pull:24.0, 28.0, 36.0, 28.0, 36.0",
 		timerThunderPunchCD:Start(timer, self.vb.punchCount+1)
 	end
 end
@@ -116,7 +119,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 468741 and args:IsPlayer() or self:IsHealer() then
+	if spellId == 468741 and args:IsPlayer() or (self:IsHealer() and args:IsDestTypePlayer()) then
 		warnShockWaterStun:CombinedShow(0.3, args.destName)
 	elseif spellId == 468616 and args:IsDestTypePlayer() then
 		if args:IsPlayer() then

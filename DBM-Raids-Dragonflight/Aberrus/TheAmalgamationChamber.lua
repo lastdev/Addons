@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2529, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(201774, 201773, 201934)--Krozgoth, Moltannia, Molgoth
 mod:SetEncounterID(2687)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -367,14 +367,14 @@ function mod:SPELL_CAST_START(args)
 			specWarnCoalescingVoid:Play("aesoon")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.coalescingCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerCoalescingVoidCD:Start(timer, self.vb.coalescingCount+1)
 		end
 	elseif spellId == 405016 then
 		self.vb.umbralCount = self.vb.umbralCount + 1
 		self.vb.umbralIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.umbralCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerUmbralDetonationCD:Start(timer, self.vb.umbralCount+1)
 		end
 	elseif spellId == 407640 then
@@ -384,7 +384,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnShadowsConvergence:Play("watchorb")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.shadowConvergeCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerShadowsConvergenceCD:Start(timer, self.vb.shadowConvergeCount+1)
 		end
 	elseif spellId == 403699 then
@@ -393,7 +393,7 @@ function mod:SPELL_CAST_START(args)
 
 		--end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.shadowStrikeCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerShadowSpikeCD:Start(timer, self.vb.shadowStrikeCount+1)
 		end
 	--Moltannia Spells
@@ -404,7 +404,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnFieryMeteor:Play("helpsoak")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.meteorCast+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerFieryMeteorCD:Start(timer, self.vb.meteorCast+1)
 		end
 	elseif spellId == 403101 then
@@ -414,7 +414,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnMoltenEruption:Play("helpsoak")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.moltenEruptionCast+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerMoltenEruptionCD:Start(timer, self.vb.moltenEruptionCast+1)
 		end
 	elseif spellId == 404896 then
@@ -424,7 +424,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnSwirlingFlame:Play("watchwave")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.swirlingCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerSwirlingFlameCD:Start(timer, self.vb.swirlingCount+1)
 		end
 	elseif spellId == 403203 then
@@ -433,7 +433,7 @@ function mod:SPELL_CAST_START(args)
 
 		--end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.flameSlashCast+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerFlameSlashCD:Start(timer, self.vb.flameSlashCast+1)
 		end
 	--Molgoth
@@ -442,14 +442,14 @@ function mod:SPELL_CAST_START(args)
 		specWarnGloomConflag:Show(self.vb.meteorCast)
 		specWarnGloomConflag:Play("helpsoak")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.meteorCast+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerGloomConflagCD:Start(timer, self.vb.meteorCast+1)
 		end
 	elseif spellId == 405641 then
 		self.vb.umbralCount = self.vb.umbralCount + 1
 		self.vb.umbralIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.umbralCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerBlisteringTwilightCD:Start(timer, self.vb.umbralCount+1)
 		end
 	elseif spellId == 408193 then
@@ -457,7 +457,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnConvergentEruption:Show(self.vb.moltenEruptionCast)
 		specWarnConvergentEruption:Play("helpsoak")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.moltenEruptionCast+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerConvergentEruptionCD:Start(timer, self.vb.moltenEruptionCast+1)
 		end
 	elseif spellId == 405914 then
@@ -467,14 +467,14 @@ function mod:SPELL_CAST_START(args)
 			specWarnWitheringVulnerability:Play("defensive")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.witheringVulnCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerWitheringVulnerabilityCD:Start(timer, self.vb.witheringVulnCount+1)
 		end
 	elseif spellId == 406783 then
 		self.vb.shadowflameBurstCount = self.vb.shadowflameBurstCount + 1
 		warnShadowflameBurst:Show(self.vb.shadowflameBurstCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.shadowflameBurstCount+1) or altTimers[difficultyName][spellId]
-		if timer then
+		if timer and timer > 0 then
 			timerShadowflameBurstCD:Start(timer, self.vb.shadowflameBurstCount+1)
 		end
 	elseif spellId == 409385 then

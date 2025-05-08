@@ -13,11 +13,13 @@
 	<Script file="Services\Classes.lua"/>
 	<Script file="Services\Options.lua"/>
 	<Script file="Services\SimpleHTML.lua"/>
+	<Script file="Classes\Array.lua"/>
 	<Script file="Classes\Dictionary.lua"/>
 	<Script file="Classes\UniqueItemsCollection.lua"/>
 	<Script file="Classes\SQLTable.lua"/>
 	<Script file="Classes\SQLTableView.lua"/>
 	<Script file="Classes\ScrollFrameViewHandler.lua"/>
+	<Script file="Services\Colors.lua"/>
 	<Script file="Templates\Frame.lua"/>
 	
 	<Include file="Templates\AutoCastShine.xml"/>
@@ -34,4 +36,5 @@
 	<Include file="Templates\AuctionHouseUI\HeaderContainer.xml"/>
 	<Include file="Templates\AuctionHouseUI\Tab.xml"/>
 	<Include file="Templates\AuctionHouseUI\Main.xml"/>
+	<Include file="Templates\AuctionHouseUI\HTMLGuide.xml"/>
 </Ui>

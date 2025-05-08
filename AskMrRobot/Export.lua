@@ -116,33 +116,12 @@ local _bankOpen = false
 local function scanBag(bagId, isBank, bagTable, bagItemsWithCount)
 
 	local numSlots = C_Container.GetContainerNumSlots(bagId)
-	local loc = ItemLocation.CreateEmpty()
-	local item
 	for slotId = 1, numSlots do
 		local itemInfo = C_Container.GetContainerItemInfo(bagId, slotId)
 		if itemInfo then
 			local itemData = Amr.Serializer.ParseItemLink(itemInfo.hyperlink)
 			if itemData ~= nil then
-				item = Item:CreateFromBagAndSlot(bagId, slotId)
-
-				-- seems to be of the form Item-1147-0-4000000XXXXXXXXX, so we take just the last 9 digits
-				itemData.guid = item:GetItemGUID()
-				if itemData.guid and strlen(itemData.guid) > 9 then
-					itemData.guid = strsub(itemData.guid, -9)
-				end
-
-				loc:SetBagAndSlot(bagId, slotId)
-				itemData.warbound = C_Item.IsBoundToAccountUntilEquip(loc)
-				itemData.soulbound = C_Item.IsBound(loc)
-								
-				-- see if this is an azerite item and read azerite power ids
-				--[[loc:SetBagAndSlot(bagId, slotId)
-				if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(loc) then
-					local powers = Amr.ReadAzeritePowers(loc)
-					if powers then
-						itemData.azerite = powers
-					end
-				end]]
+				Amr.ParseExtraItemInfo(itemData, bagId, slotId, false)
 
 				if isBank then
 					_lastBankBagId = bagId
@@ -628,10 +607,10 @@ local function scanAchievements()
 	local achieved = {}
 
 	local interestingIds = {
-		40107, -- season 1 weathered crest
-		40115, -- season 1 carved crest
-		40118, -- season 1 runed crest
-		40939, -- season 1 gilded crest
+		40942, -- season 2 weathered crest
+		40943, -- season 2 carved crest
+		40944, -- season 2 runed crest
+		40945, -- season 2 gilded crest
 	}
 
 	for _, achievementId in ipairs(interestingIds) do

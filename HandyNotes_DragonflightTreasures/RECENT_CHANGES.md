@@ -1,5 +1,5 @@
-## Changed in v61
+## Changed in v66
 
-* Flag cosmetic loot in tooltips
-* Fix tooltip label for multi-criteria points
+* Updated for 11.1.0
+* Switch to use the new menu system
 

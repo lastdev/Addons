@@ -101,6 +101,9 @@ end
 
 function private.TestPriceSource(price)
 	local _, endIndex, link = strfind(price, "(\124c[0-9a-f]+\124H[^\124]+\124h%[[^%]]+%]\124h\124r)")
+	if not link then
+		_, endIndex, link = strfind(price, "(\124cnIQ[0-9]:\124H[^\124]+\124h%[[^%]]+%]\124h\124r)")
+	end
 	price = link and strtrim(strsub(price, endIndex + 1))
 	if not price or price == "" then
 		ChatMessage.PrintUser(L["Usage: /tsm price <Item Link> <Custom String>"])

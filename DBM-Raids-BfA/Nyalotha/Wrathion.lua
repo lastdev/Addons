@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2368, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(156818)
 mod:SetEncounterID(2329)
 mod:SetUsedIcons(1, 2, 3)--Unknown number of burning targets, guessed for now
@@ -208,7 +208,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 306111 then
 		self.vb.incinerateCount = self.vb.incinerateCount + 1
 		local timer = self:IsMythic() and mythicincinerateTimers[self.vb.incinerateCount+1] or not self:IsMythic() and incinerateTimers[self.vb.incinerateCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerIncinerationCD:Start(timer, self.vb.incinerateCount+1)
 		end
 	elseif spellId == 306289 and self:AntiSpam(5, 2) then

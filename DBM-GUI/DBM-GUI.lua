@@ -597,7 +597,7 @@ local function GetSpecializationGroup()
 		if MAX_TALENT_TABS then
 			for i=1, MAX_TALENT_TABS do
 				if ( i <= numTabs ) then
-					local _, _, pointsSpent = GetTalentTabInfo(i)
+					local _, _, _, _, pointsSpent = GetTalentTabInfo(i)
 					if pointsSpent > highestPointsSpent then
 						highestPointsSpent = pointsSpent
 						currentSpecGroup = i
@@ -923,18 +923,6 @@ end
 do
 	local subTabId = 0
 
-	local cachedAddOns = {}
-	local C_AddOns = {
-		DoesAddOnExist = C_AddOns.DoesAddOnExist or function(addon)
-			if not cachedAddOns then
-				for i = 1, GetNumAddOns() do ---@diagnostic disable-line:deprecated
-				cachedAddOns[GetAddOnInfo(i)] = true ---@diagnostic disable-line:deprecated
-				end
-			end
-			return cachedAddOns[addon]
-		end,
-	}
-
 	local currentSeasons = {}
 	function UpdateCurrentSeason()
 		if not C_ChallengeMode or not C_ChallengeMode.GetMapTable then
@@ -992,8 +980,6 @@ do
 
     local expansions = {"CLASSIC", "BC", "WOTLK", "CATA", "MOP", "WOD", "LEG", "BFA", "SHADOWLANDS", "DRAGONFLIGHT", "WARWITHIN"}
 
-	-- WotLK compat, search for "local C_AddOns" in DBM-Core.lua for more details
-	local IsAddOnLoaded = _G.C_AddOns.IsAddOnLoaded or IsAddOnLoaded ---@diagnostic disable-line:deprecated
 	function DBM_GUI:UpdateModList()
 		for _, addon in ipairs(DBM.AddOns) do
 			if not addon.panel then
@@ -1008,7 +994,7 @@ do
 					DBM_GUI.tabs[3].buttons[#DBM_GUI.tabs[3].buttons].hidden = true
 				end
 
-				if not IsAddOnLoaded(addon.modId) then
+				if not C_AddOns.IsAddOnLoaded(addon.modId) then
 					local autoLoadFrame = CreateFrame("Frame", nil, addon.panel.frame)
 					autoLoadFrame:SetScript("OnShow", function()
 						if not addon.attemptedAutoLoad then
@@ -1033,7 +1019,7 @@ do
 				end
 			end
 
-			if addon.panel and addon.subTabs and IsAddOnLoaded(addon.modId) then
+			if addon.panel and addon.subTabs and C_AddOns.IsAddOnLoaded(addon.modId) then
 				if not addon.subPanels then
 					addon.subPanels = {}
 				end

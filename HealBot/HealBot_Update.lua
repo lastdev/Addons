@@ -460,7 +460,6 @@ function HealBot_Update_AuxClearAllMarkedBars()
     for xUnit,xButton in pairs(HealBot_PrivateTarget_Button) do
         HealBot_Aux_clearMarkedBars(xButton)
     end
-    HealBot_Aux_setLuVars("WaitOnFullClear", false)
 end
 
 function HealBot_Update_AuxTextButtons()
@@ -648,6 +647,11 @@ function HealBot_Update_RaidTarget()
     end
 end
 
+function HealBot_Update_RaidTargetReset()
+    HealBot_Update_RaidTarget()
+    HealBot_Events_RaidTargetAll()
+end
+
 function HealBot_Update_ClassIconTexture()
       --HealBot_setCall("HealBot_Update_ClassIconTexture")
     for _,xButton in pairs(HealBot_Unit_Button) do
@@ -670,21 +674,9 @@ end
 function HealBot_Update_AllIcons()
       --HealBot_setCall("HealBot_Update_AllIcons")
     if not HealBot_Update_luVars["TestBarsOn"] then
-        for _,xButton in pairs(HealBot_Unit_Button) do
-            HealBot_Aura_Update_AllIcons(xButton)
-        end
-        for _,xButton in pairs(HealBot_Private_Button) do
-            HealBot_Aura_Update_AllIcons(xButton)
-        end
-        for _,xButton in pairs(HealBot_Pet_Button) do
-            HealBot_Aura_Update_AllIcons(xButton)
-        end
-        for _,xButton in pairs(HealBot_Vehicle_Button) do
-            HealBot_Aura_Update_AllIcons(xButton)
-        end
-        for _,xButton in pairs(HealBot_Extra_Button) do
-            HealBot_Aura_Update_AllIcons(xButton)
-        end
+        HealBot_Timers_Set("AURA","UpdateAllDebuffIcons")
+        HealBot_Timers_Set("AURA","UpdateAllBuffIcons")
+        HealBot_Timers_Set("AURA","UpdateAllExtraIcons")
     end
 end
 
@@ -750,22 +742,41 @@ function HealBot_Update_ClearAllDebuffs(enemyOnly)
     HealBot_Update_RemoveAllDebuffIcons(enemyOnly)
 end
 
-function HealBot_Update_AuraAllState()
-      --HealBot_setCall("HealBot_Update_AuraAllState")
+function HealBot_Update_AuraAllRank()
+      --HealBot_setCall("HealBot_Update_AuraAllRank")
     for _,xButton in pairs(HealBot_Unit_Button) do
-       HealBot_Aura_UpdateState(xButton)
+       HealBot_Aura_UpdateRank(xButton)
     end
     for _,xButton in pairs(HealBot_Private_Button) do
-       HealBot_Aura_UpdateState(xButton)
+       HealBot_Aura_UpdateRank(xButton)
     end
     for _,xButton in pairs(HealBot_Pet_Button) do
-       HealBot_Aura_UpdateState(xButton)
+       HealBot_Aura_UpdateRank(xButton)
     end
     for _,xButton in pairs(HealBot_Vehicle_Button) do
-       HealBot_Aura_UpdateState(xButton)
+       HealBot_Aura_UpdateRank(xButton)
     end
     for _,xButton in pairs(HealBot_Extra_Button) do
-       HealBot_Aura_UpdateState(xButton)
+       HealBot_Aura_UpdateRank(xButton)
+    end
+end
+
+function HealBot_Update_AllOverShields()
+      --HealBot_setCall("HealBot_Update_AuraAllState")
+    for _,xButton in pairs(HealBot_Unit_Button) do
+       HealBot_Action_OverShield(xButton)
+    end
+    for _,xButton in pairs(HealBot_Private_Button) do
+       HealBot_Action_OverShield(xButton)
+    end
+    for _,xButton in pairs(HealBot_Pet_Button) do
+       HealBot_Action_OverShield(xButton)
+    end
+    for _,xButton in pairs(HealBot_Vehicle_Button) do
+       HealBot_Action_OverShield(xButton)
+    end
+    for _,xButton in pairs(HealBot_Extra_Button) do
+       HealBot_Action_OverShield(xButton)
     end
 end
 
@@ -1182,26 +1193,6 @@ function HealBot_Update_AllDebuffsReindexActives()
     for _,xButton in pairs(HealBot_Extra_Button) do
         HealBot_Aura_UnitDebuffsUpdateWhenActive(xButton)
         HealBot_DebuffSlowUpdate(xButton)
-    end
-end
-
-function HealBot_Update_AllPartyGUIDs()
-      --HealBot_setCall("HealBot_Update_AllPartyGUIDs")
-    for _,xButton in pairs(HealBot_Unit_Button) do
-        HealBot_Events_UnitGUIDChange(xButton)
-    end
-    for _,xButton in pairs(HealBot_Private_Button) do
-        HealBot_Events_UnitGUIDChange(xButton)
-    end
-end
-
-function HealBot_Update_AllPetGUIDs()
-      --HealBot_setCall("HealBot_Update_AllPetGUIDs")
-    for _,xButton in pairs(HealBot_Pet_Button) do
-        HealBot_Events_UnitGUIDChange(xButton)
-    end
-    for _,xButton in pairs(HealBot_Vehicle_Button) do
-        HealBot_Events_UnitGUIDChange(xButton)
     end
 end
 
@@ -1906,7 +1897,7 @@ end
 local skinName=""
 function HealBot_Update_Skins()
       --HealBot_setCall("HealBot_Update_Skins")
-    local oldVersion=9
+    local oldVersion=10
     if HealBot_Config.LastVersionSkinUpdate then HealBot_Config.LastVersionSkinUpdate=nil end
 
     local foundSkin=false
@@ -1931,11 +1922,7 @@ function HealBot_Update_Skins()
         HealBot_Options_SetDefaults(true)
     elseif HealBot_Globals.LastVersionSkinUpdate~=HealBot_Global_Version() then
         HealBot_Update_GlobalVars()
-        
         if tonumber(tMajor)<12 then
-            for x=1,20 do  -- This can be remove when 9.2.x check is replace with defaults due to old version
-                if HealBot_Config_Spells.Binds and HealBot_Config_Spells.Binds[x] and HealBot_Config_Spells.Binds[x] == 1 then HealBot_Config_Spells.Binds[x]=nil end
-            end
             for x in pairs (Healbot_Config_Skins.Skins) do
                 skinName=Healbot_Config_Skins.Skins[x]
                 if HealBot_Config.SkinDefault[skinName] then

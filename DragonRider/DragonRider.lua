@@ -564,6 +564,11 @@ function DR.vigorCounter(vigorCurrent)
 		return;
 	end
 
+	if not LibAdvFlight.IsAdvFlyEnabled() or DriveUtils.IsDriving() then
+		DR.toggleModels()
+		return
+	end
+
 	if not DragonRider_DB.toggleModels then
 		DR.toggleModels()
 		return
@@ -1340,9 +1345,9 @@ function DR.OnAddonLoaded()
 		if DragonRider_DB.fadeVigor == nil then
 			DragonRider_DB.fadeVigor = false
 		end
-		if DragonRider_DB.fadeSpeed == nil then
-			DragonRider_DB.fadeSpeed = true
-		end
+		--if DragonRider_DB.fadeSpeed == nil then
+		--	DragonRider_DB.fadeSpeed = true
+		--end
 		if DragonRider_DB.lightningRush == nil then
 			DragonRider_DB.lightningRush = true
 		end
@@ -1539,7 +1544,8 @@ function DR.OnAddonLoaded()
 			options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right);
 			Settings.CreateSlider(category, setting, options, tooltip)
 		end
-
+		
+		--[[
 		do
 			local variable = "fadeSpeed"
 			local name = L["FadeSpeedometer"]
@@ -1549,6 +1555,7 @@ function DR.OnAddonLoaded()
 			local setting = RegisterSetting(variable, defaultValue, name);
 			CreateCheckbox(category, setting, tooltip)
 		end
+		]]
 
 		layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L["Vigor"]));
 
@@ -1746,41 +1753,25 @@ function DR.OnAddonLoaded()
 
 		-- when the player takes off and starts flying
 		local function OnAdvFlyStart()
-			if DragonRider_DB.fadeSpeed then
-				DR.ShowWithFadeBar();
-			else
-				DR.statusbar:SetAlpha(1)
-				DR.statusbar:Show()
-			end
+			DR.ShowWithFadeBar();
 			DR.setPositions();
 		end
 
 		-- when the player mounts but isn't flying yet
 		-- OR when the player lands after flying but is still mounted
 		local function OnAdvFlyEnabled()
-			if DragonRider_DB.fadeSpeed then
-				DR.HideWithFadeBar();
-			else
-				DR.statusbar:SetAlpha(1)
-				DR.statusbar:Show()
-			end
+			DR.HideWithFadeBar();
 			DR.setPositions();
 		end
 
 		local function OnAdvFlyEnd()
-			if DragonRider_DB.fadeSpeed then
-				DR.HideWithFadeBar();
-			end
+			DR.HideWithFadeBar();
 			DR.setPositions();
 		end
 
 		-- when the player dismounts
 		local function OnAdvFlyDisabled()
-			if DragonRider_DB.fadeSpeed then
-				DR.HideWithFadeBar();
-			else
-				DR.statusbar:SetAlpha(1)
-			end
+			DR.HideWithFadeBar();
 			DR.clearPositions();
 		end
 

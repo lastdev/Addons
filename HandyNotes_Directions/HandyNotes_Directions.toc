@@ -1,12 +1,14 @@
-## Interface: 110000, 110002
-## Title: HandyNotes_Directions
-## Notes: Database of locations that city guards direct you to for HandyNotes
+## Interface: 110100, 40402, 11506
+## Title: HandyNotes: Directions
+## Notes: Remember locations that city guards direct you to for HandyNotes
 ## Author: Kemayo
-## Version: 1
+## Version: v20
+## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
-## X-Credits: I totally copied the structure from HandyNotes_Mailboxes by Kagaro
+## X-Credits: I totally copied the original structure from HandyNotes_Mailboxes by Kagaro
+## X-Curse-Project-ID: 14155
 ## SavedVariables: HandyNotes_DirectionsDB
 ## RequiredDeps: HandyNotes
 

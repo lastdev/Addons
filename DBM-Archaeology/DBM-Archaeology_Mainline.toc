@@ -1,4 +1,4 @@
-## Interface: 110007, 110100
+## Interface: 110100, 110105
 ## X-Min-Interface: 70100
 ## Category: DBM
 
@@ -14,7 +14,7 @@
 ## SavedVariables: DBM_Archaeology_Settings
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-Curse-Project-ID: 29493
-## Version: r64
+## Version: r65
 
 localization.en.lua
 localization.cn.lua

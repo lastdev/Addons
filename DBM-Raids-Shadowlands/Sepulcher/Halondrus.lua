@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2463, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045739")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(180906)
 mod:SetEncounterID(2529)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)
@@ -156,7 +156,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnEarthbreakerMissiles:Play("scatter")
 		if self.vb.stageTotality then
 			local timer = self.vb.stageTotality == 5 and (self:IsMythic() and p5MissileMythicTimers[self.vb.missilesCount+1] or p5MissileTimers[self.vb.missilesCount+1]) or self.vb.phase == 1 and 26.1 or self:GetFromTimersTable(movementTimers, false, self.vb.stageTotality, 361676, self.vb.missilesCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerEarthbreakerMissilesCD:Start(timer, self.vb.missilesCount+1)
 			end
 		end
@@ -231,7 +231,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShatter:Play("watchstep")
 		if self.vb.stageTotality then
 			local timer = self:GetFromTimersTable(movementTimers, false, self.vb.stageTotality, spellId, self.vb.shatterCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerShatterCD:Start(timer, self.vb.shatterCount+1)
 			end
 		end
@@ -267,7 +267,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				--use tabled timers during movements, regular CD during stanary subject to ICD live updates
 				local checkedId = self:IsMythic() and 3652970 or 365297
 				local timer = self.vb.phase == 1 and 26 or self:GetFromTimersTable(movementTimers, false, self.vb.stageTotality, checkedId, self.vb.crushingCast+1)
-				if timer then
+				if timer and timer > 0 then
 					timerCrushingPrismCD:Start(timer, self.vb.crushingCast+1)
 				end
 			end

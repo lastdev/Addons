@@ -1,7 +1,7 @@
-## Interface: 110100
+## Interface: 110105
 ## Title: TomTom
 ## Author: Cladhaire, Ludovicus
-## Version: v4.0.8-release
+## Version: v4.0.9-release
 ## License: All Rights Reserved
 ## IconTexture: Interface\AddOns\TomTom\Images\StaticArrow.tga
 ## Notes: Acts as your portable navigation assistant

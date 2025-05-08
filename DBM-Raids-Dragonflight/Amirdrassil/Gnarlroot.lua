@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2564, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(209333)
 mod:SetEncounterID(2820)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -177,20 +177,20 @@ function mod:SPELL_CAST_START(args)
 		self.vb.pestilanceCount = self.vb.pestilanceCount + 1
 		warnFlamingPestilence:Show(self.vb.pestilanceCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.pestilanceCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFlamingPestilenceCD:Start(timer, self.vb.pestilanceCount+1)
 		end
 	elseif spellId == 421971 then
 		self.vb.burnCount = self.vb.burnCount + 1
 		self.vb.burnIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.burnCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerControlledBurnCD:Start(timer, self.vb.burnCount+1)
 		end
 	elseif spellId == 424352 then
 		self.vb.barrageCount = self.vb.barrageCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.barrageCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerDreadfireBarrageCD:Start(timer, self.vb.barrageCount+1)
 		end
 	elseif spellId == 422026 then
@@ -198,7 +198,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnTorturedScream:Show(self.vb.screamCount)
 		specWarnTorturedScream:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.screamCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerTorturedScreamCD:Start(timer, self.vb.screamCount+1)
 		end
 	elseif spellId == 422039 then
@@ -206,7 +206,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShadowflameCleave:Show(self.vb.cleaveCount)
 		specWarnShadowflameCleave:Play("shockwave")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.cleaveCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerShadowflameCleaveCD:Start(timer, self.vb.cleaveCount+1)
 		end
 	elseif spellId == 421013 then

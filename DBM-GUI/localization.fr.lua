@@ -115,14 +115,16 @@ L.RecordOnlyBosses					= "Ne pas enregistrer les trash"
 L.DoNotLogLFG						= "Ne pas enregistrer les contenus en file d'attente (Recherche de groupe)"
 --Auto Logging: Recorded Content types
 L.Area_AutoLoggingContent			= "Contenu de l'enregistrement automatique"
-L.LogCurrentMythicRaids				= "Raids mythiques du niveau actuel (ou remix)" --Retail Only
-L.LogCurrentRaids					= "Raids non mythiques du niveau actuel (ou remix) (Héroïque, Normal, et LFR si le filtre Recherche de groupe est désactivé)"
-L.LogTWRaids						= "Raids de Marcheurs du temps ou de Temps de Chromie (n'inclut PAS le remix)" --Retail Only
+L.LogCurrentMythicRaids				= "Raids mythiques du niveau actuel" --Retail Only
+L.LogCurrentRaids					= "Raids non mythiques du niveau actuel (Héroïque, Normal, et LFR si le filtre Recherche de groupe est désactivé)"
+L.LogTWRaids						= "Raids de Marcheurs du temps ou de Temps de Chromie" --Retail Only
 L.LogTrivialRaids					= "Raids triviaux (au-dessous du niveau du personnage)"
-L.LogCurrentMPlus					= "Donjons M+ du niveau actuel (ou remix)" --Retail Only
-L.LogCurrentMythicZero				= "Donjons Mythique 0 du niveau actuel (ou remix)" --Retail Only
-L.LogTWDungeons						= "Donjons de Marcheurs du temps ou de Temps de Chromie (n'inclut PAS le remix)" --Retail Only
+L.LogCurrentMPlus					= "Donjons M+ du niveau actuel" --Retail Only
+L.LogCurrentMythicZero				= "Donjons Mythique 0 du niveau actuel" --Retail Only
+L.LogTWDungeons						= "Donjons de Marcheurs du temps ou de Temps de Chromie" --Retail Only
 L.LogCurrentHeroic					= "Donjons héroïques du niveau actuel (Remarque : si vous faites de l'héroïque via la file d'attente et souhaitez l'enregistrer, désactivez le filtre Recherche de groupe)"
+L.LogDelves							= "Expéditions du niveau actuel"--Retail Only
+L.LogChallenges						= "Défis spéciaux du niveau actuel"--Retail Only
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "Fonctionnalités supplémentaires"
@@ -378,7 +380,9 @@ L.AreaTitle_BarSetupHuge		= "Options des énormes barres"
 L.AreaTitle_BarSetupVariance 	= "Options des barres de variance"
 L.EnableHugeBar 				= "Activer les énormes barres (ou Barres 2)"
 L.EnableVarianceBar 			= "Activer les barres de variance"
+L.VarianceColor					= "Couluer de variance"
 L.VarianceTransparency			= "Transparence des barres : %0.1f"
+L.VarianceTimerTextBehavior 	= "Comportement du texte du chronomètre de variance"
 L.ZeroatWindowEnds 				= "Le texte atteint zéro à la fin de la fenêtre de recharge"
 L.ZeroatWindowStartPause 		= "Le texte atteint zéro au début de la fenêtre de recharge et se met en pause"
 L.ZeroatWindowStartRestart 		= "Le texte atteint zéro au début de la fenêtre de recharge puis redémarre"
@@ -654,6 +658,7 @@ L.ExportTestFailedNonAnonString 	= "AVERTISSEMENT : La chaîne %q semble ne pas 
 L.CreatedTest						= "Test créé avec %d événements en %.1f secondes."
 L.NoLogsFound						= "L'importation de Transcriptor ne contient pas de données de journal."
 L.NoTestDataAvailable				= "Aucune donnée de test disponible"
+L.TestDataLoading					= "Chargement des tests..."
 L.NoLogSelected						= "Échec de la création du test : Aucun journal sélectionné."
 L.LogAlreadyImported				= "Échec de la création du test : Test déjà importé."
 

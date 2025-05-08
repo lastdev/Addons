@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2519, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(204931)
 
 mod:SetEncounterID(2677)
@@ -205,7 +205,7 @@ local function blazeLoop(self)
 	else--Stage 3
 		timer = self:IsMythic() and (self.vb.blazeCount % 2 == 0 and 33 or 13) or (self.vb.blazeCount % 2 == 0 and 28 or 13)
 	end
-	if timer then
+	if timer and timer > 0 then
 		timerBlazeCD:Start(timer, self.vb.blazeCount+1)
 		self:Schedule(timer, blazeLoop, self)
 	end
@@ -225,7 +225,7 @@ local function eternalFireSwirlLoop(self)
 	self.vb.swirlCount = self.vb.swirlCount + 1
 	warnEternalFirestormSwirl:Show(self.vb.swirlCount)
 	local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 402736, self.vb.swirlCount+1)
-	if timer then
+	if timer and timer > 0 then
 		timerEternalFirestormSwirlCD:Start(timer, self.vb.swirlCount+1)
 		self:Schedule(timer, eternalFireSwirlLoop, self)
 	end
@@ -245,7 +245,7 @@ local function orbsLoop(self)
 	self.vb.orbsCount = self.vb.orbsCount + 1
 	warnShadowflameOrbs:Show(self.vb.orbsCount)
 	local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 421937, self.vb.orbsCount+1)
-	if timer then
+	if timer and timer > 0 then
 		timerShadowflameOrbsCD:Start(timer, self.vb.orbsCount+1)
 		self:Schedule(timer, orbsLoop, self)
 	end
@@ -349,7 +349,7 @@ function mod:SPELL_CAST_START(args)
 				timer = 15
 			end
 		end
-		if timer then
+		if timer and timer > 0 then
 			timerFyralathsBiteCD:Start(timer, self.vb.tankCount+1)
 		end
 	elseif spellId == 419144 then--Corrupt
@@ -386,7 +386,7 @@ function mod:SPELL_CAST_START(args)
 				specWarnIncarnate:Play("mobsoon")--Stage 2, he's lifting off for big adds
 			end
 			local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.incarnCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerIncarnateCD:Start(timer, self.vb.incarnCount+1)
 			end
 		end
@@ -394,7 +394,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.firestormCount = self.vb.firestormCount + 1
 		warnGreaterFirestorm:Show(self.vb.firestormCount)
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.firestormCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerGreaterFirestormCD:Start(timer, self.vb.firestormCount+1)
 		end
 --		timerIncarnate:Start()--Always cast after
@@ -421,7 +421,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFlamefall:Show(self.vb.flameFallCount)
 		specWarnFlamefall:Play("justrun")
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.flameFallCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFlamefallCD:Start(timer, self.vb.flameFallCount+1)
 		end
 	elseif spellId == 422837 then
@@ -462,7 +462,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 430441 then
 		warnDarkflameShades:Show(self.vb.tankCount+1)
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.tankCount+2)
-		if timer then
+		if timer and timer > 0 then
 			timerDarkflameShadesCD:Start(timer, self.vb.tankCount+2)
 		end
 	elseif spellId == 422524 then
@@ -470,7 +470,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnShadowflameDevastation:Show(self.vb.shadowflameDevastation)
 		specWarnShadowflameDevastation:Play("breathsoon")
 		local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, spellId, self.vb.shadowflameDevastation+1)
-		if timer then
+		if timer and timer > 0 then
 			timerShadowflameDevastationCD:Start(timer, self.vb.shadowflameDevastation+1)
 		end
 	elseif spellId == 426368 then
@@ -524,7 +524,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				local checkedId = self:IsHard() and 4178072 or 4178071
 				timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, checkedId, self.vb.aflameCount+1)
 			end
-			if timer then
+			if timer and timer > 0 then
 				timeAFlameCD:Start(timer, self.vb.aflameCount+1)
 			end
 		end
@@ -643,7 +643,7 @@ do
 			self.vb.spiritsCount = self.vb.spiritsCount + 1
 			warnSpirits:Show(self.vb.spiritsCount)
 			local timer = self:GetFromTimersTable(allTimers, false, self.vb.phase, 422032, self.vb.spiritsCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerSpiritsCD:Start(timer, self.vb.spiritsCount+1)
 			end
 		end

@@ -1,6 +1,6 @@
 -- AskMrRobot-Serializer will serialize and communicate character data between users.
 
-local MAJOR, MINOR = "AskMrRobot-Serializer", 151
+local MAJOR, MINOR = "AskMrRobot-Serializer", 157
 local Amr, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not Amr then return end -- already loaded by something else
@@ -302,6 +302,42 @@ function Amr.ParseItemLink(itemLink)
     return item
 end
 
+function Amr.ParseExtraItemInfo(itemData, bagId, slotId, isEquipped)
+
+	local item
+	if isEquipped then
+		item = Item:CreateFromEquipmentSlot(slotId)
+	else
+		item = Item:CreateFromBagAndSlot(bagId, slotId)
+	end
+	
+	-- seems to be of the form Item-1147-0-4000000XXXXXXXXX, so we take just the last 9 digits
+	itemData.guid = item:GetItemGUID()
+	if itemData.guid and strlen(itemData.guid) > 9 then
+		itemData.guid = strsub(itemData.guid, -9)
+	end
+
+	local loc
+	if isEquipped then
+		loc = ItemLocation:CreateFromEquipmentSlot(slotId)
+	else
+		loc = ItemLocation:CreateFromBagAndSlot(bagId, slotId)
+	end
+	
+	itemData.warbound = not isEquipped and C_Item.IsBoundToAccountUntilEquip(loc)
+	itemData.soulbound = isEquipped or C_Item.IsBound(loc)
+	itemData.catalyst = C_Item.IsItemConvertibleAndValidForPlayer(loc)
+
+	-- see if this is an azerite item and read azerite power ids
+	--[[loc:SetBagAndSlot(bagId, slotId)
+	if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(loc) then
+		local powers = Amr.ReadAzeritePowers(loc)
+		if powers then
+			itemData.azerite = powers
+		end
+	end]]
+end
+
 local AZERITE_EMPOWERED_BONUS_ID = 4775
 
 function Amr.GetItemUniqueId(item, noUpgrade, noAzeriteEmpoweredBonusId)
@@ -474,30 +510,8 @@ local function readEquippedItems(ret)
 		local itemLink = GetInventoryItemLink("player", slotId)
 		if itemLink then
 			local itemData = Amr.ParseItemLink(itemLink)			
-
 			if itemData then
-				item = Item:CreateFromEquipmentSlot(slotId)
-
-				-- seems to be of the form Item-1147-0-4000000XXXXXXXXX, so we take just the last 9 digits
-				itemData.guid = item:GetItemGUID()
-				if itemData.guid and strlen(itemData.guid) > 9 then
-					itemData.guid = strsub(itemData.guid, -9)
-				end
-
-				-- an equipped item is always soulbound
-				itemData.soulbound = true
-
-				--[[
-				-- see if this is an azerite item and read azerite power ids
-				loc:SetEquipmentSlot(slotId)
-				if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(loc) then
-					local powers = Amr.ReadAzeritePowers(loc)
-					if powers then
-						itemData.azerite = powers
-					end
-				end
-				]]
-
+				Amr.ParseExtraItemInfo(itemData, 0, slotId, true)
 				equippedItems[slotId] = itemData
 			end
 		end
@@ -661,6 +675,10 @@ local function appendItemsToExport(fields, itemObjects)
 
 		if itemData.warbound or itemData.soulbound then
 			table.insert(itemParts, "d" .. (itemData.warbound and 5 or 1))
+		end
+
+		if itemData.catalyst then
+			table.insert(itemParts, "c1")
 		end
 
 		--[[

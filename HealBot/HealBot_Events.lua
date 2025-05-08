@@ -198,6 +198,8 @@ function HealBot_Events_UnitTarget(button)
         elseif button.status.unittype<20 then
             HealBot_Panel_EnemyTargetsWithPlayersUpdate(button.unit, button.guid)
         end
+    elseif button.special.unit and HealBot_ValidLivingEnemy("player", button.unit) then
+        HealBot_UnitEnemyTargetUpdate(button.unit, button.guid)
     end
 end
 
@@ -215,14 +217,11 @@ end
 function HealBot_Events_PartyMembersChanged()
       --HealBot_setCall("HealBot_Events_PartyMembersChanged")
     HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPlayers",true)
-    if HealBot_Data["UILOCK"] then
-        HealBot_Timers_Set("LAST","UpdateAllPartyGUIDs")
-    end
 end
 
 function HealBot_Events_RosterUpdate()
       --HealBot_setCall("HealBot_Events_RosterUpdate")
-    HealBot_Timers_Set("OOC","PartyUpdateCheckSkin",true)
+    HealBot_Timers_Set("OOC","PartyUpdateCheckSkin")
     HealBot_Events_PartyMembersChanged();
 end
 
@@ -273,17 +272,6 @@ function HealBot_Events_InspectReady(guid)
     end
     if pButton then
         HealBot_GetTalentInfo(pButton)
-    end
-end
-
-function HealBot_Events_UnitGUIDChange(button)
-      --HealBot_setCall("HealBot_Events_UnitGUIDChange", button)
-    if button.guid~=UnitGUID(button.unit) then
-        HealBot_UpdateUnitGUIDChange(button, true)
-    else
-        button.status.slowupdate=true
-        button.status.change=true
-        button.status.update=true
     end
 end
 
@@ -693,7 +681,7 @@ function HealBot_Events_ClassificationChanged(button)
         else
             button.icon.extra.hostile=false
         end
-        HealBot_Aura_UpdateState(button)
+        HealBot_Aura_UpdateCombat(button)
     end
 end
 
@@ -736,9 +724,6 @@ function HealBot_Events_PetsChanged()
     if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][10]["STATE"] then
         HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPets")
     end
-    if HealBot_Data["UILOCK"] then
-        HealBot_Update_AllPetGUIDs()
-    end
 end
 
 local amSenderId=false
@@ -753,7 +738,7 @@ function HealBot_Events_AddonMsg(addon_id,msg,distribution,sender_id)
                     if amSenderId~=UnitName("player") then
                         HealBot_AddDebug("RECV: AddonMsg="..datatype.." from "..amSenderId,"Comms",true)
                         HealBot_SendVersion()
-                        if not HealBot_Events_luVars[amSenderId] then
+                        if not HealBot_Comms_KnownNames(amSenderId) then
                             HealBot_Comms_SendAddonMsg("W", 2, amSenderId)
                         end
                     end
@@ -761,13 +746,13 @@ function HealBot_Events_AddonMsg(addon_id,msg,distribution,sender_id)
                     if amSenderId~=UnitName("player") then
                         HealBot_AddDebug("RECV: AddonMsg="..datatype.." from "..amSenderId,"Comms",true)
                         HealBot_SendGuildVersion()
-                        if not HealBot_Events_luVars[amSenderId] then
+                        if not HealBot_Comms_KnownNames(amSenderId) then
                             HealBot_Comms_SendAddonMsg("W", 2, amSenderId)
                         end
                     end
                 elseif datatype == "S" then
                     if datamsg then
-                        HealBot_Events_luVars[amSenderId]=datamsg
+                        HealBot_Comms_PlayerVersion(amSenderId, datamsg)
                         HealBot_AddDebug("RECV: AddonMsg="..datatype.." from "..amSenderId.." Version="..datamsg,"Comms",true)
                         HealBot_Comms_CheckVer(amSenderId, datamsg)
                     end
@@ -949,6 +934,7 @@ function HealBot_Events_PlayerEnteringWorld()
     HealBot_Timers_Set("INIT","EnteringWorld")
     HealBot_Timers_Set("OOC","SaveSpellsProfile")
     HealBot_setLuVars("qaFRNext", HealBot_TimeNow+5)
+    HealBot_Timers_TurboOn()
 end
 
 function HealBot_Events_PlayerLeavingWorld()

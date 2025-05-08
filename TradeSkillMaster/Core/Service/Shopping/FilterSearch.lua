@@ -107,7 +107,7 @@ end
 
 function private.ScanThread(auctionScan, filterStr)
 	wipe(private.generalMaxQuantity)
-	if (ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442()) and filterStr == "" then
+	if not ClientInfo.IsVanillaClassic() and filterStr == "" then
 		auctionScan:NewQuery()
 			:SetStr("")
 		wipe(private.targetItem)
@@ -293,7 +293,7 @@ end
 function private.ValidateFilterStr(filterStr, mode)
 	assert(mode == "NORMAL" or mode == "CRAFTING" or mode == "DISENCHANT")
 	filterStr = strtrim(filterStr)
-	if mode == "NORMAL" and (ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442()) and filterStr == "" then
+	if mode == "NORMAL" and not ClientInfo.IsVanillaClassic() and filterStr == "" then
 		return filterStr
 	end
 	local isValid, errMsg = true, nil

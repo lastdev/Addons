@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2194, "DBM-Raids-BfA", 5, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240629024602")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 mod:SetBossHPInfoToHighest()
@@ -92,7 +92,7 @@ local function beamCorrection(self)
 	self:Unschedule(beamCorrection)
 	self.vb.beamCast = self.vb.beamCast + 1
 	local timer = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+1]
-	if timer then
+	if timer and timer > 0 then
 		timerObliterationbeamCD:Start(timer-4, self.vb.beamCast+1)
 		local timer2 = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+2]
 		if timer2 then
@@ -195,7 +195,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnObliterationbeam:Show(self.vb.beamCast)
 		specWarnObliterationbeam:Play("watchstep")
 		local timer = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+1]
-		if timer then
+		if timer and timer > 0 then
 			timerObliterationbeamCD:Start(timer, self.vb.beamCast+1)
 			local timer2 = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+2]
 			if timer2 then

@@ -247,7 +247,7 @@ function AuctionSubRow:GetHashes()
 		assert(self:HasRawData())
 		if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
 			local baseItemString = self:GetBaseItemString()
-			local itemMinBid = Math.Floor(self._minBid / self._quantity, COPPER_PER_SILVER)
+			local itemMinBid = Math.Floor(self._minBid / self._quantity, ClientInfo.HasFeature(ClientInfo.FEATURES.AH_COPPER) and 1 or COPPER_PER_SILVER)
 			local itemBuyout = floor(self._buyout / self._quantity)
 			local itemKeyId, itemKeySpeciesId = nil, nil
 			if ItemString.IsPet(baseItemString) then
@@ -346,7 +346,21 @@ function AuctionSubRow:_SetRawData(data, browseId, itemLink)
 	self._hashNoSeller = nil
 	self._browseId = browseId
 	if data then
-		if LibTSMService.IsRetail() or LibTSMService.IsCataClassicPatch442() then
+		if LibTSMService.IsVanillaClassic() then
+			local _, _, stackSize, timeLeft, buyout, seller, minIncrement, minBid, bid, isHighBidder = AuctionHouse.GetBrowseResult(data)
+			self._itemLink = itemLink
+			self._buyout = buyout
+			self._minBid = minBid
+			self._currentBid = bid
+			self._minIncrement = minIncrement
+			self._isHighBidder = isHighBidder
+			self._quantity = stackSize
+			self._timeLeft = timeLeft
+			self._ownerStr = seller or "?"
+			self._hasOwners = seller and true or false
+			self._numOwnerItems = 0
+			self._auctionId = 0
+		else
 			if self._resultRow:IsCommodity() then
 				local baseItemString = self._resultRow:GetBaseItemString()
 				self._itemLink = ItemInfo.GetLink(baseItemString)
@@ -395,20 +409,6 @@ function AuctionSubRow:_SetRawData(data, browseId, itemLink)
 			self._ownerStr = table.concat(private.ownersTemp, ",")
 			wipe(private.ownersTemp)
 			self._auctionId = data.auctionID
-		else
-			local _, _, stackSize, timeLeft, buyout, seller, minIncrement, minBid, bid, isHighBidder = AuctionHouse.GetBrowseResult(data)
-			self._itemLink = itemLink
-			self._buyout = buyout
-			self._minBid = minBid
-			self._currentBid = bid
-			self._minIncrement = minIncrement
-			self._isHighBidder = isHighBidder
-			self._quantity = stackSize
-			self._timeLeft = timeLeft
-			self._ownerStr = seller or "?"
-			self._hasOwners = seller and true or false
-			self._numOwnerItems = 0
-			self._auctionId = 0
 		end
 		assert(self._itemLink and self._quantity and self._buyout and self._minBid and self._currentBid and self._numOwnerItems and self._timeLeft and self._ownerStr and self._auctionId)
 	else

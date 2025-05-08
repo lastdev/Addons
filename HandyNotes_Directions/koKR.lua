@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_Directions", "koKR")
+﻿local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_Directions", "koKR")
 if not L then return end
 L["Profession Trainer"] = "전문기술 상급자"
 --L["A profession trainer"] = true

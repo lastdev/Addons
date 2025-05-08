@@ -85,6 +85,17 @@ MVC:Service("AddonFactory.SimpleHTML", function()
 			return "|TInterface\\Icons\\inv_misc_questionmark:16:16|t |cFF808080[querying..]|r"
 		end,
 		
+		GetCurrencyIcon = function(currencyID, count)
+			local info = C_CurrencyInfo.GetCurrencyInfo(currencyID)
+			
+			if info then
+				return format("%s |Hcurrency:%d|h|T%s:16:16|t|h", count, currencyID, info.iconFileID)
+			end
+			
+			-- Question mark icon
+			return "|TInterface\\Icons\\inv_misc_questionmark:16:16|t |cFF808080[querying..]|r"			
+		end,
+		
 		GetSpellIconAndLink = function(spellID)
 			local link = C_Spell.GetSpellLink(spellID)
 			local info = C_Spell.GetSpellInfo(spellID)

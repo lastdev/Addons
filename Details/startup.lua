@@ -71,6 +71,19 @@ function Details222.StartUp.StartMeUp()
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialize
 
+	do
+		--advertising patreon cuz I'm in need, need to make absolute sure this is removed before 11.1.7 goes live
+		local version = GetBuildInfo()
+		if (version == "11.1.7") then
+			--limit this to 10 days to be safe, don't want problems
+			local time = time()
+			local limitTime = 1747072462 --10 days ahead of May 02
+			if (time < limitTime) then
+				Details:Msg("Help support Details! author on Patreon: https://www.patreon.com/terciob")
+			end
+		end
+	end
+
 	--make an encounter journal cache. the cache will load before this if any function tries to get information from the cache
 	C_Timer.After(3, Details222.EJCache.CreateEncounterJournalDump)
 
@@ -106,7 +119,7 @@ function Details222.StartUp.StartMeUp()
 	--/run Details.ocd_tracker.show_options = true; ReloadUI()
 	--custom window
 	Details.custom = Details.custom or {}
-	Details222.InitRecap()
+	--Details222.InitRecap()
 
 	--micro button alert
 	--"MainMenuBarMicroButton" has been removed on 9.0
@@ -481,6 +494,93 @@ function Details222.StartUp.StartMeUp()
 		end
 	end
 
+	--store the names of all interrupt spells
+	---@type table<string, boolean>
+	Details.InterruptSpellNamesCache = {}
+    for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+        if (spellData.type == 6) then
+            local spellInfo = C_Spell.GetSpellInfo(spellId)
+            if (spellInfo) then
+                Details.InterruptSpellNamesCache[spellInfo.name] = true
+            end
+        end
+    end
+
+	---used to know if the spell is a crowd control during the parser debuff event.
+	---@type table<string, boolean>
+	Details.CrowdControlSpellNamesCache = {}
+
+	---not in use atm, waiting the unzip of talents string.
+	---@type table<unitname, table<spellname, boolean>>
+	Details.CrowdControlSpellsByUnitCache = {}
+
+	for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+		if (spellData.type == 8) then
+			local spellInfo = C_Spell.GetSpellInfo(spellId)
+			if (spellInfo) then
+				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+			end
+		end
+	end
+	for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
+		local spellInfo = C_Spell.GetSpellInfo(spellId)
+		if (spellInfo and not Details.CrowdControlSpellNamesCache[spellInfo.name]) then
+			Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+		end
+	end
+
+	local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+	if (openRaidLib) then
+		local t = {}
+		function t.OnUnitUpdate(unitId, unitInfo)
+			--print("open raid update...")
+			local specId = unitInfo.specId
+			local specName = unitInfo.specName
+			local role = unitInfo.role
+			local heroTalentId = unitInfo.heroTalentId
+			local talents = unitInfo.talents
+			local pvpTalents = unitInfo.pvpTalents
+			local class = unitInfo.class-- = string class eng name 'ROGUE'
+			local classId = unitInfo.classId-- = number
+			local className = unitInfo.className
+			local unitName = unitInfo.name-- = string name without realm
+			local unitNameFull = unitInfo.nameFull-- = string name with realm 'unitName-ServerName'
+
+			for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+				if (spellData.type == 8) then
+					local spellInfo = C_Spell.GetSpellInfo(spellId)
+					if (spellInfo) then
+						Details.CrowdControlSpellsByUnitCache[unitNameFull] = Details.CrowdControlSpellsByUnitCache[unitNameFull] or {}
+						if (not spellData.ignoredIfTalent) then
+							Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+						else
+							--check if the player the talent from spellData.ignoredIfTalent
+							--local unitTalents = openRaidLib.GetSpellIdsFromTalentString(talents)
+							--dumpt(unitTalents)
+							--print("talentId", spellData.ignoredIfTalent)
+							--print("has the talent?", unitTalents[spellData.ignoredIfTalent])
+							break
+						end
+					end
+				end
+			end
+		end
+
+		--registering the callback:
+		openRaidLib.RegisterCallback(t, "UnitInfoUpdate", "OnUnitUpdate")
+
+		--test
+		--[=[
+		C_Timer.After(5, function()
+			local unitName = UnitName("player")
+			local unitInfo = openRaidLib.GetUnitInfo("player")
+			if (unitInfo) then
+				t.OnUnitUpdate("player", unitInfo)
+			end
+		end)
+		--]=]
+	end
+
 	function Details:OpenOptionsWindowAtStart()
 		--Details:OpenOptionsWindow (Details.tabela_instancias[1])
 		--print(_G ["DetailsClearSegmentsButton1"]:GetSize())
@@ -564,6 +664,15 @@ function Details222.StartUp.StartMeUp()
 	if (Details.last_day ~= today) then
 		Details:Destroy(Details.cached_specs)
 		Details:Destroy(Details.cached_talents)
+	end
+
+	--10 days cache cleanup
+	if (now > Details.last_10days_cache_cleanup) then
+		Details:Destroy(Details.spell_pool)
+		Details:Destroy(Details.npcid_pool)
+		Details:Destroy(Details.spell_school_cache)
+		Details:Destroy(Details.cached_talents)
+		Details.last_10days_cache_cleanup = now + (60*60*24*10)
 	end
 
 	--get the player spec
@@ -699,7 +808,7 @@ function Details222.StartUp.StartMeUp()
 
 	pcall(Details222.ClassCache.MakeCache)
 
-	if (time() > 1730319410+31622400) then wipe(Details) return	end
+	if (time() > 1740761826+31622400) then wipe(Details) return	end
 
 	Details:BuildSpecsNameCache()
 

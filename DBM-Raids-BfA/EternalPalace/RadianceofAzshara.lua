@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2353, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044055")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(152364)
 mod:SetEncounterID(2305)
 mod:SetUsedIcons(1, 2)
@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnTideFistCast:Play("defensive")
 		end
 		local timer = tideFistTimers[self.vb.tideFistCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerTideFistCD:Start(timer, self.vb.tideFistCount+1)
 		end
 	elseif spellId == 296459 then
@@ -102,7 +102,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnUnshackledPower:Show(self.vb.unshackledCount)
 		specWarnUnshackledPower:Play("aesoon")
 		local timer = unshackledPowerTimers[self.vb.unshackledCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerUnshacklingPowerCD:Start(timer, self.vb.unshackledCount+1)
 		end
 	elseif spellId == 295916 then--Ancient Tempest (phase change)
@@ -137,7 +137,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.arcaneBombicon = 1
 		self.vb.arcaneBombCount = self.vb.arcaneBombCount + 1
 		local timer = self.vb.tempestStage and 20 or arcaneBombTimers[self.vb.arcaneBombCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerArcaneBombCD:Start(timer, self.vb.arcaneBombCount+1)
 		end
 	end
@@ -215,7 +215,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		self.vb.arcanadoCount = self.vb.arcanadoCount + 1
 		warnArcanadoBurst:Show(self.vb.arcanadoCount)
 		local timer = arcanadoTimers[self.vb.arcanadoCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerArcanadoBurstCD:Start(timer, self.vb.arcanadoCount+1)
 		end
 	end

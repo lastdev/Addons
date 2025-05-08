@@ -1,5 +1,5 @@
 local _, addon = ...
-local SlotMixin, private = addon.namespace('SlotMixin')
+local SlotMixin = addon.namespace('SlotMixin')
 
 function SlotMixin:Init(props)
     self.enchantable = props.enchantable or false

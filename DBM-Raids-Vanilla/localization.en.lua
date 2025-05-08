@@ -1223,7 +1223,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	AutomateEmote		= "Automatically trigger the correct emote for Marching Orders",
+	AutomateEmote		= "Attempt to automatically trigger the correct emote for Marching Orders (may be broken due a fix by Blizzard)",
 	AffixTimer			= "Show timers for hardmode affixes",
 	WarnEggs			= "Show announce for egg spawn (Spider wing hard mode)",
 	SpecWarnOrders		= "Show special warning when DBM fails to automate a Marching Order"
@@ -1236,11 +1236,11 @@ L:SetMiscLocalization({
 	SpiderAffix			= "Exploding Eggs",
 	UnsupportedLocale	= [[Welcome to the empowered Military Quarter!
 The hard mode mechanic here selects random players and requires them to do a given emote.
-DBM tries to fully automate this, however, our support for your client locale %s is still incomplete, DBM may miss emotes.
+Our support for your client locale %s is still incomplete, DBM may miss emotes.
 You can help! Share the exact text (screenshots, videos, Transcriptor logs) used in the hard mode mechanic here with us at discord.gg/deadlybossmods.
 ]],
-	AutomatedEmote		= "DBM automated emote %s for marching orders.",
-	AutomatedEmoteGuess	= "DBM automated emote %s for marching orders based on a guess. Was this wrong? Let us know at discord.gg/deadlybossmods",
+	AutomatedEmote		= "DBM attempted to automate emote %s for marching orders (this might not work due to Blizzard blocking the automation).",
+	AutomatedEmoteGuess	= "DBM attempted to automated emote %s for marching orders based on a guess. Was this the correct emote? Let us know at discord.gg/deadlybossmods",
 	-- List of emotes may not be complete, let me know if I missed one
 	OrderDance			= "DANCE for me!",
 	OrderRoar			= "Show me your best ROAR!",
@@ -1561,3 +1561,78 @@ L:SetGeneralLocalization({
 --  Emperor Dagran Thaurissan (3049) --
 ---------------------------
 --L= DBM:GetModLocalization(2670)
+
+-----------------------------
+--  Scarlet Enclave (SoD)  --
+-----------------------------
+-- This mostly relies on the new auto-generated locales for boss names from encounter data.
+-- Only add name localization if the name in locale.generated.lua is inconsistent with the commonly used name in the language.
+
+L = DBM:GetModLocalization("Balnazzar")
+
+L:SetMiscLocalization{
+	OtherPlayer = "another player", -- Use with AUTO_SPEC_WARN_TEXTS.moveto ("$spell - move to >%%s<")
+	Tick = "Tick"
+}
+
+L = DBM:GetModLocalization("Solistrasza")
+
+
+L = DBM:GetModLocalization("Beatrix")
+
+L:SetMiscLocalization{
+	YellFroggers1 = "break their ranks",
+	YellFroggers2 = "Ready your lances",
+	CannonMistress = "Cannon Mistress Lind", -- TODO: can we automatically get the localized name?
+	YellPhase2 = "We stand united! Let our enemies tremble before our might!",
+	Footmen = "Footmen",
+	Horses = "Horses"
+}
+
+
+L = DBM:GetModLocalization("RebornCouncil")
+
+
+L = DBM:GetModLocalization("Caldoran")
+
+
+L = DBM:GetModLocalization("LillianVoss")
+
+
+L = DBM:GetModLocalization("Beastmaster")
+
+L:SetOptionLocalization({
+	TimerMark = "Show timer for next Enervate/Enkindle marks (with count)",
+	WarnMark = "Show warning for enervate/Enkindle marks (with count)"
+})
+
+L:SetTimerLocalization({
+	TimerMark	= "Mark %d",
+})
+
+L:SetWarningLocalization({
+	WarnMark = "Mark %d"
+})
+
+
+L = DBM:GetModLocalization("Mason")
+
+L:SetMiscLocalization{
+	Cannons1 = "Fire!",
+	Cannons2 = "Fire at will!",
+}
+
+L = DBM:GetModLocalization("SE_Trash")
+L:SetGeneralLocalization{
+	name = "Scarlet Enclave Trash"
+}
+
+L:SetOptionLocalization{
+	FlightTimer = "Show timers for Gryphon flights",
+}
+
+L:SetMiscLocalization{
+	CentralTower = "Central Tower",
+	Prison = "Prison",
+	Cathedral = "Cathedral"
+}

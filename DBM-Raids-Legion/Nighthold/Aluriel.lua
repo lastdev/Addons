@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104720")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -232,7 +232,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 230403 then
 		self.vb.felLashCount = self.vb.felLashCount + 1
 		local timer = felLashTimers[self.vb.felLashCount+1]
-		if timer then
+		if timer and timer > 0 then
 			specWarnFelLash:Schedule(timer-3)
 			specWarnFelLash:ScheduleVoice(timer-3, "gathershare")
 			timerFelLashCD:Start(timer, self.vb.felLashCount+1)
@@ -241,7 +241,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.annihilateCount = self.vb.annihilateCount + 1
 		local nextCount = self.vb.annihilateCount+1
 		local timer = self:IsMythic() and mythicAnnihilateTimers[nextCount] or annihilateTimers[nextCount]
-		if timer then
+		if timer and timer > 0 then
 			timerAnnihilateCD:Start(timer-3, nextCount)
 		end
 		if nextCount == 6 and not self:IsMythic() then

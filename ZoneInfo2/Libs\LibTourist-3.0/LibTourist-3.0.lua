@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 323 $
+Revision: $Rev: 325 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 323 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 325 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -2011,6 +2011,7 @@ local MapIdLookupTable = {
     [2343] = "City of Threads",
     [2344] = "City of Threads",
     [2345] = "Deephaul Ravine",
+	[2346] = "Undermine",
     [2347] = "The Spiral Weave",
     [2348] = "Zekvir's Lair",
 	[2354] = "Silithus",
@@ -2023,7 +2024,24 @@ local MapIdLookupTable = {
 	[2368] = "Hall of Awakening",
     [2369] = "Siren Isle",
     [2373] = "The War Creche",
+	[2374] = "Undermine",
     [2375] = "The Forgotten Vault",
+	[2387] = "Operation: Floodgate",
+	[2388] = "Operation: Floodgate",
+	[2396] = "Excavation Site 9",
+	[2406] = "Undermine",
+	[2407] = "Undermine",
+	[2408] = "Undermine",
+	[2409] = "Undermine",
+	[2411] = "Undermine",
+	[2420] = "Sidestreet Sluice",
+	[2421] = "Sidestreet Sluice",
+	[2422] = "Sidestreet Sluice",
+	[2423] = "Sidestreet Sluice",
+	[2425] = "Demolition Dome",
+	[2426] = "Demolition Dome",
+	[2428] = "Undermine",
+	[2431] = "Minimap_RingingDeeps_Coreway",
 }
 
 
@@ -2051,6 +2069,7 @@ local zoneTranslation = {
 		
 		-- Raids
 		[14643] = "Amirdrassil, the Dream's Hope",
+		[15522] = "Liberation of Undermine",
 
 		-- Arenas
 		[3698] = "Nagrand Arena",   -- was 559
@@ -2085,6 +2104,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "Amirdrassil, Hoffnung des Traums",
+		[15522] = "Befreiung von Lorenhall",
 
 		-- Arenas
 		[3698] = "Arena von Nagrand",
@@ -2119,6 +2139,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "Amirdrassil, la Esperanza del Sueño",
+		[15522] = "Liberación de Minahonda",
 
 		-- Arenas
 		[3698] = "Arena de Nagrand",
@@ -2153,6 +2174,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "Amirdrassil, la Esperanza del Sueño",
+		[15522] = "Liberación de Minahonda",
 
 		-- Arenas
 		[3698] = "Arena de Nagrand",
@@ -2187,6 +2209,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "Amirdrassil, l’Espoir du Rêve",
+		[15522] = "Libération de Terremine",
 
 		-- Arenas
 		[3698] = "Arène de Nagrand",
@@ -2221,6 +2244,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "Amirdrassil, Speranza del Sogno",
+		[15522] = "Liberazione di Cavafonda",
 
 		-- Arenas
 		[3698] = "Arena di Nagrand",
@@ -2255,6 +2279,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "꿈의 희망 아미드랏실",
+		[15522] = "언더마인 해방전선",
 
 		-- Arenas
 		[3698] = "나그란드 투기장",
@@ -2289,6 +2314,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "Amirdrassil, a Esperança Onírica",
+		[15522] = "Libertação da Inframina",
 
 		-- Arenas
 		[3698] = "Arena de Nagrand",
@@ -2323,6 +2349,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "阿梅达希尔，梦境之愿",
+		[15522] = "解放安德麦",
 
 		-- Arenas
 		[3698] = "纳格兰竞技场",
@@ -2357,6 +2384,7 @@ local zoneTranslation = {
 
 		-- Raids
 		[14643] = "『夢境希望』埃達希爾",
+		[15522] = "解放幽坑城",
 
 		-- Arenas
 		[3698] = "納葛蘭競技場",
@@ -5174,7 +5202,9 @@ do
 	transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["The Ringing Deeps"], BZ["Siren Isle"])
 	transports["SIRENISLE_RINGINGDEEPS_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["Siren Isle"], BZ["The Ringing Deeps"])
 
-	
+	-- Undermine(d) (11.1.0)
+	transports["DORNOGAL_UNDERMINE_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dornogal"], BZ["Undermine"])
+	transports["UNDERMINE_DORNOGAL_PORTAL"] = string.format(X_Y_PORTAL, BZ["Undermine"], BZ["Dornogal"])
 	
 	local zones = {}
 
@@ -7075,7 +7105,19 @@ do
 		type = "Portal",
 	}
 
-	
+	zones[transports["DORNOGAL_UNDERMINE_PORTAL"]] = {
+		paths = {
+			[BZ["Undermine"]] = true,
+		},
+		type = "Portal",
+	}
+
+	zones[transports["UNDERMINE_DORNOGAL_PORTAL"]] = {
+		paths = {
+			[BZ["Dornogal"]] = true,
+		},
+		type = "Portal",
+	}	
 	
 	
 	-- ZONES, INSTANCES AND COMPLEXES ---------------------------------------------------------
@@ -10961,6 +11003,7 @@ do
 			[2809] = true,   -- Dragonscale Basecamp, The Waking Shores (N)
 			[2817] = true,   -- Skytop Observatory, The Waking Shores (N)
 			[2842] = true,   -- Rubyscale Outpost, The Waking Shores (N)
+			[2841] = true,   -- Skytop Observatory, The Waking Shores (Neutral)
 		},
 		continent = Dragon_Isles,
 		expansion = DragonFlight,
@@ -10994,6 +11037,7 @@ do
 			[2799] = true,   -- Rusza'thar Reach, Ohn'ahran Plains (N)
 			[2825] = true,   -- Ohn'iri Springs, Ohn'ahran Plains (N)
 			[2839] = true,   -- Rusza'thar Reach, Ohn'ahran Plains (N)
+			[2840] = true,   -- Shady Sanctuary, Ohn'ahran Plains (Neutral)
 		},
 		continent = Dragon_Isles,
 		expansion = DragonFlight,
@@ -11059,6 +11103,7 @@ do
 			[2816] = true,   -- Shifting Sands, Thaldraszus (N)
 			[2818] = true,   -- Vault of the Incarnates, Thaldraszus (N)
 			[2836] = true,   -- Algeth'era, Thaldraszus (Neutral)
+			[2834] = true,   -- Eon's Fringe, Thaldraszus (Neutral)
 		},
 		continent = Dragon_Isles,
 		expansion = DragonFlight,
@@ -11089,6 +11134,7 @@ do
 			[BZ["Ohn'ahran Plains"]] = true,
 			[BZ["The Azure Span"]] = true,
 			[BZ["Aberrus, the Shadowed Crucible"]] = true,
+			[BZ["The Throughway"]] = true,
 		},
 		flightnodes = {
 			[2864] = true,   -- Obsidian Rest, Zaralek Cavern (Neutral)
@@ -11098,6 +11144,20 @@ do
 		continent = Dragon_Isles,
 		expansion = DragonFlight,
 	}
+
+
+	-- 1.10.0
+	-- 14667 (scenario/open world)
+	zones[BZ["The Throughway"]] = {
+		low = 70,
+		high = 70,
+		paths = {
+			[BZ["Zaralek Cavern"]] = true,
+		},
+		continent = Dragon_Isles,
+		expansion = DragonFlight,
+	}
+
 
 	-- 10.2.0
 	-- 14529
@@ -11153,6 +11213,7 @@ do
 			[transports["DORNOGAL_ORGRIMMAR_PORTAL"]] = true,
 			[transports["DORNOGAL_STORMWIND_PORTAL"]] = true,
 			[transports["DORNOGAL_SIRENISLE_ZEPPELIN"]] = true,
+			[transports["DORNOGAL_UNDERMINE_PORTAL"]] = true,
 			[BZ["The Ringing Deeps"]] = true,
 		},
 		flightnodes = {
@@ -11182,12 +11243,25 @@ do
 			[BZ["Earthcrawl Mines"]] = true,
 			[BZ["Fungal Folly"]] = true,
 			[BZ["Kriegval's Rest"]] = true,
+			[BZ["The Proscenium"]] = true,
 		},
 		flightnodes = {
 			[2928] = true,   -- Dornogal, Isle of Dorn (Neutral)
 			[2929] = true,   -- Freywold Village, Isle of Dorn (Neutral)
 			[2931] = true,   -- Durgaz Cabin, Isle of Dorn (Neutral)
 			[2932] = true,   -- Rambleshire, Isle of Dorn (Neutral)
+		},
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+	}
+	
+	
+	-- 14776 (11.0.2)
+	zones[BZ["The Proscenium"]] = {
+		low = 70,
+		high = 73,
+		paths = {
+			[BZ["Isle of Dorn"]] = true,
 		},
 		continent = Khaz_Algar,
 		expansion = TheWarWithin,
@@ -11203,7 +11277,8 @@ do
 			[BZ["Deephaul Ravine"]] = true,
 			[BZ["The Dread Pit"]] = true,
 			[BZ["The Waterworks"]] = true,
-			[transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"]] = true,
+			[BZ["Operation: Floodgate"]] = true,
+			[BZ["Excavation Site 9"]] = true,
 		},
 		paths = {
 			[BZ["Dornogal"]] = true,
@@ -11214,12 +11289,16 @@ do
 			[BZ["Deephaul Ravine"]] = true,
 			[BZ["The Dread Pit"]] = true,
 			[BZ["The Waterworks"]] = true,
+			[BZ["Operation: Floodgate"]] = true,
+			[BZ["Excavation Site 9"]] = true,
+			[transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"]] = true,
 		},
 		flightnodes = {
 			[2925] = true,   -- Opportunity Point, The Ringing Deeps (Neutral)
 			[2926] = true,   -- Camp Murroch, The Ringing Deeps (Neutral)
 			[2962] = true,   -- Gundargaz, The Ringing Deeps (Neutral)
 			[2963] = true,   -- Shadowvein Point, The Ringing Deeps (Neutral)
+			[3000] = true,   -- Gutterville, The Ringing Deeps (Neutral)
 		},
 		continent = Khaz_Algar,
 		expansion = TheWarWithin,
@@ -11350,6 +11429,37 @@ do
 		continent = Khaz_Algar,
 		expansion = TheWarWithin,
 	}
+
+
+	-- patch 11.1.0
+	-- 15347
+	zones[BZ["Undermine"]] = {
+		instances = {
+			[BZ["Sidestreet Sluice"]] = true,
+			[BZ["Demolition Dome"]] = true,
+			[BZ["Liberation of Undermine"]] = true,
+		},
+		paths = {
+			[transports["UNDERMINE_DORNOGAL_PORTAL"]] = true,
+			[BZ["Sidestreet Sluice"]] = true,
+			[BZ["Demolition Dome"]] = true,
+		},
+		flightnodes = {
+			[2988] = true,   -- The Incontinental Hotel (Neutral)
+			[2996] = true,   -- The Heaps (Neutral)
+			[2997] = true,   -- Slam Central Station (Neutral)
+			[2998] = true,   -- Demolition Dome (Neutral)
+			[2999] = true,   -- The Gallagio (Neutral)
+		},
+		type = "City",
+		faction = "Sanctuary",
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+	}
+	
+
+
+
 
 	-- ============= DUNGEONS ===============
 	
@@ -13084,6 +13194,18 @@ do
 		entrancePortal = { BZ["Azj-Kahet"], 48.1, 71.3 },
 	}
 
+	zones[BZ["City of Threads - Lower"]] = {
+		low = 75,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["Azj-Kahet"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Azj-Kahet"], 48.1, 71.3 },
+	}
+
+
 	-- 15093
 	-- a.k.a. Ara-Kara
 	zones[BZ["City of Echos"]] = {
@@ -13095,6 +13217,18 @@ do
 		groupSize = 5,
 		type = "Instance",
 		entrancePortal = { BZ["Azj-Kahet"], 50.7, 82.1 },
+	}
+
+	-- 15452
+	zones[BZ["Operation: Floodgate"]] = {
+		low = 80,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["The Ringing Deeps"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["The Ringing Deeps"], 42.2, 39.6 },
 	}
 
 
@@ -13680,7 +13814,18 @@ do
 		entrancePortal = { BZ["Azj-Kahet"], 45.1, 90.7 },
 	}	
 	
-	
+	-- 14980
+	zones[BZ["Liberation of Undermine"]] = {
+		low = 80,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["Undermine"],
+		groupMinSize = 10,
+		groupMaxSize = 30,
+		type = "Instance",
+		entrancePortal = { BZ["Undermine"], 41.8, 49.0 },
+	}		
 	
 	-- ==============BATTLEGROUNDS================
 
@@ -13942,7 +14087,7 @@ do
 		groupMinSize = 1,
 		groupMaxSize = 5,
 		type = "Delve",
-		entrancePortal = { BZ["EIsle of Dorn"], 35.5, 79.2 },
+		entrancePortal = { BZ["Isle of Dorn"], 35.5, 79.2 },
 	}
 	
 	zones[BZ["Fungal Folly"]] = {
@@ -14089,6 +14234,46 @@ do
 		entrancePortal = { BZ["Azj-Kahet"], 35.0, 78.2 },
 	}	
 	
+	
+	-- 15836
+	zones[BZ["Excavation Site 9"]] = {
+		low = 70,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["The Ringing Deeps"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["The Ringing Deeps"], 76.25, 95.85 },
+	}	
+	
+	-- 15990
+	zones[BZ["Sidestreet Sluice"]] = {
+		low = 70,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["Undermine"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Undermine"], 34.95, 53.14 },
+	}
+	
+	-- 15991
+	zones[BZ["Demolition Dome"]] = {
+		low = 70,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["Undermine"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["Undermine"], 50.47, 9.11 },
+	}
+
 	
 	-- ==============COMPLEXES================
 

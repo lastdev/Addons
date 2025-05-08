@@ -96,6 +96,57 @@ if RareTracker.db.global.window.force_display_in_english then
     L[222624] = "Deepcrawler Tx'kesh"
     L[216047] = "The One Left"
     L[216046] = "Tka'ktath"
+    
+    -- Siren Isle
+    L[229982] = "Nerathor"
+    L[229992] = "Stalagnarok"
+    L[227550] = "Shardsong"
+    L[228155] = "Grimgull"
+    L[231090] = "Snacker"
+    L[229852] = "Coralweaver Calliso"
+    L[228583] = "Chef Chum Platter"
+    L[227545] = "Ikir the Flotsurge"
+    L[228201] = "Gravesludge"
+    L[228154] = "Bloodbrine"
+    L[228601] = "Ghostmaker"
+    L[228159] = "Gunnlod the Sea-Drinker"
+    L[228151] = "Wreckwater"
+    L[229853] = "Siris the Sea Scorpion"
+    L[228580] = "Plank-Master Bluebelly"
+    L[230137] = "Asbjorn the Bloodsoaked"
+    
+    
+    -- Seafury tempest rares.
+    L[231356] = "Brinebough"
+    L[231357] = "Zek'ul the Shipbreaker"
+    L[231368] = "Ksvir the Forgotten"
+    L[231353] = "Tempest Talon"
+    L[228547] = "Slaughtershell"
+    
+    -- Undermine
+    L[230931] = "Scrap Beak"
+    L[230940] = "Tally Doublespeak"
+    L[230946] = "V.V. Goosworth"
+    L[230979] = "S.A.L."
+    L[231012] = "Candy Stickemup"
+    L[231288] = "Swigs Farsight"
+    L[230793] = "The Junk-Wall"
+    L[230828] = "Chief Foreman Gutso"
+    L[234480] = "M.A.G.N.O."
+    L[233471] = "Scrapchewer"
+    L[231310] = "Darkfuse Precipitant"
+    L[230934] = "Ratspit"
+    L[230947] = "Slimesby"
+    L[230951] = "Thwack"
+    L[230995] = "Nitro"
+    L[231017] = "Grimewick"
+    L[230746] = "Ephemeral Agent Lathyd"
+    L[230800] = "Slugger the Smart"
+    L[230840] = "Flyboy Snooty"
+    L[234499] = "Giovante"
+    L[233472] = "Volstrike the Charged"
+    
+    L[234621] = "Gallagio"
 end
 
 RareTracker.RegisterRaresForModule({
@@ -227,3 +278,92 @@ RareTracker.RegisterRaresForModule({
         [216046] = {L[216046], 82289, {62.8, 66.6}}, --"Tka'ktath"
     }
 })
+
+local siren_isle_rare_announcements = {
+    [L["Deep beneath the isle surface, a strange sound echoes and then goes silent."]] = 227550,
+    [L["Seagulls sound a warning as the water churns violently offshore."]] = 231090,
+    [L["Thunderous footfalls echo along the western shores, marking the arrival of a new threat."]] = 227545,
+    [L["A foul smell is carried on the wind from the west."]] = 228154,
+    [L["A haunting, echoing howl rises from the hillside. A feel of unease lingers on the air."]] = 228601,
+    [L["The ground trembles and a chill fills the air. Something undead is stirring."]] = 228159,
+    [L["The sound of waves and breaking wood is carried on the wind."]] = 228151,
+    [L["A strange skittering sound echoes above the lap of shallow water."]] = 229853,
+    [L["A gurgling giggle and the sound of chains dragging across the sand cuts through the seaside silence."]] = 229852,
+}
+
+RareTracker.RegisterRaresForModule({
+    -- Define the zone(s) in which the rares are present.
+    ["target_zones"] = {2369, 2375},
+    ["zone_name"] = "Siren Isle",
+    ["plugin_name"] = "Siren Isle",
+    ["plugin_name_abbreviation"] = "TheWarWithin",
+    ["entities"] = {
+        --npc_id = {name, quest_id, coordinates}
+        [229982] = {L[229982], nil, {27.6, 65.6}}, --"Nerathor"
+        [229992] = {L[229992], nil, {39.4, 56.6}}, --"Stalagnarok"
+        [227550] = {L[227550], nil, {49.0, 16.8}}, --"Shardsong"
+        [228155] = {L[228155], 84796, {36.2, 23.6}}, --"Grimgull"
+        [231090] = {L[231090], 86933, {72.0, 23.6}}, --"Snacker"
+        [229852] = {L[229852], 84802, {62.6, 88.8}}, --"Coralweaver Calliso"
+        [228583] = {L[228583], 84800, {64.2, 86.8}}, --"Chef Chum Platter"
+        [227545] = {L[227545], 84792, {33.6, 74.6}}, --"Ikir the Flotsurge"
+        [228201] = {L[228201], 85669, {58.8, 67.4}}, --"Gravesludge"
+        [228154] = {L[228154], 84795, {35.4, 72.6}}, --"Bloodbrine"
+        [228601] = {L[228601], 84801, {53.8, 35.8}}, --"Ghostmaker"
+        [228159] = {L[228159], 84797, {49.0, 16.8}}, --"Gunnlod the Sea-Drinker"
+        [228151] = {L[228151], 84794, {47.6, 75.8}}, --"Wreckwater"
+        [229853] = {L[229853], 84803, {56.6, 84.6}}, --"Siris the Sea Scorpion"
+        [228580] = {L[228580], 84799, {61.2, 94.2}}, --"Plank-Master Bluebelly"
+        [230137] = {L[230137], 84805, {64.0, 87.8}}, --"Asbjorn the Bloodsoaked"
+        
+        -- Seafury tempest rares.
+        [231356] = {L[231356], 85404, {56.6, 81.4}}, --"Brinebough"
+        [231357] = {L[231357], 85405, {33.2, 73.6}}, --"Zek'ul the Shipbreaker"
+        [231368] = {L[231368], 85406, {44.49, 22.70}}, --"Ksvir the Forgotten"
+        [231353] = {L[231353], 85403, {41.89, 60.04}}, --"Tempest Talon"
+        [228547] = {L[228547], 84798, nil}, --"Slaughtershell"
+    },
+    ["FindMatchForText"] = function(self, text)
+        -- Check whether the chat message matches one of the known annoucements.
+        for designation, npc_id in pairs(siren_isle_rare_announcements) do
+            if text:find(designation) then
+                self:ProcessEntityAlive(npc_id, npc_id, nil, nil, false)
+                return
+            end
+        end
+    end
+})
+
+RareTracker.RegisterRaresForModule({
+    -- Define the zone(s) in which the rares are present.
+    ["target_zones"] = {2346},
+    ["zone_name"] = "Undermine",
+    ["plugin_name"] = "Undermine",
+    ["plugin_name_abbreviation"] = "TheWarWithin",
+    ["entities"] = {
+        --npc_id = {name, quest_id, coordinates}
+        [230931] = {L[230931], 84917, {68.8, 80.4}}, --"Scrap Beak"
+        [230940] = {L[230940], 84919, {36.7, 45.5}}, --"Tally Doublespeak"
+        [230946] = {L[230946], 84920, {38.0, 78.9}}, --"V.V. Goosworth"
+        [230979] = {L[230979], 84922, {41.1, 25.6}}, --"S.A.L."
+        [231012] = {L[231012], 84927, {42.3, 77.3}}, --"Candy Stickemup"
+        [231288] = {L[231288], 85004, {41.4, 44.0}}, --"Swigs Farsight"
+        [230793] = {L[230793], 84884, {64.2, 50.4}}, --"The Junk-Wall"
+        [230828] = {L[230828], 84907, {57.5, 86.6}}, --"Chief Foreman Gutso"
+        [234480] = {L[234480], 86298, {39.8, 22.2}}, --"M.A.G.N.O."
+        [233471] = {L[233471], 85778, {57.2, 78.6}}, --"Scrapchewer"
+        [231310] = {L[231310], 85010, {40.9, 92.0}}, --"Darkfuse Precipitant"
+        [230934] = {L[230934], 84918, {25.8, 35.6}}, --"Ratspit"
+        [230947] = {L[230947], 84920, {38.0, 78.9}}, --"Slimesby"
+        [230951] = {L[230951], 84921, {54.6, 50.6}}, --"Thwack"
+        [230995] = {L[230995], 84926, {47.0, 55.1}}, --"Nitro"
+        [231017] = {L[231017], 84928, {66.9, 33.6}}, --"Grimewick"
+        [230746] = {L[230746], 84877, {25.6, 68.4}}, --"Ephemeral Agent Lathyd"
+        [230800] = {L[230800], 84895, {52.0, 41.2}}, --"Slugger the Smart"
+        [230840] = {L[230840], 84911, {61.9, 10.3}}, --"Flyboy Snooty"
+        [234499] = {L[234499], 86307, {31.1, 75.5}}, --"Giovante"
+        [233472] = {L[233472], 85777, {63.2, 26.0}}, --"Volstrike the Charged"
+        [234621] = {L[234621], 87007, nil}, --"Gallagio"
+    }
+})
+

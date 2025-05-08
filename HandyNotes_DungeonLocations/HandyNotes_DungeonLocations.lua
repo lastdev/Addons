@@ -2856,7 +2856,7 @@ nodes[2346] = { } -- Undermine
    }
 
    nodes[2346] = {
-      [41554877] = { 
+      [42045031] = { 
          id = 1296, 
          type = "Raid", 
          showInZone = true, 

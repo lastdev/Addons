@@ -277,6 +277,9 @@ local function SetOption(option, value)
 	if TomeOfTele_Options == nil then
 		TomeOfTele_Options = {}
 	end
+	if TomeOfTele_OptionsGlobal == nil then
+		TomeOfTele_OptionsGlobal = {}
+	end
 	if TomeOfTele_ShareOptions then
 		TomeOfTele_OptionsGlobal[option] = value
 	else
@@ -846,7 +849,7 @@ local function CreateAddFavouriteMenu()
 				info.value = 1000
 				info.checked = nil
 
-				info.text = "Add favourite"
+				info.text = "Add to minimap button menu"
 				info.func = function()
 					local favourites = GetOption("favourites")
 					favourites[RightClickMenuSpell] = RightClickMenuSpellIsItem
@@ -872,7 +875,7 @@ local function CreateRemoveFavouriteMenu()
 				info.value = 1001
 				info.checked = nil
 
-				info.text = "Remove favourite"
+				info.text = "Remove from minimap button menu"
 				info.func = function()
 					local favourites = GetOption("favourites")
 					favourites[RightClickMenuSpell] = nil
@@ -884,7 +887,7 @@ local function CreateRemoveFavouriteMenu()
 end
 
 local function CreateEquipableItemRightClickMenu()
-	if not RemoveFavouriteMenu then
+	if not CantAddFavouriteMenu then
 		CantAddFavouriteMenu = CreateFrame("Frame", "TomeOfTeleCantAddFavouriteMenu", UIParent, "UIDropDownMenuTemplate")
 
 		UIDropDownMenu_Initialize(
@@ -897,7 +900,7 @@ local function CreateEquipableItemRightClickMenu()
 				info.value = 1002
 				info.checked = nil
 
-				info.text = "This item can not be added to favourites"
+				info.text = "This item can not be added to the minimap button menu"
 				info.func = nil
 				UIDropDownMenu_AddButton(info, level)
 
@@ -1079,6 +1082,11 @@ function TeleporterUpdateButton(button)
 					"macrotext",
 					"/teleportercastspell " .. toySpell .. "\n" ..
 					"/cast " .. item .. "\n" )
+			elseif settings.isPet then
+				local _, petGuid = C_PetJournal.FindPetIDByName(item)
+				button:SetAttribute(
+					"macrotext",
+					"/script C_PetJournal.SummonPetByGUID(\"" .. petGuid .. "\")\n")
 			elseif isItem then
 				button:SetAttribute(
 					"macrotext",
@@ -1932,6 +1940,7 @@ function TeleporterOpenFrame(isSearching)
 				buttonSetting.spellType = spellType
 				buttonSetting.frame = buttonFrame
 				buttonSetting.displaySpellName = displaySpellName
+				buttonSetting.isPet = spell.isPet
 				ButtonSettings[buttonFrame] = buttonSetting
 				OrderedButtonSettings[spellIndex] = buttonSetting
 				spellIndex = spellIndex + 1
@@ -2429,4 +2438,8 @@ function TeleporterTest_Reset()
 	DebugUnsupported = nil
 	ChosenHearth = nil
 	IsRefreshing = nil
+end
+
+function Teleporter_OnAddonCompartmentClick()
+	TeleporterSlashCmdFunction()
 end

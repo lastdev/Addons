@@ -41,7 +41,7 @@ local oop = MVC:GetService("AddonFactory.Classes")
 local TableInsert, TableRemove, TableSort = table.insert, table.remove, table.sort
 
 -- rather than test everywhere if the condition is nil or not, make an empty alternative
-local optionalCondition = function() return true end
+local optionalCondition = AddonFactory.TrueFunc
 
 
 oop:Create("SQLTable", {
@@ -78,9 +78,13 @@ oop:Create("SQLTable", {
 			end
 		end
 	end,
-	
-	Sort = function(self, ...)
-		-- Call : obj:Sort("name", "asc", "age", "desc")
+
+	Sort = function(self, sortFunc)
+		TableSort(self.data, sortFunc)
+	end,
+
+	OrderBy = function(self, ...)
+		-- Call : obj:OrderBy("name", "asc", "age", "desc")
 		-- Arguments : ... = field, asc/desc, field, asc/desc ..
 		local args = {...}
 
@@ -108,6 +112,8 @@ oop:Create("SQLTable", {
 		-- Call : obj:Insert({id = 2, name = "Bob"})
 		TableInsert(self.data, record)
 		self:ExecuteTriggers("insert", record)
+		
+		return record
 	end,
 	
 	Select = function(self, condition)
@@ -177,7 +183,7 @@ oop:Create("SQLTable", {
 		-- Call : obj:SelectDistinct("name")
 		
 		local uniqueValues = {}
-		local valueSet = {}
+		local valueSet = AddonFactory:GetTable()
 
 		for _, record in ipairs(self.data) do
 			local value = record[field]
@@ -188,6 +194,7 @@ oop:Create("SQLTable", {
 			end
 		end
 
+		AddonFactory:ReleaseTable(valueSet)
 		TableSort(uniqueValues)
 		return uniqueValues
 	end,

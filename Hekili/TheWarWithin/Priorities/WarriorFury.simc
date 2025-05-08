@@ -20,7 +20,7 @@ actions.precombat+=/variable,name=on_gcd_racials,value=buff.recklessness.down&bu
 actions+=/pummel,if=target.debuff.casting.react
 actions+=/charge,if=time<=0.5|movement.distance>5
 actions+=/heroic_leap,if=movement.distance>25
-actions+=/potion,if=boss&(fight_remains>300|fight_remains<300&fight_remains<35&buff.recklessness.up|fight_remains<25)
+actions+=/potion,if=boss&(fight_remains>300|boss&fight_remains<35&buff.recklessness.up|boss&fight_remains<25)
 actions+=/use_item,name=treacherous_transmitter
 
 ## Trinkets The trinket with the highest estimated value, will be used first and paired with Avatar.
@@ -29,9 +29,8 @@ actions+=/use_item,slot=trinket2,if=variable.trinket_2_buffs&!variable.trinket_2
 ## If only one on use trinket provides a buff, use the other on cooldown. Or if neither trinket provides a buff, use both on cooldown.
 actions+=/use_item,slot=trinket1,if=!variable.trinket_1_buffs&(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)&!variable.trinket_1_manual&(!variable.trinket_1_buffs&(trinket.2.cooldown.remains|!variable.trinket_2_buffs)|(trinket.1.cast_time>0&!buff.avatar.up|!trinket.1.cast_time>0)|cooldown.avatar.remains_expected>20)
 actions+=/use_item,slot=trinket2,if=!variable.trinket_2_buffs&(trinket.2.cast_time>0&!buff.avatar.up|!trinket.2.cast_time>0)&!variable.trinket_2_manual&(!variable.trinket_2_buffs&(trinket.1.cooldown.remains|!variable.trinket_1_buffs)|(trinket.2.cast_time>0&!buff.avatar.up|!trinket.2.cast_time>0)|cooldown.avatar.remains_expected>20)
-## [Hekili] Removed reference to bestinslots.
-actions+=/use_item,slot=main_hand,if=!equipped.fyralath_the_dreamrender&(!variable.trinket_1_buffs|trinket.1.cooldown.remains)&(!variable.trinket_2_buffs|trinket.2.cooldown.remains)
-
+actions+=/use_item,slot=main_hand,if=!equipped.fyralath_the_dreamrender&!equipped.bestinslots&(!variable.trinket_1_buffs|trinket.1.cooldown.remains)&(!variable.trinket_2_buffs|trinket.2.cooldown.remains)
+actions+=/use_item,name=bestinslots,if=target.time_to_die>120&(cooldown.avatar.remains>20&(trinket.1.cooldown.remains|trinket.2.cooldown.remains)|cooldown.avatar.remains>20&(!trinket.1.has_cooldown|!trinket.2.has_cooldown))|target.time_to_die<=120&target.health.pct<35&cooldown.avatar.remains>85|boss&target.time_to_die<15
 actions+=/lights_judgment,if=buff.recklessness.down&buff.avatar.down&rage<80&buff.sudden_death.down&!cooldown.bladestorm.ready&(!cooldown.execute.ready|!variable.execute_phase)
 actions+=/bag_of_tricks,if=buff.recklessness.down&buff.avatar.down&rage<80&buff.sudden_death.down&!cooldown.bladestorm.ready&(!cooldown.execute.ready|!variable.execute_phase)
 actions+=/berserking,if=buff.recklessness.up
@@ -39,8 +38,8 @@ actions+=/blood_fury
 actions+=/fireblood
 actions+=/ancestral_call
 ## actions+=/invoke_external_buff,name=power_infusion,if=buff.avatar.remains>15&fight_remains>=135|variable.execute_phase&buff.avatar.up|fight_remains<=25
-actions+=/run_action_list,name=slayer,if=!talent.lightning_strikes
-actions+=/run_action_list,name=thane,if=talent.lightning_strikes
+actions+=/run_action_list,name=slayer,strict=1,if=!talent.lightning_strikes
+actions+=/run_action_list,name=thane,strict=1,if=talent.lightning_strikes
 
 actions.slayer+=/recklessness
 actions.slayer+=/avatar,if=cooldown.recklessness.remains
@@ -49,9 +48,9 @@ actions.slayer+=/champions_spear,if=buff.enrage.up&(cooldown.bladestorm.remains>
 actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=24)
 actions.slayer+=/odyns_fury,if=(buff.enrage.up|talent.titanic_rage)&cooldown.avatar.remains
 actions.slayer+=/whirlwind,if=active_enemies>=2&talent.meat_cleaver&buff.meat_cleaver.down
-actions.slayer+=/execute,if=buff.sudden_death.stack=2&buff.sudden_death.remains<7&(target.health.pct>35|target.health.pct>20&!talent.massacre)
-actions.slayer+=/execute,if=buff.sudden_death.up&buff.sudden_death.remains<2&(target.health.pct>35|target.health.pct>20&!talent.massacre)
-actions.slayer+=/execute,if=buff.sudden_death.up&buff.imminent_demise.stack<3&cooldown.bladestorm.remains<25&(target.health.pct<35&talent.massacre|target.health.pct<20)
+actions.slayer+=/execute,if=buff.sudden_death.stack=2&buff.sudden_death.remains<7
+actions.slayer+=/execute,if=buff.sudden_death.up&buff.sudden_death.remains<2
+actions.slayer+=/execute,if=buff.sudden_death.up&buff.imminent_demise.stack<3&cooldown.bladestorm.remains<25
 actions.slayer+=/execute,if=debuff.marked_for_execution.up&buff.brutal_finish.up&debuff.overwhelmed.stack<10
 actions.slayer+=/onslaught,if=talent.tenderize&buff.brutal_finish.up
 actions.slayer+=/rampage,if=!buff.enrage.up|buff.slaughtering_strikes.stack>=4

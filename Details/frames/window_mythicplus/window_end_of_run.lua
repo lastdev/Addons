@@ -78,103 +78,6 @@ end
 _G.MythicDungeonFrames = mythicDungeonFrames
 --/run _G.MythicDungeonFrames.ShowEndOfMythicPlusPanel()
 
----@class animatedtexture : texture, df_frameshake
----@field CreateRandomBounceSettings function
----@field BounceFrameShake df_frameshake
-
----@class playerbanner : frame
----@field index number
----@field BackgroundBannerMaskTexture texture
----@field BackgroundBannerGradient texture
----@field FadeInAnimation animationgroup
----@field BackgroundShowAnim animationgroup
----@field DungeonBackdropShowAnim animationgroup
----@field BackgroundGradientAnim animationgroup
----@field BackgroundBannerFlashTextureColorAnimation animationgroup
----@field BounceFrameShake df_frameshake
----@field NextLootSquare number
----@field LootSquares details_lootsquare[]
----@field LevelUpFrame frame
----@field LevelUpTextFrame frame
----@field WaitingForLootLabel df_label
----@field RantingLabel df_label
----@field LevelFontString fontstring
----@field KeyStoneDungeonTexture texture
----@field DungeonBorderTexture texture
----@field FlashTexture texture
----@field LootSquare frame
----@field LootIcon texture
----@field LootIconBorder texture
----@field LootItemLevel fontstring
----@field unitId string
----@field unitName string
----@field PlayerNameFontString fontstring
----@field PlayerNameBackgroundTexture texture
----@field DungeonBackdropTexture texture
----@field BackgroundBannerTexture animatedtexture
----@field BackgroundBannerFlashTexture animatedtexture
----@field RoleIcon texture
----@field Portrait texture
----@field Border texture
----@field Name fontstring
----@field AnimIn animationgroup
----@field AnimOut animationgroup
----@field StartTextDotAnimation fun(self:playerbanner)
----@field StopTextDotAnimation fun(self:playerbanner)
----@field ClearLootSquares fun(self:playerbanner)
----@field GetLootSquare fun(self:playerbanner):details_lootsquare
-
----@class details_lootsquare : frame
----@field LootIcon texture
----@field LootIconBorder texture
----@field LootItemLevel fontstring
----@field LootItemLevelBackgroundTexture texture
----@field itemLink string
----@field ShadowTexture texture
-
----@class details_loot_cache : table
----@field playerName string
----@field itemLink string
----@field effectiveILvl number
----@field itemQuality number
----@field itemID number
----@field time number
-
----@class lootframe : frame
----@field LootCache details_loot_cache[]
-
----@class details_mplus_endframe : frame
----@field unitCacheByName playerbanner[]
----@field entryAnimationDuration number
----@field AutoCloseTimeBar df_timebar
----@field OpeningAnimation animationgroup
----@field HeaderFadeInAnimation animationgroup
----@field HeaderTexture texture
----@field TopFrame frame
----@field ContentFrame frame
----@field ContentFrameFadeInAnimation animationgroup
----@field YellowSpikeCircle texture
----@field YellowFlash texture
----@field Level fontstring
----@field leftFiligree texture
----@field rightFiligree texture
----@field bottomFiligree texture
----@field CloseButton df_closebutton
----@field ConfigButton df_button
----@field ShowBreakdownButton df_button
----@field ShowChartButton df_button
----@field PlayerBanners playerbanner[]
----@field YouBeatTheTimerLabel fontstring
----@field RantingLabel df_label
----@field ElapsedTimeIcon texture
----@field ElapsedTimeText fontstring
----@field OutOfCombatIcon texture
----@field OutOfCombatText fontstring
----@field SandTimeIcon texture
----@field KeylevelText fontstring
----@field StrongArmIcon texture
-
-
 --frame to handle loot events
 local lootFrame = CreateFrame("frame", "DetailsEndOfMythicLootFrame", UIParent)
 lootFrame:RegisterEvent("BOSS_KILL")
@@ -399,7 +302,7 @@ local createLootSquare = function(playerBanner, name, parent, lootIndex)
 	return lootSquare
 end
 
-local createPlayerBanner = function(parent, name, index)
+function Details:CreatePlayerPortrait(parent, name)
 	if (not C_AddOns.IsAddOnLoaded("Blizzard_ChallengesUI")) then
 		C_AddOns.LoadAddOn("Blizzard_ChallengesUI")
 	end
@@ -407,12 +310,19 @@ local createPlayerBanner = function(parent, name, index)
 	--this template is from Blizzard_ChallengesUI.xml
     local template = "ChallengeModeBannerPartyMemberTemplate"
 
-	---@type playerbanner
-    local playerBanner = CreateFrame("frame", name, parent, template)
-	playerBanner.index = index
+	local playerBanner = CreateFrame("frame", name, parent, template)
+
 	playerBanner:SetAlpha(1)
 	playerBanner:EnableMouse(true)
 	playerBanner:SetFrameLevel(parent:GetFrameLevel()+2)
+
+	return playerBanner
+end
+
+local createPlayerBanner = function(parent, name, index)
+	---@type playerbanner
+    local playerBanner = Details:CreatePlayerPortrait(parent, name)
+	playerBanner.index = index
 	--size is set on the template
 
 	--make an fade in animation

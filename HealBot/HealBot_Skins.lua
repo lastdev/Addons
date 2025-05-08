@@ -43,20 +43,20 @@ function HealBot_Skins_retColWidth(frame, id)
     end
 end
 
-local indTextures={ [2]=[[Interface\Addons\HealBot\Images\indicator_gold]],
-                    [3]=[[Interface\Addons\HealBot\Images\indicator_silver]],
-                    [4]=[[Interface\Addons\HealBot\Images\indicator_white]],
-                    [5]=[[Interface\Addons\HealBot\Images\indicator_yellow]],
-                    [6]=[[Interface\Addons\HealBot\Images\indicator_orange]],
-                    [7]=[[Interface\Addons\HealBot\Images\indicator_pink]],
-                    [8]=[[Interface\Addons\HealBot\Images\indicator_red]],
-                    [9]=[[Interface\Addons\HealBot\Images\indicator_purple]],
-                   [10]=[[Interface\Addons\HealBot\Images\indicator_aqua]],
-                   [11]=[[Interface\Addons\HealBot\Images\indicator_lime]],
-                   [12]=[[Interface\Addons\HealBot\Images\indicator_green]],
-                   [13]=[[Interface\Addons\HealBot\Images\indicator_blue]],
-                   [14]=[[Interface\Addons\HealBot\Images\indicator_brown]],
-                   [15]=[[Interface\Addons\HealBot\Images\indicator_black]],
+local indTextures={ [2]=[[Interface\Addons\HealBot\Images\indicators\indicator_gold]],
+                    [3]=[[Interface\Addons\HealBot\Images\indicators\indicator_silver]],
+                    [4]=[[Interface\Addons\HealBot\Images\indicators\indicator_white]],
+                    [5]=[[Interface\Addons\HealBot\Images\indicators\indicator_yellow]],
+                    [6]=[[Interface\Addons\HealBot\Images\indicators\indicator_orange]],
+                    [7]=[[Interface\Addons\HealBot\Images\indicators\indicator_pink]],
+                    [8]=[[Interface\Addons\HealBot\Images\indicators\indicator_red]],
+                    [9]=[[Interface\Addons\HealBot\Images\indicators\indicator_purple]],
+                   [10]=[[Interface\Addons\HealBot\Images\indicators\indicator_aqua]],
+                   [11]=[[Interface\Addons\HealBot\Images\indicators\indicator_lime]],
+                   [12]=[[Interface\Addons\HealBot\Images\indicators\indicator_green]],
+                   [13]=[[Interface\Addons\HealBot\Images\indicators\indicator_blue]],
+                   [14]=[[Interface\Addons\HealBot\Images\indicators\indicator_brown]],
+                   [15]=[[Interface\Addons\HealBot\Images\indicators\indicator_black]],
                    }
 
 local tabconcat=table.concat
@@ -544,7 +544,13 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
             b.gref["Top"]:SetWidth(bWidth)
             b.gref["IconTop"]:SetHeight(bheight)
             b.gref["IconTop"]:SetWidth(bWidth)
-
+            if bWidth > 100 then
+                button.gref["Shield"]:SetWidth(10)
+            elseif bWidth < 50 then
+                button.gref["Shield"]:SetWidth(5)
+            else
+                button.gref["Shield"]:SetWidth(ceil(bWidth/10))
+            end
             b.gref["Back"]:SetHeight(bheight+auxHeight+(bOutline*2))
             b.gref["Back"]:SetWidth(bWidth+auxWidth+(bOutline*2))
             b.gref["InHeal"]:SetHeight(bheight);
@@ -608,8 +614,8 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
                 erButton.used=false
             end
 
-			-- bgFile="Interface\\Addons\\HealBot\\Images\\WhiteLine",
-			-- edgeFile="Interface\\Addons\\HealBot\\Images\\border",
+			-- bgFile="Interface\\Addons\\HealBot\\Images\\frame\\WhiteLine.tga",
+			-- edgeFile="Interface\\Addons\\HealBot\\Images\\frame\\border.tga",
             -- edgeFile="Interface\\Buttons\\WHITE8X8",
 
             tBarsConcat[1]="f"
@@ -620,6 +626,14 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
             b.gref["Bar"]:GetStatusBarTexture():SetHorizTile(false)
             b.gref["Bar"]:ClearAllPoints()
             b.gref["Bar"]:SetPoint("BOTTOMLEFT",b.gref["Back"],"BOTTOMLEFT",auxOffsetLeft+bOutline,auxOffsetBelow+bOutline)
+            button.gref["Shield"]:ClearAllPoints()
+            if bheight > 35 then
+                button.gref["Shield"]:SetPoint("TOPRIGHT", button.gref["Bar"], "TOPRIGHT",0,0)
+                button.gref["Shield"]:SetPoint("BOTTOMRIGHT", button.gref["Bar"], "BOTTOMRIGHT",0,1)
+            else
+                button.gref["Shield"]:SetPoint("TOPRIGHT", button.gref["Bar"], "TOPRIGHT",0,0)
+                button.gref["Shield"]:SetPoint("BOTTOMRIGHT", button.gref["Bar"], "BOTTOMRIGHT",0,0)
+            end
             if b.gref["BackBorder"].size~=ceil(hbv_Skins_GetFrameVar("BarCol", "BORSIZE", b.frame)*frameScale) then
                 b.gref["BackBorder"].size=ceil(hbv_Skins_GetFrameVar("BarCol", "BORSIZE", b.frame)*frameScale)
                 b.gref["BackBorder"]:SetBackdrop({
@@ -848,7 +862,7 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
                 b.gref.txt["text3"]:SetPoint("TOPRIGHT",b.gref["Bar"],"TOPRIGHT",ceil(hbv_Skins_GetFrameVar("BarText", "SOFFSET2", b.framecol)*frameScale),ceil((-2+hbv_Skins_GetFrameVar("BarText", "SOFFSET", b.framecol))*frameScale))
                     b.gref.txt["text3"]:SetJustifyH("RIGHT")
                 end
-            elseif hbv_Skins_GetFrameVar("BarText", "STATETXTANCHOR", b.framecol)>4 then
+            elseif hbv_Skins_GetFrameVar("BarText", "STATETXTANCHOR", b.framecol) == 5 then
                 b.gref.txt["text3"]:SetPoint("BOTTOM",b.gref.txt["text"],"TOP",ceil(hbv_Skins_GetFrameVar("BarText", "SOFFSET2", b.framecol)*frameScale),ceil((0+hbv_Skins_GetFrameVar("BarText", "SOFFSET", b.framecol))*frameScale))
                 b.gref.txt["text3"]:SetJustifyH(b.gref.txt["text"]:GetJustifyH())
             end
@@ -1122,10 +1136,6 @@ function HealBot_Skins_ResetSkin(barType,button,numcols)
             HealBot_Skins_setIconAnchors(hbv_Skins_GetFrameVar("Icons", "OORONBAR", b.frame),
                                          hbv_Skins_GetFrameVar("Icons", "OORANCHOR", b.frame), true)
             b.gref.icon[94]:ClearAllPoints()
--- Patch can be removed after 11.0.7.0
-if type(hbv_Skins_GetFrameVar("Icons", "OORVOFFSET", b.frame)) ~= "number" then
-    hbv_Skins_SetFrameVar(0, "Icons", "OORVOFFSET", b.frame)
-end
             b.gref.icon[94]:SetPoint(iAnchors["ICON"],b,iAnchors["BUTTON"],
                                      ceil(hbv_Skins_GetFrameVar("Icons", "OORHOFFSET", b.frame)*frameScale),
                                      ceil(hbv_Skins_GetFrameVar("Icons", "OORVOFFSET", b.frame)*frameScale))
@@ -1133,6 +1143,30 @@ end
             b.gref.icon[94]:SetWidth((bheight*hbv_Skins_GetFrameVar("Icons", "OORSCALE", b.frame))-2)
             iZoom=hbv_Skins_GetFrameVar("Icons", "OORZOOM", b.frame)
             b.gref.icon[94]:SetTexCoord(iZoom,1-iZoom,iZoom,1-iZoom)
+
+            -- Rank 95
+            HealBot_Skins_setIconAnchors(hbv_Skins_GetFrameVar("Icons", "RANKONBAR", b.frame),
+                                         hbv_Skins_GetFrameVar("Icons", "RANKANCHOR", b.frame), true)
+            b.gref.icon[95]:ClearAllPoints()
+            b.gref.icon[95]:SetPoint(iAnchors["ICON"],b,iAnchors["BUTTON"],
+                                     ceil(hbv_Skins_GetFrameVar("Icons", "RANKHOFFSET", b.frame)*frameScale),
+                                     ceil(hbv_Skins_GetFrameVar("Icons", "RANKVOFFSET", b.frame)*frameScale))
+            b.gref.icon[95]:SetHeight((bheight*hbv_Skins_GetFrameVar("Icons", "RANKSCALE", b.frame))-2)
+            b.gref.icon[95]:SetWidth((bheight*hbv_Skins_GetFrameVar("Icons", "RANKSCALE", b.frame))-2)
+            iZoom=hbv_Skins_GetFrameVar("Icons", "RANKZOOM", b.frame)
+            b.gref.icon[95]:SetTexCoord(iZoom,1-iZoom,iZoom,1-iZoom)
+
+            -- Combat 96
+            HealBot_Skins_setIconAnchors(hbv_Skins_GetFrameVar("Icons", "COMBATONBAR", b.frame),
+                                         hbv_Skins_GetFrameVar("Icons", "COMBATANCHOR", b.frame), true)
+            b.gref.icon[96]:ClearAllPoints()
+            b.gref.icon[96]:SetPoint(iAnchors["ICON"],b,iAnchors["BUTTON"],
+                                     ceil(hbv_Skins_GetFrameVar("Icons", "COMBATHOFFSET", b.frame)*frameScale),
+                                     ceil(hbv_Skins_GetFrameVar("Icons", "COMBATVOFFSET", b.frame)*frameScale))
+            b.gref.icon[96]:SetHeight((bheight*hbv_Skins_GetFrameVar("Icons", "COMBATSCALE", b.frame))-2)
+            b.gref.icon[96]:SetWidth((bheight*hbv_Skins_GetFrameVar("Icons", "COMBATSCALE", b.frame))-2)
+            iZoom=hbv_Skins_GetFrameVar("Icons", "COMBATZOOM", b.frame)
+            b.gref.icon[96]:SetTexCoord(iZoom,1-iZoom,iZoom,1-iZoom)
             b.icon.reset=false
         end
 
@@ -1418,34 +1452,15 @@ end
         h:Disable();
     elseif barType == "hbfocus" then
         bar=_G["hbExtra_HealUnit999"]
-        HealBot_Media_UpdateTexture(bar, hbv_Skins_GetFrameVar("HealBar", "TEXTURE", button.frame), "Skins_ResetSkin - HealBar")
-        bar:GetStatusBarTexture():SetHorizTile(false)
+        --HealBot_Media_UpdateDefaultTexture(_G["hbExtra_HealUnit999Bar"], "Skins_ResetSkin - HealBar")
+        --HealBot_Media_UpdateTexture(bar, hbv_Skins_GetFrameVar("HealBar", "TEXTURE", button.frame), "Skins_ResetSkin - HealBar")
 
-        bar:SetStatusBarColor(1,1,1,1);
-        tBarsConcat[1]=bar:GetName()
-        tBarsConcat[2]="_text"
-        bar.txt=_G[HealBot_Skins_Concat(2)];
-        tBarsConcat[2]="_text2"
-        bar.txt2=_G[HealBot_Skins_Concat(2)];
-        HealBot_Media_UpdateFont(bar.txt,
-                                 hbv_Skins_GetFrameVar("BarText", "FONT", button.frame),
-                                 btextheight,
-                                 btextoutline,
-                                 "Skins_ResetSkin - BarText")
-        bar.txt:SetTextColor(0,0,0,1);
-        HealBot_Media_UpdateFont(bar.txt2,
-                                 hbv_Skins_GetFrameVar("BarText", "HFONT", button.frame),
-                                 btextheight2,
-                                 btextoutline2,
-                                 "Skins_ResetSkin - BarText")
-        bar.txt2:SetTextColor(0,0,0,1);
         iScale=0.84
         iScale=iScale+(numcols/10)
         bar:SetWidth(bWidth*iScale)
         button:SetWidth(bWidth*iScale)
         bar:SetHeight(bheight);
         button:SetHeight(bheight);
-        bar.txt:SetText(HEALBOT_ACTION_HBFOCUS)
         barScale=bar:GetScale();
         bar:SetScale(barScale + 0.01);
         bar:SetScale(barScale);
@@ -1813,6 +1828,7 @@ function HealBot_Skins_Check_Skin(SkinName)
     if not Healbot_Config_Skins.RaidIcon[SkinName] then Healbot_Config_Skins.RaidIcon[SkinName]={} end
     if not Healbot_Config_Skins.IconText[SkinName] then Healbot_Config_Skins.IconText[SkinName]={} end
     if not Healbot_Config_Skins.IconSets[SkinName] then Healbot_Config_Skins.IconSets[SkinName]={} end
+    if not Healbot_Config_Skins.IconSet[SkinName] then Healbot_Config_Skins.IconSet[SkinName]={} end
     if not Healbot_Config_Skins.IconSetsText[SkinName] then Healbot_Config_Skins.IconSetsText[SkinName]={} end
     if not Healbot_Config_Skins.Frame[SkinName] then Healbot_Config_Skins.Frame[SkinName]={} end
     if not Healbot_Config_Skins.StickyFrames[SkinName] then Healbot_Config_Skins.StickyFrames[SkinName]={} end
@@ -1867,6 +1883,7 @@ function HealBot_Skins_Check_Skin(SkinName)
 
     if Healbot_Config_Skins.Author[SkinName] == nil then Healbot_Config_Skins.Author[SkinName]="Monti of Terenas" end
     if Healbot_Config_Skins.DuplicateBars[SkinName] == nil then Healbot_Config_Skins.DuplicateBars[SkinName]=false end
+    if Healbot_Config_Skins.DupBarsPrivList[SkinName] == nil then Healbot_Config_Skins.DupBarsPrivList[SkinName]=true end
 
     hbv_Skins_CheckRoleCol(SkinName, "TANK", false)
     hbv_Skins_CheckRoleCol(SkinName, "HEALER", false)
@@ -1995,6 +2012,6 @@ function HealBot_Skins_Check_Skin(SkinName)
         end
     end
     HealBot_Skins_Clear_UnusedSkin(SkinName)
-    HealBot_Timers_Set("SKINS","VarsHasSkin")
+    hbv_Skins_VarsHasSkin()
     Healbot_Config_Skins.General[SkinName]["VC"]=HealBot_Global_Version()
 end

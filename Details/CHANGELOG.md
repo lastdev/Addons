@@ -1,6 +1,6 @@
 # Details! Damage Meter
 
-## [Details.20250130.13390.161](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.20250130.13390.161) (2025-01-30)
-[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.20250119.13388.161...Details.20250130.13390.161) 
+## [Details.20250502.13555.164](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.20250502.13555.164) (2025-05-02)
+[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.20250425.13552.164...Details.20250502.13555.164) 
 
-- Open Raid and Framework updates  
+- Fixes to make the addon work on PTR 11.1.7, framework update, Open Raid update.  

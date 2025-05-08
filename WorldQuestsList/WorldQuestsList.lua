@@ -1,4 +1,4 @@
-local VERSION = 115
+local VERSION = 116
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -1993,7 +1993,7 @@ end
 do
 	local cache = {}
 	local mapCoords = {	--leftX,topY,rightX,bottomY
-		--UiMapAssignment
+		--UiMapAssignment.db2: Region_4,Region_3,Region_1,Region_0
 		[875] = {8728.96,4532.46,-4939.41,-4582.09},	--Zandalar
 		[876] = {7521.37,5475.55,-5587.68,-3263.90},	--Кул-Тирас
 		[619] = {13099.97,7262.06,-5737.99,-5296.67},	--Broken Isles
@@ -2016,6 +2016,7 @@ do
 		[2200] = {10891.70,1393.75,3414.58,-3589.58},	--Emerald Dream
 
 		[2274] = {-556.25,5141.669921875,-6883.330078125,1662.5},	--Khaz Algar
+		[2346] = {1416.6669921875,697.9169921875,-635.416015625,-670.833984375},	--Undermine
 	}
 	function WorldQuestList:DevCreateMapCoords(mapID)
 		self.DCMC = self.DCMC or CreateFrame("Frame")
@@ -3562,7 +3563,7 @@ do
 	CreateFactionFilterSubmenu(list[#list].subMenu,{2510,2507,2503,2511,2564,2615,2574})
 
 	list[#list+1] = {text = EXPANSION_NAME10, padding = 16, subMenu = {}}
-	CreateFactionFilterSubmenu(list[#list].subMenu,{2594,2600,2607,2605,2601,2590,2570})
+	CreateFactionFilterSubmenu(list[#list].subMenu,{2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685})
 
 	list[#list+1] = {text = CLOSE,			func = function() ELib.ScrollDropDown.Close() end,		padding = 16,	}
 
@@ -3698,7 +3699,7 @@ function UpdateAnchor(forceFreeMode)
 		ELib.ScrollDropDown.DropDownList[2]:SetParent(UIParent)
 	else
 		WorldQuestList:SetParent(WorldMapFrame)
-		WorldQuestList:SetPoint("TOPLEFT",WorldMapFrame,"TOPRIGHT",10,-4)
+		WorldQuestList:SetPoint("TOPLEFT",WorldMapFrame,"TOPRIGHT",10+45,-4)
 
 		WorldQuestList.moveHeader.disabled = true
 		WorldQuestList.moveHeader:Show()
@@ -4155,7 +4156,7 @@ do
 		{text = EXPANSION_NAME7, padding = 16, subMenu = CreateFactionHighlightSubmenu({2164,2163,2157,2156,2103,2158,2159,2160,2162,2161})},
 		{text = EXPANSION_NAME8, padding = 16, subMenu = CreateFactionHighlightSubmenu({2465,2410,2413,2407,2478})},
 		{text = EXPANSION_NAME9, padding = 16, subMenu = CreateFactionHighlightSubmenu({2510,2507,2503,2511,2564,2615,2574})},
-		{text = EXPANSION_NAME10, padding = 16, subMenu = CreateFactionHighlightSubmenu({2594,2600,2607,2605,2601,2590,2570})},
+		{text = EXPANSION_NAME10, padding = 16, subMenu = CreateFactionHighlightSubmenu({2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685})},
 	}
 
 	list[#list+1] = {
@@ -5942,7 +5943,7 @@ function WorldQuestList:CalculateSqDistanceTo(x2, y2)
 	return math.huge
 end
 
-function WorldQuestList:GetRadiantWQPosition(info,result)
+function WorldQuestList:GetRadiantWQPosition(info,result,extraradius)
 	local count,self_pos = 0
 	for i=1,#result do
 		if result[i].info and result[i].info.x == info.x and result[i].info.y == info.y and result[i].info.questID then
@@ -5957,7 +5958,7 @@ function WorldQuestList:GetRadiantWQPosition(info,result)
 	end
 	local newInfo = {}
 	for q,w in pairs(info) do newInfo[q]=w end
-	local radius = 0.05 + count * 0.003
+	local radius = 0.05 + (extraradius or 0) + count * 0.003
 	newInfo.x = newInfo.x + radius * math.cos(math.pi * 2 / count * (self_pos - 1) - math.pi / 2) / 1.5
 	newInfo.y = newInfo.y + radius * math.sin(math.pi * 2 / count * (self_pos - 1) - math.pi / 2)
 	return newInfo
@@ -6221,6 +6222,18 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 				end
 			end
 		end
+		if (mapAreaID == 2274) then
+			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2346)
+			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
+				taskInfo[#taskInfo+1] = info
+				info.dX,info.dY,info.dMap = info.x,info.y,2346
+				if not VWQL.DFCaveMap then	--reverse opt
+					info.x,info.y = 0.82, 0.72
+				else
+					info.x,info.y = nil
+				end
+			end
+		end
 	end
 
 	if mapAreaID == 905 then	--Argus
@@ -6301,7 +6314,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 	end
 	do
 		--local mapID = mapAreaID == 947 and 424 or mapAreaID
-		for _,smapAreaID in pairs(mapAreaID == 2274 and {2274,2248,2215,2214,2255} or {mapAreaID}) do
+		for _,smapAreaID in pairs(mapAreaID == 2274 and {2274,2248,2215,2214,2255,2374} or {mapAreaID}) do
 			local pois = C_AreaPoiInfo.GetAreaPOIForMap(smapAreaID)
 			for i=1,#pois do
 				local poiData = C_AreaPoiInfo.GetAreaPOIInfo(smapAreaID,pois[i])
@@ -6317,6 +6330,9 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 					poiData.position.dX, poiData.position.dY, poiData.position.dMap = poiData.position.x,poiData.position.y,smapAreaID
 					if mapAreaID == 2274 then
 						poiData.position.x, poiData.position.y = WorldQuestList:GetMapCoordAdj2(poiData.position.x, poiData.position.y,2274,smapAreaID)
+						if smapAreaID == 2374 then
+							poiData.position.x, poiData.position.y = 0.82, 0.72
+						end
 					end
 	
 					tinsert(taskInfo.poi, {poiData.name, poiData.description, poiData.position.x, poiData.position.y, pois[i], poiData.atlasName, 4, smapAreaID, poiData.position.dX, poiData.position.dY, widget = poiData.tooltipWidgetSet})
@@ -6834,7 +6850,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 									isValidLine = 0 
 								end
 								RewardListColor[#RewardListStrings] = WorldQuestList.ColorYellow
-								RewardListType[#RewardListStrings] = (VWQL.SortPrio.rep or defSortPrio.rep) + currencyID / 10000
+								RewardListType[#RewardListStrings] = (VWQL.SortPrio.rep or defSortPrio.rep) + 10 + currencyID / 10000
 	
 								if VWQL[charKey]["faction"..WorldQuestList:FactionCurrencyToID(currencyID).."Highlight"] then
 									highlightFaction = true
@@ -7370,6 +7386,10 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						(mapAreaID == 1978 and info.x == 0.31 and info.y == 0.56)
 					then
 						info = WorldQuestList:GetLinearWQPosition(info,result,3)
+					elseif
+						(mapAreaID == 2274 and info.x == 0.82 and info.y == 0.72)
+					then
+						info = WorldQuestList:GetRadiantWQPosition(info,result,0.05)
 					end
 					pinsToRemove[info.questID] = nil
 					local pin = WorldQuestList.WMF_activePins[info.questID]

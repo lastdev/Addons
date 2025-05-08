@@ -140,7 +140,6 @@ local function eventHandler(self, event, ...)
 			addon.followerList:Init()
 		end
         C_Timer.After(0.1, function()
-            if true then return end
             if GarrisonMissionFrame:IsShown() then
                 addon.WODGUI:Show()
                 addon.WODGUI:SetParent(GarrisonMissionFrame)

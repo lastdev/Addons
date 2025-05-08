@@ -1,7 +1,7 @@
-## Interface: 110100
+## Interface: 110105
 ## Title: Ask Mr. Robot
 ## Author: Team Robot, Inc.
-## Version: 151
+## Version: 157
 ## Notes: Gear import/export, combat logging, and more.
 ## URL: www.askmrrobot.com
 ## SavedVariables: AskMrRobotDb4

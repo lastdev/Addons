@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2520, "DBM-Raids-Dragonflight", 2, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(201754)
 mod:SetEncounterID(2685)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -430,7 +430,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnGlitteringSurge:Show(self.vb.surgeCount)
 		specWarnGlitteringSurge:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.surgeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerGlitteringSurgeCD:Start(timer, self.vb.surgeCount+1)
 		else--Early push, abort timers even earlier
 			DBM:ShowTestSpecialWarning(L.EarlyStaging, 1, nil, true)
@@ -448,14 +448,14 @@ function mod:SPELL_CAST_START(args)
 		specWarnScorchingBomb:Show(self.vb.bombCount)
 		specWarnScorchingBomb:Play("bombsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.bombCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerScorchingBombCD:Start(timer, self.vb.bombCount+1)
 		end
 	elseif (spellId == 401642 or spellId == 401704) and self:AntiSpam(8, 1) then
 		self.vb.disintegrateCount = self.vb.disintegrateCount + 1
 		self.vb.disintegrateIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 401642, self.vb.disintegrateCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerMassDisintegrateCD:Start(timer, self.vb.disintegrateCount+1)
 		end
 	elseif spellId == 402050 then
@@ -463,13 +463,13 @@ function mod:SPELL_CAST_START(args)
 		specWarnSearingBreath:Show(self.vb.breathCount)
 		specWarnSearingBreath:Play("breathsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerSearingBreathCD:Start(timer, self.vb.breathCount+1)
 		end
 	elseif spellId == 401325 then
 		self.vb.tankCount = self.vb.tankCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerBurningClawsCD:Start(timer, self.vb.tankCount+1)
 		end
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
@@ -481,7 +481,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnVoidBomb:Show(self.vb.bombCount)
 		specWarnVoidBomb:Play("bombsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.bombCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerVoidBombCD:Start(timer, self.vb.bombCount+1)
 		end
 	elseif spellId == 404456 then
@@ -490,7 +490,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnAbyssalBreath:Show(self.vb.breathCount)
 		specWarnAbyssalBreath:Play("breathsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerAbyssalBreathCD:Start(timer, self.vb.breathCount+1)
 		end
 		if self:IsMythic() then
@@ -543,20 +543,20 @@ function mod:SPELL_CAST_START(args)
 		specWarnDesolateBlossom:Show(self.vb.blossomCount)
 		specWarnDesolateBlossom:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 404403, self.vb.blossomCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerDesolateBlossomCD:Start(timer, self.vb.blossomCount+1)
 		end
 	elseif spellId == 407496 or spellId == 404288 then--407496 confirmed, 404288 unknown (mythic?)
 		self.vb.disintegrateCount = self.vb.disintegrateCount + 1
 		self.vb.disintegrateIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 407496, self.vb.disintegrateCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerInfiniteDuressCD:Start(timer, self.vb.disintegrateCount+1)
 		end
 	elseif spellId == 411236 then
 		self.vb.tankCount = self.vb.tankCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerVoidClawsCD:Start(timer, self.vb.tankCount+1)
 		end
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
@@ -570,7 +570,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnCosmicAscension:Play("watchstep")
 		timerAstralFormation:Start(9.5)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerCosmicAscensionCD:Start(timer, self.vb.breathCount+1)
 		end
 		--if self:IsMythic() then
@@ -584,7 +584,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.hurtlingIcon = 3
 		warnHurtlingBarrageSoon:Show(self.vb.surgeCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.surgeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerHurtlingBarrageCD:Start(timer, self.vb.surgeCount+1)
 		end
 	elseif spellId == 403625 then
@@ -592,20 +592,20 @@ function mod:SPELL_CAST_START(args)
 		specWarnScouringEternity:Show(self.vb.blossomCount)
 		specWarnScouringEternity:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blossomCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerScouringEternityCD:Start(timer, self.vb.blossomCount+1)
 		end
 	elseif spellId == 403517 then
 		self.vb.nothingnessCount = self.vb.nothingnessCount + 1
 		--TODO, add incoming debuff alert if target aura is hidden
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.nothingnessCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerEmbraceofNothingnessCD:Start(timer, self.vb.nothingnessCount+1)
 		end
 	elseif spellId == 408422 then
 		self.vb.tankCount = self.vb.tankCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerVoidSlashCD:Start(timer, self.vb.tankCount+1)
 		end
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then

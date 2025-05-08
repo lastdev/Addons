@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2375, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213203")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(158041)
 mod:SetEncounterID(2344)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -399,7 +399,7 @@ local function stupefyingGlareLoop(self)
 		end
 	end
 	local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][317874][self.vb.stupefyingGlareCount+1]
-	if timer then
+	if timer and timer > 0 then
 		if self:IsMythic() then
 			--Flip direction for next timer
 			if direction == DBM_COMMON_L.RIGHT then
@@ -692,7 +692,7 @@ function mod:SPELL_CAST_START(args)
 			local castTime = spellId == 316970 and 8 or spellId == 319350 and 5 or spellId == 319351 and 50 or 20
 			timerCleansingProtocol:Start(castTime)
 			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][316970][self.vb.cleansingCastCount+1] or 16
-			if timer then
+			if timer and timer > 0 then
 				timerCleansingProtocolCD:Start(timer, self.vb.cleansingCastCount+1)
 			end
 		end
@@ -703,7 +703,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnEternalTorment:Play("aesoon")
 		end
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][318449][self.vb.eternalTormentCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerEternalTormentCD:Start(timer, self.vb.eternalTormentCount+1)
 		else
 			if self:IsMythic() and self.vb.phase == 3 then
@@ -753,7 +753,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDarkMatter:Show(self.vb.darkMatterCount)
 		specWarnDarkMatter:Play("watchstep")
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][318971][self.vb.darkMatterCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerDarkMatterCD:Start(timer, self.vb.darkMatterCount+1)
 		end
 	end
@@ -764,7 +764,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 315927 then
 		self.vb.paranoiaCount = self.vb.paranoiaCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][315927][self.vb.paranoiaCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerParanoiaCD:Start(timer, self.vb.paranoiaCount+1)
 		end
 	elseif spellId == 319257 then
@@ -777,7 +777,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 317102 then
 		self.vb.evokeAnguishCount = self.vb.evokeAnguishCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][317102][self.vb.evokeAnguishCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerEvokeAnguishCD:Start(timer, self.vb.evokeAnguishCount+1)
 		end
 	elseif spellId == 317066 then
@@ -790,7 +790,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 318460 then
 		self.vb.annihilateCastCount = self.vb.annihilateCastCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][318460][self.vb.annihilateCastCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerAnnihilateCD:Start(timer, self.vb.annihilateCastCount+1)
 		end
 	elseif spellId == 312866 then
@@ -970,7 +970,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnBasherTentacle:Play("bigmob")
 				end
 				local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][318714][self.vb.BasherCount+1]
-				if timer then
+				if timer and timer > 0 then
 					timerBasherTentacleCD:Start(timer, self.vb.BasherCount+1)
 				end
 				timerVoidLashCD:Start(16.7, args.destGUID)
@@ -1130,7 +1130,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 						warnThoughtHarvester:Show(self.vb.harvesterCount)
 					end
 					local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][316711][self.vb.harvesterCount+1]
-					if timer then
+					if timer and timer > 0 then
 						timerThoughtHarvesterCD:Start(timer, self.vb.harvesterCount+1)
 					else
 						harvesterDebugTriggered = harvesterDebugTriggered + 1
@@ -1157,7 +1157,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 318196 then--Event Horizon (cast not in combat log only debuff is)
 		self.vb.eventHorrizonCount = self.vb.eventHorrizonCount + 1
 		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][318196][self.vb.eventHorrizonCount+1] or 30
-		if timer then
+		if timer and timer > 0 then
 			timerEventHorizonCD:Start(timer, self.vb.eventHorrizonCount+1)
 		end
 	end

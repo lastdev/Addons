@@ -1542,6 +1542,7 @@ do
         inverseProfileModifier = false,
         positionProfileAuto = true,
         lockProfile = false,
+        enableLFGExportButton = true, -- NEW in 11.1
         showRoleIcons = true,
         profilePoint = { point = nil, x = 0, y = 0 },
         debugMode = false,
@@ -2567,18 +2568,8 @@ do
     ---@param bronzeTimeLimit number
     ---@param level? number
     ---@return number goldTimeLimit, number silverTimeLimit, number bronzeTimeLimit
+    -- Previously here to apply +90s timer when level was >7 (TWW S1)
     function util:ApplyKeystoneTimeLimitsForLevel(goldTimeLimit, silverTimeLimit, bronzeTimeLimit, level)
-        if level and level >= 7 then
-            if goldTimeLimit > 0 then
-                goldTimeLimit = goldTimeLimit + 90
-            end
-            if silverTimeLimit > 0 then
-                silverTimeLimit = silverTimeLimit + 90
-            end
-            if bronzeTimeLimit > 0 then
-                bronzeTimeLimit = bronzeTimeLimit + 90
-            end
-        end
         return goldTimeLimit, silverTimeLimit, bronzeTimeLimit
     end
 
@@ -2950,11 +2941,12 @@ do
 end
 
 -- json.lua
--- dependencies: module, callback, util
+-- dependencies: module, config, callback, util
 do
 
     ---@class JSONModule : Module
     local json = ns:NewModule("JSON") ---@type JSONModule
+    local config = ns:GetModule("Config") ---@type ConfigModule
     local callback = ns:GetModule("Callback") ---@type CallbackModule
     local util = ns:GetModule("Util") ---@type UtilModule
 
@@ -3046,6 +3038,7 @@ do
         EditBoxOnEscapePressed = function(self) self:GetParent():Hide() end ---@diagnostic disable-line: undefined-field
     }
 
+    ---@type RaiderIOExportButton
     local exportButton
 
     local RoleNameToBit = {
@@ -3169,8 +3162,19 @@ do
         return not not (hasGroupMembers or entry or numApplicants > 0)
     end
 
+    local function CanShowButton()
+        if not config:Get("enableLFGExportButton") then
+            return false
+        end
+        return CanShowCopyDialog()
+    end
+
+    local function UpdateButtonVisibility()
+        exportButton:SetShown(CanShowButton())
+    end
+
     local function UpdateCopyDialog()
-        local canShow = CanShowCopyDialog()
+        local canShow = CanShowButton()
         exportButton:SetShown(canShow)
         if not canShow then
             json:CloseCopyDialog()
@@ -3221,12 +3225,14 @@ do
     end
 
     function json:CanLoad()
-        return not exportButton and LFGListFrame
+        return not exportButton and LFGListFrame and config:IsEnabled()
     end
 
     function json:OnLoad()
         self:Enable()
         exportButton = CreateExportButton()
+        UpdateButtonVisibility()
+        callback:RegisterEvent(UpdateButtonVisibility, "RAIDERIO_SETTINGS_SAVED")
         callback:RegisterEvent(UpdateCopyDialog, "GROUP_ROSTER_UPDATE", "LFG_LIST_ACTIVE_ENTRY_UPDATE", "LFG_LIST_APPLICANT_LIST_UPDATED", "LFG_LIST_APPLICANT_UPDATED", "PLAYER_ENTERING_WORLD", "PLAYER_ROLES_ASSIGNED", "PLAYER_SPECIALIZATION_CHANGED")
     end
 
@@ -5881,6 +5887,10 @@ do
         -- if unit simply refresh the unit and the original hook will force update the tooltip with the desired behavior
         local _, tooltipUnit = tooltip:GetUnit()
         if tooltipUnit then
+            if tooltip.RefreshData then
+                tooltip:RefreshData()
+                return
+            end
             tooltip:SetUnit(tooltipUnit)
             return
         end
@@ -6659,7 +6669,14 @@ if IS_RETAIL then
         end
         hooked = true
         hooksecurefunc(frame, "PlayBanner", OnChallengeModeCompleteBannerPlay)
-        local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = C_ChallengeMode.GetCompletionInfo()
+        ---@type number, number, number, boolean, number, boolean, number, number, boolean, boolean, 0, boolean, ChallengeModeCompletionMemberInfo[]
+        local mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers
+        if C_ChallengeMode.GetChallengeCompletionInfo then
+            local info = C_ChallengeMode.GetChallengeCompletionInfo()
+            mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = info.mapChallengeModeID, info.level, info.time, info.onTime, info.keystoneUpgradeLevels, info.practiceRun, info.oldOverallDungeonScore, info.newOverallDungeonScore, info.isAffixRecord, info.isMapRecord, 0, info.isEligibleForScore, info.members
+        else
+            mapID, level, time, onTime, keystoneUpgradeLevels, practiceRun, oldDungeonScore, newDungeonScore, isAffixRecord, isMapRecord, primaryAffix, isEligibleForScore, upgradeMembers = C_ChallengeMode.GetCompletionInfo()
+        end
         if not practiceRun then
             local bannerData = { mapID = mapID, level = level, time = time, onTime = onTime, keystoneUpgradeLevels = keystoneUpgradeLevels or 0, oldDungeonScore = oldDungeonScore, newDungeonScore = newDungeonScore, isAffixRecord = isAffixRecord, isMapRecord = isMapRecord, primaryAffix = primaryAffix, isEligibleForScore = isEligibleForScore, upgradeMembers = upgradeMembers } ---@type ChallengeModeCompleteBannerData
             OnChallengeModeCompleteBannerPlay(frame, bannerData)
@@ -8083,68 +8100,6 @@ if IS_RETAIL then
         "ENCOUNTER_END",
     }
 
-    ---@class InstanceIdToChallengeMapId
-    local INSTANCE_ID_TO_CHALLENGE_MAP_ID = {
-        [960] = 2,
-        [961] = 56,
-        [962] = 57,
-        [959] = 58,
-        [1011] = 59,
-        [994] = 60,
-        [1007] = 76,
-        [1001] = 77,
-        [1004] = 78,
-        [1209] = 161,
-        [1175] = 163,
-        [1182] = 164,
-        [1176] = 165,
-        [1208] = 166,
-        [1358] = 167,
-        [1279] = 168,
-        [1195] = 169,
-        [1456] = 197,
-        [1466] = 198,
-        [1501] = 199,
-        [1477] = 200,
-        [1458] = 206,
-        [1493] = 207,
-        [1492] = 208,
-        [1516] = 209,
-        [1571] = 210,
-        [1651] = { 227, 234 },
-        [1677] = 233,
-        [1753] = 239,
-        [1763] = 244,
-        [1754] = 245,
-        [1771] = 246,
-        [1594] = 247,
-        [1862] = 248,
-        [1762] = 249,
-        [1877] = 250,
-        [1841] = 251,
-        [1864] = 252,
-        [1822] = 353,
-        [2097] = { 369, 370 },
-        [2290] = 375,
-        [2286] = 376,
-        [2291] = 377,
-        [2287] = 378,
-        [2289] = 379,
-        [2284] = 380,
-        [2285] = 381,
-        [2293] = 382,
-        [2441] = { 391, 392 },
-        [2521] = 399,
-        [2516] = 400,
-        [2515] = 401,
-        [2526] = 402,
-        [2451] = 403,
-        [2519] = 404,
-        [2520] = 405,
-        [2527] = 406,
-        [657] = 438,
-    }
-
     --- For any given `encounterID` the value returned will be
     --- - `true` when the boss is engaged in combat
     --- - `nil` the boss is not engaged and is out of combat
@@ -8652,8 +8607,8 @@ if IS_RETAIL then
 
     ---@type KeystoneDeathPenaltyInfo[]
     local DEATH_PENALTY_MAP = {
-        { level = 7, penalty = 15 },
-        { level = 0, penalty = 5 },
+        { level = 12, penalty = 15 },
+        { level = 4, penalty = 5 },
     }
 
     ---@class ReplayDataProvider
@@ -8728,8 +8683,7 @@ if IS_RETAIL then
                     return deathPenalty.penalty
                 end
             end
-            local deathPenalty = deathPenaltyMap[#deathPenaltyMap]
-            return deathPenalty.penalty
+            return 0 -- default to no death penalty
         end
 
         ---@return ReplaySummary replaySummary
@@ -9443,21 +9397,6 @@ if IS_RETAIL then
         ---@field public UpdatePartitions fun(self: UIWidgetBaseStatusBarTemplateMixin, barValue: number)
         ---@field public OnReset fun(self: UIWidgetBaseStatusBarTemplateMixin)
 
-        ---@class UIWidgetBaseStatusBarTemplate : StatusBar, UIWidgetBaseStatusBarTemplateMixin
-        ---@field public BackgroundGlow Texture
-        ---@field public BGLeft Texture
-        ---@field public BGRight Texture
-        ---@field public BGCenter Texture
-        ---@field public GlowLeft Texture
-        ---@field public GlowRight Texture
-        ---@field public GlowCenter Texture
-        ---@field public BorderLeft Texture
-        ---@field public BorderRight Texture
-        ---@field public BorderCenter Texture
-        ---@field public Spark Texture
-        ---@field public SparkMask Texture
-        ---@field public Label UIWidgetBaseTextMixin
-
         ---@class UIWidgetTemplateStatusBarMixin
         ---@field public SanitizeTextureKits fun(self: UIWidgetTemplateStatusBarMixin, widgetInfo: StatusBarWidgetVisualizationInfoPolyfill)
         ---@field public Setup fun(self: UIWidgetTemplateStatusBarMixin, widgetInfo: StatusBarWidgetVisualizationInfoPolyfill, widgetContainer: Region)
@@ -9465,8 +9404,6 @@ if IS_RETAIL then
         ---@field public OnReset fun(self: UIWidgetTemplateStatusBarMixin)
 
         ---@class UIWidgetTemplateStatusBar : Frame, UIWidgetTemplateStatusBarMixin
-        ---@field public Bar UIWidgetBaseStatusBarTemplate
-        ---@field public Label FontString
         ---@field public widgetContainer Region @Custom property assigned to be the same as the object used when calling `Setup`.
         ---@field public SetBarValue fun(self: UIWidgetTemplateStatusBar, barValue: number, barMin?: number, barMax?: number, forceUpdate?: boolean) @Custom function assigned to wrap around `Setup` for updating the bar widget.
 
@@ -10684,6 +10621,16 @@ if IS_RETAIL then
         return mapID, timeLimit
     end
 
+    ---@param instanceID number
+    ---@return number? mapID
+    local function GetMapIDForInstance(instanceID)
+        local dungeon = util:GetDungeonByInstanceMapID(instanceID)
+        if not dungeon then
+            return
+        end
+        return dungeon.keystone_instance
+    end
+
     ---@return (number|number[])? mapID, number? timeLimit
     local function GetKeystoneForInstance()
         local _, _, difficultyID, _, _, _, _, instanceID = GetInstanceInfo()
@@ -10694,7 +10641,7 @@ if IS_RETAIL then
         if not isChallengeMode and not displayMythic then
             return
         end
-        local mapID = INSTANCE_ID_TO_CHALLENGE_MAP_ID[instanceID]
+        local mapID = GetMapIDForInstance(instanceID)
         if not mapID then
             return
         end
@@ -12532,7 +12479,10 @@ if IS_RETAIL then
 
         ---@class RaiderIORWFLootFrameButton : Button
         ---@field public tooltip string
-        ---@field public GetAppropriateTooltip fun()
+        ---@field public GetAppropriateTooltip fun(): GameTooltip
+
+        ---@type fun(): GameTooltip
+        local GetAppropriateTooltip = GetAppropriateTooltip or UIButtonMixin.GetAppropriateTooltip
 
         frame.EnableModule = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate") ---@type RaiderIORWFLootFrameButton
         frame.EnableModule:SetSize(80, 22)
@@ -12540,7 +12490,7 @@ if IS_RETAIL then
         frame.EnableModule:SetScript("OnClick", function() config:Set("rwfMode", true) ReloadUI() end)
         frame.EnableModule:SetText(L.ENABLE_RWF_MODE_BUTTON)
         frame.EnableModule.tooltip = L.ENABLE_RWF_MODE_BUTTON_TOOLTIP
-        frame.EnableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.EnableModule.GetAppropriateTooltip = GetAppropriateTooltip
         frame.EnableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.EnableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12550,7 +12500,7 @@ if IS_RETAIL then
         frame.DisableModule:SetScript("OnClick", function() config:Set("rwfMode", false) _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.DisableModule:SetText(L.DISABLE_RWF_MODE_BUTTON)
         frame.DisableModule.tooltip = L.DISABLE_RWF_MODE_BUTTON_TOOLTIP
-        frame.DisableModule.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.DisableModule.GetAppropriateTooltip = GetAppropriateTooltip
         frame.DisableModule:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.DisableModule:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12560,7 +12510,7 @@ if IS_RETAIL then
         frame.ReloadUI:SetScript("OnClick", ReloadUI)
         frame.ReloadUI:SetText(L.RELOAD_RWF_MODE_BUTTON)
         frame.ReloadUI.tooltip = L.RELOAD_RWF_MODE_BUTTON_TOOLTIP
-        frame.ReloadUI.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.ReloadUI.GetAppropriateTooltip = GetAppropriateTooltip
         frame.ReloadUI:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.ReloadUI:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12570,7 +12520,7 @@ if IS_RETAIL then
         frame.WipeLog:SetScript("OnClick", function() _G.RaiderIO_RWF = {} ReloadUI() end)
         frame.WipeLog:SetText(L.WIPE_RWF_MODE_BUTTON)
         frame.WipeLog.tooltip = L.WIPE_RWF_MODE_BUTTON_TOOLTIP
-        frame.WipeLog.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.WipeLog.GetAppropriateTooltip = GetAppropriateTooltip
         frame.WipeLog:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.WipeLog:SetScript("OnLeave", UIButtonMixin.OnLeave)
 
@@ -12602,7 +12552,7 @@ if IS_RETAIL then
         frame.MiniFrame:SetHighlightFontObject(GameFontHighlightHuge)
         frame.MiniFrame:SetNormalFontObject(GameFontHighlightHuge)
         frame.MiniFrame.tooltip = L.RWF_MINIBUTTON_TOOLTIP
-        frame.MiniFrame.GetAppropriateTooltip = UIButtonMixin.GetAppropriateTooltip
+        frame.MiniFrame.GetAppropriateTooltip = GetAppropriateTooltip
         frame.MiniFrame:SetScript("OnEnter", UIButtonMixin.OnEnter)
         frame.MiniFrame:SetScript("OnLeave", UIButtonMixin.OnLeave)
         frame.MiniFrame:SetMotionScriptsWhileDisabled(true)
@@ -14419,6 +14369,10 @@ do
             configOptions:CreateOptionToggle(L.INVERSE_PROFILE_MODIFIER, L.INVERSE_PROFILE_MODIFIER_DESC, "inverseProfileModifier")
             configOptions:CreateOptionToggle(L.ENABLE_AUTO_FRAME_POSITION, L.ENABLE_AUTO_FRAME_POSITION_DESC, "positionProfileAuto")
             configOptions:CreateOptionToggle(L.ENABLE_LOCK_PROFILE_FRAME, L.ENABLE_LOCK_PROFILE_FRAME_DESC, "lockProfile")
+
+            configOptions:CreatePadding()
+            configOptions:CreateHeadline(L.MISC_SETTINGS)
+            configOptions:CreateOptionToggle(L.ENABLE_LFG_EXPORT_BUTTON, L.ENABLE_LFG_EXPORT_BUTTON_DESC, "enableLFGExportButton")
 
             configOptions:CreatePadding()
             configOptions:CreateHeadline(L.RAIDERIO_CLIENT_CUSTOMIZATION)

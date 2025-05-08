@@ -8,9 +8,9 @@ local Hekili = _G[ addon ]
 local class, state = Hekili.Class, Hekili.State
 
 local FindUnitDebuffByID = ns.FindUnitDebuffByID
-local UnitTokenFromGUID = _G.UnitTokenFromGUID
-
 local GetSpellInfo = C_Spell.GetSpellInfo
+
+state.sqrt = math.sqrt
 
 local spec = Hekili:NewSpecialization( 265 )
 
@@ -71,7 +71,7 @@ spec:RegisterTalents( {
     demonic_tactics                = {  71925, 452894, 1 }, -- Your spells have a 5% increased chance to deal a critical strike. You gain 10% more of the Critical Strike stat from all sources.
     diabolic_ritual                = {  94855, 428514, 1 }, -- Casting Chaos Bolt, Rain of Fire, or Shadowburn grants Diabolic Ritual for 20 sec. If Diabolic Ritual is already active, its duration is reduced by 1 sec instead. When Diabolic Ritual expires you gain Demonic Art, causing your next Chaos Bolt, Rain of Fire, or Shadowburn to summon an Overlord, Mother of Chaos, or Pit Lord that unleashes a devastating attack against your enemies.
     fel_armor                      = {  71950, 386124, 2 }, -- When Soul Leech absorbs damage, 5% of damage taken is absorbed and spread out over 5 sec. Reduces damage taken by 1.5%.
-    fel_domination                 = {  71931, 333889, 1 }, -- Your next Imp, Voidwalker, Incubus, Succubus, Felhunter, or Felguard Summon spell is free and has its casting time reduced by 90%. 
+    fel_domination                 = {  71931, 333889, 1 }, -- Your next Imp, Voidwalker, Incubus, Succubus, Felhunter, or Felguard Summon spell is free and has its casting time reduced by 90%.
     fel_pact                       = {  71932, 386113, 1 }, -- Reduces the cooldown of Fel Domination by 60 sec.
     fel_synergy                    = {  71924, 389367, 2 }, -- Soul Leech also heals you for 8% and your pet for 25% of the absorption it grants.
     fiendish_stride                = {  71948, 386110, 1 }, -- Reduces the damage dealt by Burning Rush by 10%. Burning Rush increases your movement speed by an additional 20%.
@@ -88,7 +88,7 @@ spec:RegisterTalents( {
     mortal_coil                    = {  71947,   6789, 1 }, -- Horrifies an enemy target into fleeing, incapacitating for 3 sec and healing you for 20% of maximum health.
     nightmare                      = {  71916, 386648, 1 }, -- Increases the amount of damage required to break your fear effects by 60%.
     pact_of_gluttony               = {  71926, 386689, 1 }, -- Healthstones you conjure for yourself are now Demonic Healthstones and can be used multiple times in combat. Demonic Healthstones cannot be traded.  Demonic Healthstone Instantly restores 25% health. 60 sec cooldown.
-    resolute_barrier               = {  71915, 389359, 2 }, -- Attacks received that deal at least 5% of your health decrease Unending Resolve's cooldown by 10 sec. Cannot occur more than once every 30 sec. 
+    resolute_barrier               = {  71915, 389359, 2 }, -- Attacks received that deal at least 5% of your health decrease Unending Resolve's cooldown by 10 sec. Cannot occur more than once every 30 sec.
     ruination                      = {  94830, 428522, 1 }, -- Summoning a Pit Lord causes your next Chaos Bolt to become Ruination.  Ruination Call down a demon-infested meteor from the depths of the Twisting Nether, dealing 157,144 Chaos damage on impact to all enemies within 8 yds of the target and summoning 3 Wild Imps. Damage is reduced beyond 8 targets.
     sargerei_technique             = {  93179, 405955, 2 }, -- Shadow Bolt and Drain Soul damage increased by 8%.
     secrets_of_the_coven           = {  94826, 428518, 1 }, -- Mother of Chaos empowers your next Incinerate to become Infernal Bolt.  Infernal Bolt Hurl a bolt enveloped in the infernal flames of the abyss, dealing 136,055 Fire damage to your enemy target and generating 3 Soul Shards.
@@ -185,16 +185,16 @@ spec:RegisterTalents( {
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
+spec:RegisterPvpTalents( {
     bloodstones         = 5695, -- (1218692) Your Healthstones are replaced with Bloodstones which increase their user's haste by 20% for 12 sec instead of healing.
     bonds_of_fel        = 5546, -- (353753) Encircle enemy players with Bonds of Fel. If any affected player leaves the 8 yd radius they explode, dealing 101,423 Fire damage split amongst all nearby enemies.
-    essence_drain       =   19, -- (221711) 
+    essence_drain       =   19, -- (221711)
     gateway_mastery     =   15, -- (248855) Increases the range of your Demonic Gateway by 20 yards, and reduces the cast time by 30%. Reduces the time between how often players can take your Demonic Gateway by 30 sec.
     impish_instincts    = 5579, -- (409835) Taking direct Physical damage reduces the cooldown of Demonic Circle by 3 sec. Cannot occur more than once every 5 sec.
-    jinx                = 5386, -- (426352) 
+    jinx                = 5386, -- (426352)
     nether_ward         =   18, -- (212295) Surrounds the caster with a shield that lasts 3 sec, reflecting all harmful spells cast on you.
-    rampant_afflictions = 5379, -- (335052) 
-    rot_and_decay       =   16, -- (212371) 
+    rampant_afflictions = 5379, -- (335052)
+    rot_and_decay       =   16, -- (212371)
     shadow_rift         = 5392, -- (353294) Conjure a Shadow Rift at the target location lasting 2 sec. Enemy players within the rift when it expires are teleported to your Demonic Circle. Must be within 40 yds of your Demonic Circle to cast.
     soul_rip            = 5608, -- (410598) Fracture the soul of up to 3 target players within 20 yds into the shadows, reducing their damage done by 25% and healing received by 25% for 8 sec. Souls are fractured up to 20 yds from the player's location. Players can retrieve their souls to remove this effect.
     soul_swap           = 5662, -- (386951) Copies your damage over time effects and Haunt from the target, preserving their duration. Your next use of Soul Swap within 10 sec will exhale a copy damage of the effects onto a new target.
@@ -213,10 +213,10 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=980
     agony = {
         id = 980,
-        duration = function () return ( 18 + conduit.rolling_agony.mod * 0.001 ) * ( talent.creeping_death.enabled and 0.85 or 1 ) end,
+        duration = 18,
         tick_time = function () return 2 * ( talent.creeping_death.enabled and 0.85 or 1 ) * haste end,
         type = "Magic",
-        max_stack = function () return 10 + 4 * talent.writhe_in_agony.rank end,
+        max_stack = function () return 14 + 4 * talent.writhe_in_agony.rank end,
         meta = {
             stack = function( t )
                 if t.down then return 0 end
@@ -228,7 +228,7 @@ spec:RegisterAuras( {
                 local last_real_tick = now + ( floor( ( now - app ) / tick ) * tick )
                 local ticks_since = floor( ( query_time - last_real_tick ) / tick )
 
-                return min( talent.writhe_in_agony.enabled and 18 or 10, t.count + ticks_since )
+                return min( talent.writhe_in_agony.enabled and 18 or 14, t.count + ticks_since )
             end,
         }
     },
@@ -265,7 +265,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=146739
     corruption = {
         id = 146739,
-        duration = function () return ( talent.absolute_corruption.enabled and ( target.is_player and 24 or 3600 ) or 14 ) * ( talent.creeping_death.enabled and 0.85 or 1 ) end,
+        duration = function () return talent.absolute_corruption.enabled and ( target.is_player and 24 or 3600 ) or 14 end,
         tick_time = function () return 2 * ( 1 - 0.15 * talent.creeping_death.rank ) * ( 1 - 0.15 * talent.sataiels_volition.rank ) * haste end,
         type = "Magic",
         max_stack = 1
@@ -303,7 +303,7 @@ spec:RegisterAuras( {
     dark_harvest = {
         id = 387018,
         duration = 8,
-        max_stack = 4,
+        max_stack = 5
     },
     -- Talent: Absorbs $w1 damage.
     -- https://wowhead.com/beta/spell=108416
@@ -515,7 +515,7 @@ spec:RegisterAuras( {
     nightfall = {
         id = 264571,
         duration = 12,
-        max_stack = 1
+        max_stack = 2
     },
     oblivion = {
         id = 417537,
@@ -573,7 +573,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=27243
     seed_of_corruption = {
         id = 27243,
-        duration = 12,
+        duration = function() return 12 * haste end,
         type = "Magic",
         max_stack = 1
     },
@@ -708,7 +708,7 @@ spec:RegisterAuras( {
     succulent_soul = {
         id = 449793,
         duration = 30.0,
-        max_stack = 1,
+        max_stack = 3
     },
     -- Talent: Summons a Darkglare from the Twisting Nether that blasts its target for Shadow damage, dealing increased damage for every damage over time effect you have active on any target.
     -- https://wowhead.com/beta/spell=205180
@@ -728,7 +728,7 @@ spec:RegisterAuras( {
     tormented_crescendo = {
         id = 387079,
         duration = 10,
-        max_stack = 1,
+        max_stack = 2
     },
     -- Dealing $w1 Shadowflame damage every $t1 sec for $d.
     -- https://wowhead.com/beta/spell=273526
@@ -750,7 +750,7 @@ spec:RegisterAuras( {
     -- https://wowhead.com/beta/spell=316099
     unstable_affliction = {
         id = function () return pvptalent.rampant_afflictions.enabled and 342938 or 316099 end,
-        duration = function () return 21 * ( talent.creeping_death.enabled and 0.85 or 1 ) * haste end,
+        duration = 21,
         tick_time = function () return 2 * ( talent.creeping_death.enabled and 0.85 or 1 ) * haste end,
         type = "Magic",
         max_stack = 1,
@@ -777,7 +777,7 @@ spec:RegisterAuras( {
         duration = function() return 18.0 * ( 1 - 0.15 * talent.hatefury_rituals.rank ) end,
         tick_time = function() return 2.0 * ( 1 - 0.15 * talent.creeping_death.rank ) * ( 1 - 0.25 * talent.sataiels_volition.rank) end,
         pandemic = true,
-        max_stack = 8, -- ??
+        max_stack = 8 -- ??
     },
 
 
@@ -845,7 +845,6 @@ spec:RegisterAuras( {
     },
 } )
 
-
 spec:RegisterHook( "TimeToReady", function( wait, action )
     local ability = action and class.abilities[ action ]
 
@@ -856,10 +855,17 @@ spec:RegisterHook( "TimeToReady", function( wait, action )
     return wait
 end )
 
+spec:RegisterHook( "runHandler", function( ability )
+    local a = class.abilities[ ability ]
+
+    if talent.blackened_soul.enabled and debuff.wither.up and ability and ability.spend and ability.spendType == "soul_shards" then
+        -- We need to do this here, because it works even if you spend 0 due to a discount proc
+        applyDebuff( "target", "wither", debuff.wither.remains, debuff.wither.stack + ( buff.malevolence.up and 2 or 1 ) )
+    end
+
+end )
+
 spec:RegisterStateExpr( "soul_shard", function () return soul_shards.current end )
-
-
-state.sqrt = math.sqrt
 
 spec:RegisterStateExpr( "time_to_shard", function ()
     local num_agony = active_dot.agony
@@ -868,35 +874,39 @@ spec:RegisterStateExpr( "time_to_shard", function ()
     return 1 / ( 0.16 / sqrt( num_agony ) * ( num_agony == 1 and 1.15 or 1 ) * num_agony / debuff.agony.tick_time )
 end )
 
+
+local corruption = spec.auras.corruption.id
+
+local applyEvent = {
+    SPELL_AURA_APPLIED = 1,
+    SPELL_AURA_APPLIED_DOSE = 1,
+    SPELL_AURA_REFRESH = 1
+}
+
+local corruptionTargets = {}
+
 spec:RegisterHook( "COMBAT_LOG_EVENT_UNFILTERED", function( _, subtype, _, sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName, _, amount, interrupt, a, b, c, d, offhand, multistrike, ... )
-    if sourceGUID == GUID then
-        if spellName == class.abilities.seed_of_corruption.name then
-            if subtype == "SPELL_CAST_SUCCESS" then
-                action.seed_of_corruption.flying = GetTime()
-            elseif subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REFRESH" then
-                action.seed_of_corruption.flying = 0
-            end
-        end
+    if sourceGUID ~= GUID then return end
+    if spellID == corruption and applyEvent[ subtype ] then
+        corruptionTargets[ destGUID ] = GetTime()
     end
 end, false )
+
+spec:RegisterHook( "combatExit", function()
+    wipe( corruptionTargets )
+end )
 
 -- The War Within
 spec:RegisterGear( "tww2", 229325, 229323, 229328, 229326, 229324 )
 spec:RegisterAuras( {
 -- 2-set
--- https://www.wowhead.com/ptr-2/spell=1219034/jackpot
--- Your spells and abilities have a chance to hit a Jackpot! that increases your haste by 12% for 12 sec. Casting Summon Darkglare always hits a Jackpot! 
+-- https://www.wowhead.com/spell=1219034/jackpot
+-- Your spells and abilities have a chance to hit a Jackpot! that increases your haste by 12% for 12 sec. Casting Summon Darkglare always hits a Jackpot!
     jackpot = {
         id = 1219034,
         duration = 12,
         max_stack = 1
     },
---[[ https://www.wowhead.com/ptr-2/spell=1219036/warlock-affliction-11-1-class-set-4pc
-    tww2_set_haste_buff = {
-        id = 1219034,
-        duration = 12,
-        max_stack = 1
-    },--]]
 
 } )
 
@@ -982,8 +992,6 @@ local SUMMON_DEMON_TEXT
 spec:RegisterHook( "reset_precast", function ()
     soul_shards.actual = nil
 
-    local icd = 25
-
     if debuff.drain_soul.up then
         local ticks = debuff.drain_soul.ticks_remain
         if pvptalent.rot_and_decay.enabled then
@@ -1010,6 +1018,22 @@ spec:RegisterHook( "reset_precast", function ()
         debuff.agony.applied = 0
         debuff.agony.count = 0
         debuff.agony.caster = "nobody"
+    end
+
+
+    if debuff.corruption.down and corruptionTargets[ target.guid ] then
+        local corruptionExpires = corruptionTargets[ target.guid ] + spec.auras.corruption.duration
+
+        if expires > state.now then
+            debuff.corruption.expires = corruptionExpires
+            debuff.corruption.duration = spec.auras.corruption.duration
+            debuff.corruption.applied = corruptionTargets[ target.guid ]
+            debuff.corruption.count = 1
+            debuff.corruption.caster = "player"
+
+            Hekili:Error( "WARNING: Corruption applied virtually due to aura missing from target." )
+            if Hekili.ActiveDebug then Hekili:Debug( "WARNING: Corruption applied virtrually due to aura missing from target." ) end
+        end
     end
 
     if buff.casting.up and buff.casting.v1 == 234153 then
@@ -1116,7 +1140,10 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         handler = function ()
-            applyDebuff( "target", "agony", nil, max( 2 * talent.writhe_in_agony.rank + ( azerite.sudden_onset.enabled and 4 or 0 ), debuff.agony.stack ) )
+
+            if debuff.agony.up then applyDebuff( "target", "agony", nil, min( debuff.agony.max_stack, debuff.agony.stack + 1 ) )
+            else applyDebuff( "target", "agony", nil, max( 4 * talent.writhe_in_agony.rank, 1 ) )
+            end
         end,
     },
 
@@ -1519,13 +1546,13 @@ spec:RegisterAbilities( {
 
             removeStack( "decimating_bolt" )
             removeBuff( "malefic_wrath" )
-            removeBuff( "nightfall" )
+            removeStack( "nightfall" )
 
             if talent.shadow_embrace.enabled then applyDebuff( "target", "shadow_embrace", nil, debuff.shadow_embrace.stack + 1 ) end
         end,
 
         tick = function ()
-            if not settings.manage_ds_ticks or not talent.shadow_embrace.enabled or debuff.shadow_embrace.stack > 2 then return end
+            if not settings.manage_ds_ticks or not talent.shadow_embrace.enabled then return end
             applyDebuff( "target", "shadow_embrace", nil, debuff.shadow_embrace.stack + 1 )
         end,
 
@@ -1627,7 +1654,7 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyDebuff( "target", "haunt" )
-            if level > 51 then applyDebuff( "target", "shadow_embrace", nil, debuff.shadow_embrace.stack + 1 ) end
+            if talent.improved_haunt.enabled then applyDebuff( "target", "shadow_embrace", nil, debuff.shadow_embrace.stack + 1 ) end
         end,
     },
 
@@ -1665,29 +1692,12 @@ spec:RegisterAbilities( {
         end,
     },
 
-    --[[ Passive in 10.0.5 -- Talent: Summon an Inquisitor's Eye that periodically blasts enemies for 254 Shadowflame damage and occasionally dealing 290 Shadowflame damage instead. Lasts 1 |4hour:hrs;.
-    inquisitors_gaze = {
-        id = 386344,
-        cast = 0,
-        cooldown = 10,
-        gcd = "spell",
-        school = "shadow",
-
-        talent = "inquisitors_gaze",
-        startsCombat = false,
-        nobuff = "inquisitors_gaze",
-
-        handler = function ()
-            applyBuff( "inquisitors_gaze" )
-        end,
-    }, ]]
-
     -- Talent: Your damaging periodic effects from your spells erupt on all targets, causing $324540s1 Shadow damage per effect.
     malefic_rapture = {
         id = 324536,
         cast = function ()
             if buff.tormented_crescendo.up or buff.calamitous_crescendo.up then return 0 end
-            return 1.5 * ( 1 - 0.15 * talent.improved_malefic_rapture.rank )
+            return 1.5 * ( 1 - 0.1 * talent.improved_malefic_rapture.rank ) * haste
         end,
         cooldown = 0,
         gcd = "spell",
@@ -1705,7 +1715,7 @@ spec:RegisterAbilities( {
             removeStack( "cruel_epiphany" )
 
             if buff.calamitous_crescendo.up then removeBuff( "calamitous_crescendo" ) end
-            if buff.tormented_crescendo.up then removeBuff( "tormented_crescendo" ) end
+            if buff.tormented_crescendo.up then removeStack( "tormented_crescendo" ) end
 
             if buff.malign_omen.up or buff.umbrafire_kindling.up then
                 removeStack( "umbrafire_kindling" )
@@ -1718,19 +1728,6 @@ spec:RegisterAbilities( {
                 if dot.siphon_life.up         then dot.siphon_life.expires         = dot.siphon_life.expires         + 2 end
             end
 
-            if talent.dread_touch.enabled then
-                if debuff.unstable_affliction.up then applyDebuff( "target", "dread_touch" ) end
-                active_dot.dread_touch = active_dot.unsable_affliction
-            end
-
-            if debuff.wither.up then applyDebuff( "target", "wither", nil, debuff.wither.stack + ( buff.malevolence.up and 2 or 1 ) ) end
-
-            --[[ if talent.malefic_affliction.enabled and active_dot.unstable_affliction > 0 then
-                if buff.malefic_affliction.stack == 3 then
-                    if debuff.unstable_affliction.up then applyDebuff( "target", "dread_touch" )
-                    else active_dot.dread_touch = 1 end
-                else addStack( "malefic_affliction" ) end
-            end ]]
             if legendary.malefic_wrath.enabled then addStack( "malefic_wrath" ) end
         end,
     },
@@ -1749,7 +1746,7 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         handler = function()
-            if debuff.wither.up then applyDebuff( "target", "wither", nil, debuff.wither.stack + 6 ) end
+            if debuff.wither.up then applyDebuff( "target", "wither", debuff.wither.remains, debuff.wither.stack + 6 ) end
             applyBuff( "malevolence" )
         end,
     },
@@ -1855,8 +1852,7 @@ spec:RegisterAbilities( {
 
         talent = "seed_of_corruption",
         startsCombat = true,
-        nodebuff = "seed_of_corruption",
-
+        nodebuff = function() if active_enemies == 1 then return "seed_of_corruption" end end,
         velocity = 30,
 
         handler = function()
@@ -1865,11 +1861,13 @@ spec:RegisterAbilities( {
         end,
 
         impact = function ()
-            applyDebuff( "target", "seed_of_corruption" )
-            if active_enemies > 1 and talent.sow_the_seeds.enabled then
-                active_dot.seed_of_corruption = min( active_enemies, active_dot.seed_of_corruption + 2 )
+
+            if debuff.seed_of_corruption.up then
+                active_dot.seed_of_corruption = min( active_enemies, active_dot.seed_of_corruption + 1 )
+            else
+                applyDebuff( "target", "seed_of_corruption" )
             end
-        end,
+        end
     },
 
     -- Sends a shadowy bolt at the enemy, causing 2,321 Shadow damage.
@@ -1893,7 +1891,7 @@ spec:RegisterAbilities( {
         cycle = function () return talent.shadow_embrace.enabled and "shadow_embrace" or nil end,
 
         handler = function ()
-            removeBuff( "nightfall" )
+            removeStack( "nightfall" )
             removeBuff( "malefic_wrath" )
         end,
 
@@ -2009,6 +2007,10 @@ spec:RegisterAbilities( {
             if talent.dark_harvest.enabled then applyBuff( "dark_harvest", nil, active_dot.soul_rot ) end
             if talent.malign_omen.enabled then addStack( "malign_omen", nil, 3 ) end
             if legendary.decaying_soul_satchel.enabled then applyBuff( "decaying_soul_satchel", nil, active_dot.soul_rot ) end
+            if talent.shadow_of_death.enabled then
+                addStack( "succulent_soul", nil, 3 )
+                gain( 3, "soul_shards" )
+            end
         end,
 
         copy = { 386997, 325640 }
@@ -2341,7 +2343,7 @@ spec:RegisterAbilities( {
     -- Talent: Afflicts one target with 18,624 Shadow damage over 21 sec. If dispelled, deals 32,416 damage to the dispeller and silences them for 4 sec. Generates 1 Soul Shard if the target dies while afflicted.
     unstable_affliction = {
         id = function () return pvptalent.rampant_afflictions.enabled and 342938 or 316099 end,
-        cast = function() return 1.5 * ( 1 - 0.2 * talent.perpetual_unstability.rank ) end,
+        cast = function() return 1.5 * ( 1 - 0.2 * talent.perpetual_unstability.rank ) * haste end,
         cooldown = 0,
         gcd = "spell",
         school = "shadow",
@@ -2387,7 +2389,8 @@ spec:RegisterAbilities( {
 
         handler = function()
             applyDebuff( "target", "vile_taint" )
-            applyDebuff( "target", "agony" )
+            active_dot.vile_taint = min( active_enemies, active_dot.vile_taint + 7 )
+            applyDebuff( "target", "agony", nil, 4 * ( talent.writhe_in_agony.rank + talent.infirmity.rank ) )
             active_dot.agony = min( active_enemies, active_dot.agony + 7 )
             applyDebuff( "target", "curse_of_exhaustion" )
             active_dot.curse_of_exhaustion = min( active_enemies, active_dot.curse_of_exhaustion + 7 )
@@ -2491,4 +2494,4 @@ spec:RegisterOptions( {
 } )
 
 
-spec:RegisterPack( "Affliction", 20241021, [[Hekili:T3ZAVnoos(BjyW42Ut3UTuINj7EXzrVZHfyAm7dCP37(WHZYk2YjcTSLpj5Kjab(3(XhsuKuvrsjlNU7d7hMECKOkwvXIfRxKCU38pp)2vHfrZ)B(t8V0BIV3yppVPExo)2IN3fn)2DHl)s49KFSnCd5F)461jXllIt3sF1ZjPHROGipDF2sYRFOOyx(F8dF4(4Ih2F34LPB(qE8M9jH0Vyzw46c6FV8dZV9U9Xjf)6253b2)t8iWCx0sYJ)PPeWgVAveVTr5lNFlTTV3BY799(JhwCB8MF5WIpCyrw0JX5K(j)WNo8jwtMC17VyY7oSyYF49t8l))xj(K97O9SCJ9)jYl)pOGj6WIhdZIdVljsbC(xk(8DzXPzXfpdbOjua9XKK0NoS4Fpm7l3NeMraz86dl(h3(H)ZpFyX9rfhw8uyEr0kLpKc))(DjXpsiK)nYxSzxw6JKpnA964LXrBx(CDZ)537FbP5F(bY7)VcZi)dHThV9WIH5PzeWNUEezuklDDCczSjKnSLpExwezC5UWIzRJscwLUjElB45DXRNveVj6MjdoBxuX4qcsqiQgF25Z(q((nBs3gqAf87RyDVJk0mBzsu4JrbH7sE3JHj7JMvKE)9jrJxVF72OKdF6hoS4FMtydlkspSiNYx(Cw82Vq)bLyYtsj)Y7WIW8dl(Z7xVw8EYFVoLq2fugq4(I0necz5HfjP3t(FoGzfC4e4fChbU5vOh)PJ9g)qyEW(8i2BnGN5YiQ)Per9bru)Mi6hR7KFJ1jCeqhROOTGzFBjJUf4Jxq(ZBx(U0DZi8J41L4Lh))heLKhnBY4PVBz62vXuyoRcmJ1y9dgwZ1xMMMSk9PTJxTpJjz(J)O4refnjbzPfI3nBYlVG)2F8hna2ztgDK8k)2WR8pAELVoVY)0WRaaBfVIq5mMrirCNOFoEnLDPYJQeJyttwNYvcgsEXh)h)grKpElDoWwY0OT02D0tj8c2eUDFysJjVX5JZ398gQk2S8GNIU7LxuEz4DrzzHBlciessczi)(O2rI(VwKOpmj6BIe9nrI)fQ89FFltFMmTLkRU9jYIj8hTpNVau0sAJEoD)HfRs3Yw)I(VuMaRjuwdNuAd15fe97lt2VkcAemB)Dph80drj7cYj)BIv0xm0yd9FtFH)(i4Vpk(xjHXemQMHrxUwsbJhhDoAzhU(1GQEPbpMyEWYXHBFoy1UCXS9ZhQmiSjollnliDDW6mspVplAvabJsjp9P836RPAWev53tuLVrQY3gv57ov1CXbMusivEHsA(ssIARy0c6PYws9vh8LxDWtATHZqxifBvJxEbF9eJlOG8zcM)O3o07CYkxVv1CeABghVTGi0tM4rAeaCOlioA0ndnU4pcLI3)Eo2)EL9p8a19zXBsJZIOci5HlZORdeXSromjABXyW3poAlTlwHy2CereJ08LezS97ycUe4X0nhuesuoxq0N3OnbHPr34)Ylo1oVbLO3QiIf6XldOlZdJnpeUNO97tIxsrqwxKKU8lYpDzi5H8)mijoVGl6k5EKTMME)Yv2BvCr0MC2CUp)qmrpcHkYioxr)jF5VeYFvqwolN4oj1mC2kSpftuQUyvmr9ozrH1zPBi6H(1)6Vq827U9f0pLidq(Vkft5KUI0U9BzDpXhNINhBh34UWqhTOVI4mt02OnXr5ZiJlQp5g)6zG1o(yVhidEnb)n(2)WOTm5G1X3)qHCRdVpD7Zuqo8SsrIhjUbgq5ffV8sweLXKFTy6w9lhx(UZ5Ws(ne1EfbuFehrSbLd0W7Ytt2xejjioOc4x8YlN5qZMczvQ4LIMD1ObmImO8b3SI0mgvkW4PYmaM8T0ew5zedyAh2sb3AcxDCEr4YVCT)7jZpEmGiTs0HSkJasEJb5Gg4CJKrJ9BjaNineekcDcBuPCKMseanHAQozrNVeV9(Vs8AbrlZ3E5fyg3lViX5ymEeom0yia5Bze1edzveRNzTDSJChWVXcRc8BK5BUkSOZraGRkBGAzBuMKKn)bdoBy5m2MRnqwimGWBj9JqFfLZ3SH3mPFf3GgV5OlmTPU0yFrrzrRZIYFGkKbGpsafeNQ1eqXjn5697gmesu)gVgZvQykr)E0sk)IQi9TKzeNXAxrA2gc7KG(lj46sIA9ukWrfbhWEaHOYwD903BceTwIuXKGhcjnl4U0KItd1JI5LAm(QZbGx2npkG20cIbFBvSlKlDldGA4RSCCf5yqnZn(GrSPIvotMxEov57MWFNW4tZZvfZVgfgJg0yv0bdHNu8YlnN8Y)CdkWL5d7EG4UD6MGCYIA7tcz(70sgY1x(Tl5THqfpMsOeU4GWkWhjU3LhSFNYSQs80Ed5rAFvvoeu(GLRO68OFcHO4lBuoDnAZDeFAJ4ZHMb)oISsa79hJ0oOBgLmdIdrbzH7OEwZ8ZrmB9MlfRX4Grz1R0i34rLkyq1CCJhUoCh6Ccp1QMjUVyJFikmP4HX7wwCT)elmbOEEOeNXZazzA1GBq)QYg82s1digOiJcdmOz8gVjsqiTmrvsZyREK0hOaDj956n9AVjkIIvVNY3oTtJbnM7MPUnwcW0XfDelyAyO66YHQ36BtgFM)il44qaLfV8c0SpI)g8hcOME0GgkPenV04ZgnyWzm7XWxZ(g)xnjP2n4v(kHUaJJMnuBiymkZXpdWWPwAuIo9BCEQdCaiTQMi1wysCBmGemMfsgS3Z(sJazjcA5dKFoZ7DrHzjphW(Raie)D01dzQFOVM2bb80NpEkc9lfSTXHPrNRhn4nKEIZcs3r)J3TkAD4(KIztkdhCdTG2H3Jf6aZtgAnLCSdYD5na5pjbsa9hTb2ELXaVeI1kW4uZBBmPz01)j1gTl)TguLPJdIGkah4GgOSQX8oACUjB8N5pTbsHzQCp1DnTkwhb6LzACmBQoS5I4lFEjJtYcNnz6wSi4NcK76RgmSHj(TlqL1gpkjWmOCb2QpuWJeFwLZuxpS3L)QzmEt05myUfqxTq83Ll)Q(EhgsX8pHVATw3j(Z8mzpsQWtWezmuSIwPnbWwOD90r1wGi1svB2iTAuFfrlD0xcTbKcfiWaHJPnaQoeldjxpbnJo91HHli7cRvqO1z1MBmvXCJlGnBu1GodHZXj0s2hX6(RvwyZnm2tgVUOHeqh8mZV3WNrTaDAvx5elUlaU0zdhGoS)gnCoyKoR1Sv)6EjCKmWJZaF9(w2wyzlcHxXkC1ZYsB1jzQPdcv6lucBJXi9qdpg8Rf2Z0G11b0x0S7tsVlmHRORjfn80qaJQLhuBtd1O2cDDhWpF74NSv(8maFUl5U9D5fzeRO4mtAmobGcQLtYj440yY0qGGtaPYSrNRBa65xHhfRM5lQ6JMcWnmTOBn7qAby3SMa2mcH(OjTbf)kMdAHGkQdncSeZyFbR7R(qTnl2(gz42uXJe4AgJQbNQVMnttIQBhCxM8gBmV1GPmAKz)fNaGA9uUCConosM4ZOtzJreiLZzGP(tK94AiGzko1VoMKgNfys3fTnklqi3OS0aWmrNbmSKy7H(3uz3PgTE9tYJrwInpk(x56PfCXw5VYPlllgr1VLt2I332dLhNlzFdMZfJmIoN6fDxbun(XXA7ZDla7fy7AUIKwp11ug1WxGy4uhbAiP12EIYjeiDk70OSxHoTQ2qGsIzk0SeNksZz(gRiTrOiQC(6vMZaGEsRdEUPoRAPSZLTBffdaMQb03xIvBRoyXa3QapfN8vnN6C4qQOyELwehQ6xjV9mfdclLZJ9iuuzvBzvMF9SlRSYHYDdksdwfhDJ3uvP5JOcJmWR0MRJesgt8JZf(5vdkoHqwuDzezWA0rZYgCgqFiCIKYX4mqNzTYYp6M7JnN3QudW6DNw5OHG0gnhGBIiMjpQhfG0vFgyAwhqmcCLhQMykN0jWcN9PLrRgcIwmZ8MgX7PjJtEkOZCUZayDgNL62eOGLP7PPu9yzzUpHvN1klQX2ssuZJi8m6Vl3Qon3vTVJ2I01RPlUY5A01TQaALNgtgFLnyRUDErcKqPZnsTnlAxAwr5q(SlUcSkzND1KA556HnihChbcazhFBG(09nC1(z0t3BO8aUEXrdAUn8Q27JZ8a3IILBUwACcu2FHvMJsDWQ5UxSeLbGOO7KRSCSCG6xEwyu)goDmaVlV2kuhnQ5M0SA3BcTVo57(n5W9HStip37MzkJyJCC8YVtJx(aCxpGXlpSXlVwnE51hJxn7YUnE5JoE5By8Y)igV47xy2cTpehTop4(Wn3fxOPIOAGdC(lDPzJ71w78cYW7UOLeZ0pFQUToZ8O11H6Zig))q4JPlReNmqFQAqBOnbFdpJpLHyNp6xzuPb0Ok7ZgjuGQZGSlCkyDSD1XziWPBSiFywKDPuiwuJJzeO5POC2V5yruih8aDZclBZnPbKVBxAvOaaNdPo95c1T5yvyqguATBdGtmtipkJwmCo2bEx2YoijnDvW69zp7Ah8Zw6GF4hoSqRtI3(y6xitO)DIHgBdtydYCLr7sFI42s8217ZXzInq61Xzrme3vCEs7ykuJAZlYiyknhiU2j2ym1Dtf0y7SRYFxYpO2MPw9QNHhMxEMhHkww5aCH3BSc)cU3KdUPAr(YlCtxHpabbea1bgiYriiWXs8SYCdM4Rg7kZSBvSkDdU12yRcCHiuRQ(o8(Hzq0QC1oXKScWiBd6frDPl4t9mdnMQG0kXyzRAKDibtxTCyJXnAJm5tXOnHHxUG71v5EwefZLNXZFNRqHxy7Wqzx(8BFKOqNaMQZQqVjZV9PWSTKXjYlzNcFXB2Xo59yhGyVH7W9BONmH)V7jQ9wDyrE6M6J(g6dwsgTVpkF8Hp9BSJnk))4Hf)s6wsxXE9BAmW)g(bwuZxuD2JqAWqVFFKnikhrdnyk)kmOE5RjupcQF6jbp)zyOYdAKg8kRRzeiDfmKQMvRblH6meO9h6vO5DXjH55DAKD8ond1NkW(tNgWIizEIa7rmXedKvzrsdGISoJboKjsa5vsdYqzEcRtqMFDSCxeWcyjGg0HSGQLDsh0zHbQoo05p5vyOdRteHXxd01H3VLa8iLfWa7rmtJDkj3Ny6HpbySJW0Q30k7DqWTEv0V)TPczHX(hI9kFazD3oADaYcy9kgJ0hhbFgbI9lpq3vhDOQ7ju7SY8OHo48x10c2ltIvtoNoAQM5oSLAquDjsFLUIlXlAPYGJcxbzOSyt2o(iMRADNABOwbmhAcWw(2IgV2rGQhNyaad0KtiWprG91bNBOVgmHAnazJxBEra0G8dayBmI(f4NiW(6GZnCBSjyRs7Mj4k1gfSUVbVcG)NBZ3VJQlJc6QCRuLzGdl(VjaSrIi)F(3ehzRRIZzkJWxM8OMFyBn4Jc4VslTFAHEddhokr6tkWp5g7CAHo4k)6f03BALraFFymfiHxEEW0o6fjWnhHn(iqe4Gkvd0aT4RzFCAI2ecupc(Thsml6vMXx1o5iz5EiZ86xC)RzNCmspiE90LatIaQ(Lf8Q0j9FMWWsKXXaseZy6Yqh2k0DlWmyPdOJGZ)0Kev)ttc2ovG90K3o)ttc2Wa7riUJbYUM3der((nVhiteowUlcy71O)I1jDq9cgO66qhIru97qhsN09uwDAmOedShXmTl6B7WaDxrCB48Mw5WI5WYvDnmkqp1WYj9AfkglEo(MbAJxRauSqJ01GeDIb)jdWFLW70Dr8wuETbkYrkE1Odb)(4kDecUZMmQI86iI1z8YgAj4OybBc4IkdyUHvjH(g8Nma)vcVTlb3yZcab)Ercg(wjfvc2neRZ4Ln0sWrBy4HqztJBVtaLnqTrrsWi4b2PIW9bCdv6OglYle5SthWTXDW7cDyOHQEg2W0czoM(91jm7cOvQ9rJOKitnw7dSwP2hnCjvqhG3(Laucw767(rztV1c4B7s6eEWX2NO274PU1nQdVD9D)yMlIdFhyjaIF2(e1EhZK4UUE0Pg(Ua5MxIOaGgSrUI7o3dy23Jc7UAj7Pg(Uazh4kinYvC35EWv(EdZKorxpVGMWG8D43pUAcvoE18c6aaczAOV9S23vxlVvJjVI8Yp8vKx2SV7tEzTOBFVVdaJSsyAlt6D)NUdei2RbOS)d81Rge7v(WRqk86cOqsdsZt7xnWcCCa3Y001NDrFpHTeSVgjFallChlU)1CV(0RDYRZwFbjN9Dn3hiZq7xCgPt6EUpWYjAxk(jZGShQul0uTEeylMQQth22hGgjLRhfObnzr(OK8nTY2L(E7vXH6Pjh(9nubzLGh0C9cp9Og2npA19zwiqSlwS0ZJoLZHoz8Y(C)QC4t)6MQso3ZRUyZPNE9u5I53Y(18pp)wU8f5x)np6FwcQ5)zYBiwPgr8bA(T0J)Q53YpA7PT7wo8inr7KXNd3a6Habfu1kbMt(oFn4xbe2PVSC3jFscVyaHOOs7SkC(WIRjI3vE7jzVU49NxrSYVvCDSCyXlVCyXzegjNh20I)dlgb1NLN6Ghw8wYafhkgeAyqaeLf5(qgHVI1EdTHaHPviMYzTZHf3i1reqnLWhLp1jPJwew)fiSE(mit8EnCyaJ7nuWKnDDGWztMVsqyeWKJI2UevS12ielSvAhhXmcLmc)(dlaV7yQeomldrjCJIPJkzoa3Qmmm4I6Xi2lPe6uucDyJXPVLfqRimGZjDkz(tiYQ1cpFFlV(Z2KxvxwZrLTGMjq7URq7UAryXaQIamHRPCQ9W0tZySEJNQjJdism7WcLZzCklrOgDK1V)Mzup6QP(6zruQ6pyAUGncZSG8L8gPn2AEocxCGFOpvF)2CybLgQjbGGarPfVjOeJG)xDaIvdmP7NhgqWx9wECuC794ikxrQSUqFbCa8S(ySscgAB8hgS0xrYjT2T3ge9DpeRV70kgTVVrNs6HRjNXVZPNK)m1jxwTCJnD5Mwkt1KhyquoFKbg07Ufgk5PkckDdbWinDT3oXBHibQm6a7yeNehqjpTtEz(7K0GuViodtTQhgfths95szCYZc7RKymPUZWxlA0Bv1G6QLinr2bwmpH2QjG9HEaT00OQFF2iafaE4RIhn)0RlXcZsC4lWvIYgIuMzrSYrTHUm0a7JGnP3zSwAHanUwhGMxXQ3gLJLSq0qYjQKbawarcaQwSG9bCBXGUBLyVRPu63dIF(4lE7O4xzZAe0vNKnbuA6IP)NHPU1j9jUO6OB6DCJLJBQJTL5mZrn3R4w)O4dIDdmN2WrLR0dgcT)WTqQp7peNW8XTrQHGd2kS(4M5yags3XemGGBqHeBOrenOFj(c8GFPK)L0VwFzfaA8wQvDvxCiK57Y3qvKVv56TcKMzVC(Tm3c9zQ5H4csybLLGyxjqa8Gq5gEKQregV(ta0UbhBtzfBnJtPMrT6RE4IcmaTxIvlmqcmPFBxpoYrMjh8krHhIg8OaqmW3q8ovgBBdd9mh4P2O)64JM7YLhdJg7vEgNoCdhmYHHcUcHHAFArBy5w53V2cBLoSxELqWdZYLLOQ(1hLGt58uCBxDuwudwPk7iy4UjcpeucQ(EkJBjbJN9TG8BNg0GxqKWJPNFq5M03du4(Kf6RVmhyQ95XOaSP1Jxsx8sm8s2fNjJVYOwoLDOGLGfvn0Z5)Wxft8qcEXvLEwrVu)b0nqzTxnrDre4jVybmOoyiyDbpScCgOgzAixlLLrOhUdCIR5H61YAueIv3GpmFhld7aqvswEXbvh8h1sSSYGXAxfbkKtbbd2hkiIMVuyNo9C)UMunjc6YfIp0ycBU2PoAudpx1k41kKa498BZfbVXwTKY0i5Xfp1evioYqV2uKg8bsyLMaIFpkG4Jm45HlG4zraP5XoLlciENibeiS5yfq8TiG4BvaXVZci(Z1t0hMQZAzbl6Q8MkquKXXA80fwN4EfINKlS14MvTaCzFR)ErabKVtRymeUI1MhkEZnKCWALRAZ3ASUNsWcocLddQcwIry4IQvyzSsymszPmSZqn3MDjnYvonRAYVnOpAoqIlBQ3stuUL8E3N3HZ79r49yATmo(9neVxpAe6C2QXcAFXUFUQgmQFaZ2XkIf0(X0Du3NkQHwvRP)kzFKC81mgZyMX0Py3jrm4wMJmEsnbmJSn4cwCkbVTKK7D2noeKnB27DRbkDGCdSfHDuSTn8sroIbSXWobzlP5AxauYDm7MAQXcxo1RIjF15iq8i2OJ6J49KuxlLVzGvhS3)Um(iPdatsZiNZYmCzYP8IHcsBRDArwxwjGAAIstFUCrhefkwvXPOzd8oOIB1L64xLDmqA5O0Cwekvxbe(ftfODsLVQOzfJ0cytVUQqG9UCUE1YdRtHw1AVGjUvhKKsdDsDNBWTzJvuqT2Bd(zAUEiOlyyWheJFmpWdaZZxfLt4pL1M1NFioxC6ft)jFv7KNPlhhUnpHxKY07qYfpfNKqpIJxVokJy7Aw6MdlU9x)R)Y7OHcOG(PKPACjNcAPrNhslKO173YWWWe68utiF9OgG5PLohbyyQVQwNYaUhUlbO(oG07G3T3OuDng52HPrMS6QvLElEoYTUogLfb6AvxQ(wHBRLDOHdXrwl1I9MQjtT5JDOE1atugEeOfLmLc1lf3orM8WZFFlZYXRAbQwtiIcq1qHQnuPuYasQiBgxvC5IxsVix)owCyO9kQI5vUHXp2IK1dGmMS1bDtcJamDmrtKK(AUgcDKnJxsZTDadfsTy0dfgWdLDBQc2GcyFRosup3YAstakYMZuYeI1sBwAgAZgFqPYMDF8(OgI1gWmjExs(i8X60(BOYspDSl9QqhMeGkNCvYqTgemuOQAkj0YGsdThALOy97LhauRw73kPW5m7fIKHjJduRei(q97TdYEyMznNvR4pBrPPCs5SO8a9YB9BD(Rwz7yVoG70UCaOwQXRYhvFBbDn3axvYxwtl0yCxoWelWJmVb4YLoaSXKpUHPnPkqn6klRbNbReKCewzVwyOcBpow81InBX3JmjSDZbU5(Yr2Y8U5WqvLAaivCigeWTLZqSGmw3fZCOmkK1iaSTpmueLgmMUZkhmudLYAmV57WnAHHc0SLKWPEJwyOmqTHPd)xB0IVHQ0D8L0FDvbZBdOZv3OynDfHYWERB3hB1PVnzUHUiyD9jBBI0OGLXkIK))12eX)7KjpwdcOnXVYM9V2MiUYYVa3gkBlsBMJAUxnCkAOZkXwX8cCRKmadnpWUWP9pcq4QVa3YIJjkVGDksGiVq3Kba(uVU5lUGT2geNuclyj6tCnxm3CLLZ8fKhIi(ejAcrdtOj6u0pRJsimYnXBdRiCFf0GBa9UinSOdvRqr693tuYUE)2Trjk5FTo1wfDPQb0kBWQJptTuc(pZPZQOhEn50II(Z8pIF8Usltf2K(qYe7)m5BfVpV8iqIL5VYJ3O4LhwKKEF8szIqRWDOus7RebPY0Q1usUmP43hKIFnPGuuduPAaF6SveAGL93pczXC9RRNtBQv)OTEHdMrAC0pwZn(nk3OKtPZ(O8xHCZTCzgyza6H0k64Cquso53mDeLd8GhkhUXKXQ2mGtd3tatgSx6BMSpS0zNyYqL3HJtkbU8gkxLrPfGBNbfobHUyKAiz66UOLXRPmdvoWTvAKOtZxNMKK(eTCfoS4J)JFJEeArpSUyvVWwA7CEkDvPJs5eqfJIJCcGR)bnob2L3qx5e(9nNWxIt0iNYTGvaE9rOrL)fQC(FNGYen3YKxQ8spuht4pApTvrRxhTK2ONt3t9eHMy2NcP)lLpWAcL7uAha4qDz51ZOW2xMLQdLhbfkgaTrHVPTKOVcj2(Q3uAqKQdvTw5hQpV24fOa3tAaTEvs4mbZ6oiDTKwopoH6SSR2E)Gr9DWES6byZuV9RpIJI69Bj17dq9ignQU05zwQtE8LwPQ2STWR11E)GlBsJrmw5qMmX50932u2dqmmuQ9aGMU(iRfJyEbm0bJWGWXg70iB4ONZ4ONeoA1AbMUGqQwbQ4JVK(gvtiGKzQ2hq2mxWtm7GTjymKI2sF3VplEtACgTq4dYdjVMScwuZCga2mwpGhqtEzBwU1IbY(FqyAuv0HyHWW127jhlhZ56Ojuyi9pl7IiV8r09rLw5GiL3)gQlVOQLAeh36cB92jYJTIJdoHtRTUFAgxhPoZRrVXlIxinT27kOaxc0N)KEFYkU3o4uS80noUZNKIhUmYKWR)tQZt5iG8hAo(RnrEpihHLcAFBo7jXNQmSL5h3wA3PX6EQsS9uZgTX89FsWeroj0MAuHFijc2y84pIWOvpqzVI(09ZOQ5noYDLWN6J5XRQwFfmF8DP(FvZqkYmHbs5ir64QOAascCY1AX1vRY(6p1dASHQbd60)0Xd7X64SlEQu(u0BPvru5kdWqvEQ3xdCA34u1j6NiL4rXEOwgeasmewMdffkOAYRqGGE(ffFTOU2g27feO1vWr34gihWTk4(aLkUb9Ipbr4dBBFaDoq3JDl(IqhNeh4jlQJlvzAtmvTLP1Ym1fULY0bijP0sf)zjXsgk0nTE7sD00wQfDi9ZEqK1f2sbN9ZMXwu6h(VkK1iR00rNj3UkbC8h1GoWr8nJcUDkdRxKbYtPvo(HrhLDlv9Ms4VL8XBTq0SXl738XBgzTFyjdFe3aN8(kT4gpeMSDUwvQKXPJmj4YWwlbUW2vgUI7Ij2cxDbEoZ(g(1GxjmU5ml9UmbFFs6DHjvh)wTT427fI0VneP0s46NUvkBDrxo92mTeIH6kEk2mekv0InML40pY2MKaDZiGRkcSYymqtAQtp3ggPwOJNR6GCn6kxhD4QImGxIQR1wH34srjbpmCn)4MXKE0cGJdExp1m1f6mmxPlQKDy(L1sV29zF1k3qo85QI8a1h7Rfzxqv)6XCkcYhlOBfDJtWLSNq90oQPe2fn3rLv(8YhuQPfPa3Kw5tMt3Sb2WbVl7aoCxuwEugncpMND1g84N7cEKKMUky9(SNHI5z3WJjDapwhNfXWfZbVSnOrxyh0DqqErwysaDlhmVCTPW9fpKsCt(24n)c7jZ))o]] )
+spec:RegisterPack( "Affliction", 20250303, [[Hekili:S3ZAVnoos(BjyX42UtpESuINj7EXzXmdWcmdMB3fi9(PdNLvSLtegzlFsYPNae4F7hFirXhvrszlNU7flWDZM2KQyvflwSErY5bZ)487xfxLm)VhojC6KRMC14Gjt)HWW53x9YUK53VlE5Vh)i5p2gVH8F)X1RZsxwLMVL20lz5XROGOmFFXssZpvvTR8V8DF3JPvpT)HXlZ38DLPB2Nft)ILfXRRO)7LF387FyFAw1VSD(dGJFWFMaZDjlj)83pLa20vRs49nPC587P99BNCf5)7VCyX9VSD5HfFImIK)oDZptqSI81Pze0jMHPLJ3vKqqLhIRMTojlAv(M0Tmm6dPRNvLUj5UjdUyxs144S0Nto8RgF2LZ(UY9B2KVnI0l42FoUin(HSKpq5tZwMLe)Csu8USp8CC2(Kzv5p(ywY4173Unj7WV(NoS4FvMS6WIQ8dlkjWCXhls3(70)iDl5xYYj)vWHfXLhw8t7xVw0o5FVoVG8DpLqADFv(gcHqi)S8hj)pEGzvC4efe9abULnOh)xhhm(P4YO9LjSwTGNLYiA45erdbr0qte9hBhKFJniCeqhROOTGzFFnJUd4tqujrG7d57Mr4hPRRXRa()BuswzYSjJN(HL5BxLsH5SgWmwJ1pyylxFzEE2Q8pTD8Q9fmjZV5Be)ezTvwurELOTztE9v8w)MVXcyNnz0jYRc7cVk8K5vH68QWZdVcaSn8kcLZygXeXDIkP01u2LkpQrmITmzDEww(Ni9N0Wp(p)nIiF6w6AGTKLrBP97KxseeTjE7(4mJfVPLJl39YM4YQKIYOpL8WRVQ0y8djffXBRIieswgzk)XKUrIHVvKyimjgAJedTrI)nQ89)yltFMmTLlRULVjc9N2t7vY61jlPD6L89hwSkFlPxFkM(FPmbwxOSgoP0fQlik5pwMTFvc0myX(hEj6tpLKTlQK8FZCI(IPgxO)76l8peb)drX)gjmMGrZkmcUUwsbtahDozzhU(1OMrXGhtmpy544TVeTAxPy1(LdvMe2KwuKxeLVoADbzK3xKSkIGr5KF9tLVput1GnQkSNOQqRuvOlQk0FQYCZbMusmvEHsAHssIA7y0b6zxrAErA1l67oekV7qG0EdxGUrk2UgV(k((jw3qb5Zem)rVFyWLKDUEVQ5i0(moDBfrONSWJ0ja4q3qC0O7gADZFekfF8d8C8dQhF4jQhls3KNwKqfqkJxwq3hiHzJCCwY2QXGTpozlDiwHy2CcreJ09LezS97ycUe4X0nhvftuoxr0NB0NO48K7cF9vV6xWGA0BvcXc90Lr0T5HXMNI3t0(9RIgPiiBiYYx(7Y)6YyYpY)NrzPLvCr3g2zP7UM)4YvU7vAvYMs2AUp(ukrpcHkkEHSCJ8N8T)Yi)RkY2zLepOOMHZ2H9tPeLQlwLsuVt2uyDr(gIEOF5)(N)WHfpSVI(PezaY)FJIPsYqr63(TSHN4Jt1lJDJBCxyOZw0MioZKSnztAs5mY8I6VCxy7kWwhFCpcKjptWFxO7pmzltoyD6Jpvj374hZ3(cfKdVOwK4zIBGruEr1RVwKqzmL3kwU124462UKdl5wiQ9QIO(ioIydkhOXpuMNTVkrsqCqdWV61xVWJUnfYQurJIUDZObmImQ(hUBfPBmQuGXtLzam5BPfSYRigW0oSLcU1eU64YkIN93g(TK1hphrKwj6qwvqajVZGCqlCUrYOX(TeGtKgIIfrlGnRupttjcGUqnvNSPZVNU9Xpt8AbrlZ3E9vyg3RVkX5ymEeom0Cia57yg1gdzvcBKz9DSNChWVXbRc8BK5B(kSOZraGRkBGAzBsHKKn)hgCXW6vSM7nq2imIWBjJJqFfLZB2X7M0VIBqZ3C0fM2u3ASVOOIK1fjLprfYaWhjGcItTAcO4KMC9(DdgcjQFxGXALgMsYFKSKYVOksFpzfXfS(vLxSHWojO)scUUKOwpNcCurWbSFGqufRUD63AdeDwIuXKGNIjDl6H8SQZd1JI51Am(SZbG32TmjI21kIbFBvSlKlDldGw4RSDCd5yrnZDHGrSPHvotMxEjv57M4)GW4ZllvfZVffgJgySl6GHWlkE9vZfV8p3IcCz(WUNiUBNVjQKSP2(SyM)oDKHC71F5sEBiuXZ5ekHloiSc8zI7DLr73PSQQgpD3rEK2xfx87psyzQqE5kQop6Nqik(2g1lxt28aXN2e(AOzWTrKvIyTFks7GUzuZmioefveVJ6znZphXQ17UwShJhgL1UtJCNhvRGbvZXDb46W9yWj8uNAM4(In(PK4SQNgVBz1THtCWeGg5HsCMalKLTDdUd9RQ7W7RvpGyGImkmWIMX7cMibH8hYsFMqSsRyB(jPpqb6s6Z176TbtuefBANY3oVlJbnM7UP(nxcW0XfDeByAzQ626PQ3h6sgFw4ih44qaLfV(k0QpI)g8Feqn9ObgkPeDV24tJom4cM9y47zFx4BMKu3M8QBsOlW6SPHAdbJrzn(fago1rJs0PFRRt9GdaPv1gP2btI7IbKGXSqYG9E2xAeilrqlFI8NZc(qsCr2lrS)veeI)b6(Hm1p0MPdqep95JNIq)sbBBCCEYL6rdEdzK4SG8D0)XhwLSoEFw1Sj1Hd2qlOB49CLoWcKHMPKJBqUR0aKFVeib0F0fyhuhd8Ai2QaJtnV3yrZOB)RQDAx57TOkthhebvaoWbgOSQX8EACUnB8Nfo1aPWmvUNgotRI1rGEzLghZMQdBUi(YxwY4KSWztwULkc(Pa5U9MbdnmXVBbQS14rjbMb1BW28HcEK4ZACM62H9U8xlJjyIoNbZTa6UfI)D92VQT7XukM)j8DR1goX)SSq2JKg8emrgdf7OvBtaSfA3oDuRfis9u1MnsVg1xr0sh9LqBaPqbcmq4yQbq1HyDi56jOz1PVJy6cYUWwfeAdwR5gtvm34kyZgvnOZs4C8cTK9rSD86Kf2CdJdKXRRmKaocpZc7n8zuhqNonuEXIpgax7SHhqh2FddNdgPZATB1VUxcNid80mWxFSLTfw2Iq4DSIx9IS0wBsMmDqOrFHsyBSgPhA4XGBwypJbR7iqFr3Eml)H4mUIotkA45Hag1kpO2hd1OUcD9rGFHUXpzR85za(sFYD7hkRkiwrXzM0yCcafulNKtWX5XKPHabNasLPXGRBa6L3GhflZ8f18rtb4g220TLDiTbSFwtaBgHqF0KUGIFgZbTqqf1HgbwIzSVG19zFQ2LfBFHmDBR4rI8nJrTGt1xtZ0KO62b3LPGXwZBnykJgz3FXjaOwpLlhVtJJKj(m6u2yebs5DgyA)ezpUgcyMIxJRNjPXBbM8DjBtkIeYnkBnaSs0Badlj2DO)fv2DArR3(K8yLL4YJI)tUE6axSt(RC(YYIvu9l5KTe8L9u5P5s2xG5CXkJ4Ot9IURaQg)4zT95VfG9cS9nxrs7N6BkJm8fifo1rGgs6SVNPCcbsNYonk7vOx7QneOKyMcTkXRI0CwO1ksBekIkNVEL1maON0(GxABWA2k7sz7wrXaGLAaJ91y12QhwmWTkiqXjFvZPUeoKkkMxPfXHMXvYBpBXGWr584ocfnw1wxL53o76gRCOC3OQ8OvPj3fmvvA(eQWil8kT16iHKXg)4sHFETGItiKnvxMqMSgDYSSbxamgcNiPCmod0BwRS8JU5(yR5Dk1aSF35voAiiTrZb4MeIzYJ6rbiD1Nr2w1beJaF5HQjMYlDcSWzFEz0QHGOdRmVZiEpMmo5LGEZ5UaG1zDvQFlGIwMVNMs1tLL5)cwDwRSOg7ijrnpIWZO)D9r1X8u1(bApYxVMU5kNRr33QbOnEAmz8nUGT6X5fjqc1o3i13IKD5fv1t5ZU6gWQKD2ntALNBN2GCWDeiaKD81a9PNB4MZZyGU3qLrC9IJgyEm8Ao7JZcapII1hUwACcuoFHnMJsDWY80lwJYaqumCYvwowoqdRVlmABHthdWhYBDc1rJmpKMnNEtOZ1j)0VjhUpKtc5Lb3ntzgBKNZxHh18via3nay(kaB(kOtZxb9X8L5qECZxHOZxHwMVcpH5l(5fMTr7tPjRlJEmEZdPvAQiAM4ax)s3A26zT1nVGm9UlzjXm9lNQBRZSaADDO(BeJ)Fk(58LnItwOpvnOgAtWpWZ4lzi25J(vwvAanRY(SrcfO6mi3cNcwh7uDCbcCoowuimlYTukelY4AgbADkkN9lowefYrpfVDfJhL8)TpD3UKvJ3Mqe6ZOhb84DLub2NOMdvCSWMT8ebMmTRs(E3eaf4DPdiRS6I0E901xciU18iDnHUWx0HQI9Rk6YCLc6w9kEasqdcHTlVjWuGA0vrRRup0Tn41GAFVmaoXO1YKcAPz65aeCDhhGS88vrR3x8IVdWp4ya(t)Pdl0gK0TpN)7KjY)Gy27wYmlLvYNQ3L)jIt0PBxVVeNjAG0RtlsyiUV48KUXuOIBLvuzqAg58DqCXyAhMgOXoNH1)Dn)G6PGATuFbEsh45bhQ0TLd3k(OXkdr4rtou7QLCoVmI9f(aeeq48hyHihHGaNkXZk6syIVvZIscA8dUTE8PcCHiuNQfu8XHzE(Qs1bXMScWmRb9IS5Tp4t7kdnMQG0QXyzBSLDpgZYbz944Uqqw8P4cHWnaFW92ZCrrcfZLxXZBZxOWpMfWqzx587FMOqNag2Lf51btcdMF)NIl2sMNin(r6DDs6gAubQVo7Ehp8pV7WIcQnqf0BqLY8nTxet0Fyjz2(XKYXh(1FJDjMf(xoS4NZ3sgkwZVZyI)D8RplZgAUjCiDyyWFmYfeLJVMgmLBcdQx)wc1tG6NEwWZFagQ8qyQbV6QShbs3adPMv1AWsOodbA)5EfAbxDwyEbNhzNGZZu95cSF)5bSisMNjWEclmXazton1aOOgiWahYcjGSCQbzO8GIniiRVovUlcybSeqd6qwq1Xb5i0zHbQJCQlCYBWuh2GisQKgOBt2uhb4jklGb2tyLwyqpJPh(vaJDeMw9UozVdcU1RI(9VnviBm2)qSx5di77EKwhGSbwVIXiJXjWNrGy)Yd0D1rhQ6Ec1nRmpzOdU(vnj19YIy1ufRJMQ5rgBRgevxIKPQR4s0qhvgCs4kidLf80UXhXCv74Pwd1kIWblNHqbyRBTYOzpbQESybamqxoJa)mb23gC2qFTiM3wN8mA2(MaObshaWUye9lWptG9TbNnCB0eSnjb2gCL6Jcw33GxbW)RTL73r1LrbDtYFAYmWHf)peaAKw8)3)lXfi8Q0sMYi8TjpP1hU2d(Ka(B0w7NxOBy4WjjsFwb(z3yN3cOhy402jjdEEHElCnmU6KMj1X6(f6ywzPxkVVRtgC91HHRGeE9nbv3OxKGKDc(tHarGROynqd0JpNJX5jYEiq9e43MkdodmJpRdYjYYn17CoW9pNdYPi9G4H5Xeeyeq1VSG3KbP)Z6iwsJofqIyY4Xm1Hzn0XfemSuVCKGl88KW6WZtYmpxG98KJ0WZtYmXa7jiUJbYJnhtiI89BoMqwiCQCxeW2RrAhBqoc1lyG6yN6qmIQFN6qgKJp9GNhdkXa7jSs7Q(2omq3veVdwVRtoSypeOnpaRc0tneOsnRqXyXol0oqnAwbOyHH6ydi3zg8Nna)zcVZ3LW7r9dgQiF04Ndfi43hpMRqWD2KrnK3rIyhnE5cTeCuSa7b8efcS2WPKqFd(ZgG)mH3ULGnoMqqWVxKGHFpIrLG9dXoA8YfAj4OggEiu2y8U9cOSbQpkscwbpWzugEmG7OYazSjVqKZnDa3h)bVp0HLoQ6ziwKRbFPHHzxa9sDmWIZm4RbmmP4CmmCjvqhGV7Taucw)67Xr54U2b47655fEYX1NOo64Pj3pQdVF994yNlIdFpyjaIFU(e1rhZK4JD)OZn89bYMpFWaGgSt(I7Epcy23Jc7J1s2Zn89bYEWvq6KV4U3JGV8DdZKotpm3GMWG8D4Vm2AcvE(OCd6aaczAzSdCo2npi3nZjVH8YV7ZiV0CS7tEzROBFFgpaJSsCEht6D)NUdei2RbOS)d81Bge7v(WBqk8ogqHKgeZ75BnWcCrG3X001NdrFVGTgSVfjFallCNkU)58Cv1RdYBZXmcjN9hBUpqwH2V4mYGC85(alNOhtXpzhK9qLAHMQ1taBXuvD(W2(a0iPC9KanOjlYxISVRt2U03hLnoupp5WVVHkiRe8kMSx4PN00U9zRJFLfcepglw65zN61qNnEzFE2Go8R)YMMY7piOTW(PVBfu5I53Z(R5FC(9C5lYF93dO)ZAqn)NiTqSsnH4d087PxHtZVN)Owq739C4r6I2BIbhUr0lCdkOAvcmN8DHAWVbiS7DD5Ht(oeFXacrrL2zvj8Hf3seVB82tYEDr7x2qSYTkEiMoS41xpS4ccJKZdnT4)WIrqJz99n6HfVNmrXHIfHggearzrUpKr4By93sFiqyAdIPCVgDyXDsdebutj8r57Bw6SfH1FfcRNVcYgVxdhgW4EdfmzBpeqC2K9hdigbm5KOTRrfBDndXcBL2froJqjZWF7HfGVAunch2LHOeUvX0r1mhG3tkggCv7CeRrkHofLqhAmp9LSaAdHb8cjqjZVhrwTv45RB51FWL8Q62AEQSf0mb6WDd6W1kclMqveGjCnLBijMEAgJny8unzCarIzhwO8cdqzjc1OJC(93nJ6rxl13UkIsv)zBRfCry2fKVM3jT5w7Rr4Id8lyR2x2QdlO0qljaeeikTembLye8)MlRTwGj9YCXac(U3YZJI3Tlpr5gsLne6BGdGNTxzysWq7qwXGL(osEP1U72GOF6HyJ9rTJr3hB0LKb4AYz87s6B4btDY1nB34sxUTTYun5bge1RhzGb9vBIHsbQIGsVnimstx7Tx8wisGkJoWngXjXbuYt7oxN3MKgK2nXzyQt9WOy6qQpxkZtboyF1eJn1Dw(ArNEVQguFTeXezh4W8eAVMaog6b0stJQ(lzLaua4rOkEy(P3wJf2L4W3GRgLTePm7Iy1ZAd9zQb2hbxsVZy90bbADVoanVIDVTkhlzHOLKt0idaSbIeauTyb7d42Ib9QQXAZuk9RbXVq8nV9u8RUBgbD1lztaLM(y6)fyQB9sFIpQooo9o(XYXn1X12C25O2hvCRFu8bXTbMtnCu5g9GHqhpClK6ZXdXjSqCBKmeCW2Hne3mhlWq61LHbeCdkKydgr0G(L4BWd(Ls(xs)A9TvaOX7Pw118KbrwVl)20r(wLh2oqAM1487zUfgYuZdXfKWcklbXUsGa4bHYgEKQrewF4Ja0UbhBtzfBMXPuZOw9Dp8rbgG2lXUfwibM0VRhgl5iZuc(yiXdrdEuaig4BjENkZTDHHEHh8ux0FB8rl95zJIrJ9kpJth(Hdw5WqbxHWqDVSOlSCN873AHTAh2RFmy4Hz56Auv)HJtWP8EjURhnohQbBuLDcmC)eHhckb1(cfYTKGXZ(sq(9OM0G3qKWJP3vtL203du4(Kn6BFzpyQ95XOaSRTZxsp5Am8s2fNjJVXQwoLtOGJGf1m1Z5)WpcB8qcE1n1EwLxwcPBGYAVzI6MiWlEXcyqBWqWgcEyf4mqnY0sUwQlJWaCh4epPgT7LzueInVDxmFhRd7aqvsw)KH1g8h1sSSXGXwxfbkKtbbdogkiIMVuyVeaC)UM0Sic6zfJp1ydBU1RbAKHNRAf8Adsa0o)DCsWBCvlPmnsbCXtnrfIJm03qhPjFGewPjGe2JciHitEb4ciboeqmV6M8raj4mjGaHnNQasOdbKqNciHhTas4C9e9HP6SvwWHUQGPcefzESfp9H1jErX4j5cBpUznBaxp26TlciG8RzhJHWvSAEbeo3sYbBvUQTEZyFpLGfCckhg0eSeRWWhvRWYy1WyKYwzy3xD(T6sAMREzwZIFxqF0CGexAQ3stuUJ8E)x3HZ7dr49yATSo)9feVhlAeuyZEC2Ay(s)GvUVRhTV5ajzTzqX(e3OaFPn63RSVhWZ1LBt)ce6JCTY0I0ZCOKY(vcX7iCG0TGUwWJSQAYYwJZHs48)wZGG0FyX4sUJAgjF23y01b)LT7JdqyYg42b7E1FzHLQOU6wRLLvJinEG1NXSGnxuFBAkMcADtL43Buwon2gTtlw8R1Ak)BKhkT5iO9cwGUyWItcw)yEKb0TG8NOuFjrOQU4P(4tPLIRYz6FY3wn7fQ8E82YmEvetwIEyXNsZYO33ZRxNuqwsvKV5WI7)L)7F(duzRk6NsMN4t3v0AxUmMolUE)wgggNrtLOnKVvuhW(XAVxaSCmuD1x9kS4DzafGbKzJ4d7DkL)IvUDCEInZI6uTXINeBVYihOVpht5XkTALnGwULfz9uBXUQnnD5JDRzgotw4HiwuttkuVuG1ePAdpb7DmneVPvqAlHiQqulvs2qLA9ciRFSvCnbolDj9vT9RyXHHUl5jMXcwM)OTlnbYyYoN0TjmcW0XenrYkR9I8Zt2mEnh31jmui1HzpuyapvEClvWMuahB1zI21woZQbqvWCHsQkCw7XsRqn78bLsp2)57tAkwBcZM4Dn5JWhBZlVLs)88XU0ltCysaQEVvjd1IeWsLKIA5nS2dTAiSTD5ja1YP(9skCUWDLczzX4a1s1Hpv)TUbzpSYe0bOkRLi7BlNfLhOx)PFPZFvtJOhfQ7rDmeak2z8YWrH(eSnyQdWt92WOzBJgRhdbRbmWJk(hWgt(8gM2eMBZaklBbNfReANdupmewkb2tJfFR40q81itc74wGBUVrrRkhOvLJBHLY(0cqA4qmiGBlNLeKBnUnZ8iUnYAeaoxgwQYrlgtF0khSuKJYAmV7RWtcHLkOSJKW5(KqyPonDHPd)pNeIVGkfD8T0FBvbZ7dOZv3PynDdHYWENNhhxfsVlzUH(iyD7z7CCyurXyv5X)EDooc)kzXJZGa6s8RUB)NZXHVS8RWTHY1M025O2hvlxZf6SsSDmVc3kjlWqZdSR86aEaeU6RWTS4uIYl4GIeiYR0nzaGp1RNoIRy7TbXjLWcwI(eVdfZTx63mFb5HiIVqIwSzXeDhsu)6KmcJCt624gcpubn4gqt(qvSWiZF57Og)wj5)wTwv6FLTNwTt5p(irj769B3MKXAx9qettTvLzwb9aWQ11xZ9BPwkb)xL0vv0BxMsAvl)r(hXV)vPPTNTOpMSW(NiFRO9Y67OiwM)QV)HsxEyrw(JPlLjcZSJBKHYoqjHDNskLjLW(GuKQecDZUQjfQunGpDUQsmW6Y7BGSyUT521026134Au4GzKgh9hB5g)gLBuZP0zFu(RqU5EUmdSma9wufDEokjRK83mDe1t8G3Ag(XKXkhmGRR2ZatgCu6BMCiS05rXK1TqTdlkbEDfQ3LrPhGN3afobHUyKAmz56UKLPRPmdvoW9nAKOlZxNNLL)jA5kCyXp(p)n6DCf920Iv9cBP9Z7L0n12jLtOBnyh4eaVpdACcSxxHJLte23CIqjoHroL7aRa89DqJk)Bu58)bbLjAULjVC5TEOoMW)P90ELSEDYsANEjFp1teAIz)um9)s5dSUq5o12baovxx)7mku3kHoqHGVUeDGcftGUOW31vsmuHe1nyTdKO2torZ5VsDs26lCa3tAaTEns4mbZ2biFTKwUaoH6TSR2HZGr9hH9yTtW2PE3VVdNe1h2rQpeG6rmAuDRtxLll(wRuvBU2415EVFNpNIIrmw5qMmXL0dG2u2pGyyOu)banD)rwpgX8cyOhgHbHJghfix4yG34yGeo60AbMUGyQwbQ4tOK(gvtiGKzAoOoUmxiqS6GDkvSKI2AF3FSiDtEAbTiFJkJjnt2blXmNbGDJnc4b0Kx2M1N9xGS)hfNN0eDiwim8T)bYXYXEUomHcdP)bzxe5LpIUpQplktuaFuDRCQn6iwJ4xtmCH6e1)6wjbEAQQml61UGlyrzIIcTTXdmHYO)Cv9O3D10odZ1a5o4k(OOyBx4LIS(DuUR7kzTkrDvDGllQh1U7ATq3tBeEf)eB2r9N4JK0qlDRVH7pSTDB9y(rkCOysAw5CnnICoBKjh2bGCvPf3oTpdkyu1aseiFrdMj29cNyOUVNUocL0EREakLZIZi15VMttiMxGfjOuDdqOxrKpxb6oEDti(v5jS3vIc7D1h4cLQQ2NB(bBj20sjpm1wm77qnJko50UQFl06Kcpq0GbT3cnPLk3lDHrQ5G9s1QSPfDLtXhEaVTGxxBUcXzIW8nZ6TzopWrYkOYN5GhGhQe8gACQr1iyK812tJY9t0LYBV)NoQXXmzmsdwGXOXxucTVR7HcsBnWy(9aRJpQTgL1FYXDUL147jqKrV9VQQ4LJaYFODJcmr(aOTyBLK70n6mU9Td7yrTbhwY2TeOAAMQiJRwczwlsVZcMWwpcS0Ob)qQElRjrNVh2rL7ljL7T4as2VWoxSgxK9s4t7LN8nnk0KhuRzt11H2Hsq2ndMtLYARRbOycscCYfi5TnUg)2V0dAUHQbd6o12ZRq5wZT0T4vjig190PiAdZdmiIayqNSUwEVi575z8D8hQTnjq1CGvUpIQ7V2qv7qqVOGeF9OgJzg27vXVt3UrpTLixB86wZjzao6ZjgIWh2z1e61vOhhw8nHonjoW7RBp3QYMtjnN0xnltVsxQd16nWklAuRHDhr1GyP601gTR1rtx1dKh1mwaezDLdtr94gpUd1Rz4BcznYjnDYLF1XkbC6xGVEWrcTJc(D39RxzGYlPvUu)rNL9R(6SvLEokIoNvpUlEzD36PIOZoY6(jiOlxQcnAXTE1g66AxOwjJFxScGXeqRQRGTRmEf3ftSnUog4bW(()hHo4xPJHvWBCJIeW2r2dNEo5NuI5a7qTKu3rAufpPrKINePQWr)mJe8XkbEhrmKkMb1JwmmhsgJXC3rdRPWq85iokpqQ)C5dRPAe11icHCdgAcz4gsk1Iko1Ia1Xp8pCuKI7WCYXDKt(5Ns8PvArvITHcH8ChgqgUJ0YSOub7wW)yAqkodYj4a0UbQ4saDO)aA7dfh0KSjwAjzKpWwphCM56myrIdWp]] )

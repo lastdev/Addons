@@ -41,14 +41,14 @@ CopyTargetsMount
 ApplyRules
 SwitchFlightStyle [mod:rshift]
 IF [mod:shift]
-    IF [drivable]
-        Limit -DRIVE
-    ELSEIF [submerged]
+    IF [submerged]
         Limit -SWIM
     ELSEIF [flyable]
         Limit -DRAGONRIDING/FLY
     ELSEIF [floating]
         Limit -SWIM
+    ELSEIF [drivable]
+        Limit -DRIVE
     END
 END
 SmartMount
@@ -72,7 +72,7 @@ local DefaultRulesByProject = LM.TableWithDefault({
         -- Vash'jir Seahorse
         "Mount [map:203,submerged] mt:232",
         -- Flying swimming mounts in Nazjatar with Budding Deepcoral
-        "Mount [map:1355,flyable,qfc:56766] mt:254",
+        -- "Mount [map:1355,flyable,qfc:56766] mt:254",
         -- AQ Battle Tanks in the raid instance
         "Mount [instance:531] mt:241",
         -- Arcanist's Manasaber to disguise you in Suramar
@@ -468,10 +468,16 @@ end
 -- let custom flags have the name.
 local PseudoFlags = {
     "CASTABLE",
+    "USABLE",
+    "COLLECTED",
     "SLOW",
+    "JOURNAL",
     "MAWUSABLE",
     "DRAGONRIDING",
+    "ZONEMATCH",
     "FAVORITES", FAVORITES,
+    "ENABLED", VIDEO_OPTIONS_ENABLED,
+    "DISABLED", VIDEO_OPTIONS_DISABLED,
     "ALL", ALL,
     "NONE", NONE
 }
@@ -621,7 +627,7 @@ end
 
 function LM.Options:GetRules(n)
     local rules = LM.db.profile.rules[n] or DefaultRules
-    return LM.tCopyShallow(rules)
+    return CopyTable(rules, true)
 end
 
 function LM.Options:GetCompiledRuleSet(n)
@@ -713,7 +719,7 @@ function LM.Options:RecordInstance()
 end
 
 function LM.Options:GetInstances(id)
-    return LM.tCopyShallow(LM.db.global.instances)
+    return CopyTable(LM.db.global.instances, true)
 end
 
 function LM.Options:GetInstanceNameByID(id)

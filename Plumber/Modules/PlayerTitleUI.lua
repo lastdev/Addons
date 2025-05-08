@@ -357,6 +357,10 @@ function Module:Init()
 
     API.Mixin(FilterButton, FilterButtonMixin);
     FilterButton:OnLoad();
+
+
+    --3rd Party Addon Skin
+    API.SetupSkinExternal(Searchbox);
 end
 
 function Module:SetSearchboxInstructions(text)

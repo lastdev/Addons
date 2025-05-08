@@ -1,6 +1,6 @@
 ## X-Flavor: retail
-## Interface: 110007, 110100
-## Version: 1.6.2
+## Interface: 110100, 110105
+## Version: 1.6.8
 
 ## Title: Plumber
 
@@ -9,6 +9,7 @@
 
 ## Author: Peterodox
 ## SavedVariables: PlumberDB, PlumberDevData, PlumberStorage
+## SavedVariablesPerCharacter: PlumberDB_PC
 
 ## IconTexture: Interface\AddOns\Plumber\Art\Logo\PlumberLogo64
 
@@ -20,6 +21,8 @@ API.lua
 Modules\SharedData.lua
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
+Modules\BlizzardEditMode.lua
+#Modules\DevTool.lua
 #Modules\DirectionArrow.lua
 #Modules\SuperTrack.xml
 
@@ -48,6 +51,7 @@ Modules\MerchantPrice.lua
 Modules\DelvesScenario.lua
 Modules\DelvesDashboard.lua
 Modules\ExpansionLandingPage.xml
+Modules\LandingPageSwitch.lua
 Modules\GameTooltipExtension.xml
 Modules\LootUI.xml
 Modules\UnderlightAngler.lua
@@ -57,9 +61,9 @@ Modules\NameplateResources.lua
 Modules\StaticPopupEnhancement.xml
 Modules\PlayerTitleUI.lua
 Modules\BlizzardSuperTrack.lua
-Modules\AccountStore.lua
 Modules\EquipmentFlyout.xml
 Modules\Macros.lua
+Modules\ProfessionsBook.lua
 
 #Modules\DruidModelFix.lua
 #Modules\MovieSubtitle.lua
@@ -69,3 +73,5 @@ Modules\Macros.lua
 #Modules\BlizzFix_WardrobeTrackingHelpTip.lua
 #Modules\WoWAnniversary.lua
 #Modules\Navigator_Dreamseed.lua
+#Modules\AccountStore.lua
+#Modules\MinimapMouseover.lua

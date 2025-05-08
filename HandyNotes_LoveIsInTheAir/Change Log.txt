@@ -1,3 +1,49 @@
+== v1.15 - 5th May 2025
+* File of commonly used name spaced variables Added/updated
+* Realm list updated
+* Thematic colours for the AddOn are now it's own file
+* Localised colours expanded upon
+* Note: Huge list of NPCs etc that needs localising has STILL not been done. Plz don't
+  remind as it will be done. Eventually
+* Code changes directly copied to here from Children's Week AddOn
+  Note: Will the AddOn be able to report INDIVIDUAL achievement progress? I can only
+  find out during the event in 2026. For now, I'll carry on assuming this is true but
+  it's an easy one line code switch (as per my CW AddOn) and is ready to go
+* Above code changes add functionality for future data changes
+* noContinent flag used throughout rather than a code hack in Core
+ 
+== v1.14 - 20th April 2025
+* Server/realm list updated
+* TOC update to 11.1.5
+
+== v1.13 - 8th April 2025
+* Missing Achievement criteria in the pin cluster resolved
+* Trivial code formatting change in popup Minimap menu
+
+== v1.12 - 30th March 2025
+* Chat commands incorrectly labelled this AddOn as "Winter Veil" due to cut&paste error
+* Homogenised/improved code to comply with my latest AddOn standards
+  (Eg: Options for achievements will be correctly disabled in any new Vanilla/TBC version,
+  Better handling of the Warbands/Shared achievement credit across characters, etc)
+* The pin cluster is now on each continent rather than each major city. As explained
+  elsewhere this is mainly due to pin crowding in cities
+* Rarely encountered space line bug fixed
+ 
+== v1.11 - 13th March 2025
+* Try Again message when the server didn't return quest data. Better than a terse "?"
+* Better coding for Tooltip Quest information
+* Localised GetTime
+* Removed UnitAura / C_UnitAuras.GetAuraDataByIndex localisation
+* pairs localisation changed to ipairs
+* Localised QuestUtils_GetQuestName
+* Tab indexing of options improved
+* GetMapChildrenInfo is now used as localised
+* Localised GetAchievementNumCriteria
+* Continent setup for Shadowlands, Dragon Isles, Khaz algar corrected/setup
+
+== v1.10 - 20th February 2025
+* TOC update to 11.1.0
+
 == v1.09 - 16th February 2025
 * Feralas improvements
 

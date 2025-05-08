@@ -15,29 +15,26 @@ local MVC = LibStub("LibMVC-1.0")
 local oop = MVC:GetService("AddonFactory.Classes")
 
 oop:Create("ScrollFrameViewHandler", {
-	Init = function(self, scrollFrame, view)
+	Init = function(self, scrollFrame)
 		self.scrollFrame = scrollFrame
-		self.view = view
 		
 		-- Automatically get the row height from the first row in the scrollframe
 		self.rowHeight = scrollFrame:GetRow(1):GetHeight()
 	end,
 	
-	SetView = function(self, view)
-		self.view = view
+	GetLastMaxRows = function(self)
+		return self.maxDisplayedRows
 	end,
 	
-	Update = function(self, isResizing, onRowUpdate)
+	Update = function(self, viewSize, isResizing, onRowUpdate)
 		local scrollFrame = self.scrollFrame
 		local numRows = scrollFrame.numRows
 		local offset = scrollFrame:GetOffset()
-		local viewSize = #self.view
 
 		-- This handles the resize
-		local maxDisplayedRows = math.floor(scrollFrame:GetHeight() / self.rowHeight)
+		self.maxDisplayedRows = math.floor(scrollFrame:GetHeight() / self.rowHeight)
+		local maxRows = self.maxDisplayedRows
 		-- print(format("Scroll height: %d", scrollFrame:GetHeight()))
-		-- print(format("frame height: %d, width: %d", frame:GetHeight(), frame:GetWidth()))
-		-- print(maxDisplayedRows)
 
 		-- Loop on all rows of the scrollframe
 		for rowIndex = 1, numRows do
@@ -45,7 +42,7 @@ oop:Create("ScrollFrameViewHandler", {
 			local line = rowIndex + offset
 			
 			-- If the line is visible ..
-			if line <= viewSize and (rowIndex <= maxDisplayedRows) then
+			if line <= viewSize and (rowIndex <= maxRows) then
 				if not (isResizing and rowFrame:IsVisible()) then
 					onRowUpdate(rowFrame, line)
 				end
@@ -56,8 +53,6 @@ oop:Create("ScrollFrameViewHandler", {
 			end
 		end
 
-		scrollFrame:Update(viewSize, maxDisplayedRows)
-		
-		return maxDisplayedRows
+		scrollFrame:Update(viewSize, maxRows)
 	end,
 })

@@ -31,7 +31,7 @@ spec:RegisterTalents( {
     ascending_air             = { 103607, 462791, 1 }, -- Wind Rush Totem's cooldown is reduced by 30 sec and its movement speed effect lasts an additional 2 sec.
     astral_bulwark            = { 103611, 377933, 1 }, -- Astral Shift reduces damage taken by an additional 20%.
     astral_shift              = { 103616, 108271, 1 }, -- Shift partially into the elemental planes, taking 40% less damage for 12 sec.
-    brimming_with_life        = { 103582, 381689, 1 }, -- Maximum health increased by 10%, and while you are at full health, Reincarnation cools down 75% faster. 
+    brimming_with_life        = { 103582, 381689, 1 }, -- Maximum health increased by 10%, and while you are at full health, Reincarnation cools down 75% faster.
     call_of_the_ancestors     = {  94888, 443450, 1 }, -- Benefiting from Undulation calls an Ancestor to your side for 6 sec. Casting Unleash Life calls an Ancestor to your side for 12 sec. Whenever you cast a healing or damaging spell, the Ancestor will cast a similar spell.
     call_of_the_elements      = { 103592, 383011, 1 }, -- Reduces the cooldown of Totemic Recall by 60 sec.
     capacitor_totem           = { 103579, 192058, 1 }, -- Summons a totem at the target location that gathers electrical energy from the surrounding air and explodes after 2 sec, stunning all enemies within 9 yards for 3 sec.
@@ -49,7 +49,7 @@ spec:RegisterTalents( {
     elemental_warding         = { 103597, 381650, 1 }, -- Reduces all magic damage taken by 6%.
     encasing_cold             = { 103619, 462762, 1 }, -- Frost Shock snares its targets by an additional 10% and its duration is increased by 2 sec.
     enhanced_imbues           = { 103606, 462796, 1 }, -- The effects of your weapon imbues are increased by 15%.
-    final_calling             = {  94875, 443446, 1 }, -- When an Ancestor departs, they cast Hydrobubble on a nearby injured ally.  Hydrobubble 
+    final_calling             = {  94875, 443446, 1 }, -- When an Ancestor departs, they cast Hydrobubble on a nearby injured ally.  Hydrobubble
     fire_and_ice              = { 103605, 382886, 1 }, -- Increases all Fire and Frost damage you deal by 3%.
     frost_shock               = { 103604, 196840, 1 }, -- Chills the target with frost, causing 60,449 Frost damage and reducing the target's movement speed by 50% for 6 sec.
     graceful_spirit           = { 103626, 192088, 1 }, -- Reduces the cooldown of Spiritwalker's Grace by 30 sec and increases your movement speed by 20% while it is active.
@@ -75,7 +75,7 @@ spec:RegisterTalents( {
     primordial_bond           = { 103612, 381764, 1 }, -- While you have an elemental active, your damage taken is reduced by 5%.
     primordial_capacity       = {  94860, 443448, 1 }, -- Increases your maximum mana by 5%. Tidal Waves can now stack up to 4 times.
     purge                     = { 103624,    370, 1 }, -- Purges the enemy target, removing 1 beneficial Magic effect.
-    refreshing_waters         = { 103594, 378211, 1 }, -- Your Healing Surge is 25% more effective on yourself. 
+    refreshing_waters         = { 103594, 378211, 1 }, -- Your Healing Surge is 25% more effective on yourself.
     routine_communication     = {  94884, 443445, 1 }, -- Riptide has a 15% chance to call an Ancestor to your side for 6 sec.
     seasoned_winds            = { 103628, 355630, 1 }, -- Interrupting a spell with Wind Shear decreases your damage taken from that spell school by 15% for 18 sec. Stacks up to 2 times.
     spirit_walk               = { 103591,  58875, 1 }, -- Removes all movement impairing effects and increases your movement speed by 60% for 8 sec.
@@ -107,7 +107,7 @@ spec:RegisterTalents( {
     crash_lightning           = {  80974, 187874, 1 }, -- Electrocutes all enemies in front of you, dealing 143,917 Nature damage. Hitting 2 or more targets enhances your weapons for 12 sec, causing Stormstrike, Ice Strike, and Lava Lash to also deal 43,611 Nature damage to all targets in front of you. Damage reduced beyond 6 targets.
     crashing_storms           = {  80953, 334308, 1 }, -- Crash Lightning damage increased by 40%. Chain Lightning now jumps to 2 extra targets.
     deeply_rooted_elements    = {  92219, 378270, 1 }, -- Each stack of Maelstrom Weapon consumed has a 0.6% chance to activate Ascendance for 6.0 sec.  Ascendance Transform into an Air Ascendant for 15 sec, immediately dealing 191,191 Nature damage to any enemy within 8 yds, reducing the cooldown and cost of Stormstrike by 60%, and transforming your auto attack and Stormstrike into Wind attacks which bypass armor and have a 30 yd range.
-    doom_winds                = {  80959, 384352, 1 }, -- Unleash a devastating storm around yourself, dealing 66,279 Stormstrike damage every 1 sec to nearby enemies for 8 sec. Increases your chance to activate Windfury Weapon by 200%, and the damage of Windfury Weapon by 10%. 
+    doom_winds                = {  80959, 384352, 1 }, -- Unleash a devastating storm around yourself, dealing 66,279 Stormstrike damage every 1 sec to nearby enemies for 8 sec. Increases your chance to activate Windfury Weapon by 200%, and the damage of Windfury Weapon by 10%.
     elemental_assault         = {  80962, 210853, 2 }, -- Stormstrike damage is increased by 10%, and Stormstrike, Lava Lash, and Ice Strike have a 50% chance to generate 1 stack of Maelstrom Weapon.
     elemental_blast           = {  80966, 117014, 1 }, -- Harnesses the raw power of the elements, dealing 180,793 Elemental damage and increasing your Critical Strike or Haste by 3% or Mastery by 6% for 10 sec. If Lava Burst is known, Elemental Blast replaces Lava Burst and gains 1 additional charge.
     elemental_spirits         = {  80970, 262624, 1 }, -- Your Feral Spirits are now imbued with Fire, Frost, or Lightning, increasing your damage dealt with that element by 10%, but now only increase your Physical damage dealt by 10%.
@@ -128,7 +128,7 @@ spec:RegisterTalents( {
     maelstrom_weapon          = {  80941, 187880, 1 }, -- When you deal damage with a melee weapon, you have a chance to gain Maelstrom Weapon, stacking up to 10 times. Each stack of Maelstrom Weapon reduces the cast time of your next damage or healing spell by 20% and increase its damage by 25% or its healing by 25%. A maximum of 10 stacks of Maelstrom Weapon can be consumed at a time.
     molten_assault            = {  80943, 334033, 1 }, -- Lava Lash cooldown reduced by 6.0 sec, and if Lava Lash is used against a target affected by your Flame Shock, Flame Shock will be spread to up to 5 nearby enemies.
     molten_thunder            = { 103848, 469344, 1 }, -- The cooldown of Sundering is reduced by 10 sec, but it can no longer Incapacitate. Sundering has a 40% chance to reset its own cooldown, increased by 12% for up to 5 targets. Each consecutive reset reduces these chances by half.
-    overflowing_maelstrom     = {  80938, 384149, 1 }, -- Your damage or healing spells will now consume up to 10 Maelstrom Weapon stacks. 
+    overflowing_maelstrom     = {  80938, 384149, 1 }, -- Your damage or healing spells will now consume up to 10 Maelstrom Weapon stacks.
     primordial_storm          = {  80963, 1218047, 1 }, -- Primordial Wave transforms into a single use Primordial Storm for 15 sec after it is cast. Primordial Storm Devastate nearby enemies with a Primordial Storm dealing 79,801 Flamestrike, 79,801 Froststrike, 79,801 Stormstrike damage, and unleashing a Lightning Bolt or a Chain Lightning at 150% effectiveness. Deals reduced damage beyond 5 targets. Consumes Maelstrom Weapon for increased damage.
     primordial_wave           = {  80965, 375982, 1 }, -- Blast all targets affected by your Flame Shock within 45 yards with a Primordial Wave, dealing 460,943 Elemental damage. Primordial Wave generates 5 stacks of Maelstrom Weapon.
     raging_maelstrom          = {  80939, 384143, 1 }, -- Maelstrom Weapon can now stack 5 additional times, and Maelstrom Weapon now increases the damage of spells it affects by an additional 5% per stack and the healing of spells it affects by an additional 5% per stack.
@@ -136,7 +136,7 @@ spec:RegisterTalents( {
     static_accumulation       = {  80950, 384411, 2 }, -- 10% chance to refund Maelstrom Weapon stacks spent on Lightning Bolt, Tempest, or Chain Lightning. While Ascendance is active, generate 1 Maelstrom Weapon stack every 1 sec.
     stormblast                = {  80960, 319930, 1 }, -- Stormstrike has an additional charge. Stormsurge now also causes your next Stormstrike to deal 25% additional damage as Nature damage, stacking up to 2 times.
     stormflurry               = {  80954, 344357, 1 }, -- Stormstrike has a 25% chance to strike the target an additional time for 40% of normal damage. This effect can chain off of itself.
-    storms_wrath              = {  80967, 392352, 1 }, -- Increase the chance for Mastery: Enhanced Elements to trigger Windfury and Stormsurge by 150%. 
+    storms_wrath              = {  80967, 392352, 1 }, -- Increase the chance for Mastery: Enhanced Elements to trigger Windfury and Stormsurge by 150%.
     sundering                 = {  80975, 197214, 1 }, -- Shatters a line of earth in front of you with your main hand weapon, causing 193,251 Flamestrike damage and Incapacitating any enemy hit for 2 sec.
     swirling_maelstrom        = {  80955, 384359, 1 }, -- Consuming at least 2 stacks of Hailstorm, and each explosion from Fire Nova now also grants you 1 stack of Maelstrom Weapon.
     tempest_strikes           = {  80966, 428071, 1 }, -- Stormstrike, Ice Strike, and Lava Lash have a 100% chance to discharge electricity at your target, dealing 35,689 Nature damage.
@@ -150,7 +150,7 @@ spec:RegisterTalents( {
     -- Totemic
     amplification_core        = {  94874, 445029, 1 }, -- While Surging Totem is active, your damage and healing done is increased by 3%.
     earthsurge                = {  94881, 455590, 1 }, -- Casting Sundering within 40 yards of your Surging Totem causes it to create a Tremor at 100% effectiveness at the target area.
-    imbuement_mastery         = {  94871, 445028, 1 }, -- Increases the chance for Windfury Weapon to trigger by 5% and increases its damage by 8%. When Flametongue Weapon triggers from Windfury Weapon attacks, it has a chance to gather a whirl of flame around the target, dealing 300% of its damage to all nearby enemies. 
+    imbuement_mastery         = {  94871, 445028, 1 }, -- Increases the chance for Windfury Weapon to trigger by 5% and increases its damage by 8%. When Flametongue Weapon triggers from Windfury Weapon attacks, it has a chance to gather a whirl of flame around the target, dealing 300% of its damage to all nearby enemies.
     lively_totems             = {  94882, 445034, 1 }, -- Lava Lash has a chance to summon a Searing Totem to hurl Searing Bolts that deal 44,552 Fire damage to a nearby enemy. Lasts 8 sec. Frost Shocks empowered by Hailstorm, Lava Lash, and Fire Nova cause your Searing totems to shoot a Searing Volley at up to 5 nearby enemies for 85,541 Fire damage.
     oversized_totems          = {  94859, 445026, 1 }, -- Increases the size and radius of your totems by 15%, and the health of your totems by 30%.
     oversurge                 = {  94874, 445030, 1 }, -- Surging Totem deals 50% more damage during Ascendance.
@@ -172,7 +172,7 @@ spec:RegisterTalents( {
     lightning_conduit         = {  94863, 467778, 1 }, -- You have a chance to get struck by lightning, increasing your movement speed by 50% for 5 sec. The effectiveness is increased to 100% in outdoor areas. You call down a Thunderstorm when you Reincarnate.
     natures_protection        = {  94880, 454027, 1 }, -- Lightning Shield reduces the damage you take by 3%.
     rolling_thunder           = {  94889, 454026, 1 }, -- Tempest summons a Nature Feral Spirit for 15 sec.
-    storm_swell               = {  94873, 455088, 1 }, -- Tempest grants 10% Mastery for 6 sec. 
+    storm_swell               = {  94873, 455088, 1 }, -- Tempest grants 10% Mastery for 6 sec.
     stormcaller               = {  94893, 454021, 1 }, -- Increases the critical strike chance of your Nature damage spells by 5% and the critical strike damage of your Nature spells by 5%.
     supercharge               = {  94873, 455110, 1 }, -- Lightning Bolt, Tempest, and Chain Lightning have a 35% chance to refund 2 Maelstrom Weapon stacks.
     surging_currents          = {  94880, 454372, 1 }, -- When you cast Tempest you gain Surging Currents, increasing the effectiveness of your next Chain Heal or Healing Surge by 20%, up to 100%.
@@ -182,15 +182,15 @@ spec:RegisterTalents( {
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
+spec:RegisterPvpTalents( {
     burrow              = 5575, -- (409293) Burrow beneath the ground, becoming unattackable, removing movement impairing effects, and increasing your movement speed by 50% for 5 sec. When the effect ends, enemies within 6 yards are knocked in the air and take 392,977 Physical damage.
-    counterstrike_totem = 3489, -- (204331) Summons a totem at your feet for 15 sec. Whenever enemies within 23 yards of the totem deal direct damage, the totem will deal 100% of the damage dealt back to attacker. 
-    electrocute         = 5658, -- (206642) 
+    counterstrike_totem = 3489, -- (204331) Summons a totem at your feet for 15 sec. Whenever enemies within 23 yards of the totem deal direct damage, the totem will deal 100% of the damage dealt back to attacker.
+    electrocute         = 5658, -- (206642)
     grounding_totem     = 3622, -- (204336) Summons a totem at your feet that will redirect all harmful spells cast within 34 yards on a nearby party or raid member to itself. Will not redirect area of effect spells. Lasts 3 sec.
-    shamanism           =  722, -- (193876) 
+    shamanism           =  722, -- (193876)
     static_field_totem  = 5438, -- (355580) Summons a totem with 4% of your health at the target location for 6 sec that forms a circuit of electricity that enemies cannot pass through.
-    stormweaver         = 5596, -- (410673) 
-    totem_of_wrath      = 3487, -- (460697) 
+    stormweaver         = 5596, -- (410673)
+    totem_of_wrath      = 3487, -- (460697)
     unleash_shield      = 3492, -- (356736) Unleash your Elemental Shield's energy on an enemy target: Lightning Shield: Knocks them away. Earth Shield: Roots them in place for 2 sec. Water Shield: Summons a whirlpool for 6 sec, reducing damage and healing by 50% while they stand within it.
 } )
 
@@ -513,9 +513,14 @@ spec:RegisterAuras( {
     },
     -- Talent: Damage of your next Frost Shock increased by $s1%.
     -- https://wowhead.com/ptr-2/spell=384357
-    ice_strike = {
+    ice_strike_buff = {
         id = 384357,
         duration = 12,
+        max_stack = 1
+    },
+    ice_strike = {
+        id = 470194,
+        duration = 6,
         max_stack = 1
     },
     -- Frost Shock damage increased by $w2%.
@@ -640,7 +645,7 @@ spec:RegisterAuras( {
         max_stack = 20,
     },
     -- https://www.wowhead.com/spell=1218125
-    -- Primordial Storm Primordial Wave has been replaced by Primordial Storm.  
+    -- Primordial Storm Primordial Wave has been replaced by Primordial Storm.
     primordial_storm = {
         id = 1218125,
         duration = 15,
@@ -849,9 +854,6 @@ spec:RegisterAuras( {
     },
 } )
 
-
-
-
 spec:RegisterStateTable( "feral_spirit", setmetatable( {}, {
     __index = function( t, k )
         return buff.feral_spirit[ k ]
@@ -867,7 +869,6 @@ spec:RegisterStateTable( "twisting_nether", setmetatable( { onReset = function( 
         return 0
     end
 } ) )
-
 
 local death_events = {
     UNIT_DIED               = true,
@@ -997,12 +998,12 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
 
             if now > tiWindow then -- "if this is a new window"
                 tiWindow = GetTime() + 0.5 -- Window closure time
-                tiSpell = "lightning_bolt" -- We can set to Lightning Bolt since we're at target count = 1 for now.  
-                tiTarget = destGUID -- To count the next target, we just need to know it wasn't this guy.  
+                tiSpell = "lightning_bolt" -- We can set to Lightning Bolt since we're at target count = 1 for now.
+                tiTarget = destGUID -- To count the next target, we just need to know it wasn't this guy.
                 return
             end
 
-            -- If we're here, we're inside an active Thorim's log collection window of 0.5s.  
+            -- If we're here, we're inside an active Thorim's log collection window of 0.5s.
             -- If this is hit # 3 - 99999 of the same window it doesn't matter
             if tiSpell == "chain_lightning" then return end
 
@@ -1078,8 +1079,6 @@ spec:RegisterStateFunction( "trigger_vesper_damage", function ()
         vesper_totem_used_charges = vesper_totem_used_charges + 1
     end
 end )
-
-
 
 spec:RegisterStateExpr( "active_feral_spirits", function()
     local count = 0
@@ -1198,6 +1197,19 @@ spec:RegisterHook( "reset_precast", function ()
         reduceCooldown( "lava_lash", latency * 2 )
     end
 
+    local tick = dot.flame_shock.next_tick + 0.1
+    if talent.ashen_catalyst.enabled and dot.flame_shock.ticking and cooldown.lava_lash.remains > 0.25 then
+        local original = cooldown.lava_lash.remains
+
+        while( tick < cooldown.lava_lash.expires ) do
+            reduceCooldown( "lava_lash", min( cooldown.lava_lash.expires - tick, active_dot.flame_shock * 0.5 ) )
+            -- addStack( "ashen_catalyst", nil, active_dot.flame_shock )
+            tick = tick + dot.flame_shock.tick_time
+        end
+
+        if Hekili.ActiveDebug then Hekili:Debug( "[Ashen Catalyst] Lava Lash cooldown reduced from %.2f to %.2f.", original, cooldown.lava_lash.remains ) end
+    end
+
     if talent.ascendance.enabled and buff.ascendance.up then
         setCooldown( "ascendance", buff.ascendance.applied + ( talent.thorims_invocation.enabled and 120 or 180 ) - now )
     end
@@ -1303,6 +1315,8 @@ spec:RegisterHook( "reset_precast", function ()
 
     rawset( buff, "doom_winds_debuff", debuff.doom_winds_debuff )
     rawset( buff, "doom_winds_cd", debuff.doom_winds_debuff )
+
+    if totem.surging_totem.remains > cooldown.surging_totem.remains then setCooldown( "surging_totem", totem.surging_totem.remains ) end
 end )
 
 
@@ -1341,67 +1355,76 @@ spec:RegisterHook( "runHandler", function( action )
     end
 end )
 
--- The War Within
 
-spec:RegisterGear( "tww2", 200396, 200398, 200400, 200401, 200399 )
-spec:RegisterAuras( {
-    -- https://www.wowhead.com/spell=1218616
-    -- Winning Streak! Stormstrike, Lava Lash and Doom Winds damage increased by 5.0%.  
-    winning_streak = {
-        id = 1218616,
-        duration = 30,
-        max_stack = 5
+spec:RegisterGear({
+    tww2 = {
+        items = { 229260, 229261, 229262, 229263, 229265 },
+        auras = {
+            -- https://www.wowhead.com/spell=1218616
+            -- Winning Streak! Stormstrike, Lava Lash and Doom Winds damage increased by 5.0%.
+            winning_streak = {
+                id = 1218616,
+                duration = 30,
+                max_stack = 5
+            },
+            -- https://www.wowhead.com/spell=1223410
+            -- Electrostatic Wager Crash Lightning damage increased by 120%.
+            electrostatic_wager = {
+                id = 1223410,
+                duration = 30,
+                max_stack = 10,
+            },
+        }
     },
-    -- https://www.wowhead.com/spell=1223410
-    -- Electrostatic Wager Crash Lightning damage increased by 120%.  
-    electrostatic_wager = {
-        id = 1223410,
-        duration = 30,
-        max_stack = 10,
+    tier29 = {
+        items = { 200396, 200398, 200400, 200401, 200399 },
+        auras = {
+            maelstrom_of_elements = {
+                id = 394677,
+                duration = 15,
+                max_stack = 1
+            },
+            fury_of_the_storm = {
+                id = 396006,
+                duration = 3,
+                max_stack = 10
+            }
+        }
     },
-} )
-
-spec:RegisterGear( "tier29", 200396, 200398, 200400, 200401, 200399 )
-spec:RegisterAuras( {
-    maelstrom_of_elements = {
-        id = 394677,
-        duration = 15,
-        max_stack = 1
+    tier30 = {
+        items = { 202473, 202471, 202470, 202469, 202468 },
+        auras = {
+            earthen_might = {
+                id = 409689,
+                duration = 15,
+                max_stack = 1,
+                copy = "t30_2pc_enh"
+            },
+            volcanic_strength = {
+                id = 409833,
+                duration = 15,
+                max_stack = 1,
+                copy = "t30_4pc_enh_damage"
+            },
+            crackling_thunder = {
+                id = 409834,
+                duration = 15,
+                max_stack = 2,
+                copy = "t30_4pc_enh_cl"
+            }
+        }
     },
-    fury_of_the_storm = {
-        id = 396006,
-        duration = 3,
-        max_stack = 10
+    tier31 = {
+        items = { 207207, 207208, 207209, 207210, 207212, 217238, 217240, 217236, 217237, 217239 },
+    },
+    waycrest_legacy = {
+        items = { 158362, 159631 },
+    },
+    electric_mail = {
+        items = { 161031, 161034, 161032, 161033, 161035 },
     }
 } )
 
--- Tier 30
-spec:RegisterGear( "tier30", 202473, 202471, 202470, 202469, 202468 )
-spec:RegisterAuras( {
-    earthen_might = {
-        id = 409689,
-        duration = 15,
-        max_stack = 1,
-        copy = "t30_2pc_enh"
-    },
-    volcanic_strength = {
-        id = 409833,
-        duration = 15,
-        max_stack = 1,
-        copy = "t30_4pc_enh_damage"
-    },
-    crackling_thunder = {
-        id = 409834,
-        duration = 15,
-        max_stack = 2,
-        copy = "t30_4pc_enh_cl"
-    }
-} )
-
-spec:RegisterGear( "tier31", 207207, 207208, 207209, 207210, 207212, 217238, 217240, 217236, 217237, 217239 )
-
-spec:RegisterGear( "waycrest_legacy", 158362, 159631 )
-spec:RegisterGear( "electric_mail", 161031, 161034, 161032, 161033, 161035 )
 
 spec:RegisterStateFunction( "consume_maelstrom", function( cap )
     local stacks = min( buff.maelstrom_weapon.stack, cap or ( talent.overflowing_maelstrom.enabled and 10 or 5 ) )
@@ -1434,7 +1457,7 @@ spec:RegisterStateFunction( "maelstrom_mod", function( amount )
     return mod * amount
 end )
 
-spec:RegisterTotems({
+spec:RegisterTotems( {
     skyfury_totem = {
         id = 135829
     },
@@ -1447,7 +1470,7 @@ spec:RegisterTotems({
     stoneskin_totem = {
         id = 4667425
     },
-})
+} )
 
 -- Abilities
 spec:RegisterAbilities( {
@@ -1506,11 +1529,13 @@ spec:RegisterAbilities( {
 
         talent = "capacitor_totem",
         startsCombat = false,
-
         toggle = "interrupts",
 
         handler = function ()
             summonTotem( "capacitor_totem" )
+            if not target.is_boss and debuff.casting.remains > totem.capacitor_totem.remains then
+                debuff.casting.expires = query_time + totem.capacitor_totem.remains
+            end
         end,
     },
 
@@ -1568,7 +1593,7 @@ spec:RegisterAbilities( {
         talent = "chain_lightning",
         startsCombat = true,
 
-        cycle = "lightning_rod",
+        cycle = function() if talent.conductive_energy.enabled then return "lightning_rod" end end,
 
         handler = function ()
             local refund = ceil( buff.maelstrom_weapon.stack * 0.5 )
@@ -1583,7 +1608,7 @@ spec:RegisterAbilities( {
 
             removeStack( "arc_discharge" )
             removeBuff( "chains_of_devastation_cl" )
-            
+
             if buff.natures_swiftness.up then removeBuff( "natures_swiftness" ) end -- TODO: Determine order of instant cast effect consumption.
             removeBuff( "master_of_the_elements" )
 
@@ -1823,7 +1848,7 @@ spec:RegisterAbilities( {
         talent = "elemental_blast",
         startsCombat = false,
 
-        cycle = "lightning_rod",
+        cycle = function() if talent.conductive_energy.enabled then return "lightning_rod" end end,
 
         handler = function ()
             consume_maelstrom()
@@ -2344,7 +2369,7 @@ spec:RegisterAbilities( {
         startsCombat = true,
         nobuff = "tempest",
 
-        cycle = "lightning_rod",
+        cycle = function() if talent.conductive_energy.enabled then return "lightning_rod" end end,
 
         handler = function ()
             consume_maelstrom()
@@ -2392,7 +2417,7 @@ spec:RegisterAbilities( {
         startsCombat = true,
         buff = "tempest",
 
-        cycle = "lightning_rod",
+        cycle = function() if talent.conductive_energy.enabled then return "lightning_rod" end end,
 
         handler = function ()
             consume_maelstrom()
@@ -2431,10 +2456,12 @@ spec:RegisterAbilities( {
 
         talent = "lightning_lasso",
         startsCombat = false,
+        toggle = "interrupts",
 
         start = function ()
             removeBuff( "echoing_shock" )
             applyDebuff( "target", "lightning_lasso" )
+            if not target.is_boss then interrupt() end
 
             if buff.vesper_totem.up and vesper_totem_dmg_charges > 0 then trigger_vesper_damage() end
         end,
@@ -2494,12 +2521,14 @@ spec:RegisterAbilities( {
 
         spend = 0.025,
         spendType = "mana",
+        toggle = "interrupts",
 
         talent = "poison_cleansing_totem",
         startsCombat = false,
 
         handler = function ()
             summonTotem( "poison_cleaning_totem" )
+            removeBuff( "dispellable_poison" )
         end,
     },
 
@@ -2773,7 +2802,7 @@ spec:RegisterAbilities( {
         handler = function ()
             if not talent.molten_thunder.enabled then applyDebuff( "target", "sundering" ) end
             -- Todo: Track 11.1 molten thunder reset and whether or not it can be 100%. Currently a serverside script so *shrug*
-            if talent.lashing_flames.enabled then 
+            if talent.lashing_flames.enabled then
                 applyDebuff( "target", "lashing_flames" )
                 active_dot.lashing_flames = active_enemies
             end
@@ -2789,13 +2818,15 @@ spec:RegisterAbilities( {
         cast = 0.0,
         cooldown = function() return 30.0 - 6 * talent.totemic_surge.rank end,
         gcd = "spell",
-        texture = 5927655,
 
         spend = 0.086,
         spendType = 'mana',
 
         talent = "surging_totem",
         startsCombat = false,
+        readyTime = function() return totem.surging_totem.remains end,
+
+        texture = 5927655,
 
         handler = function()
             summonTotem( "surging_totem" )
@@ -2806,6 +2837,8 @@ spec:RegisterAbilities( {
                 applyBuff( "whirling_fire" )
             end
         end,
+
+        bind = "surging_totem_projection"
     },
 
     -- Summons your Surging Totem nearby
@@ -2815,12 +2848,12 @@ spec:RegisterAbilities( {
         cooldown = 6,
         gcd = "off",
         school = "nature",
-        texture = 310733,
-
-        usable = function() return totem.surging_totem.up end,
 
         talent = "surging_totem",
         startsCombat = false,
+        usable = function() return totem.surging_totem.up end,
+
+        texture = 310733,
         essential = false,
 
         handler = function ()
@@ -2840,9 +2873,11 @@ spec:RegisterAbilities( {
 
         talent = "thunderstorm",
         startsCombat = false,
+        toggle = "interrupts",
 
         handler = function ()
             applyDebuff( "target", "thunderstorm" )
+            if not target.is_boss then interrupt() end
             if buff.vesper_totem.up and vesper_totem_dmg_charges > 0 then trigger_vesper_damage() end
         end,
     },
@@ -3013,7 +3048,7 @@ spec:RegisterAbilities( {
         known = 17364,
 
         buff = "ascendance",
-        cycle = "lightning_rod",
+        cycle = function() if talent.conductive_energy.enabled then return "lightning_rod" end end,
 
         bind = "stormstrike",
 
@@ -3170,4 +3205,4 @@ spec:RegisterSetting( "filler_shock", true, {
     width = 1.5
 } )
 
-spec:RegisterPack( "Enhancement", 20250226, [[Hekili:K3txVnoos(Bj4q7XoZSUTLJZ09G4Sa7I7a2gh2hUEX9yuuSvIfAzjFsYDMmiW)2pskrk(rvKuwwDMU3x2TNqAY6lwFXILUB(D)R7(8MOQ47(NbZcwoli46PZ(WYFD5DFU6L9X3959rR)s0tK)rw0oY)7)z22OS1X7IZQOJ9sAE0g6suMFOynz8Tvv7l)T3)(NsQ2E4HPRZ39(YKDhsJQsYZwxe9yf9)E97Fin)H3VPi6P8ShttEAB17JZEkjl(9RtJkld3LV5qAC57lxhwUnAxu20173F3NF4qsA1)i7UhaH5zliWX(41K)81K)52KnBIRNBC567(mDU)Lzb)LGR)TJ3))MNwfLS(49)T0O)i(49jLhV)XdPPVC8(njLvjzRRi)HI8DhV))kLG5hV)ZBZx)LJF64NeRZsY68)ex(sgzzEMGVK5KS7VF3NtjlqjJOKK9uAm5F9pzK54SOhsJ3C3F7UpVUiPkUijIqLJsj0YPXPmAAuAy5(eYGLt5Z(ZrRP0U7(8JXfIHVRIGKOR54J3)WHhFC6UO40Ykcse(CC0(8SPLveU5X7VD1X7Np749V(AZe3xKSlVytcD9RYl2nTiExusgHMCdzQxD8(rESIlpE)KwOvFjPq8cuiUikzty8xPuIOnBkNMKvVM1R20n50DmjJmY6880n5pNXGjoIMg)u06xcZFmSABCiHTvwrME16TtpSVgnV449nuA852azkOr7otrGRCXgR2MtW7YWKSVMVMjZ3UQoPHhVFgBwvjHSJezeXNWhicQS)Alg4HScdIRks(smfSxIc20fnz9xiBeNE2ShrLBJZcjOqu6lLvTibLw2mfjo8ZrFngCoKdZBPyXJ0ZqLGuy2qKt5Ktxuy9AuyDtE1uPjpvdWbfHesq6aBRyefAH(T3C8(RXKOPlbfy)vkWcE(ucfiZ7d2oQIIxQYTwj3x4KXnrWGbLUOiXxJdJZI3Leto3t1qWgWXjZOY1XzBOMeKiPV)49b8D0PAJGwky7IrjAF8mQTa7a98zOBIvaFfgITl63dBMdLVWvqvfVBFmHDO9Z5)zPFvdtQEGq66hUo)qwftyEHSs7ONJ(smJlYuWwkT4(t9vvA3STmkdUjREtzg5wvgBsYNOMwlHwd1xZPtR3gv8uCjrnEnkeL2yDB6hKPuTcPu7bsiC7()arvvnIJBxD4vY3GpmYiLG18FJPyFoUf1Xm6tREH8Vgx8yA(Z0TtaCDaUBKvufRTn7pYM9ez0cInzNxGBW1N9V2QjShoubboshvSoK41xnukZPAbovEfd2WTQ(NfAVDAlULw3RpSkJF9SSIaKAC7No8ZOwlXM4AVevNuR5FDlWTE)QRGmn6RrH01Hbw4wOADKIjTXi6kqfYbDf92s)0wzY5TatTAFHYGaCBzCzMT5vHK432WL(hluqQ40GMQCTrLuKprwQeNkwBrsXh2Vwh)fvC8pIb9luHuh4WAer(EDf1vEI641e)JEkUqIMDv7QscbTCBRMx2AJRWNT2sUtWJMaN9mdN9GRRUHMCiRiM(pKmPllYWDWlD)2OWNZtFuz02)C4UKSqbXFLcmbH(o0XkjZGXCW1ewgxrofNDOCA1ZpheE1(12HLRLDOwrgrZJ6afxVLj1AZ7dYZlznr4eCA4hLn8ujQSm6qAfeVzhbIjhvGMbIx(iK0fNOFPnMkSB4ZMQ2fooOTnkj1CDQJIwed3c8tuTbCIgb4ItonbLhY2qMy2ta(9lgJTfxjlvOliQkASyPsqEsyQ28WTNw76AOMiG0IMuehML)1i26OizhhvuTnui8PVN4ggjN8OkskN(ysAACHXwQqZjXR(4HSS407gYCv1YkkEIkZvLtCEqhJKNOu8GQZcxLvRH3(7L(ejL9RZZioX9ey0witqyNeZ7DC1M9oclFDuC5znGt4ijXpxmwK3bTJgTNQLZjbfqWMFDqHsopPNUez)97dLDe33(AFa2NMKrWM4n8ZOsojKxwwhglvZsOI7qZdGt8KYKEA9g6oR6vKHg7E409YZqO4xznidNoUxEyFCrtGxEF80F(0xJiBgzrNg)77jEisytPpewRQJjFBo(6uX4wj7E57)qHCYAMudE1hXCgRxY8hXMEMQFywsl24E4SdNRGDi(gZZ81NOT8dUwoeeh5aDuFd3blqqDtM8zPNYyvhHq0trM1lRtJdROm0QsQb5kRPLASxxoGorY(59Xwcrvi6POuGLznPC(0tHCRQvMR4MGLeVpxXrpPC)QnnhMIppw)1ci0scyeMURpIz4Cs9Ewq(ptzB5bP8wDMP(mb9hou0Vu84EhhEn2wYIupHD76sXTuWwwG0lCrlhwoWeX4JDLmaqR1ossaGEutPAdvPONmUX9jdf(fu2aCeemaLJRBJg1u9PcJqtuce0sELS7PzdHYM7Rxz10fKdUtqcj0sgQAq42WYL5qC5O20EOe1Uu2qQ8j)uWBcBh8kTabxPgfiNpOQl2s2KC74HhPxiqxTl08KZ5q8JfXLBPtxeSunCi4rD76XNmiUbb71qaU(ABcMlWeeDOcfsHvBegBIJ3N(syrEELC8sMNq1sCQZCZX2wRAPiX0cdA6eATqAa0kvNAo(eKIOxlrgZve2rtq5cLuJGMGYfkE8069P2S6CET6SOraIOHL0F9DO)PAHib4c6c8twdS3BAWMQdAwYiO7fD49bBHdNH8eNbCZ6kCNf8WOWv4(b0k6Ay)dZshjkKOCx19xcTOcjAUjXE8z6r(1uFfLqXO00W6)JqAbfwxwHH1vHjz1dZ3hNXup6zOqonV3pZQwtjRNL4egeuFOOkjuNVlag1khsxZgFw8KscegoCjaSIxfuJDNov3HjiiL1yBreZRyX8vWxFtG7h1UewN)aFY4BDQCH8Nq5(5qdN2QQrmJldPF1hDuhFwRppNK05ZKCQdlYe(nsjpMi(l696VuYWLL6XLWHWWgrD2IRK1WDhCcPD)nLugREnTvwZEO)bwA)g9xy1fn08Xj7TMbq1)lmcrjvhtNNx0i04)TtyWncypA(v8AUJnn4kFODC7LJTlAj9Qp(aA0aNAjHPTQqeNt8(40wzZJdybCAkO43g61L8l8sMR3rpaOwLp1w5unfdLyjeBcwYj4aRRVdPqXDjKjjudCqJn6JPhkkEXzaR1z8dwEq1qPrgU4)iPa8mauSADtk3dD)QzGzTwsp2zmXtovf27epPe8mAINC(6o6NhYgj2cAEQUE8DuIM6A1V4irtoUNbKS5m2ZCnDMkSdf1n6zTYPcNVPzTkqrNeEwRusULLSwPKDl8SwPeCkAwRuoE6iRv4hsTjNHM1kSZKdQTz4JqwYGMhAxSKpQtldgBIFKQL7oRzXGhWJ2lSapdCIrGQQwEbZm2OMzEhnW0z1(ATq5QQKF5tcyqxZCJAuzGbEksqLSAu54TYz))v3z8(lPVY0IK91t7FqRkOId7jbvN)iXlmIBfLtvpasi2XrfmEhIq4EAMbne92KuUponLoBsW7pLSMjrLMKfhUEJuH)X(1HjK)wLT0Zyzn5WXtfXrKzhwdpv4jyPrpBYHDH7jcsXvHrzFnjL)4Hrh(qzmjAHhdFIaSsjAayhIsjNy2grHL)4pia7d5)UXpVz3aNQIO7fWsVshEnKFLgttcgOkuaLhL9jxAkYr4hC8(lBlQ1wLWtjiOw(EmpNm)dYNtO0sDndCAjznZimH5A6kez3LpEysjrlxsrJdX1)1PvZjQtkdP0Ek5qj)hFduhibgTPw5qblU9A8xAg0TiSD0wYNaxPxhEnFJMn7nHkrhzFV(2RlQmnVsI9vzMalnwCGdwCaclo4phS4aNS4GZglgCVEJzXbuwSEs94S4hIJiUOgwLZs2YdXVKNTbtLi8ChCDI2zZZx2OWAzJ(kJ8hYr1DrzKaPFQij(rIsX1BXqtZ59wJIb6OiwgkpnDYxGQwgszHrUh7N2IlqvyajgB)jR(Ts1sJT1hsZZ3e(4HIxKE963ScA8tx1IT96BVIfHAdb4W4kwV(UV1CL4IY4cA0oiCL2X7pxbAVEd5kcWHXvS(eJpFCLXhrFScTCfACZmHgyMs7W9MNaTtVDSeb0W4iURz3ZchXRZj09GeyazvPflamBrBo9M3GUNVDmivqIXLCEJeM95K2Du55P1MOKUwJgnn)PkR39ak4meWs9QKSMbtD6oIBjr5prwOP8A9ziOB0kNPYAX)2na8SdDYKr31pSjuQaIDhcA(D8QmIdn11depzD8vY2tTSFpsx5DX4zUOSpUDTW(D9x3ipS47n3ZCZKLlrsntj(jEDV3QEDVQ9ti3Mh8Rqsyt121Ods8ffaIJBprPnqimd532P8WNCuSH(TIkfKFpQpW5s95aO3mupEs9Yln0t84e7vs3uZYLcU0tkM29n7ZTSuzyf48ORaUpgTpwxJRCToDf31ggoZvGrCZkNikit3xijEAV0BK9hqPwaXd3SvlhhCeUTC69(o8gBhUAWU3oZ0S8AVuPDkyXrFrIV0XozE3cHo3oqkuvs6qXRzAzmLMQnUkBF38j)0bK3LC4Y2zX2hZQ6w9ogvuP5Opl5U)Q4rLM7LrLXorHfWrLO8Q0xOVCN7MVzBmP0v)S0As)1JUkzsN3w)5Q6a1QjEbqjDL8Und6uGES77zIlBmYA4At05GitY1PuxNWwOygurfaYXkl2ZFB6uOgQrrQ0x063LxnYZvmlB71n7SYPEBAPuwYXBRGuVoqTYYtGXEUmpvM)e78F7muhw8EEBsb7ParZ1KInj)8huTzeCUIb5c)0aB3P7ZLTRodmyV)BhUjRv8MOfkvGNfkLLee01EJMIx(wRQuNp1hC1c2bb8twC(JFv8Psl1YEbFP2s4WB)wD(LUkTOMpXvHiT12VLLxMAREoWoDiwucn50rjxoORVR6n15rV3M8UGlDcZOaRt1rwls1fyhuSghwddZsv(o2Dupsbjcu2U1kZ(g2ECwGyLOhj)6kxW5QHR6(D5605PN2QgUQvtyd0lBCGdWAes5m0scutIs)EFCFCOJyeuKa91WXNlWRb1huromf8(gn4dLXDd61rFS9OJoMYG8W3o5N0Maq7DTup2IdGsImEiCnbXOgckHvzU9bL(45gLqGDhL8BFERF4nH65DW1U5E3TFN7x3(L(jjQiED(UhIARBD5Ja0YDPHJO7kNIxMuf6v5zpDigE2oEgLLF5L6AgsK2ajBCndYSo)ur(H9H7I3rR7djeSEkcVvewWfX0uUnjoDJgu5SX50gGwEXdjangVA3DRx8PQ9px5HGS0MVNfrJe)SPScO)R0dXIQaJwHAjLtbQo7gNNuMMEP8bnhKYkhAQWfajbuBUCvJYRdYbGoGQb(HQbEGQb(JQbDavduqvDd9UrvTmnQurhIyZFpBsxXkR9gzrM(lYbI1eCTmSPgoErTgpoE)ptZba9HFCP7YgHm9B)RUZah8sIuMj6liuIuHxqW8Kkt)rQ2gipw8IlmNbjnFQdi2NYldFOGFjVxcoc7hZWZlzOz9smwm3ThOVILYWDrfFHVm1gzMUnokTA7090ptASBeFgFDG(T8nsr(JTqK)JQdKWK21uFv6Ui5g1RhyQA(EMUjAhX5jveJ)zGqmZICb1PTgx1bl11q3GTO3cFjEGmxI8Zui)GaheDZSN8a65N3eonxzgakNEuCnhQwWw6azLcOpjYjNozs0AIUtVKzmCr40UbCxkCwXU9hQcAX0ABu9aZI71NsvAWduSNnniLIfYQJm(3TDSMuWVL3WUt)FS9IBHKtxv3ww(lSWqALspKvCi9fdRfwJmZ(B70X14F3PKzcNXHOCXWN8Lw5)nO(dvE1KUWhL8QHLSHZzNG2VgqOLIsASNfpstk8CpXgziBnKp0giFax7(e3373kSXHAq)Uo0lfxMGVZlWbP4E60xioDf3isjU6dp2tdKJ2yJRN6Rz1MZzWWLqZqL1o2IJv0aYgLLV0F3VicNQ8SZB7rgK1QLpWh(VGXbufH((1e1vJSgGdJFvn6NYpVDuA7sQNEFYPlgxq74nGhnD3YBquOyfvD9ngZDkq9sQcqG2YLbFo3za5zT29m(vK74UO(UwH1j0xCgWRpts9Iz32XRdIo9Y7C0qOC2WN7BdHYYNxT)mj8y5JXMB1EEuHaw(oTztUdRPnP2hFWBkqQ50gRPa1HlsOxDohwwb(ACrjDS)j9J7)SGGLtjrv)CubDZkV7Z)RTeRDj72NxurmfMxC8(FQUy6)PJ3xe))DGqfie9YCA05rhQY3fvr)deLIzehGNE8t)3jzKH(WVD8()o7AxydtccV(14roAsRJSFAmIPQxF9c7Hh1ob4iRNmASrPNosv7WQ5JmRTTBxvtZKZMjpsX3fmzKfli3UkGqCQY)EdTEVB0IWpp(jarIMoMu3KjM7sMGbmkfe7RVY(BApO0M)QI1sYFlVSC0yLNq67E3IzZUz1IztE91XTey90vpIpeu22fdAM38jte89ZpOp0qUGTCTl2YfMi3OlGqUM)QcYrHFCWFSLRB4MGlBKD16lqtORPgFE(hQPwcgY3baTaMfSIFvLv8t8R5sTrxWXXk4(Gbz4XZ)9jESOgT)fGvgAod6Y7XcxZAZEX2cdnhpHBFx(WUV0NgjzGxESf2qtWf49MLricJJganJVZg2CZkmUe9aORgaWTRST2dMU4gU0FsOV)WrEX8kvCSiWU(vJHvooIVOUpocpNbD59yHDRaeEoEc3(U8O6xp3KKbE59oOiJZ)baN)dg8Z)VZg2iPaiOxkaaw7btbaM(13g67pCKxHa(hh6qjafxNVK4h9YZNR)qBcFpAdMD2BdUg8naxd0X15drCjZdgcRXZx4IVC(pq)UMq(a67D3SYCSUDIgFThSZZdxsn(bJq1k1D1BOuNzF9RLyA2)a7gX0CThmI5Wl19dcHQvQB5Wk1nMrmHL6m7CHcAPz)rStKsZvEWOKNhroiY0psuPw5nNPkUFesBA5OlxPz3yuqo1g)KOPi7XGryppIFw049JirBAZfs9yEAA(ZSAEmIa3erWNJli)DIJHBQfhROtRgkpEpT6GP33DfFEz5SBZ6qMYS3SHo5nrvrpevg)Bh)eRMyJYEb5IWepcRFQtxf2sDxFRryTxTKW1xWr50eDpGVg1zD4hOdGB7Ot0)ns)j(aVlaZY)Ta5fcbVt4t2)ne6DgbVBiZ0R04J9qQaceYp(K1nYjFcBw(Vf(YNCmz)3qV4t2MPT0bAA0R9(av0MX1fp(QlBoaB)HGnzYptFCvxAt14KB)RT7MK6XM9sDbauFk)ZnV8s1FUPw7wlw2r53)JekpLQ5)FWu6tz)Fu1KcvLoTK3ZFmjvuBtLtfMf(5vVNcosVg3JFcAsMVdx4518Ez)LKhxX8fq(93(6R0FH6BV9gL3Dl8AQ)wBHNL8RILU9WgLQlOeJhxl8sY9X4xOVAhEQlBVZRFH9yNw5Y(1RVA1WJ2Wi6x0MfKEHoGdby4aMk72ThuDR2WoXbuDB(Gdio81Gj)BK2oFiwgVeqozA(pd((uVe7TPo5sYpzm8Rr9sJxI6TR(WSjxI((t9c0nFDLnWEJJ9GpZ0lBrm9Ni5L4pps6VI9BmF4pxkPZsQW5UeC6nuk8xgz3qCX7LufXHFMONkM3GFnfPhrKCXphWpIGuF9tCGIh)0)X)b3mujb9y5bi9qz1V08PXB11ZMjOeKju)L8JQ1EaI1CORunc2E8EWpYGYOi9hfY(mdQG40kMxqvm)EbkSJc9vbuEHu(Ua69VIEjfjvX7AK7GvB)lsFzNwnh)Ndy2q9NY4V99cH(gu3BIcFdexPFhLe(cqrjFQkMHVOyEx7wz5sBbkEm)sMILvF4ox5G6has9bUZ8H)kZFx7wzH6duAjDJ6)n8sZXpNd532aCq32vPJdC6EM(ndWcWbSoPX4cyvgoxyNhgUa(0G8c3E1KdLP4gDW)GC)Qk0oXfSn00UFmULqzAN4UIodKUF0Vtqz6M6vBCgiE)B2fCPhNcTRl(fsOq)oXt6mYsrjr1Mv2N)mX56KShpqFBANbknO9JGz(rTMhmGbZ0so0BHn1KI6xB3Vu3YBQnPsNJY78IVdGFPV8Dl4Dih7Bv)2POCByYTumr(tewFrmP((tN22(TRn5qW6gQ(XA7tTPPOMxqvsljkbMF16HknGR2Lq)zR3Eoc7f(nFwZXhSMn)nRUY(BeuYNSwaPvYNccwEvIshr4kJAcFW2JsU9Xs685idbDS9JfGQeDgVZWAf)NnY8zzEXjW6Ks9fZrZM3n6O2WXHEvOV(AZWOVQuoDQjptSTP0gXrBLOadYBAD0yagBdFf7JlXRVA(BU5Ai4q(4aWWT6Kzc5Fp9SBD)AIpZNOawUMgcTirwWGcYyIoqe1Bq6mAwn5Fe)pjMlHqw)NcPRx468dzv3UGR(j65OVeNLO1GEx5IsbQ8rRZG0tCCKRdZJu8bOw242vxpACtpHIOvQgeJsj6BN(bogl7zZBHwQgWBLC7RYlI5yHJr5FnU4X6IWjuSZEbqeohx4bBgFCYKriKqa4uf5CWZjlEtUhaA0l1Wnq)o)2z)zJ(CYhSj)6ZaneAj4T4cjzwyBpJ431L2W1wj01NZ9gb8aVugNz0FU3CvI25nFpbK5B0WO37VVDUlSRM7i1a0e59uXqIKsgTreQyyPihdJxfi8Na8ZRcebrRfIi4KO9ATBVYnzfkklysh05eaqQbRW)a9Wv9A2NUgb3lUwbTZkmnDEMFqQ5NViGFNc3Xo5ey02wiJluWWEKwhXHt1G7xoJWACK9wDWsCvQqU312LIA5ls9Zi)DrgIuZ7Sqo8vQT30AXvjn5b74c0O8(gKuCH69Aia7kQFnMCtoe3T5JjPPXf8fw)hYdpMrLKI21Y8uD120rc0paU3EvJkrWpgI3UArJcemNwmuTjbudt8s22X(4bU7qcRTczlOxPRFvh6507foJ3XgcQCQX0hva(CT0SWdzJwuNhiLn5JLsftM23WvGGKKWKoPYx63Dk5pzsJmomuUWm7Kcd7lMCMt1b3JXtoxo)QnXJboEKojyA)CIT6uGYYe(vywYxY5dWyq8taw1Ync4cr9ti8BxcygzRo7UDHvnXwsuJ00EJCauxRa7tNATfJEjbVAz3yHNaRAcmVYfgQO3t)ZTQBnYwwEOyDDQDeXPWwvs2Whdpqh49Jt)8snOnnw4(6B)iH7inK(9wJ4ONh9SSCTHQWohXO3kn7u)bfBQvWDQwEwD35AzbA7ozBZDtlrKl70Duolec0lRI(XPq5IJOF2lUz(s9vawjBZyQWM9W)mJAQEr6A(0Hx(jJa((oQTtvnzOsPF)xJ8ngkbs92Q5eZ6wo77mlUC4UiIz92iBC(KUnxtzjsoULtuxnnO1gR(iqMoGLRxDnbEGh6wIJEyJ083BU8ctqRp(aRLDiBUumFPRlECHbOPCAt6ap)wwHrzekXngNXWvtA(9duXfb80QTqFpKCIgq(VFUKmZJdFNcoI6eM(IdLWqKp9IRUgjTRZC7HInIWnR(GhOC3wadXUU9Z14iq8DhAvWVQIwV21)Ah0gUJuingCqJJyEyp9K07OR2XHOtfAg8Lh5X0dfsFh9SX20hS1tz8JHW3BHifsNA(vRbavNOAwsJE9(iREx1WYuZKk6sXwj4uS2Wd4HzpioyiVia0CEE7m(Gh5mLDJqegVrtKdZoW1NWzasu9EP8Z4tqIi)KBIJ3N(syrEoT4ZACbvsiZQYtKbBVqjp0bYv7d)cKQLwwt8HXef0S6khrLUrolej8deONvDGvNeFm4BO6AhNRqp5OEa)cSt4AXDWITWZDHpxa5KXoCX5JJmD9JMgnKdaGBlMJD2prJDGEb4EaDhAiQWgBxJJqJKHUQjyA)7RokyuciwbRIMxHbgNft6taHr1BnXEewGlWWfy6zo77qVMfxSnpJW6JN7BkaeUSeyUDOBeEC7ZoxQzUcgM7B8uoIysaW92OWyuRcCDL24TtauYoia6h7lGccvNJadN7JKKBRlUGpDJOY3cf41LRojNLLUzg)SDZlRMjLffJVKU0rRzjsxVjvtNzkeLarJRZ36balPa9CFJ7AuYo7YQ(lTF18L)LL8xAp0hYw09w1OLZ7UhBz6UIEwQ089M4u3SVR9V5ApiHmxCqtASoUORF0(f4OodO75YPqq7lNhVgpgdu)HV(ky9dhmzI1AF2zcVfqmYXfrZcQH3qRhbVKT0v40HdWoSX)bCvV6faGwMM5uEZkq5863eAfa0frjxAaqjOA22DzlF(mpdfvwjp29m5bJvJNGfbOulMW8A9bolGEv)Oeklg8pj9L(KsV(y5Qdcpo8YSZ87UktDcBbwoF(H48Th5y6SeCDVe1pt5AwgTpl5Cgtc4TMN270D3nbe9KjdY5CQgZtTrEI0TOf4pqe4KZyI6uwi1(nA(0zDUNqkf6vMl12(oKMlyVCo9KdrJzW5bgR7Pv37AUkItEX7wXBADP6Q9W5ZSlY0rBFowoOKCGCjXcpZozsH0X(25v)4Y)5(8uYflbYjBX4Tzrayq1sfM7U3Pwwdt65THbaGvE9k5CfJ1PwpqUEZRtaGyHyABPqIznr11bLMcRIBjnQnmJCUNXDYMr5(0eAl7t(YnfDafLEZXnRMhywPRIbPTqoa6rx1fS8eFhVx5fVOzTlpSpUOj)3EiA7MwkAvjM9QZBnht0olHiyaA7gpmGn)8Q69byxSsPEQBj0kV3YtkiTENzkLwIiugoBEVWD)vFcGWNL0Dz7mYqMhlgGP1CE6zwSCyBdyyOkRKn4))YbhvrtfRvb1nya06gGKAfL06qm6IaYe8sZhshAHKMGkhyHzjvuG5tRloIcCAyZcgSmkvimjcSmsXrkrBiukrSf8s(JOc2YYr4(WswdYbglgzSy3uJXUaHhHYh2cmdHXM9qzJGawnhSuvqrPMwrPwCgGmg1guS(5iLumOmQh4VeAmxcAq9s4Fr0rCfkucEhAwYCDWHLEcHFplEt5JVwgrypj5g9y0qYwuGNgss7QzghwkPu5l4EloGv)k29aeCm7WvbR4CjkgxWjwkOHbiUGdoZCDoUsacJdWd]] )
+spec:RegisterPack( "Enhancement", 20250430, [[Hekili:S3ZAZnUns(BX1wJJKNjAKOS9mtolV1T7TBvj1M9UADUB)MPOOGSynuK6iPSJt5s)2p8GK4b7ga6LNjZEFjXJaiq)c9l0a4(r3)l3F38OkY9)9GHbxn8YXdhm66rbx9H7VR651K7VBDu8NJEG(hzrRO)3)s2YOSyYkswfRTNtZJMZgJY8nfX02xwvTU8hE)7FiPA5MzdIZx9(YKvBsJQsYZIlIwuX(3XVFwA(S3pVi6H8SfPjpSS69KShsYiVponQSmCv(8nPKY3xghwUmAvu2G41RV)UzBssR(XS7Nbd0xrHJ1Ky6pF9ykOKmFor0xsz893X673p8YVF8WFy70F5js0N3o9VskIs3o9U1jfjvBNgLnF70zjpSD6F()OC7pT9NA(MrFO5BE)IKFD70)9)Z)Y2P)8)C7u68LnNuO35RPD()UKSD6M1ucqsgD8wxKKtNIN)32oTsm1)xfjRYlMNWN)Q8IvAdXv0H4hxTUi)r6WqwSijoHKf)SwFgl6tkNBSDAVY8vK(uyRCjjJIbrvrPpxwXWL)b97M(wAtZP4xV5jLrZsjZP9DtvskfQOtrwvrcPKcD5BNoNSiAtAL2KnSbN6c3tNrwKxqBQAj9)mBZIfBNUiknLoA5lw8o6G)idGEIksKVHcp)CejTSQGkA83iperrkA3Q)4)ArodI)NjvXlLt)yX0FxYQ)mJMYy9Ygd((Gp22iyZm2X)tEAvus82P)P0OFJorjuGBXM0u6KtjhvjzX0PDbfMOWqkvsNoGlZJ)CnD7FqEmPKmhe5JxsO9BkLcSD6FrWlyTsNhgM8EQytEfzfBQV7x0algl(FqkFolwqBe4W93LsHNs(AkQKtkH(x)D(YusgNRD)FsiqxKSMTM6(7UJ3nkbmQ4bctioM97srUTtzJ493j(97VlMYAcf)JqrluMrsCvyYc6I(egUFZ2PJ(iTN0pNuKeP9ZBNEovgII355PZZFkBW888vHpLKnVCqbzvusgL0oz70HBN(YlkDRCdBHcfwH61zc5MblZRcPkyMpyZ6Tt7lOfHcnpcQryoDb39v0L4gKejS2RESw1iMfsxWToNcbvrmo1T0PDu98Y746wMAyjJNkbWBOD9soc7CeVIdVn0yZHKbXJrHyk2xLe)zUIcbXLkcrLJgeXwkhgxVsEq9hla96UOmtpf9ibSpurXL0bpCbtYUu2ffaM3evxlvMNbRxIcRlykRdLuikT8AdonKaXT0(DLh9JoEFqH1qBnJb5uQovPzd9MXa9GRqhkfeKPPpSKRONHHxHIH1enQYkkPTmmj7X8yU5ljHZJPEiVxvjHCRBCKygvhKeG4ioDH3NjmW5ABIZNj5KCfMH5lcPQldxW0wsPGuLL68DoWH3x(IRoRJvPqAmUXMlLH7jL1fOjtj5Vmm8dOy488QbkYFdmwlueLmpKzcHUEyovwjjJdvIzPJ8FdqkazOVLcNxJTyLnemG9J2yhOWBTMmFwzEMZ14kayuzm1ldMFxmy7tFDj5oAOnALM0l1zMIfP5pXgYwayhGTA1SckOpQ5)eV3cr94Lm7JL0fcc8GzKMBkyWhLOgPXaE4mM9Bo(zA8TRLgQ991ekVtQEs7Nxf9RH1nvRDx0aNgegNVH59MY6m(hh9u0Nj16(Ogqkvg8XnOKx4Ve5QNwosHB(0Nb9CPf7ogpzkxAGTOI4qQ7vcsVIi2ijqziKXGnCdLFTiqzxGb34P7XhMBHBSAxgrasTvZoD9i7CjvYqTLHOVrRkRa6RsVn1KQ54vqJCwnZ(rHl8mc9VPOnvoAo82ra8ZjcJJ6DsyXqN1Mg9yuiRFCkfU5RgkII7mQRbOsiXvmJVunXXulbpqkuxj0IaE0zffv0qPlxk1qZbrCJwqWx7CYx2YLEvnciNkH(hP(EN2F2Kvqy)HIYlvMqJDV01lJcFkpDHwRYFoKg5COwScwr)aC7qMcYi84aCn9LKk6IMSnLdQE6PGWlxhBhw4QxB6GMGR6eW65y1EQsQn6hUsLA6Putuuzjl8DiI(kkOqxyc1deVAWOvxPc3jXKqyWgxbJtnxx5YoJnnBb4RxfsdrjPDhhHtYTrbfGVIsgYgAmub4luaDPDsRpTYqLB8MvrePPnEiLdv5cMcI6SIXJu7RkMA0pCxdyF8JKqdjfLbnPGeML)yeFC0KSjrfvldBLrnNtCPB6kpMIKYblsstjfDMsnAo1j1fBYYiP3dK0elRyeHY0QM6E0Og1wxxUP4bMmxflbpMyKAhv8FxVx4OT0C2H7nVQbM48mQptpa6xjshAnEJfbWE6DYemGxXBbF9l7QJKR1bMobO4fMvFLGxAixvtBJKrwXtXkdqW6)erWPswRzuKQUwCiu2ZBCLw4dW60Kmk2qM3SgvXjH8YsE)nt9dl4Pa44S160dXZzZSUZvD0y7qHTBUVRv1cCqn1fcMGymU0Qp94gcQN1YnRjf1X549Yt)5tpgrNm6GoG8RRPEisztPZcfQ64Y3DBpoTTDRKDCJusvqNmKtvZKESI(iMZz9kM)O20ZmCj2AUj2BFIA4kylIVP7AEXkAlFW1arYGLAOZp0yWWcYX0KztVmZqMUJqi6PO9654usOyFjkzgKRSM5bTq7TSmwNizF9EV2e)WjmmIq7)Uv0ttPqDYr77vswClKBvTYin3e0C2q3rbrofA6OsIvn6MdtXhhR)Mbe6ojc1lX64CIyolO)Zu(uUrjnrhzQpxqF2MIAc)EATX9mE61y7ko)9h2TRlf3sbFybsVWzsoSAGjTT3ZvYaaTw7ijba6r7kv3rvk6kJBCVYqJFThzMaGY1OBJf1KyvrNqt0ce0sQlS7PznHYM7RxA10fKdU9rcjmax3FncldlxLd1ihjtZGwu7kzFOQjJk7(KWNb)slWL6rb2Wh01fh4ChgT44HpPxWuTlu)uZ5azrbPCjR7TbljGJwE0UTbZ9pjUbb71GL05ytWCmMGOdvOqkSKrymNqwN(CyrEELA8sDxHQBN0s(GA0tvuNvAuTu0yAHbntcTrinaAL0ZDKse9gjYqlTr4jOCSwQrqtiOEwHKEFA0lTvyoYRf(6mBIgbiIgJ9CN4)9H)PgHib4c6y3BSXjY7ndyt3bTX7PtoAjd605d2yhod5jod4M1L4ol4HrHlX9dqk62X(hMLUkwLMXlfW7TMpv5Ec2KNt9DyQJ8BBlq7jvt6M61jJtVHLiVHIKknwZrp1YPOfgmnOwBTtfyG7IcuPATtTKrY5))QU1HMwP59JSCQvSzDLOehJPR5khOR0LsSPE5XLPuhPzqsFSsJnVdpLzNCqszylHRElozZMIfcJF9XGg3L72MAX)WsEx7)2sxVXORVTnVFC5seCRAj37jrnY11GytZ8KV0Hx97be)keepoADuCcfTB29GFhYuXCaDnZqq3OCskxtstz9oCv0djXCxSPwoiHXZv2Nh(xhMq)TkNjfgEmBGJhkir0EhkGNkJS4otD1CszEgv5pjkJvMPD5jDMnXNWMUQU5q1WCBYMv0(h)zsvyu2JjPn1spAZBkjH5lwesP1nznZ0QqZueLsfuOomqrYF73OW1S8FTZ3xpDGD107gi94krG1rtUsBg6YbYMjOM5EkfwOsxmkRWlKBoQ0f0bueCREfL01IXOpQAXGtmXsZjDqZOSHrgRgBDtOP9q6cZNijf1BTU4xhunIAzTmKr8z0JgK71YYOcyiRW2nf8Dmuqau6bBkcLTkPFT4klVkcghZTO5YP62jUMRxFZYLP5vkSVkG0mBWJdCWJdq4XbFDWJdCYJdoA8yW56lmpoGZJnZ0tdpEgjkMQpVkNx5ZZipNNnhtRiCFp5QfTZNhDvToRRAuzzwPanO6QOSK4WhksilO6fJxIHMD73xAumWefnJJVbfxMlqPW4Oc2oEaJGM9YW2TgIXNo00NTjtmwu5r0zZOtoNmt)yomloNHA0buvOzO0hMQWZq1gcUg16(l)AP3S21HzP55ZPb4x8SYXe4MjqTV)6nTnxV(AnBvj2co8GwTUV4V2CfAaEKcwAnq4kY2pCUc0C9fKR0coCUYRugw6TfTMEKCfwsr5cnWmfzZhmpbAM(YXsAHgohX9Pm8OWr8ADcBoOX9qhv2j4eMTy0NdM3GoNF5yq6GeNlHVJFSpsDBrM0CYbLZOwvCkZiklcZ4kUjFzoBmp4SDoEQCWbVQorbNtbSigLKyom5CtsK7CKkjk)b6anOjL4Nc6wuUGOHVTl7gaE0HonYOZTHSluQbI7oeu)D8KXVUGeNVAwKmD8ndbBfdZ4E92nOcJvgvTmFhdQYZEydbU34RM4QVk)8ZcpKApKL1OoBB2QBuK5WI8nRdxrwXSYjN)6U0Mv4MFxMM7YLjK05gqLZDtxU3w5fZsaQworjOlg8b6fvVAtqz2mFnpbLYpOrjk7Vs3qA95L5pEs5aGuTjiv6DZmOmO(GKKqOUchklfuRfL6embugw3bunWpunWdunWFunyhq1anu1moi3OAp90tcFUNFpVtxYZrzTSi)ywtxqetX1YWAlwpRBrJNn9rdz7N1fUnss7(T)rDOb64ZdpKigvnhqOSVcpGqw67Rs)r8Takz5EXfgXHKMTPyzuEz4SIMtL4fGTW)yoEEbhnfdrV2(UCdBZ5kdxfv85MHPEFxwsIsRwoyn7obH5m0hh2moqFBZePj)Xhi6)OAtbHDB2aMeF3OETBy6Ba9G5rRIEGOJynNRX2EwK3sDKr0Bcw6JbFeGoWbxGxZoxG8zAKFqGdIU1DJ6btyV3eoJny)eq56y3xSOAmFOduvkGwDp93FYuB9kiCqG5mfWo13A6xRaJ12P6FEtAvsZcGTO3HmwS6cwgmn6l6uENTULaBsV96M5QD3JjMpBn3smoRfWdRg8SE(T88AIadc6l8Emj0qg2iIrG7JfLyL0U4iWsWAZzCspnGIOBbpa)THT0tU7h7FvhBexrre3X92(RrrAsFHTzu7IFW3pWNdqMiouOYtep4LVvUUC(GQR6ON)a8I2Appjn75XNtcQa3TlUZiTnbLrdBwA2dpFo2D9QwM0LaGPzvJ7MkdHBlxIvn2HKNdpmsu7DvLLdovJ1m31uV9lZGRBjvcx36uxRkQ7bUSdWSXPwiRDa6d)S0cQsgwPGLt6Kx0qCBNwjmocF32ra6Ajva(sHq2U9lxkx0swglvUmlmpqr75fOIXOcrC2ZJQSXiRFHouzzZe7kO43e619FqJwOwfjMRH0YO7itvtqN5ge7BwoUu21exRHYM69J3XlXYbJQjRGsPAGvA8wxKUPqgQoUm6NuniA9g(aR0Tuk(9oak2DyJIp17(XwfM3AzxNQNPJXHYXPUWd(q5OFrQGDOCCEnQCybe0jp7q9t3JJM0(87GdHJZC0VBhchhf3jYjDrsYSFoCuCl(qo2RAQBmprpov4SFNOhR2Wc008GFUD0oEpwo3oA7Ja(52rBpeqp3oAlcDCUDCUnz7252bBL3j1em8cflNHip0Hy5e5inEVlNHJ2eIyl1qQ6NSLzi2arkSLzifuSYwsE65vycFsUwbUmZ2ZaiCUNX(Oj1UA0Xw8y8qSd1ZTzbfthagw6BZlHtHbLXqQoQSTPE(ek(LhiMCksUW(KjiNiQYD4iyEzWTH6ihzoYKOY8QFx(EmUEC398EQKZf7HFQprECNj3xtpVTc0bIlkPs(Er96J09NmZZ0XgNbLJXZautNbYwSp4sJsC9mkl2gEWqoDxmC2nCC5whxldOhrGdjfsENCiSAx)WDxPNJKgOA00N7i8URjqqjSAu)qqPpDSrjey)aU4CCL1SrOXpisBKFUlpsld82s4GiniqtPw)QmRtSdWhrZNGcyNeRFKm4p0hTpkgljf5nQTO))cczF8LK2V1eZQ(syhxndpwUAGXVxGr8DXiFd4xfKAv5uNBslTUIlfUtQ2BDQWTjd72Zm92WECnNc4BF8oXJB0GDAdECdL7e27WWRJl(a3xJX729005EGK4kWCCZg55GQEtgzXUVvwhNZjhtOlBT98oV3yK7EzqmYZ7Wz9lXnKCO0rTmKg5949)XBLVTMJ86zckyOMpsYFUzf0xONjinBAv3VJxCVGcjDErm4OyxZoQ7H7LAksAaQcYSCkAQQ1zSpHckUDZWc3apLcsROg5pi6aEFH6d7yGvRyEQbBFcIUNBPnk9lySH42RqrvOyoPDAnPQABwV13MQUMC60fjlsNl5DQdCKpL99b5PoHDyVjp4ojz1Q4oz71lppW8R4WINxZVcNIQtW4)M1)bKnDD5dlLGIJP4ix5i8zR7jm2hh37Eri6NNlYEzr37vYEXNNU31v677GV(R4xgdCP)yxFoMC4LJtQLH0jurH3ioFUIHeGcc3uqePtUebCX(gZ7vBflQD2Rr4zoll0VmpHjwk8fjv8GeNKmoHPTLjf87UTOKcOyDL3xUhwM67gtvhLoYJtKdLsDsThKR(oE2roQXaDSd38isAaIvXr4LoYPQDX3DlYZweAhZAMRRt3wHA2oFPptrGxy68J4bIRObDoMDGH2P)G)GhcyGxx)LwQsLD9His7z6XAzkHVKXPor7GG1TZMZw8ReI0sRP9KLQxJewERBWfLegG89TUrtkXXBDJ1SywtRbFRZWc4QEl(DLgx04bp70UlPMLiLnWYQJaNy48aYURTLnLpvRoc4enC(xU9Uwt(vtlHLNHaCDeFPqdGqfpI2JDLoHXM2UbtNWeLaOuZIvxVqCnFJUspUpRHUnwn0n7bTDax2U1Ut63UV5cf19qgWXoCpmE9sdG9hvgp8I6uvstUsDU7eVDybpQMublbslXEWKBPwULEg0MFButNGEA9peZiGL4XoC8eteWolEppad36X2JCapvJQdn0thcUk5kKYzusFuR(BzYcO0DtFeGD4ZEmpyJ1xpMM1pOb4p0Mockc9KTStAWHdXPtysOX1CSofa7NCG7xgeKY12E8n4kj(QqaY97qINeDC66ouglwIg0k0ShHkU7lgKjd2s1gzvjQL34JJ5mdOJ1Z69xU9YN6Q9boGt7raIjHFJNz5Ttzw72NHFVvGX(KI4JLhWIUTBLi0RFjmTpLi0xvfYeEfeFedL1tWCNqFFQKPMoGM60drJPDhA3txImgzLxayxby55icKvEptFSLyG2XedRxlswlNuN(pqEvF551lAwmhI1ZjkKDof0O92M5AVs8ZKJuvl1YE8QsRyAjGVzcpYf5uNY1gw3KZeFA7Sp2RRHrUglQpqFp3ti51M0MSInPpBwad2dtgxK9qlGOVe3klqjK0AbezldHhV6hYJN9vFno5IQ7DEwhFmYWAlXdp5oxEAYdR9t(5XVe(C5alWz9ZM)R34yRF0CiqXHmFDi4Ri3Wh53RNO9tXKCn4R0Rji6RFFGyX(w1J8JL6HgU9oVbYs8d1wGcFOL3uVq2rjE4iv1EKSBh3uo2tIVJlAghxHnaLcrL1kD7u5bVmtAa76QQZeQzI)GscTuaZ553tjGF8x(0U0tfodqUOpIMTG19VlLRt7(cEHpv10bCyFhn81aOHO3oYfhCPRk45amCDTHh3NnC7RO3)l8hnjSxxByARWTNRCTCg7SOwpAHZ9)VNaNs(pg)1zm9Es0XPRF7TNaNyDNNKDt4edZ7)(quxYC7KDHF)4HKLA8Z(c2AZB20cC8UV80VTMSzsZYD10XBfQLhY9JKsj7VT7F9i94uF4HDj1z5Tv3Myf2942y)QqHl1umGvIaxoYF7gxAVsATtf4Pi(rsrjRnQpBbxn8sQd239uubBQkV)UFHDuztwToVO5WZ(DTpalF32PfK)3nuYaLQxMZsrB0MQ8vrvSFGQwmJgZ9GT)0FljJ201)W2P)z(nibV5VRQ(TSa7TcHo6v5k9d9rfH2XEJ(1((nrMpbhWZcqV8FkqEbpGNj8o7)ec9oGapBi9uBQ(aYuH9qN0zMS0r)NiN8jSE5)u4lFYrN9Fc9IpzRNAt1h1NQ81eXZCg1wh7WK(D96z9jB5n9U8IAfPC11Hypul97)w2JFYfNv3BONML(3(h7zjPY6dq3JIP2N39S2P)5DpaD9BiIoq53)TektLd2(taANNtwWmhUB6Mh5swI7wGw9M8Yl8FZ4f(R(x18BL(B5LLN3tBxNEZBgpC4ntgpS)lV0dhpp3gl4ClKxPmXXh0p1qUKTm0fF5SUy35NbHD1)Qg2XqaC43M45nbxiCOyGsSnShI((SX0Grp6JcYvlh53baDlml5fJqnbR(8)cy31OznL4wgvPYL63VsGHgQpN2X3NrwWEZE22id1hFHCFh)W9yS3pQYPE8rh5oAeod)vZ(CezYZpbQiFJn05Mjymk2crxpnR3oX2yFYukxZM(kH((nh5vkHhG6cTv9SDAwFfj(O6EfjCFoTJVpJSB9GW9Xxi33Xhxp7XMQCQhF0r2TE2aa9abNC9aVXg6OOii4Gueam2Nmfby6z)YqF)MJ8kLWhFQJTauED0vuhRV64fla0K0mhsC9YVm4AWRaUgyIRyPG6WIt5JNeRYFYfF54VI(n1XaolnpFEi)r8Uz13nt622UTKgFSpzlOpDP54BmcvRuxGZSQC8PLTetsrjPGTLmaetzB7hXS7yFYiMNEPUVriusPoxrUFG0YECIjSuhBNk5l16slLnTxKYUJ8jJsECe5GitFlrLKYBUIG5ajK20YXgUYk2GWovpDjNgTVx0uK54KrypoIFw049TirBq9wuTipnn)jEf(frHBQi4tKc6VtDmCUqCSI1nbu2CvDpBtvt)YY57V1MmTEpFoRZZJQIMfvs(HT)e)CtfL9mBRX(r(UIXg(rJ0hz22EXood5lssBR(KYbTL1WBN8EgEW8kPUKY2(tqDIxkfv5zpSHyTFLF(z2y9UKft4Ie1)7bmk)lVW(I6InPUHBEOiFZ6WvKvmdvWJP80twUmHKohUxI7GnrpytFnRswKD5fZsQoNdvQ9LdAWdzJO27yhaVMqyL5a9D8hQ)jYyoGlfGxErRhMBJVrZi79UrVG2Z8DahcWWbSYzqo9GLIGrZoXb0993hCazDFnM8VqvcGpelXn2qywu1Mcs4Q8ggEVrVT(9pjEzuEz4ScXjN5cGFL)f9VG(j9QBD5gkXNs0wfv8z2hjMLbljrPvlhSoU62jFCy)lG6TyW8b0j)6AsmJhNoJg1uwgjTg2R1VRFOQhmpAv0dKlKiMS9ICoQjZYMjrH9v8VX8GZr)kfDwk1t2fGDVMsbca7bIhNcI4g1G7bI514xDTJsfjh)2GMLiivcFFhO42F6p8hAmdvsrpU7GPBkRExk1Dn6A2jxpCylLG2H15S)IP1(e4YXPUegOy72P)iteVyZA2LJYITtJJeMELOi7JOIoulpQ)QK(LgvwM)U6bDYqgT4S6LvuD1C8QzPjDSt4hogZF5XGjdn)TgVIyL0D9FJ0LBu6YBBQaCfyTAjVKv5Ic6aAnXPPd8t5GcL7RjKioADuCcffeLL7x1e81SkEVDjtjPI9XufhSFomjEERtwZtkxtstzycvj7djXuqvDGEOGerfpdfdOVF168KsQ954usug7gecII1zGeFKXiXsjAc7BfQ3G9o4DSELVyriLsmze(Nd4DI(NYvJCOPF(vOSBAR7gqCTmnVQ1LtUWPhBg)PFV4FJCQSShraLTIFHUzz0pDQVDq9daP(aBr3PFh6EJCQSq9b2m7DJ6)kUhD4RZHcp4eSq32g3HdCMba9QbyboaSL5cijmoQyEzxWQlqHpwuFpfdhL7T)d1oPi7mynzohyNRrpdErQ6al3FMtLJO1Mg(gztM0ODT7YWPM29TXwLOs7Aty(rG09T(gJOs30ZV7rG49Vyz53mkD2Zl0NjHKFLgQqgDOyKiHHG15prJEijBXg2zN7iqPbnRfm0pQ1OGtyO8QrkQFhTjifIRs13XCSpUsyhK1hzcuMmQDg0paO1tIVtrZv9M9P6WMPOCByYTmmj)bkSmqKfQdfXuUa72PP9WM16mOzDc1MpE(R2o9N3KwLSDQJ3y1205rroMUCfjoWnHq0uRi3lV0if39EnXyOXPPSldqn8JDdcEZOR6aCY0xQaBWNSykpO(AQWyqKl346bqUClE5LZSo89pV71oyTcynvd3mYC(RVCoFN2B6UaTR94UioCEsP4wWsC)iq1zCEpHkl4lqHjWT1E9w1k5xeXfb78WUWuizz8VDYN67SlxDEVAKJp(HX5BYQUD8qf1siszgKSRF5fl7kXTJUYA738HAD2pbCjgsjK2WHpycPYH3SfJuNZqdezPZBsrTr73ASowB7fv63KR7qanV8lKM0WyoJg2VoGEdtz4MtO8BBSb(GHDlC0kSG1HBcUGNvPoAj0p)8kRZJ5LhXdjDYMF9wIID1CDlvCsSYc42zYy25yipNxqRpRbe8NZqRYwdbuzCmWEVvaRKrV2WF7oSILjxlqf(VP8o3rrc(VB7oNWgr4MjF0duE3gaTBbKD)Zn4iq8DhA9odwqNsjKRFmf9Kodkxb2Ld2vXzZTyHIxaD0wqx6HPW5YZ9tvuNj2q2PXJgP4HH0iVLfPBkKBiTv(MzJTx2gwwhMwV3EC8ORhji(fGDBwzaaYlfeLzSZT5snVx7YIPdptEJUyDO4JK21dMjpO5gx5K4xK6GaqZB2pHwjWo0BK7S1(yM)UXqKdr08MR3Jfb3ozSxA)6yq48g8CoHSo95WI8Cw4B1()QiKzv7jsJTUJTlw9G3bBH0c8vmjQnnlKeCXF0vMoWH9IRf8kQD2XQi01j6lNpdB9mCuyWp8iAZbpCipHNM(ci)0ZHxrF68UEd23tpLAM2oME9ALo2c9XGZH0sGtvB9SRjQvtvhDy9XSkCO6UGrjGqhS78(L7maUVXw0k85mcn7rlcoOsznNRB)eyW0Wd7PlI(6iMS5TRCyDE3Q1hAJYGtAW1UKB8mQVp1)iJcGWLLuAyh6eQG0t4HE1SEy64UegEp0O8CehxlaFW2U6HA8QrrTn(AFan8Nea9thkGccvhJWvh5JKKBtBUGVMkg0VuUkU7N4vf)ViYM82Pljf5BRVLgP))cIXCwN2536rQPvtNAystYuV(DY)8CB51zYqLSR15rIH1QGHQCB13hdw1Y4nwN0vF7ATLcHyN9z2SurNm6QV)QMsff6rBbfXCBESN1CNDktHzFf2lYBUYnb1Jp8c2UUrP5zBFuYYUBGINwsBuQXaPTSblMmUryuth35UO8cRgaVukmpTWOmnt64lmR0rtzdy)2pxwrEqp)jhRWOXC07gth9KamsoUH5RVY56wbiqIJvPhg3h1CPVgHzl7GvpxDHkHkEssMO88K8YlA7oRaDOrW2VFFBRpDUtnTqmIwSwkxnLKUkaLKPf7KPw7DqVQd3S(iU()AZhTdIHVVnu(o3p2hz3wph7(mgLiy4sKlxGgn01UqCzT3)G5SXPNA2fYDRIfwNM4qTzvF3T1A7UW0x6dIwT3WZ)x3DTTBJBde9BjVyKGueK44fydW68sb6pqEpfEBDWkSPUbY21VKp(klEr8YzMHuu02TiVeePqoC4W5Yzgokj6HqaomXxQTJO9cNANocq(zGZ8ZWFJowEpjbY4BPJzex8YOcQDcu3QpBG(IINIwfEezsbSD318yHkp71q2opM02u92LMCowImgQxBIspcVEnwTiFPYkrYuPwLjhkO6)FHX2esnqfYQzUkKNEr(j)WRNiW5Et1pmiE7e4KBKLesyk)G7CIM0kuTizoBG4drKmOcWhsi3rZUQswIGjR5kkrMQtgY4ozzuUcwAz0ThAAFVbvLCNSSWesLoEDY(IN)a1hFUkkdkiTj0XaiuHq(ywX56atxyqYqJZr6lVNLE8Z2wYA61md2VQqCt7isttrPIMtdKYWPaKhdknc9FI32PEvbHrC(mSeffw5qQx2aUAwo8dT(QJkZeNc69NmxjOnTj(ac)cjtp0fgUr7mwEXEcn8qncNl7ncomXLHoI6UmjLDPD04sAxCAGraktCM26hndmh(uIcFtsCwJv7tQvowPQLg784HiGk8IFtD9FeVQpQRj0T5FBFadbHR22NpKDxWdDkeJMHsmDS1x)nfwvMacCNUYw43eLYPZyV4m61ZQdR(56nrlN5U5H1sXwbV(MkvpBTyfgrUaOBTufMNR(3y7hDUUSBDRBr2suvulFy(NF2UQP7n)NE45)ZGaaq8J8p2lDiaLdGNxUiP9cteM7)yDRUENsq0wMxAV0PX9CSNJFMTTCHyya9xxxhY2CE1V(V4fR62GqmAp3Mhvkjsm960vPUxp3bLHFDXU5)mhgvWtqflUDbhgNp5Ljm(qBANrQzEZ7jSGRzDHznxW2g4XOIEyWOgWX2j0QsV463336L9wL0QNSUAOB7(1(W7uy2RKjMyMvSMQcg)ARoQasdnbxkzlEyKeUPJesIFtsseXEhFsJqh5KrPFQZJJDUNIOggwiLheumhgnpLLJe44amf0U(T21B)XXHz2fX94khjgV86WRHoUSA0lj(lZvAkf4JRN5(ynZN)GDvevCBOflRKpNNrYlYXU9m))KEuW4iz9SmtmP5y8TpAXZM9v8cGmRNskwLU8CV0CStYiwq925r15zwY2wAGvh)x)LHFTIvhVIeUDCzhtklvDMp535qecvIIlRyLTphFfTHeIyf1lvv31QE6beRpUv7kd2QJxNiFvaGz0pzExpLzZZnRRE6qT5D1vMh9gFBUGmUyUOdr1PzZZQXlscZqiXib1SXRg3T0rUxpqsz6RyptGM6tVCcYWRvA5V7Im4n1N2dqTniO8qceZN6S3Qni3jGPiSvV3P46UVcOthGvvdR(p4ggN5p5ey5iGj9rblYpH24Y0K8tm9aefTb6PtpCPT9XVnX)Fpb8q0qeNoChdR2guC2iQDKBeQhWAgDUTzz5vwG2Z5dUPITUnZ8rMi4X9TcretMmJ8(fXs)FIUikEWaNAs3td7KJcKk8ckF8V1)EEDcO0wjAw1(nTRp(lnXroTJe(ekOsKKucfusJs3UExNK6M9BVB3HdZ)9fF8hG)pIkffXoLOYOyDcd4F3yWXgmROaeh7P0KYw5GtD(U7R2xGWLi5qkIv7cDfWbctxjDWlDJVdYYd8Rf0tLJugPUV)Z4KvcqMDy)gk8wZ7VVU1mWWGLiQU0G5OpEOLjY1n5Eo1((XJAPfCt2oyqb(lEr0vm8PYW4uMspX)8t62aHpvuVA7tQVB4th((wxD6GMHmMaQRxVXWN2qy75)gzNKAQbkv)1ihGCnhqnom2bzQDkztWqnqKlMtV5wuf0Lduw5w7)6zvxBq8iF5warHiGnx9Dqs9RvhbmdPClz9df9ErDjcFjvW1tXaFXc9XCZYVD93p(TP0ic)iFRm6EoIVoONXnJz5NRlLkcVgFdRy(J1dGTKAyfKWFMBhRiI1uxCQUbdufd9upB7PXeYX(jRmZs8gM(XMWvdZZUE968Nhspe7ag3rHbkBcZ2T)N3gYlSKX4r8vNuKPpJt5Zx0r1Jl9EMvYjgzrwEi7Q)AUV2y9xcgRUYWpdc34c5A0dP3Sy12NuejdR2ZeIgHA8TPK8QY2QT9Pc7Dgzvt7DOyIDOGtDhNyb7ryj8QKprYXSJC)98TsZVpSSOe(gfoFrWuZ6ns4DrYGnpaJ2NxgHhjubxAlQuOY8y2jemYW)pF8iLPpHz48R6j2IBsIu4CEKg6l33kFiWCvYWdfgNt3mG1Nh0yLf8vEiP5(pfEsI(ItVJnXd05DqA6tkkmcG6KE9ZmIzbut98UorKZOzM544DcutYRnsJqqHZ(zoHGobibn1gShKEZXLuPrlpW48UwPeSVCWulHXlbREr7CV(YQ9h9z81xEP5V(1x319ZR)7d]] )

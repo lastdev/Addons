@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2328, "DBM-Raids-BfA", 3, 1177)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(144755, 144754)--144755 Zaxasj, 144754 Fa'thuul
 mod:SetEncounterID(2269)
 mod:SetBossHPInfoToHighest()
@@ -431,7 +431,7 @@ function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	if spellId == 282515 then
 		local timer = self:IsMythic() and 120 or self:IsHeroic() and 90
-		if timer then
+		if timer and timer > 0 then
 			timerVisageActive:Start(timer, args.destGUID)
 		end
 	end

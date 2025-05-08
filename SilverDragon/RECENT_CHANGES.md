@@ -1,6 +1,5 @@
-## Changed in v2025.3
+## Changed in v2025.6
 
-* Updated for 11.1.0
-* Rares for Undermine
-* Transform all Ringing Deeps coords because 11.1.0 shrunk it horizontally
+* Updated for 11.1.5 and 1.15.7
+* The dark magic scanning method is now disabled as Blizzard has closed the loophole it relied on with a change to 11.1.5. If you're looking for non-vignette mobs, I recommend falling back on using the macro.
 

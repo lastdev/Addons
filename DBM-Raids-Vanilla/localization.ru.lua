@@ -1226,7 +1226,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	AutomateEmote		= "Автоматически активировать правильную эмоцию для выполнения приказов",
+	AutomateEmote		= "Пытаться автоматически активировать правильную эмоцию для выполнения приказов (возможно, проблема не устранена из-за исправления Blizzard)",
 	AffixTimer			= "Показывать таймеры для аффиксов сложного режима",
 	WarnEggs			= "Показывать предупреждение для появления яиц (сложный режим «Паучий квартал»)",
 	SpecWarnOrders		= "Показывать спецпредупреждение, когда DBM не может автоматизировать выполнение приказов"
@@ -1239,11 +1239,11 @@ L:SetMiscLocalization({
 	SpiderAffix			= "Взрывающееся яйцо",
 	UnsupportedLocale	= [[Добро пожаловать в усиленный Военный квартал!
 Механика сложного режима выбирает случайных игроков и требует от них проявить определенную эмоцию.
-DBM пытается полностью автоматизировать этот процесс, однако наша поддержка вашего клиентского региона %s все еще не завершена, так что DBM может не поддерживать эмоции.
+Наша поддержка локализации Вашего клиента %s еще не завершена, DBM может пропустить эмоции.
 Вы можете помочь! Поделитесь с нами в discord.gg/deadlybossmods точным текстом (скриншотами, видео, логами транскриптора), используемым в механике сложного режима.
 ]],
-	AutomatedEmote		= "DBM автоматизировал эмоцию %s для выполнения приказов.",
-	AutomatedEmoteGuess	= "DBM автоматизировал эмоцию %s для выполнения приказов на основе догадки. Это было неправильно? Дайте нам знать в discord.gg/deadlybossmods",
+	AutomatedEmote		= "DBM попытался автоматизировать эмоцию %s для приказов (это может не сработать из-за блокировки автоматизации Blizzard).",
+	AutomatedEmoteGuess	= "DBM попытался автоматизировать эмоцию %s для приказов на основе догадки. Это была правильная эмоция? Дайте нам знать в discord.gg/deadlybossmods",
 	-- List of emotes may not be complete, let me know if I missed one
 	OrderDance			= "DANCE for me!",
 	OrderRoar			= "Show me your best ROAR!",
@@ -1567,3 +1567,72 @@ L:SetGeneralLocalization({
 --  Emperor Dagran Thaurissan (3049) --
 ---------------------------
 --L= DBM:GetModLocalization(2670)
+
+
+-----------------------------
+--  Scarlet Enclave (SoD)  --
+-----------------------------
+-- This mostly relies on the new auto-generated locales for boss names from encounter data.
+-- Only add name localization if the name in locale.generated.lua is inconsistent with the commonly used name in the language.
+
+L = DBM:GetModLocalization("Balnazzar")
+
+L:SetMiscLocalization{
+	OtherPlayer = "другой игрок", -- Use with AUTO_SPEC_WARN_TEXTS.moveto ("$spell - move to >%%s<")
+	Tick = "Tick"
+}
+
+L = DBM:GetModLocalization("Solistrasza")
+
+L = DBM:GetModLocalization("Beatrix")
+
+L:SetMiscLocalization{
+	YellFroggers1 = "break their ranks",
+	YellFroggers2 = "Ready your lances",
+	CannonMistress = "Cannon Mistress Lind", -- TODO: can we automatically get the localized name?
+	YellPhase2 = "We stand united! Let our enemies tremble before our might!",
+	Footmen = "Footmen",
+	Horses = "Horses"
+}
+
+L = DBM:GetModLocalization("RebornCouncil")
+
+L = DBM:GetModLocalization("Caldoran")
+
+L = DBM:GetModLocalization("LillianVoss")
+
+L = DBM:GetModLocalization("Beastmaster")
+
+L:SetOptionLocalization({
+	TimerMark = "Показывать таймер для следующих меток Озарение/Воспламенение (со счётчиком)",
+	WarnMark = "Показывать предупреждение для меток Озарение/Воспламенение (с количеством)"
+})
+
+L:SetTimerLocalization({
+	TimerMark	= "Метка %d",
+})
+
+L:SetWarningLocalization({
+	WarnMark = "Метка %d"
+})
+
+L = DBM:GetModLocalization("Mason")
+
+L:SetMiscLocalization{
+	Cannons1 = "Fire!",
+	Cannons2 = "Fire at will!",
+}
+
+L = DBM:GetModLocalization("SE_Trash")
+L:SetGeneralLocalization{
+	name = "Трэш мобы Анклав Алого Ордена"
+}
+
+L:SetOptionLocalization{
+	FlightTimer = "Показывать таймеры для полетов Грифонов",
+}
+
+L:SetMiscLocalization{
+	CentralTower = "Центральная башня",
+	Prison = "Тюрьма",
+}

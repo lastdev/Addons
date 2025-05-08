@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2565, "DBM-Raids-Dragonflight", 1, 1207)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(209090)--Primary ID
 mod:SetEncounterID(2786)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -332,14 +332,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.shroomCount = self.vb.shroomCount + 1
 		warnBlazingMushroom:Show(self.vb.shroomCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 423260, self.vb.shroomCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerBlazingMushroomCD:Start(timer, self.vb.shroomCount+1)
 		end
 	elseif spellId == 424581 then
 		self.vb.growthCount = self.vb.growthCount + 1
 		self.vb.growthIcon = 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.growthCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFieryGrowthCD:Start(timer, self.vb.growthCount+1)
 		end
 	elseif spellId == 420236 then
@@ -347,7 +347,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFallingStars:Show(self.vb.starsCount)
 		specWarnFallingStars:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.starsCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFallingStarsCD:Start(timer, self.vb.starsCount+1)
 		end
 	elseif spellId == 421398 then
@@ -355,7 +355,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFireBeam:Show(self.vb.beamCount)
 		specWarnFireBeam:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.beamCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFirebeamCD:Start(timer, self.vb.beamCount+1)
 		end
 	elseif spellId == 426016 or spellId == 424140 or spellId == 429169 then
@@ -365,7 +365,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFlamingGermination:Show(self.vb.tranqCount)
 		specWarnFlamingGermination:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tranqCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFlamingGerminationCD:Start(timer, self.vb.tranqCount+1)
 		end
 	elseif spellId == 421636 then
@@ -379,7 +379,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 424495 then
 		self.vb.entangleCount = self.vb.entangleCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.entangleCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerMassEntanglementCD:Start(timer, self.vb.entangleCount+1)
 		end
 	end
@@ -422,21 +422,21 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.moonkinCount = self.vb.moonkinCount + 1
 		warnIncarnationMoonkin:Show(self.vb.moonkinCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.moonkinCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerMoonkinCD:Start(timer, self.vb.moonkinCount+1)
 		end
 	elseif spellId == 422115 then--Tree form starting
 		self.vb.treeCount = self.vb.treeCount + 1
 		warnIncarnationTreeofFlame:Show(self.vb.treeCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.treeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerTreeofFlameCD:Start(timer, self.vb.treeCount+1)
 		end
 	elseif spellId == 425582 then--Mythic in phase owl form
 		self.vb.owlCount = self.vb.owlCount + 1
 		warnIncarnationOwl:Show(self.vb.owlCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.owlCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerOwlCD:Start(timer, self.vb.owlCount+1)
 		end
 	elseif spellId == 424258 then

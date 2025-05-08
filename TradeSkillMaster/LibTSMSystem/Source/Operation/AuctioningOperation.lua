@@ -159,7 +159,7 @@ AuctioningOperation:OnModuleLoad(function()
 		else
 			value = CustomString.GetValue(operationSettings[key], itemString, not IS_GOLD_PRICE_KEY[key])
 		end
-		if private.defaultZeroUndercut and IS_GOLD_PRICE_KEY[key] then
+		if LibTSMSystem.IsRetail() and IS_GOLD_PRICE_KEY[key] then
 			value = value and Math.Ceil(value, COPPER_PER_SILVER) or nil
 		end
 		local limits = private.valueLimits[key]

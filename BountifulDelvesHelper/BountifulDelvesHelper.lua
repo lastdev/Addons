@@ -21,35 +21,43 @@ areaIDs = {
     [2215] = "Hallowfall",
     [2214] = "Ringing Deeps",
     [2255] = "Azj-Kahet",
+    [2346] = "Undermine"
 }
 
 waypoints = {
+    --Isle of Dorn
     -- "Earthcrawl Mines"
     [7787] = { ["zone"] = 2248, ["x"] = 38.6, ["y"] = 74.0 },
-    -- "The Dread Pit"
-    [7788] = { ["zone"] = 2214, ["x"] = 74.2, ["y"] = 37.3 },
-    -- "The Sinkhole"
-    [7783] = { ["zone"] = 2215, ["x"] = 50.6, ["y"] = 53.3 },
-    -- "The Spiral Weave"
-    [7790] = { ["zone"] = 2255, ["x"] = 45.0, ["y"] = 19.0 },
     -- "Fungal Folly"
     [7779] = { ["zone"] = 2248, ["x"] = 52.03, ["y"] = 65.77 },
     -- "Kriegval's Rest"
     [7781] = { ["zone"] = 2248, ["x"] = 62.19, ["y"] = 42.70 },
+    --The Ringing Deeps
     -- "The Waterworks"
-    [7782] = { ["zone"] = 2214, ["x"] = 46.42, ["y"] = 48.71 },
-    -- "Nightfall Sanctum"
-    [7785] = { ["zone"] = 2215, ["x"] = 34.32, ["y"] = 47.43 },
+    [7782] = { ["zone"] = 2214, ["x"] = 42.15, ["y"] = 48.71 },
+    -- "The Dread Pit"
+    [7788] = { ["zone"] = 2214, ["x"] = 70.20, ["y"] = 37.3 },
+    -- "Excavation Site 9"
+    [8181] = { ["zone"] = 2214, ["x"] = 76.0, ["y"] = 96.50 },
+    --Hallowfall
     -- "Mycomancer Cavern"
     [7780] = { ["zone"] = 2215, ["x"] = 71.3, ["y"] = 31.2 },
+    -- "Nightfall Sanctum"
+    [7785] = { ["zone"] = 2215, ["x"] = 34.32, ["y"] = 47.43 },
+    -- "The Sinkhole"
+    [7783] = { ["zone"] = 2215, ["x"] = 50.6, ["y"] = 53.3 },
     -- "Skittering Breach"
     [7789] = { ["zone"] = 2215, ["x"] = 65.48, ["y"] = 61.74 },
-    -- "The Underkeep"
-    [7786] = { ["zone"] = 2255, ["x"] = 51.85, ["y"] = 88.30 },
+    --Azj-Kahet
+    -- "The Spiral Weave"
+    [7790] = { ["zone"] = 2255, ["x"] = 45.0, ["y"] = 19.0 },
     -- "Tak-Rethan Abyss"
     [7784] = { ["zone"] = 2255, ["x"] = 55.0, ["y"] = 73.92 },
-    -- "Zekvir's Lair"
-    -- [7875] = { ["zone"] = 2255, ["x"] = 32.74, ["y"] = 76.87 },
+    -- "The Underkeep"
+    [7786] = { ["zone"] = 2255, ["x"] = 51.85, ["y"] = 88.30 },
+    --Undermine
+    -- "Sidestreet Sluice"
+    [8246] = { ["zone"] = 2346, ["x"] = 35.20, ["y"] = 52.80 },
 }
 
 worldQuestsIDs = {
@@ -64,17 +72,17 @@ worldQuestsIDs = {
 }
 
 delveTiers = {
-    { ["bountifulLootIlvl"] = 561, ["recommendedIlvl"] = 515 },
-    { ["bountifulLootIlvl"] = 564, ["recommendedIlvl"] = 532 },
-    { ["bountifulLootIlvl"] = 571, ["recommendedIlvl"] = 545 },
-    { ["bountifulLootIlvl"] = 577, ["recommendedIlvl"] = 548 },
-    { ["bountifulLootIlvl"] = 584, ["recommendedIlvl"] = 567 },
-    { ["bountifulLootIlvl"] = 590, ["recommendedIlvl"] = 574 },
-    { ["bountifulLootIlvl"] = 597, ["recommendedIlvl"] = 587 },
-    { ["bountifulLootIlvl"] = 603, ["recommendedIlvl"] = 600 },
-    { ["bountifulLootIlvl"] = 603, ["recommendedIlvl"] = 610 },
-    { ["bountifulLootIlvl"] = 603, ["recommendedIlvl"] = 610 },
-    { ["bountifulLootIlvl"] = 603, ["recommendedIlvl"] = 610 }
+    { ["bountifulLootIlvl"] = 610, ["recommendedIlvl"] = 587, ["vaultIlvl"] = 623 },
+    { ["bountifulLootIlvl"] = 613, ["recommendedIlvl"] = 590, ["vaultIlvl"] = 623 },
+    { ["bountifulLootIlvl"] = 616, ["recommendedIlvl"] = 593, ["vaultIlvl"] = 626 },
+    { ["bountifulLootIlvl"] = 619, ["recommendedIlvl"] = 597, ["vaultIlvl"] = 636 },
+    { ["bountifulLootIlvl"] = 623, ["recommendedIlvl"] = 606, ["vaultIlvl"] = 642 },
+    { ["bountifulLootIlvl"] = 626, ["recommendedIlvl"] = 613, ["vaultIlvl"] = 645 },
+    { ["bountifulLootIlvl"] = 636, ["recommendedIlvl"] = 626, ["vaultIlvl"] = 645 },
+    { ["bountifulLootIlvl"] = 639, ["recommendedIlvl"] = 639, ["vaultIlvl"] = 649 },
+    { ["bountifulLootIlvl"] = 639, ["recommendedIlvl"] = 645, ["vaultIlvl"] = 649 },
+    { ["bountifulLootIlvl"] = 639, ["recommendedIlvl"] = 652, ["vaultIlvl"] = 649 },
+    { ["bountifulLootIlvl"] = 639, ["recommendedIlvl"] = 658, ["vaultIlvl"] = 649 }
 }
 
 AceGUI = LibStub("AceGUI-3.0")
@@ -118,49 +126,134 @@ function showUI()
         else
             guiCreateNewline(container, 2)
 
-            currency = C_CurrencyInfo.GetCurrencyInfo(3028)
+            cofferKeys = C_CurrencyInfo.GetCurrencyInfo(3028)
             cofferKeyIcon = GetItemIcon(224172)
+
+            if cofferKeys.quantity == 0 then
+                textColor = "\124cffE02E2E"
+            else
+                textColor = "\124cff2FE02F"
+            end
+
+            if cofferKeys.quantity == 1 then
+                cofferKeyCountLabel = "key"
+            else
+                cofferKeyCountLabel = "keys"
+            end
 
             local text = AceGUI:Create("InteractiveLabel")
             text:SetImage(cofferKeyIcon)
             text:SetImageSize(22, 22)
-            text:SetText("\124cffA335EE" .. currency.quantity .. " Restored Coffer Key\124r")
+            text:SetText(textColor .. cofferKeys.quantity .. "\124cffFFFFFF " .. cofferKeyCountLabel .. " on this character\124r")
             text:SetWidth(420)
             text:SetFont(GameFontHighlightLarge:GetFont())
             container:AddChild(text)
 
-            local button = AceGUI:Create("Button")
-            button:SetText("Start LFG")
-            button:SetWidth(100)
-            button:SetCallback("OnClick", function()
-                openStartGroupFrame("delves")
-            end)
-            container:AddChild(button)
+            guiCreateSpacing(container, 5)
+
+            local weeklyQuestCount = 4
+            local weeklyQuestIDs = {
+                847360,
+                847363,
+                847361
+            }
+            for _, weeklyQuestID in pairs(weeklyQuestIDs) do
+                if (C_QuestLog.IsQuestFlaggedCompleted(weeklyQuestID)) then
+                    weeklyQuestCount = weeklyQuestCount - 1
+                end
+            end
+
+            WeeklyQuestsIcon = GetItemIcon(122606)
+
+            if weeklyQuestCount == 0 then
+                textColor = "\124cffE02E2E"
+            else
+                textColor = "\124cff2FE02F"
+            end
+
+            if weeklyQuestCount == 1 then
+                cofferKeyCountLabel = "key"
+            else
+                cofferKeyCountLabel = "keys"
+            end
+
+            local text = AceGUI:Create("InteractiveLabel")
+            text:SetImage(WeeklyQuestsIcon)
+            text:SetImageSize(22, 22)
+            text:SetText(textColor .. weeklyQuestCount .. "\124cffFFFFFF " .. cofferKeyCountLabel .. " left to obtain from weekly activities")
+            text:SetWidth(420)
+            text:SetFont(GameFontHighlightLarge:GetFont())
+            container:AddChild(text)
 
             guiCreateSpacing(container, 5)
 
-            if IsInGroup() and not UnitIsGroupLeader("player") then
-                button:SetDisabled(true)
+            cofferKeyShardsCount = C_Item.GetItemCount(236096)
+            keysToCreateCount = math.floor(cofferKeyShardsCount / 100)
+            CofferKeyShardIcon = GetItemIcon(236096)
+
+            if cofferKeyShardsCount < 100 then
+                textColor = "\124cffE02E2E"
+            else
+                textColor = "\124cff2FE02F"
             end
 
+            if keysToCreateCount == 1 then
+                cofferKeyCountLabel = "key"
+            else
+                cofferKeyCountLabel = "keys"
+            end
+
+            local text = AceGUI:Create("InteractiveLabel")
+            text:SetImage(CofferKeyShardIcon)
+            text:SetImageSize(22, 22)
+            text:SetText(textColor .. keysToCreateCount .. "\124cffFFFFFF " .. cofferKeyCountLabel .. " available from \124cff3088E0" .. cofferKeyShardsCount .. "\124cffFFFFFF shards\124r")
+            text:SetWidth(420)
+            text:SetFont(GameFontHighlightLarge:GetFont())
+            container:AddChild(text)
+
+            guiCreateNewline(container, 3)
+
             local button = AceGUI:Create("Button")
-            button:SetText("Search LFG")
-            button:SetWidth(110)
+            button:SetText("Great Vault")
+            button:SetWidth(100)
             button:SetCallback("OnClick", function()
-                openFindGroupFrame("delves")
+                C_AddOns.LoadAddOn("Blizzard_WeeklyRewards")
+                BountifulDelvesHelperMainFrame:Hide()
+                WeeklyRewardsFrame:Show()
             end)
             container:AddChild(button)
 
-            cofferKeyShardsCount = C_Item.GetItemCount("Coffer Key Shard")
-            keysToCreateCount = math.floor(cofferKeyShardsCount / 100)
+            local lfgbutton1 = AceGUI:Create("Button")
+            lfgbutton1:SetText("Start LFG")
+            lfgbutton1:SetWidth(100)
+            lfgbutton1:SetCallback("OnClick", function()
+                openStartGroupFrame("delves")
+                BountifulDelvesHelperMainFrame:Hide()
+            end)
+            container:AddChild(lfgbutton1)
 
-            local text = AceGUI:Create("Label")
-            text:SetText("     +" .. keysToCreateCount .. " keys from \124cff0070FF" .. cofferKeyShardsCount .. " Coffer Key Shards\124r")
-            text:SetFullWidth(true)
-            text:SetFont(GameFontHighlightMedium:GetFont())
-            container:AddChild(text)
+            if IsInRaid() then
+                lfgbutton1:SetDisabled(true)
+            elseif IsInGroup() and not UnitIsGroupLeader("player") then
+                lfgbutton1:SetDisabled(true)
+            else
+                lfgbutton1:SetDisabled(false)
+            end
 
-            guiCreateNewline(container, 4)
+            local lfgbutton2 = AceGUI:Create("Button")
+            lfgbutton2:SetText("Search LFG")
+            lfgbutton2:SetWidth(100)
+            lfgbutton2:SetCallback("OnClick", function()
+                openFindGroupFrame("delves")
+                BountifulDelvesHelperMainFrame:Hide()
+            end)
+            container:AddChild(lfgbutton2)
+
+            guiCreateNewline(container, 2)
+
+            local label = AceGUI:Create("Label")
+            label:SetFullWidth(true)
+            container:AddChild(label)
 
             local label = AceGUI:Create("Label")
             label:SetText("Delve Name")
@@ -226,8 +319,20 @@ function showUI()
     local function DrawMemoryGroup(container)
         guiCreateNewline(container, 2)
 
-        radiantEchoCount = C_Item.GetItemCount(220520)
-        radiantEchoIcon = GetItemIcon(220520)
+        radiantEchoCount = C_Item.GetItemCount(235897)
+        radiantEchoIcon = GetItemIcon(235897)
+
+        if radiantEchoCount == 0 then
+            textColor = "\124cffE02E2E"
+        else
+            textColor = "\124cff2FE02F"
+        end
+
+        if radiantEchoCount == 1 then
+            radiantEchoCountLabel = "radiant echo"
+        else
+            radiantEchoCountLabel = "radiant echoes"
+        end
 
         if UnitLevel("player") < 68 then
             guiCreateNewline(container)
@@ -246,8 +351,8 @@ function showUI()
         else
             local text = AceGUI:Create("InteractiveLabel")
             text:SetImage(radiantEchoIcon)
-            text:SetImageSize(21, 21)
-            text:SetText("\124cffA335EE" .. radiantEchoCount .. " Radiant Echo\124r")
+            text:SetImageSize(22, 22)
+            text:SetText(textColor .. radiantEchoCount .. "\124cffFFFFFF " .. radiantEchoCountLabel .. " on this character\124r")
             text:SetWidth(420)
             text:SetFont(GameFontHighlightLarge:GetFont())
             container:AddChild(text)
@@ -369,19 +474,9 @@ function showUI()
         guiCreateNewline(container, 3)
 
         local label = AceGUI:Create("Label")
-        if BountifulDelvesHelperDB["highestDelveTier"] ~= nil then
-            label:SetText("Highest Delve: " .. getColorText("40BC40", "Tier " .. BountifulDelvesHelperDB["highestDelveTier"]))
-        end
-        label:SetFont(GameFontHighlightMedium:GetFont())
-        label:SetWidth(370)
-        container:AddChild(label)
-
-        guiCreateNewline(container, 5)
-
-        local label = AceGUI:Create("Label")
         label:SetText("Tiers")
         label:SetFont(GameFontHighlightMedium:GetFont())
-        label:SetWidth(150)
+        label:SetWidth(160)
         container:AddChild(label)
 
         for index = 1, 11 do
@@ -403,7 +498,7 @@ function showUI()
         local label = AceGUI:Create("Label")
         label:SetText("Recommended Gear")
         label:SetFont(GameFontHighlightMedium:GetFont())
-        label:SetWidth(150)
+        label:SetWidth(160)
         container:AddChild(label)
 
         for _, tierDetails in pairs(delveTiers) do
@@ -419,7 +514,7 @@ function showUI()
         local label = AceGUI:Create("Label")
         label:SetText("Bountiful Loot")
         label:SetFont(GameFontHighlightMedium:GetFont())
-        label:SetWidth(150)
+        label:SetWidth(160)
         container:AddChild(label)
 
         for _, tierDetails in pairs(delveTiers) do
@@ -428,6 +523,22 @@ function showUI()
 
             label:SetText(getGearColorText(bountifulLoot, bountifulLoot))
 
+            label:SetFont(GameFontHighlightMedium:GetFont())
+            label:SetWidth(40)
+            container:AddChild(label)
+        end
+
+        guiCreateNewline(container)
+
+        local label = AceGUI:Create("Label")
+        label:SetText("Great Vault")
+        label:SetFont(GameFontHighlightMedium:GetFont())
+        label:SetWidth(160)
+        container:AddChild(label)
+
+        for _, tierDetails in pairs(delveTiers) do
+            local label = AceGUI:Create("Label")
+            label:SetText(tierDetails["vaultIlvl"])
             label:SetFont(GameFontHighlightMedium:GetFont())
             label:SetWidth(40)
             container:AddChild(label)
@@ -444,13 +555,15 @@ function showUI()
             DrawMemoryGroup(container)
         elseif group == "tab3" then
             DrawTiersOverviewGroup(container)
+        elseif group == "tab4" then
+            DrawOptionsOverviewGroup(container)
         end
     end
 
     BountifulDelvesHelperMainFrame = AceGUI:Create("Frame")
     BountifulDelvesHelperMainFrame:EnableResize(false)
     BountifulDelvesHelperMainFrame:SetTitle("Bountiful Delves Helper")
-    BountifulDelvesHelperMainFrame:SetStatusText("Bountiful Delves Helper - v1.2.0")
+    BountifulDelvesHelperMainFrame:SetStatusText("Bountiful Delves Helper - v1.2.5")
     BountifulDelvesHelperMainFrame:SetCallback("OnClose", function(widget)
         isFrameVisible = false
     end)
@@ -459,7 +572,7 @@ function showUI()
 
     local tab = AceGUI:Create("TabGroup")
     tab:SetLayout("Flow")
-    tab:SetTabs({ { text = "Bountiful Delves", value = "tab1" }, { text = "Worldsoul Memories", value = "tab2" }, { text = "Tiers Overview", value = "tab3" } })
+    tab:SetTabs({ { text = "Bountiful Delves", value = "tab1" }, { text = "Worldsoul Memories", value = "tab2" }, { text = "Tiers Overview", value = "tab3" }, { text = "Options", value = "tab4" } })
     tab:SetCallback("OnGroupSelected", SelectGroup)
     tab:SelectTab("tab1")
 
@@ -467,6 +580,25 @@ function showUI()
 
     _G["BountifulDelvesHelperGlobalFrame"] = BountifulDelvesHelperMainFrame.frame
     tinsert(UISpecialFrames, "BountifulDelvesHelperGlobalFrame")
+end
+
+function DrawOptionsOverviewGroup(container)
+    guiCreateNewline(container, 3)
+
+    local button = AceGUI:Create("Button")
+    button:SetText("Toggle Minimap Button")
+    button:SetWidth(250)
+    button:SetCallback("OnClick", function()
+        if BountifulDelvesHelperIconDB.hide == true then
+            BountifulDelvesHelperMinimapButton:Show("BountifulDelvesHelper")
+            BountifulDelvesHelperIconDB.hide = false
+        else
+            BountifulDelvesHelperMinimapButton:Hide("BountifulDelvesHelper")
+            BountifulDelvesHelperIconDB.hide = true
+        end
+    end)
+    container:AddChild(button)
+
 end
 
 function triggerFrame()

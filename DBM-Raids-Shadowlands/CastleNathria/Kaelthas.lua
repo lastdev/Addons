@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2422, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(165759)
 mod:SetEncounterID(2402)
 mod:DisableIEEUCombatDetection()--kael gets stuck on boss frames well after encounter has ended, therefor must not re-engage boss off this bug
@@ -540,7 +540,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			elseif cid == 165762 then
 				self.vb.infuserCount = self.vb.infuserCount + 1
 				local timer = addTimers[self.vb.addMode][difficultyName][cid][self.vb.infuserCount+1]
-				if timer then
+				if timer and timer > 0 then
 					timerSoulInfuserCD:Start(timer, self.vb.infuserCount+1)
 					self:Unschedule(expectedInfuser)
 					self:Schedule(timer+10, expectedInfuser, self)

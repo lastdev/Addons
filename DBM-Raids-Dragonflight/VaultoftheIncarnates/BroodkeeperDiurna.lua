@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2493, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(190245)
 mod:SetEncounterID(2614)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -473,7 +473,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			specWarnPrimalistReinforcements:Show(self.vb.addsCount)
 			specWarnPrimalistReinforcements:Play("killmob")
 			local timer = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
-			if timer then
+			if timer and timer > 0 then
 				timerPrimalistReinforcementsCD:Start(timer, self.vb.addsCount+1)
 			end
 		end

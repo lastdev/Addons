@@ -1,15 +1,16 @@
-## Interface: 110007, 110100
-## X-Min-Interface: 110007, 110100
-## X-Min-Interface-Classic: 11505
+## Interface: 110105
+## X-Min-Interface: 110105
+## X-Min-Interface-Classic: 11507
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30403
-## X-Min-Interface-Cata: 40401
+## X-Min-Interface-Cata: 40402
 ## Title: GTFO
 ## Notes: GTFO, you're dying!
 ## Author: Zensunim of Dragonblight
-## Version: 5.15.1
+## Version: 5.17.1
 ## DefaultState: Enabled
 ## SavedVariables: GTFOData
+## Category: Combat
 ## X-WoWI-ID: 17996 
 ## X-Curse-Project-ID: 20697
 ## X-Wago-ID: PANz0MK4

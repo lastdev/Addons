@@ -1,11 +1,12 @@
-## Interface: 110007, 110100
+## Interface: 110105, 110107
 ## Title: SmartBuff |cff0099ffRetail|r
-## Version: 33.110007
+## Version: 34.110105
 ## Author: |cff20d2ffCodermik & Aeldra|r (EU-Proudmoore)
 ## Contributing Author: |cff20d2ffSpeedwaystar
 ## Notes: Cast the most important buffs on you or party/raid members/pets. Use /sbm for options menu.
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
+## LoadSavedVariablesFirst: true
 ## SavedVariables: SMARTBUFF_OptionsGlobal
 ## SavedVariablesPerCharacter: SMARTBUFF_Options, SMARTBUFF_Buffs
 ## IconTexture: Interface\Addons\Smartbuff\Icons\IconEnabled.tga

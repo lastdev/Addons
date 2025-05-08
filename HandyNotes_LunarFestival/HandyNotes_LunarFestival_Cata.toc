@@ -1,5 +1,5 @@
 ## Interface: 40402
-## Version: 4.16
+## Version: 4.21
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_misc_elvencoins
 ## Title: Lunar Festival
@@ -14,7 +14,7 @@
 ## Title-ruRU: Лунный фестиваль
 ## Title-zhCN: 春节
 ## Title-zhTW: 春節
-## Notes: |cFFE9AB17Helps for the |cFFC11B17Lunar Festival|cFFE9AB17 achievements and quests
+## Notes: |cFFE9AB17Help for the |cFFC11B17Lunar Festival|cFFE9AB17 achievements and quests
 ## Notes-deDE: |cFFE9AB17Hilfe für Erfolge und Quests in |cFFC11B17Mondfest 
 ## Notes-esES: |cFFE9AB17Ayuda para los logros y misiones del |cFFC11B17Festival Lunar
 ## Notes-esMX: |cFFE9AB17Ayuda para los logros y misiones del |cFFC11B17Festival Lunar
@@ -34,8 +34,11 @@
 ## X-Curse-Project-ID: 776143
 ## X-Wago-ID: baND0oNo
 
+Colours_LF.lua
+Common.lua
 Localisations_Common.lua
 Localisations_Events.lua
 Localisations_LF.lua
-Core.lua
+Mapping.lua
 Data.lua
+Core.lua

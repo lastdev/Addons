@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2361, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213203")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(152910)
 mod:SetEncounterID(2299)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -477,7 +477,7 @@ function mod:SPELL_CAST_START(args)
 			warnOverload:Show(self.vb.overloadCount)
 		end
 		local timer = self:IsLFR() and phase4LFROverloadTimers[self.vb.overloadCount+1] or self:IsHeroic() and phase4HeroicOverloadTimers[self.vb.overloadCount+1] or self:IsNormal() and 54.9 or self:IsMythic() and 56
-		if timer then
+		if timer and timer > 0 then
 			timerOverloadCD:Start(timer, self.vb.overloadCount+1)--Mythic same as normal, heroic only one that's shorter (so far, LFR unknown)
 		end
 		if self:IsMythic() then
@@ -508,7 +508,7 @@ function mod:SPELL_CAST_START(args)
 		else--Phase 4
 			--Phase 4 pattern (imprecise as hell, it's spell queuing not true alternating, but there is enough consistency to do this somewhat)
 			local timer = self:IsEasy() and phase4LFRBeckonTimers[self.vb.beckonCast+1] or self:IsHeroic() and phase4HeroicBeckonTimers[self.vb.beckonCast+1] or self:IsMythic() and 97.4
-			if timer then
+			if timer and timer > 0 then
 				timerBeckonCD:Start(timer, self.vb.beckonCast+1)
 			end
 		end
@@ -533,7 +533,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnPiercingGaze:Show(self.vb.piercingCount)
 		specWarnPiercingGaze:Play("farfromline")
 		local timer = self:IsMythic() and phase4MythicPiercingTimers[self.vb.piercingCount+1] or self:IsLFR() and phase4LFRPiercingTimers[self.vb.piercingCount+1] or self:IsHeroic() and phase4HeroicPiercingTimers[self.vb.piercingCount+1] or self:IsNormal() and phase4NormalPiercingTimers[self.vb.piercingCount+1]
-		if timer then
+		if timer and timer > 0 then
 			timerPiercingGazeCD:Start(timer, self.vb.piercingCount+1)
 		end
 	elseif spellId == 181089 then--Encounter Event

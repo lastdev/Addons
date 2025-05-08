@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2482, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213146")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(187967)
 mod:SetEncounterID(2592)
 mod:SetUsedIcons(1, 2, 3)
@@ -225,7 +225,7 @@ function mod:SPELL_CAST_START(args)
 			timerChillingBlastCD:Start(32, self.vb.blastCount+1)
 		else
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.blastCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerChillingBlastCD:Start(timer, self.vb.blastCount+1)
 			end
 		end
@@ -233,7 +233,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.webIcon = 1
 		self.vb.webCount = self.vb.webCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.webCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerEnvelopingWebsCD:Start(timer, self.vb.webCount+1)
 		end
 	elseif spellId == 373405 then
@@ -281,7 +281,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerCallSpiderlingsCD:Start(self:IsNormal() and 25 or 30, self.vb.spiderlingsCount+1)
 		else
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.spiderlingsCount+1)
-			if timer then
+			if timer and timer > 0 then
 				timerCallSpiderlingsCD:Start(timer, self.vb.spiderlingsCount+1)
 			end
 		end

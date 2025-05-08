@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2445, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045739")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(175727)
 mod:SetEncounterID(2434)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -221,7 +221,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.ruinbladeCount = self.vb.ruinbladeCount + 1
 --		timerRuinbladeCD:Start(nil, self.vb.ruinbladeCount+1)
 		local timer = allTimers[difficultyName][spellId][self.vb.ruinbladeCount+1] or 32.5
-		if timer then
+		if timer and timer > 0 then
 			timerRuinbladeCD:Start(timer, self.vb.ruinbladeCount+1)
 		end
 	elseif spellId == 350615 then
@@ -231,7 +231,7 @@ function mod:SPELL_CAST_START(args)
 		warnSpawnMawsworn:Show(self.vb.mawswornSpawn)
 --		timerSpawnMawswornCD:Start(self:IsMythic() and 47.7 or 57.5, self.vb.mawswornSpawn+1)
 		local timer = allTimers[difficultyName][spellId][self.vb.mawswornSpawn+1] or (self:IsMythic() and 57 or 59)
-		if timer then
+		if timer and timer > 0 then
 			timerSpawnMawswornCD:Start(timer, self.vb.mawswornSpawn+1)
 		end
 		if self.Options.SetIconOnMawsworn then--This icon method may be faster than GUID matching, but also risks being slower and less consistent if marker has nameplates off
@@ -244,7 +244,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnWarmongerShackles:Play("targetchange")
 --		timerShacklesCD:Start(999, self.vb.shacklesCount+1)
 		local timer = allTimers[difficultyName][spellId][self.vb.shacklesCount+1] or (self:IsMythic() and 41.5 or 60)
-		if timer then
+		if timer and timer > 0 then
 			timerShacklesCD:Start(timer, self.vb.shacklesCount+1)
 		end
 	end
@@ -383,7 +383,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		specWarnTorment:Play("watchstep")
 --		timerTormentCD:Start(45, self.vb.tormentCount+1)
 		local timer = allTimers[difficultyName][spellId][self.vb.tormentCount+1] or (self:IsMythic() and 30.6 or 43)
-		if timer then
+		if timer and timer > 0 then
 			timerTormentCD:Start(timer, self.vb.tormentCount+1)
 		end
 	end

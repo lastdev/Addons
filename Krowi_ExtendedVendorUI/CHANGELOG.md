@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 13.0 - 2025-04-22
+### Added
+- Illusions can now also be filtered
+
+## 12.1 - 2025-03-31
+### Fixed
+- Compatibility issue with TSM
+
+## 12.0 - 2025-03-01
+### Added
+- Transmog sets likes ensembles and arsenals can now also filtered
+- Addon category
+
 ## 11.1 - 2025-02-14
 ### Cata Classic
 - Silver Shafted Arrow and Truesilver Shafted Arrow are no longer considered pets

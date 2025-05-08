@@ -2,8 +2,12 @@
 ---------------------------------- NAMESPACE ----------------------------------
 -------------------------------------------------------------------------------
 local ADDON_NAME, ns = ...
+local L = ns.locale
 
+local Rare = ns.node.Rare
 local Safari = ns.node.Safari
+
+local Transmog = ns.reward.Transmog
 
 local POI = ns.poi.POI
 
@@ -12,6 +16,44 @@ local POI = ns.poi.POI
 -------------------------------------------------------------------------------
 
 local map = ns.Map({id = 56, settings = true})
+
+-------------------------------------------------------------------------------
+------------------------------------ RARES ------------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[48007460] = Rare({
+    id = 2090,
+    rewards = {
+        Transmog({item = 5750, type = L['mail']}), -- Warchief's Girdle
+        Transmog({item = 5749, type = L['2h_axe']}) -- Scythe Axe
+    }
+}) -- Ma'ruk Wyrmscale <Dragonmaw Warlord>
+
+map.nodes[69802920] = Rare({
+    id = 1140,
+    location = L['in_cave'],
+    rewards = {
+        Transmog({item = 6198, type = L['leather']}), -- Jurassic Wristguards
+        Transmog({item = 4463, type = L['cloth']}), -- Beaded Raptor Collar
+        ns.reward.Pet({item = 48124, id = 238}) -- Razormaw Hatchling
+    },
+    pois = {POI({69503560})}
+}) -- Razormaw Matriarch
+
+map.nodes[46806360] = Rare({
+    id = 1112,
+    location = L['in_cave'],
+    rewards = {Transmog({item = 4444, type = L['shield']})}, -- Black Husk Shield
+    pois = {POI({52596282})}
+}) -- Leech Widow
+
+map.nodes[38434603] = Rare({
+    id = 2108,
+    rewards = {
+        Transmog({item = 6200, type = L['mail']}), -- Garneg's War Belt
+        Transmog({item = 3392, type = L['leather']}) -- Ringed Helm
+    }
+}) -- Garneg Charskull
 
 -------------------------------------------------------------------------------
 ------------------------------------ SAFARI -----------------------------------
@@ -80,6 +122,10 @@ map.nodes[51603580] = Safari.WaterSnake({
         })
     }
 }) -- Water Snake
+
+-------------------------------------------------------------------------------
+-------------------------- THE SCAVENGER ACHIEVEMENT --------------------------
+-------------------------------------------------------------------------------
 
 map.nodes[05906210] = ns.node.ScavengerPool(3874)
 map.nodes[07205590] = ns.node.ScavengerPool(3874)

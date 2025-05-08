@@ -1,8 +1,7 @@
 local _, ns = ...
-local points = ns.points
-local textures = ns.textures
-local scaling = ns.scaling
-ns.map = {}
+ns.points = {}
+ns.textures = {}
+ns.scaling = {}
 
 ns.crushing = "You must finish the quest \"Crushing the Crown\". The quests shown here are for the complete quest chain"
 ns.dailyGetaway = "Only one of the three dailies is available, randomly, every day"
@@ -181,38 +180,7 @@ ns.setCrushing = { crushing=true, name=( ( ns.version >= 30300 ) and "Dangerous 
 --
 --==================================================================================================================================
 
-ns.map.ashenvale = ( ns.version < 60000 ) and 1440 or 63
-ns.map.azshara = ( ns.version < 60000 ) and 1447 or 76
-ns.map.azuremyst = ( ns.version < 60000 ) and 1943 or 97
-ns.map.darkshore = ( ns.version < 60000 ) and 1439 or 62
-ns.map.darnassus = ( ns.version < 60000 ) and 1457 or 89
-ns.map.desolace = ( ns.version < 60000 ) and 1443 or 66
-ns.map.durotar =  ( ns.version < 60000 ) and 1411 or 1
-ns.map.dustwallow =  ( ns.version < 60000 ) and 1445 or 70
-ns.map.felwood =  ( ns.version < 60000 ) and 1448 or 77
-ns.map.feralas =  ( ns.version < 60000 ) and 1444 or 69
-ns.map.moonglade =  ( ns.version < 60000 ) and 1450 or 80
-ns.map.mulgore =  ( ns.version < 60000 ) and 1412 or 7
-ns.map.northernBarrens =  ( ns.version < 60000 ) and 1413 or 10
-ns.map.orgrimmar =  ( ns.version < 60000 ) and 1454 or 85
-ns.map.silithus =  ( ns.version < 60000 ) and 1451 or 81
-ns.map.stonetalon =  ( ns.version < 60000 ) and 1442 or 65
-ns.map.tanaris =  ( ns.version < 60000 ) and 1446 or 71
-ns.map.teldrassil =  ( ns.version < 60000 ) and 1438 or 57
-ns.map.theExodar =  ( ns.version < 60000 ) and 1947 or 103
-ns.map.thousand =  ( ns.version < 60000 ) and 1441 or 64
-ns.map.thunder =  ( ns.version < 60000 ) and 1456 or 88
-ns.map.ungoro =  ( ns.version < 60000 ) and 1449 or 78
-ns.map.winterspring =  ( ns.version < 60000 ) and 1452 or 83
-ns.map.kalimdor =  ( ns.version < 60000 ) and 1414 or 12
-
-points[ 76 ] = { -- Azshara
-}
-
-points[ 1447 ] = { -- Azshara
-}
-
-points[ 97 ] = { -- Azuremyst Isle
+ns.points[ ns.map.azuremyst ] = { -- Azuremyst Isle
 	[20555436] = { introduction=true, name="Draenei Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[31574612] = { introduction=true, name="Draenei Commoner", faction="Alliance",
@@ -221,37 +189,21 @@ points[ 97 ] = { -- Azuremyst Isle
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 }
 
-points[ 1943 ] = { -- Azuremyst Isle
-}
-
-points[ 62 ] = { -- Darkshore
-}
-
-points[ 1439 ] = { -- Darkshore
-}
-
-points[ ns.map.darnassus ] = { -- Darnassus	
+ns.points[ ns.map.darnassus ] = { -- Darnassus	
 	[44685287] = { introduction=true, name="Night Elf Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[45295808] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
 }
 
-points[ ns.map.desolace ] = { -- Desolace	
+ns.points[ ns.map.desolace ] = { -- Desolace	
 	[92145646] = { introduction=true, name="Tauren Commoner", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 	[92705588] = { introduction=true, name="Aurora Vabsley", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 1 ] = { -- Durotar
+ns.points[ ns.map.durotar ] = { -- Durotar
 	[41561797] = { scenicGetaway=true, name="Hana Breezeheart",
 					quests={ { id=78980, name="Take a Look Around", version=100205, faction="Horde",
 								qType="Seasonal", },
@@ -301,16 +253,7 @@ points[ 1 ] = { -- Durotar
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 1411 ] = { -- Durotar
-}
-
-points[ 70 ] = { -- Dustwallow Marsh
-}
-
-points[ 1445 ] = { -- Dustwallow Marsh
-}
-
-points[ 69 ] = { -- Feralas
+ns.points[ ns.map.feralas ] = { -- Feralas
 	[68757210] = { loveLanguage=true, name="Rizzi",
 					achievements={ { id=19508, index=8, showAllCriteria=true, } },
 					quests={ { id=78594, name=ns.feralasTitle, version=100205, faction="Alliance",
@@ -376,17 +319,14 @@ points[ 69 ] = { -- Feralas
 					achievements={ { id=19508, showAllCriteria=true, } }, },
 }
 
-points[ 7 ] = { -- Mulgore
-	[38782950] = { introduction=true, name="Tauren Commoner", faction="Horde",
+ns.points[ ns.map.mulgore ] = { -- Mulgore
+	[38782950] = { introduction=true, name="Tauren Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[39242902] = { introduction=true, name="Aurora Vabsley", faction="Horde",
+	[39242902] = { introduction=true, name="Aurora Vabsley", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 1412 ] = { -- Mulgore
-}
-
-points[ 10 ] = { -- Northern Barrens
+ns.points[ ns.map.barrens ] = { -- Northern Barrens / The Barrens
 	[01947963] = { introduction=true, name="Tauren Commoner", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 	[02387918] = { introduction=true, name="Aurora Vabsley", faction="Horde",
@@ -396,95 +336,72 @@ points[ 10 ] = { -- Northern Barrens
 								guide="Head west to Jaz by the Southfury River shore line.\n\n" ..ns.relaxation, }, }, },
 }
 
-points[ ns.map.orgrimmar ] = { -- Orgrimmar
-	[32236575] = { introduction=true, name="Troll Commoner", faction="Horde",
+ns.points[ ns.map.orgrimmar ] = { -- Orgrimmar
+	[32236575] = { introduction=true, name="Troll Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[39577804] = { introduction=true, name="Troll Commoner", faction="Horde",
+	[39577804] = { introduction=true, name="Troll Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[40264905] = { introduction=true, name="Tauren Commoner", faction="Horde",
+	[40264905] = { introduction=true, name="Tauren Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[49086150] = { introduction=true, name="Troll Commoner", faction="Horde",
+	[49086150] = { introduction=true, name="Troll Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[51557516] = { introduction=true, name="Orc Commoner", faction="Horde",
+	[51557516] = { introduction=true, name="Orc Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[51607520] = { introduction=true, name="Orc Commoner", faction="Horde",
+	[51607520] = { introduction=true, name="Orc Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[58006205] = { selfCare=true, faction="Horde", version=100205,
+	[58006205] = { selfCare=true, faction="Horde", version=100205, noContinent=true,
 					quests={ { id=78990, name="The Gift of Relief", version=100205, faction="Horde", qType="Daily",
 								guide=ns.relief, }, }, },
-	[63603325] = { selfCare=true, faction="Horde", version=100205,
+	[63603325] = { selfCare=true, faction="Horde", version=100205, noContinent=true,
 					quests={ { id=78990, name="The Gift of Relief", version=100205, faction="Horde", qType="Daily",
 								guide=ns.relief, }, }, },
-	[69854942] = { introduction=true, name="Orc Commoner", faction="Horde",
+	[69854942] = { introduction=true, name="Orc Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
 }
 
-points[ 1454 ] = { -- Orgrimmar
-}
-
-points[ 199 ] = { -- Southern Barrens
+ns.points[ 199 ] = { -- Southern Barrens
 	[17072924] = { introduction=true, name="Tauren Commoner", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 	[17412888] = { introduction=true, name="Aurora Vabsley", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 71 ] = { -- Tanaris
-}
-
-points[ 1446 ] = { -- Tanaris
-}
-
-points[ 57 ] = { -- Teldrassil
+ns.points[ ns.map.teldrassil ] = { -- Teldrassil
 	[29544918] = { introduction=true, name="Night Elf Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[29715055] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 }
 
-points[ 1438 ] = { -- Teldrassil
+ns.points[ ns.map.theExodar ] = { -- The Exodar
+	[25589361] = { introduction=true, name="Draenei Commoner", faction="Alliance", noContinent=true,
+					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
+	[68006186] = { introduction=true, name="Draenei Commoner", faction="Alliance", noContinent=true,
+					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
+	[75265188] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance", noContinent=true,
+					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 }
 
-points[ ns.map.theExodar ] = { -- The Exodar
-	[25589361] = { introduction=true, name="Draenei Commoner", faction="Alliance",
-					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[68006186] = { introduction=true, name="Draenei Commoner", faction="Alliance",
-					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[75265188] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance",
-					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
-}
-
-points[ ns.map.thunder ] = { -- Thunder Bluff
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
+ns.points[ ns.map.thunder ] = { -- Thunder Bluff
 	[40825613] = { introduction=true, name="Tauren Commoner", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 	[43225363] = { introduction=true, name="Aurora Vabsley", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 83 ] = { -- Winterspring
+ns.points[ ns.map.winterspring ] = { -- Winterspring
 	[22784676] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"a relaxing wade into Winterspring hot springs\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
+}
+
+ns.points[ ns.map.kalimdor ] = { -- Kalimdor
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
 }
 
 --==================================================================================================================================
@@ -493,46 +410,7 @@ points[ 83 ] = { -- Winterspring
 --
 --==================================================================================================================================
 					
-ns.map.badlands = ( ns.version < 60000 ) and 1418 or 15
-ns.map.blastedLands = ( ns.version < 60000 ) and 1419 or 17
-ns.map.burningSteppes = ( ns.version < 60000 ) and 1428 or 36
-ns.map.dunMorogh = ( ns.version < 60000 ) and 1426 or 27
-ns.map.duskwood = ( ns.version < 60000 ) and 1431 or 47
-ns.map.easternP = ( ns.version < 60000 ) and 1423 or 23
-ns.map.elwynn = ( ns.version < 60000 ) and 1429 or 37
-ns.map.eversong = ( ns.version < 60000 ) and 1941 or 94
-ns.map.hillsbrad = ( ns.version < 60000 ) and 1424 or 25
-ns.map.ironforge = ( ns.version < 60000 ) and 1455 or 87
-ns.map.lochModan = ( ns.version < 60000 ) and 1432 or 48
-ns.map.northStrangle = ( ns.version < 60000 ) and 1434 or 50 -- 1434 is listed as "stranglethorne"
-ns.map.searingGorge = ( ns.version < 60000 ) and 1427 or 32
-ns.map.silvermoon = ( ns.version < 60000 ) and 1954 or 110
-ns.map.silverpine = ( ns.version < 60000 ) and 1421 or 21
-ns.map.stormwind = ( ns.version < 60000 ) and 1453 or 84
-ns.map.swampOS = ( ns.version < 60000 ) and 1435 or 51
-ns.map.TheHint = ( ns.version < 60000 ) and 1425 or 26
-ns.map.tirisfal = ( ns.version < 60000 ) and 1420 or 18
-ns.map.undercity = ( ns.version < 60000 ) and 1458 or 90
-ns.map.westfall = ( ns.version < 60000 ) and 1436 or 52
-ns.map.westernP = ( ns.version < 60000 ) and 1422 or 22
-ns.map.easternK = ( ns.version < 60000 ) and 1415 or 13
-
-points[ 1416 ] = { -- Alterac Mountains
-}	
-
-points[ 27 ] = { -- Dun Morogh
-}
-
-points[ 1426 ] = { -- Dun Morogh
-}
-
-points[ 47 ] = { -- Duskwood
-}
-
-points[ 1431 ] = { -- Duskwood
-}
-
-points[ ns.map.elwynn ] = { -- Elwynn Forest
+ns.points[ ns.map.elwynn ] = { -- Elwynn Forest
 	[25473955] = { introduction=true, name="Human Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[25950747] = { selfCare=true, faction="Alliance", version=100205,
@@ -589,7 +467,7 @@ points[ ns.map.elwynn ] = { -- Elwynn Forest
 								guide=ns.selfCare, }, }, },
 }
 
-points[ 94 ] = { -- Eversong Woods
+ns.points[ ns.map.eversong ] = { -- Eversong Woods
 	[53394198] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 	[54165077] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
@@ -606,83 +484,38 @@ points[ 94 ] = { -- Eversong Woods
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 1941 ] = { -- Eversong Woods
-}
-
-points[ 95 ] = { -- Ghostlands
-}
-
-points[ 1942 ] = { -- Ghostlands
-}
-
-points[ 25 ] = { -- Hillsbrad Foothills
-}
-
-points[ 1424 ] = { -- Hillsbrad Foothills
-}
-
-points[ ns.map.ironforge ] = { -- Ironforge
-	[32407404] = { introduction=true, name="Dwarf Commoner", faction="Alliance",
+ns.points[ ns.map.ironforge ] = { -- Ironforge
+	[32407404] = { introduction=true, name="Dwarf Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[33066660] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance", version=100205,
+	[33066660] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[58154940] = { introduction=true, name="Gnome Commoner", faction="Alliance",
+	[58154940] = { introduction=true, name="Gnome Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
 }
 
-points[ 48 ] = { -- Loch Modan
-}
-
-points[ 1432 ] = { -- Loch Modan
-}
-
-points[ 50 ] = { -- Northern Stranglethorn
+ns.points[ ns.map.northStrangle ] = { -- Northern Stranglethorn
 	[79607733] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"the lovely lakeside in Northern Stranglethorn\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
-points[ 50 ] = { -- Redridge Mountains
-}
-
-points[ 1433 ] = { -- Redridge Mountains
-}
-
-points[ 1427 ] = { -- Searing Gorge
-}
-
-points[ ns.map.silvermoon ] = { -- Sivermoon City +13
-	[31504020] = ns.setDungeon,
-	[31504450] = ns.setFoolForLove,
-	[33704730] = ns.setDangerous,
-	[34004300] = ns.setFlavour,
-	[34203900] = ns.setFistful,
-	[36304600] = ns.setLoveRays,
-	[36404180] = ns.setVendorAchieves,
-	[59136077] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
+ns.points[ ns.map.silvermoon ] = { -- Sivermoon City +13
+	[59136077] = { introduction=true, name="Blood Elf Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[62279656] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
+	[62279656] = { introduction=true, name="Blood Elf Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[62507380] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
+	[62507380] = { introduction=true, name="Blood Elf Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[64366726] = { introduction=true, name="Aurora Vabsley", faction="Horde",
+	[64366726] = { introduction=true, name="Aurora Vabsley", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[77985757] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
+	[77985757] = { introduction=true, name="Blood Elf Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[89564912] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
+	[89564912] = { introduction=true, name="Blood Elf Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
-	[90245743] = { introduction=true, name="Blood Elf Commoner", faction="Horde",
+	[90245743] = { introduction=true, name="Blood Elf Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 21 ] = { -- Silverpine Forest
+ns.points[ ns.map.silverpine ] = { -- Silverpine Forest
 	[45736849] = { crushing=true, name=ns.snipSnapName, version=100205,
 					quests={ { id=78729, name="Raising a Stink", version=100205, faction="Alliance", qType="Seasonal", }, 
 						{ id=78369, name="Crushing the Crown", version=100205, faction="Alliance", qType="Seasonal",
@@ -694,23 +527,23 @@ points[ 21 ] = { -- Silverpine Forest
 						{ id=78985, name="The Stench of Revenge", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ ns.map.stormwind ] = { -- Stormwind City
-	[49729001] = { introduction=true, name="Human Commoner", faction="Alliance",
+ns.points[ ns.map.stormwind ] = { -- Stormwind City
+	[49729001] = { introduction=true, name="Human Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[62631008] = { selfCare=true, faction="Alliance", version=100205,
+	[62631008] = { selfCare=true, faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78679, name="The Gift of Relaxation", version=100205, faction="Alliance", qType="Daily",
 								guide="Go to Olivia's Pond in Stormwind.\n\n" ..ns.relaxation, }, }, },
-	[61687418] = { introduction=true, name="Human Commoner", faction="Alliance",
+	[61687418] = { introduction=true, name="Human Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[63753198] = { introduction=true, name="Human Commoner", faction="Alliance",
+	[63753198] = { introduction=true, name="Human Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[66967251] = { introduction=true, name="Human Commoner", faction="Alliance",
+	[66967251] = { introduction=true, name="Human Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[73895587] = { introduction=true, name="Human Commoner", faction="Alliance",
+	[73895587] = { introduction=true, name="Human Commoner", faction="Alliance", noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[74769465] = { support=true, name="Galvus Ironhammer", faction="Alliance", version=100205,
+	[74769465] = { support=true, name="Galvus Ironhammer", faction="Alliance", version=100205, noContinent=true,
 					achievements={ { id=19400, guide=ns.support }, }, },
-	[75029531] = { crushing=true, name="Inspector Snip Snagglebolt", faction="Alliance", version=100205,
+	[75029531] = { crushing=true, name="Inspector Snip Snagglebolt", faction="Alliance", version=100205, noContinent=true,
 					achievements={ { id=1695, showAllCriteria=true, version=100205, } },
 					quests={ { id=78332, name="I Smell Trouble", showAllCriteria=true, version=100205, faction="Alliance",
 						qType="Seasonal", }, 
@@ -720,32 +553,32 @@ points[ ns.map.stormwind ] = { -- Stormwind City
 						{ id=78369, name="Crushing the Crown", version=100205, faction="Alliance", qType="Seasonal", }, 
 						{ id=78379, name="The Stench of Revenge", version=100205, faction="Alliance", qType="Seasonal",
 							tip=ns.snipsnapThird, }, }, },
-	[75096235] = { selfCare=true, faction="Alliance", version=100205,
+	[75096235] = { selfCare=true, faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78674, name="The Gift of Relief", version=100205, faction="Alliance", qType="Daily",
 								guide=ns.relief, }, }, },
-	[75309393] = { introduction=true, name="Luciana Delgado", faction="Alliance", version=100205,
+	[75309393] = { introduction=true, name="Luciana Delgado", faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, 
 						{ id=78328, name="Take a Look Around", version=100205, faction="Alliance", qType="Seasonal", 
 							guide="Speak with Kiera, Maurice, Bang, Sylandra, Gabbo, and Ying. Will unlock dailies", }, }, },
-	[78569599] = { selfCare=true, name="Simeon Griswold", faction="Alliance", version=100205,
+	[78569599] = { selfCare=true, name="Simeon Griswold", faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78674, name="The Gift of Relief", version=100205, faction="Alliance", qType="Daily",
 								guide=ns.reliefA, }, }, },
-	[79299265] = { scenicGetaway=true, name="Sylandra Silverbreeze", version=100205,
+	[79299265] = { scenicGetaway=true, name="Sylandra Silverbreeze", version=100205, noContinent=true,
 					quests={ { id=78594, name=ns.feralasTitle, version=100205, faction="Alliance",
 								qType="Daily", tip=ns.feralasRizzi, }, 
 					{ id=78328, name="Take a Look Around", version=100205, faction="Alliance",
 								qType="Seasonal", tip="Quest completion NPC", }, }, },
-	[79419826] = { scenicGetaway=true, name="Gabbo Blinkwink", faction="Alliance", version=100205,
+	[79419826] = { scenicGetaway=true, name="Gabbo Blinkwink", faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78594, name="Getaway to Scenic Feralas", version=100205, faction="Alliance",
 								qType="Daily", }, 
 						{ id=78565, name="Getaway to Scenic Grizzly Hills", version=100205, faction="Alliance",
 							qType="Daily", },
 						{ id=78591, name="Getaway to Scenic Nagrand", version=100205, faction="Alliance",
 							qType="Daily", }, }, guide=ns.dailyGetaway, },
-	[80069168] = { selfCare=true, name="Bordol Dewgarden", faction="Alliance", version=100205,
+	[80069168] = { selfCare=true, name="Bordol Dewgarden", faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78679, name="The Gift of Relaxation", version=100205, faction="Alliance", qType="Daily",
 								guide="Go to the western side of Olivia's Pond in Stormwind.\n\n" ..ns.relaxation, }, }, },
-	[81099604] = { selfCare=true, name="Ying", faction="Alliance", version=100205,
+	[81099604] = { selfCare=true, name="Ying", faction="Alliance", version=100205, noContinent=true,
 					quests={ { id=78679, name="The Gift of Relaxation", version=100205, faction="Alliance", qType="Daily",
 								guide="Go to the western side of Olivia's Pond in Stormwind.\n\n" ..ns.relaxation, },
 							{ id=78674, name="The Gift of Relief", version=100205, faction="Alliance", qType="Daily",
@@ -756,27 +589,14 @@ points[ ns.map.stormwind ] = { -- Stormwind City
 							{ id=78726, name=ns.yourself, version=100205, faction="Alliance", qType="Daily", tip="(Tasty)", },
 							{ id=78727, name=ns.yourself, version=100205, faction="Alliance", qType="Daily", tip="(Nap)", 
 								guide=ns.selfCare, }, }, },
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
 }
 
-points[ 224 ] = { -- Stranglethorn Vale
-	[68634958] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
+ns.points[ 224 ] = { -- Stranglethorn Vale
+	[68634958] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205, noContinent=true,
 					tip="Location of \"the lovely lakeside in Northern Stranglethorn\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
-points[ 1434 ] = { -- Stranglethorn Vale / Northern Stranglethorn (Cata Classic)
-}
-
-points[ 210 ] = { -- The Cape of Stranglethorn
-}
-
-points[ 18 ] = { -- Tirisfal Glades
+ns.points[ ns.map.tirisfal ] = { -- Tirisfal Glades
 	[61247517] = { introduction=true, name="Forsaken Commoner", faction="Horde",
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal",
 						tip="Below, in the Undercity", }, }, },
@@ -784,36 +604,24 @@ points[ 18 ] = { -- Tirisfal Glades
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 1420 ] = { -- Tirisfal Glades
-}
-
-points[ ns.map.undercity ] = { -- Undercity +13
-	[31504020] = ns.setDungeon,
-	[31504450] = ns.setFoolForLove,
-	[33704730] = ns.setDangerous,
-	[34004300] = ns.setFlavour,
-	[34203900] = ns.setFistful,
-	[36304600] = ns.setLoveRays,
-	[36404180] = ns.setVendorAchieves,
-	[63304763] = { introduction=true, name="Forsaken Commoner", faction="Horde",
+ns.points[ ns.map.undercity ] = { -- Undercity
+	[63304763] = { introduction=true, name="Forsaken Commoner", faction="Horde", noContinent=true,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
-points[ 52 ] = { -- Westfall
-}
-
-points[ 1436 ] = { -- Westfall
-}
-
-points[ 56 ] = { -- Wetlands
-}
-
-points[ 1437 ] = { -- Wetlands
+ns.points[ ns.map.easternK ] = { -- Eastern Kingdoms
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
 }
 
 --==================================================================================================================================
 --
--- OUTLAND
+-- THE BURNING CRUSADE / OUTLAND
 --
 --==================================================================================================================================
 
@@ -834,15 +642,7 @@ ns.nagrandPortal = "See the pins for details. Return to here when you are done"
 ns.nagrandQuests = { { id=78591, name=ns.nagrandGetaway, version=100205, faction="Alliance", qType="Daily", },
 						{ id=78987, name=ns.nagrandGetaway, version=100205, faction="Horde", qType="Daily", }, }
 
-ns.map.shattrath = ( ns.version < 60000 ) and 1955 or 111
-
-points[ 105 ] = { -- Blade's Edge Mountains
-}
-
-points[ 1949 ] = { -- Blade's Edge Mountains
-}
-
-points[ 107 ] = { -- Nagrand
+ns.points[ ns.map.nagrand ] = { -- Nagrand
 	[28734663] = { selfCare=true, name="Beatrice Ripley", version=100205, faction="Alliance", quests=ns.nagrandQuests,
 					guide=ns.nagrandFinal },
 	[34654649] = { selfCare=true, name="Soaring Windroc", version=100205, quests=ns.nagrandQuests, guide=ns.nagrandWindroc },
@@ -858,7 +658,7 @@ points[ 107 ] = { -- Nagrand
 							qType="Daily", guide=ns.nagrandPortal, }, }, },
 }
 
-points[ ns.map.shattrath ] = { -- Shattrath
+ns.points[ ns.map.shattrath ] = { -- Shattrath
 	[28014704] = { introduction=true, name="Goblin Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[49113148] = { introduction=true, name="Goblin Commoner", faction="Alliance",
@@ -875,18 +675,21 @@ points[ ns.map.shattrath ] = { -- Shattrath
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[63513963] = { introduction=true, name="Goblin Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
+}
+
+ns.points[ ns.map.outland ] = { -- Outland
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
 }
 
 --==================================================================================================================================
 --
--- NORTHREND
+-- WRATH OF THE LICH KING / NORTHREND
 --
 --==================================================================================================================================
 
@@ -903,43 +706,21 @@ ns.grizzlySet = { scenicGetaway=true, name=ns.L[ "Lavenbloom" ] .."/" ..ns.L[ "O
 						{ id=78565, name=ns.grizzlyGetaway, version=100205, faction="Alliance",
 							qType="Daily", guide=ns.grizzlyGuide, },
 						{ id=78986, name=ns.grizzlyGetaway, version=100205, faction="Horde",
-							qType="Daily", guide=ns.grizzlyGuide, }, },
-}
+							qType="Daily", guide=ns.grizzlyGuide, }, }, }
 
-points[ 114 ] = { -- Borean Tundra
-}
-
-points[ 127 ] = { -- Crystalsong Forest
-}
-
-points[ 125 ] = { -- Dalaran
+ns.points[ 125 ] = { -- Dalaran
 	[44155890] = { introduction=true, name="Human Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[46327270] = { introduction=true, name="Human Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
 }
 
-points[ 126 ] = { -- Dalaran - The Underbelly
+ns.points[ 126 ] = { -- Dalaran - The Underbelly
 	[33195265] = { introduction=true, name="Goblin Commoner", faction="Alliance",
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 }
 
-points[ 116 ] = { -- Grizzly Hills
-	[65704140] = ns.grizzlySet,
-	[66105070] = ns.grizzlySet,
-	[68904350] = ns.grizzlySet,
-	[71304130] = ns.grizzlySet,
-	[71804930] = ns.grizzlySet,
-	[73404630] = ns.grizzlySet,
-	
---	[72574764] = ns.grizzlySet,
+ns.points[ 116 ] = { -- Grizzly Hills
 	[77024914] = { scenicGetaway=true, name="Scenic Getaway Portal", version=100205,
 					quests={
 						{ id=78565, name=ns.grizzlyGetaway, version=100205, faction="Alliance",
@@ -948,103 +729,165 @@ points[ 116 ] = { -- Grizzly Hills
 							qType="Daily", guide=ns.grizzlyPortal, }, }, },
 }
 
-points[ 118 ] = { -- Icecrown
-}
-
-points[ 129 ] = { -- The Nexus
-}
-
-points[ 143 ] = { -- The Oculus
+ns.points[ 113 ] = { -- Northrend
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
 }
 
 --==================================================================================================================================
 --
--- PANDARIA
+-- MISTS OF PANDARIA
 --
 --==================================================================================================================================
 
-points[ 371 ] = { -- The Jade Forest
+ns.points[ 371 ] = { -- The Jade Forest
 	[43914226] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"the thrilling peaks of the Jade Forest\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
---==================================================================================================================================
---
--- GARRISON / DRAENOR
---
---==================================================================================================================================
-
-points[ 525 ] = { -- Frostfire Ridge
-}
-
-points[ 590 ] = { -- Frostwall Garrison
-}
-
-points[ 543 ] = { -- Gorgrond
-}
-
-points[ 582 ] = { -- Lunarfall Garrison
-}
-
-points[ 539 ] = { -- Shadowmoon Valley in Draenor
-}
-
-points[ 535 ] = { -- Talador
-}
-
-points[ 534 ] = { -- Tanaan Jungle
+ns.points[ 424 ] = { -- Pandaria
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
 }
 
 --==================================================================================================================================
 --
--- BROKEN ISLES
+-- WARLORDS OF DRAENOR / GARRISON
 --
 --==================================================================================================================================
 
-points[ 641 ] = { -- Val'sharah
+ns.points[ 572 ] = { -- Draenor
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
+}
+
+--==================================================================================================================================
+--
+-- LEGION / BROKEN ISLES
+--
+--==================================================================================================================================
+
+ns.points[ 641 ] = { -- Val'sharah
 	[51525844] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"a romantic hideout in Val'sharah\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
+ns.points[ 619 ] = { -- Broken Isles
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
+}
+
 --==================================================================================================================================
 --
--- DRAGON ISLES
+-- BATTLE FOR AZEROTH / KUL TIRAS & ZANDALAR
 --
 --==================================================================================================================================
 
-points[ 2112 ] = { -- Valdrakken
+ns.points[ 876 ] = { -- Kul Tiras
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
+}
+
+ns.points[ 875 ] = { -- Zandalar
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
+}
+
+--==================================================================================================================================
+--
+-- SHADOWLANDS
+--
+--==================================================================================================================================
+
+ns.points[ 1550 ] = { -- Shadowlands
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
+}
+
+--==================================================================================================================================
+--
+-- DRAGONFLIGHT / DRAGON ISLES
+--
+--==================================================================================================================================
+
+ns.points[ 2112 ] = { -- Valdrakken
 	[54206000] = { introduction=true, name="Gabbo Blinkwink", faction="Alliance", version=100205,
 					quests={ { id=78329, name="Love is in the Air", version=100205, faction="Alliance", qType="Seasonal", }, }, },
 	[54306100] = { introduction=true, name="Aurora Vabsley", faction="Horde", version=100205,
 					quests={ { id=78981, name="Love is in the Air", version=100205, faction="Horde", qType="Seasonal", }, }, },
 }
 
+ns.points[ 1978 ] = { -- Dragon Isles
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
+}
+
 --==================================================================================================================================
 --
--- KHAZ ALGAR / THE WAR WITHIN
+-- THE WAR WITHIN / KHAZ ALGAR
 --
 --==================================================================================================================================
 
-points[ 2255 ] = { -- Azj-Kahet
+ns.points[ 2255 ] = { -- Azj-Kahet
 }
 
-points[ 2215 ] = { -- Hallowfall
+ns.points[ 2215 ] = { -- Hallowfall
 }
 
-points[ 2248 ] = { -- Isle of Dorn
+ns.points[ 2248 ] = { -- Isle of Dorn
 }
 
-points[ 2214 ] = { -- The Ringing Deeps
+ns.points[ 2214 ] = { -- The Ringing Deeps
 }
 
-points[ 2274 ] = { -- Khaz Algar
-	[89507620] = ns.setDungeon,
-	[89508050] = ns.setFoolForLove,
-	[91708330] = ns.setDangerous,
-	[92007900] = ns.setFlavour,
-	[92207500] = ns.setFistful,
-	[94308200] = ns.setLoveRays,
-	[94407780] = ns.setVendorAchieves,
+ns.points[ 2274 ] = { -- Khaz Algar
+	[02503320] = ns.setDungeon,
+	[02503750] = ns.setFoolForLove,
+	[04704030] = ns.setDangerous,
+	[05003600] = ns.setFlavour,
+	[05203200] = ns.setFistful,
+	[07303900] = ns.setLoveRays,
+	[07603480] = ns.setVendorAchieves,
 }
 
 --==================================================================================================================================
@@ -1054,30 +897,14 @@ points[ 2274 ] = { -- Khaz Algar
 --==================================================================================================================================
 
 if ( ns.version < 60000 ) then
-	points[ 947 ] = { -- Azeroth
+	ns.points[ 947 ] = { -- Azeroth
 		[44904700] = { metaLarge=true, noCoords=true, achievements={ { id=6006, showAllCriteria=true, }, }, },
-		[53507520] = ns.setDungeon,
-		[53507950] = ns.setFoolForLove,
-		[55708230] = ns.setDangerous,
-		[56007800] = ns.setFlavour,
-		[56207400] = ns.setFistful,
-		[58308100] = ns.setLoveRays,
-		[58407680] = ns.setVendorAchieves,
 	} 
 else
-	points[ 947 ] = { -- Azeroth
+	ns.points[ 947 ] = { -- Azeroth
 		[42004500] = { metaLarge=true, noCoords=true, achievements={ { id=6006, showAllCriteria=true, }, }, },
-		[89507620] = ns.setDungeon,
-		[89508050] = ns.setFoolForLove,
-		[91708330] = ns.setDangerous,
-		[92007900] = ns.setFlavour,
-		[92207500] = ns.setFistful,
-		[94308200] = ns.setLoveRays,
-		[94407780] = ns.setVendorAchieves,
-		[34008700] = { metaLarge=true, noCoords=true, achievements={ { id=41130, showAllCriteria=true, }, }, },
 	}
 end
-
 
 --==================================================================================================================================
 --
@@ -1087,42 +914,42 @@ end
 -- non-uniform origin placement as well as adjust the x,y offsets
 --==================================================================================================================================
 
-textures[1] = "Interface\\PlayerFrame\\MonkLightPower"
-textures[2] = "Interface\\PlayerFrame\\MonkDarkPower"
-textures[3] = "Interface\\Common\\Indicator-Red"
-textures[4] = "Interface\\Common\\Indicator-Yellow"
-textures[5] = "Interface\\Common\\Indicator-Green"
-textures[6] = "Interface\\Common\\Indicator-Gray"
-textures[7] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Basket"
-textures[8] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandySack"
-textures[9] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\ColognePink"
-textures[10] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Perfume"
-textures[11] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Ray"
-textures[12] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Rocket"
-textures[13] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveBB"
-textures[14] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveGG"
-textures[15] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRP"
-textures[16] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRY"
-textures[17] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyB"
-textures[18] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyP"
-textures[19] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveToken"
+ns.textures[1] = "Interface\\PlayerFrame\\MonkLightPower"
+ns.textures[2] = "Interface\\PlayerFrame\\MonkDarkPower"
+ns.textures[3] = "Interface\\Common\\Indicator-Red"
+ns.textures[4] = "Interface\\Common\\Indicator-Yellow"
+ns.textures[5] = "Interface\\Common\\Indicator-Green"
+ns.textures[6] = "Interface\\Common\\Indicator-Gray"
+ns.textures[7] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Basket"
+ns.textures[8] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandySack"
+ns.textures[9] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\ColognePink"
+ns.textures[10] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Perfume"
+ns.textures[11] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Ray"
+ns.textures[12] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Rocket"
+ns.textures[13] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveBB"
+ns.textures[14] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveGG"
+ns.textures[15] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRP"
+ns.textures[16] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRY"
+ns.textures[17] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyB"
+ns.textures[18] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyP"
+ns.textures[19] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveToken"
 
-scaling[1] = 0.55
-scaling[2] = 0.55
-scaling[3] = 0.55
-scaling[4] = 0.55
-scaling[5] = 0.55
-scaling[6] = 0.55
-scaling[7] = 0.48
-scaling[8] = 0.48
-scaling[9] = 0.54
-scaling[10] = 0.50
-scaling[11] = 0.48
-scaling[12] = 0.48
-scaling[13] = 0.48
-scaling[14] = 0.48
-scaling[15] = 0.48
-scaling[16] = 0.48
-scaling[17] = 0.48
-scaling[18] = 0.48
-scaling[19] = 0.48
+ns.scaling[1] = 0.55
+ns.scaling[2] = 0.55
+ns.scaling[3] = 0.55
+ns.scaling[4] = 0.55
+ns.scaling[5] = 0.55
+ns.scaling[6] = 0.55
+ns.scaling[7] = 0.48
+ns.scaling[8] = 0.48
+ns.scaling[9] = 0.54
+ns.scaling[10] = 0.50
+ns.scaling[11] = 0.48
+ns.scaling[12] = 0.48
+ns.scaling[13] = 0.48
+ns.scaling[14] = 0.48
+ns.scaling[15] = 0.48
+ns.scaling[16] = 0.48
+ns.scaling[17] = 0.48
+ns.scaling[18] = 0.48
+ns.scaling[19] = 0.48

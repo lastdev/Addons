@@ -1,13 +1,3 @@
--- Global Backdrops
-BACKDROP_OUTFITTER_DIALOG_32_32 = {
-	bgFile = "Interface\\Addons\\Outfitter\\Textures\\DialogBox-Background",
-	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-	tile = true,
-	tileSize = 32,
-	edgeSize = 32,
-	insets = { left = 11, right = 12, top = 12, bottom = 11 },
-}
-
 ----------------------------------------
 Outfitter.OutfitBar = {}
 ----------------------------------------
@@ -58,13 +48,9 @@ Outfitter.OutfitBar.cDefaultScriptIcons =
 	SKINNING = 134366,
 	LOCKPICKING = 136058,
 	COOKING = 133971,
+
+	[Outfitter.cNakedOutfit] = 237360,
 }
--- Give the birthday suit a special icon (no birthday cake icon in Vanilla)
-if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-	Outfitter.OutfitBar.cDefaultScriptIcons[Outfitter.cNakedOutfit] = 237360
-else
-	Outfitter.OutfitBar.cDefaultScriptIcons[Outfitter.cNakedOutfit] = 134140
-end
 
 function Outfitter.OutfitBar:Construct()
 	self.Settings = Outfitter.Settings
@@ -111,7 +97,8 @@ function Outfitter.OutfitBar:Construct()
 	Outfitter:RegisterOutfitEvent("ADD_OUTFIT", function () Outfitter.OutfitBar:ChangedOutfits() end)
 	Outfitter:RegisterOutfitEvent("DELETE_OUTFIT", function () Outfitter.OutfitBar:ChangedOutfits() end)
 	Outfitter:RegisterOutfitEvent("EDIT_OUTFIT", function () Outfitter.OutfitBar:ChangedOutfits() end)
-
+	Outfitter.EventLib:RegisterEvent("PET_BATTLE_OPENING_START", self.PetBattleStarted, self)
+	Outfitter.EventLib:RegisterEvent("PET_BATTLE_OVER", self.PetBattleFinished, self)
 	self.Initialized = true
 
 	self:Show()
@@ -336,9 +323,10 @@ function Outfitter.OutfitBar:NewBar(pNumColumns, pNumRows)
 
 	self.UniqueNameIndex = self.UniqueNameIndex + 1
 
-	local vBar = CreateFrame("Frame", vName, nil, "BackdropTemplate")
+	local vBar = CreateFrame("Frame", vName)
 
 	Outfitter.InitializeFrame(vBar, Outfitter._ButtonBar, self._Bar)
+
 	vBar:Construct(vName, pNumColumns, pNumRows)
 	vBar:SetScale(self.Settings.OutfitBar.Scale or 1)
 	vBar:ShowBackground(not self.Settings.OutfitBar.HideBackground)
@@ -403,7 +391,7 @@ function Outfitter.OutfitBar:GetOutfitTexture(pOutfit)
 	end
 
 	if vOutfitItem then
-		local vTexture = GetItemIcon(vOutfitItem.Code)
+		local vTexture = C_Item.GetItemIconByID(vOutfitItem.Code)
 
 		if vTexture then
 			return vTexture
@@ -421,7 +409,7 @@ function Outfitter.OutfitBar:GetCursorTexture()
 		return
 	end
 
-	if vType == "spell" then
+	if vType == "spell" and vParam1 and vParam2 then
 		return GetSpellTexture(vParam1, vParam2)
 
 	elseif vType == "item" then
@@ -437,18 +425,15 @@ function Outfitter.OutfitBar:GetCursorTexture()
 		local	vNumBags, vFirstBagIndex = Outfitter:GetNumBags()
 
 		for vBagIndex = vFirstBagIndex, vNumBags do
-			local vNumBagSlots = C_Container.GetContainerNumSlots(vBagIndex)
+			local vNumBagSlots = OutfitterAPI:GetContainerNumSlots(vBagIndex)
 
 			for vBagSlotIndex = 1, vNumBagSlots do
-				local vItemLink = C_Container.GetContainerItemLink(vBagIndex, vBagSlotIndex)
+				local vItemLink = OutfitterAPI:GetContainerItemLink(vBagIndex, vBagSlotIndex)
 
 				if vItemLink == vParam2 then
-					local itemInfo = C_Container.GetContainerItemInfo(vBagIndex, vBagSlotIndex)
-					if itemInfo == nil then
-						return nil
-					else
-						return itemInfo.iconFileID
-					end
+					local vTexture = OutfitterAPI:GetContainerItemInfo(vBagIndex, vBagSlotIndex)
+
+					return vTexture
 				end
 			end
 		end
@@ -712,10 +697,9 @@ Outfitter.OutfitBar._Button.Widgets =
 	"Icon",
 }
 
--- Is this where we need to set border? DAC
 function Outfitter.OutfitBar._Button:Construct()
-	self:SetWidth(Outfitter.Style.ButtonBar.ButtonWidth+10)
-	self:SetHeight(Outfitter.Style.ButtonBar.ButtonHeight+10)
+	self:SetWidth(Outfitter.Style.ButtonBar.ButtonWidth + 10)
+	self:SetHeight(Outfitter.Style.ButtonBar.ButtonHeight + 10)
 
 	self:SetScript("OnClick", function (button, ...) button:OnClick(...) end)
 	self:SetScript("OnEnter", function (button, ...) button:OnEnter(...) end)
@@ -829,7 +813,7 @@ function Outfitter.OutfitBar._Button:OnClick(pMouseButton)
 		local relativePoint = oppositeVert..nearestHoriz
 
 		-- Show the menu
-		self.menuFrame = LibStub("LibDropdownMC-1.0"):OpenAce3Menu(items)
+		self.menuFrame = LibStub("LibDropdown-1.0"):OpenAce3Menu(items)
 		self.menuFrame:SetPoint(anchorPoint, self, relativePoint, 0, 0)
 		self.menuFrame.cleanup = function ()
 			self.menuFrame = nil
@@ -865,34 +849,19 @@ Outfitter.OutfitBar._ChooseIconDialog.Widgets =
 
 function Outfitter.OutfitBar._ChooseIconDialog:Construct()
 	-- Create the icon buttons
+
 	self.IconButtons = {}
 	self.NumRows = 5
 	self.NumColumns = 6
 
-	-- Create a button to determine what the column and row counts *should* be
-	-- The frame should be reused in other functions
-	local vButtonName = "OutfitterChooseIconDialogButton"..#self.IconButtons
-	local vButton = _G[vButtonName] or CreateFrame("CheckButton", vButtonName, self, "ActionButtonTemplate,BackdropTemplate")
-
-	-- Get the ScrollFrame width and make sure the ScrollChild is set to the same width (maybe a tad smaller?)
-	local sChild = OutfitterChooseIconDialogScrollFrame:GetScrollChild()
-	sChild:SetWidth(OutfitterChooseIconDialogScrollFrame:GetWidth())
-	sChild:SetHeight(OutfitterChooseIconDialogScrollFrame:GetHeight())
-
-	-- Adjust the button width/height (there's a difference between retail and vanill/wrath?)
-	offset = 0
-	if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then offset = 5 end
-
-	local h, w = vButton:GetHeight() + offset, vButton:GetWidth() + offset
-	self.NumRows = math.floor(sChild:GetHeight() / (h or 1))
-	self.NumColumns = math.floor(sChild:GetWidth() / (w or 1))
-
 	local vPrevRowFirstButton
+
 	for vRow = 1, self.NumRows do
 		local vPrevButton
 
 		for vColumn = 1, self.NumColumns do
 			local vButton = self:NewIconButton()
+
 			table.insert(self.IconButtons, vButton)
 
 			if vPrevButton then
@@ -925,7 +894,7 @@ function Outfitter.OutfitBar._ChooseIconDialog:Construct()
 		end
 	end)
 
-	self:SetBackdrop({
+	local info = {
 		bgFile = "Interface\\Addons\\Outfitter\\Textures\\DialogBox-Background",
 		edgeFile ="Interface\\DialogFrame\\UI-DialogBox-Border",
 		tile = true,
@@ -933,7 +902,8 @@ function Outfitter.OutfitBar._ChooseIconDialog:Construct()
 		tileSize = 512,
 		edgeSize = 32,
 		insets = { left = 11, right = 12, top = 12, bottom = 11 },
-	})
+	};
+	self:SetBackdrop(info)
 
 	-- Icon sets
 	self.iconSets = {
@@ -1069,8 +1039,7 @@ end
 
 function Outfitter.OutfitBar._ChooseIconDialog:NewIconButton()
 	local vButtonName = "OutfitterChooseIconDialogButton"..#self.IconButtons
-	-- Reuse icon button frames when possible
-	local vButton = _G["OutfitterChooseIconDialogButton"..#self.IconButtons] or CreateFrame("CheckButton", vButtonName, self, "ActionButtonTemplate,BackdropTemplate")
+	local vButton = CreateFrame("CheckButton", vButtonName, self, "ActionButtonTemplate")
 
 	Outfitter.InitializeFrame(vButton, Outfitter.OutfitBar._IconButton)
 	vButton:Construct()
@@ -1250,27 +1219,12 @@ function Outfitter.OutfitBar.TextureSets.Spellbook:Activate()
 	local usedIconIDs = {}
 
 	-- Insert the profession icons
-	if _G["GetNumPrimaryProfessions"] then -- Vanilla/Wrath
-		for i = 1, GetNumSkillLines() do
-			local skillName, header = GetSkillLineInfo(i)
-			if not header then
-				local name, rank, iconID = GetSpellInfo(skillName)
-				if iconID ~= nil then
-					if not usedIconIDs[iconID] then
-						table.insert(self.TextureList, iconID)
-						usedIconIDs[iconID] = true
-					end
-				end
-			end
-		end
-	else
-		local professions = {GetProfessions()}
-		for _, professionID in ipairs(professions) do
-			local name, iconID = GetProfessionInfo(professionID)
-			if not usedIconIDs[iconID] then
-				table.insert(self.TextureList, iconID)
-				usedIconIDs[iconID] = true
-			end
+	local professions = {GetProfessions()}
+	for _, professionID in ipairs(professions) do
+		local name, iconID = GetProfessionInfo(professionID)
+		if not usedIconIDs[iconID] then
+			table.insert(self.TextureList, iconID)
+			usedIconIDs[iconID] = true
 		end
 	end
 
@@ -1334,15 +1288,11 @@ function Outfitter.OutfitBar.TextureSets.Inventory:Activate()
 
 	for _, vInventorySlot in ipairs(Outfitter.cSlotNames) do
 		local	vSlotID = Outfitter.cSlotIDs[vInventorySlot]
-		local	vItemLink = Outfitter:GetInventorySlotIDLink(vSlotID)
+		local vTexture = GetInventoryItemTexture("player", vSlotID)
 
-		if vItemLink == vParam2 then
-			local vTexture = GetInventoryItemTexture("player", vSlotID)
-
-			if vTexture and not vUsedTextures[vTexture] then
-				table.insert(self.TextureList, vTexture)
-				vUsedTextures[vTexture] = true
-			end
+		if vTexture and not vUsedTextures[vTexture] then
+			table.insert(self.TextureList, vTexture)
+			vUsedTextures[vTexture] = true
 		end
 	end
 
@@ -1351,13 +1301,10 @@ function Outfitter.OutfitBar.TextureSets.Inventory:Activate()
 	local vNumBags, vFirstBagIndex = Outfitter:GetNumBags()
 
 	for vBagIndex = vFirstBagIndex, vNumBags do
-		local	vNumBagSlots = C_Container.GetContainerNumSlots(vBagIndex)
-
+		local	vNumBagSlots = OutfitterAPI:GetContainerNumSlots(vBagIndex)
 		if vNumBagSlots > 0 then
-			for vBagSlotIndex = 1, vNumBagSlots do
-				local itemInfo = C_Container.GetContainerItemInfo(vBagIndex, vBagSlotIndex)
-				local vTexture = (itemInfo and itemInfo.iconFileID) or nil
-
+			for vSlotIndex = 1, vNumBagSlots do
+				local vTexture = OutfitterAPI:GetContainerItemInfo(vBagIndex, vSlotIndex)
 				if vTexture and not vUsedTextures[vTexture] then
 					table.insert(self.TextureList, vTexture)
 					vUsedTextures[vTexture] = true
@@ -1435,12 +1382,15 @@ end
 
 function Outfitter.OutfitBar._SettingsDialog:Construct()
 	self:SetFrameStrata("DIALOG")
-
-	self:SetBackdrop({
+	local backdropInfo = {
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = true, tileSize = 16, edgeSize = 16,
-		insets = {left = 3, right = 3, top = 3, bottom = 3}})
+		tile = true,
+		tileSize = 16,
+		edgeSize = 16,
+		insets = {left = 3, right = 3, top = 3, bottom = 3}
+	}
+	self:SetBackdrop(backdropInfo)
 
 	self:SetBackdropBorderColor(0.75, 0.75, 0.75)
 	self:SetBackdropColor(0, 0, 0, 0.9)

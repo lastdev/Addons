@@ -25,7 +25,7 @@ local groupSize = 0
 
 
 --[InstanceID] = {level,zoneType}
---zoneType: 1 = outdoor, 2 = dungeon, 3 = raid
+--zoneType: 1 = outdoor, 2 = dungeon, 3 = raid, 4 = delves, 5 = player challenges
 local instanceDifficultyBylevel, seasonalDungeons
 if private.isRetail then
 	instanceDifficultyBylevel = {
@@ -65,8 +65,10 @@ if private.isRetail then
 		[2652] = {80, 2}, [2662] = {80, 2}, [2660] = {80, 2}, [2669] = {80, 2}, [2651] = {80, 2}, [2649] = {80, 2}, [2648] = {80, 2}, [2661] = {80, 2}, [2773] = {80, 2},--War Within Dungeons
 		--Delves
 		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}, [2831] = {80, 4}, [2815] = {80, 4}, [2826] = {80, 4}, --War Within Delves
+		--Challenges (Mage tower, visions, torghast, proving grounds)
+		[2212] = {50, 5}, [2213] = {50, 5}, [2827] = {80, 5}, [2828] = {80, 5}, [2162]= {80, 5}, [1148] = {80, 5}, [1698] = {80, 5}, [1710] = {80, 5}, [1703] = {80, 5}, [1702] = {80, 5}, [1684] = {80, 5}, [1673] = {80, 5}, [1616] = {80, 5},
 	}
-	seasonalDungeons = {[2652]={80, 2}, [2662]=true, [2660]=true, [2669]=true, [670]=true, [1822]=true, [2286]=true, [2290]=true}--TWW Season 1
+	seasonalDungeons = {[2651]=true, [2649]=true, [2648]=true, [2661]=true, [1594]=true, [2097]=true, [2293]=true, [2773]=true,}--TWW Season 2
 elseif private.isCata then--Since 2 dungeons were changed from vanilla to cata dungeons, it has it's own table and it's NOT using retail table cause the dungeons reworked in Mop are still vanilla dungeons in classic (plus diff level caps)
 	instanceDifficultyBylevel = {
 		--World
@@ -154,7 +156,7 @@ function DBM:GetModifierLevel()
 end
 
 function difficulties:InstanceType(instanceId)
-	return instanceDifficultyBylevel[instanceId] and instanceDifficultyBylevel[instanceId][2]
+	return instanceDifficultyBylevel[instanceId] and instanceDifficultyBylevel[instanceId][2] or 0
 end
 
 function difficulties:IsSeasonalDungeon(instanceId)
@@ -413,8 +415,9 @@ function DBM:GetCurrentInstanceDifficulty()
 				difficultyName = PLAYER_DIFFICULTY6
 			end
 			-- Naxxramas Hardmode
-			-- The different levels use different buffs, 1218276 may be unused. The debuff still has the right number of stacks
-			local naxxModifier = select(3, self:UnitDebuff("player", 1218283, 1218271, 1218275, 1224428, 1218276))
+			-- The different levels (sometimes) use different buffs? The debuff still has the right number of stacks
+			-- Do not check for 1224428 here, it's active on normal (despite the description saying "The forces of the Scourge grow stronger.")
+			local naxxModifier = select(3, self:UnitDebuff("player", 1218283, 1218271, 1218275, 1218276))
 			if naxxModifier == 0 then naxxModifier = 1 end -- First level has no count
 			if naxxModifier then
 				modifierLevel = naxxModifier
@@ -426,6 +429,11 @@ function DBM:GetCurrentInstanceDifficulty()
 					difficultyId = "heroic"
 					difficultyName = PLAYER_DIFFICULTY2
 				end
+			end
+			local scarletEnclaveModifier = select(3, self:UnitDebuff("player", 1232014))
+			if scarletEnclaveModifier == 0 then scarletEnclaveModifier = 1 end
+			if scarletEnclaveModifier then
+				modifierLevel = scarletEnclaveModifier
 			end
 		end
 		if modifierLevel == 0 then
@@ -489,13 +497,13 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 208 then--Delves (War Within 11.0.0+)
 		local delveInfo, delveInfo2, delveInfo3 = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183), C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6184), C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6185)
 		local usedDelveInfo
-		if delveInfo and delveInfo.shownState and delveInfo.shownState == 1 then
-			usedDelveInfo = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183)
 		--Zekvir Hack to normal/mythic since his tiers aren't numbers
-		elseif delveInfo2 and delveInfo2.shownState and delveInfo2.shownState == 1 then
+		if delveInfo2 and delveInfo2.shownState and delveInfo2.shownState == 1 then
 			return "normal", difficultyName .. "(?) - ", difficulty, instanceGroupSize, 0
 		elseif delveInfo3 and delveInfo3.shownState and delveInfo3.shownState == 1 then
 			return "mythic", difficultyName .. "(??) - ", difficulty, instanceGroupSize, 0
+		elseif delveInfo and delveInfo.shownState and delveInfo.shownState == 1 then
+			usedDelveInfo = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183)
 		end
 		local delveTier = 0
 		if usedDelveInfo and usedDelveInfo.tierText then
@@ -520,6 +528,8 @@ function DBM:GetCurrentInstanceDifficulty()
 		--		return "mythic", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 		--	end
 		--end
+		return "normal", "", difficulty, instanceGroupSize, 0
+	elseif difficulty == 232 then--Likely Boss duos, but we'll probably store it as normal, so technically COULD leave it in else rule, but better to classify it for notation
 		return "normal", "", difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
@@ -568,6 +578,16 @@ function DBM:IsLogableContent(force)
 	end
 	--Current level Heroic dungeon
 	if self.Options.LogCurrentHeroic and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 2) and (difficulties.difficultyIndex == 2 or difficulties.difficultyIndex == 174) then
+		return true
+	end
+
+	--Current level delve
+	if self.Options.LogDelves and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 4) then
+		return true
+	end
+
+	--Current level Challenges
+	if self.Options.LogChallenges and instanceDifficultyBylevel[lastInstanceMapId] and not self:IsTrivial() and (instanceDifficultyBylevel[lastInstanceMapId][2] == 5) then
 		return true
 	end
 

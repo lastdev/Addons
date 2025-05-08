@@ -1,4 +1,4 @@
-## Interface: 110007, 110100
+## Interface: 110100, 110105
 ## X-Min-Interface: 90005
 ## Category: DBM
 
@@ -24,7 +24,7 @@
 ## X-Curse-Project-ID: 420275
 ## X-WoWI-ID: 25779
 ## X-Wago-ID: RXKqxj6y
-## Version: r40
+## Version: r41
 
 localization.en.lua
 localization.de.lua

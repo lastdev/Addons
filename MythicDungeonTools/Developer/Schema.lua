@@ -403,6 +403,30 @@ local schemas = {
                 name = "interruptible",
                 type = "boolean"
               },
+              {
+                name = "magic",
+                type = "boolean"
+              },
+              {
+                name = "poison",
+                type = "boolean"
+              },
+              {
+                name = "disease",
+                type = "boolean"
+              },
+              {
+                name = "curse",
+                type = "boolean"
+              },
+              {
+                name = "bleed",
+                type = "boolean"
+              },
+              {
+                name = "enrage",
+                type = "boolean"
+              },
             },
           }
         },
@@ -505,6 +529,20 @@ local schemas = {
                 type = "array",
                 fields = {
                   type = "boolean",
+                },
+              },
+              {
+                name = "constrained",
+                type = "schemaArray",
+                fields = {
+                  {
+                    name = "index",
+                    type = "number",
+                  },
+                  {
+                    name = "amount",
+                    type = "number",
+                  },
                 },
               },
             },

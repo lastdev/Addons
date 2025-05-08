@@ -1,7 +1,7 @@
 # TL;DR Missions
 
-##  (2025-01-02)
+##  (2025-04-26)
  
 
-- Update TLDRMissions\_Mainline.toc  
-- Update TLDRMissions.toc  
+- Fix incorrect usage of LibStub("AceConfig-3.0"):RegisterOptionsTable  
+    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/648#event-17417436743  

@@ -1,9 +1,6 @@
 local addon_name, addon_env = ...
 if not addon_env.load_this then return end
 
--- Confused about mix of CamelCase and_underscores?
--- Camel case comes from copypasta of how Blizzard calls returns/fields in their code and deriveates
--- Underscore are my own variables
 
 local c_garrison_cache = addon_env.c_garrison_cache
 local FindBestFollowersForMission = addon_env.FindBestFollowersForMission
@@ -17,21 +14,19 @@ local After = C_Timer.After
 local CANCEL = CANCEL
 local C_Garrison = C_Garrison
 local CreateFrame = CreateFrame
+local Enum_GarrisonFollowerType_FollowerType_6_0_Boat = Enum.GarrisonFollowerType.FollowerType_6_0_Boat
+local Enum_GarrisonFollowerType_FollowerType_6_0_GarrisonFollower = Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower
+local Enum_GarrisonFollowerType_FollowerType_7_0_GarrisonFollower = Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower
+local Enum_GarrisonFollowerType_FollowerType_8_0_GarrisonFollower = Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower
 local FONT_COLOR_CODE_CLOSE = FONT_COLOR_CODE_CLOSE
 local GARRISON_FOLLOWER_IN_PARTY = GARRISON_FOLLOWER_IN_PARTY
 local GARRISON_FOLLOWER_MAX_LEVEL = GARRISON_FOLLOWER_MAX_LEVEL
 local GREEN_FONT_COLOR_CODE = GREEN_FONT_COLOR_CODE
-local GarrisonLandingPage = GarrisonLandingPage
-local GarrisonMissionFrame = GarrisonMissionFrame
 local GetFollowerAbilities = C_Garrison.GetFollowerAbilities
 local GetFollowerInfo = C_Garrison.GetFollowerInfo
 local GetFollowers = C_Garrison.GetFollowers
 local HybridScrollFrame_GetOffset = HybridScrollFrame_GetOffset
-local LE_FOLLOWER_TYPE_GARRISON_6_0 = Enum.GarrisonFollowerType.FollowerType_6_0
-local LE_FOLLOWER_TYPE_GARRISON_7_0 = Enum.GarrisonFollowerType.FollowerType_7_0
-local LE_FOLLOWER_TYPE_GARRISON_8_0 = Enum.GarrisonFollowerType.FollowerType_8_0
-local LE_FOLLOWER_TYPE_SHIPYARD_6_2 = Enum.GarrisonFollowerType.FollowerType_6_2
-local LE_GARRISON_TYPE_6_0 = Enum.GarrisonType.Type_6_0
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 local UnitGUID = UnitGUID
 local _G = _G
 local concat = table.concat
@@ -65,7 +60,7 @@ local top_for_mission = {}
 addon_env.top_for_mission = top_for_mission
 addon_env.top_for_mission_dirty = true
 
-local supported_follower_types = { LE_FOLLOWER_TYPE_GARRISON_6_0, LE_FOLLOWER_TYPE_SHIPYARD_6_2, LE_FOLLOWER_TYPE_GARRISON_7_0, LE_FOLLOWER_TYPE_GARRISON_8_0 }
+local supported_follower_types = { Enum_GarrisonFollowerType_FollowerType_6_0_GarrisonFollower, Enum_GarrisonFollowerType_FollowerType_6_0_Boat, Enum_GarrisonFollowerType_FollowerType_7_0_GarrisonFollower, Enum_GarrisonFollowerType_FollowerType_8_0_GarrisonFollower }
 local filtered_followers = {}
 for _, type in pairs(supported_follower_types) do filtered_followers[type] = {} end
 local filtered_followers_dirty = true
@@ -199,11 +194,6 @@ function event_handlers:GARRISON_MISSION_NPC_OPENED()
    if addon_env.OrderHallInitUI then addon_env.OrderHallInitUI() end
 end
 event_frame:RegisterEvent("GARRISON_MISSION_NPC_OPENED")
-
-local gmm_buttons = {}
-addon_env.gmm_buttons = gmm_buttons
-local gmm_frames = {}
-addon_env.gmm_frames = gmm_frames
 
 function GMM_dumpl(pattern, ...)
    local names = { strsplit(",", pattern) }
@@ -393,7 +383,7 @@ local info_cancel = {
    text = CANCEL
 }
 
-hooksecurefunc(GarrisonFollowerOptionDropDown, "initialize", function(self)
+local function GarrisonFollowerOptionDropDown_More(self)
    local followerID = self.followerID
    if not followerID then return end
    local follower = C_Garrison.GetFollowerInfo(followerID)
@@ -411,7 +401,8 @@ hooksecurefunc(GarrisonFollowerOptionDropDown, "initialize", function(self)
          UIDropDownMenu_AddButton(info_cancel)
       end
    end
-end)
+end
+if GarrisonFollowerOptionDropDown then hooksecurefunc(GarrisonFollowerOptionDropDown, "initialize", GarrisonFollowerOptionDropDown_More) end
 
 local function GarrisonFollowerList_Update_More(self)
    -- Somehow Blizzard UI insists on updating hidden frames AND explicitly updates them OnShow.
@@ -461,22 +452,11 @@ local function GarrisonFollowerList_Update_More(self)
       end
    end
 end
-hooksecurefunc(GarrisonMissionFrame.FollowerList, "UpdateData", GarrisonFollowerList_Update_More)
+-- hooksecurefunc(GarrisonMissionFrame.FollowerList, "UpdateData", GarrisonFollowerList_Update_More)
 
-GarrisonLandingPageMinimapButton:HookScript("OnClick", function(self, button, down)
-   if not (button == "RightButton" and not down) then return end
-   HideUIPanel(GarrisonLandingPage)
-   ShowGarrisonLandingPage(LE_GARRISON_TYPE_6_0)
-end)
-GarrisonLandingPageMinimapButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+addon_env.export.buttons.StartMission = MissionPage.StartMissionButton
 
-gmm_buttons.StartMission = MissionPage.StartMissionButton
-
--- Globals deliberately exposed for people outside
-function GMM_Click(button_name)
+function addon_env.export.GMM_Click(button_name)
    local button = gmm_buttons[button_name]
    if button and button:IsVisible() then button:Click() end
 end
-
--- /dump GarrisonMissionFrame.MissionTab.MissionList.listScroll.buttons
--- /dump GarrisonMissionFrame.MissionTab.MissionList.listScroll.scrollBar

@@ -335,22 +335,14 @@ L["RAID_BOSS_ICC_6"] = "Modermiene"
 L["RAID_BOSS_ICC_7"] = "Professor Seuchenmord"
 L["RAID_BOSS_ICC_8"] = "Rat des Blutes"
 L["RAID_BOSS_ICC_9"] = "Blutkönigin Lana'thel"
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_8"] = ""--]] 
+L["RAID_BOSS_LOU_1"] = "Strolch und die Gangzwinger"
+L["RAID_BOSS_LOU_2"] = "Kessel des Gemetzels"
+L["RAID_BOSS_LOU_3"] = "Rik Resonanz"
+L["RAID_BOSS_LOU_4"] = "Stix Kojenschrotter"
+L["RAID_BOSS_LOU_5"] = "Ritzelkrämer Lockenstock"
+L["RAID_BOSS_LOU_6"] = "Der einarmige Bandit"
+L["RAID_BOSS_LOU_7"] = "Mug'Zee, Wachleitung"
+L["RAID_BOSS_LOU_8"] = "Chromkönig Gallywix"
 L["RAID_BOSS_NP_1"] = "Ulgrax"
 L["RAID_BOSS_NP_2"] = "Blutgebundener Schrecken"
 L["RAID_BOSS_NP_3"] = "Sikran"

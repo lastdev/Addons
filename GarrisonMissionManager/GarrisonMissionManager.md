@@ -1,11 +1,11 @@
-[![Donate to the author of Garrison Mission Manager](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cn=Add+special+instructions+to+the+addon+author%28s%29&business=rowaasr13%40gmail.com&bn=PP-DonationsBF%3Abtn_donateCC_LG.gif%3ANonHosted&lc=US&cmd=_donations&rm=1&no_shipping=1&currency_code=USD&return=https%3A%2F%2Fwww.curseforge.com%2Fwow%2Faddons%2Fgarrison-mission-manager&cancel_return=https%3A%2F%2Fwww.curseforge.com%2Fwow%2Faddons%2Fgarrison-mission-manager&item_name=Garrison+Mission+Manager+%28from+CurseForge.com%29)[![Support author of Garrison Mission Manager on Patreon](https://media.forgecdn.net/attachments/192/602/support-on-patreon26.png)](https://www.patreon.com/rowaasr13)
+* <ins>[Support development: Looking for EU TWW activation codes](https://github.com/rowaasr13/garrison-mission-manager/blob/master/support.md)</ins>
 
-Garrison Mission Manager, v62
+# Garrison Mission Manager, v64
 
 * https://www.curseforge.com/wow/addons/garrison-mission-manager
 * http://www.wowinterface.com/downloads/info23375-GarrisonMissionManager.html
 
-A tool to assists you with selecting best team for Battle for Azeroth mission table, Legion's Class Hall and WoD's Garrison/Shipyard missions and other followers management tasks.
+A tool to assists you with selecting best team for Battle for Azeroth (BfA)'s mission table, Legion's Class Hall and Warlords of Draenor (WoD)'s Garrison/Shipyard missions and other followers management tasks.
 
 # Additional downloads
 * [LibTTScan](https://www.curseforge.com/wow/addons/libttscan-1) - to show Artifact Power amount on mission rewards.
@@ -18,8 +18,8 @@ GMM checks all combinations of all followers and selects those that give best to
 
 # Shared features
 
-## WoD garrison/shipyard landing page
-After GMM is loaded (i.e. you've opened any garrison interface or landing page at least once), right clicking the minimap button will show WoD garrison/shipyard landing page even if you already have Class Hall. (Just like all other feature this requires GMM to be loaded -  i.e. you need any garrison interface or landing page at least once or install [GMM - Load On Login](https://mods.curse.com/addons/wow/gmm-on-login)).
+## Garrison landing pages menu
+By default minimap landing page button leads you to landing page of most recent expansion. GMM adds right-click menu that allows you access past expansion landing pages for garrisons in WoD, Legion, BfA and Shadowlands.
 
 ## Additional team selection features
 

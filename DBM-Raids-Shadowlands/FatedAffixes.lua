@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FatedAffixes", "DBM-Raids-Shadowlands", 0)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213155")
+mod:SetRevision("20250307060156")
 --mod:SetModelID(47785)
 mod:SetZone(2296, 2450, 2481)--Shadowlands Raids
 
@@ -473,7 +473,7 @@ function mod:SPELL_SUMMON(args)
 		local encounterID = activeAffixes[372419]
 		local stage = activeBosses[encounterID] or 1
 		local timer = encounterID and specialTimers[372419][0][encounterID][stage]--No or rule for now since no fights are agreeable on good base
-		if timer then
+		if timer and timer > 0 then
 			if borrowedTime[372419] then
 				timerReconfigurationEmitterCD:Start(timer-borrowedTime[372419])
 				borrowedTime[372419] = nil
@@ -509,7 +509,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local encounterID = activeAffixes[372418]
 		local stage = activeBosses[encounterID] or 1
 		local timer = encounterID and specialTimers[372418][0][encounterID][stage]--No or rule for now since no fights are agreeable on good base
-		if timer then
+		if timer and timer > 0 then
 			if borrowedTime[372418] then
 				timerProtoformBarrierCD:Start(timer-borrowedTime[372418])
 				borrowedTime[372418] = nil

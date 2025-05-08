@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2367, "DBM-Raids-BfA", 1, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(157231)
 mod:SetEncounterID(2335)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -98,7 +98,7 @@ local function umbralEruptionLoop(self)
 		warnUmbralEruption:Show()
 	end
 	local timer = umbralTimers[self.vb.eruptionCount+1]
-	if timer then
+	if timer and timer > 0 then
 		timerUmbralEruptionCD:Start(timer)
 		self:Schedule(timer, umbralEruptionLoop, self)
 	end
@@ -108,7 +108,7 @@ local function bubblingOverflowLoop(self)
 	self.vb.bubblingCount = self.vb.bubblingCount + 1
 	warnBubblingOverflow:Show(self.vb.bubblingCount)
 	local timer = bubblingTimers[self.vb.bubblingCount+1]
-	if timer then
+	if timer and timer > 0 then
 		timerBubblingOverflowCD:Start(timer)
 		self:Schedule(timer, bubblingOverflowLoop, self)
 	end
@@ -118,7 +118,7 @@ local function entropicBuildupLoop(self)
 	self.vb.buildupCount = self.vb.buildupCount + 1
 	warnEntropicBuildup:Show(self.vb.buildupCount)
 	local timer = self:IsHard() and orbTimersHeroic[self.vb.buildupCount+1] or self:IsEasy() and orbTimersNormal[self.vb.buildupCount+1]
-	if timer then
+	if timer and timer > 0 then
 		timerEntropicBuildupCD:Start(timer, self.vb.buildupCount+1)
 		self:Schedule(timer, entropicBuildupLoop, self)
 	end

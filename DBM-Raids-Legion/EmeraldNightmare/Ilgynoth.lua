@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185020")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetUsedIcons(8, 4, 3, 2, 1)
@@ -300,7 +300,7 @@ function mod:SPELL_CAST_START(args)
 				else
 					timer = self:IsMythic() and phase1MythicDeathglares[nextCount] or self:IsHeroic() and phase1HeroicDeathglares[nextCount] or phase1EasyDeathglares[nextCount]
 				end
-				if timer then
+				if timer and timer > 0 then
 					timerDeathGlareCD:Start(timer)
 				end
 			end
@@ -323,7 +323,7 @@ function mod:SPELL_CAST_START(args)
 				else
 					timer = self:IsMythic() and phase1MythicCorruptors[nextCount] or self:IsHeroic() and phase1HeroicCorruptors[nextCount] or phase1EasyCorruptors[nextCount]
 				end
-				if timer then
+				if timer and timer > 0 then
 					timerCorruptorTentacleCD:Start(timer)
 				end
 			end
@@ -345,7 +345,7 @@ function mod:SPELL_CAST_START(args)
 		timerDeathBlossom:Start()
 		local nextCount = self.vb.deathBlossomCount + 1
 		local timer = self.vb.phase == 2 and phase2DeathBlossom[nextCount] or phase1DeathBlossom[nextCount]
-		if timer then
+		if timer and timer > 0 then
 			timerDeathBlossomCD:Start(timer, self.vb.deathBlossomCount+1)
 		end
 		local elapsed, total = timerNightmareHorrorCD:GetTime()

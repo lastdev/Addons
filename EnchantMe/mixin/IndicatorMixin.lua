@@ -1,5 +1,5 @@
 local _, addon = ...
-local IndicatorMixin, private = addon.namespace('IndicatorMixin')
+local IndicatorMixin = addon.namespace('IndicatorMixin')
 local positionOffsets = {
     TOPLEFT = {x = 3, y = -2},
     TOPRIGHT = {x = -3, y = -2},

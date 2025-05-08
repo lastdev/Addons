@@ -45,7 +45,7 @@ spec:RegisterTalents( {
     holy_ritual                     = { 103866, 199422, 1 }, -- Allies are healed for 12,325 when you cast a Blessing spell on them and healed again for 12,325 when the blessing ends.
     improved_blessing_of_protection = {  81617, 384909, 1 }, -- Reduces the cooldown of Blessing of Protection by 60 sec.
     inspired_guard                  = { 103864, 469439, 1 }, -- Divine Protection increases healing taken by 15% for its duration.
-    judgment_of_light               = {  81608, 183778, 1 }, -- Judgment causes the next 5 successful attacks against the target to heal the attacker for 2,156. 
+    judgment_of_light               = {  81608, 183778, 1 }, -- Judgment causes the next 5 successful attacks against the target to heal the attacker for 2,156.
     lay_on_hands                    = {  81597,    633, 1 }, -- Heals a friendly target for an amount equal to 100% your maximum health. Grants the target 30% increased armor for 8 sec. Cannot be used on a target with Forbearance. Causes Forbearance for 30 sec.
     lead_the_charge                 = { 103867, 469780, 1 }, -- Divine Steed reduces the cooldown of 4 nearby ally's major movement ability by 3.0 sec. Your movement speed is increased by 3%.
     lightbearer                     = { 103861, 469416, 1 }, -- 10% of all healing done to you from other sources heals up to 4 nearby allies, divided evenly among them.
@@ -53,7 +53,7 @@ spec:RegisterTalents( {
     lights_countenance              = { 103854, 469325, 1 }, -- The cooldowns of Repentance and Blinding Light are reduced by 15 sec.
     lights_revocation               = { 103863, 146956, 1 }, -- Removing harmful effects with Divine Shield heals you for 10% for each effect removed. This heal cannot exceed 30% of your maximum health. Divine Shield may now be cast while Forbearance is active.
     obduracy                        = {  81630, 385427, 1 }, -- Speed increased by 2% and damage taken from area of effect attacks reduced by 2%.
-    of_dusk_and_dawn                = {  81624, 385125, 1 }, -- When you cast 3 Holy Power generating abilities, you gain Blessing of Dawn. When you consume Blessing of Dawn, you gain Blessing of Dusk. Blessing of Dawn Your next Holy Power spending ability deals 20% additional increased damage and healing. This effect stacks. Blessing of Dusk Damage taken reduced by 4% For 10 sec. 
+    of_dusk_and_dawn                = {  81624, 385125, 1 }, -- When you cast 3 Holy Power generating abilities, you gain Blessing of Dawn. When you consume Blessing of Dawn, you gain Blessing of Dusk. Blessing of Dawn Your next Holy Power spending ability deals 20% additional increased damage and healing. This effect stacks. Blessing of Dusk Damage taken reduced by 4% For 10 sec.
     punishment                      = {  93165, 403530, 1 }, -- Successfully interrupting an enemy with Rebuke casts an extra Crusader Strike.
     quickened_invocation            = {  93181, 379391, 1 }, -- Divine Toll's cooldown is reduced by 15 sec.
     rebuke                          = {  81604,  96231, 1 }, -- Interrupts spellcasting and prevents any spell in that school from being cast for 3 sec.
@@ -86,9 +86,9 @@ spec:RegisterTalents( {
     blades_of_light                 = {  93164, 403664, 1 }, -- Crusading Strikes, Judgment, Hammer of Wrath and your damaging single target Holy Power abilities now deal Holystrike damage and your abilities that deal Holystrike damage deal 5% increased damage.
     blessed_champion                = {  81541, 403010, 1 }, -- Crusader Strike and Judgment hit an additional 4 targets but deal 25% reduced damage to secondary targets.
     boundless_judgment              = {  81533, 405278, 1 }, -- Judgment generates 1 additional Holy Power and has a 50% increased chance to trigger Mastery: Highlord's Judgment.
-    burn_to_ash                     = {  92686, 446663, 1 }, -- When Truth's Wake critically strikes, its duration is extended by 2 sec. Your other damage over time effects deal 30% increased damage to targets affected by Truth's Wake. 
+    burn_to_ash                     = {  92686, 446663, 1 }, -- When Truth's Wake critically strikes, its duration is extended by 2 sec. Your other damage over time effects deal 30% increased damage to targets affected by Truth's Wake.
     burning_crusade                 = {  81536, 405289, 1 }, -- Divine Storm, Divine Hammer and Consecration now deal Radiant damage and your abilities that deal Radiant damage deal 5% increased damage.
-    crusade                         = {  81544, 231895, 1 }, -- Call upon the Light and begin a crusade, increasing your haste and damage by 3% for 27 sec. Each Holy Power spent during Crusade increases haste and damage by an additional 3%. Maximum 10 stacks. Hammer of Wrath may be cast on any target. 
+    crusade                         = {  81544, 231895, 1 }, -- Call upon the Light and begin a crusade, increasing your haste and damage by 3% for 27 sec. Each Holy Power spent during Crusade increases haste and damage by an additional 3%. Maximum 10 stacks. Hammer of Wrath may be cast on any target.
     crusading_strikes               = {  93186, 404542, 1 }, -- Crusader Strike replaces your auto-attacks and deals 7,963 Holystrike damage, but now only generates 1 Holy Power every 2 attacks. Inherits Crusader Strike benefits but cannot benefit from Skyfury.
     divine_arbiter                  = {  81540, 404306, 1 }, -- Highlord's Judgment and Holystrike damage abilities grant you a stack of Divine Arbiter. At 25 stacks your next damaging single target Holy Power ability causes 64,971 Holystrike damage to your primary target and 12,994 Holystrike damage to enemies within 6 yds.
     divine_auxiliary                = {  81538, 406158, 1 }, -- Final Reckoning and Execution Sentence grant 3 Holy Power.
@@ -98,12 +98,12 @@ spec:RegisterTalents( {
     empyrean_legacy                 = {  93173, 387170, 1 }, -- Judgment empowers your next Single target Holy Power ability to automatically activate Divine Storm with 25% increased effectiveness. This effect can only occur every 20 sec.
     empyrean_power                  = {  92860, 326732, 1 }, -- Crusading Strikes has a 5% chance to make your next Divine Storm free and deal 15% additional damage.
     execution_sentence              = {  81539, 343527, 1 }, -- A hammer slowly falls from the sky upon the target, after 12 sec, they suffer 20% of the damage taken from your abilities as Holy damage during that time. Generates 3 Holy Power.
-    executioners_will               = {  81548, 406940, 1 }, -- Final Reckoning and Execution Sentence's durations are increased by 4 sec. 
+    executioners_will               = {  81548, 406940, 1 }, -- Final Reckoning and Execution Sentence's durations are increased by 4 sec.
     expurgation                     = {  92689, 383344, 1 }, -- Your Blade of Justice causes the target to burn for 15,245 Radiant damage over 9 sec.
     final_reckoning                 = {  81539, 343721, 1 }, -- Call down a blast of heavenly energy, dealing 50,027 Holy damage to all targets in the area and causing them to take 30% increased damage from your single target Holy Power abilities, and 15% increased damage from other Holy Power abilities for 16 sec. Generates 3 Holy Power.
     final_verdict                   = {  81532, 383328, 1 }, -- Unleashes a powerful weapon strike that deals 32,296 Holystrike damage to an enemy target, Final Verdict has a 15% chance to reset the cooldown of Hammer of Wrath and make it usable on any target, regardless of their health.
     guided_prayer                   = {  81531, 404357, 1 }, -- When your health is brought below 25%, you instantly cast a free Word of Glory at 60% effectiveness on yourself. Cannot occur more than once every 60 sec.
-    heart_of_the_crusader           = {  93190, 406154, 2 }, -- Crusader Strike and auto-attacks deal 10% increased damage and deal 10% increased critical strike damage. 
+    heart_of_the_crusader           = {  93190, 406154, 2 }, -- Crusader Strike and auto-attacks deal 10% increased damage and deal 10% increased critical strike damage.
     highlords_wrath                 = {  81534, 404512, 1 }, -- Mastery: Highlord's Judgment is 50% more effective on Judgment and Hammer of Wrath. Judgment applies an additional stack of Greater Judgment if it is known.
     holy_blade                      = {  92838, 383342, 1 }, -- Blade of Justice generates 1 additional Holy Power.
     holy_flames                     = {  81545, 406545, 1 }, -- Divine Storm deals 10% increased damage and when it hits an enemy affected by your Expurgation, it spreads the effect to up to 4 targets hit. You deal 3% increased Holy damage to targets burning from your Expurgation.
@@ -120,14 +120,14 @@ spec:RegisterTalents( {
     radiant_glory                   = {  81549, 458359, 1 }, -- Avenging Wrath is replaced with Radiant Glory. Radiant Glory Wake of Ashes activates Avenging Wrath for 8 sec. Each Holy Power spent has a chance to activate Avenging Wrath for 4 sec.
     righteous_cause                 = {  81523, 402912, 1 }, -- Each Holy Power spent has a 6% chance to reset the cooldown of Blade of Justice.
     rush_of_light                   = {  81512, 407067, 1 }, -- The critical strikes of your damaging single target Holy Power abilities grant you 5% Haste for 10 sec.
-    sanctify                        = {  92688, 382536, 1 }, -- Enemies hit by Divine Storm take 20% more damage from Consecration and Divine Hammers for 12 sec. 
+    sanctify                        = {  92688, 382536, 1 }, -- Enemies hit by Divine Storm take 20% more damage from Consecration and Divine Hammers for 12 sec.
     searing_light                   = {  81552, 404540, 1 }, -- Highlord's Judgment and Radiant damage abilities have a chance to call down an explosion of Holy Fire dealing 31,185 Radiant damage to all nearby enemies and leaving a Consecration in its wake. Deals reduced damage beyond 8 targets.
-    seething_flames                 = {  92854, 405355, 1 }, -- Wake of Ashes deals significantly reduced damage to secondary targets, but now causes you to lash out 2 extra times for 32,799 Radiant damage. 
+    seething_flames                 = {  92854, 405355, 1 }, -- Wake of Ashes deals significantly reduced damage to secondary targets, but now causes you to lash out 2 extra times for 32,799 Radiant damage.
     shield_of_vengeance             = {  81550, 184662, 1 }, -- Creates a barrier of holy light that absorbs 274,592 damage for 10 sec. When the shield expires, it bursts to inflict Holy damage equal to the total amount absorbed, divided among all nearby enemies.
     swift_justice                   = {  81521, 383228, 1 }, -- Reduces the cooldown of Judgment by 2 sec and Crusader Strike by 2 sec.
     tempest_of_the_lightbringer     = {  92951, 383396, 1 }, -- Divine Storm projects an additional wave of light, striking all enemies up to 20 yds in front of you for 20% of Divine Storm's damage.
     templar_strikes                 = {  93186, 406646, 1 }, -- Crusader Strike becomes a 2 part combo. Templar Strike slashes an enemy for 22,192 Holystrike damage and gets replaced by Templar Slash for 5 sec. Templar Slash strikes an enemy for 40,933 Holystrike damage, and burns the enemy for 50% of the damage dealt over 4 sec.
-    vanguards_momentum              = {  92688, 383314, 1 }, -- Hammer of Wrath has 1 extra charge and on enemies below 20% health generates 1 additional Holy Power. 
+    vanguards_momentum              = {  92688, 383314, 1 }, -- Hammer of Wrath has 1 extra charge and on enemies below 20% health generates 1 additional Holy Power.
     wake_of_ashes                   = {  81525, 255937, 1 }, -- Lash out at your enemies, dealing 50,694 Radiant damage to all enemies within 14 yds in front of you, and applying Truth's Wake, burning the targets for an additional 31,218 damage over 9 sec. Demon and Undead enemies are also stunned for 5 sec. Generates 3 Holy Power.
     zealots_fervor                  = {  92952, 403509, 2 }, -- Auto-attack speed increased by 20%.
 
@@ -165,7 +165,7 @@ spec:RegisterTalents( {
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
+spec:RegisterPvpTalents( {
     blessing_of_sanctuary    =  752, -- (210256) Instantly removes all stun, silence, fear and horror effects from the friendly target and reduces the duration of future such effects by 60% for 5 sec.
     blessing_of_spellwarding = 5573, -- (204018) Blesses a party or raid member, granting immunity to magical damage and harmful effects for 10 sec. Cannot be used on a target with Forbearance. Causes Forbearance for 30 sec. Shares a cooldown with Blessing of Protection.
     hallowed_ground          = 5535, -- (216868) Your Consecration clears and suppresses all snare effects on allies within its area of effect.
@@ -387,7 +387,10 @@ spec:RegisterAuras( {
     devotion_aura = {
         id = 465,
         duration = 3600,
-        max_stack = 1
+        max_stack = 1,
+        dot = "buff",
+        shared = "player",
+        friendly = true
     },
     divine_arbiter = {
         id = 406975,
@@ -928,6 +931,14 @@ spec:RegisterAuras( {
     }
 } )
 
+spec:RegisterHook( "prespend", function( amount, resource )
+    -- You still need the holy power in order to cast, but it won't be consumed. It does trigger other effects as though it were consumed, though.
+    if resource == "holy_power" and buff.all_in.up then
+        ns.callHook( "spend", amount, resource )
+        return 0, resource
+    end
+end )
+
 spec:RegisterHook( "spend", function( amt, resource )
     if amt > 0 and resource == "holy_power" then
         if buff.blessing_of_dawn.up then
@@ -943,7 +954,7 @@ spec:RegisterHook( "spend", function( amt, resource )
             reduceCooldown( "blessing_of_sacrifice", 1 )
             reduceCooldown( "blessing_of_spellwarding", 1 )
         end
-        if buff.divine_hammer.up then buff.divine_hammer.up.expires =  buff.divine_hammer.up.expires + ( amt * 0.5 ) end
+        if buff.divine_hammer.up then buff.divine_hammer.expires = buff.divine_hammer.expires + ( amt * 0.5 ) end
     end
 end )
 
@@ -1142,6 +1153,18 @@ spec:RegisterHook( "reset_precast", function ()
                     state:QueueAuraEvent( "crusading_strikes", CrusadingStrikes, next_swing + 2 * ( i - 1 ) * mh_speed, "AURA_PERIODIC" )
                 end
             end
+        end
+    end
+
+    -- Testfix for 4pc; if this is insufficient then will need to track SPELL_ENERGIZE from CLEU to count Holy Power already regenerated and subtract from the gain amount.
+    if buff.all_in.up then
+        local last = state.prev_gcd.last
+        local last_ability = class.abilities[ last ]
+
+        if last_ability and action[ last ].timeSince < 0.5 then
+            local spend, spendType = last_ability.spend
+            spendType = not spendType and last_ability.spendType or "mana"
+            if spendType == "holy_power" then gain( spend, "holy_power" ) end
         end
     end
 end )
@@ -2385,4 +2408,4 @@ spec:RegisterSetting( "sov_damage", 20, {
 } ) ]]
 
 
-spec:RegisterPack( "Retribution", 20241029.1, [[Hekili:T3rApQns2FlTgfcKPdbBG0DMTHvAhTJ2jAu(WYiTFdOaBapXyZ6J(qc5F7BvLVQRx5cW07mkrA0Kexp)UVQdxm3A(VpFMdkXD(xShypYAG9N6BnC8hh9P5ZsE5G78zhqR)kAl(VeG2J)))B3KiVvPjEHbKXEXpe5qWrCyA0A84ZNTk1Zp5xdMVsjIhyHH9G765F5UbZNTZZXXnhu341ZNra99wdEV9N(PSL)ZnB8w75gS(LSLHBYw(lEbEX7CJIZw2DJ3ZUo9Y(C2NPVYGp9E77XVYmV9)C2Y0dec)3Yw(Vc)TSLyq)7SaAn42SLKxWw4fQb6(CS9lEpxGduGtful3efUV4nzFJrvVbA)E3OCE(382UlPgS7EV9qmy)(omA(pimm)hVKDEenzu4gpFS(dTMOAJ7FiYDD4(vOKFCYhI35567SiCZIhDd26IcwJ5vva(ikYdTY39wITAc2qf8v3KfwlwLUzt8TpI8tREAFR(7qX0r6hNeHXBYUJhvm4EuCIB0lkh7rSXaL457LOE8DK3v5iRJ8sofzWwPmyRtgS1id2nid2GYG95ldwlIFjy9THhMe7M4TPqwSY)ZfU(XUtg0F8TRddC8i4CsjA6lyj70TwJUom03j8PG(oPriYB9M3u9O1rPXih3QHMm44rWbFZB0GuYBAgnrexuVGTlEcp0o1KgaMg4GENIU2(I112I6A7RHUwbsz116PzRORvYbNKU(qKxiou4frTTnR22IrxFdOJnKv44ry7Jwdu9y4mSR7JcEzHZH4QX79UUw9h)JAYNGHqbPjox96nTR2aX6XmH2kYhRI2wf0MutPWeHnmrURs)Ql7twJ89xK)px47fNKBYkzY4MbDRBGlMrdXLBRjvLusEVdHKNDR3MjuUwWtl9WXJfPjZD(jpWXL(i3NDxtBHyrSBqcUcF(ORcJJ7SHuXCrK7EKxq8ddhK95F4hWfGvqFVGhd)k296zCU9aKpv3LZ7hcFYnAHxWM042KdvRg8jmC8I)i1z7EmSeQHBWbRstqrBDtI7laW0j2hpEteYZzHlMHs6JCCIXeeR5X(5Ip3ly6DJLFmeZSXd7k4hg6CccDhU)DCcUHVjwdohvrAS7cVe393g7hMuMFWIWkD7QMz6aLOQWby6ObgYV96CtcYNOGIqoEOGKfB9dP18v80oDlbww6QzPNqy3lCxxiCxNXLC0Kg0m96rqoxcLseQmVEbAvKHRmV6eRESvFvMmz6eU4MoKqPtWgz)nSnYcWgzDs2i7ESw3RHnIghbx6uvzWk(w(1QkSEJOLtQRLsZS9GsOpDxeB2wkAuuTvlQsTKPYebQH()UOQyACe5KZPyQ1yD(9yUsRFTAcldlnC3C1H1yHa86IenOnEyqFs5RM0zecOkhaooDxO)llOf0NozuNeV9UpGbM9PdPpDQWtTXUj5y0X7rVa3fO0NXZYdbLUHKtiVIDFc6wKeUWXZD69DKSg4jmU4jpFFcEKG3YUxdjNEy7Ah12jELd1gD(spGW3PBf3PWfIj)zfyB8inxHNfWxddWmxnm0SOYnMOwTafuu4rreww(FSwzfQ3hogfs)DVsCo5(l39PrVCvZjSSAGu4OQqUPKIOqLlHA3Ra6cezG3PsdludQekOOP1rdyNIcXjkFT7KMfPdU2lclCKhKpVXU8TpxO)JXtfzpT3588F7p8seohAU9IYfLbQ5(bp6g54ToPmoaxI5GBCcrEt25UG2t(kCbITUr4Us4rPV7w06xizeVjxPw6ceTcxQkQQ9gHhNBHSh1tTyVJUSGegWpFrbvbubkZHLpOyYyTVcv)qEJQ6FmA2cjuGfWXkihQCwvYPWjb2pDk2)4DdnPFVhiU7aj1VHv)LZvutyfv5hQkaYAqhUiAav9FKgN4TgHZtZvP9vwkBuNFDvcepE)CDans4BpnaFIMIrCkwMQQLso1Lnrv9YEihYwnNArjAtKl)KI5WIjSXgKFSlW7RE9zQe0BJXn6UozILy6c2cA4IFS66i34WaK4u55OAH7ZIyFC9HkjV6PyA(v(QgVZgatR8X(keLvEyjnu8gNqshvhsJ2sNBeUzH1FfNnUmDnLZ34Jf0yaSYv9IZ3Uy9w2M65GO9mRSXibOmO89h1eT8r4uDAAM3GwXMosv)upC)PuIgxoMeJkx5UhGUTWljj03N3P6bsFrTaDBwzBnwJ2gA6chpYV6H3djGNxifPzrJYh2PEsOLH7TvuwhTnhDcrGDzTQdR7EI(y6lGTsAjwzKuf2Rk2cP2RZBwpdhys8GDnxHvLXXUolwJrXbmI5MyiL)lcs25I8XUrhwNKpj(I3)ruW2uueULO9HKfHnDF909QFLhgoUuOOYYMu)CoTOoiLli(QK8obyZQMyiEBiaqSlAmG9yvyAGdHUvlG8jyKB0g)xbdvtkysOtleNRWDyID5kB28QOdnVKEMNmOazL(meMsmfy5y9X6xm3gJB9ihviF8Cd7F3yE1TnBXpS2VEYFIElC99zl06GHVvnCLUQ8J3gzJnwzQWf(cDenZQbafkAnIwsnkcJS5Zih7amu1NoM5ZEcfrw3I45ZONpeV9hcJsYwUjmkB5BR2g23MTmY9)M6fHL8LXywlBjknjCpkH8aSBboVvC)Sp)B4WZSLKZ4YphgGPgD43Qz3gXiojKbKe1W0165ETi6jR)lbUZaZfNQdD8DniTlYVaUM58MOJZ5bR9jYfib0teJoEVeG2eXxa)soNo6y3IXBr0cXSdbWQIZDGeMvdtlJ(lGXHcyucs7I8lGR1fOacw7tKlqcuh0OaG2eXxa)QmSrE8weTqm7iWy861FQyRBveNRcMRk6VAi(7893e8D4b3CiIX9wgGXsZhLav4)YpZJQWk7HESbQ2kN6r18qVsf8zQAotnZfPyAsMnsV0KAPYNAmyM4MDwvddxSqBJ(RgI)oF)nbF3CotPZKKk83c5mB4GI3avVKCdnWdW5mnt1CMAMlsX0KmBKEPj1sLp1hBzNvHyH2g9gGyLhVrfihcod5FtjdXnBXPJEtNuS25CF5OhA6jqy(C7l8kJEdqSz2ty4mK)nLmNLBJ5RS5z52yo6n0TrQc2v6JVrzEwOyuHp9fHabd)KBu2nmK5vKIwnsXYp0Ms1)ROE7dV66TpCf0Byps6(ySj03p8jCbuYgveHW(Hp5gHFogjo5(KjeWY31KSLKnakB5Q0Ks4ccPBcsAah0ooeGDqjOvOy3Fk7ZzlFF2Y8pjZccZVbkLYC8BpPnqrA25ko2bvrOkgRVBar94igM(kJx5dyIaYvCcumLcf(g8FRlaf7yg2qKw5RwSvI66HPgKRiYBeTMxbYOcDxoz0wOtAQuTKJ4RmEBrhCOjxAP3bxAydrAJ(Gkb5kI8grR5DMBKd(LtMZQtUZl6)QI8k0ExRAqf452f5vO9(REG5NUsPuaWR4h(HaQfh(eX(1IRL(mLGu3LJdHFRbxv1IL0wS)QG(lwT)QJ4IL(saLLliMeYu28B1zP6TNuZVwQ5iUpWgb(IBmqrvnE18n6iqfnqACBRNL29628oqVnNfpET6)sQI3fWJa46c4rLE)1heVtZ9hqfY8TjiWCmJCIISWxJGaEfg9pr4(cmvAXBl21Gu7oTeNdvFS(WvRY7GoWPIs5tyVaQLbaKea5ExjCUTLia)WNk6LpnTceqgGtMeCNyFr0ZniiQLoOrfsV0zWxu9ibaijaQDCjEna5PAltka6BrtQnGFFRqISp)R0QbeepMFDgjP6NpJ(3O3dIUBqP(j4)6xO3lI5GoFw(TR08zfOE()yEY8VytGO(jvalEy2ZX)I8BpXQfHKGHHNdgQRLHrrc5IdS4CHlX1kUUjAqecpGFl3KAuuU4UK)MFk(pawh4SLhpInmVQds5UcLsbiLRiVkL7jiB26yIxLbvjB21Y2i1YM3g1sNSwISc9y)SiYNTUhQgAXT2iBzhCyeNjqARdYw(gCNtLpvCF6ZwojB5GCHvdqVPjAuJfZ5fGnUxjlbcRHCwVc3i6LD38zd6pUYVYIyYgFzMm7Mnz2aMmf7VuRBYusdfMSg5Lw3KPHZAYK9XlZKvEZqXA0UjBP2qnyJkrYBYK3Ov)dCaWTOPy1r2Y3rXHvFCvYFutIRkib2Trke4)BQexPma6dCaymxjwQaMRSy4kEBUvLf3oVAkt11YYPmEa1gscj7dClau7EiaW5vYLEZaW6Gv(DVPQkxnhw)TUr93hN7cj80ruxhQWO4IbaZzjKp8oIIWSMtQwMjvvPe0EaFJZzlFiB521o93JEMArTRPn3x8PQSQCrAa3WaurgE(61ut8BDuvoHAcID8UPcVaZPw2gmfBeSz5iW3Sxzuou(Vk9hoS7JazVvaJUz8Yq1AzdEI3cef(onGs)rL0x8UnG6bCppTvFJdKJb5BDak(TgOE40d00aLwzURrcIj(oJcPEOYWDDyWtXABn2aZDjq6T3ei4UcfQmg1AmMlhcI(6EJ0xeh9H1zBQ)SPLFg9suGsxIgQdv9(O4h97fMB6tTqUjmNb)jXxeARj3L1aD5se91gMBBUHp1f3YcW410iFXMYbETJ4m7QshAbxHSbU4bktWlsRawqcgbdqTi9LCtD5Thisb4LlGHgkqgMBhoMvNPE5KYjh1dALIBkco1PWNNovBAZo9DEFqHzUBzwHFLEoWRvvnXlhHsl4c5nslzV0gCOGRO)xphk9g7pQ0ytZoiyRHRib4ToPMvPoJsxEfmJXMjU6HsxIfLASRqQyl4ciIf00C5xKNxJCbyazzTL7(6HQIsvuc6cUGA)5Alvtd1Nf2yFpXRpdvWZ4EjOEOAv4kCxbBOnCTSRwaM2OlBUvcvu)iSkOCPDfVNoybnHvSvm)WMNmNz1M1fhYREuUB7SfQmyJYzIT5jA11Gz5WD5NRy91HP00i5UsmZnTJkM9D50yzUDkRMym0eN5nyMv7JmPxPMwZrS(zNwfCWWHCkiO7Zq55kjS93g0MoBq(qG006ByU5M8zNyfRrR6cyuGpvEjmMpPIIo0f70FKQjmq9X1pR9)YO8obxHxdnSI770ty1k(UI2yfT4DQQQfmO5QaK7CuGv0lzoZEe28sqEkD2P9NZJ8xJ8dsarjiVeadhulp5)UVOA1mR5oT)cOWvO78w8K7gREy2LFvGQ6lDCsQtaF7j1(26u21Cy1VwlQQiv5ZLVm2wcXVDHBUVJzRB0ObNL4vfy28sjPhcXQL6wzrwrs59wo7weP3tVNWYAYVnhLuPqauSFkveKaG0MnuUTp5QlkP4qK0oCqcfeI36KhkIJI8dtyCauu7uWjX(7ojxxNelDojYNoEtCsSLDsK2CoJDsSvv3xxMKBAylj7AqqGkCWTZL3O2)rBpgmZf8cDHTZ3Sx5GjXk36cM0kJDa3MZg1tw)5wpzRFj(f8jl2NHtjMTG1BiAS22O6unPDb97EEQ1Y9lPH68nQxX9onO)DI7qJb7MJjDh3vz)Q4biBNgL2k2336TIjhQPGqvTbxf8c03EHHmS4kSZTNFtPBZuhLUnIFPkL0tjwSSlPut1cQ3mNA3lzhWtBVAUoMGg1)D43SqDB96e5tsZg1)c)uDqzY0UxSLDjdzpgWf)Y753WMijQngFwAwPfcSEZwott69gq4jGGDTcRmk7c0b7ITVcGuMqPdNw3ZxZmChTnLY8(sRkXjfr3OxRU5ywYjaZ9CeVhTq0dDs8Kz)NMSlmA(mYVt40Nm))9]] )
+spec:RegisterPack( "Retribution", 20250310, [[Hekili:T3rAVTnY1FlglIIvwhfrAPyNTwQaDrx0nyr(q1wKVjXrIuwCnfPkjLpae4V9(MHxZm8ndjLOCdqcqqIdNhF3xZf9CJ5)58z2KyN5FXCO54HxBmCGXOXJngnFw8l7CMpBhz1dK7HFWNSf(7)TtCO7Y9XUb(0XEXlGytXruW(WvW4ZNTCVRx8V7pFjoInay35SA(xUz48zBCTTDsb1jA18zuqF)WRFVXWFjXAM72FnX6)SJILKpN850bnFV5TWG)5x)kaHdjkWpXYmXAppyJae8EZpbG9pxV2DLRJ)QxsScwNy9BU(UrBCcJsSUCT7Zo29lELHFkfZPKnfF)TeR)vWFKybG(35b0y4vjw0xWu6fkb62uS9BUpNHdIVDbuwRdd2M9M8VXOI3GSDRtykp)hU3VjUeSBEV51ufWganFLaW8v34nUuRryWAxpWgqwrnprd2f6Sky7ss8pp5drBCD8SxeSEXJo(37q8xb8kgGpscDjl9CUIAVNagB)hCIxySy5(1RJU6rI3(INoWyWgseBKbrXHaEJ3C4aYGBjrXoHVGo2JGXGe765gJp(g67IoYQq342idMOYGPozWuJmywJmyQugmpEzWyr0l(RUky3KiNy31zYIr6)UWXlYzYWbJVAvGVTlfNtYrZajlzVll1ORcc8SdEYFG9(qc9TEZBkE0QW9reBNIHMm8WbLd(M3ObP03Sz0KqDrD9VFXtWqBWjTcyQHd63gDT5jRRnL11MNdDncs5116PzNORr5GwPR3f6gaHcViRTn512gC66lu6yRYkC4GA7Jwdu5yqg2vdi(VSWExuX49F3Lgdg)ZAYNaqGqAQZv)(tVuBGy5ynH2i5JXOTrgTP1uYmrGHj0z5(hC4FYkIN3I0)7cp3O4utwotgvpO3747amAauUTKufsj992fqF2vURNW4AjpT97oCilnzQZp9b2oSh58SZkwBilIC8JHk8PJUmikQ3AAfZfHoBjU(r3D9WKp)t)euagH(U(pg8a4E9mKB3N4X0DP8(UGNCcx46VEFuxYH4QbpkdhT4V2BF)wawk1GMKavAmj8EN4ObsamDI5HdxesCTx4amu8aITDeqqqZd(5Yp31F6nJR(yvmZAxWvWliWUfcDpH)Fum004eJHhJQyFKZc3yNTxf5feNNFWGYkxEjoZ0tvIQmhGPJg2q(TFVlIjEufuiX2L4hV4EVawnFKN27YCGRkDLS0teW9c66IaDDgLZrtQrZ0Vpf5cjuYriAE9m0IKHlpV6eJ(8vFrtMmDIqCtpAOulSrMFhBJmuyJmALnYSpV1TRSrSSzlDIIb4bZv03BMPw4cZsZOUZcSUekmRvFTI(oUqwJvPPUC1R5WCOBVPXCyBevtCrTshRyEWk1q)FxurMLlvofIzMAmwN)gWvA9N6LY02Up667SydBE6klMvffSOVMRLmglfVvwATgL0Ddhql6xNQKsaSqsi72MaVxwWAdA6Kr9ID36Cham)tVM90PWtfag6njfAajz4otDr2)mmlzIQ8a0CQL9alOHZ53C9HS(hmBIKkDeghqBHAaLJwehSW21z6T9Qy)HzWV4jxppkJvbEdZ(1Kg6U7xzJ7ciQ3zM)2Oyf0R9uOn50AioTCzklaBTlTBxyAzpe4dmxjmSYAv7uexTOkmmZzLkS88)yTYQQMrfyuv6VBrX5KBLvGNG)OQaiSjPNxEUsKow08uA5svfgv1)Dg0ziQbENOgwvZyGsbKzrmAi)CgPorPlMALP1BdndraHJ(G0jYFP48zY0)rWCd3YsyKMXD7UxcHS2P2lHO6u)GhDcTDxfNhhaf12bn2qL34nolytsAjus6EAG)fIO0Z5EYQxOjBV4s(miKWLqXXWIgzKECQfYCuFCXonldLbyeVygtsphCGj2VOonLYKA1Kn0yioBjanRsFnfTqEzMTH(Ufv75SQzAxvIzDPXBDs8le93vhYnfC1F31nPj17OrUOr94QL)Ap0c9kcuNqO3Ixxw71vVJRiOrDEP6bw043NAbXeEzJyNT(Lf7XWEh(eMLRhwdrWAIxKJI3hFj3kyXRIGMZxfpXqQK5eHYVq9tEDrOtuGpPyT0y1EaQ46Z68vFrgfSzM3YIipa6I8JfpfyYhelu9otfyAPh4AqjBAKil67c7aAtC72hEpB(Xq)jREakaKxHGjPR9antupzNI4apVAyEbbvWppBb5UFVRnHnRb0g1KGQbTt8rnroFuzR66MotdAnC6iS(7U7220Ya0EanETANe9vOB5ScInkEhTpToGU1RSngRrBRAMrhoiU8Y3QsaBtaA5uQZte0vHt9024vlc10INCh(Ix8XQ7YSafkZDxoVi1u4oZYKZGskkYXEXkaf7ae3pndg7XutmnC1h0Gc93GRdzAlfaLVu7nudD(fZ6egQdHkpXux7AKyjEvbuKWvewyByiWMZNr37BaQSJ5HP5TZN9ejKoxTO5Zyhsb3T7ccJtSwheMy92I9c8TjwHo)39UHGVUvuWwasY(4GTKy6daXgCGIgK85)aupjw0dAXVg4duJn8B1SLxaIJd4ajghMlnEUFhIE6QSrH7iWC2rlqhFxcs3I8tGR5o0d64CrW6EICcsa7yzOJ3ZbOlr8jWV0dlIo2nB8oeTQy2RvGvKn)UcMXHPJr)jW4QcyqbPBr(jW16cuucw3tKtqcWdAqaOlr8jWVOHnvhVdrRkMDKYy8YP8KT)HiX5yWCwr)zdX)GV)UGVd25Kcre0BPpGL63Wwm8F6h8omSYFY7QHQDYrVdNh6NRGpsvZrQzojftDYCJ0l1Pwk8PgRmtC9oR4Wiel01O)SH4FW3FxW31NZSYj)ad)DqoZAoTY1q1tj3qn8G6CMnt1CKAMtsXuNm3i9sDQLcFQp2XoRsXcDn6BaIrpJDiixfCnK)BkzOUzlAp6B6KI1oN7th9QMEIkmFS9fEMrFdqCZSNQHRH8FtjZr5208v28OCBAo6BOBtLkyNPBacAEwvXOs3)cPaHgEVpq7gwL5vMIg1sX8B7rU6)vuV9HxD92hod6nWJKTpgRd88cEckGs3OIqc4h(Kti8Caj2P(KXuWs31Kel6w(LyTCFCoC(bSnbzVVa022uGTjXKLKiNFj5ZjwVpXk9EbMryXnqjxMJEBR2aLkZohzRnlIqrgBGJpv9ylhM(kJ3QBITeYr2L7MsHmFdXlCHIIDCd3qKw4RMT5S66HPeKZiYRfTnVcuJk0D6KrBHUktLQJCeFLXBh6GRAYLg6DWRmCdrAT(GOGCgrETOT5DM3ih8tNmTRtUoYr8vgVDOd(nDA(WZkYlq7TDQlUep3TiVaTF6SBjzFWpohoHQqS8faqc3Yd3w0FU570ZQdotNDGwBjIRCtyuzlZhxjbmoVA8k7H6Rc6pDd6RnIZwPrjuMV(Jvqg6CnkoSIVTvZ1qHhGWD4qIVegtPOIJxnxdejQObsv0SYbOPJIdvm)MZfEBP3GwCDYUSkA99O4Xx52Zpz7JIUIokz)vUZTtq2rZUuEUsBx6ffULCN1FjMJBKwAULoa)s4vA0VHW9j7cC(ND65Y5vrZQvpz6siVkaTTfQLshz7keqCyLOxH)9jJ(Kp)7S4pkshlUqL0GR5Zy)e7lcOZAYEVy4h)c7leykOZNL(ncA(Smup)FmpE(xmPqu(KcGLV)dP4Fr63rWIvXKIHRpgmuM9aqrm9ZFx2blVcxJ8vbOgriyh8woXLOiF1HP)K3E4FuSqYjwhoaMLx1bzCxMsjdK8L0ht52czZuht8QmiMSzwkBJWLn314sxvTeDj(b)Sq6D91LucT8EJKy1dcJembv27HeR3a1QYFQ8g9NynjXAyQWQbO3uhnkXsZ5ff78pklPe2gYz9ZCJyFY2MpB4GXf(vgut24tZKzwVjZuHjdzdQ6Ctgknqmz1YlDUjtdNvNj7JNMjl)7BeVr7IelTHAQnQujVotETw9piaGWQUcQJeR3XWHXaOk5pRjXvbKk2UsgeWFMwHRqdG(GaanMRKlvOMRm44krBUrHf3mTAkx118YPTQgc7MlZ7nKFVgXk3w6xaCD5fbL5Foo1Kl90rmtnvEXU6YPVcB0IRVmtQ7Xf1GEjMbXkMERmPICZAdPyjsWQ1wkymMrX10mX6UeR7xzpyl5zMTZSK2cxVpSsEcXukUn0mbx9CHe1li3o6s2r(ApILrxWAErbHvmHMQM3PtyFrN7v)B2ppGxvQWcfmeb(rfjYrGr30n4OAPSPEwpsev9DWMr)r50x(UyZCrUvK243q6umu9wsZWVXq8HzHhLwzHqdSkaLMyEd3DfgUZdd2gRTX4gyUZbsV9McHWv(UWyuQX4cAO6RB0fK(O8v9(et6CBhK0buSQVwYzHKAsk9jLSqTyLpqx9uW1NbYyOUuq6yH7yCa1cFbhxGpr6CpqMwDjY1nVKjLUk1mEuykPIgfPzJAyYdA(frxgOR5bQIwrcy1vn6wfKEvWyuvaZjsIF)ipKsxFDzyVHhwzYkb7T8WkFv25bnMpi7O6aQgfBMZFrJkv(2xjR1r3He(ONgS5g5UWxit0IVow5dFPy3vLFLSQ04LWxklwAvZrz9xM37h3hok9T)XWRQpRpYke0LCMtJkoE(7l3NJ4NgOSIqy(tmMrFtExOGYvQtKoI(25kktWP9emEQ1tsLjviP1OOQvrJ0hK0(v0GsW8T9Enhpv(LHQ0Ht4Rdfl1uE7c10Wwf9plgSf9U(nQC9TL7aFjRkFQ003f5pu2hVYw(ZXgw)N1xTI(PktX01J5xTEKsHsPVR8XQuHbH(qTFE4tFn6h4AQsTAh4xZLMo93Ja6lUO9lQVqb5JBUl3mw1Cxk5tjQ2G1mOPQtf(3tk9V1PSl5WIV()yvNk85sxqjdPy48Mgq45EnBABJgEuIxrWz9ZKtpeTzI91Uys8lwREp9(svtfxWXCQKjaiRSPqELkl7x(cWMQUyKsarvwRrAOGu8wV0qrikYliMZbaPgQKtI5pCsoVojg6CsQESoBItIzvNKkltEJDsmXQ9xmX1YFXe8d)KUZpj)xxF8QxK(c0LpVUTO5YgKkcdhc7KZf4whTD7zou8DpEheZ0n)QAkn5LutxknTYypLB7tT6jJVT1tM6x3pPmdzl2ABIiYy9A9156kx98UXoci1UWHhJspFjLRPxSA16q)T0Fbo0qOB8AzxuarEdxs3qn6ooWOnYUUrH6AoOMwafc6YAKMhFfKwCMnvor2numQUBaQxqhEBYXoHRsUV6EZmLTDa9q9SLpU85IhkwmmtA02uYV49Lo5vJrkx4zv(4DPFG2nXtT5wYmQBlYqo8dk(nzrXzBir7EMLB)vzpgkmvBXWVYLQhv5kRngFuA2kRcE5A)FKM0BBaHNOemZZDuSUuCQolo8nGQiVTQCYtlB6REgUN2Us5E)klHvRIOR1Rv3IrKZjkwKIrIE0srpSv7HUmr7J3eeoFg9xqXSNm))9]] )

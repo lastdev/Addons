@@ -25,10 +25,10 @@ do
 		Theme.GetColor("FEEDBACK_GREEN"),
 	}
 	local hours = {}
-	if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
-		hours = { 1, 2, 24, 48 }
-	else
+	if LibTSMUI.IsVanillaClassic() then
 		hours = { 0.5, 2, 8, 24 }
+	else
+		hours = { 1, 2, 24, 48 }
 	end
 	assert(#hours == #colors)
 	for i, color in ipairs(colors) do

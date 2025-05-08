@@ -8,6 +8,8 @@ _G[addonName] = addon
 
 -- One empty function to rule them all
 addon.EmptyFunc = function() end
+addon.TrueFunc = function() return true end
+addon.FalseFunc = function() return false end
 
 -- Add support for an addon's binding to a key
 function addon:AddKeyBinding(prefix, name, description)
@@ -114,3 +116,4 @@ function addon:ReleaseTable(t)
     wipe(t)
     table.insert(tablePool, t)
 end
+

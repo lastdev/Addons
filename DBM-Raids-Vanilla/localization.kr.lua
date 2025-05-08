@@ -1107,7 +1107,7 @@ L:SetOptionLocalization({
 	timerMark					= "다음 기사의 징표 타이머 바 보기 (횟수 포함)",
 })
 
-L:SetWarningLocalization({
+L:SetTimerLocalization({
 	timerMark	= "%d번 징표",
 })
 
@@ -1207,7 +1207,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	AutomateEmote		= "자동으로 진격 명령에 맞는 감정 표현",
+	AutomateEmote		= "자동으로 진격 명령에 맞는 감정 표현 (Blizzard 핫픽스로 작동 중단)",
 	AffixTimer			= "하드모드 어픽스 타이머 보기",
 	WarnEggs			= "알 등장 알림 보기 (거미 지구 하드모드)",
 	SpecWarnOrders		= "DBM이 진격 명령을 자동으로 대처하지 못했을 때 특수 경고 보기"
@@ -1220,11 +1220,11 @@ L:SetMiscLocalization({
 	SpiderAffix			= "알 폭발",
 	UnsupportedLocale	= [[강화된 군사 지구에 오신 것을 환영합니다!
 이곳의 하드모드 패턴은 무작위 플레이어에게 특정 감정 표현을 요구하는 방식입니다.
-DBM은 모든 패턴을 자동화하는 중이나 당신의 클라이언트 언어 %s|1은;는; 아직 전부 지원하지 못해서 DBM이 빼먹는 감정 표현이 있을 것입니다.
+당신의 클라이언트 언어 %s|1은;는; 아직 전부 지원하지 못해서 DBM이 빼먹는 감정 표현이 있을 것입니다.
 당신이 도울 수 있습니다! 하드모드 패턴마다 정확한 텍스트를 공유해 주세요 (스크린샷, 동영상, Transcriptor 로그) discord.gg/deadlybossmods에 들어가서 보내주시면 됩니다.
 ]],
-	AutomatedEmote		= "DBM이 진격 명령에 %s 감정 표현을 자동으로 했습니다.",
-	AutomatedEmoteGuess	= "DBM이 추측을 기반으로 진격 명령에 %s 감정 표현을 자동으로 했습니다. 틀린 감정 표현이었나요? discord.gg/deadlybossmods에서 저희한테 알려주세요",
+	AutomatedEmote		= "DBM이 진격 명령에 %s 감정 표현을 시도했습니다. (Blizzard가 자동 기능을 막아서 작동하지 않을 수 있습니다)",
+	AutomatedEmoteGuess	= "DBM이 추측을 기반으로 진격 명령에 %s 감정 표현을 시도했습니다. 올바른 감정 표현이었나요? discord.gg/deadlybossmods에서 저희한테 알려주세요",
 	-- List of emotes may not be complete, let me know if I missed one
 	OrderDance			= "DANCE for me!",
 	OrderRoar			= "Show me your best ROAR!",
@@ -1544,3 +1544,77 @@ L:SetGeneralLocalization({
 --  Emperor Dagran Thaurissan (3049) --
 ---------------------------
 --L= DBM:GetModLocalization(2670)
+
+-----------------------------
+--  Scarlet Enclave (SoD)  --
+-----------------------------
+-- This mostly relies on the new auto-generated locales for boss names from encounter data.
+-- Only add name localization if the name in locale.generated.lua is inconsistent with the commonly used name in the language.
+
+L = DBM:GetModLocalization("Balnazzar")
+
+L:SetMiscLocalization{
+	OtherPlayer = "다른 사람", -- Use with AUTO_SPEC_WARN_TEXTS.moveto ("$spell - move to >%%s<")
+	Tick = "틱"
+}
+
+L = DBM:GetModLocalization("Solistrasza")
+
+
+L = DBM:GetModLocalization("Beatrix")
+
+L:SetMiscLocalization{
+	YellFroggers1 = "적진을 무너뜨려라",
+	YellFroggers2 = "창을 준비하라",
+	CannonMistress = "포반장 린드", -- TODO: can we automatically get the localized name?
+	YellPhase2 = "하나 되어 맞서라! 우리의 힘 앞에 적은 전율하리라!",
+	Footmen = "보병",
+	Horses = "기병"
+}
+
+
+L = DBM:GetModLocalization("RebornCouncil")
+
+
+L = DBM:GetModLocalization("Caldoran")
+
+
+L = DBM:GetModLocalization("LillianVoss")
+
+
+L = DBM:GetModLocalization("Beastmaster")
+
+L:SetOptionLocalization({
+	TimerMark = "다음 무기력/점화 징표 타이머 바 보기 (횟수 포함)",
+	WarnMark = "무기력/점화 징표 경고 보기 (횟수 포함)"
+})
+
+L:SetTimerLocalization({
+	TimerMark	= "징표 %d",
+})
+
+L:SetWarningLocalization({
+	WarnMark = "징표 %d"
+})
+
+
+L = DBM:GetModLocalization("Mason")
+
+L:SetMiscLocalization{
+	Cannons1 = "공격!",
+	Cannons2 = "공격 개시!",
+}
+
+L = DBM:GetModLocalization("SE_Trash")
+L:SetGeneralLocalization{
+	name = "붉은십자군 초소 일반몹"
+}
+
+L:SetOptionLocalization{
+	FlightTimer = "그리핀 비행 타이머 바 보기",
+}
+
+L:SetMiscLocalization{
+	CentralTower = "중앙 탑",
+	Prison = "감옥",
+}

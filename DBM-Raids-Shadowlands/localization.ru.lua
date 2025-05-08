@@ -70,7 +70,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	DBMConfigMsg		= "Marking icons configuration set to %s to match raid leaders configuration."
+	DBMConfigMsg		= "Настройки иконок установлены ​​на %s для соответствия конфигурации рейд-лидеров."
 })
 
 ---------------------------
@@ -106,7 +106,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2442)
 
 L:SetOptionLocalization({
-	ContinueRepeating	= "Продолжайте повторять крики о Презрении и Гневе, пока дебаффы не исчезнут"
+	ContinueRepeating	= "Продолжать повторять крики о $spell:355240 и $spell:355245, пока дебаффы не исчезнут"
 })
 
 ---------------------------
@@ -115,7 +115,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2439)
 
 L:SetMiscLocalization({
-	Fragment		= "Фрагмент "--Space is intentional, leave a space to add a number after it
+	Fragment		= "Фрагмент "--Пробел специально. Оставить пробел, чтобы добавить после него цифру
 })
 
 ---------------------------
@@ -146,7 +146,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	Dissection	= "Рассечение!",
-	Dismantle	= "Dismantle"
+	Dismantle	= "Демонтаж"
 })
 
 ---------------------------
@@ -221,7 +221,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	timerComboCD		= "Показать таймер (с отсчетом) перезарядки танкового комбо"
+	timerComboCD		= "Отсчёт времени (со счётчиком) до перезарядки танкового комбо"
 })
 
 ---------------------------

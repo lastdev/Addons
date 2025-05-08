@@ -1,5 +1,5 @@
 ## Author: Shauren
-## Interface: 110007
+## Interface: 110105, 40402, 11507
 ## Notes: Announces your successful interrupts to party/raid
 ## Title: InterruptAnnouncer
 ## Version: 1.0

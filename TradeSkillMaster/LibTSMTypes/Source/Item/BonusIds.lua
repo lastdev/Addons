@@ -74,6 +74,7 @@ function BonusIds.GetItemLevel(itemString)
 	local relLevel = nil
 	local importantBonusId = nil
 	local baseLevel = nil
+	local baseLevelPriority = math.huge
 	for bonusId in gmatch(bonusIds, "([0-9]+)") do
 		bonusId = tonumber(bonusId)
 		if numBonusIds > 0 then
@@ -82,7 +83,11 @@ function BonusIds.GetItemLevel(itemString)
 				if info.rel then
 					relLevel = (relLevel or 0) + info.rel
 				elseif info.base then
-					baseLevel = baseLevel or info.base
+					local priority = info.priority or math.huge
+					if not baseLevel or priority <= baseLevelPriority then
+						baseLevel = info.base
+						baseLevelPriority = priority
+					end
 				else
 					if not importantBonusId then
 						importantBonusId = bonusId

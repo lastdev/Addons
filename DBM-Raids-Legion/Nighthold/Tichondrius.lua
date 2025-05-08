@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213210")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Unknown carrions
@@ -72,14 +72,14 @@ mod:AddInfoFrameOption(212794)
 --Brand of Argus: pull:15.0, 25.0, 35.0, 25.0, 75.0, 25.5, 32.5, 30.0, 75.0, 25.6, 36.1, 22.5, 56.1, 25.6",
 --Feast of Blood: pull:20.0, 25.0, 35.0, 25.0, 75.0, 25.5, 37.5, 25.0, 75.1, 25.6, 36.2, 22.5, 56.1, 25.6"
 --Carrion Plague, feast of blood, Seeker Swarm, brand of argus All Same in Phase 1
-local P1SharedCastTimers = {0.000001, 25, 35, 24.5}
+local P1SharedCastTimers = {0, 25, 35, 24.5}
 --Phase 2 they start to fragment
-local P2CarrionTimers = {0.000001, 25.5, 35.6, 26.9}
-local P2SeekerBloodTimers = {0.000001, 25.5, 37.5, 25.0}--Seeker and Feast of Blood
-local P2BrandTimers = {0.000001, 25.5, 32.5, 30.0}
+local P2CarrionTimers = {0, 25.5, 35.6, 26.9}
+local P2SeekerBloodTimers = {0, 25.5, 37.5, 25.0}--Seeker and Feast of Blood
+local P2BrandTimers = {0, 25.5, 32.5, 30.0}
 --less fragmented in phase 3
-local P3CarrionTimers = {0.000001, 25.6, 40.6, 20.5}
-local P3SharedCastTimers = {0.000001, 25.6, 36.1, 22.5}--Seeker, Brand, Feast
+local P3CarrionTimers = {0, 25.6, 40.6, 20.5}
+local P3SharedCastTimers = {0, 25.6, 36.1, 22.5}--Seeker, Brand, Feast
 
 --Normal/LFR HAD different timers. Normal now matches heroic so assume LFR also does for now
 --local sharedCastTimersFaster = {0.000001, 15, 25, 14.5}--Carrion Plague, feast of blood, Seeker Swarm (faster on normal/LFR since no brand of argus)
@@ -231,7 +231,7 @@ function mod:SPELL_CAST_START(args)
 		else--Assume phase 3+ are same, for now since no further mechancis introduced
 			timer = P3SharedCastTimers[self.vb.seekerSwarmCast+1]
 		end
-		if timer then
+		if timer and timer > 0 then
 			timerSeekerSwarmCD:Start(timer, self.vb.seekerSwarmCast+1)
 		end
 		if DBM:UnitDebuff("player", carrionDebuff) then
@@ -287,7 +287,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timer = P3CarrionTimers[self.vb.carrionPlagueCast+1]
 		end
-		if timer then
+		if timer and timer > 0 then
 			timerCarrionPlagueCD:Start(timer, self.vb.carrionPlagueCast+1)
 		end
 	elseif spellId == 212794 then
@@ -300,7 +300,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timer = P3SharedCastTimers[self.vb.brandOfArgusCast+1]
 		end
-		if timer then
+		if timer and timer > 0 then
 			timerBrandOfArgusCD:Start(timer, self.vb.brandOfArgusCast+1)
 		end
 	elseif spellId == 208230 then
@@ -313,7 +313,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timer = P3SharedCastTimers[self.vb.feastOfBloodCast+1]
 		end
-		if timer then
+		if timer and timer > 0 then
 			timerFeastOfBloodCD:Start(timer, self.vb.feastOfBloodCast+1)
 		end
 	end

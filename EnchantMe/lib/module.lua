@@ -2,10 +2,10 @@ local addonName, addon = ...
 local modules = {}
 
 function addon.module(...)
-    local module, private = addon.namespace(...)
+    local module = addon.namespace(...)
     table.insert(modules, module)
 
-    return module, private
+    return module
 end
 
 addon.on('ADDON_LOADED', function (name)

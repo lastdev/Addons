@@ -102,24 +102,24 @@ function MyAuctions.CancelAuction(auctionId)
 end
 
 function MyAuctions.CanCancel(index)
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
-		return not private.pendingFuture
-	else
+	if ClientInfo.IsVanillaClassic() then
 		local numPending = private.pendingDB:NewQuery()
 			:Equal("isPending", true)
 			:LessThanOrEqual("index", index)
 			:CountAndRelease()
 		return numPending == 0
+	else
+		return not private.pendingFuture
 	end
 end
 
 function MyAuctions.GetNumPending()
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
-		return private.pendingFuture and 1 or 0
-	else
+	if ClientInfo.IsVanillaClassic() then
 		return private.pendingDB:NewQuery()
 			:Equal("isPending", true)
 			:CountAndRelease()
+	else
+		return private.pendingFuture and 1 or 0
 	end
 end
 

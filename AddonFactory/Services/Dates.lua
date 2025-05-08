@@ -2,6 +2,45 @@ local MVC = LibStub("LibMVC-1.0")
 
 MVC:Service("AddonFactory.Dates", function() 
 
+--[[
+
+Formats usable in date()
+
+*t: Returns a table with date and time fields.
+%a: Abbreviated weekday name (e.g., "Wed").
+%A: Full weekday name (e.g., "Wednesday").
+%b: Abbreviated month name (e.g., "Sep").
+%B: Full month name (e.g., "September").
+
+%c: Date and time representation (e.g., "09/16/98 23:48:10").
+%d: Day of the month as a decimal number (01-31).
+
+%H: Hour in 24-hour format (00-23).
+%I: Hour in 12-hour format (01-12).
+
+%j: Day of the year as a decimal number (001-366).
+%m: Month as a decimal number (01-12).
+%M: Minute as a decimal number (00-59).
+
+%p: Current locale's AM/PM indicator for 12-hour clock (e.g., "AM").
+%S: Second as a decimal number (00-59).
+%U: Week number of the year (Sunday as the first day of the week) as a decimal number (00-53).
+
+%w: Weekday as a decimal number (0-6, Sunday is 0).
+%W: Week number of the year (Monday as the first day of the week) as a decimal number (00-53).
+
+%x: Date representation for the current locale (e.g., "09/16/98").
+%X: Time representation for the current locale (e.g., "23:48:10").
+
+%y: Year without century, as a decimal number (00-99).
+%Y: Year with century, as a decimal number (e.g., "1998").
+
+%%: A literal percent sign.
+
+--]]
+
+
+
 	local weekdayNames = { WEEKDAY_SUNDAY, WEEKDAY_MONDAY, WEEKDAY_TUESDAY, WEEKDAY_WEDNESDAY, WEEKDAY_THURSDAY, WEEKDAY_FRIDAY, WEEKDAY_SATURDAY }
 
 	local monthNames = {

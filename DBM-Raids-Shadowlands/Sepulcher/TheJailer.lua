@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2464, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714005600")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(180990)
 mod:SetEncounterID(2537)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -371,7 +371,7 @@ local function mythicTimerLoop(self)
 	if not self.vb.phase then return end--This loop cannot cleanly recover on mid fight disconnect, prevent nil error
 	self.vb.echoCount = self.vb.echoCount + 1
 	local timer = mythicSpecialTimers[self.vb.phase][self.vb.echoCount]
-	if timer then
+	if timer and timer > 0 then
 		if self.vb.phase < 4 then
 			warnHealAzeroth:Show(self.vb.echoCount-1)
 			timerHealAzeroth:Start(timer, self.vb.echoCount)
@@ -465,7 +465,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnRelentingDomination:Show(DBM_COMMON_L.BREAK_LOS)
 		specWarnRelentingDomination:Play("findshelter")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 362028, self.vb.relentingCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerRelentingDominationCD:Start(timer, self.vb.relentingCount+1)
 		end
 		if not self:IsEasy() then
@@ -479,7 +479,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.unholyCount = self.vb.unholyCount + 1
 		warnUnholyAttunement:Show(self.vb.unholyCount)
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.unholyCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerUnholyAttunementCD:Start(timer, self.vb.unholyCount+1)
 		end
 	elseif spellId == 359856 then
@@ -489,7 +489,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnShatteringBlast:Play("findshelter")--Kind of a crappy voice for it but don't have a valid one that sounds better
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerShatteringBlastCD:Start(timer, self.vb.tankCount+1)
 		end
 	elseif args:IsSpellID(364942, 360562, 364488) then--All deciminator casts with a cast time
@@ -497,7 +497,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDecimator:Show(self.vb.decimatorCount)
 		specWarnDecimator:Play("specialsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 360562, self.vb.decimatorCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerDecimatorCD:Start(timer, self.vb.decimatorCount+1)
 		end
 	elseif spellId == 365033 then
@@ -505,14 +505,14 @@ function mod:SPELL_CAST_START(args)
 		specWarnDesolation:Show(self.vb.desolationCount)
 		specWarnDesolation:Play("helpsoak")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.desolationCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerDesolationCD:Start(timer, self.vb.desolationCount+1)
 		end
 	elseif spellId == 365212 then
 		self.vb.chainsIcon = 8
 		self.vb.chainsCount = self.vb.chainsCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.chainsCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerChainsofAnguishCD:Start(timer, self.vb.chainsCount+1)
 			if self:IsMythic() then
 				--Boss sometimes skips 3rd cast, this corrects timer if that happens
@@ -528,7 +528,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDefile:Show(self.vb.defileCount)
 		specWarnDefile:Play("stilldanger")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.defileCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerDefileCD:Start(timer, self.vb.defileCount+1)
 		end
 	elseif spellId == 366374 then
@@ -540,7 +540,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnWorldCracker:Show()--self.vb.worldCount
 		specWarnWorldCracker:Play("specialsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.worldCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerWorldCrackerCD:Start(timer, self.vb.worldCount+1)
 		end
 	elseif spellId == 367290 then--Transitional/Final Unholy Attunement (possibly even earlier P3 trigger)
@@ -556,7 +556,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnMeteorCleave:Show(self.vb.tankCount)
 		specWarnMeteorCleave:Play("cleave")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerMeteorCleaveCD:Start(timer, self.vb.tankCount+1)
 		end
 	end
@@ -571,7 +571,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnChainsofOppression:Show()
 		specWarnChainsofOppression:Play("justrun")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.chainsCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerChainsofOppressionCD:Start(timer, self.vb.chainsCount+1)
 		end
 	elseif spellId == 367051 then
@@ -591,7 +591,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnMartyrdom:Show(self.vb.tankCount, args.destName)
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerMartyrdomCD:Start(timer, self.vb.tankCount+1)
 		end
 		if self.Options.SetIconOnMartyrdom2 then
@@ -600,7 +600,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 365436 or spellId == 370071 then
 		self.vb.tormentCount = self.vb.tormentCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 365436, self.vb.tormentCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerTormentCD:Start(timer, self.vb.tormentCount+1)
 		end
 	elseif spellId == 360279 or spellId == 366284 or spellId == 365147 then--All rune spells
@@ -609,7 +609,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			self.vb.runeIcon = 1
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.runeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			if spellId == 360279 then
 				timerRuneofDamnationCD:Start(timer, self.vb.runeCount+1)
 			elseif spellId == 366284 then

@@ -1,10 +1,28 @@
-lightweight tag ffd0eaf069d5fe20fbda98b3b37950a9dce0628b 5.8.1
+lightweight tag 5e1a8cd21de9990fa712be0bd3508eb16331a8e1 5.10.1
 Author:	Remeen <wow@meen.co.uk>
-Date:	Mon Feb 10 19:50:26 2025 +0000
+Date:	Thu Apr 17 21:03:14 2025 +0100
 
-commit ffd0eaf069d5fe20fbda98b3b37950a9dce0628b
+commit 5e1a8cd21de9990fa712be0bd3508eb16331a8e1
 Author: Remeen <wow@meen.co.uk>
-Date:   Mon Feb 10 19:50:26 2025 +0000
+Date:   Thu Apr 17 21:03:14 2025 +0100
 
-    Fixes for errors loading custom items from older versions.
+    Custom spells can include mounts and pets
+
+commit 746a5a6af40ad7382b449307967c66efbe2d5f7a
+Author: Aaron Johnson <aaron@aaronjohnson.me>
+Date:   Fri Apr 4 21:17:32 2025 -0400
+
+    fixed expansion for waycrest manor
+
+commit 746a5a6af40ad7382b449307967c66efbe2d5f7a
+Author: Aaron Johnson <aaron@aaronjohnson.me>
+Date:   Fri Apr 4 21:17:32 2025 -0400
+
+    fixed expansion for waycrest manor
+
+commit 92e612ea31009eae9b6d7203eab92e52f190eb8c
+Author: Remeen <wow@meen.co.uk>
+Date:   Wed Mar 26 20:59:23 2025 +0000
+
+    Fix for possible uninitialised settings.
 

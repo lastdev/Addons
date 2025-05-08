@@ -125,6 +125,8 @@ L.LogCurrentMPlus					= "Current level (or remix) M+ dungeons"--Retail Only
 L.LogCurrentMythicZero				= "Current level (or remix) Mythic 0 dungeons"--Retail Only
 L.LogTWDungeons						= "Timewalking or Chromie Time dungeons (does NOT include remix)"--Retail Only
 L.LogCurrentHeroic					= "Current level Heroic dungeons (Note: if you are doing heroic via queuing and want it logged, turn off LFG filter)"
+L.LogDelves							= "Current level Delves"--Retail Only
+L.LogChallenges						= "Current level special challenges (such as Torghast, Visions, and Mage Tower)"--Retail Only
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures				= "Extra Features"
@@ -388,6 +390,7 @@ L.AreaTitle_BarSetupHuge			= "Huge Bar Options"
 L.AreaTitle_BarSetupVariance		= "Variance Bar Options"
 L.EnableHugeBar 					= "Enable huge bar (aka Bar 2)"
 L.EnableVarianceBar 				= "Enable variance bars"
+L.VarianceColor						= "Variance color"
 L.VarianceTransparency				= "Bar transparency: %0.1f"
 L.VarianceTimerTextBehavior			= "Set variance timer text behavior"
 L.ZeroatWindowEnds					= "Text hits zero at end of CD window"
@@ -667,6 +670,7 @@ L.ExportTestFailedNonAnonString		= "WARNING: String %q looks non-anonymized."
 L.CreatedTest						= "Created test with %d events in %.1f seconds."
 L.NoLogsFound						= "Transcriptor import contains no log data."
 L.NoTestDataAvailable				= "No test data available"
+L.TestDataLoading					= "Loading tests..."
 L.NoLogSelected						= "Test creation failed: No log selected."
 L.LogAlreadyImported				= "Test creation failed: Test already imported."
 

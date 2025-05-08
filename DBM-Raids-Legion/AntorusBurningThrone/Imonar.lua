@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2009, "DBM-Raids-Legion", 1, 946)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185020")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(124158)--or 124158 or 125692
 mod:SetEncounterID(2082)
 --mod:SetBossHPInfoToHighest()
@@ -181,7 +181,7 @@ function mod:SPELL_CAST_START(args)
 				timerShrapnalBlastCD:Start(26.7, self.vb.shrapnalCast+1)
 			elseif self.vb.phase == 5 then
 				local timer = mythicP5ShrapnalTimers[self.vb.shrapnalCast+1]
-				if timer then
+				if timer and timer > 0 then
 					timerShrapnalBlastCD:Start(timer, self.vb.shrapnalCast+1)
 				end
 			end

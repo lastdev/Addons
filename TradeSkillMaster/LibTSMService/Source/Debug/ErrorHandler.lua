@@ -105,6 +105,7 @@ function ErrorHandler.ProcessReport(errorInfo, details, isManual, force)
 		return
 	end
 	details = gsub(details, "\124cff[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]([^\124]+)\124r", "%1")
+	details = gsub(details, "\124cnIQ[0-9]:([^\124]+)\124r", "%1")
 	details = gsub(details, "[\\]+", "/")
 	details = gsub(details, "\"", "'")
 	tinsert(private.errorReports, {

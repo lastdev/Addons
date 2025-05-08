@@ -1398,6 +1398,7 @@ local default_global_data = {
 		current_exp_raid_encounters = {},
 		encounter_journal_cache = {}, --store a dump of the encounter journal
 		installed_skins_cache = {},
+		last_10days_cache_cleanup = 0,
 
 		auto_change_to_standard = true,
 
@@ -1628,6 +1629,10 @@ local default_global_data = {
 			shield_overheal = false,
 			--compute the energy wasted by players when they current energy is equal to the maximum energy
 			energy_overflow = false,
+			--compute avoidance for tanks
+			tank_avoidance = false,
+			--compute resources
+			energy_resources = false,
 		},
 
 	--aura creation frame libwindow
@@ -1857,7 +1862,7 @@ function Details:RestoreState_CurrentMythicDungeonRun()
 				Details:Msg("D! (debug) mythic dungeon state restored.")
 
 				C_Timer.After(2, function()
-					Details:SendEvent("COMBAT_MYTHICDUNGEON_START")
+					Details:SendEvent("COMBAT_MYTHICDUNGEON_CONTINUE")
 				end)
 				return
 			else

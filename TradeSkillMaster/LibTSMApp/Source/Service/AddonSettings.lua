@@ -377,7 +377,7 @@ function private.ProcessUpgrade(db, upgradeObj)
 			end
 		end
 	end
-	if prevVersion >= 122 and prevVersion < 131 and not LibTSMApp.IsCataClassicPatch442() then
+	if prevVersion >= 122 and prevVersion < 131 and not LibTSMApp.IsCataClassic() then
 		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "auctioningAuctionScrollingTable") do
 			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "auctioningAuctionScrollingTable", value)
 		end

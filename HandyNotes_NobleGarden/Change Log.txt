@@ -1,3 +1,73 @@
+== v4.10 - 29th April 2025
+* Falconwing Square - all eggs are now annotated
+* Doubtful eggs in Falconwing Square now all verified
+
+== v4.09 - 28th April 2025
+* Small Bloodhoof Village revamp (Retail)
+* Azure Watch now has notes for ALL of the eggs
+* New Elwynn Forest at (41.99,67.46)
+
+== v4.08 - 27th April 2025
+* Falconwing Square update. Lots of stuff added
+* numCriteria is now defined/localised into its block
+* Noble Gardner progress hack improved. It worked before but the code was nevertheless flawed
+* Core.lua line went missing in all non-Retail TOC files due to sloppy cut and paste.
+  "No need to test this change. What could possibly go wrong"
+  
+== v4.07 - 26th April 2025
+* Valdrakken revamp. All existing pin coordinates have been altered to be precise
+* Valdrakken eggs are now fully annotated - telling you exactly where it is
+* Colourised AddOn text in game engine AddOn menus now matches the AddOn's colour scheme
+* Added new data functionaility (for future use) to align with my unreleased
+  Children's Week AddOn's functionality
+* Added a Mists of Pandaria TOC file to support that too
+
+== v4.06 - 25th April 2025
+* Elwynn and Durotar revamped. Too many changes to list. Principally the "new" quest chains and dailies
+* Fix for stubborn Dailies etc still showing despite options to the contrary
+* Tip added for Elwynn at (43.70,67.38)
+* Doubtful egg location confirmed in Razor Hill
+* Individual character completion for the Quacked Killer achievement is now 
+  omitted due to a quirk/bug in the API
+* Individual completion is now correct for the Noble Garden meta
+
+== v4.05 - 23rd April 2025
+* Added The Great Egg Hunt to the Noblegarden continent pin clusters
+* Text for the above altered to suggest Kharanos, Goldshire, etc as appropriate
+* Added the A Tisket, a Tasket, a Noblegarden Basket seasonal quest
+
+== v4.04 - 21st April 2025
+* Small tidy up to the The Great Egg Hunt plus
+  added a Tooltip to point out (the bleeding obvious) that the pin is
+  on this occasion for my AddOns not actually on the quest giver
+  (to avoid obscuring Brightly Colored Egg spawn locations)
+* Removed a line of code which could cause a Tooltip to occur twice
+  
+== v4.03 - 20th April 2025
+* TOC update to 1.15.7
+* TOC update to 11.1.5
+
+== v4.02 - 11th April 2025
+* Added some more disabling logic for features that are unavailable in Vanilla/TBC
+* Brightly Colored Egg size no longer shrinks on the continent map
+* Renamed setHistory to setFlavour because I wanted to lol
+* Rarely encountered space line bug fixed
+* Trivial code formatting change in popup Minimap menu
+* Correctly titled colour codes in the colors file
+* Realm/server list updated
+
+== v4.01 - 4th April 2025
+* Pin clusters added to all continent maps
+* A bright/gay/gaudy colour scheme added for all AddOn assets
+  In keeping with the rank commercialisation of the event IRL lol
+* All the egg colours are now available for selection in the options panel
+  (previously the Turquoise and Yellow couldn't be selected)
+* Switched a couple of default textures so as to aid visibility of the Brightly Colored Eggs
+* Tiny adjustment to the default BCE size
+
+== v4.00 - 28th March 2025
+* Total makeover for 2025. Way way too many changes and additions to note here
+
 == v3.06 - 20th February 2025
 * TOC update to 11.1.0
 

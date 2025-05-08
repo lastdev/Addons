@@ -222,15 +222,15 @@ function ShoppingPostDialogPriceView:Acquire()
 	self._state:PublisherForExpression([[stackSize and numStacks and (stackSize * numStacks) <= bagQuantity or false]])
 		:AssignToTableKey(self._state, "stackSizeIsValid")
 
-	if LibTSMUI.IsRetail() or LibTSMUI.IsCataClassicPatch442() then
-		self._state:PublisherForExpression([[bagQuantity > 5000 and 5000 or bagQuantity]])
-			:AssignToTableKey(self._state, "maxPostStack")
-	else
+	if LibTSMUI.IsVanillaClassic() then
 		self._state:PublisherForKeyChange("itemString")
 			:IgnoreNil()
 			:MapWithFunction(ItemInfo.GetMaxStack)
 			:AssignToTableKey(self._state, "maxItemStack")
 		self._state:PublisherForExpression([[baseItemBagQuantity > maxItemStack and maxItemStack or baseItemBagQuantity]])
+			:AssignToTableKey(self._state, "maxPostStack")
+	else
+		self._state:PublisherForExpression([[bagQuantity > 5000 and 5000 or bagQuantity]])
 			:AssignToTableKey(self._state, "maxPostStack")
 	end
 

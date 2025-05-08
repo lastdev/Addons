@@ -28,26 +28,12 @@ end
 
 function LM.Mount:Get(className, ...)
     local class = LM[className]
-
     local m = class:Get(...)
-    if not m then return end
-
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-        for familyName, familyMounts in pairs(LM.MOUNTFAMILY) do
-            if familyMounts[m.spellID] then
-                m.family = familyName
-            end
-        end
-
+    if m then
         if not m.family then
-            m.family = UNKNOWN
-            LM.MOUNTFAMILY["Unknown"][m.spellID] = true
-            --[==[@debug@
-            LM.PrintError('No family: %s (%d)', m.name, m.spellID)
-            --@end-debug@]==]
+            m.family = NONE
         end
     end
-
     return m
 end
 
@@ -70,6 +56,10 @@ function LM.Mount.FilterToDisplay(f)
         return ALL
     elseif f == "FAVORITES" then
         return FAVORITES
+    elseif f == "ENABLED" then
+        return VIDEO_OPTIONS_ENABLED
+    elseif f == "DISABLED" then
+        return VIDEO_OPTIONS_DISABLED
     elseif f == "ZONEMATCH" then
         return L.LM_ZONEMATCH
     elseif f:sub(1,1) == '~' then
@@ -120,6 +110,10 @@ function LM.Mount:MatchesOneFilter(flags, groups, f)
         return self.mountTypeID ~= nil
     elseif f == "FAVORITES" then
         return self:IsFavorite()
+    elseif f == "ENABLED" then
+        return self:GetPriority() > 0
+    elseif f == "DISABLED" then
+        return self:GetPriority() == 0
     elseif f == "ZONEMATCH" then
         local zone = GetZoneText()
         return self:IsFromZone(zone)
@@ -213,7 +207,8 @@ function LM.Mount:IsActive(buffTable)
 end
 
 function LM.Mount:IsCastable()
-    local info = C_Spell.GetSpellInfo(self.spellID)
+    local spellID = C_Spell.GetOverrideSpell(self.spellID)
+    local info = C_Spell.GetSpellInfo(spellID)
     if LM.Environment:IsMovingOrFalling() then
         if info.castTime > 0 then return false end
     elseif LM.Options:GetOption('instantOnlyMoving') then

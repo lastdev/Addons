@@ -838,8 +838,11 @@ function private.RecipeIterator(context, index)
 				name, skillType = GetTradeSkillInfo(index)
 			end
 			if skillType == "header" then
-				context.lastHeaderIndex = index
-			elseif name then
+				-- Ignore categories with no name as they are bugged (i.e. Tinkers in Cata)
+				if name ~= "" then
+					context.lastHeaderIndex = index
+				end
+			elseif name and context.lastHeaderIndex then
 				return index, name, context.lastHeaderIndex, private.MapDifficulty(skillType)
 			end
 		end

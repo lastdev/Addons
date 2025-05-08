@@ -1,10 +1,9 @@
 # <DBM Mod> Raids (DF)
 
-## [r4](https://github.com/DeadlyBossMods/DBM-Dragonflight/tree/r4) (2025-01-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dragonflight/compare/r3...r4) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dragonflight/releases)
+## [r5](https://github.com/DeadlyBossMods/DBM-Dragonflight/tree/r5) (2025-04-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Dragonflight/compare/r4...r5) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Dragonflight/releases)
 
-- Blizzard code is ass, so partial revert of last  
-- Assign groups and categories for new addon manager in 11.1  
-- just because  
-- Update localization.ru.lua (#2)  
-- remove 11.0.5 and Add 11.1  
+- apparently i never remembered to bump tocs  
+- Because DBT can't get it's shit together, all 77 (and counting) mods that do this just need to work around core bug  
+- Merge pull request #3 from Hollicsh/patch-1  
+- Update localization.ru.lua  

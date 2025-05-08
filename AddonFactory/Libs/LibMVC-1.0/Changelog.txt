@@ -2,6 +2,10 @@ LibMVC Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 6 (27/12/2024)
+
+- Added an automatic frame:SetParent() when __Parent is detected.
+
 Version 5 (22/12/2024)
 
 - Updated SetViewMethods() to also take the controller's metatable functions into account.

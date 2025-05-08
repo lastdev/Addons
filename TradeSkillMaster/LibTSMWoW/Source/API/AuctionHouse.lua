@@ -176,7 +176,7 @@ function AuctionHouse.GetOwnedInfo(index)
 			duration = time() + duration
 		end
 	elseif saleStatus == 1 then
-		if not currentBid and (LibTSMWoW.IsRetail() or LibTSMWoW.IsCataClassicPatch442()) then
+		if not currentBid and not LibTSMWoW.IsVanillaClassic() then
 			-- Sometimes wow doesn't tell us the current bid on sold auctions
 			currentBid = 0
 		end
@@ -447,7 +447,7 @@ end
 function AuctionHouse.IsPurchaseMessage(msg, name, quantity)
 	if msg == AuctionHouse.GetPurchaseMessage(name) then
 		return true
-	elseif quantity and (LibTSMWoW.IsRetail() or LibTSMWoW.IsCataClassicPatch442()) and msg == format(ERR_AUCTION_COMMODITY_WON_S, name, quantity) then
+	elseif quantity and not LibTSMWoW.IsVanillaClassic() and msg == format(ERR_AUCTION_COMMODITY_WON_S, name, quantity) then
 		return true
 	end
 	return false

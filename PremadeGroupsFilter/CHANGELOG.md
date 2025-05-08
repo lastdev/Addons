@@ -1,8 +1,10 @@
 # Premade Groups Filter
 
-## [6.6.3](https://github.com/0xbs/premade-groups-filter/tree/6.6.3) (2025-02-19)
-[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/6.6.2...6.6.3) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
+## [6.7.1](https://github.com/0xbs/premade-groups-filter/tree/6.7.1) (2025-04-14)
+[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/6.7.0...6.7.1) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
 
-- Merge pull request #309 from Hollicsh/master  
-    Update PremadeGroupsFilter\_Cata.toc  
+- Guard against rare cases when searchResultInfo is nil (fixes #318)  
+- Merge pull request #316 from Hollicsh/master  
+    Update the .toc files  
 - Update PremadeGroupsFilter\_Cata.toc  
+- Update PremadeGroupsFilter.toc  

@@ -407,7 +407,7 @@ local function ScanQuests()
 
 	char.lastUpdate = time()
 	
-	DataStore:Broadcast("DATASTORE_QUESTLOG_SCANNED", char)
+	AddonFactory:Broadcast("DATASTORE_QUESTLOG_SCANNED", char)
 end
 
 local function ScanCallings(bountyInfo)

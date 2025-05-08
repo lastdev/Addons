@@ -282,13 +282,13 @@ end
 
 function HealBot_Init_SetSpellRange(id, spellName, range)
     HealBot_Spell_IDs[id].range=range
-    if range == 30 then
+    if range > 27 and range < 33 then
         if HealBot_WoWAPI_HelpfulSpell(spellName) then
             HealBot_Init_SetRangeSpells("HEAL30", spellName, id)
         elseif IsHarmfulSpell(spellName) then
             HealBot_Init_SetRangeSpells("HARM30", spellName, id)
         end
-    elseif range == 40 then
+    elseif range > 39 and range < 71 then
         if HealBot_WoWAPI_HelpfulSpell(spellName) then
             HealBot_Init_SetRangeSpells("HEAL", spellName, id)
         elseif IsHarmfulSpell(spellName) then
@@ -543,19 +543,23 @@ end
 
 local iSpellName, iSpellRank
 local function HealBot_Init_CheckSpell(sType, s, sId, iSpellName, iSpellRank)
-    if sType == "SPELL" and not HealBot_WoWAPI_IsSpellPassive(sId) and HealBot_Spells_KnownByName(iSpellName) and not string.find(iSpellName," Rune Ability") then -- and (string.len(iSpellRank)<1 or string.find(iSpellRank,"Rank"))
-        HealBot_Init_Spells_addSpell(sId, iSpellName, s, iSpellRank)
-    elseif sType == "FLYOUT" then
-        local _, _, numFlyoutSlots, flyoutKnown=GetFlyoutInfo(sId)
-        if flyoutKnown then
-            for f=1,numFlyoutSlots do
-                local fId, _, fKnown, fName=GetFlyoutSlotInfo(sId, f)
-                if fKnown and not HealBot_WoWAPI_IsSpellPassive(fId) and HealBot_Spells_KnownByName(fName) then
-                    HealBot_Init_Spells_addSpell(fId, fName, s, iSpellRank)
+    --if sType then
+        if sType == "SPELL" then
+            if iSpellName and not HealBot_WoWAPI_IsSpellPassive(sId) and HealBot_Spells_KnownByName(iSpellName) and not string.find(iSpellName," Rune Ability") then -- and (string.len(iSpellRank)<1 or string.find(iSpellRank,"Rank"))
+                HealBot_Init_Spells_addSpell(sId, iSpellName, s, iSpellRank)
+            end
+        elseif sType == "FLYOUT" then
+            local _, _, numFlyoutSlots, flyoutKnown=GetFlyoutInfo(sId)
+            if flyoutKnown then
+                for f=1,numFlyoutSlots do
+                    local fId, _, fKnown, fName=GetFlyoutSlotInfo(sId, f)
+                    if fKnown and not HealBot_WoWAPI_IsSpellPassive(fId) and HealBot_Spells_KnownByName(fName) then
+                        HealBot_Init_Spells_addSpell(fId, fName, s, iSpellRank)
+                    end
                 end
             end
         end
-    end
+    --end
 end
 
 function HealBot_Init_Spells_Defaults()
@@ -607,6 +611,7 @@ function HealBot_Init_Spells_Defaults()
                         iSpellName, iSpellRank=HealBot_WoWAPI_SpellBookItemName(s)
                         if not iSpellRank then iSpellRank="" end
                     end
+                    if not sType then sType="SPELL" end
                     HealBot_Init_CheckSpell(sType, s, sId, iSpellName, iSpellRank)
                 end
             end
@@ -771,9 +776,9 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginMediaReason"]=reason or ""
     HealBot_Init_luVars["pluginMediaLoaded"]=loaded
     if loaded and HealBot_Globals.PluginMedia then
+        HealBot_Timers_setLuVars("pluginMedia", true)
         HealBot_Plugin_Media_Init()
         HealBot_Media_PluginState(true)
-        HealBot_Timers_setLuVars("pluginMedia", true)
     else
         HealBot_Media_PluginState(false)
         HealBot_Timers_setLuVars("pluginMedia", false)
@@ -783,11 +788,11 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginThreatReason"]=reason or ""
     HealBot_Init_luVars["pluginThreatLoaded"]=loaded
     if loaded and HealBot_Globals.PluginThreat then
-        HealBot_Plugin_Threat_Init()
         HealBot_Aggro_setLuVars("pluginThreat", true)
         HealBot_setLuVars("pluginThreat", true)
         HealBot_Action_setLuVars("pluginThreat", true)
         HealBot_Timers_setLuVars("pluginThreat", true)
+        HealBot_Plugin_Threat_Init()
     else
         HealBot_Aggro_setLuVars("pluginThreat", false)
         HealBot_setLuVars("pluginThreat", false)
@@ -799,10 +804,10 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginTimeToDieReason"]=reason or ""
     HealBot_Init_luVars["pluginTimeToDieLoaded"]=loaded
     if loaded and HealBot_Globals.PluginTimeToDie then
-        HealBot_Plugin_TimeToDie_Init()
         HealBot_setLuVars("pluginTimeToDie", true)
         HealBot_Action_setLuVars("pluginTimeToDie", true)
         HealBot_Timers_setLuVars("pluginTimeToDie", true)
+        HealBot_Plugin_TimeToDie_Init()
     else
         HealBot_setLuVars("pluginTimeToDie", false)
         HealBot_Action_setLuVars("pluginTimeToDie", false)
@@ -813,10 +818,10 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginTimeToLiveReason"]=reason or ""
     HealBot_Init_luVars["pluginTimeToLiveLoaded"]=loaded
     if loaded and HealBot_Globals.PluginTimeToLive then
-        HealBot_Plugin_TimeToLive_Init()
         HealBot_setLuVars("pluginTimeToLive", true)
         HealBot_Action_setLuVars("pluginTimeToLive", true)
         HealBot_Timers_setLuVars("pluginTimeToLive", true)
+        HealBot_Plugin_TimeToLive_Init()
     else
         HealBot_setLuVars("pluginTimeToLive", false)
         HealBot_Action_setLuVars("pluginTimeToLive", false)
@@ -828,7 +833,7 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginExtraButtonsLoaded"]=loaded
     if loaded and HealBot_Globals.PluginExtraButtons then
         HealBot_Action_setLuVars("pluginExtraButtons", true)
-        HealBot_Timers_Set("OOC","RegisterForClicks")
+        HealBot_Timers_Set("INIT","PrepSetAllAttribs",true)
     else
         HealBot_Action_setLuVars("pluginExtraButtons", false)
     end
@@ -837,8 +842,8 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginCombatProtReason"]=reason or ""
     HealBot_Init_luVars["pluginCombatProtLoaded"]=loaded
     if loaded and HealBot_Globals.PluginCombatProt then
-        HealBot_Plugin_CombatProt_Init()
         HealBot_Timers_setLuVars("pluginCombatProt", true)
+        HealBot_Plugin_CombatProt_Init()
     else
         HealBot_Globals.UseCrashProt=false
         HealBot_Timers_setLuVars("pluginCombatProt", false)
@@ -848,8 +853,8 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginPerformanceReason"]=reason or ""
     HealBot_Init_luVars["pluginPerformanceLoaded"]=loaded
     if loaded and HealBot_Globals.PluginPerformance then
-        HealBot_Plugin_Performance_Init()
         HealBot_Timers_setLuVars("pluginPerformance", true)
+        HealBot_Plugin_Performance_Init()
     else
         HealBot_Timers_setLuVars("pluginPerformance", false)
     end
@@ -858,18 +863,20 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginTweaksReason"]=reason or ""
     HealBot_Init_luVars["pluginTweaksLoaded"]=loaded
     if loaded and HealBot_Globals.PluginTweaks then
-        HealBot_Plugin_Tweaks_Init()
         HealBot_Timers_setLuVars("pluginTweaks", true)
+        HealBot_Panel_setLuVars("pluginTweaks", true)
+        HealBot_Plugin_Tweaks_Init()
     else
         HealBot_Timers_setLuVars("pluginTweaks", false)
+        HealBot_Panel_setLuVars("pluginTweaks", true)
     end
 
     loaded, reason=HealBot_WoWAPI_LoadAddOn("HealBot_Plugin_Requests")
     HealBot_Init_luVars["pluginRequestsReason"]=reason or ""
     HealBot_Init_luVars["pluginRequestsLoaded"]=loaded
     if loaded and HealBot_Globals.PluginRequests then
-        HealBot_Plugin_Requests_Init()
         HealBot_Action_setLuVars("pluginRequests", true)
+        HealBot_Plugin_Requests_Init()
     else
         HealBot_Action_setLuVars("pluginRequests", false)
     end
@@ -878,11 +885,11 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginAuraWatchReason"]=reason or ""
     HealBot_Init_luVars["pluginAuraWatchLoaded"]=loaded
     if loaded and HealBot_Globals.PluginAuraWatch then
-        HealBot_Plugin_AuraWatch_Init()
         HealBot_Range_setLuVars("pluginAuraWatch", true)
         HealBot_setLuVars("pluginAuraWatch", true)
         HealBot_Action_setLuVars("pluginAuraWatch", true)
         HealBot_Events_setLuVars("pluginAuraWatch", true)
+        HealBot_Plugin_AuraWatch_Init()
     else
         HealBot_Range_setLuVars("pluginAuraWatch", false)
         HealBot_setLuVars("pluginAuraWatch", false)
@@ -894,10 +901,10 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginHealthWatchReason"]=reason or ""
     HealBot_Init_luVars["pluginHealthWatchLoaded"]=loaded
     if loaded and HealBot_Globals.PluginHealthWatch then
-        HealBot_Plugin_HealthWatch_Init()
         HealBot_Action_setLuVars("pluginHealthWatch", true)
         HealBot_setLuVars("pluginHealthWatch", true)
         HealBot_Timers_setLuVars("pluginHealthWatch", true)
+        HealBot_Plugin_HealthWatch_Init()
     else
         HealBot_Action_setLuVars("pluginHealthWatch", false)
         HealBot_setLuVars("pluginHealthWatch", false)
@@ -908,10 +915,10 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginManaWatchReason"]=reason or ""
     HealBot_Init_luVars["pluginManaWatchLoaded"]=loaded
     if loaded and HealBot_Globals.PluginManaWatch then
-        HealBot_Plugin_ManaWatch_Init()
         HealBot_Action_setLuVars("pluginManaWatch", true)
         HealBot_setLuVars("pluginManaWatch", true)
         HealBot_Timers_setLuVars("pluginManaWatch", true)
+        HealBot_Plugin_ManaWatch_Init()
     else
         HealBot_Action_setLuVars("pluginManaWatch", false)
         HealBot_setLuVars("pluginManaWatch", false)
@@ -922,10 +929,10 @@ function HealBot_Init_Plugins()
     HealBot_Init_luVars["pluginMyCooldownsReason"]=reason or ""
     HealBot_Init_luVars["pluginMyCooldownsLoaded"]=loaded
     if loaded and HealBot_Globals.PluginMyCooldowns then
-        HealBot_Plugin_MyCooldowns_Init()
         HealBot_setLuVars("pluginMyCooldowns", true)
         HealBot_Timers_setLuVars("pluginMyCooldowns", true)
         HealBot_Events_setLuVars("pluginMyCooldowns", true)
+        HealBot_Plugin_MyCooldowns_Init()
     else
         HealBot_setLuVars("pluginMyCooldowns", false)
         HealBot_Timers_setLuVars("pluginMyCooldowns", false)

@@ -51,6 +51,7 @@ DB.nodes = {
         [53963872] = { icon = "portal", label = L["Portal to The Timeways"], level = 80 },
 
         [54023820] = { icon = "vendor", npc=222561 }, -- Agmera
+        [57985686] = { icon = "vendor", npc=234906 }, -- Syenite
 
         -- Delver's Headqarters
         [47464362] = { icon = "vendor", npc = 208070 }, -- Sir Finley Mrrgglton

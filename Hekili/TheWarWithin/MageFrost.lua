@@ -1,3 +1,4 @@
+
 -- MageFrost.lua
 -- January 2025
 
@@ -61,23 +62,23 @@ spec:RegisterTalents( {
     quick_witted              = {  62104, 382297, 1 }, -- Successfully interrupting an enemy with Counterspell reduces its cooldown by 4 sec.
     reabsorption              = {  62125, 382820, 1 }, -- You are healed for 3% of your maximum health whenever a Mirror Image dissipates due to direct damage.
     reduplication             = {  62125, 382569, 1 }, -- Mirror Image's cooldown is reduced by 10 sec whenever a Mirror Image dissipates due to direct damage.
-    remove_curse              = {  62116,    475, 1 }, -- Removes all Curses from a friendly target. 
+    remove_curse              = {  62116,    475, 1 }, -- Removes all Curses from a friendly target.
     rigid_ice                 = {  62110, 382481, 1 }, -- Frost Nova can withstand 80% more damage before breaking.
     ring_of_frost             = {  62088, 113724, 1 }, -- Summons a Ring of Frost for 10 sec at the target location. Enemies entering the ring are incapacitated for 10 sec. Limit 10 targets. When the incapacitate expires, enemies are slowed by 75% for 4 sec.
     rondurmancy               = {  94648, 449596, 1 }, -- Spellfire Spheres can now stack up to 5 times.
     savor_the_moment          = {  94650, 449412, 1 }, -- When you cast Combustion, its duration is extended by 0.5 sec for each Spellfire Sphere you have, up to 2.5 sec.
     shifting_power            = {  62113, 382440, 1 }, -- Draw power from within, dealing 194,452 Arcane damage over 3.0 sec to enemies within 18 yds. While channeling, your Mage ability cooldowns are reduced by 12 sec over 3.0 sec.
     shimmer                   = {  62105, 212653, 1 }, -- Teleports you 20 yds forward, unless something is in the way. Unaffected by the global cooldown and castable while casting.
-    slow                      = {  62097,  31589, 1 }, -- Reduces the target's movement speed by 60% for 15 sec. 
+    slow                      = {  62097,  31589, 1 }, -- Reduces the target's movement speed by 60% for 15 sec.
     spellfire_spheres         = {  94647, 448601, 1 }, -- Every 6 times you consume Hot Streak, conjure a Spellfire Sphere. While you're out of combat, you will slowly conjure Spellfire Spheres over time.  Spellfire Sphere Increases your spell damage by 1%. Stacks up to 3 times.
-    spellsteal                = {  62084,  30449, 1 }, -- Steals a beneficial magic effect from the target. This effect lasts a maximum of 2 min. 
+    spellsteal                = {  62084,  30449, 1 }, -- Steals a beneficial magic effect from the target. This effect lasts a maximum of 2 min.
     sunfury_execution         = {  94650, 449349, 1 }, -- Scorch's critical strike threshold is increased to 35%.  Scorch Scorches an enemy for 23,925 Fire damage. When cast on a target below 30% health, Scorch is a guaranteed critical strike and increases your movement speed by 30% for 3 sec. Castable while moving.
     supernova                 = { 101883, 157980, 1 }, -- Pulses arcane energy around the target enemy or ally, dealing 27,514 Arcane damage to all enemies within 8 yds, and knocking them upward. A primary enemy target will take 100% increased damage.
     tempest_barrier           = {  62111, 382289, 2 }, -- Gain a shield that absorbs 3% of your maximum health for 15 sec after you Blink.
     temporal_velocity         = {  62099, 382826, 2 }, -- Increases your movement speed by 5% for 3 sec after casting Blink and 20% for 6 sec after returning from Alter Time.
     time_anomaly              = {  62094, 383243, 1 }, -- At any moment, you have a chance to gain Icy Veins for 8 sec, Brain Freeze, or Time Warp for 6 sec.
     time_manipulation         = {  62129, 387807, 1 }, -- Casting Ice Lance on Frozen targets reduces the cooldown of your loss of control abilities by 2 sec.
-    tome_of_antonidas         = {  62098, 382490, 1 }, -- Increases Haste by 2%. 
+    tome_of_antonidas         = {  62098, 382490, 1 }, -- Increases Haste by 2%.
     tome_of_rhonin            = {  62127, 382493, 1 }, -- Increases Critical Strike chance by 2%.
     volatile_detonation       = {  62089, 389627, 1 }, -- Greatly increases the effect of Blast Wave's knockback. Blast Wave's cooldown is reduced by 5 sec
     winters_protection        = {  62123, 382424, 2 }, -- The cooldown of Ice Block is reduced by 30 sec.
@@ -108,9 +109,9 @@ spec:RegisterTalents( {
     ice_caller                = {  62170, 236662, 1 }, -- Each time Blizzard deals damage, the cooldown of Frozen Orb is reduced by 0.5 sec.
     ice_lance                 = {  62176,  30455, 1 }, -- Quickly fling a shard of ice at the target, dealing 77,989 Frost damage. Ice Lance damage is tripled against frozen targets.
     icy_veins                 = {  62171,  12472, 1 }, -- Accelerates your spellcasting for 30 sec, granting 20% haste and preventing damage from delaying your spellcasts. Activating Icy Veins summons a water elemental to your side for its duration. The water elemental's abilities grant you Frigid Empowerment, increasing the Frost damage you deal by 3%, up to 15%.
-    lonely_winter             = {  62173, 205024, 1 }, -- Frostbolt, Ice Lance, and Flurry deal 15% increased damage. 
+    lonely_winter             = {  62173, 205024, 1 }, -- Frostbolt, Ice Lance, and Flurry deal 15% increased damage.
     permafrost_lances         = {  62169, 460590, 1 }, -- Frozen Orb increases Ice Lance's damage by 15% for 15 sec.
-    perpetual_winter          = {  62181, 378198, 1 }, -- Flurry now has 2 charges. 
+    perpetual_winter          = {  62181, 378198, 1 }, -- Flurry now has 2 charges.
     piercing_cold             = {  62166, 378919, 1 }, -- Frostbolt and Icicle critical strike damage increased by 20%.
     ray_of_frost              = {  62153, 205021, 1 }, -- Channel an icy beam at the enemy for 3.7 sec, dealing 251,369 Frost damage every 0.7 sec and slowing movement by 70%. Each time Ray of Frost deals damage, its damage and snare increases by 10%. Generates 2 charges of Fingers of Frost over its duration.
     shatter                   = {  62165,  12982, 1 }, -- Multiplies the critical strike chance of your spells against frozen targets by 1.5, and adds an additional 50% critical strike chance.
@@ -132,7 +133,7 @@ spec:RegisterTalents( {
     reactive_barrier          = {  94660, 444827, 1 }, -- Your Ice Barrier can absorb up to 50% more damage based on your missing Health. Max effectiveness when under 50% health.
     shifting_shards           = {  94657, 444675, 1 }, -- Shifting Power fires a barrage of 8 Frost Splinters at random enemies within 40 yds over its duration.
     signature_spell           = {  94657, 470021, 1 }, -- Consuming Winter's Chill with Glacial Spike conjures 2 additional Frost Splinters.
-    slippery_slinging         = {  94659, 444752, 1 }, -- You have 40% increased movement speed during Alter Time. 
+    slippery_slinging         = {  94659, 444752, 1 }, -- You have 40% increased movement speed during Alter Time.
     spellfrost_teachings      = {  94655, 444986, 1 }, -- Direct damage from Frost Splinters has a 2.5% chance to reset the cooldown of Frozen Orb and increase all damage dealt by Frozen Orb by 15% for 10 sec.
     splintering_orbs          = {  94661, 444256, 1 }, -- Enemies damaged by your Frozen Orb conjure 1 Frost Splinter, up to 5. Frozen Orb damage is increased by 10%.
     splintering_sorcery       = {  94664, 443739, 1, "spellslinger" }, -- When you consume Winter's Chill, conjure a Frost Splinter that fires at your target. Frost Splinter: Conjure raw Frost magic into a sharp projectile that deals 3,747 Frost damage. Frost Splinters embed themselves into their target, dealing 3,747 Frost damage over 18 sec. This effect stacks.
@@ -158,13 +159,13 @@ spec:RegisterTalents( {
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
-    concentrated_coolness      =  632, -- (198148) 
+spec:RegisterPvpTalents( {
+    concentrated_coolness      =  632, -- (198148)
     ethereal_blink             = 5600, -- (410939) Blink and Shimmer apply Slow at 100% effectiveness to all enemies you Blink through. For each enemy you Blink through, the cooldown of Blink and Shimmer are reduced by 1 sec, up to 5 sec.
     frost_bomb                 = 5496, -- (390612) Places a Frost Bomb on the target. After 5 sec, the bomb explodes, dealing 530,352 Frost damage to the target and 265,287 Frost damage to all other enemies within 10 yards. All affected targets are slowed by 80% for 4 sec. If Frost Bomb is dispelled before it explodes, gain a charge of Brain Freeze.
     ice_form                   =  634, -- (198144) Your body turns into Ice, increasing your Frostbolt damage done by 30% and granting immunity to stun and knockback effects. Lasts 17 sec.
     ice_wall                   = 5390, -- (352278) Conjures an Ice Wall 30 yards long that obstructs line of sight. The wall has 40% of your maximum health and lasts up to 15 sec.
-    icy_feet                   =   66, -- (407581) 
+    icy_feet                   =   66, -- (407581)
     improved_mass_invisibility = 5622, -- (415945) The cooldown of Mass Invisibility is reduced by 4 min and can affect allies in combat.
     master_shepherd            = 5581, -- (410248) While an enemy player is affected by your Polymorph or Mass Polymorph, your movement speed is increased by 25% and your Versatility is increased by 12%. Additionally, Polymorph and Mass Polymorph no longer heal enemies.
     overpowered_barrier        = 5708, -- (1220739) Your barriers absorb 100% more damage and have an additional effect, but last 5 sec.  Ice Barrier If the barrier is fully absorbed, enemies within 10 yds suffer 518,389 Frost damage and are slowed by 70% for 4 sec.
@@ -178,10 +179,10 @@ spec:RegisterAuras( {
         duration = function () return 12 * haste end,
         max_stack = 1,
         generate = function( t )
-            if query_time - action.blizzard.lastCast < 8 * haste then
+            if query_time - action.blizzard.lastCast < 12 * haste then
                 t.count = 1
                 t.applied = action.blizzard.lastCast
-                t.expires = t.applied + ( 8 * haste )
+                t.expires = t.applied + ( 12 * haste )
                 t.caster = "player"
                 return
             end
@@ -191,7 +192,9 @@ spec:RegisterAuras( {
             t.expires = 0
             t.caster = "nobody"
         end,
+
     },
+
     active_comet_storm = {
         duration = 2.6,
         max_stack = 1,
@@ -305,10 +308,32 @@ spec:RegisterAuras( {
         duration = 18,
         max_stack = 8
     },
+    excess_frost = {
+        id = 438611,
+        duration = 30,
+        max_stack = 2,
+        meta = {
+            stack = function() return max( 0, ( state.buff.excess_frost.stack - ( action.flurry.in_flight and 1 or 0 ) ) ) end,
+            stacks = function() return max( 0, ( state.buff.excess_frost.stack - ( action.flurry.in_flight and 1 or 0 ) ) ) end,
+            react = function() return max( 0, ( state.buff.excess_frost.stack - ( action.flurry.in_flight and 1 or 0 ) ) ) end,
+        }
+    },
     fingers_of_frost = {
         id = 44544,
         duration = 15,
-        max_stack = 2,
+        max_stack = 2
+    },
+    fof_consumed = {
+        -- Virtual buff to track if FoF is consumed (by Ice Lance) so we know whether to (virtually) consume Winter's Chill stacks.
+        -- Appears to only happen during the addon's forecasting, need to determine if we need to also apply this buff in reset_precast to avoid recommendation flicker between IL cast and impact.
+        -- Duration = 0.1 + max_range[ 40 ] / velocity[ 47 ]
+        duration = 0.95,
+        max_stack = 2
+    },
+    fire_mastery = {
+        id = 431040,
+        duration = 14,
+        max_stack = 6
     },
     -- Talent: Movement slowed by $w1%.
     -- https://wowhead.com/beta/spell=228354
@@ -355,6 +380,11 @@ spec:RegisterAuras( {
         type = "Magic",
         max_stack = 1,
         copy = 235235
+    },
+    frost_mastery = {
+        id = 431039,
+        duration = 14,
+        max_stack = 6
     },
     -- Talent: Frozen.
     -- https://wowhead.com/beta/spell=378760
@@ -589,7 +619,7 @@ spec:RegisterAuras( {
         id = 228358,
         duration = 8,
         type = "Magic",
-        max_stack = 2,
+        max_stack = 2
     },
     wintertide = {
         id = 1222865,
@@ -678,20 +708,65 @@ local wc_spenders = {
     frostbolt = true,
     glacial_spike = true,
     ice_lance = true,
+    frostfire_bolt = true,
 }
 
 spec:RegisterStateExpr( "remaining_winters_chill", function ()
-    local wc = debuff.winters_chill.stack
+    local wc = debuff.winters_chill
+    local stacks, remains = wc.stack, wc.remains
 
-    if wc == 0 then return 0 end
-
-    local projectiles = 0
-
-    for spender in pairs( wc_spenders ) do
-        if action[ spender ].in_flight and action[ spender ].in_flight_remains < wc then projectiles = projectiles + 1 end
+    if stacks == 0 or remains == 0 then
+        if Hekili.ActiveDebug then Hekili:Debug( "Remaining Winters Chill(%s): No stacks or remaining time.", this_action ) end
+        return 0
     end
 
-    return max( 0, wc - projectiles )
+    if this_action == "ice_lance" and action.ice_lance.time_since > 0.3 and
+            ( action.frostbolt.in_flight or action.glacial_spike.in_flight or action.frostfire_bolt.in_flight ) then
+        -- Credit back the stack of Winter's Chill that these will consume so you can double-dip with Ice Lance.
+        stacks = stacks + 1
+    end
+
+    local ability = class.abilities[ this_action ]
+    local cast = ability and ability.cast or 0
+
+    if remains < cast then
+        if Hekili.ActiveDebug then Hekili:Debug( "Remaining Winters Chill(%s): No time to cast.", this_action ) end
+        return 0
+    end
+
+    if stacks > 1 and remains < 0.1 + cast + gcd.max then
+        if Hekili.ActiveDebug then
+            Hekili:Debug( "Remaining Winters Chill(%s): Stacks reduced as cast time + GCD (%.2f) exceeds remaining time (%.2f).", this_action, 0.1 + cast + gcd.max, remains )
+        end
+        stacks = stacks - 1
+    end
+
+    local projectiles = 0
+    local fof_consumed = buff.fof_consumed.remains
+
+    for spender in pairs( wc_spenders ) do
+        local a = action[ spender ]
+        local in_flight_remains = a.in_flight_remains
+        if in_flight_remains > 0 and in_flight_remains < remains then
+            if spender == "ice_lance" and fof_consumed > in_flight_remains then
+                if Hekili.ActiveDebug then Hekili:Debug( "Remaining Winters Chill(%s): Ice Lance in flight, but FoF consumed before it hits.", this_action ) end
+            else
+                if Hekili.ActiveDebug then Hekili:Debug( "Remaining Winters Chill(%s): Added %s projectile.", this_action, spender ) end
+                projectiles = projectiles + 1
+            end
+        end
+    end
+
+    local result = max( 0, stacks - projectiles )
+
+    if Hekili.ActiveDebug then
+        Hekili:Debug( "Remaining Winters Chill(%s): FoF Consumed[%s], Winter's Chill[%d => %d, %.2f vs. %.2f], Projectiles[%d]; Value[%d]",
+            this_action, buff.fof_consumed.up and "true" or "false",
+            wc.stack, stacks, remains, cast,
+            projectiles,
+            result )
+    end
+    return result
 end )
 
 
@@ -727,16 +802,62 @@ spec:RegisterStateTable( "frost_info", {
 local lastCometCast = 0
 local lastAutoComet = 0
 
+local latestFingersLance = 0 -- Sorry, Lance
+local numLances = 0
+local lanceRemoved, lanceICD = 0, 0.3 -- Only count one Ice Lance impact per lanceICD seconds.
+
+local numFingers = 0
+
+local auraChanged = {
+    SPELL_AURA_APPLIED = true,
+    SPELL_AURA_REFRESH = true,
+    SPELL_AURA_REMOVED = true,
+    SPELL_AURA_APPLIED_DOSE = true,
+    SPELL_AURA_REMOVED_DOSE = true
+}
+
+local auraSpent = {
+    SPELL_AURA_REMOVED = true,
+    SPELL_AURA_REMOVED_DOSE = true
+}
+
 spec:RegisterHook( "COMBAT_LOG_EVENT_UNFILTERED", function( _, subtype, _, sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName )
     if sourceGUID == GUID then
         if subtype == "SPELL_CAST_SUCCESS" then
-            if spellID == 116 then
-                frost_info.last_target_actual = destGUID
+            if spellID == 116 then frost_info.last_target_actual = destGUID
+            elseif spellID == 30455 then
+                -- There appears to be a consistent ~0.1s delay between Ice Lance's cast and Fingers of Frost being consumed.
+                local fof = GetPlayerAuraBySpellID( 44544 )
+
+                if fof then
+                    latestFingersLance = GetTime() + 1
+                    numLances = numLances + 1
+                    numFingers = numFingers + 1
+                end
             end
         end
 
-        if state.talent.glacial_spike.enabled and ( spellID == 205473 or spellID == 199844 ) and ( subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REMOVED" or subtype == "SPELL_AURA_REFRESH" or subtype == "SPELL_AURA_APPLIED_DOSE" or subtype == "SPELL_AURA_REMOVED_DOSE" ) then
+        if spellID == 44544 and auraSpent[ subtype ] then
+            -- Decrement numberr of FoF stacks to remove.
+            numFingers = max( 0, numFingers - 1 )
+        end
+
+        local now = GetTime()
+
+        if subtype == "SPELL_DAMAGE" and spellID == 30455 and now - lanceRemoved > lanceICD then
+            numLances = max( 0, numLances - 1 )
+            if numLances == 0 then latestFingersLance = 0 end
+        end
+
+        if state.talent.glacial_spike.enabled and ( spellID == 205473 or spellID == 199844 ) and auraChanged[ subtype ] then
             Hekili:ForceUpdate( "ICICLES_CHANGED", true )
+        end
+
+        if spellID == 44544 and auraSpent[ subtype ] then
+            local fof = GetPlayerAuraBySpellID( 44544 )
+            pendingFinger = false
+
+            -- print( "Fingers of Frost: ", subtype, spellID, spellName, fof and fof.expires or 0, fof and max( 1, fof.applications ) or 0, pendingFinger )
         end
 
         if ( spellID == 153595 or spellID == 153596 ) then
@@ -893,20 +1014,31 @@ local BrainFreeze = setfenv( function()
     applyBuff( "brain_freeze" )
 end, state )
 
-
 spec:RegisterHook( "reset_precast", function ()
     frost_info.last_target_virtual = frost_info.last_target_actual
 
-    if now - action.flurry.lastCast < gcd.execute and debuff.winters_chill.stack < 2 then applyDebuff( "target", "winters_chill", nil, 2 ) end
+    local fof_remains = max( 0, latestFingersLance - query_time )
+    if fof_remains > 0 then
+        applyBuff( "fof_consumed", fof_remains, numLances )
+        if Hekili.ActiveDebug then Hekili:Debug( "Applied fof_consumed for %.2f seconds with %d stacks.", fof_remains, numLances ) end
+    end
+
+    if numFingers > 0 then
+        removeStack( "fingers_of_frost", numFingers )
+        if Hekili.ActiveDebug then Hekili:Debug( "Removed %d stacks of fingers_of_frost due to buffed ice_lances in flight.", numFingers ) end
+    end
+
+    if Hekili.ActiveDebug then Hekili:Debug( "Buffed Ice Lances in-flight: %d, FoF Consumed stacks: %d, FoF Consumed Remains: %.2f, Remaining FoF: %d", numLances, buff.fof_consumed.stack, buff.fof_consumed.remains, buff.fingers_of_frost.stack ) end
+
+    if action.flurry.in_flight then
+        if Hekili.ActiveDebug then Hekili:Debug( "Flurry is in-flight, keep Winter's Chill stacks at 2." ) end
+        applyDebuff( "target", "winters_chill", nil, 2 )
+    end
 
     -- Icicles take a second to get used.
-    if not state.talent.glacial_spike.enabled and now - action.ice_lance.lastCast < gcd.max then removeBuff( "icicles" ) end
+    if not state.talent.glacial_spike.enabled and action.ice_lance.time_since < gcd.max then removeBuff( "icicles" ) end
 
     incanters_flow.reset()
-
-    if Hekili.ActiveDebug then
-        Hekili:Debug( "Ice Lance in-flight?  %s\nWinter's Chill Actual Stacks?  %d\nremaining_winters_chill:  %d", state:IsInFlight( "ice_lance" ) and "Yes" or "No", state.debuff.winters_chill.stack, state.remaining_winters_chill )
-    end
 
     local remaining_pet = class.auras.icy_veins.duration - action.icy_veins.time_since
     if remaining_pet > 0 then
@@ -920,13 +1052,16 @@ spec:RegisterHook( "reset_precast", function ()
         active_dot.frost_nova > 0 and debuff.frost_nova.down then
         active_dot.frozen = active_dot.frozen + 1
     end
+
+    -- Trigger expr function for debug text.
+    if Hekili.ActiveDebug then spec.stateExprs.remaining_winters_chill() end
 end )
 
 spec:RegisterHook( "runHandler", function( action )
-    if buff.ice_floes.up then
-        local ability = class.abilities[ action ]
-        if ability and ability.cast > 0 and ability.cast < 10 then removeStack( "ice_floes" ) end
-    end
+
+    local ability = class.abilities[ action ]
+
+    if buff.ice_floes.up and ability and ability.cast > 0 and ability.cast < 10 then removeStack( "ice_floes" ) end
 
     if talent.frostfire_mastery.enabled and ability then
         if ability.school == "fire" or ability.school == "frostfire" then
@@ -970,6 +1105,7 @@ spec:RegisterAbilities( {
         handler = function ()
             applyDebuff( "target", "blizzard" )
             applyBuff( "active_blizzard" )
+
         end,
     },
 
@@ -1065,12 +1201,12 @@ spec:RegisterAbilities( {
 
         talent = "flurry",
         startsCombat = true,
-        flightTime = 1,
-
+        flightTime = 0.5,
 
         handler = function ()
             removeBuff( "brain_freeze" )
             applyDebuff( "target", "winters_chill", nil, 2 )
+            if Hekili.ActiveDebug then Hekili:Debug( "Winter's Chill applied by Flurry." ) end
             applyDebuff( "target", "flurry" )
 
             if buff.expanded_potential.up then removeBuff( "expanded_potential" )
@@ -1090,14 +1226,6 @@ spec:RegisterAbilities( {
                 end
             end
 
-            if talent.frostfire_mastery.enabled then
-                if buff.excess_frost.up then
-                    removeBuff( "excess_frost" )
-                    spec.abilities.ice_nova.handler()
-                    reduceCooldown( "comet_storm", 3 )
-                end
-            end
-
             applyDebuff( "target", "flurry" )
             addStack( "icicles" )
             if talent.glacial_spike.enabled and buff.icicles.stack == buff.icicles.max_stack then
@@ -1109,13 +1237,19 @@ spec:RegisterAbilities( {
         end,
 
         impact = function()
-            Hekili:Debug( "Winter's Chill applied by Flurry." )
+            -- This wipes out the effect of a prior projectile impacting and wiping out a stack when Flurry will re-max it.
+            if Hekili.ActiveDebug then Hekili:Debug( "Winter's Chill reapplied by Flurry impact." ) end
             applyDebuff( "target", "winters_chill", nil, 2 )
             applyDebuff( "target", "flurry" )
             applyBuff( "bone_chilling", nil, 3 )
-            if talent.frostfire_mastery.enabled then 
+            if talent.frostfire_mastery.enabled then
                 if buff.frost_mastery.up then applyBuff( "frost_mastery", buff.frost_mastery.expires, min( buff.frost_mastery.stacks + 3, 6) )
                 else applyBuff( "frost_mastery", nil, 3 ) end
+                if buff.excess_frost.up then
+                    removeStack( "excess_frost" )
+                    spec.abilities.ice_nova.handler()
+                    reduceCooldown( "comet_storm", 3 )
+                end
             end
         end,
 
@@ -1160,6 +1294,8 @@ spec:RegisterAbilities( {
         startsCombat = true,
         velocity = 35,
 
+        max_targets = function() return talent.fractured_frost.enabled and buff.icy_veins.up and min( 3, active_enemies ) or 1 end,
+
         usable = function ()
             if moving and settings.prevent_hardcasts and action.frostbolt.cast_time > buff.ice_floes.remains then return false, "prevent_hardcasts during movement and ice_floes is down" end
             return true
@@ -1168,12 +1304,10 @@ spec:RegisterAbilities( {
         handler = function ()
             addStack( "icicles" )
 
-            if action.frostbolt.cast_time > 0 then removeStack( "ice_floes" ) end
-
             if buff.frostfire_empowerment.up then
                 if talent.flash_freezeburn.enabled then
                     applyBuff( "frost_mastery", nil, 6 )
-                    applyBuff( "excess_frost" )
+                    addStack( "excess_frost" )
                     applyBuff( "fire_mastery", nil, 6 )
                     addStack( "excess_fire" )
                 end
@@ -1185,7 +1319,7 @@ spec:RegisterAbilities( {
             end
 
             if talent.deaths_chill.enabled and buff.icy_veins.up then
-                addStack( "deaths_chill", buff.icy_veins.remains, 1 )
+                addStack( "deaths_chill", buff.icy_veins.remains, action.frostbolt.max_targets )
             end
 
 
@@ -1217,7 +1351,7 @@ spec:RegisterAbilities( {
 
         impact = function ()
             applyDebuff( "target", "chilled" )
-            removeDebuffStack( "target", "winters_chill" )
+            if not action.flurry.in_flight then removeDebuffStack( "target", "winters_chill" ) end
         end,
 
         bind = "frostfire_bolt",
@@ -1243,6 +1377,8 @@ spec:RegisterAbilities( {
         startsCombat = true,
         velocity = 35,
 
+        max_targets = function() return talent.fractured_frost.enabled and buff.icy_veins.up and min( 3, active_enemies ) or 1 end,
+
         usable = function ()
             if moving and settings.prevent_hardcasts and action.frostfire_bolt.cast_time > buff.ice_floes.remains then return false, "prevent_hardcasts during movement and ice_floes is down" end
             return true
@@ -1251,12 +1387,10 @@ spec:RegisterAbilities( {
         handler = function ()
             addStack( "icicles" )
 
-            if action.frostfire_bolt.cast_time > 0 then removeStack( "ice_floes" ) end
-
             if buff.frostfire_empowerment.up then
                 if talent.flash_freezeburn.enabled then
                     applyBuff( "frost_mastery", nil, 6 )
-                    applyBuff( "excess_frost" )
+                    addStack( "excess_frost" )
                     applyBuff( "fire_mastery", nil, 6 )
                     addStack( "excess_fire" )
                 end
@@ -1268,7 +1402,7 @@ spec:RegisterAbilities( {
             end
 
             if talent.deaths_chill.enabled and buff.icy_veins.up then
-                addStack( "deaths_chill", buff.icy_veins.remains, 1 )
+                addStack( "deaths_chill", buff.icy_veins.remains, action.frostfire_bolt.max_targets )
             end
 
 
@@ -1300,7 +1434,7 @@ spec:RegisterAbilities( {
 
         impact = function ()
             applyDebuff( "target", "chilled" )
-            removeDebuffStack( "target", "winters_chill" )
+            if not action.flurry.in_flight then removeDebuffStack( "target", "winters_chill" ) end
             applyDebuff( "target", "frostfire_bolt" )
         end,
 
@@ -1372,7 +1506,7 @@ spec:RegisterAbilities( {
 
         impact = function()
             applyDebuff( "target", "glacial_spike" )
-            removeDebuffStack( "target", "winters_chill" )
+            if not action.flurry.in_flight then removeDebuffStack( "target", "winters_chill" ) end
         end,
 
         copy = 228600
@@ -1429,14 +1563,6 @@ spec:RegisterAbilities( {
         handler = function ()
             applyDebuff( "target", "chilled" )
 
-            if buff.fingers_of_frost.up or debuff.frozen.up then
-                if talent.chain_reaction.enabled then addStack( "chain_reaction" ) end
-                if talent.thermal_void.enabled and buff.icy_veins.up then
-                    buff.icy_veins.expires = buff.icy_veins.expires + 0.5
-                    pet.water_elemental.expires = buff.icy_veins.expires
-                end
-            end
-
             if not talent.glacial_spike.enabled then removeStack( "icicles" ) end
             if talent.bone_chilling.enabled then addStack( "bone_chilling" ) end
 
@@ -1445,7 +1571,17 @@ spec:RegisterAbilities( {
             end
 
             if buff.fingers_of_frost.up or debuff.frozen.up then
-                removeStack( "fingers_of_frost" )
+                if talent.chain_reaction.enabled then addStack( "chain_reaction" ) end
+                if talent.thermal_void.enabled and buff.icy_veins.up then
+                    buff.icy_veins.expires = buff.icy_veins.expires + 0.5
+                    pet.water_elemental.expires = buff.icy_veins.expires
+                end
+
+                if buff.fingers_of_frost.up then
+                    removeStack( "fingers_of_frost" )
+                    addStack( "fof_consumed" )
+                end
+
                 if talent.hailstones.enabled then
                     addStack( "icicles" )
                     if talent.glacial_spike.enabled and buff.icicles.stack_pct == 100 then
@@ -1460,14 +1596,26 @@ spec:RegisterAbilities( {
 
         impact = function ()
             removeDebuff( "target", "frozen" )
+
             if talent.frostfire_mastery.enabled then
                 if buff.excess_fire.up then
                     removeStack( "excess_fire" )
-                    applyBuff( "excess_frost" )
+                    addStack( "excess_frost" )
                     BrainFreeze()
                 end
             end
-            removeDebuffStack( "target", "winters_chill" )
+
+            if buff.fof_consumed.up then
+                if Hekili.ActiveDebug then Hekili:Debug( "Fingers of Frost consumed by Ice Lance." ) end
+                removeStack( "fof_consumed" )
+            else
+                if action.flurry.in_flight then
+                    if Hekili.ActiveDebug then Hekili:Debug( "Winter's Chill not consumed by Ice Lance because Flurry is in-flight." ) end
+                else
+                    if Hekili.ActiveDebug then Hekili:Debug( "Winter's Chill consumed by Ice Lance." ) end
+                    removeDebuffStack( "target", "winters_chill" )
+                end
+            end
         end,
 
         copy = 228598
@@ -1486,7 +1634,6 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyDebuff( "target", "ice_nova" )
-            removeDebuffStack( "target", "winters_chill" )
         end,
     },
 
@@ -1623,7 +1770,7 @@ spec:RegisterAbilities( {
             applyBuff( "shifting_power" )
         end,
 
-        tick  = function ()
+        tick = function ()
             local seen = {}
             for _, a in pairs( spec.abilities ) do
                 if not seen[ a.key ] and ( not talent.coldest_snap.enabled or a.key ~= "cone_of_cold" ) then
@@ -1782,4 +1929,4 @@ spec:RegisterSetting( "check_cone_range", true, {
     width = "full"
 } )
 
-spec:RegisterPack( "Frost Mage", 20241222, [[Hekili:T31EVTnss(plcdahP4yfr6ih7fw6aUf4aMGBN)XlW(FIIMIYMWsK6iPsIhyOp7B1nF1pQQzt9iZaClgGyBXURU6QR6x9OlQzH7I)5IhxfueT439M49zxppVXEUtGFFXJfVTlAXJ7ccFn4z4xsc2c)7)twAEXHL)d(hTl4TnPbRy0ipDFwi8rVuuSl)V9Pp9CCXl7FACy62pLhVD)MGI40KWSG1fS)o8tlE8P9XBk(TKfpHYalEmyFXlPzlE8X4T)DGUXRwfvo4O8WfpYg81UEx7593oS8XDVTniVikl)WY4T7Ys)w02OKIdF9WxlhN71tU5Jhwc)09lL)0ZJ9tVRNClB(WsCy5(Dm(ODstGhYg0KR9CR(59udEY9x79z4H)90TrG45XI0STIpCcJcSFEx5plzBukDN4d3LfNMfx8M(W(sj38pFj6WY)vqg8pGepozXJBIZlYzhjHBIc(wK)61WF878d6OKGN2eTAX)n8qGQrzXbWHyw038FoC1y3XR3Spl7nq0hYoTGbX2n(5SnZIc4aIKgfbBa594vrbfVK7h(s8MnJRg4HLohw(0(1Rhhh(M)3IItYhNfTna(5HLZpS8E(agwngjkKxa6Ehw(WHL3Ey57VByiZ4dbOZGdllz(XRzkQRJZI8FkDtX44e)1BIF(f4Wzu7guEqS94nK7X1zrr)b7Z5lKGu75nbHXbB8Z3f)AKiTHXhXO5NprAYFyPmlo5z)VhNWu1lLa89(e(iwfXLpspE8Q0VNulz40pD9A(AuXEnSBCyKFs63cym8usg(u5IHM2LnhXXHXGYBE9P7CG43u(yyxuPRjnxjLnrfAPZx4O3krrLzaiiUvrqOmcCRi9ZoQfm8nyB6xeK9CeyYc2OWs(fszVUOjNl3N2YxYQIa1UJydKf8gWn(C5JfNV4S69Mz1wHF02DPFpkJHjpE)UArcFqr)imkpVKrOEgqc4rMSADNqYk1eBnSPy7N6DTkf)JOe)0SN4uJgSmmnDdtzMamZT0gOzuT0fBydf1NfWAB1MzQ8netCeQuBKobfpIjOO0qij5AgSPFZJVQ8XZfOdIWqaKn)L41fmvkUsaxaR6jreeAtqclqcvLj9JpHTSzmLtc0Auh0OuF9BbaRc7MXmnY8DbBXTyC5Uxi0JfeiSHQ61OXPCWMn(L)HpZxFPhF)YWZ2wf6Zc2)9yqAKFEUz3)nQFBGaRa1RKGDsOPdOuNdw9gcKUGsAPGtgnUA6Ywjuk2tr1RXdYqW3HMU4d8OmmgabZfJRNKAByAsetDJjzmh9t36x9jAb6iqyJfcOlkjABCu5(AkN8)ScJGjcvzcMKRKlQc8suUnUiElOcgdw01XXbdK9HhwEn(m2abY7VpNDMoNpbyCSnZ2GFGhSYNvmPQbYLnNOdP5sh7AxQEZQPJsSRDf2ATVVBf3)IrSllaOJROsaKVBd)iNPBaogidPsjhbPijqI4qBDyNDmmSOmzR3QhZ1Ll5H4e5rGQ61YjpTj(p(JGSvMdnXop4xg3E0rPGf2BJH1qriyU4N79ZOBjm5fbEHW(P0QsaC3q0tsBwTapnedLr)5hRZCSyiWI0WsuBSKbqCEFH8BdF8pJS21cArsDau9bkkHWPOGwQpzvAzJ625dMiN2xiwmx)PY(D57ulsj1Ctvcwsr1FeM4HUWc4YgKSQKSYFIH56xgkIu(rs2u0UsPqXmGtOMHTf2NnbeISj7imq3PsssvFx0(inipBxP2GKi1opISrPDOoS3CWiva))tsShT3C6qmip9hAYB6PcWymCGru(hNyFcPQoJochBSes7YZwxjKINS5XK32FvJ8)Yv16ol)kvM8osMWcPR1iuuIDZtAykSFFlmUr2(Cy3C522sJ40Q9(af(uqnNW1bTZ1o2vZBUYfQbcjiqgXjTB0UpOgAOUWD6ez6rff1rKXAFt60IuSnjA8OdzXqoL25M)I4BSZS)(jE1a04)drsrEwJMFBqiyvSyKOhI(eWRlnwnDSbhrIV0yR9olm3P2hKa1nM1JGewfToypq56OeArz2Zz3DrSDT0YsDFcgx1Wv5M9D2urkjFYIgTQQp8BQKL)EwCitAiy3UpHKrQIkYOdXbcfi7Na7KNB2xu)5LsySEYkTTWGrVzhLW5uyOsXtNLufNB69IwwoiJEQ6scCmRjFtwWl1e4W9PaDlYGSWaiQagkcGogQcg4jo2TXzzPz(XB5DoK04uTatba98OI25wNnf732SpsZFQscNoc5JUzfdgnPa7P5BIdF1hGnXEizwbTYzwKwfP7dFHOq2KQInlr0o)8xckke9SCc8hxsvDa2CrKiWkDlGz3f2hOUzZ2fPGvKTxIYs3N7xKfKKVnMTz8Buza)MLXPOcLyC(Tmg1amchqadwttXq2OnHvjYdYXHTw4kyke8Gzm126rnEfyOfWVumEGycwujV5d8xYRyE10k0gGmUjnQSSpYXbW)8gBlXNWZZq2(ZgVoKPJJjS9eDAlNnoTlLTbjbJ3XkzlitUzIneVc)j6h72KMZ(KcLRdR08JDLIkB5VOkwQ66aXbvic33VIXlLkJA55KUJzllvVD3WRO6z3xNC3jJ17YzF2QKTYiWL1k7DSgUGwDtwIINHUrHDNzT1HmeXS0iQ2WolCRNhAbWvUQo5seqdaAx6Jd0VBsPwdHSa1gkU2fUWT0rr13BHTAN25fX(t4(wPR9GP7rb50ri8q7l1qxXmDQvsfE8D8Z(pZdlHo(OrDxY1(qlNJURm6Scih79FtE5c9S(asbNVM6YSv9E044Y(05zPzJ49SRi8efyP5LvAvblaumUXJFu6nHFwg9)TpE3UOvqIb1Vqa(Fp6jbps147n6ILpZ49jss1rA4ce36ONsTuXhgd(weEqg5sMIt4AEMdIgjGIgqrPDILYAMqUR7xT1AMMoUtMkqibwjlAxAwHuxF7jiLn5XyQIeMqMixTyrHOIebjWPgZOT7IYwdz76hKhgLScSOEZppkB)wexjMywJI6A(YWQziSPN2d5eZWwEnj97WZEwVHApd8gYQymKlt2Xt7mQG7jIiGLTG25pcjUQ0qCUgbeGW3LwiMgHPGeWu)R6trowKNiWB1GXc4snsx2R3uw8UYp8FeKSpaCvh(sa4UGfir62Y(NC2KpEy53Fjo8f4VzVdq5XBbMyFEetiwu9HbRwLcXBbzjLKk1N)LTGjWYtg7HMPvz6U1rlvZKa59bsSnxXpX9Id6PnPPR8xVNTBK9M0z)VrFUBc0PBDwxX2eeSXJYEfawB9tlMViN9v5CjVLmFO5aQYg(TcOL0yzPZoIegngnM1PkEcPKuBHD2sRJo5Zlt2m0vY4sfAV(8A16QIBuPNY(ru4(cipvUfOJbkmNFEzkOFAO2EfIy3kFQPcySu89CTHtbx6v6sNFQD9q2FTtB1QMtJasLiHR7isRHontYoEY0bVxhwyOMh8tpZn0u)un7QTS6mNms(NKlDTk7RJ6AnLY(cE03a(HnRQ3V6j3U4XVhKX4wWlo)1hgIXeI7g0ztZoS8xBUZTFLTXGCFYyjdNNYGRc2xKUnOG9bLHKKp(Wx)FJtGh5XF7NtGvJ)4FfPKaablsXFuDw3Wqg6(JrnuDkovLoduilAl8QsxxxCcl4LvHSiT2OTevettHQy93ylzp8vKZNYRNTFhoK722I6RTD1R3V2(9N5r(js1VGtvLoYrHWe9RJkTVdN2TTnIcz17NelPO07gJcrrFVz6qvIFXY9ttIWm)KniV5crxcj5jzNtqZZVzEFpCUmM5xgK9ZVrZ9xqtCxcHWrXUON3vD9u)oWjSAKB9anGcS(sqDd)5lgLjW3pdu(2lgLj8ECgOmjs)jqzu9RMwY4SOHj15neMugXqjOBBd7Gauj3jpwsXMl2rLlvVWhlP3jc7rBX20nr6N2AnAK9u941I6qk026sAsb9UAYsQ(xMZkulOWv9mQBnFgGxMxJkiVCI2xPPYC1RzzBVvJFLIZRtjSFSpHlGJoAcCHADh20pEZDYz(e3mzpAfZZibp81FJl5yKHvlPY8)pSK)99f8CwvLtxhVPPlGYh3G5F1SpP2RMh(k2Oe7st8ruxcLpYQ2WS66O8rEFdodZdGJgcUJ6M1b5iYbb(793rXUCqqESAnSzhAxlowT)D9(Wa9AmHUk1xLIXvbFQ1nW4hJxpt(EBMp7g8P0uIj958WmpMYv1SGXk2N9sFUsvNk5CavuCqk9uC5ykZL5JLTG8mxgpGFqsVBmr68Cjsp4Cr7MkH1BoNjsTJ4hdVBb15z23nBBdDSIdf0GgxEAZvKA79tbwq0lHdXBENoXKxpbYjbAGx07537mKOA3pC)7Vt8Oz37mOKnuJvQP)FgHYOSwhKXGnT9LZqQ6h)(74cahJVGEodiEHdX4N6UmZsoYHOy2ZM4qEVHN7Dr1tuAgtuDIQl)JRzUd)TJevZSHhzZ0iBo)23F3WBbjgBXVPcgHPLLL6JkVIBoMEdhNpvsmlDOHDUl6LOYuPTOeiJxSgvcZrPajKQhEiKu(sSKK062OUGqr6wZUYDYC6XJB6PIruEVonFS8BBOZa0db5pnU8Rjd9ft6aGTwdLrPFygO4mqtYpYr)QONnLWULFHrT7d97N693PU7PJsTStzkMTeAybBf(o4vCk55w6yyq7f)P8ToNe2LGHIK5r7K6WOAKZWbiEsQ8kOP2zWFXCi8Vri7wmhcugY6tU7dnsIHWlIoduuxN60n7DCohKxO5ZM6u5wL4RkUhU1H9hxJnQMVE4MF711TBfMiV5BAq0h2gl8p7Gimg)qLXbryq8NAjkTEdgPtkJoies1s4ELqolri8pryF(6PHeJHW6muTtcmGEQUpLmoi6F)k)giG0y8SvO7odOJB0kCFBHqmzLGPIAnKpKD4vwMRlxqKMN7iPn8WnEx5n5de9GDfKVwxD)(7d1Zd)93jOYibDdDaFxpH4)0FSNNthDS9dUtanGF5xQlztTuzvQpvXfkcYFL7Wqsu4EhSV46kHzVTRio0h(0IS9vuTEy)x8HaugGy4h2jr)aOFiVkuphb6C(RIR)vLzfLbCrHp7DXBDkmciIP4Cw7J0y)9WWk4mLnRyFTDL7hQqpeHRgzwTq(mHqBWBcPJzxg(S(mCNmTAkeDA(8z34nQcAhbEcMDFRB78Pt6yVs3v3cWxyScQiX8AP3L2NJ1OStPPSzNsDkXCIkn253WwsA7RRC9MlnbnjBZuO3wpufPWhGKu(f2)ZR4m2v1QStlAlJGpmzSNs1BEqmvj5dSCmyI4KVL(k7LCfu1sa8F2wS8KLB4byaR3NxFwW2(YFCzVl2l6cGMGnpyzdkn573UTcBMrB9hvrFzA32c4ApjQU7RnOfEpriypqOE6ov7uiUQrUvFGCVBl5QQUAFxPvFadrtjoRlvjQULo6YB7tjQK5v7tkbNc41v6CM5qhLbsA70DmogwhdLNtpusWFrBE9Y7XDk9nFZXrxv0czRi92mxw6vszR9e3IqLZfJPxCUsPEGWEDgrQzBLYGGpNLQrz9elvive34tUVj0Gx6IMh3uWbPIxySmfqiKTtt8GqyEyFrywoXJl)kvJ9Y0vqo4jtFzy)ZFXKD6iYz5y6w3Ov7ia)Tp7M67WXcxgAryY3r406KaNTnNplXdBYd0QQpJWd9aidNo4oAWW8oREFOoAeXrmK34CppTGGLkfGiv7laZa03kcuvmYiXpDKHtP4lCg2q9xopLBrKrvRCgfucImKuv4CxhXH3D1N)GANlmIo8p8XBzfhvTXoPYrPdatzZ1HWKaD1Am56pJhRF1xMsSnL239sGba6SIR)6tsqzos4lAjYjX0nrFO61Dma7(oyZtSWQE4BjLVXJ47SQV4KMFZelPsPdqwP0j3mCLbr5kVJcSWpN(mA9fPRJuBCx(T1FdaMa4XdtjI2EenOUjEarr9YWe9X)Atejw5KTEtjz0QVTqInUc0u575FDkBfOU(0SfIfT4S4OLqU9i7CzVWeBDv)GiN8wKhq9sQ7Ig3BR(QmY5)pKTaQsjIiFiP3LJWsImacCDg0q)Ba2S2fdVPOSak0COe1u5pRq1Bw)ZweT1u0k0J(hsO(4lriQc2r51bt46iCiM58jimVkgM1X1y3PTk5TpUPzU6u7CL3q3WXxQuje0cBdMUta92qPPIK(o9LOd3LdPK7E0LDavCIS7oEqX(xbftcxemmJOESVxKIcx873(z(7s(I)9d]] )
+spec:RegisterPack( "Frost Mage", 20250405, [[Hekili:DZvBVnUns4FlbfW1zZghl54SB6z7d3vGdOlAloG0I(HdNLLLP3ieBjDIsjBwy4F73mK6fsjsjkBLElouG17ksoC4W5LNzgPU0A5VT8HnUjKL)Q9y7PJVD80rJTSNynz5djVgrw(qKR3tUFg(lbU7H)8FehstoU6xypkY91DHUBqAqdtJ9Gh9ysse9hU5Mp7N8y66rEH7VH6VpDNBIFyGxS72e8F7DZYhwN6Vl5NcwUwfdyp9ULp4MM8yy8YhEWF)pcu2FZgcF6eQ3YhWPF94BVE80F44kCkWF(AG3XpXhyY1JTGb(T)4pGNtCPHbhxzFCvAeUzSjD71w2xBBJRo619U0esm94k)9rXHpt2tcsYNLfqT3FCf8R1h4)ABJ)AF947k2BzcpggcNY4RTTY(9E1tD89xBFlm0pgUNac2hscJ3xo0yC14VFK)lNDvqLpkouuSFySFYRvN0h4CXV9i54Q)Wng(d4wYpy5d78Pju8A0BhX9zIZ2TW)4xzkhKa317iBw(3HbbAsI9Dbvd3DG8z0gIBYJuhVh93TBu2epUAWXvRt3UDKV3Ropt8dOJIj7DHFpUAXXv3ZMWWS5irbAcORDC1SJRU94QdhAykZztbOZfhx56HQwJ2IkMB9JjoRd3LmYpWz7o)p)iisVe0KyZz5dYtAzcO0P9mUnMq(k(C2gfftE25ZEBgzn6Z7C98D35qJ8FIisBy(eKMtotAYgKlZ8d(SZl(bOQjxcWo7JzZydHjFKgE0MWxcYLmm6hUDlBpYyVc213J4ee(SlYW3QLHBKfBBl2Ulno(vCdMQDdgwOS4d6EubDGPCDaytY02KyGs1Tl7fX1qPRdz9eoJimShAR6qzMQsQxfh47EZpWmIq(IhHsDqoDuAu9NJhdyavC4hqom)Xchir2gM2hfNgqVVscCcJxxzw3R94YyhMIbE3ed3r5mA2He1d9C3TJeNFcl3V178)6xDJ3GBH14M3JkYt4AFAjHKnzrQP33wtAswLKm29vqXNlIzuuVNKmzqUkfzFu4lKymctUS4cL3Nn53YsVtgVWWDOETghWwCZHIzvEPQAAdfvifutkvhrD2cIjoJQu7Y6euuiQHIstPgjlfr0h93MG3AmHlteP3Tg)gbMnE9wqD8Ya3BnAaY(o35g4XvLMwXer8Ms2mXQQBHc7pWaWH)pCWyX8iYoCix7ZGJSe)VhCdjouQrHN9aribidnWnsk88fQV(ZughQ3xxf)GLRvwLsNwWuLkbQrrue)xHw8mgmIgriSaTwNkPH4fgqWlBuS0Lq)dBksTzES7gkHZnwMbyvkcdO3grwiOow)Bkmg1yv0dLi7oinGehZCeehUfIkqc8Evs7pXFpWBxxGCuuVy0oipaNuko1zfobnDfGk(huZ13zuy0p02zREWsUgy2WYXzBmC6hBBREZW2Bz3o4ECo1r33gW(8yJ3Bg0MgquKjdOr7yALCrQSwKwf76IizL5Aah07hxhWMCXCPtCM9CBbW4dkBxlawGRTcxOUBEvs4wh9KExNMb(a49T4DOtXyxXDxVqIJQrHMJ3R3JAVgVxVlZEXzxPVzfilEJavapUTu(7R8wodzKzrJ7Z040RN3xIJZnnUjM5RRfOWDl5j9HGpXCNo3OJM505))Z4rFq9(0b49MNVt1iSNGRjmFN28n9wdzPTKnMNtN3WYr2woDQ9RPp7htlszx83k5qTB4M)OMSK6H8tA8eCUrKERKa1s5Pv3J6l5yTymLQT2YEgfDMjgVrY()BISueyzbjAvVLv8ulntaLR6iNjnvpZtpZGgYa4pRsBEUGnAa3)zyePCNAdlFpxnv9Uz(MfBrJPcPhIwFIeWQkWTgGcu1RXjafydzRBkq5CSaLgVPmEnIGCQ02wvH1OD1BdT5iKfoYKIXl6daj9ZGYzazVpHYlh5empRyFpuAi4minqlJKH9PXWGxi4x9pb2HsBodGUZlyuOoZkL9PUXiFNKW5CyiU4P1iKQ5MoVP802BmozBsGtzpzhYewZHbpuRDRBr6g75cbBrxiamaVQodSfN7E)44Wyh)9SxPeP5v1cmeCItjjLR9zx4qcJI)TDPWpqekHdp5)K6hfr2mkbc379ijomL6Ke7gq37NaZHrGSZLMP4uCibin8W1vTfBC9L8QUju1CADofrF0b(4037g46aSam9w6USgd9CEqeBLEL0Qezg3IqYpFwKZebF0nMIw(SgTbuLW4hzbYe0zcE1b4VGNu53UgIiW2FxiPATvlEEH2J4im80YAyM4xvBkxQe22IHLKZ4sVtt8(DuKxctMmzSjepZcJ8LODHu8jjvlJcZshtXOYr(dvfl8W5stkr0HwJ3R90liIP9IZGwBzqd2mo1XZavRHSRzVgonVlTZLvRjkhGw9RHUcBuirsv6un6Q6KBGsLC107hByZntiZwtrJMr0WYLPjpL7gJ1kkLzI02plvtfSLxKMVf7fK(Kxnl1PluZ7dER6s0)7kJ4DTxgX7Yfj8dq367zdPN3uPx4fQQJVnwTLFEpLG5TsH001bSQUTk8uyEULyoFkc01g4nXZDiLYeLv0zHl(j2mvxBqH)DhxvGkLw8Ah78czTqTeZJevORXhJx9GCmVJqjbnYn71YrlvVSMhc1Vrn59LVLPzxPKHYwyYuKxMIMXhRi4FHXR0jXqzTTAx6s8vP1QE6ynEQaHeyLysuyCI47zeE9EPKdano8MwrcRrMi)otjkeRiruaYPWmAFejElK6LJl1JeSbSOE1HsIt3RiOstmBJI6Iuv0VBkW1u4qjngSgbxepfe(cmgM)x)ZBk2ffiDkdiNS1f0Mtc)c(IXl4bLvj)SCw4uwEUnc2PjNdtBwHvm6sLvJiyQPuPGexXTUxuJacrsIctYsJqpGQgSPq3v7D)cZbNewWSjRc5uf8NSVRJy)i(d)f3GuxaMI3JGiMGqvc3Z7NY8XV)4QxE037r4FJFkdu)9atKsjOqmj7HUB2GFYhqwsbHj1VibwE8iBLzAXt3vbySC(nGKgJqGEfsiKIl8rmEvCRPq3C3ImwHw32xaglNpbjIdWq7PvJxkvRM17cd34SnfVbKNwRjHRxxTjVVTB8Aj0FJ1GZos8tqeMsChfkoqoUm2VkNlbBaLo0euKH4bQLOlVGwnMK75M(vx6HAbiNo)kP0xjuPhA3Btcvg91NK7JqxItTK5AFM4utzdPpcW3Kjd1IR(EcfF1VHeLG415S1Cm8WqpdScUk(3s4KXwlF4f3yKrbFGSp7naPcGEdKLHXhx99ff397XZeGGogthIgIriCttc37MGpGhdIo64N(z)ayi8lo83dOPriTWjK7PnpVTJR(xWwPS(T)7)cGvpibloWgFk74c094NuWDqojDJVSzFhHbGuGn83Ne7h8ejrloZYx5iU2cSBjH4gBia1VNX5)0(CXaQeNlayFsHW4OvC4wFSg9F33DCLPFFOGB913abYHRVxyFKI383ye(FM9Pn(Zi5Vb7zqEPOGvD8t4w87r8Jb7lFCfUA(3f5pGF2QXiQbBlmEQ9u2BMH19BNSga7dNeoVthvOwC18BQ2kd1ZsSjgQNrEABVh1CNBw3gEpRRgZTSFV)25T1md1BBUMzJBRjlvT2S6vMxPaKTLrcTy(e1lPWTq91mBUTWLdmxX(9k98kUk4moyfjoPk92IphEJwFpVvyZTqEqzxZgO)00ePPujsFrFr7IUG2zohfPMr8tH3nG6Swx2oBBcDmIdfnV5325kDftrGjeRo3a1yzxC)GHAQK3S7pCqZqZVFWfC2q7Bi4LkyuXwjjWMIDMAGM8kuDQX(BGKPO8VdgQdF6HdQP7amnQRZokQFR2w8rvhL8AllV)xOOdm6zQbAWFmF8aTq179dsjiwnNsg(h8yw7LrIRkypqZ7DNc6j6rTwPApCqv5DvQgvSniHA8DOBH14dhA4DNtb5fXKlWOvEx50D5PGGsx6fssjS8ZNQ6QHHCwPOpnAG0ZYH12erobTnJC2WXyx8y53KTbxOG3vqwzq9sxR19zznEqdVPA4WdVO(BNMKEqT3inyv6SZLTauKnXHdMRmOjWGG2TYW)7l(FMhYlHsn0V6fQKyW9Zq1(tK8ZuUc1265IWPxwk4fdAKfhP2fzdrywm3A6LkoQD0RFo3i9yL09CmtgOTSi13Ooe4OpJB0cNKjMu9rNAqKLzGfx7ZAXhuEFQo8dBWZoCr(wuIjVFqgzzRhAKLTm2OgHfLz(QbNdB0ZlCu1dNgDbJcrnyy9I6O113HdLA3A6iVkzrxJdmuQAsxznDH(5RA)6t)7NVJKM0EvP4yCOci7XRmmlAMGiKshijzNnX(k7XVtt7zZIwuRHVhom8IAn69Wbnu5sbfS6XkqBUgg2wahQ6M5oJfHhlTISuztOJU6yK4sFI5Owsuy9r4CXUb9IFnkX3ZbEAsCAgvZN2FLnfGYGHptniG8fG(ESkB9zW1kXzJF(FTYQa3WUbjSAuSneMbGQYNI1eSqxE2WmNmvoSKVq8stioO)4RSExM3crNix2SAH8DIgTb7XAJPBH(nRVcRXtZwIMMqVy(e7lZC5QWuhwDxRd4IPJB5SQVHVc(avXkkfjnVx1BGB)VhsTYLfSa0ca3KvxfVlP6S0NQ7Ufdjkn3ftqgvVv5vw2lKwqT7JILOxymlRPSVZgSEXIF2JDuTk7u69gj4SXJSRutOzcffs5vGM2AIKSgL0LmFhV7PQ8Q5h8C4t4BwlyzeamekB5CiZpb4YABknxjaL7YpolCuxOl4JhCrbAFGoonD)(SqjiTRpuLWDCAx2d3AJu0(0gmAUxdsUzASMSMw76pVtSvhqU5RsrwZlE5vVDfI7w9OnVTlfItMxRNiv7PXisb1zY0NjTOmTinhNcdxTmWPqSH1XbpBQU0kpPJ4WQnnV4kuN3bDxONitZXB0LAljURkZDPInrTe8ehxmhpo(BPxUtGzQL5NAczukmQxA1uS0DpAzQzF2b5KkjMiL7A2qVjvfRCzIYjH1P6)tpixoTQUn6JmU0FdOrt18KLYBzup6xrBXRm2NBxRE0P4mQBmtPSrpf1Zfv97P8MZ0C0ZAfH61xPFbAyPMRuI81yUXfZBBdMKtQNMuAuD7cL15jQ6BnK5mOrUcFdRMJiV0vxyxuNRo1I8u5oRVlc4D6rLDNHLauKdvuStPqHgeh0uRLU4FvxrOKmWm21A(ZyqQZ(qjr(S23vPusRcRQ4tJuqTMi8ruQDrOIQYbR28Klu19eCDpl8snyR(iv5RzKDYY(OibFbgsLYp5rThg29ROCL9EiC1Pdc8ucwywZ27mM2Z9O0D8S57OsSS5dAKp16l7eGwwiauGCoFSU6v9BvGH5NN(YPLGStjGWIRAJ9yXEZCoBWoDWwbz4lRV)9biMIZsVbGjNITcEP(smYGQtGuuWxD1oPhrFKZc9OQTUyXf6inQvJF3veVL)6D3YElJx(F)]] )

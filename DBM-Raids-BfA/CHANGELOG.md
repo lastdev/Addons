@@ -1,8 +1,10 @@
 # <DBM Mod> Raids (BfA)
 
-## [r40](https://github.com/DeadlyBossMods/DBM-BfA/tree/r40) (2025-01-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r39...r40) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
+## [r41](https://github.com/DeadlyBossMods/DBM-BfA/tree/r41) (2025-04-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BfA/compare/r40...r41) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BfA/releases)
 
-- Blizzard code is ass, so partial revert of last  
-- Assign groups and categories for new addon manager in 11.1  
-- remove 11.0.5 and Add 11.1  
+- apparently i never remembered to bump tocs  
+- Because DBT can't get it's shit together, all 77 (and counting) mods that do this just need to work around core bug  
+- Update localization.ru.lua (#19)  
+    * Update localization.ru.lua  
+    * Update localization.ru.lua  

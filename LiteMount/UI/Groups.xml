@@ -4,38 +4,36 @@
 
 <Script file="Groups.lua" />
 
-<Button name="LiteMountGroupsPanelGroupTemplate" virtual="true" mixin="LiteMountGroupsPanelGroupMixin" inherits="LiteMountListButtonStyleTemplate">
+<Button name="LiteMountGroupsPanelGroupTemplate" virtual="true" mixin="LiteMountGroupsPanelGroupMixin">
     <Scripts>
         <OnClick method="OnClick" />
     </Scripts>
 
     <Size y="24" />
 
-    <HighlightTexture alphaMode="ADD">
-        <Color r="0.3" g="0.5" b="1" a="0.3" />
-    </HighlightTexture>
+    <NormalTexture atlas="auctionhouse-nav-button" useAtlasSize="false" />
+    <HighlightTexture atlas="auctionhouse-nav-button-highlight" useAtlasSize="false" />
 
     <Layers>
+        <Layer level="ARTWORK">
+            <FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
+                <Anchors>
+                    <Anchor point="LEFT" x="6" />
+                    <Anchor point="RIGHT" x="-6" />
+                </Anchors>
+            </FontString>
+            <Texture parentKey="SelectedTexture" atlas="auctionhouse-nav-button-select" alphaMode="ADD" useAtlasSize="false" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" />
+                    <Anchor point="BOTTOMRIGHT" />
+                </Anchors>
+            </Texture>
+        </Layer>
         <Layer level="OVERLAY">
-            <Texture parentKey="SelectedTexture" hidden="true" setAllPoints="true">
-                <Color r="1" g="0.843" b="0" a="0.2" />
-            </Texture>
-            <Texture parentKey="Icon">
-                <Size x="18" y="18" />
-                <Anchors><Anchor point="LEFT" x="8" /></Anchors>
-            </Texture>
             <Texture parentKey="SelectedArrow" file="Interface\ChatFrame\ChatFrameExpandArrow" hidden="true">
                 <Size x="18" y="18" />
                 <Anchors><Anchor point="RIGHT" x="-4" /></Anchors>
             </Texture>
-        </Layer>
-        <Layer level="ARTWORK">
-            <FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
-                <Anchors>
-                    <Anchor point="LEFT" x="4" />
-                    <Anchor point="RIGHT" x="-4" />
-                </Anchors>
-            </FontString>
         </Layer>
     </Layers>
 </Button>
@@ -79,7 +77,7 @@
     </Layers>
 </Button>
 
-<Button name="LiteMountGroupsPanelButtonTemplate" virtual="true">
+<Button name="LiteMountGroupsPanelButtonTemplate" mixin="LiteMountGroupsPanelButtonMixin" virtual="true">
     <Size y="22" />
     <Frames>
         <Button parentKey="mount1" inherits="LiteMountGroupsPanelMountTemplate">
@@ -136,15 +134,11 @@
                 <Anchor point="RIGHT" x="-16" />
             </Anchors>
         </Frame>
-        <ScrollFrame name="$parentGroups" parentKey="Groups" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountGroupsPanelGroupsMixin">
+        <ScrollFrame parentKey="GroupScrollBox" inherits="WoWScrollBoxList" mixin="LiteMountGroupsPanelGroupScrollBoxMixin">
             <Anchors>
                 <Anchor point="TOPLEFT" relativeKey="$parent.GroupsContainer" x="8" y="-8" />
                 <Anchor point="BOTTOMRIGHT" relativeKey="$parent.GroupsContainer" x="-8" y="8" />
             </Anchors>
-            <Scripts>
-                <OnLoad inherit="append" method="OnLoad" />
-                <OnSizeChanged inherit="append" method="OnSizeChanged" />
-            </Scripts>
             <Frames>
                 <Button parentKey="AddGroupButton" inherits="UIPanelButtonTemplate" text="ADD" hidden="true">
                     <Size x="96" y="22" />
@@ -156,16 +150,30 @@
                 </Button>
             </Frames>
         </ScrollFrame>
-        <ScrollFrame name="$parentMounts" parentKey="Mounts" inherits="MinimalHybridScrollFrameTemplate" mixin="LiteMountGroupsPanelMountScrollMixin">
+        <EventFrame parentKey="GroupScrollBar" inherits="MinimalScrollBar" frameStrata="HIGH">
+            <KeyValues>
+                <KeyValue key="hideIfUnscrollable" value="true" type="boolean" />
+            </KeyValues>
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent.GroupScrollBox" relativePoint="TOPRIGHT" x="4" y="0"/>
+                <Anchor point="BOTTOMLEFT" relativeKey="$parent.GroupScrollBox" relativePoint="BOTTOMRIGHT" x="4" y="0"/>
+            </Anchors>
+        </EventFrame>
+        <ScrollFrame parentKey="MountScrollBox" inherits="WoWScrollBoxList" mixin="LiteMountGroupsPanelMountScrollBoxMixin">
             <Anchors>
                 <Anchor point="TOPLEFT" relativeKey="$parent.MountsContainer" x="8" y="-8" />
-                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.MountsContainer" x="-30" y="8" />
+                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.MountsContainer" x="-22" y="8" />
             </Anchors>
-            <Scripts>
-                <OnLoad inherit="append" method="OnLoad" />
-                <OnSizeChanged inherit="append" method="OnSizeChanged" />
-            </Scripts>
         </ScrollFrame>
+        <EventFrame parentKey="MountScrollBar" inherits="MinimalScrollBar" frameStrata="HIGH">
+            <KeyValues>
+                <KeyValue key="hideIfUnscrollable" value="true" type="boolean" />
+            </KeyValues>
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent.MountScrollBox" relativePoint="TOPRIGHT" x="4" y="0"/>
+                <Anchor point="BOTTOMLEFT" relativeKey="$parent.MountScrollBox" relativePoint="BOTTOMRIGHT" x="4" y="0"/>
+            </Anchors>
+        </EventFrame>
         <CheckButton parentKey="ShowAll">
             <Size x="22" y="22" />
             <Anchors>
@@ -195,7 +203,7 @@
         <Button parentKey="DeleteButton" inherits="UIPanelButtonTemplate" text="DELETE">
             <Scripts>
                 <OnClick>
-                    local f = LiteMountGroupsPanel.Groups.selectedGroup
+                    local f = LiteMountGroupsPanel.GroupScrollBox.selectedGroup
                     if f then StaticPopup_Show("LM_OPTIONS_DELETE_GROUP", f, nil, f) end
                 </OnClick>
             </Scripts>
@@ -207,7 +215,7 @@
         <Button parentKey="RenameButton" inherits="UIPanelButtonTemplate" text="PET_RENAME">
             <Scripts>
                 <OnClick>
-                    local f = LiteMountGroupsPanel.Groups.selectedGroup
+                    local f = LiteMountGroupsPanel.GroupScrollBox.selectedGroup
                     if f then StaticPopup_Show("LM_OPTIONS_RENAME_GROUP", f, nil, f) end
                 </OnClick>
             </Scripts>

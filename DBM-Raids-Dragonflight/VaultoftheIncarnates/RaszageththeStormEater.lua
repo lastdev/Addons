@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2499, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(189492)
 mod:SetEncounterID(2607)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -306,7 +306,7 @@ local function breathCorrect(self)
 	self:Unschedule(breathCorrect)
 	self.vb.breathCount = self.vb.breathCount + 1
 	local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 377594, self.vb.breathCount+1)
-	if timer then
+	if timer and timer > 0 then
 		timerLightningBreathCD:Start(timer-4, self.vb.breathCount+1)
 		self:Schedule(timer, breathCorrect, self)
 	end
@@ -397,7 +397,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHurricaneWing:Show(self.vb.energyCount)
 		specWarnHurricaneWing:Play("pushbackincoming")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.energyCount+1) or 35
-		if timer then
+		if timer and timer > 0 then
 			timerHurricaneWingCD:Start(timer, self.vb.energyCount+1)
 		end
 		timerHurricaneWing:Start(9 + modifier)--6 sec cast + 3 sec duration + mythic cast count mod if applicable
@@ -408,7 +408,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnVolatileCurrent:Show(self.vb.currentCount)
 		specWarnVolatileCurrent:Play("scatter")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.currentCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerVolatileCurrentCD:Start(timer, self.vb.currentCount+1)
 		end
 	elseif spellId == 377658 then
@@ -418,7 +418,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnElectrifiedJaws:Play("defensive")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerElectrifiedJawsCD:Start(timer, self.vb.tankCount+1)
 		end
 	elseif spellId == 377594 then
@@ -427,7 +427,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnLightingBreath:Show(self.vb.breathCount)
 		specWarnLightingBreath:Play("breathsoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.breathCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerLightningBreathCD:Start(timer, self.vb.breathCount+1)
 			self:Schedule(timer+4, breathCorrect, self)
 		end
@@ -451,7 +451,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnStormsurge:Play("scatter")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.stormSurgeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerStormsurgeCD:Start(timer, self.vb.stormSurgeCount+1)
 		end
 		if self.Options.InfoFrame then
@@ -467,7 +467,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnTempestWing:Play("pushbackincoming")
 		specWarnTempestWing:ScheduleVoice(1.5, "movecenter")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.wingCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerTempestWingCD:Start(timer, self.vb.wingCount+1)
 		end
 	elseif spellId == 389870 then
@@ -499,7 +499,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnThunderousBlast:Play("defensive")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.tankCount+1) or 30
-		if timer then
+		if timer and timer > 0 then
 			timerThunderousBlastCD:Start(timer, self.vb.tankCount+1)
 		end
 	elseif spellId == 382434 or spellId == 390463 then
@@ -515,7 +515,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.chargeIcon = 1
 		self.vb.chargeCount = self.vb.chargeCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.chargeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerStaticChargeCD:Start(timer, self.vb.chargeCount+1)
 		end
 		timerStaticCharge:Start(8)
@@ -525,13 +525,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.chargeIcon = 1
 		self.vb.chargeCount = self.vb.chargeCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.chargeCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerFulminatingChargeCD:Start(timer, self.vb.chargeCount+1)
 		end
 	elseif spellId == 399713 then
 		self.vb.magneticCount = self.vb.magneticCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.magneticCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerMagneticChargeCD:Start(timer, self.vb.magneticCount+1)
 		end
 	elseif spellId == 382434 then--First intermission Starts (Storm Nova finished)

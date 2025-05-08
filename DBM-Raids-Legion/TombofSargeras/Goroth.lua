@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1862, "DBM-Raids-Legion", 2, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185020")
+mod:SetRevision("20250307060218")
 mod:SetCreatureID(115844)
 mod:SetEncounterID(2032)
 --mod:SetUsedIcons(1)
@@ -115,7 +115,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			end
 		else
 			local timer = shatteringStarTimers[nextCount]
-			if timer then
+			if timer and timer > 0 then
 				timerShatteringStarCD:Start(timer, nextCount)
 			else
 				if self.vb.shatteringStarCount % 2 == 0 then

@@ -23,10 +23,9 @@ spec:RegisterResource( Enum.PowerType.Rage )
 spec:RegisterResource( Enum.PowerType.LunarPower, {
     fury_of_elune = {
         aura = "fury_of_elune_ap",
-        debuff = true,
 
         last = function ()
-            local app = state.debuff.fury_of_elune_ap.applied
+            local app = state.buff.fury_of_elune_ap.applied
             local t = state.query_time
 
             return app + floor( ( t - app ) * 2 ) * 0.5
@@ -81,7 +80,7 @@ spec:RegisterTalents( {
     circle_of_the_wild          = { 104078, 474530, 1 }, -- Physical damage dealt by your abilities increased by 5%.
     claw_rampage                = {  94613, 441835, 1 }, -- During Berserk, Shred, Swipe, and Thrash have a 25% chance to make your next Ferocious Bite become Ravage.
     cyclone                     = {  82229,  33786, 1 }, -- Tosses the enemy target into the air, disorienting them but making them invulnerable for up to 5 sec. Only one target can be affected by your Cyclone at a time.
-    dreadful_wound              = {  94620, 441809, 1 }, -- Ravage also inflicts a Bleed that causes 7,375 damage over 6 sec and saps its victims' strength, reducing damage they deal to you by 10%. Dreadful Wound is not affected by Circle of Life and Death. 
+    dreadful_wound              = {  94620, 441809, 1 }, -- Ravage also inflicts a Bleed that causes 7,375 damage over 6 sec and saps its victims' strength, reducing damage they deal to you by 10%. Dreadful Wound is not affected by Circle of Life and Death.
     empowered_shapeshifting     = {  94612, 441689, 1 }, -- Frenzied Regeneration can be cast in Cat Form for 40 Energy. Bear Form reduces magic damage you take by 4%. Shred and Swipe damage increased by 6%. Mangle damage increased by 15%.
     entangling_vortex           = {  94622, 439895, 1 }, -- Enemies pulled into Ursol's Vortex are rooted in place for 3 sec. Damage may cancel the effect.
     feline_swiftness            = {  82236, 131768, 1 }, -- Increases your movement speed by 15%.
@@ -136,10 +135,10 @@ spec:RegisterTalents( {
     soothe                      = {  82229,   2908, 1 }, -- Soothes the target, dispelling all enrage effects.
     stampeding_roar             = {  82234, 106898, 1 }, -- Shift into Bear Form and let loose a wild roar, increasing the movement speed of all friendly players within 15 yards by 60% for 8 sec.
     starfire                    = {  82201, 194153, 1 }, -- Call down a burst of energy, causing 25,745 Arcane damage to the target, and 8,283 Arcane damage to all other enemies within 10 yards. Deals reduced damage beyond 8 targets. Generates 10 Astral Power.
-    starlight_conduit           = { 100223, 451211, 1 }, -- Wrath, Starsurge, and Starfire damage increased by 5%. 
+    starlight_conduit           = { 100223, 451211, 1 }, -- Wrath, Starsurge, and Starfire damage increased by 5%.
     starsurge                   = {  82202,  78674, 1 }, -- Launch a surge of stellar energies at the target, dealing 81,158 Astral damage.
     strategic_infusion          = {  94623, 439890, 1 }, -- Attacking from Prowl increases the chance for Shred, Rake, and Swipe to critically strike by 8% for 6 sec. Casting Regrowth increases the chance for your periodic heals to critically heal by 8% for 10 sec.
-    strike_for_the_heart        = {  94614, 441845, 1 }, -- Shred, Swipe, and Mangle's critical strike chance and critical strike damage are increased by 15%. 
+    strike_for_the_heart        = {  94614, 441845, 1 }, -- Shred, Swipe, and Mangle's critical strike chance and critical strike damage are increased by 15%.
     sunfire                     = {  93714,  93402, 1 }, -- A quick beam of solar light burns the enemy for 5,628 Nature damage and then an additional 65,372 Nature damage over 18 sec to the primary target and all enemies within 8 yards. Generates 6 Astral Power.
     symbiotic_relationship      = { 100173, 474750, 1 }, -- Form a bond with an ally. Your self-healing also heals your bonded ally for 10% of the amount healed. Your healing to your bonded ally also heals you for 8% of the amount healed.
     tear_down_the_mighty        = {  94614, 441846, 1 }, -- The cooldown of Pulverize is reduced by 10 sec.
@@ -158,12 +157,12 @@ spec:RegisterTalents( {
     wild_charge                 = {  82198, 102401, 1 }, -- Fly to a nearby ally's position.
     wild_growth                 = {  82205,  48438, 1 }, -- Heals up to 5 injured allies within 30 yards of the target for 35,657 over 7 sec. Healing starts high and declines over the duration.
     wildpower_surge             = {  94612, 441691, 1 }, -- Mangle grants Feline Potential. When you have 6 stacks, the next time you transform into Cat Form, gain 5 combo points and your next Ferocious Bite or Rip deals 225% increased damage for its full duration.
-    wildshape_mastery           = {  94610, 441678, 1 }, -- Ironfur and Frenzied Regeneration persist in Cat Form. When transforming from Bear to Cat Form, you retain 80% of your Bear Form armor and health for 6 sec. For 6 sec after entering Bear Form, you heal for 10% of damage taken over 8 sec. 
+    wildshape_mastery           = {  94610, 441678, 1 }, -- Ironfur and Frenzied Regeneration persist in Cat Form. When transforming from Bear to Cat Form, you retain 80% of your Bear Form armor and health for 6 sec. For 6 sec after entering Bear Form, you heal for 10% of damage taken over 8 sec.
     wildstalkers_power          = {  94621, 439926, 1 }, -- Rip and Ferocious Bite damage increased by 5%. Rejuvenation healing increased by 10%.
-    
+
     -- Balance
     aetherial_kindling          = {  88209, 327541, 1 }, -- Casting Starfall extends the duration of active Moonfires and Sunfires by 3.0 sec, up to 28 sec.
-    astral_communion            = {  88235, 450598, 1 }, -- Increases maximum Astral Power by 20. Entering Eclipse reduces the Astral Power cost of your next Starsurge or Starfall by 15. 
+    astral_communion            = {  88235, 450598, 1 }, -- Increases maximum Astral Power by 20. Entering Eclipse reduces the Astral Power cost of your next Starsurge or Starfall by 15.
     astral_smolder              = {  88204, 394058, 1 }, -- Your Starfire and Wrath damage has a 35% chance to cause the target to languish for an additional 60% of your spell's damage over 6 sec.
     astronomical_impact         = {  88232, 468960, 1 }, -- The critical strike damage of your Astral spells is increased by 20%.
     balance_of_all_things       = {  88214, 394048, 2 }, -- Entering Eclipse increases your critical strike chance with Arcane or Nature spells by 20%, decreasing by 2% every 1 sec.
@@ -197,7 +196,7 @@ spec:RegisterTalents( {
     stellar_amplification       = {  88229, 450212, 1 }, -- Starsurge increases the damage the target takes from your periodic effects and Shooting Stars by 20% for 5 sec. Reapplying this effect extends its duration, up to 20 sec.
     stellar_flare               = {  91048, 202347, 1 }, -- Burns the target for 5,139 Astral damage, and then an additional 64,532 damage over 24 sec. If dispelled, causes 60,528 damage to the dispeller and blasts them upwards. Generates 12 Astral Power.
     sundered_firmament          = {  88199, 394094, 1 }, -- Every other Eclipse creates a Fury of Elune at 25% effectiveness that follows your current target for 8 sec.
-    sunseeker_mushroom          = {  88202, 468936, 1 }, -- Sunfire damage has a chance to grow a magical mushroom at a target's location. After 1 sec, the mushroom detonates, dealing 63,714 Nature damage and then an additional 35,939 Nature damage over 10 sec. Affected targets are slowed by 50%. Generates up to 20 Astral Power based on targets hit. 
+    sunseeker_mushroom          = {  88202, 468936, 1 }, -- Sunfire damage has a chance to grow a magical mushroom at a target's location. After 1 sec, the mushroom detonates, dealing 63,714 Nature damage and then an additional 35,939 Nature damage over 10 sec. Affected targets are slowed by 50%. Generates up to 20 Astral Power based on targets hit.
     touch_the_cosmos            = {  88222, 450356, 1 }, -- Casting Wrath in an Eclipse has a 15% chance to make your next Starsurge or Starfall free. Casting Starfire in an Eclipse has a 22% chance to make your next Starsurge or Starfall free.
     twin_moons                  = {  88201, 279620, 1 }, -- Moonfire deals 10% increased damage and also hits another nearby enemy within 15 yds of the target.
     umbral_embrace              = {  88216, 393760, 1 }, -- Wrath and Starfire have a 20% chance to cause your next Wrath or Starfire cast during an Eclipse to become Astral and deal 75% additional damage.
@@ -208,7 +207,7 @@ spec:RegisterTalents( {
     whirling_stars              = {  88221, 468743, 1 }, -- Incarnation: Chosen of Elune's cooldown is reduced to 100 seconds and it has two charges, but its duration is reduced by 20%.
     wild_mushroom               = {  88202,  88747, 1 }, -- Grow a magical mushroom at the target enemy's location. After 1 sec, the mushroom detonates, dealing 63,714 Nature damage and then an additional 35,939 Nature damage over 10 sec. Affected targets are slowed by 50%. Generates up to 20 Astral Power based on targets hit.
     wild_surges                 = {  91048, 406890, 1 }, -- Your Wrath and Starfire chance to critically strike is increased by 10% and they generate 2 additional Astral Power.
-    
+
     -- Elune's Chosen
     arcane_affinity             = {  94586, 429540, 1 }, -- All Arcane damage from your spells and abilities is increased by 3%.
     astral_insight              = {  94585, 429536, 1 }, -- Incarnation: Chosen of Elune increases Arcane damage from spells and abilities by 10% while active. Increases the duration and number of spells cast by Convoke the Spirits by 25%.
@@ -219,13 +218,13 @@ spec:RegisterTalents( {
     lunar_amplification         = {  94596, 429529, 1 }, -- Each non-Arcane damaging ability you use increases the damage of your next Arcane damaging ability by 3%, stacking up to 3 times.
     lunar_calling               = {  94590, 429523, 1 }, -- Starfire deals 100% increased damage to its primary target, but no longer triggers Solar Eclipse.
     lunar_insight               = {  94588, 429530, 1 }, -- Moonfire deals 20% additional damage.
-    lunation                    = {  94586, 429539, 1 }, -- Your Arcane abilities reduce the cooldown of Fury of Elune by 2.0 sec and the cooldown of New Moon, Half Moon, and Full Moon by 1.0 sec. 
+    lunation                    = {  94586, 429539, 1 }, -- Your Arcane abilities reduce the cooldown of Fury of Elune by 2.0 sec and the cooldown of New Moon, Half Moon, and Full Moon by 1.0 sec.
     moon_guardian               = {  94598, 429520, 1 }, -- Moonfire and Starfire generate 2 additional Astral Power.
     moondust                    = {  94597, 429538, 1 }, -- Enemies affected by Moonfire are slowed by 20%.
     stellar_command             = {  94590, 429668, 1 }, -- Increases the damage of Fury of Elune by 15% and the damage of Full Moon by 25%.
     the_eternal_moon            = {  94587, 424113, 1 }, -- Further increases the power of Boundless Moonlight.  Fury of Elune The flash of energy now generates 6 Astral Power and its damage is increased by 50%.  Full Moon New Moon and Half Moon now also call down 1 Minor Moon.
     the_light_of_elune          = {  94585, 428655, 1 }, -- Moonfire damage has a chance to call down a Fury of Elune to follow your target for 3 sec.  Fury of Elune Calls down a beam of pure celestial energy, dealing 31,487 Astral damage over 3 sec within its area. Generates 15 Astral Power over its duration.
-    
+
     -- Keeper of the Grove
     blooming_infusion           = {  94601, 429433, 1 }, -- Every 5 Regrowths you cast makes your next Wrath, Starfire, or Entangling Roots instant and increases damage it deals by 100%. Every 5 Starsurges or Starfalls you cast makes your next Regrowth or Entangling roots instant.
     bounteous_bloom             = {  94591, 429215, 1 }, -- Your Force of Nature treants generate 10 Astral Power every 2 sec.
@@ -245,20 +244,20 @@ spec:RegisterTalents( {
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
-    celestial_guardian     =  180, -- (233754) 
-    crescent_burn          =  182, -- (200567) 
+spec:RegisterPvpTalents( {
+    celestial_guardian     =  180, -- (233754)
+    crescent_burn          =  182, -- (200567)
     deep_roots             =  834, -- (233755) Increases the amount of damage required to cancel your Entangling Roots or Mass Entanglement by 75%.
     dying_stars            =  822, -- (410544) Enemies that dispel your Moonfire or Sunfire suffer 15% additional damage from their effects for 12 sec. If already vulnerable, 50% of the remaining duration is applied to the dispeller.
     faerie_swarm           =  836, -- (209749) Swarms the target with Faeries, disarming the enemy, preventing the use of any weapons or shield and reducing movement speed by 30% for 5 sec.
     high_winds             = 5383, -- (200931) Increases the range of Cyclone, Typhoon, and Entangling Roots by 5 yds.
     malornes_swiftness     = 5515, -- (236147) Your Travel Form movement speed while within a Battleground or Arena is increased by 20% and you always move at 100% movement speed while in Travel Form.
-    master_shapeshifter    = 5604, -- (411266) 
+    master_shapeshifter    = 5604, -- (411266)
     moon_and_stars         =  184, -- (233750) Entering an Eclipse summons a beam of light at your location granting you 50% reduction in silence and interrupts for 6 sec.
-    moonkin_aura           =  185, -- (209740) 
-    owlkin_adept           = 5407, -- (354541) 
-    protector_of_the_grove = 3728, -- (209730) 
-    star_burst             = 3058, -- (356517) 
+    moonkin_aura           =  185, -- (209740)
+    owlkin_adept           = 5407, -- (354541)
+    protector_of_the_grove = 3728, -- (209730)
+    star_burst             = 3058, -- (356517)
     thorns                 = 3731, -- (1217017) Casting Barkskin sprouts thorns on you for until canceled. When victim to melee attacks, thorns deals 27,681 Nature damage back to the attacker. Attackers also have their movement speed reduced by 50% for 4 sec.
     tireless_pursuit       = 5646, -- (377801) For 3 sec after leaving Cat Form or Travel Form, you retain up to 40% movement speed.
 } )
@@ -1551,7 +1550,7 @@ spec:RegisterStateTable( "eclipse", setmetatable( {
         elseif eclipseType == "lunar" then
             eclipse.state = "IN_LUNAR"
             applyBuff( "eclipse_lunar", duration )
-            state:QueueAuraExpiration( "eclipse_lunar", ExitEclipse, buff.eclipse_solar.expires )
+            state:QueueAuraExpiration( "eclipse_lunar", ExitEclipse, buff.eclipse_lunar.expires )
             if talent.balance_of_all_things.enabled then applyBuff( "balance_of_all_things_arcane" ) end
         else
             eclipse.state = "IN_SOLAR"
@@ -1585,13 +1584,25 @@ spec:RegisterStateTable( "eclipse", setmetatable( {
 
     end, state ),
 
+    advance = setfenv( function( spell )
+
+        if spell == "wrath" then
+            eclipse.wrath_counter = eclipse.wrath_counter - 1
+            if eclipse.wrath_counter == 0 then eclipse.trigger_eclipse( "lunar", 15 ) end
+        elseif spell == "starfire" then
+            eclipse.starfire_counter = eclipse.starfire_counter - 1
+            if eclipse.starfire_counter == 0 then eclipse.trigger_eclipse( "solar", 15 ) end
+        end
+
+    end, state ),
+
 }, {
     __index = function( t, k )
         -- any_next
         if k == "any_next" then
             return eclipse.state == "IN_NONE"
         -- in_any
-        elseif k == "in_any" then
+        elseif k == "in_any" or k == "in_eclipse" then
             return eclipse.state ~= "IN_NONE"
         elseif k == "in_none" then
             return eclipse.state == "IN_NONE"
@@ -1622,6 +1633,8 @@ spec:RegisterStateTable( "eclipse", setmetatable( {
         -- lunar_in_1
         elseif k == "lunar_in_1" then
             return eclipse.wrath_counter == 1
+        elseif k == "remains" then
+            return eclipse.state == "IN_NONE" and 0 or max( buff.eclipse_solar.remains, buff.eclipse_lunar.remains )
         end
     end
 } ) )
@@ -1742,7 +1755,7 @@ spec:RegisterGear( "tww2", 229310, 229308, 229306, 229307, 229305  )
 spec:RegisterAuras( {
     -- 2-set
     -- https://www.wowhead.com/spell=1218033
-    -- Jackpot! Auto shot damage increased by 200% and the time between auto shots is reduced by 0.5 sec.  
+    -- Jackpot! Auto shot damage increased by 200% and the time between auto shots is reduced by 0.5 sec.
     --[[jackpot = {
         id = 1218033,
         duration = 10,
@@ -1838,11 +1851,6 @@ spec:RegisterAbilities( {
         toggle = "defensives",
         defensive = true,
 
-        usable = function ()
-            if not tanking then return false, "player is not tanking right now"
-            elseif incoming_damage_3s == 0 then return false, "player has taken no damage in 3s" end
-            return true
-        end,
         handler = function ()
             applyBuff( "barkskin" )
 
@@ -2805,13 +2813,7 @@ spec:RegisterAbilities( {
             removeBuff( "gathering_starstuff" )
             if talent.natures_grace.enabled and buff.dreamstate.up then removeStack( "dreamstate" ) end
             if talent.dream_surge.enabled and buff.dream_burst.up then removeStack( "dream_burst" ) end
-
-            -- No lunar_calling talent check needed, the API call handles this already as the return is hard set to 0 with the talent enabled
-            if eclipse.starfire_counter == 1 then
-                eclipse.trigger_eclipse( "solar", 15 )
-            elseif eclipse.starfire_counter == 2 then
-                eclipse.starfire_counter = 1
-            end -- if the counter isn't 1 or 2, we don't care because it cannot affect eclipse in any way
+            if talent.lunar_calling.disabled then eclipse.advance( "starfire" ) end
 
             if buff.blooming_infusion.up then
                 removeBuff( "blooming_infusion" )
@@ -3216,11 +3218,7 @@ spec:RegisterAbilities( {
             removeBuff( "gathering_starstuff" )
             if talent.natures_grace.enabled and buff.dreamstate.up then removeStack( "dreamstate" ) end
 
-            if eclipse.wrath_counter == 1 then
-                eclipse.trigger_eclipse( "lunar", 15 )
-            elseif eclipse.wrath_counter == 2 then
-                eclipse.wrath_counter = 1
-            end -- if the counter isn't 1 or 2, we don't care because it cannot affect eclipse in any way
+            eclipse.advance( "wrath" )
 
             removeBuff( "dawning_sun" )
             if azerite.sunblaze.enabled then applyBuff( "sunblaze" ) end
@@ -3296,4 +3294,4 @@ end, state )
 } ) ]]
 
 
-spec:RegisterPack( "Balance", 20250206, [[Hekili:T3ZAVnosY9BX4WQH0AKSiTL84dsArUdxcUjxUaeFa5dbru0suwmwIuHKA84ab9Bp9tY(r1nBzl7D29oSZUAwXIvxD117U6wZcM93MD)Y4QKz)1WbHdheoyu)Gr3mi82z3x9YUKz3VlEXtXpI(lzXBr)3)q8M4SfKV)Ln5XlXVFz((c8xTUQAx5V)QREGctVY0Tl6)yA169p0pn)k2R27(0T)XR2US)6QTB(5vPBsMWEH(vFVA29pSpDt1FoB2dae213Dt4S7J3xToVy29yeHg10LltOGNuUy29yW7niS3Gr)(JZ)ps(wsr1X5E5fhNNSmTY)48NZlEkUiFF2YYJZxHFWZfXvRpopFxswsXXVE8RiCCtVbb9chIWbEyooF)om1u)WGWEHH4hU7LTXLvjfiCLUDxr(3s2MKv1axqVbAizU397ZwLwK43a3GEH3HG7Fo97hN)p9V)Noo)pTyt6UYejigPGPpFCE8Y)N9Lv4XKpB2GMZBsZEu6nV24ezaDIee0Fq)HIF9Gri0J(miG(zyGjCm4UEHFbbe(Z7Sa0GakqdUH9j7LcgW(CidjMhPVGih0d)3IlEcTGT648Q1i(5)z6MLnWClD6(3ipjUa)4Q1PzZUFtAzvjrIpzv8(nvO)6FLObeVOknpdljVjUi6HK4TZUpjl(HnjlN9hMvHKbXq18n1VarYHk5vKUJ(D)x)jKCwYY)BefuK(4JijQ5)L9zy6GVKopfr4pJ(Cvms8FjAsKFC(UIKfijje1sLg)osshHuKOvAmszmDlc(XhNhECEhKOmft93GrCuAwuaMkVwHkZ3HMsjvnK73Irid9u8FBZE0hJoo)QJZl3LSzt0ASC8X5DrKt8gK8u)S4Q9fjLrC1tgMfbjV4H0QOhksIFkPObGlpoFzEv)T55eX8(vPlEclrIFG3X5pSF1kLxTSczN548PKNhE7X59it1lzaJwykrijP)(DhN7t(d6rH3qMsrutt7Illt)wsuC5omZ4MtMzSipFZY8NZ6VigXsx0VizBCAgsTA8pFCE9dr6ylsIYxfrzpCOePe07NSAvcACqKZILyQz4jtnpKxwswRxL(46QOgIrGwye6Y9irgewiRmCe1xLkeiWnOL6i6lJjUrNmXHxentFONgmKqmdjRtmHf0OfxKrO0OfRZltYWSXeKmSGSLpxijGidWE1NxNwGTPfHKtkkLe0g0pK8whoOrktX2Ti0icFxCC(6KI8OQIKK(pLKSlPap8i7hrpInBtXGhhw2aVoUyBE2lsq2m843GiFccgtwTJ4cwE23YFkHau5UuK6DzFro3irYLRgM8CewtsEyRrz9JxGiIhrQRRkOlBXBqCGje1iF(FuXTj(kEeAGcIQLaTfSDkCGhxSS)24Vt1VvMQwF3P66fR2JmRHmRsymrutO(6RjCT94LVqEYfSfv2d2Vts3EzeImqw4XkgiDNBv0DOqf)qsrrCwveX0kYKbockU2e0dry6lg8XuwhIr0Zjpi6uOrvxGO4lYu7MnVBrYU8IkbdTH3XeGFngA8B9DdhWzgkta0u9odtvueujfytwiJ4lsYwIC78suzsX(TItBSRLsAausl)3WN6s(EuGqqCfzjaTkuYvAL1XOyQnR(Kz61UBiWKXzcEcCGNcANBSnelinyK4CqlJOCuR8yx4Am2QZD8LFllQirHGbgKfWRolWwS3xISzhNvUnTcnwIccEN0AeLruvKM9ucAXpOFAzFzrtM0bhIqiiCz(tS6ExTsIxRmxHv4wSnDctwxwJmjo9JHGMpxeYKSaw(j4KdEPEkKLJi8iQ1GFXNVnrFyFHZsiEKG5hrW2B1(U1rPnBztBeGQbcfZ3(s0CNQCDCos8BGOF1hX5ENUGdGSt2at5FXGoq0QWfTPKtDXldJzJuWWBqIKlvyCAFXeID(osMzQxge9vX5G2JZgdvx6hxkBFdcTyn7HCTlPLhJSFIwy5M8kbMnEfrnxtLvKqtRiGgvv4WHN4ks4BDfjuEfj49zfbcTNLvKqYkYnIvYapfrS)TLkfYiqnr0MvjJtled66bnOExETAPAIJaHMQBJ1c7drD1ddkiz0QnUSbKHsno72nZtmJYkusePqj1MKLEePOpkr5ZEgzKvJl)vnYs1say4bQIaha(JW0IAGZTtlSyDPfkAr8gC(zYjVrR(tfohjKdjCQB44MPs8KCW9QJyE)2hkI3GCvuLKvMw9sFKE2tI1dQmF)gUxquekjLvnJ1uILpFPPicrfuoePkBQXc2(0JWkzfOcpWX4PYA0CSmkUyrCwIGBtlWYcIIaRib(qECve5Bj8)q1GnekqxR85M8PnaKOpvLfFAmL3Ai4qrtuc1MmUOinVOUglKjGQJ0MjGKyaD1c9LilmlWcEnOTyFwe9VhHRNkTQQm2vCoDum5CW27I(FX)Z946GMV9Hy9QZUnU4jUW1ZPBwcvJ2AyrjZHSDGfcvRL7PxLuHkHKSbjtNI0bI3K(ygUS7sRFxCAf7clwSSyF6sQzsj1FrdNVU6zkfFLSBptLKmE5s7v9tWz264YODf5lm67SjAsP0QApXlkei(lYThB9Ehwu(fEONAHJfxe)e6FJkJx8qrE(s7ZCO6D26mxo2k4jFyRtEWWFaGW0K)sEWkAX)OYcum1QZfu9O2ykOL6KkjNJMgBWBAYk0)jrsxGYmrMNqV2ZvR7JR)wujsVGUrgSkZgttBaxYgoK8KdQTAW(EBfjdCJysQ3iM1PitARJZwIuFps3Zi5n9B(dXLy6gVGrEmYOpE3qWBXepyaboK6(Vavul54FBJB1WZj2ikzgnekdiZXCtrtAEIasLn2vrTjZTKApunbVXGoJAXdfoFs8(kqRZkvi5BqvOuDvdy)1K4D)csGImDv)gn0icP4WI2L)Csr)LjRsxKwrJBUg9cBofjwKrkJbkwaiJ8IUZi0HWOwKScfG1AmS8KCOEVPAAv5rlttibWvZbOfgyeh8g5sRLcvlircsfuC5ux0YTpYhbPkFySyvt5fR6I2QKsTHFC6di2Wll2KWPhS0nGdTAg8(ZkVJgrScd5k6(SatyQ(B(hRQYRQMxsn7JYOrbpz96Atdsjx3ITbFatuQEECZe1zMAeThzAtuuCh8MeT6vdY(mSnTPKKq6Qj5qxhv(s2oblTrUgYGKQtfkUBXmJQLBrsBI9wGVi6mKjLb9qT9AqAReyOKyfNlPUePbTvYpndQK4InVevIImtjdoXgJat(OaUEsE7TTV0JZZ76MftfDSzqv8UzwyUdge2yvvRe8284XI4fjAPSEQIUt5vG2HPzRPZgqRLwGuBeGCtxvKVX8sKhuJaWs7KpA8UtqUa96uGcI8TVYyomgvoHaE2x8Iuo6glTkwm3y6ZO0MzTAsGAqeTSHXcdGE2TZSxZWwqOqsWZSxVqxkoI5YMreWVLLiLf0mZAXr0QXOK5bxOqtLsJw0)6(VaS8JUmfzPuXrCFbNe4PopRK0SOS8mZEo0kPPqrGj79ec2NtI)gjb14IDY1nTkF)I1evVf5iRZLr8ayj1qfkQwTYwAB8swvPHOY9SEKiujXh2yOuiiZgi9AIjHy3GKLhN5ZFcZhvc(Jf1p10ABJKNRR(MR)9W6TbuUbuA3o1ndok1Fpo0QtNWoxAlsVa22xiygrFFoNvx7roq82wsDT7ArGwhVzfius71bPnFGGAOiu4kggTDF56I8CT270QHjR8sRoecnBrP96fBy)lSiksRzlKgF4xKyf0ILiYcQifG9FuNGxjbARobwtdTzizDreqq6TxoolkQK2lGflx7icCAAmE63s1kuM6NCQRozBY1SqpT6j4yCyoS5ONuyyoKlStrHz25)hvwS1QZwlz6hf1Oxyv3zYe6bU8FtTu9pwCCQIU4kr)y6)hcUT57ZQmed05o)Vw7UxNBEnXE396t5DDS3DjEfDPBMSnwDj0MpCivqJknrXtmnuOmoFNy8DFv5jdrGNl(RvaL6XSHcrTEs5S7ezQOe0LePUVuAIwAzDxwL64kxzQfpwnCKE1BlMP53uxhq59y40kwXq5()tY61yy7DNs9m0ccgZ73KxSupB)6NW7AvPIJjBw0u0i2l)pSRFTsECkH28dxGmA1DPHb(lqPInqJVIg863GjslUL9C9B5wH1C4BUzyyS2zSrkUFTX0G2M5q3CbxMkrG5WVKnhiTIjpdeAzR6YmJxd0fsUXurMmhG1PhQNsmDMOfEVLATA4dbkFsL1M66mqVD0lzPslnIqxY3twSVskonlvYu7f8pxSLMcgvb0gA)9lFPPez1vpZUwMs5yfODWY)s0DSu2wlDD87rbNTuppd9Qr7jRrsAvnfncaE6fMhcm4bWx6qrBU0)EAPx5RLfBd)2CTcAZLM1ygdn78XTTDrQMK31EnjzvtbOUK1y8hYthP5J(OdBriCvCK7hEZM2AbnnDVVP4LR(12zQzs9rN0gixFu7CljXG0pJlMYb4hYJ4ITPUAmEMN3HZyDHn2um(X0BFLaKbC8wMMHBw(z3tUznqeFo(QvHCNJ8j2nQXNWje8)UhPHJYUPmh7dlEFv(24k8xSyDC2JjL9p(1)skE7jX3sh)ruKGjfKh)jLgsG1Q(iCIVFmm8uUngeuEbF3VnClDRtOGzWlZIwWBoAfKO0JmjKI08)0OFs420ORDAURTb(sOBqJl9igUaU7mM6fEBVWlP21AUTm89Vm8g(8C0v)asB1C2rWRywAKEL1phA5E1vtdJPCvHugg4sg5iMHstub)2UYjCCu4zhOQ6OCts4i2E)4gaPbQGElvFZXX4mq93bJzGs7OGElf)rDmcgOoimt)aUBRhflUKDg)aER0WpmmY4pOfdJ1UFepylhoifw14gFuYNP4oE2kYYHdTu6J4LV4F4GNNTO(6AAS)Pr(tdV7WbCKGDKjxtraAex(Dm9KPHdoCWGt8jd4Ri)QLjE1pcmXgH1W3zLnR43CyFWJLv4pHX1q4JWdQzGDBe1p(5awvaa59e7Vx49JIQ1IP9mBc3k(pbP22H)egxxLABby3gr9JOpG2rRR)NxS)EH3pkQ2q0tsvksjUjWQiPrWgqS(zqxb7MpK6QdryW7eT)oG4JFfiT86dt9NohjMd0ysk0OLZhTklWWy8UMU3qJI48ZZlGOTWJCez1kd8qzSPWiaZ7k6DaXT7fXHyFSJEGZ1SHbbgs3hk1Zdn8WaaL9KkRDnzuIj0OeJzK1(skmmVRO3be3UeJdXDyh9UiXyds3hQwLymbL0qCRbVsITAHILmWtfUkEn5T71JxqpgX5jNMVIBGPRZAXruu01QTGq7Q0XtVrv6XckXF6OEEsTJYpf6ZPQxnoUcHdZcyVdCddscXshysf0hdEAkDeZVHOsyHQPv8j6lRFwlvWU5dJPRdH4b1ub5qNHtxrR857ubXWh(tnuBigqPZJPcMbpRMUIyOgcvb)26zuTHXGS(BxA5DdXgSn)MrC45hXGgNlpX44)iSnBrA78vB)pkr6)oyUCg2pKpg2KHee59a4NuJ1rUhI1qNwYcVd6cHF5JXoaTTyEJ2coVP9zf9NqTdBhE3hwxlD4PuWBt5CEMYfYk6pb2y7W7(W6kB0TkWE8R)zISmECgY7CUJZj)2SGEmUNVYX)QaX73MY(1fXQ7KRuVdap(vqOeU9)GHGVjrFg3Nwte3nTpt6U8jxWTyPxrRo8NzPcuhoiEV(5cniVBvmQyWR4nZ3njE5sgc8Aui4vLOtZxPLZ)HdwmlO(qG8T9r8MclfH5npD8AKm1Mpa1WOHKb09uFi085YWMzey6)(h)6V73H)HMIF31H1jyTriXy9)kPhlf(Xk6FHSHR97dZl4x2DFoD1eRnQzTuOuw(DyDIkWTU34GbKNQCB7HLXqtGZ8LLh8KJGg8mJFtvqD(HYHheCE3IIFd4zRHBnptOt4vXgIyaHFu9p8tuMX56NWjXXOEYJxsgh2rLheficTSoHqldZ0eCPpZa7HRZyVBzMEv2xEgnBOB1h)Z1pW05JX4aj8lzeBqohDyGLjMqVtYTjbmIEbd7o8Y2Dt4FPxqpWyVVCq)qFLo7yksd27cRwfWnObxvbQrpoCWwpG43PLEaHo7gHjdUihRNYeAFel)IenDsOVVFZBlpNpC4cZ5jGSwd9oUrXSwN)YWw7YfkJwvIr)Cb7lYRe(v6OZfkN4mI7HgXPu6GM8DKxiedjcdnthNuRR0Sv7XDEl2qbChSliBYVL3Pia43vi1rFjrYbkanu0pLpHhudkPizpZJSSFvJKEhR9o0P2Fq(GqhAHmnhpmMKb(zfA6nD8G(XeA6n1sJazh2XRn7zJVUn9qtwMghyyw)b2ey(DSTmoEs4DMxcmi9H5)EoW2645u8Pab7zNOr2LUd3CBUyCa56gwZ3bYVngN6Q4h76QVz)Eg)1OG5e8xTnM4pcD3jO6c(CzmHbsancyZI(kPDz2qNcGguh74zGwVysau6wCZI4zju0qHd6go4spZV54WH((cCiJIB(TYRcL4vawcusOZfELTkByHxfcLQ9jYR0FZ3gVskwA6HbdZWaOKjxljy2C(ZK8VBtFpy4j(6aurWqZgLyzqXd8x)O4InEaCUkXrL1co5JVzCZjWF2Yb308O0CLgXgbOQbF4a8n920WEEm4bVpD559P3OBtdSyJx4KZloTB)xxLUwGlt4xwfPSHvUaojjgdYdUa6RBS0QSGnDYTaUN5QCIuGYpgjSyOZt(m9h9KjeJUslatdA99lRekSqFe2et8VHMBw(1MigNzJRV(Q6CH9mdyJRu5t(LySrlv4Xog4ixpUHziuBJUJuXdpY7plDNHqxBCVJnAs4eiCDfTSEXlaVc0Nosiqedr4n9Aw6FgJR)cY5jwLzT)mmh17SLFRZlPSsHeCv13mzhOwyUlRUaDa1o8UqvDqWRRrfeFissuv0DQcwP9vtwNIvPZ0G0UjOZ2ajuB33GaEp6JMEBxjbz)os)VJ9cQlBhOh4EEH8Q)j35v(9G8MPnDu0jiPhZEr9wIQd7jI9ZuhXs)w3ks(M5TtNCTdeHPk4YLyBklOyJkH8H7(I80r2PsJE3dg0nOUMRqDkrhp5QPYru3HIPykJuP3qFzs8UotwxsDBqOVG6vhkRYFfsfDMdR(op2ErbzVRqjND(DGIido2lZr8o(26cJj9k2Sl4bpiWH(ojWNvTa1q6Trv0bV56zP2oYHd8DHHDNPdBbJfidTadvA3vnSKmSDp1aHwY11cmEz36ogOfnjf9YIqzSeelDrNZ8PQDfNBGDJxpTTqONVgsxYtUc4MvUUzGF77NHJLgYuuebd91wt5BqH63xF7rPRNZU(K00zeVuXDW(P9jRnTe4CJaZ51WAPq2lIHaiMVszvRbg8EKYqP2M9(bp02I)MIXRpCqkcc7BnVfPY4LVGChA)1bPzFfI21O5RNbTe4ERAsTfpUc95MRokOVkpDKx90C05G89BoEuhfMpFJtTBeWjFhOSVNwdQyY3mVKTCRuRqbVLGeb3LxN2cg((5ETBW7W(52Yoayg3DV2x3dNo(7oSLOtRPXZa)PBRXcxpAV(5TvGQ3RKH(2c72HDDHpC36BQdamZTCQ5aMA0YhFs0lyqhDkDQlixSIwu9f1ugg2fszCmKARnLFEjFROTbDN6ykBU(KhF9P43R5ca(1535J1BZ7D()kdhFjJ1uqS1F1nf9xhHhBtQYfr8MMRriWfvoIQhF4mwC(9HtFs8QbE6nnuJWgBmDY1Q7s1nk4MNDag1U78uXlj0g5BSWfdvOG68qEtKGsEYs7A1uX7zwW9idcq1(r70Mv1jr9BQzLtjYBRab8RoxOiipN1DqNAb3xgBrgcEf421J906QROcaek9VeQko8vaV6478vnp9gsQwlYC7vQQjzbXuKPjW09hJoGtERgQjnh6YpqQZU3ehODBTOIWtHAplaoSHwgao1U63QPNgC9n(XULBMeyUZHU2hUwbUoj)W7vgttKq45b(cuozb(NLj6ft7S))p]] )
+spec:RegisterPack( "Balance", 20250425, [[Hekili:T31EZnUns(plU2A0iAp6bPSShNswPMKZ3vtUjpQXZM8hxTsIsIYI3irQLpgBFLk9z)A8GKaGaGGsYEMK4A3koreSrJgD3O7FOjWi7rFA0TZDt8g9loDD639CN(T721(T2JUn5XnEJUDJ7Sp7Eh8Ve4Ug(N)G7k3Gz4F)XvHUZrVECyAe6NwMKSj(7605o)KLPtBplCDNy)1PRCt8ddMf5Uib9FpRZ0vHt7KS07E3O7HM6h05DZqn53I8dJ8tE8d(XjXDMhL6pF8us)1g9IJUDAQ)QK3hmAQmE(YEJU1nnzzy0OBV1F9pcmK)85EKw7fdVoQ1T6EElN(F3UjOMa)ZhdMT7NipOxREDv8a7Z5FWKMjr(bF2lz3KzHbZ9rSFSft77bT)tznzH)dEXfpS7BHh(rVnRCN5TBYxCJ8DNUcAWeK0y3eVzR83edpzTxIBc6rWV9WMiV4yuVWqN(y6So8lqlM65gb9uy06DtItsxSa)FSBsq49mVHdIT(J)agfEUXHb7M4SBs6gKSmRroT6EbMSFXlcy9MiA4bdqlG9cJ(SBuyAW8ykXVpYfXXHB8c8IWu48wDTzLVme)8w2oTCqCWTBECTBCIxeqh)1BIGbWAVGKSwztgzCeysZBtdw4h5zL1QUTCUcA1)P)d7M8UF9MDtUHk3kE(fcu5n7M4o))nnob1BzJHvWiDLFWDmVxpfSFxc7BB3UB7(f)y3lacd)12M8xhB5VF3RA58wOjO)ELYM01M0KUNt)l9vS7s)BFkju1lVfye4r)SB0NHPgqpam12n5p8xnpRfxsgIFc)7i1M)aBgo62vilpShbVfUPRsG)1Fb7HWfBGIm1x5gng01wp6wVaKU58r)WOeWqe1QIFj)fWAie7Vi)nKF7)5gqFYB()cBHC3DGMZKpKgG4JSPWj(aBFp83fU(abHHq4UjGfWmqRb4wIw3doJUfikOg57cER8xdTFawJUrUru7vicp2pySnIl7jWLHBGHKxsb7MzmI(3wLc)5IDt6aguB8wTA8sKo7UjNbSJ7kqdQDGBskywM7KIsz2Megn1pz80ip3p7fv0Gt3nzEys71HHyL62j(Z(mshe9GMGXmy)k8QXjGJ4DtgIFUZL7M0cpupL2yyIjgiIx70n7MyH))WJCoxq0)7V7JV)D)WhU5w8qDmXN(gxWZYx8g7gVbjKoV2cPzHHRMhEFq7zUGOEw7fPG0cMTw6gDN3y6mZ3JCvsBhy4nZBC4IXejy7iV1U(bXSmfqkVfl8GUe4SzZrmw)AZytdJJXQdl8VBzYyA3Gvte555Pr41PWtEzeQTixWWGRaTHXKxgXCxuBMdMhpjxp5(L(riVqJH55O4cfLTBzBfSwZxc)misx6noEJpO8l00IrLKwYo8VB282RDFGOLqExDYiDudKx9QtVpSSWxMcdqw7(y(RyWNefUcP2GO7CWWyDXO3cpp3KzUlmyCAmqTSvHVgCBs4ZkALnPv6AspMoK(7TtSBNpU2JbBZApERHUbWPl9IcHXGh4McCkcETMTmm2la)SJXqOLoBkeRAiF20u9Ob4Pb6B45Vc)V0SKECl0AYy5vNkOCb7Arg1AjQwz2E2Pw10oslp04imVnOI(GAKs57QA6fyMwquQ(fDN)yoP1zm6uYs0z)vJFXs8pVwIYM23ZoDVTeLXdhBlrz9HclrfnTAlrhzwIwshlsJROb2IahBkTzPB4c6mcfq148SNrXqDzTJHk3TGi5Yuhlhud16gecC24ah6gfGf2u7rK5o2aLZuNeGUnrXtFSBqt722PyobnvdswyUECs445(E4jbK2jHxpH11WN9824fL5Y5UiCs(iYGfPGAZ6WGh5ECEO)CHrliIFBTfXAIHUFE4u8ZZI2ocQjWG(8UmbqDmg3CDOI0liI7(IsiQLnNy6QAlMO6cK8nN5UcPqWhBojjsIwqmkFUiuQFyMQhwDQzUgv66PrURaPwIxqSFYJTJCd(mNV74W081JGHRxCcJwQy(23(yK)I)fUp(DkFVBsebaQ5Mb7eRed6FygcpsrYk7U1wyHNlPznJgfUibZsqIfp2nAMlyYrt39m68U82sNEXTLLbNg6Mmg)RXyg0wGb5KoV)t38Z3MbVzCoYuJV3Bkl(cfPekXldjf8I3fKTHrjm5S7CfvjEFsi1QY31Plden8db04xf4m(Rbtnu2TqQ)Z8cMdI4hhh7fLUMDKJaQiMa(gVnC2ONdjdHwWOYcM3UbjXzATO3qz4gkTGhKNSzL(bBOopEmDSnqSQkZy1eMrHWmNvYJSGFfx96xdqXaFvMkSMjvKUGieyz6cOzNzi3WPXGJy3G41(jqFXQi0SwZrLso2pUnVUzPioK0ctg)dVMyGzLVCKzHTLdwy5vQWI)g1AWAYCKk1PVnu0SYuHuPlG0FQp6G5dHGquiAeVbvA79SnWzJGr50NgmbXjwCrwMkO5yToEgwmBRfPk21ZUdT9k(ZYAaFOk2IWIwyrJBTnRj8jvzrscBNVnQ9OiV9kuFK3yuGmR8ssqXphLo9XS5xLcNtii01OIMqmkRcrGSPcnkInjT6mYFoveOHLUXOoV6EdzM3Nn3YC2x50l2KmEvycZKjAgxeRzHzChvZ4s9WkmP4uZzCN6mJ7SxZ45(PRcCetmS6zmLACCtorpUi9ZGOqMou9GdP61SQxhwD4NAnrSLBIitWFumrCWMiIqjKzImfYuc6l4fIzTsQykUHjZW6G1RPziaX6rsiJ68fNzhbOrQyg9zJ0aVuuoKXpg4cP1n2lyjkdQiP50iFtqk5UweritxjwPKHb60sQlJNIlIHdVpYeCQeiiHOy((hjHOJepGphcrNVgcrhrCakKrk9DGCiZK76MWSOACeZzxIaVwXtcHjX4eicwmdTH74Usm94IUIdYgc8rWpcI5ziLMccgLgmM8VpgvcfKcPGg8MBOhUxuL4LU3f(pr)peyPZcxp1TCbzS2n6ZzZL37VAUSYYiVTqg3WGgHxKy5Bu)cJGz7o8wHCjbAfUR8VlavBnC51Fs9WyfnpIR9lY8lxrbWoJVFLQaxC18wSQkXa35ZLtqfKHTOu04vRuKWHFXpW9H4XR9IMLgHKNE3DNIGMfGPcp4abzC2iepwTvvxchJrKexmLI0ZSrKKOsvnICKTlb1zv8cDrOVwHQLPfW)WJtFLiya3ZWRDFYscG9XGUlP(IO417ssPdH9vwlZsCl3YM(7YWDpRnsRpkV86JAPp42bCXohxFGjOc2IVM7Mm1ngX3OiHWpgsyfvKsO6(IIOlResSSOKH1nFUdvjTuSKbdEKuGUlGkU4jmeL3HucXVzM3odfCV7xVr6cfmawJ55mPa4lmh1BMFMdvwuv(qcoJO(ifh4rsQaooX4ZiRivWl6FVG5aIIwqFt49ErTN7TWFMFczH5CYZuFyKnpuOpCxTsMZy2LDW8btVg5TiYlEjQTzrNiB7XAH2McQeGK6Zfm5LzcUYOvtewfVfNXBg3nE(67Y6bo0J0Tzs9YMkmbm6tiXNaIHhNTYlJFqA4sw4jxaNEuLDKDzsqG0bhOQLCgtfwdVmRsHMw5uQ61Pu6nOjNdHGWak8cv4oWs0TOKfCmZD0HZaSEDuLvLGJ)dsbQvEtsdqEUG5VlXEPe0piZwc)iTCa42nFf79kXYXHTKbOUoJxd6uSf3Rfl5uSHWkS2kTxQsuAkxQd8ODRT2M6x7cRCywerJZ6IYgRARKidWINoxEgj6QJadkFZumMl02qUkfU)UI6yqlE(5B0qfGUya(L5DyvOyw)jBzAsYqyvdOqIq3DifS3ZWaqtDovgDvzQANLxhmvVN(S6yxMlQQOmIAyMzwdt1VhQzzWcD7w5z6uwgyw)WhPOqpnswDzuopLIWIzOuA0J54gmsx9nG86QeBfIB0rY2t8kQ6dMoOm0hJKTjPgtqgesgjBV9KLBMIvyAqJFHk)gJ)0D4wa)so1p1KjlsiSPgo)sCT8LhYHBe6d3JFkrmSrUQiWeExv1sr8sMBGkziIInR6bpnl)mc3MjAg2aEYJcsrioL2ObgqpX7Om0279C)cgyd3On5qTIFAsy6SLyRNzHqyeXJZYNItaZMKvj4(11FElskrO4uqIokhZ7s9Ha(HQJhPPcfdovgAWuEO)ml)PQMBl0jnD2)VG1MiNQMehSJYrhpRrbE3JZpsCUJd83LURwiTv9yBfoQrzTsThTtWFzEFzmQYFTBJWGE8604LrHH5BwmkJSfPb3bAc5yQH)E3yCIW(E4EuRRpTZjAx0XrTNPQlHtoFk42vLk9qSwuL13jxVysjEQ0HKZLSZNuuYyNltWBRGoK1e9NZdY2TFQEYmtC2xo9sWq)s9OQ91asT8SRvhXW3aG9PcioPyjv0L06Quso4vJRUg3B4yQPkcvtiPdtLPlRc1mtaNsyOlMsBL4pzKhDtHsQEyVzyCTgaavTcRvDOh1lQw1B4WtiUu5MUAGy55dzmnP(OWcayb5q1puds90GCf1qr7C0D()Fq7whMgKOkard89(cwuvZGvbnWlyrDKGY5fSOEblQ9glk1r01NV8V58XoqUxzDGvPotQ89A3nAvy08Yq5K)KSpQaWeuLZ79BdfLhhIYco2K4S(MlQkL1g6xLTLsbpQowlZu4hu6i(Gl46sFZJ6WiQIWuutlvOxOPqb5uZ5qLHFeW8j(Td)ba1tLFVZvm20uHH1pqlHiQuXlzE81TQaBHkMJStI2Yu8iWVnkJMkbFdwwZ7bVzPjEmWKQdK1sVG1XsSuGLvIKcR8VVYLc070dzNkKIz4DPitJTDuJOSgi7EsWcxduEkQQPQtvcNMOycs4g0S8EgiRzY7alUt2l17krtE329KH0xH8wDc(vH1I2yHCuV4JoK8KNPRZvvJhjfYcjysYH84V9XBg)J)hFB)PAZiek9DyBq(0YXpHVE137DRSO66vHqintKVT(KbpI5PQqav(tSRIVPYVT(c7Qo9wtg3oJOFSbi)ZOhtpCv76G3sGa0jUWOBXNzKaZhIoCqXNFMVMEwr(Au0V)7uWShcLpoeTWMBAs4A3e0pmBPBWDEXT39tFWhbDg68N8hHWd9IWpoeKgytiWaZhSJE9fVI5mx8mQBhfN3Izpw6zT4PYoNfpTj2nGKtyXHnDUSLZPeVefNPIwwN6ComcrNdLV(IoFdYB5s2l4LSVotpQmUmzJhnq3anPP9dwpre)jISVWZVWZVWZgs86rw35pQNOKguF(1icxjjldDBjIkTjgXV7hXRKS730MH88(r8kj7(jkmKN3pI)er2x45)2XZYCfjPb1NFnIWQizPiKBEI29Qz72tQENA2UnV31GM8akKeN6SDlxYWdm5TpRNz9YWIgPAxJpZU)PgSZBwnAQiLOR7UDRYNzVDRQh1diPghMMW6nnK3nAERHIV6Yghgt2sSjzaBSDRb8uttMLh0dANN)QMn50KAz316vAF)mwXAOSxxZ4UgK2Yqnvn9wJdqkpqdDbvFG701GlgYjsu1yWhJLAfDhg98Yosnqf6f98Nh98Yto1G01wpVCVDC0Zltxb9CjnqTEU4APwwL4sHv0ACcFXHNT88lRT(YAR)LYNthZCmSpRTAiPRTpNxwB9f98Vo65YxB1qsxB98)2S2AEMT29uIwvPDptcCvYAdxY4kPVKDNtsc5vt)ZRi18CpaSNxvB3I2r5g8lYxSXC8NtSnAQR02QufJ4iQPU96(mvD9RUWAOZvnu94HoDv7IRBM48p1sGohKeOqnP)tSAUw6REdML3xABFn6xfBuT8ovDJRrpkEEYQqwwUvM1h7hKJpTu3e6spE2KqUIN8uYJpTuVGUQHETARmtC2RL(1WkR62xJ(1uRSkACn6XkTYu1kZ6J9BJQEAP(tfD)AZ1mMtzHnQZKJPnMX37l9F6O8xFo3wP)yBL(JpU6fpTuxjDlfC8j68(24et9xk2sfo5eBMOdkLWznWrBIW6IbSxfVzJMNOT4CH4K1h6RSCF7B9kDQOYt5nVzk(ABQMSwsdQVPt3ZC6EAZYk56endC6BXIFIYd9DRmnYx0LEI0L680OlPNSFL0LkCD9wtCjAuLkj6S94rztOj7jZS61BYEmpNEv1lnAyLm80rztOPwzqPht50D)KK6Bo)Wx)11QcNvNZ6bm9OnryPh32s6ann18o7WXVqDqy71Cxve1ybK2MAENDiPEkvp0n07G0alfjgZN1AJML)GwBrDLAn8Iwn5(SvFLt(kW7nn64W65TRj(hnoyurpphxQxt6AKx99IJnIYvtZ9dagt549J61KUgTQXEXXgrzvwSX1CjdBhtM2nwrvCaFCPEnPRrkR7fhBeLRMM7NIQPC8(r9AsxJuw3lo2ikRjaQXZMxptHZFAJ9ql5RbOUv3EZ7wtX0To7CIAq3RwmAa44AjFneJv3EZ7wtfJMbn(UF69yDzu)0p7laF3e05Tgszf9z(6ndDOI5G(mMdx4Jodv(h)JDtwMKSj(7605o)KLPtbtL1DI9xNUchb2Si3fjO)7zDMUkCAhiN87DJq3d3(bDEhUp(n0zWOFYJFa1tDWxis5FBHOxC3pH6L)5gYWAo(sFHCrEFR)6FeeqVBte6wc0HC42pDAFNfxCfAargdXTZZR5SR7iEnsPOvmxGuYBrw(2Vb9nAFn7M)(g8v4Z15fMs5JyUgzpZx91e12TSxnuMWd84Pq5IUePh7fJ(n47CNDKlrNPERcVh)XZMrSyICEQh5RUf8AnJkQFnoC6eGXrAg1NJc3CT785VXFX1fEdyZWPa1j1zUj0gEJw6y2(nf3PsibWrGrDuWOQZGsOnszuhbgfnt9X8Ryj0Sa9J1hV6Y)ngZlYfEeEU7)cJTv72YhHz3jtOHHwGZY1g5ovGAqpciKC5qnWUl(Pcxku4raOQDCVtNKp4WKbnYYoucZUMNK38SJPb0BiF0Q6(aub5yEvghnOhHoOlgp1ZDnryCtUWiY)U7qd5pqoOfVj7yr1hgR3d)DHl4rDozAh1zG2YUj)brC9GdBFKp4rtjdCAikdgBJ77F)DF89V7h(Wn3Y(U869mNChuvst(A0L(LEFe)cVvZVc1NcLNZdotzrKn47ZBJQtBlL95kqsmMqzA)jb6wrwidPxLvEJM5eHdAsANQOqT1waKvw7qeM)pjfM9tBbzlzphmGJROov1xFQvwxQ7fpTxLL6bxoQg(9yOTCulpCRbLRB1OwUZokfJAzYYxlQsEUYsrvm1EZQ46YjxBGsZlkY1uDtRIC5PGAq56QixUZokkYLjlVISKNRurwe)K6xs1AcjO8sL5gjIlL2OPWgUA3)SC1En5IzDAt7wsx(90UTDqcLsBhWq7dCdRTS0mMPQfIdCjbM0pR0GZfLSQxCY(HN316W4zgsRimRHGoejWyMes)D6GdbB2MvUZqrbtsWp)UdyThKyaPnEpatRXX4uqrjmPsiLD0Zr75mruQQZ3WbFVMtSoLtfEfhE60EGQNWDWXTDR8BnJH9A1K2EPxgF5E6kFdzOr9G5edLDutJEhrg0PQpcbM7Ih7gnZnWJwN4AAhDEKKqkAg89F6MFMl1c06rqYoRjmHqcVq2kfHcZzsQRW1h6CL0kLqL3l51vHtx1SPAO4qSmkNg6XiCHvsJMCP6K)75twso6FzwwsHLXGEv4pqzv6pWwXOwmC(NWpabRg6MghCTZvQNcuGmjs(30aXgBi8LaAHDnOspuptpeyA0hwHjlgdjHx2PkixAya7xLGtCw85DEvJBgLfAK4YW)z8lJ5G(2GKQRJoccZWt0MaeLA9wbyonPG(0TzjIOMAA58DY12nu(OIc2tskhi5JbL4MtPkCRmTmVa3QuU7Wj31wjLgxiLMvhL7DzuU3vr5Zzru(kjZEhEnuQLQMvcLLRGYdPakvVg2u0w8eGu1IRgVD9Iyv5s3S6S6iwDCr7RHNd8sXxQZpg4Ic41lyjkSViUq1eXsJ1rcFoDv5RwXWcdSG4Kfztw2tcEuhWoSwWh9bSZrFato4JrJijghx3JUht)27XNvUF8F(l7M8UF7dI5r5twm17bWdwaiWqSffBA0PmoOzTinM2nsdQNLJkorN5AELXey3NLkrPbSxdyeUXn07nXGSCgOyIioxowdTR89Jtq7Ddm0F3VEtXg9auLDpwY5yMm9Au(6TRHWTJ1G8BgRgNOxgr7qUTO6zTtHK8qDQRKds(bmyPuSvrNDHiDYsg6nC3WhKzfZRBYg57XHKmOesHUL7S8nGmR3hpF9DdVWaqi6rHxszQwNGps0ffwPhHXy56l9V6YsIOKXdJOfMk4OYvMplduqPMfnfUS62UvPvHLm(G1WZCwrUjA94L64X5qOC1UwomQZSz4hGsBlYJgE5zCkNwn4(ph00ohkwPqM1QPtgIUupAXRHjvViRwYqMR0WrqpNBcrep5YqPkzNv6xX2AMVtifMSssNTYKDXYWZS7AAVTx71R2gLVN39F23P2QKXQX8gfXSQqA379B74Wos21e(KOYNlpRV6zto6F2Lw5OuYVrgn0SLAMOAmu5cfzQfTS72qo7RvLRuSgC3ZCSLaeZDnSWRiElYYwOfLAB5Y1R64CPVlZwiz87iEhuZwIsCEQAOE7jgCz(Sk)RqwAM)sRxZIdnL3XY37IRTTOzSWZtPB0XPKoV4IfkFDLILCORbjFzmAWQem9skDllrt)v3nSKmYIVOHKtx69fLcEPK2tznzIGT8ebDYHUiMh6p4sGsH4gnhRBI4pfB9xP50SR9nXFp)EpRS1)QvsFa31Qp2is1D1FJtuEl9BqWa6fs6SUKVXGC2kROx0(k0bg2u9(fQBRcLhRjn5xYDnvrliUfp7BJ9ZJpG9CwBoEgqgIRGml(Zk5o96WgW76WSNdyNYB2KejScSrKVCr(BvGXJPVX3g7bXEg33bniF2b8xDaJkghyBWB)uXakorrubY9FiFjBX03U(sXo45dFR4svG9ZvFQdWgcf7TDlx6P6bUxZsCq85WCH(xxkpBjW0Mc)t(iOcKEQCz5QaWrG)mlwAst3RqPXVA9IK2an69dHddvDpqINh9P8vuLbm7qP4YsdUwCMw8Y7KNdEbWJxa84fap(MeWdI9PiEh9ptMX)azUj05SjlDHeYvqEJ8uFlU39h0RoROwCZXVFRO98Uo2tnS16e9MOhu8v5We3GyD)kUGRC0hm(9Ldfc7fu)WZl4gMYmD419enipxG2zz6JiT5ROjS0LSAHtLNfMnqMWb5ykCqSGaMxCLq8q2B7CHu75GbJRHwh0OkhqK)snQmcuoDG9LDbUllwUJjgIL5wP7JUUW1KErSFwt6tZI(SudKrsRtLHiB2mqZmxk9SeDpDaaDvkgzzjKklwD8DW8O))p]] )

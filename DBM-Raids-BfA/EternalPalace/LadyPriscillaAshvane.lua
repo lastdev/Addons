@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2354, "DBM-Raids-BfA", 2, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241214213203")
+mod:SetRevision("20250307060206")
 mod:SetCreatureID(152236)
 mod:SetEncounterID(2304)
 mod:SetUsedIcons(1, 2, 3, 4, 6, 7)
@@ -168,7 +168,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			else
 				--Easy: n, 16, 37.9, 16.5, 16, 24
 				local timer = easyUpSurgeTimers[self.vb.upsurgeCast+1]
-				if timer then
+				if timer and timer > 0 then
 					timerUpsurgeCD:Start(timer, self.vb.upsurgeCast+1)
 				end
 			end

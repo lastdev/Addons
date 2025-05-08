@@ -1,4 +1,4 @@
---Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.6.0
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.6.8
 
 if not (GetLocale() == "ruRU") then return end;
 
@@ -17,6 +17,8 @@ L["Quick Slot Layout Linear"] = "Линейный";
 L["Quick Slot Layout Radial"] = "Радиальный";
 L["Restriction Combat"] = "Не работает в бою";    --Indicate a feature can only work when out of combat
 L["Map Pin Change Size Method"] = "\n\n*Вы можете изменить размер штифта на карте мира - Фильтр карты - Plumber";
+L["Toggle Plumber UI"] = "Переключить интерфейс Plumber";
+L["Toggle Plumber UI Tooltip"] = "Показать следующий интерфейс Plumber в режиме редактирования:\n%s\n\nЭтот флажок управляет только их видимостью в режиме редактирования. Он не включает и не отключает эти модули.";
 
 
 --Module Categories
@@ -27,7 +29,7 @@ L["Module Category General"] = "Общие";
 --- order: 2
 L["Module Category NPC Interaction"] = "Взаимодействие с НПС";
 --- order: 3
---L["Module Category Tooltip"] = "Tooltip";   --Additional Info on Tooltips
+L["Module Category Tooltip"] = "Подсказка";   --Additional Info on Tooltips
 --- order: 4
 L["Module Category Class"] = "Класс";   --Player Class (rogue, paladin...)
 
@@ -206,6 +208,14 @@ L["ModuleName ExpansionLandingPage"] = WAR_WITHIN_LANDING_PAGE_TITLE or "Рез�
 L["ModuleDescription ExpansionLandingPage"] = "Отображение дополнительной информации на странице:\n\n- Уровень пакта с Отрезанными нитями";
 L["Instruction Track Reputation"] = "<Нажмите Shift, чтобы отслеживать эту репутацию>";
 L["Instruction Untrack Reputation"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Нажмите Shift, чтобы остановить отслеживание>";
+L["Error Show UI In Combat"] = "Вы не можете переключать этот интерфейс во время боя.";
+
+
+--Landing Page Switch
+L["ModuleName LandingPageSwitch"] = "Отчет о миссии на мини-карте";
+L["ModuleDescription LandingPageSwitch"] = "Получите доступ к отчетам о миссиях гарнизона и оплоту класса, ПКМ на кнопке Сводка известности на мини-карте.";
+L["Mission Complete Count Format"] = "%d Готовность к завершению";
+L["Open Mission Report Tooltip"] = "ПКМ, чтобы открыть отчеты о миссиях.";
 
 
 --WorldMapPin_TWW (Show Pins On Continent Map)
@@ -220,6 +230,10 @@ L["Item Level Abbr"] = ITEM_LEVEL_ABBR or "iLvl";
 L["Delves Reputation Name"] = "Путешествие в вылазки";
 L["ModuleName Delves_SeasonProgress"] = "Вылазки: Путешествие в вылазки";
 L["ModuleDescription Delves_SeasonProgress"] = "Отображение шкалы прогресса в верхней части экрана каждый раз, когда вы получаете опыт для вылазки";
+L["ModuleName Delves_Dashboard"] = "Вылазки: Еженедельная награда";
+L["ModuleDescription Delves_Dashboard"] = "Отображать прогресс Великого хранилища и Позолоченных тайников на панели Вылазок.";
+L["Delve Crest Stash No Info"] = "Эта информация недоступна в вашем текущем местоположении.";
+L["Delve Crest Stash Requirement"] = "Появляется на 11-м уровне многообещающих вылазок.";
 
 
 --WoW Anniversary
@@ -289,6 +303,23 @@ L["ModuleName BlizzardSuperTrack"] = "Точка маршрута: Таймер 
 L["ModuleDescription BlizzardSuperTrack"] = "Добавьте таймер к вашей активной точке маршрута, если в подсказке к ее маркеру на карте есть такой таймер.";
 
 
+--ProfessionsBook
+L["ModuleName ProfessionsBook"] = PROFESSIONS_SPECIALIZATION_UNSPENT_POINTS or "Нерастраченные знания";
+L["ModuleDescription ProfessionsBook"] = "Отображение количества неизрасходованных знаний специализации профессии в пользовательском интерфейсе книги профессий";
+L["Unspent Knowledge Tooltip Format"] = "У вас есть |cffffffff%s|r неизрасходованных знаний специализации профессии."  --see PROFESSIONS_UNSPENT_SPEC_POINTS_REMINDER
+
+
+--TooltipProfessionKnowledge
+L["ModuleName TooltipProfessionKnowledge"] = L["ModuleName ProfessionsBook"];
+L["ModuleDescription TooltipProfessionKnowledge"] = "Покажите количество неизрасходованных знаний вашей специализации профессии.";
+L["Available Knowledge Format"] = "Доступные знания: |cffffffff%s|r";
+
+
+--MinimapMouseover (click to /tar creature on the minimap)
+L["ModuleName MinimapMouseover"] = "Цель на миникарте";
+L["ModuleDescription MinimapMouseover"] = "Alt+Клик на существе на мини-карте, чтобы сделать его целью.".."\n\n|cffd4641c- " ..L["Restriction Combat"].."|r";
+
+
 --Loot UI
 L["ModuleName LootUI"] = HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Окно добычи";
 L["ModuleDescription LootUI"] = "Заменить стандартное окно добычи и предоставить некоторые дополнительные функции:\n\n- Быстрый сбор предметов.\n\n- Исправлена ​​ошибка сбоя автоматического сбора добычи.\n\n- Показывать кнопку взять все при ручном сборе.";
@@ -331,8 +362,30 @@ L["QuickSlot Error 3"] = "Быстрый слот: контроллер с то�
 --Plumber Macro
 L["PlumberMacro Drive"] = "Макрос Plumber Р.А.З.Г.О.Н.";
 L["PlumberMacro Drawer"] = "Plumber макрос ящика";
+L["PlumberMacro DrawerFlag Combat"] = "Ящик будет обновлен после выхода из боя.";
+L["PlumberMacro DrawerFlag Stuck"] = "Что-то пошло не так при обновлении ящика.";
 L["PlumberMacro Error Combat"] = "Недоступно в бою";
 L["PlumberMacro Error NoAction"] = "Нет поддерживаемых действий";
+L["PlumberMacro Error EditMacroInCombat"] = "Невозможно редактировать макросы во время боя";
+L["Random Favorite Mount"] = "Случайное избранное средство передвижения"; --A shorter version of MOUNT_JOURNAL_SUMMON_RANDOM_FAVORITE_MOUNT
+L["Dismiss Battle Pet"] = "Отпустить боевого питомца";
+L["Drag And Drop Item Here"] = "Перетащите предмет сюда.";
+L["Drag To Reorder"] = "ЛКМ и перетащите, чтобы изменить порядок.";
+L["Click To Set Macro Icon"] = "Ctrl-клик, чтобы установить как значок макроса";
+L["Unsupported Action Type Format"] = "Неподдерживаемый тип действия: %s";
+L["Drawer Add Action Format"] = "Добавить |cffffffff%s|r";
+L["Drawer Add Profession1"] = "Первая профессия";
+L["Drawer Add Profession2"] = "Вторая профессия";
+L["Drawer Option Global Tooltip"] = "Эта настройка является общей для всех макросов Ящика.";
+L["Drawer Option CloseAfterClick"] = "Закрыть после кликов";
+L["Drawer Option CloseAfterClick Tooltip"] = "Закройте ящик после нажатия любой кнопки в нем, независимо от того, успешное это действие или нет.";
+L["Drawer Option SingleRow"] = "Один ряд";
+L["Drawer Option SingleRow Tooltip"] = "Если этот флажок установлен, все кнопки располагаются в одной строке, а не по 4 предмета в строке.";
+L["Drawer Option Hide Unusable"] = "Скрыть бесполезные действия";
+L["Drawer Option Hide Unusable Tooltip"] = "Скрыть бесполезные предметы и неизученные заклинания.";
+L["Drawer Option Hide Unusable Tooltip 2"] = "Расходные материалы, такие как зелья, всегда будут отображаться."
+L["Drawer Option Update Frequently"] = "Часто обновляйте";
+L["Drawer Option Update Frequently Tooltip"] = "Попробуйте обновить состояние кнопок всякий раз, когда в ваших сумках или книгах заклинаний происходят изменения. Включение этой опции может немного увеличить использование ресурсов.";
 
 
 --Generic
@@ -373,6 +426,8 @@ L["Scenario Delves"] = "Вылазка";
 L["GameObject Door"] = "Дверь";
 L["Delve Chest 1 Rare"] = "Богатый сундук";   --We'll use the GameObjectID once it shows up in the database
 
+L["Season Maximum Colon"] = "Максимум за сезон:";
+
 
 --Map Pin Filter Name (name should be plural)
 L["Bountiful Delve"] =  "Многообещающая вылазка";
@@ -392,4 +447,4 @@ L["Upgrade Track 2"] = "Искатель приключений";
 L["Upgrade Track 3"] = "Ветеран";
 L["Upgrade Track 4"] = "Защитник";
 L["Upgrade Track 5"] = "Герой";
-L["Upgrade Track 6"] = "Эпохальный";
+L["Upgrade Track 6"] = "Легенда";

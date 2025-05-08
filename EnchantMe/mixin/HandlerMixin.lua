@@ -1,5 +1,5 @@
 local _, addon = ...
-local HandlerMixin, private = addon.namespace('HandlerMixin')
+local HandlerMixin = addon.namespace('HandlerMixin')
 
 HandlerMixin.unit = nil
 HandlerMixin.slots = nil

@@ -1,10 +1,16 @@
 # <DBM Mod> Raids (WoTLK)
 
-## [r340](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r340) (2025-01-08)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r339...r340) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
+## [r342](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r342) (2025-04-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r341...r342) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
 
-- Add cataclysm PTR toc  
-- Blizzard code is ass, so partial revert of last  
-- Assign groups and categories for new addon manager in 11.1  
-- remove 11.0.5 and Add 11.1  
-- Use new core object for this  
+- surprised this is erroring now when it wasn't before  
+- apparently i never remembered to bump tocs  
+- for pretty  
+- streamline it like retail so it's test/build cycles that don't conflict  
+- combine checks  
+- fixes?  
+- fixup CI  
+- Fix and close https://github.com/DeadlyBossMods/DBM-WotLK/issues/71  
+- replace one global, rest are a lie  
+- switch wrath to luaLS global checks  
+- api updates  

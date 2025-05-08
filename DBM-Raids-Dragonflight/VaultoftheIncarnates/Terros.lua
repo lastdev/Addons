@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2500, "DBM-Raids-Dragonflight", 3, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240912084847")
+mod:SetRevision("20250307060144")
 mod:SetCreatureID(190496)
 mod:SetEncounterID(2639)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -136,7 +136,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.awakenedIcon = 1
 		self.vb.rockCount = self.vb.rockCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.rockCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerRockBlastCD:Start(timer, self.vb.rockCount+1)
 		end
 	elseif spellId == 377166 then
@@ -156,7 +156,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnShatteringImpact:Show()
 		specWarnShatteringImpact:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.impactCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerShatteringImpactCD:Start(timer, self.vb.impactCount+1)
 		end
 	elseif spellId == 376279 then
@@ -166,13 +166,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnConcussiveSlam:Play("defensive")
 		end
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.slamCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerConcussiveSlamCD:Start(timer, self.vb.slamCount+1)
 		end
 	elseif spellId == 396351 then
 		self.vb.infusedCount = self.vb.infusedCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, false, spellId, self.vb.infusedCount+1)
-		if timer then
+		if timer and timer > 0 then
 			timerInfusedFalloutCD:Start(timer, self.vb.infusedCount+1)
 		end
 	end

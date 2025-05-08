@@ -1,4 +1,4 @@
-## Interface: 11505, 11506
+## Interface: 11507
 ## Category: DBM
 ## Group: DBM-Test
 ## Title:|cffffe00a<|r|cffff7d0aDBM Tests|r|cffffe00a>|r |cff69ccf0Tests for Vanilla and Season of Discovery mods|r
@@ -7,6 +7,17 @@
 ## DefaultState: enabled
 ## LoadOnDemand: 1
 ## X-DBM-Test: true
+
+# Scarlet Enclave
+Season of Discovery/ScarletEnclave/Balnazzar.lua
+Season of Discovery/ScarletEnclave/Beatrix.lua
+Season of Discovery/ScarletEnclave/Solistrasza.lua
+Season of Discovery/ScarletEnclave/Beastmaster.lua
+Season of Discovery/ScarletEnclave/Mason.lua
+Season of Discovery/ScarletEnclave/RebornCouncil.lua
+Season of Discovery/ScarletEnclave/LillianVoss.lua
+Season of Discovery/ScarletEnclave/Caldoran.lua
+Season of Discovery/ScarletEnclave/Trash-Synthetic.lua
 
 # Nax
 Season of Discovery/Naxxramas/AnubRekhan.lua

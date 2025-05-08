@@ -13,7 +13,6 @@ HealBot_Aux_luVars["AuxFluidBarOpacityFreq"]=0.088
 HealBot_Aux_luVars["AuxFluidBarFreq"]=0.088
 HealBot_Aux_luVars["FluidBarSmoothAdj"]=5
 HealBot_Aux_luVars["TestBarsOn"]=false
-HealBot_Aux_luVars["WaitOnFullClear"]=false
 
 local hbCustomRoleCols={["TANK"]={}, ["HEALER"]={}, ["DAMAGER"]={}}
 function HealBot_Aux_SetCustomRoleCols()
@@ -123,10 +122,7 @@ local function HealBot_Aux_clearAllBar(id)
             xButton.aux[id]["CLEAR"]=true
         end
     end
-    if not HealBot_Aux_luVars["WaitOnFullClear"] then
-        HealBot_Aux_luVars["WaitOnFullClear"]=true
-        HealBot_Timers_Set("LAST","AuxBarsReset")
-    end
+    HealBot_Timers_Set("LAST","AuxBarsReset")
 end
 
 local vText,sLen="",0
@@ -297,33 +293,28 @@ end
 
 function HealBot_Aux_barsReset()
       --HealBot_setCall("HealBot_Aux_barsReset")
-    HealBot_Timers_Set("AUX","ClearAllMarkedBars")
-end
-
-function HealBot_Aux_doResetBars()
-      --HealBot_setCall("HealBot_Aux_doResetBars")
-    HealBot_Timers_Set("AUX","SetBars")
-    HealBot_Timers_Set("AUX","UpdateAllAuxBars")
-    HealBot_Timers_Set("AUX","UpdateAllAuxByType")
-    HealBot_Timers_Set("PLAYER","PlayerTargetChanged")
-    HealBot_Options_framesChanged(false, false, false, false, true)
-    HealBot_Timers_Set("LAST","UpdateAllUnitBars")
-    HealBot_Timers_Set("AURA","CheckUnits")
-    HealBot_Timers_Set("LAST","AuxBarsReset")
+    HealBot_Update_AuxClearAllMarkedBars()
+    HealBot_Aux_luVars["FluidInUse"]=HealBot_Aux_luVars["TmpFluidInUse"]
 end
 
 function HealBot_Aux_resetBars()
       --HealBot_setCall("HealBot_Aux_resetBars")
     if HealBot_retLuVars("Loaded") then
-        if HealBot_Aux_luVars["WaitOnFullClear"] then
-            HealBot_Timers_Set("AUX","ResetBars",true) -- All recall require a delay
-        else
-            HealBot_Aux_luVars["WaitOnFullClear"]=true
-            HealBot_Options_clearAuxBars()
-            HealBot_Timers_Set("AUX","doResetBars")
+        HealBot_Aux_luVars["TmpFluidInUse"]=HealBot_Aux_luVars["FluidInUse"]
+        if HealBot_Aux_luVars["FluidInUse"] then
+            HealBot_Aux_luVars["FluidInUse"]=false
         end
+        HealBot_Options_clearAuxBars()
+        HealBot_Options_setAuxBars()
+        HealBot_Update_AllAuxBars()
+        HealBot_Aux_UpdateAllAuxByType()
+        HealBot_PlayerTargetChanged()
+        HealBot_Options_framesChanged(false, false, false, false, true)
+        HealBot_Timers_Set("LAST","UpdateAllUnitBars")
+        HealBot_Timers_Set("AURA","CheckUnits")
+        HealBot_Aux_barsReset()
     else
-        HealBot_Timers_Set("AUX","ResetBars",true,true) -- All recall require a delay
+        HealBot_Timers_Set("AUX","ResetBars",true) -- All recall require a delay
     end
 end
 
@@ -1067,32 +1058,32 @@ function HealBot_Aux_ClearOverHealBar(button)
 end
 
 -- Highlight
-local hbAuxHightlightAssigned={[1]={},[2]={},[3]={},[4]={},[5]={},[6]={},[7]={},[8]={},[9]={},[10]={}}
-function HealBot_Aux_clearHightlightAssigned(frame,id)
-      --HealBot_setCall("HealBot_Aux_clearHightlightAssigned")
+local hbAuxHighlightAssigned={[1]={},[2]={},[3]={},[4]={},[5]={},[6]={},[7]={},[8]={},[9]={},[10]={}}
+function HealBot_Aux_clearHighlightAssigned(frame,id)
+      --HealBot_setCall("HealBot_Aux_clearHighlightAssigned")
     if frame and id then
-        if hbAuxHightlightAssigned[frame] and hbAuxHightlightAssigned[frame][id] then
+        if hbAuxHighlightAssigned[frame] and hbAuxHighlightAssigned[frame][id] then
             HealBot_Aux_clearAllBar(id)
-            hbAuxHightlightAssigned[frame][id]=nil
+            hbAuxHighlightAssigned[frame][id]=nil
         end
     else
         for f=1,9 do
-            for id in pairs(hbAuxHightlightAssigned[f]) do
+            for id in pairs(hbAuxHighlightAssigned[f]) do
                 HealBot_Aux_clearAllBar(id)
             end
-            hbAuxHightlightAssigned[f]={};
+            hbAuxHighlightAssigned[f]={};
         end
     end
 end
 
-function HealBot_Aux_setHightlightAssigned(frame, id)
-      --HealBot_setCall("HealBot_Aux_setHightlightAssigned")
-    hbAuxHightlightAssigned[frame][id]=true
+function HealBot_Aux_setHighlightAssigned(frame, id)
+      --HealBot_setCall("HealBot_Aux_setHighlightAssigned")
+    hbAuxHighlightAssigned[frame][id]=true
 end
 
 function HealBot_Aux_UpdateHighlightBar(button)
       --HealBot_setCall("HealBot_Aux_UpdateHighlightBar", button)
-    for id in pairs(hbAuxHightlightAssigned[button.frame]) do
+    for id in pairs(hbAuxHighlightAssigned[button.frame]) do
         if hbv_Aux_GetBarVar("COLOUR", button.frame, id) == 1 then
             button.aux[id]["R"]=0.4
             button.aux[id]["G"]=1
@@ -1104,7 +1095,7 @@ end
 
 function HealBot_Aux_ClearHighlightBar(button)
       --HealBot_setCall("HealBot_Aux_ClearHighlightBar", button)
-    for id in pairs(hbAuxHightlightAssigned[button.frame]) do
+    for id in pairs(hbAuxHighlightAssigned[button.frame]) do
         HealBot_Aux_clearBar(button, id)
     end
 end

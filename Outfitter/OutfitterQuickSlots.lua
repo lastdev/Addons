@@ -1,6 +1,7 @@
-----[[----------------------------------------
+----------------------------------------
 Outfitter._FlyoutQuickSlots = {}
 ----------------------------------------
+
 function Outfitter._FlyoutQuickSlots:Construct()
 	for _, vSlotName in ipairs(Outfitter.cSlotNames) do
 		local vSlotButton = _G["Character"..vSlotName]
@@ -9,8 +10,8 @@ function Outfitter._FlyoutQuickSlots:Construct()
 			Outfitter:HookScript(vSlotButton, "PostClick", function (...) self:PostClick(...) end)
 		end
 	end
-
-	local vFlyoutSettings = PaperDollItemsFrame.flyoutSettings or {} -- flyoutSettings are only in live
+	
+	local vFlyoutSettings = PaperDollItemsFrame.flyoutSettings
 	local vOrigGetItemsFunc = vFlyoutSettings.getItemsFunc
 	vFlyoutSettings.getItemsFunc = function (pSlotID, pItemTable, ...)
 		vOrigGetItemsFunc(pSlotID, pItemTable, ...)
@@ -33,14 +34,12 @@ function Outfitter._FlyoutQuickSlots:Construct()
 end
 
 function Outfitter._FlyoutQuickSlots:PreClick(pButton, ...)
-	if not Outfitter.Settings.Options.QuickslotFlyouts or Outfitter:IsClassicEra() then return end
 	self.CurrentInventorySlot = Outfitter.cSlotIDToInventorySlot[pButton:GetID()]
 end
 
 function Outfitter._FlyoutQuickSlots:PostClick(pButton, ...)
-	if not Outfitter.Settings.Options.QuickslotFlyouts or Outfitter:IsClassicEra() then return end
 	local vSlotItemLink = Outfitter:GetInventorySlotIDLink(pButton.id or pButton:GetID())
-
+	
 	if EquipmentFlyoutFrame:IsVisible() and EquipmentFlyoutFrame.button == pButton then
 		EquipmentFlyoutFrame:Hide()
 
@@ -60,4 +59,3 @@ function Outfitter:InitializeQuickSlots()
 end
 
 Outfitter:RegisterOutfitEvent("OUTFITTER_INIT", function () Outfitter:InitializeQuickSlots() end)
---]]

@@ -534,6 +534,12 @@ local QuestExceptions = {
   [80670] = "Weekly", -- Eyes of the Weaver
   [80671] = "Weekly", -- Blade of the General
   [80672] = "Weekly", -- Hand of the Vizier
+    -- Hallowfall Fishing Derby
+  [83529] = "Weekly", -- Hallowfall Fishing Derby
+  [83530] = "Weekly", -- Hallowfall Fishing Derby
+  [83531] = "Weekly", -- Hallowfall Fishing Derby
+  [83532] = "Weekly", -- Hallowfall Fishing Derby
+  [82778] = "Weekly", -- Hallowfall Fishing Derby
   -- Special Assignments
   [82355] = "Weekly", -- Special Assignment: Cinderbee Surge (Completing)
   [81649] = "Weekly", -- Special Assignment: Titanic Resurgence (Completing)
@@ -630,6 +636,7 @@ local QuestExceptions = {
   [83362] = "Weekly", -- A Shrouded Path Through Time - MOP Timewalking
   [83364] = "Weekly", -- A Savage Path Through Time - WOD Timewalking
   [83360] = "Weekly", -- A Fel Path Through Time - LEG Timewalking
+  [86731] = "Weekly", -- An Original Path Through Time - CLA Timewalking
   [83345] = "Weekly", -- A Call to Battle - Battlegrounds
   [83347] = "Weekly", -- Emissary of War - Mythic Dungeons
   [83357] = "AccountWeekly", -- The Very Best - PvP Pet Battles
@@ -650,6 +657,7 @@ local TimewalkingItemQuest = {
   [55498] = 1971, -- The Shimmering Crystal - WOD Timewalking - Alliance
   [55499] = 1971, -- The Shimmering Crystal - WOD Timewalking - Horde
   [64710] = 2274, -- Whispering Felflame Crystal - LEG Timewalking
+  [83285] = 2634, -- The Ancient Scroll - CLA Timewalking
 }
 
 for questID, tbl in pairs(TimewalkingItemQuest) do

@@ -124,6 +124,8 @@ L.LogCurrentMPlus			= "현재 확장팩 (또는 리믹스) 신화+ 던전"--Reta
 L.LogCurrentMythicZero		= "현재 확장팩 (또는 리믹스) 신화 0단 던전"--Retail Only
 L.LogTWDungeons				= "시간여행 또는 크로미의 시간 던전 (리믹스 제외)"--Retail Only
 L.LogCurrentHeroic			= "현재 확장팩 영웅 던전 (알림: 던전 찾기를 통해 영던을 돌면서 로그를 기록하고 싶다면 던전 찾기 기록 안함 옵션을 끄세요)"
+L.LogDelves					= "현재 레벨 구렁"--Retail Only
+L.LogChallenges					= "현재 레벨 특수한 도전 (토르가스트, 환영, 마법사 탑 등)"--Retail Only
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "기타 기능"
@@ -381,9 +383,10 @@ L.AreaTitle_BarSetupSmall 	= "작은 바 설정"
 L.AreaTitle_BarSetupHuge 	= "커다란 바 설정"
 L.AreaTitle_BarSetupVariance		= "가변적 바 설정"
 L.EnableHugeBar 			= "커다란 바 사용 (일명 바 2)"
-L.EnableVarianceBar 				= "가변적 바 사용"
+L.EnableVarianceBar 				= "편차 바 사용"
+L.VarianceColor						= "편차 바 색상"
 L.VarianceTransparency				= "바 투명도: %0.1f"
-L.VarianceTimerTextBehavior			= "가변적 타이머 텍스트 작동 방식 설정"
+L.VarianceTimerTextBehavior			= "편차 타이머 텍스트 작동 방식 설정"
 L.ZeroatWindowEnds					= "타이머 마지막 지점을 0으로 설정"
 L.ZeroatWindowStartPause			= "타이머 시작 지점을 0으로 하고 0에서 정지"
 L.ZeroatWindowStartRestart			= "타이머 시작 지점을 0으로 하고 0에서 재시작"
@@ -660,6 +663,7 @@ L.ExportTestFailedNonAnonString		= "경고: 문자열 %q 익명화되지 않은 
 L.CreatedTest						= "%d개의 이벤트로 테스트를 %.1f초에 걸쳐 작성했습니다."
 L.NoLogsFound						= "Transcriptor 가져오기에 로그 데이터가 들어있지 않습니다."
 L.NoTestDataAvailable				= "사용 가능한 테스트 데이터 없음"
+L.TestDataLoading					= "테스트 로딩 중..."
 L.NoLogSelected						= "테스트 작성 실패: 선택한 로그가 없습니다."
 L.LogAlreadyImported				= "테스트 작성 실패: 이미 가져온 것입니다."
 

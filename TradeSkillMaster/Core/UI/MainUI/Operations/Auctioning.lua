@@ -259,7 +259,7 @@ function private.GetAuctioningSettings(self, button)
 end
 
 function private.AddBlacklistPlayers(frame)
-	if ClientInfo.IsRetail() or ClientInfo.IsCataClassicPatch442() then
+	if not ClientInfo.IsVanillaClassic() then
 		return
 	end
 	frame:AddChild(TSM.MainUI.Operations.CreateLinkedSettingLine("blacklist", L["Blacklisted players"])

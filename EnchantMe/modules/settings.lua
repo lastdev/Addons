@@ -1,5 +1,5 @@
 local _, addon = ...
-local settings, private = addon.module('settings')
+local settings, private = addon.module('settings'), {}
 
 function settings.init()
     local category = Settings.RegisterVerticalLayoutCategory('Enchant Me')

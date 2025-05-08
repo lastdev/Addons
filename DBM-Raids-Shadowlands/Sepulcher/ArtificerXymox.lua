@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2470, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045739")
+mod:SetRevision("20250307060156")
 mod:SetCreatureID(183501)
 mod:SetEncounterID(2553)
 mod:SetUsedIcons(1, 2, 3, 5, 6, 7, 8)
@@ -351,7 +351,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 362801 then
 		self.vb.glyphCount = self.vb.glyphCount + 1
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId)
-		if timer then
+		if timer and timer > 0 then
 			timerGlyphofRelocationCD:Start(timer, self.vb.glyphCount+1)
 		end
 	elseif spellId == 362849 then
@@ -359,7 +359,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHyperlightSpark:Show(self.vb.sparkCount)
 		specWarnHyperlightSpark:Play("aesoon")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId)
-		if timer then
+		if timer and timer > 0 then
 			timerHyperlightSparknovaCD:Start(timer, self.vb.sparkCount+1)
 		end
 	elseif spellId == 364040 then
@@ -379,7 +379,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnStasisTrap:Show(self.vb.trapCount)
 		specWarnStasisTrap:Play("watchstep")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, 362885)
-		if timer then
+		if timer and timer > 0 then
 			timerStasisTrapCD:Start(timer, self.vb.trapCount+1)
 		end
 	elseif spellId == 364040 then
@@ -411,7 +411,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnForerunnerRings:Show(self.vb.ringCount)
 		specWarnForerunnerRings:Play("watchwave")
 		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId)
-		if timer then
+		if timer and timer > 0 then
 			timerForerunnerRingsCD:Start(timer, self.vb.ringCount+1)
 		end
 	elseif spellId == 364030 then

@@ -30,6 +30,10 @@ oop:Create("Dictionary", {
 	Remove = function(self, key)
 		self.data[key] = nil
 	end,
+	
+	Toggle = function(self, key)
+		self.data[key] = not self.data[key]
+	end,
 
 	Clear = function(self)
 		wipe(self.data)
@@ -116,6 +120,14 @@ oop:Create("Dictionary", {
 		for key, value in pairs(self.data) do
 			func(key, value)
 		end
+	end,
+
+	-- This function is useful to temporarily attach one dictionary to a given table,
+	-- or to use the object on multiple tables without instanciating multiple objects.
+	-- ex: you need to execute a :Count() on many tables
+	-- => just attach them on the fly, do the count, and proceed with the next table.
+	AttachTo = function(self, data)
+		self.data = data
 	end,
 
 	--  To do : Clone

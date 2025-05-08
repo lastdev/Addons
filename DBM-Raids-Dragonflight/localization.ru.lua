@@ -287,3 +287,7 @@ L = DBM:GetModLocalization("AmirdrassilTrash")
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Амирдрассил, Надежда Сна"
 })
+
+L:SetMiscLocalization({
+	FyrakkRP			= "Это опять вы. Как жаль, что нет времени вами заняться."
+})
