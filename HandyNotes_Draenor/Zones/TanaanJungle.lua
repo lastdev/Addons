@@ -1,4 +1,4 @@
-HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
+local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
 HandyNotes_Draenor.nodes[534] = {
     [15005440] = { 534, "38754", "Axe of Weeping Wolf", "First floor of north-east tower", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "127325" },

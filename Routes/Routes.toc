@@ -1,8 +1,8 @@
-## Interface: 100207, 110000, 110002
+## Interface: 110107, 11507, 50500
 
 ## Title: Routes
 ## Author: Grum, Xinhuan
-## Version: v1.8.3
+## Version: v1.8.4
 
 ## Notes: Routes on your worldmap and minimap!
 ## Notes-frFR: Routes sur votre carte du monde et minicarte !

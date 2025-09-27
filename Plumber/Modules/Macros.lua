@@ -32,6 +32,7 @@ local GetMacroBody = GetMacroBody;
 local GetMacroInfo = GetMacroInfo;
 local GetMacroIndexByName = GetMacroIndexByName;
 local EditMacro = EditMacro;
+local GetNumMacros = GetNumMacros;
 local GetActiveAbilities = C_ZoneAbility and C_ZoneAbility.GetActiveAbilities or API.Nop;
 local GetMountInfoByID = C_MountJournal and C_MountJournal.GetMountInfoByID or API.Nop;
 local FindSpellOverrideByID = FindSpellOverrideByID;
@@ -153,13 +154,16 @@ local IsMacroSpell = {};
 
 
 local EL = CreateFrame("Frame");
-EL.macroIndexMin = 1;
-EL.macroIndexMax = 138;
+EL.macroIndexMin1 = 1;
+EL.macroIndexMax1 = MAX_ACCOUNT_MACROS or 120;
+EL.macroIndexMin2 = EL.macroIndexMax1 + 1;
+EL.macroIndexMax2 = EL.macroIndexMin2 + (MAX_CHARACTER_MACROS or 30);
 EL.macroEvents = {};
 
 
 function EL:CheckSupportedMacros()
     self:UnregisterAllEvents();
+
     if not self.isInitialized then
         self:RegisterEvent("PLAYER_ENTERING_WORLD");
     end
@@ -175,32 +179,46 @@ function EL:CheckSupportedMacros()
     local body;
     local command;
     local n = 0;
+    local numAccountMacros, numCharacterMacros = GetNumMacros();
 
-    for index = self.macroIndexMin, self.macroIndexMax do
-        body = GetMacroBody(index);
-        if body then
-            command = match(body, "#plumber:(%w+)");
-            if command and PlumberMacros[command] then
-                n = n + 1;
+    for i = 1, 2 do
+        local fromIndex, toIndex;
+        if i == 1 then
+            fromIndex = self.macroIndexMin1;
+            toIndex = fromIndex + numAccountMacros - 1;
+        else
+            fromIndex = self.macroIndexMin2;
+            toIndex = fromIndex + numCharacterMacros - 1;
+        end
 
-                if not self.activeCommands[command] then
-                    self.activeCommands[command] = {};
-                end
-                tinsert(self.activeCommands[command], index);
+        if toIndex >= fromIndex then
+            for index = fromIndex, toIndex do
+                body = GetMacroBody(index);
+                if body then
+                    command = match(body, "#plumber:(%w+)");
+                    if command and PlumberMacros[command] then
+                        n = n + 1;
 
-                if PlumberMacros[command].events then
-                    for _, event in ipairs(PlumberMacros[command].events) do
-                        if not self.macroEvents[event] then
-                            self.macroEvents[event] = {};
+                        if not self.activeCommands[command] then
+                            self.activeCommands[command] = {};
                         end
-                        tinsert(self.macroEvents[event], {
-                            index = index,
-                            command = command,
-                        });
+                        tinsert(self.activeCommands[command], index);
+
+                        if PlumberMacros[command].events then
+                            for _, event in ipairs(PlumberMacros[command].events) do
+                                if not self.macroEvents[event] then
+                                    self.macroEvents[event] = {};
+                                end
+                                tinsert(self.macroEvents[event], {
+                                    index = index,
+                                    command = command,
+                                });
+                            end
+                        end
+
+                        MacroInterpreter.macroCommand[index] = command;
                     end
                 end
-
-                MacroInterpreter.macroCommand[index] = command;
             end
         end
     end
@@ -283,6 +301,8 @@ function EL:UpdateMacros(commands)
         local commandData;
         local prefix;
 
+        local updateList = false;
+
         for command, list in pairs(commands) do
             commandData = PlumberMacros[command];
             newState = commandData.conditionFunc();
@@ -299,44 +319,57 @@ function EL:UpdateMacros(commands)
 
                     for _, index in ipairs(list) do
                         name, icon, body = GetMacroInfo(index);
-                        anyEdit = false;
 
-                        if returns and returns.icon then
-                            if returns.icon ~= icon then
+                        if command == match(body, "#plumber:(%w+)") then
+                            anyEdit = false;
+
+                            if returns and returns.icon then
+                                if returns.icon ~= icon then
+                                    anyEdit = true;
+                                end
+                                icon = returns.icon;
+                                if icon == 0 then
+                                    if returns.bestIconFunc then
+                                        icon = returns.bestIconFunc(body);
+                                    end
+                                    icon = icon or 134400;
+                                end
+                            end
+
+                            if commandData.type == ModifyType.Add and commandData.addFunc then
+                                prefix = "#plumber:"..command;
+                                body = gsub(body, ".+##", "");
+                                body = gsub(body, prefix, "");
+                                while find(body, "^\n") do
+                                    body = gsub(body, "^\n", "");
+                                end
+                                if newState then
+                                    local extraLine = commandData.addFunc();
+                                    body = prefix.."\n"..extraLine.."\n##\n"..body;
+                                else
+                                    body = prefix.."\n"..body;
+                                end
                                 anyEdit = true;
                             end
-                            icon = returns.icon;
-                            if icon == 0 then
-                                if returns.bestIconFunc then
-                                    icon = returns.bestIconFunc(body);
+
+                            if commandData.writeFunc then
+                                local _body, _icon = commandData.writeFunc(body);
+                                if _body then
+                                    body = _body;
                                 end
-                                icon = icon or 134400;
+                                if _icon then
+                                    icon = _icon;
+                                end
+                                anyEdit = true;
                             end
-                        end
 
-                        if commandData.type == ModifyType.Add and commandData.addFunc then
-                            prefix = "#plumber:"..command;
-                            body = gsub(body, ".+##", "");
-                            body = gsub(body, prefix, "");
-                            while find(body, "^\n") do
-                                body = gsub(body, "^\n", "");
+                            if anyEdit then
+                                EditMacro(index, name, icon, body);
                             end
-                            if newState then
-                                local extraLine = commandData.addFunc();
-                                body = prefix.."\n"..extraLine.."\n##\n"..body;
-                            else
-                                body = prefix.."\n"..body;
-                            end
-                            anyEdit = true;
-                        end
-
-                        if commandData.initFunc then
-                            body = commandData.initFunc(body);
-                            anyEdit = true;
-                        end
-
-                        if anyEdit then
-                            EditMacro(index, name, icon, body);
+                        else
+                            --This is when the body doesn't match our last cache
+                            --Possibly due to macros update without using MacroFrame (using other macro addons)
+                            updateList = true;
                         end
                     end
                 end
@@ -345,6 +378,10 @@ function EL:UpdateMacros(commands)
 
         if anyChange and inCombat then
             self:RegisterEvent("PLAYER_REGEN_ENABLED");
+        end
+
+        if updateList then
+            self:CheckSupportedMacros();
         end
     end
 end
@@ -1686,6 +1723,7 @@ do  --DrawerUpdator
     local UpdateEvents_Lazy = {
         ["SPELLS_CHANGED"] = true,
         ["BAG_UPDATE_DELAYED"] = true,
+        ["TRAIT_CONFIG_UPDATED"] = true,
     };
 
     function DrawerUpdator:SetEnabled(state)
@@ -1815,4 +1853,16 @@ do  --Settings Registry
             UpdateAfterSettingsChanged();
         end
     end);
+end
+
+
+do  --For other modules like Legion Remix
+    local function AddPlumberMacro(commandInfo)
+        local command = commandInfo.command;
+        local type = commandInfo.modifyType and ModifyType[commandInfo.modifyType];
+        if not PlumberMacros[command] then
+            PlumberMacros[command] = commandInfo;
+        end
+    end
+    addon.AddPlumberMacro = AddPlumberMacro;
 end

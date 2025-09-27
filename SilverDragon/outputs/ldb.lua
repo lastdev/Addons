@@ -24,6 +24,7 @@ function module:OnInitialize()
 			worldmap = true,
 			mounts = true,
 			tooltip = "always",
+			ignored = true,
 		},
 	})
 
@@ -43,12 +44,13 @@ function module:OnInitialize()
 				type = "group",
 				name = "Icon",
 				order = 91,
+				get = function(info) return self.db.profile[info[#info]] end,
+				set = function(info, v) self.db.profile[info[#info]] = v end,
 				args = {
 					show_lastseen = {
 						type = "toggle",
 						name = "Show last seen rare",
 						desc = "Toggle showing or hiding the last seen rare as the dataobject's text",
-						get = function() return self.db.profile.show_lastseen end,
 						set = function(info, v)
 							self.db.profile.show_lastseen = v
 							if v and module.last_seen then
@@ -88,17 +90,17 @@ function module:OnInitialize()
 							outofcombat = "Out of Combat",
 							never = "Never",
 						},
-						get = function() return self.db.profile.tooltip end,
-						set = function(info, v)
-							self.db.profile.tooltip = v
-						end,
 						order = 35,
+					},
+					ignored = {
+						type = "toggle",
+						name = "Show ignored mobs",
+						desc = "Toggle showing ignored mobs in the list",
 					},
 					worldmap = {
 						type = "toggle",
 						name = "Show on the world map",
 						desc = "Toggle showing the icon in the world map's header",
-						get = function() return self.db.profile.worldmap end,
 						set = function(info, v)
 							self.db.profile.worldmap = v
 							module.worldmap[v and "Show" or "Hide"](module.worldmap)
@@ -111,7 +113,6 @@ function module:OnInitialize()
 						type = "toggle",
 						name = "Show on the mount list",
 						desc = "Toggle showing the icon in the mount list",
-						get = function() return self.db.profile.mounts end,
 						set = function(info, v)
 							self.db.profile.mounts = v
 							if module.mounts then
@@ -285,7 +286,7 @@ function module:SetupMounts()
 	for source, data in pairs(core.datasources) do
 		if core.db.global.datasources[source] then
 			for id, mobdata in pairs(data) do
-				if ns.Loot.HasMounts(id) and not core:ShouldIgnoreMob(id) then
+				if ns.Loot.HasMounts(id) and core:ShouldShowMob(id) then
 					table.insert(list, id)
 				end
 			end
@@ -475,6 +476,7 @@ do
 	end
 	local locations = {}
 	local function show_mob_tooltip(cell, mobid)
+		-- TODO: this should get combined with the near-identical code in Overlay...
 		tooltip:SetFrameStrata("DIALOG")
 		GameTooltip:SetOwner(cell, "ANCHOR_NONE")
 		GameTooltip:SetPoint("TOPLEFT", cell, "BOTTOMLEFT")
@@ -495,6 +497,22 @@ do
 					end
 					GameTooltip:AddLine((SUBTITLE_FORMAT):format(core.zone_names[zone], (", "):join(unpack(locations))), nil, nil, nil, true)
 				end
+			end
+			if ns.mobdb[mobid].requires then
+			    local metRequirements = ns.conditions.check(ns.mobdb[mobid].requires)
+			    local r, g, b = (metRequirements and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
+			    GameTooltip:AddLine(
+			        core:RenderString(ns.conditions.summarize(ns.mobdb[mobid].requires), ns.mobdb[mobid]),
+			        r, g, b, true
+			    )
+			end
+			if ns.mobdb[mobid].active then
+			    local isActive = ns.conditions.check(ns.mobdb[mobid].active)
+			    local r, g, b = (isActive and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
+			    GameTooltip:AddLine(
+			        core:RenderString(ns.conditions.summarize(ns.mobdb[mobid].active), ns.mobdb[mobid]),
+			        r, g, b, true
+			    )
 			end
 		end
 		if not _G.C_TooltipInfo then
@@ -525,6 +543,13 @@ do
 
 	local sorted_mobs = {}
 
+	local hunter_icon = CreateTextureMarkup(
+		"Interface\\TargetingFrame\\UI-Classes-Circles",
+		256, 256, -- filewidth, fileheight
+		20, 20, -- width, height
+		unpack(CLASS_ICON_TCOORDS["HUNTER"]) -- left, right, top, bottom
+	)
+
 	function module:ShowTooltip(parent, options)
 		if not core.db then
 			return
@@ -546,7 +571,7 @@ do
 		local zone = options.nearby
 		if zone and ns.mobsByZone[zone] then
 			for id in pairs(ns.mobsByZone[zone]) do
-				if core:IsMobInPhase(id, zone) and not core:ShouldIgnoreMob(id, zone) then
+				if core:IsMobInPhase(id, zone) and core:ShouldShowMob(id, zone) then
 					table.insert(sorted_mobs, id)
 				end
 			end
@@ -562,96 +587,12 @@ do
 		end
 
 		if #sorted_mobs > 0 then
-			local headerLine, headerIndex = tooltip:AddHeader("Name", "Count", "Last Seen")
-			local tameableHeader = false
+			local headerLine, headerIndex = tooltip:AddHeader("Name", "Count", "Last Seen", hunter_icon)
 
 			table.sort(sorted_mobs, mob_sorter)
 
-			local notes = CreateAtlasMarkup("poi-workorders")
-
 			for _, id in ipairs(sorted_mobs) do
-				ns.Loot.Cache(id)
-				local name, vignette, tameable, last_seen, times_seen = core:GetMobInfo(id)
-				local label = core:GetMobLabel(id)
-				local index, col = tooltip:AddLine(
-					(ns.mobdb[id] and ns.mobdb[id].notes) and (label .. " " .. notes) or label,
-					times_seen,
-					core:FormatLastSeen(last_seen)
-				)
-				tooltip:SetCellScript(index, 1, "OnMouseUp", mob_click, id)
-				tooltip:SetCellScript(index, 1, "OnEnter", show_mob_tooltip, id)
-				tooltip:SetCellScript(index, 1, "OnLeave", mob_leave, id)
-				if tameable then
-					if not tameableHeader then
-						-- self.texture:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-						-- self.texture:SetTexCoord(unpack(CLASS_ICON_TCOORDS["HUNTER"]))
-						local hunter = CreateTextureMarkup(
-							"Interface\\TargetingFrame\\UI-Classes-Circles",
-							256, 256, -- filewidth, fileheight
-							20, 20, -- width, height
-							unpack(CLASS_ICON_TCOORDS["HUNTER"]) -- left, right, top, bottom
-						)
-						tooltip:SetCell(headerLine, headerIndex, hunter)
-					end
-					index, col = tooltip:SetCell(index, col, id, TameableCellProvider)
-				else
-					index, col = tooltip:SetCell(index, col, '')
-				end
-				if ns.Loot.HasMounts(id) then
-					index, col = tooltip:SetCell(index, col, id, MountCellProvider)
-					tooltip:SetCellScript(index, col - 1, "OnEnter", show_mount_tooltip, id)
-					tooltip:SetCellScript(index, col - 1, "OnLeave", hide_subtooltip)
-				else
-					index, col = tooltip:SetCell(index, col, '')
-				end
-				if ns.Loot.HasToys(id) then
-					index, col = tooltip:SetCell(index, col, id, ToyCellProvider)
-					tooltip:SetCellScript(index, col -1, "OnEnter", show_toy_tooltip, id)
-					tooltip:SetCellScript(index, col -1, "OnLeave", hide_subtooltip)
-				else
-					index, col = tooltip:SetCell(index, col, '')
-				end
-				if ns.Loot.HasPets(id) then
-					index, col = tooltip:SetCell(index, col, id, PetCellProvider)
-					tooltip:SetCellScript(index, col - 1, "OnEnter", show_pet_tooltip, id)
-					tooltip:SetCellScript(index, col - 1, "OnLeave", hide_subtooltip)
-				else
-					index, col = tooltip:SetCell(index, col, '')
-				end
-				if ns.Loot.HasRegularLoot(id) then
-					index, col = tooltip:SetCell(index, col, id, ItemsCellProvider)
-					tooltip:SetCellScript(index, col - 1, "OnMouseUp", click_items_tooltip, id)
-					tooltip:SetCellScript(index, col - 1, "OnEnter", show_items_tooltip, id)
-					-- tooltip:SetCellScript(index, col - 1, "OnLeave", hide_items_tooltip)
-				else
-					index, col = tooltip:SetCell(index, col, '')
-				end
-				local quest, achievement = ns:CompletionStatus(id)
-				if quest ~= nil or achievement ~= nil then
-					if achievement ~= nil then
-						index, col = tooltip:SetCell(index, col, achievement, AchievementCellProvider)
-						tooltip:SetCellScript(index, col - 1, "OnEnter", show_achievement_tooltip, id)
-						tooltip:SetCellScript(index, col - 1, "OnLeave", hide_subtooltip)
-					else
-						index, col = tooltip:SetCell(index, col, '')
-					end
-					if quest ~= nil then
-						index, col = tooltip:SetCell(index, col, quest, QuestCellProvider)
-					else
-						index, col = tooltip:SetCell(index, col, '')
-					end
-					if quest or achievement then
-						if (quest and achievement) or (quest == nil or achievement == nil) then
-							-- full completion
-							tooltip:SetLineColor(index, 0.33, 1, 0.33) -- green
-						else
-							-- partial completion
-							tooltip:SetLineColor(index, 1, 1, 0.33) -- yellow
-						end
-					else
-						tooltip:SetLineColor(index, 1, 0.33, 0.33) -- red
-					end
-				end
+				self:AddMobLine(id, zone)
 			end
 			if #sorted_mobs == 0 then
 				tooltip:AddLine(NONE)
@@ -694,5 +635,89 @@ do
 		tooltip:Show()
 
 		return tooltip
+	end
+
+	local notes_icon = CreateAtlasMarkup("poi-workorders")
+	local ignored_icon = CreateAtlasMarkup("Map-MarkedDefeated")
+
+	function module:AddMobLine(id, zone)
+		local is_ignored = core:ShouldIgnoreMob(id, zone)
+		if is_ignored and not self.db.profile.ignored then
+			return
+		end
+		ns.Loot.Cache(id)
+		local name, vignette, tameable, last_seen, times_seen = core:GetMobInfo(id)
+		local label = core:GetMobLabel(id)
+		if is_ignored then
+			label = label .. " " .. ignored_icon
+		end
+		local index, col = tooltip:AddLine(
+			(ns.mobdb[id] and ns.mobdb[id].notes) and (label .. " " .. notes_icon) or label,
+			times_seen,
+			core:FormatLastSeen(last_seen)
+		)
+		tooltip:SetCellScript(index, 1, "OnMouseUp", mob_click, id)
+		tooltip:SetCellScript(index, 1, "OnEnter", show_mob_tooltip, id)
+		tooltip:SetCellScript(index, 1, "OnLeave", mob_leave, id)
+		if tameable then
+			index, col = tooltip:SetCell(index, col, id, TameableCellProvider)
+		else
+			index, col = tooltip:SetCell(index, col, '')
+		end
+		if ns.Loot.HasMounts(id) then
+			index, col = tooltip:SetCell(index, col, id, MountCellProvider)
+			tooltip:SetCellScript(index, col - 1, "OnEnter", show_mount_tooltip, id)
+			tooltip:SetCellScript(index, col - 1, "OnLeave", hide_subtooltip)
+		else
+			index, col = tooltip:SetCell(index, col, '')
+		end
+		if ns.Loot.HasToys(id) then
+			index, col = tooltip:SetCell(index, col, id, ToyCellProvider)
+			tooltip:SetCellScript(index, col -1, "OnEnter", show_toy_tooltip, id)
+			tooltip:SetCellScript(index, col -1, "OnLeave", hide_subtooltip)
+		else
+			index, col = tooltip:SetCell(index, col, '')
+		end
+		if ns.Loot.HasPets(id) then
+			index, col = tooltip:SetCell(index, col, id, PetCellProvider)
+			tooltip:SetCellScript(index, col - 1, "OnEnter", show_pet_tooltip, id)
+			tooltip:SetCellScript(index, col - 1, "OnLeave", hide_subtooltip)
+		else
+			index, col = tooltip:SetCell(index, col, '')
+		end
+		if ns.Loot.HasRegularLoot(id) then
+			index, col = tooltip:SetCell(index, col, id, ItemsCellProvider)
+			tooltip:SetCellScript(index, col - 1, "OnMouseUp", click_items_tooltip, id)
+			tooltip:SetCellScript(index, col - 1, "OnEnter", show_items_tooltip, id)
+			-- tooltip:SetCellScript(index, col - 1, "OnLeave", hide_items_tooltip)
+		else
+			index, col = tooltip:SetCell(index, col, '')
+		end
+		local quest, achievement = ns:CompletionStatus(id)
+		if quest ~= nil or achievement ~= nil then
+			if achievement ~= nil then
+				index, col = tooltip:SetCell(index, col, achievement, AchievementCellProvider)
+				tooltip:SetCellScript(index, col - 1, "OnEnter", show_achievement_tooltip, id)
+				tooltip:SetCellScript(index, col - 1, "OnLeave", hide_subtooltip)
+			else
+				index, col = tooltip:SetCell(index, col, '')
+			end
+			if quest ~= nil then
+				index, col = tooltip:SetCell(index, col, quest, QuestCellProvider)
+			else
+				index, col = tooltip:SetCell(index, col, '')
+			end
+			if quest or achievement then
+				if (quest and achievement) or (quest == nil or achievement == nil) then
+					-- full completion
+					tooltip:SetLineColor(index, 0.33, 1, 0.33) -- green
+				else
+					-- partial completion
+					tooltip:SetLineColor(index, 1, 1, 0.33) -- yellow
+				end
+			else
+				tooltip:SetLineColor(index, 1, 0.33, 0.33) -- red
+			end
+		end
 	end
 end

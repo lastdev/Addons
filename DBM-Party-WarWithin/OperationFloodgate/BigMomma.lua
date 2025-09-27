@@ -1,8 +1,7 @@
-if DBM:GetTOC() < 110100 then return end
 local mod	= DBM:NewMod(2648, "DBM-Party-WarWithin", 9, 1298)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250421064654")
+mod:SetRevision("20250809064410")
 mod:SetCreatureID(226398)
 mod:SetEncounterID(3020)
 mod:SetUsedIcons(8, 7, 6, 5)
@@ -97,7 +96,7 @@ function mod:OnCombatStart(delay)
 	self.vb.sonicCount = 0
 	self.vb.barrierCount = 0
 	timerElectrocrushCD:Start(6-delay, 1)
-	timerSonicBoomCD:Start(15.7-delay, 1)
+	timerSonicBoomCD:Start(15.4-delay, 1)
 	timerBarrierCD:Start(51-delay, 1)
 end
 
@@ -203,7 +202,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--restart Timers
 		timerElectrocrushCD:Start(9.2, self.vb.electroCount+1)
 		timerSonicBoomCD:Start(18.9, self.vb.sonicCount+1)
-		timerBarrierCD:Start(54.2, self.vb.barrierCount+1)
+		timerBarrierCD:Start(60.4, self.vb.barrierCount+1)
 	elseif spellId == 469981 then
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Hide()

@@ -22,10 +22,7 @@ local function BAG_UPDATE()
                     if (itemLink) then
                         local itemId = C_Item.GetItemInfoInstant(itemLink)
                         if (itemId == 45072) then
-                            print("trying")
                             C_Container.UseContainerItem(bagId, slot)
-                            print("succeeded")
-
                             return
                         end
                     end

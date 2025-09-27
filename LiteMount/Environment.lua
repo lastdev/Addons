@@ -105,6 +105,21 @@ function LM.Environment:IsMovingOrFalling()
     return (GetUnitSpeed("player") > 0 or IsFalling())
 end
 
+function LM.Environment:IsPhaseDiving()
+    if WOW_PROJECT_ID == 1 then
+        return C_UnitAuras.GetPlayerAuraBySpellID(1214374) ~= nil
+    end
+end
+
+-- "Orbs of Power", the third node unlock in the Reshii Wraps talent tree
+function LM.Environment:CanMountInPhaseDiving()
+    if WOW_PROJECT_ID == 1 then
+        local configID = C_Traits.GetConfigIDByTreeID(1115)
+        local nodeInfo = C_Traits.GetNodeInfo(configID, 105869)
+        return nodeInfo.currentRank == 1
+    end
+end
+
 function LM.Environment:IsTheMaw(mapPath)
     local instanceID = select(8, GetInstanceInfo())
 
@@ -335,7 +350,8 @@ function LM.Environment:KnowsRidingSkill()
 end
 
 function LM.Environment:KnowsFlyingSkill()
-    return IsPlayerSpell(54197)
+    return IsPlayerSpell(90265)
+        or IsPlayerSpell(54197)
         or IsPlayerSpell(34091)
         or IsPlayerSpell(34090)
 end
@@ -343,7 +359,7 @@ end
 
 -- Overrides have 3 possible return values, true, false, nil (no override)
 local InstanceFlyableOverride = {
-    -- Clear these out for TWW, everything I tested is flagged correctly.
+    [2275] = false,     -- Lesser Vision Vale of Eternal Twilight
     [2512] = true,      -- The Primalist Future
     [2549] =            -- Amirdrassil Raid
         function ()
@@ -376,7 +392,7 @@ function LM.Environment:IsFlyableArea(mapPath)
         return override
     end
 
-    if WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
+    if WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
         -- Northrend requires Cold Weather Flying
         if self:InInstance(571) then
             if not IsPlayerSpell(54197) then
@@ -389,12 +405,18 @@ function LM.Environment:IsFlyableArea(mapPath)
                 return false
             end
         end
+        -- Pandaria requires Wisdom of the Four Winds
+        if self:InInstance(870) then
+            if not IsPlayerSpell(115913) then
+                return false
+            end
+        end
     end
 
-    if self:InInstance(2552, 2601) then
-        -- In Khaz Algar (Surface) (2552) and Khaz Algar (2601) before you
-        -- unlock Steady Flight, IsFlyableArea() is false and I don't know of a
-        -- check to see if Skyriding would work.
+    if self:InInstance(2552, 2601, 2738) then
+        -- In Khaz Algar (Surface) (2552), Khaz Algar (2601) and K'aresh (2739)
+        -- before unlocking Steady Flight, IsFlyableArea() is false and I don't
+        -- know of a check to see if Skyriding would work.
         if select(4, GetAchievementInfo(40231)) == false then
             return true
         end
@@ -478,9 +500,9 @@ ModelScanFrame:Hide()
 function LM.Environment:GetPlayerModel()
     ModelScanFrame:Show()
     ModelScanFrame:SetUnit('player')
-    local id = ModelScanFrame:GetModelFileID()
+    local modelFileID = ModelScanFrame:GetModelFileID()
     ModelScanFrame:Hide()
-    return id
+    return modelFileID
 end
 
 -- The level of black magic shenanigans here is off the charts. What on earth

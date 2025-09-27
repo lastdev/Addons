@@ -809,15 +809,19 @@ CONDITIONS["level"] = {
 
 
 CONDITIONS["loadout"] = {
-    name = L["Talent loadout"],
+    -- No name this is not enabled as menu
     disabled = ( C_ClassTalents == nil ),
     toDisplay =
         function (v)
             return v
         end,
+    -- This is very clever and all but given that the loadouts are character
+    -- specific and this matches by name I really don't know that it's anywhere
+    -- near useful enough to have as a menu.
     menu =
         function ()
             local loadoutMenu = {}
+            local loadoutNames = {}
             local _, _, classIndex = UnitClass('player')
             for specIndex = 1, 4 do
                 local specID = GetSpecializationInfoForClassID(classIndex, specIndex)
@@ -825,8 +829,11 @@ CONDITIONS["loadout"] = {
                 local configIDs = C_ClassTalents.GetConfigIDsBySpecID(specID)
                 for _, id in ipairs(configIDs) do
                     local info = C_Traits.GetConfigInfo(id)
-                    table.insert(loadoutMenu, { val = "loadout:"..info.name, text = info.name })
+                    loadoutNames[info.name] = true
                 end
+            end
+            for name in pairs(loadoutNames) do
+                table.insert(loadoutMenu, { val = "loadout:"..name, text = name })
             end
             return loadoutMenu
         end,
@@ -1104,7 +1111,25 @@ CONDITIONS["playermodel"] = {
 }
 
 CONDITIONS["profession"] = {
-    disabled = ( GetProfessions == nil ),
+    name = GUILD_ROSTER_DROPDOWN_PROFESSION,
+    toDisplay =
+        function (v)
+            return C_TradeSkillUI.GetTradeSkillDisplayName(v) or v
+        end,
+    menu = {
+        -- Note: skill line IDs for only the base professions
+        { val = "profession:164" }, -- Blacksmithing
+        { val = "profession:165" }, -- Leatherworking
+        { val = "profession:171" }, -- Alchemy
+        { val = "profession:182" }, -- Herbalism
+        { val = "profession:186" }, -- Mining
+        { val = "profession:197" }, -- Tailoring
+        { val = "profession:202" }, -- Engineering
+        { val = "profession:333" }, -- Enchanting
+        { val = "profession:393" }, -- Skinning
+        { val = "profession:755" }, -- Jewelcrafting
+        { val = "profession:773" }, -- Inscription
+    },
     handler =
         function (cond, context, v)
             if not v then return end

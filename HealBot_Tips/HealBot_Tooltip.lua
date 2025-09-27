@@ -85,7 +85,7 @@ function HealBot_Tooltip_GetHealSpell(button,sName)
                 return nil, 1, 0.2, 0, false, false
             else
                 if not button.player then
-                    if HealBot_WoWAPI_UsableItem(sName) and HealBot_Range_Unit(button.unit, button.guid) then
+                    if HealBot_WoWAPI_UsableItem(sName) and button.range.current>0 then
                         return sName, 0.2, 0.5, 1, true, true
                     else
                         return sName, 0.1, 0.25, 0.7, true, false
@@ -97,10 +97,8 @@ function HealBot_Tooltip_GetHealSpell(button,sName)
         else
             return nil, 1, 0.2, 0
         end
-    end
-
-    if not HealBot_Range_SpellInRange(button,sName) then
-        return sName, 1, 0.2, 0, false, false
+    elseif not HealBot_Range_SpellInRange(button,sName) then
+        return sName, 1, 0.4, 0, false, false
     end
 
     return sName, 1, 1, 1, false, true
@@ -122,7 +120,7 @@ local HealBot_Tooltip_GCD=HealBot_Tooltip_GCDV1
 if HEALBOT_GAME_VERSION>3 then
     HealBot_Tooltip_GCD=HealBot_Tooltip_GCDV4
 end
-function HealBot_Tooltip_getSpellCD(validSpellName, isMacro)
+function HealBot_Tooltip_getSpellCD(button, validSpellName, isMacro)
       --HealBot_setCall("HealBot_Tooltip_getSpellCD")
     local z, x=HealBot_WoWAPI_SpellCooldown(validSpellName);
     local gcd=0
@@ -160,7 +158,7 @@ function HealBot_Tooltip_setspellName(button, spellName)
         else
             local e,t=string.split("=", spellName)
             if e and e == HEALBOT_EMOTE and t then
-                if button.status.range<1 then
+                if button.range.current<1 then
                     spellAR,spellAG,spellAB=0.7,0.3,0
                 else
                     spellAR,spellAG,spellAB=1,0.58,0
@@ -173,7 +171,7 @@ function HealBot_Tooltip_setspellName(button, spellName)
                     validSpellName, spellAR, spellAG, spellAB, isItem, inRange=HealBot_Tooltip_GetHealSpell(button,spellName)
                     if validSpellName and not isItem then
                         if inRange then
-                            validSpellName,spellAR,spellAG,spellAB=HealBot_Tooltip_getSpellCD(validSpellName, false)
+                            validSpellName,spellAR,spellAG,spellAB=HealBot_Tooltip_getSpellCD(button, validSpellName, false)
                         end
                     else
                         spellType=HEALBOT_OPTIONS_ITEM
@@ -192,7 +190,7 @@ function HealBot_Tooltip_setspellName(button, spellName)
                             end
                         end
                     end
-                    validSpellName,spellAR,spellAG,spellAB=HealBot_Tooltip_getSpellCD(validSpellName, true)
+                    validSpellName,spellAR,spellAG,spellAB=HealBot_Tooltip_getSpellCD(button, validSpellName, true)
                     spellType=HEALBOT_MACRO
                 end
             end
@@ -273,10 +271,10 @@ function HealBot_Tooltip_RequestsClear()
 end
 
 local tipsAuraWatch={[1]={},[2]={},[3]={},[4]={},[5]={},[6]={},[7]={},[8]={}}
-function HealBot_Tooltip_AuraWatch(guid, index, buff, r, g, b)
+function HealBot_Tooltip_AuraWatch(guid, index, txt, r, g, b)
       --HealBot_setCall("HealBot_Tooltip_AuraWatch", nil, guid)
-    if buff then
-        tipsAuraWatch[index][guid]="      Ready for "..buff
+    if txt then
+        tipsAuraWatch[index][guid]="      "..txt
         tipsAuraWatch[index].r=r
         tipsAuraWatch[index].g=g
         tipsAuraWatch[index].b=b
@@ -471,7 +469,7 @@ function HealBot_ToolTip_ShowDebug(button)
         else
             HealBot_Tooltip_SetLine("UnitExists is False",0.4,1,1,1)
         end
-        hbTipDebugText["range40"]=button.status.range
+        hbTipDebugText["range40"]=button.range.current
         hbTipDebugText["status"]=hbStates[button.status.current] or ("Unknown ("..button.status.current..")")
         if button.player then hbTipDebugText["player"]="True" end
         if button.isplayer then hbTipDebugText["isPlayer"]="True" end
@@ -498,6 +496,7 @@ function HealBot_ToolTip_ShowDebug(button)
         end
         HealBot_Tooltip_SetLine("GlobalDimmingFrame is "..GlobalDimmingFrame,0.4,1,1,1,"GlobalDimmingFrame ID is "..GlobalDimmingFrameID)
         HealBot_Tooltip_SetLine("Button Text Name is "..(button.text.name or "nil"),0.4,1,1,1,"Button Text Nameonly is "..(button.text.nameonly or "nil"))
+        HealBot_Tooltip_SetLine("Button Text Num Format is "..hbv_Skins_GetFrameVar("BarText", "NUMFORMAT1", button.frame),0.4,1,1,1)
     end
 end
 
@@ -815,8 +814,8 @@ function HealBot_Action_DoRefreshTooltip()
                             if maxhlth>0 then
                                 hPct=floor((hlth/maxhlth)*100)
                             end
-                            hlth=HealBot_Text_readNumber(hlth)
-                            maxhlth=HealBot_Text_readNumber(maxhlth)
+                            hlth=HealBot_Util_ReadNumber(hlth)
+                            maxhlth=HealBot_Util_ReadNumber(maxhlth)
                             local vUnit=HealBot_retIsInVehicle(xUnit)
                             local pZone=" "
                             if zone and not strfind(zone,"Level") then
@@ -827,8 +826,8 @@ function HealBot_Action_DoRefreshTooltip()
                                 HealBot_Tooltip_SetLine(UnitName(vUnit),lr,lg,lb,1,hlth.."/"..maxhlth.." ("..hPct.."%)",xButton.health.rcol,xButton.health.gcol,0,1)
                                 hlth,maxhlth=UnitHealth(xButton.unit),UnitHealthMax(xButton.unit)
                                 hPct=floor((hlth/maxhlth)*100)
-                                hlth=HealBot_Text_readNumber(hlth)
-                                maxhlth=HealBot_Text_readNumber(maxhlth)
+                                hlth=HealBot_Util_ReadNumber(hlth)
+                                maxhlth=HealBot_Util_ReadNumber(maxhlth)
                                 pZone="  "..uName
                             end
                             HealBot_Tooltip_SetLine(pZone,1,1,1,1,hlth.."/"..maxhlth.." ("..hPct.."%)",xButton.health.rcol,xButton.health.gcol,0,1)
@@ -838,7 +837,7 @@ function HealBot_Action_DoRefreshTooltip()
                                 if not mana or (maxmana and maxmana == 0) then
                                     if xButton.aggro.threatpct>0 then
                                         HealBot_Tooltip_SetLine(HEALBOT_WORD_THREAT.." "..xButton.aggro.threatpct.."%",1,0.1,0.1,1,UnitTag,xButton.text.sr,xButton.text.sg,xButton.text.sb,1)
-                                        local threatvalue=HealBot_Text_readNumber(xButton.aggro.threatvalue)
+                                        local threatvalue=HealBot_Util_ReadNumber(xButton.aggro.threatvalue)
                                         HealBot_Tooltip_SetLine(xButton.aggro.mobname.." ("..threatvalue..")",1,0.1,0.1,1,UnitTag,xButton.text.sr,xButton.text.sg,xButton.text.sb,1)
                                     elseif HealBot_Tooltip_luVars["uGroup"]>0 then
                                         HealBot_Tooltip_SetLine(HEALBOT_SORTBY_GROUP.." "..HealBot_Tooltip_luVars["uGroup"],1,1,1,1,UnitTag,xButton.text.sr,xButton.text.sg,xButton.text.sb,1)
@@ -847,8 +846,8 @@ function HealBot_Action_DoRefreshTooltip()
                                     end
                                 else
                                     local mPct=xButton.mana.pct
-                                    mana=HealBot_Text_readNumber(mana)
-                                    maxmana=HealBot_Text_readNumber(maxmana)
+                                    mana=HealBot_Util_ReadNumber(mana)
+                                    maxmana=HealBot_Util_ReadNumber(maxmana)
                                     if xButton.aggro.threatpct<1 then
                                         if HealBot_Tooltip_luVars["uGroup"]>0 then
                                             HealBot_Tooltip_SetLine(HEALBOT_SORTBY_GROUP.." "..HealBot_Tooltip_luVars["uGroup"],1,1,1,1,mana.."/"..maxmana.." ("..mPct.."%)",powerCols.r,powerCols.g,powerCols.b,1)
@@ -859,7 +858,7 @@ function HealBot_Action_DoRefreshTooltip()
                                         end
                                     else
                                         HealBot_Tooltip_SetLine(HEALBOT_WORD_THREAT.." "..xButton.aggro.threatpct.."%",1,0.1,0.1,1,mana.."/"..maxmana.." ("..mPct.."%)",powerCols.r,powerCols.g,powerCols.b,1)
-                                        local threatvalue=HealBot_Text_readNumber(xButton.aggro.threatvalue)
+                                        local threatvalue=HealBot_Util_ReadNumber(xButton.aggro.threatvalue)
                                         HealBot_Tooltip_SetLine(xButton.aggro.mobname.." ("..threatvalue..")",1,0.1,0.1,1," ",UnitTag,xButton.text.sr,xButton.text.sg,xButton.text.sb,1)
                                     end
                                 end
@@ -1216,9 +1215,9 @@ function HealBot_Tooltip_DisplayActionIconTooltip(icon, target)
         if icon.range<1 then
             HealBot_Tooltip_SetLine("icon SpellRangeNeeds 0",1,1,1,1)
         elseif icon.range<35 then
-            HealBot_Tooltip_SetLine("icon SpellRangeNeeds 30",1,1,1,1)
-        elseif icon.range<45 then
-            HealBot_Tooltip_SetLine("icon SpellRangeNeeds 40",1,1,1,1)
+            HealBot_Tooltip_SetLine("icon SpellRangeNeeds <35",1,1,1,1)
+        elseif icon.range<50 then
+            HealBot_Tooltip_SetLine("icon SpellRangeNeeds <50",1,1,1,1)
         else
             HealBot_Tooltip_SetLine("icon SpellRangeNeeds 100",1,1,1,1)
         end

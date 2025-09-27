@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- **AceLocale-3.0** manages localization in addons, allowing for multiple locale to be registered with fallback to the base locale for untranslated strings.
 -- @class file

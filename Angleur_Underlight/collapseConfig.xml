@@ -1,0 +1,35 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+    <Button parent="Angleur_Underlight_DragRodButton" name="AngleurUnderlight_CollapseConfig" parentKey="collapseConfig" inherits="Legolando_CollapseConfigTemplate_AngleurUnderlight">
+        <Size x="24" y="24"/>
+        <Anchors>
+            <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad function="AngleurUnderlight_CollapseConfig_OnLoad"/>
+        </Scripts>
+        <Frames>
+            <Frame name="$parent_Checkboxes" parent="AngleurUnderlight_CollapseConfig_Popup" parentKey="checkboxes" inherits="Legolando_CheckboxesTemplate_AngleurUnderlight">
+                <Size x="1" y="1"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-28"/>
+                </Anchors>
+                <Frames>
+                    <CheckButton parentKey="checkbox1" inherits="Legolando_CheckboxTemplate_AngleurUnderlight">
+                        <Size x="26" y="26"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.title" relativePoint="BOTTOMLEFT" x="8" y="-5"/>
+                        </Anchors>
+                    </CheckButton>
+                    <CheckButton parentKey="checkbox2" inherits="Legolando_CheckboxTemplate_AngleurUnderlight">
+                        <Size x="26" y="26"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.title" relativePoint="BOTTOMLEFT" x="8" y="-29"/>
+                        </Anchors>
+                    </CheckButton>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Button>
+</Ui>

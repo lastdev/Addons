@@ -1,6 +1,6 @@
-## Changed in v79
+## Changed in v89
 
-* Label cosmetic loot in tooltips
-* Support MapPinEnhanced for waypoints
-* Fix some deprecated function calls
+* Updated for 11.2.0
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Fix creating waypoints for all related points from the right-click menu. Thanks to Taurenkey for this!
 

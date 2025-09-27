@@ -1,6 +1,6 @@
 # Details Target Caller
 
-## [v11.1.0.043](https://github.com/Tercioo/TargetCaller/tree/v11.1.0.043) (2025-02-25)
-[Full Changelog](https://github.com/Tercioo/TargetCaller/compare/v11.0.7.042...v11.1.0.043) 
+## [v11.2.0.048](https://github.com/Tercioo/TargetCaller/tree/v11.2.0.048) (2025-08-06)
+[Full Changelog](https://github.com/Tercioo/TargetCaller/compare/v11.1.7.047...v11.2.0.048) 
 
 - ToC Update  

@@ -20,6 +20,8 @@ local OPTION_BANKTYPE = "CurrentBankType"
 local OPTION_TRADESKILL = "CurrentTradeSkill"
 local OPTION_COLORED_SKILLS = "UseColorForTradeSkills"
 
+local NOT_GROUPED = L["ALT_GROUP_NOT_GROUPED"]
+
 local tab		-- small shortcut to easily address the frame (set in OnBind)
 local options
 
@@ -224,6 +226,8 @@ local function RealmsIcon_Initialize(frame, level)
 	local groupOption = options[OPTION_ALTGROUPS]
 	
 	frame:AddButton(ALL, 0, OnAltGroupChange, nil, (groupOption == 0))
+	frame:AddButton(L["ALT_GROUP_NOT_GROUPED"], NOT_GROUPED, OnAltGroupChange, nil, (groupOption == NOT_GROUPED))
+	frame:AddTitle()
 	
 	DataStore.AltGroups:Iterate(function(groupName, groupMembers) 
 		frame:AddButton(groupName, groupName, OnAltGroupChange, nil, (groupName == groupOption))
@@ -836,6 +840,7 @@ addon:Controller("AltoholicUI.TabSummaryCategoriesList", {
 					{ text = format("%s11.0|r %s", colors.green, L["PATCH_X.0"]), profile = 32 },
 					{ text = format("%s11.0|r %s", colors.green, "Season 1"), profile = 33 },
 					{ text = format("%s11.1|r %s", colors.green, L["PATCH_11.1"]), profile = 38 },
+					{ text = format("%s11.2|r %s", colors.green, "Season 3"), profile = 39 },
 					-- { text = format("%s11.2|r %s", colors.green, L["PATCH_11.2"]), profile = 39 },
 				}},				
 			}},
@@ -910,7 +915,7 @@ AddonFactory:OnAddonLoaded(addonTabName, function()
 		CurrentFactions = 3,							-- 1 = Alliance, 2 = Horde, 3 = Both
 		CurrentLevels = 1,							-- 1 = All
 		CurrentLevelsMin = 1,							
-		CurrentLevelsMax = 80,					
+		CurrentLevelsMax = GetMaxLevelForExpansionLevel(GetExpansionLevel()),				
 		CurrentBankType = 0,							-- 0 = All
 		CurrentClasses = 0,							-- 0 = All
 		CurrentRaces = 0,								-- 0 = All
@@ -924,6 +929,10 @@ AddonFactory:OnAddonLoaded(addonTabName, function()
 	})
 	options = Altoholic_SummaryTab_Options
 	options.CurrentRaces = options.CurrentRaces or 0
+
+	if options[OPTION_LEVELS] == 1 then 
+		options.CurrentLevelsMax = GetMaxLevelForExpansionLevel(GetExpansionLevel())
+	end
 	
 	-- Update only when options are ready
 	tab.CategoriesList.Entry2:Button_OnClick("LeftButton")

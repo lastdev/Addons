@@ -1,8 +1,8 @@
-## Interface: 110007
+## Interface: 110107
 ## Title: Protoform Synthesis Manager
 ## Author: Morizo
 ## Notes: Display Protoform Synthesis mats in Grid.
-## Version: 1.1.5
+## Version: 1.1.8
 ## IconTexture: Interface\AddOns\ProtoformSynthesisManager\icon.blp
 ## DefaultState: Enabled
 ## LoadOnDemand: 0

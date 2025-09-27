@@ -42,6 +42,7 @@ local crossExpansion = { -- Cross-Expansion
             7380, -- Double Agent
             19489, -- Class Connoisseur
             546, -- Safe Deposit
+            42191, -- Safer Deposit
             40142, -- Learning to Share
             40145, -- So Much Sharing
             1176, -- Got My Mind On My Money
@@ -229,7 +230,6 @@ local crossExpansion = { -- Cross-Expansion
                 18817, -- Showoff Chef
                 3296, -- Cooking with Style
                 1563, -- Hail to the Chef
-                1784, -- Hail to the Chef
                 17736, -- The Gift of Cheese
             },
         },
@@ -437,6 +437,7 @@ local crossExpansion = { -- Cross-Expansion
                 7464, -- Quality & Quantity
                 6608, -- Family Reunion
                 6571, -- That Was Close!
+                16731, -- Court is Now in Session
             },
         },
         { -- Battle
@@ -784,7 +785,6 @@ local classic = { -- Classic
                         addon.GetCategoryInfoTitle(96),
                 true,
                     {
-                        4907, -- Duskwood Quests
                         12430, -- Duskwood Quests
                         12455, -- Westfall & Duskwood Quests
                     },
@@ -815,7 +815,6 @@ local classic = { -- Classic
                         addon.GetCategoryInfoTitle(96),
                 true,
                     {
-                        4898, -- Wetlands Quests
                         12429, -- Wetlands Quests
                         12456, -- Loch Modan & Wetlands Quests
                     },
@@ -1213,10 +1212,7 @@ local classic = { -- Classic
             },
             {
                 1676, -- Loremaster of Eastern Kingdoms
-                1677, -- Loremaster of Eastern Kingdoms
                 42, -- Eastern Kingdoms Explorer
-                1681, -- The Loremaster
-                1682, -- The Loremaster
                 7520, -- The Loremaster
                 19719, -- Reclamation of Gilneas
             },
@@ -1807,10 +1803,7 @@ local classic = { -- Classic
             },
             {
                 1678, -- Loremaster of Kalimdor
-                1680, -- Loremaster of Kalimdor
                 43, -- Kalimdor Explorer
-                1681, -- The Loremaster
-                1682, -- The Loremaster
                 7520, -- The Loremaster
             },
         },
@@ -2110,7 +2103,6 @@ local classic = { -- Classic
                 5843, -- Let's Do Lunch: Thunder Bluff
                 5844, -- Let's Do Lunch: Undercity
                 5845, -- A Bunch of Lunch
-                5846, -- A Bunch of Lunch
                 5779, -- You'll Feel Right as Rain
             },
         },
@@ -2134,7 +2126,6 @@ local classic = { -- Classic
                 5849, -- Fish or Cut Bait: Thunder Bluff
                 5850, -- Fish or Cut Bait: Undercity
                 5851, -- Gone Fishin'
-                5852, -- Gone Fishin'
                 17367, -- Deadliest Cache
             },
         },
@@ -2594,7 +2585,6 @@ local theBurningCrusade = { -- The Burning Crusade
         },
         {
             1262, -- Loremaster of Outland
-            1274, -- Loremaster of Outland
             1311, -- Medium Rare
             1312, -- Bloody Rare
             44, -- Outland Explorer
@@ -2603,8 +2593,6 @@ local theBurningCrusade = { -- The Burning Crusade
             894, -- Flying High Over Skettis
             897, -- You're So Offensive
             902, -- Chief Exalted Officer
-            1681, -- The Loremaster
-            1682, -- The Loremaster
             7520, -- The Loremaster
         },
     },
@@ -3236,7 +3224,6 @@ local wrathOfTheLichKing = { -- Wrath of the Lich King
         },
         {
             41, -- Loremaster of Northrend
-            1360, -- Loremaster of Northrend
             2256, -- Northern Exposure
             2257, -- Frostbitten
             2557, -- To All The Squirrels Who Shared My Life
@@ -3247,8 +3234,6 @@ local wrathOfTheLichKing = { -- Wrath of the Lich King
             1011, -- The Winds of the North
             1012, -- The Winds of the North
             2556, -- Pest Control
-            1681, -- The Loremaster
-            1682, -- The Loremaster
             7520, -- The Loremaster
         },
     },
@@ -4431,7 +4416,6 @@ local cataclysm = { -- Cataclysm
         },
         {
             4875, -- Loremaster of Cataclysm
-            4983, -- Loremaster of Cataclysm
             4827, -- Surveying the Damage
             5548, -- To All the Squirrels Who Cared for Me
             5754, -- Drown Your Sorrows
@@ -7619,6 +7603,7 @@ local legion = { -- Legion
                 10818, -- Darkbough
                 10819, -- Tormented Guardians
                 10820, -- Rift of Aln
+                42029, -- The Emerald Nightmare
                 11194, -- Ahead of the Curve: Xavius
                 11191, -- Cutting Edge: Xavius
             },
@@ -7663,6 +7648,7 @@ local legion = { -- Legion
                 10837, -- Royal Athenaeum
                 10838, -- Nightspire
                 10839, -- Betrayer's Rise
+                42030, -- The Nighthold
                 11195, -- Ahead of the Curve: Gul'dan
                 11192, -- Cutting Edge: Gul'dan
                 11628, -- That's So Last Millennium
@@ -7724,6 +7710,7 @@ local legion = { -- Legion
                 11788, -- Wailing Halls
                 11789, -- Chamber of the Avatar
                 11790, -- Deceiver's Fall
+                42031, -- Tomb of Sargeras
                 11874, -- Ahead of the Curve: Kil'jaeden
                 11875, -- Cutting Edge: Kil'jaeden
                 11760, -- Retro Trend
@@ -7771,6 +7758,7 @@ local legion = { -- Legion
                 11990, -- Hope's End
                 11989, -- Forbidden Descent
                 11991, -- Seat of the Pantheon
+                42032, -- Antorus, the Burning Throne
                 12110, -- Ahead of the Curve: Argus the Unmaker
                 12111, -- Cutting Edge: Argus the Unmaker
                 12020, -- Argussy Up
@@ -9855,6 +9843,8 @@ local shadowlands = { -- Shadowlands
                 15177, -- Tazavesh, the Veiled Market
                 15650, -- Mythic: Streets of Wonder
                 15652, -- Mythic: So'leah's Gambit
+                61092, -- Hard Mode: Tazavesh, the Veiled Market
+                61093, -- Flawless Transaction
                 15500, -- Keystone Hero: Tazavesh, the Veiled Market
             },
         },
@@ -10256,7 +10246,6 @@ local shadowlands = { -- Shadowlands
                 14726, -- It's Certainly Never Boring
                 14727, -- Master of Ceremonies
                 14749, -- Rendle's Big Day
-                16731, -- Court is Now in Session
             },
         },
         { -- Night Fae
@@ -11951,6 +11940,10 @@ local theWarWithin = { -- The War Within
             40943, -- Carved of the Undermine
             40944, -- Runed of the Undermine
             40945, -- Gilded of the Undermined
+            41886, -- Weathered of the Ethereal
+            41887, -- Carved of the Ethereal
+            41888, -- Runed of the Ethereal
+            41892, -- Gilded of the Ethereal
         },
     },
     { -- Zones
@@ -11968,6 +11961,8 @@ local theWarWithin = { -- The War Within
                     20597, -- The War Within
                     41052, -- Lingering Shadows
                     40791, -- Fate of the Kirin Tor
+                    41818, -- Rise of the Red Dawn
+                    41820, -- Rise of the Red Dawn
                 },
             },
             { -- Exploration
@@ -12398,6 +12393,68 @@ local theWarWithin = { -- The War Within
                 41586, -- Going Goblin Mode
             }
         },
+        { -- K'aresh
+            addon.GetMapName(2371),
+            { -- Quests
+                addon.GetCategoryInfoTitle(96),
+                true,
+                {
+                    41970, -- The Knife's Edge
+                    42739, -- Sojourner of K'aresh
+                    41808, -- Otherworldly Ecologist
+                    41809, -- Ecological Variety
+                    41811, -- Ecological Stability
+                    41812, -- Expertly Done
+                    41815, -- Ecological Succession
+                    41978, -- Moonlighter
+                    41979, -- Bounty Seeker
+                    41980, -- Vigilante
+                    42731, -- Become a Hero. Become a Phasediver!
+                    42737, -- Capstoned
+                },
+            },
+            { -- Exploration
+                addon.GetCategoryInfoTitle(97),
+                true,
+                {
+                    42740, -- Explore K'aresh
+                    42741, -- Treasures of K'aresh
+                    42761, -- Remnants of a Shattered World
+                    42727, -- K'aresh Glyph Hunter
+                    42729, -- Dangerous Prowlers of K'aresh
+                    42730, -- Jump, Jump, and Away!
+                    42736, -- Ixthar's Legacy
+                    42738, -- We've All Got Swords!
+                    42742, -- Power of the Reshii
+                    60890, -- Secrets of the K'areshi
+                    61017, -- Phase-Lost-and-Found
+                },
+            },
+            { -- Player vs. Player
+                addon.GetCategoryInfoTitle(95),
+                true,
+                {
+                    42131, -- Tour of Duty: K'aresh
+                },
+            },
+            { -- Reputation
+                addon.GetCategoryInfoTitle(201),
+                true,
+                {
+                    42022, -- A Trusted Partner
+                },
+            },
+            { -- Skyriding Races
+                addon.L["Skyriding Races"],
+                true,
+                {
+                    41778, -- Brokers Don't Care How You Win
+                },
+            },
+            {
+                60889, -- Unraveled and Persevering
+            },
+        },
         {
             41201, -- You Xal Not Pass
         }
@@ -12535,6 +12592,23 @@ local theWarWithin = { -- The War Within
                 41531, -- The Hataclysm
             },
         },
+        { -- Archival Assault
+            addon.GetMapName(2452),
+            {
+                42771, -- Archival Assault Stories
+                42679, -- Archival Assault Discoveries
+            },
+        },
+        { -- Voidrazor Sanctuary
+            addon.GetMapName(2484),
+            {
+                40732, -- Heavy-Handed
+                42799, -- Let Her Solo Me
+                42193, -- My Stab-Happy Nemesis
+                42194, -- Pruning the Princess
+                42190, -- Let Me Solo Her: Nexus-Princess Ky'veza
+            },
+        },
         {
             40631, -- War Within Delves: Tier 1
             40512, -- War Within Delves: Tier 2
@@ -12556,6 +12630,14 @@ local theWarWithin = { -- The War Within
             41195, -- War Within Delves: Tier 9 (Season 2)
             41196, -- War Within Delves: Tier 10 (Season 2)
             41197, -- War Within Delves: Tier 11 (Season 2)
+            42196, -- War Within Delves: Tier 4 (Season 3)
+            42197, -- War Within Delves: Tier 5 (Season 3)
+            42198, -- War Within Delves: Tier 6 (Season 3)
+            42199, -- War Within Delves: Tier 7 (Season 3)
+            42200, -- War Within Delves: Tier 8 (Season 3)
+            42201, -- War Within Delves: Tier 9 (Season 3)
+            42202, -- War Within Delves: Tier 10 (Season 3)
+            42203, -- War Within Delves: Tier 11 (Season 3)
             40537, -- Delve Loremaster: War Within
             40506, -- Leave No Treasure Unfound
             40445, -- Sporesweeper
@@ -12576,12 +12658,16 @@ local theWarWithin = { -- The War Within
             40461, -- Buddy System VI
             41537, -- Buddy System VII
             41723, -- Buddy System VIII
+            61342, -- Buddy System IX
+            42676, -- Buddy System X
             40100, -- Undying Caver
             40098, -- Immortal Spelunker
             40459, -- I've Got a Flying Machine!
             40789, -- Flying in Style
             41532, -- I've Got a Flying Machine?
             41714, -- From Trash to Treasure
+            42677, -- This Machine Flies?! Don't Care I Got It!
+            42678, -- So That's Where My Manaflux Capacitor Was!
             40524, -- Good Deed Delver
             40763, -- I'm not a Thief, I'm a Treasure Hunter
             41097, -- Curiosity Never Killed the Looter
@@ -12602,6 +12688,13 @@ local theWarWithin = { -- The War Within
             41115, -- Algari Delver
             41116, -- Algari Delver II
             41709, -- Journey's End (Season 2)
+            42212, -- Titan Console Overcharged
+            42241, -- Overcharged Delver
+            42801, -- Journey's End (Season 3)
+            60934, -- With Flying Colors
+            60933, -- With Flying Colors
+            42778, -- A Flicker in the Dark
+            42779, -- A Flash in the Void
         },
     },
     { -- Dungeons
@@ -12696,6 +12789,15 @@ local theWarWithin = { -- The War Within
                 41348, -- Keystone Hero: Operation: Floodgate
             },
         },
+        { -- Eco-Dome Al'dani
+            addon.GetInstanceInfoName(1303),
+            {
+                42780, -- Eco-Dome Al'dani
+                42781, -- Heroic: Eco-Dome Al'dani
+                42782, -- Mythic: Eco-Dome Al'dani
+                42173, -- Keystone Hero: Eco-Dome Al'dani
+            },
+        },
         {
             40141, -- Algari Dungeon Tank
             40140, -- Algari Dungeon Healer
@@ -12708,6 +12810,10 @@ local theWarWithin = { -- The War Within
             20589, -- Tempered Hero: The War Within Season 1
             40660, -- The War Within Season 1: Spelunker Supreme
             40723, -- Web-Wrapped in the Finest Silks
+            42139, -- The Enterprising Tank
+            42141, -- The Enterprising Healer
+            42144, -- The Enterprising Damage Dealer
+            42148, -- The Enterprising Dungeon Master
             40949, -- The War Within Keystone Explorer: Season Two
             40950, -- The War Within Keystone Conqueror: Season Two
             41533, -- The War Within Keystone Master: Season Two
@@ -12716,6 +12822,14 @@ local theWarWithin = { -- The War Within
             40954, -- Enterprising Hero: The War Within Season Two
             40911, -- The War Within Season 2: Master Blaster
             41665, -- Dressed to the Mines
+            42169, -- The War Within Keystone Explorer: Season Three
+            42170, -- The War Within Keystone Conqueror: Season Three
+            41973, -- The War Within Keystone Master: Season Three
+            42171, -- The War Within Keystone Hero: Season Three
+            42172, -- The War Within Keystone Legend: Season Three
+            42174, -- Unbound Hero: The War Within Season Three
+            41937, -- The War Within Season 3: Voidborne Victor
+            42325, -- Void Wear Prohibited
         },
     },
     { -- Raids
@@ -12797,6 +12911,13 @@ local theWarWithin = { -- The War Within
                     41236, -- Mythic: Chrome King Gallywix
                 },
             },
+            { -- Reputation
+                addon.GetCategoryInfoTitle(201),
+                true,
+                {
+                    60939, -- Bringing Down the House
+                },
+            },
             {
                 41225, -- Shock and Awesome
                 41226, -- Maniacal Machinist
@@ -12815,9 +12936,59 @@ local theWarWithin = { -- The War Within
                 41665, -- Dressed to the Mines
             },
         },
+        { -- Manaforge Omega
+            addon.GetInstanceInfoName(1302),
+            { -- Glory
+                addon.L["Glory"],
+                {
+                    42118, -- Of Mice and Manaforges
+                    41613, -- Time to Vote! Cute or Scary?
+                    41614, -- Mother of All Tantrums
+                    41615, -- Cheat Meal
+                    41616, -- I See... Absolutely Nothing
+                    41617, -- Breaking the Fourth Wall
+                    41618, -- King's Ransom
+                    41619, -- Defying Gravity
+                },
+            },
+            { -- Mythic
+                addon.L["Mythic"],
+                {
+                    41604, -- Mythic: Plexus Sentinel
+                    41605, -- Mythic: Loom'ithar
+                    41606, -- Mythic: Soulbinder Naazindhri
+                    41607, -- Mythic: Forgeweaver Araz
+                    41608, -- Mythic: The Soul Hunters
+                    41609, -- Mythic: Fractillus
+                    41610, -- Mythic: Nexus-King Salhadaar
+                    41611, -- Mythic: Dimensius, the All-Devouring
+                },
+            },
+            { -- Reputation
+                addon.GetCategoryInfoTitle(201),
+                true,
+                {
+                    60940, -- Vandals! In! Space!
+                },
+            },
+            {
+                41601, -- Might of the Shadowguard
+                41602, -- Monsters of the Sands
+                41603, -- Heart of Darkness
+                41598, -- Manaforge Omega
+                41599, -- Heroic: Manaforge Omega
+                41600, -- Mythic: Manaforge Omega
+                41624, -- Ahead of the Curve: Dimensius, the All-Devouring
+                41625, -- Cutting Edge: Dimensius, the All-Devouring
+                42316, -- Fractals? For Spring? Groundbreaking.
+                41937, -- The War Within Season 3: Voidborne Victor
+                42325, -- Void Wear Prohibited
+            },
+        },
         {
             40232, -- Glory of the Nerub-ar Raider
             41286, -- Glory of the Liberation of Undermine Raider
+            41597, -- Glory of the Omega Raider
         },
     },
     { -- Professions
@@ -13021,15 +13192,23 @@ local theWarWithin = { -- The War Within
             41897, -- A Monumental Amount of Mementos
             41898, -- A Mountain of Mementos
             41873, -- Incremental Progress
-            41874, -- Symphony of Masks
             41889, -- Horrific Masquerade
             41890, -- Masked Duet
             41891, -- Masked Trio
             41893, -- Masked Quartet
+            41874, -- Symphony of Masks
             41894, -- Masked Septet
             41895, -- Orchestra of Masks
             41953, -- Mad World
             41971, -- Through the Looking Glass
+        },
+    },
+    { -- Lorewalking
+        addon.L["Lorewalking"],
+        {
+            42187, -- Lorewalking: Ethereal Wisdom
+            42188, -- Lorewalking: Blade's Bane
+            42189, -- Lorewalking: The Lich Kingdoms
         },
     },
     {

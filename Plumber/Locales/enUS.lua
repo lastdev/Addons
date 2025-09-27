@@ -6,6 +6,11 @@ local _, addon = ...
 local L = addon.L;
 
 
+--Globals
+BINDING_HEADER_PLUMBER = "Plumber Addon";
+BINDING_NAME_TOGGLE_PLUMBER_LANDINGPAGE = "Toggle Plumber Expansion Summary";   --Show/hide Expansion Summary UI
+
+
 --Module Control Panel
 L["Module Control"] = "Module Control";
 L["Quick Slot Generic Description"] = "\n\n*Quick Slot is a set of clickable buttons that appear under certain conditions.";
@@ -16,7 +21,7 @@ L["Quick Slot Layout"] = "Layout";
 L["Quick Slot Layout Linear"] = "Linear";
 L["Quick Slot Layout Radial"] = "Radial";
 L["Restriction Combat"] = "Does not work in combat";    --Indicate a feature can only work when out of combat
-L["Map Pin Change Size Method"] = "\n\n*You can change the pin size in World Map - Map Filter - Plumber";
+L["Map Pin Change Size Method"] = "\n\n*You can change the pin size in World Map> Map Filter> Plumber";
 L["Toggle Plumber UI"] = "Toggle Plumber UI";
 L["Toggle Plumber UI Tooltip"] = "Show the following Plumber UI in the Edit Mode:\n%s\n\nThis checkbox only controls their visibility in the Edit Mode. It will not enable or disable these modules.";
 
@@ -32,6 +37,11 @@ L["Module Category NPC Interaction"] = "NPC Interaction";
 L["Module Category Tooltip"] = "Tooltip";   --Additional Info on Tooltips
 --- order: 4
 L["Module Category Class"] = "Class";   --Player Class (rogue, paladin...)
+--- order: 5
+L["Module Category Reduction"] = "Reduction";   --Reduce UI elements
+--- order: -1
+L["Module Category Timerunning"] = "Legion Remix";   --Change this based on timerunning season
+
 
 L["Module Category Dragonflight"] = EXPANSION_NAME9 or "Dragonflight";  --Merge Expansion Feature (Dreamseeds, AzerothianArchives) Modules into this
 L["Module Category Plumber"] = "Plumber";   --This addon's name
@@ -78,6 +88,7 @@ L["ModuleDescription GossipFrameMedal Format"] = "Replace the default icon %s wi
 --DruidModelFix (Disabled after 10.2.0)
 L["ModuleName DruidModelFix"] = "Druid Model Fix";
 L["ModuleDescription DruidModelFix"] = "Fix the Character UI model display issue caused by using Glyph of Stars\n\nThis bug will be fixed by Blizzard in 10.2.0 and this module will be removed.";
+L["Model Layout"] = "Model Layout";
 
 
 --PlayerChoiceFrameToken (PlayerChoiceFrame)
@@ -108,7 +119,7 @@ L["Instruction Pick Lock"] = "<Right Click to Pick Lock>";
 
 
 --BlizzFixEventToast (Make the toast banner (Level-up, Weekly Reward Unlocked, etc.) non-interactable so it doesn't block your mouse clicks)
-L["ModuleName BlizzFixEventToast"] = "Blitz Fix: Event Toast";
+L["ModuleName BlizzFixEventToast"] = "Event Toast";
 L["ModuleDescription BlizzFixEventToast"] = "Modify the behavior of Event Toasts so they don't consume your mouse clicks. Also allow you to Right Click on the toast and close it immediately.\n\n*Event Toasts are banners that appear on the top of the screen when you complete certain activities.";
 
 
@@ -187,6 +198,12 @@ L["ModuleDescription TooltipItemReagents"] = "If an item can be used to combine 
 L["Can Create Multiple Item Format"] = "You have the resources to create |cffffffff%d|r items.";
 
 
+--Tooltip DelvesItem
+L["ModuleName TooltipDelvesItem"] = "Delves Items";
+L["ModuleDescription TooltipDelvesItem"] = "Show how many Coffer Keys and Shards you have earned from weekly caches.";
+L["You Have Received Weekly Item Format"] = "You have received %s this week.";
+
+
 --Plunderstore
 L["ModuleName Plunderstore"] = "Plunderstore";
 L["ModuleDescription Plunderstore"] = "Modify the store opened via Group Finder:\n\n- Added a checkbox to hide collected items.\n\n- Display the number of uncollected items on the category buttons.\n\n- Added weapon and armor equip location to their tooltips.\n\n- Allow you to view equippable items in the Dressing Room.";
@@ -201,6 +218,7 @@ L["Num Items In Bank Format"] = (BANK or "Bank") ..": |cffffffff%d|r";
 L["Num Items In Bag Format"] = (HUD_EDIT_MODE_BAGS_LABEL or "Bags") ..": |cffffffff%d|r";
 L["Number Thousands"] = "K";    --15K  15,000
 L["Number Millions"] = "M";     --1.5M 1,500,000
+L["Questionable Item Count Tooltip"] = "The item count may be incorrect due to addon limitations.";
 
 
 --Landing Page (Expansion Summary Minimap)
@@ -232,8 +250,14 @@ L["ModuleName Delves_SeasonProgress"] = "Delves: Delver's Journey";
 L["ModuleDescription Delves_SeasonProgress"] = "Display a progress bar on the top of the screen whenever you earn Delver's Journey";
 L["ModuleName Delves_Dashboard"] = "Delves: Weekly Reward";
 L["ModuleDescription Delves_Dashboard"] = "Show your Great Vault and Gilded Stash progress on the Delves Dashboard.";
+L["ModuleName Delves_Automation"] = "Delves: Auto Choose Power";
+L["ModuleDescription Delves_Automation"] = "Automatically choose the power dropped by treasures and rares.";
 L["Delve Crest Stash No Info"] = "This info is unavailable in your current location.";
 L["Delve Crest Stash Requirement"] = "Appears in Tier 11 Bountiful Delves.";
+L["Overcharged Delve"] = "Overcharged Delve";
+L["Delves History Requires AddOn"] = "Delves history is stored locally by the Plumber AddOn.";
+L["Auto Select"] = "Auto Select";
+L["Power Borrowed"] = "Power Borrowed";
 
 
 --WoW Anniversary
@@ -320,6 +344,51 @@ L["ModuleName MinimapMouseover"] = "Minimap Target";
 L["ModuleDescription MinimapMouseover"] = "Alt Click a creature on the Minimap to set it as your target.".."\n\n|cffd4641c- " ..L["Restriction Combat"].."|r";
 
 
+--BossBanner
+L["ModuleName BossBanner"] = "Boss Loot Banner";
+L["ModuleDescription BossBanner"] = "Modify the banner that appears on the top of the screen when a player in your group receives a loot.\n\n- Hide when solo.\n\n- Show valuable items only.";
+L["BossBanner Hide When Solo"] = "Hide When Solo";
+L["BossBanner Hide When Solo Tooltip"] = "Hide the banner if there is only one person (you) in your group.";
+L["BossBanner Valuable Item Only"] = "Valuable Items Only";
+L["BossBanner Valuable Item Only Tooltip"] = "Only display mounts, class tokens, and items that are marked as Very Rare or Extremely Rare on the banner.";
+
+
+--AppearanceTab
+L["ModuleName AppearanceTab"] = "Appearances Tab";
+L["ModuleDescription AppearanceTab"] = "Modify the Appearances Tab in the Warband Collections:\n\n- Reduce GPU load by improving model loading sequence and changing the number of items shown per page. It can reduce the chance of graphics crash when opening this UI.\n\n- Remember the page you visit after changing slots.";
+
+
+--SoftTargetName
+L["ModuleName SoftTargetName"] = "Nameplate: Soft Target";
+L["ModuleDescription SoftTargetName"] = "Display the soft target object's name.";
+L["SoftTargetName Req Title"] = "|cffd4641cYou need to manually change these settings to make it work:|r";
+L["SoftTargetName Req 1"] = "|cffffd100Enable Interact Key|r in Game Options> Gameplay> Controls.";
+L["SoftTargetName Req 2"] = "Set CVar |cffffd100SoftTargetIconGameObject|r to |cffffffff1|r";
+L["SoftTargetName CastBar"] = "Show Cast Bar";
+L["SoftTargetName CastBar Tooltip"] = "Show a radial cast bar on the nameplate.\n\n|cffff4800The addon will not be able to tell which object is your spell's target.|r"
+L["SoftTargetName QuestObjective"] = QUEST_LOG_SHOW_OBJECTIVES or "Show Quest Objectives";
+L["SoftTargetName QuestObjective Tooltip"] = "Show quest objectives (if any) below the name.";
+L["SoftTargetName QuestObjective Alert"] = "This feature requires enabling |cffffffffShow Target Tooltip|r in Game Options> Accessibility> General.";   --See globals: TARGET_TOOLTIP_OPTION
+L["SoftTargetName ShowNPC"] = "Include NPC";
+L["SoftTargetName ShowNPC Tooltip"] = "If disabled, the name will only appear on interactable Game Objects";
+
+
+--LegionRemix
+L["ModuleName LegionRemix"] = "Legion Remix";
+L["ModuleDescription LegionRemix"] = "Legion Remix";
+L["Artifact Weapon"] = "Artifact Weapon";
+L["Earn X To Upgrade Y Format"] = "Earn another |cffffffff%s|r %s to upgrade %s"; --Example: Earn another 100 Infinite Power to upgrade Artifact Weapon
+L["Until Next Upgrade Format"] = "%s until next upgrade";
+L["New Trait Available"] = "New trait available.";
+L["Rank Increased"] = "Rank Increased";
+L["Infinite Knowledge Tooltip"] = "You can obtain Inifite Knowledge by earning certain Legion Remix achievements.";
+
+
+--ItemUpgradeUI
+L["ModuleName ItemUpgradeUI"] = "Item Upgrades: Show Character Pane";
+L["ModuleDescription ItemUpgradeUI"] = "Automatically open Character Pane when you interact with an Item Upgrades NPC.";
+
+
 --Loot UI
 L["ModuleName LootUI"] = HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Loot Window";
 L["ModuleDescription LootUI"] = "Replace the default Loot Window and provide some optional features:\n\n- Loot items fast.\n\n- Fix Auto Loot failure bug.\n\n- Show a Take All button when looting manually.";
@@ -350,6 +419,14 @@ L["LootUI Option Use Default UI"] = "Use Default Loot Window";
 L["LootUI Option Use Default UI Tooltip"] = "Use WoW\'s default loot window.\n\n|cffff4800Enabling this option nullifies all settings above.|r";
 L["LootUI Option Background Opacity"] = "Opacity";
 L["LootUI Option Background Opacity Tooltip"] = "Set the background's opacity in Loot Notification Mode.\n\nThis option doesn't affect Manual Loot Mode.";
+L["LootUI Option Custom Quality Color"] = "Use Custom Quality Color";
+L["LootUI Option Custom Quality Color Tooltip"] = "Use the colors you set in Game Options> Accessibility> Colors."
+L["LootUI Option Grow Direction"] = "Grow Upwards";
+L["LootUI Option Grow Direction Tooltip 1"] = "When enabled: the bottom left of the window remains still, and new notifications will appear on top of the old ones.";
+L["LootUI Option Grow Direction Tooltip 2"] = "When disabled: the top left of the window remains still, and new notifications will appear on bottom of the old ones.";
+L["Junk Items"] = "Junk Items";
+L["LootUI Option Combine Items"] = "Combine Similar Items";
+L["LootUI Option Combine Items Tooltip"] = "Display similar items on a single row. Supported Categories:\n\n- Junk Items\n- Epoch Mementos (Legion Remix)";
 
 
 --Quick Slot For Third-party Dev
@@ -388,18 +465,86 @@ L["Drawer Option Update Frequently"] = "Update Frequently";
 L["Drawer Option Update Frequently Tooltip"] = "Attempt to update the button states whenever there is a change in your bags or spellbooks. Enabling this option may slightly increase resource usage.";
 
 
+--New Expansion Landing Page
+L["ModuleName NewExpansionLandingPage"] = "Expansion Summary";
+L["ModuleDescription NewExpansionLandingPage"] = "A UI that displays factions, weekly activities, and raid lockouts. You can open it by:\n\n- Click Khaz Algar Summary button on the minimap.\n\n- Set a hotkey in Game Setting> Keybindings.";
+L["Reward Available"] = "Reward Available";  --As brief as possible
+L["Paragon Reward Available"] = "Paragon Reward Available";
+L["Until Next Level Format"] = "%d until next level";   --Earn x reputation to reach the next level
+L["Until Paragon Reward Format"] = "%d until Paragon reward";
+L["Instruction Click To View Renown"] = REPUTATION_BUTTON_TOOLTIP_VIEW_RENOWN_INSTRUCTION or "<Click to view Renown>";
+L["Not On Quest"] = "You are not on this quest";
+L["Factions"] = "Factions";
+L["Activities"] = MAP_LEGEND_CATEGORY_ACTIVITIES or "Activities";
+L["Raids"] = RAIDS or "Raids";
+L["Instruction Track Achievement"] = "<Shift click to track this achievement>";
+L["Instruction Untrack Achievement"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Shift click to stop tracking>";
+L["No Data"] = "No data";
+L["No Raid Boss Selected"] = "No boss selected";
+L["Your Class"] = "(Your Class)";
+L["Great Vault"] = DELVES_GREAT_VAULT_LABEL or "Great Vault";
+L["Item Upgrade"] = ITEM_UPGRADE or "Item Upgrade";
+L["Resources"] = WORLD_QUEST_REWARD_FILTERS_RESOURCES or "Resources";
+L["Plumber Experimental Feature Tooltip"] = "An experimental feature in Plumber addon.";
+L["Bountiful Delves Rep Tooltip"] = "Opening a Bountiful Coffer has a chance to increase your reputation with this faction.";
+L["Warband Weekly Reward Tooltip"] = "You Warband can only receive this reward once per week.";
+L["Completed"] = CRITERIA_COMPLETED or "Completed";
+L["Filter Hide Completed Format"] = "Hide Completed (%d)";
+L["Weeky Reset Format"] = "Weekly Reset: %s";
+L["Daily Reset Format"] = "Daily Reset: %s";
+L["Ready To Turn In Tooltip"] = "Ready to turn in.";
+L["Trackers"] = "Trackers";
+L["New Tracker Title"] = "New Tracker";     --Create a new Tracker
+L["Edit Tracker Title"] = "Edit Tracker";
+L["Type"] = "Type";
+L["Select Instruction"] = LFG_LIST_SELECT or "Select";
+L["Name"] = "Name";
+L["Difficulty"] = LFG_LIST_DIFFICULTY or "Difficulty";
+L["All Difficulties"] = "All Difficulties";
+L["TrackerType Boss"] = "Boss";
+L["TrackerType Instance"] = "Instance";
+L["TrackerType Quest"] = "Quest";
+L["TrackerType Rare"] = "Rare Creature";
+L["TrackerTypePlural Boss"] = "Bosses";
+L["TrackerTypePlural Instance"] = "Instances";
+L["TrackerTypePlural Quest"] = "Quests";
+L["TrackerTypePlural Rare"] = "Rare Creatures";
+L["Accountwide"] = "Account-wide";
+L["Flag Quest"] = "Flag Quest";
+L["Boss Name"] = "Boss name";
+L["Instance Or Boss Name"] = "Instance or boss name";
+L["Name EditBox Disabled Reason Format"] = "This box will be filled automatically when you enter a valid %s.";
+L["Search No Matches"] = CLUB_FINDER_APPLICANT_LIST_NO_MATCHING_SPECS or "No Matches";
+L["Create New Tracker"] = "New Tracker";
+L["FailureReason Already Exist"] = "This entry already exists.";
+L["Quest ID"] = "Quest ID";
+L["Creature ID"] = "Creature ID";
+L["Edit"] = EDIT or "Edit";
+L["Delete"] = DELETE or "Delete";
+L["Visit Quest Hub To Log Quests"] = "Visit the quest hub and interact with the quest givers to log today's quests."
+L["Quest Hub Instruction Celestials"] = "Visit the August Celestials Quartermaster in Vale of Eternal Blossoms to find out which temple needs your assistance."
+L["Unavailable Klaxxi Paragons"] = "Unavailable Klaxxi Paragons:";
+L["Weekly Coffer Key Tooltip"] = "The first four weekly caches you earn each week contain a Restored Coffer Key.";
+L["Weekly Coffer Key Shards Tooltip"] = "The first four weekly caches you earn each week contain Coffer Key Shards.";
+L["Weekly Cap"] = "Weekly Cap";
+L["Weekly Cap Reached"] = "Weekly cap reached.";
+L["Instruction Right Click To Use"] = "<Right Click to Use>";
+
+
 --Generic
+L["Total Colon"] = FROM_TOTAL or "Total:";
 L["Reposition Button Horizontal"] = "Move Horizontally";   --Move the window horizontally
 L["Reposition Button Vertical"] = "Move Vertically";
 L["Reposition Button Tooltip"] = "Left click and drag to move the window";
 L["Font Size"] = FONT_SIZE or "Font Size";
+L["Icon Size"] = "Icon Size";
 L["Reset To Default Position"] = HUD_EDIT_MODE_RESET_POSITION or "Reset To Default Position";
-L["Renown Level Label"] = RENOWN_LEVEL_LABEL or "Renown ";  --There is a space
+L["Renown Level Label"] = "Renown ";  --There is a space
 L["Paragon Reputation"] = "Paragon";
 L["Level Maxed"] = "(Maxed)";   --Reached max level
 L["Current Colon"] = ITEM_UPGRADE_CURRENT or "Current:";
 L["Unclaimed Reward Alert"] = WEEKLY_REWARDS_UNCLAIMED_TITLE or "You have unclaimed rewards";
-L["Total Colon"] = FROM_TOTAL or "Total:";
+L["Uncollected Set Counter Format"] = "You have |cffffffff%d|r uncollected transmog |4set:sets;.";
 
 
 --Plumber AddOn Settings
@@ -427,6 +572,12 @@ L["GameObject Door"] = "Door";
 L["Delve Chest 1 Rare"] = "Bountiful Coffer";   --We'll use the GameObjectID once it shows up in the database
 
 L["Season Maximum Colon"] = "Season Maximum:";  --CURRENCY_SEASON_TOTAL_MAXIMUM
+L["Item Changed"] = "was changed to";   --CHANGED_OWN_ITEM
+L["Completed CHETT List"] = "Completed C.H.E.T.T. List";
+L["Devourer Attack"] = "Devourer Attack";
+L["Restored Coffer Key"] = "Restored Coffer Key";
+L["Coffer Key Shard"] = "Coffer Key Shard";
+L["Epoch Mementos"] = "Epoch Mementos";     --See currency:3293
 
 
 --Map Pin Filter Name (name should be plural)

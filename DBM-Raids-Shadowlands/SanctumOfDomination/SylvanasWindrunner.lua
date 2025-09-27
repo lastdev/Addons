@@ -1,16 +1,21 @@
 local mod	= DBM:NewMod(2441, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250719035005")
 mod:SetCreatureID(175732)
 mod:SetEncounterID(2435)
 mod:SetUsedIcons(1, 2, 3)
-mod:SetHotfixNoticeRev(20210826000000)--2021-08-26
-mod:SetMinSyncRevision(20210826000000)
+mod:SetHotfixNoticeRev(20240718000000)--2021-08-26
+mod:SetMinSyncRevision(20240718000000)
 mod.respawnTime = 29
---mod.NoSortAnnounce = true
+mod:SetZone(2450)
 
 mod:RegisterCombat("combat")
+mod:SetWipeTime(30)
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 349419 347726 352663 353418 353417 348094 355540 352271 351075 351353 356023 354011 353969 354068 353952 353935 354147 357102 351589 351562 358181 352843 352842 347609 358704",
@@ -78,6 +83,7 @@ local yellBlackArrowFades							= mod:NewIconFadesYell(358705, 208407)
 local specWarnBlackArrowTaunt						= mod:NewSpecialWarningTaunt(358705, nil, 208407, nil, 1, 2)
 local specWarnRage									= mod:NewSpecialWarningRun(358711, nil, nil, nil, 4, 2)
 
+local timerRP										= mod:NewRPTimer(58.3)
 local timerWindrunnerCD								= mod:NewCDCountTimer(50.3, 347504, nil, nil, nil, 6, nil, nil, nil, 1, 3)
 local timerDominationChainsCD						= mod:NewCDCountTimer(50.7, 349419, 298213, nil, nil, 3)--Shortname Chains
 local timerVeilofDarknessCD							= mod:NewCDCountTimer(48.8, 347704, 209426, nil, nil, 3)--Shortname Darkness
@@ -364,6 +370,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(debuffStacks)
 	table.wipe(castsPerGUID)
 	self:SetStage(1)
+	mod:SetWipeTime(10)
 	self.vb.arrowIcon = 1
 	self.vb.windrunnerCount = 0
 	self.vb.dominationChainsCount = 0
@@ -844,6 +851,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		self:SetStage(2)
+		self:SetWipeTime(20)
 		if self:IsFated() then
 			self:AffixEvent(1, 2)
 		end
@@ -1214,3 +1222,26 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	end
 end
 --]]
+
+--"<1.57 20:05:48> [CHAT_MSG_MONSTER_SAY] Azeroth's champions. You've arrived at last.#Sylvanas Windrunner###Omegal##0#0##0#1677#nil#0#false#false#false#false",
+--"<6.82 20:05:53> [UNIT_SPELLCAST_SUCCEEDED] Sylvanas Windrunner(100.0%-0.0%){Target:??} -Anchor Here- [[target:Cast-3-3881-2450-14781-45313-00037449E1:45313]]",
+--"<9.54 20:05:56> [CHAT_MSG_MONSTER_SAY] Despite witnessing the broken cycle of Life and Death with your own eyes, still you would stop us from remaking this flawed system. What a pity.#Sylvanas Windrunner###Omegal##0#0##0#1678#nil#0#false#false#false#false",
+--"<26.82 20:06:13> [CHAT_MSG_MONSTER_SAY] There are no more val'kyr to protect you, Sylvanas. You will die here--for the last time.#Highlord Bolvar Fordragon###Omegal##0#0##0#1680#nil#0#false#false#false#false",
+--"<30.75 20:06:17> [UNIT_SPELLCAST_SUCCEEDED] Sylvanas Windrunner(100.0%-0.0%){Target:??} -Anchor Here- [[target:Cast-3-3881-2450-14781-45313-0001F449F9:45313]]",
+--"<40.70 20:06:27> [CHAT_MSG_MONSTER_SAY] The archer does not mourn the loss of their arrows, Highlord.#Sylvanas Windrunner###Omegal##0#0##0#1681#nil#0#false#false#false#false",
+--"<49.60 20:06:36> [CHAT_MSG_MONSTER_SAY] A shame you won't survive to witness our victory. But if it's an ending you seek, then come and meet it!#Sylvanas Windrunner###Omegal##0#0##0#1682#nil#0#false#false#false#false",
+--"<58.72 20:06:45> [UNIT_SPELLCAST_SUCCEEDED] Sylvanas Windrunner(100.0%-0.0%){Target:??} -Anchor Here- [[target:Cast-3-3881-2450-14781-45313-0003F44A15:45313]]",
+--"<59.93 20:06:46> [UNIT_SPELLCAST_SUCCEEDED] Sylvanas Windrunner(100.0%-0.0%){Target:??} -Anchor Here- [[target:Cast-3-3881-2450-14781-45313-0002F44A16:45313]]",
+--"<59.94 20:06:46> [NAME_PLATE_UNIT_ADDED] Sylvanas Windrunner#Vehicle-0-3881-2450-14781-175732-00007445D8",
+--"<63.58 20:06:50> [DBM_Debug] ENCOUNTER_START event fired: 2435 Sylvanas Windrunner 16 20#nil",
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.PrePull or msg:find(L.PrePull)) and self:LatencyCheck() then
+		self:SendSync("SylvanasPrePull")
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "SylvanasPrePull" and self:AntiSpam(10, 8) then
+		timerRP:Start(58.3)
+	end
+end

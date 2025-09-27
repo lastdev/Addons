@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 local Type, Version = "MultiLineEditBox", 33
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)

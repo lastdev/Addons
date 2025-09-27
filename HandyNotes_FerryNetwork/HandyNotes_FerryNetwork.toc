@@ -1,0 +1,25 @@
+## Interface: 110200
+## Title: HandyNotes_FerryNetwork
+## Version: v1.3.24
+## Notes: HandyNotes plugin for Alliance players which shows Ferry Master Network 'flight' path locations on the world map
+## Author: Numy
+## IconTexture: Interface\Addons\HandyNotes_FerryNetwork\media\icon
+## OptionalDeps: TomTom
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_FerryNetworkDB
+## X-Curse-Project-ID: 317860
+## X-Wago-ID: RXKqkwNy
+## Category-enUS: Map
+## Category-deDE: Karte
+## Category-esES: Mapa
+## Category-esMX: Mapa
+## Category-frFR: Carte
+## Category-itIT: Mappa
+## Category-koKR: 지도
+## Category-ptBR: Mapa
+## Category-ruRU: Карта
+## Category-zhCN: 地图
+## Category-zhTW: 地圖
+
+libs\embeds.xml
+HandyNotes_FerryNetwork.lua

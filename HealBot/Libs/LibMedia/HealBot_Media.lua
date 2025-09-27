@@ -18,6 +18,16 @@ HealBot_Media_luVars["Registered"]=false
 HealBot_Media_luVars["DelayUpdateUsedMedia"]=false
 HealBot_Media_luVars["pluginMedia"]=false
 
+function HealBot_Media_setLuVars(vName, vValue)
+      --HealBot_setCall("HealBot_Aggro_setLuVars - "..vName)
+    HealBot_Media_luVars[vName]=vValue
+end
+
+function HealBot_Media_retLuVars(vName)
+      --HealBot_setCall("HealBot_Aggro_retLuVars - "..vName)
+    return HealBot_Media_luVars[vName]
+end
+
 local HealBot_Font_Outline={
     [1]="",
     [2]="OUTLINE",
@@ -28,7 +38,10 @@ local roleTextures={}
 local classTextures={}
 local rankTextures={}
 local targetTextures={}
-local currentSet={["CLASS"]=0, ["ROLE"]=0, ["RANK"]=0, ["TARGET"]=0, }
+local rcTextures={}
+local stateTextures={}
+local combatTextures={}
+local currentSet={["CLASS"]=0, ["ROLE"]=0, ["RANK"]=0, ["TARGET"]=0, ["RC"]=0, ["STATE"]=0, ["COMBAT"]=0 }
 function HealBot_Media_setClassRoleIcons()
     local iSet=hbv_Skins_GetVar("IconSet", "CLASS")
     classTextures["DEAT"]="Interface\\Addons\\HealBot\\Images\\class\\" .. iSet .. "\\Deathknight.tga"
@@ -92,8 +105,47 @@ function HealBot_Media_setTargetIcons()
     end
 end
 
+function HealBot_Media_setReadyCheckIcons()
+    local iSet=hbv_Skins_GetVar("IconSet", "RC")
+    if iSet == 1 then
+        rcTextures[hbv_GetStatic("rcWAITING")]="Interface\\RAIDFRAME\\ReadyCheck-Waiting"
+        rcTextures[hbv_GetStatic("rcREADY")]="Interface\\RAIDFRAME\\ReadyCheck-Ready"
+        rcTextures[hbv_GetStatic("rcNOTREADY")]="Interface\\RAIDFRAME\\ReadyCheck-NotReady"
+    else
+        rcTextures[hbv_GetStatic("rcWAITING")]="Interface\\Addons\\HealBot\\Images\\rc\\" .. iSet .. "\\waiting.tga"
+        rcTextures[hbv_GetStatic("rcREADY")]="Interface\\Addons\\HealBot\\Images\\rc\\" .. iSet .. "\\ready.tga"
+        rcTextures[hbv_GetStatic("rcNOTREADY")]="Interface\\Addons\\HealBot\\Images\\rc\\" .. iSet .. "\\notready.tga"
+    end
+    if currentSet["RC"] ~= iSet then
+        HealBot_IconReadyCheck_UpdateIcons()
+        HealBot_Timers_Set("SKINS","IconUpdAllReadyCheck",true)
+        currentSet["RC"]=iSet
+    end
+end
+
+function HealBot_Media_setStateIcons()
+    local iSet=hbv_Skins_GetVar("IconSet", "STATE")
+    stateTextures["AFK"]="Interface\\Addons\\HealBot\\Images\\state\\" .. iSet .. "\\afk.tga"
+    stateTextures["REST"]="Interface\\Addons\\HealBot\\Images\\state\\" .. iSet .. "\\rested.tga"
+    if currentSet["STATE"] ~= iSet then
+        HealBot_IconState_UpdateIcons()
+        HealBot_Timers_Set("SKINS","IconUpdAllState",true)
+        currentSet["STATE"]=iSet
+    end
+end
+
+function HealBot_Media_setCombatIcons()
+    local iSet=hbv_Skins_GetVar("IconSet", "COMBAT")
+    combatTextures["HOSTILE"]="Interface\\Addons\\HealBot\\Images\\combat\\" .. iSet .. "\\hostile.tga"
+    combatTextures["INCOMBAT"]="Interface\\Addons\\HealBot\\Images\\combat\\" .. iSet .. "\\incombat.tga"
+    if currentSet["COMBAT"] ~= iSet then
+        HealBot_IconCombat_UpdateIcons()
+        HealBot_Timers_Set("SKINS","IconUpdAllCombat",true)
+        currentSet["COMBAT"]=iSet
+    end
+end
+
 function HealBot_Media_retClassRoleIcon(id)
-      --HealBot_setCall("HealBot_Media_retClassRoleIcon")
     return classTextures[id] or roleTextures[id] or false
 end
 
@@ -103,6 +155,18 @@ end
 
 function HealBot_Media_retTargetIcon(id)
     return targetTextures[id]
+end
+
+function HealBot_Media_retReadyCheckIcon(id)
+    return rcTextures[id]
+end
+
+function HealBot_Media_retStateIcon(id)
+    return stateTextures[id]
+end
+
+function HealBot_Media_retCombatIcon(id)
+    return combatTextures[id]
 end
 
 function HealBot_Media_PluginState(state)
@@ -181,17 +245,24 @@ function HealBot_Media_UpdateFont(object, font, height, outline, caller)
 end
 
 function HealBot_Media_UpdateDefaultTexture(object, caller)
-    object:SetStatusBarTexture(HealBot_Default_Texture)
+    if not object.texture or object.texture~="DefaultTexture" then
+        object:SetStatusBarTexture(HealBot_Default_Texture)
+        object.texture="DefaultTexture"
+    end
    -- HealBot_AddDebug("UpdateDefaultTexture  Caller="..(caller or "nil"),"Media DefaultTexture",true)
 end
 
 function HealBot_Media_UpdateTexture(object, texture, caller)
-    object:SetStatusBarTexture(LSM:Fetch('statusbar', texture))
+    if not object.texture or object.texture ~= texture then
+        object:SetStatusBarTexture(LSM:Fetch('statusbar', texture))
+        object.texture=texture
+    end
    -- HealBot_AddDebug("LSM Fetch Texture "..texture.."  Caller="..(caller or "nil"),"Media Texture",true)
 end
 
 function HealBot_Media_UpdateTextureRef(name, texture, caller)
     local g=_G[name]
+    --g:SetStatusBarTexture(LSM:Fetch('statusbar', texture))
     HealBot_Media_UpdateTexture(g, texture, caller)
 end
 

@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- **AceAddon-3.0** provides a template for creating addon objects.
 -- It'll provide you with a set of callback functions that allow you to simplify the loading

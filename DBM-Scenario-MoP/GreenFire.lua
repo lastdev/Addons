@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20250105060446")
+mod:SetRevision("20250805083731")
 mod:SetZone(1112)
 
 mod:RegisterCombat("scenario", 1112)
@@ -151,7 +151,7 @@ function mod:StartEngageTimers(guid, cid, delay)
 end
 
 --Abort timers when all players out of combat, so NP timers clear on a wipe
---Caveat, it won't calls top with GUIDs, so while it might terminate bar objects, it may leave lingering nameplate icons
+--Caveat, it won't call stop with GUIDs, so while it might terminate bar objects, it may leave lingering nameplate icons
 function mod:LeavingZoneCombat()
 	self:Stop(true)
 end

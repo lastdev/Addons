@@ -534,7 +534,7 @@ function private.ColorOnMouseUp(frame)
 	ColorPickerFrame.previousValues.r = r
 	ColorPickerFrame.previousValues.g = g
 	ColorPickerFrame.previousValues.b = b
-	if ClientInfo.IsRetail() then
+	if ClientInfo.IsRetail() or ClientInfo.IsVanillaClassic() then
 		ColorPickerFrame.swatchFunc = private.ColorPickerCallback
 	else
 		ColorPickerFrame.func = private.ColorPickerCallback
@@ -546,6 +546,9 @@ function private.ColorOnMouseUp(frame)
 	ColorPickerFrame:SetPoint("CENTER", UIParent, "TOPLEFT", x, y)
 	ColorPickerFrame:Hide()
 	ColorPickerFrame:Show()
+	if ClientInfo.IsPandaClassic() then
+		ColorPickerFrame.swatchFunc = ColorPickerFrame.func
+	end
 end
 
 function private.ColorPickerCallback()

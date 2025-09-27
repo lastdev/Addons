@@ -1,4 +1,4 @@
--- Made by Nnoggie, 2017-2024
+-- Made by Nnoggie, 2017-2025
 local AddonName, MDT = ...
 local L = MDT.L
 local mainFrameStrata = "HIGH"
@@ -25,6 +25,12 @@ MDT.externalLinks = {
     tooltip = L["Provide feedback in Discord"],
     url = "https://discord.gg/tdxMPb3",
     texture = { "Interface\\AddOns\\MythicDungeonTools\\Textures\\icons", 0.5, .75, 0.75, 1 }
+  },
+  {
+    name = "Patreon",
+    tooltip = L["Support MDT on Patreon"],
+    url = "https://www.patreon.com/nnoggie",
+    texture = { "Interface\\AddOns\\MythicDungeonTools\\Textures\\icons", 0, .25, 0.25, 0.5 }
   },
 }
 
@@ -94,7 +100,6 @@ BINDING_NAME_MDTWAYPOINT = L["New Patrol Waypoint at Cursor Position"]
 BINDING_NAME_MDTUNDODRAWING = L["undoDrawing"]
 BINDING_NAME_MDTREDODRAWING = L["redoDrawing"]
 
----@diagnostic disable-next-line: duplicate-set-field
 function SlashCmdList.MYTHICDUNGEONTOOLS(cmd, editbox)
   cmd = cmd:lower()
   local rqst, arg = strsplit(' ', cmd)
@@ -174,6 +179,8 @@ local defaultSavedVars = {
     presets = {},
     currentPreset = {},
     newDataCollectionActive = false,
+    fadeOutDuringCombat = false,
+    fadeOutAlpha = 0.5,
     colorPaletteInfo = {
       autoColoring = true,
       forceColorBlindMode = false,
@@ -181,7 +188,7 @@ local defaultSavedVars = {
       customPaletteValues = {},
       numberCustomColors = 12,
     },
-    currentDungeonIdx = 115, -- set this one every new season
+    currentDungeonIdx = MDT:IsMop() and 130 or 123, -- set this one every new season
     latestDungeonSeen = 0,
     selectedDungeonList = 1,
     knownAffixWeeks = {},
@@ -241,6 +248,8 @@ do
           if v <= 0 then db.currentPreset[k] = 1 end
         end
       end
+      -- Initialize fade frame for combat transparency
+      MDT:InitializeFadeFrame()
       eventFrame:UnregisterEvent("ADDON_LOADED")
     end
   end
@@ -333,8 +342,7 @@ function MDT:GetNumDungeons()
 end
 
 function MDT:GetDungeonName(idx, forceEnglish)
-  -- don't fail hard for legacy dungeons
-  if forceEnglish and MDT.mapInfo[idx].englishName then
+  if forceEnglish and MDT.mapInfo[idx] and MDT.mapInfo[idx].englishName then
     return MDT.mapInfo[idx].englishName
   end
   return MDT.dungeonList[idx]
@@ -386,6 +394,34 @@ function MDT:ShowInterfaceInternal(force)
   end
 end
 
+function MDT:InitializeFadeFrame()
+  if self.fadeFrame then return end
+  self.fadeFrame = CreateFrame("Frame")
+  self.fadeFrame:SetScript("OnEvent", function(self, event)
+    if not MDT or not MDT.main_frame or not db then return end
+    if event == "PLAYER_REGEN_DISABLED" then
+      MDT.main_frame:SetAlpha(db.fadeOutAlpha or 0.5)
+    elseif event == "PLAYER_REGEN_ENABLED" then
+      MDT.main_frame:SetAlpha(1)
+    end
+  end)
+  self:UpdateFadeEventRegistration()
+end
+
+function MDT:UpdateFadeEventRegistration()
+  if not self.fadeFrame then return end
+  if db and db.fadeOutDuringCombat then
+    self.fadeFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+    self.fadeFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+  else
+    self.fadeFrame:UnregisterEvent("PLAYER_REGEN_DISABLED")
+    self.fadeFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+    if self.main_frame then
+      self.main_frame:SetAlpha(1)
+    end
+  end
+end
+
 function MDT:HideInterface()
   if self.main_frame then
     self.main_frame:Hide()
@@ -405,6 +441,7 @@ function MDT:CreateMenu()
   self.main_frame.closeButton:SetPoint("TOPRIGHT", self.main_frame.sidePanel, "TOPRIGHT", -1, -4)
   self.main_frame.closeButton:SetScript("OnClick", function() self:HideInterface() end)
   self.main_frame.closeButton:SetFrameLevel(4)
+  self.main_frame.closeButton:SetSize(24, 24)
 
   --Maximize Button
   self.main_frame.maximizeButton = CreateFrame("Button", "MDTMaximizeButton", self.main_frame,
@@ -417,6 +454,7 @@ function MDT:CreateMenu()
   if not db.maximized then self.main_frame.maximizeButton:Minimize() end
   self.main_frame.maximizeButton:SetOnMaximizedCallback(self.Maximize)
   self.main_frame.maximizeButton:SetOnMinimizedCallback(self.Minimize)
+  self.main_frame.maximizeButton:SetSize(24, 24)
 
   --return to live preset
   self.main_frame.liveReturnButton = CreateFrame("Button", "MDTLiveReturnButton", self.main_frame, "UIPanelCloseButton")
@@ -563,8 +601,8 @@ end
 function MDT:SkinProgressBar(progressBar)
   local bar = progressBar and progressBar.Bar
   if not bar then return end
-  bar.Icon:Hide()
-  bar.IconBG:Hide()
+  if bar.Icon then bar.Icon:Hide() end
+  if bar.IconBG then bar.IconBG:Hide() end
 end
 
 function MDT:IsFrameOffScreen()
@@ -1158,6 +1196,7 @@ function MDT:MakeSidePanel(frame)
   local function makeAffixString(week, affixes, longText)
     local ret
     local sep = ""
+    if not MDT:IsRetail() then return "" end
     for _, affixID in ipairs(affixes) do
       local name, _, filedataid = C_ChallengeMode.GetAffixInfo(affixID)
       name = name or L["Unknown"]
@@ -1218,16 +1257,6 @@ function MDT:MakeSidePanel(frame)
 
   function affixDropdown:SetAffixWeek(key, ignoreReloadPullButtons, ignoreUpdateProgressBar)
     affixDropdown:SetValue(key)
-    if not MDT:GetCurrentAffixWeek() then
-      frame.sidePanel.affixWeekWarning.image:Hide()
-      frame.sidePanel.affixWeekWarning:SetDisabled(true)
-    elseif MDT:GetCurrentAffixWeek() == key then
-      frame.sidePanel.affixWeekWarning.image:Hide()
-      frame.sidePanel.affixWeekWarning:SetDisabled(true)
-    else
-      frame.sidePanel.affixWeekWarning.image:Show()
-      frame.sidePanel.affixWeekWarning:SetDisabled(false)
-    end
     MDT:GetCurrentPreset().week = key
     local teeming = MDT:IsPresetTeeming(MDT:GetCurrentPreset())
     MDT:GetCurrentPreset().value.teeming = teeming
@@ -1255,32 +1284,6 @@ function MDT:MakeSidePanel(frame)
   end)
 
   -- frame.sidePanel.WidgetGroup:AddChild(affixDropdown)
-
-  --affix not current week warning
-  frame.sidePanel.affixWeekWarning = AceGUI:Create("Icon")
-  local affixWeekWarning = frame.sidePanel.affixWeekWarning
-  affixWeekWarning:SetImage("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew")
-  affixWeekWarning:SetImageSize(25, 25)
-  affixWeekWarning:SetWidth(30)
-  affixWeekWarning:SetCallback("OnEnter", function(...)
-    GameTooltip:SetOwner(affixDropdown.frame, "ANCHOR_CURSOR")
-    GameTooltip:AddLine(L["The selected affixes are not the ones of the current week"], 1, 1, 1)
-    GameTooltip:AddLine(L["Click to switch to current week"], 1, 1, 1)
-    GameTooltip:Show()
-  end)
-  affixWeekWarning:SetCallback("OnLeave", function(...)
-    GameTooltip:Hide()
-  end)
-  affixWeekWarning:SetCallback("OnClick", function(...)
-    if not MDT:GetCurrentAffixWeek() then return end
-    affixDropdown:SetAffixWeek(MDT:GetCurrentAffixWeek())
-    if MDT.liveSessionActive and MDT:GetCurrentPreset().uid == MDT.livePresetUID then
-      MDT:LiveSession_SendAffixWeek(MDT:GetCurrentAffixWeek())
-    end
-  end)
-  affixWeekWarning.image:Hide()
-  affixWeekWarning:SetDisabled(true)
-  frame.sidePanel.WidgetGroup:AddChild(affixWeekWarning)
 
   --difficulty slider
   frame.sidePanel.DifficultySlider = AceGUI:Create("Slider")
@@ -1333,15 +1336,16 @@ function MDT:MakeSidePanel(frame)
   frame.sidePanel.DifficultySlider:SetCallback("OnLeave", function()
     GameTooltip:Hide()
   end)
-  frame.sidePanel.WidgetGroup:AddChild(frame.sidePanel.DifficultySlider)
-
+  if MDT:IsRetail() then
+    frame.sidePanel.WidgetGroup:AddChild(frame.sidePanel.DifficultySlider)
+  end
   frame.sidePanel.middleLine = AceGUI:Create("Heading")
   frame.sidePanel.middleLine:SetWidth(240)
   frame.sidePanel.WidgetGroup:AddChild(frame.sidePanel.middleLine)
   frame.sidePanel.WidgetGroup.frame:SetFrameLevel(3)
 
-  --progress bar
-  frame.sidePanel.ProgressBar = CreateFrame("Frame", nil, frame.sidePanel, "ScenarioProgressBarTemplate")
+  local progressBarTemplate = MDT:IsMop() and "TooltipProgressBarTemplate" or "ScenarioProgressBarTemplate"
+  frame.sidePanel.ProgressBar = CreateFrame("Frame", nil, frame.sidePanel, progressBarTemplate)
   frame.sidePanel.ProgressBar:Show()
   frame.sidePanel.ProgressBar:ClearAllPoints()
   frame.sidePanel.ProgressBar:SetPoint("TOP", frame.sidePanel.WidgetGroup.frame, "BOTTOM", -10, 5)
@@ -2276,6 +2280,7 @@ end
 function MDT:EnsureDBTables()
   --dungeonIdx doesnt exist
   local seasonList = MDT:GetSeasonList()
+  db.selectedDungeonList = db.selectedDungeonList or defaultSavedVars.global.selectedDungeonList
   if not MDT.dungeonList[db.currentDungeonIdx] or string.find(MDT.dungeonList[db.currentDungeonIdx], ">") or
       not db.selectedDungeonList or not seasonList[db.selectedDungeonList] then
     db.currentDungeonIdx = defaultSavedVars.global.currentDungeonIdx
@@ -2561,6 +2566,7 @@ function MDT:CheckCurrentZone(init)
   if dungeonIdx and (not lastUpdatedDungeonIdx or dungeonIdx ~= lastUpdatedDungeonIdx) then
     lastUpdatedDungeonIdx = dungeonIdx
     MDT:UpdateToDungeon(dungeonIdx, nil, init)
+    MDT:SetDungeonList(nil, dungeonIdx)
   end
 end
 
@@ -3215,7 +3221,7 @@ function MDT:MakeSettingsFrame(frame)
   frame.settingsFrame:SetTitle(L["Settings"])
   local frameWidth = 300
   frame.settingsFrame:SetWidth(frameWidth)
-  frame.settingsFrame:SetHeight(350)
+  frame.settingsFrame:SetHeight(400)
   frame.settingsFrame:EnableResize(false)
   frame.settingsFrame:SetLayout("Flow")
   frame.settingsFrame.statustext:GetParent():Hide()
@@ -3247,7 +3253,9 @@ function MDT:MakeSettingsFrame(frame)
       minimapIcon:RemoveButtonFromCompartment("MythicDungeonTools")
     end
   end)
-  frame.settingsFrame:AddChild(frame.compartmentCheckbox)
+  if MDT:IsRetail() then
+    frame.settingsFrame:AddChild(frame.compartmentCheckbox)
+  end
 
   frame.forcesCheckbox = AceGUI:Create("CheckBox")
   frame.forcesCheckbox:SetLabel(L["Use forces count"])
@@ -3258,6 +3266,32 @@ function MDT:MakeSettingsFrame(frame)
     MDT:ReloadPullButtons()
   end)
   frame.settingsFrame:AddChild(frame.forcesCheckbox)
+
+  -- Initialize database values if they don't exist
+  if db.fadeOutDuringCombat == nil then db.fadeOutDuringCombat = false end
+  if db.fadeOutAlpha == nil then db.fadeOutAlpha = 0.5 end
+
+  frame.fadeOutCheckbox = AceGUI:Create("CheckBox")
+  frame.fadeOutCheckbox:SetLabel(L["Make window transparent in combat"])
+  frame.fadeOutCheckbox:SetWidth(frameWidth - 10)
+  frame.fadeOutCheckbox:SetValue(db.fadeOutDuringCombat)
+  frame.fadeOutCheckbox:SetCallback("OnValueChanged", function(widget, callbackName, value)
+    db.fadeOutDuringCombat = value
+    frame.fadeOutAlphaSlider:SetDisabled(not value)
+    MDT:UpdateFadeEventRegistration()
+  end)
+  frame.settingsFrame:AddChild(frame.fadeOutCheckbox)
+
+  frame.fadeOutAlphaSlider = AceGUI:Create("Slider")
+  frame.fadeOutAlphaSlider:SetLabel(L["Combat Transparency"])
+  frame.fadeOutAlphaSlider:SetWidth(frameWidth - 10)
+  frame.fadeOutAlphaSlider:SetSliderValues(0.1, 1.0, 0.1)
+  frame.fadeOutAlphaSlider:SetValue(db.fadeOutAlpha)
+  frame.fadeOutAlphaSlider:SetDisabled(not db.fadeOutDuringCombat)
+  frame.fadeOutAlphaSlider:SetCallback("OnValueChanged", function(widget, callbackName, value)
+    db.fadeOutAlpha = value
+  end)
+  frame.settingsFrame:AddChild(frame.fadeOutAlphaSlider)
 
   frame.AutomaticColorsCheck = AceGUI:Create("CheckBox")
   frame.AutomaticColorsCheck:SetLabel(L["Automatically color pulls"])
@@ -4260,6 +4294,11 @@ function MDT:DrawPresetObject(obj, objectIndex, scale, currentPreset, currentSub
     else
       obj.d[1] = obj.d[1] or 5
       color.r, color.g, color.b = self:HexToRGB(obj.d[5])
+      --check if color is valid
+      if not color.r or not color.g or not color.b then
+        color.r, color.g, color.b = 1, 1, 1
+        obj.d[5] = "ffffff"
+      end
       --lines
       local x1, y1, x2, y2
       local lastx, lasty

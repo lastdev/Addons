@@ -1,5 +1,5 @@
-## Interface: 110100, 110105
-## X-Min-Interface: 100207
+## Interface: 110200, 110205
+## X-Min-Interface: 110200
 ## Category: DBM
 ## Group: DBM-Core
 ## Title:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Main Core|r
@@ -13,16 +13,15 @@
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM Core|r|cffffe00a>|r |cff69ccf0Noyau|r
 ## Notes: Deadly Boss Mods
 ## Dependencies: DBM-StatusBarTimers
-## OptionalDependencies: LibStub, CallbackHandler-1.0, LibSharedMedia-3.0, LibChatAnims, LibDBIcon-1.0, LibDeflate, LibSerialize, LibSpecialization, CustomNames, Masque, ChatThrottleLib
-## SavedVariables: DBM_AllSavedOptions, DBM_MinimapIcon, DBM_AnnoyingPopupDisables, DBM_ModsToLoadWithFullTestSupport
+## OptionalDependencies: LibStub, CallbackHandler-1.0, LibSharedMedia-3.0, LibChatAnims, LibDBIcon-1.0, LibDeflate, LibSerialize, LibSpecialization, LibKeystone, CustomNames, Masque, ChatThrottleLib
+## SavedVariables: DBM_AllSavedOptions, DBM_MinimapIcon, DBM_AnnoyingPopupDisables, DBM_ModsToLoadWithFullTestSupport, DBM_Keystones
 ## SavedVariablesPerCharacter: DBM_UsedProfile, DBM_UseDualProfile, DBM_CharSavedRevision
 ## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 11.1.17
+## Version: 11.2.16
 ## X-Curse-Project-ID: 3358
-## X-WoWI-ID: 8814
 ## X-Wago-ID: qv633o6b
 ## X-Website: https://deadlybossmods.com
 
@@ -33,11 +32,12 @@ Libs\LibChatAnims\LibChatAnims.xml
 Libs\LibSharedMedia-3.0\lib.xml
 Libs\LibLatency\LibLatency.xml
 Libs\LibDurability\LibDurability.xml
+Libs\LibKeystone\LibKeystone.lua
 Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
 Libs\LibDeflate\LibDeflate.lua
 Libs\LibSerialize\lib.xml
-Libs\LibSpecialization\LibSpecialization.xml
+Libs\LibSpecialization\LibSpecialization.lua
 Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml
 
 localization.en.lua
@@ -86,6 +86,11 @@ DBM-InfoFrame.lua
 DBM-HudMap.lua
 DBM-Nameplate.lua
 
+# GUI Features
+modules\gui\Latency.lua
+modules\gui\Durability.lua
+modules\gui\Keystones.lua
+
 # Modules
 modules\Commands.lua
 modules\Hyperlinks.lua
@@ -107,3 +112,4 @@ modules\objects\Announce.lua
 modules\objects\SpecialWarning.lua
 modules\objects\Yell.lua
 modules\objects\Sorting.lua
+modules\objects\Tooltip.lua

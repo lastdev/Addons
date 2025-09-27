@@ -382,7 +382,7 @@ function Scanner.GetResultItem(craftString)
 	else
 		spellId = private.classicSpellIdLookup[spellId] or spellId
 		local itemLink, indirectSpellId = TradeSkill.GetResult(spellId)
-		if LibTSMService.IsCataClassic() then
+		if LibTSMService.IsPandaClassic() then
 			local itemString = Data.GetIndirectCraftResult(indirectSpellId)
 			itemLink = itemString and ItemInfo.GetLink(itemString) or itemLink
 		end
@@ -607,7 +607,7 @@ function private.ScanProfession()
 							numResultItems = #result
 						elseif ItemString.GetBase(result) then
 							local ilvlBonuses = info.qualityIlvlBonuses
-							if ilvlBonuses then
+							if ilvlBonuses and #ilvlBonuses > 0 then
 								numResultItems = #ilvlBonuses
 							else
 								numResultItems = 1
@@ -802,7 +802,7 @@ function private.BulkInsertMats(craftString)
 		end
 	end
 
-	if LibTSMService.IsCataClassic() and TradeSkill.IsEnchant(spellIdOrIndex) then
+	if LibTSMService.IsPandaClassic() and TradeSkill.IsEnchant(spellIdOrIndex) then
 		-- Add a vellum to the list of mats
 		local vellumItemString = Scanner.GetVellumItemString(craftString)
 		if vellumItemString then

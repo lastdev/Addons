@@ -40,6 +40,18 @@ Returns true if the item is in the "Destroy" list.
 },
 
 {
+    Name = "IsImportantItem",
+    Documentation =
+[[
+Returns true if the item is in the Important Items list.
+]],
+    Function = function()
+        local list = Lists:GetList(Addon.StaticListId.IMPORTANT_ITEMS)
+        return list:Contains(Id)
+    end
+},
+
+{
     Name = "IsInList",
     Documentation =
 [[
@@ -75,6 +87,12 @@ Returns true if the item is in any of the provided lists by name. The name provi
                 local custom = Lists.customLists:Find(name)
                 if (custom) then
                     list = Lists:GetList(custom.Id)
+                else
+                    -- This is awkward but its lua.
+                    local static = Lists.staticLists:Find(name)
+                    if (static) then
+                        list = Lists:GetList(static.Id)
+                    end
                 end
             end
 

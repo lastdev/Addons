@@ -1,0 +1,19 @@
+## Interface: 110200
+## Title: Angleur_Underlight
+## Notes: Automatic Aquatic Form for ALL CLASSES. Get Angleur as well for improved functionality!
+## Version: 1.1
+## Author: LegolandoBloom
+## SavedVariables: AngleurUnderlight_FirstInstall, AngleurUnderlightConfig
+## SavedVariablesPerCharacter: AngleurUnderlight_MainFishingRod
+## OptionalDeps: Angleur
+## IconTexture: Interface\AddOns\Angleur_Underlight\images\iconmini.png
+## X-Curse-Project-ID: 1274741
+
+translations\translations.xml
+angTemplates\embeds.xml
+init.lua
+equipMan.lua
+Angleur_Underlight.lua
+Angleur_Underlight.xml
+collapseConfig.lua
+collapseConfig.xml

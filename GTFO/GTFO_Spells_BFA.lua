@@ -350,6 +350,7 @@ GTFO.SpellID["310832"] = {
 GTFO.SpellID["296733"] = {
   --desc = "Dark Smash (Faceless Destroyer)";
   sound = 1;
+  ignoreApplication = true;
 };
 
 GTFO.SpellID["301516"] = {
@@ -425,6 +426,64 @@ GTFO.SpellID["270012"] = {
   sound = 1;
 };
 
+GTFO.SpellID["308673"] = {
+  --desc = "Dark Gaze (Eye of Chaos)";
+  sound = 2;
+};
+
+GTFO.SpellID["306524"] = {
+  --desc = "Burning Soles (Horrific Visions)";
+  ignoreApplication = true;
+  sound = 1;
+};
+
+GTFO.SpellID["308980"] = {
+  --desc = "Corrupting Growth (Corruption Tumor)";
+  ignoreApplication = true;
+  sound = 2;
+};
+
+GTFO.SpellID["306770"] = {
+  --desc = "Forge Breath (Enthralled Weaponsmith)";
+  sound = 1;
+};
+
+GTFO.SpellID["296674"] = {
+  --desc = "Lurking Appendage (Alx'kov the Infested)";
+  sound = 1;
+  alwaysAlert = true;
+  ignoreApplication = true;
+};
+
+GTFO.SpellID["306752"] = {
+  --desc = "Defiled Ground (Thrall)";
+  ignoreApplication = true;
+  alwaysAlert = true;
+  negatingDebuffSpellID = 306828; -- Defiled Ground (stun)
+  sound = 1;
+};
+
+GTFO.SpellID["305720"] = {
+  --desc = "Toxic Residue (Misha)";
+  ignoreApplication = true;
+  alwaysAlert = true;
+  sound = 1;
+};
+
+GTFO.SpellID["305892"] = {
+  --desc = "Visceral Fluid (Coagulated Horror)";
+  sound = 1;
+  alwaysAlert = true;
+  ignoreApplication = true;
+};
+
+GTFO.SpellID["303594"] = {
+  --desc = "Sanguine Residue (Coagulated Horror)";
+  ignoreApplication = true;
+  sound = 1;
+  alwaysAlert = true;
+};
+
 
 -- ***********************
 -- * Shrine of the Storm *
@@ -498,6 +557,7 @@ GTFO.SpellID["268086"] = {
 
 GTFO.SpellID["257274"] = {
   --desc = "Vile Coating";
+  ignoreApplication = true;
   sound = 1;
 };
 
@@ -699,8 +759,6 @@ GTFO.SpellID["253666"] = {
 -- * King's Rest *
 -- ***************
 
--- TODO: Hunting Leap (Reban)
-
 GTFO.SpellID["269932"] = {
   --desc = "Gust Slash";
   applicationOnly = true;
@@ -725,6 +783,7 @@ GTFO.SpellID["270891"] = {
 GTFO.SpellID["270931"] = {
   --desc = "Darkshot";
   sound = 1;
+  ignoreApplication = true;
 };
 
 GTFO.SpellID["270503"] = {
@@ -745,6 +804,7 @@ GTFO.SpellID["270928"] = {
 GTFO.SpellID["270292"] = {
   --desc = "Purifying Flame";
   sound = 1;
+  ignoreApplication = true;
 };
 
 GTFO.SpellID["271564"] = {
@@ -757,6 +817,11 @@ GTFO.SpellID["266191"] = {
   --desc = "Whirling Axe";
   sound = 1;
   applicationOnly = true;
+};
+
+GTFO.SpellID["269230"] = {
+  --desc = "Hunting Leap (Reban)";
+  sound = 1;
 };
 
 

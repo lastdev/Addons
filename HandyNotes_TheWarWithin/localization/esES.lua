@@ -249,6 +249,11 @@ L['nightfarm_growthling_note'] = 'Usa 3x {item:206350} en la {object:Llave ardie
 
 L['thunder_lynx_note'] = '1. Usa 3x {item:206350} en la {object:Llave ardiente inferior} de la {location:Mina Antorcha} para invocar a {npc:212419}.\n\n2. Habla con {npc:212419} y sigue todas las líneas de diálogo hasta que consigas la misión {quest:82007}.\n\n3. Localiza cada cría de lince: {npc:222373} ({dot:Blue}), {npc:222372} ({dot:Green}), {npc:222375} ({dot:Orange}), y {npc:222374} ({dot:Red}).\n\n{note:Asegúrate de empezar la misión {quest:76169} al mismo tiempo que consigas la {item:219198} o usa un objeto similar como la {item:219148}. Necesitarás una luz para conseguir a {npc:222373} dentro de la {location:Cueva Sombrafría}.}\n\n4. Rescata todos los gatitos lince y regresa con {npc:212419}.'
 
+L['options_icons_fighter'] = '{achievement:41999}'
+L['options_icons_fighter_desc'] = 'Muestra dónde están los élite del Ocaso para el logro {achievement:41999}.'
+L['suspicious_document_label'] = 'Documento sospechoso'
+L['suspicious_document_note'] = 'Abre el {object:Documento sospechoso} para invocar a un élite del Ocaso.'
+
 -------------------------------------------------------------------------------
 ---------------------------------- AZJ-KAHET ----------------------------------
 -------------------------------------------------------------------------------
@@ -324,7 +329,7 @@ L['kej_pet_vendor_note'] = 'Hay una cantidad limitada de cada mascota y cuesta 2
 L['options_icons_back_to_the_wall'] = '{achievement:40620}'
 L['options_icons_back_to_the_wall_desc'] = 'Muestra dónde están los {npc:222119} para el logro {achievement:40620}.'
 L['arathi_prisoner_suffix'] = 'Prisioneros arathi rescatados'
-L['arathi_prisoner_note'] = 'Libera {npc:222119} envueltos en telarañas durante la misión del mundo {wq:Tarea especial: Más vale prevenir}.'
+L['arathi_prisoner_note'] = 'Libera {npc:222119} envueltos en telarañas.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- DELVES ------------------------------------
@@ -646,3 +651,31 @@ L['upgrade_turbo_handcrank'] = '{item:232984} (turbo): Combina las 5 piezas de l
 L['blazefeather_peacock_note'] = 'Después de completar la serie de misiones {quest:83421}, habla con {npc:226555} para pagar %s por invocar un {npc:226561} entrenable.'
 L['radioactive_subject_note'] = 'Usa las tuberías cercanas y, combinando {item:237276}, {item:109076}, {item:231099} o cualquier otro truco de rompecabezas, salta al techo del edificio de los {location:Laboratorios Bonvapor} en {location:Estación de Vapor}.'
 L['george_the_big_pinch_note'] = 'Haz click rápidamente en los 5 {npc:238189} para conseguir {spell:1219679} que te permitirá domesticar {npc:233938}.'
+
+-------------------------------------------------------------------------------
+----------------------------------- K'ARESH -----------------------------------
+-------------------------------------------------------------------------------
+
+L['options_icons_karesh_lore_hunter'] = '{achievement:60890}'
+L['options_icons_karesh_lore_hunter_desc'] = 'Muestra dónde están los objetos históricos del logro {achievement:60890}.'
+
+L['options_icons_phase_lost_and_found'] = '{achievement:61017}'
+L['options_icons_phase_lost_and_found_desc'] = 'Muestra dónde están los Orbes de buceo de fase para el logro {achievement:61017}.'
+L['phaseorb_label'] = 'Orbe de buceo de fase'
+L['phaseorb_note'] = 'Pasa a través del Orbe de buceo de fase para tener una probabilidad de conseguir una de las transfiguraciones.'
+
+L['options_icons_purrkins'] = '{achievement:42729}'
+L['options_icons_purrkins_desc'] = 'Muestra dónde están los ronroneadores para el logro {achievement:42729}.'
+L['purrkins_note'] = 'Teclea {emote:/acariciar} en el ronroneador.'
+L['kareshire_sublabel'] = 'En fase o fuera de fase'
+L['in_a_tree'] = 'Encima del árbol.'
+L['little_ms_phaser_sublabel'] = 'En fase o fuera de fase'
+
+L['mailroom_distribution_note'] = 'Interactúa con el carro de fuera y abre la puerta de la sala de correo. Párate en los círculos y usa el botón de acción adicional. El tesoro aparecerá cerca de la puerta.'
+L['gift_of_the_brothers_note'] = 'Interactúa con el {object:Farol chisporroteante} y habla con {npc:233881}. Después ves a buscar a {npc:234112} ({dot:Red}), {npc:234113} ({dot:Yellow}) y {npc:234075} ({dot:Green}). Por último, vuelve a {npc:233881} en el {object:Farol chisporroteante}.'
+L['ancient_coffer_note'] = 'Recoge el {item:233794}({dot:Red}) y la {item:233799}({dot:Yellow}). Devuélvelos a la {object:Arca antigua} para conseguir {item:245269}.'
+
+L['sthaarbs_note'] = 'Usa el teletransportador cerca del {object:Conducto de fase} para alcanzar a {npc:234845}.'
+L['heka_tamos_note'] = 'Consigue un buff de {object:Minador de rocío}, {object:Farol espectral}, {object:Exquisitez terránea} y {object:Atrapavientos} que aparecen cerca e interactúa con el {object:Blandón de unión elemental} para invocar al raro.'
+
+L['translocated_gorger_note'] = 'Recoge 1x {item:246240} por boss cada semana de la banda guerrera del boss durante una {object:Invasión de devoradores}. Combínalas y conseguirás tu montura.'

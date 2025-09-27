@@ -750,7 +750,7 @@ function APIWrapper:_HandleAPICall(...)
 	local timeout = nil
 	if not DefaultUI.IsAuctionHouseVisible() then
 		timeout = 0
-	elseif self._name == "QueryAuctionItems" and select(7, ...) then
+	elseif (self._name == "QueryAuctionItems" and select(7, ...)) or self._name == "ReplicateItems" then
 		timeout = GET_ALL_TIMEOUT
 	else
 		timeout = API_TIMEOUT

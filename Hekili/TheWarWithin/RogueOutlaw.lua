@@ -1,23 +1,53 @@
 -- RogueOutlaw.lua
--- January 2025
+-- August 2025
+-- Patch 11.2
 
 -- Contributed to JoeMama.
 if UnitClassBase( "player" ) ~= "ROGUE" then return end
 
 local addon, ns = ...
 local Hekili = _G[ addon ]
-
-local class = Hekili.Class
-local state = Hekili.State
-local GetUnitChargedPowerPoints = GetUnitChargedPowerPoints
+local class, state = Hekili.Class, Hekili.State
 local PTR = ns.PTR
-local FindPlayerAuraByID = ns.FindPlayerAuraByID
-local strformat, abs = string.format, math.abs
-local IsSpellOverlayed = IsSpellOverlayed
-
 local spec = Hekili:NewSpecialization( 260 )
 
-spec:RegisterResource( Enum.PowerType.ComboPoints )
+---- Local function declarations for increased performance
+-- Strings
+local strformat = string.format
+-- Tables
+local insert, remove, sort, wipe = table.insert, table.remove, table.sort, table.wipe
+-- Math
+local abs, ceil, floor, max, sqrt = math.abs, math.ceil, math.floor, math.max, math.sqrt
+
+-- Common WoW APIs, comment out unneeded per-spec
+-- local GetSpellCastCount = C_Spell.GetSpellCastCount
+-- local GetSpellInfo = C_Spell.GetSpellInfo
+-- local GetSpellInfo = ns.GetUnpackedSpellInfo
+-- local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
+-- local FindUnitBuffByID, FindUnitDebuffByID = ns.FindUnitBuffByID, ns.FindUnitDebuffByID
+local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
+-- local IsSpellKnownOrOverridesKnown = C_SpellBook.IsSpellInSpellBook
+-- local IsActiveSpell = ns.IsActiveSpell
+
+-- Specialization-specific local functions (if any)
+local GetUnitChargedPowerPoints = GetUnitChargedPowerPoints
+local FindPlayerAuraByID = ns.FindPlayerAuraByID
+local min = ns.safeMin
+
+spec:RegisterResource( Enum.PowerType.ComboPoints, {
+    -- Gain 1 CP every 0.5 s while channeling Killing Spree
+    killing_spree = {
+        channel = "killing_spree",                     -- only active during the channel
+        last = function ()                             -- time of the most recent tick
+            local app  = state.buff.casting.applied    -- channel started here
+            local tick = 0.5 * state.haste
+            local t    = state.query_time
+            return app + math.floor( ( t - app ) / tick ) * tick
+        end,
+        interval = function () return 0.5 * state.haste end,
+        value    = 1,                                  -- add 1 combo-point per tick
+    },
+} )
 spec:RegisterResource( Enum.PowerType.Energy, {
         blade_rush = {
             aura = "blade_rush",
@@ -52,148 +82,146 @@ spec:RegisterResource( Enum.PowerType.Energy, {
 -- Talents
 spec:RegisterTalents( {
     -- Rogue
-    acrobatic_strikes         = {  90752, 455143, 1 }, -- Auto-attacks increase auto-attack damage and movement speed by 1.0% for 3 sec, stacking up to 10%.
-    airborne_irritant         = {  90741, 200733, 1 }, -- Blind has 50% reduced cooldown, 70% reduced duration, and applies to all nearby enemies.
-    alacrity                  = {  90751, 193539, 2 }, -- Your finishing moves have a 5% chance per combo point to grant 1% Haste for 15 sec, stacking up to 5 times.
-    atrophic_poison           = {  90763, 381637, 1 }, -- Coats your weapons with a Non-Lethal Poison that lasts for 1 |4hour:hrs;. Each strike has a 30% chance of poisoning the enemy, reducing their damage by 3.6% for 10 sec.
-    blackjack                 = {  90686, 379005, 1 }, -- Enemies have 30% reduced damage and healing for 6 sec after Blind or Sap's effect on them ends.
-    blind                     = {  90684,   2094, 1 }, -- Blinds the target, causing it to wander disoriented for 1 min. Damage will interrupt the effect. Limit 1.
-    cheat_death               = {  90742,  31230, 1 }, -- Fatal attacks instead reduce you to 7% of your maximum health. For 3 sec afterward, you take 85% reduced damage. Cannot trigger more often than once per 6 min.
-    cloak_of_shadows          = {  90697,  31224, 1 }, -- Provides a moment of magic immunity, instantly removing all harmful spell effects. The cloak lingers, causing you to resist harmful spells for 5 sec.
-    cold_blood                = {  90748, 382245, 1 }, -- Increases the critical strike chance of your next damaging ability by 100%.
-    deadened_nerves           = {  90743, 231719, 1 }, -- Physical damage taken reduced by 5%.
-    deadly_precision          = {  90760, 381542, 1 }, -- Increases the critical strike chance of your attacks that generate combo points by 5%.
-    deeper_stratagem          = {  90750, 193531, 1 }, -- Gain 1 additional max combo point. Your finishing moves that consume more than 5 combo points have increased effects, and your finishing moves deal 5% increased damage.
-    echoing_reprimand         = {  90638, 470669, 1 }, -- After consuming a supercharged combo point, your next Sinister Strike also strikes the target with an Echoing Reprimand dealing 22,527 Physical damage.
-    elusiveness               = {  90742,  79008, 1 }, -- Evasion also reduces damage taken by 20%, and Feint also reduces non-area-of-effect damage taken by 20%.
-    evasion                   = {  90764,   5277, 1 }, -- Increases your dodge chance by 100% for 10 sec. Dodging an attack while Evasion is active will trigger Mastery: Main Gauche.
-    featherfoot               = {  94563, 423683, 1 }, -- Sprint increases movement speed by an additional 30% and has 4 sec increased duration.
-    fleet_footed              = {  90762, 378813, 1 }, -- Movement speed increased by 15%.
-    forced_induction          = {  90638, 470668, 1 }, -- Increase the bonus granted when a damaging finishing move consumes a supercharged combo point by 1.
-    gouge                     = {  90741,   1776, 1 }, -- Gouges the eyes of an enemy target, incapacitating for 4 sec. Damage will interrupt the effect. Must be in front of your target. Awards 1 combo point.
-    graceful_guile            = {  94562, 423647, 1 }, -- Feint has 1 additional charge.
-    improved_ambush           = {  90692, 381620, 1 }, -- Ambush generates 1 additional combo point.
-    improved_sprint           = {  90746, 231691, 1 }, -- Reduces the cooldown of Sprint by 60 sec.
-    improved_wound_poison     = {  90637, 319066, 1 }, -- Wound Poison can now stack 2 additional times.
-    iron_stomach              = {  90744, 193546, 1 }, -- Increases the healing you receive from Crimson Vial, healing potions, and healthstones by 25%.
-    leeching_poison           = {  90758, 280716, 1 }, -- Adds a Leeching effect to your Lethal poisons, granting you 3% Leech.
-    lethality                 = {  90749, 382238, 2 }, -- Critical strike chance increased by 1%. Critical strike damage bonus of your attacks that generate combo points increased by 10%.
-    master_poisoner           = {  90636, 378436, 1 }, -- Increases the non-damaging effects of your weapon poisons by 20%.
-    nimble_fingers            = {  90745, 378427, 1 }, -- Energy cost of Feint and Crimson Vial reduced by 10.
-    numbing_poison            = {  90763,   5761, 1 }, -- Coats your weapons with a Non-Lethal Poison that lasts for 1 |4hour:hrs;. Each strike has a 30% chance of poisoning the enemy, clouding their mind and slowing their attack and casting speed by 18% for 10 sec.
-    recuperator               = {  90640, 378996, 1 }, -- Slice and Dice heals you for up to 1% of your maximum health per 3 sec.
-    rushed_setup              = {  90754, 378803, 1 }, -- The Energy costs of Kidney Shot, Cheap Shot, Sap, and Distract are reduced by 20%.
-    shadowheart               = { 101714, 455131, 1 }, -- Leech increased by 2% while Stealthed.
-    shadowrunner              = {  90687, 378807, 1 }, -- While Stealth or Shadow Dance is active, you move 20% faster.
-    shiv                      = {  90740,   5938, 1 }, -- Attack with your off-hand, dealing 11,833 Physical damage, dispelling all enrage effects and applying a concentrated form of your active Non-Lethal poison. Awards 1 combo point.
-    soothing_darkness         = {  90691, 393970, 1 }, -- You are healed for 30% of your maximum health over 6 sec after activating Vanish.
-    stillshroud               = {  94561, 423662, 1 }, -- Shroud of Concealment has 50% reduced cooldown.
-    subterfuge                = {  90688, 108208, 2 }, -- Abilities requiring Stealth can be used for 3 sec after Stealth breaks. Combat benefits requiring Stealth persist for an additional 3 sec after Stealth breaks.
-    supercharger              = {  90639, 470347, 2 }, -- Roll the Bones supercharges 1 combo point. Damaging finishing moves consume a supercharged combo point to function as if they spent 2 additional combo points.
-    superior_mixture          = {  94567, 423701, 1 }, -- Crippling Poison reduces movement speed by an additional 10%.
-    thistle_tea               = {  90756, 381623, 1 }, -- Restore 100 Energy. Mastery increased by 14.4% for 6 sec. When your Energy is reduced below 30, drink a Thistle Tea.
-    thrill_seeking            = {  90695, 394931, 1 }, -- Grappling Hook has 1 additional charge.
-    tight_spender             = {  90692, 381621, 1 }, -- Energy cost of finishing moves reduced by 6%.
-    tricks_of_the_trade       = {  90686,  57934, 1 }, -- Redirects all threat you cause to the targeted party or raid member, beginning with your next damaging attack within the next 30 sec and lasting 6 sec.
-    unbreakable_stride        = {  90747, 400804, 1 }, -- Reduces the duration of movement slowing effects 30%.
-    vigor                     = {  90759,  14983, 2 }, -- Increases your maximum Energy by 50 and Energy regeneration by 5%.
-    virulent_poisons          = {  90760, 381543, 1 }, -- Increases the damage of your weapon poisons by 10%.
-    without_a_trace           = { 101713, 382513, 1 }, -- Vanish has 1 additional charge.
+    acrobatic_strikes              = {  90752,  455143, 1 }, -- Auto-attacks increase auto-attack damage and movement speed by $s1% for $s2 sec, stacking up to $s3%
+    airborne_irritant              = {  90741,  200733, 1 }, -- Blind has $s1% reduced cooldown, $s2% reduced duration, and applies to all nearby enemies
+    alacrity                       = {  90751,  193539, 2 }, -- Your finishing moves have a $s1% chance per combo point to grant $s2% Haste for $s3 sec, stacking up to $s4 times
+    atrophic_poison                = {  90763,  381637, 1 }, -- Coats your weapons with a Non-Lethal Poison that lasts for $s1 |$s2hour:hrs;. Each strike has a $s3% chance of poisoning the enemy, reducing their damage by $s4% for $s5 sec
+    blackjack                      = {  90686,  379005, 1 }, -- Enemies have $s1% reduced damage and healing for $s2 sec after Blind or Sap's effect on them ends
+    blind                          = {  90684,    2094, 1 }, -- Blinds all enemies near the target, causing them to wander disoriented for $s1 sec. Damage may interrupt the effect. Limit $s2
+    cheat_death                    = {  90742,   31230, 1 }, -- Fatal attacks instead reduce you to $s1% of your maximum health. For $s2 sec afterward, you take $s3% reduced damage. Cannot trigger more often than once per $s4 min
+    cloak_of_shadows               = {  90697,   31224, 1 }, -- Provides a moment of magic immunity, instantly removing all harmful spell effects. The cloak lingers, causing you to resist harmful spells for $s1 sec
+    cold_blood                     = {  90748,  382245, 1 }, -- Increases the critical strike chance of your next damaging ability by $s1%
+    deadened_nerves                = {  90743,  231719, 1 }, -- Physical damage taken reduced by $s1%
+    deadly_precision               = {  90760,  381542, 1 }, -- Increases the critical strike chance of your attacks that generate combo points by $s1%
+    deeper_stratagem               = {  90750,  193531, 1 }, -- Gain $s1 additional max combo point. Your finishing moves that consume more than $s2 combo points have increased effects, and your finishing moves deal $s3% increased damage
+    echoing_reprimand              = {  90638,  470669, 1 }, -- After consuming a supercharged combo point, your next Sinister Strike also strikes the target with an Echoing Reprimand dealing $s$s2 Physical damage
+    elusiveness                    = {  90742,   79008, 1 }, -- Evasion also reduces damage taken by $s1%, and Feint also reduces non-area-of-effect damage taken by $s2%
+    evasion                        = {  90764,    5277, 1 }, -- Increases your dodge chance by $s1% for $s2 sec
+    featherfoot                    = {  94563,  423683, 1 }, -- Sprint increases movement speed by an additional $s1% and has $s2 sec increased duration
+    fleet_footed                   = {  90762,  378813, 1 }, -- Movement speed increased by $s1%
+    forced_induction               = {  90638,  470668, 1 }, -- Increase the bonus granted when a damaging finishing move consumes a supercharged combo point by $s1
+    gouge                          = {  90741,    1776, 1 }, -- Gouges the eyes of an enemy target, incapacitating for $s1 sec. Damage may interrupt the effect. Must be in front of your target. Awards $s2 combo point
+    graceful_guile                 = {  94562,  423647, 1 }, -- Feint has $s1 additional charge
+    improved_ambush                = {  90692,  381620, 1 }, -- Ambush generates $s1 additional combo point
+    improved_sprint                = {  90746,  231691, 1 }, -- Reduces the cooldown of Sprint by $s1 sec
+    improved_wound_poison          = {  90637,  319066, 1 }, -- Wound Poison can now stack $s1 additional times
+    iron_stomach                   = {  90744,  193546, 1 }, -- Increases the healing you receive from Crimson Vial, healing potions, and healthstones by $s1%
+    leeching_poison                = {  90758,  280716, 1 }, -- Adds a Leeching effect to your Lethal poisons, granting you $s1% Leech
+    lethality                      = {  90749,  382238, 2 }, -- Critical strike chance increased by $s1%. Critical strike damage bonus of your attacks that generate combo points increased by $s2%
+    master_poisoner                = {  90636,  378436, 1 }, -- Increases the non-damaging effects of your weapon poisons by $s1%
+    nimble_fingers                 = {  90745,  378427, 1 }, -- Energy cost of Feint and Crimson Vial reduced by $s1
+    numbing_poison                 = {  90763,    5761, 1 }, -- Coats your weapons with a Non-Lethal Poison that lasts for $s1 |$s2hour:hrs;. Each strike has a $s3% chance of poisoning the enemy, clouding their mind and slowing their attack and casting speed by $s4% for $s5 sec
+    recuperator                    = {  90640,  378996, 1 }, -- Slice and Dice heals you for up to $s1% of your maximum health per $s2 sec
+    rushed_setup                   = {  90754,  378803, 1 }, -- The Energy costs of Kidney Shot, Cheap Shot, Sap, and Distract are reduced by $s1%
+    shadowheart                    = { 101714,  455131, 1 }, -- Leech increased by $s1% while Stealthed
+    shadowrunner                   = {  90687,  378807, 1 }, -- While Stealth or Shadow Dance is active, you move $s1% faster
+    shiv                           = {  90740,    5938, 1 }, -- Attack with your off-hand, dealing $s$s2 Physical damage, dispelling all enrage effects and applying a concentrated form of your active Non-Lethal poison. Awards $s3 combo point
+    soothing_darkness              = {  90691,  393970, 1 }, -- You are healed for $s1% of your maximum health over $s2 sec after activating Vanish
+    stillshroud                    = {  94561,  423662, 1 }, -- Shroud of Concealment has $s1% reduced cooldown
+    subterfuge                     = {  90688,  108208, 2 }, -- Abilities requiring Stealth can be used for $s1 sec after Stealth breaks. Combat benefits requiring Stealth persist for an additional $s2 sec after Stealth breaks
+    supercharger                   = {  90639,  470347, 2 }, -- Roll the Bones supercharges $s1 combo point. Damaging finishing moves consume a supercharged combo point to function as if they spent $s2 additional combo points
+    superior_mixture               = {  94567,  423701, 1 }, -- Crippling Poison reduces movement speed by an additional $s1%
+    thistle_tea                    = {  90756,  381623, 1 }, -- Restore $s1 Energy. Mastery increased by $s2% for $s3 sec. When your Energy is reduced below $s4, drink a Thistle Tea
+    thrill_seeking                 = {  90695,  394931, 1 }, -- Grappling Hook has $s1 additional charge
+    tight_spender                  = {  90692,  381621, 1 }, -- Energy cost of finishing moves reduced by $s1%
+    tricks_of_the_trade            = {  90686,   57934, 1 }, -- Redirects all threat you cause to the targeted party or raid member, beginning with your next damaging attack within the next $s1 sec and lasting $s2 sec
+    unbreakable_stride             = {  90747,  400804, 1 }, -- Reduces the duration of movement slowing effects $s1%
+    vigor                          = {  90759,   14983, 2 }, -- Increases your maximum Energy by $s1 and Energy regeneration by $s2%
+    virulent_poisons               = {  90760,  381543, 1 }, -- Increases the damage of your weapon poisons by $s1%
+    without_a_trace                = { 101713,  382513, 1 }, -- Vanish has $s1 additional charge
 
     -- Outlaw
-    ace_up_your_sleeve        = {  90670, 381828, 1 }, -- Between the Eyes has a 5% chance per combo point spent to grant 5 combo points.
-    adrenaline_rush           = {  90659,  13750, 1 }, -- Increases your Energy regeneration rate by 50%, your maximum Energy by 50, and your attack speed by 20% for 20 sec.
-    ambidexterity             = {  90660, 381822, 1 }, -- Main Gauche has an additional 5% chance to strike while Blade Flurry is active.
-    audacity                  = {  90641, 381845, 1 }, -- Half-cost uses of Pistol Shot have a 45% chance to make your next Ambush usable without Stealth. Chance to trigger this effect matches the chance for your Sinister Strike to strike an additional time.
-    blade_rush                = {  90664, 271877, 1 }, -- Charge to your target with your blades out, dealing 33,600 Physical damage to the target and 16,800 to all other nearby enemies. While Blade Flurry is active, damage to non-primary targets is increased by 100%. Generates 25 Energy over 5 sec.
-    blinding_powder           = {  90643, 256165, 1 }, -- Reduces the cooldown of Blind by 25% and increases its range by 5 yds.
-    combat_potency            = {  90646,  61329, 1 }, -- Increases your Energy regeneration rate by 30%.
-    combat_stamina            = {  90648, 381877, 1 }, -- Stamina increased by 5%.
-    count_the_odds            = {  90655, 381982, 1 }, -- Ambush, Sinister Strike, and Dispatch have a 15% chance to grant you a Roll the Bones combat enhancement buff you do not already have for 8 sec.
-    crackshot                 = {  94565, 423703, 1 }, -- Entering Stealth refreshes the cooldown of Between the Eyes. Between the Eyes has no cooldown and also Dispatches the target for 50% of normal damage when used from Stealth.
-    dancing_steel             = {  90669, 272026, 1 }, -- Blade Flurry strikes 3 additional enemies and its duration is increased by 3 sec.
-    deft_maneuvers            = {  90672, 381878, 1 }, -- Blade Flurry's initial damage is increased by 100% and generates 1 combo point per target struck.
-    devious_stratagem         = {  90679, 394321, 1 }, -- Gain 1 additional max combo point. Your finishing moves that consume more than 5 combo points have increased effects, and your finishing moves deal 5% increased damage.
-    dirty_tricks              = {  90645, 108216, 1 }, -- Cheap Shot, Gouge, and Sap no longer cost Energy.
-    fan_the_hammer            = {  90666, 381846, 2 }, -- When Sinister Strike strikes an additional time, gain 1 additional stack of Opportunity. Max 6 stacks. Half-cost uses of Pistol Shot consume 1 additional stack of Opportunity to fire 1 additional shot. Additional shots generate 1 fewer combo point and deal 20% reduced damage.
-    fatal_flourish            = {  90662,  35551, 1 }, -- Your off-hand attacks have a 50% chance to generate 10 Energy.
-    float_like_a_butterfly    = {  90755, 354897, 1 }, -- Restless Blades now also reduces the remaining cooldown of Evasion and Feint by 0.5 sec per combo point spent.
-    ghostly_strike            = {  90644, 196937, 1 }, -- Strikes an enemy, dealing 44,352 Physical damage and causing the target to take 15% increased damage from your abilities for 12 sec. Awards 1 combo point.
-    greenskins_wickers        = {  90665, 386823, 1 }, -- Between the Eyes has a 20% chance per Combo Point to increase the damage of your next Pistol Shot by 200%.
-    heavy_hitter              = {  90642, 381885, 1 }, -- Attacks that generate combo points deal 10% increased damage.
-    hidden_opportunity        = {  90675, 383281, 1 }, -- Effects that grant a chance for Sinister Strike to strike an additional time also apply to Ambush at 80% of their value.
-    hit_and_run               = {  90673, 196922, 1 }, -- Movement speed increased by 15%.
-    improved_adrenaline_rush  = {  90654, 395422, 1 }, -- Generate full combo points when you gain Adrenaline Rush, and full Energy when it ends.
-    improved_between_the_eyes = {  90671, 235484, 1 }, -- Critical strikes with Between the Eyes deal four times normal damage.
-    improved_main_gauche      = {  90668, 382746, 1 }, -- Main Gauche has an additional 5% chance to strike.
-    keep_it_rolling           = {  90652, 381989, 1 }, -- Increase the remaining duration of your active Roll the Bones combat enhancements by 30 sec.
-    killing_spree             = {  94566,  51690, 1 }, -- Finishing move that teleports to an enemy within 10 yds, striking with both weapons for Physical damage. Number of strikes increased per combo point. 100% of damage taken during effect is delayed, instead taken over 8 sec. 1 point : 78,912 over 0.30 sec 2 points: 118,369 over 0.59 sec 3 points: 157,825 over 0.89 sec 4 points: 197,281 over 1.18 sec 5 points: 236,738 over 1.48 sec 6 points: 276,194 over 1.78 sec 7 points: 315,651 over 2.07 sec
-    loaded_dice               = {  90656, 256170, 1 }, -- Activating Adrenaline Rush causes your next Roll the Bones to grant at least two matches.
-    opportunity               = {  90683, 279876, 1 }, -- Sinister Strike has a 45% chance to hit an additional time, making your next Pistol Shot half cost and double damage.
-    precise_cuts              = {  90667, 381985, 1 }, -- Blade Flurry damage is increased by an additional 4% per missing target below its maximum.
-    precision_shot            = {  90647, 428377, 1 }, -- Between the Eyes and Pistol Shot have 10 yd increased range, and Pistol Shot reduces the the target's damage done to you by 5%.
-    quick_draw                = {  90663, 196938, 1 }, -- Half-cost uses of Pistol Shot granted by Sinister Strike now generate 1 additional combo point, and deal 20% additional damage.
-    retractable_hook          = {  90681, 256188, 1 }, -- Reduces the cooldown of Grappling Hook by 15 sec, and increases its retraction speed.
-    riposte                   = {  90661, 344363, 1 }, -- Dodging an attack will trigger Mastery: Main Gauche. This effect may only occur once every 1 sec.
-    ruthlessness              = {  90680,  14161, 1 }, -- Your finishing moves have a 20% chance per combo point spent to grant a combo point.
-    sleight_of_hand           = {  90651, 381839, 1 }, -- Roll the Bones has a 15% increased chance of granting additional matches.
-    sting_like_a_bee          = {  90755, 131511, 1 }, -- Enemies disabled by your Cheap Shot or Kidney Shot take 10% increased damage from all sources for 6 sec.
-    summarily_dispatched      = {  90653, 381990, 2 }, -- When your Dispatch consumes 5 or more combo points, Dispatch deals 6% increased damage and costs 5 less Energy for 8 sec. Max 5 stacks. Adding a stack does not refresh the duration.
-    swift_slasher             = {  90649, 381988, 1 }, -- Slice and Dice grants additional attack speed equal to 100% of your Haste.
-    take_em_by_surprise       = {  90676, 382742, 2 }, -- Haste increased by 10% while Stealthed and for 20 sec after breaking Stealth.
-    thiefs_versatility        = {  90753, 381619, 1 }, -- Versatility increased by 3%.
-    triple_threat             = {  90678, 381894, 1 }, -- Sinister Strike has a 15% chance to strike with both weapons after it strikes an additional time.
-    underhanded_upper_hand    = {  90677, 424044, 1 }, -- Blade Flurry does not lose duration during Adrenaline Rush. Adrenaline Rush does not lose duration while Stealthed.
+    ace_up_your_sleeve             = {  90670,  381828, 1 }, -- Between the Eyes has a $s1% chance per combo point spent to grant $s2 combo points
+    adrenaline_rush                = {  90659,   13750, 1 }, -- Increases your Energy regeneration rate by $s1%, your maximum Energy by $s2, and your attack speed by $s3% for $s4 sec
+    ambidexterity                  = {  90660,  381822, 1 }, -- Main Gauche has an additional $s1% chance to strike while Blade Flurry is active
+    audacity                       = {  90641,  381845, 1 }, -- Half-cost uses of Pistol Shot have a $s1% chance to make your next Ambush usable without Stealth. Chance to trigger this effect matches the chance for your Sinister Strike to strike an additional time
+    blade_rush                     = {  90664,  271877, 1 }, -- Charge to your target with your blades out, dealing $s$s2 Physical damage to the target and $s3 to all other nearby enemies. While Blade Flurry is active, damage to non-primary targets is increased by $s4%. Generates $s5 Energy over $s6 sec
+    blinding_powder                = {  90643,  256165, 1 }, -- Reduces the cooldown of Blind by $s1% and increases its range by $s2 yds
+    combat_potency                 = {  90646,   61329, 1 }, -- Increases your Energy regeneration rate by $s1%
+    combat_stamina                 = {  90648,  381877, 1 }, -- Stamina increased by $s1%
+    count_the_odds                 = {  90655,  381982, 1 }, -- Ambush, Sinister Strike, and Dispatch have a $s1% chance to grant you a Roll the Bones combat enhancement buff you do not already have for $s2 sec
+    crackshot                      = {  94565,  423703, 1 }, -- Entering Stealth refreshes the cooldown of Between the Eyes. Between the Eyes has no cooldown and also Dispatches the target for $s1% of normal damage when used from Stealth
+    dancing_steel                  = {  90669,  272026, 1 }, -- Blade Flurry strikes $s1 additional enemies and its duration is increased by $s2 sec
+    deft_maneuvers                 = {  90672,  381878, 1 }, -- Blade Flurry's initial damage is increased by $s1% and generates $s2 combo point per target struck
+    devious_stratagem              = {  90679,  394321, 1 }, -- Gain $s1 additional max combo point. Your finishing moves that consume more than $s2 combo points have increased effects, and your finishing moves deal $s3% increased damage
+    dirty_tricks                   = {  90645,  108216, 1 }, -- Cheap Shot, Gouge, and Sap no longer cost Energy
+    fan_the_hammer                 = {  90666,  381846, 2 }, -- When Sinister Strike strikes an additional time, gain $s1 additional stack of Opportunity. Max $s2 stacks. Half-cost uses of Pistol Shot consume $s3 additional stack of Opportunity to fire $s4 additional shot. Additional shots generate $s5 fewer combo point and deal $s6% reduced damage
+    fatal_flourish                 = {  90662,   35551, 1 }, -- Your off-hand attacks have a $s1% chance to generate $s2 Energy
+    float_like_a_butterfly         = {  90755,  354897, 1 }, -- Restless Blades now also reduces the remaining cooldown of Evasion and Feint by $s1 sec per combo point spent
+    ghostly_strike                 = {  90644,  196937, 1 }, -- Strikes an enemy, dealing $s$s2 Physical damage and causing the target to take $s3% increased damage from your abilities for $s4 sec. Awards $s5 combo point
+    greenskins_wickers             = {  90665,  386823, 1 }, -- Between the Eyes has a $s1% chance per Combo Point to increase the damage of your next Pistol Shot by $s2%
+    heavy_hitter                   = {  90642,  381885, 1 }, -- Attacks that generate combo points deal $s1% increased damage
+    hidden_opportunity             = {  90675,  383281, 1 }, -- Effects that grant a chance for Sinister Strike to strike an additional time also apply to Ambush at $s1% of their value
+    hit_and_run                    = {  90673,  196922, 1 }, -- Movement speed increased by $s1%
+    improved_adrenaline_rush       = {  90654,  395422, 1 }, -- Generate full combo points when you gain Adrenaline Rush, and full Energy when it ends
+    improved_between_the_eyes      = {  90671,  235484, 1 }, -- Critical strikes with Between the Eyes deal four times normal damage
+    improved_main_gauche           = {  90668,  382746, 1 }, -- Main Gauche has an additional $s1% chance to strike
+    keep_it_rolling                = {  90652,  381989, 1 }, -- Increase the remaining duration of your active Roll the Bones combat enhancements by $s1 sec
+    killing_spree                  = {  94566,   51690, 1 }, -- Finishing move that unleashes a barrage of gunfire, striking random enemies within $s1 yards for Physical damage. Number of strikes increased per combo point. Restores $s2 combo point every $s3 sec. $s4 point : $s5 million over $s6 sec $s7 points: $s8 million over $s9 sec $s10 points: $s11 million over $s12 sec $s13 points: $s14 million over $s15 sec $s16 points: $s17 million over $s18 sec $s19 points: $s20 million over $s21 sec $s22 points: $s23 million over $s24 sec
+    loaded_dice                    = {  90656,  256170, 1 }, -- Activating Adrenaline Rush causes your next Roll the Bones to grant at least two matches
+    opportunity                    = {  90683,  279876, 1 }, -- Sinister Strike has a $s1% chance to hit an additional time, making your next Pistol Shot half cost and double damage
+    precise_cuts                   = {  90667,  381985, 1 }, -- Blade Flurry damage is increased by an additional $s1% per missing target below its maximum
+    precision_shot                 = {  90647,  428377, 1 }, -- Between the Eyes and Pistol Shot have $s1 yd increased range, and Pistol Shot reduces the the target's damage done to you by $s2%
+    quick_draw                     = {  90663,  196938, 1 }, -- Half-cost uses of Pistol Shot granted by Sinister Strike now generate $s1 additional combo point, and deal $s2% additional damage
+    retractable_hook               = {  90681,  256188, 1 }, -- Reduces the cooldown of Grappling Hook by $s1 sec, and increases its retraction speed
+    riposte                        = {  90661,  344363, 1 }, -- Dodging an attack will trigger Mastery: Main Gauche. This effect may only occur once every $s1 sec
+    ruthlessness                   = {  90680,   14161, 1 }, -- Your finishing moves have a $s1% chance per combo point spent to grant a combo point
+    sleight_of_hand                = {  90651,  381839, 1 }, -- Roll the Bones has a $s1% increased chance of granting additional matches
+    sting_like_a_bee               = {  90755,  131511, 1 }, -- Enemies disabled by your Cheap Shot or Kidney Shot take $s1% increased damage from all sources for $s2 sec
+    summarily_dispatched           = {  90653,  381990, 2 }, -- When your Dispatch consumes $s1 or more combo points, Dispatch deals $s2% increased damage and costs $s3 less Energy for $s4 sec. Max $s5 stacks. Adding a stack does not refresh the duration
+    swift_slasher                  = {  90649,  381988, 1 }, -- Slice and Dice grants additional attack speed equal to $s1% of your Haste
+    take_em_by_surprise            = {  90676,  382742, 2 }, -- Haste increased by $s1% while Stealthed and for $s2 sec after breaking Stealth
+    thiefs_versatility             = {  90753,  381619, 1 }, -- Versatility increased by $s1%
+    triple_threat                  = {  90678,  381894, 1 }, -- Sinister Strike has a $s1% chance to strike with both weapons after it strikes an additional time
+    underhanded_upper_hand         = {  90677,  424044, 1 }, -- Blade Flurry does not lose duration during Adrenaline Rush. Adrenaline Rush does not lose duration while Stealthed
 
     -- Fatebound
-    chosens_revelry           = {  95138, 454300, 1 }, -- Leech increased by 0.5% for each time your Fatebound Coin has flipped the same face in a row.
-    deal_fate                 = {  95107, 454419, 1 }, -- Sinister Strike and Ambush generate 1 additional combo point when they strike an additional time.
-    deaths_arrival            = {  95130, 454433, 1 }, -- Grappling Hook may be used a second time within 3 sec with no cooldown, but its total cooldown is increased by 5 sec.
-    delivered_doom            = {  95119, 454426, 1 }, -- Damage dealt when your Fatebound Coin flips tails is increased by 30% if there are no other enemies near the target. Each additional nearby enemy reduces this bonus by 6%.
-    destiny_defined           = {  95114, 454435, 1 }, -- Sinister Strike has 5% increased chance to strike an additional time and your Fatebound Coins flipped have an additional 5% chance to match the same face as the last flip.
-    double_jeopardy           = {  95129, 454430, 1 }, -- Your first Fatebound Coin flip after breaking Stealth flips two coins that are guaranteed to match the same outcome.
-    edge_case                 = {  95139, 453457, 1 }, -- Activating Adrenaline Rush flips a Fatebound Coin and causes it to land on its edge, counting as both Heads and Tails.
-    fate_intertwined          = {  95120, 454429, 1 }, -- Fate Intertwined duplicates 30% of Dispatch critical strike damage as Cosmic to 2 additional nearby enemies. If there are no additional nearby targets, duplicate 30% to the primary target instead.
-    fateful_ending            = {  95127, 454428, 1 }, -- When your Fatebound Coin flips the same face for the seventh time in a row, keep the lucky coin to gain 7% Agility until you leave combat for 10 seconds. If you already have a lucky coin, it instead deals 68,727 Cosmic damage to your target.
-    hand_of_fate              = {  95125, 452536, 1, "fatebound" }, -- Flip a Fatebound Coin each time a finishing move consumes 5 or more combo points. Heads increases the damage of your attacks by 10%, lasting 15 sec or until you flip Tails. Tails deals 34,363 Cosmic damage to your target. For each time the same face is flipped in a row, Heads increases damage by an additional 2% and Tails increases its damage by 10%.
-    inevitabile_end           = {  95114, 454434, 1 }, -- Cold Blood now benefits the next two abilities but only applies to Dispatch. Fatebound Coins flipped by these abilities are guaranteed to match the same outcome as the last flip.
-    inexorable_march          = {  95130, 454432, 1 }, -- You cannot be slowed below 70% of normal movement speed while your Fatebound Coin flips have an active streak of at least 2 flips matching the same face.
-    mean_streak               = {  95122, 453428, 1 }, -- Fatebound Coins flipped by Dispatch multiple times in a row are 33% more likely to match the same face as the last flip.
-    tempted_fate              = {  95138, 454286, 1 }, -- You have a chance equal to your critical strike chance to absorb 10% of any damage taken, up to a maximum chance of 40%.
+    chosens_revelry                = {  95138,  454300, 1 }, -- Leech increased by $s1% for each time your Fatebound Coin has flipped the same face in a row
+    deal_fate                      = {  95107,  454419, 1 }, -- Sinister Strike and Ambush generate $s1 additional combo point when they strike an additional time
+    deaths_arrival                 = {  95130,  454433, 1 }, -- Grappling Hook may be used a second time within $s1 sec with no cooldown, but its total cooldown is increased by $s2 sec
+    delivered_doom                 = {  95119,  454426, 1 }, -- Damage dealt when your Fatebound Coin flips tails is increased by $s1% if there are no other enemies near the target. Each additional nearby enemy reduces this bonus by $s2%
+    destiny_defined                = {  95114,  454435, 1 }, -- Sinister Strike has $s1% increased chance to strike an additional time and your Fatebound Coins flipped have an additional $s2% chance to match the same face as the last flip
+    double_jeopardy                = {  95129,  454430, 1 }, -- Your first Fatebound Coin flip after breaking Stealth flips two coins that are guaranteed to match the same outcome
+    edge_case                      = {  95139,  453457, 1 }, -- Activating Adrenaline Rush flips a Fatebound Coin and causes it to land on its edge, counting as both Heads and Tails
+    fate_intertwined               = {  95120,  454429, 1 }, -- Fate Intertwined duplicates $s1% of Dispatch critical strike damage as Cosmic to $s2 additional nearby enemies. If there are no additional nearby targets, duplicate $s3% to the primary target instead
+    fateful_ending                 = {  95127,  454428, 1 }, -- When your Fatebound Coin flips the same face for the seventh time in a row, keep the lucky coin to gain $s2% Agility until you leave combat for $s3 seconds. If you already have a lucky coin, it instead deals $s$s4 Cosmic damage to your target
+    hand_of_fate                   = {  95125,  452536, 1 }, -- Flip a Fatebound Coin each time a finishing move consumes $s2 or more combo points. Heads increases the damage of your attacks by $s3%, lasting $s4 sec or until you flip Tails. Tails deals $s$s5 Cosmic damage to your target. For each time the same face is flipped in a row, Heads increases damage by an additional $s6% and Tails increases its damage by $s7%
+    inevitabile_end                = {  95114,  454434, 1 }, -- Cold Blood now benefits the next two abilities but only applies to Dispatch. Fatebound Coins flipped by these abilities are guaranteed to match the same outcome as the last flip
+    inexorable_march               = {  95130,  454432, 1 }, -- You cannot be slowed below $s1% of normal movement speed while your Fatebound Coin flips have an active streak of at least $s2 flips matching the same face
+    mean_streak                    = {  95122,  453428, 1 }, -- Fatebound Coins flipped by Dispatch are $s1% more likely to match the same face as the last flip
+    tempted_fate                   = {  95138,  454286, 1 }, -- You have a chance equal to your critical strike chance to absorb $s1% of any damage taken, up to a maximum chance of $s2%
 
     -- Trickster
-    cloud_cover               = {  95116, 441429, 1 }, -- Distract now also creates a cloud of smoke for 10 sec. Cooldown increased to 90 sec. Attacks from within the cloud apply Fazed.
-    coup_de_grace             = {  95115, 441423, 1 }, -- After 4 strikes with Unseen Blade, your next Dispatch will be performed as a Coup de Grace, functioning as if it had consumed 5 additional combo points. If the primary target is Fazed, gain 5 stacks of Flawless Form.
-    devious_distractions      = {  95133, 441263, 1 }, -- Killing Spree applies Fazed to any targets struck.
-    disorienting_strikes      = {  95118, 441274, 1 }, -- Killing Spree has 10% reduced cooldown and allows your next 2 strikes of Unseen Blade to ignore its cooldown.
-    dont_be_suspicious        = {  95134, 441415, 1 }, -- Blind and Shroud of Concealment have 10% reduced cooldown. Pick Pocket and Sap have 10 yd increased range.
-    flawless_form             = {  95111, 441321, 1 }, -- Unseen Blade and Killing Spree increase the damage of your finishing moves by 3% for 12 sec. Multiple applications may overlap.
-    flickerstrike             = {  95137, 441359, 1 }, -- Taking damage from an area-of-effect attack while Feint is active or dodging while Evasion is active refreshes your opportunity to strike with Unseen Blade. This effect may only occur once every 5 sec.
-    mirrors                   = {  95141, 441250, 1 }, -- Feint reduces damage taken from area-of-effect attacks by an additional 10%
-    nimble_flurry             = {  95128, 441367, 1 }, -- Blade Flurry damage is increased by 20% while Flawless Form is active.
-    no_scruples               = {  95116, 441398, 1 }, -- Finishing moves have 10% increased chance to critically strike Fazed targets.
-    smoke                     = {  95141, 441247, 1 }, -- You take 5% reduced damage from Fazed targets.
-    so_tricky                 = {  95134, 441403, 1 }, -- Tricks of the Trade's threat redirect duration is increased to 1 hour.
-    surprising_strikes        = {  95121, 441273, 1 }, -- Attacks that generate combo points deal 25% increased critical strike damage to Fazed targets.
-    thousand_cuts             = {  95137, 441346, 1 }, -- Slice and Dice grants 10% additional attack speed and gives your auto-attacks a chance to refresh your opportunity to strike with Unseen Blade.
-    unseen_blade              = {  95140, 441146, 1, "trickster" }, -- Sinister Strike and Ambush now also strike with an Unseen Blade dealing 61,091 damage. Targets struck are Fazed for 10 sec. Fazed enemies take 5% more damage from you and cannot parry your attacks. This effect may occur once every 20 sec.
+    cloud_cover                    = {  95116,  441429, 1 }, -- Distract now also creates a cloud of smoke for $s1 sec. Cooldown increased to $s2 sec. Attacks from within the cloud apply Fazed
+    coup_de_grace                  = {  95115,  441423, 1 }, -- After $s1 strikes with Unseen Blade, your next Dispatch will be performed as a Coup de Grace, functioning as if it had consumed $s2 additional combo points. If the primary target is Fazed, gain $s3 stacks of Flawless Form
+    devious_distractions           = {  95133,  441263, 1 }, -- Killing Spree applies Fazed to any targets struck
+    disorienting_strikes           = {  95118,  441274, 1 }, -- Killing Spree has $s1% reduced cooldown and allows your next $s2 strikes of Unseen Blade to ignore its cooldown
+    dont_be_suspicious             = {  95134,  441415, 1 }, -- Blind and Shroud of Concealment have $s1% reduced cooldown. Pick Pocket and Sap have $s2 yd increased range
+    flawless_form                  = {  95111,  441321, 1 }, -- Unseen Blade and Killing Spree increase the damage of your finishing moves by $s1% for $s2 sec. Multiple applications may overlap
+    flickerstrike                  = {  95137,  441359, 1 }, -- Taking damage from an area-of-effect attack while Feint is active or dodging while Evasion is active refreshes your opportunity to strike with Unseen Blade. This effect may only occur once every $s1 sec
+    mirrors                        = {  95141,  441250, 1 }, -- Feint reduces damage taken from area-of-effect attacks by an additional $s1%
+    nimble_flurry                  = {  95128,  441367, 1 }, -- Blade Flurry damage is increased by $s1% while Flawless Form is active
+    no_scruples                    = {  95116,  441398, 1 }, -- Finishing moves have $s1% increased chance to critically strike Fazed targets
+    smoke                          = {  95141,  441247, 1 }, -- You take $s1% reduced damage from Fazed targets
+    so_tricky                      = {  95134,  441403, 1 }, -- Tricks of the Trade's threat redirect duration is increased to $s1 hour
+    surprising_strikes             = {  95121,  441273, 1 }, -- Attacks that generate combo points deal $s1% increased critical strike damage to Fazed targets
+    thousand_cuts                  = {  95137,  441346, 1 }, -- Slice and Dice grants $s1% additional attack speed and gives your auto-attacks a chance to refresh your opportunity to strike with Unseen Blade
+    unseen_blade                   = {  95140,  441146, 1 }, -- Sinister Strike and Ambush now also strike with an Unseen Blade dealing $s1 damage. Targets struck are Fazed for $s2 sec. Fazed enemies take $s3% more damage from you and cannot parry your attacks. This effect may occur once every $s4 sec
 } )
 
 -- PvP Talents
 spec:RegisterPvpTalents( {
-    boarding_party       =  853, -- (209752) Between the Eyes increases the movement speed of all friendly players within 15 yards by 30% for 6 sec.
-    control_is_king      =  138, -- (354406) Cheap Shot grants Slice and Dice for 15 sec and Kidney Shot restores 10 Energy per combo point spent.
-    dagger_in_the_dark   = 5549, -- (198675) Each second while Stealth is active, nearby enemies within 12 yards take an additional 2% damage from you for 10 sec. Stacks up to 6 times.
-    death_from_above     = 3619, -- (269513) Finishing move that empowers your weapons with energy to performs a deadly attack. You leap into the air and Dispatch your target on the way back down, with such force that it has a 40% stronger effect.
-    dismantle            =  145, -- (207777) Disarm the enemy, preventing the use of any weapons or shield for 5 sec.
-    drink_up_me_hearties =  139, -- (354425) Crimson Vial restores 5% additional maximum health and grants 60% of its healing to allies within 15 yds.
-    enduring_brawler     = 5412, -- (354843) Every 3 sec you remain in combat, gain 1% chance for Sinister Strike to hit an additional time. Lose 1 stack each second while out of combat. Max 15 stacks.
-    maneuverability      =  129, -- (197000) Sprint has 50% reduced cooldown and 50% reduced duration.
-    smoke_bomb           = 3483, -- (212182) Creates a cloud of thick smoke in an 8 yard radius around the Rogue for 5 sec. Enemies are unable to target into or out of the smoke cloud.
-    take_your_cut        =  135, -- (198265) Roll the Bones also grants 10% Haste for 10 sec to allies within 15 yds.
-    thick_as_thieves     = 1208, -- (221622) Tricks of the Trade now increases the friendly target's damage by 15% for 6 sec.
-    turn_the_tables      = 3421, -- (198020) After coming out of a stun, you deal 10% increased damage for 12 sec.
-    veil_of_midnight     = 5516, -- (198952) Cloak of Shadows now also removes harmful physical effects.
+    boarding_party                 =  853, -- (209752)
+    control_is_king                =  138, -- (354406) Cheap Shot grants Slice and Dice for $s1 sec and Kidney Shot restores $s2 Energy per combo point spent
+    dagger_in_the_dark             = 5549, -- (198675) Each second while Stealth is active, nearby enemies within $s1 yards take an additional $s2% damage from you for $s3 sec. Stacks up to $s4 times
+    death_from_above               = 3619, -- (269513) Finishing move that empowers your weapons with energy to perform a deadly attack. You leap into the air and Dispatch your target on the way back down, with such force that it has a $s1% stronger effect
+    dismantle                      =  145, -- (207777) Disarm the enemy, preventing the use of any weapons or shield for $s1 sec
+    drink_up_me_hearties           =  139, -- (354425)
+    maneuverability                =  129, -- (197000) Sprint has $s1% reduced cooldown and $s2% reduced duration
+    preemptive_maneuver            = 5699, -- (1219122) Feint decreases your damage taken by an additional $s1% while stunned and its energy cost is reduced by $s2%
+    smoke_bomb                     = 3483, -- (212182) Creates a cloud of thick smoke in an $s1 yard radius around the Rogue for $s2 sec. Enemies are unable to target into or out of the smoke cloud
+    thick_as_thieves               = 1208, -- (221622) Tricks of the Trade now increases the friendly target's damage by $s1% for $s2 sec
+    turn_the_tables                = 3421, -- (198020)
 } )
 
 local rtb_buff_list = {
@@ -258,11 +286,31 @@ spec:RegisterAuras( {
     coup_de_grace = {
         id = 462127,
         duration = 3600,
-        max_stack = 1
+        max_stack = 1,
+        generate = function( t )
+            local eb = buff.escalating_blade
+            if eb.up and eb.at_max_stacks then
+                t.name = "coup_de_grace"
+                t.count = 1
+                t.expires = eb.expires
+                t.applied = query_time
+                t.caster = "player"
+            else
+                t.name = "coup_de_grace"
+                t.count = 0
+                t.expires = 0
+                t.applied = 0
+                t.caster = "nobody"
+            end
+        end
     },
     disorienting_strikes = {
         duration = 3600,
         max_stack = 2
+    },
+    double_jeopardy = {
+        duration = 3600,
+        max_stack = 1
     },
     echoing_reprimand = {
         id = 470671,
@@ -305,11 +353,12 @@ spec:RegisterAuras( {
     keep_it_rolling = {
         id = 381989
     },
-    -- Talent: Attacking an enemy every $t1 sec.
-    -- https://wowhead.com/beta/spell=51690
+    -- Killing Spree Blasting nearby enemies every $s1 sec. $s2 seconds remaining
+    -- https://www.wowhead.com/spell=51690
     killing_spree = {
-        id = 424562,
-        duration = function () return 0.4 * effective_combo_points end,
+        id = 51690,
+        duration = function () return 0.5 * effective_combo_points * haste end,
+        tick_time = function () return 0.5 * haste end,
         max_stack = 1
     },
     -- Suffering $w4 Nature damage every $t4 sec.
@@ -511,6 +560,17 @@ spec:RegisterAuras( {
     },
 } )
 
+
+
+local inStealth = false
+local exitedStealth = 0
+
+spec:RegisterEvent( "UPDATE_STEALTH", function()
+    local stealthed = IsStealthed()
+    if inStealth and not stealthed then exitedStealth = GetTime() end
+    inStealth = stealthed
+end )
+
 local lastShot, numShots = 0, 0
 local lastUnseenBlade, disorientStacks = 0, 0
 local lastRoll = 0
@@ -538,10 +598,9 @@ local restless_blades_list = {
 spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName )
     if sourceGUID ~= state.GUID then return end
 
-    local now = GetTime()
-
     -- SPELL_CAST_SUCCESS
     if subtype == "SPELL_CAST_SUCCESS" then
+        local now = GetTime()
 
         if spellID == 185763 and state.talent.fan_the_hammer.enabled then
             -- Opportunity: Fan the Hammer can queue 1-2 extra Pistol Shots.
@@ -554,43 +613,51 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
             else
                 numShots = max( 0, numShots - 1 )
             end
+
+            return
         end
 
         if spellID == 51690 and state.talent.disorienting_strikes.enabled then -- Killing Spree grants 2 stacks of Disorienting Strikes (hidden aura)
             disorientStacks = 2
+            return
         end
 
         if spellID == 193315 or spellID == 8676 then -- Sinister Strike (193315) or Ambush (8676) consumes 1 Disorienting Strike stack.
             disorientStacks = disorientStacks - 1
-
+            return
         end
+
+        if spellID == 315508 then
+            -- 1. ‑‑ compute pandemic before we overwrite rollDuration
+            local elapsed    = now - lastRoll           -- time since previous roll
+            local remaining  = max( 0, rollDuration - elapsed )   -- container time left
+            local pandemic   = min( 9, max( 0, remaining ) )
+            -- 2. ‑‑ reset container
+            lastRoll     = now                          -- real start‑time
+            rollDuration = 30 + pandemic                -- 30 s + up‑to‑9 s
+            return
+        end
+
+        return
     end
 
     -- SPELL_DAMAGE
     if subtype == "SPELL_DAMAGE" then
+        local now = GetTime()
         if spellID == 441144 then  -- Unseen Blade damage event.
             if disorientStacks < 0 then
                 lastUnseenBlade = now
             end
         end
+        return
     end
 
-    -- SPELL_AURA_APPLIED / SPELL_AURA_REFRESH
-    if spellID == 315508 then
-        if subtype == "SPELL_AURA_APPLIED" then
-            lastRoll = now
-            rollDuration = 30
-        elseif subtype == "SPELL_AURA_REFRESH" then
-            local pandemicExtension = min( 9, 60 - ( now - lastRoll ) )
-            rollDuration = 30 + pandemicExtension
-            lastRoll = now
-        end
-
-        if Hekili.ActiveDebug then
-            Hekili:Debug( "Updated lastRoll to %.2f, rollDuration to %.2f", lastRoll, rollDuration )
+    if subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REFRESH" or subtype == "SPELL_AURA_APPLIED_DOSE" then
+        if exitedStealth > 0 and ( spellID == class.auras.fatebound_coin_heads.id or spellID == class.auras.fatebound_coin_tails.id ) then
+            exitedStealth = 0
         end
     end
-end)
+end )
 
 spec:RegisterStateExpr( "rtb_buffs", function ()
     return buff.roll_the_bones.count
@@ -617,22 +684,22 @@ spec:RegisterStateExpr( "unseen_blades_available", function ()
 end )
 
 local TriggerUnseenBlade = setfenv( function( )
-
     if unseen_blades_available > 0 then
         -- Handle ICD vs bypass
-        if buff.disorienting_strikes.remains then
-            removeStack( "disorienting_strikes" )
+        if disorient_stacks > 0 then
+            disorient_stacks = disorient_stacks - 1
         else
             last_unseen_blade = query_time
             applyDebuff( "player", "unseen_blade" )
         end
 
-        addStack( "escalating_blade" )
-        if buff.escalating_blade.stack == 4 then applyBuff( "coup_de_grace" ) end
+        if buff.escalating_blade.stack < 4 then
+            addStack( "escalating_blade" )
+            if buff.escalating_blade.stack == 4 then applyBuff( "coup_de_grace" ) end
+        end
         applyDebuff( "target", "fazed" )
         unseen_blades_available = unseen_blades_available - 1
     end
-
 end, state )
 
 spec:RegisterStateExpr( "rtb_primary_remains", function ()
@@ -779,16 +846,9 @@ spec:RegisterStateExpr( "effective_combo_points", function ()
     return c
 end )
 
---[[ Coup De Grace double cast bug, currently a 5% dps gain according to sims
-spec:RegisterStateExpr( "coup_de_bug", function ()
-    return talent.coup_de_grace.enabled and ( IsSpellOverlayed( 2098 ) or buff.escalating_blade.at_max_stacks ) and ( haste * 1.2 ) < 1
-end )--]]
-
 -- We need to break stealth when we start combat from an ability.
 spec:RegisterHook( "runHandler", function( ability )
     local a = class.abilities[ ability ]
-
-    -- if ability ~= "coup_de_grace" then coup_de_bug = false end
 
     if stealthed.all and ( not a or a.startsCombat ) then
         if buff.stealth.up then
@@ -848,9 +908,6 @@ for i = 1, 7 do
 end
 
 spec:RegisterHook( "reset_precast", function()
-
-    local now = query_time
-
     -- Supercharged Combo Point handling
     local cPoints = GetUnitChargedPowerPoints( "player" )
     if talent.supercharger.enabled and cPoints then
@@ -861,7 +918,7 @@ spec:RegisterHook( "reset_precast", function()
         if charged > 0 then applyBuff( "supercharged_combo_points", nil, charged ) end
     end
 
-    if buff.killing_spree.up then setCooldown( "global_cooldown", max( gcd.remains, buff.killing_spree.remains ) ) end
+   -- if buff.killing_spree.up then setCooldown( "global_cooldown", max( gcd.remains, buff.killing_spree.remains ) ) end
 
     if buff.adrenaline_rush.up and talent.improved_adrenaline_rush.enabled then
         state:QueueAuraExpiration( "adrenaline_rush", ExpireAdrenalineRush, buff.adrenaline_rush.expires )
@@ -873,29 +930,49 @@ spec:RegisterHook( "reset_precast", function()
 
     if talent.unseen_blade.enabled then
 
-        -- Sync CDG availabilty with gamestate
-        if talent.coup_de_grace.enabled and IsSpellOverlayed( 2098 ) then
-            applyBuff( "coup_de_grace" )
-        end
+        -- Resync with real-data local variables first
+        last_unseen_blade = nil
+        disorient_stacks = nil
 
         -- Sync unseen blade ICD with gamestate
-        local unseenBladeCD = 20 - ( now - last_unseen_blade )
+        local unseenBladeCD = 20 - ( query_time - last_unseen_blade )
         if unseenBladeCD > 0 then
             applyDebuff( "player", "unseen_blade", unseenBladeCD )
         else
             removeDebuff( "player", "unseen_blade" )
         end
 
-        -- sync disorienting strike stacks with gamestate
-        if disorient_stacks > 0 then
-            applyBuff( "disorienting_strikes", nil, disorient_stacks )
-        else
-            removeBuff( "disorienting_strikes" )
+        if Hekili.ActiveDebug then
+            Hekili:Debug( "UB-Status: unseen_blades_available=%d DS=%d  ICD=%.1f",
+              unseen_blades_available,
+              disorient_stacks or 0,
+              ( unseenBladeCD > 0 and unseenBladeCD or 0 )
+            )
         end
+
+        if prev[1].coup_de_grace and buff.escalating_blade.at_max_stacks then
+            if set_bonus.tww3 >= 4 then
+                local dur = 5 + ( gcd.max ) - ( query_time - action.coup_de_grace.lastCast )
+                applyBuff( "tww3_trickster_4pc", dur )
+                applyBuff( "escalating_blade", dur, 4 )
+                applyBuff( "coup_de_grace", dur )
+            end
+        end
+
     end
 
     -- Debugging for Roll the Bones
     if Hekili.ActiveDebug and buff.roll_the_bones.up then
+       -- local elapsed = query_time - lastRoll
+       -- local remaining = max( 0, rollDuration - elapsed )
+       -- local pandemic = min( 9, remaining )
+       -- Hekili:Debug( "RTB: elapsed=%.2f  pandemic=%.2f  duration=%.2f",
+       --               elapsed, pandemic, rollDuration )
+        Hekili:Debug( "RTB   queueBase=%.2f (lastRoll=%.2f / lastCast=%.2f)  rollDur=%.2f",
+                      max( lastRoll or 0, action.roll_the_bones.lastCast or 0 ),
+                      lastRoll or 0,
+                      action.roll_the_bones.lastCast or 0,
+                      rollDuration )
         Hekili:Debug( "\nRoll the Bones Debugging:" )
         Hekili:Debug( " - lastRoll: %.2f", lastRoll )
         Hekili:Debug( " - rollDuration: %.2f", rollDuration )
@@ -915,7 +992,7 @@ spec:RegisterHook( "reset_precast", function()
                 local label = diff > lenTol and "longer"
                              or diff < -lenTol and "shorter"
                              or                     "normal"
-                local lose = rtb_buffs_will_lose_buff[name] and "*" or " "  -- mark with * what buff will be lost 
+                local lose = rtb_buffs_will_lose_buff[name] and "*" or " "  -- mark with * what buff will be lost
                 Hekili:Debug("   %s %-20s %5.2f [%s]", lose, name, b.remains, label)
             end
         end
@@ -940,10 +1017,47 @@ spec:RegisterHook( "reset_precast", function()
         end
     end
 
+    if talent.double_jeopardy.enabled then
+        if exitedStealth > 0 then
+            if Hekili.ActiveDebug then Hekili:Debug( "Double Jeopardy: Applying pseudobuff since Fatebound Coin not applied since exiting Stealth at %.2f.", exitedStealth ) end
+            applyBuff( "double_jeopardy" )
+        elseif stealthed.all then
+            if Hekili.ActiveDebug then Hekili:Debug( "Double Jeopardy: Applying pseudobuff since we are Stealth.", exitedStealth ) end
+            applyBuff( "double_jeopardy" )
+        end
+    end
 end )
 
 spec:RegisterGear( {
     -- The War Within
+    tww3 = {
+        items = { 237667, 237665, 237663, 237664, 237662 },
+        auras = {
+            tww3_trickster_4pc = {
+                -- id = 999998,
+                duration = 5,
+                max_stack = 1,
+                generate = function( t )
+                    local cdg = buff.escalating_blade
+                    local delta = query_time - action.coup_de_grace.lastCast
+                    if set_bonus.tww3 >= 4 and cdg.up and cdg.at_max_stacks and delta < 5 then
+                        -- Only treat this as the "trickster window" version if it's the 5s duration .. use 10s just as a safety net. The other version of the aura is 3600
+                        t.name = "tww3_trickster_4pc"
+                        t.count = 1
+                        t.expires = cdg.expires
+                        t.applied = cdg.expires - 5
+                        t.caster = "player"
+                    else
+                        t.name = "tww3_trickster_4pc"
+                        t.count = 0
+                        t.expires = 0
+                        t.applied = 0
+                        t.caster = "nobody"
+                    end
+                end
+            }
+        },
+    },
     tww2 = {
         items = { 229290, 229288, 229289, 229287, 229292 },
         auras = {
@@ -1087,6 +1201,8 @@ spec:RegisterAbilities( {
                 applyBuff( "greenskins_wickers" )
             end
 
+            if buff.double_jeopardy.up and combo_points.current > 4 then removeBuff( "double_jeopardy" ) end
+
             spend( combo_points.current, "combo_points" )
             removeStack( "supercharged_combo_points" )
         end
@@ -1148,6 +1264,7 @@ spec:RegisterAbilities( {
         usable = function() return combo_points.current > 0, "requires combo points" end,
 
         handler = function ()
+            if buff.double_jeopardy.up and combo_points.current > 4 then removeBuff( "double_jeopardy" ) end
             spend( combo_points.current, "combo_points" )
             removeStack( "supercharged_combo_points" )
         end
@@ -1201,6 +1318,8 @@ spec:RegisterAbilities( {
 
             if set_bonus.tier29_2pc > 0 then applyBuff( "vicious_followup" ) end
 
+            if buff.double_jeopardy.up and combo_points.current > 4 then removeBuff( "double_jeopardy" ) end
+
             spend( combo_points.current, "combo_points" )
             removeStack( "supercharged_combo_points" )
         end,
@@ -1215,6 +1334,7 @@ spec:RegisterAbilities( {
         cooldown = 0,
         gcd = "totem",
         school = "physical",
+        known = 2098,
 
         spend = function() return 35 * ( talent.tight_spender.enabled and 0.94 or 1 ) - ( 5 * buff.summarily_dispatched.stack ) end,
         spendType = "energy",
@@ -1226,15 +1346,21 @@ spec:RegisterAbilities( {
         talent = "coup_de_grace",
 
         handler = function ()
-
             spec.abilities.dispatch.handler()
 
             if debuff.fazed.up then addStack( "flawless_form", nil, 5 ) end
-            removeBuff( "coup_de_grace" )
-            removeBuff( "escalating_blade" )
+
+            if set_bonus.tww3 >= 4 and buff.tww3_trickster_4pc.down  then
+                applyBuff( "coup_de_grace", ( 5 + gcd.max ) ) -- recast within 5 seconds
+                applyBuff( "tww3_trickster_4pc", ( 5 + gcd.max ) )
+                applyBuff( "escalating_blade", ( 5 + gcd.max ), 4 )
+            else
+                removeBuff( "coup_de_grace" )
+                removeBuff( "escalating_blade" )
+                removeBuff( "tww3_trickster_4pc" )
+            end
 
             setCooldown( "global_cooldown", 1.2 * ( buff.adrenaline_rush.up and haste or 1) )
-
         end,
 
         bind = "dispatch"
@@ -1310,33 +1436,37 @@ spec:RegisterAbilities( {
     -- Talent: Teleport to an enemy within 10 yards, attacking with both weapons for a total of $<dmg> Physical damage over $d.    While Blade Flurry is active, also hits up to $s5 nearby enemies for $s2% damage.
     killing_spree = {
         id = 51690,
-        cast = 0,
-        cooldown = function() return 90 * ( talent.disorienting_strikes.enabled and 0.9 or 1 ) end,
-        gcd = "totem",
+        cast = function () return 0.5 * effective_combo_points * haste end,
+        channeled = true,
+        tick_time = function () return 0.5 * haste end,
+        cooldown = function () return 180 * ( talent.disorienting_strikes.enabled and 0.9 or 1 ) end,
+        gcd = "spell",
         school = "physical",
-
-        spend = function() return 45 * ( talent.tight_spender.enabled and 0.94 or 1 ) end,
+        texture = 6735718,
+        spend = function () return 45 * ( talent.tight_spender.enabled and 0.94 or 1 ) end,
         spendType = "energy",
-
         talent = "killing_spree",
         startsCombat = true,
-
         toggle = "cooldowns",
-        usable = function() return combo_points.current > 0, "requires combo_points" end,
-
+        usable = function () return combo_points.current > 0, "requires combo points" end,
         handler = function ()
-            setCooldown( "global_cooldown", 0.4 * effective_combo_points )
+
+        end,
+
+        -- No tick_time/tick, no finish-refund – resource model does it.
+        start = function ()
+            if buff.double_jeopardy.up and combo_points.current > 4 then removeBuff( "double_jeopardy" ) end
+
             applyBuff( "killing_spree" )
             spend( combo_points.current, "combo_points" )
             removeStack( "supercharged_combo_points" )
-
             if talent.disorienting_strikes.enabled then
-                applyBuff( "disorienting_strikes" )
+                disorient_stacks = 2
                 unseen_blades_available = unseen_blades_available + 2
             end
-
             if talent.flawless_form.enabled then addStack( "flawless_form" ) end
-        end
+        end,
+        finish = function() end,
     },
 
     -- Draw a concealed pistol and fire a quick shot at an enemy, dealing ${$s1*$<CAP>/$AP} Physical damage and reducing movement speed by $s3% for $d.    |cFFFFFFFFAwards $s2 combo $lpoint:points;.|r
@@ -1360,8 +1490,7 @@ spec:RegisterAbilities( {
             removeBuff( "deadshot" )
             removeBuff( "concealed_blunderbuss" ) -- Generating 2 extra combo points is purely a guess.
             removeBuff( "greenskins_wickers" )
-            removeBuff( "tornado_trigger" )
-
+            
             if buff.opportunity.up then
                 removeStack( "opportunity" )
                 if set_bonus.tier29_4pc > 0 then applyBuff( "brutal_opportunist" ) end
@@ -1621,4 +1750,4 @@ spec:RegisterSetting( "sinister_clash", -0.5, {
     width = 1.5,
 } )
 
-spec:RegisterPack( "Outlaw", 20250425, [[Hekili:T3tAZTTT2(BXZDgfPABfrz7Ct6y7zss3sAAtEXPV(ntrjczXAksD5ID8B8OF7VZ5aasaqas6LKUm3p0MerqGdo7Ba8CVZ)05NfguWo)xNoz6rtoC6rJNmXB6Kdp)SIB2Wo)SnblUm4c4VKeSg()VVSio4A8NVjonieF980YSfWJwvuSj)BF6tViQyv58Xlsx)08O1LXbfrPjlYcwwG)7fpDEC68NwSIDDq21WqJsE6lxGd5dzrPzrf38UO8I8NMLErjZpLwUX47D(zZlJIlEtY5ZTbYtMcGCqzXQ0SZp7SO1VgaOOWqgF4SC49XHV)Kd3F6rF72z4q2o732GZ023kFK3uNpAYZmF0S93o7xt3oBDAg8pEDA5MTZcH)2pMfSa(JxvEH8Tpy)Ph4yIpyFVAWPu7rE7pbbNxUzt8nWQeLNZc1hz(2zdlwfKCj8xEZByFAt6IrJPxh2kt4lQN34jJps8JtEX(tE(EBNb)P3eXFAD55dfF)pKgLNMKl)1NdOp(loXR6fZkM7NXYsJJ3oR4AwWLkJg3cFKLVHTOy7S39DBN9(nSew22z5SIIOKlQhkbj)sWFKcpmJDvuEeUUZwMLUwSqvdDYl(2AYWYOKO8v4uUinjmQOLx7zQaZ)Ba(EaLdaQRxXsO3ppkKLHG1Sxv89WVdCOWiak6L5RslKt1)E)PphMQpTcw(Fpaw5FN4Kp)SyK5fLk4af83(vsgJLempMfE(RaMuIBheHstJbSMu8b5rZI2WF2pi2s5WeLM5NW(CborW)BkoBYP4YO4yaw9Z3KXyQlcmWduh4cG50pK5FbYAAmWdDaFZzaPKL4dIQ(SBy5gG4VLJ848XauDet893GCKGmlIeH)Ysa)xWcIruybkOeeLua)Ny4ZlxUeyLqYnhn)rq8nMLdZXhYyli6)2zi4CftmoCw2KLUafYG1n)YiKu)7rlUeWvBNfbRycqLeV0yGcLbplVazoq1hHWGweGZACEkYcMeki0Pe5pnom96KXacd0eb8bbNF2qoGootaC(BKW2yuG)2Bfp3eDnoJH7xybpE7Sd5dChyheeZskgVMfK4NxKbYkJf4(TZgTD2aqIMghnNxuTj9VMVhRwZ6PYYGQNrKaFKoNqCOpOcon0Gn4zQJkmkFtqXIv6JPau2ZPNTXxRUcACmcEbvK7vbWFatWyU4IFLaCfR(DuW57tYljTXvsSCYBuUGZaquB2GOM5SfbL5c2040R3odvlDXnJBiYDW9ta5NIUyfYTYTQzxwzjYuxbRato7ZlyBkeWAyeWQvGk)bzkH80QaGdDnloCCVWJehLGrzHCDQ5p0z3YRNCjBMGEZchtgKfCuMQm6bGyH3sYAAJedQrbImcSgy1PBN9dbsK4pfSEnltJARjLJ6ZlxZqBoBsZkkticbQakxQxIR5zDWNXFdNfGi8QmW1guhg83dqneEWs8bnvvQQFekBurdTIXfpCzaN1zfTjgNbMX3o70t2oBknkIIKwd3JjWJpINjPCCnpsWLOAdWT965P(BsbTTO6NtOnqLIkhkvgvPeWkHva0CFQ8vHl5WRiEbRNxMVIRViKTmOmUWM(cnYkyuwsrqL4BsZZJGbcBYeqp9vLXGSza9dGu66iu2jkHVtdkgnUEXLkOSO)qBbFtcSXYkrznvv)CtmbXKcbWTZ1KRar4G5RqUKda87QySQP4fxAtzr6gaMyf1dukHG)T4sgzGPtKlN8Psxhdy2OfrfvSm7wnnrRbtKxXc95eI65yxRmmCRoCLF8z7Ojey6ZD5Npl6QMnva09UuNNexLfB8bXoW3fYi8(et6(exDTsNa0JYw1GH4ffmiiU6NU0Fj4yO(yKcDq4eKvCqZ7AtlV9GmOi2fuggSaFOMBaQVLa7oYMNtsNwfETeaeY99KETsQJimgkkGOmHYN9NY57ptx9vL(VXCprfQhHPhMaWjdg(()eTTm0fkvxY9hIducOzkhYEPyBYbaDfPQk)QzySzl3LI(faf2N)p8rFN5EqlMOfH52uk1Qv2k1i48ShIGqwOLeJuXQS0Ylwj9tupEHa0TH1mvz6Mah4Xw0cYVafvJASRABafLr)77JjtLLRximrqhWB887d(MygW3(fobwHpsZdYz(AAG8oI0ViEEg7cMIj)GmWCmZVinldeWWvWBIQ7MINVPmo3m6epp1bgdu7IC))Om8I14mzmwTGJMhCbQkOGIaOHJSOx8KXJkttvadgVnQPkh)xAlGPffoAd03YYwcEQ5hKVauMfKS4g)Cww566jTLX0IhMs(NAOfEhK)a2ptBl2TGqarhaXgY8ZqBX2NGMM3RnDOpb28F5sgBJFuHpg2pyL02qWuebtwy0cM2J56pnwc08RHW9ReAN4A5(zybbzxGH7J8LC33rZ)2zFxeMWfypcCqGC(lRMzmMsuH2C2skjnFKNIcu54RstqViksvCtuF(aR)SWiWssm50ismc5EHNkDafJsawyWQd4ucevkIlg3M(oCaKxFZXLxLc0coXf13uXOtQ)9JoF3GipUC1vusv8lZdUGbIFl9bvQbTfUi)fmZ)rm7Z1jOHMmrWssdwXGfpY3S0ermCebznqkca9mQwc475CW24l)W7GFVKSHjMp4TYz1tlAstMfienehTgqDH2CUVei6zOdhaAeMswMp(pSjgKxohE1LLxOlfSthrMzf)lCXhCcPYUHPdAMjiOn)zut5qv6pSKkJGWBQHPUsfILNZ9TUAeM7k1CLCGiwetLT1eG6Tw)Pb2rX9iCvb)PfT03taQlYEpOAdQJzxZl0wcB8ylpIC)M)4bTWpzdx4odapQ4I(XeRgtDbBzzSpyH10KKsEoWrnpfap)4YfxEdStJsueSmgd(u)IGO4C1qWpsHB2ySRaPfZXoY6WBU89rmCKncIPbN)Sji70hAIyefbxc7W1(ZbxIkZaF5ZBOOKqC2gx5glydd7qpIMFaQkyGjluAXamQWd5IYq3pZZhpeFgMqEm7rffS1yogq3mwb016zLMoEzhQYqPEMiOupznN4kbEbg1Oq3C4I0EMllg6Z1ySHbxXsEcMKrYakz8CzuwEb3jgy(xszn)NFZh3o7gkSiBSuAvGWKO1jNClguQSiCkL9CUKz1eA67P6O9oAcnESOu4SN7NaX6hetpCIPXrNEXA1guRCnNvcIulwfKDHA5gW8eHyzroDPuoRZNaCva7dsK4rHRsQmMt0RlM9uo2hAsE9S53AQTTU)m8g3ypqjCDj8xrVLv3c)8zkPFhvZLNMQxILAYQgKRsupysBH7yfCvHHG5K8j5SFWgHGgHhY551ipAnqKkZckQeWe6RScO8fCmOwdReHaJweHXqCmpwysBFkk3oafSGWw9vDY55CTuygoAr5udh512GVwan5OoOFPQ2AnJ(bXaOoHkQqLUdkvui)jLVZx)HkQ7Bebiat3hnzZ6WV0DAXTktPVUJdPvXW2XpVzjkUr8OQBN9WQlVia109YpQJCcIfkM4iiDuZ4oJwtGd69EBGTu1pTn5YlwLMxeFdw5WOlnR9LzQW(r(GXSfIJg2n51Bvi0S9Vyr4ykTR)WN(PAfwGS3sMOwR1QSW3dXguQjnXgg7cZC7QM)vRf9aaI2eVb1brjMfc6m6h5G5YYSIvCfKjSLiOkQ()cUTmm8WFjfZyuj8Ra2i5sdlAdR)5cVXrG7B0RIjqAD1ls7d5OM6AuJQTRr6hKpbDvPLmdmpoiK5VmUml7gJTATS9RWbb0lAuC1ytPe)d6Fk0PjaUht1a)jnkSK6QPf9fYtaKU2sVGHjtdGLN)5aG3jOa0NgtU)IRj3XI9KMan9ur6m0nPLWgBUsFcWbpAi85HtCFn4cDHyiVpmuF3BX4p3rCvhd2odRLMTSZ2)Tkzx5(SBrHPGeGiEOOSmo2aCi)qhU0uPXWvcF)cVdoqa7C9OeTd9Suqwq9crjcBQOqOvVz3vPIR0)6tzyLMFfliZ0aSbw5G2Wkkm7MfiTTSyiFCbae(ZfWax01mT4Dx1RMLOvZPMxqAl2ToQZoCeU5lObLTp0lYWIJTMfB6AvJroVmlcSBHDNc2nfDm68lrTC4CdkdZZPeB28vA4Cghtj9pEbkmNJbRCnLeVBQ4RO6YeSQk3RFS4vpjxlNRbjxGXAD9QOfRKXrHM9QlI88BQ8eaINrRyvCghW)WRy(Y5SUafweOmZGRdn1MzA(BrpprFoUUsKRAt6Ifh4INuxdK7kSWve)PF)3Ns9ANIBpnZcUmQqE1YebaEDacGYUwzcwEso4c(tTuez41OpfW8cw4IjKm6xd12wnvOShTMj4lH6racEumvRDDA9Cg5XvqgMIeqZNxUIjaDtCScCNxMpU46RN6F4Mfg6dWTJFCkQ)s0fed0tDQnQpzgu4bF9uHUZO1rxtf(M65Y50hnId3JCY5RuCetRXxc3uZyxeKfYvSIYiYazg3iaYQq4ikmfUjNARZbWXzk0(dfR5E4Fwii(oMBvQlSpUrkdteAoX17otuhQz3wOGxu8F3ujpV(hVFl8osphQYNF9(2isfpxEU3j3aPtOIHGhv6zXmmYror9Na(Zw5tqpHbg5SmYoQN0koOrkvLPHZoPwQlrZfi7GxsXuBJFxvc)4o6SaL2TuUaTn38Trb6DlLHSxD2t)4hE6NELzqO9GnXu8NSwPwsszrlALSoWXloWfdz)YpA)NtLeG2WrMD60xMDS7oJKD1mKln2YpXJ1jxAKwMMkkQW5mP6EqBdzATQGBuIl5UbUc4FrLd1rLI9RoMCfKuQ8wJ7t1015a07sOwt4cIjN23QX75keT1bH()NsS75851zK9WaPJK7zltmchUcaZA6UqtYjGH488GSB2RzMQRObr)FSkVHK5iRkyKx)HTIMSMDfddVQz2KWuoHP66lsnrjEvh5vPjc21lOAcyQiplIm35COvjz0ZmyWMO5urYqYIYVu2aXCeQj6cvyxMO1Uxi61AwGPEb28uKG(xf4woItav6zjy107VN2yqhyKvDJ0VkZrF75vUQUwaAkapTpWqO0lOwcSdLgyBPIRwBKjpZaBFGuJf0gFzm7Z8qdKsazLXsBO1A2WzT(0LWZ6Ler3StQ6at3NI((fv(PFOETcNHea3ndMlgQ(xXrDFZC0EN706MEuBKeh7R6gtbtUSRi9QBhEdUUFe7YnmqHfyFSVpNJI8xRUb6bF5ylwLeHW0n7vverm0WVRecynnbaUfcPEXV8rWhqgvlICkIy0w76OSmCigfJedXcpAE53HJbGAf5efWOwg3KwsygxXDYZEOLuUZpuq8KuYTwqHTaqdLxgztgRDeHQDaOEJO2MHOTg)IuFkZZvvd0k86ULr4UpHhkL4Y8I62vXDfAoysl9RIAvN3Ks)jU(AN5kA18xwIPZTgMWHDO2WaJcSSlPCZPpmTZTZYOmMTJTZuTZTd4idlVac62Fb1lQ6dTvdBVJjtM66GlsO)b39pXbJGx7U)OeJ9aDMhdYlmf1zkoRk58UPhmwnnHscW(KvU6STZLd)JYKlxhGqzk4Tde4QpF9AsTmlASA25Cnlv2CaOO7QWDunMZjyHiUwTb9D8J4GE3etQdazvYgdSTwBP8rw3GA1yWB8QGCSfDkgdEN5hUjVBNkb1zNLhNwaXykMhLUhU6xWDLPIDJbn9EaWtFua4P8IJYBhzlLhT78Uw35b615WWJMq2Yc0JBw5vAhBoyewkFYr1om1OOD0rxWsmAc7xonlBMxuQg7KBIYo5hyVkWY7kaY9e(ZRvTwJYcH6CpQUSq7jtiAap5r0lI8NXPxJ(1m0J73VyUKW)imjo8Ckr1jnNAxeEkN0sHkHf71j3tCYGAVSLVKgKqeQLulyl(J(e0TshZ1wPwZrtOWSBVwRwoxPYOJvdZ6mXKuxdwzWYFxuomkaM5raqpfZS6p9E1a2QRel2ajfRQtUTO4lFFLp3vCb8JXMik8kNJjRNAyr(4AQwkubYeB(8wdbByx()31rARJEt8U2nRTcmyQBBRwZUp5HCXX6JdZUo4o3T5juCpxhfX6ZZC98sXHZ7LePOqDJBCvqum5HNfMFJARBjOHkwFlpRpIoMhUPbw7d17zvU543Fq2CKCvuEu9DUK74Sf0kXKxvsfl0dv9LUux2Ei2AemKy5WNBD1GsjJ267H6dMzn7n4PmmzslwQua1WGOMFuv(ujCOwQCFxm3t5y7CNOB7CXuFLSurpJufesbL9xdVWcSpVbCKThCVvyihQomAxxhhu2UuR045gzoAuBnhqxyZEJ)0rrKGoMhFQt1aJ1Ah8yHT6QWQkx3dKzFeKh225lDiTW7QYr)FkblG(Hzbxxp9opGPFtNYc7sRWOQoLUPpwI3wMQ7e4)my7D1deUjuv5psKpulKSIQBgKMeom(0qEW48iw3t2flQC8b8ZWVj5KgNyD)FqKj4uaInnYWYdIIA)46PFm9iQJ34JAI3R5bevp1o9vPOh2ykuESv7pwSGiONUcqPtJiwTlJi9ovWr2kisIB3RrRXcxN72wHWef3sEFmC0AZhyCpU0m3lnZFCrvhmYv000L0R5(TMcyISRJ4f(LNb0gfDZmJlo7mHwVCBGxEoPcghfHSRtRqtWJC(HDfD)(eapkKVpu9nQYTOEf1GX17rJc4FhIQOrOnvLa2zyeQPKHFsfGO6WHkUoRaW5SRdYW6Idret3WqrRXfwS3EIAImFcwuvqOJoRA5POcQGYI01beAAXkS1yGOkE77OuGJxftVonbwq6XpHe706jCq27jCVsFI2V)emkXpJ3TueaTmfVGe4nbwzgA(hKgyYSMx14ECCa)OyJ4)c54ivUl5E5vp6WqCWHbfbO(QVD7BPGQ1Gd43ERfuYIW87gM4qdmHmbgoA9tjoPRweTgn1(Y4O3rBSmUhN2Yq3fv23oMPJXYoXYq0N9x4Cx05SBDiIzF7BFdreX5856mliHcpKPPlJWK68V(xG35FzVD52(wCr(TnIGTP7vmUYF8geJUf2YW(zX7zycRWulI57z6bZxEed3kCOpFC1bJD3tEQ6bj3(ia5fFm5G7Hjs5e3vL2(Bl0gVxJdJ7jtHTdEb093XtpTdCPEUZSTN3lA5jcf2UA9(b2Bci5pR0ogdSMXo6Czzf(0BVhxG3DCs7Et71NnDlRkXN8aV7DQG9AwsAAFCUHDuND8o2r9Fl9GIl(yESv3JYf8jdDAe)2BT5S7PNmD3gyuAQ3THVVJgWDK(0toAcTN)N4v7IBmUzvgfyCvS6PNOEuq23B)HA(qoWSYV3EBf9kO(Q852BLrbPE99mAGts7GHMHuC7TwctA0i1nNz5J5BsW3cI0(4FrZ09Al1WZVhy4s765FTZPGtJ0Mb3vjUZzJNknLHPFZUGZULqop9eVJ2vlKZMZaD3VO(7gx1lQps7MDrOe7VlfoPwtpbnnKP0dgSsIYz5SgyTuwd0kFfOEAWqvPYJpz6(nuMD7T74OmvJSka07600ClZ1NQy7YIeCJCcGWW)Ck7stKIrKIv(l4OEmd2rxt6Wwk7XPthyplPh7obPa7GtIZObTSyhFirQ(Rv5sAIUvskOcJOEA2gyK3Qwm4yX6YGDSYd)3O6C0eRPQasZwIUERbdDNR3t8QzT0Q2XGDCwFJrkyUoZH3JvrkUF8m89OfboGHyODPWtpPnXqx1O44PJ04N6jE4bwSH7hsXo2WU73d92DyJ0jBX37VPfESD9gns39(JpXs9d4iW)kweGorZ7ChWZ2Cjt1DSVXB8r2dg64t8AI5R8gVz2(REKzM(BQluL59VS5R)ERaSoAWh5mY3eI0QjaXAyeIW)cXC)zMYDlmZQLhypzc5pX7E5QyNUsjcr4R29LrnabbpAjpoinYHR2dgUJZWZQnB6kvp16ZEmV3l6X2X1UPRutzeuI14m(YEnwyU50VHnW9MgmQMnJ6Ss00a0PE0E5HFjvycF87cdeUg2rrlaWR9Yni8I38sQGa8EFLtycFM6hncev4xKTRFIJb6OInH7ZnsWd9gKWCZyKNyC)uD(8gZVSbWyRR(TtEw1g4bDRkyCVqCxaRtp5WbMWOuY6bdxFfUThUB71dSTxh0WJf(Vy9qsYFK5PJeXw)PEffyIg0tseTUghBDz6Un28cHRtp4fJ2DOl0qZbz7ELq5XwUljuEQJ7pcLr02DgbomdDq3PltbtuNrPzuzGozIIcN(Dy8)7ZnLq34HMNHAfXPQdpnedWGHTEJjCme9q9lQCg8p(qTyu7hg(F(x3b3lkZWkmmOI72BhAhH7PKCfdvNJSsCpAqvsxQ3DJ0nx8FVvc266wjOBs5oTslvfZinJ6xjavUyQsDgyzGd05o6ipLT8UIa11SEUJl7gvpZW(5izY6)6D9bysi6BRv0mG5BVfpTsd0oPsaIzA7RqZJWFFN5JQtc1x1JVFtxmOkfwhPT9dVBT(c5zX1Edg0ScfwhwvYmh01r0)0dMONUUEFMV)ACc8BOiq)C4Rvm2gmgyQqDFg8R6Af1hjYlSJ69CYHJg0szEVxyXh4jN3ebzVaZQn3Of8Kz7cm4XIvT7AI3BWU6WLBJoVtRaCTTBLgIyNg7cU61)sDk0BKMIkyO1ooyWowpr6dSKcZhYrl3EskKjVYXHn)0dBag6Zc)GFxL(l1txUvn9hmri0A5GG2aaLND8gpP64IB(KQtiEJ81PDOWjK5x6d7D72kDDwRRrLnpOXCj32p23No9iRiEUf2(EoTDb757rNs5te7rV2G26CV1S)AD4FXKEUUt7362SZBDVU8seuzFSco4sRN0DY65deZwJQjklpxRwfkI1)Z8ZiRfeGjnJsKRB3RfkmC9TL94dRnpO8fLDeyNHEpRFQhRFLMpEKvAM875QLhk)yEkyIK0PQbkuGQnnTArGMMhHVIR2ab3mYwk7WJ9NRvBaKnUb32kB48JGkR9zB92BRTzrD5(iBlSKS1nPy6Fz)ERALcBTxeA4UOTc2yRLneot)SbMzvfShPx6kpHKQvjoRKGEvytUM5)7xJKgFnsQXOQUERff7o2cBsXHt7FusCwQazuOhQgSM9pdjN6D0KgfM40jUZmhx35x9pFi3BKixTJXbhJ2epQFJq6b81(NoezkdEK(uGCxGhNFHqo2ZUtQpVtPDjlXx5p9D231vr5(GYCuJWDDgG(qNFEYAVrvhEVf4R8(YXNZohbZvfT3O7cIR98c000FpYxXdErBsCCNw5gT31DVHJh4(dA4xY9KBMNAVfu)aMj96YXxXnHRcU)8XD6jhj4CC)zJdgZOgdsFz6IT(XK77oH02Xowt8Rw(eUjlHGJpUBu7v((KZp790P1K(WMSaV37MqhF6Z))p]] )
+spec:RegisterPack( "Outlaw", 20250903, [[Hekili:L3tAZTTrY(BrvQIMmsIMKYY54jQQSD2e7KSj5z5S5dBTceeyijIabyWHv0RuXF7VU75aZmygqsFf7SvTh2edMPN((e(6Xx)QRVkoSID9pnz0KZh9vJoB44rtMm5SRVQ6UnSRVAty0nHlH)qw4A4)9NRRsdVf)57sZdJXxVmVUicE0QQQnLF9dF4YKQv1ZhgLV(HLjRRtdRsYZIkcxuH)9OhopnF(dRwXUnS4wyPjzp8jr4s(LIK8IKQ7(XKYQYhgZwewNw9WI8L1SGC6yhIV)1xnVojT6fzxp3nOp56RcRRwLxC9vxLS(zaGLehZ4lNvcVpU8th9vNo6SVE7SNe)71LvBNTPGTPonD7Sxw90TF)2VNVOV80Zgdl6FfMLuUA7SqAXRzzWlSiVy7S4KYW5PS4TZ(Uv5LvP3TD2vvfj3W03Ijpg2IRUllA7m8cd)zaS0xWOZHf8RBWlJyFVIfwMNTDgqgsr0bINFnbeWF6NiQglJo5RFkCDj8NAf01Sizd)hLWEDjqgfBFzvywCyba2iUmUC7STZE1V9BNTD23cWW886m4rHP3gEh8OWQk26nvWFQkh)1KLznye(fY6YFY2z)7NZUjjn5)SD2684KfjikIo6f5P3aB1TRYvyV2iVzfmG9bWZXeZt5WRVcUqvSIKqGFJvfmppRUCy1T3EwWcjehmzdGH7TDwuEEAC(TzdxY32GsAxhwvaCsfS1HjzaemD7Sr0YRctbcQ9ILO3kG96qq3Aiqe3amUCulGtWRVeFRE2pKKMMKTeU6ahitHT5i7vWfPbxt4VBxXa0)tR(hBNLa7dYKiVVWlJh7lbM)uwj8WFbqJjLj4AW1IW9Rzg4Y(WzWkYdQGZE4Igq)(73o7ifQ5gomguIGOeZSD2ac91NwPcNpNvDlJLfac4bS7yLdlyHX3rRCE9IfdleqxWgjWnursUC7ShXp7Y6nSIOvHflzbJnpPUj)MaUBAkSFiz9SdHS(QIKOBkbSMjjSn9ReiR6eTKfTxdsmYYbAC9g4fYbuW2z)gTBCHq1HDIf)GtHVqsCbUUOauDjE)EwoUZXOKvryKjjVHEx1CN6TlATUyL5s0PENnssO4itWiq9MGywWscmQswZcktYIaa7cq(B8ifbZIQQaTGhHuvIE9OdHEPJ(dNtsAicmkeWlC(QsUajysbWu1fKIgoPbu7qulbLPLIXBtq7eLjvCXV1H)P2EscPHziTfuHr7JL2ndQHcPYVfdxa2GaDucwFeHbOkatD(7Aja(cNNJ6jGDErYYvvnkhVGol1L6Z3o7l5uHQRVQiharu8gGbwzx2JSwPjf6FcNuf8Fbfw5i(ewhOxdxiymSG(jo)9iUMdtJafvZdOFLRiVl10DcfkXUjGS2vPmenaKvGR55GYuHs7RA0gvOaoKZ6U8Aj7qAEjJGv8fglbzyRxHSuapFADmIkXxM4ksa7BXjaTd5maNJqXWF4fVuxvactX5zpOsDMoEhq8plScyGHNFo)C5BKLEEdUMjC5kKfqWOuYV7b5lcwb38gof91OHhSndOiibi(iGJoiHCjN7RdbqbELH8LbsLVMfSbol26KiIL7C(P1SvGOLbp5JM4wHXen1e(uRV)Sb2KCjJid(FX)2pco(Ix8VjbvKrR2MXr3a)lEPINbUXK2bG6nXfx9EqMCsc4iyY(AkbCbXaSnencSpK4Egg7zSnbjGUaoJQbD2IuZjWt6s58(J11XqND6JeONtW)FowSXYBEgY)tQ2X3ralHfa1audIBW27rBlLGxKz4lW5HWBJxhjfOAVCYe3jhp7N)C84wUo5fBIyTZFtXAs3kre3Z)zhUvAY)gHgK0rWtuynoRTjln3rrH7KCDCCTqCCXtlGvxMeJ(57WztHe0RaVTH1YaPEl8UhP39Jl0yvELgCkk4G1vUF06NlVxYvFKFFwTwbfAXCXDTEd3qjru6Y(y4651T8C5P4BXkOyYEoiVIHMYdmgcwLEbjr75uCTBN9ZB2KxuvNblXaplqs8WFdY1wvluvyDCye(ec29Akf8DlH8kJ7oHfK)Z1vi2JRfewwyA1Qt08MTHnv6KS4ML8)XWGI57DtqG8qD(1SsgfYtAySW35L1HfHzvmwCJb2smstUBwzS6kWC4dtkkyPmWXkz06oqysyYaXrOei4ua2aei5QlbsLAKDX9dabshKMgyaLeIj9aET5impeI2o6gY)4jnyCDYHybx44rOggXJnvS0fvDqZX4dyqJPDzTCdqlYtdacvLtL2prWWSD2XEWRhJ(mNj8R75HGNly4mGc5YA0PwJ1IUMVPipsFFjRKChGLS9Q4McFDysk5lHd(9fH8OpxrNPbVUyfkUDhpBFKw0FOLIalbjFMfjArWI06II78PE3bw9etrgI1LCM8z)IsvUqo5BP9gJFeO0hJxpqjzf5rAJ8ixoSKY(1c8hqcrnQJVIKQcjD(3k2)6mUM(N8sKuqgeCKsbbEmMTOcSpcYIGbNsdCi)LcyzGJFOlXxoLI7NlcbbnnppytoeCqJsAbRphdhxaBgyuGfuaCfkNCospvgAH22PH2oOdpPctdrjpeLZuiqaiNi)lc1kAHgo(BF1ZhCslIaz)DotgEoILjANaXIEYClt4bZ6KYYgAk7pQrh7X3GeKcxdheCWyWN8apwE4eaDCmUUKiC7MQcCxN4CStJJd8si7tiRt9KxjvICClRcA1VHaKXc62JFdvpbKiCVOiVoa9qHcIbY3tH1tAll5o0GpObTZ(Znjf7J(h1DYJYFHcK((TlGO1DzyO1Z1DlDIaB(fVHyZ9g)zIIiv1O)Muwxa2zHNHC9uJXFsGQbt)RRxVhiZ9rvCFFm4c2ZXetDdp4Fud6kcIlcVTz79Y1)57K79yo3RkflTvOjEBPxLGh(LwXf8LhmH6flKPuKR8WbjRICNYnHBEiPyctNfinxSeT0WD)sNJhaJ07ejrtJCsRtCU)ViYeIJaXMw(8)wrr5q1qeodAiOQFVGTebcG6mE45TX7n8aIms4M(QfRSlMcTh70dch(aiONFLh6Pr6rTOO)kAg2krU2wKr5nh(nZDUohZwXTj42in90kmmDNyraD8iFCE55yEjL16ZQKhPPZjnr4Qi2aEn1kZDbEKxCSxZJlfEum)EO7KNY)UUd1bS(gKX(teUjG3ooRdiuOwbLH7hfgK3yFAoikAprblDfVNb26LmbwNFT3KdM7PBA)maD966uGJMF1v2vtY4SZHvdgQbq8TXv8AMQgGiLkkQ3uzxTiEffiUPYK18CvNGlMFckpkRwfwPDU3asgUcDiFdLsf9eZZt4h(NsRzu6T2jHOlH3l5wrpwTnjRHOgEneJpNOTh6V7jvzW3TZhrGzaV428DjatAucDfC4b)UVLMk8XtjAdLPOYnm0hOtjnqNsQ1AhfP4MfvGoEa65nXlDvVo3E)EaX203L(lNoxiqMdCPYAbkNSIsGH0vQtH77II81YALGiiKZhXqcJiNoHZMFLu2GZ69mfAqMwCYMgEvH)iCxX3VJW6rgCulehOeqZeHchvOMiay6htPwOnn8h8DXK)WoYIDZF0VfVPrj0(kc1ECd5yhvmT9lyKmQUxky4jloynl1UqETw586IeqqdW5HL1f7A1L3G1Xc37OcqbhLgZ2VIoULYkNvrb6kcGOq8aO)sa2Ie8gLqSzrXLU831Gz1o3AkTY4(CI0PNfH8AtvKxVuOXgvtRybkLrTX0vr2g4qJgrKHk9eqBy(v)cOPB32xWMxxvqLw8L6h3EHW47qNUQ01RZZ0Pl)hAGw3EWnLxBZJn9KtZAme8aePFvEbe1FvJvERNVPoT0YKSL57uS0hLb)ED8sS)DSx7z6RDE4sSijC1OTm0VHAofWySYuVcy2Sj9ouZFj(3moaBl0C8gy)IvSGfvfewgHD7sw0DbLSI61nBAhRPJ83jzGAG2ar1qU(QolyJv6vCUbJTCJ0PjPgZoDLlFXs0tvFRicSZ4d69ILW8Vi7ERNOwlwBczhaicorL5RJ)Hx8YJ1R5XqZc8ZDGUiKxVpmFxONt8tGs5ZZYrJvXHRdxcMioGk5SlSzFRez5TNCCIXAvFoQ24Eqv2LD3nQIBDup0sd8wxQOBXk1YF8g)3SiX7jpGtSjjKch0AN9MGDx9KDdRQCFKh9h40oALc0P1j7R8SVkVSomo4pQzSmSOJzuBp(wbrNlVYo24ouRevxaHrcHabmmbjX5PVDqXyfy0EJDOJYG2Df5m9VMDxctKe8FIHYRGf9Y1OFF5zl5LJkuVJPYIX4DA63cUZEIGJ5WsTApHOlvBPLuQMqMi)17BHFn81w02pAjXwvAZ5WHTOE5b00oiN2OgILN7HdTvgi2FetSnPwa0ULr)fUyIiDO82wRjcF0oECoQ)G0seNuYd2eq7tYOKkDkVKc8DrHM)96SBwhcrddEicUGUmmGFETQexRwkuKwi6H(2f9QUD(UXBN3G28cxou1zG4(gEgam9oKmxul6ZvsRu7sn68cszBsGYQgpCvyjMV3QHHz3feVPC3xjKvOmnh1Uj2hnVbv)shPfwSMjVbW7K3jW7eUUC0B(UQIUTzgdIYZeP7OeRNEtpNz7NGk(YximjHM9pH6SYqKr3mVBSxtPgLAafr)Tkcx0Srov(uy3iNLKYl0Xcn9u69SikUkYvMM6lERo4R(NDvHSEYMh0Bqd2kG2TT5bAzhWZzU37vppv(tMpFZUKu1yI8M4wbfX51W2f87S8nHfX3PRwT7MMCxAwfD5KpRZMDz5oc0SvZUtvDQItSZxS40LrXdD22eQcNqij312QPwUK2yvbDtQ0kRfWe7PNGnDGV)oWRDHVKjYBNuU9L44RXLBx0y7mUPL4ENLS5YMco6nEkG(Lzx0fkFxxrpHJPxuxWdzyoen7ceLZt7frFa8nVdSaX7)zogeA9ADRIgUxOP5pPCyj9QymPRvVOL(wpRsRvqOwlw(K38(tOrhQJonyIwNgOFJ4AhnRuSw9q1poJkxIIcaHSRiSSC0Yfj6hGLWLaEPZUVv0h9ydNa(X9Yx9uoyHnlbwxnNDylkSIhjlwvATBdXJOoRkrgxfOJfFPhJBFZRLphXFOwpo3XZ4L0NEJFoo2BJo30NenDGywEXA8i0AuI2pKY0TJqdF8oDP5zHQyerdh51LUIBSOoLv2z6V0YvKveX7knDCiGCCcfRa3PuwkpHR6SmFntTczNLrk)A64cKDvLGpQTgxfID4yJwzEFrkwZ(Ex4rz6ijDY325Sjq1QLfXkldlWcT2EAS0BYhru3QrqRsWPIfpN33uO3ivUs9bQ4f7GkxfwNAuwSnGbRY1BGqsB3tWDejIVWY7Q)4C(cwMm6PzXW7sPbnXvUkDxrCeJbb(CdxZBAohFAJTqF9QZmkFHY2P987WZaKDLz5UQTcSeYTcl5SQwHMO50pngl40m5R6kqAl3GSNah5ewjJ909m8OCtYBhk2eilVqcTgfhTYO1r2NDMy5wPg(TKAfriMfPS)Kx(uPacPmIt8AK)XDvsz17DbTK(X9ypQHwz70pvZir(ciuENAj2b10Fz(AE4BTiA)ULs7iuav4cDinsmDhIdC7)GB65W8fKWadwoHo3khneqNQLBAJbJbUuQtofEeXlMJmH5lu5ibtAwEHEfK4ufP7dYk8FI1gtXxQ1Kg8Fu2H3KhfnLO0OFlfmVAVBtd0(QqmKIhWa)kEkgJrnL1hwl29iafw2z)Gi5c27igDWmRp4M7jx9Utd2(FQ7rOPEeDoaGTV1fC3G8U21dPO9oB6iP12dVjZ1vly3oeQR7r7lW10WhvaBzaBDWCiizblPZgRYostDCI4)0uBphs2LRcbniRzPXws3FhwFrCoZIcRIwDAOQuoxPEdmOBw0QSeuBo6yMyK5rNh)M6SLS8mqpJCMVe)YlZRXP2Vmb9(mI7856KIcCjwJEpvdjKzD4Evfxj51oe6gLHo7GlFrWYJXYrgYOqKeXYX9Bu1tMyWdY2Lj3X0Dm0xbEPj9TkpGY2WLYWwCcV2HGANRX088406YQ9jPdNnQZus1Gm2Kt))45FUrLFXtlacJ)o7ce)yJLb(hYkUHc30CzFH(YwKuWOD0EvFPrvJZIWKnhMgerTbG5s70h3)7lv97DM6N0P7MFQMQ(j(8O5JLC1l77GoYxFeOolqiwywrpzplShkh7kBSD1RQ)JmS7L0ASmCefjmKqq6FChvjCPis5njGb6yTybeQ5A19PE17Ara2r2HDbn8woqcXNGTIDedLBfsXfmEJztJneQEwZM2EHn3Dij9B80OXeRIxQrRo956zR7pyd7bG0G2aDtBql1DL6VoAh(mUTQs1uio5BF1ZBCMNcZZDRWti7VRaRioOG3CMfmMjKJ1Me2TQzM9yntN2PzFFc6ZDcQ9p(iAHU)yd3EBnnRTdDASM1YLQBCWTqa)4idPAFD7ue26gDq9vDLkRa7Q9m(wzUyCQ8WHgaDrspQd6qs1iTjxFvISVPdswOUPwzBUNFQ20j90X4xovVMewxuhjO2SMpCUxzYnJqxgsD8TdI3vdGdIrROFxwSh6lCc9lKwLqK)ep5H63YLP5Zdt5Dqdx2TbPBmMcgoO4DY66wTNNzfM8(WLkqma31QkpqpazBnKoD(HpYiI5MWKBeWXk2s87YU7SsRyUokchP6G3vX8Q4sFlM07SE7A5qYxEMHCL8NJVBsAF3lurq29u1Du3cZMrH6yrnrBPe7Dz12GbWWJxLwBJ1qY84uiIRr91A76RUnSa)Oma8gVcjOjRr1hcnWpGhTZdq25)OgmXflZ0FyDvoW(I)qee38saxT97)rk1Gt(AmXSzWrrp(bC7v6FlPa8Wd48bpW43HFS)4)CaSteOSihNlcsIjSUatT7Tu94BQMaxqkIB9eZ(eI6RKRJ4IwWPonRoooN6AWQqmiPVE73tJbG536QVxabMidYB0ddx8ylCH0FV2(NkriD4cBd6HV5FHNnVTVKT2CNlrS5oV7rXh4n)mV3CNfj1X1336mWb(ogp1I1bIyVoMjJEFsiNm(9fL8fere3ZVYuqbjuyb1zrGUGhpcB3AqQ6NZ0(4swKVibNyIp7ZWVlIL4qhSgGZpqFHj3(945ELANFgUZiwA9A0en(LCeaM5Hlc)YVybFXFdWj(1iTs(LLeXa8lD5qvxQE80hQ3I4UxbOIjaf3pbd9EQ)Uf19BlnL2QZyNobGuYY4FDnkThuIzEACa6JpjzX0JCy6Rx3ELP1J09CMsiAo4mqlVtAkA33tZcF77A23198(7pQ9vAqpv18No6Tc1UJU0QlChH9ElhPrfS3W)sB77MbxuF3Xrxu)VlJdLlRzNV7tOb2AAFVb5C)9UMtXlNo54wyuARpUvGzd6XtNWLtpFeDN)74i05hJBh(VaJ7pUPthFAFJui3ZoM67VVVtbihDp2GEEPS96BxuL7VVvO3a5BG)7gVfCmhOnjhLfFGWv)lp7RgCCFFrl0ErUMZpTh7y2(0EQN55tBfDndF4Y0V621)MJcap3iM639JA3UpBPHq(KWX1ZzwEZDUfCUtJDWFg025UX)GVOTmZrBd3DhJi3LthF(XgFKdAVd0WVP)7wZ6M(JmgTnH673UV4ynwEOBicw07OzyXH8vRAwIaYN0FaXAJhS(IbGie6A75llwVJm1SXLcD3RoxoPN7mbErRFwvC3gNiAtpg0RJd7IhruNpU(WF1gDRLnynEpZmZj14l586WcGd199oYjB7NIFXUAJ(07bxn8N5NrQE8xx2iVxo9r96RBT(IPta2mN(lIMqpYLvych(j1xBR3uKNlVfN23eL6YhrBKE)Zo1Hpod61VJSrpEGMq8hSppwVzsPY8N7seSVB9ExoTlfFTEMWnMlMOJv2B8WB5N5Q3mKIBSH7aq6p(yjVqZhYihCwFEhCmhpEWaZaCUqcy6F5Q4iWpg)8tTt08rhaE2LRz6UL95JhEU7WbVy642y(7VVf5rM8D1JS)gt126ZGMqgFx)HIQnYZOiqe6ZYD6pdj7)L8LGYbLwVMFNill40XVroRUtp7e(r)38rnSbnaX15i5silHhl)96FK3iNACl1x(NgiuG7yF3vMRS8nb1x6CE0MosCgTN0na(6QXLrGdIoUNrtYCXeNX9(rYK)ztinNErKo6kvR99IFCD)rDHEX07cH6Wlrl3m1ZjKsHPdJyxowth57Oj1Zg9Xhnqk3T7OstaK2DnIeHHzpPE0vyVN7oB4Z23uBVjf(z5Ag8UayiBWFFQngD2icRQeG4cvg0Xizu)LH8bNJcMX(hVC65A5D)XCf)hWuYzduUtwKzTc0oKp0dc3(bU8Zu5i4h0zBZgc5QB0mO7UB7LMoA6wF3L5ODEzCUmLIVE7A(1U8SrMUmV3t80hI5tZgBAnLAgjgTLpGAMxDmHAQI1P)iHzxpz5A6Jep35KOnOxhPJ9ncd)rWmLTFcCnm5h1D5q6DOcb99jf4fxdo319GBTBd(D94UeOqUklx8gyfiY)9mlx(veAlLUh(IRyGgaK3o5HAENgUi37ZoCIxJjChhy)(DDKUFRUk2xRaRp8KR3Z7utbGR)8URszNJ5Js5xRLp3dgmGZK)r1in1YRyfm0zDZ6DKZXBQNJKl82mNsU9jwg2QNjx6Yh1cmm3f(uePQRJ(Ok5mQOZg5ns22aOCqKA9e1Shz)e14g1ksDJjmIqMVVNCiBqWSRM8n4onOY2tTcxMS7zi6YjN7eXFoDN33H(XhSxEcnYltf3XXDbTnH61Uh8CcItNmApp3j7352U788FUCBMkplvWbxALs(NS7FD8q)jB7ZCg04hMwB3bGA455j693VmwH3rT3)j2DvVEMh1qQAzuTRcG)3JUI3bgWMbMsIcXA7SD5fAp91Q8x8iJkmQxymUfENTfFJJdTF8Gdvuq2)7crk53x0MvsYZT0h6VlpB7(MhP4j76mA)H(CF37Z31w36J35(UZJ5kMV6D(NYZDbXU)0ysSF6PeQH3WsXG0Bw1NVtxEb7o1WKc3pOwGDJc(qBdE6BQryBW)dNz4DCYVVmeF4)lJCdiBM4WJB11X658C6iTIF)3Y)jq(GWl9B)pkPQqWS(No3MFxdTO1p2dv)lhlOJtlEB6Hw9e6fNRNKzT)fL9IhnXoZjeqnOnvZMcjzqE)8VyXV7WQAGSqHQ5)MT6d)3ZNAznAWfIjE4VG)rg(GqqTXpo5JoVxF3CjJh73kLcb8j3)EbFqOqhcj(4q6DKlEphSEgmsImeP3bhIFYPFQINz9pkWcT7Y2ZxDbf(jz4AzN5mH2M3zFidCbiDgr377VybUaixbk4pNsTscUW)FJVCb3FFP5xTGbUoyPd97MG8XZNCaNuuNDywRYe4Qe6UAepr5zECp7rzay(nti)yrqBoJ9YjkFV6ihcLBLmscn2UGJT6qguJ(TH3HAZ5nkJis6W0KLz6byG4FRE24)z7S)9Zz3KKM8FW(fpozrcvbA8OxKNIePBxLtUNZ9MTvpFqJG1Amip(fVbfWdM4y9m3VFfgXSbo46DeMhMossAnxKOkjntYNMrIZemGTms0kPm69z0QCm)ngvfHx4dktaub7Z0hIlYyHZKt4A0HCHCCpOpkf)6j7zGErQCK)amLZ(0NlRBRSwK2ZtoU3DrN0sWGbjyGmfbUB2hBKTmdz6TUL9AuA7XqhlZXSGz0KyQdZUjXCY6hsmRaGJSV8AEAvv5UPpUAJhxeNEERASSG596ZpMHgPmBiLR(siWc0nBh9vKrbJhyOYG8RBoXvJ3FQNsvFBYj9ijRPulssPCmliZsiBbITLwfEuqLyG64RWhup5EsceOjG6nG8pTpwQg6gzAxMeQhHaYdNpeXexm(83uorNbK2xa7F(xoG(coC9))d]] )

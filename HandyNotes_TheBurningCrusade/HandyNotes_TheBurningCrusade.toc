@@ -1,6 +1,6 @@
-## Interface: 110105
+## Interface: 110200
 ## Title: HandyNotes: The Burning Crusade
-## Version: 118
+## Version: 125
 ## Notes: Burning Crusade Notes
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes

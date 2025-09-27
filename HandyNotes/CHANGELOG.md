@@ -1,6 +1,6 @@
 # HandyNotes
 
-## [v1.6.24](https://github.com/Nevcairiel/HandyNotes/tree/v1.6.24) (2025-04-25)
-[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.6.23...v1.6.24) [Previous Releases](https://github.com/Nevcairiel/HandyNotes/releases)
+## [v1.6.26](https://github.com/Nevcairiel/HandyNotes/tree/v1.6.26) (2025-09-09)
+[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.6.25...v1.6.26) [Previous Releases](https://github.com/Nevcairiel/HandyNotes/releases)
 
-- Update TOC  
+- Update TOC for 11.2 and 11.2.5  

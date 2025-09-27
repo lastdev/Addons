@@ -82,13 +82,25 @@ function OptionsPrivate.GetActionOptions(data)
     args = {
       init_header = {
         type = "header",
-        name = L["On Init"],
-        order = 0.005
+        name = L["Custom Functions"],
+        order = 0.1
       },
       init_do_custom = {
         type = "toggle",
-        name = L["Custom"],
-        order = 0.011,
+        name = L["Custom Init"],
+        order = 0.2,
+        width = WeakAuras.doubleWidth
+      },
+      init_do_custom_load = {
+        type = "toggle",
+        name = L["Custom Load"],
+        order = 0.3,
+        width = WeakAuras.doubleWidth
+      },
+      init_do_custom_unload = {
+        type = "toggle",
+        name = L["Custom Unload"],
+        order = 0.4,
         width = WeakAuras.doubleWidth
       },
       -- texteditor added here by AddCodeOption
@@ -199,15 +211,25 @@ function OptionsPrivate.GetActionOptions(data)
           return data.actions.start.message_type ~= "WHISPER"
         end
       },
-      start_message_tts_voice = {
-        type = "select",
-        width = WeakAuras.doubleWidth,
-        name = L["Voice"],
+      start_message_tts_space = {
+        type = "execute",
+        width = WeakAuras.normalWidth,
+        name = "",
+        order = 3.19,
+        image = function() return "", 0, 0 end,
+        hidden = function() return data.actions.start.message_type ~= "TTS" end,
+      },
+      start_message_tts_settings = {
+        type = "execute",
+        width = WeakAuras.normalWidth,
+        func = function()
+          ShowUIPanel(ChatConfigFrame)
+          ChatConfigFrameChatTabManager:UpdateSelection(VOICE_WINDOW_ID)
+        end,
+        name = L["Voice Settings"],
         order = 3.2,
         disabled = function() return not data.actions.start.do_message end,
         hidden = function() return data.actions.start.message_type ~= "TTS" end,
-        values = OptionsPrivate.Private.tts_voices,
-        desc = L["Available Voices are system specific"]
       },
       start_message = {
         type = "input",
@@ -714,15 +736,25 @@ function OptionsPrivate.GetActionOptions(data)
           return data.actions.finish.message_type ~= "WHISPER"
         end
       },
-      finish_message_tts_voice = {
-        type = "select",
-        width = WeakAuras.doubleWidth,
-        name = L["Voice"],
+      finish_message_tts_space = {
+        type = "execute",
+        width = WeakAuras.normalWidth,
+        name = "",
+        order = 23.19,
+        image = function() return "", 0, 0 end,
+        hidden = function() return data.actions.finish.message_type ~= "TTS" end,
+      },
+      finish_message_tts_settings = {
+        type = "execute",
+        width = WeakAuras.normalWidth,
+        func = function()
+          ShowUIPanel(ChatConfigFrame)
+          ChatConfigFrameChatTabManager:UpdateSelection(VOICE_WINDOW_ID)
+        end,
+        name = L["Voice Settings"],
         order = 23.2,
         disabled = function() return not data.actions.finish.do_message end,
         hidden = function() return data.actions.finish.message_type ~= "TTS" end,
-        values = OptionsPrivate.Private.tts_voices,
-        desc = L["Available Voices are system specific"]
       },
       finish_message = {
         type = "input",
@@ -1140,7 +1172,12 @@ function OptionsPrivate.GetActionOptions(data)
   -- Text format option helpers
 
   OptionsPrivate.commonOptions.AddCodeOption(action.args, data, L["Custom Code"], "init", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#on-init",
-                          0.011, function() return not data.actions.init.do_custom end, {"actions", "init", "custom"}, true);
+                          0.21, function() return not data.actions.init.do_custom end, {"actions", "init", "custom"}, true)
+
+  OptionsPrivate.commonOptions.AddCodeOption(action.args, data, L["Custom Code"], "customOnLoad", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#on-load",
+                          0.31, function() return not data.actions.init.do_custom_load end, {"actions", "init", "customOnLoad"}, true)
+  OptionsPrivate.commonOptions.AddCodeOption(action.args, data, L["Custom Code"], "customOnUnload", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#on-unload",
+                          0.41, function() return not data.actions.init.do_custom_unload end, {"actions", "init", "customOnUnload"}, true)
 
   OptionsPrivate.commonOptions.AddCodeOption(action.args, data, L["Custom Code"], "start_message", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#chat-message---custom-code",
                           5, function() return not (data.actions.start.do_message and (OptionsPrivate.Private.ContainsCustomPlaceHolder(data.actions.start.message) or (data.actions.start.message_type == "WHISPER" and OptionsPrivate.Private.ContainsCustomPlaceHolder(data.actions.start.message_dest)))) end, {"actions", "start", "message_custom"}, false);

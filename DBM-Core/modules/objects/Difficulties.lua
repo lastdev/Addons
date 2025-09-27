@@ -23,6 +23,51 @@ difficulties.difficultyModifier = nil
 
 local groupSize = 0
 
+difficulties.statVarTable = {
+	--Current
+	["event5"] = "normal",
+	["event20"] = "lfr25",
+	["event40"] = "lfr25",
+	["quest"] = "follower",--For now, unless a conflict arises
+	["follower"] = "follower",
+	["story"] = "story",
+	["normal5"] = "normal",
+	["heroic5"] = "heroic",
+	["challenge5"] = "challenge",
+	["lfr"] = "lfr25",
+	["normal"] = "normal",
+	["heroic"] = "heroic",
+	["mythic"] = "mythic",
+	["mythic5"] = "mythic",
+	["worldboss"] = "normal",
+	["timewalker"] = "timewalker",
+	["progressivechallenges"] = "normal",
+	["delves"] = "normal",
+	["duos"] = "duos",
+	--BFA
+	["normalwarfront"] = "normal",
+	["heroicwarfront"] = "heroic",
+	["normalisland"] = "normal",
+	["heroicisland"] = "heroic",
+	["mythicisland"] = "mythic",
+	["teamingisland"] = "mythic",--Blizz uses mythic as fallback, so I will too
+	--Shadowlands
+	["couragescenario"] = "normal",--Map PoA scenaris to different stats for each difficulty
+	["loyaltyscenario"] = "heroic",
+	["wisdomscenario"] = "mythic",
+	["humilityscenario"] = "challenge",
+	--Legacy
+	["lfr25"] = "lfr25",
+	["normal10"] = "normal",
+	["normal20"] = "normal",
+	["normal25"] = "normal25",--Legacy raids that have two normal difficulties still (10/25)
+	["normal40"] = "normal",
+	["heroic10"] = "heroic",
+	["heroic25"] = "heroic25",--Legacy raids that have two heroic difficulties still (10/25)
+	["normalscenario"] = "normal",
+	["heroicscenario"] = "heroic",
+}
+
 
 --[InstanceID] = {level,zoneType}
 --zoneType: 1 = outdoor, 2 = dungeon, 3 = raid, 4 = delves, 5 = player challenges
@@ -50,7 +95,7 @@ if private.isRetail then
 		[1861] = {50, 3}, [2070] = {50, 3}, [2096] = {50, 3}, [2164] = {50, 3}, [2217] = {50, 3},--BfA Raids
 		[2296] = {60, 3}, [2450] = {60, 3}, [2481] = {60, 3},--Shadowlands Raids (yes, only 3 kekw, seconded)
 		[2522] = {70, 3}, [2569] = {70, 3}, [2549] = {70, 3},--Dragonflight Raids
-		[2657] = {80, 3}, [2792] = {80, 3}, [2769] = {80, 3},--War Within Raids
+		[2657] = {80, 3}, [2792] = {80, 3}, [2769] = {80, 3}, [2810] = {80, 3},--War Within Raids
 		--Dungeons
 		[48] = {30, 2}, [230] = {30, 2}, [429] = {30, 2}, [389] = {30, 2}, [34] = {30, 2},--Classic Dungeons
 		[540] = {30, 2}, [558] = {30, 2}, [556] = {30, 2}, [555] = {30, 2}, [542] = {30, 2}, [546] = {30, 2}, [545] = {30, 2}, [547] = {30, 2}, [553] = {30, 2}, [554] = {30, 2}, [552] = {30, 2}, [557] = {30, 2}, [269] = {30, 2}, [560] = {30, 2}, [543] = {30, 2}, [585] = {30, 2},--BC Dungeons
@@ -62,31 +107,38 @@ if private.isRetail then
 		[1763] = {50, 2}, [1754] = {50, 2}, [1762] = {50, 2}, [1864] = {50, 2}, [1822] = {50, 2}, [1877] = {50, 2}, [1594] = {50, 2}, [1841] = {50, 2}, [1771] = {50, 2}, [1862] = {50, 2}, [2097] = {50, 2},--Bfa Dungeons
 		[2286] = {60, 2}, [2289] = {60, 2}, [2290] = {60, 2}, [2287] = {60, 2}, [2285] = {60, 2}, [2293] = {60, 2}, [2291] = {60, 2}, [2284] = {60, 2}, [2441] = {60, 2},--Shadowlands Dungeons
 		[2520] = {70, 2}, [2451] = {70, 2}, [2516] = {70, 2}, [2519] = {70, 2}, [2526] = {70, 2}, [2515] = {70, 2}, [2521] = {70, 2}, [2527] = {70, 2}, [2579] = {70, 2},--Dragonflight Dungeons
-		[2652] = {80, 2}, [2662] = {80, 2}, [2660] = {80, 2}, [2669] = {80, 2}, [2651] = {80, 2}, [2649] = {80, 2}, [2648] = {80, 2}, [2661] = {80, 2}, [2773] = {80, 2},--War Within Dungeons
+		[2652] = {80, 2}, [2662] = {80, 2}, [2660] = {80, 2}, [2669] = {80, 2}, [2651] = {80, 2}, [2649] = {80, 2}, [2648] = {80, 2}, [2661] = {80, 2}, [2773] = {80, 2}, [2830] = {80, 2},--War Within Dungeons
 		--Delves
-		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}, [2831] = {80, 4}, [2815] = {80, 4}, [2826] = {80, 4}, --War Within Delves
+		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}, [2831] = {80, 4}, [2815] = {80, 4}, [2826] = {80, 4}, [2803] = {80, 4}, [2951] = {80, 4},--War Within Delves
 		--Challenges (Mage tower, visions, torghast, proving grounds)
 		[2212] = {50, 5}, [2213] = {50, 5}, [2827] = {80, 5}, [2828] = {80, 5}, [2162]= {80, 5}, [1148] = {80, 5}, [1698] = {80, 5}, [1710] = {80, 5}, [1703] = {80, 5}, [1702] = {80, 5}, [1684] = {80, 5}, [1673] = {80, 5}, [1616] = {80, 5},
 	}
-	seasonalDungeons = {[2651]=true, [2649]=true, [2648]=true, [2661]=true, [1594]=true, [2097]=true, [2293]=true, [2773]=true,}--TWW Season 2
-elseif private.isCata then--Since 2 dungeons were changed from vanilla to cata dungeons, it has it's own table and it's NOT using retail table cause the dungeons reworked in Mop are still vanilla dungeons in classic (plus diff level caps)
+	--seasonalDungeons = {[2662]=true, [2660]=true, [2773]=true, [2649]=true, [2830]=true, [2287]=true, [2441]=true}--TWW Season 3
+	seasonalDungeons = {[2651]=true, [2649]=true, [2648]=true, [2661]=true, [1594]=true, [2097]=true, [2293]=true, [2773]=true, [2662]=true, [2660]=true, [2830]=true, [2287]=true, [2441]=true}--TWW Season 2 and 3
+elseif private.isCata or private.isMop then
+	--Since 2 dungeons were changed from vanilla to cata dungeons, Cata and MoP need own table
+	--Still has to remain separate from retail due to level squishes retail has had
 	instanceDifficultyBylevel = {
 		--World
 		[0] = {60, 1}, [1] = {60, 1},--Eastern Kingdoms and Kalimdor world bosses.
 		[530] = {70, 1},--Outlands World Bosses
+		[870] = {90, 1}, [1064] = {90, 1},--MoP World Bosses
 		--Raids
 		[509] = {60, 3}, [531] = {60, 3}, [469] = {60, 3}, [409] = {60, 3},--Classic Raids (309 is legacy ZG)
 		[564] = {70, 3}, [534] = {70, 3}, [532] = {70, 3}, [565] = {70, 3}, [544] = {70, 3}, [548] = {70, 3}, [580] = {70, 3}, [550] = {70, 3},--BC Raids (568 is legacy ZA)
 		[615] = {80, 3}, [724] = {80, 3}, [649] = {80, 3}, [616] = {80, 3}, [631] = {80, 3}, [533] = {80, 3}, [249] = {80, 3}, [603] = {80, 3}, [624] = {80, 3},--Wrath Raids
 		[757] = {85, 3}, [671] = {85, 3}, [669] = {85, 3}, [967] = {85, 3}, [720] = {85, 3}, [951] = {85, 3}, [754] = {85, 3},--Cata Raids
+		[1009] = {90, 3}, [1008] = {90, 3}, [1136] = {90, 3}, [996] = {90, 3}, [1098] = {90, 3},--MoP Raids
 		--Dungeons
 		[429] = {45, 2}, [389] = {18, 2}, [349] = {52, 2}, [329] = {60, 2}, [289] = {60, 2}, [230] = {60, 2}, [229] = {60, 2}, [209] = {54, 2}, [189] = {45, 2}, [129] = {47, 2}, [109] = {60, 2}, [90] = {34, 2}, [70] = {52, 2}, [48] = {32, 2}, [47] = {42, 2}, [43] = {27, 2}, [34] = {32, 2},--Classic Dungeons
 		[540] = {70, 2}, [558] = {70, 2}, [556] = {70, 2}, [555] = {70, 2}, [542] = {70, 2}, [546] = {70, 2}, [545] = {70, 2}, [547] = {70, 2}, [553] = {70, 2}, [554] = {70, 2}, [552] = {70, 2}, [557] = {70, 2}, [269] = {70, 2}, [560] = {70, 2}, [543] = {70, 2}, [585] = {70, 2},--BC Dungeons
 		[619] = {80, 2}, [601] = {80, 2}, [595] = {80, 2}, [600] = {80, 2}, [604] = {80, 2}, [602] = {80, 2}, [599] = {80, 2}, [576] = {80, 2}, [578] = {80, 2}, [574] = {80, 2}, [575] = {80, 2}, [608] = {80, 2}, [658] = {80, 2}, [632] = {80, 2}, [668] = {80, 2}, [650] = {80, 2},--Wrath Dungeons
 		[755] = {85, 2}, [645] = {85, 2}, [36] = {85, 2}, [670] = {85, 2}, [644] = {85, 2}, [33] = {85, 2}, [643] = {85, 2}, [725] = {85, 2}, [657] = {85, 2}, [309] = {85, 2}, [859] = {85, 2}, [568] = {85, 2}, [938] = {85, 2}, [940] = {85, 2}, [939] = {85, 2}, [646] = {85, 2},--Cata Dungeons
+		[960] = {90, 2}, [961] = {90, 2}, [959] = {90, 2}, [962] = {90, 2}, [994] = {90, 2}, [1011] = {90, 2}, [1007] = {90, 2}, [1001] = {90, 2}, [1004] = {90, 2},--MoP Dungeons
 	}
 	seasonalDungeons = {}--None
-elseif private.isWrath then--Since naxx is moved to northrend, wrath and cata can't use tbc/classics table
+elseif private.isWrath then
+	--Since naxx is moved to northrend, wrath and cata can't use tbc/classics table
 	instanceDifficultyBylevel = {
 		--World
 		[0] = {60, 1}, [1] = {60, 1},--Eastern Kingdoms and Kalimdor world bosses.
@@ -287,12 +339,12 @@ end
 ---Pretty much ANYTHING that has mythic mode, with mythic+ included
 function bossModPrototype:IsMythic()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "mythic" or diff == "challenge5" or diff == "mythicisland" or diff == "mythic5"
+	return diff == "mythic" or (diff == "challenge5" and not self:IsMop()) or diff == "mythicisland" or diff == "mythic5"
 end
 
 function bossModPrototype:IsMythicPlus()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "challenge5"
+	return diff == "challenge5" and not self:IsMop()
 end
 
 -- Check if the SoD "Black Essence" buff in BWL is enabled. Do not use outside of SoD BWL.
@@ -326,6 +378,11 @@ function bossModPrototype:IsDelve()
 	return diff == "delves"
 end
 
+function bossModPrototype:IsDuo()
+	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	return diff == "duos"
+end
+
 difficulties.SOD_BWL_TRIAL_BLACK  = 1
 difficulties.SOD_BWL_TRIAL_GREEN  = 2
 difficulties.SOD_BWL_TRIAL_BLUE	  = 4
@@ -352,7 +409,7 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 7 then--Legacy 25 man LFR (ie pre WoD zones)
 		return "lfr25", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 8 then--Dungeon, Mythic+ (Challenge modes in mists and wod)
-		local keystoneLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() or 0
+		local keystoneLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo and C_ChallengeMode.GetActiveKeystoneInfo() or 0
 		return "challenge5", PLAYER_DIFFICULTY6 .. "+ (" .. keystoneLevel .. ") - ", difficulty, instanceGroupSize, keystoneLevel
 	 --20 man classic raids:
 	 -- 226 is SoD 20 (and 10/20 flex)
@@ -497,11 +554,11 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 208 then--Delves (War Within 11.0.0+)
 		local delveInfo, delveInfo2, delveInfo3 = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183), C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6184), C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6185)
 		local usedDelveInfo
-		--Zekvir Hack to normal/mythic since his tiers aren't numbers
+		--Nemesis Hack to normal/mythic since tiers aren't numbers
 		if delveInfo2 and delveInfo2.shownState and delveInfo2.shownState == 1 then
-			return "normal", difficultyName .. "(?) - ", difficulty, instanceGroupSize, 0
+			return "normal", difficultyName .. "(?) - ", 1, instanceGroupSize, 0--Returns 1 for normal 1-5man
 		elseif delveInfo3 and delveInfo3.shownState and delveInfo3.shownState == 1 then
-			return "mythic", difficultyName .. "(??) - ", difficulty, instanceGroupSize, 0
+			return "mythic", difficultyName .. "(??) - ", 23, instanceGroupSize, 0--returns 23 for mythic 1-5man
 		elseif delveInfo and delveInfo.shownState and delveInfo.shownState == 1 then
 			usedDelveInfo = C_UIWidgetManager.GetScenarioHeaderDelvesWidgetVisualizationInfo(6183)
 		end
@@ -510,7 +567,7 @@ function DBM:GetCurrentInstanceDifficulty()
 			---@diagnostic disable-next-line: cast-local-type
 			delveTier = tonumber(usedDelveInfo.tierText)
 		end
-		return "delves", difficultyName .. "(" .. delveTier .. ") - ", difficulty, instanceGroupSize, delveTier
+		return "delves", difficultyName .. "(" .. delveTier .. ") - ", difficulty, instanceGroupSize, delveTier or 0
 	elseif difficulty == 213 then--Infinite Dungeon (timewalking in sod?)
 		return "timewalker", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 216 then--Quest (Party Dungeon - War Within 11.0.0+)
@@ -518,19 +575,11 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 220 then--Story (Raid Dungeon - War Within 11.0.0+)
 		return "story", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 231 then--SoD BWL (and other raids?)
-		--Do fancy stuff here, TODO for paul :D
-		--if Enum.SeasonID and private.currentSeason == Enum.SeasonID.SeasonOfDiscovery then--Molten Core SoD
-		--	if self:UnitDebuff("player", 458841) then--Sweltering Heat
-		--		return "normal", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-		--	elseif self:UnitDebuff("player", 458842) then--Blistering Heat
-		--		return "heroic", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-		--	elseif self:UnitDebuff("player", 458843) then--Molten Heat
-		--		return "mythic", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-		--	end
-		--end
 		return "normal", "", difficulty, instanceGroupSize, 0
-	elseif difficulty == 232 then--Likely Boss duos, but we'll probably store it as normal, so technically COULD leave it in else rule, but better to classify it for notation
-		return "normal", "", difficulty, instanceGroupSize, 0
+	elseif difficulty == 232 then--Duos
+		return "duos", "", difficulty, instanceGroupSize, 0
+	elseif difficulty == 237 then--5 man Celestial Dungeon (MoP classic). We'll store it in mythic5 stat since it's unused in MoP
+		return "mythic5", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
 	end

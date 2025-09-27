@@ -7,7 +7,7 @@ KrowiAF.PluginsApi:LoadPluginLocalization(L);
 -- [[ https://legacy.curseforge.com/wow/addons/krowi-achievement-filter/localization ]] --
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
--- [[ Exported at 2025-04-22 19-56-52 ]] --
+-- [[ Exported at 2025-06-18 15-01-34 ]] --
 L["%c"] = true
 L["%d/%m/%Y %I:%M %p"] = true
 L["%m/%d/%Y %I:%M %p"] = true
@@ -47,8 +47,8 @@ This value can be changed while the achievement window is open and having one of
 (1) FPS drops and stuttering while adjusting the value, NOT during normal addon use]=]
 L["Active"] = true
 L["Active Event Login Delay"] = true
-L["Active Events"] = true
 L["Active events"] = true
+L["Active Events"] = true
 L["Add addon name to world map icon"] = true
 L["Add addon name to world map icon Desc"] = "Add '{addonName}' to the bottom of the tooltip when mousing over the icon."
 L["Add Locale"] = true
@@ -138,8 +138,8 @@ This value can be changed while the achievement window is open and having one of
 (1) FPS drops and stuttering while adjusting the value, NOT during normal addon use]=]
 L["Category shown temporarily"] = "This category was selected by clicking on the {eventName} event reminder and is shown temporarily because it has no achievements that match the set filters."
 L["Caverns Criss-Cross"] = true
-L["Center Header"] = true
 L["Center header"] = true
+L["Center Header"] = true
 L["Center header Desc"] = "Keep the header centered on the achievements window."
 L["Center Header Desc"] = "Center the achievement's name on the achievement button."
 L["Central Circuit"] = true
@@ -193,8 +193,8 @@ L["Completion"] = true
 L["Copy Account Wide to Character"] = true
 L["Copy Account Wide to Character Desc"] = "Copy the account wide {watchList} (any achievement watched by any character) to the current character specific {watchList}. From now on this character will have it's own {watchList}."
 L["Covenant"] = true
-L["Covenant Assaults"] = true
 L["Covenant assaults"] = true
+L["Covenant Assaults"] = true
 L["Credits"] = true
 L["Criteria"] = true
 L["Criteria Behaviour"] = true
@@ -576,6 +576,7 @@ L["Left Alt"] = true
 L["Left click"] = true
 L["Left Ctrl"] = true
 L["Left Shift"] = true
+L["Legacy of Arathor"] = true
 L["Legion Assaults"] = true
 L["Level 80"] = true
 L["Level 85"] = true
@@ -592,6 +593,7 @@ L["Lock month"] = true
 L["Lock month Desc"] = "Keep the last shown month as the month to show when opening the calendar again after it was closed."
 L["Lock month when closed by achievement"] = true
 L["Lock month when closed by achievement Desc"] = "Keep the last shown month as the month to show when opening the calendar again after it was closed by clicking an achievement on the side."
+L["Lorewalking"] = true
 L["Love is in the Air"] = true
 L["Lucky Yi"] = true
 L["Lunar Festival"] = true

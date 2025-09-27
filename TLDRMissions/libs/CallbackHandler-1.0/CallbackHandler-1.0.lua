@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --[[ $Id: CallbackHandler-1.0.lua 1284 2022-09-25 09:15:30Z nevcairiel $ ]]
 local MAJOR, MINOR = "CallbackHandler-1.0", 7

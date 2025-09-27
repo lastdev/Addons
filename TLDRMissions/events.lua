@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
@@ -52,8 +51,6 @@ weeklyButton:SetScript("OnEnter", function()
     else
         return
     end
-    
-    Main_HelpPlate_Button_OnEnter(weeklyButton)
 end)
 weeklyButton:RegisterEvent("QUEST_LOG_UPDATE")
 weeklyButton:RegisterEvent("ADDON_LOADED")
@@ -125,22 +122,27 @@ end
 local function eventHandler(self, event, ...)
     local arg1 = ...
     if event == "GARRISON_MISSION_NPC_OPENED" then
-        if arg1 ~= 123 then return end
-        if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
-        if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
-        adventureMapOpenHandler(arg1)
-        preloadItemRewards()
-        if #C_Garrison.GetCompleteMissions(123) == 0 then
-            addon.GUI.CompleteMissionsButton:Hide()
-        else
-            addon.GUI.CompleteMissionsButton:Show()
+        -- Shadowlands
+        if arg1 == 123 then
+            if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
+            if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
+            adventureMapOpenHandler(arg1)
+            preloadItemRewards()
+            if #C_Garrison.GetCompleteMissions(123) == 0 then
+                addon.GUI.CompleteMissionsButton:Hide()
+            else
+                addon.GUI.CompleteMissionsButton:Show()
+            end
+        -- WOD
+        elseif arg1 == 1 then
+            addon.WODGUI:Show()
         end
     elseif (event == "ADDON_LOADED") then
         if _G.GarrisonLandingPageFollowerList then
 			addon.followerList:Init()
 		end
-        C_Timer.After(0.1, function()
-            if GarrisonMissionFrame:IsShown() then
+        RunNextFrame(function()
+            if GarrisonMissionFrame:IsShown() and (GarrisonMissionFrame.followerTypeID == 1) then
                 addon.WODGUI:Show()
                 addon.WODGUI:SetParent(GarrisonMissionFrame)
                 addon.WODGUI:SetFrameStrata("DIALOG")

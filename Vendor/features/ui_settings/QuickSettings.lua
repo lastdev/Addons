@@ -38,6 +38,11 @@ local function isAutorepairEnabled(self)
     return (autorepair and guildrepair)
 end
 
+--[[ Checks if the protection quick setting should be enabled ]]
+local function isProtectionEnabled(self)
+    return Addon.Features.ItemProtection:IsProtectionEnabled()
+end
+
 --[[ Creates the list for this settings page ]]
 function QuickSettings:CreateList(parent)
 	local list = Settings.CreateList(parent)
@@ -71,6 +76,22 @@ function QuickSettings:CreateList(parent)
     setting = list:AddSetting(repair, "QUICK_REPAIR_SETTING", "QUICK_REPAIR_SETTING_HELP")
     setting.isNew = false
 
+    -- Quick Protection setting
+    if (Addon:IsFeatureEnabled("ItemProtection")) then
+        local protection = Settings.CreateSetting(nil, isProtectionEnabled(self),
+            function() return isProtectionEnabled(self) end,
+            function(value)
+                local profile = Addon:GetProfile()
+                if (value) then
+                    profile:SetValue(Addon.c_Config_Protection, true)
+                else
+                    profile:SetValue(Addon.c_Config_Protection, false)
+                end
+            end)
+        setting = list:AddSetting(protection, "QUICK_PROTECT_SETTING", "QUICK_PROTECT_SETTING_HELP")
+        setting.isNew = true
+    end
+
     -- Quick setting for Minimapbutton
     local minimapbutton = Addon.Features.MinimapButton:CreateSettingForMinimapButton()
     setting = list:AddSetting(minimapbutton, "OPTIONS_SETTINGNAME_MINIMAP", "QUICK_MINIMAP_SETTING_HELP")
@@ -79,7 +100,7 @@ function QuickSettings:CreateList(parent)
     -- Quick setting for Merchantbutton
     local merchantbutton = Addon.Features.MerchantButton:CreateSettingForMerchantButton()
     setting = list:AddSetting(merchantbutton, "OPTIONS_SETTINGNAME_MERCHANT", "QUICK_MERCHANT_SETTING_HELP")
-    setting.isNew = true
+    setting.isNew = false
 
 	return list;
 end

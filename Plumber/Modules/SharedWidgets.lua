@@ -135,7 +135,7 @@ do  -- Slice Frame
             self.pieces[6]:SetPoint("BOTTOMRIGHT", self.pieces[9], "TOPRIGHT", 0, 0);
             self.pieces[8]:SetPoint("TOPLEFT", self.pieces[7], "TOPRIGHT", 0, 0);
             self.pieces[8]:SetPoint("BOTTOMRIGHT", self.pieces[9], "BOTTOMLEFT", 0, 0);
-    
+
             self.pieces[1]:SetTexCoord(0, 0.25, 0, 0.25);
             self.pieces[2]:SetTexCoord(0.25, 0.75, 0, 0.25);
             self.pieces[3]:SetTexCoord(0.75, 1, 0, 0.25);
@@ -175,6 +175,12 @@ do  -- Slice Frame
         --end
         for i = 1, #self.pieces do
             self.pieces[i]:SetTexture(tex);
+        end
+    end
+
+    function SliceFrameMixin:SetDisableSharpening(state)
+        for i = 1, #self.pieces do
+            self.pieces[i]:SetSnapToPixelGrid(not state);
         end
     end
 
@@ -253,15 +259,17 @@ do  -- Checkbox
 
     local CheckboxMixin = {};
 
-    function CheckboxMixin:OnEnter()
-        if IsMouseButtonDown() then return end;
-
+    function CheckboxMixin:ShowTooltip()
         if self.tooltip then
             local f = GameTooltip;
             f:Hide();
             f:SetOwner(self, "ANCHOR_RIGHT");
             f:SetText(self.Label:GetText(), 1, 1, 1, true);
-            f:AddLine(self.tooltip, 1, 0.82, 0, true);
+            if type(self.tooltip) == "function" then
+                f:AddLine(self.tooltip(), 1, 0.82, 0, true);
+            else
+                f:AddLine(self.tooltip, 1, 0.82, 0, true);
+            end
             if self.tooltip2 then
                 local tooltip2;
                 if type(self.tooltip2) == "function" then
@@ -276,7 +284,11 @@ do  -- Checkbox
             end
             f:Show();
         end
+    end
 
+    function CheckboxMixin:OnEnter()
+        if IsMouseButtonDown() then return end;
+        self:ShowTooltip();
         if self.onEnterFunc then
             self.onEnterFunc(self);
         end
@@ -314,6 +326,24 @@ do  -- Checkbox
         end
 
         GameTooltip:Hide();
+
+        if self.keepTooltipAfterClicks then
+            if self:IsMouseMotionFocus() then
+                self:ShowTooltip();
+            end
+        end
+    end
+
+    function CheckboxMixin:OnEnable()
+        self.CheckedTexture:SetDesaturated(false);
+        self.CheckedTexture:SetVertexColor(1, 1, 1);
+        self.Label:SetTextColor(1, 0.82, 0);
+    end
+
+    function CheckboxMixin:OnDisable()
+        self.CheckedTexture:SetDesaturated(true);
+        self.CheckedTexture:SetVertexColor(0.5, 0.5, 0.5);
+        self.Label:SetTextColor(0.5, 0.5, 0.5);
     end
 
     function CheckboxMixin:GetChecked()
@@ -365,6 +395,7 @@ do  -- Checkbox
         self.onClickFunc = data.onClickFunc;
         self.onEnterFunc = data.onEnterFunc;
         self.onLeaveFunc = data.onLeaveFunc;
+        self.keepTooltipAfterClicks = data.keepTooltipAfterClicks;
 
         if data.label then
             return self:SetLabel(data.label)
@@ -410,6 +441,8 @@ do  -- Checkbox
         b:SetScript("OnClick", CheckboxMixin.OnClick);
         b:SetScript("OnEnter", CheckboxMixin.OnEnter);
         b:SetScript("OnLeave", CheckboxMixin.OnLeave);
+        b:SetScript("OnEnable", CheckboxMixin.OnEnable);
+        b:SetScript("OnDisable", CheckboxMixin.OnDisable);
 
         return b
     end
@@ -997,6 +1030,7 @@ do  -- TokenFrame   -- Money   -- Coin
 
 
     local TokenDisplayMixin = {};
+    local ITEM_COUNT_HANDLED_ALIENT;
 
     local function CreateTokenDisplay(parent, layoutName)
         local f = addon.CreateThreeSliceFrame(parent, layoutName);
@@ -1076,7 +1110,30 @@ do  -- TokenFrame   -- Money   -- Coin
     end
 
 
-    local function AppendItemCount(tooltip, itemID)
+    local function CheckOtherItemAddOns()
+        ITEM_COUNT_HANDLED_ALIENT = false;
+        local addons = {
+            "Syndicator", "Bagnon",
+            "ElvUI", "NDui",
+        };
+        local IsAddOnLoaded = C_AddOns.IsAddOnLoaded;
+        for _, name in ipairs(addons) do
+            if IsAddOnLoaded(name) then
+                ITEM_COUNT_HANDLED_ALIENT = true;
+                return
+            end
+        end
+    end
+
+    local function AppendItemCount(tooltip, itemID, questionableData)
+        if ITEM_COUNT_HANDLED_ALIENT == nil then
+            CheckOtherItemAddOns();
+        end
+
+        if ITEM_COUNT_HANDLED_ALIENT then
+            return
+        end
+
         local inBag = GetItemCount(itemID);
         local total = GetItemCount(itemID, true, false, true, true);
         local inBank = total - inBag;
@@ -1088,7 +1145,12 @@ do  -- TokenFrame   -- Money   -- Coin
         end
 
         tooltip:AddLine(text, 1, 0.82, 0, true);
+        if questionableData and total > 0 then
+            tooltip:AddLine(L["Questionable Item Count Tooltip"], 0.5, 0.5, 0.5, true);
+        end
         tooltip:Show();
+
+        return true
     end
 
     local function TokenButton_OnEnter(self)
@@ -1097,15 +1159,17 @@ do  -- TokenFrame   -- Money   -- Coin
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
         if self.tokenType == 0 and self.currencyID then
             GameTooltip:SetCurrencyByID(self.currencyID);
-        elseif self.tokenType == 1 and self.itemID then
+        elseif self.tokenType == 1 and self.item then
             if self.merchantSlot and self.metchantCostIndex then
                 GameTooltip:SetMerchantCostItem(self.merchantSlot, self.metchantCostIndex)
-            elseif self.link then
-                GameTooltip:SetHyperlink(self.link);
+            elseif self.link or type(self.item) == "string" then
+                GameTooltip:SetHyperlink(self.link or self.item);
             else
-                GameTooltip:SetItemByID(self.itemID);
+                GameTooltip:SetItemByID(self.item);
             end
-            AppendItemCount(GameTooltip, self.itemID);
+            if not AppendItemCount(GameTooltip, self.item, self.questionableData) then
+                GameTooltip:Show();
+            end
             self.UpdateTooltip = function()
                 TokenButton_OnEnter(self)
             end
@@ -1126,9 +1190,9 @@ do  -- TokenFrame   -- Money   -- Coin
             local link;
             if self.tokenType == 0 and self.currencyID then
                 link = C_CurrencyInfo.GetCurrencyLink(self.currencyID);
-            elseif self.tokenType == 1 and self.itemID then
+            elseif self.tokenType == 1 and self.item then
                 local _;
-                _, link = C_Item.GetItemInfo(self.itemID);
+                _, link = C_Item.GetItemInfo(self.item);
             end
             local linkedToChat = link and HandleModifiedItemClick(link);
             if linkedToChat then
@@ -1137,13 +1201,7 @@ do  -- TokenFrame   -- Money   -- Coin
         end
 
         if self.tokenType == 0 and self.currencyID then
-            local info = C_CurrencyInfo.GetCurrencyInfo(self.currencyID);
-            if not info then return end;
-
-            if not(info.discovered or info.isAccountWide or info.isAccountTransferable) then return end;
-
-            local onlyShow = false;      --If true, don't hide the frame when shown
-            ToggleCharacter("TokenFrame", onlyShow);
+            API.ToggleBlizzardTokenUIIfWarbandCurrency(self.currencyID);
 
             --[[    --Taint!!
             C_Timer.After(0, function()
@@ -1173,12 +1231,13 @@ do  -- TokenFrame   -- Money   -- Coin
         tokenButton.link = link;
         tokenButton.merchantSlot = currencyData[6];
         tokenButton.metchantCostIndex = currencyData[7];
+        tokenButton.questionableData = nil;
 
         if tokenType == TOKEN_TYPE_CURRENCY then
             --Currency
             self.anyCurrency = true;
             tokenButton.currencyID = id;
-            tokenButton.itemID = nil;
+            tokenButton.item = nil;
 
             local info;
 
@@ -1200,8 +1259,13 @@ do  -- TokenFrame   -- Money   -- Coin
             --Item
             self.anyItem = true;
             tokenButton.currencyID = nil;
-            tokenButton.itemID = id;
+            tokenButton.item = id;
             icon = GetItemIconByID(id)
+
+            if type(id) == "string" then
+                --here "id" can be itemlink, but the count may not be accurate
+                tokenButton.questionableData = true;
+            end
 
             if self.includeBank then
                 quantity = GetItemCount(id, true, false, true, true);
@@ -1310,14 +1374,14 @@ do  -- TokenFrame   -- Money   -- Coin
         end
     end
 
-    function TokenDisplayMixin:SetFrameOwner(owner, position, offsetX, offsetY)
+    function TokenDisplayMixin:SetFrameOwner(owner, position, offsetX, offsetY, frameStrata)
         --local b = owner:GetBottom();
         --local r = owner:GetRight();
         offsetX = offsetX or 0;
         offsetY = offsetY or 0;
 
         self:ClearAllPoints();
-        self:SetFrameStrata("FULLSCREEN");
+        self:SetFrameStrata(frameStrata or "FULLSCREEN");
 
         local realParent = owner;   --UIParent
 
@@ -1336,6 +1400,69 @@ do  -- TokenFrame   -- Money   -- Coin
     function TokenDisplayMixin:DisplayCurrencyOnFrame(tokens, owner, position, offsetX, offsetY)
         self:SetFrameOwner(owner, position, offsetX, offsetY);
         self:SetTokens(tokens);
+    end
+
+    function TokenDisplayMixin:DisplayMerchantPriceOnFrame(tokens, owner, offsetX, offsetY, merchantSlotIndexList)
+        local position = "BOTTOMRIGHT";
+        local fullyLoaded = true;
+        if merchantSlotIndexList then
+            --We use C_Tooltip.GetMerchantCostItem to get the real itemlink b/c GetMerchantItemCostItem only returns the basic itemlink
+            local GetMerchantCostItem = C_TooltipInfo.GetMerchantCostItem;
+            local numCost, slot;
+            local uniqueLinks = {};
+            for _, v in ipairs(merchantSlotIndexList) do
+                slot, numCost = v[1], v[2];
+                if numCost > 0 then
+                    for costIndex = 1, numCost do
+                        local info = GetMerchantCostItem(slot, costIndex);
+                        local itemLevel = 0;
+                        if info and info.hyperlink then
+                            for _, line in ipairs(info.lines) do
+                                if line.itemLevel then
+                                    itemLevel = line.itemLevel;
+                                    break
+                                end
+                            end
+                            uniqueLinks[info.hyperlink] = itemLevel;
+                        else
+                            fullyLoaded = false;
+                        end
+                    end
+                end
+            end
+            local linkList = {};
+            for link, itemLevel in pairs(uniqueLinks) do
+                tinsert(linkList, {link, itemLevel});
+            end
+
+            table.sort(linkList, function(a, b)
+                --Sort by itemLevel then link
+                if a[2] ~= b[2] and a[2] > 0 and b[2] > 0 then
+                    return a[2] < b[2]
+                end
+                return a[1] < b[1]
+            end);
+
+            tokens = {};
+            local match = string.match;
+            local currencyType;
+            local id;
+            for i, v in ipairs(linkList) do
+                local hyperlink = v[1];
+                id = match(hyperlink, "currency:(%d+)");
+                if id then
+                    currencyType = 0;
+                    id = tonumber(id);
+                    tokens[i] = {currencyType, id, nil, nil, hyperlink};
+                else    --item
+                    currencyType = 1;
+                    tokens[i] = {currencyType, hyperlink, nil, nil, hyperlink};
+                end
+            end
+        end
+
+        self:DisplayCurrencyOnFrame(tokens, owner, position, offsetX, offsetY);
+        return fullyLoaded
     end
 
     function TokenDisplayMixin:ShowMoneyFrame(state)
@@ -1872,6 +1999,22 @@ do  --(In)Secure Button Pool
         end
     end
 
+    function SecureButtonMixin:SetUseItem(item, mouseButton)
+        mouseButton = mouseButton or "LeftButton";
+
+        if mouseButton == "RightButton" then
+            self:SetAttribute("type2", "macro");
+        else
+            self:SetAttribute("type1", "macro");
+        end
+
+        if type(item) == "number" then
+            self:SetMacroText("/use item:"..item);
+        else
+            self:SetMacroText("/use "..item);
+        end
+    end
+
     local function CreateSecureActionButton()
         if InCombatLockdown() then return end;
         local index = #SecureButtons + 1;
@@ -1890,7 +2033,7 @@ do  --(In)Secure Button Pool
         return button
     end
 
-    local function AcquireSecureActionButton(privateKey)
+    local function AcquireSecureActionButton(privateKey, propagateMouseMotion)
         if InCombatLockdown() then return end;
 
         local button;
@@ -1915,16 +2058,19 @@ do  --(In)Secure Button Pool
             end
         end
 
-        button.isActive = true;
-        SecureButtonContainer:RegisterEvent("PLAYER_REGEN_DISABLED");
+        if button then
+            button.isActive = true;
+            button:SetPropagateMouseMotion(propagateMouseMotion or false);
+            SecureButtonContainer:RegisterEvent("PLAYER_REGEN_DISABLED");
 
-        if GetCVarBool("ActionButtonUseKeyDown") then
-            button:RegisterForClicks("LeftButtonDown", "RightButtonDown");
-        else
-            button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+            if GetCVarBool("ActionButtonUseKeyDown") then
+                button:RegisterForClicks("LeftButtonDown", "RightButtonDown");
+            else
+                button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+            end
+
+            return button
         end
-
-        return button
     end
     addon.AcquireSecureActionButton = AcquireSecureActionButton;
 
@@ -5019,16 +5165,17 @@ do  --Radial Progress Bar
     function RadialProgressBarMixin:SetPercentage(percentage)
         local seconds = 100;
 
-        if percentage > 1 then
+        if percentage >= 1 then
             percentage = 1;
-        elseif percentage < 0 then
+        elseif percentage <= 0 then
             percentage = 0;
+        else
+            percentage = self.visualOffset * (1- percentage) + (1 - self.visualOffset) * percentage;    --Additional shrinking due to level background   --Remap 0-100 to 7-93
         end
-
-        percentage = self.visualOffset * (1- percentage) + (1 - self.visualOffset) * percentage;    --Additional shrinking due to level background   --Remap 0-100 to 7-93
 
         self:Pause();
         self:SetCooldown(GetTime() - (seconds * percentage), seconds);
+        self:SetDrawEdge(percentage > 0);
     end
 
     function RadialProgressBarMixin:SetValue(currentValue, maxValue)
@@ -5104,6 +5251,8 @@ do  --Radial Progress Bar
         return f
     end
     addon.CreateRadialProgressBar = CreateRadialProgressBar;
+
+    addon.RadialProgressBarMixin = RadialProgressBarMixin;
 end
 
 do  --Progress Bar With Level
@@ -5803,7 +5952,7 @@ end
 
 do  --Blizzard Check Button
     local BlizzardCheckButtonMixin = {};
-    
+
     BlizzardCheckButtonMixin.ButtonMixin = {};
     do
         function BlizzardCheckButtonMixin.ButtonMixin:OnEnter()

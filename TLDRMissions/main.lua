@@ -1,6 +1,4 @@
-local addonName = ...
-_G[addonName] = {}
-local addon = _G[addonName]
+local addonName, addon = ...
 
 addon.GUI = CreateFrame("Frame", "TLDRMissionsFrame", UIParent, "BackdropTemplate")
 addon.WODGUI = CreateFrame("Frame", "TLDRMissionsWODFrame", UIParent, "BackdropTemplate")

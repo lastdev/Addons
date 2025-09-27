@@ -1,4 +1,4 @@
-HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
+local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
 if (UnitFactionGroup("player") == "Alliance") then
     HandyNotes_Draenor.nodes[582] = {

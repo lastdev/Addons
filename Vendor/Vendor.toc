@@ -1,10 +1,11 @@
-## Interface: 110100
+## Interface: 110200
 ## Title: Vendor
 ## Notes: Vendors junk you don't want and auto-repairs.
-## Version: 6.7.2
-## SavedVariables: Vendor_CustomRuleDefinitions, Vendor_Settings, Vendor_debug, Vendor_Profiles, Vendor_CustomLists, Vendor_History, Vendor_AccountSettings, Vendor_XX_InstanceInfo, Vendor_XX_LootInfo
+## Version: 6.9.4
+## SavedVariables: Vendor_CustomRuleDefinitions, Vendor_Settings, Vendor_debug, Vendor_Profiles, Vendor_StaticLists, Vendor_CustomLists, Vendor_History, Vendor_AccountSettings, Vendor_XX_InstanceInfo, Vendor_XX_LootInfo
 ## SavedVariablesPerCharacter: Vendor_RulesConfig, Vendor_ActiveProfile, Vendor_Character_Data
 ## Author: Thoekh of Sargeras & Buskin of Lightbringer
+## OptionalDeps: Adibags, BetterBags
 ## IconTexture: 2484341
 ## X-Curse-Project-ID: 297511
 
@@ -57,8 +58,10 @@ features\status\status.xml
 features\minimapbutton\minimapbutton.xml
 features\merchantbutton\merchantbutton.xml
 features\chat\chat.xml
-features\adibags\adibags.xml
+#features\betterbags\betterbags.xml
 features\ui_itemdialog\itemdialog.xml
+features\protection\protection.xml
+features\defaultlists\defaultlists.xml
 
 # public API export should be last
 publicAPI.lua

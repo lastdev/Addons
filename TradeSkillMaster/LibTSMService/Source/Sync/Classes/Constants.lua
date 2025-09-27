@@ -6,7 +6,7 @@
 
 local LibTSMService = select(2, ...).LibTSMService
 local Constants = LibTSMService:Init("Sync.Constants")
-Constants.VERSION = 18
+Constants.VERSION = 19
 Constants.DATA_TYPES = {
 	-- New connection types (40-49)
 	WHOAMI_ACCOUNT = strchar(40),

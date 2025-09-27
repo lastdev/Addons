@@ -1,0 +1,7 @@
+## Interface: 110200
+## Author: Rubio
+## Version: 11.2.0
+## Title: UntrackCompletedAchieves
+## Notes: Automatically untracks completed achievements for you!
+
+UntrackCompletedAchieves.lua

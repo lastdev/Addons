@@ -58,6 +58,8 @@ waypoints = {
     --Undermine
     -- "Sidestreet Sluice"
     [8246] = { ["zone"] = 2346, ["x"] = 35.20, ["y"] = 52.80 },
+    -- "Demolition Dome"
+    [8246] = { ["zone"] = 2346, ["x"] = 50.30, ["y"] = 9.60 },
 }
 
 worldQuestsIDs = {
@@ -97,7 +99,14 @@ function showUI()
 
         if delve ~= nil and delve["atlasName"] == "delves-bountiful" then
             local areaName = areaIDs[delveConfig["zone"]]
-            Delves[delvePoiID] = { ["name"] = delve["name"], ["zone"] = areaName }
+            local icon = C_UIWidgetManager.GetAllWidgetsBySetID(delve.iconWidgetSet)
+            local isOvercharged = false
+
+            if #icon == 2 then
+                isOvercharged = true
+            end
+
+            Delves[delvePoiID] = { ["name"] = delve["name"], ["zone"] = areaName, ["overcharged"] = isOvercharged }
         end
     end
 
@@ -249,7 +258,11 @@ function showUI()
             end)
             container:AddChild(lfgbutton2)
 
-            guiCreateNewline(container, 2)
+            local label = AceGUI:Create("Label")
+            label:SetFullWidth(true)
+            container:AddChild(label)
+
+            guiCreateNewline(container, 1)
 
             local label = AceGUI:Create("Label")
             label:SetFullWidth(true)
@@ -268,7 +281,6 @@ function showUI()
             container:AddChild(label)
 
             local label = AceGUI:Create("Label")
-            label:SetText("")
             label:SetFont(GameFontHighlightSmall:GetFont())
             label:SetWidth(150)
             container:AddChild(label)
@@ -280,7 +292,15 @@ function showUI()
             for mapPoiID, delve in pairs(Delves) do
                 local label = AceGUI:Create("Label")
                 label:SetImageSize(18, 18)
-                label:SetText("\124cffA335EE" .. delve["name"] .. "\124r")
+                local name = ""
+
+                if delve["overcharged"] == true then
+                    name = "(OC) " .. "\124cffFF9C00" .. delve["name"] .. "\124r"
+                else
+                    name = "\124cffA335EE" .. delve["name"] .. "\124r"
+                end
+
+                label:SetText(name)
                 label:SetFont(GameFontHighlightMedium:GetFont())
                 label:SetWidth(220)
                 container:AddChild(label)
@@ -563,7 +583,7 @@ function showUI()
     BountifulDelvesHelperMainFrame = AceGUI:Create("Frame")
     BountifulDelvesHelperMainFrame:EnableResize(false)
     BountifulDelvesHelperMainFrame:SetTitle("Bountiful Delves Helper")
-    BountifulDelvesHelperMainFrame:SetStatusText("Bountiful Delves Helper - v1.2.5")
+    BountifulDelvesHelperMainFrame:SetStatusText("Bountiful Delves Helper - v1.2.6")
     BountifulDelvesHelperMainFrame:SetCallback("OnClose", function(widget)
         isFrameVisible = false
     end)

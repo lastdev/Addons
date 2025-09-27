@@ -1,5 +1,5 @@
-## Interface: 110105
-## Version: 1.15
+## Interface: 110200
+## Version: 1.20
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\inv_valentinesboxofchocolates02
 ## Title: Love is in the Air
@@ -27,7 +27,7 @@
 ## Notes-zhCN: |cFFF433FF帮助完成 |cFFFF007F情人节|cFFF433FF 成就和任务
 ## Notes-zhTW: |cFFF433FF幫助完成 |cFFFF007F情人節|cFFF433FF 成就和任務
 ## RequiredDeps: HandyNotes
-## SavedVariables: HandyNotes_LoveIsInTheAirDB
+## SavedVariables: LoveIsInTheAirDB
 ## AddonCompartmentFunc: HandyNotes_LoveIsInTheAir_OnAddonCompartmentClick
 ## AddonCompartmentFuncOnEnter: HandyNotes_LoveIsInTheAir_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: HandyNotes_LoveIsInTheAir_OnAddonCompartmentLeave
@@ -41,4 +41,6 @@ Localisations_Events.lua
 Localisations_LIITA.lua
 Mapping.lua
 Data.lua
+DragonsTreadLightly.lua
+Common_Functions.lua
 Core.lua

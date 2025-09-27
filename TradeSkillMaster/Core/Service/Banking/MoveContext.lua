@@ -62,10 +62,9 @@ end
 
 function BagToBankMoveContext.GetEmptySlotsThreaded(self, emptySlotIds)
 	local sortValue = Threading.AcquireSafeTempTable()
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) then
-		private.GetEmptySlotsHelper(REAGENTBANK_CONTAINER, emptySlotIds, sortValue)
+	if not ClientInfo.IsRetail() then
+		private.GetEmptySlotsHelper(BANK_CONTAINER, emptySlotIds, sortValue)
 	end
-	private.GetEmptySlotsHelper(BANK_CONTAINER, emptySlotIds, sortValue)
 	for bag in Container.BankBagIterator() do
 		private.GetEmptySlotsHelper(bag, emptySlotIds, sortValue)
 	end
@@ -312,9 +311,7 @@ end
 
 function private.GetEmptySlotsHelper(bag, emptySlotIds, sortValue)
 	local isSpecial = nil
-	if bag == REAGENTBANK_CONTAINER then
-		isSpecial = true
-	elseif bag == BACKPACK_CONTAINER or bag == BANK_CONTAINER then
+	if bag == BACKPACK_CONTAINER or bag == BANK_CONTAINER or (ClientInfo.IsRetail() and Container.IsBank(bag)) then
 		isSpecial = false
 	else
 		isSpecial = Container.GetBagItemFamily(bag) ~= 0

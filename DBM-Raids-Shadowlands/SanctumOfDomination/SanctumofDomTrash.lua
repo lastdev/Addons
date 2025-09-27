@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("SanctumofDomTrash", "DBM-Raids-Shadowlands", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618051402")
+mod:SetRevision("20250719035005")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
+mod:SetZone(2450)
 
 --mod:RegisterEvents(
 --	"SPELL_CAST_START",

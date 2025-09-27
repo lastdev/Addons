@@ -147,6 +147,32 @@ if RareTracker.db.global.window.force_display_in_english then
     L[233472] = "Volstrike the Charged"
     
     L[234621] = "Gallagio"
+    
+    -- K'aresh
+    L[232098] = "Chowdar"
+    L[238540] = "Grubber"
+    L[232128] = "Ixthar the Unblinking"
+    L[245997] = "Malek'ta"
+    L[232108] = "Morgil the Netherspawn"
+    L[232182] = "Prototype MK-V"
+    L[232006] = "Sha'ryth the Cursed"
+    L[232193] = "Stalker of the Wastes"
+    L[232111] = "The Nightreaver"
+    L[232199] = "Xarran the Binder"
+    L[241956] = "Arcana-Monger So'zer"
+    L[245998] = "Heka'tamos"
+    L[232077] = "Korgorath the Ravager"
+    L[231981] = "Maw of the Sands"
+    L[232127] = "Orith the Dreadful"
+    L[232189] = "Revenant of the Wasteland"
+    L[232129] = "Shadowhowl"
+    L[234845] = "Sthaarbs"
+    L[232195] = "Urmag"
+    
+    L[238144] = "Shatterpulse"
+    L[238536] = "Hollowbane"
+    L[241920] = "Purple Peat"
+    L[238384] = "Xy'vox The Twisted"
 end
 
 RareTracker.RegisterRaresForModule({
@@ -364,6 +390,42 @@ RareTracker.RegisterRaresForModule({
         [234499] = {L[234499], 86307, {31.1, 75.5}}, --"Giovante"
         [233472] = {L[233472], 85777, {63.2, 26.0}}, --"Volstrike the Charged"
         [234621] = {L[234621], 87007, nil}, --"Gallagio"
+    }
+})
+
+RareTracker.RegisterRaresForModule({
+    -- Define the zone(s) in which the rares are present.
+    ["target_zones"] = {2371, 2472},
+    ["zone_name"] = "K'aresh",
+    ["plugin_name"] = "K'aresh",
+    ["plugin_name_abbreviation"] = "TheWarWithin",
+    ["entities"] = {
+        --npc_id = {name, quest_id, coordinates}
+        [232098] = {L[232098], 90587, {77.0, 74.9}}, --"Chowdar"
+        [238540] = {L[238540], 90698, {71.1, 56.9}}, --"Grubber"
+        [232128] = {L[232128], 90596, {63.8, 44.3}}, --"Ixthar the Unblinking"
+        [245997] = {L[245997], 91275, {53.8, 59.2}}, --"Malek'ta"
+        [232108] = {L[232108], 90588, {55.7, 52.1}}, --"Morgil the Netherspawn"
+        [232182] = {L[232182], 90590, {46.0, 24.2}}, --"Prototype MK-V"
+        [232006] = {L[232006], 90585, {73.5, 55.1}}, --"Sha'ryth the Cursed"
+        [232193] = {L[232193], 90592, {76.7, 42.2}}, --"Stalker of the Wastes"
+        [232111] = {L[232111], 90589, {51.8, 58.6}}, --"The Nightreaver"
+        [232199] = {L[232199], 90584, {65.1, 49.9}}, --"Xarran the Binder"
+        [241956] = {L[241956], 90696, {34.7, 36.1}}, --"Arcana-Monger So'zer"
+        [245998] = {L[245998], 91276, {75.4, 30.4}}, --"Heka'tamos"
+        [232077] = {L[232077], 90586, {66.0, 43.5}}, --"Korgorath the Ravager"
+        [231981] = {L[231981], 90594, {54.4, 54.4}}, --"Maw of the Sands"
+        [232127] = {L[232127], 90595, {52.7, 20.5}}, --"Orith the Dreadful"
+        [232189] = {L[232189], 90591, {50.4, 64.4}}, --"Revenant of the Wasteland"
+        [232129] = {L[232129], 90583, {51.4, 49.5}}, --"Shadowhowl"
+        [234845] = {L[234845], 91293, {73.8, 32.9}}, --"Sthaarbs"
+        [232195] = {L[232195], 90593, {70.2, 49.9}}, --"Urmag"
+        
+        [238144] = {L[238144], 90687, {49.0, 28.6}}, --"Shatterpulse"
+        [238536] = {L[238536], 90689, {48.4, 16.8}}, --"Hollowbane"
+        [241920] = {L[241920], 90692, {42.6, 57.6}}, --"Purple Peat"
+        [238384] = {L[238384], 90694, {32.8, 58.6}}, --"Xy'vox The Twisted"
+        
     }
 })
 

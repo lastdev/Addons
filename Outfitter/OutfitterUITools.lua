@@ -79,7 +79,7 @@ function Outfitter._ButtonBar:SetDimensions(pNumColumns, pNumRows)
 			elseif vPrevRowFirstButton then
 				vButton:SetPoint("TOP", vPrevRowFirstButton, "TOP", 0, -Outfitter.Style.ButtonBar.BackgroundHeight)
 			else
-				vButton:SetPoint("TOPLEFT", self, "TOPLEFT", 7, -6)
+				vButton:SetPoint("TOPLEFT", self, "TOPLEFT", 7, -6) --orig
 			end
 
 			vButton:EnableMouse(true)
@@ -160,7 +160,7 @@ function Outfitter._ButtonBar:SetDimensions(pNumColumns, pNumRows)
 
 			vTexture:SetTexCoord(vTexLeft, vTexRight, vTexTop, vTexBottom)
 			vTexture:SetHeight(vHeight)
-			vTexture:SetWidth(vWidth)
+			vTexture:SetWidth(vWidth) -- orig
 			vTexture:ClearAllPoints()
 
 			if vPrevTexture then
@@ -168,7 +168,12 @@ function Outfitter._ButtonBar:SetDimensions(pNumColumns, pNumRows)
 			elseif vPrevRowFirstTexture then
 				vTexture:SetPoint("TOP", vPrevRowFirstTexture, "BOTTOM")
 			else
-				vTexture:SetPoint("TOPLEFT", self, "TOPLEFT")
+				--vTexture:SetPoint("TOPLEFT", self, "TOPLEFT") -- DAC orig
+				if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then -- GovtGeek (a hack I don't like, but it's quicker)
+					vTexture:SetPoint("TOPLEFT", self, "TOPLEFT", 3, -3)
+				else
+					vTexture:SetPoint("TOPLEFT", self, "TOPLEFT", 5, -5)
+				end
 			end
 
 			if not self.HideBackground then
@@ -319,10 +324,8 @@ function Outfitter._SidebarWindowFrame:Construct()
 	self.Background.Shadow = self.Background.ShadowFrame:CreateTexture(nil, "OVERLAY")
 	self.Background.Shadow:SetAllPoints()
 	self.Background.Shadow:SetTexture(0, 0, 0, 1)
-	self.Background.Shadow:SetGradient(
-			"HORIZONTAL",
-			CreateColor(1, 1, 1, 1),
-			CreateColor(1, 1, 1, 0))
+	self.Background.Shadow:SetGradient("HORIZONTAL", CreateColor(1, 1, 1, 1), CreateColor(1, 1, 1, 0))
+
 end
 
 ----------------------------------------

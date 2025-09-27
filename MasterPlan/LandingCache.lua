@@ -154,6 +154,7 @@ end
 T.RegisterCallback_OnInitializedFrame(GarrisonLandingPageReport.List.ScrollBox, ShowReportMissionExpirationTime)
 
 local hs = T.CreateLazyItemButton(GarrisonLandingPageReport, 110560)
+hs.isToy = true
 hs:SetSize(24, 24)
 hs:SetPoint("LEFT", GarrisonLandingPage, "TOPLEFT", 40, -63)
 hs.Count:Hide()

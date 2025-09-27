@@ -18,7 +18,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	shipSummon		= "Hahahahaha!",
+	shipSummon		= "Ха-ха-ха!",
 	golgSpawn		= "Меня разбудила вечность.",
 	grieversMessage	= "Known TI grievers on your realm: %s"
 })

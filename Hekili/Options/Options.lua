@@ -37,6 +37,9 @@ local GetSpellInfo = ns.GetUnpackedSpellInfo
 
 local GetSpellDescription = C_Spell.GetSpellDescription
 
+local GetSpecialization = C_SpecializationInfo.GetSpecialization
+local GetSpecializationInfo = C_SpecializationInfo.GetSpecializationInfo
+
 -- One Time Fixes
 local oneTimeFixes = {
     resetAberrantPackageDates_20190728_1 = function( p )
@@ -121,7 +124,6 @@ local oneTimeFixes = {
         end
     end,
 }
-
 function Hekili:RunOneTimeFixes()
     local profile = Hekili.DB.profile
     if not profile then return end
@@ -301,6 +303,11 @@ local displayTemplate = {
         anchor = "RIGHT",
         x = 0,
         y = 0,
+
+        width = 20,
+        height = 20,
+        zoom = 30,
+        keepAspectRatio = true,
     },
 
     targets = {
@@ -464,7 +471,9 @@ do
                 screenshot = true,
 
                 flashTexture = "Interface\\Cooldown\\star4",
-
+                performance = {
+                    frameBudget = 0.7,
+                },
                 toggles = {
                     pause = {
                         key = "ALT-SHIFT-P",
@@ -2931,6 +2940,63 @@ return "Position" end,
                                 disabled = function () return data.indicators.enabled == false end,
                             },
 
+                            size = {
+                                type = "group",
+                                inline = true,
+                                name = "Appearance",
+                                order = 1.5,
+                                args = {
+                                    width = {
+                                        type = "range",
+                                        name = "Width",
+                                        desc = "Specify the width of indicator icons.",
+                                        min = 8,
+                                        max = 100,
+                                        step = 1,
+                                        width = 1.49,
+                                        order = 1,
+                                    },
+
+                                    height = {
+                                        type = "range",
+                                        name = "Height",
+                                        desc = "Specify the height of indicator icons.",
+                                        min = 8,
+                                        max = 100,
+                                        step = 1,
+                                        width = 1.49,
+                                        order = 2,
+                                    },
+
+                                    spacer01 = {
+                                        type = "description",
+                                        name = " ",
+                                        width = "full",
+                                        order = 3
+                                    },
+
+                                    zoom = {
+                                        type = "range",
+                                        name = "Icon Zoom",
+                                        desc = "Select the zoom percentage for indicator icon textures. (Roughly 30% will trim off the default Blizzard borders.)",
+                                        min = 0,
+                                        softMax = 100,
+                                        max = 200,
+                                        step = 1,
+                                        width = 1.49,
+                                        order = 4,
+                                    },
+
+                                    keepAspectRatio = {
+                                        type = "toggle",
+                                        name = "Keep Aspect Ratio",
+                                        desc = "When enabled, indicator icons will maintain their original aspect ratio when resized.",
+                                        width = 1.49,
+                                        order = 5,
+                                    },
+                                }
+                            },
+
                             pos = {
                                 type = "group",
                                 inline = true,
@@ -4678,7 +4744,7 @@ found = true end
         while( true ) do
             local id, name, description, texture, role = GetSpecializationInfo( i )
 
-            if not id then break end
+            if not id or id == 0 then break end
             if description then description = description:match( "^(.-)\n" ) end
 
             local spec = class.specs[ id ]
@@ -5102,36 +5168,60 @@ found = true end
                             name = "Performance",
                             order = 10,
                             args = {
-                                placeboBar = {
+                                frameBudget = {
                                     type = "range",
-                                    name = "Not a Placebo",
-                                    desc = "This adjusts the VROOOM of your current specialization.",
-                                    order = 100,
-                                    width = "full",
-                                    min = 3,
-                                    max = 20,
-                                    step = 1
-                                },
-
-                                vroom = {
-                                    type = "header",
-                                    name = function()
-                                        local amount = self.DB.profile.specs[ id ].placeboBar or 5
-
-                                        if amount > 19 then
-                                            return "|cFFFF0000MAXIMAL VROOM|r - Secret Optimal Mode Unlocked"
-                                        elseif amount > 14 then
-                                            return "|cFFFF0000DANGER|r - Approaching Maximum VROOOM"
-                                        end
-
-                                        return format( "VR%sM!", string.rep( "O", amount ) )
-                                    end,
-                                    order = 101,
+                                    name = "Frame Budget",
+                                    desc = "This setting determines how much time can be used to calculate recommendations.",
+                                    min = 0.1,
+                                    softMin = 0.2,
+                                    softMax = 0.9,
+                                    max = 1,
+                                    step = 0.05,
+                                    isPercent = true,
+                                    get = function( _ ) return Hekili.DB.profile.performance.frameBudget or 0.7 end,
+                                    set = function( _, v ) Hekili.DB.profile.performance.frameBudget = v end,
+                                    order = 1,
                                     width = "full"
                                 },
+                                frameBudgetInfo = {
+                                    type = "description",
+                                    name = function()
+                                        -- Use smoothed FPS from UI.lua to avoid menu-induced frame drops
+                                        local smoothedFPS = Hekili.GetSmoothedFPS and Hekili.GetSmoothedFPS() or nil
+                                        local rawFPS = GetFramerate()
+                                        local fps = smoothedFPS or 60
+
+                                        -- Safeguard: ensure FPS is reasonable (between 10 and 300)
+                                        if fps < 10 then
+                                            -- print( "[Hekili Debug] WARNING: Unreasonable FPS value detected:", fps, "- using fallback" )
+                                            fps = 60
+                                        end
+
+                                        local budget = Hekili.DB.profile.performance.frameBudget or 0.7
+                                        local frameBudgetMs = ( 1000 / fps ) * budget
+
+                                        return
+                                            "\nThis setting determines how much time can be used to generate recommendations.\n\n" ..
+                                            "|cFFFFD100• Higher values|r allow recommendations to |cFF00FF00update more quickly|r but may risk lowering your frame rate, " ..
+                                            "especially when other addons are working at the same time.\n" ..
+                                            "|cFFFFD100• Lower values|r mean recommendations may update more slowly but may |cFF00FF00preserve your frame rate|r.\n\n" ..
+
+                                            "Adjust this budget to balance |cFF00FF00smooth gameplay|r and |cFF00FF00responsive recommendations|r. " ..
+                                            "Use the highest value that feels smooth on your system without your screen freezing or stuttering.\n\n" ..
+
+                                            "|cFF00B4FFDefault (recommended)|r: |cFFFFD10070%|r\n\n" ..
+
+                                            "At |cFFFFD700" .. format( "%.1f", fps ) .. " FPS|r, a budget of |cFFFFD700" .. ( budget * 100 ) .. "%|r " ..
+                                            "allows up to |cFFFFD700" .. format( "%.2f", frameBudgetMs ) .. " ms|r of frame time per update. Recommendations that take longer " ..
+                                            "to calculate will be delayed by at least 1 frame."
+                                    end,
+                                    fontSize = "medium",
+                                    order = 2,
+                                    width = "full",
+                                }
                             }
                         }
-                    },
+                    }
                 }
 
                 local specCfg = class.specs[ id ] and class.specs[ id ].settings
@@ -8768,10 +8858,28 @@ do
                         name = "Specialization",
                         desc = "These options apply to your selected specialization.",
                         order = 0.1,
-                        width = "full",
+                        width = 1.49,
                         set = SetCurrentSpec,
                         get = GetCurrentSpec,
                         values = GetCurrentSpecList,
+                    },
+                    disable_items = {
+                        type = "toggle",
+                        name = "Disable Gear and Items",
+                        desc = function()
+                            return format( "If checked, no equipped trinkets, weapons, or armor with |cFF00FF00Use:|r effects will be recommended for |cFFFFD100%s|r, " 
+                            .. "regardless of any other options selected below.", ( GetCurrentSpec() and GetCurrentSpecList()[ GetCurrentSpec() ] or "this specialization" ) )
+                        end,
+                        order = 0.2,
+                        width = 1.49,
+                        get = function()
+                            local spec = GetCurrentSpec()
+                            return Hekili.DB.profile.specs[ spec ].disable_items or false
+                        end,
+                        set = function( info, val )
+                            local spec = GetCurrentSpec()
+                            Hekili.DB.profile.specs[ spec ].disable_items = val
+                        end,
                     },
                 },
                 plugins = {
@@ -9472,10 +9580,12 @@ do
         { "target%.1%.time_to_die"                          , "time_to_die"                             },
         { "time_to_pct_(%d+)%.remains"                      , "time_to_pct_%1"                          },
         { "trinket%.(%d)%.([%w%._]+)"                       , "trinket.t%1.%2"                          },
+        --[[ { "trinket%.(t?%d)%.stat%.([%w_]+)%.([%w%._]+)", -- Christ.
+                                                              "trinket.%1.has_stat.%2&trinket.%1.%3"    }, ]]
         { "trinket%.([%w_]+)%.cooldown"                     , "trinket.%1.cooldown.duration"            },
-        { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration"     , "trinket.%1.buff_duration"                },
+        --[[ { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration"     , "trinket.%1.proc_duration"                }, ]]
         { "trinket%.([%w_]+)%.buff%.a?n?y?%.?duration"      , "trinket.%1.buff_duration"                },
-        { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"       , "trinket.%1.has_use_buff"                 },
+        -- { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"       , "trinket.%1.has_use_buff"                 },
         { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"           , "trinket.%1.has_use_buff"                 },
         { "trinket%.([%w_]+)%.has_use_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"                 },
         { "min:([%w_]+)"                                    , "%1"                                      },

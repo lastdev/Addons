@@ -8,7 +8,7 @@ Features :
 - Stored procedures
 - Joins
 - Aggregations (Count, Sum, Min, Max, Average)
-- Can be used in conjunctions with the class SQLTable
+- Can be used in conjunction with the class SQLTable
 
 Example of usage:
 =================

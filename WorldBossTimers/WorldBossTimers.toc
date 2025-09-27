@@ -1,0 +1,18 @@
+## Interface: 50500, 110200
+## Title: WorldBossTimers
+## Notes: Creates timers for world bosses
+## Author: Soulstorm
+## Version: v1.12.27
+## SavedVariables: WorldBossTimersDB
+## IconTexture: 656169
+
+embeds.xml
+
+Util.lua
+Sound.lua
+BossData.lua
+GUI.lua
+Options.lua
+KillInfo.lua
+WorldBossTimers.lua
+

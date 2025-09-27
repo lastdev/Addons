@@ -1,6 +1,6 @@
 ## Interface: 30404
 ## X-Min-Interface: 30401
-## Version: r9
+## Version: r10
 ## Category: DBM
 
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BC)|r

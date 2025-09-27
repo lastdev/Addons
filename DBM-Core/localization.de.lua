@@ -253,22 +253,24 @@ L.SLASHCMD_HELP				= {
 	"Verfügbare Slash-Kommandos:",
 	"-----------------",
 	"/dbm unlock: Zeigt einen bewegbaren Timer an (alias: move).",
-	"/range <number> oder /distance <number>: Zeige Abstandsfenster. /rrange oder /rdistance um die Farben zu invertieren.",
-	"/hudar <number>: Zeige HudMap-basierenden Abstandssucher.",
+	"/dbm pull <sec>: Schickt einen Pull-Timer für <sec> Sekunden an alle Schlachzugsmitglieder (nur als Leiter/Assistent).",
+	"/dbm break <min>: Schickt einen Pause-Timer für <min> Minuten an alle Schlachzugsmitglieder (nur als Leiter/Assistent).",
 	"/dbm timer: Startet einen benutzerdefinierten DBM-Timer, siehe '/dbm timer' für Details.",
-	"/dbm arrow: Zeigt den DBM-Pfeil, siehe '/dbm arrow help' für Details.",
-	"/dbm hud: Zeige die DBM-HudMap, siehe '/dbm hud' für Details.",
-	"/dbm help2: Zeige Slash-Kommandos für das Management von Schlachtzügen."
+	"/dbm key: Führt M+ Schlüsselstein- und Bewertungsprüfungen für Gruppe/Gilde durch und bietet Abkürzungen zu Dungeon-Transporten an. (alias: key, keys, keystone)",--AI translated (check me)
+	"/dbm lag: Prüft die Latenz im gesamten Schlachtzug.",
+	"/dbm durability: Prüft die Haltbarkeit im gesamten Schlachtzug.",
+	"/dbm help2: Zeigt zusätzliche Slash-Kommandos an."--AI translated (check me)
 }
 L.SLASHCMD_HELP2				= {
 	"Verfügbare Slash-Kommandos:",
 	"-----------------",
-	"/dbm pull <sec>: Schickt einen Pull-Timer für <sec> Sekunden an alle Schlachzugsmitglieder (nur als Leiter/Assistent).",
-	"/dbm break <min>: Schickt einen Pause-Timer für <min> Minuten an alle Schlachzugsmitglieder (nur als Leiter/Assistent).",
 	"/dbm version: Führt eine Boss Mod Versionsprüfung durch (Alias: ver).",
 	"/dbm version2: Führt eine Boss Mod Versionsprüfung durch und flüstert Nutzer mit veralteten Versionen an (Alias: ver2).",
-	"/dbm lag: Prüft die Latenz im gesamten Schlachtzug.",
-	"/dbm durability: Prüft die Haltbarkeit im gesamten Schlachtzug."
+	"/range <number> oder /distance <number>: Zeige Abstandsfenster. /rrange oder /rdistance um die Farben zu invertieren.",
+	"/hudar <number>: Zeige HudMap-basierenden Abstandssucher.",
+	"/dbm arrow: Zeigt den DBM-Pfeil, siehe '/dbm arrow help' für Details.",
+	"/dbm hud: Zeige die DBM-HudMap, siehe '/dbm hud' für Details."
+
 }
 L.TIMER_USAGE	= {
 	L.DBM .. "-Timer Kommandos:",
@@ -615,14 +617,9 @@ L.SPEED_CLEAR_TIMER_TEXT	= "Abschlussbestzeit"
 L.COMBAT_RES_TIMER_TEXT	= "Kampfbelebung +"
 L.TIMER_RESPAWN		= "%s Wiedererscheinen"
 
-L.LAG_CHECKING				= "Prüfe Schlachtzuglatenz..."
-L.LAG_HEADER					= L.DEADLY_BOSS_MODS.." - Latenzergebnisse"
-L.LAG_ENTRY					= "%s: %dms (Welt) / %dms (Standort)"
-L.LAG_FOOTER					= "Keine Antwort: %s"
-
-L.DUR_CHECKING				= "Prüfe Schlachtzughaltbarkeit..."
-L.DUR_HEADER					= L.DEADLY_BOSS_MODS.." - Haltbarkeitergebnisse"
-L.DUR_ENTRY					= "%s: Haltbarkeit [%d Prozent] / Ausrüstung defekt [%s]"
+L.LAG_HEADER					= L.DBM.." - Latenzergebnisse"
+L.DUR_HEADER					= L.DBM.." - Haltbarkeitergebnisse"
+--L.KEYSTONES_HEADER					= L.DBM.. " - Keystones"
 
 --L.OVERRIDE_ACTIVATED					= "Configuration overrides have been activated for this encounter by RL"
 
@@ -652,3 +649,24 @@ L.DBM_INSTALL_PACKAGE_VANILLA	= "Vanilla und Season of Discovery Paket"
 L.DBM_INSTALL_PACKAGE_DUNGEON	= "Dungeons, Delves und Events Paket"
 
 L.DBM_TAINTED_BY_TESTS			= "DBM wurde in der aktuellen Session im Test-Modus mit Time Warping benutzt. Es wird empfohlen das UI neu zu laden bevor DBM in einem echten Boss-Kampf benutzt wird. Normalerweise sollte das keine Probleme machen, aber wir können nichts garantieren!"
+
+-- Boss tooltip
+L.TOOLTIP_DBM					= L.DBM .. " Info"
+L.TOOLTIP_ENRAGE_TIMER			= "Enrage Timer"
+L.TOOLTIP_KILLS					= "Kills (%s)"
+L.TOOLTIP_WIPES					= "Wipes (%s)"
+L.TOOLTIP_FASTEST				= "Schnellster Kill (%s)"
+
+-- Difficulty info not found in normal globals, used by both GUI and tooltip
+
+
+-- Keystone dungeon names (keep to a max of 6 characters)
+-- See https://wago.tools/db2/MapChallengeMode for ID => Dungeon Names
+--L.KEYSTONE_NAMES[378] = 'HOA' -- Halls of Atonement
+--L.KEYSTONE_NAMES[391] = 'STREET' -- Tazavesh: Streets of Wonder
+--L.KEYSTONE_NAMES[392] = 'GAMBIT' -- Tazavesh: So'leah's Gambit
+--L.KEYSTONE_NAMES[499] = 'PRIORY' -- Priority of the Sacred Flame
+--L.KEYSTONE_NAMES[503] = 'ARAK' -- Ara-Kara, City of Echoes
+--L.KEYSTONE_NAMES[505] = 'DAWN' -- The Dawnbreaker
+--L.KEYSTONE_NAMES[525] = 'FLOOD' -- Operation Floodgate
+--L.KEYSTONE_NAMES[542] = 'DOME' -- Eco-Dome Al'dani

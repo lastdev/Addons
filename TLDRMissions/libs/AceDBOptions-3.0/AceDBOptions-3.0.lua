@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- AceDBOptions-3.0 provides a universal AceConfig options screen for managing AceDB-3.0 profiles.
 -- @class file

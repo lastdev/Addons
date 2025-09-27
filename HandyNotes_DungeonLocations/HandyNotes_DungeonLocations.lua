@@ -2459,13 +2459,13 @@ nodes[942][83934677] = {
 
 end
 
---[[nodes[1161] = { } -- Boralus
+nodes[1161] = { } -- Boralus
 nodes[1161][71961540] = {
 		 id = 1023, -- LFG 1700, 1701
 		 type = "Dungeon",
+       showInZone = true,
 		} -- Siege of Boralus
---	end ]]--
-
+--	end
 end
 
 -- Shadowlands
@@ -2716,21 +2716,25 @@ nodes[2213] = { } -- Nerub'ar
 nodes[2216] = { } -- Nerub'ar_Lower
 nodes[2214] = { } -- The Ringing Deeps
 nodes[2346] = { } -- Undermine
+nodes[2371] = { } -- K'aresh
+nodes[2472] = { } -- Tazavesh
 
-   nodes[2274] = { -- Khaz Algar
-   [56904935] = { id = 1210, type = "Dungeon" }, -- Darkflame Cleft
-   [35095289] = { id = 1267, type = "Dungeon" }, -- Priory of the Sacred Flame
-   [40465803] = { id = 1270, type = "Dungeon" }, -- The Dawnbreaker
-   [52514448] = { id = 1269, type = "Dungeon" }, -- The Stonevault
-   [52655545] = { id = 1298, type = "Dungeon" }, -- The Floodgate
-   [70301908] = { id = 1268, type = "Dungeon" }, -- The Rookery
-   [84362059] = { id = 1272, type = "Dungeon" }, -- Cinderbrew Meadery
-   [43337984] = { id = 1274, type = "Dungeon" }, -- City of Threads
-   [44338372] = { id = 1271, type = "Dungeon" }, -- Ara-Kara, City of Echoes
-   [42188673] = { id = 1273, type = "Raid" },  -- Nerub-ar Palace
-   [82357267] = { id = 1296, type = "Raid" },  -- Liberation of Undermine
-}
-
+   nodes[2274] = {
+      [56904935] = { id = 1210, type = "Dungeon" }, -- Darkflame Cleft
+      [35095289] = { id = 1267, type = "Dungeon" }, -- Priory of the Sacred Flame
+      [40465803] = { id = 1270, type = "Dungeon" }, -- The Dawnbreaker
+      [52514448] = { id = 1269, type = "Dungeon" }, -- The Stonevault
+      [52655545] = { id = 1298, type = "Dungeon" }, -- The Floodgate
+      [70301908] = { id = 1268, type = "Dungeon" }, -- The Rookery
+      [84362059] = { id = 1272, type = "Dungeon" }, -- Cinderbrew Meadery
+      [43337984] = { id = 1274, type = "Dungeon" }, -- City of Threads
+      [44338372] = { id = 1271, type = "Dungeon" }, -- Ara-Kara, City of Echoes
+      [42188673] = { id = 1273, type = "Raid" },  -- Nerub-ar Palace
+      [82357267] = { id = 1296, type = "Raid" },  -- Liberation of Undermine
+      [14632798] = { id = 1303, type = "Dungeon" },  -- Eco-Dome Al'dani
+      [20372798] = { id = 1194, type = "Dungeon" },  -- Tazavesh, the Veiled Market
+      [17361571] = { id = 1302, type = "Raid" },  -- Manaforge Omega
+   }
 
  if self.db.profile.Zone then
 
@@ -2746,7 +2750,7 @@ nodes[2346] = { } -- Undermine
       showInZone = true, 
       hideOnContinent = true, 
    } -- Nerub-ar Palace 
-}
+   }
 
    nodes[2214] = {
       [42700856] = { 
@@ -2767,8 +2771,6 @@ nodes[2346] = { } -- Undermine
       hideOnContinent = true,
    }, -- Operation: Floodgate
    }
-
-
 
    nodes[2215] = { 
       [41324933] = { 
@@ -2844,14 +2846,14 @@ nodes[2346] = { } -- Undermine
 
    nodes[2213] = { 
       [52164580] = { id = 1271, 
-      type = "Dungeon", 
-      showInZone = true, 
-      hideOnContinent = true
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true
    }, -- Ara-Kara, City of Echoes
       [35047242] = { id = 1273, 
-      type = "Raid", 
-      showInZone = true, 
-      hideOnContinent = true
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true
     } -- Nerub-ar Palace
    }
 
@@ -2863,7 +2865,42 @@ nodes[2346] = { } -- Undermine
          hideOnContinent = true,
        }, -- Liberation of Undermine
    }
-   
+
+   nodes[2472] = {
+      [43840407] = { 
+         id = 1303, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true,
+       }, -- Eco-Dome Al'dani
+      [36481206] = { 
+         id = 1194, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true,
+      }, -- Tazavesh, the Veiled Market
+   }
+
+   nodes[2371] = {
+      [65246841] = { 
+         id = 1303, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true,
+      }, -- Eco-Dome Al'dani
+      [63587021] = { 
+         id = 1194, 
+         type = "Dungeon", 
+         showInZone = true, 
+         hideOnContinent = true,
+      }, -- Tazavesh, the Veiled Market
+      [41662152] = { 
+         id = 1302, 
+         type = "Raid", 
+         showInZone = true, 
+         hideOnContinent = true,
+      } -- Manaforge Omega
+   }
 
 end
 

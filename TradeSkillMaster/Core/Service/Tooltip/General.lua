@@ -414,28 +414,26 @@ function private.PopulateFullInventoryLines(tooltip, itemString)
 end
 
 function private.AddInventoryLine(tooltip, itemString, character, factionrealm)
-	local bag, bank, reagentBank, auction, mail = nil, nil, nil, nil, nil
+	local bag, bank, auction, mail = nil, nil, nil, nil
 	if character then
 		bag = AltTracking.GetBagQuantity(itemString, character, factionrealm)
 		bank = AltTracking.GetBankQuantity(itemString, character, factionrealm)
-		reagentBank = AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
 		auction = AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
 		mail = AltTracking.GetMailQuantity(itemString, character, factionrealm)
 	else
 		bag = BagTracking.GetBagQuantity(itemString)
 		bank = BagTracking.GetBankQuantity(itemString)
-		reagentBank = BagTracking.GetReagentBankQuantity(itemString)
 		auction = Auction.GetQuantity(itemString)
 		mail = Mail.GetQuantity(itemString)
 	end
-	local playerTotal = bag + bank + reagentBank + auction + mail
+	local playerTotal = bag + bank + auction + mail
 	if playerTotal <= 0 then
 		return
 	end
 	local characterStr = character and SessionInfo.FormatCharacterName(character, factionrealm) or SessionInfo.GetCharacterName()
 	local classKey = private.settings:GetForScopeKey("classKey", character or SessionInfo.GetCharacterName(), factionrealm)
 	characterStr = RAID_CLASS_COLORS[classKey] and "|c"..RAID_CLASS_COLORS[classKey].colorStr..characterStr.."|r" or characterStr
-	local rightText = private.RightTextFormatHelper(tooltip, L["%s (%s bags, %s bank, %s AH, %s mail)"], playerTotal, bag, bank + reagentBank, auction, mail)
+	local rightText = private.RightTextFormatHelper(tooltip, L["%s (%s bags, %s bank, %s AH, %s mail)"], playerTotal, bag, bank, auction, mail)
 	tooltip:AddLine(characterStr, rightText)
 end
 
@@ -459,7 +457,7 @@ function private.PopulateSimpleInventoryLine(tooltip, itemString)
 	end
 
 	local totalAlt, totalAltAuction = AltTracking.GetQuantity(itemString)
-	local totalPlayer = BagTracking.GetBagQuantity(itemString) + BagTracking.GetBankQuantity(itemString) + BagTracking.GetReagentBankQuantity(itemString) + Mail.GetQuantity(itemString)
+	local totalPlayer = BagTracking.GetBagQuantity(itemString) + BagTracking.GetBankQuantity(itemString) + Mail.GetQuantity(itemString)
 	local totalAuction = Auction.GetQuantity(itemString) + totalAltAuction
 	local totalGuild = AltTracking.GetTotalGuildQuantity(itemString)
 	local warbank = WarbankTracking.GetQuantity(itemString)

@@ -166,7 +166,7 @@ AppHelper:OnModuleLoad(function()
 		elseif ClientInfo.IsVanillaClassic() then
 			private.addonRegion = region.."-Classic"
 			private.appDataRegion = "Classic-"..region
-		elseif ClientInfo.IsCataClassic() then
+		elseif ClientInfo.IsPandaClassic() then
 			private.addonRegion = region.."-BCC"
 			private.appDataRegion = "BCC-"..region
 		else
@@ -267,11 +267,22 @@ function private.HandleLogin()
 		StaticPopupDialog.ShowWithOk(private.appInfo.message.msg)
 	end
 
-	if LibTSMApp.GetTime() - private.appInfo.lastSync > 60 * 60 then
+	local isAppRunning = LibTSMApp.GetTime() - private.appInfo.lastSync <= 60 * 60
+	if not isAppRunning then
 		-- The app hasn't been running for over an hour
 		StaticPopupDialog.ShowWithOk(L["TSM is missing important information from the TSM Desktop Application. Please ensure the TSM Desktop Application is running and is properly configured."])
 	end
-	Auction.EnableFullScan()
+
+	if LibTSMApp.IsPandaClassic() then
+		-- Only enable the full scan if this user hasn't scanned in the last hour and their app is running
+		local appDB = _G[APP_DB_GLOBAL_NAME]
+		local lastFullScanTime = appDB and appDB.fullScan and appDB.fullScan.updateTime or 0
+		if isAppRunning and LibTSMApp.GetTime() - lastFullScanTime > 60 * 60 then
+			Auction.EnableFullScan()
+		end
+	else
+		Auction.EnableFullScan()
+	end
 	return true
 end
 

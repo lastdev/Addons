@@ -1,6 +1,6 @@
-## Interface: 110105
+## Interface: 110200
 ## Title: TL;DR Missions
-## Version: 11.1-003
+## Version: 11.2-005
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
@@ -9,7 +9,7 @@
 ## X-Curse-Project-ID: 602487
 ## IconTexture: Interface\Icons\Spell_AnimaBastion_Orb
 ## LoadOnDemand: 1
-## LoadWith: Blizzard_GarrisonUI
+## LoadWith: Blizzard_GarrisonUI, Blizzard_TorghastLevelPicker
 
 ## Category-enUS: Expansion Features
 ## Category-deDE: Erweiterungsfeatures
@@ -56,7 +56,7 @@ bindings.lua
 publicAPI.lua
 
 Draenor\gui.lua
-Draenor\guih.lua
+Draenor\guihandlers.lua
 Draenor\missions.lua
 Draenor\combinations.lua
 Draenor\simulation.lua
@@ -80,5 +80,3 @@ Shadowlands\followerlist.lua
 Shadowlands\torghast-farm.lua
 
 ResultCache\index.xml
-
-

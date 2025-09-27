@@ -50,6 +50,11 @@ local ItemLevelsBySeason = {
     ["HEROIC"] = 632,
     ["MYTHIC"] = 645,
   },
+  -- TWW Season 3
+  [108] = {
+    ["HEROIC"] = 678,
+    ["MYTHIC"] = 691,
+  },
 }
 
 local KeystoneAbbrev = {
@@ -130,6 +135,7 @@ local KeystoneAbbrev = {
   [505] = L["DAWN"], -- The Dawnbreaker
   [506] = L["BREW"], -- Cinderbrew Meadery
   [525] = L["FLOOD"], -- Operation: Floodgate
+  [542] = L["EDA"], -- Eco-Dome Al'dani
 }
 SI.KeystoneAbbrev = KeystoneAbbrev
 
@@ -331,7 +337,7 @@ function Module:ExportKeys(index)
 end
 
 StaticPopupDialogs["SAVEDINSTANCES_REPORT_KEYS"] = {
-  preferredIndex = STATICPOPUP_NUMDIALOGS, -- reduce the chance of UI taint
+  preferredIndex = 1,
   text = L["Are you sure you want to report all your keys to %s?"],
   button1 = OKAY,
   button2 = CANCEL,

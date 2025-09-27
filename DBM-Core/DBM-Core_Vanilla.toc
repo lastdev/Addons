@@ -20,9 +20,8 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 11.1.17
+## Version: 11.2.16
 ## X-Curse-Project-ID: 3358
-## X-WoWI-ID: 8814
 ## X-Wago-ID: qv633o6b
 ## X-Website: https://deadlybossmods.com
 
@@ -37,7 +36,7 @@ Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
 Libs\LibDeflate\LibDeflate.lua
 Libs\LibSerialize\lib.xml
-Libs\LibSpecialization\LibSpecialization.xml
+Libs\LibSpecialization\LibSpecialization.lua
 Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml
 
 localization.en.lua
@@ -86,6 +85,10 @@ DBM-InfoFrame.lua
 DBM-HudMap.lua
 DBM-Nameplate.lua
 
+# GUI Features
+modules\gui\Latency.lua
+modules\gui\Durability.lua
+
 # Modules
 modules\Commands.lua
 modules\Hyperlinks.lua
@@ -107,3 +110,4 @@ modules\objects\Announce.lua
 modules\objects\SpecialWarning.lua
 modules\objects\Yell.lua
 modules\objects\Sorting.lua
+modules\objects\Tooltip.lua

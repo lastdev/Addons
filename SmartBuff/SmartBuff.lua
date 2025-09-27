@@ -9,10 +9,12 @@
 -- Version/Release info, bump these as needed:
 -- Bump .toc file and optionally update notes in localization.en.lua
 
-SMARTBUFF_DATE               = "250425"; -- EU Date
+SMARTBUFF_DATE               = "050925"; -- EU Date: DDMMYY
 SMARTBUFF_VERSION            = "r34." .. SMARTBUFF_DATE;
--- Update the NR below to force  reload of SB_Buffs on first login
--- This is needed for buff changes or major patches
+-- Update the NR below to force reload of SB_Buffs on first login
+-- This is needed for changes in existing buffs or major patches
+-- While buffs are loaded on startup; their profile logic is not changed
+-- if it already exists; so we need to force a reset
 SMARTBUFF_VERSIONNR          = 110105;
 -- End of version info
 
@@ -502,6 +504,7 @@ function SMARTBUFF_OnLoad(self)
   --auto template events
   self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   self:RegisterEvent("GROUP_ROSTER_UPDATE")
+  self:RegisterEvent("ACTIVE_DELVE_DATA_UPDATE")
 
   --One of them allows SmartBuff to be closed with the Escape key
   tinsert(UISpecialFrames, "SmartBuffOptionsFrame");
@@ -708,13 +711,8 @@ function SMARTBUFF_OnEvent(self, event, ...)
     end
   end
 
-  -- TODO: This is a blizzard bug workaround that spams GROUP_ROSTER_UPDATE during delves
-  local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID =
-  GetInstanceInfo()
-  -- Any other event here
-  if event == "ZONE_CHANGED_NEW_AREA" or (event == "GROUP_ROSTER_UPDATE" and instanceType ~= "scenario") or
-    event == PLAYER_LEVEL_UP or event == PLAYER_SPECIALIZATION_CHANGED then
-    SMARTBUFF_SetTemplate()
+  if event == "ZONE_CHANGED_NEW_AREA" or event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_LEVEL_UP" or event == "PLAYER_SPECIALIZATION_CHANGED" then
+      SMARTBUFF_SetTemplate()
   end
 end
 
@@ -798,14 +796,17 @@ Enum.SmartBuffGroup = {
   LFR = 3,
   Raid = 4,
   MythicKeystone = 5,
-  Battleground = 6,
-  Arena = 7,
-  VoTI = 8,
-  Custom1 = 9,
-  Custom2 = 10,
-  Custom3 = 11,
-  Custom4 = 12,
-  Custom5 = 13
+  HorrificVision = 6,
+  Delve = 7,
+  Battleground = 8,
+  Arena = 9,
+  NerubarRaid = 10,
+  UndermineRaid = 11,
+  Custom1 = 12,
+  Custom2 = 13,
+  Custom3 = 14,
+  Custom4 = 15,
+  Custom5 = 16
 }
 
 -- Set the current template and create an array of units
@@ -819,8 +820,8 @@ function SMARTBUFF_SetTemplate(force)
   -- if autoswitch no group change is enabled, load new template based on group composition
   if O.AutoSwitchTemplate then
     newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Solo];
-    local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID =
-    GetInstanceInfo()
+    local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
+    --printd("name: " .. name, ", instanceType: " .. instanceType .. ", difficultyID: " .. difficultyID .. ", difficultyName: " .. difficultyName, ", instanceID: " .. instanceID)
 
     if IsInRaid() then
       newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Raid];
@@ -838,6 +839,11 @@ function SMARTBUFF_SetTemplate(force)
       if (difficultyID == 8) then
         newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.MythicKeystone];
       end
+    end
+    if (difficultyID == 152) then
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.HorrificVision];
+    elseif (difficultyID == 208) then
+      newTemplate = SMARTBUFF_TEMPLATES[Enum.SmartBuffGroup.Delve];
     end
   end
 
@@ -1928,10 +1934,13 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                   end
 
                   -- dont attempt to use food while moving or we will waste them.
-                elseif (cBuff.Type == SMARTBUFF_CONST_FOOD and isPlayerMoving == false) then
-                  if (not SMARTBUFF_IsPicnic(unit)) then
-                    buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, SMARTBUFF_FOOD_AURA, cBuff.Type,
-                      cBuff.Links, cBuff.Chain);
+                elseif (cBuff.Type == SMARTBUFF_CONST_FOOD and isPlayerMoving == false and not SMARTBUFF_IsPicnic(unit)) then
+                  -- unpleasant kludge for hearty buff food, which gives SMARTBUFF_HeartyFedAura
+                  if string.find(cBuff.BuffS, SMARTBUFF_LOC_HEARTY) then
+                    buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, SMARTBUFF_HeartyFedAura, cBuff.Type, cBuff.Links, cBuff.Chain);
+                  else
+                  -- normal buff food, which givevs SMARTBUFF_WellFedAura
+                    buff, index, buffname, bt, charges = SMARTBUFF_CheckUnitBuffs(unit, SMARTBUFF_WellFedAura, cBuff.Type, cBuff.Links, cBuff.Chain);
                   end
                 else
                   if (cBuff.Params ~= SG.NIL) then
@@ -2793,17 +2802,30 @@ end
 
 -- END SMARTBUFF_IsFeignDeath
 
-
--- IsPicnic(unit)
+---Scan localized aura names for "food", "drink" or "food & drink"
+---@param unit? string default: "player"
+---@return boolean returns `true` if the player is eating or drinking, `false` otherwise
 function SMARTBUFF_IsPicnic(unit)
-  if (not SMARTBUFF_CheckUnitBuffs(unit, SMARTBUFF_FOOD_SPELL, SMARTBUFF_CONST_FOOD, { SMARTBUFF_FOOD_SPELL, SMARTBUFF_DRINK_SPELL })) then
-    return true;
+  if not unit then unit = "player" end
+  if AuraUtil.FindAuraByName( SMARTBUFF_EatingAura.name, unit) or
+      AuraUtil.FindAuraByName( SMARTBUFF_DrinkingAura.name, unit) or
+      AuraUtil.FindAuraByName( SMARTBUFF_FoodDrinkAura.name, unit) then
+    return true
   end
-  return false;
+  return false
 end
 
--- END SMARTBUFF_IsPicnic
-
+---Scan localized aura names for "well fed" or "hearty well fed"
+---@param unit? string default: "player"
+---@return boolean returns `true` if the player is well fed, `false` otherwise
+function SMARTBUFF_IsWellFed(unit)
+  if not unit then unit = "player" end
+  if AuraUtil.FindAuraByName( SMARTBUFF_WellFedAura.name, unit) or
+      AuraUtil.FindAuraByName( SMARTBUFF_HeartyFedAura.name, unit) then
+    return true
+  end
+  return false
+end
 
 -- IsFishing(unit)
 function SMARTBUFF_IsFishing(unit)

@@ -3,7 +3,8 @@ local Config = GatherMate:GetModule("Config")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("GatherMate2", true)
 
-local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
+local versionCli = select(4,GetBuildInfo())
+local isRetail = versionCli>=50000  -- MoP or higher is considered retail
 
 --------------------------------------------------------------------------
 
@@ -105,7 +106,7 @@ Config:RegisterImportModule('GatherMate2_GasClouds', {
 				print("GatherMate2: Gas Clouds Database has been imported.")
 				Config:SendMessage("GatherMate2ConfigChanged")
 			end,
-		},		
+		},
 		separator = {
 			order = 4,
 			type = "description",
@@ -143,7 +144,7 @@ Config:RegisterImportModule('GatherMate2_GasClouds', {
 				GatherMate.db.global.__GasCloudsAutoFixDisabled = (not value) or nil
 				UpdateDatabaseAutoRepair()
 			end,
-			hidden = function() return isRetail end,			
+			hidden = function() return isRetail end,
 		},
 	},
 })

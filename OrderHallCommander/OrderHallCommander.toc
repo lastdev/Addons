@@ -1,4 +1,4 @@
-## Interface: 110007, 110100
+## Interface: 110105, 110107
 ## Title: OrderHallCommander
 ## IconTexture: 134414
 ## Notes: Sending all follower to missions with just one click and more
@@ -13,8 +13,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Runetotem
-## Version: 2.5.1 100250
-## X-Revision: 129c78c
+## Version: 2.5.2 100250
+## X-Revision: 2cb1388
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -29,7 +29,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2025-02-07T22:23:40Z
+## X-Date: 2025-05-11T19:36:42Z
 ## X-Embeds: LibInit
 ## X-Reboot: 1
 ## X-Curse-Project-ID: 103097

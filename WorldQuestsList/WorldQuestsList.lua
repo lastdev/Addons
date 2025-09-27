@@ -1,4 +1,4 @@
-local VERSION = 116
+local VERSION = 117
 
 --[[
 Special icons for rares, pvp or pet battle quests in list
@@ -2215,6 +2215,8 @@ do
 		[3002] = 2601,
 		[2897] = 2590,
 		[2899] = 2570,
+
+		[3129] = 2658,
 	}
 	local fg_list = {
 		[2164] = "Both",
@@ -2444,7 +2446,7 @@ local function WorldQuestList_Line_OnClick(self,button)
 		local mapID = GetCurrentMapID()
 		local mapInfo = C_Map.GetMapInfo(mapID)
 		if mapInfo and mapInfo.parentMapID then
-			WorldMapFrame:SetMapID(mapInfo.parentMapID)
+			OpenWorldMap(mapInfo.parentMapID)
 		end
 	end
 end
@@ -2769,7 +2771,7 @@ local function WorldQuestList_LineName_OnClick(self,button)
 			if WorldQuestList.GeneralMaps[mapAreaID] then
 				local data = line.data
 				if data and data.mapID and WorldMapFrame:IsVisible() then
-					WorldMapFrame:SetMapID(data.mapID)
+					OpenWorldMap(data.mapID)
 
 					local xMin,xMax,yMin,yMax = C_Map.GetMapRectOnMap(data.mapID,data.dMap or mapAreaID)
 					if xMin ~= xMax and yMin ~= yMax and (data.x or data.dX) then
@@ -2805,7 +2807,7 @@ local function WorldQuestList_LineZone_OnClick(self,button)
 	if button == "LeftButton" then
 		local info = self:GetParent().data
 		if info and info.mapID then
-			WorldMapFrame:SetMapID(info.mapID)
+			OpenWorldMap(info.mapID)
 		end
 	elseif button == "RightButton" then
 		WorldQuestList_Line_OnClick(self:GetParent(),"RightButton")
@@ -3312,32 +3314,32 @@ ViewAllButton.Argus:SetScript("OnLeave",function(self) self.b:SetColorTexture(0.
 ViewAllButton.Update = function()
 	if UnitLevel'player' >= 71 then
 		ViewAllButton:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(2274)
+			OpenWorldMap(2274)
 		end)
 		ViewAllButton.t:SetText("World Quests List: "..EXPANSION_NAME10)
 
 		ViewAllButton.Argus:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(947)
+			OpenWorldMap(947)
 		end)
 		ViewAllButton.Argus.t:SetText("World Quests List: "..WorldQuestList:GetMapName(947))
 	elseif UnitLevel'player' >= 61 then
 		ViewAllButton:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(1978)
+			OpenWorldMap(1978)
 		end)
 		ViewAllButton.t:SetText("World Quests List: "..EXPANSION_NAME9)
 
 		ViewAllButton.Argus:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(947)
+			OpenWorldMap(947)
 		end)
 		ViewAllButton.Argus.t:SetText("World Quests List: "..WorldQuestList:GetMapName(947))
 	elseif UnitLevel'player' >= 51 then
 		ViewAllButton:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(1550)
+			OpenWorldMap(1550)
 		end)
 		ViewAllButton.t:SetText("World Quests List: "..EXPANSION_NAME8)
 
 		ViewAllButton.Argus:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(947)
+			OpenWorldMap(947)
 		end)
 		ViewAllButton.Argus.t:SetText("World Quests List: "..WorldQuestList:GetMapName(947))
 	else
@@ -3348,12 +3350,12 @@ ViewAllButton.Update = function()
 			button1, button2 = ViewAllButton.Argus, ViewAllButton
 		end
 		button1:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(876)
+			OpenWorldMap(876)
 		end)
 		button1.t:SetText("World Quests List: "..WorldQuestList:GetMapName(876).." |TInterface\\FriendsFrame\\PlusManz-Alliance:16|t")
 
 		button2:SetScript("OnClick",function()
-			WorldMapFrame:SetMapID(875)
+			OpenWorldMap(875)
 		end)
 		button2.t:SetText("World Quests List: "..WorldQuestList:GetMapName(875).." |TInterface\\FriendsFrame\\PlusManz-Horde:16|t")
 
@@ -3563,7 +3565,7 @@ do
 	CreateFactionFilterSubmenu(list[#list].subMenu,{2510,2507,2503,2511,2564,2615,2574})
 
 	list[#list+1] = {text = EXPANSION_NAME10, padding = 16, subMenu = {}}
-	CreateFactionFilterSubmenu(list[#list].subMenu,{2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685})
+	CreateFactionFilterSubmenu(list[#list].subMenu,{2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685,2658})
 
 	list[#list+1] = {text = CLOSE,			func = function() ELib.ScrollDropDown.Close() end,		padding = 16,	}
 
@@ -4156,7 +4158,7 @@ do
 		{text = EXPANSION_NAME7, padding = 16, subMenu = CreateFactionHighlightSubmenu({2164,2163,2157,2156,2103,2158,2159,2160,2162,2161})},
 		{text = EXPANSION_NAME8, padding = 16, subMenu = CreateFactionHighlightSubmenu({2465,2410,2413,2407,2478})},
 		{text = EXPANSION_NAME9, padding = 16, subMenu = CreateFactionHighlightSubmenu({2510,2507,2503,2511,2564,2615,2574})},
-		{text = EXPANSION_NAME10, padding = 16, subMenu = CreateFactionHighlightSubmenu({2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685})},
+		{text = EXPANSION_NAME10, padding = 16, subMenu = CreateFactionHighlightSubmenu({2594,2600,2607,2605,2601,2590,2570, 2653,2673,2669,2675,2677,2685, 2658})},
 	}
 
 	list[#list+1] = {
@@ -4191,8 +4193,8 @@ do
 				VWQL.ArgusMap = not VWQL.ArgusMap
 				ELib.ScrollDropDown.Close()
 				if GetCurrentMapID() == 905 then
-					WorldMapFrame:SetMapID(885)
-					WorldMapFrame:SetMapID(905)
+					OpenWorldMap(885)
+					OpenWorldMap(905)
 				end
 				WorldQuestList_Update()
 			end,
@@ -4297,8 +4299,8 @@ do
 				VWQL.DFCaveMap = not VWQL.DFCaveMap
 				ELib.ScrollDropDown.Close()
 				if GetCurrentMapID() == 1978 then
-					WorldMapFrame:SetMapID(885)
-					WorldMapFrame:SetMapID(1978)
+					OpenWorldMap(885)
+					OpenWorldMap(1978)
 				end
 				WorldQuestList_Update()
 			end,
@@ -4310,8 +4312,8 @@ do
 				VWQL.EmeraldDreamMap = not VWQL.EmeraldDreamMap
 				ELib.ScrollDropDown.Close()
 				if GetCurrentMapID() == 1978 then
-					WorldMapFrame:SetMapID(885)
-					WorldMapFrame:SetMapID(1978)
+					OpenWorldMap(885)
+					OpenWorldMap(1978)
 				end
 				WorldQuestList_Update()
 			end,
@@ -4736,7 +4738,7 @@ for i=1,6 do
 			mapID = mapID[curr]
 			self.prev = curr
 		end
-		WorldMapFrame:SetMapID(mapID)
+		OpenWorldMap(mapID)
 		WorldQuestList.SoloMapID = mapID
 		if WorldQuestList.IsSoloRun then
 			WorldQuestList_Update()
@@ -6233,6 +6235,17 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 					info.x,info.y = nil
 				end
 			end
+
+			local oppositeMapQuests = C_TaskQuest.GetQuestsForPlayerByMapID(2371)
+			for _,info in pairs(oppositeMapQuests or WorldQuestList.NULLTable) do
+				taskInfo[#taskInfo+1] = info
+				info.dX,info.dY,info.dMap = info.x,info.y,2371
+				if not VWQL.DFCaveMap then	--reverse opt
+					info.x,info.y = 0.175, 0.195
+				else
+					info.x,info.y = nil
+				end
+			end
 		end
 	end
 
@@ -6275,7 +6288,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 			info.x,info.y = nil
 		end
 		]]
-		WorldMapFrame:SetMapID(875)
+		OpenWorldMap(875)
 		return
 	end
 
@@ -6314,7 +6327,7 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 	end
 	do
 		--local mapID = mapAreaID == 947 and 424 or mapAreaID
-		for _,smapAreaID in pairs(mapAreaID == 2274 and {2274,2248,2215,2214,2255,2374} or {mapAreaID}) do
+		for _,smapAreaID in pairs(mapAreaID == 2274 and {2274,2248,2215,2214,2255,2374,2371} or {mapAreaID}) do
 			local pois = C_AreaPoiInfo.GetAreaPOIForMap(smapAreaID)
 			for i=1,#pois do
 				local poiData = C_AreaPoiInfo.GetAreaPOIInfo(smapAreaID,pois[i])
@@ -6332,6 +6345,8 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						poiData.position.x, poiData.position.y = WorldQuestList:GetMapCoordAdj2(poiData.position.x, poiData.position.y,2274,smapAreaID)
 						if smapAreaID == 2374 then
 							poiData.position.x, poiData.position.y = 0.82, 0.72
+						elseif smapAreaID == 2371 then
+							poiData.position.x, poiData.position.y = 0.175, 0.195
 						end
 					end
 	
@@ -7388,6 +7403,10 @@ function WorldQuestList_Update(preMapID,forceUpdate)
 						info = WorldQuestList:GetLinearWQPosition(info,result,3)
 					elseif
 						(mapAreaID == 2274 and info.x == 0.82 and info.y == 0.72)
+					then
+						info = WorldQuestList:GetRadiantWQPosition(info,result,0.05)
+					elseif
+						(mapAreaID == 2274 and info.x == 0.175 and info.y == 0.195)
 					then
 						info = WorldQuestList:GetRadiantWQPosition(info,result,0.05)
 					end

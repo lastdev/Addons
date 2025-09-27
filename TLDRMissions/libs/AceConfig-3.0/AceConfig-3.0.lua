@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- AceConfig-3.0 wrapper library.
 -- Provides an API to register an options table with the config registry,

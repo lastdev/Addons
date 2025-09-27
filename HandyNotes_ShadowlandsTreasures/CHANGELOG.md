@@ -1,5 +1,62 @@
 # Changelog
 
+## Changed in v89
+
+* Updated for 11.2.0
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Fix creating waypoints for all related points from the right-click menu. Thanks to Taurenkey for this!
+
+## Changed in v88
+
+* Updated for 11.1.7
+
+## Changed in v87
+
+* Updated for 11.1.5
+
+## Changed in v86
+
+* Added the Mawtouched Geomental pet to Zereth Mortis
+
+## Changed in v85
+
+* Updated for 11.1.0
+
+## Changed in v84
+
+* Updated for 11.0.7
+* Fixed the completion quest for Antros in Zereth Mortis
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * All right-click menus have been migrated to Blizzard's new menu system
+    * Fix an error that could happen with achievement criteria display in tooltips if the criteria had been completed by an alt
+
+## Changed in v83
+
+* Updated for 11.0.5
+
+## Changed in v82
+
+* Revendreth: add all the Ember Court rewards
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Don't error when trying to show an impossibly short minimap route segment
+    * Show uncompleted quest status in tooltips
+
+## Changed in v81
+
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * You can click on points to highlight them and their related points and routes
+    * Better pre-caching of data so that the first time you open the map it's less likely to be missing transmog information
+    * Lootless NPCs will no longer show with the only-transmog-available color
+    * Fixed a bug when mousing over some of the Blizzard provided world map vignettes that I'm adding loot to
+
+## Changed in v80
+
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Redesign of the settings and menus
+    * Filters for rares and treasure so you can choose to show only "notable" ones, which you can configure
+    * Color the rare icons to show whether they've got any of those notable things on them -- purple for unknown transmog, blue for more exclusive things
+    * Setting for whether to track transmog by shared appearance, or from the specific item (the previous behavior)
+
 ## Changed in v79
 
 * Label cosmetic loot in tooltips

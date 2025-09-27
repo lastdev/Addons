@@ -410,6 +410,26 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> UNIT_AURA event handling
 
+
+local function setAdditionalAuraFields(aura, unit, sourceIsSelf, sourceReaction, sourceIsPlayer)
+	if not aura or not unit then return end
+	aura.sourceIsSelf = sourceIsSelf or aura.sourceUnit and UnitIsUnit (aura.sourceUnit, unit) or false
+	aura.sourceReaction = sourceReaction or aura.sourceUnit and UnitReaction(aura.sourceUnit, "player") or 4
+	aura.sourceIsPlayer = sourceIsPlayer or aura.sourceUnit and (UnitIsUnit (aura.sourceUnit, "player") or UnitIsUnit (aura.sourceUnit, "pet")) or false
+	--print(aura.name, aura.sourceUnit, aura.sourceIsSelf, aura.sourceReaction, aura.sourceIsPlayer)
+end
+--override local again with more handling
+GetAuraDataByAuraInstanceID = function(unit, auraInstanceID)
+	local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+	setAdditionalAuraFields(aura, unit)
+	return aura
+end
+GetAuraDataBySlot = function (unit, slot)
+	local aura = C_UnitAuras.GetAuraDataBySlot(unit, slot)
+	setAdditionalAuraFields(aura, unit)
+	return aura
+end
+
 local ValidateAuraForUpdate = function (unit, aura)
 	local needsUpdate = false
 	local hasBuff = false
@@ -471,29 +491,8 @@ end
 
 --[[
 UNIT_AURA Payload:
-	- unit					-- the unit the aura update is applied to
-	- isFullUpdate			-- if there needs to be a full aura update (potentially empty updatedAuras)
-	- updatedAuras {		-- the table of updated aura information for this unit/event
-		[n] {
-			canApplyAura,
-			debuffType,
-			isBossAura,
-			isFromPlayerOrPlayerPet,
-			isHarmful,
-			isHelpful,
-			isNameplateOnly,
-			isRaid,
-			name,
-			nameplateShowAll,
-			nameplateShowPersonal,
-			shouldNeverShow,
-			sourceUnit,
-			spellId,
-		}
-
-In 10.0:
-	- unit
-	- UnitAuraUpdateInfo = {
+	- unit						-- the unit the aura update is applied to
+	- UnitAuraUpdateInfo = {	-- the table of updated aura information for this unit/event
 			addedAuras = AuraInstanceInfo[]?,
 			updatedAuraInstanceIDs = number[]?
 			removedAuraInstanceIDs = number[]?
@@ -501,10 +500,24 @@ In 10.0:
 		}
 
 with AuraInstanceInfo = {	
-		--FULL UnitAura return values plus:
+		canApplyAura,
+		debuffType,
+		isBossAura,
+		isFromPlayerOrPlayerPet,
+		isHarmful,
+		isHelpful,
+		isNameplateOnly,
+		isRaid,
+		name,
+		nameplateShowAll,
+		nameplateShowPersonal,
+		shouldNeverShow,
+		sourceUnit,
+		spellId,
+		
+		-- so, FULL UnitAura return values plus:
 		auraInstanceID = number,
-		-- "Magic" | "Curse" | "Disease" | "Poison"
-		dispelName = string,  
+		dispelName = string,  -- "Magic" | "Curse" | "Disease" | "Poison"
 	}
 ]]--
 local UnitAuraEventHandlerData = {}
@@ -570,6 +583,7 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 	for _, aura in ipairs(updatedAuras.addedAuras or {}) do
 		local needsUpdate = ValidateAuraForUpdate(unit, aura)
 		if needsUpdate then
+			setAdditionalAuraFields(aura, unit)
 			if aura.isHarmful then
 				unitCacheData.debuffs[aura.auraInstanceID] = aura
 				unitCacheData.debuffsChanged = true
@@ -582,10 +596,10 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 	
 	for _, auraInstanceID in ipairs(updatedAuras.updatedAuraInstanceIDs or {}) do
 		if unitCacheData.debuffs[auraInstanceID] ~= nil then
-			unitCacheData.debuffs[auraInstanceID].requriresUpdate = true
+			unitCacheData.debuffs[auraInstanceID].requiresUpdate = true
 			unitCacheData.debuffsChanged = true
 		elseif unitCacheData.buffs[auraInstanceID] ~= nil then
-			unitCacheData.buffs[auraInstanceID].requriresUpdate = true
+			unitCacheData.buffs[auraInstanceID].requiresUpdate = true
 			unitCacheData.buffsChanged = true
 		else
 			unitCacheData.tbd[auraInstanceID] = true
@@ -608,7 +622,7 @@ UpdateUnitAuraCacheData = function (unit, updatedAuras)
 	
 	if unitCacheData.tbdChanged then
 		for index, _ in pairs(unitCacheData.tbd) do
-			local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, index)
+			local aura = GetAuraDataByAuraInstanceID(unit, index)
 			if aura then
 				if aura.isHarmful then
 					unitCacheData.debuffs[aura.auraInstanceID] = aura
@@ -645,7 +659,7 @@ local function getUnitAuras(unit, filter)
 		if unitCacheData.debuffsChanged then
 			local tmpDebuffs = {}
 			for auraInstanceID, aura in pairs (unitCacheData.debuffs) do
-				if aura.requriresUpdate then
+				if aura.requiresUpdate then
 					tmpDebuffs[auraInstanceID] = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
 				else
 					tmpDebuffs[auraInstanceID] = aura
@@ -659,7 +673,7 @@ local function getUnitAuras(unit, filter)
 		if unitCacheData.buffsChanged then
 			local tmpBuffs = {}
 			for auraInstanceID, aura in pairs (unitCacheData.buffs) do
-				if aura.requriresUpdate then
+				if aura.requiresUpdate then
 					tmpBuffs[auraInstanceID] = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
 				else
 					tmpBuffs[auraInstanceID] = aura
@@ -2084,7 +2098,7 @@ end
 							isSpecial = true
 						
 						--> check for special auras added by the user it self
-						elseif (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet")))) then
+						elseif (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and aura.sourceIsPlayer)) then
 							Plater.AddExtraIcon (self, name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, true,"HELPFUL", id, timeMod)
 							isSpecial = true
 							
@@ -2130,7 +2144,7 @@ end
 							isSpecial = true
 						
 						--> check for special auras added by the user it self
-						elseif (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet")))) then
+						elseif (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and aura.sourceIsPlayer)) then
 							Plater.AddExtraIcon (self, name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, false, "HARMFUL", id, timeMod)
 							isSpecial = true
 							
@@ -2139,7 +2153,7 @@ end
 					
 					--checking here if the debuff is placed by the player
 					--if (sourceUnit and aurasToCheck [name] and UnitIsUnit (sourceUnit, "player")) then --this doesn't track the pet, so auras like freeze from mage frost elemental won't show
-					if (not isSpecial and (sourceUnit and (aurasToCheck [name] or aurasToCheck [spellId]) and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet")))) then
+					if (not isSpecial and (aurasToCheck [name] or aurasToCheck [spellId]) and aura.sourceIsPlayer) then
 					--if (aurasToCheck [name]) then
 						local auraIconFrame, buffFrame = Plater.GetAuraIcon (self)
 						Plater.AddAura (buffFrame, auraIconFrame, id, name, icon, applications, auraType, duration, expirationTime, sourceUnit, isFromPlayerOrPlayerPet, isStealable, nameplateShowPersonal, spellId, false, false, false, isPersonal, dispelName, timeMod)
@@ -2221,7 +2235,7 @@ end
 						end
 					end
 					
-					local sourceIsPlayer = sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet") or Plater.PlayerPetCache[UnitGUID(sourceUnit)]) and true
+					local sourceIsPlayer = aura.sourceIsPlayer or (sourceUnit and Plater.PlayerPetCache[UnitGUID(sourceUnit)]) and true
 			
 					--> important aura
 					if (DB_AURA_SHOW_IMPORTANT and (nameplateShowAll or isBossAura or (nameplateShowPersonal and sourceIsPlayer))) then
@@ -2236,11 +2250,11 @@ end
 						can_show_this_debuff = true
 						
 					--> is casted by other npcs
-					elseif (DB_AURA_SHOW_BYOTHERNPCS and not isFromPlayerOrPlayerPet and (not sourceUnit or (sourceUnit and not UnitIsUnit (sourceUnit, unit)))) then
+					elseif (DB_AURA_SHOW_BYOTHERNPCS and not isFromPlayerOrPlayerPet and sourceUnit and not aura.sourceIsSelf and aura.sourceReaction <= 4) then
 						can_show_this_debuff = true
 						
 					--> is casted by the unit it self
-					elseif (DB_AURA_SHOW_DEBUFFBYUNIT and sourceUnit and UnitIsUnit (sourceUnit, unit) and not isFromPlayerOrPlayerPet) then
+					elseif (DB_AURA_SHOW_DEBUFFBYUNIT and sourceUnit and aura.sourceIsSelf and not isFromPlayerOrPlayerPet) then
 						can_show_this_debuff = true
 					
 					--> user added this buff to track in the buff tracking tab
@@ -2258,7 +2272,7 @@ end
 				end
 				
 				--> check for special auras added by the user it self
-				if (can_show_this_debuff ~= false and (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet"))))) then
+				if (can_show_this_debuff ~= false and (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and aura.sourceIsPlayer))) then
 					Plater.AddExtraIcon (self, name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, false, "HARMFUL", id, timeMod)
 					can_show_this_debuff = false
 				end
@@ -2292,7 +2306,7 @@ end
 				unitAuraCache.hasEnrage = unitAuraCache.hasEnrage or dispelName == AURA_TYPE_ENRAGE
 				
 				--> check for special auras added by the user it self
-				if (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet")))) then
+				if (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and aura.sourceIsPlayer)) then
 					Plater.AddExtraIcon (self, name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, true, "HELPFUL", id, timeMod)
 					
 				elseif (not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) then
@@ -2312,7 +2326,7 @@ end
 						Plater.AddExtraIcon (self, name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, true, "HELPFUL", id, timeMod)
 					else
 						--> important aura
-						local sourceIsPlayer = sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet") or Plater.PlayerPetCache[UnitGUID(sourceUnit)]) and true
+						local sourceIsPlayer = aura.sourceIsPlayer or (sourceUnit and Plater.PlayerPetCache[UnitGUID(sourceUnit)]) and true
 						
 						if (DB_AURA_SHOW_IMPORTANT and (nameplateShowAll or isBossAura or (nameplateShowPersonal and sourceIsPlayer))) then
 							local auraIconFrame, buffFrame = Plater.GetAuraIcon (self, true)
@@ -2354,12 +2368,12 @@ end
 							Plater.AddAura (buffFrame, auraIconFrame, id, name, icon, applications, auraType, duration, expirationTime, sourceUnit, isFromPlayerOrPlayerPet, isStealable, nameplateShowPersonal, spellId, true, nil, nil, nil, dispelName, timeMod)
 												
 						--> is casted by other nopcs
-						elseif (DB_AURA_SHOW_BYOTHERNPCS and not isFromPlayerOrPlayerPet and (not sourceUnit or (sourceUnit and not UnitIsUnit (sourceUnit, unit)))) then
+						elseif (DB_AURA_SHOW_BYOTHERNPCS and not isFromPlayerOrPlayerPet and sourceUnit and not aura.sourceIsSelf and aura.sourceReaction <= 4) then
 							local auraIconFrame, buffFrame = Plater.GetAuraIcon (self, true)
 							Plater.AddAura (buffFrame, auraIconFrame, id, name, icon, applications, auraType, duration, expirationTime, sourceUnit, isFromPlayerOrPlayerPet, isStealable, nameplateShowPersonal, spellId, true, nil, nil, nil, dispelName, timeMod)
 							
 						--> is casted by the unit it self
-						elseif (DB_AURA_SHOW_BUFFBYUNIT and sourceUnit and UnitIsUnit (sourceUnit, unit) and not isFromPlayerOrPlayerPet) then
+						elseif (DB_AURA_SHOW_BUFFBYUNIT and aura.sourceIsSelf and not isFromPlayerOrPlayerPet) then
 							local auraIconFrame, buffFrame = Plater.GetAuraIcon (self, true)
 							Plater.AddAura (buffFrame, auraIconFrame, id, name, icon, applications, auraType, duration, expirationTime, sourceUnit, isFromPlayerOrPlayerPet, isStealable, nameplateShowPersonal, spellId, true, nil, nil, nil, dispelName, timeMod)
 						
@@ -2445,6 +2459,7 @@ end
 		Plater.ResetAuraContainer (self, unitAuraEventData.hasBuff, unitAuraEventData.hasDebuff)
 		local unitAuraCache = self.unitFrame.AuraCache
 		local noBuffDurationLimitation = Plater.db.profile.aura_show_all_duration_buffs_personal
+		local onlyImportantBuffs = Plater.db.profile.aura_show_only_important_buffs_personal
 		
 		--> debuffs
 		if (Plater.db.profile.aura_show_debuffs_personal and unitAuraEventData.hasDebuff) then
@@ -2480,7 +2495,7 @@ end
 				end
 				
 				--> check for special auras added by the user it self
-				if (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and sourceUnit and (UnitIsUnit (sourceUnit, "player") or UnitIsUnit (sourceUnit, "pet")))) then
+				if (((SPECIAL_AURAS_USER_LIST [name] or SPECIAL_AURAS_USER_LIST [spellId]) and not (SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId])) or ((SPECIAL_AURAS_USER_LIST_MINE [name] or SPECIAL_AURAS_USER_LIST_MINE [spellId]) and aura.sourceIsPlayer)) then
 					Plater.AddExtraIcon (self, name, icon, applications, dispelName, duration, expirationTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, false, "HARMFUL", id, timeMod)
 				end
 				
@@ -2508,7 +2523,7 @@ end
 				unitAuraCache.hasEnrage = unitAuraCache.hasEnrage or dispelName == AURA_TYPE_ENRAGE
 				
 				--> only show buffs casted by the player it self and less than 1 minute in duration
-				if ((not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) and (noBuffDurationLimitation or (duration and (duration > 0 and duration < 60))) and (sourceUnit and UnitIsUnit (sourceUnit, "player"))) then
+				if ((not DB_BUFF_BANNED [name] and not DB_BUFF_BANNED [spellId]) and (noBuffDurationLimitation or (duration and (duration > 0 and duration < 60))) and (sourceUnit and UnitIsUnit (sourceUnit, "player") and ((onlyImportantBuffs and nameplateShowPersonal or (AUTO_TRACKING_EXTRA_BUFFS [name] or AUTO_TRACKING_EXTRA_BUFFS [spellId])) or not onlyImportantBuffs))) then
 					local auraIconFrame, buffFrame = Plater.GetAuraIcon (self, true)
 					Plater.AddAura (buffFrame, auraIconFrame, id, name, icon, applications, auraType, duration, expirationTime, sourceUnit, isFromPlayerOrPlayerPet, isStealable, nameplateShowPersonal, spellId, true, false, false, true, dispelName, timeMod)
 

@@ -1,15 +1,20 @@
 local mod	= DBM:NewMod(2435, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044044")
+mod:SetRevision("20250727090201")
 mod:SetCreatureID(175611)
 mod:SetEncounterID(2423)
 mod:SetUsedIcons(1)
 mod:SetHotfixNoticeRev(20210706000000)--2021-07-06
 --mod:SetMinSyncRevision(20201222000000)
 mod.respawnTime = 29
+mod:SetZone(2450)
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 346985 347283 347668 347679 350280 347490",
@@ -62,6 +67,7 @@ local timerHungeringMist							= mod:NewCastCountTimer(4.8, 347679, nil, nil, ni
 local timerRemnantofForgottenTormentsCD				= mod:NewCDCountTimer(30.4, 352368, L.Remnant, nil, nil, 2, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerGraspofDeathCD							= mod:NewCDCountTimer(26.7, 347668, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerFuryoftheAgesCD							= mod:NewCDCountTimer(36.4, 347490, nil, "Tank|RemoveEnrage", nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON)
+local timerRP										= mod:NewRPTimer(15.4)
 
 local berserkTimer									= mod:NewBerserkTimer(600)
 
@@ -265,9 +271,23 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	--Could use combat log, but since that's going away in midnight, this is more robust future proofing
+	if (msg == L.PortalRP or msg:find(L.PortalRP)) and self:LatencyCheck() then
+		self:SendSync("PortalRP")
+	end
+end
+
+function mod:OnSync(msg)
+	if self:IsLFR() then return end
+	if msg == "PortalRP" and self:AntiSpam(10, 2) then
+		timerRP:Start(34)--Might need tweaking. Attempts to estimate time til portal opens after boss dies
+	end
+end
+
 --[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 340324 and destGUID == UnitGUID("player") and not playerDebuff and self:AntiSpam(2, 2) then
+	if spellId == 340324 and destGUID == UnitGUID("player") and not playerDebuff and self:AntiSpam(2, 3) then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

@@ -1,5 +1,12 @@
 local myname, ns = ...
 
+ns.DALARAN = 627
+ns.AZSUNA = 630
+ns.STORMHEIM = 634
+ns.VALSHARAH = 641
+ns.BROKENSHORE = 646
+ns.HIGHMOUNTAIN = 650
+ns.SURAMAR = 680
 ns.KROKUUN = 830
 ns.ANTORANWASTES = 885
 ns.EREDATH = 882
@@ -21,3 +28,4 @@ ns.groups["junk"] = "Junk"
 ns.groups["hippogryph"] = "{spell:215159:Long Forgotten Hippogryph}"
 ns.groups["withered"] = "{questname:43943:Withered Army Training}"
 ns.groups["kosumoth"] = "{npc:111573:Kosumoth}"
+ns.groups["riftportals"] = "{spell:223805:Advanced Dimensional Rifting}"

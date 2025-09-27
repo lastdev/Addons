@@ -6,12 +6,14 @@
 
 local LibTSMService = select(2, ...).LibTSMService
 local FullScan = LibTSMService:Init("Auction.FullScan")
+local ChatMessage = LibTSMService:Include("UI.ChatMessage")
 local Log = LibTSMService:From("LibTSMUtil"):Include("Util.Log")
 local Table = LibTSMService:From("LibTSMUtil"):Include("Lua.Table")
 local ItemString = LibTSMService:From("LibTSMTypes"):Include("Item.ItemString")
 local AuctionHouse = LibTSMService:From("LibTSMWoW"):Include("API.AuctionHouse")
 local DelayTimer = LibTSMService:From("LibTSMWoW"):IncludeClassType("DelayTimer")
 local Event = LibTSMService:From("LibTSMWoW"):Include("Service.Event")
+local StaticPopupDialog = LibTSMService:From("LibTSMWoW"):IncludeClassType("StaticPopupDialog")
 local ClientInfo = LibTSMService:From("LibTSMWoW"):Include("Util.ClientInfo")
 local SessionInfo = LibTSMService:From("LibTSMWoW"):Include("Util.SessionInfo")
 local LibDeflate = LibStub("LibDeflate")
@@ -19,6 +21,7 @@ local private = {
 	gameVersion = nil,
 	encodingLookup = {},
 	timer = nil,
+	popupDialog = nil,
 	state = "INITIALIZED",
 	startTime = nil,
 	scannedIndex = {},
@@ -43,6 +46,16 @@ FullScan:OnModuleLoad(function()
 		else
 			private.gameVersion = "Classic Era"
 		end
+	elseif ClientInfo.IsPandaClassic() then
+		private.gameVersion = "Wrath"
+		private.popupDialog = StaticPopupDialog.New()
+			:SetText("Start Scan?")
+			:SetYesNo()
+			:HideOnEscape()
+			:SetScript("OnAccept", function()
+				AuctionHouse.StartGetAllScan()
+				ChatMessage.PrintUserRaw("Started full scan.")
+			end)
 	else
 		-- Ignore for retail
 		return
@@ -63,6 +76,7 @@ end)
 ---Enables the full scan hook.
 function FullScan.Enable()
 	if private.gameVersion then
+		Event.Register("AUCTION_HOUSE_SHOW", private.HandleAuctionHouseShow)
 		AuctionHouse.SecureHookGetAllScan(private.StartScan)
 	end
 end
@@ -97,6 +111,13 @@ function private.StartScan()
 	Event.RegisterAllEvents(private.HandleAllEvents)
 end
 
+function private.HandleAuctionHouseShow()
+	if private.state ~= "INITIALIZED" or not private.popupDialog then
+		return
+	end
+	private.popupDialog:Show()
+end
+
 function private.HandleAuctionHouseClosed()
 	if private.state ~= "INITIALIZED" then
 		private.state = "INTERRUPTED"
@@ -107,7 +128,7 @@ function private.HandleAllEvents(event)
 	if private.state ~= "STARTED" then
 		Event.UnregisterAllEvents(private.HandleAllEvents)
 	end
-	if event == "AUCTION_ITEM_LIST_UPDATE" then
+	if event == "AUCTION_ITEM_LIST_UPDATE" or event == "REPLICATE_ITEM_LIST_UPDATE" then
 		private.state = "GOT_UPDATE"
 	end
 end
@@ -124,7 +145,7 @@ function private.ScannerLoop()
 		-- Keep trying to scan any data we don't yet have
 		local hasInvalid = false
 		local numScanned = 0
-		for i = 1, AuctionHouse.GetNumAuctions() do
+		for i = 1, AuctionHouse.GetNumGetAllAuctions() do
 			if not private.scannedIndex[i] then
 				local isValid = private.ScanAuction(i)
 				if isValid then
@@ -143,6 +164,9 @@ function private.ScannerLoop()
 		else
 			private.state = "DONE"
 			Log.Info("Finished scanning (%s items)", Table.Count(private.scanData))
+			if private.popupDialog then
+				ChatMessage.PrintUserRaw("Finished full scan.")
+			end
 		end
 	end
 end

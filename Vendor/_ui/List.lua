@@ -17,6 +17,8 @@ local UI = Addon.CommonUI.UI
 local Layouts = Addon.CommonUI.Layouts
 local DISCARD_TIME = 60.0
 
+
+
 --[[ sort the array, technially this sorts from least greatest ]]
 local function bubbleSort(array, sort)
     local num = table.getn(array)
@@ -29,6 +31,12 @@ local function bubbleSort(array, sort)
             end
         end
     end
+end
+
+-- Lua's default sort uses quicksort, which is not as good for small or sorted lists
+-- but better for large numbers.
+local function quickSort(array, sort)
+    table.sort(array, sort)
 end
 
 --[[ Calls a hanlder on the list or it's parent ]]
@@ -291,8 +299,14 @@ local function list_BuildView(self, state)
 
         -- If we have sort, then sort the resulting view
         if (type(sort) == "function") then
-            -- This is bugged and throwing a lua error about ruleB not existing. Commenting out for now.
-            bubbleSort(view, sort)
+            -- Race conditions with items loading their names can cause sort to fail.
+            local success = pcall(function() quickSort(view, sort) end)
+            if not success then
+                -- If we fail, fall back to sorting by ID
+                -- If this fails, welp, carry on, it aint sorted but should still render.
+
+                pcall(function() quickSort(view, function(a, b) return tonumber(a) < tonumber(b) end) end)
+            end
         end
 
         state.view = view

@@ -6,15 +6,19 @@ if ns.locale == "deDE" then
 	ns.L["Achievement"] = "Leistung"
 	ns.L["Dailies"] = "Täglich"
 	ns.L["Daily"] = "Täglich"
+	ns.L["Weeklies"] = "Wöchentliche "
+	ns.L["Weekly"] = "Wöchentliche "
 	ns.L["Guide"] = "Führung"
 	ns.L["Level"] = "Stufe"
 	ns.L["One Time"] = "Einmal"
 	ns.L["Quests"] = "Quests"
 	ns.L["RWCQuestDailies"] = "Tägliche Quests: Entfernen, wenn %p sie abgeschlossen hat"
+	ns.L["RWCQuestWeeklies"] = "Wöchentlich Quests: Entfernen, wenn %p sie abgeschlossen hat"
 	ns.L["RWCQuestOneTime"] = "Einmalige Quests: Entfernen, wenn %p sie abgeschlossen hat"
 	ns.L["RWCQuestSeasonal"] = "Saisonale Quests: Entfernen, wenn %p sie abgeschlossen hat"
 	ns.L["RWCAchievements"] = "Erfolge: Entfernen, wenn %p sie abgeschlossen hat"
 	ns.L["RWCQuestDailiesDesc"] = "Die Kartenmarkierung wird nicht angezeigt, wenn %p die Quest heute abgeschlossen hat"
+	ns.L["RWCQuestWeekliesDesc"] = "Die Kartenmarkierung wird nicht angezeigt, wenn %p die Quest diese Woche abgeschlossen hat"
 	ns.L["RWCQuestOneTimeDesc"] = "Die Kartenmarkierung wird nicht angezeigt, wenn %p die Quest abgeschlossen hat"
 	ns.L["RWCQuestSeasonalDesc"] = "Die Kartenmarkierung wird nicht angezeigt, wenn %p die Quest in dieser Saison abgeschlossen hat"
 	ns.L["RWCAchievementsDesc"] = "Die Kartenmarkierung wird nicht angezeigt, wenn %p den Erfolg abgeschlossen hat"
@@ -27,15 +31,19 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	ns.L["Achievement"] = "Logro"
 	ns.L["Dailies"] = "Diarios"
 	ns.L["Daily"] = "Diaria"
+	ns.L["Weeklies"] = "Semanales"
+	ns.L["Weekly"] = "Semanal"
 	ns.L["Guide"] = "Guía"
 	ns.L["Level"] = "Nivel"
 	ns.L["One Time"] = "Una vez"
 	ns.L["Quests"] = "Misiones"
 	ns.L["RWCQuestDailies"] = "Misiones diarias: eliminar cuando las complete %p"
+	ns.L["RWCQuestWeeklies"] = "Misiones semanal: eliminar cuando las complete %p"
 	ns.L["RWCQuestOneTime"] = "Misiones únicas: eliminar cuando las complete %p"
 	ns.L["RWCQuestSeasonal"] = "Misiones de temporada: eliminar cuando las complete %p"
 	ns.L["RWCAchievements"] = "Logros: Eliminar cuando %p lo complete"
 	ns.L["RWCQuestDailiesDesc"] = "El marcador del mapa no aparecerá cuando %p haya completado la misión de hoy"
+	ns.L["RWCQuestWeekliesDesc"] = "El marcador del mapa no aparecerá cuando %p haya completado la misión de esta semana"
 	ns.L["RWCQuestOneTimeDesc"] = "El marcador del mapa no aparecerá cuando %p haya completado la misión"
 	ns.L["RWCQuestSeasonalDesc"] = "El pin del mapa no aparecerá cuando %p haya completado la misión esta temporada"
 	ns.L["RWCAchievementsDesc"] = "El marcador del mapa no aparecerá cuando %p haya completado el logro"
@@ -48,15 +56,19 @@ elseif ns.locale == "frFR" then
 	ns.L["Achievement"] = "Réalisation"
 	ns.L["Dailies"] = "Journalière"
 	ns.L["Daily"] = "Journalière"
+	ns.L["Weeklies"] = "Hebdomadaires"
+	ns.L["Weekly"] = "Hebdomadaires"
 	ns.L["Guide"] = "Guide"
 	ns.L["Level"] = "Niveau"
 	ns.L["One Time"] = "Une fois"
 	ns.L["Quests"] = "Quêtes"
 	ns.L["RWCQuestDailies"] = "Quêtes quotidiennes : supprimer une fois terminées par %p"
+	ns.L["RWCQuestWeeklies"] = "Quêtes hebdomadaires : supprimer une fois terminées par %p"
 	ns.L["RWCQuestOneTime"] = "Quêtes uniques : supprimer une fois terminées par %p"
 	ns.L["RWCQuestSeasonal"] = "Quêtes saisonnières : supprimer une fois terminées par %p"
 	ns.L["RWCAchievements"] = "Réalisations : Supprimer une fois terminé par %p"
 	ns.L["RWCQuestDailiesDesc"] = "L'épingle de la carte n'apparaîtra pas lorsque %p aura terminé la quête aujourd'hui"
+	ns.L["RWCQuestWeekliesDesc"] = "L'épingle de la carte n'apparaîtra pas lorsque %p aura terminé la quête cette semaine"
 	ns.L["RWCQuestOneTimeDesc"] = "L'épingle de la carte n'apparaîtra pas lorsque %p aura terminé la quête"
 	ns.L["RWCQuestSeasonalDesc"] = "L'épingle de la carte n'apparaîtra pas lorsque %p aura terminé la quête cette saison"
 	ns.L["RWCAchievementsDesc"] = "L'épingle de la carte n'apparaîtra pas lorsque %p aura terminé le succès"
@@ -69,15 +81,19 @@ elseif ns.locale == "itIT" then
 	ns.L["Achievement"] = "Risultato"
 	ns.L["Dailies"] = "Giornaliera"
 	ns.L["Daily"] = "Giornaliera"
+	ns.L["Weeklies"] = "Settimanali"
+	ns.L["Weekly"] = "Settimanali"
 	ns.L["Guide"] = "Guida"
 	ns.L["Level"] = "Livello"
 	ns.L["One Time"] = "Una volta"
 	ns.L["Quests"] = "Missioni"
 	ns.L["RWCQuestDailies"] = "Missioni giornaliere: vengono rimosse una volta completate da %p"
+	ns.L["RWCQuestWeeklies"] = "Missioni settimanali: vengono rimosse una volta completate da %p"
 	ns.L["RWCQuestOneTime"] = "Missioni una tantum: vengono rimosse una volta completate da %p"
 	ns.L["RWCQuestSeasonal"] = "Missioni stagionali: vengono rimosse una volta completate da %p"
 	ns.L["RWCAchievements"] = "Risultati: rimuovi una volta completato da %p"
 	ns.L["RWCQuestDailiesDesc"] = "Il segnaposto sulla mappa non apparirà quando %p avrà completato la missione oggi"
+	ns.L["RWCQuestWeekliesDesc"] = "Il segnaposto sulla mappa non apparirà quando %p avrà completato la missione questa settimana"
 	ns.L["RWCQuestOneTimeDesc"] = "Il segnaposto sulla mappa non apparirà quando %p avrà completato la missione"
 	ns.L["RWCQuestSeasonalDesc"] = "Il segnaposto sulla mappa non apparirà quando %p avrà completato la missione in questa stagione"
 	ns.L["RWCAchievementsDesc"] = "Die Kartenmarkierung wird nicht angezeigt, wenn %p den Erfolg abgeschlossen hat"
@@ -91,15 +107,19 @@ elseif ns.locale == "koKR" then
 	ns.L["Achievement"] = "성취"
 	ns.L["Dailies"] = "일일"
 	ns.L["Daily"] = "일일"
+	ns.L["Weeklies"] = "주간"
+	ns.L["Weekly"] = "주간"
 	ns.L["Guide"] = "가이드"
 	ns.L["Level"] = "레벨"
 	ns.L["One Time"] = "일회"
 	ns.L["Quests"] = "퀘스트"
 	ns.L["RWCQuestDailies"] = "일일 퀘스트: %p가 완료 시 제거."
+	ns.L["RWCQuestWeeklies"] = "주간 퀘스트: %p가 완료 시 제거."
 	ns.L["RWCQuestOneTime"] = "일회 퀘스트: %p가 완료 시 제거."
 	ns.L["RWCQuestSeasonal"] = "계절 퀘스트: %p가 완료하면 제거됩니다."
 	ns.L["RWCAchievements"] = "업적: %p가 완료하면 제거됩니다."
 	ns.L["RWCQuestDailiesDesc"] = "오늘 %p가 퀘스트를 완료하면 지도 핀이 표시되지 않습니다."
+	ns.L["RWCQuestWeekliesDesc"] = "이번 주 %p가 퀘스트를 완료하면 지도 핀이 표시되지 않습니다."
 	ns.L["RWCQuestOneTimeDesc"] = "%p가 퀘스트를 완료하면 지도 핀이 표시되지 않습니다."
 	ns.L["RWCQuestSeasonalDesc"] = "이번 시즌 %p가 퀘스트를 완료하면 지도 핀이 표시되지 않습니다."
 	ns.L["RWCAchievementsDesc"] = "%p가 업적을 완료하면 지도 핀이 표시되지 않습니다."
@@ -112,15 +132,19 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	ns.L["Achievement"] = "Conquista"
 	ns.L["Dailies"] = "Diários"
 	ns.L["Daily"] = "Diário(a)"
+	ns.L["Weeklies"] = "Semanais"
+	ns.L["Weekly"] = "Semanais"
 	ns.L["Guide"] = "Guia"
 	ns.L["Level"] = "Nível"
 	ns.L["One Time"] = "Uma vez"
 	ns.L["Quests"] = "Missões"
 	ns.L["RWCQuestDailies"] = "Missões diárias: Remova quando concluída por %p"
+	ns.L["RWCQuestWeeklies"] = "Missões semanais: Remova quando concluída por %p"
 	ns.L["RWCQuestOneTime"] = "Missões únicas: Remova quando concluída por %p"
 	ns.L["RWCQuestSeasonal"] = "Missões sazonais: removidas quando concluídas por %p"
 	ns.L["RWCAchievements"] = "Conquistas: Remover quando concluído por %p"
 	ns.L["RWCQuestDailiesDesc"] = "O pin do mapa não aparecerá quando %p completar a missão hoje"
+	ns.L["RWCQuestWeekliesDesc"] = "O pin do mapa não aparecerá quando %p completar a missão esta semana"
 	ns.L["RWCQuestOneTimeDesc"] = "O pin do mapa não aparecerá quando %p completar a missão"
 	ns.L["RWCQuestSeasonalDesc"] = "O pin do mapa não aparecerá quando %p completar a missão nesta temporada"
 	ns.L["RWCAchievementsDesc"] = "O pin do mapa não aparecerá quando %p tiver concluído a conquista"
@@ -133,15 +157,19 @@ elseif ns.locale == "ruRU" then
 	ns.L["Achievement"] = "Достижение"
 	ns.L["Dailies"] = "Ежедневные газеты"
 	ns.L["Daily"] = "Ежедневно"
+	ns.L["Weeklies"] = "Еженедельники"
+	ns.L["Weekly"] = "Еженедельно"
 	ns.L["Guide"] = "Гид"
 	ns.L["Level"] = "Уровень"
 	ns.L["One Time"] = "Один раз"
 	ns.L["Quests"] = "Задания"
 	ns.L["RWCQuestDailies"] = "Ежедневные квесты: удаляются после выполнения %p"
+	ns.L["RWCQuestWeeklies"] = "Еженедельные квесты: удаляются после выполнения %p"
 	ns.L["RWCQuestOneTime"] = "Одноразовые квесты: удаляются после выполнения %p"
 	ns.L["RWCQuestSeasonal"] = "Сезонные квесты: удаляются после выполнения %p"
 	ns.L["RWCAchievements"] = "Достижения: удалить после завершения %p"
 	ns.L["RWCQuestDailiesDesc"] = "Значок на карте не появится, когда %p завершит квест сегодня"
+	ns.L["RWCQuestWeekliesDesc"] = "Значок на карте не появится, когда %p завершит квест на этой неделе"
 	ns.L["RWCQuestOneTimeDesc"] = "Значок на карте не появится, когда %p завершит квест"
 	ns.L["RWCQuestSeasonalDesc"] = "Значок на карте не появится, когда %p завершит квест в этом сезоне"
 	ns.L["RWCAchievementsDesc"] = "Значок на карте не появится, когда %p выполнит достижение"
@@ -154,15 +182,19 @@ elseif ns.locale == "zhCN" then
 	ns.L["Achievement"] = "成就"
 	ns.L["Dailies"] = "日常"
 	ns.L["Daily"] = "日常"
+	ns.L["Weeklies"] = "每周"
+	ns.L["Weekly"] = "每周"
 	ns.L["Guide"] = "指南"
 	ns.L["Level"] = "等级"
 	ns.L["One Time"] = "一次性"
 	ns.L["Quests"] = "任务"
 	ns.L["RWCQuestDailies"] = "每日任务：%p 完成后屏蔽显示"
+	ns.L["RWCQuestWeeklies"] = "每周任务：%p 完成后屏蔽显示"
 	ns.L["RWCQuestOneTime"] = "一次性任务：%p 完成后屏蔽显示"
 	ns.L["RWCQuestSeasonal"] = "季节性任务：%p 完成后屏蔽显示"
 	ns.L["RWCAchievements"] = "成就：%p 完成后屏蔽显示"
 	ns.L["RWCQuestDailiesDesc"] = "今天 %p 完成任务后，地图图标将不会出现"
+	ns.L["RWCQuestWeekliesDesc"] = "本周 %p 完成任务后，地图图标将不会出现"
 	ns.L["RWCQuestOneTimeDesc"] = "%p 完成任务后，地图图标将不会出现"
 	ns.L["RWCQuestSeasonalDesc"] = "当 %p 完成本赛季的任务时，地图图标将不会出现"
 	ns.L["RWCAchievementsDesc"] = "当 %p 完成成就时，地图图标将不会出现"
@@ -175,15 +207,19 @@ elseif ns.locale == "zhTW" then
 	ns.L["Achievement"] = "成就"
 	ns.L["Dailies"] = "日常"
 	ns.L["Daily"] = "日常"
+	ns.L["Weeklies"] = "每週"
+	ns.L["Weekly"] = "每週"
 	ns.L["Guide"] = "指南"
 	ns.L["Level"] = "等級"
 	ns.L["One Time"] = "一次性"
 	ns.L["Quests"] = "任務"
 	ns.L["RWCQuestDailies"] = "每日任務：%p 完成後屏蔽顯示"
+	ns.L["RWCQuestWeeklies"] = "每週任務：%p 完成後屏蔽顯示"
 	ns.L["RWCQuestOneTime"] = "一次任務：%p 完成後屏蔽顯示"
 	ns.L["RWCQuestSeasonal"] = "季節性任務：%p 完成後屏蔽顯示"
 	ns.L["RWCAchievements"] = "成就：%p 完成後屏蔽顯示"
 	ns.L["RWCQuestDailiesDesc"] = "今天 %p 完成任務後，地圖圖示將不會出現"
+	ns.L["RWCQuestWeekliesDesc"] = "本週 %p 完成任務後，地圖圖示將不會出現"
 	ns.L["RWCQuestOneTimeDesc"] = "%p 完成任務後，地圖圖示將不會出現"
 	ns.L["RWCQuestSeasonalDesc"] = "當 %p 完成本賽季的任務時，地圖圖示將不會出現"
 	ns.L["RWCAchievementsDesc"] = "當 %p 完成成就時，地圖圖示將不會出現"
@@ -194,12 +230,57 @@ elseif ns.locale == "zhTW" then
 
 else
 	ns.L["RWCQuestDailies"] = "Daily quests: Remove when completed by %p"
+	ns.L["RWCQuestWeeklies"] = "Weekly quests: Remove when completed by %p"
 	ns.L["RWCQuestOneTime"] = "One Time quests: Remove when completed by %p"
 	ns.L["RWCQuestSeasonal"] = "Seasonal quests: Remove when completed by %p"
 	ns.L["RWCAchievements"] = "Achievements: Remove when completed by %p"
 	ns.L["RWCQuestDailiesDesc"] = "The map pin will not appear when %p has completed the quest today"
+	ns.L["RWCQuestWeekliesDesc"] = "The map pin will not appear when %p has completed the quest today"
 	ns.L["RWCQuestOneTimeDesc"] = "The map pin will not appear when %p has completed the quest"
 	ns.L["RWCQuestSeasonalDesc"] = "The map pin will not appear when %p has completed the quest this season"
 	ns.L["RWCAchievementsDesc"] = "The map pin will not appear when %p has completed the achievement"
 	ns.L["RWCAchievementsDescAcct"] = "The map pin will not appear when any character has completed the achievement"
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
+local function SubstitutePlayerOrElseAcct( theType, character )
+	return gsub( ns.L[ theType ], "%%p", ( character and ns.name or ns.L[ "Account" ] ) )
+end
+
+ns.setRemoveDailies = { name = SubstitutePlayerOrElseAcct( "RWCQuestDailies", true ),
+					desc = SubstitutePlayerOrElseAcct( "RWCQuestDailiesDesc", true ),
+					type = "toggle", width = "full", arg = "removeDailies", disabled = ns.preAchievements, order = 4, }
+ns.setRemoveWeeklies = { name = SubstitutePlayerOrElseAcct( "RWCQuestWeeklies", true ),
+					desc = SubstitutePlayerOrElseAcct( "RWCQuestWeekliesDesc", true ),
+					type = "toggle", width = "full", arg = "removeWeeklies", disabled = ns.preAchievements, order = 5, }
+ns.setRemoveOneTime = { name = SubstitutePlayerOrElseAcct( "RWCQuestOneTime", true ),
+					desc = SubstitutePlayerOrElseAcct( "RWCQuestOneTimeDesc", true ),
+					type = "toggle", width = "full", arg = "removeOneTime", disabled = ns.preAchievements, order = 6, }
+ns.setRemoveSeasonal = { name = SubstitutePlayerOrElseAcct( "RWCQuestSeasonal", true ),
+					desc = SubstitutePlayerOrElseAcct( "RWCQuestSeasonalDesc", true ),
+					type = "toggle", width = "full", arg = "removeSeasonal", disabled = ns.preAchievements, order = 7, }
+ns.setRemoveAchieveChar = { name = SubstitutePlayerOrElseAcct( "RWCAchievements", true ),
+					desc = SubstitutePlayerOrElseAcct( "RWCAchievementsDesc", true ),
+					type = "toggle", width = "full", arg = "removeAchieveChar", disabled = ns.preAchievements, order = 8, }
+ns.setRemoveAchieveAcct = {
+					name = SubstitutePlayerOrElseAcct( "RWCAchievements" ),
+					desc = SubstitutePlayerOrElseAcct( "RWCAchievementsDescAcct" ),
+					type = "toggle", width = "full", arg = "removeAchieveAcct", disabled = ns.preAchievements, order = 9, }
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
+function ns.MakeSetChatCommands( chatCommands )
+
+	local commandStr = ns.L[ "ChatCommands" ]
+	for i, c in ipairs( chatCommands ) do
+		commandStr = commandStr ..NORMAL_FONT_COLOR_CODE ..c ..HIGHLIGHT_FONT_COLOR_CODE
+		if i < #chatCommands then
+			commandStr = commandStr ..", "
+		end
+	end
+	commandStr = commandStr ..ns.L[ "ShowPanel" ]
+	return { noteMenu = { type = "description", name = ns.L[ "MinimapMenu" ], order = 50, },
+				separator1 = { type = "header", name = "", order = 51, },
+				noteChat = { type = "description", name = commandStr, order = 52 }, }
 end

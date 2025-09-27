@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 325 $
+Revision: $Rev: 331 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 325 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 331 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -235,7 +235,7 @@ local COSMIC_MAP_ID = 946
 local THE_MAELSTROM_MAP_ID = 948
 local DRAENOR_MAP_ID = 572
 local BROKEN_ISLES_MAP_ID = 619
-
+local KHAZ_ALGAR_MAP_ID = 2274
 
 --------------------------------------------------------------------------------------------------------
 --                                            Localization                                            --
@@ -2015,25 +2015,36 @@ local MapIdLookupTable = {
     [2347] = "The Spiral Weave",
     [2348] = "Zekvir's Lair",
 	[2354] = "Silithus",
-    [2357] = "City of Echos",
-    [2358] = "City of Echos",
+    [2357] = "City of Echoes",
+    [2358] = "City of Echoes",
     [2359] = "The Dawnbreaker",
     [2362] = "Blackrock Depths",
     [2363] = "Blackrock Depths", 
 	[2367] = "Vault of Memory",
 	[2368] = "Hall of Awakening",
     [2369] = "Siren Isle",
+    [2371] = "K'aresh",
+    [2372] = "Arathi Highlands",
     [2373] = "The War Creche",
 	[2374] = "Undermine",
     [2375] = "The Forgotten Vault",
+    [2379] = "Ny'alotha, the Waking City",
+    [2381] = "Ny'alotha, the Waking City",
+    [2382] = "Ny'alotha, the Waking City",
+    [2383] = "Ny'alotha, the Waking City",
+    [2384] = "Ny'alotha, the Waking City",
 	[2387] = "Operation: Floodgate",
 	[2388] = "Operation: Floodgate",
 	[2396] = "Excavation Site 9",
+    [2398] = "K'aresh",
+    [2403] = "Vision of Orgrimmar",
+    [2404] = "Vision of Stormwind",
 	[2406] = "Undermine",
 	[2407] = "Undermine",
 	[2408] = "Undermine",
 	[2409] = "Undermine",
 	[2411] = "Undermine",
+	[2418] = "Scarlet Halls",
 	[2420] = "Sidestreet Sluice",
 	[2421] = "Sidestreet Sluice",
 	[2422] = "Sidestreet Sluice",
@@ -2042,6 +2053,28 @@ local MapIdLookupTable = {
 	[2426] = "Demolition Dome",
 	[2428] = "Undermine",
 	[2431] = "Minimap_RingingDeeps_Coreway",
+    [2447] = "Dastardly Dome",
+    [2449] = "Eco-Dome Al'dani",
+    [2452] = "Archival Assault",
+    [2453] = "Archival Assault",
+    [2454] = "Archival Assault",
+    [2455] = "Archival Assault",
+    [2460] = "Manaforge Omega",
+    [2461] = "Manaforge Omega",
+    [2462] = "Manaforge Omega",
+    [2463] = "Manaforge Omega",
+    [2464] = "Manaforge Omega",
+    [2465] = "Manaforge Omega",
+    [2466] = "Manaforge Omega",
+    [2467] = "Manaforge Omega",
+    [2468] = "Manaforge Omega",
+    [2469] = "Manaforge Omega",
+    [2470] = "Manaforge Omega",
+    [2471] = "Manaforge Omega",
+    [2472] = "Tazavesh",
+    [2476] = "Archival Assault",
+    [2477] = "Voidscar Cavern",
+    [2484] = "Voidrazor Sanctuary",
 }
 
 
@@ -2977,6 +3010,9 @@ local function AddDuplicatesToLocalizedLookup()
 	
 	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)
 	BZR[Tourist:GetUniqueZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Dalaran", BROKEN_ISLES_MAP_ID)
+	
+	BZ[Tourist:GetUniqueEnglishZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)] = Tourist:GetUniqueZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)
+	BZR[Tourist:GetUniqueZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)] = Tourist:GetUniqueEnglishZoneNameForLookup("Tazavesh, the Veiled Market", KHAZ_ALGAR_MAP_ID)
 end
 
 local function tablelength(T)
@@ -3328,6 +3364,11 @@ function Tourist:GetUniqueZoneNameForLookup(zoneName, continentMapID)
 			zoneName = BZ["Dalaran"].." ("..BZ["Broken Isles"]..")"
 		end
 	end
+	if continentMapID == KHAZ_ALGAR_MAP_ID then  -- Khaz Algar
+		if zoneName == BZ["Tazavesh, the Veiled Market"] or zoneName == "Tazavesh, the Veiled Market"  then
+			zoneName = BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"
+		end
+	end	
 	return zoneName
 end
 
@@ -3353,6 +3394,11 @@ function Tourist:GetUniqueEnglishZoneNameForLookup(zoneName, continentMapID)
 	if continentMapID == BROKEN_ISLES_MAP_ID then  -- Broken Isles
 		if zoneName == BZ["Dalaran"] or zoneName == "Dalaran" then
 			zoneName = "Dalaran (Broken Isles)"
+		end	
+	end
+	if continentMapID == KHAZ_ALGAR_MAP_ID then -- Khaz Algar
+		if zoneName == BZ["Tazavesh, the Veiled Market"] or zoneName == "Tazavesh, the Veiled Market" then
+			zoneName = "Tazavesh, the Veiled Market (Khaz Algar)"
 		end	
 	end
 	return zoneName
@@ -5203,8 +5249,16 @@ do
 	transports["SIRENISLE_RINGINGDEEPS_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["Siren Isle"], BZ["The Ringing Deeps"])
 
 	-- Undermine(d) (11.1.0)
-	transports["DORNOGAL_UNDERMINE_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dornogal"], BZ["Undermine"])
-	transports["UNDERMINE_DORNOGAL_PORTAL"] = string.format(X_Y_PORTAL, BZ["Undermine"], BZ["Dornogal"])
+	transports["DORNOGAL_UNDERMINE_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Dornogal"], BZ["Undermine"])
+	transports["UNDERMINE_DORNOGAL_TELEPORT"] = string.format(X_Y_TELEPORT, BZ["Undermine"], BZ["Dornogal"])
+	transports["RINGINGDEEPS_UNDERMINE_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["The Ringing Deeps"], BZ["Undermine"])
+	transports["UNDERMINE_RINGINGDEEPS_MOLEMACHINE"] = string.format(X_Y_MOLEMACHINE, BZ["Undermine"], BZ["The Ringing Deeps"])
+
+	-- K'aresh (11.2.0)
+	transports["DORNOGAL_TAZAVESH_PORTAL"] = string.format(X_Y_PORTAL, BZ["Dornogal"], BZ["Tazavesh"])
+	transports["TAZAVESH_DORNOGAL_PORTAL"] = string.format(X_Y_PORTAL, BZ["Tazavesh"], BZ["Dornogal"])
+	transports["KARESH_TAZAVESH_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["K'aresh"], BZ["Tazavesh"])
+	transports["TAZAVESH_KARESH_FLIGHTPATH"] = string.format(X_Y_FLIGHTPATH, BZ["Tazavesh"], BZ["K'aresh"])
 	
 	local zones = {}
 
@@ -7105,20 +7159,63 @@ do
 		type = "Portal",
 	}
 
-	zones[transports["DORNOGAL_UNDERMINE_PORTAL"]] = {
+	zones[transports["DORNOGAL_UNDERMINE_TELEPORT"]] = {
 		paths = {
 			[BZ["Undermine"]] = true,
 		},
 		type = "Portal",
 	}
 
-	zones[transports["UNDERMINE_DORNOGAL_PORTAL"]] = {
+	zones[transports["UNDERMINE_DORNOGAL_TELEPORT"]] = {
 		paths = {
 			[BZ["Dornogal"]] = true,
 		},
 		type = "Portal",
 	}	
 	
+	zones[transports["RINGINGDEEPS_UNDERMINE_MOLEMACHINE"]] = {
+		paths = {
+			[BZ["Undermine"]] = true,
+		},
+		type = "Portal",
+	}
+
+	zones[transports["UNDERMINE_RINGINGDEEPS_MOLEMACHINE"]] = {
+		paths = {
+			[BZ["The Ringing Deeps"]] = true,
+		},
+		type = "Portal",
+	}
+
+	zones[transports["DORNOGAL_TAZAVESH_PORTAL"]] = {
+		paths = {
+			[BZ["Tazavesh"]] = true,
+		},
+		type = "Portal",
+	}
+
+	zones[transports["TAZAVESH_DORNOGAL_PORTAL"]] = {
+		paths = {
+			[BZ["Dornogal"]] = true,
+		},
+		type = "Portal",
+	}
+	
+	zones[transports["KARESH_TAZAVESH_FLIGHTPATH"]] = {
+		paths = {
+			[BZ["Tazavesh"]] = true,
+		},
+		type = "Flightpath",
+	}
+	
+	zones[transports["TAZAVESH_KARESH_FLIGHTPATH"]] = {
+		paths = {
+			[BZ["K'aresh"]] = true,
+		},
+		type = "Flightpath",
+	}
+
+
 	
 	-- ZONES, INSTANCES AND COMPLEXES ---------------------------------------------------------
 
@@ -11213,8 +11310,13 @@ do
 			[transports["DORNOGAL_ORGRIMMAR_PORTAL"]] = true,
 			[transports["DORNOGAL_STORMWIND_PORTAL"]] = true,
 			[transports["DORNOGAL_SIRENISLE_ZEPPELIN"]] = true,
-			[transports["DORNOGAL_UNDERMINE_PORTAL"]] = true,
+			[transports["DORNOGAL_UNDERMINE_TELEPORT"]] = true,
+			[transports["DORNOGAL_TAZAVESH_PORTAL"]] = true,
 			[BZ["The Ringing Deeps"]] = true,
+			[BZ["The Rookery"]] = true,
+		},
+		instances = {
+			[BZ["The Rookery"]] = true,
 		},
 		flightnodes = {
 			[2928] = true,   -- Dornogal, Isle of Dorn (Neutral)
@@ -11238,7 +11340,6 @@ do
 		},
 		paths = {
 			[BZ["Dornogal"]] = true,
-			[BZ["The Rookery"]] = true,
 			[BZ["Cinderbrew Meadery"]] = true,
 			[BZ["Earthcrawl Mines"]] = true,
 			[BZ["Fungal Folly"]] = true,
@@ -11292,6 +11393,7 @@ do
 			[BZ["Operation: Floodgate"]] = true,
 			[BZ["Excavation Site 9"]] = true,
 			[transports["RINGINGDEEPS_SIRENISLE_MOLEMACHINE"]] = true,
+			[transports["RINGINGDEEPS_UNDERMINE_MOLEMACHINE"]] = true,
 		},
 		flightnodes = {
 			[2925] = true,   -- Opportunity Point, The Ringing Deeps (Neutral)
@@ -11347,7 +11449,7 @@ do
 		high = 80,
 		instances = {
 			[BZ["City of Threads"]] = true,
-			[BZ["City of Echos"]] = true,
+			[BZ["City of Echoes"]] = true,
 			[BZ["Nerub-ar Palace"]] = true,
 			[BZ["The Spiral Weave"]] = true,
 			[BZ["Tak-Rethan Abyss"]] = true,
@@ -11358,7 +11460,7 @@ do
 			[BZ["The Ringing Deeps"]] = true,
 			[BZ["Hallowfall"]] = true,
 			[BZ["City of Threads"]] = true,
-			[BZ["City of Echos"]] = true,
+			[BZ["City of Echoes"]] = true,
 			[BZ["Nerub-ar Palace"]] = true,
 			[BZ["The Spiral Weave"]] = true,
 			[BZ["Tak-Rethan Abyss"]] = true,
@@ -11383,7 +11485,7 @@ do
 		high = 80,
 		instances = {
 			[BZ["City of Threads"]] = true,
-			[BZ["City of Echos"]] = true,
+			[BZ["City of Echoes"]] = true,
 			[BZ["Nerub-ar Palace"]] = true,
 			[BZ["The Spiral Weave"]] = true,
 			[BZ["Tak-Rethan Abyss"]] = true,
@@ -11394,7 +11496,7 @@ do
 			[BZ["The Ringing Deeps"]] = true,
 			[BZ["Hallowfall"]] = true,
 			[BZ["City of Threads"]] = true,
-			[BZ["City of Echos"]] = true,
+			[BZ["City of Echoes"]] = true,
 			[BZ["Nerub-ar Palace"]] = true,
 			[BZ["The Spiral Weave"]] = true,
 			[BZ["Tak-Rethan Abyss"]] = true,
@@ -11434,13 +11536,16 @@ do
 	-- patch 11.1.0
 	-- 15347
 	zones[BZ["Undermine"]] = {
+		low = 80,
+		high = 80,
 		instances = {
 			[BZ["Sidestreet Sluice"]] = true,
 			[BZ["Demolition Dome"]] = true,
 			[BZ["Liberation of Undermine"]] = true,
 		},
 		paths = {
-			[transports["UNDERMINE_DORNOGAL_PORTAL"]] = true,
+			[transports["UNDERMINE_DORNOGAL_TELEPORT"]] = true,
+			[transports["UNDERMINE_RINGINGDEEPS_MOLEMACHINE"]] = true,
 			[BZ["Sidestreet Sluice"]] = true,
 			[BZ["Demolition Dome"]] = true,
 		},
@@ -11457,8 +11562,73 @@ do
 		expansion = TheWarWithin,
 	}
 	
+	
+	-- patch 11.2.0
+	-- 15336
+	zones[BZ["K'aresh"]] = {
+		low = 80,
+		high = 80,
+		instances = {
+			[BZ["Manaforge Omega"]] = true,
+			[BZ["Eco-Dome Al'dani"]] = true,
+			[BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"] = true,
+		},
+		paths = {
+			[transports["KARESH_TAZAVESH_FLIGHTPATH"]] = true,
+			[BZ["Voidscar Cavern"]] = true,
+			[BZ["Manaforge Omega"]] = true,
+			[BZ["Eco-Dome Al'dani"]] = true,
+		},
+		flightnodes = {
+			[3029] = true,   -- Tazavesh, K'aresh (Neutral)
+			[3030] = true,   -- Eco-Dome: Rhovan, K'aresh (Neutral)
+			[3031] = true,   -- The Oasis, K'aresh (Neutral)
+			[3032] = true,   -- Shan'dorah, K'aresh (Neutral)
+			[3033] = true,   -- Shadow Point, K'aresh (Neutral)
+			[3034] = true,   -- Overlook Zo'Shuul, K'aresh (Neutral)
+			[3035] = true,   -- Hosaas Rest, K'aresh (Neutral)
+		},
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+	}
 
-
+	-- 15781
+	zones[BZ["Tazavesh"]] = {
+		low = 80,
+		high = 80,
+		instances = {
+			[BZ["Eco-Dome Al'dani"]] = true,
+			[BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"] = true,
+		},
+		paths = {
+			[transports["TAZAVESH_DORNOGAL_PORTAL"]] = true,
+			[transports["TAZAVESH_KARESH_FLIGHTPATH"]] = true,
+			[BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"] = true,
+			[BZ["Eco-Dome Al'dani"]] = true,
+		},
+		flightnodes = {
+			[3029] = true,   -- Tazavesh, K'aresh (Neutral)
+		},
+		type = "City",
+		faction = "Sanctuary",
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+	}
+	
+	-- 16505
+	zones[BZ["Voidscar Cavern"]] = {
+		low = 80,
+		high = 80,
+		instances = {
+		},
+		paths = {
+			[BZ["K'aresh"]] = true,
+		},
+		flightnodes = {
+		},
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+	}
 
 
 	-- ============= DUNGEONS ===============
@@ -12727,20 +12897,7 @@ do
 		entrancePortal = GetSiegeOfBoralusEntrance(),
 	}
 	
-	-- Patch 8.1.5 raid
-	zones[BZ["Crucible of Storms"]] = {
-		low = 50,
-		high = 50,
-		continent = Kul_Tiras,
-		expansion = Battle_for_Azeroth,
-		paths = BZ["Stormsong Valley"],
-		groupSize = 10,
-		altGroupSize = 30,
-		type = "Instance",
-		entrancePortal = { BZ["Stormsong Valley"], 84.0, 46.4 }, 
-	}	
-	
-	
+
 	-- Patch 8.2.0 dungeon
 	-- Is called Operation: Mechagon but there's no map for this name in C_Map
 	zones[BZ["Mechagon"]] = {
@@ -12754,20 +12911,7 @@ do
 		--entrancePortal = { BZ["Mechagon Island"], 84.0, 46.4 }, TODO
 	}	
 	
-	
-	-- Patch 8.2.0 raid
-	zones[BZ["The Eternal Palace"]] = {
-		low = 50,
-		high = 50,
-		continent = Azeroth,
-		expansion = Battle_for_Azeroth,
-		paths = BZ["Nazjatar"],
-		groupSize = 10,
-		altGroupSize = 30,
-		type = "Instance",
-		entrancePortal = { BZ["Nazjatar"], 50.21, 10.97 },
-	}		
-	
+
 	
 	-- Horde
 
@@ -12831,46 +12975,7 @@ do
 	}
 
 
-	-- Patch 8.1 raids
-	zones[BZ["Battle of Dazar'alor"]] = {
-		low = 50,
-		high = 50,
-		continent = Zandalar,
-		expansion = Battle_for_Azeroth,
-		paths = BZ["Zuldazar"],
-		groupSize = 10,
-		altGroupSize = 30,
-		type = "Instance",
-		entrancePortal = { BZ["Zuldazar"], 54.3, 29.9 },
-	}
 
-	zones[BZ["Uldir"]] = {
-		low = 50,
-		high = 50,
-		continent = Zandalar,
-		expansion = Battle_for_Azeroth,
-		paths = BZ["Nazmir"],
-		groupSize = 10,
-		altGroupSize = 30,
-		type = "Instance",
-		entrancePortal = { BZ["Nazmir"], 53.9, 62.7 }, 
-	}
-
-	-- Patch 8.3 raid
-	-- The entrance of this raid can either be in Uldum or in the Vale of Eternal Blossoms, 
-	-- changing once a week.
-	-- Two entrances is not supported by the data structure of LibTourist unless a way can be found to detect the current location of the raid entrance.
-	zones[BZ["Ny'alotha"]] = {  -- a.k.a The Waking City
-		low = 50,
-		high = 50,
-		continent = Zandalar,
-		expansion = Battle_for_Azeroth,
-		paths = BZ["Uldum"],
-		groupSize = 10,
-		altGroupSize = 25,
-		type = "Instance",
-		entrancePortal = { BZ["Uldum"], 55, 43.6 },
-	}
 	
 	-- Shadowlands dungeons
 
@@ -12984,7 +13089,7 @@ do
 		},
 		groupSize = 5,
 		type = "Instance",
-		--entrancePortal = { BZ["Revendreth"], 0, 0 }, -- TODO
+		--entrancePortal = No entrance portal location, you have to take a flight path from Oribos
 	}
 
 
@@ -13208,7 +13313,7 @@ do
 
 	-- 15093
 	-- a.k.a. Ara-Kara
-	zones[BZ["City of Echos"]] = {
+	zones[BZ["City of Echoes"]] = {
 		low = 75,
 		high = 80,
 		continent = Khaz_Algar,
@@ -13231,7 +13336,30 @@ do
 		entrancePortal = { BZ["The Ringing Deeps"], 42.2, 39.6 },
 	}
 
+	-- 16104
+	zones[BZ["Eco-Dome Al'dani"]] = {
+		low = 80,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["Tazavesh"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Tazavesh"], 43.8, 5.4 },
+	}
 
+	-- This dungeon was updated and "relocated" from Shadowlands to K'aresh but the
+	-- original lvl 60 dungeon still exists in the Shadowlands, causing a duplicate name
+	zones[BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"] = {
+		low = 80,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["Tazavesh"],
+		groupSize = 5,
+		type = "Instance",
+		entrancePortal = { BZ["Tazavesh"], 36.2, 12.5 },
+	}
 
 	-- ==================RAIDS=====================
 	
@@ -13624,7 +13752,7 @@ do
 		groupSize = 10,
 		altGroupSize = 25,
 		type = "Instance",
-		entrancePortal = { BZ["The Veiled Stair"], 63.5, 32.2 }, 
+		entrancePortal = { BZ["Isle of Thunder"], 49.0, 46.0 }, 
 	}
 
 	zones[BZ["Siege of Orgrimmar"]] = {
@@ -13716,6 +13844,79 @@ do
 		entrancePortal = { BZ["Antoran Wastes"], 54.91, 62.41 },
 	}
 
+
+
+	-- Battle for Azeroth raids
+
+	zones[BZ["Uldir"]] = {
+		low = 50,
+		high = 50,
+		continent = Zandalar,
+		expansion = Battle_for_Azeroth,
+		paths = BZ["Nazmir"],
+		groupSize = 10,
+		altGroupSize = 30,
+		type = "Instance",
+		entrancePortal = { BZ["Nazmir"], 53.9, 62.7 }, 
+	}
+
+	zones[BZ["Battle of Dazar'alor"]] = {
+		low = 50,
+		high = 50,
+		continent = Zandalar,
+		expansion = Battle_for_Azeroth,
+		paths = BZ["Zuldazar"],
+		groupSize = 10,
+		altGroupSize = 30,
+		type = "Instance",
+		entrancePortal = { BZ["Zuldazar"], 54.3, 29.9 },
+	}
+
+	-- Patch 8.1.5 raid
+	zones[BZ["Crucible of Storms"]] = {
+		low = 50,
+		high = 50,
+		continent = Kul_Tiras,
+		expansion = Battle_for_Azeroth,
+		paths = BZ["Stormsong Valley"],
+		groupSize = 10,
+		altGroupSize = 30,
+		type = "Instance",
+		entrancePortal = { BZ["Stormsong Valley"], 84.0, 46.4 }, 
+	}	
+	
+	-- Patch 8.2.0 raid
+	zones[BZ["The Eternal Palace"]] = {
+		low = 50,
+		high = 50,
+		continent = Azeroth,
+		expansion = Battle_for_Azeroth,
+		paths = BZ["Nazjatar"],
+		groupSize = 10,
+		altGroupSize = 30,
+		type = "Instance",
+		entrancePortal = { BZ["Nazjatar"], 50.21, 10.97 },
+	}
+
+	-- Patch 8.3 raid
+	-- The entrance of this raid can either be in Uldum or in the Vale of Eternal Blossoms, 
+	-- changing once a week.
+	-- Two entrances is not supported by the data structure of LibTourist unless a way can be found to detect the current location of the raid entrance.
+	zones[BZ["Ny'alotha"]] = {  -- a.k.a The Waking City
+		low = 50,
+		high = 50,
+		continent = Zandalar,
+		expansion = Battle_for_Azeroth,
+		paths = BZ["Uldum"],
+		groupSize = 10,
+		altGroupSize = 25,
+		type = "Instance",
+		entrancePortal = { BZ["Uldum"], 55, 43.6 },
+	}
+
+
+
+
 	
 	-- Shadowlands raids
 	
@@ -13798,8 +13999,8 @@ do
 	}	
 	
 	
+
 	-- The War Within raids
-	
 	
 	-- 14980
 	zones[BZ["Nerub-ar Palace"]] = {
@@ -13814,7 +14015,7 @@ do
 		entrancePortal = { BZ["Azj-Kahet"], 45.1, 90.7 },
 	}	
 	
-	-- 14980
+	-- 15522
 	zones[BZ["Liberation of Undermine"]] = {
 		low = 80,
 		high = 80,
@@ -13826,6 +14027,21 @@ do
 		type = "Instance",
 		entrancePortal = { BZ["Undermine"], 41.8, 49.0 },
 	}		
+	
+	-- patch 11.2.0
+	-- 16178
+	zones[BZ["Manaforge Omega"]] = {
+		low = 80,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["K'aresh"],
+		groupMinSize = 10,
+		groupMaxSize = 30,
+		type = "Instance",
+		entrancePortal = { BZ["K'aresh"], 41.8, 21.0 },
+	}	
+	
 	
 	-- ==============BATTLEGROUNDS================
 
@@ -14627,4 +14843,5 @@ do
 
 	PLAYER_LEVEL_UP(Tourist)
 end
+
 

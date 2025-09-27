@@ -1,7 +1,7 @@
-## Interface: 110105
+## Interface: 110107
 ## Author: Voopie
 ## Title: Rune Helper [|cffff6a00Tazavesh, the Veiled Market|r]
-## Version: 1.47
+## Version: 1.48
 ## Notes: Helper to fight the boss Hylbrande in Tazavesh
 ## Category-enUS: Dungeons & Raids
 ## Category-deDE: Dungeons & Schlachtzüge

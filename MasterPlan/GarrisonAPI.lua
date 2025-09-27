@@ -731,27 +731,6 @@ do -- CompleteMissions/AbortCompleteMissions
 			curState, curStack, curRewards, curFollowers, curIndex, curCallback, delayMID, delayIndex = nil
 		end
 	end
-	local function isWastingCurrency(mi)
-		if mi.rewards then
-			mi.skipped = nil
-			for k,v in pairs(mi.rewards) do
-				if v.currencyID then
-					local rew, cur, tmax, _ = v.quantity * api.GetRewardMultiplier(mi, v.currencyID)
-					if v.currencyID > 0 then
-						local ci = C_CurrencyInfo.GetCurrencyInfo(v.currencyID)
-						cur, tmax = ci.quantity, ci.maxQuantity
-					else
-						cur, tmax = GetMoney(), 1e11-1
-					end
-					if tmax > 0 and (cur+rew-tmax) > rew * T.config.currencyWasteThreshold then
-						mi.skipped, curState, curIndex = true, "NEXT", curIndex + 1
-						completionStep("GARRISON_MISSION_NPC_OPENED", "IMMEDIATE")
-						return true
-					end
-				end
-			end
-		end
-	end
 
 	local function whineAboutUnexpectedState(msg, mid, suf)
 		local et = msg .. ": " .. tostring(mid) .. tostring(suf or "") .. " does not fit (" .. curIndex .. ";"
@@ -775,7 +754,7 @@ do -- CompleteMissions/AbortCompleteMissions
 			if not mi.completed then
 				curState, delayIndex, delayMID = "COMPLETE", curIndex, mi.missionID
 				delayOpen(... ~= "IMMEDIATE" and 0.2)
-			elseif not isWastingCurrency(mi) then
+			else
 				curState, delayIndex, delayMID = "BONUS", curIndex, mi.missionID
 				delayRoll(... ~= "IMMEDIATE" and 0.2)
 			end
@@ -793,7 +772,6 @@ do -- CompleteMissions/AbortCompleteMissions
 					securecall(curCallback, "STEP", curStack, curRewards, curFollowers, ok and "COMPLETE" or "FAIL", mi.missionID)
 				end
 				if ok then
-					if isWastingCurrency(mi) then return end
 					delayIndex, delayMID = curIndex, mi.missionID
 					delayRoll(0.2)
 				else

@@ -1,6 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
-
+local addonName, addon = ...
 
 local frame = CreateFrame("Frame")
 local timeElapsed = 0

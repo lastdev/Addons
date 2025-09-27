@@ -1,6 +1,6 @@
-## Interface: 110105
+## Interface: 110200, 110205
 ## Title: HandyNotes: DungeonLocations
-## Version: 2.8.1
+## Version: 2.8.8
 ## Notes: Shows locations of old and new world dungeon and raid entrances
 ## Notes-esES: Muestra las ubicaciones de las entradas de bandas y mazmorras del viejo y nuevo mundo.
 ## Notes-esMX: Muestra las ubicaciones de las entradas de bandas y mazmorras del viejo y nuevo mundo.

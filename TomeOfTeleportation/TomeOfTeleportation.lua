@@ -10,6 +10,33 @@
 
 local AddonName = "TomeOfTeleportation"
 local AddonTitle = "Tome of Teleportation"
+
+-- Simple localization function for Hearth category
+local function GetLocalizedHearthText()
+	local locale = GetLocale() or "enUS"
+	if locale == "zhCN" then
+		return "炉石"
+	elseif locale == "zhTW" then
+		return "爐石"
+	elseif locale == "deDE" then
+		return "Hearth" -- TODO: Add German translation
+	elseif locale == "frFR" then
+		return "Hearth" -- TODO: Add French translation
+	elseif locale == "esES" then
+		return "Hearth" -- TODO: Add Spanish translation
+	elseif locale == "ruRU" then
+		return "Hearth" -- TODO: Add Russian translation
+	elseif locale == "koKR" then
+		return "Hearth" -- TODO: Add Korean translation
+	elseif locale == "ptBR" then
+		return "Hearth" -- TODO: Add Portuguese (Brazil) translation
+	elseif locale == "itIT" then
+		return "Hearth" -- TODO: Add Italian translation
+	else
+		return "Hearth"
+	end
+end
+
 -- Special case strings start with number to force them to be sorted first.
 TeleporterHearthString = "0 Hearth"
 TeleporterRecallString = "1 Astral Recall"
@@ -138,6 +165,7 @@ local DefaultOptions =
 	["conciseDungeonSpells"] = 1,
 	["showSearch"] = 1,
 	["searchHidden"] = 1,
+	["tooltip"] = 1,
 }
 
 -- Themes. For now there aren't many of these. Message me on curseforge.com
@@ -505,6 +533,7 @@ local MenuIDCurrentDungeons		= 13
 local MenuIDGroupDungeons		= 14
 local MenuIDRandomHearth		= 15
 local MenuIDCloseAfterCast		= 16
+local MenuIDShowIcon			= 17
 
 local function InitTeleporterOptionsMenu(frame, level, menuList, topLevel)
 	if level == 1 or topLevel then
@@ -549,6 +578,24 @@ local function InitTeleporterOptionsMenu(frame, level, menuList, topLevel)
 		info.menuList = "Theme"
 		info.value = MenuIDTheme
 		info.checked = nil
+		UIDropDownMenu_AddButton(info, level)
+
+
+		info.text = "Show Minimap Icon"
+		info.value = MenuIDShowIcon
+		info.func = function(info)
+			TomeOfTele_IconGlobal.hide = not TomeOfTele_IconGlobal.hide
+			info.checked = not TomeOfTele_IconGlobal.hide
+			if TomeOfTele_IconGlobal.hide then
+				icon:Hide("TomeTeleGlobal")
+			else
+				icon:Show("TomeTeleGlobal")
+			end
+		end
+		info.owner = frame
+		info.checked = not TomeOfTele_IconGlobal.hide
+		info.hasArrow = false
+		info.menuList = nil
 		UIDropDownMenu_AddButton(info, level)
 
 		info.text = "Use Shared Settings"
@@ -752,9 +799,14 @@ local function SetupSpells()
 			spell.spellName = GetCachedItemInfo( spell.spellId )
 		else
 			if C_Spell and C_Spell.GetSpellInfo then
-				spell.spellName = C_Spell.GetSpellInfo( spell.spellId).name
+				local spellInfo = C_Spell.GetSpellInfo(spell.spellId)
+				if spellInfo then
+					spell.spellName = spellInfo.name
+				else
+					spell.spellName = "Unknown spell"
+				end
 			else
-				spell.spellName = GetSpellInfo( spell.spellId)
+				spell.spellName = GetSpellInfo(spell.spellId)
 			end
 		end
 
@@ -1078,10 +1130,18 @@ function TeleporterUpdateButton(button)
 			button.backdrop:SetBackdropColor(GetOption("readyColourR"), GetOption("readyColourG"), GetOption("readyColourB"), 1)
 
 			if toySpell then
-				button:SetAttribute(
-					"macrotext",
-					"/teleportercastspell " .. toySpell .. "\n" ..
-					"/cast " .. item .. "\n" )
+				if itemId == 140192 then
+					-- Work around for Dalaran Hearthstone using wrong item in some cases.
+					button:SetAttribute(
+						"macrotext",
+						"/teleportercastspell " .. toySpell .. "\n"  ..
+						"/use item:" .. itemId.. "\n" )
+				else
+					button:SetAttribute(
+						"macrotext",
+						"/teleportercastspell " .. toySpell .. "\n"  ..
+						"/cast " .. item .. "\n" )
+				end
 			elseif settings.isPet then
 				local _, petGuid = C_PetJournal.FindPetIDByName(item)
 				button:SetAttribute(
@@ -1456,6 +1516,10 @@ local function CreateMainFrame()
 	local titleHeight = GetScaledOption("titleHeight")
 	local buttonInset = GetOption("buttonInset")
 
+	if GetOption("titleFont") == "" then
+		SetOption("titleFont", nil)
+	end
+
 	TeleporterParentFrame:ClearAllPoints()
 	local points = GetOption("points")
 	if points then
@@ -1587,9 +1651,9 @@ local function FindValidSpells()
 		if zone == TeleporterHearthString or zone == TeleporterRecallString then
 			local bindLocation = GetBindLocation()
 			if bindLocation then
-				spell.displayDestination = "Hearth (" .. bindLocation .. ")"
+				spell.displayDestination = GetLocalizedHearthText() .. " (" .. bindLocation .. ")"
 			else
-				spell.displayDestination = "Hearth"
+				spell.displayDestination = GetLocalizedHearthText()
 			end
 		end
 
@@ -1608,7 +1672,12 @@ local function FindValidSpells()
 			end
 		else
 			if C_Spell and C_Spell.GetSpellInfo then
-				spell.itemTexture = C_Spell.GetSpellInfo(spellId).iconID
+				local spellInfo = C_Spell.GetSpellInfo(spell.spellId)
+				if spellInfo then
+					spell.itemTexture = spellInfo.iconID
+				else
+					spell.itemTexture = nil
+				end
 			else
 				_,_,spell.itemTexture = GetSpellInfo( spellId )
 			end
@@ -1673,7 +1742,7 @@ function TeleporterOpenFrame(isSearching)
 			ChosenHearth = nil
 		end
 
-		if TeleporterParentFrame == nil then
+		if TeleporterParentFrame == nil or TeleporterCloseButton == nil then
 			CreateMainFrame()
 		end
 
@@ -1696,10 +1765,14 @@ function TeleporterOpenFrame(isSearching)
 				GetOption("backgroundA"))
 
 		-- UI scale may have changed, resize
-		TeleporterCloseButton:SetWidth( buttonHeight )
-		TeleporterCloseButton:SetHeight( buttonHeight )
-		TeleporterCloseButtonText:SetFont(fontFile, fontHeight, fontFlags)
-		TeleporterSearchBox:SetHeight(buttonHeight)
+		if TeleporterCloseButton then
+			TeleporterCloseButton:SetWidth( buttonHeight )
+			TeleporterCloseButton:SetHeight( buttonHeight )
+			TeleporterCloseButtonText:SetFont(fontFile, fontHeight, fontFlags)
+		end
+		if TeleporterSearchBox then
+			TeleporterSearchBox:SetHeight(buttonHeight)
+		end
 
 		if TeleporterHelpString then
 			TeleporterHelpString:SetFont(fontFile, fontHeight, fontFlags)
@@ -1825,25 +1898,37 @@ function TeleporterOpenFrame(isSearching)
 				buttonFrame:SetAttribute("type", "macro")
 				buttonFrame:Show()
 
-				if isItem then
+				if GetOption("tooltip") then
+					if isItem then
+						buttonFrame:SetScript(
+							"OnEnter",
+							function()
+								TeleporterShowItemTooltip( spellId, buttonFrame )
+							end )
+					else
+						buttonFrame:SetScript(
+							"OnEnter",
+							function()
+								TeleporterShowSpellTooltip( spellName, buttonFrame )
+							end )
+					end
+
 					buttonFrame:SetScript(
-						"OnEnter",
+						"OnLeave",
 						function()
-							TeleporterShowItemTooltip( spellId, buttonFrame )
+							GameTooltip:Hide()
 						end )
 				else
 					buttonFrame:SetScript(
 						"OnEnter",
 						function()
-							TeleporterShowSpellTooltip( spellName, buttonFrame )
+						end )
+
+					buttonFrame:SetScript(
+						"OnLeave",
+						function()
 						end )
 				end
-
-				buttonFrame:SetScript(
-					"OnLeave",
-					function()
-						GameTooltip:Hide()
-					end )
 
 				-- Icon
 				local iconOffsetX = 6 * GetScale()

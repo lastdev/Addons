@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("ZuldazarRaidTrash", "DBM-Raids-BfA", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230618060944")
+mod:SetRevision("20250719034113")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
+mod:SetZone(2070)
 
 mod:RegisterEvents(
 --	"SPELL_CAST_START",

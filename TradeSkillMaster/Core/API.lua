@@ -389,25 +389,6 @@ function TSM_API.GetBankQuantity(itemString, character, factionrealm)
 	end
 end
 
---- Gets the quantity of an item in a character's reagent bank.
--- @within Inventory
--- @tparam string itemString The TSM item string (inventory is tracked by either levelItemString or baseItemString)
--- @tparam ?string character The character to get data for (defaults to the current character if not set)
--- @tparam ?string factionrealm The factionrealm to get data for (defaults to the current factionrealm if not set)
--- @treturn number The quantity of the specified item
-function TSM_API.GetReagentBankQuantity(itemString, character, factionrealm)
-	private.CheckCallMethod(itemString)
-	itemString = private.ValidateTSMItemString(itemString)
-	assert(character == nil or type(character) == "string")
-	assert(factionrealm == nil or type(factionrealm) == "string")
-	if not character then
-		assert(not factionrealm)
-		return BagTracking.GetReagentBankQuantity(itemString)
-	else
-		return AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
-	end
-end
-
 --- Gets the quantity of an item posted to the auction house by a character.
 -- @within Inventory
 -- @tparam string itemString The TSM item string (inventory is tracked by either levelItemString or baseItemString)
@@ -475,8 +456,8 @@ end
 --- Get some total quantities for an item.
 -- @within Inventory
 -- @tparam string itemString The TSM item string (inventory is tracked by either levelItemString baseItemString)
--- @treturn number The total quantity the current player has (bags, bank, reagent bank, and mail)
--- @treturn number The total quantity alt characters have (bags, bank, reagent bank, and mail)
+-- @treturn number The total quantity the current player has (bags, bank, mail)
+-- @treturn number The total quantity alt characters have (bags, bank, mail)
 -- @treturn number The total quantity the current player has on the auction house
 -- @treturn number The total quantity alt characters have on the auction house
 function TSM_API.GetPlayerTotals(itemString)
@@ -485,14 +466,12 @@ function TSM_API.GetPlayerTotals(itemString)
 	local numPlayer, numAlts, numAuctions, numAltAuctions = 0, 0, 0, 0
 	numPlayer = numPlayer + BagTracking.GetBagQuantity(itemString)
 	numPlayer = numPlayer + BagTracking.GetBankQuantity(itemString)
-	numPlayer = numPlayer + BagTracking.GetReagentBankQuantity(itemString)
 	numPlayer = numPlayer + Mail.GetQuantity(itemString)
 	numAuctions = numAuctions + Auction.GetQuantity(itemString)
 	for _, factionrealm in private.settingsDB:AccessibleRealmIterator("factionrealm", not private.settings.regionWide) do
 		for _, character in private.settingsDB:AccessibleCharacterIterator(nil, factionrealm, true) do
 			numAlts = numAlts + AltTracking.GetBagQuantity(itemString, character, factionrealm)
 			numAlts = numAlts + AltTracking.GetBankQuantity(itemString, character, factionrealm)
-			numAlts = numAlts + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
 			numAlts = numAlts + AltTracking.GetMailQuantity(itemString, character, factionrealm)
 			numAltAuctions = numAltAuctions + AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
 		end

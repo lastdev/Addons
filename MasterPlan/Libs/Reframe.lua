@@ -91,7 +91,9 @@ local CreateLazyItemButton do
 				end
 			end
 		end
-		if generic then
+		if generic and self.isToy then
+			GameTooltip:SetToyByItemID(iid)
+		elseif generic then
 			GameTooltip:SetItemByID(iid)
 		end
 		GameTooltip:Show()

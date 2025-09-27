@@ -28,12 +28,12 @@ local categoryEnum = {
 
 -- Item category data
 local categoryDataTab = {
-	[categoryEnum.Explorer] = {minLevel = 597, color = ITEM_POOR_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier1:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:1:31:73:107|t "},
-	[categoryEnum.Adventurer] = {minLevel = 610, color = WHITE_FONT_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier2:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:1:47:1:35|t "},
-	[categoryEnum.Veteran] = {minLevel = 623, color = UNCOMMON_GREEN_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier3:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:49:85:1:35|t "},
-	[categoryEnum.Champion] = {minLevel = 636, color = RARE_BLUE_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier4:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:87:121:1:35|t "},
-	[categoryEnum.Hero] = {minLevel = 649, color = ITEM_EPIC_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier5:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:1:35:37:71|t "},
-	[categoryEnum.Myth] = {minLevel = 662, color = ITEM_LEGENDARY_COLOR, icon = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons:%d:%d:0:0:128:128:86:122:42:78|t ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons:%d:%d:0:0:128:128:42:78:42:78|t "}, -- Thanks to Peterodox for supplying this new texture!
+	[categoryEnum.Explorer] = {minLevel = 642, color = ITEM_POOR_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier1:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:1:31:73:107|t "},
+	[categoryEnum.Adventurer] = {minLevel = 655, color = WHITE_FONT_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier2:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:1:47:1:35|t "},
+	[categoryEnum.Veteran] = {minLevel = 668, color = UNCOMMON_GREEN_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier3:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:49:85:1:35|t "},
+	[categoryEnum.Champion] = {minLevel = 681, color = RARE_BLUE_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier4:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:87:121:1:35|t "},
+	[categoryEnum.Hero] = {minLevel = 694, color = ITEM_EPIC_COLOR, icon = "|A:Professions-ChatIcon-Quality-Tier5:%d:%d|a ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons.tga:%d:%d:0:0:128:128:1:35:37:71|t "},
+	[categoryEnum.Myth] = {minLevel = 707, color = ITEM_LEGENDARY_COLOR, icon = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons:%d:%d:0:0:128:128:86:122:42:78|t ", iconObsolete = "|TInterface\\AddOns\\ItemUpgradeQualityIcons\\ProfessionsQualityIcons:%d:%d:0:0:128:128:42:78:42:78|t "}, -- Thanks to Peterodox for supplying this new texture!
 	[categoryEnum.Awakened] = {minLevel = 493, color = ITEM_LEGENDARY_COLOR, icon = "|A:ui-ej-icon-empoweredraid-large:%d:%d|a ", iconObsolete = "|A:ui-ej-icon-empoweredraid-large:%d:%d|a "}, -- update later maybe, for now this is OLD
 }
 
@@ -216,22 +216,18 @@ local function UpdateContainerFrame(containerFrame)
 	end
 end
 
--- Update a warbank frame
-local function UpdateWarbankFrame(warbankFrame)
-	if not warbankFrame then return end
-
-	-- Of course EnumerateValidItems works differently on the warbank because why not
-	for itemButton in warbankFrame:EnumerateValidItems() do
-		local itemLink = C_Container.GetContainerItemLink(itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
-		UpdateIcon(itemButton, itemLink)
-	end
+local function UpdateBankSlot(itemButton)
+	local itemLink = C_Container.GetContainerItemLink(itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
+	UpdateIcon(itemButton, itemLink)
 end
 
 -- Update equipment flyout frame (the buttons showing when Alt-hovering a gear slot)
 local function UpdateEquipmentFlyoutFrames(self)
 	for _, iconButton in ipairs(self.buttons) do
+		if not iconButton or not iconButton.location then return end
 		-- Retrieve the link from the bag slot or inventory slot (depending on item location)
 		local itemLocation = iconButton.location
+		if type(itemLocation) == "table" then return end
 		local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(itemLocation)
 		local itemLink;
 		if bags then
@@ -263,8 +259,6 @@ EventRegistry:RegisterFrameEventAndCallback("PLAYER_ENTERING_WORLD", function(_,
 	EventRegistry:RegisterFrameEventAndCallback("BAG_UPDATE", function(_, bagIndex)
 		if bagIndex < 13 then
 			UpdateContainerFrame(ContainerFrameUtil_GetShownFrameForID(bagIndex))
-		else
-			UpdateWarbankFrame(AccountBankPanel)
 		end
 	end)
 end)
@@ -291,26 +285,8 @@ EventRegistry:RegisterCallback("ContainerFrame.OpenBag", function()
 	end
 end)
 
--- Update bank slots when bank frame is opened
-EventRegistry:RegisterFrameEventAndCallback("BANKFRAME_OPENED", function()
-	UpdateContainerFrame(BankFrame)
-end)
-
--- Update bank slots when they change
-EventRegistry:RegisterFrameEventAndCallback("PLAYERBANKSLOTS_CHANGED", function(_, slotIndex)
-	if slotIndex > 28 then return end -- Bags changed, not an item slot
-
-	local bankItemButton = _G["BankFrameItem" .. slotIndex];
-	if bankItemButton then
-		local itemLink = C_Container.GetContainerItemLink(bankItemButton:GetBagID(), bankItemButton:GetID())
-		UpdateIcon(bankItemButton, itemLink)
-	end
-end)
-
--- Update warbank when tab is opened
-AccountBankPanel:HookScript("OnShow", function(self) UpdateWarbankFrame(self) end)
--- Update warbank when tab is changed
-hooksecurefunc(AccountBankPanel, "SelectTab", function(self) UpdateWarbankFrame(self) end)
+-- Update bank slot when it is refreshed
+hooksecurefunc(BankPanelItemButtonMixin, "Refresh", function(self) UpdateBankSlot(self) end)
 
 -- Update loot frame when opened
 EventRegistry:RegisterFrameEventAndCallback("LOOT_OPENED", function()

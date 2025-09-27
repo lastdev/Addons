@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(2335, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426182205")
+mod:SetRevision("20250719034113")
 mod:SetCreatureID(145616)--145644 Bwonsamdi
 mod:SetEncounterID(2272)
 mod:SetHotfixNoticeRev(18336)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
+mod:SetZone(2070)
 
 mod:RegisterCombat("combat")
 

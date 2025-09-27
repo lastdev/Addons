@@ -204,7 +204,6 @@ function private.RestockItem(itemString)
 		if ignored then
 			haveQuantity = haveQuantity - AltTracking.GetBagQuantity(itemString, player)
 			haveQuantity = haveQuantity - AltTracking.GetBankQuantity(itemString, player)
-			haveQuantity = haveQuantity - AltTracking.GetReagentBankQuantity(itemString, player)
 			haveQuantity = haveQuantity - AltTracking.GetAuctionQuantity(itemString, player)
 			haveQuantity = haveQuantity - AltTracking.GetMailQuantity(itemString, player)
 		end

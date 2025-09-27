@@ -1,5 +1,45 @@
 # Changelog
 
+## Changes in v43
+
+* Updated for 11.1.7
+
+## Changes in v42
+
+* Updated for 11.1.5
+
+## Changes in v41
+
+* Updated for 11.1.0
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within)
+
+## Changes in v40
+
+* Show where using the Adept's Guide to Dimensional Rifting will take you each day
+
+## Changes in v39
+
+* A few minor Suramar data improvements
+* Don't error when drawing an impossibly short route segment on the minimap, as could happen with some grapple points
+
+## Changes in v38
+
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * You can click on points to highlight them and their related points and routes
+    * Better pre-caching of data so that the first time you open the map it's less likely to be missing transmog information
+    * Lootless NPCs will no longer show with the only-transmog-available color
+    * Tightened up the wording of the right-click menu
+    * Fixed a bug when mousing over some of the Blizzard provided world map vignettes that I'm adding loot to
+
+## Changes in v37
+
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Redesign of the settings and menus
+    * Filters for rares and treasure so you can choose to show only "notable" ones, which you can configure
+    * Color the rare icons to show whether they've got any of those notable things on them -- purple for unknown transmog, blue for more exclusive things
+    * Setting for whether to track transmog by shared appearance, or from the specific item (the previous behavior)
+    * Support for MapPinEnhanced when setting waypoints
+
 ## Changes in v36
 
 Consolidate data from my other Legion-related HandyNotes plugins to here:

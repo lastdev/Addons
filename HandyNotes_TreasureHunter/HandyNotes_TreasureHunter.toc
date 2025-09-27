@@ -1,0 +1,32 @@
+## Interface: 110200
+## Title: HandyNotes: Warlords of Draenor (Treasure Hunter + Rares)
+## Notes: Where the Treasure Hunter objects and rares are in Draenor
+## Author: Kemayo
+## Version: v41
+## IconTexture: Interface\Icons\Ability_Spy
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 86342
+## X-Wago-ID: WqKQrEGx
+## SavedVariables: HandyNotes_TreasureHunterDB
+## RequiredDeps: HandyNotes
+
+handler\handler.xml
+
+treasurehunter.lua
+
+zones\Draenor.lua
+zones\Ashran.lua
+zones\FrostfireRidge.lua
+zones\Gorgrond.lua
+zones\Nagrand.lua
+zones\ShadowmoonValley.lua
+zones\SpiresOfArak.lua
+zones\Talador.lua
+zones\TanaanJungle.lua
+
+features\Garrisons.lua
+features\Mounts.lua
+features\Pepe.lua
+features\EverShiftingMirror.lua

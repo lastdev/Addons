@@ -1,6 +1,52 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.5215
+* Added Ethereal Augment Rune support
+* Data updates
+* Fixes
+
+v.5210
+* Data updates
+
+v.5210-MoP
+* Fixes
+
+v.5205
+* Data updates
+
+v.5205-MoP
+* Fixes
+
+v.5200
+* 11.2 update
+
+v.5200-MoP
+* Readded "Bonus Loot" module
+
+v.5195
+* Minor updates
+
+v.5195-MoP
+* Raid Check: updated MoP raid buffs
+
+v.5190
+* Fixes
+
+v.5190-MoP
+* Fixes
+* MoP updates
+
+v.5181
+* Pull timer fix
+
+v.5180
+* Fixes
+* 11.1.7 update
+
+v.5180-MoP
+* 5.5.0 Update
+
 v.5160
 * 11.1.5 update
 

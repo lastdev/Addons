@@ -1,8 +1,9 @@
-## Interface: 110002, 110000
+## Interface: 110107
 ## Title: HandyNotes: Legion Treasures and Rares
 ## Notes: Where are the hidden treasures in Legion?
 ## Author: Kemayo
-## Version: v36
+## Version: v43
+## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -10,9 +11,6 @@
 ## X-Wago-ID: 0mKOnY6x
 ## SavedVariables: HandyNotes_LegionTreasuresDB
 ## RequiredDeps: HandyNotes
-## OptionalDeps: !LibUIDropDownMenu
-
-lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 handler\handler.xml
 
@@ -37,4 +35,4 @@ zones\Mardum.lua
 achievements\AnomalousAnimals.lua
 
 shared\Kosumoth.lua
-
+shared\DimensionalRifting.lua

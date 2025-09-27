@@ -115,7 +115,8 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2439)
 
 L:SetMiscLocalization({
-	Fragment		= "Фрагмент "--Пробел специально. Оставить пробел, чтобы добавить после него цифру
+	Fragment		= "Фрагмент ",--Пробел специально. Оставить пробел, чтобы добавить после него цифру
+	PrePull			= "А-а-а!"
 })
 
 ---------------------------
@@ -162,7 +163,11 @@ L:SetMiscLocalization({
 ---------------------------
 --  Sylvanas Windrunner --
 ---------------------------
---L= DBM:GetModLocalization(2441)
+L= DBM:GetModLocalization(2441)
+
+L:SetMiscLocalization({
+	PrePull	= "Герои Азерота. Вы наконец-то здесь."
+})
 
 -------------
 --  Trash  --

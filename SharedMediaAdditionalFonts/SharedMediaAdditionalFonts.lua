@@ -60,5 +60,6 @@ SharedMediaAdditionalFonts:Register("font", "Ubuntu Condensed", [[Interface\Addo
 SharedMediaAdditionalFonts:Register("font", "Ubuntu Light", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Ubuntu-L.ttf]])
 -- Should be "Waltograph UI, Bold", but has historically bee named this way.
 SharedMediaAdditionalFonts:Register("font", "Waltograph UI", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\waltographUI.ttf]])
+SharedMediaAdditionalFonts:Register("font", "Verdana", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\Verdana.ttf]])
 SharedMediaAdditionalFonts:Register("font", "X360", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\X360.ttf]])
 SharedMediaAdditionalFonts:Register("font", "Yanone Kaffeesatz Regular", [[Interface\Addons\SharedMediaAdditionalFonts\fonts\YanoneKaffeesatz-Regular.ttf]])

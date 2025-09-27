@@ -384,17 +384,16 @@ SI.defaultDB = {
     Currency3028 = true, -- Restored Coffer Key
     Currency3056 = true, -- Kej
     Currency3008 = true, -- Valorstones
-    Currency3090 = true, -- Flame-Blessed Iron
-    Currency3218 = true, -- Empty Kaja'Cola Can
-    Currency3220 = true, -- Vintage Kaja'Cola Can
-    Currency3226 = true, -- Market Research
-    Currency3116 = true, -- Essence of Kaja'mite
-    Currency3107 = true, -- Weathered Undermine Crest
-    Currency3108 = true, -- Carved Undermine Crest
-    Currency3109 = true, -- Runed Undermine Crest
-    Currency3110 = true, -- Gilded Undermine Crest
-    Currency3132 = true, -- 11.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
-    Currency3216 = true, -- Bounty's Remnants
+    Currency3149 = true, -- Displaced Corrupted Mementos
+    Currency3278 = true, -- Ethereal Strands
+    Currency3303 = true, -- Untethered Coin
+    Currency3356 = true, -- Untainted Mana-Crystals
+    Currency3269 = true, -- Ethereal Voidsplinter
+    Currency3284 = true, -- Weathered Ethereal Crest
+    Currency3286 = true, -- Carved Ethereal Crest
+    Currency3288 = true, -- Runed Ethereal Crest
+    Currency3290 = true, -- Gilded Ethereal Crest
+    Currency3141 = true, -- Starlight Spark Dust
     CurrencyMax = false,
     CurrencyEarned = true,
     CurrencySortName = false,
@@ -1311,6 +1310,7 @@ function SI:UpdateToonData()
           or id == 1971 -- Random Timewalking Dungeon (Warlords of Draenor)
           or id == 2274 -- Random Timewalking Dungeon (Legion)
           or id == 2634 -- Random Timewalking Dungeon (Classic)
+          or id == 2874 -- Random Timewalking Dungeon (Battle for Azeroth)
           or id == 2714 -- The Codex of Chromie
         )
       then -- donetoday flag is falsely set for some level/dungeon combos where no daily incentive is available
@@ -2513,7 +2513,7 @@ end
 function SI:OnInitialize()
   local versionString = C_AddOns.GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "11.1.3" then
+  if versionString == "11.2.1" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -2911,6 +2911,9 @@ SI.histLimit = 10 -- instances per hour
 function SI:histZoneKey()
   local instname, insttype, diff, diffname, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo()
   if insttype == nil or insttype == "none" or insttype == "arena" or insttype == "pvp" then -- pvp doesnt count
+    return nil
+  end
+  if diff == 208 then -- delves dont count
     return nil
   end
   if (IsInLFGDungeon() or IsInScenarioGroup()) and diff ~= 19 and diff ~= 17 then -- LFG instances don't count, but Holiday Events and LFR both count

@@ -1,5 +1,43 @@
 # Changelog
 
+## Changed in v13
+
+* Updated for 11.2.0, 3.4.5
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Fix creating waypoints for all related points from the right-click menu. Thanks to Taurenkey for this!
+
+## Changed in v12
+
+* Fixed mobs not showing in Mists Classic
+* Azuremyst: update Blood Elf Bandit coords
+
+## Changed in v11
+
+* Updated for 11.1.7, 5.5.0, 3.4.4
+
+## Changed in v10
+
+* Updated for 11.1.5
+
+## Changed in v9
+
+* Updated for 11.1.0, 4.4.2
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within)
+
+## Changed in v8
+
+* Updated for 11.0.5, 4.4.1
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within)
+
+## Changed in v7
+
+* Bring in systems improvements from [my War Within plugin](https://www.curseforge.com/wow/addons/handynotes-war-within), notably:
+    * Redesign of the settings and menus
+    * Filters for rares and treasure so you can choose to show only "notable" ones, which you can configure
+    * Color the rare icons to show whether they've got any of those notable things on them -- purple for unknown transmog, blue for more exclusive things
+    * Setting for whether to track transmog by shared appearance, or from the specific item (the previous behavior)
+    * Support for MapPinEnhanced when setting waypoints
+
 ## Changed in v6
 
 * Update for 11.0.0 / 4.4.0

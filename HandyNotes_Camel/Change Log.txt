@@ -1,3 +1,13 @@
+== v2.12 - 26th September 2025
+* TOC update to 5.5.1
+
+== v2.11 - 2nd August 2025
+* TOC update to 11.2.0
+
+== v2.10 - 18th June 2025
+* TOC update to 11.1.7
+* Classic Mists 5.5.0 added!
+
 == v2.09 - 20th April 2025
 * TOC update to 11.1.5
 

@@ -1,6 +1,7 @@
 ## X-Flavor: era
-## Interface: 11506, 11507
-## Version: 1.6.8
+## X-Expansion: VANILLA
+## Interface: 11507
+## Version: 1.7.5
 
 ## Title: Plumber
 
@@ -18,6 +19,7 @@ Locales\Localization.xml
 API.lua
 
 Modules\SharedData.lua
+Modules\SharedFonts.xml
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
 Modules\BlizzardEditMode.lua

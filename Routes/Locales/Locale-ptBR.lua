@@ -7,7 +7,7 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("Routes", "ptBR")
 if not L then return end
 
-L[" Data"] = "Dados"
+L[" Data"] = "Dados "
 L[" Gatherer/HandyNotes currently does not support callbacks, so this is impossible for Gatherer/HandyNotes."] = "Gatherer/HandyNotes não suportam \"callbacks\", então é impossivel para Gatherer/HandyNotes."
 L["%s - Node %d"] = "%s - Nodo %d"
 L["A route with that name already exists. Overwrite?"] = "Já existe uma rota com esse nome. Sobrescrever?"

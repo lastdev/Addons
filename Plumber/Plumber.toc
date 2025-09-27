@@ -1,6 +1,7 @@
 ## X-Flavor: retail
-## Interface: 110100, 110105
-## Version: 1.6.8
+## X-Expansion: TWW
+## Interface: 110200, 110205
+## Version: 1.7.5
 
 ## Title: Plumber
 
@@ -19,12 +20,15 @@ Locales\Localization.xml
 API.lua
 
 Modules\SharedData.lua
+Modules\SharedFonts.xml
 Modules\SharedWidgets.xml
 Modules\SharedTooltip.lua
 Modules\BlizzardEditMode.lua
-#Modules\DevTool.lua
+Modules\ScenarioTracker.lua
 #Modules\DirectionArrow.lua
 #Modules\SuperTrack.xml
+
+#Modules\DevTool.lua
 
 ControlCenter.lua
 
@@ -46,10 +50,13 @@ Modules\BlizzFix_EventToast.lua
 Modules\TalkingHead.lua
 Modules\AzerothianArchives.lua
 Modules\MerchantPrice.lua
+Modules\BossBanner.lua
+Modules\SoftTargetName.lua
 
 #TWW
 Modules\DelvesScenario.lua
 Modules\DelvesDashboard.lua
+Modules\DelvesAutomation.lua
 Modules\ExpansionLandingPage.xml
 Modules\LandingPageSwitch.lua
 Modules\GameTooltipExtension.xml
@@ -61,9 +68,12 @@ Modules\NameplateResources.lua
 Modules\StaticPopupEnhancement.xml
 Modules\PlayerTitleUI.lua
 Modules\BlizzardSuperTrack.lua
-Modules\EquipmentFlyout.xml
+Modules\ItemUpgradeUI.xml
 Modules\Macros.lua
 Modules\ProfessionsBook.lua
+Modules\ExpansionLandingPage\ExpansionLandingPage_TWW.xml
+Modules\BlizzFix_ModelLoading.lua
+#Modules\Timerunning\LegionRemix.xml
 
 #Modules\DruidModelFix.lua
 #Modules\MovieSubtitle.lua
@@ -75,3 +85,4 @@ Modules\ProfessionsBook.lua
 #Modules\Navigator_Dreamseed.lua
 #Modules\AccountStore.lua
 #Modules\MinimapMouseover.lua
+#Modules\ObjectiveTrackerModule.xml

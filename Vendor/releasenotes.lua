@@ -2,6 +2,215 @@ local _, Addon = ...
 
 Addon.ReleaseNotes = {
 {
+Release = "6.9.4 (Aug 06, 2025)",
+Notes = [[
+# Speculative fix for a reported crash / lockup
+* There was a reported lockup related to this addon, this is a speculative fix by reverting equipment set lookup changes.
+* This means IsInEquipmentSet() may give false positives for same item-id matches, but that is better than a crash or risking
+a false negative.
+* IsInEquipmentSet update will be revisited and release again at a later time. The new method has issues due to unreliable Blizzard
+behavior.
+]]
+},
+{
+Release = "6.9.3 (Aug 05, 2025)",
+Notes = [[
+# Fix race condition in first time load of equipment set data.
+* There were conditions where when logging into the game equipment set data would not be populated at the time the addon populates.
+* Added a delay load to the equipmentset data with some redundancy checking to address this.
+]]
+},
+{
+Release = "6.9.2 (Aug 04, 2025)",
+Notes = [[
+# Improvements for HasProfession() and IsInEquipmentSet()
+* Improved performance of HasProfession(), this is now a very efficient check.
+
+* Improved performance and accuracy of IsInEquipmentSet(). This now matches by item guid so will be the exact items in your set
+and no longer give false positives for same-itemid items. It still supports querying EquipmentSet by name, ex: IsInEquipmentSet("Gallywix")
+will only match items in the "Gallyix" named equipment set, while IsInEquipmentSet() will match any set. You can also put multiple names in,
+such as IsInEquipmentSet("Raid-Tank", "M+ Tank", "Solo tank") - that will return true for items in any of those sets. The name is what you
+named the Equipment set.
+
+* Added IsInEquipmentSet() function to Classic Mists, and also enabled the equipment set keep rule for Mists Classic.
+
+* Buyback protection will no longer buy back immediately on opening a merchant.
+* The most recent buyback item at the merchant will be immune from buyback protection. This is becuase we assume that this
+item may have been intentionally sold in a previous merchant session via suppressed merchant or toggled-off protection,
+therefore we will treat it as if it were intentionally sold and not buy it back.
+
+]]
+},
+{
+Release = "6.9.0 (Aug 03, 2025)",
+Notes = [[
+# Extension Support and general addon health update
+Extensions have been updated and some new ones added!
+* Auctionator (new!) - With support for auction value, profit over vendoring, and auction:vendor ratio. There are 3 auctionator functions added and 1 keep rule.
+* TradeSkillMaster  - Fixed its keep rule. It has been broken for some time but it is now fixed.
+
+# Protection feature merchant suppression
+It's common to want to sell items that match a keep rule and toggling protection can be annoying if you want to use the feature.
+To address this, the merchant suppression feature, which is opening the merchant while you hold SHIFT has been expanded to also
+disable sell protection. So if you want to sell items on a keep list, with protection on, open the merchant with SHIFT and then
+sell those items. Vendor will not buy them back and you will not need to toggle on or off the protection feature.
+
+# Fix for Protection feature sometimes being enabled by default
+Due to a bug, the protection feature was erroneously being treated as on for some existing profiles instead of being off.
+This bug has been fixed and it should be off by default for all profiles.
+
+# Added rule information for protection
+If the protection feature buys back an item or blocks a delete, it now indicates the rule that caused it to do so in the chat.
+
+# Important Items added
+* Added horde versions of Cloak of Coordination and variants.
+* These will be added to existing important items list once.
+
+# Removed Some Extensions
+In doing a pass of extensions we also had to decide on which ones to continue maintaining, this resulted in removals.
+* AdiBags integration is no longer supported. AdiBags is no longer in active development and is going to break eventually. It is not
+worth our time to continue to maintain it or test its integration if the developer of the addon will not do so.
+* ArkInventory is no longer supported. Ark has always been an awkward integration and Ark itself is not particularly well written.
+BetterBags does everything Ark does and better, so there isn't much point to maintaining Ark support.
+Apologies if you use AdiBags or ArkInventory, they just aren't maintainable for us. Recommend trying out BetterBags, as that is in
+active development and essentially does what Ark and Adibags do. Better Bags integration is on the way.
+
+# Larger List support
+Some vendor users have large keep/sell lists, and there was a perf issue with showing those lists in the UI with a "script ran too long"
+error. We believe this is fixed now as we changed the sorting algorithm to be more supportive of large lists.
+
+# Miscellaneous
+* Removed TOCs for Wrath and Cata. These are no longer testable editions of the game so removing the TOCs makes sense.
+* Some foundational work for BetterBags has been added, though this does not yet function and has been disabled.
+
+]]
+},
+{
+Release = "6.8.0 (July 27, 2025)",
+Notes = [[
+# Item Upgrade Support - Default Keep List - Item Protection
+This update has some major features and quality of life improvements Vendor enthusiasts have requested (or complained about)
+for a long time. Vendor finally has Item Upgrade support to make rules about upgradeable items, and item tracks! It now
+also knows about your itemlevel watermark for a given slot, and has many other small quality of life improvements. A major
+new feature with Vendor comes with 6.8 - the Item Protection feature! And perhaps most important for new users of Vendor, we now have
+a special list that is pre-populated with important items (like Cloak of Coordination) along with a Keep Rule that protects
+items in that list.
+
+# Default 'Important Items' Keep rule and list
+All vendor users will now have an "Important Items" list created and pre-populated with common important items. There is also a new
+"Important Items" Keep rule that will be enabled by default on all new profiles. This list can be edited, but it cannot be deleted.
+Consider it a special "keep" list that is account-wide.
+
+# 'Keep' Item Protection Feature (Retail Only)
+Until now, Vendor's keep rules have only protected your items from Vendor selling or destroying them. Now Vendor has the ability
+to protect your important items from you - or accidents you may make in a hurry! The "Item Protection" feature is a new OFF by
+default feature which you can enable in General Settings or Quick settings, or toggle by SHIFT-Right-Clicking the Vendor Minimap/LDB
+button. When this feature is on, any item that evalutes to "Keep" by Vendor, such as a Keep rule or a Keep list will be more
+resitant to accidents. If you manually sell one of these items, Vendor will automatically buy it back for! If you attempt to
+destroy one of these items by dragging it out of your inventory, the destroy confirmation will be immediately caught and cancelled.
+This feature is intended to help you not accidentally lose your most important items.
+
+However, it is also understood that you might want to sell or destroy a keep item on occasion if you run very protective rules.
+To make that easy to do, we've added a SHIFT+Right Click functionality to the Vendor minimap and LDB buttons that will toggle the
+protection setting on and off. The tooltip for Vendor in those buttons now also displays the current state of the protection feature.
+
+# New Properties - Item Upgrade Support! (All except MaxLevel are Retail Only)
+* MaxLevel = This is the max itemlevel which an item can be if it is fully upgraded. For non-upgradeable items this is
+strictly equivalent to "Level" so this new property can be used everywhere "Level" is used but will now treat upgradeable
+items as if they were their highest upgrade possible.
+* IsUpgradeable now works correctly and is moved to be in a new "Upgrade" category in the item properties.
+* UpgradeTrack = The plain-text track name (Hero, Champion, Myth, etc).
+* UpgradeLevel = The current numeric value of the upgrade. Ex: For 3/8 upgrade, this value would be '3'
+* UpgradeMax = The max upgrade level of this item. Ex: For 3/8, this value would be '8'.
+* IsFullyUpgraded = True if UpgradeLevel == UpgradeMax
+* IsScrappable = True if item can be scrapped in the scrapper. This will be expanded before Remix for the return of scrap rules.
+For now it allows you to make rules that can exclude scrappable items.
+
+# New Function - WatermarkLevel (Retail Only)
+* WatermarkLevel() = Returns the current high watermark for that item's slot for the current character. You can use it directly
+with itemlevel comparisons, such as "MaxLevel < WatermarkLevel()" to match anything below your current watermark for that slot.
+
+# Rule Changes
+* Most built-in rules that used the "Level" property now use the "MaxLevel" property in order to account
+for upgradeable items that may not be fully upgraded. We will assume they are for the purposes of these rules.
+This includes all of the built-in Sell rules.
+* The "Keep Side-grade or Better" built-in rule has changed and now uses MaxLevel and the new WatermarkLevel()
+function to keep any item who's MaxLevel is equal to or greater than your character's high watermark for that slot.
+This means it will keep any items that are the same max ilevel as your current highest.
+* New "Keep Epic Crafted Gear" Rule, which will protect all of your spark-crafted gear. If it has a crafted quality
+and is of Epic quality, this rule will protect it.
+* New "Keep Leveling Gear" Rule, which simply matches any gear that has a higher minimum level requirement than the player's
+current level. This rule matches nothing for a max level character so its value is in leveling.
+* Default Rules for new profiles have been updated. "Keep Unknown Appearance" is no longer a default enabled
+keep rule on Retail, and "Keep Potential Upgrades" is no longer enabled by default, with the Keep Side-grade or better rule
+now a default rule instead. The new "Keep Epic Crafted gear" is now also a new enabled-by-default rule. These changes
+only affect new profiles, not existing profiles!
+
+# Merchant Autosell Suppress w/ Shift
+* Merchant autosell and auto repair features will now be suppressed if you hold the SHIFT key when opening
+the merchant frame. This is a quick way to disable the autosell if you want to temporarily suppress it.
+
+# Minimap Button / LibDataBroker plugin Improvements
+* Tooltip now refreshes as vendor scan and state changes (a longtime bug)
+* Minimap/LDB button tooltip now shows Protection feature's status.
+* Minimap/LDB button now has additional functionality:
+  * SHIFT+Left-Click will now run Destroy Next Item, so you can run destroy anywhere without a keybind.
+  * SHIFT+Right-Click will now toggle the Protection feature state On/Off
+  * Holding ALT while mousing over the tooltip will display help for the click options.
+
+# Miscellanous Changes
+* The new Chat system is no longer a beta feature, it has been around long enough without issue.
+* Added "tww" and "thewarwithin" and "thewarwithin" to Expansion Pack Ids and updated the numeric value
+of other expansion packs to be correct. You can use something like "ExpansionPackId = WAR_WITHIN" now to reference
+The War Within expansion, just like caps names work for every other expansion.
+* The CURRENT_EXPANSION environment variable in scripts has been updated to be TWW for Retail and MOP for classic.
+* Improved toy detection that was missing some toys.
+* Fixed missing property and function help. Note that blizzard's scrolling moves the help list very fast, but
+you can manually scroll it with the scrollbar, or use the search filter to better identify functions. Try putting
+"pet" in the help filter, for example.
+]]
+},
+{
+Release = "6.7.4 (July 22, 2025)",
+Notes = [[
+# Fixed compatibility with Classic SoD
+Fixed an issue that prevented latest version from working with Classic Season of Discovery.
+
+# Added AllTheThings extension!
+Thanks to 'brunokbcao' for adding an ATT extension, which features a function to check completion percentage,
+and a rule for keeping items that you still need for completing collections.
+
+# Bugfixes
+* Fix broken warbound and missing WarboundUntilEquip properties introduced in 6.7.3 for retail.
+* Fix keybind list toggling in Classic Mists
+
+# Known Issues
+* Rule help in the rule editor is missing some documentation for various properties and features.
+]]
+},
+{
+Release = "6.7.3 (July 5, 2025)",
+Notes = [[
+# Updated ToC for 11.2.0
+Nothing of note in this change, as there was no known broken functionality in retail. Verified 11.1.7 and 11.2.0.
+
+# Added Minimap icon item drag-and-drop
+A new option, OFF by default, is now in the "General" settings to enable an item properties dialog on drag and drop.
+If you drag an item onto the icon for Vendor it will open an item properties dialog for that item, showing you all of its properties.
+
+This is intended to be a convenient shortcut for people who use vendor to inspect properties or want to just get information about an item.
+
+# Added Mists Classic Support
+Mists Classic is now supported by Vendor, verified on the live Classic pre-patch.
+
+* Transmogs are now in the game with Mists, and detection of Unknown Appearance and transmog info has been enabled for Mists.
+* The Keep rule for "Keep Uncollected Appearances" has been added to Mists Classic (and should be on by default!)
+
+There may be some quirkiness with transmog detection, it is different from retail. There may be some bugs there.
+
+]]
+},
+{
 Release = "6.7.2 (February 25, 2025)",
 Notes = [[
 # Bugfixes and Partial Russian Translation

@@ -2,7 +2,7 @@
 -- Dynamic UI Elements
 
 local addon, ns = ...
-local Hekili = _G[addon]
+local Hekili = _G[ addon ]
 
 local class = Hekili.Class
 local state = Hekili.State
@@ -25,14 +25,18 @@ local GetItemCooldown = C_Item.GetItemCooldown
 local GetItemInfoInstant = C_Item.GetItemInfoInstant
 local GetSpellTexture = C_Spell.GetSpellTexture
 local IsUsableSpell = C_Spell.IsSpellUsable
+local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
 
-local GetSpellCooldown = function(spellID)
-    local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID)
+local GetSpellCooldown = function( spellID )
+    local spellCooldownInfo = C_Spell.GetSpellCooldown( spellID )
     if spellCooldownInfo then
         return spellCooldownInfo.startTime, spellCooldownInfo.duration, spellCooldownInfo.isEnabled, spellCooldownInfo.modRate
     end
     return 0, 0, false, 0
 end
+
+local GetSpecialization = C_SpecializationInfo.GetSpecialization
+local GetSpecializationInfo = C_SpecializationInfo.GetSpecializationInfo
 
 local floor, format, insert = math.floor, string.format, table.insert
 
@@ -42,21 +46,78 @@ local Tooltip = ns.Tooltip
 local Masque, MasqueGroup
 local _
 
+-- FPS smoothing system for stable budget calculations
+local fpsTracker = {
+    samples         = {},  -- Sliding window of FPS samples
+    maxSamples      = 30,  -- 30 samples for smoothing
+    smoothedFPS     = 60,  -- Current smoothed FPS value
+    lastUpdate      = 0,   -- Last update time
+    updateInterval  = 0.1, -- Update every 100ms
+    index           = 1,   -- Ring tracker
+    count           = 0,   -- Total samples
+    sum             = 0    -- Sum of all samples
+}
+
+local function updateSmoothedFPS()
+    local now = GetTime()
+    if now - fpsTracker.lastUpdate >= fpsTracker.updateInterval then
+        local currentFPS = GetFramerate()
+
+        -- If overwriting an old sample, subtract it first
+        if fpsTracker.count == fpsTracker.maxSamples then
+            fpsTracker.sum = fpsTracker.sum - fpsTracker.samples[ fpsTracker.index ]
+        else
+            fpsTracker.count = fpsTracker.count + 1
+        end
+
+        -- Add to sliding window
+        fpsTracker.samples[ fpsTracker.index ] = currentFPS
+        fpsTracker.sum = fpsTracker.sum + currentFPS
+
+        -- Shift the index
+        fpsTracker.index = ( fpsTracker.index % fpsTracker.maxSamples ) + 1
+
+        -- Calculate smoothed average
+        fpsTracker.smoothedFPS = fpsTracker.sum / fpsTracker.count
+        fpsTracker.lastUpdate = now
+    end
+
+    return fpsTracker.smoothedFPS
+end
+
+-- Expose smoothed FPS for use in other places
+function Hekili.GetSmoothedFPS()
+    return updateSmoothedFPS()
+end
+
+-- Calculate frame budget based on user percentage
+local function calculateFrameBudget()
+    local smoothedFPS = updateSmoothedFPS()
+    local frameBudget = Hekili.DB.profile.performance.frameBudget or 0.7
+    -- local rawFPS = GetFramerate()
+
+    -- Calculate frame time
+    local frameTime = 1000 / math.max( smoothedFPS, 30 ) -- min 30 FPS
+
+    -- Apply user percentage directly to frame time
+    local userBudget = frameTime * frameBudget
+
+    -- Debug output
+    -- print(string.format("[Hekili Budget] Setting: %d%%, Raw FPS: %.1f, Smoothed FPS: %.1f, Frame Time: %.2fms, Budget: %.2fms",
+    --     frameBudget, rawFPS, smoothedFPS, frameTime, userBudget))
+
+    return userBudget
+end
 
 function Hekili:GetScale()
     return PixelUtil.GetNearestPixelSize( 1, PixelUtil.GetPixelToUIUnitFactor(), 1 )
-    --[[ local monitorIndex = (tonumber(GetCVar("gxMonitor")) or 0) + 1
-    local resolutions = {GetScreenResolutions()}
-    local resolution = resolutions[GetCurrentResolution()] or GetCVar("gxWindowedResolution")
-
-    return (GetCVar("UseUIScale") == "1" and (GetScreenHeight() / resolution:match("%d+x(%d+)")) or 1) ]]
 end
 
 
 local movementData = {}
 
 local function startScreenMovement(frame)
-    movementData.origX, movementData.origY = select( 4, frame:GetPoint() )
+    movementData.origX,movementData.origY = select( 4, frame:GetPoint() )
     frame:StartMoving()
     movementData.fromX, movementData.fromY = select( 4, frame:GetPoint() )
     frame.Moving = true
@@ -71,8 +132,8 @@ local function stopScreenMovement(frame)
     scrW = scrW / ( scale * pScale )
     scrH = scrH / ( scale * pScale )
 
-    local limitX = (scrW - frame:GetWidth() ) / 2
-    local limitY = (scrH - frame:GetHeight()) / 2
+    local limitX = ( scrW - frame:GetWidth() ) / 2
+    local limitY = ( scrH - frame:GetHeight() ) / 2
 
     movementData.toX, movementData.toY = select( 4, frame:GetPoint() )
     frame:StopMovingOrSizing()
@@ -149,11 +210,11 @@ function ns.StartConfiguration( external )
     Hekili.Config = true
 
     local scaleFactor = Hekili:GetScale()
-    local ccolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+    local ccolor = RAID_CLASS_COLORS[ select( 2, UnitClass( "player" ) ) ]
 
     -- Notification Panel
     ns.UI.Notification.Mover = ns.UI.Notification.Mover or CreateFrame( "Frame", "HekiliNotificationMover", ns.UI.Notification, "BackdropTemplate" )
-    ns.UI.Notification.Mover:SetAllPoints(HekiliNotification)
+    ns.UI.Notification.Mover:SetAllPoints( HekiliNotification )
     ns.UI.Notification.Mover:SetBackdrop( {
         bgFile = "Interface/Buttons/WHITE8X8",
         edgeFile = "Interface/Buttons/WHITE8X8",
@@ -1079,11 +1140,11 @@ do
             local madeUpdate = false
 
             self.timer = pulseDisplay
-            self.NewRecommendations = nil
 
             local now = GetTime()
 
-            if fullUpdate then
+            if self.NewRecommendations then
+                self.NewRecommendations = nil
                 madeUpdate = true
 
                 local alpha = self.alpha
@@ -1092,6 +1153,10 @@ do
                 if self.HasRecommendations and self.RecommendationsStr and self.RecommendationsStr:len() == 0 then
                     for i, b in ipairs( self.Buttons ) do b:Hide() end
                     self.HasRecommendations = false
+
+                elseif self:IsThreadLocked() then
+                    self.HasRecommendations = true
+
                 else
                     self.HasRecommendations = true
 
@@ -1105,6 +1170,8 @@ do
                         local exact_time = b.Recommendation.exact_time
 
                         local ability = class.abilities[ action ]
+
+                        if ability and ability.id < 0 and ability.id > -100 and action ~= "cancel_buff" or exact_time == nil then ability = nil end
 
                         if ability then
                             if ( conf.flash.enabled and conf.flash.suppress ) then b:Hide()
@@ -1207,6 +1274,7 @@ do
                                 if b.glowStop then b:glowStop() end
                                 b.glowing = false
                             end
+
                         else
                             b:Hide()
                         end
@@ -1639,7 +1707,7 @@ do
             for i, rec in ipairs( self.Recommendations ) do
                 local button = self.Buttons[ i ]
 
-                if button.Action then
+                if button.Action and button.Action == rec.actionName then
                     local cd = button.Cooldown
                     local ability = button.Ability
 
@@ -1778,8 +1846,6 @@ do
                         isItem = true
                         id = ability.item
                     end
-
-                    local spellID = select( 9, UnitCastingInfo( "player" ) ) or select( 9, UnitChannelInfo( "player" ) )
 
                     if id and ( isItem and IsCurrentItem( id ) or IsCurrentSpell( id ) ) then --  and b.ExactTime > GetTime() then
                         b.Highlight:Show()
@@ -2314,7 +2380,8 @@ do
         end
 
         if Hekili.DB.profile.enabled and not Hekili.Pause then
-            self.refreshRate = self.refreshRate or 0.5
+            -- Set refresh rates to default values
+            self.refreshRate = self.refreshRate or 0.25
             self.combatRate = self.combatRate or 0.2
 
             local thread = self.activeThread
@@ -2336,18 +2403,8 @@ do
                 self.activeThreadStart = debugprofilestop()
                 self.activeThreadFrames = 0
 
-                if not self.firstThreadCompleted then
-                    Hekili.maxFrameTime = 16.67
-                else
-                    local rate = GetFramerate()
-                    local spf = 1000 / ( rate > 0 and rate or 100 )
-
-                    if HekiliEngine.threadUpdates then
-                        Hekili.maxFrameTime = 0.8 * max( 7, min( 16.667, spf, 1.1 * HekiliEngine.threadUpdates.meanWorkTime / floor( HekiliEngine.threadUpdates.meanFrames ) ) )
-                    else
-                        Hekili.maxFrameTime = 0.8 * max( 7, min( 16.667, spf ) )
-                    end
-                end
+                -- Use new frame budget calculation
+                Hekili.maxFrameTime = calculateFrameBudget()
 
                 thread = self.activeThread
             end
@@ -2497,12 +2554,14 @@ do
 
         -- Indicator Icons.
         b.Icon = b.Icon or b:CreateTexture( nil, "OVERLAY" )
-        b.Icon: SetSize( max( 10, b:GetWidth() / 3 ), max( 10, b:GetHeight() / 3 ) )
+        b.Icon:SetSize( conf.indicators.width or 20, conf.indicators.height or 20 )
 
-        if conf.keepAspectRatio and b.Icon:GetHeight() ~= b.Icon:GetWidth() then
-            local biggest = max( b.Icon:GetHeight(), b.Icon:GetWidth() )
-            local height = 0.5 * b.Icon:GetHeight() / biggest
-            local width = 0.5 * b.Icon:GetWidth() / biggest
+        local zoom = 1 - ( ( conf.indicators.zoom or 0) / 200 )
+
+        if conf.indicators.keepAspectRatio and conf.indicators.height ~= conf.indicators.width then
+            local biggest = max( conf.indicators.height or 20, conf.indicators.width or 20 )
+            local height = 0.5 * zoom * ( conf.indicators.height or 20 ) / biggest
+            local width = 0.5 * zoom * ( conf.indicators.width or 20 ) / biggest
 
             b.Icon:SetTexCoord( 0.5 - width, 0.5 + width, 0.5 - height, 0.5 + height )
         else

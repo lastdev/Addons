@@ -435,7 +435,7 @@ function private.UpdateBagDB()
 	if not private.settings.includeSoulbound then
 		query:Equal("isBound", false)
 	end
-	if ClientInfo.IsCataClassic() then
+	if ClientInfo.IsPandaClassic() then
 		local disenchantName = Spell.GetInfo(7411)
 		local jewelcraftName = Spell.GetInfo(28897)
 		local inscriptionName = Spell.GetInfo(45357)
@@ -500,7 +500,7 @@ function private.IsDestroyable(itemString)
 	local quality = ItemInfo.GetQuality(itemString)
 	if ItemInfo.IsDisenchantable(itemString) and quality <= private.settings.deMaxQuality then
 		local hasSourceItem = true
-		if ClientInfo.IsCataClassic() then
+		if ClientInfo.IsPandaClassic() then
 			local classId = ItemInfo.GetClassId(itemString)
 			local itemLevel = ItemInfo.GetItemLevel(ItemString.GetBase(itemString))
 			hasSourceItem = false

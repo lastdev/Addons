@@ -1,0 +1,38 @@
+## Interface: 50501
+## Version: 2.12
+## Author: Taraezor
+## IconTexture: Interface\Icons\Ability_mount_camel_gray
+## Title: Mysterious Camel Figurine
+## Title-deDE: Mysteriöse Kamelfigur
+## Title-esES: Figurilla de camello misteriosa
+## Title-esMX: Figurilla de camello misteriosa
+## Title-frFR: Figurine de dromadaire mystérieuse
+## Title-itIT: Statuetta di Dromedario Misteriosa
+## Title-koKR: 수수께끼 낙타 조각상
+## Title-ptBR: Estátua de Camelo Misteriosa
+## Title-ptPT: Estátua de Camelo Misteriosa
+## Title-ruRU: Странная фигурка верблюда
+## Title-zhCN: 神秘的骆驼雕像
+## Title-zhTW: 神秘的駱駝雕像
+## Notes: |cFF228B22Helps you find the |cFF41A317Mysterious Camel Figurine|cFF228B22 in Uldum
+## Notes-deDE: |cFF228B22Hilft Ihnen, das |cFF41A317Mysteriöse Kamelfigur|cFF228B22 in Uldum zu erhalten
+## Notes-esES: |cFF228B22Te ayuda a obtener el |cFF41A317Figurilla de camello misteriosa|cFF228B22 en Uldum
+## Notes-esMX: |cFF228B22Te ayuda a obtener el |cFF41A317Figurilla de camello misteriosa|cFF228B22 en Uldum
+## Notes-frFR: |cFF228B22Il vous aide à obtenir |cFF41A317Figurine de dromadaire mystérieuse|cFF228B22 en Uldum
+## Notes-itIT: |cFF228B22Ti aiuta a ottenere la |cFF41A317Statuetta di Dromedario Misteriosa|cFF228B22 a Uldum
+## Notes-koKR: |cFF228B22울둠에서 |cFF41A317수수께끼 낙타 조각상|r를 얻는 데 도움이 됩니다.
+## Notes-ptBR: |cFF228B22Ajuda você a obter o |cFF41A317Estátua de Camelo Misteriosa|cFF228B22 em Uldum
+## Notes-ptPT: |cFF228B22Ajuda você a obter o |cFF41A317Estátua de Camelo Misteriosa|cFF228B22 em Uldum
+## Notes-ruRU: |cFF228B22Помогает вам получить |cFF41A317Странная фигурка верблюда|cFF228B22 в Ульдум
+## Notes-zhCN: |cFF228B22帮助您获取奥丹姆中的|cFF41A317神秘的骆驼雕像
+## Notes-zhTW: |cFF228B22幫助您獲取奧丹姆中的|cFF41A317神秘的駱駝雕像
+## RequiredDeps: HandyNotes
+## SavedVariables: HandyNotes_CamelDB
+## AddonCompartmentFunc: HandyNotes_Camel_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_Camel_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_Camel_OnAddonCompartmentLeave
+## X-Curse-Project-ID: 934562
+## X-Wago-ID: BNBeMeGx
+
+Core.lua
+Data.lua

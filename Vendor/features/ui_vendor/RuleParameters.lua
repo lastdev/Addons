@@ -170,6 +170,7 @@ end
 
 --[[ Set the parameter to the current value ]]
 function NumberParameter:SetValue(value)
+    local name = self.name
 
 
     if (value ~= self.current) then

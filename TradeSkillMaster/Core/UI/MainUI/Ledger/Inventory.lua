@@ -48,7 +48,6 @@ function Inventory.OnEnable()
 		:AddUniqueStringField("levelItemString")
 		:AddNumberField("bagQuantity")
 		:AddNumberField("bankQuantity")
-		:AddNumberField("reagentBankQuantity")
 		:AddNumberField("auctionQuantity")
 		:AddNumberField("mailQuantity")
 		:AddNumberField("altQuantity")
@@ -73,17 +72,15 @@ function private.DrawInventoryPage()
 	local items = TempTable.Acquire()
 	local bagQuantityLookup = TempTable.Acquire()
 	local bankQuantityLookup = TempTable.Acquire()
-	local reagentBankQuantityLookup = TempTable.Acquire()
 	local auctionQuantityLookup = TempTable.Acquire()
 	local mailQuantityLookup = TempTable.Acquire()
 	local altQuantityLookup = TempTable.Acquire()
 	local guildQuantityLookup = TempTable.Acquire()
 	local warbankQuantityLookup = TempTable.Acquire()
-	for _, levelItemString, bagQuantity, bankQuantity, reagentBankQuantity in BagTracking.QuantityIterator() do
+	for _, levelItemString, bagQuantity, bankQuantity in BagTracking.QuantityIterator() do
 		items[levelItemString] = true
 		bagQuantityLookup[levelItemString] = bagQuantity
 		bankQuantityLookup[levelItemString] = bankQuantity
-		reagentBankQuantityLookup[levelItemString] = reagentBankQuantity
 	end
 	for _, levelItemString, auctionQuantity in Auction.QuantityIterator() do
 		items[levelItemString] = true
@@ -109,21 +106,19 @@ function private.DrawInventoryPage()
 	for levelItemString in pairs(items) do
 		local bagQuantity = bagQuantityLookup[levelItemString] or 0
 		local bankQuantity = bankQuantityLookup[levelItemString] or 0
-		local reagentBankQuantity = reagentBankQuantityLookup[levelItemString] or 0
 		local auctionQuantity = auctionQuantityLookup[levelItemString] or 0
 		local mailQuantity = mailQuantityLookup[levelItemString] or 0
 		local altQuantity = altQuantityLookup[levelItemString] or 0
 		local guildQuantity = guildQuantityLookup[levelItemString] or 0
 		local warbankQuantity = warbankQuantityLookup[levelItemString] or 0
-		local totalBankQuantity = bankQuantity + reagentBankQuantity + warbankQuantity
+		local totalBankQuantity = bankQuantity + warbankQuantity
 		local totalQuantity = bagQuantity + totalBankQuantity + guildQuantity + auctionQuantity + mailQuantity + altQuantity
-		private.db:BulkInsertNewRow(levelItemString, bagQuantity, bankQuantity, reagentBankQuantity, auctionQuantity, mailQuantity, altQuantity, guildQuantity, totalBankQuantity, totalQuantity)
+		private.db:BulkInsertNewRow(levelItemString, bagQuantity, bankQuantity, auctionQuantity, mailQuantity, altQuantity, guildQuantity, totalBankQuantity, totalQuantity)
 	end
 	private.db:BulkInsertEnd()
 	TempTable.Release(items)
 	TempTable.Release(bagQuantityLookup)
 	TempTable.Release(bankQuantityLookup)
-	TempTable.Release(reagentBankQuantityLookup)
 	TempTable.Release(auctionQuantityLookup)
 	TempTable.Release(mailQuantityLookup)
 	TempTable.Release(altQuantityLookup)

@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2343, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240721192722")
+mod:SetRevision("20250719034113")
 mod:SetCreatureID(146409)
 mod:SetEncounterID(2281)
 mod:SetUsedIcons(1, 2, 3)
 mod:SetHotfixNoticeRev(18363)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
+mod:SetZone(2070)
 
 mod:RegisterCombat("combat")
 
@@ -25,6 +26,10 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
 --TODO, detect set charge barrels, and add them to infoframe with time remaining?
 --TODO, shattering lance script and warning/cast timer?
 --TODO, Glacial Ray triggers a 9.7 ICD on all other timers. Timers can be improved by account for this in an UpdateAllTimers method and possibly other min ICDs of other casts
@@ -40,6 +45,8 @@ mod:RegisterEventsInCombat(
 local warnPhase							= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
 local warnFrozenSolid					= mod:NewTargetNoFilterAnnounce(287490, 4)
 local warnJainaIceBlocked				= mod:NewTargetNoFilterAnnounce(287322, 2)
+
+local timerRP							= mod:NewRPTimer(15.4)
 --Stage One: Burning Seas
 local warnCorsairSoon					= mod:NewSoonAnnounce("ej19690", 2, "2261243", nil, nil, nil, nil, 7)
 local warnCorsair						= mod:NewTargetAnnounce("ej19690", 3, "2261243", nil, nil, nil, nil, 7)
@@ -744,7 +751,16 @@ function mod:UNIT_POWER_UPDATE(uId, type)
 	end
 end
 
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.PrePull or msg:find(L.PrePull)) and self:LatencyCheck() then
+		self:SendSync("JainaPrePull")
+	end
+end
+
 function mod:OnSync(msg)
+	if msg == "JainaPrePull" then
+		timerRP:Start(35.7)
+	end
 	if self:IsLFR() then return end
 	if msg == "Three" then
 		self.vb.interruptBehavior = "Three"
@@ -754,3 +770,29 @@ function mod:OnSync(msg)
 		self.vb.interruptBehavior = "Five"
 	end
 end
+
+--Boat ride RP
+--"<7.35 15:55:47> [GOSSIP_SHOW] Creature-0-4226-2070-3847-145993-00007AA662#51135:We're ready to make way.",
+--"<20.28 15:56:00> [ZONE_CHANGED] Battle of Dazar'alor#Battle of Dazar'alor#",
+--"<39.67 15:56:19> [CLEU] SPELL_AURA_APPLIED#Creature-0-4226-2070-3847-148955-00007AA661#High Tinker Mekkatorque#Creature-0-4226-2070-3847-148955-00007AA661#High Tinker Mekkatorque#288831#Life Support#BUFF#nil#nil#nil#nil#nil",
+--"<41.38 15:56:21> [DBM_TimerStop] DBMLFGTimer",
+--"<41.38 15:56:21> [DBM_Debug] LOADING_SCREEN_DISABLED fired#2",
+--"<41.53 15:56:21> [ZONE_CHANGED] Battle of Dazar'alor#Battle of Dazar'alor#Boralus Harbor",
+--"<45.96 15:56:26> [PLAYER_TARGET_CHANGED] 50 Friendly (Humanoid) - Ensign Roberts # Creature-0-4226-2070-3847-148945-00007AA660",
+--"<48.09 15:56:28> [DBM_Debug] GOSSIP_SHOW triggered with a gossip ID(s) of 51057 on creatureID 148945#nil",
+--"<48.09 15:56:28> [GOSSIP_SHOW] Creature-0-4226-2070-3847-148945-00007AA660#51057:Stay calm, just tell us what you remember.",
+--"<49.36 15:56:29> [CHAT_MSG_MONSTER_SAY] Jaina badly wounded... Mekkatorque on the brink of death... What went wrong, Genn?#Anduin Wrynn###Omegal##0#0##0#2054#nil#0#false#false#false#false",
+--"<50.07 15:56:30> [CHAT_MSG_MONSTER_SAY] I'll do my best to tell you what happened. It started when they saw their king fall...#Ensign Roberts###Omegal##0#0##0#2055#nil#0#false#false#false#false",
+--"<52.60 15:56:32> [CLEU] SPELL_AURA_APPLIED#Vehicle-0-4226-2070-3847-144796-00007AA6F0#High Tinker Mekkatorque#Vehicle-0-4226-2070-3847-144796-00007AA6F0#High Tinker Mekkatorque#289696#Electroshock Strikes#DEBUFF#nil#nil#nil#nil#nil",
+--"<52.64 15:56:32> [UNIT_SPELLCAST_SUCCEEDED] PLAYER_SPELL{Omegal} -For the Horde!- [[player:Cast-3-4226-2070-3847-289061-00117AA6F0:289061]]",
+
+--Pre fight RP
+--"<10.14 14:32:29> [CHAT_MSG_MONSTER_YELL] All hands on deck! Time to make de daughter of de sea pay for trespassing in our waters!#Captain Zadari###Omegal##0#0##0#1457#nil#0#false#false#false#false",
+--"<18.08 14:32:37> [CHAT_MSG_MONSTER_YELL] Consider this your only warning. Turn your vessel back to port and look after your dead... or you will soon join them.#Lady Jaina Proudmoore###Omegal##0#0##0#1458#nil#0#false#false#false#false",
+--"<26.74 14:32:46> [CHAT_MSG_MONSTER_YELL] I have heard of you, Jaina Proudmoore. De little girl who betrayed her father and lost her brother to war. Failure is your family legacy.#Captain Zadari###Omegal##0#0##0#1459#nil#0#false#false#false#false",
+--"<38.47 14:32:58> [CHAT_MSG_MONSTER_YELL] If you know so much about me, captain, then you would have been wise to run while you still had the chance.#Lady Jaina Proudmoore###Omegal##0#0##0#1460#nil#0#false#false#false#false",
+--"<39.02 14:32:58> [PLAYER_TARGET_CHANGED] 51 Hostile (elite Elemental) - Jaina's Tide Elemental # Creature-0-3881-2070-11500-149501-0000681E0F",
+--"<39.80 14:32:59> [UNIT_SPELLCAST_SUCCEEDED] Jaina's Tide Elemental(100.0%-0.0%){Target:??} -Attack- [[target:Cast-3-3881-2070-11500-288796-0002681E5B:288796]]",
+--"<39.99 14:32:59> [PLAYER_TARGET_CHANGED] -1 Friendly (elite Humanoid) - Princess Talanji # Creature-0-3881-2070-11500-147383-0000681E0F",
+--"<44.32 14:33:03> [CHAT_MSG_MONSTER_YELL] You will pay for your crimes! All hands, attack!#Captain Zadari###Omegal##0#0##0#1461#nil#0#false#false#false#false",
+--"<45.87 14:33:05> [NAME_PLATE_UNIT_ADDED] Lady Jaina Proudmoore#Creature-0-3881-2070-11500-146409-0000681E3D",

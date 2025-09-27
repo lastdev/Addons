@@ -27,7 +27,7 @@ end, "$Revision:  $")
 
 local IsRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
-local IsCataClassic = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
+local IsPandaClassic = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
 local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local LCD = IsVanillaClassic and LibStub and LibStub("LibClassicDurations", true)
@@ -66,7 +66,7 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local GetComboPoints = GetComboPoints
 local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 local GetInspectSpecialization = GetInspectSpecialization
-local GetLootMethod = GetLootMethod
+local GetLootMethod = GetLootMethod or C_PartyInfo.GetLootMethod
 local GetNumGroupMembers = GetNumGroupMembers
 local GetRaidRosterInfo = GetRaidRosterInfo
 local GetSpecializationInfoByID = GetSpecializationInfoByID
@@ -689,9 +689,9 @@ do
 		end
 		LTQ:RegisterCallback("TalentQuery_Ready", TalentQuery_Ready)
 	else
-		if IsCataClassic and NotifyInspect then
+		if IsPandaClassic and NotifyInspect then
 			hooksecurefunc("NotifyInspect", function(unit)
-				if (IsRetail or UnitIsUnit("player", unit) or (not IsVanillaClassic and UnitInVehicle(unit)) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and CheckInteractDistance(unit, 4))) then
+				if (IsRetail or UnitIsUnit("player", unit) or (not IsVanillaClassic and UnitInVehicle(unit)) or not (UnitExists(unit) and CanInspect(unit) and UnitIsVisible(unit) and UnitIsConnected(unit) and not InCombatLockdown() and CheckInteractDistance(unit, 4))) then
 					return
 				end
 				lastInspectUnit = unit
@@ -756,7 +756,7 @@ do
 							LTQ:Query(partyid)
 						else
 							if (lastInspectPending == 0 or GetTime() > lastInspectTime + 15) then
-								if (not IsRetail and UnitExists(partyid) and UnitIsVisible(partyid) and CheckInteractDistance(partyid, 4)) then
+								if (not IsRetail and UnitExists(partyid) and UnitIsVisible(partyid) and not InCombatLockdown() and CheckInteractDistance(partyid, 4)) then
 									if (not UnitIsUnit("player", partyid)) then
 										inspectReady = nil
 										lastInspectInvalid = nil
@@ -974,7 +974,7 @@ end
 
 -- XPerl_Target_UpdateHotsPrediction
 local function XPerl_Target_UpdateHotsPrediction(self)
-	if not IsCataClassic then
+	if not IsPandaClassic then
 		return
 	end
 	if self == XPerl_Target then
@@ -1151,13 +1151,9 @@ function XPerl_Target_Update_Range(self)
 		return
 	end
 	local inRange = false
-	if IsCataClassic then
-		inRange = CheckInteractDistance(self.partyid, 4)
-	else
-		local range, checkedRange = UnitInRange(self.partyid)
-		if not checkedRange then
-			inRange = true
-		end
+	local range, checkedRange = UnitInRange(self.partyid)
+	if not checkedRange then
+		inRange = true
 	end
 	if not UnitIsConnected(self.partyid) or inRange then
 		self.nameFrame.rangeIcon:Hide()

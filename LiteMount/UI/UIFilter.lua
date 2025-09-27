@@ -66,6 +66,7 @@ local SortKeysByProject = LM.TableWithDefault({
     [1] = {
         'default',
         'name',
+        'priority',
         'rarity',
         'summons',
         'family',
@@ -73,6 +74,7 @@ local SortKeysByProject = LM.TableWithDefault({
     DEFAULT = {
         'default',
         'name',
+        'priority',
         'summons'
     },
 })
@@ -80,6 +82,7 @@ local SortKeysByProject = LM.TableWithDefault({
 local SortKeyTexts = {
     ['default']     = DEFAULT,
     ['name']        = NAME,
+    ['priority']    = L.LM_PRIORITY,
     ['rarity']      = RARITY,
     ['summons']     = SUMMONS,
     ['family']      = L.LM_FAMILY,
@@ -598,7 +601,7 @@ function LM.UIFilter.IsFilteredMount(m)
         return false
     end
 
-    if m.description and searchMatch(m.description, filtertext) then
+    if m.descriptionText and searchMatch(m.descriptionText, filtertext) then
         return false
     end
 

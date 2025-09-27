@@ -6,6 +6,11 @@ local _, addon = ...
 local L = addon.L;
 
 
+--Globals
+BINDING_HEADER_PLUMBER = "Plumber";
+BINDING_NAME_TOGGLE_PLUMBER_LANDINGPAGE = "Activer/Désactiver le résumé de l'extension";   --Show/hide Expansion Summary UI
+
+
 --Module Control Panel
 L["Module Control"] = "Contrôle du module";
 L["Quick Slot Generic Description"] = "\n\n*L'emplacement rapide est un ensemble de boutons cliquables qui apparaissent sous certaines conditions.";
@@ -155,7 +160,7 @@ L["Seed Color Uncommon"] = ICON_TAG_RAID_TARGET_TRIANGLE3 or "Vert";
 
 
 --Tooltip Chest Keys
-L["ModuleName TooltipChestKeys"] = "Infobulle : Clés de coffre";
+L["ModuleName TooltipChestKeys"] = "Infobulle : clés de coffre";
 L["ModuleDescription TooltipChestKeys"] = "Affiche des informations sur la clé nécessaire pour ouvrir le coffre ou la porte actuelle.";
 
 
@@ -189,15 +194,15 @@ L["ModuleDescription WorldMapPin_TWW"] = "Affiche des marqueurs supplémentaires
 L["Great Vault Tier Format"] = GREAT_VAULT_WORLD_TIER or "Tier %s";
 L["Item Level Format"] = ITEM_LEVEL or "Niveau d'objet %d";
 L["Item Level Abbr"] = ITEM_LEVEL_ABBR or "iLvl";
-L["Delves Reputation Name"] = "Périple du Gouffre";
-L["ModuleName Delves_SeasonProgress"] = "Périple du Gouffre";
+L["Delves Reputation Name"] = "Périple du gouffre";
+L["ModuleName Delves_SeasonProgress"] = "Périple du gouffre";
 L["ModuleDescription Delves_SeasonProgress"] = "Affiche une barre de progression en haut de l'écran lorsque vous progressez dans le périple du Gouffre.";
 
 
 --WoW Anniversary
 L["ModuleName WoWAnniversary"] = "Anniversaire de WoW";
 L["ModuleDescription WoWAnniversary"] = "- Summon the corresponding mount easily during the Mount Maniac event.\n\n- Show voting results during the Fashion Frenzy event. ";
-L["Voting Result Header"] = "Resultats";
+L["Voting Result Header"] = "Résultats";
 
 
 --WoW Anniversary
@@ -233,6 +238,32 @@ L["LootUI Option Use Default UI"] = "Utiliser la fenêtre de butin par défaut";
 L["LootUI Option Use Default UI Tooltip"] = "Utiliser la fenêtre de butin par défaut de WoW.\n\n|cffff4800Activer cette option annule tous les réglage";
 
 
+--New Expansion Landing Page
+L["Reward Available"] = "Récompense disponible";
+L["Paragon Reward Available"] = "Récompense Parangon disponible";
+L["Until Next Level Format"] = "%d jusqu'au niveau suivant";
+L["Until Paragon Reward Format"] = "%d jusqu'à la récompense Parangon";
+L["Instruction Click To View Renown"] = REPUTATION_BUTTON_TOOLTIP_VIEW_RENOWN_INSTRUCTION or "<Cliquez pour afficher le renom>";
+L["Not On Quest"] = "Vous n'êtes pas sur cette quête";
+L["Factions"] = "Factions";
+L["Activities"] = MAP_LEGEND_CATEGORY_ACTIVITIES or "Activités";
+L["Raids"] = RAIDS or "Raids";
+L["Instruction Track Achievement"] = "<Maj + clic pour suivre ce haut fait>";
+L["Instruction Untrack Achievement"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Maj + clic pour arrêter le suivi>";
+L["No Data"] = "Aucune donnée";
+L["No Raid Boss Selected"] = "Aucun boss sélectionné";
+L["Your Class"] = "(Votre classe)";
+L["Great Vault"] = DELVES_GREAT_VAULT_LABEL or "Grande chambre forte";
+L["Item Upgrade"] = ITEM_UPGRADE or "Amélioration d'objet";
+L["Resources"] = WORLD_QUEST_REWARD_FILTERS_RESOURCES or "Ressources";
+L["Plumber Experimental Feature Tooltip"] = "Une fonction expérimentale de l'addon Plumber.";
+L["Bountiful Delves Rep Tooltip"] = "Ouvrir un coffre abondant a une chance d'augmenter votre réputation avec cette faction.";
+L["Warband Weekly Reward Tooltip"] = "Votre bataillon ne peut recevoir cette récompense qu'une fois par semaine.";
+L["Completed"] = CRITERIA_COMPLETED or "Terminé";
+L["Filter Hide Completed Format"] = "Masquer les activités terminées (%d)";
+L["Weeky Reset Format"] = "Reset hebdo: %s";
+
+
 --Generic
 L["Reposition Button Horizontal"] = "Déplacer horizontalement";   --Move the window horizontally
 L["Reposition Button Vertical"] = "Déplacer verticalement";
@@ -240,7 +271,7 @@ L["Reposition Button Tooltip"] = "Cliquez gauche et faites glisser pour déplace
 L["Font Size"] = FONT_SIZE or "Taille de la police";
 L["Reset To Default Position"] = HUD_EDIT_MODE_RESET_POSITION or "Réinitialiser à la position par défaut";
 
-L["Renown Level Label"] = RENOWN_LEVEL_LABEL or "Renom ";  --There is a space
+L["Renown Level Label"] = "Renom ";  --There is a space
 L["Paragon Reputation"] = "Paragon";
 L["Level Maxed"] = "(Maximum)";   --Reached max level
 L["Current Colon"] = ITEM_UPGRADE_CURRENT or "Actuel:";
@@ -265,6 +296,11 @@ L["GameObject Door"] = "Porte";
 L["Delve Chest 1 Rare"] = "Coffre abondant";   --We'll use the GameObjectID once it shows up in the database
 
 L["Season Maximum Colon"] = "Maximum par saison :";
+L["Item Changed"] = "avez transformé";   --CHANGED_OWN_ITEM
+L["Completed CHETT List"] = "Liste C.H.E.T.T. terminée";
+L["Restored Coffer Key"] = "Clé de coffret réparée";
+L["Coffer Key Shard"] = "Fragment de clé de coffre";
+L["Epoch Mementos"] = "Souvenir d’époque";
 
 
 --Map Pin Filter Name (name should be plural)

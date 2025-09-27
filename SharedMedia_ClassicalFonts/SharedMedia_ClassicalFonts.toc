@@ -1,4 +1,4 @@
-## Interface: 11502, 40400, 100207
+## Interface: 11507, 50500, 110200
 ## Title: SharedMedia Classical Fonts
 ## Notes: Plugs classical world style fonts into LibSharedMedia-3.0
 ## Notes-ruRU: Добавление классических шрифтов в LibSharedMedia-3.0
@@ -12,12 +12,12 @@
 ## Notes-itIT: Plugs classical world style fonts into LibSharedMedia-3.0
 ## Notes-frFR: Ajoute des polices de style antique à LibSharedMedia-3.0.
 
-## Version: 2.100
+## Version: 2.104
 ## Author: Sygon of Lightbringer (Alliance, Crimson Embers)
 ## X-Category: Plugins
 ## X-License: Public Domain. See Licences folder for details
-## X-Date: 2024-06-12T08:48:14Z
-## X-Revision: 111
+## X-Date: 2025-08-12T16:50:46Z
+## X-Revision: 116
 ## X-Curse-Project-ID: 57737
 ## X-WoWI-ID: 22318
 ## X-Wago-ID: kaNedMG2

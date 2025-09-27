@@ -87,7 +87,7 @@ function private.CanLootMailIndex(index, copper)
 	local moneyCap = nil
 	if ClientInfo.IsRetail() then
 		moneyCap = MAXIMUM_BID_PRICE
-	elseif ClientInfo.IsCataClassic() then
+	elseif ClientInfo.IsPandaClassic() then
 		moneyCap = 9999999999
 	else
 		moneyCap = 2147483647

@@ -2,6 +2,28 @@ DataStore Changelog (dates in dd/mm/yyyy)
 ===================
 
 
+Version 2025.09.01 (01/09/2025)
+
+- Fixed a lua error when searching bags.
+- Fixed a lua error when opening the Warband Bank using the Distance Inhibitor.
+
+Version 2025.08.24 (24/08/2025)
+
+- Cleared data from old the seventh bank bag (= bag 12).
+- Adjusted the format of bank information to account for larger size of tabs versus the older bags.
+There is still no need to clear the saved variables, but you definitely need to visit the bank again with all your alts.
+Sorry about this, and I know many of your have a ton of alts, but this could not be avoided.
+
+Version 2025.08.22 (22/08/2025)
+
+- MoP fixes for reagent bank & void storage.
+- Fixed ScanBankSlotsInfo() for MoP.
+
+Version 2025.08.21 (21/08/2025)
+
+- Updated ToC for Mists of Pandaria and 11.2.
+- Reagent Bank and Void Storage removed.
+
 Version 2025.02.28 (28/02/2025)
 
 - ToC Update.

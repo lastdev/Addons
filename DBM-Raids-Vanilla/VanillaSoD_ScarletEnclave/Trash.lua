@@ -5,14 +5,14 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic"
 
-mod:SetRevision("20250423221724")
+mod:SetRevision("20250521174014")
 mod:SetZone(2856)
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true -- ENCOUNTER_END is somewhat unreliable in this raud, see all the terrible 10min+ logs for random fights on WCL that are just trash
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED 1232703",
-	"SPELL_CAST_START 1232703",
+	"SPELL_AURA_APPLIED 1232703 28547 1233069",
+	"SPELL_AURA_REMOVED 1232703",
 	"SPELL_CAST_SUCCESS 1227435",
 	"SPELL_DAMAGE 1232703",
 	"SPELL_MISSED 1232703",
@@ -20,15 +20,15 @@ mod:RegisterEvents(
 	"DAMAGE_SHIELD_MISSED 1232703",
 	"GOSSIP_SHOW",
 	"UNIT_ENTERING_VEHICLE player",
-	"UNIT_SPELLCAST_START_UNFILTERED"
+	"UNIT_SPELLCAST_START_UNFILTERED",
+	"SPELL_PERIODIC_DAMAGE 28547 1233069"
 )
 
 
 local flightTimer = mod:NewIntermissionTimer(0, nil, "%s", true, "FlightTimer", nil, "136106")
 flightTimer.startLarge = true
 
--- Damage reflect, can be interrupted
-local specWarnShieldInterrupt	= mod:NewSpecialWarningInterrupt(1232703, nil, nil, nil, 1, 2)
+-- Damage reflect
 local specWarnShield			= mod:NewSpecialWarningReflect(1232703, nil, nil, nil, 1, 2)
 
 -- Whirlwind, important for melees
@@ -38,11 +38,19 @@ local timerWhirlwindCast		= mod:NewCastNPTimer(6, 1232678) -- 2 sec cast, 4 sec 
 -- Balnazzar kill RP, this starts a ~2.5 seconds after ENCOUNTER_END fires so don't move this to the Balnazzar mod, otherwise it gets caught by delayed stop
 local timerBalnazzarRP = mod:NewIntermissionTimer(48.2, 1227435)
 
+-- NewGTFO() somehow doesn't work, use old way until i figure out what's wrong here
 -- Consecration
-mod:NewGtfo{antiSpam = 5, spell = 1233069}
+--mod:NewGtfo{antiSpam = 5, spell = 1233069}
 -- Blizzard, uses old spell ID from Sapphiron
-mod:NewGtfo{antiSpam = 5, spell = 28547}
+--mod:NewGtfo{antiSpam = 5, spell = 28547}
+local specWarnGTFO	= mod:NewSpecialWarningGTFO(28547, nil, nil, nil, 1, 8)
 
+function mod:ShowGtfo(spellName)
+	if self:AntiSpam(3, "GTFO", spellName) then
+		specWarnGTFO:Show(spellName)
+		specWarnGTFO:Play("watchfeet")
+	end
+end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpell(1227435) then
@@ -59,25 +67,29 @@ function mod:WarnReflect(name)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpell(1232703) and args.destGUID == UnitGUID("target") and DBM:IsMelee("player") then
-		self:WarnReflect(args.destName)
+	if args:IsSpell(1232703) then
+		if args.destGUID == UnitGUID("target") and DBM:IsMelee("player") then
+			self:WarnReflect(args.destName)
+		end
+		DBM.Nameplate:Show(true, args.destGUID, nil, 136104, nil, DBM:IsMelee("player"))
+	elseif args:IsSpell(28547, 1233069) and args:IsPlayer() then
+		self:ShowGtfo(args.spellName)
 	end
 end
 
-function mod:SPELL_CAST_START(args)
+function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpell(1232703) then
-		if self:CheckInterruptFilter(args.sourceGUID, nil, true) then
-			specWarnShieldInterrupt:Show(args.sourceName)
-			specWarnShieldInterrupt:Play("kickcast")
-		end
+		DBM.Nameplate:Hide(true, args.destGUID, nil, 136104)
 	end
 end
 
 -- Using UNIT_ events to filter this on nameplate range (which is just 20 yard)
 function mod:UNIT_SPELLCAST_START_UNFILTERED(uId, _, spellId)
-	if spellId == 1232678 and uId:match("^nameplate") and self:AntiSpam(3, "Whirlwind") then
-		specWarnWhirlwind:Show()
-		specWarnWhirlwind:Play("whirlwind")
+	if spellId == 1232678 and uId:match("^nameplate") then
+		if self:AntiSpam(3, "Whirlwind") then
+			specWarnWhirlwind:Show()
+			specWarnWhirlwind:Play("whirlwind")
+		end
 		timerWhirlwindCast:Start(nil, UnitGUID(uId))
 	end
 end
@@ -91,6 +103,12 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 mod.DAMAGE_SHIELD = mod.SPELL_DAMAGE
 mod.DAMAGE_SHIELD_MISSED = mod.SPELL_DAMAGE
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
+	if (spellId == 28547 or spellId == 1233069) and destGUID == playerGuid then
+		self:ShowGtfo(spellName)
+	end
+end
 
 local lastGossipOptions, lastGossipSelected
 function mod:GOSSIP_SHOW(...)

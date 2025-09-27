@@ -142,6 +142,8 @@ L["Assigned Role"] = "Ruolo assegnato"
 L["Assigned Role Icon"] = "Icona del ruolo assegnato"
 --[[Translation missing --]]
 L["Assist"] = "Assist"
+--[[Translation missing --]]
+L["Assisted Combat Next Cast"] = "Assisted Combat Next Cast"
 L["At Least One Enemy"] = "Almeno un nemico"
 L["At missing Value"] = "Al valore mancante"
 L["At Percent"] = "In Percentuale"
@@ -206,6 +208,8 @@ L["Bar enabled in Boss Mod addon settings"] = "Bar enabled in Boss Mod addon set
 L["Bar enabled in DBM settings"] = "Bar enabled in DBM settings"
 --[[Translation missing --]]
 L["Bar Texture"] = "Bar Texture"
+--[[Translation missing --]]
+L["Bar Type"] = "Bar Type"
 L["Baron Geddon"] = "Barone Geddon"
 --[[Translation missing --]]
 L["Battle for Azeroth"] = "Battle for Azeroth"
@@ -264,6 +268,8 @@ L["Bottom Right"] = "Basso a destra"
 L["Bottom to Top"] = "Basso verso l'alto"
 L["Bounce"] = "Balzo"
 L["Bounce with Decay"] = "Bounce with Decay"
+--[[Translation missing --]]
+L["Break"] = "Break"
 --[[Translation missing --]]
 L["BreakUpLargeNumbers (Blizzard)"] = "BreakUpLargeNumbers (Blizzard)"
 L["Broodlord Lashlayer"] = "Signore della Progenie Lashlayer"
@@ -557,6 +563,8 @@ L["Dropdown Menu"] = "Dropdown Menu"
 --[[Translation missing --]]
 L["Dumping table"] = "Dumping table"
 --[[Translation missing --]]
+L["Dungeon (Celestial)"] = "Dungeon (Celestial)"
+--[[Translation missing --]]
 L["Dungeon (Heroic)"] = "Dungeon (Heroic)"
 --[[Translation missing --]]
 L["Dungeon (Mythic)"] = "Dungeon (Mythic)"
@@ -586,8 +594,6 @@ L["Ease In and Out"] = "Ease In and Out"
 L["Ease Out"] = "Ease Out"
 --[[Translation missing --]]
 L["Ebonroc"] = "Ebonroc"
---[[Translation missing --]]
-L["Eclipse"] = "Eclipse"
 --[[Translation missing --]]
 L["Eclipse Direction"] = "Eclipse Direction"
 --[[Translation missing --]]
@@ -693,6 +699,8 @@ L["Error deserializing"] = "Error deserializing"
 L["Error Frame"] = "Error Frame"
 --[[Translation missing --]]
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
+--[[Translation missing --]]
+L["Error in Aura '%s'"] = "Error in Aura '%s'"
 --[[Translation missing --]]
 L["Error not receiving display information from %s"] = "Error not receiving display information from %s"
 --[[Translation missing --]]
@@ -880,6 +888,8 @@ L["Glow External Element"] = "Glow External Element"
 --[[Translation missing --]]
 L["Gluth"] = "Gluth"
 --[[Translation missing --]]
+L["Glyph"] = "Glyph"
+--[[Translation missing --]]
 L["Gold"] = "Gold"
 --[[Translation missing --]]
 L["Golemagg the Incinerator"] = "Golemagg the Incinerator"
@@ -1000,9 +1010,9 @@ L["Icon Function"] = "Icon Function"
 --[[Translation missing --]]
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
 --[[Translation missing --]]
-L["Id"] = "Id"
---[[Translation missing --]]
 L["ID"] = "ID"
+--[[Translation missing --]]
+L["Id"] = "Id"
 --[[Translation missing --]]
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 --[[Translation missing --]]
@@ -1052,8 +1062,6 @@ L["Include Death Runes"] = "Include Death Runes"
 --[[Translation missing --]]
 L["Include Pets"] = "Include Pets"
 --[[Translation missing --]]
-L["Include Reagent Bank"] = "Include Reagent Bank"
---[[Translation missing --]]
 L["Include War Band Bank"] = "Include War Band Bank"
 --[[Translation missing --]]
 L["Incoming Heal"] = "Incoming Heal"
@@ -1074,9 +1082,9 @@ L["Instance"] = "Instance"
 --[[Translation missing --]]
 L["Instance Difficulty"] = "Instance Difficulty"
 --[[Translation missing --]]
-L["Instance Id"] = "Instance Id"
---[[Translation missing --]]
 L["Instance ID"] = "Instance ID"
+--[[Translation missing --]]
+L["Instance Id"] = "Instance Id"
 --[[Translation missing --]]
 L["Instance Info"] = "Instance Info"
 --[[Translation missing --]]
@@ -1240,6 +1248,8 @@ L["Loot Specialization Id"] = "Loot Specialization Id"
 --[[Translation missing --]]
 L["Loot Specialization Name"] = "Loot Specialization Name"
 --[[Translation missing --]]
+L["Lorewalking"] = "Lorewalking"
+--[[Translation missing --]]
 L["Lost"] = "Lost"
 --[[Translation missing --]]
 L["Low Damage"] = "Low Damage"
@@ -1250,7 +1260,7 @@ L["Lowest Spell Id"] = "Lowest Spell Id"
 --[[Translation missing --]]
 L["Lua error"] = "Lua error"
 --[[Translation missing --]]
-L["Lua error in aura '%s': %s"] = "Lua error in aura '%s': %s"
+L["Lua error in Aura '%s': %s"] = "Lua error in Aura '%s': %s"
 --[[Translation missing --]]
 L["Lucifron"] = "Lucifron"
 --[[Translation missing --]]
@@ -1413,8 +1423,6 @@ L["Name(s)"] = "Name(s)"
 L["Name/Realm of Caster's Target"] = "Name/Realm of Caster's Target"
 --[[Translation missing --]]
 L["Nameplate"] = "Nameplate"
---[[Translation missing --]]
-L["Nameplate Type"] = "Nameplate Type"
 --[[Translation missing --]]
 L["Nameplates"] = "Nameplates"
 --[[Translation missing --]]
@@ -1608,6 +1616,8 @@ L["Ouro"] = "Ouro"
 --[[Translation missing --]]
 L["Outline"] = "Outline"
 --[[Translation missing --]]
+L["Over Energize"] = "Over Energize"
+--[[Translation missing --]]
 L["Overhealing"] = "Overhealing"
 --[[Translation missing --]]
 L["Overkill"] = "Overkill"
@@ -1756,13 +1766,15 @@ L["Progress Total"] = "Progress Total"
 --[[Translation missing --]]
 L["Progress Value"] = "Progress Value"
 --[[Translation missing --]]
+L["Pull"] = "Pull"
+--[[Translation missing --]]
 L["Pulse"] = "Pulse"
 --[[Translation missing --]]
 L["PvP Flagged"] = "PvP Flagged"
 --[[Translation missing --]]
-L["PvP Talent selected"] = "PvP Talent selected"
---[[Translation missing --]]
 L["PvP Talent Selected"] = "PvP Talent Selected"
+--[[Translation missing --]]
+L["PvP Talent selected"] = "PvP Talent selected"
 --[[Translation missing --]]
 L["Quality Id"] = "Quality Id"
 --[[Translation missing --]]
@@ -1988,15 +2000,19 @@ https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
 --[[Translation missing --]]
 L["Select Frame"] = "Select Frame"
 --[[Translation missing --]]
+L["Select the type of timer to filter"] = "Select the type of timer to filter"
+--[[Translation missing --]]
 L["Selection Mode"] = "Selection Mode"
 --[[Translation missing --]]
 L["Separator"] = "Separator"
 --[[Translation missing --]]
-L["Set IDs can be found on websites such as classic.wowhead.com/item-sets"] = "Set IDs can be found on websites such as classic.wowhead.com/item-sets"
---[[Translation missing --]]
 L["Set IDs can be found on websites such as wowhead.com/cata/item-sets"] = "Set IDs can be found on websites such as wowhead.com/cata/item-sets"
 --[[Translation missing --]]
+L["Set IDs can be found on websites such as wowhead.com/classic/item-sets"] = "Set IDs can be found on websites such as wowhead.com/classic/item-sets"
+--[[Translation missing --]]
 L["Set IDs can be found on websites such as wowhead.com/item-sets"] = "Set IDs can be found on websites such as wowhead.com/item-sets"
+--[[Translation missing --]]
+L["Set IDs can be found on websites such as wowhead.com/mop-classic/item-sets"] = "Set IDs can be found on websites such as wowhead.com/mop-classic/item-sets"
 --[[Translation missing --]]
 L["Shadow Resistance"] = "Shadow Resistance"
 --[[Translation missing --]]
@@ -2192,6 +2208,8 @@ L["Stage"] = "Stage"
 --[[Translation missing --]]
 L["Stage Counter"] = "Stage Counter"
 --[[Translation missing --]]
+L["Stagger"] = "Stagger"
+--[[Translation missing --]]
 L["Stagger (%)"] = "Stagger (%)"
 --[[Translation missing --]]
 L["Stagger against Target (%)"] = "Stagger against Target (%)"
@@ -2334,6 +2352,8 @@ L["Thaddius"] = "Thaddius"
 --[[Translation missing --]]
 L["The aura has overwritten the global '%s', this might affect other auras."] = "The aura has overwritten the global '%s', this might affect other auras."
 --[[Translation missing --]]
+L["The aura tried to overwrite the aura_env global, which is not allowed."] = "The aura tried to overwrite the aura_env global, which is not allowed."
+--[[Translation missing --]]
 L["The effective level differs from the level in e.g. Time Walking dungeons."] = "The effective level differs from the level in e.g. Time Walking dungeons."
 --[[Translation missing --]]
 L["The Four Horsemen"] = "The Four Horsemen"
@@ -2399,6 +2419,8 @@ L["Time since stack lost"] = "Time since stack lost"
 L["Timed"] = "Timed"
 --[[Translation missing --]]
 L["Timed Progress"] = "Timed Progress"
+--[[Translation missing --]]
+L["Timer"] = "Timer"
 --[[Translation missing --]]
 L["Timer Id"] = "Timer Id"
 --[[Translation missing --]]

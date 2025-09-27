@@ -1,8 +1,7 @@
-if DBM:GetTOC() < 110100 then return end
-local mod	= DBM:NewMod(2646, "DBM-Raids-WarWithin", 1, 1296)
+local mod	= DBM:NewMod(2646, "DBM-Raids-WarWithin", 2, 1296)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250416053116")
+mod:SetRevision("20250818012243")
 mod:SetCreatureID(231075)
 mod:SetEncounterID(3016)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3)
@@ -26,17 +25,12 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_START boss1"
 )
 
---TODO: Possibly add a bombs remaining infoframe similar to hellfire citadel 2nd boss
---TODO, stuff with Greedy Goblin's Armaments ?
---TODO, target scan giga blast?
 --TODO, VERIFY when a player is carrying a Gigabomb, use https://www.wowhead.com/ptr-2/spell=469361/giga-bomb too?
 --TODO, add stack announce for https://www.wowhead.com/ptr-2/spell=471352/juice-it when frequency of stacks is known
 --TODO, detect darkfuse cronies spawn, maybe https://www.wowhead.com/ptr-2/spell=462416/signal-flare ?
 --TODO, auto mark hob goblins? https://www.wowhead.com/ptr-2/spell=1216846/holding-a-wrench
---TODO, detect cratering cast start
---TODO, ego swapping? it'll need fancy checked ego amount checks https://www.wowhead.com/ptr-2/spell=467064/checked-ego
---TODO, announce https://www.wowhead.com/ptr-2/spell=469363/fling-giga-bomb flings?
 --TODO, possibly readd 469404 as a stack warning instead
+--TODO, LFR phase detection fails and counts don't reset and timers break at a point in fight, unclear why without some detailed trancsriptor logs of LFR
 --NOTE, it's possible to detect phase changes in story mode with anchor casts, but it's a mess and not worth dev time investment since the timers don't actually matter. As such timers just hard disabled in story mode
 --[[
 stoppedAbility.id = 1214369 or ability.id = 1214229 and (type = "applydebuff" or type = "removedebuff") or ability.id = 1220290 and type = "removebuff" or (ability.id = 1226891 or ability.id = 469293) and (type = "applybuff" or type = "removebuff")
@@ -199,36 +193,36 @@ local allTimers = {
 		[2] = {
 			[469286] = {6, 54.3, 54.3, 54.3, 54.3, 54.3, 54.3},--Giga Coils (always same so no subcounts needed)
 			[466341] = {--Fused Canisters
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {10, 32.8},
 				[2] = {27.2},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[465952] = {--BBBBombs
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {34.3},
 				[2] = {35.5},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[467182] = {--Suppression
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {24},
 				[2] = {8.8},
-				[3] = {0},
+				[3] = {0.000001},
 				[4] = {7.6, 35.0},
-				[5] = {0},
+				[5] = {0.000001},
 			},
 			[466751] = {--Venting Heat
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {20.5},
 				[2] = {16.7},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 		},
 		[3] = {
@@ -238,40 +232,40 @@ local allTimers = {
 				[1] = {20.3},
 				[2] = {7.5, "v37-43"},--37 can shift to 43 due to collision with another spell
 				[3] = {31.1},
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[466751] = {--Venting Heat
 				[0] = {18},
 				[1] = {11.6, 37},
 				[2] = {37.4},
 				[3] = {"v19.9-26"},--19-26 (Collision with BBB Blast)
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[1214607] = {--BBB Blast
 				[0] = {"v5-8", 36},
 				[1] = {30.7},
 				[2] = {18.5, "v26-35"},--26-35
 				[3] = {"v19.7-23.1"},--(Collision with Venting Heat)
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[466342] = {--Tick Tock Canisters
 				[0] = {22},
 				[1] = {6.6, 35},
 				[2] = {26.4},
 				[3] = {3.6},
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[466958] = {--Ego Check
 				[0] = {14, 13, 15, 8},
 				[1] = {15.3, 13.4, 8, 10},
 				[2] = {16.4, 8, 9, 26},
 				[3] = {10.6, 18.5, 11},
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 		},
 	},
@@ -285,36 +279,36 @@ local allTimers = {
 		[2] = {
 			[469286] = {6, 70.6, 70.6, 70.6, 70.6, 70.6, 70.6},--Giga Coils
 			[466341] = {--Fused Canisters
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {12.7, 41.1},
-				[2] = {0},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[2] = {0.000001},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[465952] = {--BBBBombs
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {41.8},
-				[2] = {0},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[2] = {0.000001},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[467182] = {--Suppression
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {30},
 				[2] = {9.4},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[466751] = {--Venting Heat
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {25.5},
-				[2] = {0},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[2] = {0.000001},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 		},
 		[3] = {
@@ -362,28 +356,28 @@ local allTimers = {
 		[2] = {
 			[469286] = {0, "v72.7-75.1"},--Giga Coils
 			[465952] = {--BBBBombs
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {"v42.9-45"},
-				[2] = {0},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[2] = {0.000001},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[467182] = {--Suppression
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {"v23.7-25.8", 31.9},
-				[2] = {0},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[2] = {0.000001},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[466751] = {--Venting Heat
-				[0] = {0},--No casts before first coil
+				[0] = {0.000001},--No casts before first coil
 				[1] = {"v10.6-12.6", 40.7},
 				[2] = {"v9.4-10.1"},
-				[3] = {0},
-				[4] = {0},
-				[5] = {0},
+				[3] = {0.000001},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 		},
 		[3] = {
@@ -393,24 +387,24 @@ local allTimers = {
 				[1] = {"v25.2-32.4"},
 				[2] = {34, 31.2},--Second one doesn't always happen
 				[3] = {"v25.7-35.1", 32.5},
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[466751] = {--Venting Heat
 				[0] = {21.7, 31.2},
 				[1] = {"v12.7-21.1", 31.2},--All of these have same variance on first cast
 				[2] = {"v13.2-21.5", 32.5},--^
 				[3] = {"v13.2-22.9", 31.2},--^
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 			[1214607] = {--BBBBlast
-				[0] = {26.1, 33},
+				[0] = {"v21.7-26.1", 33},
 				[1] = {"v24.9-33.6"},
 				[2] = {"v9-38.2", 37.5},--Boss sometimes skips first cast and just goes right into second. we just handle it with variance
 				[3] = {"v17.6-27.2", 33.1},
-				[4] = {0},
-				[5] = {0},
+				[4] = {0.000001},
+				[5] = {0.000001},
 			},
 		},
 	},
@@ -835,7 +829,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
-	elseif spellId == 1226891 and self:AntiSpam(2.5, 1) then--Circuit Reboot Applied
+	elseif spellId == 1226891 and self:AntiSpam(3, 1) then--Circuit Reboot Applied (1219062 is lfr id)
 		self:SetStage(0.5)--Increment stage by 0.5
 		self.vb.mayhemRocketsCount = 0
 		--Stop all timers
@@ -875,7 +869,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.InfoFrame then--Armageddon-class Plating
 			DBM.InfoFrame:Hide()
 		end
-	elseif spellId == 1214369 and self:AntiSpam(5, 3) then--Backup stage 3/1 mythic trigger
+	elseif spellId == 1214369 and self:AntiSpam(8, 3) then--Backup stage 3/1 mythic trigger
 		timerTotalDestruction:Stop()
 		if self:IsMythic() then
 			self:SetStage(0.5)--Stage should be 0.5 at this point, but this also future proofs race condition when overgearing where you might push boss to stage 2 at same time
@@ -987,7 +981,7 @@ function mod:SPELL_AURA_REMOVED(args)
 				timerEgoCheckCD:Start(allTimers[savedDifficulty][3][466958][self.vb.coilsCount][1])
 			end
 		end
-	elseif spellId == 1226891 and self:IsInCombat() and self:AntiSpam(2.5, 2) then--Circuit Reboot Removed
+	elseif spellId == 1226891 and self:IsInCombat() and self:AntiSpam(3, 2) then--Circuit Reboot Removed (1219062 is lfr id)
 		self:SetStage(0.5)--Increment stage by 0.5
 		--Reset Counts
 		self.vb.canisterCount = 0
@@ -1029,7 +1023,7 @@ end
 function mod:SPELL_INTERRUPT(args)
 	if args.extraSpellId == 466834 then
 		timerShockBarrageCast:Stop(args.destGUID)
-	elseif args.extraSpellId == 1214369 and self:AntiSpam(5, 3) then
+	elseif args.extraSpellId == 1214369 and self:AntiSpam(8, 3) then
 		timerTotalDestruction:Stop()
 		if self:IsMythic() then
 			self:SetStage(0.5)--Stage should be 0.5 at this point, but this also future proofs race condition when overgearing where you might push boss to stage 2 at same time

@@ -1,4 +1,4 @@
-HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
+local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
 HandyNotes_Draenor.nodes[525] = {
     [23172495] = { 525, "33916", "Arena Master's War Horn", "Up in the stands above the arena", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "108735" },

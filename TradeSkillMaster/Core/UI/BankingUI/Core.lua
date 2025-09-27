@@ -160,9 +160,6 @@ function private.GetSettingsContextKey()
 end
 
 function private.UpdateCurrentModule(frame)
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) then
-		ReagentBankFrame_OnShow(ReagentBankFrame)
-	end
 	-- Update navigation buttons
 	local navButtonsFrame = frame:GetElement("content.navButtons")
 	for _, module in ipairs(MODULE_LIST) do
@@ -212,7 +209,7 @@ function private.UpdateCurrentModule(frame)
 			:SetHeight(24)
 			:SetMargin(0, 0, 8, 0)
 			:SetFont("BODY_BODY2_MEDIUM")
-			:SetDisabled(not ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK))
+			:SetDisabled(not ClientInfo.IsRetail())
 			:SetText(L["Deposit reagents"])
 			:SetScript("OnClick", private.WarehousingDepositReagentsBtnOnClick)
 		)
@@ -365,7 +362,11 @@ function private.SelectAllGroupsOnClick(button)
 end
 
 function private.WarehousingDepositReagentsBtnOnClick()
-	DepositReagentBank()
+	if ClientInfo.IsRetail() then
+		C_Bank.AutoDepositItemsIntoBank(Enum.BankType.Character)
+	else
+		DepositReagentBank()
+	end
 end
 
 function private.WarehousingDepositWarboundBtnOnClick()
@@ -442,7 +443,7 @@ function private.FSMCreate()
 			footerButtonsFrame:GetElement("restockBagsBtn")
 				:SetDisabled(context.progress)
 			footerButtonsFrame:GetElement("depositReagentsBtn")
-				:SetDisabled(context.progress or not ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK))
+				:SetDisabled(context.progress or not ClientInfo.IsRetail())
 			footerButtonsFrame:GetElement("row4.emptyBagsBtn")
 				:SetDisabled(context.progress)
 			footerButtonsFrame:GetElement("row4.restoreBagsBtn")

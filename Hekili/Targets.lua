@@ -216,7 +216,10 @@ local enemyExclusions = {
     [237967] = true,              -- Gallywix: Discharged Giga Bomb
     [237968] = true,              -- Gallywix: Charged Giga Bomb
     [151579] = true,              -- Operation: Mechagon - Shield Generator
-    [219588] = true               -- Cinderbrew Meadery - Yes Man (etc.)
+    [219588] = true,              -- Cinderbrew Meadery - Yes Man (etc.),
+    [165913] = true,              -- Halls of Atonement: Ghastly Parishioner
+    [237763] = 1228284,           -- Manaforge Omega: Nexus King Salad Bar - Royal Ward immunity
+    [245705] = true               -- Manaforge Omega: Dimensius - Voidwarden (one should be focussed/cleaved down off miniboss, no reason to full AoE)
 }
 
 local requiredForInclusion = {
@@ -432,7 +435,8 @@ do
                                     details = format( "%s\n    - Excluded by pet range.", details )
                                 end
                             end
-
+                            -- FIXME It looks like some kind of resolution/backup plan is needed for range checking (note to self: see Targets.lua line 436)
+                            -- https://github.com/Hekili/hekili/issues/4845
                             if not excluded and checkPlates then
                                 local _, maxR = RC:GetRange( unit )
                                 excluded = maxR ~= nil and maxR > checkPlates

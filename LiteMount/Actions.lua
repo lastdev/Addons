@@ -284,7 +284,16 @@ ACTIONS['LeaveVehicle'] = {
     argType = 'none',
     handler =
         function (args, context)
-            if CanExitVehicle() then
+            if UnitOnTaxi('player') then
+                if MainMenuBarVehicleLeaveButton then
+                    -- Clicking updates the state of the UI button which is nice
+                    LM.Debug("  * setting action to click MainMenuBarVehicleLeaveButton")
+                    return LM.SecureAction:Click(MainMenuBarVehicleLeaveButton)
+                else
+                    LM.Debug("  * setting action to TaxiRequestEarlyLanding")
+                    return LM.SecureAction:Execute(TaxiRequestEarlyLanding)
+                end
+            elseif CanExitVehicle() then
                 LM.Debug("  * setting action to leavevehicle")
                 return LM.SecureAction:LeaveVehicle()
             end
@@ -603,12 +612,28 @@ ACTIONS['CantMount'] = {
 
 local function SummonJournalMountDirect(...)
     if IsMounted() then
+        LM.Debug("  * calling dismount directly")
         Dismount()
     else
+        LM.Debug("  * summoning a journal mount directly")
         local mounts = LM.MountRegistry:FilterSearch(..., 'JOURNAL', 'CASTABLE')
+        LM.Debug("  * found %d suitable journal mounts", #mounts)
         local m = mounts:Random()
-        if m then C_MountJournal.SummonByID(m.mountID) end
+        if m then
+            LM.Debug("  * summoning %s (id=%d)", m.name, m.mountID)
+            C_MountJournal.SummonByID(m.mountID)
+        end
     end
+end
+
+local function GetCombatMountAction(flag)
+    -- C_MountJournal.SummonByID will fail if you are in a shapeshift form.
+    if select(2, UnitClass("player")) == "DRUID" then
+        local act = LM.SecureAction:Macro("/cancelform [form]")
+        act:AddExecute(function () SummonJournalMountDirect(flag) end)
+        return act
+    end
+    return LM.SecureAction:Execute(function () SummonJournalMountDirect(flag) end)
 end
 
 local function CombatHandlerOverride(args, context)
@@ -619,23 +644,31 @@ local function CombatHandlerOverride(args, context)
         LM.Debug("  * matched encounter %s (%d)", name, id)
     end
 
-    -- Tindral Sageswift, Amirdrassil raid (Dragonflight)
+    -- It seems obvious that you should use the encounter info here, but
+    -- if you are the one who pulled it's not set yet and doesn't work.
+
+    -- When selecting maps be sure to consider the case where you get
+    -- brezzed and are on a different map when entering combat anew.
+    -- Auras are also generally not useful because they aren't on you
+    -- when combat begins.
+
+    -- Tindral Sageswift, Amirdrassil (DF). 2234 is the parent of all the
+    -- relevant maps.
     if LM.Environment:IsMapInPath(2234) then
-        return LM.SecureAction:Execute(function () SummonJournalMountDirect('DRAGONRIDING') end)
+        return GetCombatMountAction('DRAGONRIDING')
+    end
+
+    -- Dimensius, Manaforge Omega raid (TWW)
+    if LM.Environment:InInstance(2810) then
+        local mapID = C_Map.GetBestMapForUnit('player')
+        if mapID >= 2467 and mapID <= 2470 then
+            return GetCombatMountAction('DRAGONRIDING')
+        end
     end
 
     -- The Dawnbreaker dungeon (The War Within)
-    -- Two boss fight (Speaker Shadowcrown and Rasha'nan) have flying in combat
-    -- enabled by a debuff, Radiant Light.
-    --      https://www.wowhead.com/spell=449042/radiant-light
-    -- Unfortunately it may not be enabled when you enter combat so we have to
-    -- override the whole instance.
-
-    local instanceID = select(8, GetInstanceInfo())
-    if instanceID == 2662 then
-        -- Because you can fly out of combat the CASTABLE checks work correctly
-        -- and there's no need to be fancy.
-        return LM.SecureAction:Execute(function () SummonJournalMountDirect('DRAGONRIDING') end)
+    if LM.Environment:InInstance(2662) then
+        return GetCombatMountAction('DRAGONRIDING')
     end
 end
 

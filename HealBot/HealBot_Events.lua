@@ -177,7 +177,7 @@ end
 
 function HealBot_Events_UpdateRange(button)
       --HealBot_setCall("HealBot_Events_UpdateRange", button)
-    HealBot_Range_UpdateUnit(button)
+    button.range.nextcheck=0
 end
 
 function HealBot_Events_UnitTarget(button)
@@ -205,8 +205,8 @@ end
 
 function HealBot_Events_UnitPhase(button)
       --HealBot_setCall("HealBot_Events_UnitPhase", button)
-    if button.status.range>0 then button.status.range=-3 end
-    HealBot_Range_UpdateUnit(button)
+    button.range.inphase=HealBot_Range_UnitInPhase(button.unit, button.guid)
+    HealBot_Events_UpdateRange(button)
 end
 
 function HealBot_Events_PlayerCheck()
@@ -216,7 +216,7 @@ end
 
 function HealBot_Events_PartyMembersChanged()
       --HealBot_setCall("HealBot_Events_PartyMembersChanged")
-    HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPlayers",true)
+    HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPlayers")
 end
 
 function HealBot_Events_RosterUpdate()
@@ -322,20 +322,19 @@ end
 
 function HealBot_Events_CastNotify(unitName,spell,unit)
       --HealBot_setCall("HealBot_Events_CastNotify", nil, nil, unit)
-    local z=HealBot_Events_luVars["ChatNOTIFY"];
     local s=gsub(HealBot_Events_luVars["ChatMSG"],"#s",spell)
     s=gsub(s,"#l",HealBot_WoWAPI_SpellLink(spell, ""))
     s=gsub(s,"#n",unitName)
     local w=nil;
 
-    if z == 3 and UnitIsPlayer(unit) and UnitPlayerControlled(unit) and not UnitIsUnit("player",unit) then
+    if HealBot_Events_luVars["ChatNOTIFY"] == 3 and UnitIsPlayer(unit) and UnitPlayerControlled(unit) and not UnitIsUnit("player",unit) then
         s=gsub(s,unitName,HEALBOT_WORDS_YOU)
         HealBot_Comms_SendInstantMsg(s,unitName)
-    elseif z == 5 then
+    elseif HealBot_Events_luVars["ChatNOTIFY"] == 5 then
         HealBot_Comms_SendInstantMsg(s,false,true)
-    elseif z == 6 then
+    elseif HealBot_Events_luVars["ChatNOTIFY"] == 6 then
         HealBot_Comms_SendInstantMsg(s,false,false,true)
-    elseif z == 4 then
+    elseif HealBot_Events_luVars["ChatNOTIFY"] == 4 then
         HealBot_Comms_SendInstantMsg(s)
     else
         HealBot_AddChat(s);
@@ -356,12 +355,12 @@ function HealBot_Events_UnitSpellCastStart(button, unitTarget, castGUID, spellID
         end
         if HealBot_Events_ResSpells[scName] then
             if HealBot_Events_ResSpells[scName] == 2 then
-                if HealBot_Events_luVars["massResTime"]<HealBot_TimeNow then
+                if HealBot_Events_luVars["massResTime"]<HealBot_ServerTimeNow then
                     HealBot_Events_luVars["massResUnit"]=button.unit
-                    HealBot_Events_luVars["massResTime"]=HealBot_TimeNow+10
-                elseif HealBot_Events_luVars["massResAltTime"]<HealBot_TimeNow and HealBot_Events_luVars["massResUnit"]~=button.unit then
+                    HealBot_Events_luVars["massResTime"]=HealBot_ServerTimeNow+10
+                elseif HealBot_Events_luVars["massResAltTime"]<HealBot_ServerTimeNow and HealBot_Events_luVars["massResUnit"]~=button.unit then
                     HealBot_Events_luVars["massResAltUnit"]=button.unit
-                    HealBot_Events_luVars["massResAltTime"]=HealBot_TimeNow+10
+                    HealBot_Events_luVars["massResAltTime"]=HealBot_ServerTimeNow+10
                 end
             end
         end
@@ -441,7 +440,7 @@ end
 
 function HealBot_Events_MassRes()
       --HealBot_setCall("HealBot_Events_MassRes")
-    if HealBot_Events_luVars["massResTime"]>HealBot_TimeNow or HealBot_Events_luVars["massResAltTime"]>HealBot_TimeNow then
+    if HealBot_Events_luVars["massResTime"]>HealBot_ServerTimeNow or HealBot_Events_luVars["massResAltTime"]>HealBot_ServerTimeNow then
         return true
     else
         return false
@@ -568,8 +567,8 @@ end
 function HealBot_Events_UnitManaUpdate(button)
       --HealBot_setCall("HealBot_Events_UnitManaUpdate", button)
     button.mana.change=true
-    --button.mana.nextcheck=HealBot_TimeNow+15
     HealBot_UnitMana(button)
+    button.mana.changetime=HealBot_TimeNow+0.5
 end
 
 local thauHealAmount=0
@@ -591,7 +590,7 @@ function HealBot_Events_UnitThreat(button)
     if UnitAffectingCombat(button.unit) then
         if button.status.current<HealBot_Unit_Status["DC"] then
             if not HealBot_Data["UILOCK"] and HealBot_retLuVars("UpdateEnemyFrame") and HealBot_Data["PALIVE"] then
-                if hbv_Skins_GetVar("General", "UNITINCOMBAT")>1 and button.status.range>0 and
+                if hbv_Skins_GetVar("General", "UNITINCOMBAT")>1 and button.range.current>0 and
                    HealBot_ValidLivingEnemy(button.unit, button.unit.."target") and UnitIsUnit(button.unit, button.unit.."targettarget") then
                     if hbv_Skins_GetVar("General", "UNITINCOMBAT") == 3 then
                         HealBot_PlayerRegenDisabled()
@@ -689,8 +688,12 @@ local hbafk=false
 function HealBot_Events_UnitFlagsChanged(button)
           --HealBot_setCall("HealBot_Events_UnitFlagsChanged", button)
     hbafk=false
-    if hbv_Skins_GetFrameBoolean("Icons", "SHOWAFK", button.frame) and UnitIsAFK(button.unit) then
-        hbafk=true
+    if UnitIsAFK(button.unit) then
+        hbv_Auras_Save_Buffs()
+        hbv_Auras_Save_Debuffs()
+        if hbv_Skins_GetFrameBoolean("Icons", "SHOWAFK", button.frame) then
+            hbafk=true
+        end
     end
     if button.status.afk~=hbafk then
         button.status.afk=hbafk
@@ -722,7 +725,7 @@ end
 function HealBot_Events_PetsChanged()
       --HealBot_setCall("HealBot_Events_PetsChanged")
     if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][10]["STATE"] then
-        HealBot_Timers_Set("OOC","RefreshPartyNextRecalcPets")
+        HealBot_Timers_Set("OOCNT","RefreshPartyNextRecalcPets")
     end
 end
 
@@ -932,14 +935,14 @@ function HealBot_Events_PlayerEnteringWorld()
     HealBot_setLuVars("CheckAuraFlags", true)
     HealBot_setLuVars("DropCombat", 1)
     HealBot_Timers_Set("INIT","EnteringWorld")
-    HealBot_Timers_Set("OOC","SaveSpellsProfile")
-    HealBot_setLuVars("qaFRNext", HealBot_TimeNow+5)
-    HealBot_Timers_TurboOn()
+    --HealBot_Timers_Set("OOC","SaveSpellsProfile")
+    HealBot_setLuVars("qaFRNext", HealBot_ServerTimeNow+2)
+    --HealBot_Timers_TurboOn()
 end
 
 function HealBot_Events_PlayerLeavingWorld()
       --HealBot_setCall("HealBot_Events_PlayerLeavingWorld")
-    HealBot_setLuVars("qaFRNext", HealBot_TimeNow+90)
+    HealBot_setLuVars("qaFRNext", HealBot_ServerTimeNow+15)
     HealBot_Timers_Set("LAST","EndAggro")
     HealBot_Options_SaveSpellsProfile()
     --HealBot_UnRegister_Events();
@@ -954,6 +957,9 @@ function HealBot_Events_CursorChanged(isDefault, newCursorType)
       --HealBot_setCall("HealBot_Events_CursorChanged")
     HealBot_Options_CursorChanged(isDefault, newCursorType)
     HealBot_ActionIcons_CursorChanged(isDefault, newCursorType)
+    if HealBot_Events_luVars["pluginAuraWatch"] then
+        HealBot_Plugin_AuraWatch_CursorChanged(isDefault, newCursorType)
+    end
 end
 
 function HealBot_Events_ModifierChange()

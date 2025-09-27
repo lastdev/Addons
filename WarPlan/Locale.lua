@@ -7,9 +7,9 @@ V =
       "Vor %s abgeschlossen", z, "Noch verfügbar:", "BONUS erhalten!", "In geplanter Gruppe:", "Mission fehlgeschlagen", "Missions-Verlauf", "Mission erfolgreich", "Keine möglichen Gruppen", "Ergebnisse vergangener Missionen werden hier angezeigt.",
       "Schicke geplante Gruppen",
     }
-    or C == "esES" and { -- 20/21 (95%)
+    or C == "esES" and { -- 21/21 (100%)
       "%d |4misión:misiones; disponibles", "%d |4misión:misiones; completadas", "%d |4misión:misiones; en progreso", "%d |4misión:misiones; restantes...", "%d |4grupo:grupos; restantes...", "Coste de misión base: %s", "Recompensa extra", "Limpiar todos los grupos tentativos", "Clic para completar", "Completar Todas",
-      "Completada hace %s", z, "Expira en:", "Gran éxito", "En el Grupo Tentativo:", "Misión fallida", "Histórico de Misión", "Éxito en la misión", "No hay grupos viables.", "Los resultados de las misiones completadas se guardaran y se mostrarán aquí.",
+      "Completada hace %s", "Completado hace tiempo", "Expira en:", "Gran éxito", "En el Grupo Tentativo:", "Misión fallida", "Histórico de Misión", "Éxito en la misión", "No hay grupos viables.", "Los resultados de las misiones completadas se guardaran y se mostrarán aquí.",
       "Enviar Grupos Tentativos",
     }
     or C == "esMX" and { -- 17/21 (80%)

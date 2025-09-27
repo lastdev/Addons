@@ -1,5 +1,79 @@
 # Changelog
 
+## Changed in v96
+
+* K'aresh: adjustments to a few coordinates
+* Fix an issue where trait-gated points weren't correctly displaying on first login
+
+## Changed in v95
+
+* Fix an issue with points displaying across zones in Azj-Kahet
+
+## Changed in v94
+
+* K'aresh: adjustments to a few coordinates
+* Fix creating waypoints for all related points from the right-click menu. Thanks to Taurenkey for this!
+
+## Changed in v93
+
+* K'aresh: add the Phase-Lost-and-Found achievement, hidden by default
+* Fixed a typo
+
+## Changed in v92
+
+* All that and I forgot to update the TOC interface number for 11.2.0 :-P
+* K'aresh: added missing questID for the Wallbreaker
+* Fixed some bugs with showing nodes on parent maps, and with trait checks not using a cached config ID
+
+## Changed in v91
+
+* K'aresh: add loot to lots of rares now that data is out there for it
+
+## Changed in v90
+
+* K'aresh:
+    * Note that the phased treasures require What Lies Beyond
+    * Hide the individual brothers when you find them for Gift of the Brothers
+* Azj-kahet: add a few more rumors to the map
+
+## Changed in v89
+
+* K'aresh:
+    * Change the icon for phase conduits
+    * Add Dangerous Prowlers of K'aresh
+    * Add the Delves and their loot
+    * Tweak how the nearby points for Heka'tamos are displayed
+* Undermine: the discovery achievement was missing from the delve tooltips
+
+## Changed in v88
+
+* K'aresh: add Reshanor, and update various non-achievement rares
+
+## Changed in v87
+
+* Azj-Kahet: showing the tooltip for some of the profession masters could cause an error
+
+## Changed in v86
+
+* Updated for 11.2.0
+* K'aresh: all the basics, missing some non-achievement rares
+
+## Changed in v85
+
+* Updated for 11.1.7
+* Undermine: fixed the Gobfather's questid so loot will show again
+
+## Changed in v84
+
+* Undermine:
+    * Added the quartermasters to the map
+    * Some rare quest updates (thanks ywi!)
+
+## Changed in v83
+
+* Updated for 11.1.5
+* Undermine: added the Authentic Undermine Clam Chowder recipe
+
 ## Changed in v82
 
 * Undermine: add some missing loot, and a hidden shirt

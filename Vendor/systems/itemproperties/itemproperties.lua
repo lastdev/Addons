@@ -24,6 +24,7 @@ function ItemProperties:Startup(register)
     IS_RETAIL = Addon.Systems.Info.IsRetailEra
     IS_RETAIL_NEXT = Addon.Systems.Info.IsRetailNext
     IS_CLASSIC = Addon.Systems.Info.IsClassicEra
+    IS_CLASSIC_NEXT = Addon.Systems.Info.IsClassicNext
     itemproperties = self
     
     register({
@@ -69,7 +70,7 @@ local function isTransmogEquipment(invtype)
     return transmog_invtypes[invtype] or false
 end
 
-local function doGetItemProperties(itemObj)
+local function doGetItemProperties(itemObj, guidOverride, tooltipDataOverride)
 
 
     -- Empty item detection. Have to do this since there's very strange behavior for determining
@@ -80,7 +81,7 @@ local function doGetItemProperties(itemObj)
     end
 
     local location = itemObj:GetItemLocation() or false
-    local guid = itemObj:GetItemGUID() or false
+    local guid = guidOverride or itemObj:GetItemGUID() or false
     if not guid then
 
         return nil
@@ -100,6 +101,7 @@ local function doGetItemProperties(itemObj)
     item.GUID = guid or false
     item.Link = itemObj:GetItemLink()
     item.Count = count
+    item.Location = location or ItemLocation:CreateEmpty()
 
     -- Get more id and cache GetItemInfo, because we aren't bad.
     local getItemInfo = {Addon:GetItemInfo(item.Link)}
@@ -112,14 +114,14 @@ local function doGetItemProperties(itemObj)
     if not item.GUID then return nil end
 
     -- Populate tooltip and surface args.
-    local tooltipdata = nil
-    if IS_RETAIL then
+    local tooltipdata = tooltipDataOverride
+    if not tooltipdata and C_TooltipInfo and C_TooltipInfo.GetItemByGUID then
         tooltipdata = C_TooltipInfo.GetItemByGUID(item.GUID)
 
         -- TooltipUtil.SurfaceArgs removed in 11.0
         -- Does not appear necessary in order for data to be
         -- available.
-        if not Addon.Systems.Info.IsRetailNext then
+        if TooltipUtil and TooltipUtil.SurfaceArgs then
             TooltipUtil.SurfaceArgs(tooltipdata)
             for _, line in ipairs(tooltipdata.lines) do
                 TooltipUtil.SurfaceArgs(line)
@@ -132,6 +134,7 @@ local function doGetItemProperties(itemObj)
 
     -- Get the effective item level.
     item.Level = Addon:GetDetailedItemLevelInfo(item.Link)
+    item.MaxLevel = item.Level  -- MaxLevel is the level unless we determine otherwise. This allows using MaxLevel safely in any situation you want to check level.
 
     -- Rip out properties from GetItemInfo
     item.Id = itemObj:GetItemID()
@@ -174,7 +177,24 @@ local function doGetItemProperties(itemObj)
     if IS_RETAIL then item.IsProfessionEquipment = item.IsEquipment and item.TypeId == 19 end
     item.IsEquipped = location and location:IsEquipmentSlot()
     if IS_RETAIL then item.IsTransmogEquipment = isTransmogEquipment(item.EquipLoc) end
-    if IS_RETAIL then item.IsUpgradeable = location and C_ItemUpgrade.CanUpgradeItem(location) end
+    if IS_RETAIL and location then item.IsScrappable = C_Item.CanScrapItem(location) end
+
+    -- Item Upgrade info
+    if IS_RETAIL then
+        if item.IsEquipment then
+            local upgradeInfo = C_Item.GetItemUpgradeInfo(item.Link)
+
+            -- upgradeInfo should always have a value, check the track string to see if it is upgradeable.
+            if upgradeInfo.trackString then
+                item.IsUpgradeable = true
+                item.MaxLevel = upgradeInfo.maxItemLevel
+                item.UpgradeTrack = upgradeInfo.trackString
+                item.UpgradeLevel = upgradeInfo.currentLevel
+                item.UpgradeMax = upgradeInfo.maxLevel
+                item.IsFullyUpgraded = item.UpgradeLevel == item.UpgradeMax
+            end
+        end
+    end
 
     -- Get soulbound information
     if location and C_Item.IsBound(location) then
@@ -191,7 +211,9 @@ local function doGetItemProperties(itemObj)
     else
         if item.BindType == 2 then
             item.IsBindOnEquip = true
-            if IS_RETAIL_NEXT and C_Item.IsBoundToAccountUntilEquip(location) then
+            if (IS_RETAIL or IS_RETAIL_NEXT) and 
+            ((location and C_Item.IsBoundToAccountUntilEquip(location)) or
+             (C_Item.IsItemBindToAccountUntilEquip(item.Link))) then
                 item.IsWarboundUntilEquip = true
                 -- For rule simplicity, we will treat WarboundUntilEquip the same as Warbound
                 -- Technically it is both warbound and bind on equip.
@@ -202,7 +224,7 @@ local function doGetItemProperties(itemObj)
         end
     end
 
-    if IS_RETAIL then
+    if IS_RETAIL or IS_CLASSIC_NEXT then
         -- Determine if this item is cosmetic. Blizzard Cosmetic check doesn't count every type of cosmetic
         -- we have seen, so we will use tooltip to ensure it is actually a Cosmetic as the Player sees it.
         if tooltipdata and item.IsEquipment and itemproperties:IsItemCosmeticInTooltip(tooltipdata) then
@@ -262,16 +284,27 @@ local function doGetItemProperties(itemObj)
                 if Addon.IsDebug then
                     item.TransmogInfoSource = "PlayerHasTransmogByItemInfo"
                 end
-                item.IsAppearanceCollected = C_TransmogCollection.PlayerHasTransmogByItemInfo(item.Link)
+
+                -- Our last fallback is to use the Transmog collection, unless that isn't available.
+                -- Our final fallback is checking the appearance in the tooltip.
+                if (C_TransmogCollection and C_TransmogCollection.PlayerHasTransmogByItemInfo) then
+                    item.IsAppearanceCollected = C_TransmogCollection.PlayerHasTransmogByItemInfo(item.Link)
+                end
             end
         end
 
         item.IsUnknownAppearance = item.HasAppearance and not item.IsAppearanceCollected
 
+        if IS_CLASSIC_NEXT then
+            item.IsUnknownAppearance = item.IsUnknownAppearance or itemproperties:IsItemUnknownAppearanceInTooltip()
+        end
+
         -- Get Crafted Quality for Dragonflight professions.
         -- There is also a Reagent Quality but every instance I have found for that it is identical.
         -- We will just use the one for now unless there is need to add the differentiation.
-        item.CraftedQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(item.Link)
+        if (Addon.Systems.ItemProperties:IsPropertySupported("CraftedQuality")) then
+            item.CraftedQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(item.Link)
+        end
         if not item.CraftedQuality then item.CraftedQuality = 0 end
 
         -- Determine if this is a toy.
@@ -280,7 +313,7 @@ local function doGetItemProperties(itemObj)
         -- Toybox may be some sort of on-demand loaded component.
         item.IsToy = false
         local isToy = {C_ToyBox.GetToyInfo(item.Id)}
-        if tooltipdata and item.TypeId == 15 or item.TypeId == 0 then
+        if tooltipdata and ((item.TypeId == 15) or (item.TypeId == 0) or (item.SubTypeId == 0)) then
             if itemproperties:IsItemToyInTooltip(tooltipdata) then
                 item.IsToy = true
             end
@@ -315,7 +348,7 @@ local function doGetItemProperties(itemObj)
         end
     end
 
-    if not IS_RETAIL then
+    if not IS_RETAIL and not IS_CLASSIC_NEXT then
         -- Old tooltip import for Classic
         -- Import the tooltip text as item properties for custom rules.
         item.TooltipLeft = itemproperties:ImportTooltipTextLeft(location)
@@ -375,6 +408,12 @@ function ItemProperties:GetItemPropertiesFromTooltip()
     return nil
 end
 
+function ItemProperties:GetItemPropertiesFromExternalTooltip(tooltipData)
+    if not tooltipData then return end
+    if not tooltipData.guid then return end
+    return self:GetItemPropertiesFromItemLink(C_Item.GetItemLinkByGUID(tooltipData.guid), tooltipData.guid, tooltipData)
+end
+
 -- From Location
 function ItemProperties:GetItemPropertiesFromLocation(location)
     if not location or not Interop:IsLocationValid(location) then return nil end
@@ -382,9 +421,9 @@ function ItemProperties:GetItemPropertiesFromLocation(location)
 end
 
 -- From Link - Not a great choice, GUID is best.
-function ItemProperties:GetItemPropertiesFromItemLink(itemLink)
+function ItemProperties:GetItemPropertiesFromItemLink(itemLink, guidOverride, tooltipOverride)
     if not itemLink then return nil end
-    return doGetItemProperties(Item:CreateFromItemLink(itemLink));
+    return doGetItemProperties(Item:CreateFromItemLink(itemLink), guidOverride, tooltipOverride);
 end
 
 -- From Equipment Slot

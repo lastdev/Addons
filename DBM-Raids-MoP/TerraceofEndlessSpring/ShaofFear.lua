@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-Raids-MoP", 3, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241103134004")
+mod:SetRevision("20250923204249")
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -36,7 +36,7 @@ local warnDreadSpawns					= mod:NewCountAnnounce(132018)
 local specWarnBreathOfFearSoon			= mod:NewSpecialWarning("specWarnBreathOfFearSoon", nil, nil, nil, 2, 2)
 local specWarnThrash					= mod:NewSpecialWarningDefensive(131996, nil, nil, nil, 1, 2)
 local specWarnOminousCackleYou			= mod:NewSpecialWarningYou(129147, nil, nil, nil, 1, 6)--You have debuff, just warns you.
-local specWarnDreadSpray				= mod:NewSpecialWarningSpell(120047, nil, nil, nil, 2)--Platform ability, particularly nasty damage, and fear.
+local specWarnDreadSpray				= mod:NewSpecialWarningSpell(120047, nil, nil, nil, 2, 2)--Platform ability, particularly nasty damage, and fear.
 local specWarnDeathBlossom				= mod:NewSpecialWarningSpell(119888, nil, nil, nil, 2)--Cast, warns the entire raid.
 mod:AddBoolOption("specWarnMovement", false, "announce")--https://www.icy-veins.com/wow/sha-of-fear-strategy-guide-normal-heroic (doesn't match our built in strat but similar idea)
 local MoveWarningForward				= mod:NewSpecialWarning("MoveForward", nil, false)--Warning to switch sites on platform

@@ -39,6 +39,9 @@ BUGS:
 ---@alias castspellid string
 ---@alias schedulename string
 
+local GetSpecialization = C_SpecializationInfo and C_SpecializationInfo.GetSpecialization or GetSpecialization
+local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo
+
 LIB_OPEN_RAID_CAN_LOAD = false
 
 local versionString, revision, launchDate, gameVersion = GetBuildInfo()
@@ -56,7 +59,7 @@ end
 
 local major = "LibOpenRaid-1.0"
 
-local CONST_LIB_VERSION = 159
+local CONST_LIB_VERSION = 172
 
 if (LIB_OPEN_RAID_MAX_VERSION) then
     if (CONST_LIB_VERSION <= LIB_OPEN_RAID_MAX_VERSION) then
@@ -138,8 +141,8 @@ end
     local CONST_SPECIALIZATION_VERSION_CLASSIC = 0
     local CONST_SPECIALIZATION_VERSION_MODERN = 1
 
-    local CONST_COOLDOWN_CHECK_INTERVAL = CONST_THREE_SECONDS
-    local CONST_COOLDOWN_TIMELEFT_HAS_CHANGED = CONST_THREE_SECONDS
+    local CONST_COOLDOWN_CHECK_INTERVAL = CONST_THREE_SECONDS  --seconds between cooldown checks (ticker time)
+    local CONST_COOLDOWN_TIMELEFT_HAS_CHANGED = CONST_THREE_SECONDS --time tolerance when checking if the cooldown timeleft has changed
 
     local CONST_COOLDOWN_INDEX_TIMELEFT = 1
     local CONST_COOLDOWN_INDEX_CHARGES = 2
@@ -214,6 +217,11 @@ end
 
     openRaidLib.DeprecatedMessage = function(msg)
         sendChatMessage("|cFFFF9922OpenRaidLib|r:", "|cFFFF5555" .. msg .. "|r")
+    end
+
+    --set the ticker interval to check if the cooldown has changed
+    function openRaidLib.SetCooldownCheckInterval(value)
+        CONST_COOLDOWN_CHECK_INTERVAL = value
     end
 
     local isTimewalkWoW = function()
@@ -392,10 +400,13 @@ end
 
 --------------------------------------------------------------------------------------------------------------------------------
 --~comms
-    openRaidLib.commHandler = {}
-    function openRaidLib.commHandler.OnReceiveComm(self, event, prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-        --check if the data belong to us
-        if (prefix == CONST_COMM_PREFIX) then
+    openRaidLib.commHandler = {
+        aceComm = {},
+        eventFrame = CreateFrame("frame"),
+    }
+
+    function openRaidLib.commHandler.OnReceiveSafeComm(self, event, prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
+        if (prefix == CONST_COMM_PREFIX_LOGGED) then
             sender = Ambiguate(sender, "none")
 
             --don't receive comms from the player it self
@@ -419,8 +430,29 @@ end
                 data = data:gsub("#([^#]+)$", "")
                 --add the commId to the end of the data after a comma
                 data = data .. "," .. commId
-            else
-                data = text
+
+                openRaidLib.commHandler.OnReceiveComm(event, CONST_COMM_PREFIX, data, channel, sender, target, zoneChannelID, localID, name, instanceID, true)
+            end
+        end
+    end
+
+    openRaidLib.commHandler.eventFrame:RegisterEvent("CHAT_MSG_ADDON_LOGGED")
+    openRaidLib.commHandler.eventFrame:SetScript("OnEvent", openRaidLib.commHandler.OnReceiveSafeComm)
+
+    function openRaidLib.commHandler.aceComm.OnReceiveComm(event, prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID, bIsSafe)
+        --check if the data belong to us
+        if (prefix == CONST_COMM_PREFIX) then
+            sender = Ambiguate(sender, "none")
+
+            --don't receive comms from the player it self
+            local playerName = UnitName("player")
+            if (playerName == sender) then
+                return
+            end
+
+            --if this received data is not a safe comm, then decode it
+            local data = text
+            if (not bIsSafe) then
                 local LibDeflate = LibStub:GetLibrary("LibDeflate")
                 local dataCompressed = LibDeflate:DecodeForWoWAddonChannel(data)
                 data = LibDeflate:DecompressDeflate(dataCompressed)
@@ -435,7 +467,7 @@ end
                 return
             end
 
-            --get the first byte of the data, it indicates what type of data was transmited
+            --get the first byte of the data, it indicates what type of data was transmitted
             local dataTypePrefix = data:match("^.")
             if (not dataTypePrefix) then
                 openRaidLib.DiagnosticError("Invalid dataTypePrefix from player:", sender, "data:", data, "dataTypePrefix:", dataTypePrefix)
@@ -446,15 +478,7 @@ end
             end
 
             --if this is isn't a keystone data comm, check if the lib can receive comms
-            if (dataTypePrefix ~= CONST_COMM_KEYSTONE_DATA_PREFIX and dataTypePrefix ~= CONST_COMM_KEYSTONE_DATAREQUEST_PREFIX) then
-                if (not openRaidLib.IsCommAllowed()) then
-                    openRaidLib.DiagnosticError("comm not allowed.")
-                    return
-                end
-            end
-
-            --if this is isn't a rating data comm, check if the lib can receive comms
-            if (dataTypePrefix ~= CONST_COMM_RATING_DATA_PREFIX and dataTypePrefix ~= CONST_COMM_RATING_DATAREQUEST_PREFIX) then
+            if (dataTypePrefix ~= CONST_COMM_KEYSTONE_DATA_PREFIX and dataTypePrefix ~= CONST_COMM_KEYSTONE_DATAREQUEST_PREFIX and dataTypePrefix ~= CONST_COMM_RATING_DATA_PREFIX and dataTypePrefix ~= CONST_COMM_RATING_DATAREQUEST_PREFIX) then
                 if (not openRaidLib.IsCommAllowed()) then
                     openRaidLib.DiagnosticError("comm not allowed.")
                     return
@@ -485,11 +509,12 @@ end
         end
     end
 
-    C_ChatInfo.RegisterAddonMessagePrefix(CONST_COMM_PREFIX)
-    openRaidLib.commHandler.eventFrame = CreateFrame("frame")
-    openRaidLib.commHandler.eventFrame:RegisterEvent("CHAT_MSG_ADDON")
-    openRaidLib.commHandler.eventFrame:RegisterEvent("CHAT_MSG_ADDON_LOGGED")
-    openRaidLib.commHandler.eventFrame:SetScript("OnEvent", openRaidLib.commHandler.OnReceiveComm)
+    local aceComm = LibStub:GetLibrary("AceComm-3.0", true)
+    if (aceComm) then
+        aceComm:Embed(openRaidLib.commHandler.aceComm)
+        openRaidLib.commHandler.aceComm:RegisterComm(CONST_COMM_PREFIX, "OnReceiveComm")
+    end
+
 
     openRaidLib.commHandler.commCallback = {
                                             --when transmiting
@@ -511,9 +536,9 @@ end
         [CONST_COMM_RATING_DATAREQUEST_PREFIX] = {}, --received a request to send rating data
     }
 
-    function openRaidLib.commHandler.RegisterComm(prefix, func)
+    function openRaidLib.commHandler.RegisterORComm(prefix, func)
         --the table for the prefix need to be declared at the 'openRaidLib.commHandler.commCallback' table
-        tinsert(openRaidLib.commHandler.commCallback[prefix], func)
+        table.insert(openRaidLib.commHandler.commCallback[prefix], func)
     end
 
     local charactesrPerMessage = 251
@@ -959,6 +984,7 @@ end
         ["pvpTalentUpdate"] = {},
         ["onPlayerDeath"] = {},
         ["onPlayerRess"] = {},
+        ["raidEncounterStart"] = {},
         ["raidEncounterEnd"] = {},
         ["mythicDungeonStart"] = {},
         ["playerPetChange"] = {},
@@ -1141,6 +1167,13 @@ end
             openRaidLib.Schedules.NewUniqueTimer(4 + math.random(0, 5), openRaidLib.GearManager.SendAllGearInfo, "GearManager", "sendAllGearInfo_Schedule")
         end,
 
+        ["ENCOUNTER_START"] = function()
+            if (IsInRaid() or IsInGroup()) then
+                openRaidLib.UpdateUnitIDCache()
+                openRaidLib.internalCallback.TriggerEvent("raidEncounterStart")
+            end
+        end,
+
         ["ENCOUNTER_END"] = function()
             if (IsInRaid()) then
                 openRaidLib.internalCallback.TriggerEvent("raidEncounterEnd")
@@ -1209,6 +1242,7 @@ end
             eventFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
             eventFrame:RegisterEvent("TRAIT_TREE_CURRENCY_INFO_UPDATED")
             eventFrame:RegisterEvent("TRAIT_CONFIG_UPDATED")
+            eventFrame:RegisterEvent("ENCOUNTER_START")
         end
     end
 
@@ -1318,13 +1352,13 @@ end
     openRaidLib.internalCallback.RegisterCallback("onPlayerRess", openRaidLib.mainControl.OnPlayerRess)
 
     --a player in the group died
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_PLAYER_DEAD_PREFIX, function(data, unitName)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_PLAYER_DEAD_PREFIX, function(data, unitName)
         openRaidLib.mainControl.playerAliveStatus[unitName] = false
         openRaidLib.publicCallback.TriggerCallback("UnitDeath", openRaidLib.GetUnitID(unitName))
     end)
 
     --a player in the group is now alive
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_PLAYER_ALIVE_PREFIX, function(data, unitName)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_PLAYER_ALIVE_PREFIX, function(data, unitName)
         openRaidLib.mainControl.playerAliveStatus[unitName] = true
         openRaidLib.publicCallback.TriggerCallback("UnitAlive", openRaidLib.GetUnitID(unitName))
     end)
@@ -1382,7 +1416,7 @@ end
         openRaidLib.mainControl.SendFullData()
     end
 
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_FULLINFO_PREFIX, function(data, sourceName)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_FULLINFO_PREFIX, function(data, sourceName)
         openRaidLib.sendRequestedAllInfoCooldown = openRaidLib.sendRequestedAllInfoCooldown or 0
 
         --check if there's some delay before sending the data
@@ -1576,7 +1610,7 @@ end
         --add to the list of players information and also trigger a public callback
         UnitInfoManager.AddUnitInfo(unitName, specId, talentsString, pvpTalentsTableUnpacked)
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_PLAYERINFO_PREFIX, UnitInfoManager.OnReceiveUnitFullInfo)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_PLAYERINFO_PREFIX, UnitInfoManager.OnReceiveUnitFullInfo)
 
 
 function UnitInfoManager.SendAllPlayerInfo()
@@ -1767,7 +1801,7 @@ openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", UnitInfoManager.O
         local durability = tonumber(data[1])
         openRaidLib.GearManager.UpdateUnitGearDurability(unitName, durability)
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_GEARINFO_DURABILITY_PREFIX, openRaidLib.GearManager.OnReceiveGearDurability)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_GEARINFO_DURABILITY_PREFIX, openRaidLib.GearManager.OnReceiveGearDurability)
 
     --on receive the durability (sent when the player get a ress)
     function openRaidLib.GearManager.UpdateUnitGearDurability(unitName, durability)
@@ -1883,7 +1917,7 @@ openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", UnitInfoManager.O
         --add to the list of gear information
         openRaidLib.GearManager.AddUnitGearList(unitName, itemLevel, durability, weaponEnchant, noEnchantTableUnpacked, noGemsTableUnpacked, equippedGearListUnpacked, mainHandEnchantId, offHandEnchantId)
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_GEARINFO_FULL_PREFIX, openRaidLib.GearManager.OnReceiveGearFullInfo)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_GEARINFO_FULL_PREFIX, openRaidLib.GearManager.OnReceiveGearFullInfo)
 
     --todo: on changing an item in the inventory, send an update only for the slot that got changed
 
@@ -2079,7 +2113,7 @@ function openRaidLib.OpenNotesManager.OnReceiveNoteData(data, unitName)
         openRaidLib.publicCallback.TriggerCallback("NoteUpdated", openRaidLib.GetUnitID(unitName), unitNote, openRaidLib.OpenNotesManager.GetAllUnitsNotes())
     end
 end
-openRaidLib.commHandler.RegisterComm(CONST_COMM_OPENNOTES_RECEIVED_PREFIX, openRaidLib.OpenNotesManager.OnReceiveNoteData)
+openRaidLib.commHandler.RegisterORComm(CONST_COMM_OPENNOTES_RECEIVED_PREFIX, openRaidLib.OpenNotesManager.OnReceiveNoteData)
 
 local timeOfLastNoteSent = 0
 function openRaidLib.OpenNotesManager.SendNote()
@@ -2137,7 +2171,7 @@ function openRaidLib.OpenNotesManager.OnReceiveNoteRequest()
         openRaidLib.Schedules.NewUniqueTimer(2 + math.random(0, 2) + math.random(), openRaidLib.OpenNotesManager.SendNote, "OpenNotesManager", "sendNoteInfo_Schedule")
     end
 end
-openRaidLib.commHandler.RegisterComm(CONST_COMM_OPENNOTES_REQUESTED_PREFIX, openRaidLib.OpenNotesManager.OnReceiveNoteRequest)
+openRaidLib.commHandler.RegisterORComm(CONST_COMM_OPENNOTES_REQUESTED_PREFIX, openRaidLib.OpenNotesManager.OnReceiveNoteRequest)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --~cooldowns ~cooldown
@@ -2161,13 +2195,13 @@ local cooldownTimeLeftCheck_Ticker = function(tickerObject)
         return
     end
 
-    tickerObject.cooldownTimeLeft = tickerObject.cooldownTimeLeft - CONST_COOLDOWN_CHECK_INTERVAL
+    tickerObject.cooldownTimeLeft = tickerObject.cooldownTimeLeft - tickerObject.tickInterval
     local timeLeft, charges, startTimeOffset, duration, auraDuration = openRaidLib.CooldownManager.GetPlayerCooldownStatus(spellId)
 
     local bUpdateLocally = false
 
-    --is the spell ready to use?
-    if (timeLeft == 0) then
+    --is the spell ready to use?, 0.5 seconds for latency compensation
+    if (timeLeft <= tickerObject.latencyCompensation) then
         --it's ready
         openRaidLib.CooldownManager.SendPlayerCooldownUpdate(spellId, 0, charges, 0, 0, 0)
         openRaidLib.CooldownManager.CooldownTickers[spellId] = nil
@@ -2212,12 +2246,28 @@ local cooldownStartTicker = function(spellId, cooldownTimeLeft)
         end
     end
 
+    local tickInterval = CONST_COOLDOWN_CHECK_INTERVAL
+    local maxTicks = ceil(cooldownTimeLeft / tickInterval)
+    local latencyCompensation = 0
+
+    local cooldownOptions = LIB_OPEN_RAID_COOLDOWNS_CONFIG and LIB_OPEN_RAID_COOLDOWNS_CONFIG[spellId]
+    if (cooldownOptions) then
+        if (cooldownOptions.tickInterval) then
+            tickInterval = cooldownOptions.tickInterval
+            maxTicks = ceil(cooldownTimeLeft / tickInterval)
+        end
+        if (cooldownOptions.latencyCompensation) then
+            latencyCompensation = cooldownOptions.latencyCompensation
+        end
+    end
+
     --create a new ticker
-    local maxTicks = ceil(cooldownTimeLeft / CONST_COOLDOWN_CHECK_INTERVAL)
-    local newTicker = C_Timer.NewTicker(CONST_COOLDOWN_CHECK_INTERVAL, cooldownTimeLeftCheck_Ticker, maxTicks)
+    local newTicker = C_Timer.NewTicker(tickInterval, cooldownTimeLeftCheck_Ticker, maxTicks)
 
     --store the ticker
     openRaidLib.CooldownManager.CooldownTickers[spellId] = newTicker
+    newTicker.tickInterval = tickInterval
+    newTicker.latencyCompensation = latencyCompensation
     newTicker.spellId = spellId
     newTicker.cooldownTimeLeft = cooldownTimeLeft
     newTicker.startTime = GetTime()
@@ -2417,7 +2467,7 @@ end
             --get the cooldown time for this spell
             local timeLeft, charges, startTimeOffset, duration, auraDuration = openRaidLib.CooldownManager.GetPlayerCooldownStatus(spellId) --return 5 values
 
-            --check for shared cooldown time - warning: this block of code is duplicated at "openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNUPDATE_PREFIX"
+            --check for shared cooldown time - warning: this block of code is duplicated at "openRaidLib.commHandler.RegisterORComm(CONST_COMM_COOLDOWNUPDATE_PREFIX"
             local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
             local sharedCooldownId = spellData and spellData.shareid
             if (sharedCooldownId) then
@@ -2493,6 +2543,11 @@ end
         --run on next frame
         openRaidLib.Schedules.NewUniqueTimer(0.1, openRaidLib.CooldownManager.CheckCooldownsAfterEncounterEnd, "CooldownManager", "encounterEndCooldownsCheck_Schedule")
     end
+    function openRaidLib.CooldownManager.OnEncounterStart()
+        openRaidLib.Schedules.CancelUniqueTimer("CooldownManager", "sendAllPlayerCooldowns_Schedule")
+        openRaidLib.Schedules.CancelUniqueTimer("CooldownManager", "sendAllPlayerCooldownsFromTalentChange_Schedule")
+        openRaidLib.CooldownManager.SendAllPlayerCooldowns()
+    end
 
     function openRaidLib.CooldownManager.OnMythicPlusStart()
         openRaidLib.Schedules.NewUniqueTimer(0.5, openRaidLib.CooldownManager.SendAllPlayerCooldowns, "CooldownManager", "sendAllPlayerCooldowns_Schedule")
@@ -2535,6 +2590,7 @@ end
     openRaidLib.internalCallback.RegisterCallback("playerCast", openRaidLib.CooldownManager.OnPlayerCast)
     openRaidLib.internalCallback.RegisterCallback("onPlayerRess", openRaidLib.CooldownManager.OnPlayerRess)
     openRaidLib.internalCallback.RegisterCallback("talentUpdate", openRaidLib.CooldownManager.OnPlayerTalentChanged)
+    openRaidLib.internalCallback.RegisterCallback("raidEncounterStart", openRaidLib.CooldownManager.OnEncounterStart)
     openRaidLib.internalCallback.RegisterCallback("raidEncounterEnd", openRaidLib.CooldownManager.OnEncounterEnd)
     openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", openRaidLib.CooldownManager.OnEncounterEnd)
     openRaidLib.internalCallback.RegisterCallback("mythicDungeonStart", openRaidLib.CooldownManager.OnMythicPlusStart)
@@ -2640,7 +2696,7 @@ function openRaidLib.CooldownManager.OnReceiveUnitCooldownChanges(data, unitName
     end
 
 end
-openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNCHANGES_PREFIX, openRaidLib.CooldownManager.OnReceiveUnitCooldownChanges)
+openRaidLib.commHandler.RegisterORComm(CONST_COMM_COOLDOWNCHANGES_PREFIX, openRaidLib.CooldownManager.OnReceiveUnitCooldownChanges)
 
 --compare the current list of spells of the player with a new spell list generated
 --add or remove spells from the player cooldown list
@@ -2727,7 +2783,7 @@ function openRaidLib.CooldownManager.AddUnitCooldownsList(unitName, cooldownsTab
 end
 
 --received a cooldown update from another unit (sent by the function above)
-openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNUPDATE_PREFIX, function(data, unitName)
+openRaidLib.commHandler.RegisterORComm(CONST_COMM_COOLDOWNUPDATE_PREFIX, function(data, unitName)
     --get data
     local dataAsArray = data
     local spellId = tonumber(dataAsArray[1])
@@ -2844,7 +2900,7 @@ function openRaidLib.CooldownManager.OnReceiveUnitCooldowns(data, unitName)
     --add the list of cooldowns
     openRaidLib.CooldownManager.AddUnitCooldownsList(unitName, unpackedTable)
 end
-openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNFULLLIST_PREFIX, openRaidLib.CooldownManager.OnReceiveUnitCooldowns)
+openRaidLib.commHandler.RegisterORComm(CONST_COMM_COOLDOWNFULLLIST_PREFIX, openRaidLib.CooldownManager.OnReceiveUnitCooldowns)
 
 --send a comm requesting other units in the raid to send an update on the requested spell
 --any unit in the raid that has this cooldown should send a CONST_COMM_COOLDOWNUPDATE_PREFIX
@@ -2871,7 +2927,7 @@ function openRaidLib.CooldownManager.OnReceiveRequestForCooldownInfoUpdate(data,
     local timeLeft, charges, startTimeOffset, duration, auraDuration = openRaidLib.CooldownManager.GetPlayerCooldownStatus(spellId)
     openRaidLib.CooldownManager.SendPlayerCooldownUpdate(spellId, timeLeft, charges, startTimeOffset, duration, auraDuration)
 end
-openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaidLib.CooldownManager.OnReceiveRequestForCooldownInfoUpdate)
+openRaidLib.commHandler.RegisterORComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaidLib.CooldownManager.OnReceiveRequestForCooldownInfoUpdate)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --~keystones
@@ -2883,6 +2939,7 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
     ---@field classID number
     ---@field rating number
     ---@field mythicPlusMapID number
+    ---@field specID number
 
     --manager constructor
     openRaidLib.KeystoneInfoManager = {
@@ -3020,6 +3077,7 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
             classID = 0,
             rating = 0,
             mythicPlusMapID = 0,
+            specID = 0,
         }
 
     function openRaidLib.KeystoneInfoManager.UpdatePlayerKeystoneInfo(keystoneInfo)
@@ -3033,6 +3091,9 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
 
         local ratingSummary = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player")
         keystoneInfo.rating = ratingSummary and ratingSummary.currentSeasonScore or 0
+
+        local specID = GetSpecializationInfo(GetSpecialization()) or 0
+        keystoneInfo.specID = specID
     end
 
     function openRaidLib.KeystoneInfoManager.GetAllKeystonesInfo()
@@ -3055,7 +3116,7 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
         local keystoneInfo = openRaidLib.KeystoneInfoManager.GetKeystoneInfo(playerName, true)
         openRaidLib.KeystoneInfoManager.UpdatePlayerKeystoneInfo(keystoneInfo)
 
-        local dataToSend = CONST_COMM_KEYSTONE_DATA_PREFIX .. "," .. keystoneInfo.level .. "," .. keystoneInfo.mapID .. "," .. keystoneInfo.challengeMapID .. "," .. keystoneInfo.classID .. "," .. keystoneInfo.rating .. "," .. keystoneInfo.mythicPlusMapID
+        local dataToSend = CONST_COMM_KEYSTONE_DATA_PREFIX .. "," .. keystoneInfo.level .. "," .. keystoneInfo.mapID .. "," .. keystoneInfo.challengeMapID .. "," .. keystoneInfo.classID .. "," .. keystoneInfo.rating .. "," .. keystoneInfo.mythicPlusMapID .. "," .. keystoneInfo.specID
         return dataToSend
     end
 
@@ -3066,10 +3127,15 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
     end
 
     function openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToGuild()
+        if (LIB_OPEN_RAID_MYTHIC_PLUS_DND) then
+            return
+        end
         local dataToSend = getKeystoneInfoToComm()
         openRaidLib.commHandler.SendCommData(dataToSend, CONST_COMM_SENDTO_GUILD)
         diagnosticComm("SendPlayerKeystoneInfoToGuild| " .. dataToSend) --debug
     end
+
+    local latestSend = 0
 
     --when a request data is received, only send the data to party and guild
     --sending stuff to raid need to be called my the application with 'openRaidLib.RequestKeystoneDataFromRaid()'
@@ -3077,6 +3143,11 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
         if (not checkClientVersion("retail")) then
             return
         end
+
+        if (latestSend+1 > GetTime()) then
+            return
+        end
+        latestSend = GetTime()
 
         --update the information about the key stone the player has
         local keystoneInfo = openRaidLib.KeystoneInfoManager.GetKeystoneInfo(UnitName("player"), true)
@@ -3087,17 +3158,19 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
             openRaidLib.Schedules.NewUniqueTimer(math.random(1), openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty, "KeystoneInfoManager", "sendKeystoneInfoToParty_Schedule")
 
         elseif (instanceType == "raid" or instanceType == "pvp") then
-            openRaidLib.Schedules.NewUniqueTimer(math.random(0, 30) + math.random(1), openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty, "KeystoneInfoManager", "sendKeystoneInfoToParty_Schedule")
+            openRaidLib.Schedules.NewUniqueTimer(math.random(0, 10) + math.random(1), openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty, "KeystoneInfoManager", "sendKeystoneInfoToParty_Schedule")
 
         else
-            openRaidLib.Schedules.NewUniqueTimer(math.random(4), openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty, "KeystoneInfoManager", "sendKeystoneInfoToParty_Schedule")
+            openRaidLib.Schedules.NewUniqueTimer(math.random(1), openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToParty, "KeystoneInfoManager", "sendKeystoneInfoToParty_Schedule")
         end
 
         if (IsInGuild()) then
-            openRaidLib.Schedules.NewUniqueTimer(math.random(0, 6) + math.random(), openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToGuild, "KeystoneInfoManager", "sendKeystoneInfoToGuild_Schedule")
+            local delay = math.random(0, 2) + math.random()
+            C_Timer.After(delay, openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToGuild)
+            --openRaidLib.Schedules.NewUniqueTimer(delay, openRaidLib.KeystoneInfoManager.SendPlayerKeystoneInfoToGuild, "KeystoneInfoManager", "sendKeystoneInfoToGuild_Schedule")
         end
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_KEYSTONE_DATAREQUEST_PREFIX, openRaidLib.KeystoneInfoManager.OnReceiveRequestData)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_KEYSTONE_DATAREQUEST_PREFIX, openRaidLib.KeystoneInfoManager.OnReceiveRequestData)
 
     function openRaidLib.KeystoneInfoManager.OnReceiveKeystoneData(data, unitName)
         if (not checkClientVersion("retail")) then
@@ -3110,8 +3183,9 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
         local classID = tonumber(data[4])
         local rating = tonumber(data[5])
         local mythicPlusMapID = tonumber(data[6])
+        local specID = tonumber(data[7]) or 0
 
-        if (level and mapID and challengeMapID and classID and rating and mythicPlusMapID) then
+        if (level and mapID and challengeMapID and classID and rating and mythicPlusMapID and specID) then
             local keystoneInfo = openRaidLib.KeystoneInfoManager.GetKeystoneInfo(unitName, true)
             keystoneInfo.level = level
             keystoneInfo.mapID = mapID
@@ -3119,12 +3193,13 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
             keystoneInfo.challengeMapID = challengeMapID
             keystoneInfo.classID = classID
             keystoneInfo.rating = rating
+            keystoneInfo.specID = specID
 
             --trigger public callback
             openRaidLib.publicCallback.TriggerCallback("KeystoneUpdate", unitName, keystoneInfo, openRaidLib.KeystoneInfoManager.KeystoneData)
         end
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_KEYSTONE_DATA_PREFIX, openRaidLib.KeystoneInfoManager.OnReceiveKeystoneData)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_KEYSTONE_DATA_PREFIX, openRaidLib.KeystoneInfoManager.OnReceiveKeystoneData)
 
     --on entering a group, send keystone information for the party
     function openRaidLib.KeystoneInfoManager.OnPlayerEnterGroup()
@@ -3372,7 +3447,7 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
             openRaidLib.Schedules.NewUniqueTimer(math.random(0, 6) + math.random(), openRaidLib.RatingInfoManager.SendPlayerRatingInfoToGuild, "RatingInfoManager", "sendRatingInfoToGuild_Schedule")
         end
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_RATING_DATAREQUEST_PREFIX, openRaidLib.RatingInfoManager.OnReceiveRequestData)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_RATING_DATAREQUEST_PREFIX, openRaidLib.RatingInfoManager.OnReceiveRequestData)
 
     function openRaidLib.RatingInfoManager.OnReceiveRatingData(data, unitName)
         if (not checkClientVersion("retail")) then
@@ -3405,7 +3480,7 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_COOLDOWNREQUEST_PREFIX, openRaid
         --trigger public callback
         openRaidLib.publicCallback.TriggerCallback("RatingUpdate", unitName, ratingInfo, openRaidLib.RatingInfoManager.RatingData)
     end
-    openRaidLib.commHandler.RegisterComm(CONST_COMM_RATING_DATA_PREFIX, openRaidLib.RatingInfoManager.OnReceiveRatingData)
+    openRaidLib.commHandler.RegisterORComm(CONST_COMM_RATING_DATA_PREFIX, openRaidLib.RatingInfoManager.OnReceiveRatingData)
 
     --on entering a group, send rating information for the party
     function openRaidLib.RatingInfoManager.OnPlayerEnterGroup()

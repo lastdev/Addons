@@ -1,7 +1,11 @@
 local _, ns = ...
 ns.points = {}
-ns.textures = {}
-ns.scaling = {}
+ns.achievementIQ = {}
+ns.addOnName = "LoveIsInTheAir" -- For internal use to name globals etc. Should never be localised
+ns.eventName = "Love Is In The Air" -- The player sees this in labels and titles. This gets localised
+
+ns.aoa = {}
+--ns.aoa[ 1034 ] = { acctOnly = true }
 
 ns.crushing = "You must finish the quest \"Crushing the Crown\". The quests shown here are for the complete quest chain"
 ns.dailyGetaway = "Only one of the three dailies is available, randomly, every day"
@@ -55,23 +59,23 @@ ns.feralasWilber = "Respect\n\n" .."Do a /bow emote. " ..ns.feralasSomeGift
 			
 -- ---------------------------------------------------------------------------------------------------------------------------------
 
-ns.setDungeon = { dungeon=true, showAnyway=true, noCoords=true, noContinent=true, -- Dungeon focus
+ns.setDungeon = { dungeon=true, alwaysShow=true, noCoords=true, noContinent=true, -- Dungeon focus
 			achievements={ { id=4624, showAllCriteria=true,
 			guide="Defeat the three Shadowfang Keep bosses, LIITA version" },
 			{ id=9389, version=60003, 
 			guide="Equip and use any necklace that drops from the LIITA version of Shadowfang Keep" },
 			{ id=1703, guide="Drops from certain dungeon bosses. Quickest is to farm the last boss (High "
 				.."Priestess Azil) in Stonecore, Deepholm. Heroic or normal the same very high chance (>50%)", }, }, }
-ns.setDangerous = { dangerous=true, showAnyway=true, noCoords=true, noContinent=true, -- Crushing Crown / Steam Pools focus
+ns.setDangerous = { dangerous=true, alwaysShow=true, noCoords=true, noContinent=true, -- Crushing Crown / Steam Pools focus
 			achievements={ { id=1695, guide="Complete a \"Crushing the Crown\" daily", },
 			{ id=19508, showAllCriteria=true, version=100205, guide="See the Steam Pools guide", }, }, }
-ns.setFoolForLove = { foolForLove=true, showAnyway=true, noCoords=true, noContinent=true, -- The meta
+ns.setFoolForLove = { foolForLove=true, alwaysShow=true, noCoords=true, noContinent=true, -- The meta
 			achievements={ { id=1693, showAllCriteria=true, }, }, }
-ns.setFistful = { fistful=true, showAnyway=true, noCoords=true, noContinent=true, achievements={ { id=1699, showAllCriteria=true, },
+ns.setFistful = { fistful=true, alwaysShow=true, noCoords=true, noContinent=true, achievements={ { id=1699, showAllCriteria=true, },
 			{ id=1704, showAllCriteria=true, }, { id=1188, showAllCriteria=true, }, }, }
-ns.setLoveRays = { loveRays=true, showAnyway=true, noCoords=true, noContinent=true, version=60003, achievements={ -- Love Rays focus
+ns.setLoveRays = { loveRays=true, alwaysShow=true, noCoords=true, noContinent=true, version=60003, achievements={ -- Love Rays focus
 			{ id=9392, }, { id=9393, }, { id=9394, }, { id=1696, }, }, }
-ns.setVendorAchieves = { vendorAchieves=true, showAnyway=true, noCoords=true, noContinent=true,
+ns.setVendorAchieves = { vendorAchieves=true, alwaysShow=true, noCoords=true, noContinent=true,
 			achievements={ { id=1702, showAllCriteria=true, -- Sweet Tooth
 			guide="The candies are found in Box of Chocolates, which are sold by vendors or may be in the dungeon drop" },
 			{ id=1701, showAllCriteria=true, -- Be Mine
@@ -81,7 +85,7 @@ ns.setVendorAchieves = { vendorAchieves=true, showAnyway=true, noCoords=true, no
 			{ id=1700, -- Perma-Peddle
 			guide="Buy a Truesilver Shafted Arrow (40 Love Tokens). After purchase you may refund if the pet is not wanted" },
 			{ id=1291, }, { id=19400, }, }, }
-ns.setFlavour = { history=true, showAnyway=true, noCoords=true, noContinent=true,
+ns.setFlavour = { history=true, alwaysShow=true, noCoords=true, noContinent=true,
 			tip="Something is in the air in the major cities of Azeroth. Some call it love, and some just call it friendship and "
 				.."admiration. Whichever it is, many guards and townsfolks now spend their days giving and receiving tokens and "
 				.."gifts to other amorous citizens.\n\nThe more skeptical, however, are suspicious of the strange \"love "
@@ -390,7 +394,7 @@ ns.points[ ns.map.thunder ] = { -- Thunder Bluff
 }
 
 ns.points[ ns.map.winterspring ] = { -- Winterspring
-	[22784676] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
+	[22784676] = { scenicGetaway=true, alwaysShow=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"a relaxing wade into Winterspring hot springs\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
@@ -494,7 +498,7 @@ ns.points[ ns.map.ironforge ] = { -- Ironforge
 }
 
 ns.points[ ns.map.northStrangle ] = { -- Northern Stranglethorn
-	[79607733] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
+	[79607733] = { scenicGetaway=true, alwaysShow=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"the lovely lakeside in Northern Stranglethorn\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
@@ -592,7 +596,7 @@ ns.points[ ns.map.stormwind ] = { -- Stormwind City
 }
 
 ns.points[ 224 ] = { -- Stranglethorn Vale
-	[68634958] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205, noContinent=true,
+	[68634958] = { scenicGetaway=true, alwaysShow=true, name="Scenic Getaway", version=100205, noContinent=true,
 					tip="Location of \"the lovely lakeside in Northern Stranglethorn\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
@@ -746,7 +750,7 @@ ns.points[ 113 ] = { -- Northrend
 --==================================================================================================================================
 
 ns.points[ 371 ] = { -- The Jade Forest
-	[43914226] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
+	[43914226] = { scenicGetaway=true, alwaysShow=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"the thrilling peaks of the Jade Forest\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
@@ -783,7 +787,7 @@ ns.points[ 572 ] = { -- Draenor
 --==================================================================================================================================
 
 ns.points[ 641 ] = { -- Val'sharah
-	[51525844] = { scenicGetaway=true, showAnyway=true, name="Scenic Getaway", version=100205,
+	[51525844] = { scenicGetaway=true, alwaysShow=true, name="Scenic Getaway", version=100205,
 					tip="Location of \"a romantic hideout in Val'sharah\". Thanks Gabbo!\n\n" ..ns.gatewayNearby, },
 }
 
@@ -868,18 +872,6 @@ ns.points[ 1978 ] = { -- Dragon Isles
 --
 --==================================================================================================================================
 
-ns.points[ 2255 ] = { -- Azj-Kahet
-}
-
-ns.points[ 2215 ] = { -- Hallowfall
-}
-
-ns.points[ 2248 ] = { -- Isle of Dorn
-}
-
-ns.points[ 2214 ] = { -- The Ringing Deeps
-}
-
 ns.points[ 2274 ] = { -- Khaz Algar
 	[02503320] = ns.setDungeon,
 	[02503750] = ns.setFoolForLove,
@@ -914,42 +906,30 @@ end
 -- non-uniform origin placement as well as adjust the x,y offsets
 --==================================================================================================================================
 
-ns.textures[1] = "Interface\\PlayerFrame\\MonkLightPower"
-ns.textures[2] = "Interface\\PlayerFrame\\MonkDarkPower"
-ns.textures[3] = "Interface\\Common\\Indicator-Red"
-ns.textures[4] = "Interface\\Common\\Indicator-Yellow"
-ns.textures[5] = "Interface\\Common\\Indicator-Green"
-ns.textures[6] = "Interface\\Common\\Indicator-Gray"
-ns.textures[7] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Basket"
-ns.textures[8] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandySack"
-ns.textures[9] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\ColognePink"
-ns.textures[10] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Perfume"
-ns.textures[11] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Ray"
-ns.textures[12] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Rocket"
-ns.textures[13] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveBB"
-ns.textures[14] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveGG"
-ns.textures[15] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRP"
-ns.textures[16] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRY"
-ns.textures[17] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyB"
-ns.textures[18] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyP"
-ns.textures[19] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveToken"
+ns.textures[21] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Basket"
+ns.textures[22] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandySack"
+ns.textures[23] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\ColognePink"
+ns.textures[24] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Perfume"
+ns.textures[25] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Ray"
+ns.textures[26] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\Rocket"
+ns.textures[27] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveToken"
+ns.textures[31] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveBB"
+ns.textures[32] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveGG"
+ns.textures[33] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRP"
+ns.textures[34] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\LoveRY"
+ns.textures[41] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyB"
+ns.textures[42] = "Interface\\AddOns\\HandyNotes_LoveIsInTheAir\\CandyP"
 
-ns.scaling[1] = 0.55
-ns.scaling[2] = 0.55
-ns.scaling[3] = 0.55
-ns.scaling[4] = 0.55
-ns.scaling[5] = 0.55
-ns.scaling[6] = 0.55
-ns.scaling[7] = 0.48
-ns.scaling[8] = 0.48
-ns.scaling[9] = 0.54
-ns.scaling[10] = 0.50
-ns.scaling[11] = 0.48
-ns.scaling[12] = 0.48
-ns.scaling[13] = 0.48
-ns.scaling[14] = 0.48
-ns.scaling[15] = 0.48
-ns.scaling[16] = 0.48
-ns.scaling[17] = 0.48
-ns.scaling[18] = 0.48
-ns.scaling[19] = 0.48
+ns.scaling[21] = 0.432
+ns.scaling[22] = 0.432
+ns.scaling[23] = 0.432
+ns.scaling[24] = 0.432
+ns.scaling[25] = 0.432
+ns.scaling[26] = 0.432
+ns.scaling[27] = 0.432
+ns.scaling[31] = 0.432
+ns.scaling[32] = 0.432
+ns.scaling[33] = 0.432
+ns.scaling[34] = 0.432
+ns.scaling[41] = 0.432
+ns.scaling[42] = 0.432

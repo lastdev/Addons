@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod(2460, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250719035005")
 mod:SetCreatureID(181548, 181551, 181546, 181549)
 mod:SetEncounterID(2544)
 mod:SetBossHPInfoToHighest()
@@ -10,7 +10,7 @@ mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20220322000000)
 mod:SetMinSyncRevision(20220114000000)
 --mod.respawnTime = 29
---mod.NoSortAnnounce = true
+mod:SetZone(2481)
 
 mod:RegisterCombat("combat")
 
@@ -286,7 +286,7 @@ local allTimers = {
 		},
 		[2] = {
 			--Wild Stampede
-			[361304] = {54.8, 28.4, 28.4},
+			[361304] = {16.3, 28.4, 28.4},--Formerly 54.8 for first
 			--Withering Seeds
 			[361568] = {21.5, 109.3, 46.7},
 			--Animastorm
@@ -540,7 +540,7 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 366062 then
 		warnCompleteRecon:Show()
-		timerCompleteRecon:Start()
+		timerCompleteRecon:Start(nil, args.sourceGUID)
 	elseif spellId == 361789 and self:AntiSpam(10, 3) then--Backup in case USCS event is removed/broken
 		self.vb.handCount = self.vb.handCount + 1
 		specWarnHandofDestruction:Show()
@@ -564,8 +564,8 @@ function mod:SPELL_CAST_START(args)
 		self.vb.painCount = 0
 		self.vb.handCount = 0
 		self.vb.nightCount = 0
-		--Timers stoped in clearalldebuffs cast, here we only start them because that way we can use WCLs to maintain/update them
 		if self.vb.phase == 2 then
+			--Timers stoped in clearalldebuffs cast, here we only start them because that way we can use WCLs to maintain/update them
 			if self:IsMythic() then
 				--Prototype of Absolution (Venthyr)
 				timerWrackingPainCD:Start(55.6, 1)
@@ -603,6 +603,19 @@ function mod:SPELL_CAST_START(args)
 				timerAnimastormCD:Start(52.4, 1)
 			end
 		else--Stage 3
+			--Stop all timers?
+			timerNecroticRitualCD:Stop()
+			timerRunecarversDeathtouchCD:Stop()
+			timerHumblingStrikesCD:Stop()
+			timerAscensionsCallCD:Stop()
+			timerPinningVolleyCD:Stop()
+			timerWildStampedeCD:Stop()
+			timerWitheringSeedCD:Stop()
+			timerAnimastormCD:Stop()
+			timerWrackingPainCD:Stop()
+			timerHandofDestructionCD:Stop()
+			timerNightHunterCD:Stop()
+			timerCompleteRecon:Stop()
 			if self:IsMythic() then
 				--Prototype of Absolution (Venthyr)
 				timerWrackingPainCD:Start(41, 1)

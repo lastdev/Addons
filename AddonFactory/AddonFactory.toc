@@ -1,10 +1,10 @@
-## Interface: 110100
+## Interface: 110200, 50500, 11507
 ## Title: AddonFactory by |cFF69CCF0Thaoky|r
 ## IconTexture: Interface\Icons\Achievement_guildperk_workingovertime
 
 ## Notes: AddonFactory is a collection of templates for rapid UI development.
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 2025.02.28
+## Version: 2025.09.17
 
 Libs\LibStub\LibStub.lua
 Libs\LibBit64\LibBit64.lua

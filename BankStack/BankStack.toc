@@ -1,12 +1,12 @@
-## Interface: 110100, 40402, 11506
+## Interface: 110200, 50500, 11507
 ## Title: BankStack
 ## Author: Kemayo
 ## Notes: From bags we came, to bank we return
 ## IconTexture: Interface\Icons\INV_Misc_Shovel_01
-## Version: v2025.1
+## Version: v2025.6
 ## X-Category: Inventory
 ## LoadOnDemand: 0
-## OptionalDeps: Ace3, LibDBIcon-1.0, tekDebug
+## OptionalDeps: Ace3, LibDBIcon-1.0, LibBankTabSuitableItems-1.0, tekDebug
 ## SavedVariables: BankStackDB
 
 ## Category-enUS: Inventory
@@ -46,6 +46,7 @@ local.zhCN.lua
 local.zhTW.lua
 
 core.lua
+
 stack.lua
 sort.lua
 fill.lua

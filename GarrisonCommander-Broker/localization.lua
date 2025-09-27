@@ -867,8 +867,7 @@ L["%s |4follower:followers; with %s"] = "%s |4sujet:sujets; avec %s"
 --[[ L["%s start the mission without even opening the mission page. No question asked"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["%s to actually start mission"] = ""--]] 
---[[Translation missing --]]
---[[ L["%s to blacklist"] = ""--]] 
+L["%s to blacklist"] = "%s \195\160 la liste noire"
 --[[Translation missing --]]
 --[[ L["%s to remove from blacklist"] = ""--]] 
 --[[Translation missing --]]
@@ -879,7 +878,7 @@ L["(Ignores low bias ones)"] = "(Ignorer celles \195\160 basse priorit\195\169)"
 --[[ L[ [=[A requested window is not open
 Tutorial will resume as soon as possible]=] ] = ""--]] 
 L["Add %1$d levels to %2$s"] = "Ajoute %1$d niveaux \195\160 %2$s"
-L["Adds a list of other useful followers to tooltip"] = "Ajoute une liste d'autres sujets utiles dans l'infobulle"
+L["Adds a list of other useful followers to tooltip"] = "Ajoute une liste d'autres sujets utiles \195\160 l'info-bulle"
 L["Affects only little screen mode, hiding the per follower mission list if not checked"] = "N'affecte que le mode petit \195\169cran, masquant la liste par mission de sujet si d\195\169coch\195\169"
 L["Allowed Rewards"] = "R\195\169compenses re\195\167ues"
 L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = "Permet un pourcentage de r\195\169ussite inf\195\169rieur pour des missions de ressources. Utiliser /gac gui pour le changer. Il est par d\195\169faut \195\160 80 %."
@@ -995,8 +994,7 @@ If for example %2$s is set to 100%%, then the 130%% one will be choosen, but if 
 L["Garrison Appearance"] = "Arriv\195\169e de fief"
 L["Garrison Comander Quick Mission Completion"] = "Terminer rapidement toutes les missions navales"
 L["Garrison Commander Mission Control"] = "Contr\195\180le des missions navales"
---[[Translation missing --]]
---[[ L["General"] = ""--]] 
+L["General"] = "G\195\169n\195\169ral"
 L["Global approx. xp reward"] = "\195\137valuation totale du gain en XP"
 --[[Translation missing --]]
 --[[ L["Global approx. xp reward per hour"] = ""--]] 
@@ -1087,8 +1085,7 @@ L["Mission time reduced!"] = "Dur\195\169e de mission r\195\169duite !"
 --[[ L["Mission was capped due to total chance less than"] = ""--]] 
 L["Mission with lower success chance will be ignored"] = "Les missions avec des chances faibles seront ignor\195\169es"
 L["Missionlist"] = "Liste des missions"
---[[Translation missing --]]
---[[ L["Missions"] = ""--]] 
+L["Missions"] = true
 L["Must reload interface to apply"] = "Devra recharger l'interface pour activer"
 --[[Translation missing --]]
 --[[ L["Never kill Troops"] = ""--]] 

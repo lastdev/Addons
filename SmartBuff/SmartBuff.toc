@@ -1,4 +1,4 @@
-## Interface: 110105, 110107
+## Interface: 110200, 110205
 ## Title: SmartBuff |cff0099ffRetail|r
 ## Version: 34.110105
 ## Author: |cff20d2ffCodermik & Aeldra|r (EU-Proudmoore)

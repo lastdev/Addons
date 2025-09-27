@@ -23,8 +23,8 @@ do
 	assert(WOW_PROJECT_ID)
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 		GAME_VERSION = "VANILLA"
-	elseif WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC then
-		GAME_VERSION = "CATA"
+	elseif WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
+		GAME_VERSION = "MOP"
 	elseif WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 		GAME_VERSION = "RETAIL"
 	end
@@ -110,10 +110,10 @@ function LibTSMComponent.__static.IsVanillaClassic()
 	return GAME_VERSION == "VANILLA"
 end
 
----Returns whether or not we're running within the Cata Classic version of the game.
+---Returns whether or not we're running within the Panda Classic version of the game.
 ---@return boolean
-function LibTSMComponent.__static.IsCataClassic()
-	return GAME_VERSION == "CATA"
+function LibTSMComponent.__static.IsPandaClassic()
+	return GAME_VERSION == "MOP"
 end
 
 ---Returns whether or not we're running within the retail version of the game.

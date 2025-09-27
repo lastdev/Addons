@@ -79,16 +79,16 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2195)
 
 L:SetTimerLocalization({
-	timerCallofCrawgCD		= "Следующий пулл Крогов (%s)",
-	timerCallofHexerCD 		= "Следующий пулл Ведьмаков (%s)",
-	timerCallofCrusherCD	= "Следующий пулл Крошителей (%s)",
+	timerCallofCrawgCD		= "Следующие Кроги (%s)",
+	timerCallofHexerCD 		= "Следующие Ведьмаки (%s)",
+	timerCallofCrusherCD	= "Следующие Крошители (%s)",
 	timerAddIncoming		= DBM_COMMON_L.INCOMING
 })
 
 L:SetOptionLocalization({
-	timerCallofCrawgCD		= "Show timer for when Crawg pools begin to form",
-	timerCallofHexerCD 		= "Show timer for when Hexer pools begin to form",
-	timerCallofCrusherCD	= "Show timer for when Crusher pools begin to form",
+	timerCallofCrawgCD		= "Показывать таймер начала формирования Крогов",
+	timerCallofHexerCD 		= "Показывать таймер начала формирования Ведьмаков",
+	timerCallofCrusherCD	= "Показывать таймер начала формирования Крошителей",
 	timerAddIncoming		= "Показать таймер, когда входящий адд может быть атакован",
 	TauntBehavior			= "Установить режим таунта для смены танков",
 	TwoHardThreeEasy		= "Меняться местами по 2 стака на героическом/эпохальном уровне сложности, по 3 стака на других сложностях",--По умолчанию
@@ -187,7 +187,11 @@ L:SetOptionLocalization({
 ---------------------------
 -- High Tinker Mekkatorgue (Horde) --
 ---------------------------
---L= DBM:GetModLocalization(2332)
+L= DBM:GetModLocalization(2332)
+
+L:SetMiscLocalization({
+	WallRP	= "Главный механик сражался, как лев. Но этого... не хватило. Хвала волнам, у него нашелся последний трюк в рукаве, который унес его с поля боя!"
+})
 
 ---------------------------
 --  Sea Priest Blockade (Horde) --
@@ -211,7 +215,8 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	Port			=	"по левому борту",
 	Starboard		=	"по правому борту",
-	Freezing		=	"Заморозка через %s"
+	Freezing		=	"Заморозка через %s",
+	PrePull			=	"Свистать всех наверх! Дочь морей дорого заплатит за вторжение в наши воды!"
 })
 
 -------------
@@ -220,7 +225,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("ZuldazarRaidTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Дазар'алор"
+	name =	"Трэш мобы Битва за Дазар'алор"
 })
 
 ---------------------------
@@ -305,8 +310,8 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2349)
 
 L:SetMiscLocalization({
-	Phase3	= "Za'qul tears open the pathway to Delirium Realm!",
-	Tear	= "Tear"
+	Phase3	= "За'кул разрывает проход в Царство безумия!",
+	Tear	= "Разрыв"
 })
 
 ---------------------------
@@ -315,7 +320,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2361)
 
 L:SetTimerLocalization{
-	timerStageThreeBerserk		= "Adds Berserk"
+	timerStageThreeBerserk		= "Ярость аддов"
 }
 
 L:SetOptionLocalization({
@@ -325,12 +330,12 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	SoakOrb 			= "Soak Orb",
-	AvoidOrb 			= "Avoid Orb",
-	GroupUp 			= "Group Up",
-	Spread 				= "Spread",
-	Move				  = "Keep Moving",
-	DontMove 			= "Stop Moving",
+	SoakOrb 			= "Поглощать сферу",
+	AvoidOrb 			= "Избегать сферу",
+	GroupUp 			= "Сгруппироваться",
+	Spread 				= "Разойтись",
+	Move				= "Продолжить двигаться",
+	DontMove 			= "Перестать двигаться",
 	--For Yells
 	HelpSoakMove		= "{rt3}HELP SOAK MOVE{rt3}",--Purple Diamond
 	HelpSoakStay		= "{rt6}HELP SOAK STAY{rt6}",--Blue Square
@@ -376,7 +381,7 @@ L:SetGeneralLocalization({
 L= DBM:GetModLocalization(2377)
 
 L:SetOptionLocalization({
-	InterruptBehavior	= "Установить режим прерывания для 'Волны Ужаса' (будет переопределять все остальные настройки, если Вы лидер рейда)",
+	InterruptBehavior	= "Установить режим прерывания для $spell:316211 (перезапишет все остальные настройки, если Вы лидер рейда)",
 	Four				= "Ротация из 4 человек ",--По умолчанию
 	Five				= "Ротация из 5 человек ",
 	Six					= "Ротация из 6 человек ",
@@ -384,7 +389,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	ObeliskSpawn	= "Obelisks of shadow, rise!"--Only as backup, in case the NPC target check stops working
+	ObeliskSpawn	= "Обелиски тьмы, восстаньте!"--Only as backup, in case the NPC target check stops working
 })
 
 ---------------------------
@@ -413,7 +418,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(2364)
 
 L:SetOptionLocalization({
-	OnlyParentBondMoves		= "Only show special warning for Charged Bonds if you are the parent point"
+	OnlyParentBondMoves		= "Показывать спецпредупреждение для $spell:310019 только в том случае, если Вы являетесь родительской точкой"
 })
 
 L:SetMiscLocalization({
@@ -428,7 +433,7 @@ L= DBM:GetModLocalization(2374)
 
 L:SetOptionLocalization({
 	SetIconOnlyOnce		= "Установить метку только один раз при сканировании слизи с самым низким уровнем здоровья, затем отключить, пока хотя бы одна не умрет",
-	InterruptBehavior	= "Установить режим прерывания для 'Прокачивание крови' (будет переопределять все остальные настройки, если Вы лидер рейда)",
+	InterruptBehavior	= "Установить режим прерывания для $spell:310788 (перезапишет все остальные настройки, если Вы лидер рейда)",
 	Two					= "Ротация из 2 человек ",--По умолчанию
 	Three				= "Ротация из 3 человек ",
 	Four				= "Ротация из 4 человек ",
@@ -446,7 +451,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2375)
 
 L:SetOptionLocalization({
-	InterruptBehavior	= "Установите режим прерывания для 'Уничтожение разума' (будет переопределять все остальные настройки, если Вы лидер рейда)",
+	InterruptBehavior	= "Установить режим прерывания для $spell:224088 (перезапишет все остальные настройки, если Вы лидер рейда)",
 	Four				= "Ротация из 4 человек ",
 	Five				= "Ротация из 5 человек ",--По умолчанию
 	Six					= "Ротация из 6 человек ",

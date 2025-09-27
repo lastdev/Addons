@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local addonVersion = C_AddOns.GetAddOnMetadata(addonName, "Version")
 
 local GFICache = {}

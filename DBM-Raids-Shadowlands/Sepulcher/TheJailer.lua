@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2464, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250719035005")
 mod:SetCreatureID(180990)
 mod:SetEncounterID(2537)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20220423160000)
 mod:SetMinSyncRevision(20220329000000)
 --mod.respawnTime = 29
+mod:SetZone(2481)
 
 mod:RegisterCombat("combat")
 
@@ -34,11 +35,11 @@ mod:RegisterEventsInCombat(
 --]]
 --General
 local warnPhase									= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
-local warnHealAzeroth							= mod:NewAnnounce("warnHealAzeroth", 3, 366401, nil, nil, nil, 366401)
+--local warnHealAzeroth							= mod:NewAnnounce("warnHealAzeroth", 3, 366401, nil, nil, nil, 366401)
 
 local timerPhaseCD								= mod:NewStageTimer(30)
 local timerPits									= mod:NewTimer(28.8, "timerPits", 353643, nil, nil, 3)--Stages 1-3
-local timerHealAzeroth							= mod:NewTimer(28.8, "timerHealAzeroth", 366401, nil, nil, 5, nil, nil, nil, nil, nil, nil, nil, 366401)--Stages 1-3
+--local timerHealAzeroth						= mod:NewTimer(28.8, "timerHealAzeroth", 366401, nil, nil, 5, nil, nil, nil, nil, nil, nil, nil, 366401)--Stages 1-3
 
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
@@ -141,7 +142,7 @@ local yellDeathSentenceFades			= mod:NewShortFadesYell(363772)
 
 local timerMeteorCleaveCD				= mod:NewCDCountTimer(28.8, 360378, nil, nil, nil, 5, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerDeathSentenceCD				= mod:NewCDTimer(28.8, 363772, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
-local timerDispels						= mod:NewTimer(28.8, "timerDispels", 182887, nil, nil, 5, DBM_COMMON_L.MAGIC_ICON, nil, nil, nil, nil, nil, nil, 363772)--Stages 4
+--local timerDispels					= mod:NewTimer(28.8, "timerDispels", 182887, nil, nil, 5, DBM_COMMON_L.MAGIC_ICON, nil, nil, nil, nil, nil, nil, 363772)--Stages 4
 
 --Common text replacements for some warnings that help clarify mechanics as well as more closely align with other mods
 if DBM.Options.WarningShortText then
@@ -366,7 +367,7 @@ local mythicSpecialTimers = {
 	-- Dispel Timers in last stage, from Heal Channel Start (_SUCCES)
 	[4] = {40, 30, 29}
 }
-
+--[[
 local function mythicTimerLoop(self)
 	if not self.vb.phase then return end--This loop cannot cleanly recover on mid fight disconnect, prevent nil error
 	self.vb.echoCount = self.vb.echoCount + 1
@@ -382,6 +383,7 @@ local function mythicTimerLoop(self)
 		self:Schedule(timer, mythicTimerLoop, self)
 	end
 end
+--]]
 
 local function chainsSkipCheck(self)
 	self.vb.chainsCount = self.vb.chainsCount + 1
@@ -417,7 +419,7 @@ function mod:OnCombatStart(delay)
 		timerMartyrdomCD:Start(29.9-delay, 1)
 		timerRuneofDamnationCD:Start(34.9-delay, 1)
 		timerRelentingDominationCD:Start(43.9-delay, 1)
-		mythicTimerLoop(self)
+		--mythicTimerLoop(self)
 	elseif self:IsHeroic() then
 		difficultyName = "heroic"
 		timerTormentCD:Start(11-delay, 1)
@@ -749,8 +751,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerMeteorCleaveCD:Start(20, 1)
 		timerDecimatorCD:Start(25, 1)
 		timerTormentCD:Start(50, 1)
-		self:Unschedule(mythicTimerLoop)
-		mythicTimerLoop(self)
+		--self:Unschedule(mythicTimerLoop)
+		--mythicTimerLoop(self)
 	elseif spellId == 360378 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) and not args:IsPlayer() and not DBM:UnitDebuff("player", spellId) then
@@ -805,8 +807,8 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerShatteringBlastCD:Start(23, 1)
 				timerDecimatorCD:Start(45, 1)
 				timerPhaseCD:Start(193.5)
-				self:Unschedule(mythicTimerLoop)
-				mythicTimerLoop(self)
+				--self:Unschedule(mythicTimerLoop)
+				--mythicTimerLoop(self)
 			elseif self:IsHeroic() then
 				timerUnholyAttunementCD:Start(6.9, 1)--Same in all but LFR
 				timerTormentCD:Start(10, 1)
@@ -848,8 +850,8 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerDefileCD:Start(56, 1)
 				timerTormentCD:Start(59, 1)
 				timerRuneofDominationCD:Start(87, 1)
-				self:Unschedule(mythicTimerLoop)
-				mythicTimerLoop(self)
+				--self:Unschedule(mythicTimerLoop)
+				--mythicTimerLoop(self)
 			elseif self:IsHeroic() then
 				timerDecimatorCD:Start(27, 1)
 				timerDefileCD:Start(34, 1)

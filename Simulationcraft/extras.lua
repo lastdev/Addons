@@ -296,25 +296,34 @@ Simulationcraft.covenants = {
   [4] = 'necrolord',
 }
 
-Simulationcraft.upgradeAchievements = {
-  -- 11.0
-  40107, -- Harbinger of the Weathered
-  40115, -- Harbinger of the Carved
-  40118, -- Harbinger of the Runed
-  40939, -- Harbinger of the Gilded
+-- 11.1.7 Belt spells
 
-  -- 11.1
-  40942, -- Weathered
-  40943, -- Carved
-  40944, -- Runed
-  40945, -- Gilded
+Simulationcraft.discBeltSpell = 1233515
+Simulationcraft.discBeltEffectSpells = {
+  [1241240] = 1236279,
+  [1241241] = 1236278,
+  [1241242] = 1236277,
+  [1241243] = 1236961,
+  [1241244] = 1236109,
+  [1241245] = 1236122,
+  [1241246] = 1236272,
+  [1241250] = 1236275,
+  [1241251] = 1236273,
 }
 
--- Catalyst currency
-
-Simulationcraft.catalystCurrencies = {
-  [2813] = 'Harmonized Silk', -- 11.0
-  [3116] = 'Essence of Kaja\'mite', -- 11.1
+-- Spells to load by LoadSpellsAsync and to store in SpellCache
+Simulationcraft.preloadSpellIds = {
+  -- 11.1.7 DISC Belt Spells
+  1233515,
+  1241240,
+  1241241,
+  1241242,
+  1241243,
+  1241244,
+  1241245,
+  1241246,
+  1241250,
+  1241251,
 }
 
 -- Upgrade currencies and item
@@ -324,6 +333,10 @@ Simulationcraft.upgradeCurrencies = {
   [1792] = 'Honor',
   [2122] = 'Storm Sigil',
   [2245] = 'Flightstones',
+  [2706] = 'Whelpling\'s Dreaming Crest',
+  [2707] = 'Drake\'s Dreaming Crest',
+  [2708] = 'Wyrm\'s Dreaming Crest',
+  [2709] = 'Aspect\'s Dreaming Crest',
   [2806] = 'Whelpling\'s Awakened Crest',
   [2807] = 'Drake\'s Awakened Crest',
   [2809] = 'Wyrm\'s Awakened Crest',
@@ -337,9 +350,14 @@ Simulationcraft.upgradeCurrencies = {
   [3108] = 'Carved Undermine Crest',
   [3109] = 'Runed Undermine Crest',
   [3110] = 'Gilded Undermine Crest',
+  [3284] = 'Weathered Ethereal Crest',
+  [3286] = 'Carved Ethereal Crest',
+  [3288] = 'Runed Ethereal Crest',
+  [3290] = 'Gilded Ethereal Crest',
 }
 
 Simulationcraft.upgradeItems = {
+  [173381] = 'Crafter\'s Mark I',
   [180055] = 'Relic of the Past I',
   [180057] = 'Relic of the Past II',
   [180058] = 'Relic of the Past III',
@@ -380,8 +398,41 @@ Simulationcraft.upgradeItems = {
   [229388] = 'Prized Combatant\'s Heraldry',
   [229389] = 'Prized Aspirant\'s Heraldry',
   [229390] = 'Prized Gladiator\'s Heraldry',
+  [230285] = 'Astral Combatant\'s Heraldry',
+  [230286] = 'Astral Aspirant\'s Heraldry',
+  [230287] = 'Astral Gladiator\'s Heraldry',
   [230906] = 'Spark of Fortunes',
   [230935] = 'Enchanted Gilded Undermine Crest',
   [230936] = 'Enchanted Runed Undermine Crest',
   [230937] = 'Enchanted Weathered Undermine Crest',
+  [231756] = 'Spark of Starlight',
+  [231767] = 'Enchanted Weathered Ethereal Crest',
+  [231768] = 'Enchanted Gilded Ethereal Crest',
+  [231769] = 'Enchanted Runed Ethereal Crest',
+}
+
+Simulationcraft.catalystCurrencies = {
+  [2813] = 'Harmonized Silk',
+  [3116] = 'Essence of Kaja\'mite',
+  [3269] = 'Ethereal Voidsplinter',
+}
+
+Simulationcraft.upgradeAchievements = {
+  19326,  -- Dreaming of Drakes
+  19397,  -- Dreaming of Wyrms
+  19398,  -- Dreaming of the Aspects
+  19577,  -- The Awakened Drake
+  19578,  -- The Awakened Wyrm
+  19579,  -- The Awakened Aspects
+  40107,  -- Harbinger of the Weathered
+  40115,  -- Harbinger of the Carved
+  40118,  -- Harbinger of the Runed
+  40942,  -- Weathered of the Undermine
+  40943,  -- Carved of the Undermine
+  40944,  -- Runed of the Undermine
+  40945,  -- Gilded of the Undermine
+  41886,  -- Weathered of the Ethereal
+  41887,  -- Carved of the Ethereal
+  41888,  -- Runed of the Ethereal
+  41892,  -- Gilded of the Ethereal
 }

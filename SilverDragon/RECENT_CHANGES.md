@@ -1,5 +1,7 @@
-## Changed in v2025.6
+## Changed in v2025.14
 
-* Updated for 11.1.5 and 1.15.7
-* The dark magic scanning method is now disabled as Blizzard has closed the loophole it relied on with a change to 11.1.5. If you're looking for non-vignette mobs, I recommend falling back on using the macro.
+* K'aresh:
+    * Add loot to rares now data is available
+    * Note that the Devoured Energy-Pod leads to a mount
+    * Add Dangerous Prowlers and Remnants achievements to tooltips
 

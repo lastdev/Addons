@@ -162,6 +162,7 @@ GameCooltipFrame2 = {}
 ---@field Math df_math
 ---@field FontOutlineFlags table<outline, boolean>
 ---@field table df_table_functions
+---@field string df_strings
 ---@field AnchorPoints string[] localized point names
 ---@field AnchorPointsByIndex string[] api point names
 ---@field AnchorPointsToInside table<anchorid, anchorid>
@@ -216,6 +217,7 @@ GameCooltipFrame2 = {}
 ---@field CreateTextureInfo fun(self:table, texture:atlasname|texturepath|textureid, width:number?, height:number?, left:number?, right:number?, top:number?, bottom:number?, imageWidthnumber?, imageHeightnumber?) : table deprecated, use: DetailsFramework:CreateAtlas()
 ---@field CreateLabel fun(self:table, parent:frame, text:any, size:any?, color:any?, font:string?, member:string?, name:string?, layer:drawlayer?) : df_label
 ---@field CreateDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
+---@field CreateDropDownWithText fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown_text
 ---@field CreateFontDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?, bIncludeDefault:boolean?) : df_dropdown
 ---@field CreateColorDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
 ---@field CreateOutlineDropDown fun(self:table, parent:frame, func:function, default:any, width:number?, height:number?, member:string?, name:string?, template:table?) : df_dropdown
@@ -281,6 +283,7 @@ GameCooltipFrame2 = {}
 ---@field CreateIconRow fun(self:table, parent:frame, name:string?, options:table?) : df_iconrow
 ---@field ConvertAnchorPointToInside fun(self:table, anchorPoint:anchorid) : anchorid
 ---@field ExpansionHasAugEvoker fun():boolean
+---@field ExpansionHasEvoker fun():boolean
 ---@field LoadSpellCache fun(self:table, hashMap:table, indexTable:table, allSpellsSameName:table) : hashMap:table, indexTable:table, allSpellsSameName:table load all spells in the game and add them into the passed tables
 ---@field UnloadSpellCache fun(self:table) wipe the table contents filled with LoadSpellCache()
 ---@field GetCurrentClassName fun(self:table) : string return the name of the class the player is playing
@@ -319,6 +322,7 @@ GameCooltipFrame2 = {}
 ---@field RemoveOwnerName fun(self:table, name:string) : string, number removes the owner name from a name string, the owner name must be between < and >
 ---@field CleanUpName fun(self:table, name:string) : string removes the realm name and owner name from a name string
 ---@field IntegerToTimer fun(self:table, time:number) : string convert a number to a timer string, e.g. 150 -> 2:30
+---@field IntegerToCooldownTime fun(self:table, time:number) : string convert a number to a cooldown time string, e.g. 3610 seconds -> "1h"
 ---@field GroupIterator fun(self:table, callback:function, ...) iterate over the group, calling the callback function for each group member
 ---@field CommaValue fun(self:table, value:number) : string convert a number to a string with commas, e.g. 1000000 -> 1,000,000
 ---@field SplitTextInLines fun(self:table, text:string) : string[] split a text into lines
@@ -358,6 +362,7 @@ GameCooltipFrame2 = {}
 ---@field SortOrder3R fun(t1:table, t2:table) : boolean
 ---@field Trim fun(self:table, string:string) : string
 ---@field trim fun(self:table, string:string) : string
+---@field Acronym fun(self:table, phrase:string) : string
 ---@field TruncateTextBinarySearch fun(self:table, fontString:fontstring, maxWidth:number) : nil
 ---@field TruncateTextSafeBinarySearch fun(self:table, fontString:fontstring, maxWidth:number) : nil
 ---@field TruncateTextSafe fun(self:table, fontString:fontstring, maxWidth:number) : nil

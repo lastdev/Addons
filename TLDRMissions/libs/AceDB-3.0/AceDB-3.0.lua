@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- **AceDB-3.0** manages the SavedVariables of your addon.
 -- It offers profile management, smart defaults and namespaces for modules.\\

@@ -12,11 +12,11 @@ elseif loc == "deDE" then
 	--L.addPlayer = "Add Player"
 	--L.removePlayer = "Remove Player"
 elseif loc == "zhTW" then
-	--L.addPlayer = "Add Player"
-	--L.removePlayer = "Remove Player"
+	L.addPlayer = "添加玩家"
+	L.removePlayer = "移除玩家"
 elseif loc == "zhCN" then
-	--L.addPlayer = "Add Player"
-	--L.removePlayer = "Remove Player"
+	L.addPlayer = "添加玩家"
+	L.removePlayer = "移除玩家"
 elseif loc == "esES" or loc == "esMX" then
 	--L.addPlayer = "Add Player"
 	--L.removePlayer = "Remove Player"

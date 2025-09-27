@@ -306,6 +306,13 @@ do
 		AddFaction(2685)     -- Gallagio Loyalty Rewards Club
 		AddFaction(2677)     -- Steamwheedle Cartel
 		AddFaction(2671)     -- Venture Company
+		AddFaction(2688)     -- Flame's Radiance
+		
+		-- The War Within 11.2
+		AddFaction(2658)     -- The K'aresh Trust
+		AddFaction(2736)     -- Manaforge Vandals
+		
+		
 	end
 end
 
@@ -426,7 +433,7 @@ local function ScanSingleFaction(factionID, index)
 	-- local standing = info.reaction
 	
 	-- 3) Is it a faction that supports paragons ?
-	if C_Reputation.IsFactionParagon(factionID) then
+	if _G["C_Reputation.IsFactionParagon"] and C_Reputation.IsFactionParagon(factionID) then
 		local currentValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
 		while (currentValue >= 10000) do
 			currentValue = currentValue - 10000
@@ -627,8 +634,12 @@ local function _GetRawReputationInfo(character, faction)
 	end
 end
 
+local function _GetGuildReputation(character)
+	return bit64:RightShift(character.guildRep or 0, 8)	-- bits 8+ : earned rep
+end
+
 local function _IsExaltedWithGuild(character)
-	return (character.guildRep and character.guildRep >= 42000)
+	return _GetGuildReputation(character) >= 42000
 end
 
 AddonFactory:OnAddonLoaded(addonName, function()
@@ -642,7 +653,8 @@ AddonFactory:OnAddonLoaded(addonName, function()
 				-- IsExaltedWithGuild = isRetail and _IsExaltedWithGuild,
 				IsExaltedWithGuild = _IsExaltedWithGuild,
 				-- GetGuildReputation = isRetail and function(character) return character.guildRep or 0 end,
-				GetGuildReputation = function(character) return character.guildRep or 0 end,
+				-- GetGuildReputation = function(character) return character.guildRep or 0 end,
+				GetGuildReputation = _GetGuildReputation,
 				-- GetReputationInfo = isRetail and _GetReputationInfo_Retail or _GetReputationInfo_NonRetail,
 				GetReputationInfo = _GetReputationInfo_Retail,
 			},

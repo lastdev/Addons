@@ -196,8 +196,8 @@ end
 
 local SetupFuncs = {};
 SetupFuncs["Blizzard_Collections"] = function(addOnName)
-	local parent = _G["MountJournalSummonRandomFavoriteButton"];
-	local ToggleButton = CreateFrame("Button", "TestTest", parent, "ProtoformSynthesisManagerToggleButtonTemplate");
+	local parent = MountJournal.SummonRandomFavoriteSpellFrame.Button;
+	local ToggleButton = CreateFrame("Button", nil, parent, "ProtoformSynthesisManagerToggleButtonTemplate");
 
 	local loaded, finished = C_AddOns.IsAddOnLoaded("MountJournalEnhanced");
 	if loaded and finished then

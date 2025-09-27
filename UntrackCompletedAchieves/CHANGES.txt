@@ -1,0 +1,12 @@
+tag f5edd3871256b1c4bf942c45e71e3aec65c6d8e3 11.2.0
+Author:	Rubio <RubioTwitch@curseforge>
+Date:	Tue Aug 5 23:59:43 2025 -0500
+
+TOC Update for 11.2.0
+
+commit 35ec18518e7f98e56f69488a03898c212a672328
+Author: Rubio <RubioTwitch@curseforge>
+Date:   Tue Aug 5 23:58:48 2025 -0500
+
+    TOC Update for 11.2.0
+

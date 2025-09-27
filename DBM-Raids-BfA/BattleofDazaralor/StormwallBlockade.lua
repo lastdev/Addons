@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2337, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20250719034113")
 mod:SetCreatureID(146251, 146253, 146256)--Sister Katherine 146251, Brother Joseph 146253, Laminaria 146256
 mod:SetEncounterID(2280)
 mod:SetBossHPInfoToHighest()
@@ -9,6 +9,7 @@ mod:SetUsedIcons(1, 2, 3)
 mod:SetHotfixNoticeRev(18367)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
+mod:SetZone(2070)
 
 mod:RegisterCombat("combat")
 

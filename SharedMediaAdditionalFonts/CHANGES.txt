@@ -1,16 +1,10 @@
-lightweight tag fcac1e7358ad2ce2f6aa0c3f3afc9e204cb74eb7 11.0.2c
-Author:	GitHub <noreply@github.com>
-Date:	Mon Oct 21 17:59:13 2024 -0700
+lightweight tag 7cb080d24762429641200fe5d9ca1eb4729cd4e4 11.1.7
+Author:	All-in-one Mighty <mighty@allinonemighty.com>
+Date:	Thu Jun 19 15:20:48 2025 -0700
 
-commit b245d5bb5831515fecc1de73d42c2e7391f0895d
-Author: CoffeeCup <185642452+c0ffee-cup@users.noreply.github.com>
-Date:   Sat Oct 19 17:22:30 2024 -0400
+commit 7cb080d24762429641200fe5d9ca1eb4729cd4e4
+Author: All-in-one Mighty <mighty@allinonemighty.com>
+Date:   Thu Jun 19 15:20:48 2025 -0700
 
-    Adds DejaVu fonts and license.
-
-commit b245d5bb5831515fecc1de73d42c2e7391f0895d
-Author: CoffeeCup <185642452+c0ffee-cup@users.noreply.github.com>
-Date:   Sat Oct 19 17:22:30 2024 -0400
-
-    Adds DejaVu fonts and license.
+    Adding Verdana font and updating TOC
 

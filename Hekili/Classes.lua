@@ -26,7 +26,7 @@ local mt_resource = ns.metatables.mt_resource
 local GetActiveLossOfControlData, GetActiveLossOfControlDataCount = C_LossOfControl.GetActiveLossOfControlData, C_LossOfControl.GetActiveLossOfControlDataCount
 local GetItemCooldown = C_Item.GetItemCooldown
 local GetSpellDescription, GetSpellTexture = C_Spell.GetSpellDescription, C_Spell.GetSpellTexture
-local GetSpecialization, GetSpecializationInfo = _G.GetSpecialization, _G.GetSpecializationInfo
+local GetSpecialization, GetSpecializationInfo = C_SpecializationInfo.GetSpecialization, C_SpecializationInfo.GetSpecializationInfo
 local GetItemSpell, GetItemCount, IsUsableItem = C_Item.GetItemSpell, C_Item.GetItemCount, C_Item.IsUsableItem
 local GetSpellInfo = C_Spell.GetSpellInfo
 local GetSpellLink = C_Spell.GetSpellLink
@@ -55,6 +55,7 @@ local specTemplate = {
     custom1Name = "Custom 1",
     custom2Name = "Custom 2",
     noFeignedCooldown = false,
+    disable_items = false,
 
     abilities = {
         ['**'] = {
@@ -1174,8 +1175,7 @@ local HekiliSpecMixin = {
                     self.totems[ id ] = copy
                 elseif type( copy ) == "table" then
                     for _, alias in ipairs( copy ) do
-                        self.totems[ alias ] = id
-                        self.totems[ id ] = alias
+                        self.totems[ alias ] = token
                     end
                 end
             end
@@ -1293,6 +1293,7 @@ function Hekili:RestoreDefaults()
 
         if msg then
             C_Timer.After( 5, function()
+                Hekili:ReviewPacks()
                 if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
                 Hekili:Print( msg )
             end )
@@ -1318,6 +1319,7 @@ function Hekili:RestoreDefaults()
 
         if msg then
             C_Timer.After( 6, function()
+                Hekili:ReviewPacks()
                 if Hekili.DB.profile.notifications.enabled then Hekili:Notify( msg, 6 ) end
                 Hekili:Print( msg )
             end )
@@ -1339,6 +1341,8 @@ function Hekili:RestoreDefault( name )
             data.payload.version = default.version
             data.payload.date = default.version
             data.payload.builtIn = true
+
+            Hekili:ReviewPacks()
         end
     end
 end
@@ -1365,6 +1369,8 @@ end
 function Hekili:NewSpecialization( specID, isRanged, icon )
 
     if not specID or specID < 0 then return end
+
+    isRanged = isRanged or ns.Specializations[ specID ].ranged
 
     local id, name, _, texture, role, pClass
 
@@ -1462,6 +1468,7 @@ local all = Hekili:NewSpecialization( 0, "All", "Interface\\Addons\\Hekili\\Text
 -- SHARED SPELLS/BUFFS/ETC. --
 ------------------------------
 
+---@diagnostic disable-next-line: need-check-nil
 all:RegisterAuras( {
 
     enlisted_a = {
@@ -1509,7 +1516,8 @@ all:RegisterAuras( {
     voidbinding = {
         id = 462661,
         duration = 30,
-        max_stack = 1
+        max_stack = 1,
+        shared = "player"
     },
     -- Priory of the Sacred Flame
     blessing_of_the_sacred_flame = {
@@ -2141,12 +2149,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.lockoutSchool == 0 and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                    if event and event.lockoutSchool == 0 and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2180,12 +2188,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "CONFUSE"
+                    if event and event.locType == "CONFUSE"
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2223,12 +2231,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if ( event.locType == "FEAR" or event.locType == "FEAR_MECHANIC" or event.locType == "HORROR" )
+                    if event and ( event.locType == "FEAR" or event.locType == "FEAR_MECHANIC" or event.locType == "HORROR" )
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2266,12 +2274,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "STUN"
+                    if event and event.locType == "STUN"
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2310,12 +2318,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "ROOT" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                    if event and event.locType == "ROOT" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2349,12 +2357,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "SNARE" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                    if event and event.locType == "SNARE" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2389,12 +2397,12 @@ all:RegisterAuras( {
             local max_events = GetActiveLossOfControlDataCount()
 
             if max_events > 0 then
-                local spell, start, duration, remains = "none", 0, 0, 0
+                local spell, start, duration, remains = 0, 0, 0, 0
 
                 for i = 1, max_events do
                     local event = GetActiveLossOfControlData( i )
 
-                    if event.locType == "STUN_MECHANIC"
+                    if event and event.locType == "STUN_MECHANIC"
                         and event.startTime and event.startTime > 0
                         and event.timeRemaining and event.timeRemaining > 0
                         and event.timeRemaining > remains then
@@ -2705,9 +2713,14 @@ do
         {
             name = "cavedwellers_delight",
             items = { 212242, 212243, 212244 }
-        }
+        },
+        {
+            name = "invigorating_healing_potion",
+            items = { 244835, 244838, 244839 }
+        }        
     }
 
+---@diagnostic disable-next-line: need-check-nil
     all:RegisterAura( "fake_potion", {
         duration = 30,
         max_stack = 1,
@@ -2867,16 +2880,17 @@ local gotn_classes = {
 }
 
 local baseClass = UnitClassBase( "player" ) or "WARRIOR"
+local gotnID = gotn_classes[ baseClass ] or 28880
 
 all:RegisterAura( "gift_of_the_naaru", {
-    id = gotn_classes[ baseClass ],
+    id = gotnID,
     duration = 5,
     max_stack = 1,
     copy = { 28800, 121093, 59545, 59547, 59543, 59544, 59548, 59542, 370626 }
 } )
 
 all:RegisterAbility( "gift_of_the_naaru", {
-    id = gotn_classes[ baseClass ],
+    id = gotnID,
     cast = 0,
     cooldown = 180,
     gcd = "off",
@@ -3447,7 +3461,9 @@ do
         { "obsidian_aspirants_medallion", 205779 },
         { "obsidian_gladiators_medallion", 205711 },
         { "forged_aspirants_medallion", 218422 },
-        { "forged_gladiators_medallion", 218716 }
+        { "forged_gladiators_medallion", 218716 },
+        { "astral_aspirants_medallion", 230353 },
+        { "astral_gladiators_medallion", 230641 },
     }
 
     local pvp_medallions_copy = {}
@@ -3480,7 +3496,7 @@ do
             end
             return m
         end,
-        items = { 161674, 162897, 165055, 165220, 167377, 167525, 181333, 184052, 184055, 172666, 184058, 185309, 185304, 186966, 186869, 192412, 192298, 204164, 205779, 205711, 205779, 205711, 218422, 218716 },
+        items = { 161674, 162897, 165055, 165220, 167377, 167525, 181333, 184052, 184055, 172666, 184058, 185309, 185304, 186966, 186869, 192412, 192298, 204164, 205779, 205711, 205779, 205711, 218422, 218716, 230353, 230641 },
         toggle = "defensives",
 
         usable = function () return debuff.loss_of_control.up, "requires loss of control effect" end,
@@ -3527,7 +3543,9 @@ do
         { "forged_aspirants_badge_of_ferocity", 218421 },
         { "forged_gladiators_badge_of_ferocity", 218713 },
         { "prized_aspirants_badge_of_ferocity", 229491 },
-        { "prized_gladiators_badge_of_ferocity", 229780 }
+        { "prized_gladiators_badge_of_ferocity", 229780 },
+        { "astral_aspirants_badge_of_ferocity", 230352 },
+        { "astral_gladiators_badge_of_ferocity", 230638 }  
     }
 
     local pvp_badges_copy = {}
@@ -3552,7 +3570,7 @@ do
         cooldown = 120,
         gcd = "off",
 
-        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343, 218421, 218713, 229491, 229780 },
+        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343, 218421, 218713, 229491, 229780, 230352, 230638 },
         texture = 135884,
 
         toggle = "cooldowns",
@@ -3632,7 +3650,9 @@ do
         algari_competitors_emblem = 219933,
         forged_gladiators_emblem = 218715,
         prized_aspirants_emblem = 229494,
-        prized_gladiators_emblem = 229782
+        prized_gladiators_emblem = 229782,
+        astral_aspirants_emblem = 230355,
+        astral_gladiators_emblem = 230640
     }
 
     local pvp_emblems_copy = {}
@@ -3666,7 +3686,7 @@ do
             end
             return e
         end,
-        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345, 219933, 218715, 229494, 229782 },
+        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345, 219933, 218715, 229494, 229782, 230355, 230640 },
         toggle = "cooldowns",
 
         handler = function ()
@@ -4099,6 +4119,7 @@ function Hekili:SpecializationChanged()
 
     wipe( state.buff )
     wipe( state.debuff )
+    wipe( state.cooldown )
 
     wipe( class.auras )
     wipe( class.abilities )

@@ -7,13 +7,14 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104711")
+mod:SetRevision("20250719034113")
 mod:SetCreatureID(creatureID, creatureID2)
 mod:SetEncounterID(2266, 2285)--2266 horde, 2285 Alliance
 mod:SetUsedIcons(1, 2, 3)
 --mod:SetHotfixNoticeRev(17775)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
+mod:SetZone(2070)
 
 mod:RegisterCombat("combat")
 

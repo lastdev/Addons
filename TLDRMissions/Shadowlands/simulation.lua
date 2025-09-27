@@ -1,5 +1,4 @@
-local addonName = "TLDRMissions"
-local addon = _G[addonName]
+local addonName, addon = ...
 
 local function print(...)
     if not TLDRMissionsDEVTESTING then return end

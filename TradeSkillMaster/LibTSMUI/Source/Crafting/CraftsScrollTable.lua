@@ -180,7 +180,7 @@ function CraftsScrollTable.__private:_HandleQueryUpdate()
 	for _, row in self._query:Iterator() do
 		local num, itemString, name, firstOperation, bagQuantity, auctionQuantity, profession = row:GetFields("num", "itemString", "name", "firstOperation", "bagQuantity", "auctionQuantity", "profession")
 		tinsert(self._data.queued, num)
-		tinsert(self._data.craftName, "|T"..ItemInfo.GetTexture(itemString)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or name))
+		tinsert(self._data.craftName, "|T"..(ItemInfo.GetTexture(itemString) or 0)..":0|t "..(UIUtils.GetDisplayItemName(itemString) or name))
 		tinsert(self._data.craftName_tooltip, itemString)
 		tinsert(self._data.operation, firstOperation)
 		tinsert(self._data.bags, bagQuantity or "0")

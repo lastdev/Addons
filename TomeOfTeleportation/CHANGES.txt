@@ -1,28 +1,16 @@
-lightweight tag 5e1a8cd21de9990fa712be0bd3508eb16331a8e1 5.10.1
+lightweight tag 7ebaf856321df3696b469562876bbe99220e5c3b 5.11.6
 Author:	Remeen <wow@meen.co.uk>
-Date:	Thu Apr 17 21:03:14 2025 +0100
+Date:	Sun Sep 7 16:13:26 2025 +0100
 
-commit 5e1a8cd21de9990fa712be0bd3508eb16331a8e1
+commit 7ebaf856321df3696b469562876bbe99220e5c3b
 Author: Remeen <wow@meen.co.uk>
-Date:   Thu Apr 17 21:03:14 2025 +0100
+Date:   Sun Sep 7 16:13:26 2025 +0100
 
-    Custom spells can include mounts and pets
+    Added Delver's Mana-Bound Ethergate
 
-commit 746a5a6af40ad7382b449307967c66efbe2d5f7a
-Author: Aaron Johnson <aaron@aaronjohnson.me>
-Date:   Fri Apr 4 21:17:32 2025 -0400
-
-    fixed expansion for waycrest manor
-
-commit 746a5a6af40ad7382b449307967c66efbe2d5f7a
-Author: Aaron Johnson <aaron@aaronjohnson.me>
-Date:   Fri Apr 4 21:17:32 2025 -0400
-
-    fixed expansion for waycrest manor
-
-commit 92e612ea31009eae9b6d7203eab92e52f190eb8c
+commit 5dd3b2e35d0abb3e2d219b09d95828a8850b2148
 Author: Remeen <wow@meen.co.uk>
-Date:   Wed Mar 26 20:59:23 2025 +0000
+Date:   Mon Aug 18 19:46:24 2025 +0100
 
-    Fix for possible uninitialised settings.
+    Add Shadowguard Translocator
 

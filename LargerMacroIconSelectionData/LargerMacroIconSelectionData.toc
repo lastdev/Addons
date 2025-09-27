@@ -1,10 +1,22 @@
-## Interface: 110002, 110000, 40400, 11504, 11503
-## Version: v1.9.9
+## Interface: 110200, 50500, 11507
+## Version: 1.0-62438
 ## Title: LargerMacroIconSelectionData
 ## Author: Xinhuan, Ketho
-## Notes: Load on Demand Icon FileData
+## Notes: Load on Demand Icon Data
 ## LoadOnDemand: 1
 ## IconTexture: interface\icons\spell_nature_polymorph
+## X-Website: https://www.townlong-yak.com/addons/iconfilenames
+## Category: User Interface
+## Category-deDE: Benutzerinterface
+## Category-esES: Interfaz de usuario
+## Category-esMX: Interfaz de usuario
+## Category-frFR: Interface utilisateur
+## Category-itIT: Interfaccia utente
+## Category-koKR: 사용자 인터페이스
+## Category-ptBR: Interface do usuário
+## Category-ruRU: Интерфейс пользователя
+## Category-zhCN: 用户界面
+## Category-zhTW: 使用者介面
 
 LargerMacroIconSelectionData.lua
 IconFileNames.lua

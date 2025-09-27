@@ -1,5 +1,7 @@
 local _, ns = ...
 
+-- ns.iconStandard is found at the foot of Localisations_Common - to avoid cyclical references
+
 ns.mt = {}
 ns.mt.__index = function( table, key )
 	return key
@@ -25,6 +27,7 @@ if ns.locale == "deDE" then
 	ns.L["Show Coordinates"] = "Koordinaten anzeigen"
 	ns.L["Show Coordinates Description"] = "Zeigen sie die koordinaten in QuickInfos auf "
 		.."der Weltkarte und auf der Minikarte an"
+	ns.L["ShowAzeroth"] = "Stecknadeln auf der Azeroth-Karte anzeigen"
 	ns.L["Map Pin Selections"] = "Karten-Pin-Auswahl"
 	ns.L["Left"] = "Links"
 	ns.L["Right"] = "Rechts"
@@ -37,12 +40,15 @@ if ns.locale == "deDE" then
 	
 	ns.L["Blue"] = "Blau"
 	ns.L["Brown"] = "Braun"
+	ns.L["Cyan"] = "Cyan"
 	ns.L["Dark Blue"] = "Dunkelblau"
 	ns.L["Gold"] = "Gold"
 	ns.L["Green"] = "Grün"
 	ns.L["Grey"] = "Grau"
 	ns.L["Light Blue"] = "Hellblau"
 	ns.L["Light Green"] = "Hellgrün"
+	ns.L["Magenta"] = "Magenta"
+	ns.L["Orange"] = "Orange"
 	ns.L["Pink"] = "Rosa"
 	ns.L["Purple"] = "Lila"
 	ns.L["Red"] = "Rot"
@@ -67,11 +73,11 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	ns.L["Account"] = "la Cuenta"
 	ns.L["Completed"] = "Completado"
 	ns.L["Not Completed"] = ( ns.locale == "esES" ) and "Sin Completar" or "Incompleto"
-	ns.L["Options"] = "Opciones"
 	ns.L["Try again"] = "Intentar otra vez. Servidor sin respuesta"
 	ns.L["ZidormiWrongPhase"] = "Tu mapa muestra el momento equivocado en el historial de la zona. Si te encuentras actualmente "
 		.."en la zona, primero debes hablar con Zidormi."
 
+	ns.L["Options"] = "Opciones"
 	ns.L["Map Pin Size"] = "Tamaño de alfiler"
 	ns.L["The Map Pin Size"] = "Tamaño de los pines del mapa"
 	ns.L["Map Pin Alpha"] = "Alfa de los pines del mapa"
@@ -79,6 +85,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	ns.L["Show Coordinates"] = "Mostrar coordenadas"
 	ns.L["Show Coordinates Description"] = "Mostrar coordenadas en información sobre "
 		.."herramientas en el mapa del mundo y en el minimapa"
+	ns.L["ShowAzeroth"] = "Mostrar pines en el mapa de Azeroth"
 	ns.L["Map Pin Selections"] = "Selecciones de pines de mapa"
 	ns.L["Left"] = "Izquierda"
 	ns.L["Right"] = "Derecha"
@@ -91,12 +98,15 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 
 	ns.L["Blue"] = "Azul"
 	ns.L["Brown"] = "Marrón"
+	ns.L["Cyan"] = "Cian"
 	ns.L["Dark Blue"] = "Azul oscuro"
 	ns.L["Gold"] = "Oro"
 	ns.L["Green"] = "Verde"
 	ns.L["Grey"] = "Gris"
 	ns.L["Light Blue"] = "Azul claro"
 	ns.L["Light Green"] = "Verde claro"
+	ns.L["Magenta"] = "Magenta"
+	ns.L["Orange"] = "Naranja"
 	ns.L["Pink"] = "Rosa"
 	ns.L["Purple"] = "Púrpura"
 	ns.L["Red"] = "Rojo"
@@ -133,6 +143,7 @@ elseif ns.locale == "frFR" then
 	ns.L["Show Coordinates"] = "Afficher les coordonnées"
 	ns.L["Show Coordinates Description"] = "Afficher les coordonnées\124r dans les info-bulles sur "
 		.."la carte du monde et la mini-carte"
+	ns.L["ShowAzeroth"] = "Afficher les épingles sur la carte d'Azeroth"
 	ns.L["Map Pin Selections"] = "Sélections de broches de carte"
 	ns.L["Left"] = "Gauche"
 	ns.L["Right"] = "Droite"
@@ -145,12 +156,15 @@ elseif ns.locale == "frFR" then
 
 	ns.L["Blue"] = "Bleue"
 	ns.L["Brown"] = "Marron"
+	ns.L["Cyan"] = "Cyan"
 	ns.L["Dark Blue"] = "Bleu foncé"
 	ns.L["Gold"] = "Or"
 	ns.L["Green"] = "Vert"
 	ns.L["Grey"] = "Gris"
 	ns.L["Light Blue"] = "Bleu clair"
 	ns.L["Light Green"] = "Vert clair"
+	ns.L["Magenta"] = "Magenta"
+	ns.L["Orange"] = "Orange"
 	ns.L["Pink"] = "Rose"
 	ns.L["Purple"] = "Violet"
 	ns.L["Red"] = "Rouge"
@@ -191,6 +205,7 @@ elseif ns.locale == "itIT" then
 	ns.L["Left"] = "Sinistra"
 	ns.L["Right"] = "Destra"
 	ns.L["Notes"] = "Note"
+	ns.L["ShowAzeroth"] = "Mostra i pin sulla mappa di Azeroth"
 	ns.L["MinimapMenu"] = "Una scorciatoia per aprire questo pannello è tramite il menu Minimappa AddOn, che si trova "
 		.."immediatamente sotto l'icona del Calendario. Basta fare clic con il mouse\n\n"
 	ns.L["ChatCommands"] = "Sono supportate anche le scorciatoie dei comandi di chat. "
@@ -199,6 +214,7 @@ elseif ns.locale == "itIT" then
 
 	ns.L["Blue"] = "Blu"
 	ns.L["Brown"] = "Marrone"
+	ns.L["Cyan"] = "Ciano"
 	ns.L["Dark Blue"] = "Blu scuro"
 	ns.L["Gold"] = "Oro"
 	ns.L["Red"] = "Rosso"
@@ -206,6 +222,8 @@ elseif ns.locale == "itIT" then
 	ns.L["Grey"] = "Grigio"
 	ns.L["Light Blue"] = "Azzurro"
 	ns.L["Light Green"] = "Verde chiaro"
+	ns.L["Magenta"] = "Magenta"
+	ns.L["Orange"] = "Arancione"
 	ns.L["Pink"] = "Rosa"
 	ns.L["Purple"] = "Viola"
 	ns.L["Teal"] = "Verde acqua"
@@ -239,6 +257,7 @@ elseif ns.locale == "koKR" then
 	ns.L["The alpha transparency of the map pins"] = "지도 핀의 알파 투명도"
 	ns.L["Show Coordinates"] = "좌표 표시"
 	ns.L["Show Coordinates Description"] = "세계지도 및 미니지도의 도구 설명에 좌표를 표시합니다."
+	ns.L["ShowAzeroth"] = "아제로스 지도에 핀 표시"
 	ns.L["Map Pin Selections"] = "지도 핀 선택"
 	ns.L["Left"] = "왼쪽"
 	ns.L["Right"] = "오른쪽"
@@ -250,16 +269,19 @@ elseif ns.locale == "koKR" then
 
 	ns.L["Blue"] = "푸른"
 	ns.L["Brown"] = "갈색"
+	ns.L["Cyan"] = "시안"
 	ns.L["Dark Blue"] = "진한 파란색"
 	ns.L["Gold"] = "금"
 	ns.L["Green"] = "녹색"
 	ns.L["Grey"] = "회색"
 	ns.L["Light Blue"] = "하늘색"
 	ns.L["Light Green"] = "라이트 그린"
+	ns.L["Magenta"] = "마젠타"
+	ns.L["Orange"] = "오렌지"
 	ns.L["Pink"] = "분홍색"
 	ns.L["Purple"] = "보라색"
 	ns.L["Red"] = "빨간"
-	ns.L["Teal"] = "푸른 청록색"
+	ns.L["Teal"] = "청록색"
 	ns.L["Turquoise"] = "청록색"	
 	ns.L["White"] = "화이트"
 	ns.L["Yellow"] = "노랑"
@@ -292,6 +314,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	ns.L["Show Coordinates"] = "Mostrar coordenadas"
 	ns.L["Show Coordinates Description"] = "Exibir coordenadas\124r em dicas de ferramentas "
 		.."no mapa mundial e no minimapa"
+	ns.L["ShowAzeroth"] = "Mostrar pinos no mapa de Azeroth"
 	ns.L["Map Pin Selections"] = "Seleções de pinos de mapa"
 	ns.L["Left"] = "Esquerda"
 	ns.L["Right"] = "Direita"
@@ -304,12 +327,15 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 
 	ns.L["Blue"] = "Azul"
 	ns.L["Brown"] = "Marrom"
+	ns.L["Cyan"] = "Ciano"
 	ns.L["Dark Blue"] = "Azul-escuro"
 	ns.L["Gold"] = "Ouro"
 	ns.L["Green"] = "Verde"
 	ns.L["Grey"] = "Cinzento"
 	ns.L["Light Blue"] = "Azul-claro"
 	ns.L["Light Green"] = "Verde Claro"
+	ns.L["Magenta"] = "Magenta"
+	ns.L["Orange"] = "Laranja"
 	ns.L["Pink"] = "Rosa"
 	ns.L["Purple"] = "Roxa"
 	ns.L["Red"] = "Vermelho"
@@ -346,6 +372,7 @@ elseif ns.locale == "ruRU" then
 	ns.L["Show Coordinates"] = "Показать Координаты"
 	ns.L["Show Coordinates Description"] = "Отображает координаты\124r во всплывающих "
 		.."подсказках на карте мира и мини-карте"
+	ns.L["ShowAzeroth"] = "Показывать метки на карте Азерота"
 	ns.L["Map Pin Selections"] = "Выбор булавки карты"
 	ns.L["Left"] = "Налево"
 	ns.L["Right"] = "Направо"
@@ -358,12 +385,15 @@ elseif ns.locale == "ruRU" then
 
 	ns.L["Blue"] = "Синий"
 	ns.L["Brown"] = "Коричневый"
+	ns.L["Cyan"] = "Голубой"
 	ns.L["Dark Blue"] = "Темно-синий"
 	ns.L["Gold"] = "Золото"
 	ns.L["Green"] = "Зеленый"
 	ns.L["Grey"] = "Серый"
 	ns.L["Light Blue"] = "Светло-голубой"
 	ns.L["Light Green"] = "Светло-зеленый"
+	ns.L["Magenta"] = "Пурпурный"
+	ns.L["Orange"] = "Оранжевый"
 	ns.L["Pink"] = "Розовый"
 	ns.L["Purple"] = "Пурпурный"
 	ns.L["Red"] = "Красный"
@@ -399,6 +429,7 @@ elseif ns.locale == "zhCN" then
 	ns.L["The alpha transparency of the map pins"] = "地图图标透明度"
 	ns.L["Show Coordinates"] = "显示坐标"
 	ns.L["Show Coordinates Description"] = "在世界地图和小地图上的鼠标提示中显示坐标"
+	ns.L["ShowAzeroth"] = "在艾泽拉斯地图上显示图钉"
 	ns.L["Map Pin Selections"] = "地图图标选择"
 	ns.L["Left"] = "左"
 	ns.L["Right"] = "右"
@@ -411,12 +442,15 @@ elseif ns.locale == "zhCN" then
 
 	ns.L["Blue"] = "蓝"
 	ns.L["Brown"] = "棕色"
+	ns.L["Cyan"] = "青色"
 	ns.L["Dark Blue"] = "深蓝色"
 	ns.L["Gold"] = "金子"
 	ns.L["Green"] = "绿色"
 	ns.L["Grey"] = "灰色"
 	ns.L["Light Blue"] = "浅蓝色"
 	ns.L["Light Green"] = "浅绿色"
+	ns.L["Magenta"] = "洋红色"
+	ns.L["Orange"] = "橙色"
 	ns.L["Pink"] = "粉色"
 	ns.L["Purple"] = "紫色"
 	ns.L["Red"] = "红"
@@ -445,12 +479,14 @@ elseif ns.locale == "zhTW" then
 	ns.L["ZidormiWrongPhase"] = "你的地圖顯示區域的時間線不對。如果你現在 在區域內，那麼你必須去找希多爾米對話。"
 
 	ns.L["Options"] = "選項"
+	ns.L["ShowAzeroth"] = ""
 	ns.L["Map Pin Size"] = "地圖圖示大小"
 	ns.L["The Map Pin Size"] = "地圖圖示大小"
 	ns.L["Map Pin Alpha"] = "地圖圖標透明度"
 	ns.L["The alpha transparency of the map pins"] = "地圖圖標透明度"
 	ns.L["Show Coordinates"] = "顯示座標"
 	ns.L["Show Coordinates Description"] = "在世界地圖和小地圖上的滑鼠提示中顯示座標"
+	ns.L["ShowAzeroth"] = "在艾澤拉斯地圖上顯示圖釘"
 	ns.L["Map Pin Selections"] = "地圖圖示選擇"
 	ns.L["Left"] = "左"
 	ns.L["Right"] = "右"
@@ -463,12 +499,15 @@ elseif ns.locale == "zhTW" then
 
 	ns.L["Blue"] = "藍"
 	ns.L["Brown"] = "棕色的"
+	ns.L["Cyan"] = "青色"
 	ns.L["Dark Blue"] = "深藍色"
 	ns.L["Gold"] = "金子"
 	ns.L["Green"] = "綠色"
 	ns.L["Grey"] = "灰色"
 	ns.L["Light Blue"] = "淺藍色"
 	ns.L["Light Green"] = "淺綠色"
+	ns.L["Magenta"] = "洋紅色"
+	ns.L["Orange"] = "橘色"
 	ns.L["Pink"] = "粉紅色的"
 	ns.L["Purple"] = "紫色"
 	ns.L["Red"] = "紅"
@@ -492,13 +531,28 @@ else
 	ns.L["Try again"] = "Try again. Server no response"
 	ns.L["ZidormiWrongPhase"] = "Your map is looking at the wrong time in the zone's history. If you are presently "
 		.."in the zone then you must first speak to Zidormi"
+
+	ns.L["ShowAzeroth"] = "Show pins on the Azeroth map"
+	ns.L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
+	ns.L["MinimapMenu"] = "A shortcut to open this panel is via the Minimap AddOn menu, which is immediately below the "
+		.."Calendar icon. Just click your mouse\n\n"
 	ns.L["ChatCommands"] = "Chat command shortcuts are also supported. "
 	ns.L["ShowPanel"] = " - Show this panel\n"
 	ns.L["TryMinimapMenu"] = "Try the Minimap AddOn Menu (below the Calendar)"
 
 	ns.L["Grey"] = ( ( ns.locale == "enUS" ) and "Gray" or "Grey" )
 
-	ns.L["Show Coordinates Description"] = "Display coordinates in tooltips on the world map and the mini map"
-	ns.L["MinimapMenu"] = "A shortcut to open this panel is via the Minimap AddOn menu, which is immediately below the "
-		.."Calendar icon. Just click your mouse\n\n"
 end
+
+ns.iconStandard = "0 = " ..ns.L[ "Don't show" ] .."\n1 = " ..ns.L[ "White" ] .."\n2 = " ..ns.L[ "Purple" ] .."\n3 = "
+				..ns.L[ "Red" ] .."\n4 = " ..ns.L[ "Yellow" ] .."\n5 = " ..ns.L[ "Green" ] .."\n6 = " ..ns.L[ "Grey" ]
+				.."\n7 = " ..ns.L[ "Mana Orb" ] .."\n8 = " ..ns.L[ "Phasing" ] .."\n9 = " ..ns.L[ "Raptor egg" ]
+				.."\n10 = " ..ns.L[ "Stars" ]
+ns.setIconScale = { type = "range", name = ns.L[ "Map Pin Size" ], desc = ns.L[ "The Map Pin Size" ], min = 1, max = 4,
+					step = 0.1, arg = "iconScale", order = 1, }
+ns.setIconAlpha = { type = "range", name = ns.L[ "Map Pin Alpha" ], desc = ns.L[ "The alpha transparency of the map pins" ],
+					min = 0, max = 1, step = 0.01, arg = "iconAlpha", order = 2, }				
+ns.setShowCoords = { name = ns.L[ "Show Coordinates" ], desc = ns.L[ "Show Coordinates Description" ] ..ns.colour.highlight
+					.."\n(xx.xx,yy.yy)", type = "toggle", width = "full", arg = "showCoords", order = 3, }			
+ns.setShowAzeroth = { name = ns.L["ShowAzeroth"], desc = "There will be a LOT of pins on the Azeroth map",
+					type = "toggle", width = "full", arg = "showAzeroth", order = 10, }		

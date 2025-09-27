@@ -1,0 +1,9 @@
+## Interface: 110105
+## Title: Visions Vial Helper
+## Author: Psycho
+## Version: 1.0.1
+## Notes: Displays vial effects in Vision's based on the bad vial when clicked.
+## SavedVariables: VisionsvialHelperDB
+## IconTexture: 134832
+
+Visionsvialhelper.lua

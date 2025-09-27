@@ -11,7 +11,6 @@ local addonName, addon = ...
 local sformat = string.format
 local L = TomTomLocals
 local ldb = LibStub("LibDataBroker-1.1")
-local ldd = LibStub('LibDropDown')
 
 local IMAGE_ARROW = "Interface\\Addons\\TomTom\\Images\\Arrow-1024"
 local IMAGE_ARROW_UP = "Interface\\AddOns\\TomTom\\Images\\Arrow-UP-1024"
@@ -81,13 +80,13 @@ local function OnEvent(self, event, ...)
 		return
 	end
 	if (event == "PLAYER_ENTERING_WORLD") then
-        wayframe:ClearAllPoints()
-        if not TomTom.profile.arrow.position then
-            TomTom.profile.arrow.position = {"CENTER", nil , "CENTER", 0, 0}
-        end
-        local pos = TomTom.profile.arrow.position
-        wayframe:SetPoint(pos[1], UIParent, pos[3], pos[4], pos[5])
-    end
+		wayframe:ClearAllPoints()
+		if not TomTom.profile.arrow.position then
+			TomTom.profile.arrow.position = {"CENTER", nil , "CENTER", 0, 0}
+		end
+		local pos = TomTom.profile.arrow.position
+		wayframe:SetPoint(pos[1], UIParent, pos[3], pos[4], pos[5])
+	end
 end
 
 wayframe:SetScript("OnDragStart", OnDragStart)
@@ -124,7 +123,7 @@ function TomTom:SetCrazyArrow(uid, dist, title)
 end
 
 function TomTom:IsCrazyArrowEmpty()
-    return not active_point
+	return not active_point
 end
 
 local status = wayframe.status
@@ -210,7 +209,7 @@ local function OnUpdate(self, elapsed)
 			end
 			self:Hide()
 			return
-        end
+		end
 
 		angle = angle - player
 
@@ -291,13 +290,13 @@ function TomTom:ShowHideCrazyArrow()
 		wayframe:SetScale(TomTom.db.profile.arrow.scale)
 		-- Do not allow the arrow to be invisible
 		if TomTom.db.profile.arrow.alpha < 0.1 then
-		    TomTom.db.profile.arrow.alpha = 1.0
+			TomTom.db.profile.arrow.alpha = 1.0
 		end
 		-- Set the stratum
 		if TomTom.db.profile.arrow.highstrata then
-		    wayframe:SetFrameStrata("HIGH")
+			wayframe:SetFrameStrata("HIGH")
 		else
-		    wayframe:SetFrameStrata("MEDIUM")
+			wayframe:SetFrameStrata("MEDIUM")
 		end
 		wayframe:SetAlpha(TomTom.db.profile.arrow.alpha)
 		local width = TomTom.db.profile.arrow.title_width
@@ -336,114 +335,63 @@ wayframe:SetScript("OnUpdate", OnUpdate)
 --  Dropdown
 -------------------------------------------------------------------------]]--
 
-local function initDropdown(parent)
-	local menu = ldd:NewMenu(wayframe, 'MyFrameDropDown')
-	menu:SetAnchor("TOPLEFT", parent, "CENTER", 25, -25)
+local function crazyArrowDropdownGenerator(owner, rootDescription)
+	rootDescription:CreateTitle(L["TomTom Waypoint Arrow"]);
 
-	local dropdownInfo = {
-		{
-			isTitle = true,
-			text = L["TomTom Waypoint Arrow"],
-		},
-		{
-			text = L["Send waypoint to"],
-			menu = {
-				{
-					-- Title
-					text = L["Waypoint communication"],
-					isTitle = true,
-				},
-				{
-					-- Party
-					text = L["Send to party"],
-					func = function()
-						TomTom:SendWaypoint(TomTom.dropdown_uid, "PARTY")
-					end
-				},
-				{
-					-- Raid
-					text = L["Send to raid"],
-					func = function()
-						TomTom:SendWaypoint(TomTom.dropdown_uid, "RAID")
-					end
-				},
-				{
-					-- Battleground
-					text = L["Send to battleground"],
-					func = function()
-						TomTom:SendWaypoint(TomTom.dropdown_uid, "BATTLEGROUND")
-					end
-				},
-				{
-					-- Guild
-					text = L["Send to guild"],
-					func = function()
-						TomTom:SendWaypoint(TomTom.dropdown_uid, "GUILD")
-					end
-				},
-			},
-		},
-		{
-			-- Clear waypoint from crazy arrow
-			text = L["Clear waypoint from crazy arrow"],
-			func = function()
-				TomTom:ClearCrazyArrowPoint(false)
-			end,
-		},
-		{
-			-- Remove a waypoint
-			text = L["Remove waypoint"],
-			func = function()
-				TomTom:ClearCrazyArrowPoint(true)
-			end,
-		},
-		{
-            -- Remove all waypoints from this zone
-            text = L["Remove all waypoints from this zone"],
-            func = function()
-                local uid = active_point
-                local data = uid
-                local mapId = data[1]
-                for key, waypoint in pairs(TomTom.waypoints[mapId]) do
-                    TomTom:RemoveWaypoint(waypoint)
-                end
+	-- Waypoint communications
+	local sendWaypoint = rootDescription:CreateButton(L["Send waypoint to"])
+	sendWaypoint:CreateTitle(L["Waypoint communication"])
+	sendWaypoint:CreateButton(L["Send to party"], function()
+		addon:SendWaypoint(addon.dropdown_uid, "PARTY")
+	end)
+	sendWaypoint:CreateButton(L["Send to raid"], function()
+		addon:SendWaypoint(addon.dropdown_uid, "RAID")
+	end)
+	sendWaypoint:CreateButton(L["Send to battleground"], function()
+		addon:SendWaypoint(addon.dropdown_uid, "BATTLEGROUND")
+	end)
+	sendWaypoint:CreateButton(L["Send to guild"], function()
+		addon:SendWaypoint(addon.dropdown_uid, "GUILD")
+	end)
 
-            end,
-        },
-		{
-			-- Remove all waypoints
-			text = L["Remove all waypoints"],
-			func = function()
-				if TomTom.db.profile.general.confirmremoveall then
-					StaticPopup_Show("TOMTOM_REMOVE_ALL_CONFIRM")
-				else
-					StaticPopupDialogs["TOMTOM_REMOVE_ALL_CONFIRM"].OnAccept()
-					return
-				end
-			end,
-		},
-		{
-			-- Lock Arrow
-			text = L["Arrow locked"],
-			checked = function () return TomTom.db.profile.arrow.lock; end,
-			func = function ()
-				TomTom.db.profile.arrow.lock = not TomTom.db.profile.arrow.lock
-				TomTom:ShowHideCrazyArrow()
-			end,
-			isNotRadio = true,
-		}
-	}
+	rootDescription:CreateButton(L["Clear waypoint from crazy arrow"], function()
+		addon:ClearCrazyArrowPoint(false)
+	end)
 
-	menu:AddLines(unpack(dropdownInfo))
-	return menu
+	rootDescription:CreateButton(L["Remove waypoint"], function()
+		addon:ClearCrazyArrowPoint(true)
+	end)
+
+	rootDescription:CreateButton(L["Remove all waypoints from this zone"], function()
+		local uid = addon.dropdown_uid
+		local data = uid
+		local mapId = data[1]
+		for key, waypoint in pairs(addon.waypoints[mapId]) do
+			addon:RemoveWaypoint(waypoint)
+		end
+	end)
+
+	rootDescription:CreateButton(L["Remove all waypoints"], function()
+		if addon.db.profile.general.confirmremoveall then
+			StaticPopup_Show("TOMTOM_REMOVE_ALL_CONFIRM")
+		else
+			StaticPopupDialogs["TOMTOM_REMOVE_ALL_CONFIRM"].OnAccept()
+			return
+		end
+	end)
+
+	local maybeLocked = addon.db.profile.arrow.lock and L["Unlock crazy arrow"] or L["Lock crazy arrow"]
+	rootDescription:CreateButton(L[maybeLocked], function()
+		addon.db.profile.arrow.lock = not addon.db.profile.arrow.lock
+		addon:ShowHideCrazyArrow()
+	end)
 end
 
-local wayframeMenu = initDropdown(wayframe)
 local function WayFrame_OnClick(self, button)
 	if active_point then
-		if TomTom.db.profile.arrow.menu then
-			TomTom.dropdown_uid = active_point
-			wayframeMenu:Toggle()
+		if addon.db.profile.arrow.menu then
+			addon.dropdown_uid = active_point
+			MenuUtil.CreateContextMenu(self, crazyArrowDropdownGenerator)
 		end
 	end
 end
@@ -587,65 +535,65 @@ wayframe:HookScript("OnEvent", wayframe_OnEvent)
 -- into consideration.  This can be accomplished by subtracting
 -- GetPlayerFacing() from the angle before passing it in.
 function TomTom:SetCrazyArrowDirection(angle)
-    local cell = floor(angle / twopi * 108 + 0.5) % 108
-    local column = cell % 9
-    local row = floor(cell / 9)
+	local cell = floor(angle / twopi * 108 + 0.5) % 108
+	local column = cell % 9
+	local row = floor(cell / 9)
 
-    local key = column .. ":" .. row
-    arrow:SetTexCoord(unpack(texcoords[key]))
+	local key = column .. ":" .. row
+	arrow:SetTexCoord(unpack(texcoords[key]))
 end
 
 -- Convenience function to set the color of the crazy arrow
 function TomTom:SetCrazyArrowColor(r, g, b, a)
-    arrow:SetVertexColor(r, g, b, a)
+	arrow:SetVertexColor(r, g, b, a)
 end
 
 -- Convenience function to set the title/status and time to arrival text
 -- of the crazy arrow.
 function TomTom:SetCrazyArrowTitle(title, status, tta)
-    wayframe.title:SetText(title)
-    wayframe.status:SetText(status)
-    wayframe.tta:SetText(tta)
+	wayframe.title:SetText(title)
+	wayframe.status:SetText(status)
+	wayframe.tta:SetText(tta)
 end
 
 -- Function to actually hijack the crazy arrow by replacing the OnUpdate script
 function TomTom:HijackCrazyArrow(onupdate)
-    wayframe:SetScript("OnUpdate", onupdate)
-    wayframe.hijacked = true
-    wayframe:Show()
+	wayframe:SetScript("OnUpdate", onupdate)
+	wayframe.hijacked = true
+	wayframe:Show()
 end
 
 -- Releases the crazy arrow by restoring the original OnUpdate script
 function TomTom:ReleaseCrazyArrow()
-    wayframe:SetScript("OnUpdate", OnUpdate)
-    wayframe.hijacked = false
+	wayframe:SetScript("OnUpdate", OnUpdate)
+	wayframe.hijacked = false
 end
 
 -- Returns whether or not the crazy arrow is currently hijacked
 function TomTom:CrazyArrowIsHijacked()
-    return wayframe.hijacked
+	return wayframe.hijacked
 end
 
 -- Logs Crazy Arrow status
 function TomTom:DebugCrazyArrow()
-    local msg
-    msg = string.format(L["|cffffff78TomTom:|r CrazyArrow %s hijacked"], (wayframe.hijacked and L["is"]) or L["not"])
-    ChatFrame1:AddMessage(msg)
-    msg = string.format(L["|cffffff78TomTom:|r CrazyArrow %s visible"], (wayframe:IsVisible() and L["is"]) or L["not"])
-    ChatFrame1:AddMessage(msg)
-    msg = string.format(L["|cffffff78TomTom:|r Waypoint %s valid"], (active_point and TomTom:IsValidWaypoint(active_point) and L["is"]) or L["not"])
-    ChatFrame1:AddMessage(msg)
+	local msg
+	msg = string.format(L["|cffffff78TomTom:|r CrazyArrow %s hijacked"], (wayframe.hijacked and L["is"]) or L["not"])
+	ChatFrame1:AddMessage(msg)
+	msg = string.format(L["|cffffff78TomTom:|r CrazyArrow %s visible"], (wayframe:IsVisible() and L["is"]) or L["not"])
+	ChatFrame1:AddMessage(msg)
+	msg = string.format(L["|cffffff78TomTom:|r Waypoint %s valid"], (active_point and TomTom:IsValidWaypoint(active_point) and L["is"]) or L["not"])
+	ChatFrame1:AddMessage(msg)
 
-    local dist,x,y = TomTom:GetDistanceToWaypoint(active_point)
-    msg = string.format("|cffffff78TomTom:|r Waypoint distance=%s", tostring(dist))
-    ChatFrame1:AddMessage(msg)
+	local dist,x,y = TomTom:GetDistanceToWaypoint(active_point)
+	msg = string.format("|cffffff78TomTom:|r Waypoint distance=%s", tostring(dist))
+	ChatFrame1:AddMessage(msg)
 
-    if wayframe:IsVisible() then
-        local point, relativeTo, relativePoint, xOfs, yOfs = wayframe:GetPoint(1)
-        relativeTo = (relativeTo and relativeTo:GetName()) or "UIParent"
-        msg = string.format("|cffffff78TomTom:|r CrazyArrow point=%s frame=%s rpoint=%s xo=%.2f yo=%.2f",  point, relativeTo, relativePoint, xOfs, yOfs)
-        ChatFrame1:AddMessage(msg)
-    end
+	if wayframe:IsVisible() then
+		local point, relativeTo, relativePoint, xOfs, yOfs = wayframe:GetPoint(1)
+		relativeTo = (relativeTo and relativeTo:GetName()) or "UIParent"
+		msg = string.format("|cffffff78TomTom:|r CrazyArrow point=%s frame=%s rpoint=%s xo=%.2f yo=%.2f",  point, relativeTo, relativePoint, xOfs, yOfs)
+		ChatFrame1:AddMessage(msg)
+	end
 end
 
 -- Clear the waypoint from the crazy arrow

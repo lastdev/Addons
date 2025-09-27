@@ -1,5 +1,5 @@
-## Changed in v82
+## Changed in v96
 
-* Undermine: add some missing loot, and a hidden shirt
-* Delves: story progress achievements weren't showing on the Undermine delve tooltips
+* K'aresh: adjustments to a few coordinates
+* Fix an issue where trait-gated points weren't correctly displaying on first login
 

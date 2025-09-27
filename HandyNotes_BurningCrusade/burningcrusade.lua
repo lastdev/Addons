@@ -8,7 +8,7 @@ ns.groups = {
     spirithealer = "{npc:6491:Spirit Healer}",
 }
 
-if ns.CLASSIC then
+if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and LE_EXPANSION_LEVEL_CURRENT <= LE_EXPANSION_CATACLYSM then
     ns.OUTLAND = 1945
     ns.HELLFIRE = 1944
     ns.ZANGARMARSH = 1946
@@ -351,12 +351,14 @@ ns.RegisterPoints(ns.AZUREMYST, {
     [33402660] = {},
     [33607060] = {},
     [34001840] = {},
+    [35606440] = {},
     [36403240] = {},
+    [36606040] = {},
+    [37201960] = {},
     [43006320] = {},
     [46403920] = {},
     [50202900] = {},
     [51601840] = {},
-    [53206120] = {},
     [53604120] = {},
     [59001820] = {},
     [64803940] = {},

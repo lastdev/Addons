@@ -93,12 +93,17 @@
 					</Anchors>
 				</Texture>
 				<Texture parentKey="LockIcon" file="Interface\PetBattles\PetBattle-LockIcon" setAllPoints="true" hidden="true"/>
-				<FontString parentKey="Text" inherits="GameFontNormal" maxLines="2" justifyH="RIGHT" text="Protoform Synthesis">
+				<FontString parentKey="Text" inherits="GameFontNormal" maxLines="2" justifyH="RIGHT">
 					<Size x="130" y="0"/>
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativePoint="LEFT" x="-3" y="0"/>
 					</Anchors>
+					<Scripts>
+						<OnLoad>
+							self:SetText("Protoform\nSynthesis");
+						</OnLoad>
+					</Scripts>
 				</FontString>
 			</Layer>
 		</Layers>

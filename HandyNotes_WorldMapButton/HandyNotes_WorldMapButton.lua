@@ -71,26 +71,32 @@ local function IsHandyNotesEnabled()
 	return HandyNotes:IsEnabled()
 end
 
-local function ToggleHandyNotes(ShowTooltip)
+local function ToggleHandyNotes(button, ShowTooltip)
 	if not HandyNotes then return end
 	local db = LibStub("AceDB-3.0"):New("HandyNotesDB", defaults);
 	if not db then return end
 	local profile = db.profile;
 	if not profile then return end
 	
-	if HandyNotes:IsEnabled() then
-		profile.enabled = false
-		HandyNotes:Disable();
-	else
-		profile.enabled = true
-		HandyNotes:Enable();
+	
+	if button == "LeftButton" then
+		if HandyNotes:IsEnabled() then
+			profile.enabled = false
+			HandyNotes:Disable();
+		else
+			profile.enabled = true
+			HandyNotes:Enable();
+		end
+	elseif button == "RightButton" then
+		LibStub("AceConfigDialog-3.0"):Open("HandyNotes")
 	end
+	
 	SetIconTexture();
 	SetIconTooltip(ShowTooltip);
 end
 
 local function btnOnClick(self, button)
-	ToggleHandyNotes(true)
+	ToggleHandyNotes(button, true)
 end
 
 hooksecurefunc(HandyNotes, "OnEnable", function(self)

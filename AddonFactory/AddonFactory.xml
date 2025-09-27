@@ -15,6 +15,7 @@
 	<Script file="Services\SimpleHTML.lua"/>
 	<Script file="Classes\Array.lua"/>
 	<Script file="Classes\Dictionary.lua"/>
+	<Script file="Classes\FilterPipeline.lua"/>
 	<Script file="Classes\UniqueItemsCollection.lua"/>
 	<Script file="Classes\SQLTable.lua"/>
 	<Script file="Classes\SQLTableView.lua"/>

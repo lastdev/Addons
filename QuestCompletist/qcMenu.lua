@@ -257,6 +257,7 @@ qcMenu={
 {text=qcL.HALLOWFALL,isTitle=false,notCheckable=false,hasArrow=false,arg1=1404,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.ISLEOFDORN,isTitle=false,notCheckable=false,hasArrow=false,arg1=1405,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.SIRENISLE,isTitle=false,notCheckable=false,hasArrow=false,arg1=1407,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
+{text=qcL.UNDERMINE,isTitle=false,notCheckable=false,hasArrow=false,arg1=1408,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.THERINGINGDEEPS,isTitle=false,notCheckable=false,hasArrow=false,arg1=1406,func=function(button,arg1)qcProcessMenuSelection(button,arg1);end},
 {text=qcL.OTHERCATEGORIES,isTitle=true,notCheckable=true,hasArrow=false},
 --{text=stringformat("   %s%s|r","|cFFE2B018",GetText("SETTINGS")),isTitle=false,notCheckable=true,hasArrow=false},

@@ -1,6 +1,6 @@
-## Interface: 110105
+## Interface: 110200
 ## Author: Keyboardturner
-## Version: 0.3.2
+## Version: 0.3.5
 ## Title: Slow Faller
 ## Notes: Temporarily rebinds the jump key to a slow fall spell when falling.
 ## IconTexture: Interface/Icons/Spell_magic_featherfall.blp

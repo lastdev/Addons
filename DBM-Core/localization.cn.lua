@@ -1,6 +1,6 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
-----Mini Dragon <流浪者酒馆-Brilla@金色平原(The Golden Plains-CN)> projecteurs@gmail.NOSPAM.com 202401211
+----Mini Dragon <流浪者酒馆-Brilla@金色平原(The Golden Plains-CN)> projecteurs@gmail.NOSPAM.com 20250510
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_CORE_L then DBM_CORE_L = {} end
@@ -51,6 +51,7 @@ L.BIGWIGS_ICON_CONFLICT		= L.DBM .. "检测到你同时开启了Bigwigs,请关�
 
 L.MOD_AVAILABLE				= L.DBM .. "已经为%s制作了相关模块。你可以在Curse, Wago, WOWI或者到GitHub Releases页面上找到新版本。"
 L.MOD_MISSING				= "找不到团队模块"
+L.NOT_INSTALLED				= "未安装"
 
 L.COMBAT_STARTED				= "%s作战开始，祝你走运 :)"
 L.COMBAT_STARTED_IN_PROGRESS	= "已进行的战斗-%s正在作战。祝你走运 :)"
@@ -179,6 +180,7 @@ L.WHISPER_SCENARIO_END_KILL_STATS	= "%s已在场景战役-%s的战斗中取得�
 L.WHISPER_SCENARIO_END_WIPE			= "%s在场景战役-%s的战斗中灭团了。"
 L.WHISPER_SCENARIO_END_WIPE_STATS	= "%s在场景战役-%s的战斗中灭团了。该难度下总共失败%d次。"
 
+L.DUNGEONS					= "地下城"
 L.VERSIONCHECK_HEADER		= L.DBM.." - 版本检测"
 L.VERSIONCHECK_ENTRY			= "%s: %s (r%d) %s"--One Boss mod
 L.VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) & %s (r%d)"--Two Boss mods
@@ -263,22 +265,24 @@ L.SLASHCMD_HELP				= {
 	"可用命令:",
 	"-----------------",
 	"/dbm unlock: 显示一个可移动的计时条，可通过对它来移动所有" .. L.DBM .. "计时条的位置(也可使用: move)。",
-	"/range <码> 或者 /distance <码>: 显示距离雷达窗体。使用 /rrange 或者 /rdistance 翻转颜色。",
-	"/hudar <码>: 显示基于HUD的距离显示器提示器。",
+	"/dbm pull <秒>: 向所有团队成员发送一个长度为<秒>的开怪计时条(需要队长或助理权限)。",
+	"/dbm break <分钟>: 向所有团队成员发送一个长度为<分钟>的狂暴计时条(需要队长或助理权限)。",
 	"/dbm timer: 启动一个" .. L.DBM .. "计时器，输入'/dbm timer'查询更多信息。",
-	"/dbm arrow: 显示" .. L.DBM .. "箭头，输入'/dbm arrow'查询更多信息。",
-	"/dbm hud: 显示DBM hud，输入'/dbm hud'查询更多信息。",
-	"/dbm help2: 显示用于团队的命令"
+	"/dbm key: 执行M+钥石和评级检查，适用于队伍/公会，并提供副本传送的快捷方式。 (别名: key, keys, keystone)",--AI translated (check me)
+	"/dbm lag: 检测全团网络延时",
+	"/dbm durability: 检测全团装备耐久度",
+	"/dbm help2: 显示额外的斜杠命令"--AI translated (check me)
 }
 L.SLASHCMD_HELP2				= {
 	"可用命令:",
 	"-----------------",
-	"/dbm pull <秒>: 向所有团队成员发送一个长度为<秒>的开怪计时条(需要队长或助理权限)。",
-	"/dbm break <分钟>: 向所有团队成员发送一个长度为<分钟>的狂暴计时条(需要队长或助理权限)。",
+
 	"/dbm version: 进行团队范围的" .. L.DBM .. "版本检测(也可使用: ver)",
 	"/dbm version2: 进行团队范围的" .. L.DBM .. "版本检测并密语那些过期版本用户(也可使用: ver2)",
-	"/dbm lag: 检测全团网络延时",
-	"/dbm durability: 检测全团装备耐久度"
+	"/range <码> 或者 /distance <码>: 显示距离雷达窗体。使用 /rrange 或者 /rdistance 翻转颜色。",
+	"/hudar <码>: 显示基于HUD的距离显示器提示器。",
+	"/dbm arrow: 显示" .. L.DBM .. "箭头，输入'/dbm arrow'查询更多信息。",
+	"/dbm hud: 显示DBM hud，输入'/dbm hud'查询更多信息。"
 }
 L.TIMER_USAGE	= {
 	L.DBM .. "计时器可用命令:",
@@ -540,10 +544,11 @@ L.AUTO_ICONS_OPTION_TARGETS_MELEE_A		= "为$spell:%s的目标添加团队标记�
 L.AUTO_ICONS_OPTION_TARGETS_MELEE_R		= "为$spell:%s的目标添加团队标记，以近战和团队阵容优先"
 L.AUTO_ICONS_OPTION_TARGETS_RANGED_A	= "为$spell:%s的目标添加团队标记，以远程和字母顺序优先"
 L.AUTO_ICONS_OPTION_TARGETS_RANGED_R	= "为$spell:%s的目标添加团队标记，以远程和团队阵容优先"
-L.AUTO_ICONS_OPTION_TARGETS_MRH			= "为$spell:%s的目标添加团队标记，以近战高于远程再高于治疗排序，团队角色回退"
+L.AUTO_ICONS_OPTION_TARGETS_MRH			= "为$spell:%s的目标添加团队标记，以近战高于远程再高于治疗排序，团队阵容其次"
+L.AUTO_ICONS_OPTION_TARGETS_TOH			= "为$spell:%s的目标添加团队标记，以坦克高于近战再高于远程排序，团队阵容其次"
 L.AUTO_ICONS_OPTION_TARGETS_ALPHA		= "为$spell:%s的目标添加团队标记，以字母顺序优先"
 L.AUTO_ICONS_OPTION_TARGETS_ROSTER 		= "为$spell:%s的目标添加团队标记，以团队阵容优先"
-L.AUTO_ICONS_OPTION_NPCS			= "为$spell:%s添加团队标记"
+L.AUTO_ICONS_OPTION_NPCS				= "为$spell:%s添加团队标记"
 L.AUTO_ICONS_OPTION_CONFLICT 			= " （可能与其他选项冲突）"
 
 L.AUTO_ARROW_OPTION_TEXT				= "为$spell:%s的目标添加箭头"
@@ -634,14 +639,9 @@ L.SPEED_CLEAR_TIMER_TEXT	= "最速清除"
 L.COMBAT_RES_TIMER_TEXT	= "下一次可用战复"
 L.TIMER_RESPAWN		= "%s 刷新"
 
-L.LAG_CHECKING				= "延时检测请稍后... "
-L.LAG_HEADER					= L.DEADLY_BOSS_MODS .. " - 延时检测"
-L.LAG_ENTRY					= "%s：世界延时[%d毫秒] / 本地延时[%d毫秒]"
-L.LAG_FOOTER					= "未反馈此次检测的团员:%s"
-
-L.DUR_CHECKING				= "全团装备耐久度检测请稍后... "
-L.DUR_HEADER					= L.DEADLY_BOSS_MODS .. "- 装备耐久度检测结果"
-L.DUR_ENTRY					= "%s: %d 耐久度 / %s件装备损坏"
+L.LAG_HEADER					= L.DBM .. " - 延时检测"
+L.DUR_HEADER					= L.DBM .. "- 装备耐久度检测结果"
+--L.KEYSTONES_HEADER					= L.DBM.. " - Keystones"
 
 L.OVERRIDE_ACTIVATED			= "本次战斗的配置已经被队长的配置覆盖"
 
@@ -676,3 +676,25 @@ L.DBM_INSTALL_PACKAGE_DUNGEON	= "五人本与事件模块"
 
 -- Tests
 L.DBM_TAINTED_BY_TESTS			= "DBM曾经在当前进程中使用过测试模式的时间卷曲功能，建议你在正式战斗前 /reload 界面以防止DBM出现奇怪的问题。"
+
+-- Boss tooltip
+L.TOOLTIP_DBM					= L.DBM .. " 信息"
+L.TOOLTIP_ENRAGE_TIMER			= "战斗时间"
+L.TOOLTIP_KILLS					= "击杀 (%s)"
+L.TOOLTIP_WIPES					= "失败 (%s)"
+L.TOOLTIP_FASTEST				= "最快击杀 (%s)"
+
+-- Difficulty info not found in normal globals, used by both GUI and tooltip
+L.FOLLOWER	= "追随者"
+L.STORY 	= PLAYER_DIFFICULTY_STORY_RAID or "故事模式"--i.e. the new dungeon type in 11.0.0. I haven't found a translated string yet
+
+-- Keystone dungeon names (keep to a max of 6 characters)
+-- See https://wago.tools/db2/MapChallengeMode for ID => Dungeon Names
+--L.KEYSTONE_NAMES[378] = 'HOA' -- Halls of Atonement
+--L.KEYSTONE_NAMES[391] = 'STREET' -- Tazavesh: Streets of Wonder
+--L.KEYSTONE_NAMES[392] = 'GAMBIT' -- Tazavesh: So'leah's Gambit
+--L.KEYSTONE_NAMES[499] = 'PRIORY' -- Priority of the Sacred Flame
+--L.KEYSTONE_NAMES[503] = 'ARAK' -- Ara-Kara, City of Echoes
+--L.KEYSTONE_NAMES[505] = 'DAWN' -- The Dawnbreaker
+--L.KEYSTONE_NAMES[525] = 'FLOOD' -- Operation Floodgate
+--L.KEYSTONE_NAMES[542] = 'DOME' -- Eco-Dome Al'dani

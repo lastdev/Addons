@@ -386,8 +386,8 @@ function private.ProcessSource(itemString, numNeed, source, sourceList)
 		end
 		if crafter ~= SessionInfo.GetCharacterName() then
 			-- we are on the alt, so see if we can gather items from this character
-			local bagQuantity, bankQuantity, reagentBankQuantity = BagTracking.GetQuantities(itemString)
-			bankQuantity = bankQuantity + reagentBankQuantity
+			local bagQuantity, bankQuantity = BagTracking.GetQuantities(itemString)
+			bankQuantity = bankQuantity
 			local mailQuantity = Mail.GetQuantity(itemString)
 
 			if bagQuantity > 0 then
@@ -431,7 +431,6 @@ function private.ProcessSource(itemString, numNeed, source, sourceList)
 					local num = 0
 					num = num + AltTracking.GetBagQuantity(itemString, character, factionrealm)
 					num = num + AltTracking.GetBankQuantity(itemString, character, factionrealm)
-					num = num + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
 					num = num + AltTracking.GetMailQuantity(itemString, character, factionrealm)
 					if num > 0 then
 						tinsert(altCharacters, characterKey)
@@ -538,7 +537,6 @@ function private.GetCrafterInventoryQuantity(itemString)
 	local crafter = private.settings.crafter
 	local quantity = AltTracking.GetBagQuantity(itemString, crafter)
 	if ClientInfo.IsRetail() then
-		quantity = quantity + AltTracking.GetReagentBankQuantity(itemString, crafter)
 		quantity = quantity + AltTracking.GetBankQuantity(itemString, crafter)
 		quantity = quantity + WarbankTracking.GetQuantity(itemString)
 	end

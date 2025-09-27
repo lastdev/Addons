@@ -1,7 +1,11 @@
 local _, ns = ...
 ns.points = {}
-ns.textures = {}
-ns.scaling = {}
+ns.achievementIQ = {}
+ns.addOnName = "Noblegarden" -- For internal use to name globals etc. Should never be localised
+ns.eventName = "Noblegarden" -- The player sees this in labels and titles. This gets localised
+
+ns.aoa = {}
+--ns.aoa[ 1034 ] = { acctOnly = true }
 
 -- Achievements:
 -- Spring Fling							2419		Alliance	fling		Yellow
@@ -632,7 +636,7 @@ ns.points[ ns.map.mulgore ] = { -- Mulgore (Bloodhoof Village)
 	[46296162] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Under the canoe in the water. Wicked stealth!", },
 	[46315702] = ns.bceSetCataUpNoCont,
 	[46316158] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="In the canoe. Look under too!", },
-	[46386149] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Under the canoe. Devious!", },
+	[46386149] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Between the canoes, at the water's edge", },
 	[46446092] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Between the beams", },
 	[46505739] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Under the bath, tent side. Well hidden!", },
 	[46525736] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="In the centre of the bath", },
@@ -654,11 +658,13 @@ ns.points[ ns.map.mulgore ] = { -- Mulgore (Bloodhoof Village)
 	[47175674] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="In the wicker bowl", },
 	[47215646] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip=ns.baskets, },
 	[47265638] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Beneath the huge drum", },
+	[47285996] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Between the two crates", },
 	[47505936] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Under/behind the sled", },
-	[47586186] = ns.bceSetCataUpNoCont,
-	[47605944] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Between a wicker/skin basket and the totem", },
+	[47586186] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Next to the tent, under the tent peg", },
+	[47605945] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Between a wicker/skin basket and the totem", },
 	[47615941] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="Inside the urn. Well hidden!", },
 	[47635433] = ns.bceSetCataUpNoCont,
+	[47696056] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip=ns.wreathEasle, },
 	[47715807] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip=ns.baskets, },
 	[47726182] = { bce=true, name=ns.bce, version=40000, noContinent=true,
 					tip="Concealed in the high grass. Can't see it if your Ground Clutter setting is high", },
@@ -672,6 +678,7 @@ ns.points[ ns.map.mulgore ] = { -- Mulgore (Bloodhoof Village)
 					tip="In the totem brazier. May the spirits guide you... the chocolate didn't melt!", },
 	[48165864] = { bce=true, name=ns.bce, version=40000, noContinent=true,
 					tip="At the base of the support beam, hidden in the grass!", },
+	[48215837] = { bce=true, name=ns.bce, version=40000, noContinent=true, tip="On the lower of the three crates", },
 	[48285941] = ns.bceSetCataUpNoCont,
 	[48615961] = { bce=true, name=ns.bce, version=40000, noContinent=true,
 					tip="Between the straw target dummy and the pavilion platform", },
@@ -1153,6 +1160,7 @@ ns.points[ ns.map.elwynn ] = { -- Elwynn Forest
 	[41086409] = ns.bceSetWrathUpNoContShrubbery,
 	[41186569] = ns.bceSetWrathUpNoCont,
 	[41296369] = ns.bceSetWrathUpNoCont,
+	[41546479] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Upon the Noblegarden crates" },
 	[41556737] = ns.bceSetWrathUpNoCont,
 	[41606427] = ns.bceSetWrathUpNoContLampPost,
 	[41776528] = ns.bceSetWrathUpNoCont,
@@ -1160,7 +1168,7 @@ ns.points[ ns.map.elwynn ] = { -- Elwynn Forest
 	[41876637] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the small water trough", },
 	[41896549] = ns.bceSetWrathUpNoCont,
 	[41896586] = ns.bceSetWrathUpNoCont,
-	[41996746] = ns.bceSetWrathUpNoCont,
+	[41996747] = ns.bceSetWrathUpNoContCrate,
 	[42016544] = ns.bceSetWrathUpNoContShrubbery,
 	[42016585] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.wreathEasle, },
 	[42016626] = ns.bceSetWrathUpNoContShrubbery,
@@ -1169,13 +1177,15 @@ ns.points[ ns.map.elwynn ] = { -- Elwynn Forest
 	[42416439] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Alongside the lamp post", },
 	[42486745] = ns.bceSetWrathUpNoContLampPost,
 	[42626419] = ns.bceSetWrathUpNoContShrubbery,
+	[42656606] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind a Noblegarden sign post" },
 	[42746645] = ns.bceSetWrathUpNoContLampPost,
 	[42796389] = ns.bceSetWrathUpNoContShrubbery,
+	[42916581] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the kegs" },
 	[42936674] = ns.bceSetWrathUpNoContShrubbery,
 	[42946552] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the mailbox. Very difficult to obtain", },
 	[42966616] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the horses' drinking trough", },
 	[42996617] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the horses' drinking trough", },
-	[43026589] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the crate", },
+	[43026589] = ns.bceSetWrathUpNoContCrate,
 	[43046637] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the nook", },
 	[43056628] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="On the ledge, behind the jugs", },
 	[43096472] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Alongside the lamp post", },
@@ -1252,9 +1262,10 @@ ns.points[ ns.map.eversong ] = { -- Eversong Woods
 	[47334754] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind a tree", },
 	[47464745] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Between the tree and the wall", },
 	[47484526] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Between the fence and a tree", },
+	[47524745] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Between a wall and two trees", author=true, },
 	[47544527] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Between a rear wagon wheel and the fence", },
 	[47544539] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Under the wagon, adjacent to a rear wheel", },
-	[47554741] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the lamp post and teh fence", },
+	[47554741] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the lamp post and the fence", },
 	[47564535] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the wagon", },
 	[47594527] = { bce=true, name=ns.bce, version=30000, noContinent=true,
 					tip="Adjacent to, and outside of, a front wheel of the wagon", },
@@ -1271,10 +1282,12 @@ ns.points[ ns.map.eversong ] = { -- Eversong Woods
 	[47924524] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the tree", },
 	[47944546] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the tree", },
 	[47964649] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the lamp post", },
+	[47974640] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip=ns.wreathEasle, },
 	[47984556] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Between the tree and the wall", },
 	[47994584] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the lamp post", },
 	[48004657] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Between the tree and the wall", },
 	[48054567] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="Behind the tree", },
+	[48124650] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the nook", author=true, },
 	[48134564] = { bce=true, name=ns.bce, version=30000, noContinent=true, tip="In the nook", },
 	[48134586] = { bce=true, name=ns.bce, version=30000, noContinent=true,
 					tip="Nah braaaah, if we stash it in the open here nobody'll think to look!\n\n"
@@ -1626,6 +1639,7 @@ ns.points[ 2112 ] = { -- Valdrakken
 	[47885704] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Under one end of the seat", },
 	[48125114] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.wreathEasle, },
 	[48536402] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="On the grass at the foot of the tree", },
+	[48745717] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Under the foliage", },
 	[49425763] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="High up on a ledge of the fountain", },
 	[49455850] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.cornerNook .." in the fountain", },
 	[49476087] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.cornerNook, },
@@ -1633,6 +1647,7 @@ ns.points[ 2112 ] = { -- Valdrakken
 	[49856342] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="On top of the trellis", },
 	[49955741] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.cornerNook .." in the fountain", },
 	[49974991] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Under the rake", },
+	[50346036] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Under the foliage", },
 	[50405787] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Between the crates and the fountain", },
 	[50456326] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Under the foliage, against the trellis", },
 	[50875219] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.cornerNook, },
@@ -1642,7 +1657,9 @@ ns.points[ 2112 ] = { -- Valdrakken
 	[51534977] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Well hidden in the shrubbery in this nook!", },
 	[53145591] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="On the books", },
 	[54266152] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="In the fountain, lower/larger level", },
+	[54486055] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="Slightly under and between the crates", },
 	[54546436] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip="On the planter ledge", },
+	[54605983] = { bce=true, name=ns.bce, version=100000, noContinent=true, tip=ns.wreathEasle, },
 }
 
 ns.points[ 1978 ] = { -- Dragon Isles
@@ -1681,44 +1698,26 @@ ns.points[ 2274 ] = { -- Khaz Algar
 --
 -- TEXTURES
 --
--- These textures are all repurposed and as such have non-uniform sizing. In order to homogenise the sizes. I should also allow for
--- non-uniform origin placement as well as adjust the x,y offsets
 --==================================================================================================================================
 
-ns.textures[1] = "Interface\\PlayerFrame\\MonkLightPower"
-ns.textures[2] = "Interface\\PlayerFrame\\MonkDarkPower"
-ns.textures[3] = "Interface\\Common\\Indicator-Red"
-ns.textures[4] = "Interface\\Common\\Indicator-Yellow"
-ns.textures[5] = "Interface\\Common\\Indicator-Green"
-ns.textures[6] = "Interface\\Common\\Indicator-Gray"
-ns.textures[7] = "Interface\\Common\\Friendship-ManaOrb"	
-ns.textures[8] = "Interface\\TargetingFrame\\UI-PhasingIcon"
-ns.textures[9] = "Interface\\Store\\Category-icon-pets"
-ns.textures[10] = "Interface\\Store\\Category-icon-featured"
-ns.textures[11] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleBlue"
-ns.textures[12] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleLightGreen"
-ns.textures[13] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleMagenta"
-ns.textures[14] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleOrange"
-ns.textures[15] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NoblePurple"
-ns.textures[16] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleRed"
-ns.textures[17] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleTurquoise"
-ns.textures[18] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleYellow"
+ns.textures[21] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleYellow"
+ns.textures[22] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleOrange"
+ns.textures[23] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleRed"
+ns.textures[24] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleMagenta"
+ns.textures[25] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NoblePurple"
+ns.textures[26] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleLightBlue"
+ns.textures[27] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleBlue"
+ns.textures[28] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleDarkBlue"
+ns.textures[29] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleTurquoise"
+ns.textures[30] = "Interface\\AddOns\\HandyNotes_NobleGarden\\NobleLightGreen"
 
-ns.scaling[1] = 0.55
-ns.scaling[2] = 0.55
-ns.scaling[3] = 0.55
-ns.scaling[4] = 0.55
-ns.scaling[5] = 0.55
-ns.scaling[6] = 0.55
-ns.scaling[7] = 0.65
-ns.scaling[8] = 0.62
-ns.scaling[9] = 0.75
-ns.scaling[10] = 0.75
-ns.scaling[11] = 0.42
-ns.scaling[12] = 0.42
-ns.scaling[13] = 0.42
-ns.scaling[14] = 0.42
-ns.scaling[15] = 0.42
-ns.scaling[16] = 0.42
-ns.scaling[17] = 0.42
-ns.scaling[18] = 0.42
+ns.scaling[21] = 0.432
+ns.scaling[22] = 0.432
+ns.scaling[23] = 0.432
+ns.scaling[24] = 0.432
+ns.scaling[25] = 0.432
+ns.scaling[26] = 0.432
+ns.scaling[27] = 0.432
+ns.scaling[28] = 0.432
+ns.scaling[29] = 0.432
+ns.scaling[30] = 0.432

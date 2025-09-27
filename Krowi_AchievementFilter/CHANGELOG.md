@@ -1,6 +1,92 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 86.2 - 2025-08-30
+### Added
+- Additional zhCN localization
+- Additional delve and Midnight edition achievements
+
+### Fixed
+- With Flying Colors is now faction specific
+
+## 86.1 - 2025-08-10
+### Fixed
+- Moved Court is Now in Session to a more fitting category
+- Raiding with Leashes II: Attunement Edition should now have proper tooltip data
+
+### Mists Classic
+- Raiding with Leashes II: Attunement Edition should now have proper tooltip data
+- Multiple Wrath and Cata schievements should now have proper tooltip data
+
+## 86.0 - 2025-08-05
+### Added
+- New 11.2.0 achievements
+
+### Fixed
+- Popup dialog errors
+
+## 85.2 - 2025-07-19
+### Fixed
+- GW2_UI compatibility issue when disabling Event Reminders
+
+## 85.1 - 2025-07-02
+### Mists Classic
+- Version 5.5.0 filtering
+
+## 85.0 - 2025-06-27
+### Added
+- More tooltip data for Mists of Pandaria content
+
+### Changed
+- General achievements cleanup
+
+### Mists Classic
+- Added support
+
+### Cata Classic
+- Removed support
+
+## 84.0 - 2025-06-18
+### Added
+- Missing 11.1.5 The Enterprising Dungeon Master achievements
+- Turbulent Timeways achievements (1)
+- Rise of the Red Dawn achievements (2)
+- Legion raid achievements (4)
+- Lorewalking achievements (3)
+- D.I.S.C. and Overcharged Delve achievements (2)
+- Version 11.1.7 filtering
+
+## 83.4 - 2025-06-06
+### Added
+- Dastardly Duos zone data
+- A lot of Pet Battle tooltip data provided by Silden
+- Credits for Malivil and Silden for contributing to the addon
+
+### Fixed
+- Only temporarily obtainable achievements that are currently obtainable should have a green header color
+
+## 83.3 - 2025-06-03
+### Added
+- Flame Warden of Khaz Algar to the Midsummer category
+- Flame Warden of Khaz Algar is now temporarily obtainable
+- Dastardly Duos achievements are now temporarily obtainable
+- Export to CSV (dev note: this is an experimental feature available in the options under General -> Debug -> Export to CSV)
+- Isle of Dorn Skyriding Races tooltip data
+
+### Fixed
+- Dastardly Duos event reminder (EU)
+
+## 83.2 - 2025-05-29
+### Added
+- Dastardly Duos event reminder
+
+## 83.1 - 2025-05-17
+### Added
+- Portuguese (Brazilian) translations
+
+### Fixed
+- Version 11.1.5 should now also be available for filtering
+
 ## 83.0 - 2025-04-22
 ### Added
 - Nightfall event achievements (4)

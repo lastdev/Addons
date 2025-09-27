@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- **AceGUI-3.0** provides access to numerous widgets which can be used to create GUIs.
 -- AceGUI is used by AceConfigDialog to create the option GUIs, but you can use it by itself

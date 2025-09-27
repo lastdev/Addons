@@ -66,7 +66,6 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 3496, -- A Brew-FAST Mount
                 4627, -- X-45 Heartbreaker
                 2144, -- What a Long, Strange Trip It's Been
-                2145, -- What A Long, Strange Trip It's Been
                 9496, -- Warlord's Deathwheel
                 9550, -- Boldly, You Sought the Power of Ragnaros
                 13931, -- Memories of Fel, Frost and Fire
@@ -201,7 +200,6 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                     3757, -- Relentless Gladiator's Frost Wyrm
                     4600, -- Wrathful Gladiator's Frost Wyrm
                     6003, -- Vicious Gladiator's Twilight Drake
-                    6321, -- Ruthless Gladiator's Twilight Drake
                     6322, -- Ruthless Gladiator's Twilight Drake
                     6741, -- Cataclysmic Gladiator's Twilight Drake
                     8216, -- Malevolent Gladiator's Cloud Serpent
@@ -246,6 +244,8 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                     40398, -- Forged Gladiator's Fel Bat
                     41032, -- Gladiator: The War Within Season 2
                     41362, -- Prized Gladiator's Fel Bat
+                    41049, -- Gladiator: The War Within Season 3
+                    42039, -- Astral Gladiator's Fel Bat
                 },
             },
             {
@@ -656,8 +656,6 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 true,
                 {
                     978, -- 3000 Quests Completed
-                    1681, -- The Loremaster
-                    1682, -- The Loremaster
                     7520, -- The Loremaster
                 },
             },
@@ -733,7 +731,6 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                     4855, -- What was Briefly Yours is Now Mine
                     4856, -- It Belongs in a Museum!
                     1563, -- Hail to the Chef
-                    1784, -- Hail to the Chef
                 },
             },
             { -- Events
@@ -742,20 +739,14 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 true,
                 {
                     913, -- To Honor One's Elders
-                    1707, -- Fool For Love
                     1693, -- Fool For Love
-                    2797, -- Noble Gardener
                     2798, -- Noble Gardener
                     1793, -- For the Children
                     1038, -- The Flame Warden
                     1039, -- The Flame Keeper
-                    1684, -- Brewmaster
                     1683, -- Brewmaster
                     1656, -- Hallowed Be Thy Name
-                    1657, -- Hallowed Be Thy Name
                     3478, -- Pilgrim
-                    3656, -- Pilgrim
-                    1692, -- Merrymaker
                     1691, -- Merrymaker
                 },
             },
@@ -956,6 +947,7 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 19276, -- Verdant Vogue
                 40728, -- Forged Finery
                 41595, -- Prized Guise
+                42800, -- Astral Attire
             },
         },
         {
@@ -1195,6 +1187,8 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                 18929, -- Storm Rider: Silver
                 18931, -- Storm Rider: Gold
                 19030, -- Squally
+                61401, -- Heroic Edition: Lightwing Dragonhawk
+                61402, -- Epic Edition: Voidlight Surger
             },
         },
         { -- Diablo
@@ -1510,6 +1504,40 @@ KrowiAF.CategoryData.Specials = { -- TAB - Specials
                     15050, -- Keystone Hero: Theater of Pain
                     40966, -- Keystone Hero: Operation: Mechagon - Workshop
                     40965, -- Keystone Hero: The MOTHERLODE!!
+                    42139, -- The Enterprising Tank
+                    42141, -- The Enterprising Healer
+                    42144, -- The Enterprising Damage Dealer
+                    42148, -- The Enterprising Dungeon Master
+                    40949, -- The War Within Keystone Explorer: Season Two
+                    40950, -- The War Within Keystone Conqueror: Season Two
+                    41533, -- The War Within Keystone Master: Season Two
+                    40952, -- The War Within Keystone Hero: Season Two
+                    40951, -- The War Within Keystone Legend: Season Two
+                    40954, -- Enterprising Hero: The War Within Season Two
+                },
+            },
+            { -- Season 3
+                addon.L["Season"] .. " " .. 3,
+                true,
+                {
+                    -- 41348, -- Keystone Hero: Operation: Floodgate
+                    -- 20583, -- Keystone Hero: Cinderbrew Meadery
+                    -- 20584, -- Keystone Hero: Darkflame Cleft
+                    -- 20579, -- Keystone Hero: The Rookery
+                    -- 20581, -- Keystone Hero: Priory of the Sacred Flame
+                    -- 15050, -- Keystone Hero: Theater of Pain
+                    -- 40966, -- Keystone Hero: Operation: Mechagon - Workshop
+                    -- 40965, -- Keystone Hero: The MOTHERLODE!!
+                    -- 42139, -- The Enterprising Tank
+                    -- 42141, -- The Enterprising Healer
+                    -- 42144, -- The Enterprising Damage Dealer
+                    -- 42148, -- The Enterprising Dungeon Master
+                    42169, -- The War Within Keystone Explorer: Season Three
+                    42170, -- The War Within Keystone Conqueror: Season Three
+                    41973, -- The War Within Keystone Master: Season Three
+                    42171, -- The War Within Keystone Hero: Season Three
+                    42172, -- The War Within Keystone Legend: Season Three
+                    42174, -- Unbound Hero: The War Within Season Three
                 },
             },
         },

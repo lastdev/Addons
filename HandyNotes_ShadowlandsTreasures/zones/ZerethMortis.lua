@@ -689,6 +689,14 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         hide_before=ns.conditions.QuestComplete(65774), -- The Catalyst Awakens
         note="Bring gear here to become tier",
     },
+
+    [61607000] = { -- Mawtouched Geomental
+        label="{npc:183230:Mawtouched Geomental}",
+        loot={ns.rewards.BattlePet(3215)},
+        active=ns.conditions.Item(187244), -- Questionable Mushroom
+        atlas="WildBattlePetCapturable",
+        note="Eat a {item:187244:Questionable Mushroom} to be able to see this",
+    }
 })
 
 -- Schematics
@@ -826,7 +834,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     group="Schematics",
 })
 
-schematic = CopyTable(schematic)
+schematic = CopyTable(schematic, true)
 schematic.atlas = nil
 schematic.texture = ns.atlas_texture("poi-islands-table", {r=0,g=1,b=1,a=1,scale=0.9})
 schematic.hide_before=ns.conditions.QuestComplete(65419) -- Protoform Synthesis
@@ -1713,7 +1721,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [48800560] = { -- Antros
         npc=182466,
-        quest=65143,
+        quest=65695,
         worldquest=65143,
         loot={
             {189709, quest=65473}, -- Pocopoc's Cobalt and Copper Body

@@ -162,7 +162,7 @@ function private.GetMailingTargetQuantity(player, itemString, includeGuild, incl
 		end
 	end
 	if includeBank then
-		num = num + AltTracking.GetBankQuantity(itemString, player) + AltTracking.GetReagentBankQuantity(itemString, player)
+		num = num + AltTracking.GetBankQuantity(itemString, player)
 	end
 	return num
 end
@@ -200,7 +200,6 @@ function private.GetShoppingInventoryNum(itemString, includeBank, includeAuction
 			if includeAlts then
 				numHave = numHave + AltTracking.GetBagQuantity(itemString, character, factionrealm)
 				numHave = numHave + AltTracking.GetBankQuantity(itemString, character, factionrealm)
-				numHave = numHave + AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
 				numHave = numHave + AltTracking.GetMailQuantity(itemString, character, factionrealm)
 			end
 			if includeAuctions then
@@ -218,8 +217,8 @@ function private.GetVendoringInventoryNum(itemString, includeBank, includeGuild,
 		:Equal("autoBaseItemString", itemString)
 		:SumAndRelease("quantity")
 	if includeBank then
-		local _, bankQuantity, reagentBankQuantity = BagTracking.GetQuantities(itemString)
-		numHave = numHave + bankQuantity + reagentBankQuantity + WarbankTracking.GetQuantity(itemString)
+		local _, bankQuantity = BagTracking.GetQuantities(itemString)
+		numHave = numHave + bankQuantity + WarbankTracking.GetQuantity(itemString)
 	end
 	if includeGuild then
 		numHave = numHave + Guild.GetQuantity(itemString)

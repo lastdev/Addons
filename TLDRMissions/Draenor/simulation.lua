@@ -1,5 +1,4 @@
-local addonName = "TLDRMissions"
-local addon = _G[addonName]
+local addonName, addon = ...
 
 function addon:WODSimulate(leftFollowerID, middleFollowerID, rightFollowerID, missionID, callback)
     C_Garrison.AddFollowerToMission(missionID, leftFollowerID, 1)

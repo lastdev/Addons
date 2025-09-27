@@ -1,6 +1,6 @@
 # Auctionator
 
-## [276](https://github.com/Auctionator/Auctionator/tree/276) (2025-04-26)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/275...276) 
+## [293](https://github.com/TheMouseNest/Auctionator/tree/293) (2025-09-11)
+[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/292...293) 
 
-- Cata Classic: Restore Prospect and Mill tooltips (show estimated value)  
+- Update discord and support links  

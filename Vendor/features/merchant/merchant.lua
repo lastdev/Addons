@@ -28,6 +28,9 @@ function Merchant.OnMerchantShow()
     isMerchantOpen = true
     local profile = Addon:GetProfile();
 
+    -- Don't do anything else if shift is held down
+    if IsShiftKeyDown() then return end
+
     -- Do auto-repair if enabled
     if profile:GetValue(Addon.c_Config_AutoRepair) then
         Merchant:AutoRepair()
@@ -76,7 +79,11 @@ end
 
 function Merchant:CanSellAtMerchant()
     -- Assuming that if the Junk sell is enabled by blizzard then it is a sellable merchant.
-    return C_MerchantFrame.IsSellAllJunkEnabled()
+    if (C_MerchantFrame and C_MerchantFrame.IsSellAllJunkEnabled) then
+        return C_MerchantFrame.IsSellAllJunkEnabled()
+    else
+        return GetMerchantNumItems() > 0
+    end
 end
 
 local function setIsAutoSelling(isSelling, limit)

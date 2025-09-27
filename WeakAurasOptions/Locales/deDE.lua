@@ -38,6 +38,10 @@ local L = WeakAuras.L
 	L["%s - Finish Custom Text"] = "%s - Benutzerdefinierter Endtext"
 	L["%s - Init Action"] = "%s - Initialisierung"
 	L["%s - Main"] = "%s - Haupt"
+	--[[Translation missing --]]
+	L["%s - OnLoad"] = "%s - OnLoad"
+	--[[Translation missing --]]
+	L["%s - OnUnload"] = "%s - OnUnload"
 	L["%s - Option #%i has the key %s. Please choose a different option key."] = "Die %s - Option #%i hat bereits den Schlüssel %s. Bitte wähle einen anderen Optionsschlüssel."
 	L["%s - Rotate Animation"] = "%s - Rotierungsanimation"
 	L["%s - Scale Animation"] = "%s - Skalierungsanimation"
@@ -236,8 +240,6 @@ Off Screen]=]
 	L["Auto-Clone (Show All Matches)"] = "Auto-Clone (Show All Matches)"
 	--[[Translation missing --]]
 	L["Automatic length"] = "Automatic length"
-	--[[Translation missing --]]
-	L["Available Voices are system specific"] = "Available Voices are system specific"
 	L["Backdrop Color"] = "Hintergrundfarbe"
 	--[[Translation missing --]]
 	L["Backdrop in Front"] = "Backdrop in Front"
@@ -356,7 +358,15 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Custom Frames"] = "Custom Frames"
 	--[[Translation missing --]]
+	L["Custom Functions"] = "Custom Functions"
+	--[[Translation missing --]]
+	L["Custom Init"] = "Custom Init"
+	--[[Translation missing --]]
+	L["Custom Load"] = "Custom Load"
+	--[[Translation missing --]]
 	L["Custom Options"] = "Custom Options"
+	--[[Translation missing --]]
+	L["Custom Text Update Throttle"] = "Custom Text Update Throttle"
 	L["Custom Trigger"] = "Benutzerdefinierter Auslöser"
 	L["Custom trigger event tooltip"] = [=[Wähle die Ereignisse, die den benutzerdefinierten Auslöser aufrufen sollen.
 Mehrere Ereignisse können durch Komma oder Leerzeichen getrennt werden.
@@ -370,9 +380,13 @@ Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
+	L["Custom trigger Update Throttle"] = "Custom trigger Update Throttle"
+	--[[Translation missing --]]
 	L["Custom Trigger: Ignore Lua Errors on OPTIONS event"] = "Custom Trigger: Ignore Lua Errors on OPTIONS event"
 	--[[Translation missing --]]
 	L["Custom Trigger: Send fake events instead of STATUS event"] = "Custom Trigger: Send fake events instead of STATUS event"
+	--[[Translation missing --]]
+	L["Custom Unload"] = "Custom Unload"
 	L["Custom Untrigger"] = "Benutzerdefinierter Umkehrauslöser"
 	--[[Translation missing --]]
 	L["Debug Log"] = "Debug Log"
@@ -877,7 +891,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["ON"] = "ON"
 	L["On Hide"] = "Beim Ausblenden"
-	L["On Init"] = "Beim Initialisieren"
 	L["On Show"] = "Beim Einblenden"
 	--[[Translation missing --]]
 	L["Only Match auras cast by a player (not an npc)"] = "Only Match auras cast by a player (not an npc)"
@@ -971,6 +984,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Re-center Y"] = "Zentrum (Y)"
 	--[[Translation missing --]]
 	L["Reciprocal TRIGGER:# requests will be ignored!"] = "Reciprocal TRIGGER:# requests will be ignored!"
+	--[[Translation missing --]]
+	L["Redo"] = "Redo"
 	--[[Translation missing --]]
 	L["Regions of type \"%s\" are not supported."] = "Regions of type \"%s\" are not supported."
 	L["Remove"] = "Entfernen"
@@ -1144,7 +1159,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Stack Info"] = "Stapelinfo"
 	--[[Translation missing --]]
 	L["Stacks - The number of stacks of an aura (usually)"] = "Stacks - The number of stacks of an aura (usually)"
-	L["Stagger"] = "Taumeln"
 	--[[Translation missing --]]
 	L["Standby"] = "Standby"
 	L["Star"] = "Stern"
@@ -1160,6 +1174,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Stop Motion Settings"] = "Stop Motion Settings"
 	L["Stop Sound"] = "Sound stoppen"
+	--[[Translation missing --]]
+	L["Stretched by Foreground"] = "Stretched by Foreground"
 	--[[Translation missing --]]
 	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
@@ -1291,6 +1307,8 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Trigger Combination"] = "Trigger Combination"
 	--[[Translation missing --]]
 	L["Type 'select' for '%s' requires a values member'"] = "Type 'select' for '%s' requires a values member'"
+	--[[Translation missing --]]
+	L["Undo"] = "Undo"
 	L["Ungroup"] = "Gruppierung aufheben"
 	--[[Translation missing --]]
 	L["Unit %s is not a valid unit for RegisterUnitEvent"] = "Unit %s is not a valid unit for RegisterUnitEvent"
@@ -1319,9 +1337,9 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	--[[Translation missing --]]
 	L["Use SetTransform"] = "Use SetTransform"
 	--[[Translation missing --]]
-	L["Used in Auras:"] = "Used in Auras:"
-	--[[Translation missing --]]
 	L["Used in auras:"] = "Used in auras:"
+	--[[Translation missing --]]
+	L["Used in Auras:"] = "Used in Auras:"
 	--[[Translation missing --]]
 	L["Uses Texture Coordinates to rotate the texture."] = "Uses Texture Coordinates to rotate the texture."
 	--[[Translation missing --]]
@@ -1346,7 +1364,7 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	--[[Translation missing --]]
 	L["View custom code"] = "View custom code"
 	--[[Translation missing --]]
-	L["Voice"] = "Voice"
+	L["Voice Settings"] = "Voice Settings"
 	--[[Translation missing --]]
 	L["We thank"] = "We thank"
 	--[[Translation missing --]]

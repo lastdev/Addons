@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(2458, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240426185011")
+mod:SetRevision("20250719035005")
 mod:SetCreatureID(180773)
 mod:SetEncounterID(2512)
 mod:SetHotfixNoticeRev(20220301000000)
 mod:SetMinSyncRevision(20220125000000)
 --mod.respawnTime = 29
+mod:SetZone(2481)
 
 mod:RegisterCombat("combat")
 

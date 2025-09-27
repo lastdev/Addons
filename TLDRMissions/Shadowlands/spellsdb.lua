@@ -1,5 +1,4 @@
-local addonName = "TLDRMissions"
-local addon = _G[addonName]
+local addonName, addon = ...
 
 addon.spellsDB = {
     [4] = { -- Nadjia strikes the closest enemy twice, dealing a $s1 and then $s2 Physical damage.

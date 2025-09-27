@@ -20,7 +20,6 @@ local EV, G, addonLoadOK, conf, aconf = T.Evie, T.Garrison, nil, setmetatable({}
 	xpCapGrace=2000,
 	goldRewardThreshold=100e4,
 	levelDecay=0.9,
-	currencyWasteThreshold=0.20,
 	legendStep=0,
 	timeHorizon=0,
 	timeHorizonMin=300,

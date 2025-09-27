@@ -10,6 +10,9 @@ function InspectHandlerMixin:Init()
 
     -- register event listeners
     addon.on('INSPECT_READY', addon.defer(0.1, addon.bind(self, 'UpdateFlags'))) -- this can fire many times
+
+    -- plugin event
+    addon.plugin.dispatch('inspect_handler.init', self)
 end
 
 function InspectHandlerMixin:IsAvailable()
@@ -18,7 +21,7 @@ end
 
 addon.overrideMixin(InspectHandlerMixin, 'CreateIndicators', function (self, super)
     -- clear indicators when inspect is closed so old indicators don't show up for other players before inspect is ready
-    hooksecurefunc(InspectFrame, 'Hide', addon.bind(self, 'ClearFlags'))
+    hooksecurefunc(InspectFrame, 'Hide', addon.bind(self, 'ClearIndicatorFlags'))
 
     return super()
 end)

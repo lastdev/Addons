@@ -1,10 +1,12 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 
+_G[addonName] = {}
 addon.API = {}
 local api = addon.API
+_G[addonName].API = api
+_G[addonName].GUI = addon.GUI
 
 addon.hooks = {}
 addon.hooks.singleBlockCompletionCheck = {}

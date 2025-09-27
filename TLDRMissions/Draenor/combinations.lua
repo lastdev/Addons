@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 
 local function startSimulation(combination, missionID, callback)
     local info = C_Garrison.GetBasicMissionInfo(missionID)

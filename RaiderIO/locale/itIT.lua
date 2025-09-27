@@ -89,8 +89,8 @@ L["DUNGEON_SHORT_NAME_DFC"] = "FdFO"
 L["DUNGEON_SHORT_NAME_DHT"] = "BC"
 L["DUNGEON_SHORT_NAME_DOS"] = "DOS"
 L["DUNGEON_SHORT_NAME_EB"] = "VE"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EOA"] = ""--]] 
+L["DUNGEON_SHORT_NAME_EDA"] = "ESA"
+L["DUNGEON_SHORT_NAME_EOA"] = "ODA"
 L["DUNGEON_SHORT_NAME_FALL"] = "CDG"
 L["DUNGEON_SHORT_NAME_FH"] = "CDL"
 L["DUNGEON_SHORT_NAME_FLOOD"] = "PARATOIA"
@@ -98,9 +98,8 @@ L["DUNGEON_SHORT_NAME_FLOOD"] = "PARATOIA"
 --[[ L["DUNGEON_SHORT_NAME_GB"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_GMBT"] = ""--]] 
-L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
+L["DUNGEON_SHORT_NAME_GMBT"] = "AZZARDO "
+L["DUNGEON_SHORT_NAME_HOA"] = "SDR"
 L["DUNGEON_SHORT_NAME_HOI"] = "SDI"
 L["DUNGEON_SHORT_NAME_HOV"] = "SDV"
 --[[Translation missing --]]
@@ -131,8 +130,7 @@ L["DUNGEON_SHORT_NAME_SIEGE"] = "ASSEDIO"
 L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SOTS"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_STRT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_STRT"] = "STRADE"
 L["DUNGEON_SHORT_NAME_SV"] = "VDP"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TD"] = ""--]] 
@@ -155,6 +153,10 @@ L["DUNGEON_SHORT_NAME_WORK"] = "OFFICINA"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posiziona Automaticamente la Cornice del Profilo RaiderIO"
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Abilitando questa Opzione manterrai la Descrizione del Profilo M+ accanto Finestra della Ricerca delle Incursioni o al Tooltip del Giocatore."
 L["ENABLE_DEBUG_MODE_RELOAD"] = "Stai abilitando la modalità Debug. Questa modalità è indicata solo per test e sviluppatori e richiederà un ulteriore utilizzo di memoria. Premere Conferma farà ricaricare l'interfaccia"
+--[[Translation missing --]]
+--[[ L["ENABLE_LFG_EXPORT_BUTTON"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_LFG_EXPORT_BUTTON_DESC"] = ""--]] 
 L["ENABLE_LOCK_PROFILE_FRAME"] = "Blocca Finestra del Profilo RaiderIO"
 L["ENABLE_LOCK_PROFILE_FRAME_DESC"] = "Impedisce il Trascinamento della Finestra del Profilo M+. Questo non ha alcun Effetto se la Finestra del Profilo M+ è impostata per essere Posizionata Automaticamente."
 L["ENABLE_NO_SCORE_COLORS"] = "Disabilita Colori Punteggio"
@@ -209,6 +211,8 @@ L["MINIMAP_SHORTCUT_LOCK"] = "Pulsante di blocco"
 L["MINIMAP_SHORTCUT_MINIMAP_ENABLE"] = "Abilita il pulsante della minimappa"
 L["MINIMAP_SHORTCUT_MINIMAP_ENABLE_DESC"] = "Abilita per visualizzare l'icona attorno alla minimappa."
 L["MINIMAP_SHORTCUT_MINIMAP_LOCK"] = "Blocca pulsante della minimappa"
+--[[Translation missing --]]
+--[[ L["MISC_SETTINGS"] = ""--]] 
 L["MODULE_AMERICAS"] = "America"
 L["MODULE_EUROPE"] = "Europa"
 L["MODULE_KOREA"] = "Korea"
@@ -427,6 +431,18 @@ L["RAID_BOSS_CN_9"] = "Generali della Legione di Pietra "
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_FSOD_9"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_HOF_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_HOF_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_HOF_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_HOF_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_HOF_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_HOF_6"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_ICC_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ICC_10"] = ""--]] 
@@ -458,6 +474,28 @@ L["RAID_BOSS_LOU_5"] = "Ingraniere Lockenstock"
 L["RAID_BOSS_LOU_6"] = "Bandito con un Braccio Solo"
 L["RAID_BOSS_LOU_7"] = "Mug'zee, Capi della Sicurezza"
 L["RAID_BOSS_LOU_8"] = "Re Cromato Gallywix"
+L["RAID_BOSS_MFO_1"] = "Sentinella del Plesso "
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MFO_2"] = ""--]] 
+L["RAID_BOSS_MFO_3"] = "Vincolatrice d'Anime Naazindhri"
+L["RAID_BOSS_MFO_4"] = "Tessiforgia Araz"
+L["RAID_BOSS_MFO_5"] = "Cacciatori d'Anime"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MFO_6"] = ""--]] 
+L["RAID_BOSS_MFO_7"] = "Re del Nexus Salhadaar"
+L["RAID_BOSS_MFO_8"] = "Dimensius, il Divoratore"
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MSV_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MSV_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MSV_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MSV_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MSV_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_MSV_6"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_NP_1"] = ""--]] 
 L["RAID_BOSS_NP_2"] = "Orrore Vincolasangue"
@@ -514,6 +552,22 @@ L["RAID_BOSS_NP_8"] = "Regina Ansurek"
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_SOD_9"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["RAID_BOSS_ToES_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ToES_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ToES_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOES_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ToES_4"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["RAID_BOSS_TOTFW_1"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_TOTFW_2"] = ""--]] 
@@ -552,10 +606,19 @@ L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "NM"
 L["RAID_DS"] = "Anima del Drago"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Boss Incursione Sconfitti"
 L["RAID_FL"] = "Terre del Fuoco"
+--[[Translation missing --]]
+--[[ L["RAID_HOF"] = ""--]] 
 L["RAID_ICC"] = "Rocca della Corona di Ghiaccio "
 L["RAID_LOU"] = "Liberazione di Cavafonda"
+L["RAID_MFO"] = "Manaforgia Omega"
+--[[Translation missing --]]
+--[[ L["RAID_MSV"] = ""--]] 
 L["RAID_NP"] = "Palazzo dei Nerub'ar"
 L["RAID_RS"] = "Santuario di Rubino"
+--[[Translation missing --]]
+--[[ L["RAID_ToES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_TOES"] = ""--]] 
 L["RAID_TOTFW"] = "Trono dei Quattro Venti"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Media Punteggio per +%s in Tempo"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO M+ Migliore Run"

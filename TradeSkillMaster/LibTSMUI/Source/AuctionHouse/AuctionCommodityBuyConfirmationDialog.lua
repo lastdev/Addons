@@ -422,7 +422,7 @@ function AuctionCommodityBuyConfirmationDialog.__private:_ActionHandler(manager,
 		state.prepareSuccess = false
 		private.UpdateStatePrices(state)
 		state.prepareTotalBuyout = state.totalPrice
-		local itemBuyout = state.quantity > 0 and Math.Ceil(state.totalPrice / state.quantity, LibTSMUI.IsCataClassic() and 1 or COPPER_PER_SILVER)
+		local itemBuyout = state.quantity > 0 and Math.Ceil(state.totalPrice / state.quantity, LibTSMUI.IsPandaClassic() and 1 or COPPER_PER_SILVER)
 		local result, future = state.auctionScan:PrepareForBidOrBuyout(nil, state.subRow, true, state.quantity, itemBuyout)
 		if not result then
 			state.prepareQuantity = nil
@@ -535,7 +535,7 @@ function private.UpdateStateQuoteDuration(state)
 end
 
 function private.StateToPriceString(state)
-	local itemBuyout = state.quantity > 0 and Math.Ceil(state.totalPrice / state.quantity, LibTSMUI.IsCataClassic() and 1 or COPPER_PER_SILVER) or 0
+	local itemBuyout = state.quantity > 0 and Math.Ceil(state.totalPrice / state.quantity, LibTSMUI.IsPandaClassic() and 1 or COPPER_PER_SILVER) or 0
 	local pct = state.marketValue > 0 and itemBuyout > 0 and Math.Round(100 * itemBuyout / state.marketValue) or nil
 	local marketValueStr = AuctionHouseUIUtils.GetMarketValuePercentText(pct)
 	return format("%s (%s)", Money.ToStringForAH(itemBuyout), marketValueStr)

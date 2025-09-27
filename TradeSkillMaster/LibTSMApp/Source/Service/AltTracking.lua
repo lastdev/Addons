@@ -26,7 +26,6 @@ local CACHE_SEP = "\001"
 local MIRROR_SETTING_KEYS = {
 	bagQuantity = true,
 	bankQuantity = true,
-	reagentBankQuantity = true,
 	auctionQuantity = true,
 	mailQuantity = true,
 }
@@ -56,7 +55,6 @@ AltTracking:OnModuleLoad(function()
 			:AddKey("factionrealm", "coreOptions", "ignoreGuilds")
 			:AddKey("sync", "internalData", "bagQuantity")
 			:AddKey("sync", "internalData", "bankQuantity")
-			:AddKey("sync", "internalData", "reagentBankQuantity")
 			:AddKey("sync", "internalData", "auctionQuantity")
 			:AddKey("sync", "internalData", "mailQuantity")
 			:AddKey("global", "coreOptions", "regionWide")
@@ -122,10 +120,6 @@ function AltTracking.GetBankQuantity(itemString, character, factionrealm)
 	return private.GetInventoryValue(itemString, "bankQuantity", character, factionrealm)
 end
 
-function AltTracking.GetReagentBankQuantity(itemString, character, factionrealm)
-	return private.GetInventoryValue(itemString, "reagentBankQuantity", character, factionrealm)
-end
-
 function AltTracking.GetAuctionQuantity(itemString, character, factionrealm)
 	return private.GetInventoryValue(itemString, "auctionQuantity", character, factionrealm)
 end
@@ -186,7 +180,7 @@ function private.UpdateDB()
 	wipe(private.characterFactionrealmCache)
 	local totalQuantity = TempTable.Acquire()
 	local auctionQuantity = TempTable.Acquire()
-	for _, key in Vararg.Iterator("bagQuantity", "bankQuantity", "reagentBankQuantity", "auctionQuantity", "mailQuantity") do
+	for _, key in Vararg.Iterator("bagQuantity", "bankQuantity", "auctionQuantity", "mailQuantity") do
 		for _, data, character, factionrealm in private.settings:AccessibleValueIterator(key) do
 			if not SessionInfo.IsPlayer(character, factionrealm) then
 				local cacheKey = character..CACHE_SEP..factionrealm

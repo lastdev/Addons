@@ -11,14 +11,24 @@ L.WebsiteButton				= "Webseite"
 
 L.OTabBosses	= "Bosse"
 L.OTabOptions	= GAMEOPTIONS_MENU
+--L.OTabTools							= "Tools"--Such as break timer button, durability checks, latency checks, keystone checks (in future)
 
 L.TabCategory_Options	 	= "Allgemeine Einstellungen"
 L.TabCategory_OTHER			= "Sonstige Boss Mods"
 
+--Main Tab, Tools checks
+--L.Tools_LatencyCheck				= "Latency Check"
+--L.Tools_DurabilityCheck				= "Durability Check"
+--L.Tools_KeystoneCheck				= "Keystone Check"
+
+--L.Tools_BreakTimer					= "Start Break Timer"
+--L.Tools_PizzaTimer					= "Start Generic Timer"
+
+--L.Tools_Duration					= "Duration"
+--L.Tools_Message						= "Timer Message"
+
 L.BossModLoaded 			= "Statistiken von %s"
 L.BossModLoad_now 			= [[Dieses Boss Mod ist nicht geladen. Es wird automatisch geladen, wenn du die Instanz betrittst. Du kannst auch auf den Button klicken um das Boss Mod manuell zu laden.]]
-
---L.FOLLOWER				= "Follower"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
 
 L.PosX						= "Position X"
 L.PosY						= "Position Y"
@@ -306,6 +316,12 @@ L.AutoAcceptFriendInvite	= "Automatisch Gruppeneinladungen von Freunden akzeptie
 L.AutoAcceptGuildInvite		= "Automatisch Gruppeneinladungen von Gildenmitgliedern akzeptieren"
 L.Area_Advanced				= "Erweiterte Einstellungen"
 L.FakeBW					= "Bei Versionsprüfungen als \"BigWigs\" ausgeben, statt als DBM (nützlich für Gilden, die die Nutzung von \"BigWigs\" erzwingen)"
+--
+L.Area_Tooltip				= "Tooltip-Integration"
+L.EnableTooltip				= "DBM Statistiken zu Tooltips von Bossen hinzufügen"
+L.EnableTooltipInCombat		= "Zeige Tooltip-Informationen während Kämpfen"
+L.EnableTooltipHeader		= "Zeige DBM Kopfzeile in Tooltip"
+
 
 L.Panel_Profile				= "Profile"
 L.Area_CreateProfile		= "Profilerzeugung für DBM Core Einstellungen"

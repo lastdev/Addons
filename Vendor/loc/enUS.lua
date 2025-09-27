@@ -126,6 +126,8 @@ OPTIONS_CATEGORY_GENERAL = "General",
 OPTIONS_DESC_GENERAL = "All general settings for Vendor",
 OPTIONS_CATEGORY_HIDDENRULES = "Hidden Rules",
 OPTIONS_DESC_HIDDENRULES = "Management of hidden rules",
+OPTIONS_CATEGORY_PROTECT = "Protection",
+OPTIONS_DESC_PROTECT = "Controls whether you want Vendor to help protect 'Keep' items from being accidentally sold or deleted.",
 OPTIONS_CATEGORY_SELLING = "Selling",
 OPTIONS_DESC_SELLING = "Controls what Vendor does when you are selling at a merchant. ",
 OPTIONS_CATEGORY_REPAIR = "Repairing",
@@ -164,11 +166,15 @@ OPTIONS_SETTINGNAME_MINIMAP = "Show Minimap Button",
 OPTIONS_SETTINGDESC_MINIMAP = "Vendor will show a minimap button for quickly accessing rules and profiles, and mousing over it shows a summary of matching items.\n\nThis is an account-wide setting.",
 OPTIONS_SETTINGNAME_MERCHANT = "Show Merchant Buttons",
 OPTIONS_SETTINGDESC_MERCHANT = "Adds buttons when interacting with a merchant to trigger autoselling and destruction of items Vendor has identified for selling and/or destruction.\n\nThis is an account-wide setting.",
+OPTIONS_SETTINGNAME_PROTECTION = "Protect 'Keep' Items",
+OPTIONS_SETTINGDESC_PROTECTION = "Delete Attempts on a Keep item will be automatically cancelled.\n\nIf a Keep item is sold, Vendor will attempt to buy it back. This behavior will be suppressed if you hold SHIFT while opening the merchant.",
 
 QUICK_SELL_SETTING = "Auto-Sell items at merchant",
 QUICK_SELL_SETTING_HELP = "Automatically sell items when interacting with a merchant. If this is disabled you can still manually trigger an autosell by setting a hotkey.\n\nThis also enables the 12-item limit on selling, which is the buyback limit for safety.",
 QUICK_REPAIR_SETTING = "Auto-Repair at repair merchants",
 QUICK_REPAIR_SETTING_HELP = "Automatically repair when visiting a repair-capable vendor.\n\nThis also enables using guild repair when available.",
+QUICK_PROTECT_SETTING = "Protect 'Keep' items from being sold or deleted",
+QUICK_PROTECT_SETTING_HELP = "Automatic buyback of sold keep items. Automatic cancel of keep item delete.",
 QUICK_MINIMAP_SETTING = "Show Minimap Button",
 QUICK_MINIMAP_SETTING_HELP = "Enable the Vendor Minimap button on the minimap. On mouseover the button displays items that will be sold/destroyed. Left click brings up the rules configuration page, while right-click brings up profiles.\n\nThis is an account-wide setting.",
 QUICK_MERCHANT_SETTING = "Show Merchant Buttons",
@@ -266,6 +272,12 @@ CMD_HISTORY_HELP = "View, clear, or prune history. Usage: history [clear||prune 
 
 CMD_RUNDESTROY = "Destroying next item in the Destroy rules or in the Destroy list.",
 CMD_DESTROY_HELP = "Destroys a single item matching Destroy rules or in the Destroy list. Only one item can be destroyed per execution of this command.",
+
+CMD_DEFAULTLIST_HELP = "Enumeration and reset of built-in item lists",
+CMD_LIST_HEADER = "Default Item Lists:",
+CMD_LIST_USAGE = "Usage: list <all||reset>",
+CMD_LIST_ENUM = "  %s - Version: %s",
+CMD_LIST_RESET_COMPLETE = "%s list has been reset to its default list of items.",
 
 -- API
 API_REGISTEREXTENSION_TITLE = "Register Extension",
@@ -381,7 +393,16 @@ SYSRULE_KEEP_POTENTIALUPGRADES_DESC = "Matches any gear that is within 5 item le
 SYSRULE_KEEP_CRAFTINGREAGENT = "Crafting Reagents",
 SYSRULE_KEEP_CRAFTINGREAGENT_DESC = "Matches all items that are considered Crafting Reagents.",
 SYSRULE_KEEP_SIDEGRADEORBETTER = "Side-grade or Better",
-SYSRULE_KEEP_SIDEGRADEORBETTER_DESC = "Matches any equipment that is equal to or higher item level than your currently equipped gear in that slot or slots.",
+SYSRULE_KEEP_SIDEGRADEORBETTER_DESC = "Matches any equipment that is equal to or higher item level than your highest ever equipped gear in that slot or slots. For upgradeable gear, this assumes the item is fully upgraded.",
+SYSRULE_KEEP_CRAFTEDGEAR = "Crafted Epic Gear",
+SYSRULE_KEEP_CRAFTEDGEAR_DESC = "Matches any crafted equipment that is Epic quality or higher. This rule will protect any end-game crafted gear that is typically created with limited-use sparks.",
+SYSRULE_KEEP_LEVELINGGEAR = "Leveling Gear",
+SYSRULE_KEEP_LEVELINGGEAR_DESC = "Matches any equipment which has a higher minimum level to equip than the player's current level. This is gear that may be useful after the player gains levels.",
+SYSRULE_KEEP_IMPORTANTITEMS = "Important Items",
+SYSRULE_KEEP_IMPORTANTITEMS_DESC = "Matches any items in the 'Important Items' list. This list protects common important items often from earlier expansions.",
+
+LIST_STATIC_IMPORTANT_NAME = "Important Items",
+LIST_STATIC_IMPORTANT_DESC = "Items which are associated with the 'Important Items' keep rule. This list is account-wide and available on all characters. Use this list to protect important items common across all characters.",
 
 -- Destroy Rules
 SYSRULE_DESTROYLIST = "Items in Destroy list",
@@ -453,7 +474,7 @@ EDITRULE_UNHEALTHY_TEXT = "The following error occured while trying to evaulate 
 EDITRULE_EXTENSION_RULE = "Extension Rule",
 EDITRULE_EXTENSION_RULE_TEXT = "This rule is a built-in extension using '%s' and cannot be edited or deleted. ",
 EDITRULE_SYSTEM_RULE = "Built-In Rule",
-EDITRULE_SYSTEM_RULE_TEXT = "This rules is a built-in Vendor rule and cannot be edited or deleted.",
+EDITRULE_SYSTEM_RULE_TEXT = "This rule is a built-in Vendor rule and cannot be edited or deleted.",
 
 
 DIALOG_TEXT_CONFIRM="Confirm",
@@ -578,7 +599,8 @@ NEW_LIST = "Create",
 COPY_LIST = "Copy",
 COPY_LIST_FMT1 = "%s (Copy)",
 LISTOOLTIP_LISTTYPE = "Type:",
-TOOLTIP_SYTEMLIST = "Built-In (profile specific)",
+TOOLTIP_SYSTEMLIST = "Built-In (profile specific)",
+TOOLTIP_STATICLIST = "Built-In (account-wide)",
 TOOLTIP_CUSTOMLIST = "Custom",
 LISTDIALOG_CREATE_CAPTION = "New List",
 LISTDIALOG_EDIT_CAPTION = "Edit List",
@@ -589,7 +611,8 @@ LISTDIALOG_NAME_HELPTEXT = "type the name of your list here",
 LISTDIALOG_DESCR_HELPTEXT = "type the description of your list here",
 LISTDIALOG_ADDBYID_LABEL = "Enter Item ID to add directly, or drag item into the list.",
 LISTDIALOG_ADDBYID = "Add",
-LISTDIALOG_SYSTEM_INFO = "This is a built-in list and saved in the current profile, you can add and remove items bit you cannot modify the name or description",
+LISTDIALOG_SYSTEM_INFO = "This is a built-in list and saved in the current profile, you can add and remove items but you cannot modify the name or description",
+LISTDIALOG_STATIC_INFO = "This is a built-in list saved to the account, you can add and remove items but you cannot modify the name or description",
 LISTDIALOG_ADDBYID_HELP = "Type the ID an item",
 EDITLIST_DUPLICATE_NAME_CAPTION = "Name already exists",
 EDITLIST_DUPLICATE_NAME_FMT1 = [[
@@ -657,7 +680,15 @@ LDB_BUTTON_TOOLTIP_TITLE = "Vendor",
 LDB_BUTTON_TOOLTIP_TOSELL = "To Sell",
 LDB_BUTTON_TOOLTIP_TODESTROY = "To Destroy",
 LDB_BUTTON_TOOLTIP_VALUE = "Value",
-LDB_BUTTON_TOOLTIP_TITLEREFRESH = "Vendor (Update In Progress)",
+LDB_BUTTON_TOOLTIP_TITLEREFRESH = "Vendor (Updating)",
+LDB_BUTTON_TOOLTIP_PROTECTIONSTATUS_ON = "Item Protection is "..GREEN_FONT_COLOR_CODE.."ON"..FONT_COLOR_CODE_CLOSE,
+LDB_BUTTON_TOOLTIP_PROTECTIONSTATUS_OFF = "Item Protection is "..RED_FONT_COLOR_CODE.."OFF"..FONT_COLOR_CODE_CLOSE,
+LDB_BUTTON_TOOLTIP_HOWTOSHOWHELP = "(Hold ALT for additional actions)",
+LDB_BUTTON_TOOLTIP_HELP_TITLE = "Click Options:",
+LDB_BUTTON_TOOLTIP_HELP_RULES = "  Left Click = Show Rules Page",
+LDB_BUTTON_TOOLTIP_HELP_PROFILES = "  Right Click = Show Profile Page",
+LDB_BUTTON_TOOLTIP_HELP_DESTROY = "  SHIFT + Left Click = Destroy Next Item",
+LDB_BUTTON_TOOLTIP_HELP_PROTECTION = "  SHIFT + Right Click = Toggle Protection",
 LDB_BUTTON_MENU_NEW_RULE = "New Rule",
 LDB_BUTTON_MENU_SETTINGS = "Settings",
 LDB_BUTTON_MENU_KEYBINDINGS = "Keybindings",
@@ -666,7 +697,6 @@ LDB_BUTTON_MENU_HIDE = "Hide",
 LDB_BUTTON_MENU_CHANGE_PROFILES = "Set Profile",
 LDB_BUTTON_MENU_PROFILES = "Profiles",
 LDB_BUTTON_MENU_RUNDESTROY = "Run Destroy",
-
 
 -- ITEM PROPERTIES HELP
 
@@ -725,14 +755,18 @@ HELP_EXPANSIONPACKID_TEXT = [[The expansion pack ID to which this item belongs.
 5 = WoD
 6 = Legion
 7 = BFA
-8 = SL]],
+8 = SL
+9 = DF
+10 = TWW
+256 = Classic SOD]],
 HELP_EXPANSIONPACKID_NOTES = "Use caution when using this to identify items of previous expansions. Not every item is tagged with an " ..
     "expansion ID. It appears that generally only wearable equipment is tagged. Zero is the default for " .. 
     "everything, including many items from Expansion packs (like reagants and Dalaran Hearthstones).|n|n" ..
     "We recommend that you only use this for rules involving wearable equipment. Checking ExpansionPackId() == 0 " ..
     "intending to match Vanilla will not do what you want, as it will include non-Vanilla things. Likewise, " ..
     "ExpansionPackId() < 7 will match a great many items. If you want to be safe, use this in conjunction with " ..
-    "IsEquipment(), and have some items from Vanilla and several expansion packs to verify.",
+    "IsEquipment(), and have some items from Vanilla and several expansion packs to verify. Note that on Classic SoD,"..
+    "ExpansionPackId is 254",
 
 HELP_ISAZERITEITEM_TEXT = [[True if the item is Azerite gear.]],
 HELP_ISEQUIPMENT_TEXT = [[True if the item is wearable equipment. This is equivalent to EquipLoc() ~= nil]],
@@ -834,6 +868,30 @@ Example: PlayerClass() == "DEMONHUNTER"
 
 ]],
 
+HELP_HASPROFESSION = [[
+Returns true if the player has the passed in profession. You can pass in a localized string name, or one of the below
+non-localized Environment variables. Only the primary professions are supported since every player can have the secondary
+professions.
+
+Available Environment variables for the professions:
+ALCHEMY
+* BLACKSMITHING
+* ENCHANTING
+* ENGINEERING
+* HERBALISM
+* INSCRIPTION
+* JEWELCRAFTING
+* LEATHERWORKING
+* MINING
+* SKINNING
+* TAILORING
+
+## Examples:
+> HasProfession(ENCHANTING)
+> HasProfession("Enchanting")
+
+]],
+
 HELP_PLAYERITEMLEVEL = [[
 Returns the average item level of the player as it appears in the character panel, rounded down to nearest integer.
 ]],
@@ -891,6 +949,14 @@ True if the player is currently a Fury Warrior
 
 HELP_PLAYERNAME_TEXT = "The name of the currently logged in character",
 
+HELP_WATERMARKLEVEL_TEXT = [[Returns the numeric itemlevel of the highest itemlevel that the character has equipped in this same slot.
+For example, if the highest helm item level your character has equipped was 500, and the current item is equipment in that same slot, this function will return '500'.
+
+Use this function to compare against the best gear your character has ever equipped and is useful when identifying upgrades or side-grades.
+
+## Example
+MaxLevel >= WatermarkLevel()
+]],
 HELP_PLAYERREALM_TEXT = "The realm where the currently logged in character resides",
 
 HELP_TOTALITEMCOUNT_TEXT = [[
@@ -947,6 +1013,51 @@ True if the item is within 13 item levels of your currently equipped ger (within
 > CurrentEquippedLevel() <= (Level + 13)
 
 ]],
+EXT_AUCTIONATOR_FUNC_ISAUCTIONITEM = [[
+Uses Auctionator
+
+Returns whether the item has auction data for it, which indicates it is an auction item. This is
+equivalent to "Auc_AuctionValuce() > 0", it just makes rules simpler if that's what you are after.
+]],
+
+EXT_AUCTIONATOR_FUNC_AUCTIONVALUE = [[
+Uses Auctionator
+
+Returns the auction value of the item in copper, or 0 if the item is not found on auction. 
+
+This is the value after auction house cut (5%), so it is the real net value of the item if sold successfully.
+]],
+EXT_AUCTIONATOR_FUNC_AUCTIONPROFIT = [[
+Uses Auctionator
+
+Returns the amount of gold profit you will get for auctioning this item instead of vendoring it.
+
+This is the value after auction house cut (5%) in gold, not copper. This number will be 0 if the item
+is not auctionable or is a loss to sell. It cannot be negative.
+
+This function can be useful to establish a minimum amount of gold value for an item to be worth taking
+the time and effort for listing and potentially relisting it for auction, as opposed to vendoring it.
+Items with a low gold profit value may not be worth your time unless they are very high volume.
+]],
+EXT_AUCTIONATOR_FUNC_AUCTIONRATIO = [[
+Uses Auctionator
+
+Returns the ratio of the auction value to vendor value. The higher the ratio, the larger the profit is
+over vendoring. For example, an item with a value ratio of '2' is worth twice as much to auction as it
+is to sell to a merchant.
+
+This is the value after auction house cut (5%) and reflects the actual magnitude of auction value this
+item has vs vendoring it. This value will be negative for items that are a loss to auction.
+
+This function can be useful to identify how worthwhile an item is to auction vs being vendored. A low
+ratio indicates an item that is likely a loss of gold and time if you need to relist it multiple times.
+]],
+EXT_AUCTIONATOR_RULENAME_KEEPFORAUCTION = "Auctionator - Keep for Auction",
+EXT_AUCTIONATOR_RULEDESC_KEEPFORAUCTION = [[
+Matches items that have the specified minimum gold profit and specified minimum auction-to-vendor ratio. Use the parameters to fine-tune how worthwhile you want the item to be to be worth keeping for auction.
+]],
+EXT_AUCTIONATOR_RULEPARAM_MINAUCTIONPROFIT = "Minimum Gold Profit",
+EXT_AUCTIONATOR_RULEPARAM_MINAUCTIONRATIO = "Minimum Value Ratio",
 
 }) -- END OF LOCALIZATION TABLE
 

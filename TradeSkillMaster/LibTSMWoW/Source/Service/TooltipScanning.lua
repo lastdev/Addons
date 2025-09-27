@@ -124,21 +124,25 @@ function private.SetContainerItem(bag, slot)
 	private.PrepareTooltip()
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TOOLTIP_INFO) then
 		local info = nil
-		if bag == BANK_CONTAINER then
-			info = C_TooltipInfo.GetInventoryItem("player", BankButtonIDToInvSlotID(slot), true)
-		elseif bag == REAGENTBANK_CONTAINER then
-			info = C_TooltipInfo.GetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot), true)
-		else
+		if ClientInfo.IsRetail() then
 			info = C_TooltipInfo.GetBagItem(bag, slot)
+		else
+			if bag == BANK_CONTAINER then
+				info = C_TooltipInfo.GetInventoryItem("player", BankButtonIDToInvSlotID(slot), true)
+			else
+				info = C_TooltipInfo.GetBagItem(bag, slot)
+			end
 		end
 		return info
 	else
-		if bag == BANK_CONTAINER then
-			private.tooltip:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
-		elseif bag == REAGENTBANK_CONTAINER then
-			private.tooltip:SetInventoryItem("player", ReagentBankButtonIDToInvSlotID(slot))
-		else
+		if ClientInfo.IsRetail() then
 			private.tooltip:SetBagItem(bag, slot)
+		else
+			if bag == BANK_CONTAINER then
+				private.tooltip:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
+			else
+				private.tooltip:SetBagItem(bag, slot)
+			end
 		end
 	end
 end

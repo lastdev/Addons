@@ -40,7 +40,7 @@ local RETAIL_ITEM_CLASS_IDS = {
 	Enum.ItemClass.Questitem,
 	Enum.ItemClass.Miscellaneous,
 }
-local WRATH_ITEM_CLASS_IDS = {
+local PANDA_ITEM_CLASS_IDS = {
 	Enum.ItemClass.Weapon,
 	Enum.ItemClass.Armor,
 	Enum.ItemClass.Container,
@@ -53,6 +53,7 @@ local WRATH_ITEM_CLASS_IDS = {
 	Enum.ItemClass.Gem,
 	Enum.ItemClass.Miscellaneous,
 	Enum.ItemClass.Questitem,
+	Enum.ItemClass.Battlepet,
 }
 local VANILLA_ITEM_CLASS_IDS = {
 	Enum.ItemClass.Weapon,
@@ -101,8 +102,8 @@ ItemClass:OnModuleLoad(function()
 	local data = nil
 	if LibTSMWoW.IsRetail() then
 		data = RETAIL_ITEM_CLASS_IDS
-	elseif LibTSMWoW.IsCataClassic() then
-		data = WRATH_ITEM_CLASS_IDS
+	elseif LibTSMWoW.IsPandaClassic() then
+		data = PANDA_ITEM_CLASS_IDS
 	elseif LibTSMWoW.IsVanillaClassic() then
 		data = VANILLA_ITEM_CLASS_IDS
 	else

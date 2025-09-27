@@ -1,9 +1,9 @@
-## Interface: 110105
+## Interface: 110200
 ## Title: Item Upgrade Quality Icons
 ## Notes: Adds the Profession Quality icon to upgradeable items, such as Explorer, Adventurer, Veteran, Champion, and Hero.
 ## IconAtlas: Professions-ChatIcon-Quality-Tier5
 ## Author: Keyboardturner, Solanya
-## Version: 0.3.1
+## Version: 0.3.4
 ## X-Curse-Project-ID: 863476
 ## X-WoWI-ID: 26576
 ## X-Wago-ID: ZKxqqkGk

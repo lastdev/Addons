@@ -21,7 +21,9 @@ local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo
 local UA_GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 local IsUsableItem = C_Item.IsUsableItem
 local GetItemSpell = C_Item.GetItemSpell
-
+local GetTalentInfo = C_SpecializationInfo.GetTalentInfo
+local GetSpecialization= C_SpecializationInfo.GetSpecialization
+local GetSpecializationInfo = C_SpecializationInfo.GetSpecializationInfo
 local GetSpellCooldown = function(spellID)
     local spellCooldownInfo = C_Spell.GetSpellCooldown(spellID);
     if spellCooldownInfo then
@@ -753,7 +755,9 @@ do
         state.trinket.t1.__ability = "null_cooldown"
         state.trinket.t1.__usable = false
         state.trinket.t1.__has_use_buff = false
-        state.trinket.t1.__use_buff_duration = nil
+        state.trinket.t1.__has_use_damage = false
+        state.trinket.t1.__use_buff_duration = 0.01
+        state.trinket.t1.__proc = false
 
         if T1 then
             state.trinket.t1.__id = T1
@@ -772,6 +776,9 @@ do
                 state.trinket.t1.__ability = tSpell
 
                 local ability = class.abilities[ tSpell ]
+
+                state.trinket.t1.__has_use_damage = ability and ability.proc == "damage"
+
                 local aura = ability and class.auras[ ability.self_buff or spellID ]
 
                 if spellID and SpellIsSelfBuff( spellID ) and aura then
@@ -794,7 +801,7 @@ do
                 state.trinket.t1.cooldown = state.cooldown.null_cooldown
             end
 
-            state.trinket.t1.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 13, true, true )
+            if not isUsable then state.trinket.t1.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 13, true, true ) end
         end
 
         local T2 = GetInventoryItemID( "player", 14 )
@@ -803,7 +810,9 @@ do
         state.trinket.t2.__ability = "null_cooldown"
         state.trinket.t2.__usable = false
         state.trinket.t2.__has_use_buff = false
-        state.trinket.t2.__use_buff_duration = nil
+        state.trinket.t2.__has_use_damage = false
+        state.trinket.t2.__use_buff_duration = 0.01
+        state.trinket.t2.__proc = false
         state.trinket.t2.ilvl = 0
 
         if T2 then
@@ -823,6 +832,9 @@ do
                 state.trinket.t2.__ability = tSpell
 
                 local ability = class.abilities[ tSpell ]
+
+                state.trinket.t2.__has_use_damage = ability and ability.proc == "damage"
+
                 local aura = class.auras[ ability.self_buff or spellID ]
 
                 if spellID and SpellIsSelfBuff( spellID ) and aura then
@@ -845,13 +857,22 @@ do
                 state.trinket.t2.cooldown = state.cooldown.null_cooldown
             end
 
-            state.trinket.t2.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 14, true, true )
+            if not isUsable then state.trinket.t2.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 14, true, true ) end
         end
 
         state.main_hand.size = 0
         state.off_hand.size = 0
 
         local MH = GetInventoryItemID( "player", 16 )
+
+        state.trinket.main_hand.__id = 0
+        state.trinket.main_hand.__ability = "null_cooldown"
+        state.trinket.main_hand.__usable = false
+        state.trinket.main_hand.__has_use_buff = false
+        state.trinket.main_hand.__has_use_damage = false
+        state.trinket.main_hand.__use_buff_duration = 0.01
+        state.trinket.main_hand.__proc = false
+        state.trinket.main_hand.ilvl = 0
 
         class.abilities.main_hand = class.abilities.actual_main_hand
 
@@ -887,7 +908,7 @@ do
                 state.trinket.main_hand.cooldown = state.cooldown.null_cooldown
             end
 
-            state.trinket.main_hand.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 16, true, true )
+            if not isUsable then state.trinket.t2.__proc = FindStringInInventoryItemTooltip( "^" .. ITEM_SPELL_TRIGGER_ONEQUIP, 16, true, true ) end
         end
 
         for i = 1, 19 do
@@ -1094,7 +1115,7 @@ ns.castsAll = { 'no_action', 'no_action', 'no_action', 'no_action', 'no_action' 
 local castsOn, castsOff, castsAll = ns.castsOn, ns.castsOff, ns.castsAll
 
 
-function state:AddToHistory( spellID, destGUID )
+function state:AddToHistory( spellID, destGUID, rank )
     local ability = class.abilities[ spellID ]
     local key = ability and ability.key or dynamic_keys[ spellID ]
 
@@ -1104,7 +1125,7 @@ function state:AddToHistory( spellID, destGUID )
     player.lastcast = key
     player.casttime = now
 
-    if ability and not ability.essence then
+    if ability then
         local history = self.prev.history
         insert( history, 1, key )
         history[6] = nil
@@ -1123,6 +1144,7 @@ function state:AddToHistory( spellID, destGUID )
 
         ability.realCast = now
         ability.realUnit = destGUID
+        ability.realRank = rank
     end
 end
 
@@ -1190,14 +1212,17 @@ end
 
 local lowLevelWarned = false
 local noClassWarned = false
+-- Change here every expansion to automatically warn low-level users.
+local minimumLevel = 71
+local expansionName = "The War Within"
 
 -- Need to make caching system.
 RegisterUnitEvent( "UNIT_SPELLCAST_SUCCEEDED", "player", "target", function( event, unit, _, spellID )
     if not noClassWarned and not class.initialized then
-        Hekili:Notify( UnitClass( "player" ) .. " does not have any Hekili modules loaded (yet).\nWatch for updates.", 5 )
+        Hekili:Notify( UnitClass( "player" ) .. " does not have any Hekili modules loaded (yet).\nWatch for updates.", 10 )
         noClassWarned = true
-    elseif not lowLevelWarned and UnitLevel( "player" ) < 70 then
-        Hekili:Notify( "Hekili is designed for current content.\nUse below level 70 at your own risk.", 5 )
+    elseif not lowLevelWarned and UnitLevel( "player" ) < minimumLevel then
+        Hekili:Notify( "Hekili is designed for use in " .. expansionName .. " content.\nIt may not work as expected below level " .. minimumLevel .. ".", 10 )
         lowLevelWarned = true
     end
 
@@ -1269,29 +1294,30 @@ end
 
 RegisterUnitEvent( "UNIT_SPELLCAST_CHANNEL_START", "player", nil, function( event, unit, cast, spellID )
     local ability = class.abilities[ spellID ]
+    if not ability then return end
 
-    if ability then
-        Hekili:ForceUpdate( event )
-        if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
-    end
+    if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
+    Hekili:ForceUpdate( event )
 end )
 
 
 RegisterUnitEvent( "UNIT_SPELLCAST_CHANNEL_STOP", "player", nil, function( event, unit, cast, spellID )
-    local ability = class.abilities[ spellID ]
-    if ability then
-        Hekili:ForceUpdate( event )
-        if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
-    end
+    Hekili:ForceUpdate( event )
+
+end )
+
+
+RegisterUnitEvent( "UNIT_SPELLCAST_CHANNEL_UPDATE", "player", nil, function( event, unit, _, spellID )
+    Hekili:ForceUpdate( event )
 end )
 
 
 RegisterUnitEvent( "UNIT_SPELLCAST_STOP", "player", nil, function( event, unit, cast, spellID )
     local ability = class.abilities[ spellID ]
-    if ability then
-        Hekili:ForceUpdate( event )
-        if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
-    end
+    if not ability then return end
+
+    if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
+    Hekili:ForceUpdate( event )
 end )
 
 
@@ -1594,7 +1620,10 @@ local cast_events = {
     SPELL_CAST_FAILED       = true,
     SPELL_CAST_SUCCESS      = true,
     SPELL_DAMAGE            = true,
-    SPELL_AURA_REMOVED      = true
+    SPELL_AURA_REMOVED      = true,
+    SPELL_EMPOWER_START     = true,
+    SPELL_EMPOWER_INTERRUPT = true,
+    SPELL_EMPOWER_END       = true
 }
 
 
@@ -1875,6 +1904,9 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                     end
 
                     state:AddToHistory( ability.key, destGUID )
+
+                elseif subtype == "SPELL_EMPOWER_END" then
+                    state:AddToHistory( ability.key, destGUID, amount )
 
                 elseif subtype == "SPELL_DAMAGE" then
                     -- Could be an impact.
@@ -2167,6 +2199,50 @@ local function ReadKeybindings( event )
                 end
             end
 
+        -- Dominos support
+        elseif C_AddOns.IsAddOnLoaded("Dominos") then
+            table.wipe( slotsUsed )
+
+            for i = 1, 14 do
+                local bar = _G["DominosFrame" .. i]
+                for b = 1, 12 do
+                    local btn = bar.buttons[b]
+
+                    if btn.action then
+                        local keybind
+                        local action = btn.action
+                        if action <= 0 then
+                            keybind = "CLICK " .. btn:GetName() .. ":HOTKEY"
+                        elseif action <= 12 then
+                            keybind = "ACTIONBUTTON" .. action
+                        elseif action <= 24 then
+                            keybind = "CLICK " .. btn:GetName() .. ":HOTKEY"
+                        elseif action <= 36 then
+                            keybind = "MULTIACTIONBAR3BUTTON" .. (action - 24)
+                        elseif action <= 48 then
+                            keybind = "MULTIACTIONBAR4BUTTON" .. (action - 36)
+                        elseif action <= 60 then
+                            keybind = "MULTIACTIONBAR2BUTTON" .. (action - 48)
+                        elseif action <= 72 then
+                            keybind = "MULTIACTIONBAR1BUTTON" .. (action - 60)
+                        elseif action <= 132 then
+                            keybind = "CLICK " .. btn:GetName() .. ":HOTKEY"
+                        elseif action <= 144 then
+                            keybind = "MULTIACTIONBAR5BUTTON" .. (action - 132)
+                        elseif action <= 156 then
+                            keybind = "MULTIACTIONBAR6BUTTON" .. (action - 144)
+                        elseif action <= 168 then
+                            keybind = "MULTIACTIONBAR7BUTTON" .. (action - 156)
+                        end
+
+                        if keybind and GetBindingKey( keybind ) then
+                            StoreKeybindInfo( i, GetBindingKey( keybind ), GetActionInfo( btn.action ) )
+                            slotsUsed[ btn.action ] = true
+                        end
+                    end
+                end
+            end
+
         -- Use ElvUI's actionbars only if they are actually enabled.
         elseif _G["ElvUI"] and _G[ "ElvUI_Bar1Button1" ] then
             table.wipe( slotsUsed )
@@ -2331,6 +2407,45 @@ local function ReadOneKeybinding( event, slot )
         if GetBindingKey( keybind ) then
             StoreKeybindInfo( actionBarNumber, GetBindingKey( keybind ), GetActionInfo( slot ) )
             completed = true
+        end
+
+    -- Dominos support
+    elseif C_AddOns.IsAddOnLoaded("Dominos") then
+        local bar = _G["DominosFrame" .. actionBarNumber]
+        local button = bar.buttons[keyNumber]
+
+        if button.action then
+            local keybind
+            local action = button.action
+
+            if action <= 0 then
+                keybind = "CLICK " .. button:GetName() .. ":HOTKEY"
+            elseif action <= 12 then
+                keybind = "ACTIONBUTTON" .. action
+            elseif action <= 24 then
+                keybind = "CLICK " .. button:GetName() .. ":HOTKEY"
+            elseif action <= 36 then
+                keybind = "MULTIACTIONBAR3BUTTON" .. (action - 24)
+            elseif action <= 48 then
+                keybind = "MULTIACTIONBAR4BUTTON" .. (action - 36)
+            elseif action <= 60 then
+                keybind = "MULTIACTIONBAR2BUTTON" .. (action - 48)
+            elseif action <= 72 then
+                keybind = "MULTIACTIONBAR1BUTTON" .. (action - 60)
+            elseif action <= 132 then
+                keybind = "CLICK " .. button:GetName() .. ":HOTKEY"
+            elseif action <= 144 then
+                keybind = "MULTIACTIONBAR5BUTTON" .. (action - 132)
+            elseif action <= 156 then
+                keybind = "MULTIACTIONBAR6BUTTON" .. (action - 144)
+            elseif action <= 168 then
+                keybind = "MULTIACTIONBAR7BUTTON" .. (action - 156)
+            end
+
+            if keybind and GetBindingKey( keybind ) then
+                StoreKeybindInfo( actionBarNumber, GetBindingKey( keybind ), GetActionInfo( slot ) )
+                completed = true
+            end
         end
 
     elseif _G["ElvUI"] and _G["ElvUI_Bar1Button1"] then

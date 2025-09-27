@@ -1,6 +1,6 @@
-## Interface: 110105
+## Interface: 110200
 ## Title: HandyNotes: Cataclysm
-## Version: 118
+## Version: 121
 ## Notes: Cataclysm Notes
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes

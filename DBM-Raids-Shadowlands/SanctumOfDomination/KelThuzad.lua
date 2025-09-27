@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2440, "DBM-Raids-Shadowlands", 2, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240428104702")
+mod:SetRevision("20250727090201")
 mod:SetCreatureID(175559)
 mod:SetEncounterID(2422)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -10,8 +10,15 @@ mod:DisableBossDeathKill()--Instructs mod to ignore 175559 deaths, since it dies
 mod:SetHotfixNoticeRev(20211006000000)
 mod:SetMinSyncRevision(20211006000000)
 mod.respawnTime = 29
+mod:SetZone(2450)
 
 mod:RegisterCombat("combat")
+
+--[[
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
+--]]
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 348071 348428 346459 362566 352999 347291 362568 352997 348756 362569 353000 352293 349799 355127 352379 355055 352355 352348 354198 358999 362494 362565",
@@ -62,6 +69,7 @@ local specWarnFrostBlast							= mod:NewSpecialWarningMoveTo(348756, nil, nil, n
 local yellFrostBlast								= mod:NewYell(348756, nil, nil, nil, "YELL")
 local yellFrostBlastFades							= mod:NewShortFadesYell(348756, nil, nil, nil, "YELL")
 
+--local timerRP										= mod:NewRPTimer(15.4)
 local timerHowlingBlizzardCD						= mod:NewCDTimer(114.3, 354198, nil, nil, nil, 2)--Boss Mana timer
 local timerHowlingBlizzard							= mod:NewBuffActiveTimer(23, 354198, nil, nil, nil, 5)
 local timerDarkEvocationCD							= mod:NewCDTimer(86.2, 352530, nil, nil, nil, 3)--Boss Mana timer
@@ -450,4 +458,22 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+--]]
+
+--"<394.53 19:24:55> [CHAT_MSG_MONSTER_SAY] How fitting that we should face one another here, upon the precipice of Death's victory.#Kel'Thuzad###Omegal##0#0##0#1247#nil#0#false#false#false#false",
+--TODO, timestamp other end at exact moment invisible wall fades
+--[[
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	--Could use combat log, but since that's going away in midnight, this is more robust future proofing
+	if (msg == L.WallRP or msg:find(L.WallRP)) and self:LatencyCheck() then
+		self:SendSync("WallRP")
+	end
+end
+
+function mod:OnSync(msg)
+	if self:IsLFR() then return end
+	if msg == "WallRP" and self:AntiSpam(10, 2) then
+		timerRP:Start(34)--Might need tweaking. Attempts to estimate time til portal opens after boss dies
+	end
+end
 --]]

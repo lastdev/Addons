@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2461, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250727090201")
 mod:SetCreatureID(182169)
 mod:SetEncounterID(2539)
 mod:SetUsedIcons(1, 2)
 mod:SetHotfixNoticeRev(20220508000000)
 mod:SetMinSyncRevision(20220508000000)
 --mod.respawnTime = 29
+mod:SetZone(2481)
 --Disable all combat types to avoid him engaging during trash RP
 mod:DisableRegenDetection()
 mod:DisableIEEUCombatDetection()
@@ -316,10 +317,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, icon)
 		end
 		if args:IsPlayer() then
-			specWarnDeconstructingEnergy:Show()
-			specWarnDeconstructingEnergy:Play("runout")
-			yellDeconstructingEnergy:Yell(icon, icon)
-			yellDeconstructingEnergyFades:Countdown(spellId, nil, icon)
+			if self:AntiSpam(3, 3) then
+				specWarnDeconstructingEnergy:Show()
+				specWarnDeconstructingEnergy:Play("runout")
+				yellDeconstructingEnergy:Yell(icon, icon)
+				yellDeconstructingEnergyFades:Countdown(spellId, nil, icon)
+			end
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if self:IsTanking(uId) then

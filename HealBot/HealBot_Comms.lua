@@ -22,13 +22,6 @@ function HealBot_Comms_SendAddonMsg(msg, aType, pName)
     end
 end
 
-function HealBot_Comms_Set()
-      --HealBot_setCall("HealBot_Comms_Set")
-    local inInst,inType=HealBot_ZoneType()
-    HealBot_Comms_SendTo(inInst,inType)
-    HealBot_Comms_GuildUpdate()
-end
-
 local hbCommsTo,hbInInst=0,false
 function HealBot_Comms_SendTo(inInst,inType)
       --HealBot_setCall("HealBot_Comms_SendTo")
@@ -159,7 +152,7 @@ function HealBot_Comms_About()
         end
     end
 
-    HealBot_Options_SetLabel("HealBot_Error_Clientx",HEALBOT_WORD_CLIENT..": "..GetLocale())
+    HealBot_Options_SetLabel("HealBot_Error_Clientx",HEALBOT_WORD_CLIENT..": "..GetLocale().." "..GetBuildInfo())
     if HealBot_Globals.localLang then
         HealBot_Options_SetLabel("HealBot_Error_Versionx",HEALBOT_OPTIONS_LANG..": "..HealBot_Globals.localLang)
     else
@@ -201,6 +194,7 @@ end
 
 function HealBot_Comm_round(num, idp)
       --HealBot_setCall("HealBot_Util_Round")
+      -- This function can be delete when all plugins have been released after May 2025
     return HealBot_Util_Round(num, idp)
 end
 

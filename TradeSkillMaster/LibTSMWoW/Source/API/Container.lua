@@ -18,6 +18,8 @@ local private = {
 	slotIdLocked = {},
 	itemLocation = ItemLocation:CreateEmpty(),
 }
+local BANKSLOTS = ClientInfo.IsRetail() and Constants.InventoryConstants.NumCharacterBankSlots or NUM_BANKBAGSLOTS
+local MAX_BANK_SLOTS_PER_TAB = 98
 
 
 
@@ -31,7 +33,7 @@ Container:OnModuleLoad(function()
 		private.numBagSlots = private.numBagSlots + Constants.InventoryConstants.NumReagentBagSlots
 	end
 	private.minBankSlot = private.numBagSlots + 1
-	private.maxBankSlot = private.numBagSlots + NUM_BANKBAGSLOTS
+	private.maxBankSlot = private.numBagSlots + BANKSLOTS
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.WARBAND_BANK) then
 		private.minWarbankSlot = private.maxBankSlot + 1
 		private.maxWarbankSlot = private.maxBankSlot + Constants.InventoryConstants.NumAccountBankSlots
@@ -102,23 +104,6 @@ function Container.IsBank(bag)
 	return bag == BANK_CONTAINER or bag >= private.minBankSlot and bag <= private.maxBankSlot
 end
 
----Returns whether or not the specified bag index is a bank bag, the base bank container, or the reagent bank container.
----@param bag number The bag to check
----@return boolean
-function Container.IsBankOrReagentBank(bag)
-	return Container.IsBank(bag) or Container.IsReagentBank(bag)
-end
-
----Returns whether or not the specified bag index is the reagent bank container.
----@param bag number The bag to check
----@return boolean
-function Container.IsReagentBank(bag)
-	if not ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) then
-		return false
-	end
-	return bag == Container.GetReagentBankContainer()
-end
-
 ---Returns whether or not the specified bag index is a warbank container.
 ---@param bag number The bag to check
 ---@return boolean
@@ -138,7 +123,7 @@ function Container.CanAccessWarbank()
 	return C_PlayerInfo.HasAccountInventoryLock()
 end
 
----Iterates over the bank bags (regular bank and reagent bank as applicable).
+---Iterates over the bank bags/tabs.
 ---@return fun(): number
 function Container.BankBagIterator()
 	return private.BagIteratorHelper, private.maxBankSlot, private.minBankSlot - 1
@@ -150,7 +135,7 @@ function Container.WarbankBagIterator()
 	return private.BagIteratorHelper, private.maxWarbankSlot, private.minWarbankSlot - 1
 end
 
----Gets the reagent bank container index.
+---Gets the keyring container index.
 ---@return number
 function Container.GetKeyringContainer()
 	return KEYRING_CONTAINER
@@ -168,24 +153,24 @@ function Container.GetBankContainer()
 	return BANK_CONTAINER
 end
 
----Gets the reagent bank container index.
+---Gets the first bank tab index.
 ---@return number
-function Container.GetReagentBankContainer()
-	return ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) and REAGENTBANK_CONTAINER or nil
-end
-
----Returns whether or not the reagent bank is available for the current character.
----@return boolean
-function Container.HasReagentBank()
-	return ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) and IsReagentBankUnlocked() and true or false
+function Container.GetFirstBankTabIndex()
+	return private.minBankSlot
 end
 
 ---Returns the total number of slots in the bag specified by the index.
 ---@param bag number The index of the bag
 ---@return number
 function Container.GetNumSlots(bag)
-	if bag == BANK_CONTAINER then
-		return NUM_BANKGENERIC_SLOTS
+	if ClientInfo.IsRetail() then
+		if bag >= private.minBankSlot and bag <= private.maxBankSlot then
+			return MAX_BANK_SLOTS_PER_TAB
+		end
+	else
+		if bag == BANK_CONTAINER then
+			return NUM_BANKGENERIC_SLOTS
+		end
 	end
 	return C_Container.GetContainerNumSlots(bag)
 end
@@ -281,15 +266,13 @@ end
 ---@param itemId number The item ID
 ---@return number bagQuantity
 ---@return number bankQuantity
----@return number reagentBankQuantity
 ---@return number warbankQuantity
 function Container.GetItemCount(itemId)
 	-- GetItemCount() is a bit buggy and not all combinations of arguments work, so carefully call it to calculate the quantities
 	local bagQuantity = GetItemCount(itemId, false, false, false, false)
-	local reagentBankQuantity = GetItemCount(itemId, false, false, true, false) - bagQuantity
 	local warbankQuantity = GetItemCount(itemId, false, false, false, true) - bagQuantity
-	local bankQuantity = GetItemCount(itemId, true, false, true, false) - bagQuantity - reagentBankQuantity
-	return bagQuantity, bankQuantity, reagentBankQuantity, warbankQuantity
+	local bankQuantity = GetItemCount(itemId, true, false, true, false) - bagQuantity
+	return bagQuantity, bankQuantity, warbankQuantity
 end
 
 ---Returns if a bag slot is locked.

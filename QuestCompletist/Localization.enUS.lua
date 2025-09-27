@@ -547,4 +547,5 @@ qcLocalize = {
 	THERINGINGDEEPS = "The Ringing Deeps",	
 	UPGRADESYSTEM = "Upgrade System",
 	WARBANDS = "Warbands",
+	UNDERMINE = "Undermine",
 	}

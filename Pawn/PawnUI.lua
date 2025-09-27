@@ -69,7 +69,7 @@ local PawnUIFrameNeedsScaleSelector = { true, true, true, true, false, false, fa
 function PawnUI_InventoryPawnButton_Move()
 	if PawnCommon.ButtonPosition == PawnButtonPositionRight then
 		PawnUI_InventoryPawnButton:ClearAllPoints()
-		if VgerCore.IsCataclysm or PaperDollFrame.ExpandButton then
+		if VgerCore.IsCataclysm or VgerCore.IsMists or PaperDollFrame.ExpandButton then
 			-- DejaCharacterStats compatibility
 			PawnUI_InventoryPawnButton:SetPoint("TOPRIGHT", "CharacterTrinket1Slot", "BOTTOMRIGHT", -25, -8)
 		else
@@ -1351,6 +1351,7 @@ function PawnUI_CompareItems(IsAutomatedRefresh)
 	AddSockets("BlueSocket", BLUE_GEM)
 	AddSockets("MetaSocket", META_GEM)
 	AddSockets("CogwheelSocket", EMPTY_SOCKET_COGWHEEL)
+	AddSockets("ShaTouchedSocket", EMPTY_SOCKET_HYDRAULIC)
 
 	local _, TotalSocketValue1, SocketBonusValue1 = PawnGetItemValue(ItemStats1, Item1.Level, ItemSocketBonusStats1, PawnUICurrentScale, false, true)
 	local _, TotalSocketValue2, SocketBonusValue2 = PawnGetItemValue(ItemStats2, Item2.Level, ItemSocketBonusStats2, PawnUICurrentScale, false, true)
@@ -1961,11 +1962,7 @@ function PawnUIOptionsTabPage_OnShow()
 	PawnUIFrame_ShowLootUpgradeAdvisorCheck:SetChecked(PawnCommon.ShowLootUpgradeAdvisor)
 	PawnUIFrame_ShowQuestUpgradeAdvisorCheck:SetChecked(PawnCommon.ShowQuestUpgradeAdvisor)
 	PawnUIFrame_ShowSocketingAdvisorCheck:SetChecked(PawnCommon.ShowSocketingAdvisor)
-	if not VgerCore.ReforgingExists then
-		PawnUIFrame_ShowReforgingAdvisorCheck:Hide()
-	else
-		PawnUIFrame_ShowReforgingAdvisorCheck:SetChecked(PawnCommon.ShowReforgingAdvisor)
-	end
+	PawnUIFrame_ShowReforgingAdvisorCheck:SetChecked(PawnCommon.ShowReforgingAdvisor)
 	PawnUIFrame_ShowItemLevelUpgradesCheck:SetChecked(PawnCommon.ShowItemLevelUpgrades)
 
 	-- Other options
@@ -2065,7 +2062,7 @@ function PawnUIFrame_ShowSocketingAdvisorCheck_OnClick()
 end
 
 function PawnUIFrame_ShowReforgingAdvisorCheck_OnClick()
-	PawnCommon.ShowReforgingAdvisor = PawnUIFrame_ShowReforgingAdvisorCheck:GetChecked() ~= nil
+	PawnCommon.ShowReforgingAdvisor = PawnUIFrame_ShowReforgingAdvisorCheck:GetChecked()
 end
 
 function PawnUIFrame_ShowItemLevelUpgradesCheck_OnClick()
@@ -2116,7 +2113,9 @@ function PawnUIAboutTabPage_OnShow()
 		-- WoW Classic doesn't use the Mr. Robot scales, so hide that logo and information.
 		PawnUIFrame_MrRobotLogo:Hide()
 		PawnUIFrame_MrRobotLabel:SetPoint("TOPLEFT", 25, -210)
-		if VgerCore.IsCataclysm then
+		if VgerCore.IsMists then
+			PawnUIFrame_MrRobotLabel:SetText("Special thanks to Wowhead for providing the stat weights used in the starter scales.")
+		elseif VgerCore.IsCataclysm then
 			PawnUIFrame_MrRobotLabel:SetText("Default stat weights are based on the work of the WoWSims team. You can get more accurate, customized stat weights for your character by using the simulator at wowsims.github.io.")
 		else
 			PawnUIFrame_MrRobotLabel:SetText("Special thanks to HawsJon for collecting the stat weights used in the starter scales.")
@@ -2132,6 +2131,7 @@ function PawnUI_OnSocketUpdate()
 	if PawnSocketingTooltip then PawnSocketingTooltip:Hide() end
 	PawnUI_EnsureLoaded()
 	if StandardGemsUnavailable then return end
+	if not PawnCommon.ShowSocketingAdvisor then return end
 
 	-- Find out what item it is.
 	local _, ItemLink = ItemSocketingDescription:GetItem()
@@ -2751,6 +2751,9 @@ function PawnUI_EnsureLoaded()
 		end
 		if not VgerCore.HasSpecs then
 			PawnUIFrame_ShowSpecIconsCheck:Hide()
+		end
+		if not VgerCore.ReforgingExists then
+			PawnUIFrame_ShowReforgingAdvisorCheck:Hide()
 		end
 		if not PawnCommon then
 			VgerCore.Fail("Pawn UI OnShow handler was called before PawnCommon was initialized.")

@@ -25,36 +25,34 @@ function HandlerMixin:UpdateFlags()
         return
     end
 
-    -- create indicators if not done yet
-    if not self.indicators then
-        self:CreateIndicators()
-    end
-
     -- update flags
     for slotName, slot in pairs(self.slots) do
         local itemLink = GetInventoryItemLink(self.unit, GetInventorySlotInfo(slotName))
+        local flags = itemLink and slot:GetFlags(self.unit, itemLink) or {}
 
-        self.indicators[slotName]:SetFlags(
-            itemLink and slot:GetFlags(itemLink) or {}
-        )
+        self:SetIndicatorFlags(slotName, flags)
     end
 end
 
-function HandlerMixin:ClearFlags()
+function HandlerMixin:SetIndicatorFlags(slotName, flags)
+    if not self.indicators then
+        self.indicators = {}
+    end
+
+    if not self.indicators[slotName] then
+        self.indicators[slotName] = addon.new(addon.IndicatorMixin, self:GetSlotFrame(slotName))
+    end
+
+    self.indicators[slotName]:SetFlags(flags)
+end
+
+function HandlerMixin:ClearIndicatorFlags()
     if not self.indicators then
         return
     end
 
     for _, indicator in pairs(self.indicators) do
         indicator:SetFlags({})
-    end
-end
-
-function HandlerMixin:CreateIndicators()
-    self.indicators = {}
-
-    for slotName in pairs(self.slots) do
-        self.indicators[slotName] = addon.new(addon.IndicatorMixin, self:GetSlotFrame(slotName))
     end
 end
 

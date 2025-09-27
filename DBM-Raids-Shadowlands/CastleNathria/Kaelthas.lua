@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2422, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250719035005")
 mod:SetCreatureID(165759)
 mod:SetEncounterID(2402)
 mod:DisableIEEUCombatDetection()--kael gets stuck on boss frames well after encounter has ended, therefor must not re-engage boss off this bug
@@ -11,6 +11,7 @@ mod:DisableBossDeathKill()--Instructs mod to ignore 165759 deaths, since goal is
 mod:SetHotfixNoticeRev(20210128000000)--2021, 01, 28
 mod:SetMinSyncRevision(20210105000000)
 --mod.respawnTime = 29
+mod:SetZone(2296)
 
 mod:RegisterCombat("combat")
 

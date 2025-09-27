@@ -18,9 +18,19 @@ L.OTabWorld					= "Chefes mundiais"--Since there are so many world mods, enough 
 L.OTabScenarios				= "Cenários"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
 L.OTabPlugins				= "Outro"--Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.OTabOptions				= "Opções"
+L.OTabTools					= "Ferramentas"--Such as break timer button, durability checks, latency checks, keystone checks (in future)
 L.OTabAbout					= "Sobre"
 
-L.FOLLOWER					= "Seguidor"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
+--Main Tab, Tools checks
+L.Tools_LatencyCheck			= "Verificação de latência"
+L.Tools_DurabilityCheck			= "Verificação de durabilidade"
+L.Tools_KeystoneCheck			= "Verificação de pedra-chave"
+
+L.Tools_BreakTimer				= "Iniciar cronômetro de pausa"
+L.Tools_PizzaTimer				= "Iniciar cronômetro genérico"
+
+L.Tools_Duration				= "Duração"
+L.Tools_Message					= "Mensagem de cronômetro"
 
 L.TabCategory_CURRENT_SEASON	= "Temporada atual"
 
@@ -170,7 +180,7 @@ L.ShowSWarningsInChat 		= "Exibir anúncios especiais no quadro de bate-papo"
 L.SWarnNameInNote 			= "Usar opções Tipo 5 se uma nota de anúncio especial contiver seu nome"
 L.SpecialWarningIcon 		= "Exibir ícones nos anúncios especiais"
 L.ShortTextSpellname 		= "Usar texto mais curto para nome de feitiço (quando disponível)"
-L.SpecWarn_FlashFrameRepeat = "Piscar %d vez(es)"
+L.SpecWarn_FlashFrameRepeat = "Piscar %d |4vez:vezes"
 L.SpecWarn_Flash 			= "Piscar a tela"
 L.SpecWarn_Vibrate 			= "Vibrar controle"
 L.SpecWarn_FlashRepeat 		= "Repetir piscada"
@@ -539,6 +549,7 @@ L.Panel_Range				= "Quadro de distância"
 -- Panel: Nameplate
 L.Panel_Nameplates 			= "Placas de nome"
 L.Plater_Config 			= "Abrir configuração de Plater"
+L.ThreatPlates_Config		= "Abrir configuração de Threat Plates"
 L.Area_NPStyle 				= "Estilo (Nota: configura o estilo apenas quando não está usando Plater.)"
 L.NPAuraText 				= "Exibir texto do cronômetro nos ícones das placas de nome"
 L.NPAuraSize 				= "Tamanho em pixels do ícone: %d"
@@ -591,7 +602,12 @@ L.AutoAcceptFriendInvite	= "Aceitar convites de amigos automaticamente"
 L.AutoAcceptGuildInvite		= "Aceitar convites de membros da guilda automaticamente"
 L.Area_Advanced				= "Opções avançadas"
 L.FakeBW					= "Fingir ser BigWigs em checagens de versão ao invés de ser DBM (útil para guildas que forçam o uso de BigWigs)"
-
+--
+L.Area_Tooltip              = "Integração com dicas"
+L.EnableTooltip             = "Adicionar estatísticas do DBM às dicas dos chefes compatíveis"
+L.EnableTooltipInCombat     = "Exibir informações da dica durante o combate"
+L.EnableTooltipHeader       = "Incluir cabeçalho do DBM na dica"
+--
 L.Area_CombatAlerts			= "Opções de alertas de combate"
 L.AFKHealthWarning			= "Reproduzir som de alerta e fazer o ícone do aplicativo piscar quando você estiver perdendo vida (em qualquer porcentagem) enquanto estiver LDT"
 L.HealthWarningLow			= "Reproduzir som de alerta e fazer o ícone do aplicativo piscar quando você estiver perdendo vida (quando estiver abaixo de 35%) enquanto estiver LDT"

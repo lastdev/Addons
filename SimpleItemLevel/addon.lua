@@ -163,7 +163,7 @@ local function DetailsFromItemInstant(item)
     local itemLink = item:GetItemLink()
     if itemLink and itemLink:match("battlepet:") then
         -- special case for caged battle pets
-        local _, speciesID, level, breedQuality = strsplit(":", itemLink)
+        local _, speciesID, level, breedQuality = ns.GetLinkValues(itemLink)
         if speciesID and level and breedQuality then
             itemLevel = tonumber(level)
             quality = tonumber(breedQuality)
@@ -361,7 +361,12 @@ local function UpdateButtonFromItem(button, item, variant, suppress, extradetail
         if not suppress.upgrade then AddUpgradeToButton(button, details) end
         if not suppress.bound then AddBoundToButton(button, details) end
         if (variant == "character" or variant == "inspect" or not db.missingcharacter) then
-            if not suppress.missing then AddMissingToButton(button, details) end
+            -- if item.itemID then print("Skipping missing on", item:GetItemLink()) end
+            if not (suppress.missing or item.itemID) then
+                -- If an item was built from just an itemID it cannot know this
+                -- (And in the inspect case, it's going to get refreshed shortly)
+                AddMissingToButton(button, details)
+            end
         end
     end)
     return true
@@ -416,7 +421,14 @@ local function AddAverageLevelToFontString(unit, fontstring)
             (equippedLocation == "INVTYPE_2HWEAPON" and isFuryWarrior)
         ) and 16 or 15
     end
-    if isClassic then numSlots = numSlots + 1 end -- ranged slot exists in classic
+    if pcall(GetInventorySlotInfo, "RANGEDSLOT") then
+         -- ranged slot exists until Pandaria
+         -- C_PaperDollInfo.IsRangedSlotShown(), but that doesn't actually exist in classic...
+        numSlots = numSlots + 1
+    end
+    -- if UnitHasRelicSlot("target") then
+    --     numSlots = numSlots + 1
+    -- end
     continuableContainer:ContinueOnLoad(function()
         local totalLevel = 0
         for _, item in ipairs(items) do
@@ -449,6 +461,7 @@ local function UpdateItemSlotButton(button, unit)
             end
         end
         UpdateButtonFromItem(button, item, key)
+        return item
     end
 end
 
@@ -480,15 +493,35 @@ end
 
 -- and the inspect frame
 ns:RegisterAddonHook("Blizzard_InspectUI", function()
+    local refresh = CreateFrame("Frame")
+    refresh.elapsed = 0
+    refresh:SetScript("OnUpdate", function(self, elapsed)
+        self.elapsed = self.elapsed + elapsed
+        if self.elapsed > 1.5 then
+            self.elapsed = 0
+            self:Hide()
+            if InspectFrame.unit then
+                -- Classic Era Anniversary specifically seems to trigger this with timings that cause an error here
+                InspectPaperDollFrame_UpdateButtons()
+            end
+        end
+    end)
+
     hooksecurefunc("InspectPaperDollItemSlotButton_Update", function(button)
-        UpdateItemSlotButton(button, InspectFrame.unit or "target")
+        local item = UpdateItemSlotButton(button, InspectFrame.unit or "target")
+        if item and item.itemID then
+            -- the data was incompletely available, so queue a repeat
+            refresh:Show()
+        end
+        -- print("updating button", button:GetName(), item and not item.itemLink and "incomplete" or item.itemLink or "X")
     end)
     local avglevel
     hooksecurefunc("InspectPaperDollFrame_UpdateButtons", function()
         if not avglevel then
             avglevel = InspectModelFrame:CreateFontString(nil, "OVERLAY")
             avglevel:SetFontObject(NumberFontNormal)
-            avglevel:SetPoint("BOTTOM", 0, isClassic and 0 or 20)
+            -- Classic has a different frame structure until Mists:
+            avglevel:SetPoint("BOTTOM", 0, (isClassic and LE_EXPANSION_LEVEL_CURRENT < LE_EXPANSION_MISTS_OF_PANDARIA) and 0 or 20)
         end
         AddAverageLevelToFontString(InspectFrame.unit or "target", avglevel)
     end)
@@ -508,21 +541,33 @@ if _G.EquipmentFlyout_DisplayButton then
             local location = button.location
             if not location then return end
             if location >= EQUIPMENTFLYOUT_FIRST_SPECIAL_LOCATION then return end
-            local player, bank, bags, voidStorage, slot, bag, tab, voidSlot = EquipmentManager_UnpackLocation(location)
-            if type(voidStorage) ~= "boolean" then
-                -- classic compatibility: no voidStorage returns, so shuffle everything down by one
-                -- returns either `player, bank, bags (true), slot, bag` or `player, bank, bags (false), location`
-                slot, bag = voidStorage, slot
-            end
-            if bags then
-                return Item:CreateFromBagAndSlot(bag, slot)
-            elseif not voidStorage then -- player or bank
-                return Item:CreateFromEquipmentSlot(slot)
-            else
-                local itemID = EquipmentManager_GetItemInfoByLocation(location)
-                if itemID then
-                    return Item:CreateFromItemID(itemID)
+            if EquipmentManager_GetLocationData then
+                -- 11.2.0
+                local locationData = EquipmentManager_GetLocationData(location)
+                if locationData.isBags then
+                    return Item:CreateFromBagAndSlot(locationData.bag, locationData.slot)
                 end
+                if locationData.isPlayer then
+                    return Item:CreateFromEquipmentSlot(locationData.slot)
+                end
+            else
+                local player, bank, bags, voidStorage, slot, bag = EquipmentManager_UnpackLocation(location)
+                if type(voidStorage) ~= "boolean" then
+                    -- classic compatibility: no voidStorage returns, so shuffle everything down by one
+                    -- returns either `player, bank, bags (true), slot, bag` or `player, bank, bags (false), location`
+                    slot, bag = voidStorage, slot
+                end
+                if bags then
+                    return Item:CreateFromBagAndSlot(bag, slot)
+                end
+                if not voidStorage then -- player or bank
+                    return Item:CreateFromEquipmentSlot(slot)
+                end
+            end
+            local itemID = EquipmentManager_GetItemInfoByLocation(location)
+            if itemID then
+                print("fell back to itemid", location)
+                return Item:CreateFromItemID(itemID)
             end
         end
     end
@@ -578,39 +623,30 @@ else
 end
 
 -- Main bank frame, bankbags are covered by containerframe above
-hooksecurefunc("BankFrameItemButton_Update", function(button)
-    if not button.isBag then
-        UpdateContainerButton(button, button:GetParent():GetID())
-    end
-end)
-
-if _G.AccountBankPanel then
-    -- Warband bank
-    local lastButtons = {} -- needed as of 11.0.0, see below for why
-    local update = function(frame)
-        table.wipe(lastButtons)
-        for itemButton in frame:EnumerateValidItems() do
-            UpdateContainerButton(itemButton, itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
-            table.insert(lastButtons, itemButton)
-        end
-    end
-    -- Initial load and switching tabs
-    hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", update)
-    -- Moving items
-    hooksecurefunc(AccountBankPanel, "RefreshAllItemsForSelectedTab", update)
-    hooksecurefunc(AccountBankPanel, "SetItemDisplayEnabled", function(_, state)
-        -- Papering over a Blizzard bug: when you open the "buy" tab, they
-        -- call this which releases the itembuttons from the pool... but
-        -- doesn't *hide* them, so they're all still there with the buy panel
-        -- sitting one layer above them.
-        -- I sadly need to remember the buttons, because once it released them
-        -- they're no longer available via EnumerateValidItems.
-        if state == false then
-            for _, itemButton in ipairs(lastButtons) do
-                CleanButton(itemButton)
-            end
+if _G.BankFrameItemButton_Update then
+    -- pre-11.2.0 bank
+    hooksecurefunc("BankFrameItemButton_Update", function(button)
+        if not button.isBag then
+            UpdateContainerButton(button, button:GetParent():GetID())
         end
     end)
+end
+
+do
+    local function hookBankPanel(panel)
+        if not panel then return end
+        local update = function(frame)
+            for itemButton in frame:EnumerateValidItems() do
+                UpdateContainerButton(itemButton, itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
+            end
+        end
+        -- Initial load and switching tabs
+        hooksecurefunc(panel, "GenerateItemSlotsForSelectedTab", update)
+        -- Moving items
+        hooksecurefunc(panel, "RefreshAllItemsForSelectedTab", update)
+    end
+    hookBankPanel(_G.BankPanel)
+    hookBankPanel(_G.AccountBankPanel)
 end
 
 -- Loot
@@ -800,6 +836,11 @@ do
         hooksecurefunc(Bagnon.Item, "Update", bagbrother_button)
     end)
 
+    --Bagnonium (exactly same internals as Bagnon):
+    ns:RegisterAddonHook("Bagnonium", function()
+        hooksecurefunc(Bagnonium.Item, "Update", bagbrother_button)
+    end)
+
     --Combuctor (exactly same internals as Bagnon):
     ns:RegisterAddonHook("Combuctor", function()
         hooksecurefunc(Combuctor.Item, "Update", bagbrother_button)
@@ -973,7 +1014,7 @@ do
             end
         end
         if slots == 0 then return false end
-        local gem1, gem2, gem3, gem4 = select(4, strsplit(":", itemLink))
+        local gem1, gem2, gem3, gem4 = select(4, ns.GetLinkValues(itemLink))
         local gems = (gem1 ~= "" and 1 or 0) + (gem2 ~= "" and 1 or 0) + (gem3 ~= "" and 1 or 0) + (gem4 ~= "" and 1 or 0)
         return slots > gems
     end
@@ -1016,8 +1057,13 @@ do
         if not itemLink then return false end
         local equipLoc = select(4, C_Item.GetItemInfoInstant(itemLink))
         if not enchantable[equipLoc] then return false end
-        local enchantID = select(3, strsplit(":", itemLink))
+        local enchantID = select(3, ns.GetLinkValues(itemLink))
         if enchantID == "" then return true end
         return false
     end
+end
+
+ns.GetLinkValues = function(link)
+    local linkType, linkOptions, displayText = LinkUtil.ExtractLink(link)
+    return linkType, strsplit(":", linkOptions)
 end

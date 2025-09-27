@@ -40,7 +40,7 @@ local kinds = {
 }
 
 local defaultDisabledKinds = {
-  "traitnode", "traitentry", "traitdef",
+  "bonus", "traitnode", "traitentry", "traitdef",
 }
 
 -- https://warcraft.wiki.gg/wiki/Struct_TooltipData
@@ -105,7 +105,6 @@ end
 local function addLine(tooltip, id, kind)
   if not id or id == "" or not tooltip or not tooltip.GetName then return end
   if idTipConfig and (not idTipConfig.enabled or not idTipConfig[configKey(kind)]) then return end
-  if type(id) == "table" and #id == 1 then id = id[1] end
 
   -- Abort when tooltip has no name or when :GetName throws
   local ok, name = pcall(getTooltipName, tooltip)
@@ -119,16 +118,15 @@ local function addLine(tooltip, id, kind)
     if text and string.find(text, kinds[kind]) then return end
   end
 
-  local left, right
-  if type(id) == "table" then
-    left = NORMAL_FONT_COLOR_CODE .. kinds[kind] .. "s" .. FONT_COLOR_CODE_CLOSE
-    right = HIGHLIGHT_FONT_COLOR_CODE .. table.concat(id, ",") .. FONT_COLOR_CODE_CLOSE
-  else
-    left = NORMAL_FONT_COLOR_CODE .. kinds[kind] .. FONT_COLOR_CODE_CLOSE
-    right = HIGHLIGHT_FONT_COLOR_CODE .. id .. FONT_COLOR_CODE_CLOSE
+  local multiple = type(id) == "table"
+  if multiple and #id == 1 then
+    id = id[1]
+    multiple = false
   end
 
-  tooltip:AddDoubleLine(left, right)
+  local left = kinds[kind] .. (multiple and "s" or "")
+  local right = multiple and table.concat(id, ",") or id
+  tooltip:AddDoubleLine(left, right, nil, nil, nil, WHITE_FONT_COLOR.r, WHITE_FONT_COLOR.g, WHITE_FONT_COLOR.b)
   tooltip:Show()
 end
 
@@ -525,7 +523,8 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(_, _, addon)
   if addon == addonName then
     local defaults = {
-      enabled = true
+      enabled = true,
+      version = 1,
     }
 
     if not idTipConfig then idTipConfig = {} end
@@ -538,6 +537,12 @@ f:SetScript("OnEvent", function(_, _, addon)
       if type(idTipConfig[configKey(key)]) ~= "boolean" then
         idTipConfig[configKey(key)] = not contains(defaultDisabledKinds, key)
       end
+    end
+
+    -- config migrations
+    if idTipConfig.version == 1 then -- v1 to v2 - disable bonus kind
+      idTipConfig[configKey("bonus")] = false
+      idTipConfig.version = 2
     end
   elseif addon == "Blizzard_AchievementUI" then
     if AchievementTemplateMixin then
@@ -629,7 +634,7 @@ panel:Hide()
 
 panel:SetScript("OnShow", function()
   local function createCheckbox(label, key)
-    local checkBox = CreateFrame("CheckButton", addonName .. "Check" .. label, panel, "InterfaceOptionsCheckButtonTemplate")
+    local checkBox = CreateFrame("CheckButton", addonName .. "Check" .. label, panel, "ChatConfigCheckButtonTemplate")
     checkBox:SetChecked(idTipConfig[key])
     checkBox:HookScript("OnClick", function(self)
       local checked = self:GetChecked()

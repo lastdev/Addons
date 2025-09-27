@@ -1,7 +1,8 @@
 local _, addon = ...
 local API = addon.API;
 local L = addon.L;
-local tinsert = table.insert
+local GetDBBool = addon.GetDBBool;
+local tinsert = table.insert;
 local CreateFrame = CreateFrame;
 
 local RATIO = 0.75; --h/w
@@ -14,6 +15,7 @@ local LEFT_SECTOR_WIDTH = math.floor(0.618*FRAME_WIDTH + 0.5);
 
 local CATEGORY_ORDER = {
     --Must match the keys in the localization
+    [-1] = "Timerunning",
 
     [0] = "Unknown",    --Used during development
 
@@ -21,6 +23,7 @@ local CATEGORY_ORDER = {
     [2] = "NPC Interaction",
     [3] = "Tooltip",
     [4] = "Class",
+    [5] = "Reduction",
 
     --Patch Feature uses the tocVersion and #00
     [1002] = "Dragonflight",
@@ -210,7 +213,7 @@ function CategoryButtonMixin:OnEnter()
 end
 
 function CategoryButtonMixin:InitializeDrawer()
-    self.drawerHeight = #self.childOptions * (OPTION_GAP_Y + BUTTON_HEIGHT) + OPTION_GAP_Y + DIFFERENT_CATEGORY_OFFSET;
+    self.drawerHeight = self.numOptions * (OPTION_GAP_Y + BUTTON_HEIGHT) + OPTION_GAP_Y + DIFFERENT_CATEGORY_OFFSET;
     self.Drawer:SetHeight(self.drawerHeight);
 end
 
@@ -230,7 +233,13 @@ function CategoryButtonMixin:UpdateModuleCount()
 end
 
 function CategoryButtonMixin:AddChildOption(checkbox)
-    tinsert(self.childOptions, checkbox);
+    if not self.numOptions then
+        self.numOptions = 0;
+    end
+    self.numOptions = self.numOptions + 1;
+    if not checkbox.parentDBKey then
+        tinsert(self.childOptions, checkbox);
+    end
 end
 
 function CategoryButtonMixin:UpdateNineSlice(offset)
@@ -409,7 +418,6 @@ local function CreateUI()
     SelectionTexture:Hide();
 
 
-    local checkbox;
     local fromOffsetY = PADDING; -- +headerHeight
     local numButton = 0;
 
@@ -417,8 +425,23 @@ local function CreateUI()
     parent.CategoryButtons = {};
 
     local function Checkbox_OnEnter(self)
-        description:SetText(self.data.description);
-        preview:SetTexture("Interface/AddOns/Plumber/Art/ControlCenter/Preview_"..self.dbKey);
+        local desc = self.data.description;
+        local additonalDesc = self.data.descriptionFunc and self.data.descriptionFunc() or nil;
+        if additonalDesc then
+            if desc then
+                desc = desc.."\n\n"..additonalDesc;
+            else
+                desc = additonalDesc;
+            end
+        end
+        description:SetText(desc);
+
+        if self.parentDBKey then
+            preview:SetTexture("Interface/AddOns/Plumber/Art/ControlCenter/Preview_"..self.parentDBKey);
+        else
+            preview:SetTexture("Interface/AddOns/Plumber/Art/ControlCenter/Preview_"..self.dbKey);
+        end
+
         SelectionTexture:ClearAllPoints();
         SelectionTexture:SetPoint("LEFT", self, "LEFT", -PADDING, 0);
         SelectionTexture:Show();
@@ -444,6 +467,14 @@ local function CreateUI()
 
         if self.OptionToggle then
             self.OptionToggle:SetShown(self:GetChecked());
+        end
+
+        if self.subOptionWidgets then
+            local enabled = GetDBBool(self.dbKey);
+            for _, widget in ipairs(self.subOptionWidgets) do
+                widget:SetChecked(GetDBBool(widget.dbKey));
+                widget:SetEnabled(enabled);
+            end
         end
     end
 
@@ -495,8 +526,22 @@ local function CreateUI()
 
     parent.modules = validModules;
 
+
+    local function SetupCheckboxFromData(checkbox, data)
+        checkbox.dbKey = data.dbKey;
+        checkbox.data = data;
+        checkbox.onEnterFunc = Checkbox_OnEnter;
+        checkbox.onLeaveFunc = Checkbox_OnLeave;
+        checkbox.onClickFunc = Checkbox_OnClick;
+        checkbox:SetLabel(data.name);
+        checkbox:SetMotionScriptsWhileDisabled(true);
+    end
+
+
+    local checkbox;
     local lastCategoryButton;
     local positionInCategory;
+    local CreateCheckbox = addon.CreateCheckbox;
 
     for i, data in ipairs(parent.modules) do
         if newCategoryPosition[i] then
@@ -516,16 +561,11 @@ local function CreateUI()
         end
 
         numButton = numButton + 1;
-        checkbox = addon.CreateCheckbox(lastCategoryButton.Drawer);
+        checkbox = CreateCheckbox(lastCategoryButton.Drawer);
         parent.Checkboxs[numButton] = checkbox;
-        checkbox.dbKey = data.dbKey;
         checkbox:SetPoint("TOPLEFT", lastCategoryButton.Drawer, "TOPLEFT", 8, -positionInCategory * (OPTION_GAP_Y + BUTTON_HEIGHT) - OPTION_GAP_Y);
-        checkbox.data = data;
-        checkbox.onEnterFunc = Checkbox_OnEnter;
-        checkbox.onLeaveFunc = Checkbox_OnLeave;
-        checkbox.onClickFunc = Checkbox_OnClick;
         checkbox:SetFixedWidth(CHECKBOX_WIDTH);
-        checkbox:SetLabel(data.name);
+        SetupCheckboxFromData(checkbox, data);
 
         if data.moduleAddedTime and data.moduleAddedTime > settingsOpenTime then
             CreateNewFeatureMark(checkbox);
@@ -539,6 +579,25 @@ local function CreateUI()
 
         lastCategoryButton:AddChildOption(checkbox);
         positionInCategory = positionInCategory + 1;
+
+        if data.subOptions then
+            local offsetX = BUTTON_HEIGHT;
+            for j, v in ipairs(data.subOptions) do
+                local widget = CreateCheckbox(checkbox);
+                numButton = numButton + 1;
+                parent.Checkboxs[numButton] = widget;
+                widget.parentDBKey = data.dbKey;
+                SetupCheckboxFromData(widget, v);
+                widget:SetPoint("TOPLEFT", checkbox, "TOPLEFT", offsetX, -j * (OPTION_GAP_Y + BUTTON_HEIGHT));
+                widget:SetFixedWidth(CHECKBOX_WIDTH - offsetX);
+                if not checkbox.subOptionWidgets then
+                    checkbox.subOptionWidgets = {};
+                end
+                checkbox.subOptionWidgets[j] = widget;
+                lastCategoryButton:AddChildOption(widget);
+                positionInCategory = positionInCategory + 1;
+            end
+        end
     end
 
     ControlCenter.lastCategoryButton = lastCategoryButton;
@@ -631,6 +690,14 @@ function ControlCenter:InitializeModules()
     local enabled, isForceEnabled;
 
     for _, moduleData in pairs(self.modules) do
+        if moduleData.timerunningSeason and moduleData.timerunningSeason ~= self.timerunningSeason then
+            moduleData.validityCheck = function()
+                return false
+            end;
+        end
+    end
+
+    for _, moduleData in pairs(self.modules) do
         isForceEnabled = false;
         if (not moduleData.validityCheck) or (moduleData.validityCheck()) then
             enabled = db[moduleData.dbKey];
@@ -675,6 +742,13 @@ function ControlCenter:UpdateButtonStates()
             if button.OptionToggle then
                 button.OptionToggle:SetShown(button:GetChecked());
             end
+            if button.subOptionWidgets then
+                local enabled = db[button.dbKey];
+                for _, widget in ipairs(button.subOptionWidgets) do
+                    widget:SetChecked(GetDBBool(widget.dbKey));
+                    widget:SetEnabled(enabled);
+                end
+            end
         else
             button:SetChecked(false);
         end
@@ -709,7 +783,7 @@ ControlCenter:SetScript("OnEvent", function(self, event, ...)
 end);
 
 ControlCenter:SetScript("OnShow", function(self)
-    local hideBackground = true;
+    local hideBackground = SettingsPanel and SettingsPanel:IsShown();
     self:ShowUI(hideBackground);
 end);
 
@@ -739,6 +813,10 @@ end
 do
     addon.CallbackRegistry:Register("NewDBKeysAdded", function(newDBKeys)
         ControlCenter.newDBKeys = newDBKeys;
+    end);
+
+    addon.CallbackRegistry:Register("TimerunningSeason", function(seasonID)
+        ControlCenter.timerunningSeason = seasonID;
     end);
 
 

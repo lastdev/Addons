@@ -1,5 +1,5 @@
-## Interface: 11506, 11505, 20504, 30403, 40402, 40401, 110005, 110007, 110100
-## Version: v11.1.0
+## Interface: 11506, 11507, 20504, 30404, 40402, 40401, 50500, 110105, 110107, 110200
+## Version: v11.1.2
 ## Title: BadBoy_Ignore
 ## Notes: A simple and infinite ignore list to block chat from players.
 ## Notes-frFR: A simple and infinite ignore list to block chat from players.
@@ -12,7 +12,7 @@
 ## Notes-esES: A simple and infinite ignore list to block chat from players.
 ## Notes-esMX: A simple and infinite ignore list to block chat from players.
 ## Notes-itIT: A simple and infinite ignore list to block chat from players.
-## Author: Funkydude
+## Author: Funkeh
 ## Dependencies: BadBoy
 ## SavedVariables: BADBOY_IGNORE
 ## X-Category: Chat/Communication

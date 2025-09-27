@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- **AceConsole-3.0** provides registration facilities for slash commands.
 -- You can register slash commands to your custom functions and use the `GetArgs` function to parse them

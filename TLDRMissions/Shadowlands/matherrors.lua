@@ -2,8 +2,7 @@
 -- have not been able to explain the discrepancy any other way
 -- some of them round in ways that cannot even be explained by a floating point binary math rounding error
 
-local addonName = "TLDRMissions"
-local addon = _G[addonName]
+local addonName, addon = ...
 
 local knownErrors = {
   {input = {175, -60}, output = -105.5},

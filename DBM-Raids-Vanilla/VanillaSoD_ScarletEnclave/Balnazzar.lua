@@ -5,7 +5,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic"
 
-mod:SetRevision("20250419154158")
+mod:SetRevision("20250429201932")
 
 mod:SetZone(2856)
 mod:SetEncounterID(3185)
@@ -48,7 +48,7 @@ local berserkTimer = mod:NewBerserkTimer(600)
 local p2WarnShown, p3WarnShown
 
 function mod:OnCombatStart(delay)
-	berserkTimer:Start(600 - delay)
+	berserkTimer:Start(-delay)
 	p2WarnShown = false
 	p3WarnShown = false
 	self:SetStage(1)

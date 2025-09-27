@@ -1,8 +1,6 @@
-HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
-
+local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
 
-local nodes = HandyNotes_Draenor.nodes
 local info = {}
 
 local ClickedMapUID = nil
@@ -24,7 +22,7 @@ function GetRewardLinkByID(ID)
 
         else
 
-            _, Reward = GetItemInfo(ID)
+            _, Reward = C_Item.GetItemInfo(ID)
 
             if Reward ~= nil then
                 return Reward
@@ -46,7 +44,7 @@ function GetRewardIconByID(ID)
         if ID == "824" or ID == "823" then
             _, _, Icon = C_CurrencyInfo.GetCurrencyInfo(ID)
         else
-            _, _, _, _, Icon = GetItemInfoInstant(ID)
+            _, _, _, _, Icon = C_Item.GetItemInfoInstant(ID)
         end
 
         if Icon ~= nil then
@@ -127,7 +125,7 @@ end
 
 function DisablePOI(button, MapUID, coord)
 
-    local POI = nodes[MapUID][coord][2]
+    local POI = HandyNotes_Draenor.nodes[MapUID][coord][2]
 
     if (POI ~= nil) then
         HandyNotes_Draenor.db.char[POI] = true;
@@ -185,15 +183,10 @@ function TomTomCreateArrow(button, MapUID, coord)
 
         local x, y = HandyNotes:getXY(coord)
 
-        local Zone = nodes[MapUID][coord][1]
-        local ID = nodes[MapUID][coord][2]
-        local Name = nodes[MapUID][coord][3]
-        local Note = nodes[MapUID][coord][4]
-        local Icon = nodes[MapUID][coord][5]
-        local Tag = nodes[MapUID][coord][6]
-        local ItemID = nodes[MapUID][coord][7]
-        local AchievementID = nodes[MapUID][coord][9]
-        local AchievementCriteriaIndex = nodes[MapUID][coord][8]
+        local Zone = HandyNotes_Draenor.nodes[MapUID][coord][1]
+        local Name = HandyNotes_Draenor.nodes[MapUID][coord][3]
+        local Note = HandyNotes_Draenor.nodes[MapUID][coord][4]
+        local ItemID = HandyNotes_Draenor.nodes[MapUID][coord][7]
 
         local ArrowDescription = ""
 
@@ -240,15 +233,10 @@ function DBMCreateArrow(button, MapUID, coord)
 
         local x, y = HandyNotes:getXY(coord)
 
-        local Zone = nodes[MapUID][coord][1]
-        local ID = nodes[MapUID][coord][2]
-        local Name = nodes[MapUID][coord][3]
-        local Note = nodes[MapUID][coord][4]
-        local Icon = nodes[MapUID][coord][5]
-        local Tag = nodes[MapUID][coord][6]
-        local ItemID = nodes[MapUID][coord][7]
-        local AchievementID = nodes[MapUID][coord][9]
-        local AchievementCriteriaIndex = nodes[MapUID][coord][8]
+        local Zone = HandyNotes_Draenor.nodes[MapUID][coord][1]
+        local Name = HandyNotes_Draenor.nodes[MapUID][coord][3]
+        local Note = HandyNotes_Draenor.nodes[MapUID][coord][4]
+        local ItemID = HandyNotes_Draenor.nodes[MapUID][coord][7]
 
         local ArrowDescription = ""
 
@@ -288,9 +276,9 @@ end
 function HandyNotes_Draenor:OnEnter(MapUID, coord)
 
     local Zone = GetZoneByMapID(MapUID)
-    local ItemHeader = nodes[MapUID][coord][3]
-    local ItemNote = nodes[MapUID][coord][4]
-    local ItemID = nodes[MapUID][coord][7]
+    local ItemHeader = HandyNotes_Draenor.nodes[MapUID][coord][3]
+    local ItemNote = HandyNotes_Draenor.nodes[MapUID][coord][4]
+    local ItemID = HandyNotes_Draenor.nodes[MapUID][coord][7]
     local Reward = GetRewardLinkByID(ItemID)
 
     local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
@@ -550,7 +538,7 @@ function HandyNotes_Draenor:RegisterWithHandyNotes()
     end
 
     function HandyNotes_Draenor:GetNodes2(uiMapID, minimap)
-        return iter, nodes[uiMapID], nil
+        return iter, HandyNotes_Draenor.nodes[uiMapID], nil
     end
 
     self:Refresh()

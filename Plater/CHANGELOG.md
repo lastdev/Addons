@@ -1,4 +1,6 @@
 @cont1nuity:
-- Fixing healthbar animation.
-- Disable garbage collection profiling in preparation for 11.1.5.
+- Fixing texture artifacts and unifying to tga.
+- Correction to tank recognition adjustments for MoP.
+- Recognizing 'Twist of Fate' as 35% execute for priests.
+- Fixing send to party/raid functionality.
 

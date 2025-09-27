@@ -77,13 +77,16 @@ function AutoShow:SKILL_LINES_CHANGED()
 end
 
 function AutoShow:MINIMAP_UPDATE_TRACKING()
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+		return self:UNIT_AURA()
+	end
 	for i = 1, GetNumTrackingTypes() do
-		local name, texture, active, category  = GetTrackingInfo(i)
-		if tracking_spells[name] then
-			if active then
-				active_tracking[tracking_spells[name]] = true
+		local info = GetTrackingInfo(i)
+		if info and type(info) == "table" and tracking_spells[info.name] then
+			if info.active then
+				active_tracking[tracking_spells[info.name]] = true
 			else
-				active_tracking[tracking_spells[name]] = false
+				active_tracking[tracking_spells[info.name]] = false
 			end
 		end
 	end
@@ -154,13 +157,8 @@ function AutoShow:SetupAutoShow()
 		self:RegisterEvent("SKILL_LINES_CHANGED")
 		self:SKILL_LINES_CHANGED()
 
-		if GetTrackingInfo then
-			self:RegisterEvent("MINIMAP_UPDATE_TRACKING")
-			self:MINIMAP_UPDATE_TRACKING()
-		else
-			self:RegisterEvent("UNIT_AURA")
-			self:UNIT_AURA()
-		end
+		self:RegisterEvent("MINIMAP_UPDATE_TRACKING")
+		self:MINIMAP_UPDATE_TRACKING()
 	end
 end
 

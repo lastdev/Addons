@@ -16,12 +16,21 @@ L.OTabWorld							= "Boss mondiaux"--Since there are so many world mods, enough 
 L.OTabScenarios						= "Scénarios"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
 L.OTabPlugins						= "Autre"--Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.OTabOptions						= "Options"
+L.OTabTools							= "Outils"--Such as break timer button, durability checks, latency checks, keystone checks (in future)
 L.OTabAbout							= "À propos"
 
-L.FOLLOWER							= "Sujet"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
-L.STORY					    		= "Histoire"--i.e. the new dungeon type in 11.0.0. I haven't found a translated string yet
+--Main Tab, Tools checks
+L.Tools_LatencyCheck			= "Vérification de latence"
+L.Tools_DurabilityCheck			= "Vérification de durabilité"
+L.Tools_KeystoneCheck			= "Vérification de mythique"
 
-L.TabCategory_CURRENT_SEASON		= "Saison en cours"
+L.Tools_BreakTimer				= "Démarrer le chronomètre de pause"
+L.Tools_PizzaTimer				= "Démarrer le chronomètre générique"
+
+L.Tools_Duration				= "Durée"
+L.Tools_Message					= "Message du chronomètre"
+
+L.TabCategory_CURRENT_SEASON	= "Saison en cours"
 
 L.TabCategory_OTHER			= "Autres modules"
 L.TabCategory_AFFIXES		= "Affixes"
@@ -159,6 +168,11 @@ L.AutoAcceptFriendInvite	= "Acceptation auto des invitations venant d'un ami"
 L.AutoAcceptGuildInvite		= "Acceptation auto des invitations venant d'un membre de la guilde"
 L.Area_Advanced				= "Options avancées"
 L.FakeBW					= "Prétendre utiliser BigWigs lors des vérifications de versions au lieu de DBM (utile pour les guildes qui forcent l'utilisation de BigWigs)"
+--
+L.Area_Tooltip              = "Intégration à l'infobulle"
+L.EnableTooltip             = "Ajouter les statistiques de DBM aux infobulles des boss pris en charge"
+L.EnableTooltipInCombat     = "Afficher les informations de l'infobulle en combat"
+L.EnableTooltipHeader       = "Inclure l’en-tête DBM dans l’infobulle"
 
 -- Panel: Profiles
 L.Panel_Profile				= "Profils"
@@ -582,6 +596,7 @@ L.Panel_Range				= "Cadre de portée"
 -- Panel: Nameplate
 L.Panel_Nameplates			= "Plaques de nom"
 L.Plater_Config				= "Ouvrir la configuration de Plater"
+L.ThreatPlates_Config		= "Ouvrir la configuration de Threat Plates"
 L.Area_NPStyle				= "Style (Remarque : Configure uniquement le style lorsque DBM gère les plaques de nom.)"
 L.NPAuraText				= "Afficher le texte du chronomètre sur les icônes des plaques de nom"
 L.NPAuraSize				= "Taille des pixels de l'aura (carré) : %d"

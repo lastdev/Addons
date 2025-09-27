@@ -129,7 +129,7 @@ do
 		for i = 1, GetNumGroupMembers() do
 			local unit = "" .. unitType .. i
 			local name = GetUnitName (unit, true)
-			if (not rosterHashTable [name] and not UnitIsUnit (unit, "player")) then
+			if (name and not rosterHashTable [name] and not UnitIsUnit (unit, "player")) then
 				local actor = {}
 				actor.name = name
 				actor.displayName = targetCaller:GetOnlyName (name) or name or ""

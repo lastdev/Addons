@@ -5,19 +5,27 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic"
 
-mod:SetRevision("20250419154517")
+mod:SetRevision("20250521200942")
 
 mod:SetZone(2856)
 mod:SetEncounterID(3189)
 mod:SetCreatureID(241006)
+mod:DisableRegenDetection()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 1229226 1230908 1229714 1230697 1231651 1229236 1231618 1231654 1230271 1231027",
+	"SPELL_CAST_START 1229226 1230908 1229714 1230697 1231651 1229236 1231618 1231654 1230271 1231027 1229114",
 	"SPELL_CAST_SUCCESS 1230137 1230125",
 	"SPELL_AURA_APPLIED 1229272 1229503",
 	"UNIT_HEALTH"
 )
+
+-- FIXME: this should be in core
+local function castTime(spellId)
+	local timer = select(4, DBM:GetSpellInfo(spellId)) or 1000 -- GetSpellInfo takes YOUR spell haste into account...WTF?
+	local spellHaste = select(4, DBM:GetSpellInfo(10059)) / 10000 -- 10059 = Stormwind Portal, should have 10000 ms cast time
+	return timer / spellHaste / 1000
+end
 
 -- blessed feather: 5:51 1230276, 6:20 1230333 portal, 6:11 dying light 1231582, 5:59 1230268 dying light twice, 5:51 1230271 dying light again, 6:12 collapse cathedral 675770
 
@@ -40,7 +48,8 @@ local warnQuietus = mod:NewCastAnnounce(1231651)
 
 -- Blinding Flare
 local timerFlare = mod:NewVarTimer("v29-34", 1229714)
-local warnFlare = mod:NewCastAnnounce(1229714)
+local timerFlareCast = mod:NewCastTimer(1229714)
+local warnFlare = mod:NewSpecialWarningSpell(1229714, nil, nil, nil, 2, 8)
 
 -- Conflagration: timer seems very random and cast often, nothing for now
 local warnConflag = mod:NewTargetNoFilterAnnounce(1229272)
@@ -61,40 +70,73 @@ local warnReclamation = mod:NewCastAnnounce(1229236)
 local warnCessation = mod:NewCastAnnounce(1230697)
 
 -- Righteous Flame: cast by adds and interruptible
-local specWarnFlame = mod:NewSpecialWarningInterrupt(1234347, nil, nil, nil, 1, 2)
+local specWarnFlame	= mod:NewSpecialWarningInterrupt(1234347, nil, nil, nil, 1, 2)
+local castNpFlame	= mod:NewCastNPTimer(castTime(1234347), 1234347)
+
+local specWarnDevotedOffering	= mod:NewSpecialWarningInterrupt(1229114, nil, nil, nil, 1, 2)
+local castNpDevotedOffering		= mod:NewCastNPTimer(castTime(1229114), 1229114)
 
 -- Judge Unworthy: cast by boss (rare, later phases only) and interruptible
-local specWarnJudge = mod:NewSpecialWarningInterrupt(1234347, nil, nil, nil, 1, 2)
+local specWarnJudge	= mod:NewSpecialWarningInterrupt(1234347, nil, nil, nil, 1, 2)
+local castNpJudge	= mod:NewCastNPTimer(castTime(1234347), 1234347)
 
--- Not sure if this Enrage is even working as intended, kill logs suggest people killing him a minute after enrage (and the boss still being active with Enrage, but barely doing damage)
--- Also, the enrage buff timer varies between 11:36 and 11:52 in logs. Maybe only p3 enrages? Or an enrage timer per phase?
-local berserkTimer = mod:NewBerserkTimer(710)
+-- Ghosts in last phase, they just follow a player around, no good detection except when they hit players
+local warnGhost			= mod:NewTargetNoFilterAnnounce(1222773) -- Generic "Ghost" spell with no further description or tooltip
+local specWarnGhostYou	= mod:NewSpecialWarningMove(1222773, nil, nil, nil, 1, 2)
+
+local berserkTimer = mod:NewBerserkTimer(360)
 
 mod:NewGtfo{spell = 1230809, spellDamage = false, spellPeriodicDamage = false}
 mod:NewGtfo{spell = 1229397, spellDamage = false, spellPeriodicDamage = false}
 
 local p2WarnShown = false
 local p4WarnShown = false
+local berserkTimerStarted = false
+
 function mod:OnCombatStart(delay)
 	p2WarnShown = false
 	p4WarnShown = false
-	berserkTimer:Start(710 - delay)
+	berserkTimerStarted = false
 	timerFlare:Start()
 	self:SetStage(1)
 	-- timerWakeP1:Start() -- TODO: inaccurate on pull
-	-- timerExecutionSentence:Start() -- TODO: figure out start timer
+	timerExecutionSentence:Start("v32-48") -- terribly inaccurate, but it's either ~29-32 seconds or 40-48, never anything in between
+end
+
+function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpell(1229226) and self:CheckInterruptFilter(args.sourceGUID, true, true) then
-		specWarnFlame:Show(args.sourceName)
-		specWarnFlame:Play("kickcast")
-	elseif args:IsSpell(1230908) and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnJudge:Show(args.sourceName)
-		specWarnJudge:Play("kickcast")
+	if args:IsSpell(1229226) then
+		if self:CheckInterruptFilter(args.sourceGUID, true, true) then -- 1 sec cast, you're not gonna interrupt it unless you are targeting it
+			specWarnFlame:Show(args.sourceName)
+			specWarnFlame:Play("kickcast")
+		end
+		castNpFlame:Start(args.sourceGUID)
+	elseif args:IsSpell(1230908) then
+		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			specWarnJudge:Show(args.sourceName)
+			specWarnJudge:Play("kickcast")
+		end
+		castNpJudge:Start(args.sourceGUID)
+	elseif args:IsSpell(1229114) then
+		-- don't check for CD or can interrupt, can use stun etc here
+		-- always show warning if you are targeting the add casting it, but heavily anti-spam it if you aren't
+		-- multiple adds cast this at the same time and repeat it pretty soon after an interrupt
+		local interruptFilterTarget = self:CheckInterruptFilter(args.sourceGUID, true, false)
+		local interruptFilter = self:CheckInterruptFilter(args.sourceGUID, false, false)
+		if interruptFilter and (interruptFilterTarget or self:AntiSpam(20, "Interrupt")) then
+			specWarnDevotedOffering:Show(args.sourceName)
+			specWarnDevotedOffering:Play("kickcast")
+		end
+		castNpDevotedOffering:Start(args.sourceGUID)
 	elseif args:IsSpell(1229714) then
 		timerFlare:Start()
+		timerFlareCast:Start()
 		warnFlare:Show()
+		warnFlare:Play("turnaway")
+		warnFlare:ScheduleVoice(3, "safenow")
 	elseif args:IsSpell(1230697) then
 		warnCessation:Show()
 	elseif args:IsSpell(1231651) then
@@ -110,12 +152,18 @@ function mod:SPELL_CAST_START(args)
 		timerWake2:Start()
 	elseif args:IsSpell(1230271) then
 		timerDyingLightCast:Start(20, 3)
-		warnPhase3:Schedule(20)
-		timerExecutionSentence:Schedule(20)
+		warnPhase3:Show()
+		timerFlare:Stop()
+		timerWake1:Stop()
 		self:SetStage(3)
+		-- The phase actually only starts once you "engage" him again outside which is a bit annoying to detect
+		self:RegisterShortTermEvents("SWING_DAMAGE", "SWING_MISSED")
 	elseif args:IsSpell(1231027) then
 		warnPhase4:Show()
 		self:SetStage(4)
+		timerWake2:Stop()
+		timerQuietus:Stop()
+		timerExecutionSentence:Stop()
 	end
 end
 
@@ -130,6 +178,23 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	end
 end
+
+function mod:SWING_DAMAGE(srcGuid, _, _, _, dstGuid, dstName)
+	local cid = DBM:GetCIDFromGUID(srcGuid)
+	if cid == 241006 and not berserkTimerStarted and not berserkTimer.bar:IsStarted() then -- Check both the timer and variable to handle reload/timer recovery during P3+
+		berserkTimer:Start()
+		berserkTimerStarted = true
+	elseif cid == 242557 or cid == 242564 then
+		if self:AntiSpam(10, "Ghost", dstName) then
+			warnGhost:Show(dstName)
+		end
+		if dstGuid == UnitGUID("player") and self:AntiSpam(5, "GhostYou") then
+			specWarnGhostYou:Show()
+			specWarnGhostYou:Play("runaway")
+		end
+	end
+end
+mod.SWING_MISSED = mod.SWING_DAMAGE
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpell(1229272) and DBM:GetCIDFromGUID(args.sourceGUID) == 241006 then

@@ -1569,7 +1569,8 @@ L:SetMiscLocalization{
 	CannonMistress = "포반장 린드", -- TODO: can we automatically get the localized name?
 	YellPhase2 = "하나 되어 맞서라! 우리의 힘 앞에 적은 전율하리라!",
 	Footmen = "보병",
-	Horses = "기병"
+	Horses = "기병",
+	YellMeteor = "신비술사, 적을 잿더미로 만들어라",
 }
 
 
@@ -1617,4 +1618,5 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	CentralTower = "중앙 탑",
 	Prison = "감옥",
+	Cathedral = "대성당"
 }

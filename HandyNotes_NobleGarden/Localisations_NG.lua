@@ -1,6 +1,6 @@
 local _, ns = ...
 
--- Translations specific to the Hallows End AddOn
+-- Translations specific to the Noblegarden AddOn
 if ns.locale == "deDE" then
 	ns.L["AddOn Description"] = "%eHilfe für Erfolge und Quests in %sNoblegarten-Feiertage"
 	ns.L["AnywhereC"] = "Überall im Lager"
@@ -55,7 +55,7 @@ elseif ns.locale == "esES" or ns.locale == "esMX" then
 	ns.L["Marshall's Stand"] = "Alto de Marshal"
 	ns.L["Noblegarden"] = "Jardín Noble"
 	ns.L["Orange"] = "Naranja"
---	ns.L["Quacking Down"] = ""
+	ns.L["Quacking Down"] = "El silencio de los patos"
 	ns.L["Turquoise"] = "Turquesa"
 
 elseif ns.locale == "frFR" then
@@ -113,7 +113,7 @@ elseif ns.locale == "itIT" then
 	ns.L["Marshall's Stand"] = "Accampamento dei Grant"
 	ns.L["Noblegarden"] = "Festa di Nobiluova"
 	ns.L["Orange"] = "Arancione"
---	ns.L["Quacking Down"] = ""
+	ns.L["Quacking Down"] = "Guarda qua-qua!"
 	ns.L["Turquoise"] = "Turchese"
 
 elseif ns.locale == "koKR" then
@@ -137,7 +137,7 @@ elseif ns.locale == "koKR" then
 	ns.L["Marshall's Stand"] = "마샬의 격전지"
 	ns.L["Noblegarden"] = "귀족의 정원"
 	ns.L["Orange"] = "오렌지"
---	ns.L["Quacking Down"] = ""
+	ns.L["Quacking Down"] = "오리 제압"
 	ns.L["Turquoise"] = "터키석"
 		
 elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
@@ -165,7 +165,7 @@ elseif ns.locale == "ptBR" or ns.locale == "ptPT" then
 	ns.L["Marshall's Stand"] = "Posto Avançado do Marshal"
 	ns.L["Noblegarden"] = "Jardinova"
 	ns.L["Orange"] = "Laranja"
---	ns.L["Quacking Down"] = ""
+	ns.L["Quacking Down"] = "Pagando o pato"
 	ns.L["Turquoise"] = "Turquesa"
 
 elseif ns.locale == "ruRU" then
@@ -217,7 +217,7 @@ elseif ns.locale == "zhCN" then
 	ns.L["Marshall's Stand"] = "马绍尔哨站"
 	ns.L["Noblegarden"] = "贵族的花园"
 	ns.L["Orange"] = "橙色"
---	ns.L["Quacking Down"] = ""
+	ns.L["Quacking Down"] = "不堪重鸭"
 	ns.L["Turquoise"] = "青绿色"
 
 elseif ns.locale == "zhTW" then
@@ -241,7 +241,7 @@ elseif ns.locale == "zhTW" then
 	ns.L["Marshall's Stand"] = "馬紹爾哨站"
 	ns.L["Noblegarden"] = "貴族的花園"
 	ns.L["Orange"] = "橘子"
---	ns.L["Quacking Down"] = ""
+	ns.L["Quacking Down"] = "極度呱噪"
 	ns.L["Turquoise"] = "綠松石"
 	
 else

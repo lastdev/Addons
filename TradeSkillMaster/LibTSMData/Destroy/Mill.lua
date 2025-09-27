@@ -18,8 +18,8 @@ local DATA = {}
 function Mill.Get()
 	if LibTSMData.IsRetail() then
 		return DATA.Retail
-	elseif LibTSMData.IsCataClassic() then
-		return DATA.Cata
+	elseif LibTSMData.IsPandaClassic() then
+		return DATA.Panda
 	elseif LibTSMData.IsVanillaClassic() then
 		return DATA.Vanilla
 	else
@@ -39,10 +39,10 @@ DATA.Vanilla = {
 
 
 -- ============================================================================
--- Cata
+-- Panda
 -- ============================================================================
 
-DATA.Cata = {
+DATA.Panda = {
 	-- Common Pigments
 	["i:39151"] = { -- Alabaster Pigment (Ivory / Moonglow Ink)
 		["i:765"] = {requiredSkill = 1, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.5780}, -- Silverleaf
@@ -103,6 +103,14 @@ DATA.Cata = {
 		["i:36906"] = {requiredSkill = 325, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.6000}, -- Icethorn
 		["i:36905"] = {requiredSkill = 325, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.6000}, -- Lichbloom
 		["i:36903"] = {requiredSkill = 325, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.6000}, -- Adder's Tongue
+	},
+	["i:79251"] = { -- Shadow Pigment (Ink of Dreams)
+		["i:72234"] = {requiredSkill = 500, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.5660}, -- Green Tea Leaf
+		["i:72237"] = {requiredSkill = 500, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.5720}, -- Rain Poppy
+		["i:72235"] = {requiredSkill = 500, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.5720}, -- Silkweed
+		["i:89639"] = {requiredSkill = 500, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.5780}, -- Desecrated Herb
+		["i:79010"] = {requiredSkill = 500, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.5780}, -- Snow Lily
+		["i:79011"] = {requiredSkill = 500, matRate = 1.0000, minAmount = 2, maxAmount = 4, amountOfMats = 0.6000}, -- Fool's Cap
 	},
 
 	-- Uncommon Pigments
@@ -176,6 +184,14 @@ DATA.Cata = {
 		["i:52986"] = {requiredSkill = 475, matRate = 0.2500, minAmount = 1, maxAmount = 3, amountOfMats = 0.0550}, -- Heartblossom
 		["i:52988"] = {requiredSkill = 475, matRate = 0.5000, minAmount = 1, maxAmount = 3, amountOfMats = 0.1075}, -- Whiptail
 		["i:52987"] = {requiredSkill = 475, matRate = 0.5000, minAmount = 1, maxAmount = 3, amountOfMats = 0.1075}, -- Twilight Jasmine
+	},
+	["i:79253"] = { -- Misty Pigment (Starlight Ink)
+		["i:72234"] = {requiredSkill = 500, matRate = 0.4000, minAmount = 1, maxAmount = 3, amountOfMats = 0.0860}, -- Green Tea Leaf
+		["i:72237"] = {requiredSkill = 500, matRate = 0.4200, minAmount = 1, maxAmount = 3, amountOfMats = 0.0900}, -- Rain Poppy
+		["i:72235"] = {requiredSkill = 500, matRate = 0.4200, minAmount = 1, maxAmount = 3, amountOfMats = 0.0900}, -- Silkweed
+		["i:89639"] = {requiredSkill = 500, matRate = 0.4400, minAmount = 1, maxAmount = 3, amountOfMats = 0.0940}, -- Desecrated Herb
+		["i:79010"] = {requiredSkill = 500, matRate = 0.4400, minAmount = 1, maxAmount = 3, amountOfMats = 0.0940}, -- Snow Lily
+		["i:79011"] = {requiredSkill = 500, matRate = 0.5000, minAmount = 1, maxAmount = 3, amountOfMats = 0.1075}, -- Fool's Cap
 	},
 }
 

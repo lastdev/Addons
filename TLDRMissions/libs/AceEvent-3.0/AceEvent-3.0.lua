@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- AceEvent-3.0 provides event registration and secure dispatching.
 -- All dispatching is done using **CallbackHandler-1.0**. AceEvent is a simple wrapper around

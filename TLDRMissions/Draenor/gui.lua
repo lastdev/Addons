@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
@@ -9,6 +8,7 @@ do
     local interfaceVersion = select(4, GetBuildInfo())
     if (interfaceVersion >= 50000) and (interfaceVersion < 60000) then
         isWOD = true
+        addon.isWOD = true
     end
 end
 
@@ -110,11 +110,11 @@ local function setupButton(categoryName, text, dontInsert)
     gui[name].ExclusionLabel:Hide()
 
     local plname = categoryName.."PriorityLabel"
-    gui[plname] = gui.MainTabPanel:CreateFontString("TLDRMissions"..categoryName.."PriorityLabel", "OVERLAY", "GameFontNormal")
+    gui[plname] = gui.MainTabPanel:CreateFontString("TLDRMissionsWOD"..categoryName.."PriorityLabel", "OVERLAY", "GameFontNormal")
     gui[plname]:SetPoint("TOPLEFT", gui[name], -15, -10)
 
     local resourceCostName = categoryName.."GarrisonResourceCostDropDown"
-    gui[resourceCostName] = LibDD:Create_UIDropDownMenu("TLDRMissions"..categoryName.."GarrisonResourceCostDropDown", gui.MainTabPanel)
+    gui[resourceCostName] = LibDD:Create_UIDropDownMenu("TLDRMissionsWOD"..categoryName.."GarrisonResourceCostDropDown", gui.MainTabPanel)
     gui[resourceCostName]:SetPoint("TOPRIGHT", lastDD or gui.TitleBarTexture, 0, -22)
     LibDD:UIDropDownMenu_SetWidth(gui[resourceCostName], 10)
     LibDD:UIDropDownMenu_SetText(gui[resourceCostName], "")
@@ -155,6 +155,8 @@ setupButton("Apexis", "Apexis Crystal")
 setupButton("Oil", "Oil")
 
 setupButton("Seal", "Seal of Tempered Fate")
+
+setupButton("Archaeology", PROFESSIONS_ARCHAEOLOGY)
 
 setupButton("AnythingForXP", L["AnythingForXPLabel"], true)
 
@@ -250,11 +252,6 @@ gui.CompleteMissionsButton:SetWidth(240)
 gui.CompleteMissionsButton:SetHeight(25)
 gui.CompleteMissionsButton:SetEnabled(true)
 
-gui.WarningLabel = gui.MainTabPanel:CreateFontString("TLDRMissionsWODFrameWarningLabel", "OVERLAY", "GameFontNormal")
-gui.WarningLabel:SetPoint("TOPLEFT", gui.EstimateLabel, "BOTTOMLEFT", 0, -30)
-gui.WarningLabel:SetText("This module for WOD is still heavily in development. Expect bugs, errors, and maybe it won't even work!")
-gui.WarningLabel:SetSize(300, 40)
-
 --
 -- Advanced tab
 --
@@ -317,9 +314,9 @@ gui.LowerBoundLevelRestrictionSlider:SetObeyStepOnDrag(true)
 gui.LowerBoundLevelRestrictionSlider:SetMinMaxValues(1, 60)
 gui.LowerBoundLevelRestrictionSlider:SetValue(3)
 
-gui.AnimaCostLimitLabel = gui.AdvancedTabPanel:CreateFontString("TLDRMissionsAnimaCostLimitLabel", "OVERLAY", "GameFontNormal")
+gui.AnimaCostLimitLabel = gui.AdvancedTabPanel:CreateFontString("TLDRMissionsWODCostLimitLabel", "OVERLAY", "GameFontNormal")
 gui.AnimaCostLimitLabel:SetPoint("TOPLEFT", gui.LowerBoundLevelRestrictionSlider, -20, -40)
-gui.AnimaCostLimitLabel:SetText(L["AnimaCostLimit"])
+gui.AnimaCostLimitLabel:SetText("Resource Price Limit")
 gui.AnimaCostLimitLabel:SetWordWrap(true)
 gui.AnimaCostLimitLabel:SetWidth(300)
 

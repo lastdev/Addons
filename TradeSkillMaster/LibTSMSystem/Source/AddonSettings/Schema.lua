@@ -156,7 +156,8 @@ function Schema.Get()
 	-- [128] added global.internalData.{warbankMoney,warbankGoldLog,warbankGoldLogLastUpdate}
 	-- [129] updated factionrealm.internalData.crafts
 	-- [130/131] updated global.auctionUIContext.{auctioningAuctionScrollingTable,myAuctionsScrollingTable,shoppingAuctionScrollingTable}, factionrealm.auctioningOperations.whitelist
-	return Settings.NewSchema(131, 10)
+	-- [132] removed internalData.reagentBankQuantity
+	return Settings.NewSchema(132, 10)
 		:EnterScope("global")
 			:EnterNamespace("debug")
 				:AddBoolean("chatLoggingEnabled", false, 19)
@@ -436,7 +437,6 @@ function Schema.Get()
 				:AddString("classKey", "", 19)
 				:AddTable("bagQuantity", {}, 19)
 				:AddTable("bankQuantity", {}, 19)
-				:AddTable("reagentBankQuantity", {}, 19)
 				:AddTable("auctionQuantity", {}, 19)
 				:AddTable("mailQuantity", {}, 19)
 				:AddString("goldLog", "", 25)

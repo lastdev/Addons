@@ -9,7 +9,7 @@ local ChatFeature = {
     NAME = "Chat Output", 
     VERSION = 1, 
     DEPENDENCIES = { "settings" },
-    BETA = true,
+    BETA = false,
     DESCRIPTION = [[Controls where the output from vendor goes, allows you to select which messages got to each chat frame]]
 }
 
@@ -24,7 +24,7 @@ function ChatFeature:OnInitialize()
             local frame = CreateFrame("Frame", nil, parent or UIParent, "Chat_Settings")
             Addon.CommonUI.UI.Attach(frame, Addon.Features.Chat.ChatSettings)
             return frame
-        end, nil, true)
+        end, nil, false)
 end
 
 function ChatFeature:OnTerminate()

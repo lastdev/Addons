@@ -7,6 +7,7 @@ local L = Addon:GetLocale()
 
 local ItemProperties = Addon.Systems.ItemProperties
 
+
 local function isStringInTooltipText(tooltipdata, str, location)
 
 

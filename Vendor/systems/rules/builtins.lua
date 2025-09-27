@@ -51,12 +51,15 @@ local EXPANSION  = {
     ["wod"] = LE_EXPANSION_WARLORDS_OF_DRAENOR,
     ["draenor"] = LE_EXPANSION_WARLORDS_OF_DRAENOR,
     ["legion"] = LE_EXPANSION_LEGION,
-    ["bfa"] = 8.0, 
-    ["bofa"] = 8.0,
-    ["sl"] = 9.0,
-    ["shadowlands"] = 9.0,
-    ["df"] = 10.0,
-    ["drgonflight"] = 10.0
+    ["bfa"] = LE_EXPANSION_BATTLE_FOR_AZEROTH,
+    ["bofa"] = LE_EXPANSION_BATTLE_FOR_AZEROTH,
+    ["sl"] = LE_EXPANSION_SHADOWLANDS,
+    ["shadowlands"] = LE_EXPANSION_SHADOWLANDS,
+    ["df"] = LE_EXPANSION_DRAGONFLIGHT,
+    ["dragonflight"] = LE_EXPANSION_DRAGONFLIGHT,
+    ["tww"] = LE_EXPANSION_WAR_WITHIN,
+    ["thewarwithin"] = LE_EXPANSION_WAR_WITHIN,
+    ["warwithin"] = LE_EXPANSION_WAR_WITHIN,
 }
 
 --*****************************************************************************
@@ -134,6 +137,32 @@ local INVENTORY_SLOT_MAP = {
 }
 
 --*****************************************************************************
+-- Mapping of Profession Text to IDs
+--*****************************************************************************
+-- The Below only works on retail. Commenting it out until it works on Classic.
+--local PROFESSION_MAP = {}
+--for professionName, id in pairs(Enum.Profession) do
+--    -- Adds PROFESSIONNAME = skill line id for profession lookup
+--    PROFESSION_MAP[string.upper(professionName)] = C_TradeSkillUI.GetProfessionSkillLineID(id)
+--end
+
+local PROFESSION_MAP = {
+    ALCHEMY = 171,
+    BLACKSMITHING = 164,
+    ENCHANTING = 333,
+    ENGINEERING = 202,
+    HERBALISM = 182,
+    INSCRIPTION = 773,
+    JEWELCRAFTING = 755,
+    LEATHERWORKING = 165,
+    MINING = 186,
+    SKINNING = 393,
+    TAILORING = 197,
+}
+
+
+
+--*****************************************************************************
 -- Helper function which given a value, will search the map for the value
 -- and return  the value contained in the map.
 --*****************************************************************************
@@ -174,9 +203,9 @@ end
 local function getEnvironmentVariables()
     local RuleEnvironmentVariables = {}
     if Addon.Systems.Info.IsRetailEra then
-        RuleEnvironmentVariables.CURRENT_EXPANSION = LE_EXPANSION_DRAGONFLIGHT
+        RuleEnvironmentVariables.CURRENT_EXPANSION = LE_EXPANSION_WAR_WITHIN
     else
-        RuleEnvironmentVariables.CURRENT_EXPANSION = LE_EXPANSION_WRATH_OF_THE_LICH_KING
+        RuleEnvironmentVariables.CURRENT_EXPANSION = LE_EXPANSION_MISTS_OF_PANDARIA
     end
     RuleEnvironmentVariables.CLASSIC = LE_EXPANSION_CLASSIC                                 -- 0
     RuleEnvironmentVariables.BURNING_CRUSADE = LE_EXPANSION_BURNING_CRUSADE                 -- 1
@@ -188,6 +217,7 @@ local function getEnvironmentVariables()
     RuleEnvironmentVariables.BATTLE_FOR_AZEROTH = LE_EXPANSION_BATTLE_FOR_AZEROTH           -- 7
     RuleEnvironmentVariables.SHADOWLANDS = LE_EXPANSION_SHADOWLANDS                         -- 8
     RuleEnvironmentVariables.DRAGONFLIGHT = LE_EXPANSION_DRAGONFLIGHT                       -- 9
+    RuleEnvironmentVariables.WAR_WITHIN = LE_EXPANSION_WAR_WITHIN                           -- 10
     RuleEnvironmentVariables.POOR = 0
     RuleEnvironmentVariables.COMMON = 1
     RuleEnvironmentVariables.UNCOMMON = 2
@@ -204,11 +234,59 @@ local function getEnvironmentVariables()
     RuleEnvironmentVariables.PlayerName,
     RuleEnvironmentVariables.PlayerRealm = UnitFullName("player");
 
+    -- Sometimes the UnitFullName doesn't give correct results.
+    -- If it did not populate correctly, put in a sentinel value of "<unknown>"
+    if not RuleEnvironmentVariables.PlayerName then
+        RuleEnvironmentVariables.PlayerName = "<unknown>"
+    end
+    if not RuleEnvironmentVariables.PlayerRealm then
+        RuleEnvironmentVariables.PlayerRealm = "<unknown>"
+    end
+
+    -- Professions
+    for k, v in pairs(PROFESSION_MAP) do
+        RuleEnvironmentVariables[k] = v
+    end
+
     return RuleEnvironmentVariables
 end
 
 function Addon.Systems.Rules:GetRuleEnvironmentVariables()
     return getEnvironmentVariables()
+end
+
+-- This is the old way of equipment set lookup if the
+-- equipment set data failed to load, use this.
+local function itemIdEquipmentSetLookup(Id, ...)
+    -- Checks the item set for the specified item
+    local function check(Id, setId)
+        itemIds = C_EquipmentSet.GetItemIDs(setId);
+        for _, setItemId in pairs(itemIds) do
+            if ((setItemId ~= -1) and (setItemId == itemId)) then
+                return true
+            end
+        end
+    end
+
+    local sets = { ... };
+    local itemId = Id;
+    if (#sets == 0) then
+        -- No sets provied, so enumerate and check all of the characters item sets
+        local itemSets = C_EquipmentSet.GetEquipmentSetIDs();
+        for _, setId in pairs(itemSets) do
+            if (check(itemId, setId)) then
+                return true;
+            end
+        end
+    else
+        -- Check against the specific item set/sets provided.
+        for _, set in ipairs(sets) do
+            local setId = C_EquipmentSet.GetEquipmentSetID(set)
+            if (setId and check(itemId, setId)) then
+                return true
+            end
+        end
+    end
 end
 
 
@@ -273,7 +351,7 @@ local RuleFunctions = {
 {
     Name = "IsInEquipmentSet",
     Documentation = locale["HELP_ISINEQUIPMENTSET_TEXT"],
-    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true },
+    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=true },
     Function = function(...)
         -- Checks the item set for the specified item
         local function check(itemId, setId)
@@ -306,6 +384,46 @@ local RuleFunctions = {
         end
     end,
 },
+        --[[
+        local setsToCheck = {...}
+        local inSets = Addon:GetEquipmentSetsForGUID(GUID)
+        if not inSets then return false end
+        if #setsToCheck == 0 and inSets then return true end
+
+        for _, name in ipairs(setsToCheck) do
+            local setId = C_EquipmentSet.GetEquipmentSetID(name)
+            for _, set in ipairs(inSets) do
+                if set == setId then
+                    return true
+                end
+            end
+        end
+
+        return false
+    end,
+    ]]
+
+{
+    Name = "HasProfession",
+    Documentation = locale["HELP_HASPROFESSION"],
+    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true },
+    Function = function(...)
+        local profsToCheck = {...}
+        local prof1Id, prof2Id = Addon:GetProfessionIds()
+        for _, id in pairs(profsToCheck) do
+            if type(id) == "string" then
+                id = PROFESSION_MAP[string.upper(id)]
+            end
+
+            if id == prof1Id or id == prof2Id then
+                return true
+            end
+        end
+
+        return false
+    end,
+},
+
 
 
 {
@@ -356,7 +474,7 @@ local RuleFunctions = {
 
         -- build a table of the stats this item has
         for st, sv in pairs(Addon:GetItemStats(Link)) do
-            if (sv ~= 0) then
+            if (sv ~= 0 and _G[st]) then
                 itemStats[_G[st]] = true;
             end
         end
@@ -388,6 +506,21 @@ local RuleFunctions = {
         local includeBank, includeUses = ...
         -- Assuming if you care to know about the bank you also want reagent bank.
         return GetItemCount(Link, includeBank, includeUses, includeBank)
+    end,
+},
+
+{
+    Name = "WatermarkLevel",
+    Documentation = locale["HELP_WATERMARKLEVEL_TEXT"],
+    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=false },
+    Function = function(...)
+        local forAccount = not not (...)
+        local character, account = C_ItemUpgrade.GetHighWatermarkForItem(Link)
+        if forAccount then
+            return account
+        else
+            return character
+        end
     end,
 },
 

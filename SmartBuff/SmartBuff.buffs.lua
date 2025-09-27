@@ -152,15 +152,15 @@ function SMARTBUFF_InitItemList()
   _,SMARTBUFF_TWWWeaponEnhance3_q1  = C_Item.GetItemInfo(222508);   --  Ironclaw Whetstone
   _,SMARTBUFF_TWWWeaponEnhance3_q2  = C_Item.GetItemInfo(222509);   --  Ironclaw Whetstone
   _,SMARTBUFF_TWWWeaponEnhance3_q3  = C_Item.GetItemInfo(222510);   --  Ironclaw Whetstone
-  _,SMARTBUFF_TWWWeaponEnhance4_q1  = C_Item.GetItemInfo(224105);   --  Oil of Beledar's Grace
-  _,SMARTBUFF_TWWWeaponEnhance4_q2  = C_Item.GetItemInfo(224106);   --  Oil of Beledar's Grace
-  _,SMARTBUFF_TWWWeaponEnhance4_q3  = C_Item.GetItemInfo(224107);   --  Oil of Beledar's Grace
-  _,SMARTBUFF_TWWWeaponEnhance5_q1  = C_Item.GetItemInfo(224108);   --  Oil of Deep Toxins
-  _,SMARTBUFF_TWWWeaponEnhance5_q2  = C_Item.GetItemInfo(224109);   --  Oil of Deep Toxins
-  _,SMARTBUFF_TWWWeaponEnhance5_q3  = C_Item.GetItemInfo(224109);   --  Oil of Deep Toxins
-  _,SMARTBUFF_TWWWeaponEnhance6_q1  = C_Item.GetItemInfo(224110);   --  Algari Mana Oil
-  _,SMARTBUFF_TWWWeaponEnhance6_q2  = C_Item.GetItemInfo(224111);   --  Algari Mana Oil
-  _,SMARTBUFF_TWWWeaponEnhance6_q3  = C_Item.GetItemInfo(224113);   --  Algari Mana Oil
+  _,SMARTBUFF_TWWWeaponEnhance4_q1  = C_Item.GetItemInfo(224108);   --  Oil of Beledar's Grace
+  _,SMARTBUFF_TWWWeaponEnhance4_q2  = C_Item.GetItemInfo(224109);   --  Oil of Beledar's Grace
+  _,SMARTBUFF_TWWWeaponEnhance4_q3  = C_Item.GetItemInfo(224110);   --  Oil of Beledar's Grace
+  _,SMARTBUFF_TWWWeaponEnhance5_q1  = C_Item.GetItemInfo(224111);   --  Oil of Deep Toxins
+  _,SMARTBUFF_TWWWeaponEnhance5_q2  = C_Item.GetItemInfo(224112);   --  Oil of Deep Toxins
+  _,SMARTBUFF_TWWWeaponEnhance5_q3  = C_Item.GetItemInfo(224113);   --  Oil of Deep Toxins
+  _,SMARTBUFF_TWWWeaponEnhance6_q1  = C_Item.GetItemInfo(224105);   --  Algari Mana Oil
+  _,SMARTBUFF_TWWWeaponEnhance6_q2  = C_Item.GetItemInfo(224106);   --  Algari Mana Oil
+  _,SMARTBUFF_TWWWeaponEnhance6_q3  = C_Item.GetItemInfo(224107);   --  Algari Mana Oil
 
 
   -- Food
@@ -264,6 +264,7 @@ function SMARTBUFF_InitItemList()
     222781, 222766, 222776, 222780, 222778, 222768, 222783, 222779, 222751, 222773, 222753, 222774, 222752, 222758, 222770, 222775, 222777, 222759,
     222760, 222765, 222763, 222769, 222761, 222772, 222757, 222762, 222754, 222755, 222756, 222767, 222750, 222764, 222771,
   });
+
 
   -- Warlock healthstones
   SMARTBUFF_HEALTHSTONE         = C_Item.GetItemInfo(5512);  --"Healthstone"
@@ -503,6 +504,7 @@ function SMARTBUFF_InitItemList()
 -- TWW
   -- Consumables
   _,SMARTBUFF_TWWCrystalAugRune1          = C_Item.GetItemInfo(224572); --"Crystallized Augment Rune"
+  _,SMARTBUFF_TWWEtherealAugRune          = C_Item.GetItemInfo(243191); --"Ethereal Augment Rune"
 
   -- Flasks and phials
   _,SMARTBUFF_FLASKTWW1_Q1          = C_Item.GetItemInfo(212269);  --"Flask of Tempered Aggression"
@@ -838,11 +840,14 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_WarStomp        = getSpellBookItemByName(20549); --"War Stomp"
   SMARTBUFF_Visage          = getSpellBookItemByName(351239); --"Evoker Visage"
 
-  -- Food
-  SMARTBUFF_FOOD_AURA       = C_Spell.GetSpellInfo(46899); --"Well Fed"
-  SMARTBUFF_FOOD_SPELL      = C_Spell.GetSpellInfo(433);   --"Food"
-  SMARTBUFF_DRINK_SPELL     = C_Spell.GetSpellInfo(430);   --"Drink"
-
+  -- Eating & Drinking (Generic)
+  SMARTBUFF_EatingAura      = C_Spell.GetSpellInfo(433);    --"Food"
+  SMARTBUFF_DrinkingAura    = C_Spell.GetSpellInfo(430);    --"Drink"
+  SMARTBUFF_FoodDrinkAura   = C_Spell.GetSpellInfo(192002); --"Food & Drink"
+  -- Well Fed (Generic)
+  SMARTBUFF_WellFedAura     = C_Spell.GetSpellInfo(46899);  --"Well Fed"
+  SMARTBUFF_HeartyFedAura   = C_Spell.GetSpellInfo(462181); --"Hearty Well Fed"
+  
   -- Misc
   SMARTBUFF_KIRUSSOV        = C_Spell.GetSpellInfo(46302); --"K'iru's Song of Victory"
   SMARTBUFF_FISHING         = C_Spell.GetSpellInfo(450647) or C_Spell.GetSpellInfo(131476); --"Fishing"
@@ -884,9 +889,10 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BVantusRune_VotI_q3 = C_Spell.GetSpellInfo(384306); -- Vantus Rune: Vault of the Incarnates (Quality 3)
   -- TWW
   SMARTBUFF_BTWWCrystalAugRune1 = C_Spell.GetSpellInfo(453250);  -- Crystallization/Crystallized Augment Rune
+  SMARTBUFF_BTWWEtherealAugRune = C_Spell.GetSpellInfo(1234969);  -- Ethereal Augmentation from Ethereal Augment Rune
 
   S.LinkSafariHat           = { SMARTBUFF_BMiscItem9, SMARTBUFF_BMiscItem10 };
-  S.LinkAugment             = { SMARTBUFF_BMiscItem14, SMARTBUFF_BMiscItem14_1, SMARTBUFF_BMiscItem14_2, SMARTBUFF_BMiscItem14_3, SMARTBUFF_BAugmentRune,  SMARTBUFF_BVieledAugment, SMARTBUFF_BDreamAugmentRune, SMARTBUFF_BDraconicRune, SMARTBUFF_TWWCrystalAugRune1 };
+  S.LinkAugment             = { SMARTBUFF_BMiscItem14, SMARTBUFF_BMiscItem14_1, SMARTBUFF_BMiscItem14_2, SMARTBUFF_BMiscItem14_3, SMARTBUFF_BAugmentRune,  SMARTBUFF_BVieledAugment, SMARTBUFF_BDreamAugmentRune, SMARTBUFF_BDraconicRune, SMARTBUFF_TWWCrystalAugRune1, SMARTBUFF_BTWWEtherealAugRune };
 
   -- Flasks & Elixirs
   SMARTBUFF_BFLASKTBC1      = C_Spell.GetSpellInfo(28520);  --"Flask of Relentless Assault"
@@ -1606,6 +1612,7 @@ function SMARTBUFF_InitSpellList()
 
     -- TWW
     {SMARTBUFF_TWWCrystalAugRune1, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BTWWCrystalAugRune1, S.LinkAugment},
+    {SMARTBUFF_TWWEtherealAugRune, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BTWWEtherealAugRune, S.LinkAugment},
   };
 
   --  Toys:    ItemId, SpellId, Duration [min]
@@ -1699,12 +1706,16 @@ function SMARTBUFF_InitSpellList()
   AddItem(167698, 293671,  60); --Secret Fish Goggles
   AddItem(169109, 299445,  60); --Beeholder's Goggles
   AddItem(191341, 371172,  30); -- Tepid Q3
+  -- Shadowlands
+  AddItem(212525, 432001,  15); -- Delicate Ebony Parasol
+  AddItem(182694, 341678,  15); -- Stylish Black Parasol
   -- Dragonflight
   AddItem(199902, 388275,  30); -- Wayfarer's Compass
   AddItem(202019, 396172,  30); -- Golden Dragon Goblet
   AddItem(198857, 385941,  30); -- Lucky Duck
   -- TWW
   AddItem(212518, 431709, 60);  -- Vial of Endless Draconic Scales
+
 
 
   -- Potions... but really it's flasks :)

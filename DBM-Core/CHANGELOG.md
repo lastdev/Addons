@@ -1,40 +1,80 @@
 # DBM - Core
 
-## [11.1.17](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.1.17) (2025-04-22)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.1.16...11.1.17) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [11.2.16](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.2.16) (2025-09-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.2.13...11.2.16) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
 - prep new tag  
-- apparently i never remembered to bump tocs  
-- CI: Update globals  
-- Tests: Fix Scarlet Enclave test name generation  
-- Tests: Add Perfy integration  
-- Tests: Add simple performance report for in-game tests  
-- Update localization.ru.lua (#1632)  
-- kill old deprecated color picker calls  
-- just handle it this way  
-- change event order for logging purposes.  
-- Fixed a bug where a cast count timer might get stuck if it clipped before expiring  
-    Changed timer debug to always fire regardless of debugmode to improve transcriptor logging.  
-- Update RU locale and micro fix for The One Armed Bandit (#1629)  
-    * Update TheOneArmedBandit.lua  
-    * Update localization.ru.lua  
-- silene and close https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1628  
-- throttle blaze of glory  
-- remove useless countdown yell by default on cauldron and instead add a new one for tank waves  
-- maybe fix https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1630  
-- eliminate redundant events  
-- fix a bug where delay wasn't applied to NP scans  
-- Add callback for trash enemy engages  
-- Tests: Simplify mod guessing (#1620)  
-    Basically the test generator will put the encounterId into the metadata which removes the mess with compressed logs  
-- update translations (#1621)  
-    Co-authored-by: anon1231823 <anon1231823@users.noreply.github.com>  
-- Update Announce.lua (#1625)  
-    * Update Announce.lua  
-    * Update SpecialWarning.lua  
-- Fix and close https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1626  
-- Fix most of errors in https://github.com/DeadlyBossMods/DeadlyBossMods/issues/1622  
-- Update SpecialWarning.lua (#1624)  
-- Update localization.tw.lua  
-- Update localization.ru.lua (#1617)  
+- Update localization.es.lua (#1764)  
+- Update localization.br.lua (#1763)  
+- Update localization.fr.lua (#1762)  
+- Update localization.es.lua (#1761)  
+- further clarify slash commands  
+- bump alpha  
+- remove support for wow interface. if they can't be bothered to keep site updated for patches anymore (or even entire game versions like mop), then it's time to stop bothering to keep addons up to date there  
+- prep retag  
+- Bugfixes;  
+    - Make positioning cleaner on keystones frame (to always position topleft)  
+    - Allow esc to close frames  
+- Update localization.ru.lua (#1759)  
+- Hide other panels when one opens.  
+- ignore specIDs of 0 and recheck (when blizzard api gets buggy)  
+- Also register for click AnyUp?  
+- Remove bad debugging, derp.  
+- bump alpha  
+- scope button to only show on retail  
+- Add missing GUI button for keystones  
+- completely rearrange help slash command menus to be more constructive to modern times. 4 of the features in old help menu weren't even usuable in dungeons/raids anymore. Now /dbm help will provide list of actually useful commands and help2 will be where the more niche ones reside.  
+    Caveat, many of translations may be wonkey because I just let copilot write em all for preliminary update. they'll likely get revised later  
+- prep new tag  
+- fix more mop classic classifications  
+- Better handle celestial dungeon mapping  
+- New keystones system & Tweaks (#1728)  
+- Update localization.es.lua (#1757)  
+    * Update localization.es.lua  
+    * Update localization.es.lua  
+    * Update localization.es.lua  
+- Update localization.br.lua (#1758)  
+- TOc updates for PTR  
+- change boss unit ids from first prio to last in target scanner to hopefully fix icon setting issues in mop classic where boss unitids fail with SetRaidTarget (this happenson retail too sometimes but not as bad as mop classic)  
+- Extend variances for 3rd chamber on plexus sentinel mythic  
+- Update koKR (#1753)  
+    Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
+- fix bad copy paste  
+- Work around blizzard bug where the first rings has no event at all, not even emote, sometimes.  
+- tweaks to double soak yells  
+- Update localization.en.lua  
+- Update localization.ru.lua (#1748)  
+- Update localization.es.lua (#1749)  
+- Update localization.fr.lua (#1750)  
+- Update localization.fr.lua (#1751)  
+- Update localization.tw.lua (#1752)  
+- Update localization.en.lua  
+- Placeholder new locales.  
+- Update localization.fr.lua (#1747)  
+- Update localization.br.lua (#1746)  
+    * Update localization.br.lua  
+    * Update localization.br.lua  
+- Update localization.fr.lua (#1745)  
+    * Update localization.fr.lua  
+    * Update localization.fr.lua  
+- Update localization.es.lua (#1744)  
+- Update localization.tw.lua (#1743)  
+- Update commonlocal.tw.lua (#1742)  
+- Update localization.tw.lua (#1741)  
+- Update localization.es.lua (#1731)  
+- Update localization.fr.lua (#1732)  
+- Update localization.br.lua (#1733)  
+- Update commonlocal.es.lua (#1734)  
+- Update commonlocal.fr.lua (#1735)  
+- Update commonlocal.br.lua (#1736)  
+- Update localization.es.lua (#1737)  
+    * Update localization.es.lua  
+    * Update localization.es.lua  
+    * Update localization.es.lua  
+    * Update localization.es.lua  
+    * Update localization.es.lua  
+- Update localization.fr.lua (#1738)  
+    * Update localization.fr.lua  
+    * Update localization.fr.lua  
+- Update localization.br.lua (#1739)  
 - bump alpha  

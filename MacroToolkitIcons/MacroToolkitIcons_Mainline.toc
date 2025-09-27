@@ -1,8 +1,8 @@
-## Interface: 110105
+## Interface: 110200
 ## Author: Deepac
 ## IconTexture: 982414
 ## Title: MacroToolkit Icon Data
-## Version: v2.3.23
+## Version: v2.3.25
 ## Notes: Load on demand data for MacroToolkit
 ## LoadOnDemand: 1
 ## RequiredDeps: MacroToolkit

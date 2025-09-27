@@ -1,7 +1,11 @@
 local _, ns = ...
 ns.points = {}
-ns.textures = {}
-ns.scaling = {}
+ns.achievementIQ = {}
+ns.addOnName = "ChildrensWeek" -- For internal use to name globals etc. Should never be localised
+ns.eventName = "Children's Week" -- The player sees this in labels and titles. This gets localised
+
+ns.aoa = {}
+--ns.aoa[ 1034 ] = { acctOnly = true }
 
 -- Achievements:						ID			Faction		Pin				Default Texture in Core
 -- Home Alone							1791		Both		achieves		|
@@ -787,9 +791,9 @@ ns.setDornogal = { version=110105, level=10, { id=89317, name="Children's Week i
 			guide="Go to Ullna in Dornogal. " ..ns.completeTasks, }
 
 ns.points[ 2255 ] = { -- Azj'Kahet
-	[55554388] = { orphan=true, quests={ { id=89319, name="The Wondrous Weave", qType="Seasonal", }, },
+	[55554388] = { orphan=true, noAzeroth=true, quests={ { id=89319, name="The Wondrous Weave", qType="Seasonal", }, },
 					tip="The Widow Arak'nai is suspended in a web above you", },
-	[56814560] = { orphan=true, quests={ { id=89319, name="The Wondrous Weave", qType="Seasonal", }, },
+	[56814560] = { orphan=true, noAzeroth=true, quests={ { id=89319, name="The Wondrous Weave", qType="Seasonal", }, },
 					tip="The weaving minigame reuires you to make the red tangled mess into white threads. I did this by "
 					.."four separated loops.\n\nYou'll then go back to the Widow. Talk to her. Wait / move a bit to "
 					.."trigger. I found succcess standing on the original AddOn marker for this quest", },
@@ -806,7 +810,7 @@ ns.points[ 2339 ] = { -- Dornogal
 }
 
 ns.points[ 2215 ] = { -- Hallowfall
-	[41265387] = { orphan=true, quests={ { id=89318, name="Bold for a Kobold", qType="Seasonal", }, },
+	[41265387] = { orphan=true, noAzeroth=true, quests={ { id=89318, name="Bold for a Kobold", qType="Seasonal", }, },
 					tip="Takes place in this area. If it does not progress then dismiss skibbles. Leave the area. Dismount. "
 					.."Relog. Summon Skibbles. Return to the exact area. Wait / interact with Skibbles / check if the activity "
 					.."got \"ticked off\" anyway in the quest log", },
@@ -818,7 +822,7 @@ ns.points[ 2248 ] = { -- Isle of Dorn
 }
 
 ns.points[ 2214 ] = { -- The Ringing Deeps
-	[72887318] = { orphan=true, quests={ { id=89320, name="The Eager Engineer", qType="Seasonal", }, },
+	[72887318] = { orphan=true, noAzeroth=true, quests={ { id=89320, name="The Eager Engineer", qType="Seasonal", }, },
 					tip="Simply fly to here. Take the rocket drill ride", },
 }
 
@@ -855,40 +859,19 @@ ns.points[ 2274 ] = { -- Khaz Algar
 -- non-uniform origin placement as well as adjust the x,y offsets
 --==================================================================================================================================
 
-ns.textures[1] = "Interface\\PlayerFrame\\MonkLightPower"
-ns.textures[2] = "Interface\\PlayerFrame\\MonkDarkPower"
-ns.textures[3] = "Interface\\Common\\Indicator-Red"
-ns.textures[4] = "Interface\\Common\\Indicator-Yellow"
-ns.textures[5] = "Interface\\Common\\Indicator-Green"
-ns.textures[6] = "Interface\\Common\\Indicator-Gray"
-ns.textures[7] = "Interface\\Common\\Friendship-ManaOrb"	
-ns.textures[8] = "Interface\\TargetingFrame\\UI-PhasingIcon"
-ns.textures[9] = "Interface\\Store\\Category-icon-pets"
-ns.textures[10] = "Interface\\Store\\Category-icon-featured"
-ns.textures[11] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\CupCakePink"
-ns.textures[12] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\CupCakeWhite"
-ns.textures[13] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\IcecreamCone"
-ns.textures[14] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\ToyTrain"
-ns.textures[15] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyBrown"
-ns.textures[16] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyDarkBlue"
-ns.textures[17] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyLightBlue"
-ns.textures[18] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyLightGreen"
-
-ns.scaling[1] = 0.55
-ns.scaling[2] = 0.55
-ns.scaling[3] = 0.55
-ns.scaling[4] = 0.55
-ns.scaling[5] = 0.55
-ns.scaling[6] = 0.55
-ns.scaling[7] = 0.65
-ns.scaling[8] = 0.62
-ns.scaling[9] = 0.75
-ns.scaling[10] = 0.75
-ns.scaling[11] = 0.45
-ns.scaling[12] = 0.45
-ns.scaling[13] = 0.45
-ns.scaling[14] = 0.45
-ns.scaling[15] = 0.45
-ns.scaling[16] = 0.45
-ns.scaling[17] = 0.45
-ns.scaling[18] = 0.45
+ns.textures[21] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\CupCakePink"
+ns.textures[22] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\CupCakeWhite"
+ns.textures[23] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\IcecreamCone"
+ns.textures[24] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\ToyTrain"
+ns.textures[25] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyBrown"
+ns.textures[26] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyDarkBlue"
+ns.textures[27] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyLightBlue"
+ns.textures[28] = "Interface\\AddOns\\HandyNotes_ChildrensWeek\\TeddyLightGreen"
+ns.scaling[21] = 0.432
+ns.scaling[22] = 0.432
+ns.scaling[23] = 0.432
+ns.scaling[24] = 0.432
+ns.scaling[25] = 0.432
+ns.scaling[26] = 0.432
+ns.scaling[27] = 0.432
+ns.scaling[28] = 0.432

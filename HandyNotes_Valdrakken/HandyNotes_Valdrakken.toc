@@ -1,26 +1,28 @@
-## Interface: 110105
-## Title: HandyNotes: Valdrakken
-## Title-zhCN: HandyNotes: 瓦德拉肯
-## Notes: Shows the NPC and POI locations in Valdrakken.
-## Notes-deDE: Zeigt die Positionen von NPCs und anderen Orten von Interesse in Valdrakken an.
-## Notes-zhCN: 显示瓦德拉肯各种NPC及传送门位置。
-## Author: |cFFFF8C00Dathwada EU-Eredar|r
-## Version: v19
-## RequiredDeps: HandyNotes
-## DefaultState: enabled
+## Interface: 110200
+## Title: HandyNotes_Valdrakken
+## Notes: Valdrakken map locations.
+## IconTexture: Interface/Addons/HandyNotes_Valdrakken/icons/vista.blp
+## Author: Keyboardturn
+## Version: 0.2.0
 ## SavedVariables: HandyNotes_ValdrakkenDB
-## IconTexture: 4661644
-## X-Date: 2025-05-01
-## X-Category: Map
+## RequiredDeps: HandyNotes
+## X-Curse-Project-ID: 683304
+## X-WoWI-ID: 26488
+## X-Wago-ID: R4N2e9GL
 
-# LOCALIZATION FILES
-localization\locales.xml
+## Category-enUS: Map
+## Category-deDE: Karte
+## Category-esES: Mapa
+## Category-esMX: Mapa
+## Category-frFR: Carte
+## Category-itIT: Mappa
+## Category-koKR: 지도
+## Category-ptBR: Mapa
+## Category-ruRU: Карта
+## Category-zhCN: 地图
+## Category-zhTW: 地圖
 
-# CORE FILES
-core\constants.lua
-core\handler.lua
-core\config.lua
-core\dev.lua
-
-# DATABASE
-data\DB.lua
+Localization.lua
+Core.lua
+locations.lua
+icons.lua

@@ -77,6 +77,16 @@ local inventory_slots = {
 	INVTYPE_TABARD = 25,
 }
 
+-- Pet Cages normally sort by "Pet Cage", we need to dig to sort by their actual names
+local PET_CAGE_ID = 82800
+local function GetSortablePetName(link)
+	if link and string.match(link, "Hbattlepet") then
+		local _, _, _, name = string.split("|", link)
+		return name
+	end
+	return ""
+end
+
 -- Classic compat:
 local GetAuctionItemSubClasses = C_AuctionHouse and C_AuctionHouse.GetAuctionItemSubClasses or function(...) return {_G.GetAuctionItemSubClasses(...)} end
 
@@ -128,7 +138,7 @@ local bag_conjured = core.bag_conjured
 -- Avoid a *lot* of calls to GetItemInfo...
 local item_name, item_rarity, item_level, item_equipLoc, item_price, item_class, item_subClass = {}, {}, {}, {}, {}, {}, {}
 local iteminfo_metatable = {__index = function(self, itemid)
-	local name, _, rarity, level, _, _, _, _, equipLoc, _, price, class, subClass = GetItemInfo(itemid)
+	local name, _, rarity, level, _, _, _, _, equipLoc, _, price, class, subClass = C_Item.GetItemInfo(itemid)
 
 	if not name then
 		return false
@@ -137,8 +147,8 @@ local iteminfo_metatable = {__index = function(self, itemid)
 	item_name[itemid] = name
 	item_rarity[itemid] = rarity
 	item_level[itemid] = level
-	item_equipLoc[itemid] = item_equipLoc
-	item_price[itemid] = item_price
+	item_equipLoc[itemid] = equipLoc
+	item_price[itemid] = price
 	item_class[itemid] = class
 	item_subClass[itemid] = subClass
 
@@ -181,13 +191,25 @@ local function default_sorter(a, b)
 			if a_id and item_rarity[a_id] == 0 then return false end
 			if b_id and item_rarity[b_id] == 0 then return true end
 		end
-		return a_id
+		if a_id then return true end
+		if b_id then return false end
 	end
 
+	-- is only one slot a pet?  If so, move it to the back.
+	if a_id == PET_CAGE_ID and b_id ~= PET_CAGE_ID then return false end
+	if a_id ~= PET_CAGE_ID and b_id == PET_CAGE_ID then return true end
+
 	local a_order, b_order = initial_order[a], initial_order[b]
+	local a_link, b_link = bag_links[a], bag_links[b]
 
 	-- are they the same item?
 	if a_id == b_id then
+		-- pets will sort by their pet link
+		if a_id == PET_CAGE_ID then
+			local a_name = GetSortablePetName(a_link)
+			local b_name = GetSortablePetName(b_link)
+			if a_name and b_name then return a_name < b_name end
+		end
 		local a_count = bag_stacks[a]
 		local b_count = bag_stacks[b]
 		if a_count == b_count then
@@ -204,9 +226,6 @@ local function default_sorter(a, b)
 		if bag_conjured[a] then return false end
 		if bag_conjured[b] then return true end
 	end
-
-	local a_link = bag_links[a]
-	local b_link = bag_links[b]
 
 	-- Quick sanity-check to make sure we correctly fetched information about the items
 	if not (item_name[a_link] and item_name[b_link] and item_rarity[a_link] and item_rarity[b_link]) then
@@ -274,12 +293,20 @@ local function should_actually_move(source, destination)
 	-- work out whether a move from source to destination actually makes sense to do
 
 	-- skip it if...
-	-- source and destination are the same
-	if destination == source then return end
+	-- source and destination are the same bag slot
+	if destination == source then return false end
 	-- nothing's in the source slot
-	if not bag_ids[source] then return end
+	if not bag_ids[source] then return false end
+	-- pets with the same name don't need to move
+	if bag_ids[source] == PET_CAGE_ID and bag_ids[destination] == PET_CAGE_ID then
+		local a_name = GetSortablePetName(bag_links[source])
+		local b_name = GetSortablePetName(bag_links[destination])
+		if a_name and b_name then
+			return a_name ~= b_name
+		end
+	end
 	-- slot contents are the same and stack sizes are the same
-	if bag_ids[source] == bag_ids[destination] and bag_stacks[source] == bag_stacks[destination] then return end
+	if bag_ids[source] == bag_ids[destination] and bag_stacks[source] == bag_stacks[destination] then return false end
 
 	-- go for it!
 	return true
@@ -301,7 +328,7 @@ function core.Sort(bags, sorter)
 	end
 
 	table.sort(bag_sorted, sorter)
-	for i,s in ipairs(bag_sorted) do Debug("SORTED", i, core.GetItemLink(decode_bagslot(s))) end
+	-- for i,s in ipairs(bag_sorted) do Debug("SORTED", i, core.GetItemLink(decode_bagslot(s))) end
 
 	-- We now have bag_sorted, which is a table containing all slots that contain items, in the order
 	-- that they need to be moved into.

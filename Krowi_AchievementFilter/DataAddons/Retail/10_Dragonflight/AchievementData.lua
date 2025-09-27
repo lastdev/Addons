@@ -800,6 +800,12 @@ KrowiAF.AchievementData["10_00_02"] = {
             {"PvP Season", 34},
         },
     },
+    { -- Court is Now in Session
+		16731,
+		{
+			RewardType = rewardType.Title,
+		},
+	},
     { -- Crimson Legend: Dragonflight Season 1
         16734,
         {
@@ -1147,7 +1153,6 @@ KrowiAF.AchievementData["10_01_00"] = {
     { -- Flame Keeper of the Dragon Isles
         17738,
         faction.Horde,
-        faction.Alliance,
         {
             {"Event", 341},
         },

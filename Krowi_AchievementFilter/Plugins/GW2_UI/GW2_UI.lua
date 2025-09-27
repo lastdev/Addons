@@ -505,11 +505,11 @@ local function SetAchievement(self, achievement, refresh)
     local state = achievement:GetObtainableState();
 
     local texture;
-    if state and (state == false or state == "Past") then
+    if state == "Past" then
         texture = "Interface/AddOns/GW2_UI/textures/uistuff/achievementcompletebgred";
-    elseif state and state == "Current" then
+    elseif state == "Current" then
         texture = media .. "GW2_UI-achievementcompletebggreen";
-    elseif state and state == "Future" then
+    elseif state == "Future" then
         texture = media .. "GW2_UI-achievementcompletebgyellow";
     else
         if self.accountWide then
@@ -1030,6 +1030,14 @@ local function SkinSideButtons()
 end
 
 local function SkinAlertFrames()
+    if not addon.Gui.EventReminderAlertSystem.SubSystem then
+        hooksecurefunc(addon.Gui.EventReminderAlertSystem, "Load", function(system)
+            hooksecurefunc(addon.Gui.EventReminderAlertSystem.SubSystem, "setUpFunction", function(frame)
+                SkinAlertFrameTemplate(frame);
+            end);
+        end);
+        return;
+    end
     hooksecurefunc(addon.Gui.EventReminderAlertSystem.SubSystem, "setUpFunction", function(frame)
         SkinAlertFrameTemplate(frame);
     end);

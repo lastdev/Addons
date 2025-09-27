@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2330, "DBM-Raids-BfA", 4, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240714045844")
+mod:SetRevision("20250719034113")
 mod:SetCreatureID(144747, 144767, 144963, 144941)
 mod:SetEncounterID(2268)
 --mod:DisableESCombatDetection()
@@ -10,6 +10,7 @@ mod:SetUsedIcons(1, 2, 3, 4)
 mod:SetHotfixNoticeRev(18358)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
+mod:SetZone(2070)
 
 mod:RegisterCombat("combat")
 

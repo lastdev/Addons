@@ -134,11 +134,11 @@ local function addFunctionDefinition(ext, fdef)
 end
 
 -- Helper function which adds an entry for the extension.
-local function addExtension(source, addon)
+local function addExtension(source, name)
     local a =
     {
         Source = source,
-        Name = addon,
+        Name = name,
         Functions = 0,
         Rules = 0,
         OnUpdate = 0

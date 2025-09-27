@@ -1,4 +1,4 @@
-local CONTROLS_VERSION = "2025-04-22"  -- Version (date) of this file.  Stored as "UDControls.VERSION".
+local CONTROLS_VERSION = "2025-07-01"  -- Version (date) of this file.  Stored as "UDControls.VERSION".
 
 --[[---------------------------------------------------------------------------
 FILE:   UDControls.lua
@@ -16,6 +16,10 @@ REQUIREMENTS / DEPENDANCIES:
 USAGE:  See examples at end of this comment block.
 -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --
 CHANGE HISTORY:
+    Jul 01, 2025
+        - Minor changes to DisplayAllFonts().
+    Apr 23, 2025
+        - Added an assert check to CUtil.Outline() to verify only frames are passed in (not textures).
     Apr 22, 2025
         - Updated for Retail WoW 11.1.5.  (Fixed ThinBorderTemplate error.)
         - Added CUtil.CreateThinBorderFrame().
@@ -4705,9 +4709,11 @@ function CUtil.handleGlobalMouseClick(button)
 
 
 -- ****************************************************************************
-function CUtil.DisplayAllFonts(width, height)
+function CUtil.DisplayAllFonts(width, height)  --[ Keywords: ShowFonts() ]
         -- Create the fonts frame, if necessary.
         if (_G.FontNamesScrollFrame == nil) then
+            ----local chars = ""; for i = 1, 255 do chars = chars .. string.char(i) end
+
             _G.FontNamesScrollFrame = CreateTextScrollFrame(UIParent, "*** Available Game Fonts ***", width or 1000, height or 600)
 
             local fontNames = _G.GetFonts()
@@ -4721,6 +4727,7 @@ function CUtil.DisplayAllFonts(width, height)
                   ) then
                     ----print("DBG: fontNames["..i.."]:", name)
                     _G.FontNamesScrollFrame:AddText(name, nil, nil, name)
+                    if chars then _G.FontNamesScrollFrame:AddText(chars, nil, nil, name) end
                 end
             end
         end
@@ -5243,6 +5250,7 @@ end
 --      private.UDControls.Outline( yourFrame, {version=1, thickness=3} )
 -- ****************************************************************************
 function CUtil.Outline(frame, options)
+    assert(frame:GetObjectType() == "Frame")
     local r = (options and options.r) or 1
     local g = (options and options.g) or 1
     local b = (options and options.b) or 1

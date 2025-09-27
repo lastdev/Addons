@@ -1,3 +1,28 @@
+== v1.20 - 2nd August 2025
+* TOC update to 11.2.0
+
+== v1.19 - 25th July 2025
+* Dragons Tread Lightly now has increased accuracy for
+  Classic Mists: What you will see will be a very small increase
+  in precision on the continent maps and bigger improvement on
+  the Azeroth map. DTL v1.03
+
+== v1.18 - 20th July 2025
+* Further modularisation of Lunar Festical
+* Now partially overrides HN module Here Be Dragons
+  due to incompatibility with Classic Mists. This AddOn
+  now uses my Dragons Tread Lightly, which is a performance
+  gain and enhancement anyway
+* standardised pin sizes
+* Small reorganising of pin texture options to prepare for
+  next season
+  
+== v1.17 - 18th June 2025
+* TOC update to 11.1.7
+
+== v1.16 - 19th May 2025
+* showAnyway in Data changed to alwaysShow, as it should have been
+
 == v1.15 - 5th May 2025
 * File of commonly used name spaced variables Added/updated
 * Realm list updated
@@ -11,6 +36,7 @@
   it's an easy one line code switch (as per my CW AddOn) and is ready to go
 * Above code changes add functionality for future data changes
 * noContinent flag used throughout rather than a code hack in Core
+* noAzeroth pin flag now supported in LIITA
  
 == v1.14 - 20th April 2025
 * Server/realm list updated

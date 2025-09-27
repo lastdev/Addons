@@ -135,7 +135,7 @@ function Profession.GetResultInfo(craftString)
 		-- Result of craft is not an item
 		local spellId = CraftString.GetSpellId(craftString)
 		local indirectSpellId = nil
-		if LibTSMService.IsCataClassic() then
+		if LibTSMService.IsPandaClassic() then
 			indirectSpellId = strmatch(resultItem, "enchant:(%d+)")
 			indirectSpellId = indirectSpellId and tonumber(indirectSpellId)
 			if not indirectSpellId then
@@ -153,7 +153,7 @@ function Profession.GetResultInfo(craftString)
 		elseif EngineeringData.Tinkers[spellId] then
 			local name, icon = TradeSkill.GetBasicInfo(spellId)
 			return nil, icon, name
-		elseif LibTSMService.IsCataClassic() then
+		elseif LibTSMService.IsPandaClassic() then
 			local name, icon = TradeSkill.GetBasicInfo(indirectSpellId)
 			return nil, icon, name
 		elseif TradeSkill.IsClassicCrafting() then

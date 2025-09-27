@@ -4,13 +4,11 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "\n\n|cffffffff         Whats new:|r\n\n"
-  .."          |cffffffffDragonflight version by Codermik, additional retail\n"
+  .."          |cffffffffDragonflight & Classic version by Codermik, additional retail\n"
   .."          programming by Speedwaystar/MrWizard.\n"
   .."\n\n"
-  .."          Changes in r34.2504125:\n\n"
-  .."             * Adding Symbiotic Link for druids\n"
-  .."             * The way it works is bad because its a targeted buff\n"
-  .."             * BugFix: Fix weapon buff due to itemlink change\n"
+  .."          Changes in r34.050925:\n\n"
+  .."             * TWW Ethereal Augment Rune\n"
   .."\n\n"
   .."          |c0000FF96Many thanks to Chris S., Samantha R. and\n"
   .."          Twilight's Sundries for their kind donations.\n"
@@ -26,10 +24,10 @@ SMARTBUFF_CREDITS = "|cffffffff"
 ;
 
 -- Weapon types
-SMARTBUFF_WEAPON_STANDARD = {"Daggers", "Axes", "Swords", "Maces", "Staves", "Fist Weapons", "Polearms", "Thrown", "Crossbows", "Bows", "Shields"};
+SMARTBUFF_WEAPON_STANDARD = {"Daggers", "Axes", "Swords", "Maces", "Staves", "Fist Weapons", "Polearms", "Thrown", "Crossbows", "Bows", "Shields", "Guns", "Warglaives"};
 SMARTBUFF_WEAPON_BLUNT = {"Maces", "Staves", "Fist Weapons"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "Weightstone$";
-SMARTBUFF_WEAPON_SHARP = {"Daggers", "Axes", "Swords", "Polearms"};
+SMARTBUFF_WEAPON_SHARP = {"Daggers", "Axes", "Swords", "Polearms", "Warglaives"};
 SMARTBUFF_WEAPON_SHARP_PATTERN = "Sharpening Stone$";
 
 -- Creature types
@@ -44,8 +42,8 @@ SMARTBUFF_UNDEAD    = "Undead";
 SMARTBUFF_CLASSES = {"Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior", "Death Knight", "Monk", "Demon Hunter", "Evoker", "Hunter Pet", "Warlock Pet", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Battleground", "Arena", "Vault of the Incarnates", "Aberrus, The Shadowed Crucible", "Amirdrassil, the Dream's Hope", "Nerub-ar Palace", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
-SMARTBUFF_INSTANCES = {"Vault of the Incarnates", "Aberrus, the Shadowed Crucible", "Amirdrassil, the Dream's Hope", "Nerub-ar Palace"};
+SMARTBUFF_TEMPLATES = {"Solo", "Party", "LFR", "Raid", "Mythic Keystone", "Horrific Vision", "Delve", "Battleground", "Arena", "Nerub-ar Palace", "Liberation of Undermine", "Custom 1", "Custom 2", "Custom 3", "Custom 4", "Custom 5"};
+SMARTBUFF_INSTANCES = {"Nerub-ar Palace", "Liberation of Undermine"};
 
 -- Mount
 SMARTBUFF_MOUNT = "Increases speed by (%d+)%%.";
@@ -221,6 +219,9 @@ SMARTBUFF_TITAN_TT           = "Left Click: Open options\nRight Click: On/Off\nA
 SMARTBUFF_FUBAR_TT           = "\nLeft Click: Open options\nShift-Left Click: On/Off\nAlt-Left Click: SmartDebuff";
 
 SMARTBUFF_DEBUFF_TT          = "Shift-Left drag: Move frame\n|cff20d2ff- S button -|r\nLeft click: Show by classes\nShift-Left click: Class colors\nAlt-Left click: Highlight L/R\n|cff20d2ff- P button -|r\nLeft click: Hide pets on/off";
+
+-- Misc
+SMARTBUFF_LOC_HEARTY         = "Hearty"
 
 
 -- Code table

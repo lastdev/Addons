@@ -1,5 +1,4 @@
-local addonName = ...
-local addon = _G[addonName]
+local addonName, addon = ...
 local LibStub = addon.LibStub
 --- AceConfigRegistry-3.0 handles central registration of options tables in use by addons and modules.\\
 -- Options tables can be registered as raw tables, OR as function refs that return a table.\\

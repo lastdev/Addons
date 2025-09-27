@@ -23,8 +23,8 @@ local DATA = {}
 function Disenchant.Get()
 	if LibTSMData.IsRetail() then
 		return DATA.Retail
-	elseif LibTSMData.IsCataClassic() then
-		return DATA.Cata
+	elseif LibTSMData.IsPandaClassic() then
+		return DATA.Panda
 	elseif LibTSMData.IsVanillaClassic() then
 		return DATA.Vanilla
 	else
@@ -291,10 +291,10 @@ DATA.Vanilla = {
 
 
 -- ============================================================================
--- Cata
+-- Panda
 -- ============================================================================
 
-DATA.Cata = {
+DATA.Panda = {
 	-- Dust
 	["i:10940"] = { -- Strange Dust
 		minLevel = 1,
@@ -378,13 +378,25 @@ DATA.Cata = {
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 278, maxItemLevel = 294, requiredSkill = 425, matRate = 0.750, minAmount = 1, maxAmount = 3, amountOfMats = 1.350},
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 295, maxItemLevel = 305, requiredSkill = 425, matRate = 0.750, minAmount = 1, maxAmount = 4, amountOfMats = 1.600},
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 306, maxItemLevel = 312, requiredSkill = 425, matRate = 0.750, minAmount = 1, maxAmount = 5, amountOfMats = 2.050},
-			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 313, maxItemLevel = 999, requiredSkill = 425, matRate = 0.750, minAmount = 1, maxAmount = 6, amountOfMats = 2.400},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 313, maxItemLevel = 363, requiredSkill = 425, matRate = 0.750, minAmount = 1, maxAmount = 6, amountOfMats = 2.400},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 232, maxItemLevel = 277, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 2, amountOfMats = 0.375},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 278, maxItemLevel = 294, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 3, amountOfMats = 0.450},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 295, maxItemLevel = 305, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 4, amountOfMats = 0.550},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 306, maxItemLevel = 312, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 5, amountOfMats = 0.770},
-			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 313, maxItemLevel = 999, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 6, amountOfMats = 0.775},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 313, maxItemLevel = 363, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 6, amountOfMats = 0.775},
 
+		},
+	},
+	["i:74249"] = { -- Spirit Dust
+		minLevel = 86,
+		maxLevel = 90,
+		sourceInfo = {
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 364, maxItemLevel = 390, requiredSkill = 475, matRate = 0.850, minAmount = 1, maxAmount = 9, amountOfMats = 2.285},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 391, maxItemLevel = 416, requiredSkill = 475, matRate = 0.850, minAmount = 1, maxAmount = 9, amountOfMats = 2.710},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 417, maxItemLevel = 999, requiredSkill = 475, matRate = 0.850, minAmount = 2, maxAmount = 10, amountOfMats = 3.135},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 364, maxItemLevel = 390, requiredSkill = 475, matRate = 0.850, minAmount = 1, maxAmount = 8, amountOfMats = 2.245},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 391, maxItemLevel = 416, requiredSkill = 475, matRate = 0.850, minAmount = 1, maxAmount = 8, amountOfMats = 2.700},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 417, maxItemLevel = 999, requiredSkill = 475, matRate = 0.850, minAmount = 3, maxAmount = 10, amountOfMats = 3.560},
 		},
 	},
 
@@ -514,13 +526,13 @@ DATA.Cata = {
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 295, maxItemLevel = 300, requiredSkill = 425, matRate = 0.250, minAmount = 2, maxAmount = 4, amountOfMats = 0.700},
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 301, maxItemLevel = 305, requiredSkill = 425, matRate = 0.300, minAmount = 1, maxAmount = 4, amountOfMats = 0.650},
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 306, maxItemLevel = 315, requiredSkill = 425, matRate = 0.100, minAmount = 1, maxAmount = 3, amountOfMats = 0.190},
-			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 316, maxItemLevel = 999, requiredSkill = 425, matRate = 0.050, minAmount = 1, maxAmount = 3, amountOfMats = 0.090},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 316, maxItemLevel = 363, requiredSkill = 425, matRate = 0.050, minAmount = 1, maxAmount = 3, amountOfMats = 0.090},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 232, maxItemLevel = 277, requiredSkill = 425, matRate = 0.600, minAmount = 1, maxAmount = 2, amountOfMats = 0.900},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 278, maxItemLevel = 294, requiredSkill = 425, matRate = 0.700, minAmount = 1, maxAmount = 3, amountOfMats = 1.350},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 295, maxItemLevel = 300, requiredSkill = 425, matRate = 0.750, minAmount = 2, maxAmount = 4, amountOfMats = 2.250},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 301, maxItemLevel = 305, requiredSkill = 425, matRate = 0.700, minAmount = 2, maxAmount = 4, amountOfMats = 2.050},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 306, maxItemLevel = 315, requiredSkill = 425, matRate = 0.030, minAmount = 1, maxAmount = 3, amountOfMats = 0.060},
-			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 316, maxItemLevel = 999, requiredSkill = 425, matRate = 0.020, minAmount = 1, maxAmount = 3, amountOfMats = 0.038},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 316, maxItemLevel = 363, requiredSkill = 425, matRate = 0.020, minAmount = 1, maxAmount = 3, amountOfMats = 0.038},
 		},
 	},
 	["i:52719"] = { -- Greater Celestial Essence
@@ -528,9 +540,21 @@ DATA.Cata = {
 		maxLevel = 85,
 		sourceInfo = {
 			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 306, maxItemLevel = 315, requiredSkill = 425, matRate = 0.250, minAmount = 1, maxAmount = 2, amountOfMats = 0.375},
-			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 316, maxItemLevel = 999, requiredSkill = 425, matRate = 0.250, minAmount = 2, maxAmount = 3, amountOfMats = 0.625},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 316, maxItemLevel = 363, requiredSkill = 425, matRate = 0.250, minAmount = 2, maxAmount = 3, amountOfMats = 0.625},
 			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 306, maxItemLevel = 315, requiredSkill = 425, matRate = 0.750, minAmount = 1, maxAmount = 2, amountOfMats = 1.125},
-			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 316, maxItemLevel = 999, requiredSkill = 425, matRate = 0.750, minAmount = 2, maxAmount = 3, amountOfMats = 1.875},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 316, maxItemLevel = 363, requiredSkill = 425, matRate = 0.750, minAmount = 2, maxAmount = 3, amountOfMats = 1.875},
+		},
+	},
+	["i:74250"] = { -- Mysterious Essence
+		minLevel = 86,
+		maxLevel = 90,
+		sourceInfo = {
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 364, maxItemLevel = 390, requiredSkill = 475, matRate = 0.150, minAmount = 1, maxAmount = 6, amountOfMats = 0.178},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 391, maxItemLevel = 416, requiredSkill = 475, matRate = 0.150, minAmount = 1, maxAmount = 6, amountOfMats = 0.244},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 2, minItemLevel = 417, maxItemLevel = 999, requiredSkill = 475, matRate = 0.150, minAmount = 1, maxAmount = 6, amountOfMats = 0.244},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 364, maxItemLevel = 390, requiredSkill = 475, matRate = 0.150, minAmount = 1, maxAmount = 6, amountOfMats = 0.178},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 391, maxItemLevel = 416, requiredSkill = 475, matRate = 0.150, minAmount = 1, maxAmount = 6, amountOfMats = 0.244},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 2, minItemLevel = 417, maxItemLevel = 999, requiredSkill = 475, matRate = 0.150, minAmount = 1, maxAmount = 6, amountOfMats = 0.333},
 		},
 	},
 
@@ -687,8 +711,28 @@ DATA.Cata = {
 		minLevel = 81,
 		maxLevel = 85,
 		sourceInfo = {
-			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 3, minItemLevel = 317, maxItemLevel = 999, requiredSkill = 450, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
-			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 3, minItemLevel = 317, maxItemLevel = 999, requiredSkill = 450, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 3, minItemLevel = 317, maxItemLevel = 377, requiredSkill = 450, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 3, minItemLevel = 317, maxItemLevel = 377, requiredSkill = 450, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+		},
+	},
+	["i:74252"] = { -- Small Ethereal Shard
+		minLevel = 86,
+		maxLevel = 90,
+		sourceInfo = {
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 3, minItemLevel = 378, maxItemLevel = 424,  requiredSkill = 525, matRate = 0.950, minAmount = 1, maxAmount = 2, amountOfMats = 0.950},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 3, minItemLevel = 425, maxItemLevel = 999,  requiredSkill = 550, matRate = 0.050, minAmount = 1, maxAmount = 1, amountOfMats = 0.050},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 3, minItemLevel = 378, maxItemLevel = 424,  requiredSkill = 525, matRate = 0.950, minAmount = 1, maxAmount = 2, amountOfMats = 0.950},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 3, minItemLevel = 425, maxItemLevel = 999,  requiredSkill = 550, matRate = 0.050, minAmount = 1, maxAmount = 1, amountOfMats = 0.050},
+		},
+	},
+	["i:74247"] = { -- Ethereal Shard
+		minLevel = 86,
+		maxLevel = 90,
+		sourceInfo = {
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 3, minItemLevel = 378, maxItemLevel = 424,  requiredSkill = 525, matRate = 0.050, minAmount = 1, maxAmount = 1, amountOfMats = 0.050},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 3, minItemLevel = 425, maxItemLevel = 999,  requiredSkill = 550, matRate = 0.950, minAmount = 1, maxAmount = 1, amountOfMats = 0.950},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 3, minItemLevel = 378, maxItemLevel = 424,  requiredSkill = 525, matRate = 0.050, minAmount = 1, maxAmount = 1, amountOfMats = 0.050},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 3, minItemLevel = 425, maxItemLevel = 999,  requiredSkill = 550, matRate = 0.950, minAmount = 1, maxAmount = 1, amountOfMats = 0.950},
 		},
 	},
 
@@ -736,8 +780,16 @@ DATA.Cata = {
 		minLevel = 81,
 		maxLevel = 85,
 		sourceInfo = {
-			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 4, minItemLevel = 300, maxItemLevel = 999, requiredSkill = 475, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
-			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 4, minItemLevel = 300, maxItemLevel = 999, requiredSkill = 475, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 4, minItemLevel = 300, maxItemLevel = 419, requiredSkill = 475, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 4, minItemLevel = 300, maxItemLevel = 419, requiredSkill = 475, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+		},
+	},
+	["i:74248"] = { -- Sha Crystal
+		minLevel = 86,
+		maxLevel = 90,
+		sourceInfo = {
+			{class = Disenchant.ITEM_CLASSES.ARMOR, quality = 4, minItemLevel = 420, maxItemLevel = 999, requiredSkill = 575, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
+			{class = Disenchant.ITEM_CLASSES.WEAPON, quality = 4, minItemLevel = 420, maxItemLevel = 999, requiredSkill = 575, matRate = 1.000, minAmount = 1, maxAmount = 1, amountOfMats = 1.000},
 		},
 	},
 }

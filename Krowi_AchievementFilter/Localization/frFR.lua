@@ -8,7 +8,7 @@ KrowiAF.PluginsApi:LoadPluginLocalization(L);
 -- [[ https://legacy.curseforge.com/wow/addons/krowi-achievement-filter/localization ]] --
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
--- [[ Exported at 2025-04-22 19-57-31 ]] --
+-- [[ Exported at 2025-06-18 15-02-46 ]] --
 L["%c"] = true
 L["%d/%m/%Y %I:%M %p"] = true
 L["%m/%d/%Y %I:%M %p"] = true
@@ -136,8 +136,8 @@ Les FPS chutent pendant l'ajustement de la valeur non PAS pendant l'utilisation 
 {reloadRequired}]=]
 L["Category shown temporarily"] = "Cette catégorie a été sélectionnée en cliquant sur le rappel d'événement {eventName} et est affichée temporairement car elle ne contient aucun haut fait correspondant aux filtres définis."
 L["Caverns Criss-Cross"] = "Réseau des grottes"
-L["Center Header"] = "En-tête centré"
 L["Center header"] = "En-tête centré"
+L["Center Header"] = "En-tête centré"
 L["Center header Desc"] = "Gardez l'en-tête centré sur la fenêtre des Hauts-faits."
 L["Center Header Desc"] = "Centre le nom du Haut-fait sur le bouton du Haut-fait."
 L["Central Circuit"] = "Circuit Central"
@@ -182,8 +182,8 @@ L["Compact Desc"] = [=[Utiliser une version plus compacte avec une seule ligne d
 {reloadRequired}]=]
 L["Completion"] = "Terminé"
 L["Covenant"] = "Congrégation"
-L["Covenant Assaults"] = "Assauts de congrégations"
 L["Covenant assaults"] = "Assauts des congregations"
+L["Covenant Assaults"] = "Assauts de congrégations"
 L["Credits"] = "Crédits"
 L["Criteria"] = "Critères"
 L["Criteria Behaviour"] = "Comportement des critères."

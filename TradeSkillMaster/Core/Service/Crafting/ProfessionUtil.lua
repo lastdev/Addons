@@ -51,10 +51,10 @@ function ProfessionUtil.OnInitialize()
 		if ClientInfo.IsRetail() then
 			-- check if we need to update bank quantity manually
 			for _, itemString, quantity in TSM.Crafting.MatIteratorByRecipeString(private.recipeString) do
-				local bagQuantity, bankQuantity, reagentBankQuantity = BagTracking.GetQuantities(itemString)
+				local bagQuantity, bankQuantity = BagTracking.GetQuantities(itemString)
 				local warbankQuantity = WarbankTracking.GetQuantity(itemString)
 				local bankUsed = quantity - bagQuantity
-				if bankUsed > 0 and bankUsed <= (bankQuantity + reagentBankQuantity + warbankQuantity) then
+				if bankUsed > 0 and bankUsed <= (bankQuantity + warbankQuantity) then
 					local warbankUsed = min(bankUsed, warbankQuantity)
 					bankUsed = bankUsed - warbankUsed
 					Log.Info("Used %d from bank, %d from the warbank", bankUsed, warbankUsed)

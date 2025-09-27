@@ -1,8 +1,14 @@
 # TomTom
 
-## [v4.0.9-release](https://github.com/jnwhiteh/TomTom/tree/v4.0.9-release) (2025-04-23)
-[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.0.9-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
+## [v4.0.17-release](https://github.com/jnwhiteh/TomTom/tree/v4.0.17-release) (2025-09-20)
+[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.0.17-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
 
+- Fix remove waypoint  
+- Re-implement dropdowns using MenuUtil  
+- Update TOC for 11.2  
+- Update TOC for Mists  
+- Fix an issue with release  
+- Update for 11.0.7  
 - Update TOC for 11.0.5  
 - Update TOC for 11.1  
 - Update TOC for 11.0.7  
@@ -692,9 +698,3 @@
 - * Fixed the error upon login  
     * Added a middle color, which is used for proper shading between good and bad  
     * Fixed the coloring of the crazy arrow so it properly turns green when you're "Arrived"  
-- * Updated Astrolabe externals  
-- * Reworking of the Waypoints API... callbacks are broken as a result  
-- * Enable a /way command, fix a bunch of things, control-right click works  
-- * Remove inline groups, which hopefully will motivate me to not let this look stupid  
-- * Working changes to the new AceConfig GUI  
-- * More skeleton work  

@@ -1,8 +1,8 @@
-## Interface: 110002, 110000, 40400
+## Interface: 110200, 50500, 30405
 ## Title: HandyNotes: Burning Crusade
 ## Notes: Where are the interesting things in Outland?
 ## Author: Kemayo
-## Version: v6
+## Version: v13
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -10,9 +10,6 @@
 ## X-Wago-ID: 7nGvyjKx
 ## SavedVariables: HandyNotes_BurningCrusadeDB
 ## RequiredDeps: HandyNotes
-## OptionalDeps: !LibUIDropDownMenu
-
-lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 handler\handler.xml
 

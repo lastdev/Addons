@@ -20,34 +20,61 @@ local options = {
 	get = function(info) return core.db[info[#info]] end,
 	set = function(info, value) core.db[info[#info]] = value end,
 	args = {
-		verbosity = {
-			name = "Verbosity", desc = "Talkativitinessism", type = "range", min = 0, max = 2, step = 1,
-			descStyle = "inline",
-		},
-		junk = {
-			name = "Junk", desc = "Move junk to the end", type = "select",
-			descStyle = "inline",
-			values = {
-				[0] = "No",
-				[1] = "End of your items",
-				[2] = "Back of your bags",
+		sorting = {
+			name = "Sorting",
+			type = "group",
+			inline = true,
+			order = 10,
+			args = {
+				junk = {
+					name = "Junk", desc = "Move junk to the end", type = "select",
+					descStyle = "inline",
+					values = {
+						[0] = "No",
+						[1] = "End of your items",
+						[2] = "Back of your bags",
+					},
+					order = 10,
+				},
+				conjured = {
+					name = "Conjured", desc = "Move conjured items to the end", type = "toggle",
+					descStyle = "inline",
+					order = 20,
+				},
+				soulbound = {
+					name = "Soulbound", desc = "Move soulbound items to the front", type = "toggle",
+					descStyle = "inline",
+					order = 30,
+				},
+				reverse = {
+					name = "Reverse", desc = "Reverse the sort", type = "toggle",
+					descStyle = "inline",
+					order = 40,
+				},
+				backfill = {
+					name = "Backfill", desc = "Fill starting at the back of your bags", type = "toggle",
+					descStyle = "inline",
+					order = 50,
+				},
 			},
 		},
-		conjured = {
-			name = "Conjured", desc = "Move conjured items to the end", type = "toggle",
-			descStyle = "inline",
-		},
-		soulbound = {
-			name = "Soulbound", desc = "Move soulbound items to the front", type = "toggle",
-			descStyle = "inline",
-		},
-		reverse = {
-			name = "Reverse", desc = "Reverse the sort", type = "toggle",
-			descStyle = "inline",
-		},
-		backfill = {
-			name = "Backfill", desc = "Fill starting at the back of your bags", type = "toggle",
-			descStyle = "inline",
+		blizzard = {
+			name = "Blizzard",
+			type = "group",
+			inline = true,
+			order = 20,
+			args = {
+				respect = {
+					name = "Respect Blizzard settings",
+					desc = "Respect \"ignore this bag\" and item-type assignments from the default UI",
+					descStyle = "inline", width="full",
+					type = "toggle",
+					get = function() return core.db.ignore_blizzard end,
+					set = function(info, value) core.db.ignore_blizzard = value end,
+					order = 10,
+				},
+			},
+			plugins = {},
 		},
 	},
 	plugins = {},
@@ -59,13 +86,6 @@ local bag_slot_pattern = "^(-?[%d]+)%s*(%d*)$"
 local ignore_options = {
 	name = "Ignore", desc = "Slots to ignore", type = "group", order = 20,
 	args = {
-		inherit = {
-			name = "Inherit Blizzard",
-			desc = "Respect the built-in \"ignore this bag\" checkboxes from the default UI",
-			type = "toggle",
-			get = function() return core.db.ignore_blizzard end,
-			set = function(info, value) core.db.ignore_blizzard = value end,
-		},
 		list = {
 			name = "List", desc = "List all ignored slots", type = "execute", order = 1,
 			func = function()
@@ -246,6 +266,10 @@ local advanced_options = {
 	get = function(info) return core.db[info[#info]] end,
 	set = function(info, value) core.db[info[#info]] = value end,
 	args = {
+		verbosity = {
+			name = "Verbosity", desc = "Talkativitinessism", type = "range", min = 0, max = 2, step = 1,
+			descStyle = "inline",
+		},
 		conservative_guild = {
 			name = "Cautious guild",
 			desc = "If this option is enabled, only one move at a time will be made. This is slower, but is nearly certain to work. If you turn this off, I make no promises.",

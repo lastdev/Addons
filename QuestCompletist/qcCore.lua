@@ -24,7 +24,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 109.92
+local QCADDON_VERSION = 109.93
 local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -150,8 +150,8 @@ local qcHolidayDates = {
 	[8]={"241216","250102"},		-- Feast of Winter Veil 2024-2025
 	[16]={"241018","241101"},		-- Hallow's End 2024
 	[32]={"180918","180925"},		-- Harvest Festival 2018
-	[64]={"190205","190219"},		-- Love is in the Air 2019
-	[128]={"190128","190211"},		-- Lunar Festival 2019
+	[64]={"250205","250219"},		-- Love is in the Air 2019
+	[128]={"250128","250211"},		-- Lunar Festival 2019
 	[256]={"240621","240705"},		-- Midsummer Fire Festival 2024
 	[512]={"180402","180409"},		-- Noblegarden 2018
 	[1024]={"181119","181126"},		-- Pilgrim's Bounty 2018
@@ -1458,7 +1458,8 @@ local function qcGetPin()
         pin.Texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QCIcons")
         pin.Texture:SetAllPoints()
         pin:EnableMouse(true)
-        pin:SetFrameLevel(2500) 
+        pin:SetFrameLevel(2500)
+
         pin:HookScript("OnEnter", function(self, motion)
             local frames = GetMouseFoci()
             local relevantFrames = {}
@@ -1470,68 +1471,134 @@ local function qcGetPin()
                     frame = frame:GetParent()
                 end
             end
+
             qcMapTooltip:SetParent(self)
-            qcMapTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            
+            -- Dynamic tooltip positioning
+            local x, y = self:GetCenter() -- Get pin position
+            local mapWidth, mapHeight = WorldMapFrame:GetCanvas():GetSize()
+
+            -- Default anchor (Right)
+            local anchorPoint = "ANCHOR_RIGHT"
+
+            -- Adjust if near the right edge
+            if x > mapWidth * 0.75 then
+                anchorPoint = "ANCHOR_LEFT"
+            end
+
+            -- Adjust if near the top edge
+            if y > mapHeight * 0.75 then
+                anchorPoint = "ANCHOR_BOTTOM"
+            end
+
+            qcMapTooltip:SetOwner(self, anchorPoint)
+
             qcMapTooltip:ClearLines()
 
-            for i, e in pairs(frames) do
-                local initiatorsIndex = e.PinIndex
+            -- Clear old icons if any
+            if qcMapTooltip.qcIcons then
+                for _, icon in ipairs(qcMapTooltip.qcIcons) do
+                    icon:Hide()
+                    icon:SetParent(nil)
+                end
+                wipe(qcMapTooltip.qcIcons)
+            end
+            qcMapTooltip.qcIcons = {}
+
+            for _, frame in pairs(relevantFrames) do
+                local initiatorsIndex = frame.PinIndex
                 local initiatorData = qcPins[initiatorsIndex]
-                if initiatorData[3] == 0 then
-                    qcMapTooltip:AddLine(initiatorData[4] or string.format("%s %s", UnitName("player"), "|cff69ccf0&lt;Yourself&gt;|r"))
-                else
-                    qcMapTooltip:AddDoubleLine(initiatorData[4] or string.format("%s %s", UnitName("player"), "|cff69ccf0&lt;Yourself&gt;|r"), string.format("|cffff7d0a[%d]|r", initiatorData[3]))
-                end
-                for qcIndex, qcEntry in ipairs(initiatorData[7]) do
-                    qcMapTooltip:AddDoubleLine(qcColouredQuestName(qcEntry), string.format("|cffff7d0a[%d]|r", qcEntry))
-                    if #initiatorData[7] <= 10 and qcQuestDatabase[qcEntry] then
-                        local questData = qcQuestDatabase[qcEntry]
-                        local texture = nil
-                        local mapScale = qcGetMapScale() -- Get the scale factor
-                        if questData[6] == 4 then
-                            texture = qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyQuestIcon")
-                        elseif questData[6] == 128 then
-                            texture = qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\WeeklyIcon")
-                        elseif questData[6] == 2 then
-                            texture = qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyActiveQuestIcon")
-                        elseif qcCompletedQuests[qcEntry] and (qcCompletedQuests[qcEntry]["C"] == 1 or qcCompletedQuests[qcEntry]["C"] == 2) then
-                            texture = qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\QuestCompleteIcon")
-                        else
-                            texture = qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\AvailableQuestIcon")
-                        end
-                        if texture then
-                            texture:SetSize(16 * mapScale, 16 * mapScale) -- Scale texture size
-                        end
+                if initiatorData then
+                    -- Add initiator name line (without icon)
+                    if initiatorData[3] == 0 then
+                        qcMapTooltip:AddLine(initiatorData[4] or string.format("%s %s", UnitName("player"), "|cff69ccf0<Yourself>|r"))
+                    else
+                        qcMapTooltip:AddDoubleLine(initiatorData[4] or string.format("%s %s", UnitName("player"), "|cff69ccf0<Yourself>|r"), string.format("|cffff7d0a[%d]|r", initiatorData[3]))
                     end
-                end
-                if initiatorData[8] then
-                    qcMapTooltip:AddLine(string.format("|cffabd473%s|r", initiatorData[8]), nil, nil, nil, true)
+
+                    -- Add quests under the initiator
+                    for qcIndex, qcEntry in ipairs(initiatorData[7]) do
+                        if #initiatorData[7] <= 10 and qcQuestDatabase[qcEntry] then
+                            local questData = qcQuestDatabase[qcEntry]
+
+                            local mapScale = qcGetMapScale()
+                            local baseSize = 16
+                            local scaledSize = baseSize * math.max(1, math.min(mapScale, 3))
+
+                            local texture = qcMapTooltip:CreateTexture(nil, "OVERLAY")
+                            texture:SetParent(qcMapTooltip)
+                            texture:SetSize(scaledSize, scaledSize)
+
+                            if questData[6] == 4 then
+                                texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyQuestIcon")
+                            elseif questData[6] == 128 then
+                                texture:SetAtlas("questlog-questtypeicon-weekly")
+                            elseif questData[6] == 2 then
+                                texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyActiveQuestIcon")
+                            elseif qcCompletedQuests[qcEntry] and (qcCompletedQuests[qcEntry]["C"] == 1 or qcCompletedQuests[qcEntry]["C"] == 2) then
+                                texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QuestCompleteIcon")
+                            else
+                                texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AvailableQuestIcon")
+                            end
+
+                            -- Add extra spacing before quest name using spaces
+                            qcMapTooltip:AddDoubleLine("    " .. qcColouredQuestName(qcEntry), string.format("|cffff7d0a[%d]|r", qcEntry))
+
+                            -- Attach the icon **after** adding the text
+                            local line = _G["qcMapTooltipTextLeft" .. qcMapTooltip:NumLines()]
+                            if line then
+                                texture:SetPoint("LEFT", line, "LEFT", -6, 0) -- Adjusted left padding for proper spacing
+                                texture:Show()
+                                table.insert(qcMapTooltip.qcIcons, texture)
+                            else
+                                texture:Hide()
+                            end
+                        else
+                            -- fallback if questData is missing
+                            local questName = qcColouredQuestName(qcEntry) or "|cff808080Quest Missing in DB|r"
+							qcMapTooltip:AddDoubleLine("    " .. questName, string.format("|cffff7d0a[%d]|r", qcEntry))
+						end
+                    end
+
+                    if initiatorData[8] then
+                        qcMapTooltip:AddLine(string.format("|cffabd473%s|r", initiatorData[8]), nil, nil, nil, true)
+                    end
                 end
             end
 
-            -- Adjust the font size for all lines in the tooltip
-            local mapScale = qcGetMapScale() -- Get the scale factor
+            -- Adjust font size scaling
+            local mapScale = qcGetMapScale()
             local font, size, flags = GameFontNormal:GetFont()
             for i = 1, qcMapTooltip:NumLines() do
                 local leftLine = _G["qcMapTooltipTextLeft" .. i]
                 local rightLine = _G["qcMapTooltipTextRight" .. i]
                 if leftLine then
-                    leftLine:SetFont(font, 12 * mapScale, flags) -- Scale font size
+                    leftLine:SetFont(font, 12 * mapScale, flags)
                 end
                 if rightLine then
-                    rightLine:SetFont(font, 12 * mapScale, flags) -- Scale font size
+                    rightLine:SetFont(font, 12 * mapScale, flags)
                 end
             end
 
             qcMapTooltip:Show()
         end)
+
         pin:HookScript("OnLeave", function(self)
             qcMapTooltip:Hide()
+            if qcMapTooltip.qcIcons then
+                for _, icon in ipairs(qcMapTooltip.qcIcons) do
+                    icon:Hide()
+                    icon:SetParent(nil)
+                end
+                wipe(qcMapTooltip.qcIcons)
+            end
         end)
     end
+
     table.insert(qcPinFrames, pin)
     return pin
 end
+
 
 -- Show a pin
 local function qcShowPin(index, icon)
@@ -1892,13 +1959,12 @@ end
 
 -- Function to handle map updates and pin anchoring
 local function qcHandleMapUpdate()
-    local UiMapID = C_Map.GetBestMapForUnit("player")
+    local UiMapID = WorldMapFrame:GetMapID()
     local mapLevel = 0
-    
-    -- Check if the map ID has changed
-    if UiMapID ~= previousMapID then
+
+    if UiMapID and UiMapID ~= previousMapID then
         qcRefreshPins(UiMapID, mapLevel)
-        previousMapID = UiMapID -- Update the previous map ID
+        previousMapID = UiMapID
     end
 end
 
@@ -1932,11 +1998,16 @@ end
 
 -- Hook into the world map opening
 WorldMapFrame:HookScript("OnShow", function()
-    local UiMapID = C_Map.GetBestMapForUnit("player")
+    local UiMapID = WorldMapFrame:GetMapID()
     local mapLevel = 0
     qcRefreshPins(UiMapID, mapLevel)
 end)
 
+WorldMapFrame.ScrollContainer:HookScript("OnMouseUp", function()
+    local UiMapID = WorldMapFrame:GetMapID()
+    local mapLevel = 0
+    qcRefreshPins(UiMapID, mapLevel)
+end)
 -- Ensure qcQuestCompletistUI_OnLoad is properly defined
 function qcQuestCompletistUI_OnLoad(self)
     -- Your initialization code here

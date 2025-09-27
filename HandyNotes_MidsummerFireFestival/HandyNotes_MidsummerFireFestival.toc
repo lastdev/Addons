@@ -1,5 +1,5 @@
-## Interface: 110105
-## Version: 2.07
+## Interface: 110200
+## Version: 3.13
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_summerfest_firespirit
 ## Title: Midsummer Fire Festival
@@ -27,10 +27,18 @@
 ## Notes-zhCN: |cFFF6BE00协助 |cFFFFA500仲夏火焰节|cFFF6BE00 活动
 ## Notes-zhTW: |cFFF6BE00協助 |cFFFFA500仲夏火焰節|cFFF6BE00 活動
 ## RequiredDeps: HandyNotes
-## SavedVariables: HandyNotes_MidsummerFireFestivalDB
+## SavedVariables: MidsummerFireFestivalDB
 ## AddonCompartmentFunc: HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick
 ## X-Curse-Project-ID: 878385
 ## X-Wago-ID: jK8Xg5Ky
 
-Core.lua
+Colours_MFF.lua
+Common.lua
+Localisations_Common.lua
+Localisations_Events.lua
+Localisations_MFF.lua
+Mapping.lua
 Data.lua
+DragonsTreadLightly.lua
+Common_Functions.lua
+Core.lua

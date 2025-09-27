@@ -1,4 +1,4 @@
-## Interface: 110100, 110105
+## Interface: 110107, 110200
 ## X-Min-Interface: 80000
 ## Category: DBM
 
@@ -9,6 +9,7 @@
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMTimelessIsle_AllSavedVars
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: MOP
@@ -20,6 +21,7 @@
 ## X-DBM-Mod-MapID: m554
 ## X-DBM-Mod-MinCoreRevision: 12473
 ## X-Curse-Project-ID: 84414
+## Version: r55
 
 localization.en.lua
 localization.es.lua

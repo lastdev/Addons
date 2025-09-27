@@ -18,6 +18,9 @@ function PlayerHandlerMixin:Init()
     addon.on('SOCKET_INFO_UPDATE', addon.bind(self, 'UpdateFlagsIfVisible')) -- socket info becoming available
     addon.on('BAG_UPDATE', addon.bind(self, 'OnBagUpdate')) -- adding enchants, gems
     addon.on('BAG_UPDATE_DELAYED', addon.bind(self, 'OnBagUpdateDelayed')) -- adding enchants, gems
+
+    -- plugin event
+    addon.plugin.dispatch('player_handler.init', self)
 end
 
 function PlayerHandlerMixin:GetSlotFrame(slotName)

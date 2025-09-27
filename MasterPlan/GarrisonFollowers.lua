@@ -876,7 +876,7 @@ local function Recruiter_UpdatePickMenu()
 				local submenu = rootDescription:CreateButton(category);
 
 				for _, entry in pairs(categoryEntry.entries) do
-					local checkbox = submenu:CreateCheckbox(entry.name, Recruiter_IsChecked, Recruiter_SetChecked, entry);
+					local checkbox = submenu:CreateRadio(entry.name, Recruiter_IsChecked, Recruiter_SetChecked, entry);
 					checkbox:SetOnEnter(Recruiter_ShowTraitTooltip)
 					checkbox:SetOnLeave(Recruiter_HideTooltip)
 					checkbox:SetResponse(MenuResponse.CloseAll)
@@ -885,7 +885,7 @@ local function Recruiter_UpdatePickMenu()
 		end
 
 		for _, entry in pairs(GarrisonRecruiterFrame.Pick.entries) do
-			local checkbox = rootDescription:CreateCheckbox(entry.name, Recruiter_IsChecked, Recruiter_SetChecked, entry);
+			local checkbox = rootDescription:CreateRadio(entry.name, Recruiter_IsChecked, Recruiter_SetChecked, entry);
 			checkbox:SetOnEnter(Recruiter_ShowCounterTooltip)
 			checkbox:SetOnLeave(Recruiter_HideTooltip)
 			checkbox:SetResponse(MenuResponse.CloseAll)

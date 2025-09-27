@@ -122,7 +122,6 @@ function private.ProcessUpgrade(db, upgradeObj)
 					end
 					db:Set("sync", syncScopeKey, "internalData", "bagQuantity", inventoryData.bag)
 					db:Set("sync", syncScopeKey, "internalData", "bankQuantity", inventoryData.bank)
-					db:Set("sync", syncScopeKey, "internalData", "reagentBankQuantity", inventoryData.reagentBank)
 					db:Set("sync", syncScopeKey, "internalData", "auctionQuantity", inventoryData.auction)
 					db:Set("sync", syncScopeKey, "internalData", "mailQuantity", inventoryData.mail)
 				end
@@ -377,7 +376,7 @@ function private.ProcessUpgrade(db, upgradeObj)
 			end
 		end
 	end
-	if prevVersion >= 122 and prevVersion < 131 and not LibTSMApp.IsCataClassic() then
+	if prevVersion >= 122 and prevVersion < 131 and not LibTSMApp.IsPandaClassic() then
 		for _, key, value in upgradeObj:RemovedSettingIterator("global", nil, "auctionUIContext", "auctioningAuctionScrollingTable") do
 			db:Set("global", upgradeObj:GetScopeKey(key), "auctionUIContext", "auctioningAuctionScrollingTable", value)
 		end

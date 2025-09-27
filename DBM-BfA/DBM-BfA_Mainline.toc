@@ -1,4 +1,4 @@
-## Interface: 110100, 110105
+## Interface: 110107, 110200
 ## Category: DBM
 
 ## Title:|cffffe00a<|r|cffff7d0aDBM Mod|r|cffffe00a>|r |cff10ff10World Bosses (BfA)|r
@@ -30,7 +30,7 @@
 ## X-Curse-Project-ID: 420275
 ## X-WoWI-ID: 25779
 ## X-Wago-ID: RXKqxj6y
-## Version: r41
+## Version: r44
 localization.en.lua
 localization.ru.lua
 localization.de.lua

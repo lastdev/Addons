@@ -1,6 +1,6 @@
-## Interface: 110105
+## Interface: 110200
 ## Title: HandyNotes: Legion
-## Version: 118
+## Version: 121
 ## Notes: Legion Notes
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes

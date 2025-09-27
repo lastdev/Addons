@@ -215,7 +215,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	AGBuffs		= "Автоматический выбор диалога для активации положительных эффектов при взаимодействии с объектами профессии"
+	AGBuffs		= "Автоматически выбирать диалог для активации положительных эффектов при взаимодействии с объектами профессий"
 })
 
 -------------------------
@@ -280,4 +280,28 @@ L = DBM:GetModLocalization("OperationFloodgateTrash")
 
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Операция: Шлюз"
+})
+
+-----------------------------
+--  Azhiccar  --
+-----------------------------
+--L = DBM:GetModLocalization(2675)
+
+-----------------------------
+--  Taah'bat and A'wazj  --
+-----------------------------
+--L = DBM:GetModLocalization(2676)
+
+-----------------------------
+--  Soul-Scribe  --
+-----------------------------
+--L = DBM:GetModLocalization(2677)
+
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("EcoDomeAldaniTrash")
+
+L:SetGeneralLocalization({
+	name =	"Трэш мобы Заповедник Аль'дани"
 })

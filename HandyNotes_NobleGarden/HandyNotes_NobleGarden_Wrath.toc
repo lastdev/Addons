@@ -1,5 +1,5 @@
-## Interface: 30404
-## Version: 4.10
+## Interface: 30405
+## Version: 4.22
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
 ## Title: Noblegarden
@@ -27,17 +27,20 @@
 ## Notes-zhCN: |cFFFF1493帮助|cFF00CED1复活节|cFFFF1493的成就和任务
 ## Notes-zhTW: |cFFFF1493幫助|cFF00CED1復活節|cFFFF1493的成就和任務
 ## RequiredDeps: HandyNotes
-## SavedVariables: HandyNotes_NobleGardenDB
-## AddonCompartmentFunc: HandyNotes_NobleGarden_OnAddonCompartmentClick
-## AddonCompartmentFuncOnEnter: HandyNotes_NobleGarden_OnAddonCompartmentEnter
-## AddonCompartmentFuncOnLeave: HandyNotes_NobleGarden_OnAddonCompartmentLeave
+## SavedVariables: NoblegardenDB
+## AddonCompartmentFunc: HandyNotes_Noblegarden_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: HandyNotes_Noblegarden_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: HandyNotes_Noblegarden_OnAddonCompartmentLeave
 ## X-Curse-Project-ID: 678724
 ## X-Wago-ID: e56nxdG9
 
-ColoursEtc.lua
+Colours_NG.lua
+Common.lua
 Localisations_Common.lua
 Localisations_Events.lua
 Localisations_NG.lua
 Mapping.lua
 Data.lua
+DragonsTreadLightly.lua
+Common_Functions.lua
 Core.lua

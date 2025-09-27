@@ -1,0 +1,128 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+    <GameTooltip name= "AngleurUnderlight_TutorialTooltip" inherits="AngleurUnderlight_TutorialTooltipTemplate">
+
+    </GameTooltip>
+
+    <Frame name="Angleur_Underlight_NoAngleurFrame" inherits="BasicFrameTemplateWithInset" toplevel="true" FrameStrata="MEDIUM" scale="0.8" hidden="true">
+        <Size x="185" y="125"/>
+        <Anchors>
+            <Anchor point="CENTER" relativeTo="UIParent" relativePoint="LEFT" x="500" y="100"/>
+        </Anchors>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parent_MainText" parentKey="mainText" justifyH="LEFT" justifyV="TOP" inherits="GameFontNormal">
+                    <Size x="90"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="13" y="-34"/> 
+                    </Anchors>
+                </FontString>
+                <FontString name="$parent_SmallerText" parentKey="smallerText" justifyH="LEFT" justifyV="TOP" inherits="SystemFont_Shadow_Small">
+                    <Size x="140"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="$parent_MainText" relativePoint="BOTTOMLEFT" x="0" y="-5"/> 
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>                
+                tinsert(UISpecialFrames, self:GetName())
+                self:SetMovable(true)
+                self:RegisterForDrag("LeftButton")
+                local colorBlu = CreateColor(0.61, 0.85, 0.92)
+                local colorYello = CreateColor(1.0, 0.82, 0.0)
+                local colorWhite = CreateColor(1, 1, 1)
+                self.TitleText:SetText("Angleur_Underlight")
+                self.mainText:SetText(AngleurUnderlight_Translate[colorWhite:WrapTextInColorCode("Get ") .. colorBlu:WrapTextInColorCode("Angleur ") 
+                .. colorWhite:WrapTextInColorCode("for increased functionality!")])
+                self.smallerText:SetText(colorYello:WrapTextInColorCode("/undang ") .. AngleurUnderlight_Translate["to re-open this window."])
+            </OnLoad>
+            <OnMouseDown>
+                self:Raise()
+            </OnMouseDown>
+            <OnDragStart>
+                self:StartMoving()
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing()
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Button name="Angleur_Underlight_DragRodButton" inherits="AngleurUnderlight_SimplifiedActionButtonTemplate" hidden="false">
+        <KeyValues>
+            <KeyValue key="tooltipTitle" value="" type="string"/>
+            <KeyValue key="tooltipText" value="" type="string"/>
+        </KeyValues>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture name="$parent_Frame" parentKey="frame" file="Interface/AddOns/Angleur_Underlight/images/frame.png">
+                    <Size x="96" y="96"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="2"/>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parent_firstinstall" parentKey="firstInstall" file="Interface/AddOns/Angleur_Underlight/images/firstinstall.png" hidden="true">
+                    <Size x="96" y="96"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="10" y="-15"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parent_RemoveRod" parentKey="removeRod" hidden="true">
+                <Size x="22" y="22"/>
+                <Anchors>
+                    <Anchor point="CENTER" relativeTo="$parent" relativePoint="TOPRIGHT" x="-1" y="-1"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick function="AngleurUnderlight_RemoveMainRod"/>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, "ANCHOR_RIGHT", 0, -35)
+                        GameTooltip:AddLine(AngleurUnderlight_Translate["Remove Main Fishing Rod"])
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+                <NormalTexture atlas="auctionhouse-ui-filter-redx">
+                    <Size x="24" y="24"/>
+                </NormalTexture>
+                <HighlightTexture atlas="auctionhouse-ui-filter-redx" alphaMode="ADD" alpha="0.4">
+                    <Size x="24" y="24"/>
+                </HighlightTexture>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad function="AngleurUnderlight_OnLoad"/>
+            <OnEnter>
+                AngleurUnderlight_TutorialTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 0)
+                AngleurUnderlight_TutorialTooltip:PlaceTexture("Interface/AddOns/Angleur_Underlight/images/tutorial.png", 512, 128, "TOPLEFT", -460, -35)
+                AngleurUnderlight_TutorialTooltip:AddLine(self.tooltipTitle)
+                AngleurUnderlight_TutorialTooltip:AddLine(self.tooltipText, 1, 1, 1, true)
+                AngleurUnderlight_TutorialTooltip:Show()
+            </OnEnter>
+            <OnLeave>
+                AngleurUnderlight_TutorialTooltip:Hide()
+            </OnLeave>
+            <OnReceiveDrag>
+                local cursorInfo, macroIndex = GetCursorInfo()
+                if cursorInfo == "item" then
+                    AngleurUnderlight_GrabFishingRod(self)
+                end
+            </OnReceiveDrag>
+            <OnMouseUp>
+                if button ~= "LeftButton" or upInside == false then return end
+                local cursorInfo, macroIndex = GetCursorInfo()
+                if cursorInfo == "item" then
+                    AngleurUnderlight_GrabFishingRod(self)
+                end
+            </OnMouseUp>
+        </Scripts>
+    </Button>
+
+</Ui>

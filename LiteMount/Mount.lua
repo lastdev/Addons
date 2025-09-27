@@ -22,8 +22,10 @@ local MountsRarity = LibStub("MountsRarity-2.0")
 LM.Mount = { }
 LM.Mount.__index = LM.Mount
 
-function LM.Mount:new()
-    return setmetatable({ }, self)
+function LM.Mount:new(t)
+    local m = t and CopyTable(t) or {}
+    m.flags = m.flags or {}
+    return setmetatable(m, self)
 end
 
 function LM.Mount:Get(className, ...)
@@ -293,6 +295,19 @@ function LM.Mount:GetRarity()
     if self.mountID then
         return MountsRarity:GetRarityByID(self.mountID) or 0
     end
+end
+
+function LM.Mount:GetTypeString()
+    if not self.typeString then
+        local flagTexts = {}
+        for _, flag in ipairs(LM.Options:GetFlags()) do
+            if self.flags[flag] then
+                table.insert(flagTexts, L[flag])
+            end
+        end
+        self.typeString = strjoin(' ', unpack(flagTexts))
+    end
+    return self.typeString
 end
 
 -- This is gross

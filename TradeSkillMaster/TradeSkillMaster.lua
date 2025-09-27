@@ -193,7 +193,7 @@ function TSM.OnInitialize(settingsDB)
 			return data and data[key] or nil
 		end
 		local function RealmPriceFunc(itemString)
-			return PriceFuncHelper(itemString, "realm")
+			return PriceFuncHelper(itemString, "market")
 		end
 		CustomString.RegisterSource("External", "OERealm", L["Oribos Exchange Realm Price"], RealmPriceFunc, CustomString.SOURCE_TYPE.PRICE_DB)
 		local function RegionPriceFunc(itemString)

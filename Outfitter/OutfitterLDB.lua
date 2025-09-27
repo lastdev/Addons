@@ -4,38 +4,15 @@ function Outfitter.LDB:Initialize()
 	self.LDB = LibStub("LibDataBroker-1.1", true)
 	self.DataObj = self.LDB:NewDataObject(Outfitter.cTitle,
 	{
-		type = "launcher",
-		icon = "Interface\\AddOns\\Outfitter\\Textures\\Icon",
+		type = "data source",
+		icon = "Interface\\Icons\\INV_Chest_Cloth_21",
 		text = "Outfitter",
-		OnClick = function(pFrame, pButton) self:OnClick(pFrame, pButton) end
+		OnClick = function(pFrame, pButton) self:OnClick(pFrame, pButton) end,
 	})
-	
+
 	Outfitter:RegisterOutfitEvent("WEAR_OUTFIT", function (...) self:OutfitEvent(...) end)
 	Outfitter:RegisterOutfitEvent("UNWEAR_OUTFIT", function (...) self:OutfitEvent(...) end)
 	Outfitter:RegisterOutfitEvent("OUTFITTER_INIT", function (...) self:OutfitEvent(...) end)
-end
-
-function Outfitter.LDB:CreateIcon(minimapButton)
-    self.icon = LibStub("LibWithFreeDragDBIcon-1.0")
-
-    self.icon:Register(Outfitter.cTitle, self.DataObj, minimapButton)
-end
-
-function Outfitter.LDB:ShowIcon()
-    self.icon:Show(Outfitter.cTitle)
-end
-
-function Outfitter.LDB:HideIcon()
-    self.icon:Hide(Outfitter.cTitle)
-end
-
-function Outfitter.LDB:OnClick(pFrame, pButton)
-	if pButton == "LeftButton" then
-		self:ToggleMenu()
-		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
-	else
-		Outfitter:ToggleUI(true)
-	end
 end
 
 function Outfitter.LDB:OutfitEvent(pEvent, pOutfitName, pOutfit)
@@ -47,6 +24,16 @@ function Outfitter.LDB:OutfitEvent(pEvent, pOutfitName, pOutfit)
 	else
 		self.DataObj.text = Outfitter.cTitle
 		self.DataObj.icon = "Interface\\AddOns\\Outfitter\\Textures\\Icon"
+	end
+end
+
+----[[
+function Outfitter.LDB:OnClick(pFrame, pButton)
+	if pButton == "LeftButton" then
+		self:ToggleMenu()
+	else
+		self:HideMenu()
+		Outfitter:ToggleUI(true)
 	end
 end
 
@@ -62,8 +49,7 @@ function Outfitter.LDB:ShowMenu()
 	assert(not self.dropDownMenu, "can't show the LDB menu while it's already up")
 
 	-- Create the items
-	items = Outfitter:New(Outfitter.UIElementsLib._DropDownMenuItems, function ()
-		
+	local items = Outfitter:New(Outfitter.UIElementsLib._DropDownMenuItems, function ()
 		-- Close the menu after a short delay when a menu item is selected
 		Outfitter.SchedulerLib:ScheduleTask(0.1, function ()
 			self:HideMenu()
@@ -73,18 +59,18 @@ function Outfitter.LDB:ShowMenu()
 	-- Get the items
 	Outfitter:GetMinimapDropdownItems(items)
 
-	-- Get the cursor position
+	-- The LDB portion should work off cursor position. The LDBIcon portion should work off the minimap position.
 	local cursorX, cursorY = GetCursorPosition()
 	local scaling = UIParent:GetEffectiveScale()
 	cursorX = cursorX / scaling
 	cursorY = cursorY / scaling
 
-	-- Use the screen quadrant as an anchor for the menu
 	local quadrant = Outfitter:GetScreenQuadrantFromCoordinates(cursorX, cursorY)
 
 	-- Show the menu
 	self.dropDownMenu = Outfitter:New(Outfitter.UIElementsLib._DropDownMenu)
 	self.dropDownMenu:Show(items, quadrant, UIParent, "BOTTOMLEFT", cursorX, cursorY)
+
 	self.dropDownMenu.cleanup = function ()
 		self.dropDownMenu = nil
 	end
@@ -98,5 +84,6 @@ function Outfitter.LDB:HideMenu()
 	self.dropDownMenu:Hide()
 	self.dropDownMenu = nil
 end
+--]]
 
 Outfitter.LDB:Initialize()

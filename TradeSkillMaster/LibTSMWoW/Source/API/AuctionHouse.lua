@@ -221,11 +221,25 @@ end
 ---Register a secure hook function for when a GetAll scan is started
 ---@param func fun() The function to call
 function AuctionHouse.SecureHookGetAllScan(func)
-	assert(not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
 	if #private.getAllHookFuncs == 0 then
-		hooksecurefunc("QueryAuctionItems", private.QueryAuctionItemsHook)
+		if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
+			hooksecurefunc(C_AuctionHouse, "ReplicateItems", private.GetAllScanHook)
+		else
+			hooksecurefunc("QueryAuctionItems", function(_, _, _, _, _, _, isGetAll)
+				if not isGetAll then
+					return
+				end
+				private.GetAllScanHook()
+			end)
+		end
 	end
 	tinsert(private.getAllHookFuncs, func)
+end
+
+---Starts a GetAll scan.
+function AuctionHouse.StartGetAllScan()
+	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
+	C_AuctionHouse.ReplicateItems()
 end
 
 ---Gets info on the last purchase made.
@@ -308,6 +322,17 @@ function AuctionHouse.GetNumAuctions()
 	return numAuctions
 end
 
+---Gets the number of auctions for a GetAll scan.
+---@return number
+function AuctionHouse.GetNumGetAllAuctions()
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
+		return C_AuctionHouse.GetNumReplicateItems()
+	else
+		local numAuctions = GetNumAuctionItems("list")
+		return numAuctions
+	end
+end
+
 ---Gets the number of pages of browse results.
 ---@return number
 function AuctionHouse.GetNumPages()
@@ -358,10 +383,15 @@ end
 ---@return number? stackSize
 ---@return number? buyout
 function AuctionHouse.GetGetAllResult(index)
-	assert(not ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE))
-	local itemLink = GetAuctionItemLink("list", index)
-	local _, _, stackSize, _, _, _, _, _, _, buyout = GetAuctionItemInfo("list", index)
-	return itemLink, stackSize, buyout
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_AUCTION_HOUSE) then
+		local itemLink = C_AuctionHouse.GetReplicateItemLink(index - 1)
+		local _, _, stackSize, _, _, _, _, _, _, buyout = C_AuctionHouse.GetReplicateItemInfo(index - 1)
+		return itemLink, stackSize, buyout
+	else
+		local itemLink = GetAuctionItemLink("list", index)
+		local _, _, stackSize, _, _, _, _, _, _, buyout = GetAuctionItemInfo("list", index)
+		return itemLink, stackSize, buyout
+	end
 end
 
 ---Gets the search result info.
@@ -577,10 +607,7 @@ function private.HandleCommodityNotification(_, _, quantity)
 	end
 end
 
-function private.QueryAuctionItemsHook(_, _, _, _, _, _, isGetAll)
-	if not isGetAll then
-		return
-	end
+function private.GetAllScanHook()
 	for _, func in ipairs(private.getAllHookFuncs) do
 		func()
 	end

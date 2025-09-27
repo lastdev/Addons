@@ -27,7 +27,6 @@ local private = {
 	storage = {
 		bagQuantity = nil,
 		bankQuantity = nil,
-		reagentBankQuantity = nil,
 	},
 	bagUpdates = {
 		pending = {},
@@ -35,10 +34,6 @@ local private = {
 		bankList = {},
 	},
 	bankSlotUpdates = {
-		pending = {},
-		list = {},
-	},
-	reagentBankSlotUpdates = {
 		pending = {},
 		list = {},
 	},
@@ -51,7 +46,6 @@ local private = {
 	bagUpdateTimer = nil,
 	bagUpdateDelayedTimer = nil,
 	bankSlotUpdateTimer = nil,
-	reagentBankSlotUpdateTimer = nil,
 	bagTrackingCallbackTimer = nil,
 	bagTrackingQuantityCallbackTimer = nil,
 	prevQuantities = {},
@@ -86,20 +80,20 @@ BagTracking:OnModuleLoad(function()
 		:AddUniqueStringField("levelItemString")
 		:AddNumberField("bagQuantity")
 		:AddNumberField("bankQuantity")
-		:AddNumberField("reagentBankQuantity")
 		:AddSmartMapField("baseItemString", ItemString.GetBaseMap(), "levelItemString")
 		:AddIndex("baseItemString")
 		:Commit()
 	private.baseItemQuantityQuery = private.quantityDB:NewQuery()
-		:Select("bagQuantity", "bankQuantity", "reagentBankQuantity")
+		:Select("bagQuantity", "bankQuantity")
 		:Equal("baseItemString", Database.BoundQueryParam())
 	private.callbackQuery = private.slotDB:NewQuery()
 		:SetUpdateCallback(private.OnCallbackQueryUpdated)
 	private.quantityCallbackQuery = private.quantityDB:NewQuery()
 		:SetUpdateCallback(private.OnQuantityCallbackQueryUpdated)
 	private.bagUpdateTimer = DelayTimer.New("BAG_TRACKING_BAG_UPDATE", private.BagUpdateDelayedHandler)
-	private.bankSlotUpdateTimer = DelayTimer.New("BAG_TRACKING_BANK_SLOT_UPDATE", private.BankSlotUpdateDelayed)
-	private.reagentBankSlotUpdateTimer = DelayTimer.New("BAG_TRACKING_REAGENT_BANK_SLOT_UPDATE", private.ReagentBankSlotUpdateDelayed)
+	if not ClientInfo.IsRetail() then
+		private.bankSlotUpdateTimer = DelayTimer.New("BAG_TRACKING_BANK_SLOT_UPDATE", private.BankSlotUpdateDelayed)
+	end
 	private.bagTrackingCallbackTimer = DelayTimer.New("BAG_TRACKING_CALLBACK", private.DelayedBagTrackingCallback)
 	private.bagTrackingQuantityCallbackTimer = DelayTimer.New("BAG_TRACKING_QUANTITY_CALLBACK", private.DelayedBagTrackingQuantityCallback)
 end)
@@ -113,14 +107,11 @@ end)
 ---Loads and sets the stored data tables.
 ---@param bagQuantityData table<string,number> Bag item quantities
 ---@param bankQuantityData table<string,number> Bank item quantityes
----@param reagentBankQuantityData table<string,number> Reagent bank item quantities
-function BagTracking.Load(bagQuantityData, bankQuantityData, reagentBankQuantityData)
+function BagTracking.Load(bagQuantityData, bankQuantityData)
 	private.storage.bagQuantity = bagQuantityData
 	private.storage.bankQuantity = bankQuantityData
-	private.storage.reagentBankQuantity = reagentBankQuantityData
 	Table.Filter(private.storage.bagQuantity, private.FilterNonItemLevelStrings)
 	Table.Filter(private.storage.bankQuantity, private.FilterNonItemLevelStrings)
-	Table.Filter(private.storage.reagentBankQuantity, private.FilterNonItemLevelStrings)
 	local items = TempTable.Acquire()
 	for levelItemString in pairs(private.storage.bagQuantity) do
 		items[levelItemString] = true
@@ -128,16 +119,12 @@ function BagTracking.Load(bagQuantityData, bankQuantityData, reagentBankQuantity
 	for levelItemString in pairs(private.storage.bankQuantity) do
 		items[levelItemString] = true
 	end
-	for levelItemString in pairs(private.storage.reagentBankQuantity) do
-		items[levelItemString] = true
-	end
 	private.quantityDB:BulkInsertStart()
 	for levelItemString in pairs(items) do
 		local bagQuantity = private.storage.bagQuantity[levelItemString] or 0
 		local bankQuantity = private.storage.bankQuantity[levelItemString] or 0
-		local reagentBankQuantity = private.storage.reagentBankQuantity[levelItemString] or 0
-		if (bagQuantity + bankQuantity + reagentBankQuantity) > 0 then
-			private.quantityDB:BulkInsertNewRow(levelItemString, bagQuantity, bankQuantity, reagentBankQuantity)
+		if (bagQuantity + bankQuantity) > 0 then
+			private.quantityDB:BulkInsertNewRow(levelItemString, bagQuantity, bankQuantity)
 		end
 	end
 	private.quantityDB:BulkInsertEnd()
@@ -147,7 +134,7 @@ end
 ---Starts running the bag tracking code.
 function BagTracking.Start()
 	Event.Register("BAG_UPDATE", private.BagUpdateHandler)
-	if LibTSMService.IsCataClassic() or LibTSMService.IsRetail() then
+	if LibTSMService.IsPandaClassic() or LibTSMService.IsRetail() then
 		-- In Cata 4.4.0 and in Retail 10.0.5, BAG_UPDATE_DELAYED doesnt fire for non-backpack slots, so emulate it
 		private.bagUpdateDelayedTimer = DelayTimer.New("BAG_TRACKING_BAG_UPDATE_DELAYED", private.BagUpdateDelayedHandler)
 		Event.Register("BAG_UPDATE", function() private.bagUpdateDelayedTimer:RunForFrames(0) end)
@@ -155,9 +142,8 @@ function BagTracking.Start()
 		Event.Register("BAG_UPDATE_DELAYED", private.BagUpdateDelayedHandler)
 	end
 	DefaultUI.RegisterBankVisibleCallback(private.BankVisible, true)
-	Event.Register("PLAYERBANKSLOTS_CHANGED", private.BankSlotChangedHandler)
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.REAGENT_BANK) then
-		Event.Register("PLAYERREAGENTBANKSLOTS_CHANGED", private.ReagentBankSlotChangedHandler)
+	if not ClientInfo.IsRetail() then
+		Event.Register("PLAYERBANKSLOTS_CHANGED", private.BankSlotChangedHandler)
 	end
 	Lifecycle.RegisterCallback(private.HandleLogin, Lifecycle.EVENT.LOGIN)
 end
@@ -175,10 +161,10 @@ function BagTracking.RegisterQuantityCallback(callback)
 end
 
 ---Iterates over the bag quantities.
----@return fun(): number, string, number, number, number @Iterator with fields: `index`, `levelItemString`, `bagQuantity`, `bankQuantity`, `reagentBankQuantity`
+---@return fun(): number, string, number, number, number @Iterator with fields: `index`, `levelItemString`, `bagQuantity`, `bankQuantity`
 function BagTracking.QuantityIterator()
 	return private.quantityDB:NewQuery()
-		:Select("levelItemString", "bagQuantity", "bankQuantity", "reagentBankQuantity")
+		:Select("levelItemString", "bagQuantity", "bankQuantity")
 		:IteratorAndRelease()
 end
 
@@ -244,14 +230,14 @@ function BagTracking.GetNumMailable(itemString)
 		:SumAndRelease("quantity")
 end
 
----Creates a query of the bank / reagent bank.
+---Creates a query of the bank bank.
 ---@return DatabaseQuery
 function BagTracking.CreateQueryBank()
 	return private.slotDB:NewQuery()
-		:Function("bag", Container.IsBankOrReagentBank)
+		:Function("bag", Container.IsBank)
 end
 
----Creates a query of the bank / reagent bank for the specified item.
+---Creates a query of the bank bank for the specified item.
 ---@param itemString string The item string
 ---@return DatabaseQuery
 function BagTracking.CreateQueryBankItem(itemString)
@@ -277,21 +263,16 @@ function BagTracking.ForceBankQuantityDeduction(itemString, quantity)
 	if private.isFirstBankOpen then
 		-- Haven't scanned yet, so just deduct the quantity
 		local bankQuantity = private.storage.bankQuantity[levelItemString] or -math.huge
-		local reagentBankQuantity = private.storage.reagentBankQuantity[levelItemString] or -math.huge
-		if reagentBankQuantity >= quantity then
-			private.ChangeBagItemTotal(Container.GetReagentBankContainer(), levelItemString, -quantity)
-		elseif reagentBankQuantity > 0 and bankQuantity >= (quantity - reagentBankQuantity) then
-			private.ChangeBagItemTotal(Container.GetReagentBankContainer(), levelItemString, -reagentBankQuantity)
-			private.ChangeBagItemTotal(Container.GetBankContainer(), levelItemString, -quantity + reagentBankQuantity)
-		elseif bankQuantity >= quantity then
-			private.ChangeBagItemTotal(Container.GetBankContainer(), levelItemString, -quantity)
+		if bankQuantity >= quantity then
+			local bag = LibTSMService.IsRetail() and Container.GetFirstBankTabIndex() or Container.GetBankContainer()
+			private.ChangeBagItemTotal(bag, levelItemString, -quantity)
 		end
 		return
 	end
 	private.slotDB:SetQueryUpdatesPaused(true)
 	local query = private.slotDB:NewQuery()
 		:Equal("itemString", itemString)
-		:Function("bag", Container.IsBankOrReagentBank)
+		:Function("bag", Container.IsBank)
 	for _, row in query:Iterator() do
 		if quantity > 0 then
 			local rowQuantity, rowBag = row:GetFields("quantity", "bag")
@@ -346,33 +327,18 @@ function BagTracking.GetBankQuantity(itemString)
 	end
 end
 
----Gets the number of an item in the reagent bank.
----@param itemString string The item string
----@return number
-function BagTracking.GetReagentBankQuantity(itemString)
-	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
-		return private.baseItemQuantityQuery
-			:BindParams(itemString)
-			:Sum("reagentBankQuantity")
-	else
-		local levelItemString = ItemString.ToLevel(itemString)
-		return private.quantityDB:GetUniqueRowField("levelItemString", levelItemString, "reagentBankQuantity") or 0
-	end
-end
-
----Gets the bag / bank / reagent bank quantities for the specified item.
+---Gets the bag / bank bank quantities for the specified item.
 ---@param itemString string The item string
 ---@return number bagQuantity
 ---@return number bankQuantity
----@return number reagentBankQuantity
 function BagTracking.GetQuantities(itemString)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
 		private.baseItemQuantityQuery:BindParams(itemString)
-		return private.baseItemQuantityQuery:Sum("bagQuantity"), private.baseItemQuantityQuery:Sum("bankQuantity"), private.baseItemQuantityQuery:Sum("reagentBankQuantity")
+		return private.baseItemQuantityQuery:Sum("bagQuantity"), private.baseItemQuantityQuery:Sum("bankQuantity")
 	else
 		local levelItemString = ItemString.ToLevel(itemString)
-		local bagQuantity, bankQuantity, reagentBankQuantity = private.quantityDB:GetUniqueRowFields("levelItemString", levelItemString, "bagQuantity", "bankQuantity", "reagentBankQuantity")
-		return bagQuantity or 0, bankQuantity or 0, reagentBankQuantity or 0
+		local bagQuantity, bankQuantity = private.quantityDB:GetUniqueRowFields("levelItemString", levelItemString, "bagQuantity", "bankQuantity")
+		return bagQuantity or 0, bankQuantity or 0
 	end
 end
 
@@ -380,8 +346,8 @@ end
 ---@param itemString string The item string
 ---@return number
 function BagTracking.GetTotalQuantity(itemString)
-	local bagQuantity, bankQuantity, reagentBankQuantity = BagTracking.GetQuantities(itemString)
-	return bagQuantity + bankQuantity + reagentBankQuantity
+	local bagQuantity, bankQuantity = BagTracking.GetQuantities(itemString)
+	return bagQuantity + bankQuantity
 end
 
 ---Gets the available crafting mat quantity for the specified item.
@@ -402,8 +368,6 @@ end
 function BagTracking.ItemWillGoInBag(itemString, bag)
 	if bag == Container.GetBackpackContainer() or bag == Container.GetBankContainer() or Container.IsWarbankBag(bag) then
 		return true
-	elseif bag == Container.GetReagentBankContainer() then
-		return Container.HasReagentBank() and ItemInfo.IsCraftingReagent(itemString)
 	end
 	local itemFamily = Item.GetFamily(ItemInfo.GetLink(itemString), ItemInfo.GetClassId(itemString))
 	local _, bagFamily = Container.GetNumFreeSlots(bag)
@@ -426,7 +390,7 @@ function private.HandleLogin()
 	local query = private.quantityDB:NewQuery()
 	for _, row in query:Iterator() do
 		local oldBagQuantity = row:GetField("bagQuantity")
-		local oldTotalBankQuantity = row:GetField("bankQuantity") + row:GetField("reagentBankQuantity")
+		local oldTotalBankQuantity = row:GetField("bankQuantity")
 		if oldTotalBankQuantity == 0 then
 			-- Remove this row
 			assert(oldBagQuantity > 0)
@@ -438,15 +402,14 @@ function private.HandleLogin()
 				local levelItemString = row:GetField("levelItemString")
 				if levelItemString == ItemString.GetBaseFast(levelItemString) and ItemInfo.IsCommodity(levelItemString) then
 					local itemId = ItemString.ToId(levelItemString)
-					local _, bankQuantity, reagentBankQuantity = Container.GetItemCount(itemId)
-					if reagentBankQuantity ~= row:GetField("reagentBankQuantity") or bankQuantity ~= row:GetField("bankQuantity") then
+					local _, bankQuantity = Container.GetItemCount(itemId)
+					if bankQuantity ~= row:GetField("bankQuantity") then
 						updated = true
-						if reagentBankQuantity + bankQuantity == 0 then
+						if bankQuantity == 0 then
 							private.quantityDB:DeleteRow(row)
 						else
 							row:SetField("bagQuantity", 0)
 								:SetField("bankQuantity", bankQuantity)
-								:SetField("reagentBankQuantity", reagentBankQuantity)
 								:Update()
 						end
 					end
@@ -473,11 +436,10 @@ function private.BankVisible()
 		private.isFirstBankOpen = false
 		-- this is the first time opening the bank so we'll scan all the items so wipe our existing quantities
 		wipe(private.storage.bankQuantity)
-		wipe(private.storage.reagentBankQuantity)
 		private.quantityDB:SetQueryUpdatesPaused(true)
 		local query = private.quantityDB:NewQuery()
 		for _, row in query:Iterator() do
-			local oldValue = row:GetField("bankQuantity") + row:GetField("reagentBankQuantity")
+			local oldValue = row:GetField("bankQuantity")
 			if row:GetField("bagQuantity") == 0 then
 				-- remove this row
 				assert(oldValue > 0)
@@ -485,25 +447,22 @@ function private.BankVisible()
 			elseif oldValue ~= 0 then
 				-- update this row
 				row:SetField("bankQuantity", 0)
-					:SetField("reagentBankQuantity", 0)
 					:Update()
 			end
 		end
 		query:Release()
 		private.quantityDB:SetQueryUpdatesPaused(false)
 	end
-	private.BagUpdateHandler(nil, Container.GetBankContainer())
+	if not ClientInfo.IsRetail() then
+		private.BagUpdateHandler(nil, Container.GetBankContainer())
+	end
 	for bag in Container.BankBagIterator() do
 		private.BagUpdateHandler(nil, bag)
 	end
-	if Container.HasReagentBank() then
-		for slot = 1, Container.GetNumSlots(Container.GetReagentBankContainer()) do
-			private.ReagentBankSlotChangedHandler(nil, slot)
-		end
-	end
 	private.BagUpdateDelayedHandler()
-	private.BankSlotUpdateDelayed()
-	private.ReagentBankSlotUpdateDelayed()
+	if not ClientInfo.IsRetail() then
+		private.BankSlotUpdateDelayed()
+	end
 end
 
 function private.BagUpdateHandler(_, bag)
@@ -588,37 +547,6 @@ function private.BankSlotUpdateDelayed()
 	private.slotDB:SetQueryUpdatesPaused(false)
 end
 
-function private.ReagentBankSlotChangedHandler(_, slot)
-	if private.reagentBankSlotUpdates.pending[slot] then
-		return
-	end
-	private.reagentBankSlotUpdates.pending[slot] = true
-	tinsert(private.reagentBankSlotUpdates.list, slot)
-	private.reagentBankSlotUpdateTimer:RunForFrames(2)
-end
-
--- This is not a WoW event, but we fake it based on a delay from private.ReagentBankSlotChangedHandler
-function private.ReagentBankSlotUpdateDelayed()
-	if not DefaultUI.IsBankVisible() then
-		return
-	end
-	private.slotDB:SetQueryUpdatesPaused(true)
-
-	-- Scan any pending slots
-	for i, slot in Table.ReverseIPairs(private.reagentBankSlotUpdates.list) do
-		if private.ScanReagentBankSlot(slot) then
-			private.reagentBankSlotUpdates.pending[slot] = nil
-			tremove(private.reagentBankSlotUpdates.list, i)
-		end
-	end
-	if #private.reagentBankSlotUpdates.list > 0 then
-		-- Some failed to scan so try again
-		private.reagentBankSlotUpdateTimer:RunForFrames(2)
-	end
-
-	private.slotDB:SetQueryUpdatesPaused(false)
-end
-
 
 
 -- ============================================================================
@@ -639,10 +567,6 @@ end
 
 function private.ScanBankSlot(slot)
 	return private.ScanBagSlot(Container.GetBankContainer(), slot)
-end
-
-function private.ScanReagentBankSlot(slot)
-	return private.ScanBagSlot(Container.GetReagentBankContainer(), slot)
 end
 
 
@@ -789,9 +713,6 @@ function private.ChangeBagItemTotal(bag, levelItemString, changeQuantity)
 	elseif Container.IsBank(bag) then
 		totalsTable = private.storage.bankQuantity
 		field = "bankQuantity"
-	elseif Container.IsReagentBank(bag) then
-		totalsTable = private.storage.reagentBankQuantity
-		field = "reagentBankQuantity"
 	else
 		error("Unexpected bag: "..tostring(bag))
 	end
@@ -799,7 +720,7 @@ function private.ChangeBagItemTotal(bag, levelItemString, changeQuantity)
 
 	local row = private.quantityDB:GetUniqueRow("levelItemString", levelItemString)
 	if row then
-		local oldTotalQuantity = row:GetField("bagQuantity") + row:GetField("bankQuantity") + row:GetField("reagentBankQuantity")
+		local oldTotalQuantity = row:GetField("bagQuantity") + row:GetField("bankQuantity")
 		local oldValue = row:GetField(field)
 		local newValue = oldValue + changeQuantity
 		assert(newValue >= 0)
@@ -819,7 +740,6 @@ function private.ChangeBagItemTotal(bag, levelItemString, changeQuantity)
 			:SetField("levelItemString", levelItemString)
 			:SetField("bagQuantity", 0)
 			:SetField("bankQuantity", 0)
-			:SetField("reagentBankQuantity", 0)
 			:SetField(field, changeQuantity)
 			:Create()
 	end
@@ -835,5 +755,5 @@ function private.FilterNonItemLevelStrings(levelItemString)
 end
 
 function private.TotalQuantityVirtualField(row)
-	return row:GetField("bagQuantity") + row:GetField("bankQuantity") + row:GetField("reagentBankQuantity")
+	return row:GetField("bagQuantity") + row:GetField("bankQuantity")
 end

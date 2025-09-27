@@ -42,9 +42,11 @@ function Banking.OnInitialize()
 	if ClientInfo.IsRetail() then
 		Event.Register("BANKFRAME_OPENED", private.BankFrameOpened)
 		Event.Register("BANKFRAME_CLOSED", private.BankFrameClosed)
-		hooksecurefunc("BankFrame_ShowPanel", function()
-			private.WarBankVisibilityChanged(true)
-		end)
+		if BankFrame.BankPanel then
+			hooksecurefunc(BankFrame.BankPanel, "SetBankType", function(self)
+				private.WarBankVisibilityChanged(BankFrame:IsShown())
+			end)
+		end
 	end
 
 	DefaultUI.RegisterBankVisibleCallback(private.BankVisibilityChanged)

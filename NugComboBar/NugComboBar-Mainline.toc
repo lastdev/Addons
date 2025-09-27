@@ -4,7 +4,7 @@
 ## Author: d87
 ## SavedVariablesPerCharacter: NugComboBarDB_Character
 ## SavedVariables: NugComboBarDB_Global
-## Version: 11.0.3
+## Version: 11.0.6
 
 ## X-WoWI-ID: 6308
 ## X-Curse-Project-ID: 2538

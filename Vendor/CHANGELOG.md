@@ -1,9 +1,26 @@
 # Vendor
 
-## [6.1.2-67-g761b8f9](https://github.com/typicalzergling/vendor/tree/761b8f9183af4383bbcf6c4ef31174ec79d85da3) (2025-02-21)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...761b8f9183af4383bbcf6c4ef31174ec79d85da3) 
+## [6.1.2-83-g69579ae](https://github.com/typicalzergling/vendor/tree/69579aeef76a89cfff77adf93cb2f224e79db9ec) (2025-08-05)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...69579aeef76a89cfff77adf93cb2f224e79db9ec) 
 
+- Perf update  
+- Update sorting, remove extra buyback  
+- Add missing horde items to important items  
+- Update extensions, bugfixes  
+- Fix typo  
+- Update release notes  
+- Update version  
+- Create default list feature and command  
+- Update docs  
+- Fix bugs  
+- Add static lists  
+- Many features  
+- Update for classic support  
+- Merge pull request #88 from brunokbcao/vendor70  
+    Including extension referencing AllTheThings addon  
+- update with latest changes  
 - Update for Undermine, fix itemproperty issue  
+- Including extension referencing AllTheThings addon  
 - Edit Rule Item Props  
     Edit rule now leverages the itemdialog feature for generating and displaying items  
 - Follow mouse option  

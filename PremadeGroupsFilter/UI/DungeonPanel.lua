@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2024 Bernhard Saumweber
+-- Copyright (C) 2025 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,14 +31,14 @@ local DIFFICULTY_TEXT = {
 
 local CMID_MAP = {
     -- The War Within Season 1
-    [503] = { order = 1, activityGroupID = 323, keyword = "arak"  }, -- Ara-Kara, City of Echoes
-    [502] = { order = 2, activityGroupID = 329, keyword = "cot"   }, -- City of Threads
-    [505] = { order = 3, activityGroupID = 326, keyword = "dawn"  }, -- The Dawnbreaker
-    [507] = { order = 4, activityGroupID =  56, keyword = "gb"    }, -- Grim Batol
-    [375] = { order = 5, activityGroupID = 262, keyword = "mists" }, -- Mists of Tirna Scithe
-    [376] = { order = 6, activityGroupID = 265, keyword = "nw"    }, -- The Necrotic Wake
-    [353] = { order = 7, activityGroupID = 146, keyword = "siege" }, -- Siege of Boralus
-    [501] = { order = 8, activityGroupID = 328, keyword = "sv"    }, -- The Stonevault
+    --[503] = { order = 1, activityGroupID = 323, keyword = "arak"  }, -- Ara-Kara, City of Echoes
+    --[502] = { order = 2, activityGroupID = 329, keyword = "cot"   }, -- City of Threads
+    --[505] = { order = 3, activityGroupID = 326, keyword = "dawn"  }, -- The Dawnbreaker
+    --[507] = { order = 4, activityGroupID =  56, keyword = "gb"    }, -- Grim Batol
+    --[375] = { order = 5, activityGroupID = 262, keyword = "mists" }, -- Mists of Tirna Scithe
+    --[376] = { order = 6, activityGroupID = 265, keyword = "nw"    }, -- The Necrotic Wake
+    --[353] = { order = 7, activityGroupID = 146, keyword = "siege" }, -- Siege of Boralus
+    --[501] = { order = 8, activityGroupID = 328, keyword = "sv"    }, -- The Stonevault
 
     -- The War Within Season 2
     [506] = { order = 1, activityGroupID = 327, keyword = "brew" }, -- Cinderbrew Meadery
@@ -49,6 +49,16 @@ local CMID_MAP = {
     [382] = { order = 6, activityGroupID = 266, keyword = "top"  }, -- Theater of Pain
     [247] = { order = 7, activityGroupID = 140, keyword = "ml"   }, -- The MOTHERLODE!!
     [370] = { order = 8, activityGroupID = 257, keyword = "work" }, -- Operation: Mechagon - Workshop
+
+    -- The War Within Season 3
+    [542] = { order = 1, activityGroupID = 381, keyword = "eda"  }, -- Eco-Dome Al'dani
+    [503] = { order = 2, activityGroupID = 323, keyword = "arak" }, -- Ara-Kara, City of Echoes
+    --[499] = { order = 3, activityGroupID = 324, keyword = "psf"  }, -- Priory of the Sacred Flame
+    [505] = { order = 4, activityGroupID = 326, keyword = "dawn" }, -- The Dawnbreaker
+    --[525] = { order = 5, activityGroupID = 371, keyword = "fg"   }, -- Operation: Floodgate
+    [378] = { order = 6, activityGroupID = 261, keyword = "hoa"  }, -- Halls of Atonement
+    [391] = { order = 7, activityGroupID = 280, keyword = "strt" }, -- Tazavesh Streets
+    [392] = { order = 8, activityGroupID = 281, keyword = "gmbt" }, -- Tazavesh Gambit
 
     -- cmID can be found here as column ID: https://wago.tools/db2/MapChallengeMode?page=1&sort[ID]=desc
 }
@@ -72,6 +82,14 @@ local stripPrefixes = {
     "^무한의 여명: ",                -- Korean
     "^恆龍黎明：",                   -- Traditional Chinese
     "^永恒黎明：",                   -- Simplified Chinese
+    -- Tazavesh
+    "^Tazavesh: ",
+    "^Tazavesh : ",
+    "^Tazavesh : ",
+    "^Тазавеш: ",
+    "^타자베쉬: ",
+    "^塔扎维什：",
+    "^塔札維許：",
     -- Mechagon/Floodgate
     "^Operation: ",  -- English/German
     "^Operación: ",  -- Spanish
@@ -119,6 +137,22 @@ function DungeonPanel:OnLoad()
 
     -- Dungeons
     self.Dungeons.Title:SetText(L["dialog.filters.dungeons"])
+    self.Dungeons.SelectNone:Init(L["dialog.button.selectnone.title"], L["dialog.button.selectnone.tooltip"])
+    self.Dungeons.SelectNone:SetScript("OnClick", function (btn)
+        for i = 1, NUM_DUNGEON_CHECKBOXES do
+            self.Dungeons["Dungeon"..i].Act:SetChecked(false)
+            self.state["dungeon"..i] = false
+        end
+        self:TriggerFilterExpressionChange()
+    end)
+    self.Dungeons.SelectAll:Init(L["dialog.button.selectall.title"], L["dialog.button.selectall.tooltip"])
+    self.Dungeons.SelectAll:SetScript("OnClick", function (btn)
+        for i = 1, NUM_DUNGEON_CHECKBOXES do
+            self.Dungeons["Dungeon"..i].Act:SetChecked(true)
+            self.state["dungeon"..i] = true
+        end
+        self:TriggerFilterExpressionChange()
+    end)
 
     for i = 1, NUM_DUNGEON_CHECKBOXES do
         local dungeon = self.Dungeons["Dungeon"..i]

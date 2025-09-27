@@ -5,7 +5,7 @@ local L = DBM_GUI_L
 
 L.TranslationByPrefix		= "번역: "
 L.TranslationBy 			= "Elnarfim"
-L.Website					= "디스코드 |cFF73C2FBhttps://discord.gg/deadlybossmods|r를 방문해 보세요. SNS에서 @deadlybossmods 또는 @MysticalOS를 팔로우하세요"
+L.Website							= "최신 소식/업데이트 정보는 MysticalOS를 팔로우하면 볼 수 있습니다. |cFF73C2FBhttps://allmylinks.com/mysticalos|r 보내주신 성원에 감사드립니다!"
 L.WebsiteButton				= "웹사이트"
 
 L.OTabBosses					= "보스 설정"--Deprecated and will be deleted once tabs no longer use this
@@ -15,10 +15,19 @@ L.OTabWorld						= "필드 보스"--Since there are so many world mods, enough t
 L.OTabScenarios						= "시나리오"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
 L.OTabPlugins						= "기타"--Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.OTabOptions					= "핵심 설정"
+L.OTabTools						= "도구"--Such as break timer button, durability checks, latency checks, keystone checks (in future)
 L.OTabAbout						= "소개"
 
-L.FOLLOWER						= "추종자"--i.e. the new dungeon type in 10.2.5. I haven't found a translated string yet
-L.STORY					    		= "이야기"--i.e. the new dungeon type in 11.0.0. I haven't found a translated string yet
+--Main Tab, Tools checks
+L.Tools_LatencyCheck				= "지연시간 검사"
+L.Tools_DurabilityCheck				= "내구도 검사"
+L.Tools_KeystoneCheck				= "쐐기돌 확인"
+
+L.Tools_BreakTimer					= "휴식 타이머 시작"
+L.Tools_PizzaTimer					= "일반 타이머 시작"
+
+L.Tools_Duration					= "지속시간"
+L.Tools_Message						= "타이머 메시지"
 
 L.TabCategory_CURRENT_SEASON		= "현재 시즌"
 
@@ -155,6 +164,12 @@ L.AutoAcceptFriendInvite	= "친구의 파티/공격대 초대 자동 수락"
 L.AutoAcceptGuildInvite		= "길드원의 파티/공격대 초대 자동 수락"
 L.Area_Advanced				= "고급 설정"
 L.FakeBW					= "DBM 대신 BigWigs 사용자로 위장하기 (BigWigs 사용을 강제하는 공격대에서 유용)"
+--
+L.Area_Tooltip						= "툴팁 통합"
+L.EnableTooltip						= "DBM이 지원하는 보스의 툴팁에 DBM 통계 추가"
+L.EnableTooltipInCombat				= "전투 중에 툴탑 정보를 표시"
+L.EnableTooltipHeader				= "툴팁에 DBM 헤더 포함"
+
 
 -- Panel: Profiles
 L.Panel_Profile				= "프로필"
@@ -586,6 +601,7 @@ L.Panel_Range				= "거리 창"
 -- Panel: Nameplate
 L.Panel_Nameplates			= "이름표"
 L.Plater_Config						= "Plater 설정창 열기"
+L.ThreatPlates_Config						= "Threat Plates 설정창 열기"
 L.Area_NPStyle				= "외형 (알림: Plater를 사용하지 않을 때만 설정이 가능합니다)"
 L.NPAuraText					= "이름표 아이콘에 타이머 텍스트 표시"
 L.NPAuraSize				= "아이콘 픽셀 크기 (정사각형): %d"

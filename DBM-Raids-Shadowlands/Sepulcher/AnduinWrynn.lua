@@ -1,15 +1,20 @@
 local mod	= DBM:NewMod(2469, "DBM-Raids-Shadowlands", 1, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250727090201")
 mod:SetCreatureID(181954)
 mod:SetEncounterID(2546)
 mod:SetUsedIcons(4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20220405000000)
 mod:SetMinSyncRevision(20220405000000)
 --mod.respawnTime = 29
+mod:SetZone(2481)
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 362405 361989 365295 361815 362771 363024 365120 365872 365958 365805 365008",
@@ -53,6 +58,7 @@ local specWarnHopebreaker						= mod:NewSpecialWarningCount(361815, nil, nil, ni
 local specWarnDarkZeal							= mod:NewSpecialWarningCount(364248, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.stack:format(12, 364248), nil, 1, 2)
 local specWarnDarkZealOther						= mod:NewSpecialWarningTaunt(364248, nil, nil, nil, 1, 2)
 
+local timerRP									= mod:NewRPTimer(15.4)
 local timerPhaseCD								= mod:NewStageTimer(30)
 local timerKingsmourneHungersCD					= mod:NewCDCountTimer(28.8, 362405, nil, nil, nil, 3)
 local timerLostSoul								= mod:NewBuffFadesTimer(35, 362055, nil, nil, nil, 5)
@@ -493,7 +499,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.wickedSet = self.vb.wickedSet + 1
 	elseif spellId == 364248 then
 		local amount = args.amount or 1
-		if amount >= 12 and self:AntiSpam(4, 2) then
+		if amount >= 12 and self:AntiSpam(4, 1) then
 			if self:IsTanking("player", "boss1", nil, true) then
 				specWarnDarkZeal:Show(amount)
 				specWarnDarkZeal:Play("changemt")
@@ -634,6 +640,17 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	end
 end
 
+--"<385.73 19:05:20> [CLEU] SPELL_AURA_APPLIED##nil#Creature-0-3881-2481-13672-181954-0000040A3B#Anduin Wrynn#369125#Domination's Grasp#BUFF#nil#nil#nil#nil#nil",
+--"<387.77 19:05:22> [CHAT_MSG_MONSTER_SAY] It is done. The final chamber of the Sepulcher opens before me.#Zovaal###Omegal##0#0##0#638#nil#0#false#false#false#false",
+--"<394.72 19:05:29> [NAME_PLATE_UNIT_ADDED] Anduin Wrynn#Creature-0-3881-2481-13672-181954-0000040A3B",
+--"<423.68 19:05:58> [DBM_Debug] ENCOUNTER_START event fired: 2546 Anduin Wrynn 16 20#nil",
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	--Could use combat log, but since that's going away in midnight, this is more robust future proofing
+	if (msg == L.PrePull or msg:find(L.PrePull)) and self:LatencyCheck() then
+		self:SendSync("AnduinRP")
+	end
+end
+
 do
 	--Delayed function just to make absolute sure RL sync overrides user settings after OnCombatStart functions run
 	local function UpdateRLPreference(self, msg)
@@ -649,6 +666,8 @@ do
 		if self:IsLFR() then return end
 		if msg == "Auto" or msg == "Generic" or msg == "None" then
 			self:Schedule(3, UpdateRLPreference, self, msg)
+		elseif msg == "AnduinRP" and self:AntiSpam(10, 2) then
+			timerRP:Start(35.9)--Technically attackable sooner but damage reduction ends on timer expire
 		end
 	end
 end

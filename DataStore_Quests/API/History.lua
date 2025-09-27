@@ -129,7 +129,7 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 	-- 2019/09/09 : questID is valid, even in Classic
 	local questID = GetQuestID() -- returns the last displayed quest dialog's questID
 
-	if not options.TrackTurnIns or not questID then return end
+	if not DataStore_Quests_Options.TrackTurnIns or not questID then return end
 
 	-- mark the current quest ID as completed
 	_SetQuestCompleted(thisCharacter.Quests, questID)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2426, "DBM-Raids-Shadowlands", 3, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060156")
+mod:SetRevision("20250719035005")
 mod:SetCreatureID(166971, 166969, 166970)--Castellan Niklaus, Baroness Frieda, Lord Stavros
 mod:SetEncounterID(2412)
 mod:SetBossHPInfoToHighest()
@@ -9,6 +9,7 @@ mod:SetUsedIcons(8,6)
 mod:SetHotfixNoticeRev(20210216000000)--2021, 02, 16
 mod:SetMinSyncRevision(20210216000000)
 --mod.respawnTime = 29
+mod:SetZone(2296)
 
 mod:RegisterCombat("combat")
 

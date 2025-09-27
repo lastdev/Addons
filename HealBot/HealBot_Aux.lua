@@ -35,15 +35,21 @@ end
 function HealBot_Aux_setInHealAbsorbMax()
       --HealBot_setCall("HealBot_Aux_setInHealAbsorbMax")
     local maxHlth=HealBot_MaxPlayerHealth(HealBot_Data["PGUID"])
-    if not HealBot_Globals.AbsorbDiv then HealBot_Globals.AbsorbDiv=12 end
-    if not HealBot_Globals.InHealDiv then HealBot_Globals.InHealDiv=12 end
+    if not HealBot_Globals.AIHDivAdj then 
+        HealBot_Globals.AIHDivAdj=true
+        if not HealBot_Globals.AbsorbDiv then HealBot_Globals.AbsorbDiv=10 end
+        if not HealBot_Globals.InHealDiv then HealBot_Globals.InHealDiv=10 end
+        HealBot_Globals.AbsorbDiv=HealBot_Globals.AbsorbDiv*10
+        HealBot_Globals.InHealDiv=HealBot_Globals.InHealDiv*10
+        HealBot_Globals.HealAbsorbsDiv=HealBot_Globals.HealAbsorbsDiv*10
+    end
     if maxHlth and maxHlth>1 then
-        HealBot_Aux_luVars["AbsorbMax"]=ceil((maxHlth/HealBot_Globals.AbsorbDiv)/1000)
-        HealBot_Aux_luVars["InHealMax"]=ceil((maxHlth/HealBot_Globals.InHealDiv)/1000)
-        HealBot_Aux_luVars["HealAbsorbsMax"]=ceil((maxHlth/HealBot_Globals.HealAbsorbsDiv)/1000)
-        HealBot_Aux_luVars["AbsorbMax"]=HealBot_Aux_luVars["AbsorbMax"]*1000
-        HealBot_Aux_luVars["InHealMax"]=HealBot_Aux_luVars["InHealMax"]*1000
-        HealBot_Aux_luVars["HealAbsorbsMax"]=HealBot_Aux_luVars["HealAbsorbsMax"]*1000
+        HealBot_Aux_luVars["AbsorbMax"]=ceil((maxHlth/(HealBot_Globals.AbsorbDiv/10))/10)
+        HealBot_Aux_luVars["InHealMax"]=ceil((maxHlth/(HealBot_Globals.InHealDiv/10))/10)
+        HealBot_Aux_luVars["HealAbsorbsMax"]=ceil((maxHlth/(HealBot_Globals.HealAbsorbsDiv/10))/10)
+        HealBot_Aux_luVars["AbsorbMax"]=HealBot_Aux_luVars["AbsorbMax"]*10
+        HealBot_Aux_luVars["InHealMax"]=HealBot_Aux_luVars["InHealMax"]*10
+        HealBot_Aux_luVars["HealAbsorbsMax"]=HealBot_Aux_luVars["HealAbsorbsMax"]*10
 
         HealBot_Timers_Set("AUX","UpdateAllAuxInHealsBars")
         HealBot_Timers_Set("AUX","UpdateAllAuxAbsorbBars")
@@ -208,7 +214,7 @@ local function HealBot_Aux_setBar(button, id, value, isFluid, text, endTime, Cas
         end
     end
     if text then
-        if hbv_Aux_GetBarVar("ANCHOR", button.frame, id)>2 and hbv_Aux_GetBarVar("ANCHOR", button.frame, id)<5 then
+        if hbv_Aux_GetBarVar("ANCHOR", button.frame, id)>2 and hbv_Aux_GetBarVar("ANCHOR", button.frame, id)<5 and hbv_Aux_GetBarBoolean("VERTICALTEXT", button.frame, id) then
             text=HealBot_Aux_VerticalText(text)
         end
         if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 2 then
@@ -229,7 +235,7 @@ local function HealBot_Aux_setBar(button, id, value, isFluid, text, endTime, Cas
         end
         button.gref.auxtxt[id]:SetText(text)
         if button.status.enabled or HealBot_Aux_luVars["TestBarsOn"] then
-            if button.status.range>0 then
+            if button.range.current>0 then
                 button.gref.auxtxt[id]:SetTextColor(button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"],HealBot_Action_BarColourAlpha(button, hbv_Aux_GetBarTextVar("COLA", button.frame, id), 1))
             else
                 button.gref.auxtxt[id]:SetTextColor(button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"],HealBot_Action_BarColourAlpha(button, hbv_Aux_GetBarTextVar("COLOA", button.frame, id), 1))
@@ -245,7 +251,7 @@ local function HealBot_Aux_setBar(button, id, value, isFluid, text, endTime, Cas
 end
 
 local hbStaticOn=false
-function HealBot_Aux_UpdBar(button, noFluid)
+function HealBot_Aux_UpdBar(button)
       --HealBot_setCall("HealBot_DoUpdAuxBar", button)
     hbStaticOn=false
     for x=1,9 do
@@ -259,7 +265,7 @@ function HealBot_Aux_UpdBar(button, noFluid)
         end
         if button.auxtxt[x]["TEXT"] then
             if button.status.enabled or HealBot_Aux_luVars["TestBarsOn"] then
-                if button.status.range>0 then
+                if button.range.current>0 then
                     button.gref.auxtxt[x]:SetTextColor(button.auxtxt[x]["R"],button.auxtxt[x]["G"],button.auxtxt[x]["B"],HealBot_Action_BarColourAlpha(button, hbv_Aux_GetBarTextVar("COLA", button.frame, x), 1))
                 else
                     button.gref.auxtxt[x]:SetTextColor(button.auxtxt[x]["R"],button.auxtxt[x]["G"],button.auxtxt[x]["B"],HealBot_Action_BarColourAlpha(button, hbv_Aux_GetBarTextVar("COLOA", button.frame, x), 1))
@@ -294,16 +300,28 @@ end
 function HealBot_Aux_barsReset()
       --HealBot_setCall("HealBot_Aux_barsReset")
     HealBot_Update_AuxClearAllMarkedBars()
+    HealBot_Timers_Set("AUX","FluidInUseUpdate",true)
+end
+
+function HealBot_Aux_FluidInUseSet(inUse)
+    if not HealBot_Aux_luVars["FluidInUseFrozen"] then
+        HealBot_Aux_luVars["FluidInUse"]=inUse
+    else
+        HealBot_Aux_luVars["TmpFluidInUse"]=inUse
+    end
+end
+
+function HealBot_Aux_FluidInUseUpdate()
     HealBot_Aux_luVars["FluidInUse"]=HealBot_Aux_luVars["TmpFluidInUse"]
+    HealBot_Aux_luVars["FluidInUseFrozen"]=false
 end
 
 function HealBot_Aux_resetBars()
       --HealBot_setCall("HealBot_Aux_resetBars")
     if HealBot_retLuVars("Loaded") then
         HealBot_Aux_luVars["TmpFluidInUse"]=HealBot_Aux_luVars["FluidInUse"]
-        if HealBot_Aux_luVars["FluidInUse"] then
-            HealBot_Aux_luVars["FluidInUse"]=false
-        end
+        HealBot_Aux_luVars["FluidInUseFrozen"]=true
+        HealBot_Aux_luVars["FluidInUse"]=false
         HealBot_Options_clearAuxBars()
         HealBot_Options_setAuxBars()
         HealBot_Update_AllAuxBars()
@@ -486,9 +504,9 @@ function HealBot_Aux_UpdateTimedBars()
 end
 
 local function HealBot_Aux_AutoTextColour(button,id,r,g,b,minVal)
-    r=r+0.2
-    g=g+0.2
-    b=b+0.2
+    r=r+0.12
+    g=g+0.12
+    b=b+0.12
     if r<minVal then r=minVal end
     if g<minVal then g=minVal end
     if b<minVal then b=minVal end
@@ -521,17 +539,20 @@ function HealBot_Aux_setPowerAssigned(frame, id)
     hbAuxPowerAssigned[frame][id]=true
 end
 
+local function HealBot_Aux_ManaOnly(button, id, pType)
+    if hbv_Aux_GetBarBoolean("MANAONLY", button.frame, id) then
+        if pType~=0 then
+            return true
+        elseif hbv_Aux_GetBarBoolean("HEALERSMANAONLY", button.frame, id) and button.role~=3 and button.role~=5 then
+            return true
+        end
+    end
+    return false
+end
+
 local function HealBot_Aux_setPowerBarsById(button, id)
     if button.status.current<HealBot_Unit_Status["DEAD"] then
-        local noPowerbar=false
-        if hbv_Aux_GetBarBoolean("MANAONLY", button.frame, id) then
-            if button.mana.type~=0 then
-                noPowerbar=true
-            elseif hbv_Aux_GetBarBoolean("HEALERSMANAONLY", button.frame, id) and button.role~=3 and button.role~=5 then
-                noPowerbar=true
-            end
-        end
-        if button.mana.max == 0 or noPowerbar then
+        if button.mana.max == 0 or HealBot_Aux_ManaOnly(button, id, button.mana.type) then
             button.aux[id]["R"]=0
             button.aux[id]["G"]=0
             button.aux[id]["B"]=0
@@ -542,18 +563,15 @@ local function HealBot_Aux_setPowerBarsById(button, id)
                 button.aux[id]["G"]=button.mana.g
                 button.aux[id]["B"]=button.mana.b
             end
-            if button.mana.change then
-                button.mana.change=false
-                HealBot_Aux_UpdBar(button, true)
-            end
+            if button.mana.change then HealBot_Aux_UpdBar(button) end
             if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
                 if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
-                    HealBot_Aux_AutoTextColour(button, id, button.mana.r, button.mana.g, button.mana.b, 0.58)
+                    HealBot_Aux_AutoTextColour(button, id, button.mana.r, button.mana.g, button.mana.b, 0.25)
                 end
                 if hbv_Skins_GetFrameVar("BarText", "HLTHTYPE", button.frame) == 1 then
-                    HealBot_Aux_setBar(button, id, button.mana.pctc, true, HealBot_Text_shortHealTxt(button.mana.current, button.frame))
+                    HealBot_Aux_setBar(button, id, button.mana.pctc, true, HealBot_Text_shortHealTxt(button.mana.current, button.frame, hbAuxTextMaxChars[button.frame][id]))
                 elseif hbv_Skins_GetFrameVar("BarText", "HLTHTYPE", button.frame) == 2 then
-                    HealBot_Aux_setBar(button, id, button.mana.pctc, true, HealBot_Text_shortHealTxt(button.mana.current-button.mana.max, button.frame))
+                    HealBot_Aux_setBar(button, id, button.mana.pctc, true, HealBot_Text_shortHealTxt(button.mana.current-button.mana.max, button.frame, hbAuxTextMaxChars[button.frame][id]))
                 else
                     HealBot_Aux_setBar(button, id, button.mana.pctc, true, button.mana.pct.."%")
                 end
@@ -570,6 +588,121 @@ function HealBot_Aux_setPowerBars(button)
       --HealBot_setCall("HealBot_Aux_setPowerBars", button)
     for id in pairs(hbAuxPowerAssigned[button.frame]) do
         HealBot_Aux_setPowerBarsById(button, id)
+    end
+end
+
+-- PowerAlt
+local hbAuxPowerAltAssigned={[1]={},[2]={},[3]={},[4]={},[5]={},[6]={},[7]={},[8]={},[9]={},[10]={}}
+function HealBot_Aux_clearPowerAltAssigned(frame,id)
+      --HealBot_setCall("HealBot_Aux_clearPowerAssigned")
+    if frame and id then
+        if hbAuxPowerAltAssigned[frame] and hbAuxPowerAltAssigned[frame][id] then
+            HealBot_Aux_clearAllBar(id)
+            hbAuxPowerAltAssigned[frame][id]=nil
+        end
+    else
+        for f=1,10 do
+            for id in pairs(hbAuxPowerAltAssigned[f]) do
+                HealBot_Aux_clearAllBar(id)
+            end
+            hbAuxPowerAltAssigned[f]={};
+        end
+    end
+end
+
+function HealBot_Aux_setPowerAltAssigned(frame, id)
+      --HealBot_setCall("HealBot_Aux_setPowerAltAssigned")
+    hbAuxPowerAltAssigned[frame][id]=true
+end
+
+local function HealBot_Aux_setPowerAltBarsById(button, id)
+    if button.status.current<HealBot_Unit_Status["DEAD"] then
+        if button.poweralt.max == 0 or HealBot_Aux_ManaOnly(button, id, button.poweralt.type) then
+            button.aux[id]["R"]=0
+            button.aux[id]["G"]=0
+            button.aux[id]["B"]=0
+            HealBot_Aux_setBar(button, id, 0, true)
+        else
+            if hbv_Aux_GetBarVar("COLOUR", button.frame, id) == 1 then
+                button.aux[id]["R"]=button.poweralt.r
+                button.aux[id]["G"]=button.poweralt.g
+                button.aux[id]["B"]=button.poweralt.b
+            end
+            if button.mana.change then HealBot_Aux_UpdBar(button) end
+            if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
+                if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
+                    HealBot_Aux_AutoTextColour(button, id, button.poweralt.r, button.poweralt.g, button.poweralt.b, 0.25)
+                end
+                if hbv_Skins_GetFrameVar("BarText", "HLTHTYPE", button.frame) == 1 then
+                    HealBot_Aux_setBar(button, id, button.poweralt.pctc, true, HealBot_Text_shortHealTxt(button.poweralt.current, button.frame, hbAuxTextMaxChars[button.frame][id]))
+                elseif hbv_Skins_GetFrameVar("BarText", "HLTHTYPE", button.frame) == 2 then
+                    HealBot_Aux_setBar(button, id, button.poweralt.pctc, true, HealBot_Text_shortHealTxt(button.poweralt.current-button.poweralt.max, button.frame, hbAuxTextMaxChars[button.frame][id]))
+                else
+                    HealBot_Aux_setBar(button, id, button.poweralt.pctc, true, button.poweralt.pct.."%")
+                end
+            else
+                HealBot_Aux_setBar(button, id, button.poweralt.pctc, true)
+            end
+        end
+    else
+        HealBot_Aux_clearBar(button, id)
+    end
+end
+
+function HealBot_Aux_setPowerAltBars(button)
+      --HealBot_setCall("HealBot_Aux_setPowerBars", button)
+    for id in pairs(hbAuxPowerAltAssigned[button.frame]) do
+        HealBot_Aux_setPowerAltBarsById(button, id)
+    end
+end
+
+-- Plugin Text
+local hbAuxPluginAssigned={[1]={},[2]={},[3]={},[4]={},[5]={},[6]={},[7]={},[8]={},[9]={},[10]={}}
+function HealBot_Aux_clearPluginAssigned(frame,id)
+      --HealBot_setCall("HealBot_Aux_clearHighlightAssigned")
+    if frame and id then
+        if hbAuxPluginAssigned[frame] and hbAuxPluginAssigned[frame][id] then
+            HealBot_Aux_clearAllBar(id)
+            hbAuxPluginAssigned[frame][id]=nil
+        end
+    else
+        for f=1,9 do
+            for id in pairs(hbAuxPluginAssigned[f]) do
+                HealBot_Aux_clearAllBar(id)
+            end
+            hbAuxPluginAssigned[f]={};
+        end
+    end
+end
+
+function HealBot_Aux_setPluginAssigned(frame, id)
+      --HealBot_setCall("HealBot_Aux_setPluginAssigned")
+    hbAuxPluginAssigned[frame][id]=true
+end
+
+function HealBot_Aux_UpdatePluginBar(button, text, r, g, b)
+      --HealBot_setCall("HealBot_Aux_UpdateHighlightBar", button)
+    for id in pairs(hbAuxPluginAssigned[button.frame]) do
+        if hbv_Aux_GetBarVar("COLOUR", button.frame, id) == 1 then
+            button.aux[id]["R"]=r
+            button.aux[id]["G"]=g
+            button.aux[id]["B"]=b
+        end
+        if text then
+            if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
+                HealBot_Aux_AutoTextColour(button, id, 1, 1, 1, 1)
+            end
+            HealBot_Aux_setBar(button, id, 1000, true, text)
+        else
+            HealBot_Aux_setBar(button, id, 1000, false)
+        end
+    end
+end
+
+function HealBot_Aux_ClearPluginBar(button)
+      --HealBot_setCall("HealBot_Aux_ClearHighlightBar", button)
+    for id in pairs(hbAuxPluginAssigned[button.frame]) do
+        HealBot_Aux_clearBar(button, id)
     end
 end
 
@@ -622,7 +755,7 @@ local function HealBot_Aux_UpdateThreatBarById(button, id)
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
                 button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"]=1,1,1
             end
-            HealBot_Aux_setBar(button, id, button.aggro.threatpct*10, true, HealBot_Text_readNumber(button.aggro.threatvalue).." ("..button.aggro.threatpct.."%)")
+            HealBot_Aux_setBar(button, id, button.aggro.threatpct*10, true, HealBot_Util_ReadNumber(button.aggro.threatvalue).." ("..button.aggro.threatpct.."%)")
         else
             HealBot_Aux_setBar(button, id, button.aggro.threatpct*10, true, false)
         end
@@ -712,7 +845,7 @@ local function HealBot_Aux_UpdateAuraBuffBarsById(button, id)
         end
         if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
-                HealBot_Aux_AutoTextColour(button, id, button.aura.buff.r, button.aura.buff.g, button.aura.buff.b, 0.4)
+                HealBot_Aux_AutoTextColour(button, id, button.aura.buff.r, button.aura.buff.g, button.aura.buff.b, 0.2)
             end
             HealBot_Aux_setBar(button, id, 1000, false, button.aura.buff.name)
         else
@@ -744,7 +877,7 @@ local function HealBot_Aux_UpdateAuraDebuffBarsById(button, id)
         end
         if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
-                HealBot_Aux_AutoTextColour(button, id, button.aura.debuff.r, button.aura.debuff.g, button.aura.debuff.b, 0.4)
+                HealBot_Aux_AutoTextColour(button, id, button.aura.debuff.r, button.aura.debuff.g, button.aura.debuff.b, 0.2)
             end
             HealBot_Aux_setBar(button, id, 1000, false, button.aura.debuff.name)
         else
@@ -833,7 +966,7 @@ local function HealBot_Aux_UpdateAbsorbBarById(button, id)
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
                 HealBot_Aux_AutoTextColour(button, id, button.health.absorbr, button.health.absorbg, button.health.absorbb, 0.25)
             end
-            HealBot_Aux_setBar(button, id, hbAuxHlth10, true, HealBot_Text_shortHealTxt(button.health.auxabsorbs, button.frame))
+            HealBot_Aux_setBar(button, id, hbAuxHlth10, true, HealBot_Text_shortHealTxt(button.health.auxabsorbs, button.frame, hbAuxTextMaxChars[button.frame][id]))
         else
             HealBot_Aux_setBar(button, id, hbAuxHlth10, true)
         end
@@ -883,7 +1016,7 @@ local function HealBot_Aux_UpdateHealInBarById(button, id)
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
                 HealBot_Aux_AutoTextColour(button, id, button.health.inhealr, button.health.inhealg, button.health.inhealb, 0.25)
             end
-            HealBot_Aux_setBar(button, id, hbAuxHealIn10, true, HealBot_Text_shortHealTxt(button.health.auxincoming, button.frame))
+            HealBot_Aux_setBar(button, id, hbAuxHealIn10, true, HealBot_Text_shortHealTxt(button.health.auxincoming, button.frame, hbAuxTextMaxChars[button.frame][id]))
         else
             HealBot_Aux_setBar(button, id, hbAuxHealIn10, true)
         end
@@ -957,7 +1090,7 @@ local function HealBot_Aux_UpdateTotalHealAbsorbsBarById(button, id)
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
                 button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"]=1,1,1
             end
-            HealBot_Aux_setBar(button, id, hbAuxTotalHeal10, true, HealBot_Text_shortHealTxt(button.health.healabsorbs, button.frame))
+            HealBot_Aux_setBar(button, id, hbAuxTotalHeal10, true, HealBot_Text_shortHealTxt(button.health.healabsorbs, button.frame, hbAuxTextMaxChars[button.frame][id]))
         else
             HealBot_Aux_setBar(button, id, hbAuxTotalHeal10, true)
         end
@@ -1023,7 +1156,7 @@ local function HealBot_Aux_SetohValue(button)
 end
 
 local function HealBot_Aux_UpdateOverHealBarById(button, id)
-    if button.status.current<HealBot_Unit_Status["DEAD"] and button.status.range>-1 and button.health.overheal>0 then
+    if button.status.current<HealBot_Unit_Status["DEAD"] and button.range.current>-1 and button.health.overheal>0 then
         if hbv_Aux_GetBarVar("COLOUR", button.frame, id) == 1 then
             button.aux[id]["R"]=1
             button.aux[id]["G"]=0.2
@@ -1034,7 +1167,7 @@ local function HealBot_Aux_UpdateOverHealBarById(button, id)
             if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
                 button.auxtxt[id]["R"],button.auxtxt[id]["G"],button.auxtxt[id]["B"]=1,1,1
             end
-            HealBot_Aux_setBar(button, id, ohValue, true, HealBot_Text_shortHealTxt(button.health.overheal, button.frame))
+            HealBot_Aux_setBar(button, id, ohValue, true, HealBot_Text_shortHealTxt(button.health.overheal, button.frame, hbAuxTextMaxChars[button.frame][id]))
         else
             HealBot_Aux_setBar(button, id, ohValue, true)
         end
@@ -1424,7 +1557,7 @@ function HealBot_Aux_UpdateResBar(button, text, startTime, endTime, CastIsChan)
                 end
                 if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
                     if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
-                        HealBot_Aux_AutoTextColour(button, id, hbv_Skins_GetFrameVar("BarTextCol", "NRCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NRCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NRCB", button.frame), 0.5)
+                        HealBot_Aux_AutoTextColour(button, id, hbv_Skins_GetFrameVar("BarTextCol", "NRCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NRCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NRCB", button.frame), 0.25)
                     end
                     HealBot_Aux_setBar(button, id, startTime, false, text, endTime, CastIsChan)
                 else
@@ -1439,7 +1572,7 @@ function HealBot_Aux_UpdateResBar(button, text, startTime, endTime, CastIsChan)
                 button.gref.aux[id]:SetMinMaxValues(0,1000)
                 if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
                     if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
-                        HealBot_Aux_AutoTextColour(button, id, hbv_Skins_GetFrameVar("BarTextCol", "NDCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NDCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NDCB", button.frame), 0.5)
+                        HealBot_Aux_AutoTextColour(button, id, hbv_Skins_GetFrameVar("BarTextCol", "NDCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NDCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NDCB", button.frame), 0.25)
                     end
                     HealBot_Aux_setBar(button, id, 1000, false, text)
                 else
@@ -1495,7 +1628,7 @@ function HealBot_Aux_UpdateSummonsBar(button, text, startTime, endTime, CastIsCh
             end
             if hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
                 if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, id) == 1 then
-                    HealBot_Aux_AutoTextColour(button, id, hbv_Skins_GetFrameVar("BarTextCol", "NSCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCB", button.frame), 0.5)
+                    HealBot_Aux_AutoTextColour(button, id, hbv_Skins_GetFrameVar("BarTextCol", "NSCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCB", button.frame), 0.25)
                 end
                 HealBot_Aux_setBar(button, id, startTime, false, text, endTime, CastIsChan)
             else
@@ -1636,10 +1769,10 @@ function HealBot_Aux_CheckOverLays(button)
         nameLastOverlayType[button.id][2]=false
     end
     if nameLastOverlayType[button.id][3] then
-        if not hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) or button.status.range<0 or button.aura.debuff.colbar == 0 then
+        if not hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) or button.range.current<0 or button.aura.debuff.colbar == 0 then
             nameLastOverlayType[button.id][3]=false
         end
-    elseif hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) and button.status.range>-1 and button.aura.debuff.colbar>0 then
+    elseif hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) and button.range.current>-1 and button.aura.debuff.colbar>0 then
         nameLastOverlayType[button.id][3]=true
     end
     if nameLastOverlayType[button.id][4] then
@@ -1657,17 +1790,17 @@ function HealBot_Aux_CheckOverLays(button)
         HealBot_TargetChanged()
     end
     if nameLastOverlayType[button.id][7] then
-        if not hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) or button.status.range>0 then
+        if not hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) or button.range.current>0 then
             nameLastOverlayType[button.id][7]=false
         end
-    elseif hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) and button.status.range<1 then
+    elseif hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) and button.range.current<1 then
         nameLastOverlayType[button.id][7]=true
     end
     if nameLastOverlayType[button.id][8] then
-        if not hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) or button.status.range<0 or button.aura.buff.colbar == 0 then
+        if not hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) or button.range.current<0 or button.aura.buff.colbar == 0 then
             nameLastOverlayType[button.id][8]=false
         end
-    elseif hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) and button.status.range>-1 and button.aura.buff.colbar>0 then
+    elseif hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) and button.range.current>-1 and button.aura.buff.colbar>0 then
         nameLastOverlayType[button.id][8]=true
     end
 
@@ -1678,10 +1811,10 @@ function HealBot_Aux_CheckOverLays(button)
         healthLastOverlayType[button.id][2]=false
     end
     if healthLastOverlayType[button.id][3] then
-        if not hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) or button.status.range<0 or button.aura.debuff.colbar == 0 then
+        if not hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) or button.range.current<0 or button.aura.debuff.colbar == 0 then
             healthLastOverlayType[button.id][3]=false
         end
-    elseif hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) and button.status.range>-1 and button.aura.debuff.colbar>0 then
+    elseif hbv_Aux_GetOverlayBoolean("OVERLAYDEBUFF", button.frame) and button.range.current>-1 and button.aura.debuff.colbar>0 then
         healthLastOverlayType[button.id][3]=true
     end
     if healthLastOverlayType[button.id][4] then
@@ -1699,17 +1832,17 @@ function HealBot_Aux_CheckOverLays(button)
         HealBot_TargetChanged()
     end
     if healthLastOverlayType[button.id][7] then
-        if not hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) or button.status.range>0 then
+        if not hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) or button.range.current>0 then
             healthLastOverlayType[button.id][7]=false
         end
-    elseif hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) and button.status.range<1 then
+    elseif hbv_Aux_GetOverlayBoolean("OVERLAYOOR", button.frame) and button.range.current<1 then
         healthLastOverlayType[button.id][7]=true
     end
     if healthLastOverlayType[button.id][8] then
-        if not hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) or button.status.range<0 or button.aura.buff.colbar == 0 then
+        if not hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) or button.range.current<0 or button.aura.buff.colbar == 0 then
             healthLastOverlayType[button.id][8]=false
         end
-    elseif hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) and button.status.range>-1 and button.aura.buff.colbar>0 then
+    elseif hbv_Aux_GetOverlayBoolean("OVERLAYBUFF", button.frame) and button.range.current>-1 and button.aura.buff.colbar>0 then
         healthLastOverlayType[button.id][8]=true
     end
 
@@ -2032,6 +2165,8 @@ function HealBot_Aux_UpdateAuxByTypeById(button, frame, id)
         HealBot_Aux_UpdateStateBarById(button, id)
     elseif hbAuxPowerAssigned[frame][id] then
         HealBot_Aux_setPowerBarsById(button, id)
+    elseif hbAuxPowerAltAssigned[frame][id] then
+        HealBot_Aux_setPowerAltBarsById(button, id)
     elseif hbAuxBuffAssigned[frame][id] then
         HealBot_Aux_UpdateAuraBuffBarsById(button, id)
     elseif hbAuxDebuffAssigned[frame][id] then
@@ -2066,7 +2201,11 @@ local function HealBot_Aux_UpdateAllAuxByTypeById(f, x)
     elseif hbAuxStateAssigned[f][x] then
         HealBot_Timers_Set("SKINS","TextUpdateState")
     elseif hbAuxPowerAssigned[f][x] then
-        HealBot_Timers_Set("AUX","UpdateAllAuxPowerBars")
+        HealBot_Update_AllAuxPowerBars()
+        --HealBot_Timers_Set("AUX","UpdateAllAuxPowerBars")
+    elseif hbAuxPowerAltAssigned[f][x] then
+        HealBot_Update_AllAuxPowerBars()
+        --HealBot_Timers_Set("AUX","UpdateAllAuxPowerBars")
     elseif hbAuxBuffAssigned[f][x] then
         HealBot_Timers_Set("AUX","updAllAuxBuffBars")
     elseif hbAuxDebuffAssigned[f][x] then
@@ -2117,10 +2256,13 @@ function HealBot_Aux_ResetTextByTypeById(button, id)
         elseif hbAuxStateAssigned[button.frame][id] then
             HealBot_Aux_setBar(button, id, 1000, false, button.text.tag.." ")
             HealBot_Aux_setBar(button, id, 1000, false, button.text.tag)
-        elseif hbv_Aux_GetBarBoolean("TEXT", button.frame, id) then
+        else
             if hbAuxPowerAssigned[button.frame][id] then
                 HealBot_Aux_setBar(button, id, button.mana.pctc, true, " ")
                 HealBot_Aux_setPowerBarsById(button, id)
+            elseif hbAuxPowerAltAssigned[button.frame][id] then
+                HealBot_Aux_setBar(button, id, button.poweralt.pctc, true, " ")
+                HealBot_Aux_setPowerAltBarsById(button, id)
             elseif button.aura.buff.missingbuff and hbAuxBuffAssigned[button.frame][id] then
                 HealBot_Aux_setBar(button, id, 1000, false, button.aura.buff.missingbuff.." ")
                 HealBot_Aux_UpdateAuraBuffBarsById(button, id)
@@ -2129,19 +2271,19 @@ function HealBot_Aux_ResetTextByTypeById(button, id)
                 HealBot_Aux_UpdateAuraDebuffBarsById(button, id)
             elseif hbAuxAbsorbAssigned[button.frame][id] then
                 HealBot_Aux_SetAuxHlth10(button)
-                HealBot_Aux_setBar(button, id, hbAuxHlth10, true, HealBot_Text_shortHealTxt(button.health.auxabsorbs+1, button.frame))
+                HealBot_Aux_setBar(button, id, hbAuxHlth10, true, HealBot_Text_shortHealTxt(button.health.auxabsorbs+1, button.frame, hbAuxTextMaxChars[button.frame][id]))
                 HealBot_Aux_UpdateAbsorbBarById(button, id)
             elseif hbAuxHealInAssigned[button.frame][id] then
                 HealBot_Aux_SetAuxHealIn10(button)
-                HealBot_Aux_setBar(button, id, hbAuxHealIn10, true, HealBot_Text_shortHealTxt(button.health.auxincoming+1, button.frame))
+                HealBot_Aux_setBar(button, id, hbAuxHealIn10, true, HealBot_Text_shortHealTxt(button.health.auxincoming+1, button.frame, hbAuxTextMaxChars[button.frame][id]))
                 HealBot_Aux_UpdateHealInBarById(button, id)
             elseif hbAuxTotalHealAbsorbsAssigned[button.frame][id] then
                 HealBot_Aux_SetAuxTotalHeal10(button)
-                HealBot_Aux_setBar(button, id, hbAuxTotalHeal10, true, HealBot_Text_shortHealTxt(button.health.healabsorbs+1, button.frame))
+                HealBot_Aux_setBar(button, id, hbAuxTotalHeal10, true, HealBot_Text_shortHealTxt(button.health.healabsorbs+1, button.frame, hbAuxTextMaxChars[button.frame][id]))
                 HealBot_Aux_UpdateTotalHealAbsorbsBarById(button, id)
             elseif hbAuxOverHealAssigned[button.frame][id] then
                 HealBot_Aux_SetohValue(button)
-                HealBot_Aux_setBar(button, id, ohValue, true, HealBot_Text_shortHealTxt(button.health.overheal+1, button.frame))
+                HealBot_Aux_setBar(button, id, ohValue, true, HealBot_Text_shortHealTxt(button.health.overheal+1, button.frame, hbAuxTextMaxChars[button.frame][id]))
                 HealBot_Aux_UpdateOverHealBarById(button, id)
             end
         end
@@ -2154,6 +2296,8 @@ function HealBot_Aux_ResetByTypeById(button)
         HealBot_Aux_clearBar(button, x)
         if hbAuxPowerAssigned[button.frame][x] then
             HealBot_Aux_setPowerBarsById(button, x)
+        elseif hbAuxPowerAltAssigned[button.frame][x] then
+            HealBot_Aux_setPowerAltBarsById(button, x)
         elseif button.aura.buff.missingbuff and hbAuxBuffAssigned[button.frame][x] then
             HealBot_Aux_UpdateAuraBuffBarsById(button, x)
         elseif button.aura.debuff.name and hbAuxDebuffAssigned[button.frame][x] then
@@ -2273,7 +2417,7 @@ local function HealBot_Aux_SetTestButton(button)
                     button.gref.aux[x]:SetStatusBarColor(button.mana.r,button.mana.g,button.mana.b,1)
                 end
                 if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, x) == 1 then
-                    HealBot_Aux_AutoTextColour(button, x, button.mana.r, button.mana.g, button.mana.b, 0.58)
+                    HealBot_Aux_AutoTextColour(button, x, button.mana.r, button.mana.g, button.mana.b, 0.2)
                     button.gref.auxtxt[x]:SetTextColor(button.auxtxt[x]["R"], button.auxtxt[x]["G"], button.auxtxt[x]["B"],1)
                 end
                 auxTestCol=true
@@ -2463,6 +2607,15 @@ local function HealBot_Aux_SetTestButton(button)
                     end
                     auxTestCol=true
                     auxTestText=HEALBOT_OPTIONS_TAB_STATETEXT
+                elseif hbv_Aux_GetBarVar("USE", button.frame, x) == 21 then
+                    if hbv_Aux_GetBarVar("COLOUR", button.frame, x) == 1 then
+                        button.gref.aux[x]:SetStatusBarColor(0,0,0.1,1)
+                    end
+                    if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, x) == 1 then
+                        button.gref.auxtxt[x]:SetTextColor(1,1,1,1)
+                    end
+                    auxTestCol=true
+                    auxTestText=HEALBOT_OPTIONS_PLUGINTXT
                 end
             else
                 if hbv_Aux_GetBarVar("USE", button.frame, x) == 17 then
@@ -2472,7 +2625,7 @@ local function HealBot_Aux_SetTestButton(button)
                                                              hbv_Skins_GetFrameVar("BarTextCol", "NSCB", button.frame),1)
                     end
                     if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, x) == 1 then
-                        HealBot_Aux_AutoTextColour(button, x, hbv_Skins_GetFrameVar("BarTextCol", "NSCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCB", button.frame), 0.5)
+                        HealBot_Aux_AutoTextColour(button, x, hbv_Skins_GetFrameVar("BarTextCol", "NSCR", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCG", button.frame), hbv_Skins_GetFrameVar("BarTextCol", "NSCB", button.frame), 0.25)
                         button.gref.auxtxt[x]:SetTextColor(button.auxtxt[x]["R"], button.auxtxt[x]["G"], button.auxtxt[x]["B"],1)
                     end
                     auxTestCol=true
@@ -2514,6 +2667,24 @@ local function HealBot_Aux_SetTestButton(button)
                     button.gref.auxtxt[x]:SetTextColor(1,1,1,1)
                     auxTestCol=true
                     auxTestText=HEALBOT_OPTIONS_TOTALHEALABSORBS
+                elseif hbv_Aux_GetBarVar("USE", button.frame, x) == 23 then
+                    if hbv_Aux_GetBarVar("COLOUR", button.frame, x) == 1 then
+                        button.gref.aux[x]:SetStatusBarColor(0,0,0.1,1)
+                    end
+                    if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, x) == 1 then
+                        button.gref.auxtxt[x]:SetTextColor(1,1,1,1)
+                    end
+                    auxTestCol=true
+                    auxTestText=HEALBOT_OPTIONS_PLUGINTXT
+                elseif hbv_Aux_GetBarVar("USE", button.frame, x) == 24 then
+                    if hbv_Aux_GetBarVar("COLOUR", button.frame, x) == 1 then
+                        button.gref.aux[x]:SetStatusBarColor(0,0,0.1,1)
+                    end
+                    if hbv_Aux_GetBarTextVar("COLTYPE", button.frame, x) == 1 then
+                        button.gref.auxtxt[x]:SetTextColor(1,1,1,1)
+                    end
+                    auxTestCol=true
+                    auxTestText=HEALBOT_OPTIONS_POWERALT
                 end
             end
             if hbv_Aux_GetBarVar("ANCHOR", button.frame, x)>2 and hbv_Aux_GetBarVar("ANCHOR", button.frame, x)<5 then
