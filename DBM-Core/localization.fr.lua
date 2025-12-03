@@ -36,6 +36,7 @@ L.TEXT_ONLY_RANGE 			= "La fenêtre de portée est limitée au texte uniquement 
 L.NO_RANGE 					= "La fenêtre de portée ne peut pas être utilisée en raison des restrictions de l'API dans cette zone."
 L.NO_ARROW 					= "La flèche ne peut pas être utilisée dans les instances."
 L.NO_HUD 					= "HUDMap ne peut pas être utilisé dans les instances."
+L.NO_COMMS					= "La communication des addons ne peut pas être utilisée pendant les rencontres ou les donjons M+ actifs. Utilisez cette commande à nouveau après la fin de la rencontre ou du donjon."
 
 L.DYNAMIC_DIFFICULTY_CLUMP	= L.DBM .. " a désactivé la vérification du nombre de joueurs à portée sur ce combat pour cause de manque d'information sur le nombre de joueurs requis regroupés pour votre taille de raid."
 L.DYNAMIC_ADD_COUNT			= L.DBM .. " a désactivé les alertes de décompte d'adds en vie sur ce combat pour cause de manque d'information du nombre d'adds apparaissant pour votre taille de raid."
@@ -84,7 +85,8 @@ L.LOWHEALTH_WARNING			= "Vie faible (%d pour cent de vie restante), déclencheme
 L.ENTERING_COMBAT			= "Entrée en combat"
 L.LEAVING_COMBAT			= "Sortie du combat"
 
-L.COMBAT_STARTED_AI_TIMER = "Mon CPU est un processeur neuronal ; un ordinateur d'apprentissage. (Ce combat utilisera la fonctionnalité d'IA de chronomètre pour générer des approximations de chronomètre)"
+L.RAID_DIFFICULTY_CHANGED		= "Le niveau de difficulté du raid a été défini sur %s."
+L.DUNGEON_DIFFICULTY_CHANGED	= "Le niveau de difficulté du donjon a été défini sur %s."
 
 L.PROFILE_NOT_FOUND				= "<" .. L.DBM .. "> Votre profile actuel est corrompu. " .. L.DBM .. " va charger le profil par défaut."
 L.PROFILE_CREATED				= "'%s' profil créé."
@@ -297,8 +299,8 @@ L.PULL_TIME_TOO_LONG			= "Le chronomètre de pull ne peut pas dépasser 60 secon
 
 L.BREAK_USAGE				= "Les chronomètres de pause ne peuvent pas durer plus de 60 minutes. Assurez vous de mettre le temps en minutes et pas secondes."
 L.BREAK_START				= "La pause commence maintenant -- vous avez %s !"
-L.BREAK_MIN					= "Fin de la pause dans %s |4minute:minutes !"
-L.BREAK_SEC					= "Fin de la pause dans %s |4seconde:secondes !"
+L.BREAK_MIN					= "Fin de la pause dans %s |4minute:minutes; !"
+L.BREAK_SEC					= "Fin de la pause dans %s |4seconde:secondes; !"
 L.TIMER_BREAK				= "Pause !"
 L.ANNOUNCE_BREAK_OVER		= "La pause est terminée"
 

@@ -20,18 +20,16 @@ end
 
 LiteMountRuleButtonMixin = {}
 
-local function MoveRule(i, n)
+local function ReorderRulesFromDataProvider(dataProvider)
     local scroll = LiteMountRulesPanel.ScrollBox
+    local oldRules = LM.Options:GetRules(scroll.tab)
+    local newRules = {}
+    for i, elementData in dataProvider:EnumerateEntireRange() do
+        newRules[i] = oldRules[elementData.index]
+        elementData.index = i
+    end
+    LM.Options:SetRules(scroll.tab, newRules)
     scroll.isDirty = true
-    local rules = LM.Options:GetRules(scroll.tab)
-    if i+n < 1 or i+n > #rules then return end
-    local elt = table.remove(rules, i)
-    table.insert(rules, i+n, elt)
-    LM.Options:SetRules(scroll.tab, rules)
-end
-
-function LiteMountRuleButtonMixin:OnShow()
-    self:SetWidth(self:GetParent():GetWidth())
 end
 
 function LiteMountRuleButtonMixin:OnEnter()
@@ -43,11 +41,6 @@ function LiteMountRuleButtonMixin:OnEnter()
         end
         GameTooltip:Show()
     end
-end
-
-function LiteMountRuleButtonMixin:OnLoad()
-    self.MoveUp:SetScript('OnClick', function () MoveRule(self.index, -1) end)
-    self.MoveDown:SetScript('OnClick', function () MoveRule(self.index, 1) end)
 end
 
 function LiteMountRuleButtonMixin:Initialize(index, rule, compiledRule)
@@ -156,7 +149,7 @@ end
 function LiteMountRulesPanelMixin:AddRule()
     LiteMountRuleEdit:Clear()
     LiteMountRuleEdit:SetCallback(self.AddRuleCallback, self)
-    LiteMountOptionsPanel_PopOver(self, LiteMountRuleEdit)
+    LiteMountOptionsPanel_PopOver(LiteMountRuleEdit, self)
 end
 
 function LiteMountRulesPanelMixin:DeleteRule()
@@ -185,7 +178,7 @@ end
 function LiteMountRulesPanelMixin:EditRule()
     LiteMountRuleEdit:SetRule(self.selectedRule)
     LiteMountRuleEdit:SetCallback(self.EditRuleCallback, self)
-    LiteMountOptionsPanel_PopOver(self, LiteMountRuleEdit)
+    LiteMountOptionsPanel_PopOver(LiteMountRuleEdit, self)
 end
 
 function LiteMountRulesPanelMixin:OnRefresh(trigger)
@@ -209,27 +202,43 @@ function LiteMountRulesPanelMixin:OnLoad()
     view:SetElementInitializer("LiteMountRuleButtonTemplate", ButtonInitializer)
     ScrollUtil.InitScrollBoxListWithScrollBar(self.ScrollBox, self.ScrollBar, view)
 
-    --[[
-    --
-    -- This is almost working, except the cursor frame is way out of position. Not
-    -- sure if this is my bug, or Blizzard's. Also needs whatever magic happens to
-    -- actually do the reorder, probably dragBehavior:SetPostDrop.
-    --
+    -- This is dependent on the panels starting out with parent=UIParent in the
+    -- XML even though it seems irrelevant, because the drag behavior closures
+    -- capture "rootparent" on init for positioning and it needs to come out as
+    -- UIParent.
 
-    local function CursorInitializer(button, sourceButton, elementData)
-        button:Initialize(elementData.index, elementData.rule, elementData.compiledRule)
-        button.Selected:Hide()
-        button:SetWidth(sourceButton:GetWidth())
-    end
-
-    local function CursorFactory(elementData) return "LiteMountRuleButtonTemplate", CursorInitializer end
+    local templateInfo = C_XMLUtil.GetTemplateInfo("LiteMountRuleButtonTemplate")
 
     local dragBehavior = ScrollUtil.InitDefaultLinearDragBehavior(self.ScrollBox)
     dragBehavior:SetReorderable(true)
-    dragBehavior:SetDragRelativeToCursor(true)
-    dragBehavior:SetCursorFactory(ScrollUtil.GenerateCursorFactory(self.ScrollBox))
+    dragBehavior:SetAreaIntersectMargin(
+        function (destinationElementData, sourceElementData, contextData)
+            return templateInfo.height * 0.5
+        end)
+    dragBehavior:SetDropPredicate(
+        function (sourceElementData, contextData)
+            return contextData.area ~= DragIntersectionArea.Inside
+        end)
+    dragBehavior:SetDropEnter(
+        function (factory, candidate)
+            local candidateArea = candidate.area
+            local candidateFrame = candidate.frame
+            local w, h = candidateFrame:GetSize()
+            local frame = factory("ScrollBoxDragBoxTemplate")
+            frame:SetSize(w, h/4)
+            if candidateArea == DragIntersectionArea.Above then
+                frame:SetPoint("CENTER", candidateFrame, "TOP")
+            elseif candidateArea == DragIntersectionArea.Below then
+                frame:SetPoint("CENTER", candidateFrame, "BOTTOM")
+            elseif candidateArea == DragIntersectionArea.Inside then
+                frame:SetPoint("CENTER", candidateFrame, "CENTER")
+            end
 
-    ]]
+        end)
+    dragBehavior:SetPostDrop(
+        function (contextData)
+            ReorderRulesFromDataProvider(contextData.dataProvider)
+        end)
 
     self.ScrollBox.ntabs = 4
     self.ScrollBox.update = self.ScrollBox.RefreshRules
@@ -240,8 +249,6 @@ function LiteMountRulesPanelMixin:OnLoad()
     self.EditButton:SetScript('OnClick', function () self:EditRule() end)
 
     LiteMountOptionsPanel_RegisterControl(self.ScrollBox)
-
-    LiteMountOptionsPanel_OnLoad(self)
 end
 
 function LiteMountRulesPanelMixin:OnHide()

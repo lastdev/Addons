@@ -4,6 +4,7 @@ local LandingPageUtil = addon.LandingPageUtil;
 
 
 local iparis = ipairs;
+local tinsert = table.insert;
 
 
 local TooltipUpdator = CreateFrame("Frame");
@@ -28,7 +29,9 @@ function TooltipUpdator:StopUpdating()
     self.headerText = nil;
     self.showProgress = nil;
     self.showRewards = nil;
+    self.showQuestDescription = nil;
     self.poiID = nil;
+    self.achievementID = nil;
     self.tooltipLines = nil;
     self.tooltipSetter = nil;
     self.entryChildren = nil;
@@ -61,8 +64,16 @@ function TooltipUpdator:RequestQuestReward()
     self.showRewards = true;
 end
 
+function TooltipUpdator:RequestQuestDescription()
+    self.showQuestDescription = true;
+end
+
 function TooltipUpdator:RequestEventTimer(poiID)
     self.poiID = poiID;
+end
+
+function TooltipUpdator:RequestAchievementID(achievementID)
+    self.achievementID = achievementID;
 end
 
 function TooltipUpdator:RequestTooltipLines(tooltipLines)
@@ -95,11 +106,25 @@ function TooltipUpdator:OnUpdate(elapsed)
                 self.keepUpdating = true;
             end
 
+            if self.showQuestDescription then
+                local description = API.GetDescriptionFromTooltip(self.questID);
+                if description and description ~= QUEST_TOOLTIP_REQUIREMENTS then
+                    tinsert(tooltipLines, description);
+                    tinsert(tooltipLines, " ");
+                end
+            end
+
             if self.showProgress then
                 local texts = API.GetQuestProgressTexts(self.questID);
                 if texts then
                     anyContent = true;
-                    tooltipLines = texts;
+                    if #tooltipLines == 0 then
+                        tooltipLines = texts;
+                    else
+                        for _, text in iparis(texts) do
+                            tinsert(tooltipLines, text);
+                        end
+                    end
                 end
                 self.keepUpdating = true;
             end
@@ -109,10 +134,10 @@ function TooltipUpdator:OnUpdate(elapsed)
                 if rewards then
                     anyContent = true;
                     if rewards.items then
-                        table.insert(questRewards, rewards.items);
+                        tinsert(questRewards, rewards.items);
                     end
                     if rewards.currencies then
-                        table.insert(questRewards, rewards.currencies);
+                        tinsert(questRewards, rewards.currencies);
                     end
                 end
 
@@ -137,7 +162,7 @@ function TooltipUpdator:OnUpdate(elapsed)
                 tooltip:SetOwner(self.obj, "ANCHOR_NONE");
                 tooltip:SetPoint("TOPLEFT", self.obj, "TOPRIGHT", 4, 12);
 
-                tooltip:SetText(self.headerText, 1, 0.82, 0, true);
+                tooltip:SetText(self.headerText, 1, 0.82, 0, 1, true);
 
                 if self.entryChildren then
                     for k, v in iparis(self.entryChildren) do
@@ -171,6 +196,19 @@ function TooltipUpdator:OnUpdate(elapsed)
                     for _, rewards in ipairs(questRewards) do
                         for index, info in ipairs(rewards) do
                             Tooltip_AddRewardLine(tooltip, info.texture, info.name, info.quality, info.quantity);
+                        end
+                    end
+                end
+
+                if self.achievementID then
+                    local _, name, _, completed, _, _, _, description = GetAchievementInfo(self.achievementID);
+                    if name then
+                        tooltip:AddLine(" ");
+                        if completed then
+                            tooltip:AddDoubleLine("["..name.."]", CRITERIA_COMPLETED, 1, 0.82, 0, 0.098, 1.000, 0.098);
+                        else
+                            tooltip:AddDoubleLine("["..name.."]", CRITERIA_NOT_COMPLETED, 1, 0.82, 0, 1.000, 0.125, 0.125);
+                            tooltip:AddLine(description, 1, 1, 1, true);
                         end
                     end
                 end

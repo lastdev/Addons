@@ -1,7 +1,9 @@
 # Lib: HereBeDragons
 
-## [2.14.3-release](https://github.com/Nevcairiel/HereBeDragons/tree/2.14.3-release) (2024-07-24)
-[Full Changelog](https://github.com/Nevcairiel/HereBeDragons/compare/2.14.2-release...2.14.3-release) [Previous Releases](https://github.com/Nevcairiel/HereBeDragons/releases)
+## [2.15-release](https://github.com/Nevcairiel/HereBeDragons/tree/2.15-release) (2025-07-02)
+[Full Changelog](https://github.com/Nevcairiel/HereBeDragons/compare/2.14.5-release...2.15-release) [Previous Releases](https://github.com/Nevcairiel/HereBeDragons/releases)
 
-- Fix classic compat, which lacks GetMapWorldSize  
-    ... for reasons, why such a base API is missing  
+- Update TOCs  
+- Update TOC versions  
+- Add data for Mists Classic  
+- Remove pre-TWW retail data  

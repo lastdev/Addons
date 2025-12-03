@@ -269,6 +269,23 @@ function TradeSkill.ClearFilters()
 	end
 end
 
+---Sets the default filter values.
+function TradeSkill.SetDefaultFilters()
+	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI) then
+		Professions.SetDefaultFilters()
+	else
+		ExpandTradeSkillSubClass(0)
+		SetTradeSkillInvSlotFilter(0, 1, 0)
+		SetTradeSkillSubClassFilter(0, 1, 0)
+		if ClientInfo.HasFeature(ClientInfo.FEATURES.TRADE_SKILL_FILTERS) then
+			SetTradeSkillItemNameFilter(nil)
+			SetTradeSkillItemLevelFilter(0, 0)
+			TradeSkillOnlyShowSkillUps(false)
+			TradeSkillOnlyShowMakeable(false)
+		end
+	end
+end
+
 ---Gets the result item(s) of a recipe.
 ---@param spellId number The recipe spell ID
 ---@return string|number[] items
@@ -369,7 +386,8 @@ end
 ---@return number[]? qualityIlvlBonuses
 function TradeSkill.GetItemLevelBonuses(spellId)
 	assert(ClientInfo.HasFeature(ClientInfo.FEATURES.C_TRADE_SKILL_UI))
-	return C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
+	local bonusTable = C_TradeSkillUI.GetRecipeInfo(spellId).qualityIlvlBonuses
+	return (bonusTable and #bonusTable > 0) and bonusTable or nil
 end
 
 ---Gets the range of quantities crafted by a recipe.
@@ -516,7 +534,7 @@ function TradeSkill.CategoryInfo(categoryId)
 				local parentCategoryId = private.GetParentCategory(categoryId)
 				return name, numIndents, parentCategoryId, nil, nil
 			else
-				return name, 0, nil, nil, nil
+				return name or GetTradeSkillLine(), 0, nil, nil, nil
 			end
 		else
 			local name = TradeSkill.IsClassicCrafting() and GetCraftDisplaySkillLine() or GetTradeSkillLine()

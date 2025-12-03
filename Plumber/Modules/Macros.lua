@@ -5,12 +5,15 @@
 -- 2. plumber:drive         Added to your regular mount macro. Summon G-99 Breakneck in Undermine. Change the icon.
 
 
+local _, addon = ...
+--if addon.IS_MIDNIGHT then return end;     --DEBUG Functioning again in 64228, praise the Absolute!
+
+
 -- User Settings
 local HIDE_UNUSABLE = false;        --Hide unusable spells
 local UPDATE_FREQUENTLY = false;    --Update drawers when BAG_UPDATE_DELAYED, SPELLS_CHANGED
 ------------------
 
-local _, addon = ...
 local L = addon.L;
 local API = addon.API;
 local CallbackRegistry = addon.CallbackRegistry;
@@ -1865,4 +1868,57 @@ do  --For other modules like Legion Remix
         end
     end
     addon.AddPlumberMacro = AddPlumberMacro;
+
+
+    local function CreateCharacterMacro(name, icon, body)
+        local success, reason;
+        if InCombatLockdown() then
+            success = false;
+            reason = 1;
+        else
+            local _, numCharacterMacros = GetNumMacros();
+            if numCharacterMacros < 30 then
+                local perCharacter = true;
+                local macroID = CreateMacro(name, icon, body, perCharacter);
+                success = true;
+                reason = macroID;
+            else
+                success = false;
+                reason = 2;
+            end
+        end
+        return success, reason
+    end
+
+    local function AcquireCharacterMacro(command, generatorFunc)
+        local _, numCharacterMacros = GetNumMacros();
+        local fromIndex = EL.macroIndexMin2;
+        local toIndex = fromIndex + numCharacterMacros - 1;
+        local body, _command;
+        local macroID;
+
+        if toIndex >= fromIndex then
+            for index = fromIndex, toIndex do
+                body = GetMacroBody(index);
+                if body then
+                    _command = match(body, "#plumber:(%w+)");
+                    if _command == command then
+                        macroID = index;
+                        break
+                    end
+                end
+            end
+        end
+
+        if (not macroID) and generatorFunc then
+            local name, icon, body = generatorFunc();
+            local success, arg = CreateCharacterMacro(name, icon, body);
+            if success then
+                macroID = arg;
+            end
+        end
+
+        return macroID
+    end
+    addon.AcquireCharacterMacro = AcquireCharacterMacro;
 end

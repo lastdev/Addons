@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1751, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060218")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(104881)
 mod:SetEncounterID(1871)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -388,7 +388,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFrostbitten:Show(amount)
 			specWarnFrostbitten:Play("stackhigh")
 		end
-	elseif spellId == 215458 then
+	elseif spellId == 215458 and not (self:IsRemix() or self:IsTrivial()) then
 		local amount = args.amount or 1
 		if amount >= 2 then
 			if not DBM:UnitDebuff("player", args.spellName) and not args:IsPlayer() then
@@ -447,7 +447,7 @@ do
 end
 
 --More accurate way to do this for now, too many spell Ids right now don't know what's what for sure. However a simple spell NAME check should work fairly reliable for test purposes
-function mod:UNIT_AURA(uId)
+function mod:UNIT_AURA()
 	local hasDebuff = DBM:UnitDebuff("player", MarkOfFrostDebuff) or DBM:UnitDebuff("player", SearingBrandDebuff)
 	if hasDebuff and not rangeShowAll then--Has 1 or more debuff, show all players on range frame
 		rangeShowAll = true
@@ -462,7 +462,7 @@ function mod:UNIT_AURA(uId)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 	if spellId == 215455 then--Arcane Orb
 		specWarnArcaneOrb:Show()
 		specWarnArcaneOrb:Play("watchorb")

@@ -887,9 +887,13 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 	availUI:Hide()
 	local ctl = CreateFrame("Frame") do
 		ctl:SetSize(56, 22)
+		local function handlesLeftClicks(self, button)
+			return button == "LeftButton"
+		end
 		local sortIndicator = CreateFrame("Button", nil, ctl) do
 			sortIndicator:SetPoint("LEFT", 4, 0)
 			sortIndicator:SetSize(20, 20)
+			sortIndicator.HandlesGlobalMouseEvent = handlesLeftClicks
 			for i=1, 2 do
 				local t = sortIndicator:CreateTexture(nil, i == 1 and "BACKGROUND" or "HIGHLIGHT")
 				t:SetTexture("Interface\\Buttons\\SquareButtonTextures")
@@ -954,6 +958,7 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		local horizon = CreateFrame("Button", nil, ctl) do
 			horizon:SetPoint("LEFT", 30, 0)
 			horizon:SetSize(20, 20)
+			horizon.HandlesGlobalMouseEvent = handlesLeftClicks
 			for i=1, 2 do
 				local t = horizon:CreateTexture(nil, i == 1 and "BACKGROUND" or "HIGHLIGHT")
 				t:SetTexture("Interface\\FriendsFrame\\StatusIcon-Away")
@@ -1128,6 +1133,9 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 		local function Roamer_OnClick(self, button)
 			T.HideOwnedGameTooltip(self)
 			if button == "RightButton" then
+				if easyDrop:IsOpen(self) then
+					CloseDropDownMenus()
+				end
 				Roamer_SetFollower(nil, self:GetID(), nil)
 				GarrisonFollowerTooltip:Hide()
 				self:GetScript("OnEnter")(self)
@@ -1153,9 +1161,13 @@ local availUI = CreateFrame("Frame", nil, missionList) do
 				easyDrop:Open(self, mn, "TOP", self, "BOTTOM", 0, -2)
 			end
 		end
+		local function handlesLeftRightClicks(self, button)
+			return button == "LeftButton" or button == "RightButton"
+		end
 		for i=1,1 do
 			local x = CreateFrame("Button", nil, roamingParty, nil, i)
 			x:SetSize(36, 36)	x:SetPoint("LEFT", 40*i-38, 0) x:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+			x.HandlesGlobalMouseEvent = handlesLeftRightClicks
 			local v = x:CreateTexture(nil, "ARTWORK", nil, 1) v:SetPoint("TOPLEFT", 3, -3) v:SetPoint("BOTTOMRIGHT", -3, 3) v:SetTexture("Interface\\Garrison\\Portraits\\FollowerPortrait_NoPortrait")
 			slots[i], x.portrait = x, v
 			local v = x:CreateTexture(nil, "ARTWORK", nil, 2) v:SetAllPoints() v:SetAtlas("Garr_FollowerPortrait_Ring", true)

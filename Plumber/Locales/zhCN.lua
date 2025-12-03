@@ -15,15 +15,57 @@ BINDING_NAME_TOGGLE_PLUMBER_LANDINGPAGE = "打开/关闭资料片概要";   --Sh
 L["Module Control"] = "功能选项";
 L["Quick Slot Generic Description"] = "\n\n*快捷按钮是一组在特定情形下出现的、可交互的按钮。";
 L["Quick Slot Edit Mode"] = "更改布局";
+L["Quick Slot High Contrast Mode"] = "切换高对比度模式";
 L["Quick Slot Reposition"] = "调整位置";
 L["Quick Slot Layout"] = "布局";
 L["Quick Slot Layout Linear"] = "线性";
 L["Quick Slot Layout Radial"] = "环形";
-L["Quick Slot High Contrast Mode"] = "切换高对比度模式";
 L["Restriction Combat"] = "战斗中不可用";    --Indicate a feature can only work when out of combat
 L["Map Pin Change Size Method"] = "\n\n*如需更改标记大小，请打开 世界地图 - 地图筛选 - Plumber";
 L["Toggle Plumber UI"] = "Plumber界面可见性";
 L["Toggle Plumber UI Tooltip"] = "在编辑模式中显示以下Plumber界面：\n%s\n\n此选项仅控制它们在编辑模式下是否可见，并不会启用或禁用这些功能。";
+L["Remove New Feature Marker"] = "移除新功能标记";
+L["Remove New Feature Marker Tooltip"] = "新功能标记 %s 通常在一周后消失，你也可以现在就移除它们。";
+L["Modules"] = "模块控制";
+L["Release Notes"] = "版本说明";
+L["Option AutoShowChangelog"] = "自动显示版本说明";
+L["Option AutoShowChangelog Tooltip"] = "在插件更新后自动打开版本说明。";
+L["Category Colon"] = "类别：";
+L["Module Wrong Game Version"] = "此模块对当前游戏版本无效。";
+L["Changelog Wrong Game Version"] = "以下更新对当前游戏版本无效。";
+L["Settings Panel"] = "设置界面";
+L["Version"] = "版本";
+L["New Features"] = "新功能";
+L["New Feature Abbr"] = "新";
+L["Format Month Day"] = "%s%d日";
+
+
+--Settings Category
+L["SC Signature"] = "特色功能";
+L["SC Current"] = "当前内容";
+L["SC ActionBar"] = "动作条";
+L["SC Chat"] = "聊天";
+L["SC Collection"] = "战团藏品";
+L["SC Instance"] = "副本";
+L["SC Inventory"] = "物品栏";
+L["SC Loot"] = "战利品";
+L["SC Map"] = "地图";
+L["SC Profession"] = "专业";
+L["SC Quest"] = "任务";
+L["SC UnitFrame"] = "单位框体";
+L["SC Old"] = "旧内容";
+L["SC Uncategorized"] = "未分类";
+
+--Settings Search Keywords, Search Tags
+L["KW Tooltip"] = "鼠标小提示鼠标提示";
+L["KW Transmog"] = "幻化";
+L["KW Vendor"] = "商人";
+L["KW LegionRemix"] = "军团再临";
+L["KW Housing"] = "房屋住宅";
+
+--Filter Sort Method
+L["SortMethod 1"] = "名称";  --Alphabetical Order
+L["SortMethod 2"] = "加入时间";  --New on the top
 
 
 --Module Categories
@@ -130,6 +172,8 @@ L["EditMode TalkingHead"] = "Plumber: "..L["ModuleName TalkingHead"];
 L["TalkingHead Option InstantText"] = "立即显示文本";   --Should texts immediately, no gradual fading
 L["TalkingHead Option TextOutline"] = "文字描边";
 L["TalkingHead Option Condition Header"] = "隐藏来自以下情形的文字：";
+L["TalkingHead Option Hide Everything"] = "隐藏所有字幕";
+L["TalkingHead Option Hide Everything Tooltip"] = "|cffff4800不再显示字幕。|r\n\n仍然会播放语音，并在聊天窗口内显示文本。";
 L["TalkingHead Option Condition WorldQuest"] = "世界任务";
 L["TalkingHead Option Condition WorldQuest Tooltip"] = "隐藏来自世界任务的文字。\n有时对话会在接受世界任务之前触发，此时我们将无法隐藏这段文字。";
 L["TalkingHead Option Condition Instance"] = "副本";
@@ -204,6 +248,25 @@ L["ModuleDescription TooltipDelvesItem"] = "在周常宝箱的鼠标提示上显
 L["You Have Received Weekly Item Format"] = "你本周已获得%s。";
 
 
+--Tooltip ItemQuest
+L["ModuleName TooltipItemQuest"] = "任务起始物品";
+L["ModuleDescription TooltipItemQuest"] = "在任务起始物品的鼠标提示上显示任务详情。\n\n如果你已经接受了相关任务，你可以按住Ctrl并左键点击此物品来在浏览任务日志。";
+L["Instruction Show In Quest Log"] = "<按住Ctrl点击浏览任务日志>";
+
+
+L["ModuleName TooltipTransmogEnsemble"] = "团本外观套装";
+L["ModuleDescription TooltipTransmogEnsemble"] = "- 显示套装内可收集外观的数量。\n\n- 军团再临团本外观商人出售的大多数物品可以解锁所有难度的配色。在这些物品的鼠标提示上显示你的收藏进度。";
+L["Collected Appearances"] = "已收集外观";
+L["Collected Items"] = "已收集物品";
+
+
+--Tooltip Housing
+L["ModuleName TooltipHousing"] = "房屋";
+L["ModuleDescription TooltipHousing"] = "房屋";
+L["Instruction View In Dressing Room"] = "<按住Ctrl点击在试衣间中查看>";
+L["Data Loading In Progress"] = "Plumber正在加载数据";
+
+
 --Plunderstore
 L["ModuleName Plunderstore"] = "霸业风暴：珍宝商店";
 L["ModuleDescription Plunderstore"] = "调整从队伍查找器界面打开的珍宝商店：\n\n- 允许仅显示未收集物品。\n\n- 在类别按钮上显示未收集物品的数量。\n\n- 在武器和护甲的鼠标提示上显示其穿戴位置。\n\n- 允许你在试衣间里显示可穿戴的物品。";
@@ -219,6 +282,13 @@ L["Num Items In Bag Format"] = "背包: |cffffffff%d|r";
 L["Number Thousands"] = "K";
 L["Number Millions"] = "M";
 L["Questionable Item Count Tooltip"] = "受技术所限该物品数量可能不准确。";
+
+
+--QueueStatus
+L["ModuleName QueueStatus"] = "随机本队列信息";
+L["ModuleDescription QueueStatus"] = "在队伍查找器眼睛上添加一个进度条，显示有多少百分比的队友已被找到。坦克和治疗有更高的权重。\n\n（可选）显示平均等待时间和你在队列中的时间的差值。";
+L["QueueStatus Show Time"] = "显示时间";
+L["QueueStatus Show Time Tooltip"] = "显示平均等待时间和你在队列中的时间的差值。";
 
 
 --Landing Page (Expansion Summary Minimap)
@@ -375,18 +445,62 @@ L["SoftTargetName ShowNPC Tooltip"] = "若禁用此选项，我们将只显示�
 
 --LegionRemix
 L["ModuleName LegionRemix"] = "军团再临：幻境新生";
-L["ModuleDescription LegionRemix"] = "军团再临：幻境新生";
+L["ModuleDescription LegionRemix"] = "- 自动解锁神器特质。\n\n- 在角色界面上显示一个提供各种信息的小部件。你可以点击它来打开全新的神器UI。";
+L["ModuleName LegionRemix_HideWorldTier"] = "隐藏世界难度图标";
+L["ModuleDescription LegionRemix_HideWorldTier"] = "隐藏小地图下方的世界难度图标。";
+L["ModuleName LegionRemix_LFGSpam"] = "随机团本拒绝邀请通知";
+L["ModuleDescription LegionRemix_LFGSpam"] = "阻止以下信息在短时间内反复出现：\n\n有人拒绝了你的组队邀请。你已被添加到队列的前端。";
 L["Artifact Weapon"] = "神器武器";
-L["Earn X To Upgrade Y Format"] = "还差 |cffffffff%s|r %s 即可升级%s"; --Example: Earn another 100 Infinite Power to upgrade Artifact Weapon
+L["Artifact Ability"] = "神器技能";
+L["Artifact Traits"] = "神器特质";
+L["Earn X To Upgrade Y Format"] = "还差 |cffffffff%s|r %s 即可升级%s";
 L["Until Next Upgrade Format"] = "距下一级还差 %s";
 L["New Trait Available"] = "有新特质可用。";
+L["Rank Format"] = "等级 %s";
 L["Rank Increased"] = "等级已提升";
 L["Infinite Knowledge Tooltip"] = "某些军团再临成就会奖励你永恒知识。";
+L["Stat Bonuses"] = "属性提升";
+L["Bonus Traits"] = "特质加成：";
+L["Instruction Open Artifact UI"] = "左键点击显示神器界面\n右键点击显示设置";
+L["LegionRemix Widget Title"] = "Plumber小部件";
+L["Trait Icon Mode"] = "特质图标样式：";
+L["Trait Icon Mode Hidden"] = "不显示";
+L["Trait Icon Mode Mini"] = "显示小型图标";
+L["Trait Icon Mode Replace"] = "替换装备图标";
+L["Error Drag Spell In Combat"] = "战斗中不可拖拽技能。";
+L["Error Change Trait In Combat"] = "战斗中不能更改特质。";
+L["Amount Required To Unlock Format"] = "%s 后解锁";   --Earn another x amount to unlock (something)
+L["Soon To Unlock"] = "即将解锁";
+L["Artifact Ability Auto Unlock Tooltip"] = "此特质将在你获得足够的永恒能量后自动解锁。";
+L["Require More Bag Slot Alert"] = "你需要腾出一些背包格子才能进行此操作。";
+L["Spell Not Known"] = "未找到法术";
+L["Fully Upgraded"] = "已升至顶级";
+L["Unlock Level Requirement Format"] = "角色升至%d级后解锁";
+L["Auto Learn Traits"] = "自动升级特质";
+L["Auto Learn Traits Tooltip"] = "当你有足够的永恒能量时自动升级神器特质。";
+L["Infinite Power Yield Format"] = "在你当前知识等级下将奖励|cffffffff%s|r点永恒能量。";
+L["Infinite Knowledge Bonus Format"] = "当前增益：|cffffffff%s|r";
+L["Infinite Knowledge Bonus Next Format"] = "下级增益：%s";
 
 
 --ItemUpgradeUI
 L["ModuleName ItemUpgradeUI"] = "物品升级：自动打开装备栏";
 L["ModuleDescription ItemUpgradeUI"] = "当你与物品升级NPC交互时自动打开角色面板。";
+
+
+--HolidayDungeon
+L["ModuleName HolidayDungeon"] = "自动选择节日地下城";
+L["ModuleDescription HolidayDungeon"] = "当你第一次打开队伍查找器时自动选择节日或时空漫游地下城。";
+
+
+--PlayerPing
+L["ModuleName PlayerPing"] = "地图标记：玩家高亮";
+L["ModuleDescription PlayerPing"] = "在以下情形时高亮你在世界地图上的位置:\n\n- 打开世界地图\n\n- 按下Alt键\n\n- 点击最大化按钮\n\n|cffd4641c默认情况下游戏只会在你改变地图后高亮你的位置。|r";
+
+
+--StaticPopup_Confirm
+L["ModuleName StaticPopup_Confirm"] = "不可退款物品警告";
+L["ModuleDescription StaticPopup_Confirm"] = "调整购买不可退款物品时出现的确认窗口，给确认键增加一个短暂的倒计时，用红色高亮关键词。\n\n此模块还将“确认职业套装转化”的倒计时减半。";
 
 
 --Loot UI
@@ -401,6 +515,9 @@ L["Sample Item 2"] = "不错的优秀物品";
 L["Sample Item 1"] = "一般的普通物品";
 L["EditMode LootUI"] =  "Plumber: 拾取窗口";
 L["Manual Loot Instruction Format"] = "如想暂时取消一次自动拾取，请按住|cffffffff%s|r键直到拾取窗口出现。";
+L["LootUI Option Hide Window"] = "隐藏Plumber拾取窗口";
+L["LootUI Option Hide Window Tooltip"] = "隐藏Plumber拾取物品提示窗口，但仍然在后台执行其他功能例如强制自动拾取。";
+L["LootUI Option Hide Window Tooltip 2"] = "此选项不影响暴雪自带的拾取窗口。";
 L["LootUI Option Force Auto Loot"] = "强制自动拾取";
 L["LootUI Option Force Auto Loot Tooltip"] = "强制使用自动拾取以修复自动拾取有时失效的问题。\n\n如想暂时取消一次自动拾取，请按住%s键直到拾取窗口出现。";
 L["LootUI Option Owned Count"] = "显示已拥有的数量";
@@ -427,6 +544,8 @@ L["LootUI Option Grow Direction Tooltip 2"] = "未勾选时：窗口左上角位
 L["Junk Items"] = "垃圾物品";
 L["LootUI Option Combine Items"] = "合并相似物品";
 L["LootUI Option Combine Items Tooltip"] = "在同一行显示相似物品。目前支持的分类为：\n\n- 垃圾物品\n- 纪元纪念品（军团再临：幻境新生）";
+L["LootUI Option Low Frame Strata"] = "置于底层";
+L["LootUI Option Low Frame Strata Tooltip"] = "在处于通知模式时，将拾取窗口置于其他界面的后方。\n\n此选项不影响手动拾取模式。";
 
 
 --Quick Slot For Third-party Dev
@@ -490,13 +609,39 @@ L["Bountiful Delves Rep Tooltip"] = "打开丰裕宝匣有几率奖励此阵营�
 L["Warband Weekly Reward Tooltip"] = "你的战团每周只能获取一次此奖励。";
 L["Completed"] = "已完成";
 L["Filter Hide Completed Format"] = "隐藏已完成的条目 (%d)";
-L["Weeky Reset Format"] = "周常重置：%s";
+L["Weekly Reset Format"] = "周常重置：%s";
 L["Ready To Turn In Tooltip"] = "可以上交任务。";
 L["Weekly Coffer Key Tooltip"] = "每周获得的前四个周常宝箱里有一把修复的宝匣钥匙。";
 L["Weekly Coffer Key Shards Tooltip"] = "每周获得的前四个周常宝箱里有宝匣钥匙碎片。";
 L["Weekly Cap"] = "每周上限";
 L["Weekly Cap Reached"] = "已达到每周上限。";
 L["Instruction Right Click To Use"] = "<右键单击来使用>"
+L["Join Queue"] = "加入队列";
+L["In Queue"] = "在队列中";
+L["Click To Switch"] = "点击以切换为|cffffffff%s|r";
+L["Click To Queue"] = "点击以加入|cffffffff%s|r";
+L["Click to Open Format"] = "点击以打开%s";
+L["List Is Empty"] = "暂无可显示内容";
+
+
+--RaidCheck
+L["ModuleName InstanceDifficulty"] = "副本难度";
+L["ModuleDescription InstanceDifficulty"] = "- 在副本门口外显示难度选择界面\n\n- 当你进入副本时，在屏幕上方显示当前副本难度和进度。";
+L["Cannot Change Difficulty"] = "你暂时无法更改副本难度。";
+
+
+--TransmogChatCommand
+L["ModuleName TransmogChatCommand"] = "幻化指令";
+L["ModuleDescription TransmogChatCommand"] = "- 当你使用幻化聊天指令时, 移除已装备的外观，避免它们影响新的外观方案。\n\n- 当你与幻化师交互时，使用幻化指令将自动把外观方案所含的物品设为待确认外观。";
+L["Copy To Clipboard"] = "复制到剪贴板";
+L["Copy Current Outfit Tooltip"] = "复制当前外观方案以在网上分享。";
+L["Missing Appearances Format"] = "%d个外观缺失";
+L["Press Key To Copy Format"] = "按|cffffd100%s|r来复制";
+
+
+--DecorModelScaleRef
+L["ModuleName DecorModelScaleRef"] = "装饰品: 参照物";
+L["ModuleDescription DecorModelScaleRef"] = "- 为装饰品预览窗口增加一个参照物（一根香蕉），帮助你理解物体的大小。\n\n- 允许你按住鼠标左键并在模型上上下拖动来改变镜头的俯仰角。";
 
 
 --Generic
@@ -546,6 +691,9 @@ L["Devourer Attack"] = "吞噬者入侵";
 L["Restored Coffer Key"] = "修复的宝匣钥匙";
 L["Coffer Key Shard"] = "宝匣钥匙碎片";
 L["Epoch Mementos"] = "纪元纪念品";
+L["Timeless Scrolls"] = "越时卷轴";
+
+L["CONFIRM_PURCHASE_NONREFUNDABLE_ITEM"] = "你确定要将%s兑换为下列物品吗？\n\n|cffff2020本次购买将无法退还。|r\n %s";
 
 
 --Map Pin Filter Name (name should be plural)
@@ -559,3 +707,5 @@ L["Match Pattern Copper"] = "([%d]+) 铜";
 
 L["Match Pattern Rep 1"] = "你的战团在(.+)中的声望值提高了([%d%,]+)点";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
 L["Match Pattern Rep 2"] = "你在(.+)中的声望值提高了([%d%,]+)点";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Transmog Set Partially Known"] = "^包含(%d)";   --TRANSMOG_SET_PARTIALLY_KNOWN_CLASS

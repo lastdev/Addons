@@ -419,7 +419,7 @@ L["Bountiful Delves Rep Tooltip"] = "打開豐裕寶匣有幾率獎勵此陣營�
 L["Warband Weekly Reward Tooltip"] = "你的戰團每週只能獲取一次此獎勵。";
 L["Completed"] = "已完成";
 L["Filter Hide Completed Format"] = "隱藏已完成的條目 (%d)";
-L["Weeky Reset Format"] = "每週重置：%s";
+L["Weekly Reset Format"] = "每週重置：%s";
 
 
 --Generic
@@ -462,6 +462,9 @@ L["Completed CHETT List"] = "完成的C.H.E.T.T.清單";
 L["Restored Coffer Key"] = "復原的寶庫鑰匙";
 L["Coffer Key Shard"] = "寶庫鑰匙裂片";
 L["Epoch Mementos"] = "時代紀念物";
+L["Timeless Scrolls"] = "永恆卷軸";
+
+L["CONFIRM_PURCHASE_NONREFUNDABLE_ITEM"] = "你確定要用%s來兌換下列物品嗎？\n\n|cffff2020這筆交易無法退款。|r\n %s";
 
 
 --Map Pin Filter Name (name should be plural)
@@ -471,3 +474,5 @@ L["Special Assignment"] = "特殊任務";
 
 L["Match Pattern Rep 1"] = "戰隊的(.+)聲望提高([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
 L["Match Pattern Rep 2"] = "你於(.+)的聲望提高了([%d%,]+)";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Transmog Set Partially Known"] = "^包含(%d)";   --TRANSMOG_SET_PARTIALLY_KNOWN_CLASS

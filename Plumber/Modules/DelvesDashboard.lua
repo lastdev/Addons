@@ -1,4 +1,6 @@
 local _, addon = ...
+if addon.IS_MIDNIGHT then return end;
+
 local L = addon.L;
 local API = addon.API;
 local InCombatLockdown = InCombatLockdown;
@@ -681,6 +683,9 @@ do
         categoryID = 1,
         uiOrder = 1104,
         moduleAddedTime = 1724100000,
+		categoryKeys = {
+			"Instance",
+		},
     };
 
     addon.ControlCenter:AddModule(moduleData);

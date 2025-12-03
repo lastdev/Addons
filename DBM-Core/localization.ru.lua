@@ -6,12 +6,8 @@ local L = DBM_CORE_L
 L.DEADLY_BOSS_MODS						= "Deadly Boss Mods"
 L.DBM									= "DBM"
 
-local guild = GetGuildInfo("player")
 local dateTable = date("*t")
-if C_Seasons and C_Seasons.GetActiveSeason and C_Seasons.GetActiveSeason() == 12 and guild == "OnlyFangs" then
-	L.DEADLY_BOSS_MODS					= "Deadly Boss Lua"
-	L.DBM								= "Boss Loa"
-elseif dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
+if dateTable.day and dateTable.month and dateTable.day == 1 and dateTable.month == 4 then
 	L.DEADLY_BOSS_MODS					= "Harmless Minion Mods"
 	L.DBM								= "HMM"
 end
@@ -43,6 +39,7 @@ L.TEXT_ONLY_RANGE					= "Радар ограничен только тексто
 L.NO_RANGE							= "Радар не может быть использован, поскольку Blizzard отключила некоторые функции в этой зоне."
 L.NO_ARROW							= "Стрелка не может быть использована в подземельях"
 L.NO_HUD							= "HUDMap не может быть использован в подземельях"
+L.NO_COMMS							= "Связь с аддоном нельзя использовать во время сражений или активных подземелий M+. Используйте эту команду снова после окончания сражения или подземелья."
 
 L.DYNAMIC_DIFFICULTY_CLUMP			= L.DBM .. " отключил динамическое окно проверки дистанции в этом бою, т.к. нет точной информации о необходимом количестве игроков в одном скоплении для рейда Вашего размера."
 L.DYNAMIC_ADD_COUNT					= L.DBM .. " отключил предупреждения о появлении аддов в этом бою, т.к. нет точной информации о количестве аддов, которые появляются в рейде Вашего размера."
@@ -76,6 +73,7 @@ L.SCENARIO_COMPLETE_NR				= "%s завершён спустя %s! Это нов�
 L.COMBAT_ENDED_AT					= "Бой против %s (%s) завершился спустя %s."
 L.COMBAT_ENDED_AT_LONG				= "Бой против %s (%s) завершился спустя %s. На этом уровне сложности Вы вайпнулись уже %d раз."
 L.GUILD_COMBAT_ENDED_AT				= "Группа гильдии %s вайпнулась на %s (%s) спустя %s."
+L.GUILD_COMBAT_ENDED				= "Группа гильдии %s вайпнулась на %s спустя %s."
 L.SCENARIO_ENDED_AT					= "%s закончился спустя %s."
 L.SCENARIO_ENDED_AT_LONG			= "%s закончился спустя %s. На этом уровне сложности Вы не завершили сценарий уже %d раз."
 L.COMBAT_STATE_RECOVERED			= "%s был атакован %s назад, восстанавливаю таймеры..."
@@ -91,7 +89,8 @@ L.LOWHEALTH_WARNING					= "Низкое здоровье (осталось %d п
 L.ENTERING_COMBAT					= "Вступление в бой"
 L.LEAVING_COMBAT					= "Выход из боя"
 
-L.COMBAT_STARTED_AI_TIMER			= "Мой ЦП - это процессор нейронной сети, обучающий компьютер. (В этом бою будет использоваться функция таймера AI для генерации приблизительных значений таймера)"
+L.RAID_DIFFICULTY_CHANGED			= "Уровень сложности рейда установлен на %s."
+L.DUNGEON_DIFFICULTY_CHANGED		= "Уровень сложности подземелья установлен на %s."
 
 L.PROFILE_NOT_FOUND					= "<" .. L.DBM .. "> Ваш текущий профиль повреждён. " .. L.DBM .. " загрузит профиль 'По умолчанию'."
 L.PROFILE_CREATED					= "Профиль '%s' создан."
@@ -150,7 +149,7 @@ L.GENERIC_WARNING_OTHERS2			= "и %d других"
 L.GENERIC_WARNING_BERSERK			= "Берсерк через %s %s"
 L.GENERIC_TIMER_BERSERK				= "Берсерк"
 L.OPTION_TIMER_BERSERK				= "Отсчёт времени до $spell:26662"
-L.BAD								= "Плохой"
+L.BAD								= "Лужа"
 
 L.OPTION_CATEGORY_TIMERS			= "Индикаторы"
 --Sub cats for "announce" object
@@ -171,17 +170,17 @@ L.OPTION_CATEGORY_PAURAS			= "Приватные Ауры"
 L.AUTO_RESPONDED					= "Автоответ."
 L.STATUS_WHISPER					= "%s: %s, %d/%d человек живые"
 --Bosses
-L.AUTO_RESPOND_WHISPER				= "%s сейчас занят, в бою против %s (%s, %d/%d человек живые)"
-L.WHISPER_COMBAT_END_KILL			= "%s одержал победу над %s!"
-L.WHISPER_COMBAT_END_KILL_STATS		= "%s одержал победу над %s! Общее количество побед у них - %d."
-L.WHISPER_COMBAT_END_WIPE_AT		= "%s потерпел поражение от %s на %s"
-L.WHISPER_COMBAT_END_WIPE_STATS_AT	= "%s потерпел поражение от %s на %s. Общее количество вайпов на этой сложности у них - %d."
+L.AUTO_RESPOND_WHISPER				= "Персонаж %s сейчас находится в бою против %s (%s, %d/%d человек живые)"
+L.WHISPER_COMBAT_END_KILL			= "Персонаж %s одержал победу над %s!"
+L.WHISPER_COMBAT_END_KILL_STATS		= "Персонаж %s одержал победу над %s! Общее количество побед - %d."
+L.WHISPER_COMBAT_END_WIPE_AT		= "Персонаж %s потерпел поражение от %s на %s"
+L.WHISPER_COMBAT_END_WIPE_STATS_AT	= "Персонаж %s потерпел поражение от %s на %s. Общее количество вайпов на этой сложности - %d."
 --Scenarios (no percents. words like "fighting" or "wipe" changed to better fit scenarios)
-L.AUTO_RESPOND_WHISPER_SCENARIO		= "%s сейчас занят в %s (%d/%d человек живые)"
-L.WHISPER_SCENARIO_END_KILL			= "%s завершил %s!"
-L.WHISPER_SCENARIO_END_KILL_STATS	= "%s завершил %s! Общее количество побед у них - %d."
-L.WHISPER_SCENARIO_END_WIPE			= "%s не завершил %s"
-L.WHISPER_SCENARIO_END_WIPE_STATS	= "%s не завершил %s. Общее количество незавершённых на этой сложности у них - %d."
+L.AUTO_RESPOND_WHISPER_SCENARIO		= "Персонаж %s сейчас проходит сценарий %s (%d/%d человек живые)"
+L.WHISPER_SCENARIO_END_KILL			= "Персонаж %s завершил %s!"
+L.WHISPER_SCENARIO_END_KILL_STATS	= "Персонаж %s завершил %s! Общее количество побед - %d."
+L.WHISPER_SCENARIO_END_WIPE			= "Персонаж %s не завершил %s"
+L.WHISPER_SCENARIO_END_WIPE_STATS	= "Персонаж %s не завершил %s. Общее количество незавершённых этапов на этой сложности - %d."
 
 L.DUNGEONS							= "Подземелья: "--префикс для проверки версии подземелий
 L.VERSIONCHECK_HEADER				= "Boss Mod - Версии"
@@ -729,10 +728,24 @@ L.DUOS						= "Дуо"
 
 -- Keystone dungeon names (keep to a max of 6 characters)
 -- See https://wago.tools/db2/MapChallengeMode for ID => Dungeon Names
+L.KEYSTONE_NAMES[197] = 'ОА' -- Eye of Azshara
+L.KEYSTONE_NAMES[198] = 'ЧТС' -- Darkheart Thicket
+L.KEYSTONE_NAMES[199] = 'КЧЛ' -- Black Rook Hold
+L.KEYSTONE_NAMES[200] = 'ЧД' -- Halls of Valor
+L.KEYSTONE_NAMES[206] = 'ЛН' -- Neltharion's Lair
+L.KEYSTONE_NAMES[207] = 'КС' -- Vault of the Wardens
+L.KEYSTONE_NAMES[208] = 'УАП' -- Maw of Souls
+L.KEYSTONE_NAMES[209] = 'КС' -- The Arcway
+L.KEYSTONE_NAMES[210] = 'КЗ' -- Court of Stars
+L.KEYSTONE_NAMES[227] = 'ВКН' -- Return to Karazhan: Lower
+L.KEYSTONE_NAMES[233] = 'СВН' -- Cathedral of Eternal Night
+L.KEYSTONE_NAMES[234] = 'ВКВ' -- Return to Karazhan: Upper
+L.KEYSTONE_NAMES[239] = 'ПТ' -- Seat of the Triumvirate
+
 L.KEYSTONE_NAMES[378] = 'ЧП' -- Halls of Atonement
 L.KEYSTONE_NAMES[391] = 'РТУЧ' -- Tazavesh: Streets of Wonder
 L.KEYSTONE_NAMES[392] = 'РТГС' -- Tazavesh: So'leah's Gambit
-L.KEYSTONE_NAMES[499] = 'ПСП' -- Priory of the Sacred Flame
+L.KEYSTONE_NAMES[499] = 'ПСП' -- Priority of the Sacred Flame
 L.KEYSTONE_NAMES[503] = 'АКГО' -- Ara-Kara, City of Echoes
 L.KEYSTONE_NAMES[505] = 'СР' -- The Dawnbreaker
 L.KEYSTONE_NAMES[525] = 'ШЛЮЗ' -- Operation Floodgate

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,lfr"
 
-mod:SetRevision("20250720212346")
+mod:SetRevision("20251002044812")
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -788,7 +788,7 @@ function mod:UNIT_DIED(args)
 		timerMesmerizeCD:Cancel()
 	end
 
-	if not DBM:IsRetail() and FlavorTable[cid] then--Disabled on retail due to restrictions in Midnight and beyond
+	if not self:IsPostMidnight() and FlavorTable[cid] then--Disabled on retail due to restrictions in Midnight and beyond
 		local x = math.random(1, mathNumber)
 		if x == 50 then--1% chance yay
 			SendChatMessage(FlavorTable[cid], "SAY")

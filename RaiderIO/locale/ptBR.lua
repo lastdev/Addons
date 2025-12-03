@@ -433,6 +433,32 @@ L["RAID_BOSS_SOD_9"] = "Kel'Thuzad"
 --[[ L["RAID_BOSS_TOES_4"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ToES_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_10"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_11"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_12"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_13"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_9"] = ""--]] 
 L["RAID_BOSS_TOTFW_1"] = "O Conclave do Vento"
 L["RAID_BOSS_TOTFW_2"] = "Al'Akir"
 L["RAID_BOSS_VOTI_1"] = "Eranog"
@@ -474,6 +500,8 @@ L["RAID_RS"] = "Santuário Rubi"
 L["RAID_ToES"] = "Terraço da Primavera Eterna"
 --[[Translation missing --]]
 --[[ L["RAID_TOES"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_TOT"] = ""--]] 
 L["RAID_TOTFW"] = "Trono dos Quatro Ventos"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Pontuações Médias para Runs Dentro do Tempo +%s"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO Melhor Mítica+"

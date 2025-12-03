@@ -1,0 +1,27 @@
+## Interface: 110200
+## Title: HandynNotes: |cffffff00Brewfest|r
+## Notes: Shows Bar Tab Barrels on the map.
+## IconTexture: 132622
+## Author: cybertk
+## Version: v0.4
+## SavedVariables: HandyNotes_BrewfestDB
+## X-Curse-Project-ID: 1352893
+## X-Wago-ID: 
+## Dependencies: HandyNotes
+## OptionalDeps: TomTom
+## Category-enUS: Map
+## Category-deDE: Karte
+## Category-esES: Mapa
+## Category-esMX: Mapa
+## Category-frFR: Carte
+## Category-itIT: Mappa
+## Category-koKR: 지도
+## Category-ptBR: Mapa
+## Category-ruRU: Карта
+## Category-zhCN: 地图
+## Category-zhTW: 地圖
+
+#libs.xml
+
+data.lua
+core.lua

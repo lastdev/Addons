@@ -3,12 +3,11 @@
 --
 --  CrazyTaxi: A crazy-taxi style arrow used for waypoint navigation.
 --    concept taken from MapNotes2 (Thanks to Mery for the idea, along
---    with the artwork.)
+--    with the original artwork.)
 ----------------------------------------------------------------------------]]
 
 local addonName, addon = ...
 
-local sformat = string.format
 local L = TomTomLocals
 local ldb = LibStub("LibDataBroker-1.1")
 
@@ -16,35 +15,11 @@ local IMAGE_ARROW = "Interface\\Addons\\TomTom\\Images\\Arrow-1024"
 local IMAGE_ARROW_UP = "Interface\\AddOns\\TomTom\\Images\\Arrow-UP-1024"
 local IMAGE_STATIC_ARROW = "Interface\\Addons\\TomTom\\Images\\StaticArrow"
 
-local function ColorGradient(perc, ...)
-	local num = select("#", ...)
-	local hexes = type(select(1, ...)) == "string"
-
-	if perc == 1 then
-		return select(num-2, ...), select(num-1, ...), select(num, ...)
-	end
-
-	num = num / 3
-
-	local segment, relperc = math.modf(perc*(num-1))
-	local r1, g1, b1, r2, g2, b2
-	r1, g1, b1 = select((segment*3)+1, ...), select((segment*3)+2, ...), select((segment*3)+3, ...)
-	r2, g2, b2 = select((segment*3)+4, ...), select((segment*3)+5, ...), select((segment*3)+6, ...)
-
-	if not r2 or not g2 or not b2 then
-		return r1, g1, b1
-	else
-		return r1 + (r2-r1)*relperc,
-		g1 + (g2-g1)*relperc,
-		b1 + (b2-b1)*relperc
-	end
-end
+local themeHandler = addon.CrazyArrowThemeHandler
 
 local twopi = math.pi * 2
 
 local wayframe = CreateFrame("Button", "TomTomCrazyArrow", UIParent)
-wayframe:SetHeight(42)
-wayframe:SetWidth(56)
 wayframe:EnableMouse(true)
 wayframe:SetMovable(true)
 wayframe:SetClampedToScreen(true)
@@ -59,6 +34,10 @@ wayframe.tta = titleframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall"
 wayframe.title:SetPoint("TOP", wayframe, "BOTTOM", 0, 0)
 wayframe.status:SetPoint("TOP", wayframe.title, "BOTTOM", 0, 0)
 wayframe.tta:SetPoint("TOP", wayframe.status, "BOTTOM", 0, 0)
+
+local function ShowCrazyArrow()
+	wayframe:Show()
+end
 
 local function OnDragStart(self, button)
 	if not TomTom.db.profile.arrow.lock then
@@ -76,7 +55,7 @@ end
 
 local function OnEvent(self, event, ...)
 	if (event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED") and TomTom.profile.arrow.enable then
-		self:Show()
+		ShowCrazyArrow()
 		return
 	end
 	if (event == "PLAYER_ENTERING_WORLD") then
@@ -97,9 +76,7 @@ wayframe:RegisterEvent("ZONE_CHANGED")
 wayframe:RegisterEvent("PLAYER_ENTERING_WORLD")
 wayframe:SetScript("OnEvent", OnEvent)
 
-wayframe.arrow = wayframe:CreateTexture(nil, "OVERLAY")
-wayframe.arrow:SetTexture(IMAGE_ARROW)
-wayframe.arrow:SetAllPoints()
+
 
 local active_point, arrive_distance, showDownArrow, point_title
 
@@ -115,7 +92,7 @@ function TomTom:SetCrazyArrow(uid, dist, title)
 
 	if self.profile.arrow.enable then
 		wayframe.title:SetText(title or L["Unknown waypoint"])
-		wayframe:Show()
+		ShowCrazyArrow()
 		if wayframe.crazyFeedFrame then
 			wayframe.crazyFeedFrame:Show()
 		end
@@ -129,7 +106,6 @@ end
 local status = wayframe.status
 local tta = wayframe.tta
 local arrow = wayframe.arrow
-local count = 0
 local last_distance = 0
 local tta_throttle = 0
 local speed = 0
@@ -161,37 +137,17 @@ local function OnUpdate(self, elapsed)
 
 	status:SetText(addon:GetFormattedDistance(dist))
 
-	local cell
-
 	-- Showing the arrival arrow?
 	if dist <= arrive_distance then
 		if not showDownArrow then
-			arrow:SetHeight(70)
-			arrow:SetWidth(53)
-			arrow:SetTexture(IMAGE_ARROW_UP)
-			arrow:SetVertexColor(unpack(TomTom.db.profile.arrow.goodcolor))
+			themeHandler:SwitchToArrivalArrow(wayframe)
 			showDownArrow = true
 		end
 
-		count = count + 1
-		if count >= 55 then
-			count = 0
-		end
-
-		local cell = count
-		local column = cell % 9
-		local row = floor(cell / 9)
-
-		local xstart = (column * 53) / 512
-		local ystart = (row * 70) / 512
-		local xend = ((column + 1) * 53) / 512
-		local yend = ((row + 1) * 70) / 512
-		arrow:SetTexCoord(xstart,xend,ystart,yend)
+		themeHandler:ArrivalArrow_OnUpdate(elapsed)
 	else
 		if showDownArrow then
-			arrow:SetHeight(56)
-			arrow:SetWidth(42)
-			arrow:SetTexture(IMAGE_ARROW)
+			themeHandler:SwitchToNavigationArrow(wayframe)
 			showDownArrow = false
 		end
 
@@ -213,30 +169,7 @@ local function OnUpdate(self, elapsed)
 
 		angle = angle - player
 
-		local perc = math.abs((math.pi - math.abs(angle)) / math.pi)
-
-		local gr,gg,gb = unpack(TomTom.db.profile.arrow.goodcolor)
-		local mr,mg,mb = unpack(TomTom.db.profile.arrow.middlecolor)
-		local br,bg,bb = unpack(TomTom.db.profile.arrow.badcolor)
-		local r,g,b = ColorGradient(perc, br, bg, bb, mr, mg, mb, gr, gg, gb)
-
-		-- If we're 98% heading in the right direction, then use the exact
-		-- color instead of the gradient. This allows us to distinguish 'good'
-		-- from 'on target'. Thanks to Gregor_Curse for the suggestion.
-		if perc > 0.98 then
-			r,g,b = unpack(TomTom.db.profile.arrow.exactcolor)
-		end
-		arrow:SetVertexColor(r,g,b)
-
-		local cell = floor(angle / twopi * 108 + 0.5) % 108
-		local column = cell % 9
-		local row = floor(cell / 9)
-
-		local xstart = (column * 56) / 512
-		local ystart = (row * 42) / 512
-		local xend = ((column + 1) * 56) / 512
-		local yend = ((row + 1) * 42) / 512
-		arrow:SetTexCoord(xstart,xend,ystart,yend)
+		themeHandler:NavigationArrow_OnUpdate(elapsed, angle)
 	end
 
 	-- Calculate the TTA every second  (%01d:%02d)
@@ -278,7 +211,7 @@ function TomTom:ShowHideCrazyArrow()
 			return
 		end
 
-		wayframe:Show()
+		ShowCrazyArrow()
 
 		if self.profile.arrow.noclick then
 			wayframe:EnableMouse(false)
@@ -317,6 +250,10 @@ function TomTom:ShowHideCrazyArrow()
 			wayframe.tta:ClearAllPoints()
 			wayframe.tta:SetPoint("TOP", wayframe, "BOTTOM", 0, 0)
 		end
+
+		-- Set the theme
+		local theme = self.profile.arrow.theme
+		themeHandler:SetActiveTheme(wayframe, theme, showDownArrow)
 
 		if self.profile.arrow.showtta then
 			tta:Show()
@@ -433,7 +370,7 @@ local function wayframe_OnEvent(self, event, arg1, ...)
 					local dist = TomTom:GetDistanceToWaypoint(active_point)
 					if dist then
 						tooltip:AddLine(point_title or L["Unknown waypoint"])
-						tooltip:AddLine(sformat(L["%d yards"], dist), 1, 1, 1)
+						tooltip:AddLine(string.format(L["%d yards"], dist), 1, 1, 1)
 					end
 				end,
 				OnClick = WayFrame_OnClick,
@@ -476,7 +413,7 @@ local function wayframe_OnEvent(self, event, arg1, ...)
 				local gr,gg,gb = unpack(TomTom.db.profile.arrow.goodcolor)
 				local mr,mg,mb = unpack(TomTom.db.profile.arrow.middlecolor)
 				local br,bg,bb = unpack(TomTom.db.profile.arrow.badcolor)
-				local r,g,b = ColorGradient(perc, br, bg, bb, mr, mg, mb, gr, gg, gb)
+				local r,g,b = addon:ColorGradient(perc, br, bg, bb, mr, mg, mb, gr, gg, gb)
 
 				-- If we're 98% heading in the right direction, then use the exact
 				-- color instead of the gradient. This allows us to distinguish 'good'
@@ -560,7 +497,7 @@ end
 function TomTom:HijackCrazyArrow(onupdate)
 	wayframe:SetScript("OnUpdate", onupdate)
 	wayframe.hijacked = true
-	wayframe:Show()
+	ShowCrazyArrow()
 end
 
 -- Releases the crazy arrow by restoring the original OnUpdate script

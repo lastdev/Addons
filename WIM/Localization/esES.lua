@@ -162,7 +162,7 @@ local translations = {
     ["Filter Name"] = "Nombre de filtro",
     ["Filter By"] = "Filtrar por",
     ["Pattern"] = "Patrón",
-    ["User Type"] = "Tipo de usuario",
+    ["User Type"] = "Tipo de jugador",
     ["Level"] = "Nivel",
     ["Friends"] = "Amigos",
     ["Guild Members"] = "Miembros de hermandad",
@@ -170,7 +170,7 @@ local translations = {
     ["Raid Members"] = "Miembros de banda",
     ["Cross-Realm"] = "Interreinos",
     ["Everyone"] = "Todos",
-    ["User must be at least level:"] = "El usuario debe tener al menos un nivel:",
+    ["User must be at least level:"] = "El jugador debe tener al menos un nivel:",
     ["Apply to messages received."] = "Aplicar a los mensajes recibidos.",
     ["Apply to messages sent."] = "Aplicar a los mensajes enviados.",
     ["Action to Perform:"] = "Acción a realizar:",
@@ -184,7 +184,7 @@ local translations = {
 
     -- History.lua --
     ["WIM History Button"] = "Botón de historial de WIM",
-    ["Clicking the %s button on the message window will show that user's history in WIM's History Viewer."] = "Al hacer clic en el botón %s en la ventana del mensaje, se mostrará el historial de ese usuario en el visor de historial de WIM.",
+    ["Clicking the %s button on the message window will show that user's history in WIM's History Viewer."] = "Al hacer clic en el botón %s en la ventana del mensaje, se mostrará el historial de ese jugador en el visor de historial de WIM.",
     ["Click to view message history."] = "Haz clic para ver el historial de mensajes.",
     ["WIM pruned %d |4message:messages; from your history."] = "WIM eliminó %d |4mensaje:mensajes; de tu historial.",
     ["History Viewer"] = "Visor de historial",
@@ -219,7 +219,7 @@ local translations = {
     ["Coordinates"] = "Coordenadas",
     ["Invite to Party"] = "Invitar al grupo",
     ["Add Friend"] = "Añadir amigo",
-    ["Ignore User"] = "Ignorar usuario",
+    ["Ignore User"] = "Ignorar jugador",
     ["Are you sure you want to\nignore %s?"] = "¿Estás seguro de que quieres\nignorar a %s?",
     ["Right-Click for profile links..."] = "Haz clic derecho para enlaces de perfil...",
     ["Profile Links"] = "Enlaces de perfil",
@@ -388,7 +388,7 @@ local translations = {
     ["Allow others to see my location."] = "Permitir a otros ver mi ubicación.",
     ["Main"] = "Principal",
     ["General"] = "General",
-    ["User Level"] = "Nivel del usuario",
+    ["User Level"] = "Nivel del jugador",
     ["Windows will also be hidden when frames such as the world map are shown."] = "Ventanas también estará oculto cuando se muestren marcos como el mapa del mundo.",
     ["Sounds"] = "Sonidos",
     ["Configure various sound events and how they are triggered."] = "Configura varios eventos de sonido y cómo se activan.",
@@ -516,9 +516,12 @@ local translations = {
     ["Click to reposition."] = "Haz clic para reposicionar.",
 
     --Misc
-    ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM ha detectado que estás jugando en un servidor privado. Algunos servidores no pueden procesar ChatAddonMessages. ¿Quieres activarlos de todos modos?"
-,
+    ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM ha detectado que estás jugando en un servidor privado. Algunos servidores no pueden procesar ChatAddonMessages. ¿Quieres activarlos de todos modos?",
 
+	-- Whisper-Mode Warnings
+	["Set whispers to In-line"] = "Establecer susurros en línea",
+	["Message suppression requires whispers to be set to 'In-line'."] = "La supresión de mensajes requiere que los susurros estén configurados en 'en línea'.",
+	["It is recommended for whispers to be set to in-line in order to handle their behavior properly."] = "Se recomienda configurar los susurros en línea para manejar su comportamiento correctamente.",
 };
 
 if WIM.getLocale() == "esES" then

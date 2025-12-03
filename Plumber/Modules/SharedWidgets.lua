@@ -45,7 +45,7 @@ do  -- Slice Frame
         NineSlice_GenericBox = true,            --used by BackpackItemTracker
         NineSlice_GenericBox_Border = true,     --used by BackpackItemTracker
         NineSlice_GenericBox_Black = true,
-        NineSlice_GenericBox_Black_Shadowed = true,
+        NineSlice_GenericBox_Black_Shadowed = true, --CustomSpellFlyout
     };
 
     local ThreeSliceLayouts = {
@@ -83,6 +83,37 @@ do  -- Slice Frame
 
     local function NiceSlice_SetTexture(frame, texture)
         frame.NineSlice:SetTexture(texture);
+    end
+
+    function API.CreateThreeSliceTextures(parent, layer, sideWidth, sideHeight, sideOffset, file, disableSharpenging, useTrilinearFilter)
+        local slices = {};
+        slices[1] = parent:CreateTexture(nil, layer);
+        slices[2] = parent:CreateTexture(nil, layer);
+        slices[3] = parent:CreateTexture(nil, layer);
+        slices[1]:SetPoint("LEFT", parent, "LEFT", -sideOffset, 0);
+        slices[3]:SetPoint("RIGHT", parent, "RIGHT", sideOffset, 0);
+        slices[2]:SetPoint("TOPLEFT", slices[1], "TOPRIGHT", 0, 0);
+        slices[2]:SetPoint("BOTTOMRIGHT", slices[3], "BOTTOMLEFT", 0, 0);
+
+        if sideWidth and sideHeight then
+            slices[1]:SetSize(sideWidth, sideHeight);
+            slices[3]:SetSize(sideWidth, sideHeight);
+        end
+
+        if file then
+            local filter = useTrilinearFilter and "TRILINEAR" or "LINEAR";
+            slices[1]:SetTexture(file, nil, nil, filter);
+            slices[2]:SetTexture(file, nil, nil, filter);
+            slices[3]:SetTexture(file, nil, nil, filter);
+        end
+
+        if disableSharpenging then
+            DisableSharpening(slices[1]);
+            DisableSharpening(slices[2]);
+            DisableSharpening(slices[3]);
+        end
+
+        return slices
     end
 
     function SliceFrameMixin:CreatePieces(n)
@@ -264,7 +295,7 @@ do  -- Checkbox
             local f = GameTooltip;
             f:Hide();
             f:SetOwner(self, "ANCHOR_RIGHT");
-            f:SetText(self.Label:GetText(), 1, 1, 1, true);
+            f:SetText(self.Label:GetText(), 1, 1, 1, 1, true);
             if type(self.tooltip) == "function" then
                 f:AddLine(self.tooltip(), 1, 0.82, 0, true);
             else
@@ -337,7 +368,11 @@ do  -- Checkbox
     function CheckboxMixin:OnEnable()
         self.CheckedTexture:SetDesaturated(false);
         self.CheckedTexture:SetVertexColor(1, 1, 1);
-        self.Label:SetTextColor(1, 0.82, 0);
+        if self.useWhiteLabel then
+            self.Label:SetTextColor(1, 1, 1);
+        else
+            self.Label:SetTextColor(1, 0.82, 0);
+        end
     end
 
     function CheckboxMixin:OnDisable()
@@ -614,8 +649,19 @@ do  -- Common Frame with Header (and close button)
 
         return f
     end
-
     addon.CreateHeaderFrame = CreateHeaderFrame;
+
+
+    local function CreateCommonFrame(parent)
+        local showCloseButton = false;
+        local f = CreateHeaderFrame(parent, showCloseButton);
+        local texture = "Interface/AddOns/Plumber/Art/Frame/CommonFrameNoHeader";
+        for _, p in ipairs(f.pieces) do
+            p:SetTexture(texture);
+        end
+        return f
+    end
+    addon.CreateCommonFrame = CreateCommonFrame;
 
 
     local ExpandCollapseButtonMixin = {};
@@ -1277,9 +1323,9 @@ do  -- TokenFrame   -- Money   -- Coin
         if quantity then
             tokenButton.Icon:SetTexture(icon);
             if numRequired then
-                tokenButton.Count:SetText(numRequired);
+                tokenButton.Count:SetText(BreakUpLargeNumbers(numRequired));
             else
-                tokenButton.Count:SetText(quantity);
+                tokenButton.Count:SetText(BreakUpLargeNumbers(quantity));
             end
             if numRequired and numRequired > quantity then
                 grayColor = true;
@@ -3801,7 +3847,7 @@ do  --Shared Context Menu
                 tooltip:SetPoint("TOPLEFT", self.focusedButton, "TOPRIGHT", 4, 6);
             end
 
-            tooltip:SetText(self.focusedButton.Text:GetText(), 1, 1, 1, true);
+            tooltip:SetText(self.focusedButton.Text:GetText(), 1, 1, 1, 1, true);
             tooltip:AddLine(self.focusedButton.tooltip, 1, 0.82, 0, true);
             tooltip:Show();
         end
@@ -4325,7 +4371,7 @@ do  --Slider
             local f = GameTooltip;
             f:Hide();
             f:SetOwner(self, "ANCHOR_RIGHT");
-            f:SetText(self.Label:GetText(), 1, 1, 1, true);
+            f:SetText(self.Label:GetText(), 1, 1, 1, 1, true);
             f:AddLine(self.tooltip, 1, 0.82, 0, true);
             if self.tooltip2 then
                 local tooltip2;
@@ -4355,6 +4401,14 @@ do  --Slider
 
     function SliderFrameMixin:IsDraggingThumb()
         return self.isDraggingThumb
+    end
+
+    function SliderFrameMixin:SetEnabled(enabled)
+        if enabled then
+            self:Enable();
+        else
+            self:Disable();
+        end
     end
 
     local function CreateSlider(parent)
@@ -4573,7 +4627,7 @@ do  --KeybindButton
             local f = GameTooltip;
             f:Hide();
             f:SetOwner(self, "ANCHOR_RIGHT");
-            f:SetText(self.Label:GetText(), 1, 1, 1, true);
+            f:SetText(self.Label:GetText(), 1, 1, 1, 1, true);
             f:AddLine(self.tooltip, 1, 0.82, 0, true);
             f:Show();
         end
@@ -4881,6 +4935,7 @@ do  --EditMode
 
         checkbox.Label:SetFontObject("GameFontHighlightMedium");    --Fonts in EditMode and Options are different
         checkbox.Label:SetTextColor(1, 1, 1);
+        checkbox.useWhiteLabel = true;
 
         checkbox:SetData(widgetData);
         checkbox:SetChecked(addon.GetDBValue(checkbox.dbKey));
@@ -4976,6 +5031,7 @@ do  --EditMode
             for order, widgetData in ipairs(schematic.widgets) do
                 local widget;
                 if (not widgetData.validityCheckFunc) or (widgetData.validityCheckFunc()) then
+                    
                     if widgetData.type == "Checkbox" then
                         widget = self:CreateCheckbox(widgetData);
                     elseif widgetData.type == "RadioGroup" then
@@ -5005,6 +5061,10 @@ do  --EditMode
                         tinsert(self.activeWidgets, widget);
                         widget.widgetKey = widgetData.widgetKey;
                         widget.widgetType = widgetData.type;
+                        if widget.SetEnabled then
+                            local enabled = (widgetData.shouldEnableOption == nil) or (widgetData.shouldEnableOption and widgetData.shouldEnableOption());
+                            widget:SetEnabled(enabled);
+                        end
                     end
                 end
             end
@@ -5191,7 +5251,9 @@ do  --Radial Progress Bar
         if showNumber then
             if self.showNumber ~= true then
                 self.showNumber = true;
-                self.ValueText:Show();
+                if self.ValueText then
+                    self.ValueText:Show();
+                end
                 self.visualOffset = 0.07;
                 self.Border:SetTexCoord(0, 80/256, 80/256, 160/256);
                 self.BorderHighlight:SetTexCoord(0, 80/256, 80/256, 160/256);
@@ -5210,7 +5272,9 @@ do  --Radial Progress Bar
         else
             if self.showNumber ~= false then
                 self.showNumber = false;
-                self.ValueText:Hide();
+                if self.ValueText then
+                    self.ValueText:Hide();
+                end
                 self.visualOffset = 0.01;
                 self.Border:SetTexCoord(0, 80/256, 0/256, 80/256);
                 self.BorderHighlight:SetTexCoord(0, 80/256, 0/256, 80/256);
@@ -5229,7 +5293,21 @@ do  --Radial Progress Bar
         end
     end
 
-    local function CreateRadialProgressBar(parent)
+    function RadialProgressBarMixin:SetSwipeTexCoord(l, r, t, b)
+        local lowTexCoords =
+        {
+            x = l,
+            y = t,
+        };
+        local highTexCoords =
+        {
+            x = r,
+            y = b,
+        };
+        self:SetTexCoordRange(lowTexCoords, highTexCoords);
+    end
+
+    local function CreateRadialProgressBar(parent, createValueText)
         local f = CreateFrame("Cooldown", nil, parent, "PlumberRadialProgressBarTemplate");
         Mixin(f, RadialProgressBarMixin);
 
@@ -5239,10 +5317,12 @@ do  --Radial Progress Bar
         f.BorderHighlight:SetTexture(tex);
         f:SetSwipeTexture(tex);
 
-        f.ValueText = f:CreateFontString("OVERLAY", nil, "GameFontNormalLargeOutline");
-        f.ValueText:SetJustifyH("CENTER");
-        f.ValueText:SetPoint("CENTER", f, "BOTTOM", 2, 14);
-        f.ValueText:SetTextColor(1, 0.82, 0);
+        if createValueText then
+            f.ValueText = f:CreateFontString("OVERLAY", nil, "GameFontNormalLargeOutline");
+            f.ValueText:SetJustifyH("CENTER");
+            f.ValueText:SetPoint("CENTER", f, "BOTTOM", 2, 14);
+            f.ValueText:SetTextColor(1, 0.82, 0);
+        end
 
         f:ShowNumber(true);
 

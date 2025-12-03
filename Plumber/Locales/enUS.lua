@@ -24,6 +24,48 @@ L["Restriction Combat"] = "Does not work in combat";    --Indicate a feature can
 L["Map Pin Change Size Method"] = "\n\n*You can change the pin size in World Map> Map Filter> Plumber";
 L["Toggle Plumber UI"] = "Toggle Plumber UI";
 L["Toggle Plumber UI Tooltip"] = "Show the following Plumber UI in the Edit Mode:\n%s\n\nThis checkbox only controls their visibility in the Edit Mode. It will not enable or disable these modules.";
+L["Remove New Feature Marker"] = "Remove New Feature Marker";
+L["Remove New Feature Marker Tooltip"] = "New Feature Markers %s disappear after a week. But you can click this button to remove them now.";
+L["Modules"] = "Modules";
+L["Release Notes"] = "Release Notes";
+L["Option AutoShowChangelog"] = "Auto Show Release Notes";
+L["Option AutoShowChangelog Tooltip"] = "Automatically show release notes after an update.";
+L["Category Colon"] = (CATEGORY or "Category")..": ";
+L["Module Wrong Game Version"] = "This module is ineffective for your current game version.";
+L["Changelog Wrong Game Version"] = "The following changes do not apply to your current game version.";
+L["Settings Panel"] = "Settings Panel";
+L["Version"] = "Version";
+L["New Features"] = "New Features";
+L["New Feature Abbr"] = "New";
+L["Format Month Day"] = EVENT_SCHEDULER_DAY_FORMAT or "%s %d";
+
+
+--Settings Category
+L["SC Signature"] = "Signature Features";
+L["SC Current"] = "Current Content";
+L["SC ActionBar"] = "Action Bars";
+L["SC Chat"] = "Chat";
+L["SC Collection"] = "Collections";
+L["SC Instance"] = "Instances";
+L["SC Inventory"] = "Inventory";
+L["SC Loot"] = "Loot";
+L["SC Map"] = "Map";
+L["SC Profession"] = "Professions";
+L["SC Quest"] = "Quests";
+L["SC UnitFrame"] = "Unit Frame";
+L["SC Old"] = "Legacy Content";
+L["SC Uncategorized"] = "Uncategorized";
+
+--Settings Search Keywords, Search Tags
+L["KW Tooltip"] = "Tooltip";
+L["KW Transmog"] = "Transmog";
+L["KW Vendor"] = "Vendor";
+L["KW LegionRemix"] = "Legion Remix";
+L["KW Housing"] = "Player Housing House";
+
+--Filter Sort Method
+L["SortMethod 1"] = "Name";  --Alphabetical Order
+L["SortMethod 2"] = "Date added";  --New on the top
 
 
 --Module Categories
@@ -41,6 +83,8 @@ L["Module Category Class"] = "Class";   --Player Class (rogue, paladin...)
 L["Module Category Reduction"] = "Reduction";   --Reduce UI elements
 --- order: -1
 L["Module Category Timerunning"] = "Legion Remix";   --Change this based on timerunning season
+--- order: -2
+L["Module Category Beta"] = "Test Server";
 
 
 L["Module Category Dragonflight"] = EXPANSION_NAME9 or "Dragonflight";  --Merge Expansion Feature (Dreamseeds, AzerothianArchives) Modules into this
@@ -130,10 +174,12 @@ L["EditMode TalkingHead"] = "Plumber: "..L["ModuleName TalkingHead"];
 L["TalkingHead Option InstantText"] = "Instant Text";   --Should texts immediately, no gradual fading
 L["TalkingHead Option TextOutline"] = "Text Outline";   --Added a stroke/outline to the letter
 L["TalkingHead Option Condition Header"] = "Hide Texts From Source:";
+L["TalkingHead Option Hide Everything"] = "Hide Everything";
+L["TalkingHead Option Hide Everything Tooltip"] = "|cffff4800The subtitle will not appear anymore.|r\n\nThe voiceover will continue to play, and the transcription will be shown in the chat window.";
 L["TalkingHead Option Condition WorldQuest"] = TRACKER_HEADER_WORLD_QUESTS or "World Quests";
-L["TalkingHead Option Condition WorldQuest Tooltip"] = "Hide the transcription if it's from a World Quest.\nSometimes Talking Head is triggered before accepting the World Quest, and we won't be able to hide it.";
+L["TalkingHead Option Condition WorldQuest Tooltip"] = "Hide the subtitle if it's from a World Quest.\nSometimes Talking Head is triggered before accepting the World Quest, and we won't be able to hide it.";
 L["TalkingHead Option Condition Instance"] = INSTANCE or "Instance";
-L["TalkingHead Option Condition Instance Tooltip"] = "Hide the transcription when you are in an instance.";
+L["TalkingHead Option Condition Instance Tooltip"] = "Hide the subtitle when you are in an instance.";
 L["TalkingHead Option Below WorldMap"] = "Send To Back When Map Opened";
 L["TalkingHead Option Below WorldMap Tooltip"] = "Send the Talking Head to the back when you open the World Map so it doesn't block it.";
 
@@ -204,6 +250,25 @@ L["ModuleDescription TooltipDelvesItem"] = "Show how many Coffer Keys and Shards
 L["You Have Received Weekly Item Format"] = "You have received %s this week.";
 
 
+--Tooltip ItemQuest
+L["ModuleName TooltipItemQuest"] = "Quest Starting Items";
+L["ModuleDescription TooltipItemQuest"] = "If an item in your bag starts a quest, show the quest details.\n\nYou can Ctrl Left Click the item to view it in the quest log if you are already on the quest.";
+L["Instruction Show In Quest Log"] = "<Ctrl Click to View in Quest Log>";
+
+
+L["ModuleName TooltipTransmogEnsemble"] = "Transmog Ensembles";
+L["ModuleDescription TooltipTransmogEnsemble"] = "- Show the number of collectable appearances from an Ensemble.\n\n- Fixed the issue where the tooltip says \"Already known\" but you can still use it to unlock new appearances.";
+L["Collected Appearances"] = "Collected Appearances";
+L["Collected Items"] = "Collected Items";
+
+
+--Tooltip Housing
+L["ModuleName TooltipHousing"] = "Housing";
+L["ModuleDescription TooltipHousing"] = "Housing";
+L["Instruction View In Dressing Room"] = "<Ctrl Click to View in Dressing Room>";  --VIEW_IN_DRESSUP_FRAME
+L["Data Loading In Progress"] = "Plumber is loading data";
+
+
 --Plunderstore
 L["ModuleName Plunderstore"] = "Plunderstore";
 L["ModuleDescription Plunderstore"] = "Modify the store opened via Group Finder:\n\n- Added a checkbox to hide collected items.\n\n- Display the number of uncollected items on the category buttons.\n\n- Added weapon and armor equip location to their tooltips.\n\n- Allow you to view equippable items in the Dressing Room.";
@@ -219,6 +284,13 @@ L["Num Items In Bag Format"] = (HUD_EDIT_MODE_BAGS_LABEL or "Bags") ..": |cfffff
 L["Number Thousands"] = "K";    --15K  15,000
 L["Number Millions"] = "M";     --1.5M 1,500,000
 L["Questionable Item Count Tooltip"] = "The item count may be incorrect due to addon limitations.";
+
+
+--QueueStatus
+L["ModuleName QueueStatus"] = "Queue Status";
+L["ModuleDescription QueueStatus"] = "Add a progress bar to the Group Finder Eye that shows the percentage of teammates found. Tanks and Healers weigh more.\n\n(Optional) Show the delta between Average Wait Time and your Time In Queue.";
+L["QueueStatus Show Time"] = "Show Time";
+L["QueueStatus Show Time Tooltip"] = "Show the delta between Average Wait Time and your Time In Queue.";
 
 
 --Landing Page (Expansion Summary Minimap)
@@ -334,7 +406,7 @@ L["Unspent Knowledge Tooltip Format"] = "You have |cffffffff%s|r unspent Profess
 
 
 --TooltipProfessionKnowledge
-L["ModuleName TooltipProfessionKnowledge"] = L["ModuleName ProfessionsBook"];
+L["ModuleName TooltipProfessionKnowledge"] = "Tooltip: Unspent Knowledge";
 L["ModuleDescription TooltipProfessionKnowledge"] = "Show the number of your unspent Profession Specialization Knowledge.";
 L["Available Knowledge Format"] = "Available Knowledge: |cffffffff%s|r";
 
@@ -375,13 +447,43 @@ L["SoftTargetName ShowNPC Tooltip"] = "If disabled, the name will only appear on
 
 --LegionRemix
 L["ModuleName LegionRemix"] = "Legion Remix";
-L["ModuleDescription LegionRemix"] = "Legion Remix";
+L["ModuleDescription LegionRemix"] = "- Automatically learn traits.\n\n- Add a widget to the Paper Doll that provides various types of info. You can click this widget to open a new Artifact UI.";
+L["ModuleName LegionRemix_HideWorldTier"] = "Hide World Tier Icon";
+L["ModuleDescription LegionRemix_HideWorldTier"] = "Hide the Heroic World Tier icon below the minimap.";
+L["ModuleName LegionRemix_LFGSpam"] = "Raid Finder Spam";
+L["ModuleDescription LegionRemix_LFGSpam"] = "Suppress the following spam message:\n\n"..ERR_LFG_PROPOSAL_FAILED;
 L["Artifact Weapon"] = "Artifact Weapon";
+L["Artifact Ability"] = "Artifact Ability";
+L["Artifact Traits"] = "Artifact Traits";
 L["Earn X To Upgrade Y Format"] = "Earn another |cffffffff%s|r %s to upgrade %s"; --Example: Earn another 100 Infinite Power to upgrade Artifact Weapon
 L["Until Next Upgrade Format"] = "%s until next upgrade";
 L["New Trait Available"] = "New trait available.";
+L["Rank Format"] = "Rank %s";
 L["Rank Increased"] = "Rank Increased";
-L["Infinite Knowledge Tooltip"] = "You can obtain Inifite Knowledge by earning certain Legion Remix achievements.";
+L["Infinite Knowledge Tooltip"] = "You can obtain Infinite Knowledge by earning certain Legion Remix achievements.";
+L["Stat Bonuses"] = "Stat Bonuses";
+L["Bonus Traits"] = "Bonus Traits:";
+L["Instruction Open Artifact UI"] = "Left click to toggle Artifact UI\nRight click to show settings";
+L["LegionRemix Widget Title"] = "Plumber Widget";
+L["Trait Icon Mode"] = "Trait Icon Mode:";
+L["Trait Icon Mode Hidden"] = "Don't show";
+L["Trait Icon Mode Mini"] = "Show mini icons";
+L["Trait Icon Mode Replace"] = "Replace item icons";
+L["Error Drag Spell In Combat"] = "You cannot drag a spell while in combat.";
+L["Error Change Trait In Combat"] = "You cannot change traits in combat.";
+L["Amount Required To Unlock Format"] = "%s to unlock";   --Earn another x amount to unlock (something)
+L["Soon To Unlock"] = "Soon to unlock";
+L["You Can Unlock Title"] = "You can unlock";
+L["Artifact Ability Auto Unlock Tooltip"] = "This trait will be automatically unlocked once you have enough Infinite Power.";
+L["Require More Bag Slot Alert"] = "You need to free up bag space before performing this action";
+L["Spell Not Known"] = SPELL_FAILED_NOT_KNOWN or "Spell not learned";
+L["Fully Upgraded"] = AZERITE_EMPOWERED_ITEM_FULLY_UPGRADED or "Fully Upgraded";
+L["Unlock Level Requirement Format"] = "Reach level %d to unlock";
+L["Auto Learn Traits"] = "Auto Learn Traits";
+L["Auto Learn Traits Tooltip"] = "Automatically upgrade artifact traits when you have enough Infinite Power";
+L["Infinite Power Yield Format"] = "Grant |cffffffff%s|r Power at your current Knowledge level.";
+L["Infinite Knowledge Bonus Format"] = "Current Bonus: |cffffffff%s|r";
+L["Infinite Knowledge Bonus Next Format"] = "Next Rank: %s";
 
 
 --ItemUpgradeUI
@@ -389,11 +491,26 @@ L["ModuleName ItemUpgradeUI"] = "Item Upgrades: Show Character Pane";
 L["ModuleDescription ItemUpgradeUI"] = "Automatically open Character Pane when you interact with an Item Upgrades NPC.";
 
 
+--HolidayDungeon
+L["ModuleName HolidayDungeon"] = "Auto Select Holiday Dungeon";
+L["ModuleDescription HolidayDungeon"] = "Automatically select holiday and timewalking dungeons when you open Dungeon Finder for the first time.";
+
+
+--PlayerPing
+L["ModuleName PlayerPing"] = "Map Pin: Player Ping";
+L["ModuleDescription PlayerPing"] = "Highlight the player's location with a ping effect when you:\n\n- Open World Map.\n\n- Press the ALT key.\n\n- Click the Maximize button.\n\n|cffd4641cBy default, WoW only shows the player ping when you change maps.|r";
+
+
+--StaticPopup_Confirm
+L["ModuleName StaticPopup_Confirm"] = "Non-refundable Purchase Alert";
+L["ModuleDescription StaticPopup_Confirm"] = "Adjust the confirmation dialog that appears when buying a non-refundable item, adding a brief lockdown to the \'Yes\' button and highlighting the keywords in red.\n\nThis module also reduces the class set conversion delay by half.";
+
+
 --Loot UI
 L["ModuleName LootUI"] = HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Loot Window";
 L["ModuleDescription LootUI"] = "Replace the default Loot Window and provide some optional features:\n\n- Loot items fast.\n\n- Fix Auto Loot failure bug.\n\n- Show a Take All button when looting manually.";
 L["Take All"] = "Take All";     --Take all items from a loot window
-L["You Received"] = YOU_RECEIVED_LABEL or "You recieved";
+L["You Received"] = YOU_RECEIVED_LABEL or "You received";
 L["Reach Currency Cap"] = "Reached currency caps";
 L["Sample Item 4"] = "Awesome Epic Item";
 L["Sample Item 3"] = "Awesome Rare Item";
@@ -401,6 +518,9 @@ L["Sample Item 2"] = "Awesome Uncommon Item";
 L["Sample Item 1"] = "Common Item";
 L["EditMode LootUI"] =  "Plumber: "..(HUD_EDIT_MODE_LOOT_FRAME_LABEL or "Loot Window");
 L["Manual Loot Instruction Format"] = "To temporarily cancel auto loot on a specific pickup, press and hold |cffffffff%s|r key until the loot window appears.";
+L["LootUI Option Hide Window"] = "Hide Plumber Loot Window";
+L["LootUI Option Hide Window Tooltip"] = "Hide Plumber Loot Notification Window, but still enable any features such as Force Auto Loot in the background.";
+L["LootUI Option Hide Window Tooltip 2"] = "This option does not affect Blizzard Loot Window.";
 L["LootUI Option Force Auto Loot"] = "Force Auto Loot";
 L["LootUI Option Force Auto Loot Tooltip"] = "Always enable Auto Loot to counter the occasional auto loot failure.";
 L["LootUI Option Owned Count"] = "Show Number Of Owned Items";
@@ -427,6 +547,8 @@ L["LootUI Option Grow Direction Tooltip 2"] = "When disabled: the top left of th
 L["Junk Items"] = "Junk Items";
 L["LootUI Option Combine Items"] = "Combine Similar Items";
 L["LootUI Option Combine Items Tooltip"] = "Display similar items on a single row. Supported Categories:\n\n- Junk Items\n- Epoch Mementos (Legion Remix)";
+L["LootUI Option Low Frame Strata"] = "Send to Back";
+L["LootUI Option Low Frame Strata Tooltip"] = "While in Loot Notification Mode, place the loot window behind other UI.\n\nThis option doesn't affect Manual Loot Mode.";
 
 
 --Quick Slot For Third-party Dev
@@ -490,7 +612,7 @@ L["Bountiful Delves Rep Tooltip"] = "Opening a Bountiful Coffer has a chance to 
 L["Warband Weekly Reward Tooltip"] = "You Warband can only receive this reward once per week.";
 L["Completed"] = CRITERIA_COMPLETED or "Completed";
 L["Filter Hide Completed Format"] = "Hide Completed (%d)";
-L["Weeky Reset Format"] = "Weekly Reset: %s";
+L["Weekly Reset Format"] = "Weekly Reset: %s";
 L["Daily Reset Format"] = "Daily Reset: %s";
 L["Ready To Turn In Tooltip"] = "Ready to turn in.";
 L["Trackers"] = "Trackers";
@@ -529,7 +651,32 @@ L["Weekly Coffer Key Shards Tooltip"] = "The first four weekly caches you earn e
 L["Weekly Cap"] = "Weekly Cap";
 L["Weekly Cap Reached"] = "Weekly cap reached.";
 L["Instruction Right Click To Use"] = "<Right Click to Use>";
+L["Join Queue"] = WOW_LABS_JOIN_QUEUE or "Join Queue";
+L["In Queue"] = BATTLEFIELD_QUEUE_STATUS or "In Queue";
+L["Click To Switch"] = "Click to switch to |cffffffff%s|r";
+L["Click To Queue"] = "Click to queue for |cffffffff%s|r";
+L["Click to Open Format"] = "Click to open %s";
+L["List Is Empty"] = "The list is empty.";
 
+
+--RaidCheck
+L["ModuleName InstanceDifficulty"] = "Instance Difficulty";
+L["ModuleDescription InstanceDifficulty"] = "- Show a Difficulty Selector when you are at the entrance of a raid or dungeon.\n\n- Show the current difficulty and lockout info at the top of the screen when you enter an instance.";
+L["Cannot Change Difficulty"] = "Instance difficulty cannot be changed at this time.";
+
+
+--TransmogChatCommand
+L["ModuleName TransmogChatCommand"] = "Transmog Chat Command";
+L["ModuleDescription TransmogChatCommand"] = "- When using a transmog chat command, undress your character first so the old items won't be carried over into the new outfit.\n\n- When at the Transmogrifier, using a chat command automatically loads all available items to the Transmog UI.";
+L["Copy To Clipboard"] = "Copy To Clipboard";
+L["Copy Current Outfit Tooltip"] = "Copy the current outfit to share online.";
+L["Missing Appearances Format"] = "%d |4appearance:appearances; missing";
+L["Press Key To Copy Format"] = "Press |cffffd100%s|r to Copy";
+
+
+--DecorModelScaleRef
+L["ModuleName DecorModelScaleRef"] = "Decor Catalog: Banana For Scale"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
+L["ModuleDescription DecorModelScaleRef"] = "- Add a size reference (a banana) to the decor preview window, allowing you to gauge the size of the objects.\n\n- Also allow you to change the camera pitch by holding down the Left Button and moving vertically.";
 
 --Generic
 L["Total Colon"] = FROM_TOTAL or "Total:";
@@ -549,11 +696,22 @@ L["Uncollected Set Counter Format"] = "You have |cffffffff%d|r uncollected trans
 
 --Plumber AddOn Settings
 L["ModuleName EnableNewByDefault"] = "Always Enable New Features";
-L["ModuleDescription EnableNewByDefault"] = "Always enable newly added features.\n\n*You will see a notification in the chat window when a new module is enabled this way.";
+L["ModuleDescription EnableNewByDefault"] = "Always enable newly added features.\n\nYou will see a notification in the chat window when a new module is enabled this way.";
 L["New Feature Auto Enabled Format"] = "New Module %s has been enabled.";
 L["Click To See Details"] = "Click to see details";
+L["Click To Show Settings"] = "Click to toggle settings.";
 
 
+--WIP Merchant UI
+L["ItemType Consumables"] = AUCTION_CATEGORY_CONSUMABLES or "Consumables";
+L["ItemType Weapons"] = AUCTION_CATEGORY_WEAPONS or "Weapons";
+L["ItemType Gems"] = AUCTION_CATEGORY_GEMS or "Gems";
+L["ItemType Armor Generic"] = AUCTION_SUBCATEGORY_PROFESSION_ACCESSORIES or "Accessories";  --Trinkets, Rings, Necks
+L["ItemType Mounts"] = MOUNTS or "Mounts";
+L["ItemType Pets"] = PETS or "Pets";
+L["ItemType Toys"] = "Toys";
+L["ItemType TransmogSet"] = PERKS_VENDOR_CATEGORY_TRANSMOG_SET or "Transmog Set";
+L["ItemType Transmog"] = "Transmog";
 
 
 -- !! Do NOT translate the following entries
@@ -578,6 +736,9 @@ L["Devourer Attack"] = "Devourer Attack";
 L["Restored Coffer Key"] = "Restored Coffer Key";
 L["Coffer Key Shard"] = "Coffer Key Shard";
 L["Epoch Mementos"] = "Epoch Mementos";     --See currency:3293
+L["Timeless Scrolls"] = "Timeless Scrolls"; --item: 217605
+
+L["CONFIRM_PURCHASE_NONREFUNDABLE_ITEM"] = "Are you sure you wish to exchange %s for the following item?\n\n|cffff2020Your purchase is not refundable.|r\n %s";  --Base: CONFIRM_PURCHASE_NONREFUNDABLE_ITEM Change the warning's color and added a new line.
 
 
 --Map Pin Filter Name (name should be plural)
@@ -599,3 +760,5 @@ L["Upgrade Track 3"] = "Veteran";
 L["Upgrade Track 4"] = "Champion";
 L["Upgrade Track 5"] = "Hero";
 L["Upgrade Track 6"] = "Myth";
+
+L["Match Pattern Transmog Set Partially Known"] = "^Contains (%d+) uncollected";   --TRANSMOG_SET_PARTIALLY_KNOWN_CLASS

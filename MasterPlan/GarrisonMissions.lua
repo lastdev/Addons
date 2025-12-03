@@ -926,7 +926,8 @@ do -- Ship re-fitting
 				b:SetScript("OnLeave", T.HideOwnedGameTooltip)
 				b:SetScript("PreClick", SetUpEquipmentRefit)
 				b:SetScript("PostClick", CompleteEquipmentRefit)
-				T.TenSABT(b)
+				b:SetAttribute("useOnKeyDown", false)
+				b:RegisterForClicks("LeftButtonUp")
 				b:Disable()
 				b:Hide()
 				slots[i] = b

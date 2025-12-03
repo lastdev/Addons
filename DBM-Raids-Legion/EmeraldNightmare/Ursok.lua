@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1667, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240616044104")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(100497)
 mod:SetEncounterID(1841)
 mod:SetUsedIcons(6, 4)
@@ -63,7 +63,6 @@ local GenerateSoakAssignment
 do
 	local soakTable = {}
 	local UnitIsUnit = UnitIsUnit
-	local playerName = UnitName("player")
 	GenerateSoakAssignment = function(self, count, targetName)
 		table.wipe(soakTable)
 		local soakers = 0
@@ -125,16 +124,18 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 197942 then
 		self.vb.rendCount = self.vb.rendCount + 1
 		timerRendFleshCD:Start(nil, self.vb.rendCount+1)
-		if self:IsTanking("player", "boss1", nil, true) then
-			specWarnRendFlesh:Show()
-			specWarnRendFlesh:Play("defensive")
-		else
-			--Other tank has overwhelm stacks and is about to die to rend flesh, TAUNT NOW!
-			if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
-				local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", overWhelm) -- Overwhelm
-				if expireTimeTarget and expireTimeTarget-GetTime() >= 2 then
-					specWarnRendFleshOther:Show(UnitName("boss1target"))
-					specWarnRendFleshOther:Play("tauntboss")
+		if not (self:IsRemix() or self:IsTrivial()) then
+			if self:IsTanking("player", "boss1", nil, true) then
+				specWarnRendFlesh:Show()
+				specWarnRendFlesh:Play("defensive")
+			else
+				--Other tank has overwhelm stacks and is about to die to rend flesh, TAUNT NOW!
+				if UnitExists("boss1target") and not UnitIsUnit("player", "boss1target") then
+					local _, _, _, _, _, expireTimeTarget = DBM:UnitDebuff("boss1target", overWhelm) -- Overwhelm
+					if expireTimeTarget and expireTimeTarget-GetTime() >= 2 then
+						specWarnRendFleshOther:Show(UnitName("boss1target"))
+						specWarnRendFleshOther:Play("tauntboss")
+					end
 				end
 			end
 		end
@@ -143,6 +144,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnRoaringCacophony:Show(self.vb.roarCount)
 		specWarnRoaringCacophony:Play("aesoon")
 		if self:IsLFR() then
+			--37.7, 10.0???? maybe legion remix lfr is bugged and using non lfr timers?
 			--No echos, just every 40 seconds
 			timerRoaringCacophonyCD:Start(40, self.vb.roarCount + 1)
 		else
@@ -204,13 +206,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 197943 then
 		warnOverwhelm:Show(args.destName, args.amount or 1)
-		if not args:IsPlayer() then--Overwhelm Applied to someone that isn't you
-			--Taunting is safe now because your rend flesh will vanish (or is already gone), and not be cast again, before next overwhelm
-			local rendCooldown = timerRendFleshCD:GetRemaining(self.vb.rendCount+1) or 0
-			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", rendFlesh)
-			if rendCooldown > 10 and (not expireTime or expireTime and expireTime-GetTime() < 10) then
-				specWarnOverwhelmOther:Show(args.destName)
-				specWarnOverwhelmOther:Play("tauntboss")
+		if not (self:IsRemix() or self:IsTrivial()) then
+			if not args:IsPlayer() then--Overwhelm Applied to someone that isn't you
+				--Taunting is safe now because your rend flesh will vanish (or is already gone), and not be cast again, before next overwhelm
+				local rendCooldown = timerRendFleshCD:GetRemaining(self.vb.rendCount+1) or 0
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", rendFlesh)
+				if rendCooldown > 10 and (not expireTime or expireTime and expireTime-GetTime() < 10) then
+					specWarnOverwhelmOther:Show(args.destName)
+					specWarnOverwhelmOther:Play("tauntboss")
+				end
 			end
 		end
 	elseif spellId == 198388 then

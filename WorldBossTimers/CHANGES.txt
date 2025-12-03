@@ -1,12 +1,12 @@
-tag 4c9aebde3ae138b0659895548834219161e23515 v1.12.27
+tag 1837a488fdf855507a0e5a0ae778c4bf4c10f1f9 v1.12.29
 Author:	Filip Stenstrom <filip.stenstrom.4488@gmail.com>
-Date:	Wed Aug 6 22:27:08 2025 +0200
+Date:	Sun Nov 2 14:42:24 2025 +0100
 
-Update for 11.2
+Update interface version for 11.2.5
 
-commit 3b6a006d9569420ac58edb759307408388984d1e
+commit 9228b153a72d6848069ccfbfb38ccdc73b99eafe
 Author: Filip Stenstrom <filip.stenstrom.4488@gmail.com>
-Date:   Wed Aug 6 22:26:41 2025 +0200
+Date:   Sun Nov 2 14:41:32 2025 +0100
 
-    Update interface version for 11.2
+    Update interface version for 11.2.5
 

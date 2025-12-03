@@ -21,7 +21,7 @@ local function GetLocalizedHearthText()
 	elseif locale == "deDE" then
 		return "Hearth" -- TODO: Add German translation
 	elseif locale == "frFR" then
-		return "Hearth" -- TODO: Add French translation
+		return "Foyer"
 	elseif locale == "esES" then
 		return "Hearth" -- TODO: Add Spanish translation
 	elseif locale == "ruRU" then
@@ -43,6 +43,7 @@ TeleporterRecallString = "1 Astral Recall"
 TeleporterFlightString = "2 Flight Master"
 
 local DungeonsTitle = "Dungeons"
+local RaidsTitle = "Raids"
 
 local ldb = LibStub:GetLibrary("LibDataBroker-1.1")
 local icon = LibStub("LibDBIcon-1.0")
@@ -534,6 +535,9 @@ local MenuIDGroupDungeons		= 14
 local MenuIDRandomHearth		= 15
 local MenuIDCloseAfterCast		= 16
 local MenuIDShowIcon			= 17
+local MenuIDCurrentRaids		= 18
+local MenuIDGroupRaids			= 19
+local MenuIDExpansionInGroupNames = 20
 
 local function InitTeleporterOptionsMenu(frame, level, menuList, topLevel)
 	if level == 1 or topLevel then
@@ -544,9 +548,12 @@ local function InitTeleporterOptionsMenu(frame, level, menuList, topLevel)
 		AddHideOptionMenu(MenuIDHideChallenge, "Hide Dungeon Spells", "hideChallenge", frame, level)
 		AddHideOptionMenu(MenuIDHideSpells, "Hide Spells", "hideSpells", frame, level)
 		AddHideOptionMenu(MenuIDHideConsumables, "Hide Consumables", "hideConsumable", frame, level)
-		AddHideOptionMenu(MenuIDDungeonNames, "Show Dungeon Names", "showDungeonNames", frame, level)
+		AddHideOptionMenu(MenuIDDungeonNames, "Show Dungeon and Raid Names", "showDungeonNames", frame, level)
 		AddHideOptionMenu(MenuIDCurrentDungeons, "Current Dungeons Only", "seasonOnly", frame, level)
+		AddHideOptionMenu(MenuIDCurrentRaids, "Current Raids Only", "seasonRaidsOnly", frame, level)
 		AddHideOptionMenu(MenuIDGroupDungeons, "Group Dungeons", "groupDungeons", frame, level)
+		AddHideOptionMenu(MenuIDGroupRaids, "Group Raids", "groupRaids", frame, level)
+		AddHideOptionMenu(MenuIDExpansionInGroupNames, "Group Dungeons/Raids by Expansion", "expansionInGroupNames", frame, level)
 		AddHideOptionMenu(MenuIDRandomHearth, "Random Hearthstone", "randomHearth", frame, level)
 		AddHideOptionMenu(MenuIDWrongZone, "Show Spells When In Wrong Zone", "showInWrongZone", frame, level)
 		AddHideOptionMenu(MenuIDCloseAfterCast, "Close When Cast Finishes", "closeAfterCast", frame, level)
@@ -741,8 +748,28 @@ local function SortSpells(spell1, spell2, sortType)
 	local zone2 = spell2:GetZone()
 
 	if GetOption("groupDungeons") then
-		if spell1:IsDungeonSpell() then zone1 = DungeonsTitle end
-		if spell2:IsDungeonSpell() then zone2 = DungeonsTitle end
+		if GetOption("expansionInGroupNames") then
+			if spell1:IsDungeonSpell() then zone1 = DungeonsTitle .. spell1:GetExpansionName() end
+			if spell2:IsDungeonSpell() then zone2 = DungeonsTitle .. spell2:GetExpansionName() end
+		else
+			if spell1:IsDungeonSpell() then zone1 = DungeonsTitle end
+			if spell2:IsDungeonSpell() then zone2 = DungeonsTitle end
+		end
+	end
+
+	if GetOption("groupRaids") then
+		if GetOption("expansionInGroupNames") then
+			if spell1:IsRaidSpell() then zone1 = RaidsTitle .. spellExpansion1 end
+			if spell2:IsRaidSpell() then zone2 = RaidsTitle .. spellExpansion2 end
+		else
+			if spell1:IsRaidSpell() then zone1 = RaidsTitle end
+			if spell2:IsRaidSpell() then zone2 = RaidsTitle end
+		end
+	end
+
+	if GetOption("showDungeonNames") then
+		if spell1:IsDungeonSpell() or spell1:IsRaidSpell() then spellName1 = spell1.dungeon end
+		if spell2:IsDungeonSpell() or spell2:IsRaidSpell() then spellName2 = spell2.dungeon end
 	end
 
 	local so = GetOption("sortOrder") or {}
@@ -1570,6 +1597,13 @@ local function CreateMainFrame()
 	searchFrame:SetAutoFocus(false)
 	searchFrame:SetMultiLine(false)
 
+	searchFrame:SetScript("OnEscapePressed",
+		function(self)
+			self:SetText("")
+			UpdateSearch("")
+			self:ClearFocus()
+		end)
+
 	searchFrame:SetScript("OnTextChanged", function(self, userInput)
 		if userInput then
 			UpdateSearch(searchFrame:GetText())
@@ -1662,7 +1696,19 @@ local function FindValidSpells()
 		end
 
 		if spell:IsDungeonSpell() and GetOption("groupDungeons") then
-			spell.displayDestination = DungeonsTitle
+			if spell.expansion and GetOption("expansionInGroupNames") then
+				spell.displayDestination = DungeonsTitle .. ": " .. spell:GetExpansionName()
+			else
+				spell.displayDestination = DungeonsTitle
+			end
+		end
+
+		if spell:IsRaidSpell() and GetOption("groupRaids") then
+			if spell.expansion and GetOption("expansionInGroupNames") then
+				spell.displayDestination = RaidsTitle .. ": " .. spell:GetExpansionName()
+			else
+				spell.displayDestination = RaidsTitle
+			end
 		end
 
 		if isItem then
@@ -1855,12 +1901,12 @@ function TeleporterOpenFrame(isSearching)
 					newColumn = true
 				end
 
-				if spell:IsDungeonSpell() and ShowDungeonNames and spell.dungeon then
+				if (spell:IsDungeonSpell() or spell:IsRaidSpell()) and ShowDungeonNames and spell.dungeon then
 					displaySpellName = spell.dungeon
 				end
 
 				-- Title
-				if newColumn or lastDest ~= destination then
+				if (newColumn or lastDest ~= destination) and not GetOption("hideZoneTitles") then
 					local destString = TeleporterCreateReusableFontString("TeleporterDL", TeleporterParentFrame, "GameFontNormalSmall")
 					destString:SetFont(fontFile, fontHeight, fontFlags)
 					destString:SetPoint("TOPLEFT", TeleporterParentFrame, "TOPLEFT", xoffset, yoffset)

@@ -1,3 +1,4 @@
+if DBM:IsPostMidnight() then return end
 local L = DBM_GUI_L
 local DBT = DBT
 

@@ -64,14 +64,12 @@ L["DPS"] = "伤害输出"
 L["DUNGEON_SHORT_NAME_AA"] = "艾杰斯亚学院"
 L["DUNGEON_SHORT_NAME_AD"] = "阿塔达萨"
 L["DUNGEON_SHORT_NAME_ARAK"] = "回响之城"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ARC"] = ""--]] 
+L["DUNGEON_SHORT_NAME_ARC"] = "魔法回廊"
 L["DUNGEON_SHORT_NAME_AV"] = "碧蓝魔馆"
 L["DUNGEON_SHORT_NAME_BH"] = "蕨皮山谷"
 L["DUNGEON_SHORT_NAME_BREW"] = "燧酿酒庄"
 L["DUNGEON_SHORT_NAME_BRH"] = "黑鸦堡垒"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_COEN"] = ""--]] 
+L["DUNGEON_SHORT_NAME_COEN"] = "永夜大教堂"
 L["DUNGEON_SHORT_NAME_COS"] = "群星庭院"
 L["DUNGEON_SHORT_NAME_COT"] = "千丝之城"
 L["DUNGEON_SHORT_NAME_DAWN"] = "破晨号"
@@ -80,8 +78,7 @@ L["DUNGEON_SHORT_NAME_DHT"] = "黑心林地"
 L["DUNGEON_SHORT_NAME_DOS"] = "彼界"
 L["DUNGEON_SHORT_NAME_EB"] = "永茂林地"
 L["DUNGEON_SHORT_NAME_EDA"] = "生态圆顶"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_EOA"] = ""--]] 
+L["DUNGEON_SHORT_NAME_EOA"] = "艾萨拉之眼"
 L["DUNGEON_SHORT_NAME_FALL"] = "永恒：陨落"
 L["DUNGEON_SHORT_NAME_FH"] = "自由镇"
 L["DUNGEON_SHORT_NAME_FLOOD"] = "水闸行动"
@@ -97,8 +94,7 @@ L["DUNGEON_SHORT_NAME_ID"] = "钢铁码头"
 L["DUNGEON_SHORT_NAME_LOWR"] = "卡拉赞下层"
 L["DUNGEON_SHORT_NAME_MISTS"] = "仙林迷雾"
 L["DUNGEON_SHORT_NAME_ML"] = "暴富矿区"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
+L["DUNGEON_SHORT_NAME_MOS"] = "噬魂之喉"
 L["DUNGEON_SHORT_NAME_NELT"] = "奈萨鲁斯"
 L["DUNGEON_SHORT_NAME_NL"] = "巢穴"
 L["DUNGEON_SHORT_NAME_NO"] = "诺库德阻击战"
@@ -110,8 +106,7 @@ L["DUNGEON_SHORT_NAME_RLP"] = "红玉新生法池"
 L["DUNGEON_SHORT_NAME_ROOK"] = "驭雷栖巢"
 L["DUNGEON_SHORT_NAME_SBG"] = "影月墓地"
 L["DUNGEON_SHORT_NAME_SD"] = "赤红深渊"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_SEAT"] = ""--]] 
+L["DUNGEON_SHORT_NAME_SEAT"] = "执政团之座"
 L["DUNGEON_SHORT_NAME_SIEGE"] = "围攻"
 L["DUNGEON_SHORT_NAME_SOA"] = "晋升高塔"
 --[[Translation missing --]]
@@ -266,22 +261,14 @@ L["RAID_BOSS_BOT_2"] = "瑟纳利昂和瓦里昂娜"
 L["RAID_BOSS_BOT_3"] = "升腾者议会"
 L["RAID_BOSS_BOT_4"] = "古加尔"
 L["RAID_BOSS_BOT_5"] = "希奈丝特拉"
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_BRD_8"] = ""--]] 
+L["RAID_BOSS_BRD_1"] = "洛考尔"
+L["RAID_BOSS_BRD_2"] = "贝尔加"
+L["RAID_BOSS_BRD_3"] = "伊森迪奥斯"
+L["RAID_BOSS_BRD_4"] = "傀儡统帅阿格曼奇"
+L["RAID_BOSS_BRD_5"] = "黑铁七贤"
+L["RAID_BOSS_BRD_6"] = "怒炉将军"
+L["RAID_BOSS_BRD_7"] = "弗莱拉斯大使"
+L["RAID_BOSS_BRD_8"] = "达格兰·索瑞森大帝"
 L["RAID_BOSS_BWD_1"] = "全能金刚防御系统"
 L["RAID_BOSS_BWD_2"] = "熔喉"
 L["RAID_BOSS_BWD_3"] = "艾卓曼德斯"
@@ -298,22 +285,14 @@ L["RAID_BOSS_CN_6"] = "伊涅瓦·暗脉女勋爵"
 L["RAID_BOSS_CN_7"] = "猩红议会"
 L["RAID_BOSS_CN_8"] = "泥拳"
 L["RAID_BOSS_CN_9"] = "顽石军团干将"
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_DS_8"] = ""--]] 
+L["RAID_BOSS_DS_1"] = "莫卓克"
+L["RAID_BOSS_DS_2"] = "督军佐诺兹"
+L["RAID_BOSS_DS_3"] = "不眠的约萨希"
+L["RAID_BOSS_DS_4"] = "哈格拉"
+L["RAID_BOSS_DS_5"] = "奥卓克希昂"
+L["RAID_BOSS_DS_6"] = "战争大师黑角"
+L["RAID_BOSS_DS_7"] = "死亡之翼的背脊"
+L["RAID_BOSS_DS_8"] = "疯狂的死亡之翼"
 L["RAID_BOSS_FCN_1"] = "啸翼（宿命）"
 L["RAID_BOSS_FCN_10"] = "德纳修斯大帝（宿命）"
 L["RAID_BOSS_FCN_2"] = "猎手阿尔迪莫（宿命）"
@@ -324,20 +303,13 @@ L["RAID_BOSS_FCN_6"] = "伊涅瓦·暗脉女勋爵（宿命）"
 L["RAID_BOSS_FCN_7"] = "猩红议会（宿命）"
 L["RAID_BOSS_FCN_8"] = "泥拳（宿命）"
 L["RAID_BOSS_FCN_9"] = "顽石军团干将（宿命）"
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_FL_7"] = ""--]] 
+L["RAID_BOSS_FL_1"] = "贝丝缇拉克"
+L["RAID_BOSS_FL_2"] = "雷奥利斯领主"
+L["RAID_BOSS_FL_3"] = "沙恩诺克斯"
+L["RAID_BOSS_FL_4"] = "奥利瑟拉佐尔"
+L["RAID_BOSS_FL_5"] = "贝尔洛克"
+L["RAID_BOSS_FL_6"] = "管理者鹿盔"
+L["RAID_BOSS_FL_7"] = "拉格纳罗斯"
 L["RAID_BOSS_FSFO_1"] = "警戒卫士（宿命）"
 L["RAID_BOSS_FSFO_10"] = "莱葛隆（宿命）"
 L["RAID_BOSS_FSFO_11"] = "典狱长（宿命）"
@@ -359,18 +331,12 @@ L["RAID_BOSS_FSOD_6"] = "痛楚工匠莱兹纳尔（宿命）"
 L["RAID_BOSS_FSOD_7"] = "初诞者的卫士（宿命）"
 L["RAID_BOSS_FSOD_8"] = "命运撰写师罗-卡洛（宿命）"
 L["RAID_BOSS_FSOD_9"] = "克尔苏加德（宿命）"
---[[Translation missing --]]
---[[ L["RAID_BOSS_HOF_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_HOF_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_HOF_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_HOF_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_HOF_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_HOF_6"] = ""--]] 
+L["RAID_BOSS_HOF_1"] = "皇家宰相佐尔洛克"
+L["RAID_BOSS_HOF_2"] = "刀锋领主塔亚克"
+L["RAID_BOSS_HOF_3"] = "加拉隆"
+L["RAID_BOSS_HOF_4"] = "风领主梅尔加拉克"
+L["RAID_BOSS_HOF_5"] = "琥珀塑形者昂舒克"
+L["RAID_BOSS_HOF_6"] = "大女皇夏柯希尔"
 L["RAID_BOSS_ICC_1"] = "玛洛加尔领主"
 L["RAID_BOSS_ICC_10"] = "踏梦者瓦莉瑟瑞娅"
 L["RAID_BOSS_ICC_11"] = "辛达苟萨"
@@ -383,22 +349,14 @@ L["RAID_BOSS_ICC_6"] = "腐面"
 L["RAID_BOSS_ICC_7"] = "普崔塞德教授"
 L["RAID_BOSS_ICC_8"] = "鲜血王子议会"
 L["RAID_BOSS_ICC_9"] = "鲜血女王兰娜瑟尔"
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_LOU_8"] = ""--]] 
+L["RAID_BOSS_LOU_1"] = "维克茜和磨轮"
+L["RAID_BOSS_LOU_2"] = "血腥大熔炉"
+L["RAID_BOSS_LOU_3"] = "里克·混响"
+L["RAID_BOSS_LOU_4"] = "斯提克斯·堆渣"
+L["RAID_BOSS_LOU_5"] = "链齿狂人洛肯斯多"
+L["RAID_BOSS_LOU_6"] = "独臂盗匪"
+L["RAID_BOSS_LOU_7"] = "穆格·兹伊，安保头子"
+L["RAID_BOSS_LOU_8"] = "铬武大王加里维克斯"
 L["RAID_BOSS_MFO_1"] = "集能哨兵"
 L["RAID_BOSS_MFO_2"] = "卢米萨尔"
 L["RAID_BOSS_MFO_3"] = "缚魂者娜欣达利"
@@ -407,18 +365,12 @@ L["RAID_BOSS_MFO_5"] = "狩魂猎手"
 L["RAID_BOSS_MFO_6"] = "弗兰克提鲁斯"
 L["RAID_BOSS_MFO_7"] = "节点之王萨哈达尔"
 L["RAID_BOSS_MFO_8"] = "诸界吞噬者迪门修斯"
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_6"] = ""--]] 
+L["RAID_BOSS_MSV_1"] = "石头守卫"
+L["RAID_BOSS_MSV_2"] = "受诅者魔封"
+L["RAID_BOSS_MSV_3"] = "缚灵者戈拉亚"
+L["RAID_BOSS_MSV_4"] = "先王之魂"
+L["RAID_BOSS_MSV_5"] = "伊拉贡"
+L["RAID_BOSS_MSV_6"] = "皇帝的意志"
 L["RAID_BOSS_NP_1"] = "乌格拉克斯"
 L["RAID_BOSS_NP_2"] = "血缚恐魔"
 L["RAID_BOSS_NP_3"] = "席克兰"
@@ -449,22 +401,40 @@ L["RAID_BOSS_SOD_6"] = "痛楚工匠莱兹纳尔"
 L["RAID_BOSS_SOD_7"] = "初诞者的卫士"
 L["RAID_BOSS_SOD_8"] = "命运撰写师罗-卡洛"
 L["RAID_BOSS_SOD_9"] = "克尔苏加德"
+L["RAID_BOSS_ToES_1"] = "无尽守护者"
+L["RAID_BOSS_TOES_1"] = "无尽守护者"
+L["RAID_BOSS_TOES_2"] = "烛龙"
+L["RAID_BOSS_ToES_2"] = "烛龙"
+L["RAID_BOSS_ToES_3"] = "雷施"
+L["RAID_BOSS_TOES_3"] = "雷施"
+L["RAID_BOSS_TOES_4"] = "惧之煞"
+L["RAID_BOSS_ToES_4"] = "惧之煞"
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_1"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_1"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_1"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_10"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_2"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_11"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_2"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_12"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_3"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_13"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_3"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_2"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_4"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_3"] = ""--]] 
 --[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_4"] = ""--]] 
+--[[ L["RAID_BOSS_TOT_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_TOT_9"] = ""--]] 
 L["RAID_BOSS_TOTFW_1"] = "风之议会"
 L["RAID_BOSS_TOTFW_2"] = "奥拉基尔"
 L["RAID_BOSS_VOTI_1"] = "艾拉诺格"
@@ -476,8 +446,7 @@ L["RAID_BOSS_VOTI_6"] = "库洛洛·恐怖图腾"
 L["RAID_BOSS_VOTI_7"] = "巢穴守护者迪乌尔娜"
 L["RAID_BOSS_VOTI_8"] = "莱萨杰丝，噬雷之龙"
 L["RAID_BOT"] = "暮光堡垒"
---[[Translation missing --]]
---[[ L["RAID_BRD"] = ""--]] 
+L["RAID_BRD"] = "黑石深渊"
 L["RAID_BWD"] = "黑翼血环"
 L["RAID_DIFFICULTY_NAME_HEROIC"] = "英雄"
 L["RAID_DIFFICULTY_NAME_HEROIC10"] = "10人英雄"
@@ -500,14 +469,13 @@ L["RAID_HOF"] = "恐惧之心"
 L["RAID_ICC"] = "冰冠堡垒"
 L["RAID_LOU"] = "解放安德麦"
 L["RAID_MFO"] = "法力熔炉：欧米伽"
---[[Translation missing --]]
---[[ L["RAID_MSV"] = ""--]] 
+L["RAID_MSV"] = "魔古山宝库"
 L["RAID_NP"] = "尼鲁巴尔王宫"
 L["RAID_RS"] = "红玉圣所"
+L["RAID_ToES"] = "永春台"
+L["RAID_TOES"] = "永春台"
 --[[Translation missing --]]
---[[ L["RAID_ToES"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_TOES"] = ""--]] 
+--[[ L["RAID_TOT"] = ""--]] 
 L["RAID_TOTFW"] = "风神王座"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "能限时%s层的平均分数"
 L["RAIDERIO_BEST_RUN"] = "大秘境最佳成绩"

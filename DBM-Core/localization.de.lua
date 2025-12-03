@@ -33,7 +33,8 @@ L.COPY_URL_DIALOG					= "Kopiere URL"
 --L.TEXT_ONLY_RANGE						= "Range frame is limited to text only due to API restrictions in this area."
 L.NO_RANGE					= "Das Abstandsradar kann in Instanzen nicht genutzt werden. Es wird stattdessen die alte textbasierte Abstandsanzeige verwendet."
 L.NO_ARROW					= "Der Pfeil kann in Instanzen nicht genutzt werden."
-L.NO_HUD						= "Die HudMap kann in Instanzen nicht genutzt werden."
+L.NO_HUD					= "Die HudMap kann in Instanzen nicht genutzt werden."
+L.NO_COMMS					= "Addon-Kommunikation kann während Begegnungen oder aktiven M+ Dungeons nicht verwendet werden. Verwende diesen Befehl erneut, nachdem die Begegnung oder der Dungeon endet."
 
 L.DYNAMIC_DIFFICULTY_CLUMP	= L.DBM.." hat das dynamische Abstandsfenster für diesen Kampf deaktiviert, da nicht genügend Informationen vorliegen, auf wieviel versammelte Spieler bei deiner Gruppengröße geprüft werden muss."
 L.DYNAMIC_ADD_COUNT			= L.DBM.." hat Warnungen bezüglich der Anzahl der Gegner für diesen Kampf deaktiviert, da nicht genügend Informationen vorliegen, wieviel Gegner bei deiner Gruppengröße erscheinen."
@@ -77,7 +78,8 @@ L.BONUS_SKIPPED				= L.DBM.." hat das Beutefenster für den Bonuswurf automatisc
 
 L.AFK_WARNING				= "Du bist \"AFK\" und im Kampf (%d Prozent Gesundheit verbleibend), Alarmsound ausgelöst.  Entferne deine \"AFK\"-Markierung oder deaktiviere diese Alarmierung unter \"Sonstige Funktionen\", falls du nicht \"AFK\" bist."
 
-L.COMBAT_STARTED_AI_TIMER	= "Meine CPU ist ein neuronaler Prozessor, ein lernender Computer. (Dieser Kampf wird die neuen KI-Funktionen zur Erzeugung von Timernäherungen verwenden.)"
+L.RAID_DIFFICULTY_CHANGED	= "Der Schlachtzugschwierigkeitsgrad wurde auf %s gesetzt."
+L.DUNGEON_DIFFICULTY_CHANGED= "Der Dungeon-Schwierigkeitsgrad wurde auf %s gesetzt."
 
 L.PROFILE_NOT_FOUND			= "<"..L.DBM.."> Dein derzeitiges Profil ist korrupt. "..L.DBM.." wird das Profil 'Default' laden."
 L.PROFILE_CREATED			= "Profil '%s' erzeugt."

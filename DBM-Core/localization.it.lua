@@ -34,7 +34,8 @@ L.COPY_URL_DIALOG					= "Copia URL"
 --L.TEXT_ONLY_RANGE						= "Range frame is limited to text only due to API restrictions in this area."
 L.NO_RANGE					= "Il Radar Distanziometro non può essere utilizzato nelle istanze. Verrà utilizzato il precedente riquadro testuale"
 L.NO_ARROW					= "La Freccia non può essere usata nelle istanze"
-L.NO_HUD						= "La HUDMap non può essere usata nelle istanze"
+L.NO_HUD					= "La HUDMap non può essere usata nelle istanze"
+L.NO_COMMS					= "La comunicazione degli addon non può essere utilizzata durante gli incontri o le istanze M+ attive. Utilizza nuovamente questo comando dopo la fine dell'incontro o dell'istanza."
 
 L.DYNAMIC_DIFFICULTY_CLUMP	= ""..L.DBM.." ha disabilitato il riquadro distanziometro per questo combattimento per insufficienti informazioni sulle distanze richieste con un gruppo di queste dimensioni."
 L.DYNAMIC_ADD_COUNT			= ""..L.DBM.." ha disabilitato gli avvisi sulla quantità degli add per questo combattimento per insufficienti informazioni sul numero di add presenti con un gruppo di queste dimensioni."
@@ -78,7 +79,8 @@ L.BONUS_SKIPPED				= ""..L.DBM.." ha chiuso automaticamente il riquadro del bott
 
 L.AFK_WARNING				= "Sei AFK e in combattimento (%d percento di vita rimanente), esecuzione avviso sonoro. Se non sei AFK, togliti dallo stato AFK flag o disabilita questa opzione in 'funzionalità aggiuntive'."
 
-L.COMBAT_STARTED_AI_TIMER	= "Il mio processore fa parte di una rete neurale. (Questo combattimento utilizzerà la nuova funzione Temporizzatore IA per generare approssimazioni sulla temporizzazione)"
+L.RAID_DIFFICULTY_CHANGED				= "Il livello di difficoltà del raid è stato impostato su %s."
+L.DUNGEON_DIFFICULTY_CHANGED			= "Il livello di difficoltà del dungeon è stato impostato su %s."
 
 L.PROFILE_NOT_FOUND			= "<"..L.DBM.."> Il tuo profilo attuale è corrotto. "..L.DBM.." caricherà il profilo 'Predefinito'."
 L.PROFILE_CREATED			= "Profilo '%s' creato."

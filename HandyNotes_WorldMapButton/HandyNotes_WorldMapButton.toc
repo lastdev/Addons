@@ -1,6 +1,6 @@
-## Interface: 110105, 40402, 11506
+## Interface: 110207, 40402, 11507
 ## Title: HandyNotes: WorldMapButton
-## Version: 110105.02-Release
+## Version: 110207.01-Release
 ## Notes: Adds a Button to the Worldmap that can toggle HandyNotes Icons
 ## Notes-deDE: Fügt der Weltkarte einen Button hinzu, mit dem HandyNotes Icons umgeschaltet werden können
 ## Notes-ruRU: Добавляет кнопку на карту мира, которая может переключать значки HandyNotes

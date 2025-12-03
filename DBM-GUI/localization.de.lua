@@ -285,6 +285,7 @@ L.HideBossEmoteFrame				= "Hide raid boss emote frame during boss fights"
 L.HideWatchFrame					= "Hide watch (objectives) frame during boss fights if no achievements are being tracked and if not in a Mythic+"
 L.HideQuestTooltips					= "Hide quest objectives from tooltips during boss fights"--Currently hidden (NYI)
 L.HideTooltips						= "Completely hide tooltips during boss fights"
+L.HideBlizzardTimeline				= "Blende die Blizzard-Schlachtzugszeitlinie während Bosskämpfen aus"
 
 L.Panel_ExtraFeatures		= "Sonstige Funktionen"
 --
@@ -407,6 +408,8 @@ L.SpecialWarnHeader4="Typ 4: Setze Option für hoch priotisierte 'Renn weg' Spez
 L.SpecialWarnHeader5="Typ 5: Setze Option für Ansagen mit Notizen, welche meinen Spielernamen betreffen"
 L.ShowReminders="Zeige Erinnerungsnachrichten für fehlende und deaktivierte sub-Module, sub-Modul hotfixes sowie veraltete Sub-Module und aktivierter Lautlos-modus"
 L.WorldBuffAlert="Zeige Warnung und Timer wenn World-Buff RP auf dem eigenen Realm gestartet wurde"
+L.RaidDiffChangedAlert				= "Zeige Warnung wenn die Schwierigkeit des Raids geändert wird"
+L.DungeonDiffChangedAlert			= "Zeige Warnung wenn die Schwierigkeit der Dungeon geändert wird"
 L.Area_BugAlerts="Einstellungen für Fehlermeldungen"
 L.BadTimerAlert="Zeige Chat Nachricht wenn DBM einen Timer mit einer Abweichung von mehr als einer Sekunde entdeckt"
 L.PullVoice="Setze Stimme für Pull-Timer"

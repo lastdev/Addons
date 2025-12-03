@@ -11,7 +11,6 @@
 local _, LM = ...
 
 local C_Spell = LM.C_Spell or C_Spell
-local C_MountJournal = LM.C_MountJournal or C_MountJournal
 
 LM.Journal = setmetatable({ }, LM.Mount)
 LM.Journal.__index = LM.Journal
@@ -56,7 +55,7 @@ function LM.Journal:Get(id)
         creatureDisplayID = { creatureDisplayID }
     end
 
-    if not name then
+    if not name or not icon then
         LM.Debug("LM.Mount: Failed GetMountInfo for ID = #%d", id)
         return
     end
@@ -111,14 +110,16 @@ function LM.Journal:Get(id)
     end
 
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-        m.family = LM.MOUNTFAMILY_BY_SPELL_ID[m.spellID]
+        m.family = LM.MountDB.GetModelBySpellID(m.spellID)
 
         if not m.family then
             m.family = UNKNOWN
             --[==[@debug@
-            LM.PrintError('No family: [%d] = true, -- %s', m.spellID, m.name)
+            LM.PrintError('No family: [%d] = true, -- % 4d %s', m.spellID, m.mountID, m.name)
             --@end-debug@]==]
         end
+
+        m.expansion = LM.MountDB.GetExpansionByID(id)
     end
 
     return m
@@ -279,6 +280,7 @@ end
 function LM.Journal:Dump(prefix)
     prefix = prefix or ""
     LM.Mount.Dump(self, prefix)
+    LM.Print(prefix .. " expansion: " .. tostring(self.expansion))
     LM.Print(prefix .. " isFilterUsable: " .. tostring(self.isFilterUsable))
     LM.Print(prefix .. " mountTypeID: " .. tostring(self.mountTypeID))
     LM.Print(prefix .. " sourceType: " .. tostring(self.sourceType))

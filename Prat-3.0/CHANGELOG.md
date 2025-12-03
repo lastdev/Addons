@@ -1,6 +1,6 @@
 # Prat 3.0
 
-## [3.9.70](https://github.com/Legacy-of-Sylvanaar/prat-3-0/tree/3.9.70) (2025-08-05)
-[Full Changelog](https://github.com/Legacy-of-Sylvanaar/prat-3-0/compare/3.9.69...3.9.70) [Previous Releases](https://github.com/Legacy-of-Sylvanaar/prat-3-0/releases)
+## [3.9.73](https://github.com/Legacy-of-Sylvanaar/prat-3-0/tree/3.9.73) (2025-10-28)
+[Full Changelog](https://github.com/Legacy-of-Sylvanaar/prat-3-0/compare/3.9.72...3.9.73) [Previous Releases](https://github.com/Legacy-of-Sylvanaar/prat-3-0/releases)
 
-- Update toc for 11.2.0  
+- Remove 11.2.7 from the toc as it doesn't work on the 11.2.7 PTR  

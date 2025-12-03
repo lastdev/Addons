@@ -1,4 +1,4 @@
 # HandyNotes: DungeonLocations
-## [2.8.8](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2025-08-19)
+## [2.9.2](https://github.com/Ssesmar/HandyNotes_DungeonLocations) (2025-12-02)
 - Note: 
 • toc update

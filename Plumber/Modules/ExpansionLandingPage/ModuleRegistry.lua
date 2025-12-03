@@ -50,7 +50,7 @@ local function AddonCompartment_OnEnter(menuButton, data)
         local bindingText = GetBindingText(hotkey) or hotkey;
         title = title .. string.format(" |cffffd100(%s)|r", bindingText);
     end
-    tooltip:SetText(title, 1, 1, 1, true);
+    tooltip:SetText(title, 1, 1, 1, 1, true);
     tooltip:AddLine(L["Plumber Experimental Feature Tooltip"], 1, 0.82, 0, true);
     tooltip:Show();
 end
@@ -79,11 +79,13 @@ EL:SetScript("OnEvent", function(self, event, ...)
         if factionID then
             API.TriggerExpansionMinimapButtonAlert(L["Paragon Reward Available"]);
             CallbackRegistry:Trigger("ParagonRewardReady", factionID);
+            CallbackRegistry:Trigger("LandingPage.UpdateNotification");
         end
     elseif event == "QUEST_TURNED_IN" then
         local questID = ...
         if FactionUtil:IsParagonRewardQuest(questID) then
             CallbackRegistry:Trigger("ParagonRewardQuestTurnedIn", questID);
+            CallbackRegistry:Trigger("LandingPage.UpdateNotification");
         end
     end
 end);
@@ -116,8 +118,14 @@ do
         description = L["ModuleDescription NewExpansionLandingPage"],
         toggleFunc = EL.EnableModule,
         categoryID = 1,
-        uiOrder = 0,
+        uiOrder = -10,
         moduleAddedTime = 1750160000,
+        validityCheck = function()
+            return addon.IsToCVersionEqualOrNewerThan(50000);
+        end,
+		categoryKeys = {
+			"Signature",
+		},
     };
 
     addon.ControlCenter:AddModule(moduleData);

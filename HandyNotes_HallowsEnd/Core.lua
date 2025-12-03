@@ -3,7 +3,7 @@
 
                                             Hallow's End
 
-                                     v4.07 - 26th September 2025
+                                      v4.08 - 3rd October 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

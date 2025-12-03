@@ -29,12 +29,12 @@ local nodeHider = addon.import('nodeHider');
 
 local ICON_MAP = {
   question = 'Interface\\Icons\\inv_misc_questionmark',
-  skullGray = 'Interface\\Addons\\Handynotes_Pandaria\\icons\\RareIcon.tga',
-  skullGreen = 'Interface\\Addons\\Handynotes_Pandaria\\icons\\RareIconGreen.tga',
-  skullBlue = 'Interface\\Addons\\Handynotes_Pandaria\\icons\\RareIconBlue.tga',
-  skullOrange = 'Interface\\Addons\\Handynotes_Pandaria\\icons\\RareIconOrange.tga',
-  skullYellow = 'Interface\\Addons\\Handynotes_Pandaria\\icons\\RareIconYellow.tga',
-  skullPurple = 'Interface\\Addons\\Handynotes_Pandaria\\icons\\RareIconPurple.tga',
+  skullGray = 'Interface\\Addons\\HandyNotes_Pandaria\\icons\\RareIcon.tga',
+  skullGreen = 'Interface\\Addons\\HandyNotes_Pandaria\\icons\\RareIconGreen.tga',
+  skullBlue = 'Interface\\Addons\\HandyNotes_Pandaria\\icons\\RareIconBlue.tga',
+  skullOrange = 'Interface\\Addons\\HandyNotes_Pandaria\\icons\\RareIconOrange.tga',
+  skullYellow = 'Interface\\Addons\\HandyNotes_Pandaria\\icons\\RareIconYellow.tga',
+  skullPurple = 'Interface\\Addons\\HandyNotes_Pandaria\\icons\\RareIconPurple.tga',
   chest = 'Interface\\Icons\\TRADE_ARCHAEOLOGY_CHESTOFTINYGLASSANIMALS',
 };
 

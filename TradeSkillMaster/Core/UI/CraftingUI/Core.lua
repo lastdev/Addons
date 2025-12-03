@@ -158,8 +158,8 @@ end
 
 function private.SwitchBtnOnClick(button)
 	private.settings.showDefault = button ~= private.defaultUISwitchBtn
-	if ClientInfo.IsRetail() and private.settings.showDefault then
-		Professions.SetDefaultFilters()
+	if not private.settings.showDefault then
+		TradeSkill.SetDefaultFilters()
 	end
 	Profession.SetScannerDisabled(private.settings.showDefault)
 	private.fsm:ProcessEvent("EV_SWITCH_BTN_CLICKED")

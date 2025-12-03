@@ -213,7 +213,7 @@ L.Tab_RaidWarning 					= "Announcements"
 L.RaidWarning_Header				= "Announce Options"
 L.RaidWarnColors 					= "Announce Colors"
 L.RaidWarnColor_1 					= "Color 1"
-L.RaidWarnColor_2 					= "Color 2"
+L.RaidWarnColor_2 					= "Color 2"--Only one used in midnight
 L.RaidWarnColor_3		 			= "Color 3"
 L.RaidWarnColor_4 					= "Color 4"
 L.InfoRaidWarning					= [[You can specify the position and colors of the raid warning frame.
@@ -232,6 +232,7 @@ L.ThickOutline						= "Thick outline"
 L.MonochromeOutline					= "Monochrome outline"
 L.MonochromeThickOutline			= "Monochrome thick outline"
 L.RaidWarnSound						= "Play sound on raid announcement"
+L.AnnouncementMidnightNotice		= "Options on this pannel are for warnings Blizzard classifies as 'minor'"
 
 -- Panel: Spec Warn Frame
 L.Panel_SpecWarnFrame				= "Special Announcements"
@@ -251,11 +252,15 @@ L.SpecWarn_FlashAlpha				= "Flash alpha: %0.1f"
 L.SpecWarn_DemoButton				= "Show example"
 L.SpecWarn_ResetMe					= "Reset to defaults"
 L.SpecialWarnSoundOption			= "Set default sound"
+--PreMidnight
 L.SpecialWarnHeader1				= "Type 1: Set options for normal priority announcements affecting you or your actions"
 L.SpecialWarnHeader2				= "Type 2: Set options for normal priority announcements affecting everyone"
 L.SpecialWarnHeader3				= "Type 3: Set options for HIGH priority announcements"
 L.SpecialWarnHeader4				= "Type 4: Set options for HIGH priority run away special announcements"
 L.SpecialWarnHeader5				= "Type 5: Set options for announcements with notes containing your player name"
+--Post Midnight
+L.SpecialWarnHeaderMedium			= "Announcements for mechanics that blizzard classifies as 'medium'"
+L.SpecialWarnHeaderCritical			= "Announcements for mechanics that blizzard classifies as 'critical'"
 
 -- Panel: Generalwarnings
 L.Tab_GeneralMessages 				= "Chat Frame Messages"
@@ -282,6 +287,9 @@ L.RoleSpecAlert						= "Show alert message on raid join when your loot spec does
 L.CheckGear							= "Show gear alert message during pull (when your equipped ilvl is much lower than bag ilvl (40+) or main weapon is not equipped)"
 L.WorldBossAlert					= "Show alert message when world bosses might have been engaged on your realm by guildies or friends (inaccurate if sender is CRZed)"
 L.WorldBuffAlert					= "Show alert message and timer when world buff RP has been started on your realm (Disabled in SOD)"
+L.RaidDiffChangedAlert				= "Show alert message when raid difficulty is changed"
+L.RaidDiffChangedRaidOnly			= "Only show raid difficulty change alert when in a raid group (Caveat: it won't report difficulty on join if not converted to raid yet)"
+L.DungeonDiffChangedAlert			= "Show alert message when dungeon difficulty is changed"
 
 L.Area_BugAlerts					= "Bug Reporting Alert Options"
 L.BadTimerAlert						= "Show chat message when DBM detects a bad timer with at least 1 second of incorrectness"
@@ -420,6 +428,8 @@ L.ClickThrough						= "Disable mouse events (click through)"
 L.Bar_Decimal						= "Decimal shows below time: %d"
 L.Bar_Alpha							= "Alpha: %0.1f"
 L.Bar_EnlargeTime					= "Bar enlarges below time: %d"
+L.Bar_AppearTime					= "Bar are hidden above time: %d"--Used for when hidden bars show on the small bar anchor
+L.Bar_HideLongBars					= "Hide bars until they are below above threshold"
 L.BarSpark							= "Bar spark"
 L.BarFlash							= "Flash bar about to expire"
 L.BarSort							= "Sort by remaining time"
@@ -553,6 +563,7 @@ L.HideBossEmoteFrame				= "Hide raid boss emote frame during boss fights"
 L.HideWatchFrame					= "Hide watch (objectives) frame during boss fights if no achievements are being tracked and if not in a Mythic+"
 L.HideQuestTooltips					= "Hide quest objectives from tooltips during boss fights"--Currently hidden (NYI)
 L.HideTooltips						= "Completely hide tooltips during boss fights"
+L.HideBlizzardTimeline				= "Hide the Blizzard Raid Timeline during boss fights"
 
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "Raid Leader Controls"
@@ -587,6 +598,7 @@ L.TabFooter							= "All options in this panel only work if you are group leader
 
 -- Panel: Privacy
 L.Tab_Privacy 						= "Auto Reply & Privacy"
+L.Tab_PrivacyMidnight				= "Addon Comms Privacy"
 L.Area_WhisperMessages				= "Whisper Message Options"
 L.AutoRespond 						= "Auto-respond to whispers while fighting"
 L.WhisperStats 						= "Include kill/wipe stats in whisper responses"
@@ -607,7 +619,7 @@ L.Panel_Range						= "Rangeframe"
 -- Panel: Nameplate
 L.Panel_Nameplates					= "Nameplates"
 L.Plater_Config						= "Open Plater Config"
-L.ThreatPlates_Config						= "Open Threat Plates Config"
+L.ThreatPlates_Config				= "Open Threat Plates Config"
 L.Area_NPStyle						= "Style (Note: Only configures style when not using Plater.)"
 L.NPAuraText						= "Show timer text on nameplate icons"
 L.NPAuraSize						= "Icon Pixel size (squared): %d"

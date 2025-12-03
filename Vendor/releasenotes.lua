@@ -2,6 +2,44 @@ local _, Addon = ...
 
 Addon.ReleaseNotes = {
 {
+Release = "6.11.0 (Nov 11, 2025)",
+Notes = [[
+# Midnight Beta Compatibility
+Updated TOC and fixed a changed API in equipment sets. There's probably other things broken I dont know about.
+]]
+},
+{
+Release = "6.10.1 (Aug 09, 2025)",
+Notes = [[
+# Fast Looting, Rule Changes
+This update adds Fast Loot feature, some new keep rules, adjustments to existing rules, and fixes EquipmentSet detection hopefully for good.
+
+# Fast Looting
+* New on-by-default feature that does fast looting like the common Fast-Loot addons. This was an easy add for convenience. If you already
+use a loot addon or want to turn it off it is in General Settings. This is an account-wide setting, so you do not need to change it on every profile.
+* This is enabled for all versions of the game.
+
+# Rule Updates - New Profession Gear Keep Rule
+* Default sell rules parameter description changed to "Max-upgrade item level" to reduce confusion about item level being compared for upgradeable gear.
+* Default sell rules description updated for clarity.
+* New on-by-default for new profiles Keep rule for Profession Gear (retail only), which keeps anything classified as Profession Equipment.
+* Fixed a bug causing the Sell Old Food rule to silently fail.
+* Fixed classic vanilla sell rules which were using IsEquipmentSet(). New rules were created for this specifically for vanilla classic, so if the
+old rules were enabled for a profile they will be disabled with this change and need to be re-enabled.
+* Removed HasProfession() from vanilla classic (SOD), as it did not function correctly. This will be restored in a future update.
+
+# Important Items update
+* The default Important Items list has been updated to include the new Ethereal Augment rune and Soulgorged Augment runes. This will update automatically
+and not affect your current list if you have changed it, the new items will simply be added to your list if they were not already there. You can reset
+the important items list at any time using the console command '/vendor list reset' if you want to do that.
+
+# Bugfixes
+* Restored IsEquipmentSet detection to the guid form, so it should once again match exactly and not cause issues with empty equipment sets.
+* Fixed protection buyback from not matching Soulbound items correctly, causing some false positives on the buyback for items that did not
+actually match keep rules.
+]]
+},
+{
 Release = "6.9.4 (Aug 06, 2025)",
 Notes = [[
 # Speculative fix for a reported crash / lockup

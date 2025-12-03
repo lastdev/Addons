@@ -8,52 +8,50 @@ local ClickedCoord = nil
 
 function GetRewardLinkByID(ID)
 
-    if ID ~= nil then
-
-        local _, Reward
-
-        if ID == "824" or ID == "823" then
-
-            Reward = C_CurrencyInfo.GetCurrencyInfo(ID)
-
-            if Reward ~= nil then
-                return Reward.name
-            end
-
-        else
-
-            _, Reward = C_Item.GetItemInfo(ID)
-
-            if Reward ~= nil then
-                return Reward
-            end
-        end
-
+    if ID == nil then
+        return nil
     end
 
-    return nil
+    local _, Reward
+
+    if ID == "824" or ID == "823" then
+
+        Reward = C_CurrencyInfo.GetCurrencyInfo(ID)
+
+        if Reward ~= nil then
+            return Reward.name
+        end
+
+    else
+
+        _, Reward = C_Item.GetItemInfo(ID)
+
+        if Reward ~= nil then
+            return Reward
+        end
+    end
 
 end
 
 function GetRewardIconByID(ID)
 
-    if ID ~= nil then
-
-        local _, Icon
-
-        if ID == "824" or ID == "823" then
-            _, _, Icon = C_CurrencyInfo.GetCurrencyInfo(ID)
-        else
-            _, _, _, _, Icon = C_Item.GetItemInfoInstant(ID)
-        end
-
-        if Icon ~= nil then
-            return Icon
-        end
-
+    if ID == nil then
+        return Icon_Treasure_Default
     end
 
-    return Icon_Treasure_Default
+
+    local _, Icon
+
+    if ID == "824" or ID == "823" then
+        _, _, Icon = C_CurrencyInfo.GetCurrencyInfo(ID)
+    else
+        _, _, _, _, Icon = C_Item.GetItemInfoInstant(ID)
+    end
+
+    if Icon ~= nil then
+        return Icon
+    end
+
 end
 
 local function generateMenu(button, level)
@@ -125,7 +123,7 @@ end
 
 function DisablePOI(button, MapUID, coord)
 
-    local POI = HandyNotes_Draenor.nodes[MapUID][coord][2]
+    local POI = HandyNotes_Draenor.Nodes[MapUID][coord][2]
 
     if (POI ~= nil) then
         HandyNotes_Draenor.db.char[POI] = true;
@@ -136,42 +134,10 @@ end
 
 function GetZoneByMapID(ID)
 
-    if ID == 525 then
+    local Zone = HandyNotes_Draenor.ZoneMapIDs[ID]
 
-        return "FrostfireRidge"
-
-    elseif ID == 534 then
-
-        return "TanaanJungle"
-
-    elseif ID == 535 then
-
-        return "Talador"
-
-    elseif ID == 550 then
-
-        return "Nagrand"
-
-    elseif ID == 543 then
-
-        return "Gorgrond"
-
-    elseif ID == 539 then
-
-        return "ShadowmoonValley"
-
-    elseif ID == 542 then
-
-        return "SpiresOfArak"
-
-    elseif ID == 582 then
-
-        return "Lunarfall"
-
-    elseif ID == 590 then
-
-        return "Frostwall"
-
+    if Zone ~= nil then
+        return Zone
     end
 
     return "Unknown Zone"
@@ -183,10 +149,10 @@ function TomTomCreateArrow(button, MapUID, coord)
 
         local x, y = HandyNotes:getXY(coord)
 
-        local Zone = HandyNotes_Draenor.nodes[MapUID][coord][1]
-        local Name = HandyNotes_Draenor.nodes[MapUID][coord][3]
-        local Note = HandyNotes_Draenor.nodes[MapUID][coord][4]
-        local ItemID = HandyNotes_Draenor.nodes[MapUID][coord][7]
+        local Zone = HandyNotes_Draenor.Nodes[MapUID][coord][1]
+        local Name = HandyNotes_Draenor.Nodes[MapUID][coord][3]
+        local Note = HandyNotes_Draenor.Nodes[MapUID][coord][4]
+        local ItemID = HandyNotes_Draenor.Nodes[MapUID][coord][7]
 
         local ArrowDescription = ""
 
@@ -217,55 +183,57 @@ function TomTomCreateArrow(button, MapUID, coord)
 end
 
 function DBMCreateArrow(button, MapUID, coord)
-    if HandyNotes_Draenor.db.profile.Integration.DBM.Loaded == true then
 
-        if HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote == nil then
-        
-            HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote = DBMArrow:CreateFontString(nil, "OVERLAY", "GameTooltipText")
-            HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetWidth(400)
-            HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetHeight(100)
-            HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetPoint("CENTER", DBMArrow, "CENTER", 0, -70)
-            HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetTextColor(1, 1, 1, 1)
-            HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetJustifyH("CENTER")
-            DBMArrow.Desc = HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote
+    if HandyNotes_Draenor.db.profile.Integration.DBM.Loaded ~= true then
+        return 
+    end
 
-        end
+    if HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote == nil then
+    
+        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote = DBMArrow:CreateFontString(nil, "OVERLAY", "GameTooltipText")
+        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetWidth(400)
+        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetHeight(100)
+        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetPoint("CENTER", DBMArrow, "CENTER", 0, -70)
+        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetTextColor(1, 1, 1, 1)
+        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote:SetJustifyH("CENTER")
+        DBMArrow.Desc = HandyNotes_Draenor.db.profile.Integration.DBM.ArrowNote
 
-        local x, y = HandyNotes:getXY(coord)
+    end
 
-        local Zone = HandyNotes_Draenor.nodes[MapUID][coord][1]
-        local Name = HandyNotes_Draenor.nodes[MapUID][coord][3]
-        local Note = HandyNotes_Draenor.nodes[MapUID][coord][4]
-        local ItemID = HandyNotes_Draenor.nodes[MapUID][coord][7]
+    local x, y = HandyNotes:getXY(coord)
 
-        local ArrowDescription = ""
+    local Zone = HandyNotes_Draenor.Nodes[MapUID][coord][1]
+    local Name = HandyNotes_Draenor.Nodes[MapUID][coord][3]
+    local Note = HandyNotes_Draenor.Nodes[MapUID][coord][4]
+    local ItemID = HandyNotes_Draenor.Nodes[MapUID][coord][7]
 
-        if Name ~= nil then
-            if Zone ~= nil then
-                ArrowDescription = ArrowDescription.."\n"..Name;
-                ArrowDescription = ArrowDescription.."\n"..Zone;
+    local ArrowDescription = ""
 
-                if ItemID ~= nil then
-                    ArrowDescription = ArrowDescription.."\n\n"
-                    ArrowDescription = ArrowDescription..GetRewardLinkByID(ItemID)
-                end
+    if Name ~= nil then
+        if Zone ~= nil then
+            ArrowDescription = ArrowDescription.."\n"..Name;
+            ArrowDescription = ArrowDescription.."\n"..Zone;
 
-                if Note ~= nil and Note ~= nil then
-                    ArrowDescription = ArrowDescription.."\n\n"
-                    ArrowDescription = ArrowDescription.."\n"..Note
-                end
+            if ItemID ~= nil then
+                ArrowDescription = ArrowDescription.."\n\n"
+                ArrowDescription = ArrowDescription..GetRewardLinkByID(ItemID)
+            end
+
+            if Note ~= nil and Note ~= nil then
+                ArrowDescription = ArrowDescription.."\n\n"
+                ArrowDescription = ArrowDescription.."\n"..Note
             end
         end
-
-		if not DBMArrow.Desc:IsShown() then
-			DBMArrow.Desc:Show()
-		end
-
-		DBMArrow.Desc:SetText(ArrowDescription)
-        DBM.Arrow:ShowRunTo(x * 100, y * 100, nil, nil, true)
-
-        HandyNotes_Draenor.db.profile.Integration.DBM.ArrowCreated = true
     end
+
+    if not DBMArrow.Desc:IsShown() then
+        DBMArrow.Desc:Show()
+    end
+
+    DBMArrow.Desc:SetText(ArrowDescription)
+    DBM.Arrow:ShowRunTo(x * 100, y * 100, nil, nil, true)
+
+    HandyNotes_Draenor.db.profile.Integration.DBM.ArrowCreated = true
 end
 
 function DBMHideArrow()
@@ -275,10 +243,9 @@ end
 
 function HandyNotes_Draenor:OnEnter(MapUID, coord)
 
-    local Zone = GetZoneByMapID(MapUID)
-    local ItemHeader = HandyNotes_Draenor.nodes[MapUID][coord][3]
-    local ItemNote = HandyNotes_Draenor.nodes[MapUID][coord][4]
-    local ItemID = HandyNotes_Draenor.nodes[MapUID][coord][7]
+    local ItemHeader = HandyNotes_Draenor.Nodes[MapUID][coord][3]
+    local ItemNote = HandyNotes_Draenor.Nodes[MapUID][coord][4]
+    local ItemID = HandyNotes_Draenor.Nodes[MapUID][coord][7]
     local Reward = GetRewardLinkByID(ItemID)
 
     local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
@@ -444,11 +411,12 @@ end
 function HandyNotes_Draenor:RegisterWithHandyNotes()
     local function iter(t, prestate)
 
-        if t ~= nil then
+        if not t then return nil end
 
             local state, value = next(t, prestate)
 
             while state do
+                repeat
 
                 local Zone = GetZoneByMapID(value[1])
                 local ID = value[2]
@@ -458,87 +426,90 @@ function HandyNotes_Draenor:RegisterWithHandyNotes()
                 local AchievementID = value[9]
                 local AchievementCriteriaIndex = value[8]
 
-                if ID and Zone then
+                if not ID and not Zone then
+                    do break end
+                end
 
-                    if Tag == "Rare" then
+                if Tag == "Rare" then
 
-                        if self.db.profile.Zones[Zone]["Rares"] then
+                    if self.db.profile.Zones[Zone]["Rares"] then
 
-                            if self.db.profile.Settings.Rares.ShowAlreadyKilled == true or not self.db.char[ID] then
+                        if self.db.profile.Settings.Rares.ShowAlreadyKilled == true or not self.db.char[ID] then
 
-                                if C_QuestLog.IsQuestFlaggedCompleted(ID) == false or self.db.profile.Settings.Rares.ShowAlreadyKilled == true then
+                            if C_QuestLog.IsQuestFlaggedCompleted(ID) == false or self.db.profile.Settings.Rares.ShowAlreadyKilled == true then
 
-                                    if AchievementID ~= nil and AchievementCriteriaIndex ~= nil then
+                                if AchievementID ~= nil and AchievementCriteriaIndex ~= nil then
 
-                                        local _, _, Completed = GetAchievementCriteriaInfoByID(AchievementID, AchievementCriteriaIndex)
+                                    local _, _, Completed = GetAchievementCriteriaInfoByID(AchievementID, AchievementCriteriaIndex)
 
-                                        if Completed == false then
-                                            return state, nil, Icon, self.db.profile.Settings.Rares.IconScale, self.db.profile.Settings.Rares.IconAlpha
-                                        end
-
-                                    else
+                                    if Completed == false then
                                         return state, nil, Icon, self.db.profile.Settings.Rares.IconScale, self.db.profile.Settings.Rares.IconAlpha
                                     end
 
-                                end
-
-                            end
-
-                        end
-
-                    elseif string.match(Tag, "Treasure") then
-
-                        if self.db.profile.Zones[Zone]["Treasures"] then
-
-                            if self.db.profile.Settings.Treasures.ShowAlreadyCollected == true or not self.db.char[ID] then
-
-                                if string.match(Tag, "Quest") then
-
-                                    if C_QuestLog.IsQuestFlaggedCompleted(AchievementCriteriaIndex) or self.db.profile.Settings.Treasures.ShowAlreadyCollected == true then
-
-                                        if ItemID ~= nil then
-                                            return state, nil, GetRewardIconByID(ItemID), self.db.profile.Settings.Treasures.IconScale, self.db.profile.Settings.Treasures.IconAlpha
-                                        end
-
-                                    end
-
                                 else
-
-                                    if C_QuestLog.IsQuestFlaggedCompleted(ID) == false or self.db.profile.Settings.Treasures.ShowAlreadyCollected == true then
-
-                                        if ItemID ~= nil then
-                                            return state, nil, GetRewardIconByID(ItemID), self.db.profile.Settings.Treasures.IconScale, self.db.profile.Settings.Treasures.IconAlpha
-                                        else
-                                            return state, nil, Icon, self.db.profile.Settings.Treasures.IconScale, self.db.profile.Settings.Treasures.IconAlpha
-                                        end
-    
-                                    end
-
+                                    return state, nil, Icon, self.db.profile.Settings.Rares.IconScale, self.db.profile.Settings.Rares.IconAlpha
                                 end
 
                             end
-
-                        end
-
-                    elseif string.match(Tag, "Mount") then
-
-                        if self.db.profile.Mounts[Tag] and not self.db.char[ID] then
-
-                            return state, nil, Icon, self.db.profile.Settings.Rares.IconScale, self.db.profile.Settings.Rares.IconAlpha
 
                         end
 
                     end
-                    
+
+                elseif string.match(Tag, "Treasure") then
+
+                    if self.db.profile.Zones[Zone]["Treasures"] then
+
+                        if self.db.profile.Settings.Treasures.ShowAlreadyCollected == true or not self.db.char[ID] then
+
+                            if string.match(Tag, "Quest") then
+
+                                if C_QuestLog.IsQuestFlaggedCompleted(AchievementCriteriaIndex) or self.db.profile.Settings.Treasures.ShowAlreadyCollected == true then
+
+                                    if ItemID ~= nil then
+                                        return state, nil, GetRewardIconByID(ItemID), self.db.profile.Settings.Treasures.IconScale, self.db.profile.Settings.Treasures.IconAlpha
+                                    end
+
+                                end
+
+                            else
+
+                                if C_QuestLog.IsQuestFlaggedCompleted(ID) == false or self.db.profile.Settings.Treasures.ShowAlreadyCollected == true then
+
+                                    if ItemID ~= nil then
+                                        return state, nil, GetRewardIconByID(ItemID), self.db.profile.Settings.Treasures.IconScale, self.db.profile.Settings.Treasures.IconAlpha
+                                    else
+                                        return state, nil, Icon, self.db.profile.Settings.Treasures.IconScale, self.db.profile.Settings.Treasures.IconAlpha
+                                    end
+
+                                end
+
+                            end
+
+                        end
+
+                    end
+
+                elseif string.match(Tag, "Mount") then
+
+                    if self.db.profile.Mounts[Tag] and not self.db.char[ID] then
+
+                        return state, nil, Icon, self.db.profile.Settings.Rares.IconScale, self.db.profile.Settings.Rares.IconAlpha
+
+                    end
+
                 end
+                    
 
                 state, value = next(t, state)
+
+                until true
             end
-        end
+        
     end
 
-    function HandyNotes_Draenor:GetNodes2(uiMapID, minimap)
-        return iter, HandyNotes_Draenor.nodes[uiMapID], nil
+    function HandyNotes_Draenor:GetNodes2(uiMapID)
+        return iter, HandyNotes_Draenor.Nodes[uiMapID], nil
     end
 
     self:Refresh()

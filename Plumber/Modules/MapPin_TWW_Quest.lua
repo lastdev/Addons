@@ -70,7 +70,7 @@ do
                 end
 
                 local questName = GetQuestInfoByQuestID(questID)
-                tooltip:SetText(questName, 1, 1, 1, true);
+                tooltip:SetText(questName, 1, 1, 1, 1, true);
                 self:AddQuestTimeToTooltip(tooltip, questID);
                 tooltip:Show();
 
@@ -80,7 +80,7 @@ do
             local poiInfo = GetAreaPOIInfo(self.data.uiMapID, self.data.poiID);
             if poiInfo then
                 tooltip:SetOwner(self, "ANCHOR_RIGHT");
-                tooltip:SetText(poiInfo.name, 1, 1, 1, true);
+                tooltip:SetText(poiInfo.name, 1, 1, 1, 1, true);
 
                 if poiInfo.tooltipWidgetSet then
                     self:AttachWidgetSetToTooltip(tooltip, poiInfo.tooltipWidgetSet, WidgetTextRule);
@@ -120,12 +120,8 @@ end
 
 local SpecialQuestPinDataProvider = {};
 do
-    local function onCoordReceivedFunc(positionData)
-        POILocation[positionData.poiID] = positionData;
-    end
-
-    local function onConvertFinishedFunc()
-        PinController:RequestUpdate();
+    function SpecialQuestPinDataProvider:GetDBKey()
+        return "WorldMapPin_TWW_Quest"
     end
 
     function SpecialQuestPinDataProvider:GetPinDataForMap(uiMapID)

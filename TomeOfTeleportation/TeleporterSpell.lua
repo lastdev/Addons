@@ -1,9 +1,9 @@
 local ST_Item = 1
 local ST_Spell = 2
-local ST_Challenge = 3
+local ST_Dungeon = 3
+local ST_Raid = 4
 
 
--- I'm not going to attempt any prefixes with different character sets. I may have missed some variations.
 -- Some of these are odd - inconsistent translations in-game?
 local RedundantStrings =
 {
@@ -55,7 +55,11 @@ function TeleporterSpell:IsSpell()
 end
 
 function TeleporterSpell:IsDungeonSpell()
-    return self.spellType == ST_Challenge
+    return self.spellType == ST_Dungeon
+end
+
+function TeleporterSpell:IsRaidSpell()
+    return self.spellType == ST_Raid
 end
 
 function TeleporterSpell:CleanupName()
@@ -221,6 +225,10 @@ function TeleporterSpell:CanUse()
 		if TeleporterGetOption("seasonOnly") and spell:IsDungeonSpell() and not self:IsSeasonDungeon() then
 			haveSpell = false
 		end
+
+		if TeleporterGetOption("seasonRaidsOnly") and spell:IsRaidSpell() and not self:IsSeasonDungeon() then
+			haveSpell = false
+		end
 	end
 
 	if not CustomizeSpells and not spell:IsVisible() then
@@ -305,20 +313,36 @@ function TeleporterSpell:MatchesSearch(searchString)
 	return string.find(string.lower(self.spellName), searchLower) or string.find(string.lower(self.zone), searchLower)
 end
 
+function TeleporterSpell:GetExpansionName()
+	return ExpansionNames[self.expansion] or "Unknown"
+end
+
 -- Use this script in-game to get the dungeon IDs:
 -- /script for i=1,3000 do d=GetLFGDungeonInfo(i);if d=="Dungeon Name" then print(i); end;end
 function TeleporterSpell:IsSeasonDungeon()
-	-- Dragonflight Season 4
-	return tContains({
-		2987,	-- Eco-Dome Al'dani
-		2805, 	-- Manaforge Omega
-		2654,	-- Ara-Kara, City of Echoes
-		2719,	-- The Dawnbreaker
-		2791,	-- Operation: Floodgate
-		2695,	-- Priory of the Sacred Flame
-		2119,	-- Halls of Atonement
-		2225,	-- Tazavesh, the Veiled Market
-	}, self.dungeonID)
+	if PlayerIsTimerunning and PlayerIsTimerunning() then
+		-- Legion Remix
+		return tContains({
+			1205,	-- Black Rook Hold
+			1319, 	-- Court of Stars
+			1202,	-- Darkheart Thicket
+			1194,	-- Halls of Valor
+			1207,	-- Neltharion's Lair
+			175,	-- Karazhan
+		}, self.dungeonID)
+	else
+		-- Dragonflight Season 4
+		return tContains({
+			2987,	-- Eco-Dome Al'dani
+			2805, 	-- Manaforge Omega
+			2654,	-- Ara-Kara, City of Echoes
+			2719,	-- The Dawnbreaker
+			2791,	-- Operation: Floodgate
+			2695,	-- Priory of the Sacred Flame
+			2119,	-- Halls of Atonement
+			2225,	-- Tazavesh, the Veiled Market
+		}, self.dungeonID)
+	end
 end
 
 -- Spell factories
@@ -341,12 +365,12 @@ function TeleporterCreateItem(id, dest)
 end
 
 -- dungeonID from: https://warcraft.wiki.gg/wiki/LfgDungeonID
-function TeleporterCreateChallengeSpell(id, dungeonID, mapID)
+function TeleporterCreateDungeonSpell(id, dungeonID, mapID)
 	local spell = {}
 	TeleporterInitSpell(spell)
 	spell.spellId = id
 	spell.dungeonID = dungeonID
-	spell.spellType = ST_Challenge
+	spell.spellType = ST_Dungeon
 	spell.dungeon = GetLFGDungeonInfo(dungeonID)
 
 	if mapID then
@@ -366,6 +390,12 @@ function TeleporterCreateChallengeSpell(id, dungeonID, mapID)
 		print("----")
 	end
 
+	return spell
+end
+
+function TeleporterCreateRaidSpell(id, dungeonID, mapID)
+	local spell = TeleporterCreateDungeonSpell(id, dungeonID, mapID)
+	spell.spellType = ST_Raid
 	return spell
 end
 

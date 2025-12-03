@@ -1,58 +1,51 @@
-# [5.20.4](https://github.com/WeakAuras/WeakAuras2/tree/5.20.4) (2025-09-08)
+# [5.20.7](https://github.com/WeakAuras/WeakAuras2/tree/5.20.7) (2025-11-27)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.20.1...5.20.4)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.20.6...5.20.7)
 
 ## Highlights
 
-- Re-tag, no changes
+- Basic support for Wrath Titan (thanks WoW CN community)
+- Support for new Masque version
+- Various bug fixes
 
 ## Commits
 
-InfusOnWoW (11):
+Copilot (1):
 
-- SubRegion Model: Reintroduce clipped by foreground mode
-- Remove workaround for SetTexture not adjusting to different wrapModes
-- Revert "Fix KR/TW/CN large number formatting for >= 100.000.000"
-- Fix TSU custom variable warning about formatter
-- Tweak wording for lua errors
-- Priest Template Remove removed ability
-- Totem Trigger: Fix "inverse" option not being visible
-- Custom Text: Tweak rules for text replacement %cfoo ~= %c now
-- MOP: Workaround broken GetInstanceInfo in Tol'Viron Areana
-- Fix typo in variable name
-- Ticks: Fix color sometimes applying to the wrong tick
+- Fix allstates:Get to return false instead of nil
 
-Matt Weber (1):
+InfusOnWoW (6):
 
-- Add optional length limit to `WA_ClassColorName`
+- Masque Support: Support new masque version
+- Profiling: Add an inherit font
+- BT Multi Target mode: add warnings on it, and if it's missing a filter
+- Update Discord List
+- Fix regression in Abbreviate numbers on retail
+- Update Discord List
 
-Pewtro (2):
+NoM0Re (6):
 
-- Re-export the .blp files
-- Add Celestial Dungeon load option instance type
+- Titan: Replace encounter data with phase 1 raids & bosses
+- Titan: remove neutral faction group
+- Titan: fix repair dialog text assignment
+- Glyph Load: Only show in Mists of Pandaria
+- Remove atlas file from Wrath Titan Reforge
+- Add Wrath Titan Reforged support
 
-Stanzilla (3):
+Stanzilla (4):
 
 - Update WeakAurasModelPaths from wago.tools
 - Update WeakAurasModelPaths from wago.tools
 - Update WeakAurasModelPaths from wago.tools
+- Update WeakAurasModelPaths from wago.tools
 
-dependabot[bot] (3):
+dependabot[bot] (2):
 
-- Bump cbrgm/mastodon-github-action from 2.1.14 to 2.1.19
-- Bump actions/checkout from 4 to 5
-- Bump actions/setup-python from 5 to 6
+- Bump actions/checkout from 5 to 6
+- Bump actions/upload-artifact from 4 to 5
 
-emptyrivers (2):
+mrbuds (2):
 
-- include overEnergize in combat log state
-- some more difficulty ids
-
-mrbuds (5):
-
-- Fix Mists encounterID tooltip
-- Fix currency trigger default on 12.2.0 fixes #6008
-- Text To Speech: use global game voice settings, and use the tts queue system
-- BossMod Trigger: add multiselect filter for break & pull timer
-- Fix moving profiling window #noticket
+- Remove atlas files
+- Model's Icon set to sword guy on classic, fixes #6075
 

@@ -1,6 +1,6 @@
 local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
-HandyNotes_Draenor.nodes[550] = {
+HandyNotes_Draenor.Nodes[550] = {
     [73071080] = { 550, "35951", "A Pile of Dirt", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "824" },
     [67655971] = { 550, "35759", "Abandoned Cargo", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, nil },
     [38404940] = { 550, "36711", "Abu'Gar's Favorite Lure", "Combine with the other Abu'Gar Parts for a follower (just north of Telaar)", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "114245" },

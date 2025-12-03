@@ -603,7 +603,6 @@ local function _GetCharactersOnQuest(questName, player, realm, account)
 
 		-- all players except the one passed as parameter on that account & that realm
 		if account == accountName and realm == realmName and player ~= characterName then
-
 			-- Loop through quests..
 			for index, quest in ipairs(character.Quests) do
 				local questID = bit64:GetBits(quest, 6, 18)

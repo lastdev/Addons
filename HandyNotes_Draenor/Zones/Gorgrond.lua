@@ -1,6 +1,6 @@
 local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
-HandyNotes_Draenor.nodes[543] = {
+HandyNotes_Draenor.Nodes[543] = {
     [41735297] = { 543, "36506", "Brokor's Sack", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "118702" },
     [42368341] = { 543, "36625", "Discarded Pack", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, nil },
     [41827802] = { 543, "36658", "Evermorn Supply Cache", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, nil },

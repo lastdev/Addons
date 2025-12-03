@@ -215,8 +215,7 @@ WorldMapFrame:HookScript("OnShow", function(self)
 	
 end)
 
-
-----------------------------------------------------------------------
+---------------------------------------------------------------------
 -- Add Worldmap Filter Button if Client is Retail
 ----------------------------------------------------------------------
 
@@ -225,13 +224,29 @@ local function AddButtonToWorldMapMenu()
 	if (not MenuUtil) then return end
 
 	-- Create checkbox entry
-	local button = MenuUtil.CreateCheckbox(L["TEXT_TOOLTIP_SHOW_ICONS"], IsHandyNotesEnabled, ToggleHandyNotes)
+	local button = MenuUtil.CreateCheckbox(L["TEXT_TOOLTIP_SHOW_ICONS"], IsHandyNotesEnabled, function()
+		if not HandyNotes then return end
+		local db = LibStub("AceDB-3.0"):New("HandyNotesDB", defaults);
+		if not db then return end
+		local profile = db.profile;
+		if not profile then return end;
+		
+		
+		if HandyNotes:IsEnabled() then
+			profile.enabled = false
+			HandyNotes:Disable();
+		else
+			profile.enabled = true
+			HandyNotes:Enable();
+		end
+		
+	end)
 
-	-- Add tooltip
-	-- local function OnTooltipShow(tooltipFrame, elementDescription)
-	--   GameTooltip_SetTitle(tooltipFrame, L["placeholder text"])
-	-- end
-	-- button:SetTooltip(OnTooltipShow)
+	-- Add tooltip to menu button
+	--local function OnTooltipShow(tooltipFrame, elementDescription)
+		--GameTooltip_SetTitle(tooltipFrame, L["TEXT_TOOLTIP_TOGGLE_ICONS"])
+	--end
+	--button:SetTooltip(OnTooltipShow)
 
 	-- Insert button to menu
 	Menu.ModifyMenu("MENU_WORLD_MAP_TRACKING", function(ownerRegion, rootDescription, contextData)

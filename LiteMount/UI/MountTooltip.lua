@@ -76,6 +76,11 @@ function LiteMountTooltipMixin:SetMount(m, hasMenu)
             self:AddLine("|cffffffff"..L.LM_FAMILY..":|r "..L[m.family])
         end
 
+        if m.expansion then
+            local text = GetExpansionName(m.expansion)
+            self:AddLine("|cffffffff"..EXPANSION_FILTER_TEXT..":|r "..text)
+        end
+
         local r = m:GetRarity()
         if r then
             self:AddLine("|cffffffff"..RARITY..":|r "..string.format(L.LM_RARITY_FORMAT, r))
@@ -103,7 +108,7 @@ function LiteMountTooltipMixin:SetMount(m, hasMenu)
     end
 
     if hasMenu then
-        self:AddLine("|cffff00ff" .. L.LM_RIGHT_CLICK .. ": " .. CLICK_BINDING_OPEN_MENU .. "|r")
+        self:AddLine("|cffff00ff" .. L.LM_RIGHT_CLICK .. ": " .. OPTIONS_MENU .. "|r")
     end
 
     self:Show()

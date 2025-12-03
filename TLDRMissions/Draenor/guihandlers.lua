@@ -26,6 +26,14 @@ local numSent
 local numSkipped
 local numFailed
 
+local rewardLimits = {
+    [824] = 10000, -- Garrison Resources
+    [1101] = 100000, -- Oil
+    [821] = 250, -- Draenor Clans Archaeology Fragment
+    [829] = 250, -- Arakkoa
+    [828] = 250, -- Ogre
+}
+
 gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
     local i = 0
     local missions = C_Garrison.GetCompleteMissions(1)
@@ -41,9 +49,25 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
     local size = table.getn(missions)
     for _, mission in pairs(missions) do
         self:SetText(size)
+        
+        local rewards = C_Garrison.GetMissionRewardInfo(mission.missionID)
+        local skip
+        if addon.WODdb.profile.skipFullResources then
+            for _, rewardInfo in ipairs(rewards) do
+                if rewardInfo.currencyID and rewardLimits[rewardInfo.currencyID] then
+                    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(rewardInfo.currencyID)
+                    if currencyInfo.quantity + rewardInfo.quantity > rewardLimits[rewardInfo.currencyID] then
+                        skip = true
+                        print("TLDRMissions: this currency is full or nearly full, skipping " .. currencyInfo.name)
+                    end
+                end
+            end
+        end
+        
         C_Timer.After(i, function()
             size = size - 1
             self:SetText(size)
+
             if size < 1 then
                 self:SetText(DONE.."!")
                 AceEvent:SendMessage("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
@@ -62,9 +86,12 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
                 end)
             end
             
-            C_Garrison.MarkMissionComplete(mission.missionID)
-            C_Garrison.MissionBonusRoll(mission.missionID)
+            if not skip then
+                C_Garrison.MarkMissionComplete(mission.missionID)
+                C_Garrison.MissionBonusRoll(mission.missionID)
+            end
         end)
+        
         i = i + 0.1
     end
 end)
@@ -127,6 +154,8 @@ function addon:updateWODRewards()
     else
         gui.CalculateButton:SetEnabled(false)
     end
+    
+    addon:WODReorder()
 end
 
 local checkButtonHandler = function(self, name)
@@ -169,7 +198,9 @@ end
 
 for i, button in pairs(gui.checkButtons) do
     button:HookScript("OnClick", function(self) checkButtonHandler(self, rewardStrings[i]) end)
+    gui.rows[i]:HookScript("OnDragStop", function(self) addon:WODOnRowDragStop(self, i, rewardStrings) end)
 end
+z=gui
 
 gui.AnythingForXPCheckButton:HookScript("OnClick", function(self)
     addon.WODdb.profile.anythingForXP = self:GetChecked()

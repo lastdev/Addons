@@ -1,80 +1,35 @@
 # DBM - Core
 
-## [11.2.16](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/11.2.16) (2025-09-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/11.2.13...11.2.16) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [12.0.7](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/12.0.7) (2025-12-01)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/12.0.6...12.0.7) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- prep new tag  
-- Update localization.es.lua (#1764)  
-- Update localization.br.lua (#1763)  
-- Update localization.fr.lua (#1762)  
-- Update localization.es.lua (#1761)  
-- further clarify slash commands  
-- bump alpha  
-- remove support for wow interface. if they can't be bothered to keep site updated for patches anymore (or even entire game versions like mop), then it's time to stop bothering to keep addons up to date there  
-- prep retag  
-- Bugfixes;  
-    - Make positioning cleaner on keystones frame (to always position topleft)  
-    - Allow esc to close frames  
-- Update localization.ru.lua (#1759)  
-- Hide other panels when one opens.  
-- ignore specIDs of 0 and recheck (when blizzard api gets buggy)  
-- Also register for click AnyUp?  
-- Remove bad debugging, derp.  
-- bump alpha  
-- scope button to only show on retail  
-- Add missing GUI button for keystones  
-- completely rearrange help slash command menus to be more constructive to modern times. 4 of the features in old help menu weren't even usuable in dungeons/raids anymore. Now /dbm help will provide list of actually useful commands and help2 will be where the more niche ones reside.  
-    Caveat, many of translations may be wonkey because I just let copilot write em all for preliminary update. they'll likely get revised later  
-- prep new tag  
-- fix more mop classic classifications  
-- Better handle celestial dungeon mapping  
-- New keystones system & Tweaks (#1728)  
-- Update localization.es.lua (#1757)  
-    * Update localization.es.lua  
-    * Update localization.es.lua  
-    * Update localization.es.lua  
-- Update localization.br.lua (#1758)  
-- TOc updates for PTR  
-- change boss unit ids from first prio to last in target scanner to hopefully fix icon setting issues in mop classic where boss unitids fail with SetRaidTarget (this happenson retail too sometimes but not as bad as mop classic)  
-- Extend variances for 3rd chamber on plexus sentinel mythic  
-- Update koKR (#1753)  
+- Pre new DBM Core tag and marking it mandatory for following:  
+     - Fixes for wrath Titan compatability  
+     - Fixes for Midnight beta compatability  
+- Update DBM-Raids-Midnight\_Mainline.toc (#1814)  
     Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
-- fix bad copy paste  
-- Work around blizzard bug where the first rings has no event at all, not even emote, sometimes.  
-- tweaks to double soak yells  
-- Update localization.en.lua  
-- Update localization.ru.lua (#1748)  
-- Update localization.es.lua (#1749)  
-- Update localization.fr.lua (#1750)  
-- Update localization.fr.lua (#1751)  
-- Update localization.tw.lua (#1752)  
-- Update localization.en.lua  
-- Placeholder new locales.  
-- Update localization.fr.lua (#1747)  
-- Update localization.br.lua (#1746)  
-    * Update localization.br.lua  
-    * Update localization.br.lua  
-- Update localization.fr.lua (#1745)  
-    * Update localization.fr.lua  
-    * Update localization.fr.lua  
-- Update localization.es.lua (#1744)  
-- Update localization.tw.lua (#1743)  
-- Update commonlocal.tw.lua (#1742)  
-- Update localization.tw.lua (#1741)  
-- Update localization.es.lua (#1731)  
-- Update localization.fr.lua (#1732)  
-- Update localization.br.lua (#1733)  
-- Update commonlocal.es.lua (#1734)  
-- Update commonlocal.fr.lua (#1735)  
-- Update commonlocal.br.lua (#1736)  
-- Update localization.es.lua (#1737)  
-    * Update localization.es.lua  
-    * Update localization.es.lua  
-    * Update localization.es.lua  
-    * Update localization.es.lua  
-    * Update localization.es.lua  
-- Update localization.fr.lua (#1738)  
-    * Update localization.fr.lua  
-    * Update localization.fr.lua  
-- Update localization.br.lua (#1739)  
+- update difficulties  
+     - Titanforged raids will now be catagorized as heroic 25 man instead of normal 10 man  
+     - Titanforged raids will no longer be flagged as trivial encounters (ie it won't treat em as level 60 raids to level 80 players and filter alerts anymore)  
+     - Lorewalking dungeons and raids will now get treated differently and will store stats separately from regular dungeons and raids.  
+- Update localization.tw.lua (#1813)  
+- Update koKR (#1816)  
+    Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
+    Co-authored-by: Artemis <QartemisT@gmail.com>  
+- Update localization.ru.lua (#1815)  
+- Mini dragon patch 1 (#1818)  
+- cleanup unused  
+- Preliminary support for hiding bars above a certain value (essential for current way blizzard sends timeline in midnight beta).  
+    This option is disabled by default on classic and retail but on by default in midnight beta for raid testing. Feature can both be toggled and time threshold can be set anywhere between 1 minute and 10 minutes  
+- fully disable DBM offline  
+- Add localization for a future setting  
+- add midnight timer testing tool  
+- cleanup unused  
+- remove 15 bar cap, it breaks bar tracking in midnight with way blizzard queues timers. an actual system for hiding bars beyond x time or x count will be added in near future but this should fix missing bars in midnight testing  
+- tbc ptr is broken and returning WOW\_PROJECT\_CLASSIC instead of WOW\_PROJECT\_BURNING\_CRUSADE\_CLASSIC so we have to work around bug for now  
+- what a nitpick luacheck. why are you even still around?  
+- restrip some things out since they were edit mode only features  
+- Fix lua error sending pull timer in midnight  
+- wipe respawn data form midnight mods  
+- blizzard includes respawn timer in timeline so no need to start our own  
 - bump alpha  

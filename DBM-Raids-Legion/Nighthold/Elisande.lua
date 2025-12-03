@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1743, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060218")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(106643)
 mod:SetEncounterID(1872)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--During soft enrage will go over 8 debuffs, can't mark beyond that
@@ -280,7 +280,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 209615 then
+	if spellId == 209615 and not (self:IsRemix() or self:IsTrivial()) then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
@@ -303,7 +303,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellDelphuricBeam:Yell()
 		end
 	elseif spellId == 209973 then
-		warnAblatingExplosion:Show(args.destName)
 		timerAblatingExplosion:Start(args.destName)
 		timerAblatingExplosionCD:Start()
 		if args:IsPlayer() then
@@ -316,9 +315,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
 			end
-		else
+		elseif self:IsTank() then
 			specWarnAblationExplosion:Show(args.destName)
 			specWarnAblationExplosion:Play("tauntboss")
+		else
+			warnAblatingExplosion:Show(args.destName)
 		end
 	elseif spellId == 209598 then
 		self.vb.burstDebuffCount = self.vb.burstDebuffCount + 1
@@ -421,7 +422,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		if self.vb.phase == 2 then
 			warnPhase2:Show()
 			warnPhase2:Play("ptwo")
-			timerAblatingExplosionCD:Start(22)--Verfied unchanged Dec 13 Heroic
+			timerAblatingExplosionCD:Start(14.6)--Changed from 22 to 14.6 at some point
 			if self:IsMythic() then--TODO: Fine tune these as they may be hit or miss by some seconds Hard to measure precise phase changes from WCL
 				timerEpochericOrbCD:Start(23.8, 1)
 				if self.vb.ringCastCount > 0 then

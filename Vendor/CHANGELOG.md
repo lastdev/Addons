@@ -1,8 +1,11 @@
 # Vendor
 
-## [6.1.2-83-g69579ae](https://github.com/typicalzergling/vendor/tree/69579aeef76a89cfff77adf93cb2f224e79db9ec) (2025-08-05)
-[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...69579aeef76a89cfff77adf93cb2f224e79db9ec) 
+## [6.1.2-86-gf3ab31e](https://github.com/typicalzergling/vendor/tree/f3ab31e8a09d576c6eb9d4739c7acd708e2e5f4c) (2025-08-10)
+[Full Changelog](https://github.com/typicalzergling/vendor/compare/6.1.2...f3ab31e8a09d576c6eb9d4739c7acd708e2e5f4c) 
 
+- Classic fixes  
+- update for 6.10.1  
+- Updates to 6.10.0  
 - Perf update  
 - Update sorting, remove extra buyback  
 - Add missing horde items to important items  

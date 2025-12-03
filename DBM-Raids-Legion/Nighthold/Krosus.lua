@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1713, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20240525081121")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(101002)
 mod:SetEncounterID(1842)
 --mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
@@ -227,7 +227,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
-	if spellId == 206677 then
+	if spellId == 206677 and not (self:IsRemix() or self:IsTrivial()) then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1

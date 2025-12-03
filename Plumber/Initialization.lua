@@ -1,5 +1,5 @@
-local VERSION_TEXT = "v1.7.5";
-local VERSION_DATE = 1758000000;
+local VERSION_TEXT = "v1.8.1";
+local VERSION_DATE = 1764600000;
 
 
 local addonName, addon = ...
@@ -118,6 +118,11 @@ local function GetDBBool(dbKey)
 end
 addon.GetDBBool = GetDBBool;
 
+local function FlipDBBool(dbKey)
+    SetDBValue(dbKey, not GetDBBool(dbKey), true);
+end
+addon.FlipDBBool = FlipDBBool;
+
 
 local function GetPersonalData(dbKey)
     --From SavedVariablesPerCharacter
@@ -185,6 +190,13 @@ local DefaultValues = {
     AppearanceTab = false,              --Adjust Appearance Tab models to reduce GPU usage spike
         AppearanceTab_ModelCount = 1,
     ItemUpgradeUI = true,
+    HolidayDungeon = true,              --Auto select holiday dungeons once
+    StaticPopup_Confirm = true,         --Add a brief delay to purchase non-refundable items / Reduce item conversion confirm delay
+    QueueStatus = false,                --Add a progress bar to LFG Eye
+        QueueStatus_ShowTime = false,   --Relative Queue Time
+        QueueStatus_TextPosition = 1,   --0:Center, 1-4:Clockwise
+    InstanceDifficulty = false,         --Instance Difficulty Selector
+    TransmogChatCommand = false,        --Adjust /outfit command behavior
 
 
     --Tooltip
@@ -194,6 +206,9 @@ local DefaultValues = {
     TooltipItemReagents = false,        --For items with "use to combine": show the reagent count
     TooltipProfessionKnowledge = true,  --Show unspent points on GameTooltip
     TooltipDelvesItem = true,           --Show weekly Coffer Key cap on chest tooltip
+    TooltipItemQuest = true,            --Show the quest of quest starting items in bags
+    TooltipTransmogEnsemble = true,     --A Raid Ensemble now unlocks outfits (tints) from 4 difficulties, but the default UI only gives one
+    TooltipHousing = true,              --TEMP Midnight BETA PTR
 
 
     --Reduction
@@ -225,7 +240,9 @@ local DefaultValues = {
         LootUI_HotkeyName = "E",
         LootUI_ReplaceDefaultAlert = false,
         LootUI_UseStockUI = false,
+        LootUI_WindowHide = false,
         LootUI_CombineItems = false,
+        LootUI_LowFrameStrata = false,
 
 
     --Unified Map Pin System
@@ -233,6 +250,7 @@ local DefaultValues = {
         WorldMapPin_Size = 1,           --1: Default
         WorldMapPin_TWW_Delve = true,   --Show Bountiful Delves on continent map
         WorldMapPin_TWW_Quest = true,   --Show Special Assignment on continent map
+        WorldMapPin_PlayerPing = true,
 
 
     --Modify default interface behavior:
@@ -268,9 +286,20 @@ local DefaultValues = {
 
     --LegionRemix
     LegionRemix = true,
+        LegionRemix_TraitSubIconStyle = 3,  --1:OFF, 2:Mini Icon, 3:Replace Icon
+        LegionRemix_AutoUpgrade = true,
+        LegionRemix_PaperDollTraitDetail = false,
+    LegionRemix_HideWorldTier = true,
+    LegionRemix_LFGSpam = true,
 
 
     EnableNewByDefault = false,             --Always enable newly added features
+    SettingsPanel_AutoShowChangelog = false,
+
+
+    --Test Server
+    DecorModelScaleRef = true,
+        DecorModelScaleRef_ShowBanana = false,
 
 
     --Declared elsewhere:
@@ -320,6 +349,13 @@ local function LoadDatabase()
         DB.installTime = VERSION_DATE;
     end
 
+    if DB.lastVersionTime then
+        if (VERSION_DATE - 1 > DB.lastVersionTime) and DB.SettingsPanel_AutoShowChangelog then
+            CallbackRegistry:Trigger("ShowChangelog");
+        end
+    end
+    DB.lastVersionTime = VERSION_DATE;
+
     DefaultValues = nil;
 
     CallbackRegistry:Trigger("NewDBKeysAdded", newDBKeys);
@@ -340,12 +376,11 @@ EL:SetScript("OnEvent", function(self, event, ...)
         end
     elseif event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent(event);
-        if PlayerGetTimerunningSeasonID then
-            local seasonID = PlayerGetTimerunningSeasonID();
-            if seasonID and seasonID > 0 then
-                CallbackRegistry:Trigger("TimerunningSeason", seasonID);
-            end
+        local seasonID = API.GetTimerunningSeason();
+        if seasonID and seasonID > 0 then
+            CallbackRegistry:Trigger("TimerunningSeason", seasonID);
         end
+        addon.ControlCenter:InitializeModules();
     end
 end);
 
@@ -358,6 +393,8 @@ do
         return tocVersion >= targetVersion
     end
     addon.IsToCVersionEqualOrNewerThan = IsToCVersionEqualOrNewerThan;
+
+    addon.IS_MIDNIGHT = IsToCVersionEqualOrNewerThan(120000);
 
     addon.IS_CLASSIC = C_AddOns.GetAddOnMetadata(addonName, "X-Flavor") ~= "retail";
 

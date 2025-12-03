@@ -23,6 +23,9 @@ L["Completed CHETT List"] = "Lista C.I.H.T.T. Completa";
 L["Restored Coffer Key"] = "Chiave dello Scrigno Ripristinata";
 L["Coffer Key Shard"] = "Scheggia di Chiave dello Scrigno";
 L["Epoch Mementos"] = "Ricordo dell'Era";
+L["Timeless Scrolls"] = "Pergamena Senza Tempo";
+
+L["CONFIRM_PURCHASE_NONREFUNDABLE_ITEM"] = "Vuoi davvero scambiare %s per il seguente oggetto?\n\n|cffff2020Questo acquisto non è rimborsabile.|r\n %s";
 
 
 --Map Pin Filter Name (name should be plural)
@@ -32,3 +35,5 @@ L["Special Assignment"] = "Incarico speciale";
 
 L["Match Pattern Rep 1"] = "La reputazione della Brigata con \"(.+)\" è aumentata di ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
 L["Match Pattern Rep 2"] = "La reputazione con \"(.+)\" è aumentata di ([%d%,]+)";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Transmog Set Partially Known"] = "^Contiene (%d+) ";   --TRANSMOG_SET_PARTIALLY_KNOWN_CLASS

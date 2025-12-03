@@ -1,7 +1,8 @@
+local _, ns = ...
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
 if not HandyNotes then return end
 local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_DungeonLocations")
-local version, build, date, tocversion = GetBuildInfo()
+local version, build, date, tocversion = GetBuildInfo() -- 11.2.0
 
 icons = { }
 icons["Dungeon"] = "Interface\\MINIMAP\\Dungeon"
@@ -16,6 +17,18 @@ local minimap = { } -- For nodes that need precise minimap locations but would l
 local alterName = { }
 local extraInfo = { }
 local legionInstancesDiscovered = { } -- Extrememly bad juju, needs fixing in BfA
+
+-- After testing, the developer code is removed from the file and only the command remains
+SLASH_devModeDL1 = "/devmodeHN_DL";
+function SlashCmdList.devModeDL(msg, editbox)
+  if ns.Addon.db.profile.devModeDL then
+    ns.Addon.db.profile.devModeDL = false
+    print("DeveloperMode = Off")
+  else
+    ns.Addon.db.profile.devModeDL = true
+    print("DeveloperMode = On")
+  end
+end
 
 local LOCKOUTS = { }
 local function updateLockouts()
@@ -345,6 +358,7 @@ function Addon:PLAYER_ENTERING_WORLD()
 end
 
 function Addon:PLAYER_LOGIN()
+ns.Addon = Addon
  local options = {
  type = "group",
  name = "DungeonLocations",
@@ -2894,7 +2908,7 @@ nodes[2472] = { } -- Tazavesh
          showInZone = true, 
          hideOnContinent = true,
       }, -- Tazavesh, the Veiled Market
-      [41662152] = { 
+      [41662151] = { 
          id = 1302, 
          type = "Raid", 
          showInZone = true, 

@@ -3,14 +3,23 @@ local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 
-local isWOD = false
-do
-    local interfaceVersion = select(4, GetBuildInfo())
-    if (interfaceVersion >= 50000) and (interfaceVersion < 60000) then
-        isWOD = true
-        addon.isWOD = true
-    end
+local interfaceVersion = select(4, GetBuildInfo())
+if (interfaceVersion >= 50000) and (interfaceVersion < 60000) then
+    addon.isWOD = true
 end
+
+local tldrButton = CreateFrame("Button", "TLDRMissionsWODToggleButton", GarrisonMissionFrame, "UIPanelButtonTemplate")
+tldrButton:SetText("TL;DR")
+tldrButton:SetWidth(80)
+tldrButton:SetHeight(25)
+TLDRMissionsToggleButtonText:SetScale(1.3)
+tldrButton:Hide()
+tldrButton:SetPoint("TOPLEFT", GarrisonMissionFrame, "TOPLEFT", 150, 0)
+
+tldrButton:SetScript("OnClick", function (self, button)
+    addon.WODGUI:SetShown(not addon.WODGUI:IsShown())
+    addon.WODGUI:SetParent(GarrisonMissionFrame)
+end)
 
 local gui = addon.WODGUI
 gui:Hide()
@@ -93,52 +102,75 @@ gui.MainTabPanel:SetPoint("TOPLEFT", gui, "TOPLEFT")
 
 gui.priorityLabels = {}
 gui.checkButtons = {}
+gui.rows = {}
 
-local lastCheckButton
-local lastDD
+local lastRow, lastCheckButton, lastDD
+local numRows = 0
 
-local function setupButton(categoryName, text, dontInsert)
-    local name = categoryName.."CheckButton"
-    gui[name] = CreateFrame("CheckButton", "TLDRMissionsWODFrame"..categoryName.."CheckButton", gui.MainTabPanel, "UICheckButtonTemplate")
-    gui[name]:SetPoint("TOPLEFT", lastCheckButton or gui.TitleBarTexture, 0, -22)
-    _G["TLDRMissionsWODFrame"..categoryName.."CheckButtonText"]:SetText(text)
+local function setupButton(categoryName, text)
+    -- TLDRMissionsWODFrameGarrisonResourcesRow
+    local row = CreateFrame("Frame", "TLDRMissionsWODFrame"..categoryName.."Row", gui.MainTabPanel)
+    row:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 50, -5 - (22 * numRows))
+    numRows = numRows + 1
+    row.index = numRows
+    row:SetSize(200, 20)
+    row:SetMovable(true)
+    row:EnableMouse(true)
+    row:RegisterForDrag("LeftButton")
+    row:SetScript("OnDragStart", function(self, button)
+    	self:StartMoving()
+    end)
+    row:SetScript("OnDragStop", function(self)
+    	self:StopMovingOrSizing()
+    end)
+    row:SetFrameStrata("LOW")
+    row:SetFrameLevel(3)
     
-    gui[name].ExclusionLabel = gui[name]:CreateFontString("TLDRMissionsWOD"..categoryName.."ExclusionLabel", "OVERLAY", "GameFontNormalLarge")
-    gui[name].ExclusionLabel:SetText("X")
-    gui[name].ExclusionLabel:SetPoint("CENTER", gui[name], "CENTER", 0, 0)
-    gui[name].ExclusionLabel:SetTextColor(1, 0, 0)
-    gui[name].ExclusionLabel:Hide()
+    row.Border = row:CreateTexture(nil, "BORDER")
+    row.Border:SetAllPoints()
+    row.Border:SetAtlas("GarrMission-FollowerItemBg")
+    
+    row.Background = row:CreateTexture(nil, "BACKGROUND")
+    row.Background:SetAllPoints()
+    row.Background:SetColorTexture(0.25, 0.25, 0.25, 0.7)
+    
+
+    local checkButton = CreateFrame("CheckButton", "TLDRMissionsWODFrame"..categoryName.."CheckButton", gui.MainTabPanel, "UICheckButtonTemplate")
+    gui[categoryName.."CheckButton"] = checkButton
+    checkButton:SetPoint("TOPLEFT", row, -28, 5)
+    _G["TLDRMissionsWODFrame"..categoryName.."CheckButtonText"]:SetText(text)
+    _G["TLDRMissionsWODFrame"..categoryName.."CheckButtonText"]:SetDrawLayer("OVERLAY")
+    
+    checkButton.ExclusionLabel = checkButton:CreateFontString("TLDRMissionsWOD"..categoryName.."ExclusionLabel", "OVERLAY", "GameFontNormalLarge")
+    checkButton.ExclusionLabel:SetText("X")
+    checkButton.ExclusionLabel:SetPoint("CENTER", checkButton, "CENTER", 0, 0)
+    checkButton.ExclusionLabel:SetTextColor(1, 0, 0)
+    checkButton.ExclusionLabel:Hide()
 
     local plname = categoryName.."PriorityLabel"
     gui[plname] = gui.MainTabPanel:CreateFontString("TLDRMissionsWOD"..categoryName.."PriorityLabel", "OVERLAY", "GameFontNormal")
-    gui[plname]:SetPoint("TOPLEFT", gui[name], -15, -10)
+    gui[plname]:SetPoint("TOPLEFT", checkButton, -15, -10)
 
     local resourceCostName = categoryName.."GarrisonResourceCostDropDown"
     gui[resourceCostName] = LibDD:Create_UIDropDownMenu("TLDRMissionsWOD"..categoryName.."GarrisonResourceCostDropDown", gui.MainTabPanel)
-    gui[resourceCostName]:SetPoint("TOPRIGHT", lastDD or gui.TitleBarTexture, 0, -22)
+    gui[resourceCostName]:SetPoint("TOPLEFT", row, "TOPRIGHT", -50, 0)
     LibDD:UIDropDownMenu_SetWidth(gui[resourceCostName], 10)
     LibDD:UIDropDownMenu_SetText(gui[resourceCostName], "")
     
-    if not dontInsert then
-        table.insert(gui.priorityLabels, gui[plname])
-        table.insert(gui.checkButtons, gui[name])
-    end
+    table.insert(gui.priorityLabels, gui[plname])
+    table.insert(gui.checkButtons, checkButton)
+    table.insert(gui.rows, row)
     
-    lastCheckButton = gui[name]
+    lastCheckButton = checkButton
+    lastRow = row
     lastDD = gui[resourceCostName]
 end
 
-if isWOD then
+if addon.isWOD then
     setupButton("Gold", BONUS_ROLL_REWARD_MONEY)
-    gui.GoldCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 20, 0)
-    gui.GoldAnimaCostDropDown:SetPoint("TOPRIGHT", gui.TitleBarTexture, "BOTTOMRIGHT", 10, 0)
-    
-    setupButton("GarrisonResources", C_CurrencyInfo.GetBasicCurrencyInfo(824).name)
-else
-    setupButton("GarrisonResources", C_CurrencyInfo.GetBasicCurrencyInfo(824).name)
-    gui.GarrisonResourcesCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 20, 0)
-    gui.GarrisonResourcesGarrisonResourceCostDropDown:SetPoint("TOPRIGHT", gui.TitleBarTexture, "BOTTOMRIGHT", 10, 0)
 end
+
+setupButton("GarrisonResources", C_CurrencyInfo.GetBasicCurrencyInfo(824).name)
 
 setupButton("FollowerItems", GARRISON_FOLLOWER_ITEMS)
 
@@ -158,7 +190,9 @@ setupButton("Seal", "Seal of Tempered Fate")
 
 setupButton("Archaeology", PROFESSIONS_ARCHAEOLOGY)
 
-setupButton("AnythingForXP", L["AnythingForXPLabel"], true)
+gui.AnythingForXPCheckButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameAnythingForXPCheckButton", gui.MainTabPanel, "UICheckButtonTemplate")
+gui.AnythingForXPCheckButton:SetPoint("TOPLEFT", gui.TitleBarTexture, "BOTTOMLEFT", 27, -5 - ((numRows + 1) * 22))
+TLDRMissionsWODFrameAnythingForXPCheckButtonText:SetText(L["AnythingForXPLabel"])
 
 gui.SacrificeCheckButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameSacrificeCheckButton", gui.MainTabPanel, "UICheckButtonTemplate")
 gui.SacrificeCheckButton:SetPoint("TOPLEFT", gui.AnythingForXPCheckButton, 0, -22)
@@ -374,7 +408,7 @@ gui.AutoShowButton:SetPoint("TOPLEFT", gui.DurationHigherSlider, -20, -30)
 TLDRMissionsWODFrameAutoShowButtonText:SetText(L["AutoShowLabel"])
 
 gui.AutoShowButton:HookScript("OnClick", function()
-    addon.db.profile.autoShowUI = gui.AutoShowButton:GetChecked()
+    addon.WODdb.profile.autoShowUI = gui.AutoShowButton:GetChecked()
 end)
 
 gui.AutoStartButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameAutoStartButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
@@ -382,7 +416,15 @@ gui.AutoStartButton:SetPoint("TOPLEFT", gui.AutoShowButton, 0, -25)
 TLDRMissionsWODFrameAutoStartButtonText:SetText(L["AutoStart"])
 
 gui.AutoStartButton:HookScript("OnClick", function()
-    addon.db.profile.autoStart = gui.AutoStartButton:GetChecked()
+    addon.WODdb.profile.autoStart = gui.AutoStartButton:GetChecked()
+end)
+
+gui.SkipFullResourcesButton = CreateFrame("CheckButton", "TLDRMissionsWODFrameSkipFullResourcesButton", gui.AdvancedTabPanel, "UICheckButtonTemplate")
+gui.SkipFullResourcesButton:SetPoint("TOPLEFT", gui.AutoStartButton, 0, -25)
+TLDRMissionsWODFrameSkipFullResourcesButtonText:SetText(L["SkipFullResources"])
+
+gui.SkipFullResourcesButton:HookScript("OnClick", function()
+    addon.WODdb.profile.skipFullResources = gui.SkipFullResourcesButton:GetChecked()
 end)
 
 --

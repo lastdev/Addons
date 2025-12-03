@@ -1,5 +1,5 @@
-## Interface: 110200
-## Version: 2.11
+## Interface: 110205
+## Version: 2.12
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_alpacamount_yellow
 ## Title: Springfur Alpaca

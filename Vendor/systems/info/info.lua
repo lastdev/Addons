@@ -10,8 +10,8 @@ local L = Addon:GetLocale()
 
 
 -- Actual version and then assumed "next" version is the next minor version bump.
-local RETAIL_VERSION = 110107           -- 11.1 Live
-local RETAIL_VERSION_NEXT = 110200      -- 11.2 PTR
+local RETAIL_VERSION = 110200           -- 11.2 Live
+local RETAIL_VERSION_NEXT = 110200      -- 11.2 PTR (presently unused)
 local CLASSIC_VERSION = 11507           -- Classic SOD
 local CLASSIC_VERSION_NEXT = 50500      -- Classic MoP
 local tocVersion = {
@@ -22,8 +22,6 @@ local tocVersion = {
 }
 
 local releaseOrder = { "RetailNext", "Retail", "ClassicNext", "Classic" }
-
-local DELAY_LOAD_TIME = 10
 
 -- System Def
 local Info = {}
@@ -40,136 +38,6 @@ Info.ReleaseType = {
 
 function Info:GetDependencies()
     return {}
-end
-
-local prof1Id = nil
-local prof2Id = nil
-
-local function updateProfessionIds()
-    local prof1, prof2 = GetProfessions()
-    local changed = false
-
-    -- First prof may not be learned
-    if prof1 then
-        profInfo1 = {GetProfessionInfo(prof1)}
-
-        -- in most cases it will be the same profession.
-        if prof1Id ~= profInfo1[7] then
-            prof1Id = profInfo1[7]
-            changed = true
-        end
-    else
-        -- Check if we unlearned the prof
-        if prof1Id then
-            prof1Id = nil
-            changed = true
-        end
-    end
-
-    -- Second prof may not be learned
-    if prof2 then
-        profInfo2 = {GetProfessionInfo(prof2)}
-        if prof2Id ~= profInfo2[7] then
-            prof2Id = profInfo2[7]
-            changed = true
-        end
-    else
-        -- Check if we unlearned the prof
-        if prof2Id then
-            prof2Id = nil
-            changed = true
-        end
-    end
-
-    if changed then
-        -- If changed rebuild the item result cache since any profession rules need re-evaluation.
-        -- During first load the result cache may not be available yet.
-
-        if (Addon.ClearItemResultCache) then
-
-            Addon:ClearItemResultCache("Professions Changed")
-        end
-    end
-end
-
--- These may be nil if the character hasn't learned a profession yet or dropped one.
-function Info:GetProfessionIds()
-    return prof1Id, prof2Id
-end
-
---[[
-local equipmentSetGUIDs = nil
-function Info:GetEquipmentSetsForGUID(itemGUID)
-    return equipmentSetGUIDs[itemGUID]
-end
-
-function Info:IsEquipmentSetDataLoaded()
-    return false
-end
-]]
-
--- Get all item guids and to which equipment set they belong.
--- TODO: add bank check, this hsould be safe to update more frequently, as long as it isn't constant.
--- if soemthing goes into inventory from bank, we need to update this list
-function updateEquipmentSetGUIDs()
-
-    local itemSets = C_EquipmentSet.GetEquipmentSetIDs();
-    equipmentSetGUIDs = {}
-    for _, setId in pairs(itemSets) do
-        local locations = C_EquipmentSet.GetItemLocations(setId)
-        if not locations then 
-            -- Data is not loaded yet
-
-            equipmentSetGUIDs = nil
-            return 
-        end
-
-        for _, eLocation in pairs(locations) do
-            if eLocation > 0 then
-                local player, bank, bags, void, slot, bag = EquipmentManager_UnpackLocation(eLocation)
-
-                if (Addon.Systems.Info.IsClassicNext) then
-                    -- On Classic Mists this there is no "void" return value.
-                    -- Must shift over the arguments by 1
-                    bag = slot
-                    slot = void
-                end
-
-                itemLocation = nil
-                if player and bags then
-                    -- In a bag
-                    itemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
-                elseif player and slot then
-                    -- Equipped
-                    itemLocation = ItemLocation:CreateFromEquipmentSlot(slot)
-                end
-
-                if itemLocation then
-                    local guid = C_Item.GetItemGUID(itemLocation)
-                    if not equipmentSetGUIDs[guid] then
-                        equipmentSetGUIDs[guid] = {}
-                    end
-                    table.insert(equipmentSetGUIDs[guid], setId)
-                end
-            end
-        end
-    end
-
-    if Addon.IsDebug then
-        for k, v in pairs(equipmentSetGUIDs) do
-
-        end
-    end
-
-    if (Addon.ClearItemResultCache) then
-
-        Addon:RaiseEvent("OnRulesChanged", "FUNCTIONS")
-    end
-end
-
--- For some reason blizzard does not immediately have equipmentset info loaded, so delay load it.
-local function delayLoadEquipmentSetInfo(delay)
-    C_Timer.After(delay, function() updateEquipmentSetGUIDs() end)
 end
 
 local function populateBuildInfo()
@@ -260,36 +128,9 @@ end
 function Info:Startup(register)
     populateBuildInfo()
 
-    -- There is no event for when you respec and gain a profession
-    -- However, anytime you learn a new profession, you get a new recipe
-    Addon:RegisterEvent("NEW_RECIPE_LEARNED", updateProfessionIds)
-    Addon:RegisterEvent("PLAYER_TALENT_UPDATE", updateProfessionIds)
-    updateProfessionIds()
-
-    --[[
-    -- Equipment sets do not exist on classic.
-    if not Info.IsClassic then
-        -- We only need to get equipment set data whenever a set changes.
-        Addon:RegisterEvent("EQUIPMENT_SETS_CHANGED", updateEquipmentSetGUIDs)
-
-        -- Equipment set items may be in the bank, so anytime we close the
-        -- bank we need to regenerate the equipment set mappings.
-        Addon:RegisterEvent("BANKFRAME_CLOSED", updateEquipmentSetGUIDs)
-
-        -- Try to load quickly in case player goes to a merchant straight away.
-        delayLoadEquipmentSetInfo(DELAY_LOAD_TIME)
-
-        -- Fallback in case there's a lot of addons this might take longer to get the data.
-        delayLoadEquipmentSetInfo(DELAY_LOAD_TIME*6)
-    end
-    ]]
-
     register({
         "GetPriceString",
         "CheckReleaseForClient",
-        "GetProfessionIds",
-        --"GetEquipmentSetsForGUID",
-        --"IsEquipmentSetDataLoaded",
     })
 end
 

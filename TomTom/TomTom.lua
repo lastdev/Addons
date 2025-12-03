@@ -85,6 +85,7 @@ function TomTom:Initialize(event, addon)
                 pingChannel = "SFX",
                 hideDuringPetBattles = true,
                 distanceUnits = "auto",
+                theme = "modern",
             },
             minimap = {
                 enable = true,
@@ -93,6 +94,7 @@ function TomTom:Initialize(event, addon)
                 menu = true,
                 default_iconsize = 16,
                 default_icon = "Interface\\AddOns\\TomTom\\Images\\GoldGreenDot",
+                theme = "modern-green",
             },
             worldmap = {
                 enable = true,
@@ -103,6 +105,7 @@ function TomTom:Initialize(event, addon)
                 create_modifier = "A",
                 default_iconsize = 16,
                 default_icon = "Interface\\AddOns\\TomTom\\Images\\GoldGreenDot",
+                theme = "modern-green",
             },
             comm = {
                 enable = true,

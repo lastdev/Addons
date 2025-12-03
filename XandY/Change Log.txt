@@ -1,3 +1,27 @@
+== v2.65 - 12th November 2025
+* TOC update to 5.5.2
+
+== v2.64 - 5th November 2025
+* TOC update to 1.15.8
+
+== v2.63 - 30th October 2025
+* Fix for incorrect handling of three-way boolean
+* Titles colourised
+* Translation improved for Korean. Probably not perfect.
+* Colourised the description text for Korean
+
+== v2.62 - 3rd October 2025
+* TOC update to 5.5.1
+
+== v2.61 - 24th September 2025
+* TOC update to 5.5.1
+
+== v2.60 - 2nd August 2025
+* TOC update to 11.2.0
+
+== v2.59 - 21st July 2025
+* TOC update to 3.4.5
+
 == v2.58 - 26th June 2025
 * Slight movement up of World Map text for Classic Mists
   and CLassic Cataclysm. Result is exactly centred vertically

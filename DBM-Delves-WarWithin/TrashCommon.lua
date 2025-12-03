@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DelveTrashCommon", "DBM-Delves-WarWithin")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250909042058")
+mod:SetRevision("20251023050431")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)--Stays active in all zones for zone change handlers, but registers events based on dungeon ids
 local validZones = {[2664] = true, [2679] = true, [2680] = true, [2681] = true, [2683] = true, [2684] = true, [2685] = true, [2686] = true, [2687] = true, [2688] = true, [2689] = true, [2690] = true, [2767] = true, [2768] = true, [2815] = true, [2826] = true, [2803] = true, [2951] = true}
 for v, _ in pairs(validZones) do
@@ -57,6 +57,7 @@ local warnIllusionStep						= mod:NewSpellAnnounce(444915, 3)
 local specWarnSpearFish						= mod:NewSpecialWarningYou(430036, nil, nil, nil, 2, 12)
 local specWarnFungalBloom					= mod:NewSpecialWarningSpell(415250, nil, nil, nil, 2, 2)
 local specWarnDarkMassacre					= mod:NewSpecialWarningSpell(1245203, nil, nil, nil, 2, 2)
+local specWarnBurnAway						= mod:NewSpecialWarningSpell(450142, nil, nil, nil, 2, 2)
 local specWarnNexusDaggers					= mod:NewSpecialWarningDodge(1245240, nil, nil, nil, 2, 2)
 local specWarnFearfulShriek					= mod:NewSpecialWarningDodge(433410, nil, nil, nil, 2, 2)
 local specWarnHidousLaughter				= mod:NewSpecialWarningDodge(372529, nil, nil, nil, 2, 2)
@@ -94,6 +95,8 @@ local specWarnNullBreath					= mod:NewSpecialWarningDodge(1231144, nil, nil, nil
 local specWarnArcaneGeyser					= mod:NewSpecialWarningDodge(1236770, nil, nil, nil, 2, 2)--S3
 local specWarnEssenceCleave					= mod:NewSpecialWarningDodge(1238737, nil, nil, nil, 2, 15)
 local specWarnGravityShatter				= mod:NewSpecialWarningDodge(1238713, nil, nil, nil, 2, 2)
+local specWarnChargeThrough					= mod:NewSpecialWarningDodge(1244249, nil, nil, nil, 2, 2)
+local specWarnForwardCharge					= mod:NewSpecialWarningDodge(1216790, nil, nil, nil, 2, 2)
 local specWarnBloodbath						= mod:NewSpecialWarningRun(473995, nil, nil, nil, 4, 2)
 local specWarnEchoofRenilash				= mod:NewSpecialWarningRun(434281, nil, nil, nil, 4, 2)
 local specWarnNecroticEnd					= mod:NewSpecialWarningRun(445252, nil, nil, nil, 4, 2)
@@ -116,6 +119,7 @@ local specWarnEnfeeblingSpittleInterrupt	= mod:NewSpecialWarningInterrupt(450505
 local specWarnHardenShell					= mod:NewSpecialWarningInterrupt(1214238, nil, nil, nil, 1, 2)
 local specWarnOverchargeKick				= mod:NewSpecialWarningInterrupt(1220472, nil, nil, nil, 1, 2)--Overcharged Delve ability
 local specWarnTerrifyingScreech				= mod:NewSpecialWarningInterrupt(1244108, nil, nil, nil, 1, 2)
+local specWarnAlphaCannon					= mod:NewSpecialWarningInterrupt(1216794, nil, nil, nil, 1, 2)--S2 (no timer, insufficient data and inconsiquential)
 
 local timerFearfulShriekCD					= mod:NewCDPNPTimer(13.4, 433410, nil, nil, nil, 3)
 local timerHidousLaughterCD					= mod:NewCDPNPTimer(25.4, 372529, nil, nil, nil, 3)--25.4-29.8
@@ -187,6 +191,7 @@ local timerEssenceCleaveCD					= mod:NewCDNPTimer(11.4, 1238737, nil, nil, nil, 
 local timerKyvezzaSpawnCast					= mod:NewCastTimer(6, 1245156, nil, nil, nil, 1)
 local timerDarkMassacreCD					= mod:NewCDNPTimer(30.3, 1245203, nil, nil, nil, 5)
 local timerNexusDaggersCD					= mod:NewCDNPTimer(30.3, 1245240, nil, nil, nil, 3)
+local timerBurnAwayCD						= mod:NewCDPNPTimer(24.2, 450142, nil, nil, nil, 2)
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 off interrupt
 
@@ -197,8 +202,8 @@ do
 		if not force and validZones[currentZone] and not eventsRegistered then
 			eventsRegistered = true
 			self:RegisterShortTermEvents(
-                "SPELL_CAST_START 449318 450546 433410 450714 445781 415253 425040 424704 424798 414944 418791 424891 450197 448399 445191 455932 445492 434281 450637 445210 448528 449071 462686 459421 448179 445774 443292 450492 450519 450505 450509 448155 448161 418295 415250 434740 470592 443482 458879 445718 451913 445771 372529 474004 473541 474511 474482 474325 474223 474206 1217361 1217326 1216806 1216805 1217301 473550 1214238 1239731 455613 1220472 1243017 1236256 1231144 1242469 1242469 1236770 1238737 1238713 1245203 1245156 1245240",
-                "SPELL_CAST_SUCCESS 414944 424614 418791 424891 427812 450546 450197 415253 449318 445191 430036 445252 425040 424704 448399 448528 433410 445492 462686 447392 459421 448179 450509 415250 443162 443292 451913 444915 445406 372529 473541 1216806 1216805 1217361 1217326 474206 474004 473995 473550 474482 418295 1214238 1214246 1243017 1238737",--474325
+                "SPELL_CAST_START 449318 450546 433410 450714 445781 415253 425040 424704 424798 414944 418791 424891 450197 448399 445191 455932 445492 434281 450637 445210 448528 449071 462686 459421 448179 445774 443292 450492 450519 450505 450509 448155 448161 418295 415250 434740 470592 443482 458879 445718 451913 445771 372529 474004 473541 474511 474482 474325 474223 474206 1217361 1217326 1216806 1216805 1217301 473550 1214238 1239731 455613 1220472 1243017 1236256 1231144 1242469 1242469 1236770 1238737 1238713 1245203 1245156 1245240 1244249 450142 1216794 1216790",
+                "SPELL_CAST_SUCCESS 414944 424614 418791 424891 427812 450546 450197 415253 449318 445191 430036 445252 425040 424704 448399 448528 433410 445492 462686 447392 459421 448179 450509 415250 443162 443292 451913 444915 445406 372529 473541 1216806 1216805 1217361 1217326 474206 474004 473995 473550 474482 418295 1214238 1214246 1243017 1238737 474223",--474325
 				"SPELL_INTERRUPT",
                 "SPELL_AURA_APPLIED 424614 449071 418297 430036 440622 441129 448161 470592 443482 458879 445407 1220472",
                 --"SPELL_AURA_REMOVED",
@@ -228,7 +233,6 @@ end
 ---@param self DBMMod
 local function workAroundLuaLimitation(self, spellId, sourceName, sourceGUID, args)
 	if spellId == 474223 and self:IsValidWarning(sourceGUID) then
-		timerConcussiveSmashCD:Start(nil, sourceGUID)
 		if self:AntiSpam(3, 5) then
 			warnConcussiveSmash:Show()
 		end
@@ -361,6 +365,27 @@ local function workAroundLuaLimitation(self, spellId, sourceName, sourceGUID, ar
 		if self:AntiSpam(3, 2) then
 			specWarnNexusDaggers:Show()
 			specWarnNexusDaggers:Play("farfromline")
+		end
+	elseif spellId == 1244249 then
+		if self:AntiSpam(3, 2) then
+			specWarnChargeThrough:Show()
+			specWarnChargeThrough:Play("farfromline")
+		end
+	elseif spellId == 450142 then
+		if self:AntiSpam(3, 4) then
+			specWarnBurnAway:Show()
+			specWarnBurnAway:Play("aesoon")
+		end
+		timerBurnAwayCD:Start(nil, args.sourceGUID)
+	elseif spellId == 1216794 then
+		if self:CheckInterruptFilter(sourceGUID, false, true) then
+			specWarnAlphaCannon:Show(sourceName)
+			specWarnAlphaCannon:Play("kickcast")
+		end
+	elseif spellId == 1216790 then
+		if self:AntiSpam(3, 2) then
+			specWarnForwardCharge:Show()
+			specWarnForwardCharge:Play("chargemove")
 		end
 	end
 end
@@ -709,6 +734,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerSandCrashCD:Start(19.9, args.sourceGUID)
 	elseif args.spellId == 1238737 then
 		timerEssenceCleaveCD:Start(11.4, args.sourceGUID)
+	elseif args.spellId == 474223 and self:IsValidWarning(args.sourceGUID) then
+		timerConcussiveSmashCD:Start(12, args.sourceGUID)
 	end
 end
 
@@ -925,6 +952,8 @@ function mod:UNIT_DIED(args)
 	elseif cid == 244755 then--Nexus-Princess Ky'veza
 		timerDarkMassacreCD:Stop(args.destGUID)
 		timerNexusDaggersCD:Stop(args.destGUID)
+	elseif cid == 247486 then--Waxface Variant in 3 boss room
+		timerBurnAwayCD:Stop(args.destGUID)
 	end
 end
 
@@ -1022,11 +1051,13 @@ function mod:StartEngageTimers(guid, cid, delay)
 	elseif cid == 244415 then--Pactsworn Dustblade
 		timerSandCrashCD:Start(9.8-delay, guid)
 	elseif cid == 244448 then--Invasive Phasecrawler
-		timerEssenceCleaveCD:Start(20-delay, guid)--Probably very wrong, single pull of data
+		timerEssenceCleaveCD:Start(6.8-delay, guid)
 		--timerGravityShatterCD:Start(10.6-delay, guid)
 	elseif cid == 244755 then--Nexus-Princess Ky'veza
 		timerDarkMassacreCD:Start(15.5-delay, guid)
 		timerNexusDaggersCD:Start(29.8-delay, guid)
+	elseif cid == 247486 then--Waxface Variant in 3 boss room
+		timerBurnAwayCD:Start(18.2-delay, guid)
 	end
 end
 

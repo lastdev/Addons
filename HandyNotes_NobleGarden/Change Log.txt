@@ -1,5 +1,14 @@
+== v4.25 - 5th November 2025
+* TOC update to 1.15.8
+
+== v4.24 - 3rd October 2025
+* TOC update to 11.2.5
+
+== v4.23 - 27th September 2025
+* TOC update to 5.5.1
+
 == v4.22 - 7th September 2025
-* Quacking Down translation added for MExican Spanish, Italian,
+* Quacking Down translation added for Mexican Spanish, Italian,
   Korean, Brazillian Portugese, China zhCN, and Taiwan zhTW.
   These went untranslated by Blizzard for 2025 :(
 

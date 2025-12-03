@@ -18,11 +18,6 @@ L = DBM:GetModLocalization("ThreeBugs")
 L:SetGeneralLocalization{
 	name = "Adel der Silithiden"
 }
-L:SetMiscLocalization{
-	Yauj = "Prinzessin Yauj",
-	Vem = "Vem",
-	Kri = "Lord Kri"
-}
 
 -------------
 -- Sartura --
@@ -64,7 +59,10 @@ L:SetMiscLocalization{
 	Frozen	= "ist tiefgefroren",
 	Phase4 	= "geht die Puste aus",
 	Phase5 	= "ist kurz davor, zu zerspringen",
-	Phase6 	= "Explodes." --translate (trigger)
+	Phase6 	= "Explodes.",
+
+	FrostHitsPerSecond   = "Frost-Treffer pro Sekunde",
+	MeleeHitsPerSecond   = "Nahkampftreffer pro Sekunde"
 }
 -------------
 -- Huhuran --
@@ -81,10 +79,6 @@ L = DBM:GetModLocalization("TwinEmpsAQ")
 
 L:SetGeneralLocalization{
 	name = "Zwillingsimperatoren"
-}
-L:SetMiscLocalization{
-	Veklor = "Imperator Vek'lor",
-	Veknil = "Imperator Vek'nilash"
 }
 
 ------------
@@ -124,7 +118,6 @@ L:SetOptionLocalization{
 }
 L:SetMiscLocalization{
 	Stomach		= "Magen von C'Thun",
-	Eye			= "Auge von C'Thun",
 	FleshTent	= "Fleischtentakel",
 	Weakened 	= "C'Thun ist geschwächt!",
 	NotValid	= "AQ40 teilweise gelöscht. % s optionale Bosse bleiben erhalten."
@@ -427,6 +420,7 @@ L:SetOptionLocalization{
 	specwarnClassCall = "Zeige besondere Warnung wenn Du von einem Klassenruf betroffen bist"
 }
 L:SetMiscLocalization{
+	YellP1		= "Lasst die Spiele beginnen!",
 	YellP2		= "Sehr gut, meine Diener. Der Mut der Sterblichen scheint zu schwinden! Nun lasst uns sehen, wie sie sich gegen den wahren Herrscher des Schwarzfels behaupten werden!",
 	YellP3		= "Unmöglich! Erhebt Euch, meine Diener! Kämpft erneut für Euren Meister!",
 	YellShaman	= "Schamane, zeigt mir was eure Totems können!",
@@ -646,10 +640,7 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	PriestDied	= "%s stirbt.",
 	YellPhase2	= "Shirvallah, erfülle mich mit deinem Zorn!",
-	YellKill	= "Hakkar kontrolliert mich nicht länger! Endlich Frieden!",
-	Thekal		= "Hohepriester Thekal",
-	Zath		= "Zelot Zath",
-	LorKhan		= "Zelot Lor'Khan"
+	YellKill	= "Hakkar kontrolliert mich nicht länger! Endlich Frieden!"
 })
 
 -------------------
@@ -679,8 +670,6 @@ L:SetGeneralLocalization{
 	name = "Blutfürst Mandokir"
 }
 L:SetMiscLocalization{
-	Bloodlord 	= "Blutfürst Mandokir",
-	Ohgan		= "Ohgan",
 	GazeYell	= "Ich behalte Euch im Auge"
 }
 
@@ -691,12 +680,6 @@ L = DBM:GetModLocalization("EdgeOfMadness")
 
 L:SetGeneralLocalization{
 	name = "Rand des Wahnsinns"
-}
-L:SetMiscLocalization{
-	Hazzarah = "Hazza'rah",
-	Renataki = "Renataki",
-	Wushoolay = "Wushoolay",
-	Grilek = "Gri'lek"
 }
 
 -------------------
@@ -745,7 +728,7 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-   Breath = "%s atmet tief ein...",
+	Breath = "%s atmet tief ein...",
 	YellPull = "Was für ein Zufall. Normalerweise muss ich meinen Unterschlupf verlassen, um etwas zu essen.",
 	YellP2 = "Diese sinnlose Anstrengung langweilt mich. Ich werde Euch alle von oben verbrennen!",
 	YellP3 = "Mir scheint, dass Ihr noch eine Lektion braucht, sterbliche Wesen!",
@@ -761,14 +744,10 @@ L:SetGeneralLocalization({
 	name = "Anub'Rekhan"
 })
 
-L:SetOptionLocalization({
-	ArachnophobiaTimer	= "Zeige Timer für Erfolg 'Arachnophobie'"
-})
-
 L:SetMiscLocalization({
-	ArachnophobiaTimer	= "Arachnophobie",
 	Pull1				= "Rennt! Das bringt das Blut in Wallung!",
-	Pull2				= "Nur einmal kosten..."
+	Pull2				= "Nur einmal kosten...",
+	Pull3				= "Es gibt kein Entkommen."
 })
 
 ----------------------------
@@ -791,7 +770,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull					= "Kniet nieder, Wurm!"
+	Pull1					= "Kniet nieder, Wurm!",
+	Pull2					= "Ihr könnt euch nicht vor mir verstecken!",
+	Pull3					= "Tötet sie im Namen des Meisters!",
+	Pull4					= "Flieht, solange ihr noch könnt."
 })
 
 ---------------
@@ -816,10 +798,6 @@ L:SetOptionLocalization({
 	WarningSpidersSoon	= "Zeige Vorwarnung für Maexxnaspinnlinge",
 	WarningSpidersNow	= "Zeige Warnung für Maexxnaspinnlinge",
 	TimerSpider			= "Zeige Zeit bis nächste Maexxnaspinnlinge erscheinen"
-})
-
-L:SetMiscLocalization({
-	ArachnophobiaTimer	= "Arachnophobie"
 })
 
 ------------------------------
@@ -849,9 +827,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "Sterbt, Eindringling!",
-	Adds				= "summons forth Skeletal Warriors!",--translate (trigger)
-	AddsTwo				= "raises more skeletons!"--translate (trigger)
+	Pull1				= "Sterbt, Eindringling!",
+	Pull2				= "Ehre unserem Meister!",
+	Pull3				= "Euer Leben ist verwirkt!",
+	AddsYell			= "Erhebt euch, Soldaten! Erhebt euch und kämpft erneut!"
 })
 
 --------------------------
@@ -879,7 +858,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "Ihr gehört mir..."
+	Pull1				= "Ihr gehört mir...",
+	Pull2				= "Ihr entgeht mir nicht...",
+	Pull3				= "Ihr seid.... als nächstes dran."
 })
 
 ---------------
@@ -908,9 +889,6 @@ L = DBM:GetModLocalization("PatchwerkVanilla")
 
 L:SetGeneralLocalization({
 	name = "Flickwerk"
-})
-
-L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
@@ -949,8 +927,6 @@ L:SetMiscLocalization({
 	Yell	= "Stalagg zerquetschen!",
 	Emote	= "%s überlädt!",
 	Emote2	= "Teslaspule überlädt!",
-	Boss1	= "Feugen",
-	Boss2	= "Stalagg",
 	Charge1 = "negativ",
 	Charge2 = "positiv"
 })
@@ -1024,12 +1000,12 @@ L:SetWarningLocalization({
 })
 
 L:SetMiscLocalization({
-	yell			= "Ihr Narren habt euren eigenen Untergang heraufbeschworen.",
 	WarningWave1	= "%d %s",
 	WarningWave2	= "%d %s und %d %s",
 	WarningWave3	= "%d %s, %d %s und %d %s",
 	Trainee			= "Lehrlinge",
 	Knight			= "Ritter",
+	Horse			= "Spektrales Pferd",
 	Rider			= "Reiter"
 })
 
@@ -1044,22 +1020,17 @@ L:SetGeneralLocalization({
 
 L:SetOptionLocalization({
 	WarningMarkSoon				= "Zeige Vorwarnung für Mal",
-	SpecialWarningMarkOnPlayer	= "Spezialwarnung, wenn sich ein Mal mehr als 4-mal auf dir stapelt"
+	SpecialWarningMarkOnPlayer	= "Spezialwarnung, wenn sich ein Mal mehr als 4-mal auf dir stapelt",
+	timerMark 					= "Zeige Timer für das nächste Mal des Pferdemanns (mit Zähler)"
 })
 
 L:SetTimerLocalization({
+	timerMark	= "Mal %d"
 })
 
 L:SetWarningLocalization({
 	WarningMarkSoon				= "Mal %d in 3 Sekunden",
 	SpecialWarningMarkOnPlayer	= "%s: %s"
-})
-
-L:SetMiscLocalization({
-	Korthazz	= "Than Korth'azz",
-	Rivendare	= "Baron Totenschwur",
-	Blaumeux	= "Lady Blaumeux",
-	Zeliek		= "Sir Zeliek"
 })
 
 -----------------
@@ -1079,10 +1050,6 @@ L:SetOptionLocalization({
 	TimerLanding		= "Zeige Zeit bis nächste Bodenphase",
 	TimerIceBlast		= "Zeige Zeit bis $spell:28524",
 	WarningDeepBreath	= "Spezialwarnung für $spell:28524"
-})
-
-L:SetMiscLocalization({
-	EmoteBreath			= "%s holt tief Luft."
 })
 
 L:SetWarningLocalization({

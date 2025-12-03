@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1762, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060218")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(103685)
 mod:SetEncounterID(1862)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Unknown carrions
@@ -338,7 +338,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Update()
 		end
-	elseif spellId == 208230 then
+	elseif spellId == 208230 and not (self:IsRemix() or self:IsTrivial()) then
 		if args:IsPlayer() then
 			specWarnFeastOfBlood:Show()
 			specWarnFeastOfBlood:Play("runout")

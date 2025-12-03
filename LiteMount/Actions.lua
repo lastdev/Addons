@@ -11,7 +11,6 @@
 local _, LM = ...
 
 local C_Spell = LM.C_Spell or C_Spell
-local C_MountJournal = LM.C_MountJournal or C_MountJournal
 
 local L = LM.Localize
 
@@ -431,7 +430,6 @@ ACTIONS['SwitchFlightStyle'] = {
         end
 }
 
-local mawCastableArg = LM.RuleArguments:Get("MAWUSABLE", ",", "CASTABLE")
 local castableArg = LM.RuleArguments:Get("CASTABLE")
 
 local smartActions = {
@@ -487,11 +485,7 @@ ACTIONS['Mount'] = {
     handler =
         function (args, context)
             local limits = CopyTable(context.limits)
-            if LM.Conditions:Check("[maw]", context) then
-                table.insert(limits, mawCastableArg)
-            else
-                table.insert(limits, castableArg)
-            end
+            table.insert(limits, castableArg)
             if #args > 0 then
                 table.insert(limits, args)
             end
@@ -510,7 +504,11 @@ ACTIONS['Mount'] = {
 
             local randomStyle = context.rule.priority and LM.Options:GetOption('randomWeightStyle')
 
-            local m
+            local m, allDisabled
+
+            if context.allMountsDisabled == nil then
+                context.allMountsDisabled = true
+            end
 
             if context.rule.smart then
                 for _, info in ipairs(smartActions) do
@@ -519,11 +517,13 @@ ACTIONS['Mount'] = {
                         local expr = info.arg:ParseExpression()
                         local mounts = filteredList:ExpressionSearch(expr)
                         LM.Debug("  * found " .. #mounts .. " mounts.")
-                        m = mounts:Random(context.random, randomStyle)
+                        m, allDisabled = mounts:Random(context.random, randomStyle)
+                        context.allMountsDisabled = context.allMountsDisabled and allDisabled
                     end
                 end
             else
-                m = filteredList:Random(context.random, randomStyle)
+                m, allDisabled = filteredList:Random(context.random, randomStyle)
+                context.allMountsDisabled = context.allMountsDisabled and allDisabled
             end
 
             if m then
@@ -562,8 +562,8 @@ ACTIONS['Macro'] = {
     argType = 'none',
     handler =
         function (args, context)
-            local macrotext = LM.Options:GetOption('unavailableMacro')
-            if macrotext ~= "" then
+            local macrotext = LM.Macro:GetMacro()
+            if macrotext then
                 if GetRunningMacro() then
                     LM.Debug("  * unavailable macro not possible from actionbar")
                 else
@@ -592,12 +592,16 @@ ACTIONS['CantMount'] = {
     argType = 'none',
     handler =
         function (args, context)
-            -- This isn't a great message, but there isn't a better one that
-            -- Blizzard have already localized. See FrameXML/GlobalStrings.lua.
-            -- LM.Warning("You don't know any mounts you can use right now.")
-            LM.Warning(SPELL_FAILED_NO_MOUNTS_ALLOWED)
-
-            LM.Debug("  * setting action to can't mount now")
+            if context.allMountsDisabled then
+                LM.Warning(L.LM_ERR_ALL_MOUNTS_DISABLED)
+                LM.Debug("  * setting action to NoAction due to all mounts disabled")
+            else
+                -- This isn't a great message, but there isn't a better one that
+                -- Blizzard have already localized. See FrameXML/GlobalStrings.lua.
+                -- LM.Warning("You don't know any mounts you can use right now.")
+                LM.Warning(SPELL_FAILED_NO_MOUNTS_ALLOWED)
+                LM.Debug("  * setting action to NoAction due to situation")
+            end
             return LM.SecureAction:NoAction()
         end
 }
@@ -610,15 +614,16 @@ ACTIONS['CantMount'] = {
 --
 -- E.g, Mount [map:2234] DRAGONRIDING
 
-local function SummonJournalMountDirect(...)
+local function SummonJournalMountDirect(context, flag)
     if IsMounted() then
         LM.Debug("  * calling dismount directly")
         Dismount()
     else
         LM.Debug("  * summoning a journal mount directly")
-        local mounts = LM.MountRegistry:FilterSearch(..., 'JOURNAL', 'CASTABLE')
+        local mounts = LM.MountRegistry:FilterSearch(flag, 'JOURNAL', 'CASTABLE')
         LM.Debug("  * found %d suitable journal mounts", #mounts)
-        local m = mounts:Random()
+        local randomStyle = LM.Options:GetOption('randomWeightStyle')
+        local m = mounts:Random(context.random, randomStyle) or mounts:Random()
         if m then
             LM.Debug("  * summoning %s (id=%d)", m.name, m.mountID)
             C_MountJournal.SummonByID(m.mountID)
@@ -626,14 +631,14 @@ local function SummonJournalMountDirect(...)
     end
 end
 
-local function GetCombatMountAction(flag)
+local function GetCombatMountAction(context, flag)
     -- C_MountJournal.SummonByID will fail if you are in a shapeshift form.
-    if select(2, UnitClass("player")) == "DRUID" then
+    if UnitClassBase("player") == "DRUID" then
         local act = LM.SecureAction:Macro("/cancelform [form]")
-        act:AddExecute(function () SummonJournalMountDirect(flag) end)
+        act:AddExecute(function () SummonJournalMountDirect(context, flag) end)
         return act
     end
-    return LM.SecureAction:Execute(function () SummonJournalMountDirect(flag) end)
+    return LM.SecureAction:Execute(function () SummonJournalMountDirect(context, flag) end)
 end
 
 local function CombatHandlerOverride(args, context)
@@ -655,20 +660,20 @@ local function CombatHandlerOverride(args, context)
     -- Tindral Sageswift, Amirdrassil (DF). 2234 is the parent of all the
     -- relevant maps.
     if LM.Environment:IsMapInPath(2234) then
-        return GetCombatMountAction('DRAGONRIDING')
+        return GetCombatMountAction(context, 'DRAGONRIDING')
     end
 
     -- Dimensius, Manaforge Omega raid (TWW)
     if LM.Environment:InInstance(2810) then
         local mapID = C_Map.GetBestMapForUnit('player')
         if mapID >= 2467 and mapID <= 2470 then
-            return GetCombatMountAction('DRAGONRIDING')
+            return GetCombatMountAction(context, 'DRAGONRIDING')
         end
     end
 
     -- The Dawnbreaker dungeon (The War Within)
     if LM.Environment:InInstance(2662) then
-        return GetCombatMountAction('DRAGONRIDING')
+        return GetCombatMountAction(context, 'DRAGONRIDING')
     end
 end
 
@@ -680,9 +685,9 @@ ACTIONS['Combat'] = {
     handler =
         function (args, context)
             -- If specific combat macro is set always use it
-            if LM.Options:GetOption('useCombatMacro') then
+            local macrotext = LM.Macro:GetMacro(true)
+            if macrotext then
                 LM.Debug("  * setting action to options combat macro")
-                local macrotext = LM.Options:GetOption('combatMacro')
                 return LM.SecureAction:Macro(macrotext)
             end
             -- Check for an override combat setting
@@ -693,7 +698,7 @@ ACTIONS['Combat'] = {
             end
             -- Otherwise use the default actions
             LM.Debug("  * setting action to default combat macro")
-            local macrotext = LM.Actions:DefaultCombatMacro()
+            local macrotext = LM.Macro:DefaultCombatMacro()
             return LM.SecureAction:Macro(macrotext)
         end
 }
@@ -849,49 +854,6 @@ end
 --[[------------------------------------------------------------------------]]--
 
 LM.Actions = { }
-
-local function GetDruidMountForms()
-    local forms = {}
-    for i = 1,GetNumShapeshiftForms() do
-        local spell = select(4, GetShapeshiftFormInfo(i))
-        if spell == LM.SPELL.TRAVEL_FORM or spell == LM.SPELL.MOUNT_FORM then
-            tinsert(forms, i)
-        end
-    end
-    return table.concat(forms, "/")
-end
-
--- This is the macro that gets set as the default and will trigger if
--- we are in combat.  Don't put anything in here that isn't specifically
--- combat-only, because out of combat we've got proper code available.
--- Note that macros are limited to 255 chars, even inside a SecureActionButton.
-
-function LM.Actions:DefaultCombatMacro()
-
-    local mt = "/dismount [mounted]\n/stopmacro [mounted]\n"
-
-    local _, playerClass = UnitClass("player")
-
-    if playerClass ==  "DRUID" then
-        local forms = GetDruidMountForms()
-        local mount = LM.MountRegistry:GetMountBySpell(LM.SPELL.TRAVEL_FORM)
-        if mount and mount:GetPriority() > 0 then
-            mt = mt .. format("/cast [noform:%s] %s\n", forms, mount.name)
-            mt = mt .. format("/cancelform [form:%s]\n", forms)
-        end
-    elseif playerClass == "SHAMAN" then
-        local mount = LM.MountRegistry:GetMountBySpell(LM.SPELL.GHOST_WOLF)
-        if mount and mount:GetPriority() > 0 then
-            local s = C_Spell.GetSpellName(LM.SPELL.GHOST_WOLF)
-            mt = mt .. "/cast [noform] " .. s .. "\n"
-            mt = mt .. "/cancelform [form]\n"
-        end
-    end
-
-    mt = mt .. "/leavevehicle\n"
-
-    return mt
-end
 
 function LM.Actions:GetArgType(action)
     if FLOWCONTROLS[action] then

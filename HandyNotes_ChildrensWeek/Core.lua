@@ -3,7 +3,7 @@
 
                                            Children's Week
 
-                                       v1.14 - 2nd August 2025
+                                     v1.18 - 12th November 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

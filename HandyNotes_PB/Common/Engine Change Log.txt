@@ -1,0 +1,33 @@
+== v2.02 - 10th October 2025
+* Versioning support. Can now abandon old defaults as necessary. This
+  code will obviously change over time as necessary but the system is
+  in place. Functions_Common.
+* Individual pin scaling
+* Fix for Events module. Block from ARH AddOn accidentally in Options_Events
+* Allow for "" text (as well as nil) in tips and guides
+
+== v2.01 - 9th October 2025
+* Improved logic for CompletionFormatAndShow and AddOnEventTooltipLines
+* Bug with character headers not showing completion - Functions_Events
+* Translated verbose Tooltip to explain that character based pin removal
+  on achievement (criteria) being completed is difficult/impossible in
+  WoW since 10.0.0+.
+* Better use of ns.aoa table
+  ^ All above due to struggles to provide a turn-key and ACCURATE system
+  for reporting PER CHARACTER achievement completion in the retail era
+  of Warbanding / shared achievements where the data just isn't available.
+  ^ All of the above for the Events sub-module.
+* New texture indexing system. More flexible, with the future in mind.
+* A bug with the way this AddOn works with HandyNotes. It appears that a
+  Refresh pins fires before the AddOn is fully loaded. Happened on one
+  char only and was intermittent and only for a char load. Reload etc not
+  a problem. Resolved by ensuring that all required ns. variables have
+  been defined in the main body of each .lua file. ns.cluster = {} in
+  Functions_Common found to be the culprit. Monitor.
+  
+== v2.00 - 8th October 2025
+* Released with the PB AddOn. Prior MMPT was very similar
+
+== Previous
+* No versioning. Evolved with use in Event based AddOns and EAP AddOn.
+* First v2 efforts in APLT and MMPT AddOns.

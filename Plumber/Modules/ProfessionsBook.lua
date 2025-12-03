@@ -153,7 +153,7 @@ do
         if not (self.points and self.points > 0) then return end;
         local tooltip = GameTooltip;
         tooltip:SetOwner(self, "ANCHOR_RIGHT");
-        tooltip:SetText(PROFESSIONS_SPECIALIZATION_UNSPENT_POINTS, 1, 1, 1, true);
+        tooltip:SetText(PROFESSIONS_SPECIALIZATION_UNSPENT_POINTS, 1, 1, 1, 1, true);
         tooltip:AddLine(L["Unspent Knowledge Tooltip Format"]:format(self.points), 1, 0.82, 0, true);
         tooltip:Show();
     end
@@ -319,6 +319,9 @@ do
         categoryID = 1,
         uiOrder = 1170,
         moduleAddedTime = 1740755000,
+		categoryKeys = {
+			"Profession",
+		},
     };
 
     addon.ControlCenter:AddModule(moduleData);
@@ -470,6 +473,9 @@ do  --Tooltip Module
         categoryID = 3,
         uiOrder = 1152,
         moduleAddedTime = 1736940000,
+		categoryKeys = {
+			"Profession",
+		},
     };
 
     addon.ControlCenter:AddModule(moduleData);

@@ -78,7 +78,12 @@ function PawnUI_InventoryPawnButton_Move()
 		PawnUI_InventoryPawnButton:Show()
 		if PawnUI_InspectPawnButton then
 			PawnUI_InspectPawnButton:ClearAllPoints()
-			PawnUI_InspectPawnButton:SetPoint("TOPRIGHT", "InspectTrinket1Slot", "BOTTOMRIGHT", -1, -8)
+			if VgerCore.IsMainline then
+				-- In The War Within, a Talents button was added where the Pawn button would normally be, so force Pawn to the left.
+				PawnUI_InspectPawnButton:SetPoint("TOPLEFT", "InspectWristSlot", "BOTTOMLEFT", 1, -8)
+			else
+				PawnUI_InspectPawnButton:SetPoint("TOPRIGHT", "InspectTrinket1Slot", "BOTTOMRIGHT", -1, -8)
+			end
 			PawnUI_InspectPawnButton:Show()
 		end
 		if PawnUI_SocketingPawnButton then
@@ -166,9 +171,9 @@ function PawnUI_AddInventoryTotalsToTooltip(Tooltip, Unit)
 			PawnAddValuesToTooltip(Tooltip, ItemValues, nil, nil, nil, nil, true)
 		end
 	end
-	-- Add average item level information to the inspect window.  (It's not necessary for the current player's
+	-- Add average item level information to the inspect window. (On Mainline it's not necessary for the current player's
 	-- character sheet because that's part of the default UI now.)
-	if AverageItemLevel and AverageItemLevel > 0 and Unit ~= "player" then
+	if AverageItemLevel and AverageItemLevel > 0 and (not VgerCore.IsMainline or Unit ~= "player") then
 		if PawnCommon.AlignNumbersRight then
 			Tooltip:AddDoubleLine(PawnLocal.AverageItemLevelIgnoringRarityTooltipLine,  AverageItemLevel, VgerCore.Color.OrangeR, VgerCore.Color.OrangeG, VgerCore.Color.OrangeB, VgerCore.Color.OrangeR, VgerCore.Color.OrangeG, VgerCore.Color.OrangeB)
 		else
@@ -2497,13 +2502,11 @@ function PawnUI_OnQuestInfo_ShowRewards()
 	-- Now, get information about this quest.
 	local QuestID
 	if C_QuestLog.GetSelectedQuest then QuestID = C_QuestLog.GetSelectedQuest() end
-	local IsInMap = WorldMapFrame:IsShown()
+	local IsInMap = VgerCore.IsMainline and WorldMapFrame:IsShown() -- we only care about the Shadowlands+ map (or maybe Legion+)
 	local StaticRewards, RewardChoices
 	local SetQuestRewardFunctionName, GetRewardInfoFunction, GetChoiceInfoFunction
 	if QuestInfoFrame.questLog then
 		StaticRewards = GetNumQuestLogRewards()
-		-- Ignore this warning: it's incorrect; GetNumQuestLogChoices does indeed take two parameters.
-		---@diagnostic disable-next-line: redundant-parameter
 		RewardChoices = GetNumQuestLogChoices(QuestID, false)
 		SetQuestRewardFunctionName = "SetQuestLogItem"
 		GetRewardInfoFunction = GetQuestLogRewardInfo
@@ -2528,13 +2531,25 @@ function PawnUI_OnQuestInfo_ShowRewards()
 	for i = 1, StaticRewards do
 		-- BUG: In 9.0, the "get the item link for a quest reward" functions return incorrect data for some Shadowlands quests, so
 		-- we work around this by calling the "show this quest reward on a tooltip" method and then getting the item link from THAT, which is correct.
+		local ItemName, _, _, _, Usable, ItemID = GetRewardInfoFunction(i)
 		Tooltip[SetQuestRewardFunctionName](Tooltip, "reward", i)
 		local _, ItemLink = Tooltip:GetItem()
+		-- Workaround for bug in Mists of Pandaria Classic
+		if ItemName and ItemLink and ItemName ~= strsub(ItemLink, (strfind(ItemLink, "%[") or 0) + 1, (strfind(ItemLink, "%[") or 0) + strlen(ItemName)) then
+			VgerCore.Message("Pawn thinks static reward #" .. i .. " is:\n" .. tostring(ItemName) .. " " .. tostring(ItemID or "") .. "\n" .. tostring(ItemLink) .. " " .. PawnGetItemIDsForDisplay(ItemLink))
+			Tooltip:ClearLines()
+			Tooltip[SetQuestRewardFunctionName](Tooltip, "reward", i)
+			_, ItemLink = Tooltip:GetItem()
+			if ItemName == strsub(ItemLink, (strfind(ItemLink, "%[") or 0) + 1, (strfind(ItemLink, "%[") or 0) + strlen(ItemName)) then
+				VgerCore.Message(VgerCore.Color.Green .. "WRONG ITEM but Pawn worked around the problem")
+			else
+				VgerCore.Message(VgerCore.Color.Salmon .. "WRONG ITEM and unable to work around it")
+			end
+		end
 		local Item = PawnGetItemData(ItemLink)
 
 		if Item then
-			local _, _, _, _, Usable = GetRewardInfoFunction(i)
-			tinsert(QuestRewards, { ["Item"] = Item, ["RewardType"] = "reward", ["Usable"] = Usable, ["Index"] = i + RewardChoices })
+			tinsert(QuestRewards, { Item = Item, RewardType = "reward", Usable = Usable, Index = i + RewardChoices })
 		else
 			--VgerCore.Fail("Pawn can't display upgrade information because the server hasn't given us item stats for fixed rewards yet.")
 			-- TODO: Queue this up and retry these calculations later...
@@ -2543,13 +2558,25 @@ function PawnUI_OnQuestInfo_ShowRewards()
 		end
 	end
 	for i = 1, RewardChoices do
+		local ItemName, _, _, _, Usable, ItemID = GetChoiceInfoFunction(i)
 		Tooltip[SetQuestRewardFunctionName](Tooltip, "choice", i)
 		local _, ItemLink = Tooltip:GetItem()
+		-- Workaround for bug in Mists of Pandaria Classic
+		if ItemName and ItemLink and ItemName ~= strsub(ItemLink, (strfind(ItemLink, "%[") or 0) + 1, (strfind(ItemLink, "%[") or 0) + strlen(ItemName)) then
+			VgerCore.Message("Pawn thinks choice reward #" .. i .. " is:\n" .. tostring(ItemName) .. " " .. tostring(ItemID or "") .. "\n" .. tostring(ItemLink) .. " " .. PawnGetItemIDsForDisplay(ItemLink))
+			Tooltip:ClearLines()
+			Tooltip[SetQuestRewardFunctionName](Tooltip, "choice", i)
+			_, ItemLink = Tooltip:GetItem()
+			if ItemName == strsub(ItemLink, (strfind(ItemLink, "%[") or 0) + 1, (strfind(ItemLink, "%[") or 0) + strlen(ItemName)) then
+				VgerCore.Message(VgerCore.Color.Green .. "WRONG ITEM but Pawn worked around the problem")
+			else
+				VgerCore.Message(VgerCore.Color.Salmon .. "WRONG ITEM and unable to work around it")
+			end
+		end
 		local Item = PawnGetItemData(ItemLink)
 
 		if Item then
-			local _, _, _, _, Usable = GetChoiceInfoFunction(i)
-			tinsert(QuestRewards, { ["Item"] = Item, ["RewardType"] = "choice", ["Usable"] = Usable, ["Index"] = i })
+			tinsert(QuestRewards, { Item = Item, RewardType = "choice", Usable = Usable, Index = i })
 		else
 			--VgerCore.Fail("Pawn can't display upgrade information because the server hasn't given us item stats for reward choices yet.")
 			-- TODO: Queue this up and retry these calculations later...
@@ -2788,7 +2815,7 @@ function PawnUIFrame_TooltipOn(self)
 			GameTooltip:ClearLines()
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
 			GameTooltip:AddLine(Label, 1, 1, 1, 1)
-			GameTooltip:AddLine(TooltipText, nil, nil, nil, 1, 1)
+			GameTooltip:AddLine(TooltipText, nil, nil, nil, 1)
 			GameTooltip:Show()
 		end
 	end

@@ -1,9 +1,7 @@
 # <DBM Mod> Raids (WoTLK)
 
-## [r343](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r343) (2025-07-01)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r342...r343) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
+## [r345](https://github.com/DeadlyBossMods/DBM-WotLK/tree/r345) (2025-12-01)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WotLK/compare/r344...r345) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WotLK/releases)
 
-- Add mists support  
-- remove old cata toc  
-- Add 11.2 TOC  
-- toc bumps for ptr  
+- toc updates  
+- mop toc bumps for new PTR  

@@ -213,10 +213,10 @@ hooksecurefunc("ShowGarrisonLandingPage", function(pg)
 		LoadMP()
 	end
 end)
-if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 3 then
-	GARRISON_LANDING_COVIEW_PATCH_VERSION = 3
+if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 5 then
+	GARRISON_LANDING_COVIEW_PATCH_VERSION = 5
 	hooksecurefunc("ShowGarrisonLandingPage", function(pg)
-		if GARRISON_LANDING_COVIEW_PATCH_VERSION ~= 3 then
+		if GARRISON_LANDING_COVIEW_PATCH_VERSION ~= 5 or not GarrisonLandingPage then
 			return
 		end
 		pg = (pg or C_Garrison.GetLandingPageGarrisonType() or 0)

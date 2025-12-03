@@ -3,7 +3,7 @@
 
                                           Springfur Alpaca
 
-                                       v2.11 - 2nd August 2025
+                                      v2.12 - 3rd October 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 								

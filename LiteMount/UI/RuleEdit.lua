@@ -28,13 +28,11 @@ end
 
 
 local function SetArgFromPickerFunction(owner)
-    local parent = owner:GetParent()
-    LiteMountPicker:SetParent(parent)
-    LiteMountPicker:ClearAllPoints()
-    LiteMountPicker:SetPoint("CENTER")
-    LiteMountPicker:SetFrameLevel(parent:GetFrameLevel() + 3)
-    LiteMountPicker:SetCallback(function (self, m) owner:SetArg(m.name) end, owner)
-    LiteMountPicker:Show()
+    LiteMountPicker:SetCallback(
+        function (m)
+            owner:SetArg(m.name)
+        end)
+    LiteMountOptionsPanel_PopOver(LiteMountPicker, LiteMountRulesPanel)
 end
 
 local function ArgsGenerate(dropdown, rootDescription, data)
@@ -57,6 +55,13 @@ local function ArgsGenerate(dropdown, rootDescription, data)
                 local IsChecked = function () return parent.arg == item.val end
                 local Set = function () parent:SetArg(item.val) dropdown:CloseMenu() end
                 menuItem = rootDescription:CreateCheckbox(item.text, IsChecked, Set)
+                if type(item.tooltip) == 'string' then
+                    menuItem:SetTooltip(
+                        function(tt)
+                            GameTooltip_SetTitle(tt, item.text)
+                            GameTooltip_AddNormalLine(tt, item.tooltip)
+                        end)
+                end
             else
                 menuItem = rootDescription:CreateButton(item.text)
             end
@@ -140,11 +145,16 @@ function LiteMountRuleEditConditionMixin:SetCondition(condition)
 end
 
 local function ConditionOnTextChanged(self)
+    local parent = self:GetParent()
     local text = self:GetText()
     if text == "" then
-        self:GetParent():SetArg(nil)
+        parent:SetArg(nil)
     else
-        self:GetParent():SetArg(text)
+        if parent.type == 'advanced' then
+            parent:SetArg(text)
+        else
+            parent:SetArg(parent.type..':'..text)
+        end
     end
 end
 
@@ -164,10 +174,20 @@ function LiteMountRuleEditConditionMixin:Update()
         self.ArgText:SetText(self.arg or "")
         self.ArgText:Show()
         self.ArgDropDown:Hide()
+    elseif info.textentry then
+        self.TypeDropDown:SetText(info.name)
+        if self.arg then
+            local _, text = strsplit(':', self.arg)
+            self.ArgText:SetText(text or "")
+        else
+            self.ArgText:SetText("")
+        end
+        self.ArgText:Show()
+        self.ArgDropDown:Hide()
     elseif info.menu then
         self.TypeDropDown:SetText(info.name)
         if self.arg then
-            local text = select(2, LM.Conditions:ToDisplay(self.arg))
+            local _, text = LM.Conditions:ToDisplay(self.arg)
             self.ArgDropDown:SetText(text)
         else
             self.ArgDropDown:SetText("")
@@ -266,6 +286,7 @@ local function MountToInfo(m) return { val = m.spellID, text = m.name } end
 local function GroupToInfo(v) return { val = v, text = LM.UIFilter.GetGroupText(v) } end
 local function FlagToInfo(v) return { val = v, text = LM.UIFilter.GetFlagText(v) } end
 local function FamilyToInfo(v) return { val = "family:"..v, text = LM.UIFilter.GetFamilyText(v) } end
+local function ExpansionToInfo(v) return { val = "expansion:"..v, text = LM.UIFilter.GetExpansionText(v) } end
 local function PriorityToInfo(v) return { val = "prio:"..v, text = LM.UIFilter.GetPriorityText(v) } end
 local function TypeToInfo(v) return { val = "mt:"..v, text = LM.UIFilter.GetTypeText(v) } end
 
@@ -296,6 +317,10 @@ local function MountArgsMenu()
 --  table.insert(menuList, familyMenuList)
 
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        local expansionMenuList = LM.tMap(LM.UIFilter.GetExpansions(), ExpansionToInfo)
+        expansionMenuList.text = EXPANSION_FILTER_TEXT
+        table.insert(menuList, expansionMenuList)
+
         table.insert(menuList, { val = "ZONEMATCH", text = L.LM_ZONEMATCH })
     end
 
@@ -498,5 +523,4 @@ end
 function LiteMountRuleEditMixin:OnHide()
     self.callback = nil
     self.callbackFrame = nil
-    LiteMountPicker:Hide()
 end

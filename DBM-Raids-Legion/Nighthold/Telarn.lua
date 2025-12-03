@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250209043815")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
@@ -297,7 +297,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnCoN then
 			self:SetIcon(args.destName, number)
 		end
-	elseif spellId == 218503 then
+	elseif spellId == 218503 and not (self:IsRemix() or self:IsTrivial()) then
 		local amount = args.amount or 1
 		if amount >= 5 then
 			if not DBM:UnitDebuff("player", args.spellName) and not UnitIsDeadOrGhost("player") and self:AntiSpam(3, 1) then

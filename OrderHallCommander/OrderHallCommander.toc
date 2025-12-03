@@ -1,6 +1,17 @@
-## Interface: 110105, 110107
+## Interface: 110200, 110205
 ## Title: OrderHallCommander
 ## IconTexture: 134414
+## Category-enUS: Expansion Features
+## Category-deDE: Erweiterungsfeatures
+## Category-esES: Características
+## Category-esMX: Características de expansiones
+## Category-frFR: Contenu d’extension
+## Category-itIT: Contenuti specifici
+## Category-koKR: 확장팩 특징
+## Category-ptBR: Características da Expansão
+## Category-ruRU: Особый контент
+## Category-zhCN: 特色更新
+## Category-zhTW: 資料片特色
 ## Notes: Sending all follower to missions with just one click and more
 ## Notes-itIT: Invia tutti i seguaci in missione con un click e molto altro
 ## Notes-frFR: Vous aide au moment de choisir le droit utilisateur pour la bonne mission
@@ -13,8 +24,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Runetotem
-## Version: 2.5.2 100250
-## X-Revision: 2cb1388
+## Version: 2.6.0 100250
+## X-Revision: 65d33bd
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -29,7 +40,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2025-05-11T19:36:42Z
+## X-Date: 2025-09-28T15:10:52Z
 ## X-Embeds: LibInit
 ## X-Reboot: 1
 ## X-Curse-Project-ID: 103097

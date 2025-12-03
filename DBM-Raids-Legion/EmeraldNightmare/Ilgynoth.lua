@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-Raids-Legion", 5, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250307060218")
+mod:SetRevision("20251023044118")
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetUsedIcons(8, 4, 3, 2, 1)
@@ -57,7 +57,7 @@ local specWarnGroundSlam			= mod:NewSpecialWarningYou(208689, nil, nil, nil, 1, 
 local yellGroundSlam				= mod:NewYell(208689)
 local specWarnGroundSlamNear		= mod:NewSpecialWarningClose(208689, nil, nil, nil, 1, 2)
 --Stage Two: The Heart of Corruption
-local specWarnHeartPhaseBegin		= mod:NewSpecialWarningFades(209915, nil, nil, nil, 1)
+local specWarnHeartPhaseBegin		= mod:NewSpecialWarningFades(209915, nil, nil, nil, 1, 2)
 local specWarnCursedBlood			= mod:NewSpecialWarningMoveAway(215128, nil, nil, nil, 1, 2)
 local yellCursedBlood				= mod:NewFadesYell(215128)
 
@@ -68,7 +68,7 @@ local timerCorruptorTentacleCD		= mod:NewCDTimer(220, "ej13191", nil, nil, nil, 
 local timerNightmareHorrorCD		= mod:NewCDTimer(280, "ej13188", nil, nil, nil, 1, 210289, nil, nil, nil, 1, 4)
 local timerEyeOfFateCD				= mod:NewCDTimer(10, 210984, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)
 local timerNightmareishFuryCD		= mod:NewNextTimer(10.9, 215234, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerGroundSlamCD				= mod:NewNextTimer(20.5, 208689, nil, nil, nil, 3)
+local timerGroundSlamCD				= mod:NewCDTimer(20.5, 208689, nil, nil, nil, 3)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerDeathBlossomCD			= mod:NewNextTimer(105, 218415, nil, nil, nil, 2, nil, DBM_COMMON_L.HEROIC_ICON, nil, 3, 4)
 local timerDeathBlossom				= mod:NewCastTimer(15, 218415, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON)
@@ -229,7 +229,7 @@ function mod:OnCombatStart(delay)
 	autoMarkBlocked = false
 	table.wipe(autoMarkFilter)
 	timerNightmareishFuryCD:Start(6-delay)
-	timerGroundSlamCD:Start(12-delay)
+	timerGroundSlamCD:Start(8.3-delay)
 	timerDeathGlareCD:Start(21.5-delay)
 	if self:IsMythic() then
 		self.vb.deathBlossomCount = 0
@@ -301,6 +301,7 @@ function mod:SPELL_CAST_START(args)
 					timer = self:IsMythic() and phase1MythicDeathglares[nextCount] or self:IsHeroic() and phase1HeroicDeathglares[nextCount] or phase1EasyDeathglares[nextCount]
 				end
 				if timer and timer > 0 then
+					timerDeathGlareCD:Stop()--Stop annoying timer errors on fastfowarded add spawns
 					timerDeathGlareCD:Start(timer)
 				end
 			end
@@ -324,6 +325,7 @@ function mod:SPELL_CAST_START(args)
 					timer = self:IsMythic() and phase1MythicCorruptors[nextCount] or self:IsHeroic() and phase1HeroicCorruptors[nextCount] or phase1EasyCorruptors[nextCount]
 				end
 				if timer and timer > 0 then
+					timerCorruptorTentacleCD:Stop()--Stop annoying timer errors on fastfowarded add spawns
 					timerCorruptorTentacleCD:Start(timer)
 				end
 			end
@@ -346,6 +348,7 @@ function mod:SPELL_CAST_START(args)
 		local nextCount = self.vb.deathBlossomCount + 1
 		local timer = self.vb.phase == 2 and phase2DeathBlossom[nextCount] or phase1DeathBlossom[nextCount]
 		if timer and timer > 0 then
+			timerDeathBlossomCD:Stop()--Stop annoying timer errors on fastfowarded add spawns
 			timerDeathBlossomCD:Start(timer, self.vb.deathBlossomCount+1)
 		end
 		local elapsed, total = timerNightmareHorrorCD:GetTime()
@@ -361,7 +364,8 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerFinalTorpor:Start()
 		end
-	elseif spellId == 208689 and self:AntiSpam(2, 6) then
+	--Below code logic assumes spawned at same time and multiple synced up. that doesn't happen when you vastly overpower
+	elseif spellId == 208689 and self:AntiSpam(2, 6) and not self:IsRemix() and not self:IsTrivial() then
 		timerGroundSlamCD:Start()
 	end
 end
@@ -391,11 +395,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.insideActive = false
 		timerCursedBloodCD:Stop()
 		timerNightmareishFuryCD:Start(6.1)
-		timerGroundSlamCD:Start(12.1)
+		timerGroundSlamCD:Start(8.4)
 		if self:IsMythic() then
 			self.vb.deathBlossomCount = 0
 			timerDeathBlossomCD:Start(80)
 		end
+		timerDeathGlareCD:Stop()
+		timerCorruptorTentacleCD:Stop()
+		timerNightmareHorrorCD:Stop()
 		timerDeathGlareCD:Start(21.5)
 		timerCorruptorTentacleCD:Start(45)
 		timerNightmareHorrorCD:Start(95)
@@ -479,6 +486,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 209915 then--Stuff of Nightmares
 		self.vb.insideActive = true
 		specWarnHeartPhaseBegin:Show()
+		specWarnHeartPhaseBegin:Play("phasechange")
 		timerDeathGlareCD:Stop()
 		timerCorruptorTentacleCD:Stop()
 		timerNightmareHorrorCD:Stop()
@@ -579,10 +587,11 @@ end
 do
 	--This method is still 4 seconds faster than using Seeping Corruption
 	local NightmareHorror = DBM:EJ_GetSectionInfo(13188)
-	function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, targetname)
+	function mod:CHAT_MSG_RAID_BOSS_EMOTE(_, _, _, _, targetname)
 		if targetname == NightmareHorror then
 			specWarnNightmareHorror:Show()
 			specWarnNightmareHorror:Play("bigmob")
+			timerNightmareHorrorCD:Stop()
 			if self:IsMythic() then
 				timerNightmareHorrorCD:Start(250)
 			else

@@ -255,41 +255,6 @@ function Addon.Systems.Rules:GetRuleEnvironmentVariables()
     return getEnvironmentVariables()
 end
 
--- This is the old way of equipment set lookup if the
--- equipment set data failed to load, use this.
-local function itemIdEquipmentSetLookup(Id, ...)
-    -- Checks the item set for the specified item
-    local function check(Id, setId)
-        itemIds = C_EquipmentSet.GetItemIDs(setId);
-        for _, setItemId in pairs(itemIds) do
-            if ((setItemId ~= -1) and (setItemId == itemId)) then
-                return true
-            end
-        end
-    end
-
-    local sets = { ... };
-    local itemId = Id;
-    if (#sets == 0) then
-        -- No sets provied, so enumerate and check all of the characters item sets
-        local itemSets = C_EquipmentSet.GetEquipmentSetIDs();
-        for _, setId in pairs(itemSets) do
-            if (check(itemId, setId)) then
-                return true;
-            end
-        end
-    else
-        -- Check against the specific item set/sets provided.
-        for _, set in ipairs(sets) do
-            local setId = C_EquipmentSet.GetEquipmentSetID(set)
-            if (setId and check(itemId, setId)) then
-                return true
-            end
-        end
-    end
-end
-
-
 local RuleFunctions = {
 {
     Name = "PlayerLevel",
@@ -346,82 +311,6 @@ local RuleFunctions = {
 	    return floor(itemLevel);
     end,
 
-},
-
-{
-    Name = "IsInEquipmentSet",
-    Documentation = locale["HELP_ISINEQUIPMENTSET_TEXT"],
-    Supported={ Retail=true, Classic=false, RetailNext=true, ClassicNext=true },
-    Function = function(...)
-        -- Checks the item set for the specified item
-        local function check(itemId, setId)
-            itemIds = C_EquipmentSet.GetItemIDs(setId);
-            for _, setItemId in pairs(itemIds) do
-                if ((setItemId ~= -1) and (setItemId == itemId)) then
-                    return true
-                end
-            end
-        end
-
-        local sets = { ... };
-        local itemId = Id;
-        if (#sets == 0) then
-            -- No sets provied, so enumerate and check all of the characters item sets
-            local itemSets = C_EquipmentSet.GetEquipmentSetIDs();
-            for _, setId in pairs(itemSets) do
-                if (check(itemId, setId)) then
-                    return true;
-                end
-            end
-        else
-            -- Check against the specific item set/sets provided.
-            for _, set in ipairs(sets) do
-                local setId = C_EquipmentSet.GetEquipmentSetID(set)
-                if (setId and check(itemId, setId)) then
-                    return true
-                end
-            end
-        end
-    end,
-},
-        --[[
-        local setsToCheck = {...}
-        local inSets = Addon:GetEquipmentSetsForGUID(GUID)
-        if not inSets then return false end
-        if #setsToCheck == 0 and inSets then return true end
-
-        for _, name in ipairs(setsToCheck) do
-            local setId = C_EquipmentSet.GetEquipmentSetID(name)
-            for _, set in ipairs(inSets) do
-                if set == setId then
-                    return true
-                end
-            end
-        end
-
-        return false
-    end,
-    ]]
-
-{
-    Name = "HasProfession",
-    Documentation = locale["HELP_HASPROFESSION"],
-    Supported={ Retail=true, Classic=true, RetailNext=true, ClassicNext=true },
-    Function = function(...)
-        local profsToCheck = {...}
-        local prof1Id, prof2Id = Addon:GetProfessionIds()
-        for _, id in pairs(profsToCheck) do
-            if type(id) == "string" then
-                id = PROFESSION_MAP[string.upper(id)]
-            end
-
-            if id == prof1Id or id == prof2Id then
-                return true
-            end
-        end
-
-        return false
-    end,
 },
 
 

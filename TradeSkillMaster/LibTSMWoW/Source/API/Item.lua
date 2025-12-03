@@ -7,7 +7,6 @@
 local LibTSMWoW = select(2, ...).LibTSMWoW
 local Item = LibTSMWoW:Init("API.Item")
 local ItemClass = LibTSMWoW:Include("Util.ItemClass")
-local ClientInfo = LibTSMWoW:Include("Util.ClientInfo")
 local MAX_STACK_SIZE = 4000
 local MAX_ITEM_LEVEL = 700
 
@@ -30,12 +29,7 @@ local MAX_ITEM_LEVEL = 700
 ---@return number? expansionId
 ---@return boolean? isCraftingReagent
 function Item.GetInfo(item)
-	local _, name, link, quality, itemLevel, minLevel, maxStack, vendorSell, bindType, expansionId, isCraftingReagent
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_ITEM) then
-		name, link, quality, itemLevel, minLevel, _, _, maxStack, _, _, vendorSell, _, _, bindType, expansionId, _, isCraftingReagent = C_Item.GetItemInfo(item)
-	else
-		name, link, quality, itemLevel, minLevel, _, _, maxStack, _, _, vendorSell, _, _, bindType, expansionId, _, isCraftingReagent = GetItemInfo(item)
-	end
+	local name, link, quality, itemLevel, minLevel, _, _, maxStack, _, _, vendorSell, _, _, bindType, expansionId, _, isCraftingReagent = C_Item.GetItemInfo(item)
 	local isBoP = (bindType == LE_ITEM_BIND_ON_ACQUIRE or bindType == LE_ITEM_BIND_QUEST) and 1 or 0
 	-- Some items (i.e. "i:117356::1:573") produce an negative min level
 	minLevel = minLevel and max(minLevel, 0) or nil
@@ -51,12 +45,7 @@ end
 ---@return number? subClassId
 ---@return number? invSlotId
 function Item.GetInfoInstant(itemId)
-	local _, classStr, subClassStr, equipSlot, texture, classId, subClassId
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_ITEM) then
-		_, classStr, subClassStr, equipSlot, texture, classId, subClassId = C_Item.GetItemInfoInstant(itemId)
-	else
-		_, classStr, subClassStr, equipSlot, texture, classId, subClassId = GetItemInfoInstant(itemId)
-	end
+	local _, classStr, subClassStr, equipSlot, texture, classId, subClassId = C_Item.GetItemInfoInstant(itemId)
 	equipSlot = equipSlot and equipSlot ~= "" and _G[equipSlot] or nil
 	if not texture then
 		return nil, nil, nil, nil
@@ -79,12 +68,7 @@ end
 ---@param item string The WoW item string
 ---@return number
 function Item.GetDetailedItemLevel(item)
-	local itemLevel
-	if ClientInfo.HasFeature(ClientInfo.FEATURES.C_ITEM) then
-		itemLevel = C_Item.GetDetailedItemLevelInfo(item)
-	else
-		itemLevel = GetDetailedItemLevelInfo(item)
-	end
+	local itemLevel = C_Item.GetDetailedItemLevelInfo(item)
 	return itemLevel
 end
 

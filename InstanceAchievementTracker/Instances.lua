@@ -1,5 +1,5 @@
 --------------------------------------
--- Last Auto Generated: 08/06/2025 14:40:40 using https://github.com/Dragnogd/Instance-Achievement-Tracker-Database-Manager
+-- Last Auto Generated: 17/08/2025 16:03:30 using https://github.com/Dragnogd/Instance-Achievement-Tracker-Database-Manager
 --------------------------------------
 local _, core = ...
 local L = core.L
@@ -352,6 +352,135 @@ core.Instances = {
 					track = function() core._2769:ChromeKingGallywix() end,
 					partial = false,
 					encounterID = 3016,
+				},
+			},
+
+			[2810] = { --Manaforge Omega
+				name = 1302,
+				boss1 = {
+					name = 2684, --Plexus Sentinel
+					bossIDs = {},
+					achievement = 42118,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_PlexusSentinel"], "IAT_243803", C_Spell.GetSpellLink(1220489), "IAT_243803", "IAT_243803", C_Spell.GetSpellLink(1233449), "IAT_243803") },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:PlexusSentinel() end,
+					partial = false,
+					encounterID = 3129,
+					displayInfoFrame = true,
+				},
+				boss2 = {
+					name = 2686, --Loom'ithar
+					bossIDs = {},
+					achievement = 41613,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_Loomithar"], C_Spell.GetSpellLink(1246713), C_Spell.GetSpellLink(1246711), C_Spell.GetSpellLink(1246718)) },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:Loomithar() end,
+					partial = false,
+					encounterID = 3131,
+					displayInfoFrame = true,
+				},
+				boss3 = {
+					name = 2685, --Soulbinder Naazindhri
+					bossIDs = {},
+					achievement = 41614,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_SoulbinderNaazindhri"], "IAT_248704", "IAT_248707", "IAT_248707") },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:SoulbinderNaazindhri() end,
+					partial = false,
+					encounterID = 3130,
+				},
+				boss4 = {
+					name = 2687, --Forgeweaver Araz
+					bossIDs = {},
+					achievement = 41615,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_ForgeweaverAraz"], "IAT_241923", "IAT_241923", "IAT_241923", "IAT_241923", "IAT_242589", "IAT_242589") },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:ForgeweaverAraz() end,
+					partial = false,
+					encounterID = 3132,
+				},
+				boss5 = {
+					name = 2688, --The Soul Hunters
+					bossIDs = {},
+					achievement = 41616,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_SoulHunters"], C_Spell.GetSpellLink(1247656), C_Spell.GetSpellLink(1246980)) },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:SoulHunters() end,
+					partial = false,
+					encounterID = 3122,
+					displayInfoFrame = true,
+				},
+				boss6 = {
+					name = 2747, --Fractillus
+					bossIDs = {},
+					achievement = 41617,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = L["ManaforgeOmega_Fractillus"] },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:Fractillus() end ,
+					partial = false,
+					encounterID = 3133,
+					displayInfoFrame = true,
+				},
+				boss7 = {
+					name = 2690, --Nexus-King Salhadaar
+					bossIDs = {},
+					achievement = 41618,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_NexusKingSalhadaar"], "IAT_228470", "IAT_228470") },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:NexusKingSalhadaar() end,
+					partial = false,
+					encounterID = 3134,
+				},
+				boss8 = {
+					name = 2691, --Dimensius, the All-Devouring
+					bossIDs = {},
+					achievement = 41619,
+					players = {},
+					tactics = {
+						[11] = {
+							{ tactic = format(L["ManaforgeOmega_DimensiusTheAllDevouring"], C_Spell.GetSpellLink(1243577), "IAT_242587", C_Spell.GetSpellLink(1228206), C_Spell.GetSpellLink(1243577), C_Spell.GetSpellLink(1228206), C_Spell.GetSpellLink(1228206), C_Spell.GetSpellLink(1243577), C_Spell.GetSpellLink(1243577)) },
+						},
+					},
+					enabled = true,
+					track = function() core._2810:DimensiusTheAllDevouring() end,
+					partial = false,
+					encounterID = 3135,
+					displayInfoFrame = true,
 				},
 			},
 		},

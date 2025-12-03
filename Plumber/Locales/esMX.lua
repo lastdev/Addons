@@ -23,6 +23,9 @@ L["Completed CHETT List"] = "Lista de T.A.R.E.A.S. completa";
 L["Restored Coffer Key"] = "Llave de arca restaurada";
 L["Coffer Key Shard"] = "Fragmento de llave de arca";
 L["Epoch Mementos"] = "Recuerdo de época";
+L["Timeless Scrolls"] = "Pergamino intemporal";
+
+L["CONFIRM_PURCHASE_NONREFUNDABLE_ITEM"] = "¿Seguro que quieres intercambiar %s por el siguiente objeto?\n\n|cffff2020Tu compra no es reembolsable.|r\n %s";
 
 
 --Map Pin Filter Name (name should be plural)
@@ -31,3 +34,5 @@ L["Special Assignment"] = "Asignación especial";
 
 L["Match Pattern Rep 1"] = "La reputación de tu tropa con (.+) ha aumentado ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
 L["Match Pattern Rep 2"] = "Tu reputación con (.+) ha aumentado ([%d%,]+)";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Transmog Set Partially Known"] = "^Contiene (%d+) ";   --TRANSMOG_SET_PARTIALLY_KNOWN_CLASS

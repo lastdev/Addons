@@ -167,6 +167,9 @@ local attributes = {
             key = "alpha",
             label = "Alpha",
             widget = "range",
+            minvalue = 0,
+            maxvalue = 1,
+            usedecimals = true,
             setter = function(widget, value) widget:SetAlpha(value) end
         },
         {widget = "blank"},
@@ -620,9 +623,9 @@ detailsFramework.EditorMixin = {
                         moverFrame.MovingInfo.restingY = y
                         moverFrame:SetScript("OnUpdate", onTickNotMoving)
 
-                        local currentNinePoints = editorFrame.currentObjectNinePoints
-                        local startX, startY = moverFrame:GetCenter()
-                        local closestPoint = editorFrame.currentObjectNinePoints:GetClosestPoint(CreateVector2D(startX, startY))
+                        --local currentNinePoints = editorFrame.currentObjectNinePoints
+                        --local startX, startY = moverFrame:GetCenter()
+                        --local closestPoint = editorFrame.currentObjectNinePoints:GetClosestPoint(CreateVector2D(startX, startY))
                         --if (closestPoint ~= parentTable.side) then
                             --print("side is different", closestPoint, parentTable.side)
                         --end
@@ -809,111 +812,113 @@ detailsFramework.EditorMixin = {
                 menuOptions[#menuOptions+1] = {type = "blank"}
             else
                 --get the key to be used on profile table
-                local profileKey = profileMap[option.key]
-                local value
+                local profileKey = profileMap[option.key] or option.key
+                if profileKey then
+                    local value
 
-                --if the key contains a dot or a bracket, it means it's a table path, example: "text_settings[1].width"
-                if (profileKey and (profileKey:match("%.") or profileKey:match("%["))) then
-                    value = detailsFramework.table.getfrompath(profileTable, profileKey)
-                else
-                    value = profileTable[profileKey]
-                end
-
-                --if no value is found, attempt to get a default
-                if (type(value) == "nil") then
-                    value = option.default
-                end
-
-                local bHasValue = type(value) ~= "nil"
-
-                local minValue = option.minvalue
-                local maxValue = option.maxvalue
-
-                if (option.key == "anchoroffsetx") then
-                    minValue = -math.floor(object:GetParent():GetWidth())
-                    maxValue = math.floor(object:GetParent():GetWidth())
-                elseif (option.key == "anchoroffsety") then
-                    minValue = -math.floor(object:GetParent():GetHeight())
-                    maxValue = math.floor(object:GetParent():GetHeight())
-                end
-
-                if (bHasValue) then
-                    local parentTable = getParentTable(profileTable, profileKey)
-
-                    if (option.key == "anchor" or option.key == "anchoroffsetx" or option.key == "anchoroffsety") then
-                        anchorSettings = parentTable
+                    --if the key contains a dot or a bracket, it means it's a table path, example: "text_settings[1].width"
+                    if (profileKey and (profileKey:match("%.") or profileKey:match("%["))) then --profileKey is a number
+                        value = detailsFramework.table.getfrompath(profileTable, profileKey)
+                    else
+                        value = profileTable[profileKey]
                     end
 
-                    local optionTable = {
-                        type = option.widget,
-                        name = option.label,
-                        get = function() return value end,
-                        set = function(widget, fixedValue, newValue, ...)
-                            --color is a table with 4 indexes for each color plus alpha
-                            if (option.widget == "range" or option.widget == "slider") then
-                                if (not option.usedecimals) then
-                                    newValue = math.floor(newValue)
-                                end
+                    --if no value is found, attempt to get a default
+                    if (type(value) == "nil") then
+                        value = option.default
+                    end
 
-                            elseif (option.widget == "color") then
-                                --calor callback sends the red color in the fixedParameter slot
-                                local r, g, b, alpha = fixedValue, newValue, ...
-                                --need to use the same table from the profile table
-                                parentTable[1] = r
-                                parentTable[2] = g
-                                parentTable[3] = b
-                                parentTable[4] = alpha
+                    local bHasValue = type(value) ~= "nil"
 
-                                newValue = parentTable
-                            end
+                    local minValue = option.minvalue
+                    local maxValue = option.maxvalue
 
-                            detailsFramework.table.setfrompath(profileTable, profileKey, newValue)
+                    if (option.key == "anchoroffsetx") then
+                        minValue = -math.floor(object:GetParent():GetWidth())
+                        maxValue = math.floor(object:GetParent():GetWidth())
+                    elseif (option.key == "anchoroffsety") then
+                        minValue = -math.floor(object:GetParent():GetHeight())
+                        maxValue = math.floor(object:GetParent():GetHeight())
+                    end
 
-                            if (self:GetOnEditCallback()) then
-                                self:GetOnEditCallback()(object, option.key, newValue, profileTable, profileKey)
-                            end
+                    if (bHasValue) then
+                        local parentTable = getParentTable(profileTable, profileKey)
 
-                            --update the widget visual
-                            --anchoring uses SetAnchor() which require the anchorTable to be passed
-                            if (option.key == "anchor" or option.key == "anchoroffsetx" or option.key == "anchoroffsety") then
-                                anchorSettings = parentTable
-
-                                if (option.key == "anchor") then
-                                    anchorSettings.x = 0
-                                    anchorSettings.y = 0
-                                end
-
-                                self:StopObjectMovement()
-
-                                option.setter(object, parentTable)
-
-                                if (editingOptions.can_move) then
-                                    self:StartObjectMovement(anchorSettings)
-                                end
-                            else
-                                option.setter(object, newValue)
-                            end
-                        end,
-                        min = minValue,
-                        max = maxValue,
-                        step = option.step,
-                        usedecimals = option.usedecimals,
-                        id = option.key,
-                    }
-
-                    if (conditionalKeys[option.key]) then
-                        local bIsEnabled = conditionalKeys[option.key](object, profileTable, profileKey)
-                        if (not bIsEnabled) then
-                            optionTable.disabled = true
+                        if (option.key == "anchor" or option.key == "anchoroffsetx" or option.key == "anchoroffsety") then
+                            anchorSettings = parentTable
                         end
-                    end
 
-                    menuOptions[#menuOptions+1] = optionTable
+                        local optionTable = {
+                            type = option.widget,
+                            name = option.label,
+                            get = function() return value end,
+                            set = function(widget, fixedValue, newValue, ...)
+                                --color is a table with 4 indexes for each color plus alpha
+                                if (option.widget == "range" or option.widget == "slider") then
+                                    if (not option.usedecimals) then
+                                        newValue = math.floor(newValue)
+                                    end
+
+                                elseif (option.widget == "color") then
+                                    --calor callback sends the red color in the fixedParameter slot
+                                    local r, g, b, alpha = fixedValue, newValue, ...
+                                    --need to use the same table from the profile table
+                                    parentTable[1] = r
+                                    parentTable[2] = g
+                                    parentTable[3] = b
+                                    parentTable[4] = alpha
+
+                                    newValue = parentTable
+                                end
+
+                                detailsFramework.table.setfrompath(profileTable, profileKey, newValue)
+
+                                if (self:GetOnEditCallback()) then
+                                    self:GetOnEditCallback()(object, option.key, newValue, profileTable, profileKey)
+                                end
+
+                                --update the widget visual
+                                --anchoring uses SetAnchor() which require the anchorTable to be passed
+                                if (option.key == "anchor" or option.key == "anchoroffsetx" or option.key == "anchoroffsety") then
+                                    anchorSettings = parentTable
+
+                                    if (option.key == "anchor") then
+                                        anchorSettings.x = 0
+                                        anchorSettings.y = 0
+                                    end
+
+                                    self:StopObjectMovement()
+
+                                    option.setter(object, parentTable)
+
+                                    if (editingOptions.can_move) then
+                                        self:StartObjectMovement(anchorSettings)
+                                    end
+                                else
+                                    option.setter(object, newValue)
+                                end
+                            end,
+                            min = minValue,
+                            max = maxValue,
+                            step = option.step,
+                            usedecimals = option.usedecimals,
+                            id = option.key,
+                        }
+
+                        if (conditionalKeys[option.key]) then
+                            local bIsEnabled = conditionalKeys[option.key](object, profileTable, profileKey)
+                            if (not bIsEnabled) then
+                                optionTable.disabled = true
+                            end
+                        end
+
+                        menuOptions[#menuOptions+1] = optionTable
+                    end
                 end
             end
         end
 
-        if (anchorSettings) then
+        if (anchorSettings and not self.options.no_anchor_points) then
             self.AnchorFrames:SetupAnchorsForObject(anchorSettings)
         end
 
@@ -1292,6 +1297,7 @@ detailsFramework.EditorMixin = {
 ---@field object_list_lines number
 ---@field object_list_line_height number
 ---@field text_template table
+---@field no_anchor_points boolean
 
 --editorFrame.options.text_template
 
@@ -1306,6 +1312,7 @@ local editorDefaultOptions = {
     object_list_lines = 20,
     object_list_line_height = 20,
     text_template = detailsFramework:GetTemplate("font", "OPTIONS_FONT_TEMPLATE"),
+    no_anchor_points = false,
 }
 
 function detailsFramework:CreateEditor(parent, name, options)

@@ -2,9 +2,9 @@ local _, T = ...
 
 local C, z, V, K = GetLocale(), nil
 V =
-    C == "deDE" and { -- 20/21 (95%)
+    C == "deDE" and { -- 21/21 (100%)
       "%d |4Mission:Missionen; verfügbar", "%d |4Mission:Missionen; abgeschlossen", "%d laufende |4Mission:Missionen;", "%d |4Mission:Missionen; übrig", "%d |4Gruppe:Gruppen; übrig", "Missionskosten: %s", "Bonuswurfbelohnung", "Lösche alle geplanten Gruppen", "Abschließen", "Alle abschließen",
-      "Vor %s abgeschlossen", z, "Noch verfügbar:", "BONUS erhalten!", "In geplanter Gruppe:", "Mission fehlgeschlagen", "Missions-Verlauf", "Mission erfolgreich", "Keine möglichen Gruppen", "Ergebnisse vergangener Missionen werden hier angezeigt.",
+      "Vor %s abgeschlossen", "Vor langer Zeit abgeschlossen", "Noch verfügbar:", "BONUS erhalten!", "In geplanter Gruppe:", "Mission fehlgeschlagen", "Missions-Verlauf", "Mission erfolgreich", "Keine möglichen Gruppen", "Ergebnisse vergangener Missionen werden hier angezeigt.",
       "Schicke geplante Gruppen",
     }
     or C == "esES" and { -- 21/21 (100%)

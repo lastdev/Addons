@@ -1,9 +1,9 @@
 ## Interface: 20504
 ## Title: TomTom
 ## Author: Cladhaire, Ludovicus
-## Version: v4.0.17-release
+## Version: v4.1.3-release
 ## License: All Rights Reserved
-## IconTexture: Interface\AddOns\TomTom\Images\StaticArrow.tga
+## IconTexture: Interface\AddOns\TomTom\Images\Modern\TomTom-Logo.tga
 ## Notes: Acts as your portable navigation assistant
 ## Notes-frFR: Agit comme un assistant de navigation portable
 ## Notes-zhCN:一个简单的导航助手。
@@ -41,6 +41,13 @@ Localization.koKR.lua
 Localization.ptBR.lua
 
 TomTom.lua
+Utils.lua
+
+Themes\CrazyArrowThemeRegistry.lua
+Themes\CrazyArrowThemeClassic.lua
+Themes\CrazyArrowThemeModern.lua
+Themes\CrazyArrowThemeModernTopDown.lua
+Themes\waypointThemeRegistry.lua
 
 TomTom_Waypoints.lua
 TomTom_CrazyArrow.lua
@@ -49,4 +56,3 @@ TomTom_Config.lua
 TomTom_Paste.lua
 
 TomTom_POIIntegration.lua
-

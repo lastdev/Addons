@@ -1,6 +1,6 @@
 --[[
 Name: LibTourist-3.0
-Revision: $Rev: 331 $
+Revision: $Rev: 333 $
 Author(s): Odica (owner), originally created by ckknight and Arrowmaster
 Documentation: https://www.wowace.com/projects/libtourist-3-0/pages/api-reference
 SVN: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
@@ -9,7 +9,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibTourist-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 331 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 333 $"):match("(%d+)"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub") end
 local C_Map = C_Map
@@ -11572,12 +11572,14 @@ do
 			[BZ["Manaforge Omega"]] = true,
 			[BZ["Eco-Dome Al'dani"]] = true,
 			[BZ["Tazavesh, the Veiled Market"].." ("..BZ["Khaz Algar"]..")"] = true,
+			[BZ["Archival Assault"]] = true,
 		},
 		paths = {
 			[transports["KARESH_TAZAVESH_FLIGHTPATH"]] = true,
 			[BZ["Voidscar Cavern"]] = true,
 			[BZ["Manaforge Omega"]] = true,
 			[BZ["Eco-Dome Al'dani"]] = true,
+			[BZ["Archival Assault"]] = true,
 		},
 		flightnodes = {
 			[3029] = true,   -- Tazavesh, K'aresh (Neutral)
@@ -14490,6 +14492,20 @@ do
 		entrancePortal = { BZ["Undermine"], 50.47, 9.11 },
 	}
 
+	-- patch 11.2.0
+	-- 16427
+	zones[BZ["Archival Assault"]] = {
+		low = 70,
+		high = 80,
+		continent = Khaz_Algar,
+		expansion = TheWarWithin,
+		paths = BZ["K'aresh"],
+		groupMinSize = 1,
+		groupMaxSize = 5,
+		type = "Delve",
+		entrancePortal = { BZ["K'aresh"], 54.98, 48.11 },
+	}
+	
 	
 	-- ==============COMPLEXES================
 

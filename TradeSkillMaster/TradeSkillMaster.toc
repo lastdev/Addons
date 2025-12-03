@@ -1,4 +1,4 @@
-## Interface: 110200, 50500, 11507
+## Interface: 110200, 50501, 11508
 ## Title: |cff00fe00TradeSkillMaster|r
 ## IconTexture: Interface\Addons\TradeSkillMaster\Media\Logo
 ## Category-enUS: Auctions
@@ -14,7 +14,7 @@
 ## Category-zhTW: 拍賣
 ## Notes: Auction house and gold making addon.
 ## Author: TradeSkillMaster Team
-## Version: v4.14.43
+## Version: v4.14.45
 ## SavedVariables: TradeSkillMasterDB, TSMItemInfoDB
 ## OptionalDeps: ArkInventory, Auc-Advanced, Auctionator, OribosExchange, AuctionDB, CanIMogIt
 ## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibRealmInfo, LibDeflate, LibSerialize, LibAHTab

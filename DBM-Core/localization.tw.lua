@@ -37,6 +37,7 @@ L.TEXT_ONLY_RANGE				= "範圍框架受限於該區域的API限制，只限於�
 L.NO_RANGE						= "距離雷達不能在副本中使用，使用傳統文字距離框架取代"
 L.NO_ARROW						= "箭頭不能在副本中使用"
 L.NO_HUD						= "HUDMap不能在副本中使用"
+L.NO_COMMS						= "在遭遇戰或活躍的M+地下城中無法使用附加元件通信。請在遭遇戰或地下城結束後再次使用此命令。"
 
 L.DYNAMIC_DIFFICULTY_CLUMP		= L.DBM.."已中禁用動態距離框架，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
 L.DYNAMIC_ADD_COUNT				= L.DBM.."已中禁用小怪計數警告，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
@@ -84,7 +85,9 @@ L.AFK_WARNING					= "你正在暫離並戰鬥中(血量還剩餘%d百分比)所�
 L.LOWHEALTH_WARNING				= "低血量 (%d 百分比剩餘血量)，發送聲音警報。您可以在“額外功能”中禁用此選項。"
 L.ENTERING_COMBAT				= "進入戰鬥"
 L.LEAVING_COMBAT				= "離開戰鬥"
-L.COMBAT_STARTED_AI_TIMER		= "我的CPU是一個神經網路處理器;一個學習中的電腦 (這場戰鬥將使用新的計時器AI功能生成近似值的計時條)"
+
+L.RAID_DIFFICULTY_CHANGED		= "團隊難度已設定為%s。"
+L.DUNGEON_DIFFICULTY_CHANGED	= "地下城難度已設定為%s。"
 
 L.PROFILE_NOT_FOUND				= "<"..L.DBM..">你目前的配置檔已經損毀。"..L.DBM.."會載入'Default'配置檔。"
 L.PROFILE_CREATED				= "配置檔'%s'已建立。"
@@ -708,6 +711,20 @@ L.DUOS							= "雙煞"
 
 -- Keystone dungeon names (keep to a max of 6 characters)
 -- See https://wago.tools/db2/MapChallengeMode for ID => Dungeon Names
+L.KEYSTONE_NAMES[197] = '艾眼' -- Eye of Azshara
+L.KEYSTONE_NAMES[198] = '暗心' -- Darkheart Thicket
+L.KEYSTONE_NAMES[199] = '玄鴉' -- Black Rook Hold
+L.KEYSTONE_NAMES[200] = '英靈' -- Halls of Valor
+L.KEYSTONE_NAMES[206] = '巢穴' -- Neltharion's Lair
+L.KEYSTONE_NAMES[207] = '看守' -- Vault of the Wardens
+L.KEYSTONE_NAMES[208] = '靈魂' -- Maw of Souls
+L.KEYSTONE_NAMES[209] = '地道' -- The Arcway
+L.KEYSTONE_NAMES[210] = '眾星' -- Court of Stars
+L.KEYSTONE_NAMES[227] = '卡拉贊下' -- Return to Karazhan: Lower
+L.KEYSTONE_NAMES[233] = '永夜' -- Cathedral of Eternal Night
+L.KEYSTONE_NAMES[234] = '卡拉贊上' -- Return to Karazhan: Upper
+L.KEYSTONE_NAMES[239] = '議會' -- Seat of the Triumvirate
+
 L.KEYSTONE_NAMES[378] = '贖罪' -- Halls of Atonement
 L.KEYSTONE_NAMES[391] = '街道' -- Tazavesh: Streets of Wonder
 L.KEYSTONE_NAMES[392] = '險招' -- Tazavesh: So'leah's Gambit

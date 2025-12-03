@@ -3,6 +3,7 @@ local API = addon.API;
 local L = addon.L;
 local CallbackRegistry = addon.CallbackRegistry;
 local LandingPageUtil = addon.LandingPageUtil;
+local IS_MIDNIGHT = addon.IS_MIDNIGHT;
 
 
 local ipairs = ipairs;
@@ -123,6 +124,7 @@ do
 
     function CurrencyButtonMixin:SetupActionButton()
         if not self.itemID then return end;
+        if IS_MIDNIGHT then return end;
 
         local propagateMouseMotion = true;
         local actionButton = addon.AcquireSecureActionButton("ExpansionLandingPage", propagateMouseMotion);
@@ -159,8 +161,7 @@ do
             if self.appendTooltipFunc then
                 local info = API.CreateAppendTooltipInfo();
                 if self.appendTooltipFunc(info) then
-                    tooltip:ProcessInfo(info);
-                    tooltip:Show();
+                    API.DisplayTooltipInfoOnTooltip(tooltip, info);
                 end
             end
         end
@@ -183,8 +184,7 @@ do
             if tooltip.ProcessInfo then
                 local info = API.CreateAppendTooltipInfo();
                 if contextualTooltipFunc(info) then
-                    tooltip:ProcessInfo(info);
-                    tooltip:Show();
+                    API.DisplayTooltipInfoOnTooltip(tooltip, info);
                 end
             end
         end

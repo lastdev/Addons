@@ -5,7 +5,7 @@ Currently includes the following:
 - Battle for Azeroth
 - Shadowlands
 - Dragonflight
-- The War Within
+- The War Within (including all we know from Midnight Alpha)
 
 Curseforge:
 Requires https://www.curseforge.com/wow/addons/krowi-achievement-filter to work properly

@@ -1,9 +1,9 @@
-## Interface: 110200
+## Interface: 110207
 ## Title: HandyNotes_Valdrakken
 ## Notes: Valdrakken map locations.
 ## IconTexture: Interface/Addons/HandyNotes_Valdrakken/icons/vista.blp
 ## Author: Keyboardturn
-## Version: 0.2.0
+## Version: 0.2.2
 ## SavedVariables: HandyNotes_ValdrakkenDB
 ## RequiredDeps: HandyNotes
 ## X-Curse-Project-ID: 683304

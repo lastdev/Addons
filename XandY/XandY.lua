@@ -3,7 +3,7 @@
 
                                                X and Y
 											   
-                                       v2.58 - 26th June 2025
+                                     v2.65 - 12th November 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 
@@ -29,15 +29,8 @@ ns.colour.plaintext = "\124cFFDEB887"	-- X11BurlyWood
 ns.colour.malachite	= "\124cFF0BDA51"
 ns.colour.gold		= "\124cFFFED12A"
 
-local date = date
-local ceil = math.ceil
-local floor = math.floor
-local find = string.find
-local format = string.format
-local gsub = string.gsub
-local len = string.len
-local pi = math.pi
-local sub = string.sub
+local ceil, find, floor, format, gsub, len, pi, sub =
+		math.ceil, string.find, math.floor, string.format, string.gsub, string.len, math.pi, string.sub
 
 local GetBestMapForUnit = C_Map.GetBestMapForUnit
 local GetMinimapZoneText = GetMinimapZoneText
@@ -106,12 +99,6 @@ elseif locale == "zhCN" then
 elseif locale == "zhTW" then
 	L["Player"] = "玩家"
 	L["Cursor"] = "滑鼠游標"
-else
-	local dm = date( "%d%m" )
-	if sub( dm, 1, 2 ) == "19" and sub( dm, 3, 4 ) == "09" then
-		L["Player"] = "Cap'n"
-		L["Cursor"] = "Bilge Rats"
-	end
 end
 
 --=======================================================================================================
@@ -189,12 +176,9 @@ end
 local function OnEventHandler( self, event, args )
 
 	if ( event == "VARIABLES_LOADED" ) then
-		if not XandYDB then XandYDB = {} end
-		local miniPrecision = XandYDB.miniPrecision or 2
-		local showMiniZoneText = XandYDB.showMiniZoneText or true
-		XandYDB = {}
-		XandYDB.miniPrecision = miniPrecision
-		XandYDB.showMiniZoneText = showMiniZoneText
+		XandYDB = XandYDB or {}
+		XandYDB.miniPrecision = ( XandYDB.miniPrecision == nil ) and 2 or XandYDB.miniPrecision
+		XandYDB.showMiniZoneText = ( XandYDB.showMiniZoneText == nil ) and true or XandYDB.showMiniZoneText
 
 		if locale == "deDE" then
 			addonTitle = C_AddOns.GetAddOnMetadata( "XandY", "Title-deDE" )

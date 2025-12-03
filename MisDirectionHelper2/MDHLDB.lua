@@ -235,6 +235,60 @@ local function createMainPanel()
     return frame
 end
 
+local DELVE_MAP_IDS = {
+    [2445] = true,
+    [2446] = true,
+    [2447] = true,
+    [2448] = true,
+    [2449] = true,
+    [2450] = true,
+    [2451] = true,
+    [2452] = true,
+    [2453] = true,
+    [2454] = true,
+    [2455] = true,
+    [2456] = true,
+    [2457] = true,
+    [2458] = true,
+    [2459] = true,
+}
+
+
+
+local function IsInDelveEnhanced()
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if mapID and DELVE_MAP_IDS[mapID] then
+        return true
+    end
+    return false
+end
+
+function MDH:EnsurePetDisplay(retries)
+    if not MDH.db or not MDH.db.profile then return end
+    if MDH.uc ~= "HUNTER" then return end
+    if not IsInDelveEnhanced() then return end
+    if UnitExists("pet") then
+        local petName = UnitName("pet")
+        MDH.db.profile.target = "pet"
+        MDH.db.profile.name = petName
+        MDH.db.profile.petname = petName
+        if MDH.MDHEditMacro then MDH:MDHEditMacro() end
+        if MDH.MDHTextUpdate then MDH:MDHTextUpdate() end
+        if not MDH._delvePetShown then
+            print("|cFF33FF99MDH:|r Delve detected – auto-set GUI to pet: " .. (petName or "<unknown>"))
+            MDH._delvePetShown = true
+        end
+    else
+        retries = (retries or 0) + 1
+        if retries <= 5 then
+            C_Timer.After(1, function() self:EnsurePetDisplay(retries) end)
+        end
+    end
+end
+
+-- Call as method:
+MDH:EnsurePetDisplay()
+
 --************ THEMES ************
 local themelist, customlist
 local fontlist = {
@@ -1335,6 +1389,7 @@ function MDH:MDHOnload()
     MDH:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
     MDH:RegisterEvent("PLAYER_REGEN_DISABLED")
     MDH:RegisterEvent("PLAYER_FOCUS_CHANGED")
+	MDH:RegisterEvent("SCENARIO_UPDATE")
     MDH.waitFrame = MDHWaitFrame or CreateFrame("Frame", "MDHWaitFrame")
 	if MDH.db.profile.clearleave or MDH.db.profile.autotank then MDH:RegisterEvent("GROUP_ROSTER_UPDATE") end
 	if MDH.db.profile.autotank then MDH:RegisterEvent("ROLE_CHANGED_INFORM") end
@@ -1357,16 +1412,25 @@ end
 
 function MDH:ROLE_CHANGED_INFORM() MDH:GROUP_ROSTER_UPDATE() end
 
-function MDH:ZONE_CHANGED_NEW_AREA()
-	local inInstance = (select(2, GetInstanceInfo()) ~= "none")
-	if UnitIsGhost("player") then return end
-	if inInstance then
-		if MDH.remind then 
-		else
-			StaticPopup_Show("MDH_REMINDER")
-			MDH.remind = true
-		end
-	else MDH.remind = nil end
+function MDH:UpdatePetGUI()
+    -- If you use a frame, set the text to the current target/pet
+    if MDH.mainPanel and MDH.mainPanel.targetLabel then
+        MDH.mainPanel.targetLabel:SetText("Target: " .. (MDH.db.profile.name or "<none>"))
+    end
+    -- If using LDB, update its text
+    if MDH.dataObject then
+        MDH:MDHTextUpdate()
+    end
+end
+
+function MDH:SCENARIO_UPDATE()
+    C_Timer.After(0.5, function() self:UpdatePetGUI() end)
+end
+
+function MDH:UNIT_PET(event, unit)
+    if unit == "player" then
+        UpdatePetGUI()
+    end
 end
 
 function MDH:PLAYER_TARGET_CHANGED()
@@ -1387,7 +1451,35 @@ function MDH:PLAYER_FOCUS_CHANGED()
 	end
 end
 
-function MDH:PLAYER_ENTERING_WORLD() MDH:MDHLoad() end
+function MDH:PLAYER_ENTERING_WORLD()
+    MDH:MDHLoad()
+    C_Timer.After(2, function() MDH:EnsurePetDisplay() end) -- CORRECT
+end
+
+function MDH:ZONE_CHANGED_NEW_AREA()
+    self:EnsurePetDisplay()
+    local _, instanceType = GetInstanceInfo()
+    if instanceType ~= "none" then
+        if MDH.db.profile.remind and not MDH.remind then
+            StaticPopup_Show("MDH_REMINDER")
+            MDH.remind = true
+        end
+    else
+        MDH.remind = nil
+        MDH._delvePetShown = nil
+    end
+end
+
+--function MDH:SCENARIO_UPDATE()
+ --   C_Timer.After(0.5, EnsurePetDisplay)
+--end
+
+function MDH:UNIT_PET(event, unit)
+    if unit == "player" then
+        -- existing pet capture logic...
+        EnsurePetDisplay()
+    end
+end
 
 function MDH:UNIT_PET(event, unitid)
 	local pet

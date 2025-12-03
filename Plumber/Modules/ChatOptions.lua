@@ -148,7 +148,7 @@ function ChatOptions:SetupStaticPopup()
             button1 = YES or "Yes",
             button2 = NO or "No",
             OnShow = function(self, data)
-                self.text:SetText(data.text);
+                self.Text:SetText(data.text);
                 if data.showAlert then
                     self.AlertIcon:Show();
                 end
@@ -356,6 +356,9 @@ do
         categoryID = 1,
         uiOrder = 1160,
         moduleAddedTime = 1732700000,
+		categoryKeys = {
+			"Chat",
+		},
     };
 
     addon.ControlCenter:AddModule(moduleData);

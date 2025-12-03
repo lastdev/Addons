@@ -1,6 +1,6 @@
 local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
-HandyNotes_Draenor.nodes[542] = {
+HandyNotes_Draenor.Nodes[542] = {
     [40595497] = { 542, "36458", "Abandoned Mining Pick", "Allows faster Mining in Draenor", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "116913" },
     [36195446] = { 542, "36462", "Admiral Taylor's Coffer", "Requires An Old Key", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "824" },
     [37705640] = { 542, "36462", "An Old Key", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "116020" },

@@ -207,8 +207,7 @@ L["MINIMAP_SHORTCUT_LOCK"] = "Verrouiller le bouton"
 L["MINIMAP_SHORTCUT_MINIMAP_ENABLE"] = "Activer le bouton de la mini-carte"
 L["MINIMAP_SHORTCUT_MINIMAP_ENABLE_DESC"] = "Activez pour afficher le bouton autour de la mini-carte."
 L["MINIMAP_SHORTCUT_MINIMAP_LOCK"] = "Verrouiller le bouton sur la mini-carte"
---[[Translation missing --]]
---[[ L["MISC_SETTINGS"] = ""--]] 
+L["MISC_SETTINGS"] = "Divers"
 L["MODULE_AMERICAS"] = "Amérique"
 L["MODULE_EUROPE"] = "Europe"
 L["MODULE_KOREA"] = "Corée"
@@ -389,18 +388,12 @@ L["RAID_BOSS_MFO_5"] = "Chasseurs d’âmes"
 L["RAID_BOSS_MFO_6"] = "Fractillus"
 L["RAID_BOSS_MFO_7"] = "Roi-nexus Salhadaar"
 L["RAID_BOSS_MFO_8"] = "Dimensius l’Omni-dévoreur"
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_MSV_6"] = ""--]] 
+L["RAID_BOSS_MSV_1"] = "La garde de pierre"
+L["RAID_BOSS_MSV_2"] = "Feng le Maudit"
+L["RAID_BOSS_MSV_3"] = "Gara’jal le Lieur d’esprit"
+L["RAID_BOSS_MSV_4"] = "Meng le Dément"
+L["RAID_BOSS_MSV_5"] = "Elegon"
+L["RAID_BOSS_MSV_6"] = "Jan Xi"
 L["RAID_BOSS_NP_1"] = "Ulgrax le Dévoreur"
 L["RAID_BOSS_NP_2"] = "L'horreur liée par le sang"
 L["RAID_BOSS_NP_3"] = "Sikran"
@@ -431,22 +424,27 @@ L["RAID_BOSS_SOD_6"] = "Mal-ferrant Raznal"
 L["RAID_BOSS_SOD_7"] = "Gardien des Fondateurs"
 L["RAID_BOSS_SOD_8"] = "Scribe du destin Roh-Kalo"
 L["RAID_BOSS_SOD_9"] = "Kel’Thuzad"
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_ToES_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOES_4"] = ""--]] 
+L["RAID_BOSS_ToES_1"] = "Protecteurs de l’Éternel"
+L["RAID_BOSS_TOES_1"] = "Protecteurs de l’Éternel"
+L["RAID_BOSS_TOES_2"] = "Tsulong"
+L["RAID_BOSS_ToES_2"] = "Tsulong"
+L["RAID_BOSS_ToES_3"] = "Lei Shi"
+L["RAID_BOSS_TOES_3"] = "Lei Shi"
+L["RAID_BOSS_TOES_4"] = "Sha de la peur"
+L["RAID_BOSS_ToES_4"] = "Sha de la peur"
+L["RAID_BOSS_TOT_1"] = "Jin’rokh le Briseur"
+L["RAID_BOSS_TOT_10"] = "Qwon de fer"
+L["RAID_BOSS_TOT_11"] = "Empyréens jumeaux"
+L["RAID_BOSS_TOT_12"] = "Lei Shen"
+L["RAID_BOSS_TOT_13"] = "Ra Den"
+L["RAID_BOSS_TOT_2"] = "Horridon"
+L["RAID_BOSS_TOT_3"] = "Conseil des anciens"
+L["RAID_BOSS_TOT_4"] = "Tortos"
+L["RAID_BOSS_TOT_5"] = "Megaera"
+L["RAID_BOSS_TOT_6"] = "Ji Kun"
+L["RAID_BOSS_TOT_7"] = "Durumu l’Oublié"
+L["RAID_BOSS_TOT_8"] = "Primordius"
+L["RAID_BOSS_TOT_9"] = "Sombre animus"
 L["RAID_BOSS_TOTFW_1"] = "Conclave du Vent"
 L["RAID_BOSS_TOTFW_2"] = "Al’Akir"
 L["RAID_BOSS_VOTI_1"] = "Eranog"
@@ -485,8 +483,8 @@ L["RAID_MSV"] = "Caveaux Mogu’shan"
 L["RAID_NP"] = "Palais des Nérub’ar"
 L["RAID_RS"] = "Le sanctum Rubis"
 L["RAID_ToES"] = "Terrasse Printanière"
---[[Translation missing --]]
---[[ L["RAID_TOES"] = ""--]] 
+L["RAID_TOES"] = "Terrasse Printanière"
+L["RAID_TOT"] = "Trône du tonnerre"
 L["RAID_TOTFW"] = "Trône des quatre vents"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Moy. de score Raider.IO sur des +%s"
 L["RAIDERIO_BEST_RUN"] = "Meilleur donjon M+ Raider.IO"

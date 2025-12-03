@@ -1,22 +1,10 @@
-lightweight tag 96f7d5b15c95e81cc43c71219718926d8a31752e 11.2.0-03
+lightweight tag a0ea176f951651f6b9c33acb93a61833c1dcec89 12.0.0-02
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Wed Sep 17 21:51:01 2025 -0500
+Date:	Wed Oct 8 14:49:46 2025 -0500
 
-commit 96f7d5b15c95e81cc43c71219718926d8a31752e
+commit a0ea176f951651f6b9c33acb93a61833c1dcec89
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Wed Sep 17 21:51:01 2025 -0500
+Date:   Wed Oct 8 14:49:46 2025 -0500
 
-    Bump version
-
-commit 50b744380b9a193ef0b6d3e2961dcf896f28d87b
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Wed Sep 17 21:50:47 2025 -0500
-
-    Add Gilded of the Ethereal achievement
-
-commit f0aefe97ee252ee8ba9aa7111a645f24f8ccdbb3
-Author: Dave Hendler <sollaires@gmail.com>
-Date:   Sat Aug 2 14:36:36 2025 -0700
-
-    Bump for 11.2 release
+    Add Starlight Matrix to currency export
 

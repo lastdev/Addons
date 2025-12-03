@@ -1,5 +1,5 @@
-## v4.14.43 Changes
+## v4.14.45 Changes
 
-* [MoP] Added BMAH scanning
+* [Classic] Update for patch 1.15.8
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

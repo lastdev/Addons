@@ -87,10 +87,13 @@ local DefaultRules = DefaultRulesByProject[WOW_PROJECT_ID]
 -- A lot of things need to be cleaned up when flags are deleted/renamed
 
 local defaults = {
-    global = {
-        groups              = { },
-        instances           = { },
-        summonCounts        = { },
+    char = {
+        unavailableMacro    = "",
+        useUnavailableMacro = false,
+        combatMacro         = "",
+        useCombatMacro      = false,
+        debugEnabled        = false,
+        uiDebugEnabled      = false,
     },
     profile = {
         flagChanges         = { },
@@ -109,14 +112,12 @@ local defaults = {
         announceViaUI       = false,
         announceColors      = false,
         announceFlightStyle = true,
+        mountSpecialTimer   = 0,
     },
-    char = {
-        unavailableMacro    = "",
-        useUnavailableMacro = false,
-        combatMacro         = "",
-        useCombatMacro      = false,
-        debugEnabled        = false,
-        uiDebugEnabled      = false,
+    global = {
+        groups              = { },
+        instances           = { },
+        summonCounts        = { },
     },
 }
 
@@ -272,6 +273,10 @@ function LM.Options:DatabaseMaintenance()
     if self:CleanDatabase() then changed = true end
     LM.db.global.configVersion = 10
     return changed
+end
+
+function LM.Options:NotifyChanged()
+    LM.db.callbacks:Fire("OnOptionsModified")
 end
 
 function LM.Options:OnProfile()
@@ -472,7 +477,6 @@ local PseudoFlags = {
     "COLLECTED",
     "SLOW",
     "JOURNAL",
-    "MAWUSABLE",
     "DRAGONRIDING",
     "ZONEMATCH",
     "FAVORITES", FAVORITES,
@@ -683,6 +687,31 @@ function LM.Options:SetOption(name, val)
         end
     end
     LM.PrintError("Bad option: %s", name)
+end
+
+function LM.Options:GetClassOption(class, name)
+    if class == 'PLAYER' then
+        return LM.db.char[name]
+    elseif class == UnitClassBase('player') then
+        return LM.db.class[name]
+    elseif LM.db.sv.class and LM.db.sv.class[class] then
+        return LM.db.sv.class[class][name]
+    end
+end
+
+function LM.Options:SetClassOption(class, name, val)
+    if class == 'PLAYER' then
+        LM.db.char[name] = val
+        LM.db.callbacks:Fire("OnOptionsModified")
+    elseif class == UnitClassBase('player') then
+        LM.db.class[name] = val
+        LM.db.callbacks:Fire("OnOptionsModified")
+    else
+        LM.db.sv.class = LM.db.sv.class or {}
+        LM.db.sv.class[class] = LM.db.sv.class[class] or {}
+        LM.db.sv.class[class][name] = val
+        LM.db.callbacks:Fire("OnOptionsModified")
+    end
 end
 
 

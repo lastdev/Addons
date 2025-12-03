@@ -1,3 +1,6 @@
+== v2.13 - 3rd October 2025
+* TOC update to 11.2.5
+
 == v2.12 - 26th September 2025
 * TOC update to 5.5.1
 

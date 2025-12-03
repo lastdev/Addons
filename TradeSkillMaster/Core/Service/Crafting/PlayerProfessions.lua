@@ -161,8 +161,8 @@ function private.PlayerProfessionsThread()
 		ProfessionsBookFrame_Update()
 	elseif ClientInfo.IsPandaClassic() then
 		SpellBook_UpdateProfTab()
-	else
-		SpellBookFrame_UpdateSkillLineTabs()
+	elseif ClientInfo.IsVanillaClassic() then
+		SpellBookFrame:UpdateSkillLineTabs()
 	end
 	local forgetProfession = Threading.AcquireSafeTempTable()
 	for name in pairs(private.settings.playerProfessions) do

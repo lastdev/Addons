@@ -1,16 +1,28 @@
-lightweight tag 7ebaf856321df3696b469562876bbe99220e5c3b 5.11.6
+lightweight tag 327295af90dba5c797b87a179fee3528dacbfde9 5.14
 Author:	Remeen <wow@meen.co.uk>
-Date:	Sun Sep 7 16:13:26 2025 +0100
+Date:	Tue Dec 2 18:47:59 2025 +0000
 
-commit 7ebaf856321df3696b469562876bbe99220e5c3b
+commit 327295af90dba5c797b87a179fee3528dacbfde9
 Author: Remeen <wow@meen.co.uk>
-Date:   Sun Sep 7 16:13:26 2025 +0100
+Date:   Tue Dec 2 18:47:59 2025 +0000
 
-    Added Delver's Mana-Bound Ethergate
+    Update TOC to 11.2.7
 
-commit 5dd3b2e35d0abb3e2d219b09d95828a8850b2148
+commit 02d528bb23a08590886db14a0dc31eb522c1370b
 Author: Remeen <wow@meen.co.uk>
-Date:   Mon Aug 18 19:46:24 2025 +0100
+Date:   Tue Dec 2 18:47:10 2025 +0000
 
-    Add Shadowguard Translocator
+    Naaru's Enfold
+
+commit c09c1ff21fb5db731ae573f5e9e3345d7d63d079
+Author: Remeen <wow@meen.co.uk>
+Date:   Tue Dec 2 18:42:11 2025 +0000
+
+    Hide Zone Titles option
+
+commit 9a70bb3b57bc2aca38f565110bfba2b951397774
+Author: Remeen <wow@meen.co.uk>
+Date:   Tue Dec 2 18:36:18 2025 +0000
+
+    Group Dungeons/Raids by Expansion option.
 

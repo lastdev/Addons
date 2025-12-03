@@ -7,14 +7,14 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traducido por "
 L.TranslationBy 			= "Saispai, Woopy"
-L.Website					= "Visita nuestro canal de Discord (|cFF73C2FBhttps://discord.gg/deadlybossmods|r) y síguenos en Twitter (@deadlybossmods)."
+L.Website					= "Visita nuestro canal de Discord (|cFF73C2FBhttps://discord.gg/deadlybossmods|r)"
 L.WebsiteButton				= "Página web"
 
 L.OTabBosses	= "Jefes"
 L.OTabRaids		= "Bandas"
 L.OTabDungeons	= "Mazmorras"
 L.OTabWorld		= "Jefes del mundo"--Since there are so many world mods, enough to get their own tab
-L.OTabScenarios	= "Escenarios"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
+L.OTabScenarios	= "Gestas"--Future use, will be used for scenarios and delves, likely after there are more than 2 mods (so probably 12.x or later)
 L.OTabPlugins	= "Otros" --Scenarios, PVP, Delves (11.x), Solo/Challenge content (torghast, mage tower, etc)
 L.OTabOptions	= "Opciones"
 L.OTabTools		= "Herramientas"--Such as break timer button, durability checks, latency checks, keystone checks (in future)
@@ -75,13 +75,13 @@ L.Area_ModulesForYou		= "Guía de módulos"
 L.Area_ProfilesSetup		= "Guía de uso de perfiles de DBM"
 -- Panel: Core & GUI
 L.Core_GUI 					= "Core e interfaz"
-L.General 					= "Opciones generales de DBM"
+L.General 					= "Opciones generales"
 L.EnableMiniMapIcon			= "Mostrar botón del minimapa"
 L.EnableCompartmentIcon		= "Mostrar botón de compartimento"
 L.UseSoundChannel			= "Canal de audio para alertas"
-L.UseMasterChannel			= "Canal de audio principal"
-L.UseDialogChannel			= "Canal de audio de diálogo"
-L.UseSFXChannel				= "Canal de audio de efectos de sonido"
+L.UseMasterChannel			= "Canal principal"
+L.UseDialogChannel			= "Canal de diálogo"
+L.UseSFXChannel				= "Canal de efectos de sonido"
 L.Latency_Text				= "Latencia máx. para sincronización: %d"
 
 L.Button_RangeFrame			= "Mostrar/ocultar\nmarco de distancia"
@@ -125,30 +125,30 @@ L.RecordOnlyBosses			= "Registrar solo encuentros contra jefes"
 L.DoNotLogLFG				= "No registrar encuentros de buscar grupo"
 --
 L.Area_AutoLoggingContent			= "Contenido del registro automático"
-L.LogCurrentMythicRaids				= "Bandas actuales míticas"--Retail Only
-L.LogCurrentRaids					= "Bandas actuales no míticas (heroico, normal y buscador si el filtro está desactivado)"
+L.LogCurrentMythicRaids				= "Bandas actuales Míticas"--Retail Only
+L.LogCurrentRaids					= "Bandas actuales"
 L.LogTWRaids						= "Bandas de Paseo en el tiempo o Tiempo de Cromi"--Retail Only
 L.LogTrivialRaids					= "Bandas triviales (de bajo nivel)"
-L.LogCurrentMPlus					= "Mazmorras M+ de nivel actual"--Retail Only
-L.LogCurrentMythicZero				= "Mazmorras míticas 0 de nivel actual"--Retail Only
+L.LogCurrentMPlus					= "Mazmorras actuales M+"--Retail Only
+L.LogCurrentMythicZero				= "Mazmorras actuales Míticas 0"--Retail Only
 L.LogTWDungeons						= "Mazmorras de Paseo en el tiempo o Tiempo de Cromi"--Retail Only
-L.LogCurrentHeroic					= "Mazmorras heroicas actuales (desactiva el filtro 'Buscar Grupo' si quieres registrar las de cola)"
-L.LogDelves							= "Profundidades de nivel actual"--Retail Only
-L.LogChallenges						= "Desafíos especiales de nivel actual"--Retail Only
+L.LogCurrentHeroic					= "Mazmorras heroicas actuales"
+L.LogDelves							= "Profundidades actuales"--Retail Only
+L.LogChallenges						= "Desafíos especiales actuales"--Retail Only
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "Funciones adicionales"
 
 L.Area_SoundAlerts			= "Opciones de sonido y destello"
-L.LFDEnhance				= "Reproducir sonido y destellar el icono del juego para comprobaciones de rol y avisos de campo de batalla/buscar grupo en el canal principal o de diálogo"
-L.WorldBossNearAlert		= "Reproducir sonido y destellar el icono del juego al acercarse un jefe del mundo"
-L.RLReadyCheckSound			= "Reproducir sonido y destellar el icono del juego cuando se haga una comprobación de banda"
-L.AutoReplySound			= "Reproducir sonido y destellar el icono del juego al recibir respuestas automáticas de DBM por susurro"
+L.LFDEnhance				= "Reproducir sonido para comprobaciones de rol y avisos de campo de batalla/buscar grupo"
+L.WorldBossNearAlert		= "Reproducir sonido al acercarse un jefe del mundo"
+L.RLReadyCheckSound			= "Reproducir sonido cuando se haga una comprobación de banda"
+L.AutoReplySound			= "Reproducir sonido al recibir respuestas automáticas de DBM por susurro"
 --
 L.Area_CombatAlerts			= "Opciones de alerta de combate"
-L.AFKHealthWarning			= "Reproducir sonido y destellar el icono del juego si tu salud se reduce mientras estás ausente"
-L.HealthWarningLow			= "Reproducir sonido y destellar el icono del juego si tu salud se reduce debajo de 35% mientras estás ausente"
-L.EnteringCombatAlert		= "Reproducir sonido y destellar el icono del juego al entrar en combate"
+L.AFKHealthWarning			= "Reproducir sonido si tu salud se reduce mientras estás ausente"
+L.HealthWarningLow			= "Reproducir sonido si tu salud se reduce debajo de 35% mientras estás ausente"
+L.EnteringCombatAlert		= "Reproducir sonido al entrar en combate"
 L.LeavingCombatAlert		= "Reproducir sonido al salir de combate"
 
 L.TimerGeneral 				= "Opciones de temporizadores"
@@ -231,28 +231,31 @@ L.MonochromeThickOutline	= "Contorno monocromo grueso"
 L.RaidWarnSound				= "Sonido"
 
 -- Panel: Spec Warn Frame
-L.Panel_SpecWarnFrame		= "Anuncios especiales"
-L.Area_SpecWarn				= "Opciones de anuncios especiales"
-L.SpecWarn_ClassColor		= "Utilizar colores de clase para anuncios especiales"
-L.ShowSWarningsInChat 		= "Mostrar anuncios especiales en el chat"
-L.SWarnNameInNote			= "Utilizar Destello 5 si una nota personalizada contiene tu nombre"
-L.SpecialWarningIcon		= "Mostrar iconos en anuncios especiales"
-L.ShortTextSpellname		= "Utilizar texto abreviado cuando sea posible"
-L.SpecWarn_FlashFrameRepeat	= "Repetir %d |4vez:veces"
-L.SpecWarn_Flash			= "Destello"
-L.SpecWarn_Vibrate			= "Controlador de vibración"
-L.SpecWarn_FlashRepeat		= "Repetir destello"
-L.SpecWarn_FlashColor		= "Color del destello %d"
-L.SpecWarn_FlashDur			= "Duración: %0.1f s"
-L.SpecWarn_FlashAlpha		= "Transparencia: %0.1f"
-L.SpecWarn_DemoButton		= "Mostrar ejemplo"
-L.SpecWarn_ResetMe			= "Restablecer valores predeterminados"
-L.SpecialWarnSoundOption	= "Sonido predeterminado"
-L.SpecialWarnHeader1		= "Tipo 1: Opciones para anuncios de prioridad normal relevantes a ti o a tus acciones"
-L.SpecialWarnHeader2		= "Tipo 2: Opciones para anuncios de prioridad normal relevantes a todos los jugadores"
-L.SpecialWarnHeader3		= "Tipo 3: Opciones para anuncios de alta prioridad"
-L.SpecialWarnHeader4		= "Tipo 4: Opciones para anuncios especiales de correr con alta prioridad"
-L.SpecialWarnHeader5		= "Tipo 5: Opciones para anuncios con notas que contienen tu nombre"
+L.Panel_SpecWarnFrame				= "Anuncios especiales"
+L.Area_SpecWarn						= "Opciones de anuncios especiales"
+L.SpecWarn_ClassColor				= "Utilizar colores de clase para anuncios especiales"
+L.ShowSWarningsInChat 				= "Mostrar anuncios especiales en el chat"
+L.SWarnNameInNote					= "Utilizar Destello 5 si una nota personalizada contiene tu nombre"
+L.SpecialWarningIcon				= "Mostrar iconos en anuncios especiales"
+L.ShortTextSpellname				= "Utilizar texto abreviado cuando sea posible"
+L.SpecWarn_FlashFrameRepeat			= "Destellar %d |4vez:veces;"
+L.SpecWarn_Flash					= "Destello"
+L.SpecWarn_Vibrate					= "Controlador de vibración"
+L.SpecWarn_FlashRepeat				= "Repetir destello"
+L.SpecWarn_FlashColor				= "Color del destello %d"
+L.SpecWarn_FlashDur					= "Duración: %0.1f s"
+L.SpecWarn_FlashAlpha				= "Transparencia: %0.1f"
+L.SpecWarn_DemoButton				= "Mostrar ejemplo"
+L.SpecWarn_ResetMe					= "Restablecer valores predeterminados"
+L.SpecialWarnSoundOption			= "Sonido predeterminado"
+L.SpecialWarnHeader1				= "Tipo 1: Opciones para anuncios de prioridad normal relevantes a ti o a tus acciones"
+L.SpecialWarnHeader2				= "Tipo 2: Opciones para anuncios de prioridad normal relevantes a todos los jugadores"
+L.SpecialWarnHeader3				= "Tipo 3: Opciones para anuncios de alta prioridad"
+L.SpecialWarnHeader4				= "Tipo 4: Opciones para anuncios especiales de correr con alta prioridad"
+L.SpecialWarnHeader5				= "Tipo 5: Opciones para anuncios con notas que contienen tu nombre"
+L.AnnouncementMidnightNotice		= "Las opciones de este panel son para avisos que Blizzard clasifica como 'menores'"
+L.SpecialWarnHeaderMedium			= "Anuncios para mecánicas que Blizzard clasifica como 'moderadas'"
+L.SpecialWarnHeaderCritical			= "Anuncios para mecánicas que Blizzard clasifica como 'críticas'"
 
 -- Panel: Generalwarnings
 L.Tab_GeneralMessages 			= "Mensajes de chat"
@@ -264,24 +267,27 @@ L.SelectChatFrameInfoDone		= "Los mensajes se mostrarán en este marco de chat."
 L.SelectChatFrameInfoSelect		= "Haz clic en un marco de chat para seleccionarlo."
 L.SelectChatFrameInfoSelectNow	= "Haz clic para seleccionar %s."
 L.CoreMessages					= "Opciones de mensajes del módulo general"
-L.ShowPizzaMessage 				= "Mostrar mensajes de temporizadores en el chat"
-L.ShowAllVersions	 			= "Mostrar en el chat la versión de DBM de cada miembro al hacer comprobaciones"
+L.ShowPizzaMessage 				= "Mostrar mensajes de temporizadores"
+L.ShowAllVersions	 			= "Mostrar la versión de DBM de cada miembro al hacer comprobaciones"
 L.ShowReminders					= "Mostrar recordatorios de módulos faltantes, desactivados, modificados, desactualizados o silenciados"
 
 L.CombatMessages			= "Opciones de mensajes de combate"
-L.ShowEngageMessage 		= "Mostrar mensajes de inicio de encuentro en el chat"
-L.ShowDefeatMessage 		= "Mostrar mensajes de victoria y derrota en el chat"
-L.ShowGuildMessages 		= "Mostrar mensajes de inicio de encuentro, victoria y derrota para bandas de hermandad en el chat"
+L.ShowEngageMessage 		= "Mostrar mensajes de inicio de encuentro"
+L.ShowDefeatMessage 		= "Mostrar mensajes de victoria y derrota"
+L.ShowGuildMessages 		= "Mostrar mensajes de inicio de encuentro, victoria y derrota para bandas de hermandad"
 L.ShowGuildMessagesPlus		= "Mostrar mensajes de inicio de encuentro, victoria y derrota de Mítica+ para grupos de hermandad"
 
 L.Area_ChatAlerts			= "Opciones de alertas adicionales"
-L.RoleSpecAlert				= "Mostrar mensaje de alerta al unirte a una banda cuando tu especialización de botín no coincida con tu especialización actual"
-L.CheckGear					= "Mostrar mensaje de alerta al iniciar un encuentro cuando tu nivel de equipo sea como mínimo 40 niveles menor que el de tu inventario o no tengas equipada un arma principal"
-L.WorldBossAlert			= "Mostrar mensaje de alerta cuando un amigo o miembro de hermandad inicie un encuentro contra un jefe del mundo"
-L.WorldBuffAlert			= "Mostrar mensaje de alerta y temporizador cuando empiece un beneficio del mundo en tu reino"
+L.RoleSpecAlert				= "Mostrar alerta al unirte a una banda cuando tu especialización de botín no coincida con tu especialización actual"
+L.CheckGear					= "Mostrar alerta al iniciar un encuentro cuando tu nivel de equipo sea como mínimo 40 niveles menor que el de tu inventario o no tengas equipada un arma principal"
+L.WorldBossAlert			= "Mostrar alerta cuando un amigo o miembro de hermandad inicie un encuentro contra un jefe del mundo"
+L.WorldBuffAlert			= "Mostrar alerta y temporizador cuando empiece un beneficio del mundo en tu reino"
+L.RaidDiffChangedAlert		= "Mostrar alerta cuando la dificultad de la banda cambie"
+L.RaidDiffChangedRaidOnly	= "Mostrar alerta de cambio de dificultad solo cuando estés en un grupo de banda"
+L.DungeonDiffChangedAlert	= "Mostrar alerta cuando la dificultad de la mazmorra cambie"
 
 L.Area_BugAlerts			= "Opciones de alertas de informes de fallos"
-L.BadTimerAlert				= "Mostrar mensaje en el chat cuando DBM detecte un temporizador erróneo"
+L.BadTimerAlert				= "Mostrar mensaje cuando DBM detecte un temporizador erróneo"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Alertas de voz"
@@ -438,7 +444,7 @@ L.TabCategory_Filters	 	= "Filtros globales"
 L.Area_DBMFiltersSetup		= "Guía de filtros de DBM"
 L.Area_BlizzFiltersSetup	= "Guía de filtros de Blizzard"
 -- Panel: DBM Features
-L.Panel_SpamFilter			= "Funciones de DBM"
+L.Panel_SpamFilter			= "Desactivar funciones de DBM"
 
 L.Area_SpamFilter_SpecFeatures		= "Opciones de anuncios"
 L.SpamBlockNoShowAnnounce 			= "No mostrar texto ni reproducir sonido para NINGÚN anuncio general"
@@ -530,7 +536,7 @@ L.HideGuildChallengeUpdates			= "Ocultar notificaciones de desafíos de hermanda
 --L.HideVaultUnlock					= "Ocultar notificaciones de desbloqueo de la cámara"--NYI
 --Cut Scenes
 L.Area_Cinematics 					= "Bloquear cinemáticas del juego"
-L.DuringFight 						= "Bloquear escenas de corte durante encuentros de jefes" --uses explicite IsEncounterInProgress check
+L.DuringFight 						= "Bloquear escenas de corte durante encuentros de jefe" --uses explicite IsEncounterInProgress check
 L.InstanceAnywhere 					= "Bloquear escenas de corte no relacionadas con combate en mazmorras o bandas"
 L.NonInstanceAnywhere 				= "¡PELIGRO! Bloquear escenas de corte en el mundo abierto (NO recomendado)"
 L.OnlyAfterSeen 					= "Solo bloquear escenas de corte después de haberlas visto al menos una vez"
@@ -538,13 +544,14 @@ L.OnlyAfterSeen 					= "Solo bloquear escenas de corte después de haberlas vist
 L.Area_Sound 						= "Bloquear sonidos del juego"
 L.DisableSFX 						= "Desactivar canal de efectos de sonido durante encuentros de jefe"
 L.DisableAmbiance 					= "Desactivar canal de ambiente durante encuentros de jefe"
-L.DisableMusic 						= "Desactivar canal de música durante encuentros de jefes"
+L.DisableMusic 						= "Desactivar canal de música durante encuentros de jefe"
 --Other
 L.Area_HideBlizzard 				= "Desactivar y ocultar otras molestias de Blizzard"
 L.HideBossEmoteFrame 				= "Ocultar marco de emociones durante encuentros de jefe"
 L.HideWatchFrame 					= "Ocultar marco de seguimiento en jefes si no se siguen logros ni en Mítico+"
-L.HideQuestTooltips 				= "Ocultar objetivos de misión de las descripciones emergentes durante encuentros de jefes" --Currently hidden (NYI)
+L.HideQuestTooltips 				= "Ocultar objetivos de misión de las descripciones emergentes durante encuentros de jefe" --Currently hidden (NYI)
 L.HideTooltips 						= "Ocultar las descripciones emergentes durante encuentros de jefe"
+L.HideBlizzardTimeline				= "Ocultar la línea de tiempo de la banda de Blizzard durante los encuentros de jefe"
 
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "Controles de líder de banda"
@@ -578,12 +585,13 @@ L.TabFooter							= "Todas las opciones en este panel solo funcionan si eres lí
 
 -- Panel: Privacy
 L.Tab_Privacy 				= "Controles de privacidad"
+L.Tab_PrivacyMidnight		= "Privacidad de comunicaciones"
 L.Area_WhisperMessages		= "Opciones de susurros"
 L.AutoRespond 				= "Responder automáticamente a susurros en encuentro"
 L.WhisperStats 				= "Incluir estadísticas de victoria y derrota en las respuestas automáticas a susurros"
-L.DisableStatusWhisper 		= "Desactivar susurros automáticos de estado de encuentro para todos (requiere ser líder)"
+L.DisableStatusWhisper 		= "Desactivar susurros automáticos de encuentro para todos (requiere ser líder)"
 L.Area_SyncMessages			= "Opciones de sincronización de addons"
-L.DisableGuildStatus 		= "Desactivar mensajes de hermandad de estado de encuentro para todos (requiere ser líder)"
+L.DisableGuildStatus 		= "Desactivar mensajes de hermandad de encuentro para todos (requiere ser líder)"
 L.EnableWBSharing 			= "Compartir inicios y victorias de jefes del mundo con hermandad y amigos de Battle.net en tu mismo reino"
 
 -- Tab: Frames & Integrations
@@ -599,27 +607,27 @@ L.Panel_Range				= "Marco de distancia"
 L.Panel_Nameplates			= "Placas de nombre"
 L.Plater_Config				= "Abrir configuración de Plater"
 L.ThreatPlates_Config		= "Abrir configuración de Threat Plates"
-L.Area_NPStyle				= "Contorno (solo cuando DBM controla las placas de nombre)"
+L.Area_NPStyle				= "Estilo (solo cuando DBM controla las placas de nombre)"
 L.NPAuraText				= "Mostrar texto del temporizador en los iconos de la placa de nombre"
 L.NPAuraSize				= "Tamaño del aura: %d"
-L.NPIcon_BarOffSetX 		= "Desplazamiento del icono X: %d"
-L.NPIcon_BarOffSetY 		= "Desplazamiento del icono Y: %d"
-L.NPIcon_GrowthDirection 	= "Dirección de crecimiento del icono"
+L.NPIcon_BarOffSetX 		= "Desplazamiento X: %d"
+L.NPIcon_BarOffSetY 		= "Desplazamiento Y: %d"
+L.NPIcon_GrowthDirection 	= "Dirección de crecimiento"
 L.NPIcon_Spacing		 	= "Espaciado del icono: %d"
 L.NPIcon_MaxTextLen		 	= "Longitud del texto máx.: %d"
-L.NPIconAnchorPoint			= "Punto de anclaje del icono"
+L.NPIconAnchorPoint			= "Punto de anclaje"
 L.NPDemo					= "Probar (Acercarse de placas de nombre)"
-L.FontTypeTimer				= "Seleccionar fuente del temporizador"
-L.FontTypeText				= "Seleccionar fuente de texto"
+L.FontTypeTimer				= "Fuente del temporizador"
+L.FontTypeText				= "Fuente de texto"
 
 L.Area_NPGlow				= "Resplandor (Nota: Solo configura el resplandor cuando DBM está gestionando las placas de nombre.)"
-L.NPIcon_GlowBehavior 		= "Comportamiento de resplandor del icono"
-L.NPIcon_CastGlowBehavior 	= "Comportamiento del resplandor del icono de lanzamiento"
+L.NPIcon_GlowBehavior 		= "Resplandor del icono"
+L.NPIcon_CastGlowBehavior 	= "Resplandor del icono de lanzamiento"
 L.NPIcon_GlowNone			= "Nunca resplandecer los iconos"
 L.NPIcon_GlowImportant		= "Resplandecer iconos importantes de reutilizaciones/lanzamientos a punto de expirar"
 L.NPIcon_GlowAll			= "Resplandecer todos los iconos de reutilizaciones/lanzamientos a punto de expirar"
-L.NPIcon_GlowTypeCD			= "Tipo de resplandor del icono de reutilización"
-L.NPIcon_GlowTypeCast		= "Tipo de resplandor del icono de lanzamiento"
+L.NPIcon_GlowTypeCD			= "Resplandor de reutilización"
+L.NPIcon_GlowTypeCast		= "Resplandor de lanzamiento"
 L.NPIcon_Pixel  			= "Píxel"
 L.NPIcon_Proc  				= "Prec"
 L.NPIcon_AutoCast         	= "Lanzamiento automático"

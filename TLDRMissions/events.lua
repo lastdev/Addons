@@ -122,6 +122,7 @@ end
 local function eventHandler(self, event, ...)
     local arg1 = ...
     if event == "GARRISON_MISSION_NPC_OPENED" then
+        TLDRMissionsWODToggleButton:Hide()
         -- Shadowlands
         if arg1 == 123 then
             if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
@@ -135,7 +136,14 @@ local function eventHandler(self, event, ...)
             end
         -- WOD
         elseif arg1 == 1 then
-            addon.WODGUI:Show()
+            TLDRMissionsWODToggleButton:Show()
+            addon.WODGUI:SetParent(GarrisonMissionFrame)
+            addon.WODGUI:SetShown(addon.WODGUI:IsShown() or addon.WODdb.profile.autoShowUI)
+        elseif arg1 == 4 then
+            TLDRMissionsLegionToggleButton:Show()
+            addon.LegionGUI:SetParent(OrderHallMissionFrame)
+            addon.LegionGUI:SetFrameStrata("DIALOG")
+            addon.LegionGUI:SetShown(addon.LegionGUI:IsShown() or addon.Legiondb.profile.autoShowUI)
         end
     elseif (event == "ADDON_LOADED") then
         if _G.GarrisonLandingPageFollowerList then
@@ -143,9 +151,17 @@ local function eventHandler(self, event, ...)
 		end
         RunNextFrame(function()
             if GarrisonMissionFrame:IsShown() and (GarrisonMissionFrame.followerTypeID == 1) then
-                addon.WODGUI:Show()
+                TLDRMissionsWODToggleButton:Show()
                 addon.WODGUI:SetParent(GarrisonMissionFrame)
                 addon.WODGUI:SetFrameStrata("DIALOG")
+                addon.WODGUI:SetShown(addon.WODGUI:IsShown() or addon.WODdb.profile.autoShowUI)
+            elseif OrderHallMissionFrame:IsShown() and (OrderHallMissionFrame == 4) then
+                TLDRmissionsLegionToggleButton:Show()
+                addon.LegionGUI:SetParent(OrderHallMissionFrame)
+                addon.LegionGUI:SetFrameStrata("DIALOG")
+                addon.LegionGUI:SetShown(addon.LegionGUI:IsShown() or addon.Legiondb.profile.autoShowUI)
+            else
+                TLDRMissionsWODToggleButton:Hide()
             end
         end)
         eventFrame:UnregisterEvent("ADDON_LOADED")
@@ -171,4 +187,5 @@ eventFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 EventUtil.ContinueOnAddOnLoaded(addonName, function()
     addon:RefreshProfile()
     addon.WODGUI:RefreshProfile()
+    addon.LegionGUI:RefreshProfile()
 end)

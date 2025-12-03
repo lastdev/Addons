@@ -64,6 +64,7 @@ end
 
 function ItemProtection:CheckAndBuybackKeepItem()
     if suppressBuybackProtection then return end
+    if not self:IsProtectionEnabled() then return end
 
     -- Ignore during autosell, too much spam and we do not want to re-evaluate
     -- every item we just sold, that would double the evaluation cost for no
@@ -71,9 +72,7 @@ function ItemProtection:CheckAndBuybackKeepItem()
     -- vendor is selling, and if that happens, welp, we can only do so much
     -- to protect the player from themselves.
     local merchant = Addon:GetFeature("Merchant")
-    if merchant and merchant:IsAutoSelling() then return false end
-
-    if not self:IsProtectionEnabled() then return false end
+    if merchant and merchant:IsAutoSelling() then return end
 
 
     local data = C_TooltipInfo.GetBuybackItem(GetNumBuybackItems())

@@ -1,6 +1,6 @@
 local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
-HandyNotes_Draenor.nodes[535] = {
+HandyNotes_Draenor.Nodes[535] = {
     [36509610] = { 535, "34182", "Aarko's Family Treasure", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "117567" },
     [62083238] = { 535, "34236", "Amethyl Crystal", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "116131" },
     [81843494] = { 535, "34260", "Aruuna Mining Cart", nil, HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "109118" },

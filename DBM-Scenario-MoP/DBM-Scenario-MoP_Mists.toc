@@ -1,4 +1,4 @@
-## Interface: 50501
+## Interface: 50501, 50502
 ## X-Min-Interface: 50500
 ## Category: DBM
 
@@ -34,7 +34,7 @@
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
-## Version: r182
+## Version: r183
 
 localization.en.lua
 localization.kr.lua

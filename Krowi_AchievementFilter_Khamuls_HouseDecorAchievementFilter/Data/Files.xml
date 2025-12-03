@@ -1,0 +1,8 @@
+<Ui>
+    <Script file="TheWarWithin.lua" />
+    <Script file="Dragonflight.lua" />
+    <Script file="Shadowlands.lua" />
+    <Script file="BattleForAzeroth.lua" />
+    <Script file="Legacy.lua" />
+    <Script file="PvP.lua" />
+</Ui>

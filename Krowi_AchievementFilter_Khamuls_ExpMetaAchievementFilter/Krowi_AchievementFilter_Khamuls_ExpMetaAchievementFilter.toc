@@ -1,6 +1,6 @@
-## Interface: 110200
+## Interface: 110207
 ## Title: Krowi's |cFF1D92C2AF|r - Khamuls Expansion Meta Achievement Filters
-## Version: 1.1.6
+## Version: 1.2.3
 ## Author: Khamûl-Antonidas
 ## X-Email: neytiri-amanthul@gmx.at
 ## Notes: Additional Filters for Krowi's Achievement Filter Addon, providing lists for expansion meta achievements

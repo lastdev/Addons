@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(194, "DBM-Raids-Cata", 2, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20241103125714")
+mod:SetRevision("20250926000825")
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
 mod:SetZone(720)
@@ -188,6 +188,7 @@ end
 
 do
 	local initiate = DBM:EJ_GetSectionInfo(2834)
+	initiate = string.lower(initiate or "")
 	local intiateTimers = {27, 31, 31, 21, 21, 21}
 	local intiateHeroicTimers = {27, 22, 63, 21, 21, 40}
 	local initiateSpawns = {
@@ -205,7 +206,7 @@ do
 			timerMoltingCD:Cancel()
 			timerPhaseChange:Start(33, 3)
 			self.vb.initiatesSpawned = 0
-		elseif mob == initiate then--initiates yell when they spawn, and no other time
+		elseif mob and string.lower(mob) == initiate then--initiates yell when they spawn, and no other time
 			self.vb.initiatesSpawned = self.vb.initiatesSpawned + 1
 			warnNewInitiate:Show(initiateSpawns[self.vb.initiatesSpawned])
 			if self.vb.initiatesSpawned == 6 then return end--All 6 are spawned, lets not create any timers.

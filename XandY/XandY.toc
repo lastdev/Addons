@@ -1,26 +1,26 @@
-## Interface: 110107
-## Version: 2.58
+## Interface: 110205
+## Version: 2.65
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_10_dungeonjewelry_explorer_trinket_1compass_color1
-## Title: X and Y
-## Title-deDE: X und Y
-## Title-esES: X y Y
-## Title-esMX: X y Y
-## Title-frFR: X et Y
-## Title-itIT: X e Y
-## Title-koKR: X 와 Y
-## Title-ptBR: X e Y
-## Title-ptPT: X e Y
-## Title-ruRU: X и Y
-## Title-zhCN: X 和 Y
-## Title-zhTW: X 和 Y
-## Notes: |cFFF4A460Adds |cFFD2691EMap Coordinates|cFFF4A460 for the World Map and Minimap
+## Title: |cFFD2691EX and Y
+## Title-deDE: |cFFD2691EX und Y
+## Title-esES: |cFFD2691EX y Y
+## Title-esMX: |cFFD2691EX y Y
+## Title-frFR: |cFFD2691EX et Y
+## Title-itIT: |cFFD2691EX e Y
+## Title-koKR: |cFFD2691EX 와 Y
+## Title-ptBR: |cFFD2691EX e Y
+## Title-ptPT: |cFFD2691EX e Y
+## Title-ruRU: |cFFD2691EX и Y
+## Title-zhCN: |cFFD2691EX 和 Y
+## Title-zhTW: |cFFD2691EX 和 Y
+## Notes: |cFFF4A460Adds |cFFD2691EMap Coordinates|cFFF4A460 to the World Map and Minimap
 ## Notes-deDE: |cFFD2691EKarte Koordinaten|cFFF4A460 für die Weltkarte und Mini-Karte
 ## Notes-esES: |cFFD2691EMapa Coordenadas|cFFF4A460 para el Mapa del Mundo y Minimapa
 ## Notes-esMX: |cFFD2691EMapa Coordenadas|cFFF4A460 para el Mapa del Mundo y Minimapa
 ## Notes-frFR: |cFFD2691ECarte Coordonnées|cFFF4A460 de la Carte du Monde et Mini Map
 ## Notes-itIT: |cFFD2691ECoordinate della mappa|cFFF4A460 per la Mappa del Mondo e Mini Map
-## Notes-koKR: 지도는 세계지도와 미니 맵에 대한 좌표
+## Notes-koKR: |cFFF4A460세계 지도와 미니맵에 대한 |cFFD2691E지도 좌표를 |cFFF4A460추가합니다.
 ## Notes-ptBR: |cFFD2691EMapa Coordenadas|cFFF4A460 para o Mapa do Mundo e Mini Map
 ## Notes-ptPT: |cFFD2691EMapa Coordenadas|cFFF4A460 para o Mapa do Mundo e Mini Map
 ## Notes-ruRU: |cFFD2691EКарта Координаты|cFFF4A460 для Карты мира и Mini Map

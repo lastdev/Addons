@@ -1,12 +1,12 @@
 ## X-Flavor: retail
 ## X-Expansion: TWW
-## Interface: 110200, 110205
-## Version: 1.7.5
+## Interface: 110205, 110207, 120000
+## Version: 1.8.1
 
 ## Title: Plumber
 
-## Notes: Provides a variety of quality-of-life features.|nMore details in the AddOn Settings.
-## Notes-zhCN: 提供多种便捷功能。|n请前往插件设置来查看更多信息。
+## Notes: Provides a variety of quality-of-life features.|n|nOpen Settings with Slash Command:|n/plumber
+## Notes-zhCN: 提供多种便捷功能。|n|n使用此命令打开设置界面|n/plumber
 
 ## Author: Peterodox
 ## SavedVariables: PlumberDB, PlumberDevData, PlumberStorage
@@ -29,8 +29,9 @@ Modules\ScenarioTracker.lua
 #Modules\SuperTrack.xml
 
 #Modules\DevTool.lua
+#Modules\DevTool_HyperlinkEditor.lua
 
-ControlCenter.lua
+Modules\ControlCenter\ControlCenter.xml
 
 Modules\GossipFrameMedal.lua
 Modules\BackpackItemTracker.lua
@@ -53,6 +54,10 @@ Modules\MerchantPrice.lua
 Modules\BossBanner.lua
 Modules\SoftTargetName.lua
 
+
+Modules\Beta\Beta.xml
+
+
 #TWW
 Modules\DelvesScenario.lua
 Modules\DelvesDashboard.lua
@@ -73,7 +78,13 @@ Modules\Macros.lua
 Modules\ProfessionsBook.lua
 Modules\ExpansionLandingPage\ExpansionLandingPage_TWW.xml
 Modules\BlizzFix_ModelLoading.lua
-#Modules\Timerunning\LegionRemix.xml
+Modules\Timerunning\LegionRemix.xml
+Modules\HolidayDungeon.lua
+Modules\QueueStatus.lua
+Modules\RaidCheck\RaidCheck.xml
+Modules\TransmogUtil.lua
+
+#Modules\MerchantUI\MerchantUI.xml
 
 #Modules\DruidModelFix.lua
 #Modules\MovieSubtitle.lua
@@ -81,7 +92,7 @@ Modules\BlizzFix_ModelLoading.lua
 #Modules\SecretOfAzeroth.lua
 #Modules\AddonList.lua
 #Modules\BlizzFix_WardrobeTrackingHelpTip.lua
-#Modules\WoWAnniversary.lua
+Modules\WoWAnniversary.lua
 #Modules\Navigator_Dreamseed.lua
 #Modules\AccountStore.lua
 #Modules\MinimapMouseover.lua

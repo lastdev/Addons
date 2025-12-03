@@ -1,7 +1,7 @@
-## Interface: 110200
+## Interface: 110205
 ## Title: Angleur_Underlight
 ## Notes: Automatic Aquatic Form for ALL CLASSES. Get Angleur as well for improved functionality!
-## Version: 1.1
+## Version: 1.2
 ## Author: LegolandoBloom
 ## SavedVariables: AngleurUnderlight_FirstInstall, AngleurUnderlightConfig
 ## SavedVariablesPerCharacter: AngleurUnderlight_MainFishingRod

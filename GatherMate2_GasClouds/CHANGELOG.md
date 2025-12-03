@@ -1,6 +1,6 @@
 # GatherMate2 <Gas Clouds>
 
-## [2.15](https://github.com/michaelnpsp/GatherMate2GasClouds/tree/2.15) (2025-07-19)
-[Full Changelog](https://github.com/michaelnpsp/GatherMate2GasClouds/compare/2.14...2.15) [Previous Releases](https://github.com/michaelnpsp/GatherMate2GasClouds/releases)
+## [2.19](https://github.com/michaelnpsp/GatherMate2GasClouds/tree/2.19) (2025-10-29)
+[Full Changelog](https://github.com/michaelnpsp/GatherMate2GasClouds/compare/2.18...2.19) [Previous Releases](https://github.com/michaelnpsp/GatherMate2GasClouds/releases)
 
-- BugFix: burning crusade gas nodes not visible in Pandaria Classic.  
+- Pandaria TOC Updated  

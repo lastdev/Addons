@@ -223,6 +223,7 @@ Off Screen]=] ] = "Aura está fuera de la pantalla"
 	L["Circular Texture %s"] = "Textura circular de %s"
 	L["Clear Debug Logs"] = "Borrar registros de depuración"
 	L["Clear Saved Data"] = "Borrar datos guardados"
+	L["Click to replace the name with %s."] = "Haz clic para reemplazar el nombre con %s."
 	L["Clip Overlays"] = "Superposiciones recortadas"
 	L["Clipped by Foreground"] = "Recortado por el primer plano"
 	L["Close"] = "Cerrar"
@@ -432,6 +433,7 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Group Settings"] = "Configuración de grupo"
 	L["Hawk"] = "Halcón"
 	L["Help"] = "Ayuda"
+	L["Hide After"] = "Ocultar después"
 	L["Hide Background"] = "Ocultar fondo"
 	L["Hide Glows applied by this aura"] = "Ocultar resplandor aplicado por esta aura"
 	L["Hide on"] = "Ocultar en"
@@ -522,6 +524,7 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Magnetically Align"] = "Alineación magnética"
 	L["Main"] = "Principal"
 	L["Manual with %i/%i"] = "Manual con %i/%i"
+	L["Matches %s spells"] = "Coincide con los hechizos de %s"
 	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "Coincide con la altura de una barra horizontal o la anchura de una barra vertical."
 	L["Max"] = "Máx."
 	L["Max Length"] = "Longitud máx."
@@ -620,6 +623,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Ocurrencia d
 	L["Paste Trigger Settings"] = "Pegar configuración del activador"
 	L["Places a tick on the bar"] = "Coloca una marca en la barra"
 	L["Play Sound"] = "Reproducir sonido"
+	L["Player Spells found:"] = "Hechizos de jugador encontrados:"
 	L["Portrait Zoom"] = "Zoom del retrato"
 	L["Position and Size Settings"] = "Configuración de posición y tamaño"
 	L["Preferred Match"] = "Coincidencia preferida"
@@ -753,6 +757,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Ocurrencia d
 	L["Spark Texture"] = "Textura de chispa"
 	L["Specific Currency ID"] = "ID de moneda específica"
 	L["Spell Selection Filters"] = "Filtros de selección de hechizo"
+	L["Spells found:"] = "Hechizos encontrados:"
 	L["Stack Info"] = "Información de Acumulaciones"
 	L["Stacks - The number of stacks of an aura (usually)"] = "Acumulaciones - El número de acumulaciones de un aura (usualmente)"
 	L["Standby"] = "En espera"
@@ -765,8 +770,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Ocurrencia d
 	L["Stop Motion %s"] = "Stop motion de %"
 	L["Stop Motion Settings"] = "Configuración de Stop Motion"
 	L["Stop Sound"] = "Detener sonido"
-	--[[Translation missing --]]
-	L["Stretched by Foreground"] = "Stretched by Foreground"
+	L["Stretched by Foreground"] = "Estirado por primer plano"
 	L["Sub Elements"] = "Subelementos"
 	L["Sub Option %i"] = "Subopción %i"
 	L["Subevent"] = "Subevento"
@@ -791,6 +795,10 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "Ocurrencia d
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = [=[La duración de la animación en segundos. La animación de finalización no comienza a reproducirse hasta que la visualización normalmente estaría oculta.
 ]=]
 	L["The group and all direct children will share the same base frame level."] = "El grupo y todos los hijos directos compartirán el mismo nivel de marco base."
+	--[[Translation missing --]]
+	L["The Multi Target mode is less reliable and not recommended."] = "The Multi Target mode is less reliable and not recommended."
+	--[[Translation missing --]]
+	L["The Multi Target mode requires a name or spell id filter"] = "The Multi Target mode requires a name or spell id filter"
 	L["The trigger number is optional. When no trigger number is specified, the trigger selected via dynamic information will be used."] = "El número de disparador es opcional. Cuando no se especifica un número de disparador, se usará el disparador seleccionado a través de información dinámica."
 	L["The type of trigger"] = "El tipo de activador"
 	L["The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"] = "La versión del addon WeakAuras Options %s no coincide con la versión de WeakAuras %s. Si actualizaste el addon mientras el juego estaba en ejecución, intenta reiniciar World of Warcraft. De lo contrario, intenta reinstalar WeakAuras."
@@ -862,8 +870,8 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Url: %s"] = "URL: %s"
 	L["Use Display Info Id"] = "Utilizar ID de información de la visualización"
 	L["Use SetTransform"] = "Utilizar SetTransform"
-	L["Used in auras:"] = "Utilizado en auras:"
 	L["Used in Auras:"] = "Utilizado en auras:"
+	L["Used in auras:"] = "Utilizado en auras:"
 	L["Uses Texture Coordinates to rotate the texture."] = "Utiliza coordenadas de textura para rotar la textura."
 	L["Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."] = "Utiliza UnitIsVisible() para comprobar si el cliente del juego ha cargado un objeto para esta unidad. Esta distancia es de unos 100 metros. Esto se encuesta cada segundo."
 	L["Value"] = "Valor"
@@ -878,10 +886,10 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["Vertical Bar"] = "Barra vertical"
 	L["View"] = "Ver"
 	L["View custom code"] = "Ver código personalizado"
-	--[[Translation missing --]]
-	L["Voice Settings"] = "Voice Settings"
+	L["Voice Settings"] = "Configuración de voz"
 	L["We thank"] = "Agradecemos a"
 	L["WeakAuras %s on WoW %s"] = "WeakAuras %s en WoW %s"
+	L["WeakAuras recommends using spell ids instead of names. Spell ids are automatically localized."] = "WeakAuras recomienda usar IDs de hechizos en lugar de nombres. Los IDs de hechizos se localizan automáticamente."
 	L["What do you want to do?"] = "¿Qué es lo que quieres hacer?"
 	L["Whole Area"] = "Área completa"
 	L["wrapping"] = "envolviendo"
@@ -897,6 +905,11 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["You already have this group/aura. Importing will create a duplicate."] = "Ya tienes este grupo/aura. La importación creará un duplicado."
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "Estás a punto de eliminar aura(s) %d. |cFFFF0000¡Esto no se puede deshacer!|r ¿Te gustarías continuar?"
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "Estás a punto de eliminar un activador. |cFFFF0000¡Esto no se puede deshacer!|r ¿Te gustaría continuar?"
+	L[ [=[You are about to Import an Aura with custom Lua code on a Hardcore server.
+
+|cFFFF0000There is a risk the custom code could be used to kill your hardcore character!|r
+
+Would you like to continue?]=] ] = "Estás a punto de importar un aura con código Lua personalizado en un servidor Hardcore. |cFFFF0000¡Existe el riesgo de que el código personalizado pueda usarse para matar a tu personaje hardcore!|r ¿Deseas continuar?"
 	L[ [=[You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.
 
 WeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered.]=] ] = "Puedes agregar aquí una lista de valores de estado separados por comas en los que (cuando se modifican) WeakAuras también debería ejecutar el código anclaje. WeakAuras siempre ejecutará el código de orden personalizado si incluye \"cambiado\" en esta lista, o cuando se agrega, se elimina, o se reordena una región"

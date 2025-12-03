@@ -36,6 +36,7 @@ L.TEXT_ONLY_RANGE			= "El marco de distancia está limitado a texto únicamente 
 L.NO_RANGE					= "No se puede usar el radar de distancia en estancias. Se procederá a usar el marco de distancia por texto."
 L.NO_ARROW					= "No se puede usar la flecha en estancias."
 L.NO_HUD					= "No se puede usar el indicador en pantalla en estancias."
+L.NO_COMMS					= "La comunicación de addons no se puede usar durante encuentros o mazmorras M+ activas. Usa este comando nuevamente después de que termine el encuentro o la mazmorra."
 
 L.DYNAMIC_DIFFICULTY_CLUMP	= L.DBM .. " ha desactivado el marco de distancia dinámico para este combate debido a la falta de información sobre las diferencias según el número de jugadores."
 L.DYNAMIC_ADD_COUNT			= L.DBM .. " ha desactivado los anuncios de esbirros para este combate debido a la falta de información sobre las diferencias según el número de jugadores."
@@ -53,7 +54,7 @@ L.COMBAT_STARTED				= "Encuentro de %s iniciado. ¡Buena suerte!"
 L.COMBAT_STARTED_IN_PROGRESS	= "Te has unido al encuentro de %s mientras estaba en curso. ¡Buena suerte!"
 L.GUILD_COMBAT_STARTED			= "El encuentro de %s has sido iniciado por el grupo de hermandad de %s."
 L.SCENARIO_STARTED				= "%s iniciado. ¡Buena suerte!"
-L.SCENARIO_STARTED_IN_PROGRESS	= "Te has unido al escenario de %s mientras estaba en curso. ¡Buena suerte!"
+L.SCENARIO_STARTED_IN_PROGRESS	= "Te has unido a %s mientras estaba en curso. ¡Buena suerte!"
 L.BOSS_DOWN						= "¡%s ha sido derrotado en %s!"
 L.BOSS_DOWN_I					= "¡%s ha sido derrotado! Tienes %d victorias en total."
 L.BOSS_DOWN_L					= "¡%s ha sido derrotado en %s! Tu última victoria fue en %s, y tu récord actual es %s. Tienes %d victorias en total."
@@ -84,7 +85,8 @@ L.LOWHEALTH_WARNING			= "Salud baja (%d por ciento de salud restante), reproduci
 L.ENTERING_COMBAT			= "Entrando en combate"
 L.LEAVING_COMBAT			= "Saliendo del combate"
 
-L.COMBAT_STARTED_AI_TIMER	= "Mi unidad central es un procesador de red neuronal: una máquina capaz de aprender. (Este encuentro usará la IA de temporizadores para generar temporizadores aproximados.)"
+L.RAID_DIFFICULTY_CHANGED		= "La dificultad de la banda se ha establecido en %s."
+L.DUNGEON_DIFFICULTY_CHANGED	= "La dificultad de la mazmorra se ha establecido en %s."
 
 L.PROFILE_NOT_FOUND				= "<" .. L.DBM .. "> Tu perfil actual está corrupto. " .. L.DBM .. " cargará el perfil 'Predeterminado'."
 L.PROFILE_CREATED				= "Se ha creado el perfil '%s'."
@@ -135,15 +137,15 @@ L.TIMER_FORMAT				= "%d |4minuto:minutos; y %.2f |4segundo:segundos;"
 
 L.MIN						= "min"
 L.MIN_FMT					= "%d min"
-L.SEC						= "s"
-L.SEC_FMT					= "%s s"
+L.SEC						= "seg"
+L.SEC_FMT					= "%s seg"
 
 L.GENERIC_WARNING_OTHERS	= "y otro"
 L.GENERIC_WARNING_OTHERS2	= "y otros %d"
 L.GENERIC_WARNING_BERSERK	= "Rabia en %s %s"
 L.GENERIC_TIMER_BERSERK		= "Rabia"
 L.OPTION_TIMER_BERSERK		= "Mostrar tiempo restante para $spell:26662"
-L.BAD						= "Daño"
+L.BAD						= "Dañino"
 
 L.OPTION_CATEGORY_TIMERS			= "Barras"
 --Sub cats for "announce" object
@@ -299,8 +301,8 @@ L.PULL_TIME_TOO_LONG			= "El temporizador de inicio no puede durar más de 60 se
 
 L.BREAK_USAGE				= "El temporizador de descanso no puede durar más de 60 minutos. Asegúrate de que has escrito el tiempo en minutos y no en segundos."
 L.BREAK_START				= "El descanso inicia ahora. ¡Tienes %s! (Enviado por %s)"
-L.BREAK_MIN					= "¡El descanso termina en %s |4minuto:minutos!"
-L.BREAK_SEC					= "¡El descanso termina en %s |4segundo:segundos!"
+L.BREAK_MIN					= "¡El descanso termina en %s |4minuto:minutos;!"
+L.BREAK_SEC					= "¡El descanso termina en %s |4segundo:segundos;!"
 L.TIMER_BREAK				= "¡Toca descanso!"
 L.ANNOUNCE_BREAK_OVER		= "El descanso ha terminado."
 

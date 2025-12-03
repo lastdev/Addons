@@ -314,10 +314,18 @@ hooksecurefunc("UIParentLoadAddOn", function(name)
 
     if C_AddOns.IsAddOnLoaded("ElvUI") then
       backButton:SetSize(25, 25)
-      backButton:SetPoint("BOTTOMLEFT", AchievementFrameAchievements, "TOPLEFT", -1, -3)
+      if C_AddOns.IsAddOnLoaded("Krowi_AchievementFilter") then
+        backButton:SetPoint("BOTTOMRIGHT", AchievementFrameCategories, "TOPRIGHT", 0, -1)
+      else
+        backButton:SetPoint("BOTTOMLEFT", AchievementFrameAchievements, "TOPLEFT", -1, -3)
+      end
     else
       backButton:SetSize(29, 29)
-      backButton:SetPoint("LEFT", buttonAnchorFrame, "RIGHT", 10, 1)
+      if C_AddOns.IsAddOnLoaded("Krowi_AchievementFilter") then
+        backButton:SetPoint("BOTTOM", KrowiAF_AchievementFrameBrowsingHistoryPrevAchievementButton, "TOP", 0, -5)
+      else
+        backButton:SetPoint("LEFT", buttonAnchorFrame, "RIGHT", 10, 1)
+      end
     end
 
     backButton:SetScript("OnClick", function()

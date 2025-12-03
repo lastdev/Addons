@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1731, "DBM-Raids-Legion", 3, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20250209043815")
+mod:SetRevision("20251025113629")
 mod:SetCreatureID(104288)
 mod:SetEncounterID(1867)
 mod:SetUsedIcons(1)
@@ -217,7 +217,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnArcingBonds:Show()
 			specWarnArcingBonds:Play("linegather")
 		end
-	elseif spellId == 206641 then
+	elseif spellId == 206641 and not (self:IsRemix() or self:IsTrivial()) then
 		local amount = args.amount or 1
 		if amount >= 2 then
 			if not args:IsPlayer() and not UnitIsDeadOrGhost("player") then

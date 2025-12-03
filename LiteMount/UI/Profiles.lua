@@ -33,7 +33,8 @@ StaticPopupDialogs["LM_OPTIONS_NEW_PROFILE"] = {
             end
         end,
     EditBoxOnEnterPressed = function (self)
-            local button1 = self.button1 or self:GetButton1()
+            local parent = self:GetParent()
+            local button1 = parent.button1 or parent:GetButton1()
             if button1:IsEnabled() then
                 StaticPopup_OnClick(self:GetParent(), 1)
             end
@@ -43,7 +44,8 @@ StaticPopupDialogs["LM_OPTIONS_NEW_PROFILE"] = {
         end,
     EditBoxOnTextChanged = function (self)
             local text = self:GetText()
-            local button1 = self.button1 or self:GetButton1()
+            local parent = self:GetParent()
+            local button1 = parent.button1 or parent:GetButton1()
             if text ~= "" and not LM.db.profiles[text] then
                 button1:Enable()
             else
@@ -96,7 +98,7 @@ local function ClickResetProfile(self)
 end
 
 local function ClickImportProfile(self, arg1, arg2, check)
-    LiteMountOptionsPanel_PopOver(LiteMountProfilesPanel, LiteMountProfileImport)
+    LiteMountOptionsPanel_PopOver(LiteMountProfileImport, LiteMountProfilesPanel)
 end
 
 
@@ -162,7 +164,7 @@ function ExportProfileMixin.Generate(owner, rootDescription)
 
     local function OnClick(data)
         LiteMountProfileExport:SetProfile(data)
-        LiteMountOptionsPanel_PopOver(LiteMountProfilesPanel, LiteMountProfileExport)
+        LiteMountOptionsPanel_PopOver(LiteMountProfileExport, LiteMountProfilesPanel)
     end
 
     for _, p in ipairs(dbProfiles) do
@@ -215,6 +217,4 @@ function LiteMountProfilesPanelMixin:OnLoad()
     self.ExportProfile:SetScript("OnClick", OnClick)
 
     self.ImportProfile:SetScript("OnClick", ClickImportProfile)
-
-    LiteMountOptionsPanel_OnLoad(self)
 end

@@ -1,11 +1,11 @@
-## Interface: 110200
+## Interface: 110205
 ## Title: TL;DR Missions
-## Version: 11.2-005
+## Version: 11.2-011
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
 ## SavedVariablesPerCharacter: TLDRMissionsLogging
-## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache, TLDRMissionsWODProfiles
+## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache, TLDRMissionsWODProfiles, TLDRMissionsLegionProfiles
 ## X-Curse-Project-ID: 602487
 ## IconTexture: Interface\Icons\Spell_AnimaBastion_Orb
 ## LoadOnDemand: 1
@@ -61,6 +61,11 @@ Draenor\missions.lua
 Draenor\combinations.lua
 Draenor\simulation.lua
 Draenor\profiles.lua
+Draenor\reorder.lua
+
+Legion\gui.lua
+Legion\guihandlers.lua
+Legion\profiles.lua
 
 Shadowlands\caching.lua
 Shadowlands\combinations.lua

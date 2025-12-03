@@ -417,7 +417,7 @@ L["Bountiful Delves Rep Tooltip"] = "Abrir um Baú Abundante tem uma chance de a
 L["Warband Weekly Reward Tooltip"] = "Sua Warband só pode receber esta recompensa uma vez por semana.";
 L["Completed"] = CRITERIA_COMPLETED or "Concluído";
 L["Filter Hide Completed Format"] = "Ocultar Concluídos (%d)";
-L["Weeky Reset Format"] = "Reset semanal: %s";
+L["Weekly Reset Format"] = "Reset semanal: %s";
 
 
 --Generic
@@ -460,6 +460,9 @@ L["Completed CHETT List"] = "Lista da C.H.A.T.A. Concluída";
 L["Restored Coffer Key"] = "Chave de Cofre Restaurada";
 L["Coffer Key Shard"] = "Estilhaço de Chave de Cofre";
 L["Epoch Mementos"] = "Lembrança das Eras";
+L["Timeless Scrolls"] = "Pergaminho Perene";
+
+L["CONFIRM_PURCHASE_NONREFUNDABLE_ITEM"] = "Tem certeza de que deseja trocar %s pelo item a seguir?\n\n|cffff2020Esta compra não é reembolsável.|r\n %s";
 
 
 --Map Pin Filter Name (name should be plural)
@@ -469,3 +472,5 @@ L["Special Assignment"] = "Designação especial";
 
 L["Match Pattern Rep 1"] = "A Reputação do seu Bando de Guerra com (.+) aumentou em ([%d%,]+)";   --FACTION_STANDING_INCREASED_ACCOUNT_WIDE
 L["Match Pattern Rep 2"] = "Reputação com (.+) aumentou em ([%d%,]+)";   --FACTION_STANDING_INCREASED
+
+L["Match Pattern Transmog Set Partially Known"] = "^Contém (%d+) ";   --TRANSMOG_SET_PARTIALLY_KNOWN_CLASS

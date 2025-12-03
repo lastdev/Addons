@@ -31,6 +31,7 @@ difficulties.statVarTable = {
 	["quest"] = "follower",--For now, unless a conflict arises
 	["follower"] = "follower",
 	["story"] = "story",
+	["lorewalking"] = "lorewalking",
 	["normal5"] = "normal",
 	["heroic5"] = "heroic",
 	["challenge5"] = "challenge",
@@ -56,7 +57,7 @@ difficulties.statVarTable = {
 	["loyaltyscenario"] = "heroic",
 	["wisdomscenario"] = "mythic",
 	["humilityscenario"] = "challenge",
-	--Legacy
+	--Legacy/Classic
 	["lfr25"] = "lfr25",
 	["normal10"] = "normal",
 	["normal20"] = "normal",
@@ -96,6 +97,7 @@ if private.isRetail then
 		[2296] = {60, 3}, [2450] = {60, 3}, [2481] = {60, 3},--Shadowlands Raids (yes, only 3 kekw, seconded)
 		[2522] = {70, 3}, [2569] = {70, 3}, [2549] = {70, 3},--Dragonflight Raids
 		[2657] = {80, 3}, [2792] = {80, 3}, [2769] = {80, 3}, [2810] = {80, 3},--War Within Raids
+		[2912] = {90, 3}, [2939] = {90, 3}, [2913] = {90, 3},--Midnight Raids
 		--Dungeons
 		[48] = {30, 2}, [230] = {30, 2}, [429] = {30, 2}, [389] = {30, 2}, [34] = {30, 2},--Classic Dungeons
 		[540] = {30, 2}, [558] = {30, 2}, [556] = {30, 2}, [555] = {30, 2}, [542] = {30, 2}, [546] = {30, 2}, [545] = {30, 2}, [547] = {30, 2}, [553] = {30, 2}, [554] = {30, 2}, [552] = {30, 2}, [557] = {30, 2}, [269] = {30, 2}, [560] = {30, 2}, [543] = {30, 2}, [585] = {30, 2},--BC Dungeons
@@ -108,8 +110,10 @@ if private.isRetail then
 		[2286] = {60, 2}, [2289] = {60, 2}, [2290] = {60, 2}, [2287] = {60, 2}, [2285] = {60, 2}, [2293] = {60, 2}, [2291] = {60, 2}, [2284] = {60, 2}, [2441] = {60, 2},--Shadowlands Dungeons
 		[2520] = {70, 2}, [2451] = {70, 2}, [2516] = {70, 2}, [2519] = {70, 2}, [2526] = {70, 2}, [2515] = {70, 2}, [2521] = {70, 2}, [2527] = {70, 2}, [2579] = {70, 2},--Dragonflight Dungeons
 		[2652] = {80, 2}, [2662] = {80, 2}, [2660] = {80, 2}, [2669] = {80, 2}, [2651] = {80, 2}, [2649] = {80, 2}, [2648] = {80, 2}, [2661] = {80, 2}, [2773] = {80, 2}, [2830] = {80, 2},--War Within Dungeons
+		[2805] = {90, 2}, [2811] = {90, 2}, [2813] = {90, 2}, [2825] = {90, 2}, [2859] = {90, 2}, [2874] = {90, 2}, [2915] = {90, 2}, [2923] = {90, 2},--Midnight Dungeons
 		--Delves
 		[2664] = {80, 4}, [2679] = {80, 4}, [2680] = {80, 4}, [2681] = {80, 4}, [2682] = {80, 4}, [2683] = {80, 4}, [2684] = {80, 4}, [2685] = {80, 4}, [2686] = {80, 4}, [2687] = {80, 4}, [2688] = {80, 4}, [2689] = {80, 4}, [2690] = {80, 4}, [2767] = {80, 4}, [2768] = {80, 4}, [2831] = {80, 4}, [2815] = {80, 4}, [2826] = {80, 4}, [2803] = {80, 4}, [2951] = {80, 4},--War Within Delves
+		[3003] = {90, 4}, [2961] = {90, 4}, [2962] = {90, 4}, [2963] = {90, 4}, [2964] = {90, 4}, [2953] = {90, 4}, [2933] = {90, 4}, [2952] = {90, 4}, [2979] = {90, 4}, [2965] = {90, 4}, [2966] = {90, 4},--Midnight Delves
 		--Challenges (Mage tower, visions, torghast, proving grounds)
 		[2212] = {50, 5}, [2213] = {50, 5}, [2827] = {80, 5}, [2828] = {80, 5}, [2162]= {80, 5}, [1148] = {80, 5}, [1698] = {80, 5}, [1710] = {80, 5}, [1703] = {80, 5}, [1702] = {80, 5}, [1684] = {80, 5}, [1673] = {80, 5}, [1616] = {80, 5},
 	}
@@ -221,8 +225,8 @@ function DBM:IsTrivial(customLevel)
 		return false
 	end
 	local lastInstanceMapId = DBM:GetCurrentArea()
-	--if timewalking or chromie time or challenge modes. it's always non trivial content
-	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or self:IsRemix() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 then
+	--if timewalking or chromie time or challenge modes or titanforged raid. it's always non trivial content
+	if C_PlayerInfo.IsPlayerInChromieTime and C_PlayerInfo.IsPlayerInChromieTime() or self:IsRemix() or difficulties.difficultyIndex == 24 or difficulties.difficultyIndex == 33 or difficulties.difficultyIndex == 8 or difficulties.difficultyIndex == 244 then
 		return false
 	end
 	--if current season dungeon (which blizzard auto scales up to current level on ALL difficulties now)
@@ -302,7 +306,7 @@ end
 ---Dungeons: follower, normal, heroic. Raids: LFR, normal (rescope this to exclude heroic now that heroic5 is the new mythic 0?)
 function bossModPrototype:IsEasy()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" or diff == "follower" or diff == "quest"
+	return diff == "normal" or diff == "lfr" or diff == "lfr25" or diff == "heroic5" or diff == "normal5" or diff == "follower" or diff == "quest" or diff == "lorewalking"
 end
 
 ---Dungeons: mythic, mythic+. Raids: heroic, mythic
@@ -328,6 +332,11 @@ end
 function bossModPrototype:IsStory()
 	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	return diff == "quest" or diff == "story"
+end
+
+function bossModPrototype:IsLorewalking()
+	local diff = difficulties.savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	return diff == "lorewalking"
 end
 
 ---Pretty much ANYTHING that has a heroic mode
@@ -404,7 +413,7 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "normal25", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 5 or difficulty == 193 then--Legacy 10 man Heroic Raid
 		return "heroic10", difficultyName .. " - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 6 or difficulty == 194 then--Legacy 25 man Heroic Raid
+	elseif difficulty == 6 or difficulty == 194 or difficulty == 244 then--Legacy 25 man Heroic Raid, Classic 25 man heroic raid, Titanforged 25 man heroic raid
 		return "heroic25", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 7 then--Legacy 25 man LFR (ie pre WoD zones)
 		return "lfr25", difficultyName .. " - ", difficulty, instanceGroupSize, 0
@@ -580,6 +589,8 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "duos", "", difficulty, instanceGroupSize, 0
 	elseif difficulty == 237 then--5 man Celestial Dungeon (MoP classic). We'll store it in mythic5 stat since it's unused in MoP
 		return "mythic5", difficultyName .. " - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 236 or difficulty == 241 then--Lorewalking dungeon, Lorewalking Raid
+		return "lorewalking", difficultyName .. " - ", difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
 	end

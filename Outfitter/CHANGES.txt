@@ -1,10 +1,40 @@
-lightweight tag 00abb71edab7fb8cce3d2c7ff37aed3dd733b437 5.5.0.1
+lightweight tag 9f8c414dc83a3a9d622f87355e635df609429a7e 5.5.2.3
 Author:	GitHub <noreply@github.com>
-Date:	Wed Aug 13 01:34:38 2025 -0700
+Date:	Mon Oct 27 14:49:13 2025 -0700
 
-commit 86e89ed960b8297285815d578a294422382d8b83
+commit 83fadbbfca0d0085182ba5626f77174cd616a4df
 Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
-Date:   Tue Aug 12 12:44:22 2025 -0700
+Date:   Mon Oct 27 14:43:28 2025 -0700
 
-    Minor update to handle bag changes in 11.02
+    Added Monk Wise Serpent stance
+    Script now triggers on UPDATE_SHAPESHIFT_COOLDOWN to make sure it only triggers on the player's stance change (previously triggered by shapeshift changes from everything)
+    Changed warrior stance change event to UPDATE_SHAPESHIFT_COOLDOWN
+    Possible issue: Testing not possible on Classic Era without PTR (or massive leveling that I don't want to do)
+
+commit 83fadbbfca0d0085182ba5626f77174cd616a4df
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Mon Oct 27 14:43:28 2025 -0700
+
+    Added Monk Wise Serpent stance
+    Script now triggers on UPDATE_SHAPESHIFT_COOLDOWN to make sure it only triggers on the player's stance change (previously triggered by shapeshift changes from everything)
+    Changed warrior stance change event to UPDATE_SHAPESHIFT_COOLDOWN
+    Possible issue: Testing not possible on Classic Era without PTR (or massive leveling that I don't want to do)
+
+commit 4610e09a55e3d8c662ac88dda9e4bc5932eacd8d
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Mon Oct 27 13:08:00 2025 -0700
+
+    Added Wise Serpent stance to Monk special outfits
+
+commit a52f9fa4e83065d6e0cb2e7a88cd36cd1ea447df
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Mon Oct 27 13:07:25 2025 -0700
+
+    Added Wise Serpent stance strings
+
+commit 2a753b48be8cfa21e9d1b93d2f7fbaa1c73a7204
+Author: govtgeek <26489473+GovtGeek@users.noreply.github.com>
+Date:   Mon Oct 27 13:06:39 2025 -0700
+
+    Bumped Outfitter version
 

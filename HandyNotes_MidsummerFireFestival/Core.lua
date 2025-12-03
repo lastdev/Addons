@@ -3,7 +3,7 @@
 
                                        Midsummer Fire Festival
 
-                                     v3.13 - 26th September 2025
+                                     v3.16 - 12th November 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

@@ -1,0 +1,19 @@
+## Interface: 110207
+## Title: Krowi's |cFF1D92C2AF|r - Khamuls Housing Decor Achievement Filters
+## Version: 1.0.3
+## Author: Khamûl-Antonidas
+## X-Email: neytiri-amanthul@gmx.at
+## Notes: Additional Filters for Krowi's Achievement Filter Addon, providing lists for expansion housing decoration
+## Dependencies: Krowi_AchievementFilter
+## X-CurseForge: https://www.curseforge.com/wow/addons/krowis-achievement-filter-khamuls-housing-decor
+## X-Curse-Project-ID: 1360649
+## X-Wago: https://addons.wago.io/addons/krowis-achievement-filter-khamuls-housing-decor-achievement-filters
+## X-Wago-Project-ID: kNMdZOGz
+
+Libs\Files.xml
+Localization\Files.xml
+
+Utilities.lua
+Data\Files.xml
+
+Krowi_AchievementFilter_Khamuls_HouseDecorAchievementFilter.lua

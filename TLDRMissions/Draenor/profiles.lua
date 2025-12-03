@@ -25,7 +25,6 @@ function addon.WODGUI:RefreshProfile()
             followerXPSpecialTreatmentMinimum = 4,
             followerXPSpecialTreatmentAlgorithm = 1,
             autoStart = false,
-            autoShowUI = false,
             animaCosts = {
                 ["*"] = {
                     ["*"] = true,
@@ -35,6 +34,7 @@ function addon.WODGUI:RefreshProfile()
             durationHigher = 24,
             AnimaCostLimit = 300,
             LevelRestriction = 1,
+            skipFullResources = false,
         }
     }
     
@@ -73,12 +73,12 @@ function addon.WODGUI:RefreshProfile()
     setupAnimaCostDropDown("Apexis")
     setupAnimaCostDropDown("Oil")
     setupAnimaCostDropDown("Seal")
-    setupAnimaCostDropDown("AnythingForXP")
     
     local options = {type = "group", args = {}}
     LibStub("AceConfigRegistry-3.0"):ValidateOptionsTable(options, addonName)
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options, {"tldrmissions-wod"})
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(db)
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, nil, nil, "profiles")
     
     addon.WODGUI:ProfileChanged()
 end
@@ -114,6 +114,11 @@ function addon.WODGUI:ProfileChanged()
     TLDRMissionsWODFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(profile.durationLower, profile.durationHigher))
     TLDRMissionsWODFrameDurationLowerSlider:SetValue(profile.durationLower)
     TLDRMissionsWODFrameDurationHigherSlider:SetValue(profile.durationHigher)
+    
+    gui.AutoShowButton:SetChecked(profile.autoShowUI)
+    gui.AutoStartButton:SetChecked(profile.autoStart)
+    
+    gui.SkipFullResourcesButton:SetChecked(profile.skipFullResources)
     
     addon:updateWODRewards()
 end

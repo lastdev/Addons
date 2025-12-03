@@ -3,7 +3,7 @@ local AddonName = ...
 ---@class Private
 local Private = select(2, ...)
 
-local internalVersion = 86
+local internalVersion = 87
 
 -- Lua APIs
 local insert = table.insert
@@ -983,7 +983,7 @@ local function CreateTalentCache()
 
   Private.talent_types_specific[player_class] = Private.talent_types_specific[player_class] or {};
 
-  if WeakAuras.IsClassicOrCata() then
+  if WeakAuras.IsClassicOrWrathOrCata() then
     for tab = 1, GetNumTalentTabs() do
       for num_talent = 1, GetNumTalents(tab) do
         local talentName, talentIcon = Private.ExecEnv.GetTalentInfo(tab, num_talent);
@@ -1689,19 +1689,27 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
   end
 
   local mounted = IsMounted()
-  if WeakAuras.IsClassicOrCataOrMists() then
+  if WeakAuras.IsClassicOrWrathOrCataOrMists() then
     local raidID = UnitInRaid("player")
     if raidID then
       raidRole = select(10, GetRaidRosterInfo(raidID))
     end
     role = "none"
+    if WeakAuras.IsWrathClassic() then
+      role = UnitGroupRolesAssigned("player")
+      if role == "NONE" then
+        role = GetTalentGroupRole(GetActiveTalentGroup()) or "NONE"
+      end
+    end
   end
   if WeakAuras.IsClassicEra() then
     vehicle = UnitOnTaxi('player')
   end
-  if WeakAuras.IsCataOrMistsOrRetail() then
+  if WeakAuras.IsWrathOrCataOrMistsOrRetail() then
     vehicle = UnitInVehicle('player') or UnitOnTaxi('player') or false
     vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar() or false
+  end
+  if WeakAuras.IsCataOrMistsOrRetail() then
     specId, role, position = Private.LibSpecWrapper.SpecRolePositionForUnit("player")
   end
   if WeakAuras.IsMistsOrRetail() then
@@ -1736,6 +1744,11 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
     runeEngraving = C_Engraving.IsEngravingEnabled()
   end
 
+  local pvp = false
+  if WeakAuras.IsWrathClassic() then
+    pvp = UnitIsPVPFreeForAll("player") or UnitIsPVP("player")
+  end
+
   local changed = 0;
   local shouldBeLoaded, couldBeLoaded;
   local parentsToCheck = {}
@@ -1750,6 +1763,9 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
       if WeakAuras.IsClassicEra() then
         shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, alive, inEncounter, vehicle, mounted, hardcore, runeEngraving, class, player, realm, guild, race, faction, playerLevel, raidRole, group, groupSize, raidMemberType, zone, zoneId, zonegroupId, instanceId, minimapText, encounter_id, size)
         couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, alive, inEncounter, vehicle, mounted, hardcore, runeEngraving, class, player, realm, guild, race, faction, playerLevel, raidRole, group, groupSize, raidMemberType, zone, zoneId, zonegroupId, instanceId, minimapText, encounter_id, size)
+      elseif WeakAuras.IsWrathClassic() then
+        shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, alive, inEncounter, pvp, vehicle, vehicleUi, mounted, class, player, realm, guild, race, faction, playerLevel, role, raidRole, group, groupSize, raidMemberType, zone, zoneId, zonegroupId, instanceId, minimapText, encounter_id, size, difficulty, difficultyIndex)
+        couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, alive, inEncounter, pvp, vehicle, vehicleUi, mounted, class, player, realm, guild, race, faction, playerLevel, role, raidRole, group, groupSize, raidMemberType, zone, zoneId, zonegroupId, instanceId, minimapText, encounter_id, size, difficulty, difficultyIndex)
       elseif WeakAuras.IsCataClassic() then
         shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, alive, inEncounter, vehicle, vehicleUi, mounted, class, specId, player, realm, guild, race, faction, playerLevel, role, position, raidRole, group, groupSize, raidMemberType, zone, zoneId, zonegroupId, instanceId, minimapText, encounter_id, size, difficulty, difficultyIndex)
         couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, alive, inEncounter, vehicle, vehicleUi, mounted, class, specId, player, realm, guild, race, faction, playerLevel, role, position, raidRole, group, groupSize, raidMemberType, zone, zoneId, zonegroupId, instanceId, minimapText, encounter_id, size, difficulty, difficultyIndex)
@@ -1859,7 +1875,7 @@ else
   loadFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 end
 
-if WeakAuras.IsCataOrMists() then
+if WeakAuras.IsWrathOrCataOrMists() then
   loadFrame:RegisterEvent("VEHICLE_UPDATE");
   loadFrame:RegisterEvent("UPDATE_VEHICLE_ACTIONBAR")
   loadFrame:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR");
@@ -1899,7 +1915,7 @@ local unitLoadFrame = CreateFrame("Frame");
 Private.frames["Display Load Handling 2"] = unitLoadFrame;
 
 unitLoadFrame:RegisterUnitEvent("UNIT_FLAGS", "player");
-if WeakAuras.IsCataOrMistsOrRetail() then
+if WeakAuras.IsWrathOrCataOrMistsOrRetail() then
   unitLoadFrame:RegisterUnitEvent("UNIT_ENTERED_VEHICLE", "player");
   unitLoadFrame:RegisterUnitEvent("UNIT_EXITED_VEHICLE", "player");
   unitLoadFrame:RegisterUnitEvent("PLAYER_FLAGS_CHANGED", "player");
@@ -2425,10 +2441,11 @@ StaticPopupDialogs["WEAKAURAS_CONFIRM_REPAIR"] = {
     local AutomaticRepairText = L["WeakAuras has detected that it has been downgraded.\nYour saved auras may no longer work properly.\nWould you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.\nLast upgrade: %s\n\n|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r"]
     local ManualRepairText = L["Are you sure you want to run the |cffff0000EXPERIMENTAL|r repair tool?\nThis will overwrite any changes you have made since the last database upgrade.\nLast upgrade: %s"]
 
+    local text = WeakAuras.IsWrathClassic() and self.Text or self.text
     if self.data.reason == "user" then
-      self.text:SetText(ManualRepairText:format(LastUpgrade()))
+      text:SetText(ManualRepairText:format(LastUpgrade()))
     else
-      self.text:SetText(AutomaticRepairText:format(LastUpgrade()))
+      text:SetText(AutomaticRepairText:format(LastUpgrade()))
     end
   end,
   OnCancel = function(self)
@@ -3549,10 +3566,10 @@ function Private.ReleaseClone(id, cloneId, regionType)
   end
 end
 
-function Private.HandleChatAction(message_type, message, message_dest, message_dest_isunit, message_channel, r, g, b, region, customFunc, when, formatters)
+function Private.HandleChatAction(message_type, message, message_dest, message_dest_isunit, message_channel, r, g, b, region, customCache, when, formatters)
   local useHiddenStates = when == "finish"
   if (message:find('%%')) then
-    message = Private.ReplacePlaceHolders(message, region, customFunc, useHiddenStates, formatters);
+    message = Private.ReplacePlaceHolders(message, region, customCache, useHiddenStates, formatters);
   end
   if(message_type == "PRINT") then
     DEFAULT_CHAT_FRAME:AddMessage(message, r or 1, g or 1, b or 1);
@@ -3573,7 +3590,7 @@ function Private.HandleChatAction(message_type, message, message_dest, message_d
   elseif(message_type == "WHISPER") then
     if(message_dest) then
       if (message_dest:find('%%')) then
-        message_dest = Private.ReplacePlaceHolders(message_dest, region, customFunc, useHiddenStates, formatters);
+        message_dest = Private.ReplacePlaceHolders(message_dest, region, customCache, useHiddenStates, formatters);
       end
       if message_dest_isunit == true then
         message_dest = GetUnitName(message_dest, true)
@@ -3850,7 +3867,7 @@ function Private.PerformActions(data, when, region)
 
   if(actions.do_message and actions.message_type and actions.message) then
     local customFunc = Private.customActionsFunctions[data.id][when .. "_message"];
-    Private.HandleChatAction(actions.message_type, actions.message, actions.message_dest, actions.message_dest_isunit, actions.message_channel, actions.r, actions.g, actions.b, region, customFunc, when, formatters);
+    Private.HandleChatAction(actions.message_type, actions.message, actions.message_dest, actions.message_dest_isunit, actions.message_channel, actions.r, actions.g, actions.b, region, {customFunc = customFunc}, when, formatters);
   end
 
   if (actions.stop_sound) then
@@ -5089,15 +5106,18 @@ function Private.RunCustomTextFunc(region, customFunc)
   return custom
 end
 
-local function ReplaceValuePlaceHolders(textStr, region, customFunc, state, formatter, trigger)
+local function ReplaceValuePlaceHolders(textStr, region, customCache, state, formatter, trigger)
   local value;
 
   local customIndexSubStr = textStr:match("^c(%d*)$")
 
   if customIndexSubStr then
     local custom
-    if customFunc then
-      custom = Private.RunCustomTextFunc(region, customFunc)
+    if customCache then
+      if not customCache.custom then
+        customCache.custom = Private.RunCustomTextFunc(region, customCache.customFunc)
+      end
+      custom = customCache.custom
     else
       custom = region.values.custom
     end
@@ -5251,7 +5271,7 @@ end
 
 Private.ContainsPlaceHoldersPredicate = ContainsPlaceHolders
 
-local function ValueForSymbol(symbol, region, customFunc, regionState, regionStates, useHiddenStates, formatters)
+local function ValueForSymbol(symbol, region, customCache, regionState, regionStates, useHiddenStates, formatters)
   local triggerNum, sym = string.match(symbol, "(.+)%.(.+)")
   triggerNum = triggerNum and tonumber(triggerNum)
   if triggerNum and sym then
@@ -5265,7 +5285,7 @@ local function ValueForSymbol(symbol, region, customFunc, regionState, regionSta
             return tostring(value) or ""
           end
         else
-          local value = ReplaceValuePlaceHolders(sym, region, customFunc, regionStates[triggerNum], formatters[symbol], triggerNum);
+          local value = ReplaceValuePlaceHolders(sym, region, customCache, regionStates[triggerNum], formatters[symbol], triggerNum);
           return value or ""
         end
       end
@@ -5283,12 +5303,12 @@ local function ValueForSymbol(symbol, region, customFunc, regionState, regionSta
     return ""
   else
     local value = (useHiddenStates or regionState.show)
-                  and ReplaceValuePlaceHolders(symbol, region, customFunc, regionState, formatters[symbol], regionState.triggernum)
+                  and ReplaceValuePlaceHolders(symbol, region, customCache, regionState, formatters[symbol], regionState.triggernum)
     return value or ""
   end
 end
 
-function Private.ReplacePlaceHolders(textStr, region, customFunc, useHiddenStates, formatters)
+function Private.ReplacePlaceHolders(textStr, region, customCache, useHiddenStates, formatters)
   local regionValues = region.values;
   local regionState = region.state or {};
   local regionStates = region.states or {};
@@ -5307,7 +5327,7 @@ function Private.ReplacePlaceHolders(textStr, region, customFunc, useHiddenState
       if symbol == "%" then
         return "%" -- Double % input
       end
-      local value = ValueForSymbol(symbol, region, customFunc, regionState, regionStates, useHiddenStates, formatters);
+      local value = ValueForSymbol(symbol, region, customCache, regionState, regionStates, useHiddenStates, formatters);
       if (value) then
         textStr = tostring(value);
       end
@@ -5340,7 +5360,7 @@ function Private.ReplacePlaceHolders(textStr, region, customFunc, useHiddenState
         -- 0-9a-zA-Z or dot character
       else -- End of variable
         local symbol = string.sub(textStr, start, currentPos - 1)
-        result = result .. ValueForSymbol(symbol, region, customFunc, regionState, regionStates, useHiddenStates, formatters)
+        result = result .. ValueForSymbol(symbol, region, customCache, regionState, regionStates, useHiddenStates, formatters)
 
         if char == 37 then
           -- Do nothing
@@ -5351,7 +5371,7 @@ function Private.ReplacePlaceHolders(textStr, region, customFunc, useHiddenState
     elseif state == 3 then
       if char == 125 then -- } closing brace
         local symbol = string.sub(textStr, start, currentPos - 1)
-        result = result .. ValueForSymbol(symbol, region, customFunc, regionState, regionStates, useHiddenStates, formatters)
+        result = result .. ValueForSymbol(symbol, region, customCache, regionState, regionStates, useHiddenStates, formatters)
         start = currentPos + 1
       end
     end
@@ -5363,7 +5383,7 @@ function Private.ReplacePlaceHolders(textStr, region, customFunc, useHiddenState
     result = result .. string.sub(textStr, start, currentPos - 1)
   elseif state == 2 and currentPos > start then
     local symbol = string.sub(textStr, start, currentPos - 1)
-    result = result .. ValueForSymbol(symbol, region, customFunc, regionState, regionStates, useHiddenStates, formatters)
+    result = result .. ValueForSymbol(symbol, region, customCache, regionState, regionStates, useHiddenStates, formatters)
   elseif state == 1 then
     result = result .. "%"
   end

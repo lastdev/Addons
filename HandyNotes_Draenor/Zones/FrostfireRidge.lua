@@ -1,6 +1,6 @@
 local HandyNotes_Draenor = LibStub("AceAddon-3.0"):GetAddon("HandyNotes_Draenor")
 
-HandyNotes_Draenor.nodes[525] = {
+HandyNotes_Draenor.Nodes[525] = {
     [23172495] = { 525, "33916", "Arena Master's War Horn", "Up in the stands above the arena", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "108735" },
     [24242712] = { 525, "33501", "Arena Spectator's Chest", "On top of the stone arch; jump to it from the top of the nearby tower", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "63293" },
     [61904254] = { 525, "33511", "Borrok the Devourer", "Feed him 20 Ogres to get the loot", HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default, HandyNotes_Draenor.DefaultNodeTypes.Treasure, "112110" },

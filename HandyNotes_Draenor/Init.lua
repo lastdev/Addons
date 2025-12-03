@@ -1,6 +1,18 @@
 HandyNotes_Draenor = LibStub("AceAddon-3.0"):NewAddon("HandyNotes_Draenor", "AceEvent-3.0", "AceTimer-3.0", "AceBucket-3.0")
 
-HandyNotes_Draenor.nodes = {}
+HandyNotes_Draenor.Nodes = {}
+
+HandyNotes_Draenor.ZoneMapIDs = {
+    [525] = "FrostfireRidge",
+    [534] = "TanaanJungle",
+    [535] = "Talador",
+    [550] = "Nagrand",
+    [543] = "Gorgrond",
+    [539] = "ShadowmoonValley",
+    [542] = "SpiresOfArak",
+    [582] = "Lunarfall",
+    [590] = "Frostwall"
+}
 
 HandyNotes_Draenor.DefaultNodeTypes = {
     Treasure = "Treasure",
@@ -30,8 +42,6 @@ HandyNotes_Draenor.DefaultIcons = {
     Icon_Mount_Purple = "Interface\\Addons\\HandyNotes_Draenor\\Artwork\\Portal-Purple.blp",
     Icon_Scroll = "Interface\\Addons\\HandyNotes_Draenor\\Artwork\\Scroll.blp",
 }
-
--- HandyNotes_Draenor.DefaultIcons.Icon_Treasure_Default
 
 function HandyNotes_Draenor:OnInitialize()
 

@@ -4,7 +4,7 @@
                                       Mysterious Camel Figurine
 									    ( Grey Riding Camel )
 
-                                     v2.12 - 26th September 2025
+                                      v2.13 - 3rd October 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

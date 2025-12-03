@@ -6,7 +6,7 @@ addon.L = L;
 -- translated using deepl.com
 
 -- Globals
-L["Khamul's Meta-Expansion Achievement List"] = "Список мета-достижений Кхамула"
+L["Khamul's Meta-Expansion Achievement List"] = "Список мета-достижений Khamul"
 L["Unknown Achievement"] = "Неизвестное достижение"
 
 -- Tooltips

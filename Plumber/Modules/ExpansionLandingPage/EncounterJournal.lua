@@ -11,14 +11,17 @@ local EJ_GetInstanceInfo = EJ_GetInstanceInfo;
 local EJ_GetEncounterInfoByIndex = EJ_GetEncounterInfoByIndex;
 
 
+local SHOW_LOOT = true;    --Boss achievements and loot
+
 local JournalInstanceIDs = {
+    1302,   --Manaforge Omega
     1296,   --Liberation of Undermine
     1273,   --Nerub-ar Palace
-    --1190,   --Debug Castle Nathria
+    --768,   --Debug Emerald Nightmare
 };
 
 if addon.IsToCVersionEqualOrNewerThan(110200) then
-    tinsert(JournalInstanceIDs, 1, 1302);   --Manaforge Omega   --debug
+    --For PTR
 end
 
 if addon.IS_MOP then
@@ -32,7 +35,24 @@ end
 
 local RaidTab, LootContainer;
 local EncounterList = {};
+local InstanceXDungeonEncounters = {};
 
+
+addon.CallbackRegistry:Register("LandingPage.SetEncounterTabInfo", function(tabInfo)
+    if tabInfo.JournalInstanceIDs then
+        JournalInstanceIDs = tabInfo.JournalInstanceIDs;
+        if RaidTab and RaidTab:IsShown() then
+            RaidTab:FullUpdate();
+        end
+    end
+
+    if tabInfo.showLoot ~= nil then
+        SHOW_LOOT = tabInfo.showLoot;
+        if RaidTab and RaidTab.LeftFrame then
+            RaidTab.LeftFrame:SetShown(SHOW_LOOT);
+        end
+    end
+end);
 
 
 local function GetPlayerClassName(playerClassID, markYourClass)
@@ -81,6 +101,7 @@ do
                 LandingPageUtil.PlayUISound("CheckboxOn");
             end
         else
+            if not SHOW_LOOT then return end;
             RaidTab:SelectEncounterByDataIndex(self.dataIndex);
             RaidTab.AchievementContainer:SetAchievements(LandingPageUtil.GetEncounterAchievements(self.journalEncounterID));
             RaidTab.LootContainer:ShowLoot(self.journalInstanceID, self.journalEncounterID);
@@ -103,7 +124,8 @@ do
         self.journalInstanceID = journalInstanceID;
         self:SetHeader();
         self.Name:SetText(name);
-        self:HideProgress();
+
+        self:UpdateProgress();
     end
 
     function ListButtonMixin:SetEncounter(mapID, journalInstanceID, journalEncounterID, dungeonEncounterID, name)
@@ -130,24 +152,77 @@ do
 
     function ListButtonMixin:UpdateProgress()
         self:HideProgress();
-        if (not self.isHeader) and self.mapID and self.dungeonEncounterID then
-            local progress = GetEncounterProgress(self.mapID, self.dungeonEncounterID);
-            local texture;
-            for i, completed in ipairs(progress) do
-                texture = self["Light"..i];
-                if texture then
-                    texture:Show();
-                    texture:SetTexture(nil);
-                    local filter;
-                    if completed then
-                        texture:SetTexCoord(48/512, 96/512, 208/512, 256/512);
-                        filter = "LINEAR";
-                    else
-                        texture:SetTexCoord(96/512, 144/512, 208/512, 256/512);
-                        filter = "TRILINEAR";
-                    end
-                    texture:SetTexture("Interface/AddOns/Plumber/Art/ExpansionLandingPage/ChecklistButton.tga", nil, nil, filter);
+        if self.mapID then
+            if self.isHeader then
+                if self.isCollapsed and InstanceXDungeonEncounters[self.mapID] then
+                    self:UpdateConsolidatedProgress();
                 end
+            elseif self.dungeonEncounterID then
+                self:UpdateEncounterProgress();
+            end
+        end
+    end
+
+    function ListButtonMixin:UpdateEncounterProgress()
+        local progress = GetEncounterProgress(self.mapID, self.dungeonEncounterID);
+        local texture;
+        for i, completed in ipairs(progress) do
+            texture = self["Light"..i];
+            if texture then
+                texture:Show();
+                texture:SetTexture(nil);
+                local filter;
+                if completed then
+                    texture:SetTexCoord(48/512, 96/512, 208/512, 256/512);
+                    filter = "LINEAR";
+                else
+                    texture:SetTexCoord(96/512, 144/512, 208/512, 256/512);
+                    filter = "TRILINEAR";
+                end
+                texture:SetTexture("Interface/AddOns/Plumber/Art/ExpansionLandingPage/ChecklistButton.tga", nil, nil, filter);
+                texture:SetPoint("LEFT", self, "RIGHT", -184 + (i - 1) * 24, 0);
+            end
+        end
+    end
+
+    function ListButtonMixin:UpdateConsolidatedProgress()
+        local consolidatedProgress = LandingPageUtil.GetInstanceProgress(self.mapID, InstanceXDungeonEncounters[self.mapID]);
+        local texture;
+        local total = #InstanceXDungeonEncounters[self.mapID];
+        if total < 1 then return end;
+        local anyComplete
+        for i, numComplete in ipairs(consolidatedProgress) do
+            if numComplete > 0 then
+                anyComplete = true;
+                break
+            end
+        end
+        if not anyComplete then return end;
+        for i, numComplete in ipairs(consolidatedProgress) do
+            texture = self["Light"..i];
+            if texture then
+                texture:Show();
+                texture:SetTexture(nil);
+                local filter;
+                local ratio = numComplete / total;
+                if ratio > 0.99 then
+                    texture:SetTexCoord(48/512, 96/512, 208/512, 256/512);
+                    filter = "LINEAR";
+                elseif ratio > 0.66 then
+                    texture:SetTexCoord(288/512, 336/512, 208/512, 256/512);
+                    filter = "LINEAR";
+                elseif ratio > 0.32 then
+                    texture:SetTexCoord(240/512, 288/512, 208/512, 256/512);
+                    filter = "LINEAR";
+                elseif ratio > 0.01 then
+                    texture:SetTexCoord(192/512, 240/512, 208/512, 256/512);
+                    filter = "LINEAR";
+                else
+                    texture:SetTexCoord(96/512, 144/512, 208/512, 256/512);
+                    filter = "TRILINEAR";
+                end
+                texture:SetTexture("Interface/AddOns/Plumber/Art/ExpansionLandingPage/ChecklistButton.tga", nil, nil, filter);
+                texture:SetPoint("LEFT", self, "RIGHT", -180 + (i - 1) * 24, 0);
             end
         end
     end
@@ -244,7 +319,7 @@ do
         --tooltip:SetAchievementByID(self.achievementID);
 
         local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe = GetAchievementInfo(self.achievementID);
-        tooltip:SetText(name, 1, 0.82, 0, true);
+        tooltip:SetText(name, 1, 0.82, 0, 1, true);
 
         if completed then
             tooltip:AddLine(ACHIEVEMENTFRAME_FILTER_COMPLETED, 0.098, 1.000, 0.098, true);
@@ -933,7 +1008,7 @@ do
 
     function RaidTabMixin:OnShow()
         API.RegisterFrameForEvents(self, DynamicEvents);
-        LandingPageUtil.ShowLeftFrame(false);
+        LandingPageUtil.ShowLeftFrame(not SHOW_LOOT);
         self:FullUpdate();
     end
 
@@ -1004,15 +1079,21 @@ do
             local data = self:GetInstanceData(journalInstanceID);
             if data then
                 local mapID = data.mapID;
+                local dungeonEncounterIDs = {};
+
                 n = n + 1;
                 EncounterList[n] = {dataIndex = n, name = data.name, isCollapsed = IsRaidCollapsed(mapID), isHeader = true, journalInstanceID = journalInstanceID, mapID = mapID};
-                for _, encounterInfo in ipairs(data.encounters) do
+
+                for i, encounterInfo in ipairs(data.encounters) do
                     n = n + 1;
                     EncounterList[n] = {dataIndex = n, name = encounterInfo.name, journalEncounterID = encounterInfo.id, dungeonEncounterID = encounterInfo.dungeonEncounterID, mapID = mapID, journalInstanceID = journalInstanceID, };
                     if encounterInfo.id == selectedJournalEncounterID then
                         EncounterList[n].selected = true;
                     end
+                    dungeonEncounterIDs[i] =  encounterInfo.dungeonEncounterID;
                 end
+
+                InstanceXDungeonEncounters[mapID] = dungeonEncounterIDs;
             end
         end
 
@@ -1123,14 +1204,19 @@ do
         ScrollView:AddTemplate("ListButton", ListButton_Create, ListButton_OnAcquired, ListButton_OnRemoved);
 
 
-        --Init LeftSection
+        --Init LeftSection (This section, achievements and loot, will be disabled on Timerunning characters)
         local offsetY = 16;
         local categoryButtonHeight = 32;
         local lineGap = 8;
         local paragraphGap = 8;
 
-        local LeftFrame = PlumberExpansionLandingPage.LeftSection;
-        local Header1 = LandingPageUtil.CreateListCategoryButton(self, ACHIEVEMENTS);
+        local LeftFrame = CreateFrame("Frame", nil, self);
+        self.LeftFrame = LeftFrame;
+        local LeftRef = PlumberExpansionLandingPage.LeftSection;
+        LeftFrame:SetPoint("TOPLEFT", LeftRef, "TOPLEFT", 0, 0);
+        LeftFrame:SetPoint("BOTTOMRIGHT", LeftRef, "BOTTOMRIGHT", 0, 0);
+
+        local Header1 = LandingPageUtil.CreateListCategoryButton(LeftFrame, ACHIEVEMENTS);
         Header1:SetPoint("TOP", LeftFrame, "TOP", 0, -offsetY);
         offsetY = offsetY + categoryButtonHeight + lineGap;
         Header1:SetCollapsible(true);
@@ -1138,7 +1224,7 @@ do
         local header1Bottom = offsetY;
         local achvContainerHeight = 48;
 
-        local AchievementContainer = CreateAchievementContainer(self);
+        local AchievementContainer = CreateAchievementContainer(LeftFrame);
         self.AchievementContainer = AchievementContainer;
         AchievementContainer:SetSize(192, achvContainerHeight);
         AchievementContainer:SetPoint("TOP", LeftFrame, "TOP", 0, -offsetY);
@@ -1146,11 +1232,11 @@ do
 
         local header2Top = offsetY;
 
-        local Header2 = LandingPageUtil.CreateListCategoryButton(self, LOOT_NOUN);
+        local Header2 = LandingPageUtil.CreateListCategoryButton(LeftFrame, LOOT_NOUN);
         Header2:SetPoint("TOP", LeftFrame, "TOP", 0, -header2Top);
         offsetY = offsetY + categoryButtonHeight + lineGap;
 
-        LootContainer = CreateLootContainer(self);
+        LootContainer = CreateLootContainer(LeftFrame);
         self.LootContainer = LootContainer;
         LootContainer:SetPoint("TOP", Header2, "BOTTOM", 0, - lineGap + 8);
         LootContainer:SetPoint("BOTTOM", LeftFrame, "BOTTOM", 0, 12);
@@ -1171,7 +1257,11 @@ do
         end
 
         local isAchievementCollapsed = addon.GetDBBool("LandingPage_Raid_CollapsedAchievement");
-        Header1:SetCollapsed(isAchievementCollapsed, true)
+        Header1:SetCollapsed(isAchievementCollapsed, true);
+
+        if not SHOW_LOOT then
+            LeftFrame:Hide();
+        end
     end
 
     --Frame Update

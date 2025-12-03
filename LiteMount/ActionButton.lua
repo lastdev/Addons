@@ -81,9 +81,6 @@ function LM.ActionButton:PreClick(inputButton, isDown)
     local context = self.context:Clone()
     context.inputButton = inputButton
 
-    -- This uses a crazy amount of memory so just save it once
-    context.mapPath = LM.Environment:GetMapPath()
-
     local ruleSet = LM.Options:GetCompiledButtonRuleSet(self.id)
 
     local act = ruleSet:Run(context)
@@ -94,7 +91,7 @@ function LM.ActionButton:PreClick(inputButton, isDown)
     end
 
     local handler = LM.Actions:GetHandler('CantMount')
-    handler():SetupActionButton(self)
+    handler(nil, context):SetupActionButton(self)
     LM.Debug("[%d] PreClick fail time %0.2fms", self.id, debugprofilestop() - startTime)
 end
 

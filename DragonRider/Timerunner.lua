@@ -1,7 +1,7 @@
 local _, DR = ...
 local _, L = ...
 
-local LibAdvFlight = LibStub:GetLibrary("LibAdvFlight-1.0");
+local LibAdvFlight = LibStub:GetLibrary("LibAdvFlight-1.1");
 
 local function Print(...)
 	local prefix = string.format("|cFFFFF569"..L["DragonRider"] .. "|r:");
@@ -9,7 +9,9 @@ local function Print(...)
 end
 
 local f = CreateFrame("Frame")
-f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+if LE_EXPANSION_LEVEL_CURRENT <= LE_EXPANSION_WAR_WITHIN then
+	f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+end
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 
@@ -43,31 +45,38 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	if not DragonRider_DB then return end
-
+	local SeasonID = PlayerGetTimerunningSeasonID()
+	if not SeasonID then return end
 
 	if DragonRider_DB and not DragonRider_DB.Timerunner then
 		DragonRider_DB.Timerunner = {};
 	end
-	if DragonRider_DB and DragonRider_DB.Timerunner and not KillCounter then
-		KillCounter = DragonRider_DB.Timerunner;
+	if DragonRider_DB and DragonRider_DB.Timerunner and SeasonID and not DragonRider_DB.Timerunner[SeasonID] then
+		-- 1 == MoP Remix
+		-- 2 == Legion Remix
+
+		DragonRider_DB.Timerunner[SeasonID] = {}
+	end
+	if DragonRider_DB and DragonRider_DB.Timerunner and DragonRider_DB.Timerunner[SeasonID] and not KillCounter then
+		KillCounter = DragonRider_DB.Timerunner[SeasonID];
 	end
 
 	if event == "CURRENCY_DISPLAY_UPDATE" then
-		if DragonRider_DB.Timerunner and not DragonRider_DB.Timerunner.Bronze then
-			DragonRider_DB.Timerunner.Bronze = 0;
+		if DragonRider_DB and DragonRider_DB.Timerunner and DragonRider_DB.Timerunner[SeasonID] and not DragonRider_DB.Timerunner[SeasonID].Bronze then
+			DragonRider_DB.Timerunner[SeasonID].Bronze = 0;
 		end
 		local currencyType, quantity, quantityChange, quantityGainSource, destroyReason = ...
 
 		if currencyType == 3252 and quantityChange and quantityChange > 0 then
 			if LibAdvFlight and LibAdvFlight.IsAdvFlying and LibAdvFlight.IsAdvFlying() then
 				if quantityGainSource == Enum.CurrencySource.Spell then
-					DragonRider_DB.Timerunner.Bronze = DragonRider_DB.Timerunner.Bronze + quantityChange
+					DragonRider_DB.Timerunner[SeasonID].Bronze = DragonRider_DB.Timerunner[SeasonID].Bronze + quantityChange
 
 					--if DragonRider_DB.debug then --this is very spammy
 					--	Print(string.format(
 					--		"+%d Bronze (Total: %d)",
 					--		quantityChange,
-					--		DragonRider_DB.Timerunner.Bronze
+					--		DragonRider_DB.Timerunner[SeasonID].Bronze
 					--	))
 					--end
 				end

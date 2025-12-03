@@ -25,6 +25,11 @@ local GetMapWorldSize = C_Map.GetMapWorldSize
 local floor, insert, ipair, tostring = math.floor, table.insert, ipair, tostring
 
 -- ---------------------------------------------------------------------------------------------------------------------------------
+--== v1.03 - 19th July 2025
+--* Using calculated values for the ns.DragonsTreadLightly.azeroth lookup table for Classic Mists for Northrend, EK, Kalimdor.
+--*   Previously this data was visually estimated by trial and error. Calculation uses basic High School substitution algebra and
+--*   is accurate to about 4/5 digits!
+
 --== v1.02 - 29th June 2025
 --* Zaralek Cavern added into the special table
 --* Nazjatar added into the special table
@@ -176,9 +181,9 @@ do	-- Fill the lookup tables
 		ns.DragonsTreadLightly.azeroth[571] = { 47662.7, 31772.19, 25198.53, 11072.07 }
 		ns.DragonsTreadLightly.azeroth[646] = { 52500, 35000, 27590, 19100 } -- Deepholm
 	elseif ns.version < 60000 then
-		ns.DragonsTreadLightly.azeroth[0] = { 57115, 38083, 46284, 15795 } -- Eastern Kingdom zones
-		ns.DragonsTreadLightly.azeroth[1] = { 58984, 39319, 10154, 19536 } -- Kalimdor zones
-		ns.DragonsTreadLightly.azeroth[571] = { 56338, 37568, 29893, 11497 } -- Northrend zones
+		ns.DragonsTreadLightly.azeroth[0] = { 57115, 38083, 46284, 15795 } -- Eastern Kingdom zones. v1.03
+		ns.DragonsTreadLightly.azeroth[1] = { 58984, 39319, 10154, 19536 } -- Kalimdor zones. v1.03
+		ns.DragonsTreadLightly.azeroth[571] = { 56338, 37568, 29893, 11497 } -- Northrend zones. v1.03
 		ns.DragonsTreadLightly.azeroth[646] = { 52500, 35000, 26970, 17950 } -- Deepholm
 		ns.DragonsTreadLightly.azeroth[870] = { 53101, 35407, 28649, 30726 } -- Pandaria zones v1.01 Calculated
    else
