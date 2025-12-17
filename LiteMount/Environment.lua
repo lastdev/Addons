@@ -1,4 +1,5 @@
 --[[----------------------------------------------------------------------------
+
   LiteMount/Location.lua
 
   Some basics about the current game state with respect to mounting. Most of
@@ -16,12 +17,13 @@ local C_Spell = LM.C_Spell or C_Spell
 LM.Environment = LM.CreateAutoEventFrame("Frame")
 LM.Environment:RegisterEvent("PLAYER_LOGIN")
 
-function LM.Environment:Initialize()
-    self.combatTravelForm = nil
+local issecretvalue = issecretvalue or function () return false end
 
+function LM.Environment:Initialize()
     self:InitializeHolidays()
     self:UpdateSwimTimes()
 
+    self.combatTravelForm = nil
     self.startedFalling = 0
     self.stoppedFalling = 0
     self.stoppedMoving = GetTime()
@@ -36,9 +38,7 @@ function LM.Environment:Initialize()
     self:RegisterEvent("PLAYER_STARTED_MOVING")
     self:RegisterEvent("PLAYER_STOPPED_MOVING")
     self:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
-    self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-    self:RegisterEvent("ENCOUNTER_START")
-    self:RegisterEvent("ENCOUNTER_END")
+    self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 end
 
 -- I hate OnUpdate handlers but there are just no good events for determining
@@ -65,24 +65,158 @@ function LM.Environment:OnUpdate(delta)
     end
 end
 
-function LM.Environment:IsFalling()
-    return IsFalling() and
-        self.startedFalling > self.stoppedFalling and
-        GetTime() - self.startedFalling >= 0.45
-end
+local StateUpdateFunctions = {
+    canFly =
+        function (self)
+            return self:CanFly()
+        end,
+    canMountInPhaseDiving =
+        function ()
+            -- "Orbs of Power", the third node unlock in the Reshii Wraps talent tree
+            if WOW_PROJECT_ID == 1 then
+                local configID = C_Traits.GetConfigIDByTreeID(1115)
+                if configID then
+                    local nodeInfo = C_Traits.GetNodeInfo(configID, 105869)
+                    return nodeInfo and nodeInfo.currentRank == 1
+                end
+            end
+            return false
+        end,
+    druidFormInfo =
+        function ()
+            if UnitClassBase("player") == "DRUID" then
+                local id = GetShapeshiftFormID()
+                if id then
+                    local index = GetShapeshiftForm()
+                    local _, _, _, spellID = GetShapeshiftFormInfo(index)
+                    if spellID then
+                        local info = C_Spell.GetSpellInfo(spellID)
+                        info.formID = id
+                        return info
+                    end
+                end
+            end
+            return {}
+        end,
+    flightStyle =
+        function (self)
+            return select(2, self:GetFlightStyle())
+        end,
+    herbTime =
+        function (self)
+            return self.lastHerbTime or 0
+        end,
+    isCombatTravelForm =
+        function (self)
+            return self.combatTravelForm
+        end,
+    isDrivableArea =
+        function (self)
+            return self:IsDrivableArea()
+        end,
+    isFalling =
+        function (self)
+            return IsFalling() and
+                self.startedFalling > self.stoppedFalling and
+                GetTime() - self.startedFalling >= 0.45
+        end,
+    isFloating =
+        function (self)
+            local name, _, _, rate = GetMirrorTimerInfo(2)
+            local cantBreathe = ( name == "BREATH" and rate < 0 )
+            return IsSubmerged() and not cantBreathe and
+                ( GetTime() - (self.lastDryTime or 0 ) < 1.0)
+        end,
+    isFlyableArea =
+        function (self)
+            return self:IsFlyableArea()
+        end,
+    isMovingOrFalling =
+        function ()
+            return (GetUnitSpeed("player") > 0 or IsFalling())
+        end,
+    isPhaseDiving =
+        function (self)
+            return WOW_PROJECT_ID == 1 and self.playerBuffIDs[1214374] ~= nil
+        end,
+    isTheMaw =
+        function (self)
+            if WOW_PROJECT_ID == 1 then
+                local instanceID = select(8, GetInstanceInfo())
 
--- A jump in place takes approximately 0.83 seconds
+                -- This is the instanced starting experience
+                if instanceID == 2364 then return true end
 
-function LM.Environment:GetJumpTime()
-    local airTime = self.stoppedFalling - self.startedFalling
-    if airTime > 0.73 and airTime < 0.93 then
-        local timeSinceLanded = GetTime() - self.stoppedFalling
-        return timeSinceLanded
-    end
-end
+                -- This is the instanced post-Maldraxxus questing
+                if instanceID == 2456 then return true end
+
+                -- Sanctum of Domination raid allows mounting normally
+                if instanceID == 2450 then return false end
+
+                -- Otherwise, The Maw is just zones in instance 2222
+                return self:IsMapInPath(1543)
+            end
+            return false
+        end,
+    jumpTime =
+        function (self)
+            -- A jump in place takes approximately 0.83 seconds
+            local airTime = self.stoppedFalling - self.startedFalling
+            if airTime > 0.73 and airTime < 0.93 then
+                local timeSinceLanded = GetTime() - self.stoppedFalling
+                return timeSinceLanded
+            end
+        end,
+    knowsFlyingSkill =
+        function (self)
+            return self:KnowsFlyingSkill()
+        end,
+    knowsRidingSkill =
+        function (self)
+            return self:KnowsRidingSkill()
+        end,
+    mineTime =
+        function (self)
+            return self.lastMineTime or 0
+        end,
+    playerBuffIDs =
+        function ()
+            local buffIDs = {}
+            local i = 1
+            while true do
+                local auraInfo = C_UnitAuras.GetAuraDataByIndex('player', i)
+                if auraInfo == nil then
+                    break
+                elseif not issecretvalue(auraInfo.spellId) then
+                    buffIDs[auraInfo.spellId] = true
+                end
+                i = i + 1
+            end
+            return buffIDs
+        end,
+    playerDebuffIDs =
+        function ()
+            local debuffIDs = {}
+            local i = 1
+            while true do
+                local auraInfo = C_UnitAuras.GetAuraDataByIndex('player', i, 'HARMFUL')
+                if auraInfo == nil then
+                    break
+                elseif not issecretvalue(auraInfo.spellId) then
+                    debuffIDs[auraInfo.spellId] = true
+                end
+                i = i + 1
+            end
+            return debuffIDs
+        end,
+    playerModel =
+        function (self)
+            return self:GetPlayerModel()
+        end,
+}
 
 function LM.Environment:GetStationaryTime()
-    if not self.stoppedMoving then
+    if self.stoppedMoving == nil then
         return 0
     else
         return GetTime() - math.max(self.stoppedMoving, self.stoppedFalling)
@@ -92,48 +226,6 @@ end
 function LM.Environment:UpdateSwimTimes()
     if not IsSubmerged() then
         self.lastDryTime = GetTime()
-    end
-end
-
-function LM.Environment:IsFloating()
-    return IsSubmerged() and not self:CantBreathe() and
-           ( GetTime() - (self.lastDryTime or 0 ) < 1.0)
-end
-
-function LM.Environment:IsMovingOrFalling()
-    return (GetUnitSpeed("player") > 0 or IsFalling())
-end
-
-function LM.Environment:IsPhaseDiving()
-    if WOW_PROJECT_ID == 1 then
-        return C_UnitAuras.GetPlayerAuraBySpellID(1214374) ~= nil
-    end
-end
-
--- "Orbs of Power", the third node unlock in the Reshii Wraps talent tree
-function LM.Environment:CanMountInPhaseDiving()
-    if WOW_PROJECT_ID == 1 then
-        local configID = C_Traits.GetConfigIDByTreeID(1115)
-        local nodeInfo = C_Traits.GetNodeInfo(configID, 105869)
-        return nodeInfo.currentRank == 1
-    end
-end
-
-function LM.Environment:IsTheMaw()
-    if WOW_PROJECT_ID == 1 then
-        local instanceID = select(8, GetInstanceInfo())
-
-        -- This is the instanced starting experience
-        if instanceID == 2364 then return true end
-
-        -- This is the instanced post-Maldraxxus questing
-        if instanceID == 2456 then return true end
-
-        -- Sanctum of Domination raid allows mounting normally
-        if instanceID == 2450 then return false end
-
-        -- Otherwise, The Maw is just zones in instance 2222
-        return LM.Environment:IsMapInPath(1543)
     end
 end
 
@@ -169,52 +261,12 @@ function LM.Environment:ZONE_CHANGED_NEW_AREA()
     LM.Options:RecordInstance()
 end
 
--- encounterID, encounterName, difficultyID, groupSize
-function LM.Environment:ENCOUNTER_START(event, ...)
-    LM.Debug("Encounter started: %d (%s)", ...)
-    self.currentEncounter = { ... }
-end
-
-function LM.Environment:ENCOUNTER_END(event, ...)
-    self.currentEncounter = nil
-end
-
--- If you do the pulling then you get ENCOUNTER_START after PLAYER_REGEN_DISABLED
--- and the combat setup doesn't work. Hopefully in this case you are targeting the
--- boss so we can fake it up. This is pretty much all for Tindral Sageswift and I
--- hope never gets needed again.
-
-local function GetUnitNPCID(unit)
-    local guid = UnitGUID(unit)
-    if guid then
-        local _, _, _, _, _, id = strsplit('-', guid)
-        -- No check for unitType because id will be nil and tonumber(nil) == nil
-        return tonumber(id)
-    end
-end
-
-local EncounterByNPCID = {
-    -- Tindral Sageswift, Amirdrassil (Dragonflight)
-    [209539] = 2786,
-}
-
-function LM.Environment:GetEncounterInfo()
-    if self.currentEncounter then
-        return unpack(self.currentEncounter)
-    end
-    local npcid = GetUnitNPCID('target')
-    if npcid and EncounterByNPCID[npcid] then
-        local name = UnitName('target')
-        local _, _, difficultyID, _, _, _, _, _, groupSize = GetInstanceInfo()
-        return EncounterByNPCID[npcid], name, difficultyID, groupSize
-    end
-end
-
 local herbSpellName = C_Spell.GetSpellName(2366)
 local mineSpellName = C_Spell.GetSpellName(2575)
 -- local mineSpellName2 = C_Spell.GetSpellName(195122)
 
 function LM.Environment:UNIT_SPELLCAST_SUCCEEDED(ev, unit, guid, spellID)
+    -- Strictly speaking this check isn't needed because of RegisterUnitEvent
     if unit == 'player' then
         local spellName = C_Spell.GetSpellName(spellID)
         if spellName == herbSpellName then
@@ -225,40 +277,12 @@ function LM.Environment:UNIT_SPELLCAST_SUCCEEDED(ev, unit, guid, spellID)
     end
 end
 
-function LM.Environment:GetHerbTime()
-    return self.lastHerbTime or 0
-end
-
-function LM.Environment:GetMineTime()
-    return self.lastMineTime or 0
-end
-
 function LM.Environment:UPDATE_SHAPESHIFT_FORM()
     if GetShapeshiftFormID() == 3 and InCombatLockdown() then
         LM.Debug("Changed to travel form in combat.")
         self.combatTravelForm = true
     else
         self.combatTravelForm = nil
-    end
-end
-
-function LM.Environment:IsCombatTravelForm()
-    return self.combatTravelForm
-end
-
-function LM.Environment:GetDruidForm()
-    if UnitClassBase("player") == "DRUID" then
-        local id = GetShapeshiftFormID()
-        if id then
-            local index = GetShapeshiftForm()
-            local _, _, _, spellID = GetShapeshiftFormInfo(index)
-            if spellID then
-                return id, C_Spell.GetSpellInfo(spellID)
---          else
---              LM.PrintError('Uh-oh, druid form query failure please tell the author')
---              LM.PrintError('id=%d, index=%d, spellID=nil', id, index)
-            end
-        end
     end
 end
 
@@ -309,7 +333,7 @@ function LM.Environment:IsMapInPath(mapID, checkGroup)
     return false
 end
 
-function LM.Environment:InInstance(...)
+function LM.Environment:IsInInstance(...)
     local currentID = select(8, GetInstanceInfo())
     for i = 1, select('#', ...) do
         local id = select(i, ...)
@@ -362,7 +386,6 @@ function LM.Environment:KnowsFlyingSkill()
         or IsPlayerSpell(34090)
 end
 
-
 -- Overrides have 3 possible return values, true, false, nil (no override)
 local InstanceFlyableOverride = {
     [1662] = false,     -- Suramar campaign scenario
@@ -370,12 +393,12 @@ local InstanceFlyableOverride = {
     [2275] = false,     -- Lesser Vision Vale of Eternal Twilight
     [2512] = true,      -- The Primalist Future
     [2549] =            -- Amirdrassil Raid
-        function ()
+        function (self)
             -- Skyriding debuff Blessing of the Emerald Dream (429226)
             -- This is an approximation, it doesn't make the area skyriding
             -- it just forces the journal skyriding mounts to work. Notably
             -- Soar does not work with it, so there is a hack there too.
-            if LM.UnitAura('player', 429226, 'HARMFUL') then return true end
+            if self.playerDebuffIDs[429226] then return true end
         end,
     [2597] = false,     -- Zaralek Caverns - Chapter 1 Scenario
                         -- The debuff "Hostile Airways" (406608) but it's always up
@@ -386,7 +409,7 @@ function LM.Environment:GetFlyableOverride()
     local instanceID = select(8, GetInstanceInfo())
     local override = InstanceFlyableOverride[instanceID]
     if type(override) == 'function' then
-        local value = override()
+        local value = override(self)
         if value ~= nil then return value end
     else
         if override ~= nil then return override end
@@ -402,26 +425,26 @@ function LM.Environment:IsFlyableArea()
 
     if false and WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC then
         -- Northrend requires Cold Weather Flying
-        if self:InInstance(571) then
+        if self:IsInInstance(571) then
             if not IsPlayerSpell(54197) then
                 return false
             end
         end
         -- Eastern Kingdoms, Kalimdor and Deepholm require Flight Master's License
-        if self:InInstance(0, 1, 646) then
+        if self:IsInInstance(0, 1, 646) then
             if not IsPlayerSpell(90267) then
                 return false
             end
         end
         -- Pandaria requires Wisdom of the Four Winds
-        if self:InInstance(870) then
+        if self:IsInInstance(870) then
             if not IsPlayerSpell(115913) then
                 return false
             end
         end
     end
 
-    if self:InInstance(2552, 2601, 2738) then
+    if self:IsInInstance(2552, 2601, 2738) then
         -- In Khaz Algar (Surface) (2552), Khaz Algar (2601) and K'aresh (2739)
         -- before unlocking Steady Flight, IsFlyableArea() is false and I don't
         -- know of a check to see if Skyriding would work.
@@ -444,7 +467,7 @@ function LM.Environment:IsFlyableArea()
     -- of this might be different if you never unlocked Steady Flight on your
     -- account.
 
-    if PlayerIsTimerunning and PlayerIsTimerunning() and LM.UnitAura('player', 1213439) then
+    if PlayerIsTimerunning and PlayerIsTimerunning() and self.playerBuffIDs[1213439] then
         local _, flightStyle = self:GetFlightStyle()
         if flightStyle == 'skyriding' and not C_QuestLog.IsQuestFlaggedCompleted(89416) then
             return false
@@ -460,7 +483,7 @@ function LM.Environment:IsFlyableArea()
     end
 
     -- TWW intro area has this debuff preventing flying
-    if LM.UnitAura('player', 456486, 'HARMFUL') then
+    if self.playerDebuffIDs[456486] then
         return false
     end
 
@@ -495,11 +518,6 @@ end
 
 function LM.Environment:IsDrivableArea()
     return LM.Drive.IsUsable()
-end
-
-function LM.Environment:CantBreathe()
-    local name, _, _, rate = GetMirrorTimerInfo(2)
-    return (name == "BREATH" and rate < 0)
 end
 
 function LM.Environment:GetLocation()
@@ -583,8 +601,8 @@ local function ValidDisplayMap(info, group, seenGroups)
 
     local out
 
-    if C_Map.IsMapValidForNavBarDropDown then
-        out = C_Map.IsMapValidForNavBarDropDown(info.mapID)
+    if C_Map.IsMapValidForNavBardropDown then
+        out = C_Map.IsMapValidForNavBarDropdown(info.mapID)
     else
         out = info.mapType <= Enum.UIMapType.Zone
     end
@@ -632,7 +650,7 @@ function LM.Environment:GetContinents(str)
         if info
             and info.mapType == Enum.UIMapType.Continent
             and info.parentMapID > 0
-            and C_Map.IsMapValidForNavBarDropDown(i) then
+            and C_Map.IsMapValidForNavBarDropdown(i) then
             local searchName = string.lower(info.name)
             if info.mapID == tonumber(str) or searchName:find(searchStr) then
                 tinsert(lines, format("% 4d : %s", info.mapID, info.name))
@@ -674,7 +692,7 @@ end
 -- taint-safe to put it back. Wah!
 
 function LM.Environment:GetEJInstances()
-    LoadAddOn("Blizzard_EncounterJournal")
+    C_AddOns.LoadAddOn("Blizzard_EncounterJournal")
 
     -- Save EJ state
     EncounterJournal:UnregisterEvent("EJ_DIFFICULTY_UPDATE")
@@ -804,6 +822,13 @@ function LM.Environment:ClearMouseButtonClicked()
     self.mouseButtonClicked = nil
 end
 
-function LM.Environment:GetMouseButtonClicked()
-    return self.mouseButtonClicked
+function LM.Environment:RefreshState()
+    -- Update first so the other updaters can use them.
+    self.playerBuffIDs = StateUpdateFunctions.playerBuffIDs(self)
+    self.playerDebuffIDs = StateUpdateFunctions.playerDebuffIDs(self)
+    for k, f in pairs(StateUpdateFunctions) do
+        if k ~= 'playerBuffIDs' and k ~= 'playerDebuffIDs' then
+            self[k] = f(self)
+        end
+    end
 end

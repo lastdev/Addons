@@ -1,84 +1,19 @@
 --[[
-	Krowi's Tutorials License
-        Copyright ©2020 The contents of this library, excluding third-party resources, are
-        copyrighted to their authors with all rights reserved.
+    Copyright (c) 2023 Krowi
 
-        This library is free to use and the authors hereby grants you the following rights:
+    All Rights Reserved unless otherwise explicitly stated.
 
-        1. 	You may make modifications to this library for private use only, you
-            may not publicize any portion of this library. The only exception being you may
-            upload to the github website.
-
-        2. 	Do not modify the name of this library, including the library folders.
-
-        3. 	This copyright notice shall be included in all copies or substantial
-            portions of the Software.
-
-        All rights not explicitly addressed in this license are reserved by
-        the copyright holders.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
 ]]
 
---[[
-	API Information
-
-	Tutorial Arguments
-	---------------------------
-		SavedVariables ..... The table that is used in the .toc file for the SavedVariables
-		Key ................ The variable name that will be used to save the last viewed page index
-		Icon ............... [Optional] Path to image (tga or blp). Default is '?'-mark.
-		Font ............... [Optional] Font name to be used. Default is default game font (GameFontHighlight).
-
-	Tutorial Functions
-	------------------
-		New ................ Creates a new tutorial frame.
-		SetPages ........... Sets the pages the tutorial contains.
-		AddPage ............ Adds a single page to the tutorial.
-		Reset .............. Resets the tutorial so when it opens it will be on the first page.
-		ShowTutorial ....... Shows the tutorial on the set page.
-		SetFrameTitle ...... [Optional] Sets the title at the top of the tutorial window. Will be overwritten if a page has a 'Title' defined.
-		SetFrameWidth ...... [Optional] Sets the internal frame width (without borders). Default is 512 + 20. Allows for 512 wide images to have some space between image and borders.
-							            Will be overwritten if a page has a 'Width' defined.
-		SetCloseButtonHook . [Optional] Hooks a function to the closing of the tutorial.
-		SetImageSize ....... [Optional] Set the image size for all pages.
-		SetImageMargin ..... [Optional] Set the image margins for all pages.
-		SetTextSize ........ [Optional] Set the text size for all pages.
-		SetTextMargin ...... [Optional] Set the text margins for all pages.
-
-	Page Arguments (All these arguments can also be declared on Tutorial level)
-	--------------
-		Point .............. [Optional] Used in Tutorial:SetPoint. Default is "CENTER".
-		RelativeFrame ...... [Optional] Used in Tutorial:SetPoint. Default is "UIParent".
-		RelativePoint ...... [Optional] Used in Tutorial:SetPoint. Default is "CENTER".
-		OffsetX ............ [Optional] Used in Tutorial:SetPoint. Default is 0.
-		OffsetY ............ [Optional] Used in Tutorial:SetPoint. Default is 0.
-		Title .............. [Optional] Overwrites SetFrameTitle for the specific page. Default is 'Tutorial'.
-		Width .............. [Optional] Overwrites SetFrameWidth for the specific page.
-		Image .............. [Optional] Image path (tga or blp). Default is none.
-		ImageSize .......... [Optional] {Width, Height} of the image. Default is {0, 0}.
-		ImageTexCoord ...... [Optional] {Left, Right, Top, Bottom}. See https://wowpedia.fandom.com/wiki/API_Texture_SetTexCoord. Default is {0, 1, 0, 1}.
-		ImageMargin ........ [Optional] {Left, Top, Right, Bottom} margins of the image. Default is {0, 0, 0, 0}.
-		Text ............... [Optional] Text string. Dsiplayed under Image if provided.
-		TextSize ........... [Optional] {Width, Height} of the text area. Auto Width/Height if default. Default is {0, 0}.
-		TextMargin ......... [Optional] {Left, Top, Right, Bottom} margins of the text area. Default is {0, 0, 0, 0}.
-		Shine .............. [Optional] The frame to anchor the flashing "look at me!" glow.
-		ShineAll ........... [Optional] Set ShineTop, ShineBottom, ShineLeft, ShineRight to the same value, can be overwritten by the invidual arguments or ShineWidth and ShineHeight.
-		ShineWidth ......... [Optional] Set ShineLeft, ShineRight to the same value, can be overwritten by the invidual arguments.
-		ShineHeight ........ [Optional] Set ShineTop, ShineBottom to the same value, can be overwritten by the invidual arguments.
-		ShineTop ........... [Optional] Top offset.
-		ShineBottom ........ [Optional] Bottom offset.
-		ShineLeft .......... [Optional] Left offset.
-		ShineRight ......... [Optional] Right offset.
-
-	Not Used Right Now
-	------------------
-		editbox ............ [Optional] Edit box text string (directing value). Edit box is out of content flow.
-		editboxWidth ....... [Optional] Default is 400.
-		editboxLeft, editboxBottom
-		button ............. [optional] Button text string (directing value). Button is out of content flow.
-		buttonWidth ........ Default is 100.
-		buttonClick ........ Function with button's click action.
-		buttonLeft, buttonBottom
---]]
+---@diagnostic disable: undefined-global
+---@diagnostic disable: redefined-local
 
 local lib = LibStub:NewLibrary('Krowi_Tutorials-3.0', 1);
 

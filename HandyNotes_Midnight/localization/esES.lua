@@ -24,8 +24,9 @@ L['options_icons_midnight_lore_hunter_desc'] = 'Muestra dónde están los objeto
 
 L['eversong_woods_stone_vat_of_wine_note'] = 'Requiere 10x {item:256232} y 1x {item:256397} de {npc:251405}.\n\nPisa las uvas y luego añade la levadura.'
 L['on_flying_platform'] = 'En una plataforma voladora.'
-L['gift_of_the_phoenix_note'] = nil
-L['triple_locked_safebox_note'] = nil
+L['gift_of_the_phoenix_note'] = 'Atrapa 5 cenizas de los fénix que aparecen después de usar el Regalo del Fénix.'
+L['triple_locked_safebox_note'] = 'Requiere 3 llaves ocultas de caja fuerte. Coge la antorcha morada al lado del cofre para verlas.'
+L['incomplete_book_of_sonnets'] = 'Libro de sonetos incompleto.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- HARANDAR -----------------------------------
@@ -33,11 +34,13 @@ L['triple_locked_safebox_note'] = nil
 
 L['glowing_moth'] = 'Polilla resplandeciente'
 L['options_icons_glowing_moth'] = 'Polilla resplandeciente'
-L['options_icons_glowing_moth_desc'] = 'Muestra dónde están las Polillas resplandecientes.'
+L['options_icons_glowing_moth_desc'] = 'Muestra dónde están las Polillas resplandecientes para el logro {achievement:61052}.'
 
 -------------------------------------------------------------------------------
 ---------------------------------- VOIDSTORM ----------------------------------
 -------------------------------------------------------------------------------
+
+L['bloody_sack_note'] = 'Coge la {object:Carne goteando} de un montón de huesos cercanos para alimentar la {object:Mazmorra olvidada}.'
 
 -------------------------------------------------------------------------------
 ---------------------------------- ZUL'AMAN ----------------------------------

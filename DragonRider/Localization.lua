@@ -1,4 +1,8 @@
-local _, L = ...; -- Let's use the private table passed to every .lua 
+local _, DR = ...
+
+local L = {}
+DR.L = L
+local defaultsTable = DR.defaultsTable
 
 local function defaultFunc(L, key)
  -- If this function was called, we have no localization for this key.

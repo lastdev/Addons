@@ -1,5 +1,9 @@
 # Changelog
 
+## Changed in v14
+
+* Updated for 11.2.7
+
 ## Changed in v13
 
 * Updated for 11.2.0, 3.4.5

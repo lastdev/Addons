@@ -1,15 +1,15 @@
 # GatherMate2Data
 
-## [v38.2](https://github.com/Nevcairiel/GatherMate2_Data/tree/v38.2) (2022-12-14)
-[Full Changelog](https://github.com/Nevcairiel/GatherMate2_Data/commits/v38.2) [Previous Releases](https://github.com/Nevcairiel/GatherMate2_Data/releases)
+## [v40.0](https://github.com/Nevcairiel/GatherMate2_Data/tree/v40.0) (2025-12-08)
+[Full Changelog](https://github.com/Nevcairiel/GatherMate2_Data/commits/v40.0) [Previous Releases](https://github.com/Nevcairiel/GatherMate2_Data/releases)
 
+- Add Timber Data, re-generate Mining/Herb data  
+- Add Group and Texture  
+- Add more TWW zones  
+- Fix Dorn id. Thanks @AndreiMaga !  
+- Added another missing zone for DF.  
+- Add two missed DF zones.  
+- Add comments and TWW info.  
+- Update toc for 11.00.02  
+- Add touched up README from Lindsey Burnett's PR  
 - Update Data from WoWHead  
-- Add Dragonflight zone filters  
-- Update TOC for 10.0.2  
-- Add first draft of Dragonflight data  
-- Update TOC  
-- Update Data for 9.2.5  
-- Update TOC for 9.1  
-- Update Data from WoWHead  
-- Add GitHub Actions integration  
-- Add Project ID  

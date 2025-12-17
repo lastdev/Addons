@@ -1,7 +1,7 @@
 ﻿--[[
 ********************************************************************************
 Routes
-v1.8.4
+v1.8.5
 16 October 2014
 (Originally written for Live Servers v4.3.0.15050)
 (Hotfixed for v6.0.2.19034)
@@ -2731,7 +2731,7 @@ do
 			for englishName, translatedName in pairs(db.routes[mapFile][create_name].selection) do
 				local NL = LibStub("AceLocale-3.0"):GetLocale("GatherMate2Nodes",true)
 				translatedName = NL[englishName]
-				for db_type, db_data in pairs(GatherMate2.gmdbs) do
+				for db_type in pairs(GatherMate2.gmdbs) do
 					local nodeID = GatherMate2:GetIDForNode(db_type, translatedName)
 					if nodeID then
 						local key = ("%s;%s;%s;%s"):format("GatherMate2", db_type, nodeID, 0)

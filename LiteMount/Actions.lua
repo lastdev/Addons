@@ -421,7 +421,7 @@ ACTIONS['SwitchFlightStyle'] = {
         function (args, context)
             if IsPlayerSpell(switchSpellID) then
                 local argList = args:ParseList()
-                local _, currentStyle = LM.Environment:GetFlightStyle()
+                local _, currentStyle = LM.Environment.flightStyle
                 if #argList == 0 or currentStyle ~= argList[1] then
                     LM.Debug("  * setting action to spell " .. switchSpellInfo.name)
                     return LM.SecureAction:Spell(switchSpellID, context.rule.unit)
@@ -644,11 +644,6 @@ end
 local function CombatHandlerOverride(args, context)
     -- For speed these should try to return ASAP.
 
-    local id, name = LM.Environment:GetEncounterInfo()
-    if id and name then
-        LM.Debug("  * matched encounter %s (%d)", name, id)
-    end
-
     -- It seems obvious that you should use the encounter info here, but
     -- if you are the one who pulled it's not set yet and doesn't work.
 
@@ -664,7 +659,7 @@ local function CombatHandlerOverride(args, context)
     end
 
     -- Dimensius, Manaforge Omega raid (TWW)
-    if LM.Environment:InInstance(2810) then
+    if LM.Environment:IsInInstance(2810) then
         local mapID = C_Map.GetBestMapForUnit('player')
         if mapID >= 2467 and mapID <= 2470 then
             return GetCombatMountAction(context, 'DRAGONRIDING')
@@ -672,7 +667,7 @@ local function CombatHandlerOverride(args, context)
     end
 
     -- The Dawnbreaker dungeon (The War Within)
-    if LM.Environment:InInstance(2662) then
+    if LM.Environment:IsInInstance(2662) then
         return GetCombatMountAction(context, 'DRAGONRIDING')
     end
 end

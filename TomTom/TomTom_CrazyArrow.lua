@@ -631,7 +631,7 @@ function TomTom:GetFormattedDistance(distanceInYards)
 		if miles == 0 then
 			return L["%d yards away"]:format(yards)
 		elseif miles == 1 then
-			return L["%d mile %d away"]:format(miles, yards)
+			return L["%d mile %d yards away"]:format(miles, yards)
 		else
 			return L["%d miles %d yards away"]:format(miles, yards)
 		end

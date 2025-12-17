@@ -274,11 +274,11 @@ function private.CreateButtonOnClick(button)
 	local bindingMode = (GetCurrentBindingSet() == CHARACTER_BINDING_SET) and 1 or 2
 	if scrollFrame:GetElement("setup.content.direction.check.up"):IsChecked() then
 		SetBinding(modifierStr.."MOUSEWHEELUP", nil, bindingMode)
-		SetBinding(modifierStr.."MOUSEWHEELUP", BINDING_NAME, bindingMode)
+		SetBindingMacro(modifierStr.."MOUSEWHEELUP", MACRO_NAME)
 	end
 	if scrollFrame:GetElement("setup.content.direction.check.down"):IsChecked() then
 		SetBinding(modifierStr.."MOUSEWHEELDOWN", nil, bindingMode)
-		SetBinding(modifierStr.."MOUSEWHEELDOWN", BINDING_NAME, bindingMode)
+		SetBindingMacro(modifierStr.."MOUSEWHEELDOWN", MACRO_NAME)
 	end
 
 	SaveBindings(CHARACTER_BINDING_SET)

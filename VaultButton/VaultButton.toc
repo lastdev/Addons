@@ -4,7 +4,7 @@
 ## Notes: Displays an icon on the minimap that opens the great treasury.
 ## Notes-ruRU: Отображает на миникарте иконку, которая позволяет мгновенно открыть Великое Хранилище.
 ## Author: BloodDragon2580
-## Version: 10.3
+## Version: 10.4
 ## SavedVariables: VaultButtonDB
 ## IconTexture: Interface\AddOns\VaultButton\Media\Texture\logo
 

@@ -121,20 +121,42 @@ local bfaZones = {
 }
 
 local slZones = {
-	[1525] = true,
-	[1533] = true,
-	[1536] = true,
-	[1543] = true,
-	[1565] = true,
-	[1670] = true,
+	[1525] = true, -- Revendreth
+	[1533] = true, -- Bastion
+	[1536] = true, -- Maldraxxus
+	[1543] = true, -- The Maw
+	[1565] = true, -- Ardenweald
+	[1670] = true, -- Oribos
+	[1961] = true, -- Korthia
+	[1970] = true, -- Zereth Mortis
 }
 
 local dfZones = {
-	[2022] = true,
-	[2023] = true,
-	[2024] = true,
-	[2025] = true,
-	[2112] = true,
+	[2022] = true, -- The Waking Shores
+	[2023] = true, -- Ohn'ahran Plains
+	[2024] = true, -- The Azure Span
+	[2025] = true, -- Thaldraszus
+	[2112] = true, -- Valdrakken
+	[2151] = true, -- The Forbidden Reach
+	[2133] = true, -- Zaralek Cavern
+	[2200] = true, -- Emerald Dream
+	[2239] = true, -- Amirdrassil
+	[2262] = true, -- Traitor's Rest
+	[2199] = true, -- Tyrhold Reservoir
+	[2085] = true, -- The Primalist Future
+}
+
+local twwZones = {
+	[2248] = true, -- Isle of Dorn
+	[2215] = true, -- Hallowfall
+	[2214] = true, -- The Ringing Deeps
+	[2255] = true, -- Azj-Kahet
+	[2256] = true, -- Azj-Kahet, Lower
+	[2213] = true, -- City of Threads
+	[2216] = true, -- City of Threads (lower)
+	[2339] = true, -- Dornogal
+	[2346] = true, -- Undermine
+	[2371] = true, -- K'aresh
 }
 
 function GatherMateData:PerformMerge(dbs,style, zoneFilter)
@@ -158,6 +180,8 @@ function GatherMateData:PerformMerge(dbs,style, zoneFilter)
 			filter = slZones
 		elseif zoneFilter == "DF" then
 			filter = dfZones
+		elseif zoneFilter == "TWW" then
+			filter = twwZones
 		end
 	end
 	if dbs["Mines"]    then self:MergeMines(style ~= "Merge",filter) end
@@ -166,7 +190,8 @@ function GatherMateData:PerformMerge(dbs,style, zoneFilter)
 	if dbs["Fish"]     then self:MergeFish(style ~= "Merge",filter) end
 	if dbs["Treasure"] then self:MergeTreasure(style ~= "Merge",filter) end
 	if dbs["Archaeology"] then self:MergeArchaelogy(style ~= "Merge",filter) end
-	self:CleanupImportData()
+	if dbs["Logging"] then self:MergeLogging(style ~= "Merge",filter) end
+	--self:CleanupImportData()
 	GatherMate:SendMessage("GatherMateData2Import")
 	--GatherMate:CleanupDB()
 end
@@ -237,6 +262,16 @@ function GatherMateData:MergeArchaelogy(clear,zoneFilter)
 		end
 	end
 end
+function GatherMateData:MergeLogging(clear,zoneFilter)
+	if clear then GatherMate:ClearDB("Logging") end
+	for zoneID, node_table in pairs(GatherMateData2LoggingDB) do
+		if not zoneFilter or zoneFilter[zoneID] then
+			for coord, nodeID in pairs(node_table) do
+				GatherMate:InjectNode2(zoneID,coord,"Logging", nodeID)
+			end
+		end
+	end
+end
 
 
 function GatherMateData:CleanupImportData()
@@ -246,4 +281,5 @@ function GatherMateData:CleanupImportData()
 	GatherMateData2FishDB = nil
 	GatherMateData2TreasureDB = nil
 	GatherMateData2ArchaeologyDB = nil
+	GatherMateData2LoggingDB = nil
 end

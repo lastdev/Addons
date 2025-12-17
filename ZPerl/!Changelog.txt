@@ -1,4 +1,7 @@
 **7.6.1**
+* Update for 11.2.7.
+
+**7.6.1**
 * Update for 11.2.5.
 * Update for 5.5.1.
 * Update for 1.15.8.

@@ -1,8 +1,7 @@
 # LiteMount
 
-## [11.2.5-16](https://github.com/xod-wow/LiteMount/tree/11.2.5-16) (2025-11-25)
-[Full Changelog](https://github.com/xod-wow/LiteMount/compare/11.2.5-15...11.2.5-16) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
+## [11.2.7-2](https://github.com/xod-wow/LiteMount/tree/11.2.7-2) (2025-12-06)
+[Full Changelog](https://github.com/xod-wow/LiteMount/compare/11.2.7-1...11.2.7-2) [Previous Releases](https://github.com/xod-wow/LiteMount/releases)
 
-- Fix class-based combat macro enabling  
-- Add 120000 to ToC for Midnight beta  
-    Fixes #392  
+- Fix [floating] and mounting from water by jumping #397  
+- Warning message display string format support  

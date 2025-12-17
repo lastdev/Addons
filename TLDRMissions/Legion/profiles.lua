@@ -1,11 +1,10 @@
 local addonName, addon = ...
-addonName = "TLDRMissions-WOD"
+addonName = "TLDRMissions-Legion"
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 
-
-function addon.LegionGUI:RefreshProfile()
+function addon.LegionGUI:InitProfile()
     local defaults = {
         profile = {
             selectedRewards = {
@@ -18,6 +17,7 @@ function addon.LegionGUI:RefreshProfile()
             autoStart = false,
             autoShowUI = false,
             sacrificeRemaining = false,
+            minimumTroops = 0,
             guiX = nil,
             guiY = nil,
             followerXPSpecialTreatment = false,
@@ -31,19 +31,22 @@ function addon.LegionGUI:RefreshProfile()
             },
             durationLower = 1,
             durationHigher = 24,
-            AnimaCostLimit = 300,
-            LevelRestriction = 1,
+            AnimaCostLimit = 1000,
+            LevelRestriction = 3,
+            sortType = 1,
+            useLethalMissionPriority = false,
         }
     }
     
     addon.Legiondb = LibStub("AceDB-3.0"):New("TLDRMissionsLegionProfiles", defaults, true)
     local db = addon.Legiondb
+    self.db = db
 
 	db.RegisterCallback(self, "OnProfileChanged", "ProfileChanged")
     db.RegisterCallback(self, "OnProfileCopied", "ProfileChanged")
 	db.RegisterCallback(self, "OnProfileReset", "ProfileChanged")
     
-    --[[]
+    --[[
     local function setupAnimaCostDropDown(name)
         local options = {"10-24", "25-29", "30-49", "50-99", "100+"}
 
@@ -72,23 +75,22 @@ function addon.LegionGUI:RefreshProfile()
     setupAnimaCostDropDown("Apexis")
     setupAnimaCostDropDown("Oil")
     setupAnimaCostDropDown("Seal")
+    ]]
     
     local options = {type = "group", args = {}}
     LibStub("AceConfigRegistry-3.0"):ValidateOptionsTable(options, addonName)
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options, {"tldrmissions-wod"})
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options, {"tldrmissions-legion"})
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(db)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, nil, nil, "profiles")
-    ]]
     
     addon.LegionGUI:ProfileChanged()
 end
-    
     
 function addon.LegionGUI:ProfileChanged()
     local db = addon.Legiondb
     local gui = addon.LegionGUI
     local profile = db.profile
-    --[[
+    
     gui.CalculateButton:SetEnabled(false)
     for i = 1, 12 do
         if profile.selectedRewards[i] then
@@ -102,23 +104,23 @@ function addon.LegionGUI:ProfileChanged()
     gui.AnythingForXPCheckButton:SetChecked(profile.anythingForXP)    
     
     gui.AutoStartButton:SetChecked(profile.autoStart)
-    ]]
+    
+    gui.PrioritiseLethalCheckButton:SetChecked(profile.useLethalMissionPriority)
     
     if profile.guiX and profile.guiY then
         gui:ClearAllPoints()
         gui:SetPoint("TOPLEFT", OrderHallMissionFrame, "TOPLEFT", profile.guiX, profile.guiY)
     end
     
-    --[[
     gui.AnimaCostLimitSlider:SetValue(profile.AnimaCostLimit)
     gui.LowerBoundLevelRestrictionSlider:SetValue(profile.LevelRestriction)
+    gui.MinimumTroopsSlider:SetValue(profile.minimumTroops)
     
-    TLDRMissionsWODFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(profile.durationLower, profile.durationHigher))
-    TLDRMissionsWODFrameDurationLowerSlider:SetValue(profile.durationLower)
-    TLDRMissionsWODFrameDurationHigherSlider:SetValue(profile.durationHigher)
-    --]]
+    TLDRMissions4FrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(profile.durationLower, profile.durationHigher))
+    TLDRMissions4FrameDurationLowerSlider:SetValue(profile.durationLower)
+    TLDRMissions4FrameDurationHigherSlider:SetValue(profile.durationHigher)
     gui.AutoShowButton:SetChecked(profile.autoShowUI)
-    --gui.AutoStartButton:SetChecked(profile.autoStart)
+    gui.AutoStartButton:SetChecked(profile.autoStart)
     
-    --addon:updateWODRewards()
+    self:updateRewards()
 end

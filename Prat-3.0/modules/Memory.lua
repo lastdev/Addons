@@ -24,6 +24,15 @@
 --
 -------------------------------------------------------------------------------
 
+local Chat_GetChatFrame = _G.Chat_GetChatFrame or _G.ChatFrameUtil.GetChatFrame
+local ChatFrame_GetCommunityAndStreamFromChannel = _G.ChatFrame_GetCommunityAndStreamFromChannel or _G.ChatFrameUtil.GetCommunityAndStreamFromChannel
+local ChatFrame_AddNewCommunitiesChannel = _G.ChatFrame_AddNewCommunitiesChannel or _G.ChatFrameUtil.AddNewCommunitiesChannel
+
+local ChatFrame_RemoveAllMessageGroups = _G.ChatFrame_RemoveAllMessageGroups or _G.ChatFrameMixin.RemoveAllMessageGroups
+local ChatFrame_AddMessageGroup = _G.ChatFrame_AddMessageGroup or _G.ChatFrameMixin.AddMessageGroup
+local ChatFrame_RemoveAllChannels = _G.ChatFrame_RemoveAllChannels or _G.ChatFrameMixin.RemoveAllChannels
+local ChatFrame_ReceiveAllPrivateMessages = _G.ChatFrame_ReceiveAllPrivateMessages or _G.ChatFrameMixin.ReceiveAllPrivateMessages
+
 Prat:AddModuleToLoad(function()
   local function dbg(...) end
 
@@ -599,7 +608,12 @@ end
 
     ChatFrame_RemoveAllChannels(f)
     for i = 1, #db.channels, 2 do
-      local chan = ChatFrame_AddChannel(f, db.channels[i])
+		local chan
+		if _G.ChatFrame_AddChannel then
+			chan = _G.ChatFrame_AddChannel(f, db.channels[i])
+		elseif _G.ChatFrameMixin.AddChannel then
+			chan = f:AddChannel(db.channels[i])
+		end
       if not chan then
         dbg("failed to load", db.channels[i], chan)
         success = false
@@ -761,7 +775,7 @@ end
   function module:LoadSettings()
     local db = self.db.profile
     local success = true
-  
+
     if not next(db.frames) then
       self:Output(PL.msg_nosettings)
       self.needsLoading = nil
@@ -827,14 +841,14 @@ end
     if success then
       self.needsLoading = nil
       self.working = nil
-      self.errorcount = nil
+      self.errorcount = 0
       self:Output(PL.msg_settingsloaded)
     else
       self.errorcount = self.errorcount + 1
 
       if self.errorcount > 10 then
         self.working = nil
-        self.errorcount = nil
+        self.errorcount = 0
         self:Output(PL.msg_loadfailed)
         return
       end

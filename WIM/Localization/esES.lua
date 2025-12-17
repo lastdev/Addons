@@ -1,6 +1,6 @@
 --[[
     Language Localization: esES & esMX
-    Translated by: Woopy - Loatheb (NA)
+    Translated by: Woopy#1685 (NA)
 ]]
 
 local translations = {
@@ -111,6 +111,8 @@ local translations = {
     ["Direction:"] = "Dirección:",
     ["Tabs"] = "Pestañas",
     ["Sort tabs by:"] = "Ordenar pestañas por:",
+	["Window Created"] = "Ventana creada",
+	["Last Activity"] = "Última actividad",
     ["Alphabetical"] = "Alfabético",
     ["Recent Activity"] = "Actividad reciente",
     ["Keep windows on top of your UI."] = "Mantén las ventanas encima de tu IU.",
@@ -292,7 +294,7 @@ local translations = {
     ["Display Tutorials"] = "Mostrar tutoriales",
     ["Reset Tutorials"] = "Restablecer tutoriales",
     ["Credits"] = "Créditos",
-    ["This is a long message which contains both emoticons and urls 8)."] = "Este es un mensaje largo que contiene emoticonos y urls 8).",
+    ["This is a long message which contains both emoticons and urls 8). WIM's home is www.WIMAddon.com."] = "Este es un mensaje largo que contiene emoticonos y urls 8). La página de WIM es www.WIMAddon.com.",
     ["Message Formatting"] = "Formato de mensaje",
     ["Manipulate how WIM displays messages."] = "Manipula cómo WIM muestra los mensajes.",
     ["Preview"] = "Previsualización",
@@ -378,7 +380,6 @@ local translations = {
     ["Allowing your history logs to grow too large will affect the game's performance, therefore it is reccomended that you use the following options."] = "Permite que tus registros de historial crezcan demasiado afectará el rendimiento del juego, por lo tanto, se recomienda que uses las siguientes opciones.",
     ["Save a maximum number of messages per person."] = "Guardar un número máximo de mensajes por persona",
     ["%d |4Week:Weeks;"] = "%d |4Semana:Semanas;",
-    ["%d |1Week:Week;"] = "%d |1Semana:Semana;",
     ["Automatically delete old messages."] = "Eliminar automáticamente los mensajes antiguos",
     ["WIM-2-WIM is a feature which allows users with WIM to interact in ways that normal whispering can not."] = "WIM-2-WIM es una característica que permite a los usuarios con WIM interactuar de formas que los susurros normales no pueden.",
     ["Enable WIM-2-WIM"] = "Activar WIM-2-WIM",
@@ -414,9 +415,6 @@ local translations = {
     ["Place friends in their own group."] = "Colocar amigos en su propio grupo",
     ["Place guild members in their own group."] = "Colocar a los miembros de la hermandad en su propio grupo",
     ["Does not apply to windows already opened."] = "No se aplica a las ventanas ya abiertas.",
-    ["Last Activity"] = "Última actividad",
-    ["Window Created"] = "Ventana creada",
-
 
     -- Talent Specs --
     ["Affliction"] = "Aflicción",

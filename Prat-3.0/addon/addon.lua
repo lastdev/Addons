@@ -39,8 +39,7 @@ local tostring = tostring
 local pairs = pairs
 local ipairs = ipairs
 local type = type
-local select = select
-local tinsert = tinsert
+local strsub = strsub
 local Prat = Prat
 local setmetatable, getmetatable = setmetatable, getmetatable
 local strfind = strfind
@@ -62,14 +61,14 @@ Prat.BN_CHAT = true --(_G.GetBuildInfo() == "3.3.5") or (_G.GetBuildInfo() == "0
 
 --ChunkSizes = {}
 
---[==[@debug@ 
+--[==[@debug@
 Prat.Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 
 
 --@end-debug@]==]
 
 --@non-debug@
-Prat.Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.73".."|r)"
+Prat.Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.77".."|r)"
 --@end-non-debug@
 
 
@@ -89,7 +88,7 @@ Prat.IsRetail =  (_G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE)
 
 local function dbg(...) end
 
---[==[@debug@ 
+--[==[@debug@
 local function dbg(...) Prat:PrintLiteral(...) end
 
 --@end-debug@]==]
@@ -440,7 +439,15 @@ function addon:PostEnable()
   --	self:RegisterEvent("CVAR_UPDATE")
 
   -- Inbound Hooking
-  self:RawHook("ChatFrame_MessageEventHandler", true)
+	if _G["ChatFrame_MessageEventHandler"] then
+		self:RawHook("ChatFrame_MessageEventHandler", true)
+	elseif _G["ChatFrameMixin"] and _G["ChatFrameMixin"].MessageEventHandler then
+		for _, chatFrame in ipairs(_G["CHAT_FRAMES"]) do
+			_G[chatFrame].customEventHandler = function(self, event, ...)
+				return addon:ChatFrame_MessageEventHandler(self, event, ...)
+			end
+		end
+	end
 
   -- Outbound hooking
   self:SecureHook("ChatEdit_ParseText")
@@ -625,7 +632,11 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
   loading = nil -- clear any batch message loading that may be happening
 
   if not Prat.HookedFrames[this:GetName()] then
-    return self.hooks["ChatFrame_MessageEventHandler"](this, event, ...)
+	  if _G["ChatFrame_MessageEventHandler"] then
+		  return self.hooks["ChatFrame_MessageEventHandler"](this, event, ...)
+	  else
+		  return _G["ChatFrameMixin"].MessageEventHandler(this, event, ...)
+	  end
   end
 
   local message, info
@@ -636,6 +647,15 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
   if type(arg1) == "string" and (arg1):find("\r") then -- Stupid exploit. Protect our users.
     arg1 = arg1:gsub("\r", " ")
   end
+
+	if strsub(event, 1, 8) == "CHAT_MSG" and _G.ChatFrameUtil and _G.ChatFrameUtil.ProcessMessageEventFilters then
+		local shouldDiscardMessage = false
+		shouldDiscardMessage , arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
+			= _G.ChatFrameUtil.ProcessMessageEventFilters(self, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
+		if shouldDiscardMessage then
+			return true
+		end
+	end
 
   -- Create a message table. This table contains the chat message in a non-concatenated form
   -- so that it can be modified easily without lots of complex gsub's
@@ -651,7 +671,11 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
   end
 
   if not info then
-    return self.hooks["ChatFrame_MessageEventHandler"](this, event, ...)
+	  if _G["ChatFrame_MessageEventHandler"] then
+		  return self.hooks["ChatFrame_MessageEventHandler"](this, event, ...)
+	  else
+		  return _G["ChatFrameMixin"].MessageEventHandler(this, event, ...)
+	  end
   else
     local m = message --SplitMessage
 
@@ -681,7 +705,11 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
     local proxy = Prat.CreateProxy(this)
 
     m.CAPTUREOUTPUT = proxy
-    CMEResult = self.hooks["ChatFrame_MessageEventHandler"](proxy, event, ...) -- This specifically does not use message.EVENT
+	  if _G["ChatFrame_MessageEventHandler"] then
+		  CMEResult = self.hooks["ChatFrame_MessageEventHandler"](proxy, event, ...) -- This specifically does not use message.EVENT
+	  else
+		  CMEResult = _G["ChatFrameMixin"].MessageEventHandler(proxy, event, ...)
+	  end
     this.tellTimer = proxy.tellTimer
 
     Prat.RestoreProxy()
@@ -744,7 +772,7 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
 
         if (not this:IsShown()) then
           if ((this == _G.DEFAULT_CHAT_FRAME and m.INFO.flashTabOnGeneral) or (this ~= _G.DEFAULT_CHAT_FRAME and m.INFO.flashTab)) then
-            if (not _G.CHAT_OPTIONS.HIDE_FRAME_ALERTS or m.CHATTYPE == "WHISPER" or m.CHATTYPE == "BN_WHISPER") then --BN_WHISPER FIXME
+            if ((_G.CHAT_OPTIONS and not _G.CHAT_OPTIONS.HIDE_FRAME_ALERTS) or m.CHATTYPE == "WHISPER" or m.CHATTYPE == "BN_WHISPER") then --BN_WHISPER FIXME
               if (not _G.FCFManager_ShouldSuppressMessageFlash(this, m.CHATGROUP, m.CHATTARGET)) then
                 _G.FCF_StartAlertFlash(this);
               end
@@ -754,6 +782,9 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
 
 
         Prat.LastMessage = m
+		  if not _G["ChatFrame_MessageEventHandler"] then
+			  CMEResult = true
+		  end
       end
     end
 

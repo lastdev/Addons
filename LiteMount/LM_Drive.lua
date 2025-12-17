@@ -49,9 +49,7 @@ function LM.Drive.IsUsable()
     end
 
     -- Spell isn't overridden if you're in the mount, but obviously it's usable.
-
-    local name = C_Spell.GetSpellName(LM.SPELL.G_99_BREAKNECK)
-    if LM.UnitAura('player', name) then
+    if GetOverrideBarSkin() == 534041 then
         return true
     end
 
@@ -62,7 +60,7 @@ function LM.Drive.IsUsable()
     -- also shows wrongly. Not sure of the exact circumstances but the two times
     -- I've triggered it have been to do with raid group.
 
-    if LM.Environment:InInstance(2769) then
+    if LM.Environment:IsInInstance(2769) then
         return true
     end
 

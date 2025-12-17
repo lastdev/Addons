@@ -1,5 +1,3 @@
--- TODO: finish clearing out guihandlers.lua then move this file back to that
-
 local addonName, addon = ...
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
@@ -15,10 +13,7 @@ local missionCounterUpper
 local calculateNextMission
 local setNextMissionText
 
-local pauseReports
-
 local missionWaitingUserAcceptance
-local calculatedMissionBacklog = {}
 
 local alreadyUsedFollowers
 
@@ -26,261 +21,42 @@ local numSent
 local numSkipped
 local numFailed
 
-gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
-    local i = 0
-    local missions = C_Garrison.GetCompleteMissions(4)
-    
-    if table.getn(missions) == 0 then
-        self:SetText(L["NotYet"])
-        C_Timer.After(5, function()
-            self:SetText(L["CompleteMissionsButtonText"])
-        end)
-        return
-    end
-    
-    local size = table.getn(missions)
-    for _, mission in pairs(missions) do
-        self:SetText(size)
-        
-        C_Timer.After(i, function()
-            size = size - 1
-            self:SetText(size)
-            if size < 1 then
-                self:SetText(DONE.."!")
-                AceEvent:SendMessage("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
-                if WeakAuras then
-                    WeakAuras.ScanEvents("TLDRMISSIONS_COMPLETE_MISSIONS_FINISHED")
-                end
-                C_Timer.After(2, function()
-                    if #C_Garrison.GetCompleteMissions(1) == 0 then
-                        self:Hide()
-                    end
-                    self:SetText(L["CompleteMissionsButtonText"])
-                    -- without this, the completion dialog stays on screen
-                    if OrderHallMissionFrameMissions and OrderHallMissionFrameMissions.CompleteDialog and OrderHallMissionFrameMissions.CompleteDialog.BorderFrame and OrderHallMissionFrameMissions.CompleteDialog.BorderFrame.ViewButton then
-                        OrderHallMissionFrameMissions.CompleteDialog.BorderFrame.ViewButton:Click()
-                    end
-                end)
-            end
-            
-            C_Garrison.MarkMissionComplete(mission.missionID)
-            C_Garrison.MissionBonusRoll(mission.missionID)
-        end)
-        
-        i = i + 0.1
-    end
-end)
+C_Timer.After(1, function()
 
-if true then return end
-
-local rewardStrings = {
-    "garrison-resources",
-    "follower-items",
-    --"pet-charms",
-    "followerxp",
-    "gear",
-    "apexis",
-    "oil",
-    "seal",
-    "archaeology",
-}
-
--- Gold reward exists in WOD game versions only
-if gui.GoldCheckButton then
-    table.insert(rewardStrings, 1, "gold")
-end
-
-function addon:updateWODRewards()
-    for _, label in pairs(gui.priorityLabels) do
-        label:SetText()
-    end
-    
-    for _, button in pairs(gui.checkButtons) do
-        button.ExclusionLabel:Hide()
-        button:SetChecked(false)
-    end
-    
-    local db = addon.WODdb
-        
-    local wasSomethingChecked = false
-    for i, button in pairs(gui.checkButtons) do
-        for k, v in pairs(db.profile.selectedRewards) do
-            if v == rewardStrings[i] then
-                button:SetChecked(true)
-                gui.priorityLabels[i]:SetText(k)
-                wasSomethingChecked = true
-                break
-            end
-        end
-    end
-    
-    for k, v in pairs(db.profile.excludedRewards) do
-        for i, rewardString in ipairs(rewardStrings) do
-            if rewardString == v then
-                gui.checkButtons[i].ExclusionLabel:Show()
-            end
-        end
-    end
-    
-    if db.profile.anythingForXP or db.profile.sacrificeRemaining then
-        wasSomethingChecked = true
-    end
-    
-    if wasSomethingChecked then
-        gui.CalculateButton:SetEnabled(true)
-    else
-        gui.CalculateButton:SetEnabled(false)
-    end
-    
-    addon:WODReorder()
-end
-
-local checkButtonHandler = function(self, name)
-    local db = addon.WODdb
-    if self:GetChecked() then
-        for k, v in pairs(db.profile.excludedRewards) do
-            if v == name then
-                db.profile.excludedRewards[k] = nil
-                self:SetChecked(false)
-                addon:updateWODRewards()
-                return
-            end
-        end
-        
-        for i = 1, 12 do
-            if not db.profile.selectedRewards[i] then
-                db.profile.selectedRewards[i] = name
-                addon:updateWODRewards()
-                return
-            end
-        end
-    else
-        for i = 1, 12 do
-            if db.profile.selectedRewards[i] == name then
-                for j = i, 12 do
-                    if (j+1) > 12 then
-                        db.profile.selectedRewards[j] = nil
-                        table.insert(db.profile.excludedRewards, name)
-                    else
-                        db.profile.selectedRewards[j] = db.profile.selectedRewards[j+1]
-                    end
-                end
-                addon:updateWODRewards()
-                return
-            end
-        end
-    end
-    addon:updateWODRewards()
-end
-
-for i, button in pairs(gui.checkButtons) do
-    button:HookScript("OnClick", function(self) checkButtonHandler(self, rewardStrings[i]) end)
-    gui.rows[i]:HookScript("OnDragStop", function(self) addon:WODOnRowDragStop(self, i, rewardStrings) end)
-end
-z=gui
-
-gui.AnythingForXPCheckButton:HookScript("OnClick", function(self)
-    addon.WODdb.profile.anythingForXP = self:GetChecked()
-    addon:updateWODRewards()
-end)
-
-gui.SacrificeCheckButton:HookScript("OnClick", function(self)
-    addon.WODdb.profile.sacrificeRemaining = self:GetChecked()
-    addon:updateWODRewards()
-end)
-
-local function clearReportText()
-    gui.FailedCalcLabel:SetText()
-    gui.NextMissionLabel:SetText()
-    for i = 1, 3 do
-        gui["NextFollower"..i.."Label"]:SetText()
-    end
-    gui.RewardsDetailLabel:SetText()
-    gui.LowTimeWarningLabel:SetText()
-end
-
-local function updateRewardText(mission)
-    local text = ""
-    if mission.sacrifice then
-        text = L["SacrificeMissionReport"]:format(mission.xp)
-    else
-        local rewards = C_Garrison.GetMissionRewardInfo(mission.missionID)
-        if rewards then
-            for _, reward in pairs(rewards) do
-                if reward.currencyID and (reward.currencyID == 0) then
-                    text = text..GetCoinTextureString(reward.quantity).."; "
-                elseif reward.followerXP then
-                    text = text..reward.followerXP.." "..L["BonusFollowerXP"].."; "
-                elseif reward.itemID then
-                    local _, itemLink = addon:GetItemInfo(reward.itemID)
-                    itemLink = itemLink or "[item: "..reward.itemID.."]"
-                    text = text..itemLink.." x"..reward.quantity.."; "
-                elseif reward.currencyID and (reward.currencyID ~= 0) then
-                    local info = C_CurrencyInfo.GetCurrencyInfo(reward.currencyID)
-                    text = text..info.name.." x"..reward.quantity.."; "
-                end
-            end
-        end
-    end
-    gui.RewardsDetailLabel:SetText(text)
-end
-
-local function processResults(results)
-    local db = addon.WODdb
-    
-    if not results.counter then results.counter = missionCounter end
+local function processResults(lineup, result, missionID)
+    local db = addon.Legiondb
     
     if missionWaitingUserAcceptance then
-        if results.successChance and (results.successChance >= 100) then
-            local problem
-            if missionWaitingUserAcceptance and (missionWaitingUserAcceptance.missionID == results.missionID) then
-                problem = true
-            end
-            
-            for _, r in pairs(calculatedMissionBacklog) do
-                if r.missionID == results.missionID then
-                    problem = true
-                    break
-                end
-            end
-            
-            if not problem then
-                table.insert(calculatedMissionBacklog, results)
-                for i = 1, 3 do
-                    if results.combination[i] then
-                        alreadyUsedFollowers[results.combination[i]] = true
-                    end
-                end
-            end
-        end
-        calculateNextMission()
         return
     end
     
-    missionWaitingUserAcceptance = results
+    missionWaitingUserAcceptance = {
+        combination = lineup,
+        missionID = missionID,
+    }
     
-    clearReportText()
+    gui:clearReportText(true)
     
-    if results.successChance and (results.successChance >= 100) then
-        local _, _, _, _, duration = C_Garrison.GetMissionTimes(results.missionID)
+    if result and (result >= 100) then
+        local _, _, _, _, duration = C_Garrison.GetMissionTimes(missionID)
         if not duration then duration = 3600 end
         duration = duration/3600
-        gui.NextMissionLabel:SetText(string.format(L["MissionCounter"], results.counter or missionCounter, missionCounterUpper, C_Garrison.GetMissionName(results.missionID).." ("..string.format(COOLDOWN_DURATION_HOURS, math.floor(duration/0.5)*0.5)..")"))
+        gui.NextMissionLabel:SetText(string.format(L["MissionCounter"], missionCounter, missionCounterUpper, C_Garrison.GetMissionName(missionID).." ("..string.format(COOLDOWN_DURATION_HOURS, math.floor(duration/0.5)*0.5)..")"))
         for i = 1, 3 do
-            if results.combination[i] then
-                alreadyUsedFollowers[results.combination[i]] = true
-                gui["NextFollower"..i.."Label"]:SetText(C_Garrison.GetFollowerName(results.combination[i]))
+            if lineup[i] then
+                alreadyUsedFollowers[lineup[i]] = true
+                gui["NextFollower"..i.."Label"]:SetText(C_Garrison.GetFollowerName(lineup[i]))
             else
                 gui["NextFollower"..i.."Label"]:SetText(L["Empty"])
             end
         end
         
-        updateRewardText(results)
+        gui:updateRewardText(missionID)
         
         gui.FailedCalcLabel:SetText()
         gui.CostLabel:Show()
-        gui.CostResultLabel:SetText(((C_Garrison.GetMissionCost(missionWaitingUserAcceptance.missionID) or 10)).." "..WORLD_QUEST_REWARD_FILTERS_RESOURCES)
-        local timeRemaining = (C_Garrison.GetBasicMissionInfo(results.missionID).offerEndTime or (GetTime() + 601)) - GetTime()
+        gui.CostResultLabel:SetText(((C_Garrison.GetMissionCost(missionID) or 10)).." "..WORLD_QUEST_REWARD_FILTERS_RESOURCES)
+        local timeRemaining = (C_Garrison.GetBasicMissionInfo(missionID).offerEndTime or (GetTime() + 601)) - GetTime()
         if timeRemaining < 600 then
             gui.LowTimeWarningLabel:SetText(string.format(L["LowTimeWarning"], math.floor(timeRemaining/60), math.floor(mod(timeRemaining, 60))))
         end
@@ -296,14 +72,14 @@ local function processResults(results)
     else
         numFailed = numFailed + 1
         missionWaitingUserAcceptance = nil
-        clearReportText()
+        gui:clearReportText(true)
         if hasNextMission() then
             calculateNextMission()
         else
             gui.CalculateButton:SetEnabled(true)
             if (numSkipped > 0) or (numSent > 0) then
                 local numFollowersAvailable = 0
-                for _, follower in pairs(C_Garrison.GetFollowers(1)) do
+                for _, follower in pairs(C_Garrison.GetFollowers(gui.followerTypeID)) do
                     if (not follower.status) and (follower.isCollected) then
                         numFollowersAvailable = numFollowersAvailable + 1
                     end
@@ -321,10 +97,6 @@ local function processResults(results)
                 end
             end
         end
-        
-        if table.getn(calculatedMissionBacklog) > 0 then
-            processResults(table.remove(calculatedMissionBacklog, 1))
-        end
     end
 end
 
@@ -333,7 +105,7 @@ local function startSacrifice()
     if sacrificeStarted then return end
     sacrificeStarted = true
     
-    local missions = C_Garrison.GetAvailableMissions(1)
+    local missions = C_Garrison.GetAvailableMissions(gui.followerTypeID)
     local excludedMissions = {}
     
     for _, category in pairs(db.profile.excludedRewards) do
@@ -395,7 +167,7 @@ local function startSacrifice()
         return a.xp > b.xp
     end)
     
-    local followers = C_Garrison.GetFollowers(1)
+    local followers = C_Garrison.GetFollowers(gui.followerTypeID)
     local again
     repeat
         again = false
@@ -429,14 +201,13 @@ local function startSacrifice()
 end
 
 gui.CalculateButton:SetScript("OnClick", function (self, button)
-    if C_Garrison.IsAboveFollowerSoftCap(1) then
+    if C_Garrison.IsAboveFollowerSoftCap(4) then
         print(GARRISON_MAX_FOLLOWERS_MISSION_TOOLTIP)
         return
     end
 
     sacrificeStarted = false
     missionWaitingUserAcceptance = nil
-    wipe(calculatedMissionBacklog)
     
     numSent = 0
     numSkipped = 0
@@ -444,11 +215,11 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     
 	self:SetEnabled(false)
     
-    clearReportText()
+    gui:clearReportText(true)
     
     alreadyUsedFollowers = {}
     
-    local db = addon.WODdb
+    local db = addon.Legiondb
     
     -- get missions matching conditions set
     local missions = {}
@@ -457,23 +228,19 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     for _, category in pairs(db.profile.excludedRewards) do
         local missions = {}
         if category == "gold" then
-            missions = addon:GetWODGoldMissions()
-        elseif category == "garrison-resources" then
-            missions = addon:GetWODGarrisonResourcesMissions()
+            missions = gui:GetGoldMissions()
+        elseif category == "resources" then
+            missions = gui:GetTableResourcesMissions()
         elseif category == "follower-items" then
-            missions = addon:GetWODFollowerItemMissions()
-        elseif category == "followerxp" then
-            missions = addon:GetWODFollowerXPMissions()
+            missions = gui:GetFollowerItemMissions()
+        elseif category == "pet-charms" then
+            missions = gui:GetPetCharmMissions()
         elseif category == "gear" then
-            missions = addon:GetWODGearMissions()
-        elseif category == "apexis" then
-            missions = addon:GetWODApexisMissions()
-        elseif category == "oil" then
-            missions = addon:GetWODOilMissions()
-        elseif category == "seal" then
-            missions = addon:GetWODSealMissions()
-        elseif category == "archaeology" then
-            missions = addon:GetWODArchaeologyMissions()
+            missions = gui:GetGearMissions()
+        elseif category == "reputation" then
+            missions = gui:GetReputationMissions()
+        elseif category == "crafting-reagents" then
+            missions = gui:GetCraftingReagentMissions()
         end
         
         for _, mission in pairs(missions) do
@@ -486,32 +253,26 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         
         local acCategory
         if db.profile.selectedRewards[i] == "gold" then
-            newMissions = addon:GetWODGoldMissions()
+            newMissions = gui:GetGoldMissions()
             acCategory = "Gold"
-        elseif db.profile.selectedRewards[i] == "garrison-resources" then
-            newMissions = addon:GetWODGarrisonResourcesMissions()
-            acCategory = "GarrisonResources"
+        elseif db.profile.selectedRewards[i] == "resources" then
+            newMissions = gui:GetTableResourcesMissions()
+            acCategory = "Resources"
         elseif db.profile.selectedRewards[i] == "follower-items" then
-            newMissions = addon:GetWODFollowerItemMissions()
+            newMissions = gui:GetFollowerItemMissions()
             acCategory = "FollowerItems"
-        elseif db.profile.selectedRewards[i] == "followerxp" then
-            newMissions = addon:GetWODFollowerXPMissions()
-            acCategory = "FollowerXP"
+        elseif db.profile.selectedRewards[i] == "pet-charms" then
+            newMissions = gui:GetPetCharmMissions()
+            acCategory = "PetCharms"
         elseif db.profile.selectedRewards[i] == "gear" then
-            newMissions = addon:GetWODGearMissions()
+            newMissions = gui:GetGearMissions()
             acCategory = "Gear"
-        elseif db.profile.selectedRewards[i] == "apexis" then
-            newMissions = addon:GetWODApexisMissions()
-            acCategory = "Apexis"
-        elseif db.profile.selectedRewards[i] == "oil" then
-            newMissions = addon:GetWODOilMissions()
-            acCategory = "Oil"
-        elseif db.profile.selectedRewards[i] == "seal" then
-            newMissions = addon:GetWODSealMissions()
-            acCategory = "Seal"
-        elseif db.profile.selectedRewards[i] == "archaeology" then
-            newMissions = addon:GetWODArchaeologyMissions()
-            acCategory = "Archaeology"
+        elseif db.profile.selectedRewards[i] == "reputation" then
+            newMissions = gui:GetReputationMissions()
+            acCategory = "Reputation"
+        elseif db.profile.selectedRewards[i] == "crafting-reagents" then
+            newMissions = gui:GetCraftingReagentMissions()
+            acCategory = "CraftingReagents"
         end
         
         for _, mission in ipairs(newMissions) do
@@ -548,7 +309,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     end
     
     if db.profile.anythingForXP then
-        local newMissions = C_Garrison.GetAvailableMissions(1)
+        local newMissions = C_Garrison.GetAvailableMissions(4)
         
         -- filter out missions already in the queue
         for key, mission in pairs(newMissions) do
@@ -569,14 +330,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         for k, v in pairs(newMissions) do
             table.insert(n, v)
         end
-        newMissions = n
-        
-        table.sort(newMissions, function(a, b)
-            if a.xp == b.xp then
-                return a.missionID < b.missionID
-            end
-            return a.xp > b.xp
-        end)
+        newMissions = gui:SortMissions(n)
         
         for _, mission in ipairs(newMissions) do
             local animaCost = C_Garrison.GetMissionCost(mission.missionID)
@@ -596,7 +350,6 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
                 local d = db.profile.durationLower
                 if d <= 1 then d = 0 end
                 if (duration >= d) and (duration <= db.profile.durationHigher) then
-                    mission.useSpecialTreatment = true
                     table.insert(missions, mission)
                 end
             end
@@ -610,11 +363,16 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         return
     end
     
-    local followers = C_Garrison.GetFollowers(1)
+    local followers = C_Garrison.GetFollowers(4)
     local followerLineup = {}
+    local troopLineup = {}
     for _, follower in ipairs(followers) do
         if (not follower.status) and (follower.isCollected) then
-            table.insert(followerLineup, follower.followerID)
+            if follower.isTroop then
+                table.insert(troopLineup, follower.followerID)
+            else
+                table.insert(followerLineup, follower.followerID)
+            end
         end
     end 
     
@@ -632,7 +390,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
             duration = duration/3600
             gui.NextMissionLabel:SetText(string.format(L["MissionCounter"], (missionCounter>0) and missionCounter or 1, missionCounterUpper, nextMission.name).." ("..string.format(COOLDOWN_DURATION_HOURS, math.floor(duration/0.5)*0.5)..")")
             gui.NextFollower1Label:SetText(L["Calculating"])
-            updateRewardText(nextMission)
+            gui:updateRewardText(nextMission.missionID)
             return true
         end
     end
@@ -650,13 +408,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         if (not missionWaitingUserAcceptance) then
             missionCounter = missionCounter + 1
             if not setNextMissionText() then
-                gui.NextMissionLabel:SetText()
-                for i = 1, 3 do
-                    gui["NextFollower"..i.."Label"]:SetText()
-                end
-                gui.RewardsDetailLabel:SetText()
-                gui.LowTimeWarningLabel:SetText()
-                gui.CalculateButton:SetEnabled(true)
+                gui.clearReportText()
             end
             missionCounter = missionCounter - 1
         end
@@ -679,7 +431,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         if not nextMission.offerEndTime then nextMission.offerEndTime = GetTime() + 601 end
         if (nextMission.offerEndTime < GetTime()) or (gui.AnimaCostLimitSlider:GetValue() < cost) then
             if (not missionWaitingUserAcceptance) then
-                clearReportText()
+                gui:clearReportText()
                 gui.FailedCalcLabel:SetText(L["AnimaCostLimitError"])
             end
             calculateNextMission()
@@ -687,92 +439,31 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         end
         
         followerLineup = {}
+        local troopLineup = {} 
         
-        local useSpecialTreatment = false
-        if gui.FollowerXPSpecialTreatmentCheckButton:GetChecked() then
-            if nextMission.useSpecialTreatment then
-                useSpecialTreatment = true
-            else
-                local rewards = C_Garrison.GetMissionRewardInfo(nextMission.missionID)
-                if rewards then
-                    for _, reward in pairs(rewards) do
-                        if reward.followerXP then
-                            useSpecialTreatment = true
-                            break
-                        end
-                    end
-                end
-            end
-        end
-        
-        if useSpecialTreatment then
-            if (db.profile.followerXPSpecialTreatmentAlgorithm == 1) or (db.profile.followerXPSpecialTreatmentAlgorithm == 2) then -- "All low level followers, lowest level first"
-                for _, follower in ipairs(followers) do
-                    if (not follower.status) and follower.isCollected and (not alreadyUsedFollowers[follower.followerID]) and (follower.level < 40) then
+        for _, follower in ipairs(followers) do
+            if (not follower.status) and follower.isCollected and (not alreadyUsedFollowers[follower.followerID]) then
+                if (follower.level + gui.LowerBoundLevelRestrictionSlider:GetValue()) >= nextMission.missionScalar then
+                    if follower.isTroop then
+                        table.insert(troopLineup, follower.followerID)
+                    else
                         table.insert(followerLineup, follower.followerID)
                     end
                 end
-            else -- "Followers required to level troops only"
-                local numFollowers = #followers
-                if numFollowers > 0 then
-                    local median = numFollowers/2
-                    median = math.floor(median)
-                    median = median + 1
-                    
-                    table.sort(followers, function(a, b)
-                        if a.level == b.level then
-                            if a.xp == b.xp then
-                                return a.garrFollowerID < b.garrFollowerID
-                            end
-                            return a.xp > b.xp
-                        end
-                        return a.level > b.level
-                    end)
-                    
-                    for i = 1, median do
-                        if (not followers[i].status) and followers[i].isCollected and (not alreadyUsedFollowers[followers[i].followerID]) and (followers[i].level < 40) then
-                            table.insert(followerLineup, followers[i].followerID)
-                        end
-                    end
-                end
             end
-            
-            if (table.getn(followerLineup) < tonumber(db.profile.followerXPSpecialTreatmentMinimum)) then
-                if not missionWaitingUserAcceptance then
-                    clearReportText()
-                    gui.FailedCalcLabel:SetText(L["RestrictedFollowersUnavailableError"])
-                end
-                calculateNextMission()
-                return
+        end 
+    
+        if table.getn(followerLineup) == 0 then
+            if not missionWaitingUserAcceptance then
+                gui:clearReportText(true)
+                gui.FailedCalcLabel:SetText(L["RestrictedFollowersUnavailableError"])
             end
-            
-            if (db.profile.followerXPSpecialTreatmentAlgorithm == 1) or (db.profile.followerXPSpecialTreatmentAlgorithm == 1) then
-                addon:arrangeWODFollowerCombinations(followerLineup, nextMission.missionID, processResults, "lowestLevel")
-            elseif db.profile.followerXPSpecialTreatmentAlgorithm == 2 then
-                addon:arrangeWODFollowerCombinations(followerLineup, nextMission.missionID, processResults, "highestLevel")
-            else
-                addon:arrangeWODFollowerCombinations(followerLineup, nextMission.missionID, processResults, "lowestLevel")
-            end
-        else
-            for _, follower in ipairs(followers) do
-                if (not follower.status) and follower.isCollected and (not alreadyUsedFollowers[follower.followerID]) then
-                    if (follower.level + gui.LowerBoundLevelRestrictionSlider:GetValue()) >= nextMission.missionScalar then
-                        table.insert(followerLineup, follower.followerID)
-                    end
-                end
-            end 
-        
-            if table.getn(followerLineup) == 0 then
-                if not missionWaitingUserAcceptance then
-                    clearReportText()
-                    gui.FailedCalcLabel:SetText(L["RestrictedFollowersUnavailableError"])
-                end
-                calculateNextMission()
-                return
-            end
-            
-            addon:arrangeWODFollowerCombinations(followerLineup, nextMission.missionID, processResults, "lowestLevel")
+            calculateNextMission()
+            return
         end
+        
+        local lineup, result = addon.LegionGUI:arrangeFollowerTroopCombinations(followerLineup, troopLineup, nextMission.missionID, "lowestLevel")
+        processResults(lineup, result, nextMission.missionID)
     end
     
     calculateNextMission()
@@ -781,7 +472,7 @@ end)
 local afterConfirmationEvent
 RunNextFrame(function()
     hooksecurefunc(addon, "garrisonMissionStartedHandler", function(self, garrFollowerTypeID, missionID)
-        if garrFollowerTypeID ~= 1 then return end
+        if garrFollowerTypeID ~= 4 then return end
         if afterConfirmationEvent then
             afterConfirmationEvent(missionID)
         end
@@ -796,7 +487,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
         return
     end
     
-    local missions = C_Garrison.GetAvailableMissions(1)
+    local missions = C_Garrison.GetAvailableMissions(4)
     local found = false
     for _, mission in pairs(missions) do
         if mission.missionID == missionWaitingUserAcceptance.missionID then
@@ -805,17 +496,17 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
         end
     end
     if not found then
-        if table.getn(calculatedMissionBacklog) > 0 then
-            processResults(table.remove(calculatedMissionBacklog, 1), true)
+        if hasNextMission() then
+            calculateNextMission()
         end
         return
     end
     
     local animaCost = C_Garrison.GetMissionCost(missionWaitingUserAcceptance.missionID)
-    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(824)
+    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(1220)
 	local amountOwned = currencyInfo.quantity;
 	if (amountOwned < animaCost) then
-		clearReportText()
+		gui:clearReportText()
         gui.FailedCalcLabel:SetText(L["NotEnoughAnimaError"])
         gui.SkipMissionButton:SetEnabled(true)
         self:SetEnabled(true)
@@ -835,7 +526,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
     
     local success = true
-    -- results.combination : combination will be in the order frontleft, frontmid, frontright, backleft, backright
+    -- results.combination : combination will be in the order left, mid, right
     if missionWaitingUserAcceptance.combination[1] then
         if not C_Garrison.AddFollowerToMission(missionWaitingUserAcceptance.missionID, missionWaitingUserAcceptance.combination[1], 1) then
             success = false
@@ -852,7 +543,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
         end
     end
     
-    -- check the pending followers are correct, incase a slot was taken or something
+    -- check the pending followers are correct, in case a slot was taken or something
     local lineup = C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
     if not lineup then success = false end
     for i = 1, 3 do
@@ -904,22 +595,19 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
             print("Error: Blizzard sent back confirmation for a different mission")
         end
         
-        clearReportText()
+        gui:clearReportText(true)
         setNextMissionText()
         missionWaitingUserAcceptance = nil
         afterConfirmationEvent = nil
         
-        if table.getn(calculatedMissionBacklog) > 0 then
-            processResults(table.remove(calculatedMissionBacklog, 1), true)
+        if hasNextMission() then
+            calculateNextMission()
         else
             gui.EstimateLabel:SetText()
-            if hasNextMission() then
-                calculateNextMission()
-            end
-            clearReportText()
+            gui:clearReportText(true)
             if numSkipped > 0 then
                 local numFollowersAvailable = 0
-                for _, follower in pairs(C_Garrison.GetFollowers(1)) do
+                for _, follower in pairs(C_Garrison.GetFollowers(gui.followerTypeID)) do
                     if (not follower.status) and (follower.isCollected) then
                         numFollowersAvailable = numFollowersAvailable + 1
                     end
@@ -931,11 +619,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
                 end
             else
                 gui.NextMissionLabel:SetText(L["MissonsSentSuccess"])
-                -- two different ways to "listen" for this addon announcing the missions have been sent.
                 AceEvent:SendMessage("TLDRMISSIONS_SENT_SUCCESS")
-                if WeakAuras then
-                    WeakAuras.ScanEvents("TLDRMISSIONS_SENT_SUCCESS")
-                end
             end
             gui.CalculateButton:SetEnabled(true)
         end
@@ -943,8 +627,8 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
 end)
 
 gui.AnimaCostLimitSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsWODFrameAnimaCostSliderText:SetText(value)
-    addon.WODdb.profile.AnimaCostLimit = value
+    TLDRMissionsLegionFrameAnimaCostSliderText:SetText(value)
+    addon.Legiondb.profile.AnimaCostLimit = value
 end)
 
 gui.SkipMissionButton:SetScript("OnClick", function(self, button)
@@ -961,48 +645,49 @@ gui.SkipMissionButton:SetScript("OnClick", function(self, button)
     
     missionWaitingUserAcceptance = nil
     
-    if table.getn(calculatedMissionBacklog) > 0 then
-        processResults(table.remove(calculatedMissionBacklog, 1), true)
-    else
-        clearReportText()
-        gui.EstimateLabel:SetText()
-        gui.CalculateButton:SetEnabled(true)
-        
-        local numFollowersAvailable = 0
-        for _, follower in pairs(C_Garrison.GetFollowers(1)) do
-            if (not follower.status) and (follower.isCollected) then
-                numFollowersAvailable = numFollowersAvailable + 1
-            end
+    gui:clearReportText(true)
+    gui.EstimateLabel:SetText()
+    gui.CalculateButton:SetEnabled(true)
+    
+    local numFollowersAvailable = 0
+    for _, follower in pairs(C_Garrison.GetFollowers(gui.followerTypeID)) do
+        if (not follower.status) and (follower.isCollected) then
+            numFollowersAvailable = numFollowersAvailable + 1
         end
-        gui.FailedCalcLabel:SetText(L["MissionsSentPartial"]:format(numSent, numSkipped, numFailed, numFollowersAvailable))
-        AceEvent:SendMessage("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-        if WeakAuras then
-            WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
-        end
+    end
+    gui.FailedCalcLabel:SetText(L["MissionsSentPartial"]:format(numSent, numSkipped, numFailed, numFollowersAvailable))
+    AceEvent:SendMessage("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
+    if WeakAuras then
+        WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
     end
 end)
 
+gui.MinimumTroopsSlider:SetScript("OnValueChanged", function(self, value, userInput)
+    TLDRMissionsLegionFrameMinimumTroopsSliderText:SetText(value)
+    addon.Legiondb.profile.minimumTroops = value
+end)
+
 gui.LowerBoundLevelRestrictionSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsWODFrameSliderText:SetText(value)
-    addon.WODdb.profile.LevelRestriction = value
+    TLDRMissionsLegionFrameSliderText:SetText(value)
+    addon.Legiondb.profile.LevelRestriction = value
 end)
 
 gui.DurationLowerSlider:SetScript("OnValueChanged", function(self, value, userInput)
     if not userInput then return end
-    addon.WODdb.profile.durationLower = value
-    if tonumber(addon.WODdb.profile.durationLower) > tonumber(addon.WODdb.profile.durationHigher) then
-        local a = addon.WODdb.profile.durationLower
-        addon.WODdb.profile.durationLower = addon.WODdb.profile.durationHigher
-        addon.WODdb.profile.durationHigher = a
-        gui.DurationLowerSlider:SetValue(addon.WODdb.profile.durationLower)
-        gui.DurationHigherSlider:SetValue(addon.WODdb.profile.durationHigher)
+    addon.Legiondb.profile.durationLower = value
+    if tonumber(addon.Legiondb.profile.durationLower) > tonumber(addon.Legiondb.profile.durationHigher) then
+        local a = addon.Legiondb.profile.durationLower
+        addon.Legiondb.profile.durationLower = addon.Legiondb.profile.durationHigher
+        addon.Legiondb.profile.durationHigher = a
+        gui.DurationLowerSlider:SetValue(addon.Legiondb.profile.durationLower)
+        gui.DurationHigherSlider:SetValue(addon.Legiondb.profile.durationHigher)
     end
-    TLDRMissionsWODFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(addon.WODdb.profile.durationLower, addon.WODdb.profile.durationHigher))
+    TLDRMissionsLegionFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(addon.Legiondb.profile.durationLower, addon.Legiondb.profile.durationHigher))
 end)
 
 gui.DurationHigherSlider:SetScript("OnValueChanged", function(self, value, userInput)
     if not userInput then return end
-    local db = addon.WODdb
+    local db = addon.Legiondb
     db.profile.durationHigher = value
     if tonumber(db.profile.durationLower) > tonumber(db.profile.durationHigher) then
         local a = db.profile.durationLower
@@ -1012,4 +697,6 @@ gui.DurationHigherSlider:SetScript("OnValueChanged", function(self, value, userI
         gui.DurationHigherSlider:SetValue(db.profile.durationHigher)
     end
     TLDRMissionsFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(db.profile.durationLower, db.profile.durationHigher))
+end)
+
 end)

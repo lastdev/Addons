@@ -1,12 +1,12 @@
-## Author: David Griffin
+## Author: Davie3
 ## Interface: 30403
 ## Notes: Tracks player taunts and displays who they taunted, what ability they used to taunt, and if it failed in some way.
 ## OptionalDeps: Ace3
 ## SavedVariables: WhoTauntedDB
 ## Title: Who Taunted?
-## Version: v2.1.17
+## Version: v2.1.18
 ## X-Embeds: Ace3
-## X-Date: 2025-10-28T15:34:41Z
+## X-Date: 2025-12-09T15:23:05Z
 ## X-Website: https://www.curseforge.com/wow/addons/who-taunted
 ## X-License: GPLv3
 ## X-Category: Tank

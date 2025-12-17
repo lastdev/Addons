@@ -1,5 +1,7 @@
-local DragonRider, DR = ...
-local _, L = ...
+local _, DR = ...
+
+local L = DR.L
+local defaultsTable = DR.defaultsTable
 
 local function Print(...)
 	local prefix = string.format("[PH] Dragon Rider" .. ":");

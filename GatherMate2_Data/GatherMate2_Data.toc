@@ -1,13 +1,15 @@
-## Interface: 100002
+## Interface: 110207,120000
 ## Notes: Wowhead Data dump for GatherMate2
 ## Title: GatherMate2Data
 ## Author: kagaro, Xinhuan
 ## X-Category: Map
+## Group: GatherMate2
 ## X-Email: sal.scotto@gmail.com
-## Version: v38.2
+## Version: v40.0
 ## LoadOnDemand: 1
 ## Dependencies: GatherMate2
 ## X-Curse-Project-ID: 26737
+## IconTexture: Interface\AddOns\GatherMate2\Artwork\Icon.tga
 
 MiningData.lua
 HerbalismData.lua
@@ -15,4 +17,6 @@ GasData.lua
 FishData.lua
 TreasureData.lua
 ArchaeologyData.lua
+TimberData.lua
+
 GatherMateData.lua

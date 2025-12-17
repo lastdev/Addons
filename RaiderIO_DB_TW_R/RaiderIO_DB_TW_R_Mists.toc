@@ -1,7 +1,7 @@
 ## Interface: 50500
 ## Title: Raider.IO |cffFFFFFFRaiding|r (Taiwan)
 ## Author: Vladinator (Vladinator-TarrenMill), Aspyr (Aspyrox-Skullcrusher) and Isak (Isak-Sargeras)
-## Version: 5.5.0 (v202512020634)
+## Version: 5.5.0 (v202512110600)
 ## IconTexture: Interface\AddOns\RaiderIO\icons\logo
 ## Dependencies: RaiderIO
 ## DefaultState: enabled

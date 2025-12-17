@@ -405,32 +405,19 @@ L["RAID_BOSS_ToES_3"] = "Lei Shi"
 L["RAID_BOSS_TOES_3"] = "Lei Shi"
 L["RAID_BOSS_TOES_4"] = "Sha der Angst"
 L["RAID_BOSS_ToES_4"] = "Sha der Angst"
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_1"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_10"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_11"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_12"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_13"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_2"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_3"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_4"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_5"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_6"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_7"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_8"] = ""--]] 
---[[Translation missing --]]
---[[ L["RAID_BOSS_TOT_9"] = ""--]] 
+L["RAID_BOSS_TOT_1"] = "Jin'rokh der Zerstörer"
+L["RAID_BOSS_TOT_10"] = "Der eiserne Qon"
+L["RAID_BOSS_TOT_11"] = "Zwillingsempyreanerinnen"
+L["RAID_BOSS_TOT_12"] = "Lei Shen"
+L["RAID_BOSS_TOT_13"] = "Ra-den"
+L["RAID_BOSS_TOT_2"] = "Horridon"
+L["RAID_BOSS_TOT_3"] = "Rat der Ältesten"
+L["RAID_BOSS_TOT_4"] = "Tortos"
+L["RAID_BOSS_TOT_5"] = "Megaera"
+L["RAID_BOSS_TOT_6"] = "Ji-Kun"
+L["RAID_BOSS_TOT_7"] = "Durumu der Vergessene"
+L["RAID_BOSS_TOT_8"] = "Primordius"
+L["RAID_BOSS_TOT_9"] = "Dunkler Animus"
 L["RAID_BOSS_TOTFW_1"] = "Konklave des Windes"
 L["RAID_BOSS_TOTFW_2"] = "Al'Akir"
 L["RAID_BOSS_VOTI_1"] = "Eranog"
@@ -470,8 +457,7 @@ L["RAID_NP"] = "Palast der Nerub'ar"
 L["RAID_RS"] = "Das Rubinsanktum"
 L["RAID_ToES"] = "Terrasse des Endlosen Frühlings"
 L["RAID_TOES"] = "Terrasse des Endlosen Frühlings"
---[[Translation missing --]]
---[[ L["RAID_TOT"] = ""--]] 
+L["RAID_TOT"] = "Der Thron des Donners"
 L["RAID_TOTFW"] = "Thron der Vier Winde"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Durchschn. Wertungen für Zeitliche +%s"
 L["RAIDERIO_BEST_RUN"] = "Raider.IO M+ Bester Durchlauf"

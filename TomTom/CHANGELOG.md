@@ -1,8 +1,17 @@
 # TomTom
 
-## [v4.1.3-release](https://github.com/jnwhiteh/TomTom/tree/v4.1.3-release) (2025-10-27)
-[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.1.3-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
+## [v4.2.4-release](https://github.com/jnwhiteh/TomTom/tree/v4.2.4-release) (2025-12-03)
+[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.2.4-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
 
+- Update frFR Localization  
+- Update TOC  
+- Update HBD to work properly with some Midnight zones  
+- Add a minimap button for /ttpaste  
+    Can be configured in the options window or /ttpaste minimap  
+- Added text color customization  
+- Fix missing label and update localization  
+- Add new /ttpaste window  
+- Update localization  
 - Fix an issue with the purple ring theme  
 - Update HereBeDragons  
 - Add support for minimap and worldmap themes  
@@ -683,14 +692,3 @@
 - * Make sure to return the uid from AddZWaypoints  
 - * Fixed the parenting of the options panel  
 - * Added property so zips are generated properly  
-- * Removed Dongle from .toc  
-    * Updated externals  
-    * Updated localization file  
-- Fixed an issue  
-- Fixed the parsing of the description part of the slash comman  
-- * Fixed the loading of arrows from storage, and enabled right-click to set as crazy arrow  
-- Lots of changes, including a working slash command  
-- Major update to TomTom, everything except CrazyTaxi queuing "works"  
-- * Made changes to allow for better operations with 2.4  
-- Moving over to AceDB and removing dependecy on Dongle  
-    * Reconfigured options screens  

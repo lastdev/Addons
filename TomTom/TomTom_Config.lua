@@ -11,7 +11,6 @@ local function createconfig()
 	local function get(info)
 		local ns,opt = string.split(".", info.arg)
 		local val = TomTom.db.profile[ns][opt]
-		--TomTom:Print("get", ns, opt, val)
 		if type(val) == "table" then
 			return unpack(val)
 		else
@@ -43,6 +42,8 @@ local function createconfig()
 			TomTom:ReloadWaypoints()
 		elseif ns == "poi" and TomTom.WOW_MAINLINE then
 			TomTom:EnableDisablePOIIntegration()
+		elseif ns == "paste" then
+			TomTom:PasteConfigChanged()
 		elseif opt == "otherzone" then
 			TomTom:ReloadWaypoints()
 		elseif info.arg == "minimap.enable" or info.arg == "worldmap.enable" then
@@ -113,6 +114,12 @@ local function createconfig()
 						name = L["The display of the coordinate block can be customized by changing the options below."],
 						order = 1,
 					},
+					textcolor = {
+						type = "color",
+						name = L["Text color"],
+						arg = "block.textcolor",
+						hasAlpha = true,
+					},
 					bordercolor = {
 						type = "color",
 						name = L["Border color"],
@@ -146,7 +153,7 @@ local function createconfig()
 					reset_position = {
 						type = "execute",
 						name = L["Reset Position"],
-						desc = L["Resets the position of the waypoint arrow if its been dragged off screen"],
+						desc = L["Resets the position of the waypoint arrow if it has been dragged off screen"],
 						func = function()
 							if TomTomBlock then
 								TomTomBlock:ClearAllPoints()
@@ -452,7 +459,7 @@ local function createconfig()
 						order = 10,
 						type = "execute",
 						name = L["Reset Position"],
-						desc = L["Resets the position of the waypoint arrow if its been dragged off screen"],
+						desc = L["Resets the position of the waypoint arrow if it has been dragged off screen"],
 						func = function()
 							TomTomCrazyArrow:ClearAllPoints()
 							local pos = {"CENTER", nil , "CENTER", 0, 0}
@@ -471,7 +478,7 @@ local function createconfig()
 					help = {
 						order = 1,
 						type = "description",
-						name = L["The floating waypoint arrow can change color depending on whether or nor you are facing your destination.  By default it will display green when you are facing it directly, and red when you are facing away from it.  These colors can be changed in this section.  Setting these options to the same color will cause the arrow to not change color at all"],
+						name = L["The floating waypoint arrow can change color depending on whether or not you are facing your destination.  By default it will display green when you are facing it directly, and red when you are facing away from it.  These colors can be changed in this section.  Setting these options to the same color will cause the arrow to not change color at all"],
 					},
 					colorstart = {
 						order = 2,
@@ -557,7 +564,7 @@ local function createconfig()
 				order = 4,
 				type = "toggle",
 				name = L["Enable mouseover tooltips"],
-				desc = L["TomTom can display a tooltip containing information abouto waypoints, when they are moused over.  This setting toggles that functionality"],
+				desc = L["TomTom can display a tooltip containing information about waypoints, when they are moused over.  This setting toggles that functionality"],
 				width = "double",
 				arg = "minimap.tooltip",
 			},
@@ -579,13 +586,13 @@ local function createconfig()
 					help = {
 						type = "description",
 						order = 1,
-						name = L["There are a few different themes that you can apply to the minimap waypoints, use this section to configure."],
+						name = L["There are a few different themes that you can apply to the waypoints, use this section to configure."],
 					},
 					theme = {
 						order = 2,
 						type = "select",
 						name = L["Theme"],
-						desc = L["You can customize the display of the waypoints on your minimap with a variety of themes."],
+						desc = L["You can customize the display of the waypoints with a variety of themes."],
 						width = "double",
 						values = addon.waypointThemeRegistry:GetThemeConfigOptions(),
 						sorting = addon.waypointThemeRegistry:GetThemeConfigOptionsSorting(),
@@ -659,7 +666,7 @@ local function createconfig()
 				order = 4,
 				type = "toggle",
 				name = L["Enable mouseover tooltips"],
-				desc = L["TomTom can display a tooltip containing information abouto waypoints, when they are moused over.  This setting toggles that functionality"],
+				desc = L["TomTom can display a tooltip containing information about waypoints, when they are moused over.  This setting toggles that functionality"],
 				width = "double",
 				arg = "worldmap.tooltip",
 			},
@@ -719,7 +726,7 @@ local function createconfig()
 						order = 8,
 						type = "range",
 						name = L["Player coordinate offset"],
-						desc = L["Coordinates can be slid from the default location, to accomodate other addons.  This setting allows you to control that offset"],
+						desc = L["Coordinates can be moved from the default location, this setting allows you to control that offset"],
 						min = -16, max = 256, step = 1,
 						arg = "mapcoords.playeroffset",
 					},
@@ -750,7 +757,7 @@ local function createconfig()
 						order = 7,
 						type = "range",
 						name = L["Cursor coordinate offset"],
-						desc = L["Coordinates can be slid from the default location, to accomodate other addons.  This setting allows you to control that offset"],
+						desc = L["Coordinates can be moved from the default location, this setting allows you to control that offse"],
 						min = -32, max = 128, step = 1,
 						arg = "mapcoords.cursoroffset",
 					},
@@ -766,13 +773,13 @@ local function createconfig()
 					help = {
 						type = "description",
 						order = 1,
-						name = L["There are a few different themes that you can apply to the minimap waypoints, use this section to configure."],
+						name = L["There are a few different themes that you can apply to the waypoints, use this section to configure."],
 					},
 					theme = {
 						order = 2,
 						type = "select",
 						name = L["Theme"],
-						desc = L["You can customize the display of the waypoints on your minimap with a variety of themes."],
+						desc = L["You can customize the display of the waypoints with a variety of themes."],
 						width = "double",
 						values = addon.waypointThemeRegistry:GetThemeConfigOptions(),
 						sorting = addon.waypointThemeRegistry:GetThemeConfigOptionsSorting(),
@@ -822,7 +829,7 @@ local function createconfig()
 			coords = {
 				type = "toggle",
 				order = 2,
-				name = L["Provide a LDB data source for coordinates"],
+				name = L["Provide an LDB data source for coordinates"],
 				width = "double",
 				arg = "feeds.coords",
 			},
@@ -930,7 +937,7 @@ local function createconfig()
 				type = "execute",
 				order = 7,
 				name = L["Reset waypoint display options to current"],
-				desc = L["If you have changed the waypoint display settings (minimap, world), this will re-set all waypoints to the current options."],
+				desc = L["If you have changed the waypoint display settings (minimap, world), this will reset all waypoints to the current options."],
 				func = function()
 					TomTom:ResetWaypointOptions()
 					TomTom:ReloadWaypoints()
@@ -940,7 +947,7 @@ local function createconfig()
 		},
 	}
 
-    	options.args.poi = {
+	options.args.poi = {
 		type = "group",
 		order = 6,
 		name = L["Quest Objectives"],
@@ -996,9 +1003,33 @@ local function createconfig()
 		},
 	} -- End POI Integration settings
 
-	options.args.profile = {
+	options.args.paste = {
 		type = "group",
 		order = 7,
+		name = L["Paste window"],
+		desc = L["Options that affect the /ttpaste bulk waypoint window"],
+		get = get,
+		set = set,
+		args = {
+			desc = {
+				order = 1,
+				type = "description",
+				name = L["TomTom supports setting multiple waypoints at the same time, and storing and loading pages of waypoints. This section enables you to configure some settings for this feature."],
+			},
+			enable = {
+				order = 2,
+				type = "toggle",
+				name = L["Show minimap/addon compartment button"],
+				desc = L["Enables or disables the showing of a minimap/addon-compartment button to toggle the paste window."],
+				width = "double",
+				arg = "paste.minimap_button",
+			},
+		}
+	}
+
+	options.args.profile = {
+		type = "group",
+		order = 8,
 		name = L["Profile Options"],
 		args = {
 			desc = {
@@ -1059,6 +1090,10 @@ local function createBlizzOptions()
 		config:RegisterOptionsTable("TomTom-POI", options.args.poi)
 		dialog:AddToBlizOptions("TomTom-POI", options.args.poi.name, "TomTom")
 	end
+
+	-- Paste Options
+	config:RegisterOptionsTable("TomTom-Paste", options.args.paste)
+	dialog:AddToBlizOptions("TomTom-Paste", options.args.paste.name, "TomTom")
 
 	-- Profile Options
 	local p_options = options.args.profile.args.options

@@ -33,3 +33,9 @@ addon.Enums.spellType = {
     passive = 3,
     buff = 4,
 }
+
+addon.Enums.sortType = {
+    duration = 1,
+    resourceCost = 2,
+    xp = 3
+}

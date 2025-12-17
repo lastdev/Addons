@@ -10,6 +10,8 @@
 
 local _, LM = ...
 
+local Env = LM.Environment
+
 local C_Spell = LM.C_Spell or C_Spell
 
 local L = LM.Localize
@@ -129,7 +131,7 @@ CONDITIONS["btn"] = {
     },
     handler =
         function (cond, context, v)
-            local inputButton = LM.Environment:GetMouseButtonClicked() or context.inputButton
+            local inputButton = Env.mouseButtonClicked or context.inputButton
             if not inputButton or not v then
                 return false
             elseif inputButton == "LeftButton" and v == "1" then
@@ -393,7 +395,7 @@ CONDITIONS["drivable"] = {
         function (cond, context)
             -- Should work, doesn't so far
             -- return IsDrivableArea and IsDrivableArea()
-            return LM.Environment:IsDrivableArea()
+            return Env.isDrivableArea
         end,
 }
 
@@ -402,7 +404,7 @@ CONDITIONS["driving"] = {
         function (cond, context)
             -- Only one D.R.I.V.E. mount so far. Maybe in the future Blizzard will
             -- add IsDriving(), otherwise it'll be vehicle UI detection of some kind.
-            return LM.UnitAura('player', LM.SPELL.G_99_BREAKNECK) ~= nil
+            return Env.playerBuffIDs[LM.SPELL.G_99_BREAKNECK] or false
         end,
 }
 
@@ -416,21 +418,6 @@ CONDITIONS["elapsed"] = {
                     cond.elapsed = time()
                     return true
                 end
-            end
-        end
-}
-
--- This is here in case I want to use it in the combat handler code, it doesn't work
--- for player actions because you're in combat at the time. In general it's not reliable
--- because if you are the first hit you will start combat before the encounter info is
--- available.
-
-CONDITIONS["encounter"] = {
-    handler =
-        function (cond, context, v)
-            v = tonumber(v)
-            if v then
-                return LM.Environment:GetEncounterInfo() == v
             end
         end
 }
@@ -535,7 +522,7 @@ CONDITIONS["falling"] = {
     name = STRING_ENVIRONMENTAL_DAMAGE_FALLING,
     handler =
         function (cond, context)
-            return LM.Environment:IsFalling()
+            return Env.isFalling
         end
 }
 
@@ -569,15 +556,14 @@ CONDITIONS["flightstyle"] = {
         end,
     handler =
         function (cond, context, v)
-            local _, currentStyle = LM.Environment:GetFlightStyle()
-            return currentStyle == v
+            return Env.flightStyle == v
         end,
 }
 
 CONDITIONS["floating"] = {
     handler =
         function (cond, context)
-            return LM.Environment:IsFloating()
+            return Env.isFloating
         end
 }
 
@@ -585,7 +571,7 @@ CONDITIONS["flyable"] = {
     name = format(L.LM_AREA_FMT_S, MOUNT_JOURNAL_FILTER_FLYING),
     handler =
         function (cond, context)
-            return LM.Environment:CanFly()
+            return Env.canFly
         end,
 }
 
@@ -601,7 +587,7 @@ CONDITIONS["form"] = {
     handler =
         function (cond, context, v)
             if v == "slow" then
-                return LM.Environment:IsCombatTravelForm()
+                return Env.isCombatTravelForm
             elseif v then
                 return GetShapeshiftForm() == tonumber(v)
             else
@@ -679,8 +665,8 @@ CONDITIONS["gather"] = {
     args = true,
     handler =
         function (cond, context, what, n)
-            local sinceHerb = GetTime() - LM.Environment:GetHerbTime()
-            local sinceMine = GetTime() - LM.Environment:GetMineTime()
+            local sinceHerb = GetTime() - (Env.herbTime or 0)
+            local sinceMine = GetTime() - (Env.mineTime or 0)
             n = tonumber(n) or 30
             if what == "herb" then
                 return sinceHerb < n
@@ -760,12 +746,12 @@ CONDITIONS["holiday"] = {
     name = L.LM_HOLIDAY,
     toDisplay =
         function (v)
-            return LM.Environment:GetHolidayName(tonumber(v)) or v
+            return Env:GetHolidayName(tonumber(v)) or v
         end,
     menu =
         function ()
             local out = {}
-            for id, title in pairs(LM.Environment:GetHolidays()) do
+            for id, title in pairs(Env:GetHolidays()) do
                 table.insert(out, { val="holiday:"..id, text=string.format("%s (%d)", title, id) })
             end
             return out
@@ -773,7 +759,7 @@ CONDITIONS["holiday"] = {
     handler =
         function (cond, context, v)
             if v then
-                return LM.Environment:IsHolidayActive(tonumber(v) or v)
+                return Env:IsHolidayActive(tonumber(v) or v)
             end
         end
 }
@@ -797,7 +783,7 @@ CONDITIONS["instance"] = {
     menu =
         function ()
             local out = { }
-            for id, name in pairs(LM.Environment:GetInstances()) do
+            for id, name in pairs(Env:GetInstances()) do
                 table.insert(out, { val = "instance:" .. id })
             end
             return out
@@ -823,7 +809,7 @@ CONDITIONS["jump"] = {
     -- name = BINDING_NAME_JUMP,
     handler =
         function (cond, context)
-            local jumpTime = LM.Environment:GetJumpTime()
+            local jumpTime = Env.jumpTime
             return ( jumpTime and jumpTime < 2 )
         end
 }
@@ -1005,15 +991,15 @@ CONDITIONS["map"] = {
         end,
     menu =
         function ()
-            return MapTreeToMenu(LM.Environment:GetMapTree())
+            return MapTreeToMenu(Env:GetMapTree())
         end,
     handler =
         function (cond, context, v)
             if tonumber(v) then
                 if v:sub(1,1) == '*' then
-                    return LM.Environment:IsOnMap(tonumber(v:sub(2)))
+                    return Env:IsOnMap(tonumber(v:sub(2)))
                 else
-                    return LM.Environment:IsMapInPath(tonumber(v), true)
+                    return Env:IsMapInPath(tonumber(v), true)
                 end
             end
         end,
@@ -1022,7 +1008,7 @@ CONDITIONS["map"] = {
 CONDITIONS["maw"] = {
     handler =
         function (cond, context, v)
-            return LM.Environment:IsTheMaw()
+            return Env.isTheMaw
         end
 }
 
@@ -1145,7 +1131,7 @@ CONDITIONS["moving"] = {
     -- name = L.LM_MOVING_OR_FALLING,
     handler =
         function (cond, context)
-            return LM.Environment:IsMovingOrFalling()
+            return Env.isMovingOrFalling
         end
 }
 
@@ -1232,7 +1218,7 @@ CONDITIONS["playermodel"] = {
     handler =
         function (cond, context, v)
             if v then
-                return LM.Environment:GetPlayerModel() == tonumber(v)
+                return Env:GetPlayerModel() == tonumber(v)
             end
         end
 }
@@ -1524,7 +1510,7 @@ CONDITIONS["stationary"] = {
         function (cond, context, minv, maxv)
             minv = tonumber(minv)
             maxv = tonumber(maxv)
-            local stationaryTime = LM.Environment:GetStationaryTime()
+            local stationaryTime = Env:GetStationaryTime()
             if stationaryTime then
                 if stationaryTime < ( minv or 0 ) then
                     return false
@@ -1553,7 +1539,7 @@ CONDITIONS["submerged"] = {
     name = TUTORIAL_TITLE28,
     handler =
         function (cond, context)
-            return (IsSubmerged() and not LM.Environment:IsFloating())
+            return (IsSubmerged() and not Env.isFloating)
         end,
 }
 
@@ -1653,15 +1639,15 @@ CONDITIONS["waterwalking"] = {
             end
 
             -- Water Walking (546)
-            if LM.UnitAura('player', 546) then
+            if Env.playerBuffIDs[546] then
                 return true
             end
             -- Elixir of Water Walking (11319)
-            if LM.UnitAura('player', 11319) then
+            if Env.playerBuffIDs[11319] then
                 return true
             end
             --  Path of Frost (3714)
-            if LM.UnitAura('player', 3714) then
+            if Env.playerBuffIDs[3714] then
                 return true
             end
         end
@@ -1722,7 +1708,7 @@ local function IsTransmogOutfitActive(outfitID)
     local outfitInfoList = C_TransmogCollection.GetOutfitItemTransmogInfoList(outfitID)
     if not outfitInfoList then return end
 
-    local currentInfoList = LM.Environment:GetPlayerTransmogInfo()
+    local currentInfoList = Env:GetPlayerTransmogInfo()
     if not currentInfoList then return end
 
     for slotID, info in ipairs(currentInfoList) do
@@ -1745,19 +1731,17 @@ local function GetTransmogOutfitsMenu()
 end
 
 local function GetTransmogSetsMenu()
-    C_AddOns.LoadAddOn("Blizzard_EncounterJournal")
     local byExpansion = { }
-    for _,info in ipairs(C_TransmogSets.GetUsableSets()) do
-        local expansion = info.expansionID + 1
-        if not byExpansion[expansion] then
-            local name = EJ_GetTierInfo(expansion) or NONE
-            byExpansion[expansion] = { text = name }
+    for _,info in ipairs(C_TransmogSets.GetAllSets()) do
+        if not byExpansion[info.expansionID] then
+            local name = GetExpansionName(info.expansionID)
+            byExpansion[info.expansionID] = { text = name }
         end
         local text = info.name
         if info.description then
             text = text .. " (" .. info.description .. ")"
         end
-        table.insert(byExpansion[expansion], { val = "xmog:"..info.setID, text = text })
+        table.insert(byExpansion[info.expansionID], { val = "xmog:"..info.setID, text = text })
     end
     local sets = { nosort = true, text = WARDROBE_SETS }
     for _,t in LM.PairsByKeys(byExpansion) do
@@ -1884,6 +1868,7 @@ function LM.Conditions:IsValidCondition(text)
 end
 
 function LM.Conditions:TestAllConditions()
+    LM.Environment:RefreshState()
     local context = LM.RuleContext:New({ id = 99 })
     for name, cond in pairs(CONDITIONS) do
         if not cond.disabled then

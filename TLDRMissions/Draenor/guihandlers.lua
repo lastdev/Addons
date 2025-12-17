@@ -1,10 +1,8 @@
--- TODO: finish clearing out guihandlers.lua then move this file back to that
-
 local addonName, addon = ...
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-local AceEvent = LibStub("AceAddon-3.0"):NewAddon("TLDRMissions-AceEvent", "AceEvent-3.0")
+local AceEvent = LibStub("AceAddon-3.0"):GetAddon("TLDRMissions-AceEvent", "AceEvent-3.0")
 
 local gui = addon.WODGUI
 
@@ -200,7 +198,6 @@ for i, button in pairs(gui.checkButtons) do
     button:HookScript("OnClick", function(self) checkButtonHandler(self, rewardStrings[i]) end)
     gui.rows[i]:HookScript("OnDragStop", function(self) addon:WODOnRowDragStop(self, i, rewardStrings) end)
 end
-z=gui
 
 gui.AnythingForXPCheckButton:HookScript("OnClick", function(self)
     addon.WODdb.profile.anythingForXP = self:GetChecked()

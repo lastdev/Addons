@@ -7,6 +7,7 @@ local L = ns.locale
 local Map = ns.Map
 
 local LoreObject = ns.node.LoreObject
+local PT = ns.node.ProfessionTreasures
 local Rare = ns.node.Rare
 local SkyridingGlyph = ns.node.SkyridingGlyph
 local Telescope = ns.node.Telescope
@@ -15,6 +16,7 @@ local Treasure = ns.node.Treasure
 local Achievement = ns.reward.Achievement
 local Item = ns.reward.Item
 local Transmog = ns.reward.Transmog
+local Reputation = ns.reward.Reputation
 
 local Path = ns.poi.Path
 local POI = ns.poi.POI
@@ -40,9 +42,9 @@ map.nodes[51927380] = Rare({
     }
 }) -- Warden of Weeds
 
-map.nodes[10001500] = Rare({
+map.nodes[45057825] = Rare({
     id = 246633,
-    quest = nil, -- 91315 ?
+    quest = 91315, -- 91315/94682
     rewards = {Achievement({id = 61507, criteria = 110167})}
 }) -- Harried Hawkstrider
 
@@ -67,9 +69,9 @@ map.nodes[62744907] = Rare({ -- review
     rewards = {Achievement({id = 61507, criteria = 110170})}
 }) -- Cre'van
 
-map.nodes[10003500] = Rare({
+map.nodes[36383637] = Rare({
     id = 250683,
-    quest = nil, -- 92389 ?
+    quest = 92389, -- 92389 ?
     rewards = {Achievement({id = 61507, criteria = 110171})}
 }) -- Coralfang
 
@@ -94,21 +96,21 @@ map.nodes[49058775] = Rare({
     }
 }) -- Bad Zed
 
-map.nodes[10005500] = Rare({
+map.nodes[34812098] = Rare({
     id = 250780,
-    quest = nil, -- 92395 ?
+    quest = 92395, -- 94691/92395 ?
     rewards = {Achievement({id = 61507, criteria = 110175})}
 }) -- Waverly
 
-map.nodes[10006000] = Rare({
+map.nodes[56427760] = Rare({
     id = 250826,
-    quest = nil, -- 92403 ?
+    quest = 92403, -- 92403/94692
     rewards = {Achievement({id = 61507, criteria = 110176})}
 }) -- Banuran
 
 map.nodes[59207920] = Rare({ -- wowhead beta data
     id = 250806,
-    quest = nil, -- 92399 ?
+    quest = 92399, -- 92399 ?
     rewards = {Achievement({id = 61507, criteria = 110177})}
 }) -- Lost Guardian
 
@@ -118,15 +120,15 @@ map.nodes[42316891] = Rare({
     rewards = {Achievement({id = 61507, criteria = 110178})}
 }) -- Duskburn
 
-map.nodes[10007500] = Rare({
+map.nodes[51544585] = Rare({
     id = 255329,
-    quest = nil, -- 93555 ?
+    quest = 93555, -- 93555/94695 ?
     rewards = {Achievement({id = 61507, criteria = 110179})}
 }) -- Malfunctioning Construct
 
-map.nodes[10008000] = Rare({
+map.nodes[44993855] = Rare({
     id = 255348,
-    quest = nil, -- 93561 ?
+    quest = 93561, -- 93561/94696 ?
     rewards = {Achievement({id = 61507, criteria = 110180})}
 }) -- Dame Bloodshed
 
@@ -136,7 +138,7 @@ map.nodes[10008000] = Rare({
 
 smc.nodes[24346928] = Treasure({
     requires = ns.requirement.Item(263870), -- Rookery Cache Key
-    quest = nil,
+    quest = 93967, -- 94626 triggered after feeding Mischevious Chick with Tasty Meat from Farstrider Aerieminder(had to buy meat and fly away for bit to spawn to place it)
     location = L['on_flying_platform'],
     rewards = {Achievement({id = 61960, criteria = 111471})},
     parent = map.id
@@ -145,17 +147,21 @@ smc.nodes[24346928] = Treasure({
 map.nodes[38897606] = Treasure({
     requires = {
         ns.requirement.Item(258768), -- Battered Safebox Key
-        ns.requirement.Item(258769), -- Worn Safebox Key @ 38467346
+        ns.requirement.Item(258769), -- Worn Safebox Key
         ns.requirement.Item(258770) -- Tarnished Safebox Key
     },
     quest = 93456,
     note = L['triple_locked_safebox_note'],
     rewards = {Achievement({id = 61960, criteria = 111472})},
-    pois = {POI({40247582, 38467346, 37637480})}
+    pois = {
+        POI({40247582, label = '{item:258770}'}), -- Tarnished Safebox Key
+        POI({38467346, label = '{item:258769}'}), -- Worn Safebox Key
+        POI({37637480, label = '{item:258768}'}) --  Battered Safebox Key
+    }
 }) -- Triple-Locked Safebox
 
 map.nodes[40961945] = Treasure({
-    quest = nil,
+    quest = 93544, -- 93545 triggered when returning cinders
     note = L['gift_of_the_phoenix_note'],
     rewards = {Achievement({id = 61960, criteria = 111473})}
 }) -- Gift of the Phoenix
@@ -169,7 +175,7 @@ map.nodes[43276949] = Treasure({
 }) -- Forgotten Ink and Quill
 
 map.nodes[44614554] = Treasure({
-    quest = 94740, -- 93908
+    quest = 93908, -- 93908 (94740 didnt trigger for tfmonk)
     rewards = {Achievement({id = 61960, criteria = 111475})}
 }) -- Gilded Armillary Sphere
 
@@ -187,7 +193,7 @@ map.nodes[40436089] = Treasure({
     quest = 86645, -- 93061
     note = L['eversong_woods_stone_vat_of_wine_note'], -- requires 10 Bunch of Ripe Grapes (item 256232) and Instant Yeast (item 256397) from sheri. Stomp on the Grapes then add the yeast. -- todo add to locale
     location = L['eversong_woods_stone_vat_of_wine_location'], -- on a flying platform -- todo add to licale
-    rewards = {Achievement({id = 61960, criteria = 111478})}
+    rewards = {Achievement({id = 61960, criteria = 111478})} -- + [Goldenmist Grapes] housing decor
 }) -- Stone Vat of Wine
 
 map.nodes[48737544] = Treasure({
@@ -197,9 +203,79 @@ map.nodes[48737544] = Treasure({
     }
 }) -- Burbling Paint Pot
 
+smc.nodes[37805238] = Treasure({
+    label = L['incomplete_book_of_sonnets'],
+    requires = ns.requirement.Item(263257), -- Booklet of Sonnets
+    quest = 94781, -- 93458 (old quest id?),
+    -- rewards = {}, --[Silvermoon Library Bookcase] housing decor + 55rep with Silvermoon City faction
+    parent = map.id,
+    pois = {
+        POI({40748846, label = '{item:265833}'}), -- Lost Page 1
+        POI({33289017, label = '{item:265834}'}), -- Lost Page 2
+        POI({39818047, label = '{item:265835}'}) -- Lost Page 3
+    }
+}) -- Incomplete Book of Sonnets
+-- TODO: bugged on beta, cannot be looted
+
 -------------------------------------------------------------------------------
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
+smc.nodes[49117586] = PT.Alchemy({quest = 89115, id = 238536, parent = map.id}) -- Freshly Plucked Peacebloom
+smc.nodes[47755169] = PT.Alchemy({quest = 89117, id = 238538, parent = map.id}) -- Pristine Potion
+smc.nodes[53404960] = PT.Blacksmithing({
+    quest = 89183,
+    id = 238546,
+    parent = map.id
+}) -- Sin'dorei Master's Forgemace
+smc.nodes[56705120] = PT.Blacksmithing({
+    quest = 89177,
+    id = 238540,
+    parent = map.id
+}) -- Deconstructed Forge Techniques
+smc.nodes[60005340] = PT.Blacksmithing({
+    quest = 89184,
+    id = 238547,
+    parent = map.id
+}) -- Silvermoon Blacksmith's Hammer
+map.nodes[63493260] = PT.Enchanting({quest = 89107, id = 238555}) -- Sin'dorei Enchanting Rod
+smc.nodes[62005460] = PT.Engineering({
+    quest = 89133,
+    id = 238556,
+    parent = map.id
+}) -- One Engineer's Junk
+smc.nodes[64305620] = PT.Engineering({
+    quest = 89139,
+    id = 238562,
+    parent = map.id
+}) -- What To Do When Nothing Works
+map.nodes[64253046] = PT.Herbalism({quest = 89158, id = 238472}) -- A Spade
+smc.nodes[49027593] =
+    PT.Herbalism({quest = 89160, id = 238470, parent = map.id}) -- Simple Leaf Pruners
+smc.nodes[47655039] = PT.Inscription({
+    quest = 89073,
+    id = 238578,
+    parent = map.id
+}) -- Songwriter's Pen
+smc.nodes[55444782] = PT.Jewelcrafting({
+    quest = 89127,
+    id = 238585,
+    parent = map.id
+}) -- Vintage Soul Gem
+smc.nodes[50505659] = PT.Jewelcrafting({
+    quest = 89122,
+    id = 238580,
+    parent = map.id
+}) -- Sin'dorei Masterwork Chisel
+smc.nodes[44765626] = PT.Leatherworking({
+    quest = 89096,
+    id = 238595,
+    parent = map.id
+}) -- Artisan's Considered Order
+smc.nodes[43135562] = PT.Skinning({quest = 89171, id = 238633, parent = map.id}) -- Sin'dorei Tanning Oil
+smc.nodes[35736122] =
+    PT.Tailoring({quest = 89079, id = 238613, parent = map.id}) -- A Really Nice Curtain
+smc.nodes[31796828] =
+    PT.Tailoring({quest = 89084, id = 238618, parent = map.id}) -- Particularly Enchanting Tablecloth
 
 -------------------------------------------------------------------------------
 ------------------------- EVERSONG WOODS GLYPH HUNTER -------------------------
@@ -210,9 +286,9 @@ smc.nodes[48320667] = SkyridingGlyph({
     parent = map.id
 }) -- The Shining Span
 
-map.nodes[40401011] = SkyridingGlyph({
+map.nodes[65203258] = SkyridingGlyph({
     rewards = {Achievement({id = 61576, criteria = 110336})}
-}) -- Sunstrider Isle
+}) -- Brightwing Estate
 
 map.nodes[58921954] = SkyridingGlyph({
     rewards = {Achievement({id = 61576, criteria = 110337})}
@@ -254,13 +330,12 @@ map.nodes[43204636] = SkyridingGlyph({
 ------------------------- MIDNIGHT: THE HIGHEST PEAKS -------------------------
 -------------------------------------------------------------------------------
 
-map.nodes[40411010] = Telescope({
-    quest = 34905 -- placeholder
-})
-map.nodes[52486750] = Telescope({quest = 94538})
-map.nodes[50308417] = Telescope({quest = 94540})
+map.nodes[40411010] = Telescope({quest = 94537})
+map.nodes[52486750] = Telescope({quest = 94538}) -- review (doesnt seem to be there)
+map.nodes[50198543] = Telescope({quest = 94540})
 smc.nodes[20227961] = Telescope({quest = 94536, parent = map.id})
-smc.nodes[79266076] = Telescope({quest = 94539, parent = map.id})
+-- smc.nodes[79266076] = Telescope({quest = 94539, parent = map.id}) -- Moved to below location
+map.nodes[54585101] = Telescope({quest = 94539})
 
 ---------------------------- MIDNIGHT LORE HUNTER -----------------------------
 
@@ -268,70 +343,51 @@ smc.nodes[79266076] = Telescope({quest = 94539, parent = map.id})
 
 map.nodes[47958820] = LoreObject({
     quest = 91841,
-    rewards = {Achievement({id = 62104, criteria = 111828})}
+    rewards = {
+        Achievement({id = 62104, criteria = 111828}),
+        Reputation({id = 2710, gain = 275, quest = 91841})
+    }
 }) -- Memorial Plaque
 
 map.nodes[37601378] = LoreObject({
     quest = 93563,
-    rewards = {Achievement({id = 62104, criteria = 111829})}
+    rewards = {
+        Achievement({id = 62104, criteria = 111829}),
+        Reputation({id = 2710, gain = 275, quest = 93563})
+    }
 }) -- Shrine of Dath'remar
 
 map.nodes[50524347] = LoreObject({
     quest = 93564,
-    rewards = {Achievement({id = 62104, criteria = 111830})}
-}) -- Dead Scar Research
+    rewards = {
+        Achievement({id = 62104, criteria = 111830}),
+        Reputation({id = 2710, gain = 275, quest = 93564})
+    }
+}) -- Dead Scar Research/Mirveda's Notes
 
-map.nodes[17502500] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111831})}
-}) -- Dar'khan's Notes
+map.nodes[36057251] = LoreObject({
+    quest = 93565,
+    rewards = {
+        Achievement({id = 62104, criteria = 111831}),
+        Reputation({id = 2710, gain = 275, quest = 93565})
+    }
+}) -- Profane Research/Dar'khan's Notes
 
 map.nodes[57815092] = LoreObject({
     quest = 93562,
-    rewards = {Achievement({id = 62104, criteria = 111832})}
+    rewards = {
+        Achievement({id = 62104, criteria = 111832}),
+        Reputation({id = 2710, gain = 275, quest = 93562})
+    }
 }) -- Hawkstrider Husbandry Manual
 
 smc.nodes[38107699] = LoreObject({
     quest = 93570,
-    rewards = {Achievement({id = 62104, criteria = 111833})}
+    rewards = {
+        Achievement({id = 62104, criteria = 111833}),
+        Reputation({id = 2710, gain = 275, quest = 93570})
+    }
 }) -- Unfinished Sheet Music
-
-map.nodes[17504500] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111773})}
-}) -- Tablet of Halazzi
-
-map.nodes[17507000] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111778})}
-}) -- Tablet of Filo
-
-map.nodes[18501500] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111834})}
-}) -- Void Armor
-
-map.nodes[18502000] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111835})}
-}) -- Ancient Tablet
-
-map.nodes[18502500] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111836})}
-}) -- Abandoned Telescope
-
-map.nodes[18511500] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111837})}
-}) -- Tainted Page
-
-map.nodes[18512000] = LoreObject({
-    quest = nil,
-    rewards = {Achievement({id = 62104, criteria = 111838})}
-}) -- Shadowgraft Harness
-
--- Profane Research @36047251 quest 93565
 
 -------------------------------- EVER PAINTIG ---------------------------------
 

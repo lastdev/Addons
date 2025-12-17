@@ -3,7 +3,7 @@
 
                                                X and Y
 											   
-                                     v2.65 - 12th November 2025
+                                      v2.66 - 9th December 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

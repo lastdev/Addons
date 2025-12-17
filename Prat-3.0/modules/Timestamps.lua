@@ -89,7 +89,7 @@ Prat:AddModuleToLoad(function()
   do
       local L
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = true,
@@ -135,7 +135,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "enUS",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Options de l'heure des messages.",
@@ -191,7 +191,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "frFR",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Optionen für Zeitstempel in Chatfenstern.",
@@ -237,7 +237,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "deDE",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "대화창 대화 시각 옵션입니다.",
@@ -290,7 +290,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "koKR",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		--[[Translation missing --]]
@@ -372,7 +372,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "esMX",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Настройки времени в окне чата.",
@@ -425,7 +425,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "聊天窗口时间戳选项",
@@ -479,7 +479,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "Opciones de MáscaraTiempo de la ventana de chat.",
@@ -535,7 +535,7 @@ L = {
     PL:AddLocale(PRAT_MODULE, "esES",L)
 
 
-  
+
 L = {
 	["Timestamps"] = {
 		["Chat window timestamp options."] = "聊天視窗時間戳選項",
@@ -719,28 +719,30 @@ L = {
     },
   })
 
-  Prat:SetModuleInit(module, function(self)
-    -- Disable blizz timestamps if possible
-    if issecurevariable("ChatFrame_MessageEventHandler") then
-      local proxy = {}
-      if Prat.IsClassic then
-        proxy.CHAT_TIMESTAMP_FORMAT = false -- nil would defer to __index
-      else
-        proxy.GetChatTimestampFormat = function() end
-      end
-      local CF_MEH_env = setmetatable(proxy, { __index = _G, __newindex = _G })
-      setfenv(ChatFrame_MessageEventHandler, CF_MEH_env)
-    else
-      -- An addon has modified ChatFrame_MessageEventHandler and likely
-      -- replaced / hooked it, so we can't setfenv the original function.
-      -- TODO Print a warning
-      self:Output("Could not install hook")
-    end
+	Prat:SetModuleInit(module, function(self)
+		-- Disable blizz timestamps if possible
+		local proxy = {}
+		if Prat.IsClassic then
+			proxy.CHAT_TIMESTAMP_FORMAT = false -- nil would defer to __index
+		else
+			proxy.GetChatTimestampFormat = function() end
+		end
+		local CF_MEH_env = setmetatable(proxy, { __index = _G, __newindex = _G })
+		if _G.ChatFrameMixin and _G.ChatFrameMixin.MessageEventHandler then
+			setfenv(_G.ChatFrameMixin.MessageEventHandler, CF_MEH_env)
+		elseif _G["ChatFrame_MessageEventHandler"] and issecurevariable("ChatFrame_MessageEventHandler") then
+			setfenv(_G.ChatFrame_MessageEventHandler, CF_MEH_env)
+		else
+			-- An addon has modified ChatFrame_MessageEventHandler and likely
+			-- replaced / hooked it, so we can't setfenv the original function.
+			-- TODO Print a warning
+			self:Output("Could not install hook")
+		end
 
-    for name, v in pairs(Prat.HookedFrames) do
-      self:SecureHook(v, "AddMessage")
-    end
-  end)
+		for _, v in pairs(Prat.HookedFrames) do
+			self:SecureHook(v, "AddMessage")
+		end
+	end)
 
   function module:OnModuleEnable()
     for name, v in pairs(Prat.HookedFrames) do

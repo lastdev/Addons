@@ -1,5 +1,7 @@
-local DragonRider, DR = ...
-local _, L = ...
+local _, DR = ...
+
+local L = DR.L
+local defaultsTable = DR.defaultsTable
 
 --A purposeful global variable for other addons
 DragonRider_API = DR

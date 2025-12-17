@@ -1,8 +1,8 @@
-## Interface: 110200
+## Interface: 110207
 ## Title: HandyNotes: Warlords of Draenor (Treasure Hunter + Rares)
 ## Notes: Where the Treasure Hunter objects and rares are in Draenor
 ## Author: Kemayo
-## Version: v41
+## Version: v42
 ## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map

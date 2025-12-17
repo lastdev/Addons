@@ -43,6 +43,7 @@ function TomTom:Initialize(event, addon)
                 accuracy = 2,
                 bordercolor = {1, 0.8, 0, 0.8},
                 bgcolor = {0, 0, 0, 0.4},
+                textcolor = {1, 0.82, 0, 1},
                 lock = false,
                 height = 30,
                 width = 100,
@@ -128,6 +129,9 @@ function TomTom:Initialize(event, addon)
                 setClosest = false,
                 arrival = 0,
             },
+            paste = {
+                minimap_button = false,
+            }
         },
     }
 
@@ -214,6 +218,8 @@ function TomTom:Enable(addon)
     if self.WOW_MAINLINE then
         self:EnableDisablePOIIntegration()
     end
+
+    self:PasteConfigChanged()
 end
 
 -- Some utility functions that can pack/unpack data from a waypoint
@@ -427,6 +433,7 @@ function TomTom:ShowHideCoordBlock()
             TomTomBlock.Text = TomTomBlock:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             TomTomBlock.Text:SetJustifyH("CENTER")
             TomTomBlock.Text:SetPoint("CENTER", 0, 0)
+            TomTomBlock.Text:SetTextColor(1, 0.8, 0, 0.8)
 
             TomTomBlock:SetBackdrop({
                 bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
@@ -434,8 +441,8 @@ function TomTom:ShowHideCoordBlock()
                 edgeSize = 16,
                 insets = {left = 4, right = 4, top = 4, bottom = 4},
             })
-            TomTomBlock:SetBackdropColor(0,0,0,0.4)
-            TomTomBlock:SetBackdropBorderColor(1,0.8,0,0.8)
+            TomTomBlock:SetBackdropColor(0, 0, 0, 0.4)
+            TomTomBlock:SetBackdropBorderColor(1, 0.8, 0, 0.8)
 
             -- Set behavior scripts
             TomTomBlock:SetScript("OnUpdate", Block_OnUpdate)
@@ -459,6 +466,9 @@ function TomTom:ShowHideCoordBlock()
         TomTomBlock:Show()
 
         local opt = self.profile.block
+
+        -- Update the text color
+        TomTomBlock.Text:SetTextColor(unpack(opt.textcolor))
 
         -- Update the backdrop color, and border color
         TomTomBlock:SetBackdropColor(unpack(opt.bgcolor))
@@ -1164,7 +1174,7 @@ local function usage()
     ChatFrame1:AddMessage(L["|cffffff78/cway |r - Activate the closest waypoint"])
     ChatFrame1:AddMessage(L["|cffffff78/wayb [desc] |r - Save the current position with optional description"])
     ChatFrame1:AddMessage(L["|cffffff78/way /tway /tomtomway |r - Commands to set a waypoint: one should work."])
-    ChatFrame1:AddMessage(L["|cffffff78/way <x> <y> [desc]|r - Adds a waypoint at x,y with descrtiption desc"])
+    ChatFrame1:AddMessage(L["|cffffff78/way <x> <y> [desc]|r - Adds a waypoint at x,y with description desc"])
     ChatFrame1:AddMessage(L["|cffffff78/way <zone> <x> <y> [desc]|r - Adds a waypoint at x,y in zone with description desc"])
     ChatFrame1:AddMessage(L["|cffffff78/way reset all|r - Resets all waypoints"])
     ChatFrame1:AddMessage(L["|cffffff78/way reset away|r - Resets all waypoints not in current zone"])
@@ -1396,7 +1406,7 @@ local rightseparator =   "%1" .. (tonumber("1.1") and "." or ",") .. "%2"
 -- Make comparison only using lowercase letters and no spaces
 local function lowergsub(s) return s:lower():gsub("[%s]", "") end
 
-SlashCmdList["TOMTOM_WAY"] = function(msg)
+addon.SlashWayCommand = function(msg)
     msg = msg:gsub("(%d)[%.,] (%d)", "%1 %2"):gsub(wrongseparator, rightseparator)
     local tokens = {}
     for token in msg:gmatch("%S+") do table.insert(tokens, token) end
@@ -1616,3 +1626,4 @@ SlashCmdList["TOMTOM_WAY"] = function(msg)
     end
 end
 
+SlashCmdList["TOMTOM_WAY"] = addon.SlashWayCommand

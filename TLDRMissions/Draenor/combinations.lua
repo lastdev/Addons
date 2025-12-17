@@ -6,8 +6,7 @@ local function startSimulation(combination, missionID, callback)
         callback({defeats = 0, victories = 0, ["missionID"] = missionID})
         return
     end
-
-    addon.currentFollowersBeingTested = {combination[1], combination[2], combination[3]}        
+        
     addon:WODSimulate(combination[1], combination[2], combination[3], missionID, function(results)
         results.combination = {combination[1], combination[2], combination[3]}
         results.missionID = missionID  

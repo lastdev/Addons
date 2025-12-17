@@ -127,6 +127,7 @@ local function eventHandler(self, event, ...)
         if arg1 == 123 then
             if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
             if C_Map.GetBestMapForUnit("player") == 2024 then return end -- same with Azure Span - from the Blue Dragon quests campaign
+            if not CovenantMission:ShouldShowMissionsAndFollowersTabs() then return end
             adventureMapOpenHandler(arg1)
             preloadItemRewards()
             if #C_Garrison.GetCompleteMissions(123) == 0 then
@@ -139,11 +140,20 @@ local function eventHandler(self, event, ...)
             TLDRMissionsWODToggleButton:Show()
             addon.WODGUI:SetParent(GarrisonMissionFrame)
             addon.WODGUI:SetShown(addon.WODGUI:IsShown() or addon.WODdb.profile.autoShowUI)
+        -- Legion
         elseif arg1 == 4 then
-            TLDRMissionsLegionToggleButton:Show()
+            if not OrderHallMission:ShouldShowMissionsAndFollowersTabs() then return end
+            TLDRMissions4ToggleButton:Show()
             addon.LegionGUI:SetParent(OrderHallMissionFrame)
             addon.LegionGUI:SetFrameStrata("DIALOG")
             addon.LegionGUI:SetShown(addon.LegionGUI:IsShown() or addon.Legiondb.profile.autoShowUI)
+        -- BFA
+        elseif arg1 == 22 then
+            if not BFAMission:ShouldShowMissionsAndFollowersTabs() then return end
+            TLDRMissions22ToggleButton:Show()
+            addon.BFAGUI:SetParent(BFAMissionFrame)
+            addon.BFAGUI:SetFrameStrata("DIALOG")
+            addon.BFAGUI:SetShown(addon.BFAGUI:IsShown() or addon.BFAdb.profile.autoShowUI)
         end
     elseif (event == "ADDON_LOADED") then
         if _G.GarrisonLandingPageFollowerList then
@@ -187,5 +197,6 @@ eventFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 EventUtil.ContinueOnAddOnLoaded(addonName, function()
     addon:RefreshProfile()
     addon.WODGUI:RefreshProfile()
-    addon.LegionGUI:RefreshProfile()
+    addon.LegionGUI:InitProfile()
+    addon.BFAGUI:InitProfile()
 end)

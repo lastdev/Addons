@@ -1,8 +1,8 @@
-## Interface: 110107, 11507, 50500
+## Interface: 110207, 119999, 11508, 50502
 
 ## Title: Routes
 ## Author: Grum, Xinhuan
-## Version: v1.8.4
+## Version: v1.8.5
 
 ## Notes: Routes on your worldmap and minimap!
 ## Notes-frFR: Routes sur votre carte du monde et minicarte !
@@ -10,7 +10,6 @@
 
 ## X-Curse-Project-ID: 14599
 ## X-Name: Routes
-## X-Category: Map
 ## X-eMail: routes@grum.nl & xinhuan@gmail.com
 ## X-License: All Rights Reserved.
 ## X-Discord: https://discord.com/invite/ayPc89hCbj
@@ -19,6 +18,18 @@
 ## DefaultState: enabled
 ## OptionalDeps: Ace3, HereBeDragons, Cartographer, Cartographer_Notes, GatherMate, GatherMate2, Gatherer, HandyNotes
 ## SavedVariables: RoutesDB
+
+## Category: Map
+## Category-deDE: Karte
+## Category-esES: Mapa
+## Category-esMX: Mapa
+## Category-frFR: Carte
+## Category-itIT: Mappa
+## Category-koKR: 지도
+## Category-ptBR: Mapa
+## Category-ruRU: Карта
+## Category-zhCN: 地图
+## Category-zhTW: 地圖
 
 # Library files
 #@no-lib-strip@

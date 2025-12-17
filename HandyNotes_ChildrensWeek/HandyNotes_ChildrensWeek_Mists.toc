@@ -1,5 +1,5 @@
 ## Interface: 50502
-## Version: 1.18
+## Version: 1.19
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\INV_Misc_Food_31
 ## Title: Children's Week

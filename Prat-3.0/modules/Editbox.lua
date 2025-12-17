@@ -1,5 +1,11 @@
 -- This is the editbox module from Chatter by Antiarc
 
+local GetCVar = _G.GetCVar or _G.C_CVar.GetCVar
+
+local ChatEdit_ChooseBoxForSend = _G.ChatEdit_ChooseBoxForSend or _G.ChatFrameUtil.ChooseBoxForSend
+local ChatEdit_DeactivateChat = _G.ChatEdit_DeactivateChat or _G.ChatFrameUtil.DeactivateChat
+
+
 if not Prat.BN_CHAT then return end -- Requires 3.3.5
 
 Prat:AddModuleToLoad(function()
@@ -392,7 +398,6 @@ end
   local CreateFrame = _G.CreateFrame
   local max = _G.max
   local pairs = _G.pairs
-  local select = _G.select
 
   local VALID_ATTACH_POINTS = {
     TOP = PL["Top"],
@@ -419,7 +424,7 @@ end
         desc = PL["Background texture"],
         values = backgrounds,
         get = function() return mod.db.profile.background end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.background = v
           mod:SetBackdrop()
         end
@@ -430,7 +435,7 @@ end
         desc = PL["Border texture"],
         values = borders,
         get = function() return mod.db.profile.border end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.border = v
           mod:SetBackdrop()
         end
@@ -444,7 +449,7 @@ end
           local c = mod.db.profile.backgroundColor
           return c.r, c.g, c.b, c.a
         end,
-        set = function(info, r, g, b, a)
+        set = function(_, r, g, b, a)
           local c = mod.db.profile.backgroundColor
           c.r, c.g, c.b, c.a = r, g, b, a
           mod:SetBackdrop()
@@ -459,7 +464,7 @@ end
           local c = mod.db.profile.borderColor
           return c.r, c.g, c.b, c.a
         end,
-        set = function(info, r, g, b, a)
+        set = function(_, r, g, b, a)
           local c = mod.db.profile.borderColor
           c.r, c.g, c.b, c.a = r, g, b, a
           mod:SetBackdrop()
@@ -474,7 +479,7 @@ end
         step = 1,
         bigStep = 1,
         get = function() return mod.db.profile.inset end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.inset = v
           mod:SetBackdrop()
         end
@@ -488,7 +493,7 @@ end
         step = 1,
         bigStep = 1,
         get = function() return mod.db.profile.tileSize end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.tileSize = v
           mod:SetBackdrop()
         end
@@ -502,7 +507,7 @@ end
         step = 1,
         bigStep = 1,
         get = function() return mod.db.profile.edgeSize end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.edgeSize = v
           mod:SetBackdrop()
         end
@@ -513,7 +518,7 @@ end
         desc = PL["Attach edit box to..."],
         get = function() return mod.db.profile.attach end,
         values = VALID_ATTACH_POINTS,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.attach = v
           mod:SetAttach()
         end
@@ -525,10 +530,10 @@ end
         get = function()
           return mod.db.profile.colorByChannel
         end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.colorByChannel = v
           if v then
-            mod:RawHook("ChatEdit_UpdateHeader", "SetBorderByChannel", true)
+            mod:SecureHook("ChatEdit_UpdateHeader", "SetBorderByChannel", true)
           else
             if mod:IsHooked("ChatEdit_UpdateHeader") then
               mod:Unhook("ChatEdit_UpdateHeader")
@@ -547,7 +552,7 @@ end
         get = function()
           return mod.db.profile.useAltKey
         end,
-        set = function(info, v)
+        set = function(_, v)
           mod.db.profile.useAltKey = v
           updateEditBox("SetAltArrowKeyMode", v)
         end,
@@ -558,7 +563,7 @@ end
         desc = PL["Select the font to use for the edit box"],
         values = fonts,
         get = function() return mod.db.profile.font end,
-        set = function(i, v)
+        set = function(_, v)
           mod.db.profile.font = v
           for i = 1, #CHAT_FRAMES do
             local ff = _G["ChatFrame" .. i .. "EditBox"]
@@ -601,13 +606,13 @@ end
 
 
   function mod:LibSharedMedia_Registered()
-    for k, v in pairs(Media:List("background")) do
+    for _, v in pairs(Media:List("background")) do
       backgrounds[v] = v
     end
-    for k, v in pairs(Media:List("border")) do
+    for _, v in pairs(Media:List("border")) do
       borders[v] = v
     end
-    for k, v in pairs(Media:List("font")) do
+    for _, v in pairs(Media:List("font")) do
       fonts[v] = v
     end
   end
@@ -679,7 +684,7 @@ end
     e:HookScript("OnArrowPressed", OnArrowPressed)
   end
 
-  function mod:Prat_FramesUpdated(info, name, chatFrame, ...)
+  function mod:Prat_FramesUpdated(_, _, chatFrame)
     local i = chatFrame:GetID()
     local f = _G["ChatFrame" .. i .. "EditBox"]
     _G["ChatFrame" .. i .. "EditBoxLeft"]:Hide()
@@ -693,12 +698,12 @@ end
     MakePratEditbox(self, i)
     self.frames[i]:Show()
 
-    local font, s, m = f:GetFont()
+    local _, s, m = f:GetFont()
     f:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
 
     local header = _G[f:GetName() .. "Header"]
-    local font, s, m = header:GetFont()
-    header:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
+    local _, s2, m2 = header:GetFont()
+    header:SetFont(Media:Fetch("font", self.db.profile.font), s2, m2)
 
     f:SetAltArrowKeyMode(mod.db.profile.useAltKey and 1 or nil)
     if (not mod.db.profile.useAltKey) then
@@ -727,12 +732,12 @@ end
 
       MakePratEditbox(self, i) -- For new temporary chat frames created between init and now
       self.frames[i]:Show()
-      local font, s, m = f:GetFont()
+      local _, s, m = f:GetFont()
       f:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
 
       local header = _G[f:GetName() .. "Header"]
-      local font, s, m = header:GetFont()
-      header:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
+      local _, s2, m2 = header:GetFont()
+      header:SetFont(Media:Fetch("font", self.db.profile.font), s2, m2)
 
       f:SetAltArrowKeyMode(mod.db.profile.useAltKey and 1 or nil)
       if (not mod.db.profile.useAltKey) then
@@ -748,11 +753,25 @@ end
     self:SecureHook("ChatEdit_DeactivateChat")
     self:SecureHook("ChatEdit_SetLastActiveWindow")
     self:SecureHook("ChatFrame_OpenChat")
+	  if _G.ChatFrameUtil then
+		  if _G.ChatFrameUtil.DeactivateChat then
+			  self:SecureHook(_G.ChatFrameUtil, "DeactivateChat", "ChatEdit_DeactivateChat")
+		  end
+		  if _G.ChatFrameUtil.SetLastActiveWindow then
+			  self:SecureHook(_G.ChatFrameUtil, "SetLastActiveWindow", "ChatEdit_SetLastActiveWindow")
+		  end
+		  if _G.ChatFrameUtil.OpenChat then
+			  self:SecureHook(_G.ChatFrameUtil, "OpenChat", "ChatFrame_OpenChat")
+		  end
+	  end
 
     self:SetBackdrop()
     self:UpdateHeight()
     if self.db.profile.colorByChannel then
-      self:RawHook("ChatEdit_UpdateHeader", "SetBorderByChannel", true)
+      self:SecureHook("ChatEdit_UpdateHeader", "SetBorderByChannel", true)
+		if _G.ChatFrameEditBoxBaseMixin and _G.ChatFrameEditBoxBaseMixin.UpdateHeader then
+			self:SecureHook(_G.ChatFrameEditBoxBaseMixin, "UpdateHeader", "SetBorderByChannel")
+		end
     end
     self:SecureHook("FCF_Tab_OnClick")
 
@@ -761,7 +780,7 @@ end
 
 
 
-  function mod:ChatFrame_OpenChat(text, chatFrame)
+  function mod:ChatFrame_OpenChat(_, chatFrame)
     if not self.db.profile.useAltKey then
       local frame = ChatEdit_ChooseBoxForSend(chatFrame)
 
@@ -769,7 +788,7 @@ end
     end
   end
 
-  function mod:FCF_Tab_OnClick(frame, button)
+  function mod:FCF_Tab_OnClick(frame)
     if self.db.profile.attach == "TOP" and GetCVar("chatStyle") ~= "classic" then
       local chatFrame = _G["ChatFrame" .. frame:GetID()];
       ChatEdit_DeactivateChat(chatFrame.editBox)
@@ -841,13 +860,12 @@ end
       local c = self.db.profile.backgroundColor
       frame:SetBackdropColor(c.r, c.g, c.b, c.a)
 
-      local c = self.db.profile.borderColor
-      frame:SetBackdropBorderColor(c.r, c.g, c.b, c.a)
+      local c2 = self.db.profile.borderColor
+      frame:SetBackdropBorderColor(c2.r, c2.g, c2.b, c2.a)
     end
   end
 
-  function mod:SetBorderByChannel(...)
-    self.hooks.ChatEdit_UpdateHeader(...)
+  function mod:SetBorderByChannel()
     for index, frame in ipairs(self.frames) do
       local f = _G["ChatFrame" .. index .. "EditBox"]
       local attr = f:GetAttribute("chatType")
@@ -902,7 +920,7 @@ end
     function mod:SetAttach(val, x, y, w)
       for i = 1, #CHAT_FRAMES do
         local frame = _G["ChatFrame" .. i .. "EditBox"]
-        local val = val or self.db.profile.attach
+        val = val or self.db.profile.attach
         if not x and val == "FREE" then
           if self.db.profile.editX and self.db.profile.editY then
             x, y, w = self.db.profile.editX, self.db.profile.editY, self.db.profile.editW
@@ -965,7 +983,7 @@ end
   end
 
   function mod:UpdateHeight()
-    for i, frame in ipairs(self.frames) do
+    for i, _ in ipairs(self.frames) do
       local ff = _G["ChatFrame" .. i .. "EditBox"]
       ff:SetHeight(mod.db.profile.height)
     end

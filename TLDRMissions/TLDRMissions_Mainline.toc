@@ -1,11 +1,11 @@
-## Interface: 110205
+## Interface: 110207
 ## Title: TL;DR Missions
-## Version: 11.2-011
+## Version: 11.2-016
 ## Notes: Automates sending out Covenant Missions
 ## Author: Teelo
 ## Dependencies: Blizzard_GarrisonUI
 ## SavedVariablesPerCharacter: TLDRMissionsLogging
-## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache, TLDRMissionsWODProfiles, TLDRMissionsLegionProfiles
+## SavedVariables: TLDRMissionsProfiles, TLDRMissionsCache, TLDRMissionsWODProfiles, TLDRMissionsLegionProfiles, TLDRMissionsBFAProfiles
 ## X-Curse-Project-ID: 602487
 ## IconTexture: Interface\Icons\Spell_AnimaBastion_Orb
 ## LoadOnDemand: 1
@@ -50,10 +50,20 @@ libs\AceEvent-3.0\AceEvent-3.0.xml
 libs\LibStub\LibStub.lua
 libs\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
+BaseGUI.lua
+CompleteMissionButton.lua
+RewardCheckButton.lua
+GetMissions.lua
+SortMissions.lua
+SimpleSimulation.lua
+FollowerTroopCombinations.lua
+ReportText.lua
+
 enums.lua
 events.lua
 bindings.lua
 publicAPI.lua
+reorder.lua
 
 Draenor\gui.lua
 Draenor\guihandlers.lua
@@ -66,6 +76,12 @@ Draenor\reorder.lua
 Legion\gui.lua
 Legion\guihandlers.lua
 Legion\profiles.lua
+Legion\init.lua
+
+BFA\gui.lua
+BFA\guihandlers.lua
+BFA\profiles.lua
+BFA\init.lua
 
 Shadowlands\caching.lua
 Shadowlands\combinations.lua

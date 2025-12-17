@@ -1,14 +1,14 @@
-## Interface: 110207,11507,50501
+## Interface: 110207,11507,50503
 ## Title: PasteNG
 ## Description: Enables multi-line/unlimited-length pasting of text or commands into WoW
-## Version: 11.2.7-20251202-1
+## Version: 11.2.7-20251210-1
 ## IconTexture: 134944
 ## Notes: Enables multi-line/unlimited-length pasting of text or commands into WoW
 ## Author: GurliGebis
 ## AddonCompartmentFunc: PasteNG_OnAddonCompartmentClick
 ## AddonCompartmentFuncOnEnter: PasteNG_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: PasteNG_OnAddonCompartmentLeave
-## X-Curse-Packaged-Version: 11.2.7-20251202-1
+## X-Curse-Packaged-Version: 11.2.7-20251210-1
 ## X-Curse-Project-Name: PasteNG
 ## X-Curse-Project-ID: 714985
 ## Category-enUS: User Interface

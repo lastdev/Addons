@@ -1,0 +1,73 @@
+## Interface: 120000, 110207
+## Title: |cFFFF0000Housing|r|cFF0066FFVendor|r
+## Notes: Housing Decor Vendors Database
+## Version:  07.12.25.65
+## IconTexture: Interface\Icons\INV_Misc_Map02.blp
+## Category-enUS: Decor Vendors
+## Author: RenZhi
+## SavedVariables: HousingDB
+
+Core\Core.lua
+Core\Events.lua
+Core\Config.lua
+
+Locale\enUS.lua
+Locale\deDE.lua
+Locale\frFR.lua
+Locale\esES.lua
+Locale\esMX.lua
+Locale\itIT.lua
+Locale\ptBR.lua
+Locale\ruRU.lua
+Locale\koKR.lua
+Locale\zhCN.lua
+Locale\zhTW.lua
+Locale\Locale.lua
+
+Data\Constants.lua
+Data\Classic.lua
+Data\TheBurningCrusade.lua
+Data\WrathoftheLichKing.lua
+Data\Cataclysm.lua
+Data\MistsofPandaria.lua
+Data\WarlordsofDraenor.lua
+Data\Legion.lua
+Data\BattleforAzeroth.lua
+Data\Shadowlands.lua
+Data\Dragonflight.lua
+Data\TheWarWithin.lua
+Data\Midnight.lua
+Data\Other.lua
+Data\NonVendor\AchievementRewards.lua
+Data\NonVendor\CollectionItems.lua
+Data\NonVendor\CraftedItems.lua
+Data\NonVendor\DropRewards.lua
+Data\NonVendor\EventRewards.lua
+Data\NonVendor\MiscellaneousItems.lua
+Data\NonVendor\QuestRewards.lua
+Data\NonVendor\ReplicaItems.lua
+
+Modules\Tools\MapIDToExpansion.lua
+Modules\Tools\ModelMapping.lua
+Modules\Tools\PortalData.lua
+Modules\Tools\IconCache.lua
+Modules\Tools\TooltipInfoExtractor.lua
+Modules\Tools\WaypointManager.lua
+
+Modules\UI\DataManager.lua
+Modules\UI\Icons.lua
+Modules\UI\HousingUI.lua
+Modules\UI\ItemList.lua
+Modules\UI\Filters.lua
+Modules\UI\PreviewPanel.lua
+Modules\UI\ConfigUI.lua
+Modules\UI\StatisticsUI.lua
+Modules\UI\MinimapButton.lua
+
+Modules\API\HousingAPI.lua
+Modules\API\HousingCatalogAPI.lua
+Modules\API\HousingDecorAPI.lua
+Modules\API\HousingEditorAPI.lua
+Modules\API\HousingDataEnhancer.lua
+
+Modules\Features\CollectData.lua

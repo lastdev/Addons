@@ -17,49 +17,45 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to:
 --
--- Free Software Foundation, Inc., 
--- 51 Franklin Street, Fifth Floor, 
+-- Free Software Foundation, Inc.,
+-- 51 Franklin Street, Fifth Floor,
 -- Boston, MA  02110-1301, USA.
 --
 --
 -------------------------------------------------------------------------------
 
-
-
-
+local ChatFrame_SendTell = _G.ChatFrame_SendTell or _G.ChatFrameUtil.SendTell
+local ChatEdit_UpdateHeader = _G.ChatEdit_UpdateHeader or _G.ChatFrameEditBoxMixin.UpdateHeader
 
 Prat:AddModuleToLoad(function()
+	local PRAT_MODULE = Prat:RequestModuleName("TellTarget")
 
-  local PRAT_MODULE = Prat:RequestModuleName("TellTarget")
+	if PRAT_MODULE == nil then
+		return
+	end
 
-  if PRAT_MODULE == nil then
-    return
-  end
+	local module = Prat:NewModule(PRAT_MODULE, "AceHook-3.0")
+	local PL = module.PL
 
-  local module = Prat:NewModule(PRAT_MODULE, "AceHook-3.0")
+	--[==[@debug@
+	PL:AddLocale(PRAT_MODULE, "enUS", {
+		["TellTarget"] = true,
+		["Adds telltarget slash command (/tt)."] = true,
+		["Target does not exist."] = true,
+		["Target is not a player."] = true,
+		["No target selected."] = true,
+		["NoTarget"] = true,
+		["/tt"] = true,
+	})
+	--@end-debug@]==]
 
-  local PL = module.PL
+	-- These Localizations are auto-generated. To help with localization
+	-- please go to http://www.wowace.com/projects/prat-3-0/localization/
+	--@non-debug@
+	do
+		local L
 
-  --[==[@debug@
-  PL:AddLocale(PRAT_MODULE, "enUS", {
-    ["TellTarget"] = true,
-    ["Adds telltarget slash command (/tt)."] = true,
-    ["Target does not exist."] = true,
-    ["Target is not a player."] = true,
-    ["No target selected."] = true,
-    ["NoTarget"] = true,
-    ["/tt"] = true,
-  })
-  --@end-debug@]==]
-
-  -- These Localizations are auto-generated. To help with localization
-  -- please go to http://www.wowace.com/projects/prat-3-0/localization/
-  --@non-debug@
- do
-     local L
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = true,
@@ -71,12 +67,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "enUS",L)
 
-   PL:AddLocale(PRAT_MODULE, "enUS",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Ajoute la commande telltarget (/tt) pour envoyer un message privé au joueur ciblé.",
@@ -88,12 +81,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "frFR",L)
 
-   PL:AddLocale(PRAT_MODULE, "frFR",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Fügt den Slash-Befehl Ziel Sagen (/tt) hinzu.",
@@ -105,12 +95,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "deDE",L)
 
-   PL:AddLocale(PRAT_MODULE, "deDE",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = "/ㅅㅅ",
 		["Adds telltarget slash command (/tt)."] = "대상에게 말하기 슬래쉬 명령어를 추가합니다 (/tt).",
@@ -122,12 +109,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "koKR",L)
 
-   PL:AddLocale(PRAT_MODULE, "koKR",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		--[[Translation missing --]]
 		["/tt"] = "/tt",
@@ -146,12 +130,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "esMX",L)
 
-   PL:AddLocale(PRAT_MODULE, "esMX",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Добавляет слеш-команду 'сказать о цели' (/tt).",
@@ -163,12 +144,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
-   PL:AddLocale(PRAT_MODULE, "ruRU",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "添加目标告知斜杠命令(/tt).",
@@ -180,12 +158,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
-   PL:AddLocale(PRAT_MODULE, "zhCN",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "Añade comando decir a objetivo (/tt).",
@@ -197,12 +172,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "esES",L)
 
-   PL:AddLocale(PRAT_MODULE, "esES",L)
-
-
- 
-L = {
+		L = {
 	["TellTarget"] = {
 		["/tt"] = true,
 		["Adds telltarget slash command (/tt)."] = "新增 telltarget 快捷命令（/tt）",
@@ -214,90 +186,78 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "zhTW",L)
+	end
+	--@end-non-debug@
 
-   PL:AddLocale(PRAT_MODULE, "zhTW",L)
+	Prat:SetModuleDefaults(module.name, {
+		profile = {
+			on = true,
+		}
+	})
 
+	Prat:SetModuleOptions(module.name, {
+		name = PL["TellTarget"],
+		desc = PL["Adds telltarget slash command (/tt)."],
+		type = "group",
+		args = {
+			info = {
+				name = PL["Adds telltarget slash command (/tt)."],
+				type = "description",
+			}
+		}
+	})
 
- end
- --@end-non-debug@
+	function module:OnModuleEnable()
+		self:SecureHookScript(_G.ChatFrame1EditBox, "OnTextChanged")
+	end
 
-  -- create prat module
+	function module:OnModuleDisable()
+		self:UnhookAll()
+	end
 
-  Prat:SetModuleDefaults(module.name, {
-    profile = {
-      on = true,
-    }
-  })
+	--[[------------------------------------------------
+		Core Functions
+	------------------------------------------------]] --
+	function module:GetDescription()
+		return PL["Adds telltarget slash command (/tt)."]
+	end
 
-  Prat:SetModuleOptions(module.name, {
-    name = PL["TellTarget"],
-    desc = PL["Adds telltarget slash command (/tt)."],
-    type = "group",
-    args = {
-      info = {
-        name = PL["Adds telltarget slash command (/tt)."],
-        type = "description",
-      }
-    }
-  })
+	function module:OnTextChanged(editBox)
+		local command, msg = editBox:GetText():match("^(/%S+)%s(.*)$")
+		if command == "/tt" or command == PL["/tt"] then
+			self:SendTellToTarget(editBox.chatFrame, msg, editBox)
+		end
+	end
 
-  --[[------------------------------------------------
-      Module Event Functions
-  ------------------------------------------------]] --
-  function module:OnModuleEnable()
-    self:HookScript(ChatFrame1EditBox, "OnTextChanged")
-  end
+	function module:SendTellToTarget(frame, text, editBox)
+		if frame == nil then
+			frame = DEFAULT_CHAT_FRAME
+		end
 
-  function module:OnModuleDisable()
-    self:UnhookAll()
-  end
+		local unitname, realm, fullname
+		if UnitIsPlayer("target") then
+			unitname, realm = UnitName("target")
+			if unitname then
+				if realm and UnitRealmRelationship("target") ~= LE_REALM_RELATION_SAME then
+					fullname = unitname .. "-" .. realm
+				else
+					fullname = unitname
+				end
+			end
+		end
 
-  --[[------------------------------------------------
-      Core Functions
-  ------------------------------------------------]] --
+		local target = fullname and fullname:gsub(" ", "") or PL["NoTarget"]
 
-  function module:GetDescription()
-    return PL["Adds telltarget slash command (/tt)."]
-  end
+		if editBox then
+			editBox:SetAttribute("chatType", "WHISPER")
+			editBox:SetAttribute("tellTarget", target)
+			editBox:SetText(text)
+			ChatEdit_UpdateHeader(editBox)
+		else
+			ChatFrame_SendTell(target, frame)
+		end
+	end
 
-  function module:OnTextChanged(editBox, ...)
-    local command, msg = editBox:GetText():match("^(/%S+)%s(.*)$")
-    if command == "/tt" or command == PL["/tt"] then
-      self:SendTellToTarget(editBox.chatFrame, msg, editBox)
-    end
-    self.hooks[editBox].OnTextChanged(editBox, ...)
-  end
-
-  function module:SendTellToTarget(frame, text, editBox)
-    if frame == nil then frame = DEFAULT_CHAT_FRAME end
-
-    local unitname, realm, fullname
-    if UnitIsPlayer("target") then
-      unitname, realm = UnitName("target")
-      if unitname then
-        if realm and UnitRealmRelationship("target") ~= LE_REALM_RELATION_SAME then
-          fullname = unitname .. "-" .. realm
-        else
-          fullname = unitname
-        end
-      end
-    end
-
-    local target = fullname and fullname:gsub(" ", "") or PL["NoTarget"]
-
-    if editBox then
-      editBox:SetAttribute("chatType", "WHISPER");
-      editBox:SetAttribute("tellTarget", target);
-      editBox:SetText(text)
-      ChatEdit_UpdateHeader(editBox);
-    else
-      ChatFrame_SendTell(target, frame)
-    end
-  end
-
-  local function TellTarget(msg)
-    module:SendTellToTarget(SELECTED_CHAT_FRAME, msg)
-  end
-
-  return
-end) -- Prat:AddModuleToLoad
+	return
+end)
