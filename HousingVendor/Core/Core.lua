@@ -1,153 +1,87 @@
+local ADDON_NAME, ns = ...
+
 local Housing = {}
 
-Housing.version = " 07.12.25.65"
+Housing.version = " 13.12.25.85"
 
--- Make Housing globally available
 _G.Housing = Housing
+ns.Housing = Housing
 
--- Debug function to test map data integration (development only)
-function Housing:TestMapData()
-    if not HousingDebugPrint then return end
-    
-    HousingDebugPrint("Testing map data integration...")
-    
-    -- Check if HousingMapIDToExpansion is loaded
-    if HousingMapIDToExpansion then
-        local mapCount = 0
-        for _ in pairs(HousingMapIDToExpansion) do
-            mapCount = mapCount + 1
-        end
-        HousingDebugPrint("Map ID to Expansion mapping loaded with " .. mapCount .. " entries")
-    else
-        HousingDebugPrint("Map ID to Expansion mapping not loaded")
-    end
-    
-    -- Test a specific expansion
-    local testExpansion = "Classic"
-    if HousingData and HousingData.vendorData and HousingData.vendorData[testExpansion] then
-        local zoneCount = 0
-        local itemCount = 0
-        
-        for zoneName, vendors in pairs(HousingData.vendorData[testExpansion]) do
-            zoneCount = zoneCount + 1
-            for _, vendor in ipairs(vendors) do
-                if vendor and vendor.items then
-                    for _, item in ipairs(vendor.items) do
-                        itemCount = itemCount + 1
-                    end
-                end
-            end
-            if zoneCount >= 3 then break end
-        end
-        
-        HousingDebugPrint(testExpansion .. " expansion has " .. zoneCount .. " zones with " .. itemCount .. " items")
-    else
-        HousingDebugPrint("Expansion " .. testExpansion .. " not found")
-    end
-end
-
--- Command to test map data (development only)
-SLASH_HOUSING_TEST_MAP1 = "/hvtestmap"
-SlashCmdList["HOUSING_TEST_MAP"] = function(msg)
-    if Housing and Housing.TestMapData then
-        Housing:TestMapData()
-    end
-end
-
--- Command to integrate map data (manual trigger - development only)
-SLASH_HOUSING_MAP_INTEGRATE1 = "/hvmapintegrate"
-SlashCmdList["HOUSING_MAP_INTEGRATE"] = function(msg)
-    if HousingDebugPrint then
-        HousingDebugPrint("Manual map integration triggered")
-    end
-end
-
--- Existing Housing commands
 SLASH_HOUSING1 = "/hv"
+SLASH_HOUSING2 = "/housing"
+SLASH_HOUSING3 = "/decor"
 SlashCmdList["HOUSING"] = function(msg)
     local _, _, cmd, args = string.find(msg, "%s?(%w+)%s?(.*)")
     
     if cmd == "version" then
         print("Version: " .. Housing.version)
-    elseif cmd == "test" then
-        print("HousingVendor addon is working!")
-        print("Module status:")
-        print("  HousingDataManager: " .. tostring(HousingDataManager ~= nil))
-        print("  HousingIcons: " .. tostring(HousingIcons ~= nil))
-        print("  HousingUINew: " .. tostring(HousingUINew ~= nil))
-        print("  HousingItemList: " .. tostring(HousingItemList ~= nil))
-        print("  HousingFilters: " .. tostring(HousingFilters ~= nil))
-        print("  HousingPreviewPanel: " .. tostring(HousingPreviewPanel ~= nil))
-        if HousingDataManager then
-            local items = HousingDataManager:GetAllItems()
-            print("  Items loaded: " .. #items)
+    elseif cmd == "stats" or cmd == "statistics" then
+        if HousingCompletionTracker then
+            local stats = HousingCompletionTracker:GetStatistics()
+            print("|cFF8A7FD4HousingVendor Completion Statistics:|r")
+            print("  Vendors visited: |cFFFFD100" .. stats.vendorsVisited .. "|r")
+            print("  Achievements earned: |cFFFFD100" .. stats.achievementsEarned .. "|r")
+            print("  Quests completed: |cFFFFD100" .. stats.questsCompleted .. "|r")
+        else
+            print("HousingVendor: CompletionTracker not available")
         end
-    elseif cmd == "models" then
-        -- Test model mapping
-        if HousingModelMapping then
-            local count = 0
-            for k,v in pairs(HousingModelMapping) do
-                count = count + 1
-            end
+    elseif cmd == "scan" or cmd == "refresh" or cmd == "rescan" then
+        -- Force scan all housing decor items via API
+        if CollectionAPI then
+            print("|cFF8A7FD4HousingVendor:|r Starting collection scan...")
+            print("|cFF808080This may take a moment. Scanning in batches to avoid performance issues.|r")
             
-            print("HousingVendor Model Mapping Test:")
-            print("  Total model mappings: " .. count)
-            
-            -- Test a few sample mappings
-            local sampleItems = {"235523", "245275", "11454"}
-            for _, itemId in ipairs(sampleItems) do
-                local modelId = HousingModelMapping[itemId]
-                if modelId then
-                    print("  Item " .. itemId .. " -> Model ID: " .. modelId)
+            CollectionAPI:ScanAllDecorItems(function(success, scanned, collected, error)
+                if success then
+                    local cacheStats = CollectionAPI:GetCacheStats()
+                    print("|cFF00FF00Scan complete!|r")
+                    print("  Items scanned: |cFFFFD100" .. scanned .. "|r")
+                    print("  Newly collected: |cFF00FF00" .. collected .. "|r")
+                    print("  Total cached: |cFFFFD100" .. cacheStats.total .. "|r (|cFF808080" .. cacheStats.persistent .. " persistent, " .. cacheStats.session .. " session|r)")
+                    
+                    -- Refresh UI if open
+                    if HousingItemList and HousingItemList.RefreshCollectionStatus then
+                        C_Timer.After(0.5, function()
+                            HousingItemList:RefreshCollectionStatus()
+                        end)
+                    end
                 else
-                    print("  Item " .. itemId .. " -> No model mapping found")
+                    print("|cFFFF0000Scan failed:|r " .. (error or "Unknown error"))
                 end
-            end
+            end)
         else
-            print("HousingVendor Model Mapping Test: No model mapping data available")
+            print("|cFFFF4040HousingVendor:|r CollectionAPI not available")
         end
-    elseif cmd == "portals" then
-        -- Test portal data
-        local portalData = HousingPortalData
-        
-        if portalData then
-            local count = 0
-            local zoneCount = 0
-            for zoneName, portals in pairs(portalData) do
-                zoneCount = zoneCount + 1
-                count = count + #portals
+    elseif cmd == "version" or cmd == "versioncheck" or cmd == "versionfilter" then
+        if HousingVersionFilter then
+            local info = HousingVersionFilter:GetCurrentGameVersion()
+            local isBeta = HousingVersionFilter:IsBetaClient()
+            local expansions = HousingVersionFilter:GetAvailableExpansions()
+
+            print("|cFF8A7FD4HousingVendor Version Filter:|r")
+            print("  Game Version: |cFFFFD100" .. (info.version or "Unknown") .. "|r")
+            print("  Build: |cFFFFD100" .. (info.build or "Unknown") .. "|r")
+            print("  TOC Version: |cFFFFD100" .. (info.tocVersion or "Unknown") .. "|r")
+            print("  Client Type: " .. (isBeta and "|cFFFFD100Beta/PTR|r" or "|cFF00FF00Live|r"))
+            print("  Available Expansions: |cFFFFD100" .. #expansions .. "|r")
+
+            for _, expansion in ipairs(expansions) do
+                print("    - " .. expansion)
             end
-            
-            print("HousingVendor Portal Data Test:")
-            print("  Total zones with portals: " .. zoneCount)
-            print("  Total portal locations: " .. count)
-            
-            -- Test finding a portal for a specific zone
-            local testZone = "Stormwind City"
-            if portalData[testZone] then
-                print("  Portals available for " .. testZone .. ": " .. #portalData[testZone])
-                for i, portal in ipairs(portalData[testZone]) do
-                    print("    " .. i .. ". " .. portal.name .. " at (" .. portal.x .. ", " .. portal.y .. ") on map " .. (portal.mapID or "unknown"))
-                end
+
+            if isBeta then
+                print("  |cFFFFD100Midnight content is VISIBLE (Beta client detected)|r")
             else
-                print("  No portal data for " .. testZone)
+                print("  |cFF808080Midnight content is HIDDEN (Live client detected)|r")
             end
         else
-            print("HousingVendor Portal Data Test: No portal data available")
+            print("|cFFFF4040HousingVendor:|r VersionFilter not available")
         end
-    elseif cmd == "config" then
-        print("Configuration panel - coming soon")
     else
-        -- Toggle new UI
         if HousingUINew and HousingUINew.Toggle then
             HousingUINew:Toggle()
         else
             print("HousingVendor UI not available - modules may not be loaded")
-            print("  Run /hv test to check module status")
         end
     end
 end
-
--- NOTE: All initialization is handled by Events.lua to avoid duplication
--- The OnInitialize, OnEnable, OnDisable, and PLAYER_LOGIN functions have been removed
--- as they duplicated logic in Events.lua and created conflicting defaults

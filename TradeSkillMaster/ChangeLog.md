@@ -1,5 +1,5 @@
-## v4.14.47 Changes
+## v4.14.48 Changes
 
-* [Retail] Some crafting related fixes/updates
+* [Retail] More crafting related fixes/updates
 
 [Known Issues](https://support.tradeskillmaster.com/en_US/known_issues)

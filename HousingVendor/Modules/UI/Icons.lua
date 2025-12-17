@@ -1,4 +1,4 @@
--- Simple Icon Cache for HousingVendor addon
+-- Simple Icon Cache
 -- Uses GetItemIcon with basic caching
 
 local Icons = {}
@@ -79,8 +79,13 @@ function Icons:GetIcon(itemID, thumbnailFileID)
     
     -- Try C_Item.GetItemInfo first (modern API)
     if C_Item and C_Item.GetItemInfo then
-        local itemInfo = C_Item.GetItemInfo(numericItemID)
-        if itemInfo and itemInfo.iconFileID then
+        -- Request item data load first
+        if C_Item.RequestLoadItemDataByID then
+            C_Item.RequestLoadItemDataByID(numericItemID)
+        end
+
+        local ok, itemInfo = pcall(C_Item.GetItemInfo, numericItemID)
+        if ok and itemInfo and itemInfo.iconFileID then
             local iconFileID = itemInfo.iconFileID
             -- Try to get texture path
             if C_Texture and C_Texture.GetFileTextureInfo then

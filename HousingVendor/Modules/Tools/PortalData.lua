@@ -1,4 +1,4 @@
--- Portal Data for HousingVendor addon
+-- Portal Data
 -- Contains portal locations for smart navigation
 
 HousingPortalData = {
@@ -41,65 +41,65 @@ HousingPortalData = {
     },
     {
       name = "Shattrath",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 42.5,
+      y = 86.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (left side)
       destinationExpansion = "The Burning Crusade"
     },
     {
       name = "Dalaran (Northrend)",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 48.5,
+      y = 91.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (back center)
       destinationExpansion = "Wrath of the Lich King"
     },
     {
       name = "Paw'don Village",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 42.8,
+      y = 90.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (back left)
       destinationExpansion = "Mists of Pandaria"
     },
     {
       name = "Stormshield",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 54.2,
+      y = 90.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (back right)
       destinationExpansion = "Warlords of Draenor"
     },
     {
       name = "Azsuna (Crumbled Palace)",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 49.5,
+      y = 87.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (center)
       destinationExpansion = "Legion"
     },
     {
       name = "Boralus",
-      x = 49.0,
+      x = 46.0,
       y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      mapID = 84,  -- Stormwind City map ID - Portal Room (center-left)
       destinationExpansion = "Battle for Azeroth"
     },
     {
       name = "Oribos",
-      x = 49.0,
+      x = 51.8,
       y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      mapID = 84,  -- Stormwind City map ID - Portal Room (center-right)
       destinationExpansion = "Shadowlands"
     },
     {
       name = "Valdrakken",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 54.5,
+      y = 86.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (right side)
       destinationExpansion = "Dragonflight"
     },
     {
       name = "Portal to Dornogal",
-      x = 49.0,
-      y = 87.0,
-      mapID = 84,  -- Stormwind City map ID
+      x = 48.5,
+      y = 83.5,
+      mapID = 84,  -- Stormwind City map ID - Portal Room (front center)
       destinationExpansion = "The War Within"
     },
     {
@@ -174,86 +174,86 @@ HousingPortalData = {
     },
     {
       name = "Dalaran (Northrend)",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 48.5,
+      y = 42.5,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (back center)
       destinationExpansion = "Wrath of the Lich King"
     },
     {
       name = "Shattrath",
-      x = 49.0,
+      x = 42.5,
       y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (left side)
       destinationExpansion = "The Burning Crusade"
     },
     {
       name = "Paw'don Glade",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 43.0,
+      y = 41.5,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (back left)
       destinationExpansion = "Mists of Pandaria"
     },
     {
       name = "Valdrakken",
-      x = 49.0,
+      x = 54.5,
       y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (right side)
       destinationExpansion = "Dragonflight"
     },
     {
       name = "Oribos",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 52.0,
+      y = 38.5,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (center-right)
       destinationExpansion = "Shadowlands"
     },
     {
       name = "Dornogal",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 48.5,
+      y = 34.0,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (front center)
       destinationExpansion = "The War Within"
     },
     {
       name = "Razorwind Shores",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 46.0,
+      y = 38.5,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (center-left)
       destinationExpansion = "Midnight"
     },
     {
       name = "Silvermoon City",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 50.0,
+      y = 60.0,
+      mapID = 85,  -- Orgrimmar map ID - Cleft of Shadow
       destinationExpansion = "The Burning Crusade"
     },
     {
       name = "Thrallmar Mage (via NPC)",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID
+      x = 46.0,
+      y = 37.5,
+      mapID = 85,  -- Orgrimmar map ID - Caverns of Time location
       destinationExpansion = "Classic"
     },
     {
       name = "Dazar'alor",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID (Bottom floor, moved from top)
+      x = 46.5,
+      y = 41.0,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (back left area)
       destinationExpansion = "Battle for Azeroth"
     },
     {
       name = "Warspear",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID (Bottom floor)
+      x = 54.0,
+      y = 41.5,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (back right)
       destinationExpansion = "Warlords of Draenor"
     },
     {
       name = "Azsuna (Court of Stars emissary?)",
-      x = 49.0,
-      y = 38.0,
-      mapID = 85,  -- Orgrimmar map ID (Bottom floor, moved from top)
+      x = 49.5,
+      y = 38.5,
+      mapID = 85,  -- Orgrimmar map ID - Portal Room (center)
       destinationExpansion = "Legion"
     },
     {

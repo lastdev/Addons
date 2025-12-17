@@ -11,7 +11,7 @@ tldrButton:SetHeight(25)
 TLDRMissionsToggleButtonText:SetScale(1.3)
 tldrButton:Hide()
 
-tldrButton:SetScript("OnClick", function (self, button)
+tldrButton:SetScript("OnClick", function (self)
     addon.GUI:SetShown(not addon.GUI:IsShown())
 end)
 
@@ -22,7 +22,7 @@ shortcutButton:SetHeight(15)
 shortcutButton:SetPoint("TOPLEFT", tldrButton, "BOTTOMLEFT")
 shortcutButton:Hide()
 
-shortcutButton:SetScript("OnClick", function(self, button)
+shortcutButton:SetScript("OnClick", function(self)
     if #C_Garrison.GetCompleteMissions(123) > 0 then
         addon.GUI.CompleteMissionsButton.usedShortcut = true
         addon.GUI.CompleteMissionsButton:Click()

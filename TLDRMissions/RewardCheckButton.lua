@@ -1,6 +1,6 @@
 local addonName, addon = ...
 
-local checkButtonHandler = function(gui, self, button, name)
+local checkButtonHandler = function(gui, self, name)
     local db = gui.db
     if self:GetChecked() then
         for k, v in pairs(db.profile.excludedRewards) do
@@ -40,7 +40,7 @@ end
 
 function addon.BaseGUIMixin.InitRewardCheckButtons(gui)
     for i, button in pairs(gui.checkButtons) do
-        button:HookScript("OnClick", function(self, button) checkButtonHandler(gui, self, button, gui.rewardStrings[i]) end)
+        button:HookScript("OnClick", function(self) checkButtonHandler(gui, self, gui.rewardStrings[i]) end)
         gui.rows[i]:HookScript("OnDragStop", function(row) gui:RewardsOnRowDragStop(row, i, gui.rewardStrings) end)
     end
 

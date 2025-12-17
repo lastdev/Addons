@@ -68,7 +68,7 @@ function Quality.GetOptionalMats(craftString, mats, optionalMats)
 			hasValidCost = hasValidCost or qualityMatCostTemp[matItemString] ~= nil
 			if isFirst then
 				isFirst = false
-				totalWeight = totalWeight + (OptionalMatData.QualityWeight[matItemString] or 0) * quantity
+				totalWeight = totalWeight + OptionalMatData.QualityWeight[matItemString] * quantity
 			end
 		end
 		if not hasValidCost then

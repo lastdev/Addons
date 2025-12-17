@@ -1,4 +1,4 @@
--- Constants and Data Initialization for HousingVendor addon
+-- Constants and Data Initialization
 _G["HousingConstants"] = {}
 local HousingConstants = _G["HousingConstants"]
 

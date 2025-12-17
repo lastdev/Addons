@@ -1,6 +1,5 @@
 local addonName, addon = ...
 addonName = "TLDRMissions-BFA"
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 
@@ -23,7 +22,6 @@ function addon.BFAGUI:InitProfile()
             followerXPSpecialTreatment = false,
             followerXPSpecialTreatmentMinimum = 4,
             followerXPSpecialTreatmentAlgorithm = 1,
-            autoStart = false,
             animaCosts = {
                 ["*"] = {
                     ["*"] = true,

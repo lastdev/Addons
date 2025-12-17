@@ -62,7 +62,7 @@ function addon.BaseGUIMixin:updateRewards()
         end
     end
     
-    for k, v in pairs(db.profile.excludedRewards) do
+    for _, v in pairs(db.profile.excludedRewards) do
         for i, rewardString in ipairs(self.rewardStrings) do
             if rewardString == v then
                 self.checkButtons[i].ExclusionLabel:Show()
@@ -86,12 +86,10 @@ end
 function addon.BaseGUIMixin:RewardsReorder()
     local maxIndex = 0
     local skipThese = {}
-    local defaultOrder = defaultOrder[self.followerTypeID]
+    local order = defaultOrder[self.followerTypeID]
     for i = 1, #defaultOrder do
-        local isSelected
-        for j = 1, #defaultOrder do
-            if defaultOrder[i] == self.db.profile.selectedRewards[j] then
-                isSelected = true
+        for j = 1, #order do
+            if order[i] == self.db.profile.selectedRewards[j] then
                 maxIndex = maxIndex + 1
                 skipThese[i] = true
                 local row = self.rows[i]
@@ -102,7 +100,7 @@ function addon.BaseGUIMixin:RewardsReorder()
     end
     
     local buffer = 0
-    for i = 1, #defaultOrder do
+    for i = 1, #order do
         if not skipThese[i] then
             local row = self.rows[i]
             row:ClearAllPoints()
@@ -123,7 +121,7 @@ function addon.BaseGUIMixin:RewardsOnRowDragStop(row, i, rewardStrings)
         end
     end
     
-    for j, targetRow in ipairs(self.rows) do
+    for _, targetRow in ipairs(self.rows) do
         if targetRow ~= row then
             if targetRow:IsMouseOver() then
                 for k, v in pairs(db.profile.excludedRewards) do
@@ -166,8 +164,6 @@ function addon.BaseGUIMixin:RewardsOnRowDragStop(row, i, rewardStrings)
                         for k = currentPriority, #self.rows do
                             selectedRewards[k] = selectedRewards[k+1]
                         end
-                    else
-                    
                     end
                 end
                 

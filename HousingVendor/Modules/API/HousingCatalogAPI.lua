@@ -1,4 +1,4 @@
--- Housing Catalog API Integration for HousingVendor addon
+-- Housing Catalog API Integration
 local HousingCatalogAPI = {}
 HousingCatalogAPI.__index = HousingCatalogAPI
 
@@ -93,8 +93,6 @@ function HousingCatalogAPI:GetBasicDecorInfo(decorID)
 end
 
 -- Search for catalog entry by itemID using Blizzard API
--- Note: This function may need adjustment based on actual API documentation
--- Please refer to warcraft.wiki.gg for correct C_HousingCatalog API usage
 function HousingCatalogAPI:GetCatalogEntryByItemID(itemID)
     if not self:IsAvailable() or not itemID then
         return nil
@@ -161,8 +159,8 @@ end
 -- Initialize the module
 function HousingCatalogAPI:Initialize()
     if self:IsAvailable() then
-        print("HousingCatalogAPI: Initialized with live API access")
+        -- Live API access available (silent)
     else
-        print("HousingCatalogAPI: Live API not available, module loaded in stub mode")
+        -- Live API not available (silent)
     end
 end

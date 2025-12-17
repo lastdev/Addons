@@ -5,7 +5,6 @@ function addon.BaseGUIMixin:GetMissionsMatchingFilter(rewardFilter)
     local lineup = {}
     
     for _, mission in pairs(missions) do
-        local include = false
         for _, reward in pairs(mission.rewards) do
             if rewardFilter(reward) then
                 table.insert(lineup, mission)
@@ -100,5 +99,5 @@ local function artifactPowerFilter(reward)
     return reward.currencyID == 1553
 end
 function addon.BaseGUIMixin:GetArtifactPowerMissions()
-    return self:GetMissionsMatchingFilter(reagentFilter)
+    return self:GetMissionsMatchingFilter(artifactPowerFilter)
 end

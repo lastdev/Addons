@@ -1,4 +1,8 @@
--- Localization for HousingVendor addon - Spanish (Spain)
+-- Spanish (Spain) Localization
+if not HousingVendorLocales then
+    HousingVendorLocales = {}
+end
+
 local L = {}
 
 -- Main UI Strings
@@ -37,7 +41,7 @@ L["COLUMN_TYPE"] = "Tipo"
 -- Buttons
 L["BUTTON_SETTINGS"] = "Configuración"
 L["BUTTON_STATISTICS"] = "Estadísticas"
-L["BUTTON_BACK"] = "← Atrás"
+L["BUTTON_BACK"] = "Atrás"
 L["BUTTON_CLOSE"] = "Cerrar"
 L["BUTTON_WAYPOINT"] = "Establecer punto de ruta"
 L["BUTTON_SAVE"] = "Guardar"
@@ -68,6 +72,22 @@ L["TOOLTIP_PORTAL_NAVIGATION_ENABLED"] = "Navegación inteligente por portal hab
 L["TOOLTIP_PORTAL_NAVIGATION_DESC"] = "Usará automáticamente el portal más cercano al cambiar entre zonas"
 L["TOOLTIP_DIRECT_NAVIGATION"] = "Navegación directa habilitada"
 L["TOOLTIP_DIRECT_NAVIGATION_DESC"] = "Los puntos de ruta apuntarán directamente a las ubicaciones de los vendedores (no recomendado para viajes entre zonas)"
+
+-- Info Panel Tooltips
+L["TOOLTIP_INFO_EXPANSION"] = "La expansión de World of Warcraft de la que proviene este objeto"
+L["TOOLTIP_INFO_FACTION"] = "Qué facción puede comprar este objeto del vendedor"
+L["TOOLTIP_INFO_VENDOR"] = "Vendedor PNJ que vende este objeto"
+L["TOOLTIP_INFO_VENDOR_WITH_COORDS"] = "Vendedor PNJ que vende este objeto\n\nUbicación: %s\nCoordenadas: %s"
+L["TOOLTIP_INFO_ZONE"] = "Zona donde se encuentra este vendedor"
+L["TOOLTIP_INFO_ZONE_WITH_COORDS"] = "Zona donde se encuentra este vendedor\n\nCoordenadas: %s"
+L["TOOLTIP_INFO_REPUTATION"] = "Requisito de reputación para comprar este objeto del vendedor"
+L["TOOLTIP_INFO_RENOWN"] = "Nivel de renombre requerido con una facción principal para desbloquear este objeto"
+L["TOOLTIP_INFO_PROFESSION"] = "La profesión requerida para fabricar este objeto"
+L["TOOLTIP_INFO_PROFESSION_SKILL"] = "Nivel de habilidad requerido en esta profesión para fabricar el objeto"
+L["TOOLTIP_INFO_PROFESSION_RECIPE"] = "El nombre de la receta o patrón para fabricar este objeto"
+L["TOOLTIP_INFO_EVENT"] = "Evento especial o festividad cuando este objeto está disponible"
+L["TOOLTIP_INFO_CLASS"] = "Este objeto solo puede ser usado por esta clase"
+L["TOOLTIP_INFO_RACE"] = "Este objeto solo puede ser usado por esta raza"
 
 -- Messages
 L["MESSAGE_PORTAL_NAV_ENABLED"] = "Navegación inteligente por portal habilitada. Los puntos de ruta usarán automáticamente el portal más cercano al cambiar entre zonas."
@@ -120,5 +140,92 @@ L["COMMON_ITEM_ID"] = "ID del objeto:"
 L["MINIMAP_TOOLTIP"] = "Explorador de vendedores de vivienda"
 L["MINIMAP_TOOLTIP_DESC"] = "Haz clic izquierdo para alternar el explorador de vendedores de vivienda"
 
+-- Expansion Names
+L["EXPANSION_CLASSIC"] = "Clásico"
+L["EXPANSION_THEBURNINGCRUSADE"] = "La Cruzada Ardiente"
+L["EXPANSION_WRATHOFTHELLICHKING"] = "Ira del Rey Exánime"
+L["EXPANSION_CATACLYSM"] = "Cataclismo"
+L["EXPANSION_MISTSOFPANDARIA"] = "Nieblas de Pandaria"
+L["EXPANSION_WARLORDSOF DRAENOR"] = "Señores de la Guerra de Draenor"
+L["EXPANSION_LEGION"] = "Legión"
+L["EXPANSION_BATTLEFORAZEROTH"] = "Batalla por Azeroth"
+L["EXPANSION_SHADOWLANDS"] = "Shadowlands"
+L["EXPANSION_DRAGONFLIGHT"] = "Dragonflight"
+L["EXPANSION_THEWARWITHIN"] = "La Guerra Interior"
+L["EXPANSION_MIDNIGHT"] = "Medianoche"
+
+-- Faction Names
+L["FACTION_ALLIANCE"] = "Alianza"
+L["FACTION_HORDE"] = "Horda"
+L["FACTION_NEUTRAL"] = "Neutral"
+
+-- Source Types
+L["SOURCE_VENDOR"] = "Vendedor"
+L["SOURCE_ACHIEVEMENT"] = "Logro"
+L["SOURCE_QUEST"] = "Misión"
+L["SOURCE_DROP"] = "Botín"
+L["SOURCE_PROFESSION"] = "Profesión"
+L["SOURCE_REPUTATION"] = "Reputación"
+
+-- Quality Names
+L["QUALITY_POOR"] = "Pobre"
+L["QUALITY_COMMON"] = "Común"
+L["QUALITY_UNCOMMON"] = "Poco común"
+L["QUALITY_RARE"] = "Raro"
+L["QUALITY_EPIC"] = "Épico"
+L["QUALITY_LEGENDARY"] = "Legendario"
+
+-- Collection Status
+L["COLLECTION_COLLECTED"] = "Coleccionado"
+L["COLLECTION_UNCOLLECTED"] = "No coleccionado"
+
+-- Requirement Types
+L["REQUIREMENT_NONE"] = "Ninguno"
+L["REQUIREMENT_ACHIEVEMENT"] = "Logro"
+L["REQUIREMENT_QUEST"] = "Misión"
+L["REQUIREMENT_REPUTATION"] = "Reputación"
+L["REQUIREMENT_RENOWN"] = "Renombre"
+L["REQUIREMENT_PROFESSION"] = "Profesión"
+
+-- Common Category/Type Names
+L["CATEGORY_FURNITURE"] = "Muebles"
+L["CATEGORY_DECORATIONS"] = "Decoraciones"
+L["CATEGORY_LIGHTING"] = "Iluminación"
+L["CATEGORY_PLACEABLES"] = "Colocables"
+L["CATEGORY_ACCESSORIES"] = "Accesorios"
+L["CATEGORY_RUGS"] = "Alfombras"
+L["CATEGORY_PLANTS"] = "Plantas"
+L["CATEGORY_PAINTINGS"] = "Pinturas"
+L["CATEGORY_BANNERS"] = "Estandartes"
+L["CATEGORY_BOOKS"] = "Libros"
+L["CATEGORY_FOOD"] = "Comida"
+L["CATEGORY_TOYS"] = "Juguetes"
+
+-- Type Names
+L["TYPE_CHAIR"] = "Silla"
+L["TYPE_TABLE"] = "Mesa"
+L["TYPE_BED"] = "Cama"
+L["TYPE_LAMP"] = "Lámpara"
+L["TYPE_CANDLE"] = "Vela"
+L["TYPE_RUG"] = "Alfombra"
+L["TYPE_PAINTING"] = "Pintura"
+L["TYPE_BANNER"] = "Estandarte"
+L["TYPE_PLANT"] = "Planta"
+L["TYPE_BOOKSHELF"] = "Estantería"
+L["TYPE_CHEST"] = "Cofre"
+L["TYPE_WEAPON_RACK"] = "Perchero de armas"
+
+-- Filter Options
+L["FILTER_HIDE_VISITED"] = "Ocultar visitados"
+L["FILTER_ALL_QUALITIES"] = "Todas las calidades"
+L["FILTER_ALL_REQUIREMENTS"] = "Todos los requisitos"
+
+-- UI Theme Names
+L["THEME_MIDNIGHT"] = "Medianoche"
+L["THEME_ALLIANCE"] = "Alianza"
+L["THEME_HORDE"] = "Horda"
+L["THEME_SLEEK_BLACK"] = "Negro elegante"
+L["SETTINGS_UI_THEME"] = "Tema de interfaz"
+
 -- Make the locale table globally available
-_G["HousingVendorLocale"] = L
+HousingVendorLocales["esES"] = L

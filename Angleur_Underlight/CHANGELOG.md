@@ -1,6 +1,6 @@
 # Angleur_Underlight
 
-## [1.2.5](https://github.com/LegolandoBloom/Angleur_Underlight/tree/1.2.5) (2025-10-19)
-[Full Changelog](https://github.com/LegolandoBloom/Angleur_Underlight/compare/1.2.4...1.2.5) [Previous Releases](https://github.com/LegolandoBloom/Angleur_Underlight/releases)
+## [1.2.6](https://github.com/LegolandoBloom/Angleur_Underlight/tree/1.2.6) (2025-12-15)
+[Full Changelog](https://github.com/LegolandoBloom/Angleur_Underlight/compare/1.2.5...1.2.6) [Previous Releases](https://github.com/LegolandoBloom/Angleur_Underlight/releases)
 
-- Updated Legolando\_CheckboxTemplate  
+- Updated interface version number  

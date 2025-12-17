@@ -1,8 +1,8 @@
-## Interface: 110207, 50501
+## Interface: 110207, 50502, 50503
 ## Title: HandyNotes: Mists of Pandaria (Treasures and Rares)
 ## Notes: Where everything is in Pandaria
 ## Author: Kemayo
-## Version: v41
+## Version: v42
 ## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map

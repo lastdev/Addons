@@ -68,7 +68,7 @@ Prat.Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 --@end-debug@]==]
 
 --@non-debug@
-Prat.Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.77".."|r)"
+Prat.Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.9.79".."|r)"
 --@end-non-debug@
 
 
@@ -449,8 +449,11 @@ function addon:PostEnable()
 		end
 	end
 
-  -- Outbound hooking
-  self:SecureHook("ChatEdit_ParseText")
+	-- Outbound hooking
+	self:SecureHook("ChatEdit_ParseText")
+	if _G.ChatFrame1EditBox and _G.ChatFrame1EditBox.ParseText then
+		self:SecureHook(_G.ChatFrame1EditBox, 'ParseText', 'ChatEdit_ParseText')
+	end
 
   -- Display Hooking
   Prat.DummyFrame = _G.CreateFrame("ScrollingMessageFrame")
@@ -651,7 +654,7 @@ function addon:ChatFrame_MessageEventHandler(this, event, ...)
 	if strsub(event, 1, 8) == "CHAT_MSG" and _G.ChatFrameUtil and _G.ChatFrameUtil.ProcessMessageEventFilters then
 		local shouldDiscardMessage = false
 		shouldDiscardMessage , arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14
-			= _G.ChatFrameUtil.ProcessMessageEventFilters(self, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
+			= _G.ChatFrameUtil.ProcessMessageEventFilters(this, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
 		if shouldDiscardMessage then
 			return true
 		end

@@ -1,4 +1,7 @@
--- Minimap Button for HousingVendors addon
+-- Minimap Button
+local ADDON_NAME, ns = ...
+local L = ns.L
+
 local HousingMinimapButton = {}
 HousingMinimapButton.__index = HousingMinimapButton
 
@@ -46,9 +49,10 @@ function HousingMinimapButton:CreateButton()
   overlay:SetPoint("TOPLEFT")
   
   local icon = button:CreateTexture(nil, "BACKGROUND")
-  icon:SetSize(20, 20)
+  icon:SetSize(22, 22)
   icon:SetTexture("Interface\\Icons\\INV_Misc_Map02")
-  icon:SetPoint("TOPLEFT", 7, -5)
+  icon:SetPoint("CENTER", 0, 1)
+  icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
   
   -- Set button position
   -- Convert angle from degrees to radians for math.cos/math.sin

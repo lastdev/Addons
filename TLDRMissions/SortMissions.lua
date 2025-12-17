@@ -71,8 +71,8 @@ function addon.BaseGUIMixin:SortMissions(missions)
         sort_func = sortByXP
     end
     
-    table.sort(priorityMissions, sortByDuration)
-    table.sort(regularMissions, sortByDuration)
+    table.sort(priorityMissions, sort_func)
+    table.sort(regularMissions, sort_func)
     
     for _, mission in ipairs(regularMissions) do
         table.insert(priorityMissions, mission)

@@ -1,4 +1,4 @@
--- Saved Variables and Configuration for HousingVendor addon
+-- Saved Variables and Configuration
 
 -- Debug mode flag (set to true for debugging, false for production)
 local DEBUG_MODE = false
@@ -26,4 +26,4 @@ function _G.HousingDebugPrint(...)
   end
 end
 
--- Configuration file for HousingVendor addon
+-- Configuration file

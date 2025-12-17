@@ -1,5 +1,4 @@
 local addonName, addon = ...
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 local AceEvent = LibStub("AceAddon-3.0"):GetAddon("TLDRMissions-AceEvent")
@@ -104,7 +103,6 @@ local function startSacrifice()
     if sacrificeStarted then return end
     sacrificeStarted = true
     
-    local missions = C_Garrison.GetAvailableMissions(gui.followerTypeID)
     local excludedMissions = {}
     
     for _, category in pairs(db.profile.excludedRewards) do
@@ -140,6 +138,7 @@ local function startSacrifice()
         end
     end
     
+    local missions = C_Garrison.GetAvailableMissions(gui.followerTypeID)
     local m = {}
     for _, mission in pairs(missions) do
         local animaCost = C_Garrison.GetMissionCost(mission.missionID)
@@ -199,7 +198,7 @@ local function startSacrifice()
     end
 end
 
-gui.CalculateButton:SetScript("OnClick", function (self, button)
+gui.CalculateButton:SetScript("OnClick", function (self)
     if C_Garrison.IsAboveFollowerSoftCap(gui.followerTypeID) then
         print(GARRISON_MAX_FOLLOWERS_MISSION_TOOLTIP)
         return
@@ -221,7 +220,6 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     local db = addon.BFAdb
     
     -- get missions matching conditions set
-    local missions = {}
     local excludedMissions = {}
 
     for _, category in pairs(db.profile.excludedRewards) do
@@ -248,6 +246,8 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
             excludedMissions[mission.missionID] = true
         end
     end
+    
+    local missions = {}
     
     for i = 1, 12 do
         local newMissions = {}
@@ -331,7 +331,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         end
         
         local n = {}
-        for k, v in pairs(newMissions) do
+        for _, v in pairs(newMissions) do
             table.insert(n, v)
         end
         newMissions = gui:SortMissions(n)
@@ -443,7 +443,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         end
         
         followerLineup = {}
-        local troopLineup = {} 
+        troopLineup = {} 
         
         for _, follower in ipairs(followers) do
             if (not follower.status) and follower.isCollected and (not alreadyUsedFollowers[follower.followerID]) then
@@ -483,7 +483,7 @@ RunNextFrame(function()
     end)
 end)
 
-gui.StartMissionButton:SetScript("OnClick", function(self, button)
+gui.StartMissionButton:SetScript("OnClick", function(self)
     self:SetEnabled(false)
     
     if not missionWaitingUserAcceptance then
@@ -492,18 +492,20 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
     
     local missions = C_Garrison.GetAvailableMissions(gui.followerTypeID)
-    local found = false
-    for _, mission in pairs(missions) do
-        if mission.missionID == missionWaitingUserAcceptance.missionID then
-            found = true
-            break
+    do
+        local found = false
+        for _, mission in pairs(missions) do
+            if mission.missionID == missionWaitingUserAcceptance.missionID then
+                found = true
+                break
+            end
         end
-    end
-    if not found then
-        if hasNextMission() then
-            calculateNextMission()
+        if not found then
+            if hasNextMission() then
+                calculateNextMission()
+            end
+            return
         end
-        return
     end
     
     local animaCost = C_Garrison.GetMissionCost(missionWaitingUserAcceptance.missionID)
@@ -548,7 +550,6 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
     
     -- check the pending followers are correct, in case a slot was taken or something
-    local lineup = C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
     if not lineup then success = false end
     for i = 1, 3 do
         if missionWaitingUserAcceptance.combination[i] then
@@ -630,12 +631,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
 end)
 
-gui.AnimaCostLimitSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsBFAFrameAnimaCostSliderText:SetText(value)
-    addon.BFAdb.profile.AnimaCostLimit = value
-end)
-
-gui.SkipMissionButton:SetScript("OnClick", function(self, button)
+gui.SkipMissionButton:SetScript("OnClick", function(self)
     numSkipped = numSkipped + 1
     self:SetEnabled(false)
     gui.CostLabel:Hide()
@@ -668,43 +664,6 @@ gui.SkipMissionButton:SetScript("OnClick", function(self, button)
             WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
         end
     end
-end)
-
-gui.MinimumTroopsSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsBFAFrameMinimumTroopsSliderText:SetText(value)
-    addon.BFAdb.profile.minimumTroops = value
-end)
-
-gui.LowerBoundLevelRestrictionSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsBFAFrameSliderText:SetText(value)
-    addon.BFAdb.profile.LevelRestriction = value
-end)
-
-gui.DurationLowerSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    if not userInput then return end
-    addon.BFAdb.profile.durationLower = value
-    if tonumber(addon.BFAdb.profile.durationLower) > tonumber(addon.BFAdb.profile.durationHigher) then
-        local a = addon.BFAdb.profile.durationLower
-        addon.BFAdb.profile.durationLower = addon.BFAdb.profile.durationHigher
-        addon.BFAdb.profile.durationHigher = a
-        gui.DurationLowerSlider:SetValue(addon.BFAdb.profile.durationLower)
-        gui.DurationHigherSlider:SetValue(addon.BFAdb.profile.durationHigher)
-    end
-    TLDRMissionsBFAFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(addon.BFAdb.profile.durationLower, addon.BFAdb.profile.durationHigher))
-end)
-
-gui.DurationHigherSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    if not userInput then return end
-    local db = addon.BFAdb
-    db.profile.durationHigher = value
-    if tonumber(db.profile.durationLower) > tonumber(db.profile.durationHigher) then
-        local a = db.profile.durationLower
-        db.profile.durationLower = db.profile.durationHigher
-        db.profile.durationHigher = a
-        gui.DurationLowerSlider:SetValue(db.profile.durationLower)
-        gui.DurationHigherSlider:SetValue(db.profile.durationHigher)
-    end
-    TLDRMissionsFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(db.profile.durationLower, db.profile.durationHigher))
 end)
 
 end)

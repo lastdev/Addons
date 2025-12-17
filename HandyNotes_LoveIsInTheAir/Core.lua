@@ -3,7 +3,7 @@
 
                                          Love is in the Air
 
-                                       v1.20 - 2nd August 2025
+                                     v1.22 - 17th December 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

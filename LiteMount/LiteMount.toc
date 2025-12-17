@@ -1,6 +1,6 @@
 ## Interface: 120000, 110207, 50502
 ## Title: LiteMount
-## Version: 11.2.7-2
+## Version: 11.2.7-3
 ## Author: Xodiv-Nagrand
 ## Email: mib@post.com
 ## IconTexture: 132247
@@ -57,7 +57,6 @@ Conditions.lua
 Vars.lua
 RuleArguments.lua
 RuleBoolean.lua
-RuleContext.lua
 Rule.lua
 RuleSet.lua
 Actions.lua

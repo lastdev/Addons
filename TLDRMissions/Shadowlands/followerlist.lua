@@ -106,7 +106,7 @@ local doOnce = true
 function addon:Init()
     if not doOnce then return end
     doOnce = false
-    
+
     -- This code was adapted from Blizzard_GarrisonSharedTemplates.lua
     
     local function newUpdateFollowers(self)
@@ -162,8 +162,7 @@ function addon:Init()
     hooksecurefunc(CovenantMissionFrame.FollowerList, "UpdateFollowers", newUpdateFollowers)
     hooksecurefunc(GarrisonLandingPageFollowerList, "UpdateFollowers", newUpdateFollowers)
     
-    local oGFLIB = GarrisonFollowerList_InitButton
-    function GarrisonFollowerList_InitButton(frame, elementData)
+    hooksecurefunc("GarrisonFollowerList_InitButton", function(frame, elementData)
         if frame.Follower then
             if not frame.Follower.DownArrow then
                 frame.Follower.DownArrow = frame.Follower:CreateTexture()
@@ -183,6 +182,5 @@ function addon:Init()
                 end)
             end
         end
-        oGFLIB(frame, elementData)
-    end
+    end)
 end

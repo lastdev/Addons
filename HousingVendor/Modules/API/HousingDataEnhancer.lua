@@ -1,4 +1,4 @@
--- HousingDataEnhancer Module - Enhances static data with live API data for HousingVendor addon
+-- Enhances static data with live API data
 HousingDataEnhancer = {}
 
 -- Utility function to deep copy a table
@@ -19,15 +19,15 @@ end
 
 -- Check if model mapping data is available
 function HousingDataEnhancer:IsModelMappingAvailable()
-    local available = HousingModelMapping ~= nil
+    local available = HousingDecorData ~= nil
     if HousingDebugPrint then
-        HousingDebugPrint("Model mapping available: " .. tostring(available))
+        HousingDebugPrint("HousingDecorData available: " .. tostring(available))
         if available then
             local count = 0
-            for k,v in pairs(HousingModelMapping) do
+            for k,v in pairs(HousingDecorData) do
                 count = count + 1
             end
-            HousingDebugPrint("Model mapping entries: " .. count)
+            HousingDebugPrint("HousingDecorData entries: " .. count)
         end
     end
     return available
@@ -43,29 +43,27 @@ function HousingDataEnhancer:EnhanceItemData(itemData)
     -- Create a copy of the item data to avoid modifying original
     local enhancedData = CopyTable(itemData)
     
-    -- Preserve thumbnailFileID if it exists (from CSV data)
+    -- Preserve thumbnailFileID if it exists
     if itemData.thumbnailFileID then
         enhancedData.thumbnailFileID = itemData.thumbnailFileID
     elseif itemData.ThumbnailFileDataID then
         enhancedData.thumbnailFileID = itemData.ThumbnailFileDataID
     end
     
-    -- PRIORITY: Try to enhance with model data from our mapping FIRST
-    -- Model mapping should work regardless of live API availability
-    -- This ensures we always have model data if it exists in our mapping
+    -- PRIORITY: Try to enhance with model data from HousingDecorData FIRST
+    -- This ensures we always have model data if it exists in our data
     if self:IsModelMappingAvailable() and itemData.itemID then
-        -- Try both string and number key formats since itemID might be stored either way
-        local itemIDStr = tostring(itemData.itemID)
+        -- Try numeric key format (HousingDecorData uses numeric keys)
         local numericItemID = tonumber(itemData.itemID)
-        local modelFileID = HousingModelMapping[itemIDStr] or (numericItemID and HousingModelMapping[numericItemID]) or nil
+        local decorData = numericItemID and HousingDecorData[numericItemID]
         
-        if modelFileID then
-            modelFileID = tonumber(modelFileID)
+        if decorData and decorData.modelFileID then
+            local modelFileID = tonumber(decorData.modelFileID)
             if modelFileID then
                 enhancedData.modelFileID = modelFileID
                 enhancedData.displayInfoID = modelFileID  -- Set both for compatibility
                 if HousingDebugPrint then
-                    HousingDebugPrint("Added modelFileID/displayInfoID " .. tostring(modelFileID) .. " for itemID " .. itemIDStr)
+                    HousingDebugPrint("Added modelFileID/displayInfoID " .. tostring(modelFileID) .. " for itemID " .. tostring(numericItemID))
                 end
             end
         end
@@ -166,12 +164,18 @@ end
 
 -- Refresh live market data
 function HousingDataEnhancer:RefreshMarketData()
-    if not self:IsEnhancementAvailable() then
+    if not self:IsEnhancementAvailable() or not HousingCatalogAPI then
         return false
     end
     
     -- Request market info refresh
-    local success = HousingCatalogAPI:RequestHousingMarketInfoRefresh()
+    local success = false
+    if HousingCatalogAPI.RequestHousingMarketInfoRefresh then
+        local ok, result = pcall(function()
+            return HousingCatalogAPI:RequestHousingMarketInfoRefresh()
+        end)
+        success = ok and (result ~= nil) and result ~= false
+    end
     
     if success then
         -- Schedule a follow-up to update our data after refresh

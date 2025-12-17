@@ -1,8 +1,10 @@
--- Map ID to Expansion Mapping for Housing Addon
 -- Maps map IDs to expansion names for portal routing and cross-expansion waypoint management
 
 HousingMapIDToExpansion = {
     -- The War Within (11.0+)
+    [2552] = "The War Within", -- Khaz Algar (Surface)
+    [2601] = "The War Within", -- Khaz Algar (Underground)
+    [2706] = "The War Within", -- Undermine
     [2339] = "The War Within", -- Dornogal
     [2248] = "The War Within", -- Isle of Dorn
     [2214] = "The War Within", -- The Ringing Deeps
@@ -18,6 +20,9 @@ HousingMapIDToExpansion = {
     [2352] = "The War Within", -- Founders Point
 
     -- Dragonflight (10.0+)
+    [2444] = "Dragonflight", -- Dragon Isles
+    [2454] = "Dragonflight", -- Zaralek Cavern
+    [2548] = "Dragonflight", -- Emerald Dream
     [2022] = "Dragonflight", -- Waking Shore
     [2023] = "Dragonflight", -- Ohn'ahran Plains
     [2024] = "Dragonflight", -- The Azure Span
@@ -29,6 +34,8 @@ HousingMapIDToExpansion = {
     [2239] = "Dragonflight", -- Bel'ameth
 
     -- Shadowlands (9.0+)
+    [2222] = "Shadowlands", -- The Shadowlands
+    [2374] = "Shadowlands", -- Zereth Mortis
     [1550] = "Shadowlands", -- Overall Shadowlands Map
     [1565] = "Shadowlands", -- Ardenweald
     [1533] = "Shadowlands", -- Bastion
@@ -41,6 +48,9 @@ HousingMapIDToExpansion = {
     [1970] = "Shadowlands", -- Zereth Mortis
 
     -- Battle for Azeroth (8.0+)
+    [1642] = "Battle for Azeroth", -- Zandalar
+    [1643] = "Battle for Azeroth", -- Kul Tiras
+    [1718] = "Battle for Azeroth", -- Nazjatar
     [1161] = "Battle for Azeroth", -- Boralus
     [896] = "Battle for Azeroth", -- Drustvar
     [942] = "Battle for Azeroth", -- Stormsong Valley
@@ -58,6 +68,8 @@ HousingMapIDToExpansion = {
     [1530] = "Battle for Azeroth", -- Vale of Eternal Blossoms (BfA assault version)
 
     -- Legion (7.0+)
+    [1220] = "Legion", -- Broken Isles
+    [1669] = "Legion", -- Argus
     [885] = "Legion", -- Argus: Antoran Wastes
     [882] = "Legion", -- Argus: Eredath
     [830] = "Legion", -- Argus: Krokuun
@@ -72,7 +84,6 @@ HousingMapIDToExpansion = {
     [680] = "Legion", -- Suramar
     [684] = "Legion", -- Suramar: Temple of Fal'adora
     [685] = "Legion", -- Suramar: Falanaar Tunnels
-    [646] = "Legion", -- The Broken Shore
     [652] = "Legion", -- Thundertotem
     [750] = "Legion", -- Thundertotem (alternate)
     [641] = "Legion", -- Val'sharah
@@ -80,6 +91,9 @@ HousingMapIDToExpansion = {
     [715] = "Legion", -- Val'sharah Emerald Dreamway
 
     -- Warlords of Draenor (6.0+)
+    [1116] = "Warlords of Draenor", -- Draenor
+    [1191] = "Warlords of Draenor", -- Ashran
+    [1464] = "Warlords of Draenor", -- Tanaan Jungle
     [588] = "Warlords of Draenor", -- Ashran
     [525] = "Warlords of Draenor", -- Frostfire Ridge
     [543] = "Warlords of Draenor", -- Gorgrond
@@ -94,6 +108,9 @@ HousingMapIDToExpansion = {
     [582] = "Warlords of Draenor", -- Garrison - Alliance
 
     -- Mists of Pandaria (5.0+)
+    [860] = "Mists of Pandaria", -- The Wandering Isle
+    [870] = "Mists of Pandaria", -- Pandaria
+    [1064] = "Mists of Pandaria", -- Isle of Thunder
     [422] = "Mists of Pandaria", -- Dread Wastes
     [418] = "Mists of Pandaria", -- Krasarang Wilds
     [379] = "Mists of Pandaria", -- Kun-Lai Summit
@@ -106,6 +123,9 @@ HousingMapIDToExpansion = {
     [376] = "Mists of Pandaria", -- Valley of the Four Winds
 
     -- Cataclysm (4.0+)
+    [646] = "Cataclysm", -- Deepholm
+    [730] = "Cataclysm", -- Maelstrom Zone
+    [732] = "Cataclysm", -- Tol Barad
     [207] = "Cataclysm", -- Deepholm
     [198] = "Cataclysm", -- Mount Hyjal
     [245] = "Cataclysm", -- Tol Barad
@@ -116,6 +136,7 @@ HousingMapIDToExpansion = {
     [204] = "Cataclysm", -- Vashj'ir: Abyssal Depths
 
     -- Wrath of the Lich King (3.0+)
+    [571] = "Wrath of the Lich King", -- Northrend
     [114] = "Wrath of the Lich King", -- Borean Tundra
     [127] = "Wrath of the Lich King", -- Crystalsong Forest
     [125] = "Wrath of the Lich King", -- Dalaran
@@ -130,6 +151,7 @@ HousingMapIDToExpansion = {
     [121] = "Wrath of the Lich King", -- Zul'Drak
 
     -- The Burning Crusade (2.0+)
+    [530] = "The Burning Crusade", -- Outland
     [101] = "The Burning Crusade", -- Outland (Twisting Nether)
     [105] = "The Burning Crusade", -- Blade's Edge Mountains
     [100] = "The Burning Crusade", -- Hellfire Peninsula
@@ -148,13 +170,14 @@ HousingMapIDToExpansion = {
     [106] = "The Burning Crusade", -- Bloodmyst Isle
 
     -- Classic/Vanilla Zones (Kalimdor)
-    [12] = "Classic", -- Kalimdor
+    [0] = "Classic", -- Eastern Kingdoms
+    [1] = "Classic", -- Kalimdor
+    [12] = "Classic", -- Kalimdor (continent)
     [63] = "Classic", -- Ashenvale
     [76] = "Classic", -- Azshara
     [74] = "Classic", -- Caverns of Time (tunnel)
     [75] = "Classic", -- Caverns of Time (proper)
     [66] = "Classic", -- Desolace
-    [1] = "Classic", -- Durotar
     [70] = "Classic", -- Dustwallow Marsh
     [463] = "Classic", -- Echo Isles
     [77] = "Classic", -- Felwood

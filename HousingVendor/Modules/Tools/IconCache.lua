@@ -1,4 +1,4 @@
--- Icon Cache Module for HousingVendor addon
+-- Icon Cache Module
 -- Caches item icons to avoid repeated API calls
 
 local IconCache = {}
@@ -85,8 +85,14 @@ function IconCache:GetItemIcon(itemID)
   -- Try to get icon from C_Item API (modern, reliable method)
   local iconFileID = nil
   if hasC_ItemGetItemInfo then
-    local itemInfo = C_Item.GetItemInfo(numericItemID)
-    if itemInfo and itemInfo.iconFileID then
+    -- Request item data load first
+    if C_Item.RequestLoadItemDataByID then
+      C_Item.RequestLoadItemDataByID(numericItemID)
+    end
+
+    -- Safely call GetItemInfo with pcall
+    local ok, itemInfo = pcall(C_Item.GetItemInfo, numericItemID)
+    if ok and itemInfo and itemInfo.iconFileID then
       iconFileID = itemInfo.iconFileID
     end
   end
@@ -184,8 +190,8 @@ function IconCache:GetItemIconFromAPI(itemID, thumbnailFileID)
   -- Try C_Item.GetItemInfo first (modern API)
   local iconPath = nil
   if hasC_ItemGetItemInfo then
-    local itemInfo = C_Item.GetItemInfo(numericItemID)
-    if itemInfo then
+    local ok, itemInfo = pcall(C_Item.GetItemInfo, numericItemID)
+    if ok and itemInfo then
       -- Use GetItemIcon which should work with the itemID now that data is loaded
       iconPath = GetItemIcon(numericItemID)
       -- Validate and cache only if valid

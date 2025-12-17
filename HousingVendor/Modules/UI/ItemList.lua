@@ -18,9 +18,18 @@ local math_min = math.min
 local math_max = math.max
 local table_insert = table.insert
 
-local BUTTON_HEIGHT = 40
-local BUTTON_SPACING = 3
-local VISIBLE_BUTTONS = 15
+local BUTTON_HEIGHT = 48  -- Slightly taller for modern look
+local BUTTON_SPACING = 4   -- More spacing between cards
+local VISIBLE_BUTTONS = 12 -- Fewer visible due to larger size
+
+-- Theme reference
+local Theme = nil
+local function GetTheme()
+    if not Theme then
+        Theme = HousingTheme or {}
+    end
+    return Theme
+end
 
 local container = nil
 local scrollFrame = nil
@@ -32,6 +41,8 @@ local sortDirty = true  -- Dirty flag to track when sorting is needed
 
 -- Event frame for housing decor collection updates
 local eventFrame = CreateFrame("Frame")
+-- Note: Blizzard may not have a specific favorite changed event
+-- We'll check favorites on item update instead
 
 local tooltipScanner = CreateFrame("GameTooltip", "HousingVendorItemListTooltipScanner", UIParent, "GameTooltipTemplate")
 tooltipScanner:SetOwner(UIParent, "ANCHOR_NONE")
@@ -228,103 +239,39 @@ end
 -- Refresh collection status for all visible buttons
 local DecorSearcherCached = false
 
--- Initialize collection cache in saved variables (AllTheThings approach)
-local function InitializeCollectionCache()
-    if not HousingDB then
-        HousingDB = {}
-    end
-    if not HousingDB.collectedDecor then
-        HousingDB.collectedDecor = {}
-    end
-end
-
--- Check if item is cached as collected (AllTheThings approach)
-local function IsItemCached(itemID)
-    if not HousingDB or not HousingDB.collectedDecor then
-        return false
-    end
-    return HousingDB.collectedDecor[itemID] == true
-end
-
--- Mark item as collected in cache (AllTheThings approach)
-local function CacheItemAsCollected(itemID)
-    InitializeCollectionCache()
-    if HousingDB and HousingDB.collectedDecor then
-        HousingDB.collectedDecor[itemID] = true
-    end
-end
-
 function ItemList:RefreshCollectionStatus()
     if not container or not container:IsVisible() then
         return
     end
     
-    -- Initialize collection cache
-    InitializeCollectionCache()
-    
-    -- Initialize catalog searcher once (AllTheThings approach - caches decor data)
-    if not DecorSearcherCached and C_HousingCatalog and C_HousingCatalog.CreateCatalogSearcher then
-        pcall(function()
-            C_HousingCatalog.CreateCatalogSearcher()
-        end)
-        DecorSearcherCached = true
-    end
-    
-    -- Update collection status for all visible buttons
+    -- Update collection status for all visible buttons using CollectionAPI
     for _, button in ipairs(buttons) do
         if button:IsVisible() and button.itemData and button.collectedIcon then
             local item = button.itemData
-            if item.itemID and item.itemID ~= "" then
+            local isCollected = false
+            
+            -- First check: Do we have quantity data showing ownership?
+            local numStored = item._apiNumStored or 0
+            local numPlaced = item._apiNumPlaced or 0
+            local totalOwned = numStored + numPlaced
+            
+            if totalOwned > 0 then
+                isCollected = true
+            elseif item.itemID and item.itemID ~= "" then
+                -- Fallback: Check via CollectionAPI (for items without quantity data yet)
                 local itemID = tonumber(item.itemID)
-                if itemID then
-                    local isCollected = false
-                    
-                    -- Check cache first (AllTheThings approach - avoid repeated API calls)
-                    if IsItemCached(itemID) then
-                        isCollected = true
-                    else
-                        -- Method 1: Use C_Housing.IsDecorCollected (correct API for housing decor)
-                        if C_Housing and C_Housing.IsDecorCollected then
-                            local success, collected = pcall(function()
-                                return C_Housing.IsDecorCollected(itemID)
-                            end)
-                            if success and collected ~= nil then
-                                isCollected = collected
-                                if isCollected then
-                                    CacheItemAsCollected(itemID)
-                                end
-                            end
-                        end
-                        
-                        -- Method 2: AllTheThings approach - Check numStored + numPlaced from catalog
-                        if not isCollected and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByItem then
-                            local success, state = pcall(function()
-                                return C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-                            end)
-                            if success and state then
-                                local sum = (state.numStored or 0) + (state.numPlaced or 0)
-                                if sum > 0 and sum < 1000000 then
-                                    isCollected = true
-                                    CacheItemAsCollected(itemID)
-                                end
-                            end
-                        end
-                    end
-                    
-                    if isCollected then
-                        button.collectedIcon:Show()
-                    else
-                        button.collectedIcon:Hide()
-                    end
+                if itemID and CollectionAPI then
+                    isCollected = CollectionAPI:IsItemCollected(itemID)
                 end
+            end
+            
+            if isCollected then
+                button.collectedIcon:Show()
+            else
+                button.collectedIcon:Hide()
             end
         end
     end
-    
-    -- Always schedule a delayed re-check for auto-learned items (0.1-2 second delay)
-    C_Timer.After(1, function()
-        ItemList:RefreshCollectionStatus()
-    end)
 end
 
 -- Initialize item list
@@ -345,50 +292,67 @@ function ItemList:Initialize(parentFrame)
     end
     
     -- Try to register housing-specific events (may not exist in all versions)
-    SafeRegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")  -- AllTheThings approach - fires when decor added to chest
+    SafeRegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")  -- Fires when decor added to chest
     SafeRegisterEvent("HOUSING_COLLECTION_UPDATED")  -- Fires when collection status changes
     SafeRegisterEvent("HOUSING_ITEM_PURCHASED")     -- Fires when item is purchased
+    SafeRegisterEvent("HOUSING_STORAGE_UPDATED")     -- Fires when storage changes (triggers twice)
     
     -- Backup/edge case events (always available)
     eventFrame:RegisterEvent("MERCHANT_SHOW")  -- Backup refresh when vendor is opened
     eventFrame:RegisterEvent("MERCHANT_CLOSED")  -- Scan after closing vendor (catches items that may not have fired events)
     eventFrame:RegisterEvent("BAG_UPDATE_DELAYED")  -- Catches items appearing in bags silently (covers edge cases)
     eventFrame:RegisterEvent("CHAT_MSG_LOOT")  -- Detect when items are received via loot
+    eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")  -- CLEU: Detect item loots from combat
+    eventFrame:RegisterEvent("ENCOUNTER_LOOT_RECEIVED")  -- Detect encounter loot (raids/dungeons)
     eventFrame:RegisterEvent("PLAYER_LOGIN")  -- Initial scan after login
     
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         if event == "HOUSE_DECOR_ADDED_TO_CHEST" then
-            -- AllTheThings approach - decor added to chest (collected)
+            -- Decor added to chest (collected)
             local decorUid, decorID = ...
-            -- Cache the decorID immediately (AllTheThings approach)
-            if decorID then
-                CacheItemAsCollected(decorID)
+            -- Cache the decorID immediately using CollectionAPI
+            if decorID and CollectionAPI then
+                CollectionAPI:MarkItemCollected(decorID)
             end
-            -- Refresh immediately when decor is collected
-            ItemList:RefreshCollectionStatus()
-            C_Timer.After(0.5, function() ItemList:RefreshCollectionStatus() end)
-            C_Timer.After(1.5, function() ItemList:RefreshCollectionStatus() end)
+            -- Single debounced refresh (replaces 3x stacked calls)
+            C_Timer.After(1, function() ItemList:RefreshCollectionStatus() end)
         elseif event == "HOUSING_COLLECTION_UPDATED" then
-            -- Decor collection state changed - refresh immediately
-            ItemList:RefreshCollectionStatus()
-            C_Timer.After(0.5, function() ItemList:RefreshCollectionStatus() end)
-            C_Timer.After(1.5, function() ItemList:RefreshCollectionStatus() end)
-            C_Timer.After(2.5, function() ItemList:RefreshCollectionStatus() end)
+            -- Single debounced refresh (replaces 4x stacked calls)
+            C_Timer.After(1, function() ItemList:RefreshCollectionStatus() end)
         elseif event == "HOUSING_ITEM_PURCHASED" then
-            -- Item purchased - may not be collected yet (must be used from bags)
-            C_Timer.After(0.5, function() ItemList:RefreshCollectionStatus() end)
-            C_Timer.After(1.5, function() ItemList:RefreshCollectionStatus() end)
-            C_Timer.After(2.5, function() ItemList:RefreshCollectionStatus() end)
+            -- Single debounced refresh (replaces 3x stacked calls)
+            C_Timer.After(1, function() ItemList:RefreshCollectionStatus() end)
+        elseif event == "HOUSING_STORAGE_UPDATED" then
+            -- This event triggers twice, so add delay
+            C_Timer.After(2, function() ItemList:RefreshCollectionStatus() end)
         elseif event == "MERCHANT_SHOW" or event == "MERCHANT_CLOSED" or event == "BAG_UPDATE_DELAYED" or event == "CHAT_MSG_LOOT" then
-            -- Backup events - delayed checks to catch edge cases
-            C_Timer.After(0.5, function() ItemList:RefreshCollectionStatus() end)
-            C_Timer.After(1.5, function() ItemList:RefreshCollectionStatus() end)
+            -- Single debounced refresh (replaces 2x stacked calls)
+            C_Timer.After(1, function() ItemList:RefreshCollectionStatus() end)
+        elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+            -- CLEU: Detect item loots and force recache
+            local timestamp, subevent, _, sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellID, spellName, _, itemID = CombatLogGetCurrentEventInfo()
+            if subevent == "ENCHANT_APPLIED" or subevent == "SPELL_CAST_SUCCESS" then
+                -- Check if itemID is a housing decor item and force recache
+                if itemID and itemID > 0 and CollectionAPI then
+                    -- Force recache for this item
+                    CollectionAPI:ForceRecache(itemID)
+                    -- Debounced refresh of visible items
+                    C_Timer.After(0.5, function() ItemList:RefreshCollectionStatus() end)
+                end
+            end
+        elseif event == "ENCOUNTER_LOOT_RECEIVED" then
+            -- Encounter loot received (raids/dungeons)
+            local encounterID, itemID, itemLink = ...
+            if itemID and itemID > 0 and CollectionAPI then
+                -- Force recache for this item
+                CollectionAPI:ForceRecache(itemID)
+                -- Debounced refresh of visible items
+                C_Timer.After(0.5, function() ItemList:RefreshCollectionStatus() end)
+            end
         elseif event == "PLAYER_LOGIN" then
-            -- Initialize catalog searcher (AllTheThings approach - caches decor data)
-            if C_HousingCatalog and C_HousingCatalog.CreateCatalogSearcher then
-                pcall(function()
-                    C_HousingCatalog.CreateCatalogSearcher()
-                end)
+            -- Initialize catalog searcher (caches decor data)
+            if HousingAPI then
+                HousingAPI:CreateCatalogSearcher()
             end
             -- Initial scan after login
             C_Timer.After(1, function()
@@ -400,56 +364,17 @@ end
 
 -- Create item list section
 function ItemList:CreateItemListSection(parentFrame)
-    -- Create header row with column labels
-    -- Position adjusted to account for filter section (110px height + spacing)
-    local headerFrame = CreateFrame("Frame", "HousingItemListHeader", parentFrame, "BackdropTemplate")
-    local topOffset = -195  -- Base offset
-    if parentFrame.warningMessage then
-        topOffset = -230  -- Extra offset if warning message exists
-    end
-    headerFrame:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", 20, topOffset)
-    headerFrame:SetPoint("TOPRIGHT", parentFrame, "TOPRIGHT", -40, topOffset + 5)
-    headerFrame:SetHeight(25)
-    
-    -- Header background
-    headerFrame:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8x8",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true,
-        tileSize = 16,
-        edgeSize = 8,
-        insets = { left = 2, right = 2, top = 2, bottom = 2 }
-    })
-    headerFrame:SetBackdropColor(0.05, 0.05, 0.05, 0.9)
-    headerFrame:SetBackdropBorderColor(0.8, 0.6, 0.2, 1)
-    
-    -- Item Name header (aligns with nameText which starts at icon + 10)
-    local nameHeader = headerFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    nameHeader:SetPoint("LEFT", 50, 0)
-    nameHeader:SetText("|cFFFFD700Item Name|r")
-    
-    -- Source header (aligns with typeText which is nameText + 15 offset, nameText width is 300)
-    local sourceHeader = headerFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    sourceHeader:SetPoint("LEFT", 365, 0)
-    sourceHeader:SetText("|cFFFFD700Source|r")
-    
-    -- Location header (aligns with tooltipInfoText, after typeText width 120 + housingIcon + weightText)
-    local locationHeader = headerFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    locationHeader:SetPoint("LEFT", 540, 0)
-    locationHeader:SetText("|cFFFFD700Location|r")
-    
-    -- Price header removed - no longer displaying price in main UI
-    
-    -- Create scroll frame (full width now that preview panel is removed)
-    -- Bottom padding increased to make room for legend footer
-    -- Top padding adjusted for two-row filter section + header row
+    -- Create scroll frame (narrower to fit preview panel on the right)
+    -- Preview panel is 500px wide + 20px margin = 520px from right edge
+    -- No header row - items start directly below filters
     scrollFrame = CreateFrame("ScrollFrame", "HousingItemListScrollFrame", parentFrame, "UIPanelScrollFrameTemplate")
-    local scrollTopOffset = -222  -- Base offset (header + spacing)
+    -- Header is ~55px, filters are 140px (3 compact rows), plus small spacing
+    local scrollTopOffset = -215  -- Base offset (header 55 + filters 140 + spacing 20)
     if parentFrame.warningMessage then
-        scrollTopOffset = -257  -- Extra offset if warning message exists
+        scrollTopOffset = -250  -- Extra offset if warning message exists (35px warning)
     end
     scrollFrame:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", 20, scrollTopOffset)
-    scrollFrame:SetPoint("BOTTOMRIGHT", parentFrame, "BOTTOMRIGHT", -20, 52)
+    scrollFrame:SetPoint("BOTTOMRIGHT", parentFrame, "BOTTOMRIGHT", -520, 52)  -- Leave space for preview panel (520px = 500px panel + 20px margin)
     
     -- Create container
     container = CreateFrame("Frame", "HousingItemListContainer", scrollFrame)
@@ -474,213 +399,144 @@ function ItemList:CreateItemListSection(parentFrame)
     _G["HousingItemListScrollFrame"] = scrollFrame
 end
 
--- Create a single item button
+-- Create a single item button (Midnight Theme)
 function ItemList:CreateItemButton(parent, index)
-    local button = CreateFrame("Button", "HousingItemButton" .. index, parent, "BackdropTemplate")
-    button:SetSize(parent:GetWidth() - 20, BUTTON_HEIGHT)
-    button:SetPoint("TOPLEFT", 10, -(index - 1) * (BUTTON_HEIGHT + BUTTON_SPACING))
+    local theme = GetTheme()
+    local colors = theme.Colors or {}
     
-    -- Backdrop
+    local button = CreateFrame("Button", "HousingItemButton" .. index, parent, "BackdropTemplate")
+    button:SetSize(parent:GetWidth() - 16, BUTTON_HEIGHT)
+    button:SetPoint("TOPLEFT", 8, -(index - 1) * (BUTTON_HEIGHT + BUTTON_SPACING))
+    
+    -- Midnight theme backdrop (card style)
     button:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8x8",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true,
-        tileSize = 16,
-        edgeSize = 8,
-        insets = { left = 2, right = 2, top = 2, bottom = 2 }
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false,
+        tileSize = 0,
+        edgeSize = 1,
+        insets = { left = 0, right = 0, top = 0, bottom = 0 }
     })
-    button:SetBackdropColor(0.1, 0.1, 0.1, 0.7)
     
-    -- Faction color bar (pronounced, stands out more)
-    local factionBar = button:CreateTexture(nil, "OVERLAY")  -- Changed from BACKGROUND to OVERLAY
-    factionBar:SetWidth(6)  -- 6px width for visibility
-    factionBar:SetPoint("TOPLEFT", 2, -2)  -- Inset slightly from edge
-    factionBar:SetPoint("BOTTOMLEFT", 2, 2)  -- Inset slightly from edge
+    -- Deep purple background
+    local bgTertiary = colors.bgTertiary or {0.16, 0.12, 0.24, 0.90}
+    local borderPrimary = colors.borderPrimary or {0.35, 0.30, 0.50, 0.8}
+    button:SetBackdropColor(bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4])
+    button:SetBackdropBorderColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], borderPrimary[4])
+    
+    -- Source color bar on LEFT edge (combined faction + source)
+    local factionBar = button:CreateTexture(nil, "OVERLAY")
+    factionBar:SetWidth(4)  -- Thinner, more elegant
+    factionBar:SetPoint("TOPLEFT", 0, 0)
+    factionBar:SetPoint("BOTTOMLEFT", 0, 0)
     factionBar:SetTexture("Interface\\Buttons\\WHITE8x8")
-    factionBar:SetVertexColor(1, 1, 1, 1)  -- Default white, will be colored later
+    factionBar:SetVertexColor(0.35, 0.80, 0.45, 1)  -- Default green (vendor)
     button.factionBar = factionBar
     
-    -- Icon
+    -- Right edge source bar (hidden by default, all info on left)
+    local sourceBar = button:CreateTexture(nil, "OVERLAY")
+    sourceBar:SetWidth(4)
+    sourceBar:SetPoint("TOPRIGHT", 0, 0)
+    sourceBar:SetPoint("BOTTOMRIGHT", 0, 0)
+    sourceBar:SetTexture("Interface\\Buttons\\WHITE8x8")
+    sourceBar:Hide()
+    button.sourceBar = sourceBar
+    
+    -- Icon (larger for modern look)
     local icon = button:CreateTexture(nil, "ARTWORK")
-    icon:SetSize(32, 32)
-    icon:SetPoint("LEFT", 8, 0)
+    icon:SetSize(38, 38)  -- Larger icon
+    icon:SetPoint("LEFT", 12, 0)
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)  -- Trim icon borders
     button.icon = icon
 
-    -- Icon border
+    -- Icon border (quality glow)
     local iconBorder = button:CreateTexture(nil, "BORDER")
     iconBorder:SetTexture("Interface\\Buttons\\WHITE8x8")
-    iconBorder:SetSize(34, 34)
+    iconBorder:SetSize(42, 42)
     iconBorder:SetPoint("CENTER", icon, "CENTER", 0, 0)
-    iconBorder:SetVertexColor(0.3, 0.3, 0.3, 0.6)
+    iconBorder:SetVertexColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], 0.8)
     button.iconBorder = iconBorder
     
-    -- Collected indicator (green tick)
+    -- Collected indicator (checkmark)
     local collectedIcon = button:CreateTexture(nil, "OVERLAY")
-    collectedIcon:SetSize(20, 20)
-    collectedIcon:SetPoint("TOPRIGHT", icon, "TOPRIGHT", 2, 2)
+    collectedIcon:SetSize(18, 18)
+    collectedIcon:SetPoint("TOPRIGHT", icon, "TOPRIGHT", 4, 4)
     collectedIcon:SetTexture("Interface\\RAIDFRAME\\ReadyCheck-Ready")
-    collectedIcon:SetVertexColor(0, 1, 0, 1) -- Green
-    collectedIcon:Hide() -- Hidden by default, shown when item is collected
+    local statusSuccess = colors.statusSuccess or {0.30, 0.85, 0.50, 1.0}
+    collectedIcon:SetVertexColor(statusSuccess[1], statusSuccess[2], statusSuccess[3], 1)
+    collectedIcon:Hide()
     button.collectedIcon = collectedIcon
-    
-    -- Name
-    local nameText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    nameText:SetPoint("LEFT", icon, "RIGHT", 10, 0)
-    nameText:SetWidth(300)
-    nameText:SetJustifyH("LEFT")
-    button.nameText = nameText
 
-    -- Type
-    local typeText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    typeText:SetPoint("LEFT", nameText, "RIGHT", 15, 0)
-    typeText:SetWidth(120)
-    typeText:SetJustifyH("LEFT")
-    typeText:SetTextColor(0.7, 0.7, 0.7, 1)
-    button.typeText = typeText
+    -- Owned quantity text (bottom-left of icon, larger)
+    local quantityText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    quantityText:SetPoint("BOTTOMLEFT", icon, "BOTTOMLEFT", -2, -2)
+    quantityText:SetTextColor(statusSuccess[1], statusSuccess[2], statusSuccess[3], 1)
+    quantityText:Hide()
+    button.quantityText = quantityText
     
-    -- Price removed - no longer displaying price in main UI
+    -- Name text (primary)
+    local nameText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    nameText:SetPoint("LEFT", icon, "RIGHT", 12, 4)
+    nameText:SetWidth(200)
+    nameText:SetJustifyH("LEFT")
+    local textPrimary = colors.textPrimary or {0.92, 0.90, 0.96, 1.0}
+    nameText:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+    button.nameText = nameText
     
-    -- Wishlist heart button (clickable)
-    local wishlistButton = CreateFrame("Button", nil, button)
-    wishlistButton:SetSize(40, 40)  -- Same height as item bar for better visibility
-    wishlistButton:SetPoint("RIGHT", -60, 0)  -- Positioned before map icon
-    wishlistButton:SetFrameLevel(button:GetFrameLevel() + 1)
+    -- Vendor text (secondary, below name)
+    local vendorText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    vendorText:SetPoint("TOPLEFT", nameText, "BOTTOMLEFT", 0, -2)
+    vendorText:SetWidth(200)
+    vendorText:SetJustifyH("LEFT")
+    local textSecondary = colors.textSecondary or {0.70, 0.68, 0.78, 1.0}
+    vendorText:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+    vendorText:SetText("")
+    button.vendorText = vendorText
     
-    local wishlistIcon = wishlistButton:CreateTexture(nil, "ARTWORK")
-    wishlistIcon:SetAllPoints()
-    wishlistIcon:SetTexture("Interface\\Common\\friendship-heart")  -- Heart icon for favorites
-    wishlistIcon:SetVertexColor(1, 0.2, 0.2, 0.6)  -- Red/pink, semi-transparent when not favorited
-    wishlistButton.icon = wishlistIcon
+    -- Cost text (right side, gold accent)
+    local costText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    costText:SetPoint("RIGHT", button, "RIGHT", -12, 0)
+    costText:SetJustifyH("RIGHT")
+    local accentGold = colors.accentGold or {0.85, 0.75, 0.45, 1.0}
+    costText:SetTextColor(accentGold[1], accentGold[2], accentGold[3], 1)
+    button.costText = costText
     
-    wishlistButton:SetScript("OnClick", function(self, mouseButton)
-        if mouseButton == "LeftButton" then
-            -- Stop event propagation to prevent waypoint click
-            self:SetPropagateKeyboardInput(false)
-            
-            local item = self:GetParent().itemData
-            if item and item.itemID then
-                local itemID = tonumber(item.itemID)
-                if itemID then
-                    if not HousingDB then HousingDB = {} end
-                    if not HousingDB.wishlist then HousingDB.wishlist = {} end
-                    
-                    if HousingDB.wishlist[itemID] then
-                        -- Remove from wishlist
-                        HousingDB.wishlist[itemID] = nil
-                        self.icon:SetVertexColor(1, 0.2, 0.2, 0.6)  -- Dimmed red/pink
-                    else
-                        -- Add to wishlist
-                        HousingDB.wishlist[itemID] = true
-                        self.icon:SetVertexColor(1, 0.2, 0.2, 1)  -- Bright red/pink when favorited
-                    end
-                    
-                    -- Refresh filters if wishlist filter is active
-                    if HousingFilters then
-                        local filters = HousingFilters:GetFilters()
-                        if filters.source == "Wishlist" then
-                            HousingFilters:ApplyFilters()
-                        end
-                    end
-                    
-                    -- Update visible buttons to refresh wishlist icons
-                    if HousingItemList then
-                        HousingItemList:UpdateVisibleButtons()
-                    end
-                end
-            end
-        end
-    end)
+    -- Zone text (above cost, smaller)
+    local zoneText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    zoneText:SetPoint("BOTTOMRIGHT", costText, "TOPRIGHT", 0, 2)
+    zoneText:SetJustifyH("RIGHT")
+    local textMuted = colors.textMuted or {0.50, 0.48, 0.58, 1.0}
+    zoneText:SetTextColor(textMuted[1], textMuted[2], textMuted[3], 1)
+    button.zoneText = zoneText
     
-    wishlistButton:SetScript("OnEnter", function(self)
-        local item = self:GetParent().itemData
-        if item and item.itemID then
-            local itemID = tonumber(item.itemID)
-            if itemID and HousingDB and HousingDB.wishlist and HousingDB.wishlist[itemID] then
-                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                GameTooltip:SetText("Remove from Wishlist", 1, 1, 0.5)
-                GameTooltip:Show()
-            else
-                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                GameTooltip:SetText("Add to Wishlist", 1, 1, 0.5)
-                GameTooltip:Show()
-            end
-        end
-    end)
-    
-    wishlistButton:SetScript("OnLeave", function(self)
-        GameTooltip:Hide()
-    end)
-    
-    button.wishlistButton = wishlistButton
-    
-    -- Map icon indicator (shows when item has waypoint available)
-    local mapIcon = button:CreateTexture(nil, "OVERLAY")
-    mapIcon:SetSize(40, 40)  -- Full height of bar, proportional (square)
-    mapIcon:SetPoint("RIGHT", -15, 0)  -- Positioned on the right edge
-    mapIcon:SetTexture("Interface\\Icons\\INV_Misc_Map_01")  -- Map icon
-    mapIcon:SetVertexColor(1, 1, 1, 0.9)
-    mapIcon:Hide()
-    button.mapIcon = mapIcon
-    
-    -- Housing icon and weight (house icon + number)
-    local housingIcon = button:CreateTexture(nil, "ARTWORK")
-    housingIcon:SetSize(16, 16)
-    housingIcon:SetPoint("LEFT", typeText, "RIGHT", 10, 0)
-    housingIcon:Hide() -- Hidden by default
-    button.housingIcon = housingIcon
-    
-    local weightText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    weightText:SetPoint("LEFT", housingIcon, "RIGHT", 3, 0)
-    weightText:SetTextColor(0.7, 0.9, 1, 1) -- Light blue for weight
-    weightText:Hide() -- Hidden by default
-    button.weightText = weightText
-    
-    -- Tooltip info text (vendor, zone info) - create after weightText
-    local tooltipInfoText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    tooltipInfoText:SetPoint("LEFT", weightText, "RIGHT", 8, 0)
-    tooltipInfoText:SetPoint("RIGHT", wishlistButton, "LEFT", -10, 0)  -- Stop before wishlist button
-    tooltipInfoText:SetJustifyH("LEFT")
-    tooltipInfoText:SetTextColor(0.7, 0.7, 0.7, 1) -- Gray color, less prominent
-    tooltipInfoText:SetWordWrap(false)
-    tooltipInfoText:Hide() -- Hidden by default
-    button.tooltipInfoText = tooltipInfoText
-    
-    -- Make the entire button clickable for waypoints
+    -- Make the entire button clickable
     button:EnableMouse(true)
     button:RegisterForClicks("LeftButtonUp")
     button:SetScript("OnClick", function(self, mouseButton)
-        -- Don't trigger waypoint if clicking on wishlist button
-        if self.wishlistButton and self.wishlistButton:IsMouseOver() then
-            return
-        end
-        
         local item = self.itemData
-        if item and item.vendorCoords and item.vendorCoords.x and item.vendorCoords.y and item.mapID and item.mapID > 0 then
-            if HousingWaypointManager then
-                HousingWaypointManager:SetWaypoint(item)
-            else
-                print("|cFFFF4040HousingVendor:|r Waypoint module not loaded!")
-            end
+        if not item then return end
+        
+        -- Click: Show preview panel
+        if HousingPreviewPanel then
+            HousingPreviewPanel:ShowItem(item)
         else
-            -- Debug message when clicking item without waypoint
-            print("|cFFFFAA00HousingVendor:|r This item has no waypoint coordinates")
+            -- Silently handle missing PreviewPanel
+            -- print("|cFF8A7FD4HousingVendor:|r HousingPreviewPanel not found")
         end
     end)
     
-    -- Tooltip and hover effects
+    -- Hover effects (Midnight theme)
+    local bgHover = colors.bgHover or {0.22, 0.16, 0.32, 0.95}
+    local accentPrimary = colors.accentPrimary or {0.55, 0.65, 0.90, 1.0}
+    
     button:SetScript("OnEnter", function(self)
         local item = self.itemData
         if item then
-            -- Add a subtle glow border on hover
-            self:SetBackdropBorderColor(1, 0.82, 0, 1)  -- Gold glow
+            -- Hover state: lighter background, accent border
+            self:SetBackdropColor(bgHover[1], bgHover[2], bgHover[3], bgHover[4])
+            self:SetBackdropBorderColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
             
-            -- Show "clickable" cursor if item has waypoint
-            if item.vendorCoords and item.vendorCoords.x and item.vendorCoords.y and item.mapID and item.mapID > 0 then
-                -- Brighten the map icon to indicate clickability
-                if self.mapIcon then
-                    self.mapIcon:SetVertexColor(1, 1, 0, 1)  -- Yellow glow when hovering
-                end
-            end
+            -- No map icon hover effect needed anymore
             
             -- Brighten the backdrop color on hover (preserve faction/source colors)
             if self.originalBackdropColor then
@@ -722,7 +578,13 @@ function ItemList:CreateItemButton(parent, index)
                     -- Try to get item info
                     local itemInfo = allInfo.itemInfo
                     if not itemInfo and C_Item and C_Item.GetItemInfo then
-                        itemInfo = C_Item.GetItemInfo(numericItemID)
+                        if C_Item.RequestLoadItemDataByID then
+                            C_Item.RequestLoadItemDataByID(numericItemID)
+                        end
+                        local ok, info = pcall(C_Item.GetItemInfo, numericItemID)
+                        if ok then
+                            itemInfo = info
+                        end
                     end
                     
                     -- If we have item info, show official tooltip
@@ -741,7 +603,7 @@ function ItemList:CreateItemButton(parent, index)
                     nameColor = {1, 0.3, 0.3, 1} -- Red
                 elseif item.faction == "Alliance" then
                     nameColor = {0.3, 0.6, 1, 1} -- Blue
-                elseif allInfo.itemInfo and allInfo.itemInfo.itemQuality then
+                elseif allInfo.itemInfo and type(allInfo.itemInfo) == "table" and allInfo.itemInfo.itemQuality then
                     -- Use quality color if available
                     local qualityColors = {
                         [0] = {0.62, 0.62, 0.62, 1}, -- Poor
@@ -758,7 +620,7 @@ function ItemList:CreateItemButton(parent, index)
                 end
                 
                 local displayName = item.name or "Unknown Item"
-                if allInfo.itemInfo and allInfo.itemInfo.itemName then
+                if allInfo.itemInfo and type(allInfo.itemInfo) == "table" and allInfo.itemInfo.itemName then
                     displayName = allInfo.itemInfo.itemName
                 elseif allInfo.catalogInfo and type(allInfo.catalogInfo) == "table" and allInfo.catalogInfo.name then
                     displayName = allInfo.catalogInfo.name
@@ -769,7 +631,7 @@ function ItemList:CreateItemButton(parent, index)
                 GameTooltip:SetText(displayName, nameColor[1], nameColor[2], nameColor[3], 1, true)
                 
                 -- Add API info if available
-                if allInfo.itemInfo then
+                if allInfo.itemInfo and type(allInfo.itemInfo) == "table" then
                     if allInfo.itemInfo.itemLevel then
                         GameTooltip:AddLine("Item Level: " .. allInfo.itemInfo.itemLevel, 0.8, 0.8, 0.8, 1)
                     end
@@ -841,7 +703,12 @@ function ItemList:CreateItemButton(parent, index)
                 GameTooltip:AddLine("Zone: " .. item.zoneName, 1, 0.82, 0, 1)
             end
             if item.expansionName and item.expansionName ~= "" and not genericVendors[item.expansionName] then
-                GameTooltip:AddLine("Expansion: " .. item.expansionName, 1, 0.82, 0, 1)
+                local expansionText = item.expansionName
+                -- Add indicator for Midnight expansion (not yet released)
+                if expansionText == "Midnight" then
+                    expansionText = expansionText .. " (Not Yet Released)"
+                end
+                GameTooltip:AddLine("Expansion: " .. expansionText, 1, 0.82, 0, 1)
             end
             
             -- Coordinates
@@ -849,28 +716,84 @@ function ItemList:CreateItemButton(parent, index)
                 GameTooltip:AddLine("Coordinates: " .. string.format("%.1f, %.1f", item.vendorCoords.x, item.vendorCoords.y), 0.7, 0.7, 0.7, 1)
             end
             
-            -- Cost/Price information
-            if item.currency and item.currency ~= "" then
-                GameTooltip:AddLine("Cost: " .. item.currency, 1, 0.82, 0, 1)
-            elseif item.price and item.price > 0 then
-                GameTooltip:AddLine(string.format("Price: %d gold", item.price), 1, 0.82, 0, 1)
-            else
-                GameTooltip:AddLine("Price: Free", 0.3, 1, 0.3, 1)
+            -- Cost/Price information REMOVED from tooltip
+            -- Cost is now shown only in the preview panel info section
+            -- This avoids confusion with WoW's built-in "Sell Price" tooltip line
+            
+            -- Achievement requirement (prioritize API data)
+            local achievementText = nil
+            if item._apiAchievement then
+                -- Parse achievement name from formatted text if needed
+                achievementText = item._apiAchievement
+                if string.find(achievementText, "|n|cFFFFD200") then
+                    achievementText = string.match(achievementText, "^([^|]+)") or achievementText
+                end
+            elseif item.achievementRequired and item.achievementRequired ~= "" then
+                achievementText = item.achievementRequired
             end
             
-            -- Achievement requirement
-            if item.achievementRequired and item.achievementRequired ~= "" then
-                GameTooltip:AddLine("Achievement: " .. item.achievementRequired, 1, 0.5, 0, 1)
+            -- Try to get from catalog data if API data not loaded yet
+            if not achievementText and item.itemID then
+                local numericItemID = tonumber(item.itemID)
+                if numericItemID and HousingAPI then
+                    local catalogData = HousingAPI:GetCatalogData(numericItemID)
+                    if catalogData and catalogData.achievement then
+                        achievementText = catalogData.achievement
+                    end
+                end
             end
             
-            -- Quest requirement
-            if item.questRequired and item.questRequired ~= "" then
-                GameTooltip:AddLine("Quest: " .. item.questRequired, 0.5, 0.8, 1, 1)
+            if achievementText and achievementText ~= "" then
+                GameTooltip:AddLine("Achievement: " .. achievementText, 1, 0.5, 0, 1)
             end
             
-            -- Drop source
-            if item.dropSource and item.dropSource ~= "" then
-                GameTooltip:AddLine("Drops from: " .. item.dropSource, 0.8, 0.5, 1, 1)
+            -- Quest requirement (ALWAYS use Housing Catalog API - it's the authoritative source)
+            local questText = nil
+            local questID = nil
+            
+            -- Priority 1: Get from Housing Catalog API (most accurate for housing decor)
+            if item.itemID then
+                local numericItemID = tonumber(item.itemID)
+                if numericItemID and HousingAPI then
+                    local catalogData = HousingAPI:GetCatalogData(numericItemID)
+                    if catalogData and catalogData.quest then
+                        questText = catalogData.quest
+                        questID = catalogData.questID
+                    end
+                end
+            end
+            
+            -- Priority 2: Use cached API data if catalog fetch didn't work
+            if not questText and item._apiQuest then
+                questText = item._apiQuest
+            end
+            
+            -- Priority 3: Fallback to static data (least accurate)
+            if not questText and item.questRequired and item.questRequired ~= "" then
+                questText = item.questRequired
+            end
+            
+            -- Only show quest if we have Housing Catalog API data (don't show static data quest)
+            -- This ensures we only show the correct quest that unlocks the item
+            if questText and questText ~= "" and (item._apiDataLoaded or HousingAPI) then
+                GameTooltip:AddLine("Quest: " .. questText, 0.5, 0.8, 1, 1)
+            end
+            
+            -- Drop source (prioritize API data)
+            local dropText = nil
+            if item._apiSourceText and (item._apiSourceText:find("Drop") or item._apiSourceText:find("Loot")) then
+                -- Extract drop source from sourceText
+                dropText = item._apiSourceText:match("Drop: ([^\r\n|:]+)") or item._apiSourceText:match("Loot: ([^\r\n|:]+)")
+                if dropText then
+                    dropText = dropText:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H[^|]*|h", ""):gsub("|h", ""):gsub("|T[^|]*|t", ""):gsub("|n", "")
+                    dropText = dropText:match("^%s*(.-)%s*$")
+                end
+            elseif item.dropSource and item.dropSource ~= "" then
+                dropText = item.dropSource
+            end
+            
+            if dropText and dropText ~= "" then
+                GameTooltip:AddLine("Drops from: " .. dropText, 0.8, 0.5, 1, 1)
             end
             
             -- Faction
@@ -893,21 +816,19 @@ function ItemList:CreateItemButton(parent, index)
         end
     end)
     button:SetScript("OnLeave", function(self)
-        -- Restore original border color
-        self:SetBackdropBorderColor(0.8, 0.6, 0.2, 1)
+        local theme = GetTheme()
+        local colors = theme.Colors or {}
+        local bgTertiary = colors.bgTertiary or {0.16, 0.12, 0.24, 0.90}
+        local borderPrimary = colors.borderPrimary or {0.35, 0.30, 0.50, 0.8}
         
-        -- Restore map icon color
-        if self.mapIcon then
-            self.mapIcon:SetVertexColor(1, 1, 1, 0.9)  -- Back to normal white
-        end
-        
-        -- Restore the original backdrop color
+        -- Restore original colors
         if self.originalBackdropColor then
             self:SetBackdropColor(unpack(self.originalBackdropColor))
         else
-            -- Fallback if color wasn't stored
-            self:SetBackdropColor(0.1, 0.1, 0.1, 0.7)
+            self:SetBackdropColor(bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4])
         end
+        self:SetBackdropBorderColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], borderPrimary[4])
+        
         GameTooltip:Hide()
     end)
     
@@ -1081,23 +1002,7 @@ function ItemList:UpdateSpecialViewItemButton(button, item)
     -- Update item name
     button.nameText:SetText(item.name)
     
-    -- Update type text
-    button.typeText:SetText(viewType)
-    button.typeText:SetTextColor(viewColor[1], viewColor[2], viewColor[3], viewColor[4])
-    
-    -- Update tooltip info text
-    if button.tooltipInfoText then
-        if item._isExpansion then
-            button.tooltipInfoText:SetText("Click to view items in this expansion")
-        elseif item._isZone then
-            button.tooltipInfoText:SetText("Click to view items in this location")
-        elseif item._isVendor then
-            button.tooltipInfoText:SetText("Click to view items from this vendor")
-        else
-            button.tooltipInfoText:SetText("")
-        end
-        button.tooltipInfoText:Show()
-    end
+    -- Removed: Type text and tooltip info text (fields removed)
     
     -- Price text removed - no longer displaying price in main UI
     
@@ -1107,13 +1012,7 @@ function ItemList:UpdateSpecialViewItemButton(button, item)
     -- Set a generic icon for special views
     button.icon:SetTexture("Interface\\Icons\\INV_Misc_Map02")
     
-    -- Hide housing icon and weight for special views
-    if button.housingIcon then
-        button.housingIcon:Hide()
-    end
-    if button.weightText then
-        button.weightText:Hide()
-    end
+    -- Removed: housing icon and weight (fields removed)
     
     -- Override click behavior for special view items - drill down to show items
     button:SetScript("OnClick", function(self, mouseButton)
@@ -1156,134 +1055,379 @@ end
 
 function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
     buttonIndex = buttonIndex or 1
-    local isAchievement = item.achievementRequired and item.achievementRequired ~= ""
-    local isQuest = item.questRequired and item.questRequired ~= ""
-    local isDrop = item.dropSource and item.dropSource ~= ""
     
-    -- Update faction/source color bar (faction takes priority, then source type)
-    if button.factionBar then
-        if item.faction == "Horde" then
-            button.factionBar:SetVertexColor(1, 0, 0, 1) -- Bright red for Horde
-            button.factionBar:Show()
-        elseif item.faction == "Alliance" then
-            button.factionBar:SetVertexColor(0, 0.4, 1, 1) -- Bright blue for Alliance
-            button.factionBar:Show()
-        elseif isAchievement then
-            button.factionBar:SetVertexColor(1, 0.843, 0, 1) -- Gold for achievement (#FFD700)
-            button.factionBar:Show()
-        elseif isQuest then
-            button.factionBar:SetVertexColor(0.118, 0.565, 1, 1) -- Bright blue for quest (#1E90FF)
-            button.factionBar:Show()
-        elseif isDrop then
-            button.factionBar:SetVertexColor(1, 0.271, 0, 1) -- Orange/red for drop (#FF4500)
-            button.factionBar:Show()
-        else
-            button.factionBar:Hide() -- No bar for vendor-only items
+    -- Determine source type - prioritize API data over static data
+    local isAchievement = false
+    local isQuest = false
+    local isDrop = false
+    
+    -- Check API data first (most accurate)
+    if item._apiDataLoaded then
+        if item._apiRequirementType == "Achievement" or item._apiAchievement then
+            isAchievement = true
+        elseif item._apiRequirementType == "Quest" then
+            isQuest = true
+        elseif item._apiRequirementType == "Drop" then
+            isDrop = true
         end
     end
     
-    -- Update backdrop color with tint based on faction OR source type
-    local backdropColor
-    if item.faction == "Horde" then
-        backdropColor = {0.3, 0.05, 0.05, 0.9} -- Red tint for Horde
-    elseif item.faction == "Alliance" then
-        backdropColor = {0.05, 0.15, 0.3, 0.9} -- Blue tint for Alliance
-    elseif isAchievement then
-        backdropColor = {0.25, 0.21, 0.0, 0.85} -- Gold/brown tint for achievement (#FFD700)
-    elseif isQuest then
-        backdropColor = {0.03, 0.14, 0.25, 0.85} -- Blue tint for quest (#1E90FF)
-    elseif isDrop then
-        backdropColor = {0.25, 0.07, 0.0, 0.85} -- Orange/red tint for drop (#FF4500)
-    else
-        backdropColor = {0.1, 0.1, 0.1, 0.7} -- Neutral gray for vendor
+    -- Also check _sourceType field (set during data loading)
+    if not isAchievement and not isQuest and not isDrop then
+        if item._sourceType == "Achievement" then
+            isAchievement = true
+        elseif item._sourceType == "Quest" then
+            isQuest = true
+        elseif item._sourceType == "Drop" then
+            isDrop = true
+        end
     end
     
-    -- Store the original color for hover effects and apply it
+    -- Fallback to static data if API data not available
+    if not isAchievement and not isQuest and not isDrop then
+        isAchievement = item.achievementRequired and item.achievementRequired ~= ""
+        isQuest = item.questRequired and item.questRequired ~= ""
+        isDrop = item.dropSource and item.dropSource ~= ""
+    end
+    
+    -- Get theme colors
+    local theme = GetTheme()
+    local colors = theme.Colors or {}
+    
+    -- LEFT EDGE: Combined Faction + Source color bar (Midnight theme colors)
+    if button.factionBar then
+        local factionHorde = colors.factionHorde or {0.85, 0.20, 0.25, 1.0}
+        local factionAlliance = colors.factionAlliance or {0.25, 0.50, 0.90, 1.0}
+        local sourceAchievement = colors.sourceAchievement or {0.95, 0.80, 0.25, 1.0}
+        local sourceQuest = colors.sourceQuest or {0.40, 0.70, 0.95, 1.0}
+        local sourceDrop = colors.sourceDrop or {0.95, 0.60, 0.25, 1.0}
+        local sourceVendor = colors.sourceVendor or {0.35, 0.80, 0.45, 1.0}
+        
+        if item.faction == "Horde" then
+            button.factionBar:SetVertexColor(factionHorde[1], factionHorde[2], factionHorde[3], 1)
+            button.factionBar:Show()
+        elseif item.faction == "Alliance" then
+            button.factionBar:SetVertexColor(factionAlliance[1], factionAlliance[2], factionAlliance[3], 1)
+            button.factionBar:Show()
+        elseif isAchievement then
+            button.factionBar:SetVertexColor(sourceAchievement[1], sourceAchievement[2], sourceAchievement[3], 1)
+            button.factionBar:Show()
+        elseif isQuest then
+            button.factionBar:SetVertexColor(sourceQuest[1], sourceQuest[2], sourceQuest[3], 1)
+            button.factionBar:Show()
+        elseif isDrop then
+            button.factionBar:SetVertexColor(sourceDrop[1], sourceDrop[2], sourceDrop[3], 1)
+            button.factionBar:Show()
+        else
+            button.factionBar:SetVertexColor(sourceVendor[1], sourceVendor[2], sourceVendor[3], 1)
+            button.factionBar:Show()
+        end
+    end
+    
+    -- Hide the right edge source bar
+    if button.sourceBar then
+        button.sourceBar:Hide()
+    end
+    
+    -- Update backdrop color (Midnight theme with faction tint)
+    local bgTertiary = colors.bgTertiary or {0.16, 0.12, 0.24, 0.90}
+    local backdropColor
+    if item.faction == "Horde" then
+        backdropColor = {0.22, 0.10, 0.14, 0.90} -- Subtle red-purple tint
+    elseif item.faction == "Alliance" then
+        backdropColor = {0.10, 0.14, 0.24, 0.90} -- Subtle blue-purple tint
+    else
+        backdropColor = {bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4]}
+    end
+    
+    -- Store and apply
     button.originalBackdropColor = backdropColor
     button:SetBackdropColor(unpack(backdropColor))
     
-    -- Update item name (without redundant achievement info since it's shown in typeText)
     local displayName = item.name or "Unknown"
-    button.nameText:SetText(displayName)
-    
-    -- Show source type instead of item type (Achievement, Quest, Drop, or Vendor) with color coding
-    local sourceType = "Vendor"  -- Default to vendor
-    local sourceColor = {0.196, 0.804, 0.196, 1}  -- Green for vendor (#32CD32)
-    local sourceName = ""  -- The actual name of the achievement/quest/drop/vendor
-    
-    if item.achievementRequired and item.achievementRequired ~= "" then
-        sourceType = "Achievement"
-        sourceName = item.achievementRequired
-        sourceColor = {1, 0.843, 0, 1}  -- Gold for achievement (#FFD700)
-    elseif item.questRequired and item.questRequired ~= "" then
-        sourceType = "Quest"
-        sourceName = item.questRequired
-        sourceColor = {0.118, 0.565, 1, 1}  -- Bright blue for quest (#1E90FF)
-    elseif item.dropSource and item.dropSource ~= "" then
-        sourceType = "Drop"
-        sourceName = item.dropSource
-        sourceColor = {1, 0.271, 0, 1}  -- Orange/red for drop (#FF4500)
-    else
-        -- For vendor items, show the vendor name
-        sourceName = item.vendorName or ""
-    end
-    
-    -- Combine source type with name if available
-    local displayText = sourceType
-    if sourceName ~= "" then
-        displayText = string.format("%s: %s", sourceType, sourceName)
-    end
-    
-    button.typeText:SetText(displayText)
-    button.typeText:SetTextColor(sourceColor[1], sourceColor[2], sourceColor[3], sourceColor[4])
-    
-    -- Display useful info from our database - just zone (vendor name already shown in green)
-    if button.tooltipInfoText then
-        -- List of generic NonVendor zone names to exclude (they're redundant with source type)
-        local genericZones = {
-            ["Achievement Rewards"] = true,
-            ["Quest Rewards"] = true,
-            ["Drop Rewards"] = true,
-            ["Crafted"] = true,
-            ["Replicas"] = true,
-            ["Miscellaneous"] = true,
-            ["Events"] = true,
-            ["Collections"] = true
-        }
-        
-        -- Show only zone name (vendor name is already in the green source type text)
-        if item.zoneName and item.zoneName ~= "" and not genericZones[item.zoneName] then
-            local zoneName = item.zoneName
-            if string.len(zoneName) > 30 then
-                zoneName = string.format("%s...", string.sub(zoneName, 1, 27))
-            end
-            button.tooltipInfoText:SetText(zoneName)
-            button.tooltipInfoText:Show()
-        else
-            button.tooltipInfoText:Hide()
-        end
-    end
-    
-    -- Price display removed - no longer showing price in main UI (still available in tooltip)
 
-    -- Update wishlist icon state
-    if button.wishlistButton and item.itemID then
+    if item.itemID then
         local itemID = tonumber(item.itemID)
-        if itemID and HousingDB and HousingDB.wishlist and HousingDB.wishlist[itemID] then
-            button.wishlistButton.icon:SetVertexColor(1, 0.2, 0.2, 1)  -- Bright red/pink when favorited
-            button.wishlistButton:Show()
+        if itemID then
+            local itemName, itemLink = GetItemInfo(itemID)
+
+            if itemName and itemName ~= "" then
+                displayName = itemName
+            elseif itemLink and type(itemLink) == "string" then
+                local linkName = itemLink:match("%[(.+)%]")
+                if linkName and linkName ~= "" then
+                    displayName = linkName
+                end
+            end
+        end
+    end
+
+    -- Quality color codes (slightly brighter for dark theme)
+    local qualityColors = {
+        [0] = "|cff9d9d9d", -- Poor (gray)
+        [1] = "|cffEBE8F0", -- Common (soft white-purple)
+        [2] = "|cff1EFF00", -- Uncommon (green)
+        [3] = "|cff4080E6", -- Rare (moonlit blue)
+        [4] = "|cffA855F7", -- Epic (vibrant purple)
+        [5] = "|cffFF8000", -- Legendary (orange)
+    }
+
+    -- Use cached API quality if available
+    if item._apiQuality then
+        local colorCode = qualityColors[item._apiQuality] or "|cffEBE8F0"
+        button.nameText:SetText(colorCode .. displayName .. "|r")
+    else
+        button.nameText:SetText(displayName)
+    end
+    
+    -- Update zone text (new field)
+    if button.zoneText then
+        local zoneName = item._apiZone or item.zoneName or ""
+        button.zoneText:SetText(zoneName)
+    end
+
+    -- Display owned quantity if available (from cached API data)
+    if button.quantityText then
+        local numStored = item._apiNumStored or 0
+        local numPlaced = item._apiNumPlaced or 0
+        local totalOwned = numStored + numPlaced
+
+        if totalOwned > 0 then
+            button.quantityText:SetText(totalOwned)
+            button.quantityText:Show()
         else
-            button.wishlistButton.icon:SetVertexColor(1, 0.2, 0.2, 0.6)  -- Dimmed red/pink when not favorited
-            button.wishlistButton:Show()  -- Always show, just dimmed when not favorited
+            button.quantityText:Hide()
         end
     end
     
-    -- Show/hide map icon based on coordinates
-    if item.vendorCoords and item.vendorCoords.x and item.vendorCoords.y and item.mapID and item.mapID > 0 then
-        button.mapIcon:Show()
-    else
-        button.mapIcon:Hide()
+    -- Removed: Source type display (typeText field removed)
+    
+    --------------------------------------------------------
+    -- GET QUALITY & COST FROM CATALOG API (async - may take time)
+    --------------------------------------------------------
+    -- Quality color codes (WoW format: |cAARRGGBB)
+    local qualityColors = {
+        [0] = "|cff9d9d9d", -- Poor (gray)
+        [1] = "|cffffffff", -- Common (white)
+        [2] = "|cff1eff00", -- Uncommon (green)
+        [3] = "|cff0070dd", -- Rare (blue)
+        [4] = "|cffa335ee", -- Epic (purple)
+        [5] = "|cffff8000", -- Legendary (orange)
+    }
+    
+    if button.costText then
+        button.costText:SetText("...") -- Show loading indicator
+        button.costText:Show()
     end
+    
+    -- Initialize vendor text (show empty initially)
+    if button.vendorText then
+        button.vendorText:SetText("")
+        button.vendorText:Show()
+    end
+    
+    local itemID = tonumber(item.itemID)
+    if itemID and HousingAPI then
+        -- Try to get quality and cost asynchronously
+        C_Timer.After(0.1, function()
+            if not button:IsVisible() then return end
+            
+            local entryInfo = HousingAPI:GetCatalogEntryInfoByItem(itemID)
+            if entryInfo and entryInfo.entryID then
+                local entryID = entryInfo.entryID
+                if type(entryID) == "table" and entryID.recordID and entryID.entryType then
+                    local fullEntry = HousingAPI:GetCatalogEntryInfoByRecordID(entryID.entryType, entryID.recordID)
+                    if fullEntry then
+                        if fullEntry.quality ~= nil and button.nameText then
+                            local quality = fullEntry.quality
+                            local colorCode = qualityColors[quality] or "|cffffffff"
+
+                            local displayName = item.name or "Unknown"
+                            if itemID then
+                                local itemName = GetItemInfo(itemID)
+                                if itemName and itemName ~= "" then
+                                    displayName = itemName
+                                end
+                            end
+
+                            button.nameText:SetText(colorCode .. displayName .. "|r")
+                        end
+                        
+                        -- Parse vendor and cost from sourceText
+                        if fullEntry.sourceText then
+                            -- Extract vendor
+                            if button.vendorText then
+                                -- Try multiple patterns to extract vendor
+                                local vendor = fullEntry.sourceText:match("Vendor: ([^\r\n|:]+)")
+                                if not vendor then
+                                    vendor = fullEntry.sourceText:match("Vendor%s*:%s*([^\r\n|:]+)")
+                                end
+                                if vendor then
+                                    -- Clean vendor text (remove WoW formatting codes)
+                                    vendor = vendor:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H[^|]*|h", ""):gsub("|h", ""):gsub("|T[^|]*|t", ""):gsub("|n", "")
+                                    vendor = vendor:match("^%s*(.-)%s*$")  -- Trim
+                                    if vendor and vendor ~= "" then
+                                        button.vendorText:SetText(vendor)
+                                        button.vendorText:Show()
+                                    end
+                                end
+                            end
+                            
+                            -- Extract cost (stop before Vendor, Zone, Achievement, or Category)
+                            if button.costText then
+                                local cost = nil
+                                -- Find cost start position
+                                local costStart = fullEntry.sourceText:find("Cost:", 1, true)
+                                if costStart then
+                                    -- Find the earliest next field (in order of likely appearance)
+                                    local costEnd = nil
+                                    local vendorPos = fullEntry.sourceText:find("Vendor:", costStart + 5, true)
+                                    local zonePos = fullEntry.sourceText:find("Zone:", costStart + 5, true)
+                                    local achievementPos = fullEntry.sourceText:find("Achievement:", costStart + 5, true)
+                                    local categoryPos = fullEntry.sourceText:find("Category:", costStart + 5, true)
+                                    
+                                    -- Find the earliest next field
+                                    costEnd = vendorPos
+                                    if zonePos and (not costEnd or zonePos < costEnd) then
+                                        costEnd = zonePos
+                                    end
+                                    if achievementPos and (not costEnd or achievementPos < costEnd) then
+                                        costEnd = achievementPos
+                                    end
+                                    if categoryPos and (not costEnd or categoryPos < costEnd) then
+                                        costEnd = categoryPos
+                                    end
+                                    
+                                    -- If no next field found, use end of string
+                                    if not costEnd then
+                                        costEnd = #fullEntry.sourceText + 1
+                                    end
+                                    
+                                    -- Extract cost text (from "Cost:" to next field)
+                                    if costEnd > costStart + 5 then
+                                        cost = fullEntry.sourceText:sub(costStart + 5, costEnd - 1)
+                                    end
+                                end
+                                
+                                if cost then
+                                    -- Strip WoW formatting but preserve texture codes for icons
+                                    cost = cost:gsub("|c%x%x%x%x%x%x%x%x", "")  -- Color codes
+                                        :gsub("|r", "")
+                                        :gsub("|H[^|]*|h", "")  -- Hyperlinks
+                                        :gsub("|h", "")
+                                        :gsub("|n", " ")        -- Newlines
+                                    -- Keep texture codes for gold/currency icons
+                                    cost = cost:match("^%s*(.-)%s*$")  -- Trim
+                                    if cost and cost ~= "" and cost ~= "..." then
+                                        button.costText:SetText(cost)
+                                        button.costText:Show()
+                                    else
+                                        button.costText:Hide()
+                                    end
+                                else
+                                    button.costText:Hide()
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            
+            -- Also try to get vendor and cost from C_Housing API (more reliable than sourceText)
+            if HousingAPI and itemID then
+                local baseInfo = HousingAPI:GetDecorItemInfoFromItemID(itemID)
+                if baseInfo and baseInfo.decorID then
+                    local decorID = baseInfo.decorID
+                    local vendorInfo = HousingAPI:GetDecorVendorInfo(decorID)
+                    if vendorInfo then
+                        -- Get vendor name
+                        if button.vendorText and vendorInfo.name and vendorInfo.name ~= "" then
+                            button.vendorText:SetText(vendorInfo.name)
+                            button.vendorText:Show()
+                        end
+                        
+                        -- Get cost from API (amount is in copper)
+                        if button.costText and vendorInfo.cost and #vendorInfo.cost > 0 then
+                            local costEntry = vendorInfo.cost[1]
+                            local costText = ""
+                            if costEntry.currencyID == 0 then
+                                -- Gold (amount is in copper, divide by 10000 to get gold)
+                                local copperAmount = costEntry.amount or 0
+                                local gold = math.floor(copperAmount / 10000)
+                                local silver = math.floor((copperAmount % 10000) / 100)
+                                if gold > 0 then
+                                    if silver > 0 then
+                                        costText = string.format("%dg %ds", gold, silver)
+                                    else
+                                        costText = string.format("%dg", gold)
+                                    end
+                                elseif silver > 0 then
+                                    costText = string.format("%ds", silver)
+                                else
+                                    local copper = copperAmount % 100
+                                    if copper > 0 then
+                                        costText = string.format("%dc", copper)
+                                    end
+                                end
+                            elseif costEntry.currencyID then
+                                -- Currency (amount is the actual currency count)
+                                local currencyName = "Currency #" .. costEntry.currencyID
+                                local currencyInfo = HousingAPI:GetCurrencyInfo(costEntry.currencyID)
+                                if currencyInfo and currencyInfo.name then
+                                    currencyName = currencyInfo.name
+                                end
+                                costText = (costEntry.amount or 0) .. " " .. currencyName
+                            end
+                            
+                            if costText and costText ~= "" then
+                                button.costText:SetText(costText)
+                                button.costText:Show()
+                            end
+                        end
+                    end
+                end
+            end
+            
+            -- Fallback: try to get vendor from item data if available
+            if button.vendorText and (not button.vendorText:GetText() or button.vendorText:GetText() == "") then
+                if item.vendorName and item.vendorName ~= "" then
+                    button.vendorText:SetText(item.vendorName)
+                    button.vendorText:Show()
+                end
+            end
+            -- If we get here, try fallback to item.price (only if cost hasn't been set yet)
+            -- Note: Static data stores price in GOLD, not copper
+            if button.costText then
+                local currentCost = button.costText:GetText()
+                if (not currentCost or currentCost == "" or currentCost == "...") then
+                    if item.price and item.price > 0 then
+                        -- Static data price is in gold directly
+                        button.costText:SetText(string.format("%dg", item.price))
+                        button.costText:Show()
+                    else
+                        -- Hide if still showing "..." and no price
+                        if currentCost == "..." then
+                            button.costText:Hide()
+                        end
+                    end
+                end
+            end
+        end)
+    else
+        -- No catalog API, try item.price directly
+        -- Note: Static data stores price in GOLD, not copper
+        if button.costText then
+            if item.price and item.price > 0 then
+                button.costText:SetText(string.format("%dg", item.price))
+            else
+                button.costText:Hide()
+            end
+        end
+    end
+    
+    -- Removed: Vendor/zone info display (tooltipInfoText field removed)
+    -- Wishlist button removed - now in preview panel
+    -- Map icon removed - now in preview panel
 
     -- Update icon - try to get from cache or load asynchronously
     if item.itemID and item.itemID ~= "" then
@@ -1333,124 +1477,7 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
             -- Start loading with a small delay to stagger requests
             C_Timer.After(0.01 * buttonIndex, TryLoadIcon)
             
-            -- Scan tooltip for weight and house icon ONLY (other data from our database)
-            local scanAttempts = 0
-            local maxScanAttempts = 5
-            
-            local function TryScanTooltipForWeightAndIcon()
-                if not button:IsVisible() then return end
-                
-                -- Clear and set tooltip
-                tooltipScanner:ClearLines()
-                tooltipScanner:SetItemByID(itemID)
-                
-                -- Wait longer for tooltip to fully populate (housing icons may take time)
-                C_Timer.After(0.25, function()
-                    if not button:IsVisible() then return end
-                    
-                    local numLines = tooltipScanner:NumLines()
-                    local foundWeight = nil
-                    local foundIcon = nil
-                    
-                    -- Scan all lines for weight and house icon only
-                    for i = 1, numLines do
-                        local leftText = _G["HousingVendorItemListTooltipScannerTextLeft" .. i]
-                        if leftText then
-                            local text = leftText:GetText()
-                            if text then
-                                -- Look for weight
-                                local weight = string.match(text, "Weight:%s*(%d+)")
-                                if weight then
-                                    foundWeight = tonumber(weight)
-                                end
-                            end
-                        end
-                        
-                        -- Check ALL texture regions on this line (both left and right)
-                        local leftTexture = _G["HousingVendorItemListTooltipScannerTexture" .. i]
-                        local rightTexture = _G["HousingVendorItemListTooltipScannerTexture" .. i .. "Right"]
-                        
-                        -- Check left texture (don't require IsShown - sometimes texture exists but IsShown is false)
-                        if leftTexture then
-                            local texture = leftTexture:GetTexture()
-                            if texture and texture ~= "" then
-                                local textureStr = tostring(texture)
-                                -- Filter out weapon/armor icons and question marks - be more permissive for house icons
-                                if not string.find(textureStr, "INV_Weapon") and
-                                   not string.find(textureStr, "INV_Sword") and
-                                   not string.find(textureStr, "INV_Axe") and
-                                   not string.find(textureStr, "INV_Mace") and
-                                   not string.find(textureStr, "INV_Shield") and
-                                   not string.find(textureStr, "INV_Helmet") and
-                                   not string.find(textureStr, "INV_Armor") and
-                                   not string.find(textureStr, "INV_Misc_QuestionMark") and
-                                   not string.find(textureStr, "INV_Boots") and
-                                   not string.find(textureStr, "INV_Gauntlets") and
-                                   not string.find(textureStr, "INV_Shoulder") and
-                                   not string.find(textureStr, "INV_Chest") then
-                                    -- This could be the house icon - prioritize it
-                                    if not foundIcon then
-                                        foundIcon = texture
-                                    end
-                                end
-                            end
-                        end
-                        
-                        -- Check right texture
-                        if rightTexture then
-                            local texture = rightTexture:GetTexture()
-                            if texture and texture ~= "" then
-                                local textureStr = tostring(texture)
-                                if not string.find(textureStr, "INV_Weapon") and
-                                   not string.find(textureStr, "INV_Sword") and
-                                   not string.find(textureStr, "INV_Axe") and
-                                   not string.find(textureStr, "INV_Mace") and
-                                   not string.find(textureStr, "INV_Shield") and
-                                   not string.find(textureStr, "INV_Helmet") and
-                                   not string.find(textureStr, "INV_Armor") and
-                                   not string.find(textureStr, "INV_Misc_QuestionMark") and
-                                   not string.find(textureStr, "INV_Boots") and
-                                   not string.find(textureStr, "INV_Gauntlets") and
-                                   not string.find(textureStr, "INV_Shoulder") and
-                                   not string.find(textureStr, "INV_Chest") then
-                                    if not foundIcon then
-                                        foundIcon = texture
-                                    end
-                                end
-                            end
-                        end
-                    end
-                    
-                    -- Update house icon
-                    if foundIcon then
-                        button.housingIcon:SetTexture(foundIcon)
-                        button.housingIcon:Show()
-                    elseif scanAttempts < maxScanAttempts then
-                        -- Retry if icon not found
-                        scanAttempts = scanAttempts + 1
-                        C_Timer.After(0.5, TryScanTooltipForWeightAndIcon)
-                    else
-                        button.housingIcon:Hide()
-                    end
-                    
-                    -- Update weight
-                    if foundWeight then
-                        button.weightText:SetText(tostring(foundWeight))
-                        button.weightText:Show()
-                    elseif scanAttempts < maxScanAttempts then
-                        -- Retry if weight not found yet
-                        scanAttempts = scanAttempts + 1
-                        C_Timer.After(0.5, TryScanTooltipForWeightAndIcon)
-                    else
-                        button.weightText:Hide()
-                    end
-                    
-                    -- Tooltip info is now populated from hardcoded data earlier, not from tooltip scan
-                end)
-            end
-            
-            -- Start scanning after a delay to allow item data to load
-            C_Timer.After(0.3 * buttonIndex, TryScanTooltipForWeightAndIcon)
+            -- Removed: tooltip scanning for weight and house icon (fields removed)
         else
             button.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
         end
@@ -1458,113 +1485,50 @@ function ItemList:UpdateRegularItemButton(button, item, buttonIndex)
         button.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
     end
     
-    -- Hide housing icon and weight by default (will be shown if data is found)
-    if button.housingIcon then
-        button.housingIcon:Hide()
-    end
-    if button.weightText then
-        button.weightText:Hide()
-    end
+    -- Removed: housing icon and weight (fields removed)
     
     -- Check if item is collected and show green tick
+    -- If quantity > 0, item is collected (owned = collected)
     if button.collectedIcon then
-        if item.itemID and item.itemID ~= "" then
-            local itemID = tonumber(item.itemID)
-            if itemID then
-                -- Check if item is collected using the correct housing decor API
-                local isCollected = false
-                
-                -- Check cache first (AllTheThings approach - avoid repeated API calls)
-                if IsItemCached(itemID) then
-                    isCollected = true
-                else
-                    -- Method 1: Use C_Housing.IsDecorCollected (correct API for housing decor)
-                    if C_Housing and C_Housing.IsDecorCollected then
-                        local success, collected = pcall(function()
-                            return C_Housing.IsDecorCollected(itemID)
-                        end)
-                        if success and collected ~= nil then
-                            isCollected = collected
-                            if isCollected then
-                                CacheItemAsCollected(itemID)
-                            end
-                        end
-                    end
-                    
-                    -- Method 2: AllTheThings approach - Check numStored + numPlaced from catalog
-                    if not isCollected and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByItem then
-                        local success, state = pcall(function()
-                            return C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-                        end)
-                        if success and state then
-                            local sum = (state.numStored or 0) + (state.numPlaced or 0)
-                            if sum > 0 and sum < 1000000 then
-                                isCollected = true
-                                CacheItemAsCollected(itemID)
-                            end
-                        end
-                    end
-                    
-                    -- Method 3: Fallback to housing catalog API (alternative method)
-                    if not isCollected and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryByItemID then
-                        local success, entryInfo = pcall(function()
-                            return C_HousingCatalog.GetCatalogEntryByItemID(itemID)
-                        end)
-                        if success and entryInfo then
-                            if entryInfo.isCollected ~= nil then
-                                isCollected = entryInfo.isCollected
-                                if isCollected then
-                                    CacheItemAsCollected(itemID)
-                                end
-                            elseif entryInfo.collected ~= nil then
-                                isCollected = entryInfo.collected
-                                if isCollected then
-                                    CacheItemAsCollected(itemID)
-                                end
-                            end
-                        end
-                    end
-                    
-                    -- Method 4: Fallback to generic item collection API (for non-decor items)
-                    if not isCollected and C_PlayerInfo and C_PlayerInfo.IsItemCollected then
-                        local success, collected = pcall(function()
-                            return C_PlayerInfo.IsItemCollected(itemID)
-                        end)
-                        if success and collected ~= nil then
-                            isCollected = collected
-                            if isCollected then
-                                CacheItemAsCollected(itemID)
-                            end
-                        end
-                    end
+        local isCollected = false
+        
+        -- First check: Do we have quantity data showing ownership?
+        local numStored = item._apiNumStored or 0
+        local numPlaced = item._apiNumPlaced or 0
+        local totalOwned = numStored + numPlaced
+        
+        if totalOwned > 0 then
+            isCollected = true
+        else
+            -- Fallback: Check via CollectionAPI (for items without quantity data yet)
+            if item.itemID and item.itemID ~= "" then
+                local itemID = tonumber(item.itemID)
+                if itemID and CollectionAPI then
+                    isCollected = CollectionAPI:IsItemCollected(itemID)
                 end
-                
-                if isCollected then
-                    button.collectedIcon:Show()
-                else
-                    button.collectedIcon:Hide()
-                end
-            else
-                button.collectedIcon:Hide()
             end
+        end
+        
+        if isCollected then
+            button.collectedIcon:Show()
         else
             button.collectedIcon:Hide()
         end
     end
     
-    -- Restore default click behavior for regular items
+    -- Restore default click behavior for regular items (preview panel only)
     button:EnableMouse(true)
+    button:RegisterForClicks("LeftButtonUp")
     button:SetScript("OnClick", function(self, mouseButton)
         local item = self.itemData
-        if item and item.vendorCoords and item.vendorCoords.x and item.vendorCoords.y and item.mapID and item.mapID > 0 then
-            if HousingWaypointManager then
-                HousingWaypointManager:SetWaypoint(item)
-            else
-                print("|cFFFF4040HousingVendor:|r Waypoint module not loaded!")
-            end
+        if not item then return end
+        
+        -- Click: Show preview panel
+        if HousingPreviewPanel then
+            HousingPreviewPanel:ShowItem(item)
         else
-            -- Debug message when clicking item without waypoint
-            print("|cFFFFAA00HousingVendor:|r This item has no waypoint coordinates")
+            -- Silently handle missing PreviewPanel
+            -- print("HousingVendor: HousingPreviewPanel not found")
         end
     end)
 end
@@ -1579,19 +1543,7 @@ function ItemList:ApplyFontSize(fontSize)
             local nameFont, _, nameFlags = button.nameText:GetFont()
             button.nameText:SetFont(nameFont or "Fonts\\FRIZQT__.TTF", fontSize, nameFlags)
         end
-        if button.typeText then
-            local typeFont, _, typeFlags = button.typeText:GetFont()
-            button.typeText:SetFont(typeFont or "Fonts\\FRIZQT__.TTF", fontSize - 2, typeFlags)
-        end
-        -- Price text removed - no longer displaying price in main UI
-        if button.tooltipInfoText then
-            local infoFont, _, infoFlags = button.tooltipInfoText:GetFont()
-            button.tooltipInfoText:SetFont(infoFont or "Fonts\\FRIZQT__.TTF", fontSize - 2, infoFlags)
-        end
-        if button.weightText then
-            local weightFont, _, weightFlags = button.weightText:GetFont()
-            button.weightText:SetFont(weightFont or "Fonts\\FRIZQT__.TTF", fontSize - 2, weightFlags)
-        end
+        -- Removed: typeText, tooltipInfoText, weightText (fields removed)
     end
     
     -- Refresh visible buttons
@@ -1602,8 +1554,64 @@ function ItemList:ApplyFontSize(fontSize)
     end)
 end
 
+-- Cleanup function to unregister events and clear references
+-- This is called when the UI is hidden to free resources
+function ItemList:Cleanup()
+    -- Unregister all events to stop processing when UI is closed
+    if eventFrame then
+        eventFrame:UnregisterAllEvents()
+        -- Note: We don't clear the OnEvent handler, so events can be re-registered on Show
+    end
+
+    -- Hide buttons but keep references for re-use (better performance than recreating)
+    for i = 1, #buttons do
+        if buttons[i] then
+            buttons[i]:Hide()
+        end
+    end
+
+    -- Clear data arrays to allow garbage collection of large tables
+    -- These will be repopulated when UI is shown again
+    allItems = {}
+    filteredItems = {}
+
+    -- Note: We intentionally keep currentFilters and button pool for faster reopening
+end
+
+-- Re-register events after cleanup (called on UI Show)
+function ItemList:ReRegisterEvents()
+    if not eventFrame then return end
+
+    local function SafeRegisterEvent(eventName)
+        local success = pcall(function()
+            eventFrame:RegisterEvent(eventName)
+        end)
+        return success
+    end
+
+    -- Re-register all housing events
+    SafeRegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST")
+    SafeRegisterEvent("HOUSING_COLLECTION_UPDATED")
+    SafeRegisterEvent("HOUSING_ITEM_PURCHASED")
+    SafeRegisterEvent("MERCHANT_SHOW")
+    SafeRegisterEvent("MERCHANT_CLOSED")
+    SafeRegisterEvent("BAG_UPDATE_DELAYED")
+    SafeRegisterEvent("CHAT_MSG_LOOT")
+    SafeRegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    SafeRegisterEvent("ENCOUNTER_LOOT_RECEIVED")
+end
+
+-- Refresh theme colors dynamically
+function ItemList:RefreshTheme()
+    if not scrollFrame then return end
+    
+    -- Re-render visible items with new theme colors
+    ItemList:UpdateVisibleButtons()
+end
+
 -- Make globally accessible
 _G["HousingItemList"] = ItemList
 
 return ItemList
+
 

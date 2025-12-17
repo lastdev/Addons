@@ -1,4 +1,8 @@
--- Localization for HousingVendor addon - Simplified Chinese
+-- Simplified Chinese Localization
+if not HousingVendorLocales then
+    HousingVendorLocales = {}
+end
+
 local L = {}
 
 -- Main UI Strings
@@ -37,7 +41,7 @@ L["COLUMN_TYPE"] = "类型"
 -- Buttons
 L["BUTTON_SETTINGS"] = "设置"
 L["BUTTON_STATISTICS"] = "统计"
-L["BUTTON_BACK"] = "← 返回"
+L["BUTTON_BACK"] = "返回"
 L["BUTTON_CLOSE"] = "关闭"
 L["BUTTON_WAYPOINT"] = "设置路径点"
 L["BUTTON_SAVE"] = "保存"
@@ -68,6 +72,22 @@ L["TOOLTIP_PORTAL_NAVIGATION_ENABLED"] = "智能传送门导航已启用"
 L["TOOLTIP_PORTAL_NAVIGATION_DESC"] = "跨越区域时将自动使用最近的传送门"
 L["TOOLTIP_DIRECT_NAVIGATION"] = "直接导航已启用"
 L["TOOLTIP_DIRECT_NAVIGATION_DESC"] = "路径点将直接指向商贩位置（不建议用于跨区域旅行）"
+
+-- Info Panel Tooltips
+L["TOOLTIP_INFO_EXPANSION"] = "此物品来自的魔兽世界资料片"
+L["TOOLTIP_INFO_FACTION"] = "哪个阵营可以从商贩处购买此物品"
+L["TOOLTIP_INFO_VENDOR"] = "出售此物品的NPC商贩"
+L["TOOLTIP_INFO_VENDOR_WITH_COORDS"] = "出售此物品的NPC商贩\n\n位置：%s\n坐标：%s"
+L["TOOLTIP_INFO_ZONE"] = "此商贩所在的区域"
+L["TOOLTIP_INFO_ZONE_WITH_COORDS"] = "此商贩所在的区域\n\n坐标：%s"
+L["TOOLTIP_INFO_REPUTATION"] = "从商贩处购买此物品所需的声望要求"
+L["TOOLTIP_INFO_RENOWN"] = "解锁此物品所需的主要阵营名望等级"
+L["TOOLTIP_INFO_PROFESSION"] = "制作此物品所需的专业技能"
+L["TOOLTIP_INFO_PROFESSION_SKILL"] = "制作此物品所需的专业技能等级"
+L["TOOLTIP_INFO_PROFESSION_RECIPE"] = "制作此物品的配方或图样名称"
+L["TOOLTIP_INFO_EVENT"] = "此物品可用的特殊活动或节日"
+L["TOOLTIP_INFO_CLASS"] = "此物品只能由此职业使用"
+L["TOOLTIP_INFO_RACE"] = "此物品只能由此种族使用"
 
 -- Messages
 L["MESSAGE_PORTAL_NAV_ENABLED"] = "智能传送门导航已启用。跨越区域时路径点将自动使用最近的传送门。"
@@ -120,5 +140,92 @@ L["COMMON_ITEM_ID"] = "物品ID:"
 L["MINIMAP_TOOLTIP"] = "住宅商贩浏览器"
 L["MINIMAP_TOOLTIP_DESC"] = "左键切换住宅商贩浏览器"
 
+-- Expansion Names
+L["EXPANSION_CLASSIC"] = "经典旧世"
+L["EXPANSION_THEBURNINGCRUSADE"] = "燃烧的远征"
+L["EXPANSION_WRATHOFTHELLICHKING"] = "巫妖王之怒"
+L["EXPANSION_CATACLYSM"] = "大地的裂变"
+L["EXPANSION_MISTSOFPANDARIA"] = "熊猫人之谜"
+L["EXPANSION_WARLORDSOF DRAENOR"] = "德拉诺之王"
+L["EXPANSION_LEGION"] = "军团再临"
+L["EXPANSION_BATTLEFORAZEROTH"] = "争霸艾泽拉斯"
+L["EXPANSION_SHADOWLANDS"] = "暗影国度"
+L["EXPANSION_DRAGONFLIGHT"] = "巨龙时代"
+L["EXPANSION_THEWARWITHIN"] = "地心之战"
+L["EXPANSION_MIDNIGHT"] = "午夜"
+
+-- Faction Names
+L["FACTION_ALLIANCE"] = "联盟"
+L["FACTION_HORDE"] = "部落"
+L["FACTION_NEUTRAL"] = "中立"
+
+-- Source Types
+L["SOURCE_VENDOR"] = "商贩"
+L["SOURCE_ACHIEVEMENT"] = "成就"
+L["SOURCE_QUEST"] = "任务"
+L["SOURCE_DROP"] = "掉落"
+L["SOURCE_PROFESSION"] = "专业"
+L["SOURCE_REPUTATION"] = "声望"
+
+-- Quality Names
+L["QUALITY_POOR"] = "低劣"
+L["QUALITY_COMMON"] = "普通"
+L["QUALITY_UNCOMMON"] = "优秀"
+L["QUALITY_RARE"] = "精良"
+L["QUALITY_EPIC"] = "史诗"
+L["QUALITY_LEGENDARY"] = "传说"
+
+-- Collection Status
+L["COLLECTION_COLLECTED"] = "已收集"
+L["COLLECTION_UNCOLLECTED"] = "未收集"
+
+-- Requirement Types
+L["REQUIREMENT_NONE"] = "无"
+L["REQUIREMENT_ACHIEVEMENT"] = "成就"
+L["REQUIREMENT_QUEST"] = "任务"
+L["REQUIREMENT_REPUTATION"] = "声望"
+L["REQUIREMENT_RENOWN"] = "名望"
+L["REQUIREMENT_PROFESSION"] = "专业"
+
+-- Common Category/Type Names
+L["CATEGORY_FURNITURE"] = "家具"
+L["CATEGORY_DECORATIONS"] = "装饰品"
+L["CATEGORY_LIGHTING"] = "照明"
+L["CATEGORY_PLACEABLES"] = "可放置物品"
+L["CATEGORY_ACCESSORIES"] = "配饰"
+L["CATEGORY_RUGS"] = "地毯"
+L["CATEGORY_PLANTS"] = "植物"
+L["CATEGORY_PAINTINGS"] = "绘画"
+L["CATEGORY_BANNERS"] = "旗帜"
+L["CATEGORY_BOOKS"] = "书籍"
+L["CATEGORY_FOOD"] = "食物"
+L["CATEGORY_TOYS"] = "玩具"
+
+-- Type Names
+L["TYPE_CHAIR"] = "椅子"
+L["TYPE_TABLE"] = "桌子"
+L["TYPE_BED"] = "床"
+L["TYPE_LAMP"] = "灯"
+L["TYPE_CANDLE"] = "蜡烛"
+L["TYPE_RUG"] = "地毯"
+L["TYPE_PAINTING"] = "绘画"
+L["TYPE_BANNER"] = "旗帜"
+L["TYPE_PLANT"] = "植物"
+L["TYPE_BOOKSHELF"] = "书架"
+L["TYPE_CHEST"] = "箱子"
+L["TYPE_WEAPON_RACK"] = "武器架"
+
+-- Filter Options
+L["FILTER_HIDE_VISITED"] = "隐藏已访问"
+L["FILTER_ALL_QUALITIES"] = "所有品质"
+L["FILTER_ALL_REQUIREMENTS"] = "所有要求"
+
+-- UI Theme Names
+L["THEME_MIDNIGHT"] = "午夜"
+L["THEME_ALLIANCE"] = "联盟"
+L["THEME_HORDE"] = "部落"
+L["THEME_SLEEK_BLACK"] = "时尚黑"
+L["SETTINGS_UI_THEME"] = "界面主题"
+
 -- Make the locale table globally available
-_G["HousingVendorLocale"] = L
+HousingVendorLocales["zhCN"] = L

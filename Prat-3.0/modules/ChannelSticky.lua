@@ -24,48 +24,39 @@
 --
 -------------------------------------------------------------------------------
 
-
-
-
-
 Prat:AddModuleToLoad(function()
+	local PRAT_MODULE = Prat:RequestModuleName("ChannelSticky")
 
-  local PRAT_MODULE = Prat:RequestModuleName("ChannelSticky")
+	if PRAT_MODULE == nil then
+		return
+	end
 
-  if PRAT_MODULE == nil then
-    return
-  end
+	local module = Prat:NewModule(PRAT_MODULE, "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
+	local PL = module.PL
 
-  local module = Prat:NewModule(PRAT_MODULE, "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
+	--[==[@debug@
+	PL:AddLocale(PRAT_MODULE, "enUS", {
+		["ChannelSticky"] = true,
+		["Chat channel sticky options."] = true,
+		["ChatType"] = true,
+		["Per chat type options."] = true,
+		["Channel"] = true,
+		["Sticky %s"] = true,
+		["Toggles sticky on and off for %s."] = true,
+		["smartgroup_name"] = "Smart Groups",
+		["smartgroup_desc"] = "Adds a /smart or /smrt command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
+		["Sticky Per Chat Frame"] = true,
+		["Toggle remembering the chat type last used per chat frame."] = true,
+	})
+	--@end-debug@]==]
 
-  local PL = module.PL
+	-- These Localizations are auto-generated. To help with localization
+	-- please go to http://www.wowace.com/projects/prat-3-0/localization/
+	--@non-debug@
+	do
+		local L
 
-  --[==[@debug@
-  PL:AddLocale(PRAT_MODULE, "enUS", {
-    ["ChannelSticky"] = true,
-    ["Chat channel sticky options."] = true,
-    ["ChatType"] = true,
-    ["Per chat type options."] = true,
-    ["Channel"] = true,
-    ["Sticky %s"] = true,
-    ["Toggles sticky on and off for %s."] = true,
-    ["smartgroup_name"] = "Smart Groups",
-    ["smartgroup_desc"] = "Adds a /smart or /smrt command which automatically picks the correct type of chat, RAID, PARTY, or INSTANCE_CHAT",
-    ["Sticky Per Chat Frame"] = true,
-    ["Toggle remembering the chat type last used per chat frame."] = true,
-  })
-  --@end-debug@]==]
-
-  -- These Localizations are auto-generated. To help with localization
-  -- please go to http://www.wowace.com/projects/prat-3-0/localization/
-
-
-  --@non-debug@
-do
-    local L
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = true,
 		["ChannelSticky"] = true,
@@ -81,12 +72,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "enUS",L)
 
-PL:AddLocale(PRAT_MODULE, "enUS",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Canal",
 		--[[Translation missing --]]
@@ -110,12 +98,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "frFR",L)
 
-PL:AddLocale(PRAT_MODULE, "frFR",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Kanal",
 		["ChannelSticky"] = "Kanal Sticky",
@@ -131,12 +116,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "deDE",L)
 
-PL:AddLocale(PRAT_MODULE, "deDE",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "채널",
 		["ChannelSticky"] = "채널 고정 [ChannelSticky]",
@@ -152,12 +134,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "koKR",L)
 
-PL:AddLocale(PRAT_MODULE, "koKR",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		--[[Translation missing --]]
 		["Channel"] = "Channel",
@@ -184,12 +163,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "esMX",L)
 
-PL:AddLocale(PRAT_MODULE, "esMX",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Канал",
 		["ChannelSticky"] = "Совмещение каналов",
@@ -205,12 +181,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "ruRU",L)
 
-PL:AddLocale(PRAT_MODULE, "ruRU",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "频道",
 		["ChannelSticky"] = "频道粘连",
@@ -226,12 +199,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "zhCN",L)
 
-PL:AddLocale(PRAT_MODULE, "zhCN",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "Canal",
 		["ChannelSticky"] = "CanalAdhesivo",
@@ -247,12 +217,9 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "esES",L)
 
-PL:AddLocale(PRAT_MODULE, "esES",L)
-
-
-
-L = {
+		L = {
 	["ChannelSticky"] = {
 		["Channel"] = "頻道",
 		["ChannelSticky"] = "固定頻道",
@@ -271,265 +238,243 @@ L = {
 	}
 }
 
+		PL:AddLocale(PRAT_MODULE, "zhTW",L)
+	end
+	--@end-non-debug@
 
-PL:AddLocale(PRAT_MODULE, "zhTW",L)
+	-- chat channel list
+	local chatList = {
+		"SAY",
+		"WHISPER",
+		"YELL",
+		"PARTY",
+		"GUILD",
+		"OFFICER",
+		"RAID",
+		"RAID_WARNING",
+		"INSTANCE_CHAT",
+		"CHANNEL",
+		"EMOTE",
+		"BN_WHISPER",
+		"BN_CONVERSATION",
+	}
 
+	Prat:SetModuleDefaults(module, {
+		profile = {
+			on = true,
+			say = true,
+			whisper = true,
+			yell = true,
+			party = true,
+			guild = true,
+			officer = true,
+			raid = true,
+			raid_warning = true,
+			instance_chat = true,
+			channel = true,
+			emote = true,
+			perframe = false,
+			smartgroup = true,
+			bn_whisper = true,
+			bn_conversation = true,
+		}
+	})
 
-end
---@end-non-debug@
+	local chatTypePlugins = { ctype = {} }
 
+	Prat:SetModuleOptions(module, {
+		name = PL["ChannelSticky"],
+		desc = PL["Chat channel sticky options."],
+		type = "group",
+		plugins = chatTypePlugins,
+		args = {
+			smartgroup = {
+				name = PL["smartgroup_name"],
+				desc = PL["smartgroup_desc"],
+				type = "toggle",
+			}
+		}
+	})
 
-  -- chat channel list
-  local chatList = {
-    "SAY",
-    "WHISPER",
-    "YELL",
-    "PARTY",
-    "GUILD",
-    "OFFICER",
-    "RAID",
-    "RAID_WARNING",
-    "INSTANCE_CHAT",
-    "CHANNEL",
-    "EMOTE",
-    "BN_WHISPER",
-    "BN_CONVERSATION",
-  }
+	function module:OnModuleEnable()
+		self:BuildChannelList()
 
+		self:RegisterEvent("UPDATE_CHAT_COLOR")
 
-  Prat:SetModuleDefaults(module, {
-    profile = {
-      on = true,
-      say = true,
-      whisper = true,
-      yell = true,
-      party = true,
-      guild = true,
-      officer = true,
-      raid = true,
-      raid_warning = true,
-      instance_chat = true,
-      channel = true,
-      emote = true,
-      perframe = false,
-      smartgroup = true,
-      bn_whisper = true,
-      bn_conversation = true,
-    }
-  })
+		local prof = self.db.profile
 
-  local chatTypePlugins = { ctype = {} }
+		-- Sticky each channel based on db settings
+		self:Stickum("SAY", prof.say)
+		self:Stickum("WHISPER", prof.whisper)
+		self:Stickum("YELL", prof.yell)
+		self:Stickum("PARTY", prof.party)
+		self:Stickum("GUILD", prof.guild)
+		self:Stickum("OFFICER", prof.officer)
+		self:Stickum("RAID", prof.raid)
+		self:Stickum("RAID_WARNING", prof.raid_warning)
+		self:Stickum("INSTANCE_CHAT", prof.instance_chat)
+		self:Stickum("CHANNEL", prof.channel)
+		self:Stickum("EMOTE", prof.emote)
 
-  Prat:SetModuleOptions(module, {
-    name = PL["ChannelSticky"],
-    desc = PL["Chat channel sticky options."],
-    type = "group",
-    plugins = chatTypePlugins,
-    args = {
-      smartgroup = {
-        name = PL["smartgroup_name"],
-        desc = PL["smartgroup_desc"],
-        type = "toggle",
-      }
-    }
-  })
+		self:Stickum("BN_WHISPER", prof.bn_whisper)
+		self:Stickum("BN_CONVERSATION", prof.bn_conversation)
 
-  --[[------------------------------------------------
-      Module Event Functions
-  ------------------------------------------------]] --
+		if prof.smartgroup then
+			self:RegisterSmartGroup(true)
+		end
+	end
 
-  function module:OnModuleEnable()
-    self:BuildChannelList()
+	function module:OnModuleDisable()
+		-- Don't sticky no mo!
+		self:Stickum("SAY", false)
+		self:Stickum("WHISPER", false)
+		self:Stickum("YELL", false)
+		self:Stickum("PARTY", false)
+		self:Stickum("GUILD", false)
+		self:Stickum("OFFICER", false)
+		self:Stickum("RAID", false)
+		self:Stickum("RAID_WARNING", false)
+		self:Stickum("INSTANCE_CHAT", false)
+		self:Stickum("CHANNEL", false)
+		self:Stickum("EMOTE", false)
 
-    self:RegisterEvent("UPDATE_CHAT_COLOR")
+		-- Unregister events
+		self:UnregisterAllEvents()
+		self:UnhookAll()
 
-    local prof = self.db.profile
+		self:RegisterSmartGroup(false)
+	end
 
-    -- sticky each channel based on db settings
-    self:Stickum("SAY", prof.say)
-    self:Stickum("WHISPER", prof.whisper)
-    self:Stickum("YELL", prof.yell)
-    self:Stickum("PARTY", prof.party)
-    self:Stickum("GUILD", prof.guild)
-    self:Stickum("OFFICER", prof.officer)
-    self:Stickum("RAID", prof.raid)
-    self:Stickum("RAID_WARNING", prof.raid_warning)
-    self:Stickum("INSTANCE_CHAT", prof.instance_chat)
-    self:Stickum("CHANNEL", prof.channel)
-    self:Stickum("EMOTE", prof.emote)
+	--[[------------------------------------------------
+		Core Functions
+	------------------------------------------------]] --
+	function module:GetDescription()
+		return PL["Chat channel sticky options."]
+	end
 
-    self:Stickum("BN_WHISPER", prof.bn_whisper)
-    self:Stickum("BN_CONVERSATION", prof.bn_conversation)
+	-- Rebuild options menu is chat colors change
+	function module:UPDATE_CHAT_COLOR()
+		self:ScheduleTimer("BuildChannelList", 1)
+	end
 
+	function module:ChatEdit_SendText(this)
+		if self.groupsay then
+			this:SetAttribute("chatType", "SMARTGROUP")
+			self.groupsay = nil
+		end
+	end
 
+	function module:Stickum(channel, stickied)
+		local cti = ChatTypeInfo[channel:upper()]
+		if cti then
+			cti.sticky = stickied and 1 or 0
+		end
+	end
 
-    if prof.smartgroup then
-      self:RegisterSmartGroup(true)
-    end
-  end
+	--[[------------------------------------------------
+		Menu Builder Functions
+	------------------------------------------------]] --
+	local CLR = Prat.CLR
+	local function StkyChatType(text, type)
+		return CLR:Colorize(module:GetChatCLR(type), text)
+	end
 
-  function module:OnModuleDisable()
-    -- dont sticky no mo!
-    self:Stickum("SAY", false)
-    self:Stickum("WHISPER", false)
-    self:Stickum("YELL", false)
-    self:Stickum("PARTY", false)
-    self:Stickum("GUILD", false)
-    self:Stickum("OFFICER", false)
-    self:Stickum("RAID", false)
-    self:Stickum("RAID_WARNING", false)
-    self:Stickum("INSTANCE_CHAT", false)
-    self:Stickum("CHANNEL", false)
-    self:Stickum("EMOTE", false)
-    -- unregister events
-    self:UnregisterAllEvents()
+	function module:BuildChannelList()
+		local o = chatTypePlugins["ctype"]
 
-    self:RegisterSmartGroup(false)
-  end
+		for _, va in ipairs(chatList) do
+			local val = va:lower()
+			local chan
+			if va == "INSTANCE_CHAT" then
+				chan = _G["INSTANCE_CHAT"]
+			elseif va ~= "CHANNEL" then
+				chan = _G["CHAT_MSG_" .. va]
+			else
+				chan = PL["Channel"]
+			end
 
-  --[[------------------------------------------------
-      Core Functions
-  ------------------------------------------------]] --
+			o[val] = o[val] or {
+				type = "toggle",
+			}
 
-  function module:GetDescription()
-    return PL["Chat channel sticky options."]
-  end
+			o[val].name = (PL["Sticky %s"]):format(StkyChatType(chan:gsub(" ", ""), va))
+			o[val].desc = (PL["Toggles sticky on and off for %s."]):format(chan)
+		end
+	end
 
-  -- rebuild options menu is chat colors change
-  function module:UPDATE_CHAT_COLOR()
-    self:ScheduleTimer("BuildChannelList", 1)
-  end
+	function module:OnValueChanged(info, b)
+		local o = info[#info]
 
-  function module:ChatFrame_OpenChat(text, chatFrame)
-    if (not chatFrame) then
-      chatFrame = SELECTED_CHAT_FRAME
-    end
+		if o == "smartgroup" then
+			self:RegisterSmartGroup(b)
+		elseif o == "perframe" then
+			self:StickyFrameChan(b)
+		else
+			self:Stickum(o, b)
+		end
+	end
 
-    local eb = chatFrame.editBox
+	function module:GetChatCLR(name)
+		local info = ChatTypeInfo[name];
+		if not info then
+			return CLR.COLOR_NONE
+		end
+		return CLR:GetHexColor(info)
+	end
 
-    if eb == nil then
-      return
-    end
+	function module:RegisterSmartGroup(on)
+		if not self.smart_group and on then
+			Prat.RegisterChatEvent(self, Prat.Events.OUTBOUND)
+			self:SecureHook("ChatEdit_SendText")
+			if _G.ChatFrame1EditBox and _G.ChatFrame1EditBox.SendText then
+				self:SecureHook(_G.ChatFrame1EditBox, "SendText", "ChatEdit_SendText")
+			end
 
-    local chatFrameN = chatFrame:GetName()
+			self.smart_group = true
 
-    Prat:Print(eb:GetAttribute("chatType"))
+			SLASH_SMARTGROUP1 = "/smart"
+			SLASH_SMARTGROUP2 = "/smrt"
+			ChatTypeInfo["SMARTGROUP"] = { r = 0.5, g = 0.9, b = 0.9, sticky = 1 }
+			CHAT_SMARTGROUP_SEND = "SmartGroup:\32"
+			CHAT_SMARTGROUP_GET = "SmartGroup: %1\32"
+		else
+			Prat.UnregisterAllChatEvents(self)
+			self:UnhookAll()
 
-    if eb:GetAttribute("chatType") == "WHISPER" then
-      --	 NADA
-    elseif eb:GetAttribute("chatType") == "SMARTGROUP" then
-      eb:SetAttribute("origchatType", "SMARTGROUP");
-    end
-  end
+			self.smart_group = false
 
-  function module:Stickum(channel, stickied)
-    local cti = ChatTypeInfo[channel:upper()]
-    if cti then
-      cti.sticky = stickied and 1 or 0
-    end
-  end
+			SLASH_SMARTGROUP1 = nil
+			SLASH_SMARTGROUP2 = nil
+			ChatTypeInfo["SMARTGROUP"] = nil
+			CHAT_SMARTGROUP_SEND = nil
+			CHAT_SMARTGROUP_GET = nil
+		end
+	end
 
-  --[[------------------------------------------------
-      Menu Builder Functions
-  ------------------------------------------------]] --
+	function module:SmartGroupChatType()
+		local _, instanceType = IsInInstance()
 
-  local CLR = Prat.CLR
-  local function StkyChatType(text, type) return CLR:Colorize(module:GetChatCLR(type), text) end
+		if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+			if instanceType == "arena" then
+				return "PARTY"
+			else
+				return "INSTANCE_CHAT"
+			end
+		elseif IsInRaid() then
+			return "RAID"
+		elseif IsInGroup() then
+			return "PARTY"
+		else
+			return "SAY"
+		end
+	end
 
-  function module:BuildChannelList()
-    local o = chatTypePlugins["ctype"]
+	function module:Prat_OutboundChat(_, m)
+		if m.CTYPE == "SMARTGROUP" then
+			self.groupsay = true
+			m.CTYPE = self:SmartGroupChatType()
+		end
+	end
 
-    for _, va in ipairs(chatList) do
-      local val = va:lower()
-      local chan
-      if va == "INSTANCE_CHAT" then
-        chan = _G["INSTANCE_CHAT"]
-      elseif va ~= "CHANNEL" then
-        chan = _G["CHAT_MSG_" .. va]
-      else
-        chan = PL["Channel"]
-      end
-
-      o[val] = o[val] or {
-        type = "toggle",
-      }
-
-      o[val].name = (PL["Sticky %s"]):format(StkyChatType(chan:gsub(" ", ""), va))
-      o[val].desc = (PL["Toggles sticky on and off for %s."]):format(chan)
-    end
-  end
-
-  function module:OnValueChanged(info, b)
-    local o = info[#info]
-
-    if o == "smartgroup" then
-      self:RegisterSmartGroup(b)
-    elseif o == "perframe" then
-      self:StickyFrameChan(b)
-    else
-      self:Stickum(o, b)
-    end
-  end
-
-  function module:GetChatCLR(name)
-    local info = ChatTypeInfo[name];
-    if not info then
-      return CLR.COLOR_NONE
-    end
-    return CLR:GetHexColor(info)
-  end
-
-
-
-  function module:RegisterSmartGroup(on)
-    if not self.smart_group and on then
-      Prat.RegisterChatEvent(self, "Prat_OutboundChat")
-      self:SecureHook("ChatEdit_SendText", function(this) if self.groupsay then this:SetAttribute("chatType", "SMARTGROUP") self.groupsay = nil end end)
-
-      self.smart_group = true
-
-
-      SLASH_SMARTGROUP1 = "/smart"
-      SLASH_SMARTGROUP2 = "/smrt"
-      ChatTypeInfo["SMARTGROUP"] = { r = 0.5, g = 0.9, b = 0.9, sticky = 1 }
-      CHAT_SMARTGROUP_SEND = "SmartGroup:\32 "
-      CHAT_SMARTGROUP_GET = "SmartGroup: %1\32 "
-    else
-      self:Unhook("ChatEdit_SendText")
-      SLASH_SMARTGROUP1 = nil
-      SLASH_SMARTGROUP2 = nil
-      ChatTypeInfo["SMARTGROUP"] = nil
-      CHAT_SMARTGROUP_SEND = nil
-      CHAT_SMARTGROUP_GET = nil
-      self.smart_group = false
-      Prat.UnregisterAllChatEvents(self)
-    end
-  end
-
-
-  function module:SmartGroupChatType()
-    local _, instanceType = IsInInstance()
-
-    if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-      if instanceType == "arena" then
-        return "PARTY"
-      else
-        return "INSTANCE_CHAT"
-      end
-    elseif IsInRaid() then
-      return "RAID"
-    elseif IsInGroup() then
-      return "PARTY"
-    else return "SAY"
-    end
-  end
-
-  function module:Prat_OutboundChat(arg, m)
-    if m.CTYPE == "SMARTGROUP" then
-      self.groupsay = true
-      m.CTYPE = self:SmartGroupChatType()
-    end
-  end
-
-  return
-end) -- Prat:AddModuleToLoad
+	return
+end)

@@ -1,6 +1,4 @@
 local addonName, addon = ...
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
-local LibStub = addon.LibStub
 
 _G[addonName] = {}
 addon.API = {}

@@ -1,4 +1,4 @@
--- Housing Editor API Integration for HousingVendor addon
+-- Housing Editor API Integration
 local HousingEditorAPI = {}
 HousingEditorAPI.__index = HousingEditorAPI
 
@@ -104,8 +104,8 @@ end
 -- Initialize the module
 function HousingEditorAPI:Initialize()
     if self:IsAvailable() then
-        print("HousingEditorAPI: Initialized with live API access")
+        -- Live API access available (silent)
     else
-        print("HousingEditorAPI: Live API not available, module loaded in stub mode")
+        -- Live API not available (silent)
     end
 end

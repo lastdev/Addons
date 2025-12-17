@@ -1,4 +1,8 @@
--- Localization for HousingVendor addon - English (US)
+-- English (US) Localization
+if not HousingVendorLocales then
+    HousingVendorLocales = {}
+end
+
 local L = {}
 
 -- Main UI Strings
@@ -37,7 +41,7 @@ L["COLUMN_TYPE"] = "Type"
 -- Buttons
 L["BUTTON_SETTINGS"] = "Settings"
 L["BUTTON_STATISTICS"] = "Statistics"
-L["BUTTON_BACK"] = "← Back"
+L["BUTTON_BACK"] = "Back"
 L["BUTTON_CLOSE"] = "Close"
 L["BUTTON_WAYPOINT"] = "Set Waypoint"
 L["BUTTON_SAVE"] = "Save"
@@ -68,6 +72,22 @@ L["TOOLTIP_PORTAL_NAVIGATION_ENABLED"] = "Smart Portal Navigation Enabled"
 L["TOOLTIP_PORTAL_NAVIGATION_DESC"] = "Will automatically use the nearest portal when crossing zones"
 L["TOOLTIP_DIRECT_NAVIGATION"] = "Direct navigation enabled"
 L["TOOLTIP_DIRECT_NAVIGATION_DESC"] = "Waypoints will point directly to vendor locations (not recommended for cross-zone travel)"
+
+-- Info Panel Tooltips
+L["TOOLTIP_INFO_EXPANSION"] = "The World of Warcraft expansion this item is from"
+L["TOOLTIP_INFO_FACTION"] = "Which faction can purchase this item from the vendor"
+L["TOOLTIP_INFO_VENDOR"] = "NPC vendor who sells this item"
+L["TOOLTIP_INFO_VENDOR_WITH_COORDS"] = "NPC vendor who sells this item\n\nLocation: %s\nCoordinates: %s"
+L["TOOLTIP_INFO_ZONE"] = "Zone where this vendor is located"
+L["TOOLTIP_INFO_ZONE_WITH_COORDS"] = "Zone where this vendor is located\n\nCoordinates: %s"
+L["TOOLTIP_INFO_REPUTATION"] = "Reputation requirement to purchase this item from the vendor"
+L["TOOLTIP_INFO_RENOWN"] = "Renown level required with a major faction to unlock this item"
+L["TOOLTIP_INFO_PROFESSION"] = "The profession required to craft this item"
+L["TOOLTIP_INFO_PROFESSION_SKILL"] = "Skill level required in this profession to craft the item"
+L["TOOLTIP_INFO_PROFESSION_RECIPE"] = "The recipe or pattern name for crafting this item"
+L["TOOLTIP_INFO_EVENT"] = "Special event or holiday when this item is available"
+L["TOOLTIP_INFO_CLASS"] = "This item can only be used by this class"
+L["TOOLTIP_INFO_RACE"] = "This item can only be used by this race"
 
 -- Messages
 L["MESSAGE_PORTAL_NAV_ENABLED"] = "Smart portal navigation enabled. Waypoints will automatically use the nearest portal when crossing zones."
@@ -120,5 +140,92 @@ L["COMMON_ITEM_ID"] = "Item ID:"
 L["MINIMAP_TOOLTIP"] = "Housing Vendor Browser"
 L["MINIMAP_TOOLTIP_DESC"] = "Left-click to toggle the Housing Vendor browser"
 
+-- Expansion Names
+L["EXPANSION_CLASSIC"] = "Classic"
+L["EXPANSION_THEBURNINGCRUSADE"] = "The Burning Crusade"
+L["EXPANSION_WRATHOFTHELLICHKING"] = "Wrath of the Lich King"
+L["EXPANSION_CATACLYSM"] = "Cataclysm"
+L["EXPANSION_MISTSOFPANDARIA"] = "Mists of Pandaria"
+L["EXPANSION_WARLORDSOF DRAENOR"] = "Warlords of Draenor"
+L["EXPANSION_LEGION"] = "Legion"
+L["EXPANSION_BATTLEFORAZEROTH"] = "Battle for Azeroth"
+L["EXPANSION_SHADOWLANDS"] = "Shadowlands"
+L["EXPANSION_DRAGONFLIGHT"] = "Dragonflight"
+L["EXPANSION_THEWARWITHIN"] = "The War Within"
+L["EXPANSION_MIDNIGHT"] = "Midnight"
+
+-- Faction Names
+L["FACTION_ALLIANCE"] = "Alliance"
+L["FACTION_HORDE"] = "Horde"
+L["FACTION_NEUTRAL"] = "Neutral"
+
+-- Source Types
+L["SOURCE_VENDOR"] = "Vendor"
+L["SOURCE_ACHIEVEMENT"] = "Achievement"
+L["SOURCE_QUEST"] = "Quest"
+L["SOURCE_DROP"] = "Drop"
+L["SOURCE_PROFESSION"] = "Profession"
+L["SOURCE_REPUTATION"] = "Reputation"
+
+-- Quality Names
+L["QUALITY_POOR"] = "Poor"
+L["QUALITY_COMMON"] = "Common"
+L["QUALITY_UNCOMMON"] = "Uncommon"
+L["QUALITY_RARE"] = "Rare"
+L["QUALITY_EPIC"] = "Epic"
+L["QUALITY_LEGENDARY"] = "Legendary"
+
+-- Collection Status
+L["COLLECTION_COLLECTED"] = "Collected"
+L["COLLECTION_UNCOLLECTED"] = "Uncollected"
+
+-- Requirement Types
+L["REQUIREMENT_NONE"] = "None"
+L["REQUIREMENT_ACHIEVEMENT"] = "Achievement"
+L["REQUIREMENT_QUEST"] = "Quest"
+L["REQUIREMENT_REPUTATION"] = "Reputation"
+L["REQUIREMENT_RENOWN"] = "Renown"
+L["REQUIREMENT_PROFESSION"] = "Profession"
+
+-- Common Category/Type Names (add specific ones as needed)
+L["CATEGORY_FURNITURE"] = "Furniture"
+L["CATEGORY_DECORATIONS"] = "Decorations"
+L["CATEGORY_LIGHTING"] = "Lighting"
+L["CATEGORY_PLACEABLES"] = "Placeables"
+L["CATEGORY_ACCESSORIES"] = "Accessories"
+L["CATEGORY_RUGS"] = "Rugs"
+L["CATEGORY_PLANTS"] = "Plants"
+L["CATEGORY_PAINTINGS"] = "Paintings"
+L["CATEGORY_BANNERS"] = "Banners"
+L["CATEGORY_BOOKS"] = "Books"
+L["CATEGORY_FOOD"] = "Food"
+L["CATEGORY_TOYS"] = "Toys"
+
+-- Type Names (item subtypes)
+L["TYPE_CHAIR"] = "Chair"
+L["TYPE_TABLE"] = "Table"
+L["TYPE_BED"] = "Bed"
+L["TYPE_LAMP"] = "Lamp"
+L["TYPE_CANDLE"] = "Candle"
+L["TYPE_RUG"] = "Rug"
+L["TYPE_PAINTING"] = "Painting"
+L["TYPE_BANNER"] = "Banner"
+L["TYPE_PLANT"] = "Plant"
+L["TYPE_BOOKSHELF"] = "Bookshelf"
+L["TYPE_CHEST"] = "Chest"
+L["TYPE_WEAPON_RACK"] = "Weapon Rack"
+
+-- Filter Options
+L["FILTER_HIDE_VISITED"] = "Hide Visited"
+L["FILTER_ALL_QUALITIES"] = "All Qualities"
+L["FILTER_ALL_REQUIREMENTS"] = "All Requirements"
+
+-- UI Theme Names
+L["THEME_MIDNIGHT"] = "Midnight"
+L["THEME_ALLIANCE"] = "Alliance"
+L["THEME_HORDE"] = "Horde"
+L["THEME_SLEEK_BLACK"] = "Sleek Black"
+L["SETTINGS_UI_THEME"] = "UI Theme"
+
 -- Make the locale table globally available
-_G["HousingVendorLocale"] = L
+HousingVendorLocales["enUS"] = L

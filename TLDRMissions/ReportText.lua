@@ -1,8 +1,6 @@
 local addonName, addon = ...
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-local AceEvent = LibStub("AceAddon-3.0"):GetAddon("TLDRMissions-AceEvent")
 
 function addon.BaseGUIMixin:clearReportText(includeFailed)
     if includeFailed then

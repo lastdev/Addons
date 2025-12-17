@@ -1,15 +1,26 @@
--- Locale loader for HousingVendor addon
--- Note: All locale files are already loaded via .toc file
--- This just sets up the fallback system
+-- Locale loader
+-- This file loads after all locale files and selects the correct language based on GetLocale()
 
-local L = {}
+local ADDON_NAME, ns = ...
 
--- Use the locale table from enUS.lua if it exists
-if HousingVendorLocale then
-    L = HousingVendorLocale
+-- Global table to store all locale strings (populated by individual locale files)
+if not HousingVendorLocales then
+    HousingVendorLocales = {}
+end
+
+-- Get the current game locale
+local gameLocale = GetLocale()
+local L
+
+-- Try to use the locale for the current game language
+if HousingVendorLocales[gameLocale] then
+    L = HousingVendorLocales[gameLocale]
+-- Fall back to enUS if the current locale is not available
+elseif HousingVendorLocales["enUS"] then
+    L = HousingVendorLocales["enUS"]
 else
-    -- Fallback strings if locale file failed to load
-    -- Fallback strings if locale file failed to load
+    L = {}
+    -- Final fallback: hardcoded English strings if all else fails
     L["HOUSING_VENDOR_TITLE"] = "Housing Decor Locations"
     L["HOUSING_VENDOR_SUBTITLE"] = "Browse all housing decorations from vendors across Azeroth"
     L["FILTER_SEARCH"] = "Search:"
@@ -99,5 +110,6 @@ else
     L["MINIMAP_TOOLTIP_DESC"] = "Left-click to toggle the Housing Vendor browser"
 end
 
--- Make the localization table globally available
+-- Make the localization table available via namespace and globally
+ns.L = L
 _G["HousingVendorL"] = L

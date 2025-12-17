@@ -1,4 +1,4 @@
--- Waypoint Manager Module for HousingVendor addon
+-- Waypoint Manager Module
 -- Handles both Blizzard native waypoints and TomTom integration
 
 local WaypointManager = {}
@@ -309,12 +309,12 @@ local function SetTomTomWaypoint(mapID, x, y, title)
 end
 function WaypointManager:SetWaypoint(item)
     if not item then
-        print("|cFFFF4040HousingVendor:|r No item data provided")
+        print("|cFFE63946HousingVendor:|r No item data provided")
         return false
     end
 
     if not item.vendorCoords or not item.vendorCoords.x or not item.vendorCoords.y then
-        print("|cFFFF4040HousingVendor:|r No valid coordinates for waypoint")
+        print("|cFFE63946HousingVendor:|r No valid coordinates for waypoint")
         return false
     end
 
@@ -325,13 +325,13 @@ function WaypointManager:SetWaypoint(item)
         if item.expansionName then
             effectiveMapID = GetDefaultMapIDForExpansion(item.expansionName)
             if effectiveMapID then
-                print("|cFFFFAA00HousingVendor:|r Using default mapID for " .. item.expansionName .. " (item mapID missing)")
+                print("|cFFF2CC8FHousingVendor:|r Using default mapID for " .. item.expansionName .. " (item mapID missing)")
             else
-                print("|cFFFF4040HousingVendor:|r No valid map ID for waypoint and no expansion name available")
+                print("|cFFE63946HousingVendor:|r No valid map ID for waypoint and no expansion name available")
                 return false
             end
         else
-            print("|cFFFF4040HousingVendor:|r No valid map ID for waypoint")
+            print("|cFFE63946HousingVendor:|r No valid map ID for waypoint")
             return false
         end
     end
@@ -340,7 +340,7 @@ function WaypointManager:SetWaypoint(item)
     local y = item.vendorCoords.y / 100
 
     if x < 0 or x > 1 or y < 0 or y > 1 then
-        print("|cFFFF4040HousingVendor:|r Invalid coordinates: " .. tostring(x) .. ", " .. tostring(y))
+        print("|cFFE63946HousingVendor:|r Invalid coordinates: " .. tostring(x) .. ", " .. tostring(y))
         return false
     end
 
@@ -353,7 +353,7 @@ function WaypointManager:SetWaypoint(item)
     if not destinationExpansion and item.expansionName then
         destinationExpansion = item.expansionName
         if effectiveMapID ~= item.mapID then
-            print("|cFFFFAA00HousingVendor:|r Using expansion name '" .. destinationExpansion .. "' for portal routing")
+            print("|cFFF2CC8FHousingVendor:|r Using expansion name '" .. destinationExpansion .. "' for portal routing")
         end
     end
     
@@ -361,13 +361,13 @@ function WaypointManager:SetWaypoint(item)
     local currentZoneName = GetZoneNameFromMapID(currentMapID) or "Unknown Location"
     local coords = string.format("%.1f, %.1f", item.vendorCoords.x, item.vendorCoords.y)
 
-    -- Debug: Show expansion detection
-    if not currentExpansion and currentMapID then
-        print("|cFFFF4040HousingVendor Debug:|r Current mapID " .. currentMapID .. " has no expansion mapping")
-    end
-    if not destinationExpansion then
-        print("|cFFFF4040HousingVendor Debug:|r Could not determine destination expansion (mapID: " .. tostring(effectiveMapID) .. ", expansionName: " .. tostring(item.expansionName) .. ")")
-    end
+    -- Debug: Show expansion detection (only in debug mode)
+    -- if not currentExpansion and currentMapID then
+    --     print("|cFFFF4040HousingVendor Debug:|r Current mapID " .. currentMapID .. " has no expansion mapping")
+    -- end
+    -- if not destinationExpansion then
+    --     print("|cFFFF4040HousingVendor Debug:|r Could not determine destination expansion (mapID: " .. tostring(effectiveMapID) .. ", expansionName: " .. tostring(item.expansionName) .. ")")
+    -- end
 
     -- Check if destination is in Stormwind/Orgrimmar (portal room cities)
     local portalRoom = GetPortalRoom()
@@ -393,19 +393,14 @@ function WaypointManager:SetWaypoint(item)
 
             if isDestinationPortalCity then
                 -- Destination IS Stormwind/Orgrimmar - just set waypoint
-                print("|cFF00FF00HousingVendor:|r Current: |cFFFFD100" .. currentZoneName .. "|r Destination: |cFFFFD100" .. destinationZoneName .. "|r")
                 -- Continue to set waypoint below
             elseif isInPortalCity then
                 -- We're in portal city, destination is another expansion - find and use specific portal
                 local specificPortal = FindPortalForExpansion(currentMapID, destinationExpansion)
                 
                 if specificPortal then
-                    print("|cFFFFAA00=== HousingVendor: Portal Routing ===|r")
-                    print("|cFF00FF00Current:|r " .. currentZoneName)
-                    print("|cFF00FF00Destination:|r " .. destinationZoneName .. " (" .. (destinationExpansion or "Unknown") .. ")")
-                    print("|cFFFFD100Step:|r Use |cFF00FF00" .. specificPortal.name .. "|r")
-                    print("|cFFFFD100Info:|r Waypoint will update when you arrive!")
-                    print("|cFFFFAA00=============================|r")
+                    print(string.format("|cFF8A7FD4HousingVendor:|r Portal: Use |cFF00FF00%s|r to %s (arrow updates on arrival)",
+                        specificPortal.name, destinationZoneName))
 
                     pendingDestination = {
                         item = item,
@@ -421,12 +416,8 @@ function WaypointManager:SetWaypoint(item)
                     return true
                 else
                     -- Fallback to generic portal room message if specific portal not found
-                    print("|cFFFFAA00=== HousingVendor: Portal Routing ===|r")
-                    print("|cFF00FF00Current:|r " .. currentZoneName)
-                    print("|cFF00FF00Destination:|r " .. destinationZoneName .. " (" .. (destinationExpansion or "Unknown") .. ")")
-                    print("|cFFFFD100Step:|r Use portal to |cFF00FF00" .. (destinationExpansion or destinationZoneName) .. "|r")
-                    print("|cFFFFD100Info:|r Waypoint will update when you arrive!")
-                    print("|cFFFFAA00=============================|r")
+                    print(string.format("|cFF8A7FD4HousingVendor:|r Use portal to %s (arrow updates on arrival)",
+                        destinationExpansion or destinationZoneName))
 
                     pendingDestination = {
                         item = item,
@@ -440,13 +431,8 @@ function WaypointManager:SetWaypoint(item)
                 local specificPortal = FindPortalForExpansion(portalRoom.mapID, destinationExpansion)
                 
                 if specificPortal then
-                    print("|cFFFFAA00=== HousingVendor: Portal Routing ===|r")
-                    print("|cFF00FF00Current:|r " .. currentZoneName)
-                    print("|cFF00FF00Destination:|r " .. destinationZoneName .. " (" .. (destinationExpansion or "Unknown") .. ")")
-                    print("|cFFFFD100Step 1:|r Navigate to " .. portalRoom.name)
-                    print("|cFFFFD100Step 2:|r Use |cFF00FF00" .. specificPortal.name .. "|r")
-                    print("|cFFFFD100Step 3:|r Waypoint will update when you arrive!")
-                    print("|cFFFFAA00=============================|r")
+                    print(string.format("|cFF8A7FD4HousingVendor:|r Go to %s - Use |cFF00FF00%s|r (arrow updates on arrival)",
+                        portalRoom.name, specificPortal.name))
 
                     pendingDestination = {
                         item = item,
@@ -462,13 +448,8 @@ function WaypointManager:SetWaypoint(item)
                     return true
                 else
                     -- Fallback to generic portal room if specific portal not found
-                    print("|cFFFFAA00=== HousingVendor: Portal Routing ===|r")
-                    print("|cFF00FF00Current:|r " .. currentZoneName)
-                    print("|cFF00FF00Destination:|r " .. destinationZoneName .. " (" .. (destinationExpansion or "Unknown") .. ")")
-                    print("|cFFFFD100Step 1:|r Navigate to " .. portalRoom.name)
-                    print("|cFFFFD100Step 2:|r Use portal to |cFF00FF00" .. (destinationExpansion or destinationZoneName) .. "|r")
-                    print("|cFFFFD100Step 3:|r Waypoint will update when you arrive!")
-                    print("|cFFFFAA00=============================|r")
+                    print(string.format("|cFF8A7FD4HousingVendor:|r Go to %s, use portal to %s (arrow updates on arrival)",
+                        portalRoom.name, destinationExpansion or destinationZoneName))
 
                     pendingDestination = {
                         item = item,
@@ -492,16 +473,43 @@ function WaypointManager:SetWaypoint(item)
         return self:SetWaypoint(pendingItem)
     end
 
-    SetBlizzardWaypoint(effectiveMapID, x, y)
-    SetTomTomWaypoint(effectiveMapID, x, y, locationName)
-
-    print("|cFF00FF00HousingVendor:|r Waypoint set to " .. locationName .. " at |cFFFFD100" .. coords .. "|r")
-
-    return true
+    -- Try to set both waypoints and capture results
+    local blizzardSuccess, blizzardError = SetBlizzardWaypoint(effectiveMapID, x, y)
+    local tomtomSuccess, tomtomError = SetTomTomWaypoint(effectiveMapID, x, y, locationName)
+    
+    -- Report results
+    if blizzardSuccess or tomtomSuccess then
+        local methods = {}
+        if blizzardSuccess then table.insert(methods, "Blizzard") end
+        if tomtomSuccess then table.insert(methods, "TomTom") end
+        
+        print(string.format("|cFF8A7FD4HousingVendor:|r Waypoint set: %s (%s)",
+            locationName, table.concat(methods, " + ")))
+        
+        -- Show errors for failed methods (only if one failed)
+        if not blizzardSuccess and blizzardError and tomtomSuccess then
+            -- Don't spam if Blizzard failed but TomTom worked
+        end
+        if not tomtomSuccess and tomtomError and blizzardSuccess then
+            -- Don't spam if TomTom failed but Blizzard worked
+        end
+        
+        return true
+    else
+        -- Both failed - show errors
+        print("|cFFE63946HousingVendor:|r Failed to set waypoint to " .. locationName)
+        if blizzardError then
+            print("|cFFFF4040  - Blizzard:|r " .. blizzardError)
+        end
+        if tomtomError then
+            print("|cFFFF4040  - TomTom:|r " .. tomtomError)
+        end
+        return false
+    end
 end
 function WaypointManager:ClearPendingDestination()
     if pendingDestination then
-        print("|cFF00FF00HousingVendor:|r Cleared pending destination")
+        -- Silently clear - no need to spam chat
         pendingDestination = nil
         return true
     end
@@ -580,7 +588,7 @@ function WaypointManager:Initialize()
         end
     end
 
-    print("|cFF00FF00HousingVendor:|r Waypoint Manager initialized with automatic portal routing")
+    -- Silently initialize - no chat spam
 end
 
 _G["HousingWaypointManager"] = WaypointManager

@@ -626,11 +626,6 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
 end)
 
-gui.AnimaCostLimitSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsLegionFrameAnimaCostSliderText:SetText(value)
-    addon.Legiondb.profile.AnimaCostLimit = value
-end)
-
 gui.SkipMissionButton:SetScript("OnClick", function(self, button)
     numSkipped = numSkipped + 1
     self:SetEnabled(false)
@@ -660,43 +655,6 @@ gui.SkipMissionButton:SetScript("OnClick", function(self, button)
     if WeakAuras then
         WeakAuras.ScanEvents("TLDRMISSIONS_SENT_PARTIAL", numSent, numSkipped, numFailed, numFollowersAvailable)
     end
-end)
-
-gui.MinimumTroopsSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsLegionFrameMinimumTroopsSliderText:SetText(value)
-    addon.Legiondb.profile.minimumTroops = value
-end)
-
-gui.LowerBoundLevelRestrictionSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    TLDRMissionsLegionFrameSliderText:SetText(value)
-    addon.Legiondb.profile.LevelRestriction = value
-end)
-
-gui.DurationLowerSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    if not userInput then return end
-    addon.Legiondb.profile.durationLower = value
-    if tonumber(addon.Legiondb.profile.durationLower) > tonumber(addon.Legiondb.profile.durationHigher) then
-        local a = addon.Legiondb.profile.durationLower
-        addon.Legiondb.profile.durationLower = addon.Legiondb.profile.durationHigher
-        addon.Legiondb.profile.durationHigher = a
-        gui.DurationLowerSlider:SetValue(addon.Legiondb.profile.durationLower)
-        gui.DurationHigherSlider:SetValue(addon.Legiondb.profile.durationHigher)
-    end
-    TLDRMissionsLegionFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(addon.Legiondb.profile.durationLower, addon.Legiondb.profile.durationHigher))
-end)
-
-gui.DurationHigherSlider:SetScript("OnValueChanged", function(self, value, userInput)
-    if not userInput then return end
-    local db = addon.Legiondb
-    db.profile.durationHigher = value
-    if tonumber(db.profile.durationLower) > tonumber(db.profile.durationHigher) then
-        local a = db.profile.durationLower
-        db.profile.durationLower = db.profile.durationHigher
-        db.profile.durationHigher = a
-        gui.DurationLowerSlider:SetValue(db.profile.durationLower)
-        gui.DurationHigherSlider:SetValue(db.profile.durationHigher)
-    end
-    TLDRMissionsFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(db.profile.durationLower, db.profile.durationHigher))
 end)
 
 end)

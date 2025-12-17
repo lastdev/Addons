@@ -1,4 +1,4 @@
--- Housing Decor API Integration for HousingVendor addon
+-- Housing Decor API Integration
 local HousingDecorAPI = {}
 HousingDecorAPI.__index = HousingDecorAPI
 
@@ -140,8 +140,8 @@ end
 -- Initialize the module
 function HousingDecorAPI:Initialize()
     if self:IsAvailable() then
-        print("HousingDecorAPI: Initialized with live API access")
+        -- Live API access available (silent)
     else
-        print("HousingDecorAPI: Live API not available, module loaded in stub mode")
+        -- Live API not available (silent)
     end
 end

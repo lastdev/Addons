@@ -1,5 +1,10 @@
 ---@diagnostic disable: cast-local-type, param-type-mismatch
 local T = Angleur_Translate
+
+-- 'ang' is the angleur namespace
+local addonName, ang = ...
+local mists = ang.vanilla
+
 local colorDebug = CreateColor(0.24, 0.76, 1) -- angleur blue
 local colorYello = CreateColor(1.0, 0.82, 0.0)
 local colorBlu = CreateColor(0.61, 0.85, 0.92)
@@ -323,7 +328,7 @@ function Angleur_LogicVariableHandler(self, event, unit, ...)
         end
         bobberWithinRange = false
         Angleur_SetCursorForGamePad(false)
-    elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" or event == "UPDATE_SHAPESHIFT_FORM" then
+    elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" or event == "UPDATE_SHAPESHIFT_FORM" or event == "MIRROR_TIMER_START" then
         if checkMounted() then 
             mounted = true
         else
@@ -345,6 +350,9 @@ function Angleur_LogicVariableHandler(self, event, unit, ...)
         end)
     elseif event == "PLAYER_EQUIPMENT_CHANGED" and unit == 16 then
         AngleurClassic_CheckFishingPoleEquipped()
+        -- Also call BaitEnchant() on equipment changed in case the player has multiple fishing rods
+        -- Because "UNIT_INVENTORY_CHANGED" won't always trigger when you swap rods
+        Angleur_BaitEnchant()
     elseif event == "UNIT_AURA" and unit == "player" then
         --Angleur_Auras()
         Angleur_ExtraItemAuras()
@@ -364,6 +372,7 @@ logicVarFrame:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
 logicVarFrame:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
 logicVarFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 logicVarFrame:RegisterEvent("MOUNT_JOURNAL_USABILITY_CHANGED")
+logicVarFrame:RegisterEvent("MIRROR_TIMER_START")
 logicVarFrame:RegisterEvent("UNIT_AURA")
 logicVarFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
 logicVarFrame:RegisterEvent("CURSOR_CHANGED")
@@ -460,10 +469,41 @@ function Angleur_BaitEnchant()
         baitApplied = false
     end
 end
-
 --***********[~]**********
 --**Decides which action to perform**
 --***********[~]**********
+-- action = "cast" | "reel" | "clear" | "raft" | "oversized" | "crate" | "randomCrate" | "extraToy" | "extraItem"
+local function performAction(self, assignKey, action, recast, oobIcon, gPad)
+    if action == "cast" then
+        SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
+        self.visual.texture:SetTexture("Interface/AddOns/Angleur/imagesClassic/UI_Profession_Fishing")
+    elseif action == "reel" then
+        SetOverrideBinding_Custom(self, true, assignKey, "INTERACTMOUSEOVER")
+        self.visual.texture:SetTexture("Interface/AddOns/Angleur/imagesClassic/misc_arrowlup")
+    elseif action == "clear" then
+        ClearOverrideBindings(self)
+        self.visual.texture:SetTexture("")
+    elseif action == "bait" then
+        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
+        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurItems.selectedBaitTable.name .. "\n/use 16")
+        self.visual.texture:SetTexture(angleurItems.selectedBaitTable.icon)
+    elseif action == "raft" then
+        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
+        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedRaftTable.name)
+        self.visual.texture:SetTexture(angleurToys.selectedRaftTable.icon)
+    elseif action == "extraItem" then
+        -- already handled within the other function
+    end
+    if recast then
+        SetOverrideBindingSpell_Custom(self, true, AngleurConfig.recastKey, PROFESSIONS_FISHING)
+    end
+    if oobIcon then
+        self.visual.texture:SetTexture("Interface/ICONS/Achievement_BG_returnXflags_def_WSG.blp")
+    end
+    if gPad then
+        Angleur_SetCursorForGamePad(true)
+    end
+end
 function Angleur_ActionHandler(self)
     --print("WorldFrame Dragging: ", WorldFrame:IsDragging())
     if InCombatLockdown() then return end
@@ -484,59 +524,61 @@ function Angleur_ActionHandler(self)
     end
     
     ClearOverrideBindings(self)
+
+    local action
+    local recast = false
+    local oobIcon = false
+    local gPad = false
     if midFishing then
         if AngleurClassicConfig.softInteract.enabled then
             if bobberWithinRange == false then
-                self.visual.texture:SetTexture("Interface/ICONS/Achievement_BG_returnXflags_def_WSG.blp")
-                SetOverrideBinding_Custom(self, true, assignKey, "INTERACTMOUSEOVER")
+                oobIcon = true
                 if AngleurClassicConfig.softInteract.recastWhenOOB then
-                    SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
+                    action = "cast"
+                else
+                    action = "reel"
                 end 
             else
-                self.visual.texture:SetTexture("Interface/AddOns/Angleur/imagesClassic/misc_arrowlup")
-                SetOverrideBinding_Custom(self, true, assignKey, "INTERACTMOUSEOVER")
+                action = "reel"
             end
         else
             --Always set doubleClick to recast on Classic(When soft interact is off)
             if chosenMethod == "doubleClick" then
-                SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
-                self.visual.texture:SetTexture("Interface/AddOns/Angleur/imagesClassic/UI_Profession_Fishing")
+                action = "cast"
             else
-                SetOverrideBinding_Custom(self, true, assignKey, "INTERACTMOUSEOVER")
-                self.visual.texture:SetTexture("Interface/AddOns/Angleur/imagesClassic/misc_arrowlup")
-                Angleur_SetCursorForGamePad(true)
+                action = "reel"
+                gPad = true
             end
         end
         if AngleurConfig.recastEnabled and AngleurConfig.recastKey then
-            SetOverrideBindingSpell_Custom(self, true, AngleurConfig.recastKey, PROFESSIONS_FISHING)
+            recast = true
         end
-    elseif swimming then
-        --print("I am swimming")
+    -- elseif swimming then
+    --     if mounted and Angleur_TinyOptions.allowDismount == false then
+    --         action = "clear"
+    --     -- This else case is left in as a placeholder for the counterpart in Mists, where it has a case for rafts.
+    --     -- Think of the if-else duo as pointless, as the outcome is always action = "clear". left it this way in case
+    --     -- I add a similar thing here in the future.
+    --     else
+    --         action = "clear"
+    --     end
+    -- elseif not swimming then --> else
+    else
         if mounted and Angleur_TinyOptions.allowDismount == false then
-            ClearOverrideBindings(self)
-            self.visual.texture:SetTexture("")
-        else
-            ClearOverrideBindings(self)
-            self.visual.texture:SetTexture("")
-        end
-    elseif not swimming then
-        if mounted and Angleur_TinyOptions.allowDismount == false then
-            ClearOverrideBindings(self)
-            self.visual.texture:SetTexture("")
+            action = "clear"
         else
             local baitCount = C_Item.GetItemCount(AngleurConfig.chosenBait.itemID)
             if angleurItems.selectedBaitTable.hasItem == true and AngleurConfig.baitEnabled and angleurItems.selectedBaitTable.loaded and baitApplied == false and baitCount > 0 then
-                SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-                self.toyButton:SetAttribute("macrotext", "/cast " .. angleurItems.selectedBaitTable.name .. "\n/use 16")
-                self.visual.texture:SetTexture(angleurItems.selectedBaitTable.icon)
+                action = "bait"
             elseif Angleur_ActionHandler_ExtraItems(self, assignKey) then
+                action =  "extraItems"
                 --ALREADY HANDLED WITHIN THE FUNCTION
             else
-                SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
-                self.visual.texture:SetTexture("Interface/AddOns/Angleur/imagesClassic/UI_Profession_Fishing")
+                action = "cast"
             end
         end
     end
+    performAction(self, assignKey, action, recast, oobIcon, gPad)
 end
 
 local cursorControlEnabled = false

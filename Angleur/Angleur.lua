@@ -1,5 +1,10 @@
 ---@diagnostic disable: cast-local-type, param-type-mismatch
 local T = Angleur_Translate
+
+-- 'ang' is the angleur namespace
+local addonName, ang = ...
+local retail = ang.retail
+
 local colorDebug = CreateColor(0.24, 0.76, 1) -- angleur blue
 local colorYello = CreateColor(1.0, 0.82, 0.0)
 local colorBlu = CreateColor(0.61, 0.85, 0.92)
@@ -166,7 +171,7 @@ local function isChosenKeyDown()
     end
     return false
 end
-local warnedPLater = false
+local warnedPlater = false
 local function warnPlater()
     if warnedPlater then return end
     if Angleur_TinyOptions.turnOffSoftInteract == true then
@@ -404,6 +409,43 @@ end
 --***********[~]**********
 --**Decides which action to perform**
 --***********[~]**********
+-- action = "cast" | "reel" | "clear" | "raft" | "oversized" | "crate" | "randomCrate" | "extraToy" | "extraItem"
+local function performAction(self, assignKey, action)
+    if action == "cast" then
+        SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
+        self.visual.texture:SetTexture("Interface/ICONS/UI_Profession_Fishing")
+    elseif action == "recast" then
+        SetOverrideBinding_Custom(self, true, assignKey, "INTERACTTARGET")
+        self.visual.texture:SetTexture("Interface/ICONS/misc_arrowlup")
+        SetOverrideBindingSpell_Custom(self, true, AngleurConfig.recastKey, PROFESSIONS_FISHING)
+    elseif action == "reel" then
+        SetOverrideBinding_Custom(self, true, assignKey, "INTERACTTARGET")
+        self.visual.texture:SetTexture("Interface/ICONS/misc_arrowlup")
+    elseif action == "clear" then
+        ClearOverrideBindings(self)
+        self.visual.texture:SetTexture("")
+    elseif action == "raft" then
+        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
+        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedRaftTable.name)
+        self.visual.texture:SetTexture(angleurToys.selectedRaftTable.icon)
+    elseif action == "oversized" then
+        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
+        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedOversizedBobberTable.name)
+        self.visual.texture:SetTexture(angleurToys.selectedOversizedBobberTable.icon)
+    elseif action == "crate" then
+        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
+        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedCrateBobberTable.name)
+        self.visual.texture:SetTexture(angleurToys.selectedCrateBobberTable.icon)
+    elseif action == "randomCrate" then
+        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
+        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedCrateBobberTable.name)
+        self.visual.texture:SetTexture(angleurToys.selectedCrateBobberTable.icon)
+    elseif action == "extraToy" then
+        -- already handled within the other function
+    elseif action == "extraItem" then
+        -- already handled within the other function
+    end
+end
 function Angleur_ActionHandler(self)
     --print("WorldFrame Dragging: ", WorldFrame:IsDragging())
     if InCombatLockdown() then return end
@@ -420,78 +462,89 @@ function Angleur_ActionHandler(self)
             assignKey = angleurDoubleClick.iDtoButtonName[AngleurConfig.doubleClickChosenID]
         end
     end
-
     ClearOverrideBindings(self)
+
+    local action
     if midFishing then
-        SetOverrideBinding_Custom(self, true, assignKey, "INTERACTTARGET")
-        self.visual.texture:SetTexture("Interface/ICONS/misc_arrowlup")
+        action =  "reel"
         if AngleurConfig.recastEnabled and AngleurConfig.recastKey then
-            SetOverrideBindingSpell_Custom(self, true, AngleurConfig.recastKey, PROFESSIONS_FISHING)
+            action = "recast"
         end
     elseif swimming then
-        --print("I am swimming")
         if mounted and Angleur_TinyOptions.allowDismount == false then
-            ClearOverrideBindings(self)
-            self.visual.texture:SetTexture("")
+            action =  "clear"
         elseif angleurToys.selectedRaftTable.hasToy == true and AngleurConfig.raftEnabled and angleurToys.selectedRaftTable.loaded then
             if rafted then
                 local remainingAuraDuration = C_UnitAuras.GetPlayerAuraBySpellID(auraIDHolders.raft).expirationTime - GetTime()
                 if remainingAuraDuration < 60 then
-                    SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-                    self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedRaftTable.name)
-                    self.visual.texture:SetTexture(angleurToys.selectedRaftTable.icon)
+                    action =  "raft"
                 else
-                    ClearOverrideBindings(self)
-                    self.visual.texture:SetTexture("")
+                    action =  "clear"
                 end
             else
-                SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-                self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedRaftTable.name)
-                self.visual.texture:SetTexture(angleurToys.selectedRaftTable.icon)
+                action =  "raft"
             end
         else
-            ClearOverrideBindings(self)
-            self.visual.texture:SetTexture("")
+            action =  "clear"
         end
     elseif not swimming then
         if mounted and Angleur_TinyOptions.allowDismount == false then
-            ClearOverrideBindings(self)
-            self.visual.texture:SetTexture("")
+            action =  "clear"
         else
+            --________________________________________________________________________________________________________
+            --    These 2 are separate from the if-else structure below, because they have nested optional returns
+            --_________________If they are not met, we want to move onto the rest of the options______________________
+            --________________________________________________________________________________________________________
             if rafted then
                 if not C_UnitAuras.GetPlayerAuraBySpellID(auraIDHolders.raft) then return end
                 local remainingAuraDuration = C_UnitAuras.GetPlayerAuraBySpellID(auraIDHolders.raft).expirationTime - GetTime()
                 if remainingAuraDuration < 60 and AngleurConfig.raftEnabled and angleurToys.selectedRaftTable.loaded then
-                    SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-                    self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedRaftTable.name)
-                    self.visual.texture:SetTexture(angleurToys.selectedRaftTable.icon)
+                    action =  "raft"
+                    performAction(self, assignKey, action)
                     return
                 end
             end
             local _, cooldownOversized = C_Container.GetItemCooldown(angleurToys.selectedOversizedBobberTable.toyID)
             local _, cooldownCrate = C_Container.GetItemCooldown(angleurToys.selectedCrateBobberTable.toyID)
+            local crateIsRandom = AngleurConfig.chosenCrateBobber.name == "Random Bobber"
+            if(AngleurConfig.crateEnabled and not crateBobbered) and (crateIsRandom) then
+                if retail.toys:PickRandomBobber() == true  and angleurToys.selectedCrateBobberTable.loaded then
+                    action = "randomCrate"
+                    performAction(self, assignKey, action)
+                    return
+                end
+            end
+            --________________________________________________________________________________________________________
+            --________________________________________________________________________________________________________
+
+            --________________________________________________________________________
+            -- These are the regular if-else structure that don't have nested options
+            --________________________________________________________________________
             if angleurToys.selectedOversizedBobberTable.hasToy == true and AngleurConfig.oversizedEnabled and angleurToys.selectedOversizedBobberTable.loaded and not oversizedBobbered and cooldownOversized == 0 then
-                SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-                self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedOversizedBobberTable.name)
-                self.visual.texture:SetTexture(angleurToys.selectedOversizedBobberTable.icon)
-            elseif angleurToys.selectedCrateBobberTable.hasToy == true and AngleurConfig.crateEnabled and angleurToys.selectedCrateBobberTable.loaded and not crateBobbered and cooldownCrate == 0 then
-                SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-                self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedCrateBobberTable.name)
-                self.visual.texture:SetTexture(angleurToys.selectedCrateBobberTable.icon)
+                action =  "oversized"
+            elseif (AngleurConfig.crateEnabled and not crateBobbered and not crateIsRandom) 
+            and 
+            (angleurToys.selectedCrateBobberTable.hasToy == true and cooldownCrate == 0)
+            and 
+            angleurToys.selectedCrateBobberTable.loaded then
+                action =  "crate"
             elseif Angleur_ActionHandler_ExtraToys(self, assignKey) then
+                action =  "extraToys"
                 --ALREADY HANDLED WITHIN THE FUNCTION
             elseif Angleur_ActionHandler_ExtraItems(self, assignKey) then
+                action =  "extraItems"
                 --ALREADY HANDLED WITHIN THE FUNCTION
             elseif iceFishing or compressedOceanFishing then
-                SetOverrideBinding_Custom(self, true, assignKey, "INTERACTTARGET")
-                self.visual.texture:SetTexture("Interface/ICONS/misc_arrowlup")
+                action =  "reel"
             else
-                SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
-                self.visual.texture:SetTexture("Interface/ICONS/UI_Profession_Fishing")
+                action =  "cast"
             end
+            --________________________________________________________________________
         end
     end
+    performAction(self, assignKey, action)
 end
+
 function Angleur_ActionHandler_ExtraToys(self, assignKey)
     local returnValue = false
     for i, slot in pairs(Angleur_SlottedExtraToys) do

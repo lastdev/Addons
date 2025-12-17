@@ -1,4 +1,4 @@
--- Event handling for HousingVendor addon
+-- Event handling
 local addonName, addon = ...
 
 _G["HousingEvents"] = {}
@@ -30,6 +30,15 @@ function HousingEvents:OnEvent(event, ...)
             local success, err = pcall(function() HousingCatalogAPI:Initialize() end)
             if not success then
               table.insert(initErrors, "HousingCatalogAPI: " .. tostring(err))
+            end
+          end
+        end
+        
+        if CollectionAPI then
+          if CollectionAPI.Initialize then
+            local success, err = pcall(function() CollectionAPI:Initialize() end)
+            if not success then
+              table.insert(initErrors, "CollectionAPI: " .. tostring(err))
             end
           end
         end
@@ -80,12 +89,9 @@ function HousingEvents:OnEvent(event, ...)
         end
 
         if #initErrors > 0 then
-          print("HousingVendor: Some modules failed to initialize:")
-          for _, err in ipairs(initErrors) do
-            print("  " .. err)
-          end
+          print("|cFFFF0000Housing|r|cFF0066FFVendor|r version" .. (Housing.version or " unknown") .. " loaded (some modules failed)")
         else
-          print("HousingVendor addon fully initialized")
+          print("|cFFFF0000Housing|r|cFF0066FFVendor|r version" .. (Housing.version or " unknown") .. " loaded")
         end
       end
       
@@ -139,7 +145,7 @@ function HousingEvents:OnEvent(event, ...)
           HousingDB.iconCache = {}
         end
         
-        -- Initialize collection cache (AllTheThings approach)
+        -- Initialize collection cache
         if not HousingDB.collectedDecor then
           HousingDB.collectedDecor = {}
         end
@@ -152,16 +158,24 @@ function HousingEvents:OnEvent(event, ...)
       
       Housing:Initialize()
 
+      -- Initialize VersionFilter (should be done early to filter expansion data)
+      if HousingVersionFilter then
+        local success, err = pcall(HousingVersionFilter.Initialize, HousingVersionFilter)
+        if not success then
+          print("HousingVendor: VersionFilter initialization error: " .. tostring(err))
+        end
+      end
+
       -- Initialize DataManager and Icons first (required by UI)
       if HousingDataManager then
-        local success, err = pcall(function() HousingDataManager:Initialize() end)
+        local success, err = pcall(HousingDataManager.Initialize, HousingDataManager)
         if not success then
           print("HousingVendor: DataManager initialization error: " .. tostring(err))
         end
       end
       
       if HousingIcons then
-        local success, err = pcall(function() HousingIcons:Initialize() end)
+        local success, err = pcall(HousingIcons.Initialize, HousingIcons)
         if not success then
           print("HousingVendor: Icons initialization error: " .. tostring(err))
         end
@@ -169,9 +183,7 @@ function HousingEvents:OnEvent(event, ...)
 
       -- Initialize config UI
       if HousingConfigUI then
-        local success, err = pcall(function()
-          HousingConfigUI:Initialize()
-        end)
+        local success, err = pcall(HousingConfigUI.Initialize, HousingConfigUI)
         if not success then
           print("HousingVendor: ConfigUI initialization error: " .. tostring(err))
         end
@@ -179,9 +191,7 @@ function HousingEvents:OnEvent(event, ...)
       
       -- Initialize statistics UI
       if HousingStatisticsUI then
-        local success, err = pcall(function()
-          HousingStatisticsUI:Initialize()
-        end)
+        local success, err = pcall(HousingStatisticsUI.Initialize, HousingStatisticsUI)
         if not success then
           print("HousingVendor: StatisticsUI initialization error: " .. tostring(err))
         end
@@ -189,11 +199,9 @@ function HousingEvents:OnEvent(event, ...)
 
       -- Initialize new UI after all modules and data are loaded
       if HousingUINew then
-        local success, err = pcall(function()
-          HousingUINew:Initialize()
-        end)
+        local success, err = pcall(HousingUINew.Initialize, HousingUINew)
         if success then
-          print("HousingVendor UI initialized")
+          -- Silently initialized
         else
           print("HousingVendor UI initialization error: " .. tostring(err))
         end

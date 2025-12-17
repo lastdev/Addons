@@ -661,7 +661,17 @@ local trimmed_icon = function(texture)
     return icon_cache[texture]
 end
 local atlas_texture = function(atlas, extra, left, right, top, bottom)
-    atlas = C_Texture.GetAtlasInfo(atlas)
+    atlasInfo = C_Texture.GetAtlasInfo(atlas)
+    if not atlasInfo then
+        if ns.DEBUG then
+            if not ns.DEBUG_missing_atlas_cache then ns.DEBUG_missing_atlas_cache = {} end
+            if not ns.DEBUG_missing_atlas_cache[atlas] then
+                print(("%s: missing atlas %s"):format(myname, atlas))
+                ns.DEBUG_missing_atlas_cache[atlas] = true
+            end
+        end
+        atlasInfo = C_Texture.GetAtlasInfo("QuestObjective") or C_Texture.GetAtlasInfo("VignetteLoot")
+    end
     if type(extra) == "number" then
         extra = {scale=extra}
     end
@@ -673,16 +683,16 @@ local atlas_texture = function(atlas, extra, left, right, top, bottom)
     end
     if left then
         -- An atlas is already cropped into a texture, so we need to treat something else as our 1
-        local horizontal = atlas.rightTexCoord - atlas.leftTexCoord
-        local vertical = atlas.bottomTexCoord - atlas.topTexCoord
-        atlas.rightTexCoord = atlas.leftTexCoord + (right * horizontal)
-        atlas.leftTexCoord = atlas.leftTexCoord + (left * horizontal)
-        atlas.bottomTexCoord = atlas.topTexCoord + (bottom * vertical)
-        atlas.topTexCoord = atlas.topTexCoord + (top * vertical)
+        local horizontal = atlasInfo.rightTexCoord - atlasInfo.leftTexCoord
+        local vertical = atlasInfo.bottomTexCoord - atlasInfo.topTexCoord
+        atlasInfo.rightTexCoord = atlasInfo.leftTexCoord + (right * horizontal)
+        atlasInfo.leftTexCoord = atlasInfo.leftTexCoord + (left * horizontal)
+        atlasInfo.bottomTexCoord = atlasInfo.topTexCoord + (bottom * vertical)
+        atlasInfo.topTexCoord = atlasInfo.topTexCoord + (top * vertical)
     end
     return ns.merge({
-        icon = atlas.file,
-        tCoordLeft = atlas.leftTexCoord, tCoordRight = atlas.rightTexCoord, tCoordTop = atlas.topTexCoord, tCoordBottom = atlas.bottomTexCoord,
+        icon = atlasInfo.file,
+        tCoordLeft = atlasInfo.leftTexCoord, tCoordRight = atlasInfo.rightTexCoord, tCoordTop = atlasInfo.topTexCoord, tCoordBottom = atlasInfo.bottomTexCoord,
     }, extra)
 end
 ns.atlas_texture = atlas_texture

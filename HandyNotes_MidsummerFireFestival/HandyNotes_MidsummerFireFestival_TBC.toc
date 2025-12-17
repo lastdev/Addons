@@ -1,0 +1,44 @@
+## Interface: 20505
+## Version: 3.17
+## Author: Taraezor
+## IconTexture: Interface\Icons\Inv_summerfest_firespirit
+## Title: Midsummer Fire Festival
+## Title-deDE: Sonnenwendfest
+## Title-esES: Festival del Fuego del Solsticio de Verano
+## Title-esMX: Festival del Fuego del Solsticio de Verano
+## Title-frFR: Fête du Feu du solstice d'été
+## Title-itIT: Fuochi di Mezza Estate
+## Title-koKR: 한여름 불꽃축제
+## Title-ptBR: Festival da Lua
+## Title-ptPT: Festival da Lua
+## Title-ruRU: Огненный Солнцеворот
+## Title-zhCN: 仲夏火焰节
+## Title-zhTW: 仲夏火焰節
+## Notes: |cFFF6BE00Helps you with the |cFFFFA500Midsummer Fire Festival|cFFF6BE00 world event
+## Notes-deDE: |cFFF6BE00Hilft bei der |cFFFFA500Sonnenwendfest 
+## Notes-esES: |cFFF6BE00Ayuda con el suceso mundial |cFFFFA500Festival del Fuego del Solsticio de Verano
+## Notes-esMX: |cFFF6BE00Ayuda con el suceso mundial |cFFFFA500Festival del Fuego del Solsticio de Verano
+## Notes-frFR: |cFFF6BE00Aide à l'événement mondial |cFFFFA500Fête du Feu du solstice d'été
+## Notes-itIT: |cFFF6BE00Assiste con l'evento mondiale |cFFFFA500Fuochi di Mezza Estate
+## Notes-koKR: |cFFFFA500한여름 불꽃축제|cFFF6BE00 대규모 이벤트 지원
+## Notes-ptBR: |cFFF6BE00Auxilia no evento mundial |cFFFFA500Festival do Fogo do Solstício
+## Notes-ptPT: |cFFF6BE00Auxilia no evento mundial |cFFFFA500Festival do Fogo do Solstício
+## Notes-ruRU: |cFFF6BE00Помогает с игровое событие |cFFFFA500Огненный Солнцеворот
+## Notes-zhCN: |cFFF6BE00协助 |cFFFFA500仲夏火焰节|cFFF6BE00 活动
+## Notes-zhTW: |cFFF6BE00協助 |cFFFFA500仲夏火焰節|cFFF6BE00 活動
+## RequiredDeps: HandyNotes
+## SavedVariables: MidsummerFireFestivalDB
+## AddonCompartmentFunc: HandyNotes_MidsummerFireFestival_OnAddonCompartmentClick
+## X-Curse-Project-ID: 878385
+## X-Wago-ID: jK8Xg5Ky
+
+Colours_MFF.lua
+Common.lua
+Localisations_Common.lua
+Localisations_Events.lua
+Localisations_MFF.lua
+Mapping.lua
+Data.lua
+DragonsTreadLightly.lua
+Common_Functions.lua
+Core.lua
