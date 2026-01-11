@@ -4,6 +4,10 @@ HousingEditorAPI.__index = HousingEditorAPI
 
 -- Check if housing editor APIs are available
 function HousingEditorAPI:IsAvailable()
+    -- TAINT FIX: Don't access C_HouseEditor before safe delay period
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
     return C_HouseEditor ~= nil
 end
 

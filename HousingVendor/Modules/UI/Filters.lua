@@ -46,10 +46,18 @@ local currentFilters = {
     quality = "All Qualities",
     requirement = "All Requirements",
     hideVisited = false,
+    hideNotReleased = false,
+    showOnlyAvailable = true,  -- Default to showing only live items
     selectedExpansions = {},
     selectedSources = {},
-    selectedFactions = {}
+    selectedFactions = {},
+    zoneMapID = nil, -- optional language-independent zone filter
+    _userSetZone = false, -- prevent auto-filter from overriding manual zone selection
 }
+
+-- Expose the live filters table for other modules (VendorHelper, tooltips, etc).
+-- IMPORTANT: this must be the same table that `ApplyFilters()` passes to the item list.
+Filters.currentFilters = currentFilters
 
 -- Initialize filters
 function Filters:Initialize(parentFrame)
@@ -129,13 +137,33 @@ function Filters:CreateFilterSection(parentFrame)
     
     local searchLabel = filterFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     searchLabel:SetPoint("BOTTOMLEFT", searchContainer, "TOPLEFT", 2, 1)
-    searchLabel:SetText(L["FILTER_SEARCH"] or "Search:")
+    searchLabel:SetText("Search:")
     local accentPrimary = HousingTheme.Colors.accentPrimary
     searchLabel:SetTextColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
     
-    -- Expansion scrollable button selector (column 2)
-    local expansionBtn = self:CreateScrollableSelector(filterFrame, "Expansion", col2X, row1Y, function(value)
-        currentFilters.expansion = value
+    -- Expansion scrollable button selector with MULTI-SELECT (column 2)
+    local expansionBtn = self:CreateMultiSelectSelector(filterFrame, "Expansion", col2X, row1Y, function(selectedItems)
+        -- Update the selectedExpansions table
+        currentFilters.selectedExpansions = selectedItems
+        
+        -- For backward compatibility, set expansion to first selected or "All Expansions"
+        local count = 0
+        local firstSelected = nil
+        for exp, _ in pairs(selectedItems) do
+            count = count + 1
+            if not firstSelected then
+                firstSelected = exp
+            end
+        end
+        
+        if count == 0 then
+            currentFilters.expansion = "All Expansions"
+        elseif count == 1 then
+            currentFilters.expansion = firstSelected
+        else
+            currentFilters.expansion = "Multiple"
+        end
+        
         self:ApplyFilters()
     end)
 
@@ -148,6 +176,10 @@ function Filters:CreateFilterSection(parentFrame)
     -- Zone scrollable button selector (column 4)
     local zoneBtn = self:CreateScrollableSelector(filterFrame, "Zone", col4X, row1Y, function(value)
         currentFilters.zone = value
+        currentFilters.zoneMapID = nil
+        -- Treat a manual zone selection as user intent; don't auto-override on zone events.
+        currentFilters._userSetZone = value ~= "All Zones"
+        self:ShowAutoFilterIndicator(nil)
         self:ApplyFilters()
     end)
     
@@ -160,15 +192,55 @@ function Filters:CreateFilterSection(parentFrame)
         self:ApplyFilters()
     end)
 
-    -- Category scrollable button selector (column 2 - aligns with Expansion)
-    local categoryBtn = self:CreateScrollableSelector(filterFrame, "Category", col2X, row2Y, function(value)
-        currentFilters.category = value
+    -- Category scrollable button selector with MULTI-SELECT (column 2 - aligns with Expansion)
+    local categoryBtn = self:CreateMultiSelectSelector(filterFrame, "Category", col2X, row2Y, function(selectedItems)
+        -- Update the selectedCategories table
+        currentFilters.selectedCategories = selectedItems
+        
+        -- For backward compatibility
+        local count = 0
+        local firstSelected = nil
+        for cat, _ in pairs(selectedItems) do
+            count = count + 1
+            if not firstSelected then
+                firstSelected = cat
+            end
+        end
+        
+        if count == 0 then
+            currentFilters.category = "All Categories"
+        elseif count == 1 then
+            currentFilters.category = firstSelected
+        else
+            currentFilters.category = "Multiple"
+        end
+        
         self:ApplyFilters()
     end)
 
-    -- Source scrollable button selector (column 3 - aligns with Vendor)
-    local sourceBtn = self:CreateScrollableSelector(filterFrame, "Source", col3X, row2Y, function(value)
-        currentFilters.source = value
+    -- Source scrollable button selector with MULTI-SELECT (column 3 - aligns with Vendor)
+    local sourceBtn = self:CreateMultiSelectSelector(filterFrame, "Source", col3X, row2Y, function(selectedItems)
+        -- Update the selectedSources table
+        currentFilters.selectedSources = selectedItems
+        
+        -- For backward compatibility
+        local count = 0
+        local firstSelected = nil
+        for src, _ in pairs(selectedItems) do
+            count = count + 1
+            if not firstSelected then
+                firstSelected = src
+            end
+        end
+        
+        if count == 0 then
+            currentFilters.source = "All Sources"
+        elseif count == 1 then
+            currentFilters.source = firstSelected
+        else
+            currentFilters.source = "Multiple"
+        end
+        
         self:ApplyFilters()
     end)
 
@@ -184,75 +256,29 @@ function Filters:CreateFilterSection(parentFrame)
     -- Collection scrollable button selector (column 1)
     local collectionBtn = self:CreateScrollableSelector(filterFrame, "Collection", col1X, row3Y, function(value)
         currentFilters.collection = value
-        
-        -- If switching to Collected/Uncollected filter, batch-check items BEFORE filtering
-        if value ~= "All" and CollectionAPI then
-            if HousingItemList and HousingDataManager then
-                local allItems = HousingDataManager:GetAllItems()
-                if allItems and #allItems > 0 then
-                    -- Collect itemIDs that need checking (not in persistent OR session cache)
-                    local itemIDsToCheck = {}
-                    for _, item in ipairs(allItems) do
-                        local itemID = tonumber(item.itemID)
-                        if itemID then
-                            -- Check if item is in persistent cache
-                            local inPersistentCache = HousingDB and HousingDB.collectedDecor and HousingDB.collectedDecor[itemID] == true
-                            -- We can't check session cache directly, so we'll check via CollectionAPI
-                            -- But to avoid API spam, we'll batch-check items that aren't in persistent cache
-                            if not inPersistentCache then
-                                table.insert(itemIDsToCheck, itemID)
-                            end
-                        end
-                    end
-                    
-                    -- If we have uncached items, batch-check them first, THEN apply filter
-                    if #itemIDsToCheck > 0 then
-                        -- Batch check in chunks to avoid overwhelming the API
-                        local batchSize = 50
-                        local currentBatch = 1
-                        local totalBatches = math.ceil(#itemIDsToCheck / batchSize)
-                        
-                        local function ProcessBatch()
-                            local startIdx = (currentBatch - 1) * batchSize + 1
-                            local endIdx = math.min(startIdx + batchSize - 1, #itemIDsToCheck)
-                            local batch = {}
-                            for i = startIdx, endIdx do
-                                table.insert(batch, itemIDsToCheck[i])
-                            end
-                            
-                            -- Check this batch
-                            CollectionAPI:BatchRefreshCollectionStatus(batch)
-                            
-                            currentBatch = currentBatch + 1
-                            
-                            -- If more batches, schedule next one
-                            if currentBatch <= totalBatches then
-                                C_Timer.After(0.1, ProcessBatch)
-                            else
-                                -- All batches done - now apply the filter
-                                C_Timer.After(0.2, function()
-                                    self:ApplyFilters()
-                                end)
-                            end
-                        end
-                        
-                        -- Start batch processing
-                        ProcessBatch()
-                        return  -- Don't apply filter yet, wait for batch check to complete
-                    end
-                end
-            end
-        end
-        
-        -- Apply filter immediately (either "All" was selected, or cache is already populated)
+
+        -- Apply filter immediately - collection checks are fast due to caching in HousingCollectionAPI
+        -- The IsItemCollected method uses persistent cache (HousingDB.collectedDecor) and session cache
+        -- for instant lookups, falling back to API calls only for uncached items
         self:ApplyFilters()
     end)
 
-    -- Quality scrollable button selector (column 2) - API data
+    -- Quality scrollable button selector (column 2)
     local qualityBtn = self:CreateScrollableSelector(filterFrame, "Quality", col2X, row3Y, function(value)
         currentFilters.quality = value
         self:ApplyFilters()
     end)
+    -- Hard-data-only mode: allow quality only if the DataManager supports API quality enrichment.
+    if HousingDataManager and HousingDataManager.HARD_DATA_ONLY and not HousingDataManager.ALLOW_API_QUALITY then
+        currentFilters.quality = "All Qualities"
+        if qualityBtn and qualityBtn.button and qualityBtn.button.buttonText then
+            qualityBtn.button.buttonText:SetText("All Qualities")
+        end
+        if qualityBtn and qualityBtn.button and qualityBtn.button.Disable then
+            qualityBtn.button:Disable()
+            qualityBtn.button:SetAlpha(0.65)
+        end
+    end
 
     -- Requirement scrollable button selector (column 3) - API data
     local requirementBtn = self:CreateScrollableSelector(filterFrame, "Requirement", col3X, row3Y, function(value)
@@ -260,23 +286,24 @@ function Filters:CreateFilterSection(parentFrame)
         self:ApplyFilters()
     end)
 
-    -- Hide Visited Vendors checkbox (column 4)
+    -- Hide Visited Vendors checkbox (column 4, row 3)
     local hideVisitedCheckbox = CreateFrame("CheckButton", "HousingHideVisitedCheckbox", filterFrame, "UICheckButtonTemplate")
     hideVisitedCheckbox:SetSize(24, 24)
     hideVisitedCheckbox:SetPoint("TOPLEFT", col4X, row3Y)
     hideVisitedCheckbox:SetChecked(currentFilters.hideVisited)
-    
+
     local hideVisitedLabel = filterFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     hideVisitedLabel:SetPoint("LEFT", hideVisitedCheckbox, "RIGHT", 5, 0)
-    hideVisitedLabel:SetText(L["FILTER_HIDE_VISITED"] or "Hide Visited")
+    hideVisitedLabel:SetText("Hide Visited")
     hideVisitedLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
-    
+
     hideVisitedCheckbox:SetScript("OnClick", function(self)
         currentFilters.hideVisited = self:GetChecked()
         Filters:ApplyFilters()
-        -- Silently toggle visited vendors filter
-        -- print("|cFF8A7FD4HousingVendor:|r " .. (currentFilters.hideVisited and "Hiding" or "Showing") .. " visited vendors")
     end)
+
+    -- Note: "Only Show Live Items" removed from UI - now controlled by /hv showall command
+    -- Default behavior: Only show live items (showOnlyAvailable = true)
 
     -- Back button (Midnight theme styled, hidden by default)
     local backBtn = CreateFrame("Button", "HousingBackButton", filterFrame, "BackdropTemplate")
@@ -293,7 +320,7 @@ function Filters:CreateFilterSection(parentFrame)
     
     local backBtnText = backBtn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     backBtnText:SetPoint("CENTER")
-    backBtnText:SetText(L["BUTTON_BACK"] or "Back")
+    backBtnText:SetText("Back")
     local textPrimary = HousingTheme.Colors.textPrimary
     backBtnText:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     backBtn.label = backBtnText
@@ -336,7 +363,7 @@ function Filters:CreateFilterSection(parentFrame)
     
     local clearBtnText = clearBtn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     clearBtnText:SetPoint("CENTER")
-    clearBtnText:SetText(L["FILTER_CLEAR"] or "Clear Filters")
+    clearBtnText:SetText("Clear Filters")
     clearBtnText:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     clearBtn.label = clearBtnText
     
@@ -411,17 +438,17 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
     -- Set initial button text based on filter type
     local defaultText = "All " .. label .. "s"
     if label == "Expansion" then
-        defaultText = L["FILTER_ALL_EXPANSIONS"] or "All Expansions"
+        defaultText = "All Expansions"
     elseif label == "Faction" then
-        defaultText = L["FILTER_ALL_FACTIONS"] or GetDefaultFaction()
+        defaultText = GetDefaultFaction()
     elseif label == "Source" then
-        defaultText = L["FILTER_ALL_SOURCES"] or "All Sources"
+        defaultText = "All Sources"
     elseif label == "Collection" then
         defaultText = "All"
     elseif label == "Quality" then
-        defaultText = L["FILTER_ALL_QUALITIES"] or "All Qualities"
+        defaultText = "All Qualities"
     elseif label == "Requirement" then
-        defaultText = L["FILTER_ALL_REQUIREMENTS"] or "All Requirements"
+        defaultText = "All Requirements"
     end
     buttonText:SetText(defaultText)
     
@@ -513,12 +540,16 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
             -- Collection has fixed options
             options = {"Collected", "Uncollected"}
         elseif label == "Quality" then
-            -- Quality has fixed options (sorted by rarity)
-            options = {"Poor", "Common", "Uncommon", "Rare", "Epic", "Legendary"}
+            -- Quality requires API enrichment; allow it only if enabled.
+            if HousingDataManager and HousingDataManager.HARD_DATA_ONLY and not HousingDataManager.ALLOW_API_QUALITY then
+                options = {}
+            else
+                options = {"Poor", "Common", "Uncommon", "Rare", "Epic", "Legendary"}
+            end
         elseif label == "Requirement" then
             -- Requirement has fixed options
-            -- Note: Event, Class, Race commented out - no housing items have these requirements
-            options = {"None", "Achievement", "Quest", "Reputation", "Renown", "Profession"}
+            -- Note: Event, Race commented out - no housing items have these requirements
+            options = {"None", "Achievement", "Quest", "Reputation", "Renown", "Profession", "Class"}
         elseif HousingDataManager then
             local filterOptions = HousingDataManager:GetFilterOptions()
             if label == "Expansion" then
@@ -541,17 +572,17 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
         -- Add "All" option with proper pluralization
         local allText = "All"
         if label == "Expansion" then
-            allText = L["FILTER_ALL_EXPANSIONS"] or "All Expansions"
+            allText = "All Expansions"
         elseif label == "Faction" then
-            allText = L["FILTER_ALL_FACTIONS"] or "All Factions"
+            allText = "All Factions"
         elseif label == "Source" then
-            allText = L["FILTER_ALL_SOURCES"] or "All Sources"
+            allText = "All Sources"
         elseif label == "Collection" then
             allText = "All"
         elseif label == "Quality" then
-            allText = L["FILTER_ALL_QUALITIES"] or "All Qualities"
+            allText = "All Qualities"
         elseif label == "Requirement" then
-            allText = L["FILTER_ALL_REQUIREMENTS"] or "All Requirements"
+            allText = "All Requirements"
         else
             allText = "All " .. label .. "s"
         end
@@ -578,32 +609,10 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
             bg:SetColorTexture(0.1, 0.1, 0.1, 0.5)
             btn.bg = bg
 
-            -- Get display text (localized for all filter types)
-            local displayText = option
-            if HousingDataManager and option ~= allText then
-                if label == "Expansion" then
-                    displayText = HousingDataManager:GetLocalizedExpansionName(option) or option
-                elseif label == "Faction" then
-                    displayText = HousingDataManager:GetLocalizedFactionName(option) or option
-                elseif label == "Source" then
-                    displayText = HousingDataManager:GetLocalizedSourceName(option) or option
-                elseif label == "Quality" then
-                    displayText = HousingDataManager:GetLocalizedQualityName(option) or option
-                elseif label == "Collection" then
-                    displayText = HousingDataManager:GetLocalizedCollectionStatus(option) or option
-                elseif label == "Requirement" then
-                    displayText = HousingDataManager:GetLocalizedRequirementName(option) or option
-                elseif label == "Category" then
-                    displayText = HousingDataManager:GetLocalizedCategoryName(option) or option
-                elseif label == "Type" then
-                    displayText = HousingDataManager:GetLocalizedTypeName(option) or option
-                end
-            end
-
             -- Text
             local text = btn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             text:SetPoint("LEFT", 5, 0)
-            text:SetText(displayText)
+            text:SetText(option)
             text:SetJustifyH("LEFT")
             btn.text = text
 
@@ -612,17 +621,28 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
 
             -- Click handler
             btn:SetScript("OnClick", function()
-                local filterKey = string.lower(label)
-                currentFilters[filterKey] = option
-                if button.buttonText then
-                    -- Show localized text on button but keep internal value unchanged
-                    button.buttonText:SetText(displayText)
+                -- Hide first so the click-catcher doesn't get stuck if filtering throws.
+                if listFrame and listFrame.Hide then
+                    listFrame:Hide()
                 end
-                if onChange then
-                    onChange(option)
+
+                local ok, err = pcall(function()
+                    local filterKey = string.lower(label)
+                    currentFilters[filterKey] = option
+                    if button.buttonText then
+                        button.buttonText:SetText(option)
+                    end
+                    if onChange then
+                        onChange(option)
+                    end
+                    if searchBox then
+                        searchBox:SetText("")
+                    end
+                end)
+
+                if not ok then
+                    print("|cFFFF0000HousingVendor:|r Filter error: " .. tostring(err))
                 end
-                listFrame:Hide()
-                searchBox:SetText("")
             end)
 
             -- Highlight current selection
@@ -655,10 +675,25 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
         end
     end)
 
-    -- Close when clicking outside
+    -- Close when clicking outside (avoid per-frame OnUpdate polling)
+    local clickCatcher = CreateFrame("Button", nil, UIParent)
+    clickCatcher:SetAllPoints(UIParent)
+    clickCatcher:EnableMouse(true)
+    clickCatcher:Hide()
+    clickCatcher:SetScript("OnClick", function()
+        listFrame:Hide()
+    end)
+
+    listFrame:SetScript("OnShow", function()
+        clickCatcher:SetFrameStrata(listFrame:GetFrameStrata() or "DIALOG")
+        clickCatcher:SetFrameLevel(math.max(0, (listFrame:GetFrameLevel() or 1) - 1))
+        clickCatcher:Show()
+    end)
+
     listFrame:SetScript("OnHide", function()
         searchBox:SetText("")
         searchBox:ClearFocus()
+        clickCatcher:Hide()
     end)
 
     -- Store references
@@ -669,65 +704,300 @@ function Filters:CreateScrollableSelector(parent, label, xOffset, yOffset, onCha
     return container
 end
 
+-- Create a multi-select selector with highlight-based selection (for Expansion, Category, Source filters)
+function Filters:CreateMultiSelectSelector(parent, label, xOffset, yOffset, onChange)
+    local theme = GetTheme()
+    local colors = theme.Colors or {}
+
+    local container = CreateFrame("Frame", "Housing" .. label .. "Container", parent)
+    container:SetSize(190, 30)
+    container:SetPoint("TOPLEFT", parent, "TOPLEFT", xOffset, yOffset)
+
+    -- Label (Midnight theme)
+    local labelText = container:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    labelText:SetPoint("BOTTOMLEFT", container, "TOPLEFT", 2, 1)
+    labelText:SetText(label .. ":")
+    local accentPrimary = HousingTheme.Colors.accentPrimary
+    labelText:SetTextColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
+
+    -- Button (Midnight theme styled)
+    local button = CreateFrame("Button", "Housing" .. label .. "Button", container, "BackdropTemplate")
+    button:SetSize(190, 24)
+    button:SetPoint("TOPLEFT", 0, 0)
+
+    -- Button backdrop
+    button:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false,
+        edgeSize = 1,
+        insets = { left = 0, right = 0, top = 0, bottom = 0 }
+    })
+
+    local bgTertiary = HousingTheme.Colors.bgTertiary
+    local borderPrimary = HousingTheme.Colors.borderPrimary
+    button:SetBackdropColor(bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4])
+    button:SetBackdropBorderColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], borderPrimary[4])
+
+    -- Button text
+    local buttonText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    buttonText:SetPoint("LEFT", 8, 0)
+    buttonText:SetPoint("RIGHT", -20, 0)
+    buttonText:SetJustifyH("LEFT")
+    local textPrimary = HousingTheme.Colors.textPrimary
+    buttonText:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+
+    -- Set default text based on label
+    local defaultText = "All " .. label .. "s"
+    if label == "Expansion" then
+        defaultText = "All Expansions"
+    elseif label == "Source" then
+        defaultText = "All Sources"
+    elseif label == "Category" then
+        defaultText = "All Categories"
+    end
+    buttonText:SetText(defaultText)
+    button.buttonText = buttonText
+
+    -- Dropdown arrow
+    local arrow = button:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    arrow:SetPoint("RIGHT", -6, 0)
+    arrow:SetText("v")
+    local textMuted = HousingTheme.Colors.textMuted
+    arrow:SetTextColor(textMuted[1], textMuted[2], textMuted[3], 1)
+
+    -- Hover effects
+    local bgHover = HousingTheme.Colors.bgHover
+    button:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(bgHover[1], bgHover[2], bgHover[3], bgHover[4])
+        self:SetBackdropBorderColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
+    end)
+    button:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4])
+        self:SetBackdropBorderColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], borderPrimary[4])
+    end)
+
+    -- Scrollable list frame (Midnight theme)
+    local listFrame = CreateFrame("Frame", "Housing" .. label .. "ListFrame", UIParent, "BackdropTemplate")
+    listFrame:SetSize(300, 350)
+    listFrame:SetPoint("TOPLEFT", button, "BOTTOMLEFT", 0, -2)
+    listFrame:SetFrameStrata("DIALOG")
+    listFrame:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false,
+        edgeSize = 1,
+        insets = { left = 0, right = 0, top = 0, bottom = 0 }
+    })
+
+    local bgPrimary = HousingTheme.Colors.bgPrimary
+    listFrame:SetBackdropColor(bgPrimary[1], bgPrimary[2], bgPrimary[3], 0.98)
+    listFrame:SetBackdropBorderColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 0.8)
+    listFrame:Hide()
+    listFrame:EnableMouse(true)
+
+    -- Scroll frame
+    local scrollFrame = CreateFrame("ScrollFrame", nil, listFrame, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT", 10, -40)
+    scrollFrame:SetPoint("BOTTOMRIGHT", -30, 50)
+
+    -- Content frame for scroll
+    local content = CreateFrame("Frame", nil, scrollFrame)
+    content:SetSize(260, 1)
+    scrollFrame:SetScrollChild(content)
+
+    -- Store for option buttons and selected items
+    local optionButtons = {}
+    local selectedItems = {} -- {["Dragonflight"] = true, ["War Within"] = true}
+
+    -- Function to update button text based on selections
+    local function UpdateButtonText()
+        local count = 0
+        for _ in pairs(selectedItems) do
+            count = count + 1
+        end
+
+        if count == 0 then
+            buttonText:SetText(defaultText)
+        elseif count == 1 then
+            -- Show the single selected item
+            for item, _ in pairs(selectedItems) do
+                buttonText:SetText(item)
+                break
+            end
+        else
+            -- Show count
+            buttonText:SetText(count .. " selected")
+        end
+    end
+
+    -- Function to populate list with clickable options
+    local function PopulateList()
+        -- Clear existing buttons
+        for _, btn in ipairs(optionButtons) do
+            btn:Hide()
+            btn:SetParent(nil)
+        end
+        wipe(optionButtons)
+
+        -- Get options based on label
+        local options = {}
+        if HousingDataManager then
+            local filterOptions = HousingDataManager:GetFilterOptions()
+            if filterOptions then
+                if label == "Expansion" then
+                    options = filterOptions.expansions or {}
+                elseif label == "Source" then
+                    options = filterOptions.sources or {}
+                elseif label == "Category" then
+                    options = filterOptions.categories or {}
+                end
+            end
+        end
+
+        -- Create buttons for each option
+        local yOffset = 0
+        for _, option in ipairs(options) do
+            local btn = CreateFrame("Button", nil, content)
+            btn:SetSize(260, 24)
+            btn:SetPoint("TOPLEFT", 0, yOffset)
+
+            -- Background
+            local bg = btn:CreateTexture(nil, "BACKGROUND")
+            bg:SetAllPoints()
+            bg:SetColorTexture(0.1, 0.1, 0.1, 0.5)
+            btn.bg = bg
+
+            -- Text
+            local text = btn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            text:SetPoint("LEFT", 5, 0)
+            text:SetText(option)
+            text:SetJustifyH("LEFT")
+            text:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+            btn.text = text
+
+            -- Highlight on hover
+            btn:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
+
+            -- Click handler - toggle selection
+            btn:SetScript("OnClick", function(self)
+                -- Toggle selection
+                if selectedItems[option] then
+                    selectedItems[option] = nil
+                    bg:SetColorTexture(0.1, 0.1, 0.1, 0.5)
+                else
+                    selectedItems[option] = true
+                    bg:SetColorTexture(0.3, 0.5, 0.3, 0.6)
+                end
+
+                UpdateButtonText()
+
+                -- Trigger onChange callback
+                if onChange then
+                    local ok, err = pcall(onChange, selectedItems)
+                    if not ok then
+                        print("|cFFFF0000HousingVendor:|r Filter error: " .. tostring(err))
+                    end
+                end
+            end)
+
+            -- Set initial state
+            if selectedItems[option] then
+                bg:SetColorTexture(0.3, 0.5, 0.3, 0.6)
+            end
+
+            table.insert(optionButtons, btn)
+            yOffset = yOffset - 24
+        end
+
+        -- Update content height
+        content:SetHeight(math.max(1, #options * 24))
+    end
+
+    -- Button click to show/hide list
+    button:SetScript("OnClick", function()
+        if listFrame:IsShown() then
+            listFrame:Hide()
+        else
+            PopulateList()
+            listFrame:Show()
+        end
+    end)
+
+    -- Done button at bottom of list
+    local doneButton = CreateFrame("Button", nil, listFrame, "BackdropTemplate")
+    doneButton:SetSize(100, 30)
+    doneButton:SetPoint("BOTTOM", 0, 10)
+    doneButton:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        tile = false,
+        edgeSize = 1,
+        insets = { left = 0, right = 0, top = 0, bottom = 0 }
+    })
+    doneButton:SetBackdropColor(bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4])
+    doneButton:SetBackdropBorderColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], borderPrimary[4])
+
+    local doneText = doneButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    doneText:SetPoint("CENTER")
+    doneText:SetText("Done")
+    doneText:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+    doneButton.label = doneText
+
+    doneButton:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(bgHover[1], bgHover[2], bgHover[3], bgHover[4])
+        self:SetBackdropBorderColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
+        self.label:SetTextColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
+    end)
+    doneButton:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(bgTertiary[1], bgTertiary[2], bgTertiary[3], bgTertiary[4])
+        self:SetBackdropBorderColor(borderPrimary[1], borderPrimary[2], borderPrimary[3], borderPrimary[4])
+        self.label:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+    end)
+    doneButton:SetScript("OnClick", function()
+        listFrame:Hide()
+    end)
+
+    -- Close when clicking outside (avoid per-frame OnUpdate polling)
+    local clickCatcher = CreateFrame("Button", nil, UIParent)
+    clickCatcher:SetAllPoints(UIParent)
+    clickCatcher:EnableMouse(true)
+    clickCatcher:Hide()
+    clickCatcher:SetScript("OnClick", function()
+        listFrame:Hide()
+    end)
+
+    listFrame:SetScript("OnShow", function()
+        clickCatcher:SetFrameStrata(listFrame:GetFrameStrata() or "DIALOG")
+        clickCatcher:SetFrameLevel(math.max(0, (listFrame:GetFrameLevel() or 1) - 1))
+        clickCatcher:Show()
+    end)
+
+    listFrame:SetScript("OnHide", function()
+        clickCatcher:Hide()
+    end)
+
+    -- Store references
+    container.button = button
+    container.listFrame = listFrame
+    container.label = label
+    container.selectedItems = selectedItems
+    container.UpdateButtonText = UpdateButtonText
+
+    return container
+end
+
 -- Apply filters and update item list
 function Filters:ApplyFilters()
     if HousingItemList and HousingDataManager then
-        local allItems = HousingDataManager:GetAllItems()
-        
-        -- Debug: Print filter state
-        local filterCount = 0
-        local activeFilters = {}
-        if currentFilters.expansion and currentFilters.expansion ~= "All Expansions" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Expansion: " .. currentFilters.expansion)
+        local ok, err = pcall(function()
+            local allItems = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or HousingDataManager:GetAllItems()
+            HousingItemList:UpdateItems(allItems, currentFilters)
+        end)
+
+        if not ok then
+            print("|cFFFF0000HousingVendor:|r Filter error: " .. tostring(err))
         end
-        if currentFilters.vendor and currentFilters.vendor ~= "All Vendors" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Vendor: " .. currentFilters.vendor)
-        end
-        if currentFilters.zone and currentFilters.zone ~= "All Zones" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Zone: " .. currentFilters.zone)
-        end
-        if currentFilters.type and currentFilters.type ~= "All Types" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Type: " .. currentFilters.type)
-        end
-        if currentFilters.category and currentFilters.category ~= "All Categories" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Category: " .. currentFilters.category)
-        end
-        if currentFilters.faction and currentFilters.faction ~= "All Factions" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Faction: " .. currentFilters.faction)
-        end
-        if currentFilters.source and currentFilters.source ~= "All Sources" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Source: " .. currentFilters.source)
-        end
-        if currentFilters.collection and currentFilters.collection ~= "All" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Collection: " .. currentFilters.collection)
-        end
-        if currentFilters.quality and currentFilters.quality ~= "All Qualities" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Quality: " .. currentFilters.quality)
-        end
-        if currentFilters.requirement and currentFilters.requirement ~= "All Requirements" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Requirement: " .. currentFilters.requirement)
-        end
-        if currentFilters.searchText and currentFilters.searchText ~= "" then
-            filterCount = filterCount + 1
-            table.insert(activeFilters, "Search: " .. currentFilters.searchText)
-        end
-        
-        if filterCount > 0 then
-            -- Silently apply filters
-            -- print("|cFF8A7FD4HousingVendor:|r Applying " .. filterCount .. " filter(s): " .. table.concat(activeFilters, ", "))
-        end
-        
-        HousingItemList:UpdateItems(allItems, currentFilters)
         
         -- Keep preview panel visible when filters change (don't hide it)
         -- The preview panel will update if the selected item is still in the filtered list
@@ -741,12 +1011,73 @@ function Filters:GetFilters()
     return currentFilters
 end
 
+-- Set zone filter programmatically (for auto-filter feature)
+function Filters:SetZoneFilter(zoneName, mapID)
+    if not zoneName then return end
+
+    -- When auto-filtering by zone, respect manual user zone selections.
+    -- Auto-filter calls pass `mapID`; if the user manually set a zone, don't override.
+    if mapID and currentFilters._userSetZone then
+        return
+    end
+
+    currentFilters.zone = zoneName
+    -- Store mapID for language-independent zone filtering
+    currentFilters.zoneMapID = mapID
+    currentFilters._userSetZone = false
+
+    -- Update zone button text
+    local zoneBtn = _G["HousingZoneButton"]
+    if zoneBtn then
+        if zoneBtn.buttonText then
+            zoneBtn.buttonText:SetText(zoneName)
+        elseif zoneBtn.SetText then
+            zoneBtn:SetText(zoneName)
+        end
+    end
+
+    -- Show auto-filter indicator
+    self:ShowAutoFilterIndicator(zoneName)
+
+    -- Apply filters
+    self:ApplyFilters()
+end
+
+-- Toggle "Show Only Available" filter (for /hv showall command)
+function Filters:ToggleShowAll()
+    currentFilters.showOnlyAvailable = not currentFilters.showOnlyAvailable
+    self:ApplyFilters()
+    return currentFilters.showOnlyAvailable
+end
+
+-- Show/hide auto-filter indicator
+function Filters:ShowAutoFilterIndicator(zoneName)
+    if not filterFrame then return end
+    
+    -- Create indicator if it doesn't exist
+    if not filterFrame.autoFilterIndicator then
+        local indicator = filterFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        indicator:SetPoint("BOTTOMLEFT", filterFrame, "BOTTOMLEFT", 15, 5)
+        indicator:SetTextColor(HousingTheme.Colors.accentPrimary[1], HousingTheme.Colors.accentPrimary[2], HousingTheme.Colors.accentPrimary[3], 1)
+        filterFrame.autoFilterIndicator = indicator
+    end
+    
+    if zoneName and zoneName ~= "All Zones" then
+        filterFrame.autoFilterIndicator:SetText(string.format("|cFF8A7FD4Auto-filtered to:|r %s", zoneName))
+        filterFrame.autoFilterIndicator:Show()
+    else
+        filterFrame.autoFilterIndicator:Hide()
+    end
+end
+
 -- Clear all filters
 function Filters:ClearAllFilters()
     currentFilters.searchText = ""
     currentFilters.expansion = "All Expansions"
     currentFilters.vendor = "All Vendors"
     currentFilters.zone = "All Zones"
+    currentFilters.zoneMapID = nil
+    currentFilters._userSetZone = false
     currentFilters.type = "All Types"
     currentFilters.category = "All Categories"
     currentFilters.faction = GetDefaultFaction()
@@ -755,6 +1086,7 @@ function Filters:ClearAllFilters()
     currentFilters.quality = "All Qualities"
     currentFilters.requirement = "All Requirements"
     currentFilters.hideVisited = false
+    currentFilters.showOnlyAvailable = true
     currentFilters.selectedExpansions = {}
     currentFilters.selectedSources = {}
     currentFilters.selectedFactions = {}
@@ -763,10 +1095,15 @@ function Filters:ClearAllFilters()
     if searchBox then
         searchBox:SetText("")
     end
-    
+
     local hideVisitedCheckbox = _G["HousingHideVisitedCheckbox"]
     if hideVisitedCheckbox then
         hideVisitedCheckbox:SetChecked(false)
+    end
+
+    local showOnlyAvailableCheckbox = _G["HousingShowOnlyAvailableCheckbox"]
+    if showOnlyAvailableCheckbox then
+        showOnlyAvailableCheckbox:SetChecked(true)  -- Reset to default (checked)
     end
 
     -- Helper to set button text (handles both old and new button styles)
@@ -781,21 +1118,34 @@ function Filters:ClearAllFilters()
         end
     end
 
-    SetButtonText("HousingExpansionButton", L["FILTER_ALL_EXPANSIONS"] or "All Expansions")
-    SetButtonText("HousingVendorButton", L["FILTER_ALL_VENDORS"] or "All Vendors")
-    SetButtonText("HousingZoneButton", L["FILTER_ALL_ZONES"] or "All Zones")
-    SetButtonText("HousingTypeButton", L["FILTER_ALL_TYPES"] or "All Types")
-    SetButtonText("HousingCategoryButton", L["FILTER_ALL_CATEGORIES"] or "All Categories")
-    SetButtonText("HousingSourceButton", L["FILTER_ALL_SOURCES"] or "All Sources")
-    SetButtonText("HousingFactionButton", L["FILTER_ALL_FACTIONS"] or GetDefaultFaction())
+    SetButtonText("HousingExpansionButton", "All Expansions")
+    SetButtonText("HousingVendorButton", "All Vendors")
+    SetButtonText("HousingZoneButton", "All Zones")
+    SetButtonText("HousingTypeButton", "All Types")
+    SetButtonText("HousingCategoryButton", "All Categories")
+    SetButtonText("HousingSourceButton", "All Sources")
+    SetButtonText("HousingFactionButton", GetDefaultFaction())
     SetButtonText("HousingCollectionButton", "All")
-    SetButtonText("HousingQualityButton", L["FILTER_ALL_QUALITIES"] or "All Qualities")
-    SetButtonText("HousingRequirementButton", L["FILTER_ALL_REQUIREMENTS"] or "All Requirements")
+    SetButtonText("HousingQualityButton", "All Qualities")
+    SetButtonText("HousingRequirementButton", "All Requirements")
+
+    -- Clear multi-select selections
+    local function ClearMultiSelectContainer(containerName)
+        local container = _G[containerName]
+        if container and container.selectedItems then
+            wipe(container.selectedItems)
+        end
+    end
+
+    ClearMultiSelectContainer("HousingExpansionContainer")
+    ClearMultiSelectContainer("HousingCategoryContainer")
+    ClearMultiSelectContainer("HousingSourceContainer")
+
+    -- Hide auto-filter indicator
+    self:ShowAutoFilterIndicator(nil)
 
     self:ApplyFilters()
 
-    -- Silently clear filters
-    -- print("|cFF8A7FD4HousingVendor:|r Filters cleared")
 end
 
 -- Refresh theme colors dynamically
@@ -843,4 +1193,3 @@ end
 _G["HousingFilters"] = Filters
 
 return Filters
-

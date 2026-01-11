@@ -5,13 +5,14 @@ addon.BFAGUI:Init()
 
 addon.BFAGUI.rewardStrings = {
     "resources",
+    "artifact-power",
+    "augment-runes",
     --"follower-items",
     --"pet-charms",
     --"followerxp",
     "reputation",
     --"gear",
-    --"crafting-reagents",
-    "artifact-power",
+    "crafting-reagents",
 }
 
 if addon.BFAGUI.GoldCheckButton then

@@ -1,5 +1,5 @@
 ## Interface: 30405
-## Version: 4.32
+## Version: 4.33
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Inv_holiday_christmas_present_01
 ## Title: Feast of Winter Veil

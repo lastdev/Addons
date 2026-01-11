@@ -228,4 +228,15 @@ L["THEME_SLEEK_BLACK"] = "Noir élégant"
 L["SETTINGS_UI_THEME"] = "Thème de l'interface"
 
 -- Make the locale table globally available
+-- Added for Zone Popup / minimap behaviors
+L["BUTTON_ZONE_POPUP"] = "Popup de zone"
+L["BUTTON_MAIN_UI"] = "Interface principale"
+L["SETTINGS_ZONE_POPUPS"] = "Popups de zone"
+L["SETTINGS_ZONE_POPUPS_DESC"] = "Afficher le popup des objets manquants lors de l'entrée dans une nouvelle zone"
+L["MINIMAP_TOOLTIP_LEFTCLICK"] = "Clic gauche : ouvrir la fenêtre principale"
+L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "Clic droit : popup de zone"
+L["MINIMAP_TOOLTIP_DRAG"] = "Glisser : déplacer le bouton"
+L["OUTSTANDING_ITEMS_IN_ZONE"] = "Objets manquants dans la zone"
+L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "Ouvre la fenêtre principale de HousingVendor filtrée sur cette zone."
+
 HousingVendorLocales["frFR"] = L

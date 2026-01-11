@@ -1,4 +1,6 @@
 local T = Angleur_Translate
+
+local debugChannel = 3
 local colorDebug = CreateColor(1, 0.41, 0) -- orange
 
 -- 'ang' is the angleur namespace
@@ -10,12 +12,10 @@ local mistsItems = ang.mists.items
 local done = false
 function mistsItems:AdjustCloseButton(extraItemsFrame)
     if done then return end
-    extraItemsFrame.first.closeButton:SetSize(29, 31)
-    extraItemsFrame.first.closeButton:AdjustPointsOffset(3, 4)
-    extraItemsFrame.second.closeButton:SetSize(29, 31)
-    extraItemsFrame.second.closeButton:AdjustPointsOffset(3, 4)
-    extraItemsFrame.third.closeButton:SetSize(29, 31)
-    extraItemsFrame.third.closeButton:AdjustPointsOffset(3, 4)
+    for i=1, ang.extraItems.slotCount, 1 do
+        extraItemsFrame[i].closeButton:SetSize(29, 31)
+        extraItemsFrame[i].closeButton:AdjustPointsOffset(3, 4)
+    end
     done = true
 end
 

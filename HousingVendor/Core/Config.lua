@@ -14,8 +14,9 @@ _G["HousingDBDefaults"] = {
   settings = {
     showCollected = false,
     usePortalNavigation = true,
+    showOutstandingPopup = true,
+    autoFilterByZone = false,
   },
-  collectedItems = {},
   uiScale = 1.0,
 }
 

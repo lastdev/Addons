@@ -146,7 +146,7 @@ function addon:isResultCacheCombinationKnown(missionID, follower1, follower2, fo
                         -- need to convert them to followerIDs
                         local combination = {}
                         for l, c in pairs(cache.combination) do
-                            for k, v in pairs(lineup) do
+                            for _, v in pairs(lineup) do
                                 local garrFollowerID = getGarrFollowerID(v)
                                 if c and (c == garrFollowerID) then
                                     combination[l] = v
@@ -213,7 +213,7 @@ function addon:setResultCacheCombinationKnown(missionID, follower1, follower2, f
     -- need to convert them to followerIDs
     for k, v in pairs(combination) do
         local garrFollowerID = getGarrFollowerID(v)
-        for l, c in pairs(lineup) do
+        for _, c in pairs(lineup) do
             if c then
                 if c == v then
                     combination[k] = garrFollowerID

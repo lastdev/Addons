@@ -1,8 +1,14 @@
 # TomTom
 
-## [v4.2.4-release](https://github.com/jnwhiteh/TomTom/tree/v4.2.4-release) (2025-12-03)
-[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.2.4-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
+## [v4.2.8-release](https://github.com/jnwhiteh/TomTom/tree/v4.2.8-release) (2025-12-25)
+[Full Changelog](https://github.com/jnwhiteh/TomTom/commits/v4.2.8-release) [Previous Releases](https://github.com/jnwhiteh/TomTom/releases)
 
+- Fix duplicate localization  
+- Update HBD again, maybe fix issues  
+- Update HBD embed and TOC for 12.0.1  
+- More efficiently compute the distance and angle  
+    If the minimap waypoint isn't shown, we should still function  
+    and not invoke all of those computations in HBD.  
 - Update frFR Localization  
 - Update TOC  
 - Update HBD to work properly with some Midnight zones  
@@ -688,7 +694,3 @@
 - * Fixed waypoints not automatically clearing when that option is set  
 - Removed Dongle from scm control  
 - * Added version information to TomTom  
-- * Added version number to .toc  
-- * Make sure to return the uid from AddZWaypoints  
-- * Fixed the parenting of the options panel  
-- * Added property so zips are generated properly  

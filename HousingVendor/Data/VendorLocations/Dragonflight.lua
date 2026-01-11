@@ -1,253 +1,596 @@
--- Vendor Location Data: Dragonflight
+﻿-- Housing Vendor Items - Dragonflight
 
-
-if not HousingVendorLocations then
-    HousingVendorLocations = {}
-end
-
-HousingVendorLocations["Dragonflight"] = {
-    ["Azerothian Archives"] = {
-        {
-            vendorName = "Provisioner Aristta",
-            npcID = 209192,
-            faction = "Neutral",
-            vendorCoords = {x = 61.4, y = 31.4, mapID = 2025},
-            items = {
-            }
-        },
+HousingDataAggregator_RegisterExpansionItems("vendor", {
+  [1] = {
+    itemID = "245625",
+    itemName = "Bel'ameth Bench",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [2] = {
+    itemID = "245704",
+    itemName = "Bel'ameth Barrel",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [3] = {
+    itemID = "246089",
+    itemName = "Bel'ameth Wooden Table",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [4] = {
+    itemID = "246091",
+    itemName = "Bel'ameth Crafter's Tent",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Mythrin'dir",
+      npcID = 216284,
+      faction = 1,
+      coords = {x = 54.0, y = 60.8, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [5] = {
+    itemID = "246100",
+    itemName = "Small Bel'ameth Tent",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [6] = {
+    itemID = "246863",
+    itemName = "Open Tome of the Dragon's Dedication",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Ruby Lifeshrine, The Waking Shores",
+      vendorName = "Lifecaller Tzadrak",
+      npcID = 191025,
+      faction = 0,
+      coords = {x = 62.0, y = 73.8, mapID = 2022},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [7] = {
+    itemID = "247223",
+    itemName = "Roast Riverbeast Platter",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [8] = {
+    itemID = "248103",
+    itemName = "Draconic Stone Table",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [9] = {
+    itemID = "248105",
+    itemName = "Valdrakken Sconce",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Eon's Fringe, Thaldraszus",
+      vendorName = "Ironus Coldsteel",
+      npcID = 209220,
+      faction = 0,
+      coords = {x = 52.2, y = 80.8, mapID = 2025},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [10] = {
+    itemID = "248115",
+    itemName = "[DNT] Valdrakken Bookcase - DO NOT USE - newer asset in place",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Unatos",
+      npcID = 193015,
+      faction = 0,
+      coords = {x = 58.2, y = 35.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [11] = {
+    itemID = "248117",
+    itemName = "Studious Dracthyr's Tomes",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Thaldraszus",
+      vendorName = "Provisioner Aristta",
+      npcID = 209192,
+      faction = 0,
+      coords = {x = 61.4, y = 31.4, mapID = 2025},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [12] = {
+    itemID = "248401",
+    itemName = "Ornamental Kaldorei Glaive",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [13] = {
+    itemID = "248652",
+    itemName = "Dragon's Grand Mirror",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [14] = {
+    itemID = "248653",
+    itemName = "Valdrakken Stone Stool",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [15] = {
+    itemID = "248656",
+    itemName = "Dragon's Hoard Chest",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "The Forbidden Reach",
+      vendorName = "Jolinth",
+      npcID = 253086,
+      faction = 0,
+      coords = {x = 35.2, y = 57.0, mapID = 2151},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [16] = {
+    itemID = "248759",
+    itemName = "Amirdrassil Stool",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Mythrin'dir",
+      npcID = 216284,
+      faction = 1,
+      coords = {x = 54.0, y = 60.8, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [17] = {
+    itemID = "249545",
+    itemName = "Preserver's Censer",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Tethalash",
+      npcID = 196637,
+      faction = 0,
+      coords = {x = 25.52, y = 33.65, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [18] = {
+    itemID = "251022",
+    itemName = "Bel'ameth Traveler's Pack",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [19] = {
+    itemID = "256168",
+    itemName = "Draconic Sconce",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Unatos",
+      npcID = 193015,
+      faction = 0,
+      coords = {x = 58.2, y = 35.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [20] = {
+    itemID = "256429",
+    itemName = "Valdrakken Lamppost",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [21] = {
+    itemID = "257352",
+    itemName = "Large Brazier of Elune",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Moon Priestess Lasara",
+      npcID = 216286,
+      faction = 1,
+      coords = {x = 46.6, y = 70.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    }
+  },
+  [22] = {
+    itemID = "250912",
+    itemName = "Draconic Crafter's Forge",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Provisioner Thom",
+      npcID = 193659,
+      faction = 0,
+      coords = {x = 36.8, y = 50.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Bel'ameth"] = {
-        {
-            vendorName = "Moon Priestess Lasara",
-            npcID = 216286,
-            faction = "Alliance",
-            vendorCoords = {x = 46.6, y = 70.6, mapID = 2239},
-            items = {
-            }
-        },
-        {
-            vendorName = "Mythrin'dir",
-            npcID = 216284,
-            faction = "Alliance",
-            vendorCoords = {x = 54.0, y = 60.8, mapID = 2239},
-            items = {
-            }
-        },
-        {
-            vendorName = "Ellandrieth",
-            npcID = 216285,
-            faction = "Alliance",
-            vendorCoords = {x = 48.4, y = 53.6, mapID = 2239},
-            items = {
-            }
-        },
+  },
+  [23] = {
+    itemID = "246706",
+    itemName = "Elegant Dracthyr's Tea Cup",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Dragonscale Basecamp"] = {
-        {
-            vendorName = "Cataloger Jakes",
-            npcID = 189226,
-            faction = "Neutral",
-            vendorCoords = {x = 47.0, y = 82.6, mapID = 2022},
-            items = {
-            }
-        },
-        {
-            vendorName = "Rae'ana",
-            npcID = 188265,
-            faction = "Neutral",
-            vendorCoords = {x = 47.8, y = 82.2, mapID = 2022},
-            items = {
-            }
-        },
+  },
+  [24] = {
+    itemID = "248104",
+    itemName = "Pentagonal Stone Table",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Eon's Fringe"] = {
-        {
-            vendorName = "Ironus Coldsteel",
-            npcID = 209220,
-            faction = "Neutral",
-            vendorCoords = {x = 52.2, y = 80.8, mapID = 2025},
-            items = {
-            }
-        },
+  },
+  [25] = {
+    itemID = "248651",
+    itemName = "Draconic Memorial Stone",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Morqut Village"] = {
-        {
-            vendorName = "Jolinth",
-            npcID = 253086,
-            faction = "Neutral",
-            vendorCoords = {x = 35.2, y = 57.0, mapID = 2151},
-            items = {
-            }
-        },
+  },
+  [26] = {
+    itemID = "248655",
+    itemName = "Elegant Dracthyr's Tea Set",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Silvrath",
+      npcID = 253067,
+      faction = 0,
+      coords = {x = 71.53, y = 49.62, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Ruby Lifeshrine"] = {
-        {
-            vendorName = "Lifecaller Tzadrak",
-            npcID = 191025,
-            faction = "Neutral",
-            vendorCoords = {x = 62.0, y = 73.8, mapID = 2022},
-            items = {
-            }
-        },
+  },
+  [27] = {
+    itemID = "248103",
+    itemName = "Draconic Stone Table",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Unatos",
+      npcID = 193015,
+      faction = 0,
+      coords = {x = 58.2, y = 35.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["The Obsidian Enclave"] = {
-        {
-            vendorName = "Provisioner Thom",
-            npcID = 193659,
-            faction = "Neutral",
-            vendorCoords = {x = 36.8, y = 50.6, mapID = 2112},
-            items = {
-            }
-        },
+  },
+  [28] = {
+    itemID = "248112",
+    itemName = "Valdrakken Garden Fountain",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Unatos",
+      npcID = 193015,
+      faction = 0,
+      coords = {x = 58.2, y = 35.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["The Parting Glass"] = {
-        {
-            vendorName = "Silvrath",
-            npcID = 253067,
-            faction = "Neutral",
-            vendorCoords = {x = 71.53, y = 49.62, mapID = 2112},
-            items = {
-            }
-        },
+  },
+  [29] = {
+    itemID = "248652",
+    itemName = "Dragon's Grand Mirror",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Unatos",
+      npcID = 193015,
+      faction = 0,
+      coords = {x = 58.2, y = 35.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["The Seat of Aspects - Lower"] = {
-        {
-            vendorName = "Unatos",
-            npcID = 193015,
-            faction = "Neutral",
-            vendorCoords = {x = 58.2, y = 35.6, mapID = 2112},
-            items = {
-            }
-        },
+  },
+  [30] = {
+    itemID = "256169",
+    itemName = "Valdrakken Oven",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Unatos",
+      npcID = 193015,
+      faction = 0,
+      coords = {x = 58.2, y = 35.6, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Unknown Zone (MapID 2112)"] = {
-        {
-            vendorName = "Evantkis",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 58.4, y = 57.4, mapID = 2112},
-            items = {
-                {itemID = 248124},
-            }
-        },
-        {
-            vendorName = "The Great Hoard",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 36.8, y = 50.6, mapID = 2112},
-            items = {
-                {itemID = 250912},
-            }
-        },
-        {
-            vendorName = "Provisioner Thom",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 36.8, y = 50.6, mapID = 2112},
-            items = {
-                {itemID = 250912},
-            }
-        },
-        {
-            vendorName = "Draconic Crafter's Forge",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 71.53, y = 49.62, mapID = 2112},
-            items = {
-                {itemID = 248651},
-                {itemID = 248103},
-                {itemID = 248652},
-                {itemID = 246706},
-                {itemID = 248655},
-                {itemID = 248104},
-            }
-        },
-        {
-            vendorName = "Silvrath",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 71.53, y = 49.62, mapID = 2112},
-            items = {
-                {itemID = 248651},
-                {itemID = 248103},
-                {itemID = 248652},
-                {itemID = 246706},
-                {itemID = 248655},
-                {itemID = 248104},
-            }
-        },
-        {
-            vendorName = "Pentagonal Stone Table",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 25.52, y = 33.65, mapID = 2112},
-            items = {
-                {itemID = 249548},
-                {itemID = 249824},
-                {itemID = 249549},
-                {itemID = 249547},
-            }
-        },
-        {
-            vendorName = "Tethalash",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 25.52, y = 33.65, mapID = 2112},
-            items = {
-                {itemID = 249548},
-                {itemID = 249824},
-                {itemID = 249549},
-                {itemID = 249547},
-            }
-        },
+  },
+  [31] = {
+    itemID = "249547",
+    itemName = "Evoker's Elegant Rug",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Tethalash",
+      npcID = 196637,
+      faction = 0,
+      coords = {x = 25.52, y = 33.65, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Valdrakken"] = {
-        {
-            vendorName = "Silvrath",
-            npcID = 253067,
-            faction = "Neutral",
-            vendorCoords = {x = 72.0, y = 49.6, mapID = 2112},
-            factionID = 2510,
-            factionName = "Valdrakken Accord",
-            items = {
-                {itemID = 256169, reputation = "Renown 3"},
-                {itemID = 248112, reputation = "Renown 6"},
-                {itemID = 248103, reputation = "Renown 14"},
-                {itemID = 248652, reputation = "Renown 20"},
-            }
-        },
+  },
+  [32] = {
+    itemID = "249548",
+    itemName = "Augmenter's Opal Banner",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Tethalash",
+      npcID = 196637,
+      faction = 0,
+      coords = {x = 25.52, y = 33.65, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Valdrakken - evoker only maybe"] = {
-        {
-            vendorName = "Tethalash",
-            npcID = 196637,
-            faction = "Neutral",
-            vendorCoords = {x = 25.52, y = 33.65, mapID = 2112},
-            items = {
-            }
-        },
+  },
+  [33] = {
+    itemID = "249549",
+    itemName = "Draconic Crafter's Table",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Tethalash",
+      npcID = 196637,
+      faction = 0,
+      coords = {x = 25.52, y = 33.65, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Valdrakken Treasury Hoard"] = {
-        {
-            vendorName = "Evantkis",
-            npcID = 199605,
-            faction = "Neutral",
-            vendorCoords = {x = 58.4, y = 57.4, mapID = 2112},
-            items = {
-            }
-        },
+  },
+  [34] = {
+    itemID = "249824",
+    itemName = "Devastator's Brazier",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Tethalash",
+      npcID = 196637,
+      faction = 0,
+      coords = {x = 25.52, y = 33.65, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-}
+  },
+  [35] = {
+    itemID = "248124",
+    itemName = "The Great Hoard",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Valdrakken",
+      vendorName = "Evantkis",
+      npcID = 199605,
+      faction = 0,
+      coords = {x = 58.4, y = 57.4, mapID = 2112},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [36] = {
+    itemID = "255673",
+    itemName = "Moonclasp Satchel",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "The Waking Shores",
+      vendorName = "Celestine of the Harvest",
+      npcID = 210608,
+      faction = 0,
+      coords = {x = 58.4, y = 67.8, mapID = 2022},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [37] = {
+    itemID = "245655",
+    itemName = "Filigree Moon Lamp",
+    vendorDetails = {
+      expansion = "Dragonflight",
+      location = "Amirdrassil",
+      vendorName = "Ellandrieth",
+      npcID = 216285,
+      faction = 1,
+      coords = {x = 48.4, y = 53.6, mapID = 2239},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+})

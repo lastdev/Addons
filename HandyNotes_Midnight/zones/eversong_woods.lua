@@ -14,9 +14,13 @@ local Telescope = ns.node.Telescope
 local Treasure = ns.node.Treasure
 
 local Achievement = ns.reward.Achievement
-local Item = ns.reward.Item
-local Transmog = ns.reward.Transmog
+local Mount = ns.reward.Mount
+-- local Item = ns.reward.Item
+local Pet = ns.reward.Pet
 local Reputation = ns.reward.Reputation
+local Section = ns.reward.Section
+local Spacer = ns.reward.Spacer
+local Transmog = ns.reward.Transmog
 
 local Path = ns.poi.Path
 local POI = ns.poi.POI
@@ -35,7 +39,10 @@ map.nodes[51927380] = Rare({
     quest = 91280, -- 94681 ?
     rewards = {
         Achievement({id = 61507, criteria = 110166}),
-        Transmog({item = 264520, type = L['staff']}) -- Warden's Leycrook
+        Transmog({item = 264520, type = L['staff']}), -- Warden's Leycrook
+        Spacer(), Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+
     },
     pois = {
         Path({51397508, 51527435, 51927380, 52587399, 52807469, 52587536}) -- Got killed before he stopped at the end.
@@ -45,7 +52,11 @@ map.nodes[51927380] = Rare({
 map.nodes[45057825] = Rare({
     id = 246633,
     quest = 91315, -- 91315/94682
-    rewards = {Achievement({id = 61507, criteria = 110167})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110167}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Harried Hawkstrider
 
 map.nodes[54706018] = Rare({
@@ -53,38 +64,61 @@ map.nodes[54706018] = Rare({
     quest = 92392, -- 94684
     rewards = {
         Achievement({id = 61507, criteria = 110168}),
-        Transmog({item = 264523, type = L['1h_sword']})
+        Transmog({item = 264523, type = L['1h_sword']}), Spacer(),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+
     }
 }) -- Overfester Hydra
 
 map.nodes[36566408] = Rare({
     id = 250582,
-    quest = 34685, -- 92366 ?
-    rewards = {Achievement({id = 61507, criteria = 110169})}
+    quest = 92366, -- 92366/94685 ?
+    rewards = {
+        Achievement({id = 61507, criteria = 110169}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Bloated Snapdragon
 
 map.nodes[62744907] = Rare({ -- review
     id = 250719,
     quest = 92391, -- 94686
-    rewards = {Achievement({id = 61507, criteria = 110170})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110170}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Cre'van
 
 map.nodes[36383637] = Rare({
     id = 250683,
     quest = 92389, -- 92389 ?
-    rewards = {Achievement({id = 61507, criteria = 110171})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110171}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Coralfang
 
 map.nodes[36657718] = Rare({
     id = 250754,
     quest = 92393, -- 94688
-    rewards = {Achievement({id = 61507, criteria = 110172})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110172}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Lady Liminus
 
 map.nodes[40198539] = Rare({
     id = 250876,
     quest = 92409, -- 94689
-    rewards = {Achievement({id = 61507, criteria = 110173})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110173}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Terrinor
 
 map.nodes[49058775] = Rare({
@@ -92,44 +126,73 @@ map.nodes[49058775] = Rare({
     quest = 92404, -- 94690
     rewards = {
         Achievement({id = 61507, criteria = 110174}),
-        Transmog({item = 264536, type = L['cloth']}) -- Zedling Summoning Collar
+        Transmog({item = 264536, type = L['cloth']}), -- Zedling Summoning Collar
+        Spacer(), Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+
     }
 }) -- Bad Zed
 
 map.nodes[34812098] = Rare({
     id = 250780,
     quest = 92395, -- 94691/92395 ?
-    rewards = {Achievement({id = 61507, criteria = 110175})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110175}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Waverly
 
 map.nodes[56427760] = Rare({
     id = 250826,
     quest = 92403, -- 92403/94692
-    rewards = {Achievement({id = 61507, criteria = 110176})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110176}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Banuran
 
 map.nodes[59207920] = Rare({ -- wowhead beta data
     id = 250806,
     quest = 92399, -- 92399 ?
-    rewards = {Achievement({id = 61507, criteria = 110177})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110177}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Lost Guardian
 
 map.nodes[42316891] = Rare({
     id = 255302,
     quest = 93550, -- 94694
-    rewards = {Achievement({id = 61507, criteria = 110178})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110178}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Duskburn
 
-map.nodes[51544585] = Rare({
+map.nodes[51684599] = Rare({
     id = 255329,
     quest = 93555, -- 93555/94695 ?
-    rewards = {Achievement({id = 61507, criteria = 110179})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110179}),
+        Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+    }
 }) -- Malfunctioning Construct
 
 map.nodes[44993855] = Rare({
     id = 255348,
     quest = 93561, -- 93561/94696 ?
-    rewards = {Achievement({id = 61507, criteria = 110180})}
+    rewards = {
+        Achievement({id = 61507, criteria = 110180}),
+        Pet({item = 265609, id = 4985}), -- Princess Bloodshed
+        Spacer(), Section(L['shared_drops']), Mount({item = 257156, id = 2762}), -- Cerulean Hawkstrider
+        Mount({item = 257147, id = 2758}) -- Cobalt Dragonhawk
+
+    }
 }) -- Dame Bloodshed
 
 -------------------------------------------------------------------------------
@@ -140,7 +203,10 @@ smc.nodes[24346928] = Treasure({
     requires = ns.requirement.Item(263870), -- Rookery Cache Key
     quest = 93967, -- 94626 triggered after feeding Mischevious Chick with Tasty Meat from Farstrider Aerieminder(had to buy meat and fly away for bit to spawn to place it)
     location = L['on_flying_platform'],
-    rewards = {Achievement({id = 61960, criteria = 111471})},
+    rewards = {
+        Achievement({id = 61960, criteria = 111471}),
+        Pet({item = 267838, id = 5003}) -- Sunwing Hatchling
+    },
     parent = map.id
 }) -- Rookery Cache
 
@@ -198,9 +264,7 @@ map.nodes[40436089] = Treasure({
 
 map.nodes[48737544] = Treasure({
     quest = 91358,
-    rewards = {
-        Achievement({id = 61960, criteria = 111479}), ns.reward.Pet({id = 4974})
-    }
+    rewards = {Achievement({id = 61960, criteria = 111479}), Pet({id = 4974})}
 }) -- Burbling Paint Pot
 
 smc.nodes[37805238] = Treasure({
@@ -237,7 +301,10 @@ smc.nodes[60005340] = PT.Blacksmithing({
     id = 238547,
     parent = map.id
 }) -- Silvermoon Blacksmith's Hammer
+map.nodes[56844077] = PT.Blacksmithing({quest = 89180, id = 238543}) -- Metalworking Cheat Sheet
+map.nodes[48327578] = PT.Blacksmithing({quest = 89178, id = 238541}) -- Silvermoon Smithing Kit
 map.nodes[63493260] = PT.Enchanting({quest = 89107, id = 238555}) -- Sin'dorei Enchanting Rod
+map.nodes[60755301] = PT.Enchanting({quest = 89103, id = 238551}) -- Everblazing Sunmote
 smc.nodes[62005460] = PT.Engineering({
     quest = 89133,
     id = 238556,
@@ -248,6 +315,7 @@ smc.nodes[64305620] = PT.Engineering({
     id = 238562,
     parent = map.id
 }) -- What To Do When Nothing Works
+map.nodes[39574579] = PT.Engineering({quest = 89135, id = 238558}) -- Manual of Mistakes and Mishaps
 map.nodes[64253046] = PT.Herbalism({quest = 89158, id = 238472}) -- A Spade
 smc.nodes[49027593] =
     PT.Herbalism({quest = 89160, id = 238470, parent = map.id}) -- Simple Leaf Pruners
@@ -256,6 +324,8 @@ smc.nodes[47655039] = PT.Inscription({
     id = 238578,
     parent = map.id
 }) -- Songwriter's Pen
+map.nodes[40356123] = PT.Inscription({quest = 89074, id = 238579}) -- Songwriter's Quill
+map.nodes[48317555] = PT.Inscription({quest = 89069, id = 238574}) -- Spare Ink
 smc.nodes[55444782] = PT.Jewelcrafting({
     quest = 89127,
     id = 238585,
@@ -266,17 +336,42 @@ smc.nodes[50505659] = PT.Jewelcrafting({
     id = 238580,
     parent = map.id
 }) -- Sin'dorei Masterwork Chisel
+map.nodes[56624088] = PT.Jewelcrafting({quest = 89125, id = 238583}) -- Poorly Rounded Vial
+map.nodes[39643882] = PT.Jewelcrafting({quest = 89129, id = 238587}) -- Sin'dorei Gem Faceters
 smc.nodes[44765626] = PT.Leatherworking({
     quest = 89096,
     id = 238595,
     parent = map.id
 }) -- Artisan's Considered Order
+map.nodes[37984538] = PT.Mining({quest = 89147, id = 238599}) -- Solid Ore Punchers
 smc.nodes[43135562] = PT.Skinning({quest = 89171, id = 238633, parent = map.id}) -- Sin'dorei Tanning Oil
+map.nodes[48407626] = PT.Skinning({quest = 89173, id = 238635}) -- Thalassian Skinning Knife
 smc.nodes[35736122] =
     PT.Tailoring({quest = 89079, id = 238613, parent = map.id}) -- A Really Nice Curtain
 smc.nodes[31796828] =
     PT.Tailoring({quest = 89084, id = 238618, parent = map.id}) -- Particularly Enchanting Tablecloth
+map.nodes[46363487] = PT.Tailoring({quest = 89080, id = 238614}) -- Sin'dorei Outfitter's Ruler
 
+--[[ MOVE TO RIGHT MAP WHEN FOUND
+map.nodes[] = PT.Enchanting({quest = 89101, id = 238549}) -- Enchanted Sunfire Silk
+map.nodes[] = PT.Engineering({quest = 89137, id = 238560}) -- Ethereal Stormwrench
+map.nodes[] = PT.Engineering({quest = 89134, id = 238557}) -- MIniturized Transport Skiff
+map.nodes[] = PT.Tailoring({quest = 89082, id = 238616}) -- Book of Sin'dorei Stitches
+map.nodes[] = PT.Tailoring({quest = 89083, id = 238617}) --Satin Throw Pillow
+map.nodes[] = PT.Leatherworking({quest = 89093, id = 238592}) -- Patterns: Beyond the Void
+map.nodes[] = PT.Alchemy({quest = 89111, id = 238532}) -- Vial of Eversong Oddities
+map.nodes[] = PT.Alchemy({quest = 89118, id = 238539}) -- Failed Experiment
+map.nodes[] = PT.Jewelcrafting({quest = 89128, id = 238586}) -- Ethereal Gem Pliers
+map.nodes[] = PT.Jewelcrafting({quest = 89126, id = 238584}) -- Shattered Glass
+map.nodes[] = PT.Jewelcrafting({quest = 89124, id = 238582}) -- Dual-Function Magnifiers
+map.nodes[] = PT.Inscription({quest = 89072, id = 238577}) -- Half-Baked Techniques
+map.nodes[] = PT.Herbalism({quest = 89161, id = 238469}) -- Sweeping Harvester's Scythe
+map.nodes[] = PT.Mining({quest = 89148, id = 238600}) -- Glimmering Void Pearl
+map.nodes[] = PT.Mining({quest = 89146, id = 238598}) -- Lost Voidstorm Satchel
+
+
+
+]] --
 -------------------------------------------------------------------------------
 ------------------------- EVERSONG WOODS GLYPH HUNTER -------------------------
 -------------------------------------------------------------------------------
@@ -330,13 +425,37 @@ map.nodes[43204636] = SkyridingGlyph({
 ------------------------- MIDNIGHT: THE HIGHEST PEAKS -------------------------
 -------------------------------------------------------------------------------
 
-map.nodes[40411010] = Telescope({quest = 94537})
-map.nodes[52486750] = Telescope({quest = 94538}) -- review (doesnt seem to be there)
-map.nodes[50198543] = Telescope({quest = 94540})
-smc.nodes[20227961] = Telescope({quest = 94536, parent = map.id})
--- smc.nodes[79266076] = Telescope({quest = 94539, parent = map.id}) -- Moved to below location
-map.nodes[54585101] = Telescope({quest = 94539})
-
+map.nodes[40411010] = Telescope({
+    quest = 94537,
+    achievement = 62288,
+    criteria = 111574,
+    repfaction = 2710
+})
+map.nodes[50198543] = Telescope({
+    quest = 94540,
+    achievement = 62288,
+    criteria = 111577,
+    repfaction = 2710
+})
+smc.nodes[20227961] = Telescope({
+    quest = 94536,
+    parent = map.id,
+    achievement = 62288,
+    criteria = 111573,
+    repfaction = 2710
+})
+map.nodes[54585101] = Telescope({
+    quest = 94539,
+    achievement = 62288,
+    criteria = 111576,
+    repfaction = 2710
+})
+map.nodes[37414789] = Telescope({
+    quest = 94538,
+    achievement = 62288,
+    criteria = 111575,
+    repfaction = 2710
+})
 ---------------------------- MIDNIGHT LORE HUNTER -----------------------------
 
 -- note: from all zones in Midnight. move node to the zone when you find it there.
@@ -397,15 +516,13 @@ local Painting = Class('Painting', ns.node.Collectible,
 function Painting:Initialize(criteria, location)
     ns.node.Collectible.Initialize(self)
     self.location = location or nil
-    self.getters.rewards = function(self)
-        return {Achievement({id = 62185, criteria = criteria})}
-    end
+    self.rewards = {Achievement({id = 62185, criteria = criteria})}
 end
 
 map.nodes[53967560] = Painting(111993) -- Sway of Red and Gold
-map.nodes[41805634] = Painting(112030) -- Light Consuming
+map.nodes[41805634] = Painting(112030) -- Lost Lamppost
 map.nodes[50764128] = Painting(112031) -- Anar'alah Belore
-map.nodes[55145968] = Painting(112032, L['on_flying_platform']) -- Suncrown's Devastation
+map.nodes[55145968] = Painting(112032, L['on_flying_platform']) -- Light Consuming
 map.nodes[46086429] = Painting(112033) -- Babble and Brook
 map.nodes[39007822] = Painting(112034) -- Memories of Ghosts
 map.nodes[42626263] = Painting(112035) -- Elrendar's Song

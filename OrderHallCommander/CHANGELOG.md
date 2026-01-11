@@ -1,14 +1,11 @@
 # OrderHallCommander
 
-## [2.6.0](https://github.com/alarofrunetotem/OrderHallCommander/tree/2.6.0) (2025-09-28)
-[Full Changelog](https://github.com/alarofrunetotem/OrderHallCommander/compare/2.5.2...2.6.0) [Previous Releases](https://github.com/alarofrunetotem/OrderHallCommander/releases)
+## [2.7.0](https://github.com/alarofrunetotem/OrderHallCommander/tree/2.7.0) (2026-01-05)
+[Full Changelog](https://github.com/alarofrunetotem/OrderHallCommander/compare/2.6.0...2.7.0) [Previous Releases](https://github.com/alarofrunetotem/OrderHallCommander/releases)
 
-- Merge branch 'release/2.6.0'  
-- Version 2.6.0  
-- Internale: removed unused parameters  
-- Added category  
-- Fix: Removed a glitch when clicking on minimap button  
-- Merge tag '2.5.2' into develop  
-    2.5.2 2.5.2  
-- Merge tag '2.5.1' into develop  
-    2.5.1 2.5.1  
+- Merge branch 'release/2.7.0'  
+- Version 2.7.0  
+- Toc: 11.2.7  
+- Internal: Lint  
+- Merge tag '2.6.0' into develop  
+    2.6.0 2.6.0  

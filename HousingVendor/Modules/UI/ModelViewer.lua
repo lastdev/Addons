@@ -332,30 +332,40 @@ function ModelViewer:Initialize(parentFrame, anchorFrame)
     modelScene:EnableMouseWheel(true)
     modelScene:RegisterForDrag("RightButton")  -- Enable right-button drag
     
-    -- Right-click drag to manually rotate
+    -- Right-click drag to manually rotate (only run OnUpdate while dragging to reduce idle CPU)
     modelScene:SetScript("OnMouseDown", function(self, button)
-        if button == "RightButton" then
-            isDragging = true
-            local scale = self:GetEffectiveScale()
-            lastMouseX = GetCursorPosition() / scale
+        if button ~= "RightButton" then
+            return
         end
+        isDragging = true
+        local scale = self:GetEffectiveScale()
+        lastMouseX = GetCursorPosition() / scale
+
+        self:SetScript("OnUpdate", function(sceneFrame)
+            if not isDragging then
+                sceneFrame:SetScript("OnUpdate", nil)
+                return
+            end
+            local s = sceneFrame:GetEffectiveScale()
+            local mouseX = GetCursorPosition() / s
+            local delta = (mouseX - lastMouseX) * 0.005  -- Smoother rotation speed
+            currentRotation = currentRotation + delta
+            sceneFrame:SetFacing(currentRotation)
+            lastMouseX = mouseX
+        end)
     end)
     
     modelScene:SetScript("OnMouseUp", function(self, button)
-        if button == "RightButton" then
-            isDragging = false
+        if button ~= "RightButton" then
+            return
         end
+        isDragging = false
+        self:SetScript("OnUpdate", nil)
     end)
-    
-    modelScene:SetScript("OnUpdate", function(self, elapsed)
-        if isDragging then
-            local scale = self:GetEffectiveScale()
-            local mouseX = GetCursorPosition() / scale
-            local delta = (mouseX - lastMouseX) * 0.005  -- Smoother rotation speed
-            currentRotation = currentRotation + delta
-            self:SetFacing(currentRotation)
-            lastMouseX = mouseX
-        end
+
+    modelScene:SetScript("OnHide", function(self)
+        isDragging = false
+        self:SetScript("OnUpdate", nil)
     end)
 
     -- Mouse wheel zoom
@@ -410,12 +420,12 @@ function ModelViewer:ShowModel(catalogData, itemName, itemID)
     if catalogData.asset and catalogData.asset > 0 then
         modelFileID = catalogData.asset
         sourceUsed = "API (asset)"
-    elseif itemID and HousingDecorData then
+    elseif itemID and HousingAllItems then
         local numericItemID = tonumber(itemID)
-        local decorData = numericItemID and HousingDecorData[numericItemID]
-        if decorData and decorData.modelFileID then
-            modelFileID = tonumber(decorData.modelFileID)
-            sourceUsed = "HousingDecorData"
+        local decorData = numericItemID and HousingAllItems[numericItemID]
+        if decorData and decorData[2] then  -- Index 2 = modelFileID (HousingItemFields.MODEL_FILE_ID)
+            modelFileID = tonumber(decorData[2])
+            sourceUsed = "HousingAllItems (fallback)"
         end
     end
     
@@ -518,4 +528,3 @@ function ModelViewer:IsVisible()
 end
 
 return ModelViewer
-

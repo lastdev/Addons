@@ -1,64 +1,84 @@
--- Vendor Location Data: Shadowlands
+﻿-- Housing Vendor Items - Shadowlands
 
-
-if not HousingVendorLocations then
-    HousingVendorLocations = {}
-end
-
-HousingVendorLocations["Shadowlands"] = {
-    ["Revendreth - Sinfall - Venthyr Only"] = {
-        {
-            vendorName = "Chachi the Artiste",
-            npcID = 174710,
-            faction = "Neutral",
-            vendorCoords = {x = 54.0, y = 24.8, mapID = 1699},
-            items = {
-            }
-        },
+HousingDataAggregator_RegisterExpansionItems("vendor", {
+[1] = {
+    itemID = "248125",
+    itemName = "Portal to Damnation",
+    vendorDetails = {
+      expansion = "Shadowlands",
+      location = "The Maw",
+      vendorName = "Ve'nari",
+      npcID = 82159,
+      faction = 0,
+      coords = {x = 46.8, y = 41.6, mapID = 1543},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Unknown Zone (MapID 1533)"] = {
-        {
-            vendorName = "Chachi the Artiste",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 54.0, y = 24.8, mapID = 1533},
-            items = {
-                {itemID = 245501},
-            }
-        },
+  },
+  [2] = {
+    itemID = "248125",
+    itemName = "Portal to Damnation",
+    vendorDetails = {
+      expansion = "Shadowlands",
+      location = "The Maw",
+      vendorName = "Ve'nari",
+      npcID = 177774,
+      faction = 0,
+      coords = {x = 46.8, y = 41.6, mapID = 1543},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Unknown Zone (MapID 1543)"] = {
-        {
-            vendorName = "Venthyr Tome of Unforgiven Sins",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 46.8, y = 41.6, mapID = 1543},
-            items = {
-                {itemID = 248125},
-            }
-        },
-        {
-            vendorName = "Ve'nari",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 46.8, y = 41.6, mapID = 1543},
-            items = {
-                {itemID = 248125},
-            }
-        },
+  },
+  [3] = {
+    itemID = "248125",
+    itemName = "Portal to Damnation",
+    vendorDetails = {
+      expansion = "Shadowlands",
+      location = "The Maw",
+      vendorName = "Ve'nari",
+      npcID = 162804,
+      faction = 0,
+      coords = {x = 46.8, y = 41.6, mapID = 1543},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Ve'nari's Refuge"] = {
-        {
-            vendorName = "Ve'nari",
-            npcID = 162804,
-            faction = "Neutral",
-            vendorCoords = {x = 46.8, y = 41.6, mapID = 1543},
-            items = {
-            }
-        },
+  },
+  [4] = {
+    itemID = "245501",
+    itemName = "Venthyr Tome of Unforgiven Sins",
+    vendorDetails = {
+      expansion = "Shadowlands",
+      location = "Bastion",
+      vendorName = "Chachi the Artiste",
+      npcID = 179482,
+      faction = 0,
+      coords = {x = 54.0, y = 24.8, mapID = 1533},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-}
+  },
+  [5] = {
+    itemID = "245501",
+    itemName = "Venthyr Tome of Unforgiven Sins",
+    vendorDetails = {
+      expansion = "Shadowlands",
+      location = "Sinfall",
+      vendorName = "Chachi the Artiste",
+      npcID = 174710,
+      faction = 0,
+      coords = {x = 54.0, y = 24.8, mapID = 1699},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+})

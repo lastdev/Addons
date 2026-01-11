@@ -178,8 +178,8 @@ local sanctumFeatureCurrencies = {
 addon.sanctumFeatureCurrencies = sanctumFeatureCurrencies
 
 local function isSanctumFeatureItem(itemID)
-    for categoryName, category in pairs(sanctumFeatureItems) do
-        for k, v in pairs(category) do
+    for _, category in pairs(sanctumFeatureItems) do
+        for k in pairs(category) do
             if itemID == k then
                 return true
             end
@@ -188,8 +188,8 @@ local function isSanctumFeatureItem(itemID)
 end
 
 local function isSanctumFeatureCurrency(currencyID)
-    for categoryName, category in pairs(sanctumFeatureCurrencies) do
-        for k, v in pairs(category) do
+    for _, category in pairs(sanctumFeatureCurrencies) do
+        for k in pairs(category) do
             if currencyID == k then
                 return true
             end
@@ -291,7 +291,6 @@ function addon:GetFollowerXPItemMissions(hard)
     return missionLineup
 end
 
-local animaItemDiscrepancies = {}
 function addon:GetAnimaMissions(hard)
     local missions = C_Garrison.GetAvailableMissions(123)
     local missionLineup = {}
@@ -454,7 +453,7 @@ function addon:GetCampaignMissions(hard)
         for _, reward in pairs(rewards) do
             if reward.currencyID and (reward.currencyID == 1889) then
                 local quantity = C_CurrencyInfo.GetCurrencyInfo(1889).quantity
-                local include = false
+                local include
                 if quantity < 4 then
                     include = addon.db.profile.campaignCategories["1-4"]
                 elseif quantity < 8 then

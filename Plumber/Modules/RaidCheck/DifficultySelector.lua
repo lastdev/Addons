@@ -45,6 +45,14 @@ local MapThemes = {
 };
 
 
+local function IsDisplayedRaidDifficultySolid()
+    if IsInGroup() and (not IsInRaid()) and (not UnitIsGroupLeader("player")) then
+        return false
+    end
+    return true
+end
+
+
 local function CanChangeDifficulty()
     if IsInInstance() then
 		return false
@@ -71,6 +79,7 @@ local function ShowLockoutTooltip(self, instanceName, difficultyName, instanceID
     tooltip:SetPoint("TOP", self, "BOTTOM", 0, -6);
     tooltip:AddDoubleLine(instanceName, difficultyName);
     tooltip:SetCustomLineSpacing(4);
+
     for i, v in ipairs(self.encounters) do
         local hasDefeated = v.dungeonEncounterID and IsEncounterComplete(instanceID, v.dungeonEncounterID, v.difficultyID);
         if i % 5 == 1 then
@@ -88,9 +97,26 @@ local function ShowLockoutTooltip(self, instanceName, difficultyName, instanceID
             tooltip:AddLine(" ");
             tooltip:AddLine(L["Cannot Change Difficulty"], 1, 0.125, 0.125, true);
         end
+
+        if SelectorUI.isRaid and API.HasActiveChatBox() and SelectorUI:CanLinkProgress(self.encounters[1].difficultyID) then
+            tooltip:AddLine(" ");
+            tooltip:AddLine(L["Instruction Link Progress In Chat"], 0.098, 1.000, 0.098, true);
+        end
     end
 
     tooltip:Show();
+end
+
+
+local function GetSavedInstanceIndex(_instanceID, _difficultyID)
+    local name, _, _, difficultyID, _, _, _, _, _, _, _, _, _, instanceID;
+    local GetSavedInstanceInfo = GetSavedInstanceInfo;
+    for i = 1, GetNumSavedInstances() do
+        name, _, _, difficultyID, _, _, _, _, _, _, _, _, _, instanceID = GetSavedInstanceInfo(i);
+        if difficultyID == _difficultyID and instanceID == _instanceID then
+            return i
+        end
+    end
 end
 
 
@@ -99,19 +125,18 @@ do
     function DifficultyButtonMixin:OnEnter()
         self:UpdateVisual();
         SelectorUI:HighlightButton(self);
-        self:ShowTooltip();
+        SelectorUI.FocusSolver:SetFocus(self);
     end
 
     function DifficultyButtonMixin:OnLeave()
         self:UpdateVisual();
         SelectorUI:HighlightButton(nil);
         self:HideTooltip();
+        SelectorUI.FocusSolver:SetFocus(nil);
     end
 
     function DifficultyButtonMixin:OnMouseDown()
-        if not self.selected then
-            self.ButtonText:SetPoint("CENTER", self, "CENTER", 0, -1);
-        end
+        self.ButtonText:SetPoint("CENTER", self, "CENTER", 0, -1);
     end
 
     function DifficultyButtonMixin:OnMouseUp()
@@ -119,6 +144,11 @@ do
     end
 
     function DifficultyButtonMixin:OnClick()
+        if IsModifiedClick("CHATLINK") then
+            SelectorUI:LinkProgressInChat(self.difficultyID);
+            return
+        end
+
         if SelectorUI:TrySelectDiffulty(self.difficultyID) then
             SelectorUI.LoadingIndicator:ClearAllPoints();
             SelectorUI.LoadingIndicator:SetPoint("CENTER", self, "CENTER", 0, 0);
@@ -237,6 +267,10 @@ do
         GameTooltip:Hide();
     end
 
+    function DifficultyButtonMixin:OnFocused()
+        self:ShowTooltip();
+    end
+
     function DifficultyButtonMixin:OnLoad()
         self.ButtonText = self:CreateFontString(nil, "OVERLAY");
         SetupFont(self.ButtonText);
@@ -247,6 +281,71 @@ do
         self:SetScript("OnLeave", self.OnLeave);
         self:SetScript("OnMouseDown", self.OnMouseDown);
         self:SetScript("OnMouseUp", self.OnMouseUp);
+        self:SetScript("OnClick", self.OnClick);
+    end
+end
+
+
+local TitleButtonMixin = {};
+do
+    local function CanResetInstances()
+        if IsInInstance() then
+            return false
+        end
+
+        if IsInGroup() and not UnitIsGroupLeader("player") then
+            return false
+        end
+
+        if UnitPopupSharedUtil.HasLFGRestrictions() then
+            return false
+        end
+
+        return true
+    end
+
+    function TitleButtonMixin:OnEnter()
+        SelectorUI.Title:SetTextColor(1, 1, 1);
+
+        local tooltip = GameTooltip;
+        tooltip:SetOwner(self, "ANCHOR_RIGHT");
+        tooltip:SetText(SelectorUI.instanceName, 1, 1, 1);
+        tooltip:AddLine(L["Instruction Click To Open Adventure Guide"], 1, 0.82, 0, true);
+
+        if CanResetInstances() then
+            tooltip:AddLine(L["Instruction Alt Click To Reset Instance"], 1, 0.82, 0, true);
+        else
+            tooltip:AddLine(L["Cannot Reset Instance"], 0.5, 0.5, 0.5, true);
+        end
+
+        tooltip:Show();
+    end
+
+    function TitleButtonMixin:OnLeave()
+        SelectorUI.Title:SetTextColor(0.9, 0.81, 0.67);
+        GameTooltip:Hide();
+    end
+
+    function TitleButtonMixin:OnClick(button)
+        if button == "LeftButton" then
+            if IsModifiedClick("CHATLINK") then
+                SelectorUI:LinkProgressInChat(self.difficultyID);
+                return
+            end
+            SelectorUI:OpenEncounterJournal();
+            GameTooltip:Hide();
+        elseif button == "RightButton" and IsAltKeyDown() then
+            if CanResetInstances() then
+                StaticPopup_Show("CONFIRM_RESET_INSTANCES");
+                GameTooltip:Hide();
+            end
+        end
+    end
+
+    function TitleButtonMixin:OnLoad()
+        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+        self:SetScript("OnEnter", self.OnEnter);
+        self:SetScript("OnLeave", self.OnLeave);
         self:SetScript("OnClick", self.OnClick);
     end
 end
@@ -305,20 +404,23 @@ do  --SelectorUI
 
         local TitleButton = CreateFrame("Button", nil, self);
         self.TitleButton = TitleButton;
+        Mixin(TitleButton, TitleButtonMixin);
+        TitleButton:OnLoad();
         TitleButton:SetPoint("CENTER", Title, "CENTER", 0, 0);
-        TitleButton:SetSize(96, 24)
-        TitleButton:SetScript("OnEnter", function()
-            GameTooltip:SetOwner(TitleButton, "ANCHOR_RIGHT");
-            GameTooltip:SetText(ADVENTURE_JOURNAL, 1, 1, 1);
-            GameTooltip:Show();
-        end);
-        TitleButton:SetScript("OnLeave", function()
-            GameTooltip:Hide();
-        end);
-        TitleButton:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-        TitleButton:SetScript("OnClick", function()
-            self:OpenEncounterJournal();
-        end);
+        TitleButton:SetSize(32, 24);
+        TitleButton:SetHitRectInsets(0, 0, -8, 0);
+
+
+        local InaccuracyAlert = OpaqueFrame:CreateFontString(nil, "OVERLAY");
+        self.InaccuracyAlert = InaccuracyAlert;
+        SetupFont(InaccuracyAlert, 12);
+        InaccuracyAlert:SetJustifyH("CENTER");
+        InaccuracyAlert:SetPoint("TOP", Bar, "BOTTOM", 0, -4);
+        InaccuracyAlert:SetSpacing(4);
+        InaccuracyAlert:SetWidth(256);
+        InaccuracyAlert:SetTextColor(1.000, 0.125, 0.125);
+        InaccuracyAlert:SetText(L["Difficulty Not Accurate"]);
+        InaccuracyAlert:Hide();
 
 
         local ButtonBackground = CreateFrame("Frame", nil, Bar);
@@ -377,6 +479,10 @@ do  --SelectorUI
         LoadingIndicator.autoHide = true;
         LoadingIndicator:Hide();
         LoadingIndicator:SetFrameLevel(20);
+
+
+        self.FocusSolver = API.CreateFocusSolver(self);
+        self.FocusSolver:SetDelay(0.2);
 
 
         self:SetScript("OnShow", self.OnShow);
@@ -564,14 +670,19 @@ do  --SelectorUI
             self.ButtonBackground:Hide();
             self.ButtonBackground:SetParent(self.Bar);
             self.LoadingIndicator:Hide();
+            self.InaccuracyAlert:Hide();
 
             local selectedDifficulty;
             if self.isRaid then
-                local difficultyID1, difficultyID2 = DataProvider:GetRaidDifficultyID();
-                if self.isLegacyRaid then
-                    selectedDifficulty = difficultyID2;
+                if IsDisplayedRaidDifficultySolid() then
+                    local difficultyID1, difficultyID2 = DataProvider:GetRaidDifficultyID();
+                    if self.isLegacyRaid then
+                        selectedDifficulty = difficultyID2;
+                    else
+                        selectedDifficulty = difficultyID1;
+                    end
                 else
-                    selectedDifficulty = difficultyID1;
+                    self.InaccuracyAlert:Show();
                 end
             else
                 selectedDifficulty = DataProvider:GetDungeonDifficultyID();
@@ -646,10 +757,32 @@ do  --SelectorUI
             end
         end
     end
-end
 
---name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo()
---DifficultyUtil.GetDifficultyName6
+    function SelectorUI:GetSavedInstanceIndex(difficultyID)
+        if not difficultyID then
+            difficultyID = self.selectedDifficulty;
+        end
+
+        if not self.isValidDifficulty[difficultyID] then
+            difficultyID = self.fallbackDifficultyID;
+        end
+
+        return GetSavedInstanceIndex(self.instanceID, difficultyID);
+    end
+
+    function SelectorUI:CanLinkProgress(difficultyID)
+        return self:GetSavedInstanceIndex(difficultyID) ~= nil
+    end
+
+    function SelectorUI:LinkProgressInChat(difficultyID)
+        --Dungeon progress sent as plain text for some reason?
+
+        local index = self:GetSavedInstanceIndex(difficultyID);
+        if index then
+            return API.ChatInsertLink(GetSavedInstanceChatLink(index));  --Dungeon progress sent as plain text for some reason?
+        end
+    end
+end
 
 
 do  --DifficultyAnnouncer

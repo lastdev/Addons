@@ -21,6 +21,8 @@ local L = LibStub("AceLocale-3.0"):NewLocale(addonName, "enUS", true, true)
 
 L["%s wants to share a paste with you. Do you want to accept it?"] = "%s wants to share a paste with you.|nDo you want to accept it?"
 L["/pasteng config - Open the configuration"] = "/pasteng config - Open the configuration"
+L["/pasteng export - Open the export dialog"] = "/pasteng export - Open the export dialog"
+L["/pasteng import - Open the import dialog"] = "/pasteng import - Open the import dialog"
 L["/pasteng minimap - Toggle the minimap icon"] = "/pasteng minimap - Toggle the minimap icon"
 L["/pasteng send Saved Paste name - Send a save paste to the default channel"] = "/pasteng send \"Saved Paste name\" - Send a save paste to the default channel"
 L["/pasteng send Saved Paste name channel - Send a save paste to a specific channel"] = "/pasteng send \"Saved Paste name\" channel - Send a save paste to a specific channel"

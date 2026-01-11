@@ -6,7 +6,7 @@ end
 local L = {}
 
 -- Main UI Strings
-L["HOUSING_VENDOR_TITLE"] = "Wohnungsdekoration Standorte"
+L["HOUSING_VENDOR_TITLE"] = "Wohnungsdekoration-Standorte"
 L["HOUSING_VENDOR_SUBTITLE"] = "Durchsuchen Sie alle Wohnungsdekorationen von Verkäufern in ganz Azeroth"
 
 -- Filter Labels
@@ -48,24 +48,24 @@ L["BUTTON_SAVE"] = "Speichern"
 L["BUTTON_RESET"] = "Zurücksetzen"
 
 -- Settings Panel
-L["SETTINGS_TITLE"] = "Wohnungs Addon Einstellungen"
+L["SETTINGS_TITLE"] = "HousingVendor Einstellungen"
 L["SETTINGS_GENERAL_TAB"] = "Allgemein"
 L["SETTINGS_COMMUNITY_TAB"] = "Gemeinschaft"
-L["SETTINGS_MINIMAP_SECTION"] = "Minikarten Symbol"
-L["SETTINGS_SHOW_MINIMAP_BUTTON"] = "Minikarten Symbol anzeigen"
-L["SETTINGS_UI_SCALE_SECTION"] = "UI Skalierung"
-L["SETTINGS_UI_SCALE"] = "UI Skalierung"
+L["SETTINGS_MINIMAP_SECTION"] = "Minikarten-Symbol"
+L["SETTINGS_SHOW_MINIMAP_BUTTON"] = "Minikarten-Symbol anzeigen"
+L["SETTINGS_UI_SCALE_SECTION"] = "UI-Skalierung"
+L["SETTINGS_UI_SCALE"] = "UI-Skalierung"
 L["SETTINGS_FONT_SIZE"] = "Schriftgröße"
 L["SETTINGS_RESET"] = "Zurücksetzen"
 L["SETTINGS_RESET_DEFAULTS"] = "Auf Standard zurücksetzen"
 L["SETTINGS_PROGRESS_TRACKING"] = "Fortschrittsverfolgung"
 L["SETTINGS_SHOW_COLLECTED"] = "Gesammelte Gegenstände anzeigen"
-L["SETTINGS_WAYPOINT_NAVIGATION"] = "Wegpunkt Navigation"
+L["SETTINGS_WAYPOINT_NAVIGATION"] = "Wegpunkt-Navigation"
 L["SETTINGS_USE_PORTAL_NAVIGATION"] = "Intelligente Portalnavigation verwenden"
 
 -- Tooltips
 L["TOOLTIP_SETTINGS"] = "Einstellungen"
-L["TOOLTIP_SETTINGS_DESC"] = "Addon Optionen konfigurieren"
+L["TOOLTIP_SETTINGS_DESC"] = "Addon-Optionen konfigurieren"
 L["TOOLTIP_WAYPOINT"] = "Wegpunkt festlegen"
 L["TOOLTIP_WAYPOINT_DESC"] = "Zu diesem Verkäufer navigieren"
 L["TOOLTIP_PORTAL_NAVIGATION_ENABLED"] = "Intelligente Portalnavigation aktiviert"
@@ -96,7 +96,7 @@ L["MESSAGE_DIRECT_NAV_ENABLED"] = "Direkte Navigation aktiviert. Wegpunkte zeige
 -- Community Section
 L["COMMUNITY_TITLE"] = "Gemeinschaft & Unterstützung"
 L["COMMUNITY_INFO"] = "Treten Sie unserer Gemeinschaft bei, um Tipps auszutauschen, Fehler zu melden und neue Funktionen vorzuschlagen!"
-L["COMMUNITY_DISCORD"] = "Discord Server"
+L["COMMUNITY_DISCORD"] = "Discord-Server"
 L["COMMUNITY_GITHUB"] = "GitHub"
 L["COMMUNITY_REPORT_BUG"] = "Fehler melden"
 L["COMMUNITY_SUGGEST_FEATURE"] = "Funktion vorschlagen"
@@ -109,7 +109,7 @@ L["PREVIEW_NO_SELECTION"] = "Wählen Sie einen Gegenstand aus, um Details anzuze
 L["STATUS_ITEMS_DISPLAYED"] = "%d Gegenstände angezeigt (%d insgesamt)"
 
 -- Errors
-L["ERROR_ADDON_NOT_INITIALIZED"] = "Wohnungs Addon nicht initialisiert"
+L["ERROR_ADDON_NOT_INITIALIZED"] = "Housing-Addon nicht initialisiert"
 L["ERROR_UI_NOT_AVAILABLE"] = "HousingVendor Benutzeroberfläche nicht verfügbar"
 L["ERROR_CONFIG_PANEL_NOT_AVAILABLE"] = "Konfigurationsfenster nicht verfügbar"
 
@@ -137,8 +137,8 @@ L["COMMON_GOLD"] = "Gold"
 L["COMMON_ITEM_ID"] = "Gegenstands-ID:"
 
 -- Miscellaneous
-L["MINIMAP_TOOLTIP"] = "Wohnungsverkäufer Browser"
-L["MINIMAP_TOOLTIP_DESC"] = "Linksklick zum Umschalten des Wohnungsverkäufer Browsers"
+L["MINIMAP_TOOLTIP"] = "Wohnungsverkäufer-Browser"
+L["MINIMAP_TOOLTIP_DESC"] = "Linksklick zum Umschalten des Wohnungsverkäufer-Browsers"
 
 -- Expansion Names
 L["EXPANSION_CLASSIC"] = "Classic"
@@ -227,5 +227,15 @@ L["THEME_HORDE"] = "Horde"
 L["THEME_SLEEK_BLACK"] = "Elegantes Schwarz"
 L["SETTINGS_UI_THEME"] = "UI-Design"
 
--- Make the locale table globally available
+-- Added for Zone Popup / minimap behaviors
+L["BUTTON_ZONE_POPUP"] = "Zonen-Popup"
+L["BUTTON_MAIN_UI"] = "Hauptfenster"
+L["SETTINGS_ZONE_POPUPS"] = "Zonen-Popups"
+L["SETTINGS_ZONE_POPUPS_DESC"] = "Popup für ausstehende Gegenstände beim Betreten einer neuen Zone anzeigen"
+L["MINIMAP_TOOLTIP_LEFTCLICK"] = "Linksklick: Hauptfenster öffnen"
+L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "Rechtsklick: Zonen-Popup"
+L["MINIMAP_TOOLTIP_DRAG"] = "Ziehen: Schaltfläche verschieben"
+L["OUTSTANDING_ITEMS_IN_ZONE"] = "Ausstehende Gegenstände in der Zone"
+L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "Öffnet das Hauptfenster von HousingVendor, gefiltert auf diese Zone."
+
 HousingVendorLocales["deDE"] = L

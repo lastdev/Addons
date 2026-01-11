@@ -1,4 +1,6 @@
 local T = Angleur_Translate
+
+local debugChannel = 2
 local colorDebug = CreateColor(0.68, 0, 1) -- purple
 
 -- 'ang' is the angleur namespace
@@ -55,7 +57,6 @@ angleurToys = {
     --local crateBobberPossibilities = {{toyID = 444444, spellID = 444444}, {toyID = 555555, spellID = 555555}, {toyID = 666666, spellID = 666666}}
     ownedCrateBobbers = {},
     selectedCrateBobberTable = {name = 0, icon = 0, toyID = 0, spellID = 0, hasToy = false, loaded = false},
-    nextRandomCrateBobber = {name = 0, icon = 0, toyID = 0, spellID = 0, hasToy = false, loaded = false, last = nil},
 
     --Outdated implementation, not used
     extraToys = {
@@ -154,6 +155,10 @@ end
 
 function Angleur_ToyBoxOverlay_Activate(self, overlay)
     if InCombatLockdown() then return end
+    if UnitIsDeadOrGhost("player") then
+        print(T["Can't add toys while dead"])
+        return
+    end
     
     angleurToys.extraToySlotHolder = self
     if not CollectionsJournal then
@@ -226,7 +231,7 @@ function Angleur_ToyBoxOverlay_Watch(self, button)
         Angleur_SlottedExtraToys[parentKey].icon = toyInfo[3]
         local _
         _, Angleur_SlottedExtraToys[parentKey].spellID = C_Item.GetItemSpell(toyInfo[1])
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_ToyBoxOverlay_Watch ") .. ": New method: ", Angleur_SlottedExtraToys[parentKey].spellID)
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_ToyBoxOverlay_Watch ") .. ": New method: ", Angleur_SlottedExtraToys[parentKey].spellID)
 
         --We get the spellID using the "Angleur_ToyBoxOverlay_CaptureSpellID" here
         angleurToys.extraToyEventWatcher:RegisterEvent("UNIT_SPELLCAST_SENT")
@@ -247,7 +252,7 @@ function Angleur_ToyBoxOverlay_CaptureSpellID(self, event, unit, ...)
     local arg4, arg5, arg6 = ...
 
     if event == "UNIT_SPELLCAST_SENT" and unit == "player" then
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_ToyBoxOverlay_CaptureSpellID ") .. ": Previous method: ", arg6)
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_ToyBoxOverlay_CaptureSpellID ") .. ": Previous method: ", arg6)
         local parentKey = angleurToys.extraToySlotHolder:GetParentKey()
         Angleur_SlottedExtraToys[parentKey].spellID = arg6
     elseif event == "UNIT_SPELLCAST_FAILED" and unit == "player" then 

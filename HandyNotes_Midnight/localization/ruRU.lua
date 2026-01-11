@@ -10,20 +10,22 @@ L['skyriding_glyph'] = 'Символы высшего пилотажа'
 L['options_icons_skyriding_glyph'] = 'Символы высшего пилотажа'
 L['options_icons_skyriding_glyph_desc'] = 'Отображение местоположения всех символов высшего пилотажа.'
 
-L['midnight_telescope'] = nil
-L['telescopes_placed'] = nil
+L['midnight_telescope'] = 'Телескоп' -- is ingame called "Vista Flag" on beta
 L['options_icons_telescope'] = '{achievement:62057}'
-L['options_icons_telescope_desc'] = nil
+L['options_icons_telescope_desc'] = 'Отобразить расположение всех 10 телескопов для достижения {achievement:62057}.'
 
 L['options_icons_midnight_lore_hunter'] = '{achievement:62104}'
-L['options_icons_midnight_lore_hunter_desc'] = nil
+L['options_icons_midnight_lore_hunter_desc'] = 'Отобразить местоположение объектов, связанных с достижением {achievement:62104}.'
+
+L['options_icons_profession_treasures'] = 'Сокровища Профессии'
+L['options_icons_profession_treasures_desc'] = 'Отображение местонахождения сокровищ, дающих знания для профессий.'
 
 -------------------------------------------------------------------------------
 -------------------------------- EVERSONG WOODS --------------------------------
 -------------------------------------------------------------------------------
 
 L['eversong_woods_stone_vat_of_wine_note'] = nil
-L['on_flying_platform'] = nil
+L['on_flying_platform'] = 'На летающей платформе.'
 L['gift_of_the_phoenix_note'] = nil
 L['triple_locked_safebox_note'] = nil
 L['incomplete_book_of_sonnets'] = nil
@@ -41,7 +43,22 @@ L['options_icons_glowing_moth_desc'] = nil
 -------------------------------------------------------------------------------
 
 L['bloody_sack_note'] = nil
+L['malignant_chest_note'] = nil
+L['malignant_node'] = nil
 
 -------------------------------------------------------------------------------
 ---------------------------------- ZUL'AMAN ----------------------------------
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+---------------------------------- ARCANTINA ----------------------------------
+-------------------------------------------------------------------------------
+
+L['share_a_drink_note'] = nil
+
+-------------------------------------------------------------------------------
+----------------------------------- DELVES ------------------------------------
+-------------------------------------------------------------------------------
+
+L['sturdy_chest'] = 'Прочный сундук'
+L['sturdy_chest_suffix'] = 'Найден прочный сундук'

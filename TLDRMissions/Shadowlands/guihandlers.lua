@@ -13,8 +13,6 @@ local missionCounterUpper
 local calculateNextMission
 local setNextMissionText
 
-local pauseReports
-
 local missionWaitingUserAcceptance
 local calculatedMissionBacklog = {}
 
@@ -117,7 +115,7 @@ function addon:updateRewards()
         end
     end
     
-    for k, v in pairs(addon.db.profile.excludedRewards) do
+    for _, v in pairs(addon.db.profile.excludedRewards) do
         if v == "gold" then
             gui.GoldCheckButton.ExclusionLabel:Show()
         elseif v == "anima" then
@@ -410,7 +408,6 @@ local function startSacrifice()
     if sacrificeStarted then return end
     sacrificeStarted = true
     
-    local missions = C_Garrison.GetAvailableMissions(123)
     local excludedMissions = {}
     
     for _, category in pairs(addon.db.profile.excludedRewards) do
@@ -446,6 +443,7 @@ local function startSacrifice()
         end
     end
     
+    local missions = C_Garrison.GetAvailableMissions(123)
     local m = {}
     for _, mission in pairs(missions) do
         local animaCost = C_Garrison.GetMissionCost(mission.missionID)
@@ -505,7 +503,7 @@ local function startSacrifice()
     end
 end
 
-gui.CalculateButton:SetScript("OnClick", function (self, button)
+gui.CalculateButton:SetScript("OnClick", function (self)
     sacrificeStarted = false
     
     numSent = 0
@@ -522,7 +520,6 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     alreadyUsedFollowers = {}
     
     -- get missions matching conditions set
-    local missions = {}
     local excludedMissions = {}
     
     for _, category in pairs(addon.db.profile.excludedRewards) do
@@ -558,6 +555,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         end
     end
     
+    local missions = {}
     for i = 1, 12 do
         local newMissions = {}
         
@@ -685,7 +683,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
         end
         
         local n = {}
-        for k, v in pairs(newMissions) do
+        for _, v in pairs(newMissions) do
             table.insert(n, v)
         end
         newMissions = n
@@ -957,7 +955,7 @@ gui.CalculateButton:SetScript("OnClick", function (self, button)
     calculateNextMission(true)
 end)
 
-gui.AbortButton:SetScript("OnClick", function (self, button)
+gui.AbortButton:SetScript("OnClick", function (self)
 	self:SetEnabled(false)
     
     clearReportText()
@@ -972,7 +970,7 @@ gui.AbortButton:SetScript("OnClick", function (self, button)
     gui.SkipCalculationButton:SetEnabled(false)
 end)
 
-gui.SkipCalculationButton:SetScript("OnClick", function(self, button)
+gui.SkipCalculationButton:SetScript("OnClick", function(self)
     numSkipped = numSkipped + 1
     addon:clearWork()
     self:SetEnabled(false)
@@ -1015,7 +1013,7 @@ function addon:garrisonMissionStartedHandler(garrFollowerTypeID, missionID)
     end
 end
 
-gui.StartMissionButton:SetScript("OnClick", function(self, button)
+gui.StartMissionButton:SetScript("OnClick", function(self)
     self:SetEnabled(false)
     gui.SkipMissionButton:SetEnabled(false)
     
@@ -1075,7 +1073,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
     
     -- remove any followers already pending for this mission
-    local lineup =  C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
+    local lineup = C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
     if lineup then
         for _, followerID in pairs(lineup) do
             C_Garrison.RemoveFollowerFromMission(missionWaitingUserAcceptance.missionID, followerID)
@@ -1110,12 +1108,12 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
         end
     end
     
-    -- check the pending followers are correct, incase a slot was taken or something
-    local lineup = C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
+    lineup = C_Garrison.GetBasicMissionInfo(missionWaitingUserAcceptance.missionID).followers
     if not lineup then success = false end
+    -- check the pending followers are correct, incase a slot was taken or something
     for i = 1, 5 do
         if missionWaitingUserAcceptance.combination[i] then
-            local found = false
+            found = false
             for _, followerID in pairs(lineup) do
                 if missionWaitingUserAcceptance.combination[i] == followerID then
                     found = true
@@ -1149,7 +1147,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
             if not lineup then success = false end
             for i = 1, 5 do
                 if missionWaitingUserAcceptance.combination[i] then
-                    local found = false
+                    found = false
                     for _, followerID in pairs(lineup) do
                         if missionWaitingUserAcceptance.combination[i] == followerID then
                             found = true
@@ -1225,7 +1223,7 @@ gui.StartMissionButton:SetScript("OnClick", function(self, button)
     end
 end)
 
-gui.SkipMissionButton:SetScript("OnClick", function(self, button)
+gui.SkipMissionButton:SetScript("OnClick", function(self)
     numSkipped = numSkipped + 1
     self:SetEnabled(false)
     gui.CostLabel:Hide()
@@ -1306,7 +1304,7 @@ function addon.isWeeklyAnimaQuestPendingTurnin()
     return checkAnimaQuests(C_QuestLog.IsComplete)
 end
 
-gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
+gui.CompleteMissionsButton:SetScript("OnClick", function(self)
     local blockCompletionReason 
     if addon.db.profile.blockCompletion then
         if addon.db.profile.blockCompletionFilters.noQuest and (not addon.isOnWeeklyAnimaQuest()) and (not addon.isWeeklyAnimaQuestPreviouslyFinished()) then
@@ -1401,28 +1399,28 @@ gui.CompleteMissionsButton:SetScript("OnClick", function(self, button)
     end
 end)
 
-gui.MinimumTroopsSlider:SetScript("OnValueChanged", function(self, value, userInput)
+gui.MinimumTroopsSlider:SetScript("OnValueChanged", function(self, value)
     TLDRMissionsFrameMinimumTroopsSliderText:SetText(value)
     addon.db.profile.minimumTroops = value
 end)
 
-gui.LowerBoundLevelRestrictionSlider:SetScript("OnValueChanged", function(self, value, userInput)
+gui.LowerBoundLevelRestrictionSlider:SetScript("OnValueChanged", function(self, value)
     TLDRMissionsFrameSliderText:SetText(value)
     addon.db.profile.LevelRestriction = value
 end)
 
-gui.AnimaCostLimitSlider:SetScript("OnValueChanged", function(self, value, userInput)
+gui.AnimaCostLimitSlider:SetScript("OnValueChanged", function(self, value)
     TLDRMissionsFrameAnimaCostSliderText:SetText(value)
     addon.db.profile.AnimaCostLimit = value
 end)
 
-gui.SimulationsPerFrameSlider:SetScript("OnValueChanged", function(self, value, userInput)
+gui.SimulationsPerFrameSlider:SetScript("OnValueChanged", function(self, value)
     TLDRMissionsFrameSimulationsSliderText:SetText(value)
     addon.db.profile.workPerFrame = value
 end)
 
 -- the reputation submenu dropdown
-function gui.ReputationDropDown:OnSelect(factionID, arg2, checked)
+function gui.ReputationDropDown:OnSelect(factionID, _, checked)
     addon.db.profile.reputations[factionID] = checked
 end
 
@@ -1431,15 +1429,15 @@ function gui.CraftingCacheDropDown:OnSelect(categoryIndex, itemQuality, checked)
     addon.db.profile.craftingCacheTypes[categoryIndex][itemQuality] = checked
 end
 
-function gui.RunecarverDropDown:OnSelect(currencyID, arg2, checked)
+function gui.RunecarverDropDown:OnSelect(currencyID, _, checked)
     addon.db.profile.runecarver[currencyID] = checked
 end
 
-function gui.AnimaDropDown:OnSelect(itemQuality, arg2, checked)
+function gui.AnimaDropDown:OnSelect(itemQuality, _, checked)
     addon.db.profile.animaItemQualities[itemQuality] = checked
 end
 
-function gui.FollowerXPItemsDropDown:OnSelect(itemQuality, arg2, checked)
+function gui.FollowerXPItemsDropDown:OnSelect(itemQuality, _, checked)
     addon.db.profile.followerXPItemsItemQualities[itemQuality] = checked
 end
 
@@ -1469,15 +1467,15 @@ gui.DurationHigherSlider:SetScript("OnValueChanged", function(self, value, userI
     TLDRMissionsFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(addon.db.profile.durationLower, addon.db.profile.durationHigher))
 end)
 
-function gui.GearDropDown:OnSelect(goldCategory, arg2, checked)
+function gui.GearDropDown:OnSelect(goldCategory, _, checked)
     addon.db.profile.gearGoldCategories[goldCategory] = checked
 end
 
-function gui.CampaignDropDown:OnSelect(campaignCategory, arg2, checked)
+function gui.CampaignDropDown:OnSelect(campaignCategory, _, checked)
     addon.db.profile.campaignCategories[campaignCategory] = checked
 end
 
-function gui.SanctumFeatureDropDown:OnSelect(category, arg2, checked)
+function gui.SanctumFeatureDropDown:OnSelect(category, _, checked)
     for categoryName, c in pairs(addon.sanctumFeatureItems) do
         if category == categoryName then
             -- if any of them are checked, deselect them all. if none of them are checked, select them all
@@ -1507,6 +1505,6 @@ function gui.SanctumFeatureDropDown:OnSelect(category, arg2, checked)
     addon.db.profile.sanctumFeatureCategories[category] = checked
 end
 
-function gui.AnythingForXPDropDown:OnSelect(category, arg2, checked)
+function gui.AnythingForXPDropDown:OnSelect(category, _, checked)
     addon.db.profile.anythingForXPCategories[category] = checked
 end

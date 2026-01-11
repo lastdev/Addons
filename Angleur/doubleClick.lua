@@ -1,5 +1,6 @@
 local T = Angleur_Translate
 
+local debugChannel = 6
 local colorDebug = CreateColor(0.9, 0.47, 1) -- lily
 
 angleurDoubleClick = {
@@ -29,7 +30,7 @@ function Angleur_StuckFix()
 
         else
             MouselookStop()
-            Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_StuckFix ") .. ": Double Click mouse look released")
+            Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_StuckFix ") .. ": Double Click mouse look released")
         end
     end
 end
@@ -50,6 +51,7 @@ function Angleur_DoubleClickWatcher(self, event, button)
     if event == "GLOBAL_MOUSE_UP" then
         Angleur_StuckFix()
         if InCombatLockdown() then return end
+        if UnitIsDeadOrGhost("player") then return end
         if angleurDoubleClick.ignoreNextMouseUp then angleurDoubleClick.ignoreNextMouseUp = false return end
         if not angleurDoubleClick.watching then
             angleurDoubleClick.watching = true

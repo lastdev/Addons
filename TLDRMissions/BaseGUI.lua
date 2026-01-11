@@ -181,7 +181,7 @@ function addon.BaseGUIMixin:Init()
     self.SacrificeCheckButton = CreateFrame("CheckButton", "TLDRMissions"..self.followerTypeID.."FrameSacrificeCheckButton", self.MainTabPanel, "UICheckButtonTemplate")
     self.SacrificeCheckButton:SetPoint("TOPLEFT", self.AnythingForXPCheckButton, 0, -22)
     _G["TLDRMissions"..self.followerTypeID.."FrameSacrificeCheckButtonText"]:SetText(L["SacrificeLabel"])
-    self.SacrificeCheckButton:SetEnabled(false)
+    self.SacrificeCheckButton:Hide()
 
     self.CalculateButton = CreateFrame("Button", "TLDRMissions"..self.followerTypeID.."FrameCalculateButton", self.MainTabPanel, "UIPanelButtonTemplate")
     self.CalculateButton:SetPoint("TOPLEFT", self.SacrificeCheckButton, -10, -30)
@@ -262,16 +262,6 @@ function addon.BaseGUIMixin:Init()
             g:SetPoint("TOPLEFT", self["EstimateFollower"..(i-1).."Label"], "BOTTOMLEFT", 0, -2)
         end
     end
-
-    self.WarningLabel = self.MainTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."FrameWarningLabel", "OVERLAY", "GameFontNormal")
-    self.WarningLabel:SetPoint("TOPLEFT", self.EstimateLabel, "BOTTOMLEFT", 0, -30)
-    self.WarningLabel:SetText([[
-        This module is still in development.
-        
-        Warning: due to a bug in the game, pressing this Complete Missions Button will cause any troops out on missions to stay alive with zero health.
-        If you want those troops to properly die, complete the missions manually through the default UI!
-        ]])
-    self.WarningLabel:SetSize(300, 150)
 
     self.CompleteMissionsButton = CreateFrame("Button", "TLDRMissions"..self.followerTypeID.."FrameCompleteMissionsButton", self.MainTabPanel, "UIPanelButtonTemplate")
     self.CompleteMissionsButton:SetPoint("BOTTOM", self, "BOTTOM", 0, 10)
@@ -376,35 +366,37 @@ function addon.BaseGUIMixin:Init()
     self.DurationHigherSlider:SetMinMaxValues(1, 24)
     self.DurationHigherSlider:SetValue(24)
 
-    self.MinimumTroopsLabel = self.AdvancedTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsLabel", "OVERLAY", "GameFontNormal")
-    self.MinimumTroopsLabel:SetPoint("TOPLEFT", self.DurationHigherSlider, -20, -20)
-    self.MinimumTroopsLabel:SetText(L["MinimumTroops"])
-    self.MinimumTroopsLabel:SetWordWrap(true)
-    self.MinimumTroopsLabel:SetWidth(300)
+    if self ~= addon.WODGUI then
+        self.MinimumTroopsLabel = self.AdvancedTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsLabel", "OVERLAY", "GameFontNormal")
+        self.MinimumTroopsLabel:SetPoint("TOPLEFT", self.DurationHigherSlider, -20, -20)
+        self.MinimumTroopsLabel:SetText(L["MinimumTroops"])
+        self.MinimumTroopsLabel:SetWordWrap(true)
+        self.MinimumTroopsLabel:SetWidth(300)
 
-    self.MinimumTroopsSlider = CreateFrame("Slider", "TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSlider", self.AdvancedTabPanel, "OptionsSliderTemplate")
-    self.MinimumTroopsSlider:SetPoint("TOPLEFT", self.MinimumTroopsLabel, 20, -10)
-    self.MinimumTroopsSlider:SetSize(280, 20)
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderLow"]:SetText("0")
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderHigh"]:SetText("3")
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetText("2")
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:ClearAllPoints()
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetPoint("TOP", "TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSlider", "BOTTOM", 0, 3)
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetFontObject("GameFontHighlightSmall")
-    _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetTextColor(0, 1, 0)
-    self.MinimumTroopsSlider:SetOrientation('HORIZONTAL')
-    self.MinimumTroopsSlider:SetValueStep(1)
-    self.MinimumTroopsSlider:SetObeyStepOnDrag(true)
-    self.MinimumTroopsSlider:SetMinMaxValues(0, 3)
-    self.MinimumTroopsSlider:SetValue(2)
+        self.MinimumTroopsSlider = CreateFrame("Slider", "TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSlider", self.AdvancedTabPanel, "OptionsSliderTemplate")
+        self.MinimumTroopsSlider:SetPoint("TOPLEFT", self.MinimumTroopsLabel, 20, -10)
+        self.MinimumTroopsSlider:SetSize(280, 20)
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderLow"]:SetText("0")
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderHigh"]:SetText("3")
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetText("2")
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:ClearAllPoints()
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetPoint("TOP", "TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSlider", "BOTTOM", 0, 3)
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetFontObject("GameFontHighlightSmall")
+        _G["TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsSliderText"]:SetTextColor(0, 1, 0)
+        self.MinimumTroopsSlider:SetOrientation('HORIZONTAL')
+        self.MinimumTroopsSlider:SetValueStep(1)
+        self.MinimumTroopsSlider:SetObeyStepOnDrag(true)
+        self.MinimumTroopsSlider:SetMinMaxValues(0, 3)
+        self.MinimumTroopsSlider:SetValue(2)
 
-    self.MinimumTroopsInfoLabel = self.AdvancedTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsInfoLabel", "OVERLAY", "GameFontNormal")
-    self.MinimumTroopsInfoLabel:SetPoint("TOPLEFT", self.MinimumTroopsSlider, "BOTTOMLEFT", 0, -10)
-    self.MinimumTroopsInfoLabel:SetText("Set minimum troops to 3 for 'use as many as possible'.")
-    self.MinimumTroopsInfoLabel:SetSize(250, 30)
+        self.MinimumTroopsInfoLabel = self.AdvancedTabPanel:CreateFontString("TLDRMissions"..self.followerTypeID.."FrameMinimumTroopsInfoLabel", "OVERLAY", "GameFontNormal")
+        self.MinimumTroopsInfoLabel:SetPoint("TOPLEFT", self.MinimumTroopsSlider, "BOTTOMLEFT", 0, -10)
+        self.MinimumTroopsInfoLabel:SetText("Set minimum troops to 3 for 'use as many as possible'.")
+        self.MinimumTroopsInfoLabel:SetSize(250, 30)
+    end
 
     self.AutoShowButton = CreateFrame("CheckButton", "TLDRMissions"..self.followerTypeID.."FrameAutoShowButton", self.AdvancedTabPanel, "UICheckButtonTemplate")
-    self.AutoShowButton:SetPoint("TOPLEFT", self.MinimumTroopsInfoLabel, -20, -30)
+    self.AutoShowButton:SetPoint("TOPLEFT", self.MinimumTroopsInfoLabel or self.DurationHigherSlider, -20, -30)
     _G["TLDRMissions"..self.followerTypeID.."FrameAutoShowButtonText"]:SetText(L["AutoShowLabel"])
 
     self.AutoShowButton:HookScript("OnClick", function()
@@ -446,6 +438,10 @@ function addon.BaseGUIMixin:Init()
     self.DurationLowerSlider:SetScript("OnValueChanged", addon.DurationLowerSliderOnValueChangedHandler)
     self.DurationHigherSlider:SetScript("OnValueChanged", addon.DurationHigherSliderOnValueChangedHandler)
     self.AnimaCostLimitSlider:SetScript("OnValuechanged", addon.ResourceCostLimitSliderOnValueChangedHandler)
-    self.MinimumTroopsSlider:SetScript("OnValuechanged", addon.MinimumTroopsSliderOnValueChangedHandler)
+    if self ~= addon.WODGUI then self.MinimumTroopsSlider:SetScript("OnValuechanged", addon.MinimumTroopsSliderOnValueChangedHandler) end
     self.LowerBoundLevelRestrictionSlider:SetScript("OnValuechanged", addon.LevelRestrictionSliderOnValueChangedHandler)
+    
+    self:InitCalculateButton()
+    self:InitStartMissionButton()
+    self:InitSkipMissionButton()
 end

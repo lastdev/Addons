@@ -1,8 +1,6 @@
 local addonName, addon = ...
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-
 
 addon.LegionGUIMixin = CreateFromMixins(addon.BaseGUIMixin)
 
@@ -15,9 +13,10 @@ function addon.LegionGUIMixin:Init()
     self:setupRewardCheckbox("Reputation", L["ReputationTokens"])
     self:setupRewardCheckbox("Gear", WORLD_QUEST_REWARD_FILTERS_EQUIPMENT)
     self:setupRewardCheckbox("CraftingReagents", PROFESSIONS_MODIFIED_CRAFTING_REAGENT_BASIC)
+    self:setupRewardCheckbox("AugmentRunes", L["AugmentRunes"])
     
     self.ProfileTabButton:SetScript("OnClick", function()
-        LibStub("AceConfigDialog-3.0"):Open("TLDRMissions-BFA")
+        LibStub("AceConfigDialog-3.0"):Open("TLDRMissions-Legion")
     end)
 
     self.SacrificeCheckButton:SetEnabled(false)
@@ -31,4 +30,6 @@ function addon.LegionGUIMixin:Init()
     end)
     
     self:InitRewardCheckButtons()
+    
+    self.AnimaCostLimitSlider:SetMinMaxValues(10, 5000)
 end

@@ -162,11 +162,11 @@ function addon:arrangeFollowerCombinationsByMostFollowersPlusTroops(followers, m
     
     local batch = addon:createWorkBatch(4)
     
-    local function testEachTroop(callback, highPriorityBatch)
+    local function testEachTroop(callback2, highPriorityBatch)
         for troopType = 1, 2 do
             table.insert(lineup, troop[troopType])
-            if callback then
-                callback(nil, highPriorityBatch)
+            if callback2 then
+                callback2(nil, highPriorityBatch)
             else
                 highPriorityBatch = highPriorityBatch or addon:createWorkBatch(3) 
                 addon:addWork(highPriorityBatch, addon.arrangeAllFollowerPositions, addon, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5], missionID, report)
@@ -175,16 +175,16 @@ function addon:arrangeFollowerCombinationsByMostFollowersPlusTroops(followers, m
         end
     end
     
-    local function testFollower(follower, callback)
+    local function testFollower(follower, callback2)
         table.insert(lineup, follower)
         local highPriorityBatch = addon:createWorkBatch(3)
         
         if not addon:isResultCacheGuaranteedFailure(missionID, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5]) then
-            if (callback and (addon.db.profile.minimumTroops < #lineup)) or (not callback) then
+            if (callback2 and (addon.db.profile.minimumTroops < #lineup)) or (not callback2) then
                 addon:addWork(highPriorityBatch, addon.arrangeAllFollowerPositions, addon, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5], missionID, report)
             end
-            if callback then
-                callback(nil, highPriorityBatch)
+            if callback2 then
+                callback2(nil, highPriorityBatch)
             end
             
             addon:addWork(highPriorityBatch, addon.setResultCacheGuaranteedFailure, addon, missionID, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5])
@@ -262,14 +262,14 @@ function addon:arrangeFollowerCombinationsByMostFollowersPlusTroops(followers, m
                 table.insert(lineup, follower2)
                 for k = (j+1), #followers do
                     local follower3 = followers[k]
-                    testFollower(follower3, function(callback, batch)
+                    testFollower(follower3, function(_, batch2)
                         -- test the followers + 1 troop
                         if addon.db.profile.minimumTroops < 4 then
-                            testEachTroop(nil, batch)
+                            testEachTroop(nil, batch2)
                         end
                         
                         -- test the follower + 2 troops
-                        testEachTroop(testEachTroop, batch)
+                        testEachTroop(testEachTroop, batch2)
                     end)
                 end
                 table.remove(lineup)
@@ -286,19 +286,19 @@ function addon:arrangeFollowerCombinationsByMostFollowersPlusTroops(followers, m
             for j = (i+1), #followers do
                 local follower2 = followers[j]
                 
-                testFollower(follower2, function(_, batch)
+                testFollower(follower2, function(_, batch2)
                     if addon.db.profile.minimumTroops < 3 then
                         -- test the followers + 1 troop
-                        testEachTroop(nil, batch)
+                        testEachTroop(nil, batch2)
                     end
                     
                     if addon.db.profile.minimumTroops < 4 then
                         -- test the follower + 2 troops
-                        testEachTroop(testEachTroop, batch)
+                        testEachTroop(testEachTroop, batch2)
                     end
             
                     -- test the follower + 3 troops
-                    testEachTroop(function(_, batch) testEachTroop(testEachTroop, batch) end, batch)
+                    testEachTroop(function(_, batch3) testEachTroop(testEachTroop, batch3) end, batch2)
                 end)
             end
             table.remove(lineup)
@@ -354,7 +354,7 @@ function addon:arrangeFollowerCombinationsByMostFollowersPlusTroops(followers, m
     addon:unpauseWorker()
 end
 
-function addon:arrangeFollowerCombinationsByFewestFollowersPlusTroops(followers, missionID, callback, sortBy, troopsSetting)
+function addon:arrangeFollowerCombinationsByFewestFollowersPlusTroops(followers, missionID, callback, sortBy)
     addon:pauseWorker()
     
     followers = addon:sortFollowers(followers, sortBy)
@@ -373,11 +373,11 @@ function addon:arrangeFollowerCombinationsByFewestFollowersPlusTroops(followers,
     
     local batch = addon:createWorkBatch(4)
     
-    local function testEachTroop(callback, highPriorityBatch)
+    local function testEachTroop(callback2, highPriorityBatch)
         for troopType = 1, 2 do
             table.insert(lineup, troop[troopType])
-            if callback then
-                callback(nil, highPriorityBatch)
+            if callback2 then
+                callback2(nil, highPriorityBatch)
             else
                 highPriorityBatch = highPriorityBatch or addon:createWorkBatch(3) 
                 addon:addWork(highPriorityBatch, addon.arrangeAllFollowerPositions, addon, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5], missionID, report)
@@ -386,16 +386,16 @@ function addon:arrangeFollowerCombinationsByFewestFollowersPlusTroops(followers,
         end
     end
     
-    local function testFollower(follower, callback)
+    local function testFollower(follower, callback2)
         table.insert(lineup, follower)
         local highPriorityBatch = addon:createWorkBatch(3)
         
         if not addon:isResultCacheGuaranteedFailure(missionID, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5]) then
-            if (callback and (addon.db.profile.minimumTroops < #lineup)) or (not callback) then
+            if (callback2 and (addon.db.profile.minimumTroops < #lineup)) or (not callback2) then
                 addon:addWork(highPriorityBatch, addon.arrangeAllFollowerPositions, addon, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5], missionID, report)
             end
-            if callback then
-                callback(nil, highPriorityBatch)
+            if callback2 then
+                callback2(nil, highPriorityBatch)
             end
             
             addon:addWork(highPriorityBatch, addon.setResultCacheGuaranteedFailure, addon, missionID, lineup[1], lineup[2], lineup[3], lineup[4], lineup[5])
@@ -498,21 +498,21 @@ function addon:arrangeFollowerCombinationsByFewestFollowersPlusTroops(followers,
                 end
                 
                 if continue then
-                    testFollower(follower2, function(_, batch)
+                    testFollower(follower2, function(_, batch2)
                         if (missionID ~= 2266) and (missionID ~= 2343) then
                             if addon.db.profile.minimumTroops < 3 then
                                 -- test the followers + 1 troop
-                                testEachTroop(nil, batch)
+                                testEachTroop(nil, batch2)
                             end
                             
                             if addon.db.profile.minimumTroops < 4 then
                                 -- test the follower + 2 troops
-                                testEachTroop(testEachTroop, batch)
+                                testEachTroop(testEachTroop, batch2)
                             end
                         end
                 
                         -- test the follower + 3 troops
-                        testEachTroop(function(_, batch) testEachTroop(testEachTroop, batch) end, batch)
+                        testEachTroop(function(_, batch3) testEachTroop(testEachTroop, batch3) end, batch2)
                     end)
                 end
             end
@@ -556,16 +556,16 @@ function addon:arrangeFollowerCombinationsByFewestFollowersPlusTroops(followers,
                     end
                 
                     if continue then
-                        testFollower(follower3, function(callback, batch)
+                        testFollower(follower3, function(_, batch2)
                             if (missionID ~= 2266) and (missionID ~= 2343) then
                                 -- test the followers + 1 troop
                                 if addon.db.profile.minimumTroops < 4 then
-                                    testEachTroop(nil, batch)
+                                    testEachTroop(nil, batch2)
                                 end
                             end
                             
                             -- test the follower + 2 troops
-                            testEachTroop(testEachTroop, batch)
+                            testEachTroop(testEachTroop, batch2)
                         end)
                     end
                 end

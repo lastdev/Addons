@@ -1,20 +1,31 @@
--- Collection API Module
+-- Housing Collection API Module
 -- Centralized collection status detection and caching
 
-local CollectionAPI = {}
-CollectionAPI.__index = CollectionAPI
+local HousingCollectionAPI = {}
+HousingCollectionAPI.__index = HousingCollectionAPI
+
+-- TAINT FIX: Global safety flag to prevent calling Housing APIs before delay period
+-- This flag is shared across the entire addon to prevent race conditions
+-- Flag starts as false, will be set to true after 3-second delay in Initialize()
+_G.HousingCatalogSafeToCall = false
 
 -- Session caches (cleared on reload)
 local sessionCollectionCache = {}  -- itemID -> boolean (is collected)
 
--- Helper: Get itemID from decorID using HousingDecorData
+-- Persistent cache support (stored in HousingDB.collectedDecor)
+local persistentCacheEnabled = true  -- Enable persistent cache to fix collection detection issues
+
+-- PERFORMANCE: Flag to disable EventRegistry callback when UI/zone popup are both closed
+local eventHandlersActive = false
+
+-- Helper: Get itemID from decorID using HousingAllItems
 local function GetItemIDFromDecorID(decorID)
-    if not HousingDecorData or not decorID then
+    if not HousingAllItems or not decorID then
         return nil
     end
-    
-    -- Search through HousingDecorData to find itemID for this decorID
-    for itemID, decorData in pairs(HousingDecorData) do
+
+    -- Search through HousingAllItems to find itemID for this decorID
+    for itemID, decorData in pairs(HousingAllItems) do
         if decorData and decorData.decorID == decorID then
             return tonumber(itemID)
         end
@@ -23,77 +34,57 @@ local function GetItemIDFromDecorID(decorID)
     return nil
 end
 
--- Helper: Get decorID from itemID using HousingDecorData
+-- Helper: Get decorID from itemID using HousingAllItems
 local function GetDecorIDFromItemID(itemID)
-    if not HousingDecorData or not itemID then
+    if not HousingAllItems or not itemID then
         return nil
     end
-    
+
     local numericItemID = tonumber(itemID)
     if not numericItemID then
         return nil
     end
-    
-    local decorData = HousingDecorData[numericItemID]
-    if decorData and decorData.decorID then
-        return decorData.decorID
+
+    local decorData = HousingAllItems[numericItemID]
+    if decorData and decorData[1] then  -- Index 1 = decorID (HousingItemFields.DECOR_ID)
+        return decorData[1]
     end
     
     return nil
 end
 
--- Initialize persistent collection cache in saved variables
-local function InitializeCollectionCache()
-    if not HousingDB then
-        HousingDB = {}
-    end
-    if not HousingDB.collectedDecor then
-        HousingDB.collectedDecor = {}
-    end
-    
-    -- Migrate old HousingVendorCache.permanentCollections to HousingDB.collectedDecor
-    if HousingVendorCache and HousingVendorCache.permanentCollections then
-        local migrated = 0
-        for itemID, _ in pairs(HousingVendorCache.permanentCollections) do
-            if not HousingDB.collectedDecor[itemID] then
-                HousingDB.collectedDecor[itemID] = true
-                migrated = migrated + 1
-            end
-        end
-        if migrated > 0 then
-            -- Clear old cache after migration
-            HousingVendorCache.permanentCollections = {}
-        end
-    end
-end
-
 -- Check if item is cached as collected (checks both session and persistent cache)
 local function IsItemCached(itemID)
-    -- Check persistent cache first (fastest, survives reloads)
-    if HousingDB and HousingDB.collectedDecor and HousingDB.collectedDecor[itemID] == true then
-        return true
-    end
-    
-    -- Check session cache (faster than API, but cleared on reload)
+    -- Check session cache first (fastest)
     if sessionCollectionCache[itemID] == true then
         return true
     end
-    
+
+    -- Check persistent cache (HousingDB.collectedDecor)
+    if persistentCacheEnabled and HousingDB and HousingDB.collectedDecor then
+        if HousingDB.collectedDecor[itemID] == true then
+            -- Also cache in session for faster future lookups
+            sessionCollectionCache[itemID] = true
+            return true
+        end
+    end
+
     return false
 end
 
 -- Mark item as collected in both session and persistent cache
 local function CacheItemAsCollected(itemID)
-    InitializeCollectionCache()
-    
-    -- Cache in persistent storage (survives reloads)
-    if HousingDB and HousingDB.collectedDecor then
+    -- Cache in session (fast lookups)
+    sessionCollectionCache[itemID] = true
+
+    -- Also cache persistently to SavedVariables (survives reload/logout)
+    if persistentCacheEnabled and HousingDB then
+        if not HousingDB.collectedDecor then
+            HousingDB.collectedDecor = {}
+        end
         HousingDB.collectedDecor[itemID] = true
     end
-    
-    -- Cache in session (faster lookups)
-    sessionCollectionCache[itemID] = true
-    
+
     -- Invalidate filter cache so collection filter can re-run with updated status
     -- This ensures that when items are cached (via tooltip callbacks or API checks),
     -- the filter will use the updated collection status on next application
@@ -105,23 +96,140 @@ end
 -- Prime housing catalog searcher (caches decor data)
 -- Being aggressive with creating searchers is fine - recache on zone transitions and searcher release
 local function PrimeHousingCatalog()
+    -- TAINT FIX: Safety check before calling Housing APIs
+    if not _G.HousingCatalogSafeToCall then
+        return
+    end
+
     if not C_HousingCatalog then
         return
     end
-    
+
     if C_HousingCatalog.CreateCatalogSearcher then
         pcall(C_HousingCatalog.CreateCatalogSearcher)
     end
 end
 
+------------------------------------------------------------
+-- Helper: Get catalog entry state for an itemID
+-- Consolidates the repeated logic for checking catalog entries
+-- Returns: state table with numStored, numPlaced, or nil if not found
+------------------------------------------------------------
+local function GetCatalogEntryState(numericItemID)
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then
+        return nil
+    end
+
+    if not numericItemID or not C_HousingCatalog then
+        return nil
+    end
+
+    -- Request item data to be loaded first
+    if C_Item and C_Item.RequestLoadItemDataByID then
+        C_Item.RequestLoadItemDataByID(numericItemID)
+    end
+
+    local state = nil
+
+    -- Method 1: Try GetCatalogEntryInfoByItem FIRST (uses itemID directly)
+    -- This is more reliable for items not in HousingAllItems and doesn't depend on decorID
+    -- TAINT FIX: Check safety flag BEFORE accessing C_HousingCatalog (even existence checks)
+    if C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByItem then
+        PrimeHousingCatalog()
+        local success, itemState = pcall(function()
+            return C_HousingCatalog.GetCatalogEntryInfoByItem(numericItemID, true)
+        end)
+        if success and itemState then
+            state = itemState
+        end
+    end
+
+    -- Method 2: Fallback to GetCatalogEntryInfoByRecordID (uses decorID, requires static data)
+    if not state and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByRecordID then
+        local baseInfo = nil
+        local decorID = nil
+
+        -- Try HousingAPI first
+        if HousingAPI then
+            baseInfo = HousingAPI:GetDecorItemInfoFromItemID(numericItemID)
+            if baseInfo and baseInfo.decorID then
+                decorID = baseInfo.decorID
+            end
+        end
+
+        -- Fallback to HousingAllItems
+        if not decorID then
+            decorID = GetDecorIDFromItemID(numericItemID)
+        end
+
+        if decorID then
+            local decorType = Enum.HousingCatalogEntryType.Decor
+            PrimeHousingCatalog()
+            local success, recordState = pcall(function()
+                return C_HousingCatalog.GetCatalogEntryInfoByRecordID(decorType, decorID, true)
+            end)
+            if success and recordState then
+                state = recordState
+            end
+        end
+    end
+
+    return state
+end
+
 -- Force recache catalog searcher (call on zone transitions and HOUSING_CATALOG_SEARCHER_RELEASED)
 local function ForceRecacheCatalogSearcher()
+    -- TAINT FIX: Safety check before calling Housing APIs
+    if not _G.HousingCatalogSafeToCall then
+        return
+    end
+
     if not C_HousingCatalog then
         return
     end
-    
+
     if C_HousingCatalog.CreateCatalogSearcher then
         pcall(C_HousingCatalog.CreateCatalogSearcher)
+    end
+end
+
+------------------------------------------------------------
+-- Event Handling (lifecycle-controlled)
+------------------------------------------------------------
+
+local eventFrame = nil
+local housingCatalogUpdatedRegistered = false
+
+local function EnsureEventFrame()
+    if not eventFrame then
+        eventFrame = CreateFrame("Frame")
+    end
+    return eventFrame
+end
+
+local function HandleEvent(self, event, ...)
+    if event == "HOUSING_CATALOG_SEARCHER_RELEASED" then
+        -- Force recache when searcher is released
+        ForceRecacheCatalogSearcher()
+    elseif event == "HOUSING_STORAGE_UPDATED" then
+        -- This event triggers twice, so add delay
+        -- Refresh collection status after storage update
+        C_Timer.After(2, function()
+            -- Don't clear all - just let it refresh naturally on next check
+        end)
+    elseif event == "HOUSING_CATALOG_UPDATED" and housingCatalogUpdatedRegistered then
+        -- Clear session cache when catalog updates (persistent cache remains)
+        -- Only handle if event was successfully registered (Midnight API)
+        HousingCollectionAPI:ClearSessionCache()
+    elseif event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
+        -- Recache on zone transitions (being aggressive is fine)
+        C_Timer.After(0.5, function()
+            ForceRecacheCatalogSearcher()
+        end)
+    elseif event == "PLAYER_LOGOUT" then
+        -- Clear session cache on logout (persistent cache is saved automatically)
+        HousingCollectionAPI:ClearSessionCache()
     end
 end
 
@@ -129,7 +237,7 @@ end
 -- Public API: Check if item is collected (returns boolean)
 ------------------------------------------------------------
 
-function CollectionAPI:IsItemCollected(itemID)
+function HousingCollectionAPI:IsItemCollected(itemID)
     if not itemID or itemID == "" then
         return false
     end
@@ -156,8 +264,19 @@ function CollectionAPI:IsItemCollected(itemID)
     -- Fallback to direct API calls
     local isCollected = false
 
-    -- Method 1: Use C_Housing.IsDecorCollected (correct API for housing decor)
-    if C_Housing and C_Housing.IsDecorCollected then
+    -- Method 1: Check catalog entry (numStored + numPlaced) - MOST RELIABLE
+    -- This is the primary method for filtering and should be tried first
+    local state = GetCatalogEntryState(numericItemID)
+    if state then
+        local sum = (state.numStored or 0) + (state.numPlaced or 0)
+        if sum > 0 and sum < 1000000 then
+            isCollected = true
+            CacheItemAsCollected(numericItemID)
+        end
+    end
+
+    -- Method 2: Use C_Housing.IsDecorCollected (correct API for housing decor)
+    if not isCollected and _G.HousingCatalogSafeToCall and C_Housing and C_Housing.IsDecorCollected then
         local success, collected = pcall(function()
             return C_Housing.IsDecorCollected(numericItemID)
         end)
@@ -169,65 +288,9 @@ function CollectionAPI:IsItemCollected(itemID)
         end
     end
 
-    -- Method 2a: Try GetCatalogEntryInfoByRecordID first (preferred method)
-    -- Use HousingDecorData to get decorID from itemID if HousingAPI doesn't work
-    if not isCollected and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByRecordID then
-        -- Get decorID from itemID (may need item data loaded first)
-        local baseInfo = nil
-        local decorID = nil
-        
-        -- Try HousingAPI first
-        if HousingAPI then
-            -- Request item data load before getting decor info (important after cache deletion)
-            if C_Item and C_Item.RequestLoadItemDataByID then
-                C_Item.RequestLoadItemDataByID(numericItemID)
-            end
-            baseInfo = HousingAPI:GetDecorItemInfoFromItemID(numericItemID)
-            if baseInfo and baseInfo.decorID then
-                decorID = baseInfo.decorID
-            end
-        end
-        
-        -- Fallback to HousingDecorData if HousingAPI didn't work
-        if not decorID then
-            decorID = GetDecorIDFromItemID(numericItemID)
-        end
-        
-        if decorID then
-            local decorType = Enum.HousingCatalogEntryType.Decor
-            PrimeHousingCatalog()
-            local success, state = pcall(function()
-                return C_HousingCatalog.GetCatalogEntryInfoByRecordID(decorType, decorID, true)
-            end)
-            if success and state then
-                local sum = (state.numStored or 0) + (state.numPlaced or 0)
-                if sum > 0 and sum < 1000000 then
-                    isCollected = true
-                    CacheItemAsCollected(numericItemID)
-                end
-            end
-        end
-    end
-
-    -- Method 2b: Fallback - Check numStored + numPlaced from catalog using GetCatalogEntryInfoByItem
-    -- This works even if decorID isn't available (uses itemID directly)
-    -- This is the most reliable method for filtering
-    if not isCollected and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByItem then
-        PrimeHousingCatalog()
-        local success, state = pcall(function()
-            return C_HousingCatalog.GetCatalogEntryInfoByItem(numericItemID, true)
-        end)
-        if success and state then
-            local sum = (state.numStored or 0) + (state.numPlaced or 0)
-            if sum > 0 and sum < 1000000 then
-                isCollected = true
-                CacheItemAsCollected(numericItemID)
-            end
-        end
-    end
-
     -- Method 3: Fallback to housing catalog API (alternative method)
-    if not isCollected and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryByItemID then
+    -- TAINT FIX: Only call if safe delay period has passed
+    if not isCollected and _G.HousingCatalogSafeToCall and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryByItemID then
         PrimeHousingCatalog()
         local success, entryInfo = pcall(function()
             return C_HousingCatalog.GetCatalogEntryByItemID(numericItemID)
@@ -248,7 +311,7 @@ function CollectionAPI:IsItemCollected(itemID)
     end
 
     -- Method 4: Fallback to generic item collection API (for non-decor items)
-    if not isCollected and C_PlayerInfo and C_PlayerInfo.IsItemCollected then
+    if not isCollected and _G.HousingCatalogSafeToCall and C_PlayerInfo and C_PlayerInfo.IsItemCollected then
         local success, collected = pcall(function()
             return C_PlayerInfo.IsItemCollected(numericItemID)
         end)
@@ -267,7 +330,7 @@ end
 -- Public API: Get detailed collection info
 ------------------------------------------------------------
 
-function CollectionAPI:GetCollectionInfo(itemID)
+function HousingCollectionAPI:GetCollectionInfo(itemID)
     if not itemID or itemID == "" then
         return {
             isCollected = false,
@@ -307,43 +370,9 @@ function CollectionAPI:GetCollectionInfo(itemID)
             end
         end
     else
-        -- Not cached, query API - try both methods
-        local state = nil
-        
-        -- Try GetCatalogEntryInfoByRecordID first 
-        if C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByRecordID then
-            local baseInfo = nil
-            if HousingAPI then
-                -- Request item data load before getting decor info
-                if C_Item and C_Item.RequestLoadItemDataByID then
-                    C_Item.RequestLoadItemDataByID(numericItemID)
-                end
-                baseInfo = HousingAPI:GetDecorItemInfoFromItemID(numericItemID)
-            end
-            
-            if baseInfo and baseInfo.decorID then
-                local decorType = Enum.HousingCatalogEntryType.Decor
-                PrimeHousingCatalog()
-                local success, recordState = pcall(function()
-                    return C_HousingCatalog.GetCatalogEntryInfoByRecordID(decorType, baseInfo.decorID, true)
-                end)
-                if success and recordState then
-                    state = recordState
-                end
-            end
-        end
-        
-        -- Fallback to GetCatalogEntryInfoByItem if recordID method didn't work
-        if not state and C_HousingCatalog and C_HousingCatalog.GetCatalogEntryInfoByItem then
-            PrimeHousingCatalog()
-            local success, itemState = pcall(function()
-                return C_HousingCatalog.GetCatalogEntryInfoByItem(numericItemID, true)
-            end)
-            if success and itemState then
-                state = itemState
-            end
-        end
-        
+        -- Not cached, query API using consolidated helper
+        local state = GetCatalogEntryState(numericItemID)
+
         if state then
             numStored = state.numStored or 0
             numPlaced = state.numPlaced or 0
@@ -369,7 +398,7 @@ end
 -- Public API: Manually mark item as collected
 ------------------------------------------------------------
 
-function CollectionAPI:MarkItemCollected(itemID)
+function HousingCollectionAPI:MarkItemCollected(itemID)
     if not itemID or itemID == "" then
         return
     end
@@ -386,7 +415,7 @@ end
 -- Public API: Clear collection cache
 ------------------------------------------------------------
 
-function CollectionAPI:ClearCache(itemID)
+function HousingCollectionAPI:ClearCache(itemID)
     if itemID then
         local numericItemID = tonumber(itemID)
         if numericItemID then
@@ -410,7 +439,7 @@ end
 -- Public API: Clear session cache only (keeps persistent cache)
 ------------------------------------------------------------
 
-function CollectionAPI:ClearSessionCache()
+function HousingCollectionAPI:ClearSessionCache()
     wipe(sessionCollectionCache)
 end
 
@@ -418,7 +447,7 @@ end
 -- Public API: Get cache statistics
 ------------------------------------------------------------
 
-function CollectionAPI:GetCacheStats()
+function HousingCollectionAPI:GetCacheStats()
     local persistentCount = 0
     if HousingDB and HousingDB.collectedDecor then
         for _ in pairs(HousingDB.collectedDecor) do
@@ -443,7 +472,7 @@ end
 -- (for compatibility with existing code that uses HousingAPI)
 ------------------------------------------------------------
 
-function CollectionAPI:IsItemCollectedViaHousingAPI(itemID)
+function HousingCollectionAPI:IsItemCollectedViaHousingAPI(itemID)
     if not itemID or itemID == "" then
         return false
     end
@@ -471,8 +500,8 @@ function CollectionAPI:IsItemCollectedViaHousingAPI(itemID)
             end
         end
 
-        -- Fallback: Check numStored + numPlaced via HousingAPI
-        local state = HousingAPI:GetCatalogEntryInfoByItem(numericItemID)
+        -- Fallback: Use consolidated catalog entry helper
+        local state = GetCatalogEntryState(numericItemID)
         if state then
             local sum = (state.numStored or 0) + (state.numPlaced or 0)
             if sum > 0 and sum < 1000000 then
@@ -489,7 +518,7 @@ end
 -- Public API: Force recache for specific item
 ------------------------------------------------------------
 
-function CollectionAPI:ForceRecache(itemID)
+function HousingCollectionAPI:ForceRecache(itemID)
     if not itemID or itemID == "" then
         return
     end
@@ -512,7 +541,7 @@ end
 -- Public API: Force recache catalog searcher
 ------------------------------------------------------------
 
-function CollectionAPI:RecacheCatalogSearcher()
+function HousingCollectionAPI:RecacheCatalogSearcher()
     ForceRecacheCatalogSearcher()
 end
 
@@ -521,7 +550,7 @@ end
 -- Refreshes collection status for a list of itemIDs
 ------------------------------------------------------------
 
-function CollectionAPI:BatchRefreshCollectionStatus(itemIDs)
+function HousingCollectionAPI:BatchRefreshCollectionStatus(itemIDs)
     if not itemIDs or #itemIDs == 0 then
         return {}
     end
@@ -545,17 +574,24 @@ end
 
 ------------------------------------------------------------
 -- Public API: Force scan all housing decor items
--- Scans all items in HousingDecorData and updates collection cache
+-- Scans all items in HousingAllItems and updates collection cache
 ------------------------------------------------------------
 
-function CollectionAPI:ScanAllDecorItems(callback)
-    if not HousingDecorData then
+function HousingCollectionAPI:ScanAllDecorItems(callback)
+    if not HousingAllItems then
         if callback then
-            callback(false, 0, 0, "HousingDecorData not available")
+            callback(false, 0, 0, "HousingAllItems not available")
         end
         return
     end
     
+    if not _G.HousingCatalogSafeToCall then
+        if callback then
+            callback(false, 0, 0, "Housing Catalog API not safe to call yet")
+        end
+        return
+    end
+
     if not C_HousingCatalog then
         if callback then
             callback(false, 0, 0, "Housing Catalog API not available")
@@ -566,9 +602,9 @@ function CollectionAPI:ScanAllDecorItems(callback)
     -- Prime catalog searcher
     PrimeHousingCatalog()
     
-    -- Collect all itemIDs from HousingDecorData
+    -- Collect all itemIDs from HousingAllItems
     local itemIDs = {}
-    for itemID, decorData in pairs(HousingDecorData) do
+    for itemID, decorData in pairs(HousingAllItems) do
         local numericItemID = tonumber(itemID)
         if numericItemID and decorData and decorData.name then
             -- Skip [DNT] items
@@ -622,48 +658,36 @@ function CollectionAPI:ScanAllDecorItems(callback)
     ScanBatch()
 end
 
-local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("HOUSING_CATALOG_SEARCHER_RELEASED")  -- Critical: recache when searcher is released
-eventFrame:RegisterEvent("HOUSING_STORAGE_UPDATED")  -- Fires when storage changes (triggers twice, so delay)
-eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")  -- Zone transition (most reliable)
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")  -- Zone transition fallback
-eventFrame:RegisterEvent("PLAYER_LOGOUT")  -- Cleanup on logout
+function HousingCollectionAPI:StartEventHandlers()
+    local frame = EnsureEventFrame()
+    frame:SetScript("OnEvent", HandleEvent)
 
--- Conditionally register Midnight API event (only if available)
-local housingCatalogUpdatedRegistered = false
-local success, err = pcall(function()
-    eventFrame:RegisterEvent("HOUSING_CATALOG_UPDATED")
-    housingCatalogUpdatedRegistered = true
-end)
-if not success then
-    -- Event doesn't exist in this client version (not Midnight/12.x), skip it
-    housingCatalogUpdatedRegistered = false
+    -- Register core events
+    frame:RegisterEvent("HOUSING_CATALOG_SEARCHER_RELEASED")
+    frame:RegisterEvent("HOUSING_STORAGE_UPDATED")
+    frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    frame:RegisterEvent("PLAYER_LOGOUT")
+
+    -- Conditionally register Midnight API event (only if available)
+    local success = pcall(function()
+        frame:RegisterEvent("HOUSING_CATALOG_UPDATED")
+        housingCatalogUpdatedRegistered = true
+    end)
+    if not success then
+        housingCatalogUpdatedRegistered = false
+    end
+
+    eventHandlersActive = true  -- Enable EventRegistry callback processing
 end
 
-eventFrame:SetScript("OnEvent", function(self, event, ...)
-    if event == "HOUSING_CATALOG_SEARCHER_RELEASED" then
-        -- Force recache when searcher is released
-        ForceRecacheCatalogSearcher()
-    elseif event == "HOUSING_STORAGE_UPDATED" then
-        -- This event triggers twice, so add delay
-        -- Refresh collection status after storage update
-        C_Timer.After(2, function()
-            -- Don't clear all - just let it refresh naturally on next check
-        end)
-    elseif event == "HOUSING_CATALOG_UPDATED" and housingCatalogUpdatedRegistered then
-        -- Clear session cache when catalog updates (persistent cache remains)
-        -- Only handle if event was successfully registered (Midnight API)
-        CollectionAPI:ClearSessionCache()
-    elseif event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD" then
-        -- Recache on zone transitions (being aggressive is fine)
-        C_Timer.After(0.5, function()
-            ForceRecacheCatalogSearcher()
-        end)
-    elseif event == "PLAYER_LOGOUT" then
-        -- Clear session cache on logout (persistent cache is saved automatically)
-        CollectionAPI:ClearSessionCache()
+function HousingCollectionAPI:StopEventHandlers()
+    if eventFrame then
+        eventFrame:UnregisterAllEvents()
     end
-end)
+    housingCatalogUpdatedRegistered = false
+    eventHandlersActive = false  -- Disable EventRegistry callback processing
+end
 
 ------------------------------------------------------------
 -- Housing Catalog Tooltip Callback
@@ -671,80 +695,271 @@ end)
 -- This provides passive collection updates when users browse the catalog
 ------------------------------------------------------------
 
-if EventRegistry and EventRegistry.RegisterCallback then
-    EventRegistry:RegisterCallback("HousingCatalogEntry.TooltipCreated", function(val1, entryFrame, tooltip)
-        -- Don't process when house editor is active (unnecessary)
-        if C_HouseEditor and C_HouseEditor.IsHouseEditorActive and C_HouseEditor.IsHouseEditorActive() then
-            return
-        end
+local function RegisterTooltipCallback()
+    if not _G.HousingCatalogSafeToCall then
+        return
+    end
 
-        if not entryFrame or not entryFrame.entryInfo then
-            return
-        end
+    if EventRegistry and EventRegistry.RegisterCallback then
+        EventRegistry:RegisterCallback("HousingCatalogEntry.TooltipCreated", function(val1, entryFrame, tooltip)
+            -- PERFORMANCE: Don't process when event handlers are stopped (UI and zone popup both closed)
+            if not eventHandlersActive then
+                return
+            end
 
-        local entryInfo = entryFrame.entryInfo
-        
-        -- Check collection status from tooltip entryInfo
-        -- This provides passive collection updates when users browse the catalog
-        if entryInfo.numStored or entryInfo.numPlaced then
-            local sum = (entryInfo.numStored or 0) + (entryInfo.numPlaced or 0)
-            if sum > 0 and sum < 1000000 then
-                -- Try multiple methods to get itemID
-                local itemID = nil
-                
-                -- Method 1: Direct itemID from entryInfo
-                if entryInfo.itemID then
-                    itemID = entryInfo.itemID
-                end
-                
-                -- Method 2: Try to get from entryID.itemID
-                if not itemID and entryInfo.entryID and entryInfo.entryID.itemID then
-                    itemID = entryInfo.entryID.itemID
-                end
-                
-                -- Method 3: If we have decorID, try to look up itemID via HousingDecorData
-                if not itemID and entryInfo.entryID and entryInfo.entryID.recordID then
-                    local decorID = entryInfo.entryID.recordID
-                    itemID = GetItemIDFromDecorID(decorID)
-                end
-                
-                -- Method 4: Try to extract from tooltip text (last resort)
-                if not itemID and tooltip then
-                    -- Tooltip might have item link we can parse
-                    local tooltipText = tooltip:GetText()
-                    if tooltipText then
-                        -- Look for item link pattern: |Hitem:ITEMID:...
-                        local itemLinkPattern = "|Hitem:(%d+):"
-                        local foundID = tooltipText:match(itemLinkPattern)
-                        if foundID then
-                            itemID = tonumber(foundID)
-                        end
-                    end
-                end
-                
-                -- If we have itemID, cache it immediately (passive update)
-                if itemID then
-                    local numericItemID = tonumber(itemID)
-                    if numericItemID then
-                        CacheItemAsCollected(numericItemID)
+            -- Don't process when house editor is active (unnecessary)
+            if _G.HousingCatalogSafeToCall and C_HouseEditor and C_HouseEditor.IsHouseEditorActive and C_HouseEditor.IsHouseEditorActive() then
+                return
+            end
+
+            -- CRITICAL FIX: Don't process tooltips when they originate from Blizzard bag/inventory UI
+            -- This prevents UI taint that blocks secure actions like learning mounts from bags
+            -- Only process tooltips that come from the housing catalog UI itself
+            if tooltip then
+                local owner = tooltip:GetOwner()
+                if owner then
+                    local ownerName = owner:GetName()
+                    -- Block processing if tooltip owner is a Blizzard container/bag button
+                    -- This prevents interference with UseContainerItem and similar secure functions
+                    if ownerName and (
+                        string.find(ownerName, "ContainerFrame") or
+                        string.find(ownerName, "BagItem") or
+                        string.find(ownerName, "BankItem") or
+                        string.find(ownerName, "BackpackItem") or
+                        string.find(ownerName, "ReagentBankItem") or
+                        string.find(ownerName, "ItemButton")
+                    ) then
+                        return
                     end
                 end
             end
+
+            if not entryFrame or not entryFrame.entryInfo then
+                return
+            end
+
+            local entryInfo = entryFrame.entryInfo
+
+            -- Check collection status from tooltip entryInfo
+            -- This provides passive collection updates when users browse the catalog
+            if entryInfo.numStored or entryInfo.numPlaced then
+                local sum = (entryInfo.numStored or 0) + (entryInfo.numPlaced or 0)
+                if sum > 0 and sum < 1000000 then
+                    -- Try multiple methods to get itemID
+                    local itemID = nil
+
+                    -- Method 1: Direct itemID from entryInfo
+                    if entryInfo.itemID then
+                        itemID = entryInfo.itemID
+                    end
+
+                    -- Method 2: Try to get from entryID.itemID
+                    if not itemID and entryInfo.entryID and entryInfo.entryID.itemID then
+                        itemID = entryInfo.entryID.itemID
+                    end
+
+                    -- Method 3: If we have decorID, try to look up itemID via HousingAllItems
+                    if not itemID and entryInfo.entryID and entryInfo.entryID.recordID then
+                        local decorID = entryInfo.entryID.recordID
+                        itemID = GetItemIDFromDecorID(decorID)
+                    end
+
+                    -- Method 4: Try to extract from tooltip text (last resort)
+                    if not itemID and tooltip and tooltip.TextLeft1 then
+                        -- Tooltip might have item link we can parse
+                        local tooltipText = tooltip.TextLeft1:GetText()
+                        if tooltipText then
+                            -- Look for item link pattern: |Hitem:ITEMID:...
+                            local itemLinkPattern = "|Hitem:(%d+):"
+                            local foundID = tooltipText:match(itemLinkPattern)
+                            if foundID then
+                                itemID = tonumber(foundID)
+                            end
+                        end
+                    end
+
+                    -- If we have itemID, cache it immediately (passive update)
+                    if itemID then
+                        local numericItemID = tonumber(itemID)
+                        if numericItemID then
+                            CacheItemAsCollected(numericItemID)
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end
+
+------------------------------------------------------------
+-- Initialize Collection Cache
+------------------------------------------------------------
+
+-- Initialize persistent collection cache on addon load
+local function InitializeCollectionCache()
+    -- Ensure HousingDB exists
+    if not HousingDB then
+        return
+    end
+
+    -- Create collectedDecor table if it doesn't exist
+    if not HousingDB.collectedDecor then
+        HousingDB.collectedDecor = {}
+    end
+
+    -- Load persistent cache into session cache for faster lookups
+    local loadedCount = 0
+    if HousingDB.collectedDecor then
+        for itemID, isCollected in pairs(HousingDB.collectedDecor) do
+            if isCollected == true then
+                sessionCollectionCache[itemID] = true
+                loadedCount = loadedCount + 1
+            end
         end
-    end)
+    end
+
+    -- Debug: Report cache initialization
+    if loadedCount > 0 then
+        print(string.format("|cFF8A7FD4HousingVendor:|r Loaded %d collected items from cache", loadedCount))
+    end
+end
+
+------------------------------------------------------------
+-- Force Refresh Collection Cache
+------------------------------------------------------------
+
+-- Force refresh collection cache by re-querying API for all known items
+-- This is called when the outstanding items popup is about to show
+function HousingCollectionAPI:ForceRefresh()
+    -- No-op for now - the persistent cache is already loaded
+    -- Individual items will be queried on-demand and cached automatically
+    -- This function exists to satisfy the call in Events.lua line 103
+end
+
+------------------------------------------------------------
+-- Get Cache Statistics
+------------------------------------------------------------
+
+function HousingCollectionAPI:GetCacheStats()
+    local sessionCount = 0
+    for _ in pairs(sessionCollectionCache) do
+        sessionCount = sessionCount + 1
+    end
+
+    local persistentCount = 0
+    if HousingDB and HousingDB.collectedDecor then
+        for _ in pairs(HousingDB.collectedDecor) do
+            persistentCount = persistentCount + 1
+        end
+    end
+
+    return {
+        session = sessionCount,
+        persistent = persistentCount,
+        total = persistentCount,  -- Total is persistent count (session is subset)
+    }
 end
 
 ------------------------------------------------------------
 -- Initialize
 ------------------------------------------------------------
 
-function CollectionAPI:Initialize()
+function HousingCollectionAPI:Initialize()
     InitializeCollectionCache()
-    PrimeHousingCatalog()
+
+    -- TAINT FIX: Set global safety flag after delay AND after Collections is opened once
+    -- This timer MUST be created during Initialize() (ADDON_LOADED event), not at file load time
+    -- 6 seconds ensures this completes AFTER zone popup's 4+1=5 second delay
+    local REQUIRE_COLLECTIONS_SHOWN = false
+    local safeDelayPassed = false
+    local collectionsShownOnce = false
+
+    local function TryEnableHousingCatalog()
+        if _G.HousingCatalogSafeToCall then
+            return
+        end
+        if not safeDelayPassed or (REQUIRE_COLLECTIONS_SHOWN and not collectionsShownOnce) then
+            return
+        end
+
+        _G.HousingCatalogSafeToCall = true
+        PrimeHousingCatalog()
+        RegisterTooltipCallback()
+
+        -- CRITICAL: Initialize other Housing modules AFTER safety flag is set
+        -- This prevents any code from touching C_Housing* globals during ADDON_LOADED
+        if HousingAPI and HousingAPI.Initialize then
+            pcall(HousingAPI.Initialize, HousingAPI)
+        end
+        if HousingAPICache and HousingAPICache.Initialize then
+            pcall(HousingAPICache.Initialize, HousingAPICache)
+        end
+        if HousingCatalogAPI and HousingCatalogAPI.Initialize then
+            pcall(HousingCatalogAPI.Initialize, HousingCatalogAPI)
+        end
+        if HousingDecorAPI and HousingDecorAPI.Initialize then
+            pcall(HousingDecorAPI.Initialize, HousingDecorAPI)
+        end
+        if HousingEditorAPI and HousingEditorAPI.Initialize then
+            pcall(HousingEditorAPI.Initialize, HousingEditorAPI)
+        end
+        if HousingDataEnhancer and HousingDataEnhancer.Initialize then
+            pcall(HousingDataEnhancer.Initialize, HousingDataEnhancer)
+        end
+    end
+
+    local function MarkCollectionsShown()
+        collectionsShownOnce = true
+        TryEnableHousingCatalog()
+    end
+
+    local function WatchCollections()
+        if _G.CollectionsJournal then
+            _G.CollectionsJournal:HookScript("OnShow", MarkCollectionsShown)
+            if _G.CollectionsJournal:IsShown() then
+                MarkCollectionsShown()
+            end
+        end
+    end
+
+    local function OnCollectionsLoaded()
+        WatchCollections()
+    end
+
+    local collectionsWatcher = CreateFrame("Frame")
+    collectionsWatcher:RegisterEvent("ADDON_LOADED")
+    collectionsWatcher:SetScript("OnEvent", function(_, event, name)
+        if event == "ADDON_LOADED" and name == "Blizzard_Collections" then
+            OnCollectionsLoaded()
+        end
+    end)
+
+    C_Timer.After(6, function()
+        safeDelayPassed = true
+        TryEnableHousingCatalog()
+    end)
 end
 
 -- Make globally accessible
-_G["CollectionAPI"] = CollectionAPI
+_G["HousingCollectionAPI"] = HousingCollectionAPI
 
-return CollectionAPI
+-- Register mem stats
+if _G.HousingMemReport and _G.HousingMemReport.Register then
+    _G.HousingMemReport:Register("Collection", function()
+        local stats = HousingCollectionAPI.GetCacheStats and HousingCollectionAPI:GetCacheStats() or nil
+        if not stats then
+            return { total = 0 }
+        end
+        return {
+            total = stats.total or 0,
+            persistent = stats.persistent or 0,
+            session = stats.session or 0,
+        }
+    end)
+end
 
+-- REMOVED: Auto-initialize at file load time (causes taint)
+-- Initialize() is now only called from Events.lua during ADDON_LOADED event
+-- HousingCollectionAPI:Initialize()
+
+return HousingCollectionAPI

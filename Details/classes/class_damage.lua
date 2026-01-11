@@ -375,7 +375,12 @@ function Details:GetBarColor(actor) --[[exported]]
 			return unpack(actor.color)
 
 		else
-			return unpack(Details.class_colors[actor.classe or "UNKNOW"])
+			local color = Details.class_colors[actor.classe or "UNKNOW"]
+			if (not color) then
+				return detailsFramework:ParseColors("brown")
+			else
+				return unpack(Details.class_colors[actor.classe or "UNKNOW"])
+			end
 		end
 	end
 end
@@ -1739,7 +1744,8 @@ end
 			spellSchoolColor = Details.spells_school[1]
 		end
 
-		Details:SetBarColors(thisLine, instancia, unpack(spellSchoolColor))
+		local r, g, b, a = detailsFramework:ParseColors(spellSchoolColor)
+		Details:SetBarColors(thisLine, instancia, r, g, b, a)
 
 		thisLine.icone_classe:SetTexture(icon)
 		thisLine.icone_classe:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875)
@@ -2741,12 +2747,15 @@ end
 
 -- ~atualizar ~barra ~update
 function damageClass:RefreshLine(instanceObject, lineContainer, whichRowLine, rank, total, subAttribute, bForceRefresh, keyName, combatTime, percentageType, bUseAnimations, bars_show_data, bars_brackets, bars_separator)
+	---@type detailsline
 	local thisLine = lineContainer[whichRowLine]
 
 	if (not thisLine) then
 		print("DEBUG: problema com <instance.thisLine> "..whichRowLine.." "..rank)
 		return
 	end
+
+	thisLine.statusbar:SetMinMaxValues(0, 100)
 
 	local previousData = thisLine.minha_tabela
 	thisLine.minha_tabela = self --store references
@@ -3120,6 +3129,7 @@ function Details:RefreshLineValue(thisLine, instance, previousData, isForceRefre
 
 		if (not previousData or previousData ~= thisLine.minha_tabela or isForceRefresh) then
 			thisLine:SetValue(100)
+			thisLine:Show()
 
 			if (thisLine.hidden or thisLine.fading_in or thisLine.faded) then
 				Details.FadeHandler.Fader(thisLine, "out")
@@ -3451,11 +3461,17 @@ function Details:SetClassIcon(texture, instance, class) --[[exported]] --~icons
 				texture:SetVertexColor(1, 1, 1)
 			else
 				texture:SetTexture(instance.row_info.icon_file or [[Interface\AddOns\Details\images\classes_small]])
+				if (not class or class == "" or type(class) ~= "string") then
+					class = "UNKNOW"
+				end
 				texture:SetTexCoord(unpack(Details.class_coords[class]))
 				texture:SetVertexColor(1, 1, 1)
 			end
 		else
 			texture:SetTexture(instance and instance.row_info.icon_file or [[Interface\AddOns\Details\images\classes_small]])
+			if (not class) then
+				class = "UNKNOW"
+			end
 			texture:SetTexCoord(unpack(Details.class_coords[class]))
 			texture:SetVertexColor(1, 1, 1)
 		end
@@ -3934,10 +3950,14 @@ function damageClass:ToolTip_DamageDone(instance, numero, barra, keydown)
 	if (owner and owner.classe) then
 		r, g, b = unpack(Details.class_colors [owner.classe])
 	else
-		if (not Details.class_colors [self.classe]) then
-			return print("Details!: error class not found:", self.classe, "for", self.nome)
+		local class = self.classe
+		if (not class or class == "" or type(class) ~= "string") then
+			class = "UNKNOW"
 		end
-		r, g, b = unpack(Details.class_colors [self.classe])
+		if (not Details.class_colors[class]) then
+			return print("Details!: error class not found:", class, "for", self.nome)
+		end
+		r, g, b = unpack(Details.class_colors[class])
 	end
 
 	local combatObject = instance:GetCombat()

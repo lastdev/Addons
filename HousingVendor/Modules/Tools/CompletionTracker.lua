@@ -6,38 +6,78 @@ CompletionTracker.__index = CompletionTracker
 
 -- Event frame
 local eventFrame = CreateFrame("Frame")
+local isTracking = false
 
--- Initialize saved variables structure
-function CompletionTracker:Initialize()
-    if not HousingDB then
-        HousingDB = {}
-    end
-    
-    -- Initialize completion tracking tables
-    if not HousingDB.completedVendors then
-        HousingDB.completedVendors = {}
-    end
-    
-    if not HousingDB.completedAchievements then
-        HousingDB.completedAchievements = {}
-    end
-    
-    if not HousingDB.completedQuests then
-        HousingDB.completedQuests = {}
-    end
-    
-    -- Register events
+local function RegisterEvents()
     eventFrame:RegisterEvent("MERCHANT_SHOW")
     eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")
     eventFrame:RegisterEvent("QUEST_TURNED_IN")
     eventFrame:RegisterEvent("QUEST_COMPLETE")
+    isTracking = true
+end
+
+local function UnregisterEvents()
+    eventFrame:UnregisterAllEvents()
+    isTracking = false
+end
+
+-- Initialize saved variables structure (account-wide)
+function CompletionTracker:Initialize()
+    if not HousingDB then
+        HousingDB = {}
+    end
+
+    -- Initialize completion tracking tables (account-wide, shared across alts)
+    if not HousingDB.completedVendors then
+        HousingDB.completedVendors = {}
+    end
+
+    if not HousingDB.completedAchievements then
+        HousingDB.completedAchievements = {}
+    end
+
+    if not HousingDB.completedQuests then
+        HousingDB.completedQuests = {}
+    end
+
+    -- Initialize setting (opt-in)
+    HousingDB.settings = HousingDB.settings or {}
+    if HousingDB.settings.autoTrackCompletion == nil then
+        HousingDB.settings.autoTrackCompletion = false
+    end
     
     -- Set up event handler
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         CompletionTracker:OnEvent(event, ...)
     end)
     
-    print("|cFF8A7FD4HousingVendor:|r Completion Tracker initialized")
+    if HousingDB.settings.autoTrackCompletion then
+        RegisterEvents()
+    else
+        UnregisterEvents()
+    end
+end
+
+function CompletionTracker:Enable()
+    HousingDB.settings = HousingDB.settings or {}
+    HousingDB.settings.autoTrackCompletion = true
+    if isTracking then
+        return
+    end
+
+    RegisterEvents()
+    print("|cFF8A7FD4HousingVendor:|r Completion Tracker enabled")
+end
+
+function CompletionTracker:Disable()
+    HousingDB.settings = HousingDB.settings or {}
+    HousingDB.settings.autoTrackCompletion = false
+    if not isTracking then
+        return
+    end
+
+    UnregisterEvents()
+    print("|cFF8A7FD4HousingVendor:|r Completion Tracker disabled")
 end
 
 -- Main event handler
@@ -73,16 +113,14 @@ function CompletionTracker:OnMerchantShow()
     local vendorFound = false
     local vendorName = UnitName("target") or UnitName("npc") or "Unknown Vendor"
     
-    -- Search through all vendor data
-    if HousingData and HousingData.vendorData then
-        for expansionName, zones in pairs(HousingData.vendorData) do
-            for zoneName, vendors in pairs(zones) do
-                for _, vendor in ipairs(vendors) do
-                    -- Check if this vendor has items with this NPC ID
-                    if vendor.items then
-                        for _, item in ipairs(vendor.items) do
-                            -- Check if item has this vendor's NPC ID
-                            if item.npcID == npcID or vendor.npcID == npcID then
+    -- Search through all vendor location data (static)
+    if HousingVendorLocations and type(HousingVendorLocations) == "table" then
+        for _, zones in pairs(HousingVendorLocations) do
+            if type(zones) == "table" then
+                for _, vendors in pairs(zones) do
+                    if type(vendors) == "table" then
+                        for _, vendor in ipairs(vendors) do
+                            if vendor and (vendor.npcID == npcID) then
                                 vendorFound = true
                                 break
                             end
@@ -90,7 +128,6 @@ function CompletionTracker:OnMerchantShow()
                     end
                     if vendorFound then break end
                 end
-                if vendorFound then break end
             end
             if vendorFound then break end
         end

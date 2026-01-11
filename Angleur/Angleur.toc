@@ -2,7 +2,7 @@
 ## Title: Angleur
 ## Notes: The Ultimate One Button Fishing AddOn - Now with an Auto-Equip Feature!
 ## Notes-ruRU: Лучший однокнопочный рыболовный аддон — теперь с функцией автоматического оснащения!
-## Version: Angleur 2.5 - Bobber Scanner(Classic)
+## Version: Angleur 2.6.8
 ## Author: LegolandoBloom
 ## SavedVariables: AngleurConfig, Angleur_TinyOptions, AngleurMinimapButton, AngleurTutorial
 ## SavedVariablesPerCharacter: AngleurCharacter, Angleur_SlottedExtraToys, Angleur_SlottedExtraItems, Angleur_SwapoutItemsSaved, Angleur_CVars
@@ -29,6 +29,7 @@ angTemplates\GeneralTemplates\RetailTemplates.xml
 angTemplates\GeneralTemplates\RetailTemplates.lua
 angTemplates\embeds.xml
 
+debug.lua
 init.lua
 Angleur.lua
 
@@ -53,6 +54,7 @@ advancedAngling.lua
 slashcommands.lua
 minimap.lua
 animations.xml
+platerClash.lua
 
 Angleur.xml
 

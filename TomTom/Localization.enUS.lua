@@ -58,7 +58,6 @@ TomTomLocals = {
 	["Coordinate feed accuracy"] = "Coordinate feed accuracy",
 	["Coordinate feed throttle"] = "Coordinate feed throttle",
 	["Coordinates can be displayed as simple XX, YY coordinate, or as more precise XX.XX, YY.YY.  This setting allows you to control that precision"] = "Coordinates can be displayed as simple XX, YY coordinate, or as more precise XX.XX, YY.YY.  This setting allows you to control that precision",
-	["Coordinates can be moved from the default location, this setting allows you to control that offse"] = "Coordinates can be moved from the default location, this setting allows you to control that offse",
 	["Coordinates can be moved from the default location, this setting allows you to control that offset"] = "Coordinates can be moved from the default location, this setting allows you to control that offset",
 	["Could not find any matches for zone %s."] = "Could not find any matches for zone %s.",
 	["Crazy Arrow feed throttle"] = "Crazy Arrow feed throttle",

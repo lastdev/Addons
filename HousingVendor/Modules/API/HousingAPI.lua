@@ -5,11 +5,20 @@ HousingAPI.__index = HousingAPI
 
 -- Check if housing APIs are available
 function HousingAPI:IsAvailable()
+    -- TAINT FIX: Don't access C_HousingCatalog before safe delay period
+    -- Even checking for existence can trigger module load and taint CollectionsJournal
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
     return C_HousingCatalog ~= nil
 end
 
 -- Check if C_Housing API is available
 function HousingAPI:IsHousingAvailable()
+    -- TAINT FIX: Don't access C_Housing before safe delay period
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
     return C_Housing ~= nil
 end
 
@@ -26,17 +35,17 @@ end
 -- HELPER FUNCTIONS FOR TEXT PARSING
 ------------------------------------------------------------
 
--- Helper to strip WoW formatting (but preserve icons for cost)
+-- Use shared CleanText from DataManager.Util (moved to Shared.lua to eliminate duplication)
 local function CleanText(text, preserveIcons)
-    if not text then return nil end
-    text = text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
-    text = text:gsub("|H[^|]*|h", ""):gsub("|h", "")
-    if not preserveIcons then
-        text = text:gsub("|T[^|]*|t", "")  -- Strip icons unless preserving
+    local DataManager = _G["HousingDataManager"]
+    if DataManager and DataManager.Util and DataManager.Util.CleanText then
+        return DataManager.Util.CleanText(text, preserveIcons)
     end
-    text = text:gsub("|n", " ")
-    text = text:match("^%s*(.-)%s*$")
-    return text
+    -- Fallback if Util not available yet
+    if not text then return nil end
+    text = text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H[^|]*|h", ""):gsub("|h", "")
+    if not preserveIcons then text = text:gsub("|T[^|]*|t", "") end
+    return text:gsub("|n", " "):match("^%s*(.-)%s*$")
 end
 
 -- Extract field value from sourceText
@@ -106,6 +115,40 @@ local function ExtractFieldValue(sourceText, fieldName)
     return value
 end
 
+-- Fallback cost extractor for non-English / unexpected sourceText formats.
+-- Looks for a line containing a money/currency/item hyperlink and returns the portion after the label (when possible).
+local function ExtractCostFallback(sourceText)
+    if not sourceText or sourceText == "" then return nil end
+
+    -- Normalize WoW newline marker to real newlines for line scanning.
+    local text = tostring(sourceText):gsub("|n", "\n")
+
+    for line in text:gmatch("[^\r\n]+") do
+        local moneyPos = line:find("|Hmoney:", 1, true)
+        local currencyPos = line:find("|Hcurrency:", 1, true)
+        local itemPos = line:find("|Hitem:", 1, true)
+        local firstLinkPos = moneyPos or currencyPos or itemPos
+
+        if firstLinkPos then
+            -- Try to strip a leading "Label:" part safely by only searching before the hyperlink.
+            local prefix = line:sub(1, firstLinkPos - 1)
+            local colonPos = prefix:find(":")
+            if colonPos then
+                local value = line:sub(colonPos + 1):match("^%s*(.-)%s*$")
+                if value and value ~= "" then
+                    return value
+                end
+            end
+
+            -- Otherwise return the full line and let CleanText handle formatting.
+            local trimmed = line:match("^%s*(.-)%s*$")
+            return (trimmed and trimmed ~= "") and trimmed or line
+        end
+    end
+
+    return nil
+end
+
 ------------------------------------------------------------
 -- CATALOG API FUNCTIONS
 ------------------------------------------------------------
@@ -115,6 +158,9 @@ function HousingAPI:GetCatalogData(itemID)
     local result = {}
     local id = tonumber(itemID)
     if not id or not self:IsAvailable() then return result end
+
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then return result end
 
     -- Step 1: GetCatalogEntryInfoByItem
     local ok, entryInfo = pcall(C_HousingCatalog.GetCatalogEntryInfoByItem, id, true)
@@ -198,6 +244,9 @@ function HousingAPI:GetCatalogData(itemID)
         end
 
         local cost = ExtractFieldValue(sourceText, "Cost")
+        if not cost then
+            cost = ExtractCostFallback(sourceText)
+        end
         if cost then
             -- Store raw cost before cleaning (for tooltip)
             result.costRaw = cost
@@ -215,7 +264,7 @@ function HousingAPI:GetCatalogData(itemID)
             if achievementID then
                 result.achievementID = tonumber(achievementID)
             end
-            
+
             achievement = CleanText(achievement)
             if achievement and achievement ~= "" then
                 result.achievement = achievement
@@ -292,9 +341,11 @@ end
 -- Get catalog entry info by item ID (simple wrapper)
 function HousingAPI:GetCatalogEntryInfoByItem(itemID)
     if not self:IsAvailable() then return nil end
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then return nil end
     local id = tonumber(itemID)
     if not id then return nil end
-    
+
     local ok, entryInfo = pcall(C_HousingCatalog.GetCatalogEntryInfoByItem, id, true)
     if ok and entryInfo then
         return entryInfo
@@ -305,7 +356,9 @@ end
 -- Get catalog entry info by record ID
 function HousingAPI:GetCatalogEntryInfoByRecordID(entryType, recordID)
     if not self:IsAvailable() then return nil end
-    
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then return nil end
+
     local ok, fullEntry = pcall(C_HousingCatalog.GetCatalogEntryInfoByRecordID, entryType, recordID, true)
     if ok and fullEntry then
         return fullEntry
@@ -316,7 +369,9 @@ end
 -- Get catalog category info
 function HousingAPI:GetCatalogCategoryInfo(categoryID)
     if not self:IsAvailable() then return nil end
-    
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then return nil end
+
     local ok, catInfo = pcall(C_HousingCatalog.GetCatalogCategoryInfo, categoryID)
     if ok and catInfo then
         return catInfo
@@ -346,9 +401,12 @@ local function BuildExpansionTagLookup()
     if HousingAPICache then
         tagGroups = HousingAPICache:GetFilterTagGroups()
     else
-        local ok, groups = pcall(C_HousingCatalog.GetAllFilterTagGroups)
-        if ok and groups then
-            tagGroups = groups
+        -- TAINT FIX: Don't call Housing APIs before safe delay period
+        if _G.HousingCatalogSafeToCall then
+            local ok, groups = pcall(C_HousingCatalog.GetAllFilterTagGroups)
+            if ok and groups then
+                tagGroups = groups
+            end
         end
     end
 
@@ -391,6 +449,8 @@ end
 -- Get expansion from filter tags (if available from API) - OPTIMIZED VERSION
 function HousingAPI:GetExpansionFromFilterTags(itemID)
     if not self:IsAvailable() then return nil end
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then return nil end
 
     -- Build/get expansion tag lookup table (cached for 1 hour)
     local lookup = BuildExpansionTagLookup()
@@ -430,7 +490,9 @@ end
 -- Get catalog subcategory info
 function HousingAPI:GetCatalogSubcategoryInfo(subcategoryID)
     if not self:IsAvailable() then return nil end
-    
+    -- TAINT FIX: Don't call Housing APIs before safe delay period
+    if not _G.HousingCatalogSafeToCall then return nil end
+
     local ok, subcatInfo = pcall(C_HousingCatalog.GetCatalogSubcategoryInfo, subcategoryID)
     if ok and subcatInfo then
         return subcatInfo
@@ -442,7 +504,14 @@ end
 function HousingAPI:CreateCatalogSearcher()
     if not self:IsAvailable() then return false end
     
+    if self._catalogSearcherCreated then
+        return true
+    end
+
     local ok = pcall(C_HousingCatalog.CreateCatalogSearcher)
+    if ok then
+        self._catalogSearcherCreated = true
+    end
     return ok
 end
 
@@ -569,11 +638,50 @@ end
 -- Get achievement info
 function HousingAPI:GetAchievementInfo(achievementID)
     if not achievementID or not C_AchievementInfo or not C_AchievementInfo.GetAchievementInfo then return nil end
-    
+
     local ok, achievementInfo = pcall(C_AchievementInfo.GetAchievementInfo, achievementID)
     if ok and achievementInfo then
         return achievementInfo
     end
+    return nil
+end
+
+-- Achievements are effectively account-wide (Warband) for most cases.
+-- Some APIs expose both "completed" and "earnedBy/wasEarnedByMe"; callers should prefer this helper.
+function HousingAPI:GetAchievementCompletion(achievementID)
+    local id = tonumber(achievementID)
+    if not id then return nil end
+
+    -- Preferred API (structured info)
+    if C_AchievementInfo and C_AchievementInfo.GetAchievementInfo then
+        local ok, info = pcall(C_AchievementInfo.GetAchievementInfo, id)
+        if ok and info then
+            local earnedBy = info.earnedBy
+            local wasEarnedByMe = info.wasEarnedByMe
+            local completedAccountWide = (info.completed == true) or (wasEarnedByMe == true) or (earnedBy and earnedBy ~= "")
+            return {
+                completed = completedAccountWide,
+                wasEarnedByMe = wasEarnedByMe == true,
+                earnedBy = earnedBy,
+                points = info.points,
+            }
+        end
+    end
+
+    -- Fallback older API (return values)
+    if _G.GetAchievementInfo then
+        local ok, _, _, points, completed, _, _, _, _, _, _, _, _, wasEarnedByMe, earnedBy = pcall(_G.GetAchievementInfo, id)
+        if ok then
+            local completedAccountWide = (completed == true) or (wasEarnedByMe == true) or (earnedBy and earnedBy ~= "")
+            return {
+                completed = completedAccountWide,
+                wasEarnedByMe = wasEarnedByMe == true,
+                earnedBy = earnedBy,
+                points = points,
+            }
+        end
+    end
+
     return nil
 end
 
@@ -617,9 +725,13 @@ end
 -- Initialize the API module
 function HousingAPI:Initialize()
     if self:IsAvailable() then
-        -- Live API access available (silent)
-        -- Initialize catalog searcher for caching
-        self:CreateCatalogSearcher()
+        -- TAINT FIX: Delay Housing API calls by 3 seconds to avoid CollectionsJournal taint
+        -- The Housing Catalog APIs internally access CollectionsJournal, causing taint
+        -- if called before Blizzard's UI is fully initialized.
+        -- Uses global flag _G.HousingCatalogSafeToCall set by CollectionAPI
+        C_Timer.After(3, function()
+            self:CreateCatalogSearcher()
+        end)
     else
         -- Live API not available (silent)
     end

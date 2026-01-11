@@ -757,7 +757,7 @@ local function createconfig()
 						order = 7,
 						type = "range",
 						name = L["Cursor coordinate offset"],
-						desc = L["Coordinates can be moved from the default location, this setting allows you to control that offse"],
+						desc = L["Coordinates can be moved from the default location, this setting allows you to control that offset"],
 						min = -32, max = 128, step = 1,
 						arg = "mapcoords.cursoroffset",
 					},

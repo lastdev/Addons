@@ -22,6 +22,10 @@ if not L then return end
 
 L["%s wants to share a paste with you. Do you want to accept it?"] = "%s souhaite partager une Note avec vous.|nSouhaitez-vous l'accepter ?"
 L["/pasteng config - Open the configuration"] = "/pasteng config - Ouvre la configuration"
+--[[Translation missing --]]
+L["/pasteng export - Open the export dialog"] = "/pasteng export - Open the export dialog"
+--[[Translation missing --]]
+L["/pasteng import - Open the import dialog"] = "/pasteng import - Open the import dialog"
 L["/pasteng minimap - Toggle the minimap icon"] = "/pasteng minimap - Afficher / masquer l'icône sur la mini-carte"
 L["/pasteng send Saved Paste name - Send a save paste to the default channel"] = "/pasteng send \"Nom de la Note\" - Envoyer une Note enregistrée sur le canal par défaut"
 L["/pasteng send Saved Paste name channel - Send a save paste to a specific channel"] = "/pasteng send \"Nom de la Note\" \"Nom du canal\" - Envoyer une Note enregistrée sur un canal spécifique"

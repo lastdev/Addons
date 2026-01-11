@@ -470,7 +470,7 @@ function MT:CreateMTFrame()
         mtsavebutton:SetSize(80, 22)
         mtsavebutton:SetPoint("BOTTOM", mtcancelbutton, "TOP", 0, 3)
         mtsavebutton:SetScript("OnClick", function()
-            --PlaySound("igMainMenuOptionCheckBoxOn")
+            -- PlaySound("igMainMenuOptionCheckBoxOn")
             PlaySound(856)
             MT:SaveMacro()
             MT:MacroFrameUpdate()
@@ -479,8 +479,10 @@ function MT:CreateMTFrame()
         end)
     end
 
+    local tabTemplate = C_XMLUtil.GetTemplateInfo("CharacterFrameTabTemplate") and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"
+
     local mcopy
-    local mttab1 = CreateFrame("Button", "MacroToolkitFrameTab1", mtframe, "BackdropTemplate," .. (C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"))
+    local mttab1 = CreateFrame("Button", "MacroToolkitFrameTab1", mtframe, "BackdropTemplate," .. tabTemplate)
     do
         --mttab1:SetText(_G.GENERAL_MACROS)
         mttab1:SetText(_G.GENERAL)
@@ -506,7 +508,7 @@ function MT:CreateMTFrame()
             end)
     end
 
-    local mttab2 = CreateFrame("Button", "MacroToolkitFrameTab2", mtframe, "BackdropTemplate," .. (C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"))
+    local mttab2 = CreateFrame("Button", "MacroToolkitFrameTab2", mtframe, "BackdropTemplate," .. tabTemplate)
     do
         mttab2:SetID(2)
         mttab2:SetPoint("LEFT", mttab1, "RIGHT", 0, 0)
@@ -540,7 +542,7 @@ function MT:CreateMTFrame()
             end)
     end
 
-    local mttab3 = CreateFrame("Button", "MacroToolkitFrameTab3", mtframe, "BackdropTemplate," .. (C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate"))
+    local mttab3 = CreateFrame("Button", "MacroToolkitFrameTab3", mtframe, "BackdropTemplate," .. tabTemplate)
     do
         mttab3:SetID(3)
         mttab3:SetPoint("LEFT", mttab2, "RIGHT", 0, 0)
@@ -1008,26 +1010,6 @@ function MT:CreateMTFrame()
             MT.SP.title:SetFormattedText("|cffeedd82 %s|r\n\n%s", name, L["Share with"])
             MT.SP:Show()
         end)
-    end
-
-    local mtbrokericon = CreateFrame("Frame", "MacroToolkitBrokerIcon", mtframe, "BackdropTemplate")
-    do
-        mtbrokericon:SetSize(32, 16)
-        MT.brokericon = mtbrokericon:CreateTexture(nil, "ARTWORK")
-        MT.brokericon:SetPoint("TOPLEFT", mtbrokericon, "TOPLEFT")
-        MT.brokericon:SetPoint("BOTTOMRIGHT", mtbrokericon, "BOTTOMLEFT", 16, 0)
-        mtbrokericon:SetPoint("RIGHT", mtcancelbutton, "LEFT", -15, -6)
-        mtbrokericon:SetScript("OnLeave", GameTooltip_Hide)
-    end
-
-    local mtbbutton = CreateFrame("Button", "MacroToolkitBrokerButton", mtbrokericon, "BackdropTemplate")
-    do
-        mtbbutton:SetSize(16, 16)
-        mtbbutton:SetPoint("LEFT", MT.brokericon, "RIGHT")
-        mtbbutton:SetScript("OnLeave", GameTooltip_Hide)
-        --mtbbutton:SetFrameLevel(99)
-        mtbbutton:SetFrameLevel(mtmscroll:GetFrameLevel() + 1)
-        mtbrokericon:Hide()
     end
 
     local mterroricon = CreateFrame("Frame", "MacroToolkitErrorIcon", mtframe, "BackdropTemplate")

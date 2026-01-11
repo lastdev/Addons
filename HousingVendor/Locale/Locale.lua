@@ -1,4 +1,4 @@
--- Locale loader
+﻿-- Locale loader
 -- This file loads after all locale files and selects the correct language based on GetLocale()
 
 local ADDON_NAME, ns = ...
@@ -50,7 +50,7 @@ else
     L["COLUMN_TYPE"] = "Type"
     L["BUTTON_SETTINGS"] = "Settings"
     L["BUTTON_STATISTICS"] = "Statistics"
-    L["BUTTON_BACK"] = "← Back"
+    L["BUTTON_BACK"] = "Back"
     L["BUTTON_CLOSE"] = "Close"
     L["BUTTON_WAYPOINT"] = "Set Waypoint"
     L["BUTTON_SAVE"] = "Save"
@@ -108,6 +108,15 @@ else
     L["COMMON_ITEM_ID"] = "Item ID:"
     L["MINIMAP_TOOLTIP"] = "Housing Vendor Browser"
     L["MINIMAP_TOOLTIP_DESC"] = "Left-click to toggle the Housing Vendor browser"
+    L["MINIMAP_TOOLTIP_LEFTCLICK"] = "Left-click: open main window"
+    L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "Right-click: zone popup"
+    L["MINIMAP_TOOLTIP_DRAG"] = "Drag: move button"
+    L["BUTTON_ZONE_POPUP"] = "Zone Popup"
+    L["BUTTON_MAIN_UI"] = "Main UI"
+    L["SETTINGS_ZONE_POPUPS"] = "Zone Popups"
+    L["SETTINGS_ZONE_POPUPS_DESC"] = "Show outstanding items popup when entering a new zone"
+    L["OUTSTANDING_ITEMS_IN_ZONE"] = "Outstanding Items in Zone"
+    L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "Opens the main HousingVendor window filtered to this zone."
 end
 
 -- Make the localization table available via namespace and globally

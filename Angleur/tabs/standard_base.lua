@@ -1,4 +1,7 @@
 local T = Angleur_Translate
+
+local debugChannel = 5
+
 local colorYello = CreateColor(1.0, 0.82, 0.0)
 local colorGrae = CreateColor(0.85, 0.85, 0.85)
 local colorBlu = CreateColor(0.61, 0.85, 0.92)
@@ -116,6 +119,7 @@ function Angleur_FishingMethodSetSelected(self)
             button.contents:Hide()
         end
     end
+    EventRegistry:TriggerEvent("Angleur-ChosenMethod-Changed")
 end
 
 local stiffShownOnce = false

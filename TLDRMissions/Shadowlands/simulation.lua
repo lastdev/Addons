@@ -489,13 +489,13 @@ local function calculateDamage(attacker, defender, attackPercent, targetHPPercen
             -- arrange buffs by buff ID
             local newBuffNames = {}
             local buffNamesIndexes = {}
-            for k, v in pairs(changeDamageDealtPercent.buffNames) do
+            for k in pairs(changeDamageDealtPercent.buffNames) do
                 table.insert(buffNamesIndexes, k)
             end
             table.sort(buffNamesIndexes, function(a, b)
                 return a<b
             end)
-            for k, v in ipairs(buffNamesIndexes) do
+            for _, v in ipairs(buffNamesIndexes) do
                 table.insert(newBuffNames, changeDamageDealtPercent.buffNames[v])
             end
             changeDamageDealtPercent.buffNames = newBuffNames
@@ -529,13 +529,13 @@ local function calculateDamage(attacker, defender, attackPercent, targetHPPercen
             -- arrange buffs by buff ID
             local newBuffNames = {}
             local buffNamesIndexes = {}
-            for k, v in pairs(changeDamageTakenPercent.buffNames) do
+            for k in pairs(changeDamageTakenPercent.buffNames) do
                 table.insert(buffNamesIndexes, k)
             end
             table.sort(buffNamesIndexes, function(a, b)
                 return a<b
             end)
-            for k, v in ipairs(buffNamesIndexes) do
+            for _, v in ipairs(buffNamesIndexes) do
                 table.insert(newBuffNames, changeDamageTakenPercent.buffNames[v])
             end
             changeDamageTakenPercent.buffNames = newBuffNames
@@ -598,8 +598,6 @@ local function processBuff(follower, buff)
                 
         elseif buff.attackPercent then
             local stackNum = 0
-            local stackUpper = buff.stacks
-            if not stackUpper then stackUpper = 1 end
                 
             while (stackNum < buff.stacks) and (target.HP > 0) do
                 local damage = calculateDamage(buff.source, target, buff.attackPercent)
@@ -831,7 +829,7 @@ local function processEnvironmentEffect(rngTargets)
                     for i, duration in ipairs(buff.durations) do
                         buff.durations[i] = duration - 1
                     end
-                    local r = false
+                    local r
                     repeat
                         r = false
                         for i, duration in ipairs(buff.durations) do
@@ -840,7 +838,6 @@ local function processEnvironmentEffect(rngTargets)
                                 table.remove(buff.durations, i)
                                 if buff.stacks and buff.stacks > 1 then
                                     buff.stacks = buff.stacks - 1
-                                    local targetName = environmentEffect.name
                                     if TLDRMissionsDebugging then print(buff.name.." lost a stack on "..buff.target.name.."["..buff.target.boardIndex.."]") end
                                 end
                                 break
@@ -852,7 +849,6 @@ local function processEnvironmentEffect(rngTargets)
                     if buff.stacks and buff.stacks > 1 then
                         buff.duration = table.remove(buff.durations, 1)
                         buff.stacks = buff.stacks - 1
-                        local targetName = environmentEffect.name
                         if TLDRMissionsDebugging then print(buff.name.." lost a stack on "..buff.target.name.."["..buff.target.boardIndex.."]") end
                     else
                         unregisterBuff(environmentEffectFollower, buff)
@@ -965,11 +961,11 @@ local function nextTurn(rngTargets)
         -- this happens between the turn of the last follower and the first enemy minion
         if (not processedDeadFollowers) and (minion.boardIndex > 4) then
             processedDeadFollowers = true
-            for _, minion in pairs(deadMinions) do
-                if minion.boardIndex < 5 then
+            for _, minion2 in pairs(deadMinions) do
+                if minion2.boardIndex < 5 then
                     local buffIDs = {}
                     local buffIndexes = {}
-                    for _, buff in pairs(minion.buffs) do
+                    for _, buff in pairs(minion2.buffs) do
                         table.insert(buffIDs, buff.ID)
                         buffIndexes[buff.ID] = buff
                     end
@@ -980,7 +976,7 @@ local function nextTurn(rngTargets)
                     for _, id in ipairs(buffIDs) do
                         local buff = buffIndexes[id]
                         if buff.event == "beforeAttack" then
-                            processBuff(minion, buff)
+                            processBuff(minion2, buff)
                         end
                         buff.duration = buff.duration - 1
                         if buff.durations then
@@ -1007,9 +1003,9 @@ local function nextTurn(rngTargets)
                             if buff.stacks and buff.stacks > 1 then
                                 buff.duration = table.remove(buff.durations, 1)
                                 buff.stacks = buff.stacks - 1
-                                if TLDRMissionsDebugging then print(buff.name.." lost a stack on "..minion.name) end
+                                if TLDRMissionsDebugging then print(buff.name.." lost a stack on "..minion2.name) end
                             else
-                                unregisterBuff(minion, buff)
+                                unregisterBuff(minion2, buff)
                             end
                         end
                     end
@@ -1301,7 +1297,7 @@ function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFo
         minion.name = enemy.name
     
         minion.spells = {}
-        for i, spell in pairs(enemy.autoCombatSpells) do
+        for _, spell in pairs(enemy.autoCombatSpells) do
             table.insert(minion.spells, {
                 ["spellID"] = spell.autoCombatSpellID,
                 ["cooldown"] = spell.cooldown,
@@ -1319,7 +1315,6 @@ function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFo
         }
         table.insert(field, minion)
     end
-    enemies = nil
     
     local teamLineup = {
         [0] = {["followerID"] = backLeftFollowerID, ["boardIndex"] = 0},
@@ -1329,7 +1324,7 @@ function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFo
         [4] = {["followerID"] = frontRightFollowerID, ["boardIndex"] = 4},
     }
     local team = {}
-    for i, follower in pairs(teamLineup) do
+    for _, follower in pairs(teamLineup) do
         if (follower.followerID) then
             table.insert(team, follower)
         end
@@ -1345,7 +1340,7 @@ function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFo
             follower.maxHP = info.maxHealth
             follower.thorns = {}
             follower.baseAttack = info.attack
-            local info = C_Garrison.GetFollowerInfo(follower.followerID)
+            info = C_Garrison.GetFollowerInfo(follower.followerID)
             if not info then
                 -- mission probably expired
                 callback({["victories"] = 0, ["defeats"] = 0, ["incompletes"] = 1})
@@ -1361,7 +1356,7 @@ function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFo
             
             local autoCombatSpells, autoCombatAutoAttack = C_Garrison.GetFollowerAutoCombatSpells(follower.followerID, C_Garrison.GetFollowerInfo(follower.followerID).level)
             follower.spells = {}
-            for i, spell in pairs(autoCombatSpells) do
+            for _, spell in pairs(autoCombatSpells) do
                 table.insert(follower.spells, {
                     ["spellID"] = spell.autoCombatSpellID,
                     ["cooldown"] = spell.cooldown,
@@ -1387,8 +1382,6 @@ function addon:Simulate(frontLeftFollowerID, frontMiddleFollowerID, frontRightFo
     end
     print(output)
     
-    team, teamLineup = nil, nil
-    
     environmentEffect = C_Garrison.GetAutoMissionEnvironmentEffect(missionID)
     if environmentEffect then
         environmentEffect.cooldown = environmentEffect.autoCombatSpellInfo.cooldown
@@ -1412,12 +1405,12 @@ function addon:SimulateFromLog(missionID, callback)
     field = {}
     
     local enemies = record.enemies
-    for i, enemy in pairs(enemies) do -- warning: i is not boardIndex
+    for _, enemy in pairs(enemies) do -- warning: i is not boardIndex
         enemy.buffs = {}
         enemy.thorns = {}
         enemy.name = enemy.name or tostring(enemy.followerID) 
         
-        for i, spell in pairs(enemy.spells) do
+        for _, spell in pairs(enemy.spells) do
             spell.onCooldown = false
             spell.effects = addon.spellsDB[spell.spellID]
         end
@@ -1427,12 +1420,12 @@ function addon:SimulateFromLog(missionID, callback)
         table.insert(field, enemy)
     end
 
-    for i, follower in pairs(record.followers) do
+    for _, follower in pairs(record.followers) do
         follower.buffs = {}
         follower.thorns = {}
         follower.name = follower.name or tostring(follower.followerID)
         
-        for i, spell in pairs(follower.spells) do
+        for _, spell in pairs(follower.spells) do
             spell.onCooldown = false
             spell.effects = addon.spellsDB[spell.spellID]
         end

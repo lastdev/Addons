@@ -1,0 +1,25 @@
+## Interface: 110205
+## Title: Invasion Timer
+## Notes: Data broker that provides timetable of time events (including invasions).
+## Author: LiangYuxuan
+## Version: v11.2.6
+## SavedVariables: InvasionTimerDB
+## IconTexture: 369214
+## X-ReleaseDate: 2025-11-07T02:18:45Z
+## X-License: GPL-3.0
+## X-Curse-Project-ID: 311898
+## X-WoWI-ID: 25933
+## X-Wago-ID: q96dAXKO
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+#@end-no-lib-strip@
+
+Init.lua
+Locales.lua
+Core.lua
+WorldQuest.lua
+Expansions\Load.xml
+Config.lua

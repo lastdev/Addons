@@ -12,12 +12,14 @@ L['options_icons_skyriding_glyph'] = 'Glyphes de vol dynamique'
 L['options_icons_skyriding_glyph_desc'] = 'Afficher les emplacements des glyphes de vol dynamique.'
 
 L['midnight_telescope'] = 'Télescope'
-L['telescopes_placed'] = 'Télescopes placés'
 L['options_icons_telescope'] = '{achievement:62057}'
 L['options_icons_telescope_desc'] = 'Afficher les emplacements des 10 télescopes pour le haut-fait {achievement:62057}.'
 
 L['options_icons_midnight_lore_hunter'] = '{achievement:62104}'
 L['options_icons_midnight_lore_hunter_desc'] = 'Afficher les emplacements des objets d\'histoire pour le haut-fait {achievement:62104}.'
+
+L['options_icons_profession_treasures'] = 'Trésors de métiers'
+L['options_icons_profession_treasures_desc'] = 'Afficher les emplacements des trésors qui confèrent de la connaissance de métiers.'
 
 -------------------------------------------------------------------------------
 -------------------------------- EVERSONG WOODS --------------------------------
@@ -42,7 +44,22 @@ L['options_icons_glowing_moth_desc'] = 'Afficher les emplacements des Phalènes 
 -------------------------------------------------------------------------------
 
 L['bloody_sack_note'] = 'Ramassez de la {object:Viande dégoulinante} sur les tas d\'os à proximité pour nourrir l\'{object:Oubliette oubliée}.'
+L['malignant_chest_note'] = 'Activez les {object:Nœuds malveillants} dans la grotte pour déverrouiller le coffre.'
+L['malignant_node'] = 'Nœud malveillant'
 
 -------------------------------------------------------------------------------
 ---------------------------------- ZUL'AMAN ----------------------------------
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+---------------------------------- ARCANTINA ----------------------------------
+-------------------------------------------------------------------------------
+
+L['share_a_drink_note'] = 'Achetez des {item:251039} auprès de {npc:250495} à l\'Arcantina et partagez-les avec chaque race.'
+
+-------------------------------------------------------------------------------
+----------------------------------- DELVES ------------------------------------
+-------------------------------------------------------------------------------
+
+L['sturdy_chest'] = 'Coffre solide'
+L['sturdy_chest_suffix'] = 'Coffre solide trouvé'

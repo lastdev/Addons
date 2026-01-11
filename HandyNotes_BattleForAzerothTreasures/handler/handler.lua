@@ -102,6 +102,8 @@ do
             upgrade = ns.rewards.Pet(item[1], type(item.pet) == "number" and item.pet)
         elseif item.set then
             upgrade = ns.rewards.Set(item[1], item.set)
+        elseif item.decor then
+            upgrade = ns.rewards.Decor(item[1])
         else
             upgrade = ns.rewards.Item(item[1])
         end
@@ -210,7 +212,7 @@ function ns.RegisterPoints(zone, points, defaults)
             local relatedNode = ns.nodeMaker(setmetatable({
                 label=point.related.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
                 atlas=point.related.atlas or "playerpartyblip", color=point.related.color, scale=point.related.scale,
-                texture=point.related.texture or false, minimap=point.related.minimap,
+                texture=point.related.texture or false, minimap=point.related.minimap, worldmap=point.related.worldmap,
                 note=point.related.note or false,
                 loot=upgradeloot(point.related.loot),
                 active=point.related.active, requires=point.related.requires, hide_before=point.related.hide_before,
@@ -604,6 +606,10 @@ local function render_string(s, context)
             if name then
                 return name
             end
+        elseif variant == "expansion" then
+            if _G["EXPANSION_NAME"..id] then
+                return _G["EXPANSION_NAME"..id]
+            end
         end
         return fallback ~= "" and fallback or (variant .. ':' .. id)
     end)
@@ -661,7 +667,17 @@ local trimmed_icon = function(texture)
     return icon_cache[texture]
 end
 local atlas_texture = function(atlas, extra, left, right, top, bottom)
-    atlas = C_Texture.GetAtlasInfo(atlas)
+    atlasInfo = C_Texture.GetAtlasInfo(atlas)
+    if not atlasInfo then
+        if ns.DEBUG then
+            if not ns.DEBUG_missing_atlas_cache then ns.DEBUG_missing_atlas_cache = {} end
+            if not ns.DEBUG_missing_atlas_cache[atlas] then
+                print(("%s: missing atlas %s"):format(myname, atlas))
+                ns.DEBUG_missing_atlas_cache[atlas] = true
+            end
+        end
+        atlasInfo = C_Texture.GetAtlasInfo("QuestObjective") or C_Texture.GetAtlasInfo("VignetteLoot")
+    end
     if type(extra) == "number" then
         extra = {scale=extra}
     end
@@ -673,16 +689,16 @@ local atlas_texture = function(atlas, extra, left, right, top, bottom)
     end
     if left then
         -- An atlas is already cropped into a texture, so we need to treat something else as our 1
-        local horizontal = atlas.rightTexCoord - atlas.leftTexCoord
-        local vertical = atlas.bottomTexCoord - atlas.topTexCoord
-        atlas.rightTexCoord = atlas.leftTexCoord + (right * horizontal)
-        atlas.leftTexCoord = atlas.leftTexCoord + (left * horizontal)
-        atlas.bottomTexCoord = atlas.topTexCoord + (bottom * vertical)
-        atlas.topTexCoord = atlas.topTexCoord + (top * vertical)
+        local horizontal = atlasInfo.rightTexCoord - atlasInfo.leftTexCoord
+        local vertical = atlasInfo.bottomTexCoord - atlasInfo.topTexCoord
+        atlasInfo.rightTexCoord = atlasInfo.leftTexCoord + (right * horizontal)
+        atlasInfo.leftTexCoord = atlasInfo.leftTexCoord + (left * horizontal)
+        atlasInfo.bottomTexCoord = atlasInfo.topTexCoord + (bottom * vertical)
+        atlasInfo.topTexCoord = atlasInfo.topTexCoord + (top * vertical)
     end
     return ns.merge({
-        icon = atlas.file,
-        tCoordLeft = atlas.leftTexCoord, tCoordRight = atlas.rightTexCoord, tCoordTop = atlas.topTexCoord, tCoordBottom = atlas.bottomTexCoord,
+        icon = atlasInfo.file,
+        tCoordLeft = atlasInfo.leftTexCoord, tCoordRight = atlasInfo.rightTexCoord, tCoordTop = atlasInfo.topTexCoord, tCoordBottom = atlasInfo.bottomTexCoord,
     }, extra)
 end
 ns.atlas_texture = atlas_texture
@@ -1230,7 +1246,10 @@ function HLHandler:OnEnter(uiMapID, coord)
         if point.route and ns.points[uiMapID][point.route] then
             point = ns.points[uiMapID][point.route]
         end
-        ns.RouteWorldMapDataProvider:HighlightRoute(point, uiMapID, coord)
+        if point._uiMapID == uiMapID then
+            -- Highlight the route only if it's on the original mapid for the point
+            ns.RouteWorldMapDataProvider:HighlightRoute(point, uiMapID, coord)
+        end
     end
     if ns.DecorationWorldMapDataProvider then
         ns.DecorationWorldMapDataProvider:OnMouseEnter(point, uiMapID, coord)

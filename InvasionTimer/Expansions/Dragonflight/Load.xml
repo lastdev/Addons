@@ -1,0 +1,8 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file='Daycare.lua'/>
+	<Script file='Storm.lua'/>
+	<Script file='Feast.lua'/>
+	<Script file='Siege.lua'/>
+
+	<Script file='WorldQuest.lua'/>
+</Ui>

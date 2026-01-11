@@ -104,7 +104,7 @@ function addon:RefreshProfile()
     local function setupAnimaCostDropDown(name)
         local options = {"10-24", "25-29", "30-49", "50-99", "100+"}
 
-        LibDD:UIDropDownMenu_Initialize(_G["TLDRMissions"..name.."AnimaCostDropDown"], function(self, level, menuList)
+        LibDD:UIDropDownMenu_Initialize(_G["TLDRMissions"..name.."AnimaCostDropDown"], function()
             local info = LibDD:UIDropDownMenu_CreateInfo()        
             
             for _, option in ipairs(options) do
@@ -135,7 +135,7 @@ function addon:RefreshProfile()
     setupAnimaCostDropDown("SanctumFeature")
     setupAnimaCostDropDown("AnythingForXP")
 
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsFollowerXPSpecialTreatmentDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsFollowerXPSpecialTreatmentDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
     
         for i = 1, 5 do
@@ -149,7 +149,7 @@ function addon:RefreshProfile()
         end
     end)
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsFollowerXPSpecialTreatmentAlgorithmDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsFollowerXPSpecialTreatmentAlgorithmDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
         
         info.text = L["FollowerXPAlgorithm1Label"]
@@ -169,11 +169,11 @@ function addon:RefreshProfile()
         LibDD:UIDropDownMenu_AddButton(info)
     end)
 
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsReputationDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsReputationDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
     
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "reputation" then
                 info.hasCross = true
             end
@@ -204,7 +204,7 @@ function addon:RefreshProfile()
             end
         elseif menuList then
             info.hasCross = false
-            for k, v in pairs(db.profile.excludedRewards) do
+            for _, v in pairs(db.profile.excludedRewards) do
                 if v == "crafting-cache" then
                     info.hasCross = true
                 end
@@ -232,7 +232,7 @@ function addon:RefreshProfile()
         end
     end)
 
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsAnimaDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsAnimaDropDown, function(self, level)
         local info = LibDD:UIDropDownMenu_CreateInfo()
         
         info.isNotRadio = true
@@ -240,7 +240,7 @@ function addon:RefreshProfile()
         info.func = addon.GUI.AnimaDropDown.OnSelect
         
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "anima" then
                 info.hasCross = true
             end
@@ -262,7 +262,7 @@ function addon:RefreshProfile()
         LibDD:UIDropDownMenu_AddButton(info, level)
     end)
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsFollowerXPItemsDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsFollowerXPItemsDropDown, function(self, level)
         local info = LibDD:UIDropDownMenu_CreateInfo()
         
         info.isNotRadio = true
@@ -270,7 +270,7 @@ function addon:RefreshProfile()
         info.func = addon.GUI.FollowerXPItemsDropDown.OnSelect
         
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "followerxp-items" then
                 info.hasCross = true
             end
@@ -292,7 +292,7 @@ function addon:RefreshProfile()
         LibDD:UIDropDownMenu_AddButton(info, level)
     end)
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsRunecarverDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsRunecarverDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
         
         info.isNotRadio = true
@@ -300,13 +300,13 @@ function addon:RefreshProfile()
         info.func = addon.GUI.RunecarverDropDown.OnSelect
         
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "runecarver" then
                 info.hasCross = true
             end
         end
         
-        for currencyID, name in pairs(addon.runecarverCurrencyIDs) do
+        for currencyID in pairs(addon.runecarverCurrencyIDs) do
             info.text = C_CurrencyInfo.GetCurrencyInfo(currencyID).name
             info.checked = db.profile.runecarver[currencyID]
             info.arg1 = currencyID
@@ -322,7 +322,7 @@ function addon:RefreshProfile()
         "17+",
     }
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsCampaignDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsCampaignDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
         info.isNotRadio = true
         info.keepShownOnClick = true
@@ -332,7 +332,7 @@ function addon:RefreshProfile()
         info.tooltipText = L["CampaignDropDownTooltip"]
         
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "campaign" then
                 info.hasCross = true
             end
@@ -365,14 +365,14 @@ function addon:RefreshProfile()
         "100+",
     }
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsGearDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsGearDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
         info.isNotRadio = true
         info.keepShownOnClick = true
         info.func = addon.GUI.GearDropDown.OnSelect
         
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "gear" then
                 info.hasCross = true
             end
@@ -396,7 +396,7 @@ function addon:RefreshProfile()
         "1000+",
     }
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsAnythingForXPDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsAnythingForXPDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
         info.isNotRadio = true
         info.keepShownOnClick = true
@@ -432,14 +432,14 @@ function addon:RefreshProfile()
         info.keepShownOnClick = true
         
         info.hasCross = false
-        for k, v in pairs(db.profile.excludedRewards) do
+        for _, v in pairs(db.profile.excludedRewards) do
             if v == "sanctum" then
                 info.hasCross = true
             end
         end
         
         if level == 1 then
-            for categoryName, category in pairs(addon.sanctumFeatureItems) do
+            for categoryName in pairs(addon.sanctumFeatureItems) do
                 info.text = categoryName
                 info.hasArrow = true
                 info.arg1 = categoryName
@@ -465,7 +465,7 @@ function addon:RefreshProfile()
         end
     end)
     
-    LibDD:UIDropDownMenu_Initialize(TLDRMissionsBlockCompletionDropDown, function(self, level, menuList)
+    LibDD:UIDropDownMenu_Initialize(TLDRMissionsBlockCompletionDropDown, function()
         local info = LibDD:UIDropDownMenu_CreateInfo()
         
         info.text = L["BlockCompletionOption1Label"]
@@ -495,7 +495,7 @@ function addon:RefreshProfile()
     end)
     
     --preload the items
-    for categoryName, category in pairs(addon.sanctumFeatureItems) do
+    for _, category in pairs(addon.sanctumFeatureItems) do
         for itemID in pairs(category) do
             local item = Item:CreateFromItemID(itemID)
             item:ContinueOnItemLoad(function()

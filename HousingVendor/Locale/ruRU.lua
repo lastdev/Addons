@@ -228,4 +228,15 @@ L["THEME_SLEEK_BLACK"] = "Черный элегантный"
 L["SETTINGS_UI_THEME"] = "Тема интерфейса"
 
 -- Make the locale table globally available
+-- Added for Zone Popup / minimap behaviors
+L["BUTTON_ZONE_POPUP"] = "Окно зоны"
+L["BUTTON_MAIN_UI"] = "Главное окно"
+L["SETTINGS_ZONE_POPUPS"] = "Всплывающие окна зоны"
+L["SETTINGS_ZONE_POPUPS_DESC"] = "Показывать всплывающее окно с недостающими предметами при входе в новую зону"
+L["MINIMAP_TOOLTIP_LEFTCLICK"] = "Левый клик: открыть главное окно"
+L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "Правый клик: окно зоны"
+L["MINIMAP_TOOLTIP_DRAG"] = "Перетаскивание: переместить кнопку"
+L["OUTSTANDING_ITEMS_IN_ZONE"] = "Недостающие предметы в зоне"
+L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "Открывает главное окно HousingVendor с фильтром по этой зоне."
+
 HousingVendorLocales["ruRU"] = L

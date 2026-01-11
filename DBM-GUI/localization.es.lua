@@ -7,7 +7,7 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Traducido por "
 L.TranslationBy 			= "Saispai, Woopy"
-L.Website					= "Visita nuestro canal de Discord (|cFF73C2FBhttps://discord.gg/deadlybossmods|r)"
+L.Website					= "Por favor, sigue a MysticalOS para noticias y actualizaciones |cFF73C2FBhttps://allmylinks.com/mysticalos|r"
 L.WebsiteButton				= "Página web"
 
 L.OTabBosses	= "Jefes"
@@ -116,15 +116,15 @@ L.CustomOptions						= "Esta categoría contiene opciones personalizadas para un
 -- Panel: Auto Logging
 L.Panel_AutoLogging			= "Registro automático"
 --Auto Logging: Logging toggles/types
-L.Area_AutoLogging			= "Opciones del registro automático"
+L.Area_AutoLogging			= "Opciones de registro automático"
 L.AutologBosses				= "Registrar encuentros automáticamente con el registro de combate de Blizzard"
 L.AdvancedAutologBosses		= "Registrar encuentros automáticamente con Transcriptor"
 --Auto Logging: Global filter Options
-L.Area_AutoLoggingFilters	= "Filtros del registro automático"
+L.Area_AutoLoggingFilters	= "Filtros de registro automático"
 L.RecordOnlyBosses			= "Registrar solo encuentros contra jefes"
 L.DoNotLogLFG				= "No registrar encuentros de buscar grupo"
 --
-L.Area_AutoLoggingContent			= "Contenido del registro automático"
+L.Area_AutoLoggingContent			= "Contenido de registro automático"
 L.LogCurrentMythicRaids				= "Bandas actuales Míticas"--Retail Only
 L.LogCurrentRaids					= "Bandas actuales"
 L.LogTWRaids						= "Bandas de Paseo en el tiempo o Tiempo de Cromi"--Retail Only
@@ -213,6 +213,7 @@ L.RaidWarnColor_1 			= "Color 1"
 L.RaidWarnColor_2 			= "Color 2"
 L.RaidWarnColor_3		 	= "Color 3"
 L.RaidWarnColor_4 			= "Color 4"
+L.RaidWarnColor				= "Color"
 L.InfoRaidWarning			= [[Puedes definir la posición y los colores del marco de avisos de banda.
 Este marco se usa para mensajes como "Jugador X afectado por Y".]]
 L.ColorResetted 			= "Se ha restablecido la configuración de colores de este campo."
@@ -419,6 +420,8 @@ L.ClickThrough					= "Desactivar clic en barras"
 L.Bar_Decimal					= "Mostrar decimales bajo: %d s"
 L.Bar_Alpha						= "Transparencia: %0.1f"
 L.Bar_EnlargeTime				= "Agrandar barras bajo: %d s"
+L.Bar_AppearTime				= "Ocultar barras encima: %d s"--Used for when hidden bars show on the small bar anchor
+L.Bar_HideLongBars				= "Ocultar barras hasta que estén por debajo del umbral"
 L.BarSpark						= "Destello de barras"
 L.BarFlash						= "Destellar barras a punto de expirar"
 L.BarSort						= "Ordenar por tiempo restante"
@@ -452,7 +455,7 @@ L.SpamBlockNoSpecWarnText 			= "No mostrar texto de anuncios especiales"
 L.SpamBlockNoSpecWarnFlash			= "No mostrar destello de anuncios especiales"
 L.SpamBlockNoSpecWarnVibrate		= "No vibrar el controlador en un anuncio especial"
 L.SpamBlockNoSpecWarnSound			= "No reproducir sonidos de anuncios especiales"
-L.SpamBlockNoPrivateAuraSound		= "No registrar sonidos de auras privados"
+L.SpamBlockNoPrivateAuraSound		= "No registrar sonidos de auras privadas"
 
 L.Area_SpamFilter_Timers			= "Opciones de temporizadores"
 L.SpamBlockNoShowBossTimers			= "No mostrar temporizadores para jefes"
@@ -462,10 +465,10 @@ L.SpamBlockNoShowUTimers			= "No mostrar temporizadores enviados por el usuario"
 L.SpamBlockNoCountdowns				= "No reproducir sonidos de cuenta atrás"
 
 L.Area_SpamFilter_Nameplates	= "Opciones de placas de nombre"
-L.SpamBlockNoNameplate			= "No mostrar iconos de placas de nombre para mecánicas especiales de jefes (es decir, beneficios o perjuicios en enemigos)"
-L.SpamBlockNoNameplateCD		= "No mostrar iconos de placas de nombre para tiempos de reutilización de facultades"
-L.SpamBlockNoNameplateCasts 	= "No mostrar iconos de placas de nombre para temporizadores de lanzamiento de facultades"
-L.SpamBlockNoBossGUIDs			= "No mostrar iconos en placas de nombre para facultades con temporizadores"
+L.SpamBlockNoNameplate			= "No mostrar iconos para beneficios o perjuicios"
+L.SpamBlockNoNameplateCD		= "No mostrar iconos para tiempos de reutilización de facultades"
+L.SpamBlockNoNameplateCasts 	= "No mostrar iconos para temporizadores de lanzamiento de facultades"
+L.SpamBlockNoBossGUIDs			= "No mostrar iconos para facultades con temporizadores"
 L.AlwaysKeepNPs					= "Mantener visibles los iconos de temporizador caducados hasta que la facultad se lance de nuevo"
 
 L.Area_SpamFilter_Misc		= "Opciones varias"
@@ -587,12 +590,12 @@ L.TabFooter							= "Todas las opciones en este panel solo funcionan si eres lí
 L.Tab_Privacy 				= "Controles de privacidad"
 L.Tab_PrivacyMidnight		= "Privacidad de comunicaciones"
 L.Area_WhisperMessages		= "Opciones de susurros"
-L.AutoRespond 				= "Responder automáticamente a susurros en encuentro"
-L.WhisperStats 				= "Incluir estadísticas de victoria y derrota en las respuestas automáticas a susurros"
-L.DisableStatusWhisper 		= "Desactivar susurros automáticos de encuentro para todos (requiere ser líder)"
+L.AutoRespond 				= "Responder automáticamente a susurros durante el encuentro"
+L.WhisperStats 				= "Incluir estadísticas de victoria y derrota en las respuestas automáticas"
+L.DisableStatusWhisper 		= "Desactivar susurros automáticos para todos (requiere ser líder)"
 L.Area_SyncMessages			= "Opciones de sincronización de addons"
 L.DisableGuildStatus 		= "Desactivar mensajes de hermandad de encuentro para todos (requiere ser líder)"
-L.EnableWBSharing 			= "Compartir inicios y victorias de jefes del mundo con hermandad y amigos de Battle.net en tu mismo reino"
+L.EnableWBSharing 			= "Compartir inicios y victorias de jefes del mundo con la hermandad y amigos de Battle.net en tu mismo reino"
 
 -- Tab: Frames & Integrations
 L.TabCategory_Frames		= "Marcos e integración"

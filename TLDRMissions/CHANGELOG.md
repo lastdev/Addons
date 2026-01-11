@@ -1,7 +1,23 @@
 # TL;DR Missions
 
-##  (2025-12-14)
+##  (2026-01-10)
  
 
-- Fix issue with follower list causing action blocked error  
-    Closes: https://github.com/TLDRMissions/TLDRMissions/issues/664#issuecomment-3651998363  
+- Update CalculateButton.lua  
+- Update GetMissions.lua  
+- Update gui.lua  
+- Update init.lua  
+- Update gui.lua  
+- Update GetMissions.lua  
+- Update CalculateButton.lua  
+- Update guihandlers.lua  
+- Update simulation.lua  
+- Update profiles.lua  
+- Update guihandlers.lua  
+- Code cleanup per luacheck  
+- Merge branch 'main' of https://github.com/TLDRMissions/main  
+- Code cleanup  
+- Update luacheck.yml  
+- Update profiles.lua  
+- Update guihandlers.lua  
+- Update gui.lua  

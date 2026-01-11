@@ -54,7 +54,7 @@ HousingTheme.Themes["Midnight"] = {
         
         -- Source type colors
         sourceVendor = {0.35, 0.80, 0.45, 1.0},
-        sourceQuest = {0.40, 0.70, 0.95, 1.0},
+        sourceQuest = {0.80, 0.45, 0.95, 1.0},
         sourceDrop = {0.95, 0.60, 0.25, 1.0},
         sourceAchievement = {0.95, 0.80, 0.25, 1.0},
         
@@ -110,7 +110,7 @@ HousingTheme.Themes["Alliance"] = {
         
         -- Source type colors
         sourceVendor = {0.35, 0.80, 0.45, 1.0},
-        sourceQuest = {0.40, 0.70, 0.95, 1.0},
+        sourceQuest = {0.80, 0.45, 0.95, 1.0},
         sourceDrop = {0.95, 0.60, 0.25, 1.0},
         sourceAchievement = {0.95, 0.80, 0.25, 1.0},
         
@@ -166,7 +166,7 @@ HousingTheme.Themes["Horde"] = {
         
         -- Source type colors
         sourceVendor = {0.35, 0.80, 0.45, 1.0},
-        sourceQuest = {0.40, 0.70, 0.95, 1.0},
+        sourceQuest = {0.80, 0.45, 0.95, 1.0},
         sourceDrop = {0.95, 0.60, 0.25, 1.0},
         sourceAchievement = {0.95, 0.80, 0.25, 1.0},
         
@@ -222,7 +222,7 @@ HousingTheme.Themes["Sleek Black"] = {
         
         -- Source type colors
         sourceVendor = {0.35, 0.80, 0.45, 1.0},
-        sourceQuest = {0.20, 0.85, 0.95, 1.0},
+        sourceQuest = {0.80, 0.45, 0.95, 1.0},
         sourceDrop = {0.95, 0.60, 0.25, 1.0},
         sourceAchievement = {0.95, 0.80, 0.25, 1.0},
         
@@ -731,4 +731,3 @@ initFrame:SetScript("OnEvent", function(self, event, addonName)
         self:UnregisterEvent("ADDON_LOADED")
     end
 end)
-

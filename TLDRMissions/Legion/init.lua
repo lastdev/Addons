@@ -11,6 +11,7 @@ addon.LegionGUI.rewardStrings = {
     "reputation",
     "gear",
     "crafting-reagents",
+    "augment-runes",
 }
 
 if addon.LegionGUI.GoldCheckButton then

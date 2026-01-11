@@ -1,0 +1,26 @@
+## Interface: 110207
+## Title: HandyNotes: Oribos
+## Title-ruRU: HandyNotes: Орибос
+## Notes: Shows the NPC and POI locations in Oribos.
+## Notes-deDE: Zeigt die Positionen von NPCs und anderen Orten von Interesse in Oribos an.
+## Notes-ruRU: Показывает расположение NPC и других интересных мест в Орибосе
+## Author: |cFFFF8C00Dathwada EU-Eredar|r
+## Version: v39
+## RequiredDeps: HandyNotes
+## DefaultState: enabled
+## SavedVariables: HandyNotes_OribosDB
+## IconTexture: 3847779
+## X-Date: 2026-01-06
+## X-Category: Map
+
+# LOCALIZATION FILES
+localization\locales.xml
+
+# CORE FILES
+core\constants.lua
+core\handler.lua
+core\config.lua
+core\dev.lua
+
+# DATABASE
+data\DB.lua

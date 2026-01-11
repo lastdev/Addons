@@ -24,6 +24,7 @@ ns.defaults = {
         pet_notable = true,
         transmog_notable = true,
         quest_notable = true,
+        decor_notable = true,
         transmog_specific = true, -- consider whether you know the appearance from *this* item specifically
         -- icon stuff
         icon_scale = 1.0,
@@ -302,11 +303,18 @@ ns.options = {
                             desc = "Count unlearned transmogrification appearances as notable loot",
                             order = 40,
                         },
+                        decor_notable = {
+                            type = "toggle",
+                            name = BINDING_TAG_DECOR or "Decor",
+                            desc = "Count unfound decor as notable loot",
+                            order = 50,
+                            disabled = not BINDING_TAG_DECOR,
+                        },
                         quest_notable = {
                             type = "toggle",
                             name = "Quest-attached",
                             desc = "Count items with attached uncompleted quests as notable loot (this includes a lot of \"learnable\" items, weekly reputation drops, etc)",
-                            order = 50,
+                            order = 60,
                         },
                     },
                     order = 40,

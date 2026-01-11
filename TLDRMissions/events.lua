@@ -122,7 +122,7 @@ end
 local function eventHandler(self, event, ...)
     local arg1 = ...
     if event == "GARRISON_MISSION_NPC_OPENED" then
-        TLDRMissionsWODToggleButton:Hide()
+        TLDRMissions1ToggleButton:Hide()
         -- Shadowlands
         if arg1 == 123 then
             if C_Map.GetBestMapForUnit("player") == 2022 then return end -- this is The Waking Shores. There is an interactable "Scouting Map" that passes in 123 for some reason.
@@ -137,7 +137,7 @@ local function eventHandler(self, event, ...)
             end
         -- WOD
         elseif arg1 == 1 then
-            TLDRMissionsWODToggleButton:Show()
+            TLDRMissions1ToggleButton:Show()
             addon.WODGUI:SetParent(GarrisonMissionFrame)
             addon.WODGUI:SetShown(addon.WODGUI:IsShown() or addon.WODdb.profile.autoShowUI)
         -- Legion
@@ -161,17 +161,17 @@ local function eventHandler(self, event, ...)
 		end
         RunNextFrame(function()
             if GarrisonMissionFrame:IsShown() and (GarrisonMissionFrame.followerTypeID == 1) then
-                TLDRMissionsWODToggleButton:Show()
+                TLDRMissions1ToggleButton:Show()
                 addon.WODGUI:SetParent(GarrisonMissionFrame)
                 addon.WODGUI:SetFrameStrata("DIALOG")
                 addon.WODGUI:SetShown(addon.WODGUI:IsShown() or addon.WODdb.profile.autoShowUI)
             elseif OrderHallMissionFrame:IsShown() and (OrderHallMissionFrame == 4) then
-                TLDRmissionsLegionToggleButton:Show()
+                TLDRmissions4ToggleButton:Show()
                 addon.LegionGUI:SetParent(OrderHallMissionFrame)
                 addon.LegionGUI:SetFrameStrata("DIALOG")
                 addon.LegionGUI:SetShown(addon.LegionGUI:IsShown() or addon.Legiondb.profile.autoShowUI)
             else
-                TLDRMissionsWODToggleButton:Hide()
+                TLDRMissions1ToggleButton:Hide()
             end
         end)
         eventFrame:UnregisterEvent("ADDON_LOADED")

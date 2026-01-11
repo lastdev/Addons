@@ -587,7 +587,7 @@ function lib:Reset()
 		for i, _ in next, self.Pages do
 			self.Pages[i].IsViewed = false;
 		end
-	end	
+	end
 	self:Hide();
 end
 

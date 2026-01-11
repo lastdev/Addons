@@ -1,4 +1,6 @@
-## Changed in v70
+## Changed in v71
 
-* Updated for 11.2.7
+* Ready for Midnight
+* Bring in systems improvements from [my Midnight plugin](https://www.curseforge.com/wow/addons/handynotes-midnight-treasures)
+* Add Amirdrassil's treasures, and the new decor quartermasters
 

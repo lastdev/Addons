@@ -211,7 +211,7 @@ function addon:getClosestAlly(follower, field)
     return follower -- some minions have been tested to target themselves when there are no other allies left. need to test if this is true for all "closest ally" spells
 end
 
-function addon:getLineEnemies(follower, field, taunter)
+function addon:getLineEnemies(follower, field)
     local priorityOrder = {
         -- Actual:
         -- Molako cast Purification Ray at Privileged Contributor[1975HP] for 188  damage.
@@ -538,7 +538,7 @@ function addon:getAllAllies(follower, field)
     return targets
 end
 
-function addon:getAllEnemies(follower, field, taunter)
+function addon:getAllEnemies(follower, field)
     local targets = {}
     
     for _, minion in pairs(field) do
@@ -646,7 +646,7 @@ local numAliveToIndex = {
     [11] = 4,        
 }
 
-function addon:getPseudorandomMawswornStrength(follower, field)
+function addon:getPseudorandomMawswornStrength(_, field)
     local targets = {}
     
     --[[
@@ -723,7 +723,7 @@ function addon:getPseudorandomMawswornStrength(follower, field)
     return targets
 end
 
-function addon:getPseudorandomRitualFervor(follower, field)
+function addon:getPseudorandomRitualFervor(_, field)
     local targets = {}
     
     --[[
@@ -865,7 +865,7 @@ function addon:getPseudorandomRitualFervor(follower, field)
     return targets
 end
 
-function addon:getPseudorandomLashOut(follower, field)
+function addon:getPseudorandomLashOut(_, field)
     --[[
     local patterns = {
         -- observed in 2238

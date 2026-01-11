@@ -79,6 +79,10 @@
                                     print(Angleur_Translate["Can't change sleep state in combat."])
                                     return
                                 end
+                                if UnitIsDeadOrGhost("player") then
+                                    print(Angleur_Translate["Can't change sleep state while in ghost form."])
+                                    return
+                                end
                                 local colorBlu = CreateColor(0.61, 0.85, 0.92)
                                 if AngleurCharacter.sleeping == true then
                                     AngleurCharacter.sleeping = false
@@ -131,7 +135,7 @@
             <Button name="$parent_ToyButton" parentKey="toyButton" inherits="SecureActionButtonTemplate" hidden="false">
                 <Scripts>
                     <PreClick>
-                        Angleur_BetaPrint("ToyButton functions have been invoked")
+                        Angleur_BetaPrint(1, "ToyButton functions have been invoked")
                     </PreClick>
                 </Scripts>
             </Button>
@@ -485,7 +489,6 @@
                             <OnLoad>
                                 self.tabText = Angleur_Translate["  Extra  "]
                                 self:OnLoad()
-                                Angleur_SetTab2(self)
                             </OnLoad>
                             <OnClick>
                                 self:OnClick()
@@ -530,26 +533,7 @@
                                         <Anchors>
                                             <Anchor point="TOP" relativeTo="Angleur_ExtraToys" relativePoint="BOTTOM" x="0" y="0"/>
                                         </Anchors>
-                                        <Scripts>
-                                            <OnLoad function="Angleur_LoadExtraItems"/>
-                                        </Scripts>
-                                        <Frames>
-                                            <Button name="$parent_First" parentKey="first" inherits="ExtraItemButtonTemplate">
-                                                <Anchors>
-                                                    <Anchor point="LEFT" x="35" y="15"/>
-                                                </Anchors>
-                                            </Button>
-                                            <Button name="$parent_Second" parentKey="second" inherits="ExtraItemButtonTemplate">
-                                                <Anchors>
-                                                    <Anchor point="LEFT" relativeTo="$parent_First" relativePoint="RIGHT" x="45" y="0"/>
-                                                </Anchors>
-                                            </Button>
-                                            <Button name="$parent_Third" parentKey="third" inherits="ExtraItemButtonTemplate">
-                                                <Anchors>
-                                                    <Anchor point="LEFT" relativeTo="$parent_Second" relativePoint="RIGHT" x="45" y="0"/>
-                                                </Anchors>
-                                            </Button>
-                                        </Frames>
+                                        <!-- Creation of frames now handled in items_base.lua instead -->
                                     </Frame>
                                     <Button name="$parent_EquipmentButton" parentKey="equipmentButton" inherits="IconButtonTemplate" hidden="false">
                                         <Size x="36" y="36"/>
@@ -687,14 +671,19 @@
                                             <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="22" y="-35"/>
                                         </Anchors>
                                     </CheckButton>
+                                    <CheckButton name="$parent_PoleSleep" parentKey="poleSleep" inherits="CheckboxTemplate_Angleur">
+                                        <Anchors>
+                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="22" y="-60"/>
+                                        </Anchors>
+                                    </CheckButton>
                                     <Frame name= "$parent_DoubleClickWindow" parentKey="doubleClickWindow" inherits="AngleurClassic_SliderAndEditControlTemplate">
                                         <Anchors>
-                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-80"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-90"/>
                                         </Anchors>
                                     </Frame>
                                     <Frame name= "$parent_VisualSize" parentKey="visualSize" inherits="AngleurClassic_SliderAndEditControlTemplate">
                                         <Anchors>
-                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-120"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-130"/>
                                         </Anchors>
                                         <Frames>
                                             <Frame name="$parent_ButtonHolder" parentKey="buttonHolder">
@@ -717,17 +706,17 @@
                                     </Frame>
                                     <Frame name= "$parent_UltraFocusMaster" parentKey="ultraFocusMaster" inherits="AngleurClassic_SliderAndEditControlTemplate">
                                         <Anchors>
-                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-198"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="20" y="-208"/>
                                         </Anchors>
                                     </Frame>
                                     <CheckButton name="$parent_LoginMessages" parentKey="loginMessages" inherits="CheckboxTemplate_Angleur">
                                         <Anchors>
-                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="22" y="-260"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="22" y="-270"/>
                                         </Anchors>
                                     </CheckButton>
                                     <CheckButton name="$parent_DebugMode" parentKey="debugMode" inherits="CheckboxTemplate_Angleur">
                                         <Anchors>
-                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="22" y="-295"/>
+                                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT" x="22" y="-298"/>
                                         </Anchors>
                                     </CheckButton>
                                     <Button name="$parent_Defaults" parentKey="defaults" inherits="GameMenuButtonTemplate">
@@ -765,6 +754,10 @@
                             <OnClick>
                                 if InCombatLockdown() then
                                     print(Angleur_Translate["Can't change sleep state in combat."])
+                                    return
+                                end
+                                if UnitIsDeadOrGhost("player") then
+                                    print(Angleur_Translate["Can't change sleep state while in ghost form."])
                                     return
                                 end
                                 AngleurCharacter.sleeping = false
@@ -855,6 +848,7 @@
             </OnLoad>
             <OnClick>
                 if InCombatLockdown() then return end
+                if UnitIsDeadOrGhost("player") then return end
                 self:Disable()
                 Angleur_CreateEquipmentSet()
                 Angleur_AddToEquipmentSet()

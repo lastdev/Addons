@@ -42,15 +42,20 @@ function Banking.OnInitialize()
 	if ClientInfo.IsRetail() then
 		Event.Register("BANKFRAME_OPENED", private.BankFrameOpened)
 		Event.Register("BANKFRAME_CLOSED", private.BankFrameClosed)
-		if BankFrame.BankPanel then
+		-- luacheck: globals Addon_SetBankType
+		if Addon_SetBankType then
+			hooksecurefunc("Addon_SetBankType", function(self)
+				private.BankVisibilityChanged(BankFrame:IsShown())
+			end)
+		elseif BankFrame.BankPanel then
 			hooksecurefunc(BankFrame.BankPanel, "SetBankType", function(self)
-				private.WarBankVisibilityChanged(BankFrame:IsShown())
+				private.BankVisibilityChanged(BankFrame:IsShown())
 			end)
 		end
 	end
 
 	DefaultUI.RegisterBankVisibleCallback(private.BankVisibilityChanged)
-	DefaultUI.RegisterAccountBankVisibleCallback(private.WarBankVisibilityChanged)
+	DefaultUI.RegisterAccountBankVisibleCallback(private.BankVisibilityChanged)
 	if ClientInfo.HasFeature(ClientInfo.FEATURES.GUILD_BANK) then
 		DefaultUI.RegisterGuildBankVisibleCallback(private.GuildBankVisibilityChanged)
 	end
@@ -273,12 +278,8 @@ function private.BankFrameClosed()
 	Event.Unregister("GLOBAL_MOUSE_UP", private.GlobalMouseUp)
 end
 
-function private.WarBankVisibilityChanged(visible)
-	local isWarBank = Container.CanAccessWarbank() and BankFrame:GetActiveBankType() == Enum.BankType.Account or false
-	private.BankVisibilityChanged(visible, isWarBank)
-end
-
-function private.BankVisibilityChanged(visible, isWarBank)
+function private.BankVisibilityChanged(visible)
+	local isWarBank = private.IsWarBankTabActive()
 	if visible then
 		if private.openFrame == (isWarBank and "WARBANK" or "BANK") then
 			return
@@ -293,6 +294,18 @@ function private.BankVisibilityChanged(visible, isWarBank)
 	end
 	for _, callback in ipairs(private.frameCallbacks) do
 		callback(private.openFrame)
+	end
+end
+
+function private.IsWarBankTabActive()
+	if not Container.CanAccessWarbank() then
+		return false
+	end
+	-- luacheck: globals Addon_GetBankType
+	if Addon_GetBankType then
+		return Addon_GetBankType() == Enum.BankType.Account
+	else
+		return BankFrame:GetActiveBankType() == Enum.BankType.Account
 	end
 end
 

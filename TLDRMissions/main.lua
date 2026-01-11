@@ -23,6 +23,8 @@ addon.BaseGUIMixin = {}
 
 addon.BFAGUI.RESOURCE_CURRENCY_ID = 1560
 addon.LegionGUI.RESOURCE_CURRENCY_ID = 1220
+addon.WODGUI.RESOURCE_CURRENCY_ID = 824
 
 addon.BFAGUI.missionFrame = BFAMissionFrame
 addon.LegionGUI.missionFrame = OrderHallMissionFrame
+addon.WODGUI.missionFrame = GarrisonMissionFrame

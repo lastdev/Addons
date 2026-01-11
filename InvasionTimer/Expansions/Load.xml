@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="TheWarWithin\Load.xml"/>
+	<Include file="Dragonflight\Load.xml"/>
+	<Include file="Shadowlands\Load.xml"/>
+	<Include file="BattleForAzeroth\Load.xml"/>
+	<Include file="Legion\Load.xml"/>
+	<Include file="WarlordsOfDraenor\Load.xml"/>
+	<Include file="MistsOfPandaria\Load.xml"/>
+	<Include file="Vanilla\Load.xml"/>
+</Ui>

@@ -168,14 +168,14 @@ function addon:Init(layer)
             end
         elseif event == "ZONE_CHANGED_NEW_AREA" then
             local mapID = C_Map.GetBestMapForUnit("player")
-            if badMapIDs[C_Map.GetBestMapForUnit("player")] then
+            if badMapIDs[mapID] then
                 C_PartyInfo.LeaveParty()
                 print("[TLDR-TFF]: Followers cannot spawn on this map. Leaving...")
                 sayOnce = true
                 C_Timer.After(2, function() sayOnce = nil end)
             else
                 C_Timer.After(3, function() -- occasional bug: mapid doesnt update straight away after the event
-                    if badMapIDs[C_Map.GetBestMapForUnit("player")] then
+                    if badMapIDs[mapID] then
                         C_PartyInfo.LeaveParty()
                         print("[TLDR-TFF]: Followers cannot spawn on this map. Leaving...")
                         sayOnce = true

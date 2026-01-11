@@ -1,17 +1,42 @@
-## Interface: 120000, 110207
+## Interface: 120000, 120001, 110207
 ## Title: |cFFFF0000Housing|r|cFF0066FFVendor|r
 ## Notes: Housing Decor Vendors Database
-## Version:  13.12.25.85
+## Version:  01.01.26.20
 ## IconTexture: Interface\Icons\INV_Misc_Map02.blp
 ## Category-enUS: Decor Vendors
 ## Author: RenZhi
 ## SavedVariables: HousingDB, HousingVendorRepDB
 
 Core\Core.lua
+Core\DataLoader.lua
 Core\Events.lua
 Core\Config.lua
 
-# Locales kept for international users
+Data\DataAggregator.lua
+Data\DataConstants.lua
+Data\FactionIDs.lua
+Data\ItemFieldIndices.lua
+Data\DNT\AllItems_DNT.lua
+Data\AllItems.lua
+
+Data\NonVendor\Achievements.lua
+Data\NonVendor\Quests.lua
+Data\NonVendor\Costs.lua
+Data\NonVendor\Professions.lua
+Data\NonVendor\ReputationFactions.lua
+Data\NonVendor\ReputationItems.lua
+
+Data\VendorLocations\Classic.lua
+Data\VendorLocations\BurningCrusade.lua
+Data\VendorLocations\Cataclysm.lua
+Data\VendorLocations\MistsofPandaria.lua
+Data\VendorLocations\Legion.lua
+Data\VendorLocations\BattleforAzeroth.lua
+Data\VendorLocations\Shadowlands.lua
+Data\VendorLocations\Dragonflight.lua
+Data\VendorLocations\TheWarWithin.lua
+Data\VendorLocations\Midnight.lua
+
 Locale\enUS.lua
 Locale\deDE.lua
 Locale\esES.lua
@@ -25,62 +50,60 @@ Locale\zhCN.lua
 Locale\zhTW.lua
 Locale\Locale.lua
 
-Data\Constants.lua
-Data\FactionIDs.lua
-Data\HousingDecorData.lua
-Data\ItemCoordinates.lua
-Data\CurrencyTypes.lua
-
-Data\VendorLocations\Classic.lua
-Data\VendorLocations\BurningCrusade.lua
-Data\VendorLocations\WrathoftheLichKing.lua
-Data\VendorLocations\Cataclysm.lua
-Data\VendorLocations\MistsofPandaria.lua
-Data\VendorLocations\WarlordsofDraenor.lua
-Data\VendorLocations\Legion.lua
-Data\VendorLocations\BattleforAzeroth.lua
-Data\VendorLocations\Shadowlands.lua
-Data\VendorLocations\Dragonflight.lua
-Data\VendorLocations\TheWarWithin.lua
-Data\VendorLocations\Midnight.lua
-
-
-Data\NonVendor\HousingProfessions.lua
-Data\NonVendor\HousingDrops.lua
-Data\NonVendor\AchievementRewards.lua
-Data\NonVendor\QuestRewards.lua
-Data\NonVendor\HousingMiscellaneous.lua
-Data\NonVendor\HousingReputations.lua
-Data\NonVendor\HousingMissingItems.lua
-
 Modules\Data\ReputationLoader.lua
 Modules\Data\ProfessionReagents.lua
+Modules\Data\DataEnrichment.lua
 
-Modules\Tools\MapIDToExpansion.lua
-Modules\Tools\ModelPositions.lua
-Modules\Tools\PortalData.lua
-Modules\Tools\IconCache.lua
+Modules\Map\MapIDToExpansion.lua
+Modules\Map\PortalData.lua
+Modules\Map\PortalPathfinder.lua
+Modules\Map\WaypointManager.lua
+
+Modules\Tools\TooltipScanner.lua
 Modules\Tools\TooltipInfoExtractor.lua
-Modules\Tools\WaypointManager.lua
 Modules\Tools\Reputation.lua
 Modules\Tools\CompletionTracker.lua
 Modules\Tools\VersionFilter.lua
 
-Modules/UI/UITheme.lua
-Modules/UI/DataManager.lua
-Modules/UI/Icons.lua
-Modules/UI/HousingUI.lua
-Modules/UI/ItemList.lua
-Modules/UI/Filters.lua
-Modules/UI/PreviewPanel.lua
-Modules/UI/ConfigUI.lua
-Modules/UI/StatisticsUI.lua
-Modules/UI/MinimapButton.lua
+Modules\UI\UITheme.lua
 
+Modules\UI\DataManager.lua
+Modules\UI\DataManager\Shared.lua
+Modules\UI\DataManager\VendorHelper.lua
+Modules\UI\DataManager\Indexing.lua
+Modules\UI\DataManager\AllItems.lua
+Modules\UI\DataManager\ApiBatchLoader.lua
+Modules\UI\DataManager\Filtering.lua
+
+Modules\UI\Icons.lua
+Modules\UI\HousingUI.lua
+
+Modules\UI\ItemList.lua
+Modules\UI\ItemList\ItemButtonTooltip.lua
+Modules\UI\ItemList\ButtonUpdates.lua
+
+Modules\UI\Filters.lua
+Modules\UI\ModelViewer.lua
+Modules\UI\PreviewPanelUI.lua
+Modules\UI\PreviewPanelData.lua
+Modules\UI\PreviewPanel\DataFormatter.lua
+Modules\UI\PreviewPanel.lua
+Modules\UI\ConfigUI.lua
+Modules\UI\StatisticsUI.lua
+Modules\UI\Statistics\Data.lua
+Modules\UI\Statistics\Charts.lua
+Modules\UI\Statistics\Filters.lua
+Modules\UI\OutstandingItemsUI.lua
+Modules\UI\OutstandingItems\Detection.lua
+Modules\UI\OutstandingItems\Popup.lua
+Modules\UI\OutstandingItems\Events.lua
+Modules\UI\MinimapButton.lua
+
+Modules\API\CollectionAPI.lua
 Modules\API\HousingAPI.lua
 Modules\API\HousingAPICache.lua
 Modules\API\HousingCatalogAPI.lua
-Modules\API\CollectionAPI.lua
 Modules\API\HousingDecorAPI.lua
 Modules\API\HousingEditorAPI.lua
 Modules\API\HousingDataEnhancer.lua
+Modules\API\ApiDumpCommand.lua

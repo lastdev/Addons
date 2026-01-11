@@ -216,11 +216,6 @@ function TomTom:SetWaypoint(waypoint, callbacks, show_minimap, show_world)
     point.worldmap.point = point
     point.uid = waypoint
 
-    -- Place the waypoint
-    -- AddMinimapIconMap(ref, icon, uiMapID, x, y, showInParentZone, floatOnEdge)
-    hbdp:AddMinimapIconMap(self, point.minimap, m, x, y, true, true)
-    point.addedToMinimap = true
-
     if show_world then
         -- show worldmap pin on its parent zone map (if any)
         -- HBD_PINS_WORLDMAP_SHOW_PARENT    = 1
@@ -233,16 +228,20 @@ function TomTom:SetWaypoint(waypoint, callbacks, show_minimap, show_world)
         point.worldmap.disabled = true
     end
 
-    if not show_minimap then
+	if show_minimap then
+        -- Place the waypoint
+        -- AddMinimapIconMap(ref, icon, uiMapID, x, y, showInParentZone, floatOnEdge)
+        hbdp:AddMinimapIconMap(self, point.minimap, m, x, y, true, true)
+        point.addedToMinimap = true
+        point.minimap:EnableMouse(true)
+        point.minimap.disabled = false
+        rotateArrow(point.minimap)
+	else
         -- Hide the minimap icon/arrow if minimap is off
         point.minimap:EnableMouse(false)
         point.minimap.icon:Hide()
         point.minimap.arrow:Hide()
         point.minimap.disabled = true
-        rotateArrow(point.minimap)
-    else
-        point.minimap:EnableMouse(true)
-        point.minimap.disabled = false
         rotateArrow(point.minimap)
     end
 end
@@ -299,17 +298,29 @@ function TomTom:ClearWaypoint(uid)
     end
 end
 
-function TomTom:GetDistanceToWaypoint(uid)
+function TomTom:GetVectorToWaypoint(uid)
     local point = waypointMap[uid]
-    if point then
-        local angle, distance = hbdp:GetVectorToIcon(point.minimap)
-        return distance
-    end
+    if not point then return end
+
+    local x, y, instance = hbd:GetPlayerWorldPosition()
+    if not x or not y then return end
+
+    -- pull the x, y and instance from the point/icon
+    local pointX, pointY, pointInstance = hbd:GetWorldCoordinatesFromZone(point.x, point.y, point.m)
+    if instance ~= pointInstance then return end
+
+    local angle, distance = hbd:GetWorldVector(instance, x, y, pointX, pointY)
+    return angle, distance
+end
+
+function TomTom:GetDistanceToWaypoint(uid)
+    local angle, distance = self:GetVectorToWaypoint(uid)
+    return distance
 end
 
 function TomTom:GetDirectionToWaypoint(uid)
-    local point = waypointMap[uid]
-    return point and hbdp:GetVectorToIcon(point.minimap)
+    local angle, distance = self:GetVectorToWaypoint(uid)
+    return angle
 end
 
 do

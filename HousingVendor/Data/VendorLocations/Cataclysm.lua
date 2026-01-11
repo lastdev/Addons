@@ -1,180 +1,388 @@
--- Vendor Location Data: Cataclysm
+﻿-- Housing Vendor Items - Cataclysm
 
-
-if not HousingVendorLocations then
-    HousingVendorLocations = {}
-end
-
-HousingVendorLocations["Cataclysm"] = {
-    ["Darnassus"] = {
-        {
-            vendorName = "Lord Candren",
-            npcID = 50307,
-            faction = "Alliance",
-            vendorCoords = {x = 37.0, y = 47.8, mapID = 89},
-            factionID = 1134,
-            factionName = "Gilneas",
-            items = {
-                {itemID = 245605, reputation = "Honored"},
-                {itemID = 245603, reputation = "Revered"},
-            }
-        },
+HousingDataAggregator_RegisterExpansionItems("vendor", {
+[1] = {
+    itemID = "245520",
+    itemName = "Gilnean Celebration Keg",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas",
+      vendorName = "Marie Allen",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 60.4, y = 92.4, mapID = 217},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Thundermar"] = {
-        {
-            vendorName = "Breana Bitterbrand",
-            npcID = 253227,
-            faction = "Alliance",
-            vendorCoords = {x = 49.6, y = 29.6, mapID = 241},
-            items = {
-            }
-        },
-        {
-            vendorName = "Craw MacGraw",
-            npcID = 49386,
-            faction = "Alliance",
-            vendorCoords = {x = 48.6, y = 30.6, mapID = 241},
-            items = {
-            }
-        },
+  },
+  [2] = {
+    itemID = "245516",
+    itemName = "Gilnean Bench",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas",
+      vendorName = "Marie Allen",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 60.4, y = 92.4, mapID = 217},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Twilight Highlands"] = {
-        {
-            vendorName = "Breana Bitterbrand",
-            npcID = None,
-            faction = "Alliance",
-            vendorCoords = {x = 49.6, y = 29.6, mapID = 241},
-            factionID = 1174,
-            factionName = "Wildhammer Clan",
-            items = {
-                {itemID = 246425, reputation = "Friendly"},
-                {itemID = 246108, reputation = "Honored"},
-            }
-        },
+  },
+  [3] = {
+    itemID = "245515",
+    itemName = "Gilnean Wooden Bed",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas",
+      vendorName = "Marie Allen",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 60.4, y = 92.4, mapID = 217},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Unknown Zone (MapID 217)"] = {
-        {
-            vendorName = "Marie Allen",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 60.4, y = 92.4, mapID = 217},
-            items = {
-                {itemID = 245604},
-                {itemID = 245516},
-                {itemID = 245520},
-                {itemID = 245617},
-                {itemID = 258301},
-                {itemID = 245515},
-            }
-        },
+  },
+  [4] = {
+    itemID = "245604",
+    itemName = "Arched Rose Trellis",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas",
+      vendorName = "Marie Allen",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 60.4, y = 92.4, mapID = 217},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Unknown Zone (MapID 218)"] = {
-        {
-            vendorName = "Gilnean Wooden Bed",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 61.99, y = 36.72, mapID = 218},
-            items = {
-                {itemID = 245604},
-                {itemID = 245516},
-                {itemID = 245520},
-                {itemID = 245617},
-                {itemID = 258301},
-                {itemID = 245515},
-            }
-        },
-        {
-            vendorName = "Samantha Buckley",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 61.99, y = 36.72, mapID = 218},
-            items = {
-                {itemID = 245604},
-                {itemID = 245516},
-                {itemID = 245520},
-                {itemID = 245617},
-                {itemID = 258301},
-                {itemID = 245515},
-            }
-        },
+  },
+  [5] = {
+    itemID = "245617",
+    itemName = "Gilnean Stocks",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas",
+      vendorName = "Marie Allen",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 60.4, y = 92.4, mapID = 217},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Unknown Zone (MapID 241)"] = {
-        {
-            vendorName = "Pedestal of the Maelstrom's Wisdom",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 49.6, y = 29.6, mapID = 241},
-            items = {
-                {itemID = 246108},
-                {itemID = 246425},
-            }
-        },
-        {
-            vendorName = "Breana Bitterbrand",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 49.6, y = 29.6, mapID = 241},
-            items = {
-                {itemID = 246108},
-                {itemID = 246425},
-            }
-        },
-        {
-            vendorName = "Round Dwarven Table",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 48.6, y = 30.6, mapID = 241},
-            items = {
-                {itemID = 246108},
-                {itemID = 246425},
-            }
-        },
-        {
-            vendorName = "Craw MacGraw",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 48.6, y = 30.6, mapID = 241},
-            items = {
-                {itemID = 246108},
-                {itemID = 246425},
-            }
-        },
+  },
+  [6] = {
+    itemID = "246427",
+    itemName = "Dilapidated Wildhammer Well",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Thundermar, Twilight Highlands",
+      vendorName = "Breana Bitterbrand",
+      npcID = 253227,
+      faction = 1,
+      coords = {x = 49.6, y = 29.6, mapID = 241},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-    ["Unknown Zone (MapID 726)"] = {
-        {
-            vendorName = "Gilnean Wooden Bed",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 30.32, y = 60.69, mapID = 726},
-            items = {
-                {itemID = 251014},
-                {itemID = 250914},
-                {itemID = 250918},
-                {itemID = 251015},
-                {itemID = 257403},
-                {itemID = 250916},
-            }
-        },
-        {
-            vendorName = "Flamesmith Lanying",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 30.32, y = 60.69, mapID = 726},
-            items = {
-                {itemID = 251014},
-                {itemID = 250914},
-                {itemID = 250918},
-                {itemID = 251015},
-                {itemID = 257403},
-                {itemID = 250916},
-            }
-        },
+  },
+  [7] = {
+    itemID = "246428",
+    itemName = "Overgrown Wildhammer Fountain",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Thundermar, Twilight Highlands",
+      vendorName = "Breana Bitterbrand",
+      npcID = 253227,
+      faction = 1,
+      coords = {x = 49.6, y = 29.6, mapID = 241},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
     },
-
-}
+  },
+  [8] = {
+    itemID = "250914",
+    itemName = "Elemental Altar of the Maelstrom",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "The Maelstrom",
+      vendorName = "Flamesmith Lanying",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 30.32, y = 60.69, mapID = 726},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [9] = {
+    itemID = "250916",
+    itemName = "Pedestal of the Maelstrom's Wisdom",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "The Maelstrom",
+      vendorName = "Flamesmith Lanying",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 30.32, y = 60.69, mapID = 726},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [10] = {
+    itemID = "250918",
+    itemName = "Maelstrom Banner",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "The Maelstrom",
+      vendorName = "Flamesmith Lanying",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 30.32, y = 60.69, mapID = 726},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [11] = {
+    itemID = "251014",
+    itemName = "Earthen Ring Scouting Map",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "The Maelstrom",
+      vendorName = "Flamesmith Lanying",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 30.32, y = 60.69, mapID = 726},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [12] = {
+    itemID = "251015",
+    itemName = "Maelstrom Chimes",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "The Maelstrom",
+      vendorName = "Flamesmith Lanying",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 30.32, y = 60.69, mapID = 726},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [13] = {
+    itemID = "257403",
+    itemName = "Maelstrom Lava Lamp",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "The Maelstrom",
+      vendorName = "Flamesmith Lanying",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 30.32, y = 60.69, mapID = 726},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [14] = {
+    itemID = "258301",
+    itemName = "Gilnean Washing Line",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas",
+      vendorName = "Marie Allen",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 60.4, y = 92.4, mapID = 217},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [15] = {
+    itemID = "246108",
+    itemName = "Embellished Dwarven Tome",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Thundermar, Twilight Highlands",
+      vendorName = "Breana Bitterbrand",
+      npcID = 253227,
+      faction = 1,
+      coords = {x = 49.6, y = 29.6, mapID = 241},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [16] = {
+    itemID = "246425",
+    itemName = "Round Dwarven Table",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Thundermar, Twilight Highlands",
+      vendorName = "Breana Bitterbrand",
+      npcID = 253227,
+      faction = 1,
+      coords = {x = 49.6, y = 29.6, mapID = 241},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [17] = {
+    itemID = "246108",
+    itemName = "Embellished Dwarven Tome",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Thundermar, Twilight Highlands",
+      vendorName = "Craw MacGraw",
+      npcID = 49386,
+      faction = 1,
+      coords = {x = 48.6, y = 30.6, mapID = 241},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [18] = {
+    itemID = "246425",
+    itemName = "Round Dwarven Table",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Thundermar, Twilight Highlands",
+      vendorName = "Craw MacGraw",
+      npcID = 49386,
+      faction = 1,
+      coords = {x = 48.6, y = 30.6, mapID = 241},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [19] = {
+    itemID = "245516",
+    itemName = "Gilnean Bench",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas City",
+      vendorName = "Samantha Buckley",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 61.99, y = 36.72, mapID = 218},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [20] = {
+    itemID = "245617",
+    itemName = "Gilnean Stocks",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas City",
+      vendorName = "Samantha Buckley",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 61.99, y = 36.72, mapID = 218},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [21] = {
+    itemID = "258301",
+    itemName = "Gilnean Washing Line",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas City",
+      vendorName = "Samantha Buckley",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 61.99, y = 36.72, mapID = 218},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [22] = {
+    itemID = "245520",
+    itemName = "Gilnean Celebration Keg",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas City",
+      vendorName = "Samantha Buckley",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 61.99, y = 36.72, mapID = 218},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [23] = {
+    itemID = "245604",
+    itemName = "Arched Rose Trellis",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas City",
+      vendorName = "Samantha Buckley",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 61.99, y = 36.72, mapID = 218},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [24] = {
+    itemID = "245515",
+    itemName = "Gilnean Wooden Bed",
+    vendorDetails = {
+      expansion = "Cataclysm",
+      location = "Ruins of Gilneas City",
+      vendorName = "Samantha Buckley",
+      npcID = "None",
+      faction = 0,
+      coords = {x = 61.99, y = 36.72, mapID = 218},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+})

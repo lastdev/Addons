@@ -110,7 +110,6 @@ DB.nodes = {
 
         -- The Ether House
         [58064879] = { icon = "transmogrifier", npc = 219053 }, -- Warpweaver Dezeeran
-        [57704746] = { icon = "void", npc = 219054 }, -- Vaultkeeper Xir
 
         -- Shadestone Elixirs
         [61695186] = { icon = "vendor", npc = 219312 }, -- Gorenda

@@ -41,6 +41,8 @@ L["COLUMN_TYPE"] = "Type"
 -- Buttons
 L["BUTTON_SETTINGS"] = "Settings"
 L["BUTTON_STATISTICS"] = "Statistics"
+L["BUTTON_ZONE_POPUP"] = "Zone Popup"
+L["BUTTON_MAIN_UI"] = "Main UI"
 L["BUTTON_BACK"] = "Back"
 L["BUTTON_CLOSE"] = "Close"
 L["BUTTON_WAYPOINT"] = "Set Waypoint"
@@ -62,6 +64,8 @@ L["SETTINGS_PROGRESS_TRACKING"] = "Progress Tracking"
 L["SETTINGS_SHOW_COLLECTED"] = "Show Collected Items"
 L["SETTINGS_WAYPOINT_NAVIGATION"] = "Waypoint Navigation"
 L["SETTINGS_USE_PORTAL_NAVIGATION"] = "Use Smart Portal Navigation"
+L["SETTINGS_ZONE_POPUPS"] = "Zone Popups"
+L["SETTINGS_ZONE_POPUPS_DESC"] = "Show outstanding items popup when entering a new zone"
 
 -- Tooltips
 L["TOOLTIP_SETTINGS"] = "Settings"
@@ -139,6 +143,13 @@ L["COMMON_ITEM_ID"] = "Item ID:"
 -- Miscellaneous
 L["MINIMAP_TOOLTIP"] = "Housing Vendor Browser"
 L["MINIMAP_TOOLTIP_DESC"] = "Left-click to toggle the Housing Vendor browser"
+L["MINIMAP_TOOLTIP_LEFTCLICK"] = "Left-click: open main window"
+L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "Right-click: zone popup"
+L["MINIMAP_TOOLTIP_DRAG"] = "Drag: move button"
+
+-- Outstanding Items Popup
+L["OUTSTANDING_ITEMS_IN_ZONE"] = "Outstanding Items in Zone"
+L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "Opens the main HousingVendor window filtered to this zone."
 
 -- Expansion Names
 L["EXPANSION_CLASSIC"] = "Classic"

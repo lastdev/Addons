@@ -1,7 +1,7 @@
-## Interface: 110207, 120000
+## Interface: 110207, 120001
 ## Title: TomTom
 ## Author: Cladhaire, Ludovicus
-## Version: v4.2.4-release
+## Version: v4.2.8-release
 ## License: All Rights Reserved
 ## IconTexture: Interface\AddOns\TomTom\Images\Modern\TomTom-Logo.tga
 ## Notes: Acts as your portable navigation assistant

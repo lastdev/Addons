@@ -852,53 +852,42 @@ return
 end
 L=l:NewLocale(me,"frFR")
 if (L) then
---[[Translation missing --]]
---[[ L["%1$d%% lower than %2$d%%. Lower %s"] = ""--]] 
---[[Translation missing --]]
---[[ L[ [=[%1$s and %2$s switches work together to customize how you want your mission filled
+L["%1$d%% lower than %2$d%%. Lower %s"] = "%1$d%% inférieur à %2$d%%. %s inférieur"
+L[ [=[%1$s and %2$s switches work together to customize how you want your mission filled
 
-The value you set for %1$s (right now %3$s%%) is the minimum acceptable chance for attempting to achieve bonus while the value to set for %2$s (right now %4$s%%) is the chance you want achieve when you are forfaiting bonus (due to not enough powerful followers)]=] ] = ""--]] 
+The value you set for %1$s (right now %3$s%%) is the minimum acceptable chance for attempting to achieve bonus while the value to set for %2$s (right now %4$s%%) is the chance you want achieve when you are forfaiting bonus (due to not enough powerful followers)]=] ] = "Les options %1$s et %2$s fonctionnent ensemble pour personnaliser la manière dont vous souhaitez que votre mission soit remplie. La valeur que vous définissez pour %1$s (actuellement %3$s%%) est la chance minimale acceptable pour tenter d'obtenir le bonus, tandis que la valeur à définir pour %2$s (actuellement %4$s%%) est la chance que vous souhaitez obtenir lorsque vous abandonnez le bonus (faute de sujet suffisamment puissants)."
 L["%s |4follower:followers; with %s"] = "%s |4sujet:sujets; avec %s"
---[[Translation missing --]]
---[[ L["%s for a wowhead link popup"] = ""--]] 
---[[Translation missing --]]
---[[ L["%s no longer blacklist missions"] = ""--]] 
---[[Translation missing --]]
---[[ L["%s start the mission without even opening the mission page. No question asked"] = ""--]] 
---[[Translation missing --]]
---[[ L["%s to actually start mission"] = ""--]] 
+L["%s for a wowhead link popup"] = "%s pour ouvrir une fenêtre wowhead"
+L["%s no longer blacklist missions"] = "%s ne met plus les missions sur liste noire"
+L["%s start the mission without even opening the mission page. No question asked"] = "%s lance la mission sans même ouvrir la page de mission. Sans poser de questions."
+L["%s to actually start mission"] = "%s pour démarrer la mission"
 L["%s to blacklist"] = "%s à la liste noire"
---[[Translation missing --]]
---[[ L["%s to remove from blacklist"] = ""--]] 
---[[Translation missing --]]
---[[ L[ [=[%s, please review the tutorial
-(Click the icon to dismiss this message and start the tutorial)]=] ] = ""--]] 
+L["%s to remove from blacklist"] = "%s à retirer de la liste noire"
+L[ [=[%s, please review the tutorial
+(Click the icon to dismiss this message and start the tutorial)]=] ] = "%s, veuillez consulter le tutoriel (Cliquez sur l'icône pour fermer ce message et démarrer le tutoriel)"
 L["(Ignores low bias ones)"] = "(Ignorer celles à basse priorité)"
---[[Translation missing --]]
---[[ L[ [=[A requested window is not open
-Tutorial will resume as soon as possible]=] ] = ""--]] 
+L[ [=[A requested window is not open
+Tutorial will resume as soon as possible]=] ] = "La fenêtre demandée n'est pas ouverte. Le tutoriel reprendra dès que possible."
 L["Add %1$d levels to %2$s"] = "Ajoute %1$d niveaux à %2$s"
 L["Adds a list of other useful followers to tooltip"] = "Ajoute une liste d'autres sujets utiles à l'info-bulle"
 L["Affects only little screen mode, hiding the per follower mission list if not checked"] = "N'affecte que le mode petit écran, masquant la liste par mission de sujet si décoché"
-L["Allowed Rewards"] = "Récompenses reçues"
-L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = "Permet un pourcentage de réussite inférieur pour des missions de ressources. Utiliser /gac gui pour le changer. Il est par défaut à 80 %."
+L["Allowed Rewards"] = "Récompenses autorisées"
+L["Allows a lower success percentage for resource missions. Use /gac gui to change percentage. Default is 80%"] = "Permet de réduire le taux de réussite des missions de ressources. Utilisez la commande « /gac gui » pour modifier ce pourcentage. La valeur par défaut est de 80 %."
 --[[Translation missing --]]
 --[[ L["Always counter increased resource cost"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Always counter increased time"] = ""--]] 
---[[Translation missing --]]
---[[ L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = ""--]] 
+L["Always counter kill troops (ignored if we can only use troops with just 1 durability left)"] = "Toujours contrer les troupes (ignoré si nous ne pouvons utiliser que des troupes avec seulement 1 point de durabilité restant)"
 --[[Translation missing --]]
 --[[ L["Always counter no bonus loot threat"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Analyze parties"] = ""--]] 
---[[Translation missing --]]
---[[ L["and then by:"] = ""--]] 
+L["and then by:"] = "et ensuite par :"
 L["Applied when 'maximize result' is enabled. Default is 80%"] = "Affecter quand « maximiser le résultat » est actif. Il est par défaut de 80 %"
-L["Applies the best armor set"] = "Applique le meilleur ensemble d'armure"
-L["Applies the best armor upgrade"] = "Applique la meilleure amélioration d'armure"
-L["Applies the best weapon set"] = "Applique le meilleur ensemble d'arme"
-L["Applies the best weapon upgrade"] = "Applique la meilleure amélioration d'arme"
+L["Applies the best armor set"] = "Appliquer le meilleur ensemble d'armure"
+L["Applies the best armor upgrade"] = "Appliquer la meilleure amélioration d'armure"
+L["Applies the best weapon set"] = "Appliquer le meilleur ensemble d'armes"
+L["Applies the best weapon upgrade"] = "Appliquer la meilleure amélioration d'arme"
 L["Archaelogy"] = "Archéologie"
 --[[Translation missing --]]
 --[[ L["Artifact shown value is the base value without considering knowledge multiplier"] = ""--]] 
@@ -910,7 +899,7 @@ L["Archaelogy"] = "Archéologie"
 --[[ L["Better parties available in next future"] = ""--]] 
 L["Big screen"] = "Grand écran"
 L["Blacklisted"] = "Liste noire"
-L["Blacklisted missions are ignored in Mission Control"] = "Les missions en liste noire sont ignorées dans Contrôle de mission"
+L["Blacklisted missions are ignored in Mission Control"] = "Les missions figurant sur la liste noire sont ignorées dans le centre de contrôle des missions."
 --[[Translation missing --]]
 --[[ L["Bonus Chance"] = ""--]] 
 L["Building Final report"] = "Création du rapport final"
@@ -918,11 +907,9 @@ L["Building Final report"] = "Création du rapport final"
 --[[ L["but using troops with just one durability left"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Capped"] = ""--]] 
-L["Capped %1$s. Spend at least %2$d of them"] = "Maxi pour %1$s. En dépensera au moins %2$d"
---[[Translation missing --]]
---[[ L["Changes the second sort order of missions in Mission panel"] = ""--]] 
---[[Translation missing --]]
---[[ L["Changes the sort order of missions in Mission panel"] = ""--]] 
+L["Capped %1$s. Spend at least %2$d of them"] = "Plafond atteint pour %1$. Dépensez au moins %2$d d'entre eux."
+L["Changes the second sort order of missions in Mission panel"] = "Modifie le deuxième ordre de tri des missions dans le panneau Missions"
+L["Changes the sort order of missions in Mission panel"] = "Modifie l'ordre de tri des missions dans le panneau Missions"
 --[[Translation missing --]]
 --[[ L[ [=[Clicking a party button will assign its followers to the current mission.
 Use it to verify OHC calculated chance with Blizzard one.
@@ -930,9 +917,8 @@ If they differs please take a screenshot and open a ticket :).]=] ] = ""--]]
 --[[Translation missing --]]
 --[[ L["Combat ally is proposed for missions so you can consider unassigning him"] = ""--]] 
 L["Complete all missions without confirmation"] = "Terminer toutes les missions sans confirmation"
---[[Translation missing --]]
---[[ L["Configuration for mission party builder"] = ""--]] 
-L["Consider again"] = "Reconsidérer"
+L["Configuration for mission party builder"] = "Configuration pour le générateur de groupe de mission"
+L["Consider again"] = "Réfléchissez-y à nouveau"
 --[[Translation missing --]]
 --[[ L["Cost reduced"] = ""--]] 
 --[[Translation missing --]]
@@ -944,7 +930,7 @@ L["Consider again"] = "Reconsidérer"
 --[[Translation missing --]]
 --[[ L["Disable blacklisting"] = ""--]] 
 L["Disable if you dont want the full Garrison Commander Header."] = "À désactiver si vous ne voulez pas de l'intitulé naval complet"
-L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = "Désactive le remplissage automatique des sujets sur la page de mission, ou maintenir CTRL tout en cliquant sur une mission."
+L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = "Désactiver le remplissage automatique de l'écran de la page de mission. Vous pouvez également maintenir la touche Ctrl enfoncée tout en cliquant pour désactiver cette fonction pour une mission spécifique."
 --[[Translation missing --]]
 --[[ L["Disables warning: "] = ""--]] 
 L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"] = "Désactiver ceci vous donnera l'interface de version 1.1.8. Rechargera l'interface maintenant."
@@ -964,7 +950,7 @@ L["Duration Time"] = "Durée"
 --[[ L["Empty missions sorted as last"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Empty or 0% success mission are sorted as last. Does not apply to \"original\" method"] = ""--]] 
-L["Enhance tooltip"] = "Infobulle améliorée"
+L["Enhance tooltip"] = "Info-bulle améliorée"
 L["Environment Preference"] = "Préférence d'environnement"
 L["Epic followers are NOT sent alone on xp only missions"] = "Les sujets épiques ne sont PAS envoyés seuls dans des missions d'XP uniquement"
 --[[Translation missing --]]
@@ -979,10 +965,10 @@ L["Expiration Time"] = "Délai avant expiration"
 --[[Translation missing --]]
 --[[ L["Favours leveling follower for xp missions"] = ""--]] 
 L["Follower"] = "Sujet"
-L["Follower equipment set or upgrade"] = "Équipement du sujet défini ou amélioré"
+L["Follower equipment set or upgrade"] = "Ensemble d'équipement de sujet ou mise à niveau"
 L["Follower experience"] = "Expérience du sujet"
-L["Follower set minimum upgrade"] = "Amélioration minimale du sujet définie"
-L["Follower Training"] = "Formation de sujet"
+L["Follower set minimum upgrade"] = "Mise à niveau minimale de l'ensemble des sujets"
+L["Follower Training"] = "Entrainement des sujets"
 L["Followers status "] = "Statuts des sujets"
 --[[Translation missing --]]
 --[[ L["For elite missions, tries hard to not go under 100% even at cost of overcapping"] = ""--]] 
@@ -991,8 +977,8 @@ L["Followers status "] = "Statuts des sujets"
 If %1$s is set to 170%%, the 180%% one will be choosen.
 If %1$s is set to 200%% OHC will try to find the nearest to 100%% respecting %2$s setting
 If for example %2$s is set to 100%%, then the 130%% one will be choosen, but if %2$s is set to 90%% then the 95%% one will be choosen]=] ] = ""--]] 
-L["Garrison Appearance"] = "Arrivée de fief"
-L["Garrison Comander Quick Mission Completion"] = "Terminer rapidement toutes les missions navales"
+L["Garrison Appearance"] = "Apparence de la garnison"
+L["Garrison Comander Quick Mission Completion"] = "Terminer rapidement toutes les missions"
 L["Garrison Commander Mission Control"] = "Contrôle des missions navales"
 L["General"] = "Général"
 L["Global approx. xp reward"] = "Évaluation totale du gain en XP"
@@ -1003,10 +989,8 @@ L["Gold incremented!"] = "Or augmenté !"
 --[[Translation missing --]]
 --[[ L["HallComander Quick Mission Completion"] = ""--]] 
 L["Hide followers"] = "Masquer les sujets"
---[[Translation missing --]]
---[[ L["If %1$s is lower than this, then we try to achieve at least %2$s without going over 100%%. Ignored for elite missions."] = ""--]] 
-L["If checked, clicking an upgrade icon will consume the item and upgrade the follower, |cFFFF0000NO QUESTION ASKED|r"] = [=[Si activé, cliquer sur une icône d'amélioration fera disparaître l'objet et améliorera le sujet
-|cFFFF0000AUCUNE CONFIRMATION !|r]=]
+L["If %1$s is lower than this, then we try to achieve at least %2$s without going over 100%%. Ignored for elite missions."] = "Si %1$s est inférieur à cette valeur, nous essayons d'atteindre au moins %2$s sans dépasser 100 %. Ignoré pour les missions élite."
+L["If checked, clicking an upgrade icon will consume the item and upgrade the follower, |cFFFF0000NO QUESTION ASKED|r"] = "Si cette option est activée, cliquer sur une icône d'amélioration consommera l'objet et améliorera le sujet. |cFFFF0000AUCUNE CONFIRMATION !|r"
 L["IF checked, shows armors on the left and weapons on the right "] = "SI coché, affiche les armures à gauche et les armes à droite"
 --[[Translation missing --]]
 --[[ L["If instead you just want to always see the best available mission just set %1$s to 100%% and %2$s to 0%%"] = ""--]] 
@@ -1015,19 +999,16 @@ L["IF checked, shows armors on the left and weapons on the right "] = "SI coché
 --[[Translation missing --]]
 --[[ L[ [=[If you %s, you will lose them
 Click on %s to abort]=] ] = ""--]] 
-L["If you continue, you will lose them"] = "Si vous continuez, vous le(s) perdrez"
---[[Translation missing --]]
---[[ L[ [=[If you dont understand why OHC choosed a setup for a mission, you can request a full analysis.
-Analyze party will show all the possible combinations and how OHC evaluated them]=] ] = ""--]] 
-L["IF you have a Salvage Yard you probably dont want to have this one checked"] = "SI vous avez un centre de tri, vous ne voulez probablement pas avoir ça une fois vérifié"
-L["Ignore \"maxed\""] = "Ignorer \"maximisé\""
---[[Translation missing --]]
---[[ L["Ignore busy followers"] = ""--]] 
-L["Ignore epic for xp missions."] = "Ignorer sujet épique pour les missions à XP."
+L["If you continue, you will lose them"] = "Si vous continuez, vous les perdrez."
+L[ [=[If you dont understand why OHC choosed a setup for a mission, you can request a full analysis.
+Analyze party will show all the possible combinations and how OHC evaluated them]=] ] = "Si vous ne comprenez pas pourquoi OHC a choisi une configuration pour une mission, vous pouvez demander une analyse complète. L'équipe d'analyse présentera toutes les combinaisons possibles et la manière dont OHC les a évaluées."
+L["IF you have a Salvage Yard you probably dont want to have this one checked"] = "Si vous avez un Centre de tri, vous ne voudrez probablement pas avoir cela une fois vérifié"
+L["Ignore \"maxed\""] = "Ignorer « maximisé »"
+L["Ignore busy followers"] = "Ignorer les sujets occupés"
+L["Ignore epic for xp missions."] = "Ignorer les missions épiques pour obtenir de l'expérience"
 L["Ignore for all missions"] = "Ignorer pour toutes les missions"
 L["Ignore for this mission"] = "Ignorer pour cette mission"
---[[Translation missing --]]
---[[ L["Ignore inactive followers"] = ""--]] 
+L["Ignore inactive followers"] = "Ignorer les sujets inactifs"
 L["Ignore rare missions"] = "Ignorer les missions rares"
 L["Increased Rewards"] = "Augmentation des récompenses"
 L["Item minimum level"] = "Niveau minimum de l'objet"
@@ -1047,16 +1028,15 @@ L["Left Click to see available missions"] = "Cliquer gauche pour voir les missio
 L["Legendary Items"] = "Objet légendaire"
 --[[Translation missing --]]
 --[[ L["Level"] = ""--]] 
-L["Level 100 epic followers are not used for xp only missions."] = "Les sujets épiques de niveau 100 ne sont pas utilisés pour les missions d'XP uniquement."
+L["Level 100 epic followers are not used for xp only missions."] = "Les sujets épiques de niveau 100 ne sont pas utilisés pour les missions donnant uniquement de l'expérience."
 --[[Translation missing --]]
 --[[ L["Lock all"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Lock this follower"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Locked follower are only used in this mission"] = ""--]] 
---[[Translation missing --]]
---[[ L["Make Order Hall Mission Panel movable"] = ""--]] 
-L["Makes main mission panel movable"] = "Faire que le panneau principal de missions soit mobile"
+L["Make Order Hall Mission Panel movable"] = "Rendre le Rapport du fief déplaçable"
+L["Makes main mission panel movable"] = "Rend le Rapport de fief déplaçable"
 L["Makes shipyard panel movable"] = "Faire que le panneau du port naval soit mobile"
 --[[Translation missing --]]
 --[[ L["Makes sure that no troops will be killed"] = ""--]] 
@@ -1071,7 +1051,7 @@ L["Minimum mission duration."] = "Durée minimale de mission."
 L["Minimum needed chance"] = "Chance minimale nécessaire"
 L["Minimum requested level for equipment rewards"] = "Niveau requis minimum pour les récompenses d'équipement"
 L["Minimum requested upgrade for followers set (Enhancements are always included)"] = "Amélioration minimale requise pour l'équipement des sujets (les améliorations sont toujours inclus)"
-L["Minimun chance success under which ignore missions"] = "Réussite minimale en dessous de laquelle les missions seront ignorées"
+L["Minimun chance success under which ignore missions"] = "Succès minimal en dessous duquel les missions peuvent être ignorées"
 L["Minumum needed chance"] = "Chance minimale nécessaire"
 L["Mission Control"] = "Contrôle de missions"
 L["Mission Duration"] = "Durée de missions"
@@ -1091,7 +1071,7 @@ L["Must reload interface to apply"] = "Devra recharger l'interface pour activer"
 --[[ L["Never kill Troops"] = ""--]] 
 L["No confirmation"] = "Ne pas confirmer"
 L["No follower gained xp"] = "Aucune sujet n'a eu d'XP"
-L["No mission prefill"] = "Pas de constitution auto. de missions"
+L["No mission prefill"] = "Aucune mission préremplie"
 --[[Translation missing --]]
 --[[ L["No suitable missions. Have you reserved at least one follower?"] = ""--]] 
 L["Not blacklisted"] = "Ne pas mettre en liste noire"
@@ -1106,7 +1086,7 @@ L["Number of followers"] = "Nombre de sujets"
 --[[Translation missing --]]
 --[[ L["Only consider elite missions"] = ""--]] 
 L["Only first %1$d missions with over %2$d%% chance of success are shown"] = "Seuls les %1$d premières missions avec plus de %2$d%% de chances de succès sont affichées"
-L["Only meaningful upgrades are shown"] = "N'afficher que les améliorations utiles"
+L["Only meaningful upgrades are shown"] = "Seules les améliorations significatives sont affichées."
 --[[Translation missing --]]
 --[[ L["Only need %s instead of %s to start a mission from mission list"] = ""--]] 
 --[[Translation missing --]]
@@ -1143,8 +1123,8 @@ L["Reputation Items"] = "Objets de réputations"
 --[[Translation missing --]]
 --[[ L["Resurrect troops effect"] = ""--]] 
 L["Reward type"] = "Type de récompense"
-L["Right-Click to blacklist"] = "Clic-droit pour mettre en liste noire"
-L["Right-Click to remove from blacklist"] = "Clic-droit pour retirer de la liste noire"
+L["Right-Click to blacklist"] = "Clic droit pour mettre en liste noire"
+L["Right-Click to remove from blacklist"] = "Clic droit pour retirer de la liste noire"
 L["Rush orders"] = "Commandes urgentes"
 --[[Translation missing --]]
 --[[ L["See all possible parties for this mission"] = ""--]] 
@@ -1152,9 +1132,9 @@ L["Rush orders"] = "Commandes urgentes"
 --[[ L["Sets all switches to a very permissive setup. Very similar to 1.4.4"] = ""--]] 
 L["Shipyard Appearance"] = "Aspect du port naval"
 L["Show Garrison Commander menu"] = "Afficher le menu de Garrison Commander"
-L["Show itemlevel"] = "Afficher l'ilvl"
+L["Show itemlevel"] = "Afficher le niveau d'objet"
 L["Show upgrades"] = "Affiche les améliorations"
-L["Show xp"] = "Afficher l'XP"
+L["Show xp"] = "Afficher l'expérience"
 --[[Translation missing --]]
 --[[ L["Show/hide OrderHallCommander mission menu"] = ""--]] 
 --[[Translation missing --]]
@@ -1208,10 +1188,10 @@ L["Upgrading to |cff00ff00%d|r"] = "Amélioration à |cff00ff00%d|r"
 --[[ L["URL Copy"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Use at most this many champions"] = ""--]] 
-L["Use big screen"] = "Utilise la gd taille"
+L["Use big screen"] = "Utilise la grande taille"
 --[[Translation missing --]]
 --[[ L["Use combat ally"] = ""--]] 
-L["Use GC Interface"] = "Utiliser l'interface de GC"
+L["Use GC Interface"] = "Utiliser l'interface GC"
 --[[Translation missing --]]
 --[[ L["Use this slot"] = ""--]] 
 L["Uses armor token"] = "Utiliser le jeton d'armure"
@@ -1225,8 +1205,8 @@ Checking %1$s reverse it and OrderHallCOmmander will choose for each mission tro
 --[[ L[ [=[Welcome to a new release of OrderHallCommander
 Please follow this short tutorial to discover all new functionalities.
 You will not regret it]=] ] = ""--]] 
-L["When checked, show on each follower button missing xp to next level"] = "Quand coché, affiche l'XP nécessaire, pour le prochain niveau, sur chaque bouton de sujets"
-L["When checked, show on each follower button weapon and armor level for maxed followers"] = "Quand coché, affiche le niveau d'arme et d'armure sur chaque bouton des sujets maximisés"
+L["When checked, show on each follower button missing xp to next level"] = "Si cette option est activée, afficher sur chaque bouton de sujet l'expérience manquante pour passer au niveau suivant."
+L["When checked, show on each follower button weapon and armor level for maxed followers"] = "Si cette option est activée, afficher sur chaque bouton de sujet le niveau d'arme et d'armure des sujets ayant atteint le niveau maximum."
 --[[Translation missing --]]
 --[[ L["When no free followers are available shows empty follower"] = ""--]] 
 --[[Translation missing --]]
@@ -1243,13 +1223,12 @@ The target for this switch is to totally avoid killing troops, even it for this 
 --[[ L["Would start with "] = ""--]] 
 --[[Translation missing --]]
 --[[ L["XP"] = ""--]] 
-L["Xp incremented!"] = "XP augmentée !"
-L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = "Vous gaspillez |cffff0000%d|cffffd200 point(s) !!!"
-L["You can also send mission one by one clicking on each button."] = "Vous pouvez aussi débuter les missions une par une en cliquant sur chaque bouton."
---[[Translation missing --]]
---[[ L[ [=[You can blacklist missions right clicking mission button.
+L["Xp incremented!"] = "XP augmenté !"
+L["You are wasting |cffff0000%d|cffffd200 point(s)!!!"] = "Vous gaspillez |cffff0000%d|cffffd200 point(s) !"
+L["You can also send mission one by one clicking on each button."] = "Vous pouvez également envoyer les missions une par une en cliquant sur chaque bouton."
+L[ [=[You can blacklist missions right clicking mission button.
 Since 1.5.1 you can start a mission witout passing from mission page shift-clicking the mission button.
-Be sure you liked the party because no confirmation is asked]=] ] = ""--]] 
+Be sure you liked the party because no confirmation is asked]=] ] = "Vous pouvez ajouter des missions en liste noire un clic droit sur le bouton de mission. Depuis la version 1.5.1, vous pouvez lancer une mission sans quitter la page des missions en cliquant sur le bouton de mission tout en maintenant la touche Maj enfoncée. Assurez-vous d'avoir apprécié la mission, car aucune confirmation n'est requise."
 --[[Translation missing --]]
 --[[ L["You can choose not to use a troop type clicking its icon"] = ""--]] 
 --[[Translation missing --]]
@@ -1257,12 +1236,12 @@ Be sure you liked the party because no confirmation is asked]=] ] = ""--]]
 Right now OHC is not using more than %3$s champions in the same mission-
 
 Note that %2$s overrides it.]=] ] = ""--]] 
-L["You can open the menu clicking on the icon in top right corner"] = "Vous pouvez ouvrir le menu en cliquant sur l'icône dans le coin supérieur droit"
-L["You have ignored followers"] = "Vous avez ignoré des sujets"
+L["You can open the menu clicking on the icon in top right corner"] = "Vous pouvez ouvrir le menu en cliquant sur l'icône en haut à droite."
+L["You have ignored followers"] = "Vous avez ignoré les sujets"
 --[[Translation missing --]]
 --[[ L[ [=[You need to close and restart World of Warcraft in order to update this version of OrderHallCommander.
 Simply reloading UI is not enough]=] ] = ""--]] 
-L["You never performed this mission"] = "Vous n'avez jamais effectué cette mission"
+L["You never performed this mission"] = "Vous n'avez jamais accompli cette mission"
 --[[Translation missing --]]
 --[[ L["You now need to press both %s and %s to start mission"] = ""--]] 
 L["You performed this mission %d times with a win ratio of"] = "Vous avez effectué cette mission %d fois avec un rapport de"

@@ -9,6 +9,7 @@ HousingUI.__index = HousingUI
 
 local mainFrame = nil
 local isInitialized = false
+local isCleaningUp = false
 
 -- Version info (from TOC file)
 local ADDON_VERSION = C_AddOns.GetAddOnMetadata("HousingVendor", "Version") or "1.0.0"
@@ -27,13 +28,16 @@ function HousingUI:Initialize()
     
     -- Get theme reference
     Theme = HousingTheme or {}
-    
-    -- Check dependencies
-    if not HousingData then
-        print("|cFF8A7FD4HousingVendor:|r HousingData not found - UI cannot initialize")
-        return
+
+    -- IMPORTANT: Do not force-load large data at login.
+    -- Data is loaded on-demand when the user opens the UI (`/hv`).
+
+    -- PERFORMANCE: Process deferred data aggregation before initializing modules
+    -- This was previously done at ADDON_LOADED, causing 20%+ CPU spike at login
+    if HousingDataAggregator and HousingDataAggregator.ProcessPendingData then
+        HousingDataAggregator:ProcessPendingData()
     end
-    
+
     -- Ensure data manager is initialized
     if HousingDataManager then
         HousingDataManager:Initialize()
@@ -104,9 +108,14 @@ function HousingUI:CreateMainFrame()
     self:CreateCloseButton(frame)
     self:CreateFooter(frame)
 
+    -- Centralize cleanup so it runs even when the frame is closed via ESC/Blizzard close flows.
+    frame:HookScript("OnHide", function()
+        self:CleanupAfterClose()
+    end)
+
     -- Store frame reference
     _G["HousingFrameNew"] = frame
-    
+
     return frame
 end
 
@@ -251,26 +260,37 @@ function HousingUI:CreateHeader(parent)
     title:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     title:SetShadowOffset(1, -1)
     title:SetShadowColor(0, 0, 0, 0.8)
-
+    
     -- Subtitle
     local subtitle = header:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     subtitle:SetPoint("LEFT", titleIcon, "RIGHT", 12, -10)
-    subtitle:SetText(L["MAIN_SUBTITLE"] or "Housing Catalog")
+    subtitle:SetText("Midnight Edition")
     local textMuted = HousingTheme.Colors.textMuted
     subtitle:SetTextColor(textMuted[1], textMuted[2], textMuted[3], 1)
     
     -- Right side buttons container
     local buttonsContainer = CreateFrame("Frame", nil, header)
-    buttonsContainer:SetSize(250, 32)
+    buttonsContainer:SetSize(360, 32)
     buttonsContainer:SetPoint("RIGHT", -50, 0)
-    
+
     -- Statistics button
     local statsBtn = self:CreateHeaderButton(buttonsContainer, L["BUTTON_STATISTICS"] or "Statistics", 85)
-    statsBtn:SetPoint("RIGHT", -95, 0)
+    statsBtn:SetPoint("RIGHT", -275, 0)
     statsBtn:SetScript("OnClick", function()
         if HousingStatisticsUI then
             HousingStatisticsUI:Show()
         end
+    end)
+
+    -- Zone popup button
+    local zoneBtn = self:CreateHeaderButton(buttonsContainer, L["BUTTON_ZONE_POPUP"] or "Zone Popup", 95)
+    zoneBtn:SetPoint("RIGHT", -175, 0)
+    zoneBtn:SetScript("OnClick", function()
+        if not HousingOutstandingItemsUI or not HousingOutstandingItemsUI.TogglePopup then
+            print("|cFFFF4040HousingVendor:|r OutstandingItemsUI module not available")
+            return
+        end
+        HousingOutstandingItemsUI:TogglePopup()
     end)
     
     -- Settings button
@@ -422,16 +442,32 @@ function HousingUI:CreateFooter(parent)
     legendText:SetPoint("LEFT", 12, 0)
     legendText:SetJustifyH("LEFT")
     
-    -- Build legend with themed colors
+    local function Clamp01(value)
+        if value == nil then return 0 end
+        if value < 0 then return 0 end
+        if value > 1 then return 1 end
+        return value
+    end
+
+    local function ToColorCode(color)
+        if not color then return "|cffffffff" end
+        local r = math.floor(Clamp01(color[1]) * 255 + 0.5)
+        local g = math.floor(Clamp01(color[2]) * 255 + 0.5)
+        local b = math.floor(Clamp01(color[3]) * 255 + 0.5)
+        return string.format("|cff%02x%02x%02x", r, g, b)
+    end
+
+    -- Build legend using current theme colors (matches item-list edge bars)
+    local t = HousingTheme and HousingTheme.Colors or {}
     local legendParts = {
-        "|cFFE63946Horde|r",           -- Red
-        "|cFF4080E6Alliance|r",        -- Blue  
-        "|cFFF2CC8FAchievement|r",     -- Gold
-        "|cFF66B3FFQuest|r",           -- Light blue
-        "|cFFFF9933Drop|r",            -- Orange
-        "|cFF33CC66Vendor|r"           -- Green
+        ToColorCode(t.factionHorde) .. "Horde|r",
+        ToColorCode(t.factionAlliance) .. "Alliance|r",
+        ToColorCode(t.sourceAchievement) .. "Achievement|r",
+        ToColorCode(t.sourceQuest) .. "Quest|r",
+        ToColorCode(t.sourceDrop) .. "Drop|r",
+        ToColorCode(t.sourceVendor) .. "Vendor|r",
     }
-    legendText:SetText((L["FOOTER_COLOR_GUIDE"] or "Color Guide:") .. " " .. table.concat(legendParts, " | "))
+    legendText:SetText("Color Guide: " .. table.concat(legendParts, " | "))
     
     -- Instructions removed - map icon interaction no longer applies
     
@@ -461,13 +497,50 @@ function HousingUI:Show()
             return
         end
     end
+
+    -- TAINT FIX: Only create catalog searcher if safe delay period has passed
+    -- Opening the UI within first 3 seconds could trigger taint if we call Housing APIs too early
+    if _G.HousingCatalogSafeToCall and HousingAPI and HousingAPI.CreateCatalogSearcher then
+        pcall(function() HousingAPI:CreateCatalogSearcher() end)
+    end
     
     if not mainFrame then
         print("|cFF8A7FD4HousingVendor:|r Main frame not created")
         return
     end
+
+    -- Load large data only when showing the UI.
+    if HousingDataLoader and HousingDataLoader.LoadData then
+        if not HousingDataLoader:LoadData() then
+            print("|cFFFF0000HousingVendor:|r Data addon not loaded; cannot open UI")
+            return
+        end
+    end
     
     mainFrame:Show()
+
+    if HousingDataManager and HousingDataManager.SetUIActive then
+        HousingDataManager:SetUIActive(true)
+    end
+
+    -- Only start background handlers when the main UI is open.
+    if HousingCollectionAPI and HousingCollectionAPI.StartEventHandlers then
+        HousingCollectionAPI:StartEventHandlers()
+    end
+
+    if HousingReputation and HousingReputation.StartTracking then
+        HousingReputation:StartTracking()
+    end
+
+    if HousingDB and HousingDB.settings and HousingDB.settings.showOutstandingPopup then
+        if HousingOutstandingItemsUI and HousingOutstandingItemsUI.StartEventHandlers then
+            HousingOutstandingItemsUI:StartEventHandlers()
+        end
+    end
+
+    if HousingDataEnhancer and HousingDataEnhancer.StartMarketRefresh then
+        HousingDataEnhancer:StartMarketRefresh()
+    end
 
     -- Check if collection cache is empty (e.g., after WTF deletion)
     local needsCollectionRefresh = false
@@ -480,7 +553,6 @@ function HousingUI:Show()
         -- Clear caches to force fresh data
         if HousingDB then
             HousingDB.collectedDecor = {}
-            HousingDB.apiDataCache = {}
         end
 
         if HousingDataManager and HousingDataManager.ClearCache then
@@ -490,14 +562,11 @@ function HousingUI:Show()
 
     -- Initialize child components on first show
     if not mainFrame.componentsInitialized then
-        -- Pre-load data
-        if HousingDataManager then
-            local success, err = pcall(function()
-                HousingDataManager:GetAllItems()
+        -- Pre-load lightweight ID index (avoid building full item records)
+        if HousingDataManager and HousingDataManager.GetAllItemIDs then
+            pcall(function()
+                HousingDataManager:GetAllItemIDs()
             end)
-            if not success then
-                print("|cFF8A7FD4HousingVendor:|r Error loading data: " .. tostring(err))
-            end
         end
         
         -- Initialize filters
@@ -515,7 +584,7 @@ function HousingUI:Show()
             local success, err = pcall(function()
                 HousingItemList:Initialize(mainFrame)
                 if HousingDataManager and HousingFilters then
-                    local allItems = HousingDataManager:GetAllItems()
+                    local allItems = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or HousingDataManager:GetAllItems()
                     local filters = HousingFilters:GetFilters()
                     HousingItemList:UpdateItems(allItems, filters)
 
@@ -523,7 +592,7 @@ function HousingUI:Show()
                     if needsCollectionRefresh then
                         C_Timer.After(2, function()
                             if mainFrame and mainFrame:IsVisible() then
-                                local refreshedItems = HousingDataManager:GetAllItems()
+                                local refreshedItems = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or HousingDataManager:GetAllItems()
                                 HousingItemList:UpdateItems(refreshedItems, filters)
                             end
                         end)
@@ -564,7 +633,7 @@ function HousingUI:Show()
 
         -- Update item list with current filters when showing again
         if HousingDataManager and HousingFilters and HousingItemList then
-            local allItems = HousingDataManager:GetAllItems()
+            local allItems = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or HousingDataManager:GetAllItems()
             local filters = HousingFilters:GetFilters()
             HousingItemList:UpdateItems(allItems, filters)
 
@@ -572,18 +641,45 @@ function HousingUI:Show()
             if needsCollectionRefresh then
                 C_Timer.After(2, function()
                     if mainFrame and mainFrame:IsVisible() then
-                        local refreshedItems = HousingDataManager:GetAllItems()
+                        local refreshedItems = HousingDataManager.GetAllItemIDs and HousingDataManager:GetAllItemIDs() or HousingDataManager:GetAllItems()
                         HousingItemList:UpdateItems(refreshedItems, filters)
                     end
                 end)
             end
         end
     end
+    
+    -- Apply auto-filter by zone if enabled
+    if HousingOutstandingItemsUI and HousingOutstandingItemsUI.ApplyInitialAutoFilter then
+        HousingOutstandingItemsUI:ApplyInitialAutoFilter()
+    end
+
+    -- Start cache cleanup timer now that UI is active
+    if HousingAPICache and HousingAPICache.StartCleanupTimer then
+        HousingAPICache:StartCleanupTimer()
+    end
 end
 
 function HousingUI:Hide()
     if mainFrame then
         mainFrame:Hide()
+    end
+end
+
+function HousingUI:CleanupAfterClose()
+    if isCleaningUp then
+        return
+    end
+    isCleaningUp = true
+
+    pcall(function()
+        -- CRITICAL: Stop all background processing first
+        if HousingDataManager and HousingDataManager.SetUIActive then
+            HousingDataManager:SetUIActive(false)
+        end
+        if HousingDataManager and HousingDataManager.CancelBatchLoads then
+            HousingDataManager:CancelBatchLoads()
+        end
 
         -- Trigger cleanup in ItemList to unregister events and clear button references
         -- This prevents continuous event processing when UI is closed
@@ -591,16 +687,93 @@ function HousingUI:Hide()
             HousingItemList:Cleanup()
         end
 
-        -- Note: We intentionally keep API caches intact for faster reopening
-        -- Caches are cleaned automatically by the 60-second ticker in HousingAPICache
+        -- CRITICAL: Stop ALL timers and event handlers to eliminate CPU usage when inactive
+        -- This is the #1 cause of idle CPU drain
+
+        -- Stop cache cleanup timer (60-second ticker)
+        if HousingAPICache and HousingAPICache.StopCleanupTimer then
+            HousingAPICache:StopCleanupTimer()
+        end
+
+        -- PERFORMANCE: Always stop collection event handlers when UI closes
+        -- The zone popup doesn't need the EventRegistry tooltip callback
+        -- This eliminates idle CPU from tooltip processing
+        if HousingCollectionAPI and HousingCollectionAPI.StopEventHandlers then
+            HousingCollectionAPI:StopEventHandlers()
+        end
+
+        -- Stop reputation tracking
+        if HousingReputation and HousingReputation.StopTracking then
+            HousingReputation:StopTracking()
+        end
+
+        -- Stop market data refresh ticker
+        if HousingDataEnhancer and HousingDataEnhancer.StopMarketRefresh then
+            HousingDataEnhancer:StopMarketRefresh()
+        end
+
+        -- Stop waypoint manager timers
+        if HousingWaypointManager and HousingWaypointManager.ClearWaypoint then
+            HousingWaypointManager:ClearWaypoint()
+        end
+
+        -- Stop model viewer timers
+        if HousingModelViewer and HousingModelViewer.StopAllTimers then
+            HousingModelViewer:StopAllTimers()
+        end
+
+        -- Stop preview panel timers
+        if HousingPreviewPanel and HousingPreviewPanel.StopTimers then
+            HousingPreviewPanel:StopTimers()
+        end
+
+        -- Keep zone popup handlers running only if setting is enabled
+        if HousingOutstandingItemsUI and HousingOutstandingItemsUI.StopEventHandlers then
+            if not (HousingDB and HousingDB.settings and HousingDB.settings.showOutstandingPopup) then
+                HousingOutstandingItemsUI:StopEventHandlers()
+            end
+        end
+
+        -- Aggressive cleanup: return to near-baseline memory/CPU after closing the UI.
+        -- This clears session caches only (SavedVariables remain intact).
+        if HousingAPICache and HousingAPICache.InvalidateAll then
+            HousingAPICache:InvalidateAll()
+        end
+        if HousingDataManager and HousingDataManager.ClearCache then
+            HousingDataManager:ClearCache()
+        end
+        if HousingIcons and HousingIcons.ClearCache then
+            HousingIcons:ClearCache()
+        end
+        if HousingTooltipScanner and HousingTooltipScanner.ClearPendingScans then
+            HousingTooltipScanner:ClearPendingScans()
+        end
+        if HousingCollectionAPI and HousingCollectionAPI.ClearSessionCache then
+            HousingCollectionAPI:ClearSessionCache()
+        end
+        if HousingItemList and HousingItemList.ClearSessionCaches then
+            HousingItemList:ClearSessionCaches()
+        end
 
         -- Optional: Force garbage collection to reclaim memory from closed UI
         -- This runs asynchronously and won't cause FPS drops
-        collectgarbage("step", 1000)
-    end
+        C_Timer.After(1, function()
+            if collectgarbage then
+                collectgarbage("collect")
+            end
+        end)
+    end)
+
+    isCleaningUp = false
 end
 
 function HousingUI:Toggle()
+    -- PERFORMANCE: Lazy-initialize on first use (instead of at ADDON_LOADED)
+    -- This defers the 20%+ CPU spike from login to when user actually opens the UI
+    if not isInitialized then
+        self:Initialize()
+    end
+
     if mainFrame and mainFrame:IsVisible() then
         self:Hide()
     else
@@ -639,6 +812,11 @@ function HousingUI:ApplyTheme()
     -- Refresh statistics if loaded
     if HousingStatisticsUI and HousingStatisticsUI.RefreshTheme then
         HousingStatisticsUI:RefreshTheme()
+    end
+
+    -- Refresh zone popup (OutstandingItemsUI) if loaded
+    if HousingOutstandingItemsUI and HousingOutstandingItemsUI.ApplyTheme then
+        HousingOutstandingItemsUI:ApplyTheme()
     end
 end
 

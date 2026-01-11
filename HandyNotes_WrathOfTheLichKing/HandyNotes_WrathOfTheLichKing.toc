@@ -1,6 +1,6 @@
 ## Interface: 110207
 ## Title: HandyNotes: Wrath of the Lich King
-## Version: 128
+## Version: 129
 ## Notes: Wrath of the Lich King Notes
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes

@@ -15,7 +15,7 @@
 <Ui>
 	<Script file="Krowi_ProgressBar-2.0.lua"/>
 	<Script file="Krowi_ProgressBarMixin-2.0.lua"/>
-	
+
     <Frame name="Krowi_ProgressBar_Template" mixin="Krowi_ProgressBarMixin" virtual="true">
         <Size x="224" y="25"/>
 		<Layers>
@@ -134,6 +134,6 @@
 			<OnSizeChanged method="OnSizeChanged"/>
 		</Scripts>
 	</Frame>
-	
+
 	<Script file="Krowi_GameTooltipWithProgressBar-2.0.lua"/>
 </Ui>

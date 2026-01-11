@@ -228,4 +228,15 @@ L["THEME_SLEEK_BLACK"] = "세련된 검정"
 L["SETTINGS_UI_THEME"] = "UI 테마"
 
 -- Make the locale table globally available
+-- Added for Zone Popup / minimap behaviors
+L["BUTTON_ZONE_POPUP"] = "지역 팝업"
+L["BUTTON_MAIN_UI"] = "메인 창"
+L["SETTINGS_ZONE_POPUPS"] = "지역 팝업"
+L["SETTINGS_ZONE_POPUPS_DESC"] = "새 지역에 들어갈 때 미수집 아이템 팝업 표시"
+L["MINIMAP_TOOLTIP_LEFTCLICK"] = "왼쪽 클릭: 메인 창 열기"
+L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "오른쪽 클릭: 지역 팝업"
+L["MINIMAP_TOOLTIP_DRAG"] = "드래그: 버튼 이동"
+L["OUTSTANDING_ITEMS_IN_ZONE"] = "지역 내 미수집 아이템"
+L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "이 지역으로 필터링된 HousingVendor 메인 창을 엽니다."
+
 HousingVendorLocales["koKR"] = L

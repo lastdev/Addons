@@ -6,6 +6,9 @@ local addonName, ang = ...
 ang.retail = {}
 ang.mists = {}
 ang.vanilla = {}
+ang.loadedPlugins = {}
+ang.loadedPlugins.undang = false
+ang.loadedPlugins.niche = false
 
 angleurDelayers = CreateFramePool("Frame", angleurDelayers, nil, function(framePool, frame)
     frame:ClearAllPoints()
@@ -122,6 +125,9 @@ function Init_AngleurSavedVariables()
     end
     if Angleur_TinyOptions.softTargetIcon == nil then
         Angleur_TinyOptions.softTargetIcon = true
+    end
+    if Angleur_TinyOptions.poleSleep == nil then
+        Angleur_TinyOptions.poleSleep = true
     end
     if Angleur_TinyOptions.doubleClickWindow == nil then
         Angleur_TinyOptions.doubleClickWindow = 0.4
@@ -246,7 +252,26 @@ AngleurMoP_FishingSpellTable = {
     63275,
 }
 
--- 1 : Retail, 2 : Cata Classic, 3 : Classic 19 : MoP Classic    (0: None, fail)
+AngleurRetail_FishingSpellTable = {
+    -- MAIN Main Fishing Spells
+    7620, 131476,
+    -- Other Basic Fishing Spells
+    51294, 18248, 131474, 33095, 7732, 7731, 158743, 110410, 88868, 131490,
+    -- Compressed Ocean Fishing
+    295727,
+    -- Skumblade Spear Fishing
+    139505,
+    -- Ice Fishing
+    377895,
+    -- Disgusting Vat Fishing
+    405274,
+    -- [DNT] Fishing (Brain channel version)
+    1252746,
+    -- Hot-Spring Gulper Fishing
+    301092,
+}
+
+-- 1 : Retail | 2 : MoP(Or Cata) | 3 : Vanilla | (0: None, fail)
 function Angleur_CheckVersion()
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
         return 1
@@ -257,6 +282,7 @@ function Angleur_CheckVersion()
     end
     return 0
 end
+ang.gameVersion = Angleur_CheckVersion()
 
 -- USE TO CHECK VERSIONS
 -- /run print(WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "Retail" 
@@ -306,8 +332,25 @@ function Angleur_CombatDelayer(funk)
     end
 end
 
-function Angleur_PoolDelayer(delay, timeElapsed, elapsedThreshhold, delayFramePool, cycleFunk, endFunk)
+function Angleur_PoolDelayer(delay, timeElapsed, elapsedThreshhold, delayFramePool, cycleFunk, endFunk, uniqueIdentifier)
+    -- ______________________________________________________________________________________________________
+    -- ____________________________________ (Optional) OVERRIDE SYSTEM ______________________________________
+    -- ______________________________________________________________________________________________________
+    -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ unique Identifier --> optional argument ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    -- If optional argument is provided, there will only be a SINGLE INSTANCEe of that type of delayer
+    -- running at one time, and any calls of Angleur_PoolDelayer with that specific 'uniqueIdentifier' 
+    -- argument will release the one beforehand, overriding it.
+    -- ______________________________________________________________________________________________________
+    if uniqueIdentifier then
+        for poolFrame in delayFramePool:EnumerateActive() do
+            if poolFrame.uniqueIdentifier and poolFrame.uniqueIdentifier == uniqueIdentifier then
+                -- print("overriding same type delayer", uniqueIdentifier)
+                delayFramePool:Release(poolFrame)
+            end
+        end
+    end
     local delayFrame = delayFramePool:Acquire()
+    delayFrame.uniqueIdentifier = uniqueIdentifier
     delayFrame:Show()
     delayFrame:SetScript("OnUpdate", function(self, elapsed)
         timeElapsed = timeElapsed + elapsed
@@ -327,21 +370,77 @@ function Angleur_PoolDelayer(delay, timeElapsed, elapsedThreshhold, delayFramePo
             return
         end
     end)
+    -- Keep this part commented
+    -- local count = 0
+    -- local uniques = {}
+    -- local uniqCount = 0
+    -- for delayFrame in delayFramePool:EnumerateActive() do
+    --     count = count + 1
+    --     local uniqID = delayFrame.uniqueIdentifier
+    --     if uniqID then
+    --         for i, v in pairs(uniques) do
+    --             if v == uniqID then
+    --                 print("ERROR: More than one widget with the same unique identifier detected. This isn't supposed to happen.")
+    --                 return
+    --             end
+    --         end
+    --         table.insert(uniques, uniqID)
+    --         uniqCount = uniqCount + 1
+    --     end
+    -- end
+    -- print("Total number of widgets: ", count)
+    -- print("Widgets with different uniqueIdentifiers: ", uniqCount)
+    -- print("Table of active unique identifiers:")
+    -- DevTools_Dump(uniques)
 end
 
-function Angleur_BetaPrint(text, ...)
+local debugLevel = ang.debugLevel
+function Angleur_BetaPrint(debugChannel, text, ...)
+    if type(debugLevel) == "table" then
+        local matched = false
+        for i, v in pairs(debugLevel) do
+            if v == debugChannel then
+                matched = true
+            end
+        end
+        if matched == false then return end
+    elseif debugLevel ~= 0 and debugLevel ~= debugChannel then
+        return
+    end
     if Angleur_TinyOptions.errorsDisabled == false then
         print(text, ...)
     end
 end
 
-function Angleur_BetaDump(dump)
+function Angleur_BetaDump(debugChannel, dump)
+    if type(debugLevel) == "table" then
+        local matched = false
+        for i, v in pairs(debugLevel) do
+            if v == debugChannel then
+                matched = true
+            end
+        end
+        if matched == false then return end
+    elseif debugLevel ~= 0 and debugLevel ~= debugChannel then
+        return
+    end
     if Angleur_TinyOptions.errorsDisabled == false then
         DevTools_Dump(dump)
     end
 end
 
-function Angleur_BetaTableToString(tbl)
+function Angleur_BetaTableToString(debugChannel, tbl)
+    if type(debugLevel) == "table" then
+        local matched = false
+        for i, v in pairs(debugLevel) do
+            if v == debugChannel then
+                matched = true
+            end
+        end
+        if matched == false then return end
+    elseif debugLevel ~= 0 and debugLevel ~= debugChannel then
+        return
+    end
     if Angleur_TinyOptions.errorsDisabled == false then
         local tableToString = ""
         for i, v in pairs(tbl) do

@@ -1,9 +1,8 @@
 local addonName, addon = ...
 addonName = "TLDRMissions-WOD"
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
+--local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
-
 
 function addon.WODGUI:RefreshProfile()
     local defaults = {
@@ -17,14 +16,12 @@ function addon.WODGUI:RefreshProfile()
             anythingForXP = false,
             autoStart = false,
             autoShowUI = false,
-            DEVTESTING = nil,
             sacrificeRemaining = false,
             guiX = nil,
             guiY = nil,
             followerXPSpecialTreatment = false,
             followerXPSpecialTreatmentMinimum = 4,
             followerXPSpecialTreatmentAlgorithm = 1,
-            autoStart = false,
             animaCosts = {
                 ["*"] = {
                     ["*"] = true,
@@ -40,11 +37,13 @@ function addon.WODGUI:RefreshProfile()
     
     addon.WODdb = LibStub("AceDB-3.0"):New("TLDRMissionsWODProfiles", defaults, true)
     local db = addon.WODdb
+    self.db = db
 
 	db.RegisterCallback(self, "OnProfileChanged", "ProfileChanged")
     db.RegisterCallback(self, "OnProfileCopied", "ProfileChanged")
 	db.RegisterCallback(self, "OnProfileReset", "ProfileChanged")
     
+    --[[
     local function setupAnimaCostDropDown(name)
         local options = {"10-24", "25-29", "30-49", "50-99", "100+"}
 
@@ -73,6 +72,7 @@ function addon.WODGUI:RefreshProfile()
     setupAnimaCostDropDown("Apexis")
     setupAnimaCostDropDown("Oil")
     setupAnimaCostDropDown("Seal")
+    ]]
     
     local options = {type = "group", args = {}}
     LibStub("AceConfigRegistry-3.0"):ValidateOptionsTable(options, addonName)
@@ -80,7 +80,7 @@ function addon.WODGUI:RefreshProfile()
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(db)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, nil, nil, "profiles")
     
-    addon.WODGUI:ProfileChanged()
+    self:ProfileChanged()
 end
     
     
@@ -111,14 +111,14 @@ function addon.WODGUI:ProfileChanged()
     gui.AnimaCostLimitSlider:SetValue(profile.AnimaCostLimit)
     gui.LowerBoundLevelRestrictionSlider:SetValue(profile.LevelRestriction)
     
-    TLDRMissionsWODFrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(profile.durationLower, profile.durationHigher))
-    TLDRMissionsWODFrameDurationLowerSlider:SetValue(profile.durationLower)
-    TLDRMissionsWODFrameDurationHigherSlider:SetValue(profile.durationHigher)
+    TLDRMissions1FrameDurationLowerSliderText:SetText(L["DurationTimeSelectedLabel"]:format(profile.durationLower, profile.durationHigher))
+    TLDRMissions1FrameDurationLowerSlider:SetValue(profile.durationLower)
+    TLDRMissions1FrameDurationHigherSlider:SetValue(profile.durationHigher)
     
     gui.AutoShowButton:SetChecked(profile.autoShowUI)
     gui.AutoStartButton:SetChecked(profile.autoStart)
     
     gui.SkipFullResourcesButton:SetChecked(profile.skipFullResources)
     
-    addon:updateWODRewards()
+    self:updateRewards()
 end

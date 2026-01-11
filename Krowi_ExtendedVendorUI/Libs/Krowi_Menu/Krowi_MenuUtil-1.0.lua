@@ -15,27 +15,32 @@
 ---@diagnostic disable: undefined-global
 ---@diagnostic disable: duplicate-set-field
 
-local lib = LibStub:NewLibrary("Krowi_MenuUtil-1.0", 5);
+local MAJOR, MINOR = "Krowi_MenuUtil-1.0", KROWI_MENU_LIBRARY_MINOR
+local lib = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
-	return;
+	return
 end
+
+-- Store version constants
+lib.MAJOR = MAJOR
+lib.MINOR = MINOR
 
 do -- Modern
     function lib:CreateTitle(menu, text)
-        menu:CreateTitle(text);
+        menu:CreateTitle(text)
     end
 
     function lib:CreateButton(menu, text, func, isEnabled)
-        local button = menu:CreateButton(text, func);
+        local button = menu:CreateButton(text, func)
         if isEnabled == false then
-            button:SetEnabled(false);
+            button:SetEnabled(false)
         end
-        return button;
+        return button
     end
 
     function lib:CreateDivider(menu)
-        menu:CreateDivider();
+        menu:CreateDivider()
     end
 
     function lib:AddChildMenu(menu, child)
@@ -43,17 +48,17 @@ do -- Modern
     end
 
     function lib:CreateButtonAndAdd(menu, text, func, isEnabled)
-        return self:CreateButton(menu, text, func, isEnabled);
+        return self:CreateButton(menu, text, func, isEnabled)
     end
 end
 
-if LibStub("Krowi_Util-1.0").IsMainline then
-    return;
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+    return
 end
 
 do -- Classic
     function lib:CreateTitle(menu, text)
-        menu:AddTitle(text);
+        menu:AddTitle(text)
     end
 
     function lib:CreateButton(menu, text, func, isEnabled)
@@ -61,21 +66,21 @@ do -- Classic
             Text = text,
             Func = func,
             Disabled = isEnabled == false
-        });
+        })
     end
 
     function lib:CreateDivider(menu)
-        menu:AddSeparator();
+        menu:AddSeparator()
     end
 
     function lib:AddChildMenu(menu, child)
         if not menu or not child then
-            return;
+            return
         end
-        menu:Add(child);
+        menu:Add(child)
     end
 
     function lib:CreateButtonAndAdd(menu, text, func, isEnabled)
-        self:AddChildMenu(menu, self:CreateButton(nil, text, func, isEnabled));
+        self:AddChildMenu(menu, self:CreateButton(nil, text, func, isEnabled))
     end
 end

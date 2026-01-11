@@ -4,6 +4,10 @@ HousingCatalogAPI.__index = HousingCatalogAPI
 
 -- Check if housing catalog APIs are available
 function HousingCatalogAPI:IsAvailable()
+    -- TAINT FIX: Don't access C_HousingCatalog before safe delay period
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
     return C_HousingCatalog ~= nil
 end
 

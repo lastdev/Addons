@@ -19,15 +19,15 @@ end
 
 -- Check if model mapping data is available
 function HousingDataEnhancer:IsModelMappingAvailable()
-    local available = HousingDecorData ~= nil
+    local available = HousingAllItems ~= nil
     if HousingDebugPrint then
-        HousingDebugPrint("HousingDecorData available: " .. tostring(available))
+        HousingDebugPrint("HousingAllItems available: " .. tostring(available))
         if available then
             local count = 0
-            for k,v in pairs(HousingDecorData) do
+            for k,v in pairs(HousingAllItems) do
                 count = count + 1
             end
-            HousingDebugPrint("HousingDecorData entries: " .. count)
+            HousingDebugPrint("HousingAllItems entries: " .. count)
         end
     end
     return available
@@ -50,15 +50,15 @@ function HousingDataEnhancer:EnhanceItemData(itemData)
         enhancedData.thumbnailFileID = itemData.ThumbnailFileDataID
     end
     
-    -- PRIORITY: Try to enhance with model data from HousingDecorData FIRST
+    -- PRIORITY: Try to enhance with model data from HousingAllItems FIRST
     -- This ensures we always have model data if it exists in our data
     if self:IsModelMappingAvailable() and itemData.itemID then
-        -- Try numeric key format (HousingDecorData uses numeric keys)
+        -- Try numeric key format (HousingAllItems uses numeric keys)
         local numericItemID = tonumber(itemData.itemID)
-        local decorData = numericItemID and HousingDecorData[numericItemID]
-        
-        if decorData and decorData.modelFileID then
-            local modelFileID = tonumber(decorData.modelFileID)
+        local decorData = numericItemID and HousingAllItems[numericItemID]
+
+        if decorData and decorData[2] then  -- Index 2 = modelFileID (HousingItemFields.MODEL_FILE_ID)
+            local modelFileID = tonumber(decorData[2])
             if modelFileID then
                 enhancedData.modelFileID = modelFileID
                 enhancedData.displayInfoID = modelFileID  -- Set both for compatibility
@@ -195,6 +195,32 @@ function HousingDataEnhancer:OnMarketDataRefreshed()
     end
 end
 
+function HousingDataEnhancer:StartMarketRefresh()
+    if self.refreshTimer then
+        return
+    end
+
+    if not (HousingDB and HousingDB.settings and HousingDB.settings.enableMarketData) then
+        return
+    end
+
+    if not self:IsEnhancementAvailable() then
+        return
+    end
+
+    -- Periodic market refresh (opt-in, tied to UI lifecycle)
+    self.refreshTimer = C_Timer.NewTicker(300, function()
+        self:RefreshMarketData()
+    end)
+end
+
+function HousingDataEnhancer:StopMarketRefresh()
+    if self.refreshTimer then
+        self.refreshTimer:Cancel()
+        self.refreshTimer = nil
+    end
+end
+
 -- Get featured items from live API
 function HousingDataEnhancer:GetFeaturedItems()
     if not self:IsEnhancementAvailable() then
@@ -262,18 +288,12 @@ end
 
 -- Initialize the module
 function HousingDataEnhancer:Initialize()
-    if self:IsEnhancementAvailable() then
-        -- Set up periodic market data refresh
-        self.refreshTimer = C_Timer.NewTicker(300, function() -- Every 5 minutes
-            self:RefreshMarketData()
-        end)
+    if HousingDB and HousingDB.settings and HousingDB.settings.enableMarketData then
+        self:StartMarketRefresh()
     end
 end
 
 -- Clean up timers
 function HousingDataEnhancer:Shutdown()
-    if self.refreshTimer then
-        self.refreshTimer:Cancel()
-        self.refreshTimer = nil
-    end
+    self:StopMarketRefresh()
 end

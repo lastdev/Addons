@@ -1,7 +1,10 @@
--- Faction ID Mapping
+-- FactionIDs.lua
+-- Optional mapping for converting faction names -> factionID (reputation ID).
+-- Useful as a fallback when vendor data includes a faction name but not a numeric ID.
 
+local _G = _G
 
-HousingVendorFactionIDs = {
+_G.HousingVendorFactionIDs = _G.HousingVendorFactionIDs or {
     -- Classic
     ["Stormwind"] = 72,
     ["Ironforge"] = 47,
@@ -18,7 +21,7 @@ HousingVendorFactionIDs = {
     ["Bilgewater Cartel"] = 1133,
     ["Huojin Pandaren"] = 1352,
     ["Steamwheedle Cartel"] = 169,
-    
+
     -- Warlords of Draenor
     ["Frostwolf Clan"] = 729,
     ["Frostwolf Orcs"] = 1445,
@@ -32,12 +35,12 @@ HousingVendorFactionIDs = {
     ["Vol'jin's Spear"] = 1681,
     ["Vol'jin's Headhunters"] = 1848,
     ["Arakkoa Outcasts"] = 1515,
-    
+
     -- Legion
     ["Highmountain Tribe"] = 1828,
     ["The Nightfallen"] = 1859,
     ["Dreamweavers"] = 1883,
-    
+
     -- Battle for Azeroth
     ["Zandalari Empire"] = 2103,
     ["Talanji's Expedition"] = 2156,
@@ -46,3 +49,11 @@ HousingVendorFactionIDs = {
     ["Order of Embers"] = 2161,
     ["Storm's Wake"] = 2162,
 }
+
+-- Normalized lookup to tolerate minor formatting differences (case/whitespace).
+_G.HousingVendorFactionIDsNormalized = _G.HousingVendorFactionIDsNormalized or {}
+for name, id in pairs(_G.HousingVendorFactionIDs) do
+    local key = tostring(name):lower():gsub("%s+", " "):match("^%s*(.-)%s*$")
+    _G.HousingVendorFactionIDsNormalized[key] = id
+end
+

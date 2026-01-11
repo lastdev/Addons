@@ -45,16 +45,16 @@ function HousingVersionFilter:GetAvailableExpansions()
 
     local expansions = {
         "Classic",
-        "BurningCrusade",
-        "WrathoftheLichKing",
+        "The Burning Crusade",
+        "Wrath of the Lich King",
         "Cataclysm",
-        "MistsofPandaria",
-        "WarlordsofDraenor",
+        "Mists of Pandaria",
+        "Warlords of Draenor",
         "Legion",
-        "BattleforAzeroth",
+        "Battle for Azeroth",
         "Shadowlands",
         "Dragonflight",
-        "TheWarWithin"
+        "The War Within"
     }
 
     -- Add Midnight only if on beta client

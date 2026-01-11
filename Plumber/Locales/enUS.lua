@@ -307,6 +307,8 @@ L["ModuleDescription ExpansionLandingPage"] = "Display extra info on the landing
 L["Instruction Track Reputation"] = "<Shift click to track this reputation>";
 L["Instruction Untrack Reputation"] = CONTENT_TRACKING_UNTRACK_TOOLTIP_PROMPT or "<Shift click to stop tracking>";
 L["Error Show UI In Combat"] = "You cannot toggle this UI while in combat.";
+L["Error Show UI In Combat 1"] = "You really cannot toggle this UI while in combat.";
+L["Error Show UI In Combat 2"] = "PLEASE STOP";
 
 
 --Landing Page Switch
@@ -451,6 +453,11 @@ L["SoftTargetName QuestObjective Tooltip"] = "Show quest objectives (if any) bel
 L["SoftTargetName QuestObjective Alert"] = "This feature requires enabling |cffffffffShow Target Tooltip|r in Game Options> Accessibility> General.";   --See globals: TARGET_TOOLTIP_OPTION
 L["SoftTargetName ShowNPC"] = "Include NPC";
 L["SoftTargetName ShowNPC Tooltip"] = "If disabled, the name will only appear on interactable Game Objects";
+L["SoftTargetName HideIcon"] = "Hide Interact Icon";
+L["SoftTargetName HideIcon Tooltip"] = "Hide the interact icon and the radial cast bar when you are in a house.";
+L["SoftTargetName HideName"] = "Hide Object Name";
+L["SoftTargetName HideName Tooltip"] = "Hide the soft target object name when you are in a house."
+
 
 
 --LegionRemix
@@ -672,9 +679,14 @@ L["List Is Empty"] = "The list is empty.";
 
 
 --RaidCheck
-L["ModuleName InstanceDifficulty"] = "Instance Difficulty";
+L["ModuleName InstanceDifficulty"] = "Instance Difficulty Selector";
 L["ModuleDescription InstanceDifficulty"] = "- Show a Difficulty Selector when you are at the entrance of a raid or dungeon.\n\n- Show the current difficulty and lockout info at the top of the screen when you enter an instance.";
 L["Cannot Change Difficulty"] = "Instance difficulty cannot be changed at this time.";
+L["Cannot Reset Instance"] = "You cannot reset instances at this time.";
+L["Difficulty Not Accurate"] = "Difficulty is inaccurate because you are not the party leader";
+L["Instruction Click To Open Adventure Guide"] = "Left-Click: |cffffffffOpen Adventure Guide|r";
+L["Instruction Alt Click To Reset Instance"] = "Alt Right-Click: |cffffffffReset all instances|r";
+L["Instruction Link Progress In Chat"] = "<Shift click to post progress in chat>";
 
 
 --TransmogChatCommand
@@ -697,7 +709,7 @@ L["ModuleDescription CraftSearchExtended"] = "Shows more results when searching 
 
 
 --DecorModelScaleRef
-L["ModuleName DecorModelScaleRef"] = "Decor Catalog: Banana For Scale"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
+L["ModuleName DecorModelScaleRef"] = "Decor Preview: Banana For Scale"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
 L["ModuleDescription DecorModelScaleRef"] = "- Add a size reference (a banana) to the decor preview window, allowing you to gauge the size of the objects.\n\n- Also allow you to change the camera pitch by holding down the Left Button and moving vertically.";
 
 
@@ -714,7 +726,7 @@ L["Duplicate Decor Key"] = "\"Duplicate\" Key";
 L["Enable Duplicate"] = "Enable \"Duplicate\"";
 L["Enable Duplicate tooltip"] = "While in Decorate Mode, you can hover the cursor over a decor and then press a key to place another instance of this object.";
 L["ModuleName Housing_CustomizeMode"] = "Editor: 3 Customize Mode";
-L["ModuleDescription Housing_CustomizeMode"] = "In Customize Mode:\n\n- Allows you to copy dyes from one decor to another.\n\n- Change the dye slot name from index to the color's name.";
+L["ModuleDescription Housing_CustomizeMode"] = "In Customize Mode:\n\n- Allows you to copy dyes from one decor to another.\n\n- Change the dye slot name from index to the color's name.\n\n- Shift Click a dye swatch to track the recipe.";
 L["Copy Dyes"] = "Copy";
 L["Dyes Copied"] = "Dyes Copied";
 L["Apply Dyes"] = "Apply";
@@ -723,13 +735,16 @@ L["ModuleName TooltipDyeDeez"] = "Tooltip: Dye Pigment";
 L["ModuleDescription TooltipDyeDeez"] = "Display the dye color names on housing pigment's tooltip.";
 L["Instruction Show More Info"] = "<Press Alt to Show More Info>";
 L["Instruction Show Less Info"] = "<Press Alt to Show Less Info>";
+L["ModuleName Housing_ItemAcquiredAlert"] = "Decor Collected Alert";
+L["ModuleDescription Housing_ItemAcquiredAlert"] = "Allows you to left click the Decor Collected Alert to preview its model.";
 
 
 --Housing Clock
 L["ModuleName Housing_Clock"] = "Editor: Clock";
-L["ModuleDescription Housing_Clock"] = "While using the house editor, show a clock on the top of the screen.";
+L["ModuleDescription Housing_Clock"] = "While using the house editor, show a clock on the top of the screen.\n\nIt also tracks the time you spent in house editor.";
 L["Time Spent In Editor"] = "Time Spent In Editor";
 L["This Session Colon"] = "This Session: ";
+L["Time Spent Total Colon"] = "Total: ";
 L["Right Click Show Settings"] = "Right click to show settings.";
 L["Plumber Clock"] = "Plumber Clock";
 L["Clock Type"] = "Clock Type";
@@ -738,8 +753,8 @@ L["Clock Type Digital"] = "Digital";
 
 
 --CatalogExtendedSearch
-L["ModuleName Housing_CatalogSearch"] = "Decor Catalog: Extend Search Results";
-L["ModuleDescription Housing_CatalogSearch"] = "Enhances the search box on the Decor Catalog and Storage Tab, allowing you to find items by achievement, vendor, zone, or currency.";
+L["ModuleName Housing_CatalogSearch"] = "Decor Catalog";
+L["ModuleDescription Housing_CatalogSearch"] = "- Enhances the search box on the Decor Catalog and Storage Tab, allowing you to find items by achievement, vendor, zone, or currency.\n\n- Shows the number of matches next to the category.\n\n- Allows you to link decor in chat.";
 L["Match Sources"] = "Match Sources";
 
 

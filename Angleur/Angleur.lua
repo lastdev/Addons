@@ -5,14 +5,14 @@ local T = Angleur_Translate
 local addonName, ang = ...
 local retail = ang.retail
 
+local debugChannel = 1
 local colorDebug = CreateColor(0.24, 0.76, 1) -- angleur blue
+
 local colorYello = CreateColor(1.0, 0.82, 0.0)
 local colorBlu = CreateColor(0.61, 0.85, 0.92)
 local colorGreen = CreateColor(0, 1, 0)
 
 local helpTipCloseText = "|cnHIGHLIGHT_FONT_COLOR:The |r|cnNORMAL_FONT_COLOR:Interact Key|r|cnHIGHLIGHT_FONT_COLOR: allows you to interact with NPCs and objects using a keypress|n|n|r|cnRED_FONT_COLOR:Assign an Interact Key binding under Control options|r"
-
-local undangLoaded = false
 
 local function SetOverrideBinding_Custom(owner, isPriority, key, command)
     if not key then return end
@@ -38,6 +38,7 @@ function Angleur_OnLoad(self)
     self:RegisterEvent("ADDONS_UNLOADING")
     self:RegisterEvent("PLAYER_STARTED_MOVING")
     self:RegisterEvent("PLAYER_REGEN_DISABLED")
+    self:RegisterEvent("PLAYER_DEAD")
     self:RegisterEvent("PLAYER_REGEN_ENABLED")
     self:SetScript("OnEvent", Angleur_EventLoader)
     self:SetScript("OnUpdate", Angleur_OnUpdate)
@@ -58,7 +59,7 @@ function Angleur_OnUpdate(self, elapsed)
 end
 
 --**************************[1]****************************
---**Events Relating to the Loading and unloading of stuff**
+--**Events Relating to the loading and unloading of stuff**
 --**************************[1]****************************
 function Angleur_EventLoader(self, event, unit, ...)
     local arg4, arg5 = ...
@@ -93,8 +94,21 @@ function Angleur_EventLoader(self, event, unit, ...)
                 end
             end
         end
-        --Check if the Plugin Addon Angleur_Underlight is loaded
-        undangLoaded = C_AddOns.IsAddOnLoaded("Angleur_Underlight")
+
+        --Check if the Plugins of Angleur have loaded
+        ang.loadedPlugins.undang = C_AddOns.IsAddOnLoaded("Angleur_Underlight")
+        ang.loadedPlugins.niche = C_AddOns.IsAddOnLoaded("Angleur_NicheOptions")
+
+        --__________________________________________________________________________
+        -- Can't set Tab 2 on "ADDON_LOADED" because we need data from NicheOptions
+        --      for CreateSlots, and we need CreateSlots to be before SetTab2
+        --__________________________________________________________________________
+        Angleur_ExtraItems_CreateSlots(Angleur.configPanel.tab2.contents.extraItems)
+        Angleur_SetTab2(self.configPanel.tab2)
+        --__________________________________________________________________________
+        -- We also need CreateSlots Before ExtraItems_Load
+        Angleur_ExtraItems_Load(Angleur.configPanel.tab2.contents.extraItems)
+
         if AngleurConfig.ultraFocusingAudio then Angleur_UltraFocusAudio(false) end
         if AngleurConfig.ultraFocusingAutoLoot then Angleur_UltraFocusAutoLoot(false) end
         if GetCVar("autoLootDefault") == "1" then
@@ -105,8 +119,7 @@ function Angleur_EventLoader(self, event, unit, ...)
         Angleur_HandleCVars()
         HelpTip:Hide(UIParent, helpTipCloseText)
         Angleur_CombatDelayer(function()Angleur_LoadToys()end)
-        Angleur_LoadExtraItems(Angleur.configPanel.tab2.contents.extraItems)
-        
+
         Angleur_Auras()
         Angleur_ExtraToyAuras()
         Angleur_ExtraItemAuras()
@@ -124,10 +137,13 @@ function Angleur_EventLoader(self, event, unit, ...)
         if AngleurConfig.ultraFocusAudioEnabled == true and AngleurCharacter.sleeping == false then
             Angleur_UltraFocusBackground(false)
         end
+        Angleur_HandleTempCVars(false)
     elseif event == "PLAYER_REGEN_DISABLED" then
         ClearOverrideBindings(self)
         Angleur_ToyBoxOverlay_Deactivate()
         Angleur_AdvancedAnglingPanel:Hide()
+    elseif event == "PLAYER_DEAD" then
+        Angleur_ToyBoxOverlay_Deactivate()
     elseif event == "PLAYER_REGEN_ENABLED" then
     end
 end
@@ -143,12 +159,24 @@ local swimming = false
 local midFishing = false
 local compressedOceanFishing = false
 
+local function CheckTable(table ,spell)
+    local matchFound = false
+    for i, value in pairs(table) do
+        if spell == value then
+            matchFound = true
+            break
+        end
+    end
+    return matchFound
+end
+
+
 local function isChosenKeyDown()
     if AngleurConfig.chosenMethod == "doubleClick"  then
         if not AngleurConfig.doubleClickChosenID then
             return false
         elseif IsKeyDown(angleurDoubleClick.iDtoButtonName[AngleurConfig.doubleClickChosenID]) then
-            Angleur_BetaPrint(colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": mouse held")
+            Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": mouse held")
             return true
         end
     elseif AngleurConfig.chosenMethod == "oneKey" then
@@ -163,42 +191,26 @@ local function isChosenKeyDown()
             return false
         end
         if IsKeyDown(keybind) == false then 
-            Angleur_BetaPrint(colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": main key released")
+            Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": main key released")
             return false 
         end
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": oneKey held")
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": oneKey held")
         return true
     end
     return false
 end
-local warnedPlater = false
-local function warnPlater()
-    if warnedPlater then return end
-    if Angleur_TinyOptions.turnOffSoftInteract == true then
-        
-    else
-        if C_CVar.GetCVar("SoftTargetInteract") == "3" then
-            warnedPlater = true
-            return
-        end
-        if C_AddOns.IsAddOnLoaded("Plater") then
-            print("----------------------------------------------------------------------------")
-            print(T[colorBlu:WrapTextInColorCode("Angleur: ") .. colorYello:WrapTextInColorCode("Plater ") .. "detected."])
-            print(T["Plater " .. colorYello:WrapTextInColorCode("-> ") .. "Advanced " .. colorYello:WrapTextInColorCode("-> ") 
-            .. "General Settings" .. colorYello:WrapTextInColorCode(":") .. " Show soft-interact on game objects*"])
-            print(T["Must be " .. colorGreen:WrapTextInColorCode("checked ON ") .. "for Angleur's keybind to " .. colorYello:WrapTextInColorCode("Reel/Loot ") .. "your catches."])
-            print("----------------------------------------------------------------------------")
-        else
-            print("----------------------------------------------------------------------------")
-            print(T[colorBlu:WrapTextInColorCode("Angleur: ") .. "You are running an addon that interferes with" .. colorYello:WrapTextInColorCode("Soft-Interact.")])
-            print(T["Angleur Config Panel " .. colorYello:WrapTextInColorCode("-> ") .. "Tiny tab(tab 3) "
-            .. colorYello:WrapTextInColorCode("-> ") .. "Disable Soft-Interact"]) 
-            print(T["Must be " .. colorGreen:WrapTextInColorCode("checked ON ") .. "for Angleur to reel properly."])
-            print("----------------------------------------------------------------------------")
-        end
-        warnedPlater = true
-    end
-end
+
+EventRegistry:RegisterCallback("Lego-KeyBound-Angleur-angleurKey", function(ownerID, ...)
+    local base, modifier = ...
+    -- print("key", base, modifier)
+end)
+EventRegistry:RegisterCallback("Lego-KeyUnbound-Angleur-angleurKey", function(ownerID)
+    -- print("key unbound")
+end)
+EventRegistry:RegisterCallback("Angleur-ChosenMethod-Changed", function(ownerID, ...)
+    -- print("Fishing method: ", AngleurConfig.chosenMethod)
+end)
+
 local playerDruid
 local baseClassID
 local _, baseClassID = UnitClassBase("player")
@@ -223,6 +235,7 @@ local function checkMounted()
     end
     return false
 end
+local fishingSpellTable = AngleurRetail_FishingSpellTable
 function Angleur_LogicVariableHandler(self, event, unit, ...)
     local arg4, arg5 = ...
     -- Needed for when player zones into dungeon while mounted. Zone changes but no reload, and mount journal change doesn"t register
@@ -261,15 +274,23 @@ function Angleur_LogicVariableHandler(self, event, unit, ...)
             iceFishing = false
             compressedOceanFishing = false
         end
-    elseif event == "UNIT_SPELLCAST_CHANNEL_START" and unit == "player" and (arg5 == 131476 or arg5 == 377895 or arg5 == 7620) then
+    elseif event == "UNIT_SPELLCAST_CHANNEL_START" and unit == "player" then
+        if not CheckTable(fishingSpellTable, arg5) then return end
         midFishing = true
         EventRegistry:TriggerEvent("Angleur_StartFishing")
         Angleur_ActionHandler(Angleur)
-        warnPlater()
+        --__________________________________________________________________________________________________________________________________
+        --                                                  ! PLATER MEASURE !
+        -- Plater somehow turns off softInteract AFTER everything loads which is why I have to forcibly enable it on the FIRST FISHING CAST
+        --                  using HandeTempCVars. On PLAYER_LEAVING_WORLD I call it again to restore default values
+        --                                     Also tell the player about the Plater interaction
+        --__________________________________________________________________________________________________________________________________
+        Angleur_FixPlater()
         if AngleurConfig.ultraFocusAudioEnabled then Angleur_UltraFocusAudio(true) end
         if AngleurConfig.ultraFocusAutoLootEnabled then Angleur_UltraFocusAutoLoot(true) end
         if Angleur_TinyOptions.turnOffSoftInteract then Angleur_UltraFocusInteractOff(true) end
-    elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" and unit == "player" and (arg5 == 131476 or arg5 == 377895 or arg5 == 7620) then
+    elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" and unit == "player" then
+        if not CheckTable(fishingSpellTable, arg5) then return end
         if AngleurConfig.ultraFocusingAudio then Angleur_UltraFocusAudio(false) end
         if AngleurConfig.ultraFocusingAutoLoot then Angleur_UltraFocusAutoLoot(false) end
         if Angleur_TinyOptions.turnOffSoftInteract then Angleur_UltraFocusInteractOff(false) end
@@ -300,14 +321,14 @@ function Angleur_LogicVariableHandler(self, event, unit, ...)
             end
         end
     elseif event == "MOUNT_JOURNAL_USABILITY_CHANGED" then
-        --The delay, and checking swimming here is necessary. If we constantly check on update for swimming a constant jumping bug occurs. Only happens when the AngleurKey is set to: SPACE
-        Angleur_PoolDelayer(1, 0, 0.2, angleurDelayers, function()
+        -- We NEED the delay. When the event triggers, IsSwimming() sometimes isn't updated yet
+        Angleur_PoolDelayer(0.25, 0, 0.05, angleurDelayers, function()
             if IsSwimming() then
                 swimming = true
             else
                 swimming = false
             end
-        end)
+        end, nil, "swimChecker-cycle")
     elseif event == "UNIT_AURA" and unit == "player" then
         Angleur_Auras()
         Angleur_ExtraToyAuras()
@@ -384,22 +405,23 @@ end
 --***********[~]**********
 function Angleur_ExtraItemAuras()
     --Checks for Extra Toy Auras
-    for i, slottedItem in pairs(Angleur_SlottedExtraItems) do
-        slottedItem.auraActive = false
+    for i=1, ang.extraItems.slotCount, 1 do
+        local slot = Angleur_SlottedExtraItems[i]
+        slot.auraActive = false
         local spellAuraID
-        if slottedItem.spellID ~= 0 then
-            spellAuraID = slottedItem.spellID
-        elseif slottedItem.macroSpellID ~= 0 then
-            spellAuraID = slottedItem.macroSpellID
+        if slot.spellID ~= 0 then
+            spellAuraID = slot.spellID
+        elseif slot.macroSpellID ~= 0 then
+            spellAuraID = slot.macroSpellID
         end
         if spellAuraID then
             local name = C_Spell.GetSpellInfo(spellAuraID).name
             --doesn't work
             --print("Non passive: ", C_UnitAuras.GetPlayerAuraBySpellID(spellAuraID))
             if C_UnitAuras.GetAuraDataBySpellName("player", name) then
-                slottedItem.auraActive = true
+                slot.auraActive = true
                 local link = C_Spell.GetSpellLink(spellAuraID)
-                Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_ExtraItemAuras ") .. ": Slotted item/macro aura is active:", link)
+                Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_ExtraItemAuras ") .. ": Slotted item/macro aura is active:", link)
             end
         end
     end
@@ -409,7 +431,7 @@ end
 --***********[~]**********
 --**Decides which action to perform**
 --***********[~]**********
--- action = "cast" | "reel" | "clear" | "raft" | "oversized" | "crate" | "randomCrate" | "extraToy" | "extraItem"
+-- action = "cast" | "reel" | "clear" | "raft" | "oversized" | "crate" | "extraToy" | "extraItem"
 local function performAction(self, assignKey, action)
     if action == "cast" then
         SetOverrideBindingSpell_Custom(self, true, assignKey, PROFESSIONS_FISHING)
@@ -425,6 +447,9 @@ local function performAction(self, assignKey, action)
         ClearOverrideBindings(self)
         self.visual.texture:SetTexture("")
     elseif action == "raft" then
+        if AngleurConfig.chosenRaft.name == "Random Raft" then
+            retail.toys:PickRandomToy("raft", angleurToys.ownedRafts, angleurToys.selectedRaftTable, false)
+        end
         SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
         self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedRaftTable.name)
         self.visual.texture:SetTexture(angleurToys.selectedRaftTable.icon)
@@ -436,16 +461,13 @@ local function performAction(self, assignKey, action)
         SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
         self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedCrateBobberTable.name)
         self.visual.texture:SetTexture(angleurToys.selectedCrateBobberTable.icon)
-    elseif action == "randomCrate" then
-        SetOverrideBindingClick_Custom(self, true, assignKey, "Angleur_ToyButton")
-        self.toyButton:SetAttribute("macrotext", "/cast " .. angleurToys.selectedCrateBobberTable.name)
-        self.visual.texture:SetTexture(angleurToys.selectedCrateBobberTable.icon)
-    elseif action == "extraToy" then
+    elseif action == "extraToys" then
         -- already handled within the other function
-    elseif action == "extraItem" then
+    elseif action == "extraItems" then
         -- already handled within the other function
     end
 end
+-- SetOverrideBindingClick_Custom(self, true, "SPACE", "Angleur_ToyButton")
 function Angleur_ActionHandler(self)
     --print("WorldFrame Dragging: ", WorldFrame:IsDragging())
     if InCombatLockdown() then return end
@@ -455,16 +477,27 @@ function Angleur_ActionHandler(self)
         if not AngleurConfig.angleurKey then
             ClearOverrideBindings(self)
             self.visual.texture:SetTexture("")
-        return end
+            return    
+        end
         assignKey = AngleurConfig.angleurKey
+        --                !!!! VERY IMPORTANT !!!!
+        -- _____ Do not change the bind while it is held down ______
+        -- It is what caused the Raft Jump Bug, and can cause others
+        --__________________________________________________________
+        if IsKeyDown(assignKey) then return end
+        --__________________________________________________________
     elseif AngleurConfig.chosenMethod == "doubleClick" then
         if angleurDoubleClick.watching then 
             assignKey = angleurDoubleClick.iDtoButtonName[AngleurConfig.doubleClickChosenID]
         end
     end
     ClearOverrideBindings(self)
-
     local action
+    if UnitIsDeadOrGhost("player") then
+        action = "clear"
+        performAction(self, assignKey, action)
+        return
+    end
     if midFishing then
         action =  "reel"
         if AngleurConfig.recastEnabled and AngleurConfig.recastKey then
@@ -504,25 +537,26 @@ function Angleur_ActionHandler(self)
                     return
                 end
             end
-            local _, cooldownOversized = C_Container.GetItemCooldown(angleurToys.selectedOversizedBobberTable.toyID)
-            local _, cooldownCrate = C_Container.GetItemCooldown(angleurToys.selectedCrateBobberTable.toyID)
+
+
             local crateIsRandom = AngleurConfig.chosenCrateBobber.name == "Random Bobber"
-            if(AngleurConfig.crateEnabled and not crateBobbered) and (crateIsRandom) then
-                if retail.toys:PickRandomBobber() == true  and angleurToys.selectedCrateBobberTable.loaded then
-                    action = "randomCrate"
-                    performAction(self, assignKey, action)
-                    return
-                end
+            -- Why can't we do Crate Bobber randoms in performAction() like with Rafts?
+            -- We want to random pick before starting the if-else in case all bobbers are
+            -- on cooldown. (Not an issue with Rafts because they dont have a cooldown)
+            if (crateIsRandom) and (AngleurConfig.crateEnabled and not crateBobbered) then
+                retail.toys:PickRandomToy("bobber", angleurToys.ownedCrateBobbers, angleurToys.selectedCrateBobberTable, false)
             end
             --________________________________________________________________________________________________________
             --________________________________________________________________________________________________________
 
+            local _, cooldownOversized = C_Container.GetItemCooldown(angleurToys.selectedOversizedBobberTable.toyID)
+            local _, cooldownCrate = C_Container.GetItemCooldown(angleurToys.selectedCrateBobberTable.toyID)
             --________________________________________________________________________
             -- These are the regular if-else structure that don't have nested options
             --________________________________________________________________________
             if angleurToys.selectedOversizedBobberTable.hasToy == true and AngleurConfig.oversizedEnabled and angleurToys.selectedOversizedBobberTable.loaded and not oversizedBobbered and cooldownOversized == 0 then
                 action =  "oversized"
-            elseif (AngleurConfig.crateEnabled and not crateBobbered and not crateIsRandom) 
+            elseif (AngleurConfig.crateEnabled and not crateBobbered)
             and 
             (angleurToys.selectedCrateBobberTable.hasToy == true and cooldownCrate == 0)
             and 
@@ -530,10 +564,10 @@ function Angleur_ActionHandler(self)
                 action =  "crate"
             elseif Angleur_ActionHandler_ExtraToys(self, assignKey) then
                 action =  "extraToys"
-                --ALREADY HANDLED WITHIN THE FUNCTION
+                -- HANDLED WITHIN THE FUNCTION
             elseif Angleur_ActionHandler_ExtraItems(self, assignKey) then
                 action =  "extraItems"
-                --ALREADY HANDLED WITHIN THE FUNCTION
+                -- HANDLED WITHIN THE FUNCTION
             elseif iceFishing or compressedOceanFishing then
                 action =  "reel"
             else
@@ -622,8 +656,8 @@ local function checkConditions(self, slot, assignKey)
 end
 function Angleur_ActionHandler_ExtraItems(self, assignKey)
     local returnValue = false
-    for i, slot in pairs(Angleur_SlottedExtraItems) do
-       if checkConditions(self, slot, assignKey) == true then return true end
+    for i=1, ang.extraItems.slotCount, 1 do
+        if checkConditions(self, Angleur_SlottedExtraItems[i], assignKey) == true then return true end
     end
     return returnValue
 end
@@ -672,7 +706,7 @@ function Angleur_SetSleep()
             Angleur_UltraFocusBackground(true)
         end
         -- Angleur's Plugin Addon, Angleur_Underlight
-        if undangLoaded then
+        if ang.loadedPlugins.undang then
             AngleurUnderlight_AngleurWakeUpPing()
         end
         EventRegistry:TriggerEvent("Angleur_Wake")
@@ -684,10 +718,10 @@ function Angleur_UltraFocusBackground(activate)
     if activate == true then
         Angleur_CVars.ultraFocus.backgroundOn = GetCVar("Sound_EnableSoundWhenGameIsInBG")
         SetCVar("Sound_EnableSoundWhenGameIsInBG", 1)
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound set to: ", GetCVar("Sound_EnableSoundWhenGameIsInBG"))
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound set to: ", GetCVar("Sound_EnableSoundWhenGameIsInBG"))
     elseif activate == false then
         if Angleur_CVars.ultraFocus.backgroundOn ~= nil then SetCVar("Sound_EnableSoundWhenGameIsInBG", Angleur_CVars.ultraFocus.backgroundOn) end
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound restored to previous value, which was: ", Angleur_CVars.ultraFocus.backgroundOn)
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound restored to previous value, which was: ", Angleur_CVars.ultraFocus.backgroundOn)
     end
 end
 
@@ -753,9 +787,25 @@ function Angleur_UltraFocusInteractOff(activate)
     end
 end
 
+
 function Angleur_HandleCVars()
-    Angleur_UltraFocusInteractOff(not Angleur_TinyOptions.turnOffSoftInteract)
     if Angleur_TinyOptions.softIconOff == true and 	C_CVar.GetCVar("SoftTargetIconGameObject") == "1" then
         C_CVar.SetCVar("SoftTargetIconGameObject", "0")
+    end
+end
+
+local temp_Cvars = {
+    softTargetInteract = nil,
+}
+-- activate: set vs release
+function Angleur_HandleTempCVars(activate)
+    if activate == true then
+        temp_Cvars.softTargetInteract = C_CVar.GetCVar("SoftTargetInteract")
+        C_CVar.SetCVar("SoftTargetInteract", 3)
+        Angleur_BetaPrint(debugChannel, "Set CVAR SoftTargetInteract", "to: ", C_CVar.GetCVar("SoftTargetInteract"))
+    elseif activate == false then
+        if temp_Cvars.softTargetInteract then
+            C_CVar.SetCVar("SoftTargetInteract", temp_Cvars.softTargetInteract)
+        end
     end
 end

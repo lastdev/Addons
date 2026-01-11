@@ -1,3 +1,5 @@
+local debugChannel = 0
+
 AngleurUnderlight_Queue = {
     unequip = false, -- true / false
     equip = nil -- itemID
@@ -17,12 +19,12 @@ local function equipRod()
     local fishingSlotItem = GetInventoryItemID("player", 28)
     queue.unequip = false
     if not isEligible(queue.equip) then
-        Angleur_BetaPrint("equip item not eligible, removing from table.")
+        Angleur_BetaPrint(debugChannel, "equip item not eligible, removing from table.")
         queue.equip = nil
         return
     end
     if queue.equip == fishingSlotItem then
-        Angleur_BetaPrint("equip successful")
+        Angleur_BetaPrint(debugChannel, "equip successful")
         queue.equip = nil
         return
     end
@@ -38,9 +40,9 @@ local function putInBag()
             unequipTo = i
         end
     end
-    Angleur_BetaPrint("will unequip to: ", unequipTo)
+    Angleur_BetaPrint(debugChannel, "will unequip to: ", unequipTo)
     if not unequipTo then
-        Angleur_BetaPrint("no free slots in any of the bags")
+        Angleur_BetaPrint(debugChannel, "no free slots in any of the bags")
         ClearCursor()
         queue.unequip = false
     elseif unequipTo == 0 then
@@ -64,13 +66,13 @@ end
 local function unequipRod()
     local fishingSlotItem = GetInventoryItemID("player", 28)
     if not fishingSlotItem then
-        Angleur_BetaPrint("unequip successful, slot 28 empty")
+        Angleur_BetaPrint(debugChannel, "unequip successful, slot 28 empty")
         queue.unequip = false
         return
     end
     local cursorState = checkCursor(fishingSlotItem)
     if cursorState == 1 then
-        Angleur_BetaPrint("Holding something else, waiting for player to release.")
+        Angleur_BetaPrint(debugChannel, "Holding something else, waiting for player to release.")
         return
     elseif cursorState == 2 then
         PickupInventoryItem(28)
@@ -136,7 +138,7 @@ function AngleurUnderlight_HandleQueue()
             elseif queue.equip then
                 equipRod()
             else
-                Angleur_BetaPrint("table empty, removing script")
+                Angleur_BetaPrint(debugChannel, "table empty, removing script")
                 if angLoaded then
                     if AngleurCharacter.sleeping == true and not IsSwimming() and AngleurUnderlightConfig.waterwalking == false then
                         if AngleurUnderlight_CheckDelve() == false then

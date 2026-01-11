@@ -40,7 +40,7 @@ function addon:logSentMission(missionID, followers, predictedFinalHP)
 
         local autoCombatSpells, autoCombatAutoAttack = C_Garrison.GetFollowerAutoCombatSpells(followerID, info.level)
         minion.spells = {}
-        for i, spell in pairs(autoCombatSpells) do
+        for _, spell in pairs(autoCombatSpells) do
             table.insert(minion.spells, {
                 ["spellID"] = spell.autoCombatSpellID,
                 ["cooldown"] = spell.cooldown,
@@ -57,7 +57,7 @@ function addon:logSentMission(missionID, followers, predictedFinalHP)
     end
     
     local enemyID = -1
-    for boardIndex, enemy in pairs(C_Garrison.GetMissionDeploymentInfo(missionID).enemies) do
+    for _, enemy in pairs(C_Garrison.GetMissionDeploymentInfo(missionID).enemies) do
         local minion = {}
         minion.followerID = enemyID
         enemyID = enemyID - 1
@@ -68,7 +68,7 @@ function addon:logSentMission(missionID, followers, predictedFinalHP)
         minion.name = enemy.name
     
         minion.spells = {}
-        for i, spell in pairs(enemy.autoCombatSpells) do
+        for _, spell in pairs(enemy.autoCombatSpells) do
             table.insert(minion.spells, {
                 ["spellID"] = spell.autoCombatSpellID,
                 ["cooldown"] = spell.cooldown,
@@ -139,7 +139,7 @@ local function GetCombatLogEntryForEventType(spellName, eventType, caster, targe
 end
 
 local printOnce = false
-function addon:logCompletedMission(missionID, canComplete, success, overmaxSucceeded, followerDeaths, autoCombatResult)
+function addon:logCompletedMission(missionID, _, _, _, _, autoCombatResult)
     if not autoCombatResult then return end
     if addon.db.profile.DEVTESTING then
     
@@ -200,8 +200,8 @@ function addon:logCompletedMission(missionID, canComplete, success, overmaxSucce
         table.insert(TLDRMissionsLogging[missionID].combatLog, "Start of round "..roundNum)
         table.insert(TLDRMissionsLogging[missionID].combatLog, ",")
         
-        for eventNum, event in pairs(round.events) do
-            for targetNum, target in pairs(event.targetInfo) do
+        for _, event in pairs(round.events) do
+            for _, target in pairs(event.targetInfo) do
                 if not event.casterBoardIndex then
                     event.casterBoardIndex = -1
                     boardIndexes[event.casterBoardIndex] = "???"
@@ -232,7 +232,7 @@ function addon:logCompletedMission(missionID, canComplete, success, overmaxSucce
                 return
             end
         end
-        for boardIndex, HP in pairs(finalHealth) do
+        for boardIndex in pairs(finalHealth) do
             for _, minion in pairs(TLDRMissionsLogging[missionID].followers) do
                 if (minion.boardIndex == boardIndex) and minion.predictedFinalHP then
                     finalHealth[boardIndex] = tonumber(finalHealth[boardIndex])

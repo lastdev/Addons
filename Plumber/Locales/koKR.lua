@@ -451,6 +451,11 @@ L["SoftTargetName QuestObjective Tooltip"] = "이름 아래에 퀘스트 목표(
 L["SoftTargetName QuestObjective Alert"] = "이 기능을 사용하려면 게임 설정 > 손쉬운 사용 > 일반에서 |cffffffff대상 표시 툴팁|r 옵션을 활성화해야 합니다.";   --See globals: TARGET_TOOLTIP_OPTION
 L["SoftTargetName ShowNPC"] = "NPC 포함";
 L["SoftTargetName ShowNPC Tooltip"] = "비활성화하면 이름은 상호작용 가능한 게임 오브젝트에만 표시됩니다.";
+L["SoftTargetName HideIcon"] = "상호작용 아이콘 숨기기";
+L["SoftTargetName HideIcon Tooltip"] = "내부에 있을 때 상호작용 아이콘과 원형 시전 바를 숨깁니다.";
+L["SoftTargetName HideName"] = "오브젝트 이름 숨기기";
+L["SoftTargetName HideName Tooltip"] = "내부에 있을 때 오브젝트 이름을 숨깁니다."
+
 
 
 --LegionRemix
@@ -675,6 +680,10 @@ L["List Is Empty"] = "목록이 비어 있습니다.";
 L["ModuleName InstanceDifficulty"] = "인스턴스 난이도";
 L["ModuleDescription InstanceDifficulty"] = "- 공격대나 던전 입구에 있을 때 난이도 선택기를 표시합니다.\n\n- 인스턴스에 입장하면 화면 상단에 현재 난이도와 귀속 정보를 표시합니다.";
 L["Cannot Change Difficulty"] = "현재는 인스턴스 난이도를 변경할 수 없습니다.";
+L["Cannot Reset Instance"] = "지금은 인스턴스를 초기화할 수 없습니다.";
+L["Difficulty Not Accurate"] = "파티장이 아니어서 난이도 정보가 정확하지 않을 수 있습니다.";
+L["Instruction Click To Open Adventure Guide"] = "좌클릭: |cffffffff모험 안내서 열기|r";
+L["Instruction Alt Click To Reset Instance"] = "Alt+우클릭: |cffffffff모든 인스턴스 초기화|r";
 
 
 --TransmogChatCommand
@@ -697,7 +706,7 @@ L["ModuleDescription CraftSearchExtended"] = "특정 단어를 검색할 때 더
 
 
 --DecorModelScaleRef
-L["ModuleName DecorModelScaleRef"] = "장식품: 크기 비교용 바나나";
+L["ModuleName DecorModelScaleRef"] = "장식품: 크기 비교용 바나나"; --See HOUSING_DASHBOARD_CATALOG_TOOLTIP
 L["ModuleDescription DecorModelScaleRef"] = "- 장식 미리보기 창에 크기 참조용 바나나를 추가하여 오브젝트의 크기를 가늠할 수 있습니다.\n\n- 또한 왼쪽 버튼을 누른 채 수직으로 이동하여 카메라 각도를 변경할 수 있습니다.";
 
 
@@ -723,22 +732,32 @@ L["ModuleName TooltipDyeDeez"] = "툴팁: 염료 색상";
 L["ModuleDescription TooltipDyeDeez"] = "아이템 툴팁에 염료 색상 이름을 표시합니다.";
 L["Instruction Show More Info"] = "<Alt 키를 눌러 추가 정보 보기>";
 L["Instruction Show Less Info"] = "<Alt 키를 눌러 정보 줄이기>";
+L["ModuleName Housing_ItemAcquiredAlert"] = "장식 수집 알림";
+L["ModuleDescription Housing_ItemAcquiredAlert"] = "‘장식 수집’ 알림을 왼쪽 클릭해서 해당 장식의 모델을 미리 볼 수 있습니다.";
 
 
 --Housing Clock
-L["ModuleName Housing_Clock"] = "시계 & 메세지 알림";
-L["ModuleDescription Housing_Clock"] = "하우징 편집기 사용 중 화면 상단에 시계를 표시하고, 채팅 메세지를 받으면 알려줍니다.";
+L["ModuleName Housing_Clock"] = "편집기: 시계";
+L["ModuleDescription Housing_Clock"] = "하우징 편집기 사용 중 화면 상단에 시계를 표시합니다.\n\n편집기에서 보낸 시간도 추적합니다.";
 L["Time Spent In Editor"] = "편집기 사용 시간";
 L["This Session Colon"] = "이번 세션: ";
+L["Time Spent Total Colon"] = "총 시간: ";
 L["Right Click Show Settings"] = "우클릭으로 설정을 엽니다.";
 L["Plumber Clock"] = "Plumber 시계";
 L["Clock Type"] = "시계 유형";
 L["Clock Type Analog"] = "아날로그";
 L["Clock Type Digital"] = "디지털";
 
+
 --CatalogExtendedSearch
+L["ModuleName Housing_CatalogSearch"] = "장식 카탈로그";
+L["ModuleDescription Housing_CatalogSearch"] = "- 장식 목록과 창고 탭의 검색창을 강화하여 업적, 판매자, 지역 또는 화폐로 아이템을 검색할 수 있습니다.\n\n- 카테고리 옆에 일치하는 항목의 수를 표시합니다.\n\n- 채팅에 장식을 링크할 수 있습니다.";
 L["Match Sources"] = "출처 일치";
 
+
+--SourceAchievementLink
+L["ModuleName SourceAchievementLink"] = "상호작용 가능한 출처 정보";
+L["ModuleDescription SourceAchievementLink"] = "다음 UI의 업적 이름이 상호작용 가능해져 세부 정보 확인 또는 추적이 가능합니다.\n\n- 탈것 사전\n\n- 장식 카탈로그";
 
 
 --Generic

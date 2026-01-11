@@ -43,7 +43,7 @@ function ConfigUI:CreateConfigFrame()
     local textSecondary = HousingTheme.Colors.textSecondary
     
     local frame = CreateFrame("Frame", "HousingVendorConfigFrame", UIParent, "BackdropTemplate")
-    frame:SetSize(500, 400)
+    frame:SetSize(500, 600)
     frame:SetPoint("CENTER")
     frame:SetFrameStrata("DIALOG")
     frame:Hide()
@@ -85,7 +85,7 @@ function ConfigUI:CreateConfigFrame()
     
     local title = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     title:SetPoint("LEFT", headerBg, "LEFT", 20, 0)
-    title:SetText(L["SETTINGS_TITLE"] or "Settings")
+    title:SetText(L["BUTTON_SETTINGS"] or "Settings")
     title:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     
     -- Close button (modern style)
@@ -124,7 +124,7 @@ function ConfigUI:CreateConfigFrame()
     -- UI Scale slider
     local scaleLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     scaleLabel:SetPoint("TOPLEFT", 30, contentY)
-    scaleLabel:SetText(L["SETTINGS_UI_SCALE"] or "UI Scale")
+    scaleLabel:SetText("UI Scale")
     scaleLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     
     local scaleValue = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -165,17 +165,13 @@ function ConfigUI:CreateConfigFrame()
     -- Theme Selector
     local themeLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     themeLabel:SetPoint("TOPLEFT", 30, contentY)
-    themeLabel:SetText(L["SETTINGS_UI_THEME"] or "UI Theme")
+    themeLabel:SetText("UI Theme")
     themeLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
-
+    
     local currentThemeName = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     currentThemeName:SetPoint("LEFT", themeLabel, "RIGHT", 10, 0)
     currentThemeName:SetTextColor(accentPrimary[1], accentPrimary[2], accentPrimary[3], 1)
-
-    -- Get localized theme name
-    local activeTheme = HousingTheme.ActiveThemeName or "Midnight"
-    local activeThemeKey = "THEME_" .. activeTheme:upper():gsub(" ", "_")
-    currentThemeName:SetText(L[activeThemeKey] or activeTheme)
+    currentThemeName:SetText(HousingTheme.ActiveThemeName or "Midnight")
     
     -- Theme buttons container
     local themeBtnY = -25
@@ -204,8 +200,7 @@ function ConfigUI:CreateConfigFrame()
         
         local btnText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
         btnText:SetPoint("CENTER")
-        local themeKey = "THEME_" .. themeName:upper():gsub(" ", "_")
-        btnText:SetText(L[themeKey] or themeName)
+        btnText:SetText(themeName)
         btnText:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
         
         btn:SetScript("OnEnter", function(self)
@@ -279,47 +274,10 @@ function ConfigUI:CreateConfigFrame()
     
     contentY = contentY - 70
     
-    local minimapHeader = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    minimapHeader:SetPoint("TOPLEFT", 30, contentY)
-    minimapHeader:SetText(L["SETTINGS_MINIMAP_SECTION"] or "Minimap Button")
-    minimapHeader:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
-
-    contentY = contentY - 25
-
-    local minimapCheckbox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    minimapCheckbox:SetPoint("TOPLEFT", 30, contentY)
-    minimapCheckbox:SetSize(24, 24)
-    minimapCheckbox:SetChecked(not (HousingDB.minimapButton and HousingDB.minimapButton.hide))
-
-    local minimapCheckLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    minimapCheckLabel:SetPoint("LEFT", minimapCheckbox, "RIGHT", 5, 0)
-    minimapCheckLabel:SetText(L["SETTINGS_SHOW_MINIMAP_BUTTON"] or "Show Minimap Button")
-    minimapCheckLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
-    
-    minimapCheckbox:SetScript("OnClick", function(self)
-        local shouldShow = self:GetChecked()
-        
-        -- Auto-save to DB
-        if not HousingDB.minimapButton then
-            HousingDB.minimapButton = {}
-        end
-        HousingDB.minimapButton.hide = not shouldShow
-        
-        if HousingMinimap then
-            if shouldShow then
-                HousingMinimap:ShowButton()
-            else
-                HousingMinimap:HideButton()
-            end
-        end
-    end)
-    
-    contentY = contentY - 50
-    
     -- Font Size slider
     local fontLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     fontLabel:SetPoint("TOPLEFT", 30, contentY)
-    fontLabel:SetText(L["SETTINGS_FONT_SIZE"] or "Font Size")
+    fontLabel:SetText("Font Size")
     fontLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
     
     local fontValue = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -354,10 +312,148 @@ function ConfigUI:CreateConfigFrame()
             HousingItemList:ApplyFontSize(value)
         end
     end)
-
-
     
+    contentY = contentY - 90
+    
+    -- Zone Popup Toggle Checkbox
+    local zonePopupLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    zonePopupLabel:SetPoint("TOPLEFT", 30, contentY)
+    zonePopupLabel:SetText(L["SETTINGS_ZONE_POPUPS"] or "Zone Popups")
+    zonePopupLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+    
+    local zonePopupCheckbox = CreateFrame("CheckButton", "HousingZonePopupCheckbox", frame, "UICheckButtonTemplate")
+    zonePopupCheckbox:SetPoint("LEFT", zonePopupLabel, "RIGHT", 10, 0)
+    zonePopupCheckbox:SetSize(24, 24)
+    -- Default to true if not set, but respect explicit false values
+    local popupEnabled = true
+    if HousingDB and HousingDB.settings and HousingDB.settings.showOutstandingPopup ~= nil then
+        popupEnabled = HousingDB.settings.showOutstandingPopup
+    end
+    zonePopupCheckbox:SetChecked(popupEnabled)
+    
+    local zonePopupDesc = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    zonePopupDesc:SetPoint("TOPLEFT", zonePopupLabel, "BOTTOMLEFT", 0, -8)
+    zonePopupDesc:SetWidth(420)
+    zonePopupDesc:SetJustifyH("LEFT")
+    zonePopupDesc:SetText(L["SETTINGS_ZONE_POPUPS_DESC"] or "Show outstanding items popup when entering a new zone")
+    zonePopupDesc:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+    
+    zonePopupCheckbox:SetScript("OnClick", function(self)
+        local isChecked = self:GetChecked()
+        if HousingDB and HousingDB.settings then
+            HousingDB.settings.showOutstandingPopup = isChecked
+            if isChecked then
+                print("|cFFFF0000Housing|r|cFF0066FFVendor|r: Zone popups enabled")
+            else
+                print("|cFFFF0000Housing|r|cFF0066FFVendor|r: Zone popups disabled")
+            end
+        end
+    end)
+    
+    contentY = contentY - 60
+    
+    -- Multi-Select Filters Info Section
+    local multiSelectLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    multiSelectLabel:SetPoint("TOPLEFT", 30, contentY)
+    multiSelectLabel:SetText("Multi-Select Filters")
+    multiSelectLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+    
+    local multiSelectDesc = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    multiSelectDesc:SetPoint("TOPLEFT", multiSelectLabel, "BOTTOMLEFT", 0, -8)
+    multiSelectDesc:SetWidth(420)
+    multiSelectDesc:SetJustifyH("LEFT")
+    multiSelectDesc:SetText("|cFF8A7FD4Expansion, Category, and Source|r filters now support multi-select. Click checkboxes to select multiple options and see items from all selected filters at once.")
+    multiSelectDesc:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+    
+    contentY = contentY - 60
+
+    -- Hide Minimap Button Checkbox
+    local minimapButtonLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    minimapButtonLabel:SetPoint("TOPLEFT", 30, contentY)
+    minimapButtonLabel:SetText("Hide Minimap Button")
+    minimapButtonLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+
+    local minimapButtonCheckbox = CreateFrame("CheckButton", "HousingMinimapButtonCheckbox", frame, "UICheckButtonTemplate")
+    minimapButtonCheckbox:SetPoint("LEFT", minimapButtonLabel, "RIGHT", 10, 0)
+    minimapButtonCheckbox:SetSize(24, 24)
+    local minimapHidden = false
+    if HousingDB and HousingDB.minimapButton and HousingDB.minimapButton.hide ~= nil then
+        minimapHidden = HousingDB.minimapButton.hide
+    end
+    minimapButtonCheckbox:SetChecked(minimapHidden)
+
+    local minimapButtonDesc = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    minimapButtonDesc:SetPoint("TOPLEFT", minimapButtonLabel, "BOTTOMLEFT", 0, -8)
+    minimapButtonDesc:SetWidth(420)
+    minimapButtonDesc:SetJustifyH("LEFT")
+    minimapButtonDesc:SetText("Hide the minimap button. Use /hv command to open the addon")
+    minimapButtonDesc:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+
+    minimapButtonCheckbox:SetScript("OnClick", function(self)
+        local isChecked = self:GetChecked()
+        if HousingDB and HousingDB.minimapButton then
+            HousingDB.minimapButton.hide = isChecked
+            if _G.HousingMinimap then
+                if isChecked then
+                    _G.HousingMinimap:HideButton()
+                    print("|cFFFF0000Housing|r|cFF0066FFVendor|r: Minimap button hidden. Use /hv to open")
+                else
+                    _G.HousingMinimap:ShowButton()
+                    print("|cFFFF0000Housing|r|cFF0066FFVendor|r: Minimap button shown")
+                end
+            end
+        end
+    end)
+
+    contentY = contentY - 60
+
+    -- Auto-Filter by Zone Toggle Checkbox
+    local autoFilterLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    autoFilterLabel:SetPoint("TOPLEFT", 30, contentY)
+    autoFilterLabel:SetText("Auto-Filter by Zone")
+    autoFilterLabel:SetTextColor(textPrimary[1], textPrimary[2], textPrimary[3], 1)
+    
+    local autoFilterCheckbox = CreateFrame("CheckButton", "HousingAutoFilterCheckbox", frame, "UICheckButtonTemplate")
+    autoFilterCheckbox:SetPoint("LEFT", autoFilterLabel, "RIGHT", 10, 0)
+    autoFilterCheckbox:SetSize(24, 24)
+    -- Default to false if not set, but respect explicit true values
+    local autoFilterEnabled = false
+    if HousingDB and HousingDB.settings and HousingDB.settings.autoFilterByZone ~= nil then
+        autoFilterEnabled = HousingDB.settings.autoFilterByZone
+    end
+    autoFilterCheckbox:SetChecked(autoFilterEnabled)
+    
+    local autoFilterDesc = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    autoFilterDesc:SetPoint("TOPLEFT", autoFilterLabel, "BOTTOMLEFT", 0, -8)
+    autoFilterDesc:SetWidth(420)
+    autoFilterDesc:SetJustifyH("LEFT")
+    autoFilterDesc:SetText("Automatically filter items by your current zone when opening addon")
+    autoFilterDesc:SetTextColor(textSecondary[1], textSecondary[2], textSecondary[3], 1)
+    
+    autoFilterCheckbox:SetScript("OnClick", function(self)
+        local isChecked = self:GetChecked()
+        if HousingDB and HousingDB.settings then
+            HousingDB.settings.autoFilterByZone = isChecked
+            if isChecked then
+                print("|cFFFF0000Housing|r|cFF0066FFVendor|r: Auto-filter by zone enabled")
+                -- Apply filter immediately if addon is open
+                if HousingOutstandingItemsUI and HousingOutstandingItemsUI.ApplyInitialAutoFilter then
+                    HousingOutstandingItemsUI:ApplyInitialAutoFilter()
+                end
+            else
+                print("|cFFFF0000Housing|r|cFF0066FFVendor|r: Auto-filter by zone disabled")
+                -- Clear zone filter
+                if HousingFilters and HousingFilters.ShowAutoFilterIndicator then
+                    HousingFilters:ShowAutoFilterIndicator(nil)
+                end
+            end
+        end
+    end)
+
+
+
     configFrame = frame
+
     return frame
 end
 
@@ -405,4 +501,3 @@ end
 _G["HousingConfigUI"] = ConfigUI
 
 return ConfigUI
-

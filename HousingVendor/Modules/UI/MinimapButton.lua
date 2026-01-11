@@ -49,10 +49,9 @@ function HousingMinimapButton:CreateButton()
   overlay:SetPoint("TOPLEFT")
   
   local icon = button:CreateTexture(nil, "BACKGROUND")
-  icon:SetSize(22, 22)
+  icon:SetSize(20, 20)
   icon:SetTexture("Interface\\Icons\\INV_Misc_Map02")
-  icon:SetPoint("CENTER", 0, 1)
-  icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+  icon:SetPoint("TOPLEFT", 7, -5)
   
   -- Set button position
   -- Convert angle from degrees to radians for math.cos/math.sin
@@ -63,6 +62,7 @@ function HousingMinimapButton:CreateButton()
   button:EnableMouse(true)
   button:SetMovable(true)
   button:RegisterForDrag("LeftButton")
+  button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   
   button:SetScript("OnDragStart", function(self)
     self:StartMoving()
@@ -82,20 +82,40 @@ function HousingMinimapButton:CreateButton()
     HousingDB.minimapButton.position.minimapPos = angle
   end)
   
-  -- Handle clicks (both left and right click toggle main UI)
+  -- Handle clicks:
+  --  - Left click: open main UI
+  --  - Right click: show zone popup for current zone
   button:SetScript("OnClick", function(self, mouseButton)
-    if HousingUINew and HousingUINew.Toggle then
-      HousingUINew:Toggle()
+    if mouseButton == "RightButton" then
+      if not HousingOutstandingItemsUI or not HousingOutstandingItemsUI.TogglePopup then
+        print("|cFFFF4040HousingVendor:|r OutstandingItemsUI module not available")
+        return
+      end
+      HousingOutstandingItemsUI:TogglePopup()
+      return
+    end
+
+    -- Default: Load data addon and open main UI
+    if HousingDataLoader then
+      HousingDataLoader:EnsureDataLoaded(function()
+        if HousingUINew and HousingUINew.Toggle then
+          HousingUINew:Toggle()
+        else
+          print("HousingVendor UI not available")
+        end
+      end)
     else
-      print("HousingVendor UI not available")
+      print("HousingVendor DataLoader not available")
     end
   end)
 
   -- Set up tooltip
   button:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:SetText("HousingVendors", 1, 1, 1)
-    GameTooltip:AddLine("Click to open HousingVendors", nil, nil, nil, true)
+    GameTooltip:SetText(L["MINIMAP_TOOLTIP"] or "HousingVendor", 1, 1, 1)
+    GameTooltip:AddLine(L["MINIMAP_TOOLTIP_LEFTCLICK"] or "Left-click: open main window", nil, nil, nil, true)
+    GameTooltip:AddLine(L["MINIMAP_TOOLTIP_RIGHTCLICK"] or "Right-click: zone popup", nil, nil, nil, true)
+    GameTooltip:AddLine(L["MINIMAP_TOOLTIP_DRAG"] or "Drag: move button", nil, nil, nil, true)
     GameTooltip:Show()
   end)
   

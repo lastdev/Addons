@@ -191,7 +191,7 @@ T["Visual Size"] = "Visual Größe"
 T["Master Volume(Ultra Focus)"] = "Gesamtlautstärke(Aufmerksamkeit)"
 T["Login Messages"] = "Einloggensnachrichten"
 T["Debug Mode"] = "Debug Modus"
-T["Defaults"] = "Standardwerte"
+T["Defaults"] = "Standard-\nwerte"
 
 
 --firstInstall
@@ -670,3 +670,75 @@ T["When unchecked, Bobber Scanner warn you with a chat message when your "
 .. colorYello:WrapTextInColorCode("recommended ") .. "to " .. "keep the warning " .. colorGreen:WrapTextInColorCode("\'enabled\' ") .. "so you can know when a fishing spot might cause issues."
 
 T["Niche functionality plugin for Angleur. Adding niche user requests through this plugin!"] = "Niche functionality plugin for Angleur. Adding niche user requests through this plugin!"
+
+
+
+
+
+
+
+
+
+--________________________________________
+-- New Plater Fix Changes for patch 2.6.1
+--________________________________________
+T["Plater " .. colorYello:WrapTextInColorCode("-> ") .. "Advanced " .. colorYello:WrapTextInColorCode("-> ") 
+.. "General Settings" .. colorYello:WrapTextInColorCode(":") .. " Show soft-interact on game objects*"] = "Plater " 
+.. colorYello:WrapTextInColorCode("-> ") .. "Advanced " .. colorYello:WrapTextInColorCode("-> ") 
+.. "General Settings" .. colorYello:WrapTextInColorCode(":") .. " Show soft-interact on game objects*"
+
+T["Has been " .. colorGreen:WrapTextInColorCode("checked ON ") .. "for Angleur's keybind to be able to " 
+.. colorYello:WrapTextInColorCode("Reel/Loot ") .. "your catches."] = "Has been " .. colorGreen:WrapTextInColorCode("checked ON ") 
+.. "for Angleur's keybind to be able to " .. colorYello:WrapTextInColorCode("Reel/Loot ") .. "your catches."
+
+
+T[colorBlu:WrapTextInColorCode("Angleur: ") .. "Soft Interact has been turned " .. colorGreen:WrapTextInColorCode("ON ") .. "for you to be able to ".. colorYello:WrapTextInColorCode("Reel/Loot ") 
+.. "your catches. The previous values will be restored upon logout, so that if you uninstall Angleur you will have them back to normal."] = colorBlu:WrapTextInColorCode("Angleur: ") 
+.. "Soft Interact has been turned " .. colorGreen:WrapTextInColorCode("ON ") .. "for you to be able to ".. colorYello:WrapTextInColorCode("Reel/Loot ")
+.. "your catches. The previous values will be restored upon logout, so that if you uninstall Angleur you will have them back to normal."
+
+
+T["If you want Soft-Interact to be " .. colorRed:WrapTextInColorCode("TURNED OFF ") .. "when not fishing, go to:\n" 
+.. "Angleur Config Panel " .. colorYello:WrapTextInColorCode("-> ") .. "Tiny tab(tab 3) " .. colorYello:WrapTextInColorCode("-> ") .. "Disable Soft-Interact\nand check it " 
+.. colorGreen:WrapTextInColorCode("ON.")] = "If you want Soft-Interact to be " .. colorRed:WrapTextInColorCode("TURNED OFF ") .. "when not fishing, go to:\n" 
+.. "Angleur Config Panel " .. colorYello:WrapTextInColorCode("-> ") .. "Tiny tab(tab 3) " .. colorYello:WrapTextInColorCode("-> ") .. "Disable Soft-Interact\nand check it " 
+.. colorGreen:WrapTextInColorCode("ON.")
+
+T["To stop seeing these messages, go to:"] = "To stop seeing these messages, go to:"
+T["Angleur Config Panel " .. colorYello:WrapTextInColorCode("-> ") 
+.. "Tiny tab(tab 3),  and disable \'Login Messages\'"] = "Angleur Config Panel " 
+.. colorYello:WrapTextInColorCode("-> ") .. "Tiny tab(tab 3),  and disable \'Login Messages\'"
+
+
+--____________________________________________
+--    Dead/Ghost Form checks patch 2.6.1
+--____________________________________________
+T["Can't change sleep state while in ghost form."] = "Can't change sleep state while in ghost form."
+T["Item equip interrupted by death/ghost-form"] = "Item equip interrupted by death/ghost-form"
+T["Equipping of the Angleur set disrupted due to sudden death/ghost-form"] = "Equipping of the Angleur set disrupted due to sudden death/ghost-form"
+T["Can't add toys while dead"] = "Can't add toys while dead"
+
+
+-- Thing I forgot for the bobber scanner
+T["Place your cursor in the box\nbelow for the scanner to work."] = "Place your cursor in the box\nbelow for the scanner to work."
+T["Mouse needs to be in the indicated area for the scanner to work properly."] = "Mouse needs to be in the indicated area for the scanner to work properly."
+
+-- Random Raft
+T["Random Raft"] = "Random Raft"
+
+
+-- NicheOptions Tuskarr Spear
+T["Angleur: Sharpened Tuskarr Spear(MoP) detected."] = colorBlu:WrapTextInColorCode("Angleur: ") .. colorYello:WrapTextInColorCode("Sharpened Tuskarr Spear(MoP)") .. " detected."
+T["Due to the fishing rod taking up the mainhand slot in Classic, this item cannot be added to the Auto-Equip System."] = "Due to the fishing rod taking up the mainhand slot in Classic, this item cannot be added to the Auto-Equip System."
+T["Please download the: "] = "Please download the: "
+T[" plugin from Curseforge if you want Angleur to use it for you."] = " plugin from Curseforge if you want Angleur to use it for you."
+
+
+-- Sleep/Wake with Rod disable (Mists)
+T["Sleep Without Fishing Rod"] = "Sleep Without Fishing Rod"
+
+T["If checked, Angleur will go to Sleep when you unequip your fishing rod.\n\nUncheck if you want to fish without a rod in the main hand slot. On by default."] = "If checked, Angleur will go to " 
+.. colorYello:WrapTextInColorCode("Sleep ") .. "when you unequip your fishing rod.\n\n" .. colorGrae:WrapTextInColorCode("Uncheck if you want to fish without a rod in the main hand slot. On by default.")
+
+T["Angleur will no longer Sleep/Wake based on Fishing Rod equip status."] = colorBlu:WrapTextInColorCode("Angleur ") 
+.. "will no longer " .. colorYello:WrapTextInColorCode("Sleep/Wake ") .. "based on Fishing Rod equip status."

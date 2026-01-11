@@ -1,5 +1,5 @@
 -- Profession Reagents Data Loader
--- Loads profession reagent data from HousingProfessions
+-- Loads profession reagent data from HousingProfessionData
 
 local AddonName, HousingVendor = ...
 
@@ -11,28 +11,57 @@ HousingVendor.ProfessionReagents = ProfessionReagents
 local professionReagents = {}
 local isLoaded = false
 
--- Load professions data from HousingProfessions global
+local function ParseReagents(value)
+    if type(value) == "table" then
+        return value
+    end
+
+    if type(value) ~= "string" or value == "" then
+        return nil
+    end
+
+    -- Generated data sometimes stores reagents as a Python-ish string like:
+    -- "[{'id': 251764, 'amount': 25}, {'id': 61981, 'amount': 8}]"
+    local parsed = {}
+    for chunk in value:gmatch("{[^}]*}") do
+        local id = chunk:match("['\"]id['\"]%s*:%s*(%d+)")
+        local amount = chunk:match("['\"]amount['\"]%s*:%s*(%d+)")
+        id = id and tonumber(id) or nil
+        amount = amount and tonumber(amount) or nil
+        if id and amount then
+            table.insert(parsed, { id = id, amount = amount })
+        end
+    end
+
+    if #parsed > 0 then
+        return parsed
+    end
+
+    return nil
+end
+
+-- Load professions data from HousingProfessionData global
 function ProfessionReagents:LoadProfessionsData()
     if isLoaded then
         return professionReagents
     end
     
-    -- Check if HousingProfessions data is available
-    if not HousingProfessions or type(HousingProfessions) ~= "table" then
+    if not (_G.HousingProfessionData and type(_G.HousingProfessionData) == "table") then
         return {}
     end
     
     -- Build reagent lookup by itemID
     local count = 0
-    for _, item in ipairs(HousingProfessions) do
-        if item.itemID and item.reagents and #item.reagents > 0 then
-            professionReagents[item.itemID] = {
+    for itemID, item in pairs(_G.HousingProfessionData) do
+        local reagents = item and ParseReagents(item.reagents) or nil
+        if itemID and item and reagents and #reagents > 0 then
+            professionReagents[itemID] = {
                 profession = item.profession,
                 skill = item.skill,
                 skillNeeded = item.skillNeeded,
                 spellID = item.spellID,
                 recipeID = item.recipeID,
-                reagents = item.reagents
+                reagents = reagents
             }
             count = count + 1
         end
@@ -60,13 +89,5 @@ function ProfessionReagents:HasReagents(itemID)
     return professionReagents[itemID] ~= nil
 end
 
--- Initialize on addon load
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:SetScript("OnEvent", function(self, event)
-    if event == "PLAYER_LOGIN" then
-        C_Timer.After(2, function()
-            ProfessionReagents:LoadProfessionsData()
-        end)
-    end
-end)
+-- Intentionally do not preload at login: reagent parsing can be memory-heavy and isn't needed
+-- unless the user opens the Preview Panel (or another UI that queries reagents).

@@ -1672,6 +1672,46 @@ do  -- Chat Message
         return false
     end
     API.SearchChatHistory = SearchChatHistory;
+
+
+    function API.HasActiveChatBox()
+        local activeWindow = ChatFrameUtil and ChatFrameUtil.GetActiveWindow();
+        if activeWindow and activeWindow == GetCurrentKeyBoardFocus() then
+            return true
+        end
+    end
+
+    function API.ChatInsertLink(link)
+        if ChatEdit_InsertLink then
+            return ChatEdit_InsertLink(link)
+        elseif ChatFrameUtil and ChatFrameUtil.InsertLink then
+            return ChatFrameUtil.InsertLink(link)
+        end
+    end
+
+    function API.ChatLinkItem(itemID, itemLink)
+        if not itemID then return end;
+        if not itemLink then
+            itemLink = select(2, C_Item.GetItemInfo(itemID));
+        end
+
+        if itemLink then
+            return API.ChatInsertLink(itemLink)
+        end
+    end
+
+    function API.ChatForceLinkItem(itemID, itemLink)
+        --This set chat box focus
+        if not itemLink then
+            itemLink = select(2, C_Item.GetItemInfo(itemID));
+        end
+
+        if ChatEdit_LinkItem then
+            return ChatEdit_LinkItem(itemID, itemLink)
+        elseif ChatFrameUtil and ChatFrameUtil.LinkItem then
+            return ChatFrameUtil.LinkItem(itemID, itemLink)
+        end
+    end
 end
 
 do  -- Cursor Position
@@ -2194,10 +2234,7 @@ do  -- System
         if InCombatLockdown() then return false end;
 
         if IsModifiedClick("CHATLINK") then
-            if ( ChatEdit_InsertLink(link) ) then
-                return true
-            elseif SocialPostFrame and Social_IsShown() then
-                Social_InsertLink(link);
+            if API.ChatInsertLink(link) then
                 return true
             end
         end
@@ -3651,24 +3688,43 @@ do  -- Container Item Processor
 end
 
 do  -- Chat Message
-    local ADDON_ICON = "|TInterface\\AddOns\\Plumber\\Art\\Logo\\PlumberLogo32:0:0|t";
+    local CM = {};
+    CM.iconMarkup = "|TInterface\\AddOns\\Plumber\\Art\\Logo\\PlumberLogo32:0:0|t";
+    CM.errorCounter = 0;
+    CM.errorTime = 0;
+
     local function PrintMessage(msg)
         if not msg then
             msg = "";
         end
-        print(ADDON_ICON.." |cffb8c8d1Plumber:|r "..msg);
+        print(CM.iconMarkup.." |cffb8c8d1Plumber:|r "..msg);
     end
     API.PrintMessage = PrintMessage;
 
     function API.DisplayErrorMessage(msg)
         if not msg then return end;
         local messageType = 0;
-        UIErrorsFrame:TryDisplayMessage(messageType, (ADDON_ICON.." |cffb8c8d1Plumber:|r ")..msg, RED_FONT_COLOR:GetRGB());
+        UIErrorsFrame:TryDisplayMessage(messageType, (CM.iconMarkup.." |cffb8c8d1Plumber:|r ")..msg, RED_FONT_COLOR:GetRGB());
     end
 
     function API.CheckAndDisplayErrorIfInCombat()
         if InCombatLockdown() then
-            API.DisplayErrorMessage(L["Error Show UI In Combat"]);
+            local timeStamp = GetTime();
+            if timeStamp > CM.errorTime + 2 then
+                CM.errorCounter = 0;
+            else
+                CM.errorCounter = CM.errorCounter + 1;
+            end
+            CM.errorTime = timeStamp;
+
+            if CM.errorCounter < 2 then
+                API.DisplayErrorMessage(L["Error Show UI In Combat"]);
+            elseif CM.errorCounter < 4 then
+                API.DisplayErrorMessage(L["Error Show UI In Combat 1"]);
+            elseif CM.errorCounter < 5 then
+                API.DisplayErrorMessage(L["Error Show UI In Combat 2"]);
+            end
+
             return true
         else
             return false
@@ -4285,7 +4341,7 @@ do  -- FocusSolver (Run something when being hovered long enough)
 
     function FocusSolverMixin:OnUpdate(elapsed)
         self.t = self.t + elapsed;
-        if self.t > 0.05 then
+        if self.t > self.delay then
             self.t = nil;
             self:SetScript("OnUpdate", nil);
             if self:IsObjectFocused() then

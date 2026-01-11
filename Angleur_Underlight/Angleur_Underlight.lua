@@ -2,6 +2,8 @@ local T = AngleurUnderlight_Translate
 local colorUnderlight = CreateColor(0.9, 0.8, 0.5)
 local colorYello = CreateColor(1.0, 0.82, 0.0)
 
+local debugChannel = 0
+
 AngleurUnderlight_MainFishingRod = {
     name = nil,
     link = nil,
@@ -58,7 +60,7 @@ function AngleurUnderlight_RemoveMainRod(self)
 end
 
 function AngleurUnderlight_GrabFishingRod(self)
-    Angleur_BetaPrint("I wonder if this is a fishing rod.")
+    Angleur_BetaPrint(debugChannel, "I wonder if this is a fishing rod.")
     if InCombatLockdown() then
         ClearCursor()
         print(T["Can't drag item in combat."])
@@ -180,7 +182,7 @@ local function checkEquip()
     end
     local fishingAura = C_UnitAuras.GetPlayerAuraBySpellID(394009)
     local underlightEquipped = C_Item.IsEquippedItem(UNDERLIGHT)
-    Angleur_BetaPrint("fishing aura: ", fishingAura, "\nunderlight equipped: ", underlightEquipped)
+    Angleur_BetaPrint(debugChannel, "fishing aura: ", fishingAura, "\nunderlight equipped: ", underlightEquipped)
     if fishingAura then
         if underlightEquipped then
             --do nothing
@@ -234,7 +236,7 @@ function AngleurUnderlight_Events(self, event, unit)
         Angleur_SingleDelayer(1, 0, 0.2, swimdelayFrame, function()
             if checkSwimOrBreath() then
                 wasSwimming = true
-                Angleur_BetaPrint("swimming start")
+                Angleur_BetaPrint(debugChannel, "swimming start")
                 checkEquip()
                 return true
             else
@@ -243,7 +245,7 @@ function AngleurUnderlight_Events(self, event, unit)
                         -- do nothing
                     else
                         wasSwimming = false
-                        Angleur_BetaPrint("was swimming")
+                        Angleur_BetaPrint(debugChannel, "was swimming")
                         checkReEquip()
                     end
                 end
@@ -252,7 +254,7 @@ function AngleurUnderlight_Events(self, event, unit)
         function()
             if checkSwimOrBreath() then
                 wasSwimming = true
-                Angleur_BetaPrint("swimming started")
+                Angleur_BetaPrint(debugChannel, "swimming started")
                 checkEquip()
             else
                 if wasSwimming == true then
@@ -261,11 +263,11 @@ function AngleurUnderlight_Events(self, event, unit)
                         -- do nothing
                     else
                         wasSwimming = false
-                        Angleur_BetaPrint("was swimming")
+                        Angleur_BetaPrint(debugChannel, "was swimming")
                         checkReEquip()
                     end
                 end
-                Angleur_BetaPrint("player is not swimming, but also wasn't swimming before")
+                Angleur_BetaPrint(debugChannel, "player is not swimming, but also wasn't swimming before")
             end
         end)
     end
@@ -282,7 +284,7 @@ function AngleurUnderlight_CheckDelve()
     if not AngleurUnderlightConfig.delveMode then return false end 
     local inInstance, instanceType = IsInInstance()
     if not inInstance or instanceType ~= "scenario" then return false end
-    Angleur_BetaPrint("Inside delve, and using breath mode. Don't unequip.")
+    Angleur_BetaPrint(debugChannel, "Inside delve, and using breath mode. Don't unequip.")
     return true
 end
 

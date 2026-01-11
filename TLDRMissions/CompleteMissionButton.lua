@@ -3,6 +3,14 @@ local LibStub = addon.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("TLDRMissions")
 local AceEvent = LibStub("AceAddon-3.0"):GetAddon("TLDRMissions-AceEvent")
 
+local rewardLimits = {
+    [824] = 10000, -- Garrison Resources
+    [1101] = 100000, -- Oil
+    [821] = 250, -- Draenor Clans Archaeology Fragment
+    [829] = 250, -- Arakkoa
+    [828] = 250, -- Ogre
+}
+
 function addon.CompleteMissionsButtonOnClickHandler(button)
     local i = 0
     local missions = C_Garrison.GetCompleteMissions(button:GetParent():GetParent().followerTypeID)
@@ -18,6 +26,20 @@ function addon.CompleteMissionsButtonOnClickHandler(button)
     local size = table.getn(missions)
     for _, mission in pairs(missions) do
         button:SetText(size)
+        
+        local rewards = C_Garrison.GetMissionRewardInfo(mission.missionID)
+        local skip
+        if button:GetParent():GetParent().db.profile.skipFullResources then
+            for _, rewardInfo in ipairs(rewards) do
+                if rewardInfo.currencyID and rewardLimits[rewardInfo.currencyID] then
+                    local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(rewardInfo.currencyID)
+                    if currencyInfo.quantity + rewardInfo.quantity > rewardLimits[rewardInfo.currencyID] then
+                        skip = true
+                        print("TLDRMissions: this currency is full or nearly full, skipping " .. currencyInfo.name)
+                    end
+                end
+            end
+        end
         
         C_Timer.After(i, function()
             size = size - 1
@@ -40,8 +62,10 @@ function addon.CompleteMissionsButtonOnClickHandler(button)
                 end)
             end
             
-            C_Garrison.MarkMissionComplete(mission.missionID)
-            C_Garrison.MissionBonusRoll(mission.missionID)
+            if not skip then
+                C_Garrison.MarkMissionComplete(mission.missionID)
+                C_Garrison.MissionBonusRoll(mission.missionID)
+            end
         end)
         
         i = i + 0.1

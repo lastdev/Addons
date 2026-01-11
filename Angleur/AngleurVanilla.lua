@@ -5,7 +5,9 @@ local T = Angleur_Translate
 local addonName, ang = ...
 local mists = ang.vanilla
 
+local debugChannel = 1
 local colorDebug = CreateColor(0.24, 0.76, 1) -- angleur blue
+
 local colorYello = CreateColor(1.0, 0.82, 0.0)
 local colorBlu = CreateColor(0.61, 0.85, 0.92)
 
@@ -90,6 +92,19 @@ function Angleur_EventLoader(self, event, unit, ...)
                 end
             end
         end
+        --Check if the Plugins of Angleur have loaded
+        ang.loadedPlugins.niche = C_AddOns.IsAddOnLoaded("Angleur_NicheOptions")
+
+        --__________________________________________________________________________
+        -- Can't set Tab 2 on "ADDON_LOADED" because we need data from NicheOptions
+        --      for CreateSlots, and we need CreateSlots to be before SetTab2
+        --__________________________________________________________________________
+        Angleur_ExtraItems_CreateSlots(Angleur.configPanel.tab2.contents.extraItems)
+        Angleur_SetTab2(self.configPanel.tab2)
+        --__________________________________________________________________________
+        -- We also need CreateSlots Before ExtraItems_Load
+        Angleur_ExtraItems_Load(Angleur.configPanel.tab2.contents.extraItems)
+
         if AngleurConfig.ultraFocusingAudio then Angleur_UltraFocusAudio(false) end
         if AngleurConfig.ultraFocusingAutoLoot then Angleur_UltraFocusAutoLoot(false) end
         Angleur_BobberScanner_HandleGamepad(false, T["Angleur Bobber Scanner: Gamepad Detected! Cast fishing once to trigger cursor mode, then place it in the indicated box."])
@@ -102,7 +117,6 @@ function Angleur_EventLoader(self, event, unit, ...)
         AngleurClassic_ToggleSoftInteract(false)
         HelpTip:Hide(UIParent, helpTipCloseText)
         Angleur_LoadItems()
-        Angleur_LoadExtraItems(Angleur.configPanel.tab2.contents.extraItems)
         --Angleur_Auras()
         Angleur_ExtraItemAuras()
         if AngleurMinimapButton.hide == false then
@@ -149,7 +163,7 @@ end
 
 local fishingPoleTable = AngleurVanilla_FishingPoleTable
 function AngleurClassic_CheckFishingPoleEquipped()
-    if InCombatLockdown() then return end
+    if InCombatLockdown() or UnitIsDeadOrGhost("player") then return end
     local itemLoc = ItemLocation:CreateFromEquipmentSlot(16)
     if not C_Item.DoesItemExist(itemLoc) then 
         AngleurCharacter.sleeping = true
@@ -183,7 +197,7 @@ local function isChosenKeyDown()
         if not AngleurConfig.doubleClickChosenID then
             return false
         elseif IsKeyDown(angleurDoubleClick.iDtoButtonName[AngleurConfig.doubleClickChosenID]) then
-            Angleur_BetaPrint(colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": mouse held")
+            Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": mouse held")
             return true
         end
     elseif AngleurConfig.chosenMethod == "oneKey" then
@@ -198,10 +212,10 @@ local function isChosenKeyDown()
             return false
         end
         if IsKeyDown(keybind) == false then 
-            Angleur_BetaPrint(colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": main key released")
+            Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": main key released")
             return false 
         end
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": oneKey held")
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("isChosenKeyDown ") .. ": oneKey held")
         return true
     end
     return false
@@ -249,7 +263,7 @@ function Angleur_LogicVariableHandler(self, event, unit, ...)
         if arg4 then
             local found, endo = string.find(arg4, "GameObject-\0-4458-1-54-35591-")
             if found then
-                Angleur_BetaPrint("the bobber is within range")
+                Angleur_BetaPrint(debugChannel, "the bobber is within range")
                 bobberWithinRange = true
                 --[[
                 if string.match(arg4, "%-377944%-") then
@@ -263,7 +277,7 @@ function Angleur_LogicVariableHandler(self, event, unit, ...)
                 ]]
                 
             else
-                Angleur_BetaPrint("different soft target")
+                Angleur_BetaPrint(debugChannel, "different soft target")
                 bobberWithinRange = false
             end
         else
@@ -427,22 +441,24 @@ end
 
 
 function Angleur_ExtraItemAuras()
-    for i, slottedItem in pairs(Angleur_SlottedExtraItems) do
-        slottedItem.auraActive = false
+    --Checks for Extra Toy Auras
+    for i=1, ang.extraItems.slotCount, 1 do
+        local slot = Angleur_SlottedExtraItems[i]
+        slot.auraActive = false
         local spellAuraID
-        if slottedItem.spellID ~= 0 then
-            spellAuraID = slottedItem.spellID
-        elseif slottedItem.macroSpellID ~= 0 then
-            spellAuraID = slottedItem.macroSpellID
+        if slot.spellID ~= 0 then
+            spellAuraID = slot.spellID
+        elseif slot.macroSpellID ~= 0 then
+            spellAuraID = slot.macroSpellID
         end
         if spellAuraID then
             local name = GetSpellInfo(spellAuraID)
             --doesn't work
             --print("Non passive: ", C_UnitAuras.GetPlayerAuraBySpellID(spellAuraID))
             if C_UnitAuras.GetAuraDataBySpellName("player", name) then
-                slottedItem.auraActive = true
+                slot.auraActive = true
                 local link = C_Spell.GetSpellLink(spellAuraID)
-                Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_ExtraItemAuras ") .. ": Slotted item/macro aura is active:", link)
+                Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_ExtraItemAuras ") .. ": Slotted item/macro aura is active:", link)
             end
         end
     end
@@ -517,6 +533,12 @@ function Angleur_ActionHandler(self)
             return 
         end
         assignKey = AngleurConfig.angleurKey
+        --                !!!! VERY IMPORTANT !!!!
+        -- _____ Do not change the bind while it is held down ______
+        -- It is what caused the Raft Jump Bug, and can cause others
+        --__________________________________________________________
+        if IsKeyDown(assignKey) then return end
+        --__________________________________________________________
     elseif chosenMethod == "doubleClick" then
         if angleurDoubleClick.watching then 
             assignKey = angleurDoubleClick.iDtoButtonName[AngleurConfig.doubleClickChosenID]
@@ -529,6 +551,11 @@ function Angleur_ActionHandler(self)
     local recast = false
     local oobIcon = false
     local gPad = false
+    if UnitIsDeadOrGhost("player") then
+        action = "clear"
+        performAction(self, assignKey, action)
+        return
+    end
     if midFishing then
         if AngleurClassicConfig.softInteract.enabled then
             if bobberWithinRange == false then
@@ -654,8 +681,8 @@ local function checkConditions(self, slot, assignKey)
 end
 function Angleur_ActionHandler_ExtraItems(self, assignKey)
     local returnValue = false
-    for i, slot in pairs(Angleur_SlottedExtraItems) do
-       if checkConditions(self, slot, assignKey) == true then return true end
+    for i=1, ang.extraItems.slotCount, 1 do
+        if checkConditions(self, Angleur_SlottedExtraItems[i], assignKey) == true then return true end
     end
     return returnValue
 end
@@ -696,10 +723,10 @@ function Angleur_UltraFocusBackground(activate)
     if activate == true then
         Angleur_CVars.ultraFocus.backgroundOn = GetCVar("Sound_EnableSoundWhenGameIsInBG")
         SetCVar("Sound_EnableSoundWhenGameIsInBG", 1)
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound set to: ", GetCVar("Sound_EnableSoundWhenGameIsInBG"))
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound set to: ", GetCVar("Sound_EnableSoundWhenGameIsInBG"))
     elseif activate == false then
         if Angleur_CVars.ultraFocus.backgroundOn ~= nil then SetCVar("Sound_EnableSoundWhenGameIsInBG", Angleur_CVars.ultraFocus.backgroundOn) end
-        Angleur_BetaPrint(colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound restored to previous value, which was: ", Angleur_CVars.ultraFocus.backgroundOn)
+        Angleur_BetaPrint(debugChannel, colorDebug:WrapTextInColorCode("Angleur_UltraFocusBackground ") .. ": BG Sound restored to previous value, which was: ", Angleur_CVars.ultraFocus.backgroundOn)
     end
 end
 

@@ -21,6 +21,7 @@ local private = {
 	defaultUISwitchBtn = nil,
 	isVisible = false,
 	showTimer = nil,
+	defaultUIButtonShifts = {},
 }
 local MIN_FRAME_SIZE = { width = 560, height = 500 }
 
@@ -49,6 +50,10 @@ end
 
 function VendoringUI.IsVisible()
 	return private.isVisible
+end
+
+function VendoringUI.ShiftDefaultUIButton(addonTag, xOffset)
+	private.defaultUIButtonShifts[addonTag] = xOffset
 end
 
 
@@ -140,10 +145,14 @@ function private.FSMCreate()
 		:AddState(FSM.NewState("ST_DEFAULT_OPEN")
 			:SetOnEnter(function(context, isIgnored)
 				if not private.defaultUISwitchBtn then
+					local xOffset = ClientInfo.IsRetail() and -27 or -26
+					for _, shift in pairs(private.defaultUIButtonShifts) do
+						xOffset = xOffset + shift
+					end
 					private.defaultUISwitchBtn = UIElements.New("ActionButton", "switchBtn")
 						:SetSize(60, ClientInfo.IsRetail() and 15 or 16)
 						:SetFont("BODY_BODY3_MEDIUM")
-						:AddAnchor("TOPRIGHT", ClientInfo.IsRetail() and -27 or -26, ClientInfo.IsRetail() and -4 or -3)
+						:AddAnchor("TOPRIGHT", xOffset, ClientInfo.IsRetail() and -4 or -3)
 						:SetRelativeLevel(ClientInfo.IsRetail() and 600 or 3)
 						:DisableClickCooldown()
 						:SetText(L["TSM4"])

@@ -1,9 +1,12 @@
-## Interface: @toc-version-retail@,@toc-version-midnight@,120000
+## Interface: @toc-version-midnight@, @toc-version-retail@
+#@debug@
+## Interface: 120000
+#@end-debug@
 ## Title: Lib: LibTalentTree-1.0
 ## Notes: Library for retrieving class and spec talent tree information
 ## Author: Numy
 ## IconTexture: Interface\Addons\LibTalentTree-1.0\media\icon
-## Version: 66a598c
+## Version: cef9940
 ## X-Licence: Permission is granted to use and redistribute this library in any way you see fit, including but not limited to, embedding it in your own addons.
 ## X-Curse-Project-ID: 676405
 ## Category: Development Tools

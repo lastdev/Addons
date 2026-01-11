@@ -1,4 +1,4 @@
-## Interface: 110200, 110205
+## Interface: 110207, 120000, 120001
 ## Title: GarrisonCommander
 ## IconTexture: 134414
 ## Category-enUS: Expansion Features
@@ -24,8 +24,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Daggerspine
-## Version: 3.11.0 100250
-## X-Revision: ed2e041
+## Version: 3.12.0 100250
+## X-Revision: 37c7308
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -40,7 +40,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2025-09-28T15:20:05Z
+## X-Date: 2026-01-05T22:17:16Z
 ## X-Embeds: LibInit
 ## X-Curse-Project-ID: 86760
 ## X-WoWI-ID: 23426

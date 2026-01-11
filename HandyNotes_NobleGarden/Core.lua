@@ -3,7 +3,7 @@
 
                                              Noblegarden
 
-                                      v4.25 - 5th November 2025
+                                     v4.28 - 24th December 2025
                                 Copyright (C) Taraezor / Chris Birch
                                          All Rights Reserved
 

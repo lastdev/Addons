@@ -113,3 +113,36 @@ function addon.BaseGUIMixin:arrangeFollowerTroopCombinations(followers, troops, 
     
     -- all combinations failed
 end
+
+-- For use by WOD
+-- No troops, all slots must be filled
+function addon.BaseGUIMixin:arrangeFollowerCombinations(followers, missionID, sortBy)
+    followers = addon:sortFollowers(followers, sortBy)
+    
+    local lineup = {}
+    local numSlots = C_Garrison.GetBasicMissionInfo(missionID).numFollowers
+    
+    for i = 1, #followers do
+        if numSlots == 1 then
+            if self:SimulateFollower(lineup, followers[i], missionID) then return lineup, result end
+        else
+            table.insert(lineup, followers[i])
+            
+            for j = (i+1), #followers do
+                if numSlots == 2 then
+                    if self:SimulateFollower(lineup, followers[j], missionID) then return lineup, result end
+                else
+                    table.insert(lineup, followers[j])
+                    for k = (j+1), #followers do
+                        if self:SimulateFollower(lineup, followers[k], missionID) then return lineup, result end
+                    end
+                    table.remove(lineup)
+                end
+            end
+            
+            table.remove(lineup)
+        end
+    end
+    
+    -- all combinations failed
+end

@@ -77,6 +77,10 @@
                                     print(Angleur_Translate["Can't change sleep state in combat."])
                                     return
                                 end
+                                if UnitIsDeadOrGhost("player") then
+                                    print(Angleur_Translate["Can't change sleep state while in ghost form."])
+                                    return
+                                end
                                 local colorBlu = CreateColor(0.61, 0.85, 0.92)
                                 if AngleurCharacter.sleeping == true then
                                     AngleurCharacter.sleeping = false
@@ -129,7 +133,7 @@
             <Button name="$parent_ToyButton" parentKey="toyButton" inherits="SecureActionButtonTemplate" hidden="false">
                 <Scripts>
                     <PreClick>
-                        Angleur_BetaPrint("ToyButton functions have been invoked")
+                        Angleur_BetaPrint(1, "ToyButton functions have been invoked")
                     </PreClick>
                 </Scripts>
             </Button> 
@@ -466,7 +470,6 @@
                             <OnLoad>
                                 self.tabText = Angleur_Translate["  Extra  "]
                                 self:OnLoad()
-                                Angleur_SetTab2(self)
                             </OnLoad>
                             <OnClick>
                                 self:OnClick()
@@ -511,26 +514,7 @@
                                         <Anchors>
                                             <Anchor point="TOP" relativeTo="Angleur_ExtraToys" relativePoint="BOTTOM" x="0" y="0"/>
                                         </Anchors>
-                                        <Scripts>
-                                            <OnLoad function="Angleur_LoadExtraItems"/>
-                                        </Scripts>
-                                        <Frames>
-                                            <Button name="$parent_First" parentKey="first" inherits="ExtraItemButtonTemplate">
-                                                <Anchors>
-                                                    <Anchor point="LEFT" x="35" y="15"/>
-                                                </Anchors>
-                                            </Button>
-                                            <Button name="$parent_Second" parentKey="second" inherits="ExtraItemButtonTemplate">
-                                                <Anchors>
-                                                    <Anchor point="LEFT" relativeTo="$parent_First" relativePoint="RIGHT" x="45" y="0"/>
-                                                </Anchors>
-                                            </Button>
-                                            <Button name="$parent_Third" parentKey="third" inherits="ExtraItemButtonTemplate">
-                                                <Anchors>
-                                                    <Anchor point="LEFT" relativeTo="$parent_Second" relativePoint="RIGHT" x="45" y="0"/>
-                                                </Anchors>
-                                            </Button>
-                                        </Frames>
+                                        <!-- Creation of frames now handled in items_base.lua instead -->
                                     </Frame>
                                     <Button name="$parent_EquipmentButton" parentKey="equipmentButton" inherits="IconButtonTemplate" hidden="false">
                                         <Size x="36" y="36"/>
@@ -776,6 +760,10 @@
                                     print(Angleur_Translate["Can't change sleep state in combat."])
                                     return
                                 end
+                                if UnitIsDeadOrGhost("player") then
+                                    print(Angleur_Translate["Can't change sleep state while in ghost form."])
+                                    return
+                                end
                                 AngleurCharacter.sleeping = false
                                 Angleur_SetSleep()
                                 Angleur_EquipAngleurSet(true)
@@ -865,6 +853,7 @@
             </OnLoad>
             <OnClick>
                 if InCombatLockdown() then return end
+                if UnitIsDeadOrGhost("player") then return end
                 self:Disable()
                 Angleur_CreateEquipmentSet()
                 Angleur_AddToEquipmentSet()

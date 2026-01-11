@@ -17,8 +17,8 @@
 		end
 		local addonName, Details222 = ...
 		local version, build, date, tvs = GetBuildInfo()
-		Details.build_counter = 13912
-		Details.alpha_build_counter = 13912 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 14250
+		Details.alpha_build_counter = 14250 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -40,7 +40,9 @@
 		Details.BFACORE = 131 --core version on BFA launch
 		Details.SHADOWLANDSCORE = 143 --core version on Shadowlands launch
 		Details.DRAGONFLIGHT = 147 --core version on Dragonflight launch
+		Details.TBCANNIVERSARY = 166
 		Details.V11CORE = 160 --core version on V11 launch
+		Details.V12CORE = 166 --core version on V12 launch
 
 		Details = Details
 
@@ -67,9 +69,15 @@
 		end
 
 		Details.DefaultTooltipIconSize = 20
+		local isWowApocalypse = (tvs >= 120000)
 
 		function Details222.UpdateIsAllowed()
-			return tvs < 120000
+			if (isWowApocalypse) then
+				if InCombatLockdown() then
+					return false
+				end
+			end
+			return true
 		end
 
 		--namespace for the player breakdown window
@@ -176,6 +184,7 @@
 		Details222.BarIconSetList = {}
 		Details222.Instances = {}
 		Details222.Combat = {}
+		Details222.BParser = {}
 		Details222.MythicPlus = {
 			Charts = {},
 			Frames = {},
@@ -271,6 +280,9 @@
 		---@field CheckContextInterest function
 		---@field FinishContext function
 		---@field GetContext function
+
+		DAMAGE_METER_SESSIONPARAMETER_TYPE = "type"
+		DAMAGE_METER_SESSIONPARAMETER_ID = "id"
 
 		--tells what is the activity the player is doing
 		Details222.ContextManager = {

@@ -1,5 +1,5 @@
 ## Interface: 11508
-## Version: 4.25
+## Version: 4.28
 ## Author: Taraezor
 ## IconTexture: Interface\Icons\Achievement_noblegarden_chocolate_egg
 ## Title: Noblegarden

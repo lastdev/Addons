@@ -1,10 +1,22 @@
-lightweight tag a0ea176f951651f6b9c33acb93a61833c1dcec89 12.0.0-02
+lightweight tag 472d46e57aa144a7cf9f427c2e9bd7958983f2d5 12.0.0-03
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Wed Oct 8 14:49:46 2025 -0500
+Date:	Mon Dec 29 12:30:00 2025 -0800
 
-commit a0ea176f951651f6b9c33acb93a61833c1dcec89
+commit 472d46e57aa144a7cf9f427c2e9bd7958983f2d5
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Wed Oct 8 14:49:46 2025 -0500
+Date:   Mon Dec 29 12:30:00 2025 -0800
 
-    Add Starlight Matrix to currency export
+    Bump addon version
+
+commit 84ab580fd9fa510b6235504a5938f2cdcb26bf7f
+Author: Kate Martin <51387586+renanthera@users.noreply.github.com>
+Date:   Thu Dec 25 20:31:56 2025 -0700
+
+    Bump for 11.2.7 release.
+
+commit 84ab580fd9fa510b6235504a5938f2cdcb26bf7f
+Author: Kate Martin <51387586+renanthera@users.noreply.github.com>
+Date:   Thu Dec 25 20:31:56 2025 -0700
+
+    Bump for 11.2.7 release.
 

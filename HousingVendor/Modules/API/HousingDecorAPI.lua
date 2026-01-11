@@ -4,11 +4,19 @@ HousingDecorAPI.__index = HousingDecorAPI
 
 -- Check if housing decor APIs are available
 function HousingDecorAPI:IsAvailable()
+    -- TAINT FIX: Don't access C_HousingDecor before safe delay period
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
     return C_HousingDecor ~= nil
 end
 
 -- Get hovered decor info
 function HousingDecorAPI:GetHoveredDecorInfo()
+    if not _G.HousingCatalogSafeToCall then
+        return nil
+    end
+
     if C_HousingBasicMode and C_HousingBasicMode.GetHoveredDecorInfo then
         local success, info = pcall(function()
             return C_HousingBasicMode.GetHoveredDecorInfo()
@@ -34,6 +42,10 @@ end
 
 -- Get selected decor info
 function HousingDecorAPI:GetSelectedDecorInfo()
+    if not _G.HousingCatalogSafeToCall then
+        return nil
+    end
+
     if C_HousingBasicMode and C_HousingBasicMode.GetSelectedDecorInfo then
         local success, info = pcall(function()
             return C_HousingBasicMode.GetSelectedDecorInfo()
@@ -59,6 +71,10 @@ end
 
 -- Check if a decor item is selected
 function HousingDecorAPI:IsDecorSelected()
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
+
     if C_HousingBasicMode and C_HousingBasicMode.IsDecorSelected then
         local success, isSelected = pcall(function()
             return C_HousingBasicMode.IsDecorSelected()
@@ -84,6 +100,10 @@ end
 
 -- Check if hovering over a decor item
 function HousingDecorAPI:IsHoveringDecor()
+    if not _G.HousingCatalogSafeToCall then
+        return false
+    end
+
     if C_HousingBasicMode and C_HousingBasicMode.IsHoveringDecor then
         local success, isHovering = pcall(function()
             return C_HousingBasicMode.IsHoveringDecor()
@@ -109,6 +129,10 @@ end
 
 -- Get all placed decor
 function HousingDecorAPI:GetAllPlacedDecor()
+    if not _G.HousingCatalogSafeToCall then
+        return {}
+    end
+
     if C_HousingDecor and C_HousingDecor.GetAllPlacedDecor then
         local success, decor = pcall(function()
             return C_HousingDecor.GetAllPlacedDecor()
@@ -124,6 +148,10 @@ end
 
 -- Get decor instance info for GUID
 function HousingDecorAPI:GetDecorInstanceInfoForGUID(decorGUID)
+    if not _G.HousingCatalogSafeToCall then
+        return nil
+    end
+
     if C_HousingDecor and C_HousingDecor.GetDecorInstanceInfoForGUID then
         local success, info = pcall(function()
             return C_HousingDecor.GetDecorInstanceInfoForGUID(decorGUID)

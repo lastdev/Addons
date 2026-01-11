@@ -4,9 +4,9 @@ addon = addon.followerList
 
 local CAMPAIGN = TRACKER_HEADER_CAMPAIGN_QUESTS
 local RENOWN = COVENANT_SANCTUM_TAB_RENOWN
-local info = C_Map.GetMapInfo(1645)
+local mapinfo = C_Map.GetMapInfo(1645)
 local name = ""
-if info then name = info.name end
+if mapinfo then name = mapinfo.name end
 local TORGHAST = name.." "..MYTHIC_PLUS_POWER_LEVEL
 
 -- database of Garrison Follower IDs, from https://wowpedia.fandom.com/wiki/GarrFollowerID
@@ -96,12 +96,6 @@ local gDB = {
     [1347] = {["name"] = "Lucia", covenantID = 2, source = RENOWN.." "..71,}, 
 }
 
-local FOLLOWER_BUTTON_HEIGHT = 56;
-local CATEGORY_BUTTON_HEIGHT = 20;
-local FOLLOWER_LIST_BUTTON_OFFSET = -6;
-local FOLLOWER_LIST_BUTTON_INITIAL_OFFSET = -7;
-local GARRISON_FOLLOWER_LIST_BUTTON_FULL_XP_WIDTH = 205;
-
 local doOnce = true
 function addon:Init()
     if not doOnce then return end
@@ -115,7 +109,7 @@ function addon:Init()
             local uncollectedFollowers,known = {},{}
             local index = 1
             
-            for garrFollowerID, data in pairs(gDB) do
+            for garrFollowerID in pairs(gDB) do
                 dataProvider:ForEach(function(follower)
                     if follower.follower then
                         follower = follower.follower
@@ -162,7 +156,7 @@ function addon:Init()
     hooksecurefunc(CovenantMissionFrame.FollowerList, "UpdateFollowers", newUpdateFollowers)
     hooksecurefunc(GarrisonLandingPageFollowerList, "UpdateFollowers", newUpdateFollowers)
     
-    hooksecurefunc("GarrisonFollowerList_InitButton", function(frame, elementData)
+    hooksecurefunc("GarrisonFollowerList_InitButton", function(frame)
         if frame.Follower then
             if not frame.Follower.DownArrow then
                 frame.Follower.DownArrow = frame.Follower:CreateTexture()

@@ -884,6 +884,10 @@ function Details222.StartUp.StartMeUp()
 		DetailsFramework.table.copy(Details.class_coords, Details.default_profile.class_coords)
 	end
 
+	if detailsFramework.IsAddonApocalypseWow() then
+		Details222.BParser.UpdateDamageMeterSwap()
+	end
+
 	if (DetailsFramework.IsWarWow()) then
 		--streamer mode
 		function HelpTip:SetHelpTipsEnabled(flag, enabled)

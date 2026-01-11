@@ -1,6 +1,7 @@
 # Auctionator
 
-## [305](https://github.com/TheMouseNest/Auctionator/tree/305) (2025-12-03)
-[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/304...305) 
+## [307](https://github.com/TheMouseNest/Auctionator/tree/307) (2025-12-31)
+[Full Changelog](https://github.com/TheMouseNest/Auctionator/compare/306...307) 
 
-- Selling: Add "Housing", and fix durations on TBC/Wrath  
+- Update links on "About" section  
+- Support showing auction prices on RareScanner tooltips  

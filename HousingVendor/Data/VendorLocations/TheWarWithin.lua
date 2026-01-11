@@ -1,515 +1,1076 @@
--- Vendor Location Data: TheWarWithin
+﻿-- Housing Vendor Items - TheWarWithin
 
-
-if not HousingVendorLocations then
-    HousingVendorLocations = {}
-end
-
-HousingVendorLocations["TheWarWithin"] = {
-    ["Dornogal"] = {
-        {
-            vendorName = "Second Chair Pawdo",
-            npcID = 252312,
-            faction = "Neutral",
-            vendorCoords = {x = 52.84, y = 68.0, mapID = 2339},
-            items = {
-            }
-        },
-        {
-            vendorName = "Velerd",
-            npcID = 219217,
-            faction = "Neutral",
-            vendorCoords = {x = 55.2, y = 76.4, mapID = 2339},
-            items = {
-            }
-        },
+HousingDataAggregator_RegisterExpansionItems("vendor", {
+[1] = {
+    itemID = "258267",
+    itemName = "Candle-Festooned Wooden Awning",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Gabbun",
+      npcID = 256783,
+      faction = 0,
+      coords = {x = 43.35, y = 33.27, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Dornogal - Foundation Hall"] = {
-        {
-            vendorName = "Auditor Balwurz",
-            npcID = 223728,
-            faction = "Neutral",
-            vendorCoords = {x = 39.2, y = 24.4, mapID = 2339},
-            items = {
-            }
-        },
+  },
+  [2] = {
+    itemID = "243312",
+    itemName = "Undermine Rectangular Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 167300,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Dornogal - The Forgegrounds"] = {
-        {
-            vendorName = "Jorid",
-            npcID = 219318,
-            faction = "Neutral",
-            vendorCoords = {x = 57.0, y = 60.6, mapID = 2339},
-            items = {
-            }
-        },
-        {
-            vendorName = "Garnett",
-            npcID = 252910,
-            faction = "Neutral",
-            vendorCoords = {x = 54.68, y = 57.24, mapID = 2339},
-            items = {
-            }
-        },
+  },
+  [3] = {
+    itemID = "243312",
+    itemName = "Undermine Rectangular Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 231409,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Freywold Village"] = {
-        {
-            vendorName = "Cinnabar",
-            npcID = 252901,
-            faction = "Neutral",
-            vendorCoords = {x = 42.0, y = 73.0, mapID = 2248},
-            items = {
-            }
-        },
+  },
+  [4] = {
+    itemID = "243312",
+    itemName = "Undermine Rectangular Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Gundargaz"] = {
-        {
-            vendorName = "Waxmonger Squick",
-            npcID = 221390,
-            faction = "Neutral",
-            vendorCoords = {x = 43.2, y = 32.8, mapID = 2214},
-            items = {
-            }
-        },
-        {
-            vendorName = "Chert",
-            npcID = 252887,
-            faction = "Neutral",
-            vendorCoords = {x = 43.4, y = 33.0, mapID = 2214},
-            items = {
-            }
-        },
+  },
+  [5] = {
+    itemID = "253163",
+    itemName = "Fallside Storage Tent",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Hallowfall"] = {
-        {
-            vendorName = "Lars Bronsmaelt",
-            npcID = 240852,
-            faction = "Neutral",
-            vendorCoords = {x = 28.2, y = 56.2, mapID = 2215},
-            factionID = 2688,
-            factionName = "Flame's Radiance",
-            items = {
-                {itemID = 245293, reputation = "Renown 8"},
-            }
-        },
-        {
-            vendorName = "Lars Bronsmaelt",
-            npcID = 240852,
-            faction = "Neutral",
-            vendorCoords = {x = 28.28, y = 56.18, mapID = 2215},
-            items = {
-            }
-        },
+  },
+  [6] = {
+    itemID = "247750",
+    itemName = "Deephaul Crystal",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Velerd",
+      npcID = 219217,
+      faction = 0,
+      coords = {x = 55.2, y = 76.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Hovel Hill"] = {
-        {
-            vendorName = "Sitch Lowdown",
-            npcID = 231396,
-            faction = "Neutral",
-            vendorCoords = {x = 30.78, y = 38.93, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [7] = {
+    itemID = "245308",
+    itemName = "\"Elegant\" Lawn Flamingo",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.2, y = 50.4, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Liberation of Undermine"] = {
-        {
-            vendorName = "Ando the Gat",
-            npcID = 235621,
-            faction = "Neutral",
-            vendorCoords = {x = 43.29, y = 51.89, mapID = 2406},
-            items = {
-            }
-        },
+  },
+  [8] = {
+    itemID = "245655",
+    itemName = "Filigree Moon Lamp",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Mereldar"] = {
-        {
-            vendorName = "Nalina Ironsong",
-            npcID = 217642,
-            faction = "Neutral",
-            vendorCoords = {x = 42.8, y = 55.83, mapID = 2215},
-            items = {
-            }
-        },
+  },
+  [9] = {
+    itemID = "247915",
+    itemName = "Square Suramar Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Port Authority"] = {
-        {
-            vendorName = "Boatswain Hardee",
-            npcID = 231405,
-            faction = "Neutral",
-            vendorCoords = {x = 63.43, y = 16.8, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [10] = {
+    itemID = "253040",
+    itemName = "Coreway Sentinel Lamppost",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Chert",
+      npcID = 252887,
+      faction = 0,
+      coords = {x = 43.4, y = 33.0, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["The Incontinental Hotel"] = {
-        {
-            vendorName = "Stacks Topskimmer",
-            npcID = 251911,
-            faction = "Neutral",
-            vendorCoords = {x = 43.19, y = 50.47, mapID = 2346},
-            items = {
-            }
-        },
-        {
-            vendorName = "Smaks Topskimmer",
-            npcID = 231409,
-            faction = "Neutral",
-            vendorCoords = {x = 43.8, y = 50.8, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [11] = {
+    itemID = "246487",
+    itemName = "Gnomish Tesla Coil",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["The Scrapshop"] = {
-        {
-            vendorName = "Rocco Razzboom",
-            npcID = 231406,
-            faction = "Neutral",
-            vendorCoords = {x = 39.16, y = 22.2, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [12] = {
+    itemID = "256168",
+    itemName = "Draconic Sconce",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["The Vatworks"] = {
-        {
-            vendorName = "Lab Assistant Laszly",
-            npcID = 231408,
-            faction = "Neutral",
-            vendorCoords = {x = 27.18, y = 72.54, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [13] = {
+    itemID = "245296",
+    itemName = "Literature of Taelloch",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Auditor Balwurz",
+      npcID = 223728,
+      faction = 0,
+      coords = {x = 39.2, y = 24.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Undermine"] = {
-        {
-            vendorName = "Boatswain Hardee",
-            npcID = 231405,
-            faction = "Neutral",
-            vendorCoords = {x = 63.2, y = 16.8, mapID = 2346},
-            factionID = 2675,
-            factionName = "Blackwater Cartel",
-            items = {
-                {itemID = 255642, reputation = "Honored"},
-                {itemID = 248758, reputation = "Revered"},
-            }
-        },
-        {
-            vendorName = "Lab Assistant Laszly",
-            npcID = 231408,
-            faction = "Neutral",
-            vendorCoords = {x = 27.2, y = 72.4, mapID = 2346},
-            factionID = 2677,
-            factionName = "Steamwheedle Cartel",
-            items = {
-                {itemID = 245321, reputation = "Friendly"},
-                {itemID = 255641, reputation = "Honored"},
-            }
-        },
-        {
-            vendorName = "Rocco Razzboom",
-            npcID = 231406,
-            faction = "Neutral",
-            vendorCoords = {x = 39.0, y = 22.0, mapID = 2346},
-            factionID = 2673,
-            factionName = "Bilgewater Cartel",
-            items = {
-                {itemID = 255674, reputation = "Honored"},
-                {itemID = 245313, reputation = "Honored"},
-            }
-        },
-        {
-            vendorName = "Shredz the Scrapper",
-            npcID = 231407,
-            faction = "Neutral",
-            vendorCoords = {x = 53.2, y = 72.6, mapID = 2346},
-            factionID = 2671,
-            factionName = "Venture Company",
-            items = {
-                {itemID = 245311, reputation = "Honored"},
-                {itemID = 255647, reputation = "Revered"},
-            }
-        },
-        {
-            vendorName = "Sitch Lowdown",
-            npcID = 231396,
-            faction = "Neutral",
-            vendorCoords = {x = 30.6, y = 38.8, mapID = 2346},
-            factionID = 2669,
-            factionName = "Darkfuse Solutions",
-            items = {
-                {itemID = 256327, reputation = "Friendly"},
-                {itemID = 245307, reputation = "Honored"},
-            }
-        },
-        {
-            vendorName = "Blair Bass",
-            npcID = 226994,
-            faction = "Neutral",
-            vendorCoords = {x = 34.0, y = 70.8, mapID = 2346},
-            items = {
-            }
-        },
-        {
-            vendorName = "Street Food Vendor",
-            npcID = 239333,
-            faction = "Neutral",
-            vendorCoords = {x = 26.2, y = 42.8, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [14] = {
+    itemID = "248116",
+    itemName = "Valdrakken Chandelier",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Unknown Zone (MapID 2214)"] = {
-        {
-            vendorName = "Chert",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.4, y = 33.0, mapID = 2214},
-            items = {
-                {itemID = 253040},
-                {itemID = 253162},
-                {itemID = 253020},
-                {itemID = 253172},
-            }
-        },
-        {
-            vendorName = "Gundargaz Grand Keg",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.35, y = 33.27, mapID = 2214},
-            items = {
-                {itemID = 258267},
-                {itemID = 258264},
-                {itemID = 258262},
-                {itemID = 258265},
-            }
-        },
-        {
-            vendorName = "Gabbun",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.35, y = 33.27, mapID = 2214},
-            items = {
-                {itemID = 258267},
-                {itemID = 258264},
-                {itemID = 258262},
-                {itemID = 258265},
-            }
-        },
+  },
+  [15] = {
+    itemID = "258264",
+    itemName = "Kobold Candle Trio",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Gabbun",
+      npcID = 256783,
+      faction = 0,
+      coords = {x = 43.35, y = 33.27, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Unknown Zone (MapID 2346)"] = {
-        {
-            vendorName = "Kobold Wagon",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 34.0, y = 70.8, mapID = 2346},
-            items = {
-                {itemID = 245309},
-            }
-        },
-        {
-            vendorName = "Blair Bass",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 34.0, y = 70.8, mapID = 2346},
-            items = {
-                {itemID = 245309},
-            }
-        },
-        {
-            vendorName = "Rusty Patchwork Tub",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 63.43, y = 16.8, mapID = 2346},
-            items = {
-                {itemID = 248758},
-                {itemID = 255642},
-            }
-        },
-        {
-            vendorName = "Boatswain Hardee",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 63.43, y = 16.8, mapID = 2346},
-            items = {
-                {itemID = 248758},
-                {itemID = 255642},
-            }
-        },
-        {
-            vendorName = "Undermine Alleyway Sconce",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 27.18, y = 72.54, mapID = 2346},
-            items = {
-                {itemID = 245321},
-                {itemID = 255641},
-            }
-        },
-        {
-            vendorName = "Lab Assistant Laszly",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 27.18, y = 72.54, mapID = 2346},
-            items = {
-                {itemID = 245321},
-                {itemID = 255641},
-            }
-        },
-        {
-            vendorName = "Undermine Mechanic's Hanging Lamp",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 39.16, y = 22.2, mapID = 2346},
-            items = {
-                {itemID = 255674},
-                {itemID = 245313},
-            }
-        },
-        {
-            vendorName = "Rocco Razzboom",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 39.16, y = 22.2, mapID = 2346},
-            items = {
-                {itemID = 255674},
-                {itemID = 245313},
-            }
-        },
-        {
-            vendorName = "Spring-Powered Undermine Chair",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 53.34, y = 72.69, mapID = 2346},
-            items = {
-                {itemID = 255647},
-                {itemID = 245311},
-            }
-        },
-        {
-            vendorName = "Shredz the Scrapper",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 53.34, y = 72.69, mapID = 2346},
-            items = {
-                {itemID = 255647},
-                {itemID = 245311},
-            }
-        },
-        {
-            vendorName = "Undermine Wall Shelf",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 30.78, y = 38.93, mapID = 2346},
-            items = {
-                {itemID = 256327},
-                {itemID = 245307},
-            }
-        },
-        {
-            vendorName = "Sitch Lowdown",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 30.78, y = 38.93, mapID = 2346},
-            items = {
-                {itemID = 256327},
-                {itemID = 245307},
-            }
-        },
-        {
-            vendorName = "Undermine Bookcase",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.8, y = 50.8, mapID = 2346},
-            items = {
-                {itemID = 245318},
-                {itemID = 245319},
-                {itemID = 243312},
-                {itemID = 245314},
-            }
-        },
-        {
-            vendorName = "Smaks Topskimmer",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.8, y = 50.8, mapID = 2346},
-            items = {
-                {itemID = 245318},
-                {itemID = 245319},
-                {itemID = 243312},
-                {itemID = 245314},
-            }
-        },
-        {
-            vendorName = "Undermine Round Table",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.2, y = 50.4, mapID = 2346},
-            items = {
-                {itemID = 245308},
-                {itemID = 243321},
-                {itemID = 245306},
-                {itemID = 260700},
-                {itemID = 245310},
-                {itemID = 245324},
-            }
-        },
-        {
-            vendorName = "Stacks Topskimmer",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 43.2, y = 50.4, mapID = 2346},
-            items = {
-                {itemID = 245308},
-                {itemID = 243321},
-                {itemID = 245306},
-                {itemID = 260700},
-                {itemID = 245310},
-                {itemID = 245324},
-            }
-        },
-        {
-            vendorName = "Rocket-Powered Fountain",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 26.2, y = 42.8, mapID = 2346},
-            items = {
-                {itemID = 256328},
-            }
-        },
-        {
-            vendorName = "Street Food Vendor",
-            npcID = None,
-            faction = "Neutral",
-            vendorCoords = {x = 26.2, y = 42.8, mapID = 2346},
-            items = {
-                {itemID = 256328},
-            }
-        },
+  },
+  [16] = {
+    itemID = "245314",
+    itemName = "Undermine Round Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 167300,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-    ["Venture Plaza"] = {
-        {
-            vendorName = "Shredz the Scrapper",
-            npcID = 231407,
-            faction = "Neutral",
-            vendorCoords = {x = 53.34, y = 72.69, mapID = 2346},
-            items = {
-            }
-        },
+  },
+  [17] = {
+    itemID = "245314",
+    itemName = "Undermine Round Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 231409,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
     },
-
-}
+  },
+  [18] = {
+    itemID = "245314",
+    itemName = "Undermine Round Table",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [19] = {
+    itemID = "245324",
+    itemName = "Rocket-Powered Fountain",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.2, y = 50.4, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [20] = {
+    itemID = "239213",
+    itemName = "Well-Lit Incontinental Loveseat",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Liberation of Undermine",
+      vendorName = "Ando the Gat",
+      npcID = 235621,
+      faction = 0,
+      coords = {x = 43.29, y = 51.89, mapID = 2406},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [21] = {
+    itemID = "260700",
+    itemName = "Gob-chanical Trash Heap",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.2, y = 50.4, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [22] = {
+    itemID = "245259",
+    itemName = "Small Val'sharah Bookcase",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [23] = {
+    itemID = "245318",
+    itemName = "Undermine Fence",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 167300,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [24] = {
+    itemID = "245318",
+    itemName = "Undermine Fence",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 231409,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [25] = {
+    itemID = "245318",
+    itemName = "Undermine Fence",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [26] = {
+    itemID = "253166",
+    itemName = "Freywold Fountain",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Freywold Village, Isle of Dorn",
+      vendorName = "Cinnabar",
+      npcID = 252901,
+      faction = 0,
+      coords = {x = 42.0, y = 73.0, mapID = 2248},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [27] = {
+    itemID = "253035",
+    itemName = "Freywold Seat",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Freywold Village, Isle of Dorn",
+      vendorName = "Cinnabar",
+      npcID = 252901,
+      faction = 0,
+      coords = {x = 42.0, y = 73.0, mapID = 2248},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [28] = {
+    itemID = "245309",
+    itemName = "Rusty Patchwork Tub",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Blair Bass",
+      npcID = 226994,
+      faction = 0,
+      coords = {x = 34.0, y = 70.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [29] = {
+    itemID = "245303",
+    itemName = "Rocket-Unpowered Rocket",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [30] = {
+    itemID = "253170",
+    itemName = "Earthen Contender's Target",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Velerd",
+      npcID = 219217,
+      faction = 0,
+      coords = {x = 55.2, y = 76.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [31] = {
+    itemID = "245297",
+    itemName = "Literature of Gundargaz",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Auditor Balwurz",
+      npcID = 223728,
+      faction = 0,
+      coords = {x = 39.2, y = 24.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [32] = {
+    itemID = "260583",
+    itemName = "Arathi Bartender's Shelves",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Hallowfall",
+      vendorName = "Nalina Ironsong",
+      npcID = 217642,
+      faction = 0,
+      coords = {x = 42.8, y = 55.83, mapID = 2215},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [33] = {
+    itemID = "248934",
+    itemName = "Golden Cloud Serpent Treasure Chest",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [34] = {
+    itemID = "243321",
+    itemName = "Cartel Head's Schmancy Desk",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.2, y = 50.4, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [35] = {
+    itemID = "253168",
+    itemName = "Earthen Storage Crate",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [36] = {
+    itemID = "253168",
+    itemName = "Earthen Storage Crate",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Auditor Balwurz",
+      npcID = 223728,
+      faction = 0,
+      coords = {x = 39.2, y = 24.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [37] = {
+    itemID = "245310",
+    itemName = "Reinforced Goblin Umbrella",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.2, y = 50.4, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [38] = {
+    itemID = "252756",
+    itemName = "Stonelight Countertop",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [39] = {
+    itemID = "253162",
+    itemName = "Earthen Chain Wall Shelf",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Chert",
+      npcID = 252887,
+      faction = 0,
+      coords = {x = 43.4, y = 33.0, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [40] = {
+    itemID = "253162",
+    itemName = "Earthen Chain Wall Shelf",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Gundargaz, Ringing Deeps",
+      vendorName = "Waxmonger Squick",
+      npcID = 221390,
+      faction = 0,
+      coords = {x = 43.2, y = 32.8, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [41] = {
+    itemID = "246601",
+    itemName = "Bolt Chair",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [42] = {
+    itemID = "253173",
+    itemName = "Meadery Storage Barrel",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [43] = {
+    itemID = "253037",
+    itemName = "Dornogal Brazier",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [44] = {
+    itemID = "245306",
+    itemName = "Cozy Four-Pipe Bed",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.2, y = 50.4, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [45] = {
+    itemID = "245295",
+    itemName = "Literature of Dornogal",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Auditor Balwurz",
+      npcID = 223728,
+      faction = 0,
+      coords = {x = 39.2, y = 24.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [46] = {
+    itemID = "253172",
+    itemName = "Gundargaz Grand Keg",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Chert",
+      npcID = 252887,
+      faction = 0,
+      coords = {x = 43.4, y = 33.0, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [47] = {
+    itemID = "256328",
+    itemName = "Leftover Undermine Takeout",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Street Food Vendor",
+      npcID = 239333,
+      faction = 0,
+      coords = {x = 26.2, y = 42.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [48] = {
+    itemID = "253038",
+    itemName = "Dornogal Hanging Lantern",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [49] = {
+    itemID = "246867",
+    itemName = "Tome of Earthen Directives",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Jorid",
+      npcID = 219318,
+      faction = 0,
+      coords = {x = 57.0, y = 60.6, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [50] = {
+    itemID = "245302",
+    itemName = "Gallagio L.U.C.K. Spinner",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Liberation of Undermine",
+      vendorName = "Ando the Gat",
+      npcID = 235621,
+      faction = 0,
+      coords = {x = 43.29, y = 51.89, mapID = 2406},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [51] = {
+    itemID = "247908",
+    itemName = "Nightborne Lantern",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Second Chair Pawdo",
+      npcID = 252312,
+      faction = 0,
+      coords = {x = 52.84, y = 68.0, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [52] = {
+    itemID = "253023",
+    itemName = "Rambleshire Resting Platform",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [53] = {
+    itemID = "258265",
+    itemName = "Kobold Wagon",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Gabbun",
+      npcID = 256783,
+      faction = 0,
+      coords = {x = 43.35, y = 33.27, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [54] = {
+    itemID = "252757",
+    itemName = "Boulder Springs Recliner",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [55] = {
+    itemID = "253034",
+    itemName = "Fallside Lantern",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Garnett",
+      npcID = 252910,
+      faction = 0,
+      coords = {x = 54.68, y = 57.24, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [56] = {
+    itemID = "257353",
+    itemName = "Drained Dark Heart of Galakrond",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [57] = {
+    itemID = "245325",
+    itemName = "Undermine Market Stall",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [58] = {
+    itemID = "245561",
+    itemName = "Ornate Ochre Window",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Dornogal",
+      vendorName = "Auditor Balwurz",
+      npcID = 223728,
+      faction = 0,
+      coords = {x = 39.2, y = 24.4, mapID = 2339},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [59] = {
+    itemID = "253020",
+    itemName = "Earthen Etched Throne",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Chert",
+      npcID = 252887,
+      faction = 0,
+      coords = {x = 43.4, y = 33.0, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [60] = {
+    itemID = "245319",
+    itemName = "Undermine Fencepost",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 167300,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [61] = {
+    itemID = "245319",
+    itemName = "Undermine Fencepost",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Smaks Topskimmer",
+      npcID = 231409,
+      faction = 0,
+      coords = {x = 43.8, y = 50.8, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [62] = {
+    itemID = "245319",
+    itemName = "Undermine Fencepost",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Undermine",
+      vendorName = "Stacks Topskimmer",
+      npcID = 251911,
+      faction = 0,
+      coords = {x = 43.19, y = 50.47, mapID = 2346},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [63] = {
+    itemID = "253021",
+    itemName = "Freywold Bench",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Freywold Village, Isle of Dorn",
+      vendorName = "Cinnabar",
+      npcID = 252901,
+      faction = 0,
+      coords = {x = 42.0, y = 73.0, mapID = 2248},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [64] = {
+    itemID = "258262",
+    itemName = "Kobold Digger's Chair",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "The Ringing Deeps",
+      vendorName = "Gabbun",
+      npcID = 256783,
+      faction = 0,
+      coords = {x = 43.35, y = 33.27, mapID = 2214},
+      factionID = nil,
+      factionName = nil,
+      reputation = nil,
+      extra = nil,
+    },
+  },
+  [65] = {
+    itemID = "246707",
+    itemName = "Decorative Cinder Honeypot",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "Isle of Dorn",
+      vendorName = "Cendvin",
+      npcID = 226205,
+      faction = 0,
+      coords = {x = 74.4, y = 45.2, mapID = 2248},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [66] = {
+    itemID = "246866",
+    itemName = "Kaheti Scribe's Records",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "City of Threads",
+      vendorName = "Thripps",
+      npcID = 0,
+      faction = 0,
+      coords = {x = 50.2, y = 31.4, mapID = 2213},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+  [67] = {
+    itemID = "260582",
+    itemName = "Cartel Collector's Cage",
+    vendorDetails = {
+      expansion = "The War Within",
+      location = "K'aresh",
+      vendorName = "Ta'sam",
+      npcID = 0,
+      faction = 0,
+      coords = {x = 0.0, y = 0.0, mapID = 0},
+      factionID = "None",
+      factionName = "None",
+      reputation = "None",
+      extra = "None",
+    },
+  },
+})

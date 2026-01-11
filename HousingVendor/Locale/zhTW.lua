@@ -228,4 +228,15 @@ L["THEME_SLEEK_BLACK"] = "洗練黑色"
 L["SETTINGS_UI_THEME"] = "UI主題"
 
 -- Make the locale table globally available
+-- Added for Zone Popup / minimap behaviors
+L["BUTTON_ZONE_POPUP"] = "區域彈窗"
+L["BUTTON_MAIN_UI"] = "主視窗"
+L["SETTINGS_ZONE_POPUPS"] = "區域彈窗"
+L["SETTINGS_ZONE_POPUPS_DESC"] = "進入新區域時顯示未收集物品彈窗"
+L["MINIMAP_TOOLTIP_LEFTCLICK"] = "左鍵：開啟主視窗"
+L["MINIMAP_TOOLTIP_RIGHTCLICK"] = "右鍵：區域彈窗"
+L["MINIMAP_TOOLTIP_DRAG"] = "拖曳：移動按鈕"
+L["OUTSTANDING_ITEMS_IN_ZONE"] = "區域內未收集物品"
+L["OUTSTANDING_MAIN_UI_TOOLTIP_DESC"] = "開啟已套用此區域篩選的 HousingVendor 主視窗。"
+
 HousingVendorLocales["zhTW"] = L
